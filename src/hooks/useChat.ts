@@ -794,7 +794,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         context,
         messagesCount: normalized.length,
         lastMessage: normalized[normalized.length - 1],
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       // 🧠 NOUVEAU v22Ω: Harmoniser les messages avec Cognitive Kernel
@@ -836,7 +836,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         context,
         messagesCount: emitted.length,
         lastMessage: emitted[emitted.length - 1],
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       setMessages(emitted);
@@ -1833,7 +1833,9 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         // ✅ v26.3.1 FIX: Vérifier que le message a bien été appliqué
         const assistantFromState = getAssistantFromState();
         if (!assistantFromState || assistantFromState.content.trim().length === 0) {
-          chatLogger.warn('⚠️ updateAssistant failed to apply content, forcing manual update');
+          chatLogger.warn(
+            '⚠️ updateAssistant failed to apply content, forcing manual update'
+          );
           // Forcer l'ajout du message si le placeholder n'a pas été trouvé
           const forceMessage: AIMessage = {
             role: 'assistant' as const,
@@ -1842,9 +1844,12 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
             timestamp: Date.now(),
             metadata: withUiId({ ...metadataPatch, forcedFallback: true }),
           };
-          applyMessagesSafely([...messagesRef.current, forceMessage], 'assistant-forced-fallback');
+          applyMessagesSafely(
+            [...messagesRef.current, forceMessage],
+            'assistant-forced-fallback'
+          );
         }
-        
+
         // ✅ v26.3.1: Le message assistant est maintenant garanti d'avoir du contenu
         const assistantMessage: AIMessage = assistantFromState || {
           role: 'assistant' as const,

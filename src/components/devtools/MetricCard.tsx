@@ -31,9 +31,7 @@ export function MetricCard({
   };
 
   return (
-    <div
-      className={`p-4 rounded-lg border-l-4 ${statusColors[status]} bg-gray-800`}
-    >
+    <div className={`p-4 rounded-lg border-l-4 ${statusColors[status]} bg-gray-800`}>
       <div className="text-sm text-gray-400 mb-1">{title}</div>
       <div className="flex items-baseline gap-2">
         <div className="text-2xl font-bold text-white">{value}</div>
@@ -44,8 +42,8 @@ export function MetricCard({
               trend === 'up'
                 ? 'text-green-400'
                 : trend === 'down'
-                ? 'text-red-400'
-                : 'text-gray-400'
+                  ? 'text-red-400'
+                  : 'text-gray-400'
             }`}
           >
             {trendIcons[trend]}

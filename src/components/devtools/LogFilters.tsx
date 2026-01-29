@@ -20,19 +20,17 @@ export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
           type="text"
           placeholder="Search logs..."
           value={filters.search}
-          onChange={(e) =>
-            onFilterChange({ ...filters, search: e.target.value })
-          }
+          onChange={e => onFilterChange({ ...filters, search: e.target.value })}
           className="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 outline-none"
         />
       </div>
       <div className="flex gap-2">
-        {['debug', 'info', 'warn', 'error'].map((level) => (
+        {['debug', 'info', 'warn', 'error'].map(level => (
           <button
             key={level}
             onClick={() => {
               const newLevels = filters.level.includes(level)
-                ? filters.level.filter((l) => l !== level)
+                ? filters.level.filter(l => l !== level)
                 : [...filters.level, level];
               onFilterChange({ ...filters, level: newLevels });
             }}

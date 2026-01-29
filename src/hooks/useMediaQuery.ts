@@ -22,7 +22,7 @@ export function useMediaQuery(query: string): boolean {
 
   useEffect(() => {
     const mediaQuery = window.matchMedia(query);
-    
+
     const handler = (event: MediaQueryListEvent) => {
       setMatches(event.matches);
     };
@@ -32,7 +32,7 @@ export function useMediaQuery(query: string): boolean {
       mediaQuery.addEventListener('change', handler);
       return () => mediaQuery.removeEventListener('change', handler);
     }
-    
+
     // Legacy API fallback
     mediaQuery.addListener(handler);
     return () => mediaQuery.removeListener(handler);

@@ -115,7 +115,7 @@ export class ConversationManager {
     const contentString = typeof response.content === 'string' ? response.content : '';
     const toolCallerService = getToolCaller();
     const toolCalls = toolCallerService.parseToolCalls(contentString);
-    
+
     if (toolCalls.length > 0) {
       logger.info(`Found ${toolCalls.length} tool calls in response`, {
         component: 'ConversationManager',
@@ -124,10 +124,14 @@ export class ConversationManager {
       });
 
       // Execute all tool calls in sequence
-      const toolResults: Array<{ toolName: string; result: unknown; error?: string }> = [];
+      const toolResults: Array<{ toolName: string; result: unknown; error?: string }> =
+        [];
       for (const toolCall of toolCalls) {
         try {
-          const result = await toolCallerService.executeToolCall(toolCall.name, toolCall.arguments);
+          const result = await toolCallerService.executeToolCall(
+            toolCall.name,
+            toolCall.arguments
+          );
           toolResults.push({
             toolName: toolCall.name,
             result: result.result,
@@ -159,7 +163,7 @@ export class ConversationManager {
       // (This makes them visible in the UI without needing special rendering)
       const resultsFormatted = toolResults
         .map(
-          (r) =>
+          r =>
             `\n\n🔧 **Tool: ${r.toolName}**\n${r.error ? '❌ Error: ' + r.error : '✅ Success'}\n\`\`\`json\n${JSON.stringify(r.result, null, 2)}\n\`\`\``
         )
         .join('');

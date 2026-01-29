@@ -11,9 +11,27 @@ import type { LogEntry } from '@/types';
 
 describe('LogViewer Component', () => {
   const mockLogs: LogEntry[] = [
-    { id: '1', timestamp: Date.now(), level: 'info', message: 'Info message', category: 'system' },
-    { id: '2', timestamp: Date.now(), level: 'error', message: 'Error message', category: 'api' },
-    { id: '3', timestamp: Date.now(), level: 'warning', message: 'Warning message', category: 'ui' },
+    {
+      id: '1',
+      timestamp: Date.now(),
+      level: 'info',
+      message: 'Info message',
+      category: 'system',
+    },
+    {
+      id: '2',
+      timestamp: Date.now(),
+      level: 'error',
+      message: 'Error message',
+      category: 'api',
+    },
+    {
+      id: '3',
+      timestamp: Date.now(),
+      level: 'warning',
+      message: 'Warning message',
+      category: 'ui',
+    },
   ];
 
   describe('Rendering', () => {
@@ -38,33 +56,33 @@ describe('LogViewer Component', () => {
   describe('Filtering', () => {
     it('should filter by level', () => {
       render(<LogViewer logs={mockLogs} />);
-      
+
       const errorFilter = screen.getByLabelText(/error/i);
       fireEvent.click(errorFilter);
-      
+
       expect(screen.getByText('Error message')).toBeInTheDocument();
       expect(screen.queryByText('Info message')).not.toBeInTheDocument();
     });
 
     it('should filter by category', () => {
       render(<LogViewer logs={mockLogs} />);
-      
+
       const categorySelect = screen.getByRole('combobox', { name: /category/i });
       fireEvent.change(categorySelect, { target: { value: 'api' } });
-      
+
       expect(screen.getByText('Error message')).toBeInTheDocument();
       expect(screen.queryByText('Info message')).not.toBeInTheDocument();
     });
 
     it('should combine filters', () => {
       render(<LogViewer logs={mockLogs} />);
-      
+
       const errorFilter = screen.getByLabelText(/error/i);
       fireEvent.click(errorFilter);
-      
+
       const categorySelect = screen.getByRole('combobox', { name: /category/i });
       fireEvent.change(categorySelect, { target: { value: 'api' } });
-      
+
       expect(screen.getByText('Error message')).toBeInTheDocument();
     });
   });
@@ -72,20 +90,20 @@ describe('LogViewer Component', () => {
   describe('Search', () => {
     it('should search logs', () => {
       render(<LogViewer logs={mockLogs} />);
-      
+
       const searchInput = screen.getByPlaceholderText(/search/i);
       fireEvent.change(searchInput, { target: { value: 'Error' } });
-      
+
       expect(screen.getByText('Error message')).toBeInTheDocument();
       expect(screen.queryByText('Info message')).not.toBeInTheDocument();
     });
 
     it('should be case-insensitive', () => {
       render(<LogViewer logs={mockLogs} />);
-      
+
       const searchInput = screen.getByPlaceholderText(/search/i);
       fireEvent.change(searchInput, { target: { value: 'error' } });
-      
+
       expect(screen.getByText('Error message')).toBeInTheDocument();
     });
   });
@@ -94,20 +112,20 @@ describe('LogViewer Component', () => {
     it('should clear logs', () => {
       const onClear = vi.fn();
       render(<LogViewer logs={mockLogs} onClear={onClear} />);
-      
+
       const clearButton = screen.getByRole('button', { name: /clear/i });
       fireEvent.click(clearButton);
-      
+
       expect(onClear).toHaveBeenCalledTimes(1);
     });
 
     it('should export logs', () => {
       const onExport = vi.fn();
       render(<LogViewer logs={mockLogs} onExport={onExport} />);
-      
+
       const exportButton = screen.getByRole('button', { name: /export/i });
       fireEvent.click(exportButton);
-      
+
       expect(onExport).toHaveBeenCalledWith(mockLogs);
     });
   });
@@ -119,7 +137,7 @@ describe('LogViewer Component', () => {
         timestamp: Date.now(),
         level: 'info',
         message: `Log ${i}`,
-        category: 'test'
+        category: 'test',
       }));
 
       render(<LogViewer logs={largeLogs} />);

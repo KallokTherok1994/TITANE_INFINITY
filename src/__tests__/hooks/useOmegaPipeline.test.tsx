@@ -28,7 +28,7 @@ describe('useOmegaPipeline Hook', () => {
   describe('Pipeline Execution', () => {
     it('should execute pipeline', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      
+
       await act(async () => {
         await result.current.execute({ data: 'test' });
       });
@@ -38,7 +38,7 @@ describe('useOmegaPipeline Hook', () => {
 
     it('should track current stage', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      
+
       act(() => {
         result.current.execute({ data: 'test' });
       });
@@ -49,7 +49,7 @@ describe('useOmegaPipeline Hook', () => {
     it('should complete all stages', async () => {
       const onComplete = vi.fn();
       const { result } = renderHook(() => useOmegaPipeline({ onComplete }));
-      
+
       await act(async () => {
         await result.current.execute({ data: 'test' });
       });
@@ -62,7 +62,7 @@ describe('useOmegaPipeline Hook', () => {
     it('should call onStageStart', async () => {
       const onStageStart = vi.fn();
       const { result } = renderHook(() => useOmegaPipeline({ onStageStart }));
-      
+
       await act(async () => {
         await result.current.execute({ data: 'test' });
       });
@@ -73,7 +73,7 @@ describe('useOmegaPipeline Hook', () => {
     it('should call onStageComplete', async () => {
       const onStageComplete = vi.fn();
       const { result } = renderHook(() => useOmegaPipeline({ onStageComplete }));
-      
+
       await act(async () => {
         await result.current.execute({ data: 'test' });
       });
@@ -86,7 +86,7 @@ describe('useOmegaPipeline Hook', () => {
     it('should handle stage errors', async () => {
       const onError = vi.fn();
       const { result } = renderHook(() => useOmegaPipeline({ onError }));
-      
+
       await act(async () => {
         try {
           await result.current.execute({ data: 'error' });
@@ -98,7 +98,7 @@ describe('useOmegaPipeline Hook', () => {
 
     it('should stop on error', async () => {
       const { result } = renderHook(() => useOmegaPipeline({ stopOnError: true }));
-      
+
       await act(async () => {
         try {
           await result.current.execute({ data: 'error' });
@@ -114,7 +114,7 @@ describe('useOmegaPipeline Hook', () => {
   describe('Pipeline Control', () => {
     it('should pause pipeline', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      
+
       act(() => {
         result.current.execute({ data: 'test' });
         result.current.pause();
@@ -125,7 +125,7 @@ describe('useOmegaPipeline Hook', () => {
 
     it('should resume pipeline', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      
+
       act(() => {
         result.current.execute({ data: 'test' });
         result.current.pause();
@@ -137,7 +137,7 @@ describe('useOmegaPipeline Hook', () => {
 
     it('should cancel pipeline', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      
+
       act(() => {
         result.current.execute({ data: 'test' });
         result.current.cancel();

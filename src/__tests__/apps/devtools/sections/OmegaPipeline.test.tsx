@@ -47,20 +47,20 @@ describe('DevTools OmegaPipeline Section', () => {
   describe('Rendering', () => {
     it('should render pipeline section with header', () => {
       render(<OmegaPipeline />);
-      
+
       expect(screen.getByTestId('section-header')).toBeInTheDocument();
       expect(screen.getByText('Omega Pipeline')).toBeInTheDocument();
     });
 
     it('should display current execution section', () => {
       render(<OmegaPipeline />);
-      
+
       expect(screen.getByText('Current Execution')).toBeInTheDocument();
     });
 
     it('should display total duration', () => {
       render(<OmegaPipeline />);
-      
+
       // Vérifier que le total existe (peut être 0ms si pas de pipeline)
       expect(screen.getByText(/Total:/i)).toBeInTheDocument();
     });

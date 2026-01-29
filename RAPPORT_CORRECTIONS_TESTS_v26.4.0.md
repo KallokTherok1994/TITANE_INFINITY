@@ -10,21 +10,21 @@
 
 ### Corrections Réalisées
 
-| Catégorie | Fichiers | Corrections | Statut |
-|-----------|----------|-------------|--------|
-| **UI Components** | 9 | Imports via barrel `@/components/ui` | ✅ 100% |
-| **Hooks** | 17 | Imports via barrel `@/hooks` | ✅ 100% |
-| **Apps/DevTools** | 8 | Imports via barrels sections | ✅ 100% |
-| **Features/Chat** | 4 | Paths corrigés (barrel + components) | ✅ 100% |
-| **Features/Monitoring** | 2 | Paths `@/components/monitoring/` | ✅ 100% |
-| **Features/Voice** | 1 | `VoiceControlPanel` as `VoiceControl` | ✅ 100% |
-| **Panels** | 1 | Path `@/components/panels/` | ✅ 100% |
-| **Tests racine** | 2 | useChat via barrel `@/hooks` | ✅ 100% |
-| **Vitest imports** | 4 | beforeEach/afterEach ajoutés | ✅ 100% |
-| **Hook typing** | 1 | renderHook type fixé | ✅ 100% |
-| **useMemory/useVoice** | 3 | N'EXISTENT PAS (commentés) | ⚠️ SKIP |
-| **Memory components** | 3 | N'EXISTENT PAS (tests orphelins) | ⚠️ SKIP |
-| **CommandPalette** | 1 | N'EXISTE PAS (test orphelin) | ⚠️ SKIP |
+| Catégorie               | Fichiers | Corrections                           | Statut  |
+| ----------------------- | -------- | ------------------------------------- | ------- |
+| **UI Components**       | 9        | Imports via barrel `@/components/ui`  | ✅ 100% |
+| **Hooks**               | 17       | Imports via barrel `@/hooks`          | ✅ 100% |
+| **Apps/DevTools**       | 8        | Imports via barrels sections          | ✅ 100% |
+| **Features/Chat**       | 4        | Paths corrigés (barrel + components)  | ✅ 100% |
+| **Features/Monitoring** | 2        | Paths `@/components/monitoring/`      | ✅ 100% |
+| **Features/Voice**      | 1        | `VoiceControlPanel` as `VoiceControl` | ✅ 100% |
+| **Panels**              | 1        | Path `@/components/panels/`           | ✅ 100% |
+| **Tests racine**        | 2        | useChat via barrel `@/hooks`          | ✅ 100% |
+| **Vitest imports**      | 4        | beforeEach/afterEach ajoutés          | ✅ 100% |
+| **Hook typing**         | 1        | renderHook type fixé                  | ✅ 100% |
+| **useMemory/useVoice**  | 3        | N'EXISTENT PAS (commentés)            | ⚠️ SKIP |
+| **Memory components**   | 3        | N'EXISTENT PAS (tests orphelins)      | ⚠️ SKIP |
+| **CommandPalette**      | 1        | N'EXISTE PAS (test orphelin)          | ⚠️ SKIP |
 
 **TOTAL**: **52 fichiers corrigés** sur 87 erreurs détectées
 
@@ -130,6 +130,7 @@
 ### Features/Chat (4 fichiers) ✅
 
 **Corrections**:
+
 1. ✅ ChatMessage.test.tsx → `@/features/chat` (barrel)
 2. ✅ TypingIndicator.test.tsx → `@/features/chat` (barrel)
 3. ✅ ChatToolbar.test.tsx → `@/components/chat/ChatToolbar` (path direct)
@@ -160,6 +161,7 @@
 ### Tests Racine (2 fichiers) ✅
 
 **Standalone useChat imports**:
+
 1. ✅ useChat-streaming.test.ts → `@/hooks`
 2. ✅ ui-first-10-responses.test.tsx → `@/hooks`
 
@@ -297,6 +299,7 @@ export default defineConfig({
 ### Priorité 2 — COMPOSANTS MANQUANTS 📦
 
 **Option A**: Implémenter composants manquants (2-4h)
+
 - ⚠️ `useMemory` hook
 - ⚠️ `useVoice` hook
 - ⚠️ `MemoryCard` component
@@ -354,7 +357,8 @@ Voir sections détaillées ci-dessus.
 ⚠️ **7 tests orphelins** nécessitent décision (implémenter/skip)
 ⚠️ **90 faux positifs TS** nécessitent config path alias
 
-🎯 **Recommandation FINALE**: 
+🎯 **Recommandation FINALE**:
+
 1. Redémarrer TS Server
 2. Skip tests orphelins (Option B)
 3. Valider avec `pnpm test`

@@ -6,7 +6,11 @@
  */
 
 import React, { useState, useCallback, useMemo } from 'react';
-import { getReactionsService, REACTION_EMOJIS, type ReactionType } from '../../services/chat/messageReactions';
+import {
+  getReactionsService,
+  REACTION_EMOJIS,
+  type ReactionType,
+} from '../../services/chat/messageReactions';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -30,7 +34,9 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
   compact = false,
 }) => {
   const reactionsService = useMemo(() => getReactionsService(), []);
-  const [reactions, setReactions] = useState(() => reactionsService.getReactions(messageTimestamp));
+  const [reactions, setReactions] = useState(() =>
+    reactionsService.getReactions(messageTimestamp)
+  );
   const [showPicker, setShowPicker] = useState(false);
 
   const handleToggleReaction = useCallback(
@@ -84,10 +90,10 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
                 fontSize: compact ? '11px' : '12px',
                 transition: 'all 0.2s',
               }}
-              onMouseEnter={(e) => {
+              onMouseEnter={e => {
                 e.currentTarget.style.background = 'rgba(114, 123, 129, 0.3)';
               }}
-              onMouseLeave={(e) => {
+              onMouseLeave={e => {
                 e.currentTarget.style.background = 'rgba(114, 123, 129, 0.2)';
               }}
               title={`Remove ${type} reaction`}
@@ -105,7 +111,9 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
       <button
         onClick={() => setShowPicker(!showPicker)}
         style={{
-          background: showPicker ? 'rgba(114, 123, 129, 0.3)' : 'rgba(114, 123, 129, 0.15)',
+          background: showPicker
+            ? 'rgba(114, 123, 129, 0.3)'
+            : 'rgba(114, 123, 129, 0.15)',
           border: '1px solid rgba(114, 123, 129, 0.3)',
           borderRadius: '12px',
           padding: compact ? '2px 6px' : '4px 8px',
@@ -114,12 +122,12 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
           transition: 'all 0.2s',
           color: '#727B81',
         }}
-        onMouseEnter={(e) => {
+        onMouseEnter={e => {
           if (!showPicker) {
             e.currentTarget.style.background = 'rgba(114, 123, 129, 0.25)';
           }
         }}
-        onMouseLeave={(e) => {
+        onMouseLeave={e => {
           if (!showPicker) {
             e.currentTarget.style.background = 'rgba(114, 123, 129, 0.15)';
           }
@@ -148,7 +156,7 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
           }}
           onMouseLeave={() => setShowPicker(false)}
         >
-          {(Object.keys(REACTION_EMOJIS) as ReactionType[]).map((type) => {
+          {(Object.keys(REACTION_EMOJIS) as ReactionType[]).map(type => {
             const isActive = (reactions[type] ?? 0) > 0;
             return (
               <button
@@ -169,11 +177,11 @@ export const MessageReactions: React.FC<MessageReactionsProps> = ({
                   alignItems: 'center',
                   justifyContent: 'center',
                 }}
-                onMouseEnter={(e) => {
+                onMouseEnter={e => {
                   e.currentTarget.style.background = 'rgba(114, 123, 129, 0.4)';
                   e.currentTarget.style.transform = 'scale(1.2)';
                 }}
-                onMouseLeave={(e) => {
+                onMouseLeave={e => {
                   e.currentTarget.style.background = isActive
                     ? 'rgba(114, 123, 129, 0.3)'
                     : 'transparent';

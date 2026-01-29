@@ -25,8 +25,8 @@ export function EngineCard({ engine, onClick }: EngineCardProps) {
             engine.status === 'active'
               ? 'bg-green-900 text-green-300'
               : engine.status === 'error'
-              ? 'bg-red-900 text-red-300'
-              : 'bg-gray-700 text-gray-300'
+                ? 'bg-red-900 text-red-300'
+                : 'bg-gray-700 text-gray-300'
           }`}
         >
           {engine.status}

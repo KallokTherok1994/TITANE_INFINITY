@@ -148,11 +148,7 @@ export function isIAGenerationSuccess(
 
   const candidate = response as Record<string, unknown>;
 
-  return (
-    candidate.success === true &&
-    'response' in candidate &&
-    'model' in candidate
-  );
+  return candidate.success === true && 'response' in candidate && 'model' in candidate;
 }
 
 /**
@@ -167,11 +163,7 @@ export function isTTSPrepareSuccess(
 
   const candidate = response as Record<string, unknown>;
 
-  return (
-    candidate.success === true &&
-    'buffer_size' in candidate &&
-    'voice' in candidate
-  );
+  return candidate.success === true && 'buffer_size' in candidate && 'voice' in candidate;
 }
 
 /**
@@ -274,10 +266,10 @@ export const AUDIO_FORMATS = {
 
 /** Temperature presets for IA generation */
 export const TEMPERATURE_PRESETS = {
-  precise: 0.0,      // Most deterministic
-  balanced: 0.7,     // Default
-  creative: 1.5,     // Very creative
-  chaotic: 2.0,      // Maximum randomness
+  precise: 0.0, // Most deterministic
+  balanced: 0.7, // Default
+  creative: 1.5, // Very creative
+  chaotic: 2.0, // Maximum randomness
 } as const;
 
 /** Speech speed presets */

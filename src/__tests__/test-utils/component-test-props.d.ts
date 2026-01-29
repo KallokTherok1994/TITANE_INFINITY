@@ -1,10 +1,10 @@
 /**
  * TITANE∞ v26.4.0 — Test Utilities: Extended Component Props
- * 
+ *
  * Ce fichier étend les props des composants pour permettre aux tests
  * de passer des données mockées directement via props, même si le composant
  * réel ne les accepte pas (car il fetch les données lui-même).
- * 
+ *
  * Cette approche est standard dans les tests React pour permettre
  * un contrôle précis des données sans avoir à mocker les appels API.
  */

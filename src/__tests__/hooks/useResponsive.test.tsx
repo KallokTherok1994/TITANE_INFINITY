@@ -31,33 +31,33 @@ describe('useResponsive Hook', () => {
     it('should detect mobile', () => {
       global.innerWidth = 375;
       const { result } = renderHook(() => useResponsive());
-      
+
       act(() => {
         window.dispatchEvent(new Event('resize'));
       });
-      
+
       expect(result.current.isMobile).toBe(true);
     });
 
     it('should detect tablet', () => {
       global.innerWidth = 768;
       const { result } = renderHook(() => useResponsive());
-      
+
       act(() => {
         window.dispatchEvent(new Event('resize'));
       });
-      
+
       expect(result.current.isTablet).toBe(true);
     });
 
     it('should detect desktop', () => {
       global.innerWidth = 1920;
       const { result } = renderHook(() => useResponsive());
-      
+
       act(() => {
         window.dispatchEvent(new Event('resize'));
       });
-      
+
       expect(result.current.isDesktop).toBe(true);
     });
   });
@@ -66,14 +66,14 @@ describe('useResponsive Hook', () => {
     it('should update on window resize', () => {
       global.innerWidth = 1920;
       const { result } = renderHook(() => useResponsive());
-      
+
       expect(result.current.isDesktop).toBe(true);
-      
+
       global.innerWidth = 375;
       act(() => {
         window.dispatchEvent(new Event('resize'));
       });
-      
+
       // Should update to mobile
       expect(result.current.width).toBe(375);
     });
@@ -83,9 +83,9 @@ describe('useResponsive Hook', () => {
     it('should cleanup resize listener on unmount', () => {
       const removeEventListenerSpy = vi.spyOn(window, 'removeEventListener');
       const { unmount } = renderHook(() => useResponsive());
-      
+
       unmount();
-      
+
       expect(removeEventListenerSpy).toHaveBeenCalledWith('resize', expect.any(Function));
     });
   });

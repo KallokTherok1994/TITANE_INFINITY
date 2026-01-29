@@ -59,20 +59,20 @@ describe('EventStream Component', () => {
   describe('Filtering', () => {
     it('should filter by event type', () => {
       render(<EventStream events={mockEvents} />);
-      
+
       const typeFilter = screen.getByRole('combobox', { name: /type/i });
       fireEvent.change(typeFilter, { target: { value: 'error' } });
-      
+
       expect(screen.getByText('Error occurred')).toBeInTheDocument();
       expect(screen.queryByText('System started')).not.toBeInTheDocument();
     });
 
     it('should search events', () => {
       render(<EventStream events={mockEvents} />);
-      
+
       const searchInput = screen.getByPlaceholderText(/search/i);
       fireEvent.change(searchInput, { target: { value: 'User' } });
-      
+
       expect(screen.getByText('User action')).toBeInTheDocument();
       expect(screen.queryByText('System started')).not.toBeInTheDocument();
     });
@@ -81,19 +81,22 @@ describe('EventStream Component', () => {
   describe('Auto-scroll', () => {
     it('should auto-scroll to latest event', () => {
       const { rerender } = render(<EventStream events={mockEvents} autoScroll />);
-      
-      const newEvents = [...mockEvents, { id: '4', type: 'system', message: 'New event', timestamp: Date.now() }];
+
+      const newEvents = [
+        ...mockEvents,
+        { id: '4', type: 'system', message: 'New event', timestamp: Date.now() },
+      ];
       rerender(<EventStream events={newEvents} autoScroll />);
-      
+
       expect(screen.getByText('New event')).toBeInTheDocument();
     });
 
     it('should disable auto-scroll on user scroll', () => {
       render(<EventStream events={mockEvents} autoScroll />);
-      
+
       const container = screen.getByRole('log');
       fireEvent.scroll(container, { target: { scrollTop: 0 } });
-      
+
       // Auto-scroll should be paused
       expect(container.dataset.autoscroll).toBe('false');
     });
@@ -103,22 +106,25 @@ describe('EventStream Component', () => {
     it('should clear events', () => {
       const onClear = vi.fn();
       render(<EventStream events={mockEvents} onClear={onClear} />);
-      
+
       const clearButton = screen.getByRole('button', { name: /clear/i });
       fireEvent.click(clearButton);
-      
+
       expect(onClear).toHaveBeenCalledTimes(1);
     });
 
     it('should pause stream', () => {
       const { rerender } = render(<EventStream events={mockEvents} />);
-      
+
       const pauseButton = screen.getByRole('button', { name: /pause/i });
       fireEvent.click(pauseButton);
-      
-      const newEvents = [...mockEvents, { id: '4', type: 'system', message: 'New', timestamp: Date.now() }];
+
+      const newEvents = [
+        ...mockEvents,
+        { id: '4', type: 'system', message: 'New', timestamp: Date.now() },
+      ];
       rerender(<EventStream events={newEvents} />);
-      
+
       // Stream paused, new event not shown
       expect(screen.queryByText('New')).not.toBeInTheDocument();
     });

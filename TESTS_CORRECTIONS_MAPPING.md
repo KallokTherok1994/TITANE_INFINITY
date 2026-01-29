@@ -3,6 +3,7 @@
 ## Phase 3 - Corrections Import (Systématique)
 
 ### ✅ DÉJÀ CORRIGÉ (Phase 1+2)
+
 - `src/__tests__/components/ui/*.test.tsx` (9 fichiers) → Import depuis `@/components/ui` ✅
 - `src/__tests__/hooks/useThrottle.test.tsx` → `beforeEach, afterEach` ajoutés ✅
 - `src/__tests__/hooks/useResponsive.test.tsx` → `beforeEach` ajouté ✅
@@ -12,6 +13,7 @@
 ### 🔧 À CORRIGER - Hooks (tous via barrel `@/hooks`)
 
 **Tests utilisant déjà barrel** (OK si hooks sont exportés):
+
 - ✅ `useChat.test.tsx` → `@/hooks/useChat` devient `@/hooks` (export vérifié)
 - ✅ `useMemory.test.tsx` → `@/hooks/useMemory` devient `@/hooks`
 - ✅ `useDebounce.test.tsx` → `@/hooks/useDebounce` devient `@/hooks`
@@ -32,6 +34,7 @@
 - ✅ `useTTSWithMicControl.test.ts` → `@/hooks/useTTSWithMicControl` devient `@/hooks`
 
 **Hooks manquants dans barrel** (à vérifier/ajouter):
+
 - ⚠️ `useVoice` → Commenté dans index.ts (ligne 209)
 - ⚠️ `useMemory` → Seul `useMemoryCore`/`useMemoryEngine` existent
 - ⚠️ `useWindowControls` → À vérifier export
@@ -40,6 +43,7 @@
 ### 🔧 À CORRIGER - Apps (via barrels)
 
 **Tests devtools** (utiliser `@/apps/devtools` ou `@/apps/devtools/sections`):
+
 - ✅ `DevToolsApp.test.tsx` → `@/apps/devtools/DevToolsApp` devient `@/apps/devtools`
 - ✅ `Dashboard.test.tsx` → `@/apps/devtools/sections/Dashboard` devient `@/apps/devtools/sections`
 - ✅ `Metrics.test.tsx` → `@/apps/devtools/sections/Metrics` devient `@/apps/devtools/sections`
@@ -50,27 +54,32 @@
 - ✅ `OmegaPipeline.test.tsx` → `@/apps/devtools/sections/OmegaPipeline` devient `@/apps/devtools/sections`
 
 **Settings** (path direct OK):
+
 - ✅ `Settings.test.tsx` → `@/apps/Settings/Settings` (OK si fichier existe)
 
 ### 🔧 À CORRIGER - Features (chemins mixtes)
 
 **Chat** (via barrel `@/features/chat`):
+
 - ✅ `ChatMessage.test.tsx` → `@/features/chat/ChatMessage` devient `@/features/chat`
 - ⚠️ `TypingIndicator.test.tsx` → Vérifier si dans barrel
 - ⚠️ `ChatToolbar.test.tsx` → Vérifier si dans barrel
 - ⚠️ `VirtualMessageList.test.tsx` → Vérifier si dans barrel
 
 **Memory** (via barrel `@/features/memory`):
+
 - ⚠️ `MemoryVisualization.test.tsx` → N'est PAS dans barrel (voir contenu)
 - ⚠️ `MemoryCard.test.tsx` → N'est PAS dans barrel
 - ⚠️ `MemorySearch.test.tsx` → N'est PAS dans barrel
 - Barrel actuel: `MemorySearchPanel`, `MemoryTreeViewer`
 
 **Voice** (DOSSIER N'EXISTE PAS):
+
 - ❌ `VoiceControl.test.tsx` → `@/features/voice/VoiceControl` **N'EXISTE PAS**
   - **Solution**: Chercher dans `@/components/` ou créer mock
 
 **Monitoring** (MAUVAIS PATH):
+
 - ❌ `SingularityDashboard.test.tsx` → `@/features/monitoring/SingularityDashboard`
   - **Solution**: Devrait être `@/components/monitoring/SingularityDashboard`
 - ❌ `SystemHealthMonitor.test.tsx` → `@/features/monitoring/SystemHealthMonitor`
@@ -79,12 +88,14 @@
 ### 🔧 À CORRIGER - Panels
 
 **Panels** (path direct OK):
+
 - ✅ `ChatPanel.test.tsx` → `@/panels/ChatPanel` (OK si existe)
 - ✅ `CommandPalette.test.tsx` → `@/panels/CommandPalette` (OK si existe)
 
 ### 🔧 À CORRIGER - Audio Service
 
 **Audio** (path spécifique):
+
 - ⚠️ `useVAD.test.ts` → `@/features/audio-center/services/audioService` (vérifier export)
 
 ---
@@ -92,10 +103,15 @@
 ## STRATÉGIE SYSTÉMATIQUE
 
 ### 1. **Hooks** → Tous via `@/hooks` (barrel complet)
+
 ### 2. **UI** → Tous via `@/components/ui` ✅ FAIT
+
 ### 3. **Apps/DevTools** → Via `@/apps/devtools` ou `@/apps/devtools/sections`
+
 ### 4. **Features** → Vérifier barrel case par case
+
 ### 5. **Monitoring** → Corriger path `@/components/monitoring/`
+
 ### 6. **Voice** → Composant manquant, nécessite investigation
 
 ---

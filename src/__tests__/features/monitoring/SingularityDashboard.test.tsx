@@ -56,12 +56,16 @@ describe('SingularityDashboard Component', () => {
     });
 
     it('should show warning state', () => {
-      render(<SingularityDashboard metrics={{ ...mockMetrics, cpu: 85 }} health="warning" />);
+      render(
+        <SingularityDashboard metrics={{ ...mockMetrics, cpu: 85 }} health="warning" />
+      );
       expect(screen.getByText(/warning|caution/i)).toBeTruthy();
     });
 
     it('should show critical state', () => {
-      render(<SingularityDashboard metrics={{ ...mockMetrics, cpu: 95 }} health="critical" />);
+      render(
+        <SingularityDashboard metrics={{ ...mockMetrics, cpu: 95 }} health="critical" />
+      );
       expect(screen.getByText(/critical|danger/i)).toBeTruthy();
     });
   });

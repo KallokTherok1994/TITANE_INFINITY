@@ -104,7 +104,9 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       const updatedMessages = chatMemoryCompactor.addMessageToMode(options.mode, message);
 
       // 🔒 v26.4.0: Force immediate flush to prevent loss on tab switch
-      console.log(`🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode})`);
+      console.log(
+        `🔒 [useChatMemory] Forcing immediate flush after save (mode: ${options.mode})`
+      );
       chatMemoryCompactor.flushPendingSaves();
 
       // FIX v15.1: Ne plus faire setMessagesForMode ici!

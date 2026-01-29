@@ -395,7 +395,9 @@ const IdentityCenterContent: React.FC = () => {
   const handleVoiceChange = async (voiceId: string) => {
     try {
       // FIX: Commande correcte = 'identity_set_active_voice_profile' (pas 'identity_set_voice_profile')
-      await secureInvoke('identity_set_active_voice_profile', { voiceProfileId: voiceId });
+      await secureInvoke('identity_set_active_voice_profile', {
+        voiceProfileId: voiceId,
+      });
       const newVoice = voiceProfiles.find(v => v.id === voiceId);
       if (newVoice) {
         setActiveVoice(newVoice);

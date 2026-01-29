@@ -11,6 +11,7 @@
 ## ✅ PHASE 2 - Completed Features
 
 ### 1️⃣ AIChatBubble Integration
+
 - **File Modified:** `src/components/AIChatBubble.tsx`
 - **Changes:**
   - Added imports: `ConversationControls`, `ModelSelector`
@@ -21,6 +22,7 @@
 - **Status:** ✅ Production-ready
 
 ### 2️⃣ Tool Calling Service (`toolCaller.ts`)
+
 - **File:** `src/services/chat/toolCaller.ts` (350 lines)
 - **Features:**
   - ToolCallerService class with static tool registry
@@ -36,6 +38,7 @@
 - **Architecture:** Service + types, ready to integrate with ConversationManager
 
 ### 3️⃣ Tool Result Display Component (`ToolResult.tsx`)
+
 - **File:** `src/components/chat/ToolResult.tsx` (110 lines)
 - **Features:**
   - Displays tool call results with success/error styling
@@ -48,6 +51,7 @@
 - **Usage:** Can be inserted in MessageBubble for tool results
 
 ### 4️⃣ useToolCaller Hook (`useToolCaller.ts`)
+
 - **File:** `src/hooks/useToolCaller.ts` (60 lines)
 - **Features:**
   - Hook wrapper around ToolCallerService
@@ -59,6 +63,7 @@
 - **Usage:** `const { parseToolCalls, executeToolCall } = useToolCaller()`
 
 ### 5️⃣ Export/Import Fixes
+
 - **File Modified:** `src/services/chat/conversationExporter.ts`
 - **Fixes:**
   - Fixed timestamp handling in JSON export (no undefined)
@@ -90,6 +95,7 @@
 ## 🎯 Integration Points
 
 ### Component Hierarchy (Phase 2)
+
 ```
 AIChatBubble
 ├── Header (updated)
@@ -103,6 +109,7 @@ AIChatBubble
 ```
 
 ### Service Integration
+
 ```
 ConversationManager
 ├── useToolCaller (hook)
@@ -120,6 +127,7 @@ ConversationManager
 ## ✨ Features NOW Available
 
 ### Immediate (No Code Changes Needed)
+
 - ✅ Export conversations as JSON
 - ✅ Export conversations as Markdown
 - ✅ Import conversations from JSON/Markdown files
@@ -130,6 +138,7 @@ ConversationManager
 - ✅ Copy-to-clipboard for code
 
 ### Next Steps (Integration Only)
+
 - ⏳ Tool parsing from model responses
 - ⏳ Tool execution in chat flow
 - ⏳ Tool result display in messages
@@ -139,19 +148,20 @@ ConversationManager
 
 ## 📈 Performance Impact
 
-| Component | Size | Runtime |
-|-----------|------|---------|
-| toolCaller.ts | +14KB | O(tool_count) |
-| ToolResult.tsx | +4KB | O(1) render |
-| useToolCaller.ts | +2KB | O(1) calls |
-| Updated AIChatBubble | +2KB | No impact |
-| **Total** | **+22KB** | **No degradation** |
+| Component            | Size      | Runtime            |
+| -------------------- | --------- | ------------------ |
+| toolCaller.ts        | +14KB     | O(tool_count)      |
+| ToolResult.tsx       | +4KB      | O(1) render        |
+| useToolCaller.ts     | +2KB      | O(1) calls         |
+| Updated AIChatBubble | +2KB      | No impact          |
+| **Total**            | **+22KB** | **No degradation** |
 
 ---
 
 ## 🚀 How to Use (Developers)
 
 ### Tool Calling in Components
+
 ```typescript
 import { useToolCaller } from '@/hooks/useToolCaller';
 
@@ -163,32 +173,36 @@ function MyComponent() {
 
   // Execute a single tool
   const { result, error } = await executeToolCall('web_search', {
-    query: 'React best practices'
+    query: 'React best practices',
   });
 
   // Or execute multiple in parallel
   const results = await executeToolCalls([
     { name: 'web_search', arguments: { query: '...' } },
-    { name: 'calculate', arguments: { expression: '2+2' } }
+    { name: 'calculate', arguments: { expression: '2+2' } },
   ]);
 }
 ```
 
 ### Adding Custom Tools
+
 ```typescript
 const customTools = {
   send_email: {
     name: 'send_email',
     description: 'Send an email',
     parameters: { to: '...', subject: '...', body: '...' },
-    execute: async (args) => { /* ... */ }
-  }
+    execute: async args => {
+      /* ... */
+    },
+  },
 };
 
 const { executeToolCall } = useToolCaller(customTools);
 ```
 
 ### Integrating with ConversationManager
+
 ```typescript
 // In ConversationManager or chat handler
 const toolCalls = toolCaller.parseToolCalls(assistantMessage);
@@ -198,7 +212,7 @@ const results = await toolCaller.executeToolCalls(toolCalls);
 messages.push({
   role: 'system',
   content: `Tool results:\n${JSON.stringify(results)}`,
-  timestamp: Date.now()
+  timestamp: Date.now(),
 });
 ```
 
@@ -224,6 +238,7 @@ messages.push({
 ## 🔧 Phase 3 (If Needed)
 
 ### Low-effort Additions
+
 1. **Message Reactions** (1h)
    - Add 👍👎❤️ reactions to messages
    - Store in localStorage
@@ -239,6 +254,7 @@ messages.push({
    - Search by content
 
 ### High-effort Additions
+
 1. **Voice Input** (3-4h)
    - Web Speech API integration
    - Transcribe to text
@@ -258,6 +274,7 @@ messages.push({
 ## 📝 Migration Notes
 
 ### For Existing Code
+
 - No breaking changes to useGlobalAIChat()
 - No changes to message persistence
 - No changes to ConversationManager API
@@ -265,6 +282,7 @@ messages.push({
 - Tool calling is isolated in service layer
 
 ### Backward Compatibility
+
 - ✅ Old conversations still load
 - ✅ Export/import don't require changes
 - ✅ Existing handlers continue to work
@@ -274,21 +292,22 @@ messages.push({
 
 ## ✅ Quality Metrics
 
-| Metric | Value |
-|--------|-------|
-| TypeScript Errors | 0 |
-| Test Coverage | Manual ✅ |
-| Breaking Changes | 0 |
-| New Dependencies | 0 |
-| Bundle Size Impact | +22KB (acceptable) |
-| Performance Impact | None |
-| Accessibility | WCAG 2.1 AA (existing) |
+| Metric             | Value                  |
+| ------------------ | ---------------------- |
+| TypeScript Errors  | 0                      |
+| Test Coverage      | Manual ✅              |
+| Breaking Changes   | 0                      |
+| New Dependencies   | 0                      |
+| Bundle Size Impact | +22KB (acceptable)     |
+| Performance Impact | None                   |
+| Accessibility      | WCAG 2.1 AA (existing) |
 
 ---
 
 ## 🎉 Sprint 6 Summary
 
 **Phase 1 + 2 Combined:**
+
 - 11 files created/modified
 - 2000+ lines of code
 - 0 TypeScript errors
@@ -296,6 +315,7 @@ messages.push({
 - Production-ready
 
 **Features Delivered:**
+
 1. ✅ Markdown rendering
 2. ✅ Code syntax highlighting
 3. ✅ Export/Import conversations
@@ -305,6 +325,7 @@ messages.push({
 7. ✅ Full AIChatBubble integration
 
 **Time Investment:**
+
 - Phase 1: ~4-5 hours
 - Phase 2: ~3-4 hours
 - **Total: ~7-9 hours of focused work**
@@ -326,7 +347,7 @@ messages.push({
 **Commit:** Phase 2 Integration + Tool Calling  
 **Files:** 11 total (1 modified, 5 created from Phase 2)  
 **Lines:** 800+ net additions  
-**Status:** Ready for production or further customization  
+**Status:** Ready for production or further customization
 
 ---
 

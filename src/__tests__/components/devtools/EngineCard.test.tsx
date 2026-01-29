@@ -18,8 +18,8 @@ describe('EngineCard Component', () => {
     metrics: {
       processedTasks: 150,
       avgResponseTime: 120,
-      successRate: 98.5
-    }
+      successRate: 98.5,
+    },
   };
 
   describe('Rendering', () => {
@@ -83,30 +83,30 @@ describe('EngineCard Component', () => {
       const onStart = vi.fn();
       const inactiveEngine = { ...mockEngine, status: 'inactive' };
       render(<EngineCard engine={inactiveEngine} onStart={onStart} />);
-      
+
       const startButton = screen.getByRole('button', { name: /start/i });
       fireEvent.click(startButton);
-      
+
       expect(onStart).toHaveBeenCalledWith(mockEngine.id);
     });
 
     it('should stop engine', () => {
       const onStop = vi.fn();
       render(<EngineCard engine={mockEngine} onStop={onStop} />);
-      
+
       const stopButton = screen.getByRole('button', { name: /stop/i });
       fireEvent.click(stopButton);
-      
+
       expect(onStop).toHaveBeenCalledWith(mockEngine.id);
     });
 
     it('should restart engine', () => {
       const onRestart = vi.fn();
       render(<EngineCard engine={mockEngine} onRestart={onRestart} />);
-      
+
       const restartButton = screen.getByRole('button', { name: /restart/i });
       fireEvent.click(restartButton);
-      
+
       expect(onRestart).toHaveBeenCalledWith(mockEngine.id);
     });
   });
@@ -114,10 +114,10 @@ describe('EngineCard Component', () => {
   describe('Expand Details', () => {
     it('should expand details panel', () => {
       render(<EngineCard engine={mockEngine} expandable />);
-      
+
       const expandButton = screen.getByRole('button', { name: /details|expand/i });
       fireEvent.click(expandButton);
-      
+
       expect(screen.getByText(/configuration|details/i)).toBeInTheDocument();
     });
   });

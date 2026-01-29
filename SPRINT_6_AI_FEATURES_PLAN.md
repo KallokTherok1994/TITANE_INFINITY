@@ -109,7 +109,7 @@
    - Effort: 2 hours
    - Impact: 🟢 HIGH (for power users)
 
-#### **LOW PRIORITY** 
+#### **LOW PRIORITY**
 
 7. **Conversation Search**
    - Current: No search in messages
@@ -128,6 +128,7 @@
 **Focus:** Make AI features VISIBLE and INTERACTIVE (not infrastructure)
 
 ### Phase 1: User-Facing UI (Day 1)
+
 **Goal:** Messages look better, more informative
 
 - [ ] **Stream with Markdown Rendering**
@@ -142,7 +143,8 @@
   - Effort: 2.5h
 
 ### Phase 2: Export/Import (Day 1.5)
-**Goal:** Users can save conversations**
+
+**Goal:** Users can save conversations\*\*
 
 - [ ] **Conversation Export**
   - JSON format (machine-readable)
@@ -157,6 +159,7 @@
   - Effort: 1.5h
 
 ### Phase 3: Advanced Features (Day 2+)
+
 **Goal:** Unlock more capabilities
 
 - [ ] **Model Selector UI**
@@ -178,6 +181,7 @@
 ### 1. Stream with Markdown Rendering
 
 **Current Flow:**
+
 ```
 Backend sends: "# Title\n\nContent"
 ↓
@@ -187,6 +191,7 @@ MessageBubble renders as plain text
 ```
 
 **New Flow:**
+
 ```
 Backend streams: "# Title" → "\n\n" → "Content"
 ↓
@@ -196,6 +201,7 @@ MessageBubble renders formatted: Bold, code blocks, lists, etc.
 ```
 
 **Files to Modify:**
+
 - `src/components/chat/MessageBubble.tsx` (render logic)
 - `src/hooks/useConversationEngine.ts` (stream handling)
 - New: `src/components/chat/MarkdownContent.tsx` (markdown parser)
@@ -205,30 +211,30 @@ MessageBubble renders formatted: Bold, code blocks, lists, etc.
 ### 2. Code Syntax Highlighting
 
 **Implementation:**
+
 ```tsx
 // CodeBlock component
-<CodeBlock
-  language="typescript"
-  code="const x = 42;"
-/>
+<CodeBlock language="typescript" code="const x = 42;" />
 ```
 
 **Library:** `highlight.js` (lightweight, no dependencies)
 
 **Files:**
+
 - New: `src/components/chat/CodeBlock.tsx`
 - New: `src/components/chat/MarkdownContent.tsx` (use CodeBlock)
 
 ### 3. Conversation Export
 
 **Format (JSON):**
+
 ```json
 {
   "id": "conv-123",
   "mode": "default",
   "messages": [
-    {"role": "user", "content": "...", "timestamp": 1234567890},
-    {"role": "assistant", "content": "...", "timestamp": 1234567891}
+    { "role": "user", "content": "...", "timestamp": 1234567890 },
+    { "role": "assistant", "content": "...", "timestamp": 1234567891 }
   ],
   "metadata": {
     "createdAt": "2026-01-28",
@@ -239,6 +245,7 @@ MessageBubble renders formatted: Bold, code blocks, lists, etc.
 ```
 
 **Files:**
+
 - New: `src/services/chat/conversationExporter.ts`
 - Modify: `src/components/chat/ChatHeader.tsx` (add export button)
 - Modify: `src/components/chat/ChatInputArea.tsx` (add import button)
@@ -246,6 +253,7 @@ MessageBubble renders formatted: Bold, code blocks, lists, etc.
 ### 4. Conversation Import
 
 **Flow:**
+
 ```
 User selects file
 ↓
@@ -257,6 +265,7 @@ Display in chat UI
 ```
 
 **Files:**
+
 - Use: `src/services/chat/conversationExporter.ts` (parser)
 - Modify: useConversationEngine (import method)
 
@@ -265,6 +274,7 @@ Display in chat UI
 ## 🔄 EXECUTION PLAN
 
 ### Sprint 6A: Quick Wins (Day 1 - 3-4h)
+
 **Goal:** 2-3 visible improvements quickly
 
 1. **Stream + Markdown** (3h)
@@ -282,6 +292,7 @@ Display in chat UI
 **Outcome:** Messages look WAY better
 
 ### Sprint 6B: Persistence (Day 1.5 - 3h)
+
 **Goal:** Users can save work
 
 1. **Export** (1.5h)
@@ -297,6 +308,7 @@ Display in chat UI
 **Outcome:** Conversations can be saved/restored
 
 ### Sprint 6C: Advanced (Day 2+ - if time)
+
 **Goal:** More power for users
 
 1. **Model Selector** (1.5h)
@@ -337,6 +349,7 @@ Display in chat UI
 6. ✅ TypeScript: 0 errors
 
 **Bonus (if time):**
+
 - ✅ Model selector UI
 - ✅ Tool calling works
 - ✅ Context visualization
@@ -345,20 +358,21 @@ Display in chat UI
 
 ## 📊 DIFFICULTY DISTRIBUTION
 
-| Feature | Difficulty | Time | Impact |
-|---------|-----------|------|--------|
-| Markdown rendering | 🟢 Easy | 3h | 🟢 HIGH |
-| Code highlighting | 🟢 Easy | 2.5h | 🟢 HIGH |
-| Export/Import | 🟡 Medium | 3h | 🟡 MEDIUM |
-| Model selector | 🟡 Medium | 1.5h | 🟢 HIGH |
-| Tool calling | 🔴 Hard | 4-5h | 🟡 MEDIUM |
-| Context display | 🟡 Medium | 2h | 🟡 MEDIUM |
+| Feature            | Difficulty | Time | Impact    |
+| ------------------ | ---------- | ---- | --------- |
+| Markdown rendering | 🟢 Easy    | 3h   | 🟢 HIGH   |
+| Code highlighting  | 🟢 Easy    | 2.5h | 🟢 HIGH   |
+| Export/Import      | 🟡 Medium  | 3h   | 🟡 MEDIUM |
+| Model selector     | 🟡 Medium  | 1.5h | 🟢 HIGH   |
+| Tool calling       | 🔴 Hard    | 4-5h | 🟡 MEDIUM |
+| Context display    | 🟡 Medium  | 2h   | 🟡 MEDIUM |
 
 ---
 
 **Ready to start? Pick a feature and let's go!** 🚀
 
 Recommended order:
+
 1. **Markdown + Code Highlighting** (quick wins, high impact)
 2. **Export/Import** (useful immediately)
 3. **Model Selector** (bonus if time)

@@ -46,10 +46,10 @@ function adjustZoom(factor: number) {
   const currentZoom = parseFloat(html.style.zoom || '75');
   const newZoom = Math.max(50, Math.min(200, currentZoom * factor)); // Clamp between 50% and 200%
   html.style.zoom = `${newZoom}%`;
-  
+
   // Save preference
   localStorage.setItem('titane_zoom_level', newZoom.toString());
-  
+
   console.log(`🔍 Zoom ajusté: ${newZoom.toFixed(1)}%`);
 }
 
@@ -60,7 +60,7 @@ function resetZoom() {
   const html = document.documentElement;
   html.style.zoom = '75%';
   localStorage.setItem('titane_zoom_level', '75');
-  
+
   console.log('🔍 Zoom réinitialisé: 75%');
 }
 

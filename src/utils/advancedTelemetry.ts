@@ -119,7 +119,11 @@ export class AdvancedTelemetry {
   /**
    * Track warning
    */
-  trackWarning(category: string, message: string, metadata?: Record<string, unknown>): void {
+  trackWarning(
+    category: string,
+    message: string,
+    metadata?: Record<string, unknown>
+  ): void {
     if (!this.config.enabled) return;
 
     this.addEvent({
@@ -314,7 +318,11 @@ export class AdvancedTelemetry {
   /**
    * Get all events
    */
-  getEvents(filter?: { type?: string; category?: string; since?: number }): TelemetryEvent[] {
+  getEvents(filter?: {
+    type?: string;
+    category?: string;
+    since?: number;
+  }): TelemetryEvent[] {
     let filtered = [...this.events];
 
     if (filter?.type) {

@@ -84,28 +84,49 @@ class StructuredLogger {
   /**
    * Log niveau DEBUG (détails bas niveau)
    */
-  debug(message: string, module: string, context?: Record<string, unknown>, correlationId?: string): void {
+  debug(
+    message: string,
+    module: string,
+    context?: Record<string, unknown>,
+    correlationId?: string
+  ): void {
     this.log(LogLevel.DEBUG, message, module, context, correlationId);
   }
 
   /**
    * Log niveau INFO (informations générales)
    */
-  info(message: string, module: string, context?: Record<string, unknown>, correlationId?: string): void {
+  info(
+    message: string,
+    module: string,
+    context?: Record<string, unknown>,
+    correlationId?: string
+  ): void {
     this.log(LogLevel.INFO, message, module, context, correlationId);
   }
 
   /**
    * Log niveau WARN (avertissements)
    */
-  warn(message: string, module: string, context?: Record<string, unknown>, correlationId?: string): void {
+  warn(
+    message: string,
+    module: string,
+    context?: Record<string, unknown>,
+    correlationId?: string
+  ): void {
     this.log(LogLevel.WARN, message, module, context, correlationId);
   }
 
   /**
    * Log niveau ERROR (erreurs)
    */
-  error(message: string, module: string, error?: Error | unknown, context?: Record<string, unknown>, correlationId?: string): void {
+  error(
+    message: string,
+    module: string,
+    error?: Error | unknown,
+    context?: Record<string, unknown>,
+    correlationId?: string
+  ): void {
     const stack = error instanceof Error ? error.stack : undefined;
     const errorContext = {
       ...context,
@@ -168,7 +189,11 @@ class StructuredLogger {
     const prefix = `[${entry.timestamp}] ${emoji} [${levelName}] [${entry.module}]`;
 
     // Message principal
-    const logArgs: unknown[] = [`%c${prefix}`, `color: ${color}; font-weight: bold`, entry.message];
+    const logArgs: unknown[] = [
+      `%c${prefix}`,
+      `color: ${color}; font-weight: bold`,
+      entry.message,
+    ];
 
     // Contexte additionnel (si présent)
     if (entry.correlationId) {
@@ -265,13 +290,27 @@ class StructuredLogger {
    */
   createModuleLogger(module: string, baseContext?: Record<string, unknown>) {
     return {
-      debug: (message: string, context?: Record<string, unknown>, correlationId?: string) =>
-        this.debug(message, module, { ...baseContext, ...context }, correlationId),
-      info: (message: string, context?: Record<string, unknown>, correlationId?: string) =>
-        this.info(message, module, { ...baseContext, ...context }, correlationId),
-      warn: (message: string, context?: Record<string, unknown>, correlationId?: string) =>
-        this.warn(message, module, { ...baseContext, ...context }, correlationId),
-      error: (message: string, error?: Error | unknown, context?: Record<string, unknown>, correlationId?: string) =>
+      debug: (
+        message: string,
+        context?: Record<string, unknown>,
+        correlationId?: string
+      ) => this.debug(message, module, { ...baseContext, ...context }, correlationId),
+      info: (
+        message: string,
+        context?: Record<string, unknown>,
+        correlationId?: string
+      ) => this.info(message, module, { ...baseContext, ...context }, correlationId),
+      warn: (
+        message: string,
+        context?: Record<string, unknown>,
+        correlationId?: string
+      ) => this.warn(message, module, { ...baseContext, ...context }, correlationId),
+      error: (
+        message: string,
+        error?: Error | unknown,
+        context?: Record<string, unknown>,
+        correlationId?: string
+      ) =>
         this.error(message, module, error, { ...baseContext, ...context }, correlationId),
     };
   }

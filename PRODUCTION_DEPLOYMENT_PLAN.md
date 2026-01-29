@@ -3,13 +3,14 @@
 **Date**: 28 janvier 2026  
 **Version**: v26.4.0 (Chat IA Avancé)  
 **Status**: ✅ READY FOR DEPLOYMENT  
-**Confidence**: 96%  
+**Confidence**: 96%
 
 ---
 
 ## 1. PRE-DEPLOYMENT CHECKLIST
 
 ### Code Quality ✅
+
 - [x] TypeScript compilation: **PASS** (0 errors)
 - [x] ESLint: **CLEAN**
 - [x] No hardcoded secrets
@@ -17,6 +18,7 @@
 - [x] Error handling: **COMPREHENSIVE**
 
 ### Testing ✅
+
 - [x] Automated tests: **23 (82% pass)**
 - [x] Unit tests: **PASS**
 - [x] Integration tests: **PASS**
@@ -24,6 +26,7 @@
 - [x] Critical paths: **100% coverage**
 
 ### Git & Version Control ✅
+
 - [x] All changes committed
 - [x] Git status: **CLEAN**
 - [x] Commits: **4 production-ready**
@@ -34,6 +37,7 @@
 - [x] No uncommitted code
 
 ### Documentation ✅
+
 - [x] Architecture docs: **COMPLETE**
 - [x] API docs: **COMPLETE**
 - [x] Test procedures: **DOCUMENTED**
@@ -41,6 +45,7 @@
 - [x] Monitoring plan: **PREPARED**
 
 ### Security & Performance ✅
+
 - [x] Memory leak prevention: **ACTIVE** (MAX_HISTORY=1000)
 - [x] Timeout protection: **ACTIVE** (Promise.race, 1s)
 - [x] Tool validation: **ACTIVE** (checks + logging)
@@ -52,6 +57,7 @@
 ## 2. MANUAL TESTING (9 SCENARIOS)
 
 ### ✅ TEST 1: Tool Calling - get_time
+
 ```
 Prerequisites:
   • pnpm run dev:tauri running
@@ -63,18 +69,19 @@ Steps:
   2. Verify: Tool call JSON parsed
   3. Verify: Tool executed
   4. Verify: Response displayed
-  
+
 Expected Result:
   ✅ Time returned via get_time tool
   ✅ No console errors
   ✅ [ToolCaller] logs visible
-  
+
 Time: 2 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 2: Tool Calling - calculate
+
 ```
 Prerequisites:
   • Chat open (from TEST 1)
@@ -85,18 +92,19 @@ Steps:
   2. Verify: Tool execution without timeout
   3. Verify: Result = 56277
   4. Check console: No timeout error
-  
+
 Expected Result:
   ✅ Correct calculation returned
   ✅ No "timeout" error in logs
   ✅ NEW FIX #2: Timeout protection verified
-  
+
 Time: 2 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 3: Tool Calling - web_search
+
 ```
 Prerequisites:
   • Chat open
@@ -107,18 +115,19 @@ Steps:
   2. Verify: Tool executed
   3. Verify: JSON results returned
   4. Verify: Results displayed in chat
-  
+
 Expected Result:
   ✅ Search results shown
   ✅ Format valid JSON
   ✅ No parsing errors
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 4: Tool Calling - get_weather
+
 ```
 Prerequisites:
   • Chat open
@@ -129,18 +138,19 @@ Steps:
   2. Verify: Tool executed
   3. Verify: Weather data returned
   4. Verify: Temperature/conditions displayed
-  
+
 Expected Result:
   ✅ Weather data shown
   ✅ JSON format valid
   ✅ Tool registered correctly
-  
+
 Time: 2 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 5: Memory Persistence
+
 ```
 Prerequisites:
   • Chat open with 10+ messages (from TEST 1-4)
@@ -153,19 +163,20 @@ Steps:
   4. Restart: pnpm run dev:tauri
   5. Verify: Previous messages restored
   6. Send new message: Verify it's added to history
-  
+
 Expected Result:
   ✅ Conversation restored from localStorage
   ✅ NEW FIX #1: callHistory < 1000
   ✅ No memory leak after restart
   ✅ Messages persistent across sessions
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 6: Message Reactions
+
 ```
 Prerequisites:
   • Chat open with messages
@@ -179,18 +190,19 @@ Steps:
   5. Check localStorage: Reaction persisted
   6. Close/reopen app
   7. Verify: Reaction still present
-  
+
 Expected Result:
   ✅ All 5 emoji reactions clickable
   ✅ Reactions persist in localStorage
   ✅ No console errors
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 7: Token Counter
+
 ```
 Prerequisites:
   • Chat open
@@ -202,18 +214,19 @@ Steps:
   3. Verify: Format "123 tokens" (number only)
   4. Test multi-model: Switch between OpenAI/Gemini/Claude/Ollama
   5. Verify: Token count updates for each model
-  
+
 Expected Result:
   ✅ Token counter visible and accurate
   ✅ Multi-model support working
   ✅ No rendering issues
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 8: Zoom Control
+
 ```
 Prerequisites:
   • Chat open
@@ -229,18 +242,19 @@ Steps:
   7. Verify: Font size decreases
   8. Close/reopen app
   9. Verify: Zoom level persisted
-  
+
 Expected Result:
   ✅ Zoom IN/RESET/OUT work
   ✅ localStorage 'zoomLevel' updates
   ✅ Zoom persists across sessions
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
 ```
 
 ### ✅ TEST 9: Full Integration + Stability
+
 ```
 Prerequisites:
   • Fresh app start
@@ -259,7 +273,7 @@ Steps:
   9. Verify: Either result OR timeout error (1s max)
   10. Keep app open for 5 minutes
   11. Monitor: Memory usage stable, no leaks
-  
+
 Expected Result:
   ✅ Full integration working
   ✅ App stable under load
@@ -269,7 +283,7 @@ Expected Result:
      - Tool validation
   ✅ No crashes
   ✅ No console errors (except expected timeouts)
-  
+
 Time: 3 minutes
 Status: [ ] PASS [ ] FAIL
 Notes: ________________
@@ -332,6 +346,7 @@ pnpm run build
 ### Phase 2: Deployment (depends on your process)
 
 **Option A: AppImage Build**
+
 ```bash
 pnpm run build:appimage
 # Creates: src-tauri/target/release/bundle/appimage/titane-*.AppImage
@@ -339,6 +354,7 @@ pnpm run build:appimage
 ```
 
 **Option B: DEB Package**
+
 ```bash
 pnpm run build:deb
 # Creates: src-tauri/target/release/bundle/deb/titane_*.deb
@@ -346,6 +362,7 @@ pnpm run build:deb
 ```
 
 **Option C: Direct Deployment**
+
 ```bash
 # Skip build, deploy from dev
 pnpm run dev:tauri
@@ -402,6 +419,7 @@ Success Criteria:
 ### Week 1 Monitoring Schedule
 
 **Daily (Every 24 hours)**
+
 ```
 Time: 09:00 AM (server time)
 Duration: 5 minutes
@@ -419,6 +437,7 @@ Checklist:
 ```
 
 **Every 12 Hours**
+
 ```
 Checklist:
   [ ] Full system health check
@@ -430,6 +449,7 @@ Checklist:
 ```
 
 **When Issues Detected**
+
 ```
 Escalation:
   1. Document issue + timestamp + context
@@ -450,6 +470,7 @@ Escalation:
 ### Monitoring Logs & Reports
 
 **LOG_DAILY.md** (created automatically)
+
 ```
 # Daily Monitoring Report
 
@@ -459,7 +480,7 @@ Escalation:
 - Crash count: _____
 - Memory peak: _____
 - API latency avg: _____
-- Issues found: 
+- Issues found:
   [ ] None
   [ ] List below:
 - Action taken: _____
@@ -470,6 +491,7 @@ Escalation:
 ```
 
 **MONITORING_METRICS.md**
+
 ```
 # Production Metrics (Week 1)
 
@@ -492,6 +514,7 @@ Weekly Total:
 ### Critical Metrics to Monitor
 
 **1. Error Rate**
+
 ```
 Target: < 1% of all operations
 Alert: > 5%
@@ -500,6 +523,7 @@ Log Location: [ToolCaller] prefixed messages
 ```
 
 **2. Crash Reports**
+
 ```
 Target: 0
 Alert: > 2 in 24 hours
@@ -507,6 +531,7 @@ Action: Investigate and hotfix
 ```
 
 **3. Memory Usage**
+
 ```
 Target: Stable < 200MB
 Alert: > 500MB peak
@@ -515,6 +540,7 @@ Expected: "History limit reached" appears every ~1000 calls
 ```
 
 **4. Tool Execution**
+
 ```
 Target: > 95% success rate
 Alert: < 90%
@@ -526,6 +552,7 @@ Metrics:
 ```
 
 **5. Response Times**
+
 ```
 Target: < 100ms average
 Alert: > 200ms average
@@ -535,6 +562,7 @@ Exceptions:
 ```
 
 **6. Timeout Events**
+
 ```
 Target: < 1% of math operations
 Log: "[ToolCaller] ⚠️ timeout" messages
@@ -578,18 +606,21 @@ pnpm run dev:tauri
 ## 7. SUCCESS CRITERIA
 
 ### Deployment Success
+
 - ✅ Build completes without errors
 - ✅ App starts within 3 seconds
 - ✅ No crashes on startup
 - ✅ All 9 manual tests PASS
 
 ### 24-Hour Success
+
 - ✅ Error rate < 1%
 - ✅ 0 crash reports
 - ✅ Memory stable
 - ✅ API response times < 100ms
 
 ### Week 1 Success
+
 - ✅ 100% uptime (or 99.9%)
 - ✅ < 5 minor issues
 - ✅ 0 critical incidents
@@ -599,12 +630,14 @@ pnpm run dev:tauri
 ### Production Go/No-Go Decision
 
 **GO IF**:
+
 - All 9 manual tests PASS
 - No critical issues found
 - Error rate < 1%
 - Ollama endpoint healthy
 
 **NO-GO IF**:
+
 - Any critical test FAILS
 - Crash rate > 2/day
 - Memory leak confirmed
@@ -615,17 +648,20 @@ pnpm run dev:tauri
 ## 8. POST-DEPLOYMENT ACTIONS
 
 ### Day 1
+
 - [ ] Monitor error logs continuously
 - [ ] Respond to user issues immediately
 - [ ] Document any anomalies
 
 ### Day 2-7
+
 - [ ] Review daily metrics
 - [ ] Analyze user feedback
 - [ ] Plan Priorité 2 improvements
 - [ ] Create post-mortem (if issues found)
 
 ### End of Week 1
+
 - [ ] Generate WEEK1_REPORT.md
 - [ ] Calculate success metrics
 - [ ] Plan next improvements
@@ -636,11 +672,13 @@ pnpm run dev:tauri
 ## 9. CONTACT & ESCALATION
 
 **Kevin Thibault (Owner)**
+
 - Issue Severity: CRITICAL
 - Response Time: < 1 hour
 - Action: Emergency hotfix + rollback decision
 
 **Production Issues**
+
 - Documentation: INCIDENT_REPORT.md
 - Alert: Create GitHub issue
 - Escalation: After 3 incidents in 24 hours
@@ -707,5 +745,4 @@ SIGN-OFF:
 **Status**: ✅ READY TO EXECUTE  
 **Date Prepared**: 28 janvier 2026  
 **Prepared By**: GitHub Copilot (Claude Haiku 4.5)  
-**Approval**: [_________________]  
-
+**Approval**: [_________________]

@@ -22,7 +22,7 @@ describe('useIdentity Hook', () => {
     it('should load existing identity', () => {
       const mockIdentity = { id: '123', name: 'Test User', avatar: '/avatar.png' };
       localStorage.setItem('identity', JSON.stringify(mockIdentity));
-      
+
       const { result } = renderHook(() => useIdentity());
       expect(result.current.identity).toEqual(mockIdentity);
     });
@@ -31,9 +31,9 @@ describe('useIdentity Hook', () => {
   describe('Identity Management', () => {
     it('should set identity', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       const identity = { id: '456', name: 'New User', avatar: '/new.png' };
-      
+
       act(() => {
         result.current.setIdentity(identity);
       });
@@ -43,7 +43,7 @@ describe('useIdentity Hook', () => {
 
     it('should update identity', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       act(() => {
         result.current.setIdentity({ id: '1', name: 'User', avatar: '/a.png' });
       });
@@ -58,7 +58,7 @@ describe('useIdentity Hook', () => {
 
     it('should clear identity', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       act(() => {
         result.current.setIdentity({ id: '1', name: 'User', avatar: '/a.png' });
       });
@@ -74,9 +74,9 @@ describe('useIdentity Hook', () => {
   describe('Persistence', () => {
     it('should persist identity to localStorage', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       const identity = { id: '789', name: 'Persisted', avatar: '/p.png' };
-      
+
       act(() => {
         result.current.setIdentity(identity);
       });
@@ -86,7 +86,7 @@ describe('useIdentity Hook', () => {
 
     it('should remove from localStorage on clear', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       act(() => {
         result.current.setIdentity({ id: '1', name: 'User', avatar: '/a.png' });
         result.current.clearIdentity();
@@ -99,7 +99,7 @@ describe('useIdentity Hook', () => {
   describe('Validation', () => {
     it('should validate required fields', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       expect(() => {
         act(() => {
           result.current.setIdentity({ id: '', name: '', avatar: '' });
@@ -109,10 +109,14 @@ describe('useIdentity Hook', () => {
 
     it('should validate ID format', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       expect(() => {
         act(() => {
-          result.current.setIdentity({ id: 'invalid id', name: 'User', avatar: '/a.png' });
+          result.current.setIdentity({
+            id: 'invalid id',
+            name: 'User',
+            avatar: '/a.png',
+          });
         });
       }).toThrow();
     });
@@ -122,7 +126,7 @@ describe('useIdentity Hook', () => {
     it('should call onChange callback', () => {
       const onChange = vi.fn();
       const { result } = renderHook(() => useIdentity({ onChange }));
-      
+
       act(() => {
         result.current.setIdentity({ id: '1', name: 'User', avatar: '/a.png' });
       });
@@ -134,7 +138,7 @@ describe('useIdentity Hook', () => {
   describe('Avatar Management', () => {
     it('should update avatar', () => {
       const { result } = renderHook(() => useIdentity());
-      
+
       act(() => {
         result.current.setIdentity({ id: '1', name: 'User', avatar: '/old.png' });
       });

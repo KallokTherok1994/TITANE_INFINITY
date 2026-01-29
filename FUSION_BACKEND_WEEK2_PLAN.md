@@ -1,4 +1,5 @@
 # Track 2 - Week 2 Implementation Plan
+
 ## TITANE∞ Fusion Backend - Commands 3-4 (Feb 5-11, 2026)
 
 ---
@@ -6,6 +7,7 @@
 ## Overview
 
 **Week 2 Goals**: Implement 2 additional Fusion commands
+
 - **Command 3**: `fusion_generate_ia_response` - IA response generation
 - **Command 4**: `fusion_prepare_tts` - TTS audio buffer preparation
 
@@ -18,7 +20,9 @@
 ## Command 3: fusion_generate_ia_response
 
 ### Purpose
+
 Generate IA responses from prompts with:
+
 - Multi-model support (local/remote)
 - Response streaming preparation
 - Cache integration
@@ -52,6 +56,7 @@ pub struct IAGenerationResponse {
 ### Implementation Strategy
 
 **Phase 1: Basic Generation**
+
 1. Input validation (prompt length, temperature bounds)
 2. Model selection (local LLM integration)
 3. Prompt formatting with system instructions
@@ -59,12 +64,14 @@ pub struct IAGenerationResponse {
 5. Token counting
 
 **Phase 2: Cache Integration**
+
 1. Cache key generation from prompt + model
 2. Cache hit detection
 3. Cache storage for responses
 4. Cache invalidation rules
 
 **Phase 3: Streaming Preparation**
+
 1. Prepare chunked response format
 2. Stream token iterator
 3. Partial response aggregation
@@ -102,13 +109,13 @@ fn fusion_generate_ia_response_internal(
 
 ### Validation Rules
 
-| Field | Validation |
-|-------|-----------|
-| `prompt` | 1-10000 chars |
-| `temperature` | 0.0-2.0 |
-| `max_tokens` | 1-4096 |
-| `model` | Known model name |
-| `system_prompt` | 0-5000 chars |
+| Field           | Validation       |
+| --------------- | ---------------- |
+| `prompt`        | 1-10000 chars    |
+| `temperature`   | 0.0-2.0          |
+| `max_tokens`    | 1-4096           |
+| `model`         | Known model name |
+| `system_prompt` | 0-5000 chars     |
 
 ### Error Cases
 
@@ -123,7 +130,9 @@ fn fusion_generate_ia_response_internal(
 ## Command 4: fusion_prepare_tts
 
 ### Purpose
+
 Prepare TTS (Text-to-Speech) audio buffers with:
+
 - Voice selection
 - Pitch/speed control
 - Audio format selection
@@ -159,18 +168,21 @@ pub struct TTSPrepareResponse {
 ### Implementation Strategy
 
 **Phase 1: Voice Configuration**
+
 1. Voice library (presets + custom)
 2. Parameter validation
 3. Audio format selection
 4. Buffer allocation
 
 **Phase 2: Buffer Preparation**
+
 1. Calculate audio duration
 2. Allocate memory buffers
 3. Chunk preparation for streaming
 4. Metadata generation
 
 **Phase 3: Stream Support**
+
 1. Chunk iterator for streaming
 2. Progressive audio generation
 3. Backpressure handling
@@ -208,12 +220,12 @@ fn fusion_prepare_tts_internal(
 
 ### Validation Rules
 
-| Field | Validation |
-|-------|-----------|
-| `text` | 1-5000 chars |
-| `speed` | 0.5-2.0 |
-| `pitch` | 0.5-2.0 |
-| `format` | mp3, wav, aac |
+| Field      | Validation          |
+| ---------- | ------------------- |
+| `text`     | 1-5000 chars        |
+| `speed`    | 0.5-2.0             |
+| `pitch`    | 0.5-2.0             |
+| `format`   | mp3, wav, aac       |
 | `language` | Valid language code |
 
 ### Error Cases
@@ -235,7 +247,7 @@ pub struct FusionWeek2State {
     // Week 1 state
     pub modules: Arc<Mutex<FusionModuleConfig>>,
     pub styles: Arc<Mutex<UIStyleConfig>>,
-    
+
     // Week 2 additions
     pub ia_cache: Arc<IACache>,
     pub voice_library: Arc<VoiceLibrary>,
@@ -260,6 +272,7 @@ impl Default for FusionWeek2State {
 ### Unit Tests (Target: 8-10 tests)
 
 **Command 3 Tests**:
+
 1. `test_ia_response_basic` - Basic generation
 2. `test_ia_response_with_system_prompt` - System prompt override
 3. `test_ia_response_temperature_validation` - Temp bounds
@@ -267,6 +280,7 @@ impl Default for FusionWeek2State {
 5. `test_ia_response_empty_prompt` - Error case
 
 **Command 4 Tests**:
+
 1. `test_tts_prepare_basic` - Basic buffer prep
 2. `test_tts_prepare_voice_selection` - Voice config
 3. `test_tts_prepare_format_validation` - Format validation
@@ -274,6 +288,7 @@ impl Default for FusionWeek2State {
 5. `test_tts_prepare_invalid_speed` - Error case
 
 ### Coverage Goals
+
 - Line coverage: > 90%
 - Branch coverage: > 85%
 - Error path coverage: 100%
@@ -390,16 +405,19 @@ export async function prepareVoiceAudio(
 ## Timeline & Milestones
 
 ### Feb 5 (Day 1)
+
 - [ ] Implement `fusion_generate_ia_response` (Command 3)
 - [ ] 5 unit tests for Command 3
 - [ ] Basic documentation
 
 ### Feb 8-9 (Days 2-3)
+
 - [ ] Implement `fusion_prepare_tts` (Command 4)
 - [ ] 5 unit tests for Command 4
 - [ ] Complete documentation
 
 ### Feb 10-11 (Days 4-5)
+
 - [ ] Frontend integration (TypeScript)
 - [ ] React component examples
 - [ ] Full testing (cargo + TypeScript)
@@ -410,17 +428,20 @@ export async function prepareVoiceAudio(
 ## Architecture Decisions
 
 ### Caching Strategy
+
 - **In-Memory Cache**: HashMap with Arc<Mutex<T>>
 - **TTL**: 24 hours for IA responses
 - **Key Format**: `{model}:{prompt_hash}:{temp}`
 - **Eviction**: LRU when > 1000 entries
 
 ### Error Handling
+
 - All operations return `Result<T, String>`
 - Validation errors are separate from runtime errors
 - Graceful degradation (cache miss → regenerate)
 
 ### Performance Targets
+
 - IA generation: < 5 seconds (local model)
 - TTS preparation: < 500ms
 - Cache hits: < 10ms
@@ -431,16 +452,19 @@ export async function prepareVoiceAudio(
 ## Integration Points
 
 ### With Week 1 Commands
+
 - Share `FusionWeek2State`
 - Consistent error handling
 - Same validation patterns
 
 ### With Chat IA System
+
 - Use existing prompt formatting
 - Integrate with conversation history
 - Respect rate limits
 
 ### With Voice Engine
+
 - Compatible with existing voice system
 - Audio format compatibility
 - Stream with existing pipeline
@@ -450,6 +474,7 @@ export async function prepareVoiceAudio(
 ## Success Criteria
 
 ✅ Completion Checklist:
+
 - [ ] 2 commands implemented (590+ LOC)
 - [ ] 10 unit tests passing (100%)
 - [ ] 0 compilation errors
@@ -464,17 +489,20 @@ export async function prepareVoiceAudio(
 ## Dependencies & Concerns
 
 ### Required Libraries
+
 - `sha2` - For cache key hashing
 - `num-format` - For token counting
 - `rubato` - For audio resampling (TTS)
 
 ### Potential Challenges
+
 1. **Integration with local LLM** - Ollama/LLaMA coordination
 2. **Audio buffer management** - Memory efficiency
 3. **Streaming chunking** - Proper backpressure handling
 4. **Cache invalidation** - When to clear old responses
 
 ### Risk Mitigation
+
 - Mock LLM for tests
 - Buffer pooling for memory reuse
 - Chunking protocol documentation
@@ -485,6 +513,7 @@ export async function prepareVoiceAudio(
 ## Next Phase (Week 3+)
 
 After Week 2 completion:
+
 - Week 3: Commands 5-6 (Lip-sync, Avatar animation)
 - Week 4: Commands 7-8 (State sync, Auto-optimization)
 - Week 5: Stabilization, performance tuning
@@ -501,13 +530,14 @@ After Week 2 completion:
 
 ## Quick Reference
 
-| Command | Purpose | LOC Est | Tests |
-|---------|---------|---------|-------|
-| `fusion_generate_ia_response` | IA generation | 250 | 5 |
-| `fusion_prepare_tts` | TTS audio prep | 200 | 5 |
-| **Total Week 2** | **Commands 3-4** | **450** | **10** |
+| Command                       | Purpose          | LOC Est | Tests  |
+| ----------------------------- | ---------------- | ------- | ------ |
+| `fusion_generate_ia_response` | IA generation    | 250     | 5      |
+| `fusion_prepare_tts`          | TTS audio prep   | 200     | 5      |
+| **Total Week 2**              | **Commands 3-4** | **450** | **10** |
 
 **Running Tally**:
+
 - Week 1: 2 commands, 590 LOC, 4 tests ✅
 - Week 2: 2 commands, 450 LOC (est), 10 tests 🔵
 - Week 3: 2 commands, 450 LOC (est), 10 tests ⏳

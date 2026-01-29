@@ -21,7 +21,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
   describe('Provider Status API', () => {
     it('should return providers status structure', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       expect(status).toBeDefined();
       expect(status).toHaveProperty('providers');
       expect(status).toHaveProperty('orchestrator');
@@ -31,39 +31,41 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
 
     it('should have providers array', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       expect(Array.isArray(status.providers)).toBe(true);
       expect(status.providers.length).toBeGreaterThan(0);
     });
 
     it('should include titane-local provider', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      const titaneLocal = status.providers.find((p: { name: string }) => p.name === 'titane-local');
-      
+      const titaneLocal = status.providers.find(
+        (p: { name: string }) => p.name === 'titane-local'
+      );
+
       expect(titaneLocal).toBeDefined();
     });
 
     it('should track orchestrator metrics', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
       const metrics = status.orchestrator;
-      
+
       expect(metrics).toHaveProperty('totalRequests');
       expect(metrics).toHaveProperty('totalSuccesses');
       expect(metrics).toHaveProperty('totalFailures');
       expect(metrics).toHaveProperty('avgResponseTime');
       expect(metrics).toHaveProperty('fallbackRate');
       expect(metrics).toHaveProperty('autoHealTriggers');
-      
+
       expect(typeof metrics.totalRequests).toBe('number');
       expect(typeof metrics.autoHealTriggers).toBe('number');
     });
 
     it('should include autoHeal status', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       expect(status.autoHeal).toBeDefined();
       expect(typeof status.autoHeal).toBe('object');
-      
+
       // Validation Zod P1: si pas d'erreur, devrait avoir des stats valides
       if (!status.autoHeal.error) {
         // Stats attendus
@@ -75,7 +77,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
   describe('Detailed Metrics API', () => {
     it('should return detailed metrics structure', () => {
       const metrics = aiOrchestrator.getDetailedMetrics();
-      
+
       expect(metrics).toBeDefined();
       expect(metrics).toHaveProperty('aggregated');
       expect(metrics).toHaveProperty('health');
@@ -85,7 +87,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
 
     it('should validate autoHeal with Zod schema (P1)', () => {
       const metrics = aiOrchestrator.getDetailedMetrics();
-      
+
       // Zod validation P1: si pas d'erreur, format valide
       if (!metrics.autoHeal.error) {
         expect(metrics.autoHeal).not.toHaveProperty('raw');
@@ -96,13 +98,13 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
   describe('Health Check API', () => {
     it('should provide health check results', async () => {
       const health = await aiOrchestrator.healthCheck();
-      
+
       expect(health).toBeDefined();
       expect(health).toHaveProperty('overall');
       expect(health).toHaveProperty('providers');
       expect(health).toHaveProperty('autoHeal');
       expect(health).toHaveProperty('recommendations');
-      
+
       expect(['healthy', 'degraded', 'critical']).toContain(health.overall);
       expect(Array.isArray(health.providers)).toBe(true);
       expect(Array.isArray(health.recommendations)).toBe(true);
@@ -110,15 +112,15 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
 
     it('should validate autoHeal in health check (P1)', async () => {
       const health = await aiOrchestrator.healthCheck();
-      
+
       // Zod validation appliquée dans healthCheck
       expect(health.autoHeal).toBeDefined();
-      
+
       // Si validation réussie, pas de message d'erreur dans recommendations
-      const hasValidationError = health.recommendations.some(
-        (r: string) => r.includes('validation failed')
+      const hasValidationError = health.recommendations.some((r: string) =>
+        r.includes('validation failed')
       );
-      
+
       // Test ne devrait pas échouer si validation OK
       if (!hasValidationError) {
         expect(health.autoHeal).toBeDefined();
@@ -129,7 +131,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
   describe('Provider Statistics', () => {
     it('should track provider stats correctly', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       status.providers.forEach((provider: any) => {
         expect(provider).toHaveProperty('name');
         expect(provider).toHaveProperty('totalRequests');
@@ -139,7 +141,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
         expect(provider).toHaveProperty('status');
         expect(provider).toHaveProperty('lastUsed');
         expect(provider).toHaveProperty('lastFailure');
-        
+
         // Validations numériques
         expect(typeof provider.totalRequests).toBe('number');
         expect(typeof provider.successCount).toBe('number');
@@ -147,11 +149,11 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
         expect(typeof provider.reliability).toBe('number');
         expect(typeof provider.lastUsed).toBe('number');
         expect(typeof provider.lastFailure).toBe('number');
-        
+
         // Reliability: 0-100
         expect(provider.reliability).toBeGreaterThanOrEqual(0);
         expect(provider.reliability).toBeLessThanOrEqual(100);
-        
+
         // Status valide
         expect(['healthy', 'degraded', 'critical', 'offline']).toContain(provider.status);
       });
@@ -169,12 +171,12 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
   describe('Local-First Architecture', () => {
     it('should prioritize local providers', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       // Vérifier qu'il y a des providers disponibles
       expect(status.providers).toBeDefined();
       expect(Array.isArray(status.providers)).toBe(true);
       expect(status.providers.length).toBeGreaterThan(0);
-      
+
       // Vérifier que les providers ont les propriétés de base
       const firstProvider = status.providers[0];
       expect(firstProvider).toBeDefined();
@@ -186,12 +188,12 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
     it('should have coherent total counts', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
       const metrics = status.orchestrator;
-      
+
       // Total = succès + échecs (logique interne peut varier)
       expect(metrics.totalRequests).toBeGreaterThanOrEqual(0);
       expect(metrics.totalSuccesses).toBeGreaterThanOrEqual(0);
       expect(metrics.totalFailures).toBeGreaterThanOrEqual(0);
-      
+
       // Fallback rate: 0-100
       expect(metrics.fallbackRate).toBeGreaterThanOrEqual(0);
       expect(metrics.fallbackRate).toBeLessThanOrEqual(100);
@@ -199,12 +201,12 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
 
     it('should aggregate provider metrics', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
-      
+
       const totalProviderRequests = status.providers.reduce(
         (sum: number, p: any) => sum + p.totalRequests,
         0
       );
-      
+
       // Cohérence: total orchestrator >= somme providers
       // (peut inclure requêtes système)
       expect(totalProviderRequests).toBeGreaterThanOrEqual(0);
@@ -215,7 +217,7 @@ describe('AI Orchestrator - Neural Selection (P1 - Corrected)', () => {
     it('should validate AutoHealStatus with Zod schema', async () => {
       const status = await aiOrchestrator.getProvidersStatus();
       const autoHeal = status.autoHeal;
-      
+
       // Si validation échoue, devrait avoir error + raw
       if (autoHeal.error && typeof autoHeal.error === 'string') {
         expect(autoHeal.error).toContain('Invalid');

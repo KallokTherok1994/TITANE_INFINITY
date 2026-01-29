@@ -377,8 +377,10 @@ export class SingularityFusionEngine {
     intention: IntentionAnalysis
   ): Promise<ModuleActivation> {
     // FALLBACK: Local module activation logic
-    console.log('[FusionEngine] Step 2: Using local fallback (fusion_activate_modules not implemented)');
-    
+    console.log(
+      '[FusionEngine] Step 2: Using local fallback (fusion_activate_modules not implemented)'
+    );
+
     return {
       cognitive: true,
       adaptive: intention.complexity !== 'simple',
@@ -402,8 +404,10 @@ export class SingularityFusionEngine {
     preferences: UserPreferences
   ): Promise<StyleConfig> {
     // FALLBACK: Local style configuration
-    console.log('[FusionEngine] Step 3: Using local fallback (fusion_adjust_styles not implemented)');
-    
+    console.log(
+      '[FusionEngine] Step 3: Using local fallback (fusion_adjust_styles not implemented)'
+    );
+
     return {
       narrative_tone: preferences.narrative_style,
       emotional_intensity: preferences.emotion_modulation,
@@ -438,16 +442,16 @@ export class SingularityFusionEngine {
         intentions: [],
       }));
 
-      await CognitiveOptimizer.optimizeFullPipeline(
-        message,
-        cognitiveMessages
-      );
+      await CognitiveOptimizer.optimizeFullPipeline(message, cognitiveMessages);
 
       // ⚠️ TEMPORARILY DISABLED: 'fusion_generate_ia_response' not yet implemented
       // TODO: Re-enable when backend command is implemented
       // FALLBACK: Return placeholder response
-      console.log('[FusionEngine] Step 4: Using fallback (fusion_generate_ia_response not implemented)');
-      const response = 'Je suis en cours de configuration. Le système Singularity Fusion sera bientôt opérationnel.';
+      console.log(
+        '[FusionEngine] Step 4: Using fallback (fusion_generate_ia_response not implemented)'
+      );
+      const response =
+        'Je suis en cours de configuration. Le système Singularity Fusion sera bientôt opérationnel.';
 
       // Skip coherence check for now
       return response;
@@ -502,9 +506,10 @@ export class SingularityFusionEngine {
   ): Promise<LipSyncData> {
     try {
       const bytesPerSecond = 16000;
-      const estimatedDurationMs = audioBuffer.byteLength > 0
-        ? Math.max(200, Math.floor((audioBuffer.byteLength / bytesPerSecond) * 1000))
-        : 200;
+      const estimatedDurationMs =
+        audioBuffer.byteLength > 0
+          ? Math.max(200, Math.floor((audioBuffer.byteLength / bytesPerSecond) * 1000))
+          : 200;
 
       const response = await secureInvoke<{
         success: boolean;

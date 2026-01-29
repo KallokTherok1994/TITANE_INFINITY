@@ -1,13 +1,13 @@
 /**
  * TITANE∞ v26.4.0 — Global Test Type Augmentations
- * 
+ *
  * Ce fichier désactive les checks TypeScript stricts pour les tests,
  * ce qui est une pratique standard dans les projets production.
- * 
+ *
  * Raison: Les tests utilisent souvent des mocks, des données partielles,
  * et des patterns qui ne sont pas "type-safe" mais qui testent correctement
  * le comportement réel du code.
- * 
+ *
  * Note: Le code source reste 100% strict (0 erreur TypeScript).
  */
 
@@ -28,7 +28,7 @@ declare module 'react' {
   interface Component<P = {}, S = {}> {
     props: P & Record<string, any>;
   }
-  
+
   interface FunctionComponent<P = {}> {
     (props: P & Record<string, any>, context?: any): ReactElement<any, any> | null;
   }

@@ -13,7 +13,13 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
     memoryTree: [
       { id: 'stm', name: 'Short-Term Memory', size: 1024000, entries: 150, children: [] },
       { id: 'mtm', name: 'Mid-Term Memory', size: 5120000, entries: 500, children: [] },
-      { id: 'ltm', name: 'Long-Term Memory', size: 20480000, entries: 2000, children: [] },
+      {
+        id: 'ltm',
+        name: 'Long-Term Memory',
+        size: 20480000,
+        entries: 2000,
+        children: [],
+      },
     ],
   }),
 }));
@@ -29,7 +35,11 @@ vi.mock('@/apps/devtools/components', () => ({
   MemoryTree: ({ nodes, onNodeClick }: any) => (
     <div data-testid="memory-tree">
       {nodes.map((node: any) => (
-        <button key={node.id} onClick={() => onNodeClick(node)} data-testid={`node-${node.id}`}>
+        <button
+          key={node.id}
+          onClick={() => onNodeClick(node)}
+          data-testid={`node-${node.id}`}
+        >
           {node.name}: {node.entries} entries
         </button>
       ))}

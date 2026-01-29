@@ -122,7 +122,9 @@ const ModelDetailsPanel: React.FC<ModelDetailsPanelProps> = ({ model, isSelected
         background: isSelected ? 'rgba(114, 123, 129, 0.2)' : 'rgba(114, 123, 129, 0.05)',
         borderRadius: '6px',
         marginBottom: '8px',
-        border: isSelected ? '1px solid rgba(114, 123, 129, 0.5)' : '1px solid transparent',
+        border: isSelected
+          ? '1px solid rgba(114, 123, 129, 0.5)'
+          : '1px solid transparent',
         cursor: 'pointer',
         transition: 'all 0.2s',
       }}
@@ -176,14 +178,15 @@ const ModelDetailsPanel: React.FC<ModelDetailsPanelProps> = ({ model, isSelected
         <span>🔤 {(model.contextWindow / 1000).toFixed(0)}K tokens</span>
         {model.costPer1kTokens && (
           <span>
-            💰 ${model.costPer1kTokens.input.toFixed(5)}/{model.costPer1kTokens.output.toFixed(5)}
+            💰 ${model.costPer1kTokens.input.toFixed(5)}/
+            {model.costPer1kTokens.output.toFixed(5)}
           </span>
         )}
       </div>
 
       {model.tags && model.tags.length > 0 && (
         <div style={{ marginTop: '6px', display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-          {model.tags.map((tag) => (
+          {model.tags.map(tag => (
             <span
               key={tag}
               style={{
@@ -224,22 +227,19 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
 
   // Récupère le modèle sélectionné
   const selectedModelInfo = useMemo(
-    () => models.find((m) => m.id === selectedModel) || models[0],
+    () => models.find(m => m.id === selectedModel) || models[0],
     [selectedModel, models]
   );
 
   // Récupère tous les tags uniques
   const allTags = useMemo(
-    () => Array.from(new Set(models.flatMap((m) => m.tags || []))),
+    () => Array.from(new Set(models.flatMap(m => m.tags || []))),
     [models]
   );
 
   // Filtre les modèles
   const filteredModels = useMemo(
-    () =>
-      filterTag
-        ? models.filter((m) => m.tags?.includes(filterTag))
-        : models,
+    () => (filterTag ? models.filter(m => m.tags?.includes(filterTag)) : models),
     [models, filterTag]
   );
 
@@ -259,11 +259,13 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
           alignItems: 'center',
           transition: 'all 0.2s',
         }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLDivElement).style.background = 'rgba(114, 123, 129, 0.3)';
+        onMouseEnter={e => {
+          (e.currentTarget as HTMLDivElement).style.background =
+            'rgba(114, 123, 129, 0.3)';
         }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLDivElement).style.background = 'rgba(114, 123, 129, 0.2)';
+        onMouseLeave={e => {
+          (e.currentTarget as HTMLDivElement).style.background =
+            'rgba(114, 123, 129, 0.2)';
         }}
       >
         <div>
@@ -292,14 +294,25 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
         >
           {/* Filtres par tag */}
           {showAdvanced && allTags.length > 0 && (
-            <div style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid rgba(114, 123, 129, 0.2)' }}>
-              <div style={{ fontSize: '11px', color: '#727B81', marginBottom: '6px' }}>Filtrer par:</div>
+            <div
+              style={{
+                marginBottom: '12px',
+                paddingBottom: '12px',
+                borderBottom: '1px solid rgba(114, 123, 129, 0.2)',
+              }}
+            >
+              <div style={{ fontSize: '11px', color: '#727B81', marginBottom: '6px' }}>
+                Filtrer par:
+              </div>
               <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
                 <button
                   onClick={() => setFilterTag(null)}
                   style={{
                     padding: '4px 8px',
-                    background: filterTag === null ? 'rgba(114, 123, 129, 0.5)' : 'rgba(114, 123, 129, 0.2)',
+                    background:
+                      filterTag === null
+                        ? 'rgba(114, 123, 129, 0.5)'
+                        : 'rgba(114, 123, 129, 0.2)',
                     border: '1px solid rgba(114, 123, 129, 0.3)',
                     borderRadius: '3px',
                     color: '#C4C4C4',
@@ -309,13 +322,16 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 >
                   Tous
                 </button>
-                {allTags.map((tag) => (
+                {allTags.map(tag => (
                   <button
                     key={tag}
                     onClick={() => setFilterTag(filterTag === tag ? null : tag)}
                     style={{
                       padding: '4px 8px',
-                      background: filterTag === tag ? 'rgba(114, 123, 129, 0.5)' : 'rgba(114, 123, 129, 0.2)',
+                      background:
+                        filterTag === tag
+                          ? 'rgba(114, 123, 129, 0.5)'
+                          : 'rgba(114, 123, 129, 0.2)',
                       border: '1px solid rgba(114, 123, 129, 0.3)',
                       borderRadius: '3px',
                       color: '#C4C4C4',
@@ -332,7 +348,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
           )}
 
           {/* Liste des modèles */}
-          {filteredModels.map((model) => (
+          {filteredModels.map(model => (
             <div
               key={model.id}
               onClick={() => {
@@ -340,10 +356,7 @@ export const ModelSelector: React.FC<ModelSelectorProps> = ({
                 setIsOpen(false);
               }}
             >
-              <ModelDetailsPanel
-                model={model}
-                isSelected={model.id === selectedModel}
-              />
+              <ModelDetailsPanel model={model} isSelected={model.id === selectedModel} />
             </div>
           ))}
 

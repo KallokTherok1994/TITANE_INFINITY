@@ -31,7 +31,7 @@ describe('useWindowControls Hook', () => {
 
     it('should detect maximized state', async () => {
       const { result } = renderHook(() => useWindowControls());
-      
+
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
@@ -43,7 +43,7 @@ describe('useWindowControls Hook', () => {
   describe('Window Actions', () => {
     it('should minimize window', async () => {
       const { result } = renderHook(() => useWindowControls());
-      
+
       await act(async () => {
         await result.current.minimize();
       });
@@ -54,7 +54,7 @@ describe('useWindowControls Hook', () => {
 
     it('should maximize window', async () => {
       const { result } = renderHook(() => useWindowControls());
-      
+
       await act(async () => {
         await result.current.maximize();
       });
@@ -64,7 +64,7 @@ describe('useWindowControls Hook', () => {
 
     it('should close window', async () => {
       const { result } = renderHook(() => useWindowControls());
-      
+
       await act(async () => {
         await result.current.close();
       });
@@ -76,7 +76,7 @@ describe('useWindowControls Hook', () => {
   describe('Toggle Maximize', () => {
     it('should toggle maximize state', async () => {
       const { result } = renderHook(() => useWindowControls());
-      
+
       await act(async () => {
         await result.current.toggleMaximize();
       });

@@ -19,10 +19,12 @@ Toutes les corrections d'imports fonctionnent parfaitement. Les erreurs TypeScri
 ## 📊 MÉTRIQUES COMPILATION
 
 ### Avant Corrections
+
 - **96 erreurs** "Impossible de localiser le module"
 - **43 fichiers** avec erreurs import/path
 
-### Après Corrections  
+### Après Corrections
+
 - **0 erreurs** liées aux 52 fichiers corrigés ✅
 - **784 erreurs TS** totales (autres catégories):
   - 139× TS2339 (property doesn't exist)
@@ -119,31 +121,31 @@ grep -E "(Button|Card|Alert|useChat|Dashboard|Metrics)" errors.txt
 
 ### Imports Barrel Standardisés
 
-| Catégorie | Fichiers | Pattern Avant | Pattern Après | Compilation |
-|-----------|----------|---------------|---------------|-------------|
-| UI Components | 9 | `@/components/ui/button` | `@/components/ui` | ✅ OK |
-| Hooks | 17 | `@/hooks/useChat` | `@/hooks` | ✅ OK |
-| DevTools App | 1 | `@/apps/devtools/DevToolsApp` | `@/apps/devtools` | ✅ OK |
-| DevTools Sections | 7 | `@/apps/devtools/sections/Dashboard` | `@/apps/devtools/sections` | ✅ OK |
-| Chat Features | 2 | `@/features/chat/ChatMessage` | `@/features/chat` | ✅ OK |
-| Chat Components | 2 | `@/features/chat/...` | `@/components/chat/...` | ✅ OK |
-| Monitoring | 2 | `@/features/monitoring/...` | `@/components/monitoring/...` | ✅ OK |
-| Voice | 1 | `@/features/voice/VoiceControl` | `@/components/VoiceControlPanel` | ✅ OK |
-| Panels | 1 | `@/panels/ChatPanel` | `@/components/panels/ChatPanel` | ✅ OK |
-| Tests racine | 2 | `@/hooks/useChat` | `@/hooks` | ✅ OK |
+| Catégorie         | Fichiers | Pattern Avant                        | Pattern Après                    | Compilation |
+| ----------------- | -------- | ------------------------------------ | -------------------------------- | ----------- |
+| UI Components     | 9        | `@/components/ui/button`             | `@/components/ui`                | ✅ OK       |
+| Hooks             | 17       | `@/hooks/useChat`                    | `@/hooks`                        | ✅ OK       |
+| DevTools App      | 1        | `@/apps/devtools/DevToolsApp`        | `@/apps/devtools`                | ✅ OK       |
+| DevTools Sections | 7        | `@/apps/devtools/sections/Dashboard` | `@/apps/devtools/sections`       | ✅ OK       |
+| Chat Features     | 2        | `@/features/chat/ChatMessage`        | `@/features/chat`                | ✅ OK       |
+| Chat Components   | 2        | `@/features/chat/...`                | `@/components/chat/...`          | ✅ OK       |
+| Monitoring        | 2        | `@/features/monitoring/...`          | `@/components/monitoring/...`    | ✅ OK       |
+| Voice             | 1        | `@/features/voice/VoiceControl`      | `@/components/VoiceControlPanel` | ✅ OK       |
+| Panels            | 1        | `@/panels/ChatPanel`                 | `@/components/panels/ChatPanel`  | ✅ OK       |
+| Tests racine      | 2        | `@/hooks/useChat`                    | `@/hooks`                        | ✅ OK       |
 
 **TOTAL**: **52 fichiers** — **100% succès compilation** ✅
 
 ### Tests Skippés (6 fichiers)
 
-| Test | Raison | Statut |
-|------|--------|--------|
-| useMemory.test.tsx | Hook commenté ligne 209 index.ts | ✅ Skip |
-| useVoice.test.tsx | Hook commenté ligne 209 index.ts | ✅ Skip |
-| MemoryCard.test.tsx | Composant inexistant | ✅ Skip |
-| MemoryVisualization.test.tsx | Composant inexistant | ✅ Skip |
-| MemorySearch.test.tsx | Composant inexistant | ✅ Skip |
-| CommandPalette.test.tsx | Composant inexistant | ✅ Skip |
+| Test                         | Raison                           | Statut  |
+| ---------------------------- | -------------------------------- | ------- |
+| useMemory.test.tsx           | Hook commenté ligne 209 index.ts | ✅ Skip |
+| useVoice.test.tsx            | Hook commenté ligne 209 index.ts | ✅ Skip |
+| MemoryCard.test.tsx          | Composant inexistant             | ✅ Skip |
+| MemoryVisualization.test.tsx | Composant inexistant             | ✅ Skip |
+| MemorySearch.test.tsx        | Composant inexistant             | ✅ Skip |
+| CommandPalette.test.tsx      | Composant inexistant             | ✅ Skip |
 
 **Erreurs import attendues** — Tests désactivés correctement ✅
 
@@ -154,11 +156,13 @@ grep -E "(Button|Card|Alert|useChat|Dashboard|Metrics)" errors.txt
 ### 1. Exports Manquants `@/test-utils` (7 erreurs)
 
 **Fichiers impactés**:
+
 - `a11y/FocusManager.test.tsx`
 - `chat-ia-diagnostic.test.ts`
 - `chat-ia-stability.test.ts`
 
 **Solution recommandée**:
+
 ```typescript
 // src/test-utils.ts ou src/test-utils.tsx
 export { renderHook, act, waitFor } from '@testing-library/react';
@@ -167,10 +171,12 @@ export { renderHook, act, waitFor } from '@testing-library/react';
 ### 2. Exports Manquants `@/types` (15+ erreurs)
 
 **Types manquants**:
+
 - `CoreHealth`, `Engine`, `SystemEvent`
 - `LogEntry`, `MemoryNode`, `PerformanceMetrics`
 
 **Solution recommandée**:
+
 ```typescript
 // src/types/index.ts
 export type { CoreHealth } from './devtools';
@@ -182,6 +188,7 @@ export type { PerformanceMetrics } from './performance';
 ### 3. Composants DevTools Manquants (14 erreurs)
 
 **Composants**:
+
 - `EngineCard`, `EventStream`, `LogFilters`
 - `LogLine`, `LogViewer`, `MemoryTree`
 - `MetricCard`, `MetricsDisplay`
@@ -191,6 +198,7 @@ export type { PerformanceMetrics } from './performance';
 ### 4. Erreurs Strictness TypeScript (653 erreurs)
 
 **Catégories**:
+
 - Possibly undefined (131× TS2532, 34× TS18048)
 - Type mismatches (126× TS2345, 110× TS2322)
 - Property doesn't exist (139× TS2339)
@@ -212,6 +220,7 @@ export type { PerformanceMetrics } from './performance';
 ### ⚠️ Priorité 2 — Optionnel
 
 **Exports manquants** (22 erreurs rapides):
+
 1. Ajouter exports `@/test-utils` (renderHook, act, waitFor)
 2. Ajouter exports `@/types` (CoreHealth, Engine, etc.)
 
@@ -220,9 +229,11 @@ export type { PerformanceMetrics } from './performance';
 ### 🔄 Priorité 3 — Future
 
 **Composants DevTools** (14 erreurs):
+
 - Implémenter ou skip tests
 
 **Strictness TypeScript** (653 erreurs):
+
 - Corrections progressives (nullish, any, type guards)
 
 ---

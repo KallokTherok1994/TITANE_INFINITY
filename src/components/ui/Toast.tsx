@@ -59,9 +59,12 @@ export const Toast: React.FC<ToastProps> = ({
 
   const handleClose = useCallback(() => {
     setIsExiting(true);
-    setTimeout(() => {
-      onClose(id);
-    }, reduceMotion ? 150 : 300); // Shorter exit if motion reduced
+    setTimeout(
+      () => {
+        onClose(id);
+      },
+      reduceMotion ? 150 : 300
+    ); // Shorter exit if motion reduced
   }, [id, onClose, reduceMotion]);
 
   useEffect(() => {

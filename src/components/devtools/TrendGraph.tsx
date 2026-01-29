@@ -29,8 +29,8 @@ export function TrendGraph({
     );
   }
 
-  const maxValue = Math.max(...data.map((d) => d.value));
-  const minValue = Math.min(...data.map((d) => d.value));
+  const maxValue = Math.max(...data.map(d => d.value));
+  const minValue = Math.min(...data.map(d => d.value));
   const range = maxValue - minValue || 1;
 
   const points = data.map((d, i) => {
@@ -41,12 +41,7 @@ export function TrendGraph({
 
   return (
     <svg width={width} height={height} className="bg-gray-800 rounded">
-      <polyline
-        points={points.join(' ')}
-        fill="none"
-        stroke={color}
-        strokeWidth="2"
-      />
+      <polyline points={points.join(' ')} fill="none" stroke={color} strokeWidth="2" />
       {data.map((d, i) => {
         const x = (i / (data.length - 1)) * width;
         const y = height - ((d.value - minValue) / range) * height;

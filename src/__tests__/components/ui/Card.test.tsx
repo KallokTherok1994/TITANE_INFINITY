@@ -5,7 +5,14 @@
 
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui';
 
 describe('Card Component', () => {
   describe('Rendering', () => {
@@ -60,9 +67,7 @@ describe('Card Component', () => {
 
   describe('Styles', () => {
     it('should apply custom className to Card', () => {
-      const { container } = render(
-        <Card className="custom-card">Content</Card>
-      );
+      const { container } = render(<Card className="custom-card">Content</Card>);
       expect(container.firstChild).toHaveClass('custom-card');
     });
 

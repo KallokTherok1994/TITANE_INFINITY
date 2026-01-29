@@ -24,10 +24,10 @@ describe('SectionHeader Component', () => {
     it('should render action buttons', () => {
       const actions = [
         { label: 'Export', onClick: vi.fn() },
-        { label: 'Clear', onClick: vi.fn() }
+        { label: 'Clear', onClick: vi.fn() },
       ];
       render(<SectionHeader title="Data" actions={actions} />);
-      
+
       expect(screen.getByRole('button', { name: /export/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /clear/i })).toBeInTheDocument();
     });
@@ -36,7 +36,7 @@ describe('SectionHeader Component', () => {
       const onClick = vi.fn();
       const actions = [{ label: 'Test', onClick }];
       render(<SectionHeader title="Test" actions={actions} />);
-      
+
       fireEvent.click(screen.getByRole('button', { name: /test/i }));
       expect(onClick).toHaveBeenCalledTimes(1);
     });
@@ -46,10 +46,10 @@ describe('SectionHeader Component', () => {
     it('should toggle collapse', () => {
       const onToggle = vi.fn();
       render(<SectionHeader title="Collapsible" collapsible onToggle={onToggle} />);
-      
+
       const toggleButton = screen.getByRole('button', { name: /collapse|expand/i });
       fireEvent.click(toggleButton);
-      
+
       expect(onToggle).toHaveBeenCalledWith(true);
     });
 
@@ -59,11 +59,13 @@ describe('SectionHeader Component', () => {
     });
 
     it('should rotate icon when collapsed', () => {
-      const { rerender } = render(<SectionHeader title="Section" collapsible collapsed={false} />);
-      
+      const { rerender } = render(
+        <SectionHeader title="Section" collapsible collapsed={false} />
+      );
+
       const icon = screen.getByRole('img', { name: /chevron|arrow/i });
       const initialRotation = icon.style.transform;
-      
+
       rerender(<SectionHeader title="Section" collapsible collapsed={true} />);
       expect(icon.style.transform).not.toBe(initialRotation);
     });
@@ -76,7 +78,9 @@ describe('SectionHeader Component', () => {
     });
 
     it('should show status badge', () => {
-      render(<SectionHeader title="Status" badge={{ label: 'Active', variant: 'success' }} />);
+      render(
+        <SectionHeader title="Status" badge={{ label: 'Active', variant: 'success' }} />
+      );
       expect(screen.getByText('Active')).toBeInTheDocument();
     });
   });
@@ -95,7 +99,9 @@ describe('SectionHeader Component', () => {
     });
 
     it('should render secondary variant', () => {
-      const { container } = render(<SectionHeader title="Secondary" variant="secondary" />);
+      const { container } = render(
+        <SectionHeader title="Secondary" variant="secondary" />
+      );
       expect(container.firstChild?.className).toMatch(/secondary/i);
     });
   });

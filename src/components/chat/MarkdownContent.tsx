@@ -19,7 +19,16 @@ export interface MarkdownContentProps {
 }
 
 interface ParsedNode {
-  type: 'text' | 'bold' | 'italic' | 'code' | 'codeBlock' | 'heading' | 'list' | 'link' | 'break';
+  type:
+    | 'text'
+    | 'bold'
+    | 'italic'
+    | 'code'
+    | 'codeBlock'
+    | 'heading'
+    | 'list'
+    | 'link'
+    | 'break';
   content: string;
   language?: string;
   href?: string;
@@ -58,7 +67,10 @@ class MarkdownParser {
       }
 
       // Check for heading (# ## ### etc.)
-      if (this.text[this.position] === '#' && (this.position === 0 || this.text[this.position - 1] === '\n')) {
+      if (
+        this.text[this.position] === '#' &&
+        (this.position === 0 || this.text[this.position - 1] === '\n')
+      ) {
         if (currentText) {
           nodes.push({ type: 'text', content: currentText });
           currentText = '';
@@ -68,9 +80,13 @@ class MarkdownParser {
       }
 
       // Check for list (* - + followed by space)
-      if ((this.text[this.position] === '*' || this.text[this.position] === '-' || this.text[this.position] === '+') &&
-          this.text[this.position + 1] === ' ' &&
-          (this.position === 0 || this.text[this.position - 1] === '\n')) {
+      if (
+        (this.text[this.position] === '*' ||
+          this.text[this.position] === '-' ||
+          this.text[this.position] === '+') &&
+        this.text[this.position + 1] === ' ' &&
+        (this.position === 0 || this.text[this.position - 1] === '\n')
+      ) {
         if (currentText) {
           nodes.push({ type: 'text', content: currentText });
           currentText = '';
@@ -109,13 +125,19 @@ class MarkdownParser {
     return nodes;
   }
 
-  private parseInline(accumulated: string): { parsed: boolean; nodes: ParsedNode[]; newPosition: number } {
+  private parseInline(accumulated: string): {
+    parsed: boolean;
+    nodes: ParsedNode[];
+    newPosition: number;
+  } {
     const char = this.text[this.position];
     const nodes: ParsedNode[] = [];
 
     // Bold (**text** or __text__)
-    if ((char === '*' && this.text[this.position + 1] === '*') ||
-        (char === '_' && this.text[this.position + 1] === '_')) {
+    if (
+      (char === '*' && this.text[this.position + 1] === '*') ||
+      (char === '_' && this.text[this.position + 1] === '_')
+    ) {
       const delimiter = char === '*' ? '**' : '__';
       if (accumulated) nodes.push({ type: 'text', content: accumulated });
 
@@ -128,12 +150,20 @@ class MarkdownParser {
     }
 
     // Italic (*text* or _text_)
-    if ((char === '*' && this.text[this.position + 1] !== '*') ||
-        (char === '_' && this.text[this.position + 1] !== '_' && this.position > 0 && this.text[this.position - 1] !== ' ')) {
+    if (
+      (char === '*' && this.text[this.position + 1] !== '*') ||
+      (char === '_' &&
+        this.text[this.position + 1] !== '_' &&
+        this.position > 0 &&
+        this.text[this.position - 1] !== ' ')
+    ) {
       if (accumulated) nodes.push({ type: 'text', content: accumulated });
 
       const closePos = this.text.indexOf(char, this.position + 1);
-      if (closePos !== -1 && (closePos === this.text.length - 1 || this.text[closePos + 1] !== char)) {
+      if (
+        closePos !== -1 &&
+        (closePos === this.text.length - 1 || this.text[closePos + 1] !== char)
+      ) {
         const italicText = this.text.substring(this.position + 1, closePos);
         nodes.push({ type: 'italic', content: italicText });
         return { parsed: true, nodes, newPosition: closePos + 1 };
@@ -225,8 +255,12 @@ class MarkdownParser {
     const items: string[] = [];
 
     while (this.position < this.text.length) {
-      if ((this.text[this.position] === '*' || this.text[this.position] === '-' || this.text[this.position] === '+') &&
-          this.text[this.position + 1] === ' ') {
+      if (
+        (this.text[this.position] === '*' ||
+          this.text[this.position] === '-' ||
+          this.text[this.position] === '+') &&
+        this.text[this.position + 1] === ' '
+      ) {
         this.position += 2;
         let item = '';
         while (this.position < this.text.length && this.text[this.position] !== '\n') {
@@ -302,7 +336,9 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
             border: '1px solid rgba(114, 123, 129, 0.3)',
           }}
         >
-          <code style={{ fontFamily: 'monospace', color: '#C4C4C4', whiteSpace: 'pre-wrap' }}>
+          <code
+            style={{ fontFamily: 'monospace', color: '#C4C4C4', whiteSpace: 'pre-wrap' }}
+          >
             {node.content}
           </code>
         </pre>
@@ -387,14 +423,21 @@ const NodeRenderer: React.FC<RendererProps> = ({ node, index }) => {
  * - Links ([text](url))
  * - Line breaks (\n\n)
  */
-export const MarkdownContent: React.FC<MarkdownContentProps> = ({ content, className, style }) => {
+export const MarkdownContent: React.FC<MarkdownContentProps> = ({
+  content,
+  className,
+  style,
+}) => {
   const nodes = useMemo(() => {
     const parser = new MarkdownParser(content);
     return parser.parse();
   }, [content]);
 
   return (
-    <div className={className} style={{ ...style, lineHeight: '1.6', wordBreak: 'break-word' }}>
+    <div
+      className={className}
+      style={{ ...style, lineHeight: '1.6', wordBreak: 'break-word' }}
+    >
       {nodes.map((node, index) => (
         <NodeRenderer key={index} node={node} index={index} />
       ))}

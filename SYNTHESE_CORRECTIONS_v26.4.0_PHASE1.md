@@ -7,10 +7,12 @@
 ## 📊 Résultats
 
 ### Avant
+
 - **784 erreurs TypeScript** totales
 - **75 erreurs TS2307/TS2305** (modules/exports manquants)
 
 ### Après
+
 - **882 erreurs TypeScript** totales (+98 temporaires)
 - **55 erreurs TS2307/TS2305** (-20 résolues ✅)
 
@@ -19,6 +21,7 @@
 ## ✅ Corrections Appliquées
 
 ### 1. Types Manquants (src/types/devtools.ts)
+
 ```typescript
 ✅ CoreHealth interface
 ✅ Engine interface
@@ -31,6 +34,7 @@
 **Impact**: Résout imports dans 12 tests devtools + 1 features
 
 ### 2. Exports Types Barrel (src/types/index.ts)
+
 ```typescript
 ✅ export * from './devtools'
 ✅ export * from './logger'
@@ -44,6 +48,7 @@
 **Impact**: Centralise accès types via `@/types`
 
 ### 3. Composants DevTools (9 fichiers créés)
+
 ```
 ✅ src/components/devtools/EngineCard.tsx
 ✅ src/components/devtools/EventStream.tsx
@@ -59,6 +64,7 @@
 **Pattern**: Composants fonctionnels avec props TypeScript + rendu minimal
 
 ### 4. Tabs Sub-Components (tabs.tsx refactoring)
+
 ```typescript
 ✅ TabsList component (container)
 ✅ TabsTrigger component (bouton tab)
@@ -68,6 +74,7 @@
 ```
 
 **API Moderne**:
+
 ```tsx
 <Tabs defaultValue="logs">
   <TabsList>
@@ -80,6 +87,7 @@
 ```
 
 ### 5. Test-Utils Exports Explicités
+
 ```typescript
 ✅ export { renderHook } from './renderHook'
 ✅ export { render, screen, waitFor, act, ... } (explicite)
@@ -89,6 +97,7 @@
 ## 🎯 55 Erreurs Restantes
 
 ### Catégories
+
 1. **@/test-utils exports** (30 erreurs)
    - TypeScript ne détecte pas les re-exports malgré présence
    - Solution: Possiblement alias tsconfig ou cache TS
@@ -110,15 +119,18 @@
 ## 🚀 Phase 2 (Recommandée)
 
 ### Option A: Corriger @/test-utils (priorité)
+
 - Vérifier cache TypeScript: `rm -rf node_modules/.cache`
 - Vérifier tsconfig resolution
 - Alternative: Créer alias explicite `@test-utils`
 
 ### Option B: Créer hooks manquants
+
 - 7 hooks à implémenter ou skip
 - 15-20 minutes
 
 ### Option C: Cleanup imports tests skipped
+
 - Supprimer imports dans tests déjà skipped
 - 5 minutes
 
@@ -135,4 +147,3 @@ Erreurs Totales:
 **Explication augmentation**: Les 9 nouveaux composants devtools utilisent des props/types qui déclenchent erreurs strictness (nullish, any) pré-existantes. Ces erreurs n'étaient pas comptées avant car les fichiers n'existaient pas.
 
 **Progrès réel**: 20 erreurs modules critiques résolues ✅
-

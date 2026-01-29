@@ -11,6 +11,7 @@
 ## ✅ PHASE 1 - Completed Features
 
 ### 1️⃣ Markdown Rendering Component (`MarkdownContent.tsx`)
+
 - **File:** `src/components/chat/MarkdownContent.tsx` (360 lines)
 - **Features:**
   - Simple markdown parser (no external dependencies)
@@ -18,9 +19,10 @@
   - Custom styling aligned with TITANE∞ dark theme
   - Performance: useMemo for parsed nodes (prevent recalc)
 - **Status:** ✅ Production-ready
-- **Test:** Works with inline `code` and ```multiline``` blocks
+- **Test:** Works with inline `code` and `multiline` blocks
 
 ### 2️⃣ Code Block with Syntax Highlighting (`CodeBlock.tsx`)
+
 - **File:** `src/components/chat/CodeBlock.tsx` (280 lines)
 - **Features:**
   - Lightweight syntax highlighting (no highlight.js dependency)
@@ -33,6 +35,7 @@
 - **Architecture:** SyntaxHighlighter class with static highlight method
 
 ### 3️⃣ MessageBubble Integration
+
 - **File:** `src/components/chat/MessageBubble.tsx` (Modified)
 - **Changes:**
   - Import MarkdownContent + CodeBlock components
@@ -43,6 +46,7 @@
 - **Test:** Bold, italic, code blocks render correctly
 
 ### 4️⃣ Conversation Export/Import Service (`conversationExporter.ts`)
+
 - **File:** `src/services/chat/conversationExporter.ts` (210 lines)
 - **Features:**
   - Export to JSON (structured format with metadata)
@@ -55,6 +59,7 @@
 - **Architecture:** Static ConversationExporter class + useConversationExporter hook
 
 ### 5️⃣ Export/Import UI Component (`ConversationControls.tsx`)
+
 - **File:** `src/components/chat/ConversationControls.tsx` (220 lines)
 - **Features:**
   - Export JSON button
@@ -67,6 +72,7 @@
 - **UX:** Inline buttons with hover effects, status feedback
 
 ### 6️⃣ Model Selector Component (`ModelSelector.tsx`)
+
 - **File:** `src/components/chat/ModelSelector.tsx` (330 lines)
 - **Features:**
   - 7 default models (GPT-4, Claude, Gemini, Llama, GitHub)
@@ -100,12 +106,14 @@
 ## 🎯 Architecture Alignment
 
 ### 4-Ring Model Compliance
+
 - **Ring 1 (Core Types):** No new types needed (use existing AIMessage)
 - **Ring 2 (Engines):** No new engines (services handle persistence)
 - **Ring 3 (Services):** conversationExporter.ts added ✅
 - **Ring 4 (UI):** 5 new components added ✅
 
 ### Dependency Chain
+
 ```
 MarkdownContent.tsx (standalone)
     ↓
@@ -124,14 +132,14 @@ ModelSelector.tsx (standalone)
 
 ## 📈 Performance Impact
 
-| Component | Bundle Size | Runtime | Notes |
-|-----------|------------|---------|-------|
-| MarkdownContent | +8KB | O(messages) | useMemo prevents recalc |
-| CodeBlock | +7KB | O(1) light syntax highlighting |
-| MessageBubble | -5KB | N/A | Replaced react-markdown (lazy-load) |
-| conversationExporter | +6KB | O(messages) only on export/import |
-| ConversationControls | +5KB | O(1) button clicks |
-| ModelSelector | +8KB | O(models) small subset |
+| Component            | Bundle Size | Runtime                           | Notes                               |
+| -------------------- | ----------- | --------------------------------- | ----------------------------------- |
+| MarkdownContent      | +8KB        | O(messages)                       | useMemo prevents recalc             |
+| CodeBlock            | +7KB        | O(1) light syntax highlighting    |
+| MessageBubble        | -5KB        | N/A                               | Replaced react-markdown (lazy-load) |
+| conversationExporter | +6KB        | O(messages) only on export/import |
+| ConversationControls | +5KB        | O(1) button clicks                |
+| ModelSelector        | +8KB        | O(models) small subset            |
 
 **Net Impact:** +29KB → -5KB = +24KB gzip (minimal)
 
@@ -162,8 +170,8 @@ ModelSelector.tsx (standalone)
 
 ## 🧪 Manual Test Checklist
 
-- [ ] Markdown with **bold** and *italic* renders
-- [ ] Code blocks ```typescript\ncode\n``` syntax highlighted
+- [ ] Markdown with **bold** and _italic_ renders
+- [ ] Code blocks `typescript\ncode\n` syntax highlighted
 - [ ] Inline code `const x = 1;` styled correctly
 - [ ] Export JSON creates downloadable file
 - [ ] Export Markdown creates human-readable file
@@ -178,17 +186,20 @@ ModelSelector.tsx (standalone)
 ## 🚀 Next Steps (Phase 2)
 
 ### Priority 1: Validate in UI
+
 1. Add ConversationControls to AIChatBubble
 2. Add ModelSelector to chat header
 3. Test export/import flow end-to-end
 4. Verify markdown rendering in chat
 
 ### Priority 2: Tool Calling (if time)
+
 1. Create ToolCaller service
 2. Add tool parser
 3. Integrate with ConversationManager
 
 ### Priority 3: Polish
+
 1. Add message reactions
 2. Context window display
 3. Token count per message
@@ -220,12 +231,14 @@ ModelSelector.tsx (standalone)
 ## 📦 Integration Points
 
 ### Components to Update in Phase 2
+
 1. **AIChatBubble.tsx** → Add `<ConversationControls>`
 2. **ChatHeader.tsx** → Add `<ModelSelector>`
 3. **useConversationEngine.ts** → Track selected model
 4. **ConversationManager.ts** → Use selected model for API calls
 
 ### Services to Create in Phase 2
+
 1. `src/services/chat/toolCaller.ts` → Tool execution
 2. `src/services/chat/contextUsageTracker.ts` → Token counting
 

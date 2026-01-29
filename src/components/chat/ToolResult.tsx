@@ -58,9 +58,7 @@ export const ToolResult = memo(function ToolResult({
         <span style={{ color: isError ? '#FF6B6B' : '#51CF66' }}>
           {isError ? '❌' : '✅'}
         </span>
-        <span style={{ color: '#C4C4C4' }}>
-          {toolCall.name}
-        </span>
+        <span style={{ color: '#C4C4C4' }}>{toolCall.name}</span>
         <span style={{ color: '#727B81', fontSize: '11px', marginLeft: 'auto' }}>
           {timestamp}
         </span>
@@ -90,9 +88,7 @@ export const ToolResult = memo(function ToolResult({
       {/* Result or Error */}
       {isError ? (
         <div style={{ fontSize: '11px' }}>
-          <div style={{ color: '#727B81', marginBottom: '4px' }}>
-            Error:
-          </div>
+          <div style={{ color: '#727B81', marginBottom: '4px' }}>Error:</div>
           <div
             style={{
               background: 'rgba(255, 107, 107, 0.2)',
@@ -108,9 +104,7 @@ export const ToolResult = memo(function ToolResult({
         </div>
       ) : toolCall.result ? (
         <div style={{ fontSize: '11px' }}>
-          <div style={{ color: '#727B81', marginBottom: '4px' }}>
-            Result:
-          </div>
+          <div style={{ color: '#727B81', marginBottom: '4px' }}>Result:</div>
           <pre
             style={{
               background: 'rgba(81, 207, 102, 0.1)',

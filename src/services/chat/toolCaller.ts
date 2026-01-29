@@ -23,7 +23,7 @@ export interface ToolDefinition {
  */
 export interface ToolCall {
   id: string;
-  name: string;  // ✅ Aligned with types/conversation.ts
+  name: string; // ✅ Aligned with types/conversation.ts
   arguments: Record<string, unknown>;
   result?: unknown;
   error?: string;
@@ -41,15 +41,26 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     description: 'Search the web for information',
     parameters: {
       query: { type: 'string', description: 'Search query' },
-      maxResults: { type: 'number', description: 'Maximum results to return', default: 5 },
+      maxResults: {
+        type: 'number',
+        description: 'Maximum results to return',
+        default: 5,
+      },
     },
-    execute: async (args) => {
-      const { query = '', maxResults = 5 } = args as { query: string; maxResults?: number };
+    execute: async args => {
+      const { query = '', maxResults = 5 } = args as {
+        query: string;
+        maxResults?: number;
+      };
       // Implémentation stub - en production, appeler une API réelle
       console.log('[ToolCaller] web_search:', { query, maxResults });
       return {
         results: [
-          { title: `Result for "${query}"`, url: 'https://example.com', snippet: 'Placeholder result' },
+          {
+            title: `Result for "${query}"`,
+            url: 'https://example.com',
+            snippet: 'Placeholder result',
+          },
         ],
       };
     },
@@ -60,9 +71,12 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     name: 'calculate',
     description: 'Perform mathematical calculations',
     parameters: {
-      expression: { type: 'string', description: 'Mathematical expression (e.g., "2+2*3")' },
+      expression: {
+        type: 'string',
+        description: 'Mathematical expression (e.g., "2+2*3")',
+      },
     },
-    execute: async (args) => {
+    execute: async args => {
       const { expression = '' } = args as { expression: string };
       try {
         // Security: Only allow safe math operations
@@ -71,17 +85,17 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         if (!allowedPattern.test(expression)) {
           throw new Error('Invalid expression: only numbers and basic operators allowed');
         }
-        
+
         // ✅ #2: Add timeout protection (1s) to prevent infinite loops
-        const timeoutPromise = new Promise<never>((_, reject) => 
+        const timeoutPromise = new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Expression evaluation timeout (1s)')), 1000)
         );
-        
+
         const evalPromise = Promise.resolve(
           // eslint-disable-next-line no-eval
           Function(`"use strict"; return (${expression})`)()
         );
-        
+
         const result = await Promise.race([evalPromise, timeoutPromise]);
         console.log('[ToolCaller] calculate:', { expression, result });
         return { result, expression };
@@ -117,7 +131,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
       location: { type: 'string', description: 'City name or coordinates' },
       unit: { type: 'string', description: 'Temperature unit (C or F)', default: 'C' },
     },
-    execute: async (args) => {
+    execute: async args => {
       const { location = '', unit = 'C' } = args as { location: string; unit?: string };
       // Implémentation stub - en production, appeler OpenWeather API ou similaire
       console.log('[ToolCaller] get_weather:', { location, unit });
@@ -139,7 +153,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
     parameters: {
       ticker: { type: 'string', description: 'Stock ticker symbol (e.g., AAPL)' },
     },
-    execute: async (args) => {
+    execute: async args => {
       const { ticker = '' } = args as { ticker: string };
       // Implémentation stub - en production, appeler un service de données financières
       console.log('[ToolCaller] get_stock:', { ticker });
@@ -183,7 +197,7 @@ export class ToolCallerService {
     if (this.tools.has(tool.name)) {
       console.warn(`[ToolCaller] Tool ${tool.name} already registered, overwriting`);
     }
-    
+
     this.tools.set(tool.name, tool);
     console.log(`[ToolCaller] ✅ Tool registered: ${tool.name}`);
   }
@@ -195,7 +209,7 @@ export class ToolCallerService {
     const tools = Array.from(this.tools.values());
     return tools
       .map(
-        (tool) => `
+        tool => `
 - **${tool.name}**: ${tool.description}
   Parameters: ${JSON.stringify(tool.parameters || {})}
 `
@@ -209,7 +223,9 @@ export class ToolCallerService {
    * {"tool_name": "get_time"}
    * {"tool_name": "calculate", "expression": "123*456"}
    */
-  parseToolCalls(text: string): Array<{ name: string; arguments: Record<string, unknown> }> {
+  parseToolCalls(
+    text: string
+  ): Array<{ name: string; arguments: Record<string, unknown> }> {
     const calls: Array<{ name: string; arguments: Record<string, unknown> }> = [];
     console.log('[ToolCaller] 🔍 PARSING TEXT:', text.substring(0, 200)); // DEBUG: afficher début du texte
 
@@ -217,15 +233,17 @@ export class ToolCallerService {
     const jsonObjRegex = /\{\s*"tool_name"\s*:\s*"([^"]+)"([^}]*)\}/g;
     let match: RegExpExecArray | null;
     let jsonFound = 0;
-    
+
     while ((match = jsonObjRegex.exec(text)) !== null) {
       jsonFound++;
       const toolName = match[1] ?? '';
       const argsStr = match[2] ?? '';
       const args: Record<string, unknown> = {};
-      
-      console.log(`[ToolCaller] ✅ JSON MATCH #${jsonFound}: tool_name=${toolName}, argsStr=${argsStr}`); // DEBUG
-      
+
+      console.log(
+        `[ToolCaller] ✅ JSON MATCH #${jsonFound}: tool_name=${toolName}, argsStr=${argsStr}`
+      ); // DEBUG
+
       // Parse JSON properties: "key": "value"
       if (argsStr) {
         const propRegex = /"([^"]+)"\s*:\s*(?:"([^"]*)"|([^,}]+))/g;
@@ -235,13 +253,14 @@ export class ToolCallerService {
           const strValue = propMatch[2] ?? '';
           const numValue = propMatch[3] ?? '';
           if (key && key !== 'tool_name') {
-            const value = numValue && !isNaN(Number(numValue)) ? Number(numValue) : strValue;
+            const value =
+              numValue && !isNaN(Number(numValue)) ? Number(numValue) : strValue;
             args[key] = value;
             console.log(`[ToolCaller]   → arg: ${key}=${value}`); // DEBUG: afficher chaque arg
           }
         }
       }
-      
+
       if (toolName) {
         calls.push({ name: toolName, arguments: args });
         console.log('[ToolCaller] ✨ TOOL CALL PARSED:', { toolName, arguments: args });
@@ -281,10 +300,14 @@ export class ToolCallerService {
     }
 
     if (xmlFound === 0 && jsonFound === 0) {
-      console.log('[ToolCaller] 🚨 ZERO TOOLS PARSED - model did not generate tool calls'); // DEBUG
+      console.log(
+        '[ToolCaller] 🚨 ZERO TOOLS PARSED - model did not generate tool calls'
+      ); // DEBUG
     }
 
-    console.log(`[ToolCaller] 📋 FINAL RESULT: ${calls.length} tools parsed (${jsonFound} JSON + ${xmlFound} XML)`);
+    console.log(
+      `[ToolCaller] 📋 FINAL RESULT: ${calls.length} tools parsed (${jsonFound} JSON + ${xmlFound} XML)`
+    );
     return calls;
   }
 
@@ -315,11 +338,13 @@ export class ToolCallerService {
         result,
         timestamp: Date.now(),
       });
-      
+
       // ✅ #1: Enforce MAX_HISTORY limit - remove oldest if needed
       if (this.callHistory.length > this.MAX_HISTORY) {
         this.callHistory.shift();
-        console.log(`[ToolCaller] ⚠️ History limit reached (${this.MAX_HISTORY}), removed oldest entry`);
+        console.log(
+          `[ToolCaller] ⚠️ History limit reached (${this.MAX_HISTORY}), removed oldest entry`
+        );
       }
 
       return { result };
@@ -347,7 +372,7 @@ export class ToolCallerService {
     calls: Array<{ name: string; arguments: Record<string, unknown> }>
   ): Promise<Array<{ toolName: string; result: unknown; error?: string }>> {
     const results = await Promise.all(
-      calls.map((call) => this.executeToolCall(call.name, call.arguments))
+      calls.map(call => this.executeToolCall(call.name, call.arguments))
     );
     return results.map((result, idx) => {
       const call = calls[idx];
@@ -384,7 +409,9 @@ export class ToolCallerService {
 
 let toolCallerInstance: ToolCallerService | null = null;
 
-export function getToolCaller(customTools?: Record<string, ToolDefinition>): ToolCallerService {
+export function getToolCaller(
+  customTools?: Record<string, ToolDefinition>
+): ToolCallerService {
   if (!toolCallerInstance) {
     toolCallerInstance = new ToolCallerService(customTools);
   }

@@ -22,13 +22,14 @@ sudo dpkg -i TITANE-Infinity_26.4.0_amd64.deb
 ```
 
 **Nouveautés v26.4.0 :**
+
 - 🎨 **Icône holographique ∞** (symbole infini avec dégradé bleu titanium → cyan)
 - ✅ 2508/2508 tests validés (100%)
 - 🛡️ Performance Guards + Télémétrie avancée
 - 🔒 Score d'infaillibilité : 110%
 
 **Compatibilité :**  
-✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!_OS 20.04+
+✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
 📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v26.4.0) | 🔐 [SHA256 Checksum](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.4.0/TITANE-Infinity_26.4.0_amd64.deb.sha256)
 

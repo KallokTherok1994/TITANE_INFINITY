@@ -1,21 +1,24 @@
 # Rapport de Corrections Tests TypeScript
+
 **Date:** $(date +%Y-%m-%d)
-**Objectif:** Correction des erreurs TypeScript dans src/__tests__
+**Objectif:** Correction des erreurs TypeScript dans src/**tests**
 
 ## 📊 Résultats
 
 ### Corrections Principales
 
-✅ **tsconfig.test.json** - Inclure dossiers __tests__ et tests
+✅ **tsconfig.test.json** - Inclure dossiers **tests** et tests
 ✅ **Type implicite 'any'** - Correction dans ai-orchestrator-neural-fixed.test.ts  
 ✅ **Imports vitest/globals** - Ajout de beforeEach/afterEach manquants (13 fichiers)
 ✅ **Erreur syntaxe** - Correction parenthèse manquante dans DevToolsWorkflow.e2e.test.tsx
 
 ### État Initial
+
 - **475 erreurs** de type `toBeInTheDocument` non reconnu
 - **111 erreurs** liées à modules manquants (composants non implémentés)
 
 ### État Actuel
+
 - **0 erreurs** liées aux matchers @testing-library/jest-dom
 - **920 erreurs TypeScript** (strict mode) - types undefined, modules manquants
 
@@ -36,6 +39,7 @@
 ### 2. Imports Vitest Globals
 
 Fichiers corrigés (13):
+
 - features/chat/ChatToolbar.test.tsx
 - features/memory/MemoryCard.test.tsx
 - features/memory/MemorySearch.test.tsx
@@ -64,10 +68,10 @@ const titaneLocal = status.providers.find((p: { name: string }) => p.name === 't
 
 \`\`\`typescript
 // Avant - e2e/DevToolsWorkflow.e2e.test.tsx ligne 172
-fireEvent.click(screen.getByText(/engines/i });  // Parenthèse incorrecte
+fireEvent.click(screen.getByText(/engines/i }); // Parenthèse incorrecte
 
 // Après
-fireEvent.click(screen.getByText(/engines/i));   // Corrigé
+fireEvent.click(screen.getByText(/engines/i)); // Corrigé
 \`\`\`
 
 ## 📋 Erreurs Restantes (Acceptable)
@@ -76,12 +80,11 @@ Les **920 erreurs** restantes sont **normales et attendues**:
 
 1. **Modules manquants (111)** - Composants/hooks non encore implémentés
    - @/apps/Settings/Settings
-   - @/apps/devtools/* 
-   - @/features/chat/*
-   - @/features/memory/*
-   - @/hooks/* (nouveaux hooks)
-   - @/panels/*
-   
+   - @/apps/devtools/\*
+   - @/features/chat/\*
+   - @/features/memory/\*
+   - @/hooks/\* (nouveaux hooks)
+   - @/panels/\*
 2. **Types stricts (809)** - Nécessitent implémentation complète
    - possibly 'undefined' checks
    - Type mismatches
@@ -92,10 +95,15 @@ Ces erreurs se résoudront naturellement lors de l'implémentation des composant
 ## ✅ Validation
 
 \`\`\`bash
+
 # Erreurs @testing-library/jest-dom: 0 ✅
+
 # Tests compilent correctement avec vitest: ✅
+
 # Types matchers reconnus: ✅
+
 # Imports vitest/globals: ✅
+
 \`\`\`
 
 ## 🎯 Prochaines Étapes

@@ -36,7 +36,7 @@ describe('useSingularity Hook', () => {
   describe('Activation', () => {
     it('should activate singularity', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -46,7 +46,7 @@ describe('useSingularity Hook', () => {
 
     it('should update metrics on activation', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -58,7 +58,7 @@ describe('useSingularity Hook', () => {
   describe('Metrics', () => {
     it('should collect performance metrics', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -69,7 +69,7 @@ describe('useSingularity Hook', () => {
 
     it('should track uptime', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.activate();
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -82,7 +82,7 @@ describe('useSingularity Hook', () => {
   describe('State Management', () => {
     it('should transition to processing state', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.processTask();
       });
@@ -92,7 +92,7 @@ describe('useSingularity Hook', () => {
 
     it('should return to active state after processing', async () => {
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         await result.current.processTask();
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -106,9 +106,9 @@ describe('useSingularity Hook', () => {
     it('should handle activation errors', async () => {
       const tauriCore = await import('@tauri-apps/api/core');
       vi.mocked(tauriCore.invoke).mockRejectedValueOnce(new Error('Activation failed'));
-      
+
       const { result } = renderHook(() => useSingularity());
-      
+
       await act(async () => {
         try {
           await result.current.activate();

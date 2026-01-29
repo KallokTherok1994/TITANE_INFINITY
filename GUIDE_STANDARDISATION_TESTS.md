@@ -7,6 +7,7 @@
 ## 📋 CONTEXTE
 
 **Situation actuelle**:
+
 - 211 échecs / 2875 tests (92.7% passants)
 - 4 fichiers standardisés avec succès (+8 tests passants)
 - ~54 fichiers DevTools restants à standardiser
@@ -18,6 +19,7 @@
 ### 1. Structure du Mock du Store
 
 **AVANT** (incorrect):
+
 ```tsx
 vi.mock('@/apps/devtools/components/CoreHealthMonitor', () => ({
   CoreHealthMonitor: () => <div>Mock</div>,
@@ -25,15 +27,21 @@ vi.mock('@/apps/devtools/components/CoreHealthMonitor', () => ({
 ```
 
 **APRÈS** (correct):
+
 ```tsx
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     systemHealth: 'healthy',
-    engines: [
-      { id: 'helios', name: 'Helios', status: 'running' },
-    ],
+    engines: [{ id: 'helios', name: 'Helios', status: 'running' }],
     metrics: {
-      'cpu-usage': { id: 'cpu-usage', label: 'CPU Usage', value: 34, unit: '%', trend: 'up', history: [30, 32, 34] },
+      'cpu-usage': {
+        id: 'cpu-usage',
+        label: 'CPU Usage',
+        value: 34,
+        unit: '%',
+        trend: 'up',
+        history: [30, 32, 34],
+      },
     },
     logs: [],
     errors: [],
@@ -46,15 +54,20 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
 ```tsx
 vi.mock('@/apps/devtools/components', () => ({
   SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
-  MetricCard: ({ label }: any) => <div data-testid={`metric-${label.replace(/\s+/g, '-')}`}>{label}</div>,
+  MetricCard: ({ label }: any) => (
+    <div data-testid={`metric-${label.replace(/\s+/g, '-')}`}>{label}</div>
+  ),
   StatusPill: ({ label }: any) => <span data-testid="status-pill">{label}</span>,
-  EngineCard: ({ engine }: any) => <div data-testid={`engine-${engine.id}`}>{engine.name}</div>,
+  EngineCard: ({ engine }: any) => (
+    <div data-testid={`engine-${engine.id}`}>{engine.name}</div>
+  ),
 }));
 ```
 
 ### 3. Tests Alignés sur Vraie Structure
 
 **AVANT** (incorrect):
+
 ```tsx
 it('should render dashboard', () => {
   render(<Dashboard />);
@@ -63,6 +76,7 @@ it('should render dashboard', () => {
 ```
 
 **APRÈS** (correct):
+
 ```tsx
 it('should render dashboard with header', () => {
   render(<Dashboard />);
@@ -147,7 +161,13 @@ it('should display metric cards', () => {
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     logs: [
-      { id: '1', timestamp: Date.now(), level: 'info', source: 'helios', message: 'Test log' },
+      {
+        id: '1',
+        timestamp: Date.now(),
+        level: 'info',
+        source: 'helios',
+        message: 'Test log',
+      },
     ],
     autoScrollLogs: true,
     setAutoScrollLogs: vi.fn(),
@@ -219,11 +239,17 @@ afterAll(() => {
 
 ```tsx
 // Au lieu de
-{data.length}  // ❌
+{
+  data.length;
+} // ❌
 
 // Utiliser
-{(data || []).length}  // ✅
-{data?.length || 0}  // ✅
+{
+  (data || []).length;
+} // ✅
+{
+  data?.length || 0;
+} // ✅
 ```
 
 ## 📊 CONVENTION data-testid
@@ -269,4 +295,3 @@ Pour chaque fichier de test :
 **Pattern validé sur**: Dashboard, Metrics, Logs, OmegaPipeline ✅  
 **Réduction des échecs**: -3.7% (8 tests) en 4 fichiers  
 **Projection**: -45% avec standardisation complète
-

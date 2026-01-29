@@ -59,9 +59,7 @@ export interface AutoOptimizeResponse {
 // TYPE GUARDS
 // ═══════════════════════════════════════════════════════════════════════════
 
-export function isUpdateStateSuccess(
-  response: unknown
-): response is UpdateStateResponse {
+export function isUpdateStateSuccess(response: unknown): response is UpdateStateResponse {
   return (
     typeof response === 'object' &&
     response !== null &&

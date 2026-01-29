@@ -74,7 +74,11 @@ describe('Button Component', () => {
 
     it('should not trigger click when disabled', () => {
       const handleClick = vi.fn();
-      render(<Button disabled onClick={handleClick}>Disabled</Button>);
+      render(
+        <Button disabled onClick={handleClick}>
+          Disabled
+        </Button>
+      );
       fireEvent.click(screen.getByRole('button'));
       expect(handleClick).not.toHaveBeenCalled();
     });

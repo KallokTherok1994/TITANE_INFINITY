@@ -114,17 +114,24 @@ export function useConversationEngine(
             // Convert AIMessage[] to ConversationMessage[]
             const conversationMessages: ConversationMessage[] = parsed.messages.map(
               (msg, index: number) => {
-                const safe = typeof msg === 'object' && msg !== null ? (msg as Record<string, unknown>) : {};
+                const safe =
+                  typeof msg === 'object' && msg !== null
+                    ? (msg as Record<string, unknown>)
+                    : {};
                 const roleValue = safe.role === 'assistant' ? 'assistant' : 'user';
                 const contentValue = typeof safe.content === 'string' ? safe.content : '';
-                const timestampValue = typeof safe.timestamp === 'number' ? safe.timestamp : Date.now();
+                const timestampValue =
+                  typeof safe.timestamp === 'number' ? safe.timestamp : Date.now();
                 const metadataValue =
                   typeof safe.metadata === 'object' && safe.metadata !== null
                     ? (safe.metadata as Record<string, unknown>)
                     : undefined;
 
                 return {
-                  id: typeof safe.id === 'string' ? safe.id : `loaded-${index}-${Date.now()}`,
+                  id:
+                    typeof safe.id === 'string'
+                      ? safe.id
+                      : `loaded-${index}-${Date.now()}`,
                   role: roleValue,
                   content: contentValue,
                   timestamp: timestampValue,
@@ -239,7 +246,10 @@ export function useConversationEngine(
         };
         await saveMessage(userAIMessage);
       } catch (persistError) {
-        console.warn('[useConversationEngine] ⚠️ Failed to persist user message', persistError);
+        console.warn(
+          '[useConversationEngine] ⚠️ Failed to persist user message',
+          persistError
+        );
       }
 
       try {
@@ -294,7 +304,10 @@ export function useConversationEngine(
           // Ensure flush to localStorage
           chatMemoryCompactor.flushPendingSaves();
         } catch (persistError) {
-          console.warn('[useConversationEngine] ⚠️ Failed to persist messages', persistError);
+          console.warn(
+            '[useConversationEngine] ⚠️ Failed to persist messages',
+            persistError
+          );
         }
 
         setLastResponse(response);

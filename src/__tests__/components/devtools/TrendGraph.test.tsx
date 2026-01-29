@@ -43,7 +43,7 @@ describe('TrendGraph Component', () => {
     it('should render multiple series', () => {
       const multiSeries = {
         cpu: mockData,
-        memory: mockData.map(d => ({ ...d, value: d.value * 0.8 }))
+        memory: mockData.map(d => ({ ...d, value: d.value * 0.8 })),
       };
       render(<TrendGraph dataSeries={multiSeries} />);
       expect(screen.getByText('cpu')).toBeInTheDocument();
@@ -111,7 +111,7 @@ describe('TrendGraph Component', () => {
     it('should show tooltip on hover', () => {
       const { container } = render(<TrendGraph data={mockData} />);
       const chart = container.querySelector('canvas');
-      
+
       if (chart) {
         chart.dispatchEvent(new MouseEvent('mousemove', { clientX: 100, clientY: 100 }));
         expect(screen.getByRole('tooltip')).toBeInTheDocument();

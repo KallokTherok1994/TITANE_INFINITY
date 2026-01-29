@@ -420,7 +420,7 @@ describe('GovernancePanel', () => {
     const initialCallCount = runCheckSpy.mock.calls.length;
 
     // Trigger the interval callback directly (more deterministic than advancing fake timers)
-    const intervalCall = setIntervalSpy.mock.calls.find((call) => call[1] === 60000);
+    const intervalCall = setIntervalSpy.mock.calls.find(call => call[1] === 60000);
     expect(intervalCall).toBeTruthy();
 
     const intervalCallback = intervalCall?.[0] as unknown as () => unknown;
@@ -556,4 +556,3 @@ describe('Panels Integration Tests', () => {
     });
   });
 });
-

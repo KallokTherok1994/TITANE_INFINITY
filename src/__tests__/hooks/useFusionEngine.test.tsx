@@ -28,7 +28,7 @@ describe('useFusionEngine Hook', () => {
   describe('Activation', () => {
     it('should activate engine', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -38,7 +38,7 @@ describe('useFusionEngine Hook', () => {
 
     it('should deactivate engine', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
         await result.current.deactivate();
@@ -51,7 +51,7 @@ describe('useFusionEngine Hook', () => {
   describe('Processing', () => {
     it('should process input', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -65,7 +65,7 @@ describe('useFusionEngine Hook', () => {
 
     it('should update state during processing', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -79,7 +79,7 @@ describe('useFusionEngine Hook', () => {
 
     it('should handle processing errors', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -97,7 +97,7 @@ describe('useFusionEngine Hook', () => {
   describe('State Management', () => {
     it('should track processing state', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -113,7 +113,7 @@ describe('useFusionEngine Hook', () => {
 
     it('should provide engine metrics', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -126,7 +126,7 @@ describe('useFusionEngine Hook', () => {
   describe('Error Handling', () => {
     it('should handle activation errors', async () => {
       const { result } = renderHook(() => useFusionEngine({ failOnActivate: true }));
-      
+
       await expect(async () => {
         await act(async () => {
           await result.current.activate();
@@ -136,7 +136,7 @@ describe('useFusionEngine Hook', () => {
 
     it('should recover from errors', async () => {
       const { result } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });
@@ -156,7 +156,7 @@ describe('useFusionEngine Hook', () => {
   describe('Cleanup', () => {
     it('should cleanup on unmount', async () => {
       const { result, unmount } = renderHook(() => useFusionEngine());
-      
+
       await act(async () => {
         await result.current.activate();
       });

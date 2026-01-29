@@ -44,7 +44,7 @@ describe('MetricsDisplay Component', () => {
     it('should highlight high CPU', () => {
       const highCPU = { ...mockMetrics, cpu: 90 };
       render(<MetricsDisplay metrics={highCPU} />);
-      
+
       const cpuElement = screen.getByText(/90%/);
       expect(cpuElement.className).toMatch(/warning|danger|high/i);
     });
@@ -52,7 +52,7 @@ describe('MetricsDisplay Component', () => {
     it('should highlight low FPS', () => {
       const lowFPS = { ...mockMetrics, fps: 20 };
       render(<MetricsDisplay metrics={lowFPS} />);
-      
+
       const fpsElement = screen.getByText(/20.*fps/i);
       expect(fpsElement.className).toMatch(/warning|danger|low/i);
     });

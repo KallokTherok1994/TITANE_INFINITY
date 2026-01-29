@@ -12,13 +12,7 @@ export * from './logger';
 export * from './system';
 
 // DevTools exports (SystemEvent, DataPoint, MemoryNode prioritaires)
-export type {
-  CoreHealth,
-  Engine,
-  SystemEvent,
-  DataPoint,
-  MemoryNode,
-} from './devtools';
+export type { CoreHealth, Engine, SystemEvent, DataPoint, MemoryNode } from './devtools';
 
 // DevOps exports (skip duplicates)
 export type { DeploymentConfig } from './devops';
@@ -27,10 +21,7 @@ export type { DeploymentConfig } from './devops';
 export type { AutomationEvent } from './automationXP';
 
 // SingularityState exports (skip MemoryState -> from system)
-export type {
-  SingularityState,
-  DevOpsLayer,
-} from './singularityState';
+export type { SingularityState, DevOpsLayer } from './singularityState';
 
 // PerformanceEngine exports (skip DataPoint -> from devtools)
 export * from './performanceEngine';

@@ -113,12 +113,12 @@ global.__TAURI__ = {
           return { stm: [], mtm: [], ltm: [] };
         case 'singularity_get_state':
         case 'singularity_get_full_state':
-          return { 
+          return {
             physical: { health: 0.9 },
             cognitive: { coherence: 0.8 },
             symbolic: { alignment: 0.85 },
             adaptive: { plasticity: 0.75 },
-            meta: { awareness: 0.7 }
+            meta: { awareness: 0.7 },
           };
         case 'get_ai_status':
           return { status: 'ready', providers: ['gemini', 'ollama'] };

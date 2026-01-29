@@ -20,7 +20,9 @@ describe.skip('MemoryVisualization Component (NON IMPLÉMENTÉ - fichier inexist
   describe('Rendering', () => {
     it('should render memory tree', () => {
       render(<MemoryVisualization tree={mockMemoryTree} />);
-      expect(screen.getByText(/memory/i) || screen.getByText(/STM|MTM|LTM/i)).toBeTruthy();
+      expect(
+        screen.getByText(/memory/i) || screen.getByText(/STM|MTM|LTM/i)
+      ).toBeTruthy();
     });
 
     it('should display STM tier', () => {

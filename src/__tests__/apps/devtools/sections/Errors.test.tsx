@@ -15,9 +15,30 @@ const mockUpdateEngine = vi.fn();
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     errors: [
-      { id: 'err1', message: 'Connection timeout', engine: 'chat-engine', timestamp: Date.now(), resolved: false, impact: 'high' },
-      { id: 'err2', message: 'Memory limit exceeded', engine: 'memory-engine', timestamp: Date.now() - 30000, resolved: false, impact: 'medium' },
-      { id: 'err3', message: 'Invalid config', engine: 'fusion-engine', timestamp: Date.now() - 60000, resolved: true, impact: 'low' },
+      {
+        id: 'err1',
+        message: 'Connection timeout',
+        engine: 'chat-engine',
+        timestamp: Date.now(),
+        resolved: false,
+        impact: 'high',
+      },
+      {
+        id: 'err2',
+        message: 'Memory limit exceeded',
+        engine: 'memory-engine',
+        timestamp: Date.now() - 30000,
+        resolved: false,
+        impact: 'medium',
+      },
+      {
+        id: 'err3',
+        message: 'Invalid config',
+        engine: 'fusion-engine',
+        timestamp: Date.now() - 60000,
+        resolved: true,
+        impact: 'low',
+      },
     ],
     resolveError: mockResolveError,
     updateEngine: mockUpdateEngine,
@@ -70,20 +91,20 @@ describe('DevTools Errors Section', () => {
     it('should handle error retry', () => {
       vi.useFakeTimers();
       render(<Errors />);
-      
+
       // Chercher boutons retry si disponibles
       const retryButtons = screen.queryAllByRole('button', { name: /retry/i });
       if (retryButtons.length > 0) {
         fireEvent.click(retryButtons[0]);
         expect(mockUpdateEngine).toHaveBeenCalled();
       }
-      
+
       vi.useRealTimers();
     });
 
     it('should handle error resolution', () => {
       render(<Errors />);
-      
+
       const resolveButtons = screen.queryAllByRole('button', { name: /resolve/i });
       if (resolveButtons.length > 0) {
         fireEvent.click(resolveButtons[0]);

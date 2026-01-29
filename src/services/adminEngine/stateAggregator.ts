@@ -305,12 +305,11 @@ export class StateAggregator {
 
     // Essayer de récupérer depuis Rust
     try {
-      const rustStatuses =
-        await secureInvoke<RustModuleStatusResponse[]>(
-          'get_module_statuses',
-          {},
-          { skipWhitelistCheck: true }
-        );
+      const rustStatuses = await secureInvoke<RustModuleStatusResponse[]>(
+        'get_module_statuses',
+        {},
+        { skipWhitelistCheck: true }
+      );
 
       for (const rs of rustStatuses) {
         const moduleId = rs.module_id as TitaneModule;

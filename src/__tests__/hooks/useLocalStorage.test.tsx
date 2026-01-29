@@ -36,7 +36,7 @@ describe('useLocalStorage Hook', () => {
   describe('Set Value', () => {
     it('should update value', () => {
       const { result } = renderHook(() => useLocalStorage('key', 'initial'));
-      
+
       act(() => {
         result.current[1]('updated');
       });
@@ -46,7 +46,7 @@ describe('useLocalStorage Hook', () => {
 
     it('should persist to localStorage', () => {
       const { result } = renderHook(() => useLocalStorage('persist-key', 'value1'));
-      
+
       act(() => {
         result.current[1]('value2');
       });
@@ -56,7 +56,7 @@ describe('useLocalStorage Hook', () => {
 
     it('should handle function updater', () => {
       const { result } = renderHook(() => useLocalStorage('counter', 0));
-      
+
       act(() => {
         result.current[1]((prev: number) => prev + 1);
       });
@@ -68,7 +68,7 @@ describe('useLocalStorage Hook', () => {
   describe('Complex Types', () => {
     it('should store arrays', () => {
       const { result } = renderHook(() => useLocalStorage('array-key', []));
-      
+
       act(() => {
         result.current[1]([1, 2, 3]);
       });
@@ -79,7 +79,7 @@ describe('useLocalStorage Hook', () => {
 
     it('should store objects', () => {
       const { result } = renderHook(() => useLocalStorage('obj-key', {}));
-      
+
       const obj = { name: 'test', nested: { value: 42 } };
       act(() => {
         result.current[1](obj);
@@ -103,7 +103,7 @@ describe('useLocalStorage Hook', () => {
       });
 
       const { result } = renderHook(() => useLocalStorage('quota-key', 'value'));
-      
+
       act(() => {
         result.current[1]('large-value');
       });

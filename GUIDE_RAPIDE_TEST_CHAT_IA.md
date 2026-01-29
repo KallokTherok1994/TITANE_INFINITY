@@ -17,6 +17,7 @@ pnpm run dev:tauri
 ### Étape 2: Ouvrir DevTools Console
 
 Dans la fenêtre TITANE∞:
+
 - **Clic droit** n'importe où → "Inspecter l'élément"
 - Ou appuyer sur **F12**
 - Aller à l'onglet **Console**
@@ -33,6 +34,7 @@ Dans la fenêtre TITANE∞:
 ### Étape 4: Envoyer Message Test
 
 **Dans le champ de saisie, taper:**
+
 ```
 Bonjour, test debug phase 2
 ```
@@ -106,6 +108,7 @@ Bonjour, test debug phase 2
 **Cause:** Tauri invoke échoue
 
 **Action:**
+
 ```bash
 # Recompiler Rust
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
@@ -119,6 +122,7 @@ cargo build --manifest-path=src-tauri/Cargo.toml
 **Symptôme:** Log `[conversation_process_message] ❌ Error`
 
 **Action:**
+
 ```bash
 # Vérifier Ollama actif
 curl http://127.0.0.1:11434/api/tags
@@ -138,6 +142,7 @@ ollama list
 **Symptôme:** Log #4 `✅ Success` MAIS log #5 `assistant_message_length: 0`
 
 **Action:**
+
 ```bash
 # Test Ollama direct
 ollama run llama3.1 "Bonjour"
@@ -153,9 +158,10 @@ ollama run llama3.1 "Bonjour"
 **Symptôme:** Tous les 7 logs OK, `content_length > 0`, MAIS case vide dans UI
 
 **Action dans Console DevTools:**
+
 ```javascript
 // Compter messages DOM
-document.querySelectorAll('.conversation-message').length
+document.querySelectorAll('.conversation-message').length;
 // Attendu: 2 (user + assistant)
 
 // Inspecter assistant
@@ -165,7 +171,7 @@ console.log({
   display: msg ? getComputedStyle(msg).display : 'N/A',
   opacity: msg ? getComputedStyle(msg).opacity : 'N/A',
   height: msg ? msg.offsetHeight : 0,
-  texte: msg ? msg.textContent : ''
+  texte: msg ? msg.textContent : '',
 });
 ```
 

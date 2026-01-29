@@ -329,7 +329,7 @@ export const ollamaProvider: AIProvider = {
       historyLength: history.length,
       model: OLLAMA_MODEL,
       url: OLLAMA_API_URL,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
 
     // OMEGA: Pre-check endpoint health
@@ -422,7 +422,7 @@ export const ollamaProvider: AIProvider = {
             console.error('[ollamaProvider] ❌ Fetch error', {
               error: error instanceof Error ? error.message : String(error),
               url: OLLAMA_API_URL,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             });
 
             if (error instanceof Error) {
@@ -481,7 +481,7 @@ export const ollamaProvider: AIProvider = {
         contentLength: aiResponse.content.length,
         provider: aiResponse.provider,
         model: aiResponse.model,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       });
 
       // ✨ v21 - Save interaction to memory (async, non-blocking)

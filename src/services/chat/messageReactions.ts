@@ -44,7 +44,7 @@ class MessageReactionsService {
       const stored = localStorage.getItem(this.STORAGE_KEY);
       if (stored) {
         const data = JSON.parse(stored) as MessageReaction[];
-        data.forEach((item) => {
+        data.forEach(item => {
           this.reactionsCache.set(item.messageTimestamp, item.reactions);
         });
       }
@@ -81,7 +81,7 @@ class MessageReactionsService {
       // Retirer la réaction
       current[reaction] = 0;
       // Nettoyer si plus de réactions
-      if (Object.values(current).every((c) => c === 0)) {
+      if (Object.values(current).every(c => c === 0)) {
         this.reactionsCache.delete(messageTimestamp);
       }
     } else {

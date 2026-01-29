@@ -53,7 +53,7 @@ describe('useThrottle Hook', () => {
       expect(result.current).toBe('first');
 
       rerender({ value: 'second', delay: 500 });
-      
+
       // First update should be immediate
       expect(result.current).toBe('first');
     });

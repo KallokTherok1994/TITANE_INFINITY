@@ -15,15 +15,39 @@ export const mockCoreHealth = {
 };
 
 export const mockCoreHealthMap = new Map([
-  ['Orchestrator', { ...mockCoreHealth, name: 'Orchestrator', status: 'healthy' as const }],
+  [
+    'Orchestrator',
+    { ...mockCoreHealth, name: 'Orchestrator', status: 'healthy' as const },
+  ],
   ['StyleEngine', { ...mockCoreHealth, name: 'StyleEngine', status: 'healthy' as const }],
-  ['CoherenceEngine', { ...mockCoreHealth, name: 'CoherenceEngine', status: 'degraded' as const }],
-  ['ReflectionEngine', { ...mockCoreHealth, name: 'ReflectionEngine', status: 'healthy' as const }],
-  ['EmotionEngine', { ...mockCoreHealth, name: 'EmotionEngine', status: 'healthy' as const }],
-  ['UnifiedMemory', { ...mockCoreHealth, name: 'UnifiedMemory', status: 'healthy' as const }],
-  ['BehaviorEngine', { ...mockCoreHealth, name: 'BehaviorEngine', status: 'healthy' as const }],
-  ['AdaptationEngine', { ...mockCoreHealth, name: 'AdaptationEngine', status: 'healthy' as const }],
-  ['SystemHealth', { ...mockCoreHealth, name: 'SystemHealth', status: 'healthy' as const }],
+  [
+    'CoherenceEngine',
+    { ...mockCoreHealth, name: 'CoherenceEngine', status: 'degraded' as const },
+  ],
+  [
+    'ReflectionEngine',
+    { ...mockCoreHealth, name: 'ReflectionEngine', status: 'healthy' as const },
+  ],
+  [
+    'EmotionEngine',
+    { ...mockCoreHealth, name: 'EmotionEngine', status: 'healthy' as const },
+  ],
+  [
+    'UnifiedMemory',
+    { ...mockCoreHealth, name: 'UnifiedMemory', status: 'healthy' as const },
+  ],
+  [
+    'BehaviorEngine',
+    { ...mockCoreHealth, name: 'BehaviorEngine', status: 'healthy' as const },
+  ],
+  [
+    'AdaptationEngine',
+    { ...mockCoreHealth, name: 'AdaptationEngine', status: 'healthy' as const },
+  ],
+  [
+    'SystemHealth',
+    { ...mockCoreHealth, name: 'SystemHealth', status: 'healthy' as const },
+  ],
 ]);
 
 export const mockMetricsData = {

@@ -38,7 +38,7 @@ describe('usePerformanceMonitor Hook', () => {
     it('should collect metrics periodically', async () => {
       vi.useFakeTimers();
       const { result } = renderHook(() => usePerformanceMonitor({ interval: 1000 }));
-      
+
       act(() => {
         vi.advanceTimersByTime(1000);
       });
@@ -49,7 +49,7 @@ describe('usePerformanceMonitor Hook', () => {
 
     it('should update cpu usage', async () => {
       const { result } = renderHook(() => usePerformanceMonitor());
-      
+
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
       });
@@ -61,7 +61,7 @@ describe('usePerformanceMonitor Hook', () => {
   describe('Thresholds', () => {
     it('should detect high CPU usage', () => {
       const { result } = renderHook(() => usePerformanceMonitor({ cpuThreshold: 80 }));
-      
+
       act(() => {
         // Simuler CPU élevé
         result.current.metrics.cpu = 85;
@@ -73,7 +73,7 @@ describe('usePerformanceMonitor Hook', () => {
     it('should emit alerts', async () => {
       const onAlert = vi.fn();
       renderHook(() => usePerformanceMonitor({ onAlert }));
-      
+
       // Alert devrait être levée si seuils dépassés
       await act(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));

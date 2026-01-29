@@ -194,12 +194,7 @@ export interface TabsLegacyProps {
  * Tabs (Legacy) - Original render-props API
  * @deprecated Use composable primitives (Tabs, TabsList, TabsTrigger, TabsContent)
  */
-export function TabsLegacy({
-  tabs,
-  defaultTab,
-  onTabChange,
-  children,
-}: TabsLegacyProps) {
+export function TabsLegacy({ tabs, defaultTab, onTabChange, children }: TabsLegacyProps) {
   if (!tabs || tabs.length === 0) {
     return (
       <div role="tablist" className="flex flex-col">
@@ -209,12 +204,9 @@ export function TabsLegacy({
   }
 
   return (
-    <Tabs
-      defaultValue={defaultTab || tabs[0]?.id || ''}
-      onValueChange={onTabChange}
-    >
+    <Tabs defaultValue={defaultTab || tabs[0]?.id || ''} onValueChange={onTabChange}>
       <TabsList>
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <TabsTrigger
             key={tab.id}
             value={tab.id}
@@ -226,7 +218,7 @@ export function TabsLegacy({
         ))}
       </TabsList>
       <div className="mt-4">
-        {tabs.map((tab) => (
+        {tabs.map(tab => (
           <TabsContent key={tab.id} value={tab.id}>
             {children(tab.id)}
           </TabsContent>

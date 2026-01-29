@@ -17,16 +17,16 @@
 
 ## 📦 Delivered Commands
 
-| # | Command | Purpose | Status |
-|---|---------|---------|--------|
-| 1 | `fusion_activate_modules` | Toggle subsystems | ✅ |
-| 2 | `fusion_adjust_styles` | UI styles | ✅ |
-| 3 | `fusion_generate_ia_response` | IA generation + cache | ✅ |
-| 4 | `fusion_prepare_tts` | TTS buffer prep | ✅ |
-| 5 | `fusion_process_lipsync` | Lip-sync data | ✅ |
-| 6 | `fusion_animate_avatar` | Avatar animation | ✅ |
-| 7 | `fusion_update_state` | State sync | ✅ |
-| 8 | `fusion_auto_optimize` | Optimization hints | ✅ |
+| #   | Command                       | Purpose               | Status |
+| --- | ----------------------------- | --------------------- | ------ |
+| 1   | `fusion_activate_modules`     | Toggle subsystems     | ✅     |
+| 2   | `fusion_adjust_styles`        | UI styles             | ✅     |
+| 3   | `fusion_generate_ia_response` | IA generation + cache | ✅     |
+| 4   | `fusion_prepare_tts`          | TTS buffer prep       | ✅     |
+| 5   | `fusion_process_lipsync`      | Lip-sync data         | ✅     |
+| 6   | `fusion_animate_avatar`       | Avatar animation      | ✅     |
+| 7   | `fusion_update_state`         | State sync            | ✅     |
+| 8   | `fusion_auto_optimize`        | Optimization hints    | ✅     |
 
 ---
 
