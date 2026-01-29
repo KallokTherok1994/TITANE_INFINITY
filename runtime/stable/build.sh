@@ -70,6 +70,15 @@ if [[ ! -d "node_modules" ]]; then
     fi
 fi
 
+# P3_2_BUILD_HARDEN: Forbidden files scan
+echo "🛡️ P3_2_BUILD_HARDEN: Running forbidden files scan..."
+if [[ -x "scripts/check_forbidden_files.sh" ]]; then
+    ./scripts/check_forbidden_files.sh
+else
+    echo "❌ Missing scripts/check_forbidden_files.sh"
+    exit 1
+fi
+
 # Build frontend (production mode)
 echo ""
 echo "⚛️  Building React frontend (production)..."
