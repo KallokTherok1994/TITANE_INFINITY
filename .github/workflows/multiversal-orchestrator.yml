@@ -73,6 +73,20 @@ jobs:
           import random
           import asyncio
 
+          def _json_fallback(value):
+              if isinstance(value, (np.bool_, np.integer, np.floating)):
+                  return value.item()
+              if isinstance(value, np.ndarray):
+                  return value.tolist()
+              if isinstance(value, (np.complexfloating, complex)):
+                  return {
+                      'real': float(value.real),
+                      'imag': float(value.imag),
+                  }
+              if isinstance(value, set):
+                  return list(value)
+              raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
           class MultiversalOrchestratorEngine:
               def __init__(self, orchestration_level='cosmic_conductor', symphony_scope='infinite_harmonies'):
                   self.orchestration_level = orchestration_level
@@ -482,7 +496,7 @@ jobs:
 
           # Save orchestration report
           with open('reports/multiversal_orchestration/orchestration-mastery.json', 'w') as f:
-              json.dump(orchestration_report, f, indent=2)
+              json.dump(orchestration_report, f, indent=2, default=_json_fallback)
 
           # Extract key metrics
           metrics = orchestration_report['orchestration_metrics']
