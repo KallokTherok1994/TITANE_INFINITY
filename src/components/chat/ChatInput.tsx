@@ -542,7 +542,12 @@ export const ChatInput: React.FC<ChatInputProps> = React.memo(
             <div className="chat-input-error-content">
               <strong>Auto-récupération input OMEGA</strong>
               <p>{inputState.inputError}</p>
-              <button onClick={resetError} className="chat-input-error-reset">
+              <button
+                type="button"
+                onClick={resetError}
+                className="chat-input-error-reset"
+                aria-label="Réinitialiser la saisie et réessayer"
+              >
                 Réinitialiser input
               </button>
             </div>
