@@ -142,7 +142,11 @@ if [ $VIOLATIONS -eq 0 ]; then
     
     # Update manifest status
     if command -v jq >/dev/null 2>&1; then
-        jq '.last_validation = now | .certification_status = "FORBIDDEN_SCAN_PASSED"' \
+        jq '.last_validation = now
+            | .certification_status = "FORBIDDEN_SCAN_PASSED"
+            | .p3_3_forbidden_scan.status = "PASS"
+            | .p3_3_forbidden_scan.last_run = now
+            | .p3_3_forbidden_scan.violations = 0' \
             "$MANIFEST_FILE" > "${MANIFEST_FILE}.tmp" && mv "${MANIFEST_FILE}.tmp" "$MANIFEST_FILE"
     fi
     
@@ -153,7 +157,12 @@ else
     
     # Update manifest status
     if command -v jq >/dev/null 2>&1; then
-        jq '.last_validation = now | .certification_status = "FORBIDDEN_SCAN_FAILED"' \
+        jq '.last_validation = now
+            | .certification_status = "FORBIDDEN_SCAN_FAILED"
+            | .p3_3_forbidden_scan.status = "FAIL"
+            | .p3_3_forbidden_scan.last_run = now
+            | .p3_3_forbidden_scan.violations = $violations' \
+            --argjson violations "$VIOLATIONS" \
             "$MANIFEST_FILE" > "${MANIFEST_FILE}.tmp" && mv "${MANIFEST_FILE}.tmp" "$MANIFEST_FILE"
     fi
     
