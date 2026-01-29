@@ -369,66 +369,53 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 2: ACTIVATION MODULES
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ WARNING: 'fusion_activate_modules' command NOT YET IMPLEMENTED in Rust backend
-  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md for details
-  // This will throw at runtime if called. Backend implementation required.
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_activate_modules' not yet implemented in backend
+  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md
+  // TODO: Re-enable when backend command is implemented
 
   private async step2_ActivateModules(
     intention: IntentionAnalysis
   ): Promise<ModuleActivation> {
-    try {
-      const activation = await secureInvoke<ModuleActivation>('fusion_activate_modules', {
-        intention,
-      });
-
-      return activation;
-    } catch (error) {
-      console.error('[FusionEngine] Step 2 error:', error);
-      // Fallback: activer modules de base
-      return {
-        cognitive: true,
-        adaptive: intention.complexity !== 'simple',
-        narrative: true,
-        emotion: intention.requires_emotion,
-        memory: intention.requires_long_context,
-        voice: true,
-        avatar: intention.requires_animation,
-        appearance: intention.requires_animation,
-      };
-    }
+    // FALLBACK: Local module activation logic
+    console.log('[FusionEngine] Step 2: Using local fallback (fusion_activate_modules not implemented)');
+    
+    return {
+      cognitive: true,
+      adaptive: intention.complexity !== 'simple',
+      narrative: true,
+      emotion: intention.requires_emotion,
+      memory: intention.requires_long_context,
+      voice: true,
+      avatar: intention.requires_animation,
+      appearance: intention.requires_animation,
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 3: AJUSTEMENT STYLES
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_adjust_styles' not yet implemented
+  // TODO: Re-enable when backend command is implemented
 
   private async step3_AdjustStyles(
     intention: IntentionAnalysis,
     preferences: UserPreferences
   ): Promise<StyleConfig> {
-    try {
-      const styleConfig = await secureInvoke<StyleConfig>('fusion_adjust_styles', {
-        intention,
-        preferences,
-      });
-
-      return styleConfig;
-    } catch (error) {
-      console.error('[FusionEngine] Step 3 error:', error);
-      // Fallback: utiliser préférences utilisateur
-      return {
-        narrative_tone: preferences.narrative_style,
-        emotional_intensity: preferences.emotion_modulation,
-        voice_parameters: {
-          speed: preferences.voice_speed,
-          pitch: preferences.voice_pitch,
-          volume: 1.0,
-          timbre: 'warm',
-        },
-        avatar_expression: 'neutral',
-        animation_style: 'natural',
-      };
-    }
+    // FALLBACK: Local style configuration
+    console.log('[FusionEngine] Step 3: Using local fallback (fusion_adjust_styles not implemented)');
+    
+    return {
+      narrative_tone: preferences.narrative_style,
+      emotional_intensity: preferences.emotion_modulation,
+      voice_parameters: {
+        speed: preferences.voice_speed,
+        pitch: preferences.voice_pitch,
+        volume: 1.0,
+        timbre: 'warm',
+      },
+      avatar_expression: 'neutral',
+      animation_style: 'natural',
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -456,24 +443,14 @@ export class SingularityFusionEngine {
         cognitiveMessages
       );
 
-      // Générer réponse via backend IA
-      const response = await secureInvoke<string>('fusion_generate_ia_response', {
-        message,
-        optimizedContext: optimizedPipeline.optimizedContext,
-        intention: optimizedPipeline.intention,
-        styleConfig,
-      });
+      // ⚠️ TEMPORARILY DISABLED: 'fusion_generate_ia_response' not yet implemented
+      // TODO: Re-enable when backend command is implemented
+      // FALLBACK: Return placeholder response
+      console.log('[FusionEngine] Step 4: Using fallback (fusion_generate_ia_response not implemented)');
+      const response = 'Je suis en cours de configuration. Le système Singularity Fusion sera bientôt opérationnel.';
 
-      // Vérifier cohérence
-      const coherenceCheck = await CognitiveOptimizer.checkCoherence(
-        response,
-        optimizedPipeline.optimizedContext
-      );
-
-      // Utiliser réponse corrigée si nécessaire
-      return coherenceCheck.is_coherent && !coherenceCheck.corrected_response
-        ? response
-        : coherenceCheck.corrected_response || response;
+      // Skip coherence check for now
+      return response;
     } catch (error) {
       console.error('[FusionEngine] Step 4 error:', error);
       return 'Je rencontre une difficulté technique. Pouvez-vous reformuler votre question ?';
@@ -483,80 +460,61 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 5: PRÉPARATION TTS
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_prepare_tts' not yet implemented
+  // TODO: Re-enable when backend command is implemented
 
   private async step5_PrepareTTS(
     text: string,
     voiceParams: VoiceParams
   ): Promise<ArrayBuffer> {
-    try {
-      const audioBuffer = await secureInvoke<ArrayBuffer>('fusion_prepare_tts', {
-        text,
-        voiceParams,
-      });
-
-      return audioBuffer;
-    } catch (error) {
-      console.error('[FusionEngine] Step 5 error:', error);
-      // Retourner buffer vide
-      return new ArrayBuffer(0);
-    }
+    // FALLBACK: Return empty audio buffer
+    console.log('[FusionEngine] Step 5: Using fallback (fusion_prepare_tts not implemented)');
+    return new ArrayBuffer(0);
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 6: LIP-SYNC PROCESSING
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_process_lipsync' not yet implemented
+  // TODO: Re-enable when backend command is implemented
 
   private async step6_LipSync(
     audioBuffer: ArrayBuffer,
     text: string
   ): Promise<LipSyncData> {
-    try {
-      const lipsyncData = await secureInvoke<LipSyncData>('fusion_process_lipsync', {
-        audioBuffer,
-        text,
-      });
-
-      return lipsyncData;
-    } catch (error) {
-      console.error('[FusionEngine] Step 6 error:', error);
-      // Retourner lip-sync basique
-      return {
-        phonemes: [],
-        durations: [],
-        timestamps: [],
-      };
-    }
+    // FALLBACK: Return empty lipsync data
+    console.log('[FusionEngine] Step 6: Using fallback (fusion_process_lipsync not implemented)');
+    return {
+      phonemes: [],
+      durations: [],
+      timestamps: [],
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 7: ANIMATION AVATAR
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_animate_avatar' not yet implemented
+  // TODO: Re-enable when backend command is implemented
 
   private async step7_AnimateAvatar(
     lipsyncData: LipSyncData,
     styleConfig: StyleConfig
   ): Promise<AnimationData> {
-    try {
-      const animationData = await secureInvoke<AnimationData>('fusion_animate_avatar', {
-        lipsyncData,
-        styleConfig,
-      });
-
-      return animationData;
-    } catch (error) {
-      console.error('[FusionEngine] Step 7 error:', error);
-      // Retourner animation vide
-      return {
-        keyframes: [],
-        duration: 0,
-        fps: 60,
-      };
-    }
+    // FALLBACK: Return empty animation data
+    console.log('[FusionEngine] Step 7: Using fallback (fusion_animate_avatar not implemented)');
+    return {
+      keyframes: [],
+      duration: 0,
+      fps: 60,
+    };
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 8: MISE À JOUR ÉTAT
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ TEMPORARILY DISABLED: 'fusion_update_state' not yet implemented
+  // TODO: Re-enable when backend command is implemented
 
   private async step8_UpdateState(
     currentState: SingularityState,
@@ -567,18 +525,10 @@ export class SingularityFusionEngine {
       responseText: string;
     }
   ): Promise<SingularityState> {
-    try {
-      const updatedState = await secureInvoke<SingularityState>('fusion_update_state', {
-        currentState,
-        cycleData,
-      });
-
-      this.currentState = updatedState;
-      return updatedState;
-    } catch (error) {
-      console.error('[FusionEngine] Step 8 error:', error);
-      return currentState;
-    }
+    // FALLBACK: Return unchanged state
+    console.log('[FusionEngine] Step 8: Using fallback (fusion_update_state not implemented)');
+    this.currentState = currentState;
+    return currentState;
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -619,16 +569,10 @@ export class SingularityFusionEngine {
       if (bottlenecks.length > 0 || stats.total_ms > totalThreshold) {
         console.warn('[FusionEngine v∞.Ω] ⚠️ Performance issues:', bottlenecks);
 
-        try {
-          await secureInvoke('fusion_auto_optimize', {
-            bottlenecks,
-            stats,
-            suggestions: optimizations,
-          });
-        } catch {
-          // Fallback local: ajuster paramètres internes
-          console.log('[FusionEngine v∞.Ω] Local optimization fallback');
-        }
+        // ⚠️ TEMPORARILY DISABLED: 'fusion_auto_optimize' not yet implemented
+        // TODO: Re-enable when backend command is implemented
+        // FALLBACK: Local optimization only
+        console.log('[FusionEngine v∞.Ω] Using local optimization fallback (fusion_auto_optimize not implemented)');
       }
 
       // Métriques détaillées
