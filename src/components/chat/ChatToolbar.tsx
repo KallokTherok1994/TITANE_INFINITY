@@ -39,6 +39,7 @@ import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
 import { APISupport } from '@/utils/APISupport';
+import { audioTranscriptionService } from '@/services/audioTranscriptionService';
 import type { AnalyzedFile } from './FileUploadButton';
 import './ChatToolbar.css';
 
@@ -460,14 +461,40 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
         const file = e.target.files[0];
 
-        // FUTUR: Intégrer avec Whisper API ou service de transcription
-        // Pour l'instant, on simule avec Web Speech API si disponible
-        isDev &&
-          console.log('[ChatToolbar] Audio file selected for transcription:', file.name);
+        try {
+          isDev &&
+            console.log('[ChatToolbar] Audio transcription started:', file.name);
 
-        // Placeholder - à connecter avec un vrai service de transcription
-        onTranscriptionResult(`[Transcription de ${file.name} en cours...]`);
-        e.target.value = '';
+          // Afficher message de traitement
+          onTranscriptionResult(`[Transcription de "${file.name}" en cours...]`);
+
+          // ✅ NOUVEAU - Utiliser le vrai service de transcription Whisper
+          const result = await audioTranscriptionService.transcribeFile(file, percent => {
+            isDev && console.log(`[ChatToolbar] Transcription progress: ${percent}%`);
+          });
+
+          if (result.error) {
+            console.error('[ChatToolbar] Transcription error:', result.error);
+            onTranscriptionResult(
+              `[Erreur transcription: ${result.error}]\n\nVérifiez:\n- Backend Tauri disponible\n- Fichier audio valide (<25MB)`
+            );
+          } else if (result.text) {
+            isDev &&
+              console.log('[ChatToolbar] Transcription complete:', result.text.length, 'chars');
+            onTranscriptionResult(result.text);
+          } else {
+            onTranscriptionResult(
+              '[Transcription vide - vérifiez le fichier audio]'
+            );
+          }
+        } catch (err) {
+          console.error('[ChatToolbar] Transcription exception:', err);
+          onTranscriptionResult(
+            `[Erreur: ${(err as Error).message || 'Erreur inconnue'}]`
+          );
+        }
+
+        e.target.value = ''; // Reset pour permettre le même fichier
       },
       [onTranscriptionResult]
     );
