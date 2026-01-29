@@ -51,6 +51,17 @@ echo "  • Logging: MINIMAL"
 echo "  • OMEGA Pipeline: FULL ACTIVATION"
 echo ""
 
+# PHASE_3: VALIDATIONS DE SÉCURITÉ
+echo "🛡️ PHASE_3: VALIDATIONS DE SÉCURITÉ"
+
+# PHASE_3: REPRODUCTIBLE BUILD FLAGS
+export SOURCE_DATE_EPOCH="${SOURCE_DATE_EPOCH:-$(git log -1 --pretty=%ct 2>/dev/null || date +%s)}"
+export RUSTFLAGS="${RUSTFLAGS:--C debuginfo=0}"
+echo "🧪 PHASE_3: REPRODUCTIBLE BUILD FLAGS (SOURCE_DATE_EPOCH=$SOURCE_DATE_EPOCH)"
+
+# PHASE_3: BUILD MANIFEST
+BUILD_MANIFEST="runtime/stable/build-manifest.json"
+
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."
 rm -rf dist/ build/ runtime/stable/build/ runtime/stable/dist/
