@@ -369,6 +369,9 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 2: ACTIVATION MODULES
   // ═══════════════════════════════════════════════════════════════════
+  // ⚠️ WARNING: 'fusion_activate_modules' command NOT YET IMPLEMENTED in Rust backend
+  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md for details
+  // This will throw at runtime if called. Backend implementation required.
 
   private async step2_ActivateModules(
     intention: IntentionAnalysis
