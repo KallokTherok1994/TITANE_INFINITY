@@ -171,12 +171,17 @@ jobs:
           fi
 
           # Verify constitutional compliance maintained
-          if [ -f "docs/TAURI_SURFACE.md" ]; then
-            SURFACE_COMMANDS=$(grep -o "command_[a-zA-Z_]*" docs/TAURI_SURFACE.md | wc -l)
-            if [ "$SURFACE_COMMANDS" -eq 52 ]; then
+          if [ -f "docs/TAURI_SURFACE.md" ] && [ -f "src-tauri/allowlist.whitelist.stable.json" ]; then
+            EXPECTED_COMMANDS=$(grep -Eo 'Total Commands[^0-9]*([0-9]+)' docs/TAURI_SURFACE.md | grep -Eo '[0-9]+' | head -1)
+            if [ -z "$EXPECTED_COMMANDS" ]; then
+              echo "❌ P6 VIOLATION: Missing Total Commands in docs/TAURI_SURFACE.md"
+              exit 1
+            fi
+            ACTUAL_COMMANDS=$(jq '.app.security.capabilities[0].allow | length' src-tauri/allowlist.whitelist.stable.json)
+            if [ "$ACTUAL_COMMANDS" -eq "$EXPECTED_COMMANDS" ]; then
               echo "✅ Constitutional compliance maintained (L4_NO_EXPANSION)"
             else
-              echo "❌ P6 VIOLATION: Constitutional compliance broken ($SURFACE_COMMANDS commands)"
+              echo "❌ P6 VIOLATION: Constitutional compliance broken ($ACTUAL_COMMANDS commands, expected $EXPECTED_COMMANDS)"
               exit 1
             fi
           else

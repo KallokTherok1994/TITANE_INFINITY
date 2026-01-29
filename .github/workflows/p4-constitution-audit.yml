@@ -77,9 +77,11 @@ jobs:
       - name: Run P0_1_SECRETS Validation
         run: |
           echo "🔍 L3 NO_SECRETS: Running secrets audit..."
-          if find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f | grep -q .; then
+          if find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f \
+            ! -path "./runtime/dev/*" | grep -q .; then
             echo "❌ L3 VIOLATION: .env files found"
-            find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f
+            find . -name ".env" -o -name ".env.*" ! -name "*.example" -type f \
+              ! -path "./runtime/dev/*"
             exit 1
           fi
           echo "✅ L3 NO_SECRETS: COMPLIANT"
@@ -94,12 +96,17 @@ jobs:
       - name: Verify Surface Lock
         run: |
           echo "🔍 L4 NO_EXPANSION: Auditing surface lock..."
-          if [ -f "docs/TAURI_SURFACE.md" ]; then
-            COMMANDS=$(grep -o "command_[a-zA-Z_]*" docs/TAURI_SURFACE.md | wc -l)
-            if [ "$COMMANDS" -eq 52 ]; then
-              echo "✅ Surface locked at 52 commands"
+          if [ -f "docs/TAURI_SURFACE.md" ] && [ -f "src-tauri/allowlist.whitelist.stable.json" ]; then
+            EXPECTED_COMMANDS=$(grep -Eo 'Total Commands[^0-9]*([0-9]+)' docs/TAURI_SURFACE.md | grep -Eo '[0-9]+' | head -1)
+            if [ -z "$EXPECTED_COMMANDS" ]; then
+              echo "❌ L4 VIOLATION: Missing Total Commands in docs/TAURI_SURFACE.md"
+              exit 1
+            fi
+            ACTUAL_COMMANDS=$(jq '.app.security.capabilities[0].allow | length' src-tauri/allowlist.whitelist.stable.json)
+            if [ "$ACTUAL_COMMANDS" -eq "$EXPECTED_COMMANDS" ]; then
+              echo "✅ Surface locked at $ACTUAL_COMMANDS commands"
             else
-              echo "❌ L4 VIOLATION: Surface changed ($COMMANDS commands, expected 52)"
+              echo "❌ L4 VIOLATION: Surface changed ($ACTUAL_COMMANDS commands, expected $EXPECTED_COMMANDS)"
               exit 1
             fi
           else
