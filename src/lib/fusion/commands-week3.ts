@@ -5,7 +5,7 @@
  * © 2026 Kevin Thibault / TITANE Team
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import type {
   LipSyncProcessRequest,
   LipSyncProcessResponse,
@@ -22,7 +22,7 @@ export async function processLipSync(
   request: LipSyncProcessRequest
 ): Promise<LipSyncProcessResponse> {
   try {
-    const response = await invoke<LipSyncProcessResponse>(
+    const response = await secureInvoke<LipSyncProcessResponse>(
       'fusion_process_lipsync',
       { request }
     );
@@ -67,7 +67,7 @@ export async function animateAvatar(
   request: AnimateAvatarRequest
 ): Promise<AnimateAvatarResponse> {
   try {
-    const response = await invoke<AnimateAvatarResponse>(
+    const response = await secureInvoke<AnimateAvatarResponse>(
       'fusion_animate_avatar',
       { request }
     );
