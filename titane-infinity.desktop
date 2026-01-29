@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=TITANE∞ v26.2.0
+Name=TITANE∞ v27.0.0
 Comment=🏛️ Cognitive OS - Multi-Provider AI - Production Perfect
-Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/TITANE-Infinity_26.4.0_amd64.AppImage
+Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.0.0_amd64.AppImage
 Icon=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png
 Terminal=false
 Categories=Development;Utility;AI;
@@ -14,7 +14,7 @@ Actions=DevMode;Logs;Config;
 
 [Desktop Action DevMode]
 Name=🔧 Developer Mode
-Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/TITANE-Infinity_26.4.0_amd64.AppImage --dev
+Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.0.0_amd64.AppImage --dev
 
 [Desktop Action Logs]
 Name=📋 View Logs

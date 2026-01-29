@@ -1,6 +1,6 @@
 {
   "name": "titane-infinity-stable",
-  "version": "26.3.2",
+  "version": "27.0.0",
   "build_target": "production",
   "certification_level": "P3_STABLE_BUILD",
   "build_timestamp": null,
@@ -45,10 +45,18 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": ["*.AppImage", "*.deb"],
+    "artifacts_created": [
+      "*.AppImage",
+      "*.deb"
+    ],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1768612257.983157,
-  "certification_status": "FORBIDDEN_SCAN_PASSED"
+  "last_validation": 1769720191.212202,
+  "certification_status": "FORBIDDEN_SCAN_PASSED",
+  "p3_3_forbidden_scan": {
+    "status": "PASS",
+    "last_run": 1769720191.21221,
+    "violations": 0
+  }
 }
