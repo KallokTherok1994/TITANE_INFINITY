@@ -225,6 +225,11 @@ mod secure_engine {
     include!("secure_engine.rs");
 }
 
+// Fusion Commands Week 1 - Core Implementations
+mod fusion_commands_week1 {
+    include!("fusion_commands_week1.rs");
+}
+
 // Hybrid Engine commands v∞.26.0
 mod hybrid_commands {
     include!("commands/hybrid.rs");
@@ -1130,6 +1135,10 @@ fn main() {
             onboarding::is_onboarding_complete,
             onboarding::complete_onboarding,
             onboarding::get_onboarding_preferences,
+
+            // Fusion Backend Commands (Week 1)
+            fusion_commands_week1::fusion_activate_modules,
+            fusion_commands_week1::fusion_adjust_styles,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
