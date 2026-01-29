@@ -49,6 +49,7 @@ import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { CameraPreview } from '@/components/vision/CameraPreview';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
+import type { AnalyzedFile } from '@/components/chat/FileUploadButton';
 import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
 import {
   downloadConversation,
@@ -747,6 +748,26 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
         {/* ═══ CHAT TOOLBAR (v25.5.0) ═══ */}
         <ChatToolbar
+          onFilesAnalyzed={(files: AnalyzedFile[]) => {
+            const filesSummary = files
+              .map(file => {
+                const lines = [
+                  `📄 **${file.name}**`,
+                  `- Taille: ${(file.size / 1024).toFixed(1)} KB`,
+                ];
+
+                if (file.analysis?.summary) {
+                  lines.push(`- Résumé: ${file.analysis.summary}`);
+                }
+
+                return lines.join('\n');
+              })
+              .join('\n\n');
+
+            sendMessage(
+              `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers.`
+            );
+          }}
           onFileImport={files => {
             const fileNames = Array.from(files)
               .map(f => f.name)

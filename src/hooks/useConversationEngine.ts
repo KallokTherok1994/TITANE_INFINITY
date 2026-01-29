@@ -343,6 +343,42 @@ export function useConversationEngine(
         setError(errorMessage);
         options.onError?.(err as Error);
 
+        const fallbackContent = `🤖 **TITANE∞ — Réponse indisponible**
+
+Une anomalie a empêché la génération d'une réponse valide.
+
+**Détail** : ${errorMessage}
+
+Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
+
+        const fallbackMessage: ConversationMessage = {
+          id: `assistant-fallback-${Date.now()}`,
+          role: 'assistant',
+          content: fallbackContent,
+          timestamp: Date.now(),
+          metadata: {
+            intention: 'Meta',
+          },
+        };
+
+        setMessages(prev => [...prev, fallbackMessage]);
+
+        try {
+          const assistantAIMessage: AIMessage = {
+            role: 'assistant',
+            content: fallbackMessage.content,
+            timestamp: fallbackMessage.timestamp,
+            metadata: fallbackMessage.metadata || {},
+          };
+          await saveMessage(assistantAIMessage);
+          chatMemoryCompactor.flushPendingSaves();
+        } catch (persistError) {
+          console.warn(
+            '[useConversationEngine] ⚠️ Failed to persist fallback message',
+            persistError
+          );
+        }
+
         console.error('[ConversationEngine] Erreur finale:', err);
         return null;
       } finally {

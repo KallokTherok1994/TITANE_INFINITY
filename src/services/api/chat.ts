@@ -286,12 +286,6 @@ class ChatService {
     const startedAt = Date.now();
     monitoring.trackRequest();
 
-    const request = {
-      message,
-      conversation_id: conversationId,
-      config,
-    };
-
     monitoring.addBreadcrumb('Chat sendMessage (OMEGA)', 'chat', {
       endpoint: 'OMEGA',
       conversationId,
@@ -309,7 +303,13 @@ class ChatService {
       // ✅ FIX P0-1: Type any pour gérer format OMEGA direct
       const backendResponse = await invokeWithRetry<any>(
         'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA
-        { request },
+        {
+          message,
+          conversation_id: conversationId,
+          mode: config?.mode ?? null,
+          provider: config?.provider ?? 'auto',
+          system_prompt: config?.systemPrompt ?? null,
+        },
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
 
@@ -478,10 +478,10 @@ class ChatService {
   ): Promise<void> {
     // 🛡️ BROWSER MODE PROTECTION - Fallback immédiat si Tauri indisponible
     if (!isTauriRuntimeAvailable()) {
-      console.warn('[ChatService] Tauri unavailable - using browser fallback');
+      console.warn('[ChatService-Stream] Tauri unavailable - using browser fallback');
       const fallbackResponse: ChatResponse = {
         content:
-          "Je suis désolé, le backend Tauri n'est pas disponible en mode navigateur. Pour utiliser le chat complet, veuillez lancer l'application TITANE∞ native.\n\nEn mode web, certaines fonctionnalités sont limitées. Vous pouvez toujours explorer l'interface et tester les autres modules.",
+          "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.",
         finishReason: 'browser_fallback',
         model: 'titane-web-fallback',
         provider: 'browser-mode',
@@ -506,15 +506,15 @@ class ChatService {
       return;
     }
 
-    this.lastEndpoint = 'LEGACY';
+    this.lastEndpoint = 'OMEGA';
     const startedAt = Date.now();
     monitoring.trackRequest();
 
     const request = this.buildRequest(messages, config, true);
 
     const lastMessage = messages[messages.length - 1]?.content ?? '';
-    monitoring.addBreadcrumb('Chat sendMessageStream (LEGACY)', 'chat', {
-      endpoint: 'LEGACY',
+    monitoring.addBreadcrumb('Chat sendMessageStream (OMEGA)', 'chat', {
+      endpoint: 'OMEGA',
       streaming: true,
       provider: config?.provider ?? 'auto',
       mode: config?.mode,
@@ -527,7 +527,7 @@ class ChatService {
     const reportStreamError = (err: Error, phase: string) => {
       try {
         monitoring.trackError(err, {
-          endpoint: 'LEGACY_STREAM',
+          endpoint: 'OMEGA_STREAM',
           phase,
           provider: config?.provider ?? 'auto',
           mode: config?.mode,
@@ -552,7 +552,7 @@ class ChatService {
         monitoring.trackPipelineLatency(effectiveLatency);
 
         monitoring.addBreadcrumb('Chat stream completed', 'chat', {
-          endpoint: 'LEGACY',
+          endpoint: 'OMEGA',
           source,
           provider: response.provider ?? config?.provider ?? 'auto',
           mode: config?.mode,

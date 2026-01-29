@@ -37,12 +37,15 @@ import {
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
+import type { AnalyzedFile } from './FileUploadButton';
 import './ChatToolbar.css';
 
 const isDev = process.env.NODE_ENV === 'development';
 
 // ═══ TYPES ═══
 export interface ChatToolbarProps {
+  /** Callback pour les fichiers analysés via FileUploadButton */
+  onFilesAnalyzed?: (files: AnalyzedFile[]) => void;
   /** Callback pour l'import de fichiers */
   onFileImport?: (files: FileList) => void;
   /** Callback pour la capture d'écran */
@@ -114,6 +117,7 @@ ToolbarButton.displayName = 'ToolbarButton';
 // ═══ COMPOSANT PRINCIPAL ═══
 export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
   ({
+    onFilesAnalyzed,
     onFileImport,
     onScreenCapture,
     onImageAnalysis,
@@ -170,13 +174,45 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     }, []);
 
     const handleFileChange = useCallback(
-      (e: React.ChangeEvent<HTMLInputElement>) => {
+      async (e: React.ChangeEvent<HTMLInputElement>) => {
+        // Si onFilesAnalyzed est disponible, analyser les fichiers
+        if (e.target.files && onFilesAnalyzed) {
+          try {
+            const filesArray = Array.from(e.target.files);
+            const analyzedFiles: AnalyzedFile[] = [];
+            
+            for (const file of filesArray) {
+              // Analyse simple des fichiers
+              const content = await file.text().catch(() => null);
+              
+              const analyzed: AnalyzedFile = {
+                id: `${Date.now()}-${Math.random()}`,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                category: 'document', // Catégorie par défaut
+                content,
+                preview: content ? content.slice(0, 200) : '',
+                status: 'done',
+              };
+              
+              analyzedFiles.push(analyzed);
+            }
+            
+            onFilesAnalyzed(analyzedFiles);
+            e.target.value = ''; // Reset
+          } catch (err) {
+            isDev && console.error('[ChatToolbar] File analysis error:', err);
+          }
+          return;
+        }
+
         if (e.target.files && onFileImport) {
           onFileImport(e.target.files);
           e.target.value = ''; // Reset pour permettre re-sélection du même fichier
         }
       },
-      [onFileImport]
+      [onFileImport, onFilesAnalyzed]
     );
 
     // ═══ HANDLERS - CAPTURE D'ÉCRAN ═══

@@ -66,6 +66,17 @@ export interface ConversationMetadata {
   links_to_contexts: string[];
 }
 
+interface OmegaGenerateResponse {
+  content?: string;
+  conversationId?: string;
+  conversation_id?: string;
+  messageId?: string;
+  message_id?: string;
+  latencyMs?: number;
+  metadata?: Record<string, unknown>;
+  provider?: string;
+}
+
 function isMemoryEffect(val: unknown): val is MemoryEffect {
   return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
 }
@@ -127,33 +138,88 @@ export async function processMessage(
     emotionContext?: EmotionState;
   }
 ): Promise<ConversationResponse> {
+  let conversationId = options?.conversationId;
+
+  if (!conversationId) {
+    try {
+      conversationId = await secureInvoke<string>('create_new_conversation');
+    } catch (error) {
+      console.warn('[conversationEngine] ⚠️ Failed to create conversation:', error);
+      conversationId = `fallback-${Date.now()}`;
+    }
+  }
+
   console.log('[conversationEngine] 📤 Sending to backend:', {
     message_length: userMessage.length,
     mode: options?.mode || 'default',
-    conversationId: options?.conversationId,
+    conversationId,
   });
 
-  const raw = (await secureInvoke<unknown>('conversation_process_message', {
-    userMessage: userMessage,
-    conversationId: options?.conversationId,
+  const raw = (await secureInvoke<unknown>('conversation_generate', {
+    message: userMessage,
+    conversation_id: conversationId,
     mode: options?.mode || 'default',
-    aiConfig: null,
-    emotionContext: options?.emotionContext || null,
-  })) as ConversationResponse;
+    provider: 'auto',
+    system_prompt: undefined,
+  })) as OmegaGenerateResponse;
+
+  let content = typeof raw?.content === 'string' ? raw.content : '';
+  if (content.trim().length === 0) {
+    console.warn('[conversationEngine] ⚠️ Empty content received, applying fallback');
+    content =
+      "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.";
+  }
+
+  const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
+  const cognitiveTagsRaw = metadata['cognitiveTags'];
+  const cognitiveTags = Array.isArray(cognitiveTagsRaw)
+    ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
+    : [];
+
+  const detectedIntentionRaw = metadata['intention'];
+  const detectedIntention: Intention =
+    detectedIntentionRaw === 'Question' ||
+    detectedIntentionRaw === 'Action' ||
+    detectedIntentionRaw === 'Emotion' ||
+    detectedIntentionRaw === 'Clarification' ||
+    detectedIntentionRaw === 'Meta'
+      ? detectedIntentionRaw
+      : 'Question';
+
+  const response: ConversationResponse = {
+    assistant_message: content,
+    conversation_id:
+      (typeof raw?.conversationId === 'string' && raw.conversationId) ||
+      (typeof raw?.conversation_id === 'string' && raw.conversation_id) ||
+      conversationId,
+    message_id:
+      (typeof raw?.messageId === 'string' && raw.messageId) ||
+      (typeof raw?.message_id === 'string' && raw.message_id) ||
+      `msg-${Date.now()}`,
+    detected_intention: detectedIntention,
+    detected_emotion: {
+      valence: 0,
+      intensity: 0,
+      energy: 0,
+    },
+    cognitive_tags: cognitiveTags,
+    cognitive_summary: typeof metadata['cognitiveSummary'] === 'string'
+      ? (metadata['cognitiveSummary'] as string)
+      : '',
+    metadata: normalizeConversationMetadata({
+      provider_used: typeof raw?.provider === 'string' ? raw.provider : 'unknown',
+      latency_ms: typeof raw?.latencyMs === 'number' ? raw.latencyMs : 0,
+    }),
+  };
 
   console.log('[conversationEngine] 📥 Backend response:', {
-    message_id: raw.message_id,
-    assistant_message_length: raw.assistant_message?.length || 0,
-    assistant_message_preview: raw.assistant_message?.substring(0, 100),
-    provider: raw.metadata?.provider_used,
+    message_id: response.message_id,
+    assistant_message_length: response.assistant_message?.length || 0,
+    assistant_message_preview: response.assistant_message?.substring(0, 100),
+    provider: response.metadata?.provider_used,
   });
 
-  return {
-    ...raw,
-    metadata: normalizeConversationMetadata(
-      (raw as unknown as { metadata?: unknown }).metadata
-    ),
-  };
+  return response;
 }
 
 /**

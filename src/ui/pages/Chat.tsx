@@ -34,6 +34,7 @@ import { VirtualizedMessageList } from '../../components/chat/VirtualizedMessage
 // import { MessageList } from '../../components/chat/MessageList';
 import { ChatInput } from '../../components/chat/ChatInput';
 import { ChatToolbar } from '../../components/chat/ChatToolbar';
+import type { AnalyzedFile } from '../../components/chat/FileUploadButton';
 import { ChatModeSelector } from '../../components/chat/ChatModeSelector';
 import { ModeBadge } from '../../components/chat/ModeBadge';
 import { VoiceConversation } from '../../components/VoiceConversation';
@@ -526,6 +527,8 @@ export const Chat: React.FC = () => {
   const [_pendingDictationText, setPendingDictationText] = useState<string>('');
   const [_ttsEnabled, setTtsEnabled] = useState(true);
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
+    // État pour les fichiers uploadés via FileUploadButton
+    const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
 
   // ═══ MODE CHAT STATE ═══
   const [currentChatMode, setCurrentChatMode] = useState<ChatModeId>(() => {
@@ -806,6 +809,40 @@ export const Chat: React.FC = () => {
       );
     }
   }, [handleRenderError]);
+
+  // ═══ HANDLER - FILES ANALYZED ═══
+  const handleFilesAnalyzed = useCallback(
+    (files: AnalyzedFile[]) => {
+      try {
+        isDev && console.log('[Chat] Files analyzed:', files.length);
+        
+        // Stocker les fichiers dans l'état
+        setUploadedFiles(files);
+        
+        // Créer un résumé des fichiers pour le message
+        const filesSummary = files
+          .map(f => {
+            const info = [`📎 **${f.name}**`, `- Taille: ${(f.size / 1024).toFixed(1)} KB`];
+            if (f.analysis) {
+              info.push(`- Type: ${f.category}`);
+              info.push(`- Lignes: ${f.analysis.lineCount || 0}`);
+            }
+            return info.join('\n');
+          })
+          .join('\n\n');
+        
+        // Envoyer automatiquement le message avec les fichiers
+        const message = `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé détaillé.`;
+        sendMessage(message);
+      } catch (fileError) {
+        handleRenderError(
+          fileError instanceof Error ? fileError : new Error(String(fileError)),
+          'files-analyzed'
+        );
+      }
+    },
+    [sendMessage, handleRenderError]
+  );
 
   // ═══ PHASE 5.4: MEMOIZED COMPUTATIONS ═══
   const chatInputPlaceholder = useMemo(() => {
@@ -1254,6 +1291,7 @@ export const Chat: React.FC = () => {
 
             {/* ═══ v25.5.0 - CHAT TOOLBAR COMPLET ═══ */}
             <ChatToolbar
+              onFilesAnalyzed={handleFilesAnalyzed}
               onFileImport={files => {
                 isDev && console.log('[Chat] Files imported:', files.length);
                 // Créer un résumé des fichiers pour le message
@@ -1325,6 +1363,7 @@ export const Chat: React.FC = () => {
 
             <ChatInput
               onSend={sendMessage}
+              onFilesAnalyzed={handleFilesAnalyzed}
               disabled={isLoading || pageState.isCorrupted}
               voiceModeActive={voiceModeActive}
               onToggleVoiceMode={toggleVoiceMode}
