@@ -426,7 +426,7 @@ export class SingularityFusionEngine {
     message: string,
     history: Message[],
     _intention: IntentionAnalysis,
-    styleConfig: StyleConfig
+    _styleConfig: StyleConfig
   ): Promise<string> {
     try {
       // Optimiser contexte avec CognitiveOptimizer
@@ -438,7 +438,7 @@ export class SingularityFusionEngine {
         intentions: [],
       }));
 
-      const optimizedPipeline = await CognitiveOptimizer.optimizeFullPipeline(
+      await CognitiveOptimizer.optimizeFullPipeline(
         message,
         cognitiveMessages
       );

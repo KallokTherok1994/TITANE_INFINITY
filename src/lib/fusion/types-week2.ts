@@ -140,7 +140,7 @@ export interface CachedIAResponse {
  * Type guard for successful IA response
  */
 export function isIAGenerationSuccess(
-  response: IAGenerationResponse | any
+  response: IAGenerationResponse | unknown
 ): response is IAGenerationResponse {
   return (
     typeof response === 'object' &&
@@ -155,7 +155,7 @@ export function isIAGenerationSuccess(
  * Type guard for successful TTS response
  */
 export function isTTSPrepareSuccess(
-  response: TTSPrepareResponse | any
+  response: TTSPrepareResponse | unknown
 ): response is TTSPrepareResponse {
   return (
     typeof response === 'object' &&
