@@ -126,6 +126,7 @@
     "react-router-dom": "^7.11.0",
     "recharts": "^3.5.1",
     "remark-gfm": "^4.0.1",
+    "sonner": "^2.0.7",
     "tauri": "^0.15.0",
     "three": "^0.182.0",
     "web-vitals": "^5.1.0",

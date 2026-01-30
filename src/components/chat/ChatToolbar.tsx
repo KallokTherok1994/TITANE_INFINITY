@@ -39,6 +39,7 @@ import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
 import { useTTSPreference, useAudioConversationPreference } from '@/hooks/usePreferences';
+import { useToast } from '@/hooks/useToast';
 import { APISupport } from '@/utils/APISupport';
 import { audioTranscriptionService } from '@/services/audioTranscriptionService';
 import { RecordingTimer } from './RecordingTimer';
@@ -140,6 +141,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const { isTTSEnabled: persistedTTS, setTTSEnabled } = useTTSPreference();
     const { isAudioConversationPreferred: persistedAudioConv, setAudioConversationPreferred } = 
       useAudioConversationPreference();
+    const { success, error, info, warning } = useToast(); // ✅ NOUVEAU - Toast notifications
 
     // ═══ ÉTATS ═══
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
@@ -234,7 +236,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         const supported = await APISupport.supportsScreenCapture();
         if (!supported) {
           const errorMsg = APISupport.getErrorMessage('screen-capture');
-          alert(errorMsg);
+          error(errorMsg);
           isDev && console.warn('[ChatToolbar] Screen capture not supported:', errorMsg);
           return;
         }
@@ -268,7 +270,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         if (errorCode === 'NotAllowedError') {
           console.log('[ChatToolbar] Screen capture cancelled by user');
         } else if (errorCode === 'NotFoundError') {
-          alert('Aucun écran à capturer trouvé');
+          error('Aucun écran à capturer trouvé');
         } else {
           console.error('[ChatToolbar] Screen capture error:', err);
         }
@@ -306,14 +308,14 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         const supported = await APISupport.supportsGetUserMedia();
         if (!supported) {
           const errorMsg = APISupport.getErrorMessage('camera');
-          alert(errorMsg);
+          error(errorMsg);
           isDev && console.warn('[ChatToolbar] Camera not supported:', errorMsg);
           return;
         }
 
         const hasCamera = await APISupport.hasCamera();
         if (!hasCamera) {
-          alert('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
+          error('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
           isDev && console.warn('[ChatToolbar] No camera found');
           return;
         }
@@ -356,7 +358,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           // ✅ NOUVEAU - Vérifier microphone disponible
           const hasMic = await APISupport.hasMicrophone();
           if (!hasMic) {
-            alert('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
             isDev && console.warn('[ChatToolbar] No microphone found for dictation');
             return;
           }
@@ -366,7 +368,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         } catch (err) {
           setIsDictating(false);
           console.error('[ChatToolbar] Dictation error:', err);
-          alert(`Erreur dictation: ${(err as Error).message || 'Erreur inconnue'}`);
+          error(`Erreur dictation: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
     }, [isDictating, voiceEngine, onDictationResult]);
@@ -396,7 +398,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           // ✅ NOUVEAU - Vérifier support MediaRecorder
           if (!APISupport.supportsMediaRecorder()) {
             const errorMsg = APISupport.getErrorMessage('media-recorder');
-            alert(errorMsg);
+            error(errorMsg);
             isDev && console.warn('[ChatToolbar] MediaRecorder not supported');
             return;
           }
@@ -404,7 +406,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           // ✅ NOUVEAU - Vérifier microphone disponible
           const hasMic = await APISupport.hasMicrophone();
           if (!hasMic) {
-            alert('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
             isDev && console.warn('[ChatToolbar] No microphone found for recording');
             return;
           }
@@ -439,7 +441,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         } catch (err) {
           setIsRecordingAudio(false);
           console.error('[ChatToolbar] Audio recording error:', err);
-          alert(`Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`);
+          error(`Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
     }, [isRecordingAudio, onAudioRecorded]);
@@ -515,7 +517,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         if (newState) {
           const hasMic = await APISupport.hasMicrophone();
           if (!hasMic) {
-            alert('Aucun microphone détecté. Mode conversation audio non disponible.');
+            error('Aucun microphone détecté. Mode conversation audio non disponible.');
             isDev && console.warn('[ChatToolbar] No microphone for audio conversation');
             return;
           }
@@ -535,7 +537,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       } catch (err) {
         setIsAudioConversationActive(false);
         console.error('[ChatToolbar] Audio conversation toggle error:', err);
-        alert(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
+        error(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
       }
     }, [
       isAudioConversationActive,
@@ -570,14 +572,14 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           const supported = await APISupport.supportsGetUserMedia();
           if (!supported) {
             const errorMsg = APISupport.getErrorMessage('camera');
-            alert(errorMsg);
+            error(errorMsg);
             isDev && console.warn('[ChatToolbar] Camera not supported for live mode');
             return;
           }
 
           const hasCamera = await APISupport.hasCamera();
           if (!hasCamera) {
-            alert('Aucune caméra détectée. Caméra live non disponible.');
+            error('Aucune caméra détectée. Caméra live non disponible.');
             isDev && console.warn('[ChatToolbar] No camera found for live mode');
             return;
           }
@@ -586,7 +588,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           onToggleCameraLive?.(true);
         } catch (err) {
           console.error('[ChatToolbar] Camera live toggle error:', err);
-          alert(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
+          error(`Erreur: ${(err as Error).message || 'Erreur inconnue'}`);
         }
       }
       isDev && console.log('[ChatToolbar] Camera live:', !isCameraActive ? 'ON' : 'OFF');
