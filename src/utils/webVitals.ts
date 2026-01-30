@@ -361,6 +361,5 @@ export function useWebVitals(): UseWebVitalsReturn {
     overallScore,
     recommendations,
     isMonitoring: true,
-    isMonitoring,
   };
 }
