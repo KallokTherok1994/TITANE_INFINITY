@@ -1,0 +1,140 @@
+/**
+ * TITANE∞ — Recording Timer Styles
+ */
+
+.recording-timer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 6px;
+  font-size: 13px;
+  transition: all 0.2s ease;
+}
+
+.recording-timer.warning {
+  background: rgba(255, 152, 0, 0.08);
+}
+
+.recording-timer.at-limit {
+  background: rgba(244, 67, 54, 0.08);
+}
+
+/* Barre de progression */
+.recording-timer-bar-container {
+  width: 100%;
+  height: 4px;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.recording-timer-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff4444, #ff6b6b);
+  border-radius: 2px;
+  transition: width 0.3s linear, background-color 0.3s ease;
+  animation: pulse-record 1s infinite;
+}
+
+.recording-timer-bar.warning {
+  background: linear-gradient(90deg, #ff9800, #ffb74d);
+}
+
+.recording-timer-bar.danger {
+  background: linear-gradient(90deg, #f44336, #e53935);
+  animation: pulse-record-danger 0.5s infinite;
+}
+
+/* Animation pulse */
+@keyframes pulse-record {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulse-record-danger {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+/* Contenu du timer */
+.recording-timer-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.recording-timer-text {
+  font-weight: 500;
+  color: #666;
+  font-family: 'Courier New', monospace;
+  letter-spacing: 0.5px;
+  transition: color 0.3s ease;
+}
+
+.recording-timer-text.warning {
+  color: #ff9800;
+  font-weight: 600;
+}
+
+.recording-timer-limit {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #ff9800;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.recording-timer-max-reached {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #f44336;
+  font-weight: 600;
+  animation: blink-warning 0.8s infinite;
+}
+
+@keyframes blink-warning {
+  0%, 49%, 100% {
+    opacity: 1;
+  }
+  50%, 99% {
+    opacity: 0.6;
+  }
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .recording-timer {
+    padding: 8px 10px;
+    font-size: 12px;
+    gap: 6px;
+  }
+
+  .recording-timer-bar-container {
+    height: 3px;
+  }
+
+  .recording-timer-content {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .recording-timer-limit,
+  .recording-timer-max-reached {
+    font-size: 11px;
+  }
+}

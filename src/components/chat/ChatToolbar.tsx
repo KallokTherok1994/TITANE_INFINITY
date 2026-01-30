@@ -41,6 +41,7 @@ import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAu
 import { useTTSPreference, useAudioConversationPreference } from '@/hooks/usePreferences';
 import { APISupport } from '@/utils/APISupport';
 import { audioTranscriptionService } from '@/services/audioTranscriptionService';
+import { RecordingTimer } from './RecordingTimer';
 import type { AnalyzedFile } from './FileUploadButton';
 import './ChatToolbar.css';
 
@@ -764,6 +765,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
             </div>
           </div>
         </div>
+
+        {/* Recording Timer - NOUVEAU */}
+        <RecordingTimer isRecording={isRecordingAudio} maxDuration={5 * 60} />
 
         {/* Indicateurs d'état */}
         <div className="chat-toolbar-status">
