@@ -246,4 +246,6 @@ export const DevToolsPanel: React.FC<DevToolsPanelProps> = ({
   );
 };
 
+DevToolsPanel.displayName = 'DevToolsPanel';
+
 export default DevToolsPanel;

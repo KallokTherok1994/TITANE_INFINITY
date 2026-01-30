@@ -222,4 +222,6 @@ export const CameraPreview: React.FC<CameraPreviewProps> = ({
   );
 };
 
+CameraPreview.displayName = 'CameraPreview';
+
 export default CameraPreview;

@@ -233,9 +233,9 @@ export function useDeviceHealth(
     };
   }, [autoScan, autoMonitor, monitorInterval, scan]);
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // Derived State
-  // ═══════════════════════════════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════════════════════════
+  // Derived State (Memoized)
+  // ═══════════════════════════════════════════════════════════════════════
 
   const isHealthy = report?.overallStatus === 'healthy';
   const isDegraded = report?.overallStatus === 'degraded';

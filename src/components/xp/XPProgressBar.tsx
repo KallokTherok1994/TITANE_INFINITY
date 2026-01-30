@@ -136,4 +136,6 @@ export const XPProgressBar: React.FC<XPProgressBarProps> = ({
   );
 };
 
+XPProgressBar.displayName = 'XPProgressBar';
+
 export default XPProgressBar;

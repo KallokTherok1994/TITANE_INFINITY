@@ -119,3 +119,5 @@ export const ConfigSection: React.FC<ConfigSectionProps> = ({
     </div>
   );
 };
+
+ConfigSection.displayName = 'ConfigSection';

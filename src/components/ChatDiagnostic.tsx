@@ -742,3 +742,5 @@ export const ChatDiagnostic: React.FC<ChatDiagnosticProps> = ({ variant = 'panel
     </div>
   );
 };
+
+ChatDiagnostic.displayName = 'ChatDiagnostic';

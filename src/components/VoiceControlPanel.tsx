@@ -156,3 +156,5 @@ export const VoiceControlPanel: React.FC<VoiceControlPanelProps> = ({
     </div>
   );
 };
+
+VoiceControlPanel.displayName = 'VoiceControlPanel';

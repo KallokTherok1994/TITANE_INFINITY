@@ -153,4 +153,6 @@ export const TitaneLogo: React.FC<TitaneLogoProps> = ({
   );
 };
 
+TitaneLogo.displayName = 'TitaneLogo';
+
 export default TitaneLogo;

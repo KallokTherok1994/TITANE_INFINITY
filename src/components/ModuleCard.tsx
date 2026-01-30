@@ -101,3 +101,5 @@ export const ModuleCard: React.FC<ModuleCardProps> = ({
     </div>
   );
 };
+
+ModuleCard.displayName = 'ModuleCard';
