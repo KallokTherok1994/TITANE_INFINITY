@@ -50,7 +50,8 @@ import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User 
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
-import { useSidebarCollapsed, useSidebarActions } from './stores/uiStore.selectors'; // ✨ v29.0.0 - Optimized selectors
+import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ v29.1.0 - Optimized selectors
+import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors'; // ✨ v29.1.0 - Optimized selectors
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
@@ -251,11 +252,12 @@ const AppRouter: React.FC = () => {
   const navigate = useNavigate();
 
   // Use Singularity State instead of local state
-  const sidebarCollapsed = useSingularityState(s => s.context.sidebarCollapsed);
-  const toggleSidebar = useSingularityState(s => s.toggleSidebar);
+  const sidebarCollapsed = useSingularitySidebarCollapsed();
+  const { toggleSidebar } = useContextActions();
 
   // ✨ v19.5.2 - Toast system
-  const { toasts, removeToast } = useUIStore();
+  const toasts = useToasts();
+  const { removeToast } = useToastActions();
 
   // ✨ v26.2.1 - Window zoom & fullscreen controls (CTRL+scroll, F11)
   useWindowControls({ enableZoom: true, enableFullscreen: true });

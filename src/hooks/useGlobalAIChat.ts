@@ -14,6 +14,7 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import { useChat } from './useChat';
 import { useSingularityState } from '../core/state/SingularityState';
+import { useAIActions } from '../core/state/SingularityState.selectors';
 import type { AIMessage } from '../services/ai/types';
 import type { AIStatus } from '@/core/ARCHITECTURE_TYPES_v∞';
 
@@ -83,8 +84,7 @@ export function useGlobalAIChat(): UseGlobalAIChatReturn {
   } = chatHook;
 
   // ═══ SINGULARITY STATE ═══
-  const setAIStatus = useSingularityState(state => state.setAIStatus);
-  const setAIError = useSingularityState(state => state.setAIError);
+  const { setAIStatus, setAIError } = useAIActions();
 
   // ═══ LOCAL STATE ═══
   const [isOpen, setIsOpen] = useState(false);

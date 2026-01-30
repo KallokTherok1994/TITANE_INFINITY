@@ -11,6 +11,7 @@ import {
   type EngineName,
   type EngineDataMap,
 } from '../core/state/SingularityState';
+import { useEngineState, useEngineActions } from '../core/state/SingularityState.selectors';
 import { useTitaneCore } from './useTitaneCore';
 
 type EngineType =
@@ -40,9 +41,8 @@ export interface UseEngineSubscriptionReturn {
  * ```
  */
 export function useEngineSubscription(engine: EngineType): UseEngineSubscriptionReturn {
-  const engineData = useSingularityState(state => state.enginesData[engine]);
-  const setEngineData = useSingularityState(state => state.setEngineData);
-  const setEngineLoading = useSingularityState(state => state.setEngineLoading);
+  const engineData = useEngineState(engine as EngineName);
+  const { setEngineData, setEngineLoading } = useEngineActions();
 
   const {
     getHeliosMetrics,
