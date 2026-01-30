@@ -342,7 +342,7 @@ export const ollamaProvider: AIProvider = {
       message: message.substring(0, 100),
       historyLength: history.length,
       model: OLLAMA_MODEL,
-      url: OLLAMA_API_URL,
+        url: OLLAMA_BASE_URL,
       timestamp: new Date().toISOString(),
     });
 
@@ -350,7 +350,7 @@ export const ollamaProvider: AIProvider = {
     const isHealthy = await this.isAvailable();
     if (!isHealthy) {
       const error = new Error('Ollama endpoint not available');
-      handleOllamaError(error, 'pre_check', { url: OLLAMA_API_URL });
+        handleOllamaError(error, 'pre_check', { url: OLLAMA_BASE_URL });
       throw error;
     }
 
@@ -435,7 +435,7 @@ export const ollamaProvider: AIProvider = {
             // 🚨 DEBUG CRITICAL: Log erreur fetch Ollama
             console.error('[ollamaProvider] ❌ Fetch error', {
               error: error instanceof Error ? error.message : String(error),
-              url: OLLAMA_API_URL,
+                url: OLLAMA_BASE_URL,
               timestamp: new Date().toISOString(),
             });
 
