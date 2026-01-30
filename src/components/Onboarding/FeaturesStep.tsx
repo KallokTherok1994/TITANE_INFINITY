@@ -108,3 +108,5 @@ export const FeaturesStep: React.FC = () => {
     </div>
   );
 };
+
+FeaturesStep.displayName = 'FeaturesStep';

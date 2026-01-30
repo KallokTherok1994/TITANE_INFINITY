@@ -130,3 +130,5 @@ export const ReadyStep: React.FC = () => {
     </div>
   );
 };
+
+ReadyStep.displayName = 'ReadyStep';

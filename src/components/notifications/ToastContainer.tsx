@@ -117,3 +117,5 @@ export const ToastContainer: React.FC = () => {
 };
 
 ToastContainer.displayName = 'ToastContainer';
+
+ToastContainer.displayName = 'ToastContainer';

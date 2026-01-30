@@ -416,4 +416,6 @@ export const AdvancedPerformanceDashboard: React.FC = () => {
   );
 };
 
+AdvancedPerformanceDashboard.displayName = 'AdvancedPerformanceDashboard';
+
 export default AdvancedPerformanceDashboard;

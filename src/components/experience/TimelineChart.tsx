@@ -21,3 +21,5 @@ export const TimelineChart: React.FC = () => {
     </div>
   );
 };
+
+TimelineChart.displayName = 'TimelineChart';

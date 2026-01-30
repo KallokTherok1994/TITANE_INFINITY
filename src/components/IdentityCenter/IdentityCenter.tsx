@@ -1061,4 +1061,6 @@ const IdentityCenter: React.FC = () => {
   );
 };
 
+IdentityCenter.displayName = 'IdentityCenter';
+
 export default IdentityCenter;
