@@ -68,16 +68,48 @@ export default defineConfig({
   publicDir: resolve(ROOT_DIR, 'public'),
   base: './',
 
-  // 🔧 Server configuration with proper headers
+  // ✅ v27: Exclure les fichiers shell et scripts du traitement Vite
+  assetsInclude: ['**/*.sh', '**/*.bash', '**/*.zsh'],
+
+  // 🔧 Server configuration with proper headers + Network + Ollama Proxy
   server: {
-    port: 5173,
-    host: '0.0.0.0',
+    host: '0.0.0.0', // Listen on all network interfaces for WiFi access
+    port: 4000,
     strictPort: false,
     cors: true,
+    open: false, // Don't auto-open browser
     headers: {
       // Vite gère automatiquement Content-Type selon l'extension (.tsx → application/javascript)
       'X-Content-Type-Options': 'nosniff',
       'X-Frame-Options': 'SAMEORIGIN',
+    },
+    // ✅ v27: Ignore shell scripts from HMR watching
+    watch: {
+      ignored: [
+        '**/*.sh',
+        '**/*.bash',
+        '**/*.zsh',
+        '**/scripts/**/*.sh',
+        '**/runtime/**',
+        '**/logs/**',
+        '**/deployment/**',
+      ],
+    },
+    proxy: {
+      // ✅ v27: Proxy Ollama API to avoid CORS issues (port 11435 alternative)
+      '/api/ollama': {
+        target: 'http://127.0.0.1:11435',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/ollama/, '/api'),
+        configure: (proxy, _options) => {
+          proxy.on('error', (err, _req, _res) => {
+            console.log('🔴 Ollama proxy error:', err.message);
+          });
+          proxy.on('proxyReq', (proxyReq, req, _res) => {
+            console.log('🔵 Proxying:', req.method, req.url, '→', proxyReq.path);
+          });
+        },
+      },
     },
   },
 

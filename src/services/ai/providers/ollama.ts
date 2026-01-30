@@ -26,10 +26,24 @@ import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional loggin
 
 const logger = createLogger('Ollama'); // ✨ v21.1
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
-const OLLAMA_API_URL =
-  typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
+
+// ✅ v27: Use Vite proxy in dev mode (/api/ollama → http://127.0.0.1:11435)
+const isDevelopment = import.meta.env.DEV;
+const OLLAMA_BASE_URL = isDevelopment
+  ? '/api/ollama' // Proxy Vite (évite CORS)
+  : typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
     ? runtimeConfig.ollamaUrl.trim()
     : 'http://127.0.0.1:11434';
+
+// ✅ v27: Helper to construct full API URLs
+const getOllamaURL = (endpoint: string): string => {
+  // En dev avec proxy: /api/ollama déjà mappé vers /api/* du serveur Ollama
+  // Donc on ajoute directement l'endpoint sans dupliquer /api
+  return isDevelopment 
+    ? `${OLLAMA_BASE_URL}${endpoint}` // /api/ollama/tags (proxy redirige vers /api/tags)
+    : `${OLLAMA_BASE_URL}/api${endpoint}`; // http://127.0.0.1:11434/api/tags
+};
+
 const OLLAMA_MODEL =
   typeof runtimeConfig.ollamaModel === 'string' &&
   runtimeConfig.ollamaModel.trim().length > 0
@@ -59,16 +73,16 @@ export async function initializeOllama(): Promise<boolean> {
 
     if (healthy) {
       errorCount = 0;
-      logger.info(`✅ Health check passed - Ready at ${OLLAMA_API_URL}`);
+      logger.info(`✅ Health check passed - Ready at ${OLLAMA_BASE_URL}`);
       logger.debug(`📦 Model: ${OLLAMA_MODEL}`);
     } else {
-      logger.warn(`⚠️ Endpoint offline at ${OLLAMA_API_URL}`);
+      logger.warn(`⚠️ Endpoint offline at ${OLLAMA_BASE_URL}`);
       logger.warn(`🔄 Falling back to titaneLocal provider`);
     }
 
     return healthy;
   } catch (error) {
-    handleOllamaError(error, 'initialization', { url: OLLAMA_API_URL });
+    handleOllamaError(error, 'initialization', { url: OLLAMA_BASE_URL });
     logger.error('❌ Initialization failed:', error);
     return false;
   }
@@ -212,7 +226,7 @@ async function checkEndpointHealth(): Promise<boolean> {
 
     const response = await fetch(
       // @network-allowed
-      `${OLLAMA_API_URL}/api/tags`,
+      getOllamaURL('/tags'),
       {
         method: 'GET',
         signal: controller.signal,
@@ -230,7 +244,7 @@ async function checkEndpointHealth(): Promise<boolean> {
 
     return false;
   } catch (error) {
-    handleOllamaError(error, 'health_check', { url: OLLAMA_API_URL });
+    handleOllamaError(error, 'health_check', { url: OLLAMA_BASE_URL });
     return false;
   }
 }
@@ -372,7 +386,7 @@ export const ollamaProvider: AIProvider = {
 
             const response = await fetch(
               // @network-allowed
-              `${OLLAMA_API_URL}/api/generate`,
+              getOllamaURL('/generate'),
               {
                 method: 'POST',
                 headers: {
@@ -554,7 +568,7 @@ export const ollamaProvider: AIProvider = {
     try {
       const response = await fetch(
         // @network-allowed
-        `${OLLAMA_API_URL}/api/generate`,
+        getOllamaURL('/generate'),
         {
           method: 'POST',
           headers: {
