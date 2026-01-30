@@ -77,6 +77,7 @@ const DEFAULT_CONFIG: VADConfig = {
 
 // Anti-echo delay after TTS stops (ms)
 const TTS_ECHO_DELAY_MS = 500;
+const DEFAULT_RESUME_DELAY_MS = 200;
 
 /**
  * useVAD - Voice Activity Detection Hook
@@ -405,7 +406,7 @@ export function useVAD(config?: Partial<VADConfig>): UseVADReturn {
    * Call this after TTS playback completes to resume voice detection
    * Includes a small delay to avoid detecting TTS tail as user speech
    */
-  const resumeAfterTTS = useCallback((delayMs: number = 200) => {
+  const resumeAfterTTS = useCallback((delayMs: number = DEFAULT_RESUME_DELAY_MS) => {
     console.log(`[useVAD] 🔊 Resuming VAD after TTS (delay: ${delayMs}ms)`);
     // ✨ v24.2.1: Clear any pending timeout before setting a new one
     if (resumeTimeoutRef.current) {

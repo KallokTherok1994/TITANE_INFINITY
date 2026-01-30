@@ -25,3 +25,5 @@ export function StatusPill({ status, label }: StatusPillProps) {
     </span>
   );
 }
+
+StatusPill.displayName = 'StatusPill';

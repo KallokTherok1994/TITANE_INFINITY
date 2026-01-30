@@ -825,4 +825,6 @@ export function PerfectFusionDashboard() {
   );
 }
 
+PerfectFusionDashboard.displayName = 'PerfectFusionDashboard';
+
 export default PerfectFusionDashboard;

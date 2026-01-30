@@ -53,3 +53,5 @@ export function MetricCard({
     </div>
   );
 }
+
+MetricCard.displayName = 'MetricCard';

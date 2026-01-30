@@ -16,3 +16,5 @@ export function LanguageSwitcher() {
     </select>
   );
 }
+
+LanguageSwitcher.displayName = 'LanguageSwitcher';

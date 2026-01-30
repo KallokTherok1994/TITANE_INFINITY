@@ -11,8 +11,14 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
+
+// ═══════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════════
+
+const DEFAULT_MONITORING_INTERVAL_MS = 5000;
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -87,6 +93,10 @@ export interface UseSystemHealthReturn {
   stopMonitoring: () => void;
   resolveAlert: (alertId: string) => Promise<void>;
   triggerRecovery: (component: string) => Promise<void>;
+
+  // Derived state (memoized)
+  alertCount: number;
+  hasCriticalAlerts: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -377,7 +387,7 @@ export function useSystemHealth(): UseSystemHealthReturn {
 
   // ═══ START MONITORING ═══
   const startMonitoring = useCallback(
-    (intervalMs = 5000) => {
+    (intervalMs = DEFAULT_MONITORING_INTERVAL_MS) => {
       if (monitoringInterval) {
         clearInterval(monitoringInterval);
       }
@@ -455,6 +465,13 @@ export function useSystemHealth(): UseSystemHealthReturn {
     };
   }, [monitoringInterval]);
 
+  // ═══ MEMOIZED DERIVED STATE ═══
+  const alertCount = useMemo(() => health?.alerts.length ?? 0, [health?.alerts.length]);
+  const hasCriticalAlerts = useMemo(
+    () => health?.alerts.some(a => a.severity === 'critical') ?? false,
+    [health?.alerts]
+  );
+
   // ═══ RETURN ═══
   return {
     health,
@@ -465,6 +482,8 @@ export function useSystemHealth(): UseSystemHealthReturn {
     stopMonitoring,
     resolveAlert,
     triggerRecovery,
+    alertCount,
+    hasCriticalAlerts,
   };
 }
 
