@@ -26,11 +26,13 @@ export const ToastProvider: React.FC<{ children?: React.ReactNode }> = ({ childr
       closeButton
       expand
       visibleToasts={5}
-      style={{
-        '--toast-padding': '12px',
-        '--toast-width': '360px',
-        '--toast-border-radius': '6px',
-      } as React.CSSProperties}
+      style={
+        {
+          '--toast-padding': '12px',
+          '--toast-width': '360px',
+          '--toast-border-radius': '6px',
+        } as React.CSSProperties
+      }
     />
   </>
 );

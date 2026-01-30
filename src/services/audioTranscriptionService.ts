@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v26.2.0 — Audio Transcription Service
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
- * 
+ *
  * Service de transcription audio utilisant Whisper
  * Support fallback: Web Speech API si backend Tauri indisponible
  */
@@ -74,13 +74,16 @@ export const audioTranscriptionService = {
 
       // Fallback en cas d'erreur backend
       if (errorMsg.includes('indisponible') || errorMsg.includes('Tauri')) {
-        console.warn('[audioTranscriptionService] Backend Tauri unavailable, trying Web Speech API');
-        
+        console.warn(
+          '[audioTranscriptionService] Backend Tauri unavailable, trying Web Speech API'
+        );
+
         // Pour Web Speech, on ne peut pas transcrire un fichier
         // Il faut utiliser le microphone
         return {
           text: '',
-          error: 'Transcription fichier non disponible. Utilisez le microphone ou réessayez plus tard.',
+          error:
+            'Transcription fichier non disponible. Utilisez le microphone ou réessayez plus tard.',
         };
       }
 
@@ -102,8 +105,7 @@ export const audioTranscriptionService = {
       try {
         // Vérifier support
         const SpeechRecognition =
-          (window as any).SpeechRecognition ||
-          (window as any).webkitSpeechRecognition;
+          (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
 
         if (!SpeechRecognition) {
           return resolve({
@@ -129,7 +131,9 @@ export const audioTranscriptionService = {
           // Auto-stop après maxDuration
           timeoutHandle = setTimeout(() => {
             if (isListening) {
-              console.warn(`[audioTranscriptionService] Auto-stop after ${maxDuration}ms`);
+              console.warn(
+                `[audioTranscriptionService] Auto-stop after ${maxDuration}ms`
+              );
               recognition.stop();
             }
           }, maxDuration);

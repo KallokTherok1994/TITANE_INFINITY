@@ -37,7 +37,11 @@ import {
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
-import { useAutoTimeout, useElapsedTime, formatElapsedTime } from '@/hooks/useAutoTimeout';
+import {
+  useAutoTimeout,
+  useElapsedTime,
+  formatElapsedTime,
+} from '@/hooks/useAutoTimeout';
 import { useTTSPreference, useAudioConversationPreference } from '@/hooks/usePreferences';
 import { useToast } from '@/hooks/useToast';
 import { APISupport } from '@/utils/APISupport';
@@ -139,14 +143,17 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
   }) => {
     // ═══ IMPORTS HOOKS ═══
     const { isTTSEnabled: persistedTTS, setTTSEnabled } = useTTSPreference();
-    const { isAudioConversationPreferred: persistedAudioConv, setAudioConversationPreferred } = 
-      useAudioConversationPreference();
+    const {
+      isAudioConversationPreferred: persistedAudioConv,
+      setAudioConversationPreferred,
+    } = useAudioConversationPreference();
     const { success, error, info, warning } = useToast(); // ✅ NOUVEAU - Toast notifications
 
     // ═══ ÉTATS ═══
     const [isRecordingAudio, setIsRecordingAudio] = useState(false);
     const [isDictating, setIsDictating] = useState(false);
-    const [isAudioConversationActive, setIsAudioConversationActive] = useState(persistedAudioConv);
+    const [isAudioConversationActive, setIsAudioConversationActive] =
+      useState(persistedAudioConv);
     const [isTTSEnabled, setIsTTSEnabledLocal] = useState(persistedTTS);
 
     // Refs
@@ -192,11 +199,11 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           try {
             const filesArray = Array.from(e.target.files);
             const analyzedFiles: AnalyzedFile[] = [];
-            
+
             for (const file of filesArray) {
               // Analyse simple des fichiers
               const content = await file.text().catch(() => null);
-              
+
               const analyzed: AnalyzedFile = {
                 id: `${Date.now()}-${Math.random()}`,
                 name: file.name,
@@ -207,10 +214,10 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
                 preview: content ? content.slice(0, 200) : '',
                 status: 'done',
               };
-              
+
               analyzedFiles.push(analyzed);
             }
-            
+
             onFilesAnalyzed(analyzedFiles);
             e.target.value = ''; // Reset
           } catch (err) {
@@ -315,7 +322,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
 
         const hasCamera = await APISupport.hasCamera();
         if (!hasCamera) {
-          error('Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.');
+          error(
+            'Aucune caméra détectée. Vérifiez la connexion du matériel et les permissions.'
+          );
           isDev && console.warn('[ChatToolbar] No camera found');
           return;
         }
@@ -358,7 +367,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           // ✅ NOUVEAU - Vérifier microphone disponible
           const hasMic = await APISupport.hasMicrophone();
           if (!hasMic) {
-            error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            error(
+              'Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.'
+            );
             isDev && console.warn('[ChatToolbar] No microphone found for dictation');
             return;
           }
@@ -406,7 +417,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
           // ✅ NOUVEAU - Vérifier microphone disponible
           const hasMic = await APISupport.hasMicrophone();
           if (!hasMic) {
-            error('Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.');
+            error(
+              'Aucun microphone détecté. Vérifiez la connexion du matériel et les permissions.'
+            );
             isDev && console.warn('[ChatToolbar] No microphone found for recording');
             return;
           }
@@ -441,7 +454,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         } catch (err) {
           setIsRecordingAudio(false);
           console.error('[ChatToolbar] Audio recording error:', err);
-          error(`Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`);
+          error(
+            `Erreur enregistrement audio: ${(err as Error).message || 'Erreur inconnue'}`
+          );
         }
       }
     }, [isRecordingAudio, onAudioRecorded]);
@@ -471,8 +486,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         const file = e.target.files[0];
 
         try {
-          isDev &&
-            console.log('[ChatToolbar] Audio transcription started:', file.name);
+          isDev && console.log('[ChatToolbar] Audio transcription started:', file.name);
 
           // Afficher message de traitement
           onTranscriptionResult(`[Transcription de "${file.name}" en cours...]`);
@@ -489,12 +503,14 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
             );
           } else if (result.text) {
             isDev &&
-              console.log('[ChatToolbar] Transcription complete:', result.text.length, 'chars');
+              console.log(
+                '[ChatToolbar] Transcription complete:',
+                result.text.length,
+                'chars'
+              );
             onTranscriptionResult(result.text);
           } else {
-            onTranscriptionResult(
-              '[Transcription vide - vérifiez le fichier audio]'
-            );
+            onTranscriptionResult('[Transcription vide - vérifiez le fichier audio]');
           }
         } catch (err) {
           console.error('[ChatToolbar] Transcription exception:', err);
@@ -533,7 +549,8 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         }
 
         onToggleAudioConversation?.(newState);
-        isDev && console.log('[ChatToolbar] Audio conversation:', newState ? 'ON' : 'OFF');
+        isDev &&
+          console.log('[ChatToolbar] Audio conversation:', newState ? 'ON' : 'OFF');
       } catch (err) {
         setIsAudioConversationActive(false);
         console.error('[ChatToolbar] Audio conversation toggle error:', err);

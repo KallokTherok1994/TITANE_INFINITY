@@ -417,14 +417,17 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     }
   }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
 
-  const handleCopyMessage = useCallback(async (content: string) => {
-    try {
-      await navigator.clipboard.writeText(content);
-    } catch (err) {
-      pageLogger.warn('Copy message failed', err);
-      errorToast('Impossible de copier le message');
-    }
-  }, [errorToast]);
+  const handleCopyMessage = useCallback(
+    async (content: string) => {
+      try {
+        await navigator.clipboard.writeText(content);
+      } catch (err) {
+        pageLogger.warn('Copy message failed', err);
+        errorToast('Impossible de copier le message');
+      }
+    },
+    [errorToast]
+  );
 
   const handleRetryMessage = useCallback(
     async (content: string) => {
@@ -539,7 +542,10 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             <button
               className="conversation-icon-btn"
               onClick={async () => {
-                const copySuccess = await copyToClipboard('Conversation TITANE', messages);
+                const copySuccess = await copyToClipboard(
+                  'Conversation TITANE',
+                  messages
+                );
                 if (copySuccess) toastSuccess('Conversation copiée.');
               }}
               title="Copier dans le presse-papier"

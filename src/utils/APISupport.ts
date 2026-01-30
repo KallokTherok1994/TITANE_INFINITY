@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v26.2.0 — API Support Detection & Safety
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
- * 
+ *
  * Détection et validation de support pour les APIs media/capture
  * Prévention des crashes sur navigateurs non-supportés
  */
@@ -16,7 +16,7 @@ export const APISupport = {
    */
   async supportsScreenCapture(): Promise<boolean> {
     try {
-      return !!(navigator.mediaDevices?.getDisplayMedia);
+      return !!navigator.mediaDevices?.getDisplayMedia;
     } catch {
       return false;
     }
@@ -27,7 +27,7 @@ export const APISupport = {
    */
   async supportsGetUserMedia(): Promise<boolean> {
     try {
-      return !!(navigator.mediaDevices?.getUserMedia);
+      return !!navigator.mediaDevices?.getUserMedia;
     } catch {
       return false;
     }
@@ -75,8 +75,7 @@ export const APISupport = {
   supportsWebSpeechRecognition(): boolean {
     if (typeof window === 'undefined') return false;
     const SpeechRecognition =
-      (window as any).SpeechRecognition ||
-      (window as any).webkitSpeechRecognition;
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     return !!SpeechRecognition;
   },
 
@@ -132,14 +131,16 @@ export const APISupport = {
   /**
    * Message d'erreur utilisateur-friendly basé sur le contexte
    */
-  getErrorMessage(context: 'screen-capture' | 'microphone' | 'camera' | 'media-recorder'): string {
+  getErrorMessage(
+    context: 'screen-capture' | 'microphone' | 'camera' | 'media-recorder'
+  ): string {
     const browser = this.getBrowserInfo();
-    
+
     switch (context) {
       case 'screen-capture':
         return browser.isSafari
-          ? 'Capture d\'écran : Safari nécessite macOS 12.1+. Vérifiez les permissions dans Paramètres > Confidentialité.'
-          : 'Capture d\'écran non disponible. Vérifiez les permissions ou essayez un autre navigateur.';
+          ? "Capture d'écran : Safari nécessite macOS 12.1+. Vérifiez les permissions dans Paramètres > Confidentialité."
+          : "Capture d'écran non disponible. Vérifiez les permissions ou essayez un autre navigateur.";
 
       case 'microphone':
         return browser.isSafari

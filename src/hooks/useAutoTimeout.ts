@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v26.2.0 — Auto-Timeout Hook
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
- * 
+ *
  * Hook pour arrêter automatiquement les opérations longues
  * (enregistrement audio, dictation, mode audio conversation, etc.)
  */
@@ -23,10 +23,10 @@ interface UseAutoTimeoutOptions {
 
 /**
  * Hook pour auto-arrêter une opération après un délai
- * 
+ *
  * @example
  * const [isRecording, setIsRecording] = useState(false);
- * 
+ *
  * useAutoTimeout({
  *   id: 'audio-record',
  *   timeoutMs: 5 * 60 * 1000, // 5 minutes
@@ -91,11 +91,11 @@ export function useAutoTimeout({
 /**
  * Hook pour obtenir le temps écoulé d'une opération active
  * Útile pour afficher une barre de progression ou un compteur
- * 
+ *
  * @example
  * const [isRecording, setIsRecording] = useState(false);
  * const elapsed = useElapsedTime(isRecording);
- * 
+ *
  * // Afficher: 1:23 (1 minute 23 secondes)
  * const minutes = Math.floor(elapsed / 60);
  * const seconds = elapsed % 60;
