@@ -79,6 +79,7 @@ export function TTSButton({
     </button>
   );
 }
+TTSButton.displayName = 'TTSButton';
 
 export interface TTSIconButtonProps {
   text: string;
@@ -88,5 +89,6 @@ export interface TTSIconButtonProps {
 export function TTSIconButton({ text, className }: TTSIconButtonProps): JSX.Element {
   return <TTSButton text={text} size="small" className={className} />;
 }
+TTSIconButton.displayName = 'TTSIconButton';
 
 export default TTSButton;

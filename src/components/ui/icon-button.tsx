@@ -84,3 +84,4 @@ export function IconButton({
     </button>
   );
 }
+IconButton.displayName = 'IconButton';

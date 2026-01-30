@@ -61,6 +61,7 @@ export function Skeleton({
     </>
   );
 }
+Skeleton.displayName = 'Skeleton';
 
 /**
  * SkeletonGroup - Groupe de skeletons pour une liste
@@ -80,3 +81,4 @@ export function SkeletonGroup({
     </div>
   );
 }
+SkeletonGroup.displayName = 'SkeletonGroup';

@@ -36,6 +36,7 @@ export function TTSControls({ text, className = '' }: TTSControlsProps): JSX.Ele
     </div>
   );
 }
+TTSControls.displayName = 'TTSControls';
 
 export function TTSMiniControls({ text, className = '' }: TTSControlsProps): JSX.Element {
   const { speak, stop, isSpeaking } = useTTS();
@@ -50,5 +51,6 @@ export function TTSMiniControls({ text, className = '' }: TTSControlsProps): JSX
     </button>
   );
 }
+TTSMiniControls.displayName = 'TTSMiniControls';
 
 export default TTSControls;
