@@ -7,6 +7,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { useToast } from '@/hooks/useToast';
 import React, { useState, useEffect, useCallback } from 'react';
 import VaultStatus from './VaultStatus';
 import SyncConfig from './SyncConfig';
@@ -27,6 +28,7 @@ const CloudCenter: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState(false);
+  const { success } = useToast();
 
   // Passphrase pour l'initialisation
   const [passphrase, setPassphrase] = useState('');
@@ -113,7 +115,7 @@ const CloudCenter: React.FC = () => {
     try {
       const isValid = await secureInvoke<boolean>('cloud_verify_integrity');
       if (isValid) {
-        alert("✅ L'intégrité du vault est validée");
+        success("L'intégrité du vault est validée");
       } else {
         setError("⚠️ Le vault présente des problèmes d'intégrité");
       }
@@ -131,7 +133,7 @@ const CloudCenter: React.FC = () => {
 
     try {
       const backupPath = await secureInvoke<string>('cloud_backup_vault');
-      alert(`✅ Sauvegarde créée: ${backupPath}`);
+      success(`Sauvegarde créée: ${backupPath}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {

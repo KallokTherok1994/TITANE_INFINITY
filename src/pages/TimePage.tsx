@@ -14,6 +14,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { useToast } from '@/hooks/useToast';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { TBadge, TMetric, TSectionHeader } from '../design-system';
 import './TimePage.css';
@@ -669,6 +670,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
   loading,
   loadSnapshots,
 }) => {
+  const { success, error: errorToast } = useToast();
   const formatDate = (timestamp: number): string => {
     return new Date(timestamp * 1000).toLocaleString('fr-FR');
   };
@@ -689,10 +691,10 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 
     try {
       await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
-      alert('✅ Restauration réussie ! Redémarrage requis.');
+      success('Restauration réussie ! Redémarrage requis.');
       window.location.reload();
     } catch (error) {
-      alert(`❌ Erreur lors de la restauration: ${error}`);
+      errorToast(`Erreur lors de la restauration: ${error}`);
     }
   };
 
@@ -705,7 +707,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
       await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
       loadSnapshots();
     } catch (error) {
-      alert(`❌ Erreur: ${error}`);
+      errorToast(`Erreur: ${error}`);
     }
   };
 

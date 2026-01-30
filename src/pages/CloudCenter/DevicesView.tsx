@@ -7,6 +7,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { useToast } from '@/hooks/useToast';
 import { DeviceIdentity } from './types';
 
 interface DevicesResponse {
@@ -19,6 +20,7 @@ const DevicesView: React.FC = () => {
   const [knownDevices, setKnownDevices] = useState<DeviceIdentity[]>([]);
   const [loading, setLoading] = useState(true);
   const [removing, setRemoving] = useState<string | null>(null);
+  const { error } = useToast();
 
   const loadDevices = async () => {
     setLoading(true);
@@ -48,7 +50,7 @@ const DevicesView: React.FC = () => {
       await loadDevices();
     } catch (err) {
       console.error('[DevicesView] Failed to remove device:', err);
-      alert(`Erreur: ${err}`);
+      error(`Erreur: ${err}`);
     } finally {
       setRemoving(null);
     }
