@@ -146,6 +146,8 @@ export const NULLABLE_COMMANDS = new Set<string>([
   // Memory / Vector store
   'memory_get_entry',
   'vector_store_get',
+  // Audio Transcription (can be empty or fail)
+  'transcribe_audio_file',
 ]);
 
 /**
@@ -311,6 +313,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'is_recording',
   'get_recording_status',
   'transcribe_audio',
+  'transcribe_audio_file', // ✅ NEW: Whisper-based file transcription
 
   // ═══════════════════════════════════════════════════════════════
   // AUDIO CENTER (v19.2+)

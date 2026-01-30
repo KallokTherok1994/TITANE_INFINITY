@@ -7,7 +7,6 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { tauriProtector } from '@/utils/tauriProtector';
 
 export interface TranscriptionResult {
   text: string;
