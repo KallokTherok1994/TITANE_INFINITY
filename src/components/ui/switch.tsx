@@ -99,3 +99,4 @@ export function Switch({
     </div>
   );
 }
+Switch.displayName = 'Switch';

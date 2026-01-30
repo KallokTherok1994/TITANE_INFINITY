@@ -48,6 +48,7 @@ export function TabsList({ children, className = '' }: TabsListProps) {
     </div>
   );
 }
+TabsList.displayName = 'TabsList';
 
 export interface TabsTriggerProps {
   value: string;
@@ -106,6 +107,7 @@ export function TabsTrigger({
     </button>
   );
 }
+TabsTrigger.displayName = 'TabsTrigger';
 
 export interface TabsContentProps {
   value: string;
@@ -132,6 +134,7 @@ export function TabsContent({ value, children, className = '' }: TabsContentProp
     </div>
   );
 }
+TabsContent.displayName = 'TabsContent';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // MAIN TABS COMPONENT (Root)
@@ -171,6 +174,7 @@ export function Tabs({
     </TabsContext.Provider>
   );
 }
+Tabs.displayName = 'Tabs';
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // LEGACY API (Backward Compatibility)
@@ -227,3 +231,4 @@ export function TabsLegacy({ tabs, defaultTab, onTabChange, children }: TabsLega
     </Tabs>
   );
 }
+TabsLegacy.displayName = 'TabsLegacy';

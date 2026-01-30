@@ -67,6 +67,7 @@ export function Alert({
     </div>
   );
 }
+Alert.displayName = 'Alert';
 
 export function AlertTitle({
   className = '',
@@ -79,6 +80,7 @@ export function AlertTitle({
     </h5>
   );
 }
+AlertTitle.displayName = 'AlertTitle';
 
 export function AlertDescription({
   className = '',
@@ -91,3 +93,4 @@ export function AlertDescription({
     </div>
   );
 }
+AlertDescription.displayName = 'AlertDescription';
