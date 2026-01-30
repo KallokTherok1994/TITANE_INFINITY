@@ -106,65 +106,6 @@
   font-weight: 600;
 }
 
-/* Quick Stat Card */
-.quick-stat-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  background: linear-gradient(
-    135deg,
-    rgba(30, 41, 59, 0.6) 0%,
-    rgba(15, 23, 42, 0.8) 100%
-  );
-  border: 1px solid rgba(100, 116, 139, 0.2);
-  border-radius: 0.75rem;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.quick-stat-card:hover {
-  border-color: rgba(59, 130, 246, 0.4);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
-}
-
-.quick-stat-icon {
-  width: 48px;
-  height: 48px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(59, 130, 246, 0.1);
-  border-radius: 0.625rem;
-  flex-shrink: 0;
-}
-
-.quick-stat-content {
-  flex: 1;
-}
-
-.quick-stat-label {
-  font-size: 0.75rem;
-  color: #94a3b8;
-  margin-bottom: 0.25rem;
-}
-
-.quick-stat-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #e2e8f0;
-  line-height: 1.2;
-}
-
-.quick-stat-trend {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  margin-top: 0.25rem;
-}
-
 /* Recharts Customization */
 .recharts-cartesian-axis-tick-value {
   fill: #64748b;
@@ -199,14 +140,5 @@
 
   .chart-header h4 {
     font-size: 0.875rem;
-  }
-
-  .quick-stat-icon {
-    width: 40px;
-    height: 40px;
-  }
-
-  .quick-stat-value {
-    font-size: 1.25rem;
   }
 }

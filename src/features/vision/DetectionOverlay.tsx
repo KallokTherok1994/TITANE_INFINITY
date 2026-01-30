@@ -8,7 +8,7 @@
  * Affiche bounding boxes, labels, confidence scores
  */
 
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Eye, EyeOff, Maximize2, Minimize2 } from 'lucide-react';
 import './DetectionOverlay.css';
 
@@ -40,7 +40,7 @@ interface DetectionOverlayProps {
   minConfidence?: number;
 }
 
-export const DetectionOverlay: React.FC<DetectionOverlayProps> = ({
+export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(({
   streamRef,
   showLabels = true,
   showConfidence = true,
@@ -139,9 +139,13 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = ({
     }
   }, [detections, isActive, overlayEnabled, showLabels, showConfidence]);
 
-  const toggleFullscreen = () => {
-    setIsFullscreen(!isFullscreen);
-  };
+  const toggleFullscreen = useCallback(() => {
+    setIsFullscreen(prev => !prev);
+  }, []);
+
+  const toggleOverlayEnabled = useCallback(() => {
+    setOverlayEnabled(prev => !prev);
+  }, []);
 
   if (!isActive) {
     return null;
@@ -161,7 +165,7 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = ({
       <div className="detection-controls">
         <button
           className={`detection-control-btn ${overlayEnabled ? 'active' : ''}`}
-          onClick={() => setOverlayEnabled(!overlayEnabled)}
+          onClick={toggleOverlayEnabled}
           title={overlayEnabled ? 'Masquer détections' : 'Afficher détections'}
         >
           {overlayEnabled ? <Eye size={16} /> : <EyeOff size={16} />}
@@ -191,7 +195,9 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = ({
       )}
     </div>
   );
-};
+});
+
+DetectionOverlay.displayName = 'DetectionOverlay';
 
 // Normalize box coordinates (0-1 to pixel values)
 function normalizeBox(
