@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { GlobalMetricsSummary } from '../components/monitoring/GlobalMetricsSummary';
 import { ServiceMetricsPanel } from '../components/monitoring/ServiceMetricsPanel';
 import { CommandStatsTable } from '../components/monitoring/CommandStatsTable';
@@ -24,7 +24,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
   const [isExporting, setIsExporting] = React.useState(false);
 
   // Export métriques JSON
-  const handleExportJSON = () => {
+  const handleExportJSON = useCallback(() => {
     setIsExporting(true);
     try {
       const metrics = ServiceMetrics.export();
@@ -43,10 +43,10 @@ export const MonitoringDashboard: React.FC = memo(() => {
     } finally {
       setIsExporting(false);
     }
-  };
+  }, []);
 
   // Export métriques CSV
-  const handleExportCSV = () => {
+  const handleExportCSV = useCallback(() => {
     setIsExporting(true);
     try {
       const metrics = ServiceMetrics.export();
@@ -88,15 +88,15 @@ export const MonitoringDashboard: React.FC = memo(() => {
     } finally {
       setIsExporting(false);
     }
-  };
+  }, []);
 
   // Clear métriques
-  const handleClearMetrics = () => {
+  const handleClearMetrics = useCallback(() => {
     if (window.confirm('Effacer toutes les métriques ? Cette action est irréversible.')) {
       ServiceMetrics.clear();
       window.location.reload();
     }
-  };
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-900 p-6">
