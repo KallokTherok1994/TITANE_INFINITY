@@ -36,6 +36,7 @@ export function Card({
     </div>
   );
 }
+Card.displayName = 'Card';
 
 export function CardHeader({
   className = '',
@@ -48,6 +49,7 @@ export function CardHeader({
     </div>
   );
 }
+CardHeader.displayName = 'CardHeader';
 
 export function CardTitle({
   className = '',
@@ -63,6 +65,7 @@ export function CardTitle({
     </h3>
   );
 }
+CardTitle.displayName = 'CardTitle';
 
 export function CardDescription({
   className = '',
@@ -75,6 +78,7 @@ export function CardDescription({
     </p>
   );
 }
+CardDescription.displayName = 'CardDescription';
 
 export function CardContent({
   className = '',
@@ -87,6 +91,7 @@ export function CardContent({
     </div>
   );
 }
+CardContent.displayName = 'CardContent';
 
 export function CardFooter({
   className = '',
@@ -99,3 +104,4 @@ export function CardFooter({
     </div>
   );
 }
+CardFooter.displayName = 'CardFooter';

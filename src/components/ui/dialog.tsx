@@ -72,6 +72,7 @@ export function DialogTrigger({
     </button>
   );
 }
+DialogTrigger.displayName = 'DialogTrigger';
 
 export function DialogContent({
   className = '',
@@ -128,6 +129,7 @@ export function DialogContent({
     </div>
   );
 }
+DialogContent.displayName = 'DialogContent';
 
 export function DialogHeader({
   className = '',
@@ -142,6 +144,7 @@ export function DialogHeader({
     </div>
   );
 }
+DialogHeader.displayName = 'DialogHeader';
 
 export function DialogTitle({
   className = '',
@@ -162,6 +165,7 @@ export function DialogTitle({
     </h2>
   );
 }
+DialogTitle.displayName = 'DialogTitle';
 
 export function DialogDescription({
   className = '',
@@ -174,6 +178,7 @@ export function DialogDescription({
     <p className={`text-base text-titanium-text-secondary ${className}`}>{children}</p>
   );
 }
+DialogDescription.displayName = 'DialogDescription';
 
 export function DialogFooter({
   className = '',
@@ -190,3 +195,4 @@ export function DialogFooter({
     </div>
   );
 }
+DialogFooter.displayName = 'DialogFooter';
