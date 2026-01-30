@@ -8,7 +8,7 @@
  * Utilise les données du useVisionStore pour afficher détection, affect, body language
  */
 
-import React, { useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -38,12 +38,31 @@ interface VisionMetricsChartProps {
   showBodyLanguage?: boolean;
 }
 
-export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
+const levelToPercent = (level: string | null | undefined): number => {
+  switch (level) {
+    case 'low':
+      return 25;
+    case 'medium':
+      return 50;
+    case 'high':
+      return 75;
+    default:
+      return 0;
+  }
+};
+
+const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
+  hour: '2-digit',
+  minute: '2-digit',
+});
+
+export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(({
   timeRange = 10,
   showDetection = true,
   showAffect = true,
   showBodyLanguage = true,
 }) => {
+  const tooltipContent = useMemo(() => <CustomTooltip />, []);
   const isActive = useVisionStore(
     state => state.isObservationActive && state.visionInput.streamActive
   );
@@ -52,51 +71,26 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
 
   const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
 
-  const levelToPercent = (level: string | null | undefined): number => {
-    switch (level) {
-      case 'low':
-        return 25;
-      case 'medium':
-        return 50;
-      case 'high':
-        return 75;
-      default:
-        return 0;
-    }
-  };
+  const recentAffect = useMemo(
+    () =>
+      (affectHistory || [])
+        .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
+        .slice(-60),
+    [affectHistory, cutoffTimestamp]
+  );
 
-  // Données pour graphique détection
-  const detectionData = useMemo(() => {
-    const recent = (affectHistory || [])
-      .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
-      .slice(-60);
-
-    return recent.map(item => ({
-      time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      confidence: Math.round((item.confidence || 0) * 100),
-      objects: 0,
-    }));
-  }, [affectHistory, cutoffTimestamp]);
-
-  // Données pour graphique affect
-  const affectData = useMemo(() => {
-    const recent = (affectHistory || [])
-      .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
-      .slice(-60);
-
-    return recent.map(item => ({
-      time: new Date(item.timestamp).toLocaleTimeString('fr-FR', {
-        hour: '2-digit',
-        minute: '2-digit',
-      }),
-      energy: levelToPercent(item.energy),
-      tension: levelToPercent(item.tension),
-      engagement: levelToPercent(item.engagement),
-    }));
-  }, [affectHistory, cutoffTimestamp]);
+  const chartData = useMemo(
+    () =>
+      recentAffect.map(item => ({
+        time: timeFormatter.format(item.timestamp),
+        confidence: Math.round((item.confidence || 0) * 100),
+        objects: 0,
+        energy: levelToPercent(item.energy),
+        tension: levelToPercent(item.tension),
+        engagement: levelToPercent(item.engagement),
+      })),
+    [recentAffect]
+  );
 
   // Données pour radar body language
   const bodyLanguageData = useMemo(() => {
@@ -115,34 +109,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
     ];
   }, [bodyLanguage]);
 
-  // Custom Tooltip avec types corrects
-  interface TooltipProps {
-    active?: boolean;
-    payload?: Array<{
-      name?: string;
-      value?: number;
-      color?: string;
-    }>;
-    label?: string;
-  }
-
-  const CustomTooltip = ({ active, payload, label }: TooltipProps) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="vision-chart-tooltip">
-          <p className="tooltip-label">{label}</p>
-          {payload.map(
-            (entry: { name?: string; value?: number; color?: string }, index: number) => (
-              <p key={index} className="tooltip-value" style={{ color: entry.color }}>
-                {entry.name}: <strong>{Math.round(entry.value || 0)}%</strong>
-              </p>
-            )
-          )}
-        </div>
-      );
-    }
-    return null;
-  };
+  
 
   if (!isActive) {
     return (
@@ -164,7 +131,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
             <span className="chart-badge good">Active</span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
-            <AreaChart data={detectionData}>
+            <AreaChart data={chartData}>
               <defs>
                 <linearGradient id="colorConfidence" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
@@ -174,7 +141,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
               <XAxis dataKey="time" stroke="#64748b" fontSize={11} />
               <YAxis stroke="#64748b" fontSize={11} />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={tooltipContent} />
               <Legend />
               <Area
                 type="monotone"
@@ -198,11 +165,11 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
             <span className="chart-badge">Temps Réel</span>
           </div>
           <ResponsiveContainer width="100%" height={220}>
-            <LineChart data={affectData}>
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
               <XAxis dataKey="time" stroke="#64748b" fontSize={11} />
               <YAxis stroke="#64748b" fontSize={11} />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={tooltipContent} />
               <Legend />
               <Line
                 type="monotone"
@@ -246,7 +213,7 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
               <PolarGrid stroke="rgba(100, 116, 139, 0.2)" />
               <PolarAngleAxis dataKey="metric" stroke="#cbd5e1" fontSize={11} />
               <PolarRadiusAxis stroke="#64748b" fontSize={11} />
-              <Tooltip content={<CustomTooltip />} />
+              <Tooltip content={tooltipContent} />
               <Radar
                 name="Score"
                 dataKey="value"
@@ -261,4 +228,33 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = ({
       )}
     </div>
   );
+});
+
+VisionMetricsChart.displayName = 'VisionMetricsChart';
+
+interface TooltipProps {
+  active?: boolean;
+  payload?: Array<{
+    name?: string;
+    value?: number;
+    color?: string;
+  }>;
+  label?: string;
+}
+
+const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="vision-chart-tooltip">
+        <p className="tooltip-label">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} className="tooltip-value" style={{ color: entry.color }}>
+            {entry.name}: <strong>{Math.round(entry.value || 0)}%</strong>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
 };
+

@@ -8,7 +8,7 @@
  * Affiche métriques système, performance, et activité
  */
 
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import {
   LineChart,
   Line,
@@ -38,34 +38,45 @@ interface RealTimeChartsProps {
   activityData?: ChartData[];
 }
 
-export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
-  performanceData = generateMockData(20),
-  messagesData = generateMockData(15),
-  cpuData = generateMockData(30),
-  activityData = generateMockData(24),
+// Custom Tooltip avec typing strict (extrait pour éviter recréation)
+const CustomTooltip: React.FC<{
+  active?: boolean;
+  payload?: Array<{ name: string; value: number }>;
+  label?: string;
+}> = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="chart-tooltip">
+        <p className="chart-tooltip-label">{label}</p>
+        <p className="chart-tooltip-value">
+          {payload[0]?.name ?? 'Value'}: <strong>{payload[0]?.value ?? 'N/A'}</strong>
+        </p>
+      </div>
+    );
+  }
+  return null;
+};
+
+export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(({
+  performanceData,
+  messagesData,
+  cpuData,
+  activityData,
 }) => {
-  // Custom Tooltip avec typing strict
-  const CustomTooltip = ({
-    active,
-    payload,
-    label,
-  }: {
-    active?: boolean;
-    payload?: Array<{ name: string; value: number }>;
-    label?: string;
-  }) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="chart-tooltip">
-          <p className="chart-tooltip-label">{label}</p>
-          <p className="chart-tooltip-value">
-            {payload[0]?.name ?? 'Value'}: <strong>{payload[0]?.value ?? 'N/A'}</strong>
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
+  const tooltipContent = useMemo(() => <CustomTooltip />, []);
+  const resolvedPerformanceData = useMemo(
+    () => performanceData ?? generateMockData(20),
+    [performanceData]
+  );
+  const resolvedMessagesData = useMemo(
+    () => messagesData ?? generateMockData(15),
+    [messagesData]
+  );
+  const resolvedCpuData = useMemo(() => cpuData ?? generateMockData(30), [cpuData]);
+  const resolvedActivityData = useMemo(
+    () => activityData ?? generateMockData(24),
+    [activityData]
+  );
 
   return (
     <div className="realtime-charts-container">
@@ -77,7 +88,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <span className="chart-badge good">Optimal</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={performanceData}>
+          <AreaChart data={resolvedPerformanceData}>
             <defs>
               <linearGradient id="colorPerf" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
@@ -87,7 +98,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
             <XAxis dataKey="timestamp" stroke="#64748b" fontSize={11} tickLine={false} />
             <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={tooltipContent} />
             <Area
               type="monotone"
               dataKey="value"
@@ -108,11 +119,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <span className="chart-badge">128 msg/h</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
-          <LineChart data={messagesData}>
+          <LineChart data={resolvedMessagesData}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
             <XAxis dataKey="timestamp" stroke="#64748b" fontSize={11} tickLine={false} />
             <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={tooltipContent} />
             <Line
               type="monotone"
               dataKey="value"
@@ -134,7 +145,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <span className="chart-badge warning">Modérée</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
-          <AreaChart data={cpuData}>
+          <AreaChart data={resolvedCpuData}>
             <defs>
               <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
@@ -144,7 +155,7 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
             <XAxis dataKey="timestamp" stroke="#64748b" fontSize={11} tickLine={false} />
             <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={tooltipContent} />
             <Area
               type="monotone"
               dataKey="value"
@@ -165,18 +176,20 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = ({
           <span className="chart-badge">24h</span>
         </div>
         <ResponsiveContainer width="100%" height={200}>
-          <BarChart data={activityData}>
+          <BarChart data={resolvedActivityData}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
             <XAxis dataKey="timestamp" stroke="#64748b" fontSize={11} tickLine={false} />
             <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-            <Tooltip content={<CustomTooltip />} />
+            <Tooltip content={tooltipContent} />
             <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Activité" />
           </BarChart>
         </ResponsiveContainer>
       </div>
     </div>
   );
-};
+});
+
+RealTimeCharts.displayName = 'RealTimeCharts';
 
 /**
  * Generate mock data for demo
@@ -196,53 +209,3 @@ function generateMockData(count: number): ChartData[] {
   return data;
 }
 
-/**
- * QuickStatsCard - Carte statistique compacte
- */
-interface QuickStatProps {
-  icon: React.ReactNode;
-  label: string;
-  value: string | number;
-  trend?: 'up' | 'down' | 'neutral';
-  trendValue?: string;
-  color?: string;
-}
-
-export const QuickStatCard: React.FC<QuickStatProps> = ({
-  icon,
-  label,
-  value,
-  trend,
-  trendValue,
-  color = '#3b82f6',
-}) => {
-  const getTrendIcon = () => {
-    if (trend === 'up') return '↑';
-    if (trend === 'down') return '↓';
-    return '→';
-  };
-
-  const getTrendColor = () => {
-    if (trend === 'up') return '#10b981';
-    if (trend === 'down') return '#ef4444';
-    return '#94a3b8';
-  };
-
-  return (
-    <div className="quick-stat-card">
-      <div className="quick-stat-icon" style={{ color }}>
-        {icon}
-      </div>
-      <div className="quick-stat-content">
-        <div className="quick-stat-label">{label}</div>
-        <div className="quick-stat-value">{value}</div>
-        {trend && trendValue && (
-          <div className="quick-stat-trend" style={{ color: getTrendColor() }}>
-            <span>{getTrendIcon()}</span>
-            <span>{trendValue}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};

@@ -5,3 +5,4 @@
 
 export { RealTimeCharts } from './RealTimeCharts';
 export { DashboardEditor } from './DashboardEditor';
+export { QuickStatCard } from './QuickStatCard';

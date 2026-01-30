@@ -24,7 +24,15 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect, useMemo, useCallback, useRef, memo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+  useDeferredValue,
+  memo,
+} from 'react';
 import { Container, Stack, Grid } from '@components/layout';
 import { Button, Card } from '../ui';
 import { XPProgressBar } from '@features/progression';
@@ -60,7 +68,7 @@ import {
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { AchievementCard } from '@/features/progression/AchievementCard';
 import { ACHIEVEMENTS } from '@/features/progression/achievements';
-import { RealTimeCharts, QuickStatCard } from '@/features/dashboard/RealTimeCharts';
+import { QuickStatCard } from '@/features/dashboard';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
 import { detectEnvironment } from '@/core/tauri/environment';
@@ -68,8 +76,6 @@ import { Camera } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
 import type { VisualLevel } from '@/types/visionAffect';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
-import { VisionMetricsChart } from '@/features/vision/VisionMetricsChart';
-import { DetectionOverlay } from '@/features/vision/DetectionOverlay';
 import { createLogger } from '@/utils/logger';
 // NOTE: Heavy tab components are lazy-loaded below (Phase 5.2)
 import './TitanePage.css';
@@ -130,6 +136,24 @@ const LazyTransformationRoadmap = React.lazy(() =>
   }))
 );
 
+const LazyRealTimeCharts = React.lazy(() =>
+  import('@/features/dashboard/RealTimeCharts').then(m => ({
+    default: m.RealTimeCharts,
+  }))
+);
+
+const LazyVisionMetricsChart = React.lazy(() =>
+  import('@/features/vision/VisionMetricsChart').then(m => ({
+    default: m.VisionMetricsChart,
+  }))
+);
+
+const LazyDetectionOverlay = React.lazy(() =>
+  import('@/features/vision/DetectionOverlay').then(m => ({
+    default: m.DetectionOverlay,
+  }))
+);
+
 /**
  * Sanitize input pour sécurité renforcée (XSS prevention)
  */
@@ -156,6 +180,28 @@ type TabId =
   | 'progression'
   | 'transformation';
 
+const TAB_PANEL_IDS: Record<TabId, string> = {
+  conversation: 'titane-panel-conversation',
+  vision: 'titane-panel-vision',
+  overview: 'titane-panel-overview',
+  identity: 'titane-panel-identity',
+  'memory-map': 'titane-panel-memory',
+  'memory-evolution': 'titane-panel-evolution',
+  progression: 'titane-panel-progression',
+  transformation: 'titane-panel-transformation',
+};
+
+const TAB_LABEL_IDS: Record<TabId, string> = {
+  conversation: 'titane-tab-conversation',
+  vision: 'titane-tab-vision',
+  overview: 'titane-tab-overview',
+  identity: 'titane-tab-identity',
+  'memory-map': 'titane-tab-memory',
+  'memory-evolution': 'titane-tab-evolution',
+  progression: 'titane-tab-progression',
+  transformation: 'titane-tab-transformation',
+};
+
 interface TitaneStats {
   totalXP: number;
   level: number;
@@ -168,6 +214,16 @@ interface TitaneStats {
 interface StatusIndicatorProps {
   active: boolean;
   label: string;
+}
+
+interface ConversationMessageItem {
+  id?: string;
+  role: 'user' | 'assistant' | string;
+  content: string;
+  metadata?: {
+    tags?: string[];
+    intention?: string;
+  };
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -225,11 +281,139 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = memo(({ active, label })
 ));
 StatusIndicator.displayName = 'StatusIndicator';
 
+const ConversationMessage = memo(({
+  message,
+  isLoading,
+  onCopy,
+  onRetry,
+  onDelete,
+}: {
+  message: ConversationMessageItem;
+  isLoading: boolean;
+  onCopy: (content: string) => void;
+  onRetry: (content: string) => void;
+  onDelete: (id: string) => void;
+}) => {
+  const handleCopy = useCallback(() => onCopy(message.content), [message.content, onCopy]);
+  const handleRetry = useCallback(() => onRetry(message.content), [message.content, onRetry]);
+  const handleDelete = useCallback(() => {
+    if (message.id) {
+      onDelete(message.id);
+    }
+  }, [message.id, onDelete]);
+
+  return (
+    <div className={`conversation-message ${message.role}`}>
+      <div className="conversation-message-avatar">
+        {message.role === 'user' ? '👤' : '🧠'}
+      </div>
+      <div className="conversation-message-content">
+        <div className="conversation-message-header">
+          <span className="conversation-message-role">
+            {message.role === 'user' ? 'Vous' : 'TITANE'}
+          </span>
+          {message.metadata?.tags && message.metadata.tags.length > 0 && (
+            <div className="conversation-message-tags">
+              {message.metadata.tags.slice(0, 3).map((tag, i) => (
+                <span key={i} className="conversation-tag">
+                  {tag}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="conversation-message-text">{message.content}</div>
+        {message.metadata?.intention && (
+          <div className="conversation-message-meta">
+            <span className="meta-intention">{message.metadata.intention}</span>
+          </div>
+        )}
+
+        <div className="conversation-message-actions">
+          <button
+            type="button"
+            className="conversation-message-action"
+            onClick={handleCopy}
+            title="Copier le message"
+          >
+            📋 Copier
+          </button>
+
+          {message.role === 'user' && (
+            <button
+              type="button"
+              className="conversation-message-action"
+              onClick={handleRetry}
+              title="Renvoyer ce message"
+              disabled={isLoading}
+            >
+              🔄 Retry
+            </button>
+          )}
+
+          <button
+            type="button"
+            className="conversation-message-action danger"
+            onClick={handleDelete}
+            title="Supprimer ce message"
+          >
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+});
+
+ConversationMessage.displayName = 'ConversationMessage';
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 1: CONVERSATION
 // ═══════════════════════════════════════════════════════════════════════════
 
 type ConversationSectionProps = Record<string, never>;
+
+const AVAILABLE_PROVIDERS = [
+  { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
+  { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
+  { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
+  { id: 'claude', name: 'Claude', icon: '🧠', available: true },
+];
+
+const BUILT_IN_CONVERSATION_MODES = [
+  { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
+  {
+    id: 'brainstorming',
+    name: 'Brainstorming',
+    icon: '💡',
+    description: 'Idéation créative',
+  },
+  { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
+  {
+    id: 'planning',
+    name: 'Planification',
+    icon: '📋',
+    description: 'Stratégie et organisation',
+  },
+  {
+    id: 'journal',
+    name: 'Journal',
+    icon: '📔',
+    description: 'Réflexion personnelle',
+  },
+  {
+    id: 'debug_cognitive',
+    name: 'Debug Cognitif',
+    icon: '🔧',
+    description: 'Analyse système',
+  },
+];
+
+const CONVERSATION_SUGGESTIONS = [
+  { label: '💡 Comment tu fonctionnes ?', value: 'Explique-moi ton fonctionnement' },
+  { label: '📋 Planifier un projet', value: 'Aide-moi à planifier mon projet' },
+  { label: '💡 Brainstorming', value: 'Brainstorming sur une idée innovante' },
+];
 
 const ConversationSection: React.FC<ConversationSectionProps> = () => {
   // ═══ IMPORTS & HOOKS ═══
@@ -264,61 +448,28 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   const [_cameraActive, setCameraActive] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false); // v26.2 - Protection contre double-envoi
+  const deferredSearchQuery = useDeferredValue(searchQuery);
 
   // ═══ THINKING STEPS (v25.6.0) ═══
   const thinking = useThinkingSteps();
 
+  const handleVoiceTranscript = useCallback((text: string) => {
+    setInputValue(prev => (prev ? `${prev} ${text}` : text));
+  }, []);
+
+  const handleVoiceError = useCallback((error: unknown) => {
+    pageLogger.error('Voice recognition error', error);
+  }, []);
+
   // ═══ VOICE ENGINE INTEGRATION (v25.4.2) ═══
   const voiceEngine = useVoiceEngine({
     language: 'fr-FR',
-    onTranscript: text => {
-      // Auto-insert transcript into input
-      setInputValue(prev => (prev ? `${prev} ${text}` : text));
-    },
-    onError: error => {
-      pageLogger.error('Voice recognition error', error);
-    },
+    onTranscript: handleVoiceTranscript,
+    onError: handleVoiceError,
   });
-
-  // Available providers
-  const availableProviders = [
-    { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
-    { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
-    { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
-    { id: 'claude', name: 'Claude', icon: '🧠', available: true },
-  ];
 
   // Conversation modes disponibles (merge built-in + custom)
   const conversationModes = useMemo(() => {
-    const builtInModes = [
-      { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
-      {
-        id: 'brainstorming',
-        name: 'Brainstorming',
-        icon: '💡',
-        description: 'Idéation créative',
-      },
-      { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
-      {
-        id: 'planning',
-        name: 'Planification',
-        icon: '📋',
-        description: 'Stratégie et organisation',
-      },
-      {
-        id: 'journal',
-        name: 'Journal',
-        icon: '📔',
-        description: 'Réflexion personnelle',
-      },
-      {
-        id: 'debug_cognitive',
-        name: 'Debug Cognitif',
-        icon: '🔧',
-        description: 'Analyse système',
-      },
-    ];
-
     const customModesFormatted = customModes.map(m => ({
       id: m.id,
       name: m.name,
@@ -326,8 +477,56 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
       description: m.description,
     }));
 
-    return [...builtInModes, ...customModesFormatted];
+    return [...BUILT_IN_CONVERSATION_MODES, ...customModesFormatted];
   }, [customModes]);
+
+  const currentModeLabel = useMemo(
+    () => conversationModes.find(m => m.id === currentMode)?.name ?? '—',
+    [conversationModes, currentMode]
+  );
+
+  const selectedProviderLabel = useMemo(
+    () => AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
+    [selectedProvider]
+  );
+
+  const conversationModeOptions = useMemo(
+    () =>
+      conversationModes.map(mode => (
+        <option key={mode.id} value={mode.id}>
+          {mode.icon} {mode.name}
+        </option>
+      )),
+    [conversationModes]
+  );
+
+  const hasMessages = messages.length > 0;
+  const isHealthy = healthReport?.status === 'Healthy';
+
+  const handleSuggestionClick = useCallback(
+    (event: React.MouseEvent<HTMLButtonElement>) => {
+      const value = event.currentTarget.dataset.value;
+      if (value) {
+        setInputValue(value);
+      }
+    },
+    []
+  );
+
+  const suggestionButtons = useMemo(
+    () =>
+      CONVERSATION_SUGGESTIONS.map(suggestion => (
+        <button
+          key={suggestion.value}
+          type="button"
+          data-value={suggestion.value}
+          onClick={handleSuggestionClick}
+        >
+          {suggestion.label}
+        </button>
+      )),
+    [handleSuggestionClick]
+  );
 
   // ═══ CHARGER MODES CUSTOM AU DÉMARRAGE ═══
   useEffect(() => {
@@ -347,12 +546,20 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     pageLogger.debug('Mode personnalisé sauvegardé', mode);
   }, []);
 
+  const searchNeedle = useMemo(() => {
+    const trimmed = deferredSearchQuery.trim();
+    return trimmed ? trimmed.toLowerCase() : '';
+  }, [deferredSearchQuery]);
+
   const filteredMessages = useMemo(() => {
+    if (!searchNeedle && filterRole === 'all') {
+      return messages;
+    }
+
     let result = messages;
 
-    if (searchQuery.trim()) {
-      const needle = searchQuery.toLowerCase();
-      result = result.filter(m => m.content.toLowerCase().includes(needle));
+    if (searchNeedle) {
+      result = result.filter(m => m.content.toLowerCase().includes(searchNeedle));
     }
 
     if (filterRole !== 'all') {
@@ -360,7 +567,10 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     }
 
     return result;
-  }, [messages, searchQuery, filterRole]);
+  }, [messages, searchNeedle, filterRole]);
+
+  const filteredCount = filteredMessages.length;
+  const messageCount = messages.length;
 
   // ═══ AUTO-SCROLL ═══
   useEffect(() => {
@@ -370,11 +580,13 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   // ═══ HANDLERS ═══
   const handleSend = useCallback(async () => {
     // v26.2 - Protection double-envoi
-    if (!inputValue.trim() || isLoading || sendingRef.current) return;
+    const rawInput = inputValue;
+    const trimmedInput = rawInput.trim();
+    if (!trimmedInput || isLoading || sendingRef.current) return;
     sendingRef.current = true;
 
     // Sanitize input pour sécurité
-    const sanitized = sanitizeInput(inputValue);
+    const sanitized = sanitizeInput(rawInput);
     if (!sanitized || sanitized.length === 0) {
       pageLogger.debug('Input vide apres sanitization');
       sendingRef.current = false;
@@ -458,6 +670,19 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     }
   }, [clearMessages]);
 
+  const handleExportJson = useCallback(() => {
+    downloadConversation('current', 'Conversation TITANE', messages);
+  }, [messages]);
+
+  const handleExportMarkdown = useCallback(() => {
+    downloadMarkdown('Conversation TITANE', messages);
+  }, [messages]);
+
+  const handleCopyAll = useCallback(async () => {
+    const copySuccess = await copyToClipboard('Conversation TITANE', messages);
+    if (copySuccess) toastSuccess('Conversation copiée.');
+  }, [messages, toastSuccess]);
+
   const handleVoiceInput = useCallback(async () => {
     // ✅ v25.4.2: Speech Recognition implementation avec useVoiceEngine
     if (!voiceEngine.status.isMicAvailable) {
@@ -484,6 +709,142 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     }
   }, [errorToast, voiceEngine]);
 
+  const handleFilesAnalyzed = useCallback(
+    (files: AnalyzedFile[]) => {
+      const filesSummary = files
+        .map(file => {
+          const lines = [
+            `📄 **${file.name}**`,
+            `- Taille: ${(file.size / 1024).toFixed(1)} KB`,
+          ];
+
+          if (file.analysis?.summary) {
+            lines.push(`- Résumé: ${file.analysis.summary}`);
+          }
+
+          return lines.join('\n');
+        })
+        .join('\n\n');
+
+      sendMessage(
+        `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers.`
+      );
+    },
+    [sendMessage]
+  );
+
+  const handleFileImport = useCallback(
+    (files: FileList) => {
+      const fileNames = Array.from(files)
+        .map(f => f.name)
+        .join(', ');
+      sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
+    },
+    [sendMessage]
+  );
+
+  const handleScreenCapture = useCallback(
+    (imageData: string) => {
+      setAttachedImages(prev => [...prev, imageData]);
+      sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
+    },
+    [sendMessage]
+  );
+
+  const handleImageAnalysis = useCallback(
+    (imageData: string, prompt?: string) => {
+      setAttachedImages(prev => [...prev, imageData]);
+      sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
+    },
+    [sendMessage]
+  );
+
+  const handleDictationResult = useCallback((text: string) => {
+    if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
+  }, []);
+
+  const handleAudioRecorded = useCallback(
+    (audioBlob: Blob) => {
+      const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
+      sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
+    },
+    [sendMessage]
+  );
+
+  const handleTranscriptionResult = useCallback(
+    (text: string) => {
+      sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
+    },
+    [sendMessage]
+  );
+
+  const handleModeChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setMode(e.target.value as ConversationMode);
+    },
+    [setMode]
+  );
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    },
+    []
+  );
+
+  const handleFilterRoleChange = useCallback(
+    (e: React.ChangeEvent<HTMLSelectElement>) => {
+      setFilterRole(e.target.value as typeof filterRole);
+    },
+    []
+  );
+
+  const toggleAudioEnabled = useCallback(() => {
+    setAudioEnabled(prev => !prev);
+  }, []);
+
+  const toggleModeBuilder = useCallback(() => {
+    setShowModeBuilder(prev => !prev);
+  }, []);
+
+  const handleToggleAudioConversation = useCallback((active: boolean) => {
+    setAudioEnabled(active);
+  }, []);
+
+  const handleToggleTTS = useCallback((active: boolean) => {
+    setAudioEnabled(active);
+  }, []);
+
+  const handleToggleCameraLive = useCallback(() => {
+    setCameraActive(prev => !prev);
+  }, []);
+
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(e.target.value);
+    },
+    []
+  );
+
+  const handleCloseModeBuilder = useCallback(() => {
+    setShowModeBuilder(false);
+  }, []);
+
+  const messageItems = useMemo(
+    () =>
+      filteredMessages.map((msg, index) => (
+        <ConversationMessage
+          key={msg.id || `msg-${index}`}
+          message={msg}
+          isLoading={isLoading}
+          onCopy={handleCopyMessage}
+          onRetry={handleRetryMessage}
+          onDelete={deleteMessage}
+        />
+      )),
+    [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
+  );
+
   return (
     <div className="titane-section titane-section-conversation">
       <TSectionHeader
@@ -498,20 +859,16 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             <ChatProviderSelector
               selectedProvider={selectedProvider}
               onChange={setSelectedProvider}
-              providers={availableProviders}
+              providers={AVAILABLE_PROVIDERS}
             />
 
             {/* Mode Selector */}
             <select
               className="conversation-mode-select"
               value={currentMode}
-              onChange={e => setMode(e.target.value as ConversationMode)}
+              onChange={handleModeChange}
             >
-              {conversationModes.map(mode => (
-                <option key={mode.id} value={mode.id}>
-                  {mode.icon} {mode.name}
-                </option>
-              ))}
+              {conversationModeOptions}
             </select>
           </div>
 
@@ -519,11 +876,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             {/* Export JSON */}
             <button
               className="conversation-icon-btn"
-              onClick={() =>
-                downloadConversation('current', 'Conversation TITANE', messages)
-              }
+              onClick={handleExportJson}
               title="Exporter en JSON"
-              disabled={messages.length === 0}
+              disabled={!hasMessages}
             >
               <Download size={16} />
             </button>
@@ -531,9 +886,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             {/* Export Markdown */}
             <button
               className="conversation-icon-btn"
-              onClick={() => downloadMarkdown('Conversation TITANE', messages)}
+              onClick={handleExportMarkdown}
               title="Exporter en Markdown"
-              disabled={messages.length === 0}
+              disabled={!hasMessages}
             >
               <FileText size={16} />
             </button>
@@ -541,15 +896,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             {/* Copy to Clipboard */}
             <button
               className="conversation-icon-btn"
-              onClick={async () => {
-                const copySuccess = await copyToClipboard(
-                  'Conversation TITANE',
-                  messages
-                );
-                if (copySuccess) toastSuccess('Conversation copiée.');
-              }}
+              onClick={handleCopyAll}
               title="Copier dans le presse-papier"
-              disabled={messages.length === 0}
+              disabled={!hasMessages}
             >
               <Copy size={16} />
             </button>
@@ -557,7 +906,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             {/* Audio Toggle */}
             <button
               className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
-              onClick={() => setAudioEnabled(!audioEnabled)}
+              onClick={toggleAudioEnabled}
               title="Audio (TTS)"
             >
               {audioEnabled ? '🔊' : '🔇'}
@@ -575,7 +924,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             {/* Mode Builder */}
             <button
               className="conversation-icon-btn"
-              onClick={() => setShowModeBuilder(!showModeBuilder)}
+              onClick={toggleModeBuilder}
               title="Créer un mode personnalisé"
             >
               ⚙️
@@ -583,11 +932,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
             {/* Health Check */}
             <button
-              className={`conversation-icon-btn ${healthReport?.status === 'Healthy' ? 'healthy' : ''}`}
+              className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
               onClick={refreshHealth}
               title={`Santé: ${healthReport?.status || 'Unknown'}`}
             >
-              {healthReport?.status === 'Healthy' ? '✅' : '⚠️'}
+              {isHealthy ? '✅' : '⚠️'}
             </button>
 
             {/* Clear Chat */}
@@ -609,7 +958,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
               type="search"
               placeholder="Rechercher..."
               value={searchQuery}
-              onChange={e => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               aria-label="Rechercher dans la conversation"
             />
           </div>
@@ -617,7 +966,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
           <select
             className="conversation-filters-role"
             value={filterRole}
-            onChange={e => setFilterRole(e.target.value as typeof filterRole)}
+            onChange={handleFilterRoleChange}
             aria-label="Filtrer par rôle"
           >
             <option value="all">Tous</option>
@@ -626,7 +975,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
           </select>
 
           <div className="conversation-filters-count">
-            {filteredMessages.length}/{messages.length}
+            {filteredCount}/{messageCount}
           </div>
         </div>
 
@@ -646,90 +995,17 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
               <h3>TITANE∞ est prêt à converser</h3>
               <p>
                 Mode actuel:{' '}
-                <strong>{conversationModes.find(m => m.id === currentMode)?.name}</strong>
+                <strong>{currentModeLabel}</strong>
                 <br />
-                Provider: <strong>{selectedProvider}</strong>
+                Provider: <strong>{selectedProviderLabel}</strong>
               </p>
               <div className="conversation-empty-suggestions">
-                <button onClick={() => setInputValue('Explique-moi ton fonctionnement')}>
-                  💡 Comment tu fonctionnes ?
-                </button>
-                <button onClick={() => setInputValue('Aide-moi à planifier mon projet')}>
-                  📋 Planifier un projet
-                </button>
-                <button
-                  onClick={() => setInputValue('Brainstorming sur une idée innovante')}
-                >
-                  💡 Brainstorming
-                </button>
+                {suggestionButtons}
               </div>
             </div>
           )}
 
-          {filteredMessages.map((msg, index) => (
-            <div
-              key={msg.id || `msg-${index}`}
-              className={`conversation-message ${msg.role}`}
-            >
-              <div className="conversation-message-avatar">
-                {msg.role === 'user' ? '👤' : '🧠'}
-              </div>
-              <div className="conversation-message-content">
-                <div className="conversation-message-header">
-                  <span className="conversation-message-role">
-                    {msg.role === 'user' ? 'Vous' : 'TITANE'}
-                  </span>
-                  {msg.metadata?.tags && msg.metadata.tags.length > 0 && (
-                    <div className="conversation-message-tags">
-                      {msg.metadata.tags.slice(0, 3).map((tag, i) => (
-                        <span key={i} className="conversation-tag">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
-                </div>
-                <div className="conversation-message-text">{msg.content}</div>
-                {msg.metadata?.intention && (
-                  <div className="conversation-message-meta">
-                    <span className="meta-intention">{msg.metadata.intention}</span>
-                  </div>
-                )}
-
-                <div className="conversation-message-actions">
-                  <button
-                    type="button"
-                    className="conversation-message-action"
-                    onClick={() => handleCopyMessage(msg.content)}
-                    title="Copier le message"
-                  >
-                    📋 Copier
-                  </button>
-
-                  {msg.role === 'user' && (
-                    <button
-                      type="button"
-                      className="conversation-message-action"
-                      onClick={() => handleRetryMessage(msg.content)}
-                      title="Renvoyer ce message"
-                      disabled={isLoading}
-                    >
-                      🔄 Retry
-                    </button>
-                  )}
-
-                  <button
-                    type="button"
-                    className="conversation-message-action danger"
-                    onClick={() => deleteMessage(msg.id)}
-                    title="Supprimer ce message"
-                  >
-                    🗑️
-                  </button>
-                </div>
-              </div>
-            </div>
-          ))}
+          {messageItems}
 
           {isLoading && (
             <div className="conversation-message assistant loading">
@@ -756,53 +1032,16 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
         {/* ═══ CHAT TOOLBAR (v25.5.0) ═══ */}
         <ChatToolbar
-          onFilesAnalyzed={(files: AnalyzedFile[]) => {
-            const filesSummary = files
-              .map(file => {
-                const lines = [
-                  `📄 **${file.name}**`,
-                  `- Taille: ${(file.size / 1024).toFixed(1)} KB`,
-                ];
-
-                if (file.analysis?.summary) {
-                  lines.push(`- Résumé: ${file.analysis.summary}`);
-                }
-
-                return lines.join('\n');
-              })
-              .join('\n\n');
-
-            sendMessage(
-              `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers.`
-            );
-          }}
-          onFileImport={files => {
-            const fileNames = Array.from(files)
-              .map(f => f.name)
-              .join(', ');
-            sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
-          }}
-          onScreenCapture={imageData => {
-            setAttachedImages(prev => [...prev, imageData]);
-            sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
-          }}
-          onImageAnalysis={(imageData, prompt) => {
-            setAttachedImages(prev => [...prev, imageData]);
-            sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
-          }}
-          onDictationResult={text => {
-            if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
-          }}
-          onAudioRecorded={audioBlob => {
-            const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
-            sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
-          }}
-          onTranscriptionResult={text => {
-            sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
-          }}
-          onToggleAudioConversation={active => setAudioEnabled(active)}
-          onToggleCameraLive={() => setCameraActive(prev => !prev)}
-          onToggleTTS={active => setAudioEnabled(active)}
+          onFilesAnalyzed={handleFilesAnalyzed}
+          onFileImport={handleFileImport}
+          onScreenCapture={handleScreenCapture}
+          onImageAnalysis={handleImageAnalysis}
+          onDictationResult={handleDictationResult}
+          onAudioRecorded={handleAudioRecorded}
+          onTranscriptionResult={handleTranscriptionResult}
+          onToggleAudioConversation={handleToggleAudioConversation}
+          onToggleCameraLive={handleToggleCameraLive}
+          onToggleTTS={handleToggleTTS}
           disabled={isLoading}
           compact={false}
         />
@@ -813,7 +1052,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             className="conversation-input"
             placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
             value={inputValue}
-            onChange={e => setInputValue(e.target.value)}
+            onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             disabled={isLoading}
             rows={3}
@@ -830,7 +1069,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
         {/* ═══ MODE BUILDER MODAL ═══ */}
         {showModeBuilder && (
           <ModeBuilder
-            onClose={() => setShowModeBuilder(false)}
+            onClose={handleCloseModeBuilder}
             onSave={handleSaveCustomMode}
           />
         )}
@@ -929,7 +1168,9 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
                 )}
 
                 <CameraPreview position="bottom-left" />
-                <DetectionOverlay />
+                <React.Suspense fallback={null}>
+                  <LazyDetectionOverlay />
+                </React.Suspense>
               </div>
             ) : (
               <div className="vision-placeholder">
@@ -987,7 +1228,9 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
       {/* Vision Metrics Charts */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
-        <VisionMetricsChart />
+        <React.Suspense fallback={null}>
+          <LazyVisionMetricsChart />
+        </React.Suspense>
       </div>
     </div>
   );
@@ -1001,7 +1244,7 @@ interface OverviewSectionProps {
   stats: TitaneStats;
 }
 
-const OverviewSection: React.FC<OverviewSectionProps> = ({ stats }) => {
+const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) => {
   return (
     <div className="titane-section titane-section-overview">
       <TSectionHeader
@@ -1053,7 +1296,9 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats }) => {
       </div>
 
       {/* Real-Time Charts */}
-      <RealTimeCharts />
+      <React.Suspense fallback={null}>
+        <LazyRealTimeCharts />
+      </React.Suspense>
 
       {/* Memory System Stats */}
       <div style={{ marginTop: spacing[6] }}>
@@ -1073,7 +1318,9 @@ const OverviewSection: React.FC<OverviewSectionProps> = ({ stats }) => {
       </div>
     </div>
   );
-};
+});
+
+OverviewSection.displayName = 'OverviewSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 4: IDENTITÉ & ADN
@@ -1165,7 +1412,7 @@ type MemorySearchEntry = {
   relevance?: number;
 };
 
-const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
+const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
   const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
 
   const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
@@ -1271,7 +1518,9 @@ const MemorySection: React.FC<MemorySectionProps> = ({ stats }) => {
       </div>
     </div>
   );
-};
+});
+
+MemorySection.displayName = 'MemorySection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 6: ÉVOLUTION MÉMOIRE
@@ -1322,7 +1571,7 @@ interface ProgressionSectionProps {
   stats: TitaneStats;
 }
 
-const ProgressionSection: React.FC<ProgressionSectionProps> = ({
+const ProgressionSection: React.FC<ProgressionSectionProps> = memo(({
   progression: _progression,
   stats,
 }) => {
@@ -1515,7 +1764,9 @@ const ProgressionSection: React.FC<ProgressionSectionProps> = ({
       </div>
     </div>
   );
-};
+});
+
+ProgressionSection.displayName = 'ProgressionSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 8: TRANSFORMATION
@@ -1645,6 +1896,20 @@ export const TitanePage: React.FC = () => {
     [progression]
   );
 
+  const tabHandlers = useMemo(
+    () => ({
+      conversation: () => setActiveTab('conversation'),
+      vision: () => setActiveTab('vision'),
+      overview: () => setActiveTab('overview'),
+      identity: () => setActiveTab('identity'),
+      memoryMap: () => setActiveTab('memory-map'),
+      memoryEvolution: () => setActiveTab('memory-evolution'),
+      progression: () => setActiveTab('progression'),
+      transformation: () => setActiveTab('transformation'),
+    }),
+    [setActiveTab]
+  );
+
   // Render section active
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
@@ -1701,7 +1966,7 @@ export const TitanePage: React.FC = () => {
           >
             <button
               className={`titane-tab ${activeTab === 'conversation' ? 'active' : ''}`}
-              onClick={() => setActiveTab('conversation')}
+              onClick={tabHandlers.conversation}
               role="tab"
               aria-selected={activeTab === 'conversation'}
               aria-controls="titane-panel-conversation"
@@ -1711,7 +1976,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'vision' ? 'active' : ''}`}
-              onClick={() => setActiveTab('vision')}
+              onClick={tabHandlers.vision}
               role="tab"
               aria-selected={activeTab === 'vision'}
               aria-controls="titane-panel-vision"
@@ -1721,7 +1986,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'overview' ? 'active' : ''}`}
-              onClick={() => setActiveTab('overview')}
+              onClick={tabHandlers.overview}
               role="tab"
               aria-selected={activeTab === 'overview'}
               aria-controls="titane-panel-overview"
@@ -1731,7 +1996,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'identity' ? 'active' : ''}`}
-              onClick={() => setActiveTab('identity')}
+              onClick={tabHandlers.identity}
               role="tab"
               aria-selected={activeTab === 'identity'}
               aria-controls="titane-panel-identity"
@@ -1741,7 +2006,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'memory-map' ? 'active' : ''}`}
-              onClick={() => setActiveTab('memory-map')}
+              onClick={tabHandlers.memoryMap}
               role="tab"
               aria-selected={activeTab === 'memory-map'}
               aria-controls="titane-panel-memory"
@@ -1751,7 +2016,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'memory-evolution' ? 'active' : ''}`}
-              onClick={() => setActiveTab('memory-evolution')}
+              onClick={tabHandlers.memoryEvolution}
               role="tab"
               aria-selected={activeTab === 'memory-evolution'}
               aria-controls="titane-panel-evolution"
@@ -1761,7 +2026,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'progression' ? 'active' : ''}`}
-              onClick={() => setActiveTab('progression')}
+              onClick={tabHandlers.progression}
               role="tab"
               aria-selected={activeTab === 'progression'}
               aria-controls="titane-panel-progression"
@@ -1771,7 +2036,7 @@ export const TitanePage: React.FC = () => {
             </button>
             <button
               className={`titane-tab ${activeTab === 'transformation' ? 'active' : ''}`}
-              onClick={() => setActiveTab('transformation')}
+              onClick={tabHandlers.transformation}
               role="tab"
               aria-selected={activeTab === 'transformation'}
               aria-controls="titane-panel-transformation"
@@ -1785,8 +2050,8 @@ export const TitanePage: React.FC = () => {
           <div
             className="titane-content"
             role="tabpanel"
-            id={`titane-panel-${activeTab}`}
-            aria-labelledby={`titane-tab-${activeTab.replace('-', '')}`}
+            id={TAB_PANEL_IDS[activeTab]}
+            aria-labelledby={TAB_LABEL_IDS[activeTab]}
             tabIndex={0}
           >
             {renderActiveSection()}
