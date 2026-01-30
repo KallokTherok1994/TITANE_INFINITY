@@ -71,3 +71,4 @@ export const MetricsCard: React.FC<MetricsCardProps> = ({
     </div>
   );
 };
+MetricsCard.displayName = 'MetricsCard';

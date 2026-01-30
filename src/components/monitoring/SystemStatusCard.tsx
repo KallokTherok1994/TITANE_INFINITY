@@ -135,3 +135,4 @@ export const SystemStatusCard: React.FC<SystemStatusCardProps> = ({
     </div>
   );
 };
+SystemStatusCard.displayName = 'SystemStatusCard';

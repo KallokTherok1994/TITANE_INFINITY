@@ -62,3 +62,4 @@ export const LogsCard: React.FC<LogsCardProps> = ({
     </div>
   );
 };
+LogsCard.displayName = 'LogsCard';

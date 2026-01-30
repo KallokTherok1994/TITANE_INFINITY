@@ -304,4 +304,6 @@ const styles: Record<string, React.CSSProperties> = {
   },
 };
 
+SingularityMonitor.displayName = 'SingularityMonitor';
+
 export default SingularityMonitor;

@@ -65,3 +65,4 @@ export const ErrorsCard: React.FC<ErrorsCardProps> = ({
     </div>
   );
 };
+ErrorsCard.displayName = 'ErrorsCard';

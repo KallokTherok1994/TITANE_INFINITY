@@ -1050,4 +1050,6 @@ export const SingularityDashboard = memo(function SingularityDashboard({
   );
 });
 
+SingularityDashboard.displayName = 'SingularityDashboard';
+
 export default SingularityDashboard;

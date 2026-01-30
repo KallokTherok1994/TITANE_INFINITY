@@ -118,3 +118,4 @@ export const CognitiveModuleCard: React.FC<CognitiveModuleCardProps> = ({
     </div>
   );
 };
+CognitiveModuleCard.displayName = 'CognitiveModuleCard';
