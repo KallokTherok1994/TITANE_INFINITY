@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useRef, useEffect } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { logger } from '@/lib/logger';
 import type {
   ConversationMode,
@@ -27,6 +27,15 @@ import {
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+
+// ═══════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════════
+
+const MAX_RETRIES = 3;
+const RETRY_DELAY_BASE_MS = 1000;
+const DEFAULT_MAX_MESSAGES = 500;
+const DEFAULT_HEALTH_CHECK_INTERVAL_MS = 30000;
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -168,7 +177,7 @@ export function useConversationEngine(
       (options.autoHealthCheck !== false && enabledByDefault);
 
     if (enabled) {
-      // Health check toutes les 30 secondes
+      // Health check périodique
       healthCheckIntervalRef.current = window.setInterval(async () => {
         try {
           const report = await healthCheck();
@@ -183,7 +192,7 @@ export function useConversationEngine(
         } catch (err) {
           console.error('[ConversationEngine] Health check failed:', err);
         }
-      }, 30000);
+      }, DEFAULT_HEALTH_CHECK_INTERVAL_MS);
     }
 
     return () => {
@@ -206,9 +215,6 @@ export function useConversationEngine(
   // ═══ SEND MESSAGE (avec Retry Logic) ═══
   const sendMessage = useCallback(
     async (content: string, retryCount = 0): Promise<ConversationResponse | null> => {
-      const MAX_RETRIES = 3;
-      const RETRY_DELAY = 1000; // Base delay 1s
-
       // Prévenir double-envoi
       if (isProcessingRef.current) {
         logger.warn('Message already being processed', {
@@ -230,7 +236,7 @@ export function useConversationEngine(
       };
 
       setMessages(prev => {
-        const maxMessages = options.maxMessages || 500;
+        const maxMessages = options.maxMessages ?? DEFAULT_MAX_MESSAGES;
         const updated = [...prev, userMessage];
         // Garder seulement les N derniers messages pour éviter surcharge mémoire
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
@@ -329,7 +335,7 @@ export function useConversationEngine(
 
         // Retry logic avec backoff exponentiel
         if (retryCount < MAX_RETRIES && errorMessage.includes('network')) {
-          const delay = RETRY_DELAY * Math.pow(2, retryCount);
+          const delay = RETRY_DELAY_BASE_MS * Math.pow(2, retryCount);
           console.warn(
             `[ConversationEngine] Tentative ${retryCount + 1}/${MAX_RETRIES} échouée, retry dans ${delay}ms`
           );
@@ -408,6 +414,9 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     console.log('[ConversationEngine] Mode changé:', mode);
   }, []);
 
+  // ═══ MEMOIZED VALUES ═══
+  const totalMessages = useMemo(() => messages.length, [messages.length]);
+
   // ═══ RETOUR ═══
   return {
     messages,
@@ -422,7 +431,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     healthReport,
     refreshHealth,
     lastResponse,
-    totalMessages: messages.length,
+    totalMessages,
   };
 }
 
