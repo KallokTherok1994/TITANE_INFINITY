@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { MCPOrchestrator } from '@/services/mcp/MCPOrchestrator';
 import type {
   MCPState,
@@ -126,6 +126,9 @@ export function useMCPOrchestrator() {
     MCPOrchestrator.stopEvolutionCycle();
   }, []);
 
+  // ═══ MEMOIZED STATS ═══
+  const stats = useMemo(() => MCPOrchestrator.getStats(), [state]);
+
   return {
     // State
     state,
@@ -134,7 +137,7 @@ export function useMCPOrchestrator() {
     memory: state.memory,
     governance: state.governance,
     evolution: state.evolution,
-    stats: MCPOrchestrator.getStats(),
+    stats,
 
     // Operations
     createJob,
@@ -179,13 +182,18 @@ export function useMCPHealth() {
     }
   }, [runHealthCheck]);
 
+  // ═══ MEMOIZED DERIVED STATE ═══
+  const isHealthy = useMemo(() => health.globalStatus === 'HEALTHY', [health.globalStatus]);
+  const isDegraded = useMemo(() => health.globalStatus === 'DEGRADED', [health.globalStatus]);
+  const isCritical = useMemo(() => health.globalStatus === 'CRITICAL', [health.globalStatus]);
+
   return {
     health,
     isChecking,
     refresh,
-    isHealthy: health.globalStatus === 'HEALTHY',
-    isDegraded: health.globalStatus === 'DEGRADED',
-    isCritical: health.globalStatus === 'CRITICAL',
+    isHealthy,
+    isDegraded,
+    isCritical,
   };
 }
 
@@ -207,16 +215,22 @@ export function useMCPJobQueue() {
     [createJob, approveJob]
   );
 
+  // ═══ MEMOIZED TOTAL ═══
+  const totalJobs = useMemo(
+    () =>
+      jobs.pending.length +
+      jobs.running.length +
+      jobs.completed.length +
+      jobs.suspended.length,
+    [jobs.pending.length, jobs.running.length, jobs.completed.length, jobs.suspended.length]
+  );
+
   return {
     pending: jobs.pending,
     running: jobs.running,
     completed: jobs.completed,
     suspended: jobs.suspended,
-    totalJobs:
-      jobs.pending.length +
-      jobs.running.length +
-      jobs.completed.length +
-      jobs.suspended.length,
+    totalJobs,
     queueJob,
     cancelJob,
   };
@@ -238,11 +252,15 @@ export function useMCPMemory() {
     }
   }, [purifyMemory]);
 
+  // ═══ MEMOIZED DERIVED ═══
+  const totalEntries = useMemo(() => memory.entries.length, [memory.entries.length]);
+  const totalSize = useMemo(() => memory.stats.totalSize, [memory.stats.totalSize]);
+
   return {
     stats: memory.stats,
     entries: memory.entries,
-    totalEntries: memory.entries.length,
-    totalSize: memory.stats.totalSize,
+    totalEntries,
+    totalSize,
     isPurifying,
     storeMemory,
     retrieveMemory,

@@ -133,4 +133,6 @@ export const VisionStatusIndicator: React.FC<VisionStatusIndicatorProps> = ({
   );
 };
 
+VisionStatusIndicator.displayName = 'VisionStatusIndicator';
+
 export default VisionStatusIndicator;

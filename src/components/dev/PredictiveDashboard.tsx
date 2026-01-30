@@ -239,3 +239,5 @@ export const PredictiveDashboard: React.FC = () => {
     </div>
   );
 };
+
+PredictiveDashboard.displayName = 'PredictiveDashboard';

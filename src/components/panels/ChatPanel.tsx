@@ -273,4 +273,6 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({ className = '', children }
   );
 };
 
+ChatPanel.displayName = 'ChatPanel';
+
 export default ChatPanel;

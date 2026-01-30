@@ -224,4 +224,6 @@ export const VisionFeedbackCard: React.FC<VisionFeedbackCardProps> = ({
   );
 };
 
+VisionFeedbackCard.displayName = 'VisionFeedbackCard';
+
 export default VisionFeedbackCard;

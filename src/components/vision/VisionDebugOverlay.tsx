@@ -317,4 +317,6 @@ export const VisionDebugOverlay: React.FC<VisionDebugOverlayProps> = ({
   );
 };
 
+VisionDebugOverlay.displayName = 'VisionDebugOverlay';
+
 export default VisionDebugOverlay;

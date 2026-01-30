@@ -182,4 +182,6 @@ export const VisionToggleButton: React.FC<VisionToggleButtonProps> = ({
   );
 };
 
+VisionToggleButton.displayName = 'VisionToggleButton';
+
 export default VisionToggleButton;

@@ -298,4 +298,6 @@ export const MemoryPanel: React.FC<MemoryPanelProps> = ({ className = '', metric
   );
 };
 
+MemoryPanel.displayName = 'MemoryPanel';
+
 export default MemoryPanel;

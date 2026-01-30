@@ -115,3 +115,5 @@ export const ConfigField: React.FC<ConfigFieldProps> = ({
     </div>
   );
 };
+
+ConfigField.displayName = 'ConfigField';

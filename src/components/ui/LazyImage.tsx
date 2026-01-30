@@ -133,4 +133,6 @@ export const LazyImage: React.FC<LazyImageProps> = ({
   );
 };
 
+LazyImage.displayName = 'LazyImage';
+
 export default LazyImage;

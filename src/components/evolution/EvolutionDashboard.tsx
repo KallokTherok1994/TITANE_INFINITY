@@ -501,4 +501,6 @@ export const EvolutionDashboard: React.FC<EvolutionDashboardProps> = ({
   );
 };
 
+EvolutionDashboard.displayName = 'EvolutionDashboard';
+
 export default EvolutionDashboard;

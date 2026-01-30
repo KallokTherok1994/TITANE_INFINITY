@@ -267,3 +267,5 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
     </div>
   );
 };
+
+ConfigFieldEditable.displayName = 'ConfigFieldEditable';

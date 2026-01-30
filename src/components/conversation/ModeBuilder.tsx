@@ -435,4 +435,6 @@ Principes de communication:
   );
 };
 
+ModeBuilder.displayName = 'ModeBuilder';
+
 export default ModeBuilder;

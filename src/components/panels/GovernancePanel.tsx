@@ -652,4 +652,6 @@ export const GovernancePanel: React.FC<GovernancePanelProps> = ({ className = ''
   );
 };
 
+GovernancePanel.displayName = 'GovernancePanel';
+
 export default GovernancePanel;
