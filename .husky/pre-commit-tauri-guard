@@ -1,0 +1,22 @@
+#!/bin/bash
+# Pre-commit hook to prevent tauri@0.15.0 from being added
+# This obsolete package brings many deprecated subdependencies
+
+set -e
+
+STAGED_FILES=$(git diff --cached --name-only 2>/dev/null || echo "")
+
+if echo "$STAGED_FILES" | grep -q "package.json"; then
+    if git diff --cached package.json | grep -q '"tauri":\s*".*0\.15'; then
+        echo "❌ ERROR: tauri@0.15.0 detected in staged package.json"
+        echo "   This is an obsolete package that brings deprecated subdependencies."
+        echo "   We use @tauri-apps/api@2.9.1 instead."
+        echo ""
+        echo "   To fix: Remove 'tauri@0.15.0' from package.json and unstage:"
+        echo "   $ git checkout package.json"
+        echo "   $ git add package.json"
+        exit 1
+    fi
+fi
+
+exit 0
