@@ -1,15 +1,20 @@
 /**
  * TITANE∞ v26.2.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
- * Import order:
- * 1. Design tokens (Titanium Dark system)
- * 2. CSS imports (legacy support)
- * 3. Tailwind layers
- * 4. Custom component classes
+ * Import order (CRITICAL FOR TAILWIND v4):
+ * 1. Tailwind CSS v4 (@import "tailwindcss")
+ * 2. Design tokens (Titanium Dark system)
+ * 3. CSS imports (legacy support)
+ * 4. Custom component classes via @layer
  *
  * v26.2.0: Titanium Dark Design System
  * UX Enhancements: Smooth scroll, optimized rendering, WCAG 2.2 AA
  */
+
+/* ═══════════════════════════════════════════════════════════════ */
+/* TAILWIND CSS v4 (MUST BE FIRST)                                   */
+/* ═══════════════════════════════════════════════════════════════ */
+@import "tailwindcss";
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* DESIGN TOKENS (Primary Source of Truth)                          */
@@ -56,17 +61,6 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* TAILWIND BASE LAYER                                              */
-/* ═══════════════════════════════════════════════════════════════ */
-@tailwind base;
-
-/* ═══════════════════════════════════════════════════════════════ */
-/* TAILWIND COMPONENTS & UTILITIES                                   */
-/* ═══════════════════════════════════════════════════════════════ */
-@tailwind components;
-@tailwind utilities;
-
-/* ═══════════════════════════════════════════════════════════════ */
 /* CUSTOM COMPONENT CLASSES (Tailwind @layer components)            */
 /* ═══════════════════════════════════════════════════════════════ */
 
@@ -85,29 +79,30 @@ body {
   }
 
   .btn-secondary {
-    @apply bg-titane-600 text-white hover:bg-titane-700;
-    @apply focus-visible:ring-titane-500;
+    @apply bg-gray-700 text-white hover:bg-gray-600;
+    @apply focus-visible:ring-violet-500;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-text-primary hover:bg-bg-tertiary;
+    @apply bg-transparent hover:bg-gray-900;
+    @apply text-gray-100;
     @apply focus-visible:ring-violet-500;
   }
 
   .btn-outline {
-    @apply border border-border-default bg-transparent text-text-primary;
-    @apply hover:bg-bg-tertiary hover:border-border-strong;
+    @apply border border-gray-700 bg-transparent text-gray-100;
+    @apply hover:bg-gray-900 hover:border-gray-600;
     @apply focus-visible:ring-violet-500;
   }
 
   /* Card base styles */
   .card {
-    @apply bg-bg-secondary rounded-lg border border-border-default;
+    @apply bg-gray-900 rounded-lg border border-gray-800;
     @apply shadow-md transition-shadow duration-200;
   }
 
   .card-hover {
-    @apply hover:shadow-lg hover:border-border-strong;
+    @apply hover:shadow-lg hover:border-gray-700;
   }
 
   /* Badge base styles */
@@ -134,19 +129,19 @@ body {
   /* Input base styles */
   .input {
     @apply w-full px-3 py-2 text-sm rounded-md;
-    @apply bg-bg-tertiary border border-border-default text-text-primary;
-    @apply placeholder:text-text-muted;
+    @apply bg-gray-900 border border-gray-800 text-gray-100;
+    @apply placeholder:text-gray-500;
     @apply focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent;
     @apply transition-colors duration-200;
   }
 
   .input-error {
-    @apply border-error-500 focus:ring-error-500;
+    @apply border-red-500 focus:ring-red-500;
   }
 
   /* Container responsive */
   .container-responsive {
-    @apply w-full max-w-content mx-auto px-4 sm:px-6 lg:px-8;
+    @apply w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
   /* Text utilities */
@@ -155,20 +150,20 @@ body {
   }
 
   .text-gradient-sage {
-    @apply bg-gradient-to-r from-sage-400 to-sage-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-emerald-400 to-emerald-600 bg-clip-text text-transparent;
   }
 
   /* Glow effects */
   .glow-violet {
-    @apply shadow-glow-violet;
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.4);
   }
 
   .glow-sage {
-    @apply shadow-glow-sage;
+    box-shadow: 0 0 20px rgba(132, 204, 22, 0.4);
   }
 
   .glow-titane {
-    @apply shadow-glow-titane;
+    box-shadow: 0 0 20px rgba(114, 123, 129, 0.4);
   }
 }
 
@@ -197,11 +192,11 @@ body {
   }
 
   .scrollbar-custom::-webkit-scrollbar-track {
-    @apply bg-bg-secondary;
+    @apply bg-gray-950;
   }
 
   .scrollbar-custom::-webkit-scrollbar-thumb {
-    @apply bg-bg-tertiary rounded-md hover:bg-bg-elevated;
+    @apply bg-gray-800 rounded-md hover:bg-gray-700;
   }
 
   /* Smooth transitions */
