@@ -71,6 +71,7 @@ const AuraControlPanel = lazy(() =>
 import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
 import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
+import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -1241,34 +1242,36 @@ const AppRouter: React.FC = () => {
  */
 const App: React.FC = () => {
   return (
-    <ThemeProvider>
-      <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
-        <TitanStateProvider>
-          {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
-          {import.meta.env.DEV && (
-            <Suspense fallback={null}>
-              <ConsoleMonitorDashboard />
-            </Suspense>
-          )}
+    <ToastProvider>
+      <ThemeProvider>
+        <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
+          <TitanStateProvider>
+            {/* ✨ v26.1 - Console Monitor Dashboard (Dev only) */}
+            {import.meta.env.DEV && (
+              <Suspense fallback={null}>
+                <ConsoleMonitorDashboard />
+              </Suspense>
+            )}
 
-          {/* ✨ v26.2 - Predictive AI Dashboard (Dev only) */}
-          {import.meta.env.DEV && (
-            <Suspense fallback={null}>
-              <PredictiveDashboard />
-            </Suspense>
-          )}
+            {/* ✨ v26.2 - Predictive AI Dashboard (Dev only) */}
+            {import.meta.env.DEV && (
+              <Suspense fallback={null}>
+                <PredictiveDashboard />
+              </Suspense>
+            )}
 
-          {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
-          <AuraConnectedParticles />
+            {/* ✨ v25.3.1 - Quantum Particles Background (Global) - Connected to Aura Orchestrator */}
+            <AuraConnectedParticles />
 
-          <BrowserRouter>
-            <AutoHealErrorBoundary>
-              <AppRouter />
-            </AutoHealErrorBoundary>
-          </BrowserRouter>
-        </TitanStateProvider>
-      </AnimationProvider>
-    </ThemeProvider>
+            <BrowserRouter>
+              <AutoHealErrorBoundary>
+                <AppRouter />
+              </AutoHealErrorBoundary>
+            </BrowserRouter>
+          </TitanStateProvider>
+        </AnimationProvider>
+      </ThemeProvider>
+    </ToastProvider>
   );
 };
 
