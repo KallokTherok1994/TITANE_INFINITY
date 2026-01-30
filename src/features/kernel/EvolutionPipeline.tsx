@@ -6,22 +6,17 @@
  */
 
 import React, { useEffect } from 'react';
-import { useEvolutionStore } from '../../stores/evolutionStore';
+import {
+  useEvolutionActions,
+  useEvolutionSnapshot,
+} from '../../stores/evolutionStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
 
 export function EvolutionPipeline() {
-  const {
-    state,
-    lastReport,
-    health,
-    running,
-    loading,
-    fetchState,
-    runEvolution,
-    quickHealthCheck,
-  } = useEvolutionStore();
+  const { state, lastReport, health, running, loading } = useEvolutionSnapshot();
+  const { fetchState, runEvolution, quickHealthCheck } = useEvolutionActions();
 
   useEffect(() => {
     fetchState();
