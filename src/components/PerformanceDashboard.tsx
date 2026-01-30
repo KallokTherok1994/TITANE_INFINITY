@@ -441,5 +441,6 @@ export const PerformanceDashboard: React.FC<{ compact?: boolean }> = ({
     </div>
   );
 };
+PerformanceDashboard.displayName = 'PerformanceDashboard';
 
 export default PerformanceDashboard;

@@ -199,3 +199,4 @@ export const LivingEnginesCard: React.FC<LivingEnginesCardProps> = ({ state }) =
     </div>
   );
 };
+LivingEnginesCard.displayName = 'LivingEnginesCard';
