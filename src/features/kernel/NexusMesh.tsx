@@ -6,12 +6,13 @@
  */
 
 import { useEffect } from 'react';
-import { useSystemStore } from '../../stores/systemStore';
+import { useNexusSnapshot, useFetchNexus } from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 
 export function NexusMesh() {
-  const { nexus, loading, error, fetchNexus } = useSystemStore();
+  const { nexus, loading, error } = useNexusSnapshot();
+  const fetchNexus = useFetchNexus();
 
   useEffect(() => {
     fetchNexus();
