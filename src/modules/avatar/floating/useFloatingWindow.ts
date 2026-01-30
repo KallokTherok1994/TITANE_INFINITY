@@ -13,6 +13,7 @@ import type {
 import { DEFAULT_DISPLAY_STATE } from './AvatarDisplayState';
 import * as FloatingEngine from './avatarFloatingEngine';
 import { useSingularityState } from '@/core/state/SingularityState';
+import { useAvatarDisplay, useAvatarDisplayActions } from '@/core/state/SingularityState.selectors';
 
 export interface UseFloatingWindowResult {
   displayState: AvatarDisplayState;
@@ -65,7 +66,8 @@ export function useFloatingWindow(): UseFloatingWindowResult {
   const [error, setError] = useState<string | null>(null);
 
   // Sync bidirectionnel avec SingularityState
-  const { avatarDisplay, updateAvatarDisplay } = useSingularityState();
+  const avatarDisplay = useAvatarDisplay();
+  const { updateAvatarDisplay } = useAvatarDisplayActions();
   const syncTimerRef = useRef<number | null>(null);
 
   // ═══════════════════════════════════════════════════════════════
