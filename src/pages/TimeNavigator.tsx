@@ -10,6 +10,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { useToast } from '@/hooks/useToast';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './TimeNavigator.css';
 
@@ -45,6 +46,7 @@ export const TimeNavigator: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [compareMode, setCompareMode] = useState(false);
   const [compareSnapshot, setCompareSnapshot] = useState<Snapshot | null>(null);
+  const { success, error: errorToast } = useToast();
 
   useEffect(() => {
     loadSnapshots();
@@ -88,11 +90,11 @@ export const TimeNavigator: React.FC = () => {
     try {
       setLoading(true);
       await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
-      alert('✅ Restauration réussie ! Redémarrage requis.');
+      success('Restauration réussie ! Redémarrage requis.');
       // v24.7 - Recharge l&apos;application après restauration
       window.location.reload();
     } catch (error) {
-      alert(`❌ Erreur lors de la restauration: ${error}`);
+      errorToast(`Erreur lors de la restauration: ${error}`);
     } finally {
       setLoading(false);
     }
@@ -107,7 +109,7 @@ export const TimeNavigator: React.FC = () => {
       await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
       loadSnapshots();
     } catch (error) {
-      alert(`❌ Erreur: ${error}`);
+      errorToast(`Erreur: ${error}`);
     }
   };
 

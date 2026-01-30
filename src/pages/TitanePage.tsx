@@ -31,6 +31,7 @@ import { XPProgressBar } from '@features/progression';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { useVisualEngines } from '@hooks/useVisualEngines';
+import { useToast } from '@/hooks/useToast';
 import {
   useVisionStore,
   selectIsCameraActive,
@@ -232,6 +233,7 @@ type ConversationSectionProps = Record<string, never>;
 
 const ConversationSection: React.FC<ConversationSectionProps> = () => {
   // ═══ IMPORTS & HOOKS ═══
+  const { success: toastSuccess, error: errorToast } = useToast();
   const {
     messages,
     isLoading,
@@ -420,9 +422,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
       await navigator.clipboard.writeText(content);
     } catch (err) {
       pageLogger.warn('Copy message failed', err);
-      alert('❌ Impossible de copier le message');
+      errorToast('Impossible de copier le message');
     }
-  }, []);
+  }, [errorToast]);
 
   const handleRetryMessage = useCallback(
     async (content: string) => {
@@ -456,7 +458,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
   const handleVoiceInput = useCallback(async () => {
     // ✅ v25.4.2: Speech Recognition implementation avec useVoiceEngine
     if (!voiceEngine.status.isMicAvailable) {
-      alert('🎤 Microphone non disponible. Vérifiez les permissions.');
+      errorToast('Microphone non disponible. Vérifiez les permissions.');
       return;
     }
 
@@ -475,9 +477,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
     } catch (error) {
       pageLogger.error('Voice input error', error);
       setIsRecording(false);
-      alert('❌ Erreur reconnaissance vocale. Consultez la console.');
+      errorToast('Erreur reconnaissance vocale. Consultez la console.');
     }
-  }, [voiceEngine]);
+  }, [errorToast, voiceEngine]);
 
   return (
     <div className="titane-section titane-section-conversation">
@@ -537,8 +539,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
             <button
               className="conversation-icon-btn"
               onClick={async () => {
-                const success = await copyToClipboard('Conversation TITANE', messages);
-                if (success) alert('✅ Conversation copiée!');
+                const copySuccess = await copyToClipboard('Conversation TITANE', messages);
+                if (copySuccess) toastSuccess('Conversation copiée.');
               }}
               title="Copier dans le presse-papier"
               disabled={messages.length === 0}
@@ -1602,6 +1604,7 @@ export const TitanePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('conversation');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [_isEditing, _setIsEditing] = useState(false);
+  const { success: toastSuccess, error: errorToast } = useToast();
 
   // Visual engines
   useVisualEngines({

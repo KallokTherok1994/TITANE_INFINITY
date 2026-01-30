@@ -224,7 +224,14 @@ jobs:
   evidence-collection:
     name: '📊 P6 Evidence Collection'
     runs-on: ubuntu-latest
-    needs: [p6-capability-certification]
+    needs:
+      [
+        p6-user-capabilities-audit,
+        p6-performance-qualification,
+        p6-integration-validation,
+        p6-production-readiness,
+        p6-capability-certification,
+      ]
     if: always()
     steps:
       - name: Collect P6 evidence

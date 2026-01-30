@@ -12,6 +12,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
 
@@ -45,6 +46,7 @@ export const ConfigurationHub: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ConfigTab>('system');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
+  const { success, error: errorToast } = useToast();
 
   // Edit mode state
   const [editMode, setEditMode] = useState(false);
@@ -195,10 +197,10 @@ export const ConfigurationHub: React.FC = () => {
       const filePath = await secureInvoke<string>('export_config', { filename });
       console.log('✅ [ConfigHub] Configuration exported to:', filePath);
 
-      alert(`✅ Configuration exportée vers:\n${filePath}`);
+      success(`Configuration exportée vers:\n${filePath}`);
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to export configuration:', err);
-      alert(`❌ Échec de l'export: ${err}`);
+      errorToast(`Échec de l'export: ${err}`);
     }
   };
 
@@ -222,10 +224,10 @@ export const ConfigurationHub: React.FC = () => {
       // Reload config to show imported values
       await loadConfig();
 
-      alert('✅ Configuration importée avec succès!');
+      success('Configuration importée avec succès.');
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to import configuration:', err);
-      alert(`❌ Échec de l'import: ${err}`);
+      errorToast(`Échec de l'import: ${err}`);
     }
   };
 
@@ -254,11 +256,11 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       await secureInvoke('save_config_preset', { name, description });
-      alert(`✅ Preset "${name}" sauvegardé!`);
+      success(`Preset "${name}" sauvegardé.`);
       await loadPresets();
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to save preset:', err);
-      alert(`❌ Échec de sauvegarde: ${err}`);
+      errorToast(`Échec de sauvegarde: ${err}`);
     }
   };
 
@@ -272,10 +274,10 @@ export const ConfigurationHub: React.FC = () => {
     try {
       await secureInvoke('load_config_preset', { name });
       await loadConfig();
-      alert(`✅ Preset "${name}" chargé!`);
+      success(`Preset "${name}" chargé.`);
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load preset:', err);
-      alert(`❌ Échec de chargement: ${err}`);
+      errorToast(`Échec de chargement: ${err}`);
     }
   };
 
@@ -286,11 +288,11 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       await secureInvoke('delete_config_preset', { name });
-      alert(`✅ Preset "${name}" supprimé!`);
+      success(`Preset "${name}" supprimé.`);
       await loadPresets();
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to delete preset:', err);
-      alert(`❌ Échec de suppression: ${err}`);
+      errorToast(`Échec de suppression: ${err}`);
     }
   };
 

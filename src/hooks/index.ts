@@ -780,3 +780,6 @@ export type {
   Bifurcation,
   StatePrediction,
 } from '../engines/phasespace/phaseSpaceEngine';
+
+// ═══ M1 - TOAST NOTIFICATIONS ═══
+export { useToast, type ToastType, type ToastOptions } from './useToast';

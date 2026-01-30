@@ -222,7 +222,17 @@ jobs:
   evidence-collection:
     name: '📊 P4 Evidence Collection'
     runs-on: ubuntu-latest
-    needs: [p4-constitutional-certification]
+    needs:
+      [
+        p4-l1-local-first-audit,
+        p4-l2-dual-runtime-audit,
+        p4-l3-no-secrets-audit,
+        p4-l4-no-expansion-audit,
+        p4-l5-no-free-refactor-audit,
+        p4-l6-proof-over-intuition-audit,
+        p4-l7-safe-run-gate-audit,
+        p4-constitutional-certification,
+      ]
     if: always()
     steps:
       - name: Collect P4 evidence
