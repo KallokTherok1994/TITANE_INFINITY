@@ -26,7 +26,7 @@ import {
 } from 'react-router-dom';
 import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
-import { useSingularityState } from './core/state/SingularityState';
+import { useSingularityStore } from './core/state/SingularityState';
 import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';
@@ -50,7 +50,7 @@ import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User 
 import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
-import { useUIStore } from './stores/uiStore'; // ✨ v19.5.2 - UI state management
+import { useSidebarCollapsed, useSidebarActions } from './stores/uiStore.selectors'; // ✨ v29.0.0 - Optimized selectors
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
