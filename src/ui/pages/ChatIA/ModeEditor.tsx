@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
-import { useUIStore } from '../../../stores/uiStore';
+import { useToastActions } from '../../../stores/uiStore.selectors';
 import './ModeEditor.css';
 
 interface ModeEditorProps {
@@ -15,7 +15,7 @@ export const ModeEditor: React.FC<ModeEditorProps> = ({
   onModeSelect,
   currentModeId,
 }) => {
-  const { addToast } = useUIStore();
+  const { addToast } = useToastActions();
   const [modes, setModes] = useState<InstructionMode[]>(
     instructionModeManager.getAllModes()
   );

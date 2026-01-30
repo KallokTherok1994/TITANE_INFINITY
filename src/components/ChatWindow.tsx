@@ -17,7 +17,7 @@ import { MessageBubble } from './chat/MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { VitalsPanel } from './VitalsPanel';
 import { ChatFileImport } from './chat/ChatFileImport';
-import { useSingularityState } from '../core/state/SingularityState';
+import { useAIActions } from '../core/state/SingularityState.selectors';
 import type { Message as _Message } from '../core/ARCHITECTURE_TYPES_v∞';
 import { listPromptPresets } from '@/core/prompts';
 import type { ChatMode } from '@/services/ai';
@@ -42,8 +42,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
       restoreFromVault,
     } = useChat({ voiceEnabled: voiceModeActive });
     const { status: connectionStatus } = useConnection();
-    const setAIStatus = useSingularityState(state => state.setAIStatus);
-    const setAIError = useSingularityState(state => state.setAIError);
+    const { setAIStatus, setAIError } = useAIActions();
     // CPU load removed - not in SingularityFrontendState (use useVitals for system metrics)
 
     const [input, setInput] = useState('');

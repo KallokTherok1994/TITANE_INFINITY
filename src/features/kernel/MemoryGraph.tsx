@@ -6,13 +6,20 @@
  */
 
 import { useEffect } from 'react';
-import { useMemoryStore } from '../../stores/memoryStore';
+import {
+  useMemoryState,
+  useLogs,
+  useTelemetry,
+  useMemoryActions,
+} from '../../stores/memoryStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 
 export function MemoryGraph() {
-  const { state, logs, telemetry, fetchState, fetchLogs, fetchTelemetry } =
-    useMemoryStore();
+  const state = useMemoryState();
+  const logs = useLogs();
+  const telemetry = useTelemetry();
+  const { fetchState, fetchLogs, fetchTelemetry } = useMemoryActions();
 
   useEffect(() => {
     fetchState();
