@@ -825,12 +825,13 @@ function DevPageContent(): JSX.Element {
 }
 
 // Export with ErrorBoundary
-export const DevPage: React.FC = () => {
+export const DevPage: React.FC = memo(() => {
   return (
     <ErrorBoundary context="DevPage">
       <DevPageContent />
     </ErrorBoundary>
   );
-};
+});
+DevPage.displayName = 'DevPage';
 
 export default DevPage;
