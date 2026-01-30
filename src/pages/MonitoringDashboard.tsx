@@ -13,14 +13,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React from 'react';
+import React, { memo } from 'react';
 import { GlobalMetricsSummary } from '../components/monitoring/GlobalMetricsSummary';
 import { ServiceMetricsPanel } from '../components/monitoring/ServiceMetricsPanel';
 import { CommandStatsTable } from '../components/monitoring/CommandStatsTable';
 import { Download, RefreshCw } from 'lucide-react';
 import { ServiceMetrics } from '../lib/serviceMetrics';
 
-export const MonitoringDashboard: React.FC = () => {
+export const MonitoringDashboard: React.FC = memo(() => {
   const [isExporting, setIsExporting] = React.useState(false);
 
   // Export métriques JSON
@@ -180,6 +180,7 @@ export const MonitoringDashboard: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+MonitoringDashboard.displayName = 'MonitoringDashboard';
 
 export default MonitoringDashboard;

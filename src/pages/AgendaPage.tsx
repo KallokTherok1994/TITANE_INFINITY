@@ -537,7 +537,7 @@ const AgendaSidebar: React.FC<SidebarProps> = ({ stats, todayEvents, onEventClic
 // MAIN PAGE COMPONENT
 // ═══════════════════════════════════════════════════════════════════
 
-export const AgendaPage: React.FC = () => {
+export const AgendaPage: React.FC = React.memo(() => {
   const {
     timeState,
     energyState,
@@ -706,6 +706,7 @@ export const AgendaPage: React.FC = () => {
       </div>
     </div>
   );
-};
+});
+AgendaPage.displayName = 'AgendaPage';
 
 export default AgendaPage;

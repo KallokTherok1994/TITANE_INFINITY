@@ -415,7 +415,7 @@ const CONVERSATION_SUGGESTIONS = [
   { label: '💡 Brainstorming', value: 'Brainstorming sur une idée innovante' },
 ];
 
-const ConversationSection: React.FC<ConversationSectionProps> = () => {
+const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ IMPORTS & HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
   const {
@@ -1076,7 +1076,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
       </div>
     </div>
   );
-};
+});
+ConversationSection.displayName = 'ConversationSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 2: VISION & PERCEPTION
@@ -1084,7 +1085,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = () => {
 
 type VisionSectionProps = Record<string, never>;
 
-const VisionSection: React.FC<VisionSectionProps> = () => {
+const VisionSection: React.FC<VisionSectionProps> = memo(() => {
   const env = detectEnvironment();
   const isCameraActive = useVisionStore(selectIsCameraActive);
   const isObservationActive = useVisionStore(selectIsObservationActive);
@@ -1234,7 +1235,8 @@ const VisionSection: React.FC<VisionSectionProps> = () => {
       </div>
     </div>
   );
-};
+});
+VisionSection.displayName = 'VisionSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 3: VUE D'ENSEMBLE
@@ -1328,7 +1330,7 @@ OverviewSection.displayName = 'OverviewSection';
 
 type IdentitySectionProps = Record<string, never>;
 
-const IdentitySection: React.FC<IdentitySectionProps> = () => {
+const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
   const env = detectEnvironment();
 
   return (
@@ -1387,7 +1389,8 @@ const IdentitySection: React.FC<IdentitySectionProps> = () => {
       </Card>
     </div>
   );
-};
+});
+IdentitySection.displayName = 'IdentitySection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 5: MÉMOIRE TRIPLE
@@ -1528,7 +1531,7 @@ MemorySection.displayName = 'MemorySection';
 
 type MemoryEvolutionSectionProps = Record<string, never>;
 
-const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
+const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = memo(() => {
   const env = detectEnvironment();
 
   return (
@@ -1560,7 +1563,8 @@ const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = () => {
       </Card>
     </div>
   );
-};
+});
+MemoryEvolutionSection.displayName = 'MemoryEvolutionSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // SECTION 7: PROGRESSION & XP
@@ -1774,7 +1778,7 @@ ProgressionSection.displayName = 'ProgressionSection';
 
 type TransformationSectionProps = Record<string, never>;
 
-const TransformationSection: React.FC<TransformationSectionProps> = () => {
+const TransformationSection: React.FC<TransformationSectionProps> = memo(() => {
   return (
     <div className="titane-section titane-section-transformation">
       <TSectionHeader
@@ -1850,7 +1854,8 @@ const TransformationSection: React.FC<TransformationSectionProps> = () => {
       </Grid>
     </div>
   );
-};
+});
+TransformationSection.displayName = 'TransformationSection';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // COMPOSANT PRINCIPAL
