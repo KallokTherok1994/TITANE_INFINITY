@@ -140,7 +140,7 @@
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.57.0",
-    "@sentry/react": "^10.32.0",
+    "@sentry/react": "^10.38.0",
     "@storybook/addon-a11y": "^10.2.1",
     "@storybook/addon-docs": "^10.2.1",
     "@storybook/addon-onboarding": "^10.2.1",
