@@ -54,3 +54,5 @@ export function TrendGraph({
     </svg>
   );
 }
+
+TrendGraph.displayName = 'TrendGraph';

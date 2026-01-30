@@ -47,3 +47,5 @@ export function LogFilters({ filters, onFilterChange }: LogFiltersProps) {
     </div>
   );
 }
+
+LogFilters.displayName = 'LogFilters';

@@ -53,3 +53,5 @@ export function LoaderSpinner({ size = 'md', label }: LoaderSpinnerProps) {
     </div>
   );
 }
+
+LoaderSpinner.displayName = 'LoaderSpinner';

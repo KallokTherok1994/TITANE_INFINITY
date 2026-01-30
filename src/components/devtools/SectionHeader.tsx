@@ -20,3 +20,5 @@ export function SectionHeader({ title, subtitle, action }: SectionHeaderProps) {
     </div>
   );
 }
+
+SectionHeader.displayName = 'SectionHeader';

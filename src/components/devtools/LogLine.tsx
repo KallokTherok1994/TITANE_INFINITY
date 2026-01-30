@@ -43,3 +43,5 @@ export function LogLine({ log, highlight }: LogLineProps) {
     </div>
   );
 }
+
+LogLine.displayName = 'LogLine';

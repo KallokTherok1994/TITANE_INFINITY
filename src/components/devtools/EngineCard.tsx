@@ -42,3 +42,5 @@ export function EngineCard({ engine, onClick }: EngineCardProps) {
     </div>
   );
 }
+
+EngineCard.displayName = 'EngineCard';

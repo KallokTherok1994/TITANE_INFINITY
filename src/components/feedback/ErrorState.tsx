@@ -85,3 +85,5 @@ export function ErrorState({
     </div>
   );
 }
+
+ErrorState.displayName = 'ErrorState';
