@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v26.2.0 — User Preferences Hook
  * © 2025 Humain Total / Kevin Thibault / TITANE Team
- * 
+ *
  * Gestion des préférences utilisateur avec persistence localStorage
  */
 
@@ -135,7 +135,7 @@ export function usePreferences() {
  */
 export function usePreferenceToggle(
   key: keyof PreferencesStore,
-  defaultValue: boolean = (DEFAULT_PREFERENCES[key] as boolean)
+  defaultValue: boolean = DEFAULT_PREFERENCES[key] as boolean
 ) {
   const { preferences, savePreference } = usePreferences();
   const currentValue = (preferences[key] as boolean) ?? defaultValue;

@@ -13,6 +13,7 @@
 **Fichier**: `src/components/chat/ChatToolbar.tsx:468-485`
 
 **Problème**:
+
 ```typescript
 // ACTUEL - Seulement placeholder
 onTranscriptionResult(`[Transcription de ${file.name} en cours...]`);
@@ -27,14 +28,15 @@ const handleAudioFileChange = useCallback(
     if (!e.target.files?.[0] || !onTranscriptionResult) return;
 
     const file = e.target.files[0];
-    
+
     // Validation fichier
     if (!file.type.startsWith('audio/')) {
       alert('Veuillez sélectionner un fichier audio');
       return;
     }
 
-    if (file.size > 25 * 1024 * 1024) { // 25MB limit pour Whisper
+    if (file.size > 25 * 1024 * 1024) {
+      // 25MB limit pour Whisper
       alert('Fichier trop volumineux (max 25MB)');
       return;
     }
@@ -42,16 +44,14 @@ const handleAudioFileChange = useCallback(
     try {
       // Afficher état "en transcription"
       onTranscriptionResult(`[Transcription de "${file.name}" en cours...]`);
-      
+
       // Utiliser Tauri backend pour transcription Whisper
       const result = await secureInvoke<{ text: string }>('transcribe_audio_file', {
         file_name: file.name,
         file_size: file.size,
         mime_type: file.type,
         // Envoyer le fichier en base64
-        file_data: await file.arrayBuffer().then(b => 
-          Buffer.from(b).toString('base64')
-        ),
+        file_data: await file.arrayBuffer().then(b => Buffer.from(b).toString('base64')),
       });
 
       if (result?.text) {
@@ -65,7 +65,7 @@ const handleAudioFileChange = useCallback(
       alert(`Erreur transcription: ${errorMsg}`);
       onTranscriptionResult(''); // Reset
     }
-    
+
     e.target.value = ''; // Reset input
   },
   [onTranscriptionResult]
@@ -83,11 +83,11 @@ pub async fn transcribe_audio_file(
 ) -> CommandResult<TranscriptionResult> {
     // Décoder base64
     let file_bytes = base64_decode(&file_data)?;
-    
+
     // Sauvegarder temporairement
     let temp_file = format!("/tmp/titane_{}", file_name);
     fs::write(&temp_file, file_bytes)?;
-    
+
     // Appeler Whisper (local ou API)
     let result = match whisper_local_transcribe(&temp_file).await {
         Ok(text) => text,
@@ -96,10 +96,10 @@ pub async fn transcribe_audio_file(
             whisper_api_transcribe(&temp_file).await?
         }
     };
-    
+
     // Nettoyer fichier temporaire
     fs::remove_file(&temp_file)?;
-    
+
     Ok(TranscriptionResult { text: result })
 }
 ```
@@ -109,6 +109,7 @@ pub async fn transcribe_audio_file(
 ### C2: Ajouter Timeouts Auto-Stop (Dictation, Recording, Audio Conversation)
 
 **Fichiers à corriger**:
+
 - `src/components/chat/ChatToolbar.tsx:385` (Dictation)
 - `src/components/chat/ChatToolbar.tsx:420` (Recording)
 - `src/components/chat/ChatToolbar.tsx:500` (Audio Conversation)
@@ -169,10 +170,15 @@ const handleDictationToggle = useCallback(async () => {
 }, [isDictating, voiceEngine, onDictationResult]);
 
 // ✅ Use timeout hook
-useAutoTimeout(isDictating, 60 * 1000, () => {
-  setIsDictating(false);
-  onDictationResult?.('[Dictation arrêtée automatiquement après 60s]');
-}, 'dictation');
+useAutoTimeout(
+  isDictating,
+  60 * 1000,
+  () => {
+    setIsDictating(false);
+    onDictationResult?.('[Dictation arrêtée automatiquement après 60s]');
+  },
+  'dictation'
+);
 ```
 
 ---
@@ -180,6 +186,7 @@ useAutoTimeout(isDictating, 60 * 1000, () => {
 ### C3: Ajouter Check Support APIs (Screen Capture, Camera, Microphone)
 
 **Fichiers à corriger**:
+
 - `src/components/chat/ChatToolbar.tsx:223` (Screen Capture)
 - `src/components/chat/ChatToolbar.tsx:420` (Audio Recording)
 - `src/components/chat/ChatToolbar.tsx:545` (Camera)
@@ -191,7 +198,7 @@ useAutoTimeout(isDictating, 60 * 1000, () => {
 export const APISupport = {
   async getDisplayMedia(): Promise<boolean> {
     try {
-      return !!(navigator.mediaDevices?.getDisplayMedia);
+      return !!navigator.mediaDevices?.getDisplayMedia;
     } catch {
       return false;
     }
@@ -199,7 +206,7 @@ export const APISupport = {
 
   async getUserMedia(): Promise<boolean> {
     try {
-      return !!(navigator.mediaDevices?.getUserMedia);
+      return !!navigator.mediaDevices?.getUserMedia;
     } catch {
       return false;
     }
@@ -224,9 +231,8 @@ export const APISupport = {
   },
 
   supportsWebSpeech(): boolean {
-    const SpeechRecognition = 
-      (window as any).SpeechRecognition || 
-      (window as any).webkitSpeechRecognition;
+    const SpeechRecognition =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     return !!SpeechRecognition;
   },
 
@@ -245,7 +251,7 @@ const handleScreenCapture = useCallback(async () => {
 
   const supported = await APISupport.getDisplayMedia();
   if (!supported) {
-    alert('Capture d\'écran non supportée dans ce navigateur');
+    alert("Capture d'écran non supportée dans ce navigateur");
     return;
   }
 
@@ -256,7 +262,7 @@ const handleScreenCapture = useCallback(async () => {
     // ... rest of code
   } catch (err) {
     if ((err as any).name === 'NotAllowedError') {
-      alert('Permission de capture d\'écran refusée');
+      alert("Permission de capture d'écran refusée");
     } else if ((err as any).name === 'NotFoundError') {
       alert('Aucun écran à capturer trouvé');
     } else {
@@ -343,7 +349,7 @@ const RecordingTimer: React.FC<RecordingTimerProps> = memo(
           {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
         </span>
         <div className="timer-bar">
-          <div 
+          <div
             className={`timer-fill ${percentage > 80 ? 'warning' : ''}`}
             style={{ width: `${percentage}%` }}
           />
@@ -391,7 +397,7 @@ function usePersistentToggle(key: string, defaultValue: boolean) {
 // Usage:
 const [isTTSEnabled, setIsTTSEnabled] = usePersistentToggle('tts_enabled', true);
 const [isAudioConvActive, setIsAudioConvActive] = usePersistentToggle(
-  'audio_conversation_active', 
+  'audio_conversation_active',
   false
 );
 ```
@@ -410,7 +416,7 @@ const showErrorNotification = (
   onRetry?: () => void
 ) => {
   const message = typeof error === 'string' ? error : error.message;
-  
+
   // Could integrate with toast/notification system
   const notification = {
     id: `${context}-${Date.now()}`,
@@ -420,7 +426,7 @@ const showErrorNotification = (
     action: onRetry ? { label: 'Réessayer', callback: onRetry } : undefined,
     duration: 6000,
   };
-  
+
   // Dispatch to notification store/context
   console.error(`[${context}] ${message}`);
 };
@@ -430,14 +436,14 @@ const showErrorNotification = (
 
 ## ✅ RÉSUMÉ DES CORRECTIONS
 
-| # | Problème | Sévérité | Fichier | Ligne | Statut |
-|---|----------|----------|---------|-------|--------|
-| C1 | Transcription placeholder | 🔴 | ChatToolbar.tsx | 468 | À faire |
-| C2 | Pas de timeouts | 🔴 | ChatToolbar.tsx | 385,420,500 | À faire |
-| C3 | Pas de check support API | 🔴 | ChatToolbar.tsx | 223,420,545 | À faire |
-| H1 | Pas d'indicateur durée | 🟠 | ChatToolbar.tsx | 420,500 | À faire |
-| H2 | Pas de persistence état | 🟠 | ChatToolbar.tsx | 130,570 | À faire |
-| M1 | Error feedback inconsistant | 🟡 | ChatToolbar.tsx | Partout | À faire |
+| #   | Problème                    | Sévérité | Fichier         | Ligne       | Statut  |
+| --- | --------------------------- | -------- | --------------- | ----------- | ------- |
+| C1  | Transcription placeholder   | 🔴       | ChatToolbar.tsx | 468         | À faire |
+| C2  | Pas de timeouts             | 🔴       | ChatToolbar.tsx | 385,420,500 | À faire |
+| C3  | Pas de check support API    | 🔴       | ChatToolbar.tsx | 223,420,545 | À faire |
+| H1  | Pas d'indicateur durée      | 🟠       | ChatToolbar.tsx | 420,500     | À faire |
+| H2  | Pas de persistence état     | 🟠       | ChatToolbar.tsx | 130,570     | À faire |
+| M1  | Error feedback inconsistant | 🟡       | ChatToolbar.tsx | Partout     | À faire |
 
 ---
 
@@ -455,14 +461,14 @@ const showErrorNotification = (
 
 ## 📊 Estimation Impact
 
-| Correction | Effort | Impact | Score |
-|-----------|--------|--------|-------|
-| C1 Transcription | 3h | 🔴 Critique | +15pts |
-| C3 API Checks | 2h | 🔴 Critique | +12pts |
-| C2 Timeouts | 1h | 🔴 Critique | +8pts |
-| H2 Persistence | 1h | 🟠 Important | +5pts |
-| H1 Timer UI | 1.5h | 🟠 Important | +4pts |
-| M1 Error UX | 2h | 🟡 Nice-to-have | +3pts |
+| Correction       | Effort | Impact          | Score  |
+| ---------------- | ------ | --------------- | ------ |
+| C1 Transcription | 3h     | 🔴 Critique     | +15pts |
+| C3 API Checks    | 2h     | 🔴 Critique     | +12pts |
+| C2 Timeouts      | 1h     | 🔴 Critique     | +8pts  |
+| H2 Persistence   | 1h     | 🟠 Important    | +5pts  |
+| H1 Timer UI      | 1.5h   | 🟠 Important    | +4pts  |
+| M1 Error UX      | 2h     | 🟡 Nice-to-have | +3pts  |
 
 **Total Effort**: ~10.5h  
 **Total Gain**: +47 pts → Score 119/100 (capped at 100)

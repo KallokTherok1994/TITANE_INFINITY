@@ -13,11 +13,13 @@
 **Objectif**: Afficher durée d'enregistrement en real-time
 
 **Ce qui est prêt**:
+
 - ✅ `RecordingTimer` component (code dans PLAN_ACTION)
 - ✅ `useElapsedTime` hook (dans useAutoTimeout.ts)
 - ✅ `formatElapsedTime()` utility
 
 **À faire**:
+
 ```bash
 # 1. Créer src/components/chat/RecordingTimer.tsx
 # 2. Importer dans ChatToolbar.tsx
@@ -26,16 +28,20 @@
 ```
 
 **Code à intégrer** (approximativement):
+
 ```tsx
-{isRecordingAudio && (
-  <RecordingTimer 
-    isRecording={isRecordingAudio}
-    maxDuration={5 * 60} // 5 minutes
-  />
-)}
+{
+  isRecordingAudio && (
+    <RecordingTimer
+      isRecording={isRecordingAudio}
+      maxDuration={5 * 60} // 5 minutes
+    />
+  );
+}
 ```
 
 **Bénéfice**:
+
 - Users voient la progression
 - Warning visuel avant auto-stop
 - UX professionnel
@@ -47,24 +53,26 @@
 **Objectif**: Compliance accessibilité complète pour tous buttons
 
 **Status Actuel**:
+
 - ✅ Button 1.2 (Reset Error): aria-label + type="button"
 - ❌ 8+ buttons: Missing aria-labels, type attributes, aria-pressed
 
 **Buttons à corriger**:
 
-| Button | Location | Issue | Fix |
-|--------|----------|-------|-----|
-| 2.1 | ChatToolbar:194 | No aria-label | Add aria-label="Importer fichiers" |
-| 2.2 | ChatToolbar:207 | No aria-label | Add aria-label="Capturer écran" |
-| 2.3 | ChatToolbar:221 | No aria-label | Add aria-label="Analyser image" |
-| 2.4 | ChatToolbar:234 | No aria-label | Add aria-label="Démarrer dictation vocale" + aria-pressed |
-| 2.5 | ChatToolbar:247 | No aria-label | Add aria-label="Enregistrer audio" + aria-pressed |
-| 2.6 | ChatToolbar:258 | No aria-label | Add aria-label="Transcrire fichier audio" |
-| 2.7 | ChatToolbar:270 | No aria-label | Add aria-label="Mode conversation audio" + aria-pressed |
-| 2.8 | ChatToolbar:283 | No aria-label | Add aria-label="Caméra live" + aria-pressed |
-| 2.9 | ChatToolbar:296 | No aria-label | Add aria-label="Text-to-Speech" + aria-pressed |
+| Button | Location        | Issue         | Fix                                                       |
+| ------ | --------------- | ------------- | --------------------------------------------------------- |
+| 2.1    | ChatToolbar:194 | No aria-label | Add aria-label="Importer fichiers"                        |
+| 2.2    | ChatToolbar:207 | No aria-label | Add aria-label="Capturer écran"                           |
+| 2.3    | ChatToolbar:221 | No aria-label | Add aria-label="Analyser image"                           |
+| 2.4    | ChatToolbar:234 | No aria-label | Add aria-label="Démarrer dictation vocale" + aria-pressed |
+| 2.5    | ChatToolbar:247 | No aria-label | Add aria-label="Enregistrer audio" + aria-pressed         |
+| 2.6    | ChatToolbar:258 | No aria-label | Add aria-label="Transcrire fichier audio"                 |
+| 2.7    | ChatToolbar:270 | No aria-label | Add aria-label="Mode conversation audio" + aria-pressed   |
+| 2.8    | ChatToolbar:283 | No aria-label | Add aria-label="Caméra live" + aria-pressed               |
+| 2.9    | ChatToolbar:296 | No aria-label | Add aria-label="Text-to-Speech" + aria-pressed            |
 
 **Pattern à appliquer** (pour ToolbarButton):
+
 ```tsx
 // Existant
 <button
@@ -89,10 +97,12 @@
 **Objectif**: Remplacer `alert()` par notifications toast élégantes
 
 **Ce qui existe**:
+
 - ❌ Aucun toast system actuellement
 - alert() utilisé partout
 
 **Options**:
+
 1. **Sonner** (lightweight, ~2KB) - RECOMMANDÉ
 2. **React-Toastify** (features riches)
 3. Custom toast component
@@ -112,6 +122,7 @@ pnpm add sonner
 ```
 
 **Exemple remplacement**:
+
 ```typescript
 // AVANT
 alert('Aucun microphone détecté');
@@ -124,6 +135,7 @@ toast.error('Aucun microphone détecté');
 **Estimation**: 1.5-2 heures (install + conversion + styling)
 
 **Bénéfice**:
+
 - Professional UX (+15% satisfaction)
 - Doesn't block interaction
 - Auto-dismiss
@@ -134,6 +146,7 @@ toast.error('Aucun microphone détecté');
 ## 🏁 COMPLETION CHECKLIST
 
 ### Phase 1: Recording Timer (1h)
+
 - [ ] Create RecordingTimer.tsx component
 - [ ] Integrate into ChatToolbar
 - [ ] Test visual display
@@ -141,6 +154,7 @@ toast.error('Aucun microphone détecté');
 - [ ] Verify timeout warning triggers
 
 ### Phase 2: Button Accessibility (1-2h)
+
 - [ ] Add aria-label to Button 2.1 (File Import)
 - [ ] Add aria-label to Button 2.2 (Screen Capture)
 - [ ] Add aria-label to Button 2.3 (Image Analysis)
@@ -153,6 +167,7 @@ toast.error('Aucun microphone détecté');
 - [ ] Test with screen reader (NVDA/JAWS)
 
 ### Phase 3: Toast System (1.5-2h)
+
 - [ ] `pnpm add sonner`
 - [ ] Add <Toaster /> to App.tsx
 - [ ] Replace alert() in ChatToolbar.tsx (8 locations)
@@ -162,6 +177,7 @@ toast.error('Aucun microphone détecté');
 - [ ] Verify stacking behavior
 
 ### Phase 4: Final Validation (1h)
+
 - [ ] TypeScript: `npx tsc --noEmit` (0 errors)
 - [ ] Browser testing (Chrome, Firefox, Safari)
 - [ ] Screen reader testing
@@ -172,13 +188,13 @@ toast.error('Aucun microphone détecté');
 
 ## 📦 ESTIMATED EFFORT
 
-| Phase | Time | Difficulty |
-|-------|------|------------|
-| Recording Timer | 1h | 🟡 Medium |
-| Button A11y | 1-2h | 🟢 Easy |
-| Toast System | 1.5-2h | 🟡 Medium |
-| Final Validation | 1h | 🟢 Easy |
-| **TOTAL** | **4.5-6h** | **🟡 Moderate** |
+| Phase            | Time       | Difficulty      |
+| ---------------- | ---------- | --------------- |
+| Recording Timer  | 1h         | 🟡 Medium       |
+| Button A11y      | 1-2h       | 🟢 Easy         |
+| Toast System     | 1.5-2h     | 🟡 Medium       |
+| Final Validation | 1h         | 🟢 Easy         |
+| **TOTAL**        | **4.5-6h** | **🟡 Moderate** |
 
 ---
 
@@ -219,6 +235,7 @@ Final: ✨ 100/100 PERFECTION ✨
 ## 🚀 READY TO CONTINUE?
 
 All code is prepared:
+
 - ✅ RecordingTimer component code available
 - ✅ API support complete
 - ✅ Error handling framework in place

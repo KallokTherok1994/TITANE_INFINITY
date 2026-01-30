@@ -12,6 +12,7 @@
 ### ✅ CRITIQUES (4/4 TERMINÉES)
 
 #### 1. **C1 - Transcription Audio Réelle** (🔴 → ✅)
+
 - **Problème**: Button 2.6 était placeholder seulement
 - **Solution Implémentée**:
   - `audioTranscriptionService.ts`: Service complet Whisper + fallback
@@ -24,6 +25,7 @@
 - **Commit**: `f2b72a9b`
 
 #### 2. **C2 - Auto-Stop Timeouts** (🔴 → ✅)
+
 - **Problème**: Dictation, enregistrement, mode audio illimités
 - **Solution Implémentée**:
   - `useAutoTimeout` hook: Gestion timeouts
@@ -36,26 +38,28 @@
 - **Commit**: `70fddaef`
 
 #### 3. **C3 - API Support Checks** (🔴 → ✅)
+
 - **Problème**: Crashes sur navigateurs non-supportés
 - **Solution Implémentée**:
   - `APISupport.ts`: Détection complète APIs
-    * Screen Capture support
-    * UserMedia/microphone/caméra availability
-    * MediaRecorder support
-    * Web Speech API detection
-    * Browser-specific error messages
+    - Screen Capture support
+    - UserMedia/microphone/caméra availability
+    - MediaRecorder support
+    - Web Speech API detection
+    - Browser-specific error messages
   - Checks appliqués à 5 handlers:
-    * handleScreenCapture: Verify support + error handling
-    * handleCameraCapture: Check API + device availability
-    * handleDictationToggle: Verify microphone
-    * handleAudioRecordToggle: Check MediaRecorder + mic
-    * handleAudioConversationToggle: Verify microphone
-    * handleCameraLiveToggle: Check API + device
+    - handleScreenCapture: Verify support + error handling
+    - handleCameraCapture: Check API + device availability
+    - handleDictationToggle: Verify microphone
+    - handleAudioRecordToggle: Check MediaRecorder + mic
+    - handleAudioConversationToggle: Verify microphone
+    - handleCameraLiveToggle: Check API + device
 - **Impact**: Élimine 100% des crashes dues aux APIs manquantes
 - **Files**: `src/utils/APISupport.ts` (217 lignes), ChatToolbar.tsx (mods)
 - **Commit**: `70fddaef`
 
 #### 4. **C4 - Correct Error Handling** (🔴 → ✅)
+
 - **Problème**: Silent failures, messages vagues
 - **Solution Implémentée**:
   - User-friendly error messages pour chaque contexte
@@ -70,6 +74,7 @@
 ### ✅ ÉLEVÉES (2/3 TERMINÉES)
 
 #### **H2 - Persistence État Utilisateur** (🟠 → ✅)
+
 - **Problème**: Chaque restart, toutes les préfs perdues
 - **Solution Implémentée**:
   - `usePreferences` hook: localStorage persistence
@@ -82,6 +87,7 @@
 - **Commit**: `2b38d55a`
 
 #### **H1 - Recording Timer UI** (🟠 → 🔄 PARTIELLEMENT)
+
 - **Status**: Code fourni, intégration optionnelle
 - **Fourni dans PLAN_ACTION**:
   - `RecordingTimer` component avec barre progress
@@ -91,6 +97,7 @@
 - **À Intégrer**: Ajouter au ChatToolbar pour affichage durée
 
 #### **H3 - Browser API Fallbacks** (🟠 → ✅)
+
 - **Problème**: Pas de fallback si API principale échoue
 - **Solution Implémentée**:
   - Transcription: Whisper (primary) + Web Speech (fallback)
@@ -104,6 +111,7 @@
 ### 🟡 MODÉRÉES (1/3 COMPLÉTÉES)
 
 #### **M1 - Error Feedback Unified** (🟡 → ✅)
+
 - **Status**: Partiellement implémenté
 - **Fourni**:
   - `APISupport.getErrorMessage()` avec context
@@ -112,10 +120,12 @@
 - **À Compléter**: Toast/notification system pour UX polish
 
 #### **M2 - Button Accessibility** (🟡 → 🔄)
+
 - **Complété**: Button 1.2 (aria-label)
 - **Reste**: 2.2, 2.4, 2.5, 2.8, 3.1+ (type attributes, aria-pressed, etc.)
 
 #### **M3 - Media Device Tracking** (🟡 → 🔄)
+
 - **Fourni**: `useMediaDevices()` hook dans APISupport
 - **À Intégrer**: Ajouter devicechange listeners pour UI update real-time
 
@@ -133,18 +143,19 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 
 ### Breakdown par Sévérité
 
-| Sévérité | Total | Completées | Score |
-|----------|-------|-----------|-------|
-| 🔴 CRITICAL | 4 | 4 | 100% ✅ |
-| 🟠 ELEVATED | 3 | 2 | 67% 🔄 |
-| 🟡 MODERATE | 3 | 1 | 33% 🔄 |
-| **TOTAL** | **10** | **7** | **92/100** |
+| Sévérité    | Total  | Completées | Score      |
+| ----------- | ------ | ---------- | ---------- |
+| 🔴 CRITICAL | 4      | 4          | 100% ✅    |
+| 🟠 ELEVATED | 3      | 2          | 67% 🔄     |
+| 🟡 MODERATE | 3      | 1          | 33% 🔄     |
+| **TOTAL**   | **10** | **7**      | **92/100** |
 
 ---
 
 ## 📂 FILES IMPACTED
 
 ### CREATED
+
 ```
 ✅ src/hooks/useAutoTimeout.ts              (146 lignes)
 ✅ src/utils/APISupport.ts                  (217 lignes)
@@ -154,6 +165,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ```
 
 ### MODIFIED
+
 ```
 ✅ src/components/chat/ChatToolbar.tsx      (+180 lignes, -15 lignes)
    - Added imports: useAutoTimeout, APISupport, audioTranscriptionService, usePreferences
@@ -163,6 +175,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ```
 
 ### TypeScript Status
+
 ```
 ✅ Before: 0 errors
 ✅ After: 0 errors
@@ -173,6 +186,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ## 🧪 VALIDATION
 
 ### Type Safety
+
 ```typescript
 ✅ ChatToolbar.tsx compiles without errors
 ✅ All imports resolve correctly
@@ -181,6 +195,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ```
 
 ### API Compatibility
+
 ```
 ✅ secureInvoke compatible
 ✅ Tauri command 'transcribe_audio_file' ready (need backend impl)
@@ -189,6 +204,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ```
 
 ### Error Handling
+
 ```
 ✅ All async operations have try-catch
 ✅ User-facing error messages non-technical
@@ -201,6 +217,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
 ## 🚀 NEXT STEPS (Remaining 8 points)
 
 ### Remaining Elevated Fixes
+
 1. **H1 - Recording Timer UI** (🟡 MODERATE)
    - Integrate RecordingTimer component
    - Add to handleAudioRecordToggle visual feedback
@@ -212,6 +229,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
    - Estimated: 1.5 hours
 
 ### Remaining Moderate Fixes
+
 3. **M1 - Toast Notification System** (🟡 MODERATE)
    - Replace alert() with toast
    - Better UX for long operations
@@ -224,6 +242,7 @@ Remaining       : 8 points (M1 toast system, M2 more a11y, M3 real-time device t
    - Estimated: 1 hour
 
 ### Validation Phase
+
 5. **Native Tauri Testing** (🔴 CRITICAL)
    - Test transcription with real backend
    - Verify all handlers work in production mode
@@ -273,32 +292,35 @@ f2b72a9b - 🎙️ Implement real Whisper audio transcription (C1 CRITICAL fix)
 
 ## 📅 Timeline
 
-| Phase | Status | Commits | Duration |
-|-------|--------|---------|----------|
-| Audit | ✅ Complete | 1 | 1h |
-| C2+C3 Fixes | ✅ Complete | 1 | 2h |
-| C1 Transcription | ✅ Complete | 1 | 1.5h |
-| H2 Preferences | ✅ Complete | 1 | 1h |
-| **Total Completed** | | **4** | **5.5h** |
-| Remaining | 🔄 Ready | - | ~7h est. |
+| Phase               | Status      | Commits | Duration |
+| ------------------- | ----------- | ------- | -------- |
+| Audit               | ✅ Complete | 1       | 1h       |
+| C2+C3 Fixes         | ✅ Complete | 1       | 2h       |
+| C1 Transcription    | ✅ Complete | 1       | 1.5h     |
+| H2 Preferences      | ✅ Complete | 1       | 1h       |
+| **Total Completed** |             | **4**   | **5.5h** |
+| Remaining           | 🔄 Ready    | -       | ~7h est. |
 
 ---
 
 ## 📝 NOTES
 
 ### Backend Integration Required
+
 - Tauri command `transcribe_audio_file` needs implementation
 - Whisper endpoint integration
 - File upload handling in src-tauri backend
 - Error mapping for user feedback
 
 ### Browser Compatibility
+
 - ✅ Chrome/Chromium: 100% support
 - ✅ Firefox: 100% support
 - ✅ Safari: 90% (Screen capture limited to macOS 12.1+)
 - ✅ Edge: 100% support
 
 ### Performance Considerations
+
 - Transcription: 100MB file = ~30-60 seconds (Whisper speed)
 - Audio recording: 5MB per minute at high quality
 - localStorage: <5MB total for preferences

@@ -56,7 +56,9 @@ export const RecordingTimer: React.FC<RecordingTimerProps> = ({
   }
 
   return (
-    <div className={`recording-timer ${isNearLimit ? 'warning' : ''} ${isAtLimit ? 'at-limit' : ''} ${className}`}>
+    <div
+      className={`recording-timer ${isNearLimit ? 'warning' : ''} ${isAtLimit ? 'at-limit' : ''} ${className}`}
+    >
       {/* Barre de progression */}
       <div className="recording-timer-bar-container">
         <div
@@ -74,8 +76,7 @@ export const RecordingTimer: React.FC<RecordingTimerProps> = ({
         {/* Afficher la limite si on est proche */}
         {isNearLimit && (
           <span className="recording-timer-limit">
-            <AlertCircle size={14} />
-            {' '}Limite: {formattedMax}
+            <AlertCircle size={14} /> Limite: {formattedMax}
           </span>
         )}
 

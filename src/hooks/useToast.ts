@@ -55,11 +55,7 @@ export function useToast() {
       message: string;
       options?: ToastOptions;
     }) => {
-      const {
-        duration = 4000,
-        description,
-        action,
-      } = options;
+      const { duration = 4000, description, action } = options;
 
       const toastId = toast[type](message, {
         description,
@@ -105,7 +101,7 @@ export function useToast() {
   const loading = useCallback(
     (message: string, options?: ToastOptions) => {
       const toastId = showToast({ type: 'loading', message, options });
-      
+
       // Retourner une fonction pour resolver/dismiss
       return {
         id: toastId,

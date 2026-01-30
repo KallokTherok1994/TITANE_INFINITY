@@ -34,7 +34,9 @@
   height: 100%;
   background: linear-gradient(90deg, #ff4444, #ff6b6b);
   border-radius: 2px;
-  transition: width 0.3s linear, background-color 0.3s ease;
+  transition:
+    width 0.3s linear,
+    background-color 0.3s ease;
   animation: pulse-record 1s infinite;
 }
 
@@ -49,7 +51,8 @@
 
 /* Animation pulse */
 @keyframes pulse-record {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -58,7 +61,8 @@
 }
 
 @keyframes pulse-record-danger {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 1;
   }
   50% {
@@ -108,10 +112,13 @@
 }
 
 @keyframes blink-warning {
-  0%, 49%, 100% {
+  0%,
+  49%,
+  100% {
     opacity: 1;
   }
-  50%, 99% {
+  50%,
+  99% {
     opacity: 0.6;
   }
 }

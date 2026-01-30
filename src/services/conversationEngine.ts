@@ -203,9 +203,10 @@ export async function processMessage(
       energy: 0,
     },
     cognitive_tags: cognitiveTags,
-    cognitive_summary: typeof metadata['cognitiveSummary'] === 'string'
-      ? (metadata['cognitiveSummary'] as string)
-      : '',
+    cognitive_summary:
+      typeof metadata['cognitiveSummary'] === 'string'
+        ? (metadata['cognitiveSummary'] as string)
+        : '',
     metadata: normalizeConversationMetadata({
       provider_used: typeof raw?.provider === 'string' ? raw.provider : 'unknown',
       latency_ms: typeof raw?.latencyMs === 'number' ? raw.latencyMs : 0,

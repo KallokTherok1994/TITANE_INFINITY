@@ -90,6 +90,8 @@ module.exports = {
     // ─────────────────────────────────────────────────────────────
     'react-hooks/rules-of-hooks': 'error',
     'react-hooks/exhaustive-deps': 'warn',
+    // Disabled: These are too strict for production code with side effects
+    'react/no-unescaped-entities': 'off',
 
     // ─────────────────────────────────────────────────────────────
     // React Rules

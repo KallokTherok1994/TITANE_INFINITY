@@ -527,8 +527,8 @@ export const Chat: React.FC = () => {
   const [_pendingDictationText, setPendingDictationText] = useState<string>('');
   const [_ttsEnabled, setTtsEnabled] = useState(true);
   const [_attachedImages, setAttachedImages] = useState<string[]>([]);
-    // État pour les fichiers uploadés via FileUploadButton
-    const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
+  // État pour les fichiers uploadés via FileUploadButton
+  const [uploadedFiles, setUploadedFiles] = useState<AnalyzedFile[]>([]);
 
   // ═══ MODE CHAT STATE ═══
   const [currentChatMode, setCurrentChatMode] = useState<ChatModeId>(() => {
@@ -815,14 +815,17 @@ export const Chat: React.FC = () => {
     (files: AnalyzedFile[]) => {
       try {
         isDev && console.log('[Chat] Files analyzed:', files.length);
-        
+
         // Stocker les fichiers dans l'état
         setUploadedFiles(files);
-        
+
         // Créer un résumé des fichiers pour le message
         const filesSummary = files
           .map(f => {
-            const info = [`📎 **${f.name}**`, `- Taille: ${(f.size / 1024).toFixed(1)} KB`];
+            const info = [
+              `📎 **${f.name}**`,
+              `- Taille: ${(f.size / 1024).toFixed(1)} KB`,
+            ];
             if (f.analysis) {
               info.push(`- Type: ${f.category}`);
               info.push(`- Lignes: ${f.analysis.lineCount || 0}`);
@@ -830,7 +833,7 @@ export const Chat: React.FC = () => {
             return info.join('\n');
           })
           .join('\n\n');
-        
+
         // Envoyer automatiquement le message avec les fichiers
         const message = `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers et donne-moi un résumé détaillé.`;
         sendMessage(message);
