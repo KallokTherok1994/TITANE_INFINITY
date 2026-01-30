@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout dimensional matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -533,7 +533,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout architect matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🏗️ Ascend to Reality Architect Status'
         run: |

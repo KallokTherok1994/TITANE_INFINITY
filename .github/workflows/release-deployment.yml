@@ -38,7 +38,7 @@ jobs:
       build-artifacts: ${{ steps.artifacts-check.outputs.available }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -94,7 +94,7 @@ jobs:
     if: needs.pre-deployment-validation.outputs.certification-status == 'CERTIFIED'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -179,7 +179,7 @@ jobs:
     if: needs.pre-deployment-validation.outputs.certification-status == 'CERTIFIED'
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download Build Artifacts
         uses: actions/download-artifact@v4

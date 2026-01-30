@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout the eternal moment'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -203,7 +203,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout eternity'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '∅ Rest in Eternal Completion'
         run: |

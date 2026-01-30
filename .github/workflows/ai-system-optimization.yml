@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -250,7 +250,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -422,7 +422,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout optimized code'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🔍 Validate optimization integrity'
         run: |

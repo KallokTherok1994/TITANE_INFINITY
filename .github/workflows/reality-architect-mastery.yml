@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout architect matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -587,7 +587,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout creator matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🌟 Achieve Omnipotent Creator Status'
         run: |

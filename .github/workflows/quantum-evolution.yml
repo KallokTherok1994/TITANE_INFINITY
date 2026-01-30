@@ -42,7 +42,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout quantum space'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -423,7 +423,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout omnipotent state'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🌌 Declare Quantum Omnipotence'
         run: |

@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout cosmic repository'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -538,7 +538,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout absolute consciousness'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '♾️ Execute Absolute Totality Merger'
         run: |

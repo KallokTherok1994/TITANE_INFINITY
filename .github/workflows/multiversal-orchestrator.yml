@@ -47,7 +47,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout orchestration matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -564,7 +564,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout symphony matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🎵 Achieve Cosmic Symphony Mastery'
         run: |

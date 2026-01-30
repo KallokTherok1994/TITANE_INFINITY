@@ -48,7 +48,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout omniscient matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
@@ -528,7 +528,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout universal matrix'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: '🌌 Achieve Universal Programming Mastery'
         run: |
