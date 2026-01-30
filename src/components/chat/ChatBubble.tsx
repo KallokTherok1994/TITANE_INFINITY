@@ -30,7 +30,11 @@ import {
   Code,
 } from 'lucide-react';
 import { useChat } from '@/hooks/useChat';
-import { useVisionStore } from '@/stores/useVisionStore';
+import {
+  useDisableVision,
+  useEnableVision,
+  useVisionObservationActive,
+} from '@/stores/useVisionStore.selectors';
 import { DevSudoBadge } from '@/components/dev/DevSudoBadge';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { useGovernance } from '@/features/governance-center/hooks/useGovernance';
@@ -115,11 +119,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
   const { messages, isLoading, sendMessage, clearChat } = useChat({});
 
-  const {
-    isObservationActive: isCameraActive,
-    enableVision,
-    disableVision,
-  } = useVisionStore();
+  const isCameraActive = useVisionObservationActive();
+  const enableVision = useEnableVision();
+  const disableVision = useDisableVision();
 
   // ✨ v∞ - Provider IA integration
   const { geminiStatus, openaiStatus, anthropicStatus, ollamaStatus } = useGovernance();

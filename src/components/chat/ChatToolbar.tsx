@@ -34,7 +34,11 @@ import {
   Disc,
   Square,
 } from 'lucide-react';
-import { useVisionStore } from '@/stores/useVisionStore';
+import {
+  useDisableVision,
+  useEnableVision,
+  useVisionObservationActive,
+} from '@/stores/useVisionStore.selectors';
 import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import {
@@ -164,11 +168,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const audioChunksRef = useRef<Blob[]>([]);
 
     // Stores & Hooks
-    const {
-      isObservationActive: isCameraActive,
-      enableVision,
-      disableVision,
-    } = useVisionStore();
+    const isCameraActive = useVisionObservationActive();
+    const enableVision = useEnableVision();
+    const disableVision = useDisableVision();
 
     const {
       isListening: _isListening,
