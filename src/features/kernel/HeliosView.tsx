@@ -6,13 +6,15 @@
  */
 
 import { useEffect } from 'react';
-import { useSystemStore } from '../../stores/systemStore';
+import { useHeliosSnapshot, useFetchHelios, useFetchHealth } from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import type { HealthStatus } from '../../services/tauri/backend-v17.2.types';
 
 export function HeliosView() {
-  const { helios, health, loading, error, fetchHelios, fetchHealth } = useSystemStore();
+  const { helios, health, loading, error } = useHeliosSnapshot();
+  const fetchHelios = useFetchHelios();
+  const fetchHealth = useFetchHealth();
 
   useEffect(() => {
     fetchHelios();

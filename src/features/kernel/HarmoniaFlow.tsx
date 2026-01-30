@@ -6,12 +6,13 @@
  */
 
 import { useEffect } from 'react';
-import { useSystemStore } from '../../stores/systemStore';
+import { useHarmoniaSnapshot, useFetchHarmonia } from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 
 export function HarmoniaFlow() {
-  const { harmonia, loading, error, fetchHarmonia } = useSystemStore();
+  const { harmonia, loading, error } = useHarmoniaSnapshot();
+  const fetchHarmonia = useFetchHarmonia();
 
   useEffect(() => {
     fetchHarmonia();
