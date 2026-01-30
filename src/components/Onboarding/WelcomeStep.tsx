@@ -101,3 +101,5 @@ export const WelcomeStep: React.FC = () => {
     </div>
   );
 };
+
+WelcomeStep.displayName = 'WelcomeStep';

@@ -730,4 +730,6 @@ const QuantumCenter: React.FC = () => {
   );
 };
 
+QuantumCenter.displayName = 'QuantumCenter';
+
 export default QuantumCenter;

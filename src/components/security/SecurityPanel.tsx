@@ -203,4 +203,6 @@ const SecurityPanel: React.FC = () => {
   );
 };
 
+SecurityPanel.displayName = 'SecurityPanel';
+
 export default SecurityPanel;

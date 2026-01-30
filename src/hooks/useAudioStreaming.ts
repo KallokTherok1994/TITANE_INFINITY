@@ -13,6 +13,12 @@ import {
   type StreamingStats,
 } from '../services/audio/audioStreaming';
 
+// ═══════════════════════════════════════════════════════════════════
+// CONSTANTS
+// ═══════════════════════════════════════════════════════════════════
+
+const STATS_UPDATE_INTERVAL_MS = 500;
+
 export interface UseAudioStreamingOptions {
   config?: StreamingConfig;
   onStateChange?: (state: StreamingState) => void;
@@ -119,7 +125,7 @@ export function useAudioStreaming(
         } catch (err) {
           console.error('[useAudioStreaming] Stats error:', err);
         }
-      }, 500); // Update every 500ms
+      }, STATS_UPDATE_INTERVAL_MS);
     } else {
       if (statsIntervalRef.current !== null) {
         window.clearInterval(statsIntervalRef.current);

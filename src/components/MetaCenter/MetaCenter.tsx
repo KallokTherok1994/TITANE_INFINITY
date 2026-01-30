@@ -466,4 +466,6 @@ const MetaCenter: React.FC = () => {
   );
 };
 
+MetaCenter.displayName = 'MetaCenter';
+
 export default MetaCenter;

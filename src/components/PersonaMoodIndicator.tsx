@@ -123,3 +123,5 @@ export const PersonaMoodIndicator: React.FC = () => {
     </div>
   );
 };
+
+PersonaMoodIndicator.displayName = 'PersonaMoodIndicator';

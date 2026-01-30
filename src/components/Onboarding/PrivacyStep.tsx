@@ -114,3 +114,5 @@ export const PrivacyStep: React.FC = () => {
     </div>
   );
 };
+
+PrivacyStep.displayName = 'PrivacyStep';
