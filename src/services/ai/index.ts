@@ -71,8 +71,9 @@ export {
 } from './cognitiveCacheConnector';
 
 // Providers
-export { geminiProvider } from './providers/gemini';
-export { copilotProvider } from './providers/copilot';
+// ⚠️ v37.1.0: Cloud providers lazy-loaded via AIProviderLazyLoader
+// export { geminiProvider } from './providers/gemini';
+// export { copilotProvider } from './providers/copilot';
 export { ollamaProvider } from './providers/ollama';
 export { fallbackProvider } from './providers/fallback';
 

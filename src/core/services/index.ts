@@ -47,7 +47,8 @@ export type {
 export type { ProviderMetrics } from '../../services/ai/metricsEngine';
 
 // 6. PROVIDER LAYER (Re-export from services/ai/providers)
-export { geminiProvider } from '../../services/ai/providers/gemini';
+// ⚠️ v37.1.0: Removed static exports - use AIProviderLazyLoader for cloud providers
+// export { geminiProvider } from '../../services/ai/providers/gemini';
 export { ollamaProvider } from '../../services/ai/providers/ollama';
 export { fallbackProvider } from '../../services/ai/providers/fallback';
 export type {
