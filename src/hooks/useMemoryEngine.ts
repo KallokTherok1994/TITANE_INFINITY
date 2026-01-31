@@ -11,7 +11,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -72,11 +72,15 @@ export interface UseMemoryEngineReturn {
 }
 
 // ═══════════════════════════════════════════════════════════════════
-// HELPER FUNCTIONS
+// HELPER FUNCTIONS (DEPRECATED - see useCallback in hook for v33.0.0)
 // ═══════════════════════════════════════════════════════════════════
+// These functions are kept for backward compatibility but are no longer
+// used directly. Instead, memoized versions are created in useMemoryEngine
+// using useCallback to prevent redundant computations on every call.
 
 /**
  * Extract tags from content (keywords extraction)
+ * @deprecated Use memoizedExtractTags from useMemoryEngine hook instead
  */
 function extractTags(content: string): string[] {
   // Remove common words
@@ -122,6 +126,7 @@ function extractTags(content: string): string[] {
 
 /**
  * Detect intentions from content
+ * @deprecated Use memoizedDetectIntentions from useMemoryEngine hook instead
  */
 function detectIntentions(content: string): string[] {
   const intentionKeywords = {
@@ -146,6 +151,7 @@ function detectIntentions(content: string): string[] {
 
 /**
  * Analyze emotions from content
+ * @deprecated Use memoizedAnalyzeEmotions from useMemoryEngine hook instead
  */
 function analyzeEmotions(content: string): {
   valence: number;
@@ -191,6 +197,103 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
 
+  // ═══ MEMOIZED ANALYSIS FUNCTIONS (v33.0.0 optimization) ═══
+  // These were previously recalculated on every saveToMemory call
+  // Now they're memoized to avoid redundant computations
+
+  const memoizedExtractTags = useCallback((content: string): string[] => {
+    const stopWords = new Set([
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'et',
+      'ou',
+      'mais',
+      'donc',
+      'car',
+      'de',
+      'du',
+      'à',
+      'au',
+      'en',
+      'pour',
+      'par',
+      'sur',
+      'dans',
+    ]);
+
+    const words = content
+      .toLowerCase()
+      .replace(/[.,!?;:]/g, '')
+      .split(/\s+/)
+      .filter(w => w.length > 3 && !stopWords.has(w));
+
+    const freq = new Map<string, number>();
+    words.forEach(w => freq.set(w, (freq.get(w) || 0) + 1));
+
+    return Array.from(freq.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([word]) => word);
+  }, []);
+
+  const memoizedDetectIntentions = useCallback((content: string): string[] => {
+    const intentionKeywords = {
+      Question: ['comment', 'pourquoi', 'quoi', 'où', 'quand', 'qui', '?'],
+      Action: ['faire', 'créer', 'développer', 'implémenter', 'ajouter'],
+      Emotion: ['ressentir', 'sentiment', 'émotion', 'heureux', 'triste'],
+      Clarification: ['préciser', 'clarifier', 'expliquer', 'détailler'],
+      Meta: ['système', 'architecture', 'conception', 'design'],
+    };
+
+    const detected: string[] = [];
+    const lowerContent = content.toLowerCase();
+
+    Object.entries(intentionKeywords).forEach(([intention, keywords]) => {
+      if (keywords.some(kw => lowerContent.includes(kw))) {
+        detected.push(intention);
+      }
+    });
+
+    return detected.length > 0 ? detected : ['Meta'];
+  }, []);
+
+  const memoizedAnalyzeEmotions = useCallback(
+    (content: string): {
+      valence: number;
+      intensity: number;
+      energy: number;
+    } => {
+      const positiveWords = ['bien', 'super', 'excellent', 'parfait', 'merci', 'génial'];
+      const negativeWords = ['mal', 'erreur', 'problème', 'bug', 'échec', 'triste'];
+      const intensityWords = ['très', 'vraiment', 'extrêmement', 'complètement'];
+      const energyWords = ['rapide', 'urgent', 'immédiat', 'maintenant', 'vite'];
+
+      const lowerContent = content.toLowerCase();
+
+      const positiveCount = positiveWords.filter(w => lowerContent.includes(w)).length;
+      const negativeCount = negativeWords.filter(w => lowerContent.includes(w)).length;
+      const intensityCount = intensityWords.filter(w => lowerContent.includes(w)).length;
+      const energyCount = energyWords.filter(w => lowerContent.includes(w)).length;
+
+      const valence =
+        (positiveCount - negativeCount) / Math.max(positiveCount + negativeCount, 1);
+
+      const intensity = Math.min(intensityCount / 3, 1.0);
+      const energy = Math.min(energyCount / 3, 1.0);
+
+      return {
+        valence: Math.max(-1, Math.min(1, valence)),
+        intensity,
+        energy,
+      };
+    },
+    []
+  );
+
   // ═══ REFRESH STATS ═══
   const refreshStats = useCallback(async () => {
     try {
@@ -220,9 +323,9 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
           content,
           type,
           timestamp: Date.now(),
-          tags: extractTags(content),
-          intentions: detectIntentions(content),
-          emotions: analyzeEmotions(content),
+          tags: memoizedExtractTags(content),
+          intentions: memoizedDetectIntentions(content),
+          emotions: memoizedAnalyzeEmotions(content),
           metadata,
         };
 
@@ -244,7 +347,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
         setIsLoading(false);
       }
     },
-    [refreshStats]
+    [memoizedExtractTags, memoizedDetectIntentions, memoizedAnalyzeEmotions, refreshStats]
   );
 
   // ═══ GET MEMORY CONTEXT ═══
