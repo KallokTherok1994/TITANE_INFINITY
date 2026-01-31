@@ -1,0 +1,17 @@
+# TITANE∞ Maintenance Cron (UTC)
+# Install with: crontab /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/maintenance/cron/maintenance.cron
+
+SHELL=/bin/bash
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Daily: 09:00 UTC
+0 9 * * * /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/maintenance/automation-suite.sh daily >> /tmp/titane-maintenance-daily.log 2>&1
+
+# Weekly Code Audit: Monday 10:00 UTC
+0 10 * * 1 /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/maintenance/automation-suite.sh weekly-code >> /tmp/titane-maintenance-weekly-code.log 2>&1
+
+# Weekly Docs Audit: Wednesday 14:00 UTC
+0 14 * * 3 /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/maintenance/automation-suite.sh weekly-docs >> /tmp/titane-maintenance-weekly-docs.log 2>&1
+
+# Monthly Infra Review: 1st day of month 09:00 UTC
+0 9 1 * * /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/maintenance/automation-suite.sh monthly >> /tmp/titane-maintenance-monthly.log 2>&1
