@@ -347,8 +347,90 @@ pnpm list --depth=0 | wc -l
 
 ---
 
-**Ready for Phase 2**: Code splitting implementation  
-**Estimated Impact**: 15-20% bundle size reduction (lazy-loading heavy modules)  
-**Risk Level**: Low (dynamic imports with Suspense boundaries)
+## 📋 PHASE 2: CODE SPLITTING ANALYSIS 🔄
+
+**Status**: Analysis in progress (2026-01-30)
+
+### Already Optimized ✅
+
+**Good News**: Major lazy-loading already implemented in TitanePage.tsx!
+
+1. **react-chrono** (Timeline) - ✅ LAZY LOADED
+   - `LazyEvolutionTimeline` using `React.lazy()`
+   - Used in Evolution tab only
+
+2. **react-d3-tree** (Tree visualization) - ✅ LAZY LOADED
+   - `LazyMemoryTreeViewer` using `React.lazy()`
+   - Used in Memory tab only
+
+3. **recharts** (Charts) - ✅ LAZY LOADED
+   - `LazyVisionMetricsChart` using `React.lazy()`
+   - Used in Vision tab only
+
+4. **@xenova/transformers** (192K) - ✅ DYNAMIC IMPORT
+   - Already using `await import('@xenova/transformers')` in:
+     - `LocalEmbeddingGenerator.ts` (line 101)
+     - `LocalEmbeddingGenerator.ts` (line 97)
+     - `index.ts` (line 200)
+
+5. **react-chartjs-2** - ✅ DYNAMIC IMPORT
+   - `MetricsDisplay.tsx` uses dynamic import
+
+### Remaining Optimization Targets
+
+**Top Priority** (High Impact, Low Risk):
+
+1. **service-ai bundle** (232K) - ANALYZE
+   - Largest service bundle
+   - Check if AI providers can be split per-provider
+   - Consider lazy-loading OpenAI/Anthropic/GitHub models separately
+
+2. **onnxruntime-web** (536K) - EVALUATE
+   - Largest single dependency
+   - Used for neural network inference
+   - Check if can be lazy-loaded only when AI features activated
+
+3. **vendor-utils** (308K) - INVESTIGATE
+   - Generic utilities bundle
+   - May contain unused exports (tree-shaking opportunity)
+   - Analyze with bundle visualizer
+
+4. **DOMPurify** (in services-common) - KEEP AS-IS
+   - Used in security layer (Sanitizer.ts)
+   - Critical path, used globally
+   - Not worth lazy-loading (small, essential)
+
+5. **Three.js** - PARTIALLY OPTIMIZED
+   - `ThreeJSLazyLoader` exists but not fully adopted
+   - Some files still import `three` directly:
+     - `AudioVisualSyncEngine.ts`
+     - `VoiceReactionSystem.ts`
+     - `BodyGestureFluidityEngine.ts`
+     - `PBRMaterialSystem.ts`
+   - **Action**: Convert remaining eager imports to use `ThreeJSLazyLoader`
+
+---
+
+### Phase 2 Strategy
+
+**Quick Wins** (30-45 min):
+1. Audit `service-ai` bundle composition
+2. Check for unused exports in `vendor-utils`
+3. Convert remaining Three.js eager imports to lazy loader
+
+**Medium Effort** (1-2 hours):
+1. Split AI provider modules per-provider (OpenAI, Anthropic, GitHub)
+2. Implement lazy-loading strategy for ONNX runtime
+3. Measure impact with bundle analyzer
+
+**Expected Impact**:
+- Quick wins: -5-8% bundle size
+- Full Phase 2: -15-20% bundle size (if AI providers split successfully)
+
+---
+
+**Ready for Phase 2**: Analysis complete ✅  
+**Next Action**: Deep dive into `service-ai` bundle composition  
+**Tool**: Open `dist/stats.html` in browser for interactive analysis
 
 ---
