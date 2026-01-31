@@ -9,7 +9,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import {
   IdentityMatrix,
   DEFAULT_IDENTITY_MATRIX,
@@ -136,9 +136,15 @@ export function useIdentityValue(valueId: string) {
 export function useIdentityCluster(clusterIds: string[]) {
   const { matrix, loading } = useIdentityMatrix();
 
-  if (loading) return [];
+  // ═══ MEMOIZED CLUSTER FILTERING (v33.0.0 Phase 2 optimization) ═══
+  // Previously recalculated on every render when clusterIds changed
+  // Now memoized to avoid redundant .filter() operations
+  const filteredValues = useMemo(() => {
+    if (loading) return [];
+    return matrix.values.filter(v => clusterIds.includes(v.id));
+  }, [matrix.values, clusterIds, loading]);
 
-  return matrix.values.filter(v => clusterIds.includes(v.id));
+  return filteredValues;
 }
 
 /**
@@ -158,7 +164,13 @@ export function useIdentityCluster(clusterIds: string[]) {
 export function useTopIdentityValues(count: number = 5) {
   const { matrix, loading } = useIdentityMatrix();
 
-  if (loading) return [];
+  // ═══ MEMOIZED TOP VALUES SORTING (v33.0.0 Phase 2 optimization) ═══
+  // Previously recalculated on every render when count changed
+  // Now memoized to avoid redundant sort + slice operations
+  const topValues = useMemo(() => {
+    if (loading) return [];
+    return [...matrix.values].sort((a, b) => b.weight - a.weight).slice(0, count);
+  }, [matrix.values, count, loading]);
 
-  return [...matrix.values].sort((a, b) => b.weight - a.weight).slice(0, count);
+  return topValues;
 }
