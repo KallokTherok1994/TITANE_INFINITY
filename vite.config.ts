@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
+import { visualizer } from 'rollup-plugin-visualizer';
 import type { Plugin, ResolvedConfig } from 'vite';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
@@ -122,13 +123,14 @@ export default defineConfig({
       },
     }),
     tsconfigPaths(), // Auto-sync avec tsconfig.json paths
-    // visualizer({
-    //   open: false,
-    //   filename: 'dist/stats.html',
-    //   template: 'sunburst',
-    // }),
-    // Ajout d'une alternative potentielle ici
-    // Exemple : bundle-analyzer ou autre plugin compatible
+    // 🚀 v34.0.0: Bundle analyzer for dependency visualization
+    visualizer({
+      open: false,
+      filename: 'dist/stats.html',
+      template: 'sunburst',
+      gzipSize: true,
+      brotliSize: true,
+    }),
     // P2-A: Brotli compression (-15% vs gzip)
     viteCompression({
       verbose: true,

@@ -16,9 +16,6 @@ interface AuraControlPanelProps {
 }
 
 export const AuraControlPanel: React.FC<AuraControlPanelProps> = ({
-  intensity,
-  onChange,
-}) => {
   position = 'bottom-right',
   defaultOpen = false,
 }) => {
