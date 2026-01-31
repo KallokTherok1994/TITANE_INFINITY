@@ -181,6 +181,7 @@ const loadCameraIntegration = async () => {
 
 // ✨ v∞.24.2 - Production-Safe Logging
 import { chatLogger } from '@/utils/chatLogger';
+import { getOrLoadProvider } from '@/services/ai/AIProviderLazyLoader';
 
 // ✨ v24.3.0 - Cloud Providers Availability Check
 import { UI_TIMEOUTS, getAdaptiveUITimeout } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
@@ -189,18 +190,21 @@ let _cloudProvidersPromise: Promise<{
   openaiProvider: { isAvailable: () => Promise<boolean> };
   geminiProvider: { isAvailable: () => Promise<boolean> };
   claudeProvider: { isAvailable: () => Promise<boolean> };
+  copilotProvider: { isAvailable: () => Promise<boolean> };
 }> | null = null;
 
 const loadCloudProviders = async () => {
   if (!_cloudProvidersPromise) {
     _cloudProvidersPromise = Promise.all([
-      import('@/services/ai/providers/openai'),
-      import('@/services/ai/providers/gemini'),
-      import('@/services/ai/providers/claude'),
-    ]).then(([openai, gemini, claude]) => ({
-      openaiProvider: openai.openaiProvider,
-      geminiProvider: gemini.geminiProvider,
-      claudeProvider: claude.claudeProvider,
+      getOrLoadProvider('openai'),
+      getOrLoadProvider('gemini'),
+      getOrLoadProvider('claude'),
+      getOrLoadProvider('copilot'),
+    ]).then(([openaiProvider, geminiProvider, claudeProvider, copilotProvider]) => ({
+      openaiProvider,
+      geminiProvider,
+      claudeProvider,
+      copilotProvider,
     }));
   }
   return _cloudProvidersPromise;
@@ -550,6 +554,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     openai: false,
     gemini: false,
     anthropic: false,
+    copilot: false,
   });
 
   const updatePreferredProvider = useCallback((provider: ProviderPreference) => {
@@ -621,7 +626,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
       checkInProgress = true;
       try {
-        const { openaiProvider, geminiProvider, claudeProvider } =
+        const { openaiProvider, geminiProvider, claudeProvider, copilotProvider } =
           await loadCloudProviders();
 
         // ✨ v24.3.7: Use Promise.allSettled with individual timeouts - no single slow provider blocks others
@@ -629,11 +634,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           withTimeout(openaiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
           withTimeout(geminiProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
           withTimeout(claudeProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
+          withTimeout(copilotProvider.isAvailable(), PROVIDER_CHECK_TIMEOUT, false),
         ]);
 
         const result0 = results[0];
         const result1 = results[1];
         const result2 = results[2];
+        const result3 = results[3];
 
         const openaiAvailable =
           result0 && result0.status === 'fulfilled' ? result0.value : false;
@@ -641,18 +648,22 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           result1 && result1.status === 'fulfilled' ? result1.value : false;
         const claudeAvailable =
           result2 && result2.status === 'fulfilled' ? result2.value : false;
+        const copilotAvailable =
+          result3 && result3.status === 'fulfilled' ? result3.value : false;
 
         setProviderReadiness(prev => ({
           ...prev,
           openai: openaiAvailable,
           gemini: geminiAvailable,
           anthropic: claudeAvailable,
+          copilot: copilotAvailable,
         }));
 
         chatLogger.debug('Provider readiness check (v24.3.7 optimized)', {
           openai: openaiAvailable,
           gemini: geminiAvailable,
           anthropic: claudeAvailable,
+          copilot: copilotAvailable,
           timedOut: results.filter(r => r.status === 'rejected').length,
         });
       } finally {

@@ -5,7 +5,7 @@
  */
 
 import { useMemoryStore } from './memoryStore';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 
 // ═══════════════════════════════════════════════════════════════
 // PRIMITIVE SELECTORS (Single Value)
@@ -29,11 +29,10 @@ export const useMemoryError = () => useMemoryStore(state => state.error);
  */
 export const useMemoryLoadingState = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       loading: state.loading,
       error: state.error,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -42,11 +41,10 @@ export const useMemoryLoadingState = () =>
  */
 export const useSnapshotsState = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       snapshots: state.snapshots,
       count: state.snapshots.length,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -55,11 +53,10 @@ export const useSnapshotsState = () =>
  */
 export const useLogsState = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       logs: state.logs,
       count: state.logs.length,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -68,11 +65,10 @@ export const useLogsState = () =>
  */
 export const useTimelineState = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       timeline: state.timeline,
       count: state.timeline.length,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════
@@ -85,13 +81,12 @@ export const useTimelineState = () =>
  */
 export const useMemoryActions = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       fetchState: state.fetchState,
       fetchLogs: state.fetchLogs,
       fetchTelemetry: state.fetchTelemetry,
       reset: state.reset,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -100,10 +95,9 @@ export const useMemoryActions = () =>
  */
 export const useSnapshotActions = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       createSnapshot: state.createSnapshot,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -112,10 +106,9 @@ export const useSnapshotActions = () =>
  */
 export const useLogActions = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       addLog: state.addLog,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -124,10 +117,9 @@ export const useLogActions = () =>
  */
 export const useTimelineActions = () =>
   useMemoryStore(
-    state => ({
+    useShallow(state => ({
       addTimelineEvent: state.addTimelineEvent,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════

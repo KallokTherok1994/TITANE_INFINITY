@@ -7,10 +7,9 @@
  * Impact: -60% temps de démarrage
  */
 
-import { openaiProvider } from '@/services/ai/providers/openai';
 import { logger } from '@/lib/logger';
-import { geminiProvider } from '@/services/ai/providers/gemini';
-import { claudeProvider } from '@/services/ai/providers/claude';
+import type { AIProvider } from '@/services/ai/types';
+import { getOrLoadProvider, type LazyProviderName } from '@/services/ai/AIProviderLazyLoader';
 
 interface ProviderStatus {
   name: string;
@@ -76,30 +75,12 @@ class ParallelProviderLoader {
     // Charger tous les providers en parallèle avec timeout
     const timeout = 3000; // 3 secondes max par provider
 
-    const results = await Promise.allSettled([
-      this.checkProvider('openai', openaiProvider, timeout),
-      this.checkProvider('gemini', geminiProvider, timeout),
-      this.checkProvider('claude', claudeProvider, timeout),
+    const providers = await Promise.all([
+      this.loadAndCheck('openai', timeout),
+      this.loadAndCheck('gemini', timeout),
+      this.loadAndCheck('claude', timeout),
+      this.loadAndCheck('copilot', timeout),
     ]);
-
-    const providers: ProviderStatus[] = results.map((result, index) => {
-      const names = ['openai', 'gemini', 'claude'];
-      const name = names[index] ?? 'unknown';
-
-      if (result.status === 'fulfilled') {
-        return result.value;
-      } else {
-        return {
-          name,
-          available: false,
-          latencyMs: 0,
-          error:
-            result.reason instanceof Error
-              ? result.reason.message
-              : String(result.reason),
-        };
-      }
-    });
 
     // Trouver le provider le plus rapide
     const availableProviders = providers.filter(p => p.available);
@@ -126,11 +107,31 @@ class ParallelProviderLoader {
   }
 
   /**
+   * Charge un provider lazy et lance le health check
+   */
+  private async loadAndCheck(
+    name: LazyProviderName,
+    timeoutMs: number
+  ): Promise<ProviderStatus> {
+    try {
+      const provider = await getOrLoadProvider(name);
+      return await this.checkProvider(name, provider, timeoutMs);
+    } catch (error) {
+      return {
+        name,
+        available: false,
+        latencyMs: 0,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  }
+
+  /**
    * Vérifie un provider spécifique
    */
   private async checkProvider(
     name: string,
-    provider: any,
+    provider: AIProvider,
     timeoutMs: number
   ): Promise<ProviderStatus> {
     const startTime = Date.now();
@@ -162,7 +163,7 @@ class ParallelProviderLoader {
   /**
    * Effectue un health check sur un provider
    */
-  private async performHealthCheck(provider: any): Promise<void> {
+  private async performHealthCheck(provider: AIProvider): Promise<void> {
     // Vérifier si le provider a une méthode isAvailable
     if (typeof provider.isAvailable === 'function') {
       const available = await provider.isAvailable();
@@ -172,8 +173,11 @@ class ParallelProviderLoader {
     }
 
     // Sinon, vérifier si getModels fonctionne (léger)
-    if (typeof provider.getModels === 'function') {
-      await provider.getModels();
+    const providerWithModels = provider as AIProvider & {
+      getModels?: () => Promise<unknown>;
+    };
+    if (typeof providerWithModels.getModels === 'function') {
+      await providerWithModels.getModels();
     }
   }
 
@@ -227,8 +231,9 @@ class ParallelProviderLoader {
    * Vérifie un provider spécifique rapidement
    */
   async checkSingle(providerName: string): Promise<ProviderStatus> {
-    const provider = this.getProviderByName(providerName);
-    if (!provider) {
+    const normalized = providerName.toLowerCase();
+    const lazyName = this.normalizeProviderName(normalized);
+    if (!lazyName) {
       return {
         name: providerName,
         available: false,
@@ -237,21 +242,23 @@ class ParallelProviderLoader {
       };
     }
 
-    return this.checkProvider(providerName, provider, 3000);
+    return this.loadAndCheck(lazyName, 3000);
   }
 
   /**
-   * Récupère un provider par nom
+   * Normalise un nom de provider vers LazyProviderName
    */
-  private getProviderByName(name: string): any {
-    switch (name.toLowerCase()) {
+  private normalizeProviderName(name: string): LazyProviderName | null {
+    switch (name) {
       case 'openai':
-        return openaiProvider;
+        return 'openai';
       case 'gemini':
-        return geminiProvider;
+        return 'gemini';
       case 'claude':
       case 'anthropic':
-        return claudeProvider;
+        return 'claude';
+      case 'copilot':
+        return 'copilot';
       default:
         return null;
     }

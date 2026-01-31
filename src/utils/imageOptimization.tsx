@@ -17,7 +17,8 @@
  *   }, []);
  */
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { FC, RefObject } from 'react';
 
 /* ────────────────────────────────────────────────────────────
    1. LAZY-LOADING WITH INTERSECTION OBSERVER
@@ -32,7 +33,9 @@ export const useImageLazyLoad = (options?: IntersectionObserverInit) => {
   const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
       if (entry.isIntersecting) {
         setIsVisible(true);
         observer.unobserve(entry.target);
@@ -93,7 +96,7 @@ export const preloadImage = (src: string, sizes?: string): Promise<void> => {
  * @param sources - Array of image URLs
  */
 export const preloadImages = async (sources: string[]): Promise<void> => {
-  await Promise.all(sources.map(preloadImage));
+  await Promise.all(sources.map((src) => preloadImage(src)));
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -161,14 +164,16 @@ export const preloadComponentsIdle = (paths: string[]): void => {
  * Useful for triggering data loading, analytics, etc.
  */
 export const useIntersectionObserver = (
-  ref: React.RefObject<HTMLElement>,
+  ref: RefObject<HTMLElement>,
   callback?: (isVisible: boolean) => void,
   options?: IntersectionObserverInit
 ) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver(([entry]) => {
+    const observer = new IntersectionObserver((entries) => {
+      const entry = entries[0];
+      if (!entry) return;
       setIsVisible(entry.isIntersecting);
       callback?.(entry.isIntersecting);
     }, {
@@ -231,11 +236,6 @@ export const useImagePerformance = (src: string) => {
    7. LAZY COMPONENT WITH FALLBACK
    ──────────────────────────────────────────────────────────── */
 
-/**
- * React component for lazy-loading images with built-in skeleton
- */
-import React, { Suspense, lazy } from 'react';
-
 interface LazyImageProps {
   src: string;
   alt: string;
@@ -245,11 +245,11 @@ interface LazyImageProps {
   loading?: 'lazy' | 'eager';
 }
 
-const SkeletonImage: React.FC<{ className?: string }> = ({ className }) => (
-  <div className={`loading-skeleton ${className}`} />
+const SkeletonImage: FC<{ className?: string }> = ({ className }) => (
+  <div className={`loading-skeleton ${className ?? ''}`} />
 );
 
-export const LazyImage: React.FC<LazyImageProps> = ({
+export const LazyImage: FC<LazyImageProps> = ({
   src,
   alt,
   placeholder,
@@ -278,5 +278,5 @@ export const LazyImage: React.FC<LazyImageProps> = ({
 };
 
 /* ────────────────────────────────────────────────────────────
-   END - imageOptimization.ts
+   END - imageOptimization.tsx
    ──────────────────────────────────────────────────────────── */
