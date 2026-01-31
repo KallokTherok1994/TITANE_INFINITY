@@ -6,6 +6,8 @@
   Date: 2026-01-31
   Purpose: Reduce Font Layout Shift and enable text rendering immediately
   Strategy: System fonts first, web fonts as enhancement (not blocker)
+  
+  NOTE: Google Fonts @import is managed in index.css for proper PostCSS ordering
 */
 
 /* ────────────────────────────────────────────────────────────
@@ -23,19 +25,8 @@ pre {
 }
 
 /* ────────────────────────────────────────────────────────────
-   2. GOOGLE FONTS (Optional web fonts - non-blocking)
+   2. OPTIONAL WEB FONT USAGE (See notes above)
    ──────────────────────────────────────────────────────────── */
-
-/* 
-  Optional: Import from Google Fonts with font-display: swap
-  This allows text to render immediately with system font,
-  then swap to web font when loaded.
-  
-  Recommendation: Use sparingly for branding only (max 2-3 fonts).
-  Keep total font requests < 3 for best performance.
-*/
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* 
   If you want to use Inter font as an enhancement:
