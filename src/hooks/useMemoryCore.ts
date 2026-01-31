@@ -7,7 +7,7 @@
  */
 
 // TITANE∞ v15 - Memory Core Hook
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { memoryService } from '../services/api';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
@@ -18,6 +18,10 @@ interface MemoryState {
   encrypted_count: number;
 }
 
+/**
+ * Normalize memory state with validation and type safety
+ * @deprecated Use memoizedNormalizeMemoryState from useMemoryCore hook for v33.0.0 optimization
+ */
 const normalizeMemoryState = (
   state: Partial<MemoryState> | null | undefined
 ): MemoryState => {
@@ -62,12 +66,48 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // ═══ MEMOIZED NORMALIZATION (v33.0.0 Phase 2 optimization) ═══
+  // Previously recalculated on every loadEntries/getMemoryState call
+  // Now memoized to avoid redundant .map() + .filter() operations
+
+  const memoizedNormalizeMemoryState = useCallback(
+    (state: Partial<MemoryState> | null | undefined): MemoryState => {
+      const rawEntries = Array.isArray(state?.entries) ? state.entries : [];
+      const entries = rawEntries
+        .map(item => {
+          if (!item || typeof item !== 'object') {
+            return null;
+          }
+          const candidate = item as Partial<MemoryEntry>;
+          if (typeof candidate.id === 'string' && typeof candidate.content === 'string') {
+            return item as MemoryEntry;
+          }
+          return null;
+        })
+        .filter((item): item is MemoryEntry => item !== null);
+      const encryptedCount = entries.filter(item => {
+        if (!item) return false;
+        return Boolean(item.encrypted);
+      }).length;
+
+      return {
+        entries,
+        total: typeof state?.total === 'number' ? state.total : entries.length,
+        encrypted_count:
+          typeof state?.encrypted_count === 'number'
+            ? state.encrypted_count
+            : encryptedCount,
+      };
+    },
+    []
+  );
+
   const loadEntries = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
-      const normalized = normalizeMemoryState(state);
+      const normalized = memoizedNormalizeMemoryState(state);
       setEntries(normalized.entries);
       return normalized;
     } catch (err) {
@@ -78,7 +118,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [memoizedNormalizeMemoryState]);
 
   const saveEntry = useCallback(
     async (content: string) => {
@@ -124,7 +164,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
   const getMemoryState = useCallback(async () => {
     try {
       const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
-      const normalized = normalizeMemoryState(state);
+      const normalized = memoizedNormalizeMemoryState(state);
       setEntries(normalized.entries);
       return normalized;
     } catch (err) {
@@ -132,7 +172,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
       setError(message);
       throw err;
     }
-  }, []);
+  }, [memoizedNormalizeMemoryState]);
 
   return {
     entries,
