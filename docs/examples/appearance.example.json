@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "TITANE∞ Appearance Configuration Example",
+  "description": "Configuration de l'apparence et du thème de l'interface",
+  "version": "27.0.0",
+  
+  "theme": {
+    "mode": "dark",
+    "options": ["light", "dark", "auto"],
+    "autoSwitchTime": {
+      "enabled": false,
+      "lightModeStart": "07:00",
+      "darkModeStart": "19:00"
+    }
+  },
+  
+  "colors": {
+    "primary": "#3B82F6",
+    "secondary": "#8B5CF6",
+    "accent": "#10B981",
+    "background": {
+      "light": "#FFFFFF",
+      "dark": "#0F172A"
+    },
+    "surface": {
+      "light": "#F8FAFC",
+      "dark": "#1E293B"
+    },
+    "text": {
+      "primary": {
+        "light": "#0F172A",
+        "dark": "#F1F5F9"
+      },
+      "secondary": {
+        "light": "#475569",
+        "dark": "#94A3B8"
+      }
+    },
+    "border": {
+      "light": "#E2E8F0",
+      "dark": "#334155"
+    },
+    "success": "#10B981",
+    "warning": "#F59E0B",
+    "error": "#EF4444",
+    "info": "#3B82F6"
+  },
+  
+  "typography": {
+    "fontFamily": {
+      "sans": "Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+      "mono": "JetBrains Mono, Menlo, Monaco, Courier New, monospace"
+    },
+    "fontSize": {
+      "base": "14px",
+      "options": ["12px", "14px", "16px", "18px", "20px"],
+      "scale": 1.0
+    },
+    "lineHeight": {
+      "base": 1.5,
+      "tight": 1.25,
+      "relaxed": 1.75
+    },
+    "fontWeight": {
+      "normal": 400,
+      "medium": 500,
+      "semibold": 600,
+      "bold": 700
+    }
+  },
+  
+  "layout": {
+    "compactMode": false,
+    "sidebarWidth": {
+      "default": 280,
+      "min": 200,
+      "max": 400
+    },
+    "chatWidth": {
+      "max": 800,
+      "centered": true
+    },
+    "spacing": {
+      "base": 16,
+      "compact": 8,
+      "comfortable": 24
+    },
+    "borderRadius": {
+      "small": 4,
+      "medium": 8,
+      "large": 12,
+      "full": 9999
+    }
+  },
+  
+  "animations": {
+    "enabled": true,
+    "duration": {
+      "fast": 150,
+      "normal": 250,
+      "slow": 400
+    },
+    "reducedMotion": false
+  },
+  
+  "chat": {
+    "bubbleStyle": "rounded",
+    "options": ["rounded", "square", "minimal"],
+    "messagePadding": 16,
+    "messageSpacing": 12,
+    "showTimestamps": true,
+    "timestampFormat": "HH:mm",
+    "showAvatars": true,
+    "avatarSize": 40,
+    "codeHighlighting": {
+      "enabled": true,
+      "theme": "github-dark",
+      "options": ["github-dark", "monokai", "dracula", "nord", "one-dark"],
+      "showLineNumbers": true,
+      "copyButton": true
+    },
+    "markdown": {
+      "enabled": true,
+      "renderTables": true,
+      "renderLists": true,
+      "renderLinks": true,
+      "renderImages": true
+    }
+  },
+  
+  "sidebar": {
+    "collapsible": true,
+    "defaultCollapsed": false,
+    "iconsOnly": false,
+    "showLabels": true,
+    "groupSeparators": true
+  },
+  
+  "accessibility": {
+    "highContrast": false,
+    "focusIndicator": true,
+    "keyboardNavigation": true,
+    "screenReaderOptimizations": true,
+    "fontSize": {
+      "minimum": 12,
+      "maximum": 24,
+      "step": 2
+    }
+  },
+  
+  "advanced": {
+    "customCSS": {
+      "enabled": false,
+      "path": "./custom/styles.css"
+    },
+    "transparency": {
+      "enabled": false,
+      "level": 0.95
+    },
+    "glassmorphism": false,
+    "shadows": true,
+    "gradients": true
+  }
+}
