@@ -26,7 +26,6 @@ import {
 } from 'react-router-dom';
 import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
-import { useSingularityStore } from './core/state/SingularityState';
 import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';

@@ -5,7 +5,7 @@
  */
 
 import { useSingularityState } from './SingularityState';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import type { EngineName, EngineDataMap } from './SingularityState';
 
 // ═══════════════════════════════════════════════════════════════
@@ -24,7 +24,8 @@ export const useFPS = () => useSingularityState(state => state.ui.fps);
  * Complete UI state (shallow equality)
  * Use when component needs multiple UI values
  */
-export const useUIState = () => useSingularityState(state => state.ui, shallow);
+export const useUIState = () =>
+  useSingularityState(useShallow(state => state.ui));
 
 // ═══════════════════════════════════════════════════════════════
 // AI STATE SELECTORS
@@ -39,7 +40,8 @@ export const useFallbackActive = () => useSingularityState(state => state.ai.fal
  * Complete AI state (shallow equality)
  * Use when component needs multiple AI values
  */
-export const useAIState = () => useSingularityState(state => state.ai, shallow);
+export const useAIState = () =>
+  useSingularityState(useShallow(state => state.ai));
 
 // ═══════════════════════════════════════════════════════════════
 // META-MODE STATE SELECTORS
@@ -58,7 +60,7 @@ export const useMetaModeLastUpdate = () =>
  * Use when component needs multiple meta-mode values
  */
 export const useMetaModeState = () =>
-  useSingularityState(state => state.metaMode, shallow);
+  useSingularityState(useShallow(state => state.metaMode));
 
 // ═══════════════════════════════════════════════════════════════
 // AVATAR DISPLAY STATE SELECTORS
@@ -91,7 +93,8 @@ export const useHyperDepthEngine = () =>
  * Complete engines state (shallow equality)
  * Use when component needs multiple engine states
  */
-export const useEnginesState = () => useSingularityState(state => state.engines, shallow);
+export const useEnginesState = () =>
+  useSingularityState(useShallow(state => state.engines));
 
 // ═══════════════════════════════════════════════════════════════
 // ENGINES DATA SELECTORS (Type-Safe)
@@ -113,7 +116,9 @@ export const useEngineLoading = (engine: EngineName) =>
  * Generic engine state selector (data + loading, shallow equality)
  */
 export const useEngineState = <T extends EngineName>(engine: T) =>
-  useSingularityState(state => state.enginesData[engine], shallow) as {
+  useSingularityState(
+    useShallow(state => state.enginesData[engine])
+  ) as {
     data: EngineDataMap[T] | null;
     loading: boolean;
   };
@@ -152,7 +157,8 @@ export const useSingularitySidebarCollapsed = () =>
  * Complete context state (shallow equality)
  * Use when component needs multiple context values
  */
-export const useContextState = () => useSingularityState(state => state.context, shallow);
+export const useContextState = () =>
+  useSingularityState(useShallow(state => state.context));
 
 // ═══════════════════════════════════════════════════════════════
 // GLOBAL HEALTH SELECTORS
@@ -169,15 +175,14 @@ export const useGlobalHealth = () => useSingularityState(state => state.globalHe
  */
 export const useUIActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setMode: state.setMode,
       setTheme: state.setTheme,
       toggleSound: state.toggleSound,
       toggleMic: state.toggleMic,
       setGlowIntensity: state.setGlowIntensity,
       toggleMotion: state.toggleMotion,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -185,12 +190,11 @@ export const useUIActions = () =>
  */
 export const useAIActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setAIModel: state.setAIModel,
       setAIStatus: state.setAIStatus,
       setAIError: state.setAIError,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -198,11 +202,10 @@ export const useAIActions = () =>
  */
 export const useMetaModeActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setMetaMode: state.setMetaMode,
       setMetaModeTransition: state.setMetaModeTransition,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -210,11 +213,10 @@ export const useMetaModeActions = () =>
  */
 export const useAvatarDisplayActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setAvatarDisplay: state.setAvatarDisplay,
       updateAvatarDisplay: state.updateAvatarDisplay,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -222,12 +224,11 @@ export const useAvatarDisplayActions = () =>
  */
 export const useEngineActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       updateEngine: state.updateEngine,
       setEngineData: state.setEngineData,
       setEngineLoading: state.setEngineLoading,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -235,14 +236,13 @@ export const useEngineActions = () =>
  */
 export const useContextActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setPage: state.setPage,
       setFocus: state.setFocus,
       setFullscreen: state.setFullscreen,
       setSidebarCollapsed: state.setSidebarCollapsed,
       toggleSidebar: state.toggleSidebar,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -250,10 +250,9 @@ export const useContextActions = () =>
  */
 export const useGlobalHealthActions = () =>
   useSingularityState(
-    state => ({
+    useShallow(state => ({
       setGlobalHealth: state.setGlobalHealth,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════
@@ -264,7 +263,9 @@ export const useGlobalHealthActions = () =>
  * Is AI active (status === 'active')
  */
 export const useIsAIActive = () =>
-  useSingularityState(state => state.ai.status === 'active');
+  useSingularityState(state =>
+    ['processing', 'thinking', 'streaming'].includes(state.ai.status)
+  );
 
 /**
  * Has AI error (error !== null)

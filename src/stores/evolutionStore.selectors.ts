@@ -4,7 +4,7 @@
  * Prevents unnecessary rerenders by selecting only needed slices
  */
 
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 import { useEvolutionStore } from './evolutionStore';
 
 // ═══════════════════════════════════════════════════════════════
@@ -24,14 +24,13 @@ export const useEvolutionLoading = () => useEvolutionStore(state => state.loadin
 
 export const useEvolutionSnapshot = () =>
   useEvolutionStore(
-    state => ({
+    useShallow(state => ({
       state: state.state,
       lastReport: state.lastReport,
       health: state.health,
       running: state.running,
       loading: state.loading,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════
@@ -40,11 +39,10 @@ export const useEvolutionSnapshot = () =>
 
 export const useEvolutionActions = () =>
   useEvolutionStore(
-    state => ({
+    useShallow(state => ({
       fetchState: state.fetchState,
       runEvolution: state.runEvolution,
       quickHealthCheck: state.quickHealthCheck,
       reset: state.reset,
-    }),
-    shallow
+    }))
   );

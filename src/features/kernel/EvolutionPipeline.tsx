@@ -13,6 +13,11 @@ import {
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import { Button } from '../../ui/Button';
+import type {
+  Issue,
+  Recommendation,
+  EvolutionHistory,
+} from '../../services/tauri/backend-v17.2.types';
 
 export function EvolutionPipeline() {
   const { state, lastReport, health, running, loading } = useEvolutionSnapshot();
@@ -137,7 +142,7 @@ export function EvolutionPipeline() {
               </div>
             ) : (
               <div className="space-y-3">
-                {lastReport.issues.map((issue, idx) => (
+                {lastReport.issues.map((issue: Issue, idx: number) => (
                   <div key={idx} className="p-4 bg-gray-800 rounded-lg">
                     <div className="flex items-start gap-3">
                       <Badge color={getSeverityColor(issue.severity)} size="sm">
@@ -170,8 +175,8 @@ export function EvolutionPipeline() {
             ) : (
               <div className="space-y-3">
                 {lastReport.recommendations
-                  .sort((a, b) => b.priority - a.priority)
-                  .map((rec, idx) => (
+                  .sort((a: Recommendation, b: Recommendation) => b.priority - a.priority)
+                  .map((rec: Recommendation, idx: number) => (
                     <div
                       key={idx}
                       className="p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg"
@@ -250,7 +255,7 @@ export function EvolutionPipeline() {
             {state.history
               .slice(-10)
               .reverse()
-              .map((entry, idx) => (
+              .map((entry: EvolutionHistory, idx: number) => (
                 <div
                   key={idx}
                   className="flex items-center justify-between p-3 bg-gray-800 rounded-lg"

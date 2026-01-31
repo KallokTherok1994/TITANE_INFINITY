@@ -26,11 +26,9 @@ import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
 import { titaneLocalProvider } from './providers/titaneLocal'; // ← PREMIER (noyau infaillible)
 import { tauriChatProvider } from './providers/tauriChat';
-import { geminiProvider } from './providers/gemini';
-import { openaiProvider } from './providers/openai'; // ← NOUVEAU: OpenAI GPT
-import { claudeProvider } from './providers/claude'; // ← NOUVEAU: Anthropic Claude
-import { copilotProvider } from './providers/copilot'; // ← NOUVEAU: GitHub Copilot
 import { ollamaProvider } from './providers/ollama';
+// v37.0.0: Cloud providers lazy-loaded on first use (OpenAI, Claude, Gemini, Copilot)
+import { getOrLoadProvider, type LazyProviderName } from './AIProviderLazyLoader';
 import { autoHealEngine } from './autoHealEngine';
 import { metricsEngine } from './metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
@@ -111,15 +109,21 @@ class AIOrchestrator {
   // ═══ v24.3: CLOUD FIRST - Mode EN LIGNE prioritaire ═══
   // Ordre: Cloud APIs (qualité) → Backend Rust → Ollama (mémoire locale) → Local (fallback)
   // IMPORTANT: APIs cloud = réponses de meilleure qualité, Ollama = mémoire persistante
-  private providers = [
-    claudeProvider, // 🥇 #1 Anthropic Claude (meilleur raisonnement)
-    openaiProvider, // 🥈 #2 OpenAI GPT (polyvalent, rapide)
-    copilotProvider, // 🆕 #2.5 GitHub Copilot (OpenAI-compatible, GitHub ecosystem)
-    geminiProvider, // 🥉 #3 Google Gemini (multimodal)
-    tauriChatProvider, // #4 Backend Rust (cascade interne)
-    ollamaProvider, // #5 Ollama (mémoire locale + analyse permanente)
-    titaneLocalProvider, // #6 Fallback local (noyau infaillible)
+  // v37.0.0: Eager providers (local-first, always available)
+  private eagerProviders = [
+    tauriChatProvider, // #1 Backend Rust (cascade interne)
+    ollamaProvider, // #2 Ollama (mémoire locale + analyse permanente)
+    titaneLocalProvider, // #3 Fallback local (noyau infaillible)
   ];
+
+  // v37.0.0: Lazy providers (cloud, loaded on demand)
+  private lazyProviderNames: LazyProviderName[] = ['claude', 'openai', 'copilot', 'gemini'];
+  private loadedProviders: Map<string, AIProvider> = new Map();
+
+  // Combined providers list (for compatibility)
+  private get providers(): AIProvider[] {
+    return [...this.eagerProviders, ...Array.from(this.loadedProviders.values())];
+  }
 
   private providerStats: Map<string, ProviderStats> = new Map();
   private orchestratorMetrics: OrchestratorMetrics = {
@@ -168,7 +172,9 @@ class AIOrchestrator {
 
   constructor() {
     // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
-    this.providers = this.providers.filter((p): p is AIProvider => Boolean(p));
+    this.eagerProviders = this.eagerProviders.filter(
+      (provider): provider is AIProvider => Boolean(provider)
+    );
     this.initializeProviderStats();
     // En contexte tests (Vitest), on évite tout side-effect à l'import :
     // - warmup (appels provider.isAvailable → secureInvoke)
@@ -287,7 +293,9 @@ class AIOrchestrator {
    */
 
   private initializeProviderStats(): void {
-    this.providers.forEach(provider => {
+    // v37.0.0: Initialize stats for eager providers only
+    // Lazy providers get stats when first loaded
+    this.eagerProviders.forEach(provider => {
       this.providerStats.set(provider.name, {
         name: provider.name,
         totalRequests: 0,
@@ -298,6 +306,21 @@ class AIOrchestrator {
         lastFailure: 0,
         reliability: 100, // Start optimistic
         status: 'healthy',
+      });
+    });
+
+    // Initialize placeholder stats for lazy providers
+    this.lazyProviderNames.forEach(providerName => {
+      this.providerStats.set(providerName, {
+        name: providerName,
+        totalRequests: 0,
+        successCount: 0,
+        failureCount: 0,
+        avgResponseTime: 0,
+        lastUsed: 0,
+        lastFailure: 0,
+        reliability: 100,
+        status: 'offline', // Mark as offline until loaded
       });
     });
   }
@@ -320,7 +343,9 @@ class AIOrchestrator {
       logger.info('Starting provider warmup (v24.3.6 optimized)...');
 
       // Warmup en parallèle avec timeout court pour performance
-      const warmupPromises = this.providers.map(async provider => {
+      // v37.0.0: Warmup only eager providers (local-first)
+      // Lazy providers warmup when first requested
+      const warmupPromises = this.eagerProviders.map(async provider => {
         try {
           const isAvailable = await Promise.race([
             provider.isAvailable(),
@@ -882,7 +907,22 @@ class AIOrchestrator {
 
       for (const providerName of providersToTry) {
         attempts++;
-        const provider = this.providers.find(p => p.name === providerName);
+        // v37.0.0: Lazy-load cloud providers on first use
+        let provider = this.providers.find(p => p.name === providerName);
+        
+        // If not found in eager list, try lazy-loading
+        if (!provider && this.lazyProviderNames.includes(providerName as LazyProviderName)) {
+          try {
+            logger.debug(`📦 Lazy-loading provider: ${providerName}`);
+            provider = await getOrLoadProvider(providerName as LazyProviderName);
+            this.loadedProviders.set(providerName, provider);
+            logger.info(`✅ Provider ${providerName} loaded successfully`);
+          } catch (loadError) {
+            logger.error(`❌ Failed to load provider ${providerName}:`, loadError);
+            continue;
+          }
+        }
+        
         if (!provider) continue;
 
         const stats = this.providerStats.get(providerName);
@@ -1615,7 +1655,9 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
   }> {
     try {
       // v22Ω OPT12: Update provider availability using cache (parallel)
-      const availabilityChecks = this.providers.map(async provider => {
+      // v37.0.0: Check both eager and loaded providers
+      const allProviders = [...this.eagerProviders, ...Array.from(this.loadedProviders.values())];
+      const availabilityChecks = allProviders.map(async provider => {
         try {
           const isAvailable = await this.checkAvailabilityWithCache(provider);
 

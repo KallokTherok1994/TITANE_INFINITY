@@ -5,7 +5,7 @@
  */
 
 import { useUIStore } from './uiStore';
-import { shallow } from 'zustand/shallow';
+import { useShallow } from 'zustand/react/shallow';
 
 // ═══════════════════════════════════════════════════════════════
 // PRIMITIVE SELECTORS (Single Value)
@@ -29,11 +29,10 @@ export const useLoading = () => useUIStore(state => state.loading);
  */
 export const useSidebarState = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       collapsed: state.sidebarCollapsed,
       width: state.sidebarWidth,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -42,11 +41,10 @@ export const useSidebarState = () =>
  */
 export const useModalState = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       open: state.modalOpen,
       content: state.modalContent,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -55,11 +53,10 @@ export const useModalState = () =>
  */
 export const useLoadingState = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       loading: state.loading,
       toastsCount: state.toasts.length,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════
@@ -72,12 +69,11 @@ export const useLoadingState = () =>
  */
 export const useSidebarActions = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       toggleSidebar: state.toggleSidebar,
       setSidebarCollapsed: state.setSidebarCollapsed,
       setSidebarWidth: state.setSidebarWidth,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -86,11 +82,10 @@ export const useSidebarActions = () =>
  */
 export const useModalActions = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       openModal: state.openModal,
       closeModal: state.closeModal,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -99,11 +94,10 @@ export const useModalActions = () =>
  */
 export const useToastActions = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       addToast: state.addToast,
       removeToast: state.removeToast,
-    }),
-    shallow
+    }))
   );
 
 /**
@@ -112,11 +106,10 @@ export const useToastActions = () =>
  */
 export const useExpPanelActions = () =>
   useUIStore(
-    state => ({
+    useShallow(state => ({
       openExpPanel: state.openExpPanel,
       closeExpPanel: state.closeExpPanel,
-    }),
-    shallow
+    }))
   );
 
 // ═══════════════════════════════════════════════════════════════
