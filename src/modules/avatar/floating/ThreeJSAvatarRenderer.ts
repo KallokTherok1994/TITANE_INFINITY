@@ -1,10 +1,10 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//   TITANE∞ v25.3.0 — ENHANCED THREE.JS AVATAR RENDERER
-//   YOLO OPT-1: Lazy-loaded Three.js (-400 KB gzip)
+//   TITANE∞ v36.0.0 — ENHANCED THREE.JS AVATAR RENDERER
+//   v36 OPT: Three.js lazy-loading (-536 KB gzip on initial bundle)
 //   Premium WebGL rendering with PBR, TAA, Bloom, Studio Lighting
-// ═════════════════════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════════════════
 
-import * as THREE from 'three';
+import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 import type { SkeletonSnapshot } from '../fullbody/fullbody_engine';
 import { PBRMaterialSystem } from '../rendering/PBRMaterialSystem';
 import { StudioLightingRig, type AppearanceStyle } from '../rendering/StudioLightingRig';
@@ -12,6 +12,9 @@ import { PostProcessingPipeline } from '../rendering/PostProcessingPipeline';
 
 // Debug flag (disable in production)
 const DEBUG = import.meta.env.DEV;
+
+// Type-only import for Three.js (no runtime cost)
+type THREE = typeof import('three');
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -28,10 +31,10 @@ export interface ThreeJSAvatarRendererOptions {
 }
 
 export interface AvatarMeshes {
-  root: THREE.Group;
-  skeleton: THREE.Skeleton;
-  bones: Map<string, THREE.Bone>;
-  meshes: THREE.SkinnedMesh[];
+  root: any; // THREE.Group (loaded dynamically)
+  skeleton: any; // THREE.Skeleton
+  bones: Map<string, any>; // Map<string, THREE.Bone>
+  meshes: any[]; // THREE.SkinnedMesh[]
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -39,12 +42,14 @@ export interface AvatarMeshes {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export class ThreeJSAvatarRenderer {
-  private renderer: THREE.WebGLRenderer;
-  private scene: THREE.Scene;
-  private camera: THREE.PerspectiveCamera;
+  private THREE: THREE | null = null;
+  private renderer: any = null; // THREE.WebGLRenderer (lazy-loaded)
+  private scene: any = null; // THREE.Scene
+  private camera: any = null; // THREE.PerspectiveCamera
   private avatarMeshes: AvatarMeshes | null = null;
   private animationFrameId: number | null = null;
   private isDisposed: boolean = false;
+  private isInitialized: boolean = false;
 
   // v25.0 Enhanced systems
   private materialSystem: PBRMaterialSystem;
@@ -52,21 +57,52 @@ export class ThreeJSAvatarRenderer {
   private postProcessing: PostProcessingPipeline | null = null;
   private usePostProcessing: boolean = true;
 
-  constructor(canvas: HTMLCanvasElement, options: ThreeJSAvatarRendererOptions = {}) {
-    const {
-      width = 400,
-      height = 600,
-      alpha = true,
-      pixelRatio = window.devicePixelRatio,
-      enablePostProcessing = true,
-      appearanceStyle = 'bureau',
-    } = options;
+  // Canvas and options (stored for async init)
+  private canvas: HTMLCanvasElement;
+  private options: Required<ThreeJSAvatarRendererOptions>;
 
-    this.usePostProcessing = enablePostProcessing;
+  constructor(canvas: HTMLCanvasElement, options: ThreeJSAvatarRendererOptions = {}) {
+    this.canvas = canvas;
+    this.options = {
+      width: options.width ?? 400,
+      height: options.height ?? 600,
+      antialias: options.antialias ?? true,
+      alpha: options.alpha ?? true,
+      pixelRatio: options.pixelRatio ?? window.devicePixelRatio,
+      enablePostProcessing: options.enablePostProcessing ?? true,
+      appearanceStyle: options.appearanceStyle ?? 'bureau',
+    };
+
+    this.usePostProcessing = this.options.enablePostProcessing;
+
+    // v25.0: Initialize systems (non-Three.js dependent for now)
+    this.materialSystem = new PBRMaterialSystem();
+    // Note: lightingRig needs scene, will be initialized in initialize()
+    this.lightingRig = null as any; // Will be set in initialize()
+
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Constructor complete (Three.js not loaded yet)');
+  }
+
+  /**
+   * v36.0.0: Async initialization with Three.js lazy-loading
+   * MUST be called after constructor before using renderer
+   */
+  public async initialize(): Promise<void> {
+    if (this.isInitialized) {
+      if (DEBUG) console.warn('[ThreeJSAvatarRenderer] Already initialized');
+      return;
+    }
+
+    // Lazy-load Three.js
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Loading Three.js...');
+    this.THREE = await loadThreeJS();
+    const THREE = this.THREE;
+
+    const { width, height, alpha, pixelRatio, enablePostProcessing, appearanceStyle } = this.options;
 
     // Initialize renderer
     this.renderer = new THREE.WebGLRenderer({
-      canvas,
+      canvas: this.canvas,
       antialias: !enablePostProcessing, // TAA replaces MSAA
       alpha,
       preserveDrawingBuffer: false,
@@ -90,7 +126,6 @@ export class ThreeJSAvatarRenderer {
     this.camera.lookAt(0, 1.5, 0); // Look at avatar head
 
     // v25.0: Initialize enhanced systems
-    this.materialSystem = new PBRMaterialSystem();
     this.lightingRig = new StudioLightingRig(this.scene);
     this.lightingRig.applyStyle(appearanceStyle);
 
@@ -110,6 +145,9 @@ export class ThreeJSAvatarRenderer {
         }
       );
     }
+
+    this.isInitialized = true;
+    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Initialization complete ✅');
   }
 
   // ═════════════════════════════════════════════════════════════════════════
@@ -120,6 +158,11 @@ export class ThreeJSAvatarRenderer {
    * Create simple placeholder avatar (before 3D model loaded)
    */
   private createPlaceholderAvatar(): AvatarMeshes {
+    if (!this.THREE || !this.isInitialized) {
+      throw new Error('[ThreeJSAvatarRenderer] Must call initialize() before createPlaceholderAvatar()');
+    }
+
+    const THREE = this.THREE;
     const root = new THREE.Group();
     root.name = 'AvatarRoot';
 
@@ -158,7 +201,7 @@ export class ThreeJSAvatarRenderer {
     this.scene.add(root);
 
     // Create placeholder skeleton (for future updates)
-    const bones: Map<string, THREE.Bone> = new Map();
+    const bones: Map<string, any> = new Map(); // THREE.Bone
     const skeleton = new THREE.Skeleton([]);
 
     return {
@@ -173,6 +216,10 @@ export class ThreeJSAvatarRenderer {
    * Initialize avatar (placeholder for now)
    */
   public initializeAvatar(): void {
+    if (!this.isInitialized) {
+      throw new Error('[ThreeJSAvatarRenderer] Must call initialize() before initializeAvatar()');
+    }
+
     if (this.avatarMeshes) {
       console.warn('[ThreeJSAvatarRenderer] Avatar already initialized');
       return;
@@ -294,6 +341,8 @@ export class ThreeJSAvatarRenderer {
    * Set camera zoom (FOV adjustment)
    */
   public setCameraZoom(fov: number): void {
+    if (!this.isInitialized || !this.THREE) return;
+    const THREE = this.THREE;
     this.camera.fov = THREE.MathUtils.clamp(fov, 30, 90);
     this.camera.updateProjectionMatrix();
   }
@@ -305,7 +354,8 @@ export class ThreeJSAvatarRenderer {
   /**
    * Set scene background (transparent by default)
    */
-  public setBackground(color: THREE.Color | null): void {
+  public setBackground(color: any | null): void { // THREE.Color
+    if (!this.isInitialized) return;
     this.scene.background = color;
   }
 
@@ -320,6 +370,8 @@ export class ThreeJSAvatarRenderer {
    * Set lighting intensity (legacy wrapper)
    */
   public setLightingIntensity(factor: number): void {
+    if (!this.isInitialized || !this.THREE) return;
+    const THREE = this.THREE;
     const clampedFactor = THREE.MathUtils.clamp(factor, 0.1, 2.0);
     this.lightingRig.setKeyIntensity(3.0 * clampedFactor);
     this.lightingRig.setFillIntensity(1.2 * clampedFactor);
@@ -342,16 +394,21 @@ export class ThreeJSAvatarRenderer {
    */
   public dispose(): void {
     if (this.isDisposed) return;
+    if (!this.isInitialized) {
+      this.isDisposed = true;
+      return;
+    }
 
     this.stopRenderLoop();
 
     // Dispose avatar meshes
-    if (this.avatarMeshes) {
-      this.avatarMeshes.root.traverse(object => {
+    if (this.avatarMeshes && this.THREE) {
+      const THREE = this.THREE;
+      this.avatarMeshes.root.traverse((object: any) => {
         if (object instanceof THREE.Mesh) {
           object.geometry?.dispose();
           if (Array.isArray(object.material)) {
-            object.material.forEach(mat => mat.dispose());
+            object.material.forEach((mat: any) => mat.dispose());
           } else {
             object.material?.dispose();
           }
@@ -363,13 +420,17 @@ export class ThreeJSAvatarRenderer {
 
     // Dispose v25.0 systems
     this.materialSystem.dispose();
-    this.lightingRig.dispose();
+    if (this.lightingRig) {
+      this.lightingRig.dispose();
+    }
     if (this.postProcessing) {
       this.postProcessing.dispose();
     }
 
     // Dispose renderer
-    this.renderer.dispose();
+    if (this.renderer) {
+      this.renderer.dispose();
+    }
 
     this.isDisposed = true;
     if (DEBUG) console.log('[ThreeJSAvatarRenderer] Disposed');
@@ -379,24 +440,28 @@ export class ThreeJSAvatarRenderer {
   // GETTERS
   // ═════════════════════════════════════════════════════════════════════════
 
-  public getRenderer(): THREE.WebGLRenderer {
+  public getRenderer(): any { // THREE.WebGLRenderer
     return this.renderer;
   }
 
-  public getScene(): THREE.Scene {
+  public getScene(): any { // THREE.Scene
     return this.scene;
   }
 
-  public getCamera(): THREE.PerspectiveCamera {
+  public getCamera(): any { // THREE.PerspectiveCamera
     return this.camera;
   }
 
-  public isInitialized(): boolean {
+  public isAvatarInitialized(): boolean {
     return this.avatarMeshes !== null;
   }
 
   public isRendering(): boolean {
     return this.animationFrameId !== null;
+  }
+
+  public isReady(): boolean {
+    return this.isInitialized;
   }
 }
 
