@@ -1,0 +1,150 @@
+/* 
+  FONTS OPTIMIZATION - v35.0.0
+  ═════════════════════════════════════════════════════════════
+  Font configuration with font-display: swap for optimal FCP/LCP.
+  
+  Date: 2026-01-31
+  Purpose: Reduce Font Layout Shift and enable text rendering immediately
+  Strategy: System fonts first, web fonts as enhancement (not blocker)
+*/
+
+/* ────────────────────────────────────────────────────────────
+   1. SYSTEM FONT STACK (Loaded immediately, no render-blocking)
+   ──────────────────────────────────────────────────────────── */
+
+body {
+  /* System fonts - always available, zero-latency */
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+code,
+pre {
+  font-family: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+}
+
+/* ────────────────────────────────────────────────────────────
+   2. GOOGLE FONTS (Optional web fonts - non-blocking)
+   ──────────────────────────────────────────────────────────── */
+
+/* 
+  Optional: Import from Google Fonts with font-display: swap
+  This allows text to render immediately with system font,
+  then swap to web font when loaded.
+  
+  Recommendation: Use sparingly for branding only (max 2-3 fonts).
+  Keep total font requests < 3 for best performance.
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+/* 
+  If you want to use Inter font as an enhancement:
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+  
+  But keep body using system fonts for optimal performance.
+*/
+
+/* ────────────────────────────────────────────────────────────
+   3. LOCAL FONT FILES (If bundled with app)
+   ──────────────────────────────────────────────────────────── */
+
+/*
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-400.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-600.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Inter';
+    src: url('/fonts/inter-700.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+*/
+
+/* ────────────────────────────────────────────────────────────
+   4. FONT RENDERING OPTIMIZATION
+   ──────────────────────────────────────────────────────────── */
+
+html {
+  /* Enable font smoothing for better rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Prevent font adjustment on orientation change */
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body {
+  /* Optimize text rendering */
+  text-rendering: optimizeLegibility;
+  /* Prevent layout shift during font swap */
+  font-feature-settings: 'kern' 1;
+}
+
+/* ────────────────────────────────────────────────────────────
+   5. FONT WEIGHT RECOMMENDATIONS
+   ──────────────────────────────────────────────────────────── */
+
+/*
+  Limit font weights to reduce bundle size:
+  - Regular (400): Body text, paragraph text
+  - Medium (500): Secondary headings, labels
+  - Semibold (600): Primary headings, emphasis
+  - Bold (700): Strong emphasis, call-to-action
+  
+  Avoid: 300, 800, 900 (rarely used, increases bundle)
+*/
+
+/* ────────────────────────────────────────────────────────────
+   6. PERFORMANCE METRICS FOR FONTS
+   ──────────────────────────────────────────────────────────── */
+
+/*
+  font-display options:
+  
+  - auto (default): Browser decides (not recommended for web fonts)
+  - block: Hide text until font loads, max 3s block period (~100ms impact)
+  - swap: Show system font immediately, swap when web font ready (~50ms improvement)
+  - fallback: Brief block period (~100ms), then use system font if not ready (best for non-critical)
+  - optional: No block period, only use if already cached (~0ms impact)
+  
+  ✅ Recommendation for v35.0.0: Use swap or optional
+*/
+
+/* ────────────────────────────────────────────────────────────
+   7. FONT LOADING STATUS INDICATORS (Optional)
+   ──────────────────────────────────────────────────────────── */
+
+/*
+  Use Font Loading API to detect when fonts are ready:
+  
+  if (document.fonts) {
+    document.fonts.ready.then(() => {
+      // Font loaded, can safely measure text
+      document.documentElement.classList.add('fonts-loaded');
+    });
+  }
+*/
+
+html.fonts-loaded {
+  /* Optional: Apply enhancements after fonts load */
+}
+
+/* ────────────────────────────────────────────────────────────
+   END - fonts.css
+   ──────────────────────────────────────────────────────────── */
