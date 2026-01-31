@@ -1,37 +1,33 @@
 /**
  * TITANE∞ v26.2.0 — MAIN STYLESHEET (TITANIUM DARK)
  *
- * Import order (CRITICAL FOR TAILWIND v4):
- * 1. Tailwind CSS v4 (@import "tailwindcss")
- * 2. Design tokens (Titanium Dark system)
- * 3. CSS imports (legacy support)
- * 4. Custom component classes via @layer
- *
- * v26.2.0: Titanium Dark Design System
- * UX Enhancements: Smooth scroll, optimized rendering, WCAG 2.2 AA
+ * CRITICAL: ALL @import statements MUST be at the TOP of this file
+ * PostCSS strict mode requires @import before any other rules
  */
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* TAILWIND CSS v4 (MUST BE FIRST)                                   */
+/* TAILWIND CSS v4 (@import — MUST BE FIRST)                        */
 /* ═══════════════════════════════════════════════════════════════ */
 @import 'tailwindcss';
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* DESIGN TOKENS (Primary Source of Truth)                          */
+/* EXTERNAL RESOURCES (Google Fonts)                               */
 /* ═══════════════════════════════════════════════════════════════ */
-@import './styles/titanium-dark-tokens.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* LEGACY CSS IMPORTS (Compatibility Layer - Will be deprecated)    */
+/* ALL PROJECT CSS FILES (Regular @import, no nested @import)       */
 /* ═══════════════════════════════════════════════════════════════ */
-@import './styles/css-vars.css';
-@import './styles/unified-tokens.css';
-@import './styles/tech-effects.css';
-@import './styles/animations.css';
-@import './styles/a11y.css';
+@import './styles/titanium-dark-tokens.css' layer(tokens);
+@import './styles/css-vars.css' layer(tokens);
+@import './styles/fonts.css' layer(fonts);
+@import './styles/unified-tokens.css' layer(tokens);
+@import './styles/tech-effects.css' layer(effects);
+@import './styles/animations.css' layer(animations);
+@import './styles/a11y.css' layer(a11y);
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* UI/UX POLISH v26.2.3 — Smooth Scroll & Better Rendering          */
+/* BASE RULES (After all @import statements)                       */
 /* ═══════════════════════════════════════════════════════════════ */
 
 * {
