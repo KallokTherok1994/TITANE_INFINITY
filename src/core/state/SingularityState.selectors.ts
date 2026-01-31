@@ -4,7 +4,7 @@
  * Prevents unnecessary rerenders by selecting only needed slices
  */
 
-import { useSingularityStore } from './SingularityState';
+import { useSingularityState } from './SingularityState';
 import { shallow } from 'zustand/shallow';
 import type { EngineName, EngineDataMap } from './SingularityState';
 
@@ -12,86 +12,86 @@ import type { EngineName, EngineDataMap } from './SingularityState';
 // UI STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useUIMode = () => useSingularityStore(state => state.ui.mode);
-export const useUITheme = () => useSingularityStore(state => state.ui.theme);
-export const useSoundEnabled = () => useSingularityStore(state => state.ui.soundEnabled);
-export const useMicEnabled = () => useSingularityStore(state => state.ui.micEnabled);
-export const useGlowIntensity = () => useSingularityStore(state => state.ui.glowIntensity);
-export const useMotionEnabled = () => useSingularityStore(state => state.ui.motionEnabled);
-export const useFPS = () => useSingularityStore(state => state.ui.fps);
+export const useUIMode = () => useSingularityState(state => state.ui.mode);
+export const useUITheme = () => useSingularityState(state => state.ui.theme);
+export const useSoundEnabled = () => useSingularityState(state => state.ui.soundEnabled);
+export const useMicEnabled = () => useSingularityState(state => state.ui.micEnabled);
+export const useGlowIntensity = () => useSingularityState(state => state.ui.glowIntensity);
+export const useMotionEnabled = () => useSingularityState(state => state.ui.motionEnabled);
+export const useFPS = () => useSingularityState(state => state.ui.fps);
 
 /**
  * Complete UI state (shallow equality)
  * Use when component needs multiple UI values
  */
-export const useUIState = () => useSingularityStore(state => state.ui, shallow);
+export const useUIState = () => useSingularityState(state => state.ui, shallow);
 
 // ═══════════════════════════════════════════════════════════════
 // AI STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useAIModel = () => useSingularityStore(state => state.ai.model);
-export const useAIStatus = () => useSingularityStore(state => state.ai.status);
-export const useAIError = () => useSingularityStore(state => state.ai.error);
-export const useFallbackActive = () => useSingularityStore(state => state.ai.fallbackActive);
+export const useAIModel = () => useSingularityState(state => state.ai.model);
+export const useAIStatus = () => useSingularityState(state => state.ai.status);
+export const useAIError = () => useSingularityState(state => state.ai.error);
+export const useFallbackActive = () => useSingularityState(state => state.ai.fallbackActive);
 
 /**
  * Complete AI state (shallow equality)
  * Use when component needs multiple AI values
  */
-export const useAIState = () => useSingularityStore(state => state.ai, shallow);
+export const useAIState = () => useSingularityState(state => state.ai, shallow);
 
 // ═══════════════════════════════════════════════════════════════
 // META-MODE STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useCurrentMode = () => useSingularityStore(state => state.metaMode.currentMode);
+export const useCurrentMode = () => useSingularityState(state => state.metaMode.currentMode);
 export const usePreviousMode = () =>
-  useSingularityStore(state => state.metaMode.previousMode);
+  useSingularityState(state => state.metaMode.previousMode);
 export const useIsTransitioning = () =>
-  useSingularityStore(state => state.metaMode.transitioning);
+  useSingularityState(state => state.metaMode.transitioning);
 export const useMetaModeLastUpdate = () =>
-  useSingularityStore(state => state.metaMode.lastUpdate);
+  useSingularityState(state => state.metaMode.lastUpdate);
 
 /**
  * Complete meta-mode state (shallow equality)
  * Use when component needs multiple meta-mode values
  */
 export const useMetaModeState = () =>
-  useSingularityStore(state => state.metaMode, shallow);
+  useSingularityState(state => state.metaMode, shallow);
 
 // ═══════════════════════════════════════════════════════════════
 // AVATAR DISPLAY STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useAvatarDisplay = () => useSingularityStore(state => state.avatarDisplay);
+export const useAvatarDisplay = () => useSingularityState(state => state.avatarDisplay);
 
 /**
  * Has avatar display (boolean)
  * Use for conditional rendering
  */
 export const useHasAvatarDisplay = () =>
-  useSingularityStore(state => state.avatarDisplay !== null);
+  useSingularityState(state => state.avatarDisplay !== null);
 
 // ═══════════════════════════════════════════════════════════════
 // ENGINES STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useGlowEngine = () => useSingularityStore(state => state.engines.glow);
-export const useMotionEngine = () => useSingularityStore(state => state.engines.motion);
-export const usePersonaEngine = () => useSingularityStore(state => state.engines.persona);
+export const useGlowEngine = () => useSingularityState(state => state.engines.glow);
+export const useMotionEngine = () => useSingularityState(state => state.engines.motion);
+export const usePersonaEngine = () => useSingularityState(state => state.engines.persona);
 export const useCognitiveEngine = () =>
-  useSingularityStore(state => state.engines.cognitive);
+  useSingularityState(state => state.engines.cognitive);
 export const useHolographyEngine = () =>
-  useSingularityStore(state => state.engines.holography);
+  useSingularityState(state => state.engines.holography);
 export const useHyperDepthEngine = () =>
-  useSingularityStore(state => state.engines.hyperdepth);
+  useSingularityState(state => state.engines.hyperdepth);
 
 /**
  * Complete engines state (shallow equality)
  * Use when component needs multiple engine states
  */
-export const useEnginesState = () => useSingularityStore(state => state.engines, shallow);
+export const useEnginesState = () => useSingularityState(state => state.engines, shallow);
 
 // ═══════════════════════════════════════════════════════════════
 // ENGINES DATA SELECTORS (Type-Safe)
@@ -101,19 +101,19 @@ export const useEnginesState = () => useSingularityStore(state => state.engines,
  * Generic engine data selector (type-safe)
  */
 export const useEngineData = <T extends EngineName>(engine: T) =>
-  useSingularityStore(state => state.enginesData[engine].data) as EngineDataMap[T] | null;
+  useSingularityState(state => state.enginesData[engine].data) as EngineDataMap[T] | null;
 
 /**
  * Generic engine loading selector
  */
 export const useEngineLoading = (engine: EngineName) =>
-  useSingularityStore(state => state.enginesData[engine].loading);
+  useSingularityState(state => state.enginesData[engine].loading);
 
 /**
  * Generic engine state selector (data + loading, shallow equality)
  */
 export const useEngineState = <T extends EngineName>(engine: T) =>
-  useSingularityStore(state => state.enginesData[engine], shallow) as {
+  useSingularityState(state => state.enginesData[engine], shallow) as {
     data: EngineDataMap[T] | null;
     loading: boolean;
   };
@@ -142,23 +142,23 @@ export const useAdaptiveLoading = () => useEngineLoading('adaptive');
 // CONTEXT STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useCurrentPage = () => useSingularityStore(state => state.context.page);
-export const useFocus = () => useSingularityStore(state => state.context.focus);
-export const useFullscreen = () => useSingularityStore(state => state.context.fullscreen);
+export const useCurrentPage = () => useSingularityState(state => state.context.page);
+export const useFocus = () => useSingularityState(state => state.context.focus);
+export const useFullscreen = () => useSingularityState(state => state.context.fullscreen);
 export const useSingularitySidebarCollapsed = () =>
-  useSingularityStore(state => state.context.sidebarCollapsed);
+  useSingularityState(state => state.context.sidebarCollapsed);
 
 /**
  * Complete context state (shallow equality)
  * Use when component needs multiple context values
  */
-export const useContextState = () => useSingularityStore(state => state.context, shallow);
+export const useContextState = () => useSingularityState(state => state.context, shallow);
 
 // ═══════════════════════════════════════════════════════════════
 // GLOBAL HEALTH SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useGlobalHealth = () => useSingularityStore(state => state.globalHealth);
+export const useGlobalHealth = () => useSingularityState(state => state.globalHealth);
 
 // ═══════════════════════════════════════════════════════════════
 // ACTION SELECTORS (Actions Only)
@@ -168,7 +168,7 @@ export const useGlobalHealth = () => useSingularityStore(state => state.globalHe
  * UI actions
  */
 export const useUIActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setMode: state.setMode,
       setTheme: state.setTheme,
@@ -184,7 +184,7 @@ export const useUIActions = () =>
  * AI actions
  */
 export const useAIActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setAIModel: state.setAIModel,
       setAIStatus: state.setAIStatus,
@@ -197,7 +197,7 @@ export const useAIActions = () =>
  * Meta-mode actions
  */
 export const useMetaModeActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setMetaMode: state.setMetaMode,
       setMetaModeTransition: state.setMetaModeTransition,
@@ -209,7 +209,7 @@ export const useMetaModeActions = () =>
  * Avatar display actions
  */
 export const useAvatarDisplayActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setAvatarDisplay: state.setAvatarDisplay,
       updateAvatarDisplay: state.updateAvatarDisplay,
@@ -221,7 +221,7 @@ export const useAvatarDisplayActions = () =>
  * Engine actions
  */
 export const useEngineActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       updateEngine: state.updateEngine,
       setEngineData: state.setEngineData,
@@ -234,7 +234,7 @@ export const useEngineActions = () =>
  * Context actions
  */
 export const useContextActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setPage: state.setPage,
       setFocus: state.setFocus,
@@ -249,7 +249,7 @@ export const useContextActions = () =>
  * Global health actions
  */
 export const useGlobalHealthActions = () =>
-  useSingularityStore(
+  useSingularityState(
     state => ({
       setGlobalHealth: state.setGlobalHealth,
     }),
@@ -264,18 +264,18 @@ export const useGlobalHealthActions = () =>
  * Is AI active (status === 'active')
  */
 export const useIsAIActive = () =>
-  useSingularityStore(state => state.ai.status === 'active');
+  useSingularityState(state => state.ai.status === 'active');
 
 /**
  * Has AI error (error !== null)
  */
-export const useHasAIError = () => useSingularityStore(state => state.ai.error !== null);
+export const useHasAIError = () => useSingularityState(state => state.ai.error !== null);
 
 /**
  * Any engine loading (boolean)
  */
 export const useAnyEngineLoading = () =>
-  useSingularityStore(state =>
+  useSingularityState(state =>
     Object.values(state.enginesData).some(engine => engine.loading)
   );
 
@@ -283,7 +283,7 @@ export const useAnyEngineLoading = () =>
  * All engines loaded (boolean)
  */
 export const useAllEnginesLoaded = () =>
-  useSingularityStore(state =>
+  useSingularityState(state =>
     Object.values(state.enginesData).every(engine => engine.data !== null)
   );
 
@@ -291,7 +291,7 @@ export const useAllEnginesLoaded = () =>
  * Engine data count (number of loaded engines)
  */
 export const useLoadedEnginesCount = () =>
-  useSingularityStore(
+  useSingularityState(
     state => Object.values(state.enginesData).filter(engine => engine.data !== null).length
   );
 
@@ -299,4 +299,4 @@ export const useLoadedEnginesCount = () =>
  * Is sidebar expanded (inverse of collapsed)
  */
 export const useSingularitySidebarExpanded = () =>
-  useSingularityStore(state => !state.context.sidebarCollapsed);
+  useSingularityState(state => !state.context.sidebarCollapsed);
