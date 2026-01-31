@@ -47,6 +47,19 @@
     <meta name="msapplication-TileColor" content="#0a0a0a" />
     <meta name="msapplication-config" content="none" />
 
+    <!-- ✅ v35.0.0: CRITICAL CSS - Loaded synchronously for optimal FCP -->
+    <link rel="stylesheet" href="/src/styles/critical.css" />
+
+    <!-- ✅ v35.0.0: FONTS OPTIMIZATION - System fonts first, web fonts non-blocking -->
+    <link rel="stylesheet" href="/src/styles/fonts.css" />
+
+    <!-- ✅ v35.0.0: Preconnect to Google Fonts CDN for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- ✅ v35.0.0: Defer non-critical CSS to avoid render-blocking -->
+    <link rel="stylesheet" href="/src/styles/main.css" media="print" onload="this.media='all'" />
+
     <!-- Mobile-specific meta tags -->
     <meta name="format-detection" content="telephone=no" />
     <meta name="mobile-web-app-capable" content="yes" />
