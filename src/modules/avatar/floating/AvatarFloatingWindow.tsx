@@ -83,45 +83,63 @@ export const AvatarFloatingWindow: React.FC<AvatarFloatingWindowProps> = ({
 
     console.log('[AvatarFloatingWindow] Initializing Three.js renderer');
 
-    // Create renderer
-    const renderer = new ThreeJSAvatarRenderer(canvasRef.current, {
-      width: displayState.width,
-      height: displayState.height,
-      antialias: true,
-      alpha: true,
-    });
+    let isMounted = true;
 
-    renderer.initializeAvatar();
-    renderer.startRenderLoop();
+    // v36.0.0: Async initialization with Three.js lazy-loading
+    (async () => {
+      try {
+        // Create renderer (constructor doesn't load Three.js yet)
+        const renderer = new ThreeJSAvatarRenderer(canvasRef.current!, {
+          width: displayState.width,
+          height: displayState.height,
+          antialias: true,
+          alpha: true,
+        });
 
-    rendererRef.current = renderer;
+        // Lazy-load Three.js and initialize renderer
+        await renderer.initialize();
 
-    // Create appearance integration
-    const appearance = new AppearanceFloatingIntegration(renderer);
-    appearanceRef.current = appearance;
+        if (!isMounted) {
+          renderer.dispose();
+          return;
+        }
 
-    // Fetch and apply initial appearance
-    void appearance
-      .fetchAppearance()
-      .then(state => {
-        appearance.applyAppearance(state);
-        console.log('[AvatarFloatingWindow] Initial appearance applied');
-      })
-      .catch(error => {
-        console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
-      });
+        renderer.initializeAvatar();
+        renderer.startRenderLoop();
 
-    // Start appearance sync (every 2 seconds)
-    void appearance.startAppearanceSync(2000).then(stopSync => {
-      // Cleanup will call stopSync
-      return () => {
-        stopSync();
-      };
-    });
+        rendererRef.current = renderer;
 
-    console.log('[AvatarFloatingWindow] Three.js renderer initialized');
+        // Create appearance integration
+        const appearance = new AppearanceFloatingIntegration(renderer);
+        appearanceRef.current = appearance;
+
+        // Fetch and apply initial appearance
+        void appearance
+          .fetchAppearance()
+          .then(state => {
+            appearance.applyAppearance(state);
+            console.log('[AvatarFloatingWindow] Initial appearance applied');
+          })
+          .catch(error => {
+            console.error('[AvatarFloatingWindow] Failed to load appearance:', error);
+          });
+
+        // Start appearance sync (every 2 seconds)
+        void appearance.startAppearanceSync(2000).then(stopSync => {
+          // Cleanup will call stopSync
+          return () => {
+            stopSync();
+          };
+        });
+
+        console.log('[AvatarFloatingWindow] Three.js renderer initialized ✅');
+      } catch (error) {
+        console.error('[AvatarFloatingWindow] Failed to initialize Three.js:', error);
+      }
+    })();
 
     return () => {
+      isMounted = false;
       console.log('[AvatarFloatingWindow] Disposing Three.js renderer');
       if (appearanceRef.current) {
         appearanceRef.current.dispose();
