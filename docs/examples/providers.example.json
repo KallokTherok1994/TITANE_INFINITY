@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "TITANE∞ Providers Configuration Example",
+  "description": "Configuration pour les providers IA (Ollama, Gemini, Local, etc.)",
+  "version": "27.0.0",
+  
+  "providers": [
+    {
+      "id": "ollama-local",
+      "name": "Ollama (Local)",
+      "type": "ollama",
+      "enabled": true,
+      "default": true,
+      "config": {
+        "baseUrl": "http://localhost:11434",
+        "model": "llama2:latest",
+        "timeout": 30000,
+        "maxRetries": 3,
+        "streamingEnabled": true
+      },
+      "settings": {
+        "temperature": 0.7,
+        "maxTokens": 3000,
+        "topP": 0.9,
+        "topK": 40,
+        "repeatPenalty": 1.1
+      }
+    },
+    {
+      "id": "gemini-cloud",
+      "name": "Google Gemini",
+      "type": "gemini",
+      "enabled": false,
+      "default": false,
+      "config": {
+        "apiKey": "YOUR_GEMINI_API_KEY_HERE",
+        "model": "gemini-pro",
+        "timeout": 60000,
+        "maxRetries": 2,
+        "streamingEnabled": true
+      },
+      "settings": {
+        "temperature": 0.8,
+        "maxTokens": 4000,
+        "topP": 0.95,
+        "safetySettings": [
+          {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+          },
+          {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+          }
+        ]
+      }
+    },
+    {
+      "id": "anthropic-claude",
+      "name": "Anthropic Claude",
+      "type": "anthropic",
+      "enabled": false,
+      "default": false,
+      "config": {
+        "apiKey": "YOUR_ANTHROPIC_API_KEY_HERE",
+        "model": "claude-3-opus-20240229",
+        "baseUrl": "https://api.anthropic.com/v1",
+        "timeout": 60000,
+        "maxRetries": 2
+      },
+      "settings": {
+        "temperature": 0.7,
+        "maxTokens": 4096,
+        "topP": 0.9
+      }
+    },
+    {
+      "id": "local-fallback",
+      "name": "Local Provider (Fallback)",
+      "type": "local",
+      "enabled": true,
+      "default": false,
+      "config": {
+        "model": "builtin-basic",
+        "alwaysAvailable": true
+      },
+      "settings": {
+        "temperature": 0.6,
+        "maxTokens": 2000
+      }
+    }
+  ],
+  
+  "fallback": {
+    "enabled": true,
+    "order": ["ollama-local", "gemini-cloud", "anthropic-claude", "local-fallback"],
+    "retryOnFailure": true,
+    "maxFallbackAttempts": 3
+  },
+  
+  "loadBalancing": {
+    "enabled": false,
+    "strategy": "round-robin",
+    "healthCheckInterval": 60000
+  }
+}

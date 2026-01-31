@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "TITANE∞ Memory Configuration Example",
+  "description": "Configuration du système de mémoire triple (STM/MTM/LTM)",
+  "version": "27.0.0",
+  
+  "stm": {
+    "enabled": true,
+    "name": "Short-Term Memory (Mémoire Court Terme)",
+    "description": "Mémoire de travail pour conversation active",
+    "config": {
+      "maxMessages": 20,
+      "retentionDuration": "24h",
+      "autoCleanup": true,
+      "cleanupInterval": "1h"
+    },
+    "storage": {
+      "type": "memory",
+      "persistent": false
+    }
+  },
+  
+  "mtm": {
+    "enabled": true,
+    "name": "Medium-Term Memory (Mémoire Moyen Terme)",
+    "description": "Détection de patterns et cohérence sur 30 jours",
+    "config": {
+      "retentionDuration": "30d",
+      "patternDetection": true,
+      "minPatternOccurrences": 3,
+      "coherenceThreshold": 0.85,
+      "autoPromoteToLTM": true,
+      "promotionThreshold": 0.90
+    },
+    "storage": {
+      "type": "sqlite",
+      "path": "./runtime/memory/mtm.db",
+      "encrypted": false
+    },
+    "analysis": {
+      "enabled": true,
+      "analysisInterval": "6h",
+      "patternTypes": ["temporal", "semantic", "behavioral"]
+    }
+  },
+  
+  "ltm": {
+    "enabled": true,
+    "name": "Long-Term Memory (Mémoire Long Terme)",
+    "description": "Stockage permanent et sécurisé",
+    "config": {
+      "unlimited": true,
+      "encrypted": true,
+      "encryptionAlgorithm": "AES-256-GCM",
+      "compressionEnabled": true,
+      "compressionLevel": 6
+    },
+    "storage": {
+      "type": "sqlite",
+      "path": "./runtime/memory/ltm.db",
+      "encrypted": true,
+      "backupEnabled": true,
+      "backupInterval": "24h",
+      "backupLocation": "./runtime/memory/backups",
+      "maxBackups": 7
+    },
+    "indexing": {
+      "enabled": true,
+      "fullTextSearch": true,
+      "semanticSearch": true,
+      "vectorDimensions": 768
+    },
+    "security": {
+      "encryptionKey": "GENERATED_ON_FIRST_RUN",
+      "keyDerivationFunction": "PBKDF2-SHA256",
+      "iterations": 100000,
+      "saltLength": 32
+    }
+  },
+  
+  "global": {
+    "memoryLimit": {
+      "enabled": true,
+      "maxTotalSizeMB": 500,
+      "warningThresholdPercent": 80,
+      "criticalThresholdPercent": 95,
+      "autoCleanupOnLimit": true
+    },
+    "privacy": {
+      "redactSensitiveData": true,
+      "sensitivePatterns": [
+        "\\b\\d{3}-\\d{2}-\\d{4}\\b",
+        "\\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Z|a-z]{2,}\\b",
+        "\\b\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}[\\s-]?\\d{4}\\b"
+      ],
+      "redactionReplacement": "[REDACTED]"
+    },
+    "export": {
+      "enabled": true,
+      "formats": ["json", "csv", "markdown"],
+      "includeMetadata": true,
+      "compressExports": true
+    },
+    "import": {
+      "enabled": true,
+      "validateSchema": true,
+      "mergeStrategy": "append"
+    }
+  }
+}
