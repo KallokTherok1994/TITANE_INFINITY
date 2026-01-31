@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { tauriClient } from '../services/tauriClient';
 import type { ProviderStatus } from '../services/tauriClient';
 
@@ -60,16 +60,8 @@ export function useProviderStatus(
 
       setProviders(statuses);
 
-      // Détecter provider actif (priorité: available + latence min)
-      const available = statuses.filter(p => p.available);
-      if (available.length > 0) {
-        const fastest = available.reduce((prev, curr) =>
-          curr.latency_ms < prev.latency_ms ? curr : prev
-        );
-        setActiveProvider(fastest.provider);
-      } else {
-        setActiveProvider(null);
-      }
+      // Note: Active provider now computed via useMemo as derived state
+      // (v33.0.0 optimization - eliminates redundant filter/reduce)
 
       console.log(`✅ Provider status refreshed (${statuses.length} providers)`);
     } catch (err) {
@@ -96,16 +88,10 @@ export function useProviderStatus(
 
       setProviders(statuses);
 
-      const available = statuses.filter(p => p.available);
-      if (available.length > 0) {
-        const fastest = available.reduce((prev, curr) =>
-          curr.latency_ms < prev.latency_ms ? curr : prev
-        );
-        setActiveProvider(fastest.provider);
-      } else {
-        setActiveProvider(null);
-      }
+      // Note: Active provider now computed via useMemo as derived state
+      // (v33.0.0 optimization - eliminates redundant filter/reduce)
 
+      const available = statuses.filter(p => p.available);
       console.log(
         `✅ Provider check complete (${available.length}/${statuses.length} available)`
       );
@@ -117,6 +103,18 @@ export function useProviderStatus(
       setIsLoading(false);
     }
   }, []);
+
+  // ═══ MEMOIZED ACTIVE PROVIDER DETECTION (v33.0.0 Phase 2 optimization) ═══
+  // Previously computed twice in refresh/checkAll callbacks
+  // Now memoized as derived state to eliminate redundant .filter() + .reduce()
+  const activeProviderMemo = useMemo(() => {
+    const available = providers.filter(p => p.available);
+    if (available.length === 0) return null;
+    const fastest = available.reduce((prev, curr) =>
+      curr.latency_ms < prev.latency_ms ? curr : prev
+    );
+    return fastest.provider;
+  }, [providers]);
 
   // Auto-refresh optionnel
   useEffect(() => {
@@ -140,7 +138,7 @@ export function useProviderStatus(
     providers,
     isLoading,
     error,
-    activeProvider,
+    activeProvider: activeProviderMemo,
     refresh,
     checkAll,
   };
