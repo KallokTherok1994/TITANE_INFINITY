@@ -26,13 +26,17 @@ export { aiOrchestrator, askTitan, streamTitan, getAIStatus } from './orchestrat
 // ─────────────────────────────────────────────────────────────────
 // PROVIDERS
 // ─────────────────────────────────────────────────────────────────
+// ⚠️ v37.1.0: Local/Tauri/Ollama remain eagerly loaded (always needed)
 export { titaneLocalProvider } from './providers/titaneLocal';
 export { tauriChatProvider } from './providers/tauriChat';
-export { geminiProvider } from './providers/gemini';
-export { openaiProvider } from './providers/openai';
-export { claudeProvider } from './providers/claude';
-export { copilotProvider } from './providers/copilot';
 export { ollamaProvider } from './providers/ollama';
+
+// ⚠️ v37.1.0: Cloud providers now lazy-loaded via AIProviderLazyLoader
+// Use: loadGeminiProvider(), loadOpenAIProvider(), loadClaudeProvider(), loadCopilotProvider()
+// export { geminiProvider } from './providers/gemini';
+// export { openaiProvider } from './providers/openai';
+// export { claudeProvider } from './providers/claude';
+// export { copilotProvider } from './providers/copilot';
 
 // ─────────────────────────────────────────────────────────────────
 // ENGINES (Static imports - already bundled due to metaKernel usage)
