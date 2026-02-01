@@ -11,7 +11,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import type { AIProvider, AIMessage, AIResponse } from '../types';
-import { autoHealEngine } from '../system';
+import { autoHealEngine } from '../autoHealEngine';
 import { withRetry, getRetryConfig } from '../retryStrategy';
 import { createLogger } from '@/utils/logger';
 import { withCache, CACHE_TTL } from '../apiCache';
