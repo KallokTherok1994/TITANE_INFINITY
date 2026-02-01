@@ -10,9 +10,9 @@
     "dev": "tauri dev $@",
     "dev:tauri": "bash scripts/dev/full_local_tauri_ollama.sh -- tauri dev --config runtime/dev/tauri.conf.json --no-watch",
     "dev:tauri:no-ollama": "tauri dev --config runtime/dev/tauri.conf.json --no-watch",
-    "ollama:start": "bash scripts/dev/full_local_tauri_ollama.sh --no-tauri",
+    "ollama:start": "ollama serve",
     "ollama:status": "curl -s http://127.0.0.1:11434/api/tags | jq . 2>/dev/null || echo 'Ollama not running'",
-    "ollama:pull": "bash scripts/dev/full_local_tauri_ollama.sh --pull-model --no-tauri",
+    "ollama:pull": "ollama pull llama3.2:latest",
     "build": "vite build",
     "postbuild": "bash scripts/post-build.sh",
     "build:production": "pnpm run lint && pnpm run format:check && vite build && tauri build && bash scripts/post-build.sh",
@@ -164,6 +164,7 @@
     "@vitest/ui": "4.0.18",
     "autoprefixer": "^10.4.16",
     "axe-core": "^4.11.1",
+    "baseline-browser-mapping": "^2.9.19",
     "cross-env": "^10.1.0",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -192,7 +193,8 @@
     "vite": "^7.3.1",
     "vite-plugin-compression": "^0.5.1",
     "vite-tsconfig-paths": "^6.0.5",
-    "vitest": "4.0.18"
+    "vitest": "4.0.18",
+    "workbox-build": "^7.4.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [

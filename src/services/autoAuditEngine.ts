@@ -10,6 +10,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { logger } from '@/lib/logger';
+import type { SingularityState } from '@/types/singularityState';
 
 interface MemoryState {
   snapshots_count?: number;
@@ -20,12 +21,6 @@ interface PerformanceMemory {
   usedJSHeapSize: number;
   totalJSHeapSize: number;
   jsHeapSizeLimit: number;
-}
-
-interface SingularityStateXP {
-  xp?: number;
-  level?: number;
-  [key: string]: unknown;
 }
 
 export interface AuditResult {
@@ -391,22 +386,22 @@ export class AutoAuditEngine {
     const results: AuditResult[] = [];
 
     try {
-      const state = await secureInvoke<SingularityStateXP>('singularity_get_full_state');
+      const state = await secureInvoke<SingularityState>('singularity_get_full_state');
 
-      // Vérifier champs XP
-      if (state.xp !== undefined && state.level !== undefined) {
+      // Vérifier champs XP (dans progression)
+      if (state.progression?.xp !== undefined && state.progression?.level !== undefined) {
         results.push({
           timestamp: Date.now(),
           category: 'xp',
           status: 'ok',
-          message: `XP structure: Level ${state.level}, XP ${state.xp}`,
+          message: `XP structure: Level ${state.progression.level}, XP ${state.progression.xp}`,
         });
       } else {
         results.push({
           timestamp: Date.now(),
           category: 'xp',
           status: 'warning',
-          message: 'XP structure incomplete',
+          message: 'XP structure incomplete (progression field missing)',
         });
       }
     } catch (error) {
