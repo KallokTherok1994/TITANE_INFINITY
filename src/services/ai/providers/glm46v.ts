@@ -19,7 +19,7 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
-import { unifiedHealingFacade } from '../system';
+import { unifiedHealingFacade } from '../unifiedHealingFacade';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('GLM46V');

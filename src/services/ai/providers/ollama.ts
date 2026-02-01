@@ -19,7 +19,7 @@ import {
   type SecureAIResponse,
   type ChatResponse,
 } from '@/lib/security';
-import { autoHealEngine } from '../system';
+import { autoHealEngine } from '../autoHealEngine';
 import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging

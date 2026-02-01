@@ -14,7 +14,7 @@
 import type { AIMessage, AIProvider, AIResponse } from '../types';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
-import { autoHealEngine } from '../system';
+import { autoHealEngine } from '../autoHealEngine';
 import { createLogger } from '@/utils/logger';
 
 const logger = createLogger('TauriChat');
