@@ -48,7 +48,7 @@ describe('BackendDownIndicator Component', () => {
 
       const { container } = render(<BackendDownIndicator position="top" />);
       const banner = container.querySelector('[role="alert"]');
-      expect(banner).toHaveClass('top-0') || expect(banner).toHaveClass('top');
+      expect(banner).toHaveClass('top-0');
     });
 
     it('should render checking state as spinner', () => {
@@ -60,7 +60,9 @@ describe('BackendDownIndicator Component', () => {
 
       render(<BackendDownIndicator position="top" />);
       // Could be rendering or showing loader
-      expect(screen.getByRole('alert') || screen.queryByLabelText(/checking/i)).toBeDefined();
+      expect(
+        screen.getByRole('alert') || screen.queryByLabelText(/checking/i)
+      ).toBeDefined();
     });
   });
 
@@ -133,13 +135,10 @@ describe('BackendDownIndicator Component', () => {
         recheck: vi.fn(),
       });
 
-      render(
-        <BackendDownIndicator
-          position="top"
-          dismissible={true}
-        />
-      );
-      const dismissButton = screen.getByLabelText(/dismiss/i) || screen.getByRole('button', { name: /close|x/i });
+      render(<BackendDownIndicator position="top" dismissible={true} />);
+      const dismissButton =
+        screen.getByLabelText(/dismiss/i) ||
+        screen.getByRole('button', { name: /close|x/i });
       expect(dismissButton).toBeInTheDocument();
     });
 
@@ -151,10 +150,7 @@ describe('BackendDownIndicator Component', () => {
       });
 
       const { container } = render(
-        <BackendDownIndicator
-          position="top"
-          dismissible={true}
-        />
+        <BackendDownIndicator position="top" dismissible={true} />
       );
       const dismissButton = screen.getByLabelText(/dismiss/i);
       fireEvent.click(dismissButton);

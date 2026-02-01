@@ -38,7 +38,9 @@ describe('useBackendHealth Hook', () => {
     it('should set checking status on first render', async () => {
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
-        expect(['unknown', 'checking', 'available', 'unavailable']).toContain(result.current.status);
+        expect(['unknown', 'checking', 'available', 'unavailable']).toContain(
+          result.current.status
+        );
       });
     });
   });
@@ -54,7 +56,7 @@ describe('useBackendHealth Hook', () => {
     it('should handle provider timeouts gracefully', async () => {
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
-        expect(result.current.status).toBe('available') || expect(result.current.status).toBe('unavailable');
+        expect(['available', 'unavailable']).toContain(result.current.status);
       });
     });
 
@@ -126,7 +128,7 @@ describe('useBackendHealth Hook', () => {
       ];
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
-        result.current.unavailableReasons.forEach((reason) => {
+        result.current.unavailableReasons.forEach(reason => {
           expect(validReasons).toContain(reason);
         });
       });
