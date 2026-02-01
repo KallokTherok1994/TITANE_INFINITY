@@ -93,26 +93,27 @@ export const ControlPanelLayout: React.FC<ControlPanelLayoutProps> = ({
 }) => {
   return (
     <div className="cp-layout">
-      {/* Sidebar navigation */}
-      <aside className="cp-sidebar">
-        <div className="cp-sidebar-header">
-          <h1 className="cp-sidebar-title">
-            <span className="cp-sidebar-icon">⚙️</span>
+      {/* Header avec navigation horizontale */}
+      <header className="cp-header">
+        <div className="cp-header-content">
+          <h1 className="cp-header-title">
+            <span className="cp-header-icon">⚙️</span>
             Panneau de Contrôle
           </h1>
           {systemInfo && (
-            <div className="cp-sidebar-status">
+            <div className="cp-header-status">
               <span
                 className={`cp-status-dot ${systemInfo.singularity_active ? 'active' : ''}`}
               />
               <span className="cp-status-text">
                 {systemInfo.singularity_active ? 'Singularité Active' : 'Système Normal'}
               </span>
+              <span className="cp-version-value">{systemInfo?.version || 'v19.1.0'}</span>
             </div>
           )}
         </div>
 
-        <nav className="cp-sidebar-nav">
+        <nav className="cp-nav">
           {navigationItems.map(item => (
             <button
               key={item.id}
@@ -122,18 +123,10 @@ export const ControlPanelLayout: React.FC<ControlPanelLayoutProps> = ({
             >
               <span className="cp-nav-icon">{item.icon}</span>
               <span className="cp-nav-label">{item.label}</span>
-              {activeSection === item.id && <span className="cp-nav-indicator" />}
             </button>
           ))}
         </nav>
-
-        <div className="cp-sidebar-footer">
-          <div className="cp-version">
-            <span className="cp-version-label">Version</span>
-            <span className="cp-version-value">{systemInfo?.version || 'v19.1.0'}</span>
-          </div>
-        </div>
-      </aside>
+      </header>
 
       {/* Main content */}
       <main className="cp-main">{children}</main>
