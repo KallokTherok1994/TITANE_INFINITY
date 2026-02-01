@@ -5,14 +5,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v24.3.0 — AppShell Layout (Tailwind CSS)
- * Layout principal avec sidebar, header, et contenu
- * v22Ω AI Performance Optimizations Compatible
+ * TITANE∞ vΩ — AppShell Layout (Sans Sidebar)
+ * Layout principal TopNav + contenu centré
+ * UI/UX Rework vΩ: Suppression sidebar, navigation horizontale uniquement
  * ═══════════════════════════════════════════════════════════════
  */
 
 import { type ReactNode } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { cn } from '@/utils/cn'; // Utility for conditional classes
 
 // ─────────────────────────────────────────────────────────────────
@@ -21,20 +21,10 @@ import { cn } from '@/utils/cn'; // Utility for conditional classes
 
 export interface AppShellProps {
   children: ReactNode;
-  header?: ReactNode;
-  sidebar?: ReactNode;
+  topNav?: ReactNode;
   footer?: ReactNode;
-  sidebarCollapsed?: boolean;
-  onSidebarToggle?: () => void;
   className?: string;
 }
-
-// ─────────────────────────────────────────────────────────────────
-// CONSTANTS
-// ─────────────────────────────────────────────────────────────────
-
-const SIDEBAR_WIDTH = 280;
-const SIDEBAR_WIDTH_COLLAPSED = 64;
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -42,66 +32,39 @@ const SIDEBAR_WIDTH_COLLAPSED = 64;
 
 export const AppShell = ({
   children,
-  header,
-  sidebar,
+  topNav,
   footer,
-  sidebarCollapsed = false,
   className,
 }: AppShellProps): JSX.Element => {
-  const sidebarWidth = sidebarCollapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH;
-
   return (
     <div
       className={cn(
-        'flex flex-col h-screen w-screen overflow-hidden bg-bg-primary',
+        'flex flex-col h-screen w-screen overflow-hidden bg-titanium-bg-base',
         className
       )}
     >
-      {/* Header */}
-      {header && (
-        <motion.header
-          className="h-header glass-strong border-b border-border-default shadow-md flex items-center px-6 z-fixed"
+      {/* TopNav (remplace header + sidebar) */}
+      {topNav && (
+        <motion.div
           initial={{ y: -64 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}
         >
-          {header}
-        </motion.header>
+          {topNav}
+        </motion.div>
       )}
 
-      {/* Body: Sidebar + Main */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        {sidebar && (
-          <AnimatePresence mode="wait">
-            <motion.aside
-              className="bg-bg-secondary border-r border-border-default shadow-lg flex flex-col overflow-hidden z-sticky"
-              style={{ width: sidebarWidth }}
-              initial={{ x: -sidebarWidth }}
-              animate={{
-                x: 0,
-                width: sidebarWidth,
-              }}
-              transition={{
-                duration: 0.3,
-                ease: 'easeInOut',
-              }}
-            >
-              {sidebar}
-            </motion.aside>
-          </AnimatePresence>
-        )}
-
-        {/* Main Content */}
-        <main className="flex-1 overflow-hidden relative flex flex-col">
-          <div className="p-6 flex-1 overflow-auto scrollbar-custom">{children}</div>
-        </main>
-      </div>
+      {/* Main Content (centré, sans sidebar) */}
+      <main className="flex-1 overflow-hidden relative flex flex-col">
+        <div className="flex-1 overflow-auto scrollbar-custom max-w-7xl mx-auto w-full px-6 py-8">
+          {children}
+        </div>
+      </main>
 
       {/* Footer */}
       {footer && (
         <motion.footer
-          className="h-footer glass-strong border-t border-border-default flex items-center px-6 text-sm text-text-muted z-fixed"
+          className="h-footer glass-strong border-t border-titanium-border-default flex items-center px-6 text-sm text-titanium-text-tertiary z-fixed"
           initial={{ y: 48 }}
           animate={{ y: 0 }}
           transition={{ duration: 0.3, ease: 'easeOut' }}

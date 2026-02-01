@@ -8,20 +8,24 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- * TITANE∞ v8.0 - Layout Components Index (Tailwind CSS)
+ * TITANE∞ vΩ - Layout Components Index
  * Export centralisé de tous les composants de layout
+ * UI/UX Rework vΩ: TopNav remplace Sidebar
  * ═══════════════════════════════════════════════════════════════
  */
 
-// Main Layout Components (Tailwind migrated)
+// Main Layout Components (vΩ migrated)
 export { AppShell, type AppShellProps } from './AppShell';
 export {
   AppShellWithDevTools,
   type AppShellWithDevToolsProps,
 } from './AppShellWithDevTools';
-export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
+export { TopNav, type TopNavProps, type TopNavItem, createTopNavItems } from './TopNav';
 export { Header, type HeaderProps } from './Header';
 export { MobileNav, type MobileNavProps } from './MobileNav';
+
+// Legacy (deprecated - kept for backward compatibility during migration)
+export { Sidebar, type SidebarProps, type SidebarItem } from './Sidebar';
 
 // Utility Layout Components (original)
 export {
