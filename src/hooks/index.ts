@@ -30,6 +30,14 @@ export {
   type SingularitySyncReturn,
 } from './useSingularitySync';
 
+// ═══ UI vΩ PHASE F: BACKEND HEALTH MONITORING ═══
+export {
+  useBackendHealth,
+  type BackendServiceStatus,
+  type BackendUnavailableReason,
+  type BackendHealthState,
+} from './useBackendHealth';
+
 export {
   useMemoryEngine,
   type MemoryType,
