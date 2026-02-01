@@ -85,14 +85,6 @@
       "status": "active",
       "note": "Canonical E2E command. 'pnpm test:e2e' is alias."
     },
-    "wdio-e2e": {
-      "id": "wdio-e2e",
-      "name": "WebdriverIO E2E",
-      "command": "pnpm test:e2e:wdio",
-      "config": "wdio.conf.js",
-      "status": "active",
-      "note": "Officially included since 2026-01-23."
-    },
     "rust-cargo-test": {
       "id": "rust-cargo-test",
       "name": "Rust Tests",

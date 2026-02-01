@@ -19,21 +19,21 @@
    ./scripts/install-tauri-driver.sh
    ```
 
-2. **Lancer les tests E2E** :
+2. **Lancer les tests E2E (Playwright)** :
    ```bash
-   pnpm run e2e
+   pnpm run test:e2e
    ```
 
-3. **Vérifier l'environnement avec `beta:doctor`** :
+3. **Option avancée (Playwright direct)** :
    ```bash
-   pnpm run beta:doctor
+   pnpm run test:e2e:playwright
    ```
 
 ## Dépannage
 
 - **Port occupé** : Assurez-vous que le port `5173` est libre.
 - **Rust manquant** : Installez Rust via [rustup](https://rustup.rs/).
-- **Timeouts** : Augmentez les timeouts dans `wdio.conf.ts` si nécessaire.
+- **Timeouts** : Ajustez les timeouts Playwright si nécessaire.
 - **Problèmes avec `tauri-driver`** :
   - Vérifiez que `tauri-driver` est installé :
     ```bash
@@ -77,14 +77,8 @@
 
 3. **Lancer les tests E2E** :
    ```bash
-   pnpm run e2e
+   pnpm run test:e2e
    ```
-
-4. **Vérifier l'environnement** :
-   ```bash
-   pnpm run beta:doctor
-   ```
-
-5. **Résultats attendus** :
+4. **Résultats attendus** :
    - Tous les tests passent avec un message `✔️`.
    - En cas d'échec, des logs et captures d'écran sont disponibles.
