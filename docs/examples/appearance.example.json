@@ -3,7 +3,7 @@
   "title": "TITANE∞ Appearance Configuration Example",
   "description": "Configuration de l'apparence et du thème de l'interface",
   "version": "27.0.0",
-  
+
   "theme": {
     "mode": "dark",
     "options": ["light", "dark", "auto"],
@@ -13,7 +13,7 @@
       "darkModeStart": "19:00"
     }
   },
-  
+
   "colors": {
     "primary": "#3B82F6",
     "secondary": "#8B5CF6",
@@ -45,7 +45,7 @@
     "error": "#EF4444",
     "info": "#3B82F6"
   },
-  
+
   "typography": {
     "fontFamily": {
       "sans": "Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
@@ -68,7 +68,7 @@
       "bold": 700
     }
   },
-  
+
   "layout": {
     "compactMode": false,
     "sidebarWidth": {
@@ -92,7 +92,7 @@
       "full": 9999
     }
   },
-  
+
   "animations": {
     "enabled": true,
     "duration": {
@@ -102,7 +102,7 @@
     },
     "reducedMotion": false
   },
-  
+
   "chat": {
     "bubbleStyle": "rounded",
     "options": ["rounded", "square", "minimal"],
@@ -127,7 +127,7 @@
       "renderImages": true
     }
   },
-  
+
   "sidebar": {
     "collapsible": true,
     "defaultCollapsed": false,
@@ -135,7 +135,7 @@
     "showLabels": true,
     "groupSeparators": true
   },
-  
+
   "accessibility": {
     "highContrast": false,
     "focusIndicator": true,
@@ -147,7 +147,7 @@
       "step": 2
     }
   },
-  
+
   "advanced": {
     "customCSS": {
       "enabled": false,

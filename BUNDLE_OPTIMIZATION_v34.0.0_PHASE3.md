@@ -11,13 +11,15 @@
 
 ### 3.1 Three.js Lazy Loader Migration
 
-**Current State**: 
+**Current State**:
+
 - 4 files still with eager imports despite `ThreeJSLazyLoader` existing
 - Files: `AudioVisualSyncEngine.ts`, `VoiceReactionSystem.ts`, `BodyGestureFluidityEngine.ts`, `PBRMaterialSystem.ts`
 
 **Action**: Replace eager `import * as THREE from 'three'` with dynamic loading
 
 **Pattern**:
+
 ```typescript
 // Before: Eager (blocks module load)
 import * as THREE from 'three';
@@ -34,6 +36,7 @@ const THREE = await loadThreeJS();
 **Risk**: Low (ThreeJSLazyLoader tested pattern exists)
 
 **Files to Update**:
+
 1. `src/modules/avatar/core/AudioVisualSyncEngine.ts` (line 5)
 2. `src/modules/avatar/voice/VoiceReactionSystem.ts` (check imports)
 3. `src/modules/avatar/gesture/BodyGestureFluidityEngine.ts` (check imports)
@@ -43,16 +46,19 @@ const THREE = await loadThreeJS();
 
 ### 3.2 Vendor Utils Tree-Shaking Verification
 
-**Current State**: 
+**Current State**:
+
 - `vendor-utils` (308K) - Generic utilities bundle
 - May contain unused exports preventing tree-shaking
 
-**Action**: 
+**Action**:
+
 1. Audit what's exported from vendor-utils module
 2. Check unused exports with `eslint-plugin-unused-imports`
 3. Enable stricter tree-shaking in rollup config
 
 **Command**:
+
 ```bash
 # Find vendor-utils index
 find src -name "*vendor*" -o -name "*utils*" | grep -i index
@@ -71,12 +77,14 @@ grep -r "export.*" src/utils/ --include="*.ts" | wc -l
 ### 3.3 AI Service Provider Splitting
 
 **Current State**:
+
 - `service-ai` bundle (232K) - Monolithic AI service layer
 - Loads OpenAI/Anthropic/GitHub clients eagerly
 
 **Action**: Create provider-specific modules for lazy-loading
 
 **New Structure**:
+
 ```
 src/services/ai/
   ├── base/ (core, 10K)
@@ -91,6 +99,7 @@ src/services/ai/
 ```
 
 **Implementation**:
+
 ```typescript
 // Before: All providers imported eagerly
 import OpenAIService from './providers/openai';
@@ -98,7 +107,7 @@ import AnthropicService from './providers/anthropic';
 
 // After: Dynamic import based on config
 async function getAIProvider(type: 'openai' | 'anthropic' | 'github') {
-  switch(type) {
+  switch (type) {
     case 'openai':
       return (await import('./providers/openai')).default;
     case 'anthropic':
@@ -118,12 +127,14 @@ async function getAIProvider(type: 'openai' | 'anthropic' | 'github') {
 ### 3.4 ONNX Runtime Lazy-Loading
 
 **Current State**:
+
 - `onnxruntime` (536K) - Largest single dependency
 - Possibly loaded eagerly if AI models initialized early
 
 **Action**: Check current usage, consider lazy-loading for on-demand model inference
 
 **Investigation**:
+
 ```bash
 # Find onnxruntime imports
 grep -r "onnxruntime" src/ --include="*.ts" --include="*.tsx"
@@ -142,12 +153,14 @@ grep -r "import.*onnxruntime" src/ --include="*.ts"
 ## Implementation Roadmap
 
 ### Step 1: Three.js Lazy Loader Migration (20 min)
+
 - [ ] Audit current Three.js usage in 4 avatar files
 - [ ] Convert imports to `loadThreeJS()` pattern
 - [ ] Test avatar initialization
 - [ ] Commit: "perf(avatar): Three.js lazy-loading via ThreeJSLazyLoader"
 
 ### Step 2: Vendor Utils Audit (15 min)
+
 - [ ] Map all exports in utils modules
 - [ ] Run tree-shaking analysis
 - [ ] Identify unused exports
@@ -155,6 +168,7 @@ grep -r "import.*onnxruntime" src/ --include="*.ts"
 - [ ] Commit: "perf(build): vendor-utils tree-shaking optimization"
 
 ### Step 3: AI Provider Splitting (1-2 hours)
+
 - [ ] Extract provider modules (openai, anthropic, github)
 - [ ] Implement factory with dynamic imports
 - [ ] Update service initialization
@@ -163,6 +177,7 @@ grep -r "import.*onnxruntime" src/ --include="*.ts"
 - [ ] Commit: "perf(ai): split AI providers for lazy-loading (v34.0.0 Phase 3)"
 
 ### Step 4: ONNX Runtime Check (15 min)
+
 - [ ] Verify current loading strategy
 - [ ] If eager: Move to dynamic import
 - [ ] Verify @xenova/transformers already handles this
@@ -172,14 +187,15 @@ grep -r "import.*onnxruntime" src/ --include="*.ts"
 
 ## Success Metrics
 
-| Target | Current | After Phase 3 | Gain |
-|--------|---------|---------------|------|
-| Total JS | 4.04 MB | ~3.6-3.8 MB | -8-12% |
-| Main chunk | ~300K | ~290K | -3-5% |
-| service-ai | 232K | ~150K (split) | -35% |
-| Three.js | ~38MB (dynamic) | Loaded only when needed | ✅ |
+| Target     | Current         | After Phase 3           | Gain   |
+| ---------- | --------------- | ----------------------- | ------ |
+| Total JS   | 4.04 MB         | ~3.6-3.8 MB             | -8-12% |
+| Main chunk | ~300K           | ~290K                   | -3-5%  |
+| service-ai | 232K            | ~150K (split)           | -35%   |
+| Three.js   | ~38MB (dynamic) | Loaded only when needed | ✅     |
 
 **Cumulative v27-v34 Achievement**:
+
 - v30.0.0: -58% component rerenders
 - v33.0.0: -80% computation overhead
 - v34.0.0 Phase 3: -8-12% bundle size
@@ -190,6 +206,7 @@ grep -r "import.*onnxruntime" src/ --include="*.ts"
 ## Rollback Plan
 
 Each optimization commits independently:
+
 1. Three.js migration: Can revert to eager imports if issues
 2. Tree-shaking: No code changes, only config (safe)
 3. AI provider split: New modules created, old service still works

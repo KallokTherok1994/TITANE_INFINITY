@@ -13,7 +13,10 @@ import type {
 import { DEFAULT_DISPLAY_STATE } from './AvatarDisplayState';
 import * as FloatingEngine from './avatarFloatingEngine';
 import { useSingularityState } from '@/core/state/SingularityState';
-import { useAvatarDisplay, useAvatarDisplayActions } from '@/core/state/SingularityState.selectors';
+import {
+  useAvatarDisplay,
+  useAvatarDisplayActions,
+} from '@/core/state/SingularityState.selectors';
 
 export interface UseFloatingWindowResult {
   displayState: AvatarDisplayState;

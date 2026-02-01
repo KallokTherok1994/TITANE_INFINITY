@@ -93,7 +93,7 @@ pnpm run build
 ```bash
 # Verify build artifacts
 ls -lh release/
-# Expected: 
+# Expected:
 # - titane-infinity-27.0.0.AppImage
 # - titane-infinity-27.0.0.deb
 # - titane-infinity-27.0.0.tar.gz
@@ -201,4 +201,3 @@ Authority: TITANE∞ v27.0.0 PLATINUM Certification
 Status: OFFICIAL AUTHORIZATION - SIGNED & EFFECTIVE
 
 🚀 **v27.0.0 IS NOW AUTHORIZED FOR PRODUCTION DEPLOYMENT** 🚀
-

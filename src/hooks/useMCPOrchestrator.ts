@@ -183,9 +183,18 @@ export function useMCPHealth() {
   }, [runHealthCheck]);
 
   // ═══ MEMOIZED DERIVED STATE ═══
-  const isHealthy = useMemo(() => health.globalStatus === 'HEALTHY', [health.globalStatus]);
-  const isDegraded = useMemo(() => health.globalStatus === 'DEGRADED', [health.globalStatus]);
-  const isCritical = useMemo(() => health.globalStatus === 'CRITICAL', [health.globalStatus]);
+  const isHealthy = useMemo(
+    () => health.globalStatus === 'HEALTHY',
+    [health.globalStatus]
+  );
+  const isDegraded = useMemo(
+    () => health.globalStatus === 'DEGRADED',
+    [health.globalStatus]
+  );
+  const isCritical = useMemo(
+    () => health.globalStatus === 'CRITICAL',
+    [health.globalStatus]
+  );
 
   return {
     health,
@@ -222,7 +231,12 @@ export function useMCPJobQueue() {
       jobs.running.length +
       jobs.completed.length +
       jobs.suspended.length,
-    [jobs.pending.length, jobs.running.length, jobs.completed.length, jobs.suspended.length]
+    [
+      jobs.pending.length,
+      jobs.running.length,
+      jobs.completed.length,
+      jobs.suspended.length,
+    ]
   );
 
   return {

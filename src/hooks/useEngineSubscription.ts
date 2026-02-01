@@ -11,7 +11,10 @@ import {
   type EngineName,
   type EngineDataMap,
 } from '../core/state/SingularityState';
-import { useEngineState, useEngineActions } from '../core/state/SingularityState.selectors';
+import {
+  useEngineState,
+  useEngineActions,
+} from '../core/state/SingularityState.selectors';
 import { useTitaneCore } from './useTitaneCore';
 
 type EngineType =

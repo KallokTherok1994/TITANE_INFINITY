@@ -8,12 +8,12 @@
 
 ### 📋 Statistiques de Nettoyage
 
-| Catégorie | Avant | Après | Archivés |
-|-----------|-------|-------|----------|
-| **Fichiers .md (racine)** | 218 | 6 | 212 |
-| **Fichiers config** | 40+ | 22 | Consolidés |
-| **Fichiers logs** | 15+ | 0 | 15 |
-| **Total archivés** | - | - | **490** |
+| Catégorie                 | Avant | Après | Archivés   |
+| ------------------------- | ----- | ----- | ---------- |
+| **Fichiers .md (racine)** | 218   | 6     | 212        |
+| **Fichiers config**       | 40+   | 22    | Consolidés |
+| **Fichiers logs**         | 15+   | 0     | 15         |
+| **Total archivés**        | -     | -     | **490**    |
 
 ### 🎯 Fichiers .md ESSENTIELS (conservés à la racine)
 
@@ -31,70 +31,70 @@
 **`.archive_cleanup/` contient :**
 
 1. **audit_reports/** (50 fichiers)
-   - AUDIT_*.md et AUDIT_*.txt (anciens audits)
+   - AUDIT*\*.md et AUDIT*\*.txt (anciens audits)
 
 2. **analysis_docs/** (60+ fichiers)
-   - ANALYSE_*.md
-   - RAPPORT_*.md
-   - CONFORMITE_*.md
-   - SYNTHESE_*.md
-   - APPROVAL_*.md
+   - ANALYSE\_\*.md
+   - RAPPORT\_\*.md
+   - CONFORMITE\_\*.md
+   - SYNTHESE\_\*.md
+   - APPROVAL\_\*.md
 
 3. **old_tests/** (6 fichiers)
    - Fichiers test obsolètes
 
 4. **logs/** (15 fichiers)
-   - build_*.log
-   - build_*.py
+   - build\_\*.log
+   - build\_\*.py
 
 5. **authorization/** (15 fichiers)
-   - AUTHORIZATION_*.md
-   - AUTORISATION_*.md
-   - CERTIFICATION_*.md (anciennes versions)
+   - AUTHORIZATION\_\*.md
+   - AUTORISATION\_\*.md
+   - CERTIFICATION\_\*.md (anciennes versions)
 
 6. **build_reports/** (10 fichiers)
-   - BRANCH_MERGE_*.md
-   - BUILD_*.md
-   - BUILD_SUCCESS_*.md
+   - BRANCH*MERGE*\*.md
+   - BUILD\_\*.md
+   - BUILD*SUCCESS*\*.md
 
 7. **feature_reports/** (10 fichiers)
-   - CHAT_*.md
-   - AUTOMATION_*.md
+   - CHAT\_\*.md
+   - AUTOMATION\_\*.md
 
 8. **history/** (20+ fichiers)
-   - Anciens CHANGELOG_*.md
+   - Anciens CHANGELOG\_\*.md
    - Fichiers v26, v25, versions anciennes
 
 9. **secondary_docs/** (5+ fichiers)
    - Docs secondaires non critiques
 
 10. **old_sessions/** (80+ fichiers)
-    - SESSION_*.md
-    - REFLEXION_*.md
-    - SPRINT_*.md
-    - WEEK_*.md
-    - TRACK_*.md
+    - SESSION\_\*.md
+    - REFLEXION\_\*.md
+    - SPRINT\_\*.md
+    - WEEK\_\*.md
+    - TRACK\_\*.md
     - Fichiers COMPLETE/SUCCESS/ULTIMATE
 
 11. **old_reports/** (150+ fichiers)
-    - REPORT_*.md
-    - STATUS_*.md
-    - RESUME_*.md
-    - VALIDATION_*.md
-    - TEST_*.md
-    - VERIFY_*.md
+    - REPORT\_\*.md
+    - STATUS\_\*.md
+    - RESUME\_\*.md
+    - VALIDATION\_\*.md
+    - TEST\_\*.md
+    - VERIFY\_\*.md
 
 12. **config_ci_cd/** (20+ fichiers)
-    - CLINE_*.md
-    - CI_*.md
-    - CHECKLIST_*.md
+    - CLINE\_\*.md
+    - CI\_\*.md
+    - CHECKLIST\_\*.md
     - Fichiers CI/CD obsolètes
 
 13. **deployment_info/** (50+ fichiers)
-    - DEBUG_*.md
-    - DEEP_*.md
-    - DEPLOYMENT_*.md (infos anciennes)
-    - DIAGNOSTIC_*.md
+    - DEBUG\_\*.md
+    - DEEP\_\*.md
+    - DEPLOYMENT\_\*.md (infos anciennes)
+    - DIAGNOSTIC\_\*.md
     - Et autres fichiers d'info deployement
 
 14. **unnecessary_docs/** (15+ fichiers)
@@ -105,7 +105,7 @@
     - Etc.
 
 15. **old_tests_additional/** (5+ fichiers)
-    - check_*.js
+    - check\_\*.js
     - Fichiers test additionnels
 
 16. **old_reflexions/** (20+ fichiers)
@@ -135,22 +135,27 @@ TITANE_INFINITY/
 ## 📊 Nettoyage par Phase
 
 ### Phase 1: Archivage Audit/Analyse
+
 - **Fichiers**: 106 archivés
 - **Catégories**: AUDIT, ANALYSE, RAPPORT, CONFORMITE, SYNTHESE
 
 ### Phase 2: Nettoyage Approfondi
+
 - **Fichiers**: 70 archivés supplémentaires
 - **Catégories**: BUILD logs, AUTHORIZATION, CHAT/AUTOMATION
 
 ### Phase 3: Tri Intelligent
+
 - **Fichiers**: 100+ archivés
 - **Catégories**: CI/CLINE, Documentation secondaire, Tests obsolètes
 
 ### Phase 4: Nettoyage Radical
+
 - **Fichiers**: 150+ archivés
 - **Catégories**: SESSION, REFLEXION, SPRINT, REPORT, VALIDATION, v26/v25
 
 ### Phase 5: Organisation Finale
+
 - **Fichiers**: 50+ archivés
 - **Catégories**: DEPLOYMENT, DEBUG, DIAGNOSTIC, PRODUCTION_PLAN
 
@@ -162,25 +167,26 @@ TITANE_INFINITY/
 ✅ Tests actuels (vitest, playwright configs)  
 ✅ Scripts de développement  
 ✅ Documentation produit (README.md, CHANGELOG.md)  
-✅ Artifacts production (runtime/)  
+✅ Artifacts production (runtime/)
 
 ## 🎓 Archivage Intelligent
 
 **Stratégie appliquée:**
+
 - Conservé: Documentation ACTIVE, Configuration ACTUELLE, Source CODE
 - Archivé: Sessions ANCIENNES, Reports OBSOLÈTES, Audits PASSÉS
 - Supprimé: Fichiers CASSÉS, Config DUPLIQUÉES, Test DÉPRÉCIÉ
 
 ## ✅ Certifications
 
-| Aspect | Status |
-|--------|--------|
-| **Racine propre** | ✅ 6 fichiers essentiels |
-| **Archive organisée** | ✅ 18 dossiers structurés |
+| Aspect                 | Status                       |
+| ---------------------- | ---------------------------- |
+| **Racine propre**      | ✅ 6 fichiers essentiels     |
+| **Archive organisée**  | ✅ 18 dossiers structurés    |
 | **Source code intact** | ✅ 1,423 TS + 906 Rust files |
-| **Config valide** | ✅ 22 fichiers essentiels |
-| **Build tested** | ✅ v27.0.0 operational |
-| **Git status clean** | ⏳ Prêt à commit |
+| **Config valide**      | ✅ 22 fichiers essentiels    |
+| **Build tested**       | ✅ v27.0.0 operational       |
+| **Git status clean**   | ⏳ Prêt à commit             |
 
 ## 🚀 Prochaines Étapes
 

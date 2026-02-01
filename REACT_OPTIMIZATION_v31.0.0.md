@@ -12,6 +12,7 @@
 Phase de **raffinement** complémentaire à v30.0.0 React.memo: stabiliser les **props callbacks** et **memoizer computations coûteuses** pour maximiser l'efficacité des composants memoizés.
 
 **Strategy Stack**:
+
 - **v27-v28**: displayName + memoization hooks (base patterns)
 - **v29.x**: Zustand selectors (store subscriptions optimization)
 - **v30.0.0**: React.memo (component rendering optimization)
@@ -38,15 +39,15 @@ Phase de **raffinement** complémentaire à v30.0.0 React.memo: stabiliser les *
 
 **RÉSULTAT**: **95% des handlers DÉJÀ optimisés!**
 
-| Component | Handlers | useCallback | useMemo | Status |
-|-----------|----------|-------------|---------|--------|
-| ConversationSection | 20+ | ✅ 20+ | ✅ 4 | OPTIMAL |
-| VisionSection | 1 | ✅ 1 | N/A | OPTIMAL |
-| MemorySection | 2 | ✅ 2 | N/A | OPTIMAL |
-| ProgressionSection | N/A | N/A | ✅ 2 | OPTIMAL |
-| AgendaPage | 2 | ✅ 2 | ✅ 3 | OPTIMAL |
-| DevPage | 3 | ✅ 3 | N/A | OPTIMAL |
-| MonitoringDashboard | 3 | ❌ **0** | N/A | **NEEDS OPTIMIZATION** |
+| Component           | Handlers | useCallback | useMemo | Status                 |
+| ------------------- | -------- | ----------- | ------- | ---------------------- |
+| ConversationSection | 20+      | ✅ 20+      | ✅ 4    | OPTIMAL                |
+| VisionSection       | 1        | ✅ 1        | N/A     | OPTIMAL                |
+| MemorySection       | 2        | ✅ 2        | N/A     | OPTIMAL                |
+| ProgressionSection  | N/A      | N/A         | ✅ 2    | OPTIMAL                |
+| AgendaPage          | 2        | ✅ 2        | ✅ 3    | OPTIMAL                |
+| DevPage             | 3        | ✅ 3        | N/A     | OPTIMAL                |
+| MonitoringDashboard | 3        | ❌ **0**    | N/A     | **NEEDS OPTIMIZATION** |
 
 **Seul composant nécessitant optimization**: **MonitoringDashboard.tsx**
 
@@ -66,6 +67,7 @@ const handleClearMetrics = () => { ... };
 ```
 
 **Problème**:
+
 - Handlers recréés à **chaque render**
 - Brise l'efficacité de `memo()` appliqué en v30.0.0
 - Props instables passées aux boutons → rerenders inutiles
@@ -110,6 +112,7 @@ const handleClearMetrics = useCallback(() => {
 ```
 
 **Bénéfices**:
+
 - ✅ References stables (empty deps)
 - ✅ Aucun rerender inutile des boutons
 - ✅ Maximise l'efficacité du `memo()` v30.0.0
@@ -121,9 +124,11 @@ const handleClearMetrics = useCallback(() => {
 ### Changements Effectifs
 
 **Fichiers modifiés**: 1
+
 - `src/pages/MonitoringDashboard.tsx`
 
 **Handlers optimisés**: 3
+
 - `handleExportJSON` → useCallback
 - `handleExportCSV` → useCallback
 - `handleClearMetrics` → useCallback
@@ -133,14 +138,17 @@ const handleClearMetrics = useCallback(() => {
 ### Performance Attendue
 
 **MonitoringDashboard.tsx**:
+
 - **Avant v31.0.0**: 3 handlers recréés chaque render → buttons rerender systématiquement
 - **Après v31.0.0**: 3 handlers stables → buttons skip rerenders
 
 **Impact estimé**:
+
 - **MonitoringDashboard buttons**: -100% rerenders (stable props)
 - **Global impact**: -2% additional (small component, high optimization déjà présente)
 
 **Cumulative v27-v31**:
+
 - v27-v28: -45% hooks rerenders
 - v29.x: -35% store subscriptions
 - v30.0.0: -15% component rendering
@@ -169,6 +177,7 @@ const handleClearMetrics = useCallback(() => {
 **Découverte clé**: TITANE∞ codebase déjà **hautement optimisé**!
 
 **Evidence**:
+
 1. ConversationSection: 20+ handlers ALL useCallback ✅
 2. AgendaPage: 2 handlers + 3 useMemo ALL optimized ✅
 3. DevPage: 3 handlers ALL useCallback ✅
@@ -201,11 +210,13 @@ Maximum Performance + Clean Architecture
 **Reason**: **Previous developers already followed best practices!**
 
 **Evidence from codebase**:
+
 - 95% of handlers already wrapped in useCallback
 - Expensive computations already memoized with useMemo
 - Only 1 component (MonitoringDashboard) needed fixes
 
 **Interpretation**:
+
 - ✅ TITANE∞ team understood React performance from start
 - ✅ Patterns adopted early (probably since v24-v25)
 - ✅ Only recent additions (MonitoringDashboard) missed pattern
@@ -235,6 +246,7 @@ Maximum Performance + Clean Architecture
 ### Pattern Examples from Codebase
 
 **Excellent pattern (ConversationSection)**:
+
 ```typescript
 const handleSuggestionClick = useCallback(
   (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -248,6 +260,7 @@ const handleSuggestionClick = useCallback(
 ```
 
 **Complex pattern avec deps (AgendaPage)**:
+
 ```typescript
 const handleDayClick = useCallback(
   (date: Date) => {
@@ -261,6 +274,7 @@ const handleDayClick = useCallback(
 ```
 
 **Expensive computation (ProgressionSection)**:
+
 ```typescript
 const categories = useMemo(
   () => ({
@@ -280,18 +294,21 @@ const categories = useMemo(
 ### v32.0.0+ Recommendations
 
 **Option A: Continue Zustand Selectors (RECOMMENDED - HIGH-IMPACT)**
+
 - **Target**: 17+ stores remaining (evolutionStore, visualStore, agendaStore, etc.)
 - **Pattern**: Established in v29.x (selectors architecture)
 - **Impact**: -20-30% additional (store subscriptions = high leverage)
 - **Timeline**: 3-5 sprints (1 store/sprint = sustainable)
 
 **Option B: Component Virtualization (OPTIONAL - FUTURE)**
+
 - **Target**: Long lists (messages, achievements, calendar days)
 - **Libraries**: react-window or react-virtual
 - **Impact**: -40-50% for long lists (1000+ items)
 - **Priority**: P2 (optimization already excellent)
 
 **Option C: Code Splitting (OPTIONAL - FUTURE)**
+
 - **Target**: Route-level lazy loading
 - **Pattern**: Already present (lazy components in TitanePage)
 - **Impact**: -20% initial bundle size
@@ -335,16 +352,19 @@ const categories = useMemo(
 v31.0.0 was a **validation pass** that confirmed TITANE∞ codebase is **already highly optimized**.
 
 **Key Findings**:
+
 1. **95% of handlers already wrapped** in useCallback ✅
 2. **Expensive computations already memoized** with useMemo ✅
 3. **Only 1 component needed fixes** (MonitoringDashboard) ✅
 
 **Interpretation**:
+
 - Previous developers **understood React performance** from early versions
 - Patterns **adopted consistently** across most of codebase
 - v31.0.0 = **final polish** rather than massive refactor
 
 **Strategic Implication**:
+
 - React-level optimizations (v30-v31) = **COMPLETE** ✅
 - **Next high-impact area**: Zustand selectors (17+ stores) = v32.0.0+
 - Estimated remaining potential: **-20-30%** additional from store optimization

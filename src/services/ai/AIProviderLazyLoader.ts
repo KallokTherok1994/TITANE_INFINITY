@@ -1,7 +1,7 @@
 /**
  * TITANE∞ v37.0.0 — Proprietary License
  * © 2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
- * 
+ *
  * ═══════════════════════════════════════════════════════════════════
  *   AI PROVIDER LAZY LOADER
  *   Dynamic imports for cloud AI providers (OpenAI, Claude, Gemini, Copilot)
@@ -39,18 +39,18 @@ interface ProviderModule {
 export const loadOpenAIProvider = async (): Promise<AIProvider> => {
   logger.debug('Loading OpenAI provider...');
   const start = performance.now();
-  
+
   try {
-    const module = await import('./providers/openai') as ProviderModule;
+    const module = (await import('./providers/openai')) as ProviderModule;
     const provider = module.openaiProvider || module.default;
-    
+
     if (!provider) {
       throw new Error('OpenAI provider not found in module');
     }
-    
+
     const duration = performance.now() - start;
     logger.info(`OpenAI provider loaded in ${duration.toFixed(2)}ms`);
-    
+
     return provider;
   } catch (error) {
     logger.error('Failed to load OpenAI provider:', error);
@@ -65,18 +65,18 @@ export const loadOpenAIProvider = async (): Promise<AIProvider> => {
 export const loadClaudeProvider = async (): Promise<AIProvider> => {
   logger.debug('Loading Claude provider...');
   const start = performance.now();
-  
+
   try {
-    const module = await import('./providers/claude') as ProviderModule;
+    const module = (await import('./providers/claude')) as ProviderModule;
     const provider = module.claudeProvider || module.default;
-    
+
     if (!provider) {
       throw new Error('Claude provider not found in module');
     }
-    
+
     const duration = performance.now() - start;
     logger.info(`Claude provider loaded in ${duration.toFixed(2)}ms`);
-    
+
     return provider;
   } catch (error) {
     logger.error('Failed to load Claude provider:', error);
@@ -91,18 +91,18 @@ export const loadClaudeProvider = async (): Promise<AIProvider> => {
 export const loadGeminiProvider = async (): Promise<AIProvider> => {
   logger.debug('Loading Gemini provider...');
   const start = performance.now();
-  
+
   try {
-    const module = await import('./providers/gemini') as ProviderModule;
+    const module = (await import('./providers/gemini')) as ProviderModule;
     const provider = module.geminiProvider || module.default;
-    
+
     if (!provider) {
       throw new Error('Gemini provider not found in module');
     }
-    
+
     const duration = performance.now() - start;
     logger.info(`Gemini provider loaded in ${duration.toFixed(2)}ms`);
-    
+
     return provider;
   } catch (error) {
     logger.error('Failed to load Gemini provider:', error);
@@ -117,18 +117,18 @@ export const loadGeminiProvider = async (): Promise<AIProvider> => {
 export const loadCopilotProvider = async (): Promise<AIProvider> => {
   logger.debug('Loading Copilot provider...');
   const start = performance.now();
-  
+
   try {
-    const module = await import('./providers/copilot') as ProviderModule;
+    const module = (await import('./providers/copilot')) as ProviderModule;
     const provider = module.copilotProvider || module.default;
-    
+
     if (!provider) {
       throw new Error('Copilot provider not found in module');
     }
-    
+
     const duration = performance.now() - start;
     logger.info(`Copilot provider loaded in ${duration.toFixed(2)}ms`);
-    
+
     return provider;
   } catch (error) {
     logger.error('Failed to load Copilot provider:', error);
@@ -172,16 +172,16 @@ export const getOrLoadProvider = async (name: LazyProviderName): Promise<AIProvi
     logger.debug(`Using cached ${name} provider`);
     return cached;
   }
-  
+
   // Load and cache
   const loader = PROVIDER_LOADERS[name];
   if (!loader) {
     throw new Error(`Unknown provider: ${name}`);
   }
-  
+
   const provider = await loader();
   providerCache.set(name, provider);
-  
+
   return provider;
 };
 
@@ -195,9 +195,9 @@ export const preloadProvider = (name: LazyProviderName): void => {
     logger.debug(`Provider ${name} already preloaded`);
     return;
   }
-  
+
   // Start async load (non-blocking)
-  getOrLoadProvider(name).catch((error) => {
+  getOrLoadProvider(name).catch(error => {
     logger.warn(`Failed to preload ${name} provider:`, error);
   });
 };

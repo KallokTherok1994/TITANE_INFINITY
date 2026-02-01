@@ -52,11 +52,13 @@ const { sidebarCollapsed, modalOpen, toasts, loading } = useUIStore();
 ### Impact Performance
 
 **Exemple réel (App.tsx avant optimisation):**
+
 - Store avec 7 propriétés
 - Component utilise uniquement `sidebarCollapsed`
 - **Rerenders 7× plus que nécessaire** (sur chaque changement de propriété)
 
 **Multiplicateurs:**
+
 - useEngineSubscription: 1 hook × 8 engines = **impact 8×**
 - Root components: Rerenders cascadent à TOUS les enfants
 
@@ -96,14 +98,11 @@ src/stores/
 import { useUIStore } from './uiStore';
 
 // Selector primitive: retourne UNE valeur
-export const useSidebarCollapsed = () => 
-  useUIStore(state => state.sidebarCollapsed);
+export const useSidebarCollapsed = () => useUIStore(state => state.sidebarCollapsed);
 
-export const useModalOpen = () => 
-  useUIStore(state => state.modalOpen);
+export const useModalOpen = () => useUIStore(state => state.modalOpen);
 
-export const useLoading = () => 
-  useUIStore(state => state.loading);
+export const useLoading = () => useUIStore(state => state.loading);
 ```
 
 ### Utilisation
@@ -136,10 +135,10 @@ const sidebarCollapsed = useSidebarCollapsed();
 
 ```typescript
 // ❌ PROBLÈME: Nouveau object à chaque appel
-const useSidebarState = () => 
-  useUIStore(state => ({ 
-    collapsed: state.sidebarCollapsed, 
-    width: state.sidebarWidth 
+const useSidebarState = () =>
+  useUIStore(state => ({
+    collapsed: state.sidebarCollapsed,
+    width: state.sidebarWidth,
   }));
 
 // Résultat: { collapsed, width } est un NOUVEL object à chaque appel
@@ -154,11 +153,11 @@ import { shallow } from 'zustand/shallow';
 
 export const useSidebarState = () =>
   useUIStore(
-    state => ({ 
-      collapsed: state.sidebarCollapsed, 
-      width: state.sidebarWidth 
+    state => ({
+      collapsed: state.sidebarCollapsed,
+      width: state.sidebarWidth,
     }),
-    shallow  // ⭐ Compare VALUES, not object reference
+    shallow // ⭐ Compare VALUES, not object reference
   );
 ```
 
@@ -183,12 +182,10 @@ const { collapsed, width } = useSidebarState();
 
 ```typescript
 // ❌ NE PAS faire sans shallow!
-const useBadSelector = () => 
-  useUIStore(state => ({ ...state.ui }));  // Nouveau object à chaque fois
+const useBadSelector = () => useUIStore(state => ({ ...state.ui })); // Nouveau object à chaque fois
 
 // ✅ TOUJOURS utiliser shallow pour objects/arrays
-const useGoodSelector = () => 
-  useUIStore(state => ({ ...state.ui }), shallow);
+const useGoodSelector = () => useUIStore(state => ({ ...state.ui }), shallow);
 ```
 
 ---
@@ -208,7 +205,7 @@ export const useSidebarActions = () =>
       setSidebarCollapsed: state.setSidebarCollapsed,
       setSidebarWidth: state.setSidebarWidth,
     }),
-    shallow  // Important pour éviter rerenders si référence actions change
+    shallow // Important pour éviter rerenders si référence actions change
   );
 ```
 
@@ -218,11 +215,11 @@ export const useSidebarActions = () =>
 // Form handler qui MUTATE seulement
 const MyForm = () => {
   const { setSidebarWidth } = useSidebarActions();
-  
+
   const handleSubmit = (width: number) => {
-    setSidebarWidth(width);  // Mutation only, no state reading
+    setSidebarWidth(width); // Mutation only, no state reading
   };
-  
+
   // Résultat: Component JAMAIS rerender (aucune subscription à l'état)
   // Performance: -100% rerenders! 🚀
 };
@@ -231,6 +228,7 @@ const MyForm = () => {
 ### Impact Massif
 
 **Stats v29.1.0:**
+
 - 3 hooks convertis en action-only (useGlobalAIChat, useEngineSubscription, App.tsx)
 - **-100% rerenders** pour ces consumers
 - **Applicable à 40-50% des usages de stores** (forms, callbacks, mutations)
@@ -252,23 +250,19 @@ const MyForm = () => {
 
 ```typescript
 // Computed: Boolean check
-export const useHasToasts = () => 
-  useUIStore(state => state.toasts.length > 0);
+export const useHasToasts = () => useUIStore(state => state.toasts.length > 0);
 
 // Computed: Count
-export const useToastCount = () => 
-  useUIStore(state => state.toasts.length);
+export const useToastCount = () => useUIStore(state => state.toasts.length);
 
 // Computed: Inverse logic
-export const useSidebarExpanded = () => 
-  useUIStore(state => !state.sidebarCollapsed);
+export const useSidebarExpanded = () => useUIStore(state => !state.sidebarCollapsed);
 
 // Computed: Latest item
-export const useLatestSnapshot = () => 
-  useMemoryStore(state => state.snapshots[0]);
+export const useLatestSnapshot = () => useMemoryStore(state => state.snapshots[0]);
 
 // Computed: Derived boolean
-export const useHasOverlay = () => 
+export const useHasOverlay = () =>
   useUIStore(state => state.modalOpen || state.expPanelOpen);
 ```
 
@@ -315,15 +309,12 @@ import { shallow } from 'zustand/shallow';
 export const useMyValue = () => useMyStore(state => state.myValue);
 
 // 2. Composite selectors (shallow)
-export const useMyState = () => 
+export const useMyState = () =>
   useMyStore(state => ({ value1: state.value1, value2: state.value2 }), shallow);
 
 // 3. Action selectors
 export const useMyActions = () =>
-  useMyStore(
-    state => ({ action1: state.action1, action2: state.action2 }),
-    shallow
-  );
+  useMyStore(state => ({ action1: state.action1, action2: state.action2 }), shallow);
 
 // 4. Computed selectors
 export const useHasValue = () => useMyStore(state => state.myValue !== null);
@@ -366,20 +357,20 @@ const MyComponent = () => {
 
 ### Résultats Réels v29.0.0-v29.1.0
 
-| Optimization | Component | Rerenders Before | Rerenders After | Reduction |
-|-------------|-----------|------------------|-----------------|-----------|
-| Primitive | MemoryGraph | 100% (all changes) | 15% (state only) | **-85%** |
-| Composite | App.tsx sidebar | 100% (all changes) | 25% (sidebar only) | **-75%** |
-| Action-Only | useGlobalAIChat | 100% (all changes) | 0% (actions only) | **-100%** |
-| Computed | Modal overlay | 100% (all changes) | 10% (modal/panel) | **-90%** |
+| Optimization | Component       | Rerenders Before   | Rerenders After    | Reduction |
+| ------------ | --------------- | ------------------ | ------------------ | --------- |
+| Primitive    | MemoryGraph     | 100% (all changes) | 15% (state only)   | **-85%**  |
+| Composite    | App.tsx sidebar | 100% (all changes) | 25% (sidebar only) | **-75%**  |
+| Action-Only  | useGlobalAIChat | 100% (all changes) | 0% (actions only)  | **-100%** |
+| Computed     | Modal overlay   | 100% (all changes) | 10% (modal/panel)  | **-90%**  |
 
 ### Multiplicateurs Identifiés
 
-| Pattern | Count | Impact |
-|---------|-------|--------|
-| useEngineSubscription | 1 hook × 8 engines | **8× performance gain** |
-| Root component (App.tsx) | 1 optimization | **Cascade to all children** |
-| Action-only pattern | 3 implementations | **40-50% of usages applicable** |
+| Pattern                  | Count              | Impact                          |
+| ------------------------ | ------------------ | ------------------------------- |
+| useEngineSubscription    | 1 hook × 8 engines | **8× performance gain**         |
+| Root component (App.tsx) | 1 optimization     | **Cascade to all children**     |
+| Action-only pattern      | 3 implementations  | **40-50% of usages applicable** |
 
 ### Impact Global Cumulé
 
@@ -394,25 +385,27 @@ const MyComponent = () => {
 ### 1. Prioriser Optimizations
 
 **High ROI Targets:**
+
 1. **Root components** (App.tsx) → cascade effect
 2. **Hooks avec multiplicateurs** (useEngineSubscription ×8)
 3. **High-frequency components** (Dashboard, Monitoring, Real-time)
 4. **Action-only opportunities** (Forms, callbacks, mutations)
 
 **Low ROI Targets:**
+
 - Components rendus rarement
 - One-time mount components
 - Static display components
 
 ### 2. Pattern Selection
 
-| Use Case | Pattern | Expected Gain |
-|----------|---------|---------------|
-| 1 primitive value | Primitive Selector | -80% |
-| 2-4 related values | Composite + Shallow | -70% |
-| Actions only | Action-Only Selector | -100% |
-| Boolean/count/derived | Computed Selector | -85% |
-| Full store needed | Keep original | 0% |
+| Use Case              | Pattern              | Expected Gain |
+| --------------------- | -------------------- | ------------- |
+| 1 primitive value     | Primitive Selector   | -80%          |
+| 2-4 related values    | Composite + Shallow  | -70%          |
+| Actions only          | Action-Only Selector | -100%         |
+| Boolean/count/derived | Computed Selector    | -85%          |
+| Full store needed     | Keep original        | 0%            |
 
 ### 3. Code Organization
 
@@ -433,6 +426,7 @@ export const useSidebarWidth = () => ...;
 ### 4. Naming Conventions
 
 **Primitive/Composite:**
+
 ```typescript
 // Format: use + Property + optional Type
 export const useSidebarCollapsed = () => ...;  // boolean
@@ -442,6 +436,7 @@ export const useSidebarState = () => ...;      // object (composite)
 ```
 
 **Actions:**
+
 ```typescript
 // Format: use + Domain + Actions
 export const useSidebarActions = () => ...;
@@ -450,6 +445,7 @@ export const useModalActions = () => ...;
 ```
 
 **Computed:**
+
 ```typescript
 // Format: use + Has/Is/Count/Latest + Property
 export const useHasToasts = () => ...;         // boolean
@@ -473,13 +469,13 @@ test('useSidebarCollapsed returns current state', () => {
 test('useSidebarActions returns actions only', () => {
   const { result, rerender } = renderHook(() => useSidebarActions());
   const actions1 = result.current;
-  
+
   // Trigger state change elsewhere
   // ...
-  
+
   rerender();
   const actions2 = result.current;
-  
+
   // Actions should be stable (no rerender)
   expect(actions1).toBe(actions2);
 });
@@ -490,17 +486,16 @@ test('useSidebarActions returns actions only', () => {
 ```typescript
 /**
  * Sidebar collapsed state (boolean)
- * 
+ *
  * @returns {boolean} True if sidebar is collapsed
- * 
+ *
  * @example
  * const collapsed = useSidebarCollapsed();
  * if (collapsed) {
  *   // Handle collapsed state
  * }
  */
-export const useSidebarCollapsed = () => 
-  useUIStore(state => state.sidebarCollapsed);
+export const useSidebarCollapsed = () => useUIStore(state => state.sidebarCollapsed);
 ```
 
 ---
@@ -512,18 +507,21 @@ export const useSidebarCollapsed = () =>
 ```typescript
 // ❌ MAUVAIS: Nouveau object à chaque fois
 export const useBadSelector = () =>
-  useUIStore(state => ({ 
+  useUIStore(state => ({
     collapsed: state.sidebarCollapsed,
-    width: state.sidebarWidth 
+    width: state.sidebarWidth,
   }));
 // Résultat: TOUJOURS rerender (référence object change)
 
 // ✅ BON: Shallow equality
 export const useGoodSelector = () =>
-  useUIStore(state => ({ 
-    collapsed: state.sidebarCollapsed,
-    width: state.sidebarWidth 
-  }), shallow);
+  useUIStore(
+    state => ({
+      collapsed: state.sidebarCollapsed,
+      width: state.sidebarWidth,
+    }),
+    shallow
+  );
 ```
 
 ### ❌ Anti-Pattern 2: Full Store Subscription
@@ -543,13 +541,12 @@ const collapsed = useSidebarCollapsed();
 // ❌ MAUVAIS: Logique répétée dans chaque component
 const MyComponent = () => {
   const toasts = useToasts();
-  const hasToasts = toasts.length > 0;  // Répété partout
+  const hasToasts = toasts.length > 0; // Répété partout
   // ...
 };
 
 // ✅ BON: Computed selector centralisé
-export const useHasToasts = () => 
-  useUIStore(state => state.toasts.length > 0);
+export const useHasToasts = () => useUIStore(state => state.toasts.length > 0);
 
 const MyComponent = () => {
   const hasToasts = useHasToasts();
@@ -575,14 +572,17 @@ const MyComponent = () => {
 ## 📚 RESSOURCES
 
 ### Documentation Officielle
+
 - [Zustand Documentation](https://github.com/pmndrs/zustand)
 - [Shallow Equality Explanation](https://github.com/pmndrs/zustand#selecting-multiple-state-slices)
 
 ### TITANE∞ Reports
+
 - `OPTIMIZATION_REPORT_v29.0.0.md` — Création selectors (75+ selectors)
 - `OPTIMIZATION_REPORT_v29.1.0.md` — Application wave 1 (8 components)
 
 ### Code Examples
+
 - `src/stores/uiStore.selectors.ts` — 15+ selectors (UI state)
 - `src/stores/memoryStore.selectors.ts` — 20+ selectors (Memory system)
 - `src/core/state/SingularityState.selectors.ts` — 40+ selectors (Global state)
@@ -610,17 +610,20 @@ const MyComponent = () => {
 Les patterns Zustand établis en v29.0.0-v29.1.0 ont démontré des gains de performance massifs:
 
 **Patterns Clés:**
+
 1. **Primitive Selectors** → -80% rerenders
 2. **Composite + Shallow** → -70% rerenders
 3. **Action-Only** → -100% rerenders (breakthrough!)
 4. **Computed Selectors** → -85% rerenders + DRY
 
 **ROI Maximum:**
+
 - Root components (cascade effect)
 - Hooks avec multiplicateurs (×5+)
 - Action-only opportunities (40-50% usages)
 
 **Impact Global:**
+
 - -35% rerenders
 - -25% memory
 - +55% state update performance

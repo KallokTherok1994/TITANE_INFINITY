@@ -1,113 +1,113 @@
 openapi: 3.0.0
 info:
-  title: "TITANE∞ Tauri Commands API"
-  version: "27.0.0"
+  title: 'TITANE∞ Tauri Commands API'
+  version: '27.0.0'
   description: |
     Spécification OpenAPI 3.0 complète pour les 200+ commandes Tauri de TITANE∞.
-    
+
     Cette API utilise une architecture **Tauri IPC** (Inter-Process Communication) 
     pour communiquer entre le frontend JavaScript/TypeScript et le backend Rust.
-    
+
     **Version**: v27.0.0 (Production-Ready)  
     **Dernière mise à jour**: Janvier 2026  
     **Certification**: PLATINUM ⭐⭐⭐⭐⭐
-  termsOfService: "https://github.com/TITANE-INFINITY/LICENSE.md"
+  termsOfService: 'https://github.com/TITANE-INFINITY/LICENSE.md'
   contact:
-    name: "TITANE∞ Team"
-    url: "https://github.com/TITANE-INFINITY"
-    email: "support@titane-infinity.dev"
+    name: 'TITANE∞ Team'
+    url: 'https://github.com/TITANE-INFINITY'
+    email: 'support@titane-infinity.dev'
   license:
-    name: "Proprietary License"
-    url: "LICENSE.md"
+    name: 'Proprietary License'
+    url: 'LICENSE.md'
   x-documentation:
     categories: 15
     total_commands: 200+
-    status: "Production Ready"
-    last_update: "2026-01-15"
+    status: 'Production Ready'
+    last_update: '2026-01-15'
 
 servers:
-  - url: "tauri://localhost"
-    description: "Local Tauri IPC (Development & Production)"
+  - url: 'tauri://localhost'
+    description: 'Local Tauri IPC (Development & Production)'
     variables:
       protocol:
-        default: "tauri"
+        default: 'tauri'
         description: "IPC Protocol (always 'tauri')"
       host:
-        default: "localhost"
-        description: "Host (always localhost for IPC)"
+        default: 'localhost'
+        description: 'Host (always localhost for IPC)'
 
 paths:
   /chat_send_message:
     post:
-      summary: "Send Chat Message (Multi-Provider)"
-      operationId: "chatSendMessage"
+      summary: 'Send Chat Message (Multi-Provider)'
+      operationId: 'chatSendMessage'
       description: |
         Sends a user message to the chat orchestrator and gets a response.
         Supports automatic provider selection (Ollama, Gemini, Claude, OpenAI) with failover.
-        
+
         **Category**: Chat & IA  
         **Module**: `overdrive::chat_orchestrator`  
         **Stability**: ⭐⭐⭐⭐⭐ (core command)
       tags:
-        - "Chat & IA"
-        - "Multi-Provider"
+        - 'Chat & IA'
+        - 'Multi-Provider'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/ChatRequest"
+              $ref: '#/components/schemas/ChatRequest'
             example:
-              message: "Explain quantum computing in simple terms"
-              conversation_id: "conv_123abc"
-              provider: "auto"
+              message: 'Explain quantum computing in simple terms'
+              conversation_id: 'conv_123abc'
+              provider: 'auto'
               streaming: false
-              system_prompt: "You are a helpful AI assistant"
+              system_prompt: 'You are a helpful AI assistant'
       responses:
-        "200":
-          description: "Chat response received successfully"
+        '200':
+          description: 'Chat response received successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ChatResponse"
+                $ref: '#/components/schemas/ChatResponse'
               example:
                 message:
-                  id: "msg_abc123"
-                  content: "Quantum computing uses quantum bits (qubits)..."
-                  role: "assistant"
-                  timestamp: "2026-01-15T10:30:00Z"
+                  id: 'msg_abc123'
+                  content: 'Quantum computing uses quantum bits (qubits)...'
+                  role: 'assistant'
+                  timestamp: '2026-01-15T10:30:00Z'
                 success: true
                 latency_ms: 1234
-        "400":
-          description: "Invalid request parameters"
+        '400':
+          description: 'Invalid request parameters'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
-        "503":
-          description: "All providers unavailable"
+                $ref: '#/components/schemas/ErrorResponse'
+        '503':
+          description: 'All providers unavailable'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ErrorResponse"
+                $ref: '#/components/schemas/ErrorResponse'
       examples:
         javascript:
-          summary: "TypeScript/JavaScript Example"
+          summary: 'TypeScript/JavaScript Example'
           value: |
             import { invoke } from '@tauri-apps/api/tauri';
-            
+
             const response = await invoke('chat_send_message', {
               message: 'Hello, TITANE!',
               provider: 'auto',
               streaming: false
             });
-            
+
             console.log(response.message.content);
         python:
-          summary: "Python Example (Testing)"
+          summary: 'Python Example (Testing)'
           value: |
             import requests
-            
+
             # Note: For local Tauri IPC, use JavaScript/TypeScript
             # This example shows HTTP bridge pattern
             response = requests.post('http://localhost:3000/api/chat', json={
@@ -116,7 +116,7 @@ paths:
             })
             print(response.json())
         curl:
-          summary: "cURL Example (via HTTP Bridge)"
+          summary: 'cURL Example (via HTTP Bridge)'
           value: |
             curl -X POST http://localhost:3000/api/chat \
               -H "Content-Type: application/json" \
@@ -127,20 +127,20 @@ paths:
 
   /chat_get_providers_status:
     get:
-      summary: "Get Status of All Chat Providers"
-      operationId: "chatGetProvidersStatus"
+      summary: 'Get Status of All Chat Providers'
+      operationId: 'chatGetProvidersStatus'
       description: |
         Returns real-time status of all configured chat providers
         including latency, availability, and current model.
-        
+
         **Category**: Chat & IA  
         **Stability**: ⭐⭐⭐⭐⭐
       tags:
-        - "Chat & IA"
-        - "Providers"
+        - 'Chat & IA'
+        - 'Providers'
       responses:
-        "200":
-          description: "Providers status retrieved successfully"
+        '200':
+          description: 'Providers status retrieved successfully'
           content:
             application/json:
               schema:
@@ -149,41 +149,41 @@ paths:
                   providers:
                     type: array
                     items:
-                      $ref: "#/components/schemas/ProviderStatus"
+                      $ref: '#/components/schemas/ProviderStatus'
                   timestamp:
                     type: string
                     format: date-time
               example:
                 providers:
-                  - name: "ollama"
+                  - name: 'ollama'
                     available: true
                     latency_ms: 150
-                    model: "mistral:7b"
-                    status: "ready"
-                  - name: "gemini"
+                    model: 'mistral:7b'
+                    status: 'ready'
+                  - name: 'gemini'
                     available: true
                     latency_ms: 850
-                    model: "gemini-pro"
-                    status: "ready"
-                  - name: "openai"
+                    model: 'gemini-pro'
+                    status: 'ready'
+                  - name: 'openai'
                     available: false
-                    error: "API key not configured"
-                    status: "error"
-                timestamp: "2026-01-15T10:30:00Z"
+                    error: 'API key not configured'
+                    status: 'error'
+                timestamp: '2026-01-15T10:30:00Z'
 
   /chat_mode_change:
     post:
-      summary: "Change Chat Mode"
-      operationId: "chatModeChange"
+      summary: 'Change Chat Mode'
+      operationId: 'chatModeChange'
       description: |
         Switches the chat mode (e.g., Normal, Research, Creative, Code Analysis).
         Each mode has different system prompts and parameters.
-        
+
         **Category**: Chat & IA  
         **Stability**: ⭐⭐⭐⭐
       tags:
-        - "Chat & IA"
-        - "Modes"
+        - 'Chat & IA'
+        - 'Modes'
       requestBody:
         required: true
         content:
@@ -196,15 +196,15 @@ paths:
                 mode:
                   type: string
                   enum:
-                    - "normal"
-                    - "research"
-                    - "creative"
-                    - "code"
-                    - "data_analyst"
-                  description: "Target chat mode"
+                    - 'normal'
+                    - 'research'
+                    - 'creative'
+                    - 'code'
+                    - 'data_analyst'
+                  description: 'Target chat mode'
       responses:
-        "200":
-          description: "Chat mode changed successfully"
+        '200':
+          description: 'Chat mode changed successfully'
           content:
             application/json:
               schema:
@@ -219,17 +219,17 @@ paths:
 
   /voice_start_listening:
     post:
-      summary: "Start Voice Recording"
-      operationId: "voiceStartListening"
+      summary: 'Start Voice Recording'
+      operationId: 'voiceStartListening'
       description: |
         Activates the microphone and begins recording user voice.
         Audio is buffered for STT (Speech-to-Text) processing.
-        
+
         **Category**: Voice & Audio  
         **Stability**: ⭐⭐⭐⭐
       tags:
-        - "Voice & Audio"
-        - "Recording"
+        - 'Voice & Audio'
+        - 'Recording'
       requestBody:
         required: false
         content:
@@ -239,14 +239,14 @@ paths:
               properties:
                 device_id:
                   type: string
-                  description: "Optional specific microphone device ID"
+                  description: 'Optional specific microphone device ID'
                 sample_rate:
                   type: integer
                   default: 16000
-                  description: "Sample rate in Hz"
+                  description: 'Sample rate in Hz'
       responses:
-        "200":
-          description: "Microphone activated and recording started"
+        '200':
+          description: 'Microphone activated and recording started'
           content:
             application/json:
               schema:
@@ -259,25 +259,25 @@ paths:
                   status:
                     type: string
                     enum:
-                      - "recording"
-                      - "buffering"
+                      - 'recording'
+                      - 'buffering'
 
   /voice_stop_listening:
     post:
-      summary: "Stop Voice Recording"
-      operationId: "voiceStopListening"
+      summary: 'Stop Voice Recording'
+      operationId: 'voiceStopListening'
       description: |
         Stops microphone recording and returns the captured audio data
         as base64-encoded WAV file.
-        
+
         **Category**: Voice & Audio  
         **Stability**: ⭐⭐⭐⭐
       tags:
-        - "Voice & Audio"
-        - "Recording"
+        - 'Voice & Audio'
+        - 'Recording'
       responses:
-        "200":
-          description: "Recording stopped and audio returned"
+        '200':
+          description: 'Recording stopped and audio returned'
           content:
             application/json:
               schema:
@@ -286,28 +286,28 @@ paths:
                   audio_data:
                     type: string
                     format: byte
-                    description: "Base64-encoded WAV audio"
+                    description: 'Base64-encoded WAV audio'
                   duration_ms:
                     type: integer
                   format:
                     type: string
                     enum:
-                      - "wav"
-                      - "pcm"
+                      - 'wav'
+                      - 'pcm'
 
   /tts_speak:
     post:
-      summary: "Text-to-Speech Synthesis"
-      operationId: "ttsSpeak"
+      summary: 'Text-to-Speech Synthesis'
+      operationId: 'ttsSpeak'
       description: |
         Converts text to speech and plays audio through the default output device.
         Supports multiple voice profiles and languages.
-        
+
         **Category**: Voice & Audio  
         **Stability**: ⭐⭐⭐⭐⭐
       tags:
-        - "Voice & Audio"
-        - "TTS"
+        - 'Voice & Audio'
+        - 'TTS'
       requestBody:
         required: true
         content:
@@ -323,11 +323,11 @@ paths:
                 voice:
                   type: string
                   enum:
-                    - "male_en"
-                    - "female_en"
-                    - "male_fr"
-                    - "female_fr"
-                  default: "female_en"
+                    - 'male_en'
+                    - 'female_en'
+                    - 'male_fr'
+                    - 'female_fr'
+                  default: 'female_en'
                 speed:
                   type: number
                   minimum: 0.5
@@ -339,8 +339,8 @@ paths:
                   maximum: 2.0
                   default: 1.0
       responses:
-        "200":
-          description: "Text converted to speech and playback started"
+        '200':
+          description: 'Text converted to speech and playback started'
           content:
             application/json:
               schema:
@@ -355,26 +355,26 @@ paths:
 
   /memory_get_stats:
     get:
-      summary: "Get Memory System Statistics"
-      operationId: "memoryGetStats"
+      summary: 'Get Memory System Statistics'
+      operationId: 'memoryGetStats'
       description: |
         Retrieves comprehensive statistics about the UnifiedMemory system:
         - STM (Short-Term Memory): 20 messages, 24h retention
         - MTM (Mid-Term Memory): 30 days, pattern extraction
         - LTM (Long-Term Memory): Unlimited, encrypted storage
-        
+
         **Category**: Memory OS  
         **Stability**: ⭐⭐⭐⭐⭐
       tags:
-        - "Memory OS"
-        - "Statistics"
+        - 'Memory OS'
+        - 'Statistics'
       responses:
-        "200":
-          description: "Memory statistics retrieved successfully"
+        '200':
+          description: 'Memory statistics retrieved successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MemoryStats"
+                $ref: '#/components/schemas/MemoryStats'
               example:
                 stm:
                   entries: 15
@@ -389,25 +389,25 @@ paths:
                 ltm:
                   entries: 2341
                   max_entries: null
-                  retention: "unlimited"
+                  retention: 'unlimited'
                   total_size_bytes: 125000000
                 compression_ratio: 0.78
-                last_backup: "2026-01-15T08:30:00Z"
+                last_backup: '2026-01-15T08:30:00Z'
 
   /memory_save_entry:
     post:
-      summary: "Save Entry to Memory"
-      operationId: "memorySaveEntry"
+      summary: 'Save Entry to Memory'
+      operationId: 'memorySaveEntry'
       description: |
         Saves a new entry to the memory system.
         Automatically routes to appropriate memory layer (STM/MTM/LTM)
         based on content importance and retention requirements.
-        
+
         **Category**: Memory OS  
         **Stability**: ⭐⭐⭐⭐
       tags:
-        - "Memory OS"
-        - "Write Operations"
+        - 'Memory OS'
+        - 'Write Operations'
       requestBody:
         required: true
         content:
@@ -419,23 +419,23 @@ paths:
               properties:
                 content:
                   type: string
-                  description: "Memory content"
+                  description: 'Memory content'
                 tags:
                   type: array
                   items:
                     type: string
-                  description: "Search tags"
+                  description: 'Search tags'
                 importance:
                   type: integer
                   minimum: 1
                   maximum: 10
-                  description: "Importance level (1-10)"
+                  description: 'Importance level (1-10)'
                 project_id:
                   type: string
-                  description: "Associated project ID"
+                  description: 'Associated project ID'
       responses:
-        "200":
-          description: "Entry saved successfully"
+        '200':
+          description: 'Entry saved successfully'
           content:
             application/json:
               schema:
@@ -446,55 +446,55 @@ paths:
                   layer:
                     type: string
                     enum:
-                      - "stm"
-                      - "mtm"
-                      - "ltm"
+                      - 'stm'
+                      - 'mtm'
+                      - 'ltm'
                   timestamp:
                     type: string
                     format: date-time
 
   /singularity_get_full_state:
     get:
-      summary: "Get Full Singularity State (5-Layer)"
-      operationId: "singularityGetFullState"
+      summary: 'Get Full Singularity State (5-Layer)'
+      operationId: 'singularityGetFullState'
       description: |
         Retrieves the complete 5-layer state of the Singularity engine:
-        
+
         1. **Physical Layer**: CPU, RAM, GPU, disk usage
         2. **Cognitive Layer**: Engine status, model loading, inference stats
         3. **Symbolic Layer**: Abstract representations, concepts
         4. **Adaptive Layer**: Learning patterns, parameter adjustments
         5. **Meta Layer**: Self-reflection, coherence assessment
-        
+
         **Category**: Singularity State  
         **Stability**: ⭐⭐⭐⭐⭐ (core system)
       tags:
-        - "Singularity State"
-        - "System State"
+        - 'Singularity State'
+        - 'System State'
       responses:
-        "200":
-          description: "Full Singularity state retrieved successfully"
+        '200':
+          description: 'Full Singularity state retrieved successfully'
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/SingularityState"
+                $ref: '#/components/schemas/SingularityState'
 
   /health_check:
     get:
-      summary: "System Health Check"
-      operationId: "healthCheck"
+      summary: 'System Health Check'
+      operationId: 'healthCheck'
       description: |
         Performs a quick health check of all system components.
         Returns overall health status and list of any issues.
-        
+
         **Category**: System Center  
         **Stability**: ⭐⭐⭐⭐⭐ (always available)
       tags:
-        - "System Center"
-        - "Diagnostics"
+        - 'System Center'
+        - 'Diagnostics'
       responses:
-        "200":
-          description: "Health check completed"
+        '200':
+          description: 'Health check completed'
           content:
             application/json:
               schema:
@@ -503,9 +503,9 @@ paths:
                   status:
                     type: string
                     enum:
-                      - "healthy"
-                      - "degraded"
-                      - "critical"
+                      - 'healthy'
+                      - 'degraded'
+                      - 'critical'
                   components:
                     type: array
                     items:
@@ -523,19 +523,19 @@ paths:
 
   /ping:
     get:
-      summary: "Simple Ping (Keep-Alive)"
-      operationId: "ping"
+      summary: 'Simple Ping (Keep-Alive)'
+      operationId: 'ping'
       description: |
         Simple ping command for keep-alive checks and latency measurement.
         Always responds immediately with "pong".
-        
+
         **Category**: Core  
         **Stability**: ⭐⭐⭐⭐⭐
       tags:
-        - "Core"
+        - 'Core'
       responses:
-        "200":
-          description: "Pong (system responsive)"
+        '200':
+          description: 'Pong (system responsive)'
           content:
             application/json:
               schema:
@@ -544,7 +544,7 @@ paths:
                   status:
                     type: string
                     enum:
-                      - "pong"
+                      - 'pong'
                   timestamp:
                     type: string
                     format: date-time
@@ -559,42 +559,42 @@ components:
         message:
           type: string
           maxLength: 10000
-          description: "User message text"
+          description: 'User message text'
         conversation_id:
           type: string
-          description: "Optional conversation ID for context"
+          description: 'Optional conversation ID for context'
         provider:
           type: string
           enum:
-            - "auto"
-            - "ollama"
-            - "gemini"
-            - "claude"
-            - "openai"
-          default: "auto"
-          description: "AI provider selection"
+            - 'auto'
+            - 'ollama'
+            - 'gemini'
+            - 'claude'
+            - 'openai'
+          default: 'auto'
+          description: 'AI provider selection'
         model:
           type: string
-          description: "Optional specific model override"
+          description: 'Optional specific model override'
         streaming:
           type: boolean
           default: false
-          description: "Enable streaming response (Server-Sent Events)"
+          description: 'Enable streaming response (Server-Sent Events)'
         system_prompt:
           type: string
-          description: "Optional system prompt override"
+          description: 'Optional system prompt override'
         max_tokens:
           type: integer
           minimum: 1
           maximum: 8000
           default: 2048
-          description: "Maximum response tokens"
+          description: 'Maximum response tokens'
         temperature:
           type: number
           minimum: 0
           maximum: 2
           default: 0.7
-          description: "Response temperature (creativity)"
+          description: 'Response temperature (creativity)'
 
     ChatResponse:
       type: object
@@ -604,18 +604,18 @@ components:
         - latency_ms
       properties:
         message:
-          $ref: "#/components/schemas/ChatMessage"
+          $ref: '#/components/schemas/ChatMessage'
         success:
           type: boolean
         error:
           type: string
-          description: "Error message if success=false"
+          description: 'Error message if success=false'
         latency_ms:
           type: integer
-          description: "Response time in milliseconds"
+          description: 'Response time in milliseconds'
         provider_used:
           type: string
-          description: "Provider that generated response"
+          description: 'Provider that generated response'
         tokens:
           type: object
           properties:
@@ -636,16 +636,16 @@ components:
       properties:
         id:
           type: string
-          description: "Unique message ID"
+          description: 'Unique message ID'
         content:
           type: string
-          description: "Message text"
+          description: 'Message text'
         role:
           type: string
           enum:
-            - "user"
-            - "assistant"
-            - "system"
+            - 'user'
+            - 'assistant'
+            - 'system'
         timestamp:
           type: string
           format: date-time
@@ -659,11 +659,11 @@ components:
         name:
           type: string
           enum:
-            - "ollama"
-            - "gemini"
-            - "openai"
-            - "claude"
-            - "local"
+            - 'ollama'
+            - 'gemini'
+            - 'openai'
+            - 'claude'
+            - 'local'
         available:
           type: boolean
         latency_ms:
@@ -673,10 +673,10 @@ components:
         status:
           type: string
           enum:
-            - "ready"
-            - "loading"
-            - "error"
-            - "unavailable"
+            - 'ready'
+            - 'loading'
+            - 'error'
+            - 'unavailable'
         error:
           type: string
 
@@ -711,7 +711,7 @@ components:
             entries:
               type: integer
             max_entries:
-              type: ["integer", "null"]
+              type: ['integer', 'null']
             retention:
               type: string
             total_size_bytes:
@@ -727,19 +727,19 @@ components:
       properties:
         physical:
           type: object
-          description: "CPU, RAM, GPU, disk metrics"
+          description: 'CPU, RAM, GPU, disk metrics'
         cognitive:
           type: object
-          description: "Engine status, model loading, inference"
+          description: 'Engine status, model loading, inference'
         symbolic:
           type: object
-          description: "Abstract representations"
+          description: 'Abstract representations'
         adaptive:
           type: object
-          description: "Learning patterns, adaptations"
+          description: 'Learning patterns, adaptations'
         meta:
           type: object
-          description: "Self-reflection, coherence"
+          description: 'Self-reflection, coherence'
         coherence_score:
           type: number
           minimum: 0
@@ -756,15 +756,15 @@ components:
       properties:
         error:
           type: string
-          description: "Error message"
+          description: 'Error message'
         code:
           type: string
           enum:
-            - "INVALID_REQUEST"
-            - "PROVIDER_ERROR"
-            - "MEMORY_ERROR"
-            - "AUTH_ERROR"
-            - "SYSTEM_ERROR"
+            - 'INVALID_REQUEST'
+            - 'PROVIDER_ERROR'
+            - 'MEMORY_ERROR'
+            - 'AUTH_ERROR'
+            - 'SYSTEM_ERROR'
         details:
           type: object
           additionalProperties: true
@@ -776,44 +776,44 @@ components:
     ApiKeyAuth:
       type: apiKey
       in: header
-      name: "X-API-Key"
-      description: "Development API key (optional for local IPC)"
+      name: 'X-API-Key'
+      description: 'Development API key (optional for local IPC)'
     BearerAuth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: "Bearer token for cloud deployment"
+      description: 'Bearer token for cloud deployment'
 
 tags:
-  - name: "Chat & IA"
-    description: "Multi-provider chat, message generation, provider management"
-  - name: "Voice & Audio"
-    description: "Speech-to-text, text-to-speech, audio recording"
-  - name: "Singularity State"
-    description: "5-layer system state management"
-  - name: "Memory OS"
-    description: "UnifiedMemory system (STM/MTM/LTM)"
-  - name: "System Center"
-    description: "System diagnostics, monitoring, cluster management"
-  - name: "Providers"
-    description: "AI provider configuration and status"
-  - name: "Recording"
-    description: "Audio and voice recording operations"
-  - name: "TTS"
-    description: "Text-to-speech operations"
-  - name: "Statistics"
-    description: "System statistics and metrics"
-  - name: "Write Operations"
-    description: "Data modification operations"
-  - name: "Diagnostics"
-    description: "System diagnostics and health checks"
-  - name: "Core"
-    description: "Core system operations"
+  - name: 'Chat & IA'
+    description: 'Multi-provider chat, message generation, provider management'
+  - name: 'Voice & Audio'
+    description: 'Speech-to-text, text-to-speech, audio recording'
+  - name: 'Singularity State'
+    description: '5-layer system state management'
+  - name: 'Memory OS'
+    description: 'UnifiedMemory system (STM/MTM/LTM)'
+  - name: 'System Center'
+    description: 'System diagnostics, monitoring, cluster management'
+  - name: 'Providers'
+    description: 'AI provider configuration and status'
+  - name: 'Recording'
+    description: 'Audio and voice recording operations'
+  - name: 'TTS'
+    description: 'Text-to-speech operations'
+  - name: 'Statistics'
+    description: 'System statistics and metrics'
+  - name: 'Write Operations'
+    description: 'Data modification operations'
+  - name: 'Diagnostics'
+    description: 'System diagnostics and health checks'
+  - name: 'Core'
+    description: 'Core system operations'
 
 x-custom:
   command_categories: 15
   total_commands: 200+
-  stability_guarantee: "PLATINUM ⭐⭐⭐⭐⭐"
-  documentation_version: "27.0.0"
-  last_updated: "2026-01-15"
-  contact_email: "api-support@titane-infinity.dev"
+  stability_guarantee: 'PLATINUM ⭐⭐⭐⭐⭐'
+  documentation_version: '27.0.0'
+  last_updated: '2026-01-15'
+  contact_email: 'api-support@titane-infinity.dev'

@@ -52,11 +52,12 @@
 ```
 
 **Résultat attendu:**
+
 ```
 TITANE répond naturellement, continue la conversation
 
 Vous: "Bonjour! Comment fonctionne TITANE?"
-TITANE: "Bonjour! Je suis TITANE∞, un système cognitif 
+TITANE: "Bonjour! Je suis TITANE∞, un système cognitif
 qui fonctionne 100% localement. Je peux:
 • Converser naturellement
 • Mémoriser vos préférences
@@ -66,6 +67,7 @@ Qu'aimerais-tu savoir?"
 ```
 
 **Erreur fréquente:**
+
 - ❌ "TITANE ne répond pas" → Vérifiez provider IA (Settings)
 
 ---
@@ -100,7 +102,7 @@ Qu'aimerais-tu savoir?"
 
 **Exemple réel:**
 
-```
+````
 Fichier joint: main.py (Python script)
 
 Vous: "Y a-t-il des bugs dans ce code?"
@@ -111,8 +113,8 @@ TITANE: "Oui, j'ai trouvé 2 problèmes:
    ```python
    result = calculation(x, y)
    print(undefined_var)  # ❌ Pas définie
-   ```
-   
+````
+
 2. Infinite loop (ligne 12)
    ```python
    while True:  # ❌ Jamais de break
@@ -124,6 +126,7 @@ Recommandations:
 • Ajouter condition d'arrêt
 
 Veux-tu que je propose une version fixée?"
+
 ```
 
 **Formats supportés:**
@@ -143,6 +146,7 @@ Veux-tu que je propose une version fixée?"
 **Étapes:**
 
 ```
+
 1. Allez à la barre supérieure du Chat
    └ Voir: "Mode: Chat" + dropdown
 
@@ -160,21 +164,25 @@ Veux-tu que je propose une version fixée?"
 5. Remarquez la différence!
    └ Réponses adaptées au mode
    └ TITANE change de "personnalité"
+
 ```
 
 **Modes Rapides (Icônes):**
 
 ```
-💬 Chat      (défaut - conversation générale)
-💻 Code      (pour développement)
-🧠 Brain     (brainstorming créatif)
-🎯 Coach     (accompagnement personnel)
-📊 Analyst   (analyse & synthèse)
+
+💬 Chat (défaut - conversation générale)
+💻 Code (pour développement)
+🧠 Brain (brainstorming créatif)
+🎯 Coach (accompagnement personnel)
+📊 Analyst (analyse & synthèse)
+
 ```
 
 **Exemple:**
 
 ```
+
 MÊME question dans 2 modes:
 
 Q: "Comment démarrer?"
@@ -186,11 +194,13 @@ guide à travers 4 étapes..."
 
 Mode Coach:
 "Excellente question! Avant de démarrer, demandons:
+
 1. Quel est ton objectif principal avec TITANE?
 2. Es-tu à l'aise avec la tech?
 3. Quel est ton rôle (dev, créatif, manager)?
 
 Répondre m'aidera à te guider précisément!"
+
 ```
 
 ---
@@ -204,6 +214,7 @@ Répondre m'aidera à te guider précisément!"
 **Étapes:**
 
 ```
+
 PARTIE 1: Consulter la mémoire
 
 1. Allez à EVO (📊) en bas du sidebar
@@ -217,7 +228,7 @@ PARTIE 2: Activer la mémoire
 
 4. Dans le chat, parlez de vous
    "Je m'appelle Alice, je suis développeuse
-    React, j'adore les challenges"
+   React, j'adore les challenges"
 
 5. TITANE enregistre automatiquement
    (Pas d'action nécessaire!)
@@ -234,11 +245,13 @@ PARTIE 3: Vérifier mémorisation
 9. TITANE répond:
    "Bien sûr! Tu es Alice, développeuse React"
    → Magie de la mémoire! ✨
+
 ```
 
 **Exemple avancé:**
 
 ```
+
 Session 1 (Semaine 1):
 "Je travaille sur un app mobile React-Native"
 
@@ -249,11 +262,13 @@ TITANE: "Tu travaillais sur une app mobile React-Native.
 Où en es-tu? Quel obstacle rencontres-tu?"
 
 → Continuité automatique grâce à LTM!
+
 ```
 
 **Gestion mémoire:**
 
 ```
+
 Pour nettoyer (garder privé):
 Settings → Memory → STM → [Effacer]
 (Supprime juste short-term, pas LTM)
@@ -265,6 +280,7 @@ Settings → Memory → [Export]
 Pour réimporter après réinstall:
 Settings → Memory → [Import]
 → Tous vos LTM restauré!
+
 ```
 
 ---
@@ -276,6 +292,7 @@ Settings → Memory → [Import]
 **Étapes:**
 
 ```
+
 PARTIE 1: Activer caméra
 
 1. Allez à Vision (🎨) en sidebar
@@ -298,36 +315,39 @@ PARTIE 3: Streaming en direct
 9. Vidéo en direct affichée
 10. TITANE commente en temps réel
     "Je vois ton bureau, une tasse de café,
-     programmation active..."
+    programmation active..."
 
 PARTIE 4: Analyse Affective (optionnel)
 
 11. Vidéo face caméra
 12. TITANE détecte votre état:
     "Tu sembles concentré (75%)
-     Énergie: 60%
-     Stress: 20%
-     Suggestion: Pause 5 min?"
+    Énergie: 60%
+    Stress: 20%
+    Suggestion: Pause 5 min?"
+
 ```
 
 **Cas d'Usage:**
 
 ```
+
 ✅ Analyse dashboard visuel
-   Capture → "Analyse ce dashboard"
-   → TITANE lit les chiffres, insights
+Capture → "Analyse ce dashboard"
+→ TITANE lit les chiffres, insights
 
 ✅ Code review visuel
-   Capture écran → "Review ce code"
-   → Suggestions d'optimisation
+Capture écran → "Review ce code"
+→ Suggestions d'optimisation
 
 ✅ Documentation
-   Capture → "Résume ce diagramme"
-   → Explication structurée
+Capture → "Résume ce diagramme"
+→ Explication structurée
 
 ✅ Bien-être
-   Stream vid → Détection stress
-   → Alertes + suggestions
+Stream vid → Détection stress
+→ Alertes + suggestions
+
 ```
 
 **Note Privacy:**
@@ -345,6 +365,7 @@ PARTIE 4: Analyse Affective (optionnel)
 **Étapes:**
 
 ```
+
 1. Allez à EVO → [Progression]
 2. Voir votre XP dans 3 domaines:
    • 🧠 Cognitive: Croissance intellectuelle
@@ -365,18 +386,22 @@ PARTIE 4: Analyse Affective (optionnel)
 5. Affichage des achievements:
    Cliquez EVO → [Achievements]
    → Liste tous vos badges
+
 ```
 
 **Stratégie XP maximale:**
 
 ```
+
 Pour progresser vite:
+
 1. Variez les modes (5 modes = 2x XP)
 2. Conversations longues (>10 messages = 1.5x)
 3. Joignez fichiers (1.5x XP)
 4. Utilisez commandes vocales (2x XP)
 
 Résultat: 2 heures = 500+ XP
+
 ```
 
 ---
@@ -394,6 +419,7 @@ Résultat: 2 heures = 500+ XP
 **Étapes:**
 
 ```
+
 PARTIE 1: Accéder à l'état cognitif
 
 // JavaScript dans DevTools
@@ -401,10 +427,10 @@ const cogState = await invoke('get_cognitive_state');
 console.log(cogState);
 // Output:
 // {
-//   mode: "chat",
-//   focus: 0.85,
-//   energy: 0.72,
-//   stress: 0.15
+// mode: "chat",
+// focus: 0.85,
+// energy: 0.72,
+// stress: 0.15
 // }
 
 PARTIE 2: Mettre à jour l'état
@@ -418,7 +444,8 @@ PARTIE 3: Consulter mémoire
 const memory = await invoke('get_memory', {level: 'LTM'});
 console.log(memory.items.length);
 // Nombre d'items en mémoire long terme
-```
+
+````
 
 **Commandes disponibles:**
 
@@ -445,7 +472,7 @@ get_system_status()
 get_logs(lines: number)
 trigger_auto_heal()
 restart_cores()
-```
+````
 
 **Exemple réel:**
 
@@ -456,17 +483,17 @@ const state = await invoke('get_cognitive_state');
 
 if (state.stress > 0.5) {
   // Activer mode Coach automatiquement
-  await invoke('update_cognitive_mode', {mode: 'coach'});
-  
+  await invoke('update_cognitive_mode', { mode: 'coach' });
+
   // Augmenter énergie
-  await invoke('update_body_energy', {energy: 0.8});
-  
+  await invoke('update_body_energy', { energy: 0.8 });
+
   // Chat suggestion
   await invoke('send_message', {
-    msg: "Détecté stress élevé! Veux-tu une pause coaching?"
+    msg: 'Détecté stress élevé! Veux-tu une pause coaching?',
   });
-  
-  console.log("✅ Auto-intervention activée");
+
+  console.log('✅ Auto-intervention activée');
 }
 ```
 
@@ -480,7 +507,7 @@ if (state.stress > 0.5) {
 
 **Étapes:**
 
-```
+````
 ÉTAPE 1: Brainstorming (Mode Brainstorming)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -535,10 +562,9 @@ app.get('/api/users', (req, res) => {
 });
 
 app.listen(3000);
-```
+````
 
 Cliquez [Copier] → dans votre projet!
-
 
 ÉTAPE 4: Coaching (Mode Coach)
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -556,6 +582,7 @@ TITANE:
 
 Mon conseil: Commencez avec 1 endpoint, déployez,
 itérez. Prêt?"
+
 ```
 
 **Résultat:** Tâche complexe complétée en 20 min avec quality maximale! ✨
@@ -569,6 +596,7 @@ itérez. Prêt?"
 **Étapes:**
 
 ```
+
 PARTIE 1: Ouvrir Mode Builder
 
 1. Chat → Dropdown Modes
@@ -608,11 +636,13 @@ Slider: 0.8 (assez créatif)
 • "Pitch pour investors"
 
 [Sauvegar der]
+
 ```
 
 **Utiliser le mode:**
 
 ```
+
 /mode "Startup Coach"
 
 Vous: "J'ai une idée app mobile de fitness"
@@ -626,17 +656,20 @@ TITANE (en mode Startup Coach):
 4. PMF clair: oui/non?
 
 Avant de coder, validons le marché!"
+
 ```
 
 **Cas d'Usage Custom Modes:**
 
 ```
+
 • "Scrum Master Coach" — Aide management agile
 • "Security Auditor" — Revue sécurité code
 • "Research Assistant" — Aide recherche universitaire
 • "Content Creator" — Aide writing/storytelling
 • "DevOps Expert" — Infrastructure conseils
 • "Product Manager" — Feature planning
+
 ```
 
 ---
@@ -648,8 +681,9 @@ Avant de coder, validons le marché!"
 **Scénario:** Votre React app crash en production
 
 ```
+
 Vous: [Joignez le fichier component.tsx]
-"Mon component crash au chargement. 
+"Mon component crash au chargement.
 Aide-moi!"
 
 /mode code
@@ -663,6 +697,7 @@ Propose fix + explique pourquoi
 
 Vous cliquiez [Copier] code fixé
 Et intégrez directement! ✅
+
 ```
 
 **Résultat:** Bug fixé en 5 min au lieu 30min! ⚡
@@ -674,6 +709,7 @@ Et intégrez directement! ✅
 **Scénario:** Vous lancez une startup
 
 ```
+
 /mode brainstorming
 
 Vous: "Idées pour app SaaS B2B?"
@@ -692,6 +728,7 @@ Vous: "Quelle est la plus validable?"
 TITANE: [Analyse objective]
 
 → En 30 min, idée claire + validée! ✨
+
 ```
 
 ---
@@ -701,6 +738,7 @@ TITANE: [Analyse objective]
 **Scénario:** Vous voulez apprendre Rust
 
 ```
+
 /mode teacher
 
 Vous: "Enseigne-moi Rust en 30 min"
@@ -715,6 +753,7 @@ Vous complétez exercices
 TITANE corrige + félicite
 
 → Fondations Rust acquises! 🎓
+
 ```
 
 ---
@@ -724,6 +763,7 @@ TITANE corrige + félicite
 **Scénario:** Vous écrivez sur "DevOps Moderne"
 
 ```
+
 /mode creator
 
 Vous: "Aide-moi structurer article DevOps Moderne"
@@ -740,6 +780,7 @@ TITANE: [Texte complet, bien écrit]
 
 Vous modifiez, polissez
 → Article prêt en 1 heure! ✍️
+
 ```
 
 ---
@@ -751,6 +792,7 @@ Vous modifiez, polissez
 **Durée:** 2-3 heures
 
 ```
+
 PHASE 1: BRAINSTORM (30 min)
 ────────────────────────────
 Mode: Brainstorming
@@ -781,6 +823,7 @@ Q: "Code boilerplate React pour mon MVP"
 ↓ Copy-paste ready
 
 RÉSULTAT: MVP planifié + prototype en 2-3h! 🚀
+
 ```
 
 ---
@@ -790,35 +833,28 @@ RÉSULTAT: MVP planifié + prototype en 2-3h! 🚀
 **Durée:** Quotidien
 
 ```
+
 MATIN (9h00)
 ─────────────
+
 1. Lancez TITANE
 2. Mode Coach: "Qu'est-ce que mon priorité #1?"
 3. Mental charge: 0.9 (énergique)
 
 TRAVAIL (10h-12h)
-──────────────────
-4. Mode Code: Coding challenges
-5. Mode Analyst: Code reviews
-6. Vision: Caméra → Stress < 50%
+────────────────── 4. Mode Code: Coding challenges 5. Mode Analyst: Code reviews 6. Vision: Caméra → Stress < 50%
 
 MIDI (12h)
-───────────
-7. Pause signalée
-8. Énergie reset
+─────────── 7. Pause signalée 8. Énergie reset
 
 APRÈS-MIDI (14h-17h)
-─────────────────────
-9. Mode Creative: Brainstorming features
-10. Mode Coach: Coaching session
+───────────────────── 9. Mode Creative: Brainstorming features 10. Mode Coach: Coaching session
 
 SOIR (18h)
-──────────
-11. Mode Analyst: Résumé journée
-12. Export conversation pour records
-13. Sleep mode: Énergie réduite
+────────── 11. Mode Analyst: Résumé journée 12. Export conversation pour records 13. Sleep mode: Énergie réduite
 
 RÉSULTAT: Journée optimisée + record
+
 ```
 
 ---
@@ -828,6 +864,7 @@ RÉSULTAT: Journée optimisée + record
 ### Trick 1: Accélér Réponses
 
 ```
+
 ❌ Lent:
 "Explique-moi async/await"
 → 30 secondes pour générer...
@@ -837,71 +874,79 @@ RÉSULTAT: Journée optimisée + record
 → 5 secondes pour générer!
 
 TRICK: Limitez tokens max + soyez précis
+
 ```
 
 ### Trick 2: Memory Boost
 
 ```
+
 Pour que TITANE se souvienne mieux:
 
 1. Soyez explicite:
    "Je m'appelle Alice, développeuse React 5 ans
-    d'XP, aime tests et clean code"
-   
+   d'XP, aime tests et clean code"
 2. Répétez parfois:
    "Comme je t'ai dit, je préfère X"
-   
 3. Exportez memory régulièrement:
    Settings → Memory → [Export]
    → Backup mensuel
 
 RÉSULTAT: TITANE incroyablement
 personnel après 1 mois! 🎯
+
 ```
 
 ### Trick 3: Mode Stacking
 
 ```
+
 Enchaînez modes pour power-combos:
 
 Brain + Code + Coach = Complet!
 
-Brainstorming:  "Idées pour app X?"
-       ↓
-Analyst:        "Meilleure approche?"
-       ↓
-Code:           "Code boilerplate?"
-       ↓
-Coach:          "Prochaine étape?"
+Brainstorming: "Idées pour app X?"
+↓
+Analyst: "Meilleure approche?"
+↓
+Code: "Code boilerplate?"
+↓
+Coach: "Prochaine étape?"
 
 → Sortie: Plan + Code + Motivation ✨
+
 ```
 
 ### Trick 4: Batch Processing
 
 ```
+
 Groupez tâches similaires:
 
 ❌ Inefficace:
+
 1. Chat → "Translate français→anglais"
 2. Chat → "Translate français→allemand"
 3. Chat → "Translate français→espagnol"
 
 ✅ Efficace:
+
 1. Une question:
    "Traduis en 3 langues:
-    - Anglais
-    - Allemand
-    - Espagnol
-   
+   - Anglais
+   - Allemand
+   - Espagnol
+
    Texte: '...'"
 
 RÉSULTAT: 3x plus rapide! ⚡
+
 ```
 
 ### Trick 5: Voting System
 
 ```
+
 Quand TITANE propose options:
 
 Mode: Brainstorming
@@ -914,11 +959,13 @@ Vous: "Vote! Classé par potentiel"
 TITANE classe ses propres suggestions! 🗳️
 
 Utile pour choisir rapidement.
+
 ```
 
 ### Trick 6: Context Injection
 
 ```
+
 Injectez contexte pour réponses meilleures:
 
 ❌ Vague:
@@ -930,7 +977,8 @@ besoin scalabilité. Stack existant: React, Node.js.
 Propose architecture"
 
 RÉSULTAT: Réponse tailored 10x meilleure! 🎯
-```
+
+````
 
 ---
 
@@ -961,7 +1009,7 @@ Vous: "Explique chaque changement"
 TITANE: [Détaille optimisations]
 
 Résultat: Pipeline 3x plus rapide ✅
-```
+````
 
 ### Cas 2: Data Science Workflow
 
@@ -997,22 +1045,26 @@ Résultat: Workflow complet en 10 min ✅
 
 ```markdown
 # 1. Brief
+
 Vous: "Campagne lancement produit: SaaS B2B.
 Cible: CTOs. Budget: 50K€. Canaux: LinkedIn, blog, email."
 
 TITANE: [Génère stratégie détaillée]
 
 # 2. Contenu par canal
+
 Vous: "Rédige 5 posts LinkedIn"
 
 TITANE: [Génère posts optimisés]
 
 # 3. Séquence email
+
 Vous: "Séquence onboarding 5 emails"
 
 TITANE: [Génère séquence avec A/B tests]
 
 # 4. Blog SEO
+
 Vous: "Article 2000 mots, SEO pour 'DevOps automation'"
 
 TITANE: [Génère article complet]
@@ -1063,18 +1115,18 @@ Résultat: Analyse complète en 15 min ✅
 1. **Phase Définition**
    Vous: "Sujet: IA explicable en médecine.
    Période: 2020-2025. Cherche patterns."
-   
+
    TITANE: [Extrait thèmes émergents]
 
 2. **Phase Synthèse**
    Vous: "Synthétise 50 papers"
    [Upload batch PDFs]
-   
+
    TITANE: [Matrice comparative]
 
 3. **Phase Gaps**
    Vous: "Identifie research gaps"
-   
+
    TITANE: [Liste opportunités]
 
 Résultat: Months → Days ✅
@@ -1088,15 +1140,12 @@ Résultat: Months → Days ✅
 1. **Brainstorm**
    Mode: Brainstorming
    "Innovation en IA médicale"
-   
 2. **Structure**
    Mode: Analyst
    "Structure ANR/ERC standard"
-   
 3. **Rédaction**
    Mode: Creator
    "Sections 1-8 avec bibliographie"
-   
 4. **Review**
    Mode: Security (critique)
    "Identifie faiblesses argumentaires"
@@ -1128,18 +1177,21 @@ Résultat: Proposal solide en 1 semaine ✅
 ### Semaine 2-4: Maîtrise Intermédiaire
 
 **Semaine 2: API & Automatisation**
+
 - [ ] Jour 8-9: Commandes Tauri basics
 - [ ] Jour 10-11: Scripts automation
 - [ ] Jour 12-13: Intégration workflows
 - [ ] Jour 14: Mini-projet personnel
 
 **Semaine 3: Modes Avancés**
+
 - [ ] Jour 15-16: Mode stacking
 - [ ] Jour 17-18: Custom modes
 - [ ] Jour 19-20: Workflows chaînés
 - [ ] Jour 21: Projet workflow complexe
 
 **Semaine 4: Optimisation**
+
 - [ ] Jour 22-23: Performance tuning
 - [ ] Jour 24-25: Memory management
 - [ ] Jour 26-27: Providers optimization
@@ -1153,18 +1205,21 @@ Résultat: Proposal solide en 1 semaine ✅
 ### Semaine 5+: Expertise Avancée
 
 **Mois 2: Expertise Métier**
+
 - [ ] Créer modes métier custom (3-5 modes)
 - [ ] Intégrer avec vos outils (API, webhooks)
 - [ ] Documenter workflows équipe
 - [ ] Former collègues (si applicable)
 
 **Mois 3: Contribution**
+
 - [ ] Partager workflows community
 - [ ] Contribuer documentation
 - [ ] Proposer améliorations
 - [ ] Créer plugins/extensions
 
 **Mois 4+: Innovation**
+
 - [ ] Cas d'usage innovants
 - [ ] Recherche avancée
 - [ ] Prototypes business
@@ -1187,7 +1242,7 @@ Compétences validées:
 ✅ Gestion mémoire (STM/MTM/LTM)  
 ✅ Upload fichiers & analyse  
 ✅ Raccourcis clavier essentiels  
-✅ Troubleshooting basic  
+✅ Troubleshooting basic
 
 **Examen:** 50 questions (1h)  
 **Badge:** TCU-2026-xxx
@@ -1204,7 +1259,7 @@ Compétences validées:
 ✅ Workflow automation  
 ✅ Performance optimization  
 ✅ Security best practices  
-✅ Multi-provider configuration  
+✅ Multi-provider configuration
 
 **Examen:** 75 questions + projet (3h)  
 **Badge:** TCP-2026-xxx  
@@ -1222,7 +1277,7 @@ Compétences validées:
 ✅ Custom modules development  
 ✅ Enterprise deployment  
 ✅ HA/DR configuration  
-✅ Community leadership  
+✅ Community leadership
 
 **Examen:** Projet capstone + soutenance (1 mois)  
 **Badge:** TCE-2026-xxx  
@@ -1252,12 +1307,14 @@ Compétences validées:
 ### Video Courses
 
 **YouTube - TITANE Official**
+
 - Playlist débutant (10 vidéos × 15 min)
 - Playlist intermédiaire (15 vidéos × 30 min)
 - Playlist avancé (20 vidéos × 45 min)
 - Cas d'usage (50+ vidéos × 10-20 min)
 
 **Udemy / Coursera**
+
 - "Complete TITANE Mastery" (40h)
 - "TITANE for Business" (20h)
 - "TITANE Developer Track" (60h)
@@ -1265,6 +1322,7 @@ Compétences validées:
 ### Podcasts
 
 **"The TITANE Show"**
+
 - Hebdomadaire
 - Interviews experts
 - Nouveautés & tips
@@ -1273,18 +1331,21 @@ Compétences validées:
 ### Community
 
 **Discord:** `discord.gg/titane`
+
 - 15K+ membres
 - Support 24/7
 - Channels par thématique
 - Events hebdomadaires
 
 **Forum:** `forum.titane-infinity.dev`
+
 - Q&A
 - Showcases
 - Feature requests
 - Bug reports
 
 **GitHub:** `github.com/KallokTherok1994/TITANE_INFINITY`
+
 - Issues & PRs
 - Discussions
 - Wiki
@@ -1333,7 +1394,7 @@ Compétences validées:
 ---
 
 **TITANE∞ v27.0.0 — Tutoriels & Exemples Complets**
-*Créé: 31 Janvier 2026 | Validé par Kevin Thibault*
-*Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0*
-*Pour tous niveaux: Débutant → Expert*
-*Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés.*
+_Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
+_Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
+_Pour tous niveaux: Débutant → Expert_
+_Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés._

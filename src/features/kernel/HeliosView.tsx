@@ -6,7 +6,11 @@
  */
 
 import { useEffect } from 'react';
-import { useHeliosSnapshot, useFetchHelios, useFetchHealth } from '../../stores/systemStore.selectors';
+import {
+  useHeliosSnapshot,
+  useFetchHelios,
+  useFetchHealth,
+} from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import type { HealthStatus } from '../../services/tauri/backend-v17.2.types';

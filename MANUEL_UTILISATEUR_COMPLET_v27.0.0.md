@@ -1,4 +1,5 @@
 # 📚 TITANE∞ — MANUEL UTILISATEUR COMPLET v27.0.0
+
 **Version:** 27.0.0 | **Langue:** Français | **Date:** 31 Janvier 2026
 
 ---
@@ -32,6 +33,7 @@
 TITANE∞ est un **Système d'Exploitation Cognitif (OS Cognitif)** - une application desktop intelligente et autonome qui fonctionne 100% localement. C'est bien plus qu'un chatbot : c'est un assistant personnel cognitif qui apprend, évolue et s'adapte à vos besoins.
 
 **Capacités principales:**
+
 - 🧠 **IA Conversationnelle** — Chat multimodal avec 4+ providers IA
 - 💾 **Triple Système de Mémoire** — STM (court terme) + MTM (moyen terme) + LTM (long terme)
 - 📈 **Progression & XP** — Gagnez de l'expérience dans 3 domaines
@@ -43,6 +45,7 @@ TITANE∞ est un **Système d'Exploitation Cognitif (OS Cognitif)** - une applic
 ### Qui peut l'utiliser ?
 
 TITANE∞ est conçu pour :
+
 - **Développeurs** — Assist- ance technique, revue de code, architecture
 - **Créatifs** — Brainstorming, génération d'idées, écriture
 - **Gestionnaires** — Planification, organisation, prise de décision
@@ -77,6 +80,7 @@ sudo apt install titane-infinity
 #### 2. Configuration Initiale
 
 Au premier lancement, TITANE vous guidera à travers :
+
 - ✅ Acceptation des conditions d'utilisation
 - ✅ Configuration du profil utilisateur
 - ✅ Sélection du provider IA (Ollama / Gemini / Local)
@@ -85,11 +89,13 @@ Au premier lancement, TITANE vous guidera à travers :
 ### Démarrage
 
 **Lancement rapide:**
+
 ```bash
 ./Titan-Stable_27.0.0_amd64.AppImage
 ```
 
 **Avec options:**
+
 ```bash
 ./Titan-Stable_27.0.0_amd64.AppImage --dev        # Mode développement
 ./Titan-Stable_27.0.0_amd64.AppImage --offline    # Mode hors ligne
@@ -127,6 +133,7 @@ Au premier lancement, TITANE vous guidera à travers :
 #### 1. **Barre Latérale (Sidebar)**
 
 **Pages:**
+
 - 🏠 **Home** — Accueil avec suggestions rapides
 - 💬 **Chat** — Interface de conversation (page principale)
 - 🎨 **Vision** — Analyse visuelle (webcam)
@@ -134,6 +141,7 @@ Au premier lancement, TITANE vous guidera à travers :
 - ⚙️ **Settings** — Paramètres et configuration
 
 **Navigation:**
+
 - Cliquez sur une section pour accéder à la page
 - Icônes pour accès rapide
 - Badges de notification
@@ -141,12 +149,14 @@ Au premier lancement, TITANE vous guidera à travers :
 #### 2. **Zone de Chat**
 
 **Affichage des messages:**
+
 - 🔵 **Vos messages** — Alignés à droite, couleur bleue
 - 🟢 **Messages TITANE** — Alignés à gauche, couleur verte
 - ⏳ **Indicateur de frappe** — Trois points animés pendant traitement
 - 📎 **Attachements** — Fichiers jointes visibles
 
 **Contrôles:**
+
 - 🔄 **Rafraîchir** — Régénérer dernière réponse
 - ✏️ **Modifier** — Éditer message
 - 🗑️ **Supprimer** — Effacer message
@@ -179,6 +189,7 @@ Input: [________________________________________] 🎤 🎨 📎 ▶️
 3. Appuyez sur `Enter` ou cliquez ▶️
 
 **Exemple:**
+
 ```
 Vous: "Explique-moi la différence entre async/await et les callbacks en JavaScript"
 
@@ -189,6 +200,7 @@ TITANE: "Excellente question. Voici les différences clés...
 #### Méthode 2 : Commandes Vocales
 
 Si TTS (Text-to-Speech) est activé:
+
 1. Cliquez le bouton 🎤
 2. Parlez (le micro écoutera)
 3. TITANE génère la réponse vocale
@@ -200,6 +212,7 @@ Si TTS (Text-to-Speech) est activé:
 3. TITANE analyse le fichier dans sa réponse
 
 **Formats supportés:**
+
 - Code: `.js`, `.ts`, `.py`, `.rust`, `.cpp`, `.md`
 - Documents: `.pdf`, `.txt`, `.docx`
 - Images: `.png`, `.jpg`, `.gif`
@@ -216,6 +229,7 @@ Si TTS (Text-to-Speech) est activé:
 #### Suggestions Rapides
 
 La première ligne affiche des suggestions :
+
 ```
 💬 Poser une question | 🧠 Demander une explication | 🎯 Explorer un sujet
 ```
@@ -253,18 +267,18 @@ TITANE propose **12+ modes conversationnels** optimisés pour différents contex
 
 ### Vue d'Ensemble des Modes
 
-| Mode | Icône | Description | Usage |
-|------|-------|-------------|-------|
-| **Chat** | 💬 | Conversation équilibrée | Discussion générale |
-| **Code** | 💻 | Analyse & génération code | Dev, debugging |
-| **Brainstorming** | 🧠 | Exploration créative | Idées, innovation |
-| **Coach** | 🎯 | Accompagnement personnel | Développement perso |
-| **Analyst** | 📊 | Analyse profonde | Synthèse, rapports |
-| **Creator** | 🎨 | Contenu créatif | Écriture, storytelling |
-| **Teacher** | 👨‍🏫 | Explication pédagogique | Apprentissage |
-| **DevOps** | ⚙️ | Système & infrastructure | Ops, deploy |
-| **Security** | 🔒 | Audit & sécurité | Pénétration test, audit |
-| **Research** | 🔬 | Investigation scientifique | Recherche, analyse |
+| Mode              | Icône | Description                | Usage                   |
+| ----------------- | ----- | -------------------------- | ----------------------- |
+| **Chat**          | 💬    | Conversation équilibrée    | Discussion générale     |
+| **Code**          | 💻    | Analyse & génération code  | Dev, debugging          |
+| **Brainstorming** | 🧠    | Exploration créative       | Idées, innovation       |
+| **Coach**         | 🎯    | Accompagnement personnel   | Développement perso     |
+| **Analyst**       | 📊    | Analyse profonde           | Synthèse, rapports      |
+| **Creator**       | 🎨    | Contenu créatif            | Écriture, storytelling  |
+| **Teacher**       | 👨‍🏫    | Explication pédagogique    | Apprentissage           |
+| **DevOps**        | ⚙️    | Système & infrastructure   | Ops, deploy             |
+| **Security**      | 🔒    | Audit & sécurité           | Pénétration test, audit |
+| **Research**      | 🔬    | Investigation scientifique | Recherche, analyse      |
 
 ### Utiliser un Mode
 
@@ -289,12 +303,14 @@ Des boutons visuels affichent les modes rapides (icônes en haut du chat).
 ### Mode Chat (Par défaut)
 
 **Caractéristiques:**
+
 - Conversation naturelle et équilibrée
 - Température: 0.7 (modérée)
 - Contexte: Mémoire complète activée
 - Suggère les prochaines actions
 
 **Utilisation:**
+
 ```
 Vous: "Quel est ton avis sur le Rust vs C++ ?"
 
@@ -307,12 +323,14 @@ Selon tes besoins..."
 ### Mode Code
 
 **Caractéristiques:**
+
 - Optimisé pour programmation
 - Coloration syntaxe automatique
 - Suggestions de refactoring
 - Explications techniques
 
 **Utilisation:**
+
 ```
 Vous: "Explique cette boucle récursive"
 
@@ -329,12 +347,14 @@ Complexité: O(2^n) ❌ À optimiser...
 ### Mode Brainstorming
 
 **Caractéristiques:**
+
 - Divergence créative (sans jugement)
 - Génère variantes et perspectives
 - Température élevée (0.9)
 - Encourage l'exploration
 
 **Utilisation:**
+
 ```
 Vous: "Comment créer une app de productivité révolutionnaire ?"
 
@@ -349,12 +369,14 @@ TITANE: "Voici 20 angles d'attaque :
 ### Mode Coach
 
 **Caractéristiques:**
+
 - Accompagnement personnel
 - Questions puissantes (Socratique)
 - Motivation et célébration
 - Exercices pratiques
 
 **Utilisation:**
+
 ```
 Vous: "Je veux progresser en leadership"
 
@@ -369,12 +391,14 @@ Exercice: Fais une lise de 5 leaders..."
 ### Mode Analyst
 
 **Caractéristiques:**
+
 - Analyse profonde et synthèse
 - Structures données complexes
 - Rapports détaillés
 - Insights actionnables
 
 **Utilisation:**
+
 ```
 Vous: "Analyse ces 3 stratégies de croissance"
 
@@ -398,16 +422,19 @@ TITANE possède une **mémoire triple** unique :
 ### 1. Mémoire Court Terme (STM)
 
 **Caractéristiques:**
+
 - Durée: Session actuelle (~24h)
 - Contenance: ~20 messages récents
 - Vitesse: Ultra-rapide
 - Utilité: Contexte immédiat
 
 **Affichage:**
+
 - Visible dans le chat courant
 - Aucune action nécessaire
 
 **Exemple:**
+
 ```
 Vous: "Je m'appelle Alice, je suis développeuse"
 [La STM enregistre: "Alice, Dev"]
@@ -422,17 +449,20 @@ TITANE: "Pour Alice, développeuse voici 5 projets..."
 ### 2. Mémoire Moyen Terme (MTM)
 
 **Caractéristiques:**
+
 - Durée: ~1 mois
 - Contenance: Patterns & thèmes
 - Vitesse: Rapide
 - Utilité: Apprentissage contextuel
 
 **Affichage:**
+
 - Section "MTM Active" dans EVO
 - Montre les patterns détectés
 - Affiche la cohérence (0-100%)
 
 **Exemple:**
+
 ```
 Pattern MTM détecté: "Alice intéressée par DevOps"
 Basé sur: 15 conversations en 2 semaines
@@ -443,17 +473,20 @@ TITANE: "Comme tu explores DevOps, voici..."
 ### 3. Mémoire Long Terme (LTM)
 
 **Caractéristiques:**
+
 - Durée: Indéfinie (persistante)
 - Contenance: Faits permanents, acquis
 - Vitesse: Requête + recherche
 - Utilité: Connaissance structurée
 
 **Affichage:**
+
 - Section "Knowledge Vault" dans EVO
 - Recherche avec 🔍
 - Éditable manuellement
 
 **Exemple:**
+
 ```
 LTM: "Alice — Développeuse front-end, 5 ans XP, aime React"
 
@@ -471,11 +504,13 @@ Cette info persiste et s'accumule.
 #### Éditer la Mémoire
 
 **LTM (Éditable):**
+
 1. **EVO** → **Memory** → **Long Term**
 2. Cliquez une entrée
 3. Modifiez/supprimez
 
 **Exemple:**
+
 ```
 Avant: "Alice — Dev front-end React"
 Après: "Alice — Dev full-stack React + Node.js, intéressée par DevOps"
@@ -535,6 +570,7 @@ Vision Page → Cliquez "Capture"
 ```
 
 **Exemple:**
+
 ```
 [Capture d'un dashboard]
 
@@ -556,6 +592,7 @@ Vision Page → Cliquez "Stream"
 ```
 
 **Exemple:**
+
 ```
 [Webcam capture la salle]
 
@@ -605,16 +642,19 @@ TITANE contient **13 modules cognitifs** spécialisés.
 **Fonction:** Traitement de l'information
 
 **Capacités:**
+
 - Analyse logique
 - Synthèse
 - Critique
 - Découpe problèmes complexes
 
 **Affichage:**
+
 - Visible quand TITANE "réfléchit"
 - Indicateur: 🧠 + spinner
 
 **Usage:**
+
 ```
 Vous: "Quelle est la meilleure architecture pour un app de streaming ?"
 
@@ -630,11 +670,13 @@ TITANE: [HeliosCore active]
 **Fonction:** Connecter concepts
 
 **Capacités:**
+
 - Créer liens
 - Pattern matching
 - Cross-domaines insights
 
 **Affichage:**
+
 - Graph de connexions
 - Accessible via **EVO** → **Nexus**
 
@@ -643,11 +685,13 @@ TITANE: [HeliosCore active]
 **Fonction:** Résoudre tensions
 
 **Capacités:**
+
 - Equilibrer trade-offs
 - Trouver middle ground
 - Médiation
 
 **Usage:**
+
 ```
 Vous: "Comment équilibrer vitesse vs sécurité ?"
 
@@ -666,11 +710,13 @@ TITANE: [HarmoniaCore pèse les 2 côtés]
 **Fonction:** S'améliorer continuellement
 
 **Capacités:**
+
 - Détecte patterns
 - Apprend de l'interaction
 - Améliore réponses futures
 
 **Affichage:**
+
 - **EVO** → **Evolution**
 - Montre l'apprentissage
 
@@ -679,6 +725,7 @@ TITANE: [HarmoniaCore pèse les 2 côtés]
 **Fonction:** Sécurité & monitoring
 
 **Capacités:**
+
 - Détecte problèmes
 - Prévient erreurs
 - Auto-diagnostic
@@ -696,6 +743,7 @@ TITANE: [HarmoniaCore pèse les 2 côtés]
 ### Affichage des Modules
 
 **EVO → Cores:**
+
 ```
 ┌─ COGNITIVE CORES ─────────────────┐
 │                                    │
@@ -728,12 +776,15 @@ TITANE tracks votre **progression** dans 3 domaines.
 ### Les 3 Domaines
 
 #### 1. Cognitive XP 🧠
+
 **Mesure:** Votre croissance intellectuelle
+
 - Gagnée par: Conversations complexes, learning
 - Bonus: Mode Analyst, mode Teacher
 - Niveau max: 100 (puis reset avec bonus)
 
 **Exemple:**
+
 ```
 Vous: [Demandez une analyse technique profonde]
 → +50 Cognitive XP
@@ -743,19 +794,24 @@ Progression: [████░░░░░░░░░░░░]
 ```
 
 #### 2. Social XP 👥
+
 **Mesure:** Votre capacité collaborative
+
 - Gagnée par: Brainstorming, discussions équilibrées
 - Bonus: Mode Coach, partage mémoire
 - Niveau max: 100
 
 **Exemple:**
+
 ```
 Vous: [Brainstormez idées ensemble]
 → +30 Social XP
 ```
 
 #### 3. Tool Mastery XP 🛠️
+
 **Mesure:** Maîtrise de TITANE
+
 - Gagnée par: Utiliser features, modes, APIs
 - Bonus: Code mode, file uploads
 - Niveau max: 100
@@ -763,6 +819,7 @@ Vous: [Brainstormez idées ensemble]
 ### Affichage Progression
 
 **Page EVO:**
+
 ```
 ┌─ PROGRESSION ─────────────────────┐
 │                                    │
@@ -825,6 +882,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 1. Profil
 
 **Affichage:**
+
 ```
 ┌─ PROFIL ──────────────────────┐
 │                                │
@@ -840,6 +898,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 ```
 
 **Modification:**
+
 1. Cliquez [Éditer Profil]
 2. Changez informations
 3. Cliquez [Sauvegarder]
@@ -849,6 +908,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 💡 **Configuration initiale:** Consultez le [Guide : Setup Providers IA](./GUIDE_INSTALLATION_SETUP_v27.0.0.md#setup-providers-ia) pour configurer Ollama, Gemini ou d'autres providers.
 
 **Configuration:**
+
 ```
 ┌─ PROVIDERS IA ───────────────────┐
 │                                   │
@@ -871,6 +931,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 ```
 
 **Ajouter un Provider:**
+
 1. Settings → Providers
 2. Cliquez [+ Ajouter]
 3. Choisissez le type (Gemini, OpenAI, Ollama)
@@ -879,6 +940,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 6. [Sauvegarder]
 
 **Exemple (Ollama):**
+
 ```
 1. Installer Ollama (ollama.com)
 2. Lancer: ollama serve
@@ -891,6 +953,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 3. Mémoire
 
 **Configuration:**
+
 ```
 ┌─ MÉMOIRE ──────────────────────┐
 │                                 │
@@ -915,6 +978,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 ```
 
 **Actions:**
+
 - **Réinitialiser STM:** [Effacer] → Confirmer
 - **Export LTM:** [Export] → Fichier `.json`
 - **Import LTM:** [Import] → Sélectionner fichier
@@ -922,6 +986,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 4. Chat
 
 **Configuration:**
+
 ```
 ┌─ CHAT ──────────────────────────┐
 │                                  │
@@ -943,6 +1008,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 ```
 
 **Température expliquée:**
+
 - **0.1** = Très déterministe, réponses strictes
 - **0.7** = Équilibré (défaut) ← Recommandé
 - **1.0** = Très créatif, réponses variées
@@ -950,6 +1016,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 5. Vision
 
 **Configuration:**
+
 ```
 ┌─ VISION ──────────────────────┐
 │                                │
@@ -971,6 +1038,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 6. Sécurité
 
 **Configuration:**
+
 ```
 ┌─ SÉCURITÉ ──────────────────┐
 │                              │
@@ -995,6 +1063,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 7. Notifications
 
 **Configuration:**
+
 ```
 ┌─ NOTIFICATIONS ──────────────┐
 │                               │
@@ -1014,6 +1083,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 8. Apparence
 
 **Configuration:**
+
 ```
 ┌─ APPARENCE ───────────────────┐
 │                                │
@@ -1035,6 +1105,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### 9. Raccourcis Clavier
 
 **Configuration:**
+
 ```
 ┌─ RACCOURCIS ──────────────────┐
 │                                │
@@ -1060,18 +1131,21 @@ Ou: `Ctrl+,` (raccourci clavier)
 #### "TITANE ne démarre pas"
 
 **Solution 1 — Vérifier la RAM:**
+
 ```bash
 free -h  # Linux/Mac
 tasklist | find "memory"  # Windows
 ```
 
 **Solution 2 — Logs:**
+
 ```bash
 tail -f ~/.titane/logs/app.log
 # Cherchez ERROR ou PANIC
 ```
 
 **Solution 3 — Réinitialiser:**
+
 ```bash
 rm -rf ~/.titane/cache
 ./Titan-Stable_27.0.0_amd64.AppImage --reset
@@ -1080,11 +1154,13 @@ rm -rf ~/.titane/cache
 #### "Chat très lent"
 
 **Causes possibles:**
+
 - Provider IA surchargé
 - Connexion internet lente
 - Model IA trop gros
 
 **Solutions:**
+
 1. Settings → Providers → Vérifier status
 2. Réduire Token Max: 2000 au lieu de 3000
 3. Changer provider (ex: Ollama au lieu de Gemini)
@@ -1092,11 +1168,13 @@ rm -rf ~/.titane/cache
 #### "Mémoire corrompue"
 
 **Symptômes:**
+
 - Messages dupliqués
 - Oublie informations
 - Incohérence détectée
 
 **Solution:**
+
 ```
 Settings → Memory → [Export Mémoire]
 (sauvegarder backup)
@@ -1110,6 +1188,7 @@ Settings → Memory → [Réanalyser]
 #### "Caméra ne fonctionne pas"
 
 **Vérifiez permissions:**
+
 ```bash
 # Linux
 sudo chmod 666 /dev/video0
@@ -1119,6 +1198,7 @@ System Preferences → Security & Privacy → Camera
 ```
 
 **Test:**
+
 ```
 Settings → Vision → [Tester Caméra]
 ```
@@ -1135,6 +1215,7 @@ Settings → Vision → [Tester Caméra]
 ```
 
 **Exemple:**
+
 ```
 Vous: /help memory
 TITANE: "Commandes mémoire:
@@ -1146,7 +1227,9 @@ TITANE: "Commandes mémoire:
 #### Contact Support
 
 **Pour des problèmes:**
+
 1. Collectez les logs:
+
    ```
    TITANE: /export logs
    ```
@@ -1174,6 +1257,7 @@ Pour les utilisateurs avancés et développeurs, voici comment diagnostiquer les
 #### Patterns d'Erreurs Communs
 
 **1. Provider IA Inaccessible**
+
 ```bash
 # Chercher erreurs provider dans les logs
 grep -i "provider.*error\|connection.*refused" ~/.titane/logs/app.log | tail -20
@@ -1184,11 +1268,13 @@ grep -i "provider.*error\|connection.*refused" ~/.titane/logs/app.log | tail -20
 ```
 
 **Solutions:**
+
 - Ollama: Vérifier service `systemctl status ollama` ou `ollama serve`
 - Gemini: Valider API key dans Settings → Providers
 - Fallback: TITANE basculera automatiquement vers provider suivant
 
 **2. Crash Mémoire (Out of Memory)**
+
 ```bash
 # Chercher allocations mémoire excessives
 grep -E "memory.*exceeded|allocation.*failed|OOM" ~/.titane/logs/app.log
@@ -1199,6 +1285,7 @@ grep -E "memory.*exceeded|allocation.*failed|OOM" ~/.titane/logs/app.log
 ```
 
 **Solutions:**
+
 ```bash
 # Nettoyer cache
 rm -rf ~/.titane/cache/*
@@ -1212,6 +1299,7 @@ TITANE: /memory clean --older-than 90d
 ```
 
 **3. Corruption Base de Données**
+
 ```bash
 # Détecter corruption SQLite
 grep -i "database.*corrupt\|malformed\|integrity" ~/.titane/logs/app.log
@@ -1221,6 +1309,7 @@ sqlite3 ~/.titane/memory/ltm.db "PRAGMA integrity_check;"
 ```
 
 **Solutions:**
+
 ```bash
 # Backup préventif
 cp ~/.titane/memory/ltm.db ~/.titane/memory/ltm.db.backup
@@ -1234,6 +1323,7 @@ cp ~/.titane/memory/backups/ltm_YYYYMMDD.db ~/.titane/memory/ltm.db
 ```
 
 **4. GPU Non Utilisé (Ollama)**
+
 ```bash
 # Vérifier utilisation GPU dans logs Ollama
 journalctl -u ollama -n 100 | grep -i "gpu\|cuda\|rocm"
@@ -1244,6 +1334,7 @@ journalctl -u ollama -n 100 | grep -i "gpu\|cuda\|rocm"
 ```
 
 **Solutions:**
+
 ```bash
 # NVIDIA: Vérifier drivers
 nvidia-smi
@@ -1257,6 +1348,7 @@ curl -fsSL https://ollama.com/install.sh | sh
 ```
 
 **5. Fichiers de Configuration Invalides**
+
 ```bash
 # Chercher erreurs parsing JSON/TOML
 grep -i "parse.*error\|invalid.*config\|syntax.*error" ~/.titane/logs/app.log
@@ -1267,6 +1359,7 @@ grep -i "parse.*error\|invalid.*config\|syntax.*error" ~/.titane/logs/app.log
 ```
 
 **Solutions:**
+
 ```bash
 # Valider JSON
 cat ~/.titane/config/providers.json | jq .
@@ -1280,6 +1373,7 @@ rm ~/.titane/config/providers.json
 #### Commandes Diagnostiques Utiles
 
 **Extraire Logs Par Niveau**
+
 ```bash
 # Seulement erreurs critiques
 grep "CRITICAL\|FATAL" ~/.titane/logs/app.log | tail -50
@@ -1292,6 +1386,7 @@ awk '/2026-01-31 14:00/,0' ~/.titane/logs/app.log
 ```
 
 **Analyser Performance**
+
 ```bash
 # Temps de réponse moyen des providers
 grep "response_time" ~/.titane/logs/app.log | \
@@ -1308,6 +1403,7 @@ grep "invoke(" ~/.titane/logs/app.log | \
 ```
 
 **Workflow Diagnostic Complet**
+
 ```bash
 #!/bin/bash
 # Script: diagnose_titane.sh
@@ -1345,11 +1441,13 @@ echo "=== End of Report ==="
 #### Workflow: Symptôme → Root Cause → Solution
 
 **Étape 1: Reproduire le problème**
+
 - Notez étapes exactes menant au bug
 - Timestamp approximatif de l'incident
 - Comportement attendu vs observé
 
 **Étape 2: Collecter contexte**
+
 ```bash
 # Logs autour du timestamp
 grep -C 20 "2026-01-31 14:35" ~/.titane/logs/app.log > debug.log
@@ -1361,16 +1459,19 @@ df -h >> system_state.txt
 ```
 
 **Étape 3: Identifier Root Cause**
+
 - Rechercher pattern d'erreur dans logs
 - Comparer avec patterns communs ci-dessus
 - Vérifier corrélations (ex: erreur après action spécifique)
 
 **Étape 4: Appliquer solution**
+
 - Tester solution sur environnement de test si possible
 - Documenter changement effectué
 - Valider résolution
 
 **Étape 5: Prévention**
+
 - Ajouter monitoring si problème récurrent
 - Mettre à jour configuration pour éviter répétition
 - Partager solution avec communauté
@@ -1378,12 +1479,14 @@ df -h >> system_state.txt
 #### Ressources Supplémentaires
 
 **Logs Disponibles:**
+
 - `~/.titane/logs/app.log` - Logs application principale
 - `~/.titane/logs/tauri.log` - Logs backend Rust/Tauri
 - `~/.titane/logs/providers.log` - Logs providers IA
 - `~/.titane/logs/memory.log` - Logs système mémoire
 
 **Outils Recommandés:**
+
 - `jq` - Parser/valider JSON
 - `sqlite3` - Inspecter bases de données
 - `htop` - Monitoring ressources temps réel
@@ -1541,29 +1644,29 @@ Voilà! Vous avez backup de votre LTM.
 
 ### Raccourcis Clavier (Par défaut)
 
-| Raccourci | Action |
-|-----------|--------|
-| `Enter` | Envoyer message |
-| `Ctrl+Enter` | Envoyer (alt) |
-| `Ctrl+,` | Ouvrir Settings |
-| `Ctrl+K` | Recherche |
-| `Ctrl+/` | Commandes |
-| `Ctrl+L` | Clearhistorique |
-| `Escape` | Fermer dialog |
-| `?` | Afficher aides |
+| Raccourci    | Action          |
+| ------------ | --------------- |
+| `Enter`      | Envoyer message |
+| `Ctrl+Enter` | Envoyer (alt)   |
+| `Ctrl+,`     | Ouvrir Settings |
+| `Ctrl+K`     | Recherche       |
+| `Ctrl+/`     | Commandes       |
+| `Ctrl+L`     | Clearhistorique |
+| `Escape`     | Fermer dialog   |
+| `?`          | Afficher aides  |
 
 ### Commandes Système
 
-| Commande | Effet |
-|----------|-------|
-| `/help` | Aide générale |
-| `/status` | État système |
-| `/memory` | Afficher mémoire |
-| `/reset` | Réinitialiser chat |
-| `/mode [nom]` | Changer mode |
-| `/export [type]` | Exporter données |
-| `/diagnostics` | Rapport diagnostic |
-| `/exit` | Quitter TITANE |
+| Commande         | Effet              |
+| ---------------- | ------------------ |
+| `/help`          | Aide générale      |
+| `/status`        | État système       |
+| `/memory`        | Afficher mémoire   |
+| `/reset`         | Réinitialiser chat |
+| `/mode [nom]`    | Changer mode       |
+| `/export [type]` | Exporter données   |
+| `/diagnostics`   | Rapport diagnostic |
+| `/exit`          | Quitter TITANE     |
 
 ---
 
@@ -1572,13 +1675,15 @@ Voilà! Vous avez backup de votre LTM.
 ### Optimiser les Réponses
 
 **Meilleur Input:**
+
 ```
-"Je développe en React. 
+"Je développe en React.
 Quels patterns éviter pour optimiser performance?
 [Fichier: mon-app.tsx joint]"
 ```
 
 **Faible Input:**
+
 ```
 "Optimise mon app"
 ```
@@ -1599,6 +1704,7 @@ Utilisez plusieurs modes dans même session:
 ### Utiliser la Mémoire Efficacement
 
 **Bonne pratique:**
+
 ```
 Session 1: Vous discutez de votre projet
 → LTM enregistre: "Utilisateur travaille sur app mobile"
@@ -1657,59 +1763,59 @@ git push origin feature/votre-feature
 
 ### Raccourcis Essentiels
 
-| Raccourci | Action | Description |
-|-----------|--------|-------------|
-| `Ctrl + N` | Nouvelle session | Démarre une nouvelle conversation |
-| `Ctrl + M` | Mode audio | Active/désactive le mode vocal |
-| `Ctrl + K` | Effacer conversation | Nettoie la conversation courante |
-| `Ctrl + ,` | Ouvrir paramètres | Accède aux paramètres |
-| `Ctrl + /` | Aide rapide | Affiche l'aide contextuelle |
-| `↑` / `↓` | Historique | Navigue dans l'historique des messages |
-| `Ctrl + Enter` | Envoyer message | Envoie le message en cours |
+| Raccourci      | Action               | Description                            |
+| -------------- | -------------------- | -------------------------------------- |
+| `Ctrl + N`     | Nouvelle session     | Démarre une nouvelle conversation      |
+| `Ctrl + M`     | Mode audio           | Active/désactive le mode vocal         |
+| `Ctrl + K`     | Effacer conversation | Nettoie la conversation courante       |
+| `Ctrl + ,`     | Ouvrir paramètres    | Accède aux paramètres                  |
+| `Ctrl + /`     | Aide rapide          | Affiche l'aide contextuelle            |
+| `↑` / `↓`      | Historique           | Navigue dans l'historique des messages |
+| `Ctrl + Enter` | Envoyer message      | Envoie le message en cours             |
 
 ### Navigation
 
-| Raccourci | Action | Section |
-|-----------|--------|---------|
-| `Ctrl + 1` | TITANE (Cœur) | Accède à la page principale |
-| `Ctrl + 2` | TIME (Temporel) | Accède à la timeline mémoire |
-| `Ctrl + 3` | STATS | Accède aux statistiques |
-| `Ctrl + 4` | ADMIN | Accède à l'administration |
-| `Ctrl + 5` | DEV | Accède aux outils développeur |
-| `Ctrl + B` | Toggle Sidebar | Affiche/cache la barre latérale |
-| `Ctrl + Shift + P` | Command Palette | Ouvre la palette de commandes |
+| Raccourci          | Action          | Section                         |
+| ------------------ | --------------- | ------------------------------- |
+| `Ctrl + 1`         | TITANE (Cœur)   | Accède à la page principale     |
+| `Ctrl + 2`         | TIME (Temporel) | Accède à la timeline mémoire    |
+| `Ctrl + 3`         | STATS           | Accède aux statistiques         |
+| `Ctrl + 4`         | ADMIN           | Accède à l'administration       |
+| `Ctrl + 5`         | DEV             | Accède aux outils développeur   |
+| `Ctrl + B`         | Toggle Sidebar  | Affiche/cache la barre latérale |
+| `Ctrl + Shift + P` | Command Palette | Ouvre la palette de commandes   |
 
 ### Accessibilité
 
-| Raccourci | Action | Description |
-|-----------|--------|-------------|
-| `Alt + S` | Skip to Content | Passe au contenu principal |
-| `Alt + N` | Skip to Navigation | Passe à la navigation |
-| `Ctrl + +` | Zoom In | Agrandit l'interface (+10%) |
-| `Ctrl + -` | Zoom Out | Rétrécit l'interface (-10%) |
-| `Ctrl + 0` | Reset Zoom | Réinitialise le zoom à 100% |
-| `F11` | Plein écran | Active/désactive le mode plein écran |
-| `Shift + ?` | Shortcuts Help | Affiche l'aide des raccourcis |
+| Raccourci   | Action             | Description                          |
+| ----------- | ------------------ | ------------------------------------ |
+| `Alt + S`   | Skip to Content    | Passe au contenu principal           |
+| `Alt + N`   | Skip to Navigation | Passe à la navigation                |
+| `Ctrl + +`  | Zoom In            | Agrandit l'interface (+10%)          |
+| `Ctrl + -`  | Zoom Out           | Rétrécit l'interface (-10%)          |
+| `Ctrl + 0`  | Reset Zoom         | Réinitialise le zoom à 100%          |
+| `F11`       | Plein écran        | Active/désactive le mode plein écran |
+| `Shift + ?` | Shortcuts Help     | Affiche l'aide des raccourcis        |
 
 ### Fichiers & Données
 
-| Raccourci | Action | Description |
-|-----------|--------|-------------|
-| `Ctrl + O` | Open File | Ouvre un fichier |
-| `Ctrl + S` | Save | Sauvegarde la conversation |
-| `Ctrl + Shift + S` | Save As | Sauvegarde sous... |
-| `Ctrl + E` | Export | Exporte la conversation |
-| `Ctrl + I` | Import | Importe des données |
+| Raccourci          | Action    | Description                |
+| ------------------ | --------- | -------------------------- |
+| `Ctrl + O`         | Open File | Ouvre un fichier           |
+| `Ctrl + S`         | Save      | Sauvegarde la conversation |
+| `Ctrl + Shift + S` | Save As   | Sauvegarde sous...         |
+| `Ctrl + E`         | Export    | Exporte la conversation    |
+| `Ctrl + I`         | Import    | Importe des données        |
 
 ### Développement
 
-| Raccourci | Action | Description |
-|-----------|--------|-------------|
-| `Ctrl + Shift + I` | DevTools | Ouvre les outils développeur |
-| `Ctrl + Shift + C` | Console | Ouvre la console JavaScript |
-| `F12` | Inspect Element | Inspecte un élément |
-| `Ctrl + R` | Reload | Recharge l'application |
-| `Ctrl + Shift + R` | Hard Reload | Recharge sans cache |
+| Raccourci          | Action          | Description                  |
+| ------------------ | --------------- | ---------------------------- |
+| `Ctrl + Shift + I` | DevTools        | Ouvre les outils développeur |
+| `Ctrl + Shift + C` | Console         | Ouvre la console JavaScript  |
+| `F12`              | Inspect Element | Inspecte un élément          |
+| `Ctrl + R`         | Reload          | Recharge l'application       |
+| `Ctrl + Shift + R` | Hard Reload     | Recharge sans cache          |
 
 **💡 Astuce:** Appuyez sur `Shift + ?` pour afficher tous les raccourcis disponibles dans l'interface.
 
@@ -1730,19 +1836,19 @@ TITANE expose **100+ commandes Tauri** pour l'interaction backend ↔ frontend. 
 ```typescript
 // Sauvegarder une entrée mémoire
 await invoke('memory_save_entry', {
-  content: "Mon souvenir important",
-  tags: ["personnel", "important"],
-  encrypted: true
+  content: 'Mon souvenir important',
+  tags: ['personnel', 'important'],
+  encrypted: true,
 });
 
 // Charger les entrées mémoire
 const entries = await invoke('memory_load_entries', {
-  filter: { tags: ["important"] }
+  filter: { tags: ['important'] },
 });
 
 // Effacer la mémoire (⚠️ DESTRUCTIF)
 await invoke('memory_clear', {
-  confirm: true
+  confirm: true,
 });
 ```
 
@@ -1751,20 +1857,20 @@ await invoke('memory_clear', {
 ```typescript
 // Générer avec Gemini
 const response = await invoke('chat_generate_gemini', {
-  prompt: "Explique-moi la physique quantique",
+  prompt: 'Explique-moi la physique quantique',
   temperature: 0.7,
-  max_tokens: 2000
+  max_tokens: 2000,
 });
 
 // Générer avec Ollama (local)
 const response = await invoke('chat_generate_ollama', {
-  model: "llama2",
-  prompt: "Code Python pour un serveur web"
+  model: 'llama2',
+  prompt: 'Code Python pour un serveur web',
 });
 
 // Changer de provider
 await invoke('set_active_provider', {
-  provider: "gemini" // ou "ollama", "local", "tauri"
+  provider: 'gemini', // ou "ollama", "local", "tauri"
 });
 ```
 
@@ -1794,7 +1900,7 @@ const state = await invoke('get_cognitive_state');
 console.log(state.mode); // → "focused", "creative", etc.
 
 // Changer mode cognitif
-await invoke('update_cognitive_mode', { mode: "creative" });
+await invoke('update_cognitive_mode', { mode: 'creative' });
 
 // Cohérence des 3 centres
 const coherence = await invoke('get_three_centers_coherence');
@@ -1810,7 +1916,7 @@ const recs = await invoke('get_system_recommendations');
 ```typescript
 // Configurer clé API (chiffrée)
 await invoke('chat_set_gemini_key', {
-  key: "votre-cle-api-gemini"
+  key: 'votre-cle-api-gemini',
 });
 
 // Vérifier status clé
@@ -1818,10 +1924,10 @@ const hasKey = await invoke('get_gemini_key_status');
 console.log(hasKey); // → true/false
 
 // Configurer OpenAI
-await invoke('chat_set_openai_key', { key: "sk-..." });
+await invoke('chat_set_openai_key', { key: 'sk-...' });
 
 // Configurer Anthropic (Claude)
-await invoke('chat_set_anthropic_key', { key: "anthropic-..." });
+await invoke('chat_set_anthropic_key', { key: 'anthropic-...' });
 ```
 
 #### 6. Voice API (Vocal)
@@ -1849,15 +1955,15 @@ console.log(profile);
 
 ```typescript
 // Log info
-await invoke('log_info', { message: "Opération réussie" });
+await invoke('log_info', { message: 'Opération réussie' });
 
 // Log warning
-await invoke('log_warning', { message: "Attention: ressources faibles" });
+await invoke('log_warning', { message: 'Attention: ressources faibles' });
 
 // Log error
-await invoke('log_error', { 
-  message: "Erreur critique",
-  context: { code: 500, details: "..." }
+await invoke('log_error', {
+  message: 'Erreur critique',
+  context: { code: 500, details: '...' },
 });
 
 // Obtenir logs récents
@@ -1875,34 +1981,34 @@ async function chatWithMemory(userMessage: string) {
     // 1. Sauvegarder le message utilisateur
     await invoke('memory_save_entry', {
       content: userMessage,
-      tags: ["user", "chat"],
-      encrypted: false
+      tags: ['user', 'chat'],
+      encrypted: false,
     });
 
     // 2. Générer réponse IA
     const response = await invoke('chat_generate_gemini', {
       prompt: userMessage,
       temperature: 0.7,
-      max_tokens: 1000
+      max_tokens: 1000,
     });
 
     // 3. Sauvegarder la réponse
     await invoke('memory_save_entry', {
       content: response.text,
-      tags: ["ai", "chat", "response"],
-      encrypted: false
+      tags: ['ai', 'chat', 'response'],
+      encrypted: false,
     });
 
     // 4. Log succès
     await invoke('log_info', {
-      message: `Chat completed: ${userMessage.slice(0, 50)}...`
+      message: `Chat completed: ${userMessage.slice(0, 50)}...`,
     });
 
     return response.text;
   } catch (error) {
     // Log erreur
     await invoke('log_error', {
-      message: `Chat failed: ${error.message}`
+      message: `Chat failed: ${error.message}`,
     });
     throw error;
   }
@@ -1918,66 +2024,87 @@ async function chatWithMemory(userMessage: string) {
 ### Termes Essentiels
 
 **AI Provider**
+
 > Service IA utilisé par TITANE pour générer les réponses (Gemini, Ollama, Local, TauriChat).
 
 **AppImage**
+
 > Format de distribution Linux portable. Fonctionne sur toutes les distributions sans installation.
 
 **Chiffrement (Encryption)**
+
 > Protection des données via algorithmes cryptographiques (AES-256 pour TITANE).
 
 **Cognitive Mode**
+
 > État mental du système (Focused, Creative, Analytical, Reflective).
 
 **Context Window**
+
 > Nombre maximum de tokens qu'un modèle IA peut traiter en une fois.
 
 **DEB Package**
+
 > Format de package Debian (.deb) pour Ubuntu, Debian, etc.
 
 **Gemini**
+
 > Modèle IA de Google (cloud). Rapide et performant, nécessite clé API.
 
 **GPU Acceleration**
+
 > Utilisation de la carte graphique pour accélérer l'IA (Ollama + CUDA/ROCm).
 
 **LTM (Long-Term Memory)**
+
 > Mémoire à long terme. Souvenirs persistants sur plusieurs mois/années.
 
 **Modal**
+
 > Fenêtre de dialogue qui apparaît au-dessus de l'interface principale.
 
 **MTM (Mid-Term Memory)**
+
 > Mémoire à moyen terme. Souvenirs sur ~30 jours, progressivement consolidés.
 
 **Ollama**
+
 > Plateforme open-source pour exécuter des modèles IA localement (Llama, Mistral, etc.).
 
 **Provider**
+
 > Service IA backend (Gemini, Ollama, Local, TauriChat).
 
 **Streaming**
+
 > Affichage progressif des réponses IA (mot par mot) au lieu d'attendre la réponse complète.
 
 **STM (Short-Term Memory)**
+
 > Mémoire à court terme. Souvenirs récents (< 24h), haute volatilité.
 
 **Tauri**
+
 > Framework Rust pour créer des applications desktop natives. Backend de TITANE.
 
 **Temperature**
+
 > Paramètre IA contrôlant la créativité (0.0 = déterministe, 1.0 = très créatif).
 
 **Token**
+
 > Unité de texte (~4 caractères). Les modèles IA ont des limites de tokens.
 
 **Triple Memory System**
+
 > Architecture STM + MTM + LTM de TITANE pour persistance intelligente.
 
 **Vision Module**
+
 > Système d'analyse visuelle (webcam, capture écran, reconnaissance affective).
 
 **XP (Experience Points)**
+
 > Points d'expérience gagnés dans 3 domaines (Mental, Cœur, Corps).
 
 ### Acronymes
@@ -2008,16 +2135,19 @@ async function chatWithMemory(userMessage: string) {
 TITANE adopte une approche **Privacy-First**:
 
 ✅ **100% Local par Défaut**
+
 - Tous les calculs se font localement
 - Aucune donnée envoyée au cloud sans autorisation
 - Provider "Local" fonctionne entièrement hors ligne
 
 ✅ **Chiffrement End-to-End**
+
 - Mémoire chiffrée AES-256
 - Clés API stockées chiffrées
 - Communications sécurisées (TLS 1.3)
 
 ✅ **Contrôle Utilisateur Total**
+
 - Vous choisissez quel provider utiliser
 - Vous contrôlez quelles données sont envoyées
 - Vous pouvez effacer toutes les données instantanément
@@ -2036,6 +2166,7 @@ Vos clés API sont:
 ```
 
 **Où sont stockées vos clés?**
+
 - **Linux:** `~/.local/share/titane/secure/keys.enc`
 - **macOS:** Keychain système
 - **Windows:** Windows Credential Manager
@@ -2065,22 +2196,25 @@ Vos conversations:
 #### 🟢 Pour Utilisateurs Soucieux de la Vie Privée
 
 1. **Utilisez le provider "Ollama" (100% local)**
+
    ```bash
    # Installer Ollama
    curl -fsSL https://ollama.com/install.sh | sh
-   
+
    # Télécharger un modèle
    ollama pull llama2
-   
+
    # TITANE détectera automatiquement Ollama
    ```
 
 2. **Désactivez la télémétrie** (si activée)
+
    ```
    Settings → Privacy → Telemetry → OFF
    ```
 
 3. **Activez le chiffrement mémoire** (par défaut)
+
    ```
    Settings → Memory → Encryption → ON
    ```
@@ -2104,7 +2238,7 @@ Vos conversations:
 ❌ Tracker votre usage sans consentement  
 ❌ Utiliser vos conversations pour entraîner des modèles  
 ❌ Partager vos clés API  
-❌ Logger vos messages en clair  
+❌ Logger vos messages en clair
 
 ### Audit de Sécurité
 
@@ -2131,68 +2265,68 @@ cargo tree
 
 ### Benchmarks v27.0.0 — Vue d'Ensemble
 
-| Métrique | Valeur | Notes |
-|----------|--------|-------|
-| **Démarrage** | 585ms | Temps de lancement |
-| **Première réponse** | < 2s | Gemini streaming |
-| **Mémoire RAM** | 150-300MB | Utilisation typique |
-| **CPU idle** | < 1% | Au repos |
-| **CPU charge** | 30-60% | Génération active |
-| **Disk I/O** | < 5MB/s | Lecture/écriture |
-| **Réseau** | 0 (local) | 10-50 KB/s (cloud) |
+| Métrique             | Valeur    | Notes               |
+| -------------------- | --------- | ------------------- |
+| **Démarrage**        | 585ms     | Temps de lancement  |
+| **Première réponse** | < 2s      | Gemini streaming    |
+| **Mémoire RAM**      | 150-300MB | Utilisation typique |
+| **CPU idle**         | < 1%      | Au repos            |
+| **CPU charge**       | 30-60%    | Génération active   |
+| **Disk I/O**         | < 5MB/s   | Lecture/écriture    |
+| **Réseau**           | 0 (local) | 10-50 KB/s (cloud)  |
 
 ### Benchmarks Détaillés Par Provider
 
 #### Ollama (Local) — GPU NVIDIA RTX 3080
 
-| Modèle | Latence Première Token | Throughput | RAM GPU | Qualité |
-|--------|------------------------|------------|---------|---------|
-| llama2:7b | 320ms | 45 tok/s | 4.2 GB | ⭐⭐⭐ |
-| llama2:13b | 580ms | 28 tok/s | 7.8 GB | ⭐⭐⭐⭐ |
-| codellama:7b | 290ms | 52 tok/s | 4.1 GB | ⭐⭐⭐ (code) |
-| mistral:7b | 280ms | 48 tok/s | 4.0 GB | ⭐⭐⭐⭐ |
-| mixtral:8x7b | 950ms | 18 tok/s | 24 GB | ⭐⭐⭐⭐⭐ |
+| Modèle       | Latence Première Token | Throughput | RAM GPU | Qualité       |
+| ------------ | ---------------------- | ---------- | ------- | ------------- |
+| llama2:7b    | 320ms                  | 45 tok/s   | 4.2 GB  | ⭐⭐⭐        |
+| llama2:13b   | 580ms                  | 28 tok/s   | 7.8 GB  | ⭐⭐⭐⭐      |
+| codellama:7b | 290ms                  | 52 tok/s   | 4.1 GB  | ⭐⭐⭐ (code) |
+| mistral:7b   | 280ms                  | 48 tok/s   | 4.0 GB  | ⭐⭐⭐⭐      |
+| mixtral:8x7b | 950ms                  | 18 tok/s   | 24 GB   | ⭐⭐⭐⭐⭐    |
 
 **Recommandation:** `mistral:7b` pour équilibre vitesse/qualité optimal
 
 #### Ollama (Local) — CPU Only (AMD Ryzen 9 5900X)
 
-| Modèle | Latence Première Token | Throughput | RAM | Qualité |
-|--------|------------------------|------------|-----|---------|
-| llama2:7b | 2.1s | 8 tok/s | 6 GB | ⭐⭐⭐ |
-| mistral:7b | 1.9s | 9 tok/s | 6 GB | ⭐⭐⭐⭐ |
-| phi2:2.7b | 950ms | 15 tok/s | 3 GB | ⭐⭐ (compact) |
+| Modèle     | Latence Première Token | Throughput | RAM  | Qualité        |
+| ---------- | ---------------------- | ---------- | ---- | -------------- |
+| llama2:7b  | 2.1s                   | 8 tok/s    | 6 GB | ⭐⭐⭐         |
+| mistral:7b | 1.9s                   | 9 tok/s    | 6 GB | ⭐⭐⭐⭐       |
+| phi2:2.7b  | 950ms                  | 15 tok/s   | 3 GB | ⭐⭐ (compact) |
 
 **Recommandation:** `phi2:2.7b` si pas de GPU, ou upgrader vers GPU
 
 #### Gemini Pro (Cloud)
 
-| Endpoint | Latence Première Token | Throughput | Coût/1K tok | Qualité |
-|----------|------------------------|------------|-------------|---------|
-| gemini-pro | 1.2s | 60 tok/s | $0.001 | ⭐⭐⭐⭐⭐ |
-| gemini-pro-vision | 1.5s | 55 tok/s | $0.002 | ⭐⭐⭐⭐⭐ |
-| gemini-1.5-flash | 800ms | 80 tok/s | $0.0005 | ⭐⭐⭐⭐ |
+| Endpoint          | Latence Première Token | Throughput | Coût/1K tok | Qualité    |
+| ----------------- | ---------------------- | ---------- | ----------- | ---------- |
+| gemini-pro        | 1.2s                   | 60 tok/s   | $0.001      | ⭐⭐⭐⭐⭐ |
+| gemini-pro-vision | 1.5s                   | 55 tok/s   | $0.002      | ⭐⭐⭐⭐⭐ |
+| gemini-1.5-flash  | 800ms                  | 80 tok/s   | $0.0005     | ⭐⭐⭐⭐   |
 
 **Recommandation:** `gemini-1.5-flash` pour vitesse, `gemini-pro` pour qualité
 
 #### Anthropic Claude (Cloud)
 
-| Modèle | Latence Première Token | Throughput | Coût/1K tok | Qualité |
-|----------|------------------------|------------|-------------|---------|
-| claude-3-opus | 1.8s | 45 tok/s | $0.015 | ⭐⭐⭐⭐⭐ |
-| claude-3-sonnet | 1.2s | 55 tok/s | $0.003 | ⭐⭐⭐⭐ |
-| claude-3-haiku | 750ms | 65 tok/s | $0.00025 | ⭐⭐⭐ |
+| Modèle          | Latence Première Token | Throughput | Coût/1K tok | Qualité    |
+| --------------- | ---------------------- | ---------- | ----------- | ---------- |
+| claude-3-opus   | 1.8s                   | 45 tok/s   | $0.015      | ⭐⭐⭐⭐⭐ |
+| claude-3-sonnet | 1.2s                   | 55 tok/s   | $0.003      | ⭐⭐⭐⭐   |
+| claude-3-haiku  | 750ms                  | 65 tok/s   | $0.00025    | ⭐⭐⭐     |
 
 **Recommandation:** `claude-3-haiku` pour vitesse/coût, `claude-3-opus` pour qualité maximale
 
 #### Local Provider (Fallback Builtin)
 
-| Métrique | Valeur | Notes |
-|----------|--------|-------|
-| Latence | 100ms | Réponses pré-générées |
-| Throughput | N/A | Pas de génération |
-| RAM | 50 MB | Ultra-léger |
-| Qualité | ⭐ | Basique (règles fixes) |
+| Métrique   | Valeur | Notes                  |
+| ---------- | ------ | ---------------------- |
+| Latence    | 100ms  | Réponses pré-générées  |
+| Throughput | N/A    | Pas de génération      |
+| RAM        | 50 MB  | Ultra-léger            |
+| Qualité    | ⭐     | Basique (règles fixes) |
 
 **Usage:** Fallback uniquement, pas pour usage principal
 
@@ -2243,6 +2377,7 @@ $0.00025│                ● Haiku (économique)
 #### Profil RAM Par Scénario
 
 **Idle (Application au repos):**
+
 ```
 Total: 145 MB
 ├─ Application Core: 85 MB
@@ -2252,6 +2387,7 @@ Total: 145 MB
 ```
 
 **Active Chat (1 conversation 20 messages):**
+
 ```
 Total: 220 MB
 ├─ Application Core: 85 MB
@@ -2262,6 +2398,7 @@ Total: 220 MB
 ```
 
 **Heavy Load (Vision + Chat + Multiple Providers):**
+
 ```
 Total: 380 MB
 ├─ Application Core: 85 MB
@@ -2273,6 +2410,7 @@ Total: 380 MB
 ```
 
 **Peak (Limite recommandée):**
+
 ```
 Total: 500 MB (seuil critique)
 ├─ Application: 100 MB
@@ -2285,15 +2423,15 @@ Total: 500 MB (seuil critique)
 
 ### CPU Utilization Détaillée
 
-| Opération | CPU Single-Core | CPU Multi-Core | Durée | Notes |
-|-----------|-----------------|----------------|-------|-------|
-| Startup | 45% | 15% | 0.5s | Chargement initial |
-| Chat Idle | 0.5% | 0.2% | — | Monitoring seulement |
-| Provider Call (Ollama GPU) | 8% | 3% | 2-5s | GPU fait le travail |
-| Provider Call (Ollama CPU) | 95% | 60% | 10-30s | CPU intensif |
-| Vision Processing | 40% | 20% | 1-2s | Analyse image |
-| Memory Indexing | 25% | 12% | 0.5s | Recherche LTM |
-| Database Backup | 30% | 15% | 2-5s | Compression + I/O |
+| Opération                  | CPU Single-Core | CPU Multi-Core | Durée  | Notes                |
+| -------------------------- | --------------- | -------------- | ------ | -------------------- |
+| Startup                    | 45%             | 15%            | 0.5s   | Chargement initial   |
+| Chat Idle                  | 0.5%            | 0.2%           | —      | Monitoring seulement |
+| Provider Call (Ollama GPU) | 8%              | 3%             | 2-5s   | GPU fait le travail  |
+| Provider Call (Ollama CPU) | 95%             | 60%            | 10-30s | CPU intensif         |
+| Vision Processing          | 40%             | 20%            | 1-2s   | Analyse image        |
+| Memory Indexing            | 25%             | 12%            | 0.5s   | Recherche LTM        |
+| Database Backup            | 30%             | 15%            | 2-5s   | Compression + I/O    |
 
 ### Optimisations Recommandées
 
@@ -2392,17 +2530,20 @@ Log Level: WARN
 **Solutions:**
 
 1. **Vérifiez provider:**
+
    ```
    Settings → AI → Provider
    → Préférez Ollama (local) ou Gemini (cloud rapide)
    ```
 
 2. **Réduisez max_tokens:**
+
    ```
    Settings → AI → Max Tokens → 1000-1500
    ```
 
 3. **Désactivez features non utilisées:**
+
    ```
    Settings → Vision → OFF (si non utilisé)
    Settings → Voice → OFF (si non utilisé)
@@ -2420,11 +2561,13 @@ Log Level: WARN
 **Solutions:**
 
 1. **Réduisez cache:**
+
    ```
    Settings → Memory → Cache Size → 100 MB
    ```
 
 2. **Activez auto-cleanup:**
+
    ```
    Settings → Memory → Auto-cleanup → ON
    ```
@@ -2442,15 +2585,17 @@ Log Level: WARN
 **Solutions:**
 
 1. **Vérifiez drivers GPU:**
+
    ```bash
    # NVIDIA
    nvidia-smi
-   
+
    # AMD
    rocm-smi
    ```
 
 2. **Réinstallez Ollama:**
+
    ```bash
    curl -fsSL https://ollama.com/install.sh | sh
    ```
@@ -2503,6 +2648,6 @@ Pour démarrer au mieux:
 ---
 
 **TITANE∞ v27.0.0 — Manuel Utilisateur Complet**
-*Créé: 31 Janvier 2026 | Validé par Kevin Thibault*
-*Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0*
-*Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés.*
+_Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
+_Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
+_Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés._

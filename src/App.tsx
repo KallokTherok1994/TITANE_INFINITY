@@ -749,14 +749,34 @@ const AppRouter: React.FC = () => {
   const topNavSections = useMemo(
     () => [
       // ═══ PRINCIPAL ═══
-      { id: 'titane', label: 'TITANE', route: '/titane', description: 'Le Cœur du Système' },
+      {
+        id: 'titane',
+        label: 'TITANE',
+        route: '/titane',
+        description: 'Le Cœur du Système',
+      },
       { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
       { id: 'stats', label: 'STATS', route: '/stats', description: 'Métriques Système' },
-      { id: 'admin', label: 'ADMIN', route: '/admin', description: 'Centre Admin Unifié' },
+      {
+        id: 'admin',
+        label: 'ADMIN',
+        route: '/admin',
+        description: 'Centre Admin Unifié',
+      },
       { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
       // Dans menu "Plus"
-      { id: 'fusion', label: 'FUSION', route: '/fusion', description: 'Backend/Frontend Fusion' },
-      { id: 'optimization', label: 'OPTIMIZE', route: '/optimization', description: 'Performance Ultime' },
+      {
+        id: 'fusion',
+        label: 'FUSION',
+        route: '/fusion',
+        description: 'Backend/Frontend Fusion',
+      },
+      {
+        id: 'optimization',
+        label: 'OPTIMIZE',
+        route: '/optimization',
+        description: 'Performance Ultime',
+      },
     ],
     []
   );

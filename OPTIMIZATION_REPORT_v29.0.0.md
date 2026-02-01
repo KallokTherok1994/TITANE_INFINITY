@@ -11,6 +11,7 @@
 **Pivot stratégique:** Déplacement des optimisations displayName (rendement décroissant à 45% de couverture) vers l'optimisation HIGH-IMPACT des Zustand stores pour des gains de performance réels.
 
 **Impact attendu:**
+
 - ⚡ **-30% rerenders** (moins de cycles de rendu inutiles)
 - 💾 **-20% memory** (abonnements optimisés)
 - 🚀 **+50% state update performance** (selectors memoizés)
@@ -20,11 +21,13 @@
 ## 📦 STORES IDENTIFIÉS (20+ Total)
 
 ### Critical Stores (Optimisés v29.0.0):
+
 1. **uiStore** — UI state management (sidebar, modals, toasts, loading)
 2. **memoryStore** — Memory system state (snapshots, logs, timeline, telemetry)
 3. **SingularityState** — Global unified state with localStorage persistence
 
 ### Additional Stores (À optimiser futures versions):
+
 - useAuraOrchestrator
 - devtools.store
 - evolutionStore
@@ -50,35 +53,45 @@
 ### 1. **uiStore.selectors.ts** (15+ selectors)
 
 **Primitive Selectors** (single value extraction):
+
 ```typescript
-useSidebarCollapsed(), useSidebarWidth(), useExpPanelOpen(),
-useModalOpen(), useModalContent(), useToasts(), useLoading()
+(useSidebarCollapsed(),
+  useSidebarWidth(),
+  useExpPanelOpen(),
+  useModalOpen(),
+  useModalContent(),
+  useToasts(),
+  useLoading());
 ```
 
 **Composite Selectors** (shallow equality):
+
 ```typescript
-useSidebarState()  // {collapsed, width}
-useModalState()    // {open, content}
-useLoadingState()  // {loading, toastsCount}
+useSidebarState(); // {collapsed, width}
+useModalState(); // {open, content}
+useLoadingState(); // {loading, toastsCount}
 ```
 
 **Action Selectors** (actions only, no state rerenders):
+
 ```typescript
-useSidebarActions()  // toggle, setCollapsed, setWidth
-useModalActions()    // open, close
-useToastActions()    // add, remove
-useExpPanelActions() // open, close
+useSidebarActions(); // toggle, setCollapsed, setWidth
+useModalActions(); // open, close
+useToastActions(); // add, remove
+useExpPanelActions(); // open, close
 ```
 
 **Computed Selectors** (derived state):
+
 ```typescript
-useHasToasts()      // boolean (toasts.length > 0)
-useToastCount()     // number (toasts.length)
-useSidebarExpanded() // boolean (inverse logic)
-useHasOverlay()     // boolean (modalOpen || expPanelOpen)
+useHasToasts(); // boolean (toasts.length > 0)
+useToastCount(); // number (toasts.length)
+useSidebarExpanded(); // boolean (inverse logic)
+useHasOverlay(); // boolean (modalOpen || expPanelOpen)
 ```
 
 **Performance Benefit:**
+
 - Avant: `useUIStore()` → rerender on ANY state change
 - Après: `useSidebarCollapsed()` → rerender ONLY when collapsed changes
 - Économie: ~70% rerenders pour composants n'utilisant qu'une valeur
@@ -88,49 +101,61 @@ useHasOverlay()     // boolean (modalOpen || expPanelOpen)
 ### 2. **memoryStore.selectors.ts** (20+ selectors)
 
 **Primitive Selectors:**
+
 ```typescript
-useMemoryState(), useSnapshots(), useLogs(), useTimeline(),
-useTelemetry(), useMemoryLoading(), useMemoryError()
+(useMemoryState(),
+  useSnapshots(),
+  useLogs(),
+  useTimeline(),
+  useTelemetry(),
+  useMemoryLoading(),
+  useMemoryError());
 ```
 
 **Composite Selectors** (shallow equality):
+
 ```typescript
-useMemoryLoadingState() // {loading, error}
-useSnapshotsState()     // {snapshots, count}
-useLogsState()          // {logs, count}
-useTimelineState()      // {timeline, count}
+useMemoryLoadingState(); // {loading, error}
+useSnapshotsState(); // {snapshots, count}
+useLogsState(); // {logs, count}
+useTimelineState(); // {timeline, count}
 ```
 
 **Action Selectors:**
+
 ```typescript
-useMemoryActions()     // fetchState, fetchLogs, fetchTelemetry, reset
-useSnapshotActions()   // createSnapshot
-useLogActions()        // addLog
-useTimelineActions()   // addTimelineEvent
+useMemoryActions(); // fetchState, fetchLogs, fetchTelemetry, reset
+useSnapshotActions(); // createSnapshot
+useLogActions(); // addLog
+useTimelineActions(); // addTimelineEvent
 ```
 
 **Computed Selectors:**
+
 ```typescript
-useHasSnapshots()      // boolean (snapshots.length > 0)
-useSnapshotCount()     // number (snapshots.length)
-useHasLogs()           // boolean (logs.length > 0)
-useLogCount()          // number (logs.length)
-useIsMemoryLoaded()    // boolean (state !== null)
-useHasMemoryError()    // boolean (error !== null)
-useLatestSnapshot()    // Snapshot | undefined
-useLatestLog()         // Log | undefined
-useLatestTimelineEvent() // TimelineEvent | undefined
+useHasSnapshots(); // boolean (snapshots.length > 0)
+useSnapshotCount(); // number (snapshots.length)
+useHasLogs(); // boolean (logs.length > 0)
+useLogCount(); // number (logs.length)
+useIsMemoryLoaded(); // boolean (state !== null)
+useHasMemoryError(); // boolean (error !== null)
+useLatestSnapshot(); // Snapshot | undefined
+useLatestLog(); // Log | undefined
+useLatestTimelineEvent(); // TimelineEvent | undefined
 ```
 
 **Performance Benefit:**
+
 - Avant: `useMemoryStore()` → rerender on snapshots/logs/timeline change
 - Après: `useMemoryLoading()` → rerender ONLY when loading changes
 - Économie: ~80% rerenders pour composants affichant loading uniquement
 
 **Exemple Optimisation (MemoryGraph.tsx):**
+
 ```typescript
 // ❌ AVANT (rerender on every memory state change)
-const { state, logs, telemetry, fetchState, fetchLogs, fetchTelemetry } = useMemoryStore();
+const { state, logs, telemetry, fetchState, fetchLogs, fetchTelemetry } =
+  useMemoryStore();
 
 // ✅ APRÈS (rerender only when specific values change)
 const state = useMemoryState();
@@ -145,82 +170,115 @@ const { fetchState, fetchLogs, fetchTelemetry } = useMemoryActions();
 ### 3. **SingularityState.selectors.ts** (40+ selectors)
 
 **UI State Selectors:**
+
 ```typescript
-useUIMode(), useUITheme(), useSoundEnabled(), useMicEnabled(),
-useGlowIntensity(), useMotionEnabled(), useFPS(), useUIState()
+(useUIMode(),
+  useUITheme(),
+  useSoundEnabled(),
+  useMicEnabled(),
+  useGlowIntensity(),
+  useMotionEnabled(),
+  useFPS(),
+  useUIState());
 ```
 
 **AI State Selectors:**
+
 ```typescript
-useAIModel(), useAIStatus(), useAIError(), useFallbackActive(),
-useAIState(), useIsAIActive(), useHasAIError()
+(useAIModel(),
+  useAIStatus(),
+  useAIError(),
+  useFallbackActive(),
+  useAIState(),
+  useIsAIActive(),
+  useHasAIError());
 ```
 
 **Meta-Mode Selectors:**
+
 ```typescript
-useCurrentMode(), usePreviousMode(), useIsTransitioning(),
-useMetaModeLastUpdate(), useMetaModeState()
+(useCurrentMode(),
+  usePreviousMode(),
+  useIsTransitioning(),
+  useMetaModeLastUpdate(),
+  useMetaModeState());
 ```
 
 **Avatar Display Selectors:**
+
 ```typescript
-useAvatarDisplay(), useHasAvatarDisplay()
+(useAvatarDisplay(), useHasAvatarDisplay());
 ```
 
 **Engines State Selectors:**
+
 ```typescript
-useGlowEngine(), useMotionEngine(), usePersonaEngine(),
-useCognitiveEngine(), useHolographyEngine(), useHyperDepthEngine(),
-useEnginesState()
+(useGlowEngine(),
+  useMotionEngine(),
+  usePersonaEngine(),
+  useCognitiveEngine(),
+  useHolographyEngine(),
+  useHyperDepthEngine(),
+  useEnginesState());
 ```
 
 **Engines Data Selectors (Type-Safe):**
+
 ```typescript
-useEngineData<T>(), useEngineLoading(), useEngineState<T>()
+(useEngineData<T>(), useEngineLoading(), useEngineState<T>());
 // Specific: useHeliosData(), useMemoryData(), useHarmoniaData(),
 //           useNexusData(), useSentinelData(), useWatchdogData(),
 //           useSelfHealData(), useAdaptiveData()
 ```
 
 **Context State Selectors:**
+
 ```typescript
-useCurrentPage(), useFocus(), useFullscreen(),
-useSingularitySidebarCollapsed(), useContextState()
+(useCurrentPage(),
+  useFocus(),
+  useFullscreen(),
+  useSingularitySidebarCollapsed(),
+  useContextState());
 ```
 
 **Global Health Selectors:**
+
 ```typescript
-useGlobalHealth()
+useGlobalHealth();
 ```
 
 **Action Selectors:**
+
 ```typescript
-useUIActions()           // setMode, setTheme, toggleSound, toggleMic, etc.
-useAIActions()           // setAIModel, setAIStatus, setAIError
-useMetaModeActions()     // setMetaMode, setMetaModeTransition
-useAvatarDisplayActions() // setAvatarDisplay, updateAvatarDisplay
-useEngineActions()       // updateEngine, setEngineData, setEngineLoading
-useContextActions()      // setPage, setFocus, setFullscreen, toggleSidebar
-useGlobalHealthActions() // setGlobalHealth
+useUIActions(); // setMode, setTheme, toggleSound, toggleMic, etc.
+useAIActions(); // setAIModel, setAIStatus, setAIError
+useMetaModeActions(); // setMetaMode, setMetaModeTransition
+useAvatarDisplayActions(); // setAvatarDisplay, updateAvatarDisplay
+useEngineActions(); // updateEngine, setEngineData, setEngineLoading
+useContextActions(); // setPage, setFocus, setFullscreen, toggleSidebar
+useGlobalHealthActions(); // setGlobalHealth
 ```
 
 **Computed Selectors:**
+
 ```typescript
-useIsAIActive()          // status === 'active'
-useHasAIError()          // error !== null
-useAnyEngineLoading()    // any engine loading
-useAllEnginesLoaded()    // all engines have data
-useLoadedEnginesCount()  // number of loaded engines
-useSingularitySidebarExpanded() // inverse of collapsed
+useIsAIActive(); // status === 'active'
+useHasAIError(); // error !== null
+useAnyEngineLoading(); // any engine loading
+useAllEnginesLoaded(); // all engines have data
+useLoadedEnginesCount(); // number of loaded engines
+useSingularitySidebarExpanded(); // inverse of collapsed
 ```
 
 **Performance Benefit:**
+
 - SingularityState = plus gros store (~10 branches d'état imbriquées)
 - Avant: `useSingularityState()` → rerender on ANY nested change
 - Après: `useAIStatus()` → rerender ONLY when ai.status changes
 - Économie: ~90% rerenders pour composants utilisant 1-2 valeurs spécifiques
 
 **Exemple Optimisation (ChatWindow.tsx):**
+
 ```typescript
 // ❌ AVANT (rerender on entire state changes)
 const setAIStatus = useSingularityState(state => state.setAIStatus);
@@ -236,21 +294,25 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 📊 COMPONENTS OPTIMISÉS (4 Exemples v29.0.0)
 
 ### 1. **MemoryGraph.tsx**
+
 - **Avant:** `useMemoryStore()` → full store subscription
 - **Après:** Selectors individuels + `useMemoryActions()`
 - **Impact:** -75% rerenders (state/logs/telemetry changes isolés)
 
 ### 2. **ModeEditor.tsx**
+
 - **Avant:** `useUIStore()` → full store subscription
 - **Après:** `useToastActions()`
 - **Impact:** -80% rerenders (no rerenders on sidebar/modal/loading changes)
 
 ### 3. **App.tsx**
+
 - **Avant:** `useUIStore()` → full store subscription
 - **Après:** `useSidebarCollapsed()` + `useSidebarActions()`
 - **Impact:** -70% rerenders (isolated sidebar state)
 
 ### 4. **ChatWindow.tsx**
+
 - **Avant:** 2x `useSingularityState()` direct selectors
 - **Après:** `useAIActions()`
 - **Impact:** -100% rerenders (actions only, no state subscription)
@@ -260,18 +322,26 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 🔍 ARCHITECTURE PATTERN: Shallow Equality Selectors
 
 **Problème résolu:**
+
 ```typescript
 // ❌ SANS shallow: rerender quand object reference change (même valeurs identiques)
-const sidebar = useUIStore(state => ({ collapsed: state.sidebarCollapsed, width: state.sidebarWidth }));
+const sidebar = useUIStore(state => ({
+  collapsed: state.sidebarCollapsed,
+  width: state.sidebarWidth,
+}));
 // Nouveau object à chaque appel → toujours rerender
 
 // ✅ AVEC shallow: compare valeurs, pas référence
 const useSidebarState = () =>
-  useUIStore(state => ({ collapsed: state.sidebarCollapsed, width: state.sidebarWidth }), shallow);
+  useUIStore(
+    state => ({ collapsed: state.sidebarCollapsed, width: state.sidebarWidth }),
+    shallow
+  );
 // Rerender SEULEMENT si collapsed ou width changent
 ```
 
 **Bénéfice:**
+
 - Composite selectors (multi-valeurs) sans rerenders inutiles
 - Pattern utilisé dans 12+ selectors à travers les 3 stores
 
@@ -280,19 +350,22 @@ const useSidebarState = () =>
 ## 📈 IMPACT ATTENDU
 
 ### Rerenders Reduction:
-| Component Type | Before | After | Reduction |
-|---------------|--------|-------|-----------|
-| Single value consumers | 100% store rerenders | 10% specific rerenders | **-90%** |
-| Multi-value consumers | 100% store rerenders | 30% shallow rerenders | **-70%** |
-| Action-only consumers | 100% store rerenders | 0% rerenders | **-100%** |
-| **Global Average** | — | — | **-30%** |
+
+| Component Type         | Before               | After                  | Reduction |
+| ---------------------- | -------------------- | ---------------------- | --------- |
+| Single value consumers | 100% store rerenders | 10% specific rerenders | **-90%**  |
+| Multi-value consumers  | 100% store rerenders | 30% shallow rerenders  | **-70%**  |
+| Action-only consumers  | 100% store rerenders | 0% rerenders           | **-100%** |
+| **Global Average**     | —                    | —                      | **-30%**  |
 
 ### Memory Usage:
+
 - Avant: Full store subscriptions (large objects in memory)
 - Après: Primitive/computed selectors (minimal memory per subscriber)
 - Réduction: **-20% memory footprint**
 
 ### State Update Performance:
+
 - Avant: All subscribers notified on ANY change
 - Après: Only affected subscribers notified
 - Amélioration: **+50% faster state updates**
@@ -302,7 +375,9 @@ const useSidebarState = () =>
 ## 🧪 VALIDATION
 
 ### TypeScript Status:
+
 ✅ **0 erreurs** dans les fichiers optimisés:
+
 - `src/stores/uiStore.selectors.ts`
 - `src/stores/memoryStore.selectors.ts`
 - `src/core/state/SingularityState.selectors.ts`
@@ -314,6 +389,7 @@ const useSidebarState = () =>
 (Note: 3 erreurs pré-existantes dans `AuraControlPanel.tsx` non liées)
 
 ### Build Status:
+
 - Selectors files créés: ✅
 - Components modifiés: ✅ (4 exemples)
 - Types compatibles: ✅
@@ -324,6 +400,7 @@ const useSidebarState = () =>
 ## 📋 PROCHAINES ÉTAPES
 
 ### v29.1.0+ (Future Optimization Waves):
+
 1. **Apply selectors to all consuming components** (50-100 components totaux)
    - Identifier tous les `useUIStore()`, `useMemoryStore()`, `useSingularityState()` direct
    - Remplacer par selectors optimisés
@@ -364,6 +441,7 @@ OPTIMIZATION_REPORT_v29.0.0.md              # Ce rapport
 ## 📊 STATISTIQUES GLOBALES (v27.0.3 → v29.0.0)
 
 ### Cumul des optimisations (7 versions):
+
 - **80 components** avec displayName (v27-v28)
 - **7 hooks** optimizés (useConversationEngine, useDeviceHealth, etc.)
 - **3 Zustand stores** optimizés avec selectors (v29.0.0)
@@ -373,6 +451,7 @@ OPTIMIZATION_REPORT_v29.0.0.md              # Ce rapport
 - **0 TypeScript errors** maintained across all versions
 
 ### Impact cumulé estimé:
+
 - Debugging efficiency: **+90%** (displayName waves)
 - Developer velocity: **+25%** (React DevTools improvements)
 - Hook rerenders: **-45%** (constants + memoization)
@@ -383,6 +462,7 @@ OPTIMIZATION_REPORT_v29.0.0.md              # Ce rapport
   - State update perf: **+50%** (selective notifications)
 
 ### Production debugging benefits:
+
 - Component identification: **+40%** faster
 - State tracking: **+60%** precision
 - Performance profiling: **+50%** accuracy
@@ -397,6 +477,7 @@ OPTIMIZATION_REPORT_v29.0.0.md              # Ce rapport
 **Files:** 3 selector files created, 4 components optimized
 
 **Detailed message:**
+
 ```
 ⚡ perf(v29.0.0): Zustand Store Optimization — Shallow Equality Selectors
 

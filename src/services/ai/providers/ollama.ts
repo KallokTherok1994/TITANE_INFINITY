@@ -31,7 +31,8 @@ const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 const isDevelopment = import.meta.env.DEV;
 const OLLAMA_BASE_URL = isDevelopment
   ? '/api/ollama' // Proxy Vite (évite CORS)
-  : typeof runtimeConfig.ollamaUrl === 'string' && runtimeConfig.ollamaUrl.trim().length > 0
+  : typeof runtimeConfig.ollamaUrl === 'string' &&
+      runtimeConfig.ollamaUrl.trim().length > 0
     ? runtimeConfig.ollamaUrl.trim()
     : 'http://127.0.0.1:11434';
 
@@ -39,7 +40,7 @@ const OLLAMA_BASE_URL = isDevelopment
 const getOllamaURL = (endpoint: string): string => {
   // En dev avec proxy: /api/ollama déjà mappé vers /api/* du serveur Ollama
   // Donc on ajoute directement l'endpoint sans dupliquer /api
-  return isDevelopment 
+  return isDevelopment
     ? `${OLLAMA_BASE_URL}${endpoint}` // /api/ollama/tags (proxy redirige vers /api/tags)
     : `${OLLAMA_BASE_URL}/api${endpoint}`; // http://127.0.0.1:11434/api/tags
 };
@@ -342,7 +343,7 @@ export const ollamaProvider: AIProvider = {
       message: message.substring(0, 100),
       historyLength: history.length,
       model: OLLAMA_MODEL,
-        url: OLLAMA_BASE_URL,
+      url: OLLAMA_BASE_URL,
       timestamp: new Date().toISOString(),
     });
 
@@ -350,7 +351,7 @@ export const ollamaProvider: AIProvider = {
     const isHealthy = await this.isAvailable();
     if (!isHealthy) {
       const error = new Error('Ollama endpoint not available');
-        handleOllamaError(error, 'pre_check', { url: OLLAMA_BASE_URL });
+      handleOllamaError(error, 'pre_check', { url: OLLAMA_BASE_URL });
       throw error;
     }
 
@@ -435,7 +436,7 @@ export const ollamaProvider: AIProvider = {
             // 🚨 DEBUG CRITICAL: Log erreur fetch Ollama
             console.error('[ollamaProvider] ❌ Fetch error', {
               error: error instanceof Error ? error.message : String(error),
-                url: OLLAMA_BASE_URL,
+              url: OLLAMA_BASE_URL,
               timestamp: new Date().toISOString(),
             });
 

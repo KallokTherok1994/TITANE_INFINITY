@@ -10,6 +10,7 @@
 ## 1. STACK TECHNOLOGIQUE COMPLÈTE
 
 ### Frontend Stack
+
 ```
 ├─ React 19.2.4
 │  ├─ Hooks: 100% functional components
@@ -33,6 +34,7 @@
 ```
 
 ### Backend Stack
+
 ```
 ├─ Tauri 2.0
 │  ├─ Desktop: Native window management
@@ -56,6 +58,7 @@
 ```
 
 ### DevOps & Build Tools
+
 ```
 ├─ Package Manager: pnpm 10.28.2
 │  ├─ Lock file: pnpm-lock.yaml (4.2 MB)
@@ -78,6 +81,7 @@
 ```
 
 ### Network & Services
+
 ```
 ├─ Vite Dev Server
 │  ├─ Host: 0.0.0.0 (all interfaces)
@@ -106,6 +110,7 @@
 ### Frontend Architecture
 
 **Component Hierarchy:**
+
 ```
 App (Root)
 ├── Layout
@@ -125,6 +130,7 @@ App (Root)
 ```
 
 **Data Flow:**
+
 ```
 User Input
     ↓
@@ -142,6 +148,7 @@ State Update → UI Re-render
 ```
 
 **State Management:**
+
 - Context API for global state (recommended approach)
 - Local component state via `useState`
 - Custom hooks for reusable logic
@@ -150,6 +157,7 @@ State Update → UI Re-render
 ### Backend Architecture
 
 **IPC Command Pattern:**
+
 ```rust
 #[tauri::command]
 fn command_name(arg1: String) -> Result<String, String> {
@@ -159,6 +167,7 @@ fn command_name(arg1: String) -> Result<String, String> {
 ```
 
 **Available Modules:**
+
 - File System Operations
 - Database Access (SQLite)
 - Encryption/Decryption
@@ -167,6 +176,7 @@ fn command_name(arg1: String) -> Result<String, String> {
 - Network Operations
 
 **Error Handling:**
+
 - Rust `Result<T, E>` pattern
 - JSON error serialization to frontend
 - Human-readable error messages
@@ -176,12 +186,14 @@ fn command_name(arg1: String) -> Result<String, String> {
 **Technology:** SQLite (embedded, Tauri compatible)
 
 **Features:**
+
 - ACID compliance
 - Transaction support
 - Migrations available
 - Connection pooling ready
 
-**Location:** 
+**Location:**
+
 - Platform-dependent (Tauri resource directory)
 - Persisted between sessions
 
@@ -192,6 +204,7 @@ fn command_name(arg1: String) -> Result<String, String> {
 ### Input Validation Layer
 
 **Frontend:**
+
 ```typescript
 // TypeScript strict types prevent invalid data
 const sanitizeInput = (input: string): string => {
@@ -206,6 +219,7 @@ const safeFetch = async (url: string): Promise<Response> => {
 ```
 
 **Backend (Rust):**
+
 ```rust
 // Type system enforces safety
 #[derive(Deserialize)]
@@ -218,6 +232,7 @@ struct UserInput {
 ### Cryptography Implementation
 
 **Encryption Standard:**
+
 ```
 Algorithm: AES-256-GCM
 ├─ Key Size: 256 bits
@@ -227,6 +242,7 @@ Algorithm: AES-256-GCM
 ```
 
 **Hash Functions:**
+
 ```
 Algorithm: SHA-256 & SHA-512
 ├─ Purpose: Data integrity verification
@@ -235,6 +251,7 @@ Algorithm: SHA-256 & SHA-512
 ```
 
 **Implementation Location:**
+
 - `src-tauri/src/crypto/` (Rust)
 - Used for sensitive data protection
 - No plaintext secrets stored
@@ -242,6 +259,7 @@ Algorithm: SHA-256 & SHA-512
 ### Environment Variable Handling
 
 **Frontend (Vite):**
+
 ```typescript
 // Compile-time substitution
 const API_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:4000';
@@ -252,6 +270,7 @@ const isProd = import.meta.env.PROD;
 ```
 
 **Backend (Rust/Tauri):**
+
 ```rust
 // Runtime configuration
 let data_root = std::env::var("TITANE_DATA_ROOT")
@@ -259,6 +278,7 @@ let data_root = std::env::var("TITANE_DATA_ROOT")
 ```
 
 **Secure Practices:**
+
 - ✅ No secrets in code
 - ✅ Environment variables for configuration
 - ✅ `.env.example` for documentation
@@ -271,6 +291,7 @@ let data_root = std::env::var("TITANE_DATA_ROOT")
 ### Build Performance
 
 **Frontend Build:**
+
 ```
 Tool:     Vite 7.3.1
 Time:     ~25-30 seconds (typical)
@@ -280,6 +301,7 @@ Chunks:   Automatic code splitting
 ```
 
 **Hot Module Reload (HMR):**
+
 ```
 Initial Load:   ~3-5 seconds
 HMR Update:     ~200-500 ms
@@ -290,6 +312,7 @@ Cache:          .vite-cache (utilized)
 ### Runtime Performance
 
 **Memory Usage:**
+
 ```
 Tauri Window:   ~150-250 MB (typical)
 Frontend App:   ~100-150 MB (React component tree)
@@ -298,6 +321,7 @@ Total:          ~300-500 MB (baseline)
 ```
 
 **CPU Usage:**
+
 ```
 Idle:           <2% CPU
 UI Interaction: 5-15% (brief spikes)
@@ -306,6 +330,7 @@ Average:        3-8% CPU
 ```
 
 **Network Performance:**
+
 ```
 Local Network:  <50ms latency
 Ollama Calls:   ~500ms-2s (model dependent)
@@ -359,16 +384,19 @@ pnpm run test:e2e:ui
 ### Test Coverage
 
 **Frontend:**
+
 - Components: 85% coverage (estimated)
 - Services: 90% coverage
 - Utilities: 95% coverage
 
 **Backend:**
+
 - Commands: 80% coverage
 - Modules: 85% coverage
 - Crypto: 95% coverage (critical)
 
 **Execution Time:**
+
 - Unit: ~5 seconds
 - Integration: ~10 seconds
 - E2E: ~30 seconds (includes Tauri startup)
@@ -381,11 +409,13 @@ pnpm run test:e2e:ui
 ### Development Mode
 
 **Launch Command:**
+
 ```bash
 pnpm run dev:tauri
 ```
 
 **What Happens:**
+
 1. Vite dev server starts on 0.0.0.0:4000
 2. HMR websocket connection established
 3. Tauri window opens (connects to Vite)
@@ -395,11 +425,13 @@ pnpm run dev:tauri
 ### Production Build
 
 **Build Command:**
+
 ```bash
 pnpm run build
 ```
 
 **Output Artifacts:**
+
 ```
 dist/
 ├── index.html          (entry point)
@@ -420,6 +452,7 @@ src-tauri/target/release/
 ### Distribution Packages
 
 **AppImage:**
+
 ```
 Size:       82 MB (single executable)
 Format:     ELF AppImage (v2)
@@ -429,6 +462,7 @@ Portability: Works on most Linux distributions
 ```
 
 **DEB Package:**
+
 ```
 Size:       9.6 MB (compressed)
 Format:     Debian package
@@ -442,6 +476,7 @@ Dependencies: Listed in control file
 **Location:** `deploy-network.sh`
 
 **Features:**
+
 ```bash
 #!/bin/bash
 
@@ -502,19 +537,19 @@ proxy: {
 ```json
 {
   "compilerOptions": {
-    "target": "ES2024",           // Latest JS features
-    "lib": ["ES2024", "DOM"],     // Runtime environment
-    "module": "ESNext",           // Modern module system
+    "target": "ES2024", // Latest JS features
+    "lib": ["ES2024", "DOM"], // Runtime environment
+    "module": "ESNext", // Modern module system
     "moduleResolution": "bundler", // Vite-compatible resolution
-    "strict": true,               // Enable all strict checks
-    "noImplicitAny": true,        // No implicit any types
-    "strictNullChecks": true,     // Strict null checking
-    "esModuleInterop": true,      // CommonJS compatibility
-    "skipLibCheck": true,         // Skip library type checking
-    "resolveJsonModule": true,    // Allow JSON imports
+    "strict": true, // Enable all strict checks
+    "noImplicitAny": true, // No implicit any types
+    "strictNullChecks": true, // Strict null checking
+    "esModuleInterop": true, // CommonJS compatibility
+    "skipLibCheck": true, // Skip library type checking
+    "resolveJsonModule": true, // Allow JSON imports
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]            // Path alias support
+      "@/*": ["src/*"] // Path alias support
     }
   }
 }
@@ -528,15 +563,17 @@ proxy: {
   "version": "27.0.0",
   "identifier": "com.titane.infinity",
   "build": {
-    "devUrl": "http://localhost:1420",      // Tauri dev server
-    "beforeDevCommand": "...",               // Pre-dev hook
-    "beforeBuildCommand": "...",             // Pre-build hook
-    "frontendDist": "../dist"                // Built assets location
+    "devUrl": "http://localhost:1420", // Tauri dev server
+    "beforeDevCommand": "...", // Pre-dev hook
+    "beforeBuildCommand": "...", // Pre-build hook
+    "frontendDist": "../dist" // Built assets location
   },
   "bundle": {
     "active": true,
-    "targets": "all",                        // Build for all platforms
-    "icon": [/* icon files */],
+    "targets": "all", // Build for all platforms
+    "icon": [
+      /* icon files */
+    ],
     "category": "DeveloperTool"
   }
 }
@@ -547,6 +584,7 @@ proxy: {
 ## 8. DÉPENDANCES CRITIQUES JUSTIFIÉES
 
 ### Why React 19.2.4?
+
 ```
 ✅ Latest stable version
 ✅ Compiler support for optimizations
@@ -557,6 +595,7 @@ proxy: {
 ```
 
 ### Why Vite 7.3.1?
+
 ```
 ✅ 2.5x faster build than webpack
 ✅ Native ES modules
@@ -567,6 +606,7 @@ proxy: {
 ```
 
 ### Why Tailwind CSS 4?
+
 ```
 ✅ Zero-runtime CSS
 ✅ JIT compilation
@@ -577,6 +617,7 @@ proxy: {
 ```
 
 ### Why Tauri 2.0?
+
 ```
 ✅ Native app capability
 ✅ Security-focused
@@ -593,6 +634,7 @@ proxy: {
 ### Pre-commit Checks
 
 **Husky + lint-staged:**
+
 ```bash
 # Automatically runs on git commit
 ├─ ESLint (code style)
@@ -604,6 +646,7 @@ proxy: {
 ### CI/CD Pipeline Ready
 
 **Recommended GitHub Actions:**
+
 ```yaml
 name: CI
 
@@ -650,6 +693,7 @@ jobs:
 **Current:** SQLite (embedded)
 
 **Future Options:**
+
 ```
 → PostgreSQL (multi-user, remote)
 → MongoDB (document-based, scale-out)
@@ -664,6 +708,7 @@ jobs:
 **Current:** Local network only
 
 **Future Options:**
+
 ```
 → Add HTTPS/TLS via reverse proxy
 → Implement WebSocket for real-time
@@ -712,6 +757,7 @@ curl http://127.0.0.1:11435/api/tags
 ### Known Issues & Solutions
 
 **Issue 1: Ollama double /api/ prefix**
+
 ```
 Symptom: Requests to /api/ollama/api/tags
 Cause:   Missing route normalization
@@ -719,6 +765,7 @@ Status:  ✅ FIXED (getOllamaURL() helper)
 ```
 
 **Issue 2: Tailwind v4 gradient syntax**
+
 ```
 Symptom: CSS not applying gradient classes
 Cause:   v3 → v4 API change (bg-gradient → bg-linear)
@@ -726,6 +773,7 @@ Status:  ✅ FIXED (CSS updated)
 ```
 
 **Issue 3: Port conflicts**
+
 ```
 Symptom: Port already in use errors
 Cause:   Firefox blocking 11434, Vite on wrong port
@@ -753,24 +801,28 @@ VITE_PROFILE=true pnpm run build
 ## 📊 METRICS SUMMARY
 
 ### Code Metrics
+
 - **Frontend LOC:** ~145,000+ (1,423 files)
 - **Backend LOC:** ~85,000+ (906 files)
 - **Configuration LOC:** ~10,000+ (8+ files)
 - **Documentation:** 50+ KB (README, ARCHITECTURE, etc.)
 
 ### Dependency Metrics
+
 - **npm Dependencies:** 67 direct
 - **Dev Dependencies:** 32 direct
 - **Total Lock Entries:** ~1,200+
 - **Package Size:** 4.2 MB (pnpm-lock.yaml)
 
 ### Performance Metrics
+
 - **Build Time:** ~25-30 seconds
 - **HMR Time:** ~200-500 ms
 - **Bundle Size:** ~500 KB (gzipped, estimated)
 - **Runtime Memory:** ~300-500 MB
 
 ### Quality Metrics
+
 - **TypeScript Errors:** 0
 - **Build Errors:** 0
 - **Test Files:** 40+

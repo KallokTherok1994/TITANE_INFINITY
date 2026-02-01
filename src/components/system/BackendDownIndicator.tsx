@@ -49,13 +49,8 @@ export const BackendDownIndicator: React.FC<BackendDownIndicatorProps> = ({
   dismissible = true,
   className,
 }) => {
-  const {
-    allBackendsDown,
-    tauriStatus,
-    ollamaStatus,
-    unavailableReason,
-    recheckHealth,
-  } = useBackendHealth();
+  const { allBackendsDown, tauriStatus, ollamaStatus, unavailableReason, recheckHealth } =
+    useBackendHealth();
 
   const [dismissed, setDismissed] = useState(false);
   const [isRechecking, setIsRechecking] = useState(false);

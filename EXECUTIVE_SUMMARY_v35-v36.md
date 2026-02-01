@@ -10,10 +10,12 @@
 ## 🎯 Vue d'Ensemble
 
 ### v35.0.0 — Web Vitals Optimization
+
 **Déployé**: 2026-01-30 (premier déploiement)  
 **Objectif**: Optimiser Core Web Vitals (FCP, LCP, Speed Index)
 
 ### v36.0.0 — Three.js Lazy-Loading
+
 **Déployé**: 2026-01-30 (même jour)  
 **Objectif**: Réduire bundle initial via lazy-loading Three.js
 
@@ -25,16 +27,17 @@
 
 ### v35.0.0 Impact
 
-| Métrique | Baseline | v35.0.0 | Amélioration |
-|----------|----------|---------|--------------|
-| **FCP** | 2.8s | **1.7-1.9s** | **-35-40%** |
-| **LCP** | 4.2s | **2.3-2.8s** | **-35-45%** |
-| **Speed Index** | 4.5s | **2.8-3.2s** | **-30-40%** |
-| **TTI** | 5.5s | **3.5-4.0s** | **-35-40%** |
-| **TBT** | 250ms | **120-150ms** | **-40-50%** |
-| **CLS** | 0.08 | **0.03-0.05** | **-38-63%** |
+| Métrique        | Baseline | v35.0.0       | Amélioration |
+| --------------- | -------- | ------------- | ------------ |
+| **FCP**         | 2.8s     | **1.7-1.9s**  | **-35-40%**  |
+| **LCP**         | 4.2s     | **2.3-2.8s**  | **-35-45%**  |
+| **Speed Index** | 4.5s     | **2.8-3.2s**  | **-30-40%**  |
+| **TTI**         | 5.5s     | **3.5-4.0s**  | **-35-40%**  |
+| **TBT**         | 250ms    | **120-150ms** | **-40-50%**  |
+| **CLS**         | 0.08     | **0.03-0.05** | **-38-63%**  |
 
 **Techniques v35.0.0**:
+
 - Critical CSS extraction (3.5 KB synchronous)
 - Font optimization (`font-display: swap`)
 - Image lazy-loading (native + Intersection Observer)
@@ -43,14 +46,15 @@
 
 ### v36.0.0 Impact
 
-| Métrique | v35.0.0 | v36.0.0 | Amélioration |
-|----------|---------|---------|--------------|
-| **Bundle Initial** | 950 KB | **414 KB** | **-536 KB (-56%)** |
-| **FCP (no avatar)** | 1.7s | **1.45-1.55s** | **-150-250ms** |
-| **LCP (no avatar)** | 2.5s | **2.2-2.4s** | **-100-200ms** |
-| **Three.js Load** | Boot (0ms) | 1st access (50-800ms) | Deferred |
+| Métrique            | v35.0.0    | v36.0.0               | Amélioration       |
+| ------------------- | ---------- | --------------------- | ------------------ |
+| **Bundle Initial**  | 950 KB     | **414 KB**            | **-536 KB (-56%)** |
+| **FCP (no avatar)** | 1.7s       | **1.45-1.55s**        | **-150-250ms**     |
+| **LCP (no avatar)** | 2.5s       | **2.2-2.4s**          | **-100-200ms**     |
+| **Three.js Load**   | Boot (0ms) | 1st access (50-800ms) | Deferred           |
 
 **Technique v36.0.0**:
+
 - Three.js (536 KB) lazy-loaded dynamically
 - `async initialize()` pattern for avatar renderer
 - 90% users never load Three.js (0 KB saved)
@@ -84,6 +88,7 @@ TOTAL IMPROVEMENT: ~98% vs v26 baseline 🏆
 ### v35.0.0 Artifacts
 
 **Fichiers Créés**:
+
 ```
 src/styles/
 ├── critical.css (3.5 KB)    → Above-fold styles
@@ -99,12 +104,14 @@ index.html
 ```
 
 **Documentation**:
+
 - WEB_VITALS_v35.0.0.md (332 lignes)
 - PERFORMANCE_REPORT_v35.0.0.md (366 lignes)
 - OPTIMIZATION_STACK_v27-v35.md
 - scripts/validate-v35.0.0.sh
 
 **Commits**:
+
 - `dfd86226` v35.0.0 Phase 1: Critical path optimization
 - `a8f7349a` v35.0.0 Phase 5: Validation & measurement
 - `09b75936` docs: v35.0.0 validation + optimization stack
@@ -115,6 +122,7 @@ index.html
 ### v36.0.0 Artifacts
 
 **Fichiers Modifiés**:
+
 ```
 src/modules/avatar/floating/
 ├── ThreeJSAvatarRenderer.ts
@@ -129,11 +137,13 @@ src/modules/avatar/floating/
 ```
 
 **Documentation**:
+
 - THREE_JS_OPTIMIZATION_v36.0.0.md (332 lignes)
 - THREE_JS_LAZY_RESULTS_v36.0.0.md (326 lignes)
 - PRODUCTION_AUTHORIZATION_v36.0.0.md (423 lignes)
 
 **Commits**:
+
 - `de0fcb23` perf(v36): Phase 1 - ThreeJSAvatarRenderer async init
 - `e50d1d4d` docs(v36): Phase 1 results - Three.js lazy-loading impact
 - `0d2b4510` prod: v36.0.0 Production Authorization
@@ -149,6 +159,7 @@ src/modules/avatar/floating/
 **Profil**: Navigation web, pas d'avatar 3D
 
 **v26 → v35.0.0**:
+
 ```
 Bundle: 2.5 MB → 950 KB (-62%)
 FCP: 5.0s → 1.7s (-66%)
@@ -156,6 +167,7 @@ LCP: 7.0s → 2.5s (-64%)
 ```
 
 **v35.0.0 → v36.0.0**:
+
 ```
 Bundle: 950 KB → 414 KB (-56%)
 Three.js: JAMAIS chargé (0 KB saved permanently)
@@ -164,6 +176,7 @@ LCP: 2.5s → 2.2-2.4s (-12%)
 ```
 
 **Total v26 → v36.0.0**:
+
 ```
 Bundle: 2.5 MB → 414 KB (-83%) 🎯
 FCP: 5.0s → 1.45-1.55s (-71%) 🚀
@@ -175,11 +188,13 @@ LCP: 7.0s → 2.2-2.4s (-66%) ⚡
 **Profil**: Active avatar 3D
 
 **v26 → v35.0.0**:
+
 ```
 Identique à Scénario 1
 ```
 
 **v35.0.0 → v36.0.0**:
+
 ```
 Bundle Initial: 950 KB → 414 KB (-56%)
 Three.js: Lazy-loaded on 1st avatar access
@@ -195,18 +210,18 @@ Three.js: Lazy-loaded on 1st avatar access
 
 ## 🏆 Stack d'Optimisation Complet (v27-v36)
 
-| Version | Optimization | Impact | Cumulative |
-|---------|--------------|--------|------------|
-| v27 | Build optimization | -20% | 80% |
-| v28 | State management | -30% | 56% |
-| v29 | Code splitting | -30% | 39% |
-| v30 | Monitoring | -15% | 33% |
-| v31 | Selectors | -40% | 20% |
-| v32 | React hooks | -75% | 5% |
-| v33 | Bundle analysis | -5% | 5% |
-| v34 | Web Vitals Phase 1 | -35-40% | ~3% |
-| **v35** | **Web Vitals Phase 2-5** | **-35-45%** | **~2%** |
-| **v36** | **Three.js lazy** | **-56% bundle** | **~1%** |
+| Version | Optimization             | Impact          | Cumulative |
+| ------- | ------------------------ | --------------- | ---------- |
+| v27     | Build optimization       | -20%            | 80%        |
+| v28     | State management         | -30%            | 56%        |
+| v29     | Code splitting           | -30%            | 39%        |
+| v30     | Monitoring               | -15%            | 33%        |
+| v31     | Selectors                | -40%            | 20%        |
+| v32     | React hooks              | -75%            | 5%         |
+| v33     | Bundle analysis          | -5%             | 5%         |
+| v34     | Web Vitals Phase 1       | -35-40%         | ~3%        |
+| **v35** | **Web Vitals Phase 2-5** | **-35-45%**     | **~2%**    |
+| **v36** | **Three.js lazy**        | **-56% bundle** | **~1%**    |
 
 **Performance Totale**: **~98-99% optimisé** vs v26 baseline 🎊
 
@@ -217,12 +232,14 @@ Three.js: Lazy-loaded on 1st avatar access
 ### Code Quality
 
 **v35.0.0**:
+
 - TypeScript: 0 errors ✅
 - Build: Vite production successful ✅
 - Validation: 11/11 checks passed ✅
 - Documentation: Complete (3 docs + validation script) ✅
 
 **v36.0.0**:
+
 - TypeScript: 0 errors ✅
 - Build: Vite production successful ✅
 - Migration: Type-safe lazy loading ✅
@@ -231,6 +248,7 @@ Three.js: Lazy-loaded on 1st avatar access
 ### Testing
 
 **v35.0.0**:
+
 - Critical CSS: 3.5 KB verified ✅
 - Fonts: `font-display: swap` confirmed ✅
 - CSS containment: 16 rules found ✅
@@ -238,6 +256,7 @@ Three.js: Lazy-loaded on 1st avatar access
 - Route preloading: `requestIdleCallback` + fallback ✅
 
 **v36.0.0**:
+
 - ThreeJSAvatarRenderer: async init pattern ✅
 - AvatarFloatingWindow: await initialize() ✅
 - Error handling: Graceful degradation ✅
@@ -248,11 +267,13 @@ Three.js: Lazy-loaded on 1st avatar access
 **COPILOT-XS Deployment Rules**: ✅ RESPECTÉES
 
 **v35.0.0**:
+
 - Authorization: Kevin Thibault "J'Autorise la production !" ✅
 - Documentation: PRODUCTION_AUTHORIZATION_v35.0.0.md ✅
 - Git tag: v35.0.0 pushed to origin ✅
 
 **v36.0.0**:
+
 - Authorization: Kevin Thibault "go j'autorise" ✅
 - Documentation: PRODUCTION_AUTHORIZATION_v36.0.0.md ✅
 - Git tag: v36.0.0 pushed to origin ✅
@@ -433,16 +454,16 @@ CLS            0.15   0.04   0.03   -80% ✅
 ✅ **LCP**: 7.0s → 2.2-2.4s (-66%)  
 ✅ **Quality**: 0 TypeScript errors, production builds successful  
 ✅ **Compliance**: COPILOT-XS rules respected, Kevin authorizations received  
-✅ **Documentation**: Complete et comprehensive  
+✅ **Documentation**: Complete et comprehensive
 
 **Status**: ✅ **PRODUCTION READY & DEPLOYED**
 
 ---
 
-*Rapport Exécutif Généré: 2026-01-30*  
-*Versions: v35.0.0 + v36.0.0*  
-*Authorisé par: Kevin Thibault (TITANE∞ Owner)*  
-*Durée Totale: 10 jours (v27-v36)*  
-*Performance Cumulative: ~98% vs v26 baseline*
+_Rapport Exécutif Généré: 2026-01-30_  
+_Versions: v35.0.0 + v36.0.0_  
+_Authorisé par: Kevin Thibault (TITANE∞ Owner)_  
+_Durée Totale: 10 jours (v27-v36)_  
+_Performance Cumulative: ~98% vs v26 baseline_
 
 🚀 **TITANE∞ — OPTIMIZED TO PERFECTION** 🎊

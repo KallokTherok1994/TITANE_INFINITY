@@ -32,34 +32,29 @@ const getTrendColor = (trend?: 'up' | 'down' | 'neutral') => {
   return '#94a3b8';
 };
 
-export const QuickStatCard: React.FC<QuickStatProps> = memo(({
-  icon,
-  label,
-  value,
-  trend,
-  trendValue,
-  color = '#3b82f6',
-}) => {
-  const trendIcon = getTrendIcon(trend);
-  const trendColor = getTrendColor(trend);
+export const QuickStatCard: React.FC<QuickStatProps> = memo(
+  ({ icon, label, value, trend, trendValue, color = '#3b82f6' }) => {
+    const trendIcon = getTrendIcon(trend);
+    const trendColor = getTrendColor(trend);
 
-  return (
-    <div className="quick-stat-card">
-      <div className="quick-stat-icon" style={{ color }}>
-        {icon}
+    return (
+      <div className="quick-stat-card">
+        <div className="quick-stat-icon" style={{ color }}>
+          {icon}
+        </div>
+        <div className="quick-stat-content">
+          <div className="quick-stat-label">{label}</div>
+          <div className="quick-stat-value">{value}</div>
+          {trend && trendValue && (
+            <div className="quick-stat-trend" style={{ color: trendColor }}>
+              <span>{trendIcon}</span>
+              <span>{trendValue}</span>
+            </div>
+          )}
+        </div>
       </div>
-      <div className="quick-stat-content">
-        <div className="quick-stat-label">{label}</div>
-        <div className="quick-stat-value">{value}</div>
-        {trend && trendValue && (
-          <div className="quick-stat-trend" style={{ color: trendColor }}>
-            <span>{trendIcon}</span>
-            <span>{trendValue}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 QuickStatCard.displayName = 'QuickStatCard';

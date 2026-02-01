@@ -45,12 +45,12 @@
 
 ### Expected Performance Impact ✅
 
-| Metric | Baseline | Expected | Improvement |
-|--------|----------|----------|-------------|
-| FCP | 2.8s | 1.7-1.9s | -35-40% |
-| LCP | 4.2s | 2.3-2.8s | -35-45% |
-| Speed Index | 4.5s | 2.8-3.2s | -30-40% |
-| TTI | 5.5s | 3.5-4.0s | -35-40% |
+| Metric      | Baseline | Expected | Improvement |
+| ----------- | -------- | -------- | ----------- |
+| FCP         | 2.8s     | 1.7-1.9s | -35-40%     |
+| LCP         | 4.2s     | 2.3-2.8s | -35-45%     |
+| Speed Index | 4.5s     | 2.8-3.2s | -30-40%     |
+| TTI         | 5.5s     | 3.5-4.0s | -35-40%     |
 
 **Cumulative Stack (v27-v35)**: ~92-95% total performance improvement
 
@@ -65,6 +65,7 @@ NODE_ENV=production pnpm run build:production
 ```
 
 **Build Steps**:
+
 1. ESLint validation
 2. Prettier format check
 3. Vite production build
@@ -178,6 +179,7 @@ git push origin :refs/tags/v35.0.0
 **Policy**: No production deployment without explicit Kevin Thibault authorization
 
 **Compliance**:
+
 - ✅ Explicit authorization received: "J'Autorise la production !"
 - ✅ Build command executed with authorization flag
 - ✅ Pre-deployment validation complete
@@ -188,6 +190,7 @@ git push origin :refs/tags/v35.0.0
 **Rule**: "NE JAMAIS déployer via AppImage ou DEB sans autorisation explicite de Kevin Thibault"
 
 **Compliance**:
+
 - ✅ Authorization explicitly granted
 - ✅ Production build triggered only after approval
 - ✅ All safety checks performed
@@ -300,6 +303,6 @@ NODE_ENV=production pnpm run build:production
 
 ---
 
-*This document serves as official authorization and audit trail for v35.0.0 production deployment.*
+_This document serves as official authorization and audit trail for v35.0.0 production deployment._
 
 **BUILD IN PROGRESS** — Monitoring build completion...

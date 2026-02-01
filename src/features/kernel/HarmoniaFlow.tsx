@@ -6,7 +6,10 @@
  */
 
 import { useEffect } from 'react';
-import { useHarmoniaSnapshot, useFetchHarmonia } from '../../stores/systemStore.selectors';
+import {
+  useHarmoniaSnapshot,
+  useFetchHarmonia,
+} from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 

@@ -286,12 +286,16 @@ export const MessageList = React.memo(function MessageList({
                     pipelineState={message.metadata?.pipelineState as string | undefined}
                     onRetry={() => {
                       // Trigger retry logic (parent component should handle)
-                      logger.info('Retry requested from fallback', { component: 'MessageList' });
+                      logger.info('Retry requested from fallback', {
+                        component: 'MessageList',
+                      });
                     }}
                     onChangeProvider={() => {
-                      logger.info('Change provider requested', { component: 'MessageList' });
+                      logger.info('Change provider requested', {
+                        component: 'MessageList',
+                      });
                     }}
-                    onCopyDiagnostic={(diagnostic) => {
+                    onCopyDiagnostic={diagnostic => {
                       navigator.clipboard?.writeText(diagnostic).then(() => {
                         logger.info('Diagnostic copied', { component: 'MessageList' });
                       });

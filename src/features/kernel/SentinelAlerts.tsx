@@ -6,7 +6,10 @@
  */
 
 import { useEffect, useState } from 'react';
-import { useSentinelSnapshot, useFetchSentinel } from '../../stores/systemStore.selectors';
+import {
+  useSentinelSnapshot,
+  useFetchSentinel,
+} from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
 import type { Severity, AlertCategory } from '../../services/tauri/backend-v17.2.types';

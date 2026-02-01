@@ -11,6 +11,7 @@
 Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'optimisation réutilisables pour éliminer les rerenders excessifs et améliorer les performances état global.
 
 **Pivot Stratégique v29.0.0:**
+
 - **Départ:** displayName completion (45% coverage, rendement décroissant +5% debugging)
 - **Arrivée:** Zustand store optimization (HIGH-IMPACT, -30% rerenders, -20% memory, +50% state perf)
 
@@ -21,6 +22,7 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 ### Selector Files Created (3 Stores, 75+ Selectors)
 
 **1. uiStore.selectors.ts (15+ selectors)**
+
 ```typescript
 // Primitive: useSidebarCollapsed, useModalOpen, useToasts, etc.
 // Composite (shallow): useSidebarState, useModalState, useLoadingState
@@ -29,6 +31,7 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 ```
 
 **2. memoryStore.selectors.ts (20+ selectors)**
+
 ```typescript
 // Primitive: useMemoryState, useSnapshots, useLogs, useTimeline, useTelemetry
 // Composite (shallow): useMemoryLoadingState, useSnapshotsState, useLogsState
@@ -37,6 +40,7 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 ```
 
 **3. SingularityState.selectors.ts (40+ selectors)**
+
 ```typescript
 // UI State: useUIMode, useUITheme, useSoundEnabled, useMicEnabled, useFPS
 // AI State: useAIModel, useAIStatus, useAIError, useIsAIActive, useHasAIError
@@ -62,22 +66,27 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 ### Components/Hooks Optimized (8 Total)
 
 **1. App.tsx (ROOT Component)**
+
 - Sidebar: `useSingularitySidebarCollapsed()` + `useContextActions()`
 - Toasts: `useToasts()` + `useToastActions()`
 - **Impact:** -75% rerenders (cascade effect to all children)
 
 **2. useEngineSubscription.ts (×8 MULTIPLICATEUR)**
+
 - `useEngineState(engine)` + `useEngineActions()`
 - **Impact:** -85% rerenders × 8 engines = MASSIVE performance gain
 
 **3. useGlobalAIChat.ts (ACTION-ONLY Pattern)**
+
 - `useAIActions()` → -100% rerenders (zero state subscription)
 
 **4. useFloatingWindow.ts**
+
 - `useAvatarDisplay()` + `useAvatarDisplayActions()`
 - **Impact:** -90% rerenders (perfect isolation)
 
 **5-8. Précédemment optimisés (v29.0.0)**
+
 - MemoryGraph.tsx, ModeEditor.tsx, ChatWindow.tsx (déjà comptés v29.0.0)
 
 ---
@@ -86,16 +95,16 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 
 ### Rerenders Reduction
 
-| Component/Hook | Before | After | Reduction |
-|---------------|--------|-------|-----------|
-| App.tsx (root) | 100% full stores | 25% specific | **-75%** |
-| useEngineSubscription (×8) | 100% SingularityState | 15% engine-specific | **-85%** |
-| useGlobalAIChat | 100% SingularityState | 0% (actions only) | **-100%** |
-| useFloatingWindow | 100% SingularityState | 10% avatarDisplay | **-90%** |
-| MemoryGraph | 100% memoryStore | 15% state/logs/telemetry | **-85%** |
-| ModeEditor | 100% uiStore | 0% (toast actions) | **-100%** |
-| ChatWindow | 100% SingularityState | 0% (AI actions) | **-100%** |
-| **Global Average** | — | — | **-35%** |
+| Component/Hook             | Before                | After                    | Reduction |
+| -------------------------- | --------------------- | ------------------------ | --------- |
+| App.tsx (root)             | 100% full stores      | 25% specific             | **-75%**  |
+| useEngineSubscription (×8) | 100% SingularityState | 15% engine-specific      | **-85%**  |
+| useGlobalAIChat            | 100% SingularityState | 0% (actions only)        | **-100%** |
+| useFloatingWindow          | 100% SingularityState | 10% avatarDisplay        | **-90%**  |
+| MemoryGraph                | 100% memoryStore      | 15% state/logs/telemetry | **-85%**  |
+| ModeEditor                 | 100% uiStore          | 0% (toast actions)       | **-100%** |
+| ChatWindow                 | 100% SingularityState | 0% (AI actions)          | **-100%** |
+| **Global Average**         | —                     | —                        | **-35%**  |
 
 ### Memory Usage
 
@@ -116,6 +125,7 @@ Transformer l'architecture Zustand de TITANE∞ en établissant des patterns d'o
 ### Découverte v29.1.0
 
 **Pattern:**
+
 ```typescript
 // Components needing ONLY actions (no state) → useActions() = -100% rerenders
 const { setAIStatus, setAIError } = useAIActions();
@@ -125,11 +135,13 @@ const { setAIStatus, setAIError } = useAIActions();
 ```
 
 **Impact:**
+
 - 3 implementations (useGlobalAIChat, useEngineSubscription, ModeEditor)
 - **-100% rerenders** for these consumers
 - **Applicable to 40-50% of store usages** (forms, callbacks, mutations)
 
 **Potential:**
+
 - 17+ stores restants × 40-50% usages = **massive optimization opportunity**
 
 ---
@@ -139,31 +151,37 @@ const { setAIStatus, setAIError } = useAIActions();
 ### Pattern 1: useEngineSubscription (×8)
 
 **Impact:**
+
 - 1 hook optimisé
 - Utilisé par 8 engines (helios, harmonia, nexus, sentinel, watchdog, selfheal, adaptive, memory)
 - **-85% rerenders × 8 = impact 8× sur performance**
 
 **Leçon:**
+
 - Prioriser hooks/composants avec multiplicateurs > 5×
 - ROI énorme pour optimisations uniques avec impact multiple
 
 ### Pattern 2: Root Component (App.tsx)
 
 **Impact:**
+
 - -75% rerenders App.tsx
 - **Cascade effect: -15% global** (tous les enfants bénéficient)
 
 **Leçon:**
+
 - Root components = priorité absolue
 - Effet cascade massif sur toute l'arborescence
 
 ### Pattern 3: Action-Only (40-50% Usages)
 
 **Impact:**
+
 - 3 implementations = -100% rerenders chacune
 - Applicable à 40-50% des usages de stores
 
 **Leçon:**
+
 - Pattern le plus impactant découvert
 - Potentiel énorme pour applications futures
 
@@ -174,12 +192,14 @@ const { setAIStatus, setAIError } = useAIActions();
 ### Optimizations Réalisées
 
 **displayName Waves (v27-v28):**
+
 - 80 components avec displayName (45% coverage)
 - 7 hooks optimisés (constants + memoization)
 - +90% debugging efficiency
 - +25% developer velocity
 
 **Zustand Optimization (v29.0.0-v29.1.0):**
+
 - 3 stores avec 75+ selectors créés
 - 12 components/hooks avec selectors appliqués
 - -35% rerenders global
@@ -196,14 +216,17 @@ const { setAIStatus, setAIError } = useAIActions();
 ### Git Commits
 
 **v27.0.3-v28.2.0:** 6 commits (displayName waves)
+
 - 05301940, 7e667481, 02113c3d, bdceed91, 3e1635df, 1e45b4f8, 3dc0650c
 
 **v29.0.0:** cf5a5536 (Selector architecture)
+
 - 3 selector files created
 - 75+ selectors implemented
 - Pattern documentation
 
 **v29.1.0:** 59b625e8 (Application wave 1)
+
 - 8 components/hooks optimized
 - Breakthrough patterns identified
 - Multiplicateurs documented
@@ -213,18 +236,21 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 📚 DOCUMENTATION CRÉÉE
 
 ### 1. OPTIMIZATION_REPORT_v29.0.0.md
+
 - Architecture selectors (primitive/composite/action/computed)
 - Pattern shallow equality
 - 3 stores optimisés détaillés
 - 4 exemples d'application
 
 ### 2. OPTIMIZATION_REPORT_v29.1.0.md
+
 - Application wave 1 (8 components/hooks)
 - Breakthrough action-only pattern
 - Multiplicateurs identifiés (×8, cascade, 40-50%)
 - Performance benchmarks réels
 
 ### 3. ZUSTAND_OPTIMIZATION_GUIDE.md (NOUVEAU)
+
 - Guide complet patterns optimisation
 - 4 patterns détaillés avec exemples
 - Migration guide step-by-step
@@ -234,6 +260,7 @@ const { setAIStatus, setAIError } = useAIActions();
 - Checklist optimisation
 
 ### 4. OPTIMIZATION_SUMMARY_v29_FINAL.md (CE DOCUMENT)
+
 - Vue d'ensemble complète v29.x
 - Cumul achievements v27-v29
 - Impact global mesuré
@@ -278,32 +305,38 @@ const { setAIStatus, setAIError } = useAIActions();
 ### v30.0.0+ — Store Optimization Continuation
 
 **Phase 1: High-Frequency Stores (Priority)**
+
 - evolutionStore (evolution tracking)
 - performanceStore (metrics real-time)
 - visualStore (visual effects state)
 - Estimate: 60-80 selectors, -30% rerenders pour ces stores
 
 **Phase 2: Medium-Frequency Stores**
+
 - authStore, useChatModeStore, panelsStore
 - Estimate: 40-60 selectors, -25% rerenders
 
 **Phase 3: Specialized Stores**
+
 - useAuraOrchestrator, useTTSEngineStore, useVisionStore
 - Estimate: 50-70 selectors, -20% rerenders
 
 ### Performance Profiling (CRITICAL)
 
 **React DevTools Profiler:**
+
 - Mesurer rerenders avant/après optimisations
 - Identifier high-frequency components
 - Valider estimations -35% global
 
 **Chrome DevTools Memory:**
+
 - Heap snapshots avant/après
 - Valider réduction -25% memory
 - Identifier memory leaks potentiels
 
 **Performance Timeline:**
+
 - State update timing avant/après
 - Valider +55% faster state updates
 - Identifier bottlenecks restants
@@ -347,7 +380,7 @@ const { setAIStatus, setAIError } = useAIActions();
 
 - ✅ **Conventional commits** maintenu (⚡ perf(vX.X.X))
 - ✅ **Detailed messages** multi-lignes avec impact
-- ✅ **Clean architecture** (*.selectors.ts séparés)
+- ✅ **Clean architecture** (\*.selectors.ts séparés)
 - ✅ **Type-safe generics** (EngineDataMap<T>)
 - ✅ **Testability** amélilorée
 
@@ -386,6 +419,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ### 1. Strategic Pivot = High ROI
 
 **Decision v29.0.0:**
+
 - Stop: displayName completion (45% → 50% = +5% debugging benefit)
 - Start: Zustand optimization (0% → 35% rerenders reduction = MASSIVE benefit)
 
@@ -394,6 +428,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ### 2. Patterns > Individual Optimizations
 
 **Achievement:**
+
 - 4 core patterns établis (réutilisables 17+ stores)
 - 1 breakthrough pattern (action-only = -100% rerenders)
 - Documentation complète (future developers benefit)
@@ -403,6 +438,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ### 3. Multiplicateurs = ROI Énorme
 
 **Identified:**
+
 - useEngineSubscription ×8
 - Root component cascade
 - Action-only 40-50% applicability
@@ -412,6 +448,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ### 4. Documentation = Force Multiplier
 
 **Created:**
+
 - 3 optimization reports (detailed impact)
 - 1 comprehensive guide (10+ sections)
 - Migration guides, checklists, best practices
@@ -427,29 +464,34 @@ const { setAIStatus, setAIError } = useAIActions();
 Les versions v29.0.0-v29.1.0 ont établi une **architecture d'optimisation Zustand réutilisable** pour TITANE∞ avec:
 
 **Technical Foundation:**
+
 - 3 stores optimisés (75+ selectors)
 - 4 core patterns (primitive/composite/action/computed)
 - 12 components/hooks appliqués
 - 0 TypeScript errors maintained
 
 **Performance Breakthrough:**
+
 - -35% rerenders global
 - -25% memory reduction
 - +55% state update performance
 - Action-only pattern -100% rerenders
 
 **Knowledge Transfer:**
+
 - ZUSTAND_OPTIMIZATION_GUIDE.md (guide complet)
 - 3 optimization reports (detailed)
 - Migration guides & best practices
 - Checklist nouveaux stores
 
 **Next Phase v30.0.0+:**
+
 - Optimize 17+ remaining stores (350-500+ selectors)
 - Performance profiling (validate estimates)
 - Pattern refinement (new edge cases)
 
 **Legacy:**
+
 - Patterns établis = réutilisables années futures
 - Documentation = onboarding futurs développeurs
 - Architecture = scalable 100+ stores

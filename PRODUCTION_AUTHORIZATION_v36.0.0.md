@@ -110,6 +110,7 @@ pnpm run check (via Vite tsconfig)
 ### Migration Summary
 
 **Files Modified**: 3
+
 1. `src/modules/avatar/floating/ThreeJSAvatarRenderer.ts`
    - Static `import * as THREE` → `loadThreeJS()` dynamic import
    - Constructor pattern → `async initialize()` method
@@ -123,6 +124,7 @@ pnpm run check (via Vite tsconfig)
 4. `THREE_JS_LAZY_RESULTS_v36.0.0.md` (Results)
 
 **Commits**:
+
 - `de0fcb23` perf(v36): Phase 1 - ThreeJSAvatarRenderer async init
 - `e50d1d4d` docs(v36): Phase 1 results - Three.js lazy-loading impact
 
@@ -140,6 +142,7 @@ const scene = new THREE.Scene();
 ```
 
 **Impact**:
+
 - Three.js (536 KB gzip) NOT in main bundle
 - Loaded dynamically only when avatar activated
 - 90% users save -536 KB permanently
@@ -150,21 +153,23 @@ const scene = new THREE.Scene();
 
 ### Metrics (Estimated)
 
-| Metric | v35.0.0 | v36.0.0 | Improvement |
-|--------|---------|---------|-------------|
-| Bundle Initial | 950 KB | **414 KB** | **-536 KB (-56%)** |
-| FCP (no avatar) | 1.7s | **1.45-1.55s** | **-150-250ms** |
-| LCP (no avatar) | 2.5s | **2.2-2.4s** | **-100-200ms** |
-| Three.js Load | Boot (0ms) | 1st access (50-800ms) | Deferred |
+| Metric          | v35.0.0    | v36.0.0               | Improvement        |
+| --------------- | ---------- | --------------------- | ------------------ |
+| Bundle Initial  | 950 KB     | **414 KB**            | **-536 KB (-56%)** |
+| FCP (no avatar) | 1.7s       | **1.45-1.55s**        | **-150-250ms**     |
+| LCP (no avatar) | 2.5s       | **2.2-2.4s**          | **-100-200ms**     |
+| Three.js Load   | Boot (0ms) | 1st access (50-800ms) | Deferred           |
 
 ### User Experience
 
-**Scenario 1: Standard User (90%)**  
+**Scenario 1: Standard User (90%)**
+
 - Avatar 3D: **Not used**
 - Three.js: **Never loaded** (0 KB saved)
 - Performance: **-536 KB boot** + **-150-250ms FCP**
 
-**Scenario 2: Avatar User (10%)**  
+**Scenario 2: Avatar User (10%)**
+
 - Avatar 3D: **Activated**
 - Three.js: **Lazy-loaded on demand** (50-800ms)
 - Performance: **-536 KB boot**, **+50-800ms avatar delay**
@@ -231,18 +236,21 @@ git push origin v36.0.0
 ### Phase 2: Post-Deployment Monitoring
 
 **Immediate** (0-24h):
+
 - [ ] Monitor application logs for Three.js load errors
 - [ ] Verify avatar 3D activation works
 - [ ] Check lazy-load timing on different connections
 - [ ] Validate spinner animation during load
 
 **Short-term** (1-7 days):
+
 - [ ] Run Lighthouse audit (FCP/LCP validation)
 - [ ] Collect user feedback on avatar loading
 - [ ] Monitor bundle analytics (confirm 414 KB)
 - [ ] Track avatar activation rate
 
 **Long-term** (1-4 weeks):
+
 - [ ] Analyze real user metrics (RUM)
 - [ ] Validate -150-250ms FCP improvement
 - [ ] Consider Phase 2 migration (remaining systems)
@@ -281,6 +289,7 @@ git push origin v36.0.0
 ### Risk Level: **LOW** ✅
 
 **Rationale**:
+
 1. **Backwards Compatible**: API unchanged (+ async initialize())
 2. **Type-Safe**: 0 TypeScript errors
 3. **Tested Pattern**: ThreeJSLazyLoader existed since v25.3.0
@@ -294,6 +303,7 @@ git push origin v36.0.0
 **Probability**: Low  
 **Impact**: Medium (10% users affected)  
 **Mitigation**:
+
 - Error handling catches lazy-load failures
 - Fallback: Show error message with retry
 - Monitoring: Track loadThreeJS() errors
@@ -303,6 +313,7 @@ git push origin v36.0.0
 **Probability**: High (expected)  
 **Impact**: Low (acceptable trade-off)  
 **Mitigation**:
+
 - Spinner animation shows loading state
 - 50-800ms delay is reasonable for 536 KB savings
 - Preload option available for future optimization
@@ -312,6 +323,7 @@ git push origin v36.0.0
 **Probability**: Very Low  
 **Impact**: Low (development only)  
 **Mitigation**:
+
 - Production build successful (Vite handles types correctly)
 - Using 'any' for Three.js types is acceptable pattern
 - Runtime type safety via isInitialized checks
@@ -331,6 +343,7 @@ git push origin MAIN
 ```
 
 **Rollback Criteria**:
+
 - Avatar 3D broken for >50% of users
 - Critical performance regression (FCP +500ms)
 - Widespread lazy-load failures
@@ -344,6 +357,7 @@ git push origin MAIN
 **Rule**: NE JAMAIS déployer sans autorisation explicite de Kevin Thibault
 
 **Compliance**:
+
 - ✅ Authorization received: **"go j'autorise"**
 - ✅ Authorization timestamp: 2026-01-30, 21:28 UTC
 - ✅ Authorization document: This file (PRODUCTION_AUTHORIZATION_v36.0.0.md)
@@ -380,12 +394,12 @@ TOTAL: ~98% performance improvement vs v26 ✅
 
 ### Metrics Evolution
 
-| Version | Bundle Size | FCP | LCP | Notes |
-|---------|------------|-----|-----|-------|
-| v26 | 2.5 MB | 5.0s | 7.0s | Baseline |
-| v27-v33 | 1.2 MB | 3.5s | 5.0s | React hooks + selectors |
-| v34-v35 | 950 KB | 1.7s | 2.5s | Web Vitals optimization |
-| **v36** | **414 KB** | **1.45-1.55s** | **2.2-2.4s** | **Three.js lazy** |
+| Version | Bundle Size | FCP            | LCP          | Notes                   |
+| ------- | ----------- | -------------- | ------------ | ----------------------- |
+| v26     | 2.5 MB      | 5.0s           | 7.0s         | Baseline                |
+| v27-v33 | 1.2 MB      | 3.5s           | 5.0s         | React hooks + selectors |
+| v34-v35 | 950 KB      | 1.7s           | 2.5s         | Web Vitals optimization |
+| **v36** | **414 KB**  | **1.45-1.55s** | **2.2-2.4s** | **Three.js lazy**       |
 
 **Achievement**: **~98% optimized** vs v26 baseline 🎊
 
@@ -415,9 +429,9 @@ TOTAL: ~98% performance improvement vs v26 ✅
 
 ---
 
-*Authorization Document Generated: 2026-01-30*  
-*Deployment Authorized By: Kevin Thibault*  
-*Version: v36.0.0*  
-*Deployment Type: Production*
+_Authorization Document Generated: 2026-01-30_  
+_Deployment Authorized By: Kevin Thibault_  
+_Version: v36.0.0_  
+_Deployment Type: Production_
 
 🚀 **CLEARED FOR PRODUCTION DEPLOYMENT** 🚀

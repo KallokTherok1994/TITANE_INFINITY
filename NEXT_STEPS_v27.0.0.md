@@ -24,12 +24,14 @@
 **If you want to deploy NOW:**
 
 ### Step 1: Install Package
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 sudo dpkg -i src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb
 ```
 
 ### Step 2: Verify Installation
+
 ```bash
 # Check package installed
 dpkg -l | grep titane-infinity
@@ -42,6 +44,7 @@ ls -lh /usr/bin/titane-infinity
 ```
 
 ### Step 3: Start Service
+
 ```bash
 # Start immediately
 sudo systemctl start titane-infinity
@@ -54,6 +57,7 @@ sudo systemctl status titane-infinity
 ```
 
 ### Step 4: Monitor (First 5 minutes)
+
 ```bash
 # Watch logs
 journalctl -u titane-infinity -f
@@ -66,6 +70,7 @@ journalctl -u titane-infinity --since "5 minutes ago" | grep -i error
 ```
 
 ### Success Criteria
+
 - ✅ Service running (systemctl status = active)
 - ✅ No errors in logs
 - ✅ CPU < 40% idle
@@ -79,17 +84,20 @@ journalctl -u titane-infinity --since "5 minutes ago" | grep -i error
 **If you want to make additional changes before deploying:**
 
 ### Step 1: Start Dev Environment
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 pnpm run dev:tauri
 ```
 
 ### Step 2: Test Changes
+
 - Make code modifications
 - Hot reload will update automatically
 - Test in development window
 
 ### Step 3: When Ready, Rebuild
+
 ```bash
 # Stop dev server (Ctrl+C)
 pnpm run build
@@ -108,6 +116,7 @@ pnpm run lint --quiet
 **If you want to distribute the DEB package:**
 
 ### Step 1: Copy to Distribution Directory
+
 ```bash
 mkdir -p ~/deployment/titane-infinity/v27.0.0
 cp src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb \
@@ -115,18 +124,21 @@ cp src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb \
 ```
 
 ### Step 2: Generate Checksum
+
 ```bash
 cd ~/deployment/titane-infinity/v27.0.0
 sha256sum TITANE-Infinity_27.0.0_amd64.deb > TITANE-Infinity_27.0.0_amd64.deb.sha256
 ```
 
 ### Step 3: Create Distribution Archive
+
 ```bash
 cd ~/deployment/titane-infinity
 tar -czf titane-infinity-v27.0.0-linux-amd64.tar.gz v27.0.0/
 ```
 
 ### Step 4: Distribution
+
 - Upload to file server
 - Share via secure link
 - Provide installation instructions
@@ -138,6 +150,7 @@ tar -czf titane-infinity-v27.0.0-linux-amd64.tar.gz v27.0.0/
 **If you want to begin the Technical Debt cleanup sprint:**
 
 ### Objectives (v27.1.0)
+
 1. Fix 142 React purity violations
 2. Update React Compiler memoization
 3. Improve hook patterns
@@ -145,17 +158,20 @@ tar -czf titane-infinity-v27.0.0-linux-amd64.tar.gz v27.0.0/
 5. Additional E2E tests
 
 ### Step 1: Create v27.1.0 Branch
+
 ```bash
 git checkout -b v27.1.0-dev
 ```
 
 ### Step 2: Review Technical Debt
+
 ```bash
 # Read the cleanup plan
 cat TECHNICAL_DEBT_v27.0.0.md
 ```
 
 ### Step 3: Plan Sprint
+
 - Estimate: 2-3 weeks
 - Priority: High impact issues first
 - Categories:
@@ -166,6 +182,7 @@ cat TECHNICAL_DEBT_v27.0.0.md
   5. Memoization inference
 
 ### Step 4: Start First Issue
+
 ```bash
 # Example: Fix useThrottle.ts purity violations
 code src/hooks/useThrottle.ts
@@ -178,6 +195,7 @@ code src/hooks/useThrottle.ts
 **If you want to set up monitoring before deployment:**
 
 ### Metrics to Track
+
 - Application uptime
 - CPU/Memory usage
 - Error rates
@@ -186,6 +204,7 @@ code src/hooks/useThrottle.ts
 - Crash reports
 
 ### Tools Setup
+
 ```bash
 # Install monitoring dependencies (if needed)
 # Configure telemetry
@@ -235,6 +254,7 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 ## 🆘 Troubleshooting
 
 ### Issue: Installation fails
+
 ```bash
 # Check package integrity
 sha256sum src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb
@@ -245,6 +265,7 @@ sudo apt-get install -f
 ```
 
 ### Issue: Service won't start
+
 ```bash
 # Check logs
 journalctl -u titane-infinity -n 100
@@ -257,6 +278,7 @@ ls -l /usr/bin/titane-infinity
 ```
 
 ### Issue: Need to rollback
+
 ```bash
 # Remove current version
 sudo dpkg -r titane-infinity
@@ -270,6 +292,7 @@ sudo dpkg -i TITANE-Infinity_26.3.0_amd64.deb
 ## 📞 Support
 
 **Questions or Issues?**
+
 - Review: [DEPLOYMENT_REPORT_v27.0.0.md](DEPLOYMENT_REPORT_v27.0.0.md)
 - Check: [TECHNICAL_DEBT_v27.0.0.md](TECHNICAL_DEBT_v27.0.0.md)
 - Contact: Kevin Thibault (TITANE∞)

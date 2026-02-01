@@ -3,7 +3,7 @@
   "title": "TITANE∞ Providers Configuration Example",
   "description": "Configuration pour les providers IA (Ollama, Gemini, Local, etc.)",
   "version": "27.0.0",
-  
+
   "providers": [
     {
       "id": "ollama-local",
@@ -90,14 +90,14 @@
       }
     }
   ],
-  
+
   "fallback": {
     "enabled": true,
     "order": ["ollama-local", "gemini-cloud", "anthropic-claude", "local-fallback"],
     "retryOnFailure": true,
     "maxFallbackAttempts": 3
   },
-  
+
   "loadBalancing": {
     "enabled": false,
     "strategy": "round-robin",

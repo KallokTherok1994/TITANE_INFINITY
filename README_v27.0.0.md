@@ -48,12 +48,12 @@ chmod +x Titan-Stable_27.0.0_amd64.AppImage
 
 ### 📦 Artefacts Production
 
-| Format | Taille | SHA256 | Status |
-|--------|--------|--------|--------|
-| **AppImage** | 82 MB | `eec260...` | ✅ Ready |
-| **DEB** | 9.6 MB | `8bfa2d...` | ✅ Ready |
+| Format       | Taille | SHA256      | Status   |
+| ------------ | ------ | ----------- | -------- |
+| **AppImage** | 82 MB  | `eec260...` | ✅ Ready |
+| **DEB**      | 9.6 MB | `8bfa2d...` | ✅ Ready |
 
-**Compatibilité:** ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint | ✅ Pop!_OS
+**Compatibilité:** ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint | ✅ Pop!\_OS
 
 ---
 
@@ -156,14 +156,14 @@ pnpm run build:app
 
 ## 📚 Documentation
 
-| Document | Description |
-|----------|-------------|
-| [CHANGELOG.md](./CHANGELOG.md) | Historique complet des versions |
-| [ARCHITECTURE.md](./ARCHITECTURE.md) | Architecture détaillée du système |
-| [LICENSE.md](./LICENSE.md) | Conditions de licence propriétaire |
-| [NETTOYAGE_v27.0.0.md](./NETTOYAGE_v27.0.0.md) | Rapport de nettoyage complet |
-| [RAPPORT_FINAL_STRUCTURE_v27.0.0.md](./RAPPORT_FINAL_STRUCTURE_v27.0.0.md) | Rapport final structure projet |
-| [docs/](./docs/) | Documentation technique (297 fichiers) |
+| Document                                                                   | Description                            |
+| -------------------------------------------------------------------------- | -------------------------------------- |
+| [CHANGELOG.md](./CHANGELOG.md)                                             | Historique complet des versions        |
+| [ARCHITECTURE.md](./ARCHITECTURE.md)                                       | Architecture détaillée du système      |
+| [LICENSE.md](./LICENSE.md)                                                 | Conditions de licence propriétaire     |
+| [NETTOYAGE_v27.0.0.md](./NETTOYAGE_v27.0.0.md)                             | Rapport de nettoyage complet           |
+| [RAPPORT_FINAL_STRUCTURE_v27.0.0.md](./RAPPORT_FINAL_STRUCTURE_v27.0.0.md) | Rapport final structure projet         |
+| [docs/](./docs/)                                                           | Documentation technique (297 fichiers) |
 
 ---
 
@@ -215,23 +215,23 @@ pnpm run test:coverage
 
 ### Build Metrics
 
-| Aspect | Valeur | Status |
-|--------|--------|--------|
-| **Vite Bundle** | 7.1 MB | ✅ Optimized |
-| **AppImage** | 82 MB | ✅ Compact |
-| **DEB Package** | 9.6 MB | ✅ Minimal |
-| **Build Time** | ~10s | ✅ Fast |
-| **Startup** | <1s | ⚡ Ultra-fast |
+| Aspect          | Valeur | Status        |
+| --------------- | ------ | ------------- |
+| **Vite Bundle** | 7.1 MB | ✅ Optimized  |
+| **AppImage**    | 82 MB  | ✅ Compact    |
+| **DEB Package** | 9.6 MB | ✅ Minimal    |
+| **Build Time**  | ~10s   | ✅ Fast       |
+| **Startup**     | <1s    | ⚡ Ultra-fast |
 
 ### Quality Metrics
 
-| Métrique | Valeur | Status |
-|----------|--------|--------|
-| **TypeScript Files** | 1,423 | ✅ 0 errors |
-| **Rust Files** | 906 | ✅ 0 errors |
-| **Test Files** | 146 | ✅ Configured |
-| **Code Coverage** | TBD | 📊 Monitoring |
-| **Audit Score** | 97.9/100 | 🏆 Excellent |
+| Métrique             | Valeur   | Status        |
+| -------------------- | -------- | ------------- |
+| **TypeScript Files** | 1,423    | ✅ 0 errors   |
+| **Rust Files**       | 906      | ✅ 0 errors   |
+| **Test Files**       | 146      | ✅ Configured |
+| **Code Coverage**    | TBD      | 📊 Monitoring |
+| **Audit Score**      | 97.9/100 | 🏆 Excellent  |
 
 ---
 

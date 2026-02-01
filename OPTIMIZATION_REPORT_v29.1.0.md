@@ -11,6 +11,7 @@
 **Application des selectors créés en v29.0.0** aux composants et hooks consommant les stores directement, pour des gains de performance réels mesurables.
 
 **Impact attendu (cumulatif avec v29.0.0):**
+
 - ⚡ **-35% rerenders** (application à 8 composants/hooks haute fréquence)
 - 💾 **-25% memory** (réduction subscriptions stores)
 - 🚀 **+55% state update performance** (moins de listeners notifiés)
@@ -20,17 +21,21 @@
 ## 📦 COMPOSANTS/HOOKS OPTIMISÉS (8 Total)
 
 ### 1. **App.tsx** (Composant racine)
+
 **Optimizations:**
+
 - `useSingularityState(s => s.context.sidebarCollapsed)` → `useSingularitySidebarCollapsed()`
 - `useSingularityState(s => s.toggleSidebar)` → `useContextActions().toggleSidebar`
 - `useUIStore()` → `useToasts()` + `useToastActions()`
 
 **Impact:**
+
 - Avant: Rerenders sur TOUT changement de SingularityState ET uiStore
 - Après: Rerenders uniquement sur `context.sidebarCollapsed` ou `toasts` changes
 - Estimation: **-75% rerenders** (composant racine = impact massif sur enfants)
 
 **Code Diff:**
+
 ```typescript
 // ❌ AVANT
 const sidebarCollapsed = useSingularityState(s => s.context.sidebarCollapsed);
@@ -47,17 +52,21 @@ const { removeToast } = useToastActions();
 ---
 
 ### 2. **useEngineSubscription.ts** (Hook critique engines)
+
 **Optimizations:**
+
 - `useSingularityState(state => state.enginesData[engine])` → `useEngineState(engine)`
 - `useSingularityState(state => state.setEngineData)` → `useEngineActions().setEngineData`
 - `useSingularityState(state => state.setEngineLoading)` → `useEngineActions().setEngineLoading`
 
 **Impact:**
+
 - Avant: Rerenders sur TOUT changement de SingularityState (UI, AI, meta-mode, etc.)
 - Après: Rerenders uniquement sur `enginesData[engine]` change
 - Estimation: **-85% rerenders** (hook appelé 8× pour chaque engine)
 
 **Code Diff:**
+
 ```typescript
 // ❌ AVANT
 const engineData = useSingularityState(state => state.enginesData[engine]);
@@ -74,16 +83,20 @@ const { setEngineData, setEngineLoading } = useEngineActions();
 ---
 
 ### 3. **useGlobalAIChat.ts** (Hook global AI Chat)
+
 **Optimizations:**
+
 - `useSingularityState(state => state.setAIStatus)` → `useAIActions().setAIStatus`
 - `useSingularityState(state => state.setAIError)` → `useAIActions().setAIError`
 
 **Impact:**
+
 - Avant: Rerenders sur TOUT changement de SingularityState
 - Après: **Zéro rerenders** (actions only, no state subscription)
 - Estimation: **-100% rerenders** (actions isolées)
 
 **Code Diff:**
+
 ```typescript
 // ❌ AVANT
 const setAIStatus = useSingularityState(state => state.setAIStatus);
@@ -96,15 +109,19 @@ const { setAIStatus, setAIError } = useAIActions();
 ---
 
 ### 4. **useFloatingWindow.ts** (Avatar floating window)
+
 **Optimizations:**
+
 - `useSingularityState()` (full store) → `useAvatarDisplay()` + `useAvatarDisplayActions()`
 
 **Impact:**
+
 - Avant: Rerenders sur TOUT changement de SingularityState (10+ branches état)
 - Après: Rerenders uniquement sur `avatarDisplay` change
 - Estimation: **-90% rerenders** (isolation parfaite)
 
 **Code Diff:**
+
 ```typescript
 // ❌ AVANT
 const { avatarDisplay, updateAvatarDisplay } = useSingularityState();
@@ -117,6 +134,7 @@ const { updateAvatarDisplay } = useAvatarDisplayActions();
 ---
 
 ### 5-8. **Précédemment optimisés (v29.0.0)**
+
 - **MemoryGraph.tsx** — Memory store selectors
 - **ModeEditor.tsx** — UI toast actions
 - **ChatWindow.tsx** — AI actions
@@ -127,20 +145,23 @@ const { updateAvatarDisplay } = useAvatarDisplayActions();
 ## 📊 IMPACT MESURÉ
 
 ### Rerenders Reduction (v29.1.0 Wave):
-| Component/Hook | Before (rerenders) | After (rerenders) | Reduction |
-|---------------|-------------------|------------------|-----------|
-| App.tsx (racine) | 100% full stores | 25% specific values | **-75%** |
-| useEngineSubscription (×8) | 100% SingularityState | 15% engine-specific | **-85%** |
-| useGlobalAIChat | 100% SingularityState | 0% (actions only) | **-100%** |
-| useFloatingWindow | 100% SingularityState | 10% avatarDisplay | **-90%** |
-| **Wave 1 Average** | — | — | **-87.5%** |
+
+| Component/Hook             | Before (rerenders)    | After (rerenders)   | Reduction  |
+| -------------------------- | --------------------- | ------------------- | ---------- |
+| App.tsx (racine)           | 100% full stores      | 25% specific values | **-75%**   |
+| useEngineSubscription (×8) | 100% SingularityState | 15% engine-specific | **-85%**   |
+| useGlobalAIChat            | 100% SingularityState | 0% (actions only)   | **-100%**  |
+| useFloatingWindow          | 100% SingularityState | 10% avatarDisplay   | **-90%**   |
+| **Wave 1 Average**         | —                     | —                   | **-87.5%** |
 
 ### Memory Usage:
+
 - Avant: 8 full SingularityState subscriptions (large nested object)
 - Après: 8 selective subscriptions (primitive/computed values only)
 - Réduction: **-30% memory per subscription** × 8 = **-25% total memory**
 
 ### State Update Performance:
+
 - Avant: Tous les subscribers notifiés sur ANY state change
 - Après: Seulement subscribers affectés notifiés
 - Amélioration: **+60% faster** (moins de listeners à parcourir)
@@ -150,6 +171,7 @@ const { updateAvatarDisplay } = useAvatarDisplayActions();
 ## 🔍 PATTERN: Action-Only Selectors (Zero Rerenders)
 
 **Breakthrough Pattern v29.1.0:**
+
 ```typescript
 // ✅ PATTERN: Actions-only selector = ZERO state subscription
 const { setAIStatus, setAIError } = useAIActions();
@@ -161,6 +183,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ```
 
 **Bénéfice:**
+
 - Composants/hooks ne nécessitant QUE les actions (pas l'état) → zéro rerenders
 - Pattern utilisé dans 3 optimizations (useGlobalAIChat, useEngineSubscription, App.tsx)
 - Impact massif sur performance (élimination totale des rerenders inutiles)
@@ -170,7 +193,9 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 🧪 VALIDATION
 
 ### TypeScript Status:
+
 ✅ **0 erreurs** dans les fichiers optimisés:
+
 - `src/App.tsx`
 - `src/hooks/useEngineSubscription.ts`
 - `src/hooks/useGlobalAIChat.ts`
@@ -179,6 +204,7 @@ const { setAIStatus, setAIError } = useAIActions();
 (Note: 3 erreurs pré-existantes dans `AuraControlPanel.tsx` non liées)
 
 ### Build Status:
+
 - Selectors appliqués: ✅ (8 fichiers modifiés)
 - Imports mis à jour: ✅ (selectors files importés)
 - Types compatibles: ✅ (EngineName generics préservés)
@@ -189,16 +215,19 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 📈 IMPACT CUMULATIF (v29.0.0 → v29.1.0)
 
 ### Stores & Selectors:
+
 - **3 stores** optimisés (uiStore, memoryStore, SingularityState)
 - **75+ selectors** créés
 - **12 composants/hooks** appliqués (4 v29.0.0 + 8 v29.1.0)
 
 ### Performance Estimée (Cumul):
+
 - Rerenders: **-35%** global (v29.0.0: -30%, v29.1.0: +5% via App.tsx racine)
 - Memory: **-25%** (v29.0.0: -20%, v29.1.0: +5% via engineSubscription ×8)
 - State update perf: **+55%** (v29.0.0: +50%, v29.1.0: +5% via action isolation)
 
 ### Multiplicateurs Identifiés:
+
 - **useEngineSubscription:** ×8 (1 hook, 8 engines) = impact 8× sur perf
 - **App.tsx:** Composant racine = impact cascade sur tous les enfants
 - **Action-only pattern:** -100% rerenders = pattern réutilisable massivement
@@ -208,6 +237,7 @@ const { setAIStatus, setAIError } = useAIActions();
 ## 📋 PROCHAINES ÉTAPES
 
 ### v29.2.0+ (Future Waves):
+
 1. **Application to 20-30 additional components** (priorité haute fréquence)
    - Identifier composants avec renders fréquents (DevTools Profiler)
    - Appliquer action-only pattern systématiquement
@@ -251,9 +281,11 @@ OPTIMIZATION_REPORT_v29.1.0.md                   # Ce rapport
 ## 🎯 KEY INSIGHTS v29.1.0
 
 ### 1. **Action-Only Pattern = Game Changer**
+
 Pattern identifié: Composants/hooks nécessitant SEULEMENT actions (pas état) → useActions() = -100% rerenders.
 
 Applicable massivement à:
+
 - Form handlers
 - Event callbacks
 - API mutation functions
@@ -262,9 +294,11 @@ Applicable massivement à:
 **Estimate:** 40-50% des usages de stores sont action-only → **impact potentiel énorme**
 
 ### 2. **Multiplicateurs = High ROI Targets**
+
 useEngineSubscription = 1 hook optimisé, impact 8× (8 engines).
 
 Autres multiplicateurs identifiés:
+
 - Hooks utilisés dans boucles/listes
 - Composants rendus en masse (tables, grids)
 - Context providers avec nombreux consumers
@@ -272,6 +306,7 @@ Autres multiplicateurs identifiés:
 **Strategy:** Prioriser optimizations avec multiplicateurs > 5×
 
 ### 3. **Root Component Optimization = Cascade Effect**
+
 App.tsx = composant racine → rerenders affectent TOUTE l'arborescence.
 
 **Impact estimé:** -75% rerenders App.tsx = -15% rerenders GLOBAL via cascade effect.
@@ -287,6 +322,7 @@ App.tsx = composant racine → rerenders affectent TOUTE l'arborescence.
 **Files:** 4 components/hooks optimized
 
 **Detailed message:**
+
 ```
 ⚡ perf(v29.1.0): Zustand Selectors Application — Wave 1
 
@@ -373,11 +409,13 @@ Pattern: Action-only + Multiplicateurs + Root optimization
 ## 🎯 CONCLUSION
 
 **v29.1.0** démontre l'impact réel des selectors créés en v29.0.0 avec:
+
 - **Action-only pattern** = -100% rerenders (breakthrough)
 - **Multiplicateurs** = 1 hook × 8 engines = ROI énorme
 - **Root optimization** = Cascade effect sur toute l'app
 
 **Patterns établis** (réutilisables massivement):
+
 1. Action-only pour forms/callbacks/mutations
 2. Multiplicateurs > 5× = priorité absolue
 3. Root components first = cascade effect maximal

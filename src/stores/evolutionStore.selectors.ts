@@ -12,8 +12,7 @@ import { useEvolutionStore } from './evolutionStore';
 // ═══════════════════════════════════════════════════════════════
 
 export const useEvolutionState = () => useEvolutionStore(state => state.state);
-export const useEvolutionLastReport = () =>
-  useEvolutionStore(state => state.lastReport);
+export const useEvolutionLastReport = () => useEvolutionStore(state => state.lastReport);
 export const useEvolutionHealth = () => useEvolutionStore(state => state.health);
 export const useEvolutionRunning = () => useEvolutionStore(state => state.running);
 export const useEvolutionLoading = () => useEvolutionStore(state => state.loading);
