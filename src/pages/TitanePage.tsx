@@ -908,6 +908,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
               onClick={toggleAudioEnabled}
               title="Audio (TTS)"
+              aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
+              aria-pressed={audioEnabled}
+              role="switch"
             >
               {audioEnabled ? '🔊' : '🔇'}
             </button>
@@ -917,6 +920,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
               onClick={handleVoiceInput}
               title="Reconnaissance vocale"
+              aria-label={isRecording ? 'Arrêter l\'enregistrement' : 'Démarrer reconnaissance vocale'}
+              aria-pressed={isRecording}
             >
               🎤
             </button>
@@ -926,6 +931,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className="conversation-icon-btn"
               onClick={toggleModeBuilder}
               title="Créer un mode personnalisé"
+              aria-label="Créer un mode personnalisé"
             >
               ⚙️
             </button>
@@ -935,6 +941,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
               onClick={refreshHealth}
               title={`Santé: ${healthReport?.status || 'Unknown'}`}
+              aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
             >
               {isHealthy ? '✅' : '⚠️'}
             </button>
@@ -944,8 +951,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className="conversation-icon-btn"
               onClick={handleClearChat}
               title="Effacer l'historique"
+              aria-label="Effacer l'historique du chat"
             >
-              <Trash2 size={16} />
+              <Trash2 size={16} aria-hidden="true" />
             </button>
           </div>
         </div>
