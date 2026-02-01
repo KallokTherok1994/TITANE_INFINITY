@@ -17,6 +17,7 @@ import { logger } from '@/lib/logger';
 import { MessageBubble } from './MessageBubble';
 import type { AIMessage } from '../../services/ai/types';
 import { autoHealEngine } from '../../services/ai/autoHealEngine';
+import { ChatFallback } from './ChatFallback'; // ✨ UI vΩ - Anti-Silence Contract
 import './MessageList.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -237,14 +238,14 @@ export const MessageList = React.memo(function MessageList({
       );
     }
 
-    // ═══ MAIN RENDER WITH ISOLATION ═══
+    // ═══ MAIN RENDER WITH ISOLATION + ANTI-SILENCE CONTRACT (UI vΩ) ═══
     return (
       <div className="message-list-container" ref={containerRef}>
         <div className="message-list">
-          {/* Messages avec protection individuelle */}
+          {/* Messages avec protection individuelle + détection vide */}
           {messages.map((message, index) => {
             try {
-              // Validation message avant render - OMEGA FIX: permet content vide pour streaming placeholder
+              // Validation message avant render
               if (
                 !message ||
                 typeof message !== 'object' ||
@@ -261,13 +262,51 @@ export const MessageList = React.memo(function MessageList({
                 return null;
               }
 
+              // ✨ UI vΩ: ANTI-SILENCE CONTRACT - Détecter réponse assistant vide
+              const isAssistant = message.role === 'assistant';
+              const isEmpty = message.content.trim().length === 0;
+              const isLatest = index === messages.length - 1;
+
+              if (isAssistant && isEmpty && isLatest && !isLoading) {
+                // INTERDIT: Bulle vide → Rendre fallback Always Respond
+                logger.warn('Empty assistant response detected - rendering fallback', {
+                  component: 'MessageList',
+                  event: 'CHAT_EMPTY_RESPONSE_HANDLED',
+                  timestamp: message.timestamp,
+                });
+
+                return (
+                  <ChatFallback
+                    key={`fallback-empty-${index}`}
+                    reason="empty-response"
+                    traceId={message.metadata?.traceId as string | undefined}
+                    timestamp={message.timestamp || Date.now()}
+                    provider={message.metadata?.provider as string | undefined}
+                    mode={message.metadata?.mode as string | undefined}
+                    pipelineState={message.metadata?.pipelineState as string | undefined}
+                    onRetry={() => {
+                      // Trigger retry logic (parent component should handle)
+                      logger.info('Retry requested from fallback', { component: 'MessageList' });
+                    }}
+                    onChangeProvider={() => {
+                      logger.info('Change provider requested', { component: 'MessageList' });
+                    }}
+                    onCopyDiagnostic={(diagnostic) => {
+                      navigator.clipboard?.writeText(diagnostic).then(() => {
+                        logger.info('Diagnostic copied', { component: 'MessageList' });
+                      });
+                    }}
+                  />
+                );
+              }
+
               return (
                 <MessageBubble
                   key={`${message.metadata?.uiId ?? `${message.timestamp}-${index}`}-omega`}
                   role={message.role || 'user'}
                   content={String(message.content)}
                   timestamp={message.timestamp || Date.now()}
-                  isLatest={index === messages.length - 1}
+                  isLatest={isLatest}
                 />
               );
             } catch (bubbleError) {
