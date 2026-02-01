@@ -1942,55 +1942,48 @@ export const TitanePage: React.FC = () => {
   return (
     <ErrorBoundary context="TitanePage">
       <Container size="xl" className="titane-page">
-        <Stack direction="vertical" gap={6}>
-          {/* ═══ HEADER ═══ */}
-          <div className="titane-header">
-            <div className="titane-header-content">
-              <div className="titane-header-left">
-                <TitaneLogo size={64} />
-                <div className="titane-header-text">
-                  <h1 className="titane-title">⚡ TITANE — Le Cœur du Système</h1>
-                  <p className="titane-subtitle">
-                    Fusion ultime: Communication + Perception + Évolution Complète
-                  </p>
-                </div>
+        <Stack direction="vertical" gap={4}>
+          {/* ═══ HEADER (UI vΩ: Compact & Hierarchical) ═══ */}
+          <div className="titane-header-vΩ">
+            <div className="flex items-center gap-4">
+              <TitaneLogo size={48} />
+              <div>
+                <h1 className="text-2xl font-bold text-titanium-text-primary mb-1">
+                  ⚡ TITANE
+                </h1>
+                <p className="text-sm text-titanium-text-secondary">
+                  Le Cœur du Système
+                </p>
               </div>
-
-              {/* Badge INFINITY */}
-              <TBadge variant="info" size="lg">
-                INFINITY
-              </TBadge>
             </div>
           </div>
 
-          {/* ═══ NAVIGATION TABS (A11Y Enhanced v25.4.1) ═══ */}
+          {/* ═══ TABS (UI vΩ: Compact, Usage-Oriented Order) ═══ */}
           <div
-            className="titane-tabs"
+            className="flex gap-1 overflow-x-auto py-2 border-b border-titanium-border-default"
             role="tablist"
             aria-label="Sections principales TITANE"
           >
             <button
-              className={`titane-tab ${activeTab === 'conversation' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'conversation'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.conversation}
               role="tab"
               aria-selected={activeTab === 'conversation'}
               aria-controls="titane-panel-conversation"
               id="titane-tab-conversation"
             >
-              💬 Conversation
+              💬 Chat
             </button>
             <button
-              className={`titane-tab ${activeTab === 'vision' ? 'active' : ''}`}
-              onClick={tabHandlers.vision}
-              role="tab"
-              aria-selected={activeTab === 'vision'}
-              aria-controls="titane-panel-vision"
-              id="titane-tab-vision"
-            >
-              📷 Vision
-            </button>
-            <button
-              className={`titane-tab ${activeTab === 'overview' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'overview'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.overview}
               role="tab"
               aria-selected={activeTab === 'overview'}
@@ -2000,7 +1993,25 @@ export const TitanePage: React.FC = () => {
               📊 Vue
             </button>
             <button
-              className={`titane-tab ${activeTab === 'identity' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'vision'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
+              onClick={tabHandlers.vision}
+              role="tab"
+              aria-selected={activeTab === 'vision'}
+              aria-controls="titane-panel-vision"
+              id="titane-tab-vision"
+            >
+              📷 Vision
+            </button>
+            <button
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'identity'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.identity}
               role="tab"
               aria-selected={activeTab === 'identity'}
@@ -2010,7 +2021,11 @@ export const TitanePage: React.FC = () => {
               🧬 Identité
             </button>
             <button
-              className={`titane-tab ${activeTab === 'memory-map' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'memory-map'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.memoryMap}
               role="tab"
               aria-selected={activeTab === 'memory-map'}
@@ -2020,7 +2035,11 @@ export const TitanePage: React.FC = () => {
               💾 Mémoire
             </button>
             <button
-              className={`titane-tab ${activeTab === 'memory-evolution' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'memory-evolution'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.memoryEvolution}
               role="tab"
               aria-selected={activeTab === 'memory-evolution'}
@@ -2030,17 +2049,25 @@ export const TitanePage: React.FC = () => {
               🔄 Évolution
             </button>
             <button
-              className={`titane-tab ${activeTab === 'progression' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'progression'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.progression}
               role="tab"
               aria-selected={activeTab === 'progression'}
               aria-controls="titane-panel-progression"
               id="titane-tab-progression"
             >
-              ⚡ Progression
+              ⚡ XP
             </button>
             <button
-              className={`titane-tab ${activeTab === 'transformation' ? 'active' : ''}`}
+              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                activeTab === 'transformation'
+                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+              }`}
               onClick={tabHandlers.transformation}
               role="tab"
               aria-selected={activeTab === 'transformation'}
