@@ -31,6 +31,7 @@ import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
 import { AppShell, TopNav, createTopNavItems } from '@components/layout';
+import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
 const XPBar = lazy(() =>
@@ -859,6 +860,9 @@ const AppRouter: React.FC = () => {
         />
       }
     >
+      {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
+      <BackendDownIndicator position="top" dismissible />
+
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
         <Routes>
