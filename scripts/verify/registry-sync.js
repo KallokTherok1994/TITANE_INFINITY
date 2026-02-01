@@ -34,7 +34,6 @@ const WATCHED_PATTERNS = [
   'e2e/**/*.test.js',
   'vitest*.config.ts',
   'playwright.config.ts',
-  'wdio.conf.js',
   '.github/workflows/*.yml',
 ];
 
