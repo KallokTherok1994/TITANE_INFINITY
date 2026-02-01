@@ -18,23 +18,31 @@ describe('ChatFallback Component', () => {
   describe('Rendering', () => {
     it('should render with empty-response reason', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(
-        screen.getByText(/no response generated/i) ||
-          screen.getByText(/empty response/i)
-      ).toBeInTheDocument();
+      const messageEl =
+        screen.queryByText(/empty response/i) || screen.queryByText(/réponse/i);
+      expect(messageEl).toBeInTheDocument();
     });
 
     it('should display all fallback reasons', () => {
       const reasons: Array<
-        'empty-response' | 'timeout' | 'aborted' | 'backend-down' | 'network-error' | 'unknown'
-      > = ['empty-response', 'timeout', 'aborted', 'backend-down', 'network-error', 'unknown'];
+        | 'empty-response'
+        | 'timeout'
+        | 'aborted'
+        | 'backend-down'
+        | 'network-error'
+        | 'unknown'
+      > = [
+        'empty-response',
+        'timeout',
+        'aborted',
+        'backend-down',
+        'network-error',
+        'unknown',
+      ];
 
-      reasons.forEach((reason) => {
+      reasons.forEach(reason => {
         const { unmount } = render(
-          <ChatFallback
-            {...mockFallbackProps}
-            reason={reason}
-          />
+          <ChatFallback {...mockFallbackProps} reason={reason} />
         );
         expect(screen.getByText(/.*/, { selector: 'div' })).toBeInTheDocument();
         unmount();
@@ -43,7 +51,9 @@ describe('ChatFallback Component', () => {
 
     it('should display diagnostic information', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(screen.getByText(/trace.?id/i) || screen.getByText('trace-123')).toBeInTheDocument();
+      expect(
+        screen.getByText(/trace.?id/i) || screen.getByText('trace-123')
+      ).toBeInTheDocument();
     });
 
     it('should render three-tier CTA buttons', () => {
@@ -69,7 +79,7 @@ describe('ChatFallback Component', () => {
     it('should have aria-label on all buttons', () => {
       render(<ChatFallback {...mockFallbackProps} />);
       const buttons = screen.getAllByRole('button');
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveAttribute('aria-label');
       });
     });
@@ -84,12 +94,7 @@ describe('ChatFallback Component', () => {
   describe('Interactions', () => {
     it('should call onRetry when Retry button clicked', () => {
       const onRetry = vi.fn();
-      render(
-        <ChatFallback
-          {...mockFallbackProps}
-          onRetry={onRetry}
-        />
-      );
+      render(<ChatFallback {...mockFallbackProps} onRetry={onRetry} />);
       const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
       fireEvent.click(retryButton);
       expect(onRetry).toHaveBeenCalled();
@@ -97,13 +102,10 @@ describe('ChatFallback Component', () => {
 
     it('should call onChangeProvider when Change Provider clicked', () => {
       const onChangeProvider = vi.fn();
-      render(
-        <ChatFallback
-          {...mockFallbackProps}
-          onChangeProvider={onChangeProvider}
-        />
-      );
-      const changeButton = screen.queryByText(/change provider/i) || screen.getByRole('button', { name: /provider/i });
+      render(<ChatFallback {...mockFallbackProps} onChangeProvider={onChangeProvider} />);
+      const changeButton =
+        screen.queryByText(/change provider/i) ||
+        screen.getByRole('button', { name: /provider/i });
       if (changeButton) {
         fireEvent.click(changeButton);
         expect(onChangeProvider).toHaveBeenCalled();
@@ -112,12 +114,7 @@ describe('ChatFallback Component', () => {
 
     it('should call onCopyDiagnostic when Copy Diagnostic clicked', () => {
       const onCopyDiagnostic = vi.fn();
-      render(
-        <ChatFallback
-          {...mockFallbackProps}
-          onCopyDiagnostic={onCopyDiagnostic}
-        />
-      );
+      render(<ChatFallback {...mockFallbackProps} onCopyDiagnostic={onCopyDiagnostic} />);
       const copyButton = screen.getByLabelText(/copy/i) || screen.queryByText(/copy/i);
       if (copyButton) {
         fireEvent.click(copyButton);

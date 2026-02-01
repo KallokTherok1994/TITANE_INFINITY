@@ -49,7 +49,7 @@ describe('TopNav Component', () => {
     it('should have aria-label on all buttons', () => {
       renderTopNav();
       const buttons = screen.getAllByRole('button');
-      buttons.forEach((button) => {
+      buttons.forEach(button => {
         expect(button).toHaveAttribute('aria-label');
       });
     });
