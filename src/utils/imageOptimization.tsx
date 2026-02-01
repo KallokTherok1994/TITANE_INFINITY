@@ -1,16 +1,16 @@
 /**
  * IMAGE OPTIMIZATION UTILITIES - v35.0.0
  * ═════════════════════════════════════════════════════════════
- * 
+ *
  * Provides image lazy-loading and preloading strategies
  * for optimal LCP and CLS (Cumulative Layout Shift).
- * 
+ *
  * Usage:
  *   import { useImageLazyLoad, preloadImage } from '@utils/imageOptimization';
- *   
+ *
  *   // Lazy-load an image
  *   <img {...useImageLazyLoad()} src={imageSrc} alt={alt} />
- *   
+ *
  *   // Preload critical images
  *   useEffect(() => {
  *     preloadImage(criticalImageSrc);
@@ -33,18 +33,21 @@ export const useImageLazyLoad = (options?: IntersectionObserverInit) => {
   const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      if (entry.isIntersecting) {
-        setIsVisible(true);
-        observer.unobserve(entry.target);
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        if (!entry) return;
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target);
+        }
+      },
+      {
+        rootMargin: '50px', // Start loading 50px before entering viewport
+        threshold: 0,
+        ...options,
       }
-    }, {
-      rootMargin: '50px', // Start loading 50px before entering viewport
-      threshold: 0,
-      ...options,
-    });
+    );
 
     if (ref.current) {
       observer.observe(ref.current);
@@ -79,14 +82,14 @@ export const useImageLazyLoad = (options?: IntersectionObserverInit) => {
 export const preloadImage = (src: string, sizes?: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
-    
+
     if (sizes) {
       img.sizes = sizes;
     }
-    
+
     img.onload = () => resolve();
     img.onerror = () => reject(new Error(`Failed to preload image: ${src}`));
-    
+
     img.src = src;
   });
 };
@@ -96,7 +99,7 @@ export const preloadImage = (src: string, sizes?: string): Promise<void> => {
  * @param sources - Array of image URLs
  */
 export const preloadImages = async (sources: string[]): Promise<void> => {
-  await Promise.all(sources.map((src) => preloadImage(src)));
+  await Promise.all(sources.map(src => preloadImage(src)));
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -112,9 +115,7 @@ export const preloadImages = async (sources: string[]): Promise<void> => {
  *   // Returns: '/image-400.jpg 400w, /image-800.jpg 800w, ...'
  */
 export const generateSrcSet = (basePath: string, sizes: number[]): string => {
-  return sizes
-    .map((size) => `${basePath}-${size}w.jpg ${size}w`)
-    .join(', ');
+  return sizes.map(size => `${basePath}-${size}w.jpg ${size}w`).join(', ');
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -133,14 +134,14 @@ export const preloadComponentIdle = (
 ): void => {
   if ('requestIdleCallback' in window) {
     requestIdleCallback(() => {
-      import(componentPath).catch((err) => {
+      import(componentPath).catch(err => {
         console.warn(`Failed to preload component: ${componentPath}`, err);
       });
     });
   } else {
     // Fallback for browsers without requestIdleCallback
     setTimeout(() => {
-      import(componentPath).catch((err) => {
+      import(componentPath).catch(err => {
         console.warn(`Failed to preload component (fallback): ${componentPath}`, err);
       });
     }, fallbackDelay);
@@ -152,7 +153,7 @@ export const preloadComponentIdle = (
  * @param paths - Array of dynamic import paths
  */
 export const preloadComponentsIdle = (paths: string[]): void => {
-  paths.forEach((path) => preloadComponentIdle(path));
+  paths.forEach(path => preloadComponentIdle(path));
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -171,15 +172,18 @@ export const useIntersectionObserver = (
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      setIsVisible(entry.isIntersecting);
-      callback?.(entry.isIntersecting);
-    }, {
-      threshold: 0.1,
-      ...options,
-    });
+    const observer = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        if (!entry) return;
+        setIsVisible(entry.isIntersecting);
+        callback?.(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+        ...options,
+      }
+    );
 
     if (ref.current) {
       observer.observe(ref.current);
@@ -261,7 +265,9 @@ export const LazyImage: FC<LazyImageProps> = ({
 
   return (
     <div className="lazy-image-container">
-      {!isVisible && placeholder && <img src={placeholder} alt={alt} className={className} />}
+      {!isVisible && placeholder && (
+        <img src={placeholder} alt={alt} className={className} />
+      )}
       {isVisible && (
         <img
           ref={ref}

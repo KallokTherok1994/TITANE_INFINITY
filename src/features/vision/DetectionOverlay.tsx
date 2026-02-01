@@ -40,162 +40,159 @@ interface DetectionOverlayProps {
   minConfidence?: number;
 }
 
-export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(({
-  streamRef,
-  showLabels = true,
-  showConfidence = true,
-  minConfidence = 0.5,
-}) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [overlayEnabled, setOverlayEnabled] = useState(true);
+export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(
+  ({ streamRef, showLabels = true, showConfidence = true, minConfidence = 0.5 }) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [isFullscreen, setIsFullscreen] = useState(false);
+    const [overlayEnabled, setOverlayEnabled] = useState(true);
 
-  // Pour l'instant, utilise des données mock
-  // FUTURE: Activate when detections and isActive exist in store
-  // const { detections, isActive } = useVisionStore();
-  const isActive = false; // Mock
-  const detections: Detection[] = useMemo(() => [], []); // Mock - vide pour l'instant
+    // Pour l'instant, utilise des données mock
+    // FUTURE: Activate when detections and isActive exist in store
+    // const { detections, isActive } = useVisionStore();
+    const isActive = false; // Mock
+    const detections: Detection[] = useMemo(() => [], []); // Mock - vide pour l'instant
 
-  // Draw detections on canvas
-  useEffect(() => {
-    if (!canvasRef.current || !overlayEnabled || !isActive) return;
+    // Draw detections on canvas
+    useEffect(() => {
+      if (!canvasRef.current || !overlayEnabled || !isActive) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    // Clear canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Get video dimensions
-    const video = streamRef?.current;
-    if (video) {
-      canvas.width = video.videoWidth || canvas.width;
-      canvas.height = video.videoHeight || canvas.height;
-    }
-
-    // Filter detections by confidence
-    const validDetections = (detections || []).filter(
-      (d: Detection) => d.confidence >= minConfidence
-    );
-
-    // Draw each detection
-    validDetections.forEach((detection: Detection) => {
-      const box = normalizeBox(detection, canvas.width, canvas.height);
-      drawBox(ctx, box, showLabels, showConfidence);
-    });
-  }, [
-    detections,
-    overlayEnabled,
-    isActive,
-    minConfidence,
-    showLabels,
-    showConfidence,
-    streamRef,
-  ]);
-
-  // Mock detections for demo (when no real detections)
-  useEffect(() => {
-    if (!detections?.length && isActive && overlayEnabled) {
-      // Draw mock detections for demonstration
       const canvas = canvasRef.current;
-      if (!canvas) return;
-
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const mockBoxes: Array<Omit<DetectionBox, 'id'>> = [
-        {
-          x: 0.2,
-          y: 0.15,
-          width: 0.3,
-          height: 0.4,
-          label: 'Person',
-          confidence: 0.92,
-          color: '#10b981',
-        },
-        {
-          x: 0.6,
-          y: 0.3,
-          width: 0.25,
-          height: 0.35,
-          label: 'Hand',
-          confidence: 0.78,
-          color: '#3b82f6',
-        },
-      ];
-
+      // Clear canvas
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      mockBoxes.forEach(box => {
-        const absBox = {
-          ...box,
-          x: box.x * canvas.width,
-          y: box.y * canvas.height,
-          width: box.width * canvas.width,
-          height: box.height * canvas.height,
-        };
-        drawBox(ctx, absBox as DetectionBox, showLabels, showConfidence);
+
+      // Get video dimensions
+      const video = streamRef?.current;
+      if (video) {
+        canvas.width = video.videoWidth || canvas.width;
+        canvas.height = video.videoHeight || canvas.height;
+      }
+
+      // Filter detections by confidence
+      const validDetections = (detections || []).filter(
+        (d: Detection) => d.confidence >= minConfidence
+      );
+
+      // Draw each detection
+      validDetections.forEach((detection: Detection) => {
+        const box = normalizeBox(detection, canvas.width, canvas.height);
+        drawBox(ctx, box, showLabels, showConfidence);
       });
+    }, [
+      detections,
+      overlayEnabled,
+      isActive,
+      minConfidence,
+      showLabels,
+      showConfidence,
+      streamRef,
+    ]);
+
+    // Mock detections for demo (when no real detections)
+    useEffect(() => {
+      if (!detections?.length && isActive && overlayEnabled) {
+        // Draw mock detections for demonstration
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        const mockBoxes: Array<Omit<DetectionBox, 'id'>> = [
+          {
+            x: 0.2,
+            y: 0.15,
+            width: 0.3,
+            height: 0.4,
+            label: 'Person',
+            confidence: 0.92,
+            color: '#10b981',
+          },
+          {
+            x: 0.6,
+            y: 0.3,
+            width: 0.25,
+            height: 0.35,
+            label: 'Hand',
+            confidence: 0.78,
+            color: '#3b82f6',
+          },
+        ];
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        mockBoxes.forEach(box => {
+          const absBox = {
+            ...box,
+            x: box.x * canvas.width,
+            y: box.y * canvas.height,
+            width: box.width * canvas.width,
+            height: box.height * canvas.height,
+          };
+          drawBox(ctx, absBox as DetectionBox, showLabels, showConfidence);
+        });
+      }
+    }, [detections, isActive, overlayEnabled, showLabels, showConfidence]);
+
+    const toggleFullscreen = useCallback(() => {
+      setIsFullscreen(prev => !prev);
+    }, []);
+
+    const toggleOverlayEnabled = useCallback(() => {
+      setOverlayEnabled(prev => !prev);
+    }, []);
+
+    if (!isActive) {
+      return null;
     }
-  }, [detections, isActive, overlayEnabled, showLabels, showConfidence]);
 
-  const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(prev => !prev);
-  }, []);
+    return (
+      <div className={`detection-overlay-container ${isFullscreen ? 'fullscreen' : ''}`}>
+        {/* Canvas overlay */}
+        <canvas
+          ref={canvasRef}
+          className={`detection-canvas ${overlayEnabled ? '' : 'hidden'}`}
+          width={640}
+          height={480}
+        />
 
-  const toggleOverlayEnabled = useCallback(() => {
-    setOverlayEnabled(prev => !prev);
-  }, []);
+        {/* Controls */}
+        <div className="detection-controls">
+          <button
+            className={`detection-control-btn ${overlayEnabled ? 'active' : ''}`}
+            onClick={toggleOverlayEnabled}
+            title={overlayEnabled ? 'Masquer détections' : 'Afficher détections'}
+          >
+            {overlayEnabled ? <Eye size={16} /> : <EyeOff size={16} />}
+          </button>
 
-  if (!isActive) {
-    return null;
-  }
-
-  return (
-    <div className={`detection-overlay-container ${isFullscreen ? 'fullscreen' : ''}`}>
-      {/* Canvas overlay */}
-      <canvas
-        ref={canvasRef}
-        className={`detection-canvas ${overlayEnabled ? '' : 'hidden'}`}
-        width={640}
-        height={480}
-      />
-
-      {/* Controls */}
-      <div className="detection-controls">
-        <button
-          className={`detection-control-btn ${overlayEnabled ? 'active' : ''}`}
-          onClick={toggleOverlayEnabled}
-          title={overlayEnabled ? 'Masquer détections' : 'Afficher détections'}
-        >
-          {overlayEnabled ? <Eye size={16} /> : <EyeOff size={16} />}
-        </button>
-
-        <button
-          className="detection-control-btn"
-          onClick={toggleFullscreen}
-          title={isFullscreen ? 'Quitter plein écran' : 'Plein écran'}
-        >
-          {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
-        </button>
-      </div>
-
-      {/* Stats overlay */}
-      {overlayEnabled && (
-        <div className="detection-stats">
-          <div className="stat-item">
-            <span className="stat-label">Détections:</span>
-            <span className="stat-value">{detections?.length || 2}</span>
-          </div>
-          <div className="stat-item">
-            <span className="stat-label">Confiance min:</span>
-            <span className="stat-value">{Math.round(minConfidence * 100)}%</span>
-          </div>
+          <button
+            className="detection-control-btn"
+            onClick={toggleFullscreen}
+            title={isFullscreen ? 'Quitter plein écran' : 'Plein écran'}
+          >
+            {isFullscreen ? <Minimize2 size={16} /> : <Maximize2 size={16} />}
+          </button>
         </div>
-      )}
-    </div>
-  );
-});
+
+        {/* Stats overlay */}
+        {overlayEnabled && (
+          <div className="detection-stats">
+            <div className="stat-item">
+              <span className="stat-label">Détections:</span>
+              <span className="stat-value">{detections?.length || 2}</span>
+            </div>
+            <div className="stat-item">
+              <span className="stat-label">Confiance min:</span>
+              <span className="stat-value">{Math.round(minConfidence * 100)}%</span>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 DetectionOverlay.displayName = 'DetectionOverlay';
 

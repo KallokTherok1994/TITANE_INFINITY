@@ -56,7 +56,10 @@ export interface AvatarModuleResult {
 export function useLazyAvatar(
   mode: AvatarRenderingMode = 'floating-window',
   autoLoad = true
-): AvatarLoadingState & { module?: AvatarModuleResult; loadAvatarModule: () => Promise<void> } {
+): AvatarLoadingState & {
+  module?: AvatarModuleResult;
+  loadAvatarModule: () => Promise<void>;
+} {
   const [state, setState] = useState<AvatarLoadingState>({
     isLoading: autoLoad,
     isLoaded: false,
@@ -68,26 +71,24 @@ export function useLazyAvatar(
 
   const loadAvatarModule = useCallback(async () => {
     try {
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       const startTime = performance.now();
       const result = await loadAvatarModuleByMode(mode, 15000);
       const duration = performance.now() - startTime;
 
       setModule(result as AvatarModuleResult);
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isLoading: false,
         isLoaded: true,
         error: null,
       }));
 
-      logger.debug(
-        `[useLazyAvatar] Loaded ${mode} in ${duration.toFixed(2)}ms`
-      );
+      logger.debug(`[useLazyAvatar] Loaded ${mode} in ${duration.toFixed(2)}ms`);
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         isLoading: false,
         isLoaded: false,
@@ -167,7 +168,9 @@ export function useLazyAvatarComponent(
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setError(error);
-      logger.error(`[useLazyAvatarComponent] Failed to load ${componentType}: ${error.message}`);
+      logger.error(
+        `[useLazyAvatarComponent] Failed to load ${componentType}: ${error.message}`
+      );
     } finally {
       setIsLoading(false);
     }
@@ -209,7 +212,7 @@ export function useLazyAvatarOnVisible(
     if (!ref) return;
 
     const observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         const entry = entries[0];
         if (entry && entry.isIntersecting) {
           setIsVisible(true);

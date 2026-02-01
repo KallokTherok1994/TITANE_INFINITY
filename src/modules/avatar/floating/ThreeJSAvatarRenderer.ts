@@ -80,7 +80,10 @@ export class ThreeJSAvatarRenderer {
     // Note: lightingRig needs scene, will be initialized in initialize()
     this.lightingRig = null as any; // Will be set in initialize()
 
-    if (DEBUG) console.log('[ThreeJSAvatarRenderer] Constructor complete (Three.js not loaded yet)');
+    if (DEBUG)
+      console.log(
+        '[ThreeJSAvatarRenderer] Constructor complete (Three.js not loaded yet)'
+      );
   }
 
   /**
@@ -98,7 +101,8 @@ export class ThreeJSAvatarRenderer {
     this.THREE = await loadThreeJS();
     const THREE = this.THREE;
 
-    const { width, height, alpha, pixelRatio, enablePostProcessing, appearanceStyle } = this.options;
+    const { width, height, alpha, pixelRatio, enablePostProcessing, appearanceStyle } =
+      this.options;
 
     // Initialize renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -159,7 +163,9 @@ export class ThreeJSAvatarRenderer {
    */
   private createPlaceholderAvatar(): AvatarMeshes {
     if (!this.THREE || !this.isInitialized) {
-      throw new Error('[ThreeJSAvatarRenderer] Must call initialize() before createPlaceholderAvatar()');
+      throw new Error(
+        '[ThreeJSAvatarRenderer] Must call initialize() before createPlaceholderAvatar()'
+      );
     }
 
     const THREE = this.THREE;
@@ -217,7 +223,9 @@ export class ThreeJSAvatarRenderer {
    */
   public initializeAvatar(): void {
     if (!this.isInitialized) {
-      throw new Error('[ThreeJSAvatarRenderer] Must call initialize() before initializeAvatar()');
+      throw new Error(
+        '[ThreeJSAvatarRenderer] Must call initialize() before initializeAvatar()'
+      );
     }
 
     if (this.avatarMeshes) {
@@ -354,7 +362,8 @@ export class ThreeJSAvatarRenderer {
   /**
    * Set scene background (transparent by default)
    */
-  public setBackground(color: any | null): void { // THREE.Color
+  public setBackground(color: any | null): void {
+    // THREE.Color
     if (!this.isInitialized) return;
     this.scene.background = color;
   }
@@ -440,15 +449,18 @@ export class ThreeJSAvatarRenderer {
   // GETTERS
   // ═════════════════════════════════════════════════════════════════════════
 
-  public getRenderer(): any { // THREE.WebGLRenderer
+  public getRenderer(): any {
+    // THREE.WebGLRenderer
     return this.renderer;
   }
 
-  public getScene(): any { // THREE.Scene
+  public getScene(): any {
+    // THREE.Scene
     return this.scene;
   }
 
-  public getCamera(): any { // THREE.PerspectiveCamera
+  public getCamera(): any {
+    // THREE.PerspectiveCamera
     return this.camera;
   }
 

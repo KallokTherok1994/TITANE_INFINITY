@@ -6,13 +6,13 @@
 
 ## 📊 Current Performance Baseline (v27.0.0)
 
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| **Startup Time** | ~1.2s | < 1.0s | ⚠️ Good |
-| **Bundle Size** | 7.1 MB | < 6.5 MB | 🔴 To Optimize |
-| **Memory Usage** | ~250 MB | < 200 MB | ⚠️ Acceptable |
-| **Chat Response Time** | ~500ms | < 200ms | 🟡 Depends on Ollama |
-| **UI Responsiveness** | 60 FPS | 60 FPS | ✅ Perfect |
+| Metric                 | Value   | Target   | Status               |
+| ---------------------- | ------- | -------- | -------------------- |
+| **Startup Time**       | ~1.2s   | < 1.0s   | ⚠️ Good              |
+| **Bundle Size**        | 7.1 MB  | < 6.5 MB | 🔴 To Optimize       |
+| **Memory Usage**       | ~250 MB | < 200 MB | ⚠️ Acceptable        |
+| **Chat Response Time** | ~500ms  | < 200ms  | 🟡 Depends on Ollama |
+| **UI Responsiveness**  | 60 FPS  | 60 FPS   | ✅ Perfect           |
 
 ---
 
@@ -21,6 +21,7 @@
 ### Priority 1: Bundle Size (7.1 MB → 6.5 MB)
 
 **Current breakdown**:
+
 ```
 vite-built bundle:  4.2 MB (main code)
 Dependencies:       1.8 MB (node_modules dist)
@@ -32,6 +33,7 @@ Assets:            1.1 MB (fonts, icons)
 **File**: `vite.config.ts`
 
 **Action**: Enable automatic chunk splitting
+
 ```typescript
 export default defineConfig({
   build: {
@@ -39,14 +41,8 @@ export default defineConfig({
       output: {
         manualChunks: {
           'react-core': ['react', 'react-dom'],
-          'ui-components': [
-            '@/components/ui',
-            '@/components/icons',
-          ],
-          'ai-services': [
-            '@/services/ai',
-            '@/lib/security',
-          ],
+          'ui-components': ['@/components/ui', '@/components/icons'],
+          'ai-services': ['@/services/ai', '@/lib/security'],
         },
       },
     },
@@ -61,17 +57,20 @@ export default defineConfig({
 #### 1.2 Remove Unused Dependencies
 
 **Audit**:
+
 ```bash
 npm list --depth=0 | grep -v "├──\|└──"
 # Review each package
 ```
 
 **Candidates for removal**:
+
 - ❓ `axios` (use native `fetch`)
 - ❓ `lodash` (use modern JS alternatives)
 - ❓ Unused UI library modules
 
 **Action**: Replace or remove
+
 ```bash
 npm uninstall axios lodash  # if unused
 ```
@@ -83,6 +82,7 @@ npm uninstall axios lodash  # if unused
 #### 1.3 Optimize Images & Assets
 
 **Current state**:
+
 - Fonts: ~500 KB
 - Icons: ~300 KB
 - Other: ~300 KB
@@ -90,6 +90,7 @@ npm uninstall axios lodash  # if unused
 **Optimizations**:
 
 a) **Font Subsetting** (keep only needed chars)
+
 ```bash
 # Use font subsetter
 npm install --save-dev fonttools
@@ -101,6 +102,7 @@ npm install --save-dev fonttools
 **Expected Savings**: ~150-200 KB
 
 b) **SVG Optimization**
+
 ```bash
 npm install --save-dev svgo
 
@@ -111,6 +113,7 @@ svgo --folder=public/icons --recursive
 **Expected Savings**: ~50-100 KB
 
 c) **Image Compression**
+
 ```bash
 npm install --save-dev imagemin imagemin-mozjpeg
 
@@ -124,11 +127,13 @@ npm install --save-dev imagemin imagemin-mozjpeg
 #### 1.4 Tree-Shaking & Dead Code Removal
 
 **Check**: Run build analysis
+
 ```bash
 npm run build -- --analyze
 ```
 
 **Remove dead imports** in:
+
 - `src/services/ai/providers/`
 - `src/lib/security/`
 - `src/hooks/`
@@ -142,6 +147,7 @@ npm run build -- --analyze
 #### 2.1 Optimize React Components
 
 **Pattern 1**: Use `memo` for expensive renders
+
 ```typescript
 import { memo } from 'react';
 
@@ -151,18 +157,20 @@ const ChatMessage = memo(({ content, role }: Props) => {
 ```
 
 **Pattern 2**: Use `useMemo` for expensive computations
+
 ```typescript
-const memoizedData = useMemo(
-  () => expensiveComputation(data),
-  [data]
-);
+const memoizedData = useMemo(() => expensiveComputation(data), [data]);
 ```
 
 **Pattern 3**: Use `useCallback` for event handlers
+
 ```typescript
-const handleSend = useCallback((msg: string) => {
-  // ...
-}, [dependencies]);
+const handleSend = useCallback(
+  (msg: string) => {
+    // ...
+  },
+  [dependencies]
+);
 ```
 
 **Expected Savings**: ~30-50 MB
@@ -174,6 +182,7 @@ const handleSend = useCallback((msg: string) => {
 **Current**: In-memory caching of all chat history
 
 **Optimization**: Use IndexedDB for large datasets
+
 ```typescript
 import { useIDB } from '@/hooks/useIDB';
 
@@ -201,9 +210,7 @@ useEffect(() => {
 import { ollamaProvider } from '@/services/ai/providers/ollama';
 
 // After: Lazy loaded
-const ollamaProvider = lazy(
-  () => import('@/services/ai/providers/ollama')
-);
+const ollamaProvider = lazy(() => import('@/services/ai/providers/ollama'));
 ```
 
 **Expected Savings**: ~40-60 MB
@@ -242,6 +249,7 @@ export function App() {
 #### 3.2 Preload Critical Resources
 
 **HTML** (`index.html`):
+
 ```html
 <!-- Critical fonts -->
 <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" />
@@ -268,7 +276,7 @@ export default defineConfig({
     terserOptions: {
       compress: { drop_console: true },
     },
-    sourcemap: false,  // Only for production
+    sourcemap: false, // Only for production
   },
   // Use esbuild for faster builds
   esbuild: {
@@ -294,6 +302,7 @@ lhci autorun
 ```
 
 **Target scores**:
+
 - Performance: 90+
 - Accessibility: 95+
 - Best Practices: 95+
@@ -328,7 +337,7 @@ console.log(`AI Chat took ${measure.duration}ms`);
 
 ```typescript
 // Check memory usage
-console.memory?.usedJSHeapSize
+console.memory?.usedJSHeapSize;
 // Log periodically
 setInterval(() => {
   const mem = (performance as any).memory;
@@ -380,16 +389,19 @@ setInterval(() => {
 ## 📈 Performance Improvement Timeline
 
 **Week 1**: Bundle size optimization (7.1 MB → 6.7 MB)
+
 - Code splitting: -300 KB
 - Unused deps removal: -200 KB
 - Asset optimization: -200 KB
 
 **Week 2**: Memory optimization (250 MB → 220 MB)
+
 - React memo/useMemo: -30 MB
 - Storage optimization: -50 MB
 - Lazy loading: -40 MB
 
 **Week 3**: Startup optimization (1.2s → 0.9s)
+
 - Route-based code splitting: -300ms
 - Resource preloading: -150ms
 - Vite optimization: -50ms

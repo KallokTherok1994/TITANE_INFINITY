@@ -21,12 +21,14 @@ Architecture: amd64
 ```
 
 **Installation**:
+
 ```bash
 sudo dpkg -i TITANE-Infinity_27.0.0_amd64.deb
 sudo apt-get install -f  # Résoudre les dépendances si nécessaire
 ```
 
 **Désinstallation**:
+
 ```bash
 sudo apt-get remove titane-infinity
 # ou
@@ -180,6 +182,7 @@ export TITANE_DATA_DIR=/var/lib/titane-infinity
 ### Fichier de Configuration
 
 Créer `/etc/titane-infinity/config.toml`:
+
 ```toml
 [production]
 log_level = "info"
@@ -223,13 +226,13 @@ tar -czf ~/titane-infinity-backup-$(date +%Y%m%d).tar.gz \
 
 ### Critères de Validation Post-Déploiement
 
-| Métrique | Cible | Validation |
-|----------|-------|------------|
-| Taux d'erreur | < 0.1% | ⏳ Monitoring 24-48h |
-| Temps de réponse | < 150ms | ⏳ À mesurer |
-| CPU usage | < 10% idle | ⏳ À mesurer |
-| Memory usage | < 500MB | ⏳ À mesurer |
-| Crash rate | 0 | ⏳ Monitoring actif |
+| Métrique         | Cible      | Validation           |
+| ---------------- | ---------- | -------------------- |
+| Taux d'erreur    | < 0.1%     | ⏳ Monitoring 24-48h |
+| Temps de réponse | < 150ms    | ⏳ À mesurer         |
+| CPU usage        | < 10% idle | ⏳ À mesurer         |
+| Memory usage     | < 500MB    | ⏳ À mesurer         |
+| Crash rate       | 0          | ⏳ Monitoring actif  |
 
 ### Monitoring 24-48h
 
@@ -336,5 +339,5 @@ done
 
 ---
 
-*Généré automatiquement par TITANE-Infinity Build System*  
-*Pour assistance: Consulter AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md*
+_Généré automatiquement par TITANE-Infinity Build System_  
+_Pour assistance: Consulter AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md_

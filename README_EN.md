@@ -51,19 +51,25 @@ What's your first question?"
 **Choose your learning style:**
 
 ### 👶 **Total Beginner?**
+
 → Start with **[Installation Guide](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md)**
+
 - 30 minutes to full setup
 - All 3 operating systems covered
 
 ### 🎓 **Want to Learn?**
+
 → Follow **[Tutorials & Examples](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)**
+
 - 11 practical tutorials (beginner to advanced)
 - 4 real-world use cases
 - 2 complete workflows
 - 5-week learning path
 
 ### 📖 **Need Full Reference?**
+
 → Read **[Complete User Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md)**
+
 - 2,500+ lines of comprehensive coverage
 - All 12 conversation modes
 - 100+ API commands
@@ -71,7 +77,9 @@ What's your first question?"
 - Complete glossary
 
 ### 🧭 **Looking for Navigation?**
+
 → Check **[Documentation Index](./docs/DOCUMENTATION_INDEX_v27.0.0_EN.md)**
+
 - Quick-start paths for your role
 - Structured learning progression
 - Search by topic
@@ -81,13 +89,13 @@ What's your first question?"
 
 ## 🎯 QUICK NAVIGATION BY ROLE
 
-| Role | Start Here | Time | Result |
-|------|-----------|------|--------|
-| **👨‍💻 Developer** | [Install](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md) + [API Docs](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands) | 1 hour | Integrate with your tools |
-| **🎓 Learner** | [Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md) (all 11) | 3 hours | Master all features |
-| **🚀 Business** | [Use Cases](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-real-world-use-cases) | 1 hour | Practical workflow ideas |
-| **⚡ Power User** | [Full Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md) | 2 hours | Everything explained |
-| **🔬 Researcher** | [Cognitive Modules](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#cognitive-modules) | 1.5 hours | Deep architecture |
+| Role              | Start Here                                                                                                                     | Time      | Result                    |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | ------------------------- |
+| **👨‍💻 Developer**  | [Install](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md) + [API Docs](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands) | 1 hour    | Integrate with your tools |
+| **🎓 Learner**    | [Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md) (all 11)                                                        | 3 hours   | Master all features       |
+| **🚀 Business**   | [Use Cases](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-real-world-use-cases)                                           | 1 hour    | Practical workflow ideas  |
+| **⚡ Power User** | [Full Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md)                                                                       | 2 hours   | Everything explained      |
+| **🔬 Researcher** | [Cognitive Modules](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#cognitive-modules)                                               | 1.5 hours | Deep architecture         |
 
 ---
 
@@ -302,21 +310,25 @@ Quality:
 ## 🔗 QUICK LINKS
 
 ### Installation
+
 - [Install on Linux](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#linux-installation)
 - [Install on macOS](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#macos-installation)
 - [Install on Windows](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#windows-installation)
 
 ### Learning
+
 - [Beginner Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-beginner-tutorials)
 - [All 12 Modes](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#conversation-modes)
 - [Complete API](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands)
 
 ### Support
+
 - [FAQ](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#frequently-asked-questions)
 - [Troubleshooting](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#troubleshooting)
 - [Glossary](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#glossary)
 
 ### More
+
 - [Documentation Index](./docs/DOCUMENTATION_INDEX_v27.0.0_EN.md)
 - [GitHub Repository](https://github.com/titane/titane-infinity)
 - [Discord Community](https://discord.gg/titane)
@@ -328,6 +340,7 @@ Quality:
 ### ▶️ **THREE WAYS TO BEGIN**
 
 **Option 1: Install & Explore** (Quickest)
+
 ```bash
 # Your OS specific command above
 # Launch → explore → learn
@@ -365,7 +378,7 @@ Pick ONE:
 > **TITANE is most powerful when you're curious.**
 >
 > Try different modes, ask "weird" questions, upload files, explore Vision.
-> 
+>
 > The system learns from you. You learn from the system.
 >
 > That's where magic happens. ✨
@@ -376,9 +389,9 @@ Pick ONE:
 
 🔗 [GitHub](https://github.com/titane/titane-infinity) | 💬 [Discord](https://discord.gg/titane) | 📧 [Support](mailto:support@titane.dev)
 
-*Created with ❤️ by Humain Total Team | Maintained by Copilot*
+_Created with ❤️ by Humain Total Team | Maintained by Copilot_
 
-*Copyright © 2025 Humain Total / TITANE∞. Licensed under MIT + Open Source Cognition License.*
+_Copyright © 2025 Humain Total / TITANE∞. Licensed under MIT + Open Source Cognition License._
 
 ---
 

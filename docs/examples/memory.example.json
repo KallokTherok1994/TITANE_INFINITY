@@ -3,7 +3,7 @@
   "title": "TITANE∞ Memory Configuration Example",
   "description": "Configuration du système de mémoire triple (STM/MTM/LTM)",
   "version": "27.0.0",
-  
+
   "stm": {
     "enabled": true,
     "name": "Short-Term Memory (Mémoire Court Terme)",
@@ -19,7 +19,7 @@
       "persistent": false
     }
   },
-  
+
   "mtm": {
     "enabled": true,
     "name": "Medium-Term Memory (Mémoire Moyen Terme)",
@@ -30,7 +30,7 @@
       "minPatternOccurrences": 3,
       "coherenceThreshold": 0.85,
       "autoPromoteToLTM": true,
-      "promotionThreshold": 0.90
+      "promotionThreshold": 0.9
     },
     "storage": {
       "type": "sqlite",
@@ -43,7 +43,7 @@
       "patternTypes": ["temporal", "semantic", "behavioral"]
     }
   },
-  
+
   "ltm": {
     "enabled": true,
     "name": "Long-Term Memory (Mémoire Long Terme)",
@@ -77,7 +77,7 @@
       "saltLength": 32
     }
   },
-  
+
   "global": {
     "memoryLimit": {
       "enabled": true,

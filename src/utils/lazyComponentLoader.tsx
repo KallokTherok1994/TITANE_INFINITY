@@ -42,8 +42,12 @@ export function lazyComponent<P extends object = {}>(
   importFn: () => Promise<{ default: ComponentType<P> }>,
   options: LazyComponentOptions = {}
 ): React.LazyExoticComponent<ComponentType<P>> {
-  const { timeoutMs = 10000, label = 'Component', verbose = false, retryOnTimeout = false } =
-    options;
+  const {
+    timeoutMs = 10000,
+    label = 'Component',
+    verbose = false,
+    retryOnTimeout = false,
+  } = options;
 
   if (verbose) {
     logger.debug(`[lazyComponent] Loading: ${label}`);

@@ -14,15 +14,16 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 ## 📖 GUIDE RAPIDE - CHOISISSEZ VOTRE PARCOURS
 
 ### 🟢 JE SUIS DÉBUTANT (Jamais utilisé TITANE)
+
 **Temps estimé: 30 minutes pour être opérationnel**
 
 **Ordre de lecture recommandé:**
+
 1. **→** Commencez par [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
    - Section: **🎯 INTRODUCTION** (5 min)
    - Section: **🚀 INSTALLATION & DÉMARRAGE** (10 min)
    - Section: **🖥️ INTERFACE PRINCIPALE** (5 min)
    - Section: **💬 CHAT IA** (5 min)
-   
 2. **→** Puis lisez [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
    - Section: **🟢 TUTORIELS DÉBUTANT** (15 min)
    - 3 tutoriels courts pour maîtriser les bases
@@ -35,6 +36,7 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 ---
 
 ### 🟡 JE SUIS DÉVELOPPEUR (Expérience tech)
+
 **Temps estimé: 1-2 jours pour maîtrise complète**
 
 **Ordre de lecture recommandé:**
@@ -74,6 +76,7 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 ---
 
 ### 🔴 JE SUIS POWER USER (Expérience avancée)
+
 **Temps estimé: 1-2 semaines pour expertise complète**
 
 **Parcours d'apprentissage:**
@@ -99,6 +102,7 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
    - Optimisez pour votre cas d'usage
 
 **Ressources complémentaires:**
+
 - [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
   - Section: **🔴 TUTORIELS AVANCÉ**
   - Section: **🎯 CAS D'USAGE RÉELS**
@@ -113,54 +117,57 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 ## 📂 STRUCTURE DOCUMENTATION
 
 ### **Fichier 1: MANUEL_UTILISATEUR_COMPLET_v27.0.0.md** (37 KB)
+
 **Référence complète de toutes les fonctionnalités TITANE**
 
-| Section | Contenu | Longueur |
-|---------|---------|----------|
-| 🎯 Introduction | Qu'est-ce que TITANE, qui l'utilise, capacités | 500 lignes |
-| 🚀 Installation & Démarrage | Démarrage rapide, configurations | 400 lignes |
-| 🖥️ Interface Principale | Layout UI, sections, navation | 600 lignes |
-| 💬 Chat IA | Système conversationnel complet | 700 lignes |
-| 🔄 Modes de Conversation | Tous les 12+ modes détaillés | 850 lignes |
-| 🧠 Système de Mémoire | STM/MTM/LTM expliqué | 700 lignes |
-| 👁️ Vision & Perception | Webcam, analyse visuelle | 500 lignes |
-| 🧮 Modules Cognitifs | 13 modules cognitive cores | 750 lignes |
-| 📈 Progression & XP | Système XP, achievements | 550 lignes |
-| ⚙️ Paramètres & Configuration | 9 sections settings | 600 lignes |
-| 🐛 Dépannage & Support | Problèmes & solutions | 700 lignes |
-| ❓ FAQ | 30+ questions répondues | 550 lignes |
-| 📊 Extras | Specs, shortcuts, tips | 400 lignes |
+| Section                       | Contenu                                        | Longueur   |
+| ----------------------------- | ---------------------------------------------- | ---------- |
+| 🎯 Introduction               | Qu'est-ce que TITANE, qui l'utilise, capacités | 500 lignes |
+| 🚀 Installation & Démarrage   | Démarrage rapide, configurations               | 400 lignes |
+| 🖥️ Interface Principale       | Layout UI, sections, navation                  | 600 lignes |
+| 💬 Chat IA                    | Système conversationnel complet                | 700 lignes |
+| 🔄 Modes de Conversation      | Tous les 12+ modes détaillés                   | 850 lignes |
+| 🧠 Système de Mémoire         | STM/MTM/LTM expliqué                           | 700 lignes |
+| 👁️ Vision & Perception        | Webcam, analyse visuelle                       | 500 lignes |
+| 🧮 Modules Cognitifs          | 13 modules cognitive cores                     | 750 lignes |
+| 📈 Progression & XP           | Système XP, achievements                       | 550 lignes |
+| ⚙️ Paramètres & Configuration | 9 sections settings                            | 600 lignes |
+| 🐛 Dépannage & Support        | Problèmes & solutions                          | 700 lignes |
+| ❓ FAQ                        | 30+ questions répondues                        | 550 lignes |
+| 📊 Extras                     | Specs, shortcuts, tips                         | 400 lignes |
 
 **Total: 3,500+ lignes**
 
 ### **Fichier 2: GUIDE_INSTALLATION_SETUP_v27.0.0.md** (19 KB)
+
 **Installation détaillée et configuration pour tous les OS**
 
-| Section | Contenu | Longueur |
-|---------|---------|----------|
-| 📋 Prérequis | Requirements, dépendances | 300 lignes |
-| 🐧 Linux | AppImage, DEB, source | 400 lignes |
-| 🍎 macOS | DMG, Homebrew, Silicon | 350 lignes |
-| 🪟 Windows | MSI, portable, Winget, source | 400 lignes |
-| ⚙️ Configuration Initiale | 4-step setup wizard | 350 lignes |
-| 🔧 Providers IA | Ollama, Gemini, Local setup | 300 lignes |
-| ⚡ Performance | GPU, tokens, cache, optimization | 250 lignes |
-| 🐛 Troubleshooting | 8+ problèmes courants | 250 lignes |
+| Section                   | Contenu                          | Longueur   |
+| ------------------------- | -------------------------------- | ---------- |
+| 📋 Prérequis              | Requirements, dépendances        | 300 lignes |
+| 🐧 Linux                  | AppImage, DEB, source            | 400 lignes |
+| 🍎 macOS                  | DMG, Homebrew, Silicon           | 350 lignes |
+| 🪟 Windows                | MSI, portable, Winget, source    | 400 lignes |
+| ⚙️ Configuration Initiale | 4-step setup wizard              | 350 lignes |
+| 🔧 Providers IA           | Ollama, Gemini, Local setup      | 300 lignes |
+| ⚡ Performance            | GPU, tokens, cache, optimization | 250 lignes |
+| 🐛 Troubleshooting        | 8+ problèmes courants            | 250 lignes |
 
 **Total: 2,000+ lignes**
 
 ### **Fichier 3: TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md** (20 KB)
+
 **Tutoriels pratiques et exemples pour tous les niveaux**
 
-| Section | Contenu | Longueur |
-|---------|---------|----------|
-| 🟢 Tutoriels Débutant | 3 tutoriels × 5-10 min | 300 lignes |
-| 🟡 Tutoriels Intermédiaire | 4 tutoriels × 8-20 min | 400 lignes |
-| 🔴 Tutoriels Avancé | 3 tutoriels × 15-20 min | 400 lignes |
-| 🎯 Cas d'Usage Réels | 4 exemples concrets | 350 lignes |
-| 🔄 Workflows Complets | 2 workflows end-to-end | 300 lignes |
-| 💡 Tips & Tricks | 6 techniques avancées | 250 lignes |
-| 🎓 Learning Path | 5-semaines progression | 200 lignes |
+| Section                    | Contenu                 | Longueur   |
+| -------------------------- | ----------------------- | ---------- |
+| 🟢 Tutoriels Débutant      | 3 tutoriels × 5-10 min  | 300 lignes |
+| 🟡 Tutoriels Intermédiaire | 4 tutoriels × 8-20 min  | 400 lignes |
+| 🔴 Tutoriels Avancé        | 3 tutoriels × 15-20 min | 400 lignes |
+| 🎯 Cas d'Usage Réels       | 4 exemples concrets     | 350 lignes |
+| 🔄 Workflows Complets      | 2 workflows end-to-end  | 300 lignes |
+| 💡 Tips & Tricks           | 6 techniques avancées   | 250 lignes |
+| 🎓 Learning Path           | 5-semaines progression  | 200 lignes |
 
 **Total: 2,000+ lignes**
 
@@ -171,48 +178,59 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 ### **Par Thématique**
 
 **Installation & Setup**
+
 - → [GUIDE_INSTALLATION_SETUP_v27.0.0.md](./GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Toutes les méthodes d'installation
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-installation--démarrage](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Démarrage rapide
 
 **Chat & Conversation**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-chat-ia--système-conversationnel](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - System complet
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modes-de-conversation](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les modes (12+)
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-débutant](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Premiers pas
 
 **Mémoire & Persistance**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-système-de-mémoire](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - STM/MTM/LTM expliqué
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Maîtrise mémoire
 
 **Vision & Webcam**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-vision--perception](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Vue complète
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Tutorial Vision
 
 **Modules Cognitifs**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modules-cognitifs](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les 13 modules
 
 **Progression & XP**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-progression--xp](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Système complet
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Progression mastery
 
 **Paramètres & Configuration**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-paramètres--configuration](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 9 sections settings
 - → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-configuration-initiale](./GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Setup wizard
 - → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-setup-providers-ia](./GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Providers config
 
 **Dépannage & Support**
+
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-dépannage--support](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Problèmes généraux
 - → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-faq](./MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 30+ questions
 - → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-troubleshooting-installation](./GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Problèmes installation
 
 **API & Développement**
+
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-avancé](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - API Tauri & customs
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Exemples concrets
 
 **Workflows & Cas d'Usage**
+
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 4 cas réels
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-workflows-complets](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 2 workflows end-to-end
 
 **Performance & Optimisation**
+
 - → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-optimisation-performance](./GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Optimisation complète
 - → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tips--tricks](./TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 6 tips avancés
 
@@ -220,31 +238,32 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 
 ## 📊 STATISTIQUES DOCUMENTATION
 
-| Métrique | Valeur |
-|----------|--------|
-| **Total Lignes** | 7,500+ |
-| **Total Fichiers** | 3 |
-| **Sections** | 100+ |
-| **Tutoriels** | 11 (3 débutant + 4 intermédiaire + 3 avancé) |
-| **Cas d'Usage** | 4 (réels) |
-| **Workflows** | 2 (complets) |
-| **FAQ Items** | 30+ |
-| **Tips & Tricks** | 6 |
-| **Problèmes Troubleshooting** | 12+ |
-| **Modules Cognitifs Documentés** | 13 |
-| **Chat Modes Documentés** | 12+ |
-| **OS Couverts** | 3 (Linux, macOS, Windows) |
-| **Méthodes Installation** | 4+ par OS |
-| **Providers IA** | 4 (Ollama, Gemini, Local, Tauri) |
-| **Niveaux Audience** | 4 (Débutant, Intermédiaire, Avancé, Développeur) |
-| **Language** | 100% Français |
-| **Format** | Markdown (Git-friendly) |
+| Métrique                         | Valeur                                           |
+| -------------------------------- | ------------------------------------------------ |
+| **Total Lignes**                 | 7,500+                                           |
+| **Total Fichiers**               | 3                                                |
+| **Sections**                     | 100+                                             |
+| **Tutoriels**                    | 11 (3 débutant + 4 intermédiaire + 3 avancé)     |
+| **Cas d'Usage**                  | 4 (réels)                                        |
+| **Workflows**                    | 2 (complets)                                     |
+| **FAQ Items**                    | 30+                                              |
+| **Tips & Tricks**                | 6                                                |
+| **Problèmes Troubleshooting**    | 12+                                              |
+| **Modules Cognitifs Documentés** | 13                                               |
+| **Chat Modes Documentés**        | 12+                                              |
+| **OS Couverts**                  | 3 (Linux, macOS, Windows)                        |
+| **Méthodes Installation**        | 4+ par OS                                        |
+| **Providers IA**                 | 4 (Ollama, Gemini, Local, Tauri)                 |
+| **Niveaux Audience**             | 4 (Débutant, Intermédiaire, Avancé, Développeur) |
+| **Language**                     | 100% Français                                    |
+| **Format**                       | Markdown (Git-friendly)                          |
 
 ---
 
 ## 🎓 LEARNING PATHS RECOMMANDÉS
 
 ### **Path 1: Débutant → Utilisateur Avancé (1 semaine)**
+
 ```
 Jour 1: Installation + Interface (2h)
 Jour 2: Chat & Modes (2h)
@@ -254,9 +273,11 @@ Jour 5: Tutoriels Débutant (2h)
 Jour 6: Tutoriels Intermédiaire (3h)
 Jour 7: Cas d'Usage & Workflows (3h)
 ```
+
 **Résultat:** Vous maîtrisez TITANE ✅
 
 ### **Path 2: Développeur → Expert (3-5 jours)**
+
 ```
 Day 1: Installation + Architecture (3h)
 Day 2: Chat System + Modes (2h)
@@ -264,9 +285,11 @@ Day 3: Memory + Cognitive Modules (2h)
 Day 4: API Tauri + Custom Modes (3h)
 Day 5: Workflows + Optimization (2h)
 ```
+
 **Résultat:** Vous pouvez développer avec TITANE ✅
 
 ### **Path 3: Crash Course (2 heures)**
+
 ```
 Intro: Qu'est-ce que TITANE? (10 min)
 Install: Setup rapide (15 min)
@@ -276,6 +299,7 @@ Modes: Overview des modes (10 min)
 Memory: Concept rapide (5 min)
 Quick Win: Faire quelque chose! (60 min)
 ```
+
 **Résultat:** Vous avez les bases ✅
 
 ---
@@ -302,18 +326,21 @@ Quick Win: Faire quelque chose! (60 min)
 ## 🚀 PROCHAINES ÉTAPES
 
 ### **Immédiat (Maintenant)**
+
 - [ ] Téléchargez/clonez TITANE
 - [ ] Lisez le fichier approprié pour votre niveau
 - [ ] Installez TITANE
 - [ ] Lancez votre première conversation
 
 ### **Court terme (Cette semaine)**
+
 - [ ] Explorez tous les modes de chat
 - [ ] Découvrez le système de mémoire
 - [ ] Testez vision & webcam
 - [ ] Lisez les tutoriels pertinents
 
 ### **Moyen terme (Ce mois)**
+
 - [ ] Suivez le learning path complet
 - [ ] Appliquez aux vos use-cases
 - [ ] Optimisez votre configuration
@@ -324,17 +351,20 @@ Quick Win: Faire quelque chose! (60 min)
 ## 📞 SUPPORT & RESSOURCES
 
 ### **Documentation**
+
 - 📖 Manuel Utilisateur Complet - MANUEL_UTILISATEUR_COMPLET_v27.0.0.md
 - 📦 Guide Installation - GUIDE_INSTALLATION_SETUP_v27.0.0.md
 - 🎓 Tutoriels & Exemples - TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md
 - 📚 Cet Index - DOCUMENTATION_INDEX_v27.0.0.md
 
 ### **Communauté**
+
 - 💬 Discord - Rejoignez la communauté
 - 🐛 GitHub Issues - Reportez les bugs
 - 💡 GitHub Discussions - Proposez des améliorations
 
 ### **Autres**
+
 - 🌐 Website - En développement
 - 📧 Email Support - contact@titane-infinity.ai
 - 💻 GitHub Repo - TITANE_INFINITY
@@ -367,7 +397,7 @@ Vous avez maintenant accès à la documentation complète de TITANE∞ v27.0.0. 
 ✅ 2 workflows complets  
 ✅ 30+ questions FAQ répondues  
 ✅ 12+ problèmes troubleshooting solubles  
-✅ Couverture 100% des fonctionnalités  
+✅ Couverture 100% des fonctionnalités
 
 **De débutant à expert en 1-2 semaines!**
 

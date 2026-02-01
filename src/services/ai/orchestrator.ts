@@ -117,7 +117,12 @@ class AIOrchestrator {
   ];
 
   // v37.0.0: Lazy providers (cloud, loaded on demand)
-  private lazyProviderNames: LazyProviderName[] = ['claude', 'openai', 'copilot', 'gemini'];
+  private lazyProviderNames: LazyProviderName[] = [
+    'claude',
+    'openai',
+    'copilot',
+    'gemini',
+  ];
   private loadedProviders: Map<string, AIProvider> = new Map();
 
   // Combined providers list (for compatibility)
@@ -172,8 +177,8 @@ class AIOrchestrator {
 
   constructor() {
     // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
-    this.eagerProviders = this.eagerProviders.filter(
-      (provider): provider is AIProvider => Boolean(provider)
+    this.eagerProviders = this.eagerProviders.filter((provider): provider is AIProvider =>
+      Boolean(provider)
     );
     this.initializeProviderStats();
     // En contexte tests (Vitest), on évite tout side-effect à l'import :
@@ -909,9 +914,12 @@ class AIOrchestrator {
         attempts++;
         // v37.0.0: Lazy-load cloud providers on first use
         let provider = this.providers.find(p => p.name === providerName);
-        
+
         // If not found in eager list, try lazy-loading
-        if (!provider && this.lazyProviderNames.includes(providerName as LazyProviderName)) {
+        if (
+          !provider &&
+          this.lazyProviderNames.includes(providerName as LazyProviderName)
+        ) {
           try {
             logger.debug(`📦 Lazy-loading provider: ${providerName}`);
             provider = await getOrLoadProvider(providerName as LazyProviderName);
@@ -922,7 +930,7 @@ class AIOrchestrator {
             continue;
           }
         }
-        
+
         if (!provider) continue;
 
         const stats = this.providerStats.get(providerName);
@@ -1656,7 +1664,10 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     try {
       // v22Ω OPT12: Update provider availability using cache (parallel)
       // v37.0.0: Check both eager and loaded providers
-      const allProviders = [...this.eagerProviders, ...Array.from(this.loadedProviders.values())];
+      const allProviders = [
+        ...this.eagerProviders,
+        ...Array.from(this.loadedProviders.values()),
+      ];
       const availabilityChecks = allProviders.map(async provider => {
         try {
           const isAvailable = await this.checkAvailabilityWithCache(provider);

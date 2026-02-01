@@ -16,16 +16,17 @@ export const useUIMode = () => useSingularityState(state => state.ui.mode);
 export const useUITheme = () => useSingularityState(state => state.ui.theme);
 export const useSoundEnabled = () => useSingularityState(state => state.ui.soundEnabled);
 export const useMicEnabled = () => useSingularityState(state => state.ui.micEnabled);
-export const useGlowIntensity = () => useSingularityState(state => state.ui.glowIntensity);
-export const useMotionEnabled = () => useSingularityState(state => state.ui.motionEnabled);
+export const useGlowIntensity = () =>
+  useSingularityState(state => state.ui.glowIntensity);
+export const useMotionEnabled = () =>
+  useSingularityState(state => state.ui.motionEnabled);
 export const useFPS = () => useSingularityState(state => state.ui.fps);
 
 /**
  * Complete UI state (shallow equality)
  * Use when component needs multiple UI values
  */
-export const useUIState = () =>
-  useSingularityState(useShallow(state => state.ui));
+export const useUIState = () => useSingularityState(useShallow(state => state.ui));
 
 // ═══════════════════════════════════════════════════════════════
 // AI STATE SELECTORS
@@ -34,20 +35,21 @@ export const useUIState = () =>
 export const useAIModel = () => useSingularityState(state => state.ai.model);
 export const useAIStatus = () => useSingularityState(state => state.ai.status);
 export const useAIError = () => useSingularityState(state => state.ai.error);
-export const useFallbackActive = () => useSingularityState(state => state.ai.fallbackActive);
+export const useFallbackActive = () =>
+  useSingularityState(state => state.ai.fallbackActive);
 
 /**
  * Complete AI state (shallow equality)
  * Use when component needs multiple AI values
  */
-export const useAIState = () =>
-  useSingularityState(useShallow(state => state.ai));
+export const useAIState = () => useSingularityState(useShallow(state => state.ai));
 
 // ═══════════════════════════════════════════════════════════════
 // META-MODE STATE SELECTORS
 // ═══════════════════════════════════════════════════════════════
 
-export const useCurrentMode = () => useSingularityState(state => state.metaMode.currentMode);
+export const useCurrentMode = () =>
+  useSingularityState(state => state.metaMode.currentMode);
 export const usePreviousMode = () =>
   useSingularityState(state => state.metaMode.previousMode);
 export const useIsTransitioning = () =>
@@ -116,9 +118,7 @@ export const useEngineLoading = (engine: EngineName) =>
  * Generic engine state selector (data + loading, shallow equality)
  */
 export const useEngineState = <T extends EngineName>(engine: T) =>
-  useSingularityState(
-    useShallow(state => state.enginesData[engine])
-  ) as {
+  useSingularityState(useShallow(state => state.enginesData[engine])) as {
     data: EngineDataMap[T] | null;
     loading: boolean;
   };
@@ -293,7 +293,8 @@ export const useAllEnginesLoaded = () =>
  */
 export const useLoadedEnginesCount = () =>
   useSingularityState(
-    state => Object.values(state.enginesData).filter(engine => engine.data !== null).length
+    state =>
+      Object.values(state.enginesData).filter(engine => engine.data !== null).length
   );
 
 /**

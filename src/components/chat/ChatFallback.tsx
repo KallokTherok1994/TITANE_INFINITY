@@ -44,7 +44,10 @@ export interface ChatFallbackProps {
 // CONSTANTS
 // ─────────────────────────────────────────────────────────────────
 
-const REASON_MESSAGES: Record<ChatFallbackReason, { title: string; description: string }> = {
+const REASON_MESSAGES: Record<
+  ChatFallbackReason,
+  { title: string; description: string }
+> = {
   'empty-response': {
     title: 'Réponse vide reçue',
     description: "L'IA a répondu mais le contenu est vide. Veuillez réessayer.",
@@ -59,7 +62,8 @@ const REASON_MESSAGES: Record<ChatFallbackReason, { title: string; description: 
   },
   'backend-down': {
     title: 'Moteur indisponible',
-    description: "Le service d'IA ne répond pas. Vérifiez votre connexion ou changez de provider.",
+    description:
+      "Le service d'IA ne répond pas. Vérifiez votre connexion ou changez de provider.",
   },
   'network-error': {
     title: 'Erreur réseau',

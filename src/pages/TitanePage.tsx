@@ -281,89 +281,97 @@ const StatusIndicator: React.FC<StatusIndicatorProps> = memo(({ active, label })
 ));
 StatusIndicator.displayName = 'StatusIndicator';
 
-const ConversationMessage = memo(({
-  message,
-  isLoading,
-  onCopy,
-  onRetry,
-  onDelete,
-}: {
-  message: ConversationMessageItem;
-  isLoading: boolean;
-  onCopy: (content: string) => void;
-  onRetry: (content: string) => void;
-  onDelete: (id: string) => void;
-}) => {
-  const handleCopy = useCallback(() => onCopy(message.content), [message.content, onCopy]);
-  const handleRetry = useCallback(() => onRetry(message.content), [message.content, onRetry]);
-  const handleDelete = useCallback(() => {
-    if (message.id) {
-      onDelete(message.id);
-    }
-  }, [message.id, onDelete]);
+const ConversationMessage = memo(
+  ({
+    message,
+    isLoading,
+    onCopy,
+    onRetry,
+    onDelete,
+  }: {
+    message: ConversationMessageItem;
+    isLoading: boolean;
+    onCopy: (content: string) => void;
+    onRetry: (content: string) => void;
+    onDelete: (id: string) => void;
+  }) => {
+    const handleCopy = useCallback(
+      () => onCopy(message.content),
+      [message.content, onCopy]
+    );
+    const handleRetry = useCallback(
+      () => onRetry(message.content),
+      [message.content, onRetry]
+    );
+    const handleDelete = useCallback(() => {
+      if (message.id) {
+        onDelete(message.id);
+      }
+    }, [message.id, onDelete]);
 
-  return (
-    <div className={`conversation-message ${message.role}`}>
-      <div className="conversation-message-avatar">
-        {message.role === 'user' ? '👤' : '🧠'}
-      </div>
-      <div className="conversation-message-content">
-        <div className="conversation-message-header">
-          <span className="conversation-message-role">
-            {message.role === 'user' ? 'Vous' : 'TITANE'}
-          </span>
-          {message.metadata?.tags && message.metadata.tags.length > 0 && (
-            <div className="conversation-message-tags">
-              {message.metadata.tags.slice(0, 3).map((tag, i) => (
-                <span key={i} className="conversation-tag">
-                  {tag}
-                </span>
-              ))}
+    return (
+      <div className={`conversation-message ${message.role}`}>
+        <div className="conversation-message-avatar">
+          {message.role === 'user' ? '👤' : '🧠'}
+        </div>
+        <div className="conversation-message-content">
+          <div className="conversation-message-header">
+            <span className="conversation-message-role">
+              {message.role === 'user' ? 'Vous' : 'TITANE'}
+            </span>
+            {message.metadata?.tags && message.metadata.tags.length > 0 && (
+              <div className="conversation-message-tags">
+                {message.metadata.tags.slice(0, 3).map((tag, i) => (
+                  <span key={i} className="conversation-tag">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+          <div className="conversation-message-text">{message.content}</div>
+          {message.metadata?.intention && (
+            <div className="conversation-message-meta">
+              <span className="meta-intention">{message.metadata.intention}</span>
             </div>
           )}
-        </div>
-        <div className="conversation-message-text">{message.content}</div>
-        {message.metadata?.intention && (
-          <div className="conversation-message-meta">
-            <span className="meta-intention">{message.metadata.intention}</span>
-          </div>
-        )}
 
-        <div className="conversation-message-actions">
-          <button
-            type="button"
-            className="conversation-message-action"
-            onClick={handleCopy}
-            title="Copier le message"
-          >
-            📋 Copier
-          </button>
-
-          {message.role === 'user' && (
+          <div className="conversation-message-actions">
             <button
               type="button"
               className="conversation-message-action"
-              onClick={handleRetry}
-              title="Renvoyer ce message"
-              disabled={isLoading}
+              onClick={handleCopy}
+              title="Copier le message"
             >
-              🔄 Retry
+              📋 Copier
             </button>
-          )}
 
-          <button
-            type="button"
-            className="conversation-message-action danger"
-            onClick={handleDelete}
-            title="Supprimer ce message"
-          >
-            🗑️
-          </button>
+            {message.role === 'user' && (
+              <button
+                type="button"
+                className="conversation-message-action"
+                onClick={handleRetry}
+                title="Renvoyer ce message"
+                disabled={isLoading}
+              >
+                🔄 Retry
+              </button>
+            )}
+
+            <button
+              type="button"
+              className="conversation-message-action danger"
+              onClick={handleDelete}
+              title="Supprimer ce message"
+            >
+              🗑️
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 ConversationMessage.displayName = 'ConversationMessage';
 
@@ -486,7 +494,8 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   );
 
   const selectedProviderLabel = useMemo(
-    () => AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
+    () =>
+      AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
     [selectedProvider]
   );
 
@@ -785,12 +794,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
     [setMode]
   );
 
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
-    },
-    []
-  );
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
 
   const handleFilterRoleChange = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -819,12 +825,9 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
     setCameraActive(prev => !prev);
   }, []);
 
-  const handleInputChange = useCallback(
-    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-      setInputValue(e.target.value);
-    },
-    []
-  );
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+  }, []);
 
   const handleCloseModeBuilder = useCallback(() => {
     setShowModeBuilder(false);
@@ -920,7 +923,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
               onClick={handleVoiceInput}
               title="Reconnaissance vocale"
-              aria-label={isRecording ? 'Arrêter l\'enregistrement' : 'Démarrer reconnaissance vocale'}
+              aria-label={
+                isRecording
+                  ? "Arrêter l'enregistrement"
+                  : 'Démarrer reconnaissance vocale'
+              }
               aria-pressed={isRecording}
             >
               🎤
@@ -1002,14 +1009,11 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
               <div className="conversation-empty-icon">🧠⚡∞</div>
               <h3>TITANE∞ est prêt à converser</h3>
               <p>
-                Mode actuel:{' '}
-                <strong>{currentModeLabel}</strong>
+                Mode actuel: <strong>{currentModeLabel}</strong>
                 <br />
                 Provider: <strong>{selectedProviderLabel}</strong>
               </p>
-              <div className="conversation-empty-suggestions">
-                {suggestionButtons}
-              </div>
+              <div className="conversation-empty-suggestions">{suggestionButtons}</div>
             </div>
           )}
 
@@ -1076,10 +1080,7 @@ const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
 
         {/* ═══ MODE BUILDER MODAL ═══ */}
         {showModeBuilder && (
-          <ModeBuilder
-            onClose={handleCloseModeBuilder}
-            onSave={handleSaveCustomMode}
-          />
+          <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
         )}
       </div>
     </div>
@@ -1583,200 +1584,199 @@ interface ProgressionSectionProps {
   stats: TitaneStats;
 }
 
-const ProgressionSection: React.FC<ProgressionSectionProps> = memo(({
-  progression: _progression,
-  stats,
-}) => {
-  // Current stats for achievement progress
-  const currentStats = useMemo(
-    () => ({
-      level: stats.level,
-      totalXP: stats.totalXP,
-      messageCount: 1247, // From real data or store
-      modesUsed: 4,
-    }),
-    [stats]
-  );
+const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
+  ({ progression: _progression, stats }) => {
+    // Current stats for achievement progress
+    const currentStats = useMemo(
+      () => ({
+        level: stats.level,
+        totalXP: stats.totalXP,
+        messageCount: 1247, // From real data or store
+        modesUsed: 4,
+      }),
+      [stats]
+    );
 
-  // Filter achievements by category
-  const categories = useMemo(
-    () => ({
-      conversation: ACHIEVEMENTS.filter(a => a.category === 'conversation'),
-      progression: ACHIEVEMENTS.filter(a => a.category === 'progression'),
-      exploration: ACHIEVEMENTS.filter(a => a.category === 'exploration'),
-      mastery: ACHIEVEMENTS.filter(a => a.category === 'mastery'),
-    }),
-    []
-  );
+    // Filter achievements by category
+    const categories = useMemo(
+      () => ({
+        conversation: ACHIEVEMENTS.filter(a => a.category === 'conversation'),
+        progression: ACHIEVEMENTS.filter(a => a.category === 'progression'),
+        exploration: ACHIEVEMENTS.filter(a => a.category === 'exploration'),
+        mastery: ACHIEVEMENTS.filter(a => a.category === 'mastery'),
+      }),
+      []
+    );
 
-  return (
-    <div className="titane-section titane-section-progression">
-      <TSectionHeader
-        title="⚡ Progression & XP"
-        subtitle="Système XP, milestones, talents et achievements"
-      />
-
-      {/* XP Progress Bar */}
-      <div style={{ marginBottom: spacing[6] }}>
-        <XPProgressBar
-          currentXP={stats.totalXP}
-          level={stats.level}
-          requiredXP={(stats.level + 1) * 10000}
+    return (
+      <div className="titane-section titane-section-progression">
+        <TSectionHeader
+          title="⚡ Progression & XP"
+          subtitle="Système XP, milestones, talents et achievements"
         />
+
+        {/* XP Progress Bar */}
+        <div style={{ marginBottom: spacing[6] }}>
+          <XPProgressBar
+            currentXP={stats.totalXP}
+            level={stats.level}
+            requiredXP={(stats.level + 1) * 10000}
+          />
+        </div>
+
+        {/* Milestones & Talents */}
+        <Grid columns={2} gap={4} style={{ marginBottom: spacing[6] }}>
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>Milestones</h3>
+            <Stack direction="vertical" gap={3}>
+              <TMetric
+                label="Niveau Atteint"
+                value={stats.level.toString()}
+                color="primary"
+              />
+              <TMetric
+                label="Total XP"
+                value={stats.totalXP.toLocaleString()}
+                color="success"
+              />
+              <TMetric
+                label="Prochain Niveau"
+                value={`${((stats.totalXP % 10000) / 10000) * 100}%`}
+              />
+            </Stack>
+          </Card>
+
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
+              <TBadge variant="success">Architecte</TBadge>
+              <TBadge variant="info">Optimiseur</TBadge>
+              <TBadge variant="info">Évolutionniste</TBadge>
+              <TBadge variant="success">Pédagogue</TBadge>
+            </div>
+          </Card>
+        </Grid>
+
+        {/* Achievements Grid */}
+        <div style={{ marginBottom: spacing[6] }}>
+          <h3 style={{ marginBottom: spacing[4] }}>🏆 Achievements</h3>
+
+          {/* Mastery (Legendary) */}
+          <div style={{ marginBottom: spacing[6] }}>
+            <h4
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginBottom: spacing[3],
+              }}
+            >
+              👑 Maîtrise
+            </h4>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: spacing[4],
+              }}
+            >
+              {categories.mastery.map(achievement => (
+                <AchievementCard
+                  key={achievement.id}
+                  achievement={achievement}
+                  currentStats={currentStats}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Progression */}
+          <div style={{ marginBottom: spacing[6] }}>
+            <h4
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginBottom: spacing[3],
+              }}
+            >
+              ⚡ Progression
+            </h4>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: spacing[4],
+              }}
+            >
+              {categories.progression.map(achievement => (
+                <AchievementCard
+                  key={achievement.id}
+                  achievement={achievement}
+                  currentStats={currentStats}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Conversation */}
+          <div style={{ marginBottom: spacing[6] }}>
+            <h4
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginBottom: spacing[3],
+              }}
+            >
+              💬 Communication
+            </h4>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: spacing[4],
+              }}
+            >
+              {categories.conversation.map(achievement => (
+                <AchievementCard
+                  key={achievement.id}
+                  achievement={achievement}
+                  currentStats={currentStats}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Exploration */}
+          <div>
+            <h4
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginBottom: spacing[3],
+              }}
+            >
+              🧭 Exploration
+            </h4>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: spacing[4],
+              }}
+            >
+              {categories.exploration.map(achievement => (
+                <AchievementCard
+                  key={achievement.id}
+                  achievement={achievement}
+                  currentStats={currentStats}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-
-      {/* Milestones & Talents */}
-      <Grid columns={2} gap={4} style={{ marginBottom: spacing[6] }}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Milestones</h3>
-          <Stack direction="vertical" gap={3}>
-            <TMetric
-              label="Niveau Atteint"
-              value={stats.level.toString()}
-              color="primary"
-            />
-            <TMetric
-              label="Total XP"
-              value={stats.totalXP.toLocaleString()}
-              color="success"
-            />
-            <TMetric
-              label="Prochain Niveau"
-              value={`${((stats.totalXP % 10000) / 10000) * 100}%`}
-            />
-          </Stack>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
-            <TBadge variant="success">Architecte</TBadge>
-            <TBadge variant="info">Optimiseur</TBadge>
-            <TBadge variant="info">Évolutionniste</TBadge>
-            <TBadge variant="success">Pédagogue</TBadge>
-          </div>
-        </Card>
-      </Grid>
-
-      {/* Achievements Grid */}
-      <div style={{ marginBottom: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>🏆 Achievements</h3>
-
-        {/* Mastery (Legendary) */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <h4
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[400],
-              marginBottom: spacing[3],
-            }}
-          >
-            👑 Maîtrise
-          </h4>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: spacing[4],
-            }}
-          >
-            {categories.mastery.map(achievement => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                currentStats={currentStats}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Progression */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <h4
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[400],
-              marginBottom: spacing[3],
-            }}
-          >
-            ⚡ Progression
-          </h4>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: spacing[4],
-            }}
-          >
-            {categories.progression.map(achievement => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                currentStats={currentStats}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Conversation */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <h4
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[400],
-              marginBottom: spacing[3],
-            }}
-          >
-            💬 Communication
-          </h4>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: spacing[4],
-            }}
-          >
-            {categories.conversation.map(achievement => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                currentStats={currentStats}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Exploration */}
-        <div>
-          <h4
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[400],
-              marginBottom: spacing[3],
-            }}
-          >
-            🧭 Exploration
-          </h4>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-              gap: spacing[4],
-            }}
-          >
-            {categories.exploration.map(achievement => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                currentStats={currentStats}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 ProgressionSection.displayName = 'ProgressionSection';
 
@@ -1959,9 +1959,7 @@ export const TitanePage: React.FC = () => {
                 <h1 className="text-2xl font-bold text-titanium-text-primary mb-1">
                   ⚡ TITANE
                 </h1>
-                <p className="text-sm text-titanium-text-secondary">
-                  Le Cœur du Système
-                </p>
+                <p className="text-sm text-titanium-text-secondary">Le Cœur du Système</p>
               </div>
             </div>
           </div>

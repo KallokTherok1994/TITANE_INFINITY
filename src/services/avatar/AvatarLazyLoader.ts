@@ -57,7 +57,7 @@ export async function loadThreeJSAvatarRenderer(timeoutMs = 8000): Promise<any> 
 
     const module = await Promise.race([
       import('@/modules/avatar/floating/ThreeJSAvatarRenderer').then(
-        (m) => m.ThreeJSAvatarRenderer
+        m => m.ThreeJSAvatarRenderer
       ),
       timeoutPromise,
     ]);
@@ -65,7 +65,9 @@ export async function loadThreeJSAvatarRenderer(timeoutMs = 8000): Promise<any> 
     avatarModuleCache.set(cacheKey, module);
 
     const duration = performance.now() - startTime;
-    logger.debug(`[AvatarLazyLoader] Loaded ThreeJSAvatarRenderer (${duration.toFixed(2)}ms)`);
+    logger.debug(
+      `[AvatarLazyLoader] Loaded ThreeJSAvatarRenderer (${duration.toFixed(2)}ms)`
+    );
 
     return module;
   } catch (error) {
@@ -107,7 +109,7 @@ export async function loadAvatarFloatingWindow(timeoutMs = 5000): Promise<any> {
 
     const module = await Promise.race([
       import('@/modules/avatar/floating/AvatarFloatingWindow').then(
-        (m) => m.AvatarFloatingWindow
+        m => m.AvatarFloatingWindow
       ),
       timeoutPromise,
     ]);
@@ -115,7 +117,9 @@ export async function loadAvatarFloatingWindow(timeoutMs = 5000): Promise<any> {
     avatarModuleCache.set(cacheKey, module);
 
     const duration = performance.now() - startTime;
-    logger.debug(`[AvatarLazyLoader] Loaded AvatarFloatingWindow (${duration.toFixed(2)}ms)`);
+    logger.debug(
+      `[AvatarLazyLoader] Loaded AvatarFloatingWindow (${duration.toFixed(2)}ms)`
+    );
 
     return module;
   } catch (error) {
@@ -156,14 +160,16 @@ export async function loadAvatarFloatingPopup(timeoutMs = 5000): Promise<any> {
     );
 
     const module = await Promise.race([
-      import('@/modules/avatar/floating/AvatarFloatingPopup').then((m) => m.default),
+      import('@/modules/avatar/floating/AvatarFloatingPopup').then(m => m.default),
       timeoutPromise,
     ]);
 
     avatarModuleCache.set(cacheKey, module);
 
     const duration = performance.now() - startTime;
-    logger.debug(`[AvatarLazyLoader] Loaded AvatarFloatingPopup (${duration.toFixed(2)}ms)`);
+    logger.debug(
+      `[AvatarLazyLoader] Loaded AvatarFloatingPopup (${duration.toFixed(2)}ms)`
+    );
 
     return module;
   } catch (error) {
@@ -205,7 +211,7 @@ export async function loadFullBodyAvatarHook(timeoutMs = 5000): Promise<any> {
 
     const module = await Promise.race([
       import('@/modules/avatar/fullbody/useFullBodyAvatar').then(
-        (m) => m.useFullBodyAvatar
+        m => m.useFullBodyAvatar
       ),
       timeoutPromise,
     ]);
@@ -213,7 +219,9 @@ export async function loadFullBodyAvatarHook(timeoutMs = 5000): Promise<any> {
     avatarModuleCache.set(cacheKey, module);
 
     const duration = performance.now() - startTime;
-    logger.debug(`[AvatarLazyLoader] Loaded useFullBodyAvatar (${duration.toFixed(2)}ms)`);
+    logger.debug(
+      `[AvatarLazyLoader] Loaded useFullBodyAvatar (${duration.toFixed(2)}ms)`
+    );
 
     return module;
   } catch (error) {
@@ -356,7 +364,9 @@ export function clearAvatarCache(): void {
  * Preload avatar modules for better UX
  * Call this when avatar will soon be needed (e.g., on button hover)
  */
-export async function preloadAvatarModules(mode: AvatarRenderingMode = 'floating-window'): Promise<void> {
+export async function preloadAvatarModules(
+  mode: AvatarRenderingMode = 'floating-window'
+): Promise<void> {
   try {
     await loadAvatarModuleByMode(mode, 15000);
     logger.debug(`[AvatarLazyLoader] Preloaded ${mode} module`);

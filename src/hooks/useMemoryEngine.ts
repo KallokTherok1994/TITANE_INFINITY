@@ -262,7 +262,9 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
   }, []);
 
   const memoizedAnalyzeEmotions = useCallback(
-    (content: string): {
+    (
+      content: string
+    ): {
       valence: number;
       intensity: number;
       energy: number;

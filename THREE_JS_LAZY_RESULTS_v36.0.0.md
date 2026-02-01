@@ -11,6 +11,7 @@
 ### Bundle Analysis (Before vs After)
 
 #### AVANT v36.0.0 (Baseline v35.0.0)
+
 ```
 Main Bundle: ~950 KB gzip
   - React vendor: 201.54 KB ✅
@@ -18,11 +19,12 @@ Main Bundle: ~950 KB gzip
   - Vendor utils: 88.29 KB ✅
   - Three.js: ~536 KB ❌ CHARGÉ AU BOOT
   - Service AI: ~60 KB ✅
-  
+
 Total Initial Load: ~950 KB gzip
 ```
 
 #### APRÈS v36.0.0 Phase 1 (Core Renderer Migration)
+
 ```
 Main Bundle: ~414 KB gzip (estimated)
   - React vendor: 201.54 KB ✅ (unchanged)
@@ -41,6 +43,7 @@ Total Initial Load: ~414 KB gzip (-56% !)
 ### Build Output Verification
 
 **Production Build**: ✅ SUCCESS
+
 ```bash
 NODE_ENV=production pnpm run build
 ✓ 2418 modules transformed.
@@ -48,6 +51,7 @@ NODE_ENV=production pnpm run build
 ```
 
 **Key Artifacts**:
+
 ```
 react-vendor-c3lmXmYu.js     808.98 KB → 201.54 KB gzip
 onnxruntime-BZCLyO-e.js      532.52 KB →  99.78 KB gzip
@@ -81,17 +85,20 @@ Three.js: NOT in main bundle ✅
 ### Files Remaining (8/10)
 
 **Priority 2: Rendering Systems**
+
 - [ ] PBRMaterialSystem.ts (8 KB)
 - [ ] StudioLightingRig.ts (6 KB)
 - [ ] PostProcessingPipeline.ts (7 KB)
 
 **Priority 3: Animation Systems**
+
 - [ ] VoiceReactionSystem.ts (5 KB)
 - [ ] AudioVisualSyncEngine.ts (4 KB)
 - [ ] BodyGestureFluidityEngine.ts (5 KB)
 - [ ] CameraDynamismEngine.ts (4 KB)
 
 **Priority 4: Integration**
+
 - [ ] appearanceFloatingIntegration.ts (6 KB)
 
 **Note**: Ces fichiers sont actuellement instanciés par ThreeJSAvatarRenderer APRÈS initialize(), donc ils reçoivent déjà le Three.js lazy-loaded via closures/props. Migration optionnelle pour cohérence.
@@ -102,10 +109,10 @@ Three.js: NOT in main bundle ✅
 
 ### Bundle Size
 
-| Metric | v35.0.0 | v36.0.0 Phase 1 | Improvement |
-|--------|---------|-----------------|-------------|
-| Main Bundle (gzip) | 950 KB | **414 KB** | **-536 KB (-56%)** ✅ |
-| Three.js (lazy) | Included | **536 KB** (separate) | Deferred |
+| Metric             | v35.0.0  | v36.0.0 Phase 1       | Improvement           |
+| ------------------ | -------- | --------------------- | --------------------- |
+| Main Bundle (gzip) | 950 KB   | **414 KB**            | **-536 KB (-56%)** ✅ |
+| Three.js (lazy)    | Included | **536 KB** (separate) | Deferred              |
 
 ### Performance Impact (Estimated)
 
@@ -152,12 +159,13 @@ Trade-off: -536 KB boot for +50-800ms avatar delay
 ### Migration Pattern Used
 
 #### AVANT (Static Import)
+
 ```typescript
 import * as THREE from 'three';
 
 export class ThreeJSAvatarRenderer {
   private scene: THREE.Scene;
-  
+
   constructor(canvas: HTMLCanvasElement) {
     this.scene = new THREE.Scene(); // ❌ Immediate usage
   }
@@ -165,6 +173,7 @@ export class ThreeJSAvatarRenderer {
 ```
 
 #### APRÈS (Lazy Import)
+
 ```typescript
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
@@ -172,11 +181,11 @@ export class ThreeJSAvatarRenderer {
   private THREE: typeof import('three') | null = null;
   private scene: any; // THREE.Scene
   private isInitialized = false;
-  
+
   constructor(canvas: HTMLCanvasElement) {
     // ✅ No Three.js usage
   }
-  
+
   async initialize(): Promise<void> {
     this.THREE = await loadThreeJS();
     const THREE = this.THREE;
@@ -256,6 +265,7 @@ export class ThreeJSAvatarRenderer {
 ### Phase 2: Optional Consistency Migration (2-3h)
 
 **Remaining Files** (8):
+
 ```
 Priority 2: Rendering Systems (21 KB)
   - PBRMaterialSystem.ts
@@ -273,6 +283,7 @@ Priority 4: Integration (6 KB)
 ```
 
 **Decision**: ⏸️ **PAUSE AVANT CONTINUER**
+
 - Current migration sufficient for 90% impact
 - Remaining files receive lazy-loaded Three.js via props
 - Full migration adds consistency but minimal bundle benefit
@@ -280,11 +291,13 @@ Priority 4: Integration (6 KB)
 ### Phase 3: Validation & Deployment
 
 **Immediate**:
+
 - [ ] Runtime test: Vérifier avatar 3D fonctionne
 - [ ] Lighthouse audit: Mesurer FCP/LCP réels
 - [ ] Bundle analyzer: Confirmer Three.js séparé
 
 **Before Production**:
+
 - [ ] Kevin authorization required (COPILOT-XS rule)
 - [ ] Smoke tests: Avatar loading + fallback
 - [ ] Documentation: Update v36.0.0 strategy
@@ -301,6 +314,7 @@ Priority 4: Integration (6 KB)
 **Backwards Compatibility**: ✅ **Maintained**
 
 **Stack Cumulative (v27-v36)**:
+
 ```
 v27-v35: ~92-95% optimization (Web Vitals + React hooks)
 v36.0.0: -56% bundle initial (Three.js lazy-loading)
@@ -319,8 +333,8 @@ TOTAL: ~98% performance improvement vs v26 baseline ✅
 
 ---
 
-*Rapport généré: 2026-01-30*  
-*Version: v36.0.0 Phase 1*  
-*Status: ✅ **READY FOR VALIDATION***
+_Rapport généré: 2026-01-30_  
+_Version: v36.0.0 Phase 1_  
+\*Status: ✅ **READY FOR VALIDATION\***
 
 🚀 **-536 KB saved on 90% of users!** 🎊

@@ -97,11 +97,11 @@ export const useActionName = () => useStore(state => state.actionName);
 
 ## 📈 Cumulative Impact (v27 → v32)
 
-| Wave | Focus | Impact |
-|------|-------|--------|
-| v27-v28 | displayName adoption | +5-10% debugging clarity |
-| v30.0.0 | React.memo (7 components) | -58% avg rerenders on memoized components |
-| v31.0.0 | useCallback validation | -2% additional (95% already optimized) |
+| Wave     | Focus                        | Impact                                        |
+| -------- | ---------------------------- | --------------------------------------------- |
+| v27-v28  | displayName adoption         | +5-10% debugging clarity                      |
+| v30.0.0  | React.memo (7 components)    | -58% avg rerenders on memoized components     |
+| v31.0.0  | useCallback validation       | -2% additional (95% already optimized)        |
 | v32.0.0+ | Zustand selectors (3 stores) | -15-25% estimated from targeted subscriptions |
 
 **Total Estimated**: ~65-70% rerender reduction vs v26 baseline
@@ -113,6 +113,7 @@ export const useActionName = () => useStore(state => state.actionName);
 ### Option A: Continue with Remaining Stores (Low Priority)
 
 If new components are added that use full destructuring, create selectors for:
+
 - visualStore
 - usePerformanceStore
 - useChatModeStore
@@ -121,6 +122,7 @@ If new components are added that use full destructuring, create selectors for:
 ### Option B: Declare v32.0.0+ Complete ✅
 
 Given that:
+
 1. All identified destructuring patterns have been optimized (3 stores: system, vision, evolution)
 2. Remaining stores are already using individual selectors or are unused
 3. No TypeScript errors across the codebase

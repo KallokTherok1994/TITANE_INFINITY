@@ -44,6 +44,7 @@ X-Request-ID: <uuid>  # Optionnel, aide au debugging
 Envoyer un message à un provider AI (Ollama, OpenAI, etc.)
 
 **Request**:
+
 ```bash
 curl -X POST http://localhost:1430/api/ai/chat \
   -H "Content-Type: application/json" \
@@ -67,6 +68,7 @@ curl -X POST http://localhost:1430/api/ai/chat \
 | `config` | object | No | AI config overrides |
 
 **Response** (200 OK):
+
 ```json
 {
   "content": "AI is a field of computer science...",
@@ -81,6 +83,7 @@ curl -X POST http://localhost:1430/api/ai/chat \
 ```
 
 **Error Responses**:
+
 - `400 Bad Request`: Invalid parameters
 - `401 Unauthorized`: Auth token missing/invalid
 - `503 Service Unavailable`: Provider endpoint down
@@ -93,6 +96,7 @@ curl -X POST http://localhost:1430/api/ai/chat \
 Streamer la réponse AI (SSE - Server Sent Events)
 
 **Request**:
+
 ```bash
 curl -X POST http://localhost:1430/api/ai/stream \
   -H "Content-Type: application/json" \
@@ -104,6 +108,7 @@ curl -X POST http://localhost:1430/api/ai/stream \
 ```
 
 **Response Stream** (text/event-stream):
+
 ```
 event: token
 data: {"token": "Once"}
@@ -124,6 +129,7 @@ data: {"totalTokens": 145}
 Lister les modèles Ollama disponibles
 
 **Response** (200 OK):
+
 ```json
 {
   "models": [
@@ -143,6 +149,7 @@ Lister les modèles Ollama disponibles
 Télécharger un nouveau modèle Ollama
 
 **Request**:
+
 ```bash
 curl -X POST http://localhost:1430/api/ollama/pull \
   -H "Content-Type: application/json" \
@@ -150,6 +157,7 @@ curl -X POST http://localhost:1430/api/ollama/pull \
 ```
 
 **Response Stream** (text/event-stream):
+
 ```
 event: progress
 data: {"status": "pulling", "digest": "sha256:...", "complete": 45}
@@ -165,6 +173,7 @@ data: {"model": "neural-chat:7b"}
 Vérifier la santé du serveur Ollama
 
 **Response** (200 OK):
+
 ```json
 {
   "status": "healthy",
@@ -175,6 +184,7 @@ Vérifier la santé du serveur Ollama
 ```
 
 **Response** (503 Service Unavailable):
+
 ```json
 {
   "status": "offline",
@@ -195,7 +205,7 @@ ws.onopen = () => {
   console.log('Connected to TITANE');
 };
 
-ws.onmessage = (event) => {
+ws.onmessage = event => {
   const data = JSON.parse(event.data);
   console.log('Message:', data);
 };
@@ -208,6 +218,7 @@ ws.onmessage = (event) => {
 Envoyer/recevoir un message chat
 
 **Send**:
+
 ```json
 {
   "type": "chat_message",
@@ -219,6 +230,7 @@ Envoyer/recevoir un message chat
 ```
 
 **Receive**:
+
 ```json
 {
   "type": "chat_message",
@@ -291,11 +303,11 @@ interface AIResponse {
 
 // AI Config
 interface AIConfig {
-  temperature: number;        // 0.0 - 2.0 (default: 0.7)
-  maxTokens: number;          // 1 - 4096 (default: 2048)
-  topP: number;               // 0.0 - 1.0 (default: 0.9)
-  topK: number;               // 1 - 100 (default: 40)
-  timeout: number;            // ms (default: 30000)
+  temperature: number; // 0.0 - 2.0 (default: 0.7)
+  maxTokens: number; // 1 - 4096 (default: 2048)
+  topP: number; // 0.0 - 1.0 (default: 0.9)
+  topK: number; // 1 - 100 (default: 40)
+  timeout: number; // ms (default: 30000)
 }
 
 // Provider type
@@ -341,7 +353,7 @@ export function DataComponent() {
   const { data, set, remove, clear } = useStorage('my-key');
 
   // Read
-  console.log(data);  // null | any
+  console.log(data); // null | any
 
   // Write
   set({ user: 'John', age: 30 });
@@ -479,7 +491,7 @@ streamingChat();
 function connectWebSocket() {
   const ws = new WebSocket('ws://localhost:1430/ws');
 
-  ws.onmessage = (event) => {
+  ws.onmessage = event => {
     const message = JSON.parse(event.data);
 
     if (message.type === 'chat_message') {
@@ -488,13 +500,15 @@ function connectWebSocket() {
   };
 
   // Send message
-  ws.send(JSON.stringify({
-    type: 'chat_message',
-    payload: {
-      content: 'Hello AI',
-      timestamp: Date.now(),
-    },
-  }));
+  ws.send(
+    JSON.stringify({
+      type: 'chat_message',
+      payload: {
+        content: 'Hello AI',
+        timestamp: Date.now(),
+      },
+    })
+  );
 }
 
 connectWebSocket();

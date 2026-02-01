@@ -24,15 +24,17 @@
 **Étapes de diagnostic**:
 
 1. **Vérifier les logs**:
+
    ```bash
    # Linux/macOS
    cat ~/.titane/logs/app.log
-   
+
    # Windows
    %APPDATA%\TITANE\logs\app.log
    ```
 
 2. **Vérifier l'espace disque**:
+
    ```bash
    df -h /home  # Linux
    du -sh ~/.titane  # Size of TITANE directory
@@ -50,6 +52,7 @@
    ```
 
 **Solutions**:
+
 - Réinstaller l'application
 - Vérifier la permission d'accès `/home`
 - Contacter support avec logs (voir [Support](#support))
@@ -63,11 +66,13 @@
 **Étapes de diagnostic**:
 
 1. **Activer debug mode**:
+
    ```bash
    TITANE_DEBUG=1 ./Titan-Stable
    ```
 
 2. **Vérifier les plugins Tauri**:
+
    ```bash
    # Logs Tauri détaillés
    RUST_LOG=debug TITANE_DEBUG=1 ./Titan-Stable 2>&1 | head -50
@@ -80,6 +85,7 @@
    ```
 
 **Solutions**:
+
 - Mettre à jour les dépendances système (glib-2.0, libssl)
 - Vérifier la version du système (Ubuntu 20.04+, Fedora 35+)
 - Désactiver les extensions si présentes
@@ -95,12 +101,14 @@
 **Étapes de diagnostic**:
 
 1. **Vérifier qu'Ollama tourne**:
+
    ```bash
    curl http://127.0.0.1:11434/api/tags
    # Doit retourner: {"models": [...]}
    ```
 
 2. **Vérifier le port**:
+
    ```bash
    netstat -tulpn | grep 11434  # Linux
    lsof -i :11434  # macOS
@@ -117,6 +125,7 @@
    ```
 
 **Solutions**:
+
 - Redémarrer Ollama: `killall ollama && ollama serve`
 - Vérifier la connexion: `ping 127.0.0.1` (ou l'IP du serveur)
 - Réinstaller Ollama depuis https://ollama.ai
@@ -131,6 +140,7 @@
 **Étapes de diagnostic**:
 
 1. **Tester la latence directe**:
+
    ```bash
    time curl -X POST http://127.0.0.1:11434/api/generate \
      -H "Content-Type: application/json" \
@@ -138,12 +148,14 @@
    ```
 
 2. **Vérifier l'utilisation système**:
+
    ```bash
    top -b -n 1 | grep ollama  # CPU/Memory usage
    free -h  # RAM disponible
    ```
 
 3. **Vérifier la taille du modèle**:
+
    ```bash
    du -sh ~/.ollama/models/blobs/*
    ```
@@ -154,6 +166,7 @@
    ```
 
 **Solutions**:
+
 - Réduire la taille du modèle (e.g., `mistral:7b` au lieu de `mistral:70b`)
 - Ajouter de la RAM au serveur Ollama
 - Réduire les paramètres: `temperature`, `top_p` dans Settings
@@ -168,6 +181,7 @@
 **Étapes de diagnostic**:
 
 1. **Vérifier les logs**:
+
    ```bash
    grep "Rate limit" ~/.titane/logs/app.log
    ```
@@ -177,6 +191,7 @@
    - Quelle API (Ollama, OpenAI, etc.)?
 
 **Solutions**:
+
 - Attendre 5-10 minutes avant de continuer
 - Réduire la fréquence des appels
 - Augmenter les délais d'attente (Settings → Advanced)
@@ -197,12 +212,14 @@
    - Performance → Enregistrer et analyser
 
 2. **Vérifier l'utilisation RAM**:
+
    ```bash
    ps aux | grep Titan
    # Chercher > 1GB RAM usage
    ```
 
 3. **Vérifier le cache**:
+
    ```bash
    du -sh ~/.titane/cache
    # Si > 500MB, doit être nettoyé
@@ -211,6 +228,7 @@
 4. **Désactiver les extensions** (si pertinent)
 
 **Solutions**:
+
 - Fermer les onglets inutilisés
 - Nettoyer le cache: Settings → Storage → Clear Cache
 - Redémarrer l'application
@@ -225,12 +243,14 @@
 **Étapes de diagnostic**:
 
 1. **Vérifier la RAM système**:
+
    ```bash
    free -h
    # Doit avoir > 2GB libre pour TITANE
    ```
 
 2. **Vérifier la taille des fichiers**:
+
    ```bash
    du -sh ~/.titane/*
    ```
@@ -241,6 +261,7 @@
    ```
 
 **Solutions**:
+
 - Fermer d'autres applications
 - Augmenter la swap: `fallocate -l 4G /swapfile && mkswap /swapfile`
 - Nettoyer le cache: `rm -rf ~/.titane/cache/*`
@@ -261,6 +282,7 @@
    - Essayer "System Default"
 
 2. **Vérifier l'encoding**:
+
    ```bash
    locale
    # Doit montrer UTF-8
@@ -275,6 +297,7 @@
    ```
 
 **Solutions**:
+
 - Réinstaller les polices: `sudo apt install fonts-liberation fonts-noto` (Linux)
 - Changer le locale: `export LANG=en_US.UTF-8`
 - Redémarrer l'app
@@ -299,6 +322,7 @@
    - L'app a-t-elle permission d'accéder aux ressources?
 
 **Solutions**:
+
 - Cliquer à nouveau (peut être delayed)
 - Vérifier la connexion réseau
 - Redémarrer l'app
@@ -315,6 +339,7 @@
 **Étapes de diagnostic**:
 
 1. **Vérifier les processus** qui accèdent à la DB:
+
    ```bash
    lsof ~/.titane/data/main.db
    ```
@@ -326,6 +351,7 @@
    ```
 
 **Solutions**:
+
 - Attendre quelques secondes et réessayer
 - Tuer les processus bloquants: `pkill -f Titan`
 - Nettoyer les fichiers lock: `rm ~/.titane/data/*.lock`
@@ -340,6 +366,7 @@
 **Étapes de diagnostic**:
 
 1. **Analyser la taille DB**:
+
    ```bash
    sqlite3 ~/.titane/data/main.db ".tables"
    sqlite3 ~/.titane/data/main.db ".schema messages" | wc -l
@@ -351,6 +378,7 @@
    ```
 
 **Solutions**:
+
 - Optimiser la DB: `sqlite3 ~/.titane/data/main.db "VACUUM;"`
 - Archiver les anciennes données
 - Augmenter la limite de WAL
@@ -365,6 +393,7 @@
 **Avant de contacter support**, veuillez préparer:
 
 1. **Informations système**:
+
    ```bash
    uname -a
    cat /etc/os-release | grep -E "^NAME|^VERSION"
@@ -372,11 +401,13 @@
    ```
 
 2. **Logs TITANE** (derniers 100 lignes):
+
    ```bash
    tail -100 ~/.titane/logs/app.log > titane_logs.txt
    ```
 
 3. **Version TITANE**:
+
    ```bash
    ./Titan-Stable --version  # ou voir Settings → About
    ```
@@ -400,6 +431,7 @@ Merci de fournir:
 **Version**: TITANE v27.0.0
 **OS**: [Linux/macOS/Windows] + version
 **Reproduction Steps**:
+
 1. ...
 2. ...
 3. ...

@@ -342,6 +342,7 @@ Veuillez lire & accepter:
 ```
 
 **Fichiers créés:**
+
 ```
 ~/.titane/
   ├─ config.json (configuration)
@@ -376,6 +377,7 @@ Veuillez lire & accepter:
 ```
 
 **Remplissez sincèrement** (utilisé pour personnalisation):
+
 - Votre nom complet
 - Email valide (optionnel mais recommandé)
 - Rôle principal
@@ -410,12 +412,14 @@ Veuillez lire & accepter:
 ```
 
 **Choix recommandé: Ollama**
+
 - Priv- acité maximale (local)
 - Performance excellente
 - Gratuit
 - Open-source
 
 **Si vous choisissez Ollama:**
+
 ```
 1. Visitez: https://ollama.com
 2. Téléchargez & installez pour votre OS
@@ -472,12 +476,14 @@ ollama pull neural-chat   # Optimisé conversation
 ```
 
 **Vérifier la connexion:**
+
 ```bash
 curl http://localhost:11434/api/version
 # Doit retourner: {"version": "..."}
 ```
 
 **Settings TITANE:**
+
 ```
 Settings → Providers IA
 ✅ Ollama: http://localhost:11434
@@ -485,6 +491,7 @@ Settings → Providers IA
 ```
 
 **Performance:**
+
 - Latence: ~2-5 secondes par réponse
 - GPU acéléré: ~500ms si NVIDIA CUDA
 - CPU: ~5-10 secondes
@@ -508,6 +515,7 @@ GEMINI_API_KEY="sk-..."
 ```
 
 **Configuration TITANE:**
+
 ```
 Settings → Providers IA → + Ajouter
 
@@ -520,6 +528,7 @@ Temperature: 0.7
 ```
 
 **Tarification:**
+
 - Gratuit: ~100 requêtes/jour
 - Payant: $0.00025 per 1K input tokens
 
@@ -626,12 +635,14 @@ Settings → Memory → [Export/Import]
 **Symptôme:** Erreur permission ou FUSE manquant
 
 **Solution 1 — Vérifier permissions:**
+
 ```bash
 chmod +x Titan-Stable_27.0.0_amd64.AppImage
 ./Titan-Stable_27.0.0_amd64.AppImage --help
 ```
 
 **Solution 2 — Installer FUSE:**
+
 ```bash
 # Ubuntu/Debian
 sudo apt install fuse libfuse2
@@ -641,6 +652,7 @@ sudo dnf install fuse libfuse
 ```
 
 **Solution 3 — Extraire & lancer:**
+
 ```bash
 # Extraire AppImage
 ./Titan-Stable_27.0.0_amd64.AppImage --appimage-extract
@@ -653,6 +665,7 @@ cd squashfs-root
 **Symptôme:** TITANE ne trouve pas Ollama
 
 **Vérifications:**
+
 ```bash
 # 1. Ollama en train de tourner?
 ps aux | grep ollama
@@ -671,6 +684,7 @@ ollama serve
 ```
 
 **Solution:**
+
 ```bash
 # Tuer tous les processu Ollama
 pkill -9 ollama
@@ -686,11 +700,13 @@ ollama serve
 **Symptôme:** TITANE très lent ou crash
 
 **Diagnostic:**
+
 ```bash
 free -h  # Voir RAM disponible
 ```
 
 **Solutions:**
+
 1. **Réduire Token Max:** Settings → Chat → 2000 (au lieu 3000)
 2. **Fermer autres apps:** Chrome, Slack, etc. consomment RAM
 3. **Utiliser modèle léger:** Ollama → `tinyllama` (1.1GB)
@@ -701,6 +717,7 @@ free -h  # Voir RAM disponible
 **Symptôme:** Ollama utilise CPU même avec GPU NVIDIA
 
 **Vérifications:**
+
 ```bash
 nvidia-smi  # NVIDIA GPU présent?
 # Doit lister votre GPU
@@ -709,6 +726,7 @@ nvidia-smi -l 1  # Monitor GPU en live
 ```
 
 **Solutions:**
+
 ```bash
 # Installer Ollama avec CUDA support
 # Visitez: https://ollama.com
@@ -727,6 +745,7 @@ ollama serve
 **Symptôme:** "API Key rejected"
 
 **Vérifications:**
+
 ```bash
 # 1. Clé copiée correctement?
 # Vérifiez: aucun espace extra
@@ -741,6 +760,7 @@ ollama serve
 ```
 
 **Solution:**
+
 ```bash
 # Générer nouvelle clé
 1. Visitez: https://aistudio.google.com/app/apikey
@@ -752,11 +772,13 @@ ollama serve
 ### "Démarrage très lent (10+ secondes)"
 
 **Causes possibles:**
+
 - Disque dur lent (SSD recommandé)
 - Trop de cache accumulé
 - Mémoire fragmentée
 
 **Solutions:**
+
 ```bash
 # 1. Nettoyer cache
 rm -rf ~/.titane/cache
@@ -855,15 +877,15 @@ titane-infinity --init-config --profile=enterprise
 # /etc/titane/enterprise.yaml
 
 organization:
-  name: "Votre Entreprise"
+  name: 'Votre Entreprise'
   policy:
-    allowed_providers: ["ollama"]  # Pas de cloud
+    allowed_providers: ['ollama'] # Pas de cloud
     encryption_required: true
     telemetry: false
     auto_updates: false
 
 restrictions:
-  file_upload_max_size: 10485760  # 10 MB
+  file_upload_max_size: 10485760 # 10 MB
   memory_retention_days: 90
   export_allowed: false
 
@@ -886,12 +908,12 @@ nodes:
     hostname: titane-01.local
     role: master
     ip: 192.168.1.10
-  
+
   - id: node2
     hostname: titane-02.local
     role: replica
     ip: 192.168.1.11
-  
+
   - id: node3
     hostname: titane-03.local
     role: replica
@@ -963,27 +985,27 @@ spec:
         app: titane
     spec:
       containers:
-      - name: titane
-        image: titane-infinity:27.0.0
-        ports:
-        - containerPort: 8080
-        env:
-        - name: TITANE_ENV
-          value: "production"
-        resources:
-          requests:
-            memory: "512Mi"
-            cpu: "500m"
-          limits:
-            memory: "2Gi"
-            cpu: "2000m"
-        volumeMounts:
-        - name: titane-storage
-          mountPath: /data
+        - name: titane
+          image: titane-infinity:27.0.0
+          ports:
+            - containerPort: 8080
+          env:
+            - name: TITANE_ENV
+              value: 'production'
+          resources:
+            requests:
+              memory: '512Mi'
+              cpu: '500m'
+            limits:
+              memory: '2Gi'
+              cpu: '2000m'
+          volumeMounts:
+            - name: titane-storage
+              mountPath: /data
       volumes:
-      - name: titane-storage
-        persistentVolumeClaim:
-          claimName: titane-pvc
+        - name: titane-storage
+          persistentVolumeClaim:
+            claimName: titane-pvc
 ```
 
 ### CI/CD Pipeline
@@ -1004,32 +1026,32 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-    
+
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Setup Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-      
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-      
+
       - name: Install pnpm
         run: npm install -g pnpm
-      
+
       - name: Install dependencies
         run: pnpm install
-      
+
       - name: Build Tauri
         run: pnpm run tauri build
-      
+
       - name: Run tests
         run: cargo test --all
-      
+
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -1062,12 +1084,12 @@ lazy_static! {
         "titane_chat_requests_total",
         "Total chat requests"
     ).unwrap();
-    
+
     static ref MEMORY_USAGE: Gauge = Gauge::new(
         "titane_memory_bytes",
         "Memory usage in bytes"
     ).unwrap();
-    
+
     static ref RESPONSE_TIME: Histogram = Histogram::new(
         "titane_response_time_seconds",
         "Response time distribution"
@@ -1158,7 +1180,7 @@ Avant d'utiliser TITANE en production:
 ---
 
 **TITANE∞ v27.0.0 — Guide Installation & Setup Complet**
-*Créé: 31 Janvier 2026 | Validé par Kevin Thibault*
-*Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0*
-*Pour support détaillé: support@titane.dev ou Discord community*
-*Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés.*
+_Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
+_Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
+_Pour support détaillé: support@titane.dev ou Discord community_
+_Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés._

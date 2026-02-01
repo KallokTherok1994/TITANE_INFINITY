@@ -16,16 +16,19 @@ v27.0.0 relaxes strict React ESLint rules to enable production deployment. These
 **Category:** `react-hooks/purity`
 
 **Issue:** Impure functions called during render phase:
+
 - `Date.now()` (17 violations)
 - `performance.now()` (4 violations)
 
-**Root Cause:** 
+**Root Cause:**
 Hooks and component initialization use timing functions for:
+
 - Performance monitoring (usePerformanceMonitor)
 - Throttling/debouncing (useThrottle, useDebounce)
 - Test timestamps
 
 **Migration Strategy (v27.1.0):**
+
 ```typescript
 // BEFORE (impure)
 const throttledValue = useRef(Date.now());
@@ -49,6 +52,7 @@ useEffect(() => {
 
 **Root Cause:**
 Common pattern for initialization and polling:
+
 ```typescript
 useEffect(() => {
   fetchData(); // setState inside
@@ -59,13 +63,16 @@ useEffect(() => {
 
 **Migration Strategy (v27.1.0):**
 Use state setter callbacks or separate effect phases:
+
 ```typescript
 useEffect(() => {
   let isMounted = true;
   fetchData().then(data => {
     if (isMounted) setData(data);
   });
-  return () => { isMounted = false; };
+  return () => {
+    isMounted = false;
+  };
 }, []);
 ```
 
@@ -80,11 +87,13 @@ useEffect(() => {
 **Issue:** Accessing `ref.current` during render phase
 
 **Root Cause:**
+
 - Checking if ref is initialized to run setup code
 - Returning ref.current from hook render
 
 **Migration Strategy (v27.1.0):**
 Move ref access to effects:
+
 ```typescript
 // BEFORE (render phase)
 if (!batcherRef.current) {
@@ -111,12 +120,14 @@ useEffect(() => {
 
 **Root Cause:**
 Attaching `cancel` method to throttled callbacks:
+
 ```typescript
 (throttledCallback as ThrottledFunction).cancel = cancel;
 ```
 
 **Migration Strategy (v27.1.0):**
 Use object wrapper instead of function property:
+
 ```typescript
 return {
   callback: throttledCallback,
@@ -139,6 +150,7 @@ React Compiler infers more dependencies than developer specified (error variable
 
 **Migration Strategy (v27.1.0):**
 Either:
+
 1. Add all inferred dependencies
 2. Use React Compiler compiler config to suppress
 
@@ -149,12 +161,14 @@ Either:
 ## Release Timeline
 
 ### v27.0.0 (✅ TODAY)
+
 - ✅ ESLint rules relaxed
 - ✅ Production deployment approved
 - ✅ All tests passing
 - ✅ DEB package valid (9.6 MB)
 
 ### v27.1.0 (2-3 weeks)
+
 - [ ] Fix all 142 violations
 - [ ] Update React Compiler config if needed
 - [ ] Re-enable strict rules
@@ -166,6 +180,7 @@ Either:
 ## Deployment Impact
 
 **⚠️ Production Safety:**
+
 - ✅ No impact on runtime behavior
 - ✅ All 4,781 tests still passing
 - ✅ Code works correctly despite lint violations
@@ -173,6 +188,7 @@ Either:
 
 **Why Safe:**
 These are architectural patterns, not bugs:
+
 - Date.now() produces correct values even if "impure"
 - setState in effect still batches correctly
 - Ref access patterns are stable

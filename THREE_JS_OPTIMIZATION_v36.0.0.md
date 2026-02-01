@@ -18,36 +18,38 @@
 ### État Actuel
 
 **11 fichiers** importent Three.js de façon statique:
+
 ```typescript
 import * as THREE from 'three';
 ```
 
-| Fichier | Taille | Usage |
-|---------|--------|-------|
-| ThreeJSAvatarRenderer.ts | ~15 KB | Renderer principal |
-| PBRMaterialSystem.ts | ~8 KB | Materials PBR |
-| StudioLightingRig.ts | ~6 KB | Lighting studio |
-| PostProcessingPipeline.ts | ~7 KB | TAA/Bloom/Vignette |
-| VoiceReactionSystem.ts | ~5 KB | Animations voice |
-| AudioVisualSyncEngine.ts | ~4 KB | Audio-visual sync |
-| BodyGestureFluidityEngine.ts | ~5 KB | Gestures |
-| CameraDynamismEngine.ts | ~4 KB | Camera dynamics |
-| appearanceFloatingIntegration.ts | ~6 KB | Appearance integration |
-| floating.perf.test.ts | Test | Tests de performance |
+| Fichier                          | Taille | Usage                  |
+| -------------------------------- | ------ | ---------------------- |
+| ThreeJSAvatarRenderer.ts         | ~15 KB | Renderer principal     |
+| PBRMaterialSystem.ts             | ~8 KB  | Materials PBR          |
+| StudioLightingRig.ts             | ~6 KB  | Lighting studio        |
+| PostProcessingPipeline.ts        | ~7 KB  | TAA/Bloom/Vignette     |
+| VoiceReactionSystem.ts           | ~5 KB  | Animations voice       |
+| AudioVisualSyncEngine.ts         | ~4 KB  | Audio-visual sync      |
+| BodyGestureFluidityEngine.ts     | ~5 KB  | Gestures               |
+| CameraDynamismEngine.ts          | ~4 KB  | Camera dynamics        |
+| appearanceFloatingIntegration.ts | ~6 KB  | Appearance integration |
+| floating.perf.test.ts            | Test   | Tests de performance   |
 
 **Total**: ~60 KB de code avatar → Force chargement de **536 KB Three.js** au boot
 
 ### Solution OPT-1 (Déjà Créée v25.3.0)
 
 Le fichier `ThreeJSLazyLoader.ts` existe déjà:
+
 ```typescript
 export async function loadThreeJS(): Promise<typeof import('three')> {
   if (cachedTHREE) return cachedTHREE;
-  
+
   logger.info('⚡ Lazy-loading Three.js (38 MB)...');
   cachedTHREE = await import('three');
   logger.info('✅ Three.js loaded and cached');
-  
+
   return cachedTHREE;
 }
 ```
@@ -87,12 +89,12 @@ Impact utilisateur: Loader animation pendant lazy-load
 
 ### Métriques v35 → v36
 
-| Métrique | Baseline v35 | Target v36 | Amélioration |
-|----------|-------------|------------|--------------|
-| Bundle Initial | 950 KB gzip | **414 KB gzip** | **-56%** |
-| FCP (sans avatar) | 1.7s | **1.45-1.55s** | **-150-250ms** |
-| LCP (sans avatar) | 2.5s | **2.2-2.4s** | **-100-200ms** |
-| Three.js Load (avatar) | Boot (0ms) | 1st access (50-800ms) | Déferred |
+| Métrique               | Baseline v35 | Target v36            | Amélioration   |
+| ---------------------- | ------------ | --------------------- | -------------- |
+| Bundle Initial         | 950 KB gzip  | **414 KB gzip**       | **-56%**       |
+| FCP (sans avatar)      | 1.7s         | **1.45-1.55s**        | **-150-250ms** |
+| LCP (sans avatar)      | 2.5s         | **2.2-2.4s**          | **-100-200ms** |
+| Three.js Load (avatar) | Boot (0ms)   | 1st access (50-800ms) | Déferred       |
 
 ---
 
@@ -103,12 +105,13 @@ Impact utilisateur: Loader animation pendant lazy-load
 **Pattern de migration**:
 
 #### AVANT (Static Import)
+
 ```typescript
 import * as THREE from 'three';
 
 export class MyAvatarSystem {
   private scene: THREE.Scene;
-  
+
   constructor() {
     this.scene = new THREE.Scene(); // ❌ Immediate usage
   }
@@ -116,20 +119,21 @@ export class MyAvatarSystem {
 ```
 
 #### APRÈS (Lazy Import)
+
 ```typescript
 import { loadThreeJS } from '../core/ThreeJSLazyLoader';
 
 export class MyAvatarSystem {
   private scene: any; // or THREE.Scene if type-only import
   private isInitialized = false;
-  
+
   constructor() {
     // ✅ No Three.js usage in constructor
   }
-  
+
   async initialize(): Promise<void> {
     if (this.isInitialized) return;
-    
+
     const THREE = await loadThreeJS();
     this.scene = new THREE.Scene();
     this.isInitialized = true;
@@ -140,28 +144,34 @@ export class MyAvatarSystem {
 ### Phase 2: Fichiers à Migrer (2h)
 
 #### Priorité 1: Core Renderer
+
 - [ ] `ThreeJSAvatarRenderer.ts` — Renderer principal (15 KB)
 
 #### Priorité 2: Rendering Systems
+
 - [ ] `PBRMaterialSystem.ts` — Materials PBR (8 KB)
 - [ ] `StudioLightingRig.ts` — Lighting (6 KB)
 - [ ] `PostProcessingPipeline.ts` — Post-processing (7 KB)
 
 #### Priorité 3: Animation Systems
+
 - [ ] `VoiceReactionSystem.ts` — Voice reactions (5 KB)
 - [ ] `AudioVisualSyncEngine.ts` — Audio-visual sync (4 KB)
 - [ ] `BodyGestureFluidityEngine.ts` — Gestures (5 KB)
 - [ ] `CameraDynamismEngine.ts` — Camera dynamics (4 KB)
 
 #### Priorité 4: Integration
+
 - [ ] `appearanceFloatingIntegration.ts` — Appearance (6 KB)
 
 #### Priorité 5: Tests
+
 - [ ] `floating.perf.test.ts` — Tests (skip ou mock Three.js)
 
 ### Phase 3: Update Entry Points (30 min)
 
 **AvatarFloatingWindow.tsx** (usage principal):
+
 ```typescript
 // AVANT
 const renderer = new ThreeJSAvatarRenderer(canvas, options);
@@ -186,17 +196,20 @@ renderer.initializeAvatar();
 ## ✅ Success Criteria
 
 ### Must-Have
+
 - [x] Bundle initial < 450 KB gzip (target: 414 KB)
 - [x] Three.js lazy-loadé uniquement si avatar activé
 - [x] 0 TypeScript errors
 - [x] Avatar 3D fonctionne après lazy-load
 
 ### Should-Have
+
 - [x] FCP improvement -150ms+ (1.7s → <1.55s)
 - [x] Loader animation pendant Three.js load
 - [x] Graceful degradation si lazy-load échoue
 
 ### Nice-to-Have
+
 - [ ] Preload Three.js en background (optionnel)
 - [ ] Cache Three.js dans Service Worker
 - [ ] Bundle stats analytics (before/after)
@@ -205,17 +218,17 @@ renderer.initializeAvatar();
 
 ## 📈 Stack Cumulé v27-v36
 
-| Version | Optimization | Impact | Cumulative |
-|---------|--------------|--------|------------|
-| v27 | Build optimization | -20% | 80% |
-| v28 | State management | -30% | 56% |
-| v29 | Code splitting | -30% | 39% |
-| v30 | Monitoring | -15% | 33% |
-| v31 | Selectors | -40% | 20% |
-| v32 | React hooks | -75% | 5% |
-| v33 | Bundle analysis | -5% | 5% |
-| v34 | Web Vitals | -35-40% | ~3% |
-| **v36** | **Three.js lazy** | **-56% bundle** | **~1-2%** |
+| Version | Optimization       | Impact          | Cumulative |
+| ------- | ------------------ | --------------- | ---------- |
+| v27     | Build optimization | -20%            | 80%        |
+| v28     | State management   | -30%            | 56%        |
+| v29     | Code splitting     | -30%            | 39%        |
+| v30     | Monitoring         | -15%            | 33%        |
+| v31     | Selectors          | -40%            | 20%        |
+| v32     | React hooks        | -75%            | 5%         |
+| v33     | Bundle analysis    | -5%             | 5%         |
+| v34     | Web Vitals         | -35-40%         | ~3%        |
+| **v36** | **Three.js lazy**  | **-56% bundle** | **~1-2%**  |
 
 **Total Impact**: ~98-99% optimized vs. v26 baseline ✅
 
@@ -239,6 +252,6 @@ renderer.initializeAvatar();
 
 ---
 
-*Document créé: 2026-01-30*  
-*Version: v36.0.0 (Draft)*  
-*Autorisation requise: Kevin Thibault (pour déploiement production)*
+_Document créé: 2026-01-30_  
+_Version: v36.0.0 (Draft)_  
+_Autorisation requise: Kevin Thibault (pour déploiement production)_

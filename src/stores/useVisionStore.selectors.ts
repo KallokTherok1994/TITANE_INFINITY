@@ -4,17 +4,13 @@
  * Prevents unnecessary rerenders by selecting only needed slices
  */
 
-import {
-  selectIsObservationActive,
-  useVisionStore,
-} from './useVisionStore';
+import { selectIsObservationActive, useVisionStore } from './useVisionStore';
 
 // ═══════════════════════════════════════════════════════════════
 // PRIMITIVE SELECTORS (Single Value)
 // ═══════════════════════════════════════════════════════════════
 
-export const useVisionObservationActive = () =>
-  useVisionStore(selectIsObservationActive);
+export const useVisionObservationActive = () => useVisionStore(selectIsObservationActive);
 
 // ═══════════════════════════════════════════════════════════════
 // ACTION SELECTORS (Actions Only)

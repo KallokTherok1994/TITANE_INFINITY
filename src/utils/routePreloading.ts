@@ -1,16 +1,16 @@
 /**
  * ROUTE PRELOADING OPTIMIZATION - v35.0.0
  * ═════════════════════════════════════════════════════════════
- * 
+ *
  * Intelligent preloading of route chunks using requestIdleCallback
  * Reduces navigation latency by -200-400ms for next routes.
- * 
+ *
  * Usage:
  *   import { useRoutePreloading, preloadRoute } from '@utils/routePreloading';
- *   
+ *
  *   // Automatic preloading on route change
  *   useRoutePreloading();
- *   
+ *
  *   // Manual preloading
  *   preloadRoute('@pages/centers/QuantumCenter');
  */
@@ -27,30 +27,12 @@ import { useLocation } from 'react-router';
  * Used for intelligent preloading of likely next routes
  */
 const ROUTE_CHUNKS: Record<string, string[]> = {
-  '/': [
-    '@/pages/Chat',
-    '@/pages/centers/MemoryCenter',
-  ],
-  '/chat': [
-    '@/pages/Agenda',
-    '@/pages/Camera',
-  ],
-  '/memory': [
-    '@/pages/centers/RealityCenter',
-    '@/pages/centers/IdentityCenter',
-  ],
-  '/agenda': [
-    '@/pages/Camera',
-    '@/pages/Chat',
-  ],
-  '/camera': [
-    '@/pages/Chat',
-    '@/pages/centers/MemoryCenter',
-  ],
-  '/developer-tools': [
-    '@/pages/Chat',
-    '@/pages/centers/MemoryCenter',
-  ],
+  '/': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
+  '/chat': ['@/pages/Agenda', '@/pages/Camera'],
+  '/memory': ['@/pages/centers/RealityCenter', '@/pages/centers/IdentityCenter'],
+  '/agenda': ['@/pages/Camera', '@/pages/Chat'],
+  '/camera': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
+  '/developer-tools': ['@/pages/Chat', '@/pages/centers/MemoryCenter'],
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -66,14 +48,14 @@ export const preloadRoute = (
   componentPath: string,
   priority: 'high' | 'low' = 'low'
 ): Promise<void> => {
-  return new Promise((resolve) => {
+  return new Promise(resolve => {
     const preloadFn = () => {
       import(componentPath)
         .then(() => {
           console.debug(`✅ Preloaded: ${componentPath}`);
           resolve();
         })
-        .catch((err) => {
+        .catch(err => {
           console.warn(`⚠️ Failed to preload ${componentPath}:`, err);
           resolve(); // Don't fail the promise
         });
@@ -103,7 +85,7 @@ export const preloadRoutes = (
   paths: string[],
   priority: 'high' | 'low' = 'low'
 ): Promise<void[]> => {
-  return Promise.all(paths.map((path) => preloadRoute(path, priority)));
+  return Promise.all(paths.map(path => preloadRoute(path, priority)));
 };
 
 /* ────────────────────────────────────────────────────────────
@@ -113,7 +95,7 @@ export const preloadRoutes = (
 /**
  * Hook for automatic intelligent route preloading
  * Preloads chunks for likely next routes based on current route
- * 
+ *
  * @example
  *   // In your App component
  *   useRoutePreloading();
@@ -129,7 +111,9 @@ export const useRoutePreloading = () => {
       // Preload next likely routes with low priority
       preloadRoutes(nextRoutes, 'low')
         .then(() => {
-          console.debug(`✅ Preloaded ${nextRoutes.length} chunks for route: ${currentRoute}`);
+          console.debug(
+            `✅ Preloaded ${nextRoutes.length} chunks for route: ${currentRoute}`
+          );
         })
         .catch(() => {
           // Silently fail, don't block user experience
@@ -152,14 +136,15 @@ export const getPreloadingMetrics = (): {
   averageLoadTime: number;
 } => {
   const metrics = performance.getEntriesByType('measure');
-  const preloadMetrics = metrics.filter((m) => m.name.includes('preload'));
+  const preloadMetrics = metrics.filter(m => m.name.includes('preload'));
 
   return {
     chunksPreloaded: preloadMetrics.length,
     timeSpent: preloadMetrics.reduce((sum, m) => sum + m.duration, 0),
-    averageLoadTime: preloadMetrics.length > 0
-      ? preloadMetrics.reduce((sum, m) => sum + m.duration, 0) / preloadMetrics.length
-      : 0,
+    averageLoadTime:
+      preloadMetrics.length > 0
+        ? preloadMetrics.reduce((sum, m) => sum + m.duration, 0) / preloadMetrics.length
+        : 0,
   };
 };
 
@@ -170,7 +155,7 @@ export const getPreloadingMetrics = (): {
 /**
  * Predict next route based on user behavior patterns
  * Can be extended with ML/analytics data
- * 
+ *
  * @param currentRoute - Current route path
  * @param userBehavior - Optional user behavior context
  */
@@ -260,9 +245,7 @@ export const prefetchOnHover = (path: string): void => {
  * Register a custom route chunk mapping
  * Useful for adding dynamic routes or overriding defaults
  */
-export const registerRouteChunks = (
-  routeMap: Record<string, string[]>
-): void => {
+export const registerRouteChunks = (routeMap: Record<string, string[]>): void => {
   Object.assign(ROUTE_CHUNKS, routeMap);
 };
 

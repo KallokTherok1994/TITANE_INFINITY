@@ -9,7 +9,10 @@
 
 import { logger } from '@/lib/logger';
 import type { AIProvider } from '@/services/ai/types';
-import { getOrLoadProvider, type LazyProviderName } from '@/services/ai/AIProviderLazyLoader';
+import {
+  getOrLoadProvider,
+  type LazyProviderName,
+} from '@/services/ai/AIProviderLazyLoader';
 
 interface ProviderStatus {
   name: string;

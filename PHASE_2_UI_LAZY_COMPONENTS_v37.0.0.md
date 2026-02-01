@@ -14,6 +14,7 @@ Phase 1 v37.0.0 delivered centralized lazy-loading for cloud AI providers (-100K
 Phase 2 focuses on **UI component code-splitting** using React.lazy + Suspense to defer non-critical visual components until needed. Target: Additional -50-80KB reduction.
 
 **Key Finding**: Analysis shows that 70-80% of heavy components are already lazy-loaded (v24+), but integration can be improved through:
+
 1. Centralized lazy-load component wrapper
 2. Component library optimization (remove unused CSS/assets)
 3. Tab-based deferral (load tabs on-demand instead of pre-rendering)
@@ -23,6 +24,7 @@ Phase 2 focuses on **UI component code-splitting** using React.lazy + Suspense t
 ## 🔍 Current State Analysis
 
 ### Already Lazy-Loaded (No Action Needed)
+
 ```
 ✅ Router Pages (all lazy):
   - TitanePage (20s timeout via lazyWithTimeout)
@@ -45,7 +47,9 @@ Phase 2 focuses on **UI component code-splitting** using React.lazy + Suspense t
 ### Optimization Candidates
 
 #### Category 1: Feature Tab Components (3-5 lazy candidates)
+
 Located in `/src/features/`, some already lazy but could be reviewed:
+
 - `qa-monitoring/QAMonitoringPage.tsx` (1145 lines)
 - `system-center/tabs/DevToolsTab.tsx` (832 lines)
 - `governance-center/tabs/SecretsTab.tsx` (804 lines)
@@ -55,7 +59,9 @@ Located in `/src/features/`, some already lazy but could be reviewed:
 **Action**: Review import paths in parent pages; many may already be lazy.
 
 #### Category 2: Hook Optimization (v33 Stack Already Applied)
+
 Previous optimization completed in v33.0.0:
+
 - ✅ useMemoryEngine: -75% computation (3 memoized functions)
 - ✅ useMemoryCore: Memoized normalizeMemoryState
 - ✅ useIdentityMatrix: Memoized filtering + sorting
@@ -64,7 +70,9 @@ Previous optimization completed in v33.0.0:
 **Status**: Phase 33.2 complete, -80% total hook overhead achieved.
 
 #### Category 3: Component Library Cleanup (Estimated -20-30KB)
+
 Potential issues:
+
 - Unused CSS imports in component bundles
 - Shared utilities loaded eagerly instead of lazily
 - Avatar system (mentioned in v33 roadmap, may need optimization)
@@ -109,6 +117,7 @@ export function lazyComponent(
 ```
 
 **Files to Update** (unified pattern):
+
 - `src/App.tsx` - Replace all lazy() calls with lazyComponent()
 - `src/pages/TitanePage.tsx` - Standardize LazyComponent imports
 
@@ -119,11 +128,13 @@ export function lazyComponent(
 Identify pages using tabbed interfaces where tab content loads on-demand:
 
 **Candidates**:
+
 1. `TitanePage.tsx` - Already uses lazy tabs ✅
 2. `EvolutionCenterPage.tsx` - Check if all tabs are lazy
 3. `AdminPage.tsx` - Check if sub-pages are lazy
 
 **Pattern** (if not already implemented):
+
 ```typescript
 const [activeTab, setActiveTab] = useState('overview');
 
@@ -141,11 +152,13 @@ const TabContent = React.lazy(() => {
 ### STAGE 3: Avatar System Optimization (Medium-High)
 
 From v33 roadmap mentions, check if avatar rendering is optimized:
+
 - Deferred Avatar component loading
 - Lazy-load avatar animation assets
 - Memoize avatar state selectors
 
 **Action**: Review `/src/components/Avatar/` or similar:
+
 ```bash
 find src -name "*Avatar*" -o -name "*avatar*" | head -20
 ```
@@ -155,6 +168,7 @@ find src -name "*Avatar*" -o -name "*avatar*" | head -20
 ### STAGE 4: CSS Bundle Reduction (Easy)
 
 Review component CSS imports:
+
 - Remove unused CSS from lazy-loaded components
 - Consider CSS-in-JS for components loaded late
 - Audit shared styles for duplication
@@ -170,13 +184,14 @@ find src -name "*.css" | xargs wc -l | sort -rn | head -15
 
 Based on v24-v36 optimization stack:
 
-| Phase | Category | Estimated Savings |
-|-------|----------|-------------------|
-| Phase 1 (v37) ✅ | Provider lazy-loading | -100KB bundle |
-| Phase 2 (v37) 🔄 | UI component optimization | -50KB to -80KB |
-| **Total v37** | **All phases combined** | **-150KB to -180KB** |
+| Phase            | Category                  | Estimated Savings    |
+| ---------------- | ------------------------- | -------------------- |
+| Phase 1 (v37) ✅ | Provider lazy-loading     | -100KB bundle        |
+| Phase 2 (v37) 🔄 | UI component optimization | -50KB to -80KB       |
+| **Total v37**    | **All phases combined**   | **-150KB to -180KB** |
 
 **Performance Gains**:
+
 - FCP: -120-180ms (cumulative)
 - Initial bundle: -15-20%
 - Code coverage: ~85% of application code lazy-loaded
@@ -186,6 +201,7 @@ Based on v24-v36 optimization stack:
 ## 🎯 Phase 2 Work Breakdown
 
 ### Task A: Component Library Audit (2h)
+
 ```bash
 # 1. Find all lazy() declarations
 grep -r "lazy(() =>" src/ --include="*.tsx" --include="*.ts" | wc -l
@@ -200,6 +216,7 @@ find src/components -name "*.tsx" | xargs wc -l | sort -rn | head -15
 **Deliverable**: Audit report identifying 5-10 high-priority lazy-load candidates
 
 ### Task B: Component Wrapper Standardization (1h)
+
 ```typescript
 // Create lazyComponentLoader.ts
 // Update App.tsx to use consistent pattern
@@ -209,6 +226,7 @@ find src/components -name "*.tsx" | xargs wc -l | sort -rn | head -15
 **Deliverable**: Unified lazy-loading pattern across codebase
 
 ### Task C: Tab-Based Deferral Verification (1h)
+
 - Check TitanePage tab loading strategy
 - Check EvolutionCenterPage tab strategy
 - Identify any pre-rendered tabs that should be lazy
@@ -216,6 +234,7 @@ find src/components -name "*.tsx" | xargs wc -l | sort -rn | head -15
 **Deliverable**: List of verified tab implementations
 
 ### Task D: Avatar System Review (1-2h)
+
 - Locate avatar component(s)
 - Check if avatar rendering is deferred
 - Identify optimization opportunities
@@ -223,6 +242,7 @@ find src/components -name "*.tsx" | xargs wc -l | sort -rn | head -15
 **Deliverable**: Avatar optimization plan (may be Phase 3)
 
 ### Task E: CSS Optimization (1h)
+
 - Audit CSS file sizes
 - Identify unused styles in lazy components
 - Plan CSS-in-JS consolidation
@@ -234,6 +254,7 @@ find src/components -name "*.tsx" | xargs wc -l | sort -rn | head -15
 ## ⏭️ Next Steps After Phase 2
 
 ### Phase 3 Candidates (v38+)
+
 1. **Avatar System Optimization** - Lazy-load avatar rendering + animation assets
 2. **React.lazy UI Subcomponents** - Defer modal dialogs, dropdowns to idle time
 3. **Animation Asset Deferred Loading** - Preload animations on scroll to viewport
@@ -250,15 +271,15 @@ feat(v37): complete Phase 2 UI component lazy-loading
   - Created lazyComponentLoader.ts wrapper for unified pattern
   - Standardized React.lazy + Suspense across App.tsx, TitanePage.tsx
   - Added consistent timeout + fallback handling
-  
+
 🔄 OPTIMIZED: Tab-based component deferral
   - Verified TitanePage lazy tab loading strategy
   - [List specific tabs now lazy-loaded]
-  
+
 📦 AUDITED: Avatar system + CSS bundle
   - [Results of audit]
   - Identified [N] CSS optimization opportunities
-  
+
 ✅ VALIDATION: TypeScript strict mode compliance (0 errors)
 
 PERF IMPACT: Additional -50-80KB bundle, -120-180ms FCP (v37 cumulative)
