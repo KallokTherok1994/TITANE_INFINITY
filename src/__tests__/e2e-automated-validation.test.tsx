@@ -1339,12 +1339,13 @@ describe('🟣 OMEGA Phase 7Ω - E2E: Error Recovery', () => {
 
   it('should handle UI crashes with error boundaries', () => {
     // Mock corrupted message that would crash normal rendering
+    const testTimestamp = Date.now(); // Call outside component
     const CorruptedChat = () => {
       const [messages] = React.useState([
         null, // Null message
         { role: 'user' }, // Missing content
         { content: 'Test' }, // Missing role
-        { role: 'user', content: 'Valid message', timestamp: Date.now() },
+        { role: 'user', content: 'Valid message', timestamp: testTimestamp },
       ] as any);
 
       return <MessageList messages={messages} isLoading={false} />;
