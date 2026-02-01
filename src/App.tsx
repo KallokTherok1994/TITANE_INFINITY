@@ -30,7 +30,7 @@ import { logger } from './lib/logger';
 import { ThemeProvider } from './themes/ThemeProvider';
 import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
-import { AppShell, Sidebar, Header } from '@components/layout';
+import { AppShell, TopNav, createTopNavItems } from '@components/layout';
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
 const XPBar = lazy(() =>
@@ -50,7 +50,8 @@ import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // �
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
 import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
 import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ v29.1.0 - Optimized selectors
-import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors'; // ✨ v29.1.0 - Optimized selectors
+// Sidebar state removed in UI vΩ - Navigation moved to TopNav
+// import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
 import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
@@ -250,9 +251,9 @@ const AppRouter: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Use Singularity State instead of local state
-  const sidebarCollapsed = useSingularitySidebarCollapsed();
-  const { toggleSidebar } = useContextActions();
+  // UI vΩ: Sidebar removed, TopNav navigation only
+  // const sidebarCollapsed = useSingularitySidebarCollapsed();
+  // const { toggleSidebar } = useContextActions();
 
   // ✨ v19.5.2 - Toast system
   const toasts = useToasts();
@@ -743,40 +744,30 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // ✨ v25.3.0: Sidebar items - Architecture FINALE avec TITANE CORE
-  // FUSION v25.3.0: Chat IA + Vision + EVO → TITANE (le cœur du système)
-  const sidebarItems = useMemo(
+  // ✨ UI vΩ: TopNav items - Navigation horizontale (max 5 visibles)
+  const topNavSections = useMemo(
     () => [
       // ═══ PRINCIPAL ═══
-      { id: '/titane', label: 'TITANE', icon: '⚡', badge: 'v25.3' }, // FUSION: Chat+Vision+EVO
-      { id: '/time', label: 'TIME', icon: '🕐', badge: 'v25.1' }, // FUSION: Temporal+Agenda+TimeNav
-      { id: '/stats', label: 'STATS', icon: '📊', badge: 'v25.2' }, // FUSION: Nexus+Helios+Harmonia+Cognitif
-
-      // ═══ CENTRES UNIFIÉS ═══
-      { id: '/admin', label: 'ADMIN', icon: '👑', badge: 'v25.2' }, // FUSION: Système + Config + Audio + Design + Gouvernance
-      { id: '/dev', label: 'DEV', icon: '🔧', badge: 'v25.4' }, // FUSION: Dev Mode + ONE CORE + QA & Tests + Orchestration
-      { id: '/fusion', label: 'FUSION', icon: '🌌', badge: 'v25.3.2' }, // ✨ Backend/Frontend Perfect Fusion Dashboard
-      { id: '/optimization', label: 'OPTIMIZE', icon: '⚡', badge: 'v25.6' }, // ✨ Phase 12: GPU/WASM/Cache/IndexedDB Ultimate Performance
+      { id: 'titane', label: 'TITANE', route: '/titane', description: 'Le Cœur du Système' },
+      { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
+      { id: 'stats', label: 'STATS', route: '/stats', description: 'Métriques Système' },
+      { id: 'admin', label: 'ADMIN', route: '/admin', description: 'Centre Admin Unifié' },
+      { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
+      // Dans menu "Plus"
+      { id: 'fusion', label: 'FUSION', route: '/fusion', description: 'Backend/Frontend Fusion' },
+      { id: 'optimization', label: 'OPTIMIZE', route: '/optimization', description: 'Performance Ultime' },
     ],
     []
-  ); // Empty deps = stable reference
-
-  // ✨ v24.2.1: Memoized onItemClick to prevent re-renders
-  const handleSidebarClick = useCallback(
-    (item: { id: string }) => {
-      navigate(item.id);
-    },
-    [navigate]
   );
 
-  // ✨ v24.2.1: Memoized sidebar items with active state
-  const sidebarItemsWithActive = useMemo(
-    () =>
-      sidebarItems.map(item => ({
-        ...item,
-        active: item.id === location.pathname,
-      })),
-    [sidebarItems, location.pathname]
+  const topNavItems = useMemo(() => createTopNavItems(topNavSections), [topNavSections]);
+
+  // ✨ UI vΩ: Navigation handler
+  const handleNavigate = useCallback(
+    (route: string) => {
+      navigate(route);
+    },
+    [navigate]
   );
 
   // ✨ v19.5.2 - Handler onboarding completion
@@ -856,55 +847,17 @@ const AppRouter: React.FC = () => {
     return <OnboardingFlow onComplete={handleOnboardingComplete} />;
   }
 
-  // ✨ v19.5.2 - Main app (onboarding completed)
+  // ✨ UI vΩ - Main app with TopNav (sidebar removed)
   return (
     <AppShell
-      sidebar={
-        <Sidebar
-          items={sidebarItemsWithActive}
-          onItemClick={handleSidebarClick}
-          collapsed={sidebarCollapsed}
-          header={
-            <>
-              {/* Logo TITANE∞ Reactor */}
-              <div style={{ padding: '8px 0' }}>
-                <TitaneLogo
-                  size={sidebarCollapsed ? 32 : 36}
-                  withText={!sidebarCollapsed}
-                  direction="column"
-                />
-              </div>
-            </>
-          }
+      topNav={
+        <TopNav
+          items={topNavItems}
+          currentRoute={location.pathname}
+          onNavigate={handleNavigate}
+          maxVisibleItems={5}
         />
       }
-      header={
-        <Header
-          logo={
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={toggleSidebar}
-              leftIcon={sidebarCollapsed ? '→' : '←'}
-            >
-              {sidebarCollapsed ? 'Ouvrir' : 'Fermer'}
-            </Button>
-          }
-          title="TITANE∞"
-          subtitle={
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-              <span>v24.3.0 — Singularity Architecture • 20 Engines • Full OPUS</span>
-              <XPBar /> {/* ✨ v∞.D4 - Barre XP */}
-            </div>
-          }
-          actions={
-            <Suspense fallback={null}>
-              <AuraControlPanel position="header" defaultOpen={false} />
-            </Suspense>
-          }
-        />
-      }
-      sidebarCollapsed={sidebarCollapsed}
     >
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
