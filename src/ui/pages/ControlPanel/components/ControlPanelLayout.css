@@ -4,43 +4,43 @@
 
 .cp-layout {
   display: flex;
+  flex-direction: column;
   height: 100vh;
   background: var(--color-background);
 }
 
-/* Sidebar */
-.cp-sidebar {
-  width: 280px;
+/* Header */
+.cp-header {
   background: var(--color-surface);
-  border-right: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-}
-
-.cp-sidebar-header {
-  padding: var(--spacing-xl);
   border-bottom: 1px solid var(--color-border);
+  padding: var(--spacing-md) var(--spacing-xl);
 }
 
-.cp-sidebar-title {
+.cp-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-md);
+}
+
+.cp-header-title {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   font-size: var(--font-size-xl);
   font-weight: 700;
   color: var(--color-text-primary);
-  margin: 0 0 var(--spacing-md) 0;
+  margin: 0;
 }
 
-.cp-sidebar-icon {
+.cp-header-icon {
   font-size: var(--font-size-2xl);
 }
 
-.cp-sidebar-status {
+.cp-header-status {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-md);
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
 }
@@ -67,28 +67,30 @@
   }
 }
 
-/* Navigation */
-.cp-sidebar-nav {
-  flex: 1;
-  padding: var(--spacing-md);
+/* Navigation horizontale */
+.cp-nav {
   display: flex;
-  flex-direction: column;
   gap: var(--spacing-xs);
+  overflow-x: auto;
+  padding: 0;
+  scrollbar-width: thin;
 }
 
 .cp-nav-item {
   position: relative;
   display: flex;
   align-items: center;
-  gap: var(--spacing-md);
-  padding: var(--spacing-md);
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
   background: transparent;
   border: none;
   border-radius: var(--radius-sm);
-  text-align: left;
+  text-align: center;
   cursor: pointer;
   transition: all 0.2s ease;
   color: var(--color-text-secondary);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .cp-nav-item:hover {
@@ -99,47 +101,25 @@
 .cp-nav-item.active {
   background: var(--color-primary);
   color: white;
+  border-bottom: 3px solid currentColor;
 }
 
 .cp-nav-icon {
-  font-size: var(--font-size-xl);
+  font-size: var(--font-size-lg);
   flex-shrink: 0;
 }
 
 .cp-nav-label {
-  font-size: var(--font-size-md);
-  font-weight: 500;
-}
-
-.cp-nav-indicator {
-  position: absolute;
-  right: var(--spacing-md);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: white;
-}
-
-/* Footer */
-.cp-sidebar-footer {
-  padding: var(--spacing-lg);
-  border-top: 1px solid var(--color-border);
-}
-
-.cp-version {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   font-size: var(--font-size-sm);
-}
-
-.cp-version-label {
-  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .cp-version-value {
   font-weight: 600;
   color: var(--color-text-primary);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: var(--color-background);
+  border-radius: var(--radius-sm);
 }
 
 /* Main content */
@@ -150,56 +130,37 @@
 }
 
 /* Responsive */
-@media (max-width: 1024px) {
-  .cp-sidebar {
-    width: 240px;
-  }
-}
-
 @media (max-width: 768px) {
-  .cp-layout {
+  .cp-header {
+    padding: var(--spacing-sm) var(--spacing-md);
+  }
+
+  .cp-header-content {
     flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
   }
 
-  .cp-sidebar {
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid var(--color-border);
-    max-height: 60px;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
-
-  .cp-sidebar-header {
-    padding: var(--spacing-md);
-  }
-
-  .cp-sidebar-title {
+  .cp-header-title {
     font-size: var(--font-size-lg);
   }
 
-  .cp-sidebar-status,
-  .cp-sidebar-footer {
-    display: none;
+  .cp-header-status {
+    font-size: var(--font-size-xs);
+    gap: var(--spacing-sm);
   }
 
-  .cp-sidebar-nav {
-    flex-direction: row;
-    padding: var(--spacing-sm);
+  .cp-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .cp-nav-item {
-    flex-direction: column;
-    gap: var(--spacing-xs);
-    padding: var(--spacing-sm);
-    min-width: 80px;
+    padding: var(--spacing-xs) var(--spacing-sm);
   }
 
   .cp-nav-label {
-    font-size: var(--font-size-xs);
-  }
-
-  .cp-nav-indicator {
     display: none;
   }
 }
+
