@@ -179,7 +179,7 @@ export function EvolutionPipeline() {
                   .map((rec: Recommendation, idx: number) => (
                     <div
                       key={idx}
-                      className="p-4 bg-gradient-to-r from-blue-900/20 to-purple-900/20 rounded-lg"
+                      className="p-4 bg-linear-to-r from-blue-900/20 to-purple-900/20 rounded-lg"
                     >
                       <div className="flex items-start gap-3">
                         <Badge color="blue" size="sm">
