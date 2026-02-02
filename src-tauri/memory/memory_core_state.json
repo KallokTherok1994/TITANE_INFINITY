@@ -2,6 +2,13 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1769990472950-sd957y2k",
+      "timestamp": 1769990472950,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
       "id": "ui-1769989287836-345uwy0y",
       "timestamp": 1769989287836,
       "level": "Info",
@@ -2803,7 +2810,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1769989287858,
+    "last_validation_ts": 1769990472993,
     "last_compaction_ts": null
   }
 }

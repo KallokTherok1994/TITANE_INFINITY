@@ -14,9 +14,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { memo, useMemo } from 'react';
+import React, { memo, useMemo, useState } from 'react';
 import './MessageBubble.css';
 import { MarkdownContent } from './MarkdownContent';
+import { ChatFallback } from './ChatFallback';
 import { MessageReactions } from './MessageReactions'; // Sprint 6 Phase 3
 
 interface MessageBubbleProps {
@@ -24,6 +25,8 @@ interface MessageBubbleProps {
   content: string;
   timestamp: number;
   isLatest?: boolean;
+  onRetry?: () => void;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -81,15 +84,20 @@ export const MessageBubble = memo(function MessageBubble({
   content,
   timestamp,
   isLatest = false,
+  onRetry,
+  metadata,
 }: MessageBubbleProps) {
+  // État pour gérer le retry loading
+  const [isRetrying, setIsRetrying] = useState(false);
+
   // Memoize le temps formaté
   const formattedTime = useMemo(() => formatTime(timestamp), [timestamp]);
 
   // Memoize les classes CSS
   const bubbleClasses = useMemo(
     () =>
-      `message-bubble message-bubble-${role} ${isLatest ? 'message-bubble-latest' : ''}`,
-    [role, isLatest]
+      `message-bubble message-bubble-${role} ${isLatest ? 'message-bubble-latest' : ''} ${isRetrying ? 'message-bubble-loading' : ''}`,
+    [role, isLatest, isRetrying]
   );
 
   // Memoize le label aria
@@ -98,25 +106,65 @@ export const MessageBubble = memo(function MessageBubble({
     [role]
   );
 
-  // Contenu du message avec markdown amélioré
+  // Handler pour retry avec état loading
+  const handleRetry = React.useCallback(async () => {
+    if (!onRetry || isRetrying) return;
+    
+    setIsRetrying(true);
+    try {
+      await onRetry();
+    } finally {
+      // Reset après un délai pour permettre de voir l'état
+      setTimeout(() => setIsRetrying(false), 500);
+    }
+  }, [onRetry, isRetrying]);
+
+  // Handler pour copier le diagnostic
+  const handleCopyDiagnostic = React.useCallback((diagnostic: string) => {
+    navigator.clipboard?.writeText(diagnostic).catch(console.error);
+  }, []);
+
+  // Contenu du message avec markdown amélioré et fallback UI
   const messageContent = useMemo(() => {
     if (role === 'assistant') {
+      // Si retry en cours, afficher état loading
+      if (isRetrying) {
+        return (
+          <div className="message-retry-loading">
+            <TypingIndicator />
+            <span className="message-retry-text">Nouvelle tentative en cours...</span>
+          </div>
+        );
+      }
+
       // Si le message a du contenu, l'afficher avec markdown
       if (content && content.trim().length > 0) {
-        // Utiliser notre MarkdownContent pour meilleur support
         return <MarkdownContent content={content} />;
       }
+      
       // Si le message est vide mais récent (< 3s), afficher le typing indicator
-      // Sinon afficher un placeholder pour indiquer un problème
       const messageAge = Date.now() - timestamp;
       if (messageAge < 3000) {
         return <TypingIndicator />;
       }
-      // Message vide et ancien = erreur ou placeholder non mis à jour
-      return <div className="message-error">⚠️ Erreur: aucune réponse générée</div>;
+      
+      // Message vide et ancien = erreur → Utiliser ChatFallback
+      return (
+        <ChatFallback
+          reason="empty-response"
+          traceId={metadata?.traceId as string | undefined}
+          timestamp={timestamp}
+          provider={metadata?.provider as string | undefined}
+          mode={metadata?.mode as string | undefined}
+          pipelineState={metadata?.pipelineState as string | undefined}
+          onRetry={onRetry ? handleRetry : undefined}
+          onCopyDiagnostic={handleCopyDiagnostic}
+          className="message-bubble-fallback"
+        />
+      );
     }
     return content;
-  }, [role, content, timestamp]);
+  }, [role, content, timestamp, isRetrying, metadata, onRetry, handleRetry, handleCopyDiagnostic]);
 
   return (
     <div className={bubbleClasses} role="article" aria-label={ariaLabel}>
