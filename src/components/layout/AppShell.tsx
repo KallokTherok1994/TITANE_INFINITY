@@ -36,6 +36,7 @@ export const AppShell = ({
   footer,
   className,
 }: AppShellProps): JSX.Element => {
+  // TEST VIOLATION: Modification UI sans entry registry (doit échouer GATE_UI_INDEX)
   return (
     <div
       className={cn(
