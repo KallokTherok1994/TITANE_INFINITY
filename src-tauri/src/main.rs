@@ -545,6 +545,7 @@ fn main() {
         .manage(singularity_fusion::CrashGuardState::default())
         .manage(singularity_fusion::PerformanceState::default())
         .manage(singularity_fusion::UnifiedPipelineState::default())
+        .manage(singularity_fusion::FusionEngineState::default())
         .manage(state_bridge_commands::FrontendStateStore::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
@@ -889,6 +890,25 @@ fn main() {
             singularity_fusion::pipeline_resume,
             singularity_fusion::pipeline_reset,
             singularity_fusion::pipeline_validate,
+
+            // FUSION ENGINE COMMANDS (Singularity Cycle Steps 2-4)
+            singularity_fusion::singularity_get_fusion_state,
+            singularity_fusion::singularity_start_sync_loop,
+            singularity_fusion::singularity_perform_sync,
+            singularity_fusion::singularity_check_integrity,
+            singularity_fusion::singularity_create_snapshot,
+            singularity_fusion::singularity_restore_snapshot,
+            singularity_fusion::singularity_register_pipeline,
+            singularity_fusion::singularity_complete_pipeline,
+            singularity_fusion::singularity_detect_inconsistencies,
+            singularity_fusion::singularity_get_metrics,
+            singularity_fusion::singularity_get_diagnostics,
+            singularity_fusion::singularity_reset,
+            // ✅ NEW v27.1.0: Fusion Cycle Steps
+            singularity_fusion::fusion_activate_modules,
+            singularity_fusion::fusion_adjust_styles,
+            singularity_fusion::fusion_generate_ia_response,
+
             // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
