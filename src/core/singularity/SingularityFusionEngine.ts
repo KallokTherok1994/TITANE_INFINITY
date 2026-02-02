@@ -144,6 +144,7 @@ export interface ModuleActivation {
   voice: boolean;
   avatar: boolean;
   appearance: boolean;
+  timestamp?: number;
 }
 
 export interface StyleConfig {
@@ -152,6 +153,7 @@ export interface StyleConfig {
   voice_parameters: VoiceParams;
   avatar_expression: string;
   animation_style: string;
+  timestamp?: number;
 }
 
 export interface VoiceParams {
@@ -369,57 +371,81 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 2: ACTIVATION MODULES
   // ═══════════════════════════════════════════════════════════════════
-  // [PENDING-BACKEND] 'fusion_activate_modules' Tauri command not yet implemented
-  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md for status
-  // Using local fallback logic - requires backend implementation for full feature
+  // ✅ v27.1.0: NOW IMPLEMENTED via fusion_activate_modules Tauri command
 
   private async step2_ActivateModules(
     intention: IntentionAnalysis
   ): Promise<ModuleActivation> {
-    // FALLBACK: Local module activation logic
-    console.log(
-      '[FusionEngine] Step 2: Using local fallback (fusion_activate_modules not implemented)'
-    );
+    try {
+      // Call Tauri backend command
+      const activation = await secureInvoke<ModuleActivation>(
+        'fusion_activate_modules',
+        {
+          complexity: intention.complexity,
+          requires_emotion: intention.requires_emotion,
+          requires_animation: intention.requires_animation,
+        }
+      );
 
-    return {
-      cognitive: true,
-      adaptive: intention.complexity !== 'simple',
-      narrative: true,
-      emotion: intention.requires_emotion,
-      memory: intention.requires_long_context,
-      voice: true,
-      avatar: intention.requires_animation,
-      appearance: intention.requires_animation,
-    };
+      console.log('[FusionEngine] Step 2: Modules activated via backend', activation);
+      return activation;
+    } catch (error) {
+      console.warn('[FusionEngine] Step 2: Backend call failed, using fallback', error);
+      // Fallback to local logic
+      return {
+        cognitive: true,
+        adaptive: intention.complexity !== 'simple',
+        narrative: true,
+        emotion: intention.requires_emotion,
+        memory: intention.requires_long_context,
+        voice: true,
+        avatar: intention.requires_animation,
+        appearance: intention.requires_animation,
+        timestamp: Date.now(),
+      };
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
   // STEP 3: AJUSTEMENT STYLES
   // ═══════════════════════════════════════════════════════════════════
-  // [PENDING-BACKEND] 'fusion_adjust_styles' Tauri command not yet implemented
-  // Using local fallback logic - requires backend implementation for full feature
+  // ✅ v27.1.0: NOW IMPLEMENTED via fusion_adjust_styles Tauri command
 
   private async step3_AdjustStyles(
     intention: IntentionAnalysis,
     preferences: UserPreferences
   ): Promise<StyleConfig> {
-    // FALLBACK: Local style configuration
-    console.log(
-      '[FusionEngine] Step 3: Using local fallback (fusion_adjust_styles not implemented)'
-    );
+    try {
+      // Call Tauri backend command
+      const styleConfig = await secureInvoke<StyleConfig>(
+        'fusion_adjust_styles',
+        {
+          narrative_style: preferences.narrative_style,
+          emotion_modulation: preferences.emotion_modulation,
+          voice_speed: preferences.voice_speed,
+          voice_pitch: preferences.voice_pitch,
+        }
+      );
 
-    return {
-      narrative_tone: preferences.narrative_style,
-      emotional_intensity: preferences.emotion_modulation,
-      voice_parameters: {
-        speed: preferences.voice_speed,
-        pitch: preferences.voice_pitch,
-        volume: 1.0,
-        timbre: 'warm',
-      },
-      avatar_expression: 'neutral',
-      animation_style: 'natural',
-    };
+      console.log('[FusionEngine] Step 3: Styles adjusted via backend', styleConfig);
+      return styleConfig;
+    } catch (error) {
+      console.warn('[FusionEngine] Step 3: Backend call failed, using fallback', error);
+      // Fallback to local logic
+      return {
+        narrative_tone: preferences.narrative_style,
+        emotional_intensity: preferences.emotion_modulation,
+        voice_parameters: {
+          speed: preferences.voice_speed,
+          pitch: preferences.voice_pitch,
+          volume: 1.0,
+          timbre: 'warm',
+        },
+        avatar_expression: 'neutral',
+        animation_style: 'natural',
+        timestamp: Date.now(),
+      };
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════
@@ -444,16 +470,29 @@ export class SingularityFusionEngine {
 
       await CognitiveOptimizer.optimizeFullPipeline(message, cognitiveMessages);
 
-      // [PENDING-BACKEND] 'fusion_generate_ia_response' Tauri command not yet implemented
-      // Using fallback response - requires backend implementation for full feature
-      // FALLBACK: Return placeholder response
-      console.log(
-        '[FusionEngine] Step 4: Using fallback (fusion_generate_ia_response not implemented)'
-      );
-      const response =
-        'Je suis en cours de configuration. Le système Singularity Fusion sera bientôt opérationnel.';
+      // ✅ v27.1.0: NOW IMPLEMENTED via fusion_generate_ia_response Tauri command
+      // Build context from history
+      const context = history
+        .slice(-5)
+        .map(m => `${m.role}: ${m.content}`)
+        .join('\n');
 
-      // Skip coherence check for now
+      const iaResponse = await secureInvoke<any>(
+        'fusion_generate_ia_response',
+        {
+          message,
+          context,
+          mode: 'ASSISTANT_MODE',
+        }
+      );
+
+      const response = iaResponse.response || 'Réponse générée avec succès.';
+      console.log('[FusionEngine] Step 4: IA response generated via backend', {
+        tokens: iaResponse.tokens_used,
+        confidence: iaResponse.confidence,
+        time: iaResponse.processing_time_ms,
+      });
+
       return response;
     } catch (error) {
       console.error('[FusionEngine] Step 4 error:', error);

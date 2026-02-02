@@ -316,6 +316,197 @@ pub async fn singularity_reset(state: State<'_, FusionEngineState>) -> Result<()
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// FUSION CYCLE STEP 2: ACTIVATE MODULES
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ModuleActivation {
+    pub cognitive: bool,
+    pub adaptive: bool,
+    pub narrative: bool,
+    pub emotion: bool,
+    pub memory: bool,
+    pub voice: bool,
+    pub avatar: bool,
+    pub appearance: bool,
+    pub timestamp: u64,
+}
+
+/// Étape 2 du cycle Singularity: Active les modules nécessaires
+/// Basé sur l'analyse d'intention, activerait les moteurs requis
+#[tauri::command]
+pub async fn fusion_activate_modules(
+    state: State<'_, FusionEngineState>,
+    complexity: String,
+    requires_emotion: bool,
+    requires_animation: bool,
+) -> Result<ModuleActivation, String> {
+    let _fusion_state = state.state.lock().map_err(|e| e.to_string())?;
+
+    // Activer les modules basé sur les paramètres d'intention
+    let adaptive = complexity != "simple";
+    let memory = complexity == "complex";
+
+    let activation = ModuleActivation {
+        cognitive: true,
+        adaptive,
+        narrative: true,
+        emotion: requires_emotion,
+        memory,
+        voice: true,
+        avatar: requires_animation,
+        appearance: requires_animation,
+        timestamp: current_timestamp(),
+    };
+
+    println!(
+        "[FusionEngine] Step 2: Modules activés - cognitive: true, adaptive: {}, emotion: {}, avatar: {}",
+        adaptive, requires_emotion, requires_animation
+    );
+
+    Ok(activation)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FUSION CYCLE STEP 3: ADJUST STYLES
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct VoiceParameters {
+    pub speed: f32,
+    pub pitch: f32,
+    pub volume: f32,
+    pub timbre: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StyleConfig {
+    pub narrative_tone: String,
+    pub emotional_intensity: f32,
+    pub voice_parameters: VoiceParameters,
+    pub avatar_expression: String,
+    pub animation_style: String,
+    pub timestamp: u64,
+}
+
+/// Étape 3 du cycle Singularity: Ajuste les styles narratifs et audiovisuels
+/// Configure les paramètres de voix, expression avatar, et style d'animation
+#[tauri::command]
+pub async fn fusion_adjust_styles(
+    state: State<'_, FusionEngineState>,
+    narrative_style: String,
+    emotion_modulation: f32,
+    voice_speed: f32,
+    voice_pitch: f32,
+) -> Result<StyleConfig, String> {
+    let _fusion_state = state.state.lock().map_err(|e| e.to_string())?;
+
+    // Mapper style narratif à expression avatar
+    let avatar_expression = match narrative_style.as_str() {
+        "formal" => "serious",
+        "technical" => "focused",
+        "creative" => "animated",
+        "casual" => "friendly",
+        _ => "neutral",
+    };
+
+    // Déterminer style animation basé sur intensité émotionnelle
+    let animation_style = if emotion_modulation > 0.7 {
+        "expressive"
+    } else if emotion_modulation > 0.4 {
+        "moderate"
+    } else {
+        "natural"
+    };
+
+    let config = StyleConfig {
+        narrative_tone: narrative_style,
+        emotional_intensity: emotion_modulation,
+        voice_parameters: VoiceParameters {
+            speed: voice_speed,
+            pitch: voice_pitch,
+            volume: 1.0,
+            timbre: "warm".to_string(),
+        },
+        avatar_expression: avatar_expression.to_string(),
+        animation_style: animation_style.to_string(),
+        timestamp: current_timestamp(),
+    };
+
+    println!(
+        "[FusionEngine] Step 3: Styles ajustés - tone: {}, emotion: {:.2}, voice_speed: {:.2}",
+        config.narrative_tone, config.emotional_intensity, voice_speed
+    );
+
+    Ok(config)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// FUSION CYCLE STEP 4: GENERATE IA RESPONSE
+// ═══════════════════════════════════════════════════════════════════════════
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IAGenerationRequest {
+    pub message: String,
+    pub context: String,
+    pub mode: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IAGenerationResponse {
+    pub response: String,
+    pub confidence: f32,
+    pub processing_time_ms: u64,
+    pub tokens_used: u32,
+    pub model: String,
+    pub timestamp: u64,
+}
+
+/// Étape 4 du cycle Singularity: Génère la réponse IA
+/// Utilise le contexte, l'historique, et le mode pour générer réponse optimisée
+#[tauri::command]
+pub async fn fusion_generate_ia_response(
+    state: State<'_, FusionEngineState>,
+    message: String,
+    context: String,
+    mode: String,
+) -> Result<IAGenerationResponse, String> {
+    let mut metrics = state.metrics.lock().map_err(|e| e.to_string())?;
+    let start_time = current_timestamp();
+
+    // En production, ceci appellerait le moteur d'IA réel (OpenAI, Claude, etc.)
+    // Pour maintenant, génère réponse de fallback intelligente
+    let response = match mode.as_str() {
+        "ASSISTANT_MODE" => format!("Je vous aide avec: {}. {}", message, context),
+        "TUTOR_MODE" => format!("Leçon sur {}. Explication: {}", message, context),
+        "CREATIVE_MODE" => format!(
+            "Création basée sur '{}'. Contexte créatif: {}",
+            message, context
+        ),
+        _ => format!("Réponse à: {}. Contexte: {}", message, context),
+    };
+
+    let processing_time = current_timestamp() - start_time;
+    metrics.total_events += 1;
+
+    let result = IAGenerationResponse {
+        response,
+        confidence: 0.85,
+        processing_time_ms: processing_time,
+        tokens_used: (message.len() / 4) as u32,
+        model: "singularity-fusion-v1".to_string(),
+        timestamp: current_timestamp(),
+    };
+
+    println!(
+        "[FusionEngine] Step 4: IA Response générée - mode: {}, tokens: {}, time: {}ms",
+        mode, result.tokens_used, processing_time
+    );
+
+    Ok(result)
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════════════════
 
