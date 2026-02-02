@@ -37,15 +37,18 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
       React.createElement(
         BrowserRouter,
         null,
-        React.createElement(AppShell, {
-          topNav: React.createElement(TopNav, {
-            items,
-            currentRoute: '/titane',
-            onNavigate: () => undefined,
-            maxVisibleItems: 5,
-          }),
-          children: React.createElement('div', null),
-        })
+        React.createElement(
+          AppShell,
+          {
+            topNav: React.createElement(TopNav, {
+              items,
+              currentRoute: '/titane',
+              onNavigate: () => undefined,
+              maxVisibleItems: 5,
+            }),
+          },
+          React.createElement('div', null)
+        )
       )
     );
   };

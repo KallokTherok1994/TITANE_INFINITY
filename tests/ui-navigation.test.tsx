@@ -34,7 +34,7 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
 
     // Chercher toutes les navigations globales
     const navElements = screen.queryAllByRole('navigation', { 
-      name: /principale|navigation principale/i 
+      name: /principale|navigation principale/i,
     });
     
     expect(navElements).toHaveLength(1);
