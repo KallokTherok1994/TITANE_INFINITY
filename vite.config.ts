@@ -311,6 +311,14 @@ export default defineConfig({
             if (id.includes('chart.js') || id.includes('chartjs')) {
               return 'charts';
             }
+            // Plotly and visualization libraries (heavy)
+            if (id.includes('plotly') || id.includes('echarts') || id.includes('highcharts')) {
+              return 'charts-heavy';
+            }
+            // Moment.js and date libraries (heavy)
+            if (id.includes('moment') || id.includes('dayjs')) {
+              return 'datelib';
+            }
             // Autres vendors groupés
             return 'vendor-utils';
           }
