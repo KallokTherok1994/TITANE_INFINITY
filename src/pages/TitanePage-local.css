@@ -5,74 +5,67 @@
  */
 
 /* ═══════════════════════════════════════════════════════════════
-   LOCAL SECTION (Non-Navbar, Integrated Content)
+   PAGE HEADER (Integrated Content, Not Navigation Bar)
    ═══════════════════════════════════════════════════════════════ */
 
-.titane-local-section {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  /* NOT sticky, NOT navbar-like */
+.titane-page-header {
+  padding: 1.5rem;
+  margin-bottom: 0.5rem;
+  /* Clearly integrated in content, not a navigation bar */
   position: relative;
-}
-
-.titane-section-header {
-  padding: 1rem 0;
-  /* Subtle, non-prominent styling */
-  border-bottom: 1px solid var(--titanium-border-subtle, rgba(255, 255, 255, 0.05));
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid var(--titanium-border-subtle, rgba(255, 255, 255, 0.05));
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   TABS (Local Navigation, Visually Secondary)
+   INLINE TABS (Content Section Switcher, Not Navigation)
    ═══════════════════════════════════════════════════════════════ */
 
-.titane-tabs-container {
+.titane-inline-tabs {
   display: flex;
-  gap: 0.25rem;
-  overflow-x: auto;
-  padding: 0.5rem 0;
-  /* Visually secondary - no background, minimal border */
-  border-bottom: 1px solid var(--titanium-border-subtle, rgba(255, 255, 255, 0.05));
-  /* Ensure no navbar-like styling */
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  /* Integrated in content card, not a top bar */\n  padding: 0;
   background: transparent;
-  backdrop-filter: none;
+  border: none;
   box-shadow: none;
+  backdrop-filter: none;
 }
 
-.titane-tabs-container::-webkit-scrollbar {
+.titane-inline-tabs::-webkit-scrollbar {
   height: 4px;
 }
 
-.titane-tabs-container::-webkit-scrollbar-thumb {
+.titane-inline-tabs::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 2px;
 }
 
-/* Tab buttons - compact and secondary */
-.titane-tabs-container button {
+/* Tab buttons - pill style, clearly not navigation */
+.titane-inline-tabs button {
   flex-shrink: 0;
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  border-radius: 6px;
+  border-radius: 20px;
   transition: all 0.2s ease;
-  /* Ensure no navbar-like appearance */
-  background: transparent;
-  border: 1px solid transparent;
+  /* Pill-style buttons, clearly content-level */
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.titane-tabs-container button[aria-selected='true'] {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
+.titane-inline-tabs button[aria-selected='true'] {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.4);
   color: var(--titanium-accent-cool, #3b82f6);
 }
 
-.titane-tabs-container button[aria-selected='false'] {
+.titane-inline-tabs button[aria-selected='false'] {
   color: var(--titanium-text-secondary, rgba(255, 255, 255, 0.6));
 }
 
-.titane-tabs-container button[aria-selected='false']:hover {
+.titane-inline-tabs button[aria-selected='false']:hover {
   background: rgba(255, 255, 255, 0.05);
   color: var(--titanium-text-primary, rgba(255, 255, 255, 0.9));
 }
