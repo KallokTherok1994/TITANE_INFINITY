@@ -556,7 +556,7 @@ export const AIChatBubble: React.FC<AIChatBubbleProps> = ({
     // Importer les messages dans la conversation (implémentation simple)
     // Note: Ceci serait intégré avec useConversationEngine pour une vraie implémentation
     console.log('[AIChatBubble] 📥 Imported messages:', importedMessages.length);
-    // TODO: Appeler une action pour charger les messages importés
+    // [DEPENDENCY] Requires conversation engine integration - see useConversationEngine hook
   }, []);
 
   // ═══ RENDER BUBBLE (Minimized) ═══

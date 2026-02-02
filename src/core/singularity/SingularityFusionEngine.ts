@@ -369,9 +369,9 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 2: ACTIVATION MODULES
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_activate_modules' not yet implemented in backend
-  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md
-  // TODO: Re-enable when backend command is implemented
+  // [PENDING-BACKEND] 'fusion_activate_modules' Tauri command not yet implemented
+  // See: AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md for status
+  // Using local fallback logic - requires backend implementation for full feature
 
   private async step2_ActivateModules(
     intention: IntentionAnalysis
@@ -396,8 +396,8 @@ export class SingularityFusionEngine {
   // ═══════════════════════════════════════════════════════════════════
   // STEP 3: AJUSTEMENT STYLES
   // ═══════════════════════════════════════════════════════════════════
-  // ⚠️ TEMPORARILY DISABLED: 'fusion_adjust_styles' not yet implemented
-  // TODO: Re-enable when backend command is implemented
+  // [PENDING-BACKEND] 'fusion_adjust_styles' Tauri command not yet implemented
+  // Using local fallback logic - requires backend implementation for full feature
 
   private async step3_AdjustStyles(
     intention: IntentionAnalysis,
@@ -444,8 +444,8 @@ export class SingularityFusionEngine {
 
       await CognitiveOptimizer.optimizeFullPipeline(message, cognitiveMessages);
 
-      // ⚠️ TEMPORARILY DISABLED: 'fusion_generate_ia_response' not yet implemented
-      // TODO: Re-enable when backend command is implemented
+      // [PENDING-BACKEND] 'fusion_generate_ia_response' Tauri command not yet implemented
+      // Using fallback response - requires backend implementation for full feature
       // FALLBACK: Return placeholder response
       console.log(
         '[FusionEngine] Step 4: Using fallback (fusion_generate_ia_response not implemented)'
