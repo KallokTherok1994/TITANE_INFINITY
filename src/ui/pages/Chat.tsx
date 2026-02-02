@@ -510,7 +510,7 @@ function useOmegaRenderProtection() {
 // Clé localStorage pour persistance du mode
 const CHAT_MODE_STORAGE_KEY = 'titane-chat-mode';
 
-export const Chat: React.FC = () => {
+const ChatComponent: React.FC = () => {
   const mountedRef = useRef(false);
   const settingsPanelRef = useRef<HTMLDivElement>(null);
 
@@ -1540,5 +1540,13 @@ export const Chat: React.FC = () => {
     );
   }
 };
+
+/**
+ * OMEGA Chat Page wrapped with React.memo for performance
+ * Prevents unnecessary re-renders when parent re-renders
+ * Phase 5: Performance optimization
+ */
+export const Chat = React.memo(ChatComponent);
+Chat.displayName = 'ChatPage';
 
 export default Chat;
