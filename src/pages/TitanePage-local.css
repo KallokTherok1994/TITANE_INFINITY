@@ -5,22 +5,12 @@
  */
 
 /* ═══════════════════════════════════════════════════════════════
-   PAGE HEADER (Integrated Content, Not Navigation Bar)
+   TABS ONLY (No Page Header, Direct Content Navigation)
    ═══════════════════════════════════════════════════════════════ */
 
-.titane-page-header {
-  padding: 1.5rem;
-  margin-bottom: 0.5rem;
-  /* Clearly integrated in content, not a navigation bar */
-  position: relative;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 12px;
-  border: 1px solid var(--titanium-border-subtle, rgba(255, 255, 255, 0.05));
+.titane-page-tabs-only {
+  margin-bottom: 1rem;
 }
-
-/* ═══════════════════════════════════════════════════════════════
-   INLINE TABS (Content Section Switcher, Not Navigation)
-   ═══════════════════════════════════════════════════════════════ */
 
 .titane-inline-tabs {
   display: flex;
