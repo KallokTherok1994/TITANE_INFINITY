@@ -11,7 +11,7 @@
   gap: var(--spacing-6, 24px);
   padding: var(--spacing-6, 24px);
   background: var(--bg-base, #050607);
-  min-height: 100vh;
+  min-height: 100%;
   color: var(--text-primary, #e5e7eb);
 }
 

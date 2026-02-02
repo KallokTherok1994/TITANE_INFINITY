@@ -5,7 +5,7 @@
   max-width: 1400px;
   margin: 0 auto;
   background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
-  min-height: 100vh;
+  min-height: 100%;
   color: #e0e0e0;
 }
 
