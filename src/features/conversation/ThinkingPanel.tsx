@@ -9,7 +9,7 @@
  * Mode compact par défaut, expansible sur demande (style ChatGPT/Claude)
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Brain, Sparkles, Loader2, Check, ChevronDown, ChevronUp } from 'lucide-react';
 import './ThinkingPanel.css';
@@ -32,7 +32,7 @@ interface ThinkingPanelProps {
   elapsedTime?: number; // Temps écoulé en secondes (v2.1)
 }
 
-export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
+export const ThinkingPanel: React.FC<ThinkingPanelProps> = memo(function ThinkingPanel({
   isThinking,
   steps = [],
   onClose,
@@ -40,7 +40,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   inline = false,
   provider,
   elapsedTime,
-}) => {
+}) {
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
 
@@ -63,7 +63,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     return '⚡';
   };
 
-  const toggleStep = (id: string) => {
+  const toggleStep = useCallback((id: string) => {
     setExpandedSteps(prev => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -73,7 +73,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
       }
       return next;
     });
-  };
+  }, []);
 
   const getStepIcon = (type: ThinkingStep['type'], status: ThinkingStep['status']) => {
     if (status === 'complete') {
@@ -267,7 +267,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
       </motion.div>
     </AnimatePresence>
   );
-};
+});
+
+ThinkingPanel.displayName = 'ThinkingPanel';
 
 /**
  * Hook to manage thinking steps with compact mode support
