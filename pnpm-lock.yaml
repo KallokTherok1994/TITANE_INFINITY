@@ -208,8 +208,8 @@ importers:
         specifier: ^5.3.3
         version: 5.3.3
       '@types/react-window':
-        specifier: ^1.8.8
-        version: 1.8.8
+        specifier: ^2.0.0
+        version: 2.0.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
@@ -301,8 +301,8 @@ importers:
         specifier: ^19.2.4
         version: 19.2.4(react@19.2.4)
       react-window:
-        specifier: ^2.2.5
-        version: 2.2.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+        specifier: ^2.2.6
+        version: 2.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       rollup-plugin-visualizer:
         specifier: ^6.0.5
         version: 6.0.5(rollup@2.79.2)
@@ -1959,8 +1959,9 @@ packages:
   '@types/react-router@5.1.20':
     resolution: {integrity: sha512-jGjmu/ZqS7FjSH6owMcD5qpq19+1RS9DeVRqfl1FeBMxTDQAGwlMWOcs52NDoXaNKyG3d1cYQFMs9rCrb88o9Q==}
 
-  '@types/react-window@1.8.8':
-    resolution: {integrity: sha512-8Ls660bHR1AUA2kuRvVG9D/4XpRC6wjAaPT9dil7Ckc76eP9TKWZwwmgfq8Q1LANX3QNDnoU4Zp48A3w+zK69Q==}
+  '@types/react-window@2.0.0':
+    resolution: {integrity: sha512-E8hMDtImEpMk1SjswSvqoSmYvk7GEtyVaTa/GJV++FdDNuMVVEzpAClyJ0nqeKYBrMkGiyH6M1+rPLM0Nu1exQ==}
+    deprecated: This is a stub types definition. react-window provides its own type definitions, so you do not need this installed.
 
   '@types/react@19.2.10':
     resolution: {integrity: sha512-WPigyYuGhgZ/cTPRXB2EwUw+XvsRA3GqHlsP4qteqrnnjDrApbS7MxcGr/hke5iUoeB7E/gQtrs9I37zAJ0Vjw==}
@@ -4342,8 +4343,8 @@ packages:
       react-dom:
         optional: true
 
-  react-window@2.2.5:
-    resolution: {integrity: sha512-6viWvPSZvVuMIe9hrl4IIZoVfO/npiqOb03m4Z9w+VihmVzBbiudUrtUqDpsWdKvd/Ai31TCR25CBcFFAUm28w==}
+  react-window@2.2.6:
+    resolution: {integrity: sha512-v89O08xRdpCaEuf380B39D1C/0KgUDZA59xft6SVAjzjz/xQxSyXrgDWHymIsYI6TMrqE8WO+G0/PB9AGE8VNA==}
     peerDependencies:
       react: ^18.0.0 || ^19.0.0
       react-dom: ^18.0.0 || ^19.0.0
@@ -6973,9 +6974,12 @@ snapshots:
       '@types/history': 4.7.11
       '@types/react': 19.2.10
 
-  '@types/react-window@1.8.8':
+  '@types/react-window@2.0.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
-      '@types/react': 19.2.10
+      react-window: 2.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
+    transitivePeerDependencies:
+      - react
+      - react-dom
 
   '@types/react@19.2.10':
     dependencies:
@@ -9763,7 +9767,7 @@ snapshots:
     optionalDependencies:
       react-dom: 19.2.4(react@19.2.4)
 
-  react-window@2.2.5(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
+  react-window@2.2.6(react-dom@19.2.4(react@19.2.4))(react@19.2.4):
     dependencies:
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
