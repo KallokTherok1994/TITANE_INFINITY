@@ -198,23 +198,21 @@ export const TitanePage: React.FC = () => {
     <ErrorBoundary context="TitanePage">
       <Container size="xl" className="titane-page">
         <Stack direction="vertical" gap={4}>
-          {/* ═══ LOCAL SECTION HEADER (UI vΩ: Integrated, Non-Navbar) ═══ */}
-          <div className="titane-local-section">
-            <div className="titane-section-header">
-              <div className="flex items-center gap-3">
-                <TitaneLogo size={36} />
-                <div>
-                  <h1 className="text-xl font-semibold text-titanium-text-primary">
-                    ⚡ TITANE
-                  </h1>
-                  <p className="text-xs text-titanium-text-secondary">Le Cœur du Système</p>
-                </div>
+          {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
+          <div className="titane-page-header">
+            <div className="flex items-center gap-3 mb-4">
+              <TitaneLogo size={36} />
+              <div>
+                <h1 className="text-xl font-semibold text-titanium-text-primary">
+                  ⚡ TITANE
+                </h1>
+                <p className="text-xs text-titanium-text-secondary">Le Cœur du Système</p>
               </div>
             </div>
 
-            {/* ═══ TABS (Local Navigation, Visually Secondary) ═══ */}
+            {/* ═══ SECTION TABS (Inline Content Navigation) ═══ */}
             <div
-              className="titane-tabs-container"
+              className="titane-inline-tabs"
               role="tablist"
               aria-label="Sections principales TITANE"
             >
