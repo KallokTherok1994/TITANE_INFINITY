@@ -82,7 +82,7 @@ const TemporalFlowCenter: React.FC = () => {
   ];
 
   return (
-    <div className="temporal-flow-center p-6 space-y-6 bg-gray-900 min-h-screen text-gray-100">
+    <div className="temporal-flow-center p-6 space-y-6 bg-gray-900 text-gray-100">
       {/* Header */}
       <div className="header mb-8">
         <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent">

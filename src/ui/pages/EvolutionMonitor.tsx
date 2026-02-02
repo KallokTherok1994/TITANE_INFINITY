@@ -116,7 +116,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
   }, [fetchStats]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-green-900 to-gray-900 p-6">
+    <div className="bg-gradient-to-br from-gray-900 via-green-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>
