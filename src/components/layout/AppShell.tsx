@@ -54,9 +54,9 @@ export const AppShell = ({
         </motion.div>
       )}
 
-      {/* Main Content (centré, sans sidebar) */}
+      {/* Main Content (plein écran, sans sidebar) */}
       <main className="flex-1 overflow-hidden relative flex flex-col">
-        <div className="flex-1 overflow-auto scrollbar-custom max-w-7xl mx-auto w-full px-6 py-8">
+        <div className="flex-1 overflow-auto scrollbar-custom w-full">
           {children}
         </div>
       </main>
