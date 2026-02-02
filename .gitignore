@@ -160,3 +160,6 @@ tmp_import_useChat.mjs
 # Local Node toolchain downloads (do not commit binaries)
 .tools/node/_tmp/*.tar.gz
 .tools/node/_tmp/*.tar.xz
+src-tauri/memory/*.json
+src-tauri/memory/*.db
+*.memory.json
