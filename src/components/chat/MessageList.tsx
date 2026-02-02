@@ -29,6 +29,7 @@ interface MessageListProps {
   messages: AIMessage[];
   isLoading?: boolean;
   error?: string | null;
+  onRetry?: () => void; // Callback pour retry depuis fallback
 }
 
 interface MessageListState {
@@ -130,6 +131,7 @@ export const MessageList = React.memo(function MessageList({
   messages: rawMessages,
   isLoading = false,
   error = null,
+  onRetry,
 }: MessageListProps) {
   const endRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -267,42 +269,8 @@ export const MessageList = React.memo(function MessageList({
               const isEmpty = message.content.trim().length === 0;
               const isLatest = index === messages.length - 1;
 
-              if (isAssistant && isEmpty && isLatest && !isLoading) {
-                // INTERDIT: Bulle vide → Rendre fallback Always Respond
-                logger.warn('Empty assistant response detected - rendering fallback', {
-                  component: 'MessageList',
-                  event: 'CHAT_EMPTY_RESPONSE_HANDLED',
-                  timestamp: message.timestamp,
-                });
-
-                return (
-                  <ChatFallback
-                    key={`fallback-empty-${index}`}
-                    reason="empty-response"
-                    traceId={message.metadata?.traceId as string | undefined}
-                    timestamp={message.timestamp || Date.now()}
-                    provider={message.metadata?.provider as string | undefined}
-                    mode={message.metadata?.mode as string | undefined}
-                    pipelineState={message.metadata?.pipelineState as string | undefined}
-                    onRetry={() => {
-                      // Trigger retry logic (parent component should handle)
-                      logger.info('Retry requested from fallback', {
-                        component: 'MessageList',
-                      });
-                    }}
-                    onChangeProvider={() => {
-                      logger.info('Change provider requested', {
-                        component: 'MessageList',
-                      });
-                    }}
-                    onCopyDiagnostic={diagnostic => {
-                      navigator.clipboard?.writeText(diagnostic).then(() => {
-                        logger.info('Diagnostic copied', { component: 'MessageList' });
-                      });
-                    }}
-                  />
-                );
-              }
+              // ✨ UI vΩ: MessageBubble gère maintenant le fallback en interne
+              // Plus besoin de dupliquer ChatFallback ici
 
               return (
                 <MessageBubble
@@ -311,6 +279,8 @@ export const MessageList = React.memo(function MessageList({
                   content={String(message.content)}
                   timestamp={message.timestamp || Date.now()}
                   isLatest={isLatest}
+                  onRetry={onRetry} // Propager le callback retry
+                  metadata={message.metadata} // Propager metadata pour diagnostic
                 />
               );
             } catch (bubbleError) {

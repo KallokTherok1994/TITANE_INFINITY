@@ -581,7 +581,7 @@
 }
 
 /* ═══════════════════════════════════
-   MESSAGE ERROR - Warning Display
+   MESSAGE ERROR - Warning Display (Legacy, deprecated)
    ═══════════════════════════════════ */
 
 .message-error {
@@ -604,6 +604,55 @@
   box-shadow:
     0 2px 8px rgba(239, 68, 68, 0.15),
     inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ═══════════════════════════════════
+   CHAT FALLBACK - Enhanced Error Display (UI vΩ)
+   ═══════════════════════════════════ */
+
+/* Fallback container dans message bubble */
+.message-bubble-fallback {
+  width: 100%;
+  max-width: 500px;
+  margin: 0;
+}
+
+/* État de retry loading */
+.message-bubble-loading {
+  opacity: 0.7;
+  pointer-events: none;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.message-retry-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px;
+  background: linear-gradient(
+    135deg,
+    rgba(6, 182, 212, 0.1) 0%,
+    rgba(14, 165, 233, 0.06) 100%
+  );
+  border-radius: 12px;
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.message-retry-text {
+  font-size: 14px;
+  color: rgba(6, 182, 212, 0.9);
+  font-weight: 500;
+  text-align: center;
 }
 
 /* ═══════════════════════════════════
