@@ -5,14 +5,14 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ v25.3.0 — TITANE — LE CŒUR DU SYSTÈME
+ * TITANE∞ v25.3.0 — TITANE — LE CŒUR DU SYSTÈME (REFACTORED - Phase 3C)
  *
  * FUSION ULTIME de 3 modules majeurs:
  * - Chat IA (/chat) → Communication & Intelligence Conversationnelle
  * - Vision (/camera) → Perception Visuelle & Affect Estimation
  * - EVO (/evo) → Évolution Totale (Dashboard, Identity, Memory, Progression)
  *
- * 8 SECTIONS UNIFIÉES:
+ * 8 SECTIONS UNIFIÉES (EXTRACTED AS INDEPENDENT COMPONENTS):
  * 💬 CONVERSATION - Interface Chat IA multi-provider
  * 📷 VISION & PERCEPTION - Analyse visuelle et affective
  * 📊 VUE D'ENSEMBLE - Dashboard système et stats
@@ -21,153 +21,46 @@
  * 🔄 ÉVOLUTION MÉMOIRE - Dynamiques internes et journal
  * ⚡ PROGRESSION & XP - Système XP, milestones, talents
  * 🌱 TRANSFORMATION - Lignes d'évolution et paliers
+ *
+ * Phase 3C Refactoring:
+ * - Extracted 8 internal section components to src/components/sections/
+ * - TitanePage now acts as an orchestrator/router for tab switching
+ * - Bundle size optimized (1700+ duplicate lines removed from main file)
+ * - Improved maintainability and reusability
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, {
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useRef,
-  useDeferredValue,
-  memo,
-} from 'react';
-import { Container, Stack, Grid } from '@components/layout';
-import { Button, Card } from '../ui';
-import { XPProgressBar } from '@features/progression';
-import { colors, spacing, fontSizes } from '@themes/tokens';
-import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
-import { useVisualEngines } from '@hooks/useVisualEngines';
-import { useToast } from '@/hooks/useToast';
-import {
-  useVisionStore,
-  selectIsCameraActive,
-  selectIsObservationActive,
-  selectEnergyLevel,
-  selectTensionLevel,
-  selectEngagementLevel,
-  selectConfidence,
-} from '@/stores/useVisionStore';
-import { useConversationEngine } from '@hooks/useConversationEngine';
-import type { ConversationMode } from '@/services/conversationEngine';
-import { TitaneLogo } from '@components/branding/TitaneLogo';
-import { TBadge, TMetric, TSectionHeader } from '../design-system';
-import { ErrorBoundary } from '../components/ErrorBoundary';
-import { xpEngine } from '@/cognitive/progression/xpEngine';
-import { CameraPreview } from '@/components/vision/CameraPreview';
-import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
-import { ChatToolbar } from '@/components/chat/ChatToolbar';
-import type { AnalyzedFile } from '@/components/chat/FileUploadButton';
-import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
-import {
-  downloadConversation,
-  downloadMarkdown,
-  copyToClipboard,
-} from '@/features/chat/exportImport';
-import { hybridTTS } from '@/services/tts/hybridTTS';
-import { AchievementCard } from '@/features/progression/AchievementCard';
-import { ACHIEVEMENTS } from '@/features/progression/achievements';
-import { QuickStatCard } from '@/features/dashboard';
-import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
-import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
-import { detectEnvironment } from '@/core/tauri/environment';
-import { Camera } from 'lucide-react';
-import type { ProgressionState } from '@/cognitive/types';
-import type { VisualLevel } from '@/types/visionAffect';
-import { useVoiceEngine } from '@/hooks/useVoiceEngine';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
-// NOTE: Heavy tab components are lazy-loaded below (Phase 5.2)
+import { useToast } from '@/hooks/useToast';
+import { useVisualEngines } from '@hooks/useVisualEngines';
+import { xpEngine } from '@/cognitive/progression/xpEngine';
+import type { ProgressionState } from '@/cognitive/types';
+
+// Section Components (Phase 3C Extracted)
+import {
+  ConversationSection,
+  VisionSection,
+  OverviewSection,
+  IdentitySection,
+  MemorySection,
+  MemoryEvolutionSection,
+  ProgressionSection,
+  TransformationSection,
+} from '@/components/sections';
+import type { TitaneStats } from '@/components/sections';
+
+// UI Components
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { TitaneLogo } from '@/components/branding/TitaneLogo';
+
 import './TitanePage.css';
 
 const pageLogger = createLogger('TitanePage');
 
-// ═══ HELPER FUNCTIONS FOR OPTIMIZATION ═══
-
-// ═══ LAZY-LOADED TAB COMPONENTS (Phase 5.2 Code Splitting) ═══
-
-const LazyMemoryTreeViewer = React.lazy(() =>
-  import('@/features/memory/MemoryTreeViewer').then(m => ({
-    default: m.MemoryTreeViewer,
-  }))
-);
-
-const LazyMemorySearchPanel = React.lazy(() =>
-  import('@/features/memory/MemorySearchPanel').then(m => ({
-    default: m.MemorySearchPanel,
-  }))
-);
-
-const LazyMemoryDashboard = React.lazy(() =>
-  import('@/components/chat/MemoryDashboard').then(m => ({
-    default: m.MemoryDashboard,
-  }))
-);
-
-const LazyMemoryEvolutionCenter = React.lazy(
-  () => import('@/components/MemoryEvolution/MemoryEvolutionCenter')
-);
-
-const LazyEvolutionTimeline = React.lazy(() =>
-  import('@/features/evolution/EvolutionTimeline').then(m => ({
-    default: m.EvolutionTimeline,
-  }))
-);
-
-const LazyIdentityCenter = React.lazy(
-  () => import('@/components/IdentityCenter/IdentityCenter')
-);
-
-const LazyModeMatrix = React.lazy(() =>
-  import('@/features/identity/ModeMatrix').then(m => ({
-    default: m.ModeMatrix,
-  }))
-);
-
-const LazyPersonaEditor = React.lazy(() =>
-  import('@/features/identity/PersonaEditor').then(m => ({
-    default: m.PersonaEditor,
-  }))
-);
-
-const LazyTransformationRoadmap = React.lazy(() =>
-  import('@/features/transformation/TransformationRoadmap').then(m => ({
-    default: m.TransformationRoadmap,
-  }))
-);
-
-const LazyRealTimeCharts = React.lazy(() =>
-  import('@/features/dashboard/RealTimeCharts').then(m => ({
-    default: m.RealTimeCharts,
-  }))
-);
-
-const LazyVisionMetricsChart = React.lazy(() =>
-  import('@/features/vision/VisionMetricsChart').then(m => ({
-    default: m.VisionMetricsChart,
-  }))
-);
-
-const LazyDetectionOverlay = React.lazy(() =>
-  import('@/features/vision/DetectionOverlay').then(m => ({
-    default: m.DetectionOverlay,
-  }))
-);
-
-/**
- * Sanitize input pour sécurité renforcée (XSS prevention)
- */
-function sanitizeInput(input: string): string {
-  return input
-    .trim()
-    .replace(/<script[^>]*>.*?<\/script>/gi, '') // Remove script tags
-    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // Remove iframes
-    .replace(/on\w+="[^"]*"/gi, '') // Remove inline event handlers
-    .slice(0, 10000); // Max 10k characters
-}
-
 // ═══════════════════════════════════════════════════════════════════════════
-// TYPES
+// TYPES & CONSTANTS
 // ═══════════════════════════════════════════════════════════════════════════
 
 type TabId =
@@ -202,1688 +95,38 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   transformation: 'titane-tab-transformation',
 };
 
-interface TitaneStats {
-  totalXP: number;
-  level: number;
-  memoryShortTerm: number;
-  memoryMidTerm: number;
-  memoryLongTerm: number;
-  evolutionScore: number;
-}
-
-interface StatusIndicatorProps {
-  active: boolean;
-  label: string;
-}
-
-interface ConversationMessageItem {
-  id?: string;
-  role: 'user' | 'assistant' | string;
-  content: string;
-  metadata?: {
-    tags?: string[];
-    intention?: string;
-  };
-}
-
 // ═══════════════════════════════════════════════════════════════════════════
-// HELPERS
+// MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-const _levelToPercent = (level: VisualLevel): number => {
-  switch (level) {
-    case 'low':
-      return 25;
-    case 'medium':
-      return 50;
-    case 'high':
-      return 75;
-    default:
-      return 50;
-  }
-};
-
-const _levelToColor = (level: VisualLevel): string => {
-  switch (level) {
-    case 'high':
-      return 'var(--titane-accent)';
-    case 'medium':
-      return 'var(--titane-primary)';
-    case 'low':
-      return 'var(--titane-secondary)';
-    default:
-      return 'var(--titane-secondary)';
-  }
-};
-
-const _levelToLabel = (level: VisualLevel): string => {
-  switch (level) {
-    case 'low':
-      return 'Faible';
-    case 'medium':
-      return 'Moyen';
-    case 'high':
-      return 'Élevé';
-    default:
-      return '—';
-  }
-};
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SUB-COMPONENTS
-// ═══════════════════════════════════════════════════════════════════════════
-
-const StatusIndicator: React.FC<StatusIndicatorProps> = memo(({ active, label }) => (
-  <div className={`titane-status-indicator ${active ? 'active' : ''}`}>
-    <span className="status-dot" />
-    <span className="status-label">{label}</span>
-  </div>
-));
-StatusIndicator.displayName = 'StatusIndicator';
-
-const ConversationMessage = memo(
-  ({
-    message,
-    isLoading,
-    onCopy,
-    onRetry,
-    onDelete,
-  }: {
-    message: ConversationMessageItem;
-    isLoading: boolean;
-    onCopy: (content: string) => void;
-    onRetry: (content: string) => void;
-    onDelete: (id: string) => void;
-  }) => {
-    const handleCopy = useCallback(
-      () => onCopy(message.content),
-      [message.content, onCopy]
-    );
-    const handleRetry = useCallback(
-      () => onRetry(message.content),
-      [message.content, onRetry]
-    );
-    const handleDelete = useCallback(() => {
-      if (message.id) {
-        onDelete(message.id);
-      }
-    }, [message.id, onDelete]);
-
-    return (
-      <div className={`conversation-message ${message.role}`}>
-        <div className="conversation-message-avatar">
-          {message.role === 'user' ? '👤' : '🧠'}
-        </div>
-        <div className="conversation-message-content">
-          <div className="conversation-message-header">
-            <span className="conversation-message-role">
-              {message.role === 'user' ? 'Vous' : 'TITANE'}
-            </span>
-            {message.metadata?.tags && message.metadata.tags.length > 0 && (
-              <div className="conversation-message-tags">
-                {message.metadata.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="conversation-tag">
-                    {tag}
-                  </span>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="conversation-message-text">{message.content}</div>
-          {message.metadata?.intention && (
-            <div className="conversation-message-meta">
-              <span className="meta-intention">{message.metadata.intention}</span>
-            </div>
-          )}
-
-          <div className="conversation-message-actions">
-            <button
-              type="button"
-              className="conversation-message-action"
-              onClick={handleCopy}
-              title="Copier le message"
-            >
-              📋 Copier
-            </button>
-
-            {message.role === 'user' && (
-              <button
-                type="button"
-                className="conversation-message-action"
-                onClick={handleRetry}
-                title="Renvoyer ce message"
-                disabled={isLoading}
-              >
-                🔄 Retry
-              </button>
-            )}
-
-            <button
-              type="button"
-              className="conversation-message-action danger"
-              onClick={handleDelete}
-              title="Supprimer ce message"
-            >
-              🗑️
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-);
-
-ConversationMessage.displayName = 'ConversationMessage';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 1: CONVERSATION
-// ═══════════════════════════════════════════════════════════════════════════
-
-type ConversationSectionProps = Record<string, never>;
-
-const AVAILABLE_PROVIDERS = [
-  { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
-  { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
-  { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
-  { id: 'claude', name: 'Claude', icon: '🧠', available: true },
-];
-
-const BUILT_IN_CONVERSATION_MODES = [
-  { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
-  {
-    id: 'brainstorming',
-    name: 'Brainstorming',
-    icon: '💡',
-    description: 'Idéation créative',
-  },
-  { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
-  {
-    id: 'planning',
-    name: 'Planification',
-    icon: '📋',
-    description: 'Stratégie et organisation',
-  },
-  {
-    id: 'journal',
-    name: 'Journal',
-    icon: '📔',
-    description: 'Réflexion personnelle',
-  },
-  {
-    id: 'debug_cognitive',
-    name: 'Debug Cognitif',
-    icon: '🔧',
-    description: 'Analyse système',
-  },
-];
-
-const CONVERSATION_SUGGESTIONS = [
-  { label: '💡 Comment tu fonctionnes ?', value: 'Explique-moi ton fonctionnement' },
-  { label: '📋 Planifier un projet', value: 'Aide-moi à planifier mon projet' },
-  { label: '💡 Brainstorming', value: 'Brainstorming sur une idée innovante' },
-];
-
-const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
-  // ═══ IMPORTS & HOOKS ═══
-  const { success: toastSuccess, error: errorToast } = useToast();
-  const {
-    messages,
-    isLoading,
-    error,
-    currentMode,
-    setMode,
-    sendMessage,
-    clearMessages,
-    deleteMessage,
-    healthReport,
-    refreshHealth,
-  } = useConversationEngine({
-    mode: 'default',
-    autoHealthCheck: false,
-    maxMessages: 500, // Limite historique pour optimiser mémoire
-  });
-
-  // ═══ LOCAL STATE ═══
-  const [selectedProvider, setSelectedProvider] = useState('gemini');
-  const [inputValue, setInputValue] = useState('');
-  const [showModeBuilder, setShowModeBuilder] = useState(false);
-  const [audioEnabled, setAudioEnabled] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [customModes, setCustomModes] = useState<CustomMode[]>([]);
-  const [_attachedImages, setAttachedImages] = useState<string[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
-  const [_cameraActive, setCameraActive] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const sendingRef = useRef(false); // v26.2 - Protection contre double-envoi
-  const deferredSearchQuery = useDeferredValue(searchQuery);
-
-  // ═══ THINKING STEPS (v25.6.0) ═══
-  const thinking = useThinkingSteps();
-
-  const handleVoiceTranscript = useCallback((text: string) => {
-    setInputValue(prev => (prev ? `${prev} ${text}` : text));
-  }, []);
-
-  const handleVoiceError = useCallback((error: unknown) => {
-    pageLogger.error('Voice recognition error', error);
-  }, []);
-
-  // ═══ VOICE ENGINE INTEGRATION (v25.4.2) ═══
-  const voiceEngine = useVoiceEngine({
-    language: 'fr-FR',
-    onTranscript: handleVoiceTranscript,
-    onError: handleVoiceError,
-  });
-
-  // Conversation modes disponibles (merge built-in + custom)
-  const conversationModes = useMemo(() => {
-    const customModesFormatted = customModes.map(m => ({
-      id: m.id,
-      name: m.name,
-      icon: m.icon,
-      description: m.description,
-    }));
-
-    return [...BUILT_IN_CONVERSATION_MODES, ...customModesFormatted];
-  }, [customModes]);
-
-  const currentModeLabel = useMemo(
-    () => conversationModes.find(m => m.id === currentMode)?.name ?? '—',
-    [conversationModes, currentMode]
-  );
-
-  const selectedProviderLabel = useMemo(
-    () =>
-      AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
-    [selectedProvider]
-  );
-
-  const conversationModeOptions = useMemo(
-    () =>
-      conversationModes.map(mode => (
-        <option key={mode.id} value={mode.id}>
-          {mode.icon} {mode.name}
-        </option>
-      )),
-    [conversationModes]
-  );
-
-  const hasMessages = messages.length > 0;
-  const isHealthy = healthReport?.status === 'Healthy';
-
-  const handleSuggestionClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      const value = event.currentTarget.dataset.value;
-      if (value) {
-        setInputValue(value);
-      }
-    },
-    []
-  );
-
-  const suggestionButtons = useMemo(
-    () =>
-      CONVERSATION_SUGGESTIONS.map(suggestion => (
-        <button
-          key={suggestion.value}
-          type="button"
-          data-value={suggestion.value}
-          onClick={handleSuggestionClick}
-        >
-          {suggestion.label}
-        </button>
-      )),
-    [handleSuggestionClick]
-  );
-
-  // ═══ CHARGER MODES CUSTOM AU DÉMARRAGE ═══
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('titane_custom_modes');
-      if (stored) {
-        setCustomModes(JSON.parse(stored));
-      }
-    } catch (error) {
-      pageLogger.error('Erreur chargement modes custom', error);
-    }
-  }, []);
-
-  // ═══ HANDLERS ═══
-  const handleSaveCustomMode = useCallback((mode: CustomMode) => {
-    setCustomModes(prev => [...prev, mode]);
-    pageLogger.debug('Mode personnalisé sauvegardé', mode);
-  }, []);
-
-  const searchNeedle = useMemo(() => {
-    const trimmed = deferredSearchQuery.trim();
-    return trimmed ? trimmed.toLowerCase() : '';
-  }, [deferredSearchQuery]);
-
-  const filteredMessages = useMemo(() => {
-    if (!searchNeedle && filterRole === 'all') {
-      return messages;
-    }
-
-    let result = messages;
-
-    if (searchNeedle) {
-      result = result.filter(m => m.content.toLowerCase().includes(searchNeedle));
-    }
-
-    if (filterRole !== 'all') {
-      result = result.filter(m => m.role === filterRole);
-    }
-
-    return result;
-  }, [messages, searchNeedle, filterRole]);
-
-  const filteredCount = filteredMessages.length;
-  const messageCount = messages.length;
-
-  // ═══ AUTO-SCROLL ═══
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // ═══ HANDLERS ═══
-  const handleSend = useCallback(async () => {
-    // v26.2 - Protection double-envoi
-    const rawInput = inputValue;
-    const trimmedInput = rawInput.trim();
-    if (!trimmedInput || isLoading || sendingRef.current) return;
-    sendingRef.current = true;
-
-    // Sanitize input pour sécurité
-    const sanitized = sanitizeInput(rawInput);
-    if (!sanitized || sanitized.length === 0) {
-      pageLogger.debug('Input vide apres sanitization');
-      sendingRef.current = false;
-      return;
-    }
-
-    const messageText = sanitized;
-    setInputValue(''); // Clear immédiatement (Optimistic UI)
-
-    // Start thinking visualization
-    thinking.startThinking();
-    thinking.addStep('analysis', 'Analyse de votre message...');
-
-    try {
-      thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
-      const response = await sendMessage(messageText);
-
-      // Stop thinking
-      thinking.addStep('synthesis', 'Génération de la réponse...');
-      thinking.stopThinking();
-
-      // TTS si actif et reponse valide
-      if (audioEnabled && response?.assistant_message) {
-        try {
-          await hybridTTS.speak(response.assistant_message, {
-            rate: 1.0,
-            pitch: 1.0,
-            lang: 'fr-FR',
-          });
-        } catch (ttsError) {
-          pageLogger.warn('TTS error (non-critical)', ttsError);
-          setAudioEnabled(false);
-        }
-      }
-    } catch (err) {
-      pageLogger.error('Send message error', err);
-      thinking.stopThinking();
-    } finally {
-      sendingRef.current = false;
-    }
-  }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
-
-  const handleCopyMessage = useCallback(
-    async (content: string) => {
-      try {
-        await navigator.clipboard.writeText(content);
-      } catch (err) {
-        pageLogger.warn('Copy message failed', err);
-        errorToast('Impossible de copier le message');
-      }
-    },
-    [errorToast]
-  );
-
-  const handleRetryMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isLoading) return;
-      thinking.startThinking();
-      try {
-        await sendMessage(content);
-      } finally {
-        thinking.stopThinking();
-      }
-    },
-    [isLoading, sendMessage, thinking]
-  );
-
-  const handleKeyPress = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        handleSend();
-      }
-    },
-    [handleSend]
-  );
-
-  const handleClearChat = useCallback(() => {
-    if (confirm("Voulez-vous vraiment effacer tout l'historique ?")) {
-      clearMessages();
-    }
-  }, [clearMessages]);
-
-  const handleExportJson = useCallback(() => {
-    downloadConversation('current', 'Conversation TITANE', messages);
-  }, [messages]);
-
-  const handleExportMarkdown = useCallback(() => {
-    downloadMarkdown('Conversation TITANE', messages);
-  }, [messages]);
-
-  const handleCopyAll = useCallback(async () => {
-    const copySuccess = await copyToClipboard('Conversation TITANE', messages);
-    if (copySuccess) toastSuccess('Conversation copiée.');
-  }, [messages, toastSuccess]);
-
-  const handleVoiceInput = useCallback(async () => {
-    // ✅ v25.4.2: Speech Recognition implementation avec useVoiceEngine
-    if (!voiceEngine.status.isMicAvailable) {
-      errorToast('Microphone non disponible. Vérifiez les permissions.');
-      return;
-    }
-
-    try {
-      if (voiceEngine.status.isRecording) {
-        // Stop dictation et récupérer le transcript
-        const finalTranscript = await voiceEngine.stopDictation();
-        setIsRecording(false);
-        pageLogger.debug('Voice dictation stopped', finalTranscript);
-      } else {
-        // Start dictation
-        await voiceEngine.startDictation();
-        setIsRecording(true);
-        pageLogger.debug('Voice dictation started');
-      }
-    } catch (error) {
-      pageLogger.error('Voice input error', error);
-      setIsRecording(false);
-      errorToast('Erreur reconnaissance vocale. Consultez la console.');
-    }
-  }, [errorToast, voiceEngine]);
-
-  const handleFilesAnalyzed = useCallback(
-    (files: AnalyzedFile[]) => {
-      const filesSummary = files
-        .map(file => {
-          const lines = [
-            `📄 **${file.name}**`,
-            `- Taille: ${(file.size / 1024).toFixed(1)} KB`,
-          ];
-
-          if (file.analysis?.summary) {
-            lines.push(`- Résumé: ${file.analysis.summary}`);
-          }
-
-          return lines.join('\n');
-        })
-        .join('\n\n');
-
-      sendMessage(
-        `📎 Fichiers importés pour analyse:\n\n${filesSummary}\n\nAnalyse ces fichiers.`
-      );
-    },
-    [sendMessage]
-  );
-
-  const handleFileImport = useCallback(
-    (files: FileList) => {
-      const fileNames = Array.from(files)
-        .map(f => f.name)
-        .join(', ');
-      sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
-    },
-    [sendMessage]
-  );
-
-  const handleScreenCapture = useCallback(
-    (imageData: string) => {
-      setAttachedImages(prev => [...prev, imageData]);
-      sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
-    },
-    [sendMessage]
-  );
-
-  const handleImageAnalysis = useCallback(
-    (imageData: string, prompt?: string) => {
-      setAttachedImages(prev => [...prev, imageData]);
-      sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
-    },
-    [sendMessage]
-  );
-
-  const handleDictationResult = useCallback((text: string) => {
-    if (text.trim()) setInputValue(prev => (prev ? `${prev} ${text}` : text));
-  }, []);
-
-  const handleAudioRecorded = useCallback(
-    (audioBlob: Blob) => {
-      const sizeMB = (audioBlob.size / (1024 * 1024)).toFixed(2);
-      sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
-    },
-    [sendMessage]
-  );
-
-  const handleTranscriptionResult = useCallback(
-    (text: string) => {
-      sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
-    },
-    [sendMessage]
-  );
-
-  const handleModeChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setMode(e.target.value as ConversationMode);
-    },
-    [setMode]
-  );
-
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  }, []);
-
-  const handleFilterRoleChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      setFilterRole(e.target.value as typeof filterRole);
-    },
-    []
-  );
-
-  const toggleAudioEnabled = useCallback(() => {
-    setAudioEnabled(prev => !prev);
-  }, []);
-
-  const toggleModeBuilder = useCallback(() => {
-    setShowModeBuilder(prev => !prev);
-  }, []);
-
-  const handleToggleAudioConversation = useCallback((active: boolean) => {
-    setAudioEnabled(active);
-  }, []);
-
-  const handleToggleTTS = useCallback((active: boolean) => {
-    setAudioEnabled(active);
-  }, []);
-
-  const handleToggleCameraLive = useCallback(() => {
-    setCameraActive(prev => !prev);
-  }, []);
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  }, []);
-
-  const handleCloseModeBuilder = useCallback(() => {
-    setShowModeBuilder(false);
-  }, []);
-
-  const messageItems = useMemo(
-    () =>
-      filteredMessages.map((msg, index) => (
-        <ConversationMessage
-          key={msg.id || `msg-${index}`}
-          message={msg}
-          isLoading={isLoading}
-          onCopy={handleCopyMessage}
-          onRetry={handleRetryMessage}
-          onDelete={deleteMessage}
-        />
-      )),
-    [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
-  );
-
-  return (
-    <div className="titane-section titane-section-conversation">
-      <TSectionHeader
-        title="💬 Communication & Intelligence"
-        subtitle="Interface conversationnelle multi-provider avec modes spécialisés"
-      />
-
-      <div className="conversation-container">
-        {/* ═══ TOOLBAR ═══ */}
-        <div className="conversation-toolbar">
-          <div className="conversation-toolbar-left">
-            <ChatProviderSelector
-              selectedProvider={selectedProvider}
-              onChange={setSelectedProvider}
-              providers={AVAILABLE_PROVIDERS}
-            />
-
-            {/* Mode Selector */}
-            <select
-              className="conversation-mode-select"
-              value={currentMode}
-              onChange={handleModeChange}
-            >
-              {conversationModeOptions}
-            </select>
-          </div>
-
-          <div className="conversation-toolbar-right">
-            {/* Export JSON */}
-            <button
-              className="conversation-icon-btn"
-              onClick={handleExportJson}
-              title="Exporter en JSON"
-              disabled={!hasMessages}
-            >
-              <Download size={16} />
-            </button>
-
-            {/* Export Markdown */}
-            <button
-              className="conversation-icon-btn"
-              onClick={handleExportMarkdown}
-              title="Exporter en Markdown"
-              disabled={!hasMessages}
-            >
-              <FileText size={16} />
-            </button>
-
-            {/* Copy to Clipboard */}
-            <button
-              className="conversation-icon-btn"
-              onClick={handleCopyAll}
-              title="Copier dans le presse-papier"
-              disabled={!hasMessages}
-            >
-              <Copy size={16} />
-            </button>
-
-            {/* Audio Toggle */}
-            <button
-              className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
-              onClick={toggleAudioEnabled}
-              title="Audio (TTS)"
-              aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
-              aria-pressed={audioEnabled}
-              role="switch"
-            >
-              {audioEnabled ? '🔊' : '🔇'}
-            </button>
-
-            {/* Voice Input */}
-            <button
-              className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
-              onClick={handleVoiceInput}
-              title="Reconnaissance vocale"
-              aria-label={
-                isRecording
-                  ? "Arrêter l'enregistrement"
-                  : 'Démarrer reconnaissance vocale'
-              }
-              aria-pressed={isRecording}
-            >
-              🎤
-            </button>
-
-            {/* Mode Builder */}
-            <button
-              className="conversation-icon-btn"
-              onClick={toggleModeBuilder}
-              title="Créer un mode personnalisé"
-              aria-label="Créer un mode personnalisé"
-            >
-              ⚙️
-            </button>
-
-            {/* Health Check */}
-            <button
-              className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
-              onClick={refreshHealth}
-              title={`Santé: ${healthReport?.status || 'Unknown'}`}
-              aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
-            >
-              {isHealthy ? '✅' : '⚠️'}
-            </button>
-
-            {/* Clear Chat */}
-            <button
-              className="conversation-icon-btn"
-              onClick={handleClearChat}
-              title="Effacer l'historique"
-              aria-label="Effacer l'historique du chat"
-            >
-              <Trash2 size={16} aria-hidden="true" />
-            </button>
-          </div>
-        </div>
-
-        {/* ═══ SEARCH / FILTERS ═══ */}
-        <div className="conversation-filters">
-          <div className="conversation-filters-search">
-            <Search size={16} />
-            <input
-              type="search"
-              placeholder="Rechercher..."
-              value={searchQuery}
-              onChange={handleSearchChange}
-              aria-label="Rechercher dans la conversation"
-            />
-          </div>
-
-          <select
-            className="conversation-filters-role"
-            value={filterRole}
-            onChange={handleFilterRoleChange}
-            aria-label="Filtrer par rôle"
-          >
-            <option value="all">Tous</option>
-            <option value="user">Utilisateur</option>
-            <option value="assistant">TITANE</option>
-          </select>
-
-          <div className="conversation-filters-count">
-            {filteredCount}/{messageCount}
-          </div>
-        </div>
-
-        {/* ═══ THINKING PANEL ═══ */}
-        <ThinkingPanel
-          steps={thinking.steps}
-          isThinking={thinking.isThinking}
-          compact={thinking.compact}
-          inline={false}
-        />
-
-        {/* ═══ MESSAGES AREA ═══ */}
-        <div className="conversation-messages">
-          {messages.length === 0 && !thinking.isThinking && (
-            <div className="conversation-empty">
-              <div className="conversation-empty-icon">🧠⚡∞</div>
-              <h3>TITANE∞ est prêt à converser</h3>
-              <p>
-                Mode actuel: <strong>{currentModeLabel}</strong>
-                <br />
-                Provider: <strong>{selectedProviderLabel}</strong>
-              </p>
-              <div className="conversation-empty-suggestions">{suggestionButtons}</div>
-            </div>
-          )}
-
-          {messageItems}
-
-          {isLoading && (
-            <div className="conversation-message assistant loading">
-              <div className="conversation-message-avatar">🧠</div>
-              <div className="conversation-message-content">
-                <div className="conversation-typing">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <small style={{ color: colors.neutral[400] }}>TITANE réfléchit...</small>
-              </div>
-            </div>
-          )}
-
-          {error && (
-            <div className="conversation-error">
-              <strong>❌ Erreur:</strong> {error}
-            </div>
-          )}
-
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* ═══ CHAT TOOLBAR (v25.5.0) ═══ */}
-        <ChatToolbar
-          onFilesAnalyzed={handleFilesAnalyzed}
-          onFileImport={handleFileImport}
-          onScreenCapture={handleScreenCapture}
-          onImageAnalysis={handleImageAnalysis}
-          onDictationResult={handleDictationResult}
-          onAudioRecorded={handleAudioRecorded}
-          onTranscriptionResult={handleTranscriptionResult}
-          onToggleAudioConversation={handleToggleAudioConversation}
-          onToggleCameraLive={handleToggleCameraLive}
-          onToggleTTS={handleToggleTTS}
-          disabled={isLoading}
-          compact={false}
-        />
-
-        {/* ═══ INPUT AREA ═══ */}
-        <div className="conversation-input-container">
-          <textarea
-            className="conversation-input"
-            placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
-            value={inputValue}
-            onChange={handleInputChange}
-            onKeyPress={handleKeyPress}
-            disabled={isLoading}
-            rows={3}
-          />
-          <button
-            className="conversation-send-btn"
-            onClick={handleSend}
-            disabled={!inputValue.trim() || isLoading}
-          >
-            {isLoading ? '⏳' : '📤'} Envoyer
-          </button>
-        </div>
-
-        {/* ═══ MODE BUILDER MODAL ═══ */}
-        {showModeBuilder && (
-          <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
-        )}
-      </div>
-    </div>
-  );
-});
-ConversationSection.displayName = 'ConversationSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 2: VISION & PERCEPTION
-// ═══════════════════════════════════════════════════════════════════════════
-
-type VisionSectionProps = Record<string, never>;
-
-const VisionSection: React.FC<VisionSectionProps> = memo(() => {
-  const env = detectEnvironment();
-  const isCameraActive = useVisionStore(selectIsCameraActive);
-  const isObservationActive = useVisionStore(selectIsObservationActive);
-  const energyLevel = useVisionStore(selectEnergyLevel);
-  const tensionLevel = useVisionStore(selectTensionLevel);
-  const engagementLevel = useVisionStore(selectEngagementLevel);
-  const confidence = useVisionStore(selectConfidence);
-  const enableVision = useVisionStore(s => s.enableVision);
-  const requestCameraPermission = useVisionStore(s => s.requestCameraPermission);
-  const startCamera = useVisionStore(s => s.startCamera);
-  const [isStarting, setIsStarting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleStartVision = useCallback(async () => {
-    setIsStarting(true);
-    setError(null);
-    try {
-      const permission = await requestCameraPermission();
-      if (permission !== 'granted') {
-        setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
-        return;
-      }
-
-      const enabled = await enableVision();
-      if (!enabled) {
-        setError('Activation Vision annulée ou impossible.');
-        return;
-      }
-
-      const started = await startCamera();
-      if (!started) {
-        setError('Impossible de démarrer la caméra.');
-        return;
-      }
-    } catch (e) {
-      const message = e instanceof Error ? e.message : String(e);
-      setError(message);
-      pageLogger.error('Vision start failed', e);
-    } finally {
-      setIsStarting(false);
-    }
-  }, [enableVision, requestCameraPermission, startCamera]);
-
-  return (
-    <div className="titane-section titane-section-vision">
-      <TSectionHeader
-        title="📷 Vision & Perception"
-        subtitle="Analyse visuelle et estimation affective en temps réel"
-      />
-
-      <Grid columns={2} gap={4}>
-        {/* Camera Preview avec Detection Overlay */}
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Caméra & Détections</h3>
-          <StatusIndicator active={isCameraActive} label="Caméra Active" />
-
-          <div className="vision-camera-container">
-            {env.isTauri ? (
-              <div style={{ position: 'relative' }}>
-                {!isCameraActive && (
-                  <div
-                    style={{ display: 'flex', flexDirection: 'column', gap: spacing[3] }}
-                  >
-                    <div style={{ color: colors.neutral[400] }}>
-                      Opt-in requis: activez Vision puis démarrez la caméra.
-                    </div>
-                    {error && (
-                      <div style={{ color: colors.semantic.error[400] }}>{error}</div>
-                    )}
-                    <div style={{ display: 'flex', gap: spacing[3] }}>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={handleStartVision}
-                        disabled={isStarting}
-                      >
-                        {isStarting ? 'Activation...' : 'Activer Vision & Caméra'}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                <CameraPreview position="bottom-left" />
-                <React.Suspense fallback={null}>
-                  <LazyDetectionOverlay />
-                </React.Suspense>
-              </div>
-            ) : (
-              <div className="vision-placeholder">
-                <Camera size={48} color={colors.neutral[400]} />
-                <p style={{ color: colors.neutral[400], marginTop: spacing[4] }}>
-                  Disponible en mode Tauri uniquement
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="vision-ethical-disclaimer" style={{ marginTop: spacing[4] }}>
-            <h4>⚠️ Information Importante</h4>
-            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
-              Le module Vision est <strong>100% local</strong> — aucune donnée n&apos;est
-              envoyée vers le cloud.
-            </p>
-          </div>
-        </Card>
-
-        {/* Vision Stats - Placeholder pour compatibilité */}
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Métriques Vision</h3>
-
-          <Stack direction="vertical" gap={3}>
-            <TMetric
-              label="Observation"
-              value={isObservationActive ? 'Active' : 'Inactive'}
-              color={isObservationActive ? 'success' : 'warning'}
-            />
-            <TMetric
-              label="Énergie (indice)"
-              value={`${_levelToLabel(energyLevel)} (${_levelToPercent(energyLevel)}%)`}
-              color="success"
-            />
-            <TMetric
-              label="Tension (indice)"
-              value={`${_levelToLabel(tensionLevel)} (${_levelToPercent(tensionLevel)}%)`}
-              color="warning"
-            />
-            <TMetric
-              label="Engagement (indice)"
-              value={`${_levelToLabel(engagementLevel)} (${_levelToPercent(engagementLevel)}%)`}
-              color="info"
-            />
-            <TMetric
-              label="Confiance"
-              value={`${Math.round((confidence || 0) * 100)}%`}
-              color="primary"
-            />
-          </Stack>
-        </Card>
-      </Grid>
-
-      {/* Vision Metrics Charts */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
-        <React.Suspense fallback={null}>
-          <LazyVisionMetricsChart />
-        </React.Suspense>
-      </div>
-    </div>
-  );
-});
-VisionSection.displayName = 'VisionSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 3: VUE D'ENSEMBLE
-// ═══════════════════════════════════════════════════════════════════════════
-
-interface OverviewSectionProps {
-  stats: TitaneStats;
-}
-
-const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) => {
-  return (
-    <div className="titane-section titane-section-overview">
-      <TSectionHeader
-        title="📊 Vue d'Ensemble"
-        subtitle="Dashboard système et métriques principales"
-      />
-
-      {/* Quick Stats Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: spacing[4],
-          marginBottom: spacing[6],
-        }}
-      >
-        <QuickStatCard
-          icon={<span style={{ fontSize: '1.5rem' }}>⚡</span>}
-          label="Niveau"
-          value={stats.level}
-          trend="up"
-          trendValue="+2 cette semaine"
-          color="#3b82f6"
-        />
-        <QuickStatCard
-          icon={<span style={{ fontSize: '1.5rem' }}>✨</span>}
-          label="XP Total"
-          value={stats.totalXP.toLocaleString()}
-          trend="up"
-          trendValue="+15k aujourd'hui"
-          color="#10b981"
-        />
-        <QuickStatCard
-          icon={<span style={{ fontSize: '1.5rem' }}>💬</span>}
-          label="Messages"
-          value="1,247"
-          trend="neutral"
-          trendValue="128/h"
-          color="#f59e0b"
-        />
-        <QuickStatCard
-          icon={<span style={{ fontSize: '1.5rem' }}>🎯</span>}
-          label="Score Évolution"
-          value={`${stats.evolutionScore}%`}
-          trend="up"
-          trendValue="+5%"
-          color="#8b5cf6"
-        />
-      </div>
-
-      {/* Real-Time Charts */}
-      <React.Suspense fallback={null}>
-        <LazyRealTimeCharts />
-      </React.Suspense>
-
-      {/* Memory System Stats */}
-      <div style={{ marginTop: spacing[6] }}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Mémoire Système</h3>
-          <Grid columns={3} gap={4}>
-            <TMetric label="Court Terme" value={stats.memoryShortTerm.toString()} />
-            <TMetric label="Moyen Terme" value={stats.memoryMidTerm.toString()} />
-            <TMetric label="Long Terme" value={stats.memoryLongTerm.toString()} />
-          </Grid>
-        </Card>
-      </div>
-
-      {/* Persona Mood */}
-      <div style={{ marginTop: spacing[6] }}>
-        <PersonaMoodIndicator />
-      </div>
-    </div>
-  );
-});
-
-OverviewSection.displayName = 'OverviewSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 4: IDENTITÉ & ADN
-// ═══════════════════════════════════════════════════════════════════════════
-
-type IdentitySectionProps = Record<string, never>;
-
-const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
-  const env = detectEnvironment();
-
-  return (
-    <div className="titane-section titane-section-identity">
-      <TSectionHeader
-        title="🧬 Identité & ADN"
-        subtitle="Matrice identité, modes, pacte fondateur"
-      />
-
-      <Grid columns={2} gap={4}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
-          <React.Suspense fallback={null}>
-            <LazyModeMatrix />
-          </React.Suspense>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Personnalité TITANE</h3>
-          <React.Suspense fallback={null}>
-            <LazyPersonaEditor />
-          </React.Suspense>
-        </Card>
-      </Grid>
-
-      <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>Pacte Fondateur</h3>
-        <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-          <strong>Excellence Systémique</strong>
-          <br />
-          Architecture cohérente et maintenable
-          <br />
-          <br />
-          <strong>Innovation Continue</strong>
-          <br />
-          Évolution permanente du système
-          <br />
-          <br />
-          <strong>Cohérence Totale</strong>
-          <br />
-          Zéro duplication, source unique de vérité
-        </p>
-      </Card>
-
-      <Card style={{ marginTop: spacing[4] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>Identity Center</h3>
-        {env.isTauri ? (
-          <React.Suspense fallback={null}>
-            <LazyIdentityCenter />
-          </React.Suspense>
-        ) : (
-          <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-            Disponible en mode Tauri uniquement
-          </p>
-        )}
-      </Card>
-    </div>
-  );
-});
-IdentitySection.displayName = 'IdentitySection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 5: MÉMOIRE TRIPLE
-// ═══════════════════════════════════════════════════════════════════════════
-
-interface MemorySectionProps {
-  stats: TitaneStats;
-}
-
-type MemoryTreeNodeData = {
-  name: string;
-  attributes?: Record<string, string | number | boolean>;
-  children?: MemoryTreeNodeData[];
-};
-
-type MemorySearchEntry = {
-  id: string;
-  content: string;
-  type: 'short' | 'mid' | 'long';
-  timestamp: number;
-  tags?: string[];
-  relevance?: number;
-};
-
-const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
-  const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
-
-  const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
-    setSelectedNode(node);
-    pageLogger.debug('Node clicked', node);
-  }, []);
-
-  const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
-    pageLogger.debug('Memory entry clicked', entry);
-  }, []);
-
-  return (
-    <div className="titane-section titane-section-memory">
-      <TSectionHeader
-        title="💾 Mémoire Triple"
-        subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
-      />
-
-      {/* Stats Cards */}
-      <Grid columns={3} gap={4}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
-          <TMetric
-            label="Entrées"
-            value={stats.memoryShortTerm.toString()}
-            color="primary"
-          />
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Contexte immédiat et conversation active
-          </p>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Moyen Terme</h3>
-          <TMetric
-            label="Entrées"
-            value={stats.memoryMidTerm.toString()}
-            color="success"
-          />
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Sessions récentes et apprentissages temporaires
-          </p>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
-          <TMetric label="Entrées" value={stats.memoryLongTerm.toString()} color="info" />
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Connaissances permanentes et identité
-          </p>
-        </Card>
-      </Grid>
-
-      <div style={{ marginTop: spacing[6] }}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
-          <React.Suspense fallback={null}>
-            <LazyMemoryDashboard modeId="default" compact={true} />
-          </React.Suspense>
-        </Card>
-      </div>
-
-      {/* Memory Tree Visualization */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
-        <React.Suspense fallback={null}>
-          <LazyMemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
-        </React.Suspense>
-        {selectedNode && (
-          <Card style={{ marginTop: spacing[4] }}>
-            <h4>Nœud sélectionné</h4>
-            <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
-              {JSON.stringify(selectedNode, null, 2)}
-            </pre>
-          </Card>
-        )}
-      </div>
-
-      {/* Memory Search */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
-        <React.Suspense fallback={null}>
-          <LazyMemorySearchPanel onEntryClick={handleEntryClick} />
-        </React.Suspense>
-      </div>
-    </div>
-  );
-});
-
-MemorySection.displayName = 'MemorySection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 6: ÉVOLUTION MÉMOIRE
-// ═══════════════════════════════════════════════════════════════════════════
-
-type MemoryEvolutionSectionProps = Record<string, never>;
-
-const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = memo(() => {
-  const env = detectEnvironment();
-
-  return (
-    <div className="titane-section titane-section-memory-evolution">
-      <TSectionHeader
-        title="🔄 Évolution Mémoire"
-        subtitle="Dynamiques internes et journal évolutif"
-      />
-
-      <Card>
-        <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
-        {env.isTauri ? (
-          <React.Suspense fallback={null}>
-            <LazyMemoryEvolutionCenter />
-          </React.Suspense>
-        ) : (
-          <div>
-            <p style={{ color: colors.neutral[400], fontSize: fontSizes.sm }}>
-              Disponible en mode Tauri uniquement
-            </p>
-            <div style={{ marginTop: spacing[4] }}>
-              <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
-              <React.Suspense fallback={null}>
-                <LazyEvolutionTimeline />
-              </React.Suspense>
-            </div>
-          </div>
-        )}
-      </Card>
-    </div>
-  );
-});
-MemoryEvolutionSection.displayName = 'MemoryEvolutionSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 7: PROGRESSION & XP
-// ═══════════════════════════════════════════════════════════════════════════
-
-interface ProgressionSectionProps {
-  progression: ProgressionState | null;
-  stats: TitaneStats;
-}
-
-const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
-  ({ progression: _progression, stats }) => {
-    // Current stats for achievement progress
-    const currentStats = useMemo(
-      () => ({
-        level: stats.level,
-        totalXP: stats.totalXP,
-        messageCount: 1247, // From real data or store
-        modesUsed: 4,
-      }),
-      [stats]
-    );
-
-    // Filter achievements by category
-    const categories = useMemo(
-      () => ({
-        conversation: ACHIEVEMENTS.filter(a => a.category === 'conversation'),
-        progression: ACHIEVEMENTS.filter(a => a.category === 'progression'),
-        exploration: ACHIEVEMENTS.filter(a => a.category === 'exploration'),
-        mastery: ACHIEVEMENTS.filter(a => a.category === 'mastery'),
-      }),
-      []
-    );
-
-    return (
-      <div className="titane-section titane-section-progression">
-        <TSectionHeader
-          title="⚡ Progression & XP"
-          subtitle="Système XP, milestones, talents et achievements"
-        />
-
-        {/* XP Progress Bar */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <XPProgressBar
-            currentXP={stats.totalXP}
-            level={stats.level}
-            requiredXP={(stats.level + 1) * 10000}
-          />
-        </div>
-
-        {/* Milestones & Talents */}
-        <Grid columns={2} gap={4} style={{ marginBottom: spacing[6] }}>
-          <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Milestones</h3>
-            <Stack direction="vertical" gap={3}>
-              <TMetric
-                label="Niveau Atteint"
-                value={stats.level.toString()}
-                color="primary"
-              />
-              <TMetric
-                label="Total XP"
-                value={stats.totalXP.toLocaleString()}
-                color="success"
-              />
-              <TMetric
-                label="Prochain Niveau"
-                value={`${((stats.totalXP % 10000) / 10000) * 100}%`}
-              />
-            </Stack>
-          </Card>
-
-          <Card>
-            <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
-              <TBadge variant="success">Architecte</TBadge>
-              <TBadge variant="info">Optimiseur</TBadge>
-              <TBadge variant="info">Évolutionniste</TBadge>
-              <TBadge variant="success">Pédagogue</TBadge>
-            </div>
-          </Card>
-        </Grid>
-
-        {/* Achievements Grid */}
-        <div style={{ marginBottom: spacing[6] }}>
-          <h3 style={{ marginBottom: spacing[4] }}>🏆 Achievements</h3>
-
-          {/* Mastery (Legendary) */}
-          <div style={{ marginBottom: spacing[6] }}>
-            <h4
-              style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
-                marginBottom: spacing[3],
-              }}
-            >
-              👑 Maîtrise
-            </h4>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
-              }}
-            >
-              {categories.mastery.map(achievement => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  currentStats={currentStats}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Progression */}
-          <div style={{ marginBottom: spacing[6] }}>
-            <h4
-              style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
-                marginBottom: spacing[3],
-              }}
-            >
-              ⚡ Progression
-            </h4>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
-              }}
-            >
-              {categories.progression.map(achievement => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  currentStats={currentStats}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Conversation */}
-          <div style={{ marginBottom: spacing[6] }}>
-            <h4
-              style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
-                marginBottom: spacing[3],
-              }}
-            >
-              💬 Communication
-            </h4>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
-              }}
-            >
-              {categories.conversation.map(achievement => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  currentStats={currentStats}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* Exploration */}
-          <div>
-            <h4
-              style={{
-                fontSize: fontSizes.sm,
-                color: colors.neutral[400],
-                marginBottom: spacing[3],
-              }}
-            >
-              🧭 Exploration
-            </h4>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: spacing[4],
-              }}
-            >
-              {categories.exploration.map(achievement => (
-                <AchievementCard
-                  key={achievement.id}
-                  achievement={achievement}
-                  currentStats={currentStats}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-);
-
-ProgressionSection.displayName = 'ProgressionSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// SECTION 8: TRANSFORMATION
-// ═══════════════════════════════════════════════════════════════════════════
-
-type TransformationSectionProps = Record<string, never>;
-
-const TransformationSection: React.FC<TransformationSectionProps> = memo(() => {
-  return (
-    <div className="titane-section titane-section-transformation">
-      <TSectionHeader
-        title="🌱 Transformation"
-        subtitle="Lignes d'évolution et paliers franchis"
-      />
-
-      <Card>
-        <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
-        <React.Suspense fallback={null}>
-          <LazyTransformationRoadmap />
-        </React.Suspense>
-      </Card>
-
-      <Grid columns={2} gap={4} style={{ marginTop: spacing[4] }}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Lignes d&apos;Évolution</h3>
-          <Stack direction="vertical" gap={3}>
-            <div>
-              <TBadge variant="info">Cognitif</TBadge>
-              <p
-                style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
-                }}
-              >
-                Capacités de raisonnement et apprentissage
-              </p>
-            </div>
-
-            <div>
-              <TBadge variant="success">Social</TBadge>
-              <p
-                style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
-                }}
-              >
-                Interaction et communication
-              </p>
-            </div>
-
-            <div>
-              <TBadge variant="info">Technique</TBadge>
-              <p
-                style={{
-                  fontSize: fontSizes.sm,
-                  color: colors.neutral[400],
-                  marginTop: spacing[2],
-                }}
-              >
-                Architecture et optimisation
-              </p>
-            </div>
-          </Stack>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Paliers Franchis</h3>
-          <Stack direction="vertical" gap={3}>
-            <TMetric label="v25.0" value="Fusion EVO" color="success" />
-            <TMetric label="v25.1" value="Fusion TIME" color="success" />
-            <TMetric label="v25.2" value="Fusion STATS + ADMIN" color="success" />
-            <TMetric
-              label="v25.3"
-              value="Fusion TITANE"
-              color={colors.saphir.primary[500]}
-            />
-          </Stack>
-        </Card>
-      </Grid>
-    </div>
-  );
-});
-TransformationSection.displayName = 'TransformationSection';
-
-// ═══════════════════════════════════════════════════════════════════════════
-// COMPOSANT PRINCIPAL
-// ═══════════════════════════════════════════════════════════════════════════
-
+/**
+ * TitanePage - Main orchestrator component for TITANE system
+ * 
+ * Responsibilities:
+ * - Tab state management
+ * - Progression state loading
+ * - Stats calculation
+ * - Section routing/rendering
+ * - Visual engines initialization
+ * 
+ * All section implementations have been extracted to separate components
+ * in src/components/sections/ for better maintainability and testability.
+ */
 export const TitanePage: React.FC = () => {
-  // État
+  // ═══ STATE ═══
   const [activeTab, setActiveTab] = useState<TabId>('conversation');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [_isEditing, _setIsEditing] = useState(false);
   const { success: toastSuccess, error: errorToast } = useToast();
 
-  // Visual engines
+  // ═══ VISUAL ENGINES INITIALIZATION ═══
   useVisualEngines({
     engines: { stable: true, helios: true, nexus: true },
     health: 100,
     mode: 'stable',
   });
 
-  // Chargement progression
+  // ═══ PROGRESSION LOADING ═══
   useEffect(() => {
     const loadProgression = async () => {
       try {
@@ -1891,12 +134,13 @@ export const TitanePage: React.FC = () => {
         setProgression(state);
       } catch (error) {
         pageLogger.error('Erreur chargement progression', error);
+        // Graceful fallback: use default progression state
       }
     };
     loadProgression();
   }, []);
 
-  // Stats calculées
+  // ═══ STATS CALCULATION ═══
   const stats: TitaneStats = useMemo(
     () => ({
       totalXP: progression?.totalXP || 193000,
@@ -1909,6 +153,7 @@ export const TitanePage: React.FC = () => {
     [progression]
   );
 
+  // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
     () => ({
       conversation: () => setActiveTab('conversation'),
@@ -1920,10 +165,10 @@ export const TitanePage: React.FC = () => {
       progression: () => setActiveTab('progression'),
       transformation: () => setActiveTab('transformation'),
     }),
-    [setActiveTab]
+    []
   );
 
-  // Render section active
+  // ═══ RENDER ACTIVE SECTION ═══
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
       case 'conversation':
@@ -1947,6 +192,7 @@ export const TitanePage: React.FC = () => {
     }
   }, [activeTab, progression, stats]);
 
+  // ═══ RENDER ═══
   return (
     <ErrorBoundary context="TitanePage">
       <Container size="xl" className="titane-page">
@@ -1979,8 +225,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.conversation}
               role="tab"
               aria-selected={activeTab === 'conversation'}
-              aria-controls="titane-panel-conversation"
-              id="titane-tab-conversation"
+              aria-controls={TAB_PANEL_IDS.conversation}
+              id={TAB_LABEL_IDS.conversation}
             >
               💬 Chat
             </button>
@@ -1993,8 +239,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.overview}
               role="tab"
               aria-selected={activeTab === 'overview'}
-              aria-controls="titane-panel-overview"
-              id="titane-tab-overview"
+              aria-controls={TAB_PANEL_IDS.overview}
+              id={TAB_LABEL_IDS.overview}
             >
               📊 Vue
             </button>
@@ -2007,8 +253,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.vision}
               role="tab"
               aria-selected={activeTab === 'vision'}
-              aria-controls="titane-panel-vision"
-              id="titane-tab-vision"
+              aria-controls={TAB_PANEL_IDS.vision}
+              id={TAB_LABEL_IDS.vision}
             >
               📷 Vision
             </button>
@@ -2021,8 +267,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.identity}
               role="tab"
               aria-selected={activeTab === 'identity'}
-              aria-controls="titane-panel-identity"
-              id="titane-tab-identity"
+              aria-controls={TAB_PANEL_IDS.identity}
+              id={TAB_LABEL_IDS.identity}
             >
               🧬 Identité
             </button>
@@ -2035,8 +281,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.memoryMap}
               role="tab"
               aria-selected={activeTab === 'memory-map'}
-              aria-controls="titane-panel-memory"
-              id="titane-tab-memory"
+              aria-controls={TAB_PANEL_IDS['memory-map']}
+              id={TAB_LABEL_IDS['memory-map']}
             >
               💾 Mémoire
             </button>
@@ -2049,8 +295,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.memoryEvolution}
               role="tab"
               aria-selected={activeTab === 'memory-evolution'}
-              aria-controls="titane-panel-evolution"
-              id="titane-tab-evolution"
+              aria-controls={TAB_PANEL_IDS['memory-evolution']}
+              id={TAB_LABEL_IDS['memory-evolution']}
             >
               🔄 Évolution
             </button>
@@ -2063,8 +309,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.progression}
               role="tab"
               aria-selected={activeTab === 'progression'}
-              aria-controls="titane-panel-progression"
-              id="titane-tab-progression"
+              aria-controls={TAB_PANEL_IDS.progression}
+              id={TAB_LABEL_IDS.progression}
             >
               ⚡ XP
             </button>
@@ -2077,8 +323,8 @@ export const TitanePage: React.FC = () => {
               onClick={tabHandlers.transformation}
               role="tab"
               aria-selected={activeTab === 'transformation'}
-              aria-controls="titane-panel-transformation"
-              id="titane-tab-transformation"
+              aria-controls={TAB_PANEL_IDS.transformation}
+              id={TAB_LABEL_IDS.transformation}
             >
               🌱 Transform
             </button>
