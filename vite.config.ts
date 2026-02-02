@@ -201,7 +201,17 @@ export default defineConfig({
     // 🚀 OPTIMIZATION v24.7.7: Parallel minification with esbuild (faster than terser)
     minify: 'esbuild',
 
-    // ✨ v26.1 CONSOLE MONITOR: Drop console calls in production
+    // ✨ v27.1: CONSOLE OPTIMIZATION - Strip console calls in production
+    terserOptions: {
+      compress: {
+        drop_console: true,      // Remove console.* calls
+        drop_debugger: true,      // Remove debugger statements
+        pure_funcs: ['console.log', 'console.debug', 'console.info'],
+      },
+      format: {
+        comments: false,          // Remove comments
+      },
+    },
 
     rollupOptions: {
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
@@ -407,10 +417,15 @@ export default defineConfig({
     sourcemap: false,
   },
 
-  // ✨ v21.5 Sprint 1: Global esbuild transform (source code)
+  // ✨ v27.1 Sprint: Global esbuild transform (source code + production optimization)
   esbuild: {
+    // 🎯 Drop console and debugger in production
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none', // Remove comments in production
+    // 🎯 Production minification settings
+    minifyIdentifiers: process.env.NODE_ENV === 'production',
+    minifySyntax: process.env.NODE_ENV === 'production',
+    minifyWhitespace: process.env.NODE_ENV === 'production',
   },
 
   // 🚀 OPTIMIZATION v24.7.7: CSS source maps for debugging
