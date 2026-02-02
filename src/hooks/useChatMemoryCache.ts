@@ -36,6 +36,8 @@ export const compressMessages = (messages: AIMessage[], maxMessages: number = 10
   // Keep messages in reverse order (newest first)
   for (let i = messages.length - 1; i >= 0; i--) {
     const msg = messages[i];
+    if (!msg) continue; // Skip undefined/null
+    
     const key = `${msg.role}:${msg.content.substring(0, 50)}`;
 
     if (!seen.has(key) && compressed.length < maxMessages) {

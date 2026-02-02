@@ -6,7 +6,11 @@
 import { useState, useCallback, useMemo } from 'react';
 import type { ChatMode } from '@/services/ai/chatTypes';
 
-export interface CustomMode extends ChatMode {
+export interface CustomMode {
+  id: ChatMode | string;
+  name: string;
+  icon: string;
+  description: string;
   custom: boolean;
   userDefined?: boolean;
 }
