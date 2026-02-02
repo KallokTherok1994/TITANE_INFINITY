@@ -868,7 +868,7 @@ const AppRouter: React.FC = () => {
     return <OnboardingFlow onComplete={handleOnboardingComplete} />;
   }
 
-  // ✨ UI vΩ - Main app with TopNav (sidebar removed)
+  // ✨ UI vΩ - Main app with TopNav (global navigation)
   return (
     <AppShell
       topNav={
@@ -880,6 +880,7 @@ const AppRouter: React.FC = () => {
         />
       }
     >
+
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
 
