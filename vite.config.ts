@@ -317,6 +317,9 @@ export default defineConfig({
 
           // Application code splitting
           if (id.includes('/src/')) {
+            // ✨ v27.2 Phase 3A: Split DevSudo modules for lazy loading (-150 KB)
+            if (id.includes('/modules/devSudo/')) return 'devtools-sudo';
+
             // v25.7.5 P1-B: Split DevTools tabs for lazy loading (-100 KB)
             if (id.includes('/pages/tabs/DevTools/SystemTab')) return 'devtools-system';
             if (id.includes('/pages/tabs/DevTools/LogsTab')) return 'devtools-logs';
