@@ -181,11 +181,22 @@ export class TauriInvokeProtector {
   private isTauriAvailable: boolean | null = null;
   private checkCache: Record<string, TauriCacheEntry> = {};
   private pendingInvokes: Map<string, Promise<any>> = new Map(); // ✅ Anti-debounce
+  private tauriModuleCache: { invoke: typeof import('@tauri-apps/api/core').invoke } | null = null; // ✅ CRITICAL FIX: Cache the imported module
   private readonly CACHE_DURATION = 5000; // 5s cache
   private readonly isTestEnv: boolean =
     (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
     (typeof globalThis !== 'undefined' &&
       Boolean((globalThis as { __vitest_worker__?: unknown }).__vitest_worker__));
+
+  /**
+   * Constructor - Initialize Tauri detection on first instantiation
+   */
+  constructor() {
+    // ✅ v20.2: Initialize Tauri availability check immediately
+    // This ensures isTauriAvailable is set as soon as the protector is created
+    this.syncCheckTauriAvailability();
+    console.log('[TauriProtector] 🛡️ Initialized - isTauriAvailable:', this.isTauriAvailable);
+  }
 
   static getInstance(): TauriInvokeProtector {
     if (!TauriInvokeProtector.instance) {
@@ -206,10 +217,16 @@ export class TauriInvokeProtector {
 
   /**
    * Vérifie si Tauri est disponible dans l'environnement actuel
+   * ✅ v20.1: Détection améliorée + cache persistant
    */
   private syncCheckTauriAvailability(): boolean {
     if (this.isTauriAvailable === true) {
       return true;
+    }
+
+    // Évite re-vérifier si déjà confirmé comme indisponible (dans cette session)
+    if (this.isTauriAvailable === false) {
+      return false;
     }
 
     try {
@@ -218,19 +235,38 @@ export class TauriInvokeProtector {
         return false;
       }
 
-      const tauriGlobal = getTauriGlobal();
-      const internals = (
-        window as typeof window & { __TAURI_INTERNALS__?: { invoke?: unknown } }
-      ).__TAURI_INTERNALS__;
-      const hasInvoke =
-        typeof tauriGlobal?.core?.invoke === 'function' ||
-        typeof internals?.invoke === 'function';
+      // 🔍 Multiple detection strategies (most permissive)
+      const w = window as any;
+      
+      // Strategy 1: window.__TAURI__ (primary)
+      const hasTauriGlobal = w.__TAURI__ && typeof w.__TAURI__ === 'object';
+      
+      // Strategy 2: window.__TAURI_INTERNALS__ (secondary)  
+      const hasTauriInternals = w.__TAURI_INTERNALS__ && typeof w.__TAURI_INTERNALS__ === 'object';
+      
+      // Strategy 3: Check for actual invoke function in either location
+      const hasTauriInvoke = 
+        (w.__TAURI__?.core?.invoke && typeof w.__TAURI__.core.invoke === 'function') ||
+        (w.__TAURI_INTERNALS__?.invoke && typeof w.__TAURI_INTERNALS__.invoke === 'function');
+      
+      // Strategy 4: Runtime flag (set during initialization)
+      const hasTauriFlag = w.__TITANE_TAURI_INITIALIZED === true;
 
-      if (hasInvoke) {
+      // ✅ If ANY strategy confirms Tauri, mark as available
+      const isAvailable = hasTauriGlobal || hasTauriInternals || hasTauriInvoke || hasTauriFlag;
+
+      if (isAvailable) {
         this.isTauriAvailable = true;
+        console.log('[TauriProtector] ✅ Tauri confirmed available (strategies:', {
+          hasTauriGlobal,
+          hasTauriInternals,
+          hasTauriInvoke,
+          hasTauriFlag,
+        }, ')');
         return true;
       }
 
+      this.isTauriAvailable = false;
       return false;
     } catch (error) {
       console.warn('[TauriProtector] Error checking Tauri availability:', error);
@@ -293,6 +329,29 @@ export class TauriInvokeProtector {
       }
 
       console.warn(`[TauriProtector] Command ${command} failed:`, error);
+      
+      // ✨ v20.5: Special handling for conversation_generate - try Ollama fallback
+      if (command === 'conversation_generate') {
+        try {
+          const { callOllamaDirectly } = await import('./ollamaFallback');
+          console.log('[TauriProtector] 🤖 Using Ollama fallback for conversation_generate');
+          
+          const ollamaRequest = {
+            message: (args as any)?.message || '',
+            conversation_id: (args as any)?.conversation_id || `fallback-${Date.now()}`,
+            mode: (args as any)?.mode,
+            provider: (args as any)?.provider,
+            system_prompt: (args as any)?.system_prompt,
+          };
+
+          const result = await callOllamaDirectly(ollamaRequest);
+          return result as T;
+        } catch (ollamaError) {
+          console.error('[TauriProtector] ❌ Ollama fallback also failed:', ollamaError);
+          // Fall through to standard fallback below
+        }
+      }
+      
       if (this.isTestEnv) {
         // En mode test, propager l'erreur pour permettre les assertions
         throw error;
@@ -310,64 +369,118 @@ export class TauriInvokeProtector {
     timeoutMs: number,
     cacheKey: string
   ): Promise<T> {
-    // Hard guard: if we're not actually in a Tauri WebView, do not attempt invoke.
-    // In pure web mode, @tauri-apps/api exists but invoke will try ipc://localhost and fail.
-    if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
-      this.isTauriAvailable = false;
-      return this.createFallbackResponse<T>(command, 'Tauri not available (web mode)');
+    // ✅ v20.2: Don't re-check Tauri here - use cache state instead
+    // If isTauriAvailable is FALSE (confirmed unavailable), skip invoke
+    // If isTauriAvailable is NULL or TRUE (not yet checked, or confirmed available), proceed
+    if (this.isTauriAvailable === false && !this.isTestEnv) {
+      console.log('[TauriProtector] Skipping invoke for', command, '- Tauri marked as unavailable');
+      return this.createFallbackResponse<T>(command, 'Tauri not available (cached)');
     }
 
-    // Import dynamique avec protection (détermine disponibilité réelle)
-    const tauriModule = await this.safeTauriImport();
-    if (!tauriModule || !tauriModule.invoke) {
-      this.isTauriAvailable = false;
-      if (this.isTestEnv) {
-        throw new Error('Tauri invoke not available');
+    // ✅ CRITICAL FIX v20.3: Use cached module if available, don't re-import
+    // This prevents timing-dependent failures
+    let tauriModule = this.tauriModuleCache;
+    
+    if (!tauriModule) {
+      console.log('[TauriProtector] 🔄 Module cache miss - importing...');
+      // Only import if not cached
+      tauriModule = await this.safeTauriImport();
+      if (!tauriModule || !tauriModule.invoke) {
+        console.warn('[TauriProtector] ❌ Module import/invoke failed for', command);
+        this.isTauriAvailable = false;
+        if (this.isTestEnv) {
+          throw new Error('Tauri invoke not available');
+        }
+        return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
       }
-      return this.createFallbackResponse<T>(command, 'Tauri invoke not available');
+      // Cache the module for future calls
+      this.tauriModuleCache = tauriModule;
+      console.log('[TauriProtector] ✅ Module cached successfully');
     }
 
     this.isTauriAvailable = true;
 
-    // Appel avec timeout
-    const result = await Promise.race([
-      tauriModule.invoke<T>(command, args),
-      this.createTimeoutPromise<T>(timeoutMs),
-    ]);
+    try {
+      console.log(`[TauriProtector] 🚀 Invoking: ${command} with args:`, args);
+      
+      // Appel avec timeout - handle undefined args
+      const invokeCall = args !== undefined && args !== null
+        ? tauriModule.invoke<T>(command, args)
+        : tauriModule.invoke<T>(command);
 
-    // Cache du résultat positif (skip for recording commands)
-    if (
-      command !== 'start_recording' &&
-      command !== 'stop_recording' &&
-      command !== 'cancel_recording'
-    ) {
-      this.checkCache[cacheKey] = {
-        result,
-        timestamp: Date.now(),
-      };
+      const result = await Promise.race([
+        invokeCall,
+        this.createTimeoutPromise<T>(timeoutMs),
+      ]);
+
+      console.log(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
+
+      // Cache du résultat positif (skip for recording commands)
+      if (
+        command !== 'start_recording' &&
+        command !== 'stop_recording' &&
+        command !== 'cancel_recording'
+      ) {
+        this.checkCache[cacheKey] = {
+          result,
+          timestamp: Date.now(),
+        };
+      }
+
+      return result;
+    } catch (invokeError) {
+      console.warn(`[TauriProtector] ❌ Invoke failed: ${command}`, invokeError instanceof Error ? invokeError.message : String(invokeError));
+      throw invokeError; // Re-throw to be caught by safeInvoke
     }
-
-    return result;
   }
 
   /**
    * Import sécurisé du module Tauri
+   * ✅ v20.3: Cache le module importé pour éviter re-imports
    */
   private async safeTauriImport(): Promise<{
     invoke: typeof import('@tauri-apps/api/core').invoke;
   } | null> {
     try {
-      // Avoid importing/using the module in web mode: it exists, but will fail at runtime.
-      if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
-        this.isTauriAvailable = false;
+      // ✅ If we've already imported and cached, return immediately
+      if (this.tauriModuleCache) {
+        console.log('[TauriProtector] ✅ Using cached Tauri module');
+        return this.tauriModuleCache;
+      }
+
+      // ✅ If we've already confirmed Tauri is unavailable, don't try again
+      if (this.isTauriAvailable === false && !this.isTestEnv) {
         return null;
       }
 
       const module = await import('@tauri-apps/api/core');
       if (module && typeof module.invoke === 'function') {
-        this.isTauriAvailable = true;
-        return { invoke: module.invoke };
+        // Verify invoke is actually bound to the Tauri runtime
+        // In browser mode, invoke exists but may not be callable
+        try {
+          // Quick sanity check: invoke should have a name
+          if (module.invoke.name && (module.invoke.name === 'invoke' || module.invoke.toString().includes('tauri'))) {
+            this.isTauriAvailable = true;
+            this.tauriModuleCache = { invoke: module.invoke };
+            console.log('[TauriProtector] ✅ Successfully imported Tauri core module (verified)');
+            return { invoke: module.invoke };
+          } else {
+            console.warn('[TauriProtector] Tauri invoke imported but signature suspicious:', module.invoke.name);
+            // Still cache it in case it's the real thing
+            this.isTauriAvailable = true;
+            this.tauriModuleCache = { invoke: module.invoke };
+            return { invoke: module.invoke };
+          }
+        } catch (e) {
+          // If we can even check the invoke function, that's a problem
+          console.warn('[TauriProtector] Error verifying invoke function:', e);
+          this.isTauriAvailable = false;
+          return null;
+        }
       }
+      
+      console.warn('[TauriProtector] Tauri module imported but invoke not found');
+      this.isTauriAvailable = false;
       return null;
     } catch (error) {
       console.warn('[TauriProtector] Failed to import Tauri core:', error);
@@ -441,9 +554,9 @@ export class TauriInvokeProtector {
     }
 
     if (safeCommand.includes('conversation_generate')) {
+      // ✨ v20.5: Retourner message d'erreur simple - Ollama fallback sera tenté dans safeInvoke
       return {
-        content:
-          "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.",
+        content: `Backend indisponible. Tentative de fallback Ollama en cours...`,
         conversationId: `fallback-${Date.now()}`,
         messageId: `fallback-${Date.now()}`,
         latencyMs: 0,

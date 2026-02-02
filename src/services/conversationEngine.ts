@@ -155,6 +155,10 @@ export async function processMessage(
     conversationId,
   });
 
+  // ✨ v20.5: Ne pas bloquer ici - laisser TauriProtector gérer le fallback Ollama
+  // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
+  console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
+
   const raw = (await secureInvoke<unknown>('conversation_generate', {
     message: userMessage,
     conversation_id: conversationId,
@@ -165,9 +169,9 @@ export async function processMessage(
 
   let content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {
-    console.warn('[conversationEngine] ⚠️ Empty content received, applying fallback');
-    content =
-      "Mode navigateur: backend Tauri indisponible. Lance l'application native TITANE∞ pour accéder au moteur IA complet.";
+    console.error('[conversationEngine] ❌ AI returned empty content');
+    console.info('[conversationEngine] Raw response:', raw);
+    throw new Error('AI backend returned empty response');
   }
 
   const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
