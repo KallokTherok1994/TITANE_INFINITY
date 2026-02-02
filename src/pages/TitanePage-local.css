@@ -26,7 +26,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  /* Integrated in content card, not a top bar */\n  padding: 0;
+  /* Integrated in content card, not a top bar */
+  padding: 0;
   background: transparent;
   border: none;
   box-shadow: none;
