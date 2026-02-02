@@ -99,7 +99,7 @@ export const MonitoringDashboard: React.FC = memo(() => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-900 p-6">
+    <div className="bg-gray-900 p-6">
       <div className="max-w-450 mx-auto space-y-6">
         {/* Header */}
         <div className="flex items-center justify-between">

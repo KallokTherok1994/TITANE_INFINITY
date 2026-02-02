@@ -97,7 +97,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
+    <div className="bg-gradient-to-br from-gray-900 via-purple-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600">

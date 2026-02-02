@@ -21,7 +21,7 @@ export default function DesignSystemShowcase() {
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="min-h-screen bg-titanium-bg-base p-8">
+    <div className="bg-titanium-bg-base p-8">
       <div className="max-w-6xl mx-auto space-y-12">
         {/* Header */}
         <header className="text-center space-y-4 pb-8 border-b border-titanium-border-default">

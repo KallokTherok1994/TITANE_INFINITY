@@ -35,7 +35,7 @@ function GovernanceCenterPageContent(): JSX.Element {
   // Loading état initial
   if (governance.loading || matrixLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center py-20">
         <Spinner />
         <span className="ml-3 text-gray-400">Chargement du Centre Gouvernance...</span>
       </div>
@@ -45,7 +45,7 @@ function GovernanceCenterPageContent(): JSX.Element {
   // Error état (governance uniquement, matrix a fallback)
   if (governance.error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-8">
+      <div className="flex flex-col items-center justify-center py-20 p-8">
         <div className="text-red-400 text-xl mb-4">⚠️ Erreur de chargement</div>
         <p className="text-gray-400 mb-6">{governance.error}</p>
         <button

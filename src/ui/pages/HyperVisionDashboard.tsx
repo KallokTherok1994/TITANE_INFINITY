@@ -83,7 +83,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a0a0a] via-[#111416] to-[#0f0f0f] p-6">
+    <div className="bg-gradient-to-br from-[#0a0a0a] via-[#111416] to-[#0f0f0f] p-6">
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
         <div>

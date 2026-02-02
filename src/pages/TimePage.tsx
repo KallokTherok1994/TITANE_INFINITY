@@ -167,7 +167,7 @@ export const TimePage: React.FC = () => {
   };
 
   return (
-    <div className="time-page p-6 space-y-6 bg-gray-900 min-h-screen text-gray-100">
+    <div className="time-page p-6 space-y-6 bg-gray-900 text-gray-100">
       {/* Header */}
       <div className="header mb-8">
         <div className="flex items-center gap-3 mb-2">

@@ -107,7 +107,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
+    <div className="bg-gradient-to-br from-gray-900 via-indigo-900 to-gray-900 p-6">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-600">
