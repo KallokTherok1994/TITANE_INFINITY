@@ -501,19 +501,22 @@ export function PerfectFusionDashboard() {
         .perfect-fusion-dashboard {
           padding: var(--space-md);
           font-family: system-ui, -apple-system, sans-serif;
+          background: linear-gradient(135deg, #0b0f18 0%, #121826 100%);
+          color: #e6edf7;
         }
 
         .dashboard-title {
           font-size: var(--text-2xl);
           margin-bottom: var(--space-lg);
+          color: #e6edf7;
         }
 
         section {
           margin: var(--space-lg) 0;
           padding: var(--space-md);
-          border: 1px solid #ddd;
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 8px;
-          background: #f9f9f9;
+          background: rgba(15, 20, 30, 0.75);
         }
 
         section h2 {
@@ -529,10 +532,6 @@ export function PerfectFusionDashboard() {
         section p {
           font-size: var(--text-base);
           margin: var(--space-xs) 0;
-        }
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          background: #f9f9f9;
         }
 
         .status-badge {
@@ -568,9 +567,9 @@ export function PerfectFusionDashboard() {
 
         .health-card {
           /* .card-responsive handles responsive padding */
-          border: 1px solid #ccc;
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 6px;
-          background: white;
+          background: rgba(20, 24, 35, 0.85);
         }
 
         .metrics p {
@@ -579,10 +578,10 @@ export function PerfectFusionDashboard() {
         }
 
         .error {
-          color: #f44336;
+          color: #ffb4b4;
           font-weight: bold;
           padding: var(--space-sm);
-          background: #ffebee;
+          background: rgba(244, 67, 54, 0.15);
           border-radius: 4px;
           margin: var(--space-sm) 0;
           font-size: var(--text-base);
@@ -602,25 +601,26 @@ export function PerfectFusionDashboard() {
         }
 
         .alert-info {
-          background: #e3f2fd;
+          background: rgba(33, 150, 243, 0.12);
           border-color: #2196f3;
         }
         .alert-warning {
-          background: #fff3e0;
+          background: rgba(255, 152, 0, 0.12);
           border-color: #ff9800;
         }
         .alert-error {
-          background: #ffebee;
+          background: rgba(244, 67, 54, 0.12);
           border-color: #f44336;
         }
         .alert-critical {
-          background: #fce4ec;
+          background: rgba(233, 30, 99, 0.12);
           border-color: #e91e63;
         }
 
         .alert-header {
           display: flex;
-          justify-contentvar(--space-xs);
+          justify-content: space-between;
+          gap: var(--space-xs);
           font-weight: bold;
           font-size: var(--text-sm);
         }
@@ -637,29 +637,29 @@ export function PerfectFusionDashboard() {
           padding: var(--space-xs) var(--space-md);
           border: none;
           border-radius: 4px;
-          background: #2196f3;
-          color: white;
+          background: #2b6fff;
+          color: #ffffff;
           cursor: pointer;
           font-size: var(--text-base);
-          font-weight: 500
-          cursor: pointer;
+          font-weight: 600;
         }
 
-        button:hover {var(--space-lg);
-          padding: var(--space-sm);
-          background: #e8f5e9;
+        button:hover {
+          background: #3b82f6;
           border-radius: 4px;
-          text-align: center;
-          font-size: var(--text-base);
         }
 
         /* ✨ v25.6.0 + v25.7.4 - Responsive Optimization Section */
         .optimization-section {
           margin: var(--space-lg) 0;
           padding: var(--space-lg);
-          border: 1px solid #ddd;
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 8px;
-          background: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(156, 39, 176, 0.05));
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.08),
+            rgba(156, 39, 176, 0.08)
+          );
         }
 
         .optimization-grid {
@@ -671,13 +671,13 @@ export function PerfectFusionDashboard() {
           /* .card-responsive handles padding */
           border: 1px solid rgba(33, 150, 243, 0.3);
           border-radius: 6px;
-          background: rgba(255, 255, 255, 0.95);
+          background: rgba(20, 24, 35, 0.85);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .optimization-card h3 {
           margin: 0 0 var(--space-sm) 0;
-          color: #1976d2;
+          color: #60a5fa;
           font-size: var(--text-lg);
         }
 
@@ -686,15 +686,9 @@ export function PerfectFusionDashboard() {
           font-size: var(--text-sm);
         }
 
-        .optimization-card p {
-          margin: 8px 0;
-          font-size: 0.9em;
-        }
-
         .badge {
           display: inline-block;
           padding: 2px 8px;
-          border-ravar(--space-xs) var(--space-sm);
           border-radius: 12px;
           font-size: var(--text-xs);
         }
@@ -737,7 +731,7 @@ export function PerfectFusionDashboard() {
 
         .optimization-summary h3 {
           margin: 0 0 var(--space-md) 0;
-          color: #1976d2;
+          color: #93c5fd;
           font-size: var(--text-xl);
         }
 
@@ -753,7 +747,11 @@ export function PerfectFusionDashboard() {
           align-items: center;
           padding: var(--space-md);
           border-radius: 8px;
-          background: linear-gradient(135deg, rgba(33, 150, 243, 0.1), rgba(156, 39, 176, 0.1));
+          background: linear-gradient(
+            135deg,
+            rgba(33, 150, 243, 0.12),
+            rgba(156, 39, 176, 0.12)
+          );
           text-align: center;
         }
 
@@ -764,14 +762,14 @@ export function PerfectFusionDashboard() {
 
         .summary-label {
           font-size: var(--text-xs);
-          color: #666;
+          color: #9aa6b2;
           margin-bottom: var(--space-xs);
         }
 
         .summary-value {
           font-size: var(--text-xl);
           font-weight: bold;
-          color: #1976d2;
+          color: #93c5fd;
         }
 
         /* ✨ v25.7.4 - Mobile Specific Optimizations */

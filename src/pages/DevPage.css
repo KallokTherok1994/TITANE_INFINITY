@@ -24,8 +24,8 @@
   --dev-surface-glass: rgba(26, 26, 30, 0.85);
   --dev-border: rgba(50, 50, 60, 0.8);
   --dev-border-glow: rgba(76, 175, 80, 0.4);
-  --dev-text: #e8e8e8;
-  --dev-text-dim: #a8a8a8;
+  --dev-text: #f3f7ff;
+  --dev-text-dim: #c1c9d6;
   --dev-hover: rgba(45, 45, 55, 0.9);
   --dev-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.03);
   --dev-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 30px rgba(76, 175, 80, 0.1);
@@ -45,14 +45,15 @@
 .dev-page {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100%;
+  height: auto;
   background: var(--dev-bg);
   color: var(--dev-text);
   font-family:
     system-ui,
     -apple-system,
     sans-serif;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* ============================================================================

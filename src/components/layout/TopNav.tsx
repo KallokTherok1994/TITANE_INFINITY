@@ -103,7 +103,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   return (
     <nav
       className={cn(
-        'flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default z-50 sticky top-0',
+        'app-topnav fixed top-0 inset-x-0 z-[10000] flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default pointer-events-auto',
         'shadow-sm backdrop-blur-md',
         className
       )}

@@ -45,17 +45,15 @@ export const AppShell = ({
     >
       {/* TopNav (remplace header + sidebar) */}
       {topNav && (
-        <motion.div
-          initial={{ y: -64 }}
-          animate={{ y: 0 }}
-          transition={{ duration: 0.3, ease: 'easeOut' }}
-        >
+        <div className="relative z-[10000]" style={{ zIndex: 'var(--z-dev-tools)' }}>
           {topNav}
-        </motion.div>
+        </div>
       )}
 
       {/* Main Content (plein écran, sans sidebar) */}
-      <main className="flex-1 overflow-hidden relative flex flex-col">
+      <main
+        className={cn('flex-1 overflow-hidden relative flex flex-col', topNav && 'pt-16')}
+      >
         <div className="flex-1 overflow-auto scrollbar-custom w-full">
           {children}
         </div>
