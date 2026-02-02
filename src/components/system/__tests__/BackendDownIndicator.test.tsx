@@ -17,9 +17,12 @@ describe('BackendDownIndicator Component', () => {
   describe('Visibility', () => {
     it('should not render when backend is available', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'available',
-        unavailableReasons: [],
-        recheck: vi.fn(),
+        tauriStatus: 'available',
+        ollamaStatus: 'available',
+        anyBackendAvailable: true,
+        allBackendsDown: false,
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(<BackendDownIndicator position="top" />);
@@ -29,9 +32,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should render when backend is unavailable', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(<BackendDownIndicator position="top" />);
@@ -41,9 +48,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should render at correct position (top/bottom)', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(<BackendDownIndicator position="top" />);
@@ -53,9 +64,12 @@ describe('BackendDownIndicator Component', () => {
 
     it('should render checking state as spinner', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'checking',
-        unavailableReasons: [],
-        recheck: vi.fn(),
+        tauriStatus: 'checking',
+        ollamaStatus: 'checking',
+        anyBackendAvailable: false,
+        allBackendsDown: false,
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -69,9 +83,13 @@ describe('BackendDownIndicator Component', () => {
   describe('Message Display', () => {
     it('should display message for ollama-offline', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'available',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: true,
+        allBackendsDown: false,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -80,9 +98,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should display message for tauri-backend-down', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['tauri-backend-down'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'available',
+        anyBackendAvailable: true,
+        allBackendsDown: false,
+        unavailableReason: 'tauri-backend-down',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -91,9 +113,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should display message for network-error', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['network-error'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'network-error',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -104,9 +130,13 @@ describe('BackendDownIndicator Component', () => {
   describe('Actions', () => {
     it('should have Retry button', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -115,24 +145,32 @@ describe('BackendDownIndicator Component', () => {
     });
 
     it('should call recheck on Retry click', () => {
-      const recheck = vi.fn();
+      const recheckHealth = vi.fn();
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck,
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth,
       });
 
       render(<BackendDownIndicator position="top" />);
       const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
       fireEvent.click(retryButton);
-      expect(recheck).toHaveBeenCalled();
+      expect(recheckHealth).toHaveBeenCalled();
     });
 
     it('should have Dismiss button when dismissible', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" dismissible={true} />);
@@ -144,9 +182,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should hide banner when dismissed', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(
@@ -162,9 +204,13 @@ describe('BackendDownIndicator Component', () => {
   describe('Accessibility', () => {
     it('should have alert role', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(<BackendDownIndicator position="top" />);
@@ -174,9 +220,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should have aria-live assertive', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       const { container } = render(<BackendDownIndicator position="top" />);
@@ -186,9 +236,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should have focus ring on buttons', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -200,9 +254,13 @@ describe('BackendDownIndicator Component', () => {
   describe('Diagnostic Information', () => {
     it('should display collapsible diagnostic section', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -214,9 +272,13 @@ describe('BackendDownIndicator Component', () => {
 
     it('should toggle diagnostic visibility on click', () => {
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
@@ -235,17 +297,24 @@ describe('BackendDownIndicator Component', () => {
 
       // Start with unavailable
       mockUseBackendHealth.mockReturnValue({
-        status: 'unavailable',
-        unavailableReasons: ['ollama-offline'],
-        recheck: vi.fn(),
+        tauriStatus: 'unavailable',
+        ollamaStatus: 'unavailable',
+        anyBackendAvailable: false,
+        allBackendsDown: true,
+        unavailableReason: 'ollama-offline',
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
       rerender(<BackendDownIndicator position="top" />);
 
       // Simulate recovery
       mockUseBackendHealth.mockReturnValue({
-        status: 'available',
-        unavailableReasons: [],
-        recheck: vi.fn(),
+        tauriStatus: 'available',
+        ollamaStatus: 'available',
+        anyBackendAvailable: true,
+        allBackendsDown: false,
+        lastCheck: Date.now(),
+        recheckHealth: vi.fn(),
       });
       rerender(<BackendDownIndicator position="top" />);
 
