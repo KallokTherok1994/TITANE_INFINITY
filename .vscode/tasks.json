@@ -1124,6 +1124,22 @@
 			"type": "shell",
 			"command": "bash -lc 'set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; git add .gitignore deployment/latest/TITANE-Infinity_26.3.0_amd64.AppImage deployment/latest/TITANE-Infinity_26.3.0_amd64.deb; git status --porcelain=v1 -b | cat; git commit -m \"publish(latest): add linux bundles v26.3.0\" -m \"- Autorise deployment/latest/*.AppImage et *.deb (exception .gitignore)\\n- Versionne les artefacts AppImage/DEB v26.3.0\"; git status --porcelain=v1 -b | cat'",
 			"isBackground": false
+		},
+		{
+			"label": "🧪 Test Ollama Connection",
+			"type": "shell",
+			"command": "bash test-ollama-connection.sh",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"problemMatcher": [],
+			"presentation": {
+				"reveal": "always",
+				"panel": "dedicated",
+				"focus": true,
+				"showReuseMessage": false
+			},
+			"detail": "Test complet de la connexion Ollama + Tauri"
 		}
 	],
 	"inputs": [

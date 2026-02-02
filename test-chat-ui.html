@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chat TITANE∞ v20.5</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #00ff00; }
+        h1 { color: #00ffff; }
+        button { padding: 10px 20px; margin: 5px; background: #333; color: #0f0; border: 1px solid #0f0; cursor: pointer; }
+        button:hover { background: #0f0; color: #000; }
+        #output { background: #000; padding: 15px; margin: 10px 0; border: 1px solid #0f0; min-height: 200px; }
+        .success { color: #0f0; }
+        .error { color: #f00; }
+        .info { color: #ff0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Chat TITANE∞ v20.5 - Ollama Fallback</h1>
+    
+    <button onclick="testOllamaFallback()">Test Ollama Fallback Direct</button>
+    <button onclick="testTauriBackend()">Test Tauri Backend (Mock)</button>
+    <button onclick="clearOutput()">Clear</button>
+    
+    <div id="output"></div>
+
+    <script type="module">
+        window.log = (msg, type = 'info') => {
+            const output = document.getElementById('output');
+            const line = document.createElement('div');
+            line.className = type;
+            line.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`;
+            output.appendChild(line);
+            output.scrollTop = output.scrollHeight;
+        };
+
+        window.clearOutput = () => {
+            document.getElementById('output').innerHTML = '';
+        };
+
+        window.testOllamaFallback = async () => {
+            log('🚀 Testing Ollama HTTP fallback...', 'info');
+            
+            try {
+                const request = {
+                    model: 'llama3.1:latest',
+                    prompt: 'Test: réponds simplement "OK" si tu me reçois.',
+                    stream: false,
+                    options: { temperature: 0.7 }
+                };
+
+                log(`📤 Request: ${JSON.stringify(request).substring(0, 100)}...`, 'info');
+                
+                const response = await fetch('http://127.0.0.1:11434/api/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(request)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                log(`✅ SUCCESS: ${data.response}`, 'success');
+                log(`📊 Model: ${data.model}, Done: ${data.done}`, 'info');
+                
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`, 'error');
+                console.error(error);
+            }
+        };
+
+        window.testTauriBackend = async () => {
+            log('🚀 Testing Tauri Backend conversation_generate...', 'info');
+            
+            if (!window.__TAURI__) {
+                log('❌ ERROR: Not in Tauri context! Open this in Titan-Dev window.', 'error');
+                return;
+            }
+
+            try {
+                // Import dynamique du protector
+                const { safeInvokeTauri } = await import('/src/utils/tauriProtector.ts');
+                
+                log('📤 Calling conversation_generate via TauriProtector...', 'info');
+                
+                const result = await safeInvokeTauri('conversation_generate', {
+                    message: 'Test backend: réponds "OK"',
+                    conversation_id: 'test-' + Date.now(),
+                    mode: 'default',
+                    provider: 'auto',
+                    system_prompt: 'Tu es un assistant de test. Réponds brièvement.'
+                });
+
+                log(`✅ SUCCESS: ${result.content || result.message || JSON.stringify(result).substring(0, 100)}`, 'success');
+                log(`📊 Response metadata: ${JSON.stringify(result.metadata || {})}`, 'info');
+                
+            } catch (error) {
+                log(`❌ ERROR: ${error.message}`, 'error');
+                console.error(error);
+            }
+        };
+
+        // Auto-test au chargement
+        window.addEventListener('load', () => {
+            log('🎯 Test page loaded', 'success');
+            log('💡 Click buttons to test chat system', 'info');
+            
+            if (window.__TAURI__) {
+                log('✅ Running in Tauri context', 'success');
+            } else {
+                log('⚠️ Not in Tauri - only HTTP fallback will work', 'info');
+            }
+        });
+    </script>
+</body>
+</html>

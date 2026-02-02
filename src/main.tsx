@@ -16,7 +16,10 @@ declare global {
   }
 }
 
-// 🛡️ TAURI INVOKE PROTECTION - Applied first
+// 🛡️ TAURI INITIALIZATION FIX - Assure que Tauri est bien disponible
+import './tauri-init-fix';
+
+// 🛡️ TAURI INVOKE PROTECTION - Applied after init fix
 import './tauri-protection-patch';
 
 // 🌐 BROWSER MODE ADAPTER - Configure pour mode navigateur si nécessaire
