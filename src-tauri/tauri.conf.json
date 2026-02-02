@@ -61,7 +61,7 @@
       }
     ],
     "security": {
-      "csp": "default-src 'self' tauri: asset: *; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri: *; style-src 'self' 'unsafe-inline' asset: tauri: *; img-src 'self' asset: data: blob: * https:; font-src 'self' asset: data: *; connect-src 'self' tauri: asset: ipc: http: https: ws: wss: *; media-src 'self' asset: blob: mediastream: *; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://127.0.0.1:1420 ws://127.0.0.1:1420; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "dangerousDisableAssetCspModification": true,
       "assetProtocol": {
         "enable": true,
@@ -167,7 +167,6 @@
             { "command": "cp_get_ai_config" },
             { "command": "cp_set_ai_config" },
             { "command": "chat_generate" },
-            { "command": "chat_send_message" },
             { "command": "chat_stream_message" },
             { "command": "chat_create_conversation" },
             { "command": "chat_get_conversation" },

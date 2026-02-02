@@ -76,13 +76,13 @@ export const loadUserPreferencesEngine = async () => {
 
 // Experience Tools Loader
 let _experienceToolsPromise: Promise<{
-  recordXPGain: (source: string, amount: number) => void;
+  recordXPGain: (amount: number, source: any, description: string, metadata?: Record<string, unknown>) => Promise<any>;
 }> | null = null;
 
 export const loadExperienceTools = async () => {
   if (!_experienceToolsPromise) {
     _experienceToolsPromise = import('@/cognitive/progression/xpEngine').then(m => ({
-      recordXPGain: m.xpEngine.recordXPGain.bind(m.xpEngine),
+      recordXPGain: m.xpEngine.addXP.bind(m.xpEngine),
     }));
   }
   return _experienceToolsPromise;
@@ -90,13 +90,13 @@ export const loadExperienceTools = async () => {
 
 // DevSudo Integration Loader
 let _devSudoPromise: Promise<{
-  executeDevCommand: (command: string) => Promise<any>;
+  executeDevCommand: (command: any) => Promise<any>;
 }> | null = null;
 
 export const loadDevSudoIntegration = async () => {
   if (!_devSudoPromise) {
     _devSudoPromise = import('@/modules/devSudo/devSudoIntegration').then(m => ({
-      executeDevCommand: m.devSudoIntegration.executeDevCommand.bind(m.devSudoIntegration),
+      executeDevCommand: m.devSudoHandler.executeCommand.bind(m.devSudoHandler),
     }));
   }
   return _devSudoPromise;
@@ -104,28 +104,28 @@ export const loadDevSudoIntegration = async () => {
 
 // Camera Integration Loader
 let _cameraIntegrationPromise: Promise<{
-  captureAndAnalyze: () => Promise<any>;
+  captureAndAnalyze: (message: string, visionStore: any) => Promise<any>;
 }> | null = null;
 
 export const loadCameraIntegration = async () => {
   if (!_cameraIntegrationPromise) {
     _cameraIntegrationPromise = import('@/modules/camera/cameraChatIntegration').then(m => ({
-      captureAndAnalyze: m.cameraChatIntegration.captureAndAnalyze.bind(m.cameraChatIntegration),
+      captureAndAnalyze: m.handleCameraInChat,
     }));
   }
   return _cameraIntegrationPromise;
 };
 
-// Cloud Providers Loader
-let _cloudProvidersPromise: Promise<{
-  validateProvider: (provider: string) => boolean;
-}> | null = null;
+// Cloud Providers Loader - Désactivé (module n'existe pas)
+// let _cloudProvidersPromise: Promise<{
+//   validateProvider: (provider: string) => boolean;
+// }> | null = null;
 
-export const loadCloudProviders = async () => {
-  if (!_cloudProvidersPromise) {
-    _cloudProvidersPromise = import('@/services/cloudProviders').then(m => ({
-      validateProvider: m.validateProvider,
-    }));
-  }
-  return _cloudProvidersPromise;
-};
+// export const loadCloudProviders = async () => {
+//   if (!_cloudProvidersPromise) {
+//     _cloudProvidersPromise = import('@/services/cloudProviders').then(m => ({
+//       validateProvider: m.validateProvider,
+//     }));
+//   }
+//   return _cloudProvidersPromise;
+// };

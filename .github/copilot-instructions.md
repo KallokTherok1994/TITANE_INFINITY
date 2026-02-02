@@ -23,6 +23,22 @@ Notes:
 - No secrets committed.
 - Keep changes minimal and testable.
 
+### ⚠️ RÈGLE CRITIQUE — REGISTRE UI OBLIGATOIRE (Ajouté: 2026-02-02)
+
+**OBLIGATION PERMANENTE :**
+
+- **TOUTE modification UI** (pages, layout, navigation, styles) **DOIT** être enregistrée dans `registry/ui-events.jsonl`.
+- **UN changement UI = UNE entry append-only** (JSONL) avec champs obligatoires complets.
+- **CHAQUE phase UI** (fix, tests, governance, polish) **doit** ajouter une entry si elle modifie l’UI.
+- **Le gate `GATE_UI_INDEX` doit passer** avant toute validation QUALIFIED/STABLE.
+
+**Champs obligatoires:** `id`, `ts`, `category`, `scope`, `change_type`, `summary`, `reason`, `files_changed`, `tests_run`, `proofs`, `risk_level`, `rollback`, `status`.
+
+**Interdictions:**
+- ❌ Modifier un fichier UI sans entry registre.
+- ❌ Écraser/supprimer une entry (append-only strict).
+- ❌ Valider un changement UI sans `tests_run` + `rollback`.
+
 ### ⚠️ RÈGLE CRITIQUE — FERMETURE DES PORTS ET TERMINAUX DÉPRÉCIÉS (Ajouté: 2026-01-05)
 
 **OBLIGATION PERMANENTE :**

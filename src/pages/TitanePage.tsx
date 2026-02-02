@@ -56,6 +56,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
 
 import './TitanePage.css';
+import './TitanePage-local.css';
 
 const pageLogger = createLogger('TitanePage');
 
@@ -197,25 +198,26 @@ export const TitanePage: React.FC = () => {
     <ErrorBoundary context="TitanePage">
       <Container size="xl" className="titane-page">
         <Stack direction="vertical" gap={4}>
-          {/* ═══ HEADER (UI vΩ: Compact & Hierarchical) ═══ */}
-          <div className="titane-header-vΩ">
-            <div className="flex items-center gap-4">
-              <TitaneLogo size={48} />
-              <div>
-                <h1 className="text-2xl font-bold text-titanium-text-primary mb-1">
-                  ⚡ TITANE
-                </h1>
-                <p className="text-sm text-titanium-text-secondary">Le Cœur du Système</p>
+          {/* ═══ LOCAL SECTION HEADER (UI vΩ: Integrated, Non-Navbar) ═══ */}
+          <div className="titane-local-section">
+            <div className="titane-section-header">
+              <div className="flex items-center gap-3">
+                <TitaneLogo size={36} />
+                <div>
+                  <h1 className="text-xl font-semibold text-titanium-text-primary">
+                    ⚡ TITANE
+                  </h1>
+                  <p className="text-xs text-titanium-text-secondary">Le Cœur du Système</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* ═══ TABS (UI vΩ: Compact, Usage-Oriented Order) ═══ */}
-          <div
-            className="flex gap-1 overflow-x-auto py-2 border-b border-titanium-border-default"
-            role="tablist"
-            aria-label="Sections principales TITANE"
-          >
+            {/* ═══ TABS (Local Navigation, Visually Secondary) ═══ */}
+            <div
+              className="titane-tabs-container"
+              role="tablist"
+              aria-label="Sections principales TITANE"
+            >
             <button
               className={`px-4 py-2 text-sm font-medium rounded transition-all ${
                 activeTab === 'conversation'
@@ -328,6 +330,7 @@ export const TitanePage: React.FC = () => {
             >
               🌱 Transform
             </button>
+            </div>
           </div>
 
           {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}

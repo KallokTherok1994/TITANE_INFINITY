@@ -281,7 +281,6 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'upload_and_process_file',
 
   // Chat Orchestrator (v18+)
-  'chat_send_message',
   'chat_get_providers_status',
   'chat_check_providers',
   'chat_create_conversation',
