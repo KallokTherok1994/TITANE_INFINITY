@@ -119,7 +119,7 @@ export const TopNav: React.FC<TopNavProps> = ({
       </div>
 
       {/* Navigation Items */}
-      <div className="flex items-center gap-2 flex-1 justify-center max-w-4xl">
+      <div className="flex items-center gap-3 flex-1 justify-center max-w-5xl">
         {/* Visible Items */}
         {visibleItems.map(item => {
           const active = isActive(item.route);
@@ -132,23 +132,20 @@ export const TopNav: React.FC<TopNavProps> = ({
               aria-label={item.label}
               aria-current={active ? 'page' : undefined}
               className={cn(
-                'relative flex items-center gap-2 px-4 py-2 rounded-lg',
-                'text-sm font-medium transition-all duration-200',
-                'hover:bg-titanium-bg-interactive focus:outline-none',
-                'focus:ring-2 focus:ring-titanium-accent-cool focus:ring-offset-2 focus:ring-offset-titanium-bg-elevated',
+                'relative flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium',
+                'transition-colors duration-150 focus:outline-none focus:ring-2',
+                'focus:ring-titanium-accent-cool focus:ring-offset-1',
                 active
                   ? 'text-titanium-accent-cool bg-titanium-bg-interactive'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50'
               )}
             >
               <span className="shrink-0">{item.icon}</span>
               <span className="hidden md:inline">{item.label}</span>
               {active && (
-                <motion.div
-                  layoutId="topnav-indicator"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-titanium-accent-cool"
-                  initial={false}
-                  transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                <span
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-titanium-accent-cool rounded-full"
+                  aria-hidden="true"
                 />
               )}
             </button>
@@ -164,13 +161,7 @@ export const TopNav: React.FC<TopNavProps> = ({
               aria-label="Plus d'options"
               aria-expanded={isMoreMenuOpen}
               aria-haspopup="true"
-              className={cn(
-                'flex items-center gap-2 px-4 py-2 rounded-lg',
-                'text-sm font-medium transition-all duration-200',
-                'hover:bg-titanium-bg-interactive focus:outline-none',
-                'focus:ring-2 focus:ring-titanium-accent-cool focus:ring-offset-2 focus:ring-offset-titanium-bg-elevated',
-                'text-titanium-text-secondary hover:text-titanium-text-primary'
-              )}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50 focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool"
             >
               <MoreHorizontal size={18} />
               <span className="hidden md:inline">Plus</span>
@@ -209,10 +200,8 @@ export const TopNav: React.FC<TopNavProps> = ({
                         onKeyDown={e => handleKeyDown(e, item.route)}
                         aria-current={active ? 'page' : undefined}
                         className={cn(
-                          'w-full flex items-center gap-3 px-4 py-3',
-                          'text-sm transition-colors duration-150',
-                          'hover:bg-titanium-bg-interactive focus:outline-none',
-                          'focus:bg-titanium-bg-interactive',
+                          'w-full flex items-center gap-3 px-4 py-3 text-sm transition-colors duration-150',
+                          'hover:bg-titanium-bg-interactive focus:outline-none focus:bg-titanium-bg-interactive',
                           active
                             ? 'text-titanium-accent-cool bg-titanium-bg-interactive/50'
                             : 'text-titanium-text-secondary hover:text-titanium-text-primary'
