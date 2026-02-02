@@ -392,9 +392,8 @@ class TauriClient {
   }
 
   async chatSendMessage(params?: unknown): Promise<unknown> {
-    return await this.invoke(
-      TAURI_COMMANDS.CHAT_SEND_MESSAGE,
-      (params as Record<string, unknown>) || {}
+    throw new Error(
+      'Legacy chat_send_message is disabled. Use conversation_generate via ConversationManager.'
     );
   }
 

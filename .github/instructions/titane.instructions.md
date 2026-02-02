@@ -41,6 +41,24 @@
 
 ---
 
+## ⚠️ RÈGLE CRITIQUE #2 — REGISTRE UI OBLIGATOIRE (2026-02-02)
+
+**OBLIGATION PERMANENTE :**
+
+- **TOUTE modification UI** (pages, layout, navigation, styles) **DOIT** être enregistrée dans `registry/ui-events.jsonl`.
+- **UN changement UI = UNE entry append-only** (JSONL) avec champs obligatoires complets.
+- **CHAQUE phase UI** (fix, tests, governance, polish) **doit** ajouter une entry si elle modifie l’UI.
+- **Le gate `GATE_UI_INDEX` doit passer** avant toute validation QUALIFIED/STABLE.
+
+**Champs obligatoires:** `id`, `ts`, `category`, `scope`, `change_type`, `summary`, `reason`, `files_changed`, `tests_run`, `proofs`, `risk_level`, `rollback`, `status`.
+
+**Interdictions:**
+- ❌ Modifier un fichier UI sans entry registre.
+- ❌ Écraser/supprimer une entry (append-only strict).
+- ❌ Valider un changement UI sans `tests_run` + `rollback`.
+
+---
+
 ## Vision
 
 Assistant IA local-first, privacy-first, cognitif révolutionnaire.

@@ -265,6 +265,40 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     onError: handleVoiceError,
   });
 
+  // ═══ HANDLERS ═══
+  const handleCopyMessage = useCallback(
+    async (content: string) => {
+      try {
+        await navigator.clipboard.writeText(content);
+      } catch (err) {
+        pageLogger.warn('Copy message failed', err);
+        errorToast('Impossible de copier le message');
+      }
+    },
+    [errorToast]
+  );
+
+  const handleRetryMessage = useCallback(
+    async (content: string) => {
+      if (!content.trim() || isLoading) return;
+      thinking.startThinking();
+      try {
+        await sendMessage(content);
+      } finally {
+        thinking.stopThinking();
+      }
+    },
+    [isLoading, sendMessage, thinking]
+  );
+
+  const handleSuggestionClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      const value = e.currentTarget.dataset.value;
+      if (value) setInputValue(value);
+    },
+    []
+  );
+
   // ═══ COMPUTED VALUES ═══
   const conversationModes = useMemo(() => {
     const customModesFormatted = customModes.map(m => ({
@@ -339,7 +373,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           onDelete={deleteMessage}
         />
       )),
-    [filteredMessages, isLoading, deleteMessage]
+    [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
   );
 
   const suggestionButtons = useMemo(
@@ -373,46 +407,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // ═══ HANDLERS ═══
-  const handleSuggestionClick = useCallback(
-    (event: React.MouseEvent<HTMLButtonElement>) => {
-      const value = event.currentTarget.dataset.value;
-      if (value) {
-        setInputValue(value);
-      }
-    },
-    []
-  );
-
+  // ═══ MORE HANDLERS ═══
   const handleSaveCustomMode = useCallback((mode: CustomMode) => {
     setCustomModes(prev => [...prev, mode]);
     pageLogger.debug('Mode personnalisé sauvegardé', mode);
   }, []);
-
-  const handleCopyMessage = useCallback(
-    async (content: string) => {
-      try {
-        await navigator.clipboard.writeText(content);
-      } catch (err) {
-        pageLogger.warn('Copy message failed', err);
-        errorToast('Impossible de copier le message');
-      }
-    },
-    [errorToast]
-  );
-
-  const handleRetryMessage = useCallback(
-    async (content: string) => {
-      if (!content.trim() || isLoading) return;
-      thinking.startThinking();
-      try {
-        await sendMessage(content);
-      } finally {
-        thinking.stopThinking();
-      }
-    },
-    [isLoading, sendMessage, thinking]
-  );
 
   const handleSend = useCallback(async () => {
     const rawInput = inputValue;

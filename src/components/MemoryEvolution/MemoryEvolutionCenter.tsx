@@ -483,13 +483,23 @@ export const MemoryEvolutionCenter: React.FC = () => {
   const fetchClusters = useCallback(async () => {
     try {
       const clustersData = await secureInvoke<MemoryCluster[]>('memory_get_clusters');
-      setClusters(clustersData);
+      // Vérifier que clustersData est bien un tableau
+      if (Array.isArray(clustersData)) {
+        setClusters(clustersData);
+      } else {
+        logger.warn('Clusters data is not an array', { 
+          component: 'MemoryEvolutionCenter', 
+          data: clustersData 
+        });
+        setClusters([]);
+      }
     } catch (err) {
       logger.error(
         'Failed to fetch memory clusters',
         { component: 'MemoryEvolutionCenter', action: 'fetchClusters' },
         err as Error
       );
+      setClusters([]);
     }
   }, []);
 
