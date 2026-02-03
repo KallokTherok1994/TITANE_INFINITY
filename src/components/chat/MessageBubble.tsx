@@ -109,7 +109,7 @@ export const MessageBubble = memo(function MessageBubble({
   // Handler pour retry avec état loading
   const handleRetry = React.useCallback(async () => {
     if (!onRetry || isRetrying) return;
-    
+
     setIsRetrying(true);
     try {
       await onRetry();
@@ -141,13 +141,13 @@ export const MessageBubble = memo(function MessageBubble({
       if (content && content.trim().length > 0) {
         return <MarkdownContent content={content} />;
       }
-      
+
       // Si le message est vide mais récent (< 3s), afficher le typing indicator
       const messageAge = Date.now() - timestamp;
       if (messageAge < 3000) {
         return <TypingIndicator />;
       }
-      
+
       // Message vide et ancien = erreur → Utiliser ChatFallback
       return (
         <ChatFallback
@@ -164,7 +164,16 @@ export const MessageBubble = memo(function MessageBubble({
       );
     }
     return content;
-  }, [role, content, timestamp, isRetrying, metadata, onRetry, handleRetry, handleCopyDiagnostic]);
+  }, [
+    role,
+    content,
+    timestamp,
+    isRetrying,
+    metadata,
+    onRetry,
+    handleRetry,
+    handleCopyDiagnostic,
+  ]);
 
   return (
     <div className={bubbleClasses} role="article" aria-label={ariaLabel}>

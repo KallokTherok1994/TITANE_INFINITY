@@ -13,13 +13,13 @@
 
 ### Bundle Analysis
 
-| Métrique | Valeur | Status |
-|----------|--------|--------|
-| **Total dist/** | 9.5 MB | ✅ ACCEPTABLE |
-| **JavaScript** | 3.90 MB (68 fichiers) | ✅ BON |
-| **CSS** | 0.51 MB (31 fichiers) | ✅ EXCELLENT |
-| **Chunk le plus gros** | 812 KB (react-vendor) | ✅ < 1MB |
-| **Compression gzip** | -71.3% → 1.11 MB | ✅ EXCELLENT |
+| Métrique               | Valeur                | Status        |
+| ---------------------- | --------------------- | ------------- |
+| **Total dist/**        | 9.5 MB                | ✅ ACCEPTABLE |
+| **JavaScript**         | 3.90 MB (68 fichiers) | ✅ BON        |
+| **CSS**                | 0.51 MB (31 fichiers) | ✅ EXCELLENT  |
+| **Chunk le plus gros** | 812 KB (react-vendor) | ✅ < 1MB      |
+| **Compression gzip**   | -71.3% → 1.11 MB      | ✅ EXCELLENT  |
 
 ### Chunks Principaux
 
@@ -60,12 +60,12 @@ ui-chat             92 KB   ██
 
 ### Workspace Breakdown
 
-| Répertoire | Taille | Notes |
-|------------|--------|-------|
+| Répertoire          | Taille    | Notes                        |
+| ------------------- | --------- | ---------------------------- |
 | `src-tauri/target/` | **20 GB** | ⚠️ Accumulation builds debug |
-| `node_modules/` | 1.3 GB | ✅ Normal |
-| `src/` | 23 MB | ✅ Source code |
-| `dist/` | 9.5 MB | ✅ Bundle optimisé |
+| `node_modules/`     | 1.3 GB    | ✅ Normal                    |
+| `src/`              | 23 MB     | ✅ Source code               |
+| `dist/`             | 9.5 MB    | ✅ Bundle optimisé           |
 
 ### Recommandation Nettoyage
 
@@ -102,6 +102,7 @@ bash optimize-workspace.sh
 ### Priorité Haute
 
 1. **Nettoyer `src-tauri/target/`** → Libère 19 GB
+
    ```bash
    bash optimize-workspace.sh
    ```
@@ -138,20 +139,20 @@ bash optimize-workspace.sh
 
 ### Temps de Build
 
-| Environnement | Temps | Notes |
-|---------------|-------|-------|
-| **Dev build** | ~30s | Incremental |
-| **Production build** | ~2min | Full optimization |
-| **Rust debug** | ~45s | Incremental |
-| **Rust release** | ~5min | LTO + optimizations |
+| Environnement        | Temps | Notes               |
+| -------------------- | ----- | ------------------- |
+| **Dev build**        | ~30s  | Incremental         |
+| **Production build** | ~2min | Full optimization   |
+| **Rust debug**       | ~45s  | Incremental         |
+| **Rust release**     | ~5min | LTO + optimizations |
 
 ### Load Times (estimé)
 
-| Connexion | Initial Load | Subsequent |
-|-----------|--------------|------------|
-| **Gigabit** | < 1s | < 100ms (cache) |
-| **4G LTE** | ~2-3s | < 500ms |
-| **3G** | ~8-10s | ~1-2s |
+| Connexion   | Initial Load | Subsequent      |
+| ----------- | ------------ | --------------- |
+| **Gigabit** | < 1s         | < 100ms (cache) |
+| **4G LTE**  | ~2-3s        | < 500ms         |
+| **3G**      | ~8-10s       | ~1-2s           |
 
 ---
 
@@ -159,12 +160,12 @@ bash optimize-workspace.sh
 
 ### Dépendances Volumineuses
 
-| Package | Taille | Justification |
-|---------|--------|---------------|
-| **React** | 812 KB | Framework UI principal ✅ |
-| **ONNX Runtime** | 536 KB | AI inference nécessaire ✅ |
-| **Charts** | 196 KB | Visualisations dashboard ✅ |
-| **AI Transformers** | 192 KB | NLP/embeddings ✅ |
+| Package             | Taille | Justification               |
+| ------------------- | ------ | --------------------------- |
+| **React**           | 812 KB | Framework UI principal ✅   |
+| **ONNX Runtime**    | 536 KB | AI inference nécessaire ✅  |
+| **Charts**          | 196 KB | Visualisations dashboard ✅ |
+| **AI Transformers** | 192 KB | NLP/embeddings ✅           |
 
 Toutes les grosses dépendances sont **justifiées** et utilisées.
 
@@ -198,6 +199,7 @@ Brotli:      ~0.9 MB (-77%)    ✅ OPTIMAL
 **Performance actuelle: BONNE ✅**
 
 Le bundle TITANE∞ est **bien optimisé** pour une application de cette envergure:
+
 - Code splitting efficace
 - Compression excellente (-71%)
 - Chunks dans la norme (< 1MB)

@@ -102,14 +102,14 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
 
 /**
  * TitanePage - Main orchestrator component for TITANE system
- * 
+ *
  * Responsibilities:
  * - Tab state management
  * - Progression state loading
  * - Stats calculation
  * - Section routing/rendering
  * - Visual engines initialization
- * 
+ *
  * All section implementations have been extracted to separate components
  * in src/components/sections/ for better maintainability and testability.
  */
@@ -216,118 +216,118 @@ export const TitanePage: React.FC = () => {
               role="tablist"
               aria-label="Sections principales TITANE"
             >
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'conversation'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.conversation}
-              role="tab"
-              aria-selected={activeTab === 'conversation'}
-              aria-controls={TAB_PANEL_IDS.conversation}
-              id={TAB_LABEL_IDS.conversation}
-            >
-              💬 Chat
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'overview'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.overview}
-              role="tab"
-              aria-selected={activeTab === 'overview'}
-              aria-controls={TAB_PANEL_IDS.overview}
-              id={TAB_LABEL_IDS.overview}
-            >
-              📊 Vue
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'vision'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.vision}
-              role="tab"
-              aria-selected={activeTab === 'vision'}
-              aria-controls={TAB_PANEL_IDS.vision}
-              id={TAB_LABEL_IDS.vision}
-            >
-              📷 Vision
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'identity'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.identity}
-              role="tab"
-              aria-selected={activeTab === 'identity'}
-              aria-controls={TAB_PANEL_IDS.identity}
-              id={TAB_LABEL_IDS.identity}
-            >
-              🧬 Identité
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'memory-map'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.memoryMap}
-              role="tab"
-              aria-selected={activeTab === 'memory-map'}
-              aria-controls={TAB_PANEL_IDS['memory-map']}
-              id={TAB_LABEL_IDS['memory-map']}
-            >
-              💾 Mémoire
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'memory-evolution'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.memoryEvolution}
-              role="tab"
-              aria-selected={activeTab === 'memory-evolution'}
-              aria-controls={TAB_PANEL_IDS['memory-evolution']}
-              id={TAB_LABEL_IDS['memory-evolution']}
-            >
-              🔄 Évolution
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'progression'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.progression}
-              role="tab"
-              aria-selected={activeTab === 'progression'}
-              aria-controls={TAB_PANEL_IDS.progression}
-              id={TAB_LABEL_IDS.progression}
-            >
-              ⚡ XP
-            </button>
-            <button
-              className={`px-4 py-2 text-sm font-medium rounded transition-all ${
-                activeTab === 'transformation'
-                  ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
-                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
-              }`}
-              onClick={tabHandlers.transformation}
-              role="tab"
-              aria-selected={activeTab === 'transformation'}
-              aria-controls={TAB_PANEL_IDS.transformation}
-              id={TAB_LABEL_IDS.transformation}
-            >
-              🌱 Transform
-            </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'conversation'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.conversation}
+                role="tab"
+                aria-selected={activeTab === 'conversation'}
+                aria-controls={TAB_PANEL_IDS.conversation}
+                id={TAB_LABEL_IDS.conversation}
+              >
+                💬 Chat
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'overview'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.overview}
+                role="tab"
+                aria-selected={activeTab === 'overview'}
+                aria-controls={TAB_PANEL_IDS.overview}
+                id={TAB_LABEL_IDS.overview}
+              >
+                📊 Vue
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'vision'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.vision}
+                role="tab"
+                aria-selected={activeTab === 'vision'}
+                aria-controls={TAB_PANEL_IDS.vision}
+                id={TAB_LABEL_IDS.vision}
+              >
+                📷 Vision
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'identity'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.identity}
+                role="tab"
+                aria-selected={activeTab === 'identity'}
+                aria-controls={TAB_PANEL_IDS.identity}
+                id={TAB_LABEL_IDS.identity}
+              >
+                🧬 Identité
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'memory-map'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.memoryMap}
+                role="tab"
+                aria-selected={activeTab === 'memory-map'}
+                aria-controls={TAB_PANEL_IDS['memory-map']}
+                id={TAB_LABEL_IDS['memory-map']}
+              >
+                💾 Mémoire
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'memory-evolution'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.memoryEvolution}
+                role="tab"
+                aria-selected={activeTab === 'memory-evolution'}
+                aria-controls={TAB_PANEL_IDS['memory-evolution']}
+                id={TAB_LABEL_IDS['memory-evolution']}
+              >
+                🔄 Évolution
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'progression'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.progression}
+                role="tab"
+                aria-selected={activeTab === 'progression'}
+                aria-controls={TAB_PANEL_IDS.progression}
+                id={TAB_LABEL_IDS.progression}
+              >
+                ⚡ XP
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'transformation'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                onClick={tabHandlers.transformation}
+                role="tab"
+                aria-selected={activeTab === 'transformation'}
+                aria-controls={TAB_PANEL_IDS.transformation}
+                id={TAB_LABEL_IDS.transformation}
+              >
+                🌱 Transform
+              </button>
             </div>
           </div>
 

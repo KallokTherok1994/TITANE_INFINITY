@@ -7,22 +7,27 @@ Le problème était que le frontend **ne détectait pas Tauri** même si le back
 ### Corrections Appliquées
 
 #### 1. ✅ Nouvel Script d'Initialisation Tauri
+
 **Fichier:** `src/tauri-init-fix.ts`
 
 Assure que Tauri est correctement initialisé avant que le reste du code s'exécute.
 
 #### 2. ✅ Amélioration de la Détection Tauri
+
 **Fichier:** `src/main.tsx`
 
 L'ordre d'initialisation a été optimisé:
+
 1. ✅ Initialisation Tauri en premier
 2. ✅ Puis protection des invokes
 3. ✅ Puis chargement du reste
 
 #### 3. ✅ Messages d'Erreur Meilleurs
+
 **Fichier:** `src/services/conversationEngine.ts`
 
 Au lieu d'un message générique vague, vous recevrez maintenant:
+
 - ❌ Erreur claire si Tauri n'est pas détecté
 - 💡 Conseil: "Lancer avec `pnpm run dev:tauri`"
 - ⚠️ Avertissement: "Ne pas ouvrir le navigateur"
@@ -43,11 +48,13 @@ pkill -9 -f "vite"
 ### Étape 2: Relancer Proprement
 
 **Option A (Automatique - Recommandé):**
+
 ```bash
 bash restart-complete-fix.sh
 ```
 
 **Option B (Manuel):**
+
 ```bash
 pnpm run dev:tauri
 ```
@@ -73,7 +80,7 @@ pnpm run dev:tauri
 Dans la fenêtre TITANE∞ (F12), exécutez:
 
 ```javascript
-window.__TAURI__
+window.__TAURI__;
 ```
 
 - ✅ **Si retourne un objet:** Tauri est détecté ✓
@@ -111,11 +118,11 @@ bash test-tauri-detection.sh
 
 ## 📝 Résumé des Modifications
 
-| Fichier | Modification | Impact |
-|---------|-------------|--------|
-| `src/tauri-init-fix.ts` | ✨ **Nouveau** - Init Tauri au démarrage | Assure Tauri est disponible |
-| `src/main.tsx` | 🔄 Ordre d'import optimisé | Init correcte |
-| `src/services/conversationEngine.ts` | 🛠️ Meilleure détection + erreurs claires | Messages utiles |
+| Fichier                              | Modification                             | Impact                      |
+| ------------------------------------ | ---------------------------------------- | --------------------------- |
+| `src/tauri-init-fix.ts`              | ✨ **Nouveau** - Init Tauri au démarrage | Assure Tauri est disponible |
+| `src/main.tsx`                       | 🔄 Ordre d'import optimisé               | Init correcte               |
+| `src/services/conversationEngine.ts` | 🛠️ Meilleure détection + erreurs claires | Messages utiles             |
 
 ---
 

@@ -20,7 +20,7 @@ const calculateChecksum = (messages: AIMessage[]): string => {
   let hash = 0;
   for (let i = 0; i < combined.length; i++) {
     const char = combined.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
+    hash = (hash << 5) - hash + char;
     hash = hash & hash; // Keep 32-bit
   }
   return `${hash}`;
@@ -29,7 +29,10 @@ const calculateChecksum = (messages: AIMessage[]): string => {
 /**
  * Compress messages by removing duplicates and old messages
  */
-export const compressMessages = (messages: AIMessage[], maxMessages: number = 100): AIMessage[] => {
+export const compressMessages = (
+  messages: AIMessage[],
+  maxMessages: number = 100
+): AIMessage[] => {
   const seen = new Set<string>();
   const compressed: AIMessage[] = [];
 
@@ -37,7 +40,7 @@ export const compressMessages = (messages: AIMessage[], maxMessages: number = 10
   for (let i = messages.length - 1; i >= 0; i--) {
     const msg = messages[i];
     if (!msg) continue; // Skip undefined/null
-    
+
     const key = `${msg.role}:${msg.content.substring(0, 50)}`;
 
     if (!seen.has(key) && compressed.length < maxMessages) {
@@ -88,9 +91,7 @@ export const useChatMemoryCache = () => {
   }, []);
 
   const getCacheSize = useCallback((): number => {
-    return cacheRef.current.reduce((sum, entry) => 
-      sum + JSON.stringify(entry).length, 0
-    );
+    return cacheRef.current.reduce((sum, entry) => sum + JSON.stringify(entry).length, 0);
   }, []);
 
   return {
@@ -104,7 +105,10 @@ export const useChatMemoryCache = () => {
 /**
  * Export message history to JSON
  */
-export const exportChatHistory = (messages: AIMessage[], filename: string = 'chat-history.json'): void => {
+export const exportChatHistory = (
+  messages: AIMessage[],
+  filename: string = 'chat-history.json'
+): void => {
   const data = JSON.stringify(messages, null, 2);
   const blob = new Blob([data], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
@@ -118,7 +122,10 @@ export const exportChatHistory = (messages: AIMessage[], filename: string = 'cha
 /**
  * Export to markdown format
  */
-export const exportChatMarkdown = (messages: AIMessage[], filename: string = 'chat-history.md'): void => {
+export const exportChatMarkdown = (
+  messages: AIMessage[],
+  filename: string = 'chat-history.md'
+): void => {
   let markdown = '# Chat History\n\n';
   markdown += `Generated: ${new Date().toISOString()}\n\n`;
 

@@ -11,7 +11,7 @@
 
   function checkTauri() {
     const w = window as any;
-    
+
     // Tauri v2 devrait injecter __TAURI__ globalement
     if (w.__TAURI__ && w.__TAURI__.core && w.__TAURI__.core.invoke) {
       console.log('✅ [TauriInit] Tauri detected and initialized');
@@ -49,9 +49,11 @@
     if (elapsed > maxWaitTime) {
       clearInterval(waitForTauri);
       console.warn('⚠️ [TauriInit] Tauri not initialized after 5 seconds');
-      console.warn('ℹ️ [TauriInit] Using fallback - make sure you are running in Tauri app');
+      console.warn(
+        'ℹ️ [TauriInit] Using fallback - make sure you are running in Tauri app'
+      );
       window.dispatchEvent(new Event('tauri-not-available'));
-      
+
       // Marquer que nous ne sommes probablement pas en Tauri
       const w = window as any;
       if (!w.__TITANE_NOT_TAURI__) {

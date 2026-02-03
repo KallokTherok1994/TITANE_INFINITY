@@ -54,9 +54,7 @@ export const AppShell = ({
       <main
         className={cn('flex-1 overflow-hidden relative flex flex-col', topNav && 'pt-16')}
       >
-        <div className="flex-1 overflow-auto scrollbar-custom w-full">
-          {children}
-        </div>
+        <div className="flex-1 overflow-auto scrollbar-custom w-full">{children}</div>
       </main>
 
       {/* Footer */}

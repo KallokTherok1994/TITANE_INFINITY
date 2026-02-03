@@ -23,6 +23,7 @@ pnpm run dev:tauri
 ```
 
 Cette commande va:
+
 1. Démarrer le serveur Vite (frontend React)
 2. Compiler et lancer l'application Tauri (backend Rust)
 3. Ouvrir une fenêtre native avec accès complet aux commandes Tauri
@@ -52,6 +53,7 @@ npm run dev
 ```
 
 Cette commande lance **uniquement Vite** (serveur web frontend). Le backend Rust Tauri n'est pas démarré, donc:
+
 - ❌ Pas d'accès aux commandes Tauri
 - ❌ Pas de connexion Ollama via Rust
 - ❌ Pas d'accès au système de fichiers local
@@ -69,7 +71,7 @@ Ouvrez la console (F12) et vérifiez:
 
 ```javascript
 // Dans la console
-window.__TAURI__
+window.__TAURI__;
 // Devrait retourner un objet (pas undefined)
 ```
 
@@ -118,6 +120,7 @@ pnpm run dev:tauri
 ### 4. Attendre le Démarrage
 
 Vous devriez voir dans le terminal:
+
 ```
 [INFO] Tauri is running...
 [INFO] Frontend ready on http://localhost:4000
@@ -167,14 +170,14 @@ pnpm run dev:tauri
 
 ## 📊 Différences: Navigateur vs Tauri
 
-| Fonctionnalité | Navigateur Web | Application Tauri |
-|----------------|----------------|-------------------|
-| Interface React | ✅ Oui | ✅ Oui |
-| Moteur IA Ollama | ❌ Non | ✅ Oui |
-| Système de fichiers | ❌ Non | ✅ Oui |
-| Commandes Rust | ❌ Non | ✅ Oui |
-| Performance | ⚠️ Moyenne | ✅ Optimale |
-| Accès natif | ❌ Non | ✅ Oui |
+| Fonctionnalité      | Navigateur Web | Application Tauri |
+| ------------------- | -------------- | ----------------- |
+| Interface React     | ✅ Oui         | ✅ Oui            |
+| Moteur IA Ollama    | ❌ Non         | ✅ Oui            |
+| Système de fichiers | ❌ Non         | ✅ Oui            |
+| Commandes Rust      | ❌ Non         | ✅ Oui            |
+| Performance         | ⚠️ Moyenne     | ✅ Optimale       |
+| Accès natif         | ❌ Non         | ✅ Oui            |
 
 ## ✅ Résumé
 
@@ -188,6 +191,7 @@ pnpm run dev:tauri
 
 ---
 
-*Pour plus d'informations, voir:*
+_Pour plus d'informations, voir:_
+
 - `OLLAMA_QUICKSTART.md` - Guide complet Ollama
 - `docs/OLLAMA_TAURI_CONFIG.md` - Configuration technique

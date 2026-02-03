@@ -44,7 +44,9 @@ if (connectSrc.includes('*')) {
 // Baseline: unsafe-eval/unsafe-inline must be explicitly justified
 const hasUnsafe = csp.includes("'unsafe-eval'") || csp.includes("'unsafe-inline'");
 if (hasUnsafe && !ALLOW_UNSAFE) {
-  console.error('❌ FAIL: CSP contains unsafe-eval/unsafe-inline without CSP_ALLOW_UNSAFE=1');
+  console.error(
+    '❌ FAIL: CSP contains unsafe-eval/unsafe-inline without CSP_ALLOW_UNSAFE=1'
+  );
   process.exit(1);
 }
 

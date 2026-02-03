@@ -67,11 +67,13 @@
 ## 🎯 Configuration Finale
 
 ### Serveur Ollama
+
 - **URL:** http://127.0.0.1:11434
 - **Port:** 11434
 - **Statut:** ✅ Actif et répondant
 
 ### Modèles Installés (10)
+
 - **Par défaut:** llama3.1:latest (4.9 GB)
 - **Disponibles:**
   - qwen2.5:latest (4.7 GB) - Excellent pour code
@@ -84,6 +86,7 @@
   - deepseek-coder-v2 (8.9 GB) - Expert code
 
 ### Intégration Tauri
+
 - **Commande principale:** `conversation_generate`
 - **Module Rust:** `src-tauri/src/ollama.rs`
 - **Fallback:** Automatique vers autres providers si Ollama indisponible
@@ -91,6 +94,7 @@
 - **Validation:** Entrées utilisateur validées
 
 ### Configuration Frontend
+
 - **Provider:** Ollama (🦙)
 - **Proxy Vite:** `/api/ollama` → `http://127.0.0.1:11434`
 - **Mode Dev:** CORS évité via proxy
@@ -164,8 +168,8 @@ bash test-ollama-connection.sh
 ```
 Q: Bonjour! Je suis TITANE∞. Peux-tu te présenter en une phrase?
 
-R: Je m'appelle Llama, pour "Large Language Model de Meta", 
-   j'ai été développé par Meta pour aider et informer sur 
+R: Je m'appelle Llama, pour "Large Language Model de Meta",
+   j'ai été développé par Meta pour aider et informer sur
    une vaste gamme de sujets. Comment puis-je vous aider aujourd'hui?
 ```
 
@@ -206,6 +210,7 @@ ollama pull <nom-modele>
 ### Changer de Modèle
 
 Éditez `.env.local`:
+
 ```bash
 TITANE_OLLAMA_MODEL=qwen2.5:latest
 ```
@@ -247,6 +252,7 @@ journalctl -u ollama -f
 Toutes les vérifications sont au vert. Le système est prêt à être utilisé en production.
 
 Pour démarrer:
+
 ```bash
 pnpm run dev:tauri
 ```
@@ -255,6 +261,6 @@ Puis sélectionnez le provider "Ollama" (🦙) dans la section Conversation.
 
 ---
 
-*Rapport généré automatiquement le 2 février 2026*  
-*TITANE∞ v27+ avec Ollama Integration*  
-*Tous droits réservés - Humain Total / Kevin Thibault*
+_Rapport généré automatiquement le 2 février 2026_  
+_TITANE∞ v27+ avec Ollama Integration_  
+_Tous droits réservés - Humain Total / Kevin Thibault_

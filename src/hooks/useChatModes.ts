@@ -90,34 +90,41 @@ const saveCustomModes = (modes: CustomMode[]): void => {
 export const useChatModes = () => {
   const [customModes, setCustomModes] = useState<CustomMode[]>(loadCustomModes);
 
-  const allModes = useMemo(
-    () => [...BUILT_IN_MODES, ...customModes],
+  const allModes = useMemo(() => [...BUILT_IN_MODES, ...customModes], [customModes]);
+
+  const addMode = useCallback(
+    (mode: CustomMode) => {
+      const newModes = [...customModes, { ...mode, custom: true, userDefined: true }];
+      setCustomModes(newModes);
+      saveCustomModes(newModes);
+    },
     [customModes]
   );
 
-  const addMode = useCallback((mode: CustomMode) => {
-    const newModes = [...customModes, { ...mode, custom: true, userDefined: true }];
-    setCustomModes(newModes);
-    saveCustomModes(newModes);
-  }, [customModes]);
+  const removeMode = useCallback(
+    (modeId: string) => {
+      const newModes = customModes.filter(m => m.id !== modeId);
+      setCustomModes(newModes);
+      saveCustomModes(newModes);
+    },
+    [customModes]
+  );
 
-  const removeMode = useCallback((modeId: string) => {
-    const newModes = customModes.filter(m => m.id !== modeId);
-    setCustomModes(newModes);
-    saveCustomModes(newModes);
-  }, [customModes]);
+  const updateMode = useCallback(
+    (modeId: string, updates: Partial<CustomMode>) => {
+      const newModes = customModes.map(m => (m.id === modeId ? { ...m, ...updates } : m));
+      setCustomModes(newModes);
+      saveCustomModes(newModes);
+    },
+    [customModes]
+  );
 
-  const updateMode = useCallback((modeId: string, updates: Partial<CustomMode>) => {
-    const newModes = customModes.map(m => 
-      m.id === modeId ? { ...m, ...updates } : m
-    );
-    setCustomModes(newModes);
-    saveCustomModes(newModes);
-  }, [customModes]);
-
-  const getMode = useCallback((modeId: string): CustomMode | undefined => {
-    return allModes.find(m => m.id === modeId);
-  }, [allModes]);
+  const getMode = useCallback(
+    (modeId: string): CustomMode | undefined => {
+      return allModes.find(m => m.id === modeId);
+    },
+    [allModes]
+  );
 
   return {
     modes: allModes,

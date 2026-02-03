@@ -10,12 +10,14 @@
 ## 🎯 Root Cause Identified
 
 Le log montrait clairement:
+
 ```
 ✅ [TauriInit] Tauri internals detected
 [TauriProtector] Using fallback for conversation_generate ← BUG
 ```
 
 **Analyse:**
+
 - Tauri **était bien détecté** au démarrage
 - Mais lors de l'appel `conversation_generate`, le `TauriProtector` utilisait le **fallback**
 - Cause: La vérification dans `performInvoke()` échouait à ce moment
@@ -39,11 +41,12 @@ Nouveau système à **4 stratégies** (au lieu de 1 seule):
 // Strategy 1: window.__TAURI__ (primary)
 const hasTauriGlobal = w.__TAURI__ && typeof w.__TAURI__ === 'object';
 
-// Strategy 2: window.__TAURI_INTERNALS__ (secondary)  
-const hasTauriInternals = w.__TAURI_INTERNALS__ && typeof w.__TAURI_INTERNALS__ === 'object';
+// Strategy 2: window.__TAURI_INTERNALS__ (secondary)
+const hasTauriInternals =
+  w.__TAURI_INTERNALS__ && typeof w.__TAURI_INTERNALS__ === 'object';
 
 // Strategy 3: Check for actual invoke function
-const hasTauriInvoke = 
+const hasTauriInvoke =
   (w.__TAURI__?.core?.invoke && typeof w.__TAURI__.core.invoke === 'function') ||
   (w.__TAURI_INTERNALS__?.invoke && typeof w.__TAURI_INTERNALS__.invoke === 'function');
 
@@ -76,10 +79,10 @@ Ce flag **persiste** pour toute la durée de la session, même si `window.__TAUR
 
 ## 📊 Changements
 
-| Fichier | Ligne(s) | Changement |
-|---------|----------|-----------|
-| `src/utils/tauriProtector.ts` | 213-270 | Nouvelle détection multi-stratégie |
-| `src/tauri-init-fix.ts` | 17-18, 27-28 | Ajout flag `__TITANE_TAURI_INITIALIZED` |
+| Fichier                       | Ligne(s)     | Changement                              |
+| ----------------------------- | ------------ | --------------------------------------- |
+| `src/utils/tauriProtector.ts` | 213-270      | Nouvelle détection multi-stratégie      |
+| `src/tauri-init-fix.ts`       | 17-18, 27-28 | Ajout flag `__TITANE_TAURI_INITIALIZED` |
 
 ---
 
@@ -87,7 +90,7 @@ Ce flag **persiste** pour toute la durée de la session, même si `window.__TAUR
 
 ```bash
 ✅ Rust compile: cargo check successful
-✅ TypeScript: tsc --noEmit successful  
+✅ TypeScript: tsc --noEmit successful
 ✅ No import/export errors
 ✅ No type errors
 ```
@@ -100,17 +103,18 @@ Exécutez dans la console (F12) après redémarrage:
 
 ```javascript
 // Check all Tauri detection methods
-window.__TEST_TAURI()
+window.__TEST_TAURI();
 
 // Ou manuellement:
-console.log('Flag:', window.__TITANE_TAURI_INITIALIZED)
-console.log('__TAURI__:', window.__TAURI__)
-console.log('__TAURI_INTERNALS__:', window.__TAURI_INTERNALS__)
+console.log('Flag:', window.__TITANE_TAURI_INITIALIZED);
+console.log('__TAURI__:', window.__TAURI__);
+console.log('__TAURI_INTERNALS__:', window.__TAURI_INTERNALS__);
 
 // Test direct invoke
-window.__TAURI__.core.invoke('health_check')
+window.__TAURI__.core
+  .invoke('health_check')
   .then(r => console.log('✅ Invoke works:', r))
-  .catch(e => console.error('❌', e))
+  .catch(e => console.error('❌', e));
 ```
 
 ---
@@ -118,6 +122,7 @@ window.__TAURI__.core.invoke('health_check')
 ## 🚀 Étapes Suivantes
 
 1. **Redémarrer l'app complètement:**
+
    ```bash
    pkill -9 -f "titane-infinity"
    pnpm run dev:tauri
@@ -149,11 +154,13 @@ window.__TAURI__.core.invoke('health_check')
 Si le chat montre encore le fallback:
 
 1. Vérifiez dans la console:
+
    ```javascript
-   window.__TITANE_TAURI_INITIALIZED === true ? "✅" : "❌"
+   window.__TITANE_TAURI_INITIALIZED === true ? '✅' : '❌';
    ```
 
 2. Si `false`, c'est que Tauri n'a pas été détecté au démarrage:
+
    ```javascript
    // Vérifier les logs de démarrage pour:
    // "✅ [TauriInit] Tauri detected and initialized"

@@ -12,11 +12,11 @@
 
 ### Compression Performance
 
-| Format | Size | Compression | Status |
-|--------|------|-------------|--------|
-| **Original** | 9.5 MB | - | Baseline |
-| **Gzip** | 1.11 MB | -88.3% | ✅ Active |
-| **Brotli** | 968 KB | -89.8% | ✅ Active |
+| Format       | Size    | Compression | Status    |
+| ------------ | ------- | ----------- | --------- |
+| **Original** | 9.5 MB  | -           | Baseline  |
+| **Gzip**     | 1.11 MB | -88.3%      | ✅ Active |
+| **Brotli**   | 968 KB  | -89.8%      | ✅ Active |
 
 **Brotli Gain:** -15.8% vs Gzip (203 KB vs 241 KB on largest chunk)
 
@@ -32,23 +32,23 @@
 
 ### Top 15 JavaScript Chunks
 
-| Size | File | Category | Optimization |
-|------|------|----------|--------------|
-| **812 KB** | react-vendor | React core | ✅ Optimal |
-| **533 KB** | onnxruntime | AI inference | ⚠️ Review needed |
-| **352 KB** | devtools-sudo | Dev tools | ✅ Dev-only |
-| **305 KB** | vendor-utils | Utilities | ✅ Shared |
-| **230 KB** | ui-common | UI components | ✅ Optimal |
-| **195 KB** | charts | Charting libs | ⚠️ Heavy |
-| **192 KB** | ai-transformers | AI models | ⚠️ Review needed |
-| **188 KB** | service-ai | AI services | ✅ Core feature |
-| **149 KB** | services-common | Common services | ✅ Optimal |
-| **92 KB** | ui-chat | Chat UI | ✅ Optimal |
-| **80 KB** | service-audio | Audio | ✅ Feature-specific |
-| **68 KB** | service-cognitive | Cognitive | ✅ Feature-specific |
-| **63 KB** | validation | Validation | ✅ Shared |
-| **49 KB** | i18n | Internationalization | ✅ Optimal |
-| **48 KB** | index | Main entry | ✅ Minimal |
+| Size       | File              | Category             | Optimization        |
+| ---------- | ----------------- | -------------------- | ------------------- |
+| **812 KB** | react-vendor      | React core           | ✅ Optimal          |
+| **533 KB** | onnxruntime       | AI inference         | ⚠️ Review needed    |
+| **352 KB** | devtools-sudo     | Dev tools            | ✅ Dev-only         |
+| **305 KB** | vendor-utils      | Utilities            | ✅ Shared           |
+| **230 KB** | ui-common         | UI components        | ✅ Optimal          |
+| **195 KB** | charts            | Charting libs        | ⚠️ Heavy            |
+| **192 KB** | ai-transformers   | AI models            | ⚠️ Review needed    |
+| **188 KB** | service-ai        | AI services          | ✅ Core feature     |
+| **149 KB** | services-common   | Common services      | ✅ Optimal          |
+| **92 KB**  | ui-chat           | Chat UI              | ✅ Optimal          |
+| **80 KB**  | service-audio     | Audio                | ✅ Feature-specific |
+| **68 KB**  | service-cognitive | Cognitive            | ✅ Feature-specific |
+| **63 KB**  | validation        | Validation           | ✅ Shared           |
+| **49 KB**  | i18n              | Internationalization | ✅ Optimal          |
+| **48 KB**  | index             | Main entry           | ✅ Minimal          |
 
 **Total analyzed:** 3.35 MB / 3.90 MB (86% coverage)
 
@@ -59,6 +59,7 @@
 ### Heavy Dependencies Identified
 
 #### React Ecosystem (812 KB vendor chunk)
+
 - `react` + `react-dom` (core)
 - `react-router` v7.13.0 + `react-router-dom` v7.13.0
 - `@tanstack/react-query` v5.90.20
@@ -68,6 +69,7 @@
 **Status:** ✅ All dependencies are actively used and essential
 
 #### Charting Libraries (195 KB chunk)
+
 - `chart.js` v4.5.1
 - `react-chartjs-2` v5.3.1
 - `recharts` v3.7.0
@@ -77,12 +79,14 @@
 **Opportunity:** ⚠️ 5 different charting libraries detected
 
 #### AI/ML Libraries
+
 - `@xenova/transformers` v2.17.2 (192 KB chunk)
 - `onnxruntime` (533 KB chunk)
 
 **Status:** ✅ Core AI features, required
 
 #### UI Components
+
 - `lucide-react` v0.563.0 (icons)
 - `react-markdown` v10.1.0
 
@@ -95,9 +99,11 @@
 ### Priority HIGH ⚠️
 
 #### 1. Charting Library Consolidation
+
 **Current:** 5 different charting libraries (195 KB total)
 
 **Analysis:**
+
 ```
 chart.js + react-chartjs-2    ~80 KB
 recharts                      ~60 KB
@@ -107,11 +113,13 @@ Other charting utils          ~5 KB
 ```
 
 **Recommendation:**
+
 - **Audit usage** of each charting library
 - **Consolidate** to 1-2 primary libraries
 - **Potential savings:** 50-100 KB (-25% to -50%)
 
 **Action:**
+
 ```bash
 # Search for usage patterns
 grep -r "import.*from.*chart" src/
@@ -121,9 +129,11 @@ grep -r "import.*from.*chrono" src/
 ```
 
 #### 2. ONNX Runtime Review (533 KB)
+
 **Current:** Full onnxruntime bundle included
 
 **Opportunity:**
+
 - Check if ONNX WASM backend is needed
 - Consider lazy loading for AI features
 - Use dynamic imports for optional ML models
@@ -131,6 +141,7 @@ grep -r "import.*from.*chrono" src/
 **Potential savings:** 200-300 KB (if lazy-loaded)
 
 **Action:**
+
 ```typescript
 // Instead of:
 import onnx from 'onnxruntime';
@@ -147,6 +158,7 @@ const loadOnnx = async () => {
 #### 3. Tree-shaking Verification
 
 **Check for unused exports:**
+
 ```bash
 # Analyze bundle with rollup-plugin-visualizer
 open dist/stats.html
@@ -164,6 +176,7 @@ open dist/stats.html
 **Current:** All routes bundled in main chunks
 
 **Optimization:**
+
 ```typescript
 // Lazy load heavy routes
 const HeavyRoute = lazy(() => import('./routes/HeavyRoute'));
@@ -183,6 +196,7 @@ const HeavyRoute = lazy(() => import('./routes/HeavyRoute'));
 **Current:** v0.563.0 (potentially large)
 
 **Optimization:**
+
 ```typescript
 // Instead of:
 import { Icon1, Icon2, Icon3 } from 'lucide-react';
@@ -237,22 +251,22 @@ import { Icon1, Icon2, Icon3 } from 'lucide-react';
 
 ### Industry Standards
 
-| Metric | TITANE∞ | Industry Target | Status |
-|--------|---------|-----------------|--------|
-| **Total bundle** | 9.5 MB | < 10 MB | ✅ GOOD |
-| **Gzipped** | 1.11 MB | < 2 MB | ✅ EXCELLENT |
-| **Brotli** | 968 KB | < 1.5 MB | ✅ EXCELLENT |
-| **Largest chunk** | 812 KB | < 1 MB | ✅ OPTIMAL |
-| **Initial load** | 48 KB | < 200 KB | ✅ EXCELLENT |
-| **Chunks count** | 68 | 50-100 | ✅ OPTIMAL |
+| Metric            | TITANE∞ | Industry Target | Status       |
+| ----------------- | ------- | --------------- | ------------ |
+| **Total bundle**  | 9.5 MB  | < 10 MB         | ✅ GOOD      |
+| **Gzipped**       | 1.11 MB | < 2 MB          | ✅ EXCELLENT |
+| **Brotli**        | 968 KB  | < 1.5 MB        | ✅ EXCELLENT |
+| **Largest chunk** | 812 KB  | < 1 MB          | ✅ OPTIMAL   |
+| **Initial load**  | 48 KB   | < 200 KB        | ✅ EXCELLENT |
+| **Chunks count**  | 68      | 50-100          | ✅ OPTIMAL   |
 
 ### Load Time Estimates
 
-| Connection | Initial | Full App | Status |
-|------------|---------|----------|--------|
-| **Gigabit** | < 100ms | < 1s | ✅ EXCELLENT |
-| **4G LTE** | < 500ms | 2-3s | ✅ GOOD |
-| **3G** | 1-2s | 8-10s | ⚠️ Acceptable |
+| Connection  | Initial | Full App | Status        |
+| ----------- | ------- | -------- | ------------- |
+| **Gigabit** | < 100ms | < 1s     | ✅ EXCELLENT  |
+| **4G LTE**  | < 500ms | 2-3s     | ✅ GOOD       |
+| **3G**      | 1-2s    | 8-10s    | ⚠️ Acceptable |
 
 ---
 
@@ -261,11 +275,13 @@ import { Icon1, Icon2, Icon3 } from 'lucide-react';
 ### Immediate (This Week)
 
 1. **Audit charting libraries usage**
+
    ```bash
    bash scripts/audit-charts.sh
    ```
 
 2. **Review ONNX lazy loading**
+
    ```bash
    grep -r "onnxruntime" src/
    ```
@@ -324,7 +340,7 @@ build: {
   cssMinify: 'lightningcss',          ✅
   minify: 'terser',                   ✅
   chunkSizeWarningLimit: 1000,        ✅
-  
+
   rollupOptions: {
     output: {
       manualChunks: {

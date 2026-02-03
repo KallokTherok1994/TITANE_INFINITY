@@ -7,21 +7,25 @@ Ollama est maintenant **entièrement configuré et connecté** à l'interface ch
 ## 🎯 Ce Qui a Été Fait
 
 ### 1. Configuration Ollama
+
 - ✅ Serveur Ollama vérifié et opérationnel (port 11434)
 - ✅ 10 modèles IA installés et prêts (llama3.1, qwen2.5, mistral, etc.)
 - ✅ Test de génération réussi
 
 ### 2. Configuration TITANE∞
+
 - ✅ Fichier `.env.local` créé avec configuration Ollama
 - ✅ Modèle par défaut: `llama3.1:latest`
 - ✅ Proxy Vite configuré pour éviter CORS
 
 ### 3. Intégration Tauri
+
 - ✅ Module Rust `ollama.rs` vérifié
 - ✅ Commande `conversation_generate` active
 - ✅ Build Rust compilé sans erreur
 
 ### 4. Tests Automatiques
+
 - ✅ Script de test créé: `test-ollama-connection.sh`
 - ✅ Tâche VS Code ajoutée: "🧪 Test Ollama Connection"
 - ✅ 10/10 tests passés avec succès
@@ -77,14 +81,14 @@ Puis redémarrez TITANE∞.
 
 ## 📚 Modèles Disponibles
 
-| Modèle | Taille | Usage Recommandé |
-|--------|--------|------------------|
-| `llama3.1:latest` | 4.9 GB | **Par défaut** - Polyvalent |
-| `qwen2.5:latest` | 4.7 GB | Code et développement |
-| `llama3.2:latest` | 2.0 GB | Rapide et léger |
-| `mistral:latest` | 4.4 GB | Performant général |
-| `gemma2:2b` | 1.6 GB | Ultra-léger |
-| `codellama:latest` | 3.8 GB | Spécialiste code |
+| Modèle             | Taille | Usage Recommandé            |
+| ------------------ | ------ | --------------------------- |
+| `llama3.1:latest`  | 4.9 GB | **Par défaut** - Polyvalent |
+| `qwen2.5:latest`   | 4.7 GB | Code et développement       |
+| `llama3.2:latest`  | 2.0 GB | Rapide et léger             |
+| `mistral:latest`   | 4.4 GB | Performant général          |
+| `gemma2:2b`        | 1.6 GB | Ultra-léger                 |
+| `codellama:latest` | 3.8 GB | Spécialiste code            |
 
 ## 🛠️ Dépannage
 
@@ -117,6 +121,7 @@ bash test-ollama-connection.sh
 ## 📖 Documentation Complète
 
 Pour plus de détails techniques, voir:
+
 - `docs/OLLAMA_TAURI_CONFIG.md` - Configuration complète
 - `.env.ollama.example` - Template de configuration
 
@@ -132,4 +137,4 @@ pnpm run dev:tauri
 
 ---
 
-*Configuration validée le: 2 février 2026*
+_Configuration validée le: 2 février 2026_

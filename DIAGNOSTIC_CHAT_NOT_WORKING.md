@@ -8,11 +8,13 @@
 ## ✅ Vérifications Système Effectuées
 
 ### Backend
+
 - ✅ Vite actif sur port 5173
 - ✅ Processus Tauri actif (PID: 1346911)
 - ✅ Ollama actif (10 modèles disponibles)
 
 ### Configuration
+
 - ✅ `.env.local` créé avec modèle llama3.1:latest
 - ✅ Proxy Vite configuré
 - ✅ Module ollama.rs présent
@@ -27,24 +29,26 @@ Si tout le système est actif MAIS le chat ne fonctionne pas, il y a **3 causes 
 ### 1. ❌ Vous Utilisez le Navigateur au Lieu de la Fenêtre Native
 
 **Symptôme:**
+
 - Vous voyez l'adresse `http://127.0.0.1:5173` dans la barre d'adresse
 - Le titre dit juste "TITANE∞" sans "[DEV]"
 
 **Solution:**
+
 - Fermez l'onglet du navigateur
 - Cherchez la fenêtre native "**Titan-Dev [DEV] — TITANE∞ Development**"
 - Si elle n'existe pas, relancez: `pnpm run dev:tauri`
 
 ---
 
-### 2. ⚠️ window.__TAURI__ est Undefined
+### 2. ⚠️ window.**TAURI** est Undefined
 
 **Test:**
 
 Dans la fenêtre TITANE∞, ouvrez la console (Clic droit → Inspect ou F12), puis tapez:
 
 ```javascript
-window.__TAURI__
+window.__TAURI__;
 ```
 
 #### Si ça retourne `undefined`:
@@ -54,6 +58,7 @@ C'est le problème! Tauri n'est pas détecté par le frontend.
 **Solutions:**
 
 #### A. Recharger la Fenêtre Native
+
 ```
 Ctrl+R (ou Cmd+R sur Mac) dans la fenêtre native
 ```
@@ -61,6 +66,7 @@ Ctrl+R (ou Cmd+R sur Mac) dans la fenêtre native
 #### B. Vérifier les Erreurs Console
 
 Dans la console, cherchez des erreurs rouges liées à:
+
 - `Cannot read properties of undefined (reading 'invoke')`
 - `__TAURI__ is not defined`
 - `Failed to execute 'invoke'`
@@ -68,9 +74,10 @@ Dans la console, cherchez des erreurs rouges liées à:
 #### C. Forcer Reconnexion
 
 Dans la console:
+
 ```javascript
 // Forcer reload
-location.reload()
+location.reload();
 ```
 
 #### Si ça retourne un objet:
@@ -90,10 +97,10 @@ console.log('Tauri:', window.__TAURI__);
 // Test 2: Tester conversation_generate
 try {
   const result = await window.__TAURI__.core.invoke('conversation_generate', {
-    message: "Test",
-    conversation_id: "test-123",
-    mode: "default",
-    provider: "ollama"
+    message: 'Test',
+    conversation_id: 'test-123',
+    mode: 'default',
+    provider: 'ollama',
   });
   console.log('✅ Success:', result);
 } catch (error) {
@@ -104,11 +111,14 @@ try {
 #### Erreurs Possibles:
 
 **A. "command not found" ou "unknown variant"**
+
 - La commande n'est pas enregistrée dans Tauri
 - Vérifiez `src-tauri/src/main.rs` ligne 727
 
 **B. "Ollama connection failed"**
+
 - Test direct Ollama:
+
 ```bash
 curl -X POST http://127.0.0.1:11434/api/generate \
   -H "Content-Type: application/json" \
@@ -116,6 +126,7 @@ curl -X POST http://127.0.0.1:11434/api/generate \
 ```
 
 **C. "Backend unavailable"**
+
 - Le provider détecte que Tauri n'est pas disponible
 - Rechargez la fenêtre (Ctrl+R)
 
@@ -129,7 +140,7 @@ curl -X POST http://127.0.0.1:11434/api/generate \
 - [ ] Ce N'EST PAS un onglet de navigateur (pas de barre d'adresse)
 - [ ] La fenêtre est une application native
 
-### Étape 2: Tester window.__TAURI__ dans la Console
+### Étape 2: Tester window.**TAURI** dans la Console
 
 Ouvrir Console (F12 ou Clic droit → Inspect):
 
@@ -142,7 +153,7 @@ Ouvrir Console (F12 ou Clic droit → Inspect):
 Dans la console:
 
 ```javascript
-window.__TAURI__.core.invoke('ping').then(console.log).catch(console.error)
+window.__TAURI__.core.invoke('ping').then(console.log).catch(console.error);
 ```
 
 - [ ] Retourne sans erreur
@@ -164,12 +175,15 @@ curl -X POST http://127.0.0.1:11434/api/generate \
 Dans la console TITANE∞:
 
 ```javascript
-window.__TAURI__.core.invoke('conversation_generate', {
-  message: "Bonjour",
-  conversation_id: "test-" + Date.now(),
-  mode: "default",
-  provider: "ollama"
-}).then(r => console.log('✅ Réussi:', r)).catch(e => console.error('❌ Erreur:', e))
+window.__TAURI__.core
+  .invoke('conversation_generate', {
+    message: 'Bonjour',
+    conversation_id: 'test-' + Date.now(),
+    mode: 'default',
+    provider: 'ollama',
+  })
+  .then(r => console.log('✅ Réussi:', r))
+  .catch(e => console.error('❌ Erreur:', e));
 ```
 
 - [ ] Retourne un objet avec `content`
@@ -179,7 +193,7 @@ window.__TAURI__.core.invoke('conversation_generate', {
 
 ## 🔧 Solutions Selon le Résultat
 
-### Si window.__TAURI__ est undefined:
+### Si window.**TAURI** est undefined:
 
 1. **Fermez TOUT** (navigateur + fenêtre native)
 2. **Tuez les processus:**
@@ -194,9 +208,10 @@ window.__TAURI__.core.invoke('conversation_generate', {
 4. **Attendez** que la fenêtre native s'ouvre
 5. **NE PAS** ouvrir http://127.0.0.1:5173 dans un navigateur
 
-### Si window.__TAURI__ existe mais conversation_generate échoue:
+### Si window.**TAURI** existe mais conversation_generate échoue:
 
 1. **Vérifier Ollama:**
+
    ```bash
    bash test-ollama-connection.sh
    ```
@@ -212,11 +227,13 @@ window.__TAURI__.core.invoke('conversation_generate', {
 ### Si conversation_generate retourne "backend indisponible":
 
 C'est le fallback du `tauriProtector.ts`. Signifie que:
+
 - La commande a été appelée
 - MAIS elle a échoué/timeout
 - Le système a retourné un message d'erreur générique
 
 **Solution:**
+
 1. Vérifier les logs du terminal
 2. Augmenter le timeout (temporaire):
    - Ouvrir `src/lib/security.ts`
@@ -241,19 +258,19 @@ Puis dans la console TITANE∞:
   console.log('1. Tauri:', typeof window.__TAURI__);
   console.log('2. Core:', typeof window.__TAURI__?.core);
   console.log('3. Invoke:', typeof window.__TAURI__?.core?.invoke);
-  
+
   try {
     const result = await window.__TAURI__.core.invoke('conversation_generate', {
-      message: "Test connexion",
-      conversation_id: "diag-" + Date.now(),
-      mode: "default",
-      provider: "ollama"
+      message: 'Test connexion',
+      conversation_id: 'diag-' + Date.now(),
+      mode: 'default',
+      provider: 'ollama',
     });
     console.log('✅ SUCCÈS! Contenu:', result.content.substring(0, 100));
   } catch (e) {
     console.error('❌ ÉCHEC:', e.message);
   }
-})()
+})();
 ```
 
 ---
@@ -269,13 +286,14 @@ Si après TOUTES ces étapes le problème persiste:
    - Sortie du terminal `pnpm run dev:tauri`
 
 2. **Logs à fournir:**
+
    ```bash
    # État système
    bash check-tauri-backend.sh > diagnostic.txt
-   
+
    # Test Ollama
    bash test-ollama-connection.sh >> diagnostic.txt
-   
+
    # Test détection
    bash test-tauri-detection.sh >> diagnostic.txt
    ```

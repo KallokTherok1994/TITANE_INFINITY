@@ -30,7 +30,10 @@ interface RealTimeChartsProps {
 function generateMockData(count: number): ChartData[] {
   const now = Date.now();
   return Array.from({ length: count }, (_, i) => ({
-    timestamp: new Date(now - (count - i) * 60000).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    timestamp: new Date(now - (count - i) * 60000).toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }),
     value: Math.floor(Math.random() * 40) + 60,
     label: `Point ${i + 1}`,
   }));
@@ -38,16 +41,53 @@ function generateMockData(count: number): ChartData[] {
 
 export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
   ({ performanceData, messagesData, cpuData, activityData }) => {
-    const resolvedPerformanceData = useMemo(() => performanceData ?? generateMockData(20), [performanceData]);
-    const resolvedMessagesData = useMemo(() => messagesData ?? generateMockData(15), [messagesData]);
+    const resolvedPerformanceData = useMemo(
+      () => performanceData ?? generateMockData(20),
+      [performanceData]
+    );
+    const resolvedMessagesData = useMemo(
+      () => messagesData ?? generateMockData(15),
+      [messagesData]
+    );
     const resolvedCpuData = useMemo(() => cpuData ?? generateMockData(30), [cpuData]);
-    const resolvedActivityData = useMemo(() => activityData ?? generateMockData(24), [activityData]);
+    const resolvedActivityData = useMemo(
+      () => activityData ?? generateMockData(24),
+      [activityData]
+    );
 
     // Calcul des stats moyennes
-    const avgPerf = useMemo(() => Math.round(resolvedPerformanceData.reduce((sum, item) => sum + item.value, 0) / resolvedPerformanceData.length), [resolvedPerformanceData]);
-    const avgMessages = useMemo(() => Math.round(resolvedMessagesData.reduce((sum, item) => sum + item.value, 0) / resolvedMessagesData.length), [resolvedMessagesData]);
-    const avgCpu = useMemo(() => Math.round(resolvedCpuData.reduce((sum, item) => sum + item.value, 0) / resolvedCpuData.length), [resolvedCpuData]);
-    const avgActivity = useMemo(() => Math.round(resolvedActivityData.reduce((sum, item) => sum + item.value, 0) / resolvedActivityData.length), [resolvedActivityData]);
+    const avgPerf = useMemo(
+      () =>
+        Math.round(
+          resolvedPerformanceData.reduce((sum, item) => sum + item.value, 0) /
+            resolvedPerformanceData.length
+        ),
+      [resolvedPerformanceData]
+    );
+    const avgMessages = useMemo(
+      () =>
+        Math.round(
+          resolvedMessagesData.reduce((sum, item) => sum + item.value, 0) /
+            resolvedMessagesData.length
+        ),
+      [resolvedMessagesData]
+    );
+    const avgCpu = useMemo(
+      () =>
+        Math.round(
+          resolvedCpuData.reduce((sum, item) => sum + item.value, 0) /
+            resolvedCpuData.length
+        ),
+      [resolvedCpuData]
+    );
+    const avgActivity = useMemo(
+      () =>
+        Math.round(
+          resolvedActivityData.reduce((sum, item) => sum + item.value, 0) /
+            resolvedActivityData.length
+        ),
+      [resolvedActivityData]
+    );
 
     return (
       <div className="realtime-charts-container">
@@ -61,7 +101,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
             <div className="chart-bars">
               {resolvedPerformanceData.slice(-10).map((item, i) => (
                 <div key={i} className="chart-bar-wrapper">
-                  <div className="chart-bar perf" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                  <div
+                    className="chart-bar perf"
+                    style={{ height: `${item.value}%` }}
+                    title={`${item.timestamp}: ${item.value}%`}
+                  />
                 </div>
               ))}
             </div>
@@ -82,7 +126,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
             <div className="chart-bars">
               {resolvedMessagesData.slice(-10).map((item, i) => (
                 <div key={i} className="chart-bar-wrapper">
-                  <div className="chart-bar messages" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                  <div
+                    className="chart-bar messages"
+                    style={{ height: `${item.value}%` }}
+                    title={`${item.timestamp}: ${item.value}%`}
+                  />
                 </div>
               ))}
             </div>
@@ -102,7 +150,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
             <div className="chart-bars">
               {resolvedCpuData.slice(-10).map((item, i) => (
                 <div key={i} className="chart-bar-wrapper">
-                  <div className="chart-bar cpu" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                  <div
+                    className="chart-bar cpu"
+                    style={{ height: `${item.value}%` }}
+                    title={`${item.timestamp}: ${item.value}%`}
+                  />
                 </div>
               ))}
             </div>
@@ -122,7 +174,11 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
             <div className="chart-bars">
               {resolvedActivityData.slice(-10).map((item, i) => (
                 <div key={i} className="chart-bar-wrapper">
-                  <div className="chart-bar activity" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                  <div
+                    className="chart-bar activity"
+                    style={{ height: `${item.value}%` }}
+                    title={`${item.timestamp}: ${item.value}%`}
+                  />
                 </div>
               ))}
             </div>

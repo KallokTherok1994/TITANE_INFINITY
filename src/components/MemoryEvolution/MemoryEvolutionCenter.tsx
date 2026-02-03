@@ -487,9 +487,9 @@ export const MemoryEvolutionCenter: React.FC = () => {
       if (Array.isArray(clustersData)) {
         setClusters(clustersData);
       } else {
-        logger.warn('Clusters data is not an array', { 
-          component: 'MemoryEvolutionCenter', 
-          data: clustersData 
+        logger.warn('Clusters data is not an array', {
+          component: 'MemoryEvolutionCenter',
+          data: clustersData,
         });
         setClusters([]);
       }

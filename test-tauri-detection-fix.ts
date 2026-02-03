@@ -14,14 +14,20 @@ const testTauriDetection = () => {
 
   // Test 1: Global flag
   console.log('1️⃣ Initialization Flag');
-  console.log('   __TITANE_TAURI_INITIALIZED:', w.__TITANE_TAURI_INITIALIZED ? '✅ YES' : '❌ NO');
+  console.log(
+    '   __TITANE_TAURI_INITIALIZED:',
+    w.__TITANE_TAURI_INITIALIZED ? '✅ YES' : '❌ NO'
+  );
 
   // Test 2: __TAURI__ global
   console.log('\n2️⃣ Window.__TAURI__');
   if (w.__TAURI__) {
     console.log('   ✅ Exists');
     console.log('   __TAURI__.core:', w.__TAURI__.core ? '✅' : '❌');
-    console.log('   __TAURI__.core.invoke:', typeof w.__TAURI__.core?.invoke === 'function' ? '✅' : '❌');
+    console.log(
+      '   __TAURI__.core.invoke:',
+      typeof w.__TAURI__.core?.invoke === 'function' ? '✅' : '❌'
+    );
   } else {
     console.log('   ❌ Does not exist');
   }
@@ -30,7 +36,10 @@ const testTauriDetection = () => {
   console.log('\n3️⃣ Window.__TAURI_INTERNALS__');
   if (w.__TAURI_INTERNALS__) {
     console.log('   ✅ Exists');
-    console.log('   __TAURI_INTERNALS__.invoke:', typeof w.__TAURI_INTERNALS__.invoke === 'function' ? '✅' : '❌');
+    console.log(
+      '   __TAURI_INTERNALS__.invoke:',
+      typeof w.__TAURI_INTERNALS__.invoke === 'function' ? '✅' : '❌'
+    );
   } else {
     console.log('   ❌ Does not exist');
   }

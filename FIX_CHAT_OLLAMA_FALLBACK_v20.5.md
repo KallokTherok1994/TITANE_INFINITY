@@ -9,11 +9,13 @@
 ## 📋 Problème Identifié
 
 **Symptôme** : Chat retournait "Mode navigateur: backend Tauri indisponible" malgré que :
+
 - ✅ Tauri était détecté (`isTauriAvailable: true`)
 - ✅ Les ports/processus fonctionnaient
 - ✅ Ollama était actif sur port 11434
 
-**Cause Racine** : 
+**Cause Racine** :
+
 - Le backend Tauri compilé avec feature **`--no-default-features --features mock`**
 - Le `mock` mode retourne des erreurs pour `conversation_generate`
 - Le backend Rust a trop d'erreurs de compilation en mode `full`
@@ -23,6 +25,7 @@
 ## ✅ Corrections Appliquées
 
 ### 1. **Fichier Créé** : `src/utils/ollamaFallback.ts`
+
 - Implémente appel HTTP direct à Ollama (`http://127.0.0.1:11434/api/generate`)
 - Retourne réponse compatible avec format chat TITANE∞
 - Gère les erreurs de connexion avec messages clairs
@@ -32,6 +35,7 @@
 ### 2. **Fichier Modifié** : `src/utils/tauriProtector.ts`
 
 **Modification 1** (ligne ~325) : Ajout Ollama fallback dans catch de `safeInvoke()` :
+
 ```typescript
 // ✨ v20.5: Special handling for conversation_generate - try Ollama fallback
 if (command === 'conversation_generate') {
@@ -46,6 +50,7 @@ if (command === 'conversation_generate') {
 ```
 
 **Modification 2** (ligne ~550) : Simplifier fallback response pour conversation_generate :
+
 ```typescript
 if (safeCommand.includes('conversation_generate')) {
   return {
@@ -81,19 +86,20 @@ if (safeCommand.includes('conversation_generate')) {
 
 ## ✨ Améliorations
 
-| Aspect | Avant | Après |
-|--------|-------|-------|
-| **Chat en dev** | ❌ Erreur "Backend indisponible" | ✅ Réponses Ollama directes |
-| **Fallback** | Simple message d'erreur | Ollama HTTP direct |
-| **TypeScript** | ❌ Erreurs de compilation | ✅ Zéro erreur |
-| **Temps réponse** | N/A (ne fonctionnait pas) | ~200-500ms (Ollama local) |
-| **Mode offline** | Pas de réponse | Répond si Ollama actif |
+| Aspect            | Avant                            | Après                       |
+| ----------------- | -------------------------------- | --------------------------- |
+| **Chat en dev**   | ❌ Erreur "Backend indisponible" | ✅ Réponses Ollama directes |
+| **Fallback**      | Simple message d'erreur          | Ollama HTTP direct          |
+| **TypeScript**    | ❌ Erreurs de compilation        | ✅ Zéro erreur              |
+| **Temps réponse** | N/A (ne fonctionnait pas)        | ~200-500ms (Ollama local)   |
+| **Mode offline**  | Pas de réponse                   | Répond si Ollama actif      |
 
 ---
 
 ## 🚀 Utilisation
 
 ### Pour tester :
+
 1. S'assurer Ollama tourne : `ollama serve` (port 11434)
 2. Lancer app : `pnpm run dev:tauri`
 3. Ouvrir DevTools (F12)
@@ -101,6 +107,7 @@ if (safeCommand.includes('conversation_generate')) {
 5. Voir logs : `[TauriProtector] 🤖 Using Ollama fallback for conversation_generate`
 
 ### Pour profiter du vrai backend Rust :
+
 - Corriger les erreurs Rust en mode `full` (12 erreurs de compilation)
 - Changer `Cargo.toml` : `default = ["custom-protocol", "full"]`
 - Recompiler

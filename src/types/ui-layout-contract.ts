@@ -13,13 +13,13 @@
  * Classification des régions de layout UI
  * Chaque composant de navigation doit déclarer sa région
  */
-export type LayoutRegion = 
-  | 'topnav'        // Navigation globale (1 seule instance max)
-  | 'local-tabs'    // Tabs internes à une page
-  | 'content'       // Zone de contenu principal
-  | 'toolstrip'     // Barre d'outils contextuelle
-  | 'overlay'       // Modal/drawer temporaire
-  | 'footer';       // Pied de page
+export type LayoutRegion =
+  | 'topnav' // Navigation globale (1 seule instance max)
+  | 'local-tabs' // Tabs internes à une page
+  | 'content' // Zone de contenu principal
+  | 'toolstrip' // Barre d'outils contextuelle
+  | 'overlay' // Modal/drawer temporaire
+  | 'footer'; // Pied de page
 
 /**
  * Métadonnées requises pour chaque composant de navigation
@@ -27,19 +27,19 @@ export type LayoutRegion =
 export interface NavigationComponentMetadata {
   /** Identifiant unique du composant */
   id: string;
-  
+
   /** Région de layout déclarée */
   region: LayoutRegion;
-  
+
   /** Nom du composant (pour debug/logs) */
   componentName: string;
-  
+
   /** Le composant est-il sticky ? */
   isSticky?: boolean;
-  
+
   /** z-index si sticky */
   zIndex?: number;
-  
+
   /** Scope de navigation */
   scope: 'global' | 'local' | 'contextual';
 }
@@ -92,7 +92,11 @@ export const LAYOUT_REGION_RULES = {
  */
 class NavigationRegistry {
   private components: Map<string, NavigationComponentMetadata> = new Map();
-  private violations: Array<{ component: string; rule: string; severity: 'critical' | 'high' | 'medium' }> = [];
+  private violations: Array<{
+    component: string;
+    rule: string;
+    severity: 'critical' | 'high' | 'medium';
+  }> = [];
 
   /**
    * Enregistre un composant de navigation
@@ -113,8 +117,8 @@ class NavigationRegistry {
         this.violations.push(violation);
         throw new Error(
           `[UI Layout Contract] CRITICAL: Tentative d'ajouter une 2e TopNav ` +
-          `(existante: ${existingTopNav.componentName}, nouvelle: ${metadata.componentName}). ` +
-          `Voir UI_NAVIGATION_CONSTITUTION.md Article 1.`
+            `(existante: ${existingTopNav.componentName}, nouvelle: ${metadata.componentName}). ` +
+            `Voir UI_NAVIGATION_CONSTITUTION.md Article 1.`
         );
       }
     }
@@ -129,7 +133,7 @@ class NavigationRegistry {
       this.violations.push(violation);
       console.warn(
         `[UI Layout Contract] HIGH: local-tabs "${metadata.componentName}" est sticky. ` +
-        `Exception documentée requise. Voir UI_NAVIGATION_CONSTITUTION.md Article 3.`
+          `Exception documentée requise. Voir UI_NAVIGATION_CONSTITUTION.md Article 3.`
       );
     }
 
@@ -138,7 +142,7 @@ class NavigationRegistry {
       if (metadata.zIndex !== LAYOUT_REGION_RULES.topnav.requiredZIndex) {
         console.warn(
           `[UI Layout Contract] MEDIUM: TopNav z-index devrait être ${LAYOUT_REGION_RULES.topnav.requiredZIndex}, ` +
-          `reçu ${metadata.zIndex}.`
+            `reçu ${metadata.zIndex}.`
         );
       }
     }
@@ -218,7 +222,9 @@ export interface StyleValidationResult {
   violations: string[];
 }
 
-export function validateLocalTabsStyles(styles: CSSStyleDeclaration): StyleValidationResult {
+export function validateLocalTabsStyles(
+  styles: CSSStyleDeclaration
+): StyleValidationResult {
   const violations: string[] = [];
 
   // Check backdrop-filter

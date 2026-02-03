@@ -73,7 +73,7 @@ export async function callOllamaDirectly(
     };
   } catch (error) {
     console.error('[OllamaFallback] Error calling Ollama directly:', error);
-    
+
     // Return error as content
     return {
       content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Vérifiez qu'Ollama est actif sur http://127.0.0.1:11434`,
