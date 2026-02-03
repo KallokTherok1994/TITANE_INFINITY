@@ -7,27 +7,8 @@ import { secureInvoke } from '@/lib/security';
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import './MetricsDisplay.css';
 
-// YOLO OPT-2: Lazy-load Chart.js (-175 KB gzip)
-// Chart.js chargé uniquement quand MetricsDisplay est rendu
-const LazyLineChart = lazy(() =>
-  import('react-chartjs-2').then(module => ({
-    default: module.Line,
-  }))
-);
-
-// Lazy register Chart.js components
-const registerChartJS = async () => {
-  const ChartJS = await import('chart.js');
-  ChartJS.Chart.register(
-    ChartJS.CategoryScale,
-    ChartJS.LinearScale,
-    ChartJS.PointElement,
-    ChartJS.LineElement,
-    ChartJS.Title,
-    ChartJS.Tooltip,
-    ChartJS.Legend
-  );
-};
+// Note: Chart.js lazy-loading removed (dependencies removed for optimization)
+// Using simple metric display instead
 
 interface DashboardMetrics {
   health_score: number;
