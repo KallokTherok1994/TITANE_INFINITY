@@ -4,35 +4,19 @@
  */
 
 /**
- * VisionMetricsChart - Graphiques métriques Vision en temps réel
+ * VisionMetricsChart - Graphiques métriques Vision en temps réel (version CSS pure)
  * Utilise les données du useVisionStore pour afficher détection, affect, body language
+ * Note: Simplified version using CSS bars instead of recharts (dependency removed for optimization)
  */
 
 import React, { memo, useMemo } from 'react';
-import {
-  LineChart,
-  Line,
-  Area,
-  AreaChart,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Legend,
-} from 'recharts';
 import { useVisionStore } from '@/stores/useVisionStore';
 import type { AffectHistoryEntry } from '@/types/visionAffect';
-import { Camera, Activity, Brain, User } from 'lucide-react';
+import { Camera, Activity, Brain, User, TrendingUp, TrendingDown, Minus } from 'lucide-react';
 import './VisionMetricsChart.css';
 
 interface VisionMetricsChartProps {
-  timeRange?: number; // Minutes de données à afficher
+  timeRange?: number;
   showDetection?: boolean;
   showAffect?: boolean;
   showBodyLanguage?: boolean;
@@ -40,78 +24,71 @@ interface VisionMetricsChartProps {
 
 const levelToPercent = (level: string | null | undefined): number => {
   switch (level) {
-    case 'low':
-      return 25;
-    case 'medium':
-      return 50;
-    case 'high':
-      return 75;
-    default:
-      return 0;
+    case 'low': return 25;
+    case 'medium': return 50;
+    case 'high': return 75;
+    default: return 0;
   }
 };
 
-const timeFormatter = new Intl.DateTimeFormat('fr-FR', {
-  hour: '2-digit',
-  minute: '2-digit',
-});
-
 export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
-  ({
-    timeRange = 10,
-    showDetection = true,
-    showAffect = true,
-    showBodyLanguage = true,
-  }) => {
-    const tooltipContent = useMemo(() => <CustomTooltip />, []);
-    const isActive = useVisionStore(
-      state => state.isObservationActive && state.visionInput.streamActive
-    );
+  ({ timeRange = 10, showDetection = true, showAffect = true, showBodyLanguage = true }) => {
+    const isActive = useVisionStore(state => state.isObservationActive && state.visionInput.streamActive);
     const affectHistory = useVisionStore(state => state.affectEstimation.history);
     const bodyLanguage = useVisionStore(state => state.bodyLanguage);
 
     const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
-
-    const recentAffect = useMemo(
-      () =>
-        (affectHistory || [])
-          .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
-          .slice(-60),
+    const recentAffect = useMemo(() =>
+      (affectHistory || []).filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp).slice(-20),
       [affectHistory, cutoffTimestamp]
     );
 
-    const chartData = useMemo(
-      () =>
-        recentAffect.map(item => ({
-          time: timeFormatter.format(item.timestamp),
-          confidence: Math.round((item.confidence || 0) * 100),
-          objects: 0,
-          energy: levelToPercent(item.energy),
-          tension: levelToPercent(item.tension),
-          engagement: levelToPercent(item.engagement),
-        })),
-      [recentAffect]
-    );
+    const avgConfidence = useMemo(() => {
+      if (!recentAffect.length) return 0;
+      return Math.round((recentAffect.reduce((sum, item) => sum + (item.confidence || 0), 0) / recentAffect.length) * 100);
+    }, [recentAffect]);
 
-    // Données pour radar body language
-    const bodyLanguageData = useMemo(() => {
-      return [
-        { metric: 'Posture', value: Math.round((bodyLanguage.postureScore || 0) * 100) },
-        {
-          metric: 'Mouvement',
-          value: Math.round((bodyLanguage.movementScore || 0) * 100),
-        },
-        {
-          metric: 'Regard',
-          value: Math.round((bodyLanguage.gazeStabilityScore || 0) * 100),
-        },
-        { metric: 'Visage', value: Math.round((bodyLanguage.facialActivity || 0) * 100) },
-        {
-          metric: 'Symétrie',
-          value: Math.round((bodyLanguage.shoulderSymmetry || 0) * 100),
-        },
-      ];
-    }, [bodyLanguage]);
+    const avgEnergy = useMemo(() => {
+      if (!recentAffect.length) return 0;
+      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.energy), 0) / recentAffect.length);
+    }, [recentAffect]);
+
+    const avgTension = useMemo(() => {
+      if (!recentAffect.length) return 0;
+      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.tension), 0) / recentAffect.length);
+    }, [recentAffect]);
+
+    const avgEngagement = useMemo(() => {
+      if (!recentAffect.length) return 0;
+      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.engagement), 0) / recentAffect.length);
+    }, [recentAffect]);
+
+    const bodyScores = useMemo(() => ({
+      posture: Math.round((bodyLanguage.postureScore || 0) * 100),
+      movement: Math.round((bodyLanguage.movementScore || 0) * 100),
+      gaze: Math.round((bodyLanguage.gazeStabilityScore || 0) * 100),
+      facial: Math.round((bodyLanguage.facialActivity || 0) * 100),
+      symmetry: Math.round((bodyLanguage.shoulderSymmetry || 0) * 100),
+    }), [bodyLanguage]);
+
+    const trends = useMemo(() => {
+      if (recentAffect.length < 10) return { energy: 0, tension: 0, engagement: 0 };
+      const first10 = recentAffect.slice(0, 10);
+      const last10 = recentAffect.slice(-10);
+      const avgFirst = (data: AffectHistoryEntry[], key: 'energy' | 'tension' | 'engagement') =>
+        data.reduce((sum, item) => sum + levelToPercent(item[key]), 0) / data.length;
+      return {
+        energy: avgFirst(last10, 'energy') - avgFirst(first10, 'energy'),
+        tension: avgFirst(last10, 'tension') - avgFirst(first10, 'tension'),
+        engagement: avgFirst(last10, 'engagement') - avgFirst(first10, 'engagement'),
+      };
+    }, [recentAffect]);
+
+    const getTrendIcon = (value: number) => {
+      if (value > 5) return <TrendingUp className="trend-up" size={14} />;
+      if (value < -5) return <TrendingDown className="trend-down" size={14} />;
+      return <Minus className="trend-stable" size={14} />;
+    };
 
     if (!isActive) {
       return (
@@ -124,7 +101,6 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
 
     return (
       <div className="vision-metrics-container">
-        {/* Detection Chart */}
         {showDetection && (
           <div className="vision-chart-card">
             <div className="vision-chart-header">
@@ -132,33 +108,24 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
               <h4>Détection & Confiance</h4>
               <span className="chart-badge good">Active</span>
             </div>
-            <ResponsiveContainer width="100%" height={220}>
-              <AreaChart data={chartData}>
-                <defs>
-                  <linearGradient id="colorConfidence" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-                <XAxis dataKey="time" stroke="#64748b" fontSize={11} />
-                <YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip content={tooltipContent} />
-                <Legend />
-                <Area
-                  type="monotone"
-                  dataKey="confidence"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  fill="url(#colorConfidence)"
-                  name="Confiance"
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="vision-simple-chart">
+              <div className="metric-row">
+                <span className="metric-label">Confiance détection</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar confidence" style={{ width: `${avgConfidence}%` }} />
+                  <span className="metric-value">{avgConfidence}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Points de données</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar data-points" style={{ width: `${Math.min(recentAffect.length * 5, 100)}%` }} />
+                  <span className="metric-value">{recentAffect.length}</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
-
-        {/* Affect Chart */}
         {showAffect && (
           <div className="vision-chart-card">
             <div className="vision-chart-header">
@@ -166,43 +133,31 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
               <h4>Estimation Affective</h4>
               <span className="chart-badge">Temps Réel</span>
             </div>
-            <ResponsiveContainer width="100%" height={220}>
-              <LineChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-                <XAxis dataKey="time" stroke="#64748b" fontSize={11} />
-                <YAxis stroke="#64748b" fontSize={11} />
-                <Tooltip content={tooltipContent} />
-                <Legend />
-                <Line
-                  type="monotone"
-                  dataKey="energy"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  name="Énergie"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="tension"
-                  stroke="#f59e0b"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  name="Tension"
-                />
-                <Line
-                  type="monotone"
-                  dataKey="engagement"
-                  stroke="#8b5cf6"
-                  strokeWidth={2}
-                  dot={{ r: 3 }}
-                  name="Engagement"
-                />
-              </LineChart>
-            </ResponsiveContainer>
+            <div className="vision-simple-chart">
+              <div className="metric-row">
+                <span className="metric-label">Énergie {getTrendIcon(trends.energy)}</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar energy" style={{ width: `${avgEnergy}%` }} />
+                  <span className="metric-value">{avgEnergy}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Tension {getTrendIcon(trends.tension)}</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar tension" style={{ width: `${avgTension}%` }} />
+                  <span className="metric-value">{avgTension}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Engagement {getTrendIcon(trends.engagement)}</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar engagement" style={{ width: `${avgEngagement}%` }} />
+                  <span className="metric-value">{avgEngagement}%</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
-
-        {/* Body Language Radar */}
         {showBodyLanguage && (
           <div className="vision-chart-card">
             <div className="vision-chart-header">
@@ -210,22 +165,43 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
               <h4>Body Language</h4>
               <span className="chart-badge info">Analyse</span>
             </div>
-            <ResponsiveContainer width="100%" height={280}>
-              <RadarChart data={bodyLanguageData}>
-                <PolarGrid stroke="rgba(100, 116, 139, 0.2)" />
-                <PolarAngleAxis dataKey="metric" stroke="#cbd5e1" fontSize={11} />
-                <PolarRadiusAxis stroke="#64748b" fontSize={11} />
-                <Tooltip content={tooltipContent} />
-                <Radar
-                  name="Score"
-                  dataKey="value"
-                  stroke="#a855f7"
-                  strokeWidth={2}
-                  fill="#a855f7"
-                  fillOpacity={0.3}
-                />
-              </RadarChart>
-            </ResponsiveContainer>
+            <div className="vision-simple-chart">
+              <div className="metric-row">
+                <span className="metric-label">Posture</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar posture" style={{ width: `${bodyScores.posture}%` }} />
+                  <span className="metric-value">{bodyScores.posture}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Mouvement</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar movement" style={{ width: `${bodyScores.movement}%` }} />
+                  <span className="metric-value">{bodyScores.movement}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Regard</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar gaze" style={{ width: `${bodyScores.gaze}%` }} />
+                  <span className="metric-value">{bodyScores.gaze}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Visage</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar facial" style={{ width: `${bodyScores.facial}%` }} />
+                  <span className="metric-value">{bodyScores.facial}%</span>
+                </div>
+              </div>
+              <div className="metric-row">
+                <span className="metric-label">Symétrie</span>
+                <div className="metric-bar-container">
+                  <div className="metric-bar symmetry" style={{ width: `${bodyScores.symmetry}%` }} />
+                  <span className="metric-value">{bodyScores.symmetry}%</span>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>
@@ -234,29 +210,3 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
 );
 
 VisionMetricsChart.displayName = 'VisionMetricsChart';
-
-interface TooltipProps {
-  active?: boolean;
-  payload?: Array<{
-    name?: string;
-    value?: number;
-    color?: string;
-  }>;
-  label?: string;
-}
-
-const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="vision-chart-tooltip">
-        <p className="tooltip-label">{label}</p>
-        {payload.map((entry, index) => (
-          <p key={index} className="tooltip-value" style={{ color: entry.color }}>
-            {entry.name}: <strong>{Math.round(entry.value || 0)}%</strong>
-          </p>
-        ))}
-      </div>
-    );
-  }
-  return null;
-};

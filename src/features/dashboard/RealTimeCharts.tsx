@@ -4,25 +4,13 @@
  */
 
 /**
- * RealTimeCharts - Graphiques temps réel pour Vue d'Ensemble
+ * RealTimeCharts - Graphiques temps réel pour Vue d'Ensemble (CSS-only version)
  * Affiche métriques système, performance, et activité
+ * Note: Simplified version without recharts dependency (removed for optimization)
  */
 
 import React, { memo, useMemo } from 'react';
-import {
-  LineChart,
-  Line,
-  AreaChart,
-  Area,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from 'recharts';
-import { Activity, Cpu, MessageSquare, Zap } from 'lucide-react';
+import { Activity, Cpu, MessageSquare, Zap, TrendingUp } from 'lucide-react';
 import './RealTimeCharts.css';
 
 interface ChartData {
@@ -38,168 +26,110 @@ interface RealTimeChartsProps {
   activityData?: ChartData[];
 }
 
-// Custom Tooltip avec typing strict (extrait pour éviter recréation)
-const CustomTooltip: React.FC<{
-  active?: boolean;
-  payload?: Array<{ name: string; value: number }>;
-  label?: string;
-}> = ({ active, payload, label }) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="chart-tooltip">
-        <p className="chart-tooltip-label">{label}</p>
-        <p className="chart-tooltip-value">
-          {payload[0]?.name ?? 'Value'}: <strong>{payload[0]?.value ?? 'N/A'}</strong>
-        </p>
-      </div>
-    );
-  }
-  return null;
-};
+// Génération de données mock pour démonstration
+function generateMockData(count: number): ChartData[] {
+  const now = Date.now();
+  return Array.from({ length: count }, (_, i) => ({
+    timestamp: new Date(now - (count - i) * 60000).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }),
+    value: Math.floor(Math.random() * 40) + 60,
+    label: `Point ${i + 1}`,
+  }));
+}
 
 export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
   ({ performanceData, messagesData, cpuData, activityData }) => {
-    const tooltipContent = useMemo(() => <CustomTooltip />, []);
-    const resolvedPerformanceData = useMemo(
-      () => performanceData ?? generateMockData(20),
-      [performanceData]
-    );
-    const resolvedMessagesData = useMemo(
-      () => messagesData ?? generateMockData(15),
-      [messagesData]
-    );
+    const resolvedPerformanceData = useMemo(() => performanceData ?? generateMockData(20), [performanceData]);
+    const resolvedMessagesData = useMemo(() => messagesData ?? generateMockData(15), [messagesData]);
     const resolvedCpuData = useMemo(() => cpuData ?? generateMockData(30), [cpuData]);
-    const resolvedActivityData = useMemo(
-      () => activityData ?? generateMockData(24),
-      [activityData]
-    );
+    const resolvedActivityData = useMemo(() => activityData ?? generateMockData(24), [activityData]);
+
+    // Calcul des stats moyennes
+    const avgPerf = useMemo(() => Math.round(resolvedPerformanceData.reduce((sum, item) => sum + item.value, 0) / resolvedPerformanceData.length), [resolvedPerformanceData]);
+    const avgMessages = useMemo(() => Math.round(resolvedMessagesData.reduce((sum, item) => sum + item.value, 0) / resolvedMessagesData.length), [resolvedMessagesData]);
+    const avgCpu = useMemo(() => Math.round(resolvedCpuData.reduce((sum, item) => sum + item.value, 0) / resolvedCpuData.length), [resolvedCpuData]);
+    const avgActivity = useMemo(() => Math.round(resolvedActivityData.reduce((sum, item) => sum + item.value, 0) / resolvedActivityData.length), [resolvedActivityData]);
 
     return (
       <div className="realtime-charts-container">
-        {/* Performance Chart */}
         <div className="chart-card">
           <div className="chart-header">
             <Zap className="chart-icon" size={18} />
             <h4>Performance Temps Réel</h4>
             <span className="chart-badge good">Optimal</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={resolvedPerformanceData}>
-              <defs>
-                <linearGradient id="colorPerf" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#10b981" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-              <XAxis
-                dataKey="timestamp"
-                stroke="#64748b"
-                fontSize={11}
-                tickLine={false}
-              />
-              <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-              <Tooltip content={tooltipContent} />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#10b981"
-                strokeWidth={2}
-                fill="url(#colorPerf)"
-                name="Score"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className="simple-chart">
+            <div className="chart-bars">
+              {resolvedPerformanceData.slice(-10).map((item, i) => (
+                <div key={i} className="chart-bar-wrapper">
+                  <div className="chart-bar perf" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                </div>
+              ))}
+            </div>
+            <div className="chart-stats">
+              <span>Moyenne: {avgPerf}%</span>
+              <TrendingUp size={14} className="trend-icon" />
+            </div>
+          </div>
         </div>
 
-        {/* Messages Activity */}
         <div className="chart-card">
           <div className="chart-header">
             <MessageSquare className="chart-icon" size={18} />
-            <h4>Activité Messages</h4>
-            <span className="chart-badge">128 msg/h</span>
+            <h4>Messages / Activité</h4>
+            <span className="chart-badge">Actif</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <LineChart data={resolvedMessagesData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-              <XAxis
-                dataKey="timestamp"
-                stroke="#64748b"
-                fontSize={11}
-                tickLine={false}
-              />
-              <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-              <Tooltip content={tooltipContent} />
-              <Line
-                type="monotone"
-                dataKey="value"
-                stroke="#3b82f6"
-                strokeWidth={2}
-                dot={{ fill: '#3b82f6', r: 3 }}
-                activeDot={{ r: 5 }}
-                name="Messages"
-              />
-            </LineChart>
-          </ResponsiveContainer>
+          <div className="simple-chart">
+            <div className="chart-bars">
+              {resolvedMessagesData.slice(-10).map((item, i) => (
+                <div key={i} className="chart-bar-wrapper">
+                  <div className="chart-bar messages" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                </div>
+              ))}
+            </div>
+            <div className="chart-stats">
+              <span>Moyenne: {avgMessages}%</span>
+            </div>
+          </div>
         </div>
 
-        {/* CPU Usage */}
         <div className="chart-card">
           <div className="chart-header">
             <Cpu className="chart-icon" size={18} />
-            <h4>Utilisation CPU</h4>
-            <span className="chart-badge warning">Modérée</span>
+            <h4>CPU / Ressources</h4>
+            <span className="chart-badge info">Normal</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <AreaChart data={resolvedCpuData}>
-              <defs>
-                <linearGradient id="colorCpu" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="#f59e0b" stopOpacity={0} />
-                </linearGradient>
-              </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-              <XAxis
-                dataKey="timestamp"
-                stroke="#64748b"
-                fontSize={11}
-                tickLine={false}
-              />
-              <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-              <Tooltip content={tooltipContent} />
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke="#f59e0b"
-                strokeWidth={2}
-                fill="url(#colorCpu)"
-                name="CPU %"
-              />
-            </AreaChart>
-          </ResponsiveContainer>
+          <div className="simple-chart">
+            <div className="chart-bars">
+              {resolvedCpuData.slice(-10).map((item, i) => (
+                <div key={i} className="chart-bar-wrapper">
+                  <div className="chart-bar cpu" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                </div>
+              ))}
+            </div>
+            <div className="chart-stats">
+              <span>Moyenne: {avgCpu}%</span>
+            </div>
+          </div>
         </div>
 
-        {/* Activity Distribution */}
         <div className="chart-card">
           <div className="chart-header">
             <Activity className="chart-icon" size={18} />
-            <h4>Distribution Activité</h4>
-            <span className="chart-badge">24h</span>
+            <h4>Activité Système</h4>
+            <span className="chart-badge good">Stable</span>
           </div>
-          <ResponsiveContainer width="100%" height={200}>
-            <BarChart data={resolvedActivityData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(100, 116, 139, 0.1)" />
-              <XAxis
-                dataKey="timestamp"
-                stroke="#64748b"
-                fontSize={11}
-                tickLine={false}
-              />
-              <YAxis stroke="#64748b" fontSize={11} tickLine={false} />
-              <Tooltip content={tooltipContent} />
-              <Bar dataKey="value" fill="#8b5cf6" radius={[4, 4, 0, 0]} name="Activité" />
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="simple-chart">
+            <div className="chart-bars">
+              {resolvedActivityData.slice(-10).map((item, i) => (
+                <div key={i} className="chart-bar-wrapper">
+                  <div className="chart-bar activity" style={{ height: `${item.value}%` }} title={`${item.timestamp}: ${item.value}%`} />
+                </div>
+              ))}
+            </div>
+            <div className="chart-stats">
+              <span>Moyenne: {avgActivity}%</span>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -207,21 +137,3 @@ export const RealTimeCharts: React.FC<RealTimeChartsProps> = memo(
 );
 
 RealTimeCharts.displayName = 'RealTimeCharts';
-
-/**
- * Generate mock data for demo
- */
-function generateMockData(count: number): ChartData[] {
-  const data: ChartData[] = [];
-  const now = Date.now();
-
-  for (let i = count; i >= 0; i--) {
-    const timestamp = new Date(now - i * 60000); // 1 minute intervals
-    data.push({
-      timestamp: `${timestamp.getHours()}:${String(timestamp.getMinutes()).padStart(2, '0')}`,
-      value: Math.floor(Math.random() * 50) + 50, // 50-100
-    });
-  }
-
-  return data;
-}
