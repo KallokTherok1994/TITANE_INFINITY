@@ -42,9 +42,7 @@ console.log('║  GATE_FORBIDDEN_SCRIPTS — Tauri-only script guard        ║'
 console.log('╚══════════════════════════════════════════════════════════╝\n');
 
 const workflowFiles = getWorkflowFiles();
-const findings = workflowFiles
-  .map(scanFile)
-  .filter(Boolean);
+const findings = workflowFiles.map(scanFile).filter(Boolean);
 
 if (findings.length === 0) {
   console.log('✅ PASS: Aucun script interdit détecté dans workflows CI');

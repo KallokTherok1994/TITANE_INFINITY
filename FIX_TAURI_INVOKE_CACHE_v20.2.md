@@ -3,7 +3,7 @@
 **Date:** 2026-02-02  
 **Status:** ✅ ROOT CAUSE FIXED  
 **Problema:** Re-vérification Tauri causait fallback permanent  
-**Gravité:** CRITIQUE  
+**Gravité:** CRITIQUE
 
 ---
 
@@ -12,6 +12,7 @@
 ### Problème Détecté
 
 Logs montraient:
+
 ```
 ✅ [TauriProtector] Tauri confirmed available (strategies: ... hasTauriInvoke: true)
 [TauriProtector] Using fallback for conversation_generate ← FALLBACK MALGRÉ CONFIRMATION!
@@ -27,6 +28,7 @@ if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
 ```
 
 **Pourquoi cela échouait:**
+
 1. `syncCheckTauriAvailability()` est appelée au démarrage → Tauri détecté ✅
 2. Lors du chat, `performInvoke()` l'appelle **ENCORE**
 3. À ce moment, `window.__TAURI__` peut être temporairement inaccessible (timing issue)
@@ -49,7 +51,7 @@ Chaque vérification peut échouer pour des raisons de timing → cascade de fal
 ```typescript
 // ❌ OLD: Re-check Tauri même si déjà vérifié
 if (!this.isTestEnv && !this.syncCheckTauriAvailability()) {
-  return null;  // ← RE-VÉRIFICATION INUTILE
+  return null; // ← RE-VÉRIFICATION INUTILE
 }
 
 // ✅ NEW: Utiliser le cache `isTauriAvailable` directement
@@ -86,7 +88,8 @@ if (this.isTauriAvailable === false && !this.isTestEnv) {
 }
 ```
 
-**Avantage:** 
+**Avantage:**
+
 - Seulement vérifie si explicitly marqué comme `false`
 - Si `null` ou `true`, on procède (import va re-tester)
 - Pas de re-appel coûteux à `syncCheckTauriAvailability()`
@@ -95,11 +98,11 @@ if (this.isTauriAvailable === false && !this.isTestEnv) {
 
 ## 📊 Changements
 
-| Fichier | Ligne(s) | Changement | Impact |
-|---------|----------|-----------|--------|
-| `src/utils/tauriProtector.ts` | 197-200 | Ajout constructor | Initialise Tauri au démarrage |
-| `src/utils/tauriProtector.ts` | 385-400 | Fix `safeTauriImport()` | Élimine double vérification |
-| `src/utils/tauriProtector.ts` | 350-363 | Fix `performInvoke()` | Utilise cache au lieu de re-vérifier |
+| Fichier                       | Ligne(s) | Changement              | Impact                               |
+| ----------------------------- | -------- | ----------------------- | ------------------------------------ |
+| `src/utils/tauriProtector.ts` | 197-200  | Ajout constructor       | Initialise Tauri au démarrage        |
+| `src/utils/tauriProtector.ts` | 385-400  | Fix `safeTauriImport()` | Élimine double vérification          |
+| `src/utils/tauriProtector.ts` | 350-363  | Fix `performInvoke()`   | Utilise cache au lieu de re-vérifier |
 
 ---
 
@@ -107,7 +110,7 @@ if (this.isTauriAvailable === false && !this.isTestEnv) {
 
 ```bash
 ✅ Rust compile: cargo check successful
-✅ TypeScript: tsc --noEmit successful  
+✅ TypeScript: tsc --noEmit successful
 ✅ No errors
 ```
 
@@ -116,6 +119,7 @@ if (this.isTauriAvailable === false && !this.isTestEnv) {
 ## 🔄 Flux Maintenant
 
 ### 1. Démarrage
+
 ```
 tauri-init-fix.ts détecte Tauri
   ↓
@@ -130,6 +134,7 @@ isTauriAvailable = true (basé sur 4 stratégies)
 ```
 
 ### 2. Appel Chat
+
 ```
 Chat envoie "test"
   ↓
@@ -158,17 +163,19 @@ Ollama répond! ✅
 
 ```javascript
 // Vérifier l'état
-console.log('isTauriAvailable set:', window.__TITANE_TAURI_INITIALIZED)
-console.log('Protector isTauriAvailable:', window.safeInvokeTauri ? '✅' : '❌')
+console.log('isTauriAvailable set:', window.__TITANE_TAURI_INITIALIZED);
+console.log('Protector isTauriAvailable:', window.safeInvokeTauri ? '✅' : '❌');
 
 // Test direct
-window.__TAURI__.core.invoke('conversation_generate', {
-  message: "test",
-  conversation_id: "test-123",
-  mode: "default",
-  provider: "ollama"
-}).then(r => console.log('✅ INVOKE SUCCESS:', r))
-  .catch(e => console.error('❌ INVOKE FAILED:', e.message))
+window.__TAURI__.core
+  .invoke('conversation_generate', {
+    message: 'test',
+    conversation_id: 'test-123',
+    mode: 'default',
+    provider: 'ollama',
+  })
+  .then(r => console.log('✅ INVOKE SUCCESS:', r))
+  .catch(e => console.error('❌ INVOKE FAILED:', e.message));
 ```
 
 ---
@@ -176,6 +183,7 @@ window.__TAURI__.core.invoke('conversation_generate', {
 ## 🚀 À Faire
 
 1. **Redémarrer complètement:**
+
    ```bash
    pkill -9 -f "titane-infinity"
    sleep 2

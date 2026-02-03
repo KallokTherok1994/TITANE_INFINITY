@@ -378,21 +378,18 @@ export class SingularityFusionEngine {
   ): Promise<ModuleActivation> {
     try {
       // Call Tauri backend command
-      const response = await secureInvoke<any>(
-        'fusion_activate_modules',
-        {
-          request: {
-            cognitive: true,
-            adaptive: intention.complexity !== 'simple',
-            narrative: true,
-            emotion: intention.requires_emotion,
-            memory: intention.requires_long_context,
-            voice: true,
-            avatar: intention.requires_animation,
-            appearance: intention.requires_animation,
-          }
-        }
-      );
+      const response = await secureInvoke<any>('fusion_activate_modules', {
+        request: {
+          cognitive: true,
+          adaptive: intention.complexity !== 'simple',
+          narrative: true,
+          emotion: intention.requires_emotion,
+          memory: intention.requires_long_context,
+          voice: true,
+          avatar: intention.requires_animation,
+          appearance: intention.requires_animation,
+        },
+      });
 
       // Transform backend FusionModuleConfig response to frontend ModuleActivation
       // Backend returns: { success, message, previous_state, new_state, activated_modules, deactivated_modules, timestamp }
@@ -400,7 +397,7 @@ export class SingularityFusionEngine {
       const newState = response.new_state || {};
       const activation: ModuleActivation = {
         cognitive: newState.memory_sync ?? true,
-        adaptive: newState.singularity_sync ?? (intention.complexity !== 'simple'),
+        adaptive: newState.singularity_sync ?? intention.complexity !== 'simple',
         narrative: newState.logs_sync ?? true,
         emotion: newState.telemetry ?? intention.requires_emotion,
         memory: newState.memory_sync ?? intention.requires_long_context,
@@ -409,7 +406,10 @@ export class SingularityFusionEngine {
         appearance: newState.crash_protection ?? intention.requires_animation,
       };
 
-      console.log('[FusionEngine] Step 2: Modules activated via backend', { response, activation });
+      console.log('[FusionEngine] Step 2: Modules activated via backend', {
+        response,
+        activation,
+      });
       return activation;
     } catch (error) {
       console.warn('[FusionEngine] Step 2: Backend call failed, using fallback', error);
@@ -438,24 +438,21 @@ export class SingularityFusionEngine {
   ): Promise<StyleConfig> {
     try {
       // Call Tauri backend command (fusion_adjust_styles from week1)
-      const response = await secureInvoke<any>(
-        'fusion_adjust_styles',
-        {
-          request: {
-            theme: 'auto',
-            accent_color: '#4a9eff',
-            primary_color: '#e0e0e0',
-            secondary_color: '#a0a0a0',
-            border_radius: 8,
-            animation_duration: 300,
-            font_family: 'system-ui, -apple-system, sans-serif',
-            font_size: 16,
-            contrast_level: 'normal',
-            enable_animations: true,
-            enable_transitions: true,
-          }
-        }
-      );
+      const response = await secureInvoke<any>('fusion_adjust_styles', {
+        request: {
+          theme: 'auto',
+          accent_color: '#4a9eff',
+          primary_color: '#e0e0e0',
+          secondary_color: '#a0a0a0',
+          border_radius: 8,
+          animation_duration: 300,
+          font_family: 'system-ui, -apple-system, sans-serif',
+          font_size: 16,
+          contrast_level: 'normal',
+          enable_animations: true,
+          enable_transitions: true,
+        },
+      });
 
       // Transform response to frontend StyleConfig
       const styleConfig: StyleConfig = {
@@ -471,7 +468,10 @@ export class SingularityFusionEngine {
         animation_style: 'natural',
       };
 
-      console.log('[FusionEngine] Step 3: Styles adjusted via backend', { response, styleConfig });
+      console.log('[FusionEngine] Step 3: Styles adjusted via backend', {
+        response,
+        styleConfig,
+      });
       return styleConfig;
     } catch (error) {
       console.warn('[FusionEngine] Step 3: Backend call failed, using fallback', error);
@@ -520,14 +520,11 @@ export class SingularityFusionEngine {
         .map(m => `${m.role}: ${m.content}`)
         .join('\n');
 
-      const iaResponse = await secureInvoke<any>(
-        'fusion_generate_ia_response',
-        {
-          message,
-          context,
-          mode: 'ASSISTANT_MODE',
-        }
-      );
+      const iaResponse = await secureInvoke<any>('fusion_generate_ia_response', {
+        message,
+        context,
+        mode: 'ASSISTANT_MODE',
+      });
 
       const response = iaResponse.response || 'Réponse générée avec succès.';
       console.log('[FusionEngine] Step 4: IA response generated via backend', {

@@ -8,34 +8,37 @@ The E2E test suite has been reorganized for better maintainability and clarity. 
 
 ### Core Test Files
 
-| File | Purpose | Tests |
-|------|---------|-------|
-| `e2e-automated-validation.test.tsx` | Main E2E test suite (legacy, comprehensive) | All OMEGA Phase 7Ω validation tests |
-| `e2e-ui-integration.test.tsx` | **NEW** — UI component integration tests | Component rendering, user interactions |
-| `e2e-api-integration.test.ts` | **NEW** — Backend API integration tests | Orchestrator, chat engine, AI provider calls |
-| `e2e-performance.test.ts` | **NEW** — Performance and load tests | Response times, concurrent requests, history handling |
+| File                                | Purpose                                     | Tests                                                 |
+| ----------------------------------- | ------------------------------------------- | ----------------------------------------------------- |
+| `e2e-automated-validation.test.tsx` | Main E2E test suite (legacy, comprehensive) | All OMEGA Phase 7Ω validation tests                   |
+| `e2e-ui-integration.test.tsx`       | **NEW** — UI component integration tests    | Component rendering, user interactions                |
+| `e2e-api-integration.test.ts`       | **NEW** — Backend API integration tests     | Orchestrator, chat engine, AI provider calls          |
+| `e2e-performance.test.ts`           | **NEW** — Performance and load tests        | Response times, concurrent requests, history handling |
 
 ### Utility Files
 
-| File | Purpose |
-|------|---------|
+| File                | Purpose                                                   |
+| ------------------- | --------------------------------------------------------- |
 | `e2e-test-utils.ts` | Shared utility functions (mock creation, message helpers) |
-| `e2e-setup.ts` | Shared setup/teardown logic for tests |
+| `e2e-setup.ts`      | Shared setup/teardown logic for tests                     |
 
 ## Key Improvements
 
 ### 1. **Code Reuse**
+
 - `e2e-test-utils.ts` provides shared utilities like `createMockResponse()`, `resetChatState()`
 - `e2e-setup.ts` provides `setupE2ETest()` and `teardownE2ETest()` helpers
 - Eliminates duplicated setup/teardown code across test files
 
 ### 2. **Domain Separation**
+
 - **UI tests** in `e2e-ui-integration.test.tsx` (rendering, interactions)
 - **API tests** in `e2e-api-integration.test.ts` (orchestrator, providers)
 - **Performance tests** in `e2e-performance.test.ts` (timing, load)
 - **Validation tests** still in `e2e-automated-validation.test.tsx` (comprehensive suite)
 
 ### 3. **Maintainability**
+
 - Easier to find specific tests by category
 - Smaller, more focused test files (cleaner diffs)
 - Shared utilities reduce maintenance burden
@@ -88,13 +91,13 @@ describe('My E2E Test', () => {
 
 ## Metrics
 
-| Metric | Value |
-|--------|-------|
-| New utility files | 2 |
-| New test files | 3 |
-| Total lines (new) | 316 |
-| Code reuse | ~50% setup code extracted |
-| Test discovery | Easier (domain-based) |
+| Metric            | Value                     |
+| ----------------- | ------------------------- |
+| New utility files | 2                         |
+| New test files    | 3                         |
+| Total lines (new) | 316                       |
+| Code reuse        | ~50% setup code extracted |
+| Test discovery    | Easier (domain-based)     |
 
 ## Migration Notes
 

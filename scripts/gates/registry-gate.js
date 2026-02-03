@@ -91,7 +91,9 @@ function filesCovered(modifiedFiles, entry) {
   const infraFiles = modifiedFiles.filter(isInfraFile);
   if (infraFiles.length === 0) return true;
   return infraFiles.every(file =>
-    entry.files_changed.some(recorded => file.includes(recorded) || recorded.includes(file))
+    entry.files_changed.some(
+      recorded => file.includes(recorded) || recorded.includes(file)
+    )
   );
 }
 
@@ -130,8 +132,11 @@ if (!validation.valid) {
 
 if (!filesCovered(modifiedFiles, lastEntry)) {
   console.error('❌ FAIL: Fichiers infra non documentés dans repo-events.jsonl');
-  const uncovered = infraFiles.filter(file =>
-    !lastEntry.files_changed.some(recorded => file.includes(recorded) || recorded.includes(file))
+  const uncovered = infraFiles.filter(
+    file =>
+      !lastEntry.files_changed.some(
+        recorded => file.includes(recorded) || recorded.includes(file)
+      )
   );
   uncovered.forEach(file => console.error(`  - ${file}`));
   process.exit(1);

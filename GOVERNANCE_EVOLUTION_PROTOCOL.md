@@ -1,4 +1,5 @@
 # TITANE∞ — PHASE ÉVOLUTION CONTRÔLÉE PROMPT vΩ.EVOLVE
+
 (Evolve without regress · Governed growth · Stability preserved)
 
 **Version:** vΩ.1  
@@ -8,6 +9,7 @@
 ---
 
 ## STATUT
+
 STABLE (certifié) → EVOLUTION (contrôlée)
 
 ---
@@ -15,6 +17,7 @@ STABLE (certifié) → EVOLUTION (contrôlée)
 ## LOIS ABSOLUES (INVARIANTS NON NÉGOCIABLES)
 
 ### Sacralité de l'État STABLE
+
 - L'état STABLE actuel est sacré
 - Aucune régression fonctionnelle, UI, test ou CI
 - Local-first absolu
@@ -32,9 +35,11 @@ STABLE (certifié) → EVOLUTION (contrôlée)
 ---
 
 ## OBJECTIF DE LA PHASE
+
 Faire évoluer TITANE∞ **sans jamais repasser par une phase de stabilisation d'urgence**.
 
 Cette phase sert à :
+
 1. Ajouter des capacités ou améliorations
 2. Renforcer la qualité long terme
 3. Préserver la stabilité acquise
@@ -49,6 +54,7 @@ Cette phase sert à :
 **Règle:** UNE évolution principale (et une seule) par cycle.
 
 **Catégories disponibles:**
+
 - [ ] UI / UX (nouvelle capacité, pas refonte)
 - [ ] Sécurité (durcissement progressif)
 - [ ] Performance / DX
@@ -57,22 +63,29 @@ Cette phase sert à :
 - [ ] Architecture interne (qualifiée)
 
 **Documentation obligatoire:**
+
 ```markdown
 ## Évolution: [TITRE CLAIR]
+
 ### Objectif
+
 [Décrire le "pourquoi" en 2-3 phrases]
 
 ### Valeur Ajoutée
+
 [Impact mesurable ou observable]
 
 ### Périmètre Précis
+
 [Ce qui EST dans le scope]
 
 ### Hors Scope Explicite
+
 [Ce qui N'EST PAS dans le scope]
 ```
 
 **Critère de validation Phase 1:**
+
 - ✅ Une seule évolution identifiée
 - ✅ Objectif clair et mesurable
 - ✅ Périmètre défini et hors-scope explicite
@@ -93,6 +106,7 @@ Cette phase sert à :
 | UI | [liste] | [LOW/MED/HIGH] | [action préventive] |
 
 **Pour chaque Ring impacté, documenter:**
+
 - Quels fichiers seront touchés (chemins complets)
 - Quels invariants doivent rester vrais (interfaces, contrats)
 - Quels tests existants doivent continuer à passer (noms de suites)
@@ -100,6 +114,7 @@ Cette phase sert à :
 **AUCUNE ligne vide tolérée.**
 
 **Critère de validation Phase 2:**
+
 - ✅ Matrice d'impact complète (tous Rings couverts)
 - ✅ Fichiers identifiés (chemins absolus)
 - ✅ Risques évalués (LOW/MED/HIGH)
@@ -110,18 +125,21 @@ Cette phase sert à :
 ### PHASE 3 — STRATÉGIE D'IMPLÉMENTATION ISOLÉE
 
 **Règles strictes:**
+
 1. **Branche dédiée obligatoire:** `feature/evolve-<topic>`
 2. **Un domaine à la fois:** Ne pas modifier Types + UI simultanément
 3. **Zéro refactor gratuit:** Pas de "nettoyage opportuniste"
 4. **Justification explicite:** Chaque changement doit avoir une raison
 
 **Si un refactor est nécessaire:**
+
 - Le documenter dans un fichier `REFACTOR_JUSTIFICATION_<topic>.md`
 - Le tracer dans le registry
 - Le justifier par rapport à l'évolution principale
 - L'isoler dans un commit séparé si possible
 
 **Workflow Git:**
+
 ```bash
 # Créer branche dédiée
 git checkout -b feature/evolve-<topic>
@@ -134,6 +152,7 @@ git push origin feature/evolve-<topic>
 ```
 
 **Critère de validation Phase 3:**
+
 - ✅ Branche dédiée créée
 - ✅ Un seul domaine modifié à la fois
 - ✅ Aucun refactor non justifié
@@ -146,6 +165,7 @@ git push origin feature/evolve-<topic>
 **Obligation:** Repasser TOUS les tests existants AVANT validation.
 
 **Checklist obligatoire:**
+
 ```bash
 # 1. TypeScript compilation
 pnpm run check
@@ -173,6 +193,7 @@ pnpm run test:e2e
 ```
 
 **Vérifications supplémentaires:**
+
 - [ ] **UI:** Aucune régression visuelle (smoke test manuel si nécessaire)
 - [ ] **CI:** Durée stable (pas d'augmentation >20%)
 - [ ] **Tests:** Zéro nouveau warning critique
@@ -180,11 +201,13 @@ pnpm run test:e2e
 
 **Règle absolue:**
 **Tout échec = STOP immédiat.**
+
 - Pas de "je corrige après"
 - Pas de "c'est non-bloquant"
 - Pas de "TODO" dans le code
 
 **Critère de validation Phase 4:**
+
 - ✅ Tous tests existants PASS
 - ✅ Nouveaux tests ajoutés (si applicable)
 - ✅ Aucune régression détectée
@@ -197,10 +220,12 @@ pnpm run test:e2e
 **Obligation:** Toute modification DOIT être enregistrée.
 
 #### 5.1 Repo Registry
+
 **Pour toute modification infra / logique / CI:**
 Append une entrée dans `registry/repo-events.jsonl`
 
 **Template obligatoire:**
+
 ```json
 {
   "id": "repo-evolve-XXX",
@@ -227,10 +252,12 @@ Append une entrée dans `registry/repo-events.jsonl`
 ```
 
 #### 5.2 UI Registry
+
 **Si UI impactée:**
 Append une entrée dans `registry/ui-events.jsonl`
 
 **Template obligatoire:**
+
 ```json
 {
   "id": "ui-XXX",
@@ -251,6 +278,7 @@ Append une entrée dans `registry/ui-events.jsonl`
 ```
 
 **Champs obligatoires:**
+
 - cause / objective
 - fichiers touchés (complet)
 - tests re-exécutés (tous)
@@ -260,6 +288,7 @@ Append une entrée dans `registry/ui-events.jsonl`
 **Aucune modification sans registre.**
 
 **Critère de validation Phase 5:**
+
 - ✅ Registry entry créée (repo et/ou UI)
 - ✅ Tous champs obligatoires remplis
 - ✅ Rollback documenté
@@ -272,45 +301,55 @@ Append une entrée dans `registry/ui-events.jsonl`
 **Obligation:** Produire un rapport court de validation.
 
 **Template obligatoire:**
+
 ```markdown
 # VALIDATION ÉVOLUTION — [TOPIC]
 
 ## 1. Objectif de l'Évolution
+
 [Rappel de la Phase 1]
 
 ## 2. Changements Appliqués
+
 | Ring | Fichiers | Nature | Commits |
-|------|----------|--------|---------|
+| ---- | -------- | ------ | ------- |
+
 [Tableau complet]
 
 ## 3. Résultats des Tests
-| Test Suite | Before | After | Status |
-|------------|--------|-------|--------|
-| TypeScript | X errors | Y errors | [PASS/FAIL] |
-| ESLint | X errors | Y errors | [PASS/FAIL] |
-| Vitest | X/X | Y/Y | [PASS/FAIL] |
-| E2E | X scenarios | Y scenarios | [PASS/FAIL] |
+
+| Test Suite | Before      | After       | Status      |
+| ---------- | ----------- | ----------- | ----------- |
+| TypeScript | X errors    | Y errors    | [PASS/FAIL] |
+| ESLint     | X errors    | Y errors    | [PASS/FAIL] |
+| Vitest     | X/X         | Y/Y         | [PASS/FAIL] |
+| E2E        | X scenarios | Y scenarios | [PASS/FAIL] |
 
 ## 4. Risques Résiduels
+
 [S'il y en a, les documenter explicitement]
 [Si aucun: "Aucun risque résiduel identifié"]
 
 ## 5. Registry Entries
+
 - repo-evolve-XXX: [lien/résumé]
 - ui-XXX: [lien/résumé si applicable]
 
 ## 6. Décision Finale
+
 - ✅ EVOLUTION VALIDÉE — Prête pour merge dans MAIN
 - ❌ BLOCKED — [Causes précises]
 ```
 
 **Critères de validation Phase 6:**
+
 - ✅ Rapport complet généré
 - ✅ Tous tests documentés
 - ✅ Risques identifiés (ou "aucun")
 - ✅ Décision explicite (VALIDÉE ou BLOCKED)
 
 **Si VALIDÉE:**
+
 ```bash
 # Merge dans MAIN
 git checkout MAIN
@@ -319,6 +358,7 @@ git push origin MAIN
 ```
 
 **Si BLOCKED:**
+
 - Documenter les causes
 - Créer issues GitHub pour chaque blocage
 - Ne pas merger
@@ -329,25 +369,30 @@ git push origin MAIN
 ## INTERDICTIONS ABSOLUES
 
 ### ❌ Repasser en "mode correction"
+
 - Toute évolution doit être proactive, pas réactive
 - Si bugs découverts, traiter dans un cycle séparé
 
 ### ❌ Modifier un invariant sans décision explicite
+
 - Architecture 4-Ring: intouchable
 - Registres append-only: intouchables
 - Local-first / Tauri-only: intouchables
 
 ### ❌ Introduire une dette "temporaire"
+
 - Aucun TODO dans le code sans issue GitHub liée
 - Aucun commentaire "fix later"
 - Aucun test skip sans justification documentée
 
 ### ❌ Toucher à une zone stable sans test
+
 - Chaque fichier modifié doit avoir:
   - Tests existants qui passent
   - Nouveaux tests si comportement ajouté
 
 ### ❌ Déclarer "OK" sans preuves
+
 - Toute validation nécessite logs/screenshots
 - Toute assertion nécessite test automatisé
 - Toute régression doit être détectée et documentée
@@ -443,6 +488,7 @@ git push origin MAIN
 ## EXEMPLES D'ÉVOLUTIONS VALIDES
 
 ### ✅ Évolution Valide: Ajout métriques performance
+
 - **Phase 1:** Ajouter tracking temps réponse AI
 - **Phase 2:** Ring Services impacté, risque LOW
 - **Phase 3:** Branche `feature/evolve-perf-metrics`
@@ -451,6 +497,7 @@ git push origin MAIN
 - **Phase 6:** VALIDÉE — Merge dans MAIN
 
 ### ✅ Évolution Valide: Nouveau composant UI
+
 - **Phase 1:** Ajouter panneau latéral paramètres
 - **Phase 2:** Ring UI impacté, risque MED
 - **Phase 3:** Branche `feature/evolve-settings-panel`
@@ -459,12 +506,14 @@ git push origin MAIN
 - **Phase 6:** VALIDÉE — Merge dans MAIN
 
 ### ❌ Évolution Invalide: "Refactor global"
+
 - **Phase 1:** "Améliorer architecture globale"
   - ❌ Pas de scope précis
   - ❌ Trop de Rings impactés
   - ❌ Pas de valeur mesurable
 
 ### ❌ Évolution Invalide: "Corriger bug critique"
+
 - **Phase 1:** "Fix crash au démarrage"
   - ❌ C'est une correction, pas une évolution
   - ❌ Doit passer par STABLE+ protocol
@@ -475,24 +524,30 @@ git push origin MAIN
 ## GOUVERNANCE DU PROTOCOL
 
 ### Modifications du Protocol vΩ.EVOLVE
+
 Ce protocol lui-même peut évoluer, mais nécessite:
+
 1. RFC documentée (Request for Comments)
 2. Validation Kevin Thibault (TITANE∞ creator)
 3. Entry dans `registry/repo-events.jsonl` catégorie "governance"
 4. Version bump (vΩ.1 → vΩ.2)
 
 ### Audits Périodiques
+
 - **Mensuel:** Review des évolutions appliquées
 - **Trimestriel:** Analyse des risques résiduels cumulés
 - **Semestriel:** Validation que STABLE est toujours STABLE
 
 ### Escalation
+
 Si une évolution:
+
 - Casse la stabilité
 - Introduit une dette technique
 - Viole un invariant
 
 **Action immédiate:**
+
 1. Revert du merge (si déjà mergé)
 2. Post-mortem obligatoire
 3. RFC pour correction du protocol
@@ -513,9 +568,9 @@ Aucune exception. Aucun raccourci. Aucune "urgence" qui justifie de skip une pha
 
 ---
 
-*Protocol vΩ.EVOLVE*  
-*Créé: 2026-02-02*  
-*Version: vΩ.1*  
-*Status: ACTIF — Gouvernance évolutions post-STABLE*
+_Protocol vΩ.EVOLVE_  
+_Créé: 2026-02-02_  
+_Version: vΩ.1_  
+_Status: ACTIF — Gouvernance évolutions post-STABLE_
 
 **FIN DU PROTOCOL**

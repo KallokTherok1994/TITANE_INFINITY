@@ -12,7 +12,15 @@
 import React, { memo, useMemo } from 'react';
 import { useVisionStore } from '@/stores/useVisionStore';
 import type { AffectHistoryEntry } from '@/types/visionAffect';
-import { Camera, Activity, Brain, User, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import {
+  Camera,
+  Activity,
+  Brain,
+  User,
+  TrendingUp,
+  TrendingDown,
+  Minus,
+} from 'lucide-react';
 import './VisionMetricsChart.css';
 
 interface VisionMetricsChartProps {
@@ -24,59 +32,91 @@ interface VisionMetricsChartProps {
 
 const levelToPercent = (level: string | null | undefined): number => {
   switch (level) {
-    case 'low': return 25;
-    case 'medium': return 50;
-    case 'high': return 75;
-    default: return 0;
+    case 'low':
+      return 25;
+    case 'medium':
+      return 50;
+    case 'high':
+      return 75;
+    default:
+      return 0;
   }
 };
 
 export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
-  ({ timeRange = 10, showDetection = true, showAffect = true, showBodyLanguage = true }) => {
-    const isActive = useVisionStore(state => state.isObservationActive && state.visionInput.streamActive);
+  ({
+    timeRange = 10,
+    showDetection = true,
+    showAffect = true,
+    showBodyLanguage = true,
+  }) => {
+    const isActive = useVisionStore(
+      state => state.isObservationActive && state.visionInput.streamActive
+    );
     const affectHistory = useVisionStore(state => state.affectEstimation.history);
     const bodyLanguage = useVisionStore(state => state.bodyLanguage);
 
     const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
-    const recentAffect = useMemo(() =>
-      (affectHistory || []).filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp).slice(-20),
+    const recentAffect = useMemo(
+      () =>
+        (affectHistory || [])
+          .filter((item: AffectHistoryEntry) => item.timestamp >= cutoffTimestamp)
+          .slice(-20),
       [affectHistory, cutoffTimestamp]
     );
 
     const avgConfidence = useMemo(() => {
       if (!recentAffect.length) return 0;
-      return Math.round((recentAffect.reduce((sum, item) => sum + (item.confidence || 0), 0) / recentAffect.length) * 100);
+      return Math.round(
+        (recentAffect.reduce((sum, item) => sum + (item.confidence || 0), 0) /
+          recentAffect.length) *
+          100
+      );
     }, [recentAffect]);
 
     const avgEnergy = useMemo(() => {
       if (!recentAffect.length) return 0;
-      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.energy), 0) / recentAffect.length);
+      return Math.round(
+        recentAffect.reduce((sum, item) => sum + levelToPercent(item.energy), 0) /
+          recentAffect.length
+      );
     }, [recentAffect]);
 
     const avgTension = useMemo(() => {
       if (!recentAffect.length) return 0;
-      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.tension), 0) / recentAffect.length);
+      return Math.round(
+        recentAffect.reduce((sum, item) => sum + levelToPercent(item.tension), 0) /
+          recentAffect.length
+      );
     }, [recentAffect]);
 
     const avgEngagement = useMemo(() => {
       if (!recentAffect.length) return 0;
-      return Math.round(recentAffect.reduce((sum, item) => sum + levelToPercent(item.engagement), 0) / recentAffect.length);
+      return Math.round(
+        recentAffect.reduce((sum, item) => sum + levelToPercent(item.engagement), 0) /
+          recentAffect.length
+      );
     }, [recentAffect]);
 
-    const bodyScores = useMemo(() => ({
-      posture: Math.round((bodyLanguage.postureScore || 0) * 100),
-      movement: Math.round((bodyLanguage.movementScore || 0) * 100),
-      gaze: Math.round((bodyLanguage.gazeStabilityScore || 0) * 100),
-      facial: Math.round((bodyLanguage.facialActivity || 0) * 100),
-      symmetry: Math.round((bodyLanguage.shoulderSymmetry || 0) * 100),
-    }), [bodyLanguage]);
+    const bodyScores = useMemo(
+      () => ({
+        posture: Math.round((bodyLanguage.postureScore || 0) * 100),
+        movement: Math.round((bodyLanguage.movementScore || 0) * 100),
+        gaze: Math.round((bodyLanguage.gazeStabilityScore || 0) * 100),
+        facial: Math.round((bodyLanguage.facialActivity || 0) * 100),
+        symmetry: Math.round((bodyLanguage.shoulderSymmetry || 0) * 100),
+      }),
+      [bodyLanguage]
+    );
 
     const trends = useMemo(() => {
       if (recentAffect.length < 10) return { energy: 0, tension: 0, engagement: 0 };
       const first10 = recentAffect.slice(0, 10);
       const last10 = recentAffect.slice(-10);
-      const avgFirst = (data: AffectHistoryEntry[], key: 'energy' | 'tension' | 'engagement') =>
-        data.reduce((sum, item) => sum + levelToPercent(item[key]), 0) / data.length;
+      const avgFirst = (
+        data: AffectHistoryEntry[],
+        key: 'energy' | 'tension' | 'engagement'
+      ) => data.reduce((sum, item) => sum + levelToPercent(item[key]), 0) / data.length;
       return {
         energy: avgFirst(last10, 'energy') - avgFirst(first10, 'energy'),
         tension: avgFirst(last10, 'tension') - avgFirst(first10, 'tension'),
@@ -112,14 +152,20 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
               <div className="metric-row">
                 <span className="metric-label">Confiance détection</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar confidence" style={{ width: `${avgConfidence}%` }} />
+                  <div
+                    className="metric-bar confidence"
+                    style={{ width: `${avgConfidence}%` }}
+                  />
                   <span className="metric-value">{avgConfidence}%</span>
                 </div>
               </div>
               <div className="metric-row">
                 <span className="metric-label">Points de données</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar data-points" style={{ width: `${Math.min(recentAffect.length * 5, 100)}%` }} />
+                  <div
+                    className="metric-bar data-points"
+                    style={{ width: `${Math.min(recentAffect.length * 5, 100)}%` }}
+                  />
                   <span className="metric-value">{recentAffect.length}</span>
                 </div>
               </div>
@@ -135,23 +181,35 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
             </div>
             <div className="vision-simple-chart">
               <div className="metric-row">
-                <span className="metric-label">Énergie {getTrendIcon(trends.energy)}</span>
+                <span className="metric-label">
+                  Énergie {getTrendIcon(trends.energy)}
+                </span>
                 <div className="metric-bar-container">
                   <div className="metric-bar energy" style={{ width: `${avgEnergy}%` }} />
                   <span className="metric-value">{avgEnergy}%</span>
                 </div>
               </div>
               <div className="metric-row">
-                <span className="metric-label">Tension {getTrendIcon(trends.tension)}</span>
+                <span className="metric-label">
+                  Tension {getTrendIcon(trends.tension)}
+                </span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar tension" style={{ width: `${avgTension}%` }} />
+                  <div
+                    className="metric-bar tension"
+                    style={{ width: `${avgTension}%` }}
+                  />
                   <span className="metric-value">{avgTension}%</span>
                 </div>
               </div>
               <div className="metric-row">
-                <span className="metric-label">Engagement {getTrendIcon(trends.engagement)}</span>
+                <span className="metric-label">
+                  Engagement {getTrendIcon(trends.engagement)}
+                </span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar engagement" style={{ width: `${avgEngagement}%` }} />
+                  <div
+                    className="metric-bar engagement"
+                    style={{ width: `${avgEngagement}%` }}
+                  />
                   <span className="metric-value">{avgEngagement}%</span>
                 </div>
               </div>
@@ -169,35 +227,50 @@ export const VisionMetricsChart: React.FC<VisionMetricsChartProps> = memo(
               <div className="metric-row">
                 <span className="metric-label">Posture</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar posture" style={{ width: `${bodyScores.posture}%` }} />
+                  <div
+                    className="metric-bar posture"
+                    style={{ width: `${bodyScores.posture}%` }}
+                  />
                   <span className="metric-value">{bodyScores.posture}%</span>
                 </div>
               </div>
               <div className="metric-row">
                 <span className="metric-label">Mouvement</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar movement" style={{ width: `${bodyScores.movement}%` }} />
+                  <div
+                    className="metric-bar movement"
+                    style={{ width: `${bodyScores.movement}%` }}
+                  />
                   <span className="metric-value">{bodyScores.movement}%</span>
                 </div>
               </div>
               <div className="metric-row">
                 <span className="metric-label">Regard</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar gaze" style={{ width: `${bodyScores.gaze}%` }} />
+                  <div
+                    className="metric-bar gaze"
+                    style={{ width: `${bodyScores.gaze}%` }}
+                  />
                   <span className="metric-value">{bodyScores.gaze}%</span>
                 </div>
               </div>
               <div className="metric-row">
                 <span className="metric-label">Visage</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar facial" style={{ width: `${bodyScores.facial}%` }} />
+                  <div
+                    className="metric-bar facial"
+                    style={{ width: `${bodyScores.facial}%` }}
+                  />
                   <span className="metric-value">{bodyScores.facial}%</span>
                 </div>
               </div>
               <div className="metric-row">
                 <span className="metric-label">Symétrie</span>
                 <div className="metric-bar-container">
-                  <div className="metric-bar symmetry" style={{ width: `${bodyScores.symmetry}%` }} />
+                  <div
+                    className="metric-bar symmetry"
+                    style={{ width: `${bodyScores.symmetry}%` }}
+                  />
                   <span className="metric-value">{bodyScores.symmetry}%</span>
                 </div>
               </div>

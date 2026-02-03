@@ -3,13 +3,14 @@
 **Status:** 🔄 IN PROGRESS  
 **Date:** 2 février 2026  
 **Branch:** MAIN  
-**Build:** 9.5M, 40 chunks, 0 errors ✅  
+**Build:** 9.5M, 40 chunks, 0 errors ✅
 
 ---
 
 ## 1. Phase 6 Objectives
 
 ### Primary Goals
+
 1. 🎯 **Identify render hotspots** (components re-rendering 5+ times/second)
 2. 🎯 **Measure actual performance** (React DevTools baseline)
 3. 🎯 **Optimize high-frequency components** (per-component analysis)
@@ -17,6 +18,7 @@
 5. 🎯 **Establish CI monitoring** (Lighthouse integration)
 
 ### Success Criteria
+
 - [ ] Profile baseline captured (render times, memory)
 - [ ] Hotspots identified (>5 renders/sec components)
 - [ ] Component optimizations applied (3+ targets)
@@ -31,6 +33,7 @@
 ### Tools & Methods
 
 #### A. React DevTools Profiler
+
 ```
 Method: Render timeline + component flamegraph
 Target: src/ui/pages/Chat.tsx + dependencies
@@ -38,6 +41,7 @@ Metrics: Render time, commit phase duration
 ```
 
 #### B. Chrome DevTools Performance Tab
+
 ```
 Method: Full page profile (FCP, LCP, CLS, TTI)
 Target: Chat page load + message send workflow
@@ -45,6 +49,7 @@ Metrics: Frame rate, CPU usage, memory growth
 ```
 
 #### C. Source Code Analysis
+
 ```
 Method: Static AST analysis (components, hooks)
 Target: All src/ React components
@@ -52,6 +57,7 @@ Metrics: Re-render risk scoring, memo coverage
 ```
 
 #### D. Bundle Analysis
+
 ```
 Method: Vite stats.html + esbuild-visualizer
 Target: dist/stats.html (already generated)
@@ -63,6 +69,7 @@ Metrics: Chunk sizes, dependency graph
 ## 3. Hotspot Identification Strategy
 
 ### Target Components (High Risk)
+
 Based on previous analysis:
 
 1. **Chat.tsx** (1,545 lines)
@@ -91,6 +98,7 @@ Based on previous analysis:
    - Action: Measure animation FPS
 
 ### Scoring Methodology
+
 ```
 Render Risk Score = (lines × hooks × state_mutations) / memo_coverage
 
@@ -104,6 +112,7 @@ LOW (<20):    Acceptable
 ## 4. Measurement Plan
 
 ### Step 1: Baseline Capture
+
 ```bash
 # Record current state
 - Chrome DevTools Performance profile (30s)
@@ -113,6 +122,7 @@ LOW (<20):    Acceptable
 ```
 
 ### Step 2: Hotspot Analysis
+
 ```
 Identify:
 - Components with >5 renders/sec
@@ -122,6 +132,7 @@ Identify:
 ```
 
 ### Step 3: Optimization Application
+
 ```
 For each hotspot:
 1. Apply targeted optimization (memo, useCallback, useMemo)
@@ -130,6 +141,7 @@ For each hotspot:
 ```
 
 ### Step 4: Validation
+
 ```
 - Re-profile with optimizations
 - Measure improvement percentage
@@ -141,9 +153,11 @@ For each hotspot:
 ## 5. Expected Optimization Targets
 
 ### Target 1: Message Rendering Pipeline
+
 **Current:** VirtualizedMessageList + MessageBubble (memo-wrapped)
 
 **Potential Optimization:**
+
 - Measure overscan impact (currently 5 items)
 - Consider dynamic overscan based on device
 - Profile animation frame drops during scroll
@@ -151,9 +165,11 @@ For each hotspot:
 **Expected Gain:** -5-10% memory during scroll
 
 ### Target 2: Input Validation Loop
+
 **Current:** ChatInput with OMEGA protection
 
 **Potential Optimization:**
+
 - Debounce validation (currently on keystroke)
 - Extract validation to separate hook
 - Memoize validation results
@@ -161,9 +177,11 @@ For each hotspot:
 **Expected Gain:** -40-50% keystroke latency
 
 ### Target 3: State Management Cascade
+
 **Current:** useChat hook with 8 useCallback exports
 
 **Potential Optimization:**
+
 - Profile state update frequency
 - Identify unnecessary re-renders
 - Consider useContext splitting
@@ -171,9 +189,11 @@ For each hotspot:
 **Expected Gain:** -30-40% cascade re-renders
 
 ### Target 4: Thinking Panel Animations
+
 **Current:** ThinkingPanel with framer-motion
 
 **Potential Optimization:**
+
 - Measure animation FPS during generation
 - Consider GPU acceleration
 - Profile CSS animation performance
@@ -181,9 +201,11 @@ For each hotspot:
 **Expected Gain:** +10-15 FPS during thinking
 
 ### Target 5: DevTools Overlay
+
 **Current:** DevSudo lazy-loaded (Phase 3A)
 
 **Potential Optimization:**
+
 - Verify lazy-loading working
 - Profile dev mode performance impact
 - Measure initialization time
@@ -195,30 +217,35 @@ For each hotspot:
 ## 6. Phase 6 Implementation Tasks
 
 ### 6a: Setup Profiling Infrastructure ✅ (THIS TASK)
+
 - [ ] Create profiling strategy document
 - [ ] Define measurement methodology
 - [ ] Identify baseline metrics to capture
 - [ ] Set success criteria
 
 ### 6b: Identify Render Hotspots (NEXT)
+
 - [ ] Analyze component render frequency
 - [ ] Score components by re-render risk
 - [ ] Profile Chat page interaction
 - [ ] Capture React DevTools baseline
 
 ### 6c: Apply Component Optimizations
+
 - [ ] Optimize high-risk components (3+ targets)
 - [ ] Re-measure each optimization
 - [ ] Verify no regressions
 - [ ] Document improvements
 
 ### 6d: Memory & Performance Profiling
+
 - [ ] Heap snapshot analysis
 - [ ] Memory growth over time
 - [ ] Garbage collection patterns
 - [ ] Bundle size per interaction
 
 ### 6e: Generate Phase 6 Report
+
 - [ ] Summarize all measurements
 - [ ] Document optimizations applied
 - [ ] Show before/after metrics
@@ -229,6 +256,7 @@ For each hotspot:
 ## 7. Profiling Tools Configuration
 
 ### React DevTools Integration
+
 ```javascript
 // Available in development mode
 // Chrome: React DevTools extension
@@ -236,6 +264,7 @@ For each hotspot:
 ```
 
 ### Chrome DevTools Performance
+
 ```javascript
 // Keyboard shortcut: Ctrl+Shift+I → Performance
 // 1. Click Record
@@ -245,6 +274,7 @@ For each hotspot:
 ```
 
 ### Build Stats Analysis
+
 ```bash
 # Already generated during build
 file: dist/stats.html
@@ -259,40 +289,45 @@ open dist/stats.html
 ## 8. Success Metrics (Phase 6)
 
 ### Render Performance
-| Metric | Target | Status |
-|--------|--------|--------|
-| Max render time | <16ms | ⏳ To measure |
-| Avg render time | <8ms | ⏳ To measure |
-| Re-renders/sec | <2 | ⏳ To measure |
+
+| Metric               | Target | Status        |
+| -------------------- | ------ | ------------- |
+| Max render time      | <16ms  | ⏳ To measure |
+| Avg render time      | <8ms   | ⏳ To measure |
+| Re-renders/sec       | <2     | ⏳ To measure |
 | Message send latency | <100ms | ⏳ To measure |
 
 ### Memory Performance
-| Metric | Target | Status |
-|--------|--------|--------|
-| Initial heap | <50MB | ⏳ To measure |
-| Heap after 100 msgs | <70MB | ⏳ To measure |
-| Memory growth rate | <0.5MB/min | ⏳ To measure |
-| GC frequency | <1/sec | ⏳ To measure |
+
+| Metric              | Target     | Status        |
+| ------------------- | ---------- | ------------- |
+| Initial heap        | <50MB      | ⏳ To measure |
+| Heap after 100 msgs | <70MB      | ⏳ To measure |
+| Memory growth rate  | <0.5MB/min | ⏳ To measure |
+| GC frequency        | <1/sec     | ⏳ To measure |
 
 ### Interaction Performance
-| Metric | Target | Status |
-|--------|--------|--------|
-| Input latency | <16ms | ⏳ To measure |
-| Scroll FPS | 55+ | ⏳ To measure |
-| Animation FPS | 55+ | ⏳ To measure |
-| Click response | <50ms | ⏳ To measure |
+
+| Metric         | Target | Status        |
+| -------------- | ------ | ------------- |
+| Input latency  | <16ms  | ⏳ To measure |
+| Scroll FPS     | 55+    | ⏳ To measure |
+| Animation FPS  | 55+    | ⏳ To measure |
+| Click response | <50ms  | ⏳ To measure |
 
 ---
 
 ## 9. Risk Assessment
 
 ### Potential Risks
+
 - ❌ Over-optimization (premature optimization)
 - ❌ Memo overhead (small components)
 - ❌ Breaking existing functionality
 - ❌ Regression in edge cases
 
 ### Mitigation
+
 - ✅ Measure BEFORE optimizing
 - ✅ Test each optimization in isolation
 - ✅ Maintain backward compatibility
@@ -303,21 +338,25 @@ open dist/stats.html
 ## 10. Next Steps
 
 **Immediate (Phase 6a):**
+
 1. ✅ Create profiling strategy (THIS TASK)
 2. ⏳ Prepare measurement tools
 3. ⏳ Define baseline metrics
 
 **Short-term (Phase 6b):**
+
 1. ⏳ Profile Chat page interactions
 2. ⏳ Identify render hotspots
 3. ⏳ Score components by risk
 
 **Implementation (Phase 6c-d):**
+
 1. ⏳ Apply targeted optimizations
 2. ⏳ Measure impact
 3. ⏳ Validate improvements
 
 **Final (Phase 6e):**
+
 1. ⏳ Generate completion report
 2. ⏳ Summary metrics
 3. ⏳ Production readiness sign-off
@@ -326,14 +365,14 @@ open dist/stats.html
 
 ## 11. Phase 6 Timeline
 
-| Task | Duration | Status |
-|------|----------|--------|
-| 6a: Strategy setup | 30min | ⏳ |
-| 6b: Hotspot ID | 1hr | ⏳ |
-| 6c: Optimizations | 2-3hr | ⏳ |
-| 6d: Memory profiling | 1hr | ⏳ |
-| 6e: Report + commit | 1hr | ⏳ |
-| **Total** | **5-6hr** | **⏳** |
+| Task                 | Duration  | Status |
+| -------------------- | --------- | ------ |
+| 6a: Strategy setup   | 30min     | ⏳     |
+| 6b: Hotspot ID       | 1hr       | ⏳     |
+| 6c: Optimizations    | 2-3hr     | ⏳     |
+| 6d: Memory profiling | 1hr       | ⏳     |
+| 6e: Report + commit  | 1hr       | ⏳     |
+| **Total**            | **5-6hr** | **⏳** |
 
 ---
 

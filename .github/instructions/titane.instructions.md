@@ -53,6 +53,7 @@
 **Champs obligatoires:** `id`, `ts`, `category`, `scope`, `change_type`, `summary`, `reason`, `files_changed`, `tests_run`, `proofs`, `risk_level`, `rollback`, `status`.
 
 **Interdictions:**
+
 - ❌ Modifier un fichier UI sans entry registre.
 - ❌ Écraser/supprimer une entry (append-only strict).
 - ❌ Valider un changement UI sans `tests_run` + `rollback`.

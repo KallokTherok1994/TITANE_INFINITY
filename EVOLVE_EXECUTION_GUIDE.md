@@ -1,4 +1,5 @@
 # TITANE∞ — EVOLVE EXECUTION GUIDE vΩ.EVOLVE_EXEC
+
 (Launch 1 governed evolution · Produce impact matrix · Implement · Prove · Register · Validate)
 
 **Version:** vΩ.1  
@@ -8,11 +9,13 @@
 ---
 
 ## STATUT
+
 STABLE (certifié) → EVOLUTION (cycle N)
 
 ---
 
 ## LOIS ABSOLUES (RAPPEL)
+
 - ✅ L'état STABLE actuel est sacré : aucun compromis
 - ✅ Local-first absolu
 - ✅ Tauri-only strict
@@ -29,10 +32,10 @@ STABLE (certifié) → EVOLUTION (cycle N)
 **RÈGLE CRITIQUE:** Remplir ces 6 champs (texte complet, pas de "TODO", pas de "TBD").
 
 ```markdown
-1) **TOPIC (titre court)** :
+1. **TOPIC (titre court)** :
    [Ex: "Add AI Response Metrics Tracking"]
 
-2) **CATÉGORIE** :
+2. **CATÉGORIE** :
    [ ] UI/UX (nouvelle capacité, pas refonte)
    [ ] Sécurité (durcissement progressif)
    [ ] Performance/DX
@@ -40,18 +43,18 @@ STABLE (certifié) → EVOLUTION (cycle N)
    [ ] Qualité/Observabilité
    [ ] Architecture interne (qualifiée)
 
-3) **OBJECTIF (2-3 phrases)** :
+3. **OBJECTIF (2-3 phrases)** :
    [Décrire le "pourquoi" clair et mesurable]
 
-4) **VALEUR AJOUTÉE (mesurable/observable)** :
+4. **VALEUR AJOUTÉE (mesurable/observable)** :
    [Impact concret, ex: "Réduction latence 20%", "Nouvelle capacité X"]
 
-5) **SCOPE IN (liste précise)** :
+5. **SCOPE IN (liste précise)** :
    - [Fichier/Composant 1]
    - [Fichier/Composant 2]
    - [...]
 
-6) **SCOPE OUT (liste précise)** :
+6. **SCOPE OUT (liste précise)** :
    - [Ce qui N'EST PAS dans cette évolution]
    - [...]
 ```
@@ -67,11 +70,13 @@ STABLE (certifié) → EVOLUTION (cycle N)
 **Action:** Créer le document de définition.
 
 **Fichier à créer:**
+
 ```
 reports/EVOLVE_01_DEFINITION_<topic>.md
 ```
 
 **Contenu obligatoire:**
+
 ```markdown
 # ÉVOLUTION: [TOPIC]
 
@@ -82,18 +87,23 @@ reports/EVOLVE_01_DEFINITION_<topic>.md
 ---
 
 ## Objectif
+
 [Reprendre INPUTS #3]
 
 ## Valeur Ajoutée
+
 [Reprendre INPUTS #4]
 
 ## Scope IN (Périmètre Inclus)
+
 [Reprendre INPUTS #5]
 
 ## Scope OUT (Hors Périmètre)
+
 [Reprendre INPUTS #6]
 
 ## Critères d'Acceptation
+
 - [ ] [Critère mesurable 1]
 - [ ] [Critère mesurable 2]
 - [ ] [Critère mesurable 3]
@@ -108,6 +118,7 @@ reports/EVOLVE_01_DEFINITION_<topic>.md
 ```
 
 **Registry Entry:**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 echo '{
@@ -125,6 +136,7 @@ echo '{
 ```
 
 **Validation Phase 1:**
+
 - ✅ Document EVOLVE_01_DEFINITION créé
 - ✅ Tous champs remplis (pas de TODO)
 - ✅ Critères d'acceptation définis
@@ -137,12 +149,14 @@ echo '{
 **Action:** Produire la matrice d'impact AVANT tout code.
 
 **Fichier à créer:**
+
 ```
 reports/EVOLVE_02_IMPACT_MATRIX_<topic>.md
 ```
 
 **Contenu obligatoire:**
-```markdown
+
+````markdown
 # MATRICE D'IMPACT — [TOPIC]
 
 **Date:** YYYY-MM-DD  
@@ -153,12 +167,12 @@ reports/EVOLVE_02_IMPACT_MATRIX_<topic>.md
 
 ## Matrice 4-Ring
 
-| Ring | Fichiers Candidats | Risque | Mitigation |
-|------|-------------------|--------|------------|
-| **Types** | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
-| **Engines** | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
+| Ring         | Fichiers Candidats                  | Risque            | Mitigation                        |
+| ------------ | ----------------------------------- | ----------------- | --------------------------------- |
+| **Types**    | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
+| **Engines**  | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
 | **Services** | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
-| **UI** | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
+| **UI**       | [liste chemins complets ou "Aucun"] | LOW/MED/HIGH/NONE | [action préventive si nécessaire] |
 
 **AUCUNE ligne vide tolérée.**
 
@@ -167,18 +181,22 @@ reports/EVOLVE_02_IMPACT_MATRIX_<topic>.md
 ## Fichiers Impactés (Détail)
 
 ### Ring Types
+
 - `src/types/[...].ts` — [raison modification]
 - [...]
 
 ### Ring Engines
+
 - `src/engines/[...].ts` — [raison modification]
 - [...]
 
 ### Ring Services
+
 - `src/services/[...].ts` — [raison modification]
 - [...]
 
 ### Ring UI
+
 - `src/components/[...].tsx` — [raison modification]
 - [...]
 
@@ -187,15 +205,18 @@ reports/EVOLVE_02_IMPACT_MATRIX_<topic>.md
 ## Invariants à Préserver
 
 ### Architecture
+
 - [ ] Architecture 4-Ring intacte
 - [ ] Pas de dépendance circulaire introduite
 - [ ] Interfaces existantes non cassées
 
 ### Comportement
+
 - [ ] [Invariant métier 1]
 - [ ] [Invariant métier 2]
 
 ### Performance
+
 - [ ] Temps de build stable (±10%)
 - [ ] Temps de tests stable (±20%)
 
@@ -204,6 +225,7 @@ reports/EVOLVE_02_IMPACT_MATRIX_<topic>.md
 ## Tests à Repasser (Checklist)
 
 ### Tests Obligatoires
+
 ```bash
 # TypeScript compilation
 pnpm run check
@@ -225,8 +247,10 @@ pnpm run test
 pnpm run verify
 # Résultat attendu: all checks passing
 ```
+````
 
 ### Tests Conditionnels
+
 ```bash
 # Rust tests (if Tauri backend modified)
 cd src-tauri && cargo test
@@ -242,19 +266,22 @@ pnpm run test:e2e
 ## Décision de Scope
 
 **Analyse de Risque:**
+
 - Rings impactés: [nombre]
 - Risque MED ou HIGH: [nombre]
 
 **Règle:** Si plus d'un Ring avec risque MED/HIGH, **réduire le scope**.
 
 **Décision:**
+
 - [ ] Scope validé tel quel
 - [ ] Scope réduit (documenter ce qui est reporté à cycle ultérieur)
 
 ---
 
 **Status:** PHASE 2 COMPLETE
-```
+
+````
 
 **Registry Entry:**
 ```bash
@@ -270,9 +297,10 @@ echo '{
   "risk_level": "[LOW/MED/HIGH]",
   "status": "phase2-complete"
 }' >> registry/repo-events.jsonl
-```
+````
 
 **Validation Phase 2:**
+
 - ✅ Matrice 4-Ring complète (aucune ligne vide)
 - ✅ Fichiers identifiés avec chemins complets
 - ✅ Invariants listés
@@ -287,6 +315,7 @@ echo '{
 **Action:** Créer branche dédiée et plan d'implémentation.
 
 **Branche à créer:**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 git checkout -b feature/evolve-<topic>
@@ -294,11 +323,13 @@ git push -u origin feature/evolve-<topic>
 ```
 
 **Fichier à créer:**
+
 ```
 reports/EVOLVE_03_PLAN_<topic>.md
 ```
 
 **Contenu obligatoire:**
+
 ```markdown
 # PLAN D'IMPLÉMENTATION — [TOPIC]
 
@@ -314,12 +345,14 @@ reports/EVOLVE_03_PLAN_<topic>.md
 ### Étapes Séquentielles
 
 **Étape 1:** [Description]
+
 - Fichiers: [liste]
 - Ring: [Types/Engines/Services/UI]
 - Durée estimée: [temps]
 - Commit attendu: `evolve([ring]): [action] - [justification]`
 
 **Étape 2:** [Description]
+
 - Fichiers: [liste]
 - Ring: [Types/Engines/Services/UI]
 - Durée estimée: [temps]
@@ -330,13 +363,14 @@ reports/EVOLVE_03_PLAN_<topic>.md
 ---
 
 ## Commits Attendus (Format)
-
 ```
+
 commit 1: evolve(types): add [interface] - [raison]
 commit 2: evolve(services): implement [logic] - [raison]
 commit 3: evolve(ui): integrate [component] - [raison]
 commit 4: evolve(tests): add [test suite] - [raison]
-```
+
+````
 
 **Règles:**
 - Commits atomiques (1 étape = 1 commit si possible)
@@ -358,9 +392,10 @@ git branch -D feature/evolve-<topic>
 
 # Suppression branche remote
 git push origin --delete feature/evolve-<topic>
-```
+````
 
 ### Si problème détecté APRÈS merge:
+
 ```bash
 # Identifier commit de merge
 git log --oneline -10
@@ -379,6 +414,7 @@ git push origin MAIN
 ## Critères de STOP
 
 **STOP immédiat si:**
+
 - [ ] 1 erreur TypeScript non prévue
 - [ ] 1 erreur ESLint non prévue
 - [ ] 1 test fail non prévu
@@ -388,6 +424,7 @@ git push origin MAIN
 - [ ] Modification d'un invariant sans RFC
 
 **Action si STOP:**
+
 1. Commit état actuel avec message `WIP: stopped - [raison]`
 2. Documenter raison dans issue GitHub
 3. Retourner en Phase appropriée (1, 2 ou 3)
@@ -395,7 +432,8 @@ git push origin MAIN
 ---
 
 **Status:** PHASE 3 COMPLETE
-```
+
+````
 
 **Registry Entry:**
 ```bash
@@ -411,9 +449,10 @@ echo '{
   "rollback_time": "< 10min",
   "status": "phase3-complete"
 }' >> registry/repo-events.jsonl
-```
+````
 
 **Validation Phase 3:**
+
 - ✅ Branche `feature/evolve-<topic>` créée
 - ✅ Plan d'implémentation documenté (étapes séquentielles)
 - ✅ Commits attendus formatés
@@ -449,6 +488,7 @@ echo '{
    - Format commit: `evolve([ring]): [action] - [raison liée à l'objectif]`
 
 **Format Commit Strict:**
+
 ```
 evolve(ui): add metrics panel component - enable real-time AI response tracking
 evolve(services): implement metrics collection service - persist tracking data
@@ -457,6 +497,7 @@ evolve(tests): add metrics service tests - validate data collection logic
 ```
 
 **Checklist pendant Implémentation:**
+
 - [ ] Chaque commit respecte le format
 - [ ] Aucun fichier hors scope IN
 - [ ] Aucun refactor non justifié
@@ -464,6 +505,7 @@ evolve(tests): add metrics service tests - validate data collection logic
 - [ ] Pas de console.log/debugging code
 
 **Si Problème Détecté:**
+
 - Appliquer critères STOP de Phase 3
 - Documenter dans issue GitHub
 - Ne pas continuer "en espérant que ça passe"
@@ -475,6 +517,7 @@ evolve(tests): add metrics service tests - validate data collection logic
 **Action:** Exécuter TOUS les tests et capturer outputs.
 
 **Commandes Obligatoires:**
+
 ```bash
 cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
 
@@ -516,11 +559,13 @@ fi
 ```
 
 **Fichier à créer:**
+
 ```
 reports/EVOLVE_05_TEST_RESULTS_<topic>.md
 ```
 
 **Contenu obligatoire:**
+
 ```markdown
 # RÉSULTATS TESTS — [TOPIC]
 
@@ -533,15 +578,15 @@ reports/EVOLVE_05_TEST_RESULTS_<topic>.md
 
 ## Résumé Exécutif
 
-| Test Suite | Status | Errors | Warnings | Notes |
-|------------|--------|--------|----------|-------|
-| TypeScript | [PASS/FAIL] | N | N | [...] |
-| ESLint | [PASS/FAIL] | N | N | [...] |
-| Prettier | [PASS/FAIL] | N | N | [...] |
-| Vitest | [PASS/FAIL] | N/N | N | [...] |
-| Verify | [PASS/FAIL/N/A] | N | N | [...] |
-| Cargo | [PASS/FAIL/N/A] | N | N | [...] |
-| E2E | [PASS/FAIL/N/A] | N | N | [...] |
+| Test Suite | Status          | Errors | Warnings | Notes |
+| ---------- | --------------- | ------ | -------- | ----- |
+| TypeScript | [PASS/FAIL]     | N      | N        | [...] |
+| ESLint     | [PASS/FAIL]     | N      | N        | [...] |
+| Prettier   | [PASS/FAIL]     | N      | N        | [...] |
+| Vitest     | [PASS/FAIL]     | N/N    | N        | [...] |
+| Verify     | [PASS/FAIL/N/A] | N      | N        | [...] |
+| Cargo      | [PASS/FAIL/N/A] | N      | N        | [...] |
+| E2E        | [PASS/FAIL/N/A] | N      | N        | [...] |
 
 **Global:** [ALL PASS / BLOCKED]
 
@@ -551,52 +596,66 @@ reports/EVOLVE_05_TEST_RESULTS_<topic>.md
 
 ### TypeScript Compilation
 ```
+
 [Copier output complet ou résumé]
+
 ```
-**Erreurs:** [liste ou "Aucune"]  
+**Erreurs:** [liste ou "Aucune"]
 **Status:** [PASS/FAIL]
 
 ### ESLint
 ```
+
 [Copier output complet ou résumé]
+
 ```
-**Erreurs:** [liste ou "Aucune"]  
+**Erreurs:** [liste ou "Aucune"]
 **Status:** [PASS/FAIL]
 
 ### Prettier
 ```
+
 [Copier output complet ou résumé]
+
 ```
-**Erreurs:** [liste ou "Aucune"]  
-**Warnings:** [liste ou "Aucun"]  
+**Erreurs:** [liste ou "Aucune"]
+**Warnings:** [liste ou "Aucun"]
 **Status:** [PASS/FAIL]
 
 ### Vitest
 ```
+
 [Copier output complet ou résumé]
+
 ```
-**Tests:** X passing / Y total  
-**Durée:** Xs  
+**Tests:** X passing / Y total
+**Durée:** Xs
 **Status:** [PASS/FAIL]
 
 ### Verify (if applicable)
 ```
+
 [Copier output]
+
 ```
 **Status:** [PASS/FAIL/N/A]
 
 ### Cargo Tests (if applicable)
 ```
+
 [Copier output]
+
 ```
-**Tests:** X passing / Y total  
+**Tests:** X passing / Y total
 **Status:** [PASS/FAIL/N/A]
 
 ### E2E Tests (if applicable)
 ```
+
 [Copier output]
+
 ```
-**Scenarios:** X passing / Y total  
+**Scenarios:** X passing / Y total
 **Status:** [PASS/FAIL/N/A]
 
 ---
@@ -642,6 +701,7 @@ reports/EVOLVE_05_TEST_RESULTS_<topic>.md
 ```
 
 **Registry Entry (si ALL PASS):**
+
 ```bash
 echo '{
   "id": "repo-evolve-NNN-phase5",
@@ -663,6 +723,7 @@ echo '{
 ```
 
 **Validation Phase 5:**
+
 - ✅ Toutes commandes exécutées
 - ✅ Outputs capturés
 - ✅ Rapport EVOLVE_05_TEST_RESULTS créé
@@ -672,6 +733,7 @@ echo '{
 - ✅ Registry entry phase5 ajoutée (si PASS)
 
 **⛔ STOP si BLOCKED:**
+
 - Ne pas passer en Phase 6
 - Retourner en phase appropriée
 - Documenter causes précises
@@ -685,6 +747,7 @@ echo '{
 #### 6.1 Repo Registry (OBLIGATOIRE)
 
 **Entry à créer:**
+
 ```bash
 echo '{
   "id": "repo-evolve-NNN",
@@ -739,6 +802,7 @@ echo '{
 #### 6.2 UI Registry (SI UI IMPACTÉE)
 
 **Entry à créer (si applicable):**
+
 ```bash
 echo '{
   "id": "ui-XXX",
@@ -770,6 +834,7 @@ echo '{
 ```
 
 **Validation Phase 6:**
+
 - ✅ Entry `repo-evolve-NNN` créée (tous champs obligatoires)
 - ✅ Entry `ui-XXX` créée (si UI impactée)
 - ✅ Rollback procedures documentées
@@ -786,12 +851,14 @@ echo '{
 **Action:** Produire rapport de validation et décider merge.
 
 **Fichier à créer:**
+
 ```
 reports/EVOLVE_07_VALIDATION_<topic>.md
 ```
 
 **Contenu obligatoire:**
-```markdown
+
+````markdown
 # VALIDATION FINALE — [TOPIC]
 
 **Date:** YYYY-MM-DD  
@@ -809,12 +876,12 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 
 ## 2. Changements Appliqués
 
-| Ring | Fichiers Modifiés | Nature Changement | Commits |
-|------|-------------------|-------------------|---------|
-| Types | [liste] | [add/modify/refactor] | [hashes] |
-| Engines | [liste] | [add/modify/refactor] | [hashes] |
-| Services | [liste] | [add/modify/refactor] | [hashes] |
-| UI | [liste] | [add/modify/refactor] | [hashes] |
+| Ring     | Fichiers Modifiés | Nature Changement     | Commits  |
+| -------- | ----------------- | --------------------- | -------- |
+| Types    | [liste]           | [add/modify/refactor] | [hashes] |
+| Engines  | [liste]           | [add/modify/refactor] | [hashes] |
+| Services | [liste]           | [add/modify/refactor] | [hashes] |
+| UI       | [liste]           | [add/modify/refactor] | [hashes] |
 
 **Total Fichiers:** N  
 **Total Commits:** N  
@@ -825,17 +892,18 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 
 ## 3. Résultats des Tests/CI
 
-| Test Suite | Before (MAIN) | After (branch) | Status | Delta |
-|------------|---------------|----------------|--------|-------|
-| TypeScript | 0 errors | 0 errors | ✅ PASS | = |
-| ESLint | 0 errors | 0 errors | ✅ PASS | = |
-| Prettier | 0 YAML errors | 0 YAML errors | ✅ PASS | = |
-| Vitest | X/X passing | Y/Y passing | ✅ PASS | +Z tests |
-| Verify | all passing | all passing | ✅ PASS | = |
-| Cargo | test: ok | test: ok | ✅ PASS | = |
-| E2E | X/X scenarios | Y/Y scenarios | ✅ PASS | +Z scenarios |
+| Test Suite | Before (MAIN) | After (branch) | Status  | Delta        |
+| ---------- | ------------- | -------------- | ------- | ------------ |
+| TypeScript | 0 errors      | 0 errors       | ✅ PASS | =            |
+| ESLint     | 0 errors      | 0 errors       | ✅ PASS | =            |
+| Prettier   | 0 YAML errors | 0 YAML errors  | ✅ PASS | =            |
+| Vitest     | X/X passing   | Y/Y passing    | ✅ PASS | +Z tests     |
+| Verify     | all passing   | all passing    | ✅ PASS | =            |
+| Cargo      | test: ok      | test: ok       | ✅ PASS | =            |
+| E2E        | X/X scenarios | Y/Y scenarios  | ✅ PASS | +Z scenarios |
 
 **CI Duration:**
+
 - Before: Xs
 - After: Xs
 - Delta: [+/-]X% (acceptable si < 20%)
@@ -848,7 +916,9 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 **Aucun risque résiduel identifié.**
 
 [Si risques présents:]
+
 ### Risque 1: [Description]
+
 - **Probabilité:** [LOW/MED/HIGH]
 - **Impact:** [LOW/MED/HIGH]
 - **Mitigation:** [Action préventive]
@@ -860,11 +930,13 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 ## 5. Registry Entries
 
 ### Repo Registry
+
 - **ID:** `repo-evolve-NNN`
 - **Lien:** [registry/repo-events.jsonl#line-X](../registry/repo-events.jsonl)
 - **Status:** evolution-validated
 
 ### UI Registry (if applicable)
+
 - **ID:** `ui-XXX`
 - **Lien:** [registry/ui-events.jsonl#line-Y](../registry/ui-events.jsonl)
 - **Status:** deployed-testing
@@ -888,6 +960,7 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 ## 7. Décision Finale
 
 **Analyse:**
+
 - Objectif atteint: [OUI/NON]
 - Valeur ajoutée démontrée: [OUI/NON]
 - Scope respecté: [OUI/NON]
@@ -903,6 +976,7 @@ reports/EVOLVE_07_VALIDATION_<topic>.md
 **Raison:** [Tous critères satisfaits, aucun risque bloquant]
 
 **Procédure de merge:**
+
 ```bash
 # Checkout MAIN
 git checkout MAIN
@@ -926,17 +1000,20 @@ git push origin MAIN
 # Optionnel: supprimer branche feature (conserver sur remote pour traçabilité)
 # git branch -d feature/evolve-<topic>
 ```
+````
 
 **OU**
 
 ### ❌ BLOCKED — Causes précises
 
 **Raisons du blocage:**
+
 1. [Raison 1 avec détail]
 2. [Raison 2 avec détail]
 3. [...]
 
 **Actions correctives:**
+
 1. [Action requise pour débloquer]
 2. [...]
 
@@ -947,7 +1024,8 @@ git push origin MAIN
 ---
 
 **Status:** [EVOLUTION VALIDÉE / BLOCKED]
-```
+
+````
 
 **Registry Entry Finale (si VALIDÉE):**
 ```bash
@@ -963,9 +1041,10 @@ echo '{
   "decision": "VALIDÉE",
   "status": "cycle-complete"
 }' >> registry/repo-events.jsonl
-```
+````
 
 **Validation Phase 7:**
+
 - ✅ Rapport EVOLVE_07_VALIDATION créé
 - ✅ Tous changements documentés (table Ring/Fichiers/Commits)
 - ✅ Résultats tests complets (table avant/après)
@@ -977,11 +1056,13 @@ echo '{
 - ✅ Registry entry phase7 ajoutée (si VALIDÉE)
 
 **Si VALIDÉE:**
+
 - Exécuter procédure merge `--no-ff`
 - Push MAIN
 - Cycle EVOLVE terminé
 
 **Si BLOCKED:**
+
 - Ne pas merger
 - Créer issues GitHub pour chaque cause
 - Documenter retour en Phase appropriée
@@ -996,26 +1077,31 @@ echo '{
 ## 🚫 INTERDICTIONS ABSOLUES
 
 ### ❌ Démarrer sans INPUTS remplis
+
 - Tous les 6 champs INPUTS doivent être texte complet
 - Pas de "TODO", pas de "TBD", pas de champs vides
 - Si incomplet: STOP immédiat, ne pas passer en Phase 1
 
 ### ❌ Toucher plusieurs Rings sans réduction de scope
+
 - Si matrice Phase 2 montre risque MED/HIGH sur >1 Ring: réduire scope
 - Ne pas se dire "ça va passer"
 - Préférer cycle plus petit validé que scope large bloqué
 
 ### ❌ Masquer un problème par un retry
+
 - Si test fail: investiguer cause, ne pas juste relancer
 - Si erreur TS/ESLint: corriger, ne pas ignorer
 - Si gate fail: comprendre pourquoi, ne pas skip
 
 ### ❌ Modifier sans registry
+
 - Aucun merge sans entry `repo-evolve-NNN` complète
 - Si UI impactée: entry `ui-XXX` obligatoire
 - Pas de "j'ajoute le registry après"
 
 ### ❌ Déclarer "OK" sans preuves
+
 - Toute validation nécessite rapport EVOLVE_05_TEST_RESULTS
 - Toute assertion nécessite log/output capturé
 - Pas de "ça marche chez moi" sans CI proof
@@ -1073,16 +1159,19 @@ CYCLE COMPLETE ✅
 ## 📚 CHECKLIST COMPLÈTE
 
 ### Pré-requis
+
 - [ ] 6 INPUTS remplis (texte complet, pas de TODO)
 - [ ] Protocol GOVERNANCE_EVOLUTION_PROTOCOL.md lu
 - [ ] État STABLE certifié vérifié
 
 ### Phase 1
+
 - [ ] Document EVOLVE_01_DEFINITION créé
 - [ ] Critères d'acceptation définis
 - [ ] Registry entry phase1 ajoutée
 
 ### Phase 2
+
 - [ ] Document EVOLVE_02_IMPACT_MATRIX créé
 - [ ] Matrice 4-Ring complète (aucune ligne vide)
 - [ ] Fichiers identifiés (chemins complets)
@@ -1091,6 +1180,7 @@ CYCLE COMPLETE ✅
 - [ ] Registry entry phase2 ajoutée
 
 ### Phase 3
+
 - [ ] Branche `feature/evolve-<topic>` créée
 - [ ] Document EVOLVE_03_PLAN créé
 - [ ] Stratégie implémentation documentée
@@ -1100,6 +1190,7 @@ CYCLE COMPLETE ✅
 - [ ] Registry entry phase3 ajoutée
 
 ### Phase 4
+
 - [ ] Commits atomiques appliqués (format strict)
 - [ ] Un Ring à la fois respecté
 - [ ] Aucun refactor gratuit
@@ -1107,6 +1198,7 @@ CYCLE COMPLETE ✅
 - [ ] Scope IN respecté
 
 ### Phase 5
+
 - [ ] Toutes commandes tests exécutées
 - [ ] Outputs capturés (logs)
 - [ ] Document EVOLVE_05_TEST_RESULTS créé
@@ -1116,12 +1208,14 @@ CYCLE COMPLETE ✅
 - [ ] Registry entry phase5 ajoutée (si PASS)
 
 ### Phase 6
+
 - [ ] Entry `repo-evolve-NNN` créée (complète)
 - [ ] Entry `ui-XXX` créée (si UI impactée)
 - [ ] Rollback documenté
 - [ ] Proofs attachées
 
 ### Phase 7
+
 - [ ] Document EVOLVE_07_VALIDATION créé
 - [ ] Changements appliqués documentés
 - [ ] Résultats tests documentés
@@ -1133,6 +1227,7 @@ CYCLE COMPLETE ✅
 - [ ] Registry entry phase7 ajoutée (si VALIDÉE)
 
 ### Merge (si VALIDÉE)
+
 - [ ] git merge --no-ff exécuté
 - [ ] Commit merge avec refs rapports
 - [ ] Push MAIN effectué
@@ -1140,9 +1235,9 @@ CYCLE COMPLETE ✅
 
 ---
 
-*EVOLVE Execution Guide vΩ.EVOLVE_EXEC*  
-*Créé: 2026-02-02*  
-*Version: vΩ.1*  
-*Status: ACTIF — Guide opérationnel pour cycles d'évolution contrôlée*
+_EVOLVE Execution Guide vΩ.EVOLVE_EXEC_  
+_Créé: 2026-02-02_  
+_Version: vΩ.1_  
+_Status: ACTIF — Guide opérationnel pour cycles d'évolution contrôlée_
 
 **FIN DU GUIDE**

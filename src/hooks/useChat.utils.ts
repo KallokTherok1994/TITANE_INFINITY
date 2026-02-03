@@ -73,7 +73,11 @@ export const normalizeMessages = (
   return messages
     .filter(m => m && typeof m === 'object')
     .map(m => ({
-      role: (m.role === 'user' ? 'user' : m.role === 'system' ? 'system' : 'assistant') as 'user' | 'assistant' | 'system',
+      role: (m.role === 'user'
+        ? 'user'
+        : m.role === 'system'
+          ? 'system'
+          : 'assistant') as 'user' | 'assistant' | 'system',
       content: String(m.content || ''),
       timestamp: m.timestamp || Date.now(),
     }))

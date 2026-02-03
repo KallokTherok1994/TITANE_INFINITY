@@ -33,10 +33,10 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
     );
 
     // Chercher toutes les navigations globales
-    const navElements = screen.queryAllByRole('navigation', { 
+    const navElements = screen.queryAllByRole('navigation', {
       name: /principale|navigation principale/i,
     });
-    
+
     expect(navElements).toHaveLength(1);
   });
 
@@ -90,12 +90,12 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
       </BrowserRouter>
     );
 
-    const tablist = screen.getByRole('tablist', { 
-      name: /sections principales titane/i 
+    const tablist = screen.getByRole('tablist', {
+      name: /sections principales titane/i,
     });
-    
+
     const styles = window.getComputedStyle(tablist);
-    
+
     // backdrop-filter should be 'none' or empty
     expect(styles.backdropFilter).toMatch(/^(none|)$/);
   });
@@ -109,7 +109,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);
-    
+
     // Extract first shadow offset (rough check)
     const shadowMatch = styles.boxShadow.match(/(\d+)px/);
     if (shadowMatch) {
@@ -127,7 +127,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
 
     const tablist = screen.getByRole('tablist');
     const styles = window.getComputedStyle(tablist);
-    
+
     expect(styles.position).not.toBe('sticky');
     expect(styles.position).not.toBe('fixed');
   });
@@ -156,9 +156,7 @@ describe('UI Navigation — Tabs Not Navbar-Like (Article 2)', () => {
 
     const result = validateLocalTabsStyles(invalidStyles);
     expect(result.isValid).toBe(false);
-    expect(result.violations).toContain(
-      expect.stringMatching(/backdrop-filter/)
-    );
+    expect(result.violations).toContain(expect.stringMatching(/backdrop-filter/));
   });
 });
 
@@ -214,7 +212,7 @@ describe('UI Navigation — Scroll Behavior (Article 3)', () => {
     });
 
     const report = checkLayoutCompliance();
-    
+
     expect(report.compliant).toBe(true);
     expect(report.criticalViolations).toBe(0);
   });
@@ -241,7 +239,7 @@ describe('UI Navigation — Layout Compliance', () => {
     });
 
     const report = checkLayoutCompliance();
-    
+
     expect(report).toHaveProperty('compliant');
     expect(report).toHaveProperty('criticalViolations');
     expect(report).toHaveProperty('warnings');
@@ -258,7 +256,7 @@ describe('UI Navigation — Layout Compliance', () => {
     });
 
     const report = checkLayoutCompliance();
-    
+
     // Should have warnings (not critical)
     expect(report.warnings).toBeGreaterThan(0);
   });

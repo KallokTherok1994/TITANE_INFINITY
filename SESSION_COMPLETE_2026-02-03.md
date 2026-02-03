@@ -22,6 +22,7 @@
 ### 2. Optimization Tools (CREATED)
 
 #### A. `analyze-bundle.sh` (NEW)
+
 - Analyse automatisée du bundle
 - Breakdown par type de fichier (JS/CSS/Assets)
 - Recommandations d'optimisation
@@ -29,6 +30,7 @@
 - Status: ✅ TESTED & WORKING
 
 #### B. `optimize-workspace.sh` (NEW)
+
 - Nettoyage automatisé du workspace
 - Cleanup `src-tauri/target/` → Libère 19 GB
 - Réinstallation `node_modules` propre (optionnel)
@@ -140,12 +142,12 @@ dist/               9.5 MB  ✅ Optimized
 
 ### Automated Tests
 
-| Test Suite | Status | Results |
-|------------|--------|---------|
-| **Chat UI Auto** | ✅ PASS | 7/7 tests |
+| Test Suite          | Status  | Results          |
+| ------------------- | ------- | ---------------- |
+| **Chat UI Auto**    | ✅ PASS | 7/7 tests        |
 | **Bundle Analysis** | ✅ PASS | All metrics good |
-| **TypeScript** | ✅ PASS | 0 errors |
-| **Rust Compile** | ✅ PASS | No errors |
+| **TypeScript**      | ✅ PASS | 0 errors         |
+| **Rust Compile**    | ✅ PASS | No errors        |
 
 ### Manual Testing (Pending)
 
@@ -215,20 +217,20 @@ bash test-chat-ui-auto.sh
 
 ### Load Times (Estimated)
 
-| Connection | Initial | Cached |
-|------------|---------|--------|
-| **Gigabit** | < 1s | < 100ms |
-| **4G LTE** | 2-3s | < 500ms |
-| **3G** | 8-10s | 1-2s |
+| Connection  | Initial | Cached  |
+| ----------- | ------- | ------- |
+| **Gigabit** | < 1s    | < 100ms |
+| **4G LTE**  | 2-3s    | < 500ms |
+| **3G**      | 8-10s   | 1-2s    |
 
 ### Build Times
 
-| Type | Duration | Status |
-|------|----------|--------|
-| **Dev build** | ~30s | ✅ Fast |
-| **Prod build** | ~2min | ✅ Acceptable |
-| **Rust debug** | ~45s | ✅ Incremental |
-| **Rust release** | ~5min | ✅ Optimized |
+| Type             | Duration | Status         |
+| ---------------- | -------- | -------------- |
+| **Dev build**    | ~30s     | ✅ Fast        |
+| **Prod build**   | ~2min    | ✅ Acceptable  |
+| **Rust debug**   | ~45s     | ✅ Incremental |
+| **Rust release** | ~5min    | ✅ Optimized   |
 
 ---
 

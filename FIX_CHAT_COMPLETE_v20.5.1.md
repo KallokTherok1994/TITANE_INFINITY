@@ -19,6 +19,7 @@ Le chat ne fonctionnait pas car :
 ## ✅ Corrections Appliquées
 
 ### 1. **conversationEngine.ts** (v20.5.1)
+
 ```typescript
 // ✨ AVANT (BLOQUAIT):
 const isTauriAvailable = !!(w.__TAURI__ || w.__TAURI_INTERNALS__);
@@ -37,16 +38,17 @@ const raw = await secureInvoke('conversation_generate', {...});
 ---
 
 ### 2. **tauriProtector.ts** (v20.5 - déjà appliqué)
+
 ```typescript
 } catch (error) {
   console.warn(`[TauriProtector] Command ${command} failed:`, error);
-  
+
   // ✨ v20.5: Special handling for conversation_generate
   if (command === 'conversation_generate') {
     try {
       const { callOllamaDirectly } = await import('./ollamaFallback');
       console.log('[TauriProtector] 🤖 Using Ollama fallback');
-      
+
       const result = await callOllamaDirectly({
         message: args.message,
         conversation_id: args.conversation_id || `fallback-${Date.now()}`,
@@ -65,6 +67,7 @@ const raw = await secureInvoke('conversation_generate', {...});
 ---
 
 ### 3. **ollamaFallback.ts** (NOUVEAU)
+
 - 92 lignes
 - HTTP POST direct vers http://127.0.0.1:11434/api/generate
 - Format réponse compatible backend TITANE∞
@@ -75,6 +78,7 @@ const raw = await secureInvoke('conversation_generate', {...});
 ## 🧪 Tests Exécutés
 
 ### Test Automatique 1: `test-chat-system.sh`
+
 ```bash
 1️⃣ ✅ Ollama is running on :11434
 2️⃣ ✅ TITANE∞ running (PID: 1458220)
@@ -86,6 +90,7 @@ const raw = await secureInvoke('conversation_generate', {...});
 ```
 
 ### Test Automatique 2: `test-chat-direct.mjs`
+
 ```bash
 Ollama Fallback: ✅ PASS
 Models List:     ✅ PASS
@@ -95,6 +100,7 @@ Multiple Msgs:   ✅ PASS (3/3)
 ```
 
 ### Test TypeScript
+
 ```bash
 $ pnpm exec tsc --noEmit
 [No errors]
@@ -154,6 +160,7 @@ tauriProtector.safeInvoke()
 ## ✅ Validation Finale
 
 ### Environnement
+
 - **OS:** Linux (TITANE-OS)
 - **Ollama:** v0.13.5, model llama3.1:latest (4.58GB)
 - **Tauri:** v2 (mode mock, PID 1458220)
@@ -161,6 +168,7 @@ tauriProtector.safeInvoke()
 - **Node:** Bundled in `.tools/node/current/bin`
 
 ### Performance
+
 - **Latency Ollama:** ~300-500ms (acceptable)
 - **Success Rate:** 100% (3/3 messages testés)
 - **Compilation:** 0 erreurs TypeScript
@@ -171,16 +179,19 @@ tauriProtector.safeInvoke()
 ## 📝 Prochaines Étapes
 
 ### Court Terme (Immédiat)
+
 1. ✅ **Tester dans l'UI réelle** - Ouvrir Chat tab et envoyer message
 2. ✅ **Vérifier console logs** - Chercher `[TauriProtector] 🤖 Using Ollama fallback`
 3. ⏳ **Commiter les changements** - `git add` + `git commit`
 
 ### Moyen Terme
+
 1. **Fixer les 12 erreurs Rust** pour activer mode `full` backend
 2. **Implémenter streaming** dans ollamaFallback.ts
 3. **Ajouter UI indicator** "Mode Fallback Ollama"
 
 ### Long Terme
+
 1. **Auto-switch intelligent** Tauri ↔ Ollama selon disponibilité
 2. **Performance monitoring** latency tracking
 3. **Retry logic** avec exponential backoff

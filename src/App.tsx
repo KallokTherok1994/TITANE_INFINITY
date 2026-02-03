@@ -880,7 +880,6 @@ const AppRouter: React.FC = () => {
         />
       }
     >
-
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
 

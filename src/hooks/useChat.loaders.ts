@@ -5,10 +5,7 @@
 
 // Chat Service Loader
 let _chatServicePromise: Promise<{
-  sendMessageLegacy: (
-    messages: any[],
-    config: any
-  ) => Promise<any>;
+  sendMessageLegacy: (messages: any[], config: any) => Promise<any>;
 }> | null = null;
 
 export const loadChatService = async () => {
@@ -76,7 +73,12 @@ export const loadUserPreferencesEngine = async () => {
 
 // Experience Tools Loader
 let _experienceToolsPromise: Promise<{
-  recordXPGain: (amount: number, source: any, description: string, metadata?: Record<string, unknown>) => Promise<any>;
+  recordXPGain: (
+    amount: number,
+    source: any,
+    description: string,
+    metadata?: Record<string, unknown>
+  ) => Promise<any>;
 }> | null = null;
 
 export const loadExperienceTools = async () => {
@@ -109,9 +111,11 @@ let _cameraIntegrationPromise: Promise<{
 
 export const loadCameraIntegration = async () => {
   if (!_cameraIntegrationPromise) {
-    _cameraIntegrationPromise = import('@/modules/camera/cameraChatIntegration').then(m => ({
-      captureAndAnalyze: m.handleCameraInChat,
-    }));
+    _cameraIntegrationPromise = import('@/modules/camera/cameraChatIntegration').then(
+      m => ({
+        captureAndAnalyze: m.handleCameraInChat,
+      })
+    );
   }
   return _cameraIntegrationPromise;
 };

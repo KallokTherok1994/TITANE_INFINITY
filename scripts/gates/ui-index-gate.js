@@ -59,12 +59,12 @@ function getModifiedFiles() {
     const staged = execSync('git diff --cached --name-only', { encoding: 'utf-8' })
       .split('\n')
       .filter(Boolean);
-    
+
     // Fichiers unstaged
     const unstaged = execSync('git diff --name-only', { encoding: 'utf-8' })
       .split('\n')
       .filter(Boolean);
-    
+
     return [...new Set([...staged, ...unstaged])];
   } catch (error) {
     console.warn('[GATE_UI_INDEX] Warning: git non disponible, skip check');
@@ -89,18 +89,20 @@ function parseUIRegistry() {
   if (!fs.existsSync(UI_REGISTRY_PATH)) {
     return [];
   }
-  
+
   const content = fs.readFileSync(UI_REGISTRY_PATH, 'utf-8');
   const lines = content.split('\n').filter(line => line.trim());
-  
-  return lines.map(line => {
-    try {
-      return JSON.parse(line);
-    } catch (error) {
-      console.warn(`[GATE_UI_INDEX] Warning: invalid JSON line: ${line}`);
-      return null;
-    }
-  }).filter(Boolean);
+
+  return lines
+    .map(line => {
+      try {
+        return JSON.parse(line);
+      } catch (error) {
+        console.warn(`[GATE_UI_INDEX] Warning: invalid JSON line: ${line}`);
+        return null;
+      }
+    })
+    .filter(Boolean);
 }
 
 /**
@@ -127,14 +129,14 @@ function validateEntry(entry) {
  */
 function filesAreCovered(modifiedFiles, entry) {
   if (!entry || !entry.files_changed) return false;
-  
+
   const uiFiles = modifiedFiles.filter(isUICriticalFile);
   if (uiFiles.length === 0) return true; // Aucun fichier UI = pas de check
-  
+
   // Tous les fichiers UI modifiés doivent être dans files_changed
-  return uiFiles.every(file => 
-    entry.files_changed.some(recorded => 
-      file.includes(recorded) || recorded.includes(file)
+  return uiFiles.every(file =>
+    entry.files_changed.some(
+      recorded => file.includes(recorded) || recorded.includes(file)
     )
   );
 }
@@ -147,30 +149,30 @@ function runGate() {
   console.log('╔══════════════════════════════════════════════════════════╗');
   console.log('║  GATE_UI_INDEX — UI Modifications Require Registry      ║');
   console.log('╚══════════════════════════════════════════════════════════╝\n');
-  
+
   // 1. Obtenir les fichiers modifiés
   const modifiedFiles = getModifiedFiles();
   const uiModifiedFiles = modifiedFiles.filter(isUICriticalFile);
-  
+
   console.log(`📂 Fichiers modifiés: ${modifiedFiles.length}`);
   console.log(`🎨 Fichiers UI critiques: ${uiModifiedFiles.length}\n`);
-  
+
   if (uiModifiedFiles.length === 0) {
     console.log('✅ PASS: Aucun fichier UI critique modifié\n');
     return { passed: true };
   }
-  
+
   console.log('Fichiers UI modifiés:');
   uiModifiedFiles.forEach(f => console.log(`  - ${f}`));
   console.log('');
-  
+
   // 2. Vérifier existence du registre
   if (!fs.existsSync(UI_REGISTRY_PATH)) {
     console.error(`❌ FAIL: Registre UI manquant: ${UI_REGISTRY_PATH}`);
     console.error('Créer le registre avec au moins une entry pour ce changement.\n');
     return { passed: false, reason: 'REGISTRY_MISSING' };
   }
-  
+
   // 3. Obtenir la dernière entry
   const lastEntry = getLastRegistryEntry();
   if (!lastEntry) {
@@ -178,9 +180,9 @@ function runGate() {
     console.error('Ajouter une entry pour documenter ce changement.\n');
     return { passed: false, reason: 'REGISTRY_EMPTY' };
   }
-  
+
   console.log(`📝 Dernière entry UI: ${lastEntry.id} (${lastEntry.ts})\n`);
-  
+
   // 4. Valider les champs requis
   const validation = validateEntry(lastEntry);
   if (!validation.valid) {
@@ -188,31 +190,34 @@ function runGate() {
     console.error(`Champs manquants: ${validation.missing.join(', ')}\n`);
     return { passed: false, reason: 'ENTRY_INCOMPLETE', missing: validation.missing };
   }
-  
+
   // 5. Vérifier que les fichiers modifiés sont couverts
   if (!filesAreCovered(modifiedFiles, lastEntry)) {
     console.error('❌ FAIL: Fichiers UI modifiés non documentés');
     console.error('Les fichiers suivants ne sont pas listés dans files_changed:');
-    const uncovered = uiModifiedFiles.filter(f => 
-      !lastEntry.files_changed.some(recorded => f.includes(recorded) || recorded.includes(f))
+    const uncovered = uiModifiedFiles.filter(
+      f =>
+        !lastEntry.files_changed.some(
+          recorded => f.includes(recorded) || recorded.includes(f)
+        )
     );
     uncovered.forEach(f => console.error(`  - ${f}`));
     console.error('\nAjouter une nouvelle entry ou mettre à jour la dernière.\n');
     return { passed: false, reason: 'FILES_NOT_COVERED', uncovered };
   }
-  
+
   // 6. Vérifier tests_run
   if (!lastEntry.tests_run || lastEntry.tests_run.length === 0) {
     console.warn('⚠️  WARNING: Aucun test documenté dans tests_run');
     console.warn('Recommandé: ajouter au moins un test de non-régression.\n');
   }
-  
+
   // 7. Vérifier rollback
   if (!lastEntry.rollback || lastEntry.rollback.trim() === '') {
     console.warn('⚠️  WARNING: Aucun rollback plan documenté');
     console.warn('Recommandé: spécifier comment annuler ce changement.\n');
   }
-  
+
   console.log('✅ PASS: Entry UI valide et à jour\n');
   console.log('Entry details:');
   console.log(`  ID: ${lastEntry.id}`);
@@ -222,7 +227,7 @@ function runGate() {
   console.log(`  Risk: ${lastEntry.risk_level}`);
   console.log(`  Status: ${lastEntry.status}`);
   console.log('');
-  
+
   return { passed: true, entry: lastEntry };
 }
 

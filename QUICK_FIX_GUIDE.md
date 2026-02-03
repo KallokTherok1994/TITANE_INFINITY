@@ -5,6 +5,7 @@
 Le message **"Mode navigateur: backend Tauri indisponible"** est dû à une mauvaise détection de Tauri au démarrage.
 
 **✅ Corrections effectuées:**
+
 - Amélioration de l'initialisation Tauri
 - Meilleure détection du contexte
 - Messages d'erreur plus clairs
@@ -53,6 +54,7 @@ pnpm run dev:tauri
 **Cause:** Vous avez ouvert l'app dans le **navigateur** au lieu de la **fenêtre native**
 
 **Solution:**
+
 1. Fermez l'onglet du navigateur
 2. Utilisez la fenêtre d'application qui doit s'ouvrir seule
 3. Testez le chat
@@ -62,6 +64,7 @@ pnpm run dev:tauri
 **Cause:** Ollama a timeout ou ne répond pas
 
 **Solution:**
+
 ```bash
 # Vérifier Ollama
 curl -sf http://127.0.0.1:11434/api/tags
@@ -92,15 +95,18 @@ Dans la console de la fenêtre TITANE∞ (F12):
 
 ```javascript
 // Doit retourner un objet (pas undefined)
-window.__TAURI__
+window.__TAURI__;
 
 // Test direct
-window.__TAURI__.core.invoke('conversation_generate', {
-  message: "Test",
-  conversation_id: "test-" + Date.now(),
-  mode: "default",
-  provider: "ollama"
-}).then(r => console.log('✅', r)).catch(e => console.error('❌', e.message))
+window.__TAURI__.core
+  .invoke('conversation_generate', {
+    message: 'Test',
+    conversation_id: 'test-' + Date.now(),
+    mode: 'default',
+    provider: 'ollama',
+  })
+  .then(r => console.log('✅', r))
+  .catch(e => console.error('❌', e.message));
 ```
 
 ---
@@ -108,6 +114,7 @@ window.__TAURI__.core.invoke('conversation_generate', {
 ## 🎉 Résultat Attendu
 
 Après ces étapes, le chat doit fonctionner:
+
 - Message envoyé → Ollama répond
 - Pas d'erreur "backend Tauri indisponible"
 - Réponse de l'IA affichée

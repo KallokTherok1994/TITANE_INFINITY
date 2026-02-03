@@ -1,14 +1,11 @@
 /**
  * TITANE∞ v22.0 — MetricsDisplay Component
- * Real-time dashboard metrics with Chart.js visualization
+ * Real-time dashboard metrics (CSS-only version, Chart.js removed)
  */
 
 import { secureInvoke } from '@/lib/security';
-import React, { useState, useEffect, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import './MetricsDisplay.css';
-
-// Note: Chart.js lazy-loading removed (dependencies removed for optimization)
-// Using simple metric display instead
 
 interface DashboardMetrics {
   health_score: number;
@@ -45,12 +42,6 @@ export const MetricsDisplay: React.FC = () => {
     latency: [],
   });
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [chartReady, setChartReady] = useState(false);
-
-  // YOLO OPT: Register Chart.js au montage
-  useEffect(() => {
-    registerChartJS().then(() => setChartReady(true));
-  }, []);
 
   // Fetch metrics
   const fetchMetrics = async () => {
@@ -100,72 +91,30 @@ export const MetricsDisplay: React.FC = () => {
     return '#10b981';
   };
 
-  // Chart data for CPU
-  const cpuChartData = {
-    labels: timeSeries.labels,
-    datasets: [
-      {
-        label: 'CPU Usage (%)',
-        data: timeSeries.cpu,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  // Chart data for RAM
-  const ramChartData = {
-    labels: timeSeries.labels,
-    datasets: [
-      {
-        label: 'RAM Usage (MB)',
-        data: timeSeries.ram,
-        borderColor: '#8b5cf6',
-        backgroundColor: 'rgba(139, 92, 246, 0.1)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  // Chart data for Latency
-  const latencyChartData = {
-    labels: timeSeries.labels,
-    datasets: [
-      {
-        label: 'Latency (ms)',
-        data: timeSeries.latency,
-        borderColor: '#10b981',
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-        tension: 0.4,
-      },
-    ],
-  };
-
-  // Chart options
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false,
-      },
-    },
-    scales: {
-      x: {
-        display: false,
-      },
-      y: {
-        beginAtZero: true,
-        grid: {
-          color: 'rgba(255, 255, 255, 0.1)',
-        },
-        ticks: {
-          color: 'rgba(255, 255, 255, 0.7)',
-        },
-      },
-    },
-  };
+  // Compute averages
+  const avgCpu = useMemo(
+    () =>
+      timeSeries.cpu.length
+        ? Math.round(timeSeries.cpu.reduce((a, b) => a + b, 0) / timeSeries.cpu.length)
+        : 0,
+    [timeSeries.cpu]
+  );
+  const avgRam = useMemo(
+    () =>
+      timeSeries.ram.length
+        ? Math.round(timeSeries.ram.reduce((a, b) => a + b, 0) / timeSeries.ram.length)
+        : 0,
+    [timeSeries.ram]
+  );
+  const avgLatency = useMemo(
+    () =>
+      timeSeries.latency.length
+        ? Math.round(
+            timeSeries.latency.reduce((a, b) => a + b, 0) / timeSeries.latency.length
+          )
+        : 0,
+    [timeSeries.latency]
+  );
 
   // Format uptime
   const formatUptime = (seconds: number): string => {
@@ -273,32 +222,52 @@ export const MetricsDisplay: React.FC = () => {
           </div>
 
           {/* Time-Series Charts */}
-          {timeSeries.labels.length > 0 && chartReady && (
+          {timeSeries.labels.length > 0 && (
             <div className="metrics-charts">
-              <Suspense
-                fallback={<div className="chart-loading">Chargement graphiques...</div>}
-              >
-                <div className="chart-container">
-                  <h4>CPU Usage Over Time</h4>
-                  <div className="chart-wrapper">
-                    <LazyLineChart data={cpuChartData} options={chartOptions} />
-                  </div>
+              {/* CPU Usage Chart */}
+              <div className="chart-container">
+                <h4>CPU Usage Over Time (avg: {avgCpu}%)</h4>
+                <div className="chart-wrapper css-chart">
+                  {timeSeries.cpu.slice(-10).map((value, i) => (
+                    <div
+                      key={i}
+                      className="chart-bar cpu"
+                      style={{ height: `${Math.max(10, value)}%` }}
+                      title={`${timeSeries.labels[timeSeries.labels.length - 10 + i]}: ${value}%`}
+                    />
+                  ))}
                 </div>
+              </div>
 
-                <div className="chart-container">
-                  <h4>RAM Usage Over Time</h4>
-                  <div className="chart-wrapper">
-                    <LazyLineChart data={ramChartData} options={chartOptions} />
-                  </div>
+              {/* RAM Usage Chart */}
+              <div className="chart-container">
+                <h4>RAM Usage Over Time (avg: {avgRam}MB)</h4>
+                <div className="chart-wrapper css-chart">
+                  {timeSeries.ram.slice(-10).map((value, i) => (
+                    <div
+                      key={i}
+                      className="chart-bar ram"
+                      style={{ height: `${Math.max(10, (value / 4096) * 100)}%` }}
+                      title={`${timeSeries.labels[timeSeries.labels.length - 10 + i]}: ${value}MB`}
+                    />
+                  ))}
                 </div>
+              </div>
 
-                <div className="chart-container">
-                  <h4>Latency Over Time</h4>
-                  <div className="chart-wrapper">
-                    <LazyLineChart data={latencyChartData} options={chartOptions} />
-                  </div>
+              {/* Latency Chart */}
+              <div className="chart-container">
+                <h4>Latency Over Time (avg: {avgLatency}ms)</h4>
+                <div className="chart-wrapper css-chart">
+                  {timeSeries.latency.slice(-10).map((value, i) => (
+                    <div
+                      key={i}
+                      className="chart-bar latency"
+                      style={{ height: `${Math.max(10, (value / 200) * 100)}%` }}
+                      title={`${timeSeries.labels[timeSeries.labels.length - 10 + i]}: ${value}ms`}
+                    />
+                  ))}
                 </div>
-              </Suspense>
+              </div>
             </div>
           )}
         </>

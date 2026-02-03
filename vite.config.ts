@@ -204,12 +204,12 @@ export default defineConfig({
     // ✨ v27.1: CONSOLE OPTIMIZATION - Strip console calls in production
     terserOptions: {
       compress: {
-        drop_console: true,      // Remove console.* calls
-        drop_debugger: true,      // Remove debugger statements
+        drop_console: true, // Remove console.* calls
+        drop_debugger: true, // Remove debugger statements
         pure_funcs: ['console.log', 'console.debug', 'console.info'],
       },
       format: {
-        comments: false,          // Remove comments
+        comments: false, // Remove comments
       },
     },
 
@@ -312,7 +312,11 @@ export default defineConfig({
               return 'charts';
             }
             // Plotly and visualization libraries (heavy)
-            if (id.includes('plotly') || id.includes('echarts') || id.includes('highcharts')) {
+            if (
+              id.includes('plotly') ||
+              id.includes('echarts') ||
+              id.includes('highcharts')
+            ) {
               return 'charts-heavy';
             }
             // Moment.js and date libraries (heavy)

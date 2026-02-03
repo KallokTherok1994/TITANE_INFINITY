@@ -7,23 +7,13 @@ import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
 
-const EXCLUDE_DIRS = [
-  '__tests__',
-  'tests',
-  'test',
-  'legacy',
-  'docs',
-  'scripts',
-];
+const EXCLUDE_DIRS = ['__tests__', 'tests', 'test', 'legacy', 'docs', 'scripts'];
 
-const EXCLUDE_FILES = [
-  'src/core/commands/TAURI_COMMANDS.ts',
-  'src/lib/tauriCommands.ts',
-];
+const EXCLUDE_FILES = ['src/core/commands/TAURI_COMMANDS.ts', 'src/lib/tauriCommands.ts'];
 
 const FORBIDDEN_PATTERNS = [
   /invoke\(['"]chat_send_message['"]/,
-  /TAURI_COMMANDS\.CHAT_SEND_MESSAGE/, 
+  /TAURI_COMMANDS\.CHAT_SEND_MESSAGE/,
 ];
 
 describe('🔒 Compliance — No legacy chat_send_message in runtime', () => {

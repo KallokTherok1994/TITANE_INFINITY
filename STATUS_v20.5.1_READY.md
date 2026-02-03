@@ -14,15 +14,15 @@ Le système de chat TITANE∞ v20.5.1 avec **Ollama fallback** est opérationnel
 
 ## ✅ Tests Automatiques (7/7 Passés)
 
-| Test | Status | Détails |
-|------|--------|---------|
-| **1. Ollama** | ✅ PASS | Port 11434, modèle llama3.1:latest (4.58GB) |
-| **2. TITANE∞** | ✅ PASS | PID 1464576, Uptime 2h03m, Mem 233MB |
-| **3. TypeScript** | ✅ PASS | 0 erreurs de compilation |
-| **4. Fichiers Chat** | ✅ PASS | ollamaFallback.ts, tauriProtector.ts, conversationEngine.ts |
-| **5. Génération Ollama** | ✅ PASS | Réponse HTTP fonctionnelle |
-| **6. Logs** | ✅ PASS | Logs propres (erreurs normales de dev) |
-| **7. Architecture** | ✅ PASS | Fallback correctement intégré |
+| Test                     | Status  | Détails                                                     |
+| ------------------------ | ------- | ----------------------------------------------------------- |
+| **1. Ollama**            | ✅ PASS | Port 11434, modèle llama3.1:latest (4.58GB)                 |
+| **2. TITANE∞**           | ✅ PASS | PID 1464576, Uptime 2h03m, Mem 233MB                        |
+| **3. TypeScript**        | ✅ PASS | 0 erreurs de compilation                                    |
+| **4. Fichiers Chat**     | ✅ PASS | ollamaFallback.ts, tauriProtector.ts, conversationEngine.ts |
+| **5. Génération Ollama** | ✅ PASS | Réponse HTTP fonctionnelle                                  |
+| **6. Logs**              | ✅ PASS | Logs propres (erreurs normales de dev)                      |
+| **7. Architecture**      | ✅ PASS | Fallback correctement intégré                               |
 
 ---
 
@@ -80,17 +80,20 @@ Le système de chat TITANE∞ v20.5.1 avec **Ollama fallback** est opérationnel
 ## 📦 Composants Modifiés (v20.5.1)
 
 ### 1. **src/utils/ollamaFallback.ts** (NOUVEAU - 92 lignes)
+
 - **Fonction:** `callOllamaDirectly(request: OllamaRequest)`
 - **Rôle:** HTTP POST direct vers Ollama en cas d'échec Tauri
 - **Endpoint:** `http://127.0.0.1:11434/api/generate`
 - **Format:** Compatible avec backend TITANE∞
 
 ### 2. **src/utils/tauriProtector.ts** (MODIFIÉ - +18 lignes)
+
 - **Section:** catch block de `secureInvoke()`
 - **Ajout:** Détection `conversation_generate` + dynamic import
 - **Log:** `[TauriProtector] 🤖 Using Ollama fallback`
 
 ### 3. **src/services/conversationEngine.ts** (MODIFIÉ - -9 lignes)
+
 - **Suppression:** Blocking check `if (!isTauriAvailable) throw Error`
 - **Raison:** Empêchait le fallback de s'activer
 - **Nouveau:** Délégation à TauriProtector sans vérification préalable
@@ -100,11 +103,13 @@ Le système de chat TITANE∞ v20.5.1 avec **Ollama fallback** est opérationnel
 ## 🧪 Scripts de Test
 
 ### Test Automatique Complet
+
 ```bash
 bash test-chat-ui-auto.sh
 ```
 
 ### Test HTTP Direct
+
 ```bash
 curl -s http://127.0.0.1:11434/api/generate \
   -d '{"model":"llama3.1:latest","prompt":"Test","stream":false}' \
@@ -112,6 +117,7 @@ curl -s http://127.0.0.1:11434/api/generate \
 ```
 
 ### Test Suite Node.js
+
 ```bash
 node test-chat-direct.mjs
 ```
@@ -142,15 +148,15 @@ node test-chat-direct.mjs
 
 ## 🔧 Configuration Système
 
-| Composant | Version | Status |
-|-----------|---------|--------|
-| **TITANE∞** | v20.5.1 | ✅ Running |
-| **Ollama** | v0.13.5 | ✅ Active |
-| **Model** | llama3.1:latest | ✅ Loaded (4.58GB) |
-| **Node.js** | bundled | ✅ OK |
-| **Rust** | stable | ✅ OK |
-| **Tauri** | v2 (mock mode) | ✅ OK |
-| **TypeScript** | latest | ✅ 0 errors |
+| Composant      | Version         | Status             |
+| -------------- | --------------- | ------------------ |
+| **TITANE∞**    | v20.5.1         | ✅ Running         |
+| **Ollama**     | v0.13.5         | ✅ Active          |
+| **Model**      | llama3.1:latest | ✅ Loaded (4.58GB) |
+| **Node.js**    | bundled         | ✅ OK              |
+| **Rust**       | stable          | ✅ OK              |
+| **Tauri**      | v2 (mock mode)  | ✅ OK              |
+| **TypeScript** | latest          | ✅ 0 errors        |
 
 ---
 
@@ -170,16 +176,19 @@ node test-chat-direct.mjs
 ## 🚀 Prochaines Étapes (Post-Validation)
 
 ### Priorité Haute
+
 1. ✅ **Validation manuelle Kevin** (EN COURS)
 2. 🔄 Fixer 12 erreurs Rust → Activer full backend
 3. 🎨 Nettoyer 57 warnings CSS (cosmétiques)
 
 ### Priorité Moyenne
+
 4. 📦 Optimiser bundle size
 5. ⚡ Profiler performances
 6. 🧪 Ajouter tests E2E Playwright
 
 ### Priorité Basse
+
 7. 🎨 CSS warnings Tailwind (non-bloquants)
 8. 📝 Documentation utilisateur finale
 
@@ -190,6 +199,7 @@ node test-chat-direct.mjs
 ### Pourquoi le fallback fonctionne maintenant ?
 
 **Avant v20.5:**
+
 ```typescript
 // conversationEngine.ts (BLOQUAIT)
 if (!isTauriAvailable) {
@@ -199,6 +209,7 @@ if (!isTauriAvailable) {
 ```
 
 **Après v20.5.1:**
+
 ```typescript
 // conversationEngine.ts (DÉLÈGUE)
 // ✨ Ne pas bloquer - laisser TauriProtector gérer
@@ -207,11 +218,13 @@ const raw = await secureInvoke('conversation_generate', {...});
 ```
 
 ### Latence Observée
+
 - **Ollama HTTP:** 300-500ms (moyenne 400ms)
 - **Backend Tauri (full):** Non testé (mode mock actif)
 - **Acceptable:** < 1000ms pour UX fluide
 
 ### Sécurité
+
 - ✅ Aucun secret exposé
 - ✅ Ollama local uniquement (127.0.0.1:11434)
 - ✅ Pas de données envoyées hors machine

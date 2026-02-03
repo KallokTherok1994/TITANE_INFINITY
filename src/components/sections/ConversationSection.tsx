@@ -291,13 +291,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     [isLoading, sendMessage, thinking]
   );
 
-  const handleSuggestionClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      const value = e.currentTarget.dataset.value;
-      if (value) setInputValue(value);
-    },
-    []
-  );
+  const handleSuggestionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const value = e.currentTarget.dataset.value;
+    if (value) setInputValue(value);
+  }, []);
 
   // ═══ COMPUTED VALUES ═══
   const conversationModes = useMemo(() => {

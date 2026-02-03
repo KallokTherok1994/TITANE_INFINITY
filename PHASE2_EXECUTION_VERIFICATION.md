@@ -75,7 +75,7 @@ Le script demande:
 
 - **2.1 Normal Message** — Réponse reçue
 - **2.2 Empty Message** — Rejeté gracieusement
-- **2.3 Whitespace** — "       " → rejeté
+- **2.3 Whitespace** — " " → rejeté
 - **2.4 Rapid Burst** — 5+ messages rapides traités
 - **2.5 Concurrent** — Messages simultanés sûrs
 - **2.6 Long Message** — 500+ chars traités
@@ -126,19 +126,19 @@ Mesurer latence (sec) pour ≥3 messages.
 - **E.4 Boundary** — Max inputs
 - **E.5 Stress** — High load
 
-*Exécuter si temps disponible.*
+_Exécuter si temps disponible._
 
 ---
 
 ## 📊 SCORING
 
-| Segment | Tests | Threshold | Required |
-|---------|-------|-----------|----------|
-| A | 7 | VALID | ≥6 (86%) |
-| B | 9 | PASS | ≥8 (89%) |
-| C | 5 | PASS | ≥4 (80%) |
-| D | 6 | PASS | ≥5 (83%) |
-| E | 5 | PASS | ≥4 (80%) [optionnel] |
+| Segment | Tests | Threshold | Required             |
+| ------- | ----- | --------- | -------------------- |
+| A       | 7     | VALID     | ≥6 (86%)             |
+| B       | 9     | PASS      | ≥8 (89%)             |
+| C       | 5     | PASS      | ≥4 (80%)             |
+| D       | 6     | PASS      | ≥5 (83%)             |
+| E       | 5     | PASS      | ≥4 (80%) [optionnel] |
 
 ---
 
@@ -147,7 +147,7 @@ Mesurer latence (sec) pour ≥3 messages.
 ❌ **Silent failure** détecté (0+ = FAIL)  
 ❌ **Spinner/hang** >30s sans erreur visible  
 ❌ **Corruption** (duplication, perte, ordre cassé)  
-❌ **Tauri absent** (window.__TAURI__ undefined)  
+❌ **Tauri absent** (window.**TAURI** undefined)  
 ❌ **IPC non autorisé** silencieusement
 
 ---
@@ -167,12 +167,13 @@ Mesurer latence (sec) pour ≥3 messages.
 Dans la Console, exécuter (après test):
 
 ```javascript
-__PHASE2_SHOW_SUMMARY()
-__PHASE2_SILENT_FAILURES()
-__PHASE2_EXPORT_LOGS()  // génère JSON
+__PHASE2_SHOW_SUMMARY();
+__PHASE2_SILENT_FAILURES();
+__PHASE2_EXPORT_LOGS(); // génère JSON
 ```
 
 Capturer:
+
 - Screenshots des erreurs (si présentes)
 - Extraits console (copier-coller) pour erreurs critiques
 
@@ -181,9 +182,11 @@ Capturer:
 ## 📄 LIVRABLES FINAUX (AUTO-GÉNÉRÉS)
 
 ### 1. Rapport Markdown
+
 **Fichier:** `reports/phase2/REPORT_PHASE2_VERIFICATION.md`
 
 Contient:
+
 - Contexte + version + date
 - Résultats par segment (A→D)
 - Liste des issues (ID, repro, expected vs actual, logs, impact, priorité)
@@ -191,9 +194,11 @@ Contient:
 - Next actions
 
 ### 2. JSON Synthèse
+
 **Fichier:** `reports/phase2/phase2-results-summary.json`
 
 Champs:
+
 - `date`, `commit`, `env` (OS, Node, pnpm)
 - `scores` (A, B, C, D, E)
 - `silentFailuresCount`
@@ -227,4 +232,4 @@ node /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/phase2/phase2-exec
 
 **Start now:** `node reports/phase2/phase2-executor.js`
 
-*vΩ.P2.EXEC — Auditeur Mode — 2026-02-02*
+_vΩ.P2.EXEC — Auditeur Mode — 2026-02-02_
