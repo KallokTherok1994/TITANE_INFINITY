@@ -2,7 +2,7 @@
 
 exports[`Alert Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="rounded-lg border p-4 bg-warning-100 border-warning-500/30 text-warning-700 "
+  class="rounded-lg border p-4 bg-warning-100 border-warning-500/30 text-warning-700  "
   role="alert"
 >
   Snapshot test
