@@ -267,8 +267,9 @@ const AppRouter: React.FC = () => {
   useZoomControl();
 
   // ✨ v19.5.2 - User Onboarding State
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Assume complete until proven otherwise
-  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(true);
+  // 🔧 PROD-BOOT FIX: Default to complete=true + checking=false to prevent loader hang
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true);
+  const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
   // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
   useEffect(() => {
