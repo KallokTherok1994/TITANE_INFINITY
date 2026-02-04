@@ -167,7 +167,7 @@ export async function processMessage(
     system_prompt: undefined,
   })) as OmegaGenerateResponse;
 
-  let content = typeof raw?.content === 'string' ? raw.content : '';
+  const content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {
     console.error('[conversationEngine] ❌ AI returned empty content');
     console.info('[conversationEngine] Raw response:', raw);
