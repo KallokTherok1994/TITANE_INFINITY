@@ -564,9 +564,25 @@ const handleTauriInvoke = async (
       };
     case 'get_dashboard_metrics':
       return {
-        cpu: { value: 12, history: [10, 11, 12] },
-        memory: { value: 256, history: [240, 248, 256] },
-        fps: { value: 60, history: [58, 59, 60] },
+        error_count: 0,
+        warning_count: 0,
+        total_logs: 0,
+        active_cores: 0,
+        system_health: 1,
+      };
+    case 'get_admin_vitals':
+      return {
+        cpu_process: 0,
+        cpu_global: 0,
+        ram_process: 0,
+        ram_process_percent: 0,
+        ram_system_used: 0,
+        ram_system_total: 0,
+        io_read_rate: 0,
+        io_write_rate: 0,
+        tauri_latency: 0,
+        threads_active: 0,
+        uptime: 0,
       };
     case 'qa_run_all':
       return {
@@ -588,7 +604,7 @@ const handleTauriInvoke = async (
       return { success: true, level: 0.5, devices: [] };
     default:
       console.warn(`[vitest] No mock handler for command "${command}"`);
-      return undefined;
+      return {};
   }
 };
 
