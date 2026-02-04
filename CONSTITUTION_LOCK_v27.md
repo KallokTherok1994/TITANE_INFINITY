@@ -23,12 +23,14 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 ### 2.1 Architecture Fondamentale
 
 **Local-First Absolu**:
+
 - ✅ AUCUNE dépendance réseau obligatoire pour fonctionnement nominal
 - ✅ Stockage SQLite local (runtime/memory/titanememory.db)
 - ✅ Pas de cloud/remote/API externe dans le core
 - ⚠️ Interdiction: Ajouter des appels HTTP/WebSocket dans le Ring 1-2
 
 **Tauri-Only Strict**:
+
 - ✅ Application desktop Tauri 2.x
 - ✅ AUCUN serveur web standalone/proxy/tunnel permanent
 - ✅ Pas de mode "run as server"
@@ -36,6 +38,7 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 - ✅ Référence: verify:final100 → verify:tauri-only (0 erreurs)
 
 **4-Ring Architecture**:
+
 - **Ring 1 (Kernel)**: IPC, security boundary, event bus, state machine
 - **Ring 2 (Core)**: FusionEngine, telemetry, memory, metrics
 - **Ring 3 (Surface)**: UI components, layouts, routing
@@ -45,16 +48,19 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 ### 2.2 Sécurité & Gouvernance
 
 **Allowlist Stability**:
+
 - ✅ Tauri allowlist minimale (IPC commands déclarés)
 - ✅ Pas d'élargissement implicite (ex: `allow all`)
 - ⚠️ Interdiction: Ajouter permissions sans registry entry + justification
 
 **Content Security Policy**:
+
 - ✅ CSP strict (inline-script limité, eval interdit)
 - ✅ Tauri CSP header automatique
 - ⚠️ Interdiction: Affaiblir CSP sans audit sécurité
 
 **Registry Append-Only**:
+
 - ✅ registry/repo-events.jsonl, registry/ui-events.jsonl
 - ✅ AUCUNE modification (delete/edit) d'entries existantes
 - ✅ Append-only strict pour toute nouvelle entry
@@ -63,12 +69,14 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 ### 2.3 Validation & CI
 
 **verify:final100 Deterministic**:
+
 - ✅ Commande: `pnpm run check && pnpm run lint && pnpm run format:check && pnpm run verify:tauri-only`
 - ✅ Objectif: Alternative déterministe au full test suite (timeout issues)
 - ✅ Durée: ~60s (vs 5+ min avec timeouts)
 - ⚠️ Interdiction: Supprimer verify:final100 OU affaiblir ses composants
 
 **Zero Test Regressions**:
+
 - ✅ 47 passing + 27 skips documentés = 0 failures
 - ✅ Tout nouveau skip DOIT avoir:
   - Registry entry (category: tests)
@@ -78,17 +86,20 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 - ⚠️ Interdiction: `.skip()` sans documentation + registry
 
 **Cargo Test Baseline**:
+
 - ✅ Rust backend: 0 failed, 0 passed, 14 ignored (doc-tests)
 - ⚠️ Interdiction: Accepter des failures Rust en CI
 
 ### 2.4 Scripts Interdits
 
 **Zero Forbidden Scripts Increase**:
+
 - ✅ Liste actuelle gelée (deployment, tunnels, mega-scripts)
 - ✅ Déjà présent: interdiction déploiement sans GO Kevin
 - ⚠️ Interdiction: Ajouter nouveaux scripts auto-deploy/auto-build/auto-publish
 
 **UI Registry Obligatoire**:
+
 - ✅ GATE_UI_INDEX: Toute modif UI → entry dans registry/ui-events.jsonl
 - ✅ Champs obligatoires: id, ts, category, scope, change_type, summary, reason, files_changed, tests_run, proofs, risk_level, rollback, status
 - ⚠️ Interdiction: Modifier UI sans entry AVANT validation
@@ -111,7 +122,7 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 **Commande**: `pnpm run lint` (eslint src/**)  
 **Log**: `reports/final100/_logs/BA_lint_freeze.txt`  
 **Résultat**: EXIT_CODE 0, 0 violations  
-**Hash Log**: `sha256sum reports/final100/_logs/BA_lint_freeze.txt`
+**Hash Log\*\*: `sha256sum reports/final100/_logs/BA_lint_freeze.txt`
 
 ### 3.3 Prettier
 
@@ -172,11 +183,12 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 **File**: `src/__tests__/components/ui/Tabs.test.tsx`  
 **Skip Count**: 2  
 **Tests**: Arrow key navigation + snapshot  
-**Justification**:  
-- Keyboard: fireEvent limitation architecturale (cannot trigger component handlers)  
+**Justification**:
+
+- Keyboard: fireEvent limitation architecturale (cannot trigger component handlers)
 - Snapshot: Outdated structure  
-**Status**: ACCEPTED  
-**Alternative**: E2E tests avec vrais événements navigateur (Playwright)
+  **Status**: ACCEPTED  
+  **Alternative**: E2E tests avec vrais événements navigateur (Playwright)
 
 ---
 
@@ -201,6 +213,7 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 3. **Kevin Validation**: Approval écrit explicite requis
 
 4. **Registry Governance Entry**: Ajouter à `registry/repo-events.jsonl`:
+
    ```json
    {
      "id": "repo-constitution-mod-XXX",
@@ -225,6 +238,7 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
    - Référence à RFC
 
 **Interdictions Absolues**:
+
 - ❌ Modifier CONSTITUTION_LOCK_v27.md directement (immuable après tag)
 - ❌ Bypass validation Kevin
 - ❌ Modifier registry entries existantes (append-only strict)
@@ -236,6 +250,7 @@ Cette baseline représente l'état **FINAL100 — READY** gelé après convergen
 ## 6. COMPLIANCE VALIDATION
 
 **Commande de Vérification**:
+
 ```bash
 # Compliance check (à exécuter régulièrement)
 pnpm run verify:final100 && \
@@ -245,6 +260,7 @@ echo "❌ Constitution VIOLATION — see logs"
 ```
 
 **Dérive Détectée → Actions**:
+
 1. Identifier commit introduisant dérive
 2. Créer issue "DÉRIVE CONSTITUTIONNELLE DÉTECTÉE"
 3. Rollback immédiat SI production
@@ -268,18 +284,21 @@ echo "❌ Constitution VIOLATION — see logs"
 ## 8. SIGNATURE CONSTITUTIONNELLE
 
 **Hash Repository**:
+
 ```bash
 git rev-parse HEAD
 # Expected: 2d48b9de7f1e3c2a8b4d5e6f7a8b9c0d1e2f3a4b (MAIN)
 ```
 
 **Hash Preuves**:
+
 ```bash
 sha256sum reports/final100/_logs/BA_*_freeze.txt
 # Génère 5 hashes (check, lint, format, verify, cargo)
 ```
 
 **Tag Git**:
+
 ```
 v27.0.0-CONSTITUTION
 Annotation: "TITANE∞ Constitution — FINAL100 READY (sealed)"
