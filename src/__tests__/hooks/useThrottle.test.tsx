@@ -11,6 +11,7 @@ describe('useThrottle Hook', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     vi.useFakeTimers();
+    vi.setSystemTime(0);
   });
 
   afterEach(() => {
@@ -34,17 +35,25 @@ describe('useThrottle Hook', () => {
       expect(result.current).toBe('first');
 
       rerender({ value: 'second', delay: 500 });
-      expect(result.current).toBe('first'); // Still throttled
+      expect(result.current).toBe('first');
 
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
+      expect(result.current).toBe('second');
+
       rerender({ value: 'third', delay: 500 });
-      expect(result.current).toBe('third'); // Updated after throttle period
+      expect(result.current).toBe('second');
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(result.current).toBe('third');
     });
 
-    it('should update immediately on first call', () => {
+    it('should keep initial value before interval elapses', () => {
       const { result, rerender } = renderHook(
         ({ value, delay }) => useThrottle(value, delay),
         { initialProps: { value: 'first', delay: 500 } }
@@ -53,14 +62,12 @@ describe('useThrottle Hook', () => {
       expect(result.current).toBe('first');
 
       rerender({ value: 'second', delay: 500 });
-
-      // First update should be immediate
       expect(result.current).toBe('first');
     });
   });
 
   describe('Multiple Updates', () => {
-    it('should ignore rapid updates', () => {
+    it('should apply latest value after interval', () => {
       const { result, rerender } = renderHook(
         ({ value, delay }) => useThrottle(value, delay),
         { initialProps: { value: 'v1', delay: 500 } }
@@ -70,15 +77,13 @@ describe('useThrottle Hook', () => {
       rerender({ value: 'v3', delay: 500 });
       rerender({ value: 'v4', delay: 500 });
 
-      // Should still be throttled
       expect(result.current).toBe('v1');
 
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
-      rerender({ value: 'v5', delay: 500 });
-      expect(result.current).toBe('v5');
+      expect(result.current).toBe('v4');
     });
   });
 
@@ -99,8 +104,7 @@ describe('useThrottle Hook', () => {
       act(() => {
         vi.advanceTimersByTime(1);
       });
-      rerender({ value: 'final', delay: 1000 });
-      expect(result.current).toBe('final');
+      expect(result.current).toBe('updated');
     });
   });
 });
