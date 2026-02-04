@@ -1,0 +1,4 @@
+
+> titane-infinity@27.0.0 lint /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> eslint "src/**/*.{ts,tsx,js,jsx}"
+
