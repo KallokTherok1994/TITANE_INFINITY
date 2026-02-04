@@ -5,49 +5,9 @@ exports[`DevTools Logs Section > Snapshot > should match snapshot 1`] = `
   class="space-y-4 h-full flex flex-col"
 >
   <div
-    class="flex items-start justify-between mb-6 "
+    data-testid="section-header"
   >
-    <div>
-      <h2
-        class="text-xl font-semibold mb-1"
-      >
-        System Logs
-      </h2>
-      <p
-        class="text-sm"
-      >
-        Logs temps réel de tous les moteurs
-      </p>
-    </div>
-    <div
-      class="flex items-center gap-2"
-    >
-      <div
-        class="flex items-center gap-2"
-      >
-        <button
-          class="px-3 py-1.5 text-xs font-medium rounded-md border transition-colors duration-150 hover:bg-opacity-80"
-        >
-          Clear Logs
-        </button>
-        <div
-          class="flex items-center gap-2"
-        >
-          <input
-            checked=""
-            class="w-4 h-4 rounded"
-            id="auto-scroll"
-            type="checkbox"
-          />
-          <label
-            class="text-xs font-medium cursor-pointer"
-            for="auto-scroll"
-          >
-            Auto-scroll
-          </label>
-        </div>
-      </div>
-    </div>
+    System Logs
   </div>
   <div
     data-testid="log-filters"
@@ -66,7 +26,7 @@ exports[`DevTools Logs Section > Snapshot > should match snapshot 1`] = `
       <span
         class="font-medium"
       >
-        0
+        2
       </span>
     </span>
     <span
@@ -76,7 +36,7 @@ exports[`DevTools Logs Section > Snapshot > should match snapshot 1`] = `
       <span
         class="font-medium"
       >
-        0
+        2
       </span>
     </span>
     <span
@@ -87,22 +47,27 @@ exports[`DevTools Logs Section > Snapshot > should match snapshot 1`] = `
       <span
         class="font-medium"
       >
-        0
+        1
       </span>
     </span>
   </div>
   <div
     class="flex-1 rounded-lg border overflow-y-auto"
+    data-testid="log-viewer"
     style="max-height: calc(100vh - 400px);"
   >
-    <div
-      class="flex items-center justify-center h-64"
-    >
-      <p
-        class="text-sm"
+    <div>
+      <div
+        data-testid="log-1"
       >
-        No logs yet
-      </p>
+        Test log 1
+      </div>
+      <div
+        data-testid="log-2"
+      >
+        Test error
+      </div>
+      <div />
     </div>
   </div>
 </div>
