@@ -64,10 +64,13 @@ function workboxPlugin(): Plugin {
 // Phase 5: Bundle analysis + code splitting
 // P2-A: Brotli compression for -15% bundle size
 // https://vitejs.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
   root: ROOT_DIR,
   publicDir: resolve(ROOT_DIR, 'public'),
-  base: './',
+  // ✅ FIX: Enforce relative base in production build (Tauri file:// compatibility)
+  // - Dev: '/' for absolute paths
+  // - Build: './' for relative paths (required for AppImage/DEB bundling)
+  base: command === 'build' ? './' : '/',
 
   // ✅ v27: Exclure les fichiers shell et scripts du traitement Vite
   assetsInclude: ['**/*.sh', '**/*.bash', '**/*.zsh'],
@@ -453,4 +456,4 @@ export default defineConfig({
   // ═══════════════════════════════════════════════════════════════════════════
   clearScreen: false,
   envPrefix: ['VITE_', 'TAURI_'],
-});
+}));
