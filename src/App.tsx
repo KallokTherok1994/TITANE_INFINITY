@@ -267,12 +267,15 @@ const AppRouter: React.FC = () => {
   useZoomControl();
 
   // ✨ v19.5.2 - User Onboarding State
-  // 🔧 PROD-BOOT FIX: Default to complete=true + checking=false to prevent loader hang
+  // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
-
-  // ✨ v19.5.2 - Check if onboarding is complete (first-run detection)
+  // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
   useEffect(() => {
+    // Immédiate reset - force UI to show, même si backend tardive
+    setCheckingOnboarding(false);
+    
+    // Puis check le backend EN ARRIÈRE-PLAN UNIQUEMENT (ne modifie pas checkingOnboarding)
     const checkOnboarding = async () => {
       try {
         // En mode navigateur, vérifier d'abord le localStorage
@@ -285,8 +288,7 @@ const AppRouter: React.FC = () => {
               component: 'Onboarding',
               status: localComplete ? 'Complete' : 'Not started',
             });
-            setOnboardingComplete(localComplete || true); // Par défaut complété en mode navigateur
-            setCheckingOnboarding(false);
+            setOnboardingComplete(localComplete || true);
             return;
           }
         }
@@ -303,13 +305,11 @@ const AppRouter: React.FC = () => {
           component: 'Onboarding',
           error,
         });
-        setOnboardingComplete(true); // Fallback to main app
-      } finally {
-        setCheckingOnboarding(false);
+        setOnboardingComplete(true);
       }
     };
 
-    // Add timeout to prevent infinite loading (3 seconds in browser mode, 5 in Tauri)
+    // Add timeout to prevent infinite loading
     const timeoutDuration =
       typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
         ? 1000
@@ -320,7 +320,6 @@ const AppRouter: React.FC = () => {
         component: 'Onboarding',
       });
       setOnboardingComplete(true);
-      setCheckingOnboarding(false);
     }, timeoutDuration);
 
     checkOnboarding();
