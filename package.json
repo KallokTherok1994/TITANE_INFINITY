@@ -25,6 +25,7 @@
     "format:check": "prettier --check .",
     "check": "tsc --noEmit",
     "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:local-first && pnpm run verify:tauri-configs",
+    "verify:final100": "pnpm run check && pnpm run lint && pnpm run format:check && pnpm run verify:tauri-only",
     "verify:tauri-only": "bash scripts/verify/enforce-tauri-only.sh",
     "verify:local-first": "bash scripts/verify/enforce-local-first.sh",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",

@@ -118,7 +118,7 @@ describe('ChatFallback Component', () => {
   describe('Diagnostic Display', () => {
     it('should display trace ID', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(screen.getByText(/trace-123|trace.?id/i)).toBeInTheDocument();
+      expect(screen.getByText('trace-123')).toBeInTheDocument();
     });
 
     it('should display timestamp', () => {
@@ -129,12 +129,14 @@ describe('ChatFallback Component', () => {
 
     it('should display provider information', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(screen.getByText(/ollama|provider/i)).toBeInTheDocument();
+      const providers = screen.getAllByText(/ollama/i);
+      expect(providers.length).toBeGreaterThan(0);
     });
 
     it('should display pipeline state', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(screen.getByText(/idle|pipeline/i)).toBeInTheDocument();
+      const pipelines = screen.getAllByText(/idle/i);
+      expect(pipelines.length).toBeGreaterThan(0);
     });
   });
 });
