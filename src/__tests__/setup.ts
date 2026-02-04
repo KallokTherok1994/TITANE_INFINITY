@@ -100,6 +100,27 @@ global.__TAURI__ = {
         case 'create_new_conversation':
           return { conversationId: 'test-conv-id', success: true };
         case 'get_dashboard_metrics':
+          return {
+            error_count: 0,
+            warning_count: 0,
+            total_logs: 0,
+            active_cores: 0,
+            system_health: 1,
+          };
+        case 'get_admin_vitals':
+          return {
+            cpu_process: 0,
+            cpu_global: 0,
+            ram_process: 0,
+            ram_process_percent: 0,
+            ram_system_used: 0,
+            ram_system_total: 0,
+            io_read_rate: 0,
+            io_write_rate: 0,
+            tauri_latency: 0,
+            threads_active: 0,
+            uptime: 0,
+          };
         case 'engines_monitoring_get_metrics':
         case 'get_system_health':
         case 'get_helios_metrics':
