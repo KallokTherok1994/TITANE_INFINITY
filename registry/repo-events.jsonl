@@ -132,3 +132,4 @@
   "rollback": "git revert --no-edit <commit_sha>",
   "status": "stable"
 }
+{"id":"repo-prod-ui-hang-001","ts":"2026-02-04T21:57:30Z","category":"production-fix","scope":"frontend-ui","change_type":"bug-fix","summary":"vΩ.2: Fixed infinite loading spinner in React AppRouter component","reason":"The AppRouter component had checkingOnboarding=true which displayed LoadingSpinner indefinitely while async onboarding check completed. Changed to false to allow immediate UI render with async auth check in background.","files_changed":["src/App.tsx"],"tests_run":["pnpm run check","pnpm run lint","pnpm run format:check","pnpm run verify:final100","cargo test"],"proofs":["appimage_test_vomega2.log: page_load events fired, no infinite loader messages","boot timeline: UI pages loaded in ~1.1s total"],"risk_level":"minimal","rollback":"Revert src/App.tsx line 272 from useState<boolean>(false) to useState<boolean>(true)","status":"merged"}
