@@ -5,7 +5,7 @@ import { ChatFallback } from '../ChatFallback';
 const mockFallbackProps = {
   reason: 'empty-response' as const,
   traceId: 'trace-123',
-  timestamp: '2025-02-01T10:00:00Z',
+  timestamp: new Date('2025-02-01T10:00:00Z').getTime(),
   provider: 'ollama',
   mode: 'chat',
   pipelineState: 'idle',
@@ -18,9 +18,7 @@ describe('ChatFallback Component', () => {
   describe('Rendering', () => {
     it('should render with empty-response reason', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      const messageEl =
-        screen.queryByText(/empty response/i) || screen.queryByText(/réponse/i);
-      expect(messageEl).toBeInTheDocument();
+      expect(screen.getByText(/réponse vide reçue/i)).toBeInTheDocument();
     });
 
     it('should display all fallback reasons', () => {
@@ -44,22 +42,22 @@ describe('ChatFallback Component', () => {
         const { unmount } = render(
           <ChatFallback {...mockFallbackProps} reason={reason} />
         );
-        expect(screen.getByText(/.*/, { selector: 'div' })).toBeInTheDocument();
+        expect(screen.getByRole('alert')).toBeInTheDocument();
         unmount();
       });
     });
 
     it('should display diagnostic information', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      expect(
-        screen.getByText(/trace.?id/i) || screen.getByText('trace-123')
-      ).toBeInTheDocument();
+      expect(screen.getByText(/trace id/i)).toBeInTheDocument();
+      expect(screen.getByText('trace-123')).toBeInTheDocument();
     });
 
-    it('should render three-tier CTA buttons', () => {
+    it('should render CTA buttons', () => {
       render(<ChatFallback {...mockFallbackProps} />);
-      const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
-      expect(retryButton).toBeInTheDocument();
+      expect(screen.getByLabelText(/réessayer la génération/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/changer de provider/i)).toBeInTheDocument();
+      expect(screen.getByLabelText(/copier le diagnostic/i)).toBeInTheDocument();
     });
   });
 
@@ -95,7 +93,7 @@ describe('ChatFallback Component', () => {
     it('should call onRetry when Retry button clicked', () => {
       const onRetry = vi.fn();
       render(<ChatFallback {...mockFallbackProps} onRetry={onRetry} />);
-      const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
+      const retryButton = screen.getByLabelText(/réessayer la génération/i);
       fireEvent.click(retryButton);
       expect(onRetry).toHaveBeenCalled();
     });
@@ -103,23 +101,17 @@ describe('ChatFallback Component', () => {
     it('should call onChangeProvider when Change Provider clicked', () => {
       const onChangeProvider = vi.fn();
       render(<ChatFallback {...mockFallbackProps} onChangeProvider={onChangeProvider} />);
-      const changeButton =
-        screen.queryByText(/change provider/i) ||
-        screen.getByRole('button', { name: /provider/i });
-      if (changeButton) {
-        fireEvent.click(changeButton);
-        expect(onChangeProvider).toHaveBeenCalled();
-      }
+      const changeButton = screen.getByLabelText(/changer de provider/i);
+      fireEvent.click(changeButton);
+      expect(onChangeProvider).toHaveBeenCalled();
     });
 
     it('should call onCopyDiagnostic when Copy Diagnostic clicked', () => {
       const onCopyDiagnostic = vi.fn();
       render(<ChatFallback {...mockFallbackProps} onCopyDiagnostic={onCopyDiagnostic} />);
-      const copyButton = screen.getByLabelText(/copy/i) || screen.queryByText(/copy/i);
-      if (copyButton) {
-        fireEvent.click(copyButton);
-        expect(onCopyDiagnostic).toHaveBeenCalled();
-      }
+      const copyButton = screen.getByLabelText(/copier le diagnostic/i);
+      fireEvent.click(copyButton);
+      expect(onCopyDiagnostic).toHaveBeenCalled();
     });
   });
 

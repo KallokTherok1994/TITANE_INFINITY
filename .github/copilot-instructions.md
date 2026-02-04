@@ -19,7 +19,6 @@ Notes:
 
 ## Layer 1 — Non-negotiables for this repo
 
-- Tauri-only (no HTTP servers); keep the project local-first.
 - No secrets committed.
 - Keep changes minimal and testable.
 

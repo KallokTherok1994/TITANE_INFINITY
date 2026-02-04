@@ -8,9 +8,18 @@ import { invoke } from '@tauri-apps/api/core';
 import { Window } from '@tauri-apps/api/window';
 import { readTextFile, writeTextFile } from '@tauri-apps/plugin-fs';
 
-vi.mock('@tauri-apps/api/core');
-vi.mock('@tauri-apps/api/window');
-vi.mock('@tauri-apps/plugin-fs');
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
+}));
+
+vi.mock('@tauri-apps/api/window', () => ({
+  Window: vi.fn(),
+}));
+
+vi.mock('@tauri-apps/plugin-fs', () => ({
+  readTextFile: vi.fn(),
+  writeTextFile: vi.fn(),
+}));
 
 describe('Integration: Tauri Communication', () => {
   beforeEach(() => {

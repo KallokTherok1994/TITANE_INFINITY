@@ -18,3 +18,22 @@ exports[`VoiceControl Component > Snapshot > should match snapshot 1`] = `
   </div>
 </div>
 `;
+
+exports[`VoiceControlPanel Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="voice-control-panel disabled"
+>
+  <div
+    class="voice-header"
+  >
+    <button
+      class="voice-toggle "
+    >
+      🔇
+      <span>
+        Mode Voix Inactif
+      </span>
+    </button>
+  </div>
+</div>
+`;
