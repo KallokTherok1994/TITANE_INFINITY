@@ -552,6 +552,22 @@ const handleTauriInvoke = async (
         ollama: { healthy: true, latency_ms: 110 },
         fallback: { healthy: true },
       };
+    case 'health_check':
+      return {
+        providers_online: ['titane-local'],
+        providers_degraded: [],
+        provider_errors: [],
+        memory_entries: 0,
+        memory_tokens: 0,
+        auto_tts_enabled: false,
+        timestamp: Date.now(),
+      };
+    case 'get_dashboard_metrics':
+      return {
+        cpu: { value: 12, history: [10, 11, 12] },
+        memory: { value: 256, history: [240, 248, 256] },
+        fps: { value: 60, history: [58, 59, 60] },
+      };
     case 'qa_run_all':
       return {
         passed: true,
@@ -559,6 +575,17 @@ const handleTauriInvoke = async (
       };
     case 'get_timeline':
       return clone(timelineEvents);
+    case 'get_logs':
+      return { logs: [], totalEntries: 0, offset: 0 };
+    case 'get_core_info':
+      return {
+        cores: [],
+        totalCores: 0,
+        activeCores: 0,
+        timestamp: new Date().toISOString(),
+      };
+    case 'test_microphone':
+      return { success: true, level: 0.5, devices: [] };
     default:
       console.warn(`[vitest] No mock handler for command "${command}"`);
       return undefined;
