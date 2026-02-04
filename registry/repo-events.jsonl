@@ -104,3 +104,31 @@
   },
   "status": "activated"
 }
+{
+  "id": "repo-prod-boot-001",
+  "ts": "2026-02-04T19:35:00Z",
+  "category": "stable-fix",
+  "scope": "frontend-build",
+  "change_type": "prod-boot-fix",
+  "summary": "Fix AppImage/DEB infinite loading by enforcing Vite relative base in build",
+  "reason": "Absolute /assets paths break file:// runtime in Tauri production bundles; UI never boots. Fix ensures build produces ./assets/ (relative) paths for Tauri compatibility.",
+  "files_changed": [
+    "vite.config.ts",
+    "scripts/gates/vite-base-relative-gate.cjs",
+    "package.json"
+  ],
+  "tests_run": [
+    "pnpm run build",
+    "grep -n './assets/' dist/index.html",
+    "pnpm tauri build",
+    "AppImage smoke test (30s timeout, SUCCESS)",
+    "pnpm run verify:prod-boot"
+  ],
+  "proofs": [
+    "dist/index.html uses ./assets/ (relative paths)",
+    "reports/runtime/APPIMAGE_BOOT.txt (shows successful boot, no load errors)"
+  ],
+  "risk_level": "NONE",
+  "rollback": "git revert --no-edit <commit_sha>",
+  "status": "stable"
+}
