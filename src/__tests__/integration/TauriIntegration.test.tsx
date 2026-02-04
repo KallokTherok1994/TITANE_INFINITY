@@ -57,12 +57,11 @@ describe('Integration: Tauri Communication', () => {
   describe('Window Management', () => {
     it('should minimize window', async () => {
       const mockMinimize = vi.fn().mockResolvedValue(undefined);
-      vi.mocked(Window).mockImplementation(
-        () =>
-          ({
-            minimize: mockMinimize,
-          }) as any
-      );
+      vi.mocked(Window).mockImplementation(function (this: any) {
+        return {
+          minimize: mockMinimize,
+        };
+      } as any);
 
       const appWindow = new Window('main');
       await appWindow.minimize();
@@ -72,12 +71,11 @@ describe('Integration: Tauri Communication', () => {
 
     it('should maximize window', async () => {
       const mockMaximize = vi.fn().mockResolvedValue(undefined);
-      vi.mocked(Window).mockImplementation(
-        () =>
-          ({
-            maximize: mockMaximize,
-          }) as any
-      );
+      vi.mocked(Window).mockImplementation(function (this: any) {
+        return {
+          maximize: mockMaximize,
+        };
+      } as any);
 
       const appWindow = new Window('main');
       await appWindow.maximize();
@@ -87,12 +85,11 @@ describe('Integration: Tauri Communication', () => {
 
     it('should close window', async () => {
       const mockClose = vi.fn().mockResolvedValue(undefined);
-      vi.mocked(Window).mockImplementation(
-        () =>
-          ({
-            close: mockClose,
-          }) as any
-      );
+      vi.mocked(Window).mockImplementation(function (this: any) {
+        return {
+          close: mockClose,
+        };
+      } as any);
 
       const appWindow = new Window('main');
       await appWindow.close();
@@ -102,12 +99,11 @@ describe('Integration: Tauri Communication', () => {
 
     it('should detect window state', async () => {
       const mockIsMaximized = vi.fn().mockResolvedValue(true);
-      vi.mocked(Window).mockImplementation(
-        () =>
-          ({
-            isMaximized: mockIsMaximized,
-          }) as any
-      );
+      vi.mocked(Window).mockImplementation(function (this: any) {
+        return {
+          isMaximized: mockIsMaximized,
+        };
+      } as any);
 
       const appWindow = new Window('main');
       const isMaximized = await appWindow.isMaximized();

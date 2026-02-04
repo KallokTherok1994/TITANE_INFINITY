@@ -101,14 +101,11 @@ global.__TAURI__ = {
           return { conversationId: 'test-conv-id', success: true };
         case 'get_dashboard_metrics':
           return {
-            cpu: { value: 45.2, trend: 'stable', history: [40, 42, 45] },
-            memory: {
-              value: 512,
-              unit: 'MB',
-              trend: 'stable',
-              history: [500, 510, 512],
-            },
-            fps: { value: 60, trend: 'stable', history: [60, 60, 60] },
+            error_count: 0,
+            warning_count: 0,
+            total_logs: 123,
+            active_cores: 4,
+            system_health: 1.0,
           };
         case 'get_admin_vitals':
           return {
