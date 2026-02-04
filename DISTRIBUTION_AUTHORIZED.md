@@ -24,6 +24,7 @@
 **Location**: `deployment/v27.0.0-PRODUCTION/`
 
 **Artifacts to Publish**:
+
 - `TITANE-Infinity_27.0.0_amd64.deb` (9.6 MB)
 - `TITANE-Infinity-27.0.0-1.x86_64.rpm` (9.6 MB)
 - `TITANE-Infinity_27.0.0_amd64.AppImage` (82 MB)
@@ -36,6 +37,7 @@
 **Title**: TITANE∞ v27.0.0 — Production Release
 
 **Content**:
+
 - Version: v27.0.0-PRODUCTION
 - Release Date: 2026-02-04
 - Constitutional Lock: v27.0.0-CONSTITUTION (immutable baseline)
@@ -44,6 +46,7 @@
 ### 3. User Availability
 
 **Installation Methods**:
+
 ```bash
 # DEB (Debian/Ubuntu)
 sudo dpkg -i TITANE-Infinity_27.0.0_amd64.deb

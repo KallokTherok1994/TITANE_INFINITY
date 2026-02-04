@@ -31,7 +31,7 @@ La production **NE PEUT ÊTRE AUTORISÉE** que si
 
 ❌ Toute autre formulation est invalide  
 ❌ Toute approximation est invalide  
-❌ Toute automatisation est interdite  
+❌ Toute automatisation est interdite
 
 **Cette phrase DOIT apparaître dans un message utilisateur direct.**
 
@@ -44,6 +44,7 @@ La production **NE PEUT ÊTRE AUTORISÉE** que si
 **File**: `PRODUCTION_GO_SIGNED.md`
 
 **Contenu requis**:
+
 ```markdown
 # PRODUCTION GO — SIGNED BY KEVIN THIBAULT
 
@@ -76,6 +77,7 @@ Toute action ultérieure passe par protocole vΩ.EVOLVE.
 ### 2) Registry append-only (obligatoire)
 
 **Commande**:
+
 ```bash
 cat >> registry/repo-events.jsonl << 'EOF'
 {"id":"repo-production-001","ts":"<timestamp-utc>","category":"production","scope":"FULL","change_type":"approval","summary":"Production GO signed by Kevin Thibault","reason":"Explicit human approval received with exact GO phrase. Constitutional lock validated (v27.0.0-CONSTITUTION), baseline stable (0 failures, 47 passing, 27 skips), all invariants locked","files_changed":["PRODUCTION_GO_SIGNED.md","registry/repo-events.jsonl"],"tests_run":["N/A - human decision"],"proofs":["PRODUCTION_GO_SIGNED.md with exact GO phrase, commit SHA, signature"],"risk_level":"NONE","rollback":"Revert + delete v27.0.0-PRODUCTION tag if not distributed","status":"approved"}
@@ -83,6 +85,7 @@ EOF
 ```
 
 **Vérification**:
+
 ```bash
 tail -1 registry/repo-events.jsonl | jq -r '.id'
 # Expected: repo-production-001
@@ -93,6 +96,7 @@ tail -1 registry/repo-events.jsonl | jq -r '.id'
 ### 3) Tag production (acte symbolique final)
 
 **Commandes**:
+
 ```bash
 # Stage files
 git add PRODUCTION_GO_SIGNED.md registry/repo-events.jsonl
@@ -129,6 +133,7 @@ git push origin v27.0.0-PRODUCTION
 ```
 
 **Vérification**:
+
 ```bash
 git tag -l v27.0.0-PRODUCTION
 git ls-remote origin refs/tags/v27.0.0-PRODUCTION
@@ -142,6 +147,7 @@ git ls-remote origin refs/tags/v27.0.0-PRODUCTION
 **File**: `reports/final100/PHASE_A_PRODUCTION_AUTHORIZED.md`
 
 **Contenu** (générer après push):
+
 - Confirmation GO reçu + timestamp
 - Commit SHA du GO signed
 - Tag production créé + pushed
@@ -158,7 +164,7 @@ git ls-remote origin refs/tags/v27.0.0-PRODUCTION
 ❌ Modifier la Constitution après GO (sauf via vΩ.EVOLVE)  
 ❌ Rejouer FINAL100 après GO (gel effectif)  
 ❌ Bypass registry append-only  
-❌ Accepter une formulation approximative du GO  
+❌ Accepter une formulation approximative du GO
 
 ---
 
@@ -167,11 +173,13 @@ git ls-remote origin refs/tags/v27.0.0-PRODUCTION
 **NOTE CRITIQUE**: Le build (`pnpm tauri build`) est **OPTIONNEL** et **SÉPARÉ** de l'approbation production.
 
 **Quand construire**:
+
 - Seulement si Kevin demande explicitement le build
 - Après que v27.0.0-PRODUCTION soit pushed
 - En suivant la règle COPILOT-XS: "NE JAMAIS déployer via AppImage ou DEB sans autorisation explicite"
 
 **Si build requis**:
+
 ```bash
 # SEULEMENT après demande explicite Kevin
 pnpm tauri build
@@ -192,12 +200,12 @@ EOF
 
 Après exécution complète de Phase A:
 
-* ✅ TITANE∞ est officiellement **AUTORISÉ EN PRODUCTION**
-* ✅ Tag `v27.0.0-PRODUCTION` existe et est pushed
-* ✅ `PRODUCTION_GO_SIGNED.md` prouve l'acte humain
-* ✅ Registry entry `repo-production-001` scellée
-* 🔒 Toute action ultérieure passe par **protocole vΩ.EVOLVE**
-* 🎯 Le système est désormais **responsable**, pas expérimental
+- ✅ TITANE∞ est officiellement **AUTORISÉ EN PRODUCTION**
+- ✅ Tag `v27.0.0-PRODUCTION` existe et est pushed
+- ✅ `PRODUCTION_GO_SIGNED.md` prouve l'acte humain
+- ✅ Registry entry `repo-production-001` scellée
+- 🔒 Toute action ultérieure passe par **protocole vΩ.EVOLVE**
+- 🎯 Le système est désormais **responsable**, pas expérimental
 
 **STOP.**
 
@@ -209,6 +217,7 @@ Toute évolution future = RFC + vΩ.EVOLVE + validation Kevin.
 ## PHASE A CHECKLIST
 
 **Avant exécution** (vérifier):
+
 - [ ] Phase B complète (tag v27.0.0-CONSTITUTION pushed)
 - [ ] CONSTITUTION_LOCK_v27.md existe
 - [ ] Registry entry repo-constitution-001 confirmée
@@ -216,6 +225,7 @@ Toute évolution future = RFC + vΩ.EVOLVE + validation Kevin.
 - [ ] Message Kevin contient phrase GO exacte
 
 **Après exécution** (vérifier):
+
 - [ ] PRODUCTION_GO_SIGNED.md créé avec phrase exacte
 - [ ] Registry entry repo-production-001 appended
 - [ ] Commit "feat(production): GO signed" pushed

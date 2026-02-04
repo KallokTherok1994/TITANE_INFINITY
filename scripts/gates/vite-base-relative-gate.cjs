@@ -2,14 +2,14 @@
 
 /**
  * TITANE∞ — Vite Base Relative Gate
- * 
+ *
  * Purpose: Ensure production build uses relative asset paths (./assets/...)
  * to avoid breaking AppImage/DEB boot in file:// Tauri runtime.
- * 
+ *
  * Criteria:
  *   PASS: dist/index.html contains "./assets/" AND NOT "/assets/"
  *   FAIL: dist/index.html contains "/assets/" OR missing dist/index.html
- * 
+ *
  * Protocol: vΩ.1 — FIX_PROD_BOOT_LOOP
  */
 
@@ -34,18 +34,24 @@ function main() {
 
     // Check for absolute asset paths (FAIL condition)
     const hasAbsoluteAssets = htmlContent.includes('"/assets/');
-    
+
     // Check for relative asset paths (PASS condition)
     const hasRelativeAssets = htmlContent.includes('"./assets/');
 
     console.log('Results:');
-    console.log(`  Absolute "/assets/": ${hasAbsoluteAssets ? '❌ FOUND' : '✓ Not found'}`);
-    console.log(`  Relative "./assets/": ${hasRelativeAssets ? '✓ Found' : '❌ NOT FOUND'}`);
+    console.log(
+      `  Absolute "/assets/": ${hasAbsoluteAssets ? '❌ FOUND' : '✓ Not found'}`
+    );
+    console.log(
+      `  Relative "./assets/": ${hasRelativeAssets ? '✓ Found' : '❌ NOT FOUND'}`
+    );
 
     if (hasAbsoluteAssets) {
       console.error('\n❌ FAIL: Found absolute asset paths!');
       console.error('   This will break AppImage/DEB boots in file:// Tauri runtime.');
-      console.error('   Fix: Ensure vite.config.ts uses base: "./" for production builds.');
+      console.error(
+        '   Fix: Ensure vite.config.ts uses base: "./" for production builds.'
+      );
       process.exit(1);
     }
 
