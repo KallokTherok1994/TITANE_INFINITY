@@ -46,3 +46,23 @@
   },
   "status": "authorized"
 }
+{
+  "id": "repo-production-004",
+  "ts": "2026-02-04T12:10:00Z",
+  "category": "production",
+  "scope": "FULL",
+  "change_type": "release-published",
+  "summary": "GitHub Release v27.0.0-PRODUCTION published",
+  "reason": "All artifacts uploaded to GitHub Releases with SHA256 verification, installation instructions, and constitutional governance documentation. Ready for public download.",
+  "files_changed": ["deployment/v27.0.0-PRODUCTION/"],
+  "artifacts_published": {
+    "deb": "TITANE-Infinity_27.0.0_amd64.deb (9.6M)",
+    "rpm": "TITANE-Infinity-27.0.0-1.x86_64.rpm (9.6M)",
+    "appimage": "TITANE-Infinity_27.0.0_amd64.AppImage (82M)",
+    "binary": "titane-infinity (22M)",
+    "checksums": "SHA256SUMS.txt",
+    "total_size_mb": 123.2
+  },
+  "release_url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.0-PRODUCTION",
+  "status": "published"
+}
