@@ -1227,6 +1227,8 @@ const App: React.FC = () => {
   (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
   (window as any).__TITANE_BOOT__.app_render = true;
   (window as any).__TITANE_BOOT__.app_render_timestamp = Date.now();
+  (window as any).__TITANE_BOOT__.stage = '[BOOT] App render';
+  (window as any).__TITANE_BOOT__.timestamp = Date.now();
 
   return (
     <ToastProvider>

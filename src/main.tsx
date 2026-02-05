@@ -11,6 +11,9 @@ console.log('[BOOT] main.tsx start');
 (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
 (window as any).__TITANE_BOOT__.main_tsx = true;
 (window as any).__TITANE_BOOT__.main_tsx_timestamp = Date.now();
+if (typeof document !== 'undefined') {
+  document.documentElement.dataset.titane = 'main_tsx';
+}
 
 // 🛡️ Type augmentation for Sentry and Monitoring on window
 declare global {

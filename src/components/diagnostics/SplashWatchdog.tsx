@@ -19,6 +19,7 @@
 
 import React, { useEffect, useState, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
+import { promises as fsPromises, join as joinPath } from '@/utils/tauriFsAdapter';
 
 type BootStage = string;
 
@@ -32,6 +33,12 @@ interface BootDiagnostics {
 
 const WATCHDOG_TIMEOUT_MS = 10000; // 10s
 const BOOT_COMPLETE_STAGE = '[BOOT] after render';
+const DIAG_ENV_ENABLED =
+  import.meta.env.VITE_TITANE_DIAG === '1' ||
+  import.meta.env.TITANE_DIAG === '1' ||
+  (typeof window !== 'undefined' && window.localStorage?.getItem('TITANE_DIAG') === '1');
+const DIAG_DIR = 'runtime/diag';
+const DIAG_FILE = 'frontend_boot.json';
 
 /**
  * Hook qui surveille le boot et expose les diagnostics
@@ -43,12 +50,14 @@ const useBootWatchdog = () => {
     errors: [],
   });
   const [timedOut, setTimedOut] = useState(false);
+  const [diagStatus, setDiagStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>(
+    'idle'
+  );
+  const [diagError, setDiagError] = useState<string | null>(null);
 
   useEffect(() => {
-    const timeoutId: NodeJS.Timeout = setTimeout(() => setTimedOut(true), WATCHDOG_TIMEOUT_MS);
-    const checkInterval: NodeJS.Timeout = setInterval(() => {
-      // checkBootProgress logic
-    }, 500);
+    let timeoutId: NodeJS.Timeout | null = null;
+    let checkInterval: NodeJS.Timeout | null = null;
 
     const checkBootProgress = () => {
       const w = window as typeof window & {
@@ -78,8 +87,12 @@ const useBootWatchdog = () => {
 
       // Si boot complété, désactiver watchdog
       if (currentStage === BOOT_COMPLETE_STAGE) {
-        clearTimeout(timeoutId);
-        clearInterval(checkInterval);
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        if (checkInterval) {
+          clearInterval(checkInterval);
+        }
         setTimedOut(false);
       }
     };
@@ -120,10 +133,94 @@ const useBootWatchdog = () => {
     checkBootProgress();
 
     return () => {
-      clearTimeout(timeoutId);
-      clearInterval(checkInterval);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      if (checkInterval) {
+        clearInterval(checkInterval);
+      }
     };
   }, []);
+
+  useEffect(() => {
+    if (!timedOut || !DIAG_ENV_ENABLED) {
+      return;
+    }
+
+    let cancelled = false;
+
+    const writeDiagReport = async () => {
+      setDiagStatus('pending');
+      setDiagError(null);
+
+      const w = window as typeof window & {
+        __TITANE_BOOT__?: Record<string, unknown>;
+      };
+
+      const cspMeta = document.querySelector(
+        'meta[http-equiv="Content-Security-Policy"]'
+      ) as HTMLMetaElement | null;
+      const moduleScript = document.querySelector('script[type="module"]') as
+        | HTMLScriptElement
+        | null;
+      const moduleSrc = moduleScript?.src ?? null;
+
+      let moduleProbe: {
+        ok: boolean;
+        status?: number;
+        contentType?: string | null;
+        error?: string;
+      } | null = null;
+
+      if (moduleSrc) {
+        try {
+          const response = await fetch(moduleSrc, { method: 'HEAD' });
+          moduleProbe = {
+            ok: response.ok,
+            status: response.status,
+            contentType: response.headers.get('content-type'),
+          };
+        } catch (error) {
+          moduleProbe = {
+            ok: false,
+            error: String(error),
+          };
+        }
+      }
+
+      const report = {
+        timestamp: new Date().toISOString(),
+        url: typeof location !== 'undefined' ? String(location.href) : 'n/a',
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+        protocol: typeof location !== 'undefined' ? location.protocol : 'n/a',
+        cspMeta: cspMeta?.content ?? null,
+        markers: w.__TITANE_BOOT__ ?? null,
+        diagnostics,
+        moduleSrc,
+        moduleProbe,
+      };
+
+      try {
+        await fsPromises.mkdir(DIAG_DIR, { recursive: true });
+        const fullPath = joinPath(DIAG_DIR, DIAG_FILE);
+        await fsPromises.writeFile(fullPath, JSON.stringify(report, null, 2), 'utf-8');
+        if (!cancelled) {
+          setDiagStatus('saved');
+        }
+      } catch (error) {
+        if (!cancelled) {
+          setDiagStatus('error');
+          setDiagError(String(error));
+        }
+      }
+    };
+
+    void writeDiagReport();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [timedOut, diagnostics]);
 
   const reload = useCallback(() => {
     window.location.reload();
@@ -137,14 +234,15 @@ const useBootWatchdog = () => {
     );
   }, [diagnostics]);
 
-  return { diagnostics, timedOut, reload, copyDiagnostics };
+  return { diagnostics, timedOut, diagStatus, diagError, reload, copyDiagnostics };
 };
 
 /**
  * Composant de diagnostic affiché après timeout
  */
 export const SplashWatchdog: React.FC = () => {
-  const { diagnostics, timedOut, reload, copyDiagnostics } = useBootWatchdog();
+  const { diagnostics, timedOut, diagStatus, diagError, reload, copyDiagnostics } =
+    useBootWatchdog();
 
   if (!timedOut) {
     // Boot normal, ne rien afficher
@@ -253,6 +351,16 @@ export const SplashWatchdog: React.FC = () => {
               <span style={{ color: '#9ca3af' }}>Timeout:</span>{' '}
               {(WATCHDOG_TIMEOUT_MS / 1000).toFixed(0)}s dépassé
             </div>
+            {DIAG_ENV_ENABLED && (
+              <div>
+                <span style={{ color: '#9ca3af' }}>DIAG PROD:</span>{' '}
+                {diagStatus === 'pending' && <span style={{ color: '#f59e0b' }}>⏳ Écriture…</span>}
+                {diagStatus === 'saved' && <span style={{ color: '#10b981' }}>✓ Rapport écrit</span>}
+                {diagStatus === 'error' && (
+                  <span style={{ color: '#ff4444' }}>✗ Échec ({diagError})</span>
+                )}
+              </div>
+            )}
           </div>
 
           {diagnostics.errors.length > 0 && (
