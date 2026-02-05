@@ -918,7 +918,7 @@ class AIOrchestrator {
             ];
 
       const uniqueProviders = Array.from(new Set(baseProviders));
-      let providersToTry = uniqueProviders.slice(0, REQUEST_BUDGETS.maxAttempts);
+      const providersToTry = uniqueProviders.slice(0, REQUEST_BUDGETS.maxAttempts);
       if (
         uniqueProviders.includes('titane-local') &&
         !providersToTry.includes('titane-local') &&
