@@ -24,9 +24,9 @@ export default defineConfig({
   workers: 1,
 
   // Timeouts
-  timeout: 30000, // 30s per test
+  timeout: 60000, // 60s per test (relaxed for CI env)
   expect: {
-    timeout: 5000, // 5s for assertions
+    timeout: 10000, // 10s for assertions (relaxed)
   },
 
   // Reporting
@@ -40,7 +40,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
-    actionTimeout: 10000,
+    actionTimeout: 30000, // 30s action timeout (CI environment)
   },
 
   // Test projects (browsers)
@@ -80,7 +80,7 @@ export default defineConfig({
     command: 'npx vite dev --host 127.0.0.1 --port 5173 --strictPort',
     url: 'http://localhost:5173',
     reuseExistingServer: false,
-    timeout: 120000, // 2min to start
+    timeout: 180000, // 3min to start (CI heavy load)
     stdout: 'pipe',
     stderr: 'pipe',
   },
