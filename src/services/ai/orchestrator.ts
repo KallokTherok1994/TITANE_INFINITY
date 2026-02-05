@@ -1878,7 +1878,28 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 // EXPORT SINGLETON + API COMPATIBILITY
 // ─────────────────────────────────────────────────────────────────
 
-export const aiOrchestrator = new AIOrchestrator();
+// Lazy initialization to avoid ReferenceError during module loading
+let _orchestratorInstance: AIOrchestrator | null = null;
+
+function getOrchestratorInstance(): AIOrchestrator {
+  if (!_orchestratorInstance) {
+    try {
+      _orchestratorInstance = new AIOrchestrator();
+    } catch (error) {
+      logger.error('Failed to initialize AIOrchestrator:', error);
+      // Fallback: Return a stub that won't crash
+      throw error;
+    }
+  }
+  return _orchestratorInstance;
+}
+
+export const aiOrchestrator = new Proxy({} as AIOrchestrator, {
+  get(target, prop) {
+    const instance = getOrchestratorInstance();
+    return Reflect.get(instance, prop);
+  },
+});
 
 // API de rétrocompatibilité
 export async function askTitan(
@@ -1886,18 +1907,18 @@ export async function askTitan(
   history: AIMessage[] = [],
   config?: AIConfig
 ): Promise<AIResponse> {
-  return aiOrchestrator.generate(message, history, config);
+  return getOrchestratorInstance().generate(message, history, config);
 }
 
 export async function* streamTitan(
   message: string,
   history: AIMessage[] = []
 ): AsyncGenerator<string> {
-  yield* aiOrchestrator.stream(message, history);
+  yield* getOrchestratorInstance().stream(message, history);
 }
 
 export async function getAIStatus() {
-  return aiOrchestrator.getProvidersStatus();
+  return getOrchestratorInstance().getProvidersStatus();
 }
 
 export default aiOrchestrator;
