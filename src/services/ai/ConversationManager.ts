@@ -21,7 +21,8 @@
 
 import { emit } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
-import chatEngineCommands from '@/services/tauri/chatEngine.commands';
+// 🔧 P1_BUILD_CHUNKS_FIX: Dynamic import to avoid static/dynamic conflict
+// import chatEngineCommands from '@/services/tauri/chatEngine.commands'; // REMOVED
 import type {
   ConversationMessage,
   ConversationResponse,
@@ -389,6 +390,10 @@ export class ConversationManager {
         .filter(m => m.role === 'system')
         .map(m => m.content)
         .join('\n\n');
+
+      // 🔧 P1_BUILD_CHUNKS_FIX: Dynamic import to avoid static/dynamic conflict
+      const chatEngineModule = await import('@/services/tauri/chatEngine.commands');
+      const chatEngineCommands = chatEngineModule.default;
 
       const omegaResponse = await chatEngineCommands.generate({
         message: prompt,

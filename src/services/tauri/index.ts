@@ -29,25 +29,10 @@ export {
 } from './backend-v17.2.commands';
 export * from './backend-v17.2.types';
 
-// Chat Engine Backend (v19.2Ω)
-export {
-  chatEngineCommands,
-  generateResponse as chatEngineGenerateResponse,
-  streamResponse as chatEngineStreamResponse,
-  speakText as chatEngineSpeakText,
-  saveMemory as chatEngineSaveMemory,
-  loadMemory as chatEngineLoadMemory,
-  resetMemory as chatEngineResetMemory,
-  healthCheck as chatEngineHealthCheck,
-  onStreamChunk as chatEngineOnStreamChunk,
-  onStreamDone as chatEngineOnStreamDone,
-} from './chatEngine.commands';
-export type {
-  ProviderPreference as ChatEngineProviderPreference,
-  SpeechMode as ChatEngineSpeechMode,
-  ChatRequestArgs as ChatEngineRequestArgs,
-  ChatCompletionPayload as ChatEngineCompletion,
-  StreamChunkPayload as ChatEngineStreamChunk,
-  StreamHandle as ChatEngineStreamHandle,
-  EngineHealthReport as ChatEngineHealthReport,
-} from './chatEngine.commands';
+// 🔧 P1_BUILD_CHUNKS_FIX: Chat Engine Backend exports removed from static index
+// Reason: chatEngine.commands.ts is dynamically imported by chatEngine.ts
+// Strategy: Consumers should import directly from './chatEngine.commands' if needed,
+//           or use dynamic imports to avoid static/dynamic conflict
+// REMOVED:
+// export { chatEngineCommands, ... } from './chatEngine.commands';
+// export type { ProviderPreference, ... } from './chatEngine.commands';

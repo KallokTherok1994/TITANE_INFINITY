@@ -254,27 +254,89 @@ export default defineConfig(({ command }) => ({
       },
       output: {
         manualChunks: id => {
-          // Vendors
+          // ═════════════════════════════════════════════════════════════════════
+          // 🔧 P1_BUILD_CHUNKS_FIX: Deterministic non-overlapping chunk rules
+          // ORDER: Most specific → Most general (prevents ambiguity)
+          // STRATEGY: Merge circular dependency groups into unified buckets
+          // ═════════════════════════════════════════════════════════════════════
+
+          // ────────────────────────────────────────────────────────────────────
+          // 1️⃣ VENDOR ONNX CLUSTER (onnxruntime ↔ vendor-utils)
+          // ────────────────────────────────────────────────────────────────────
           if (id.includes('node_modules')) {
+            // Must check onnxruntime BEFORE generic vendor-utils
+            if (id.includes('onnxruntime-web')) {
+              return 'vendor-onnx';
+            }
+          }
+
+          // ────────────────────────────────────────────────────────────────────
+          // 2️⃣ UI CORE CLUSTER (ui-layout ↔ ui-common ↔ ui-primitives)
+          // ────────────────────────────────────────────────────────────────────
+          if (id.includes('/src/')) {
+            // Check UI cluster BEFORE other components
             if (
-              id.includes('react') ||
-              id.includes('react-dom') ||
-              id.includes('react-router')
+              id.includes('/components/layout/') ||
+              id.includes('/ui/') ||
+              (id.includes('/components/') &&
+                !id.includes('/chat/') &&
+                !id.includes('/audio/') &&
+                !id.includes('/monitoring/') &&
+                !id.includes('/voice/') &&
+                !id.includes('/experience/') &&
+                !id.includes('/evolution/') &&
+                !id.includes('/aura/') &&
+                !id.includes('/performance/') &&
+                !id.includes('/admin/') &&
+                !id.includes('/dev/') &&
+                !id.includes('/fusion/') &&
+                !id.includes('/QuantumCenter/') &&
+                !id.includes('/HyperCenter/') &&
+                !id.includes('/RealityCenter/') &&
+                !id.includes('/IdentityCenter/') &&
+                !id.includes('/MemoryEvolution/') &&
+                !id.includes('/optimization/') &&
+                !id.includes('/branding/'))
+            ) {
+              return 'ui-core';
+            }
+          }
+
+          // ────────────────────────────────────────────────────────────────────
+          // 3️⃣ SERVICES CORE CLUSTER (service-ai ↔ service-memory ↔ service-audio
+          //                           ↔ services-common ↔ service-cognitive
+          //                           ↔ devtools-sudo)
+          // ────────────────────────────────────────────────────────────────────
+          if (id.includes('/src/')) {
+            if (
+              id.includes('/services/') ||
+              id.includes('/modules/devSudo/')
+            ) {
+              // ALL service modules + devtools-sudo → ONE CHUNK
+              return 'services-core';
+            }
+          }
+
+          // ────────────────────────────────────────────────────────────────────
+          // 4️⃣ VENDOR CHUNKS (non-circular, order matters)
+          // ────────────────────────────────────────────────────────────────────
+          if (id.includes('node_modules')) {
+            // 🔧 P1_BUILD_CHUNKS_FIX: React cluster BEFORE generic vendor
+            // Check React FIRST to prevent falling into 'vendor' generic bucket
+            if (
+              id.includes('/react/') ||
+              id.includes('/react-dom/') ||
+              id.includes('/react-router') ||
+              id.includes('/scheduler/')
             ) {
               return 'react-vendor';
             }
             if (id.includes('@tauri-apps')) {
               return 'tauri-vendor';
             }
-            // 🚀 Split: ONNX Runtime (very large)
-            if (id.includes('onnxruntime-web')) {
-              return 'onnxruntime';
-            }
-            // 🚀 Split: Three.js (large)
             if (id.includes('/three/') || id.includes('three')) {
               return 'three-vendor';
             }
-            // 🚀 Split: TanStack Query (moderately large)
             if (id.includes('@tanstack/react-query')) {
               return 'react-query';
             }
@@ -293,7 +355,6 @@ export default defineConfig(({ command }) => ({
             if (id.includes('recharts')) {
               return 'charts';
             }
-            // Optional / heavy UI libs
             if (id.includes('react-chrono')) {
               return 'chrono';
             }
@@ -306,15 +367,12 @@ export default defineConfig(({ command }) => ({
             if (id.includes('@xenova/transformers')) {
               return 'ai-transformers';
             }
-            // Web vitals
             if (id.includes('web-vitals')) {
               return 'web-vitals';
             }
-            // Chart.js séparé (gros et optionnel)
             if (id.includes('chart.js') || id.includes('chartjs')) {
               return 'charts';
             }
-            // Plotly and visualization libraries (heavy)
             if (
               id.includes('plotly') ||
               id.includes('echarts') ||
@@ -322,20 +380,18 @@ export default defineConfig(({ command }) => ({
             ) {
               return 'charts-heavy';
             }
-            // Moment.js and date libraries (heavy)
             if (id.includes('moment') || id.includes('dayjs')) {
               return 'datelib';
             }
-            // Autres vendors groupés
-            return 'vendor-utils';
+            // Generic vendor fallback (includes former vendor-utils)
+            return 'vendor';
           }
 
-          // Application code splitting
+          // ────────────────────────────────────────────────────────────────────
+          // 5️⃣ APPLICATION CODE (non-service, non-ui-core)
+          // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
-            // ✨ v27.2 Phase 3A: Split DevSudo modules for lazy loading (-150 KB)
-            if (id.includes('/modules/devSudo/')) return 'devtools-sudo';
-
-            // v25.7.5 P1-B: Split DevTools tabs for lazy loading (-100 KB)
+            // DevTools tabs (already checked devSudo above in services-core)
             if (id.includes('/pages/tabs/DevTools/SystemTab')) return 'devtools-system';
             if (id.includes('/pages/tabs/DevTools/LogsTab')) return 'devtools-logs';
             if (id.includes('/pages/tabs/DevTools/PerformanceTab'))
@@ -366,43 +422,14 @@ export default defineConfig(({ command }) => ({
               return 'centers-common';
             }
 
-            // Services (engines)
-            // ✨ P3: Split services more granularly
-            if (id.includes('/services/')) {
-              if (id.includes('cognitive')) return 'service-cognitive';
-              if (id.includes('audio') || id.includes('voice')) return 'service-audio';
-              if (id.includes('memory')) return 'service-memory';
-              if (id.includes('fusion')) return 'service-fusion';
-              if (id.includes('performanceEngine')) return 'service-performance';
-              if (id.includes('orchestration')) return 'service-orchestration';
-              if (id.includes('ai/')) return 'service-ai';
-              if (id.includes('analytics')) return 'service-analytics';
-
-              // Regroupement des dépendances circulaires dans un chunk unique
-              if (
-                id.includes('service-ai') ||
-                id.includes('service-memory') ||
-                id.includes('service-cognitive') ||
-                id.includes('services-common') ||
-                id.includes('service-audio')
-              ) {
-                return 'service-core';
-              }
-
-              return 'services-common';
-            }
-
-            // Components UI - Split by domain for better code splitting
-            // FIX v24.2.1 + P3: Split ui-components (302KB) into smaller chunks
+            // Domain-specific UI components (NOT in ui-core cluster)
             if (id.includes('/components/')) {
               if (id.includes('/chat/')) return 'ui-chat';
               if (id.includes('/audio/')) return 'ui-audio';
               if (id.includes('/monitoring/')) return 'ui-monitoring';
-              if (id.includes('/layout/')) return 'ui-layout';
               if (id.includes('/voice/')) return 'ui-voice';
               if (id.includes('/experience/')) return 'ui-experience';
               if (id.includes('/evolution/')) return 'ui-evolution';
-              // ✨ P3: Further split ui-common into domain-specific chunks
               if (id.includes('/aura/')) return 'ui-aura';
               if (id.includes('/performance/')) return 'ui-performance';
               if (id.includes('/admin/')) return 'ui-admin';
@@ -415,12 +442,14 @@ export default defineConfig(({ command }) => ({
               if (id.includes('/MemoryEvolution/')) return 'ui-memory-evolution';
               if (id.includes('/optimization/')) return 'ui-optimization';
               if (id.includes('/branding/')) return 'ui-branding';
-              return 'ui-common';
-            }
-            if (id.includes('/ui/')) {
-              return 'ui-primitives';
+              // Fallback for unmatched components → ui-core already handled above
             }
           }
+
+          // ────────────────────────────────────────────────────────────────────
+          // 6️⃣ FALLBACK: undefined (default Vite chunk)
+          // ────────────────────────────────────────────────────────────────────
+          return undefined;
         },
       },
     },
