@@ -45,8 +45,10 @@ const useBootWatchdog = () => {
   const [timedOut, setTimedOut] = useState(false);
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    let checkInterval: NodeJS.Timeout;
+    const timeoutId: NodeJS.Timeout = setTimeout(() => setTimedOut(true), WATCHDOG_TIMEOUT_MS);
+    const checkInterval: NodeJS.Timeout = setInterval(() => {
+      // checkBootProgress logic
+    }, 500);
 
     const checkBootProgress = () => {
       const w = window as typeof window & {
