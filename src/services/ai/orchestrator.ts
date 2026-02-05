@@ -111,11 +111,8 @@ class AIOrchestrator {
   // Ordre: Cloud APIs (qualité) → Backend Rust → Ollama (mémoire locale) → Local (fallback)
   // IMPORTANT: APIs cloud = réponses de meilleure qualité, Ollama = mémoire persistante
   // v37.0.0: Eager providers (local-first, always available)
-  private eagerProviders = [
-    tauriChatProvider, // #1 Backend Rust (cascade interne)
-    ollamaProvider, // #2 Ollama (mémoire locale + analyse permanente)
-    titaneLocalProvider, // #3 Fallback local (noyau infaillible)
-  ];
+  // FIX: Lazy initialization to avoid ReferenceError on uninitialized variables
+  private eagerProviders: AIProvider[] = []; // Will be initialized in constructor
 
   // v37.0.0: Lazy providers (cloud, loaded on demand)
   private lazyProviderNames: LazyProviderName[] = [
@@ -177,10 +174,24 @@ class AIOrchestrator {
   private readonly METRICS_CACHE_TTL_MS = CACHE_TTL.metrics;
 
   constructor() {
-    // Certains providers peuvent être indisponibles/undefined en tests ou selon le runtime.
-    this.eagerProviders = this.eagerProviders.filter((provider): provider is AIProvider =>
+    // Initialize eager providers safely (they may be undefined at import time)
+    // Order: Tauri (Rust backend) → Ollama (local memory) → TitaneLocal (fallback)
+    const eagerCandidates: (AIProvider | undefined)[] = [
+      tauriChatProvider,    // #1 Backend Rust (cascade interne)
+      ollamaProvider,       // #2 Ollama (mémoire locale + analyse permanente)
+      titaneLocalProvider,  // #3 Fallback local (noyau infaillible)
+    ];
+    
+    // Filter out undefined providers and ensure we have the fallback
+    this.eagerProviders = eagerCandidates.filter((provider): provider is AIProvider =>
       Boolean(provider)
     );
+    
+    // Ensure titaneLocalProvider is always available as fallback
+    if (!this.eagerProviders.includes(titaneLocalProvider) && titaneLocalProvider) {
+      this.eagerProviders.push(titaneLocalProvider);
+    }
+    
     this.initializeProviderStats();
     // En contexte tests (Vitest), on évite tout side-effect à l'import :
     // - warmup (appels provider.isAvailable → secureInvoke)
