@@ -8,6 +8,24 @@
 <!doctype html>
 <html lang="fr" data-theme="dark">
   <head>
+    <!-- ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER (SAFE, INLINE, NO CSP BYPASS) -->
+    <script>
+      window.__TITANE_BOOT__ = window.__TITANE_BOOT__ || {};
+      window.__TITANE_BOOT__.html_ok = true;
+      window.__TITANE_BOOT__.html_timestamp = Date.now();
+      // Capture errors ASAP
+      window.onerror = function(msg, url, line, col, err) {
+        if (!window.__TITANE_BOOT__.errors) window.__TITANE_BOOT__.errors = [];
+        window.__TITANE_BOOT__.errors.push({ msg, url, line, col, err: err?.toString() });
+        console.error('[BOOT-ERROR]', msg);
+      };
+      window.addEventListener('unhandledrejection', function(evt) {
+        if (!window.__TITANE_BOOT__.errors) window.__TITANE_BOOT__.errors = [];
+        window.__TITANE_BOOT__.errors.push({ type: 'rejection', reason: evt.reason?.toString() });
+        console.error('[BOOT-REJECTION]', evt.reason);
+      });
+    </script>
+
     <meta charset="UTF-8" />
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./vite.svg" />
