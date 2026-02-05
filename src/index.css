@@ -11,9 +11,11 @@
 @import 'tailwindcss';
 
 /* ═══════════════════════════════════════════════════════════════ */
-/* EXTERNAL RESOURCES (Google Fonts)                               */
+/* LOCAL FONT DEFINITIONS (Titanium Design System)                 */
 /* ═══════════════════════════════════════════════════════════════ */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+/* @font-face imports moved to local-fonts.css (build-time generated) */
+/* Fallback: system font stack (Inter → -apple-system → sans-serif) */
+@import './styles/local-fonts.css';
 
 /* ═══════════════════════════════════════════════════════════════ */
 /* ALL PROJECT CSS FILES (Regular @import, no nested @import)       */
