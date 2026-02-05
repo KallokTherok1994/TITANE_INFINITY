@@ -13,7 +13,7 @@ describe('ConversationLifecycleEngine', () => {
   beforeEach(() => {
     engine = new ConversationLifecycleEngine();
     events = [];
-    engine.addEventListener((event) => events.push(event));
+    engine.addEventListener(event => events.push(event));
   });
 
   describe('createConversation', () => {

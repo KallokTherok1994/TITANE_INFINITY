@@ -137,20 +137,22 @@ test.describe('Critical Path: Application Launch', () => {
       await page.waitForTimeout(300);
     }
 
-    // Utilise une interaction stable (tabs TITANE) plutôt que le "premier bouton".
-    const tablist = page.getByRole('tablist', { name: /Sections principales TITANE/i });
-    await expect(tablist).toBeVisible({ timeout: 15000 });
+    // Interaction stable via TopNav (navigation principale)
+    const mainNav = page.getByRole('navigation', {
+      name: /Navigation principale|Main navigation/i,
+    });
+    await expect(mainNav).toBeVisible({ timeout: 15000 });
 
-    const memoryTab = page.getByRole('tab', { name: /Mémoire/i }).first();
-    const conversationTab = page.getByRole('tab', { name: /Conversation/i }).first();
+    const statsButton = mainNav.getByRole('button', { name: /^STATS$/i }).first();
+    const titaneButton = mainNav.getByRole('button', { name: /^TITANE$/i }).first();
 
-    await expect(memoryTab).toBeVisible({ timeout: 15000 });
-    await memoryTab.click({ force: true });
-    await page.waitForTimeout(300);
+    await expect(statsButton).toBeVisible({ timeout: 15000 });
+    await statsButton.click({ force: true });
+    await expect(page).toHaveURL(/\/stats(\?|$)/, { timeout: 15000 });
 
-    await expect(conversationTab).toBeVisible({ timeout: 15000 });
-    await conversationTab.click({ force: true });
-    await page.waitForTimeout(300);
+    await expect(titaneButton).toBeVisible({ timeout: 15000 });
+    await titaneButton.click({ force: true });
+    await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
 
     // Verify page still functional (no crash)
     await expect(page.locator('body')).toBeVisible();

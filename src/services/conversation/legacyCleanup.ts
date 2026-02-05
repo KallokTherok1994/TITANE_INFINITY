@@ -40,7 +40,10 @@ export function cleanupLegacyConversationKeys(): void {
         logger.debug('Removed legacy key', { key });
       });
 
-      logger.info('🧹 Cleaned up legacy conversation keys', { count: keysToRemove.length, keys: keysToRemove });
+      logger.info('🧹 Cleaned up legacy conversation keys', {
+        count: keysToRemove.length,
+        keys: keysToRemove,
+      });
     }
   } catch (error) {
     logger.error('Failed to cleanup legacy keys', error);

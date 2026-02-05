@@ -12,6 +12,7 @@
 ### Système Dual de localStorage (Conflit)
 
 **Ancien système (useChat.ts):**
+
 ```typescript
 const stored = localStorage.getItem('titane_current_conversation_id');
 localStorage.setItem('titane_current_conversation_id', newId);
@@ -19,6 +20,7 @@ localStorage.getItem('titane_chat_mode_default');
 ```
 
 **Nouveau système (conversationStorage.ts):**
+
 ```typescript
 const STORAGE_KEY_ACTIVE = 'titane_active_conversation_id';
 const STORAGE_KEY_PREFIX = 'titane_conversation_';
@@ -55,4 +57,3 @@ const STORAGE_KEY_PREFIX = 'titane_conversation_';
 ## Correction en Cours
 
 Phase: **PHASE 3 → CORRECTION IMMÉDIATE**
-

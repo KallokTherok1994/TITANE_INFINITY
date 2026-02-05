@@ -8,14 +8,14 @@
 
 ## QUICK REFERENCE
 
-| Item | Status | Location |
-|------|--------|----------|
-| **Tauri Build** | ✅ SUCCESS | `src-tauri/target/release/bundle/` |
+| Item              | Status              | Location                                              |
+| ----------------- | ------------------- | ----------------------------------------------------- |
+| **Tauri Build**   | ✅ SUCCESS          | `src-tauri/target/release/bundle/`                    |
 | **AppImage Test** | ✅ UI renders ~1.1s | `reports/prod-ui-hang/logs/appimage_test_vomega2.log` |
-| **Code Status** | ✅ Clean | Commit e516f062 pushed to origin/MAIN |
-| **Test Suite** | ✅ All PASS | TypeScript, ESLint, Prettier, Cargo tests |
-| **Registry** | ✅ 8 entries | `registry/repo-events.jsonl` (append-only) |
-| **Artifacts** | ✅ Generated | AppImage (82M), DEB (9.6M), RPM (9.6M) |
+| **Code Status**   | ✅ Clean            | Commit e516f062 pushed to origin/MAIN                 |
+| **Test Suite**    | ✅ All PASS         | TypeScript, ESLint, Prettier, Cargo tests             |
+| **Registry**      | ✅ 8 entries        | `registry/repo-events.jsonl` (append-only)            |
+| **Artifacts**     | ✅ Generated        | AppImage (82M), DEB (9.6M), RPM (9.6M)                |
 
 ---
 
@@ -24,22 +24,26 @@
 ### Session Phases
 
 **Phase 1: Distribution** ✅
+
 - Authorization received ("J'AUTORISE !", Kevin Thibault)
 - v27.0.0-PRODUCTION published to GitHub Releases
 - 4 artifact formats with SHA256 hashes
 
 **Phase 2: Deployment** ✅
+
 - Local AppImage deployment tested (180s smoke test PASS)
 - GitHub Actions CI/CD pipeline created & activated
 - Deploy workflow: validate → test → build → notify
 
 **Phase 3: vΩ.1 Boot Fix** ✅
+
 - Issue: Vite absolute paths incompatible with file:// Tauri
 - Solution: Conditional base in vite.config.ts
 - Result: Boot time 544ms (optimal), all systems initialized
 - Anti-regression gate: verify:prod-boot (ACTIVE)
 
 **Phase 4: vΩ.2 UI Fix** ✅
+
 - Issue: React AppRouter checkingOnboarding=true blocked UI render
 - Solution: Changed to false (async auth check in background)
 - Result: UI renders in ~1.1s, no infinite loading spinner
@@ -69,13 +73,13 @@
 
 ### Documentation
 
-| Document | Purpose |
-|----------|---------|
-| `TITANE_INFINITY_STATUS_FINAL_vOMEGA2.md` | Comprehensive session report |
-| `reports/prod-ui-hang/PROD_UI_HANG_ROOT_CAUSE_vOMEGA2.md` | Root cause analysis (vΩ.2) |
-| `reports/prod-ui-hang/logs/appimage_test_vomega2.log` | AppImage boot logs (proof) |
-| `RELEASE_NOTES_v27.0.0.md` | User-facing release notes |
-| `DEPLOYMENT_SUMMARY_v27.0.0.md` | Build metrics & QA summary |
+| Document                                                  | Purpose                      |
+| --------------------------------------------------------- | ---------------------------- |
+| `TITANE_INFINITY_STATUS_FINAL_vOMEGA2.md`                 | Comprehensive session report |
+| `reports/prod-ui-hang/PROD_UI_HANG_ROOT_CAUSE_vOMEGA2.md` | Root cause analysis (vΩ.2)   |
+| `reports/prod-ui-hang/logs/appimage_test_vomega2.log`     | AppImage boot logs (proof)   |
+| `RELEASE_NOTES_v27.0.0.md`                                | User-facing release notes    |
+| `DEPLOYMENT_SUMMARY_v27.0.0.md`                           | Build metrics & QA summary   |
 
 ---
 
@@ -96,13 +100,13 @@ b39baad1                              style: apply Prettier formatting to docume
 
 ## REGISTRY ENTRIES (Append-Only Governance)
 
-| Entry | Category | Scope | Status |
-|-------|----------|-------|--------|
-| repo-production-003 | distribution | release | merged |
-| repo-production-004 | distribution | github-release | merged |
-| repo-deploy-001 | deployment | local | merged |
-| repo-deploy-002 | deployment | ci-cd | merged |
-| repo-prod-boot-001 | production-fix | asset-paths (vΩ.1) | merged |
+| Entry                 | Category       | Scope              | Status |
+| --------------------- | -------------- | ------------------ | ------ |
+| repo-production-003   | distribution   | release            | merged |
+| repo-production-004   | distribution   | github-release     | merged |
+| repo-deploy-001       | deployment     | local              | merged |
+| repo-deploy-002       | deployment     | ci-cd              | merged |
+| repo-prod-boot-001    | production-fix | asset-paths (vΩ.1) | merged |
 | repo-prod-ui-hang-001 | production-fix | frontend-ui (vΩ.2) | merged |
 
 **File:** `registry/repo-events.jsonl` (135 lines, append-only JSONL)
@@ -113,28 +117,28 @@ b39baad1                              style: apply Prettier formatting to docume
 
 ### Frontend Validation
 
-| Test | Command | Result |
-|------|---------|--------|
-| TypeScript | `pnpm run check` | ✅ 0 errors |
-| ESLint | `pnpm run lint` | ✅ 0 violations |
-| Prettier | `pnpm run format:check` | ✅ 100% compliant |
-| Full Suite | `pnpm run verify:final100` | ✅ PASS |
+| Test       | Command                    | Result            |
+| ---------- | -------------------------- | ----------------- |
+| TypeScript | `pnpm run check`           | ✅ 0 errors       |
+| ESLint     | `pnpm run lint`            | ✅ 0 violations   |
+| Prettier   | `pnpm run format:check`    | ✅ 100% compliant |
+| Full Suite | `pnpm run verify:final100` | ✅ PASS           |
 
 ### Backend Validation
 
-| Test | Command | Result |
-|------|---------|--------|
+| Test        | Command                | Result                 |
+| ----------- | ---------------------- | ---------------------- |
 | Cargo Tests | `cargo test --release` | ✅ 26 passed, 0 failed |
-| Build | `pnpm tauri build` | ✅ SUCCESS |
+| Build       | `pnpm tauri build`     | ✅ SUCCESS             |
 
 ### Integration Validation
 
-| Test | Result |
-|------|--------|
-| AppImage Boot Time | ✅ ~1.1s (excellent) |
-| UI Render Time | ✅ ~682ms after backend init |
-| Backend Init Time | ✅ ~327ms (optimal) |
-| Page Load Events | ✅ main + avatar-floating |
+| Test                  | Result                               |
+| --------------------- | ------------------------------------ |
+| AppImage Boot Time    | ✅ ~1.1s (excellent)                 |
+| UI Render Time        | ✅ ~682ms after backend init         |
+| Backend Init Time     | ✅ ~327ms (optimal)                  |
+| Page Load Events      | ✅ main + avatar-floating            |
 | System Initialization | ✅ All 4-Ring components initialized |
 
 ---
@@ -166,11 +170,11 @@ TOTAL BOOT TIME: ~1.1 seconds ✅ OPTIMAL
 
 ### Ready for Deployment
 
-| Format | Path | Size | Status |
-|--------|------|------|--------|
-| **AppImage** | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.0_amd64.AppImage` | 82M | ✅ Generated, Tested |
-| **DEB** | `src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb` | 9.6M | ✅ Generated |
-| **RPM** | `src-tauri/target/release/bundle/rpm/TITANE-Infinity-27.0.0-1.x86_64.rpm` | 9.6M | ✅ Generated |
+| Format       | Path                                                                             | Size | Status               |
+| ------------ | -------------------------------------------------------------------------------- | ---- | -------------------- |
+| **AppImage** | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.0_amd64.AppImage` | 82M  | ✅ Generated, Tested |
+| **DEB**      | `src-tauri/target/release/bundle/deb/TITANE-Infinity_27.0.0_amd64.deb`           | 9.6M | ✅ Generated         |
+| **RPM**      | `src-tauri/target/release/bundle/rpm/TITANE-Infinity-27.0.0-1.x86_64.rpm`        | 9.6M | ✅ Generated         |
 
 All artifacts include vΩ.1 + vΩ.2 fixes and are ready for immediate deployment.
 
@@ -204,21 +208,25 @@ sha256sum src-tauri/target/release/bundle/*/*.{AppImage,deb,rpm}
 ### Critical Fixes
 
 #### vΩ.1: Boot Loop Resolution
+
 - Fixed Vite asset path incompatibility with Tauri file:// protocol
 - Implemented conditional base in vite.config.ts
 - Boot time: 544ms (optimal)
 
 #### vΩ.2: Infinite Loading Fix
+
 - Fixed React AppRouter blocking UI render
 - Changed checkingOnboarding initialization to false
 - UI now renders in ~1.1s (excellent performance)
 
 ### Performance Metrics
+
 - Backend initialization: 327ms
 - UI first render: 682ms after backend
 - Total boot time: ~1.1 seconds
 
 ### Verification
+
 ✅ 26 Rust tests passing  
 ✅ Zero TypeScript errors  
 ✅ Zero ESLint violations  
@@ -286,6 +294,7 @@ pnpm tauri build
 ✨ **TITANE∞ v27.0.0-PRODUCTION is now PRODUCTION READY** ✨
 
 All critical issues identified during this session have been:
+
 1. Root-caused (Vite asset paths, React state initialization)
 2. Fixed (vΩ.1 conditional base, vΩ.2 async auth)
 3. Tested (AppImage boot test, full CLI validation)

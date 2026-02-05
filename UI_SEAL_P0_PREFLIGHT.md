@@ -19,20 +19,21 @@ $ git status --porcelain
 
 ## P0.2 — Versions & Environnement
 
-| Component | Version |
-|-----------|---------|
-| **Node.js** | v24.0.0 |
-| **pnpm** | 10.28.2 |
-| **package.json** | TITANE∞ v27.0.1 |
+| Component        | Version                          |
+| ---------------- | -------------------------------- |
+| **Node.js**      | v24.0.0                          |
+| **pnpm**         | 10.28.2                          |
+| **package.json** | TITANE∞ v27.0.1                  |
 | **React Router** | v7 (modern, createBrowserRouter) |
-| **Tauri** | Mode-only (no browser fallback) |
-| **Vite** | v7.3.1 |
+| **Tauri**        | Mode-only (no browser fallback)  |
+| **Vite**         | v7.3.1                           |
 
 ---
 
 ## P0.3 — Commandes Disponibles
 
 ### Dev & Build
+
 ```bash
 pnpm run dev:tauri        # Full Tauri dev (tauri dev with Vite + Ollama)
 pnpm run dev             # Alias to dev:tauri
@@ -41,6 +42,7 @@ pnpm run build:production # Full production (lint + format + vite + tauri)
 ```
 
 ### Tests & Verification
+
 ```bash
 pnpm test                # vitest run (all tests)
 pnpm test:watch         # vitest --watch
@@ -49,6 +51,7 @@ pnpm run verify         # Full verification (lint + format + type check + tests)
 ```
 
 ### Linting & Formatting
+
 ```bash
 pnpm lint               # ESLint check
 pnpm lint:fix          # ESLint auto-fix
@@ -62,6 +65,7 @@ pnpm check             # TypeScript --noEmit
 ## P0.4 — Boot Logs (First 15s of dev:tauri)
 
 ### ✅ Backend Boot (Rust/Tauri)
+
 ```
 [2026-02-05T07:30:58.266Z INFO titane_infinity::security::secrets_engine]
   [SecretsEngine] Secure secrets engine initialised (encrypted)
@@ -90,6 +94,7 @@ pnpm check             # TypeScript --noEmit
 ```
 
 ### ✅ Frontend Boot (Vite)
+
 ```
 VITE v7.3.1 ready in 405 ms
 ➜ Local: http://127.0.0.1:5173/
@@ -120,6 +125,7 @@ VITE v7.3.1 ready in 405 ms
 ```
 
 ### ✅ Console Check (No Blocking Errors)
+
 - ✅ No `TypeError: Cannot read property`
 - ✅ No `ReferenceError: [var] is not defined`
 - ✅ No `Uncaught Promise rejection`
@@ -131,15 +137,15 @@ VITE v7.3.1 ready in 405 ms
 
 ## P0.5 — Pre-Audit Invariants Check
 
-| Invariant | Status | Note |
-|-----------|--------|------|
-| Ring 4 isolation (UI = pure delegation) | ✅ | useChat, useConversations via services |
-| No localStorage direct access in Ring 4 | ✅ | conversationStorage is Ring 3 |
-| conversation_id mandatory on AI calls | ✅ | useChatCore enforces it |
-| Single active conversation | ✅ | setActiveConversation centralizes |
-| ErrorBoundary present | ✅ | AutoHealErrorBoundary + ErrorBoundary in App.tsx |
-| No loading infinite loops | ✅ | Boot completed, no hangs |
-| Build should be clean | 🔄 | To verify in P5 |
+| Invariant                               | Status | Note                                             |
+| --------------------------------------- | ------ | ------------------------------------------------ |
+| Ring 4 isolation (UI = pure delegation) | ✅     | useChat, useConversations via services           |
+| No localStorage direct access in Ring 4 | ✅     | conversationStorage is Ring 3                    |
+| conversation_id mandatory on AI calls   | ✅     | useChatCore enforces it                          |
+| Single active conversation              | ✅     | setActiveConversation centralizes                |
+| ErrorBoundary present                   | ✅     | AutoHealErrorBoundary + ErrorBoundary in App.tsx |
+| No loading infinite loops               | ✅     | Boot completed, no hangs                         |
+| Build should be clean                   | 🔄     | To verify in P5                                  |
 
 ---
 
@@ -154,4 +160,5 @@ VITE v7.3.1 ready in 405 ms
 - Pre-audit invariants baseline established
 
 ### Next Phase
+
 → P1: **Carte UI exhaustive** (routes, composants, stores, architecture map)

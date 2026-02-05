@@ -92,7 +92,9 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .conversations-sidebar__new-btn:hover:not(:disabled) {

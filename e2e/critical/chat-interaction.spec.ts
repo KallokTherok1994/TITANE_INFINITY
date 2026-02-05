@@ -15,7 +15,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('chat interface is accessible', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     await expect(chatInput).toBeVisible({ timeout: 15000 });
@@ -23,7 +23,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('can type message in chat input', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
 
@@ -37,7 +37,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('send button is present and enabled', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     await chatInput.fill('ping');
@@ -49,7 +49,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('message appears in chat history after sending', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();
@@ -65,7 +65,7 @@ test.describe('Critical Path: Chat Interaction', () => {
     // (actual AI response depends on backend availability)
 
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     await chatInput.fill('ping');
@@ -82,7 +82,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('chat pipeline handles rapid messages', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
 
@@ -102,7 +102,7 @@ test.describe('Critical Path: Chat Interaction', () => {
     const initialUrl = page.url();
 
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     await chatInput.fill('Navigation test');
@@ -115,7 +115,7 @@ test.describe('Critical Path: Chat Interaction', () => {
 
   test('empty message handling', async ({ page }) => {
     const chatInput = page
-      .getByRole('textbox', { name: /Tapez votre message/i })
+      .getByPlaceholder(/Tapez votre message/i)
       .or(page.locator('textarea.conversation-input'))
       .first();
     const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();

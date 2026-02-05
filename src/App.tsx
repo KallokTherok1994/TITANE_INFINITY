@@ -274,7 +274,7 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     // Immédiate reset - force UI to show, même si backend tardive
     setCheckingOnboarding(false);
-    
+
     // Puis check le backend EN ARRIÈRE-PLAN UNIQUEMENT (ne modifie pas checkingOnboarding)
     const checkOnboarding = async () => {
       try {

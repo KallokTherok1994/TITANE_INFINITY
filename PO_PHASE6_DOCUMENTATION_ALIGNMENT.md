@@ -13,17 +13,20 @@
 **File:** `ARCHITECTURE.md` (inferred from project structure)
 
 **Expected sections:**
+
 - ✅ 4-Ring pattern: Types → Engines → Services → UI
 - ✅ Conversation system overview
 - ✅ Storage mechanism
 - ✅ Event flow
 
 **Phase 3 Update Required?**
+
 - `conversationStorage.ts` now has sync methods
 - `useChat.ts` now properly delegates to conversationStorage
 - Legacy system officially deprecated (handled by cleanup)
 
 **Required additions to ARCHITECTURE.md:**
+
 ```markdown
 ## Conversation Storage System (Updated Phase 3)
 
@@ -41,6 +44,7 @@ The conversation storage system uses **centralized, single-source design**:
   - All reads go through conversationStorage
 
 **Migration Notes:**
+
 - Old system keys: `titane_current_conversation_id`, `titane_chat_mode_*` (DEPRECATED)
 - New system keys: `titane_active_conversation_id`, `titane_conversation_{id}` (CURRENT)
 - Cleanup automatic on app startup (non-blocking)
@@ -53,30 +57,37 @@ The conversation storage system uses **centralized, single-source design**:
 **File:** `API_REFERENCE.md` (exists in workspace)
 
 **Check:**
+
 - ✅ Documents conversationStorage API
 - ✅ Documents conversationLifecycle API
 - ✅ Documents useConversations hook
 - ✅ Documents useChat hook
 
 **Phase 3 additions to document:**
-```markdown
+
+````markdown
 ## ConversationStorageService API (Ring 3)
 
 ### Synchronous Access Methods (NEW — Phase 3)
 
 #### getActiveConversationId()
+
 ```typescript
 getActiveConversationId(): string | null
 ```
+````
+
 - Returns the ID of the currently active conversation
 - Synchronous (no Promise)
 - Used by Ring 4 during mount to prevent flash
 - Returns null if no conversation is active
 
 #### loadConversationSync()
+
 ```typescript
 loadConversationSync(conversationId: string): Conversation | null
 ```
+
 - Loads a conversation synchronously from localStorage
 - Used by Ring 4 during mount
 - Returns null if conversation not found
@@ -85,11 +96,13 @@ loadConversationSync(conversationId: string): Conversation | null
 ### Automatic Cleanup (NEW — Phase 3)
 
 The service automatically calls `cleanupLegacyConversationKeys()` during initialization:
+
 - Removes: `titane_current_conversation_id`
 - Removes: `titane_chat_mode_*` (all variants)
 - Non-blocking, idempotent operation
 - User-transparent
-```
+
+````
 
 ---
 
@@ -122,7 +135,7 @@ The service automatically calls `cleanupLegacyConversationKeys()` during initial
 
 ### Deprecated
 - Direct localStorage access pattern for conversation state (use conversationStorage instead)
-```
+````
 
 ---
 
@@ -147,16 +160,19 @@ The service automatically calls `cleanupLegacyConversationKeys()` during initial
 **Key aspects:**
 
 #### Storage System Design
+
 - ✅ Document single-source-of-truth pattern
 - ✅ Document why Ring 3 is authoritative
 - ✅ Document why Ring 4 delegates
 
 #### Integration Pattern
+
 - ✅ Document Ring 4 → Ring 3 delegation
 - ✅ Document sync methods for mount-time use
 - ✅ Document event-driven updates after mount
 
 #### Legacy System Deprecation
+
 - ✅ Document which keys are obsolete
 - ✅ Document automatic cleanup behavior
 - ✅ Document why migration was necessary
@@ -165,25 +181,28 @@ The service automatically calls `cleanupLegacyConversationKeys()` during initial
 
 ## Documentation Compliance Matrix
 
-| Document | Scope | Phase 3 Relevant | Status | Action |
-|----------|-------|---|---|---|
-| **ARCHITECTURE.md** | System design | ✅ YES | 🔄 Needs update | Add storage section |
-| **API_REFERENCE.md** | API contracts | ✅ YES | 🔄 Needs update | Add sync methods |
-| **CHANGELOG.md** | Release notes | ✅ YES | 🔄 Needs update | Add Phase 3 entry |
-| **GUIDE_INSTALLATION_SETUP.md** | Installation | ❌ NO | ✅ OK | No change |
-| **MANUEL_UTILISATEUR.md** | User guide | ❌ NO | ✅ OK | No change |
+| Document                        | Scope         | Phase 3 Relevant | Status          | Action              |
+| ------------------------------- | ------------- | ---------------- | --------------- | ------------------- |
+| **ARCHITECTURE.md**             | System design | ✅ YES           | 🔄 Needs update | Add storage section |
+| **API_REFERENCE.md**            | API contracts | ✅ YES           | 🔄 Needs update | Add sync methods    |
+| **CHANGELOG.md**                | Release notes | ✅ YES           | 🔄 Needs update | Add Phase 3 entry   |
+| **GUIDE_INSTALLATION_SETUP.md** | Installation  | ❌ NO            | ✅ OK           | No change           |
+| **MANUEL_UTILISATEUR.md**       | User guide    | ❌ NO            | ✅ OK           | No change           |
 
 ---
 
 ## Recommended Documentation Updates (Post-Phase 6)
 
 ### Priority 1: ARCHITECTURE.md
+
 Add section: "Conversation Storage System" (see above)
 
 ### Priority 2: API_REFERENCE.md
+
 Add methods: `getActiveConversationId()`, `loadConversationSync()`
 
 ### Priority 3: CHANGELOG.md
+
 Add v26.3.1 entry documenting Phase 3 fix
 
 **Time estimate:** 15-20 minutes  
@@ -238,4 +257,3 @@ Before Phase 7 final commit:
 4. Proceed to Phase 7 (Registry & Final Seal)
 
 **Note:** Phase 3 code is already committed (d6dad451). Documentation updates can be included in final Phase 7 commit or separate follow-up.
-
