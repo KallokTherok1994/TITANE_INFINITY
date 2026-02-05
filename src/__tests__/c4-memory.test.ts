@@ -113,7 +113,7 @@ describe('C4.3: Memory Injection Bounds', () => {
     expect(estimatedTokens).toBeLessThanOrEqual(MAX_INJECTION_TOKENS);
     
     // Should be injected as-is
-    let currentTokens = estimatedTokens;
+    const currentTokens = estimatedTokens;
     expect(currentTokens).toBeLessThanOrEqual(MAX_INJECTION_TOKENS);
   });
 
