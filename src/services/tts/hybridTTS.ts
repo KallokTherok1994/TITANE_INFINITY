@@ -17,11 +17,12 @@
 
 import { detectEnvironment } from '@/core/tauri/environment';
 import { secureInvoke } from '@/lib/security';
+// 🔧 P1_BUILD_CHUNKS_FIX: Direct import to avoid re-exported static/dynamic conflict
 import {
-  chatEngineHealthCheck,
-  chatEngineSpeakText,
-  type ChatEngineSpeechMode,
-} from '@/services/tauri';
+  healthCheck as chatEngineHealthCheck,
+  speakText as chatEngineSpeakText,
+  type SpeechMode as ChatEngineSpeechMode,
+} from '@/services/tauri/chatEngine.commands';
 import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { parlerTTSBridge, playAudioBlob, type ParlerTTSConfig } from './parlerTTSBridge';
 import { antiEchoShield } from '@/services/voice/antiEchoShield';
