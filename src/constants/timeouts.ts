@@ -5,17 +5,17 @@
 
 /**
  * Timeouts API et réseau (ms)
- * ✨ v26.2.1: Extended timeouts for cloud operations
+ * ✨ vΩ.2: Budgets bornés pour respecter la latence max
  */
 export const API_TIMEOUTS = {
-  /** Timeout par défaut pour les appels API (30s) */
-  DEFAULT: 30000,
-  /** Timeout pour les opérations IA (90s - increased for cloud agents) */
-  AI_GENERATION: 90000,
+  /** Timeout par défaut pour les appels API (25s) */
+  DEFAULT: 25000,
+  /** Timeout pour les opérations IA (25s max global) */
+  AI_GENERATION: 25000,
   /** Timeout court pour les checks rapides (5s) */
   QUICK_CHECK: 5000,
-  /** Timeout pour les opérations longues (120s) */
-  LONG_OPERATION: 120000,
+  /** Timeout pour les opérations longues (60s) */
+  LONG_OPERATION: 60000,
 } as const;
 
 /**

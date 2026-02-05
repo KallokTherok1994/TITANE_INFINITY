@@ -25,7 +25,7 @@ describe('conversationEngine.processMessage', () => {
     const response = await processMessage('Hi');
 
     expect(response.metadata).toBeDefined();
-    expect(response.metadata.provider_used).toBe('unknown');
+    expect(response.metadata.provider_used).toBe('fallback');
     expect(response.metadata.latency_ms).toBe(0);
     expect(response.metadata.tokens_used).toBe(0);
     expect(response.metadata.memory_effect).toBe('New');

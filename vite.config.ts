@@ -347,7 +347,7 @@ export default defineConfig(({ command }) => ({
               return 'validation';
             }
             if (id.includes('zustand')) {
-              return 'state';
+              return 'react-vendor';
             }
             if (id.includes('recharts')) {
               return 'charts';

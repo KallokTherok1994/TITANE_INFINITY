@@ -9,6 +9,7 @@
  */
 
 import { safeInvoke } from '@/utils/invoke';
+import { StatusCache } from '@/services/ai/statusCache';
 import type {
   SecureResponse,
   GeminiKeyStatus,
@@ -26,6 +27,39 @@ import type {
 // ═══════════════════════════════════════════════════════════════
 
 const FALLBACK_ERROR = 'Tauri backend indisponible';
+
+const keyStatusCaches = {
+  gemini: new StatusCache<SecureResponse<GeminiKeyStatus>>({
+    name: 'gemini-key-status',
+    ttlMs: 30000,
+    backoffBaseMs: 1000,
+    backoffMaxMs: 10000,
+  }),
+  openai: new StatusCache<SecureResponse<GeminiKeyStatus>>({
+    name: 'openai-key-status',
+    ttlMs: 30000,
+    backoffBaseMs: 1000,
+    backoffMaxMs: 10000,
+  }),
+  anthropic: new StatusCache<SecureResponse<GeminiKeyStatus>>({
+    name: 'anthropic-key-status',
+    ttlMs: 30000,
+    backoffBaseMs: 1000,
+    backoffMaxMs: 10000,
+  }),
+  copilot: new StatusCache<SecureResponse<GeminiKeyStatus>>({
+    name: 'copilot-key-status',
+    ttlMs: 30000,
+    backoffBaseMs: 1000,
+    backoffMaxMs: 10000,
+  }),
+};
+
+const backoffKeyStatusFallback = (provider: string): SecureResponse<GeminiKeyStatus> => ({
+  ok: false,
+  data: null,
+  error: `Backoff actif (${provider})`,
+});
 
 function normalizeResponse<T>(
   raw: unknown,
@@ -60,10 +94,15 @@ function normalizeResponse<T>(
  * Obtenir le statut de la clé Gemini
  */
 async function getGeminiStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('get_gemini_key_status');
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de récupérer le statut Gemini'
+  return keyStatusCaches.gemini.get(
+    async () => {
+      const raw = await safeInvoke<unknown>('get_gemini_key_status');
+      return normalizeResponse<GeminiKeyStatus>(
+        raw,
+        'Impossible de récupérer le statut Gemini'
+      );
+    },
+    () => backoffKeyStatusFallback('gemini')
   );
 }
 
@@ -79,10 +118,15 @@ async function setGeminiKey(apiKey: string): Promise<SecureResponse<GeminiKeySta
  * Obtenir le statut de la clé OpenAI
  */
 async function getOpenAIStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('get_openai_key_status');
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de récupérer le statut OpenAI'
+  return keyStatusCaches.openai.get(
+    async () => {
+      const raw = await safeInvoke<unknown>('get_openai_key_status');
+      return normalizeResponse<GeminiKeyStatus>(
+        raw,
+        'Impossible de récupérer le statut OpenAI'
+      );
+    },
+    () => backoffKeyStatusFallback('openai')
   );
 }
 
@@ -98,10 +142,15 @@ async function setOpenAIKey(apiKey: string): Promise<SecureResponse<GeminiKeySta
  * Obtenir le statut de la clé Anthropic
  */
 async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('get_anthropic_key_status');
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de récupérer le statut Anthropic'
+  return keyStatusCaches.anthropic.get(
+    async () => {
+      const raw = await safeInvoke<unknown>('get_anthropic_key_status');
+      return normalizeResponse<GeminiKeyStatus>(
+        raw,
+        'Impossible de récupérer le statut Anthropic'
+      );
+    },
+    () => backoffKeyStatusFallback('anthropic')
   );
 }
 
@@ -120,10 +169,15 @@ async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKey
  * Obtenir le statut de la clé GitHub Copilot
  */
 async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('get_copilot_key_status');
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de récupérer le statut Copilot'
+  return keyStatusCaches.copilot.get(
+    async () => {
+      const raw = await safeInvoke<unknown>('get_copilot_key_status');
+      return normalizeResponse<GeminiKeyStatus>(
+        raw,
+        'Impossible de récupérer le statut Copilot'
+      );
+    },
+    () => backoffKeyStatusFallback('copilot')
   );
 }
 

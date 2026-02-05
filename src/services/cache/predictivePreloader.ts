@@ -23,6 +23,8 @@ export class PredictivePreloader {
   private queue: PreloadQueueItem[] = [];
   private isProcessing = false;
   private maxQueueSize = 10;
+  private preloadHandler: ((message: string, mode: string) => Promise<void>) | null =
+    null;
 
   // Patterns détectés automatiquement
   private userPatterns: Map<string, number> = new Map(); // message -> fréquence
@@ -40,6 +42,13 @@ export class PredictivePreloader {
       // Déjà vu 2+ fois = pattern
       this.predictNext(message, mode);
     }
+  }
+
+  /**
+   * Injecte un handler de préchargement (évite import dynamique de chatEngine).
+   */
+  setPreloadHandler(handler: (message: string, mode: string) => Promise<void>): void {
+    this.preloadHandler = handler;
   }
 
   /**
@@ -168,28 +177,21 @@ export class PredictivePreloader {
     // Préchargement uniquement côté UI (évite les exécutions Node/SSR)
     if (typeof window === 'undefined') return;
 
-    // ⚠️ Important: éviter une dépendance statique vers chatEngine (cycle).
-    // On warm le cache via import dynamique + génération avec predictive désactivé.
-    const { chatEngine } = await import('@/services/ai/chatEngine');
-
     const mode =
       typeof item.key.mode === 'string' && item.key.mode.trim()
         ? item.key.mode
         : 'default';
+
+    if (!this.preloadHandler) {
+      return;
+    }
 
     logger.debug('Predictive preload: warming cache', {
       mode,
       preview: item.key.message.slice(0, 80),
     });
 
-    await chatEngine.generate(item.key.message, [], {
-      mode: mode as any,
-      performanceConfig: {
-        enableCache: true,
-        enablePredictive: false,
-        cacheHitBonus: false,
-      },
-    });
+    await this.preloadHandler(item.key.message, mode);
   }
 
   /**

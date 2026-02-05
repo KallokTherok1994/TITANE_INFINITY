@@ -40,6 +40,7 @@ pub async fn conversation_generate(
     mode: Option<String>,
     provider: Option<String>,
     system_prompt: Option<String>, // Ajout: system prompt personnalisé
+    request_id: Option<String>,
 ) -> CommandResult<serde_json::Value> {
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
@@ -51,6 +52,15 @@ pub async fn conversation_generate(
         Some("debug_cognitive") => ConversationMode::DebugCognitive,
         _ => ConversationMode::Default,
     };
+
+    let req_id = request_id.unwrap_or_else(|| format!("req_{}", Uuid::new_v4()));
+    log::info!(
+        "[Ω:CMD] 📨 Request | req_id={} | msg_len={} | conv_id={} | mode={:?}",
+        req_id,
+        message.len(),
+        conversation_id,
+        conversation_mode
+    );
 
     // Créer la requête OMEGA
     let request = ConversationRequest {
@@ -91,7 +101,8 @@ pub async fn conversation_generate(
     }
 
     log::info!(
-        "[Ω:CMD] ✅ Success | msg_id={} | content_len={} | latency={}ms",
+        "[Ω:CMD] ✅ Success | req_id={} | msg_id={} | content_len={} | latency={}ms",
+        req_id,
         response.message_id,
         response.assistant_message.len(),
         latency_ms
@@ -109,6 +120,7 @@ pub async fn conversation_generate(
             "emotion": format!("{:?}", response.detected_emotion),
             "cognitiveTags": response.cognitive_tags,
             "cognitiveSummary": response.cognitive_summary,
+            "requestId": req_id,
         }
     }))
 }

@@ -25,6 +25,7 @@ import type {
   HealthStatus,
 } from '../core/ARCHITECTURE_TYPES_v∞';
 import type { SingularityFrontendState } from '../core/state/SingularityState';
+import { getSystemPrompt } from '@/config/chatModes.config';
 
 const logger = createLogger('[TAURI-BRIDGE]');
 
@@ -242,13 +243,20 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     .map(m => `${(m as any)?.role ?? 'unknown'}: ${m.content}`)
     .join('\n');
 
+  const basePrompt = getSystemPrompt('default');
+  const systemPrompt = history
+    ? `${basePrompt}\n\nContexte conversation (résumé):\n${history}`
+    : basePrompt;
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   const request = {
     message: userMessage,
     conversation_id: `chat-${Date.now()}`,
     provider: 'auto',
     model: (config as any)?.model,
     streaming: false,
-    system_prompt: history ? `Contexte conversation (résumé):\n${history}` : undefined,
+    system_prompt: systemPrompt,
+    request_id: requestId,
   };
 
   const raw = await invokeTauriCommand<unknown>(
@@ -259,6 +267,7 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
       mode: 'default',
       provider: request.provider,
       system_prompt: request.system_prompt,
+      request_id: request.request_id,
       streaming: request.streaming,
     },
     { timeout: 30000, retries: 2, retryDelay: 1000 }

@@ -356,6 +356,7 @@ export class TauriInvokeProtector {
             mode: (args as any)?.mode,
             provider: (args as any)?.provider,
             system_prompt: (args as any)?.system_prompt,
+            request_id: (args as any)?.request_id,
           };
 
           const result = await callOllamaDirectly(ollamaRequest);

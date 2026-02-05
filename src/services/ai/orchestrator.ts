@@ -41,6 +41,7 @@ import {
   CIRCUIT_BREAKER,
   STREAM_CONFIG,
   AVAILABILITY_CACHE,
+  REQUEST_BUDGETS,
 } from '@/config/aiTimeouts.config'; // ← v22Ω: Centralized timeouts
 
 const logger = createLogger('Orchestrator');
@@ -759,6 +760,13 @@ class AIOrchestrator {
   ): Promise<AIResponse> {
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(7)}`;
     const requestStartTime = Date.now();
+    const globalBudgetMs = Math.min(
+      config?.timeout ?? REQUEST_BUDGETS.globalRequestMs,
+      REQUEST_BUDGETS.globalRequestMs
+    );
+    let routerLatencyMs = 0;
+    let lastProviderLatencyMs = 0;
+    let finalProviderUsed: string | null = null;
 
     // 🚨 DEBUG CRITICAL: Log entrée orchestrator
     console.log('[aiOrchestrator] 📨 generate() APPELÉ', {
@@ -856,6 +864,7 @@ class AIOrchestrator {
 
       // Sélection neurale standard (avec préférence optionnelle)
       const preferredProvider = config?.preferredProvider;
+      const routerStartTime = Date.now();
       const selection = await this.selectOptimalProvider(
         sanitized,
         history,
@@ -873,6 +882,7 @@ class AIOrchestrator {
           : cognitiveDecision.confidence > 70
             ? cognitiveDecision.provider
             : selection.selectedProvider;
+      routerLatencyMs = Date.now() - routerStartTime;
 
       logger.group('Provider Selection');
       logger.info(
@@ -898,7 +908,7 @@ class AIOrchestrator {
             : preferredProvider
           : null;
 
-      const providersToTry =
+      const baseProviders =
         IS_VITEST && forcedProviderName
           ? [forcedProviderName, 'titane-local']
           : [
@@ -907,10 +917,27 @@ class AIOrchestrator {
               'titane-local', // Fallback infaillible
             ];
 
+      const uniqueProviders = Array.from(new Set(baseProviders));
+      let providersToTry = uniqueProviders.slice(0, REQUEST_BUDGETS.maxAttempts);
+      if (
+        uniqueProviders.includes('titane-local') &&
+        !providersToTry.includes('titane-local') &&
+        providersToTry.length > 0
+      ) {
+        providersToTry[providersToTry.length - 1] = 'titane-local';
+      }
+
       let lastError: Error | null = null;
       let attempts = 0;
 
       for (const providerName of providersToTry) {
+        const elapsedMs = Date.now() - requestStartTime;
+        const remainingBudgetMs = globalBudgetMs - elapsedMs;
+        if (remainingBudgetMs <= 0) {
+          lastError = new Error('Global budget exceeded');
+          break;
+        }
+
         attempts++;
         // v37.0.0: Lazy-load cloud providers on first use
         let provider = this.providers.find(p => p.name === providerName);
@@ -990,7 +1017,11 @@ class AIOrchestrator {
 
           // ═══ ISOLATED EXECUTION WITH ADAPTIVE TIMEOUT (v22Ω Optimized) ═══
           // v22Ω: Using centralized timeout config
-          const executionTimeout = getProviderTimeout(providerName);
+          const executionTimeout = Math.min(
+            getProviderTimeout(providerName),
+            REQUEST_BUDGETS.providerAttemptMs,
+            Math.max(1000, globalBudgetMs - (Date.now() - requestStartTime))
+          );
           const historyForProvider = this.buildHistoryForProvider(
             history,
             providerName,
@@ -1018,6 +1049,8 @@ class AIOrchestrator {
           // EVOLUTION v21Ω: Use provider-specific timing for accurate stats
           const providerLatency = Date.now() - providerStartTime;
           const totalResponseTime = Date.now() - requestStartTime;
+          lastProviderLatencyMs = providerLatency;
+          finalProviderUsed = providerName;
           this.updateProviderStats(providerName, true, providerLatency); // Use provider-specific latency
           this.orchestratorMetrics.totalSuccesses++;
 
@@ -1061,6 +1094,11 @@ class AIOrchestrator {
           );
           logger.groupEnd();
 
+          const fallbackUsed = attempts > 1 || providerName !== finalProvider;
+          logger.info(
+            `[AI_SUMMARY] request_id=${requestId} latency_total=${totalResponseTime} latency_router=${routerLatencyMs} latency_provider=${providerLatency} attempt_count=${attempts} final_provider=${providerName} fallback_used=${fallbackUsed} error_code=none`
+          );
+
           return {
             ...response,
             metadata: {
@@ -1069,6 +1107,7 @@ class AIOrchestrator {
               selectedProvider: providerName,
               neuralSelection: selection,
               attempts,
+              fallbackUsed,
               providerLatency, // EVOLUTION v21Ω: Accurate provider-specific latency
               totalResponseTime, // EVOLUTION v21Ω: Total time including fallbacks
               omegaVersion: 'v21Ω',
@@ -1078,6 +1117,8 @@ class AIOrchestrator {
           lastError = error instanceof Error ? error : new Error(String(error));
           // EVOLUTION v21Ω: Use provider-specific latency for failure stats
           const providerFailureLatency = Date.now() - providerStartTime;
+          lastProviderLatencyMs = providerFailureLatency;
+          finalProviderUsed = providerName;
 
           // 🚨 DEBUG CRITICAL: Log échec provider
           console.error(`[aiOrchestrator] ❌ Échec provider`, {
@@ -1158,6 +1199,10 @@ class AIOrchestrator {
         responseTime,
       });
 
+      logger.info(
+        `[AI_SUMMARY] request_id=${requestId} latency_total=${responseTime} latency_router=${routerLatencyMs} latency_provider=${lastProviderLatencyMs} attempt_count=${attempts} final_provider=${finalProviderUsed ?? 'none'} fallback_used=true error_code=${lastError?.message || 'unknown'}`
+      );
+
       // Ultimate emergency response
       return {
         content: `🟣 **OMEGA Auto-Récupération Activée** [${requestId.substring(0, 8)}]
@@ -1229,6 +1274,10 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         criticalError,
         degradedMode: this.isDegradedMode,
       });
+
+      logger.info(
+        `[AI_SUMMARY] request_id=${requestId} latency_total=${responseTime} latency_router=${routerLatencyMs} latency_provider=${lastProviderLatencyMs} attempt_count=${0} final_provider=${finalProviderUsed ?? 'none'} fallback_used=true error_code=${criticalError instanceof Error ? criticalError.message : String(criticalError)}`
+      );
 
       return {
         content: `🔴 **Récupération Critique OMEGA** [${requestId.substring(0, 8)}]

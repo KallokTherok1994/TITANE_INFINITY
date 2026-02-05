@@ -14,6 +14,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
 import type { AIMessage } from '../services/ai/types';
 import { chatValidator } from '../services/chatValidator';
+import { getProviderTimeout, REQUEST_BUDGETS } from '@/config/aiTimeouts.config';
 
 export interface UseChatCoreOptions {
   mode?: ChatMode;
@@ -94,15 +95,21 @@ export function useChatCore(options: UseChatCoreOptions = {}): UseChatCoreReturn
           emotionState: emotionStateRef.current,
         });
 
-        // Timeout dynamique par provider
-        const timeout =
-          currentProvider === 'gemini'
-            ? 60000 // Gemini cloud: 60s
+        // Timeout dynamique par provider (borné par budgets globaux)
+        const providerKey =
+          currentProvider === 'local'
+            ? 'titane-local'
             : currentProvider === 'ollama'
-              ? 45000 // Ollama local: 45s
-              : currentProvider === 'local'
-                ? 15000 // Local builtin: 15s
-                : 60000; // auto: défaut 60s
+              ? 'ollama'
+              : currentProvider === 'gemini'
+                ? 'gemini'
+                : 'default';
+
+        const timeout = Math.min(
+          getProviderTimeout(providerKey),
+          REQUEST_BUDGETS.providerAttemptMs,
+          REQUEST_BUDGETS.globalRequestMs
+        );
 
         console.log(`⏱️  Timeout: ${timeout}ms (${currentProvider})`);
 

@@ -23,6 +23,50 @@ export interface AIMessage {
   metadata?: Record<string, unknown>;
 }
 
+/**
+ * 🔒 STRICT PROVIDER ENUM (C1.2 CONTRACT)
+ * Only known, vetted providers. No fallback variants.
+ * Used by AIOrchestrator, response metadata, and type guards.
+ * ═══════════════════════════════════════════════════════════════
+ * Rationale: Legacy types had 19 variants including 5+ fallback aliases
+ * that created ambiguity and undefined provider states in error paths.
+ * This strict type ensures all provider names are known and type-safe.
+ */
+export type ProviderName =
+  | 'gemini'
+  | 'openai'
+  | 'claude'
+  | 'copilot'  // GitHub Copilot (v26.3+)
+  | 'ollama'
+  | 'titane-local'
+  | 'fallback';  // Generic fallback only
+
+/**
+ * Type guard for ProviderName (C1.2 CONTRACT)
+ * Validates that a string is a known provider.
+ * @param name - String to validate
+ * @returns true if name is a valid ProviderName
+ */
+export function isKnownProvider(name: unknown): name is ProviderName {
+  if (typeof name !== 'string') return false;
+  const knownProviders = new Set<ProviderName>([
+    'gemini',
+    'openai',
+    'claude',
+    'copilot',
+    'ollama',
+    'titane-local',
+    'fallback',
+  ]);
+  return knownProviders.has(name as ProviderName);
+}
+
+/**
+ * DEPRECATED: AIProviderName is kept for backward compatibility only.
+ * New code should use ProviderName + isKnownProvider() type guard.
+ * Migration path: Replace AIProviderName with ProviderName in new code.
+ * @deprecated Use ProviderName instead
+ */
 export type AIProviderName =
   | 'gemini'
   | 'ollama'
@@ -69,6 +113,26 @@ export interface AIResponseMetadata {
   [key: string]: unknown;
 }
 
+/**
+ * 🔒 NEW C1.2 Contract: AIResponse with strict ProviderName (v27.0.0)
+ * Guarantees provider is always a known value, never "unknown" or undefined.
+ * ═════════════════════════════════════════════════════════════════════
+ * Migration: New providers should return StrictAIResponse instead of AIResponse.
+ * This ensures type safety through the entire response lifecycle.
+ */
+export interface StrictAIResponse {
+  content: string;
+  provider: ProviderName;  // ← Strict provider (never unknown)
+  timestamp: number;
+  model?: string;
+  tokens?: number;
+  metadata?: AIResponseMetadata;
+}
+
+/**
+ * @deprecated Use StrictAIResponse for new code.
+ * Kept for backward compatibility with existing providers.
+ */
 export interface AIResponse {
   content: string;
   provider: AIProviderName;

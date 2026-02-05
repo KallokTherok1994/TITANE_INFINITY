@@ -11,6 +11,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { getSystemPrompt } from '@/config/chatModes.config';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -90,7 +91,7 @@ function normalizeConversationMetadata(meta: unknown): ConversationMetadata {
 
   return {
     timestamp: typeof m.timestamp === 'number' ? m.timestamp : Date.now(),
-    provider_used: typeof m.provider_used === 'string' ? m.provider_used : 'unknown',
+    provider_used: typeof m.provider_used === 'string' ? m.provider_used : 'fallback',
     latency_ms: typeof m.latency_ms === 'number' ? m.latency_ms : 0,
     tokens_used: typeof m.tokens_used === 'number' ? m.tokens_used : 0,
     memory_effect: isMemoryEffect(m.memory_effect) ? m.memory_effect : 'New',
@@ -159,12 +160,16 @@ export async function processMessage(
   // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
   console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
+  const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
+  const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   const raw = (await secureInvoke<unknown>('conversation_generate', {
     message: userMessage,
     conversation_id: conversationId,
     mode: options?.mode || 'default',
     provider: 'auto',
-    system_prompt: undefined,
+    system_prompt: systemPrompt,
+    request_id: requestId,
   })) as OmegaGenerateResponse;
 
   const content = typeof raw?.content === 'string' ? raw.content : '';
@@ -212,7 +217,10 @@ export async function processMessage(
         ? (metadata['cognitiveSummary'] as string)
         : '',
     metadata: normalizeConversationMetadata({
-      provider_used: typeof raw?.provider === 'string' ? raw.provider : 'unknown',
+      provider_used:
+        typeof raw?.provider === 'string' && raw.provider.trim().length > 0
+          ? raw.provider
+          : 'fallback',
       latency_ms: typeof raw?.latencyMs === 'number' ? raw.latencyMs : 0,
     }),
   };

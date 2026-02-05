@@ -12,6 +12,7 @@
 
 import { secureInvoke } from '@/lib/security';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
+import { getSystemPrompt } from '@/config/chatModes.config';
 
 const COMMANDS = {
   generate: 'generate_response',
@@ -38,6 +39,7 @@ export interface OmegaGenerateArgs {
   mode?: string;
   provider?: string;
   systemPrompt?: string; // ✨ Ajout: system prompt personnalisé depuis InstructionMode
+  requestId?: string;
 }
 
 export interface OmegaResponse {
@@ -258,12 +260,17 @@ export async function createNewConversation(): Promise<string> {
 }
 
 export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> {
+  const systemPrompt = args.systemPrompt ?? getSystemPrompt('default');
+  const requestId =
+    args.requestId ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
   return invokeCommand<OmegaResponse>('conversation_generate', {
     message: args.message,
     conversation_id: args.conversationId,
     mode: args.mode ?? null,
     provider: args.provider ?? null,
-    system_prompt: args.systemPrompt ?? null, // ✨ Transmission du system prompt
+    system_prompt: systemPrompt, // ✨ Transmission du system prompt
+    request_id: requestId,
   });
 }
 
