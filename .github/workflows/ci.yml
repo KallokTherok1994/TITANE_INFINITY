@@ -201,12 +201,52 @@ jobs:
         run: echo "✅ Rust tests completed"
 
   # ═══════════════════════════════════════════════════════════════
-  # JOB 6: Quality Gate Summary
+  # JOB 7: Production Build Gate (Assets Validation)
+  # P0.Ω∞.PROD_SPLASH_PERMASEAL - Anti-splash regression gate
+  # ═══════════════════════════════════════════════════════════════
+  dist-assets-gate:
+    name: 🎯 Dist Assets Gate (P0.Ω∞)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: typescript-check
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 📚 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🔨 Build frontend (dist/)
+        run: pnpm run build
+
+      - name: 🎯 Run dist assets gate (relative paths)
+        run: pnpm run gate:dist-assets
+
+      - name: ✅ Dist assets gate passed
+        if: success()
+        run: |
+          echo "✅ Assets gate PASSED"
+          echo "All assets use relative paths (no /vite.svg, /manifest.json absolutes)"
+
+  # ═══════════════════════════════════════════════════════════════
+  # JOB 8: Quality Gate Summary
   # ═══════════════════════════════════════════════════════════════
   quality-gate:
     name: 🎯 Quality Gate
     runs-on: ubuntu-latest
-    needs: [typescript-check, unit-tests, accessibility-tests, lint-check]
+    needs: [typescript-check, unit-tests, accessibility-tests, lint-check, dist-assets-gate]
     if: always()
 
     steps:
@@ -219,6 +259,7 @@ jobs:
           echo "Unit Tests: ${{ needs.unit-tests.result }}"
           echo "Accessibility: ${{ needs.accessibility-tests.result }}"
           echo "Lint: ${{ needs.lint-check.result }}"
+          echo "Dist Assets (P0.Ω∞): ${{ needs.dist-assets-gate.result }}"
           echo "═══════════════════════════════════════"
 
       - name: ❌ Quality gate FAILED
