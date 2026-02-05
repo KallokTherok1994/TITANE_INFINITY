@@ -9,6 +9,7 @@
  *   Pipeline infaillible • Validation multi-niveaux • Auto-guérison
  *   Architecture: UI → useChat → chatEngine → orchestrator → providers → normalize → UI
  *   v22Ω AI Performance Optimizations: Parallel loading, -40% latency
+ *   P1: Multi-conversations lifecycle integration
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -51,6 +52,9 @@ import type {
 import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
+
+// 🆕 P1: Multi-conversations integration
+import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
 
 // Type-safe correction interface
 interface _CorrectionInfo {
@@ -142,6 +146,7 @@ class ChatEngineOmega {
   private conversationContext: Map<string, any> = new Map();
   private pipelineFailures: number = 0;
   private lastHealing: number = 0;
+  // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
   private conversationIds: Map<ChatMode, string> = new Map();
   private providerPreference: ChatEngineProviderPreference = 'auto';
 
@@ -190,12 +195,29 @@ class ChatEngineOmega {
     return typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
   }
 
-  private getConversationId(mode: ChatMode): string | undefined {
-    return this.conversationIds.get(mode);
+  /**
+   * 🆕 P1: Obtenir l'ID de conversation active depuis le lifecycle engine
+   * Remplace getConversationId() qui utilisait Map<ChatMode, string>
+   */
+  private getConversationId(_mode?: ChatMode): string | undefined {
+    // P1: Utiliser le lifecycle engine centralisé au lieu de la Map locale
+    const activeId = conversationLifecycle.getActiveConversation();
+    if (activeId) {
+      return activeId;
+    }
+    // Fallback legacy (migration)
+    return this.conversationIds.get(_mode || this.config.mode);
   }
 
+  /**
+   * 🆕 P1: Définir l'ID de conversation active
+   * Note: Le lifecycle engine gère maintenant l'état actif
+   */
   private setConversationId(mode: ChatMode, id: string): void {
+    // Legacy support: garder la Map pour compatibilité
     this.conversationIds.set(mode, id);
+    // P1: Synchroniser avec le lifecycle engine
+    conversationLifecycle.setActiveConversation(id);
   }
 
   private normalizeBackendProvider(provider: string): AIProviderName {
