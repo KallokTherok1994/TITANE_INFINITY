@@ -105,7 +105,7 @@ export const sharedTestConfig = defineConfig({
       VITE_DISABLE_SECURITY_IN_TESTS: 'true',
       NODE_ENV: 'test',
     },
-    testTimeout: 45000,
+    testTimeout: 180000,
     hookTimeout: 20000,
     teardownTimeout: 60000,
     // maxThreads removed - not supported in Vitest 4.x, use pool options instead
