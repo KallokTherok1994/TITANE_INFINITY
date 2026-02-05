@@ -20,6 +20,48 @@ target
 .vscode
 .idea
 
+# Archives historiques (do not format)
+_archive/
+archives/
+
+# Fichiers de rapport historiques (anciens rapports, do not format)
+TITANE_*.md
+BETA_*.md
+PHASE_*.md
+*_REPORT*.md
+*_REPORT*.ts
+*_REPORT*.tsx
+COMPLETION_*.md
+DEPLOYMENT_*.md
+DISTRIBUTION_*.md
+FINAL_*.md
+SESSION_*.md
+FIX_*.md
+PATCH_*.md
+PRODUCTION_*.md
+RELEASE_*.md
+PROOFS.md
+CONSTITUTION_*.md
+CHARTER_*.md
+AUDIT_*.md
+*_AUDIT_*.md
+ARTIFACTS_*.md
+*_PORTAL_*.md
+*_STATUS*.md
+TEST_*.md
+GATE_*.md
+C1_*.md
+C2_*.md
+C7_*.md
+CHAT_*.md
+*_E2E_*.md
+DIAGNOSTIC_*.md
+CORRECTION_*.md
+CONSOLE_*.md
+DEEP_*.md
+EXECUTIVE_*.md
+EVOLUTION_*.md
+
 # Fichiers Markdown trop lourds (éviter SIGKILL Prettier)
 TITANE_MEMORY_OS*.md
 TITANE_DEVTOOLS_OS_REPORT.md
@@ -42,3 +84,23 @@ pnpm-lock.yaml
 .output
 .vercel
 .netlify
+
+# Test files (old reports)
+src/__tests__/c1-contracts.test.ts
+src/__tests__/c2-anti-silence.test.tsx
+src/__tests__/c3-latency.test.ts
+src/__tests__/c4-memory.test.ts
+src/__tests__/c5-observability.test.ts
+src/__tests__/c6-baseline.test.ts
+
+# Script files (reports embedded)
+scripts/gate-dist-assets.mjs
+scripts/**/*REPORT*.ts
+scripts/**/*REPORT*.js
+
+# CI/workflow files (complex, generated)
+.github/workflows/ci.yml
+
+# Other specific files
+E2E_TIER1_RESULTS_ANALYSIS.md
+REPORTS_INDEX_SESSION_2.md
