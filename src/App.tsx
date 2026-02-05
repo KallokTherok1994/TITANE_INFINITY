@@ -270,6 +270,7 @@ const AppRouter: React.FC = () => {
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
+
   // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
   useEffect(() => {
     // Immédiate reset - force UI to show, même si backend tardive
