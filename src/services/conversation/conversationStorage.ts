@@ -19,6 +19,7 @@ import type {
 import type { AIMessage } from '@/types/ai';
 import { createLogger } from '@/utils/logger';
 import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
+import { cleanupLegacyConversationKeys } from '@/services/conversation/legacyCleanup';
 
 const logger = createLogger('ConversationStorage');
 
@@ -60,6 +61,9 @@ export class ConversationStorageService {
     }
 
     try {
+      // PHASE 3: Cleanup legacy keys before loading
+      cleanupLegacyConversationKeys();
+
       // Charger l'index
       const indexData = localStorage.getItem(STORAGE_KEY_INDEX);
       if (indexData) {
@@ -340,6 +344,56 @@ export class ConversationStorageService {
       conversations,
       events: this.loadEvents(),
     };
+  }
+
+  /**
+   * PHASE 3: Obtenir l'ID de la conversation active (SYNCHRONE)
+   * Utilisé par useChat pour initialisation au mount
+   */
+  getActiveConversationId(): string | null {
+    try {
+      const id = localStorage.getItem(STORAGE_KEY_ACTIVE);
+      return id || null;
+    } catch (error) {
+      logger.error('getActiveConversationId error', error);
+      return null;
+    }
+  }
+
+  /**
+   * PHASE 3: Charger une conversation de façon SYNCHRONE
+   * Utilisé par useChat pour charger messages au mount (éviter flash)
+   * Note: Retourne null si conversation n'existe pas
+   */
+  loadConversationSync(conversationId: string): Conversation | null {
+    try {
+      // Vérifier cache mémoire d'abord
+      if (this.conversations.has(conversationId)) {
+        return this.conversations.get(conversationId) || null;
+      }
+
+      // Charger depuis localStorage
+      const key = STORAGE_KEY_PREFIX + conversationId;
+      const data = localStorage.getItem(key);
+      if (!data) {
+        logger.debug('Conversation not found (sync)', { id: conversationId });
+        return null;
+      }
+
+      try {
+        const conversation: Conversation = JSON.parse(data);
+        // Mettre en cache
+        this.conversations.set(conversationId, conversation);
+        logger.debug('Conversation loaded (sync)', { id: conversationId });
+        return conversation;
+      } catch (parseError) {
+        logger.error('Failed to parse conversation (sync)', parseError);
+        return null;
+      }
+    } catch (error) {
+      logger.error('loadConversationSync error', error);
+      return null;
+    }
   }
 
   /**

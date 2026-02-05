@@ -16,6 +16,7 @@ import { useCallback, useEffect, useRef, useMemo, useState } from 'react';
 import { useChatCore, type UseChatCoreReturn } from '@hooks/useChatCore';
 import { useChatMemory } from '@hooks/useChatMemory';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+import { conversationStorage } from '@/services/conversation/conversationStorage';
 import type { ChatMode } from '@/services/ai/chatTypes';
 import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
@@ -438,15 +439,26 @@ interface UseChatReturn {
 
 export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ OMNIS STATE ═══
-  // ✅ FIX AUDIT: Générer conversationId UNE SEULE FOIS au mount
-  const [_conversationId] = useState<string>(() => {
-    // Réutiliser ID existant ou créer nouveau
-    const stored = localStorage.getItem('titane_current_conversation_id');
-    if (stored) return stored;
-    const newId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-    localStorage.setItem('titane_current_conversation_id', newId);
-    return newId;
+  // PHASE 3 FIX: Obtenir conversationId depuis le système centralisé (conversationStorage)
+  // This replaces the legacy localStorage.getItem('titane_current_conversation_id')
+  const [_conversationId, _setConversationId] = useState<string>(() => {
+    // Get from centralized system
+    const activeId = conversationStorage.getActiveConversationId();
+    if (activeId) {
+      chatLogger.info('🔄 Using active conversation from conversationStorage', { activeId });
+      return activeId;
+    }
+    
+    // Fallback: This should rarely happen in production
+    // (conversationStorage.initialize() creates default conversation)
+    const fallbackId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    chatLogger.warn('⚠️ No active conversation in conversationStorage, using fallback ID', { fallbackId });
+    return fallbackId;
   });
+
+  // PHASE 3 MIGRATION: Remove reference to legacy localStorage keys
+  // Previously: localStorage.getItem('titane_current_conversation_id')
+  // Now: conversationStorage handles this centrally
 
   // Cognitive Kernel: utilisé dans des chemins sync (init + applyMessagesSafely).
   // Fallback sync + lazy-load (remplacement du ref quand prêt).
@@ -469,24 +481,28 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
   }, []);
 
-  // OMEGA FIX: Charger les messages depuis localStorage au démarrage pour éviter le flash
+  // PHASE 3 MIGRATION: Load messages from centralized conversationStorage
+  // Previously: localStorage.getItem('titane_chat_mode_default') + chatMemoryCompactor
+  // Now: conversationStorage.loadConversationSync(activeId).messages
   const [messages, setMessages] = useState<AIMessage[]>(() => {
     if (typeof window === 'undefined') return [];
     try {
-      // Clé utilisée par chatMemoryCompactor (note: currentMode n'est pas disponible ici, utiliser default)
-      const stored = localStorage.getItem('titane_chat_mode_default');
-      if (stored) {
-        const memory = JSON.parse(stored);
-        if (memory && Array.isArray(memory.messages)) {
+      // Get active conversation ID from centralized system
+      const activeId = conversationStorage.getActiveConversationId();
+      if (activeId) {
+        // Load conversation synchronously (safe for mount)
+        const conversation = conversationStorage.loadConversationSync(activeId);
+        if (conversation && Array.isArray(conversation.messages) && conversation.messages.length > 0) {
           chatLogger.info(
-            '📂 Initial load from localStorage:',
-            memory.messages.length,
-            'messages (mode: default)'
+            '📂 Initial load from conversationStorage:',
+            conversation.messages.length,
+            'messages (conversationId:',
+            activeId + ')'
           );
 
-          // 🧠 NOUVEAU v22Ω: Harmoniser messages avec Cognitive Kernel
+          // 🧠 Harmonize with Cognitive Kernel (same as before)
           const harmonized = cognitiveKernelRef.current.harmonizeChatMessages(
-            memory.messages
+            conversation.messages
           );
           return Array.isArray(harmonized) ? (harmonized as AIMessage[]) : [];
         }
