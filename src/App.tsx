@@ -1222,6 +1222,12 @@ const AppRouter: React.FC = () => {
  * ═══════════════════════════════════════════════════════════════
  */
 const App: React.FC = () => {
+  // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
+  console.log('[BOOT] App render');
+  (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
+  (window as any).__TITANE_BOOT__.app_render = true;
+  (window as any).__TITANE_BOOT__.app_render_timestamp = Date.now();
+
   return (
     <ToastProvider>
       {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) */}
