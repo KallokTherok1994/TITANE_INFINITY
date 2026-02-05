@@ -14,7 +14,7 @@ import { test, expect } from '@playwright/test';
 test.describe('🔥 Flux Critiques — Garantie Infaillibilité', () => {
   test.beforeEach(async ({ page }) => {
     // Start app in test mode
-    await page.goto('http://localhost:4000');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
   });
 
@@ -384,7 +384,7 @@ test.describe('🔥 Flux Critiques — Garantie Infaillibilité', () => {
 
 test.describe('📸 Régression Visuelle', () => {
   test('should match visual snapshot', async ({ page }) => {
-    await page.goto('http://localhost:4000');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Take screenshot
@@ -394,7 +394,7 @@ test.describe('📸 Régression Visuelle', () => {
   });
 
   test('should match chat interface snapshot', async ({ page }) => {
-    await page.goto('http://localhost:4000');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Send test message
