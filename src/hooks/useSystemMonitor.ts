@@ -14,6 +14,7 @@ import { useVitals } from './useVitals';
 import { useEngineVitals } from './useEngineVitals';
 import type { SystemVitals } from './useVitals';
 import type { EngineVitals } from './useEngineVitals';
+import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
 
 export interface UseSystemMonitorOptions {
   vitalsInterval?: number;
@@ -41,6 +42,10 @@ export function useSystemMonitor(
   options: UseSystemMonitorOptions = {}
 ): UseSystemMonitorReturn {
   const { vitalsInterval = 5000, enginesInterval = 10000, enabled = true } = options;
+  const requestInFlight = useRequestInFlightStore(state => state.requestInFlight);
+  const throttleFactor = requestInFlight ? 4 : 1;
+  const effectiveVitalsInterval = vitalsInterval * throttleFactor;
+  const effectiveEnginesInterval = enginesInterval * throttleFactor;
 
   const {
     vitals: systemVitals,
@@ -49,7 +54,7 @@ export function useSystemMonitor(
     error: systemError,
     fetchVitals,
     isOverloaded,
-  } = useVitals({ pollInterval: vitalsInterval, enabled });
+  } = useVitals({ pollInterval: effectiveVitalsInterval, enabled });
 
   const {
     vitals: engineVitals,
@@ -58,7 +63,7 @@ export function useSystemMonitor(
     refresh: refreshEnginesBase,
     getHealthScore,
     getCriticalIssues,
-  } = useEngineVitals({ pollInterval: enginesInterval, enabled });
+  } = useEngineVitals({ pollInterval: effectiveEnginesInterval, enabled });
 
   const refreshSystem = async () => {
     await fetchVitals();

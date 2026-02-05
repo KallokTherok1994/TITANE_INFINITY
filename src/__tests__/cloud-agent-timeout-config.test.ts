@@ -15,66 +15,58 @@ import { API_TIMEOUTS } from '../constants/timeouts';
 
 describe('Cloud Agent Timeout Configuration v26.2.1', () => {
   describe('Provider Timeouts', () => {
-    it('should have increased cloud provider timeouts', () => {
-      // OpenAI and Claude should be 75s (was 40s)
-      expect(PROVIDER_TIMEOUTS.openai).toBe(75000);
-      expect(PROVIDER_TIMEOUTS.claude).toBe(75000);
-
-      // Gemini should be 60s (was 35s)
-      expect(PROVIDER_TIMEOUTS.gemini).toBe(60000);
+    it('should enforce cloud provider budgets', () => {
+      // Cloud providers are capped to 8s
+      expect(PROVIDER_TIMEOUTS.openai).toBe(8000);
+      expect(PROVIDER_TIMEOUTS.claude).toBe(8000);
+      expect(PROVIDER_TIMEOUTS.gemini).toBe(8000);
     });
 
     it('should maintain local provider timeouts', () => {
       // Local providers should remain fast
       expect(PROVIDER_TIMEOUTS['titane-local']).toBe(5000);
-      expect(PROVIDER_TIMEOUTS['tauri-backend']).toBe(12000);
-      expect(PROVIDER_TIMEOUTS.ollama).toBe(30000);
+      expect(PROVIDER_TIMEOUTS['tauri-backend']).toBe(8000);
+      expect(PROVIDER_TIMEOUTS.ollama).toBe(8000);
     });
 
-    it('should ensure cloud timeouts > local timeouts', () => {
-      const cloudProviders = ['openai', 'claude', 'gemini'];
-      const localProviders = ['titane-local', 'tauri-backend', 'ollama'];
-
+    it('should keep cloud timeouts >= titane-local', () => {
+      const cloudProviders = ['openai', 'claude', 'gemini'] as const;
       cloudProviders.forEach(cloud => {
-        localProviders.forEach(local => {
-          expect(
-            PROVIDER_TIMEOUTS[cloud as keyof typeof PROVIDER_TIMEOUTS]
-          ).toBeGreaterThan(PROVIDER_TIMEOUTS[local as keyof typeof PROVIDER_TIMEOUTS]);
-        });
+        expect(PROVIDER_TIMEOUTS[cloud]).toBeGreaterThanOrEqual(
+          PROVIDER_TIMEOUTS['titane-local']
+        );
       });
     });
 
     it('getProviderTimeout should return correct values', () => {
-      expect(getProviderTimeout('openai')).toBe(75000);
-      expect(getProviderTimeout('claude')).toBe(75000);
-      expect(getProviderTimeout('gemini')).toBe(60000);
+      expect(getProviderTimeout('openai')).toBe(8000);
+      expect(getProviderTimeout('claude')).toBe(8000);
+      expect(getProviderTimeout('gemini')).toBe(8000);
       expect(getProviderTimeout('unknown')).toBe(PROVIDER_TIMEOUTS.default);
     });
   });
 
   describe('UI Timeouts', () => {
-    it('should have increased UI cloud timeouts', () => {
-      // Cloud provider timeouts should be extended
-      expect(UI_TIMEOUTS.cloudProvider.short).toBe(65000);
-      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(80000);
-      expect(UI_TIMEOUTS.cloudProvider.long).toBe(90000);
+    it('should enforce UI cloud timeouts', () => {
+      // Cloud provider timeouts aligned to global budget
+      expect(UI_TIMEOUTS.cloudProvider.short).toBe(12000);
+      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(18000);
+      expect(UI_TIMEOUTS.cloudProvider.long).toBe(25000);
     });
 
-    it('should have increased max request timeout', () => {
-      // Max request should be 90s (was 45s)
-      expect(UI_TIMEOUTS.maxRequest).toBe(90000);
+    it('should enforce max request timeout', () => {
+      // Max request should be 25s
+      expect(UI_TIMEOUTS.maxRequest).toBe(25000);
     });
 
     it('should ensure UI timeout >= backend timeout', () => {
-      // UI cloud long should be >= OpenAI/Claude backend
+      // UI cloud long should be >= backend
       expect(UI_TIMEOUTS.cloudProvider.long).toBeGreaterThanOrEqual(
         PROVIDER_TIMEOUTS.openai
       );
       expect(UI_TIMEOUTS.cloudProvider.long).toBeGreaterThanOrEqual(
         PROVIDER_TIMEOUTS.claude
       );
-
-      // UI cloud medium should be >= Gemini backend
       expect(UI_TIMEOUTS.cloudProvider.medium).toBeGreaterThanOrEqual(
         PROVIDER_TIMEOUTS.gemini
       );
@@ -96,12 +88,12 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
   });
 
   describe('Streaming Timeouts', () => {
-    it('should have increased streaming timeouts', () => {
-      // Total stream timeout should be 3 minutes (was 2)
-      expect(STREAM_CONFIG.totalTimeoutMs).toBe(180000);
+    it('should enforce streaming timeouts', () => {
+      // Total stream timeout should be 25s
+      expect(STREAM_CONFIG.totalTimeoutMs).toBe(25000);
 
-      // Per-chunk timeout should be 15s (was 10s)
-      expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(15000);
+      // Per-chunk timeout should be 4s
+      expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(4000);
     });
 
     it('should ensure streaming timeout > provider timeout', () => {
@@ -113,14 +105,14 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
   });
 
   describe('General API Timeouts', () => {
-    it('should have increased AI generation timeout', () => {
-      // AI generation should be 90s (was 30s)
-      expect(API_TIMEOUTS.AI_GENERATION).toBe(90000);
+    it('should enforce AI generation timeout', () => {
+      // AI generation should be 25s
+      expect(API_TIMEOUTS.AI_GENERATION).toBe(25000);
     });
 
-    it('should have increased long operation timeout', () => {
-      // Long operations should be 120s (was 60s)
-      expect(API_TIMEOUTS.LONG_OPERATION).toBe(120000);
+    it('should enforce long operation timeout', () => {
+      // Long operations should be 60s
+      expect(API_TIMEOUTS.LONG_OPERATION).toBe(60000);
     });
 
     it('should ensure AI generation timeout >= max provider timeout', () => {
@@ -136,7 +128,7 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('Timeout Hierarchy', () => {
     it('should maintain proper timeout hierarchy', () => {
-      // UI Max > Cloud Provider Long > OpenAI/Claude Backend
+      // UI Max >= Cloud Provider Long >= Backend
       expect(UI_TIMEOUTS.maxRequest).toBeGreaterThanOrEqual(
         UI_TIMEOUTS.cloudProvider.long
       );

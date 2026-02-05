@@ -9,6 +9,7 @@ export interface OllamaRequest {
   mode?: string;
   provider?: string;
   system_prompt?: string;
+  request_id?: string;
 }
 
 export interface OllamaResponse {
@@ -21,6 +22,7 @@ export interface OllamaResponse {
     emotion: string;
     cognitiveTags: string[];
     cognitiveSummary: string;
+    requestId?: string;
   };
 }
 
@@ -34,6 +36,9 @@ export async function callOllamaDirectly(
   const ollamaEndpoint = 'http://127.0.0.1:11434/api/generate';
 
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 1500);
+
     const response = await fetch(ollamaEndpoint, {
       method: 'POST',
       headers: {
@@ -47,7 +52,8 @@ export async function callOllamaDirectly(
           temperature: 0.7,
         },
       }),
-    });
+      signal: controller.signal,
+    }).finally(() => clearTimeout(timeout));
 
     if (!response.ok) {
       throw new Error(`Ollama returned ${response.status}: ${response.statusText}`);
@@ -69,6 +75,7 @@ export async function callOllamaDirectly(
         emotion: 'Neutre', // Default emotion
         cognitiveTags: ['ollama-fallback', 'direct-call'],
         cognitiveSummary: `Réponse générée via Ollama direct en ${latencyMs}ms`,
+        requestId: request.request_id,
       },
     };
   } catch (error) {
@@ -85,6 +92,7 @@ export async function callOllamaDirectly(
         emotion: 'Erreur',
         cognitiveTags: ['error', 'ollama-unreachable'],
         cognitiveSummary: 'Échec de connexion à Ollama',
+        requestId: request.request_id,
       },
     };
   }

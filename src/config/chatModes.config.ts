@@ -23,7 +23,7 @@ import type {
 // PROMPTS SYSTÈME PAR MODE
 // ═══════════════════════════════════════════════════════════════════════════
 
-const SYSTEM_PROMPTS = {
+export const SYSTEM_PROMPTS = {
   coach: `Tu es TITANE∞ en mode COACH PERSONNEL.
 Tu accompagnes Kevin dans son développement personnel et professionnel.
 Ton approche est empathique, motivante et structurée.

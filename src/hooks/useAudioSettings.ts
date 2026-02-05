@@ -494,7 +494,7 @@ export function useAudioSettings(): UseAudioSettingsReturn {
           success: false,
           latencyMs: 0,
           qualityScore: 0,
-          provider: 'unknown',
+          provider: 'system-audio',
           errorMessage:
             error instanceof Error ? error.message : 'Échec du test haut-parleur',
         };

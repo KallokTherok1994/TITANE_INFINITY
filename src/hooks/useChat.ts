@@ -48,6 +48,7 @@ const loadChatService = async () => {
 };
 
 import { useVisionStore } from '@/stores/useVisionStore';
+import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
 
 let _cognitiveKernelPromise: Promise<{
   harmonizeChatMessages: (messages: unknown) => unknown;
@@ -185,7 +186,11 @@ import { chatLogger } from '@/utils/chatLogger';
 import { getOrLoadProvider } from '@/services/ai/AIProviderLazyLoader';
 
 // ✨ v24.3.0 - Cloud Providers Availability Check
-import { UI_TIMEOUTS, getAdaptiveUITimeout } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
+import {
+  UI_TIMEOUTS,
+  getAdaptiveUITimeout,
+  REQUEST_BUDGETS,
+} from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 
 let _cloudProvidersPromise: Promise<{
   openaiProvider: { isAvailable: () => Promise<boolean> };
@@ -383,6 +388,7 @@ interface UseChatReturn {
   messages: AIMessage[];
   input: string;
   isLoading: boolean;
+  requestInFlight: boolean;
   error: string | null;
   suggestions: string[];
 
@@ -524,6 +530,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   });
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const requestInFlight = useRequestInFlightStore(state => state.requestInFlight);
+  const setRequestInFlight = useRequestInFlightStore(
+    state => state.setRequestInFlight
+  );
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);
@@ -646,6 +656,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       // 🔒 v26.2.1: Skip if already checking
       if (checkInProgress) {
         chatLogger.debug('Provider readiness check skipped - already in progress');
+        return;
+      }
+
+      if (requestInFlightRef.current) {
+        chatLogger.debug('Provider readiness check deferred (request in flight)');
         return;
       }
 
@@ -910,10 +925,15 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   // ═══ SYNC INITIAL MESSAGES ═══
   // FIX v19.3Ω: Protection ABSOLUE contre les resets pendant loading
   const isLoadingRef = useRef(false);
+  const requestInFlightRef = useRef(false);
 
   useEffect(() => {
     isLoadingRef.current = isLoading;
   }, [isLoading]);
+
+  useEffect(() => {
+    requestInFlightRef.current = requestInFlight;
+  }, [requestInFlight]);
 
   useEffect(() => {
     // OMEGA FIX v3: Protection ABSOLUE contre les resets intempestifs
@@ -1040,6 +1060,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         contentPreview: content?.substring(0, 50),
       });
       const startTime = Date.now();
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
       if (!content || typeof content !== 'string' || content.trim().length === 0) {
         chatLogger.debug('❌ Message invalide ou vide');
@@ -1168,17 +1189,19 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       chatLogger.info('✅ Message valide, traitement...');
       const cleanMessage = content.trim();
       setIsLoading(true);
+      setRequestInFlight(true);
 
       // ⭐ OMEGA FIX: Activer failsafe timeout APRÈS setIsLoading(true)
       failsafeTimeout = setTimeout(() => {
         if (isLoadingRef.current) {
           chatLogger.warn(
-            '⚠️ OMEGA FAILSAFE: isLoading reset forcé après 30s timeout backend'
+            '⚠️ OMEGA FAILSAFE: isLoading reset forcé après timeout backend'
           );
           setIsLoading(false);
+          setRequestInFlight(false);
           operationLockRef.current = false;
         }
-      }, 30000); // 30s max
+      }, UI_TIMEOUTS.failsafe);
 
       setError(null);
 
@@ -1186,7 +1209,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         role: 'user',
         content: cleanMessage,
         timestamp: Date.now(),
-        metadata: withUiId({ inputLength: cleanMessage.length, mode: currentModeState }),
+        metadata: withUiId({
+          inputLength: cleanMessage.length,
+          mode: currentModeState,
+          requestId,
+        }),
       };
 
       const bufferedMessages = [...messagesRef.current, userMessage];
@@ -1227,6 +1254,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         status: 'streaming',
         mode: currentModeState,
         streamChunks: 0,
+        requestId,
       });
 
       const assistantPlaceholder: AIMessage = {
@@ -1607,6 +1635,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           // avec "Duplicate conversation detected" et ne jamais répondre (2e message vide).
           const requestConfig: StreamConfig = {
             provider: firstCandidate ?? 'auto',
+            requestId,
           };
           for (const candidate of providerCandidates) {
             try {
@@ -1616,6 +1645,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               const response = await withTimeout(
                 (await loadChatService()).sendMessageLegacy(backendHistory, {
                   provider: candidate,
+                  requestId,
                 }),
                 `legacy:${candidate}`
               );
@@ -1984,6 +2014,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
             error: error instanceof Error ? error.message : String(error),
             cognitiveHarmonized: true,
             errorType: harmonizedError.type,
+            requestId,
           }),
         };
 
@@ -2014,6 +2045,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
 
         // ✅ v∞.FIX P0-1: Garantie absolue de désactivation du lock (synchrone)
         setIsLoading(false);
+        setRequestInFlight(false);
         operationLockRef.current = false;
         chatLogger.debug('🔓 Operation lock RELEASED (finally)');
       }
@@ -2127,6 +2159,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       anomalyCount: anomalyCount + internalAnomalyCount,
       currentMode: currentModeState,
       isLoading,
+      requestInFlight,
       messagesCount: messages.length,
       omnisConfig,
     }),
@@ -2135,6 +2168,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
       currentModeState,
       internalAnomalyCount,
       isLoading,
+      requestInFlight,
       messages.length,
       memoryStats,
       omnisConfig,
@@ -2147,6 +2181,7 @@ Le système cognitif s'adapte en temps réel. Tu peux continuer la conversation 
     messages,
     input,
     isLoading,
+    requestInFlight,
     error,
     suggestions,
 

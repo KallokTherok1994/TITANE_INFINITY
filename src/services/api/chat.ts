@@ -10,16 +10,10 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
+import { chatEngine } from '@/services/ai/chatEngine';
+import { getSystemPrompt } from '@/config/chatModes.config';
 
-let _chatEnginePromise: Promise<typeof import('@/services/ai/chatEngine')> | null = null;
-
-const getChatEngine = async () => {
-  if (!_chatEnginePromise) {
-    _chatEnginePromise = import('@/services/ai/chatEngine');
-  }
-  const mod = await _chatEnginePromise;
-  return mod.chatEngine;
-};
+const getChatEngine = async () => chatEngine;
 
 /**
  * Type pour l'ID de conversation OMEGA
@@ -58,6 +52,7 @@ export interface StreamConfig {
   topP?: number;
   conversationId?: string;
   messageId?: string;
+  requestId?: string;
   systemPrompt?: string;
   mode?: string; // Mode IA (coach, strategist, etc.)
 }
@@ -123,6 +118,7 @@ interface BackendChatRequest {
   conversation_id?: string;
   model?: string;
   system_prompt?: string;
+  request_id?: string;
 }
 
 interface StreamChunkEvent {
@@ -301,6 +297,11 @@ class ChatService {
 
     try {
       // ✅ FIX P0-1: Type any pour gérer format OMEGA direct
+      const requestId =
+        config?.requestId ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const systemPrompt =
+        config?.systemPrompt ?? getSystemPrompt(config?.mode ?? 'default');
+
       const backendResponse = await invokeWithRetry<any>(
         'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA
         {
@@ -308,7 +309,8 @@ class ChatService {
           conversation_id: conversationId,
           mode: config?.mode ?? null,
           provider: config?.provider ?? 'auto',
-          system_prompt: config?.systemPrompt ?? null,
+          system_prompt: systemPrompt,
+          request_id: requestId,
         },
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
@@ -372,6 +374,7 @@ class ChatService {
           metadata: {
             messageId: backendResponse.messageId,
             conversationId: backendResponse.conversationId || conversationId, // Fallback
+            requestId,
             timestamp: Date.now(),
             success: true,
             ...(backendResponse.metadata || {}),
@@ -1060,8 +1063,11 @@ class ChatService {
       request.model = config.model;
     }
 
-    if (config?.systemPrompt) {
-      request.system_prompt = config.systemPrompt;
+    request.system_prompt =
+      config?.systemPrompt ?? getSystemPrompt(config?.mode ?? 'default');
+
+    if (config?.requestId) {
+      request.request_id = config.requestId;
     }
 
     return request;

@@ -33,6 +33,7 @@ import type { UnifiedMemoryQuery } from '@/services/unified/UnifiedMemory';
 import { createUnifiedMemory } from '@/services/unified';
 import { MemoryTier } from '@/services/mcp/mcp.types';
 import { getToolCaller } from '@/services/chat/toolCaller'; // Sprint 6 Phase 3
+import { getSystemPrompt } from '@/config/chatModes.config';
 
 // Singleton UnifiedMemory instance
 let _unifiedMemoryInstance: Awaited<ReturnType<typeof createUnifiedMemory>> | null = null;
@@ -395,13 +396,18 @@ export class ConversationManager {
       const chatEngineModule = await import('@/services/tauri/chatEngine.commands');
       const chatEngineCommands = chatEngineModule.default;
 
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
       const omegaResponse = await chatEngineCommands.generate({
         message: prompt,
         conversationId,
         mode: 'default',
         provider: config.backendProvider,
         systemPrompt:
-          systemPrompt.length > 0 ? systemPrompt : request.config.systemPrompt,
+          systemPrompt.length > 0
+            ? systemPrompt
+            : request.config.systemPrompt ?? getSystemPrompt('default'),
+        requestId,
       });
 
       return {

@@ -17,6 +17,7 @@ import { autoHealEngine } from '../autoHealEngine';
 import { logger } from '../../../utils/logger';
 import { withRetry, getRetryConfig } from '../retryStrategy';
 import { withCache, CACHE_TTL } from '../apiCache';
+import { StatusCache } from '../statusCache';
 
 /**
  * Modèles Copilot disponibles (via GitHub Models API)
@@ -37,6 +38,40 @@ const DEFAULT_CONFIG: CopilotConfig = {
   maxTokens: 2048,
 };
 
+const copilotKeyStatusCache = new StatusCache<{
+  configured: boolean;
+  status: string;
+  message?: string;
+}>({
+  name: 'copilot-key-status',
+  ttlMs: 30000,
+  backoffBaseMs: 1000,
+  backoffMaxMs: 10000,
+});
+
+/**
+ * Statut Copilot caché (singleflight + TTL + backoff)
+ */
+export async function getCopilotKeyStatusCached(): Promise<{
+  configured: boolean;
+  status: string;
+  message?: string;
+}> {
+  return copilotKeyStatusCache.get(
+    () =>
+      secureInvoke<{
+        configured: boolean;
+        status: string;
+        message?: string;
+      }>('get_copilot_key_status'),
+    () => ({
+      configured: false,
+      status: 'error',
+      message: 'Backoff actif (cache)',
+    })
+  );
+}
+
 /**
  * Provider GitHub Copilot (v26.3)
  * Utilise backend Rust via chat_generate_copilot command
@@ -49,10 +84,7 @@ export const copilotProvider: AIProvider = {
    */
   async isAvailable(): Promise<boolean> {
     try {
-      const response = await secureInvoke<{
-        configured: boolean;
-        status: string;
-      }>('get_copilot_key_status');
+      const response = await getCopilotKeyStatusCached();
 
       return response.configured === true && response.status === 'ok';
     } catch (error) {
@@ -322,11 +354,7 @@ export async function getCopilotStatus(): Promise<{
   message?: string;
 }> {
   try {
-    const statusResult = await secureInvoke<{
-      configured: boolean;
-      status: string;
-      message?: string;
-    }>('get_copilot_key_status');
+    const statusResult = await getCopilotKeyStatusCached();
 
     const available = await copilotProvider.isAvailable();
 

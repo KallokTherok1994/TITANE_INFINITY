@@ -44,12 +44,13 @@ import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
 export type { ChatMode } from './chatTypes';
-import type {
-  ProviderPreference,
-  ChatRequestArgs,
-  ChatCompletionPayload,
+import {
+  chatEngineCommands,
+  type ProviderPreference,
+  type ChatRequestArgs,
+  type ChatCompletionPayload,
 } from '@/services/tauri/chatEngine.commands';
-import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
+import { MEMORY_TIMEOUTS, REQUEST_BUDGETS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 
@@ -170,8 +171,8 @@ class ChatEngineOmega {
       this.config = {
         mode,
         omegaConfig: {
-          timeoutMs: 30000,
-          maxRetries: 3,
+          timeoutMs: REQUEST_BUDGETS.globalRequestMs,
+          maxRetries: REQUEST_BUDGETS.maxAttempts,
           enableSanitizer: true,
           enableAutoHeal: true,
           ...config?.omegaConfig,
@@ -1004,8 +1005,6 @@ Que souhaites-tu explorer ?`;
     try {
       pipelineSteps.push('backend-dispatch');
 
-      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
-
       const payload: ChatRequestArgs = {
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
@@ -1206,8 +1205,6 @@ Que souhaites-tu explorer ?`;
     };
 
     try {
-      const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
-
       chunkUnlisten = await chatEngineCommands.onStreamChunk(chunk => {
         if (!conversationId || !messageId) {
           return;
@@ -2080,5 +2077,16 @@ Que souhaites-tu explorer ?`;
 // ─────────────────────────────────────────────────────────────────
 
 export const chatEngine = new ChatEngineOmega();
+
+predictivePreloader.setPreloadHandler(async (message, mode) => {
+  await chatEngine.generate(message, [], {
+    mode: mode as ChatMode,
+    performanceConfig: {
+      enableCache: true,
+      enablePredictive: false,
+      cacheHitBonus: false,
+    },
+  });
+});
 
 export default chatEngine;

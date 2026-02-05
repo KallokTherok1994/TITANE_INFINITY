@@ -16,8 +16,18 @@ import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
 import { autoHealEngine } from '../autoHealEngine';
 import { createLogger } from '@/utils/logger';
+import { getSystemPrompt } from '@/config/chatModes.config';
+import { StatusCache } from '../statusCache';
+import { REQUEST_BUDGETS } from '@/config/aiTimeouts.config';
 
 const logger = createLogger('TauriChat');
+
+const providersStatusCache = new StatusCache<ProviderStatus[]>({
+  name: 'tauri-providers-status',
+  ttlMs: 30000,
+  backoffBaseMs: 1000,
+  backoffMaxMs: 10000,
+});
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES (matching Rust structs)
@@ -42,6 +52,7 @@ interface ChatRequest {
   streaming: boolean;
   images?: string[];
   system_prompt?: string;
+  request_id?: string;
 }
 
 interface ChatResponse {
@@ -70,7 +81,7 @@ class TauriChatProvider implements AIProvider {
   private readonly CHECK_INTERVAL = 20000; // 20s cache (plus réactif)
   private errorCount = 0;
   private readonly MAX_ERRORS = 8; // Plus tolérant aux erreurs réseau
-  private readonly TIMEOUT_MS = 50000; // 50s timeout pour invoke (Gemini peut être lent)
+  private readonly TIMEOUT_MS = REQUEST_BUDGETS.globalRequestMs; // Budget global max
 
   /**
    * Vérifie si le backend chat_orchestrator est disponible (OMEGA Protected)
@@ -150,12 +161,15 @@ class TauriChatProvider implements AIProvider {
         throw new Error('Backend not available');
       }
 
+      const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+
       // Construit la requête
       const request: ChatRequest = {
         message: message.trim(),
         provider: 'auto', // Rust choisira gemini → ollama → local
         streaming: false,
         system_prompt: this.buildSystemPrompt(history),
+        request_id: requestId,
       };
 
       logger.debug('Request details', {
@@ -172,6 +186,7 @@ class TauriChatProvider implements AIProvider {
           mode: null,
           provider: request.provider,
           system_prompt: request.system_prompt,
+          request_id: request.request_id,
           streaming: request.streaming,
         }),
         new Promise<never>((_, reject) =>
@@ -211,6 +226,10 @@ class TauriChatProvider implements AIProvider {
         timestamp: response.message.timestamp || Date.now(),
         model: response.message.model || 'unknown',
         tokens: response.message.tokens,
+        metadata: {
+          requestId: requestId,
+          latencyMs: response.latency_ms,
+        },
       };
     } catch (error) {
       this.handleInvokeError(error, 'generate', { message: message.substring(0, 100) });
@@ -279,34 +298,38 @@ class TauriChatProvider implements AIProvider {
   /**
    * Construit un prompt système depuis l'historique
    */
-  private buildSystemPrompt(history: AIMessage[]): string | undefined {
+  private buildSystemPrompt(history: AIMessage[]): string {
     const systemMessages = history.filter(m => m.role === 'system');
+    const fallbackPrompt = getSystemPrompt('default');
 
     if (systemMessages.length === 0) {
-      return undefined;
+      return fallbackPrompt;
     }
 
-    // Combine tous les messages système
-    return systemMessages.map(m => m.content).join('\n\n');
+    const combined = systemMessages.map(m => m.content).join('\n\n').trim();
+    return combined.length > 0 ? combined : fallbackPrompt;
   }
 
   /**
    * Retourne le statut des providers backend (OMEGA Protected)
    */
   async getProvidersStatus(): Promise<ProviderStatus[]> {
-    try {
-      const status = await Promise.race([
-        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
-        new Promise<ProviderStatus[]>((_, reject) =>
-          setTimeout(() => reject(new Error('Status check timeout')), 10000)
-        ),
-      ]);
+    return providersStatusCache.get(
+      async () => {
+        const status = await Promise.race([
+          safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+          new Promise<ProviderStatus[]>((_, reject) =>
+            setTimeout(() => reject(new Error('Status check timeout')), 10000)
+          ),
+        ]);
 
-      return Array.isArray(status) ? status : [];
-    } catch (error) {
+        return Array.isArray(status) ? status : [];
+      },
+      () => []
+    ).catch(error => {
       this.handleInvokeError(error, 'getProvidersStatus');
       return [];
-    }
+    });
   }
 
   /**

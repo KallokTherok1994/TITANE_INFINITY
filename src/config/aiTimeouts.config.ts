@@ -6,16 +6,28 @@
 /**
  * Provider-specific execution timeouts (ms)
  * Ordered by expected latency (fastest to slowest)
- * ✨ v26.2.1: Increased cloud timeouts to handle complex requests
+ * ✨ vΩ.2: Reduced budgets to enforce <= 25s global latency cap
  */
 export const PROVIDER_TIMEOUTS = {
   'titane-local': 5000, // Noyau infaillible, ultra-rapide
-  'tauri-backend': 12000, // Backend Rust local
-  ollama: 30000, // Local LLM, dépend du modèle
-  gemini: 60000, // ✨ Cloud API Google (increased from 35s to 60s)
-  openai: 75000, // ✨ Cloud API OpenAI (increased from 40s to 75s)
-  claude: 75000, // ✨ Cloud API Anthropic (increased from 40s to 75s)
-  default: 25000, // Fallback
+  'tauri-backend': 8000, // Backend Rust local
+  ollama: 8000, // Local LLM (budget borné)
+  gemini: 8000, // Cloud APIs bornées
+  openai: 8000,
+  claude: 8000,
+  default: 8000, // Fallback
+} as const;
+
+/**
+ * Budgets globaux (ms)
+ * - globalRequestMs: budget maximal par requête
+ * - providerAttemptMs: budget maximal par tentative provider
+ * - maxAttempts: nombre max de tentatives
+ */
+export const REQUEST_BUDGETS = {
+  globalRequestMs: 25000,
+  providerAttemptMs: 8000,
+  maxAttempts: 3,
 } as const;
 
 /**
@@ -30,15 +42,14 @@ export const MEMORY_TIMEOUTS = {
 
 /**
  * UI-facing timeouts (ms)
- * ✨ v26.2.1: Extended cloud timeouts to exceed backend timeouts
- * Ensures UI doesn't timeout before backend completes
+ * ✨ vΩ.2: Alignés sur le budget global (<= 25s)
  */
 export const UI_TIMEOUTS = {
-  maxRequest: 90000, // ✨ Hard cap increased to 90s (was 45s)
-  failsafe: 30000, // Failsafe reset for stuck operations
-  localProvider: { short: 8000, long: 15000 },
-  ollamaProvider: { short: 12000, long: 25000 },
-  cloudProvider: { short: 65000, medium: 80000, long: 90000 }, // ✨ All increased by ~30s
+  maxRequest: 25000, // Hard cap global
+  failsafe: 25000, // Failsafe reset aligned
+  localProvider: { short: 6000, long: 8000 },
+  ollamaProvider: { short: 8000, long: 12000 },
+  cloudProvider: { short: 12000, medium: 18000, long: 25000 },
 } as const;
 
 /**
@@ -62,13 +73,13 @@ export const CIRCUIT_BREAKER = {
 
 /**
  * Streaming configuration (OPT11: Chunk batching)
- * ✨ v26.2.1: Extended streaming timeouts for cloud agents
+ * ✨ vΩ.2: Bornes alignées sur le budget global
  */
 export const STREAM_CONFIG = {
   chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
   chunkBatchDelayMs: 50, // Max delay before flushing batch
-  totalTimeoutMs: 180000, // ✨ 3 minutes max for entire stream (was 2min)
-  perChunkTimeoutMs: 15000, // ✨ 15s max between chunks (was 10s)
+  totalTimeoutMs: 25000, // 25s max for entire stream
+  perChunkTimeoutMs: 4000, // 4s max between chunks
 } as const;
 
 /**
