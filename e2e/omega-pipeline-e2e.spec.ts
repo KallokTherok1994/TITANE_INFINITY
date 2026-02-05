@@ -19,7 +19,9 @@ async function gotoTitane(page: Page) {
   // statique au lieu de l'app SPA. On passe par la navigation UI depuis '/'.
   await page.goto('/');
 
-  const mainNav = page.getByRole('navigation', { name: 'Main navigation' });
+  const mainNav = page.getByRole('navigation', {
+    name: /Navigation principale|Main navigation/i,
+  });
   await expect(mainNav).toBeVisible({ timeout: 30000 });
 
   const titaneBtn = mainNav.getByRole('button', { name: 'TITANE' });

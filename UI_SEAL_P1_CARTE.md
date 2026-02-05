@@ -9,24 +9,25 @@
 
 Source: [src/router.tsx](src/router.tsx#L120)
 
-| Route | Page Component | Layout | Lazy Load | Error Fallback |
-|-------|---|---|---|---|
-| `/` | Dashboard (DashboardPage) | AppLayout | ✅ Yes | ErrorFallback |
-| `/chat` | Chat (Chat.tsx) | AppLayout | ✅ Yes | ErrorFallback |
-| `/stats` | Stats | AppLayout | ✅ Yes | ErrorFallback |
-| `/sentinel` | Sentinel | AppLayout | ✅ Yes | ErrorFallback |
-| `/watchdog` | Watchdog | AppLayout | ✅ Yes | ErrorFallback |
-| `/selfheal` | SelfHeal | AppLayout | ✅ Yes | ErrorFallback |
-| `/adaptive` | AdaptiveEngine | AppLayout | ✅ Yes | ErrorFallback |
-| `/memory` | Memory | AppLayout | ✅ Yes | ErrorFallback |
-| `/settings` | Settings (SecureSettings.tsx) | AppLayout | ✅ Yes | ErrorFallback |
-| `/devtools` | DevTools | AppLayout | ✅ Yes | ErrorFallback |
-| `/cloud` | CloudCenter | AppLayout | ✅ Yes | ErrorFallback |
-| `/agenda` | AgendaPage | AppLayout | ✅ Yes | ErrorFallback |
-| `/design-system` | DesignSystemShowcase | None (Direct Suspense) | ✅ Yes | ErrorFallback |
-| `*` (catch-all) | Navigate to `/` | N/A | N/A | N/A |
+| Route            | Page Component                | Layout                 | Lazy Load | Error Fallback |
+| ---------------- | ----------------------------- | ---------------------- | --------- | -------------- |
+| `/`              | Dashboard (DashboardPage)     | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/chat`          | Chat (Chat.tsx)               | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/stats`         | Stats                         | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/sentinel`      | Sentinel                      | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/watchdog`      | Watchdog                      | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/selfheal`      | SelfHeal                      | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/adaptive`      | AdaptiveEngine                | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/memory`        | Memory                        | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/settings`      | Settings (SecureSettings.tsx) | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/devtools`      | DevTools                      | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/cloud`         | CloudCenter                   | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/agenda`        | AgendaPage                    | AppLayout              | ✅ Yes    | ErrorFallback  |
+| `/design-system` | DesignSystemShowcase          | None (Direct Suspense) | ✅ Yes    | ErrorFallback  |
+| `*` (catch-all)  | Navigate to `/`               | N/A                    | N/A       | N/A            |
 
 ### Legacy Routes (Redirects)
+
 ```
 / → /titane (implicit)
 /chat → /titane
@@ -44,6 +45,7 @@ Source: [src/router.tsx](src/router.tsx#L120)
 ## P1.2 — Arborescence Ring 4 (UI Components)
 
 ### App Shell & Layout
+
 ```
 src/
 ├── App.tsx (main entry, BrowserRouter, providers, theme setup)
@@ -63,6 +65,7 @@ src/
 ```
 
 ### Chat UI Components (Ring 4 Pure Delegation)
+
 ```
 src/components/chat/
 ├── Chat-related composites
@@ -105,6 +108,7 @@ src/components/chat/
 ```
 
 ### Hooks (Ring 2/3 Integration)
+
 ```
 src/hooks/
 ├── useChat.ts (2172 lines: sendMessage, streaming, memory, voice)
@@ -120,6 +124,7 @@ src/hooks/
 ```
 
 ### Providers & State Management
+
 ```
 src/context/ + src/stores/
 ├── TitanStateContext (persistence wrapper)
@@ -217,6 +222,7 @@ Ring 4 (UI Hooks)
 ```
 
 ### localStorage Keys (Single Source of Truth)
+
 ```
 titane_conversation_{id}                  # Per-conversation messages (JSONL)
 titane_active_conversation_id             # Current active ID
@@ -227,27 +233,28 @@ titane_conversation_events                # Audit log (append-only)
 
 ## P1.5 — State Managers & Contexts
 
-| Provider | Purpose | Ring | Used In |
-|----------|---------|------|---------|
-| TitanStateProvider | Persistence wrapper | Ring 2/3 | App.tsx |
-| ThemeProvider | Dark/light theme | Ring 4 | App.tsx |
-| AnimationContext | Animation flags | Ring 4 | App.tsx |
-| ToastProvider | Toast notifications | Ring 4 | App.tsx → Toast.tsx |
-| TitaneLogo (component) | Branding | Ring 4 | TopNav |
-| XPBar (lazy) | Experience display | Ring 4 | Dynamic |
+| Provider               | Purpose             | Ring     | Used In             |
+| ---------------------- | ------------------- | -------- | ------------------- |
+| TitanStateProvider     | Persistence wrapper | Ring 2/3 | App.tsx             |
+| ThemeProvider          | Dark/light theme    | Ring 4   | App.tsx             |
+| AnimationContext       | Animation flags     | Ring 4   | App.tsx             |
+| ToastProvider          | Toast notifications | Ring 4   | App.tsx → Toast.tsx |
+| TitaneLogo (component) | Branding            | Ring 4   | TopNav              |
+| XPBar (lazy)           | Experience display  | Ring 4   | Dynamic             |
 
 ---
 
 ## P1.6 — Architecture 4-Ring Verification
 
-| Ring | Layer | Components | Status |
-|------|-------|-----------|--------|
-| **Ring 1** | Types (contracts) | conversation.ts, ai.ts, etc. | ✅ Pure TS interfaces |
-| **Ring 2** | Engines (logic) | useChat, useChatCore, conversationLifecycleEngine | ✅ Business rules |
-| **Ring 3** | Services (persistence) | conversationStorage, hybridTTS | ✅ Data access |
-| **Ring 4** | UI (delegation) | Chat.tsx, ConversationsSidebar, etc. | ✅ Pure components |
+| Ring       | Layer                  | Components                                        | Status                |
+| ---------- | ---------------------- | ------------------------------------------------- | --------------------- |
+| **Ring 1** | Types (contracts)      | conversation.ts, ai.ts, etc.                      | ✅ Pure TS interfaces |
+| **Ring 2** | Engines (logic)        | useChat, useChatCore, conversationLifecycleEngine | ✅ Business rules     |
+| **Ring 3** | Services (persistence) | conversationStorage, hybridTTS                    | ✅ Data access        |
+| **Ring 4** | UI (delegation)        | Chat.tsx, ConversationsSidebar, etc.              | ✅ Pure components    |
 
 ### Critical Invariant: No Reverse Dependencies
+
 - ✅ Ring 4 never imports Ring 4 circular (no Chat → Chat)
 - ✅ Ring 4 calls Ring 2/3 via hooks/services only
 - ✅ No direct Ring 1 import in Ring 4 (via types only)
@@ -257,18 +264,19 @@ titane_conversation_events                # Audit log (append-only)
 ## P1.7 — Lazy Loading Strategy
 
 All pages use `React.lazy()` with `Suspense`:
+
 ```typescript
 const Chat = lazy(() => import('./ui/pages/Chat').then(m => ({ default: m.Chat })));
 ```
 
 **Router-level Suspense:**
+
 ```tsx
-<Suspense fallback={<LoadingFallback />}>
-  {children}
-</Suspense>
+<Suspense fallback={<LoadingFallback />}>{children}</Suspense>
 ```
 
 **In-page Lazy Components:**
+
 ```tsx
 const XPBar = lazy(() => import('./components/experience/XPBar'));
 const QuantumParticles = lazy(() => import('./components/aura/QuantumParticles'));
@@ -276,6 +284,7 @@ const AuraControlPanel = lazy(() => import('./components/aura/AuraControlPanel')
 ```
 
 **Fallback UI:**
+
 - LoadingFallback: Simple "Chargement TITANE∞..." with spinner
 - ErrorFallback: "Erreur de chargement" with optional error message
 
@@ -291,11 +300,13 @@ Note: `/chat` route exists but **historically redirects** to `/` in some configs
 ## P1.9 — ErrorBoundary Coverage
 
 **Locations:**
+
 1. `App.tsx` → AutoHealErrorBoundary (wraps entire app)
 2. `router.tsx` → Each route has `errorElement: <ErrorFallback />`
 3. `Chat.tsx` → Potential local ErrorBoundary for message list safety
 
 **Recovery:**
+
 - AutoHeal: Attempts to recover silently
 - ErrorBoundary: Displays error UI with context
 - Route ErrorFallback: Page-level recovery with navigation
@@ -305,6 +316,7 @@ Note: `/chat` route exists but **historically redirects** to `/` in some configs
 ## P1.10 — UI Dependencies Map (Critical for P2-P7)
 
 ### External Dependencies (UI layer)
+
 ```
 react 18.x
 react-router-dom 7.x
@@ -316,6 +328,7 @@ tailwindcss or custom CSS
 ```
 
 ### Internal Dependencies (Ring 2/3 exposed to Ring 4)
+
 ```
 useChat.ts → useChatCore.ts → chatService.ts
 useConversations.ts → conversationStorage.ts
@@ -330,6 +343,7 @@ useVAD.ts → hybridTTS.ts (voice integration)
 ✅ **CARTE UI COMPLETE**
 
 **Summary:**
+
 - 12+ primary routes (lazy-loaded via React Router v7)
 - 30+ chat-specific components (pure delegation, Ring 4)
 - 3 ErrorBoundary layers (app + router + local)
@@ -338,6 +352,7 @@ useVAD.ts → hybridTTS.ts (voice integration)
 - 4-Ring architecture fully mapped
 
 **Key Findings:**
+
 - ConversationsButton + ConversationsSidebar → multi-conversation ready
 - Chat.tsx uses VirtualizedMessageList (perf-optimized)
 - useChat.ts + useConversations.ts → clean Ring 2/3 integration
@@ -345,5 +360,6 @@ useVAD.ts → hybridTTS.ts (voice integration)
 - Lazy loading + Suspense on all routes
 
 ### Next Phases
+
 → P2: **Gates by screen** (loading, error, empty, nav, responsive)  
 → P3: **Chat multi-conversation & zero-silence audit**

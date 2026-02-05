@@ -308,10 +308,7 @@ export default defineConfig(({ command }) => ({
           //                           ↔ devtools-sudo)
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
-            if (
-              id.includes('/services/') ||
-              id.includes('/modules/devSudo/')
-            ) {
+            if (id.includes('/services/') || id.includes('/modules/devSudo/')) {
               // ALL service modules + devtools-sudo → ONE CHUNK
               return 'services-core';
             }

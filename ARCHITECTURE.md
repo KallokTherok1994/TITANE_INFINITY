@@ -24,6 +24,7 @@
 ## System Overview
 
 TITANE∞ is a desktop chat application with advanced features:
+
 - **Local-First:** All data stored locally (localStorage)
 - **Tauri-Based:** Rust backend, React frontend
 - **Multi-Conversation:** Support for multiple concurrent conversations
@@ -31,6 +32,7 @@ TITANE∞ is a desktop chat application with advanced features:
 - **Governed:** Strict architectural patterns enforced
 
 **Technology Stack:**
+
 - Frontend: React (TypeScript), Vite
 - Backend: Tauri (Rust)
 - Storage: localStorage (browser API)
@@ -76,6 +78,7 @@ TITANE∞ employs a **4-Ring architectural pattern** for separation of concerns:
 ```
 
 **Key Principle:** Each ring has single responsibility
+
 - **Ring 1 (Types):** Define what is possible
 - **Ring 2 (Engines):** Orchestrate business logic
 - **Ring 3 (Services):** Handle persistence & events
@@ -90,12 +93,14 @@ TITANE∞ employs a **4-Ring architectural pattern** for separation of concerns:
 **Location:** `src/services/ai/chatEngine.ts`
 
 **Responsibilities:**
+
 - Execute chat pipeline (preprocessor → model → postprocessor)
 - Manage conversation context
 - Thread `conversationId` through all pipeline stages
 - Integrate with ConversationLifecycleEngine
 
 **Key Integration Points:**
+
 ```typescript
 // Line 57: Import lifecycle engine
 import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
@@ -118,6 +123,7 @@ const request = {
 ```
 
 **Message Flow:**
+
 ```
 User Input
     ↓
@@ -141,26 +147,31 @@ ConversationStorageService.appendMessage(conversationId, message)
 The multi-conversation system follows the 4-Ring pattern:
 
 #### Ring 1: Types
+
 **File:** `src/types/conversation.ts` (153 lines)
 
 **Interfaces:**
+
 - `Conversation` — Full conversation state (id, title, messages[], status, mode, metadata)
 - `ConversationSummary` — Lightweight reference (id, title, status, counts)
 - `ConversationLifecycleEvent` — Audit events (type, timestamp, conversation_id, data)
 - `CreateConversationOptions` — Parameters for creation (title, mode, metadata)
 
 #### Ring 2: Engine
+
 **File:** `src/engines/conversation/conversationLifecycleEngine.ts` (244 lines)
 
 **Class:** `ConversationLifecycleEngine` (singleton)
 
 **Responsibilities:**
+
 - Manage active conversation state
 - Emit lifecycle events (created, activated, archived, etc.)
 - Validate message eligibility
 - Create conversation summaries
 
 **Key Methods:**
+
 ```typescript
 // State management
 createConversation(options?: CreateConversationOptions): Conversation
@@ -182,6 +193,7 @@ addEventListener(listener: (event: ConversationLifecycleEvent) => void): void
 ```
 
 **Event Types:**
+
 - `conversation.created` — New conversation created
 - `conversation.activated` — Conversation became active
 - `conversation.message.appended` — Message added to conversation
@@ -189,17 +201,20 @@ addEventListener(listener: (event: ConversationLifecycleEvent) => void): void
 - `conversation.title.updated` — Conversation title changed
 
 #### Ring 3: Service
+
 **File:** `src/services/conversation/conversationStorage.ts` (371 lines)
 
 **Class:** `ConversationStorageService` (singleton)
 
 **Responsibilities:**
+
 - localStorage persistence (read/write/update)
 - Event listener registration
 - Message isolation (load conversation before append)
 - Index management
 
 **Key Methods:**
+
 ```typescript
 // Persistence
 async initialize(): Promise<void>
@@ -215,6 +230,7 @@ async getActiveConversation(): Promise<Conversation | null>
 ```
 
 **Storage Schema:**
+
 ```
 localStorage keys:
 ├── titane_conversation_{id}         — Full conversation state (JSON)
@@ -224,20 +240,21 @@ localStorage keys:
 ```
 
 **Critical Implementation Detail:**
+
 ```typescript
 // Message isolation enforced at Ring 3
 async appendMessage(conversationId: string, message: AIMessage): Promise<void> {
   // 1. Load ONLY the specified conversation
   const conversation = await this.loadConversation(conversationId);
-  
+
   // 2. Fail if conversation doesn't exist
   if (!conversation) {
     throw new Error('Conversation not found: ' + conversationId);
   }
-  
+
   // 3. Append to loaded conversation only
   conversation.messages.push(message);
-  
+
   // 4. Persist immediately
   await this.saveConversation(conversation);
 }
@@ -245,14 +262,17 @@ async appendMessage(conversationId: string, message: AIMessage): Promise<void> {
 ```
 
 #### Ring 4: UI & Hooks
+
 **Files:** `src/components/chat/Conversations*.tsx` + `src/hooks/useConversations.ts`
 
 **Components:**
+
 - `ConversationsSidebar.tsx` — Drawer with conversation history
 - `ConversationsButton.tsx` — Toggle button for sidebar
 - `useConversations.ts` — React hook for CRUD operations
 
 **Hook State & Actions:**
+
 ```typescript
 // State
 conversations: ConversationSummary[]
@@ -269,6 +289,7 @@ refreshConversations(): Promise<void>
 ```
 
 **Usage in Components:**
+
 ```typescript
 const { conversations, activeConversationId, createConversation } = useConversations();
 
@@ -386,12 +407,12 @@ setActiveConversation(conversationId: string): void {
 async appendMessage(conversationId: string, message: AIMessage): Promise<void> {
   // Load ONLY the specified conversation
   const conversation = await this.loadConversation(conversationId);
-  
+
   // Fail if doesn't exist
   if (!conversation) {
     throw new Error('Conversation not found: ' + conversationId);
   }
-  
+
   // Append only to loaded conversation
   conversation.messages.push(message);
   await this.saveConversation(conversation);
@@ -447,13 +468,13 @@ await conversationStorage.appendMessage(activeId, response);
 
 All critical paths have error handling:
 
-| Function | Pattern | Result |
-|----------|---------|--------|
-| `saveConversation()` | try-catch | Logs error, throws Error |
-| `loadConversation()` | try-catch | Returns null on error |
-| `appendMessage()` | Null check before append | Throws if not found |
-| `setActiveConversation()` | Idempotent | Safe to call repeatedly |
-| `canReceiveMessages()` | Early returns | Returns false instead of throwing |
+| Function                  | Pattern                  | Result                            |
+| ------------------------- | ------------------------ | --------------------------------- |
+| `saveConversation()`      | try-catch                | Logs error, throws Error          |
+| `loadConversation()`      | try-catch                | Returns null on error             |
+| `appendMessage()`         | Null check before append | Throws if not found               |
+| `setActiveConversation()` | Idempotent               | Safe to call repeatedly           |
+| `canReceiveMessages()`    | Early returns            | Returns false instead of throwing |
 
 ### Logging Strategy
 
@@ -473,10 +494,11 @@ logger.info('Conversation created', { id, title });
 **Rule:** No operation silently succeeds or fails
 
 Example:
+
 ```typescript
 // ❌ Bad: Silent failure
 if (conversation) {
-  conversation.messages.push(message);  // What if conversation is null?
+  conversation.messages.push(message); // What if conversation is null?
 }
 
 // ✅ Good: Explicit handling
@@ -490,15 +512,15 @@ conversation.messages.push(message);
 
 ## Appendix: File Locations
 
-| Component | File | Lines |
-|-----------|------|-------|
-| Types | `src/types/conversation.ts` | 153 |
-| Engine | `src/engines/conversation/conversationLifecycleEngine.ts` | 244 |
-| Service | `src/services/conversation/conversationStorage.ts` | 371 |
-| Hook | `src/hooks/useConversations.ts` | 190 |
-| Components | `src/components/chat/Conversations*.tsx` | 263 |
-| Tests | `src/engines/conversation/__tests__/*.test.ts` | 233 |
-| **Total** | | **1,454** |
+| Component  | File                                                      | Lines     |
+| ---------- | --------------------------------------------------------- | --------- |
+| Types      | `src/types/conversation.ts`                               | 153       |
+| Engine     | `src/engines/conversation/conversationLifecycleEngine.ts` | 244       |
+| Service    | `src/services/conversation/conversationStorage.ts`        | 371       |
+| Hook       | `src/hooks/useConversations.ts`                           | 190       |
+| Components | `src/components/chat/Conversations*.tsx`                  | 263       |
+| Tests      | `src/engines/conversation/__tests__/*.test.ts`            | 233       |
+| **Total**  |                                                           | **1,454** |
 
 ---
 

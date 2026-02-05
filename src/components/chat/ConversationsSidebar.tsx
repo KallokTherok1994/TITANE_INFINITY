@@ -20,7 +20,10 @@ export interface ConversationsSidebarProps {
   onClose: () => void;
 }
 
-export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({ isOpen, onClose }) => {
+export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
+  isOpen,
+  onClose,
+}) => {
   const {
     conversations,
     activeConversationId,
@@ -67,11 +70,11 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({ isOp
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return 'À l\'instant';
+    if (minutes < 1) return "À l'instant";
     if (minutes < 60) return `Il y a ${minutes}min`;
     if (hours < 24) return `Il y a ${hours}h`;
     if (days < 7) return `Il y a ${days}j`;
-    
+
     return new Date(timestamp).toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'short',
@@ -82,7 +85,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({ isOp
 
   return (
     <div className="conversations-sidebar-overlay" onClick={onClose}>
-      <div className="conversations-sidebar" onClick={(e) => e.stopPropagation()}>
+      <div className="conversations-sidebar" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="conversations-sidebar__header">
           <h2>Conversations</h2>
@@ -121,7 +124,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({ isOp
                   conv.id === activeConversationId ? 'conversation-item--active' : ''
                 } ${conv.status === 'archived' ? 'conversation-item--archived' : ''}`}
                 onClick={() => handleSelectConversation(conv.id)}
-                onContextMenu={(e) => {
+                onContextMenu={e => {
                   e.preventDefault();
                   setContextMenuId(contextMenuId === conv.id ? null : conv.id);
                 }}
@@ -145,13 +148,13 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({ isOp
                   <div className="conversation-item__menu">
                     <button
                       className="conversation-item__menu-btn"
-                      onClick={(e) => handleArchive(e, conv.id)}
+                      onClick={e => handleArchive(e, conv.id)}
                     >
                       📦 Archiver
                     </button>
                     <button
                       className="conversation-item__menu-btn conversation-item__menu-btn--danger"
-                      onClick={(e) => handleDelete(e, conv.id)}
+                      onClick={e => handleDelete(e, conv.id)}
                     >
                       🗑️ Supprimer
                     </button>

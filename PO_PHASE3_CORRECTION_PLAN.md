@@ -12,14 +12,16 @@
 ### Situation Actuelle
 
 **Système 1 — Legacy (useChat.ts):**
+
 ```typescript
 // Line 444-447 (useChat.ts)
 const stored = localStorage.getItem('titane_current_conversation_id');
 localStorage.setItem('titane_current_conversation_id', newId);
-localStorage.getItem('titane_chat_mode_default');  // Messages sauvegardés ici
+localStorage.getItem('titane_chat_mode_default'); // Messages sauvegardés ici
 ```
 
 **Système 2 — New Multi-Conversations (conversationStorage.ts):**
+
 ```typescript
 // Lines 26-28 (conversationStorage.ts)
 private static readonly STORAGE_KEY_PREFIX = 'titane_conversation_';
@@ -62,6 +64,7 @@ private static readonly STORAGE_KEY_INDEX = 'titane_conversations_index';
 **Raison:** useChat doit charger synchroniquement au mount (pour éviter le flash)
 
 **Action:**
+
 ```typescript
 // src/services/conversation/conversationStorage.ts
 
@@ -91,6 +94,7 @@ loadConversationSync(conversationId: string): Conversation | null {
 ### Phase 3b: Migrer useChat vers conversationStorage
 
 **Step 1: Remove legacy conversationId generation**
+
 ```typescript
 // BEFORE (Line 444-447)
 const stored = localStorage.getItem('titane_current_conversation_id');
@@ -106,6 +110,7 @@ if (activeId) return activeId;
 ```
 
 **Step 2: Remove legacy message loading**
+
 ```typescript
 // BEFORE (Line 477-482)
 const stored = localStorage.getItem('titane_chat_mode_default');
@@ -127,13 +132,14 @@ if (activeId) {
 ```
 
 **Step 3: Listen to conversation changes**
+
 ```typescript
 // Add listener for when conversation changes externally
 useEffect(() => {
   // When user clicks "new conversation" or switches via sidebar
   // this hook should reflect the change
   // Trigger reload of messages for new active conversation
-}, [activeConversationId_FROM_LIFECYCLE])
+}, [activeConversationId_FROM_LIFECYCLE]);
 ```
 
 **Impact:** useChat now sources truth from conversationStorage
@@ -143,6 +149,7 @@ useEffect(() => {
 ### Phase 3c: Remove Legacy Keys
 
 **After full migration:**
+
 ```typescript
 // Remove these keys from localStorage (they are obsolete)
 // localStorage.removeItem('titane_current_conversation_id');
@@ -206,4 +213,3 @@ PHASE 3 COMPLETE
 
 **Document Status:** ANALYSIS COMPLETE, READY FOR IMPLEMENTATION  
 **Confidence Level:** 100% (problem is clear and solution is straightforward)
-

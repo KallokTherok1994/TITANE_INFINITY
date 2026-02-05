@@ -445,14 +445,19 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     // Get from centralized system
     const activeId = conversationStorage.getActiveConversationId();
     if (activeId) {
-      chatLogger.info('🔄 Using active conversation from conversationStorage', { activeId });
+      chatLogger.info('🔄 Using active conversation from conversationStorage', {
+        activeId,
+      });
       return activeId;
     }
-    
+
     // Fallback: This should rarely happen in production
     // (conversationStorage.initialize() creates default conversation)
     const fallbackId = `conv-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-    chatLogger.warn('⚠️ No active conversation in conversationStorage, using fallback ID', { fallbackId });
+    chatLogger.warn(
+      '⚠️ No active conversation in conversationStorage, using fallback ID',
+      { fallbackId }
+    );
     return fallbackId;
   });
 
@@ -492,7 +497,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
       if (activeId) {
         // Load conversation synchronously (safe for mount)
         const conversation = conversationStorage.loadConversationSync(activeId);
-        if (conversation && Array.isArray(conversation.messages) && conversation.messages.length > 0) {
+        if (
+          conversation &&
+          Array.isArray(conversation.messages) &&
+          conversation.messages.length > 0
+        ) {
           chatLogger.info(
             '📂 Initial load from conversationStorage:',
             conversation.messages.length,

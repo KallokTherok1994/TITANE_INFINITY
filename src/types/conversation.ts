@@ -164,7 +164,7 @@ export interface CreateConversationOptions {
  * Event de lifecycle conversation
  */
 export interface ConversationLifecycleEvent {
-  type: 
+  type:
     | 'conversation.created'
     | 'conversation.activated'
     | 'conversation.message.appended'

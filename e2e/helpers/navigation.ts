@@ -3,7 +3,9 @@ import { expect, Page } from '@playwright/test';
 export async function openTitane(page: Page): Promise<void> {
   await page.goto('/');
 
-  const mainNav = page.getByRole('navigation', { name: /Main navigation/i });
+  const mainNav = page.getByRole('navigation', {
+    name: /Navigation principale|Main navigation/i,
+  });
   await expect(mainNav).toBeVisible({ timeout: 30000 });
 
   const titaneButton = mainNav.getByRole('button', { name: /^TITANE$/i }).first();

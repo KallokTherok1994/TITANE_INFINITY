@@ -45,10 +45,10 @@ import type { ChatMode } from './chatTypes';
 // Re-export for convenience
 export type { ChatMode } from './chatTypes';
 import type {
-  ChatEngineProviderPreference,
-  ChatEngineRequestArgs,
-  ChatEngineCompletion,
-} from '@/services/tauri';
+  ProviderPreference,
+  ChatRequestArgs,
+  ChatCompletionPayload,
+} from '@/services/tauri/chatEngine.commands';
 import { MEMORY_TIMEOUTS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
@@ -148,7 +148,7 @@ class ChatEngineOmega {
   private lastHealing: number = 0;
   // 🆕 P1: DEPRECATED - Use conversationLifecycle.getActiveConversation() instead
   private conversationIds: Map<ChatMode, string> = new Map();
-  private providerPreference: ChatEngineProviderPreference = 'auto';
+  private providerPreference: ProviderPreference = 'auto';
 
   /**
    * PHASE 1Ω: Configure le mode avec reset cognitif OMEGA
@@ -187,7 +187,7 @@ class ChatEngineOmega {
     }
   }
 
-  setProvider(provider: ChatEngineProviderPreference): void {
+  setProvider(provider: ProviderPreference): void {
     this.providerPreference = provider;
   }
 
@@ -1006,7 +1006,7 @@ Que souhaites-tu explorer ?`;
 
       const { chatEngineCommands } = await import('@/services/tauri/chatEngine.commands');
 
-      const payload: ChatEngineRequestArgs = {
+      const payload: ChatRequestArgs = {
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
         systemPrompt,
@@ -1018,7 +1018,7 @@ Que souhaites-tu explorer ?`;
         enableStreaming: false,
       };
 
-      const completion: ChatEngineCompletion =
+      const completion: ChatCompletionPayload =
         await chatEngineCommands.generateResponse(payload);
       this.setConversationId(finalConfig.mode, completion.conversationId);
       pipelineSteps.push('backend-response');
@@ -1193,7 +1193,7 @@ Que souhaites-tu explorer ?`;
       }
     };
 
-    const payload: ChatEngineRequestArgs = {
+    const payload: ChatRequestArgs = {
       conversationId: conversationId ?? undefined,
       userMessage: validatedMessage,
       systemPrompt,

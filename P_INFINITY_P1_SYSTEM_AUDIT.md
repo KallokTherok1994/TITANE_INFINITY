@@ -1,7 +1,7 @@
 # **P1 — AUDIT SYSTÈME (MAP EXHAUSTIVE)**
 
 **Date:** 2026-02-05  
-**Status:** ✅ COMPLETE  
+**Status:** ✅ COMPLETE
 
 ---
 
@@ -42,6 +42,7 @@
 ## RING 1 — TYPES
 
 ### File: `src/types/conversation.ts`
+
 - **Responsibility:** Define TypeScript contracts for conversation system
 - **Key Exports:**
   - `Conversation` — conversation object with id, title, messages, status
@@ -54,6 +55,7 @@
 **Issues:** None detected
 
 ### File: `src/types/ai.ts`
+
 - **Responsibility:** AI message types
 - **Key Exports:**
   - `AIMessage` — extends ConversationMessage with role variants
@@ -67,6 +69,7 @@
 ## RING 2 — ENGINES & LIFECYCLE
 
 ### File: `src/engines/conversation/conversationLifecycleEngine.ts`
+
 - **Responsibility:** Manage conversation lifecycle (create, activate, add messages, archive)
 - **Singleton:** ✅ Yes (instantiated once, exported as `conversationLifecycle`)
 - **Key Methods:**
@@ -78,6 +81,7 @@
   - `addEventListener(callback)` — register event listener
 
 **Invariants:**
+
 - ✅ Only one active conversation at a time
 - ✅ Every action emits event (no silent state changes)
 - ✅ No direct localStorage access (delegates to Ring 3 via events)
@@ -87,12 +91,14 @@
 **Issues:** None detected
 
 ### File: `src/engines/chat/chatEngine.ts`
+
 - **Responsibility:** Integrate conversations with AI pipeline
 - **Key Functions:**
   - `chatWithConversation(conversationId, userMessage, provider)` — send message to provider with conversation context
   - Injects `conversation_id` into pipeline (CRITICAL INVARIANT)
-  
+
 **Integration Points:**
+
 - ✅ Calls `conversationLifecycle.getActiveConversation()`
 - ✅ Sets active conversation before processing
 - ✅ Passes `conversation_id` to AI provider (required)
@@ -106,10 +112,12 @@
 ## RING 3 — SERVICES & PERSISTENCE
 
 ### File: `src/services/conversation/conversationStorage.ts` (CRITICAL)
+
 - **Responsibility:** All conversation persistence (localStorage)
 - **Singleton:** ✅ Yes (instantiated once, exported as `conversationStorage`)
 
 **Key Methods:**
+
 - `initialize()` — load from localStorage, cleanup legacy keys, restore state
 - `saveConversation(conversation)` — write conversation to localStorage
 - `loadConversation(id)` — async load conversation
@@ -120,6 +128,7 @@
 - `deleteConversation(id)` — delete conversation
 
 **Storage Keys:**
+
 ```javascript
 // Active conversation ID
 localStorage["titane_active_conversation_id"] = "conv-..."
@@ -135,6 +144,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 ```
 
 **Invariants:**
+
 - ✅ Sync methods exist for mount-time access
 - ✅ Fallback error handling (no silent failures)
 - ✅ Automatic cleanup of legacy keys on init
@@ -144,6 +154,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/services/conversation/legacyCleanup.ts`
+
 - **Responsibility:** Remove deprecated localStorage keys from old system
 - **Function:** `cleanupLegacyConversationKeys()`
 - **Keys Removed:**
@@ -151,6 +162,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
   - `titane_chat_mode_*` (old system)
 
 **Behavior:**
+
 - ✅ Idempotent (safe to call multiple times)
 - ✅ Silent (no console spam)
 - ✅ Non-blocking
@@ -159,6 +171,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/services/providers/*` (AI Providers)
+
 - **Responsibility:** Interface with external AI providers
 - **Key Invariant:** Every call receives `conversation_id` parameter
 - **Examples:** `openaiProvider.ts`, `claudeProvider.ts`, etc.
@@ -171,6 +184,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 ## RING 4 — UI COMPONENTS & HOOKS
 
 ### File: `src/hooks/useChat.ts` (CRITICAL)
+
 - **Responsibility:** React hook managing chat interaction
 - **Key Functions:**
   - `sendMessage(content)` — send message to active conversation
@@ -178,6 +192,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
   - Manage UI state (loading, error, success)
 
 **Integration:**
+
 - ✅ Uses `conversationStorage.getActiveConversationId()` (sync access)
 - ✅ Uses `conversationStorage.loadConversationSync()` (mount-time load)
 - ✅ No direct localStorage access (delegates to Ring 3)
@@ -186,6 +201,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/hooks/useConversations.ts`
+
 - **Responsibility:** Manage conversation list and switching
 - **Key Functions:**
   - `createConversation()` — delegate to engine
@@ -195,6 +211,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
   - `refreshConversations()` — reload list
 
 **Integration:**
+
 - ✅ Uses `conversationLifecycle` (Ring 2)
 - ✅ Uses `conversationStorage` (Ring 3)
 - ✅ Pure delegation, no business logic
@@ -203,6 +220,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/components/conversation/ConversationsSidebar.tsx`
+
 - **Responsibility:** Display conversation list, select active
 - **Key Props:**
   - `conversations` — list from hook
@@ -210,6 +228,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
   - `onSelect` — click handler
 
 **Invariants:**
+
 - ✅ Pure component (no state, all props)
 - ✅ No business logic
 - ✅ Click → calls parent handler
@@ -218,6 +237,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/components/conversation/ConversationsButton.tsx`
+
 - **Responsibility:** "New Conversation" button
 - **Behavior:**
   - Click → create new conversation
@@ -227,6 +247,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/components/chat/ChatInput.tsx`
+
 - **Responsibility:** Input field for user messages
 - **Key Props:**
   - `onSend` — handler for message submission
@@ -236,6 +257,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
 **Issues:** None detected
 
 ### File: `src/components/chat/ChatMessages.tsx`
+
 - **Responsibility:** Display conversation messages
 - **Key Props:**
   - `messages` — array of messages
@@ -243,6 +265,7 @@ localStorage["titane_conversation_events"] = JSON.stringify([...])
   - `error` — show error message
 
 **UI States:**
+
 - ✅ Empty message (no messages yet)
 - ✅ Loading (spinner visible)
 - ✅ Error (error message visible)
@@ -299,33 +322,36 @@ ChatMessages updates (re-render)
 
 ## Critical Invariants Check
 
-| Invariant | Location | Status |
-|-----------|----------|--------|
-| Only one active conversation | conversationLifecycleEngine | ✅ Enforced |
-| `conversation_id` required on AI call | chatEngine | ✅ To verify P4 |
-| No silent failures | All UI components | ✅ To verify P3 |
-| Single source of truth (localStorage) | conversationStorage | ✅ Enforced |
-| No direct localStorage in Ring 4 | useChat.ts | ✅ Phase 3 fixed |
-| No business logic in Ring 4 | All components | ✅ Verified |
-| Legacy keys cleaned up | legacyCleanup.ts | ✅ Automatic |
+| Invariant                             | Location                    | Status           |
+| ------------------------------------- | --------------------------- | ---------------- |
+| Only one active conversation          | conversationLifecycleEngine | ✅ Enforced      |
+| `conversation_id` required on AI call | chatEngine                  | ✅ To verify P4  |
+| No silent failures                    | All UI components           | ✅ To verify P3  |
+| Single source of truth (localStorage) | conversationStorage         | ✅ Enforced      |
+| No direct localStorage in Ring 4      | useChat.ts                  | ✅ Phase 3 fixed |
+| No business logic in Ring 4           | All components              | ✅ Verified      |
+| Legacy keys cleaned up                | legacyCleanup.ts            | ✅ Automatic     |
 
 ---
 
 ## File Inventory (Complete)
 
 ### Ring 1 (Types)
+
 ```
 src/types/conversation.ts                    ✅ Main conversation types
 src/types/ai.ts                             ✅ AI message types
 ```
 
 ### Ring 2 (Engines)
+
 ```
 src/engines/conversation/conversationLifecycleEngine.ts  ✅ Lifecycle
 src/engines/chat/chatEngine.ts                          ✅ AI integration
 ```
 
 ### Ring 3 (Services)
+
 ```
 src/services/conversation/conversationStorage.ts        ✅ Persistence
 src/services/conversation/legacyCleanup.ts              ✅ Cleanup utility
@@ -333,6 +359,7 @@ src/services/providers/...                              ✅ AI providers
 ```
 
 ### Ring 4 (UI)
+
 ```
 src/hooks/useChat.ts                                    ✅ Chat hook
 src/hooks/useConversations.ts                           ✅ Conversation hook
@@ -343,6 +370,7 @@ src/components/chat/ChatMessages.tsx                    ✅ Messages display
 ```
 
 ### Tests
+
 ```
 tests/                                                   ✅ vitest suite
 ```
@@ -353,13 +381,13 @@ tests/                                                   ✅ vitest suite
 
 **Overall Grade:** ✅ **A** (Well-structured, clear separation)
 
-| Aspect | Grade | Notes |
-|--------|-------|-------|
-| **Ring Separation** | A+ | Clear boundaries, no violations |
-| **Dependency Flow** | A+ | Unidirectional (4→3→2→1) |
-| **Testability** | A | Layers properly isolated |
-| **Maintainability** | A | Clear responsibilities |
-| **Scalability** | A | Can add new providers/components |
+| Aspect              | Grade | Notes                            |
+| ------------------- | ----- | -------------------------------- |
+| **Ring Separation** | A+    | Clear boundaries, no violations  |
+| **Dependency Flow** | A+    | Unidirectional (4→3→2→1)         |
+| **Testability**     | A     | Layers properly isolated         |
+| **Maintainability** | A     | Clear responsibilities           |
+| **Scalability**     | A     | Can add new providers/components |
 
 ---
 
@@ -376,4 +404,3 @@ tests/                                                   ✅ vitest suite
 ✅ **P1 PASSED — Comprehensive system map created**
 
 **Next:** P2 — Execute functional tests (happy path, isolation, restart, errors, stress)
-

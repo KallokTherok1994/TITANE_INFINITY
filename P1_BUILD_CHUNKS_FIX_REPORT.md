@@ -13,6 +13,7 @@
 Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 
 ### Circular chunks (manualChunks)
+
 1. `onnxruntime` → `vendor-utils` → `onnxruntime`
 2. `service-ai` → `devtools-sudo` → `service-ai`
 3. `service-audio` → `services-common` → `service-audio`
@@ -24,6 +25,7 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 9. `react-vendor` → `vendor` → `react-vendor` (scheduler overlap)
 
 ### Import conflicts
+
 - `src/features/dashboard/RealTimeCharts.tsx` importé **dynamiquement** par `OverviewSection.tsx` mais aussi **importé statiquement** via `src/features/dashboard/index.ts`
 - `src/services/tauri/chatEngine.commands.ts` importé **dynamiquement** par `chatEngine.ts` mais aussi **importé statiquement** via `src/services/tauri/index.ts`
 
@@ -45,16 +47,19 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 #### A1) Buckets de fusion pour casser les cycles
 
 **1️⃣ Cluster ONNX (vendor-onnx)**
+
 - `onnxruntime-web` (anciennement chunk `onnxruntime`)
 - Tout ce qui matchait `vendor-utils` (fusionné)
 
 **2️⃣ Cluster UI (ui-core)**
+
 - `ui-layout`
 - `ui-common`
 - `ui-primitives`
 - Tous les composants `/components/layout/` ou `/ui/` sans sous-domaine spécifique
 
 **3️⃣ Cluster Services (services-core)**
+
 - `service-ai`
 - `service-memory`
 - `service-audio`
@@ -63,10 +68,12 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 - `devtools-sudo`
 
 **4️⃣ Fix react-vendor overlap**
+
 - Ajout de `/scheduler/` dans les checks React (avant le fallback `vendor`)
 - Pattern match plus spécifique : `/react/`, `/react-dom/`, `/react-router`, `/scheduler/`
 
 #### A2) Ordre strict des règles
+
 ```typescript
 // ORDER: Most specific → Most general
 1. vendor-onnx (onnxruntime-web check FIRST)
@@ -78,6 +85,7 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 ```
 
 #### A3) Zéro ambiguïté
+
 - Chaque module ne peut matcher qu'UN SEUL bucket
 - Plus de règles concurrentes (ex: `service-ai` séparé vs `service-core`)
 - Résultat : **0 circular chunk**
@@ -89,6 +97,7 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 **Option choisie : C1 (recommandée) — 100% lazy loading**
 
 #### B1) Suppression export statique
+
 **Fichier:** `src/features/dashboard/index.ts`
 
 ```diff
@@ -99,6 +108,7 @@ Le build Vite/Rollup remontait systématiquement des problèmes bloquants :
 ```
 
 #### B2) Conservation du lazy loading
+
 **Fichier:** `src/components/sections/OverviewSection.tsx` (inchangé)
 
 ```typescript
@@ -116,11 +126,13 @@ const LazyRealTimeCharts = React.lazy(() =>
 ### C) Correction `chatEngine.commands` — 100% dynamique ou direct
 
 **Problème identifié:**
+
 - `src/services/tauri/index.ts` ré-exportait statiquement `chatEngineCommands`
 - `src/services/ai/chatEngine.ts` l'importait dynamiquement
 - `src/services/ai/ConversationManager.ts` l'importait statiquement depuis l'index
 
 #### C1) Suppression ré-export statique
+
 **Fichier:** `src/services/tauri/index.ts`
 
 ```diff
@@ -135,6 +147,7 @@ const LazyRealTimeCharts = React.lazy(() =>
 ```
 
 #### C2) ConversationManager → import dynamique
+
 **Fichier:** `src/services/ai/ConversationManager.ts`
 
 ```diff
@@ -147,6 +160,7 @@ const LazyRealTimeCharts = React.lazy(() =>
 ```
 
 #### C3) hybridTTS → import direct avec aliasing
+
 **Fichier:** `src/services/tts/hybridTTS.ts`
 
 ```diff
@@ -170,6 +184,7 @@ const LazyRealTimeCharts = React.lazy(() =>
 ## ✅ Validation & Preuves
 
 ### Test de validation
+
 ```bash
 pnpm -s build 2>&1 | grep -E "(Circular chunk|dynamically imported|built in)"
 ```
@@ -177,11 +192,13 @@ pnpm -s build 2>&1 | grep -E "(Circular chunk|dynamically imported|built in)"
 **Résultat:** ✅ **0 ligne de sortie** (aucun warning)
 
 ### Build complet
+
 ```bash
 pnpm -s build
 ```
 
 **Résultat:**
+
 - ✅ Build réussi en ~12s
 - ✅ 0 occurrence de "Circular chunk: …"
 - ✅ 0 occurrence de l'avertissement "dynamically imported ... but also statically imported"
@@ -190,6 +207,7 @@ pnpm -s build
 - ✅ Workbox: 95 fichiers précachés (3938 KB)
 
 ### Logs de preuve
+
 **Fichier:** `/tmp/p1_final_check.log` (vide = succès)
 
 ```bash
@@ -198,6 +216,7 @@ $ grep -E "(Circular chunk|dynamically imported)" /tmp/p1_final_check.log
 ```
 
 ### Chunks générés (extrait)
+
 ```
 dist/assets/vendor-onnx-BJgr1DKl.js          531.89 kB │ gzip: 126.61 kB │ brotli: 99.49 kB
 dist/assets/services-core-DKY0HfAe.js        843.06 kB │ gzip: 240.14 kB │ brotli: 198.15 kB
@@ -211,15 +230,15 @@ dist/assets/react-vendor-Cd4XW7r7.js         533.09 kB │ gzip: 167.32 kB │ b
 
 ## 📊 Critères d'Acceptation
 
-| Critère | Statut |
-|---------|--------|
-| 0 occurrence de "Circular chunk: …" | ✅ |
-| 0 occurrence de conflit d'import RealTimeCharts | ✅ |
-| 0 occurrence de conflit d'import chatEngine.commands | ✅ |
-| `manualChunks` déterministe sans chevauchement | ✅ |
-| Commit clair avec message conventionnel | ✅ |
-| Registre mis à jour (append-only) | ✅ |
-| Build OK avec artifacts | ✅ |
+| Critère                                              | Statut |
+| ---------------------------------------------------- | ------ |
+| 0 occurrence de "Circular chunk: …"                  | ✅     |
+| 0 occurrence de conflit d'import RealTimeCharts      | ✅     |
+| 0 occurrence de conflit d'import chatEngine.commands | ✅     |
+| `manualChunks` déterministe sans chevauchement       | ✅     |
+| Commit clair avec message conventionnel              | ✅     |
+| Registre mis à jour (append-only)                    | ✅     |
+| Build OK avec artifacts                              | ✅     |
 
 ---
 
@@ -239,11 +258,13 @@ dist/assets/react-vendor-Cd4XW7r7.js         533.09 kB │ gzip: 167.32 kB │ b
 ## 🔄 Rollback Plan
 
 **Commande:**
+
 ```bash
 git revert 7823c294
 ```
 
 **Impact:**
+
 - Restaure l'ancien `manualChunks` avec règles séparées
 - Restaure exports statiques de RealTimeCharts et chatEngine
 - Re-introduit les warnings circular chunks (non bloquant build, mais pollue logs)

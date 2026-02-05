@@ -1,7 +1,7 @@
 # **P0 — PRÉFLIGHT CHECK**
 
 **Date:** 2026-02-05  
-**Status:** ✅ PASSED  
+**Status:** ✅ PASSED
 
 ---
 
@@ -18,23 +18,23 @@
 
 ## B) Environment Captured
 
-| Component | Version |
-|-----------|---------|
-| **Node.js** | v24.0.0 |
-| **pnpm** | 10.28.2 |
+| Component     | Version         |
+| ------------- | --------------- |
+| **Node.js**   | v24.0.0         |
+| **pnpm**      | 10.28.2         |
 | **Tauri CLI** | tauri-cli 2.9.6 |
-| **OS** | Linux |
+| **OS**        | Linux           |
 
 ---
 
 ## C) Build Scripts Available
 
-| Script | Status | Purpose |
-|--------|--------|---------|
-| `pnpm dev` | ✅ Available | `tauri dev` — launch dev mode |
+| Script       | Status       | Purpose                         |
+| ------------ | ------------ | ------------------------------- |
+| `pnpm dev`   | ✅ Available | `tauri dev` — launch dev mode   |
 | `pnpm build` | ✅ Available | `vite build` — production build |
-| `pnpm lint` | ✅ Available | eslint check on src/ |
-| `pnpm test` | ✅ Available | vitest run — unit tests |
+| `pnpm lint`  | ✅ Available | eslint check on src/            |
+| `pnpm test`  | ✅ Available | vitest run — unit tests         |
 
 ---
 
@@ -78,6 +78,7 @@ Example: [
 **Initialization:** `conversationStorage.initialize()` — called on app startup
 
 **Cleanup:** `cleanupLegacyConversationKeys()` — removes obsolete keys:
+
 - `titane_current_conversation_id` (old system)
 - `titane_chat_mode_*` (old system)
 
@@ -132,4 +133,3 @@ Tests:
 ## STATUS
 
 ✅ **P0 PASSED — Ready to proceed to P1 (System Audit)**
-

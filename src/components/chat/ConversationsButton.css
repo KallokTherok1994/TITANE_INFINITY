@@ -28,7 +28,11 @@
 }
 
 .conversations-button--active {
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.2) 0%, rgba(118, 75, 162, 0.2) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.2) 0%,
+    rgba(118, 75, 162, 0.2) 100%
+  );
   border-color: rgba(102, 126, 234, 0.5);
 }
 

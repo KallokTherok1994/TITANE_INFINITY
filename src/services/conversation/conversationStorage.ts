@@ -30,12 +30,12 @@ const EVENTS_KEY = 'titane_conversation_events';
 
 /**
  * Service de stockage des conversations
- * 
+ *
  * Architecture:
  * - Stockage localStorage (JSON)
  * - Index des conversations actives
  * - Log d'événements append-only (JSONL-like)
- * 
+ *
  * Clés localStorage:
  * - titane_conversation_{id}: Conversation complète
  * - titane_conversations_index: Liste des IDs + metadata
@@ -149,7 +149,7 @@ export class ConversationStorageService {
 
       const conversation: Conversation = JSON.parse(data);
       this.conversations.set(conversationId, conversation);
-      
+
       logger.debug('Conversation loaded', { id: conversationId });
       return conversation;
     } catch (error) {
@@ -186,7 +186,7 @@ export class ConversationStorageService {
     }
 
     conversation.messages.push(message);
-    
+
     // Mettre à jour le titre si c'est le premier message utilisateur
     if (conversation.messages.filter(m => m.role === 'user').length === 1) {
       conversation.title = conversationLifecycle.updateConversationTitle(conversation);
@@ -305,10 +305,10 @@ export class ConversationStorageService {
     try {
       const events = this.loadEvents();
       events.push(event);
-      
+
       // Garder seulement les 1000 derniers événements
       const trimmed = events.slice(-1000);
-      
+
       localStorage.setItem(EVENTS_KEY, JSON.stringify(trimmed));
     } catch (error) {
       logger.error('Append event error', error);
@@ -330,9 +330,12 @@ export class ConversationStorageService {
   /**
    * Exporter toutes les conversations (debug/backup)
    */
-  async exportAll(): Promise<{ conversations: Conversation[]; events: ConversationLifecycleEvent[] }> {
+  async exportAll(): Promise<{
+    conversations: Conversation[];
+    events: ConversationLifecycleEvent[];
+  }> {
     const conversations: Conversation[] = [];
-    
+
     for (const summary of this.index) {
       const conv = await this.loadConversation(summary.id);
       if (conv) {

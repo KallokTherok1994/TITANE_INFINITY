@@ -38,13 +38,13 @@ function generateTitle(messages: AIMessage[]): string {
 
 /**
  * Engine de gestion du lifecycle des conversations
- * 
+ *
  * Responsabilités:
  * - Création de conversations
  * - Activation/désactivation
  * - Gestion des messages
  * - Archivage
- * 
+ *
  * Règles:
  * - Une seule conversation active à la fois
  * - Si aucune conversation n'existe → en créer une automatiquement
@@ -156,7 +156,7 @@ export class ConversationLifecycleEngine {
     }
 
     const newTitle = generateTitle(conversation.messages);
-    
+
     if (newTitle !== conversation.title) {
       this.emitEvent({
         type: 'conversation.updated',
@@ -174,7 +174,7 @@ export class ConversationLifecycleEngine {
    */
   addEventListener(listener: (event: ConversationLifecycleEvent) => void): () => void {
     this.eventListeners.push(listener);
-    
+
     // Retourner fonction de cleanup
     return () => {
       const index = this.eventListeners.indexOf(listener);
@@ -222,7 +222,10 @@ export class ConversationLifecycleEngine {
     }
 
     if (conversationId !== this.activeConversationId) {
-      logger.warn('Conversation is not active', { conversationId, active: this.activeConversationId });
+      logger.warn('Conversation is not active', {
+        conversationId,
+        active: this.activeConversationId,
+      });
       return false;
     }
 
