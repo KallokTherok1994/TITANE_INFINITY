@@ -131,6 +131,8 @@ const CognitiveLayoutControl = lazy(() =>
 
 import './components/psyche/DeepPsychePanel.css';
 import { presenceOS } from './engines/presence/_stubs';
+// ✨ P0.Ω∞ - Splash Watchdog (Anti-freeze diagnostic)
+import { SplashWatchdog } from './components/diagnostics/SplashWatchdog';
 
 type LazyModule<T> = { default: T };
 
@@ -1222,6 +1224,9 @@ const AppRouter: React.FC = () => {
 const App: React.FC = () => {
   return (
     <ToastProvider>
+      {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) */}
+      <SplashWatchdog />
+      
       <ThemeProvider>
         <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
           <TitanStateProvider>
