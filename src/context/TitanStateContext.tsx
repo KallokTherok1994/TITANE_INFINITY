@@ -557,7 +557,11 @@ export function TitanStateProvider({ children }: TitanProviderProps) {
     const unlistenPromise = setupShutdownListener();
 
     return () => {
-      unlistenPromise.then(unlisten => unlisten());
+      unlistenPromise.then(unlisten => {
+        if (typeof unlisten === 'function') {
+          unlisten();
+        }
+      });
     };
   }, [state.dirty, forceSnapshot]);
 

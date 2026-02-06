@@ -25,7 +25,8 @@ vi.mock('@/apps/devtools/sections', () => ({
 
 // Mock Tabs component
 vi.mock('@/components/ui/tabs', () => ({
-  Tabs: ({ tabs, defaultTab, children, onTabChange }: any) => (
+  TabsLegacy: ({ tabs, defaultTab, children, onTabChange }: any) => (
+    // Render-props API: children is a function(activeTab)
     <div data-testid="tabs-component">
       <div data-testid="tabs-list">
         {tabs.map((tab: any) => (
@@ -38,7 +39,11 @@ vi.mock('@/components/ui/tabs', () => ({
           </button>
         ))}
       </div>
-      <div data-testid="tabs-content">{children}</div>
+      <div data-testid="tabs-content">
+        {typeof children === 'function'
+          ? children(defaultTab ?? tabs[0]?.id)
+          : children}
+      </div>
     </div>
   ),
 }));
