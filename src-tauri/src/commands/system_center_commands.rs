@@ -28,6 +28,12 @@ lazy_static! {
     static ref CLUSTER_NODES: Mutex<Vec<ClusterNode>> = Mutex::new(Vec::new());
 }
 
+/// Read environment variable at runtime (for DIAG mode detection)
+#[tauri::command]
+pub fn sc_get_env(key: String) -> Option<String> {
+    std::env::var(&key).ok()
+}
+
 #[tauri::command]
 pub async fn sc_clear_logs() -> Result<(), TitaneError> {
     log::debug!("[SYSTEM_CENTER] sc_clear_logs called");

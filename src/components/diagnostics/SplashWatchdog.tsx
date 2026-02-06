@@ -20,6 +20,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { secureInvoke } from '@/lib/security';
 import { promises as fsPromises, join as joinPath } from '@/utils/tauriFsAdapter';
+import { gstreamerCheck } from '@/services/audio/gstreamerCheck';
 
 type BootStage = string;
 
@@ -28,17 +29,80 @@ interface BootDiagnostics {
   timestamp: number;
   errors: string[];
   backendStatus?: 'ok' | 'error' | 'unknown';
+  gstreamerStatus?: 'available' | 'unavailable' | 'unknown';
   lastLogs?: string[];
 }
 
 const WATCHDOG_TIMEOUT_MS = 10000; // 10s
-const BOOT_COMPLETE_STAGE = '[BOOT] after render';
-const DIAG_ENV_ENABLED =
-  import.meta.env.VITE_TITANE_DIAG === '1' ||
-  import.meta.env.TITANE_DIAG === '1' ||
-  (typeof window !== 'undefined' && window.localStorage?.getItem('TITANE_DIAG') === '1');
+const BOOT_COMPLETE_STAGE = '[BOOT] App render';
+
+/**
+ * Runtime check: import.meta.env only captures build-time vars,
+ * so we must read process.env at runtime via Tauri when available.
+ */
+const checkDiagEnabled = async (): Promise<boolean> => {
+  // 1. localStorage (browser persistence)
+  if (typeof window !== 'undefined' && window.localStorage?.getItem('TITANE_DIAG') === '1') {
+    return true;
+  }
+  // 2. Vite build-time envs (fallback)
+  if (import.meta.env.VITE_TITANE_DIAG === '1' || import.meta.env.TITANE_DIAG === '1') {
+    return true;
+  }
+  // 3. Tauri runtime envs (requires Tauri API)
+  if (typeof window !== 'undefined' && '__TAURI__' in window) {
+    try {
+      const { invoke } = await import('@tauri-apps/api/core');
+      const val = await invoke<string | null>('sc_get_env', { key: 'TITANE_DIAG' });
+      if (val === '1') {
+        return true;
+      }
+    } catch (e) {
+      // Suppress errors if Tauri API not available
+      console.warn('[SplashWatchdog] Failed to read TITANE_DIAG from Tauri:', e);
+    }
+  }
+  return false;
+};
+
 const DIAG_DIR = 'runtime/diag';
 const DIAG_FILE = 'frontend_boot.json';
+const HEALTH_OK_THRESHOLD = 0.7;
+
+const deriveBackendStatus = (health: unknown): 'ok' | 'error' | 'unknown' => {
+  if (!health || typeof health !== 'object') {
+    return 'unknown';
+  }
+
+  const record = health as Record<string, unknown>;
+
+  if (typeof record.healthy === 'boolean') {
+    return record.healthy ? 'ok' : 'error';
+  }
+
+  if (typeof record.status === 'string') {
+    const status = record.status.toLowerCase();
+    if (['healthy', 'ok', 'good'].includes(status)) {
+      return 'ok';
+    }
+    if (['degraded', 'critical', 'unhealthy', 'error', 'offline', 'unavailable'].includes(status)) {
+      return 'error';
+    }
+  }
+
+  if (typeof record.global_health === 'number') {
+    if ('initialized' in record && record.initialized === false) {
+      return 'error';
+    }
+    return record.global_health >= HEALTH_OK_THRESHOLD ? 'ok' : 'error';
+  }
+
+  if (typeof record.overallScore === 'number') {
+    return record.overallScore >= HEALTH_OK_THRESHOLD ? 'ok' : 'error';
+  }
+
+  return 'unknown';
+};
 
 /**
  * Hook qui surveille le boot et expose les diagnostics
@@ -50,10 +114,18 @@ const useBootWatchdog = () => {
     errors: [],
   });
   const [timedOut, setTimedOut] = useState(false);
+  const [diagEnabled, setDiagEnabled] = useState(false);
   const [diagStatus, setDiagStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>(
     'idle'
   );
   const [diagError, setDiagError] = useState<string | null>(null);
+
+  // Check DIAG mode on mount
+  useEffect(() => {
+    void checkDiagEnabled().then(setDiagEnabled);
+    // Check GStreamer availability
+    void gstreamerCheck.checkGStreamerAvailability();
+  }, []);
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout | null = null;
@@ -113,17 +185,22 @@ const useBootWatchdog = () => {
         setTimedOut(true);
 
         // Tenter de récupérer status backend
-        secureInvoke<{ healthy: boolean }>('get_system_health')
+        secureInvoke<unknown>('get_system_health')
           .then(health => {
+            const derivedStatus = deriveBackendStatus(health);
+            const gstStatus = gstreamerCheck.getGStreamerStatus();
             setDiagnostics(prev => ({
               ...prev,
-              backendStatus: health.healthy ? 'ok' : 'error',
+              backendStatus: derivedStatus,
+              gstreamerStatus: gstStatus,
             }));
           })
           .catch(() => {
+            const gstStatus = gstreamerCheck.getGStreamerStatus();
             setDiagnostics(prev => ({
               ...prev,
               backendStatus: 'unknown',
+              gstreamerStatus: gstStatus,
             }));
           });
       }
@@ -143,7 +220,7 @@ const useBootWatchdog = () => {
   }, []);
 
   useEffect(() => {
-    if (!timedOut || !DIAG_ENV_ENABLED) {
+    if (!timedOut || !diagEnabled) {
       return;
     }
 
@@ -234,14 +311,22 @@ const useBootWatchdog = () => {
     );
   }, [diagnostics]);
 
-  return { diagnostics, timedOut, diagStatus, diagError, reload, copyDiagnostics };
+  return {
+    diagnostics,
+    timedOut,
+    diagEnabled,
+    diagStatus,
+    diagError,
+    reload,
+    copyDiagnostics,
+  };
 };
 
 /**
  * Composant de diagnostic affiché après timeout
  */
 export const SplashWatchdog: React.FC = () => {
-  const { diagnostics, timedOut, diagStatus, diagError, reload, copyDiagnostics } =
+  const { diagnostics, timedOut, diagEnabled, diagStatus, diagError, reload, copyDiagnostics } =
     useBootWatchdog();
 
   if (!timedOut) {
@@ -348,10 +433,22 @@ export const SplashWatchdog: React.FC = () => {
               )}
             </div>
             <div>
+              <span style={{ color: '#9ca3af' }}>GStreamer:</span>{' '}
+              {diagnostics.gstreamerStatus === 'available' && (
+                <span style={{ color: '#10b981' }}>✓ Disponible</span>
+              )}
+              {diagnostics.gstreamerStatus === 'unavailable' && (
+                <span style={{ color: '#f59e0b' }}>⚠ Non disponible (dépendances système manquantes)</span>
+              )}
+              {diagnostics.gstreamerStatus === 'unknown' && (
+                <span style={{ color: '#9ca3af' }}>? Vérifié…</span>
+              )}
+            </div>
+            <div>
               <span style={{ color: '#9ca3af' }}>Timeout:</span>{' '}
               {(WATCHDOG_TIMEOUT_MS / 1000).toFixed(0)}s dépassé
             </div>
-            {DIAG_ENV_ENABLED && (
+            {diagEnabled && (
               <div>
                 <span style={{ color: '#9ca3af' }}>DIAG PROD:</span>{' '}
                 {diagStatus === 'pending' && <span style={{ color: '#f59e0b' }}>⏳ Écriture…</span>}
