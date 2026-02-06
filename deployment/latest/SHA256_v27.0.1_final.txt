@@ -1,0 +1,2 @@
+8b7c53ea903fc745468283023ca7bba0f2e3fe0a00adae8f04844bcbdc13bafa  TITANE-Infinity_27.0.1_amd64.AppImage
+3302a9abacf2aae409a5bb7242ef5a64e1be27f687e81f9ed2ceba970b267184  TITANE-Infinity_27.0.1_amd64.deb

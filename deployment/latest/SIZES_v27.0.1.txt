@@ -1,0 +1,2 @@
+85M	TITANE-Infinity_27.0.1_amd64.AppImage
+13M	TITANE-Infinity_27.0.1_amd64.deb
