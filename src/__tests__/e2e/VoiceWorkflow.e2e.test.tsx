@@ -5,7 +5,7 @@
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { App } from '@/App';
+import App from '@/App';
 
 describe('E2E: Voice Workflow', () => {
   beforeEach(() => {
