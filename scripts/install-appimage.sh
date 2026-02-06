@@ -1,11 +1,11 @@
 #!/bin/bash
-# TITANE∞ v27.0.0 - Installation Script (AppImage)
-# Date: 30 janvier 2026
+# TITANE∞ v27.0.1 - Installation Script (AppImage)
+# Date: 6 février 2026
 
 set -e
 
 echo "╔════════════════════════════════════════════════════════════╗"
-echo "║          TITANE∞ v27.0.0 - Installation (AppImage)        ║"
+echo "║          TITANE∞ v27.0.1 - Installation (AppImage)        ║"
 echo "╚════════════════════════════════════════════════════════════╝"
 echo ""
 
@@ -16,16 +16,16 @@ YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
 # Variables
-VERSION="27.0.0"
+VERSION="27.0.1"
 APPIMAGE_NAME="TITANE-Infinity_${VERSION}_amd64.AppImage"
 INSTALL_DIR="$HOME/.local/bin"
 DESKTOP_DIR="$HOME/.local/share/applications"
 ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
 
 # Vérifications préliminaires
-if [ ! -f "deployment/latest/v${VERSION}/${APPIMAGE_NAME}" ]; then
+if [ ! -f "deployment/latest/${APPIMAGE_NAME}" ]; then
     echo -e "${RED}✗ Erreur: AppImage introuvable!${NC}"
-    echo "  Chemin attendu: deployment/latest/v${VERSION}/${APPIMAGE_NAME}"
+    echo "  Chemin attendu: deployment/latest/${APPIMAGE_NAME}"
     exit 1
 fi
 
@@ -39,7 +39,7 @@ mkdir -p "$ICON_DIR"
 # Copier l'AppImage
 echo ""
 echo "[1/4] Installation du binaire..."
-cp "deployment/latest/v${VERSION}/${APPIMAGE_NAME}" "$INSTALL_DIR/titane-infinity"
+cp "deployment/latest/${APPIMAGE_NAME}" "$INSTALL_DIR/titane-infinity"
 chmod +x "$INSTALL_DIR/titane-infinity"
 echo -e "${GREEN}✓${NC} Binaire installé: $INSTALL_DIR/titane-infinity"
 
