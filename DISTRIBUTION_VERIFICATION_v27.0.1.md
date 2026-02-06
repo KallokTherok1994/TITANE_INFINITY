@@ -11,7 +11,7 @@
 
 ### AppImage
 ```
-SHA256: 8b7c53ea903fc745468283023ca7bba0f2e3fe0a00adae8f04844bcbdc13bafa
+SHA256: f42eedb9117a312080131c25376c432a720bda91b266c3b92c2e7c68c3f0cb08
 File: TITANE-Infinity_27.0.1_amd64.AppImage
 Size: 85M
 Type: ELF 64-bit LSB pie executable, x86-64
@@ -20,7 +20,7 @@ Checksum Status: ✅ VERIFIED
 
 ### Debian Package
 ```
-SHA256: 3302a9abacf2aae409a5bb7242ef5a64e1be27f687e81f9ed2ceba970b267184
+SHA256: 1955af1616fa3d32a42e12ced8fb8a1e0c7e7f3f4274e0c6831091b97d1cbfda
 File: TITANE-Infinity_27.0.1_amd64.deb
 Size: 13M
 Type: Debian binary package (format 2.0)
@@ -35,10 +35,10 @@ Checksum Status: ✅ VERIFIED
 
 ```bash
 # For AppImage
-echo "8b7c53ea903fc745468283023ca7bba0f2e3fe0a00adae8f04844bcbdc13bafa  TITANE-Infinity_27.0.1_amd64.AppImage" | sha256sum -c -
+echo "f42eedb9117a312080131c25376c432a720bda91b266c3b92c2e7c68c3f0cb08  TITANE-Infinity_27.0.1_amd64.AppImage" | sha256sum -c -
 
 # For DEB
-echo "3302a9abacf2aae409a5bb7242ef5a64e1be27f687e81f9ed2ceba970b267184  TITANE-Infinity_27.0.1_amd64.deb" | sha256sum -c -
+echo "1955af1616fa3d32a42e12ced8fb8a1e0c7e7f3f4274e0c6831091b97d1cbfda  TITANE-Infinity_27.0.1_amd64.deb" | sha256sum -c -
 ```
 
 ### Expected Output
@@ -118,7 +118,7 @@ wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0
 
 # Verify
 sha256sum TITANE-Infinity_27.0.1_amd64.AppImage
-# Expected: 8b7c53ea903fc745468283023ca7bba0f2e3fe0a00adae8f04844bcbdc13bafa
+# Expected: f42eedb9117a312080131c25376c432a720bda91b266c3b92c2e7c68c3f0cb08
 
 # Make executable
 chmod +x TITANE-Infinity_27.0.1_amd64.AppImage
@@ -134,7 +134,7 @@ wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0
 
 # Verify
 sha256sum TITANE-Infinity_27.0.1_amd64.deb
-# Expected: 3302a9abacf2aae409a5bb7242ef5a64e1be27f687e81f9ed2ceba970b267184
+# Expected: 1955af1616fa3d32a42e12ced8fb8a1e0c7e7f3f4274e0c6831091b97d1cbfda
 
 # Install
 sudo apt install ./TITANE-Infinity_27.0.1_amd64.deb

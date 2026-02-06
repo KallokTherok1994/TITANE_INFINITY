@@ -20,7 +20,7 @@ VERSION="27.0.0"
 APPIMAGE_NAME="TITANE-Infinity_${VERSION}_amd64.AppImage"
 INSTALL_DIR="$HOME/.local/bin"
 DESKTOP_DIR="$HOME/.local/share/applications"
-ICON_DIR="$HOME/.local/share/icons/hicolor/128x128/apps"
+ICON_DIR="$HOME/.local/share/icons/hicolor/256x256/apps"
 
 # Vérifications préliminaires
 if [ ! -f "deployment/latest/v${VERSION}/${APPIMAGE_NAME}" ]; then
@@ -46,8 +46,8 @@ echo -e "${GREEN}✓${NC} Binaire installé: $INSTALL_DIR/titane-infinity"
 # Copier l'icône
 echo ""
 echo "[2/4] Installation de l'icône..."
-if [ -f "src-tauri/icons/128x128.png" ]; then
-    cp "src-tauri/icons/128x128.png" "$ICON_DIR/titane-infinity.png"
+if [ -f "src-tauri/icons/256x256.png" ]; then
+    cp "src-tauri/icons/256x256.png" "$ICON_DIR/titane-infinity.png"
     echo -e "${GREEN}✓${NC} Icône installée: $ICON_DIR/titane-infinity.png"
 else
     echo -e "${YELLOW}⚠${NC} Icône source introuvable, ignorée"

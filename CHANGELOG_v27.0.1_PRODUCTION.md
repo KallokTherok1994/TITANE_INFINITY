@@ -132,13 +132,13 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 
 | Format | Size | SHA256 | Notes |
 |--------|------|--------|-------|
-| **AppImage** | 85M | `8b7c53ea...` | Linux universal, direct execution |
-| **DEB** | 13M | `3302a9ab...` | Debian/Ubuntu system package |
+| **AppImage** | 85M | `f42eedb9...` | Linux universal, direct execution |
+| **DEB** | 13M | `1955af16...` | Debian/Ubuntu system package |
 
 ### Verification
 ```bash
-sha256sum -c <<< "8b7c53ea903fc745468283023ca7bba0f2e3fe0a00adae8f04844bcbdc13bafa  TITANE-Infinity_27.0.1_amd64.AppImage"
-sha256sum -c <<< "3302a9abacf2aae409a5bb7242ef5a64e1be27f687e81f9ed2ceba970b267184  TITANE-Infinity_27.0.1_amd64.deb"
+sha256sum -c <<< "f42eedb9117a312080131c25376c432a720bda91b266c3b92c2e7c68c3f0cb08  TITANE-Infinity_27.0.1_amd64.AppImage"
+sha256sum -c <<< "1955af1616fa3d32a42e12ced8fb8a1e0c7e7f3f4274e0c6831091b97d1cbfda  TITANE-Infinity_27.0.1_amd64.deb"
 ```
 
 ---
