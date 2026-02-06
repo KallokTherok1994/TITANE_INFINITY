@@ -22,6 +22,7 @@ use tauri::Manager;
 
 // TITANE∞ command modules
 use std::sync::Arc;
+use std::process::{Command as ProcessCommand, Stdio};
 
 // EXP Fusion Engine (used by frontend XP/EXP UI)
 use crate::commands::exp_fusion::ExpFusionState;
@@ -604,6 +605,41 @@ fn main() {
             let chat_orch_clone = chat_orchestrator.clone();
             tauri::async_runtime::spawn(async move {
                 overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
+            });
+
+            // ─────────────────────────────────────────────────────────────
+            // OLLAMA BUNDLED AUTO-START (AppImage/DEB)
+            // Starts bundled Ollama if local endpoint is not available.
+            // ─────────────────────────────────────────────────────────────
+            let app_handle = app.handle().clone();
+            tauri::async_runtime::spawn(async move {
+                if let Ok(status) = titane_infinity::ai::ollama::ai_check_ollama_status().await {
+                    if status.available {
+                        log::info!("[Ollama] Endpoint already available");
+                        return;
+                    }
+                }
+
+                let bundled = app_handle
+                    .path()
+                    .resolve("resources/ollama/ollama", tauri::path::BaseDirectory::Resource)
+                    .ok();
+
+                let Some(ollama_path) = bundled.filter(|p| p.exists()) else {
+                    log::warn!("[Ollama] Bundled binary not found; skipping auto-start");
+                    return;
+                };
+
+                match ProcessCommand::new(ollama_path)
+                    .arg("serve")
+                    .env("OLLAMA_HOST", "127.0.0.1:11434")
+                    .stdout(Stdio::null())
+                    .stderr(Stdio::null())
+                    .spawn()
+                {
+                    Ok(_) => log::info!("[Ollama] Bundled server started"),
+                    Err(err) => log::warn!("[Ollama] Failed to start bundled server: {err}"),
+                }
             });
 
             // ─────────────────────────────────────────────────────────────
