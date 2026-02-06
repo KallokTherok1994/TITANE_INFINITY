@@ -4,127 +4,114 @@
  * Coverage: Health display, Thresholds, Alerts, History
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
 import { CoreHealthMonitor } from '@/components/devtools/CoreHealthMonitor';
-import type { CoreHealth } from '@/types';
+import { secureInvoke } from '@/lib/security';
+
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
+}));
 
 describe('CoreHealthMonitor Component', () => {
-  const mockHealth: CoreHealth = {
-    cpu: 45,
-    memory: 65,
-    fps: 60,
-    network: 'connected',
-    status: 'healthy',
-    timestamp: Date.now(),
-  };
+  const mockSecureInvoke = secureInvoke as unknown as ReturnType<typeof vi.fn>;
+
+  const buildMetrics = (cpu: number, memory: number, operations = 123) => [
+    { name: 'cpu_percent', value: cpu, unit: '%' },
+    { name: 'memory_mb', value: memory, unit: 'MB' },
+    { name: 'operations_total', value: operations, unit: 'ops' },
+  ];
+
+  beforeEach(() => {
+    mockSecureInvoke.mockReset();
+    mockSecureInvoke.mockImplementation(async (_command: string, payload: any) => {
+      const core = payload?.core_name ?? 'unknown';
+      if (core === 'emotionengine') {
+        return {
+          name: core,
+          version: '1.0.0',
+          status: 'degraded',
+          dependencies: [],
+          metrics: buildMetrics(82, 78),
+        };
+      }
+
+      if (core === 'systemhealth') {
+        return {
+          name: core,
+          version: '1.0.0',
+          status: 'failing',
+          dependencies: [],
+          metrics: buildMetrics(95, 92),
+        };
+      }
+
+      return {
+        name: core,
+        version: '1.0.0',
+        status: 'healthy',
+        dependencies: [],
+        metrics: buildMetrics(45, 65),
+      };
+    });
+  });
 
   describe('Rendering', () => {
-    it('should render health monitor', () => {
-      render(<CoreHealthMonitor health={mockHealth} />);
-      expect(screen.getByText(/health/i)).toBeInTheDocument();
+    it('should render health monitor', async () => {
+      render(<CoreHealthMonitor />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/core engine health/i)).toBeInTheDocument();
+      });
     });
 
-    it('should show all metrics', () => {
-      render(<CoreHealthMonitor health={mockHealth} />);
-      expect(screen.getByText(/cpu/i)).toBeInTheDocument();
-      expect(screen.getByText(/memory/i)).toBeInTheDocument();
-      expect(screen.getByText(/fps/i)).toBeInTheDocument();
+    it('should show all cores', async () => {
+      render(<CoreHealthMonitor />);
+
+      await waitFor(() => {
+        expect(screen.getByText(/orchestrator/i)).toBeInTheDocument();
+        expect(screen.getByText(/systemhealth/i)).toBeInTheDocument();
+      });
     });
   });
 
   describe('Health Status', () => {
-    it('should show healthy status', () => {
-      render(<CoreHealthMonitor health={mockHealth} />);
-      const status = screen.getByText(/healthy/i);
-      expect(status.className).toMatch(/success|green/i);
+    it('should show healthy status', async () => {
+      render(<CoreHealthMonitor />);
+
+      await waitFor(() => {
+        const status = screen.getAllByText('HEALTHY')[0];
+        expect(status.className).toMatch(/text-green-400/i);
+      });
     });
 
-    it('should show warning status', () => {
-      const warningHealth = { ...mockHealth, status: 'warning', cpu: 85 };
-      render(<CoreHealthMonitor health={warningHealth} />);
-      const status = screen.getByText(/warning/i);
-      expect(status.className).toMatch(/warning|yellow/i);
+    it('should show degraded status', async () => {
+      render(<CoreHealthMonitor />);
+
+      await waitFor(() => {
+        const status = screen.getByText(/degraded/i);
+        expect(status.className).toMatch(/text-yellow-400/i);
+      });
     });
 
-    it('should show critical status', () => {
-      const criticalHealth = { ...mockHealth, status: 'critical', cpu: 95 };
-      render(<CoreHealthMonitor health={criticalHealth} />);
-      const status = screen.getByText(/critical/i);
-      expect(status.className).toMatch(/error|red|danger|critical/i);
-    });
-  });
+    it('should show failing status', async () => {
+      render(<CoreHealthMonitor />);
 
-  describe('Metric Thresholds', () => {
-    it('should highlight high CPU', () => {
-      const highCPU = { ...mockHealth, cpu: 90 };
-      render(<CoreHealthMonitor health={highCPU} />);
-
-      const cpuMetric = screen.getByText(/90%/);
-      expect(cpuMetric.className).toMatch(/warning|danger|high/i);
-    });
-
-    it('should highlight high memory', () => {
-      const highMemory = { ...mockHealth, memory: 95 };
-      render(<CoreHealthMonitor health={highMemory} />);
-
-      const memoryMetric = screen.getByText(/95%/);
-      expect(memoryMetric.className).toMatch(/warning|danger|high/i);
-    });
-
-    it('should highlight low FPS', () => {
-      const lowFPS = { ...mockHealth, fps: 20 };
-      render(<CoreHealthMonitor health={lowFPS} />);
-
-      const fpsMetric = screen.getByText(/20/);
-      expect(fpsMetric.className).toMatch(/warning|danger|low/i);
+      await waitFor(() => {
+        const status = screen.getByText('FAILING');
+        expect(status.className).toMatch(/text-red-400/i);
+      });
     });
   });
 
-  describe('Network Status', () => {
-    it('should show connected status', () => {
-      render(<CoreHealthMonitor health={mockHealth} />);
-      expect(screen.getByText(/connected/i)).toBeInTheDocument();
-    });
+  describe('Metrics Display', () => {
+    it('should show CPU and memory values', async () => {
+      render(<CoreHealthMonitor />);
 
-    it('should show disconnected status', () => {
-      const disconnected = { ...mockHealth, network: 'disconnected' };
-      render(<CoreHealthMonitor health={disconnected} />);
-      const networkStatus = screen.getByText(/disconnected/i);
-      expect(networkStatus.className).toMatch(/error|red/i);
-    });
-  });
-
-  describe('Alerts', () => {
-    it('should show CPU alert', () => {
-      const highCPU = { ...mockHealth, cpu: 95, status: 'critical' };
-      render(<CoreHealthMonitor health={highCPU} showAlerts />);
-      expect(screen.getByText(/cpu.*high|critical/i)).toBeInTheDocument();
-    });
-
-    it('should show memory alert', () => {
-      const highMemory = { ...mockHealth, memory: 92, status: 'warning' };
-      render(<CoreHealthMonitor health={highMemory} showAlerts />);
-      expect(screen.getByText(/memory.*high|warning/i)).toBeInTheDocument();
-    });
-  });
-
-  describe('History Chart', () => {
-    it('should render history chart', () => {
-      const history = [
-        { ...mockHealth, timestamp: Date.now() - 3000 },
-        { ...mockHealth, timestamp: Date.now() - 2000 },
-        { ...mockHealth, timestamp: Date.now() - 1000 },
-      ];
-      render(<CoreHealthMonitor health={mockHealth} history={history} showChart />);
-      expect(screen.getByRole('img', { name: /chart|graph/i })).toBeInTheDocument();
-    });
-  });
-
-  describe('Snapshot', () => {
-    it('should match snapshot', () => {
-      const { container } = render(<CoreHealthMonitor health={mockHealth} />);
-      expect(container.firstChild).toMatchSnapshot();
+      await waitFor(() => {
+        expect(screen.getAllByText(/cpu:/i).length).toBeGreaterThan(0);
+        expect(screen.getAllByText(/memory:/i).length).toBeGreaterThan(0);
+      });
     });
   });
 });

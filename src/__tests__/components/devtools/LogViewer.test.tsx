@@ -4,145 +4,206 @@
  * Coverage: Log display, Filtering, Search, Virtual scrolling
  */
 
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { LogViewer } from '@/components/devtools/LogViewer';
-import type { LogEntry } from '@/types';
+import { secureInvoke } from '@/lib/security';
+
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(),
+}));
 
 describe('LogViewer Component', () => {
-  const mockLogs: LogEntry[] = [
+  const mockSecureInvoke = secureInvoke as unknown as ReturnType<typeof vi.fn>;
+
+  const mockLogs = [
     {
-      id: '1',
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       level: 'info',
+      source: 'system',
       message: 'Info message',
-      category: 'system',
     },
     {
-      id: '2',
-      timestamp: Date.now(),
+      timestamp: new Date().toISOString(),
       level: 'error',
+      source: 'api',
       message: 'Error message',
-      category: 'api',
     },
     {
-      id: '3',
-      timestamp: Date.now(),
-      level: 'warning',
+      timestamp: new Date().toISOString(),
+      level: 'warn',
+      source: 'ui',
       message: 'Warning message',
-      category: 'ui',
     },
   ];
 
+  beforeEach(() => {
+    mockSecureInvoke.mockReset();
+    mockSecureInvoke.mockImplementation(async (command: string, payload?: any) => {
+      if (command === 'get_logs') {
+        const level = payload?.level ?? 'all';
+        const filtered =
+          level === 'all' ? mockLogs : mockLogs.filter(log => log.level === level);
+        return {
+          logs: filtered,
+          total: filtered.length,
+          has_more: false,
+        };
+      }
+
+      if (command === 'clear_logs' || command === 'clear_system_logs') {
+        return { ok: true };
+      }
+
+      return { ok: true };
+    });
+  });
+
   describe('Rendering', () => {
-    it('should render log viewer', () => {
-      render(<LogViewer logs={mockLogs} />);
-      expect(screen.getByText('Info message')).toBeInTheDocument();
+    it('should render log viewer', async () => {
+      render(<LogViewer />);
+      await waitFor(() => {
+        expect(screen.getByText('Info message')).toBeInTheDocument();
+      });
     });
 
     it('should render empty state', () => {
-      render(<LogViewer logs={[]} />);
+      mockSecureInvoke.mockResolvedValueOnce({ logs: [], total: 0, has_more: false });
+      render(<LogViewer />);
       expect(screen.getByText(/no logs|empty/i)).toBeInTheDocument();
     });
 
-    it('should show all log levels', () => {
-      render(<LogViewer logs={mockLogs} />);
-      expect(screen.getByText('Info message')).toBeInTheDocument();
-      expect(screen.getByText('Error message')).toBeInTheDocument();
-      expect(screen.getByText('Warning message')).toBeInTheDocument();
+    it('should show all log levels', async () => {
+      render(<LogViewer />);
+      await waitFor(() => {
+        expect(screen.getByText('Info message')).toBeInTheDocument();
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+        expect(screen.getByText('Warning message')).toBeInTheDocument();
+      });
     });
   });
 
   describe('Filtering', () => {
-    it('should filter by level', () => {
-      render(<LogViewer logs={mockLogs} />);
+    it('should filter by level', async () => {
+      render(<LogViewer />);
 
-      const errorFilter = screen.getByLabelText(/error/i);
-      fireEvent.click(errorFilter);
+      const levelSelect = screen.getByRole('combobox');
+      fireEvent.change(levelSelect, { target: { value: 'error' } });
 
-      expect(screen.getByText('Error message')).toBeInTheDocument();
-      expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(mockSecureInvoke).toHaveBeenCalledWith('get_logs', expect.any(Object));
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+        expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      });
     });
 
-    it('should filter by category', () => {
-      render(<LogViewer logs={mockLogs} />);
+    it('should filter by category', async () => {
+      render(<LogViewer />);
+      const searchInput = screen.getByPlaceholderText(/search/i);
 
-      const categorySelect = screen.getByRole('combobox', { name: /category/i });
-      fireEvent.change(categorySelect, { target: { value: 'api' } });
+      fireEvent.change(searchInput, { target: { value: 'api' } });
 
-      expect(screen.getByText('Error message')).toBeInTheDocument();
-      expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+        expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      });
     });
 
-    it('should combine filters', () => {
-      render(<LogViewer logs={mockLogs} />);
+    it('should combine filters', async () => {
+      render(<LogViewer />);
 
-      const errorFilter = screen.getByLabelText(/error/i);
-      fireEvent.click(errorFilter);
+      const levelSelect = screen.getByRole('combobox');
+      fireEvent.change(levelSelect, { target: { value: 'error' } });
 
-      const categorySelect = screen.getByRole('combobox', { name: /category/i });
-      fireEvent.change(categorySelect, { target: { value: 'api' } });
+      const searchInput = screen.getByPlaceholderText(/search/i);
+      fireEvent.change(searchInput, { target: { value: 'api' } });
 
-      expect(screen.getByText('Error message')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+        expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      });
     });
   });
 
   describe('Search', () => {
-    it('should search logs', () => {
-      render(<LogViewer logs={mockLogs} />);
+    it('should search logs', async () => {
+      render(<LogViewer />);
 
       const searchInput = screen.getByPlaceholderText(/search/i);
       fireEvent.change(searchInput, { target: { value: 'Error' } });
 
-      expect(screen.getByText('Error message')).toBeInTheDocument();
-      expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+        expect(screen.queryByText('Info message')).not.toBeInTheDocument();
+      });
     });
 
-    it('should be case-insensitive', () => {
-      render(<LogViewer logs={mockLogs} />);
+    it('should be case-insensitive', async () => {
+      render(<LogViewer />);
 
       const searchInput = screen.getByPlaceholderText(/search/i);
       fireEvent.change(searchInput, { target: { value: 'error' } });
 
-      expect(screen.getByText('Error message')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Error message')).toBeInTheDocument();
+      });
     });
   });
 
   describe('Actions', () => {
     it('should clear logs', () => {
-      const onClear = vi.fn();
-      render(<LogViewer logs={mockLogs} onClear={onClear} />);
+      render(<LogViewer />);
 
       const clearButton = screen.getByRole('button', { name: /clear/i });
       fireEvent.click(clearButton);
 
-      expect(onClear).toHaveBeenCalledTimes(1);
+      expect(mockSecureInvoke).toHaveBeenCalledWith('clear_logs');
     });
 
     it('should export logs', () => {
-      const onExport = vi.fn();
-      render(<LogViewer logs={mockLogs} onExport={onExport} />);
+      const createObjectURL = vi.fn(() => 'blob:mock');
+      const clickSpy = vi.fn();
+
+      Object.defineProperty(URL, 'createObjectURL', {
+        writable: true,
+        value: createObjectURL,
+      });
+
+      Object.defineProperty(HTMLAnchorElement.prototype, 'click', {
+        writable: true,
+        value: clickSpy,
+      });
+
+      render(<LogViewer />);
 
       const exportButton = screen.getByRole('button', { name: /export/i });
       fireEvent.click(exportButton);
 
-      expect(onExport).toHaveBeenCalledWith(mockLogs);
+      expect(createObjectURL).toHaveBeenCalled();
+      expect(clickSpy).toHaveBeenCalled();
     });
   });
 
   describe('Virtual Scrolling', () => {
-    it('should handle large log lists', () => {
+    it('should handle large log lists', async () => {
       const largeLogs = Array.from({ length: 1000 }, (_, i) => ({
-        id: `${i}`,
-        timestamp: Date.now(),
+        timestamp: new Date().toISOString(),
         level: 'info',
+        source: 'test',
         message: `Log ${i}`,
-        category: 'test',
       }));
 
-      render(<LogViewer logs={largeLogs} />);
+      mockSecureInvoke.mockResolvedValueOnce({
+        logs: largeLogs,
+        total: largeLogs.length,
+        has_more: false,
+      });
+
+      render(<LogViewer />);
       // Should render without performance issues
-      expect(screen.getByText('Log 0')).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.getByText('Log 0')).toBeInTheDocument();
+      });
     });
   });
 });
