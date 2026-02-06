@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { ToastContainer } from '@/components/ui';
 
 describe('Toast/ToastContainer Components', () => {
@@ -99,29 +99,29 @@ describe('Toast/ToastContainer Components', () => {
 
   describe('Auto-dismiss', () => {
     it('should auto-dismiss after duration', async () => {
-      vi.useFakeTimers();
       render(<ToastContainer />);
 
       await waitFor(() => {
         expect((window as Window & { __titaneToast?: any }).__titaneToast).toBeDefined();
       });
 
-      (window as Window & { __titaneToast?: any }).__titaneToast?.default(
-        'Auto-dismiss',
-        3000
-      );
+      act(() => {
+        (window as Window & { __titaneToast?: any }).__titaneToast?.default(
+          'Auto-dismiss',
+          50
+        );
+      });
 
       await waitFor(() => {
         expect(screen.getByText('Auto-dismiss')).toBeInTheDocument();
       });
 
-      vi.advanceTimersByTime(3000);
-
-      await waitFor(() => {
-        expect(screen.queryByText('Auto-dismiss')).not.toBeInTheDocument();
-      });
-
-      vi.useRealTimers();
+      await waitFor(
+        () => {
+          expect(screen.queryByText('Auto-dismiss')).not.toBeInTheDocument();
+        },
+        { timeout: 1000 }
+      );
     });
   });
 
