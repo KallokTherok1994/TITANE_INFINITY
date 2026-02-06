@@ -1031,6 +1031,7 @@ fn main() {
             commands_v21::governance_commands::export_security_log,
             commands_v21::governance_commands::clear_security_log,
             // System Center Commands (6 commands)
+            commands_v21::system_center_commands::sc_get_env,
             commands_v21::system_center_commands::sc_clear_logs,
             commands_v21::system_center_commands::sc_add_log,
             commands_v21::system_center_commands::sc_initialize_cluster,
