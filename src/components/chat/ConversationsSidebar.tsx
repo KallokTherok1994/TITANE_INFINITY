@@ -31,6 +31,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
     createConversation,
     setActiveConversation,
     archiveConversation,
+    restoreConversation,
     deleteConversation,
   } = useConversations();
 
@@ -42,15 +43,36 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
     onClose(); // Fermer la sidebar après création
   };
 
-  const handleSelectConversation = async (id: string) => {
-    await setActiveConversation(id);
+  const handleSelectConversation = async (conversation: ConversationSummary) => {
+    if (conversation.status === 'archived') {
+      await restoreConversation(conversation.id);
+    }
+    await setActiveConversation(conversation.id);
     onClose(); // Fermer la sidebar après sélection
+  };
+
+  const handleConversationKeyDown = async (
+    event: React.KeyboardEvent<HTMLDivElement>,
+    conversation: ConversationSummary
+  ) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      await handleSelectConversation(conversation);
+    }
   };
 
   const handleArchive = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
     if (confirm('Archiver cette conversation ?')) {
       await archiveConversation(id);
+      setContextMenuId(null);
+    }
+  };
+
+  const handleRestore = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    if (confirm('Restaurer cette conversation ?')) {
+      await restoreConversation(id);
       setContextMenuId(null);
     }
   };
@@ -123,7 +145,11 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
                 className={`conversation-item ${
                   conv.id === activeConversationId ? 'conversation-item--active' : ''
                 } ${conv.status === 'archived' ? 'conversation-item--archived' : ''}`}
-                onClick={() => handleSelectConversation(conv.id)}
+                role="button"
+                tabIndex={0}
+                aria-current={conv.id === activeConversationId ? 'true' : undefined}
+                onClick={() => handleSelectConversation(conv)}
+                onKeyDown={event => handleConversationKeyDown(event, conv)}
                 onContextMenu={e => {
                   e.preventDefault();
                   setContextMenuId(contextMenuId === conv.id ? null : conv.id);
@@ -146,12 +172,21 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
                 {/* Context Menu */}
                 {contextMenuId === conv.id && (
                   <div className="conversation-item__menu">
-                    <button
-                      className="conversation-item__menu-btn"
-                      onClick={e => handleArchive(e, conv.id)}
-                    >
-                      📦 Archiver
-                    </button>
+                    {conv.status === 'archived' ? (
+                      <button
+                        className="conversation-item__menu-btn"
+                        onClick={e => handleRestore(e, conv.id)}
+                      >
+                        ♻️ Restaurer
+                      </button>
+                    ) : (
+                      <button
+                        className="conversation-item__menu-btn"
+                        onClick={e => handleArchive(e, conv.id)}
+                      >
+                        📦 Archiver
+                      </button>
+                    )}
                     <button
                       className="conversation-item__menu-btn conversation-item__menu-btn--danger"
                       onClick={e => handleDelete(e, conv.id)}

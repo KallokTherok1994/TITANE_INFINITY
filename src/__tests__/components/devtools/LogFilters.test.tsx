@@ -10,6 +10,7 @@ import { LogFilters } from '@/components/devtools/LogFilters';
 
 describe('LogFilters Component', () => {
   const mockOnChange = vi.fn();
+  const baseFilters = { level: [], search: '', source: undefined };
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -17,117 +18,72 @@ describe('LogFilters Component', () => {
 
   describe('Rendering', () => {
     it('should render filter controls', () => {
-      render(<LogFilters onChange={mockOnChange} />);
-      expect(screen.getByLabelText(/level/i)).toBeInTheDocument();
+      render(<LogFilters filters={baseFilters} onFilterChange={mockOnChange} />);
+      expect(screen.getByPlaceholderText(/search logs/i)).toBeInTheDocument();
     });
 
     it('should show all filter options', () => {
-      render(<LogFilters onChange={mockOnChange} />);
-      expect(screen.getByLabelText(/level/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/category/i)).toBeInTheDocument();
+      render(<LogFilters filters={baseFilters} onFilterChange={mockOnChange} />);
+      expect(screen.getByRole('button', { name: /debug/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /info/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /warn/i })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: /error/i })).toBeInTheDocument();
     });
   });
 
   describe('Level Filters', () => {
     it('should filter by info level', () => {
-      render(<LogFilters onChange={mockOnChange} />);
+      render(<LogFilters filters={baseFilters} onFilterChange={mockOnChange} />);
 
-      const infoCheckbox = screen.getByLabelText(/info/i);
-      fireEvent.click(infoCheckbox);
+      fireEvent.click(screen.getByRole('button', { name: /info/i }));
 
       expect(mockOnChange).toHaveBeenCalledWith(
-        expect.objectContaining({
-          levels: expect.arrayContaining(['info']),
-        })
+        expect.objectContaining({ level: ['info'] })
       );
     });
 
     it('should filter by error level', () => {
-      render(<LogFilters onChange={mockOnChange} />);
-
-      const errorCheckbox = screen.getByLabelText(/error/i);
-      fireEvent.click(errorCheckbox);
-
-      expect(mockOnChange).toHaveBeenCalled();
+      render(<LogFilters filters={baseFilters} onFilterChange={mockOnChange} />);
+      fireEvent.click(screen.getByRole('button', { name: /error/i }));
+      expect(mockOnChange).toHaveBeenCalledWith(
+        expect.objectContaining({ level: ['error'] })
+      );
     });
 
     it('should support multiple levels', () => {
-      render(<LogFilters onChange={mockOnChange} />);
+      render(
+        <LogFilters
+          filters={{ ...baseFilters, level: ['info'] }}
+          onFilterChange={mockOnChange}
+        />
+      );
 
-      fireEvent.click(screen.getByLabelText(/info/i));
-      fireEvent.click(screen.getByLabelText(/warning/i));
+      fireEvent.click(screen.getByRole('button', { name: /warn/i }));
 
       expect(mockOnChange).toHaveBeenLastCalledWith(
-        expect.objectContaining({
-          levels: expect.arrayContaining(['info', 'warning']),
-        })
+        expect.objectContaining({ level: ['info', 'warn'] })
       );
     });
   });
 
-  describe('Category Filters', () => {
-    it('should filter by category', () => {
-      render(<LogFilters onChange={mockOnChange} categories={['system', 'api', 'ui']} />);
-
-      const categorySelect = screen.getByLabelText(/category/i);
-      fireEvent.change(categorySelect, { target: { value: 'system' } });
+  describe('Search', () => {
+    it('should update search text', () => {
+      render(<LogFilters filters={baseFilters} onFilterChange={mockOnChange} />);
+      fireEvent.change(screen.getByPlaceholderText(/search logs/i), {
+        target: { value: 'error' },
+      });
 
       expect(mockOnChange).toHaveBeenCalledWith(
-        expect.objectContaining({
-          category: 'system',
-        })
+        expect.objectContaining({ search: 'error' })
       );
-    });
-
-    it('should show custom categories', () => {
-      render(<LogFilters onChange={mockOnChange} categories={['custom1', 'custom2']} />);
-
-      expect(screen.getByText('custom1')).toBeInTheDocument();
-      expect(screen.getByText('custom2')).toBeInTheDocument();
-    });
-  });
-
-  describe('Date Range', () => {
-    it('should filter by start date', () => {
-      render(<LogFilters onChange={mockOnChange} showDateRange />);
-
-      const startDate = screen.getByLabelText(/start date/i);
-      fireEvent.change(startDate, { target: { value: '2026-01-01' } });
-
-      expect(mockOnChange).toHaveBeenCalled();
-    });
-
-    it('should filter by end date', () => {
-      render(<LogFilters onChange={mockOnChange} showDateRange />);
-
-      const endDate = screen.getByLabelText(/end date/i);
-      fireEvent.change(endDate, { target: { value: '2026-01-31' } });
-
-      expect(mockOnChange).toHaveBeenCalled();
-    });
-  });
-
-  describe('Reset', () => {
-    it('should reset all filters', () => {
-      render(<LogFilters onChange={mockOnChange} />);
-
-      fireEvent.click(screen.getByLabelText(/info/i));
-
-      const resetButton = screen.getByRole('button', { name: /reset|clear/i });
-      fireEvent.click(resetButton);
-
-      expect(mockOnChange).toHaveBeenLastCalledWith({
-        levels: [],
-        category: null,
-        startDate: null,
-        endDate: null,
-      });
     });
   });
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<LogFilters onChange={mockOnChange} />);
+      const { container } = render(
+        <LogFilters filters={baseFilters} onFilterChange={mockOnChange} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

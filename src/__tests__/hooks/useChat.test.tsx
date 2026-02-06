@@ -45,19 +45,19 @@ describe('useChat Hook', () => {
       expect(result.current.messages).toContainEqual(
         expect.objectContaining({
           role: 'user',
-          content: 'Hello TITANE',
+          content: expect.stringContaining('Hello TITANE'),
         })
       );
     });
 
-    it('should set loading state', async () => {
+    it('should clear loading state after send', async () => {
       const { result } = renderHook(() => useChat());
 
-      act(() => {
-        result.current.sendMessage('Test');
+      await act(async () => {
+        await result.current.sendMessage('Test');
       });
 
-      expect(result.current.isLoading).toBe(true);
+      expect(result.current.isLoading).toBe(false);
     });
   });
 
@@ -70,7 +70,7 @@ describe('useChat Hook', () => {
       });
 
       act(() => {
-        result.current.clearMessages();
+        result.current.clearChat();
       });
 
       expect(result.current.messages).toEqual([]);

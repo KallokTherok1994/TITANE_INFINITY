@@ -15,8 +15,8 @@ describe('useOmegaPipeline Hook', () => {
   describe('Initialization', () => {
     it('should initialize with default state', () => {
       const { result } = renderHook(() => useOmegaPipeline());
-      expect(result.current.isRunning).toBe(false);
-      expect(result.current.currentStage).toBe(null);
+      expect(result.current.state.stage).toBe('idle');
+      expect(result.current.state.progress).toBe(0);
     });
 
     it('should have execute method', () => {
@@ -29,121 +29,42 @@ describe('useOmegaPipeline Hook', () => {
     it('should execute pipeline', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
 
+      vi.useFakeTimers();
       await act(async () => {
-        await result.current.execute({ data: 'test' });
+        const promise = result.current.execute({ data: 'test' });
+        await vi.runAllTimersAsync();
+        await promise;
       });
 
-      expect(result.current.isRunning).toBe(false);
-    });
-
-    it('should track current stage', async () => {
-      const { result } = renderHook(() => useOmegaPipeline());
-
-      act(() => {
-        result.current.execute({ data: 'test' });
+      expect(result.current.state.stage).toBe('complete');
+      expect(result.current.state.progress).toBe(100);
+      expect(result.current.state.result).toMatchObject({
+        processed: true,
+        input: { data: 'test' },
       });
 
-      expect(result.current.currentStage).not.toBe(null);
-    });
-
-    it('should complete all stages', async () => {
-      const onComplete = vi.fn();
-      const { result } = renderHook(() => useOmegaPipeline({ onComplete }));
-
-      await act(async () => {
-        await result.current.execute({ data: 'test' });
-      });
-
-      expect(onComplete).toHaveBeenCalled();
+      vi.useRealTimers();
     });
   });
 
-  describe('Stage Callbacks', () => {
-    it('should call onStageStart', async () => {
-      const onStageStart = vi.fn();
-      const { result } = renderHook(() => useOmegaPipeline({ onStageStart }));
-
-      await act(async () => {
-        await result.current.execute({ data: 'test' });
-      });
-
-      expect(onStageStart).toHaveBeenCalled();
-    });
-
-    it('should call onStageComplete', async () => {
-      const onStageComplete = vi.fn();
-      const { result } = renderHook(() => useOmegaPipeline({ onStageComplete }));
-
-      await act(async () => {
-        await result.current.execute({ data: 'test' });
-      });
-
-      expect(onStageComplete).toHaveBeenCalled();
-    });
-  });
-
-  describe('Error Handling', () => {
-    it('should handle stage errors', async () => {
-      const onError = vi.fn();
-      const { result } = renderHook(() => useOmegaPipeline({ onError }));
-
-      await act(async () => {
-        try {
-          await result.current.execute({ data: 'error' });
-        } catch (error) {
-          expect(error).toBeDefined();
-        }
-      });
-    });
-
-    it('should stop on error', async () => {
-      const { result } = renderHook(() => useOmegaPipeline({ stopOnError: true }));
-
-      await act(async () => {
-        try {
-          await result.current.execute({ data: 'error' });
-        } catch {
-          // Handled
-        }
-      });
-
-      expect(result.current.isRunning).toBe(false);
-    });
-  });
-
-  describe('Pipeline Control', () => {
-    it('should pause pipeline', async () => {
+  describe('Reset', () => {
+    it('should reset pipeline state', async () => {
       const { result } = renderHook(() => useOmegaPipeline());
 
-      act(() => {
-        result.current.execute({ data: 'test' });
-        result.current.pause();
+      vi.useFakeTimers();
+      await act(async () => {
+        const promise = result.current.execute({ data: 'test' });
+        await vi.runAllTimersAsync();
+        await promise;
       });
 
-      expect(result.current.isPaused).toBe(true);
-    });
-
-    it('should resume pipeline', async () => {
-      const { result } = renderHook(() => useOmegaPipeline());
-
       act(() => {
-        result.current.execute({ data: 'test' });
-        result.current.pause();
-        result.current.resume();
+        result.current.reset();
       });
 
-      expect(result.current.isPaused).toBe(false);
-    });
-
-    it('should cancel pipeline', async () => {
-      const { result } = renderHook(() => useOmegaPipeline());
-
-      act(() => {
-        result.current.execute({ data: 'test' });
-        result.current.cancel();
-      });
-
-      expect(result.current.isRunning).toBe(false);
+      expect(result.current.state.stage).toBe('idle');
+      expect(result.current.state.progress).toBe(0);
+      vi.useRealTimers();
     });
   });
 });

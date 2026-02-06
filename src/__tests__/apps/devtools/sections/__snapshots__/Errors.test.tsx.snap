@@ -119,7 +119,7 @@ exports[`DevTools Errors Section > Snapshot > should match snapshot 1`] = `
           <p
             class="text-xs"
           >
-            26/01/2026 19:33:55
+            06/02/2026 07:00:00
           </p>
         </button>
         <button
@@ -155,7 +155,7 @@ exports[`DevTools Errors Section > Snapshot > should match snapshot 1`] = `
           <p
             class="text-xs"
           >
-            26/01/2026 19:33:25
+            06/02/2026 06:59:30
           </p>
         </button>
       </div>

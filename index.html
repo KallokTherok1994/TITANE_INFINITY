@@ -14,7 +14,7 @@
       window.__TITANE_BOOT__.html_ok = true;
       window.__TITANE_BOOT__.html_timestamp = Date.now();
 
-      var pushBootError = function(payload) {
+      var pushBootError = function (payload) {
         try {
           var existing = [];
           try {
@@ -32,14 +32,20 @@
       };
 
       // Capture errors ASAP
-      window.onerror = function(msg, url, line, col, err) {
-        var payload = { msg: msg, url: url, line: line, col: col, err: err && err.toString() };
+      window.onerror = function (msg, url, line, col, err) {
+        var payload = {
+          msg: msg,
+          url: url,
+          line: line,
+          col: col,
+          err: err && err.toString(),
+        };
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);
         console.error('[BOOT-ERROR]', msg);
       };
-      window.addEventListener('unhandledrejection', function(evt) {
+      window.addEventListener('unhandledrejection', function (evt) {
         var payload = { type: 'rejection', reason: evt.reason && evt.reason.toString() };
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
@@ -91,9 +97,7 @@
 
     <!-- ✅ v35.0.0: FONTS OPTIMIZATION - System fonts first, web fonts non-blocking -->
 
-    <!-- ✅ v35.0.0: Preconnect to Google Fonts CDN for faster font loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- ✅ v35.0.0: Local-first (no external preconnect) -->
 
     <!-- ✅ v35.0.0: Defer non-critical CSS to avoid render-blocking -->
     <!-- NOTE: Main CSS is loaded via src/main.tsx (index.css) with Vite optimization -->

@@ -177,21 +177,21 @@ class AIOrchestrator {
     // Initialize eager providers safely (they may be undefined at import time)
     // Order: Tauri (Rust backend) → Ollama (local memory) → TitaneLocal (fallback)
     const eagerCandidates: (AIProvider | undefined)[] = [
-      tauriChatProvider,    // #1 Backend Rust (cascade interne)
-      ollamaProvider,       // #2 Ollama (mémoire locale + analyse permanente)
-      titaneLocalProvider,  // #3 Fallback local (noyau infaillible)
+      tauriChatProvider, // #1 Backend Rust (cascade interne)
+      ollamaProvider, // #2 Ollama (mémoire locale + analyse permanente)
+      titaneLocalProvider, // #3 Fallback local (noyau infaillible)
     ];
-    
+
     // Filter out undefined providers and ensure we have the fallback
     this.eagerProviders = eagerCandidates.filter((provider): provider is AIProvider =>
       Boolean(provider)
     );
-    
+
     // Ensure titaneLocalProvider is always available as fallback
     if (!this.eagerProviders.includes(titaneLocalProvider) && titaneLocalProvider) {
       this.eagerProviders.push(titaneLocalProvider);
     }
-    
+
     this.initializeProviderStats();
     // En contexte tests (Vitest), on évite tout side-effect à l'import :
     // - warmup (appels provider.isAvailable → secureInvoke)
@@ -1895,9 +1895,33 @@ function getOrchestratorInstance(): AIOrchestrator {
 }
 
 export const aiOrchestrator = new Proxy({} as AIOrchestrator, {
-  get(target, prop) {
+  get(_target, prop) {
     const instance = getOrchestratorInstance();
-    return Reflect.get(instance, prop);
+    const value = Reflect.get(instance, prop);
+    return typeof value === 'function' ? value.bind(instance) : value;
+  },
+  set(_target, prop, value) {
+    const instance = getOrchestratorInstance();
+    return Reflect.set(instance, prop, value);
+  },
+  has(_target, prop) {
+    const instance = getOrchestratorInstance();
+    return prop in instance;
+  },
+  getOwnPropertyDescriptor(_target, prop) {
+    const instance = getOrchestratorInstance();
+    const descriptor = Object.getOwnPropertyDescriptor(instance, prop);
+    if (descriptor) {
+      return { ...descriptor, configurable: true };
+    }
+    return {
+      configurable: true,
+      enumerable: true,
+      writable: true,
+      value: (instance as unknown as Record<string, unknown>)[
+        prop as keyof AIOrchestrator
+      ],
+    };
   },
 });
 

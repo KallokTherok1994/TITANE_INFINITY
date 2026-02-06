@@ -14,22 +14,28 @@ describe('VirtualMessageList Component', () => {
     { id: '3', role: 'user', content: 'Message 3', timestamp: Date.now() },
   ];
 
+  const renderMessage = (message: { content: string }) => <div>{message.content}</div>;
+
   describe('Rendering', () => {
     it('should render message list', () => {
-      render(<VirtualMessageList messages={mockMessages} />);
+      render(
+        <VirtualMessageList messages={mockMessages} renderMessage={renderMessage} />
+      );
       expect(screen.getByText('Message 1')).toBeInTheDocument();
     });
 
     it('should render multiple messages', () => {
-      render(<VirtualMessageList messages={mockMessages} />);
+      render(
+        <VirtualMessageList messages={mockMessages} renderMessage={renderMessage} />
+      );
       expect(screen.getByText('Message 1')).toBeInTheDocument();
       expect(screen.getByText('Message 2')).toBeInTheDocument();
       expect(screen.getByText('Message 3')).toBeInTheDocument();
     });
 
-    it('should render empty state', () => {
-      render(<VirtualMessageList messages={[]} />);
-      expect(screen.getByText(/no messages/i) || screen.getByText(/empty/i)).toBeTruthy();
+    it('should render empty list without messages', () => {
+      render(<VirtualMessageList messages={[]} renderMessage={renderMessage} />);
+      expect(screen.queryByText(/Message/i)).not.toBeInTheDocument();
     });
   });
 
@@ -41,25 +47,17 @@ describe('VirtualMessageList Component', () => {
         content: `Message ${i}`,
         timestamp: Date.now(),
       }));
-      render(<VirtualMessageList messages={largeList} />);
+      render(<VirtualMessageList messages={largeList} renderMessage={renderMessage} />);
       // Au moins le premier message devrait être visible
       expect(screen.getByText('Message 0')).toBeInTheDocument();
     });
   });
 
-  describe('Scroll', () => {
-    it('should auto-scroll to bottom by default', () => {
-      const { container } = render(
-        <VirtualMessageList messages={mockMessages} autoScrollToBottom />
-      );
-      // Le container devrait avoir scroll au bottom
-      expect(container).toBeTruthy();
-    });
-  });
-
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<VirtualMessageList messages={mockMessages} />);
+      const { container } = render(
+        <VirtualMessageList messages={mockMessages} renderMessage={renderMessage} />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

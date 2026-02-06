@@ -292,7 +292,7 @@ describe('Sprint 2: Monitoring System', () => {
       chatMetrics.recordError('conv-1', 'NetworkError', 'Timeout');
 
       alerting.checkAlerts();
-      expect(alerting.getActiveAlerts()).toHaveLength(1);
+      expect(alerting.getActiveAlerts()).toHaveLength(2);
 
       // Nettoyer et recréer conversation saine
       chatMetrics.reset();

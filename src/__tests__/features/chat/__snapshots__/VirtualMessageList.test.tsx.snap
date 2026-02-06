@@ -1,0 +1,24 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`VirtualMessageList Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="virtual-message-list "
+  style="overflow-y: auto; height: 100%;"
+>
+  <div>
+    <div>
+      Message 1
+    </div>
+  </div>
+  <div>
+    <div>
+      Message 2
+    </div>
+  </div>
+  <div>
+    <div>
+      Message 3
+    </div>
+  </div>
+</div>
+`;

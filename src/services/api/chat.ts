@@ -298,7 +298,8 @@ class ChatService {
     try {
       // ✅ FIX P0-1: Type any pour gérer format OMEGA direct
       const requestId =
-        config?.requestId ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+        config?.requestId ??
+        `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const systemPrompt =
         config?.systemPrompt ?? getSystemPrompt(config?.mode ?? 'default');
 

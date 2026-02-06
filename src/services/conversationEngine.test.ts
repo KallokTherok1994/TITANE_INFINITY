@@ -11,14 +11,10 @@ import { processMessage } from '@/services/conversationEngine';
 
 describe('conversationEngine.processMessage', () => {
   it('normalizes missing metadata with safe defaults', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce({
-      assistant_message: 'Hello',
-      conversation_id: 'c1',
-      message_id: 'm1',
-      detected_intention: 'Question',
-      detected_emotion: { valence: 0, intensity: 0, energy: 0 },
-      cognitive_tags: [],
-      cognitive_summary: '',
+    vi.mocked(secureInvoke).mockResolvedValueOnce('c1').mockResolvedValueOnce({
+      content: 'Hello',
+      conversationId: 'c1',
+      messageId: 'm1',
       metadata: undefined,
     });
 
@@ -33,23 +29,21 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('preserves provided metadata values when valid', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce({
-      assistant_message: 'Ok',
-      conversation_id: 'c2',
-      message_id: 'm2',
-      detected_intention: 'Action',
-      detected_emotion: { valence: 0.2, intensity: 0.3, energy: 0.4 },
-      cognitive_tags: ['tag'],
-      cognitive_summary: 'sum',
-      metadata: {
-        timestamp: 123,
-        provider_used: 'local',
-        latency_ms: 42,
-        tokens_used: 7,
-        memory_effect: 'Recall',
-        links_to_contexts: ['a', 1, null, 'b'],
-      },
-    });
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce('c2')
+      .mockResolvedValueOnce({
+        content: 'Ok',
+        conversationId: 'c2',
+        messageId: 'm2',
+        metadata: {
+          timestamp: 123,
+          provider_used: 'local',
+          latency_ms: 42,
+          tokens_used: 7,
+          memory_effect: 'Recall',
+          links_to_contexts: ['a', 1, null, 'b'],
+        },
+      });
 
     const response = await processMessage('Hi');
 

@@ -36,9 +36,12 @@ describe('useSystemHealth Hook', () => {
       health_score: 95,
     },
     engine_get_singularity_state: {
-      engines: [{ name: 'core', status: 'ok' }],
+      engines: Array.from({ length: 20 }, (_, index) => ({
+        name: `engine-${index + 1}`,
+        status: 'active',
+      })),
     },
-    system_health_check: {
+    system_health: {
       uptime_ms: 1000,
       cpu_usage: 10,
       memory_usage_mb: 256,
@@ -93,9 +96,9 @@ describe('useSystemHealth Hook', () => {
   describe('Alerts', () => {
     it('should generate warnings when thresholds exceeded', async () => {
       vi.mocked(secureInvoke).mockImplementation(async command => {
-        if (command === 'system_health_check') {
+        if (command === 'system_health') {
           return {
-            ...mockHealthPayloads.system_health_check,
+            ...mockHealthPayloads.system_health,
             cpu_usage: 90,
           };
         }

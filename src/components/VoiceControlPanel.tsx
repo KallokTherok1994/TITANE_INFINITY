@@ -14,7 +14,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { hybridTTS, type TTSStatus } from '../services/tts/hybridTTS';
+import { hybridTTS, type TTSStatus } from '@/services/tts/hybridTTS';
 import { logger } from '@/lib/logger';
 import './VoiceControlPanel.css';
 

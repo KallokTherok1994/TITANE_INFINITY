@@ -148,6 +148,19 @@ export class ConversationLifecycleEngine {
   }
 
   /**
+   * Restaurer une conversation archivée
+   */
+  restoreConversation(conversationId: string): void {
+    this.emitEvent({
+      type: 'conversation.restored',
+      conversation_id: conversationId,
+      timestamp: Date.now(),
+    });
+
+    logger.info('Conversation restored', { conversationId });
+  }
+
+  /**
    * Générer ou mettre à jour le titre d'une conversation
    */
   updateConversationTitle(conversation: Conversation): string {

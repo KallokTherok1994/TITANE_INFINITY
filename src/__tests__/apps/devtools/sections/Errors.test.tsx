@@ -12,6 +12,8 @@ import { Errors } from '@/apps/devtools/sections';
 const mockResolveError = vi.fn();
 const mockUpdateEngine = vi.fn();
 
+const fixedNow = new Date('2026-02-06T12:00:00Z').getTime();
+
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
     errors: [
@@ -19,7 +21,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         id: 'err1',
         message: 'Connection timeout',
         engine: 'chat-engine',
-        timestamp: Date.now(),
+        timestamp: fixedNow,
         resolved: false,
         impact: 'high',
       },
@@ -27,7 +29,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         id: 'err2',
         message: 'Memory limit exceeded',
         engine: 'memory-engine',
-        timestamp: Date.now() - 30000,
+        timestamp: fixedNow - 30000,
         resolved: false,
         impact: 'medium',
       },
@@ -35,7 +37,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         id: 'err3',
         message: 'Invalid config',
         engine: 'fusion-engine',
-        timestamp: Date.now() - 60000,
+        timestamp: fixedNow - 60000,
         resolved: true,
         impact: 'low',
       },

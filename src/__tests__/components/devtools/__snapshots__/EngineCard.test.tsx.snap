@@ -25,12 +25,15 @@ exports[`EngineCard Component > Snapshot > should match snapshot 1`] = `
   >
     <div>
       Requests: 
+      150
     </div>
     <div>
       Errors: 
+      2
     </div>
     <div>
       Latency: 
+      120
       ms
     </div>
   </div>

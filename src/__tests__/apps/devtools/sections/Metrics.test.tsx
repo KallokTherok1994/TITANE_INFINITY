@@ -7,6 +7,8 @@ import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Metrics } from '@/apps/devtools/sections';
 
+const fixedNow = new Date('2026-02-06T12:00:00Z').getTime();
+
 // Mock du store DevTools
 vi.mock('@/apps/devtools/store/devtools.store', () => ({
   useDevToolsStore: () => ({
@@ -18,6 +20,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         unit: 'ms',
         trend: 'stable',
         history: [10, 11, 12],
+        timestamp: fixedNow,
       },
       'ipc-latency-p90': {
         id: 'ipc-latency-p90',
@@ -26,6 +29,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         unit: 'ms',
         trend: 'down',
         history: [28, 26, 25],
+        timestamp: fixedNow - 10000,
       },
       'cpu-usage': {
         id: 'cpu-usage',
@@ -34,6 +38,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         unit: '%',
         trend: 'up',
         history: [30, 32, 34],
+        timestamp: fixedNow - 20000,
       },
       'memory-usage': {
         id: 'memory-usage',
@@ -42,6 +47,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         unit: 'MB',
         trend: 'stable',
         history: [500, 510, 512],
+        timestamp: fixedNow - 30000,
       },
       'omega-duration': {
         id: 'omega-duration',
@@ -50,6 +56,7 @@ vi.mock('@/apps/devtools/store/devtools.store', () => ({
         unit: 'ms',
         trend: 'stable',
         history: [140, 143, 145],
+        timestamp: fixedNow - 40000,
       },
     },
     timeRange: '2m',

@@ -531,9 +531,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const requestInFlight = useRequestInFlightStore(state => state.requestInFlight);
-  const setRequestInFlight = useRequestInFlightStore(
-    state => state.setRequestInFlight
-  );
+  const setRequestInFlight = useRequestInFlightStore(state => state.setRequestInFlight);
   const [error, setError] = useState<string | null>(null);
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [internalAnomalyCount, setInternalAnomalyCount] = useState(0);

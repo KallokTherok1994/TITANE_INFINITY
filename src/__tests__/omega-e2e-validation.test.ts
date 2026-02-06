@@ -43,16 +43,15 @@ const createDeterministicResponse = (message: string, history: AIMessage[] = [])
 };
 
 const runWithDeterministicOrchestrator = async (callback: () => Promise<void>) => {
-  const generateSpy = vi
-    .spyOn(aiOrchestrator, 'generate')
-    .mockImplementation(async (message: string, history: AIMessage[] = []) =>
-      createDeterministicResponse(message, history)
-    );
+  const originalGenerate = aiOrchestrator.generate;
+  aiOrchestrator.generate = vi.fn(async (message: string, history: AIMessage[] = []) =>
+    createDeterministicResponse(message, history)
+  ) as typeof aiOrchestrator.generate;
 
   try {
     await callback();
   } finally {
-    generateSpy.mockRestore();
+    aiOrchestrator.generate = originalGenerate;
   }
 };
 

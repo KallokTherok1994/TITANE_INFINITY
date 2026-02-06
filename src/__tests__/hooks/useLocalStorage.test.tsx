@@ -16,20 +16,20 @@ describe('useLocalStorage Hook', () => {
   describe('Initialization', () => {
     it('should initialize with default value', () => {
       const { result } = renderHook(() => useLocalStorage('key', 'default'));
-      expect(result.current[0]).toBe('default');
+      expect(result.current.value).toBe('default');
     });
 
     it('should load existing value from localStorage', () => {
       localStorage.setItem('test-key', JSON.stringify('stored-value'));
       const { result } = renderHook(() => useLocalStorage('test-key', 'default'));
-      expect(result.current[0]).toBe('stored-value');
+      expect(result.current.value).toBe('stored-value');
     });
 
     it('should handle JSON objects', () => {
       const obj = { name: 'test', value: 123 };
       localStorage.setItem('obj-key', JSON.stringify(obj));
       const { result } = renderHook(() => useLocalStorage('obj-key', {}));
-      expect(result.current[0]).toEqual(obj);
+      expect(result.current.value).toEqual(obj);
     });
   });
 
@@ -38,17 +38,17 @@ describe('useLocalStorage Hook', () => {
       const { result } = renderHook(() => useLocalStorage('key', 'initial'));
 
       act(() => {
-        result.current[1]('updated');
+        result.current.setValue('updated');
       });
 
-      expect(result.current[0]).toBe('updated');
+      expect(result.current.value).toBe('updated');
     });
 
     it('should persist to localStorage', () => {
       const { result } = renderHook(() => useLocalStorage('persist-key', 'value1'));
 
       act(() => {
-        result.current[1]('value2');
+        result.current.setValue('value2');
       });
 
       expect(localStorage.getItem('persist-key')).toBe(JSON.stringify('value2'));
@@ -58,10 +58,10 @@ describe('useLocalStorage Hook', () => {
       const { result } = renderHook(() => useLocalStorage('counter', 0));
 
       act(() => {
-        result.current[1]((prev: number) => prev + 1);
+        result.current.setValue((prev: number) => prev + 1);
       });
 
-      expect(result.current[0]).toBe(1);
+      expect(result.current.value).toBe(1);
     });
   });
 
@@ -70,10 +70,10 @@ describe('useLocalStorage Hook', () => {
       const { result } = renderHook(() => useLocalStorage('array-key', []));
 
       act(() => {
-        result.current[1]([1, 2, 3]);
+        result.current.setValue([1, 2, 3]);
       });
 
-      expect(result.current[0]).toEqual([1, 2, 3]);
+      expect(result.current.value).toEqual([1, 2, 3]);
       expect(JSON.parse(localStorage.getItem('array-key')!)).toEqual([1, 2, 3]);
     });
 
@@ -82,10 +82,10 @@ describe('useLocalStorage Hook', () => {
 
       const obj = { name: 'test', nested: { value: 42 } };
       act(() => {
-        result.current[1](obj);
+        result.current.setValue(obj);
       });
 
-      expect(result.current[0]).toEqual(obj);
+      expect(result.current.value).toEqual(obj);
     });
   });
 
@@ -93,7 +93,7 @@ describe('useLocalStorage Hook', () => {
     it('should handle invalid JSON gracefully', () => {
       localStorage.setItem('invalid-key', 'invalid-json{');
       const { result } = renderHook(() => useLocalStorage('invalid-key', 'fallback'));
-      expect(result.current[0]).toBe('fallback');
+      expect(result.current.value).toBe('fallback');
     });
 
     it('should handle localStorage quota exceeded', () => {
@@ -105,11 +105,11 @@ describe('useLocalStorage Hook', () => {
       const { result } = renderHook(() => useLocalStorage('quota-key', 'value'));
 
       act(() => {
-        result.current[1]('large-value');
+        result.current.setValue('large-value');
       });
 
       // Should not crash
-      expect(result.current[0]).toBe('large-value');
+      expect(result.current.value).toBe('large-value');
       setItemSpy.mockRestore();
     });
   });

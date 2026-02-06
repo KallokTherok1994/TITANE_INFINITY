@@ -42,7 +42,10 @@ const TestSettingsApp: React.FC = () => {
     }
   }, []);
 
-  const updateSetting = (key: keyof SettingsState, value: SettingsState[keyof SettingsState]) => {
+  const updateSetting = (
+    key: keyof SettingsState,
+    value: SettingsState[keyof SettingsState]
+  ) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
@@ -115,7 +118,9 @@ const TestSettingsApp: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={settings.hardwareAcceleration}
-                  onChange={event => updateSetting('hardwareAcceleration', event.target.checked)}
+                  onChange={event =>
+                    updateSetting('hardwareAcceleration', event.target.checked)
+                  }
                 />
               </label>
 
@@ -154,9 +159,7 @@ const TestSettingsApp: React.FC = () => {
           <button type="button" onClick={handleExport}>
             Export
           </button>
-          <button type="button">
-            Import
-          </button>
+          <button type="button">Import</button>
 
           <label htmlFor="import">Import</label>
           <input

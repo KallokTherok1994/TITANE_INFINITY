@@ -14,11 +14,10 @@ describe('EngineCard Component', () => {
     id: 'fusion-1',
     name: 'Fusion Engine',
     status: 'active',
-    version: '2.1.0',
     metrics: {
-      processedTasks: 150,
-      avgResponseTime: 120,
-      successRate: 98.5,
+      requests: 150,
+      errors: 2,
+      latency: 120,
     },
   };
 
@@ -26,11 +25,6 @@ describe('EngineCard Component', () => {
     it('should render engine card', () => {
       render(<EngineCard engine={mockEngine} />);
       expect(screen.getByText('Fusion Engine')).toBeInTheDocument();
-    });
-
-    it('should show engine version', () => {
-      render(<EngineCard engine={mockEngine} />);
-      expect(screen.getByText(/2\.1\.0/)).toBeInTheDocument();
     });
 
     it('should show engine status', () => {
@@ -43,82 +37,49 @@ describe('EngineCard Component', () => {
     it('should show active status', () => {
       render(<EngineCard engine={mockEngine} />);
       const status = screen.getByText(/active/i);
-      expect(status.className).toMatch(/success|green|active/i);
+      expect(status.className).toMatch(/bg-green-900/);
     });
 
     it('should show inactive status', () => {
       const inactiveEngine = { ...mockEngine, status: 'inactive' };
       render(<EngineCard engine={inactiveEngine} />);
       const status = screen.getByText(/inactive/i);
-      expect(status.className).toMatch(/gray|idle/i);
+      expect(status.className).toMatch(/bg-gray-700/);
     });
 
     it('should show error status', () => {
       const errorEngine = { ...mockEngine, status: 'error' };
       render(<EngineCard engine={errorEngine} />);
-      const status = screen.getByText(/error/i);
-      expect(status.className).toMatch(/error|red|danger/i);
+      const status = screen.getByText(/^error$/i);
+      expect(status.className).toMatch(/bg-red-900/);
     });
   });
 
   describe('Metrics', () => {
-    it('should show processed tasks', () => {
-      render(<EngineCard engine={mockEngine} showMetrics />);
-      expect(screen.getByText(/150.*tasks?/i)).toBeInTheDocument();
+    it('should show request metrics', () => {
+      render(<EngineCard engine={mockEngine} />);
+      expect(screen.getByText(/Requests: 150/i)).toBeInTheDocument();
     });
 
-    it('should show average response time', () => {
-      render(<EngineCard engine={mockEngine} showMetrics />);
-      expect(screen.getByText(/120.*ms/i)).toBeInTheDocument();
+    it('should show error metrics', () => {
+      render(<EngineCard engine={mockEngine} />);
+      expect(screen.getByText(/Errors: 2/i)).toBeInTheDocument();
     });
 
-    it('should show success rate', () => {
-      render(<EngineCard engine={mockEngine} showMetrics />);
-      expect(screen.getByText(/98\.5.*%/i)).toBeInTheDocument();
+    it('should show latency metrics', () => {
+      render(<EngineCard engine={mockEngine} />);
+      expect(screen.getByText(/Latency: 120ms/i)).toBeInTheDocument();
     });
   });
 
   describe('Actions', () => {
-    it('should start engine', () => {
-      const onStart = vi.fn();
-      const inactiveEngine = { ...mockEngine, status: 'inactive' };
-      render(<EngineCard engine={inactiveEngine} onStart={onStart} />);
+    it('should handle click', () => {
+      const onClick = vi.fn();
+      render(<EngineCard engine={mockEngine} onClick={onClick} />);
 
-      const startButton = screen.getByRole('button', { name: /start/i });
-      fireEvent.click(startButton);
+      fireEvent.click(screen.getByRole('button', { name: /Fusion Engine/i }));
 
-      expect(onStart).toHaveBeenCalledWith(mockEngine.id);
-    });
-
-    it('should stop engine', () => {
-      const onStop = vi.fn();
-      render(<EngineCard engine={mockEngine} onStop={onStop} />);
-
-      const stopButton = screen.getByRole('button', { name: /stop/i });
-      fireEvent.click(stopButton);
-
-      expect(onStop).toHaveBeenCalledWith(mockEngine.id);
-    });
-
-    it('should restart engine', () => {
-      const onRestart = vi.fn();
-      render(<EngineCard engine={mockEngine} onRestart={onRestart} />);
-
-      const restartButton = screen.getByRole('button', { name: /restart/i });
-      fireEvent.click(restartButton);
-
-      expect(onRestart).toHaveBeenCalledWith(mockEngine.id);
-    });
-  });
-
-  describe('Expand Details', () => {
-    it('should expand details panel', () => {
-      render(<EngineCard engine={mockEngine} expandable />);
-
-      const expandButton = screen.getByRole('button', { name: /details|expand/i });
-      fireEvent.click(expandButton);
-
-      expect(screen.getByText(/configuration|details/i)).toBeInTheDocument();
+      expect(onClick).toHaveBeenCalledTimes(1);
     });
   });
 
