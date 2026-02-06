@@ -47,6 +47,8 @@
   },
   "include": ["src", "src/types"],
   "exclude": [
+    ".venv",
+    "**/.venv/**",
     "src/__tests__",
     "**/__tests__/**",
     "src/test/**",
