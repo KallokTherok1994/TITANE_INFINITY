@@ -55,6 +55,7 @@ venv/
 /src-tauri/target-test
 /src-tauri/target-release
 /src-tauri/WixTools
+ /src-tauri/resources/ollama/ollama
 
 # TITANE∞ Dual-Runtime Directories
 runtime/stable/build/

@@ -11,8 +11,8 @@
 
 ```
 File: TITANE-Infinity_27.0.1_amd64.AppImage
-Size: 85M
-SHA256: f42eedb9117a312080131c25376c432a720bda91b266c3b92c2e7c68c3f0cb08
+Size: 96M
+SHA256: c54ed56f92713517bd999705b1bc0ce070748a3a26d16f026f04cc3f8d06ea09
 Executable: Yes (run directly, no installation required)
 ```
 
@@ -20,8 +20,8 @@ Executable: Yes (run directly, no installation required)
 
 ```
 File: TITANE-Infinity_27.0.1_amd64.deb
-Size: 13M
-SHA256: 1955af1616fa3d32a42e12ced8fb8a1e0c7e7f3f4274e0c6831091b97d1cbfda
+Size: 26M
+SHA256: a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c16
 Install: sudo dpkg -i TITANE-Infinity_27.0.1_amd64.deb
 ```
 
