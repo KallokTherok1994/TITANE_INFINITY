@@ -38,6 +38,8 @@ pnpm dev
 - Tests de composants isolés
 - Pas de backend Rust actif
 
+**Note (watchers):** Vite ignore `.venv/`, `node_modules/`, `dist/`, `target/` et `runtime/` pour éviter les limites ENOSPC si un environnement Python est présent dans le repo.
+
 ### Application Complète (Tauri)
 
 ```bash

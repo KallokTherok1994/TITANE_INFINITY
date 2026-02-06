@@ -90,6 +90,13 @@ export default defineConfig(({ command }) => ({
     // ✅ v27: Ignore shell scripts from HMR watching
     watch: {
       ignored: [
+        '**/.venv/**',
+        '**/.git/**',
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/target/**',
+        '**/coverage/**',
+        '**/*.log',
         '**/*.sh',
         '**/*.bash',
         '**/*.zsh',
