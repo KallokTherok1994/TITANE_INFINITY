@@ -169,9 +169,15 @@ describe('SingularityFusionEngine', () => {
     setupSuccessfulInvoke(updatedState, {
       fusion_activate_modules: {
         ...backendActivation,
-        voice: false,
-        avatar: false,
-        appearance: false,
+        new_state: {
+          auto_healing: false,
+          performance_guards: false,
+          crash_protection: false,
+          memory_sync: false,
+          logs_sync: false,
+          singularity_sync: false,
+          telemetry: false,
+        },
       },
     });
 
@@ -310,8 +316,12 @@ describe('SingularityFusionEngine', () => {
     expect(mockInvoke).toHaveBeenCalledWith(
       'fusion_auto_optimize',
       expect.objectContaining({
-        stats,
-        bottlenecks: ['IA generation too slow'],
+        request: {
+          stats: expect.objectContaining({
+            step4_generation_ms: 2500,
+            total_ms: 3200,
+          }),
+        },
       })
     );
   });

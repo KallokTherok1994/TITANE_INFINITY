@@ -6,7 +6,9 @@ exports[`MetricCard Component > Snapshot > should match snapshot 1`] = `
 >
   <div
     class="text-sm text-gray-400 mb-1"
-  />
+  >
+    Test
+  </div>
   <div
     class="flex items-baseline gap-2"
   >

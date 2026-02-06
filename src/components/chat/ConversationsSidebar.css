@@ -78,6 +78,12 @@
   color: #fff;
 }
 
+.conversations-sidebar__close:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
 /* New Conversation Button */
 .conversations-sidebar__new-btn {
   margin: 1rem 1.25rem;
@@ -104,6 +110,11 @@
 
 .conversations-sidebar__new-btn:active:not(:disabled) {
   transform: translateY(0);
+}
+
+.conversations-sidebar__new-btn:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
 }
 
 .conversations-sidebar__new-btn:disabled {
@@ -155,6 +166,11 @@
 
 .conversation-item:hover {
   background: rgba(255, 255, 255, 0.05);
+}
+
+.conversation-item:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: -2px;
 }
 
 .conversation-item--active {
@@ -227,6 +243,11 @@
 
 .conversation-item__menu-btn:hover {
   background: rgba(255, 255, 255, 0.1);
+}
+
+.conversation-item__menu-btn:focus-visible {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
 }
 
 .conversation-item__menu-btn--danger {

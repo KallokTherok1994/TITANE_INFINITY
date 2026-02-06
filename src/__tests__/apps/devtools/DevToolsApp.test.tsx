@@ -40,9 +40,7 @@ vi.mock('@/components/ui/tabs', () => ({
         ))}
       </div>
       <div data-testid="tabs-content">
-        {typeof children === 'function'
-          ? children(defaultTab ?? tabs[0]?.id)
-          : children}
+        {typeof children === 'function' ? children(defaultTab ?? tabs[0]?.id) : children}
       </div>
     </div>
   ),

@@ -4,7 +4,7 @@
 
 import { describe, it, expect, beforeEach } from 'vitest';
 import { ConversationLifecycleEngine } from '../conversationLifecycleEngine';
-import type { ConversationLifecycleEvent } from '@/types/conversation';
+import type { ConversationLifecycleEvent } from '../../../types/conversation';
 
 describe('ConversationLifecycleEngine', () => {
   let engine: ConversationLifecycleEngine;
@@ -107,6 +107,19 @@ describe('ConversationLifecycleEngine', () => {
       engine.archiveConversation(conv.id);
 
       expect(engine.getActiveConversation()).toBeNull();
+    });
+  });
+
+  describe('restoreConversation', () => {
+    it('should emit restore event', () => {
+      const conv = engine.createConversation();
+      events = []; // Reset
+
+      engine.restoreConversation(conv.id);
+
+      expect(events).toHaveLength(1);
+      expect(events[0].type).toBe('conversation.restored');
+      expect(events[0].conversation_id).toBe(conv.id);
     });
   });
 

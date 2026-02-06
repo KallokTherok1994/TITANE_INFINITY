@@ -36,10 +36,10 @@ export type ProviderName =
   | 'gemini'
   | 'openai'
   | 'claude'
-  | 'copilot'  // GitHub Copilot (v26.3+)
+  | 'copilot' // GitHub Copilot (v26.3+)
   | 'ollama'
   | 'titane-local'
-  | 'fallback';  // Generic fallback only
+  | 'fallback'; // Generic fallback only
 
 /**
  * Type guard for ProviderName (C1.2 CONTRACT)
@@ -122,7 +122,7 @@ export interface AIResponseMetadata {
  */
 export interface StrictAIResponse {
   content: string;
-  provider: ProviderName;  // ← Strict provider (never unknown)
+  provider: ProviderName; // ← Strict provider (never unknown)
   timestamp: number;
   model?: string;
   tokens?: number;

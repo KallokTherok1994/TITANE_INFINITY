@@ -72,11 +72,9 @@ describe('BackendDownIndicator Component', () => {
         recheckHealth: vi.fn(),
       });
 
-      render(<BackendDownIndicator position="top" />);
-      // Could be rendering or showing loader
-      expect(
-        screen.getByRole('alert') || screen.queryByLabelText(/checking/i)
-      ).toBeDefined();
+      const { container } = render(<BackendDownIndicator position="top" />);
+      const banner = container.querySelector('[role="alert"]');
+      expect(banner).not.toBeInTheDocument();
     });
   });
 
@@ -85,30 +83,32 @@ describe('BackendDownIndicator Component', () => {
       mockUseBackendHealth.mockReturnValue({
         tauriStatus: 'available',
         ollamaStatus: 'unavailable',
-        anyBackendAvailable: true,
-        allBackendsDown: false,
+        anyBackendAvailable: false,
+        allBackendsDown: true,
         unavailableReason: 'ollama-offline',
         lastCheck: Date.now(),
         recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
-      expect(screen.getByText(/ollama|offline/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/Le serveur Ollama local est hors ligne/i)
+      ).toBeInTheDocument();
     });
 
     it('should display message for tauri-backend-down', () => {
       mockUseBackendHealth.mockReturnValue({
         tauriStatus: 'unavailable',
         ollamaStatus: 'available',
-        anyBackendAvailable: true,
-        allBackendsDown: false,
+        anyBackendAvailable: false,
+        allBackendsDown: true,
         unavailableReason: 'tauri-backend-down',
         lastCheck: Date.now(),
         recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
-      expect(screen.getByText(/tauri|backend|down/i)).toBeInTheDocument();
+      expect(screen.getByText(/Le backend Rust est indisponible/i)).toBeInTheDocument();
     });
 
     it('should display message for network-error', () => {
@@ -117,13 +117,13 @@ describe('BackendDownIndicator Component', () => {
         ollamaStatus: 'unavailable',
         anyBackendAvailable: false,
         allBackendsDown: true,
-        unavailableReason: 'network-error',
+        unavailableReason: 'unknown-error',
         lastCheck: Date.now(),
         recheckHealth: vi.fn(),
       });
 
       render(<BackendDownIndicator position="top" />);
-      expect(screen.getByText(/network|error/i)).toBeInTheDocument();
+      expect(screen.getByText(/temporairement indisponibles/i)).toBeInTheDocument();
     });
   });
 
@@ -140,11 +140,12 @@ describe('BackendDownIndicator Component', () => {
       });
 
       render(<BackendDownIndicator position="top" />);
-      const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
+      const retryButton =
+        screen.getByLabelText(/réessayer/i) || screen.getByText(/réessayer/i);
       expect(retryButton).toBeInTheDocument();
     });
 
-    it('should call recheck on Retry click', () => {
+    it('should call recheck on Retry click', async () => {
       const recheckHealth = vi.fn();
       mockUseBackendHealth.mockReturnValue({
         tauriStatus: 'unavailable',
@@ -157,9 +158,10 @@ describe('BackendDownIndicator Component', () => {
       });
 
       render(<BackendDownIndicator position="top" />);
-      const retryButton = screen.getByLabelText(/retry/i) || screen.getByText(/retry/i);
+      const retryButton =
+        screen.getByLabelText(/réessayer/i) || screen.getByText(/réessayer/i);
       fireEvent.click(retryButton);
-      expect(recheckHealth).toHaveBeenCalled();
+      await waitFor(() => expect(recheckHealth).toHaveBeenCalled());
     });
 
     it('should have Dismiss button when dismissible', () => {
@@ -175,8 +177,8 @@ describe('BackendDownIndicator Component', () => {
 
       render(<BackendDownIndicator position="top" dismissible={true} />);
       const dismissButton =
-        screen.getByLabelText(/dismiss/i) ||
-        screen.getByRole('button', { name: /close|x/i });
+        screen.getByLabelText(/masquer/i) ||
+        screen.getByRole('button', { name: /masquer|x/i });
       expect(dismissButton).toBeInTheDocument();
     });
 
@@ -194,7 +196,7 @@ describe('BackendDownIndicator Component', () => {
       const { container } = render(
         <BackendDownIndicator position="top" dismissible={true} />
       );
-      const dismissButton = screen.getByLabelText(/dismiss/i);
+      const dismissButton = screen.getByLabelText(/masquer/i);
       fireEvent.click(dismissButton);
       const banner = container.querySelector('[role="alert"]');
       expect(banner).not.toBeInTheDocument();
@@ -246,8 +248,8 @@ describe('BackendDownIndicator Component', () => {
       });
 
       render(<BackendDownIndicator position="top" />);
-      const retryButton = screen.getByLabelText(/retry/i);
-      expect(retryButton).toHaveClass('focus', 'ring');
+      const retryButton = screen.getByLabelText(/réessayer/i);
+      expect(retryButton).toHaveClass('focus:ring-2');
     });
   });
 

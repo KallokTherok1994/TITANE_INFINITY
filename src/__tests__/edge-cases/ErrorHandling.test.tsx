@@ -249,7 +249,7 @@ describe('Edge Cases: Error Handling', () => {
       render(<TestErrorApp />);
 
       // Trigger multiple concurrent requests
-      const promises = Array.from({ length: 5 }, () => fetch('/api/test'));
+      const promises = Array.from({ length: 5 }, () => fetch('/api/test')); // @network-allowed: mocked API calls for concurrency test
 
       const results = await Promise.all(promises);
 

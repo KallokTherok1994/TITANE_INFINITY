@@ -7,7 +7,38 @@ exports[`DevTools OmegaPipeline Section > Snapshot > should match snapshot 1`] =
   <div
     data-testid="section-header"
   >
-    Omega Pipeline
+    <span>
+      Omega Pipeline
+    </span>
+    <div
+      data-testid="header-actions"
+    >
+      <div
+        class="flex items-center gap-3"
+      >
+        <span
+          class="text-xs"
+        >
+          Total: 
+          <span
+            class="font-medium"
+          >
+            170
+            ms
+          </span>
+        </span>
+        <span
+          class="text-xs"
+        >
+          History: 
+          <span
+            class="font-medium"
+          >
+            2
+          </span>
+        </span>
+      </div>
+    </div>
   </div>
   <div>
     <h3

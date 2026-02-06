@@ -85,7 +85,9 @@ describe('Input Component', () => {
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<Input placeholder="Snapshot test" />);
+      const { container } = render(
+        <Input id="input-snapshot" placeholder="Snapshot test" />
+      );
       expect(container.firstChild).toMatchSnapshot();
     });
   });

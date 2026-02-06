@@ -1,24 +1,19 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, within } from '@testing-library/react';
 import { TopNav } from '../TopNav';
-import { BrowserRouter } from 'react-router-dom';
 
 // Mock data
 const mockTopNavItems = [
-  { id: 'titane', label: 'TITANE', href: '/' },
-  { id: 'time', label: 'TIME', href: '/time' },
-  { id: 'stats', label: 'STATS', href: '/stats' },
-  { id: 'admin', label: 'ADMIN', href: '/admin' },
-  { id: 'dev', label: 'DEV', href: '/dev' },
-  { id: 'fusion', label: 'FUSION', href: '/fusion' },
+  { id: 'titane', label: 'TITANE', icon: <span>🧠</span>, route: '/' },
+  { id: 'time', label: 'TIME', icon: <span>⏱️</span>, route: '/time' },
+  { id: 'stats', label: 'STATS', icon: <span>📊</span>, route: '/stats' },
+  { id: 'admin', label: 'ADMIN', icon: <span>⚙️</span>, route: '/admin' },
+  { id: 'dev', label: 'DEV', icon: <span>🛠️</span>, route: '/dev' },
+  { id: 'fusion', label: 'FUSION', icon: <span>✨</span>, route: '/fusion' },
 ];
 
 const renderTopNav = (items = mockTopNavItems) => {
-  return render(
-    <BrowserRouter>
-      <TopNav items={items} />
-    </BrowserRouter>
-  );
+  return render(<TopNav items={items} currentRoute="/" onNavigate={vi.fn()} />);
 };
 
 describe('TopNav Component', () => {
@@ -31,7 +26,8 @@ describe('TopNav Component', () => {
 
     it('should display Plus menu when more than 5 items', () => {
       renderTopNav();
-      const plusMenu = screen.getByLabelText(/Plus/i) || screen.getByText('Plus');
+      const plusMenu =
+        screen.getByLabelText(/Plus d'options/i) || screen.getByText('Plus');
       expect(plusMenu).toBeInTheDocument();
     });
 
@@ -56,7 +52,7 @@ describe('TopNav Component', () => {
 
     it('should have aria-expanded on dropdown menu', () => {
       renderTopNav();
-      const plusMenu = screen.getByLabelText(/Plus|More/i);
+      const plusMenu = screen.getByLabelText(/Plus d'options/i);
       expect(plusMenu).toHaveAttribute('aria-expanded');
     });
 
@@ -72,16 +68,16 @@ describe('TopNav Component', () => {
   describe('Interactions', () => {
     it('should toggle dropdown menu on click', () => {
       renderTopNav();
-      const plusButton = screen.getByLabelText(/Plus|More/i);
+      const plusButton = screen.getByLabelText(/Plus d'options/i);
       fireEvent.click(plusButton);
       expect(plusButton).toHaveAttribute('aria-expanded', 'true');
     });
 
-    it('should close dropdown on escape key', () => {
+    it('should close dropdown on outside click', () => {
       renderTopNav();
-      const plusButton = screen.getByLabelText(/Plus|More/i);
+      const plusButton = screen.getByLabelText(/Plus d'options/i);
       fireEvent.click(plusButton);
-      fireEvent.keyDown(document, { key: 'Escape' });
+      fireEvent.mouseDown(document.body);
       expect(plusButton).toHaveAttribute('aria-expanded', 'false');
     });
 
@@ -97,7 +93,7 @@ describe('TopNav Component', () => {
     it('should have responsive classes', () => {
       renderTopNav();
       const container = screen.getByRole('navigation');
-      expect(container).toHaveClass('flex', 'gap-4');
+      expect(container).toHaveClass('app-topnav', 'flex');
     });
 
     it('should display logo', () => {

@@ -96,7 +96,21 @@ exports[`DevToolsApp > Snapshot > should match snapshot 1`] = `
         </div>
         <div
           data-testid="tabs-content"
-        />
+        >
+          <div
+            class="flex-1 overflow-y-auto"
+          >
+            <div
+              class="p-6"
+            >
+              <div
+                data-testid="section-dashboard"
+              >
+                Dashboard Section
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

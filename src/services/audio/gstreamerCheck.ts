@@ -34,11 +34,7 @@ async function checkGStreamerAvailability(): Promise<boolean> {
         {}
       );
 
-      if (
-        response &&
-        typeof response === 'object' &&
-        'gstreamer_available' in response
-      ) {
+      if (response && typeof response === 'object' && 'gstreamer_available' in response) {
         gstreamerStatus = response.gstreamer_available ? 'available' : 'unavailable';
         return response.gstreamer_available === true;
       }
@@ -68,9 +64,7 @@ function getGStreamerStatus(): 'available' | 'unavailable' | 'unknown' {
  */
 function markGStreamerUnavailable(): void {
   gstreamerStatus = 'unavailable';
-  console.warn(
-    '[GStreamerCheck] GStreamer marked unavailable due to runtime errors'
-  );
+  console.warn('[GStreamerCheck] GStreamer marked unavailable due to runtime errors');
 }
 
 export const gstreamerCheck = {

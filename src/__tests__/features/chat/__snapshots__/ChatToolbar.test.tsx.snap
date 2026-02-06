@@ -67,7 +67,6 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Capture d'écran"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
-          disabled=""
           title="Prendre une capture d'écran (📸)"
           type="button"
         >
@@ -126,7 +125,6 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Analyser image"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
-          disabled=""
           title="Importer une image pour analyse IA (👁️)"
           type="button"
         >
@@ -169,7 +167,6 @@ exports[`ChatToolbar Component > Snapshot > should match snapshot 1`] = `
           aria-label="Capture caméra"
           aria-pressed="false"
           class="chat-toolbar-btn   default"
-          disabled=""
           title="Prendre une photo avec la caméra (📷)"
           type="button"
         >

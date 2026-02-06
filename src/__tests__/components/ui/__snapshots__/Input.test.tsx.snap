@@ -2,7 +2,7 @@
 
 exports[`Input Component > Snapshot > should match snapshot 1`] = `
 <div
-  class="w-full flex flex-col gap-2"
+  class="w-full flex flex-col gap-2 "
 >
   <div
     class="relative"
@@ -22,9 +22,8 @@ exports[`Input Component > Snapshot > should match snapshot 1`] = `
               disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-titanium-bg-elevated
               
               
-              
             "
-      id="input-pcfpr3b9r"
+      id="input-snapshot"
       placeholder="Snapshot test"
     />
   </div>

@@ -209,6 +209,19 @@ export class ConversationStorageService {
   }
 
   /**
+   * Restaurer une conversation archivée
+   */
+  async restoreConversation(conversationId: string): Promise<void> {
+    const conversation = await this.loadConversation(conversationId);
+    if (!conversation) {
+      throw new Error(`Conversation ${conversationId} not found`);
+    }
+
+    conversation.status = 'active';
+    await this.saveConversation(conversation);
+  }
+
+  /**
    * Supprimer une conversation
    */
   async deleteConversation(conversationId: string): Promise<void> {
@@ -292,6 +305,13 @@ export class ConversationStorageService {
       case 'conversation.archived': {
         void this.archiveConversation(event.conversation_id).catch(error => {
           logger.error('Failed to archive conversation', error);
+        });
+        break;
+      }
+
+      case 'conversation.restored': {
+        void this.restoreConversation(event.conversation_id).catch(error => {
+          logger.error('Failed to restore conversation', error);
         });
         break;
       }

@@ -10,7 +10,7 @@ exports[`LogLine Component > Snapshot > should match snapshot 1`] = `
     <span
       class="text-gray-500 text-xs"
     >
-      11:46:13
+      12:00:00
     </span>
     <span
       class="font-medium text-blue-400"

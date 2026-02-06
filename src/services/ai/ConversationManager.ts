@@ -406,7 +406,7 @@ export class ConversationManager {
         systemPrompt:
           systemPrompt.length > 0
             ? systemPrompt
-            : request.config.systemPrompt ?? getSystemPrompt('default'),
+            : (request.config.systemPrompt ?? getSystemPrompt('default')),
         requestId,
       });
 

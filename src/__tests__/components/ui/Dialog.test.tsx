@@ -30,8 +30,8 @@ describe('Dialog Component', () => {
     it('should render when open', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
-            <DialogTitle>Test Dialog</DialogTitle>
+          <DialogContent aria-labelledby="dialog-title">
+            <DialogTitle id="dialog-title">Test Dialog</DialogTitle>
           </DialogContent>
         </Dialog>
       );
@@ -41,9 +41,9 @@ describe('Dialog Component', () => {
     it('should render dialog with title and description', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-labelledby="dialog-title">
             <DialogHeader>
-              <DialogTitle>Dialog Title</DialogTitle>
+              <DialogTitle id="dialog-title">Dialog Title</DialogTitle>
               <DialogDescription>Dialog description text</DialogDescription>
             </DialogHeader>
           </DialogContent>
@@ -56,8 +56,8 @@ describe('Dialog Component', () => {
     it('should render dialog with footer', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
-            <DialogTitle>Test</DialogTitle>
+          <DialogContent aria-labelledby="dialog-title">
+            <DialogTitle id="dialog-title">Test</DialogTitle>
             <DialogFooter>
               <button>Cancel</button>
               <button>Confirm</button>
@@ -75,8 +75,8 @@ describe('Dialog Component', () => {
       const handleOpenChange = vi.fn();
       render(
         <Dialog open={true} onOpenChange={handleOpenChange}>
-          <DialogContent>
-            <DialogTitle>Test</DialogTitle>
+          <DialogContent aria-labelledby="dialog-title">
+            <DialogTitle id="dialog-title">Test</DialogTitle>
           </DialogContent>
         </Dialog>
       );
@@ -92,8 +92,8 @@ describe('Dialog Component', () => {
     it('should have proper role', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
-            <DialogTitle>Accessible Dialog</DialogTitle>
+          <DialogContent aria-labelledby="dialog-title">
+            <DialogTitle id="dialog-title">Accessible Dialog</DialogTitle>
           </DialogContent>
         </Dialog>
       );
@@ -103,13 +103,13 @@ describe('Dialog Component', () => {
     it('should support aria-labelledby', () => {
       render(
         <Dialog open={true}>
-          <DialogContent>
+          <DialogContent aria-labelledby="dialog-title">
             <DialogTitle id="dialog-title">Title</DialogTitle>
           </DialogContent>
         </Dialog>
       );
       const dialog = screen.getByRole('dialog');
-      expect(dialog).toHaveAttribute('aria-labelledby');
+      expect(dialog).toHaveAttribute('aria-labelledby', 'dialog-title');
     });
   });
 
@@ -117,8 +117,8 @@ describe('Dialog Component', () => {
     it('should match snapshot when open', () => {
       const { container } = render(
         <Dialog open={true}>
-          <DialogContent>
-            <DialogTitle>Snapshot Test</DialogTitle>
+          <DialogContent aria-labelledby="dialog-title">
+            <DialogTitle id="dialog-title">Snapshot Test</DialogTitle>
           </DialogContent>
         </Dialog>
       );

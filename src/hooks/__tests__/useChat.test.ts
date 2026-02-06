@@ -21,6 +21,7 @@ beforeEach(() => {
   } catch {
     // Ignore storage errors in test environments
   }
+  mockStoredMessages = [];
 });
 
 // Types locaux pour les tests (basés sur useChat.ts)
@@ -31,6 +32,15 @@ interface AIMessage {
   provider?: string;
   metadata?: Record<string, unknown>;
 }
+
+let mockStoredMessages: AIMessage[] = [];
+
+vi.mock('@/services/conversation/conversationStorage', () => ({
+  conversationStorage: {
+    getActiveConversationId: () => 'conv-test',
+    loadConversationSync: () => ({ messages: mockStoredMessages }),
+  },
+}));
 
 // NOTE: useChatCore/useChatMemory sont mockés via `vitest.config.ts` (alias Vitest)
 // pour éviter de charger l'implémentation réelle (qui importe le chatEngine).
@@ -203,10 +213,7 @@ describe('useChat - KERNEL OMNIS Tests', () => {
         },
       ];
 
-      localStorage.setItem(
-        'titane_chat_mode_default',
-        JSON.stringify({ messages: storedMessages })
-      );
+      mockStoredMessages = storedMessages;
 
       const { result } = renderHook(() => useChat());
 

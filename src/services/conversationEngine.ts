@@ -217,11 +217,18 @@ export async function processMessage(
         ? (metadata['cognitiveSummary'] as string)
         : '',
     metadata: normalizeConversationMetadata({
+      ...metadata,
       provider_used:
-        typeof raw?.provider === 'string' && raw.provider.trim().length > 0
+        (typeof raw?.provider === 'string' && raw.provider.trim().length > 0
           ? raw.provider
-          : 'fallback',
-      latency_ms: typeof raw?.latencyMs === 'number' ? raw.latencyMs : 0,
+          : undefined) ??
+        (typeof metadata['provider_used'] === 'string'
+          ? metadata['provider_used']
+          : undefined) ??
+        'fallback',
+      latency_ms:
+        (typeof raw?.latencyMs === 'number' ? raw.latencyMs : undefined) ??
+        (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
     }),
   };
 

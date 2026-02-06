@@ -7,12 +7,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useWindowControls } from '@/hooks';
 
-vi.mock('@tauri-apps/api/window', () => ({
-  getCurrent: () => ({
-    minimize: vi.fn(),
-    maximize: vi.fn(),
-    close: vi.fn(),
-    isMaximized: vi.fn().mockResolvedValue(false),
+vi.mock('@tauri-apps/api/event', () => ({
+  listen: vi.fn(async () => () => {}),
+}));
+
+vi.mock('@/lib/security', () => ({
+  secureInvoke: vi.fn(async (command: string) => {
+    if (command === 'window_toggle_fullscreen') return true;
+    if (command === 'window_zoom_in') return 1.1;
+    if (command === 'window_zoom_out') return 0.9;
+    return undefined;
   }),
 }));
 
@@ -24,52 +28,42 @@ describe('useWindowControls Hook', () => {
   describe('Initialization', () => {
     it('should initialize window controls', () => {
       const { result } = renderHook(() => useWindowControls());
-      expect(result.current.minimize).toBeDefined();
-      expect(result.current.maximize).toBeDefined();
-      expect(result.current.close).toBeDefined();
-    });
-
-    it('should detect maximized state', async () => {
-      const { result } = renderHook(() => useWindowControls());
-
-      await act(async () => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-      });
-
-      expect(typeof result.current.isMaximized).toBe('boolean');
+      expect(result.current.zoomIn).toBeDefined();
+      expect(result.current.zoomOut).toBeDefined();
+      expect(result.current.zoomReset).toBeDefined();
+      expect(result.current.toggleFullscreen).toBeDefined();
     });
   });
 
   describe('Window Actions', () => {
-    it('should minimize window', async () => {
+    it('should zoom in', async () => {
       const { result } = renderHook(() => useWindowControls());
 
       await act(async () => {
-        await result.current.minimize();
+        await result.current.zoomIn();
       });
 
-      // Minimize should be called
-      expect(result.current.minimize).toBeDefined();
+      expect(result.current.zoomIn).toBeDefined();
     });
 
-    it('should maximize window', async () => {
+    it('should zoom out', async () => {
       const { result } = renderHook(() => useWindowControls());
 
       await act(async () => {
-        await result.current.maximize();
+        await result.current.zoomOut();
       });
 
-      expect(result.current.maximize).toBeDefined();
+      expect(result.current.zoomOut).toBeDefined();
     });
 
-    it('should close window', async () => {
+    it('should reset zoom', async () => {
       const { result } = renderHook(() => useWindowControls());
 
       await act(async () => {
-        await result.current.close();
+        await result.current.zoomReset();
       });
 
-      expect(result.current.close).toBeDefined();
+      expect(result.current.zoomReset).toBeDefined();
     });
   });
 
@@ -78,11 +72,10 @@ describe('useWindowControls Hook', () => {
       const { result } = renderHook(() => useWindowControls());
 
       await act(async () => {
-        await result.current.toggleMaximize();
+        await result.current.toggleFullscreen();
       });
 
-      // Toggle should change state
-      expect(result.current.toggleMaximize).toBeDefined();
+      expect(result.current.toggleFullscreen).toBeDefined();
     });
   });
 });

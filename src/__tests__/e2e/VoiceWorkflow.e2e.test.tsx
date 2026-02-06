@@ -27,7 +27,7 @@ const TestVoiceApp: React.FC = () => {
   const handleStop = async () => {
     setStatus('transcribing');
     try {
-      await fetch('/transcribe');
+      await fetch('/transcribe'); // @network-allowed: mocked voice transcription endpoint for E2E
       setTranscription('transcription text');
     } catch {
       setStatus('transcription failed');

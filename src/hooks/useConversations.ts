@@ -34,6 +34,7 @@ export interface UseConversationsReturn {
   createConversation: (options?: CreateConversationOptions) => Promise<Conversation>;
   setActiveConversation: (conversationId: string) => Promise<void>;
   archiveConversation: (conversationId: string) => Promise<void>;
+  restoreConversation: (conversationId: string) => Promise<void>;
   deleteConversation: (conversationId: string) => Promise<void>;
   refreshConversations: () => Promise<void>;
 }
@@ -159,6 +160,22 @@ export function useConversations(): UseConversationsReturn {
   );
 
   /**
+   * Restaurer une conversation archivée
+   */
+  const restoreConversation = useCallback(
+    async (conversationId: string): Promise<void> => {
+      conversationLifecycle.restoreConversation(conversationId);
+      await conversationStorage.restoreConversation(conversationId);
+
+      const updatedList = await conversationStorage.listConversations();
+      setConversations(updatedList);
+
+      logger.info('Conversation restored', { id: conversationId });
+    },
+    []
+  );
+
+  /**
    * Supprimer une conversation
    */
   const deleteConversation = useCallback(
@@ -204,6 +221,7 @@ export function useConversations(): UseConversationsReturn {
     createConversation,
     setActiveConversation: setActiveConversationAction,
     archiveConversation,
+    restoreConversation,
     deleteConversation,
     refreshConversations,
   };

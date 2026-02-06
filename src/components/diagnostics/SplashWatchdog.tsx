@@ -9,7 +9,7 @@
 /**
  * ═══════════════════════════════════════════════════════════════
  * SPLASH WATCHDOG - Anti-Freeze Diagnostic (P0.Ω∞.PROD_SPLASH_PERMASEAL)
- * 
+ *
  * But: Empêcher le blocage infini sur l'écran "TITANE∞ — Chargement…"
  * Garantie: Always-Respond UI (même en cas d'échec boot)
  * Timeout: 10s (si [BOOT] after render non atteint)
@@ -42,7 +42,10 @@ const BOOT_COMPLETE_STAGE = '[BOOT] App render';
  */
 const checkDiagEnabled = async (): Promise<boolean> => {
   // 1. localStorage (browser persistence)
-  if (typeof window !== 'undefined' && window.localStorage?.getItem('TITANE_DIAG') === '1') {
+  if (
+    typeof window !== 'undefined' &&
+    window.localStorage?.getItem('TITANE_DIAG') === '1'
+  ) {
     return true;
   }
   // 2. Vite build-time envs (fallback)
@@ -85,7 +88,11 @@ const deriveBackendStatus = (health: unknown): 'ok' | 'error' | 'unknown' => {
     if (['healthy', 'ok', 'good'].includes(status)) {
       return 'ok';
     }
-    if (['degraded', 'critical', 'unhealthy', 'error', 'offline', 'unavailable'].includes(status)) {
+    if (
+      ['degraded', 'critical', 'unhealthy', 'error', 'offline', 'unavailable'].includes(
+        status
+      )
+    ) {
       return 'error';
     }
   }
@@ -237,9 +244,9 @@ const useBootWatchdog = () => {
       const cspMeta = document.querySelector(
         'meta[http-equiv="Content-Security-Policy"]'
       ) as HTMLMetaElement | null;
-      const moduleScript = document.querySelector('script[type="module"]') as
-        | HTMLScriptElement
-        | null;
+      const moduleScript = document.querySelector(
+        'script[type="module"]'
+      ) as HTMLScriptElement | null;
       const moduleSrc = moduleScript?.src ?? null;
 
       let moduleProbe: {
@@ -251,7 +258,7 @@ const useBootWatchdog = () => {
 
       if (moduleSrc) {
         try {
-          const response = await fetch(moduleSrc, { method: 'HEAD' });
+          const response = await fetch(moduleSrc, { method: 'HEAD' }); // @network-allowed: probe local module script for diagnostics
           moduleProbe = {
             ok: response.ok,
             status: response.status,
@@ -326,8 +333,15 @@ const useBootWatchdog = () => {
  * Composant de diagnostic affiché après timeout
  */
 export const SplashWatchdog: React.FC = () => {
-  const { diagnostics, timedOut, diagEnabled, diagStatus, diagError, reload, copyDiagnostics } =
-    useBootWatchdog();
+  const {
+    diagnostics,
+    timedOut,
+    diagEnabled,
+    diagStatus,
+    diagError,
+    reload,
+    copyDiagnostics,
+  } = useBootWatchdog();
 
   if (!timedOut) {
     // Boot normal, ne rien afficher
@@ -438,7 +452,9 @@ export const SplashWatchdog: React.FC = () => {
                 <span style={{ color: '#10b981' }}>✓ Disponible</span>
               )}
               {diagnostics.gstreamerStatus === 'unavailable' && (
-                <span style={{ color: '#f59e0b' }}>⚠ Non disponible (dépendances système manquantes)</span>
+                <span style={{ color: '#f59e0b' }}>
+                  ⚠ Non disponible (dépendances système manquantes)
+                </span>
               )}
               {diagnostics.gstreamerStatus === 'unknown' && (
                 <span style={{ color: '#9ca3af' }}>? Vérifié…</span>
@@ -451,8 +467,12 @@ export const SplashWatchdog: React.FC = () => {
             {diagEnabled && (
               <div>
                 <span style={{ color: '#9ca3af' }}>DIAG PROD:</span>{' '}
-                {diagStatus === 'pending' && <span style={{ color: '#f59e0b' }}>⏳ Écriture…</span>}
-                {diagStatus === 'saved' && <span style={{ color: '#10b981' }}>✓ Rapport écrit</span>}
+                {diagStatus === 'pending' && (
+                  <span style={{ color: '#f59e0b' }}>⏳ Écriture…</span>
+                )}
+                {diagStatus === 'saved' && (
+                  <span style={{ color: '#10b981' }}>✓ Rapport écrit</span>
+                )}
                 {diagStatus === 'error' && (
                   <span style={{ color: '#ff4444' }}>✗ Échec ({diagError})</span>
                 )}
@@ -556,9 +576,7 @@ export const SplashWatchdog: React.FC = () => {
           <ul style={{ margin: '0.5rem 0 0 0', paddingLeft: '1.25rem' }}>
             <li>Vérifiez la console DevTools (F12) pour plus de détails</li>
             <li>Si le problème persiste, essayez de vider le cache (Ctrl+Shift+R)</li>
-            <li>
-              Copiez le diagnostic et contactez l'équipe support si nécessaire
-            </li>
+            <li>Copiez le diagnostic et contactez l'équipe support si nécessaire</li>
           </ul>
         </div>
       </div>

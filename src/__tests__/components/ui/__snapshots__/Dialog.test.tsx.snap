@@ -13,6 +13,7 @@ exports[`Dialog Component > Snapshot > should match snapshot when open 1`] = `
       class="relative z-modal"
     >
       <div
+        aria-labelledby="dialog-title"
         aria-modal="true"
         class="
         relative 
@@ -26,6 +27,7 @@ exports[`Dialog Component > Snapshot > should match snapshot when open 1`] = `
       >
         <h2
           class="text-xl font-semibold leading-tight text-titanium-text-primary "
+          id="dialog-title"
         >
           Snapshot Test
         </h2>

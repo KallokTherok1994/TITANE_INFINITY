@@ -169,6 +169,7 @@ export interface ConversationLifecycleEvent {
     | 'conversation.activated'
     | 'conversation.message.appended'
     | 'conversation.archived'
+    | 'conversation.restored'
     | 'conversation.updated'
     | 'conversation.deleted';
   conversation_id: string;

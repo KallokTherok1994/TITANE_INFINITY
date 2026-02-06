@@ -40,6 +40,7 @@ export async function callOllamaDirectly(
     const timeout = setTimeout(() => controller.abort(), 1500);
 
     const response = await fetch(ollamaEndpoint, {
+      // @network-allowed: local Ollama HTTP fallback (localhost only)
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

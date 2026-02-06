@@ -1,0 +1,42 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`LogFilters Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="flex gap-4 p-4 bg-gray-800 rounded-lg"
+>
+  <div
+    class="flex-1"
+  >
+    <input
+      class="w-full px-3 py-2 bg-gray-700 text-white rounded border border-gray-600 focus:border-blue-500 outline-none"
+      placeholder="Search logs..."
+      type="text"
+      value=""
+    />
+  </div>
+  <div
+    class="flex gap-2"
+  >
+    <button
+      class="px-3 py-2 rounded text-sm font-medium bg-gray-700 text-gray-300"
+    >
+      debug
+    </button>
+    <button
+      class="px-3 py-2 rounded text-sm font-medium bg-gray-700 text-gray-300"
+    >
+      info
+    </button>
+    <button
+      class="px-3 py-2 rounded text-sm font-medium bg-gray-700 text-gray-300"
+    >
+      warn
+    </button>
+    <button
+      class="px-3 py-2 rounded text-sm font-medium bg-gray-700 text-gray-300"
+    >
+      error
+    </button>
+  </div>
+</div>
+`;

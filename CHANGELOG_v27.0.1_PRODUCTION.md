@@ -10,6 +10,7 @@
 ## 🎯 Summary
 
 v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
+
 - Boot sequence alignment and stage marker fixes
 - Intelligent backend status derivation (4-tier format detection)
 - GStreamer availability detection and awareness
@@ -23,6 +24,7 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 ## ✨ New Features
 
 ### 1. Backend Status Intelligent Derivation
+
 - **4-tier format detection** handling multiple backend response formats:
   - Direct `healthy: boolean` field check
   - Status string matching (`status` field)
@@ -32,6 +34,7 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 - **Files:** `src/components/diagnostics/SplashWatchdog.tsx`
 
 ### 2. GStreamer Availability Detection
+
 - **Async runtime check** via Tauri health endpoint
 - **Non-blocking operation** (doesn't delay UI rendering)
 - **Status states:** `'available'` | `'unavailable'` | `'unknown'`
@@ -39,11 +42,12 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
   - ✓ Disponible (green) — Ready
   - ⚠ Non disponible (yellow) — Missing system deps
   - ? Vérifié... (gray) — Checking
-- **Files:** 
+- **Files:**
   - `src/services/audio/gstreamerCheck.ts` (NEW)
   - `src/components/diagnostics/SplashWatchdog.tsx`
 
 ### 3. Boot Sequence Alignment
+
 - **Fixed stage marker** from `[BOOT] after render` → `[BOOT] App render`
 - **Aligns with actual App.tsx lifecycle** (line 1230)
 - **Result:** Eliminates false 10s timeout triggers
@@ -55,11 +59,11 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 
 ### Critical Fixes
 
-| Issue | Root Cause | Solution | Impact |
-|-------|-----------|----------|--------|
-| False `backendStatus: "error"` | Format incompatibility in health response | 4-tier derivation logic | Diagnostic accuracy restored |
-| Boot timeout false positives | Stage marker mismatch | Aligned markers with App.tsx | No more spurious 10s delays |
-| GStreamer warnings in stderr | System-level audio pipeline deps | Capture + display status | Warnings categorized, not errors |
+| Issue                          | Root Cause                                | Solution                     | Impact                           |
+| ------------------------------ | ----------------------------------------- | ---------------------------- | -------------------------------- |
+| False `backendStatus: "error"` | Format incompatibility in health response | 4-tier derivation logic      | Diagnostic accuracy restored     |
+| Boot timeout false positives   | Stage marker mismatch                     | Aligned markers with App.tsx | No more spurious 10s delays      |
+| GStreamer warnings in stderr   | System-level audio pipeline deps          | Capture + display status     | Warnings categorized, not errors |
 
 ### System Integration
 
@@ -74,6 +78,7 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 ### Code Changes
 
 #### New Files
+
 - **`src/services/audio/gstreamerCheck.ts`** (67 lines)
   ```typescript
   - checkGStreamerAvailability(): Promise<boolean>
@@ -82,6 +87,7 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
   ```
 
 #### Modified Files
+
 - **`src/components/diagnostics/SplashWatchdog.tsx`** (6 changes)
   - Import gstreamerCheck service
   - Add gstreamerStatus to BootDiagnostics interface
@@ -91,6 +97,7 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
   - Add GStreamer status UI display
 
 - **`src-tauri/src/commands/system_center_commands.rs`**
+
   ```rust
   #[tauri::command]
   pub fn sc_get_env(key: String) -> Option<String> {
@@ -110,12 +117,14 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 ## 🔍 Diagnostics System
 
 ### Boot Sequence
+
 1. HTML inline marker: `data-boot="html"`
 2. Main entry marker: `data-boot="main"`
 3. **App render marker:** `data-boot="[BOOT] App render"` ← Detection point
 4. Timeout: 10 seconds (SplashWatchdog)
 
 ### Diagnostic JSON Output
+
 ```json
 {
   "backendStatus": "ok|error|unknown",
@@ -130,12 +139,13 @@ v27.0.1 introduces **comprehensive diagnostics system overhaul** with:
 
 ## 📦 Build Artifacts
 
-| Format | Size | SHA256 | Notes |
-|--------|------|--------|-------|
-| **AppImage** | 96M | `c54ed56f...` | Linux universal, direct execution |
-| **DEB** | 26M | `a6f9c992...` | Debian/Ubuntu system package |
+| Format       | Size | SHA256        | Notes                             |
+| ------------ | ---- | ------------- | --------------------------------- |
+| **AppImage** | 96M  | `c54ed56f...` | Linux universal, direct execution |
+| **DEB**      | 26M  | `a6f9c992...` | Debian/Ubuntu system package      |
 
 ### Verification
+
 ```bash
 sha256sum -c <<< "c54ed56f92713517bd999705b1bc0ce070748a3a26d16f026f04cc3f8d06ea09  TITANE-Infinity_27.0.1_amd64.AppImage"
 sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c16  TITANE-Infinity_27.0.1_amd64.deb"
@@ -146,6 +156,7 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 ## ✅ Validation & Testing
 
 ### Build Results
+
 - ✅ Vite: 3435 modules, 10.85s
 - ✅ Tauri: Rust compilation successful
 - ✅ Frontend: React + TypeScript (strict, zero errors)
@@ -153,6 +164,7 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 - ✅ Smoke test: 30s AppImage execution verified
 
 ### Gate Validation
+
 - ✅ GATE_UI_INDEX: PASSED
 - ✅ ESLint: Zero errors
 - ✅ TypeScript: Zero errors
@@ -160,6 +172,7 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 - ✅ Authorization: APPROVED
 
 ### Test Coverage
+
 - ✅ Boot sequence alignment
 - ✅ Backend status derivation (all 4 formats)
 - ✅ GStreamer detection (async, non-blocking)
@@ -171,14 +184,16 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 ## 🚀 Deployment
 
 ### Release Timeline
-| Date | Event |
-|------|-------|
-| Feb 5, 2026 | Commit 2a410ff7 (diagnostics fixes) |
-| Feb 5, 2026 | Commit 646945db (authorization) |
-| Feb 5, 2026 | Commit 6226ce09 (production deployment) |
-| Feb 5+, 2026 | Available for download (production) |
+
+| Date         | Event                                   |
+| ------------ | --------------------------------------- |
+| Feb 5, 2026  | Commit 2a410ff7 (diagnostics fixes)     |
+| Feb 5, 2026  | Commit 646945db (authorization)         |
+| Feb 5, 2026  | Commit 6226ce09 (production deployment) |
+| Feb 5+, 2026 | Available for download (production)     |
 
 ### Deployment Locations
+
 - **AppImage:** `deployment/latest/TITANE-Infinity_27.0.1_amd64.AppImage`
 - **DEB:** `deployment/latest/TITANE-Infinity_27.0.1_amd64.deb`
 - **Hashes:** `deployment/latest/SHA256_v27.0.1_final.txt`
@@ -200,6 +215,7 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 ## ⚠️ Known Limitations
 
 ### System-Level Issues
+
 - **GStreamer plugins** unavailable on certain systems (non-critical)
   - Status: Diagnostics aware, graceful handling
   - Impact: No audio in some environments, properly categorized
@@ -209,6 +225,7 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
   - Impact: None, properly acknowledged in diagnostics
 
 ### No Breaking Changes
+
 - All APIs remain backward compatible
 - No migration required
 - Existing configurations work unchanged
@@ -228,12 +245,15 @@ sha256sum -c <<< "a6f9c9922a9cb20a1f8afe344fab6156ba1435134d40f10992189feeda6d0c
 ## 📞 Support & Feedback
 
 ### Reporting Issues
+
 → [GitHub Issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
 
 ### Feature Requests
+
 → [GitHub Discussions](https://github.com/KallokTherok1994/TITANE_INFINITY/discussions)
 
 ### Direct Communication
+
 → Reply to release notification or DM
 
 ---
@@ -249,12 +269,14 @@ Thank you to everyone who tested and provided feedback leading up to v27.0.1!
 ## 📋 Next Steps
 
 ### v27.1.0 (Planned)
+
 - Audio pipeline enhancements
 - Additional diagnostics metrics
 - Performance optimizations
 - Documentation expansion
 
 ### v28.0.0 (Future)
+
 - Architecture enhancements
 - Advanced features
 - Extended platform support

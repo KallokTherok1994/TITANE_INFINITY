@@ -6,22 +6,22 @@
 
 ## Autorisation Formelle
 
-| **Champ** | **Valeur** |
-|-----------|-----------|
-| **Autorisé par** | Kevin Thibault (Utilisateur) |
-| **Date/Heure** | 5 février 2026 — 20:55 UTC |
-| **Commande** | `J'Autorise la production` |
-| **Statut** | ✅ **GO FOR PRODUCTION DEPLOY** |
+| **Champ**        | **Valeur**                      |
+| ---------------- | ------------------------------- |
+| **Autorisé par** | Kevin Thibault (Utilisateur)    |
+| **Date/Heure**   | 5 février 2026 — 20:55 UTC      |
+| **Commande**     | `J'Autorise la production`      |
+| **Statut**       | ✅ **GO FOR PRODUCTION DEPLOY** |
 
 ---
 
 ## Artifacts Validés
 
-| **Artifact** | **Chemin** | **Taille** | **Hash** |
-|--------------|-----------|-----------|---------|
-| **AppImage** | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.1_amd64.AppImage` | 85M | Généré 16:55 |
-| **DEB** | `src-tauri/target/release/bundle/deb/titane-infinity_*.deb` | ~45M | Inclus dans build |
-| **Source** | Commits `05796ce8..217b61f1` | MAIN → origin/MAIN | Validés |
+| **Artifact** | **Chemin**                                                                       | **Taille**         | **Hash**          |
+| ------------ | -------------------------------------------------------------------------------- | ------------------ | ----------------- |
+| **AppImage** | `src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.1_amd64.AppImage` | 85M                | Généré 16:55      |
+| **DEB**      | `src-tauri/target/release/bundle/deb/titane-infinity_*.deb`                      | ~45M               | Inclus dans build |
+| **Source**   | Commits `05796ce8..217b61f1`                                                     | MAIN → origin/MAIN | Validés           |
 
 ---
 
@@ -43,9 +43,7 @@
   "gstreamerStatus": "unavailable",
   "bootStage": "[BOOT] App render",
   "elapsedMs": 9250,
-  "warnings": [
-    "GStreamer-CRITICAL assertions (system-level, WebKit appsink)"
-  ]
+  "warnings": ["GStreamer-CRITICAL assertions (system-level, WebKit appsink)"]
 }
 ```
 
@@ -75,5 +73,5 @@
 
 **Status: 🟢 PRODUCTION READY**
 
-*Autorisé par Kevin Thibault*  
-*5 février 2026 — 20:55 UTC*
+_Autorisé par Kevin Thibault_  
+_5 février 2026 — 20:55 UTC_

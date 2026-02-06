@@ -306,7 +306,10 @@ class TauriChatProvider implements AIProvider {
       return fallbackPrompt;
     }
 
-    const combined = systemMessages.map(m => m.content).join('\n\n').trim();
+    const combined = systemMessages
+      .map(m => m.content)
+      .join('\n\n')
+      .trim();
     return combined.length > 0 ? combined : fallbackPrompt;
   }
 
@@ -314,22 +317,24 @@ class TauriChatProvider implements AIProvider {
    * Retourne le statut des providers backend (OMEGA Protected)
    */
   async getProvidersStatus(): Promise<ProviderStatus[]> {
-    return providersStatusCache.get(
-      async () => {
-        const status = await Promise.race([
-          safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
-          new Promise<ProviderStatus[]>((_, reject) =>
-            setTimeout(() => reject(new Error('Status check timeout')), 10000)
-          ),
-        ]);
+    return providersStatusCache
+      .get(
+        async () => {
+          const status = await Promise.race([
+            safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+            new Promise<ProviderStatus[]>((_, reject) =>
+              setTimeout(() => reject(new Error('Status check timeout')), 10000)
+            ),
+          ]);
 
-        return Array.isArray(status) ? status : [];
-      },
-      () => []
-    ).catch(error => {
-      this.handleInvokeError(error, 'getProvidersStatus');
-      return [];
-    });
+          return Array.isArray(status) ? status : [];
+        },
+        () => []
+      )
+      .catch(error => {
+        this.handleInvokeError(error, 'getProvidersStatus');
+        return [];
+      });
   }
 
   /**

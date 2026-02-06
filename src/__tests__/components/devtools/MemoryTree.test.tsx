@@ -64,9 +64,7 @@ describe('MemoryTree Component', () => {
       const child = screen.getByText('Child 1 content');
       fireEvent.click(child);
 
-      expect(onNodeClick).toHaveBeenCalledWith(
-        expect.objectContaining({ id: 'child1' })
-      );
+      expect(onNodeClick).toHaveBeenCalledWith(expect.objectContaining({ id: 'child1' }));
     });
   });
 });

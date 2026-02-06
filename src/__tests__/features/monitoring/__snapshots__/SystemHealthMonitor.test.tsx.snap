@@ -1,0 +1,121 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SystemHealthMonitor Component > Snapshot > should match snapshot 1`] = `
+<div
+  class="bg-titane-bg-panel rounded-xl p-6 border border-titane-border-subtle"
+>
+  <div
+    class="flex items-center justify-between mb-6"
+  >
+    <h2
+      class="text-titane-text-primary text-lg font-semibold"
+    >
+      System Health
+    </h2>
+    <div
+      class="flex items-center gap-2"
+    >
+      <div
+        class="w-2 h-2 rounded-full bg-titane-accent-500 animate-pulse"
+      />
+      <span
+        class="text-titane-text-tertiary text-xs"
+      >
+        Last update: 
+        19:00:00
+      </span>
+    </div>
+  </div>
+  <div
+    class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+  >
+    <div
+      class="bg-titane-bg-card rounded-lg p-4"
+    >
+      <div
+        class="text-titane-text-tertiary text-xs mb-1"
+      >
+        CPU Usage
+      </div>
+      <div
+        class="text-titane-text-primary text-2xl font-bold"
+      >
+        —
+        %
+      </div>
+      <div
+        class="mt-2 h-1 bg-titane-bg-surface rounded-full overflow-hidden"
+      >
+        <div
+          class="h-full bg-titane-primary-500 transition-all duration-300"
+          style="width: 0%;"
+        />
+      </div>
+    </div>
+    <div
+      class="bg-titane-bg-card rounded-lg p-4"
+    >
+      <div
+        class="text-titane-text-tertiary text-xs mb-1"
+      >
+        Memory
+      </div>
+      <div
+        class="text-titane-text-primary text-2xl font-bold"
+      >
+        0
+        %
+      </div>
+      <div
+        class="text-titane-text-tertiary text-xs mt-1"
+      >
+        0
+         /
+         
+        0
+         MB
+      </div>
+    </div>
+    <div
+      class="bg-titane-bg-card rounded-lg p-4"
+    >
+      <div
+        class="text-titane-text-tertiary text-xs mb-1"
+      >
+        Uptime
+      </div>
+      <div
+        class="text-titane-text-primary text-2xl font-bold"
+      >
+        0h 0m
+      </div>
+    </div>
+    <div
+      class="bg-titane-bg-card rounded-lg p-4"
+    >
+      <div
+        class="text-titane-text-tertiary text-xs mb-1"
+      >
+        Active Engines
+      </div>
+      <div
+        class="text-titane-text-primary text-2xl font-bold"
+      >
+        0
+        /
+        0
+      </div>
+    </div>
+  </div>
+  <div>
+    <h3
+      class="text-titane-text-secondary text-sm font-medium mb-3"
+    >
+      Engine Status
+    </h3>
+    <div
+      class="grid grid-cols-2 md:grid-cols-4 gap-2"
+    />
+  </div>
+</div>
+`;

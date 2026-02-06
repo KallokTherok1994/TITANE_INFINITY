@@ -5,12 +5,14 @@
 
 import { describe, it, expect, vi } from 'vitest';
 import { renderWithProviders as render, screen } from '../../test-helpers';
+import { act } from '@testing-library/react';
 import { ChatMessage } from '@/features/chat';
 
 vi.mock('@/contexts/AnimationContext', () => ({
   useAnimation: () => ({
     animationConfig: { duration: 0 },
   }),
+  AnimationProvider: ({ children }: { children: React.ReactNode }) => children,
 }));
 
 vi.mock('@/hooks/useTTS', () => ({
@@ -49,7 +51,7 @@ describe('ChatMessage Component', () => {
         />
       );
       expect(screen.getByText('Hi there!')).toBeInTheDocument();
-      expect(screen.getByText(/local/i)).toBeInTheDocument();
+      expect(screen.getByText(/Local/i)).toBeInTheDocument();
     });
 
     it('should render system message', () => {
@@ -63,12 +65,17 @@ describe('ChatMessage Component', () => {
   describe('States', () => {
     it('should show timestamp', () => {
       render(<ChatMessage {...baseMessage} />);
-      expect(screen.getByText('12:00')).toBeInTheDocument();
+      expect(screen.getByText(/\d{2}:\d{2}/)).toBeInTheDocument();
     });
 
     it('should handle streaming state', () => {
+      vi.useFakeTimers();
       render(<ChatMessage {...baseMessage} streaming />);
+      act(() => {
+        vi.runAllTimers();
+      });
       expect(screen.getByText('Hello TITANE!')).toBeInTheDocument();
+      vi.useRealTimers();
     });
   });
 

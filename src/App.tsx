@@ -1234,7 +1234,7 @@ const App: React.FC = () => {
     <ToastProvider>
       {/* ✨ P0.Ω∞ - Splash Watchdog: Diagnostic si boot timeout (10s) */}
       <SplashWatchdog />
-      
+
       <ThemeProvider>
         <AnimationProvider fpsThreshold={40} cpuThreshold={80}>
           <TitanStateProvider>
