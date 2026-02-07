@@ -6,13 +6,15 @@
   "delta_status": "Kevin V5 pending",
   
   "router": {
-    "canonical_file": "src/App.tsx",
-    "router_type": "BrowserRouter (react-router-dom)",
-    "proof": "src/App.tsx:1258",
-    "alternate_router": {
-      "file": "src/router.tsx",
-      "status": "DEAD_CODE",
-      "note": "Not imported, not used at runtime"
+    "canonical_file": "src/AppRoutes.tsx",
+    "router_type": "Lazy imports via React.Suspense",
+    "proof": "src/App.tsx:70 + src/AppRoutes.tsx",
+    "deprecated_router": {
+      "file": "src/_deprecated/router.tsx",
+      "status": "DEPRECATED",
+      "moved_date": "2026-02-07",
+      "reason": "Dead code (0 imports), UI Hygiene Sprint P1-1",
+      "note": "Moved from src/router.tsx to src/_deprecated/router.tsx with deprecation header"
     }
   },
   
