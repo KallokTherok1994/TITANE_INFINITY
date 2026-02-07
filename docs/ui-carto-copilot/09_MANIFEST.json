@@ -1,0 +1,223 @@
+{
+  "cartography_version": "V6",
+  "generated_at": "2026-02-07T19:48:35Z",
+  "commit_hash": "8c038a13d537c565dec5f1ca1daaf0ee687ac078",
+  "baseline": "Truth mode audit (Gates A-E complete, F blocked)",
+  "delta_status": "Kevin V5 pending",
+  
+  "router": {
+    "canonical_file": "src/App.tsx",
+    "router_type": "BrowserRouter (react-router-dom)",
+    "proof": "src/App.tsx:1258",
+    "alternate_router": {
+      "file": "src/router.tsx",
+      "status": "DEAD_CODE",
+      "note": "Not imported, not used at runtime"
+    }
+  },
+  
+  "counts": {
+    "routes_total": 87,
+    "routes_active": 9,
+    "routes_redirects": 78,
+    "pages_count": 41,
+    "components_count": 296,
+    "invokes_count": 1182,
+    "ipc_commands": 180,
+    "http_endpoints": 1,
+    "stores_count": 18,
+    "hooks_count": 80,
+    "topnav_items": 7,
+    "persistent_widgets": 6,
+    "tabs_total": 27
+  },
+  
+  "structure": {
+    "topnav_sections": ["TITANE", "TIME", "STATS", "ADMIN", "DEV", "PLUS", "MORE"],
+    "primary_pages": [
+      "/titane",
+      "/time",
+      "/stats",
+      "/admin",
+      "/dev",
+      "/alerts",
+      "/orchestration-center",
+      "/fusion",
+      "/optimization"
+    ],
+    "persistent_widgets": [
+      "CognitiveLayout",
+      "ConsoleMonitor",
+      "XPBar",
+      "ToastContainer",
+      "ErrorBoundary",
+      "BackendDownIndicator"
+    ],
+    "tabs_by_page": {
+      "titane": 8,
+      "dev": 9,
+      "admin": 5,
+      "stats": 4,
+      "time": 1
+    }
+  },
+  
+  "contracts": {
+    "ipc": {
+      "total_commands": 180,
+      "total_invocations": 1182,
+      "wrapper_pattern": "secureInvoke",
+      "direct_invoke_violations": 5,
+      "proof": "docs/ui-carto-copilot/VERIFICATION/TRUTH_IPC.md"
+    },
+    "http": {
+      "proxy_target": "http://localhost:11434",
+      "proxy_path": "/api",
+      "purpose": "Ollama local LLM",
+      "proof": "vite.config.ts:109-122"
+    }
+  },
+  
+  "observability": {
+    "boot_markers": true,
+    "boot_diagnostic_object": "window.__TITANE_BOOT__",
+    "error_boundaries": 3,
+    "console_monitor": true,
+    "prod_boot_risks": ["CSP", "allowlist", "module_scripts", "lazy_chunks"],
+    "proof": "docs/ui-carto-copilot/VERIFICATION/TRUTH_PROD_BOOT.md"
+  },
+  
+  "issues": {
+    "p0_count": 0,
+    "p1_count": 2,
+    "p2_count": 8,
+    "p3_count": 2,
+    "total": 12,
+    "top_p1": [
+      "UI-003: router.tsx dead code",
+      "UI-007: No auth guards"
+    ],
+    "top_p2": [
+      "UI-IPC-001: Direct invoke() violations (5 instances)",
+      "UI-SILENCE-001: Empty catch blocks (10 instances)"
+    ]
+  },
+  
+  "known_risks": [
+    {
+      "id": "PROD-001",
+      "description": "Dual router confusion",
+      "probability": "medium",
+      "impact": "medium",
+      "mitigation": "Document canonical router"
+    },
+    {
+      "id": "PROD-003",
+      "description": "Silent IPC failures",
+      "probability": "medium",
+      "impact": "medium",
+      "mitigation": "Standardize error UI patterns"
+    },
+    {
+      "id": "PROD-PROXY",
+      "description": "Ollama proxy loop risk",
+      "probability": "low",
+      "impact": "high",
+      "mitigation": "Verify Ollama config"
+    }
+  ],
+  
+  "architecture": {
+    "model": "4-Ring",
+    "rings": {
+      "ring1_core": "types/, constants/ (zero imports)",
+      "ring2_engines": "engines/*/ (business logic, no I/O)",
+      "ring3_services": "services/*/ (I/O abstractions)",
+      "ring4_ui": "components/, pages/ (UI layer)"
+    },
+    "compliance": {
+      "ring1": "100%",
+      "ring2": "95%",
+      "ring3": "100%",
+      "ring4": "100%"
+    }
+  },
+  
+  "technology": {
+    "frontend": {
+      "react": "18.3.1",
+      "vite": "6.0.5",
+      "typescript": "5.7.3",
+      "router": "react-router-dom v7"
+    },
+    "state": {
+      "zustand": "5.0.2",
+      "stores": 18
+    },
+    "testing": {
+      "vitest": "4.0.13",
+      "playwright": "1.56.1"
+    },
+    "backend": {
+      "tauri": "v2.2.0",
+      "rust": "1.83"
+    }
+  },
+  
+  "gates": {
+    "A_routes": "PASS",
+    "B_ipc": "PARTIAL",
+    "C_http_proxy": "PASS",
+    "D_zero_silence": "PASS",
+    "E_prod_boot": "PASS",
+    "F_kevin_v5_delta": "BLOCKED",
+    "score": "4.5/6"
+  },
+  
+  "documentation": {
+    "phase_a_preflight": ["00-context.md", "01-repo-fingerprint.md"],
+    "phase_b_navigation": ["10-topbar-map.md", "11-sections-map.md", "12-routes-map.md", "13-layout-shell.md", "14-persistent-widgets.md"],
+    "phase_c_components": ["20-inventory-by-feature.md", "21-inventory-by-filetree.md"],
+    "phase_d_contracts": ["30-ipc-invocations-index.md"],
+    "phase_e_observability": ["40-boot-pipeline.md", "41-error-boundaries.md"],
+    "phase_f_audit": ["50-issues-register.md"],
+    "phase_g_tests": ["60-test-plan.md", "61-run-results.md"],
+    "phase_h_compare": ["70-delta-template-vs-kevin-v5.md"],
+    "verification": [
+      "00-scope.md",
+      "01-command-log.md",
+      "02-kevin-v5-presence.md",
+      "MISSING_KEVIN_V5.md",
+      "TRUTH_ROUTES.md",
+      "TRUTH_IPC.md",
+      "TRUTH_HTTP_PROXY.md",
+      "TRUTH_ZERO_SILENCE.md",
+      "TRUTH_PROD_BOOT.md",
+      "VERDICT.md",
+      "AUDIT_STATUS.md",
+      "GATE_SUMMARY.md",
+      "VERIFICATION_REPORT.md",
+      "DELTA_REVERIFICATION_LOG.md"
+    ],
+    "v6_new": [
+      "25-visual-map/25-screen-map.md",
+      "25-visual-map/26-topnav-interactions.md",
+      "25-visual-map/27-dev-admin-stats-titane-tabs.md",
+      "25-visual-map/28-overlay-widgets.md",
+      "35-states/35-ui-state-machine.md",
+      "35-states/36-chat-state-machine.md",
+      "35-states/37-health-metrics-state.md",
+      "35-states/38-empty-loading-error-catalog.md",
+      "55-nonconformities/55-nonconformities-register.md",
+      "09_MANIFEST.json"
+    ]
+  },
+  
+  "status": {
+    "cartography": "V6_COMPLETE",
+    "kevin_v5_delta": "PENDING",
+    "verdict": "FAIL (Kevin V5 required)",
+    "seal": "NOT_ALLOWED (delta incomplete)",
+    "production_ready": "CONDITIONAL (see issues P1/P2)"
+  }
+}
