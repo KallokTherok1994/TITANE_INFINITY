@@ -8,8 +8,13 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v15 — ROUTER SYSTEM
- *   Router moderne avec React Router v7, lazy loading, type safety
+ *   DEPRECATED — DO NOT USE
+ *   This router is NOT used by the application.
+ *   The canonical router is: src/AppRoutes.tsx (used via src/App.tsx)
+ *   
+ *   Moved to _deprecated/ on 2026-02-07 (UI Hygiene Sprint)
+ *   Reason: Dead code (0 imports found in codebase)
+ *   Decision: P1-1 from UI_ARBITRATION_LOG.md
  * ═══════════════════════════════════════════════════════════════
  */
 
