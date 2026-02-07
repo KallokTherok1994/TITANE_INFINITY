@@ -1,9 +1,35 @@
 {
-  "cartography_version": "V6",
+  "cartography_version": "V6.1",
   "generated_at": "2026-02-07T19:48:35Z",
-  "commit_hash": "8c038a13d537c565dec5f1ca1daaf0ee687ac078",
-  "baseline": "Truth mode audit (Gates A-E complete, F blocked)",
-  "delta_status": "Kevin V5 pending",
+  "commit_hash": "8adbd8fe4278c9e577de1ea2f646ac204837aa16",
+  "baseline": "Truth mode audit + Hygiene Sprint + Constitutional Freeze",
+  "delta_status": "Kevin V5 pending (Gate F blocked)",
+  
+  "freeze_status": {
+    "frozen": true,
+    "freeze_date": "2026-02-07",
+    "freeze_commit": "8adbd8fe4278c9e577de1ea2f646ac204837aa16",
+    "hygiene_sprint_commit": "8adbd8fe4278c9e577de1ea2f646ac204837aa16",
+    "freeze_authority": "docs/ui-carto-copilot/ARCHITECTURAL_FREEZE_NOTICE.md",
+    "gates_document": "docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md",
+    "governance": "UI_ARBITRATION_LOG.md",
+    "review_triggers": [
+      "Kevin V5 delta complete",
+      "Major UX shift",
+      "P0 incident",
+      "Sprint N+6 or 3 months"
+    ]
+  },
+  
+  "issues_summary": {
+    "open_P0_count": 0,
+    "open_P1_count": 1,
+    "open_P2_count": 5,
+    "open_P3_count": 2,
+    "closed_count": 2,
+    "total_count": 10,
+    "closed_issues": ["UI-003 (Dual Router)", "UI-010 (Silent Catch)"]
+  },
   
   "router": {
     "canonical_file": "src/AppRoutes.tsx",
