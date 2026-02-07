@@ -214,10 +214,87 @@
   },
   
   "status": {
-    "cartography": "V6_COMPLETE",
+    "cartography": "V6.1_COMPLETE",
     "kevin_v5_delta": "PENDING",
     "verdict": "FAIL (Kevin V5 required)",
     "seal": "NOT_ALLOWED (delta incomplete)",
     "production_ready": "CONDITIONAL (see issues P1/P2)"
+  },
+  
+  "clarity_lock": {
+    "version": "V6.1",
+    "date": "2026-02-07",
+    "zones_analyzed": 15,
+    "unresolved_zones": [],
+    "blocked_by": [
+      {
+        "zone": "GATE F Delta Comparison",
+        "artifact": "Kevin V5 cartography baseline",
+        "import_instructions": "VERIFICATION/MISSING_KEVIN_V5.md",
+        "affected_tasks": [
+          "GATE F execution",
+          "VERDICT update to PASS",
+          "SEAL issuance",
+          "70-compare/ directory completion"
+        ]
+      }
+    ],
+    "future_scope": [
+      {
+        "zone": "Per-section error boundaries",
+        "rationale": "Enhancement beyond 3-layer current setup",
+        "priority": "LOW",
+        "conditions": "If multi-tenant sections or high isolation needed"
+      },
+      {
+        "zone": "Authentication guards",
+        "rationale": "Conditional on multi-user requirement (local-first app)",
+        "priority": "MEDIUM",
+        "conditions": "If multi-user or remote access added",
+        "issue": "NC-004 reclassified from P1 to FUTURE"
+      }
+    ],
+    "acceptable_partials": [
+      {
+        "gate": "Gate B IPC",
+        "status": "PARTIAL",
+        "coverage": "95%+ (1177 of 1182 wrapped)",
+        "gaps": "5 direct invoke() calls (P2)",
+        "rationale": "Non-blocking, documented in NC-001"
+      },
+      {
+        "gate": "Gate L2 Zero Silence",
+        "status": "PARTIAL",
+        "coverage": "90%+ loading/empty, 80% errors",
+        "gaps": "10 empty catch blocks (P2)",
+        "rationale": "Non-critical contexts, tracked in UI-010"
+      },
+      {
+        "area": "Accessibility",
+        "status": "WCAG 2.2 AA Partial",
+        "score": "80/100",
+        "gaps": "Skip links missing (P3)",
+        "rationale": "P3 gaps only, no P0/P1 blockers"
+      },
+      {
+        "area": "Offline indicator",
+        "status": "Partial",
+        "covered": "Tauri backend down (BackendDownIndicator)",
+        "gaps": "Global network offline indicator (P2)",
+        "rationale": "Critical path covered, enhancement nice-to-have"
+      },
+      {
+        "area": "Degraded states",
+        "status": "70% coverage",
+        "rationale": "Acceptable baseline, 90%+ loading/empty covered"
+      }
+    ],
+    "reclassifications": {
+      "acceptable": 11,
+      "blocked": 5,
+      "future": 2
+    },
+    "ambiguities_eliminated": 15,
+    "production_impact": "NONE (status unchanged, clarity improved)"
   }
 }
