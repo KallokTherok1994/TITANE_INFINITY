@@ -221,18 +221,66 @@ const OfflineIndicator = () => {
 
 ---
 
+## NC-UI-SILENCE-EXEMPT-001: Silent Catches - Governed Exceptions
+
+**Rule Violated:** Zero-silence UI (always provide feedback)  
+**Severity:** P2 (monitored exception)  
+**Impact:** 6 non-critical catches remain silent (browser APIs, not user-facing)
+
+**Status:** GOVERNED EXCEPTION (rearbitraged 2026-02-08)  
+**Authority:** P1-2_CATCH_AUDIT.md + P1-2_REARBITRAGE_PROOF.md
+
+**Locations (6):**
+1. `src/stores/panelsStore.ts:646` - `catch { }` - localStorage.removeItem (storage API failure)
+2. `src/stores/useVisionStore.ts:292` - `catch { }` - device permission denied (navigator.mediaDevices)
+3. `src/stores/useVisionStore.ts:522` - `catch { }` - device permission denied (navigator.mediaDevices)
+4. `src/stores/usePerformanceStore.ts:279` - `catch { return false; }` - optimization apply failure
+5. `src/stores/effectsStore.ts:483` - `catch { }` - localStorage.removeItem (storage API failure)
+6. `src/engines/aiPredictiveEngine.ts:533` - `catch { return 1000; }` - network latency measure default
+
+**Proof:** `P1-2_CATCH_AUDIT.md` (exhaustive scan 100+ catches)
+
+**Root Cause:** Non-critical browser API operations (localStorage, permissions, network)
+
+**Why EXCEPTION (not FIX_NOW):**
+- **None are user-facing actions:** All are background operations
+- **All have inline comments:** Context documented in code
+- **All have safe fallbacks:** Return defaults or no-op
+- **Zero UX impact:** No user complaints, no blocking behavior
+- **Browser API restrictions:** localStorage can fail (quota), permissions can be denied
+- **Hygiene sprint:** Critical catch already fixed (useSelfHealingStore.ts:386)
+
+**Trigger to Reopen:**
+- If any user-facing action found to be silently failing
+- If user complaints about missing feedback
+- If P0 incident caused by silent failure
+- If new silent catches added without arbitration
+
+**Mitigation:**
+- Monitored via Gate 11 (UI_FREEZE_GATES.md)
+- No new silent catches without arbitration update
+- Quarterly review of exception validity
+- Can re-arbitrage to FIX_NOW if context changes
+
+**Validation:** Manual review + monitoring (no automated fix)
+
+---
+
 ## Summary
 
-**Total Non-Conformities:** 8  
-**P0:** 0 (NC-005 conditional)  
+**Total Non-Conformities:** 9  
+**P0:** 0  
 **P1:** 3 (NC-003, NC-004, NC-007)  
-**P2:** 5 (NC-001, NC-002, NC-006, NC-008)
+**P2:** 6 (NC-001, NC-002, NC-006, NC-008, NC-UI-SILENCE-EXEMPT-001)
 
 **Critical for Production:**
 - Fix NC-001 (direct invoke)
 - Delete NC-003 (dead code)
 - Verify NC-005 (proxy config)
 - Test NC-007 (lazy chunks in Tauri)
+
+**Governed Exceptions:**
+- NC-UI-SILENCE-EXEMPT-001 (6 catches) - Monitored, non-critical
 
 **Can Defer:**
 - NC-002 (empty catch - audit each case)
