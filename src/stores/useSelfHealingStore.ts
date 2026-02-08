@@ -383,7 +383,8 @@ export const useSelfHealingStore = create<SelfHealingStore>()(
                 }
                 state.stats.repairsSuccessful += 1;
               });
-            } catch {
+            } catch (error) {
+              console.error('[SelfHealing] Repair execution failed:', repair.id, error);
               set(state => {
                 const r = state.repairs.find(rep => rep.id === repair.id);
                 if (r) {
