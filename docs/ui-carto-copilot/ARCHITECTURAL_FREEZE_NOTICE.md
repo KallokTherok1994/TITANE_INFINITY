@@ -67,6 +67,7 @@ The TITANE∞ Frontend UI architecture is now **GOVERNED and FROZEN** following:
 All UI architectural changes must:
 1. Reference a decision in `UI_ARBITRATION_LOG.md`, OR
 2. Create a new arbitration entry with justification
+3. **NEW:** Use CHANGE_CONTROL_TEMPLATE.md for all architectural changes (Gate 14)
 
 **No exceptions** for "quick fixes" that affect structure.
 
@@ -76,6 +77,7 @@ All changes must provide:
 - Before/after evidence
 - Rollback plan
 - Test validation
+- **NEW:** Anti-regression scan results (Gate 13) for major changes
 
 **No "trust me" or "looks good" commits.**
 
@@ -84,6 +86,7 @@ Changes must be:
 - Minimal (surgical, not sweeping)
 - Reversible (documented rollback)
 - Tested (lint + typecheck minimum)
+- **NEW:** Validated against FUTURE_PROOF_CHECKLIST.md (19 items)
 
 **No "while we're here" refactors.**
 
@@ -94,6 +97,31 @@ Changes must be:
 - ✅ Gate F unblocked
 
 **Current status:** Kevin V5 pending (delta blocked)
+
+### Rule 5: Authority Attribution (NEW)
+**Authority:** GOVERNANCE_RULES.md (GOV-NO-HUMAN-IDENTITY-ATTRIBUTION)
+
+All governance documents MUST use system labels:
+- ✅ "Authority: TITANE∞ Governance"
+- ✅ "Authority: UI_ARBITRATION_LOG.md"
+- ❌ NO person names as authority
+
+**Enforcement:** Gate 12 (NO_HUMAN_NAME_AUTHORITY)
+
+---
+
+## Governance Framework (NEW)
+
+The freeze is enforced through:
+
+1. **GOVERNANCE_RULES.md** - Constitutional principles
+2. **UI_FREEZE_GATES.md** - 14 anti-drift gates
+3. **CHANGE_CONTROL_TEMPLATE.md** - Mandatory template for changes
+4. **FUTURE_PROOF_CHECKLIST.md** - 19-item verification checklist
+5. **ANTI_REGRESSION_SCANS.md** - 4 automated scan specifications
+6. **UI_ARBITRATION_LOG.md** - Decision log
+
+**All changes must comply with this framework.**
 
 ---
 

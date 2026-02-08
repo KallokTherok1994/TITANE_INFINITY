@@ -1,7 +1,7 @@
 # TITANE∞ — UI FREEZE GATES (Anti-Drift Rules)
 
 **Authority:** ARCHITECTURAL_FREEZE_NOTICE.md  
-**Date:** 2026-02-07  
+**Date:** 2026-02-08 (v1.2 - Gates 12-14 added)  
 **Mode:** Governance enforcement (doc-only, manual review)
 
 ---
@@ -309,6 +309,156 @@ $ grep -rn "from.*services" src/engines/
 
 ---
 
+## Gate 12: NO_HUMAN_NAME_AUTHORITY
+
+**Rule:** Authority attribution MUST use system labels only (no person names).
+
+**Authority:** GOVERNANCE_RULES.md (GOV-NO-HUMAN-IDENTITY-ATTRIBUTION)
+
+**Forbidden:**
+- ❌ "Authority: Kevin Thibault"
+- ❌ "Decision Maker: Kevin"
+- ❌ "Owner: [person name]"
+- ❌ "Approved by: [person]"
+
+**Allowed:**
+- ✅ "Authority: TITANE∞ Governance"
+- ✅ "Authority: UI_ARBITRATION_LOG.md"
+- ✅ "Authority: Protocol vΩ.UI.HYGIENE"
+- ✅ "Decision Maker: Governance Board"
+- ✅ "Owner: TITANE∞ Project"
+
+**Rationale:**
+- Prevent governance drift (decisions outlive individuals)
+- Avoid identity confusion (institutional authority)
+- Enable continuity (future agents need clear references)
+- Constitutional stability (self-referential frameworks)
+
+**Enforcement:**
+- Scan docs for "Authority:" / "Decision:" lines
+- Check for human names (case-by-case)
+- Require system label replacement
+
+**Scan Command:**
+```bash
+# Check for human names in authority
+grep -rn "Authority:" docs/ui-carto-copilot/ | grep -v "TITANE\|Protocol\|Governance\|Decision Log"
+# Expected: 0 results
+```
+
+**Remediation:**
+- Replace human name with system label
+- Update all authority references in affected docs
+- See GOVERNANCE_RULES.md for examples
+
+---
+
+## Gate 13: ANTI_REGRESSION_SCANS_REQUIRED
+
+**Rule:** Before major UI changes, run anti-regression scans and log results.
+
+**Authority:** ANTI_REGRESSION_SCANS.md
+
+**Required Scans (4):**
+1. **NO_EMPTY_OR_SILENT_CATCH** - Detect silent error handlers
+2. **NO_DIRECT_INVOKE_BYPASS** - Detect unwrapped IPC calls
+3. **NO_IPC_FETCH** - Detect forbidden fetch("ipc://")
+4. **NO_HUMAN_NAME_AUTHORITY** - Detect human name attributions
+
+**When to Run:**
+- Before major UI changes (new routes, pages, stores)
+- Weekly maintenance (recommended)
+- Pre-release verification
+
+**Not Required For:**
+- Minor bug fixes (localized)
+- Documentation updates
+- Test additions
+- Console.log cleanup
+
+**Enforcement:**
+- Run all 4 scans before major changes
+- Log results in `VERIFICATION/SCAN_RESULTS.md`
+- Address P0 violations before merge
+- Document P1/P2 violations or add to exceptions
+
+**Scan Commands:**
+```bash
+# A) Silent catch scan
+rg -n "} catch" src --type ts | wc -l
+# Expected: <= 6 (NC-UI-SILENCE-EXEMPT-001)
+
+# B) Direct invoke scan
+rg -n "invoke\(" src --type ts | grep -v "secureInvoke\|tauriClient" | wc -l
+# Expected: <= 5 (NC-001)
+
+# C) IPC fetch scan
+rg -n 'ipc://' src --type ts | wc -l
+# Expected: 0
+
+# D) Human name authority scan
+grep -rn "Authority:" docs/ui-carto-copilot/ | grep -v "TITANE\|Protocol\|Governance"
+# Expected: 0
+```
+
+**Results Format:**
+- Document in VERIFICATION/SCAN_RESULTS.md
+- Include timestamp, scan status (PASS/FAIL), violations
+- Link to exception IDs (NC-*) if applicable
+
+---
+
+## Gate 14: CHANGE_CONTROL_REQUIRED
+
+**Rule:** ALL UI architectural changes MUST use CHANGE_CONTROL_TEMPLATE.md.
+
+**Authority:** CHANGE_CONTROL_TEMPLATE.md
+
+**Scope:**
+- New routes/pages
+- New navigation sections/tabs
+- New stores (Zustand)
+- New IPC patterns
+- Layout/router changes
+- Design system changes
+
+**Not Required:**
+- Bug fixes (proven, localized)
+- Documentation updates
+- Test additions
+- Minor style tweaks
+
+**Enforcement:**
+- Copy CHANGE_CONTROL_TEMPLATE.md
+- Fill all 10 sections (mandatory)
+- Attach to PR description or commit
+- Reviewer validates completeness
+
+**Template Sections (10):**
+1. Change Summary
+2. Ring Impact
+3. Authorized By (arbitration reference)
+4. Scope Boundaries
+5. Risks (P0/P1/P2)
+6. Proof Plan (path:line)
+7. Tests / Gates to Run
+8. Rollback Plan
+9. Freeze Exemption
+10. Registry / Logs to Update
+
+**Verification:**
+- Check all 10 sections filled (no TBD/TODO)
+- Verify arbitration reference (section 3)
+- Confirm rollback plan executable (section 8)
+- Validate registry updates (section 10)
+
+**Without Change Control:**
+- ❌ No merge allowed for architectural changes
+- ❌ PR blocked until template provided
+- ❌ Exception only for emergency P0 (post-facto within 24h)
+
+---
+
 ## Manual Review Checklist
 
 For reviewers:
@@ -325,9 +475,12 @@ For reviewers:
 - [ ] Gate 9: Docs updated?
 - [ ] Gate 10: Rollback plan documented?
 - [ ] Gate 11: New exceptions justified?
+- [ ] Gate 12: No human name authority?
+- [ ] Gate 13: Anti-regression scans run (if major)?
+- [ ] Gate 14: Change control template used (if architectural)?
 ```
 
-**All 11 gates must PASS for merge.**
+**All 14 gates must PASS for merge.**
 
 ---
 
