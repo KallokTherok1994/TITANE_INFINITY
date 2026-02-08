@@ -1,0 +1,22 @@
+8:## NC-001: Direct invoke() Bypasses secureInvoke Wrapper
+42:## NC-002: Empty Catch Blocks Swallow Errors
+74:## NC-003: router.tsx Dead Code Not Removed
+102:## NC-004: No Authentication Guards on Routes
+131:## NC-005: Ollama Proxy Loop Risk
+161:## NC-006: No Global Offline Mode Indicator
+184:## NC-007: Lazy Chunks May Fail in Production Tauri
+206:## NC-008: Ring 2 Engines Have Minor I/O Violations
+224:## NC-UI-SILENCE-EXEMPT-001: Silent Catches - Governed Exceptions
+269:## NC-009: dev:tauri termine avec beforeDevCommand non‑zéro
+290:**P1:** 4 (NC-003, NC-004, NC-007, NC-009)  
+291:**P2:** 6 (NC-001, NC-002, NC-006, NC-008, NC-UI-SILENCE-EXEMPT-001)
+294:- Fix NC-001 (direct invoke)
+295:- Delete NC-003 (dead code)
+296:- Verify NC-005 (proxy config)
+297:- Test NC-007 (lazy chunks in Tauri)
+298:- Stabiliser NC-009 (dev:tauri beforeDevCommand)
+301:- NC-UI-SILENCE-EXEMPT-001 (6 catches) - Monitored, non-critical
+304:- NC-002 (empty catch - audit each case)
+305:- NC-004 (auth - if not required)
+306:- NC-006 (offline indicator - nice-to-have)
+307:- NC-008 (Ring 2 I/O - documented exceptions)

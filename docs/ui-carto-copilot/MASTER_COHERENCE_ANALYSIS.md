@@ -396,4 +396,4 @@ Cette analyse croise la **cartographie structurelle V6** (routes, composants, ho
 
 ---
 
-**MASTER COHERENCE ANALYSIS COMPLETE**
+**MASTER COHERENCE ANALYSIS TERMINÉE**

@@ -227,39 +227,39 @@ If any item is **FAIL** → Stop. Address the issue before proceeding.
 
 ## G. Forbidden Terms (3 items)
 
-### G1. NO_SEALED_TERM
+### G1. NO_SCELLE_TERM
 **Rule:** Constitutional protocol  
-**Check:** No "SEALED" in verdict/status documents
+**Check:** No "SCELLÉ" in verdict/status documents
 
-- [ ] **PASS:** No SEALED term found
-- [ ] **FAIL:** SEALED term found
+- [ ] **PASS:** No SCELLÉ term found
+- [ ] **FAIL:** SCELLÉ term found
 
-**Proof location:** grep "SEALED" docs/ui-carto-copilot/  
-**Fix:** Remove SEALED term, use appropriate status
+**Proof location:** grep "SCELLÉ" docs/ui-carto-copilot/  
+**Fix:** Remove SCELLÉ term, use appropriate status
 
 ---
 
-### G2. NO_PRODUCTION_READY_TERM
+### G2. NO_PRET_PRODUCTION_TERM
 **Rule:** Constitutional protocol  
-**Check:** No "PRODUCTION READY" in verdict documents
+**Check:** No "PRÊT PRODUCTION" in verdict documents
 
-- [ ] **PASS:** No PRODUCTION READY term found
-- [ ] **FAIL:** PRODUCTION READY term found
+- [ ] **PASS:** No PRÊT PRODUCTION term found
+- [ ] **FAIL:** PRÊT PRODUCTION term found
 
-**Proof location:** grep "PRODUCTION READY" docs/ui-carto-copilot/  
+**Proof location:** grep "PRÊT PRODUCTION" docs/ui-carto-copilot/  
 **Fix:** Remove term, use appropriate status
 
 ---
 
-### G3. NO_COMPLETE_IN_VERDICT
+### G3. NO_TERMINE_IN_VERDICT
 **Rule:** Constitutional protocol  
-**Check:** No "COMPLETE" in verdict context (OK elsewhere)
+**Check:** No "TERMINÉ" in verdict context (OK elsewhere)
 
-- [ ] **PASS:** No COMPLETE in verdict status
-- [ ] **FAIL:** COMPLETE in verdict
+- [ ] **PASS:** No TERMINÉ in verdict status
+- [ ] **FAIL:** TERMINÉ in verdict
 
 **Proof location:** VERIFICATION/VERDICT.md  
-**Fix:** Avoid "COMPLETE" for verdict; use "PASS" or "FAIL"
+**Fix:** Avoid "TERMINÉ" for verdict; use "PASS" or "FAIL"
 
 ---
 
@@ -286,7 +286,7 @@ find src -name "router*.tsx" -o -name "routes.tsx" | grep -v "_deprecated"
 # Expected: 0 results (only AppRoutes.tsx allowed)
 
 # G1-G3: Check forbidden terms
-grep -rn "SEALED\|PRODUCTION READY" docs/ui-carto-copilot/VERIFICATION/VERDICT.md
+grep -rn "SCELLÉ\|PRÊT PRODUCTION" docs/ui-carto-copilot/VERIFICATION/VERDICT.md
 # Expected: 0 results
 ```
 

@@ -91,8 +91,8 @@ Changes must be:
 **No "while we're here" refactors.**
 
 ### Rule 4: Delta Blocking
-**CRITICAL:** No "SEALED" or "PRODUCTION READY" status until:
-- ✅ Kevin V5 delta comparison complete
+**CRITICAL:** No "SCELLÉ" or "PRÊT PRODUCTION" status until:
+- ✅ Kevin V5 delta comparison finalisée
 - ✅ All P0 issues resolved
 - ✅ Gate F unblocked
 

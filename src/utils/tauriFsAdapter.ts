@@ -17,7 +17,7 @@
 // RUNTIME DETECTION
 // ═══════════════════════════════════════════════════════════════════════════
 
-const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
+const canAttemptTauri = typeof window !== 'undefined';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TAURI IMPORTS (Lazy loaded to avoid errors in browser-only builds)
@@ -26,9 +26,9 @@ const isTauriContext = typeof window !== 'undefined' && '__TAURI__' in window;
 let tauriFs: typeof import('@tauri-apps/plugin-fs') | null = null;
 let tauriPath: typeof import('@tauri-apps/api/path') | null = null;
 
-async function ensureTauriApis() {
-  if (!isTauriContext) return;
-  if (tauriFs && tauriPath) return;
+async function ensureTauriApis(): Promise<boolean> {
+  if (!canAttemptTauri) return false;
+  if (tauriFs && tauriPath) return true;
 
   try {
     // Lazy dynamic imports - Tauri v2 uses plugin architecture
@@ -43,6 +43,7 @@ async function ensureTauriApis() {
       '[tauriFsAdapter] Tauri APIs not available, using localStorage fallback'
     );
   }
+  return Boolean(tauriFs && tauriPath);
 }
 
 const STORAGE_PREFIX = 'titane_fs_';
@@ -57,8 +58,8 @@ function localStorageExists(path: string): boolean {
 }
 
 function localStorageRead(path: string): string {
-  if (typeof window === 'undefined') return '{}';
-  return localStorage.getItem(getStorageKey(path)) || '{}';
+  if (typeof window === 'undefined') return '';
+  return localStorage.getItem(getStorageKey(path)) || '';
 }
 
 function localStorageWrite(path: string, data: string): void {
@@ -123,8 +124,7 @@ export function dirname(path: string): string {
  */
 export async function existsSync(path: string): Promise<boolean> {
   try {
-    if (isTauriContext) {
-      await ensureTauriApis();
+    if (await ensureTauriApis()) {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
@@ -145,8 +145,7 @@ export async function existsSync(path: string): Promise<boolean> {
  */
 export async function readFileSync(path: string, _encoding?: string): Promise<string> {
   try {
-    if (isTauriContext) {
-      await ensureTauriApis();
+    if (await ensureTauriApis()) {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
@@ -156,7 +155,7 @@ export async function readFileSync(path: string, _encoding?: string): Promise<st
     return localStorageRead(path);
   } catch (error) {
     console.warn('[tauriFsAdapter] readFileSync error:', error);
-    return '{}';
+    return '';
   }
 }
 
@@ -167,8 +166,7 @@ export async function readFileSync(path: string, _encoding?: string): Promise<st
  */
 export async function writeFileSync(path: string, data: string): Promise<void> {
   try {
-    if (isTauriContext) {
-      await ensureTauriApis();
+    if (await ensureTauriApis()) {
       if (tauriPath && tauriFs) {
         const appDir = await tauriPath.appDataDir();
         const fullPath = await tauriPath.join(appDir, path);
@@ -211,8 +209,7 @@ export const promises = {
    */
   async appendFile(path: string, data: string, _encoding?: string): Promise<void> {
     try {
-      if (isTauriContext) {
-        await ensureTauriApis();
+      if (await ensureTauriApis()) {
         const existing = await readFileSync(path);
         await writeFileSync(path, existing + data);
       } else {
@@ -230,12 +227,22 @@ export const promises = {
    */
   async mkdir(path: string, _options?: { recursive?: boolean }): Promise<void> {
     try {
-      if (isTauriContext) {
-        await ensureTauriApis();
+      if (await ensureTauriApis()) {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);
-          await tauriFs.create(fullPath);
+          const fsAny = tauriFs as typeof tauriFs & {
+            createDir?: (path: string, options?: { recursive?: boolean }) => Promise<void>;
+            mkdir?: (path: string, options?: { recursive?: boolean }) => Promise<void>;
+            create?: (path: string) => Promise<void>;
+          };
+          if (fsAny.createDir) {
+            await fsAny.createDir(fullPath, { recursive: true });
+          } else if (fsAny.mkdir) {
+            await fsAny.mkdir(fullPath, { recursive: true });
+          } else if (fsAny.create) {
+            await fsAny.create(fullPath);
+          }
         }
       }
       // Browser: no-op, localStorage doesn't need directories
@@ -254,8 +261,7 @@ export const promises = {
    */
   async readdir(path: string): Promise<string[]> {
     try {
-      if (isTauriContext) {
-        await ensureTauriApis();
+      if (await ensureTauriApis()) {
         if (tauriPath && tauriFs) {
           const appDir = await tauriPath.appDataDir();
           const fullPath = await tauriPath.join(appDir, path);

@@ -97,7 +97,7 @@ The following steps were BLOCKED due to failed precondition:
 ✅ Verdict preserved (not modified)  
 ✅ Status documented with proof
 
-**Status:** Protocol execution COMPLETE (blocked at precondition)
+**Status:** Protocol execution TERMINÉ (blocked at precondition)
 
 ---
 

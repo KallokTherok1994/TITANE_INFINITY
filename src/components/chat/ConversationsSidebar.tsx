@@ -10,9 +10,10 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
-import { useConversations } from '@/hooks/useConversations';
+import React, { useEffect, useState } from 'react';
+import { useConversationsContext } from '@/contexts/ConversationsContext';
 import type { ConversationSummary } from '@/types/conversation';
+import { g4Log } from '@/lib/telemetry/convG4Collector';
 import './ConversationsSidebar.css';
 
 export interface ConversationsSidebarProps {
@@ -26,6 +27,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
 }) => {
   const {
     conversations,
+    storageCount,
     activeConversationId,
     isLoading,
     createConversation,
@@ -33,9 +35,10 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
     archiveConversation,
     restoreConversation,
     deleteConversation,
-  } = useConversations();
+  } = useConversationsContext();
 
   const [contextMenuId, setContextMenuId] = useState<string | null>(null);
+  const [desync, setDesync] = useState(false);
 
   const handleNewConversation = async () => {
     const conversation = await createConversation({ title: 'Nouvelle conversation' });
@@ -86,6 +89,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
   };
 
   const formatDate = (timestamp: number): string => {
+    if (!timestamp || Number.isNaN(timestamp)) return 'Date inconnue';
     const now = Date.now();
     const diff = now - timestamp;
     const minutes = Math.floor(diff / 60000);
@@ -103,11 +107,64 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
     });
   };
 
+  useEffect(() => {
+    if (!isOpen) return;
+    console.log('[CONV_UI] MOUNT');
+    void g4Log('CONV_UI', { phase: 'MOUNT', len: conversations.length, storageCount });
+    return () => {
+      console.log('[CONV_UI] UNMOUNT');
+      void g4Log('CONV_UI', { phase: 'UNMOUNT', len: conversations.length, storageCount });
+    };
+  }, [conversations.length, isOpen, storageCount]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    console.log('[CONV_UI] RENDER', {
+      len: conversations.length,
+      storageCount,
+      activeId: activeConversationId,
+    });
+    void g4Log('CONV_UI', {
+      phase: 'RENDER',
+      len: conversations.length,
+      storageCount,
+      activeId: activeConversationId,
+    });
+  }, [activeConversationId, conversations.length, isOpen, storageCount]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    console.log('[CONV_UI] RAW', conversations);
+    void g4Log('CONV_UI', {
+      phase: 'RAW',
+      len: conversations.length,
+      storageCount,
+      sampleId: conversations[0]?.id,
+    });
+  }, [conversations, isOpen, storageCount]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    if (storageCount > 0 && conversations.length === 0 && !isLoading) {
+      const timer = setTimeout(() => {
+        setDesync(true);
+        console.error('[CONV_DESYNC]', { storageCount, uiLen: conversations.length });
+        void g4Log('CONV_DESYNC', { storageCount, uiLen: conversations.length });
+      }, 250);
+      return () => clearTimeout(timer);
+    }
+    setDesync(false);
+  }, [conversations.length, isLoading, isOpen, storageCount]);
+
   if (!isOpen) return null;
 
   return (
     <div className="conversations-sidebar-overlay" onClick={onClose}>
-      <div className="conversations-sidebar" onClick={e => e.stopPropagation()}>
+      <div
+        className="conversations-sidebar"
+        onClick={e => e.stopPropagation()}
+        data-testid="conversations-sidebar"
+      >
         {/* Header */}
         <div className="conversations-sidebar__header">
           <h2>Conversations</h2>
@@ -115,6 +172,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
             className="conversations-sidebar__close"
             onClick={onClose}
             aria-label="Fermer"
+            data-testid="conversations-close"
           >
             ✕
           </button>
@@ -125,6 +183,7 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
           className="conversations-sidebar__new-btn"
           onClick={handleNewConversation}
           disabled={isLoading}
+          data-testid="conversations-new"
         >
           <span className="icon">+</span>
           <span>Nouvelle conversation</span>
@@ -132,6 +191,11 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
 
         {/* Liste des conversations */}
         <div className="conversations-sidebar__list">
+          {desync && (
+            <div className="conversations-sidebar__empty">
+              Diagnostic: storage &gt; 0 mais UI vide.
+            </div>
+          )}
           {isLoading && conversations.length === 0 ? (
             <div className="conversations-sidebar__loading">Chargement...</div>
           ) : conversations.length === 0 ? (
@@ -154,6 +218,8 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
                   e.preventDefault();
                   setContextMenuId(contextMenuId === conv.id ? null : conv.id);
                 }}
+                data-testid="conversation-item"
+                data-conversation-id={conv.id}
               >
                 <div className="conversation-item__content">
                   <div className="conversation-item__title">{conv.title}</div>

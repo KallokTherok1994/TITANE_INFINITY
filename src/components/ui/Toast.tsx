@@ -116,7 +116,7 @@ export const Toast: React.FC<ToastProps> = ({
     >
       {/* Sprint 4 UX: Progress bar (AAA contrast 7:1) */}
       <div
-        className="absolute bottom-0 left-0 h-[3px] bg-current opacity-60 transition-all ease-linear"
+        className="absolute bottom-0 left-0 h-0.75 bg-current opacity-60 transition-all ease-linear"
         style={{
           width: `${progress}%`,
           transitionDuration: '50ms',
@@ -124,7 +124,7 @@ export const Toast: React.FC<ToastProps> = ({
         aria-hidden="true"
       />
 
-      <span className="text-lg flex-shrink-0" aria-hidden="true">
+      <span className="text-lg shrink-0" aria-hidden="true">
         {ICONS[type]}
       </span>
       <p className="text-sm font-medium flex-1">{message}</p>
@@ -133,8 +133,8 @@ export const Toast: React.FC<ToastProps> = ({
         aria-label="Fermer la notification"
         type="button"
         className="
-          flex-shrink-0 text-lg leading-none rounded p-1
-          transition-all duration-200 ease-[cubic-bezier(0.4,0,0.2,1)]
+          shrink-0 text-lg leading-none rounded p-1
+          transition-all duration-200 ease-in-out
           hover:opacity-70 hover:bg-black/10
           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current focus-visible:ring-offset-2
         "

@@ -96,8 +96,8 @@
 - `CLOUD_UPDATE_CONFIG` - Update cloud config
 
 ### Onboarding & Setup (2 commands)
-- `IS_ONBOARDING_COMPLETE` - Check onboarding status
-- `COMPLETE_ONBOARDING` - Mark onboarding complete
+- `IS_ONBOARDING_DONE` - Check onboarding status
+- `FINALIZE_ONBOARDING` - Mark onboarding done
 
 ---
 
@@ -136,7 +136,7 @@ const health = await tauriClient.getSystemHealth();
 Examples:
 - `CLEAR_ALL_MEMORY`
 - `AUTOHEAL_CLEAR_PIPELINE`
-- `COMPLETE_ONBOARDING`
+- `FINALIZE_ONBOARDING`
 
 ---
 

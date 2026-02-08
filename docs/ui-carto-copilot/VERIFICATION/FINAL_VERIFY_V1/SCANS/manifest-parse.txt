@@ -1,0 +1,539 @@
+{
+  "cartography_version": "V7.0",
+  "generated_at": "2026-02-08T17:30:00Z",
+  "commit_hash": "1d30441f190c9e408a6c39d02548ba1808f0f243",
+  "baseline": "Truth mode audit + Hygiene Sprint + Constitutional Freeze",
+  "delta_status": "Kevin V5 pending (Gate F blocked)",
+  "master_fix_cycle": [
+    {
+      "id": "V7_MASTER_FIX_CYCLE_2026-02-08",
+      "date": "2026-02-08",
+      "commits": [],
+      "fix_ids": [],
+      "scope": "Proof-driven scans + triage (no patches)",
+      "gateF_blocked": true,
+      "proof": [
+        "docs/ui-carto-copilot/VERIFICATION/V7_MASTER_FIX_PREFLIGHT.md",
+        "docs/ui-carto-copilot/VERIFICATION/V7_MASTER_TRIAGE.md",
+        "docs/ui-carto-copilot/VERIFICATION/V7_MASTER_REPORT.md"
+      ]
+    }
+  ],
+  "final_verify_v1": {
+    "date_utc": "2026-02-08",
+    "inputs_present": true,
+    "gateF_status": "BLOCKED_BASELINE_MISSING",
+    "scans_paths": [
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/SCANS/"
+    ],
+    "updated_files": [
+      "docs/ui-carto-copilot/README.md",
+      "docs/ui-carto-copilot/09_MANIFEST.json",
+      "docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md",
+      "docs/ui-carto-copilot/UI_ARBITRATION_LOG.md",
+      "docs/ui-carto-copilot/INDEX.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_PREFLIGHT.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_CHECKLIST.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_SCANS_LOG.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_REGISTRY_DIFF.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_REPORT.md",
+      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/FINAL_VERIFY_GATE_SUMMARY.md"
+    ],
+    "notes": [
+      "Doc-only verify pack generated",
+      "Forbidden terms removed from registry docs",
+      "Gate F remains blocked (Kevin V5 baseline missing)",
+      "No verdict modification",
+      "No source code changes"
+    ]
+  },
+  "freeze_status": {
+    "frozen": true,
+    "freeze_date": "2026-02-07",
+    "freeze_commit": "8adbd8fe4278c9e577de1ea2f646ac204837aa16",
+    "hygiene_sprint_commit": "8adbd8fe4278c9e577de1ea2f646ac204837aa16",
+    "freeze_authority": "docs/ui-carto-copilot/ARCHITECTURAL_FREEZE_NOTICE.md",
+    "gates_document": "docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md",
+    "governance": "UI_ARBITRATION_LOG.md",
+    "review_triggers": [
+      "Kevin V5 delta complete",
+      "Major UX shift",
+      "P0 incident",
+      "Sprint N+6 or 3 months"
+    ]
+  },
+  "issues_summary": {
+    "open_P0_count": 0,
+    "open_P1_count": 1,
+    "open_P2_count": 5,
+    "open_P3_count": 2,
+    "closed_count": 2,
+    "total_count": 10,
+    "closed_issues": [
+      "UI-003 (Dual Router)",
+      "UI-010 (Silent Catch - 1 critical fixed)"
+    ],
+    "rearbitraged_issues": [
+      "P1-2 (Silent IPC Failures): FIX_NOW → MONITOR (6 non-critical exceptions)"
+    ]
+  },
+  "accepted_exceptions": [
+    {
+      "id": "NC-UI-SILENCE-EXEMPT-001",
+      "type": "silent_catch_blocks",
+      "severity": "P2",
+      "count": 6,
+      "files": [
+        "src/stores/panelsStore.ts:646",
+        "src/stores/useVisionStore.ts:292",
+        "src/stores/useVisionStore.ts:522",
+        "src/stores/usePerformanceStore.ts:279",
+        "src/stores/effectsStore.ts:483",
+        "src/engines/aiPredictiveEngine.ts:533"
+      ],
+      "rationale": "Non-user-facing browser APIs (localStorage, permissions, network). Safe fallbacks. Zero UX impact.",
+      "authority": "P1-2_REARBITRAGE_PROOF.md",
+      "trigger_to_reopen": "User-facing action found silent OR user complaints OR P0 incident",
+      "date_accepted": "2026-02-08"
+    }
+  ],
+  "router": {
+    "canonical_file": "src/AppRoutes.tsx",
+    "router_type": "Lazy imports via React.Suspense",
+    "proof": "src/App.tsx:70 + src/AppRoutes.tsx",
+    "deprecated_router": {
+      "file": "src/_deprecated/router.tsx",
+      "status": "DEPRECATED",
+      "moved_date": "2026-02-07",
+      "reason": "Dead code (0 imports), UI Hygiene Sprint P1-1",
+      "note": "Moved from src/router.tsx to src/_deprecated/router.tsx with deprecation header"
+    }
+  },
+  "counts": {
+    "routes_total": 87,
+    "routes_active": 9,
+    "routes_redirects": 78,
+    "pages_count": 41,
+    "components_count": 296,
+    "invokes_count": 1182,
+    "ipc_commands": 180,
+    "http_endpoints": 1,
+    "stores_count": 18,
+    "hooks_count": 80,
+    "topnav_items": 7,
+    "persistent_widgets": 6,
+    "tabs_total": 27
+  },
+  "structure": {
+    "topnav_sections": [
+      "TITANE",
+      "TIME",
+      "STATS",
+      "ADMIN",
+      "DEV",
+      "PLUS",
+      "MORE"
+    ],
+    "primary_pages": [
+      "/titane",
+      "/time",
+      "/stats",
+      "/admin",
+      "/dev",
+      "/alerts",
+      "/orchestration-center",
+      "/fusion",
+      "/optimization"
+    ],
+    "persistent_widgets": [
+      "CognitiveLayout",
+      "ConsoleMonitor",
+      "XPBar",
+      "ToastContainer",
+      "ErrorBoundary",
+      "BackendDownIndicator"
+    ],
+    "tabs_by_page": {
+      "titane": 8,
+      "dev": 9,
+      "admin": 5,
+      "stats": 4,
+      "time": 1
+    }
+  },
+  "contracts": {
+    "ipc": {
+      "total_commands": 180,
+      "total_invocations": 1182,
+      "wrapper_pattern": "secureInvoke",
+      "direct_invoke_violations": 5,
+      "proof": "docs/ui-carto-copilot/VERIFICATION/TRUTH_IPC.md"
+    },
+    "http": {
+      "proxy_target": "http://localhost:11434",
+      "proxy_path": "/api",
+      "purpose": "Ollama local LLM",
+      "proof": "vite.config.ts:109-122"
+    }
+  },
+  "observability": {
+    "boot_markers": true,
+    "boot_diagnostic_object": "window.__TITANE_BOOT__",
+    "error_boundaries": 3,
+    "console_monitor": true,
+    "prod_boot_risks": [
+      "CSP",
+      "allowlist",
+      "module_scripts",
+      "lazy_chunks"
+    ],
+    "proof": "docs/ui-carto-copilot/VERIFICATION/TRUTH_PROD_BOOT.md"
+  },
+  "issues": {
+    "p0_count": 0,
+    "p1_count": 2,
+    "p2_count": 8,
+    "p3_count": 2,
+    "total": 12,
+    "top_p1": [
+      "UI-003: router.tsx dead code",
+      "UI-007: No auth guards"
+    ],
+    "top_p2": [
+      "UI-IPC-001: Direct invoke() violations (5 instances)",
+      "UI-SILENCE-001: Empty catch blocks (10 instances)"
+    ]
+  },
+  "known_risks": [
+    {
+      "id": "PROD-001",
+      "description": "Dual router confusion",
+      "probability": "medium",
+      "impact": "medium",
+      "mitigation": "Document canonical router"
+    },
+    {
+      "id": "PROD-003",
+      "description": "Silent IPC failures",
+      "probability": "medium",
+      "impact": "medium",
+      "mitigation": "Standardize error UI patterns"
+    },
+    {
+      "id": "PROD-PROXY",
+      "description": "Ollama proxy loop risk",
+      "probability": "low",
+      "impact": "high",
+      "mitigation": "Verify Ollama config"
+    }
+  ],
+  "architecture": {
+    "model": "4-Ring",
+    "rings": {
+      "ring1_core": "types/, constants/ (zero imports)",
+      "ring2_engines": "engines/*/ (business logic, no I/O)",
+      "ring3_services": "services/*/ (I/O abstractions)",
+      "ring4_ui": "components/, pages/ (UI layer)"
+    },
+    "compliance": {
+      "ring1": "100%",
+      "ring2": "95%",
+      "ring3": "100%",
+      "ring4": "100%"
+    }
+  },
+  "technology": {
+    "frontend": {
+      "react": "18.3.1",
+      "vite": "6.0.5",
+      "typescript": "5.7.3",
+      "router": "react-router-dom v7"
+    },
+    "state": {
+      "zustand": "5.0.2",
+      "stores": 18
+    },
+    "testing": {
+      "vitest": "4.0.13",
+      "playwright": "1.56.1"
+    },
+    "backend": {
+      "tauri": "v2.2.0",
+      "rust": "1.83"
+    }
+  },
+  "gates": {
+    "A_routes": "PASS",
+    "B_ipc": "PARTIAL",
+    "C_http_proxy": "PASS",
+    "D_zero_silence": "PASS",
+    "E_prod_boot": "PASS",
+    "F_kevin_v5_delta": "BLOCKED_BASELINE_MISSING",
+    "score": "4.5/6"
+  },
+  "delta_runner": {
+    "ready": true,
+    "protocol_version": "v1.0",
+    "protocol_file": "docs/ui-carto-copilot/70-compare/DELTA_RUNNER_PROTOCOL.md",
+    "templates": [
+      "docs/ui-carto-copilot/70-compare/DELTA_REPORT_TEMPLATE.md",
+      "docs/ui-carto-copilot/70-compare/DELTA_ISSUES_TEMPLATE.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_RUN_LOG_TEMPLATE.md"
+    ],
+    "expected_outputs": [
+      "docs/ui-carto-copilot/70-compare/DELTA_REPORT.md",
+      "docs/ui-carto-copilot/70-compare/DELTA_ISSUES.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_GATE_SUMMARY.md",
+      "docs/ui-carto-copilot/VERIFICATION/VERDICT_UPDATE.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_RUN_LOG.md"
+    ],
+    "preconditions": {
+      "kevin_v5_folder": "docs/reference/kevin-v5/",
+      "min_files": 1,
+      "status": "BLOCKED (folder empty)"
+    },
+    "baseline_import": {
+      "spec_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_SPEC.md",
+      "checklist_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_CHECKLIST.md",
+      "example_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_EXAMPLE.md",
+      "status": "AWAITING_IMPORT"
+    },
+    "execution_status": "READY_BUT_BLOCKED",
+    "blocking_reason": "Kevin V5 baseline not imported",
+    "unblock_action": "Import Kevin V5 files to docs/reference/kevin-v5/",
+    "date_prepared": "2026-02-08"
+  },
+  "future_proof_pack": {
+    "ready": true,
+    "version": "v1",
+    "date_prepared": "2026-02-08",
+    "governance_rule_id": "GOV-NO-HUMAN-IDENTITY-ATTRIBUTION",
+    "paths": {
+      "governance_rules": "docs/ui-carto-copilot/GOVERNANCE_RULES.md",
+      "anti_regression_scans": "docs/ui-carto-copilot/VERIFICATION/ANTI_REGRESSION_SCANS.md",
+      "change_control_template": "docs/ui-carto-copilot/CHANGE_CONTROL_TEMPLATE.md",
+      "future_proof_checklist": "docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_CHECKLIST.md",
+      "future_proof_log": "docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_LOG.md",
+      "future_proof_proof": "docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_PROOF.md"
+    },
+    "gates": {
+      "gate_12": "NO_HUMAN_NAME_AUTHORITY",
+      "gate_13": "ANTI_REGRESSION_SCANS_REQUIRED",
+      "gate_14": "CHANGE_CONTROL_REQUIRED",
+      "total_gates": 14,
+      "gates_version": "v1.2"
+    },
+    "scans": {
+      "scan_a": "NO_EMPTY_OR_SILENT_CATCH",
+      "scan_b": "NO_DIRECT_INVOKE_BYPASS",
+      "scan_c": "NO_IPC_FETCH",
+      "scan_d": "NO_HUMAN_NAME_AUTHORITY",
+      "frequency": "weekly + pre-release + before major changes",
+      "results_log": "docs/ui-carto-copilot/VERIFICATION/SCAN_RESULTS.md"
+    },
+    "checklist": {
+      "categories": 7,
+      "total_items": 19,
+      "categories_list": [
+        "A. Governance & Identity (3 items)",
+        "B. Freeze Compliance (3 items)",
+        "C. Anti-Silence (3 items)",
+        "D. IPC Safety (3 items)",
+        "E. Router Canon (2 items)",
+        "F. Delta Readiness (2 items)",
+        "G. Forbidden Terms (3 items)"
+      ],
+      "pass_requirement": "19/19 (100%)"
+    },
+    "enforcement": {
+      "change_control_mandatory": true,
+      "change_control_applies_to": [
+        "new routes/pages",
+        "new navigation sections/tabs",
+        "new stores",
+        "new IPC patterns",
+        "layout/router changes",
+        "design system changes"
+      ],
+      "exemptions": [
+        "emergency P0 fixes (post-facto within 24h)",
+        "explicit arbitration override"
+      ]
+    },
+    "constitutional_compliance": {
+      "no_human_name_authority": true,
+      "proof_driven": true,
+      "minimal_changes": true,
+      "rollback_ready": true,
+      "freeze_respected": true,
+      "gate_f_status": "BLOCKED_BASELINE_MISSING (unchanged)",
+      "verdict_unchanged": true,
+      "forbidden_terms_absent": true
+    }
+  },
+  "documentation": {
+    "phase_a_preflight": [
+      "00-context.md",
+      "01-repo-fingerprint.md"
+    ],
+    "phase_b_navigation": [
+      "10-topbar-map.md",
+      "11-sections-map.md",
+      "12-routes-map.md",
+      "13-layout-shell.md",
+      "14-persistent-widgets.md"
+    ],
+    "phase_c_components": [
+      "20-inventory-by-feature.md",
+      "21-inventory-by-filetree.md"
+    ],
+    "phase_d_contracts": [
+      "30-ipc-invocations-index.md"
+    ],
+    "phase_e_observability": [
+      "40-boot-pipeline.md",
+      "41-error-boundaries.md"
+    ],
+    "phase_f_audit": [
+      "50-issues-register.md"
+    ],
+    "phase_g_tests": [
+      "60-test-plan.md",
+      "61-run-results.md"
+    ],
+    "phase_h_compare": [
+      "70-delta-template-vs-kevin-v5.md"
+    ],
+    "verification": [
+      "00-scope.md",
+      "01-command-log.md",
+      "02-kevin-v5-presence.md",
+      "MISSING_KEVIN_V5.md",
+      "TRUTH_ROUTES.md",
+      "TRUTH_IPC.md",
+      "TRUTH_HTTP_PROXY.md",
+      "TRUTH_ZERO_SILENCE.md",
+      "TRUTH_PROD_BOOT.md",
+      "VERDICT.md",
+      "AUDIT_STATUS.md",
+      "GATE_SUMMARY.md",
+      "VERIFICATION_REPORT.md",
+      "DELTA_REVERIFICATION_LOG.md",
+      "V7_MASTER_FIX_PREFLIGHT.md",
+      "V7_AGENTGPT_KEYPOINTS.md",
+      "V7_V4_KEYPOINTS.md",
+      "V7_MASTER_TRIAGE.md",
+      "V7_MASTER_REPORT.md",
+      "SCANS_V7/boot-entrypoints.txt",
+      "SCANS_V7/routes-proof.txt",
+      "SCANS_V7/vite-proxy.txt",
+      "SCANS_V7/ipc-fetch-forbidden.txt",
+      "SCANS_V7/ipc-invoke-raw.txt",
+      "SCANS_V7/ipc-secure-usage.txt",
+      "SCANS_V7/silent-empty-catch.txt",
+      "SCANS_V7/silent-return-catch.txt",
+      "SCANS_V7/runtime-dev-tauri.log",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_PREFLIGHT.md",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_CHECKLIST.md",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_SCANS_LOG.md",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_REGISTRY_DIFF.md",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_REPORT.md",
+      "FINAL_VERIFY_V1/FINAL_VERIFY_GATE_SUMMARY.md"
+    ],
+    "v6_new": [
+      "25-visual-map/25-screen-map.md",
+      "25-visual-map/26-topnav-interactions.md",
+      "25-visual-map/27-dev-admin-stats-titane-tabs.md",
+      "25-visual-map/28-overlay-widgets.md",
+      "35-states/35-ui-state-machine.md",
+      "35-states/36-chat-state-machine.md",
+      "35-states/37-health-metrics-state.md",
+      "35-states/38-empty-loading-error-catalog.md",
+      "55-nonconformities/55-nonconformities-register.md",
+      "09_MANIFEST.json"
+    ]
+  },
+  "status": {
+    "cartography": "V7.0",
+    "kevin_v5_delta": "PENDING",
+    "verdict": "FAIL (Kevin V5 required)",
+    "seal": "NOT_ALLOWED (delta incomplete)",
+    "production_ready": "CONDITIONAL (see issues P1/P2)"
+  },
+  "clarity_lock": {
+    "version": "V6.1",
+    "date": "2026-02-07",
+    "zones_analyzed": 15,
+    "unresolved_zones": [],
+    "blocked_by": [
+      {
+        "zone": "GATE F Delta Comparison",
+        "artifact": "Kevin V5 cartography baseline",
+        "import_instructions": "VERIFICATION/MISSING_KEVIN_V5.md",
+        "affected_tasks": [
+          "GATE F execution",
+          "VERDICT update to PASS",
+          "SEAL issuance",
+          "70-compare/ directory completion"
+        ]
+      }
+    ],
+    "future_scope": [
+      {
+        "zone": "Per-section error boundaries",
+        "rationale": "Enhancement beyond 3-layer current setup",
+        "priority": "LOW",
+        "conditions": "If multi-tenant sections or high isolation needed"
+      },
+      {
+        "zone": "Authentication guards",
+        "rationale": "Conditional on multi-user requirement (local-first app)",
+        "priority": "MEDIUM",
+        "conditions": "If multi-user or remote access added",
+        "issue": "NC-004 reclassified from P1 to FUTURE"
+      }
+    ],
+    "acceptable_partials": [
+      {
+        "gate": "Gate B IPC",
+        "status": "PARTIAL",
+        "coverage": "95%+ (1177 of 1182 wrapped)",
+        "gaps": "5 direct invoke() calls (P2)",
+        "rationale": "Non-blocking, documented in NC-001"
+      },
+      {
+        "gate": "Gate L2 Zero Silence",
+        "status": "PARTIAL",
+        "coverage": "90%+ loading/empty, 80% errors",
+        "gaps": "10 empty catch blocks (P2)",
+        "rationale": "Non-critical contexts, tracked in UI-010"
+      },
+      {
+        "area": "Accessibility",
+        "status": "WCAG 2.2 AA Partial",
+        "score": "80/100",
+        "gaps": "Skip links missing (P3)",
+        "rationale": "P3 gaps only, no P0/P1 blockers"
+      },
+      {
+        "area": "Offline indicator",
+        "status": "Partial",
+        "covered": "Tauri backend down (BackendDownIndicator)",
+        "gaps": "Global network offline indicator (P2)",
+        "rationale": "Critical path covered, enhancement nice-to-have"
+      },
+      {
+        "area": "Degraded states",
+        "status": "70% coverage",
+        "rationale": "Acceptable baseline, 90%+ loading/empty covered"
+      }
+    ],
+    "reclassifications": {
+      "acceptable": 11,
+      "blocked": 5,
+      "future": 2
+    },
+    "ambiguities_eliminated": 15,
+    "production_impact": "NONE (status unchanged, clarity improved)"
+  }
+}

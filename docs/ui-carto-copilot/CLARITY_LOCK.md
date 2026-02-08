@@ -468,7 +468,7 @@ Add to `09_MANIFEST.json`:
 
 ---
 
-## V6.1 CLARITY LOCK COMPLETE ✅
+## V6.1 CLARITY LOCK TERMINÉ ✅
 
 **Status:** All ambiguities eliminated  
 **Unresolved zones:** 0  

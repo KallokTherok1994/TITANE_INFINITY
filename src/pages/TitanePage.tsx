@@ -37,6 +37,9 @@ import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
+import { ConversationsProvider } from '@/contexts/ConversationsContext';
+import { initG4Collector } from '@/lib/telemetry/convG4Collector';
+import { maybeRunG4AutoRunner } from '@/lib/telemetry/convG4AutoRunner';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -120,6 +123,12 @@ export const TitanePage: React.FC = () => {
   const [_isEditing, _setIsEditing] = useState(false);
   const { success: toastSuccess, error: errorToast } = useToast();
 
+  // ═══ G4 AUTO-RUNNER INITIALIZATION (BEFORE VISUAL ENGINES) ═══
+  useEffect(() => {
+    initG4Collector();
+    void maybeRunG4AutoRunner();
+  }, []);
+
   // ═══ VISUAL ENGINES INITIALIZATION ═══
   useVisualEngines({
     engines: { stable: true, helios: true, nexus: true },
@@ -169,6 +178,18 @@ export const TitanePage: React.FC = () => {
     []
   );
 
+  useEffect(() => {
+    const w = window as typeof window & {
+      __G4_TITANE__?: { setTab: (tabId: 'conversation' | 'overview') => void };
+    };
+    w.__G4_TITANE__ = {
+      setTab: tabId => setActiveTab(tabId),
+    };
+    return () => {
+      delete w.__G4_TITANE__;
+    };
+  }, []);
+
   // ═══ RENDER ACTIVE SECTION ═══
   const renderActiveSection = useCallback(() => {
     switch (activeTab) {
@@ -215,6 +236,7 @@ export const TitanePage: React.FC = () => {
               className="titane-inline-tabs"
               role="tablist"
               aria-label="Sections principales TITANE"
+              data-testid="titane-tablist"
             >
               <button
                 className={`px-4 py-2 text-sm font-medium rounded transition-all ${
@@ -227,6 +249,7 @@ export const TitanePage: React.FC = () => {
                 aria-selected={activeTab === 'conversation'}
                 aria-controls={TAB_PANEL_IDS.conversation}
                 id={TAB_LABEL_IDS.conversation}
+                data-testid="titane-tab-conversation"
               >
                 💬 Chat
               </button>
@@ -241,6 +264,7 @@ export const TitanePage: React.FC = () => {
                 aria-selected={activeTab === 'overview'}
                 aria-controls={TAB_PANEL_IDS.overview}
                 id={TAB_LABEL_IDS.overview}
+                data-testid="titane-tab-overview"
               >
                 📊 Vue
               </button>
@@ -339,7 +363,7 @@ export const TitanePage: React.FC = () => {
             aria-labelledby={TAB_LABEL_IDS[activeTab]}
             tabIndex={0}
           >
-            {renderActiveSection()}
+            <ConversationsProvider>{renderActiveSection()}</ConversationsProvider>
           </div>
         </Stack>
       </Container>

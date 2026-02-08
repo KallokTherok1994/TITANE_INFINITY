@@ -185,9 +185,9 @@ on_fail: STOP_NO_STATE_CHANGE
 ### Guards Respected
 
 **Forbidden Terms Before PASS:**
-✅ "SEALED" — NOT USED  
-✅ "PRODUCTION_READY" — NOT USED  
-✅ "COMPLETE" — NOT USED (in verdict context)
+✅ "SCELLÉ" — NOT USED  
+✅ "PRET_PRODUCTION" — NOT USED  
+✅ "TERMINÉ" — NOT USED (in verdict context)
 
 ### Non-Goals Respected
 

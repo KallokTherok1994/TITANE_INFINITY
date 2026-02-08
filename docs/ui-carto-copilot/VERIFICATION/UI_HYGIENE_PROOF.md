@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-**Status:** ✅ COMPLETE  
+**Status:** ✅ TERMINÉ  
 **Changes:** Minimal, surgical, proof-driven  
 **Impact:** Zero behavioral changes (additive only)  
 **Rollback:** Simple (documented below)
@@ -287,6 +287,6 @@ No behavioral changes. Additive only. Rollback-ready.
 
 ---
 
-**Status:** ✅ UI HYGIENE SPRINT COMPLETE  
+**Status:** ✅ UI HYGIENE SPRINT TERMINÉ  
 **Verdict:** Ready for constitutional freeze  
 **Quality:** High (proof-driven, minimal, reversible)

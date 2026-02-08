@@ -170,7 +170,8 @@ Pour chaque item FIX_NOW, critères de validation:
 | Date | Item | Change | Rationale | Authority |
 |------|------|--------|-----------|-----------|
 | 2026-02-08 | P1-2 | FIX_NOW → MONITOR | 6 restants non-critiques (localStorage, permissions). Hygiene sprint a fixé critique (useSelfHealingStore). Restants gouvernés via NC-UI-SILENCE-EXEMPT-001. Zero UX impact. | P1-2_CATCH_AUDIT.md + P1-2_REARBITRAGE_PROOF.md |
+| 2026-02-08 | FINAL_VERIFY_V1 | NO_CHANGE | Vérification registre uniquement, aucune décision modifiée. | FINAL_VERIFY_V1 |
 
 ---
 
-**UI ARBITRATION COMPLETE**
+**UI ARBITRATION TERMINÉE**

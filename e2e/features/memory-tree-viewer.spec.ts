@@ -9,9 +9,11 @@ import { test, expect, Page } from '@playwright/test';
 
 async function openTitane(page: Page) {
   await page.goto('/');
-  const mainNav = page.getByRole('navigation', { name: 'Main navigation' });
+  const mainNav = page.getByRole('navigation', {
+    name: /Navigation principale|Main navigation/i,
+  });
   await expect(mainNav).toBeVisible({ timeout: 30000 });
-  await mainNav.getByRole('button', { name: 'TITANE' }).click();
+  await mainNav.getByRole('button', { name: /^TITANE$/i }).click();
   await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
 }
 

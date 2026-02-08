@@ -266,11 +266,34 @@ const OfflineIndicator = () => {
 
 ---
 
+## Registry Verification V1 (2026-02-08)
+
+- Doc-only verification pack executed (no new NC added).
+
+---
+
+## NC-009: dev:tauri termine avec beforeDevCommand non‑zéro
+
+**Rule Violated:** Stabilité du boot dev (diagnostic/UI)
+**Severity:** P1 (dev boot instable)
+**Impact:** `pnpm run dev:tauri` s’arrête avec une erreur non‑zéro
+
+**Proof:** Erreur `beforeDevCommand` dans le log runtime
+- [docs/ui-carto-copilot/VERIFICATION/SCANS_V7/runtime-dev-tauri.log](docs/ui-carto-copilot/VERIFICATION/SCANS_V7/runtime-dev-tauri.log#L30-L139)
+
+**Root Cause:** Hypothèse (non prouvée) — sortie non‑zéro du process Vite (BeforeDevCommand). Aucun message d’erreur explicite dans [runtime/dev/logs/vite.log](runtime/dev/logs/vite.log).
+
+**Minimal Fix (si prouvé):** Stabiliser `beforeDevCommand` (ex: détecter un arrêt de Vite et retourner un code 0 si volontaire).
+
+**Validation:** Re‑exécuter `pnpm run dev:tauri` avec logs de `runtime/dev/logs/vite.log` et sortie terminal complète.
+
+---
+
 ## Summary
 
-**Total Non-Conformities:** 9  
+**Total Non-Conformities:** 10  
 **P0:** 0  
-**P1:** 3 (NC-003, NC-004, NC-007)  
+**P1:** 4 (NC-003, NC-004, NC-007, NC-009)  
 **P2:** 6 (NC-001, NC-002, NC-006, NC-008, NC-UI-SILENCE-EXEMPT-001)
 
 **Critical for Production:**
@@ -278,6 +301,7 @@ const OfflineIndicator = () => {
 - Delete NC-003 (dead code)
 - Verify NC-005 (proxy config)
 - Test NC-007 (lazy chunks in Tauri)
+- Stabiliser NC-009 (dev:tauri beforeDevCommand)
 
 **Governed Exceptions:**
 - NC-UI-SILENCE-EXEMPT-001 (6 catches) - Monitored, non-critical

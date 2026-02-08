@@ -1,0 +1,1 @@
+-rw-rw-r-- 1 titane-os titane-os 13747 févr.  8 10:27 docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md

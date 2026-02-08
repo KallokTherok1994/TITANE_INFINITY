@@ -1,0 +1,458 @@
+src/__tests__/singularity-fusion-mocked.test.ts:83:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:95:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-mocked.test.ts:104:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:114:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:126:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:140:      const warnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:171:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:182:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:188:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:199:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:206:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:207:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:16:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:24:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:31:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:38:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:46:      const metrics = await invoke('singularity_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:53:      const diagnostics = await invoke('singularity_get_diagnostics');
+src/__tests__/singularity-fusion-integration.test.ts:62:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:71:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:81:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:90:      const stats = await invoke('pipeline_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:97:      const valid = await invoke('pipeline_validate');
+src/__tests__/singularity-fusion-integration.test.ts:104:      const issues = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-integration.test.ts:109:      const issues = await invoke('autofix_detect_typescript_errors');
+src/__tests__/singularity-fusion-integration.test.ts:114:      const stats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:122:      const history = await invoke('autofix_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:134:      const result = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:142:      const result = await invoke('autoheal_heal_avatar_module');
+src/__tests__/singularity-fusion-integration.test.ts:148:      const history = await invoke('autoheal_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:164:      await expect(invoke('performance_throttle_cpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:168:      await expect(invoke('performance_optimize_gpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:172:      await expect(invoke('performance_compress_memory')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:178:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-integration.test.ts:183:      const threats = await invoke('crashguard_get_active_threats');
+src/__tests__/singularity-fusion-integration.test.ts:188:      const stats = await invoke('crashguard_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:196:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:202:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:209:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:215:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:229:      const healResult = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:233:      await invoke('autoheal_resync_state');
+src/__tests__/singularity-fusion-integration.test.ts:236:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:243:        await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:244:        await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:249:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:258:      await invoke('singularity_reset');
+src/__tests__/singularity-fusion-integration.test.ts:259:      await invoke('autofix_reset');
+src/__tests__/singularity-fusion-integration.test.ts:260:      await invoke('autoheal_reset');
+src/__tests__/singularity-fusion-integration.test.ts:261:      await invoke('performance_reset_optimizations');
+src/__tests__/singularity-fusion-integration.test.ts:264:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:267:      const fixStats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:272:      const baselineState = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:274:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:280:      await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:283:      await invoke('singularity_restore_snapshot', { snapshotId });
+src/__tests__/singularity-fusion-integration.test.ts:286:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/integration/TauriIntegration.test.tsx:33:      const result = await invoke('get_system_info');
+src/__tests__/integration/TauriIntegration.test.tsx:42:      await invoke('save_settings', { theme: 'dark', language: 'fr' });
+src/__tests__/integration/TauriIntegration.test.tsx:53:      await expect(invoke('invalid_command')).rejects.toThrow('Backend error');
+src/__tests__/integration/TauriIntegration.test.tsx:144:      const result = await invoke('store_memory', {
+src/__tests__/integration/TauriIntegration.test.tsx:158:      const memories = await invoke('get_memories', { tier: 'STM' });
+src/__tests__/integration/TauriIntegration.test.tsx:166:      await invoke('delete_memory', { id: '123' });
+src/__tests__/integration/TauriIntegration.test.tsx:180:      const metrics = await invoke('get_performance_metrics');
+src/__tests__/integration/TauriIntegration.test.tsx:199:      const metrics1 = await invoke('get_performance_metrics');
+src/__tests__/integration/TauriIntegration.test.tsx:200:      const metrics2 = await invoke('get_performance_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:1949:        const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:1953:        const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:1986:        const rustWarnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/e2e-automated-validation.test.tsx:1987:        const tsErrors = await invoke('autofix_detect_typescript_errors');
+src/__tests__/e2e-automated-validation.test.tsx:1988:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:1995:          await invoke('autofix_fix_all');
+src/__tests__/e2e-automated-validation.test.tsx:2000:            await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2007:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2025:        const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/e2e-automated-validation.test.tsx:2029:        const animation = await invoke('pipeline_prepare_avatar_animation', {
+src/__tests__/e2e-automated-validation.test.tsx:2049:        const state = await invoke('singularity_get_fusion_state');
+src/__tests__/e2e-automated-validation.test.tsx:2050:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2066:      const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:2070:      const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:2086:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2102:            invoke('singularity_get_fusion_state'),
+src/__tests__/e2e-automated-validation.test.tsx:2103:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2104:            invoke('pipeline_get_stats'),
+src/__tests__/e2e-automated-validation.test.tsx:2127:        void (await invoke('crashguard_detect_threats'));
+src/__tests__/e2e-automated-validation.test.tsx:2128:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2132:          const healed = await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2140:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2151:      const state = (await invoke('singularity_get_fusion_state')) as FusionStateResponse;
+src/__tests__/e2e-automated-validation.test.tsx:2152:      const integrity = (await invoke('singularity_check_integrity')) as number;
+src/__tests__/e2e-automated-validation.test.tsx:2153:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2154:      const stats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/__tests__/e2e-automated-validation.test.tsx:2167:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2183:      const fusionState = (await invoke(
+src/__tests__/e2e-automated-validation.test.tsx:2189:      const pipelineStats = (await invoke('pipeline_get_stats')) as PipelineStats;
+src/__tests__/e2e-automated-validation.test.tsx:2193:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2197:      const threats = (await invoke('crashguard_detect_threats')) as unknown[];
+src/__tests__/e2e-automated-validation.test.tsx:2201:      const autofixStats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/utils/invoke.ts:11: * Wrapper universel pour invoke() avec gestion d'erreur automatique
+src/utils/invoke.ts:36: * Wrapper pour invoke() avec retry automatique
+src/utils/invoke.ts:78: * Wrapper pour invoke() avec timeout
+src/utils/logging/structuredLogger.ts:278:        await invoke('log_entries', { entries });
+src/modules/devSudo/devSudoHandler.ts:2471:await window.__TAURI__.core.invoke('titan_state_get')
+src/hooks/useMemory.ts:128:        await invoke('delete_conversation', { conversationId });
+src/hooks/useMemory.ts:153:      await invoke('clear_all_memory');
+src/modules/devSudo/devSudoBackendHandlers.ts:125:   invoke('memory_scan') → #[tauri::command] memory_scan()
+src/modules/devSudo/devSudoBackendHandlers.ts:126:   invoke('secure_store_key') → #[tauri::command] secure_store_key()
+src/modules/devSudo/devSudoBackendHandlers.ts:127:   invoke('camera_start') → #[tauri::command] camera_start()
+src/modules/devSudo/devSudoBackendHandlers.ts:298:   invoke('${handlerName}').then(console.log).catch(console.error)
+src/modules/devSudo/devSudoBackendHandlers.ts:507:       return invoke('${apiName.toLowerCase()}_init');
+src/modules/devSudo/devSudoBackendHandlers.ts:511:       return invoke('${apiName.toLowerCase()}_execute', { input });
+src/modules/devSudo/devSudoBackendHandlers.ts:515:       return invoke('${apiName.toLowerCase()}_stop');
+src/hooks/useMultimodalPresence.ts:285:    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
+src/hooks/useMultimodalPresence.ts:296:    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
+src/hooks/useMemoryCore.ts:153:      await invoke('memory_clear');
+src/modules/devSudo/devSudoSingularityHandlers.ts:948:  await invoke('command');
+src/core/commands/TAURI_COMMANDS.ts:222: * Helper pour invoke() avec validation et protection robuste
+src/core/commands/TAURI_COMMANDS.ts:343: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+src/hooks/useDevicePermissions.ts:266:  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
+src/core/devops/LocalAgentEngine.ts:960:      // 1. Tauri: invoke('fs_exists', {path}) - requires Tauri command registration
+src/core/devops/LocalAgentEngine.ts:972:      // 1. Tauri: invoke('read_json_file', {path}) - type-safe, sandboxed
+src/core/devops/VisualDevOpsEngine.ts:816:    // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save
+src/lib/tauriClient.ts:5: * - `invoke()` autorisé uniquement dans ce fichier
+src/lib/tauriClient.ts:53: * **RÈGLE CRITIQUE:** Aucun appel `invoke()` direct autorisé hors de ce fichier
+src/lib/tauriClient.ts:108:    return await this.invoke(
+src/lib/tauriClient.ts:115:    return await this.invoke(
+src/lib/tauriClient.ts:122:    return await this.invoke(
+src/lib/tauriClient.ts:129:    return await this.invoke(
+src/lib/tauriClient.ts:136:    return await this.invoke(
+src/lib/tauriClient.ts:143:    return await this.invoke(
+src/lib/tauriClient.ts:150:    return await this.invoke(
+src/lib/tauriClient.ts:157:    return await this.invoke(
+src/lib/tauriClient.ts:164:    return await this.invoke(
+src/lib/tauriClient.ts:171:    return await this.invoke(
+src/lib/tauriClient.ts:178:    return await this.invoke(
+src/lib/tauriClient.ts:185:    return await this.invoke(
+src/lib/tauriClient.ts:192:    return await this.invoke(
+src/lib/tauriClient.ts:199:    return await this.invoke(
+src/lib/tauriClient.ts:206:    return await this.invoke(
+src/lib/tauriClient.ts:213:    return await this.invoke(
+src/lib/tauriClient.ts:220:    return await this.invoke(
+src/lib/tauriClient.ts:227:    return await this.invoke(
+src/lib/tauriClient.ts:234:    return await this.invoke(
+src/lib/tauriClient.ts:241:    return await this.invoke(
+src/lib/tauriClient.ts:248:    return await this.invoke(
+src/lib/tauriClient.ts:255:    return await this.invoke(
+src/lib/tauriClient.ts:262:    return await this.invoke(
+src/lib/tauriClient.ts:269:    return await this.invoke(
+src/lib/tauriClient.ts:276:    return await this.invoke(
+src/lib/tauriClient.ts:283:    return await this.invoke(
+src/lib/tauriClient.ts:290:    return await this.invoke(
+src/lib/tauriClient.ts:297:    return await this.invoke(
+src/lib/tauriClient.ts:304:    return await this.invoke(
+src/lib/tauriClient.ts:311:    return await this.invoke(
+src/lib/tauriClient.ts:318:    return await this.invoke(
+src/lib/tauriClient.ts:325:    return await this.invoke(
+src/lib/tauriClient.ts:332:    return await this.invoke(
+src/lib/tauriClient.ts:339:    return await this.invoke(
+src/lib/tauriClient.ts:346:    return await this.invoke(
+src/lib/tauriClient.ts:353:    return await this.invoke(
+src/lib/tauriClient.ts:360:    return await this.invoke(
+src/lib/tauriClient.ts:367:    return await this.invoke(
+src/lib/tauriClient.ts:374:    return await this.invoke(
+src/lib/tauriClient.ts:381:    return await this.invoke(
+src/lib/tauriClient.ts:388:    return await this.invoke(
+src/lib/tauriClient.ts:401:    return await this.invoke(
+src/lib/tauriClient.ts:408:    return await this.invoke(
+src/lib/tauriClient.ts:415:    return await this.invoke(
+src/lib/tauriClient.ts:422:    return await this.invoke(
+src/lib/tauriClient.ts:429:    return await this.invoke(
+src/lib/tauriClient.ts:436:    return await this.invoke(
+src/lib/tauriClient.ts:443:    return await this.invoke(
+src/lib/tauriClient.ts:450:    return await this.invoke(
+src/lib/tauriClient.ts:457:    return await this.invoke(
+src/lib/tauriClient.ts:464:    return await this.invoke(
+src/lib/tauriClient.ts:471:    return await this.invoke(
+src/lib/tauriClient.ts:478:    return await this.invoke(
+src/lib/tauriClient.ts:485:    return await this.invoke(
+src/lib/tauriClient.ts:492:    return await this.invoke(
+src/lib/tauriClient.ts:499:    return await this.invoke(
+src/lib/tauriClient.ts:506:    return await this.invoke(
+src/lib/tauriClient.ts:513:    return await this.invoke(
+src/lib/tauriClient.ts:520:    return await this.invoke(
+src/lib/tauriClient.ts:527:    return await this.invoke(
+src/lib/tauriClient.ts:534:    return await this.invoke(
+src/lib/tauriClient.ts:541:    return await this.invoke(
+src/lib/tauriClient.ts:548:    return await this.invoke(
+src/lib/tauriClient.ts:555:    return await this.invoke(
+src/lib/tauriClient.ts:562:    return await this.invoke(
+src/lib/tauriClient.ts:569:    return await this.invoke(
+src/lib/tauriClient.ts:576:    return await this.invoke(
+src/lib/tauriClient.ts:583:    return await this.invoke(
+src/lib/tauriClient.ts:590:    return await this.invoke(
+src/lib/tauriClient.ts:597:    return await this.invoke(
+src/lib/tauriClient.ts:604:    return await this.invoke(
+src/lib/tauriClient.ts:611:    return await this.invoke(
+src/lib/tauriClient.ts:618:    return await this.invoke(
+src/lib/tauriClient.ts:625:    return await this.invoke(
+src/lib/tauriClient.ts:632:    return await this.invoke(
+src/lib/tauriClient.ts:639:    return await this.invoke(
+src/lib/tauriClient.ts:646:    return await this.invoke(
+src/lib/tauriClient.ts:653:    return await this.invoke(
+src/lib/tauriClient.ts:660:    return await this.invoke(
+src/lib/tauriClient.ts:667:    return await this.invoke(
+src/lib/tauriClient.ts:674:    return await this.invoke(
+src/lib/tauriClient.ts:681:    return await this.invoke(
+src/lib/tauriClient.ts:688:    return await this.invoke(
+src/lib/tauriClient.ts:695:    return await this.invoke(
+src/lib/tauriClient.ts:702:    return await this.invoke(
+src/lib/tauriClient.ts:709:    return await this.invoke(
+src/lib/tauriClient.ts:716:    return await this.invoke(
+src/lib/tauriClient.ts:723:    return await this.invoke(
+src/lib/tauriClient.ts:730:    return await this.invoke(
+src/lib/tauriClient.ts:737:    return await this.invoke(
+src/lib/tauriClient.ts:744:    return await this.invoke(
+src/lib/tauriClient.ts:751:    return await this.invoke(
+src/lib/tauriClient.ts:758:    return await this.invoke(
+src/lib/tauriClient.ts:765:    return await this.invoke(
+src/lib/tauriClient.ts:772:    return await this.invoke(
+src/lib/tauriClient.ts:779:    return await this.invoke(
+src/lib/tauriClient.ts:786:    return await this.invoke(
+src/lib/tauriClient.ts:793:    return await this.invoke(
+src/lib/tauriClient.ts:800:    return await this.invoke(
+src/lib/tauriClient.ts:807:    return await this.invoke(
+src/lib/tauriClient.ts:814:    return await this.invoke(
+src/lib/tauriClient.ts:821:    return await this.invoke(
+src/lib/tauriClient.ts:828:    return await this.invoke(
+src/lib/tauriClient.ts:835:    return await this.invoke(
+src/lib/tauriClient.ts:842:    return await this.invoke(
+src/lib/tauriClient.ts:849:    return await this.invoke(
+src/lib/tauriClient.ts:856:    return await this.invoke(
+src/lib/tauriClient.ts:863:    return await this.invoke(
+src/lib/tauriClient.ts:870:    return await this.invoke(
+src/lib/tauriClient.ts:877:    return await this.invoke(
+src/lib/tauriClient.ts:884:    return await this.invoke(
+src/lib/tauriClient.ts:891:    return await this.invoke(
+src/lib/tauriClient.ts:898:    return await this.invoke(
+src/lib/tauriClient.ts:905:    return await this.invoke(
+src/lib/tauriClient.ts:912:    return await this.invoke(
+src/lib/tauriClient.ts:919:    return await this.invoke(
+src/lib/tauriClient.ts:926:    return await this.invoke(
+src/lib/tauriClient.ts:933:    return await this.invoke(
+src/lib/tauriClient.ts:940:    return await this.invoke(
+src/lib/tauriClient.ts:947:    return await this.invoke(
+src/lib/tauriClient.ts:954:    return await this.invoke(
+src/lib/tauriClient.ts:961:    return await this.invoke(
+src/lib/tauriClient.ts:968:    return await this.invoke(
+src/lib/tauriClient.ts:975:    return await this.invoke(
+src/lib/tauriClient.ts:982:    return await this.invoke(
+src/lib/tauriClient.ts:989:    return await this.invoke(
+src/lib/tauriClient.ts:996:    return await this.invoke(
+src/lib/tauriClient.ts:1003:    return await this.invoke(
+src/lib/tauriClient.ts:1010:    return await this.invoke(
+src/lib/tauriClient.ts:1017:    return await this.invoke(
+src/lib/tauriClient.ts:1024:    return await this.invoke(
+src/lib/tauriClient.ts:1031:    return await this.invoke(
+src/lib/tauriClient.ts:1038:    return await this.invoke(
+src/lib/tauriClient.ts:1045:    return await this.invoke(
+src/lib/tauriClient.ts:1052:    return await this.invoke(
+src/lib/tauriClient.ts:1059:    return await this.invoke(
+src/lib/tauriClient.ts:1066:    return await this.invoke(
+src/lib/tauriClient.ts:1073:    return await this.invoke(
+src/lib/tauriClient.ts:1080:    return await this.invoke(
+src/lib/tauriClient.ts:1087:    return await this.invoke(
+src/lib/tauriClient.ts:1094:    return await this.invoke(
+src/lib/tauriClient.ts:1101:    return await this.invoke(
+src/lib/tauriClient.ts:1108:    return await this.invoke(
+src/lib/tauriClient.ts:1115:    return await this.invoke(
+src/lib/tauriClient.ts:1122:    return await this.invoke(
+src/lib/tauriClient.ts:1129:    return await this.invoke(
+src/lib/tauriClient.ts:1136:    return await this.invoke(
+src/lib/tauriClient.ts:1143:    return await this.invoke(
+src/lib/tauriClient.ts:1150:    return await this.invoke(
+src/lib/tauriClient.ts:1157:    return await this.invoke(
+src/lib/tauriClient.ts:1164:    return await this.invoke(
+src/lib/tauriClient.ts:1171:    return await this.invoke(
+src/lib/tauriClient.ts:1178:    return await this.invoke(
+src/lib/tauriClient.ts:1185:    return await this.invoke(
+src/lib/tauriClient.ts:1192:    return await this.invoke(
+src/lib/tauriClient.ts:1199:    return await this.invoke(
+src/lib/tauriClient.ts:1206:    return await this.invoke(
+src/lib/tauriClient.ts:1213:    return await this.invoke(
+src/lib/tauriClient.ts:1220:    return await this.invoke(
+src/lib/tauriClient.ts:1227:    return await this.invoke(
+src/lib/tauriClient.ts:1234:    return await this.invoke(
+src/lib/tauriClient.ts:1241:    return await this.invoke(
+src/lib/tauriClient.ts:1248:    return await this.invoke(
+src/lib/tauriClient.ts:1255:    return await this.invoke(
+src/lib/tauriClient.ts:1262:    return await this.invoke(
+src/lib/tauriClient.ts:1269:    return await this.invoke(
+src/lib/tauriClient.ts:1276:    return await this.invoke(
+src/lib/tauriClient.ts:1283:    return await this.invoke(
+src/lib/tauriClient.ts:1290:    return await this.invoke(
+src/lib/tauriClient.ts:1297:    return await this.invoke(
+src/lib/tauriClient.ts:1304:    return await this.invoke(
+src/lib/tauriClient.ts:1311:    return await this.invoke(
+src/lib/tauriClient.ts:1318:    return await this.invoke(
+src/lib/tauriClient.ts:1325:    return await this.invoke(
+src/lib/tauriClient.ts:1332:    return await this.invoke(
+src/lib/tauriClient.ts:1339:    return await this.invoke(
+src/lib/tauriClient.ts:1346:    return await this.invoke(
+src/lib/tauriClient.ts:1353:    return await this.invoke(
+src/lib/tauriClient.ts:1360:    return await this.invoke(
+src/lib/tauriClient.ts:1367:    return await this.invoke(
+src/lib/tauriClient.ts:1374:    return await this.invoke(
+src/lib/tauriClient.ts:1381:    return await this.invoke(
+src/lib/tauriClient.ts:1388:    return await this.invoke(
+src/lib/tauriClient.ts:1395:    return await this.invoke(
+src/lib/tauriClient.ts:1402:    return await this.invoke(
+src/lib/tauriClient.ts:1409:    return await this.invoke(
+src/lib/tauriClient.ts:1416:    return await this.invoke(
+src/lib/tauriClient.ts:1423:    return await this.invoke(
+src/lib/tauriClient.ts:1430:    return await this.invoke(
+src/lib/tauriClient.ts:1437:    return await this.invoke(
+src/lib/tauriClient.ts:1444:    return await this.invoke(
+src/lib/tauriClient.ts:1451:    return await this.invoke(
+src/lib/tauriClient.ts:1458:    return await this.invoke(
+src/lib/tauriClient.ts:1465:    return await this.invoke(
+src/lib/tauriClient.ts:1472:    return await this.invoke(
+src/lib/tauriClient.ts:1479:    return await this.invoke(
+src/lib/tauriClient.ts:1486:    return await this.invoke(
+src/lib/tauriClient.ts:1493:    return await this.invoke(
+src/lib/tauriClient.ts:1500:    return await this.invoke(
+src/lib/tauriClient.ts:1507:    return await this.invoke(
+src/lib/tauriClient.ts:1514:    return await this.invoke(
+src/lib/tauriClient.ts:1521:    return await this.invoke(
+src/lib/tauriClient.ts:1528:    return await this.invoke(
+src/lib/tauriClient.ts:1535:    return await this.invoke(
+src/lib/tauriClient.ts:1542:    return await this.invoke(
+src/lib/tauriClient.ts:1549:    return await this.invoke(
+src/lib/tauriClient.ts:1556:    return await this.invoke(
+src/lib/tauriClient.ts:1563:    return await this.invoke(
+src/lib/tauriClient.ts:1570:    return await this.invoke(
+src/lib/tauriClient.ts:1577:    return await this.invoke(
+src/lib/tauriClient.ts:1584:    return await this.invoke(
+src/lib/tauriClient.ts:1591:    return await this.invoke(
+src/lib/tauriClient.ts:1598:    return await this.invoke(
+src/lib/tauriClient.ts:1605:    return await this.invoke(
+src/lib/tauriClient.ts:1612:    return await this.invoke(
+src/lib/tauriClient.ts:1619:    return await this.invoke(
+src/lib/tauriClient.ts:1626:    return await this.invoke(
+src/lib/tauriClient.ts:1633:    return await this.invoke(
+src/lib/tauriClient.ts:1640:    return await this.invoke(
+src/lib/tauriClient.ts:1647:    return await this.invoke(
+src/lib/tauriClient.ts:1654:    return await this.invoke(
+src/lib/tauriClient.ts:1661:    return await this.invoke(
+src/lib/tauriClient.ts:1668:    return await this.invoke(
+src/lib/tauriClient.ts:1675:    return await this.invoke(
+src/lib/tauriClient.ts:1682:    return await this.invoke(
+src/lib/tauriClient.ts:1689:    return await this.invoke(
+src/lib/tauriClient.ts:1696:    return await this.invoke(
+src/lib/tauriClient.ts:1703:    return await this.invoke(
+src/lib/tauriClient.ts:1710:    return await this.invoke(
+src/lib/tauriClient.ts:1717:    return await this.invoke(
+src/lib/tauriClient.ts:1724:    return await this.invoke(
+src/lib/tauriClient.ts:1731:    return await this.invoke(
+src/lib/tauriClient.ts:1738:    return await this.invoke(
+src/lib/tauriClient.ts:1745:    return await this.invoke(
+src/lib/tauriClient.ts:1752:    return await this.invoke(
+src/lib/tauriClient.ts:1759:    return await this.invoke(
+src/lib/tauriClient.ts:1766:    return await this.invoke(
+src/lib/tauriClient.ts:1773:    return await this.invoke(
+src/lib/tauriClient.ts:1780:    return await this.invoke(
+src/lib/tauriClient.ts:1788:  //   return await this.invoke('start_recording', (params as Record<string, unknown>) || {});
+src/lib/tauriClient.ts:1792:    return await this.invoke(
+src/lib/tauriClient.ts:1799:    return await this.invoke(
+src/lib/tauriClient.ts:1806:    return await this.invoke(
+src/lib/tauriClient.ts:1813:    return await this.invoke(
+src/lib/tauriClient.ts:1820:    return await this.invoke(
+src/lib/tauriClient.ts:1827:    return await this.invoke(
+src/lib/logger.ts:285:      // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
+src/core/identity/defaultIdentityMatrix.ts:321:  await invoke('identity_set_matrix', { matrix });
+src/os/bridge/TauriBridge.ts:32:      await this.invoke('ping');
+src/os/bridge/TauriBridge.ts:162:    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+src/os/bridge/TauriBridge.ts:172:      await this.invoke('ping');
+src/os/bridge/StateBridge.ts:84:      await this.bridge.invoke('set_state', { key, value });
+src/os/bridge/StateBridge.ts:116:      await this.bridge.invoke('delete_state', { key });
+src/os/bridge/StateBridge.ts:225:        await this.bridge.invoke('set_state', { key, value });
+src/components/ErrorBoundary.tsx:85:    // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+src/components/Onboarding/INTEGRATION_GUIDE.md:148:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:257:await invoke('complete_onboarding', {
+src/components/Onboarding/INTEGRATION_GUIDE.md:267:const prefs = await invoke('get_onboarding_preferences');
+src/components/Onboarding/INTEGRATION_GUIDE.md:270:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:302:await invoke('reset_onboarding');
+src/components/ChatErrorBoundary.tsx:358:      // await invoke('report_chat_error', {
+src/services/api/index.ts:15: * Remplace les `invoke()` dispersés par une API cohérente + cache + validation.
+src/services/api/index.ts:103: * const projects = await invoke('memory_get_active_projects', { limit: 5 });
+src/services/api/index.ts:126: * Phase 2 (Semaine 2): Refactor tous les invoke() existants
+src/services/api/index.ts:130: * grep -r "invoke(" src/ --include="*.ts" --include="*.tsx"
+src/services/api/index.ts:136: *    `invoke('memory_get_active_projects')`
+src/services/api/index.ts:140: *    `invoke('conversation_generate', { message, conversation_id, mode })`
+src/services/api/index.ts:144: *    `invoke('speak', { text })`
+src/services/api/index.ts:148: *    `invoke('persona_get_multipliers')`
+src/services/api/index.ts:152: *    `invoke('system_get_status')`
+src/tests/regression/titane_regression.test.ts:67:          await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:69:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:71:          await invoke('cognitive_get_map');
+src/tests/regression/titane_regression.test.ts:73:          await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:75:          await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:77:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:117:        await invoke(command, {}).catch(() => {
+src/tests/regression/titane_regression.test.ts:150:      const stats = await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:179:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:213:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:251:      await invoke('parse_document', {
+src/tests/regression/titane_regression.test.ts:281:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:331:      const response = await invoke('chat_send_message', {
+src/tests/regression/titane_regression.test.ts:381:      const status = await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:418:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:419:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/regression/titane_regression.test.ts:482:      const stateBefore = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:483:      await invoke('meta_trigger_sync');
+src/tests/regression/titane_regression.test.ts:484:      const stateAfter = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:498:      const alignment = await invoke('meta_get_alignment');
+src/tests/e2e/titane_e2e.test.ts:109:      const health = await invoke('get_system_health');
+src/tests/e2e/titane_e2e.test.ts:118:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:127:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:145:      const result = await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:159:      const stats = await invoke('memory_get_stats');
+src/tests/e2e/titane_e2e.test.ts:168:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:182:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/e2e/titane_e2e.test.ts:220:      const files = await invoke('secure_list_files');
+src/tests/e2e/titane_e2e.test.ts:229:      const parsed = await invoke('parse_document', {
+src/tests/e2e/titane_e2e.test.ts:241:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:258:      const result = await invoke('store_file', {
+src/tests/e2e/titane_e2e.test.ts:272:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:286:      const files = await invoke('get_files_by_category', { category: 'legal' });
+src/tests/e2e/titane_e2e.test.ts:344:      const synthesis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:361:      const stored = await invoke('memory_store', {
+src/tests/e2e/titane_e2e.test.ts:372:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:414:      const state = await invoke('meta_get_state');
+src/tests/e2e/titane_e2e.test.ts:423:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:432:      const alignment = await invoke('meta_get_alignment');
+src/tests/e2e/titane_e2e.test.ts:441:      const report = await invoke('meta_get_report');
+src/tests/e2e/titane_e2e.test.ts:450:      const coherence = await invoke('singularity_check_coherence');
+src/tests/e2e/titane_e2e.test.ts:459:      const selftest = await invoke('meta_selftest_all');
+src/tests/e2e/titane_e2e.test.ts:468:      const metrics = await invoke('meta_get_monitoring_metrics');
+src/tests/e2e/titane_e2e.test.ts:506:      const message = await invoke('chat_send_message', {
+src/tests/e2e/titane_e2e.test.ts:512:      await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:525:      const projects = await invoke('memory_get_active_projects');
+src/tests/e2e/titane_e2e.test.ts:534:      const parsed = await invoke('parse_document', {
+src/tests/e2e/titane_e2e.test.ts:545:      const snapshot = await invoke('write_snapshot', {
+src/tests/e2e/titane_e2e.test.ts:558:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:566:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:575:      const coherence = await invoke('singularity_get_global_coherence');
+src/services/evolutionEngine/index.ts:254:      // await invoke('sync_evolution_state', { snapshot });
+src/services/tauriClient.ts:4: * Client centralisé pour tous les appels Tauri invoke()
+src/services/cognitive/index.ts:211:    await invoke('check_sqlite_available');
+src/services/ai/providers/tauriChat.ts:9: *   PHASE 4Ω: Protection invoke() • Timeout handling • Error isolation

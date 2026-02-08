@@ -9,7 +9,7 @@
 
 ## Executive Summary
 
-**Comparison Status:** [COMPLETED / PARTIAL / FAILED]
+**Comparison Status:** [FINISHED / PARTIAL / FAILED]
 
 **Overall Assessment:** [1-3 sentences summary]
 

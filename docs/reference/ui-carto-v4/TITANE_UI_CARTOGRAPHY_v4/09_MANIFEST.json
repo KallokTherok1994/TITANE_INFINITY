@@ -1,0 +1,95 @@
+{
+  "version": "v2",
+  "generated_at": "2026-02-07T15:20:22.228192Z",
+  "top_nav": [
+    "TITANE",
+    "TIME",
+    "STATS",
+    "ADMIN",
+    "DEV",
+    "Plus"
+  ],
+  "sections": {
+    "DEV": {
+      "tabs": [
+        "Vue d’ensemble",
+        "Dev Tools",
+        "Command Center",
+        "System Commands",
+        "Q&A Tests",
+        "Orchestration",
+        "Security",
+        "Metrics",
+        "Ultimate Optimization"
+      ]
+    },
+    "ADMIN": {
+      "tabs": [
+        "System",
+        "Configuration",
+        "Audio & Voice",
+        "Design",
+        "Governance"
+      ],
+      "subtabs": {
+        "Design": [
+          "Design System",
+          "Appearance"
+        ]
+      }
+    },
+    "CHAT": {
+      "modules": [
+        "Chat",
+        "VAD",
+        "Vision",
+        "Identité",
+        "Mémoire",
+        "Évolution",
+        "XP",
+        "Transform"
+      ],
+      "conversation_controls": [
+        "Nouvelle conversation",
+        "Conversations",
+        "Archives"
+      ]
+    }
+  },
+  "widgets": [
+    "Cognitive Layout",
+    "BOOT BEACON"
+  ],
+  "errors": [
+    {
+      "id": "E1",
+      "expr": "s.meta.parameters.level"
+    },
+    {
+      "id": "E2",
+      "expr": "f.quantum_coherence"
+    },
+    {
+      "id": "E3",
+      "expr": "NaN metrics"
+    }
+  ],
+  "warnings": [
+    {
+      "id": "W1",
+      "label": "Disk usage warning ~67.8%"
+    },
+    {
+      "id": "W2",
+      "label": "WEBGL/JS fallback"
+    },
+    {
+      "id": "W3",
+      "label": "Service Worker not registered"
+    },
+    {
+      "id": "W4",
+      "label": "UNKNOWN health"
+    }
+  ]
+}

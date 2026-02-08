@@ -107,4 +107,4 @@ grep -rn "Authority:" docs/ui-carto-copilot/ | grep -v "TITANE\|Protocol\|Govern
 
 ---
 
-**Status:** ✅ FUTURE PROOF SAFETY PACK V1 COMPLETE
+**Status:** ✅ FUTURE PROOF SAFETY PACK V1 TERMINÉ

@@ -19,6 +19,7 @@
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
 use tauri::Manager;
+use tauri_plugin_fs;
 
 // TITANE∞ command modules
 use std::sync::Arc;
@@ -532,6 +533,7 @@ fn main() {
     let multi_ai_orchestrator = OrchestratorState::new();
 
     let builder = tauri::Builder::default()
+        .plugin(tauri_plugin_fs::init())
         .manage(app_state)
         .manage(singularity_cortex)
         .manage(multi_ai_orchestrator)

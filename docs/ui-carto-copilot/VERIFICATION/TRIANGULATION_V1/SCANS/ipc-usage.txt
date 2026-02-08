@@ -1,0 +1,1631 @@
+src/api/tauriClient.ts:15:import { secureInvoke } from '@/lib/security';
+src/api/tauriClient.ts:20: * Wraps secureInvoke with:
+src/api/tauriClient.ts:50:    const result = await secureInvoke<T>(cmd, payload ?? {}, {}, validator);
+src/api/tauriClient.ts:70: * Includes all security protections from secureInvoke.
+src/api/tauriClient.ts:123: * by secureInvoke validations.
+src/__tests__/api/tauriClient.test.ts:3:const secureInvokeMock = vi.fn();
+src/__tests__/api/tauriClient.test.ts:6:  secureInvoke: secureInvokeMock,
+src/__tests__/api/tauriClient.test.ts:20:  it('tauri() devrait appeler secureInvoke avec payload par défaut {}', async () => {
+src/__tests__/api/tauriClient.test.ts:23:    secureInvokeMock.mockResolvedValueOnce('ok');
+src/__tests__/api/tauriClient.test.ts:29:    expect(secureInvokeMock).toHaveBeenCalledWith('my_cmd', {}, {}, validator);
+src/__tests__/api/tauriClient.test.ts:36:    secureInvokeMock.mockRejectedValueOnce(new Error('boom'));
+src/__tests__/api/tauriClient.test.ts:51:    secureInvokeMock.mockRejectedValueOnce('oops');
+src/__tests__/api/tauriClient.test.ts:66:    secureInvokeMock
+src/__tests__/api/tauriClient.test.ts:78:    expect(secureInvokeMock).toHaveBeenCalledTimes(2);
+src/__tests__/api/tauriClient.test.ts:91:    secureInvokeMock.mockRejectedValue(new Error('nope'));
+src/__tests__/api/tauriClient.test.ts:100:    expect(secureInvokeMock).toHaveBeenCalledTimes(2);
+src/__tests__/api/tauriClient.test.ts:109:    secureInvokeMock.mockResolvedValueOnce('a').mockResolvedValueOnce('b');
+src/__tests__/useChat-streaming.test.ts:14:// Neutraliser les effets de bord (secureInvoke experience_update_state, etc.)
+src/__tests__/ui-first-10-responses.test.tsx:20:// Neutraliser les effets de bord (secureInvoke experience_update_state, etc.)
+src/__tests__/singularity-fusion-mocked.test.ts:83:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:95:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-mocked.test.ts:104:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:114:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:126:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:140:      const warnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-mocked.test.ts:149:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-mocked.test.ts:158:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:171:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:182:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-mocked.test.ts:188:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-mocked.test.ts:195:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-mocked.test.ts:199:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-mocked.test.ts:206:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-mocked.test.ts:207:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-mocked.test.ts:208:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:16:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:24:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:31:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:38:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:46:      const metrics = await invoke('singularity_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:53:      const diagnostics = await invoke('singularity_get_diagnostics');
+src/__tests__/singularity-fusion-integration.test.ts:62:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:71:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:81:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:90:      const stats = await invoke('pipeline_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:97:      const valid = await invoke('pipeline_validate');
+src/__tests__/singularity-fusion-integration.test.ts:104:      const issues = await invoke('autofix_detect_rust_warnings');
+src/__tests__/singularity-fusion-integration.test.ts:109:      const issues = await invoke('autofix_detect_typescript_errors');
+src/__tests__/singularity-fusion-integration.test.ts:114:      const stats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:122:      const history = await invoke('autofix_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:129:      const modules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:134:      const result = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:142:      const result = await invoke('autoheal_heal_avatar_module');
+src/__tests__/singularity-fusion-integration.test.ts:148:      const history = await invoke('autoheal_get_history');
+src/__tests__/singularity-fusion-integration.test.ts:155:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:164:      await expect(invoke('performance_throttle_cpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:168:      await expect(invoke('performance_optimize_gpu')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:172:      await expect(invoke('performance_compress_memory')).resolves.toBeUndefined();
+src/__tests__/singularity-fusion-integration.test.ts:178:      const threats = await invoke('crashguard_detect_threats');
+src/__tests__/singularity-fusion-integration.test.ts:183:      const threats = await invoke('crashguard_get_active_threats');
+src/__tests__/singularity-fusion-integration.test.ts:188:      const stats = await invoke('crashguard_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:196:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:202:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:209:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:215:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:219:      const metrics = await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:225:      const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/singularity-fusion-integration.test.ts:229:      const healResult = await invoke('autoheal_heal_cognitive_module');
+src/__tests__/singularity-fusion-integration.test.ts:233:      await invoke('autoheal_resync_state');
+src/__tests__/singularity-fusion-integration.test.ts:236:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:243:        await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:244:        await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:245:        await invoke('performance_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:249:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:258:      await invoke('singularity_reset');
+src/__tests__/singularity-fusion-integration.test.ts:259:      await invoke('autofix_reset');
+src/__tests__/singularity-fusion-integration.test.ts:260:      await invoke('autoheal_reset');
+src/__tests__/singularity-fusion-integration.test.ts:261:      await invoke('performance_reset_optimizations');
+src/__tests__/singularity-fusion-integration.test.ts:264:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:267:      const fixStats = await invoke('autofix_get_stats');
+src/__tests__/singularity-fusion-integration.test.ts:272:      const baselineState = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:274:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:280:      await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:283:      await invoke('singularity_restore_snapshot', { snapshotId });
+src/__tests__/singularity-fusion-integration.test.ts:286:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/useVAD.test.ts:60:// Mock secureInvoke
+src/__tests__/useVAD.test.ts:62:  secureInvoke: vi.fn().mockResolvedValue({ success: true }),
+src/__tests__/mocks/devtools.mocks.ts:96:// Mock pour secureInvoke utilisé par CoreHealthMonitor
+src/__tests__/omega/conversation-manager.test.ts:18:// Mock secureInvoke with proper isolation
+src/__tests__/omega/conversation-manager.test.ts:23:    secureInvoke: vi.fn((cmd: string, args?: any) => {
+src/__tests__/integration/TauriIntegration.test.tsx:33:      const result = await invoke('get_system_info');
+src/__tests__/integration/TauriIntegration.test.tsx:42:      await invoke('save_settings', { theme: 'dark', language: 'fr' });
+src/__tests__/integration/TauriIntegration.test.tsx:53:      await expect(invoke('invalid_command')).rejects.toThrow('Backend error');
+src/__tests__/integration/TauriIntegration.test.tsx:144:      const result = await invoke('store_memory', {
+src/__tests__/integration/TauriIntegration.test.tsx:158:      const memories = await invoke('get_memories', { tier: 'STM' });
+src/__tests__/integration/TauriIntegration.test.tsx:166:      await invoke('delete_memory', { id: '123' });
+src/__tests__/integration/TauriIntegration.test.tsx:180:      const metrics = await invoke('get_performance_metrics');
+src/__tests__/integration/TauriIntegration.test.tsx:199:      const metrics1 = await invoke('get_performance_metrics');
+src/__tests__/integration/TauriIntegration.test.tsx:200:      const metrics2 = await invoke('get_performance_metrics');
+src/test/serviceInvoker.test.ts:30:import { secureInvoke } from '../lib/security';
+src/test/serviceInvoker.test.ts:33:  secureInvoke: vi.fn(),
+src/test/serviceInvoker.test.ts:36:const mockSecureInvoke = vi.mocked(secureInvoke);
+src/test/serviceInvoker.test.ts:38:// Utiliser seulement des commandes whitelistees pour respecter secureInvoke
+src/__tests__/hooks/useWindowControls.test.tsx:15:  secureInvoke: vi.fn(async (command: string) => {
+src/__tests__/hooks/useSystemHealth.test.tsx:9:import { secureInvoke } from '@/lib/security';
+src/__tests__/hooks/useSystemHealth.test.tsx:12:  secureInvoke: vi.fn(),
+src/__tests__/hooks/useSystemHealth.test.tsx:54:    vi.mocked(secureInvoke).mockImplementation(async command => {
+src/__tests__/hooks/useSystemHealth.test.tsx:92:      expect(secureInvoke).toHaveBeenCalled();
+src/__tests__/hooks/useSystemHealth.test.tsx:98:      vi.mocked(secureInvoke).mockImplementation(async command => {
+src/__tests__/features/monitoring/SystemHealthMonitor.test.tsx:9:import { secureInvoke } from '@/lib/security';
+src/__tests__/features/monitoring/SystemHealthMonitor.test.tsx:12:  secureInvoke: vi.fn(),
+src/__tests__/features/monitoring/SystemHealthMonitor.test.tsx:15:const mockSecureInvoke = secureInvoke as ReturnType<typeof vi.fn>;
+src/components/RealityCenter/RealityCenter.tsx:9:import { secureInvoke } from '@/lib/security';
+src/components/RealityCenter/RealityCenter.tsx:222:      const currentState = await secureInvoke<RealityRendererState>(
+src/components/RealityCenter/RealityCenter.tsx:224:      ).catch(async () => secureInvoke<RealityRendererState>('reality_init'));
+src/components/RealityCenter/RealityCenter.tsx:243:        const stats = await secureInvoke<FrameStats>('reality_render_frame');
+src/components/RealityCenter/RealityCenter.tsx:256:      await secureInvoke('reality_set_render_config', { mode });
+src/components/RealityCenter/RealityCenter.tsx:265:      await secureInvoke('reality_toggle_physics', { enabled });
+src/components/RealityCenter/RealityCenter.tsx:274:      await secureInvoke('reality_add_entity', { params });
+src/components/RealityCenter/RealityCenter.tsx:283:      const stats = await secureInvoke<FrameStats>('reality_render_frame');
+src/components/RealityCenter/RealityCenter.tsx:399:                    secureInvoke('reality_set_render_config', { antialiasing: v }).then(
+src/components/RealityCenter/RealityCenter.tsx:408:                    secureInvoke('reality_set_render_config', { shadows: v }).then(
+src/__tests__/services/audio/audioStreaming.test.ts:3:const secureInvokeMock = vi.fn();
+src/__tests__/services/audio/audioStreaming.test.ts:6:  secureInvoke: secureInvokeMock,
+src/__tests__/services/audio/audioStreaming.test.ts:29:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/services/audio/audioStreaming.test.ts:34:          secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
+src/__tests__/services/audio/audioStreaming.test.ts:37:            : secureInvokeMock.mock.calls.filter(c => c[0] === 'get_streaming_state')
+src/__tests__/services/audio/audioStreaming.test.ts:79:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/services/audio/audioStreaming.test.ts:114:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/services/audio/audioStreaming.test.ts:135:    const callsBeforeStop = secureInvokeMock.mock.calls.filter(
+src/__tests__/services/audio/audioStreaming.test.ts:149:    const callsAfterStop = secureInvokeMock.mock.calls.filter(
+src/__tests__/services/audio/audioStreaming.test.ts:164:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/services/audio/audioStreaming.test.ts:185:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/services/audio/audioStreaming.test.ts:210:    secureInvokeMock.mockImplementation((command: string) => {
+src/__tests__/features/monitoring/SingularityDashboard.test.tsx:9:import { secureInvoke } from '@/lib/security';
+src/__tests__/features/monitoring/SingularityDashboard.test.tsx:13:  secureInvoke: vi.fn(),
+src/__tests__/features/monitoring/SingularityDashboard.test.tsx:21:  const mockSecureInvoke = secureInvoke as unknown as ReturnType<typeof vi.fn>;
+src/__tests__/e2e-automated-validation.test.tsx:1949:        const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:1953:        const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:1986:        const rustWarnings = await invoke('autofix_detect_rust_warnings');
+src/__tests__/e2e-automated-validation.test.tsx:1987:        const tsErrors = await invoke('autofix_detect_typescript_errors');
+src/__tests__/e2e-automated-validation.test.tsx:1988:        const brokenModules = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:1995:          await invoke('autofix_fix_all');
+src/__tests__/e2e-automated-validation.test.tsx:2000:            await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2007:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2025:        const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/e2e-automated-validation.test.tsx:2029:        const animation = await invoke('pipeline_prepare_avatar_animation', {
+src/__tests__/e2e-automated-validation.test.tsx:2049:        const state = await invoke('singularity_get_fusion_state');
+src/__tests__/e2e-automated-validation.test.tsx:2050:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2066:      const intention = (await invoke('pipeline_analyze_intention', {
+src/__tests__/e2e-automated-validation.test.tsx:2070:      const response = (await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/e2e-automated-validation.test.tsx:2086:        const metrics = await invoke('performance_get_metrics');
+src/__tests__/e2e-automated-validation.test.tsx:2102:            invoke('singularity_get_fusion_state'),
+src/__tests__/e2e-automated-validation.test.tsx:2103:            invoke('performance_get_metrics'),
+src/__tests__/e2e-automated-validation.test.tsx:2104:            invoke('pipeline_get_stats'),
+src/__tests__/e2e-automated-validation.test.tsx:2127:        void (await invoke('crashguard_detect_threats'));
+src/__tests__/e2e-automated-validation.test.tsx:2128:        const broken = await invoke('autoheal_detect_broken_modules');
+src/__tests__/e2e-automated-validation.test.tsx:2132:          const healed = await invoke('autoheal_heal_cognitive_module', {
+src/__tests__/e2e-automated-validation.test.tsx:2140:        const integrity = await invoke('singularity_check_integrity');
+src/__tests__/e2e-automated-validation.test.tsx:2151:      const state = (await invoke('singularity_get_fusion_state')) as FusionStateResponse;
+src/__tests__/e2e-automated-validation.test.tsx:2152:      const integrity = (await invoke('singularity_check_integrity')) as number;
+src/__tests__/e2e-automated-validation.test.tsx:2153:      const metrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2154:      const stats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/__tests__/e2e-automated-validation.test.tsx:2167:        const metrics = (await invoke('performance_get_metrics')) as {
+src/__tests__/e2e-automated-validation.test.tsx:2183:      const fusionState = (await invoke(
+src/__tests__/e2e-automated-validation.test.tsx:2189:      const pipelineStats = (await invoke('pipeline_get_stats')) as PipelineStats;
+src/__tests__/e2e-automated-validation.test.tsx:2193:      const perfMetrics = (await invoke('performance_get_metrics')) as PerformanceMetrics;
+src/__tests__/e2e-automated-validation.test.tsx:2197:      const threats = (await invoke('crashguard_detect_threats')) as unknown[];
+src/__tests__/e2e-automated-validation.test.tsx:2201:      const autofixStats = (await invoke('autofix_get_stats')) as AutoFixStats;
+src/apps/devtools/components/CoreHealthMonitor.tsx:7:import { secureInvoke } from '@/lib/security';
+src/apps/devtools/components/CoreHealthMonitor.tsx:36:      const response = await secureInvoke<CoreHealthResponse>('get_core_info');
+src/apps/devtools/components/CoreHealthMonitor.tsx:59:        await secureInvoke('restart_cores', { coreIds: failingCores });
+src/pages/TimeNavigator.tsx:12:import { secureInvoke } from '@/lib/security';
+src/pages/TimeNavigator.tsx:62:      const response = await secureInvoke<Snapshot[]>('list_snapshots');
+src/pages/TimeNavigator.tsx:74:      const response = await secureInvoke<TravelStats>('get_travel_stats');
+src/pages/TimeNavigator.tsx:92:      await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
+src/pages/TimeNavigator.tsx:109:      await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
+src/apps/devtools/components/EventStream.tsx:7:import { secureInvoke } from '@/lib/security';
+src/apps/devtools/components/EventStream.tsx:44:      const response = await secureInvoke<EventStreamResponse>('get_event_stream', {
+src/apps/devtools/components/EventStream.tsx:107:      await secureInvoke('clear_event_stream');
+src/apps/devtools/components/MetricsDisplay.tsx:6:import { secureInvoke } from '@/lib/security';
+src/apps/devtools/components/MetricsDisplay.tsx:49:      const response = await secureInvoke<MetricsResponse>('get_dashboard_metrics');
+src/apps/devtools/components/LogViewer.tsx:7:import { secureInvoke } from '@/lib/security';
+src/apps/devtools/components/LogViewer.tsx:67:      const response = await secureInvoke<LogsResponse>('get_system_logs', {
+src/apps/devtools/components/LogViewer.tsx:117:      await secureInvoke('clear_system_logs');
+src/core/commands/TAURI_COMMANDS.ts:222: * Helper pour invoke() avec validation et protection robuste
+src/core/commands/TAURI_COMMANDS.ts:343: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:10:// Mock secureInvoke from @/lib/security
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:15:    secureInvoke: vi.fn(),
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:19:import { secureInvoke } from '@/lib/security';
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:26:    (secureInvoke as ReturnType<typeof vi.fn>).mockResolvedValue({
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:45:      expect(secureInvoke).toHaveBeenCalledWith('get_dashboard_metrics');
+src/__tests__/components/devtools/MetricsDisplay.test.tsx:90:      (secureInvoke as ReturnType<typeof vi.fn>).mockRejectedValue(
+src/__tests__/components/devtools/CoreHealthMonitor.test.tsx:10:import { secureInvoke } from '@/lib/security';
+src/__tests__/components/devtools/CoreHealthMonitor.test.tsx:13:  secureInvoke: vi.fn(),
+src/__tests__/components/devtools/CoreHealthMonitor.test.tsx:17:  const mockSecureInvoke = secureInvoke as unknown as ReturnType<typeof vi.fn>;
+src/components/ChatErrorBoundary.tsx:358:      // await invoke('report_chat_error', {
+src/modules/performance/AdvancedPerformanceMonitor.ts:21:import { secureInvoke } from '@/lib/security';
+src/modules/performance/AdvancedPerformanceMonitor.ts:243:      const metrics = await secureInvoke<CPUMetrics>('get_cpu_metrics');
+src/modules/performance/AdvancedPerformanceMonitor.ts:398:      const metrics = await secureInvoke<BundleMetrics>('analyze_bundle_size');
+src/pages/ConfigurationHub.tsx:14:import { secureInvoke } from '@/lib/security';
+src/pages/ConfigurationHub.tsx:70:      const snapshot = await secureInvoke<ConfigSnapshot>('get_all_configs');
+src/pages/ConfigurationHub.tsx:144:        await secureInvoke('update_runtime_config', {
+src/pages/ConfigurationHub.tsx:156:        await secureInvoke('update_chat_engine_config', {
+src/pages/ConfigurationHub.tsx:197:      const filePath = await secureInvoke<string>('export_config', { filename });
+src/pages/ConfigurationHub.tsx:219:      const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', {
+src/pages/ConfigurationHub.tsx:242:        await secureInvoke<Array<{ name: string; description: string }>>(
+src/pages/ConfigurationHub.tsx:258:      await secureInvoke('save_config_preset', { name, description });
+src/pages/ConfigurationHub.tsx:275:      await secureInvoke('load_config_preset', { name });
+src/pages/ConfigurationHub.tsx:290:      await secureInvoke('delete_config_preset', { name });
+src/__tests__/components/devtools/LogViewer.test.tsx:10:import { secureInvoke } from '@/lib/security';
+src/__tests__/components/devtools/LogViewer.test.tsx:13:  secureInvoke: vi.fn(),
+src/__tests__/components/devtools/LogViewer.test.tsx:17:  const mockSecureInvoke = secureInvoke as unknown as ReturnType<typeof vi.fn>;
+src/pages/DevPage.tsx:11:import { secureInvoke } from '@/lib/security';
+src/pages/DevPage.tsx:636:        const orchState = await secureInvoke<OrchestrationState>(
+src/pages/TimePage.tsx:16:import { secureInvoke } from '@/lib/security';
+src/pages/TimePage.tsx:151:      const response = await secureInvoke<Snapshot[]>('list_snapshots');
+src/pages/TimePage.tsx:162:      const response = await secureInvoke<TravelStats>('get_travel_stats');
+src/pages/TimePage.tsx:693:      await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
+src/pages/TimePage.tsx:707:      await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
+src/modules/vocalDev/VocalDevConsoleEngine.ts:32:import { secureInvoke } from '@/lib/security';
+src/modules/vocalDev/VocalDevConsoleEngine.ts:337:      await secureInvoke('start_recording', {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:385:      const result = await secureInvoke<{ transcript: string; confidence: number }>(
+src/modules/vocalDev/VocalDevConsoleEngine.ts:633:      const result = await secureInvoke<{ output: string; exitCode: number }>(
+src/modules/vocalDev/VocalDevConsoleEngine.ts:668:          const result = await secureInvoke<{ response: string }>('ai_query_local', {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:700:      const diagnostics = await secureInvoke<{ issues: string[] }>('dev_diagnostic', {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:765:      const result = await secureInvoke<{ response: string }>('ai_query_claude', {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:779:      const result = await secureInvoke<{ response: string }>('ai_query_gemini', {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:859:      await secureInvoke('test_microphone');
+src/modules/vocalDev/VocalDevConsoleEngine.ts:886:      await secureInvoke('vad_configure', {
+src/modules/hybrid/HybridEngine.ts:19:import { secureInvoke } from '@/lib/security';
+src/modules/hybrid/HybridEngine.ts:341:      const result = await secureInvoke<string>('dev_inspect_file', { path: target });
+src/modules/hybrid/HybridEngine.ts:353:      const result = await secureInvoke<string>('dev_apply_patch', { file: target });
+src/modules/hybrid/HybridEngine.ts:365:      const result = await secureInvoke<string>('dev_get_logs', { filter });
+src/modules/hybrid/HybridEngine.ts:377:      const result = await secureInvoke<string>('hybrid_analyze_code', { target });
+src/modules/hybrid/HybridEngine.ts:389:      const result = await secureInvoke<string>('dev_run_command', { command });
+src/modules/hybrid/HybridEngine.ts:420:      await secureInvoke('dev_apply_patch', {
+src/modules/hybrid/HybridEngine.ts:444:      const result = await secureInvoke<string>('hybrid_analyze_code', { target: 'all' });
+src/modules/avatar/fullbody/fullbody_engine.ts:5:import { secureInvoke } from '@/lib/security';
+src/modules/avatar/fullbody/fullbody_engine.ts:100:      const result = await secureInvoke<string>('fullbody_initialize', {
+src/modules/avatar/fullbody/fullbody_engine.ts:133:        await secureInvoke('fullbody_advance_frame');
+src/modules/avatar/fullbody/fullbody_engine.ts:173:      await secureInvoke<string>('fullbody_activate_gesture', {
+src/modules/avatar/fullbody/fullbody_engine.ts:194:      await secureInvoke<string>('fullbody_update_expression', {
+src/modules/avatar/fullbody/fullbody_engine.ts:209:      await secureInvoke<string>('fullbody_update_lipsync', {
+src/modules/avatar/fullbody/fullbody_engine.ts:231:      await secureInvoke<string>('fullbody_update_state', {
+src/modules/avatar/fullbody/fullbody_engine.ts:250:      await secureInvoke<string>('fullbody_update_context', {
+src/modules/avatar/fullbody/fullbody_engine.ts:271:      await secureInvoke<string>('fullbody_on_wake_word');
+src/modules/avatar/fullbody/fullbody_engine.ts:287:      const json = await secureInvoke<string>('fullbody_export_skeleton');
+src/modules/avatar/fullbody/fullbody_engine.ts:300:      const json = await secureInvoke<string>('fullbody_get_stats');
+src/core/realtime/RealTimeExecutionEngine.ts:29:import { secureInvoke } from '@/lib/security';
+src/core/realtime/RealTimeExecutionEngine.ts:353:      await secureInvoke('realtime_network_task', { payload });
+src/core/realtime/RealTimeExecutionEngine.ts:496:      const chunks = await secureInvoke<ArrayBuffer[]>('realtime_stream_tts', { text });
+src/core/realtime/RealTimeExecutionEngine.ts:518:      const animations = await secureInvoke<AvatarAnimationPayload[]>(
+src/modules/avatar/appearance/appearanceEngine.ts:5:import { secureInvoke } from '@/lib/security';
+src/modules/avatar/appearance/appearanceEngine.ts:16:  const json = await secureInvoke<string>('avatar_get_appearance');
+src/modules/avatar/appearance/appearanceEngine.ts:25:  return secureInvoke<string>('avatar_set_appearance', { stateJson: json });
+src/modules/avatar/appearance/appearanceEngine.ts:33:  return secureInvoke<string>('avatar_update_appearance', { updateJson: json });
+src/modules/avatar/appearance/appearanceEngine.ts:40:  return secureInvoke<string>('avatar_apply_style_preset', { styleName });
+src/modules/avatar/appearance/appearanceEngine.ts:51:  const json = await secureInvoke<string>('avatar_parse_style_command', { command });
+src/modules/avatar/appearance/appearanceEngine.ts:64:  return secureInvoke<string>('avatar_save_custom_style', {
+src/modules/avatar/appearance/appearanceEngine.ts:75:  return secureInvoke<string>('avatar_load_custom_style', { name });
+src/modules/avatar/appearance/appearanceEngine.ts:84:  return secureInvoke<string>('avatar_merge_styles', { styleNamesJson: json });
+src/modules/avatar/appearance/appearanceEngine.ts:91:  const json = await secureInvoke<string>('avatar_list_styles');
+src/modules/avatar/appearance/appearanceEngine.ts:100:  return secureInvoke<string>('avatar_add_archetype', { name, keywordsJson });
+src/pages/OrchestrationMetaCenter.tsx:12:import { secureInvoke } from '@/lib/security';
+src/pages/OrchestrationMetaCenter.tsx:723:      const metaState = await secureInvoke<MetaOrchestratorState>(
+src/pages/OrchestrationMetaCenter.tsx:726:        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
+src/pages/OrchestrationMetaCenter.tsx:730:      const multiAiState = await secureInvoke<MultiAIState>('multi_ai_get_state').catch(
+src/pages/OrchestrationMetaCenter.tsx:740:      const nexusState = await secureInvoke<NexusState>('nexus_get_state').catch(() => ({
+src/pages/OrchestrationMetaCenter.tsx:750:      const harmoniaState = await secureInvoke<HarmoniaState>('harmonia_get_state').catch(
+src/pages/OrchestrationMetaCenter.tsx:762:      const cognitiveState = await secureInvoke<CognitiveState>(
+src/pages/OrchestrationMetaCenter.tsx:811:        await secureInvoke('orchestrator_set_mode', { mode });
+src/pages/OrchestrationMetaCenter.tsx:822:      await secureInvoke('orchestrator_run_cycle');
+src/core/healing/AutoFixEngine.ts:23:import { secureInvoke } from '@/lib/security';
+src/core/healing/AutoFixEngine.ts:223:      const warnings = await secureInvoke<string[]>('autofix_detect_rust_warnings');
+src/core/healing/AutoFixEngine.ts:241:      const errors = await secureInvoke<string[]>('autofix_detect_typescript_errors');
+src/core/healing/AutoFixEngine.ts:272:    await secureInvoke('autofix_rust_warning', { warning: issue.description });
+src/core/healing/AutoFixEngine.ts:277:    await secureInvoke('autofix_typescript_error', { error: issue.description });
+src/core/healing/AutoFixEngine.ts:286:    await secureInvoke('autofix_reset_state', { component: issue.affected_component });
+src/core/healing/AutoFixEngine.ts:291:    await secureInvoke('autofix_restart_pipeline', {
+src/core/healing/AutoFixEngine.ts:298:    await secureInvoke('autofix_resync_lipsync');
+src/core/healing/AutoFixEngine.ts:309:    await secureInvoke('autofix_restart_tauri_command', {
+src/core/healing/AutoFixEngine.ts:316:    await secureInvoke('autofix_add_mutex', { component: issue.affected_component });
+src/modules/devSudo/devSudoExtendedHandlers.ts:8:import { secureInvoke } from '@/lib/security';
+src/modules/devSudo/devSudoExtendedHandlers.ts:164:    const diagnosticResult = await secureInvoke<{
+src/modules/devSudo/devSudoExtendedHandlers.ts:217:    const health = await secureInvoke<{ status: string; healthy: boolean }>(
+src/core/healing/AutoHealEngine.ts:19:import { secureInvoke } from '@/lib/security';
+src/core/healing/AutoHealEngine.ts:105:      const modules = await secureInvoke<BrokenModule[]>('autoheal_detect_broken');
+src/core/healing/AutoHealEngine.ts:232:    await secureInvoke('autoheal_reset_cognitive');
+src/core/healing/AutoHealEngine.ts:235:    await secureInvoke('autoheal_init_cognitive');
+src/core/healing/AutoHealEngine.ts:240:    await secureInvoke('autoheal_reset_adaptive');
+src/core/healing/AutoHealEngine.ts:245:    await secureInvoke('autoheal_clear_narrative');
+src/core/healing/AutoHealEngine.ts:248:    await secureInvoke('autoheal_init_narrative');
+src/core/healing/AutoHealEngine.ts:253:    await secureInvoke('autoheal_stop_avatar');
+src/core/healing/AutoHealEngine.ts:256:    await secureInvoke('autoheal_reload_avatar');
+src/core/healing/AutoHealEngine.ts:259:    await secureInvoke('autoheal_start_avatar');
+src/core/healing/AutoHealEngine.ts:264:    await secureInvoke('autoheal_clear_tts_queue');
+src/core/healing/AutoHealEngine.ts:267:    await secureInvoke('autoheal_init_tts');
+src/core/healing/AutoHealEngine.ts:272:    await secureInvoke('autoheal_resync_lipsync');
+src/core/healing/AutoHealEngine.ts:277:    await secureInvoke('autoheal_rebuild_memory_index');
+src/core/healing/AutoHealEngine.ts:280:    await secureInvoke('autoheal_validate_memory');
+src/core/healing/AutoHealEngine.ts:285:    await secureInvoke('autoheal_stop_pipeline');
+src/core/healing/AutoHealEngine.ts:288:    await secureInvoke('autoheal_clear_pipeline');
+src/core/healing/AutoHealEngine.ts:291:    await secureInvoke('autoheal_start_pipeline');
+src/core/healing/AutoHealEngine.ts:301:      await secureInvoke('autoheal_resync_state');
+src/modules/devSudo/devSudoBackendHandlers.ts:125:   invoke('memory_scan') → #[tauri::command] memory_scan()
+src/modules/devSudo/devSudoBackendHandlers.ts:126:   invoke('secure_store_key') → #[tauri::command] secure_store_key()
+src/modules/devSudo/devSudoBackendHandlers.ts:127:   invoke('camera_start') → #[tauri::command] camera_start()
+src/modules/devSudo/devSudoBackendHandlers.ts:298:   invoke('${handlerName}').then(console.log).catch(console.error)
+src/modules/devSudo/devSudoBackendHandlers.ts:507:       return invoke('${apiName.toLowerCase()}_init');
+src/modules/devSudo/devSudoBackendHandlers.ts:511:       return invoke('${apiName.toLowerCase()}_execute', { input });
+src/modules/devSudo/devSudoBackendHandlers.ts:515:       return invoke('${apiName.toLowerCase()}_stop');
+src/pages/Stats.tsx:17:import { secureInvoke } from '@/lib/security';
+src/pages/Stats.tsx:86:        const data = await secureInvoke<CognitiveMetrics>(
+src/modules/avatar/floating/appearanceFloatingIntegration.ts:10:import { secureInvoke } from '@/lib/security';
+src/modules/avatar/floating/appearanceFloatingIntegration.ts:146:      const appearance = await secureInvoke<string>('avatar_get_appearance');
+src/modules/devSudo/devSudoHandler.ts:16:import { secureInvoke } from '@/lib/security';
+src/modules/devSudo/devSudoHandler.ts:2336:    const diagnostic = await secureInvoke<{
+src/modules/devSudo/devSudoHandler.ts:2451:    const state = await secureInvoke<Record<string, unknown>>('titan_state_get');
+src/modules/devSudo/devSudoHandler.ts:2471:await window.__TAURI__.core.invoke('titan_state_get')
+src/modules/devSudo/devSudoHandler.ts:2585:    const status = await secureInvoke<{ available: boolean; models: string[] }>(
+src/modules/devSudo/devSudoHandler.ts:2615:    const testResponse = await secureInvoke<{ content: string; model: string }>(
+src/modules/devSudo/devSudoHandler.ts:2698:    const result = await secureInvoke<string>('ai_set_local_model', { modelName });
+src/modules/devSudo/devSudoHandler.ts:2792:    const models = await secureInvoke<string[]>('ai_scan_local_models');
+src/modules/devSudo/devSudoHandler.ts:2863:    const status = await secureInvoke<{
+src/modules/devSudo/devSudoHandler.ts:2967:    const result = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:3030:    const result = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:3092:    const test1 = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:3098:    const test2 = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:3158:    await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:3166:    await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoHandler.ts:4054:    const _diagnostics = await secureInvoke('hybrid_analyze_code', { target });
+src/modules/devSudo/devSudoHandler.ts:4100:    const inspection = await secureInvoke('dev_inspect_file', { path });
+src/modules/devSudo/devSudoHandler.ts:4209:    await secureInvoke('dev_apply_patch', { file, lineStart, lineEnd, newCode });
+src/modules/devSudo/devSudoHandler.ts:4252:    const result = await secureInvoke('dev_run_command', { command });
+src/modules/devSudo/devSudoHandler.ts:4293:    const result = await secureInvoke('dev_get_logs', { filter });
+src/modules/devSudo/devSudoHandler.ts:4385:    const result = await secureInvoke('fusion_sync');
+src/modules/devSudo/devSudoHandler.ts:4613:    const result = await secureInvoke('fusion_merge', { sourcePath: file });
+src/modules/devSudo/devSudoSingularityHandlers.ts:948:  await invoke('command');
+src/pages/CloudCenter/index.tsx:9:import { secureInvoke } from '@/lib/security';
+src/pages/CloudCenter/index.tsx:41:      const result = await secureInvoke<CloudStatus>('cloud_get_status');
+src/pages/CloudCenter/index.tsx:65:      const result = await secureInvoke<CloudStatus>('cloud_init', {
+src/pages/CloudCenter/index.tsx:86:      await secureInvoke<SyncResult>('cloud_sync_push');
+src/pages/CloudCenter/index.tsx:101:      await secureInvoke<SyncResult>('cloud_sync_pull');
+src/pages/CloudCenter/index.tsx:116:      const isValid = await secureInvoke<boolean>('cloud_verify_integrity');
+src/pages/CloudCenter/index.tsx:135:      const backupPath = await secureInvoke<string>('cloud_backup_vault');
+src/core/singularity/SingularityFusionEngine.ts:44:import { secureInvoke } from '@/lib/security';
+src/core/singularity/SingularityFusionEngine.ts:346:      const fullIntention = await secureInvoke<IntentionAnalysis>(
+src/core/singularity/SingularityFusionEngine.ts:381:      const response = await secureInvoke<any>('fusion_activate_modules', {
+src/core/singularity/SingularityFusionEngine.ts:441:      const response = await secureInvoke<any>('fusion_adjust_styles', {
+src/core/singularity/SingularityFusionEngine.ts:523:      const iaResponse = await secureInvoke<any>('fusion_generate_ia_response', {
+src/core/singularity/SingularityFusionEngine.ts:552:      const response = await secureInvoke<{
+src/core/singularity/SingularityFusionEngine.ts:593:      const response = await secureInvoke<{
+src/core/singularity/SingularityFusionEngine.ts:630:      const response = await secureInvoke<{
+src/core/singularity/SingularityFusionEngine.ts:673:      const response = await secureInvoke<{
+src/core/singularity/SingularityFusionEngine.ts:739:          const response = await secureInvoke<{
+src/pages/CloudCenter/DevicesView.tsx:9:import { secureInvoke } from '@/lib/security';
+src/pages/CloudCenter/DevicesView.tsx:28:      const result = await secureInvoke<DevicesResponse>('cloud_get_devices');
+src/pages/CloudCenter/DevicesView.tsx:49:      await secureInvoke('cloud_remove_device', { deviceId });
+src/features/developer-mode/useDeveloperMode.ts:7:import { secureInvoke } from '@/lib/security';
+src/features/developer-mode/useDeveloperMode.ts:32:      const result = await secureInvoke<DeveloperModeState>('engines_devmode_get_state');
+src/features/developer-mode/useDeveloperMode.ts:45:        const success = await secureInvoke<boolean>('engines_devmode_enable', {
+src/features/developer-mode/useDeveloperMode.ts:62:      const success = await secureInvoke<boolean>('engines_devmode_disable');
+src/features/developer-mode/useDeveloperMode.ts:92:        const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', {
+src/features/developer-mode/useDeveloperMode.ts:111:        const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', {
+src/features/developer-mode/useDeveloperMode.ts:130:        const result = await secureInvoke<DiffPreview>('engines_devmode_preview', {
+src/features/developer-mode/useDeveloperMode.ts:148:      const success = await secureInvoke<boolean>('engines_devmode_rollback', {
+src/features/developer-mode/useDeveloperMode.ts:176:      const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', {
+src/features/developer-mode/useDeveloperMode.ts:206:      const backupId = await secureInvoke<string>('engines_devmode_create_backup', {
+src/features/developer-mode/useDeveloperMode.ts:222:      const success = await secureInvoke<boolean>('engines_devmode_restore_backup', {
+src/features/developer-mode/useDeveloperMode.ts:250:      const result = await secureInvoke<CodeSuggestion[]>(
+src/features/developer-mode/useDeveloperMode.ts:280:        const buildId = await secureInvoke<string>('engines_build_start', { config });
+src/features/developer-mode/useDeveloperMode.ts:295:      const result = await secureInvoke<BuildStatus>('engines_build_get_status', {
+src/features/developer-mode/useDeveloperMode.ts:307:      const res = await secureInvoke<BuildResult>('engines_build_get_result', {
+src/features/developer-mode/useDeveloperMode.ts:320:      const success = await secureInvoke<boolean>('engines_build_cancel', { buildId });
+src/features/developer-mode/useDeveloperMode.ts:334:      const success = await secureInvoke<boolean>('engines_build_clean');
+src/features/developer-mode/useDeveloperMode.ts:370:      const result = await secureInvoke<UnifiedEnginesDashboard>('engines_get_dashboard');
+src/features/developer-mode/useDeveloperMode.ts:401:      const result = await secureInvoke<string>('engines_devmode_changelog', { since });
+src/core/singularity/SingularityFusionCore.ts:18:import { secureInvoke } from '@/lib/security';
+src/core/singularity/SingularityFusionCore.ts:306:      const backendState = await secureInvoke<any>('sync_singularity');
+src/pages/CloudCenter/VaultStatus.tsx:9:import { secureInvoke } from '@/lib/security';
+src/pages/CloudCenter/VaultStatus.tsx:44:      const list = await secureInvoke<BackupInfo[]>('cloud_list_backups');
+src/pages/CloudCenter/VaultStatus.tsx:54:      const report = await secureInvoke<HealReport>('cloud_auto_heal');
+src/pages/CloudCenter/VaultStatus.tsx:70:      await secureInvoke<string>('cloud_backup_vault');
+src/pages/CloudCenter/VaultStatus.tsx:83:      await secureInvoke('cloud_restore_vault', { backupPath: path });
+src/modules/devSudo/devSudoBuiltins.ts:9:import { secureInvoke } from '@/lib/security';
+src/modules/devSudo/devSudoBuiltins.ts:251:    const diagnostic = await secureInvoke<{
+src/modules/devSudo/devSudoBuiltins.ts:366:    const state = await secureInvoke<Record<string, unknown>>('titan_state_get');
+src/modules/devSudo/devSudoBuiltins.ts:500:    const status = await secureInvoke<{ available: boolean; models: string[] }>(
+src/modules/devSudo/devSudoBuiltins.ts:530:    const testResponse = await secureInvoke<{ content: string; model: string }>(
+src/modules/devSudo/devSudoBuiltins.ts:613:    const result = await secureInvoke<string>('ai_set_local_model', { modelName });
+src/modules/devSudo/devSudoBuiltins.ts:707:    const models = await secureInvoke<string[]>('ai_scan_local_models');
+src/modules/devSudo/devSudoBuiltins.ts:778:    const status = await secureInvoke<{
+src/modules/devSudo/devSudoBuiltins.ts:882:    const result = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:945:    const result = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:1007:    const test1 = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:1013:    const test2 = await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:1073:    await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:1081:    await secureInvoke<string>('execute_shell_command', {
+src/modules/devSudo/devSudoBuiltins.ts:1969:    const _diagnostics = await secureInvoke('hybrid_analyze_code', { target });
+src/modules/devSudo/devSudoBuiltins.ts:2015:    const inspection = await secureInvoke('dev_inspect_file', { path });
+src/modules/devSudo/devSudoBuiltins.ts:2124:    await secureInvoke('dev_apply_patch', { file, lineStart, lineEnd, newCode });
+src/modules/devSudo/devSudoBuiltins.ts:2167:    const result = await secureInvoke('dev_run_command', { command });
+src/modules/devSudo/devSudoBuiltins.ts:2208:    const result = await secureInvoke('dev_get_logs', { filter });
+src/modules/devSudo/devSudoBuiltins.ts:2300:    const result = await secureInvoke('fusion_sync');
+src/modules/devSudo/devSudoBuiltins.ts:2528:    const result = await secureInvoke('fusion_merge', { sourcePath: file });
+src/pages/CloudCenter/SyncLogs.tsx:8:import { secureInvoke } from '@/lib/security';
+src/pages/CloudCenter/SyncLogs.tsx:26:      const result = await secureInvoke<SyncHistoryResponse>('cloud_get_sync_history', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:6:import { secureInvoke } from '@/lib/security';
+src/modules/avatar/floating/avatarFloatingEngine.ts:23:    return await secureInvoke<AvatarDisplayState>('avatar_get_display_state');
+src/modules/avatar/floating/avatarFloatingEngine.ts:37:    return await secureInvoke<AvatarDisplayState>('avatar_set_display_state', { state });
+src/modules/avatar/floating/avatarFloatingEngine.ts:51:    return await secureInvoke<AvatarDisplayState>('avatar_update_display_state', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:65:    return await secureInvoke<AvatarDisplayState>('avatar_reset_display_state');
+src/modules/avatar/floating/avatarFloatingEngine.ts:81:    return await secureInvoke<AvatarDisplayState>('avatar_mode_floating');
+src/modules/avatar/floating/avatarFloatingEngine.ts:93:    return await secureInvoke<AvatarDisplayState>('avatar_mode_embed');
+src/modules/avatar/floating/avatarFloatingEngine.ts:105:    return await secureInvoke<AvatarDisplayState>('avatar_mode_hidden');
+src/modules/avatar/floating/avatarFloatingEngine.ts:121:    return await secureInvoke<AvatarDisplayState>('avatar_set_position', { x, y });
+src/modules/avatar/floating/avatarFloatingEngine.ts:136:    return await secureInvoke<AvatarDisplayState>('avatar_set_size', { width, height });
+src/modules/avatar/floating/avatarFloatingEngine.ts:148:    return await secureInvoke<AvatarDisplayState>('avatar_set_scale', { scale });
+src/modules/avatar/floating/avatarFloatingEngine.ts:160:    return await secureInvoke<AvatarDisplayState>('avatar_set_opacity', { opacity });
+src/modules/avatar/floating/avatarFloatingEngine.ts:172:    return await secureInvoke<AvatarDisplayState>('avatar_set_always_on_top', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:186:    return await secureInvoke<AvatarDisplayState>('avatar_set_locked', { locked });
+src/modules/avatar/floating/avatarFloatingEngine.ts:198:    return await secureInvoke<AvatarDisplayState>('avatar_set_mirror_mode', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:214:    return await secureInvoke<AvatarDisplayState>('avatar_set_click_through', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:232:    return await secureInvoke<AvatarDisplayState>('avatar_set_anchor', { anchor });
+src/modules/avatar/floating/avatarFloatingEngine.ts:244:    return await secureInvoke<AvatarDisplayState>('avatar_set_anchor_by_name', {
+src/modules/avatar/floating/avatarFloatingEngine.ts:262:    return await secureInvoke<ScreenInfo[]>('avatar_list_screens');
+src/modules/avatar/floating/avatarFloatingEngine.ts:274:    return await secureInvoke<AvatarDisplayState>('avatar_move_to_screen', {
+src/pages/CloudCenter/SyncConfig.tsx:9:import { secureInvoke } from '@/lib/security';
+src/pages/CloudCenter/SyncConfig.tsx:75:      await secureInvoke('cloud_update_config', {
+src/components/SingularityMonitor.tsx:9:import { secureInvoke } from '@/lib/security';
+src/components/SingularityMonitor.tsx:25:        await secureInvoke('engine_init');
+src/components/SingularityMonitor.tsx:36:            await secureInvoke('engine_tick');
+src/components/SingularityMonitor.tsx:39:            const m = await secureInvoke<EngineMetrics>('engine_metrics');
+src/components/SingularityMonitor.tsx:43:            const h = await secureInvoke<{ status: 'healthy' | 'degraded' | 'failing' }>(
+src/components/SingularityMonitor.tsx:50:              const mods = await secureInvoke<ModuleInfo[]>('engine_modules');
+src/components/SingularityMonitor.tsx:79:      secureInvoke('engine_stop').catch(err => {
+src/core/context/LongContextOptimizer.ts:27:import { secureInvoke } from '@/lib/security';
+src/core/context/LongContextOptimizer.ts:160:      const result = await secureInvoke<CompressionResult>('context_compress', {
+src/core/context/LongContextOptimizer.ts:213:      const groups = await secureInvoke<SemanticGroup[]>('context_semantic_grouping', {
+src/core/context/LongContextOptimizer.ts:266:      const result = await secureInvoke<InjectionResult>('context_selective_injection', {
+src/core/context/LongContextOptimizer.ts:315:      const result = await secureInvoke<NoiseRemovalResult>('context_remove_noise', {
+src/core/context/LongContextOptimizer.ts:367:      const result = await secureInvoke<GatingResult>('context_gating', {
+src/core/context/LongContextOptimizer.ts:415:      const result = await secureInvoke<CrossChatContext>('context_link_conversations', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:32:import { secureInvoke } from '@/lib/security';
+src/core/cognitive/CognitiveOptimizationEngine.ts:142:      const result = await secureInvoke<IntentionAnalysis>(
+src/core/cognitive/CognitiveOptimizationEngine.ts:176:      const result = await secureInvoke<CoherenceCheck>('cognitive_check_coherence', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:214:      const result = await secureInvoke<ContextOptimization>(
+src/core/cognitive/CognitiveOptimizationEngine.ts:251:      const result = await secureInvoke<MemoryGatingResult>('cognitive_memory_gating', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:280:      const clusters = await secureInvoke<SemanticCluster[]>(
+src/core/cognitive/CognitiveOptimizationEngine.ts:309:      const corrected = await secureInvoke<string>('cognitive_auto_correct_response', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:328:      const cleaned = await secureInvoke<CognitiveMessage[]>('cognitive_remove_noise', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:355:      const injected = await secureInvoke<CognitiveMessage[]>(
+src/core/cognitive/CognitiveOptimizationEngine.ts:377:      const steps = await secureInvoke<string[]>('cognitive_prioritize_steps', {
+src/core/cognitive/CognitiveOptimizationEngine.ts:398:      const result = await secureInvoke<{ valid: boolean; reasoning: string }>(
+src/core/cognitive/CognitiveOptimizationEngine.ts:419:      const continuityScore = await secureInvoke<number>(
+src/core/optimization/PerformanceOptimizer.ts:23:import { secureInvoke } from '@/lib/security';
+src/core/optimization/PerformanceOptimizer.ts:182:        backendMetrics = await secureInvoke<PerformanceMetrics>(
+src/core/optimization/PerformanceOptimizer.ts:267:        await secureInvoke('performance_throttle_cpu');
+src/core/optimization/PerformanceOptimizer.ts:291:        await secureInvoke('performance_optimize_gpu');
+src/core/optimization/PerformanceOptimizer.ts:314:        await secureInvoke('performance_reduce_render_quality');
+src/core/optimization/PerformanceOptimizer.ts:336:        await secureInvoke('performance_compress_memory');
+src/core/optimization/PerformanceOptimizer.ts:401:      await secureInvoke('performance_reset_optimizations');
+src/components/MetaCenter/MetaCenter.tsx:12:import { secureInvoke } from '@/lib/security';
+src/components/MetaCenter/MetaCenter.tsx:223:      const currentState = await secureInvoke<MetaOrchestratorState>(
+src/components/MetaCenter/MetaCenter.tsx:227:        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
+src/components/MetaCenter/MetaCenter.tsx:232:      const currentMetrics = await secureInvoke<MetaMetrics>(
+src/components/MetaCenter/MetaCenter.tsx:250:      await secureInvoke('orchestrator_set_mode', { mode });
+src/components/MetaCenter/MetaCenter.tsx:260:      await secureInvoke('orchestrator_run_cycle');
+src/core/identity/defaultIdentityMatrix.ts:321:  await invoke('identity_set_matrix', { matrix });
+src/core/devmode/DevModeEngine.ts:26:import { secureInvoke } from '@/lib/security';
+src/core/devmode/DevModeEngine.ts:206:      const result = await secureInvoke<PatchResult>('devmode_patch', {
+src/core/devmode/DevModeEngine.ts:240:      const result = await secureInvoke<RefactorResult>('devmode_refactor', {
+src/core/devmode/DevModeEngine.ts:273:      const result = await secureInvoke<RewriteResult>('devmode_rewrite', {
+src/core/devmode/DevModeEngine.ts:307:      const result = await secureInvoke<AuditResult>('devmode_audit', {
+src/core/devmode/DevModeEngine.ts:384:      const result = await secureInvoke<OptimizeResult>('devmode_optimize', {
+src/core/devmode/DevModeEngine.ts:426:      const result = await secureInvoke<FusionResult>('devmode_fusion', {
+src/core/devmode/DevModeEngine.ts:460:      const result = await secureInvoke<HardeningResult>('devmode_hardening', {
+src/core/pipelines/UnifiedCognitivePipeline.ts:29:import { secureInvoke } from '@/lib/security';
+src/core/pipelines/UnifiedCognitivePipeline.ts:343:      const result = await secureInvoke<DetectedIntention>(
+src/core/pipelines/UnifiedCognitivePipeline.ts:400:      const result = await secureInvoke<CognitiveResponse>(
+src/core/pipelines/UnifiedCognitivePipeline.ts:436:      const result = await secureInvoke<TTSAudio>('tts_speak', {
+src/core/pipelines/UnifiedCognitivePipeline.ts:462:      const result = await secureInvoke<AvatarAnimation>('avatar_prepare_animation', {
+src/features/system-center/hooks/useIntrospection.ts:10:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useIntrospection.ts:47:      const result = await secureInvoke<IntrospectionReport>(
+src/features/system-center/hooks/useIntrospection.ts:68:      const result = await secureInvoke<IntrospectionReport>(
+src/features/system-center/hooks/useIntrospection.ts:90:        const result = await secureInvoke<AutoFixResult>('sc_introspection_auto_fix', {
+src/features/system-center/hooks/useSystemDiagnostics.ts:10:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useSystemDiagnostics.ts:38:      const result = await secureInvoke<SystemDiagnostics>('sc_run_quick_diagnostics');
+src/features/system-center/hooks/useSystemDiagnostics.ts:55:      const result = await secureInvoke<SystemDiagnostics>('sc_run_full_diagnostics');
+src/features/system-center/hooks/useSystemDiagnostics.ts:69:      const result = await secureInvoke<OverallStatus>('sc_get_diagnostic_status');
+src/core/devops/LocalAgentEngine.ts:960:      // 1. Tauri: invoke('fs_exists', {path}) - requires Tauri command registration
+src/core/devops/LocalAgentEngine.ts:972:      // 1. Tauri: invoke('read_json_file', {path}) - type-safe, sandboxed
+src/core/safety/CrashGuardEngine.ts:21:import { secureInvoke } from '@/lib/security';
+src/core/safety/CrashGuardEngine.ts:251:      const threats = await secureInvoke<CrashThreat[]>('crashguard_detect_threats');
+src/core/safety/CrashGuardEngine.ts:296:          await secureInvoke('crashguard_clear_memory');
+src/core/safety/CrashGuardEngine.ts:302:          await secureInvoke('crashguard_kill_thread', { source: threat.source });
+src/core/safety/CrashGuardEngine.ts:308:          await secureInvoke('crashguard_restart_module', { module: threat.source });
+src/core/safety/CrashGuardEngine.ts:314:          await secureInvoke('crashguard_emergency_shutdown');
+src/core/safety/CrashGuardEngine.ts:320:          await secureInvoke('crashguard_reset_pipeline');
+src/core/safety/CrashGuardEngine.ts:360:        await secureInvoke('crashguard_emergency_rollback');
+src/core/devops/VisualDevOpsEngine.ts:19:import { secureInvoke } from '@/lib/security';
+src/core/devops/VisualDevOpsEngine.ts:152:        const backendAnalysis = await secureInvoke<{
+src/core/devops/VisualDevOpsEngine.ts:495:      const patch = await secureInvoke<CodePatch>('visual_devops_generate_fix', {
+src/core/devops/VisualDevOpsEngine.ts:816:    // 2. Tauri filesystem: Use invoke('fs:write_file', { path, content }) to save
+src/features/system-center/hooks/useDebuggerLiveOS.ts:12:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useDebuggerLiveOS.ts:175:      const systemHealth = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:187:      const moduleHealth = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:201:        await secureInvoke<Record<string, unknown>>('get_helios_metrics');
+src/features/system-center/hooks/useDebuggerLiveOS.ts:209:      const singularityState = await secureInvoke<Record<string, unknown>>(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:219:      const enginesHealth = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:463:        await secureInvoke<Record<string, unknown>>('get_cognitive_state');
+src/features/system-center/hooks/useDebuggerLiveOS.ts:466:      const singularity = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:475:      const memoryState = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:511:          secureInvoke<Record<string, unknown>>('get_system_health').catch(() => ({})),
+src/features/system-center/hooks/useDebuggerLiveOS.ts:512:          secureInvoke<Record<string, unknown>>('get_module_health').catch(() => ({})),
+src/features/system-center/hooks/useDebuggerLiveOS.ts:513:          secureInvoke<Record<string, unknown>>('get_helios_metrics').catch(() => ({})),
+src/features/system-center/hooks/useDebuggerLiveOS.ts:514:          secureInvoke<Record<string, unknown>>('get_singularity_state').catch(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:517:          secureInvoke<Record<string, unknown>>('get_runtime_config').catch(() => ({})),
+src/features/system-center/hooks/useDebuggerLiveOS.ts:525:          const persistenceStatus = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:668:      const cognitiveState = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:672:      const systemState = await secureInvoke<{
+src/features/system-center/hooks/useDebuggerLiveOS.ts:933:              await secureInvoke('memory_prune');
+src/features/system-center/hooks/useDebuggerLiveOS.ts:938:              await secureInvoke('singularity_self_check');
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1009:      const health = await secureInvoke<{ healthy: boolean; status: string }>(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1030:      const modules = await secureInvoke<{ all_healthy: boolean }>('get_module_health');
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1072:      await secureInvoke('singularity_self_check');
+src/features/system-center/hooks/useNodeCluster.ts:10:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useNodeCluster.ts:45:      const result = await secureInvoke<ClusterStatus>('sc_get_cluster_status');
+src/features/system-center/hooks/useNodeCluster.ts:68:      const result = await secureInvoke<NodeInfo[]>('sc_get_cluster_peers');
+src/features/system-center/hooks/useNodeCluster.ts:83:        await secureInvoke('sc_initialize_cluster', { nodeId, port });
+src/features/system-center/hooks/useNodeCluster.ts:99:      await secureInvoke('sc_shutdown_cluster');
+src/App.tsx:27:import { secureInvoke } from '@/lib/security';
+src/App.tsx:300:        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
+src/features/system-center/hooks/useSystemLogs.ts:10:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useSystemLogs.ts:51:        secureInvoke<LogEntry[]>('sc_get_logs', { filter }),
+src/features/system-center/hooks/useSystemLogs.ts:52:        secureInvoke<LogStats>('sc_get_log_stats'),
+src/features/system-center/hooks/useSystemLogs.ts:68:      await secureInvoke('sc_clear_logs');
+src/features/system-center/hooks/useSystemLogs.ts:81:        await secureInvoke('sc_add_log', { level, source, message });
+src/features/system-center/hooks/useHyperVision.ts:10:import { secureInvoke } from '@/lib/security';
+src/features/system-center/hooks/useHyperVision.ts:56:      const result = await secureInvoke<HyperVisionState>('sc_hypervision_get_state');
+src/features/system-center/hooks/useHyperVision.ts:66:      const result = await secureInvoke<SystemMetrics>('sc_hypervision_get_metrics');
+src/features/system-center/hooks/useHyperVision.ts:81:      const result = await secureInvoke<LayerHealth[]>('sc_hypervision_get_layers');
+src/features/system-center/hooks/useHyperVision.ts:90:      const result = await secureInvoke<Anomaly[]>('sc_hypervision_get_anomalies', {
+src/features/system-center/hooks/useHyperVision.ts:104:      const result = await secureInvoke<HyperVisionState>('sc_hypervision_start');
+src/features/system-center/hooks/useHyperVision.ts:125:      await secureInvoke('sc_hypervision_stop');
+src/features/system-center/hooks/useHyperVision.ts:144:      await secureInvoke('sc_hypervision_clear_anomalies');
+src/features/system-center/hooks/useHyperVision.ts:154:        await secureInvoke('sc_hypervision_resolve_anomaly', { anomalyId: id });
+src/lib/serviceInvoker.ts:9:import { secureInvoke, type SecureInvokeOptions } from './security';
+src/lib/serviceInvoker.ts:168:      // Race entre secureInvoke et timeout
+src/lib/serviceInvoker.ts:170:        secureInvoke<T>(
+src/lib/serviceInvoker.ts:260:    return await secureInvoke<T>(
+src/lib/logger.ts:285:      // await invoke('log_to_file', { entry: this.formatEntry(_entry) });
+src/components/devtools/CoreHealthMonitor.tsx:7:import { secureInvoke } from '@/lib/security';
+src/components/devtools/CoreHealthMonitor.tsx:51:            const info = await secureInvoke<{
+src/components/IdentityCenter/IdentityCenter.tsx:13:import { secureInvoke } from '@/lib/security';
+src/components/IdentityCenter/IdentityCenter.tsx:149:        secureInvoke<IdentityMatrix>('identity_get_matrix').catch(() => null),
+src/components/IdentityCenter/IdentityCenter.tsx:150:        secureInvoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
+src/components/IdentityCenter/IdentityCenter.tsx:154:        secureInvoke<VoiceProfile[]>('identity_list_voice_profiles').catch(() => []),
+src/components/IdentityCenter/IdentityCenter.tsx:155:        secureInvoke<ToneState>('identity_get_current_tone').catch(() => null),
+src/components/IdentityCenter/IdentityCenter.tsx:156:        secureInvoke<OperationalMode>('identity_get_current_mode').catch(() => null),
+src/components/IdentityCenter/IdentityCenter.tsx:157:        secureInvoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
+src/components/IdentityCenter/IdentityCenter.tsx:158:        secureInvoke<BehaviorRule[]>('identity_get_active_rules').catch(() => []),
+src/components/IdentityCenter/IdentityCenter.tsx:159:        secureInvoke<number>('identity_get_coherence_score').catch(() => 0.85),
+src/components/IdentityCenter/IdentityCenter.tsx:383:      await secureInvoke('identity_set_mode', { mode: modeType });
+src/components/IdentityCenter/IdentityCenter.tsx:398:      await secureInvoke('identity_set_active_voice_profile', {
+src/components/IdentityCenter/IdentityCenter.tsx:421:        await secureInvoke('identity_disable_rule', { ruleId });
+src/components/IdentityCenter/IdentityCenter.tsx:423:        await secureInvoke('identity_enable_rule', { ruleId });
+src/components/devtools/MetricsDisplay.tsx:7:import { secureInvoke } from '@/lib/security';
+src/components/devtools/MetricsDisplay.tsx:38:        const dashboard = await secureInvoke<{
+src/core/autonomy/SingularityAutonomyEngine.ts:36:import { secureInvoke } from '@/lib/security';
+src/core/autonomy/SingularityAutonomyEngine.ts:212:      return await secureInvoke<T>(cmd, args);
+src/utils/invoke.ts:8:import { secureInvoke } from '@/lib/security';
+src/utils/invoke.ts:11: * Wrapper universel pour invoke() avec gestion d'erreur automatique
+src/utils/invoke.ts:21:    const result = await secureInvoke<T>(cmd, payload);
+src/utils/invoke.ts:36: * Wrapper pour invoke() avec retry automatique
+src/utils/invoke.ts:53:      const result = await secureInvoke<T>(cmd, payload);
+src/utils/invoke.ts:78: * Wrapper pour invoke() avec timeout
+src/utils/invoke.ts:90:    const result = await secureInvoke<T>(cmd, payload, { timeout: timeoutMs });
+src/components/HyperCenter/HyperCenter.tsx:9:import { secureInvoke } from '@/lib/security';
+src/components/HyperCenter/HyperCenter.tsx:209:      const currentState = await secureInvoke<HyperIntelligenceState>(
+src/components/HyperCenter/HyperCenter.tsx:211:      ).catch(async () => secureInvoke<HyperIntelligenceState>('hyper_init'));
+src/components/HyperCenter/HyperCenter.tsx:214:      const recentThoughts = await secureInvoke<Thought[]>('hyper_get_thoughts', {
+src/components/HyperCenter/HyperCenter.tsx:219:      const recentInsights = await secureInvoke<Insight[]>('hyper_get_insights', {
+src/components/HyperCenter/HyperCenter.tsx:240:      await secureInvoke('hyper_set_mode', { mode });
+src/components/HyperCenter/HyperCenter.tsx:251:      const thought = await secureInvoke<Thought>('hyper_think', { prompt: thinkPrompt });
+src/components/HyperCenter/HyperCenter.tsx:269:      const result = await secureInvoke<Conclusion>('hyper_reason', {
+src/components/HyperCenter/HyperCenter.tsx:281:      const result = await secureInvoke<Imagination>('hyper_imagine', {
+src/components/HyperCenter/HyperCenter.tsx:292:      await secureInvoke<Insight>('hyper_generate_insight', {
+src/lib/security.ts:1674: * const state = await secureInvoke<MemoryState>('memory_get_state');
+src/lib/security.ts:1677: * await secureInvoke('memory_save_entry', {
+src/lib/security.ts:1683: * const report = await secureInvoke<HardeningReport>(
+src/lib/security.ts:1691:export async function secureInvoke<T>(
+src/lib/security.ts:1714:    monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
+src/lib/security.ts:1869:      monitoring.addBreadcrumb('secureInvoke success', 'tauri', {
+src/lib/security.ts:1881:    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
+src/lib/security.ts:1907:  const report = await secureInvoke<HardeningReport>(
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:10:import { secureInvoke } from '@/lib/security';
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:454:      const statusData = await secureInvoke<MemoryEvolutionStatus>(
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:472:      const healthData = await secureInvoke<HierarchyHealth>('memory_hierarchy_health');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:485:      const clustersData = await secureInvoke<MemoryCluster[]>('memory_get_clusters');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:529:          result = await secureInvoke('memory_parse');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:532:          result = await secureInvoke('memory_synthesize');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:535:          result = await secureInvoke('memory_cluster');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:539:          result = await secureInvoke('memory_compress');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:542:          result = await secureInvoke('memory_extract_patterns');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:545:          result = await secureInvoke('memory_check_and_repair');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:548:          result = await secureInvoke('memory_grow');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:551:          result = await secureInvoke('memory_create_backup');
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:554:          result = await secureInvoke<EvolutionResult>('memory_evolve_full', {
+src/lib/fusion/commands.ts:8:import { secureInvoke } from '@/lib/security';
+src/lib/fusion/commands.ts:50:    const response = await secureInvoke<ModuleActivationResponse | FusionError>(
+src/lib/fusion/commands.ts:95:    const response = await secureInvoke<StyleAdjustmentResponse | FusionError>(
+src/lib/fusion/commands-week3.ts:8:import { secureInvoke } from '@/lib/security';
+src/lib/fusion/commands-week3.ts:25:    const response = await secureInvoke<LipSyncProcessResponse>(
+src/lib/fusion/commands-week3.ts:68:    const response = await secureInvoke<AnimateAvatarResponse>('fusion_animate_avatar', {
+src/utils/autoHealClient.ts:4:import { secureInvoke } from '@/lib/security';
+src/utils/autoHealClient.ts:42:    const report = await secureInvoke<HealReport>('auto_heal_scan');
+src/utils/autoHealClient.ts:57:    const results = await secureInvoke<string[]>('auto_heal_repair', { module });
+src/utils/autoHealClient.ts:71:    const logs = await secureInvoke<HealReport>('auto_heal_get_logs');
+src/lib/fusion/commands-week2.ts:8:import { secureInvoke } from '@/lib/security';
+src/lib/fusion/commands-week2.ts:37:    const response = await secureInvoke<IAGenerationResponse>(
+src/lib/fusion/commands-week2.ts:150:    const response = await secureInvoke<TTSPrepareResponse>('fusion_prepare_tts', {
+src/hooks/useMemory.ts:13:import { secureInvoke } from '@/lib/security';
+src/hooks/useMemory.ts:60:      const conversationsJson = await secureInvoke<string>('list_conversations');
+src/hooks/useMemory.ts:78:        const conversationId = await secureInvoke<string>('create_conversation', {
+src/hooks/useMemory.ts:102:      const conversationJson = await secureInvoke<string>('load_conversation', {
+src/hooks/useMemory.ts:128:        await invoke('delete_conversation', { conversationId });
+src/hooks/useMemory.ts:153:      await invoke('clear_all_memory');
+src/components/diagnostics/SplashWatchdog.tsx:21:import { secureInvoke } from '@/lib/security';
+src/components/diagnostics/SplashWatchdog.tsx:195:        secureInvoke<unknown>('get_system_health')
+src/lib/fusion/commands-week4.ts:8:import { secureInvoke } from '@/lib/security';
+src/lib/fusion/commands-week4.ts:22:    const response = await secureInvoke<UpdateStateResponse>('fusion_update_state', {
+src/lib/fusion/commands-week4.ts:42:    const response = await secureInvoke<AutoOptimizeResponse>('fusion_auto_optimize', {
+src/components/experience/ExpPanel.tsx:12:import { secureInvoke } from '@/lib/security';
+src/components/experience/ExpPanel.tsx:76:        secureInvoke<GlobalExpState>('exp_get_global_state'),
+src/components/experience/ExpPanel.tsx:77:        secureInvoke<CategoryState[]>('exp_get_categories'),
+src/components/experience/ExpPanel.tsx:78:        secureInvoke<ProjectState[]>('exp_get_projects'),
+src/components/experience/ExpPanel.tsx:79:        secureInvoke<TalentTreeState>('exp_get_talents'),
+src/components/experience/GlobalExpBar.tsx:13:import { secureInvoke } from '@/lib/security';
+src/components/experience/GlobalExpBar.tsx:43:      const state = await secureInvoke<GlobalExpState>('exp_get_global_state');
+src/components/conversation/ModeBuilder.tsx:13:import { secureInvoke } from '@/lib/security';
+src/components/conversation/ModeBuilder.tsx:132:      const response = await secureInvoke<GeneratePromptResponse>(
+src/lib/tauriClient.ts:5: * - `invoke()` autorisé uniquement dans ce fichier
+src/lib/tauriClient.ts:20:import { secureInvoke } from '@/lib/security';
+src/lib/tauriClient.ts:53: * **RÈGLE CRITIQUE:** Aucun appel `invoke()` direct autorisé hors de ce fichier
+src/lib/tauriClient.ts:65:      return await secureInvoke<T>(command, payload, options);
+src/lib/tauriClient.ts:108:    return await this.invoke(
+src/lib/tauriClient.ts:115:    return await this.invoke(
+src/lib/tauriClient.ts:122:    return await this.invoke(
+src/lib/tauriClient.ts:129:    return await this.invoke(
+src/lib/tauriClient.ts:136:    return await this.invoke(
+src/lib/tauriClient.ts:143:    return await this.invoke(
+src/lib/tauriClient.ts:150:    return await this.invoke(
+src/lib/tauriClient.ts:157:    return await this.invoke(
+src/lib/tauriClient.ts:164:    return await this.invoke(
+src/lib/tauriClient.ts:171:    return await this.invoke(
+src/lib/tauriClient.ts:178:    return await this.invoke(
+src/lib/tauriClient.ts:185:    return await this.invoke(
+src/lib/tauriClient.ts:192:    return await this.invoke(
+src/lib/tauriClient.ts:199:    return await this.invoke(
+src/lib/tauriClient.ts:206:    return await this.invoke(
+src/lib/tauriClient.ts:213:    return await this.invoke(
+src/lib/tauriClient.ts:220:    return await this.invoke(
+src/lib/tauriClient.ts:227:    return await this.invoke(
+src/lib/tauriClient.ts:234:    return await this.invoke(
+src/lib/tauriClient.ts:241:    return await this.invoke(
+src/lib/tauriClient.ts:248:    return await this.invoke(
+src/lib/tauriClient.ts:255:    return await this.invoke(
+src/lib/tauriClient.ts:262:    return await this.invoke(
+src/lib/tauriClient.ts:269:    return await this.invoke(
+src/lib/tauriClient.ts:276:    return await this.invoke(
+src/lib/tauriClient.ts:283:    return await this.invoke(
+src/lib/tauriClient.ts:290:    return await this.invoke(
+src/lib/tauriClient.ts:297:    return await this.invoke(
+src/lib/tauriClient.ts:304:    return await this.invoke(
+src/lib/tauriClient.ts:311:    return await this.invoke(
+src/lib/tauriClient.ts:318:    return await this.invoke(
+src/lib/tauriClient.ts:325:    return await this.invoke(
+src/lib/tauriClient.ts:332:    return await this.invoke(
+src/lib/tauriClient.ts:339:    return await this.invoke(
+src/lib/tauriClient.ts:346:    return await this.invoke(
+src/lib/tauriClient.ts:353:    return await this.invoke(
+src/lib/tauriClient.ts:360:    return await this.invoke(
+src/lib/tauriClient.ts:367:    return await this.invoke(
+src/lib/tauriClient.ts:374:    return await this.invoke(
+src/lib/tauriClient.ts:381:    return await this.invoke(
+src/lib/tauriClient.ts:388:    return await this.invoke(
+src/lib/tauriClient.ts:401:    return await this.invoke(
+src/lib/tauriClient.ts:408:    return await this.invoke(
+src/lib/tauriClient.ts:415:    return await this.invoke(
+src/lib/tauriClient.ts:422:    return await this.invoke(
+src/lib/tauriClient.ts:429:    return await this.invoke(
+src/lib/tauriClient.ts:436:    return await this.invoke(
+src/lib/tauriClient.ts:443:    return await this.invoke(
+src/lib/tauriClient.ts:450:    return await this.invoke(
+src/lib/tauriClient.ts:457:    return await this.invoke(
+src/lib/tauriClient.ts:464:    return await this.invoke(
+src/lib/tauriClient.ts:471:    return await this.invoke(
+src/lib/tauriClient.ts:478:    return await this.invoke(
+src/lib/tauriClient.ts:485:    return await this.invoke(
+src/lib/tauriClient.ts:492:    return await this.invoke(
+src/lib/tauriClient.ts:499:    return await this.invoke(
+src/lib/tauriClient.ts:506:    return await this.invoke(
+src/lib/tauriClient.ts:513:    return await this.invoke(
+src/lib/tauriClient.ts:520:    return await this.invoke(
+src/lib/tauriClient.ts:527:    return await this.invoke(
+src/lib/tauriClient.ts:534:    return await this.invoke(
+src/lib/tauriClient.ts:541:    return await this.invoke(
+src/lib/tauriClient.ts:548:    return await this.invoke(
+src/lib/tauriClient.ts:555:    return await this.invoke(
+src/lib/tauriClient.ts:562:    return await this.invoke(
+src/lib/tauriClient.ts:569:    return await this.invoke(
+src/lib/tauriClient.ts:576:    return await this.invoke(
+src/lib/tauriClient.ts:583:    return await this.invoke(
+src/lib/tauriClient.ts:590:    return await this.invoke(
+src/lib/tauriClient.ts:597:    return await this.invoke(
+src/lib/tauriClient.ts:604:    return await this.invoke(
+src/lib/tauriClient.ts:611:    return await this.invoke(
+src/lib/tauriClient.ts:618:    return await this.invoke(
+src/lib/tauriClient.ts:625:    return await this.invoke(
+src/lib/tauriClient.ts:632:    return await this.invoke(
+src/lib/tauriClient.ts:639:    return await this.invoke(
+src/lib/tauriClient.ts:646:    return await this.invoke(
+src/lib/tauriClient.ts:653:    return await this.invoke(
+src/lib/tauriClient.ts:660:    return await this.invoke(
+src/lib/tauriClient.ts:667:    return await this.invoke(
+src/lib/tauriClient.ts:674:    return await this.invoke(
+src/lib/tauriClient.ts:681:    return await this.invoke(
+src/lib/tauriClient.ts:688:    return await this.invoke(
+src/lib/tauriClient.ts:695:    return await this.invoke(
+src/lib/tauriClient.ts:702:    return await this.invoke(
+src/lib/tauriClient.ts:709:    return await this.invoke(
+src/lib/tauriClient.ts:716:    return await this.invoke(
+src/lib/tauriClient.ts:723:    return await this.invoke(
+src/lib/tauriClient.ts:730:    return await this.invoke(
+src/lib/tauriClient.ts:737:    return await this.invoke(
+src/lib/tauriClient.ts:744:    return await this.invoke(
+src/lib/tauriClient.ts:751:    return await this.invoke(
+src/lib/tauriClient.ts:758:    return await this.invoke(
+src/lib/tauriClient.ts:765:    return await this.invoke(
+src/lib/tauriClient.ts:772:    return await this.invoke(
+src/lib/tauriClient.ts:779:    return await this.invoke(
+src/lib/tauriClient.ts:786:    return await this.invoke(
+src/lib/tauriClient.ts:793:    return await this.invoke(
+src/lib/tauriClient.ts:800:    return await this.invoke(
+src/lib/tauriClient.ts:807:    return await this.invoke(
+src/lib/tauriClient.ts:814:    return await this.invoke(
+src/lib/tauriClient.ts:821:    return await this.invoke(
+src/lib/tauriClient.ts:828:    return await this.invoke(
+src/lib/tauriClient.ts:835:    return await this.invoke(
+src/lib/tauriClient.ts:842:    return await this.invoke(
+src/lib/tauriClient.ts:849:    return await this.invoke(
+src/lib/tauriClient.ts:856:    return await this.invoke(
+src/lib/tauriClient.ts:863:    return await this.invoke(
+src/lib/tauriClient.ts:870:    return await this.invoke(
+src/lib/tauriClient.ts:877:    return await this.invoke(
+src/lib/tauriClient.ts:884:    return await this.invoke(
+src/lib/tauriClient.ts:891:    return await this.invoke(
+src/lib/tauriClient.ts:898:    return await this.invoke(
+src/lib/tauriClient.ts:905:    return await this.invoke(
+src/lib/tauriClient.ts:912:    return await this.invoke(
+src/lib/tauriClient.ts:919:    return await this.invoke(
+src/lib/tauriClient.ts:926:    return await this.invoke(
+src/lib/tauriClient.ts:933:    return await this.invoke(
+src/lib/tauriClient.ts:940:    return await this.invoke(
+src/lib/tauriClient.ts:947:    return await this.invoke(
+src/lib/tauriClient.ts:954:    return await this.invoke(
+src/lib/tauriClient.ts:961:    return await this.invoke(
+src/lib/tauriClient.ts:968:    return await this.invoke(
+src/lib/tauriClient.ts:975:    return await this.invoke(
+src/lib/tauriClient.ts:982:    return await this.invoke(
+src/lib/tauriClient.ts:989:    return await this.invoke(
+src/lib/tauriClient.ts:996:    return await this.invoke(
+src/lib/tauriClient.ts:1003:    return await this.invoke(
+src/lib/tauriClient.ts:1010:    return await this.invoke(
+src/lib/tauriClient.ts:1017:    return await this.invoke(
+src/lib/tauriClient.ts:1024:    return await this.invoke(
+src/lib/tauriClient.ts:1031:    return await this.invoke(
+src/lib/tauriClient.ts:1038:    return await this.invoke(
+src/lib/tauriClient.ts:1045:    return await this.invoke(
+src/lib/tauriClient.ts:1052:    return await this.invoke(
+src/lib/tauriClient.ts:1059:    return await this.invoke(
+src/lib/tauriClient.ts:1066:    return await this.invoke(
+src/lib/tauriClient.ts:1073:    return await this.invoke(
+src/lib/tauriClient.ts:1080:    return await this.invoke(
+src/lib/tauriClient.ts:1087:    return await this.invoke(
+src/lib/tauriClient.ts:1094:    return await this.invoke(
+src/lib/tauriClient.ts:1101:    return await this.invoke(
+src/lib/tauriClient.ts:1108:    return await this.invoke(
+src/lib/tauriClient.ts:1115:    return await this.invoke(
+src/lib/tauriClient.ts:1122:    return await this.invoke(
+src/lib/tauriClient.ts:1129:    return await this.invoke(
+src/lib/tauriClient.ts:1136:    return await this.invoke(
+src/lib/tauriClient.ts:1143:    return await this.invoke(
+src/lib/tauriClient.ts:1150:    return await this.invoke(
+src/lib/tauriClient.ts:1157:    return await this.invoke(
+src/lib/tauriClient.ts:1164:    return await this.invoke(
+src/lib/tauriClient.ts:1171:    return await this.invoke(
+src/lib/tauriClient.ts:1178:    return await this.invoke(
+src/lib/tauriClient.ts:1185:    return await this.invoke(
+src/lib/tauriClient.ts:1192:    return await this.invoke(
+src/lib/tauriClient.ts:1199:    return await this.invoke(
+src/lib/tauriClient.ts:1206:    return await this.invoke(
+src/lib/tauriClient.ts:1213:    return await this.invoke(
+src/lib/tauriClient.ts:1220:    return await this.invoke(
+src/lib/tauriClient.ts:1227:    return await this.invoke(
+src/lib/tauriClient.ts:1234:    return await this.invoke(
+src/lib/tauriClient.ts:1241:    return await this.invoke(
+src/lib/tauriClient.ts:1248:    return await this.invoke(
+src/lib/tauriClient.ts:1255:    return await this.invoke(
+src/lib/tauriClient.ts:1262:    return await this.invoke(
+src/lib/tauriClient.ts:1269:    return await this.invoke(
+src/lib/tauriClient.ts:1276:    return await this.invoke(
+src/lib/tauriClient.ts:1283:    return await this.invoke(
+src/lib/tauriClient.ts:1290:    return await this.invoke(
+src/lib/tauriClient.ts:1297:    return await this.invoke(
+src/lib/tauriClient.ts:1304:    return await this.invoke(
+src/lib/tauriClient.ts:1311:    return await this.invoke(
+src/lib/tauriClient.ts:1318:    return await this.invoke(
+src/lib/tauriClient.ts:1325:    return await this.invoke(
+src/lib/tauriClient.ts:1332:    return await this.invoke(
+src/lib/tauriClient.ts:1339:    return await this.invoke(
+src/lib/tauriClient.ts:1346:    return await this.invoke(
+src/lib/tauriClient.ts:1353:    return await this.invoke(
+src/lib/tauriClient.ts:1360:    return await this.invoke(
+src/lib/tauriClient.ts:1367:    return await this.invoke(
+src/lib/tauriClient.ts:1374:    return await this.invoke(
+src/lib/tauriClient.ts:1381:    return await this.invoke(
+src/lib/tauriClient.ts:1388:    return await this.invoke(
+src/lib/tauriClient.ts:1395:    return await this.invoke(
+src/lib/tauriClient.ts:1402:    return await this.invoke(
+src/lib/tauriClient.ts:1409:    return await this.invoke(
+src/lib/tauriClient.ts:1416:    return await this.invoke(
+src/lib/tauriClient.ts:1423:    return await this.invoke(
+src/lib/tauriClient.ts:1430:    return await this.invoke(
+src/lib/tauriClient.ts:1437:    return await this.invoke(
+src/lib/tauriClient.ts:1444:    return await this.invoke(
+src/lib/tauriClient.ts:1451:    return await this.invoke(
+src/lib/tauriClient.ts:1458:    return await this.invoke(
+src/lib/tauriClient.ts:1465:    return await this.invoke(
+src/lib/tauriClient.ts:1472:    return await this.invoke(
+src/lib/tauriClient.ts:1479:    return await this.invoke(
+src/lib/tauriClient.ts:1486:    return await this.invoke(
+src/lib/tauriClient.ts:1493:    return await this.invoke(
+src/lib/tauriClient.ts:1500:    return await this.invoke(
+src/lib/tauriClient.ts:1507:    return await this.invoke(
+src/lib/tauriClient.ts:1514:    return await this.invoke(
+src/lib/tauriClient.ts:1521:    return await this.invoke(
+src/lib/tauriClient.ts:1528:    return await this.invoke(
+src/lib/tauriClient.ts:1535:    return await this.invoke(
+src/lib/tauriClient.ts:1542:    return await this.invoke(
+src/lib/tauriClient.ts:1549:    return await this.invoke(
+src/lib/tauriClient.ts:1556:    return await this.invoke(
+src/lib/tauriClient.ts:1563:    return await this.invoke(
+src/lib/tauriClient.ts:1570:    return await this.invoke(
+src/lib/tauriClient.ts:1577:    return await this.invoke(
+src/lib/tauriClient.ts:1584:    return await this.invoke(
+src/lib/tauriClient.ts:1591:    return await this.invoke(
+src/lib/tauriClient.ts:1598:    return await this.invoke(
+src/lib/tauriClient.ts:1605:    return await this.invoke(
+src/lib/tauriClient.ts:1612:    return await this.invoke(
+src/lib/tauriClient.ts:1619:    return await this.invoke(
+src/lib/tauriClient.ts:1626:    return await this.invoke(
+src/lib/tauriClient.ts:1633:    return await this.invoke(
+src/lib/tauriClient.ts:1640:    return await this.invoke(
+src/lib/tauriClient.ts:1647:    return await this.invoke(
+src/lib/tauriClient.ts:1654:    return await this.invoke(
+src/lib/tauriClient.ts:1661:    return await this.invoke(
+src/lib/tauriClient.ts:1668:    return await this.invoke(
+src/lib/tauriClient.ts:1675:    return await this.invoke(
+src/lib/tauriClient.ts:1682:    return await this.invoke(
+src/lib/tauriClient.ts:1689:    return await this.invoke(
+src/lib/tauriClient.ts:1696:    return await this.invoke(
+src/lib/tauriClient.ts:1703:    return await this.invoke(
+src/lib/tauriClient.ts:1710:    return await this.invoke(
+src/lib/tauriClient.ts:1717:    return await this.invoke(
+src/lib/tauriClient.ts:1724:    return await this.invoke(
+src/lib/tauriClient.ts:1731:    return await this.invoke(
+src/lib/tauriClient.ts:1738:    return await this.invoke(
+src/lib/tauriClient.ts:1745:    return await this.invoke(
+src/lib/tauriClient.ts:1752:    return await this.invoke(
+src/lib/tauriClient.ts:1759:    return await this.invoke(
+src/lib/tauriClient.ts:1766:    return await this.invoke(
+src/lib/tauriClient.ts:1773:    return await this.invoke(
+src/lib/tauriClient.ts:1780:    return await this.invoke(
+src/lib/tauriClient.ts:1786:  // DEPRECATED: Use secureInvoke('start_recording', { config }) directly
+src/lib/tauriClient.ts:1788:  //   return await this.invoke('start_recording', (params as Record<string, unknown>) || {});
+src/lib/tauriClient.ts:1792:    return await this.invoke(
+src/lib/tauriClient.ts:1799:    return await this.invoke(
+src/lib/tauriClient.ts:1806:    return await this.invoke(
+src/lib/tauriClient.ts:1813:    return await this.invoke(
+src/lib/tauriClient.ts:1820:    return await this.invoke(
+src/lib/tauriClient.ts:1827:    return await this.invoke(
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:68:      // Connexion réelle à Helios via secureInvoke
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:69:      const { secureInvoke } = await import('@/lib/security');
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:70:      const heliosData = await secureInvoke<{
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:188:      // Connexion réelle à Nexus via secureInvoke
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:189:      const { secureInvoke } = await import('@/lib/security');
+src/engines/cognitive/cognitiveLayoutIntegrations.ts:190:      const nexusData = await secureInvoke<{
+src/lib/ipc.ts:4: * **Règle absolue:** Interdit fetch("ipc://...") — passer par l'IPC wrapper uniquement
+src/lib/ipc.ts:10:import { secureInvoke } from '@/lib/security';
+src/lib/ipc.ts:38: * Wrapper IPC centralisé — remplace tout fetch("ipc://...")
+src/lib/ipc.ts:40: * **RÈGLE CRITIQUE:** Aucun fetch("ipc://localhost/...") autorisé
+src/lib/ipc.ts:41: * Utilise exclusivement le wrapper sécurisé (secureInvoke via tauriClient)
+src/lib/ipc.ts:56:    const result = await secureInvoke<T>(cmd as string, args, {
+src/lib/ipc.ts:58:      // On laisse le whitelist check côté secureInvoke/tauriClient
+src/components/ErrorBoundary.tsx:85:    // 4. Tauri command: invoke('watchdog:report_ui_error', { errorReport })
+src/utils/logging/structuredLogger.ts:278:        await invoke('log_entries', { entries });
+src/components/Onboarding/OnboardingFlow.tsx:15:import { secureInvoke } from '@/lib/security';
+src/components/Onboarding/OnboardingFlow.tsx:77:        await secureInvoke('complete_onboarding', {
+src/components/Onboarding/INTEGRATION_GUIDE.md:148:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:257:await invoke('complete_onboarding', {
+src/components/Onboarding/INTEGRATION_GUIDE.md:267:const prefs = await invoke('get_onboarding_preferences');
+src/components/Onboarding/INTEGRATION_GUIDE.md:270:await invoke('reset_onboarding');
+src/components/Onboarding/INTEGRATION_GUIDE.md:302:await invoke('reset_onboarding');
+src/utils/ollama.ts:1:import { secureInvoke } from '@/lib/security';
+src/utils/ollama.ts:4:  return secureInvoke<string>('ollama_query', { prompt });
+src/components/monitoring/SystemHealthMonitor.tsx:7:import { secureInvoke } from '@/lib/security';
+src/components/monitoring/SystemHealthMonitor.tsx:48:      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
+src/components/monitoring/SystemHealthMonitor.tsx:67:      const result = await secureInvoke<EngineStatus[]>('get_engines_status');
+src/components/monitoring/SingularityDashboard.tsx:21:import { secureInvoke } from '@/lib/security';
+src/components/monitoring/SingularityDashboard.tsx:779:      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
+src/services/api/numericTwin.ts:7:import { secureInvoke } from '@/lib/security';
+src/services/api/numericTwin.ts:32:      const state = await secureInvoke<TwinState>('twin_get_state');
+src/services/api/numericTwin.ts:46:      const index = await secureInvoke<FusionIndex>('twin_get_fusion_index');
+src/services/api/numericTwin.ts:60:      const syncId = await secureInvoke<string>('twin_submit_observation', {
+src/services/api/numericTwin.ts:76:      const result = await secureInvoke<TwinEvolutionResult>('twin_apply_evolution', {
+src/services/api/numericTwin.ts:92:      const result = await secureInvoke<boolean>('twin_validate_sync', { validation });
+src/services/api/numericTwin.ts:106:      const profile = await secureInvoke<TwinEvolutionProfile>(
+src/services/api/numericTwin.ts:122:      const identity = await secureInvoke<TwinIdentityCore>('twin_get_identity');
+src/services/api/numericTwin.ts:136:      const score = await secureInvoke<number>('twin_recalculate_fusion');
+src/hooks/useControlPanelSection.ts:7:import { secureInvoke } from '@/lib/security';
+src/hooks/useControlPanelSection.ts:50:      const result = await secureInvoke<T>(loadCommand);
+src/hooks/useControlPanelSection.ts:71:      await secureInvoke(saveCommand, { [saveParamKey]: config });
+src/services/api/index.ts:15: * Remplace les `invoke()` dispersés par une API cohérente + cache + validation.
+src/services/api/index.ts:103: * const projects = await invoke('memory_get_active_projects', { limit: 5 });
+src/services/api/index.ts:126: * Phase 2 (Semaine 2): Refactor tous les invoke() existants
+src/services/api/index.ts:130: * grep -r "invoke(" src/ --include="*.ts" --include="*.tsx"
+src/services/api/index.ts:136: *    `invoke('memory_get_active_projects')`
+src/services/api/index.ts:140: *    `invoke('conversation_generate', { message, conversation_id, mode })`
+src/services/api/index.ts:144: *    `invoke('speak', { text })`
+src/services/api/index.ts:148: *    `invoke('persona_get_multipliers')`
+src/services/api/index.ts:152: *    `invoke('system_get_status')`
+src/services/api/voice.ts:61: * Remplace appels secureInvoke() voice_*
+src/hooks/useSingularityStore.ts:24: *   secureInvoke('get_helios_metrics').then(data => setCpuUsage(data.cpu));
+src/hooks/useSingularitySync.ts:15:import { secureInvoke } from '@/lib/security';
+src/hooks/useSingularitySync.ts:97:      const backendState = await secureInvoke<SingularityState>(
+src/hooks/useSingularitySync.ts:152:        await secureInvoke('singularity_update_full_state', {
+src/features/design-center/services/uiThemeIAService.ts:8:import { secureInvoke } from '@/lib/security';
+src/features/design-center/services/uiThemeIAService.ts:231:          await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/services/uiThemeIAService.ts:245:          await secureInvoke<UIThemeTokens>('reset_ui_theme');
+src/features/design-center/services/uiThemeIAService.ts:253:          const tokens = await secureInvoke<UIThemeTokens>('load_ui_theme');
+src/features/design-center/services/uiThemeIAService.ts:254:          await secureInvoke('save_ui_theme', { tokens });
+src/features/design-center/services/uiThemeIAService.ts:262:          await secureInvoke<UIThemeTokens>('load_ui_theme');
+src/hooks/useSingularityState.ts:7:import { secureInvoke } from '@/lib/security';
+src/hooks/useSingularityState.ts:134:      const state = await secureInvoke<SingularityState>('engine_get_singularity_state');
+src/hooks/useSingularityState.ts:139:        secureInvoke<NexusState>('engine_get_nexus_state'),
+src/hooks/useSingularityState.ts:140:        secureInvoke<HarmoniaState>('engine_get_harmonia_state'),
+src/hooks/useSingularityState.ts:141:        secureInvoke<SentinelState>('engine_get_sentinel_state'),
+src/hooks/useSingularityState.ts:142:        secureInvoke<CognitionState>('engine_get_cognition_state'),
+src/hooks/useSingularityState.ts:143:        secureInvoke<EvolutionState>('engine_get_evolution_state'),
+src/hooks/useSingularityState.ts:167:      const result = await secureInvoke<string>('engine_init_singularity');
+src/hooks/useSingularityState.ts:185:      const result = await secureInvoke<string>('engine_tick');
+src/services/audioTranscriptionService.ts:9:import { secureInvoke } from '@/lib/security';
+src/services/audioTranscriptionService.ts:51:      const result = await secureInvoke<{ text: string; language?: string }>(
+src/services/conversationEngine.ts:13:import { secureInvoke } from '@/lib/security';
+src/services/conversationEngine.ts:146:      conversationId = await secureInvoke<string>('create_new_conversation');
+src/services/conversationEngine.ts:161:  console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
+src/services/conversationEngine.ts:166:  const raw = (await secureInvoke<unknown>('conversation_generate', {
+src/services/conversationEngine.ts:249:  return secureInvoke<ConversationHealthReport>('conversation_health_check');
+src/services/conversationEngine.ts:256:  return secureInvoke<ConversationMemoryStats>('conversation_memory_stats');
+src/features/design-center/providers/UIThemeProvider.tsx:16:import { secureInvoke } from '@/lib/security';
+src/features/design-center/providers/UIThemeProvider.tsx:159:      const tokens = await secureInvoke<UIThemeTokens | null>('load_ui_theme');
+src/features/design-center/providers/UIThemeProvider.tsx:325:      await secureInvoke('save_ui_theme', { tokens: state.tokens });
+src/features/design-center/providers/UIThemeProvider.tsx:347:      const tokens = await secureInvoke<UIThemeTokens | null>('reset_ui_theme');
+src/os/bridge/TauriBridge.ts:6:import { secureInvoke } from '@/lib/security';
+src/os/bridge/TauriBridge.ts:32:      await this.invoke('ping');
+src/os/bridge/TauriBridge.ts:48:      const result = await secureInvoke<R>(command, args as Record<string, unknown>);
+src/os/bridge/TauriBridge.ts:162:    return Promise.all(commands.map(cmd => this.invoke(cmd.name, cmd.args))) as Promise<
+src/os/bridge/TauriBridge.ts:172:      await this.invoke('ping');
+src/os/bridge/StateBridge.ts:84:      await this.bridge.invoke('set_state', { key, value });
+src/os/bridge/StateBridge.ts:116:      await this.bridge.invoke('delete_state', { key });
+src/os/bridge/StateBridge.ts:225:        await this.bridge.invoke('set_state', { key, value });
+src/hooks/useDevicePermissions.ts:14:import { secureInvoke } from '@/lib/security';
+src/hooks/useDevicePermissions.ts:104:    const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+src/hooks/useDevicePermissions.ts:266:  // - API: await invoke('plugin:screenshots|capture', {monitor: 0})
+src/features/design-center/hooks/useUIThemeCommands.ts:9:import { secureInvoke } from '@/lib/security';
+src/features/design-center/hooks/useUIThemeCommands.ts:52:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:75:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:98:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:121:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:144:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:167:            await secureInvoke<UIThemeTokens>('update_ui_token', {
+src/features/design-center/hooks/useUIThemeCommands.ts:182:            await secureInvoke<UIThemeTokens>('reset_ui_theme');
+src/features/design-center/hooks/useUIThemeCommands.ts:191:            await secureInvoke('save_ui_theme', { tokens });
+src/services/systemCenter/SystemAPI.ts:13:import { secureInvoke } from '@/lib/security';
+src/services/systemCenter/SystemAPI.ts:67:      const data = await secureInvoke<SystemHealth>('get_system_health', {});
+src/services/systemCenter/SystemAPI.ts:79:          const data = await secureInvoke(fix.newCommand, {});
+src/services/systemCenter/SystemAPI.ts:116:        const data = await secureInvoke<MonitoringMetrics>(command, {});
+src/services/systemCenter/SystemAPI.ts:147:      const data = await secureInvoke('get_module_health', { module: moduleName });
+src/services/systemCenter/SystemAPI.ts:175:        const data = await secureInvoke(command, {});
+src/services/systemCenter/SystemAPI.ts:198:      const data = await secureInvoke('get_helios_metrics', {});
+src/services/systemCenter/SystemAPI.ts:217:        const data = await secureInvoke(command, {});
+src/services/systemCenter/SystemAPI.ts:268:      const data = await secureInvoke('engines_monitoring_get_dashboard', {});
+src/services/systemCenter/SystemAPI.ts:293:      await secureInvoke(command, {});
+src/services/systemCenter/SystemCenterAutoFix.ts:13:import { secureInvoke } from '@/lib/security';
+src/services/systemCenter/SystemCenterAutoFix.ts:242:      await secureInvoke(newCommand, {});
+src/services/systemCenter/SystemCenterAutoFix.ts:611:import { secureInvoke } from '@/lib/security';
+src/services/systemCenter/SystemCenterAutoFix.ts:642:    const result = await secureInvoke('get_system_health', {});
+src/services/agendaService.ts:8: * Les Engines (Ring 2) appellent ce service au lieu de secureInvoke directement.
+src/services/agendaService.ts:11:import { secureInvoke } from '@/lib/security';
+src/services/agendaService.ts:31:  return secureInvoke('agenda_save_events', { events });
+src/services/agendaService.ts:38:  return secureInvoke<AgendaEvent[]>('agenda_load_events');
+src/services/agendaService.ts:45:  return secureInvoke<string>('agenda_export_ical');
+src/services/agendaService.ts:52:  return secureInvoke('agenda_sync');
+src/services/agendaService.ts:59:  return secureInvoke('agenda_save_event', { event });
+src/services/agendaService.ts:66:  return secureInvoke('agenda_delete_event', { eventId });
+src/hooks/useWindowControls.ts:5:import { secureInvoke } from '@/lib/security';
+src/hooks/useWindowControls.ts:44:      const newLevel = await secureInvoke<number>('window_zoom_in');
+src/hooks/useWindowControls.ts:54:      const newLevel = await secureInvoke<number>('window_zoom_out');
+src/hooks/useWindowControls.ts:64:      await secureInvoke('window_zoom_reset');
+src/hooks/useWindowControls.ts:74:      const isFullscreen = await secureInvoke<boolean>('window_toggle_fullscreen');
+src/hooks/useWindowControls.ts:189:    return secureInvoke<number>('window_get_zoom');
+src/hooks/useWindowControls.ts:193:    return secureInvoke('window_set_zoom', { level });
+src/hooks/useWindowControls.ts:197:    return secureInvoke<number>('window_zoom_in');
+src/hooks/useWindowControls.ts:201:    return secureInvoke<number>('window_zoom_out');
+src/hooks/useWindowControls.ts:205:    return secureInvoke('window_zoom_reset');
+src/hooks/useWindowControls.ts:209:    return secureInvoke<boolean>('window_toggle_fullscreen');
+src/hooks/useWindowControls.ts:213:    return secureInvoke('window_set_fullscreen', { fullscreen });
+src/hooks/useWindowControls.ts:217:    return secureInvoke<boolean>('window_is_fullscreen');
+src/services/automation/automationXPService.ts:41:import { secureInvoke } from '@/lib/security';
+src/services/automation/automationXPService.ts:179:      await secureInvoke('xp_sync_state', {
+src/services/automation/automationXPService.ts:578:          const result = await secureInvoke('automation_execute_action', {
+src/services/backup/AutoBackupService.ts:14:import { secureInvoke } from '@/lib/security';
+src/services/backup/AutoBackupService.ts:274:      await secureInvoke('write_snapshot', {
+src/hooks/__tests__/fusion-hooks.test.ts:27:  secureInvoke: vi.fn(),
+src/hooks/__tests__/fusion-hooks.test.ts:42:  secureInvoke: vi.fn().mockResolvedValue({}),
+src/hooks/__tests__/fusion-hooks.test.ts:55:import { secureInvoke } from '@/lib/security';
+src/hooks/__tests__/fusion-hooks.test.ts:98:    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+src/hooks/__tests__/fusion-hooks.test.ts:141:    vi.mocked(secureInvoke).mockResolvedValue(mockState as unknown as SingularityState);
+src/hooks/__tests__/fusion-hooks.test.ts:160:    vi.mocked(secureInvoke).mockRejectedValue(mockError);
+src/hooks/__tests__/fusion-hooks.test.ts:208:    vi.mocked(secureInvoke).mockResolvedValue(mockStats);
+src/hooks/__tests__/fusion-hooks.test.ts:221:    vi.mocked(secureInvoke).mockResolvedValue(undefined);
+src/hooks/__tests__/fusion-hooks.test.ts:231:    expect(secureInvoke).toHaveBeenCalledWith(
+src/hooks/__tests__/fusion-hooks.test.ts:240:    vi.mocked(secureInvoke).mockResolvedValue(undefined);
+src/hooks/__tests__/fusion-hooks.test.ts:249:      .mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:279:    vi.mocked(secureInvoke).mockResolvedValue(mockResults);
+src/hooks/__tests__/fusion-hooks.test.ts:328:    vi.mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:369:    vi.mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:394:    // Mock les 4 appels secureInvoke pour refreshHealth
+src/hooks/__tests__/fusion-hooks.test.ts:416:    vi.mocked(secureInvoke).mockImplementation(async () => mockConvHealth);
+src/hooks/__tests__/fusion-hooks.test.ts:417:    vi.mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:460:    vi.mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:511:    vi.mocked(secureInvoke)
+src/hooks/__tests__/fusion-hooks.test.ts:562:    vi.mocked(secureInvoke).mockImplementation(async (cmd: string) => {
+src/tests/voice/voiceE2ETests.ts:14:import { secureInvoke } from '@/lib/security';
+src/tests/voice/voiceE2ETests.ts:18:// Mock secureInvoke
+src/tests/voice/voiceE2ETests.ts:20:  secureInvoke: vi.fn(),
+src/tests/voice/voiceE2ETests.ts:147:    // Mock secureInvoke to route to mockBackend
+src/tests/voice/voiceE2ETests.ts:148:    (secureInvoke as ReturnType<typeof vi.fn>).mockImplementation(
+src/tests/voice/voiceE2ETests.ts:192:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:195:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:206:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:209:    await expect(secureInvoke('start_recording')).rejects.toThrow(
+src/tests/voice/voiceE2ETests.ts:222:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:223:    await expect(secureInvoke('stop_recording')).rejects.toThrow(
+src/tests/voice/voiceE2ETests.ts:235:    await secureInvoke('tts_speak', { text: 'Hello World' });
+src/tests/voice/voiceE2ETests.ts:245:    const speakPromise = secureInvoke('tts_speak', { text: 'Long text...' });
+src/tests/voice/voiceE2ETests.ts:249:    await secureInvoke('tts_stop');
+src/tests/voice/voiceE2ETests.ts:263:    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects.toThrow(
+src/tests/voice/voiceE2ETests.ts:274:    const state = await secureInvoke('vad_get_state');
+src/tests/voice/voiceE2ETests.ts:285:    const result = await secureInvoke('vad_process_frame', { audioData });
+src/tests/voice/voiceE2ETests.ts:295:    const result = await secureInvoke('vad_configure', {
+src/tests/voice/voiceE2ETests.ts:308:    const result = await secureInvoke('vad_reset');
+src/tests/voice/voiceE2ETests.ts:311:    const state = await secureInvoke('vad_get_state');
+src/tests/voice/voiceE2ETests.ts:322:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:326:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:334:    await secureInvoke('tts_speak', { text: aiResponse });
+src/tests/voice/voiceE2ETests.ts:348:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:354:    await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:360:    await secureInvoke('tts_speak', { text: 'Response' });
+src/tests/voice/voiceE2ETests.ts:377:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:380:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:393:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:396:    await expect(secureInvoke('start_recording')).rejects.toThrow(
+src/tests/voice/voiceE2ETests.ts:401:    await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:411:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:415:    await expect(secureInvoke('stop_recording')).rejects.toThrow(
+src/tests/voice/voiceE2ETests.ts:424:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:425:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:436:    let state = await secureInvoke('vad_get_state');
+src/tests/voice/voiceE2ETests.ts:442:    state = await secureInvoke('vad_get_state');
+src/tests/voice/voiceE2ETests.ts:448:    const frameResult = await secureInvoke('vad_process_frame', { audioData });
+src/tests/voice/voiceE2ETests.ts:460:      await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:464:      const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:468:      await secureInvoke('tts_speak', { text: `Loop ${i + 1}` });
+src/tests/voice/voiceE2ETests.ts:482:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:484:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:492:    await secureInvoke('tts_speak', { text: 'Slow response' });
+src/tests/voice/voiceE2ETests.ts:504:    await expect(secureInvoke('stop_recording')).rejects.toThrow('Not recording');
+src/tests/voice/voiceE2ETests.ts:516:    await secureInvoke('start_recording');
+src/tests/voice/voiceE2ETests.ts:524:    const transcript = await secureInvoke('stop_recording');
+src/tests/voice/voiceE2ETests.ts:532:    await secureInvoke('tts_speak', { text: `You said: ${transcript}` });
+src/tests/voice/voiceE2ETests.ts:571:    expect(typeof secureInvoke).toBe('function');
+src/tests/voice/voiceE2ETests.ts:574:    expect(typeof secureInvoke).toBe('function');
+src/tests/voice/voiceE2ETests.ts:577:    expect(secureInvoke('vad_get_state')).toBeInstanceOf(Promise);
+src/services/tauriCommands.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/tauriCommands.ts:311:    const result = await secureInvoke<T>(command, params || {});
+src/services/tauriBridge.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/tauriBridge.ts:133:      // Timeout race avec secureInvoke
+src/services/tauriBridge.ts:134:      const invokePromise = secureInvoke<T>(command, params);
+src/tests/activeListeningIntegration.test.ts:119:// Prevent Tauri-only branches in tests (avoids secureInvoke('test_microphone') noise)
+src/hooks/useMultimodalPresence.ts:285:    // 1. Engine call: multimodalPresenceEngine.activateMirroring() or invoke('presence:activate_mirroring')
+src/hooks/useMultimodalPresence.ts:296:    // 1. Engine call: multimodalPresenceEngine.deactivateMirroring() or invoke('presence:deactivate_mirroring')
+src/hooks/useMemoryCore.ts:11:import { secureInvoke } from '@/lib/security';
+src/hooks/useMemoryCore.ts:109:      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+src/hooks/useMemoryCore.ts:153:      await invoke('memory_clear');
+src/hooks/useMemoryCore.ts:166:      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+src/services/tauri/backend-v17.2.commands.ts:16:import { secureInvoke } from '@/lib/security';
+src/services/tauri/backend-v17.2.commands.ts:38:    const result = await secureInvoke<T>(cmd, args);
+src/hooks/useChat.ts:628:    // Unit tests: skip provider availability checks (these call Tauri/secureInvoke).
+src/hooks/useWhisperStream.ts:28:import { secureInvoke } from '@/lib/security';
+src/hooks/useWhisperStream.ts:131:      await secureInvoke('start_whisper_streaming', {
+src/hooks/useWhisperStream.ts:218:      await secureInvoke('stop_whisper_streaming');
+src/hooks/useWhisperStream.ts:281:        await secureInvoke('send_audio_chunk', {
+src/hooks/useWhisperStream.ts:310:      secureInvoke('stop_whisper_streaming').catch(console.error);
+src/hooks/useSystemHealth.ts:15:import { secureInvoke } from '@/lib/security';
+src/hooks/useSystemHealth.ts:244:        secureInvoke<{
+src/hooks/useSystemHealth.ts:251:        secureInvoke<{
+src/hooks/useSystemHealth.ts:256:        secureInvoke<{ engines: Array<{ name: string; status: string }> }>(
+src/hooks/useSystemHealth.ts:259:        secureInvoke<{
+src/hooks/useSystemHealth.ts:432:            await secureInvoke('conversation_reset');
+src/hooks/useSystemHealth.ts:435:            await secureInvoke('memory_compress');
+src/hooks/useSystemHealth.ts:438:            await secureInvoke('engine_singularity_reset');
+src/hooks/useSystemHealth.ts:442:            await secureInvoke('system_recovery');
+src/tests/e2e/titane_e2e.test.ts:109:      const health = await invoke('get_system_health');
+src/tests/e2e/titane_e2e.test.ts:118:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:127:      const response = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:145:      const result = await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:159:      const stats = await invoke('memory_get_stats');
+src/tests/e2e/titane_e2e.test.ts:168:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:182:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/e2e/titane_e2e.test.ts:220:      const files = await invoke('secure_list_files');
+src/tests/e2e/titane_e2e.test.ts:229:      const parsed = await invoke('parse_document', {
+src/tests/e2e/titane_e2e.test.ts:241:      const analysis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:258:      const result = await invoke('store_file', {
+src/tests/e2e/titane_e2e.test.ts:272:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:286:      const files = await invoke('get_files_by_category', { category: 'legal' });
+src/tests/e2e/titane_e2e.test.ts:344:      const synthesis = await invoke('conversation_generate', {
+src/tests/e2e/titane_e2e.test.ts:361:      const stored = await invoke('memory_store', {
+src/tests/e2e/titane_e2e.test.ts:372:      const event = await invoke('add_timeline_event', {
+src/tests/e2e/titane_e2e.test.ts:414:      const state = await invoke('meta_get_state');
+src/tests/e2e/titane_e2e.test.ts:423:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:432:      const alignment = await invoke('meta_get_alignment');
+src/tests/e2e/titane_e2e.test.ts:441:      const report = await invoke('meta_get_report');
+src/tests/e2e/titane_e2e.test.ts:450:      const coherence = await invoke('singularity_check_coherence');
+src/tests/e2e/titane_e2e.test.ts:459:      const selftest = await invoke('meta_selftest_all');
+src/tests/e2e/titane_e2e.test.ts:468:      const metrics = await invoke('meta_get_monitoring_metrics');
+src/tests/e2e/titane_e2e.test.ts:506:      const message = await invoke('chat_send_message', {
+src/tests/e2e/titane_e2e.test.ts:512:      await invoke('memory_save_chat_interaction', {
+src/tests/e2e/titane_e2e.test.ts:525:      const projects = await invoke('memory_get_active_projects');
+src/tests/e2e/titane_e2e.test.ts:534:      const parsed = await invoke('parse_document', {
+src/tests/e2e/titane_e2e.test.ts:545:      const snapshot = await invoke('write_snapshot', {
+src/tests/e2e/titane_e2e.test.ts:558:      const sync = await invoke('meta_trigger_sync');
+src/tests/e2e/titane_e2e.test.ts:566:      const state = await invoke('singularity_get_full_state');
+src/tests/e2e/titane_e2e.test.ts:575:      const coherence = await invoke('singularity_get_global_coherence');
+src/services/tauri/chatEngine.commands.ts:13:import { secureInvoke } from '@/lib/security';
+src/services/tauri/chatEngine.commands.ts:184:    return await secureInvoke<T>(command, args ?? {});
+src/services/tauri/commands.ts:16:import { secureInvoke } from '@/lib/security';
+src/services/tauri/commands.ts:57:    const result = await secureInvoke(cmd, payload ?? {});
+src/services/tauri/commands.ts:73:    await secureInvoke(cmd, payload ?? {});
+src/services/tauri/commands.ts:110:    const result = await secureInvoke<string>('meta_mode_get_current_mode');
+src/services/tauri/commands.ts:118:    const result = await secureInvoke<string[]>('meta_mode_list_modes');
+src/services/tauri/commands.ts:126:    const result = await secureInvoke<Array<[string, string]>>('meta_mode_get_history');
+src/services/tauri/commands.ts:141:    const result = await secureInvoke<string>('meta_mode_reset');
+src/services/tauri/commands.ts:179:    const result = await secureInvoke<Talent[]>('exp_list_talents');
+src/services/tauri/commands.ts:199:    const result = await secureInvoke<LevelUpEvent[]>('exp_get_level_up_history');
+src/services/tauri/commands.ts:213:    const result = await secureInvoke<string>('memory_store', { content, metadata });
+src/services/tauri/commands.ts:221:    const result = await secureInvoke<number>('memory_store_conversation', {
+src/services/tauri/commands.ts:235:    const result = await secureInvoke<MemoryResult[]>('memory_search', { query });
+src/services/tauri/commands.ts:243:    const result = await secureInvoke<MemoryEntry[]>('memory_get_related', {
+src/services/tauri/commands.ts:281:    const result = await secureInvoke<string>('stop_recording');
+src/hooks/useVAD.ts:17:import { secureInvoke } from '@/lib/security';
+src/hooks/useVAD.ts:253:        const testResult = await secureInvoke<{
+src/tests/regression/titane_regression.test.ts:67:          await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:69:          await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:71:          await invoke('cognitive_get_map');
+src/tests/regression/titane_regression.test.ts:73:          await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:75:          await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:77:          await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:117:        await invoke(command, {}).catch(() => {
+src/tests/regression/titane_regression.test.ts:150:      const stats = await invoke('memory_get_stats');
+src/tests/regression/titane_regression.test.ts:179:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:213:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:251:      await invoke('parse_document', {
+src/tests/regression/titane_regression.test.ts:281:      const timeline = await invoke('get_timeline');
+src/tests/regression/titane_regression.test.ts:331:      const response = await invoke('chat_send_message', {
+src/tests/regression/titane_regression.test.ts:381:      const status = await invoke('chat_get_providers_status');
+src/tests/regression/titane_regression.test.ts:418:      const state = await invoke('singularity_get_full_state');
+src/tests/regression/titane_regression.test.ts:419:      const coherence = await invoke('singularity_get_global_coherence');
+src/tests/regression/titane_regression.test.ts:482:      const stateBefore = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:483:      await invoke('meta_trigger_sync');
+src/tests/regression/titane_regression.test.ts:484:      const stateAfter = await invoke('meta_get_state');
+src/tests/regression/titane_regression.test.ts:498:      const alignment = await invoke('meta_get_alignment');
+src/hooks/useMemoryEngine.ts:15:import { secureInvoke } from '@/lib/security';
+src/hooks/useMemoryEngine.ts:302:      const memoryStats = await secureInvoke<MemoryStats>('memory_get_stats');
+src/hooks/useMemoryEngine.ts:334:        await secureInvoke('memory_save_entry', {
+src/hooks/useMemoryEngine.ts:364:          const result = await secureInvoke<MemorySearchResult>('memory_search', {
+src/hooks/useMemoryEngine.ts:371:          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+src/hooks/useMemoryEngine.ts:375:            const value = await secureInvoke<string | null>('memory_get_entry', { key });
+src/hooks/useMemoryEngine.ts:411:      const value = await secureInvoke<string | null>('memory_get_entry', { key: id });
+src/hooks/useMemoryEngine.ts:433:        await secureInvoke('memory_delete_entry', { key: id });
+src/hooks/useMemoryEngine.ts:456:          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+src/hooks/useMemoryEngine.ts:459:              await secureInvoke('memory_delete_entry', { key });
+src/hooks/useMemoryEngine.ts:464:          await secureInvoke('memory_clear_all');
+src/hooks/useMemoryEngine.ts:486:      await secureInvoke('memory_compress');
+src/services/autoAuditEngine.ts:11:import { secureInvoke } from '@/lib/security';
+src/services/autoAuditEngine.ts:185:      const response = await secureInvoke<{
+src/services/autoAuditEngine.ts:247:        const __response = await secureInvoke(cmd);
+src/services/autoAuditEngine.ts:274:      const state = await secureInvoke<MemoryState>('get_memory_state');
+src/services/autoAuditEngine.ts:311:      const response = await secureInvoke<{ ok: boolean; error?: string }>(
+src/services/autoAuditEngine.ts:389:      const state = await secureInvoke<SingularityState>('singularity_get_full_state');
+src/hooks/usePersistentMemory.ts:22:import { secureInvoke } from '@/lib/security';
+src/hooks/usePersistentMemory.ts:277:      const response = await secureInvoke<MemoryReadResponse>('persistent_memory_read', {
+src/hooks/usePersistentMemory.ts:298:      const bundles = await secureInvoke<MemoryBundle[]>('persistent_memory_get_bundles');
+src/hooks/usePersistentMemory.ts:305:      const stats = await secureInvoke<MemoryStats>('persistent_memory_get_stats');
+src/hooks/usePersistentMemory.ts:350:        const response = await secureInvoke<MemoryReadResponse>(
+src/hooks/usePersistentMemory.ts:393:          const response = await secureInvoke<MemoryReadResponse>(
+src/hooks/usePersistentMemory.ts:457:        const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
+src/hooks/usePersistentMemory.ts:484:        await secureInvoke('persistent_memory_promote_entry', { entryId });
+src/hooks/usePersistentMemory.ts:498:        await secureInvoke('persistent_memory_archive_entry', { entryId });
+src/hooks/usePersistentMemory.ts:512:        await secureInvoke('persistent_memory_delete_entry', { entryId });
+src/hooks/usePersistentMemory.ts:530:        const summaryId = await secureInvoke<string>('persistent_memory_create_summary', {
+src/hooks/usePersistentMemory.ts:553:        const bundleId = await secureInvoke<string>('persistent_memory_create_bundle', {
+src/hooks/usePersistentMemory.ts:572:        await secureInvoke('persistent_memory_add_to_bundle', { bundleId, entryIds });
+src/hooks/usePersistentMemory.ts:604:      return await secureInvoke<string>('persistent_memory_export');
+src/hooks/usePersistentMemory.ts:715:        const response = await secureInvoke<{ context: string; usedEntries: string[] }>(
+src/services/ai/__tests__/ConversationManager.test.ts:10:// Mock secureInvoke (replaces deprecated Tauri invoke)
+src/services/ai/__tests__/ConversationManager.test.ts:12:  secureInvoke: vi.fn((cmd: string, args?: any) => {
+src/hooks/useVoiceMode.ts:31:import { secureInvoke } from '@/lib/security';
+src/hooks/useVoiceMode.ts:113:      const transcript = await secureInvoke<string>('transcribe_audio', {
+src/hooks/useVoiceMode.ts:187:      const vadActive = await secureInvoke<boolean>('get_vad_state');
+src/hooks/useVoiceEngine.ts:27:import { secureInvoke } from '@/lib/security';
+src/hooks/useVoiceEngine.ts:72:      const result = await secureInvoke<{ success: boolean }>(
+src/services/ai/gateway/types.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/ai/gateway/types.ts:376:  const response = await secureInvoke<UnifiedChatResponse>('unified_chat', {
+src/cognitive/memory/memoryEngine.ts:14:import { secureInvoke } from '@/lib/security';
+src/cognitive/memory/memoryEngine.ts:75:      const savedState = await secureInvoke<string | null>('memory_get_entry', {
+src/cognitive/memory/memoryEngine.ts:436:      await secureInvoke('memory_save_entry', {
+src/services/evolutionEngine/executor.ts:15:import { secureInvoke } from '@/lib/security';
+src/services/evolutionEngine/executor.ts:285:      const result = await secureInvoke<{ allowed: boolean; reason?: string }>(
+src/services/evolutionEngine/executor.ts:475:    const actionPromise = secureInvoke<{
+src/services/evolutionEngine/executor.ts:500:      const result = await secureInvoke<{ backupId: string }>('create_evolution_backup', {
+src/services/evolutionEngine/executor.ts:535:      const rollbackResult = await secureInvoke<{ success: boolean; message: string }>(
+src/features/audio-center/services/audioService.ts:14:import { secureInvoke } from '@/lib/security';
+src/features/audio-center/services/audioService.ts:111:        const res = await secureInvoke<{ ok: boolean; data: boolean | null }>(
+src/features/audio-center/services/audioService.ts:171:        devices = await secureInvoke<AudioDevice[]>('get_audio_output_devices');
+src/features/audio-center/services/audioService.ts:241:        devices = await secureInvoke<AudioDevice[]>('get_audio_input_devices');
+src/features/audio-center/services/audioService.ts:310:        await secureInvoke('set_audio_output_device', { deviceId });
+src/features/audio-center/services/audioService.ts:324:        await secureInvoke('set_audio_input_device', { deviceId });
+src/features/audio-center/services/audioService.ts:357:        await secureInvoke('test_tts', { text, settings: this.config.tts });
+src/features/audio-center/services/audioService.ts:406:        const result = await secureInvoke<MicrophoneTestResult>(
+src/features/audio-center/services/audioService.ts:523:          await secureInvoke('tts_speak', {
+src/features/audio-center/services/audioService.ts:600:      secureInvoke('tts_stop').catch(err => {
+src/features/audio-center/services/audioService.ts:622:      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
+src/features/audio-center/services/audioService.ts:644:      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
+src/features/audio-center/services/audioService.ts:669:      const result = await secureInvoke<string>('vad_configure', {
+src/features/audio-center/services/audioService.ts:692:      const result = await secureInvoke<string>('vad_reset');
+src/features/audio-center/services/audioService.ts:727:      const result = await secureInvoke<{
+src/cognitive/evolution/evolutionEngine.ts:13:import { secureInvoke } from '@/lib/security';
+src/cognitive/evolution/evolutionEngine.ts:201:      const backendState = await secureInvoke<EvolutionState>('evolution_get_state');
+src/cognitive/evolution/evolutionEngine.ts:303:      await secureInvoke('evolution_run_cycle', { cycle });
+src/cognitive/evolution/evolutionEngine.ts:388:      await secureInvoke('evolution_save_state', { state: this.state });
+src/services/evolutionEngine/collector.ts:15:import { secureInvoke } from '@/lib/security';
+src/services/evolutionEngine/collector.ts:202:      const stats = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:258:        const stats = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:302:      const metrics = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:327:      const metrics = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:369:      const metrics = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:410:      const metrics = await secureInvoke<{
+src/services/evolutionEngine/collector.ts:544:      await secureInvoke('submit_evolution_data', { dataPoints: batch });
+src/services/evolutionEngine/index.ts:254:      // await invoke('sync_evolution_state', { snapshot });
+src/cognitive/knowledge/knowledgeVault.ts:13:import { secureInvoke } from '@/lib/security';
+src/cognitive/knowledge/knowledgeVault.ts:190:      const backendState = await secureInvoke<KnowledgeVaultState>('knowledge_get_state');
+src/cognitive/knowledge/knowledgeVault.ts:292:      await secureInvoke('knowledge_ingest', { entry });
+src/cognitive/knowledge/knowledgeVault.ts:552:      await secureInvoke('knowledge_save_state', { state: this.state });
+src/cognitive/progression/xpEngine.ts:13:import { secureInvoke } from '@/lib/security';
+src/cognitive/progression/xpEngine.ts:232:      const backendState = await secureInvoke<ProgressionState>('xp_get_state');
+src/cognitive/progression/xpEngine.ts:457:      await secureInvoke('progression_save_state', { state: this.state });
+src/services/adaptiveBridgeV21.ts:9:import { secureInvoke } from '@/lib/security';
+src/services/adaptiveBridgeV21.ts:83:    return await secureInvoke<PreferenceProfile>(TAURI_COMMANDS.ADAPTIVE_GET_PROFILE);
+src/services/adaptiveBridgeV21.ts:91:    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_SET_MODE, { mode: modeStr });
+src/services/adaptiveBridgeV21.ts:98:    return await secureInvoke<string>(TAURI_COMMANDS.ADAPTIVE_LEARN);
+src/services/adaptiveBridgeV21.ts:105:    return await secureInvoke<string[]>(TAURI_COMMANDS.ADAPTIVE_RUN_OPTIMIZATION);
+src/services/adaptiveBridgeV21.ts:112:    return await secureInvoke<SystemPerformanceSample[]>(
+src/services/adaptiveBridgeV21.ts:124:    await secureInvoke(TAURI_COMMANDS.ADAPTIVE_CAPTURE_SAMPLE, { sample });
+src/services/adaptiveBridgeV21.ts:131:    return await secureInvoke<AdaptiveSummary>(TAURI_COMMANDS.ADAPTIVE_GET_SUMMARY);
+src/services/evolutionEngine/evolutionEngine.bindings.ts:11:import { secureInvoke } from '@/lib/security';
+src/services/evolutionEngine/evolutionEngine.bindings.ts:223:  return secureInvoke<EvolutionEngineState>('evolution_get_state');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:230:  return secureInvoke<boolean>('evolution_start');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:237:  return secureInvoke<boolean>('evolution_stop');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:248:  return secureInvoke<EvolutionScores>('evolution_get_scores');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:258:  return secureInvoke<EvolutionScores>('evolution_update_score', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:268:  return secureInvoke<EvolutionFullReport>('evolution_generate_report');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:284:  return secureInvoke<EvolutionDataPoint>('evolution_add_data_point', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:300:  return secureInvoke<EvolutionDataPoint[]>('evolution_get_data_points', options || {});
+src/services/evolutionEngine/evolutionEngine.bindings.ts:313:  return secureInvoke<EvolutionPattern[]>('evolution_get_patterns', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:324:  return secureInvoke<EvolutionInsight[]>('evolution_get_insights', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:340:  return secureInvoke<EvolutionSuggestion[]>('evolution_get_suggestions', options || {});
+src/services/evolutionEngine/evolutionEngine.bindings.ts:350:  return secureInvoke<EvolutionSuggestion>('evolution_approve_suggestion', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:363:  return secureInvoke<EvolutionSuggestion>('evolution_reject_suggestion', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:382:  return secureInvoke<EvolutionAction>('evolution_create_action', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:397:  return secureInvoke<EvolutionAction>('evolution_execute_action', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:410:  return secureInvoke<EvolutionAction>('evolution_rollback_action', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:427:  return secureInvoke<EvolutionHistoryEntry[]>('evolution_get_history', options || {});
+src/services/evolutionEngine/evolutionEngine.bindings.ts:434:  return secureInvoke<number>('evolution_clear_old_history', {
+src/services/evolutionEngine/evolutionEngine.bindings.ts:447:  return secureInvoke<EvolutionFullReport>('evolution_run_full_cycle');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:454:  return secureInvoke<EvolutionStatistics>('evolution_get_statistics');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:465:  return secureInvoke('evolution_run_cycle');
+src/services/evolutionEngine/evolutionEngine.bindings.ts:472:  return secureInvoke('evolution_get_stats');
+src/context/TitanStateContext.tsx:24:import { secureInvoke } from '@/lib/security';
+src/context/TitanStateContext.tsx:438:        await secureInvoke('titan_persist_event', { event });
+src/context/TitanStateContext.tsx:450:      await secureInvoke('titan_persist_event', { event });
+src/context/TitanStateContext.tsx:461:      await secureInvoke('titan_force_snapshot', { stateJson });
+src/context/TitanStateContext.tsx:472:      const report = await secureInvoke<{ is_valid: boolean }>('titan_check_integrity');
+src/context/TitanStateContext.tsx:484:        return await secureInvoke<PersistenceStatus>('titan_get_persistence_status');
+src/context/TitanStateContext.tsx:496:        await secureInvoke('titan_persistence_init');
+src/context/TitanStateContext.tsx:500:        const savedState = await secureInvoke<TitanState | null>('titan_load_state');
+src/context/TitanStateContext.tsx:547:          await secureInvoke('titan_persistence_shutdown');
+src/services/ai/providers/gemini.ts:14:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/gemini.ts:57:      const response = await secureInvoke<{
+src/services/ai/providers/gemini.ts:109:              return await secureInvoke<{
+src/services/audio/gstreamerCheck.ts:7:import { secureInvoke } from '@/lib/security';
+src/services/audio/gstreamerCheck.ts:32:      const response = await secureInvoke<{ gstreamer_available?: boolean }>(
+src/services/audio/audioSelfHeal.ts:14:import { secureInvoke } from '@/lib/security';
+src/services/audio/audioSelfHeal.ts:90:        const _isRecording = await secureInvoke<boolean>('is_recording', {});
+src/services/audio/audioSelfHeal.ts:150:      const status = await secureInvoke<any>('get_recording_status', {});
+src/services/audio/audioSelfHeal.ts:229:          await secureInvoke('cancel_recording', {});
+src/services/ai/providers/__tests__/openai.test.ts:7:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/__tests__/openai.test.ts:9:// Mock Tauri secureInvoke
+src/services/ai/providers/__tests__/openai.test.ts:11:  secureInvoke: vi.fn(),
+src/services/ai/providers/__tests__/openai.test.ts:25:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:33:      expect(secureInvoke).toHaveBeenCalledWith('get_openai_key_status');
+src/services/ai/providers/__tests__/openai.test.ts:37:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:48:      vi.mocked(secureInvoke).mockRejectedValue(new Error('Backend error'));
+src/services/ai/providers/__tests__/openai.test.ts:56:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:80:      vi.mocked(secureInvoke).mockResolvedValue(mockResponse);
+src/services/ai/providers/__tests__/openai.test.ts:89:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
+src/services/ai/providers/__tests__/openai.test.ts:105:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:117:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:129:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:141:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:153:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:166:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
+src/services/ai/providers/__tests__/openai.test.ts:177:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:189:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_openai', {
+src/services/ai/providers/__tests__/openai.test.ts:203:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/openai.test.ts:217:      vi.mocked(secureInvoke).mockResolvedValue({
+src/features/one-core/useOneCore.ts:13:import { secureInvoke } from '@/lib/security';
+src/features/one-core/useOneCore.ts:63:          secureInvoke<OneCoreState>('one_core_get_state').catch(() => null),
+src/features/one-core/useOneCore.ts:64:          secureInvoke<OneCoreMetrics>('one_core_get_metrics').catch(() => null),
+src/features/one-core/useOneCore.ts:65:          secureInvoke<OneCoreCommand[]>('one_core_list_commands').catch(() => []),
+src/features/one-core/useOneCore.ts:66:          secureInvoke<OneCoreActionResult[]>('one_core_get_event_history', {
+src/features/one-core/useOneCore.ts:187:        const result = await secureInvoke<OneCoreActionResult>(
+src/features/one-core/useOneCore.ts:209:      const result = await secureInvoke<OneCoreDiagnostic>('one_core_run_diagnostic');
+src/features/one-core/useOneCore.ts:230:      const result = await secureInvoke<OneCoreActionResult>('one_core_force_sync');
+src/features/one-core/useOneCore.ts:246:      const result = await secureInvoke<OneCoreActionResult>('one_core_cleanup');
+src/features/one-core/useOneCore.ts:262:        const result = await secureInvoke<OneCoreActionResult>('one_core_set_mode', {
+src/features/one-core/useOneCore.ts:282:      return await secureInvoke<OneCoreActionResult>('one_core_verify_integrity');
+src/features/one-core/useOneCore.ts:297:        return await secureInvoke<EngineStatus>('one_core_get_engine_status', {
+src/features/one-core/useOneCore.ts:324:      secureInvoke<OneCoreMetrics>('one_core_get_metrics')
+src/services/audio/audioHealthCheck.ts:20:import { secureInvoke } from '@/lib/security';
+src/services/audio/audioHealthCheck.ts:677:        await secureInvoke('vad_reset');
+src/services/audio/audioHealthCheck.ts:680:        const state = await secureInvoke<{ initialized: boolean }>('vad_get_state');
+src/services/audio/audioHealthCheck.ts:744:        const result = await secureInvoke<{ success: boolean; errorMessage?: string }>(
+src/services/ai/providers/__tests__/claude.test.ts:7:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/__tests__/claude.test.ts:9:// Mock Tauri secureInvoke
+src/services/ai/providers/__tests__/claude.test.ts:11:  secureInvoke: vi.fn(),
+src/services/ai/providers/__tests__/claude.test.ts:25:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:33:      expect(secureInvoke).toHaveBeenCalledWith('get_anthropic_key_status');
+src/services/ai/providers/__tests__/claude.test.ts:37:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:48:      vi.mocked(secureInvoke).mockRejectedValue(new Error('Backend error'));
+src/services/ai/providers/__tests__/claude.test.ts:56:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:80:      vi.mocked(secureInvoke).mockResolvedValue(mockResponse);
+src/services/ai/providers/__tests__/claude.test.ts:89:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
+src/services/ai/providers/__tests__/claude.test.ts:105:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:117:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:129:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:141:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:153:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:165:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:178:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
+src/services/ai/providers/__tests__/claude.test.ts:189:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:201:      expect(secureInvoke).toHaveBeenCalledWith('chat_generate_claude', {
+src/services/ai/providers/__tests__/claude.test.ts:215:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/__tests__/claude.test.ts:229:      vi.mocked(secureInvoke).mockResolvedValue({
+src/services/ai/providers/claude.ts:12:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/claude.ts:45:        return await secureInvoke<{
+src/services/ai/providers/claude.ts:178:      const response = await secureInvoke<{
+src/services/tauriAutoRepair.ts:16:import { secureInvoke } from '@/lib/security';
+src/services/tauriAutoRepair.ts:336:        await secureInvoke('singularity_self_check');
+src/services/tauriAutoRepair.ts:344:        await secureInvoke('singularity_autonomy_heal');
+src/services/tauriAutoRepair.ts:398:      await secureInvoke('run_hardening_selftest');
+src/services/tauriAutoRepair.ts:408:      const persistence = await secureInvoke<any>('titan_get_persistence_status');
+src/services/tauriAutoRepair.ts:420:      const xpState = await secureInvoke<any>('xp_get_state');
+src/services/tauriAutoRepair.ts:425:        await secureInvoke('xp_sync_state');
+src/services/performanceEngine/metricsCollector.ts:20:import { secureInvoke } from '@/lib/security';
+src/services/performanceEngine/metricsCollector.ts:681:      const rustMetrics = await secureInvoke<{
+src/services/ai/providers/openai.ts:12:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/openai.ts:46:        return await secureInvoke<{
+src/services/ai/providers/openai.ts:177:      const response = await secureInvoke<{
+src/services/voice/voiceFingerprintTauri.ts:15:import { secureInvoke } from '@/lib/security';
+src/services/voice/voiceFingerprintTauri.ts:72:      await secureInvoke('calibrate_titane_voice', {
+src/services/voice/voiceFingerprintTauri.ts:109:      const result = await secureInvoke<VoiceFingerprintResult>(
+src/services/voice/voiceFingerprintTauri.ts:134:      const status = await secureInvoke<TitaneVoiceStatus>('get_titane_voice_status');
+src/services/ai/providers/tauriChat.ts:9: *   PHASE 4Ω: Protection invoke() • Timeout handling • Error isolation
+src/services/ai/providers/copilot.ts:14:import { secureInvoke } from '@/lib/security';
+src/services/ai/providers/copilot.ts:62:      secureInvoke<{
+src/services/ai/providers/copilot.ts:133:              const result = await secureInvoke<{
+src/services/ai/providers/copilot.ts:254:      const result = await secureInvoke<{
+src/services/ai/providers/copilot.ts:298:    const result = await secureInvoke<{
+src/services/selfHealing/selfHealingSyncLayer.ts:20:import { secureInvoke } from '@/lib/security';
+src/services/selfHealing/selfHealingSyncLayer.ts:391:        const vitals = await secureInvoke<VitalsSnapshot>('selfheal_get_vitals');
+src/services/selfHealing/selfHealingSyncLayer.ts:423:        const profile = await secureInvoke<SelfHealingProfile>('selfheal_load_profile');
+src/services/selfHealing/selfHealingSyncLayer.ts:438:        await secureInvoke('selfheal_save_profile', { profile: this.profile });
+src/services/selfHealing/selfHealingSyncLayer.ts:538:        await secureInvoke('selfheal_sync_with_singularity', {
+src/services/ai/orchestrator.ts:197:    // - warmup (appels provider.isAvailable → secureInvoke)
+src/services/selfHealing/selfHealingExecutor.ts:21:import { secureInvoke } from '@/lib/security';
+src/services/selfHealing/selfHealingExecutor.ts:118:    return secureInvoke('selfheal_restart_module', {
+src/services/selfHealing/selfHealingExecutor.ts:125:    return secureInvoke('selfheal_clear_cache', {
+src/services/selfHealing/selfHealingExecutor.ts:132:    return secureInvoke('selfheal_regenerate_config', {
+src/services/selfHealing/selfHealingExecutor.ts:139:    return secureInvoke('selfheal_repair_json', {
+src/services/selfHealing/selfHealingExecutor.ts:146:    return secureInvoke('selfheal_rebuild_memory', {
+src/services/selfHealing/selfHealingExecutor.ts:154:    return secureInvoke('selfheal_switch_provider', {
+src/services/selfHealing/selfHealingExecutor.ts:161:    return secureInvoke('selfheal_reset_state', {
+src/services/selfHealing/selfHealingExecutor.ts:169:    return secureInvoke('selfheal_restart_worker', {
+src/services/selfHealing/selfHealingExecutor.ts:182:    return secureInvoke('selfheal_restart_process', {
+src/services/selfHealing/selfHealingExecutor.ts:189:    return secureInvoke('selfheal_sync_state', {
+src/services/selfHealing/selfHealingExecutor.ts:196:    return secureInvoke('selfheal_mini_audit', {
+src/services/selfHealing/selfHealingExecutor.ts:203:    return secureInvoke('selfheal_isolate_module', {
+src/components/chat/FileUploadButton.tsx:16:import { secureInvoke } from '@/lib/security';
+src/components/chat/FileUploadButton.tsx:298:              const memoryResult = await secureInvoke('memory_ingest_file', {
+src/services/agents/agents.api.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/agents/agents.api.ts:28:      const result = await secureInvoke<CommandResult<AgentConfig[]>>('list_agents');
+src/services/agents/agents.api.ts:53:      const result = await secureInvoke<CommandResult<AgentConfig>>('get_agent', {
+src/services/agents/agents.api.ts:80:      const result = await secureInvoke<CommandResult<AgentConfig>>('create_agent', {
+src/services/agents/agents.api.ts:110:      const result = await secureInvoke<CommandResult<string>>(
+src/services/agents/agents.api.ts:142:      const result = await secureInvoke<CommandResult<boolean>>(
+src/services/agents/agents.api.ts:173:      const result = await secureInvoke<CommandResult<string | null>>(
+src/services/agents/agents.api.ts:200:      const result = await secureInvoke<CommandResult<PermissionStats>>(
+src/services/conversationEngine.test.ts:5:    secureInvoke: vi.fn(),
+src/services/conversationEngine.test.ts:9:import { secureInvoke } from '@/lib/security';
+src/services/conversationEngine.test.ts:14:    vi.mocked(secureInvoke).mockResolvedValueOnce('c1').mockResolvedValueOnce({
+src/services/conversationEngine.test.ts:32:    vi.mocked(secureInvoke)
+src/features/qa-monitoring/useQAMonitoring.ts:8:import { secureInvoke } from '@/lib/security';
+src/features/qa-monitoring/useQAMonitoring.ts:35:    return await secureInvoke<QASystemState>('qa_get_state');
+src/features/qa-monitoring/useQAMonitoring.ts:42:    return await secureInvoke<TestSuite[]>('qa_list_test_suites');
+src/features/qa-monitoring/useQAMonitoring.ts:49:    return await secureInvoke<TestResult[]>('qa_run_test_suite', { suiteId });
+src/features/qa-monitoring/useQAMonitoring.ts:56:    return await secureInvoke<TestResult>('qa_get_test_result', { testId });
+src/features/qa-monitoring/useQAMonitoring.ts:67:    return await secureInvoke<Monitor[]>('qa_list_monitors');
+src/features/qa-monitoring/useQAMonitoring.ts:81:      return await secureInvoke<Monitor>('qa_create_monitor', {
+src/features/qa-monitoring/useQAMonitoring.ts:97:      return await secureInvoke<Monitor>('qa_toggle_monitor', { monitorId, active });
+src/features/qa-monitoring/useQAMonitoring.ts:106:    return await secureInvoke<boolean>('qa_delete_monitor', { monitorId });
+src/features/qa-monitoring/useQAMonitoring.ts:113:    return await secureInvoke<SystemMetrics>('qa_get_system_metrics');
+src/features/qa-monitoring/useQAMonitoring.ts:125:      return await secureInvoke<Alert[]>('qa_list_alerts', { includeResolved });
+src/features/qa-monitoring/useQAMonitoring.ts:134:    return await secureInvoke<Alert>('qa_acknowledge_alert', { alertId });
+src/features/qa-monitoring/useQAMonitoring.ts:142:      return await secureInvoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
+src/features/qa-monitoring/useQAMonitoring.ts:155:    return await secureInvoke<HardeningConfig>('qa_get_hardening_config');
+src/features/qa-monitoring/useQAMonitoring.ts:163:      return await secureInvoke<HardeningConfig>('qa_update_hardening_config', {
+src/features/qa-monitoring/useQAMonitoring.ts:174:    return await secureInvoke<SecurityAuditResult>('qa_run_security_audit');
+src/features/qa-monitoring/useQAMonitoring.ts:186:      return await secureInvoke<PerformanceReport>('qa_get_performance_report', {
+src/features/qa-monitoring/useQAMonitoring.ts:198:      return await secureInvoke<LogEntry[]>('qa_get_logs', { level, source, limit });
+src/features/qa-monitoring/useQAMonitoring.ts:207:    return await secureInvoke<string>('qa_export_metrics_prometheus');
+src/features/qa-monitoring/useQAMonitoring.ts:214:    return await secureInvoke<HealthCheckResult>('qa_health_check');
+src/services/governance/GovernanceConnector.ts:14:import { secureInvoke } from '@/lib/security';
+src/services/governance/GovernanceConnector.ts:191:      const geminiStatus = await secureInvoke<{
+src/services/governance/GovernanceConnector.ts:206:      const openaiStatus = await secureInvoke<{
+src/services/governance/GovernanceConnector.ts:220:      const anthropicStatus = await secureInvoke<{
+src/services/governance/GovernanceConnector.ts:234:      const ollamaStatus = await secureInvoke<{ available: boolean }>(
+src/services/tts/hybridTTS.ts:19:import { secureInvoke } from '@/lib/security';
+src/services/tts/hybridTTS.ts:489:        await secureInvoke('tts_stop');
+src/services/unified/VectorStoreClient.ts:17:import { secureInvoke } from '@/lib/security';
+src/services/unified/VectorStoreClient.ts:69:      this.storeId = await secureInvoke<string>('vector_store_init', {
+src/services/unified/VectorStoreClient.ts:92:      await secureInvoke('vector_store_insert', {
+src/services/unified/VectorStoreClient.ts:193:      const results = await secureInvoke<
+src/services/unified/VectorStoreClient.ts:223:      const entry = await secureInvoke<unknown | null>('vector_store_get', {
+src/services/unified/VectorStoreClient.ts:242:      await secureInvoke('vector_store_update', {
+src/services/unified/VectorStoreClient.ts:260:      await secureInvoke('vector_store_delete', {
+src/services/unified/VectorStoreClient.ts:277:      const stats = await secureInvoke<{
+src/services/devices/deviceHealthService.ts:22:import { secureInvoke } from '@/lib/security';
+src/services/devices/deviceHealthService.ts:226:        const result = await secureInvoke<{ success: boolean }>(
+src/services/devices/deviceHealthService.ts:400:        await secureInvoke('titan_force_snapshot');
+src/services/singularityBridge.ts:9:import { secureInvoke } from '@/lib/security';
+src/services/singularityBridge.ts:371:    await secureInvoke('singularity_update_full_state', { state });
+src/services/singularityBridge.ts:381:    await secureInvoke('singularity_save_state');
+src/services/singularityBridge.ts:385:    await secureInvoke('singularity_load_state');
+src/services/tauriClient.ts:4: * Client centralisé pour tous les appels Tauri invoke()
+src/services/tauriClient.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/tauriClient.ts:195:        // Race: secureInvoke vs timeout
+src/services/tauriClient.ts:197:          secureInvoke<T>(command, args),
+src/services/tts/ttsEngineService.ts:13:import { secureInvoke } from '@/lib/security';
+src/services/tts/ttsEngineService.ts:158:        await secureInvoke('tts_stop');
+src/services/tts/ttsEngineService.ts:275:        const elevenLabsOk = await secureInvoke<boolean>('check_elevenlabs_available');
+src/services/tts/ttsEngineService.ts:283:        const localStatus = await secureInvoke<{ piper: boolean; espeak: boolean }>(
+src/services/tts/ttsEngineService.ts:475:    const response = await secureInvoke<{ audio_path: string; duration_ms: number }>(
+src/services/tts/ttsEngineService.ts:565:      await secureInvoke('health_check');
+src/services/singularityConnections.ts:17:import { secureInvoke } from '@/lib/security';
+src/services/singularityConnections.ts:99:      return await secureInvoke<T>(cmd, args);
+src/services/chat/chatModeService.ts:28:import { secureInvoke } from '@/lib/security';
+src/services/chat/chatModeService.ts:135:      await secureInvoke('chat_mode_sync', {
+src/services/chat/chatModeService.ts:255:      await secureInvoke('chat_mode_change', {
+src/services/personaTauriBridge.ts:18:import { secureInvoke } from '@/lib/security';
+src/services/personaTauriBridge.ts:198:      const rustState = await secureInvoke<RustPersonaState>('persona_get_state');
+src/services/personaTauriBridge.ts:218:      const rustState = await secureInvoke<RustPersonaState>('persona_update', {
+src/services/personaTauriBridge.ts:240:      const rustState = await secureInvoke<RustPersonaState>('persona_react', {
+src/services/personaTauriBridge.ts:259:      const rustState = await secureInvoke<RustPersonaState>('persona_reset');
+src/services/singularityBridgeVInfinity.ts:21:import { secureInvoke } from '@/lib/security';
+src/services/singularityBridgeVInfinity.ts:232:      const state = await secureInvoke<SingularityStateVInfinity>(
+src/services/singularityBridgeVInfinity.ts:248:      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_SET, {
+src/services/singularityBridgeVInfinity.ts:264:      const diff = await secureInvoke<DiffResult>(TAURI_COMMANDS.SINGULARITY_V_DIFF, {
+src/services/singularityBridgeVInfinity.ts:280:      const hash = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_HASH);
+src/services/singularityBridgeVInfinity.ts:296:      const state = await secureInvoke<SingularityStateVInfinity>(
+src/services/singularityBridgeVInfinity.ts:312:      const report = await secureInvoke<MetaCognitiveReport>(
+src/services/singularityBridgeVInfinity.ts:328:      const result = await secureInvoke<IntegrityCheckResult>(
+src/services/singularityBridgeVInfinity.ts:345:      const state = await secureInvoke<SingularityStateVInfinity>(
+src/services/singularityBridgeVInfinity.ts:361:      const json = await secureInvoke<string>(TAURI_COMMANDS.SINGULARITY_V_EXPORT);
+src/services/singularityBridgeVInfinity.ts:375:      const snapshot = await secureInvoke<Record<string, string>>(
+src/services/adminEngine/actionsEngine.ts:15:import { secureInvoke } from '@/lib/security';
+src/services/adminEngine/actionsEngine.ts:220:    const result = await secureInvoke<{
+src/services/adminEngine/stateAggregator.ts:15:import { secureInvoke } from '@/lib/security';
+src/services/adminEngine/stateAggregator.ts:203:      rustVitals = await secureInvoke<RustVitalsResponse>(
+src/services/adminEngine/stateAggregator.ts:273:      await secureInvoke('ping_ollama');
+src/services/adminEngine/stateAggregator.ts:286:      await secureInvoke('ping_gemini');
+src/services/adminEngine/stateAggregator.ts:308:      const rustStatuses = await secureInvoke<RustModuleStatusResponse[]>(
+src/services/adminEngine/stateAggregator.ts:389:      const perfAnomalies = await secureInvoke<AdminAnomaly[]>(
+src/services/adminEngine/stateAggregator.ts:401:      const healingAnomalies = await secureInvoke<AdminAnomaly[]>(
+src/services/adminEngine/stateAggregator.ts:424:      const mode = await secureInvoke<string>(
+src/ui/pages/KnowledgeFusionPage.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/KnowledgeFusionPage.tsx:47:      const format = await secureInvoke<string>('detect_file_format', {
+src/ui/pages/KnowledgeFusionPage.tsx:63:      const doc = await secureInvoke<KnowledgeDocument>('parse_document', {
+src/services/cognitive/TauriVectorStore.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/cognitive/TauriVectorStore.ts:54:      this.storeId = await secureInvoke<string>('vector_store_init', {
+src/services/cognitive/TauriVectorStore.ts:133:    await secureInvoke('vector_store_insert', {
+src/services/cognitive/TauriVectorStore.ts:158:    const results = await secureInvoke<
+src/services/cognitive/TauriVectorStore.ts:189:    const entry = await secureInvoke<Record<string, unknown> | null>('vector_store_get', {
+src/services/cognitive/TauriVectorStore.ts:211:    await secureInvoke('vector_store_update', {
+src/services/cognitive/TauriVectorStore.ts:224:    await secureInvoke('vector_store_delete', {
+src/services/cognitive/TauriVectorStore.ts:244:    const stats = await secureInvoke<{
+src/services/cognitive/TauriVectorStore.ts:433:    const available = await secureInvoke<boolean>('check_sqlite_available');
+src/services/cognitive/cognitiveLayoutService.ts:10:import { secureInvoke } from '@/lib/security';
+src/services/cognitive/cognitiveLayoutService.ts:39:      const heliosData = await secureInvoke<{
+src/services/cognitive/cognitiveLayoutService.ts:69:      const nexusData = await secureInvoke<{
+src/ui/pages/EvolutionMonitor.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/EvolutionMonitor.tsx:48:      const data = await secureInvoke<EvolutionStats>('evolution_get_stats');
+src/ui/pages/EvolutionMonitor.tsx:58:      const report = await secureInvoke<EvolutionReport>('evolution_run_cycle');
+src/services/cognitive/index.ts:211:    await invoke('check_sqlite_available');
+src/ui/pages/HyperVisionDashboard.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/HyperVisionDashboard.tsx:40:      const data = await secureInvoke<SystemMetrics>('get_system_metrics');
+src/ui/pages/HyperVisionDashboard.tsx:62:      await secureInvoke('sc_hypervision_start');
+src/ui/pages/CreationStudio.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/CreationStudio.tsx:45:      const result = await secureInvoke<GeneratedArtifact>('create_module', {
+src/services/ia/ia.api.ts:8:import { secureInvoke } from '@/lib/security';
+src/services/ia/ia.api.ts:42:      const result = await secureInvoke<CommandResult<string>>('set_api_key', {
+src/services/ia/ia.api.ts:68:      const result = await secureInvoke<CommandResult<string>>('delete_api_key', {
+src/services/ia/ia.api.ts:85:      const result = await secureInvoke<CommandResult<IAProvider[]>>('list_ai_providers');
+src/services/ia/ia.api.ts:100:      const result = await secureInvoke<CommandResult<boolean>>('test_api_key', {
+src/services/ia/ia.api.ts:119:      const result = await secureInvoke<CommandResult<IAGenerateResponse>>(
+src/services/ia/ia.api.ts:139:      const result = await secureInvoke<CommandResult<IAEngine[]>>(
+src/ui/pages/ChatIA/ModeEditor.tsx:2:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ChatIA/ModeEditor.tsx:223:      const response = await secureInvoke<{
+src/ui/pages/HyperEvolutionDashboard.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/HyperEvolutionDashboard.tsx:64:      const report = await secureInvoke<PredictionReport>('hyper_predict_issues');
+src/ui/pages/HyperEvolutionDashboard.tsx:76:      const report = await secureInvoke<AccelerationReport>('hyper_accelerate');
+src/ui/pages/SelfHealingDashboard.tsx:12:import { secureInvoke } from '@/lib/security';
+src/ui/pages/SelfHealingDashboard.tsx:231:        secureInvoke<SystemHealth>('get_self_healing_health').catch(() => null),
+src/ui/pages/SelfHealingDashboard.tsx:232:        secureInvoke<HealingState>('get_self_healing_state').catch(() => null),
+src/ui/pages/SelfHealingDashboard.tsx:233:        secureInvoke<AnomalyPrediction>('get_self_healing_prediction').catch(() => null),
+src/ui/pages/SelfHealingDashboard.tsx:259:      const report = await secureInvoke<HealingReport>('force_self_healing_evaluation');
+src/ui/pages/SelfHealingDashboard.tsx:270:      await secureInvoke('confirm_self_healing_action', { action });
+src/ui/pages/SelfHealingDashboard.tsx:281:      await secureInvoke('reject_self_healing_action', { action });
+src/ui/pages/SelfHealingDashboard.tsx:291:      await secureInvoke('toggle_safe_mode', { enable: !healingState.safe_mode_active });
+src/ui/pages/NodeClusterDashboard.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/NodeClusterDashboard.tsx:38:      await secureInvoke('mesh_initialize', { node_id: nodeId, port });
+src/ui/pages/NodeClusterDashboard.tsx:52:          const data = await secureInvoke<MeshStats>('mesh_get_stats');
+src/ui/pages/IntrospectionDashboard.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/IntrospectionDashboard.tsx:41:      const result = await secureInvoke<ScanReport>('introspection_scan', {
+src/ui/pages/IntrospectionDashboard.tsx:55:      const result = await secureInvoke<ScanReport>('introspection_auto_fix', {
+src/ui/pages/ControlPanel/ControlPanel.tsx:11:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/ControlPanel.tsx:99:      const info = await secureInvoke<SystemInfo>('get_system_info');
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:30:      const logEntries = await secureInvoke<LogEntry[]>('get_logs', { limit: 100 });
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:47:      await secureInvoke('clear_logs');
+src/ui/pages/ControlPanel/sections/MemorySection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/MemorySection.tsx:25:      const memoryStats = await secureInvoke<MemoryStats>('get_memory_stats');
+src/ui/pages/ControlPanel/sections/MemorySection.tsx:39:      await secureInvoke('clear_memory_cache');
+src/features/system-center/tabs/DevToolsTab.tsx:17:import { secureInvoke } from '@/lib/security';
+src/features/system-center/tabs/DevToolsTab.tsx:208:        secureInvoke<DevToolsResponse<DebuggerEvent[]>>('devtools_debug_last', { n: 50 }),
+src/features/system-center/tabs/DevToolsTab.tsx:209:        secureInvoke<DevToolsResponse<DebuggerStats>>('devtools_debug_stats'),
+src/features/system-center/tabs/DevToolsTab.tsx:228:    await secureInvoke('devtools_debug_clear');
+src/features/system-center/tabs/DevToolsTab.tsx:323:        secureInvoke<DevToolsResponse<MemorySystemStats>>('devtools_memory_stats'),
+src/features/system-center/tabs/DevToolsTab.tsx:324:        secureInvoke<DevToolsResponse<MemoryHealthReport>>('devtools_memory_health'),
+src/features/system-center/tabs/DevToolsTab.tsx:341:      const res = await secureInvoke<DevToolsResponse<unknown[]>>(
+src/features/system-center/tabs/DevToolsTab.tsx:357:      const res = await secureInvoke<DevToolsResponse<unknown[]>>('devtools_knn', {
+src/features/system-center/tabs/DevToolsTab.tsx:541:      const res = await secureInvoke<DevToolsResponse<AnalyzerReport>>(
+src/features/system-center/tabs/DevToolsTab.tsx:738:          await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+src/features/system-center/tabs/DevToolsTab.tsx:750:        await secureInvoke('devtools_disable');
+src/features/system-center/tabs/DevToolsTab.tsx:752:        await secureInvoke('devtools_enable');
+src/features/system-center/tabs/DevToolsTab.tsx:754:      const res = await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:192:      const loadedConfig = await secureInvoke<DesignSystemConfig>('get_design_config');
+src/ui/pages/ControlPanel/sections/AppearanceSection.tsx:207:      await secureInvoke('cp_set_design_config', { config: newConfig });
+src/ui/pages/ControlPanel/sections/SystemSection.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/SystemSection.tsx:25:      const result = await secureInvoke<string>('run_system_diagnostic');
+src/ui/pages/ControlPanel/sections/UpdatesSection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/UpdatesSection.tsx:25:      const info = await secureInvoke<UpdateInfo>('check_for_updates');
+src/ui/pages/ControlPanel/sections/UpdatesSection.tsx:41:      await secureInvoke('install_update');
+src/ui/pages/ControlPanel/sections/ModulesSection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/ModulesSection.tsx:24:      const modulesList = await secureInvoke<ModuleStatus[]>('get_modules_status');
+src/ui/pages/ControlPanel/sections/ModulesSection.tsx:38:        await secureInvoke('cp_toggle_module', { module_id: moduleId });
+src/ui/pages/ControlPanel/sections/AISection.tsx:7:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/AISection.tsx:65:      const aiConfig = await secureInvoke<AIConfig>('cp_get_ai_config');
+src/ui/pages/ControlPanel/sections/AISection.tsx:162:      await secureInvoke('cp_set_ai_config', { config: payload });
+src/ui/pages/ControlPanel/sections/AISection.tsx:186:      await secureInvoke('cp_set_ai_config', {
+src/ui/pages/ControlPanel/sections/SingularitySection.tsx:8:import { secureInvoke } from '@/lib/security';
+src/ui/pages/ControlPanel/sections/SingularitySection.tsx:23:      const singularityStatus = await secureInvoke<SingularityStatus>(
+src/ui/pages/ControlPanel/sections/SingularitySection.tsx:39:      await secureInvoke('toggle_singularity');
+src/components/devtools/LogViewer.tsx:7:import { secureInvoke } from '@/lib/security';
+src/components/devtools/LogViewer.tsx:46:      const result = await secureInvoke<LogsResponse>('get_logs', {
+src/components/devtools/LogViewer.tsx:92:      await secureInvoke('clear_logs');
+src/components/devtools/LogViewer.tsx:96:        await secureInvoke('clear_system_logs');

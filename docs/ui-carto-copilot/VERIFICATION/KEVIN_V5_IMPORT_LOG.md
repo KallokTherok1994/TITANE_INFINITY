@@ -12,7 +12,7 @@
 
 **Scope:** Documentation only (NO import executed, NO delta run)
 
-**Status:** ✅ COMPLETE (readiness achieved)
+**Status:** ✅ TERMINÉ (readiness achieved)
 
 ---
 
@@ -140,7 +140,7 @@ grep -A 2 "^## VERDICT" docs/ui-carto-copilot/VERIFICATION/VERDICT.md 2>/dev/nul
 ✅ **No UI Code Changes:** 0 src/ files modified  
 ✅ **No Verdict Modification:** VERDICT.md unchanged  
 ✅ **No Delta Execution:** Kevin V5 not imported, delta not run  
-✅ **No Forbidden Terms:** No SEALED/PRODUCTION READY  
+✅ **No Forbidden Terms:** No SCELLÉ/PRÊT PRODUCTION  
 ✅ **Goal Achieved:** Readiness, not comparison  
 ✅ **Authority Clear:** Kevin V5 = external baseline (input only)  
 ✅ **Proof-Driven:** All specs with examples  

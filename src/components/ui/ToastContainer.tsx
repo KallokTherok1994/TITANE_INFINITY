@@ -94,7 +94,7 @@ export const ToastContainer: React.FC<ToastContainerProps> = ({
       aria-live="polite"
       aria-atomic="false"
     >
-      <div className="pointer-events-auto flex flex-col gap-2 min-w-[300px] max-w-md">
+      <div className="pointer-events-auto flex flex-col gap-2 min-w-75 max-w-md">
         {toasts.map(toast => (
           <Toast
             key={toast.id}
