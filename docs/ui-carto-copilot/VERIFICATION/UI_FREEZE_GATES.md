@@ -267,6 +267,48 @@ $ grep -rn "from.*services" src/engines/
 
 ---
 
+## Gate 11: ACCEPTED EXCEPTIONS
+
+**Rule:** Some non-conformities are **governed exceptions** (monitored, not fixed).
+
+**NC-UI-SILENCE-EXEMPT-001: 6 Silent Catches (P2)**
+
+**Authority:** P1-2_REARBITRAGE_PROOF.md (2026-02-08)
+
+**Allowed Exception (6 files):**
+1. `src/stores/panelsStore.ts:646` - localStorage.removeItem
+2. `src/stores/useVisionStore.ts:292` - device permission
+3. `src/stores/useVisionStore.ts:522` - device permission
+4. `src/stores/usePerformanceStore.ts:279` - optimization apply
+5. `src/stores/effectsStore.ts:483` - localStorage.removeItem
+6. `src/engines/aiPredictiveEngine.ts:533` - network latency
+
+**Why Accepted:**
+- Non-user-facing operations (browser APIs)
+- Safe fallback behavior (defaults, no-op)
+- Inline comments document context
+- Zero UX impact measured
+
+**Rule for New Silent Catches:**
+- ❌ FORBIDDEN without arbitration update
+- Must reference UI_ARBITRATION_LOG.md decision
+- Must justify why exception is needed
+- Must document trigger-to-fix conditions
+
+**Enforcement:**
+- Manual diff review (catch blocks)
+- Check if new catch is in exception list
+- If not in list → require console.error + justification
+- Quarterly review of exception validity
+
+**Trigger to Remove Exception:**
+- User-facing action found silent
+- User complaints received
+- P0 incident caused by silence
+- Context changes (API behavior)
+
+---
+
 ## Manual Review Checklist
 
 For reviewers:
@@ -278,13 +320,14 @@ For reviewers:
 - [ ] Gate 4: Proof pack provided?
 - [ ] Gate 5: Change is minimal/surgical?
 - [ ] Gate 6: 4-ring compliance verified?
-- [ ] Gate 7: No new silent UI?
+- [ ] Gate 7: No new silent UI (check exceptions)?
 - [ ] Gate 8: Frozen patterns respected?
 - [ ] Gate 9: Docs updated?
 - [ ] Gate 10: Rollback plan documented?
+- [ ] Gate 11: New exceptions justified?
 ```
 
-**All 10 gates must PASS for merge.**
+**All 11 gates must PASS for merge.**
 
 ---
 

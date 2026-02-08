@@ -20,7 +20,7 @@
 | Item | Décision | Justification | Horizon |
 |------|----------|---------------|---------|
 | **P1-1: Dual Router Confusion** | FIX_NOW | Code mort (router.tsx 50 lignes) crée confusion maintenance. Navigation UI unifiée mais 2 routers backend = risque modification accidentelle mauvais router. Consolidation = améliore clarté sans risque regression. | Sprint N+1 |
-| **P1-2: Silent IPC Failures** | FIX_NOW | 10 catch blocks vides = utilisateur dans le noir (action échouée silencieusement). Perte de confiance utilisateur + debug impossible. Fix minimal = console.error + toast notification. Impact UX critique. | Sprint N+1 |
+| **P1-2: Silent IPC Failures** | MONITOR | 6 silent catches restants après hygiene sprint = non-critiques (localStorage, permissions, network). Aucun user-facing. Gouvernés via NC-UI-SILENCE-EXEMPT-001. Trigger reopen = si action critique silencieuse détectée. Preuve audit: P1-2_CATCH_AUDIT.md (6 fichiers documentés). | Later (trigger-based) |
 | **P1-3: Unknown/NaN Display** | MONITOR | Metrics affichant "Unknown/NaN" = perception "app non terminée". Nécessite validation layer (zod schema) entre IPC et UI. Impact perception qualité mais non bloquant fonctionnellement. Si plaintes utilisateurs répétées → FIX. | Sprint N+2-3 |
 | **P1-4: Tab Overflow Navigation** | MONITOR | 9 tabs DEV section, >7-8 = overflow invisible. Fonctionnalités cachées = mauvaise découvrabilité. Solution = limiter tabs OU dropdown "More...". Pas bloquant si usage actuel <8 utilisateurs simultanés. Observer analytics. | Sprint N+2-3 |
 
@@ -156,10 +156,20 @@ Pour chaque item FIX_NOW, critères de validation:
 - ✅ Aucune route cassée
 
 **P1-2 (Silent IPC):**
-- ✅ 10 catch blocks identifiés incluent console.error minimum
-- ✅ Toast notification ajoutée pour actions user-facing
-- ✅ ErrorBoundary propagation si erreur critique
-- ✅ Aucun catch vide restant dans code
+- ⚠️ REARBITRAGE (2026-02-08): FIX_NOW → MONITOR
+- ✅ Hygiene sprint: 1 catch critique fixé (useSelfHealingStore.ts:386)
+- ⚠️ 6 catches restants = non-critiques (localStorage, permissions, network)
+- ✅ Gouvernés via NC-UI-SILENCE-EXEMPT-001
+- 📋 Preuve: P1-2_CATCH_AUDIT.md (scan exhaustif 100+ catches)
+- 🔄 Trigger reopen: si action user-facing critique silencieuse détectée
+
+---
+
+## 6) DECISION CHANGELOG
+
+| Date | Item | Change | Rationale | Authority |
+|------|------|--------|-----------|-----------|
+| 2026-02-08 | P1-2 | FIX_NOW → MONITOR | 6 restants non-critiques (localStorage, permissions). Hygiene sprint a fixé critique (useSelfHealingStore). Restants gouvernés via NC-UI-SILENCE-EXEMPT-001. Zero UX impact. | P1-2_CATCH_AUDIT.md + P1-2_REARBITRAGE_PROOF.md |
 
 ---
 

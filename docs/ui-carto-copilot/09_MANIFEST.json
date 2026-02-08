@@ -28,8 +28,30 @@
     "open_P3_count": 2,
     "closed_count": 2,
     "total_count": 10,
-    "closed_issues": ["UI-003 (Dual Router)", "UI-010 (Silent Catch)"]
+    "closed_issues": ["UI-003 (Dual Router)", "UI-010 (Silent Catch - 1 critical fixed)"],
+    "rearbitraged_issues": ["P1-2 (Silent IPC Failures): FIX_NOW → MONITOR (6 non-critical exceptions)"]
   },
+  
+  "accepted_exceptions": [
+    {
+      "id": "NC-UI-SILENCE-EXEMPT-001",
+      "type": "silent_catch_blocks",
+      "severity": "P2",
+      "count": 6,
+      "files": [
+        "src/stores/panelsStore.ts:646",
+        "src/stores/useVisionStore.ts:292",
+        "src/stores/useVisionStore.ts:522",
+        "src/stores/usePerformanceStore.ts:279",
+        "src/stores/effectsStore.ts:483",
+        "src/engines/aiPredictiveEngine.ts:533"
+      ],
+      "rationale": "Non-user-facing browser APIs (localStorage, permissions, network). Safe fallbacks. Zero UX impact.",
+      "authority": "P1-2_REARBITRAGE_PROOF.md",
+      "trigger_to_reopen": "User-facing action found silent OR user complaints OR P0 incident",
+      "date_accepted": "2026-02-08"
+    }
+  ],
   
   "router": {
     "canonical_file": "src/AppRoutes.tsx",
