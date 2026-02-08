@@ -379,6 +379,7 @@ git commit -m "Partial portage rollback"
 
 ### Supporting Documents
 
+- **Final Output (SUPER PROMPT §7):** [PORTAGE_V27.4.1_FINAL_OUTPUT.md](PORTAGE_V27.4.1_FINAL_OUTPUT.md)
 - Final Report: [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md)
 - Completion Guide: [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md)
 - PR Template: [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md)
@@ -401,3 +402,26 @@ git commit -m "Partial portage rollback"
 **Seal Date:** 2026-02-08 09:15 EST  
 **Status:** 🔒 **SEALED & PERMANENT**  
 **Revision:** IMMUTABLE (append-only)
+
+---
+
+## ⚠️ APPEND-ONLY POLICY
+
+**All portage documents are APPEND-ONLY:**
+
+These documents constitute an official audit trail and governance record. Modifications are **PROHIBITED** except via addendum:
+
+**Allowed:**
+- ✅ Adding "## Addendum [DATE]" sections at the end
+- ✅ Creating new versioned documents (e.g., PORTAGE_V27.4.2_SEAL.md)
+- ✅ Referencing from other documents
+
+**Prohibited:**
+- ❌ Editing existing content
+- ❌ Deleting sections
+- ❌ Modifying dates, commits, or metrics
+- ❌ Changing seal status
+
+**Enforcement:** Any modification requires a new portage cycle with full governance approval.
+
+**Archive Reference:** Original source documents preserved in TITANE_LITE (commit 6863cf96)
