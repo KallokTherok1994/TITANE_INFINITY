@@ -245,6 +245,12 @@
       "min_files": 1,
       "status": "BLOCKED (folder empty)"
     },
+    "baseline_import": {
+      "spec_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_SPEC.md",
+      "checklist_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_CHECKLIST.md",
+      "example_path": "docs/reference/kevin-v5/KEVIN_V5_IMPORT_EXAMPLE.md",
+      "status": "AWAITING_IMPORT"
+    },
     "execution_status": "READY_BUT_BLOCKED",
     "blocking_reason": "Kevin V5 baseline not imported",
     "unblock_action": "Import Kevin V5 files to docs/reference/kevin-v5/",
