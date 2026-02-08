@@ -36,6 +36,10 @@ echo "✅ Preconditions met: Kevin V5 baseline present ($file_count files)"
 - Do NOT change Gate F status from BLOCKED
 - Exit with error code
 
+**IMPORT SPECIFICATION:**
+- Kevin V5 import must follow: `docs/reference/kevin-v5/KEVIN_V5_IMPORT_SPEC.md`
+- Delta execution assumes: `KEVIN_V5_IMPORT_CHECKLIST.md` ALL items PASS
+
 ---
 
 ## 1. NORMALIZATION RULES
