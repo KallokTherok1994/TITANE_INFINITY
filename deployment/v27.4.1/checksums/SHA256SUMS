@@ -1,0 +1,5 @@
+cfabf14c84c2144cda91bdedad8205ef9557b2693412eb6923b4e2f088f2a54c  src-tauri/target/release/bundle/appimage/TITANE-Lite_27.4.1_amd64.AppImage
+74506999b03d875de98188f7eb5ab6d38e976209b736d715cbbb0a3d0a047f53  src-tauri/target/release/bundle/deb/TITANE-Lite_27.0.0_amd64.deb
+9257ca45010e0f88083af64ae766c63c91af4650364778da4e04456e9b3151f4  src-tauri/target/release/bundle/deb/TITANE-Lite_27.4.1_amd64.deb
+618b53e0762acaeb96e8ec5e1c422cc053a03fb6d59a284cea80178a82b8b568  src-tauri/target/release/bundle/rpm/TITANE-Lite-27.0.0-1.x86_64.rpm
+ee9767e2dad0a6fc1e9690579ddc31d97078eb4a819f24156043b78d5876d1f8  src-tauri/target/release/bundle/rpm/TITANE-Lite-27.4.1-1.x86_64.rpm
