@@ -220,8 +220,35 @@
     "C_http_proxy": "PASS",
     "D_zero_silence": "PASS",
     "E_prod_boot": "PASS",
-    "F_kevin_v5_delta": "BLOCKED",
+    "F_kevin_v5_delta": "BLOCKED_BASELINE_MISSING",
     "score": "4.5/6"
+  },
+  
+  "delta_runner": {
+    "ready": true,
+    "protocol_version": "v1.0",
+    "protocol_file": "docs/ui-carto-copilot/70-compare/DELTA_RUNNER_PROTOCOL.md",
+    "templates": [
+      "docs/ui-carto-copilot/70-compare/DELTA_REPORT_TEMPLATE.md",
+      "docs/ui-carto-copilot/70-compare/DELTA_ISSUES_TEMPLATE.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_RUN_LOG_TEMPLATE.md"
+    ],
+    "expected_outputs": [
+      "docs/ui-carto-copilot/70-compare/DELTA_REPORT.md",
+      "docs/ui-carto-copilot/70-compare/DELTA_ISSUES.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_GATE_SUMMARY.md",
+      "docs/ui-carto-copilot/VERIFICATION/VERDICT_UPDATE.md",
+      "docs/ui-carto-copilot/VERIFICATION/DELTA_RUN_LOG.md"
+    ],
+    "preconditions": {
+      "kevin_v5_folder": "docs/reference/kevin-v5/",
+      "min_files": 1,
+      "status": "BLOCKED (folder empty)"
+    },
+    "execution_status": "READY_BUT_BLOCKED",
+    "blocking_reason": "Kevin V5 baseline not imported",
+    "unblock_action": "Import Kevin V5 files to docs/reference/kevin-v5/",
+    "date_prepared": "2026-02-08"
   },
   
   "documentation": {
