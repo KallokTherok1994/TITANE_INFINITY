@@ -1,0 +1,7 @@
+79:  server: {
+109:    proxy: {
+111:      '/api': {
+114:        // Direct /api/* pass-through to Ollama (it already exposes /api/...)
+174:    // En mode dev browser, on peut inclure @tauri-apps/api
+227:      // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
+235:        // ❌ REMOVED: @tauri-apps/api/* - Let Vite bundle them normally for Tauri

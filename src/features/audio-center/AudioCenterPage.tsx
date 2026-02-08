@@ -398,7 +398,7 @@ export const AudioCenterPage: React.FC = () => {
                     testSpeaker();
                   }}
                   disabled={isTesting}
-                  className="px-6 py-3 bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
+                  className="px-6 py-3 bg-linear-to-r from-cyan-600 to-purple-600 hover:from-cyan-500
                            hover:to-purple-500 rounded-lg font-medium transition-all disabled:opacity-50"
                 >
                   {isTesting && testType === 'speaker'

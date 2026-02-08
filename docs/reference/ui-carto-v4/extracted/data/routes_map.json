@@ -1,0 +1,47 @@
+{
+  "top_nav": [
+    "TITANE",
+    "TIME",
+    "STATS",
+    "ADMIN",
+    "DEV",
+    "Plus"
+  ],
+  "DEV": {
+    "tabs": [
+      "Vue d'ensemble",
+      "Dev Tools",
+      "Command Center",
+      "System Commands",
+      "Q&A Tests",
+      "Orchestration",
+      "Security",
+      "Metrics",
+      "Ultimate Optimization"
+    ]
+  },
+  "TITANE": {
+    "modules": [
+      "Vue d'ensemble",
+      "Chat",
+      "VAD",
+      "Vision",
+      "Identité",
+      "Mémoire",
+      "Évolution",
+      "XP",
+      "Transform",
+      "Audio Center"
+    ]
+  },
+  "TIME": {
+    "tabs": [
+      "Maintenant",
+      "Agenda",
+      "Timeline",
+      "Snapshots",
+      "Intelligence",
+      "Flow"
+    ]
+  }
+}

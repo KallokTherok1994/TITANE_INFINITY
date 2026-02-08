@@ -1,0 +1,90 @@
+src/App.tsx:891:        <Routes>
+src/App.tsx:893:          <Route path="/" element={<Navigate to="/titane" replace />} />
+src/App.tsx:895:          <Route
+src/App.tsx:904:          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+src/App.tsx:905:          <Route path="/camera" element={<Navigate to="/titane" replace />} />
+src/App.tsx:906:          <Route path="/evo" element={<Navigate to="/titane" replace />} />
+src/App.tsx:907:          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+src/App.tsx:908:          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+src/App.tsx:909:          <Route
+src/App.tsx:913:          <Route
+src/App.tsx:917:          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+src/App.tsx:918:          <Route path="/xp" element={<Navigate to="/titane" replace />} />
+src/App.tsx:920:          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
+src/App.tsx:921:          <Route
+src/App.tsx:929:          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+src/App.tsx:931:          <Route
+src/App.tsx:940:          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+src/App.tsx:941:          <Route path="/agenda" element={<Navigate to="/time" replace />} />
+src/App.tsx:942:          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+src/App.tsx:944:          <Route
+src/App.tsx:953:          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:954:          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+src/App.tsx:955:          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
+src/App.tsx:956:          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
+src/App.tsx:957:          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
+src/App.tsx:958:          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+src/App.tsx:959:          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+src/App.tsx:960:          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:961:          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+src/App.tsx:962:          <Route path="/settings" element={<Navigate to="/admin" replace />} />
+src/App.tsx:963:          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:964:          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+src/App.tsx:965:          <Route path="/secure" element={<Navigate to="/admin" replace />} />
+src/App.tsx:966:          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:967:          <Route path="/audio" element={<Navigate to="/admin" replace />} />
+src/App.tsx:968:          <Route path="/voice" element={<Navigate to="/admin" replace />} />
+src/App.tsx:969:          <Route path="/tts" element={<Navigate to="/admin" replace />} />
+src/App.tsx:971:          <Route
+src/App.tsx:982:          <Route
+src/App.tsx:993:          <Route
+src/App.tsx:1002:          <Route
+src/App.tsx:1010:          <Route
+src/App.tsx:1015:          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
+src/App.tsx:1016:          <Route
+src/App.tsx:1020:          <Route
+src/App.tsx:1024:          <Route
+src/App.tsx:1028:          <Route
+src/App.tsx:1033:          <Route
+src/App.tsx:1042:          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1043:          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1044:          <Route path="/unified" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1045:          <Route path="/singularity" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1046:          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1047:          <Route path="/qa" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1048:          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1049:          <Route path="/tests" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1050:          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1051:          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1052:          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1053:          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1055:          <Route
+src/App.tsx:1059:          <Route
+src/App.tsx:1064:          <Route
+src/App.tsx:1072:          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1073:          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1075:          <Route
+src/App.tsx:1083:          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1084:          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1086:          <Route
+src/App.tsx:1094:          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+src/App.tsx:1096:          <Route
+src/App.tsx:1104:          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1105:          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1107:          <Route
+src/App.tsx:1115:          <Route
+src/App.tsx:1120:          <Route
+src/App.tsx:1128:          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1129:          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1132:          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+src/App.tsx:1133:          <Route path="/creation" element={<CreationStudio />} />
+src/App.tsx:1134:          <Route path="/evolution" element={<EvolutionMonitor />} />
+src/App.tsx:1136:          <Route
+src/App.tsx:1146:          <Route path="/sentinel" element={<Sentinel />} />
+src/App.tsx:1147:          <Route path="/watchdog" element={<Watchdog />} />
+src/App.tsx:1148:          <Route path="/selfheal" element={<SelfHeal />} />
+src/App.tsx:1149:          <Route path="/adaptive" element={<AdaptiveEngine />} />
+src/App.tsx:1150:          <Route path="/memory" element={<Memory />} />
+src/App.tsx:1152:          <Route path="/performance" element={<PerformanceTest />} />
+src/App.tsx:1154:          <Route path="*" element={<Navigate to="/" replace />} />
+src/App.tsx:1258:            <BrowserRouter>

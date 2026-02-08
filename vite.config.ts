@@ -60,6 +60,38 @@ function workboxPlugin(): Plugin {
   };
 }
 
+// ✅ Dev-only: Force SPA fallback for TITANE routes that collide with repo files
+function spaRouteFallbackPlugin(): Plugin {
+  const spaRoutes = new Set([
+    '/titane',
+    '/chat',
+    '/camera',
+    '/evo',
+    '/dashboard',
+    '/evolution-center',
+    '/progression',
+    '/xp',
+  ]);
+
+  return {
+    name: 'titane-spa-route-fallback',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use((req, _res, next) => {
+        if (!req.url) {
+          next();
+          return;
+        }
+        const pathOnly = req.url.split('?')[0];
+        if (spaRoutes.has(pathOnly)) {
+          req.url = '/';
+        }
+        next();
+      });
+    },
+  };
+}
+
 // TITANE∞ v17.3.0 - Vite Configuration OPTIMIZED (CPU < 50%)
 // Phase 5: Bundle analysis + code splitting
 // P2-A: Brotli compression for -15% bundle size
@@ -125,6 +157,7 @@ export default defineConfig(({ command }) => ({
   },
 
   plugins: [
+    spaRouteFallbackPlugin(),
     react({
       // Optimisation React Fast Refresh
       babel: {

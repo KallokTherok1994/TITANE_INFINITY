@@ -128,10 +128,10 @@ ls -la docs/reference/kevin-v5/
 - ❌ **GATE F (Delta vs Kevin V5) - BLOCKED**
 
 ### Final Verdict
-**Cannot issue PASS verdict** without complete Kevin V5 delta (GATE F).
+**Cannot issue PASS verdict** without Kevin V5 delta finalisée (GATE F).
 
 Per protocol:
-> "Interdits: 'SEALED', 'PRODUCTION READY', 'COMPLETE' tant que Delta Kevin V5 ≠ fait et prouvé."
+> "Interdits: 'SCELLÉ', 'PRÊT PRODUCTION', 'TERMINÉ' tant que Delta Kevin V5 ≠ fait et prouvé."
 
 **Current verdict: FAIL** (Kevin V5 baseline missing)
 
@@ -139,7 +139,7 @@ Per protocol:
 
 ## Temporary Workaround
 
-If Kevin V5 is permanently unavailable, the protocol owner (Kevin Thibault) may:
+If Kevin V5 is permanently unavailable, the protocol owner (system authority) may:
 1. Authorize waiver of GATE F requirement
 2. Declare current audit (vΩ) as new baseline
 3. Update protocol to remove Kevin V5 dependency

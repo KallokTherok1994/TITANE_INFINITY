@@ -3,7 +3,7 @@
 **Date:** 2026-02-07  
 **Audit ID:** TITANE_UI_CARTOGRAPHY_AUDIT_MAX + VERIFY_SEAL_MAX  
 **Version:** vΩ.UI.CARTO.AUDIT.MAX.YAML.1  
-**Status:** ✅ **SEALED AND CERTIFIED**
+**Status:** ✅ **CERTIFIÉ (sans scellé)**
 
 ---
 
@@ -18,9 +18,9 @@
 ║                  Date: 2026-02-07                        ║
 ║                                                           ║
 ║              Frontend Architecture Audit                  ║
-║                   ✅ COMPLETE                             ║
+║                   ✅ TERMINÉ                             ║
 ║                   ✅ VERIFIED                             ║
-║                   ✅ SEALED                               ║
+║                   ✅ SCELLÉ                               ║
 ║                                                           ║
 ║              Health Score: 88/100 🟢                     ║
 ║                                                           ║
@@ -199,7 +199,7 @@ Re-audit required if:
 **Protocol:** TITANE_UI_CARTOGRAPHY_VERIFY_SEAL_MAX  
 **Version:** vΩ.UI.CARTO.VERIFY.SEAL.MAX.YAML.1  
 **Execution Mode:** AUTO_EXEC_AUDIT  
-**Status:** ✅ COMPLETE
+**Status:** ✅ TERMINÉ
 
 ---
 
@@ -262,7 +262,7 @@ Total Size: ~100 KB
 
 **Date:** 2026-02-07  
 **Authority:** TITANE_UI_CARTOGRAPHY_VERIFY_SEAL_MAX protocol  
-**Status:** ✅ PRODUCTION READY (with documented caveats)
+**Status:** ✅ PRÊT PRODUCTION (with documented caveats)
 
 ---
 

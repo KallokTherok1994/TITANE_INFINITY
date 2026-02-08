@@ -2,7 +2,7 @@
 
 **Date:** 2026-02-07  
 **Protocol:** Ω.UI.CARTO.COMPARE.AUDIT.TRUTH.MAX  
-**Status:** ❌ **INCOMPLETE** (Kevin V5 missing)
+**Status:** ❌ **INCOMPLET** (Kevin V5 missing)
 
 ---
 
@@ -11,7 +11,7 @@
 **Previous file:** `SEAL_UI_CARTOGRAPHY.md`  
 **Status:** INVALIDATED (contained forbidden terms without Kevin V5 delta)
 
-**Per protocol:** "Interdits: 'SEALED', 'PRODUCTION READY', 'COMPLETE' tant que Delta Kevin V5 ≠ fait et prouvé."
+**Per protocol:** "Interdits: 'SCELLÉ', 'PRÊT PRODUCTION', 'TERMINÉ' tant que Delta Kevin V5 ≠ fait et prouvé."
 
 **Action:** Previous seal renamed to `.INVALIDATED` suffix
 
@@ -38,11 +38,11 @@
 **File:** `MISSING_KEVIN_V5.md`
 
 Kevin V5 cartography baseline is required to:
-1. Complete GATE F (delta comparison)
+1. Finaliser GATE F (delta comparison)
 2. Issue PASS verdict
-3. Use terms "SEALED", "PRODUCTION READY", or "COMPLETE"
+3. Use terms "SCELLÉ", "PRÊT PRODUCTION", or "TERMINÉ"
 
-**Without Kevin V5:** Audit cannot be considered complete per protocol
+**Without Kevin V5:** Audit cannot be considered finalisé per protocol
 
 ---
 

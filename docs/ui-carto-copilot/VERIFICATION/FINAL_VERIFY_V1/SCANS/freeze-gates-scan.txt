@@ -1,0 +1,13 @@
+17:## Gate 1: ARBITRATION REFERENCE
+253:## Gate 10: ROLLBACK READINESS
+270:## Gate 11: ACCEPTED EXCEPTIONS
+312:## Gate 12: NO_HUMAN_NAME_AUTHORITY
+356:## Gate 13: ANTI_REGRESSION_SCANS_REQUIRED
+360:**Authority:** ANTI_REGRESSION_SCANS.md
+411:## Gate 14: CHANGE_CONTROL_REQUIRED
+467:- [ ] Gate 1: Arbitration reference cited?
+476:- [ ] Gate 10: Rollback plan documented?
+477:- [ ] Gate 11: New exceptions justified?
+478:- [ ] Gate 12: No human name authority?
+479:- [ ] Gate 13: Anti-regression scans run (if major)?
+480:- [ ] Gate 14: Change control template used (if architectural)?

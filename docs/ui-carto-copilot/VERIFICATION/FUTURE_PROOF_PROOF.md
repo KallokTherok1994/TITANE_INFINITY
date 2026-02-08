@@ -4,7 +4,7 @@
 **Executor:** GitHub Copilot Agent  
 **Mission:** Preventive governance hardening (documentation-only)  
 **Authority:** GOVERNANCE_RULES.md (GOV-NO-HUMAN-IDENTITY-ATTRIBUTION)  
-**Status:** ✅ COMPLETE
+**Status:** ✅ TERMINÉ
 
 ---
 
@@ -169,19 +169,19 @@ git diff docs/ui-carto-copilot/VERIFICATION/VERDICT.md
 ```
 
 ### Statement 3: No Forbidden Terms Introduced
-**Assertion:** No "SEALED", "PRODUCTION READY", or "COMPLETE" in verdict context  
+**Assertion:** No "SCELLÉ", "PRÊT PRODUCTION", or "TERMINÉ" in verdict context
 **Proof:** Scan of modified files shows no forbidden terms
 
 **Verification Command:**
 ```bash
-grep -rn "SEALED\|PRODUCTION READY" docs/ui-carto-copilot/VERIFICATION/*.md
+grep -rn "SCELLÉ\|PRÊT PRODUCTION" docs/ui-carto-copilot/VERIFICATION/*.md
 # Expected: 0 results in new files
 ```
 
 **Allowed uses:**
-- "SEALED" in historical context (explaining why NOT sealed)
-- "COMPLETE" for task completion (not verdict status)
-- Never "PRODUCTION READY" until Gate F unblocked
+- "SCELLÉ" in historical context (explaining why NOT sealed)
+- "TERMINÉ" for task completion (not verdict status)
+- Never "PRÊT PRODUCTION" until Gate F unblocked
 
 ### Statement 4: Gate F Status Preserved
 **Assertion:** Gate F remains BLOCKED_BASELINE_MISSING  
@@ -335,7 +335,7 @@ git revert <commit-hash>
 
 - [x] ✅ No src/ files modified (0 production code changes)
 - [x] ✅ VERDICT.md unchanged (FAIL status preserved)
-- [x] ✅ No forbidden terms in verdict context (SEALED/PRODUCTION READY/COMPLETE)
+- [x] ✅ No forbidden terms in verdict context (SCELLÉ/PRÊT PRODUCTION/TERMINÉ)
 - [x] ✅ Gate F status unchanged (BLOCKED_BASELINE_MISSING)
 - [x] ✅ Authority uses system labels only (GOV-NO-HUMAN-IDENTITY-ATTRIBUTION)
 - [x] ✅ Proof-driven (every rule references docs/exceptions)
@@ -348,4 +348,4 @@ git revert <commit-hash>
 
 ---
 
-**FUTURE PROOF SAFETY PACK V1 COMPLETE**
+**FUTURE PROOF SAFETY PACK V1 TERMINÉ**

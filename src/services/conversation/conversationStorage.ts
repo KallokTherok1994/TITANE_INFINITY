@@ -162,6 +162,7 @@ export class ConversationStorageService {
    * Lister toutes les conversations
    */
   async listConversations(): Promise<ConversationSummary[]> {
+    console.log('[CONV_STORAGE]', { storageLen: this.index.length });
     return [...this.index].sort((a, b) => b.updated_at - a.updated_at);
   }
 

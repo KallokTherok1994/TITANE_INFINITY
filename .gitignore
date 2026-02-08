@@ -165,3 +165,6 @@ tmp_import_useChat.mjs
 src-tauri/memory/*.json
 src-tauri/memory/*.db
 *.memory.json
+
+# E2E authorization gate (local only, never commit)
+runtime/ALLOW_E2E_TAURI_BUILD.ok

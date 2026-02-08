@@ -84,25 +84,25 @@ Every UI change must pass these checks before merge.
 
 ---
 
-## Gate 3: NO "SEALED" UNTIL KEVIN V5
+## Gate 3: NO "SCELLÉ" UNTIL KEVIN V5
 
-**Rule:** FORBIDDEN to use these terms in docs/PR/commits until Gate F complete:
-- "SEALED"
-- "PRODUCTION READY"
-- "COMPLETE" (in absolute sense)
+**Rule:** FORBIDDEN to use these terms in docs/PR/commits until Gate F finalisée:
+- "SCELLÉ"
+- "PRÊT PRODUCTION"
+- "TERMINÉ" (in absolute sense)
 - "APPROVED FOR PRODUCTION"
 
 **Reason:** Kevin V5 delta comparison blocked (Gate F)
 
 **Allowed Terms:**
 - "V6 cartography updated"
-- "Hygiene sprint complete"
+- "Hygiene sprint terminé"
 - "Freeze active"
 - "Delta pending"
 
 **Enforcement:**
 - Grep docs for forbidden terms
-- PR review rejects premature "SEALED"
+- PR review rejects premature "SCELLÉ"
 - README status must say "Delta pending"
 
 **Gate F Unblock Conditions:**
@@ -111,7 +111,7 @@ Every UI change must pass these checks before merge.
 3. All P0 divergences addressed
 4. VERDICT.md updated to PASS
 
-**Until then:** ❌ NO SEAL
+**Until then:** ❌ NO SCELLEMENT
 
 ---
 
@@ -466,7 +466,7 @@ For reviewers:
 ```markdown
 - [ ] Gate 1: Arbitration reference cited?
 - [ ] Gate 2: Layout/nav unchanged OR justified?
-- [ ] Gate 3: No premature "SEALED" terms?
+- [ ] Gate 3: No premature "SCELLÉ" terms?
 - [ ] Gate 4: Proof pack provided?
 - [ ] Gate 5: Change is minimal/surgical?
 - [ ] Gate 6: 4-ring compliance verified?
@@ -489,7 +489,7 @@ For reviewers:
 These gates are **manual review only** for now.
 
 **Possible Automation:**
-- Grep for "SEALED" in docs → CI fail
+- Grep for "SCELLÉ" in docs → CI fail
 - Import checker (4-ring violations) → CI warn
 - Empty catch detector → CI fail
 - Manifest sync validator → CI fail
@@ -505,8 +505,8 @@ These gates are **manual review only** for now.
 - Must retroactively document within 24h
 - Create arbitration entry post-fix
 
-### Kevin-Approved Override
-- Creator Kevin Thibault may override any gate
+### System-Approved Override
+- System authority may override any gate
 - Requires written justification in PR/issue
 - Documents reason for exception
 

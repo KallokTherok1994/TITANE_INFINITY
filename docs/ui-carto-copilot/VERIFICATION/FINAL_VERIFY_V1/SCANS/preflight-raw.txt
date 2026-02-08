@@ -1,0 +1,97 @@
+]633;E;find docs/reference/kevin-v5 -maxdepth 1 -type f \\( -iname "*.md" -o -iname "*.pdf" -o -iname "*.zip" -o -iname "*.docx" \\) ! -iname "KEVIN_V5_IMPORT_SPEC.md" ! -iname "KEVIN_V5_IMPORT_CHECKLIST.md" ! -iname "KEVIN_V5_IMPORT_EXAMPLE.md" | wc -l;5dc738aa-d9d5-4e67-ad18-9e7b76f09c85]633;Cdim. 08 févr. 2026 17:22:58 UTC
+1d30441f
+-rw-r--r-- 1 titane-os titane-os 107973 févr.  8 11:47 docs/reference/agentgpt-ui/ANALYSE-AGENTGPT.pdf
+-rw-r--r-- 1 titane-os titane-os 42616 févr.  7 12:47 docs/reference/ui-carto-v4/TITANE_UI_CARTOGRAPHY_v4.zip
+total 40
+drwxrwxr-x 2 titane-os titane-os 4096 févr.  8 10:27 .
+drwxrwxr-x 5 titane-os titane-os 4096 févr.  8 11:48 ..
+-rw-rw-r-- 1 titane-os titane-os 6692 févr.  8 10:27 KEVIN_V5_IMPORT_CHECKLIST.md
+-rw-rw-r-- 1 titane-os titane-os 9633 févr.  8 10:27 KEVIN_V5_IMPORT_EXAMPLE.md
+-rw-rw-r-- 1 titane-os titane-os 8609 févr.  8 10:27 KEVIN_V5_IMPORT_SPEC.md
+docs/ui-carto-copilot/00-preflight/00-context.md
+docs/ui-carto-copilot/00-preflight/01-repo-fingerprint.md
+docs/ui-carto-copilot/09_MANIFEST.json
+docs/ui-carto-copilot/10-navigation/10-topbar-map.md
+docs/ui-carto-copilot/10-navigation/11-sections-map.md
+docs/ui-carto-copilot/10-navigation/12-routes-map.md
+docs/ui-carto-copilot/10-navigation/13-layout-shell.md
+docs/ui-carto-copilot/10-navigation/14-persistent-widgets.md
+docs/ui-carto-copilot/10-navigation/15-redirects-and-deadcode.md
+docs/ui-carto-copilot/20-components/20-inventory-by-feature.md
+docs/ui-carto-copilot/20-components/21-inventory-by-filetree.md
+docs/ui-carto-copilot/25-visual-map/25-screen-map.md
+docs/ui-carto-copilot/30-contracts/30-ipc-invocations-index.md
+docs/ui-carto-copilot/35-states/38-empty-loading-error-catalog.md
+docs/ui-carto-copilot/40-observability/40-boot-pipeline.md
+docs/ui-carto-copilot/40-observability/41-error-boundaries.md
+docs/ui-carto-copilot/50-audit/50-issues-register.md
+docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md
+docs/ui-carto-copilot/60-tests/60-test-plan.md
+docs/ui-carto-copilot/60-tests/61-run-results.md
+docs/ui-carto-copilot/70-compare/70-delta-template-vs-kevin-v5.md
+docs/ui-carto-copilot/70-compare/DELTA_ISSUES_TEMPLATE.md
+docs/ui-carto-copilot/70-compare/DELTA_REPORT_TEMPLATE.md
+docs/ui-carto-copilot/70-compare/DELTA_RUNNER_PROTOCOL.md
+docs/ui-carto-copilot/ARCHITECTURAL_FREEZE_NOTICE.md
+docs/ui-carto-copilot/CHANGE_CONTROL_TEMPLATE.md
+docs/ui-carto-copilot/CLARITY_LOCK.md
+docs/ui-carto-copilot/GOVERNANCE_RULES.md
+docs/ui-carto-copilot/MASTER_COHERENCE_ANALYSIS.md
+docs/ui-carto-copilot/README.md
+docs/ui-carto-copilot/UI_ARBITRATION_LOG.md
+docs/ui-carto-copilot/VERIFICATION/00-scope.md
+docs/ui-carto-copilot/VERIFICATION/01-command-log.md
+docs/ui-carto-copilot/VERIFICATION/02-kevin-v5-presence.md
+docs/ui-carto-copilot/VERIFICATION/ANTI_REGRESSION_SCANS.md
+docs/ui-carto-copilot/VERIFICATION/AUDIT_STATUS.md
+docs/ui-carto-copilot/VERIFICATION/BASELINE_IMPORT_BLOCKED_FINAL.md
+docs/ui-carto-copilot/VERIFICATION/BASELINE_IMPORT_SEARCH.md
+docs/ui-carto-copilot/VERIFICATION/BASELINE_IMPORT_SNAPSHOT.md
+docs/ui-carto-copilot/VERIFICATION/DELTA_REVERIFICATION_LOG.md
+docs/ui-carto-copilot/VERIFICATION/DELTA_RUN_LOG_TEMPLATE.md
+docs/ui-carto-copilot/VERIFICATION/DELTA_RUNNER_PREP_PROOF.md
+docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_CHECKLIST.md
+docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_LOG.md
+docs/ui-carto-copilot/VERIFICATION/FUTURE_PROOF_PROOF.md
+docs/ui-carto-copilot/VERIFICATION/GATE_SUMMARY.md
+docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_FAIL.md
+docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_LOG.md
+docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_PROOF.md
+docs/ui-carto-copilot/VERIFICATION/MASTER_PREFLIGHT_LOG.md
+docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md
+docs/ui-carto-copilot/VERIFICATION/P1-2_CATCH_AUDIT.md
+docs/ui-carto-copilot/VERIFICATION/P1-2_REARBITRAGE_PROOF.md
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/boot-entrypoints.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/ipc-fetch-forbidden.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/ipc-invoke-raw.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/ipc-secure-usage.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/routes-proof.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/runtime-dev-tauri.log
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/silent-empty-catch.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/silent-return-catch.txt
+docs/ui-carto-copilot/VERIFICATION/SCANS_V7/vite-proxy.txt
+docs/ui-carto-copilot/VERIFICATION/SEAL_PRODUCTION_BLOCKED.md
+docs/ui-carto-copilot/VERIFICATION/SEAL_UI_CARTOGRAPHY.md.INVALIDATED
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_DECISION_RECOMMENDATIONS.md
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_DELTA_REPORT.md
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_EVIDENCE_LOG.md
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_INDEX.md
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_ISSUES.md
+docs/ui-carto-copilot/VERIFICATION/TRIANGULATION_V1/MASTER_TRIANGULATION_PREFLIGHT.md
+docs/ui-carto-copilot/VERIFICATION/TRUTH_HTTP_PROXY.md
+docs/ui-carto-copilot/VERIFICATION/TRUTH_IPC.md
+docs/ui-carto-copilot/VERIFICATION/TRUTH_PROD_BOOT.md
+docs/ui-carto-copilot/VERIFICATION/TRUTH_ROUTES.md
+docs/ui-carto-copilot/VERIFICATION/TRUTH_ZERO_SILENCE.md
+docs/ui-carto-copilot/VERIFICATION/UI_DOCS_UPDATE_BLOCKED.md
+docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md
+docs/ui-carto-copilot/VERIFICATION/UI_HYGIENE_PROOF.md
+docs/ui-carto-copilot/VERIFICATION/UI_HYGIENE_SPRINT_LOG.md
+docs/ui-carto-copilot/VERIFICATION/V7_AGENTGPT_KEYPOINTS.md
+docs/ui-carto-copilot/VERIFICATION/V7_MASTER_FIX_PREFLIGHT.md
+docs/ui-carto-copilot/VERIFICATION/V7_MASTER_REPORT.md
+docs/ui-carto-copilot/VERIFICATION/V7_MASTER_TRIAGE.md
+docs/ui-carto-copilot/VERIFICATION/V7_V4_KEYPOINTS.md
+docs/ui-carto-copilot/VERIFICATION/VERDICT.md
+docs/ui-carto-copilot/VERIFICATION/VERIFICATION_REPORT.md
+0

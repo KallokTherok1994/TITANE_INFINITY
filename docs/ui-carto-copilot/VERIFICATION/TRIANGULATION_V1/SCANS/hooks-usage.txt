@@ -1,0 +1,776 @@
+src/pages/TimeNavigator.tsx:51:  useEffect(() => {
+src/features/developer-mode/useDeveloperMode.ts:29:  const fetchState = useCallback(async () => {
+src/features/developer-mode/useDeveloperMode.ts:42:  const enable = useCallback(
+src/features/developer-mode/useDeveloperMode.ts:60:  const disable = useCallback(async () => {
+src/features/developer-mode/useDeveloperMode.ts:73:  useEffect(() => {
+src/features/developer-mode/useDeveloperMode.ts:88:  const validatePatch = useCallback(
+src/features/developer-mode/useDeveloperMode.ts:107:  const applyPatch = useCallback(
+src/features/developer-mode/useDeveloperMode.ts:126:  const previewChanges = useCallback(
+src/features/developer-mode/useDeveloperMode.ts:145:  const rollback = useCallback(async (patchId: string): Promise<boolean> => {
+src/features/developer-mode/useDeveloperMode.ts:173:  const fetchHistory = useCallback(async (limit?: number) => {
+src/features/developer-mode/useDeveloperMode.ts:188:  useEffect(() => {
+src/features/developer-mode/useDeveloperMode.ts:203:  const createBackup = useCallback(async (name: string): Promise<string | null> => {
+src/features/developer-mode/useDeveloperMode.ts:219:  const restoreBackup = useCallback(async (backupId: string): Promise<boolean> => {
+src/features/developer-mode/useDeveloperMode.ts:247:  const analyzeFile = useCallback(async (filePath: string) => {
+src/features/developer-mode/useDeveloperMode.ts:276:  const startBuild = useCallback(
+src/features/developer-mode/useDeveloperMode.ts:293:  const getStatus = useCallback(async (buildId: string) => {
+src/features/developer-mode/useDeveloperMode.ts:305:  const getResult = useCallback(async (buildId: string) => {
+src/features/developer-mode/useDeveloperMode.ts:317:  const cancelBuild = useCallback(async (buildId: string): Promise<boolean> => {
+src/features/developer-mode/useDeveloperMode.ts:331:  const cleanArtifacts = useCallback(async (): Promise<boolean> => {
+src/features/developer-mode/useDeveloperMode.ts:367:  const fetchDashboard = useCallback(async () => {
+src/features/developer-mode/useDeveloperMode.ts:380:  useEffect(() => {
+src/features/developer-mode/useDeveloperMode.ts:398:  const generateChangelog = useCallback(async (since?: string) => {
+src/components/visualization/SingularityFieldCanvas.tsx:103:  const initParticles = useCallback(() => {
+src/components/visualization/SingularityFieldCanvas.tsx:157:  const updateParticles = useCallback(() => {
+src/components/visualization/SingularityFieldCanvas.tsx:258:  const render = useCallback(() => {
+src/components/visualization/SingularityFieldCanvas.tsx:396:  const animate = useCallback(() => {
+src/components/visualization/SingularityFieldCanvas.tsx:403:  useEffect(() => {
+src/components/visualization/SingularityFieldCanvas.tsx:415:  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
+src/components/visualization/SingularityFieldCanvas.tsx:427:  const handleMouseLeave = useCallback(() => {
+src/features/memory/MemoryTreeViewer.tsx:45:  const baseTreeData = useMemo(() => {
+src/features/memory/MemoryTreeViewer.tsx:52:  const treeData = useMemo(() => {
+src/features/memory/MemoryTreeViewer.tsx:58:  React.useEffect(() => {
+src/features/memory/MemoryTreeViewer.tsx:63:  const renderCustomNode = useCallback(
+src/pages/EvoPage.tsx:82:  useEffect(() => {
+src/pages/EvoPage.tsx:95:  const stats: EvoStats = useMemo(
+src/components/VocalDevConsole.tsx:56:  useEffect(() => {
+src/features/memory/MemorySearchPanel.tsx:39:  const memoryEntries = useMemo(() => {
+src/features/memory/MemorySearchPanel.tsx:45:  const filteredEntries = useMemo(() => {
+src/features/memory/MemorySearchPanel.tsx:89:  const availableTags = useMemo(() => {
+src/features/memory/MemorySearchPanel.tsx:97:  const toggleTag = useCallback((tag: string) => {
+src/pages/DevTools.tsx:60:  const loadGeminiStatus = useCallback(async () => {
+src/pages/DevTools.tsx:99:  useEffect(() => {
+src/pages/DevTools.tsx:173:  useEffect(() => {
+src/pages/TitanePage.tsx:132:  useEffect(() => {
+src/pages/TitanePage.tsx:146:  const stats: TitaneStats = useMemo(
+src/pages/TitanePage.tsx:159:  const tabHandlers = useMemo(
+src/pages/TitanePage.tsx:173:  useEffect(() => {
+src/pages/TitanePage.tsx:186:  const renderActiveSection = useCallback(() => {
+src/components/RealityCenter/RealityCenter.tsx:220:  const loadState = useCallback(async () => {
+src/components/RealityCenter/RealityCenter.tsx:234:  useEffect(() => {
+src/components/RealityCenter/RealityCenter.tsx:238:  useEffect(() => {
+src/features/vision/DetectionOverlay.tsx:53:    const detections: Detection[] = useMemo(() => [], []); // Mock - vide pour l'instant
+src/features/vision/DetectionOverlay.tsx:56:    useEffect(() => {
+src/features/vision/DetectionOverlay.tsx:94:    useEffect(() => {
+src/features/vision/DetectionOverlay.tsx:138:    const toggleFullscreen = useCallback(() => {
+src/features/vision/DetectionOverlay.tsx:142:    const toggleOverlayEnabled = useCallback(() => {
+src/pages/EvolutionCenterPage.tsx:225:  useEffect(() => {
+src/pages/EvolutionCenterPage.tsx:269:  const renderOverview = useCallback(
+src/pages/EvolutionCenterPage.tsx:379:  const renderProgression = useCallback(
+src/pages/EvolutionCenterPage.tsx:516:  const renderKnowledge = useCallback(
+src/pages/EvolutionCenterPage.tsx:680:  const renderEvolution = useCallback(
+src/pages/EvolutionCenterPage.tsx:866:  const renderMemory = useCallback(
+src/features/vision/VisionMetricsChart.tsx:59:    const cutoffTimestamp = useMemo(() => Date.now() - timeRange * 60_000, [timeRange]);
+src/features/vision/VisionMetricsChart.tsx:60:    const recentAffect = useMemo(
+src/features/vision/VisionMetricsChart.tsx:68:    const avgConfidence = useMemo(() => {
+src/features/vision/VisionMetricsChart.tsx:77:    const avgEnergy = useMemo(() => {
+src/features/vision/VisionMetricsChart.tsx:85:    const avgTension = useMemo(() => {
+src/features/vision/VisionMetricsChart.tsx:93:    const avgEngagement = useMemo(() => {
+src/features/vision/VisionMetricsChart.tsx:101:    const bodyScores = useMemo(
+src/features/vision/VisionMetricsChart.tsx:112:    const trends = useMemo(() => {
+src/pages/PerformanceTest.tsx:52:  useEffect(() => {
+src/pages/PerformanceTest.tsx:98:  useEffect(() => {
+src/pages/PerformanceTest.tsx:111:  useEffect(() => {
+src/pages/AgendaPage.tsx:564:  const monthGrid = React.useMemo(() => {
+src/pages/AgendaPage.tsx:598:  const todayEvents = React.useMemo(() => {
+src/pages/AgendaPage.tsx:607:  const energyLevels = React.useMemo(() => {
+src/pages/AgendaPage.tsx:618:  const handleEventClick = useCallback((event: AgendaEvent) => {
+src/pages/AgendaPage.tsx:623:  const handleDayClick = useCallback(
+src/components/config/ConfigFieldEditable.tsx:40:  useEffect(() => {
+src/pages/DashboardPage.tsx:48:  useEffect(() => {
+src/pages/ConfigurationHub.tsx:86:  useEffect(() => {
+src/pages/ConfigurationHub.tsx:235:  useEffect(() => {
+src/pages/SecureSettings.tsx:66:  const maskedKey = useMemo(() => {
+src/pages/SecureSettings.tsx:73:  const maskedOpenaiKey = useMemo(() => {
+src/pages/SecureSettings.tsx:80:  const maskedAnthropicKey = useMemo(() => {
+src/pages/SecureSettings.tsx:87:  const loadStatus = useCallback(async () => {
+src/pages/SecureSettings.tsx:147:  useEffect(() => {
+src/pages/SecureSettings.tsx:281:  const maskedExample = useMemo(() => maskSecret('FAKE-KEY-1234-ABCDE'), []);
+src/features/system-center/hooks/useIntrospection.ts:42:  const runQuickScan = useCallback(async (projectPath: string) => {
+src/features/system-center/hooks/useIntrospection.ts:63:  const runFullScan = useCallback(async (projectPath: string) => {
+src/features/system-center/hooks/useIntrospection.ts:84:  const runAutoFix = useCallback(
+src/features/system-center/hooks/useIntrospection.ts:110:  const clearReport = useCallback(() => {
+src/components/security/SecurityPanel.tsx:35:  useEffect(() => {
+src/pages/DevPage.tsx:615:  const loadData = useCallback(async () => {
+src/pages/DevPage.tsx:675:  useEffect(() => {
+src/pages/DevPage.tsx:680:  const handleExecuteCommand = useCallback(
+src/pages/DevPage.tsx:696:  const handleRunSuite = useCallback(
+src/pages/DevPage.tsx:712:  const handleAcknowledgeAlert = useCallback(
+src/features/system-center/hooks/useSystemDiagnostics.ts:33:  const runQuickDiagnostics = useCallback(async () => {
+src/features/system-center/hooks/useSystemDiagnostics.ts:50:  const runFullDiagnostics = useCallback(async () => {
+src/features/system-center/hooks/useSystemDiagnostics.ts:67:  const refreshStatus = useCallback(async () => {
+src/features/system-center/hooks/useSystemDiagnostics.ts:76:  const clearError = useCallback(() => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:121:  const handleError = useCallback((err: unknown) => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:145:  const clearError = useCallback(() => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:150:  const addToHistory = useCallback((action: string, data?: unknown) => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:169:  const captureLiveMetrics = useCallback(async (): Promise<LiveMetrics> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:236:  const refreshLiveMetrics = useCallback(async () => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:254:  const _addTraceEntry = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:295:  const assessRisks = useCallback(async (): Promise<RiskAssessmentReport> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:459:  const _captureCognitiveSnapshot = useCallback(async (): Promise<CognitiveSnapshot> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:504:  const captureOSSnapshot = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:584:  const compareSnapshots = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:665:  const captureVisualSyncState = useCallback(async (): Promise<VisualSyncState> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:715:  const start = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:810:  const stop = useCallback(async () => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:834:  const switchMode = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:842:  const snapshot = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:854:  const exportData = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:910:  const autoFix = useCallback(
+src/features/system-center/hooks/useDebuggerLiveOS.ts:982:  const getState = useCallback(() => state, [state]);
+src/features/system-center/hooks/useDebuggerLiveOS.ts:984:  const getTimeline = useCallback(() => traceBuffer.current, []);
+src/features/system-center/hooks/useDebuggerLiveOS.ts:986:  const explain = useCallback(async (traceId: string): Promise<string> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1004:  const sanityCheck = useCallback(async (): Promise<SanityCheckReport> => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1070:  const syncWithSingularity = useCallback(async () => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1079:  const syncWithVisualEngine = useCallback(async () => {
+src/features/system-center/hooks/useDebuggerLiveOS.ts:1093:  useEffect(() => {
+src/pages/TimePage.tsx:141:  useEffect(() => {
+src/features/system-center/hooks/useNodeCluster.ts:40:  const refreshStatus = useCallback(async () => {
+src/features/system-center/hooks/useNodeCluster.ts:66:  const refreshPeers = useCallback(async () => {
+src/features/system-center/hooks/useNodeCluster.ts:77:  const initialize = useCallback(
+src/features/system-center/hooks/useNodeCluster.ts:97:  const shutdown = useCallback(async () => {
+src/features/system-center/hooks/useNodeCluster.ts:112:  useEffect(() => {
+src/features/system-center/hooks/useNodeCluster.ts:117:  useEffect(() => {
+src/pages/MonitoringDashboard.tsx:27:  const handleExportJSON = useCallback(() => {
+src/pages/MonitoringDashboard.tsx:49:  const handleExportCSV = useCallback(() => {
+src/pages/MonitoringDashboard.tsx:94:  const handleClearMetrics = useCallback(() => {
+src/features/system-center/hooks/useSystemLogs.ts:45:  const refreshLogs = useCallback(async () => {
+src/features/system-center/hooks/useSystemLogs.ts:66:  const clearLogs = useCallback(async () => {
+src/features/system-center/hooks/useSystemLogs.ts:78:  const addLog = useCallback(
+src/features/system-center/hooks/useSystemLogs.ts:92:  useEffect(() => {
+src/pages/Experience.tsx:26:  useEffect(() => {
+src/pages/Experience.tsx:34:  const filteredHistory = useMemo(() => {
+src/pages/Experience.tsx:41:  const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
+src/features/system-center/hooks/useHyperVision.ts:54:  const refreshState = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:64:  const refreshMetrics = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:79:  const refreshLayers = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:88:  const refreshAnomalies = useCallback(async (includeResolved = false) => {
+src/features/system-center/hooks/useHyperVision.ts:99:  const startMonitoring = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:123:  const stopMonitoring = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:142:  const clearAnomalies = useCallback(async () => {
+src/features/system-center/hooks/useHyperVision.ts:151:  const resolveAnomaly = useCallback(
+src/features/system-center/hooks/useHyperVision.ts:164:  useEffect(() => {
+src/features/system-center/hooks/useHyperVision.ts:169:  useEffect(() => {
+src/components/ui/Toast.tsx:50:  useEffect(() => {
+src/components/ui/Toast.tsx:60:  const handleClose = useCallback(() => {
+src/components/ui/Toast.tsx:70:  useEffect(() => {
+src/pages/Memory.tsx:26:  useEffect(() => {
+src/components/ui/dialog.tsx:20:  useEffect(() => {
+src/pages/OrchestrationMetaCenter.tsx:395:  useEffect(() => {
+src/pages/OrchestrationMetaCenter.tsx:696:  const TABS: { id: ViewTab; label: string; icon: string }[] = useMemo(
+src/pages/OrchestrationMetaCenter.tsx:707:  useEffect(() => {
+src/pages/OrchestrationMetaCenter.tsx:713:  useEffect(() => {
+src/pages/OrchestrationMetaCenter.tsx:720:  const loadAllState = useCallback(async () => {
+src/pages/OrchestrationMetaCenter.tsx:808:  const handleModeChange = useCallback(
+src/pages/OrchestrationMetaCenter.tsx:820:  const handleRunCycle = useCallback(async () => {
+src/components/ui/ToastContainer.tsx:43:  const removeToast = useCallback((id: string) => {
+src/components/ui/ToastContainer.tsx:47:  const addToast = useCallback(
+src/components/ui/ToastContainer.tsx:67:  useMemo(() => {
+src/components/ui/ToastContainer.tsx:115:  return useMemo(() => {
+src/pages/Stats.tsx:81:  useEffect(() => {
+src/pages/Stats.tsx:135:  const networkDensity = useMemo(
+src/components/ui/textarea.tsx:56:    useEffect(() => {
+src/components/AudioSettings.tsx:86:  useEffect(() => {
+src/features/system-center/tabs/DiagnosticsTab.tsx:68:  useEffect(() => {
+src/features/system-center/tabs/IntrospectionTab.tsx:87:  const filteredIssues = useMemo(() => {
+src/components/ConsciousnessDashboard.tsx:39:  useEffect(() => {
+src/components/ConsciousnessDashboard.tsx:60:  const consciousnessMetrics = useMemo(() => {
+src/components/ConsciousnessDashboard.tsx:103:  const quantumMetrics = useMemo(() => {
+src/components/ConsciousnessDashboard.tsx:121:  const _thoughtsByType = useMemo(() => {
+src/components/ConsciousnessDashboard.tsx:137:  const patternsByType = useMemo(() => {
+src/features/system-center/tabs/DevToolsTab.tsx:205:  const fetchDebugger = useCallback(async () => {
+src/features/system-center/tabs/DevToolsTab.tsx:219:  useEffect(() => {
+src/features/system-center/tabs/DevToolsTab.tsx:319:  const fetchMemory = useCallback(async () => {
+src/features/system-center/tabs/DevToolsTab.tsx:334:  useEffect(() => {
+src/features/system-center/tabs/DevToolsTab.tsx:554:  useEffect(() => {
+src/features/system-center/tabs/DevToolsTab.tsx:734:  useEffect(() => {
+src/components/MetaCenter/MetaCenter.tsx:209:  useEffect(() => {
+src/components/MetaCenter/MetaCenter.tsx:214:  useEffect(() => {
+src/components/PerformanceDashboard.tsx:67:  useEffect(() => {
+src/components/ui/LazyImage.tsx:63:  useEffect(() => {
+src/features/system-center/tabs/HyperVisionTab.tsx:79:  const activeAnomalies = useMemo(
+src/features/system-center/tabs/HyperVisionTab.tsx:85:  const criticalCount = useMemo(
+src/features/system-center/SystemCenterPage.tsx:57:  const handleTabChange = useCallback((tab: SystemCenterTab) => {
+src/components/debug/ChatDebugPanel.tsx:147:  const clampPosition = useCallback(
+src/components/ChatDiagnostic.tsx:367:  const testsByGroup = useMemo(() => {
+src/components/ChatDiagnostic.tsx:377:  const summary = useMemo(() => {
+src/components/VoiceConversation.tsx:65:  const generateLocalResponse = useCallback((input: string): string => {
+src/components/VoiceConversation.tsx:88:  const _generateAIResponse = useCallback(
+src/components/VoiceConversation.tsx:150:  useEffect(() => {
+src/components/VoiceConversation.tsx:167:  const startAudioVisualization = useCallback(async () => {
+src/components/VoiceConversation.tsx:215:  const stopAudioVisualization = useCallback(async () => {
+src/components/VoiceConversation.tsx:244:  useEffect(() => {
+src/components/VoiceConversation.tsx:257:  useEffect(() => {
+src/features/qa-monitoring/QAMonitoringPage.tsx:834:  const loadData = useCallback(async () => {
+src/features/qa-monitoring/QAMonitoringPage.tsx:879:  useEffect(() => {
+src/features/qa-monitoring/QAMonitoringPage.tsx:897:  useEffect(() => {
+src/features/qa-monitoring/QAMonitoringPage.tsx:1004:  const handleExportFrontendMetrics = useCallback(() => {
+src/components/fusion/PerfectFusionDashboard.tsx:73:  useEffect(() => {
+src/components/fusion/PerfectFusionDashboard.tsx:78:  useEffect(() => {
+src/components/fusion/PerfectFusionDashboard.tsx:102:  useEffect(() => {
+src/pages/CloudCenter/index.tsx:39:  const loadStatus = useCallback(async () => {
+src/pages/CloudCenter/index.tsx:50:  useEffect(() => {
+src/components/notifications/ToastContainer.tsx:27:  useEffect(() => {
+src/pages/CloudCenter/DevicesView.tsx:38:  useEffect(() => {
+src/features/qa-monitoring/useQAMonitoring.ts:34:  const getState = useCallback(async (): Promise<QASystemState> => {
+src/features/qa-monitoring/useQAMonitoring.ts:41:  const listTestSuites = useCallback(async (): Promise<TestSuite[]> => {
+src/features/qa-monitoring/useQAMonitoring.ts:48:  const runTestSuite = useCallback(async (suiteId: string): Promise<TestResult[]> => {
+src/features/qa-monitoring/useQAMonitoring.ts:55:  const getTestResult = useCallback(async (testId: string): Promise<TestResult> => {
+src/features/qa-monitoring/useQAMonitoring.ts:66:  const listMonitors = useCallback(async (): Promise<Monitor[]> => {
+src/features/qa-monitoring/useQAMonitoring.ts:73:  const createMonitor = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:95:  const toggleMonitor = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:105:  const deleteMonitor = useCallback(async (monitorId: string): Promise<boolean> => {
+src/features/qa-monitoring/useQAMonitoring.ts:112:  const getSystemMetrics = useCallback(async (): Promise<SystemMetrics> => {
+src/features/qa-monitoring/useQAMonitoring.ts:123:  const listAlerts = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:133:  const acknowledgeAlert = useCallback(async (alertId: string): Promise<Alert> => {
+src/features/qa-monitoring/useQAMonitoring.ts:140:  const resolveAlert = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:154:  const getHardeningConfig = useCallback(async (): Promise<HardeningConfig> => {
+src/features/qa-monitoring/useQAMonitoring.ts:161:  const updateHardeningConfig = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:173:  const runSecurityAudit = useCallback(async (): Promise<SecurityAuditResult> => {
+src/features/qa-monitoring/useQAMonitoring.ts:184:  const getPerformanceReport = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:196:  const getLogs = useCallback(
+src/features/qa-monitoring/useQAMonitoring.ts:206:  const exportPrometheus = useCallback(async (): Promise<string> => {
+src/features/qa-monitoring/useQAMonitoring.ts:213:  const healthCheck = useCallback(async (): Promise<HealthCheckResult> => {
+src/features/qa-monitoring/useQAMonitoring.ts:217:  return useMemo(
+src/pages/CloudCenter/VaultStatus.tsx:38:  useEffect(() => {
+src/pages/CloudCenter/SyncLogs.tsx:38:  useEffect(() => {
+src/components/optimization/UltimateOptimizationDashboard.tsx:42:  const refreshMetrics = useCallback(() => {
+src/components/optimization/UltimateOptimizationDashboard.tsx:54:  useEffect(() => {
+src/components/a11y/KeyboardShortcuts.tsx:34:  const handleKeyDown = useCallback(
+src/components/a11y/KeyboardShortcuts.tsx:61:  useEffect(() => {
+src/components/a11y/KeyboardShortcuts.tsx:260:  useEffect(() => {
+src/components/a11y/KeyboardShortcuts.tsx:302:  const skipToContent = useCallback(() => {
+src/features/cognitive/NexusGraph.tsx:62:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:89:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:117:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:130:  const handleUndo = useCallback(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:141:  const handleRedo = useCallback(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:153:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:179:  const savePreset = useCallback(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:195:  const loadPreset = useCallback(
+src/components/cognitive/CognitiveLayoutControl.tsx:202:  const deletePreset = useCallback(
+src/components/cognitive/CognitiveLayoutControl.tsx:212:  const playSound = useCallback((type: 'click' | 'success' | 'error') => {
+src/components/cognitive/CognitiveLayoutControl.tsx:254:  const exportConfig = useCallback(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:275:  const importConfig = useCallback(
+src/components/cognitive/CognitiveLayoutControl.tsx:324:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:342:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:349:  useEffect(() => {
+src/components/cognitive/CognitiveLayoutControl.tsx:362:  const clampPosition = useCallback(
+src/components/ChatWindow.tsx:55:    const promptPresets = useMemo(() => listPromptPresets(), []);
+src/components/ChatWindow.tsx:69:    const filteredMessages = useMemo(() => {
+src/components/ChatWindow.tsx:81:    const handleRestoreHistory = useCallback(() => {
+src/components/ChatWindow.tsx:89:    useEffect(() => {
+src/components/ChatWindow.tsx:93:    const handleSendWithRetry = useCallback(
+src/components/ChatWindow.tsx:154:    const handlePresetSelect = useCallback(
+src/features/cognitive/HeliosVisualization.tsx:44:  useEffect(() => {
+src/pages/CloudCenter/SyncConfig.tsx:50:  useEffect(() => {
+src/features/cognitive/HarmoniaPatterns.tsx:67:  useEffect(() => {
+src/components/SingularityMonitor.tsx:19:  useEffect(() => {
+src/components/panels/ChatPanel.tsx:49:  useEffect(() => {
+src/components/panels/ChatPanel.tsx:67:  useEffect(() => {
+src/components/layout/TopNav.tsx:74:  useEffect(() => {
+src/components/layout/TopNav.tsx:88:  useEffect(() => {
+src/components/HybridBubble.tsx:63:  useEffect(() => {
+src/components/HybridBubble.tsx:73:  useEffect(() => {
+src/components/HybridBubble.tsx:80:  useEffect(() => {
+src/components/HybridBubble.tsx:87:  useEffect(() => {
+src/components/HybridBubble.tsx:112:  const handleBubbleClick = useCallback(() => {
+src/components/HybridBubble.tsx:118:  const handleExecuteCommand = useCallback(async () => {
+src/components/HybridBubble.tsx:131:  const handleKeyDown = useCallback(
+src/components/HybridBubble.tsx:141:  const handleModeSwitch = useCallback((newMode: HybridMode) => {
+src/components/panels/GovernancePanel.tsx:110:  useEffect(() => {
+src/components/panels/GovernancePanel.tsx:134:  useEffect(() => {
+src/components/panels/GovernancePanel.tsx:155:  useEffect(() => {
+src/components/layout/Sidebar.tsx:74:  const _sidebarWidth = useMemo(() => {
+src/components/layout/Sidebar.tsx:83:  const renderItem = useCallback(
+src/components/panels/MemoryPanel.tsx:51:  useEffect(() => {
+src/components/vision/CameraPreview.tsx:64:  useEffect(() => {
+src/components/vision/CameraPreview.tsx:84:  const handleDragStart = useCallback((e: React.MouseEvent) => {
+src/components/vision/CameraPreview.tsx:89:  const handleDrag = useCallback(
+src/components/vision/CameraPreview.tsx:100:  const handleDragEnd = useCallback(() => {
+src/components/vision/CameraPreview.tsx:104:  useEffect(() => {
+src/components/vision/CameraPreview.tsx:116:  const handleClose = useCallback(() => {
+src/components/vision/CameraPreview.tsx:125:  const handleStopCamera = useCallback(() => {
+src/components/layout/MobileNav.tsx:54:  useEffect(() => {
+src/components/layout/MobileNav.tsx:61:  useEffect(() => {
+src/components/layout/MobileNav.tsx:78:  const handleItemClick = useCallback(
+src/components/layout/MobileNav.tsx:88:  const toggleMenu = useCallback(() => setIsOpen(prev => !prev), []);
+src/components/layout/MobileNav.tsx:89:  const closeMenu = useCallback(() => setIsOpen(false), []);
+src/components/core/TitaneSphereCore.tsx:67:  useEffect(() => {
+src/components/core/TitaneSphereCore.tsx:78:  useEffect(() => {
+src/components/core/TitaneSphereCore.tsx:92:  useEffect(() => {
+src/components/core/TitaneSphereCore.tsx:111:  useEffect(() => {
+src/components/VoiceControlPanel.tsx:42:  useEffect(() => {
+src/features/one-core/useOneCore.ts:56:  const refresh = useCallback(async () => {
+src/features/one-core/useOneCore.ts:184:  const executeCommand = useCallback(
+src/features/one-core/useOneCore.ts:207:  const runDiagnostic = useCallback(async () => {
+src/features/one-core/useOneCore.ts:228:  const forceSync = useCallback(async (): Promise<OneCoreActionResult | null> => {
+src/features/one-core/useOneCore.ts:244:  const cleanup = useCallback(async (): Promise<OneCoreActionResult | null> => {
+src/features/one-core/useOneCore.ts:259:  const setMode = useCallback(
+src/features/one-core/useOneCore.ts:280:  const verifyIntegrity = useCallback(async (): Promise<OneCoreActionResult | null> => {
+src/features/one-core/useOneCore.ts:294:  const getEngineStatus = useCallback(
+src/features/one-core/useOneCore.ts:317:  useEffect(() => {
+src/features/one-core/useOneCore.ts:322:  useEffect(() => {
+src/features/one-core/useOneCore.ts:332:  return useMemo(
+src/components/performance/MetricsGraph.tsx:153:  const formatTime = useCallback((timestamp: number) => {
+src/components/performance/MetricsGraph.tsx:163:  const filteredData = useMemo(() => {
+src/components/performance/MetricsGraph.tsx:190:  const thresholdLines = useMemo(() => {
+src/components/performance/MetricsGraph.tsx:221:  const trends = useMemo(() => {
+src/components/performance/MetricsGraph.tsx:254:  const handleTimeRangeChange = useCallback(
+src/components/performance/MetricsGraph.tsx:262:  const toggleSeries = useCallback((key: MetricType) => {
+src/components/performance/MetricsGraph.tsx:274:  const handleZoomIn = useCallback(() => {
+src/components/performance/MetricsGraph.tsx:278:  const handleZoomOut = useCallback(() => {
+src/components/performance/MetricsGraph.tsx:282:  const handleFullscreen = useCallback(() => {
+src/components/performance/MetricsGraph.tsx:287:  const CustomTooltip = useCallback(
+src/components/performance/MetricsGraph.tsx:328:  const CustomLegend = useCallback(() => {
+src/components/vision/VisionToggleButton.tsx:60:  const handleToggle = useCallback(async () => {
+src/components/vision/VisionToggleButton.tsx:107:  const handleCancel = useCallback(() => {
+src/components/BootHealthDashboard.tsx:38:  const fetchMetrics = useCallback(async () => {
+src/components/BootHealthDashboard.tsx:104:  useEffect(() => {
+src/components/xp/XPProgressBar.tsx:33:  const formattedXP = useMemo(() => {
+src/components/xp/XPProgressBar.tsx:43:  const formattedXPToNext = useMemo(() => {
+src/features/meta-dashboard/MetaDashboardRouter.tsx:103:  const ActiveDashboard = useMemo(() => {
+src/components/IdentityCenter/IdentityCenter.tsx:133:  const loadIdentityData = useCallback(async () => {
+src/components/IdentityCenter/IdentityCenter.tsx:373:  useEffect(() => {
+src/components/performance/PerformanceIssues.tsx:360:  const filteredIssues = useMemo(() => {
+src/components/performance/PerformanceIssues.tsx:402:  const sortedIssues = useMemo(() => {
+src/components/performance/PerformanceIssues.tsx:431:  const stats = useMemo(() => {
+src/components/performance/PerformanceIssues.tsx:444:  const toggleIssue = useCallback((issueId: string) => {
+src/components/performance/PerformanceIssues.tsx:456:  const toggleSort = useCallback(
+src/components/performance/PerformanceIssues.tsx:468:  const toggleSeverityFilter = useCallback((severity: SeverityLevel) => {
+src/features/chat/ThinkingPanel.tsx:48:  useEffect(() => {
+src/components/vision/VisionFeedbackCard.tsx:82:  const allSuggestions = useMemo(() => {
+src/components/Onboarding/INTEGRATION_GUIDE.md:73:  useEffect(() => {
+src/components/performance/PerformanceDashboard.tsx:349:  const engine = useMemo(() => getPerformanceEngine(), []);
+src/components/performance/PerformanceDashboard.tsx:352:  const refresh = useCallback(() => {
+src/components/performance/PerformanceDashboard.tsx:367:  useEffect(() => {
+src/components/performance/PerformanceDashboard.tsx:377:  const handleManualRefresh = useCallback(async () => {
+src/components/performance/PerformanceDashboard.tsx:385:  const handleApplyRecommendation = useCallback(
+src/components/ErrorBoundary.tsx:191:  const showBoundary = React.useCallback((error: Error) => {
+src/components/performance/RecommendationsPanel.tsx:438:  const filteredRecs = useMemo(() => {
+src/components/performance/RecommendationsPanel.tsx:462:  const sortedRecs = useMemo(() => {
+src/components/performance/RecommendationsPanel.tsx:491:  const stats = useMemo(() => {
+src/components/performance/RecommendationsPanel.tsx:508:  const toggleRec = useCallback((recId: string) => {
+src/components/performance/RecommendationsPanel.tsx:520:  const handleApply = useCallback(
+src/components/performance/RecommendationsPanel.tsx:538:  const toggleCategoryFilter = useCallback((category: RecommendationCategory) => {
+src/components/performance/RecommendationsPanel.tsx:548:  const toggleImpactFilter = useCallback((impact: RecommendationImpact) => {
+src/components/performance/RecommendationsPanel.tsx:558:  const toggleSort = useCallback(
+src/components/sections/MemorySection.tsx:77:  const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
+src/components/sections/MemorySection.tsx:82:  const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
+src/features/chat/ChatProviderSelector.tsx:26:    const availableCount = useMemo(
+src/features/chat/ChatProviderSelector.tsx:32:    const options = useMemo(
+src/components/tts/TTSButton.tsx:33:  const handleClick = useCallback(async () => {
+src/components/HyperCenter/HyperCenter.tsx:207:  const loadState = useCallback(async () => {
+src/components/HyperCenter/HyperCenter.tsx:232:  useEffect(() => {
+src/components/AIChatBubble.tsx:265:  const getMessageText = useCallback((message: AIMessage): string => {
+src/components/AIChatBubble.tsx:278:  const validMessages = useMemo(() => {
+src/components/AIChatBubble.tsx:314:  useEffect(() => {
+src/components/AIChatBubble.tsx:319:  const getItemSize = useCallback(
+src/components/AIChatBubble.tsx:339:  const setItemSize = useCallback((index: number, size: number) => {
+src/components/AIChatBubble.tsx:347:  useEffect(() => {
+src/components/AIChatBubble.tsx:368:  useEffect(() => {
+src/components/AIChatBubble.tsx:409:  useEffect(() => {
+src/components/AIChatBubble.tsx:422:  const handleBubbleClick = useCallback(() => {
+src/components/AIChatBubble.tsx:430:  const handleMinimize = useCallback(() => {
+src/components/AIChatBubble.tsx:434:  const handleClose = useCallback(() => {
+src/components/AIChatBubble.tsx:438:  const handleSend = useCallback(async () => {
+src/components/AIChatBubble.tsx:529:  const handleKeyDown = useCallback(
+src/components/AIChatBubble.tsx:539:  const handleClear = useCallback(() => {
+src/components/AIChatBubble.tsx:546:  const handleModelChange = useCallback(
+src/components/AIChatBubble.tsx:555:  const handleImportConversation = useCallback((importedMessages: AIMessage[]) => {
+src/components/sections/VisionSection.tsx:123:  const handleStartVision = useCallback(async () => {
+src/components/chat/FileUploadButton.tsx:210:    const processFile = useCallback(
+src/components/chat/FileUploadButton.tsx:271:    const handleFiles = useCallback(
+src/components/chat/FileUploadButton.tsx:381:    const handleClick = useCallback(() => {
+src/components/chat/FileUploadButton.tsx:387:    const handleChange = useCallback(
+src/components/chat/FileUploadButton.tsx:396:    const handleDragEnter = useCallback(
+src/components/chat/FileUploadButton.tsx:405:    const handleDragLeave = useCallback((e: React.DragEvent) => {
+src/components/chat/FileUploadButton.tsx:411:    const handleDragOver = useCallback((e: React.DragEvent) => {
+src/components/chat/FileUploadButton.tsx:416:    const handleDrop = useCallback(
+src/components/chat/FileUploadButton.tsx:429:    const handleRemoveFile = useCallback((fileId: string) => {
+src/components/chat/FileUploadButton.tsx:433:    const handleClearAll = useCallback(() => {
+src/features/chat/ChatMessage.tsx:120:  useEffect(() => {
+src/features/chat/ChatMessage.tsx:140:  useEffect(() => {
+src/components/chat/AutomationPanel.tsx:75:  const handleClick = useCallback(() => {
+src/components/chat/AutomationPanel.tsx:160:  const filteredAutomations = useMemo(() => {
+src/components/chat/AutomationPanel.tsx:183:  const groupedAutomations = useMemo(() => {
+src/components/chat/AutomationPanel.tsx:208:  const checkAvailability = useCallback(
+src/components/chat/AutomationPanel.tsx:225:  const handleExecute = useCallback(
+src/components/chat/AutomationPanel.tsx:284:  const availableCount = useMemo(() => {
+src/components/sections/ProgressionSection.tsx:45:    const currentStats = useMemo(
+src/components/sections/ProgressionSection.tsx:56:    const categories = useMemo(
+src/components/SystemIntegrationHub.tsx:80:  const computeStateHash = useCallback((state: HubState): string => {
+src/components/SystemIntegrationHub.tsx:92:  const integrationLoop = useCallback(() => {
+src/components/SystemIntegrationHub.tsx:237:  useEffect(() => {
+src/components/SystemIntegrationHub.tsx:246:  const triggerManualHealing = useCallback(async () => {
+src/components/SystemIntegrationHub.tsx:268:  const demonstrateQuantumIntelligence = useCallback(async () => {
+src/components/SystemIntegrationHub.tsx:280:  useEffect(() => {
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:452:  const fetchStatus = useCallback(async () => {
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:470:  const fetchHealth = useCallback(async () => {
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:483:  const fetchClusters = useCallback(async () => {
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:506:  useEffect(() => {
+src/components/QuantumCenter/QuantumCenter.tsx:83:  useEffect(() => {
+src/components/QuantumCenter/QuantumCenter.tsx:116:  useEffect(() => {
+src/components/QuantumCenter/QuantumCenter.tsx:653:  useEffect(() => {
+src/features/admin/AdminPage.tsx:142:  const handleTabChange = useCallback((tab: AdminTab) => {
+src/components/chat/ContextUsage.tsx:37:  const tokenCounter = useMemo(() => getTokenCounter(), []);
+src/components/chat/ContextUsage.tsx:40:  const usage = useMemo(() => {
+src/components/chat/ContextUsage.tsx:53:  const cost = useMemo(() => {
+src/features/chat/ProviderStatusPanel.tsx:68:  useEffect(() => {
+src/components/chat/ModeBadge.tsx:91:  const modeConfig = useMemo(
+src/components/chat/ModeBadge.tsx:97:  const handleMouseEnter = useCallback(() => setIsHovered(true), []);
+src/components/chat/ModeBadge.tsx:98:  const handleMouseLeave = useCallback(() => setIsHovered(false), []);
+src/components/chat/ModeBadge.tsx:101:  const handleKeyDown = useMemo(
+src/components/chat/ModeBadge.tsx:115:  const badgeClasses = useMemo(
+src/components/chat/ModeBadge.tsx:129:  const badgeStyle = useMemo(
+src/features/audio-center/hooks/useAudio.ts:65:  useEffect(() => {
+src/features/audio-center/hooks/useAudio.ts:87:  const updateTTSSettings = useCallback(async (settings: Partial<TTSSettings>) => {
+src/features/audio-center/hooks/useAudio.ts:93:  const speak = useCallback(async (text: string) => {
+src/features/audio-center/hooks/useAudio.ts:97:  const stopSpeaking = useCallback(() => {
+src/features/audio-center/hooks/useAudio.ts:102:  const setOutputDevice = useCallback(async (deviceId: string) => {
+src/features/audio-center/hooks/useAudio.ts:107:  const setInputDevice = useCallback(async (deviceId: string) => {
+src/features/audio-center/hooks/useAudio.ts:113:  const setVolume = useCallback(async (volume: number) => {
+src/features/audio-center/hooks/useAudio.ts:118:  const setMicGain = useCallback(async (gain: number) => {
+src/features/audio-center/hooks/useAudio.ts:124:  const testSpeaker = useCallback(async (text?: string): Promise<AudioTestResult> => {
+src/features/audio-center/hooks/useAudio.ts:136:  const testMicrophone = useCallback(async (): Promise<MicrophoneTestResult> => {
+src/features/audio-center/hooks/useAudio.ts:162:  const refreshDevices = useCallback(async () => {
+src/features/audio-center/hooks/useAudio.ts:179:  const setBalance = useCallback(async (balance: number) => {
+src/features/audio-center/hooks/useAudio.ts:185:  const setInputOption = useCallback(
+src/components/sections/ConversationSection.tsx:135:    const handleCopy = useCallback(
+src/components/sections/ConversationSection.tsx:139:    const handleRetry = useCallback(
+src/components/sections/ConversationSection.tsx:143:    const handleDelete = useCallback(() => {
+src/components/sections/ConversationSection.tsx:277:  const handleVoiceTranscript = useCallback((text: string) => {
+src/components/sections/ConversationSection.tsx:281:  const handleVoiceError = useCallback((error: unknown) => {
+src/components/sections/ConversationSection.tsx:292:  const handleCopyMessage = useCallback(
+src/components/sections/ConversationSection.tsx:304:  const handleRetryMessage = useCallback(
+src/components/sections/ConversationSection.tsx:317:  const handleSuggestionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+src/components/sections/ConversationSection.tsx:323:  const conversationModes = useMemo(() => {
+src/components/sections/ConversationSection.tsx:334:  const currentModeLabel = useMemo(
+src/components/sections/ConversationSection.tsx:339:  const selectedProviderLabel = useMemo(
+src/components/sections/ConversationSection.tsx:345:  const conversationModeOptions = useMemo(
+src/components/sections/ConversationSection.tsx:358:  const searchNeedle = useMemo(() => {
+src/components/sections/ConversationSection.tsx:363:  const filteredMessages = useMemo(() => {
+src/components/sections/ConversationSection.tsx:384:  const messageItems = useMemo(
+src/components/sections/ConversationSection.tsx:399:  const lastAssistantMessage = useMemo(() => {
+src/components/sections/ConversationSection.tsx:409:  const suggestionButtons = useMemo(
+src/components/sections/ConversationSection.tsx:425:  useEffect(() => {
+src/components/sections/ConversationSection.tsx:436:  useEffect(() => {
+src/components/sections/ConversationSection.tsx:441:  const handleSaveCustomMode = useCallback((mode: CustomMode) => {
+src/components/sections/ConversationSection.tsx:446:  const handleSend = useCallback(async () => {
+src/components/sections/ConversationSection.tsx:492:  const handleKeyPress = useCallback(
+src/components/sections/ConversationSection.tsx:502:  const handleClearChat = useCallback(() => {
+src/components/sections/ConversationSection.tsx:508:  const handleExportJson = useCallback(() => {
+src/components/sections/ConversationSection.tsx:512:  const handleExportMarkdown = useCallback(() => {
+src/components/sections/ConversationSection.tsx:516:  const handleCopyAll = useCallback(async () => {
+src/components/sections/ConversationSection.tsx:521:  const handleVoiceInput = useCallback(async () => {
+src/components/sections/ConversationSection.tsx:544:  const handleFilesAnalyzed = useCallback(
+src/components/sections/ConversationSection.tsx:568:  const handleFileImport = useCallback(
+src/components/sections/ConversationSection.tsx:578:  const handleScreenCapture = useCallback(
+src/components/sections/ConversationSection.tsx:586:  const handleImageAnalysis = useCallback(
+src/components/sections/ConversationSection.tsx:594:  const handleDictationResult = useCallback((text: string) => {
+src/components/sections/ConversationSection.tsx:598:  const handleAudioRecorded = useCallback(
+src/components/sections/ConversationSection.tsx:606:  const handleTranscriptionResult = useCallback(
+src/components/sections/ConversationSection.tsx:613:  const handleModeChange = useCallback(
+src/components/sections/ConversationSection.tsx:620:  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+src/components/sections/ConversationSection.tsx:624:  const handleFilterRoleChange = useCallback(
+src/components/sections/ConversationSection.tsx:631:  const toggleAudioEnabled = useCallback(() => {
+src/components/sections/ConversationSection.tsx:635:  const toggleModeBuilder = useCallback(() => {
+src/components/sections/ConversationSection.tsx:639:  const handleToggleAudioConversation = useCallback((active: boolean) => {
+src/components/sections/ConversationSection.tsx:643:  const handleToggleTTS = useCallback((active: boolean) => {
+src/components/sections/ConversationSection.tsx:647:  const handleToggleCameraLive = useCallback(() => {
+src/components/sections/ConversationSection.tsx:653:  const handleToggleSidebar = useCallback(() => {
+src/components/sections/ConversationSection.tsx:667:  const handleCloseSidebar = useCallback(() => {
+src/components/sections/ConversationSection.tsx:678:  useEffect(() => {
+src/components/sections/ConversationSection.tsx:697:  useEffect(() => {
+src/components/sections/ConversationSection.tsx:724:  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+src/components/sections/ConversationSection.tsx:728:  const handleCloseModeBuilder = useCallback(() => {
+src/components/chat/MessageListOptimized.tsx:52:    const formattedTime = useMemo(() => {
+src/components/chat/MessageListOptimized.tsx:62:    const handleCopy = useCallback(async () => {
+src/components/chat/MessageListOptimized.tsx:80:    const handleSpeak = useCallback(async () => {
+src/components/chat/MessageListOptimized.tsx:98:    const handleStopSpeak = useCallback(async () => {
+src/components/chat/MessageListOptimized.tsx:206:  useEffect(() => {
+src/components/chat/MessageListOptimized.tsx:223:  useEffect(() => {
+src/components/chat/MessageListOptimized.tsx:233:  const emptyState = useMemo(
+src/components/chat/MessageListOptimized.tsx:252:  const validMessages = useMemo(() => {
+src/features/evolution/EvolutionTimeline.tsx:40:  const timelineEvents = useMemo(() => {
+src/features/evolution/EvolutionTimeline.tsx:46:  const filteredEvents = useMemo(() => {
+src/features/evolution/EvolutionTimeline.tsx:52:  const chronoItems = useMemo(() => {
+src/components/voice/VoiceControlPanelWithWakeWord.tsx:75:  const toggleMode = useCallback(() => {
+src/components/voice/VoiceControlPanelWithWakeWord.tsx:96:  const handleStartRecording = useCallback(async () => {
+src/components/voice/VoiceControlPanelWithWakeWord.tsx:105:  const handleStopRecording = useCallback(async () => {
+src/components/voice/VoiceControlPanelWithWakeWord.tsx:114:  const handleCancel = useCallback(async () => {
+src/components/chat/ModelSelector.tsx:229:  const selectedModelInfo = useMemo(
+src/components/chat/ModelSelector.tsx:235:  const allTags = useMemo(
+src/components/chat/ModelSelector.tsx:241:  const filteredModels = useMemo(
+src/components/chat/ChatFileImport.tsx:137:  const handleFileImport = useCallback(
+src/components/chat/ChatFileImport.tsx:234:  const handleDragOver = useCallback(
+src/components/chat/ChatFileImport.tsx:245:  const handleDragLeave = useCallback((e: React.DragEvent) => {
+src/components/chat/ChatFileImport.tsx:251:  const handleDrop = useCallback(
+src/components/chat/VirtualizedMessageList.tsx:60:  useEffect(() => {
+src/components/chat/VirtualizedMessageList.tsx:67:  const validMessages = useMemo(
+src/components/chat/VirtualizedMessageList.tsx:171:  return useMemo(
+src/features/dashboard/DashboardEditor.tsx:132:  const handleAddWidget = useCallback(
+src/features/dashboard/DashboardEditor.tsx:145:  const handleDeleteWidget = useCallback((id: string) => {
+src/features/dashboard/DashboardEditor.tsx:151:  const handleToggleVisibility = useCallback((id: string) => {
+src/features/dashboard/DashboardEditor.tsx:155:  const handleStartEdit = useCallback((id: string) => {
+src/features/dashboard/DashboardEditor.tsx:159:  const handleSaveEdit = useCallback((id: string, updates: Partial<DashboardWidget>) => {
+src/features/dashboard/DashboardEditor.tsx:164:  const handleCancelEdit = useCallback(() => {
+src/features/dashboard/DashboardEditor.tsx:168:  const handleMoveUp = useCallback((index: number) => {
+src/features/dashboard/DashboardEditor.tsx:180:  const handleMoveDown = useCallback((index: number) => {
+src/features/dashboard/DashboardEditor.tsx:192:  const handleDragStart = useCallback((index: number) => {
+src/features/dashboard/DashboardEditor.tsx:196:  const handleDragOver = useCallback(
+src/features/dashboard/DashboardEditor.tsx:214:  const handleDragEnd = useCallback(() => {
+src/features/dashboard/DashboardEditor.tsx:218:  const handleSave = useCallback(() => {
+src/components/chat/EvolutionTracker.tsx:194:  const unlockedCapabilities = useMemo(() => {
+src/components/chat/EvolutionTracker.tsx:209:  const phaseProgress = useMemo(() => {
+src/components/chat/EvolutionTracker.tsx:218:  const transitionCheck = useMemo(() => {
+src/components/chat/EvolutionTracker.tsx:240:  const unlockableCapabilities = useMemo(() => {
+src/components/agents/AgentManager.tsx:33:  useEffect(() => {
+src/features/progression/TalentTree.tsx:73:  useEffect(() => {
+src/features/dashboard/RealTimeCharts.tsx:44:    const resolvedPerformanceData = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:48:    const resolvedMessagesData = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:52:    const resolvedCpuData = useMemo(() => cpuData ?? generateMockData(30), [cpuData]);
+src/features/dashboard/RealTimeCharts.tsx:53:    const resolvedActivityData = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:59:    const avgPerf = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:67:    const avgMessages = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:75:    const avgCpu = useMemo(
+src/features/dashboard/RealTimeCharts.tsx:83:    const avgActivity = useMemo(
+src/features/conversation/ThinkingPanel.tsx:48:  useEffect(() => {
+src/features/conversation/ThinkingPanel.tsx:66:  const toggleStep = useCallback((id: string) => {
+src/components/chat/MessageList.tsx:57:  const resetError = useCallback(() => {
+src/components/chat/MessageList.tsx:65:  const handleError = useCallback(
+src/components/chat/MessageList.tsx:145:  useEffect(() => {
+src/components/chat/MessageList.tsx:152:  useEffect(() => {
+src/components/chat/MessageList.tsx:164:  useEffect(() => {
+src/components/chat/MessageList.tsx:178:  useEffect(() => {
+src/components/chat/RecordingTimer.tsx:45:  const formattedTime = useMemo(() => {
+src/components/chat/RecordingTimer.tsx:50:  const formattedMax = useMemo(() => {
+src/features/governance-center/tabs/PermissionsTab.tsx:70:  const groupedPermissions = useMemo(() => {
+src/features/governance-center/tabs/PermissionsTab.tsx:92:  const filteredAudit = useMemo(() => {
+src/components/chat/MessageBubble.tsx:94:  const formattedTime = useMemo(() => formatTime(timestamp), [timestamp]);
+src/components/chat/MessageBubble.tsx:97:  const bubbleClasses = useMemo(
+src/components/chat/MessageBubble.tsx:104:  const ariaLabel = useMemo(
+src/components/chat/MessageBubble.tsx:110:  const handleRetry = React.useCallback(async () => {
+src/components/chat/MessageBubble.tsx:123:  const handleCopyDiagnostic = React.useCallback((diagnostic: string) => {
+src/components/chat/MessageBubble.tsx:128:  const messageContent = useMemo(() => {
+src/features/conversation/ChatMessage.tsx:120:  useEffect(() => {
+src/features/conversation/ChatMessage.tsx:140:  useEffect(() => {
+src/components/chat/MemoryDashboard.tsx:370:  const filteredEntries = useMemo(() => {
+src/components/aura/QuantumParticles.tsx:68:  const initParticles = useCallback(
+src/components/aura/QuantumParticles.tsx:90:  const updateParticle = useCallback(
+src/components/aura/QuantumParticles.tsx:137:  const drawParticle = useCallback((ctx: CanvasRenderingContext2D, p: Particle) => {
+src/components/aura/QuantumParticles.tsx:149:  const drawConnection = useCallback(
+src/components/aura/QuantumParticles.tsx:163:  const animate = useCallback(() => {
+src/components/aura/QuantumParticles.tsx:200:  useEffect(() => {
+src/components/aura/QuantumParticles.tsx:227:  useEffect(() => {
+src/components/aura/QuantumParticles.tsx:246:  useEffect(() => {
+src/components/devtools/CoreHealthMonitor.tsx:45:  useEffect(() => {
+src/features/conversation/ProviderStatusPanel.tsx:68:  useEffect(() => {
+src/components/chat/MarkdownContent.tsx:431:  const nodes = useMemo(() => {
+src/features/conversation/ChatProviderSelector.tsx:26:    const availableCount = useMemo(
+src/features/conversation/ChatProviderSelector.tsx:32:    const options = useMemo(
+src/features/governance-center/GovernanceCenter.tsx:39:  useEffect(() => {
+src/features/governance-center/GovernanceCenter.tsx:44:  useEffect(() => {
+src/components/evolution/EvolutionDashboard.tsx:298:  useEffect(() => {
+src/components/evolution/EvolutionDashboard.tsx:302:  useEffect(() => {
+src/components/evolution/EvolutionDashboard.tsx:311:  const handleApprove = useCallback(
+src/components/evolution/EvolutionDashboard.tsx:315:  const handleReject = useCallback(
+src/components/evolution/EvolutionDashboard.tsx:319:  const handleCancel = useCallback(
+src/features/governance-center/tabs/SecurityLogTab.tsx:64:  const filteredLogs = useMemo(() => {
+src/features/governance-center/tabs/SecurityLogTab.tsx:83:  const stats = useMemo(() => {
+src/components/evolution/EvolutionHistory.tsx:163:  const filteredEntries = useMemo(() => {
+src/components/evolution/EvolutionHistory.tsx:190:  const stats = useMemo(
+src/components/chat/ChatInput.tsx:79:  const handleInputError = useCallback(
+src/components/chat/ChatInput.tsx:105:  const validateMessage = useCallback(
+src/components/chat/ChatInput.tsx:168:  const sanitizeInput = useCallback(
+src/components/chat/ChatInput.tsx:190:  const resetError = useCallback(() => {
+src/components/chat/ChatInput.tsx:236:    const onToggleVoiceMode = useMemo(
+src/components/chat/ChatInput.tsx:258:    useEffect(() => {
+src/components/chat/ChatInput.tsx:275:    useEffect(() => {
+src/components/chat/ChatInput.tsx:296:    useEffect(() => {
+src/components/chat/ChatInput.tsx:304:    const handleSend = useCallback(async () => {
+src/components/chat/ChatInput.tsx:394:    const handleKeyDown = useCallback(
+src/components/chat/ChatInput.tsx:423:    const handleValueChange = useCallback(
+src/components/chat/ChatInput.tsx:454:    const handleVoiceToggle = useCallback(() => {
+src/components/chat/ChatInput.tsx:468:    const handleToggleFileUpload = useCallback(() => {
+src/components/chat/ChatInput.tsx:472:    const handleFilesSelected = useCallback(
+src/components/chat/ChatInput.tsx:504:    const handleDictationResult = useCallback((text: string) => {
+src/components/chat/ChatInput.tsx:518:    const isInputDisabled = useMemo(() => {
+src/components/chat/ChatInput.tsx:522:    const trimmedValue = useMemo(() => {
+src/components/chat/ChatInput.tsx:526:    const characterCount = useMemo(() => {
+src/components/chat/ChatInput.tsx:530:    const placeholderSafe = useMemo(() => {
+src/components/devtools/MetricsDisplay.tsx:34:  useEffect(() => {
+src/components/devtools/LogViewer.tsx:42:  const fetchLogs = useCallback(async () => {
+src/components/devtools/LogViewer.tsx:65:  useEffect(() => {
+src/components/chat/ChatModeSelector.tsx:75:  const accessibleModes = useMemo(
+src/components/chat/ChatModeSelector.tsx:81:  const currentModeConfig = useMemo(() => CHAT_MODES_CONFIG[currentMode], [currentMode]);
+src/components/chat/ChatModeSelector.tsx:84:  const modesByCategory = useMemo(() => {
+src/components/chat/ChatModeSelector.tsx:101:  useEffect(() => {
+src/components/chat/ChatModeSelector.tsx:113:  const handleToggle = useCallback(() => {
+src/components/chat/ChatModeSelector.tsx:119:  const handleModeSelect = useCallback(
+src/components/chat/ChatModeSelector.tsx:127:  const handleKeyDown = useCallback(
+src/features/kernel/NexusMesh.tsx:17:  useEffect(() => {
+src/features/governance-center/hooks/useGovernance.ts:52:  const setLoading = useCallback((loading: boolean) => {
+src/features/governance-center/hooks/useGovernance.ts:56:  const setError = useCallback((error: string | null) => {
+src/features/governance-center/hooks/useGovernance.ts:60:  const setActiveTab = useCallback((activeTab: GovernanceTab) => {
+src/features/governance-center/hooks/useGovernance.ts:68:  const loadSecretsStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:76:  const loadGeminiStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:84:  const loadOpenAIStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:92:  const loadAnthropicStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:100:  const loadOllamaStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:153:  const setGeminiKey = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:172:  const setOpenAIKey = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:191:  const setAnthropicKey = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:210:  const loadCopilotStatus = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:218:  const setCopilotKey = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:237:  const storeSecret = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:254:  const deleteSecret = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:275:  const loadPolicies = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:283:  const togglePolicy = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:305:  const createPolicy = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:327:  const deletePolicy = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:353:  const loadPermissionMatrix = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:361:  const loadPermissionAudit = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:369:  const clearPermissionAudit = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:389:  const loadSecurityLog = useCallback(async (filters?: SecurityLogFilters) => {
+src/features/governance-center/hooks/useGovernance.ts:401:  const appendSecurityLog = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:417:  const exportSecurityLog = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:427:  const clearSecurityLog = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:447:  const checkIntegrity = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:458:  const refreshAll = useCallback(async () => {
+src/features/governance-center/hooks/useGovernance.ts:492:  useEffect(() => {
+src/components/evolution/EvolutionTrends.tsx:96:  const sparklinePath = useMemo(
+src/components/evolution/EvolutionTrends.tsx:101:  const changePercent = useMemo(() => {
+src/components/evolution/EvolutionTrends.tsx:172:  const sortedTrends = useMemo(() => {
+src/components/evolution/EvolutionTrends.tsx:185:  const summary = useMemo(
+src/components/dev/PredictiveDashboard.tsx:23:  useEffect(() => {
+src/components/chat/CodeBlock.tsx:400:  useEffect(() => {
+src/features/kernel/MemoryGraph.tsx:24:  useEffect(() => {
+src/components/chat/MemoryViewer.tsx:394:  const showNotification = useCallback((message: string) => {
+src/components/chat/MemoryViewer.tsx:399:  const handlePromote = useCallback(async () => {
+src/components/chat/MemoryViewer.tsx:441:  const handleArchive = useCallback(async () => {
+src/components/chat/MemoryViewer.tsx:474:  const handleDelete = useCallback(async () => {
+src/components/chat/MemoryViewer.tsx:489:  const handleCopy = useCallback(async () => {
+src/components/chat/MemoryViewer.tsx:499:  const handleExport = useCallback(() => {
+src/components/chat/MemoryViewer.tsx:512:  const handleImportanceChange = useCallback(
+src/components/chat/MemoryViewer.tsx:529:  React.useEffect(() => {
+src/components/admin/AdminDashboard.tsx:242:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminDashboard.tsx:245:  useEffect(() => {
+src/components/admin/AdminDashboard.tsx:254:  const fetchSnapshot = useCallback(async () => {
+src/components/admin/AdminDashboard.tsx:266:  useEffect(() => {
+src/components/admin/AdminDashboard.tsx:276:  useEffect(() => {
+src/components/admin/AdminDashboard.tsx:286:  const vitalsWithStatus = useMemo(() => {
+src/components/admin/AdminDashboard.tsx:313:  const activeModules = useMemo(() => {
+src/features/kernel/HeliosView.tsx:23:  useEffect(() => {
+src/components/dev/ConsoleMonitorDashboard.tsx:21:  useEffect(() => {
+src/components/chat/DictationButton.tsx:46:  const handleClick = useCallback(async () => {
+src/components/chat/DictationButton.tsx:68:  useEffect(() => {
+src/features/identity/ModeMatrix.tsx:390:  const handleModeClick = useCallback(
+src/features/kernel/EvolutionPipeline.tsx:26:  useEffect(() => {
+src/components/diagnostics/SplashWatchdog.tsx:131:  useEffect(() => {
+src/components/diagnostics/SplashWatchdog.tsx:137:  useEffect(() => {
+src/components/diagnostics/SplashWatchdog.tsx:229:  useEffect(() => {
+src/components/diagnostics/SplashWatchdog.tsx:309:  const reload = useCallback(() => {
+src/components/diagnostics/SplashWatchdog.tsx:313:  const copyDiagnostics = useCallback(() => {
+src/components/admin/AdminActions.tsx:285:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminActions.tsx:288:  const filteredActions = useMemo(() => {
+src/components/admin/AdminActions.tsx:318:  const getActionState = useCallback(
+src/components/admin/AdminActions.tsx:328:  const updateActionState = useCallback(
+src/components/admin/AdminActions.tsx:346:  const executeAction = useCallback(
+src/components/admin/AdminActions.tsx:378:  const handleExecute = useCallback(
+src/components/admin/AdminActions.tsx:389:  const handleCancel = useCallback(
+src/components/admin/AdminActions.tsx:396:  const handleConfirm = useCallback(
+src/components/admin/AdminTimeline.tsx:286:  const adminEngine = useMemo(() => getAdminEngine(), []);
+src/components/admin/AdminTimeline.tsx:289:  const loadData = useCallback(() => {
+src/components/admin/AdminTimeline.tsx:303:  useEffect(() => {
+src/components/admin/AdminTimeline.tsx:308:  useEffect(() => {
+src/components/admin/AdminTimeline.tsx:316:  useEffect(() => {
+src/components/admin/AdminTimeline.tsx:358:  const combinedItems = useMemo(() => {
+src/components/admin/AdminTimeline.tsx:381:  const stats = useMemo(() => {
+src/features/kernel/HarmoniaFlow.tsx:20:  useEffect(() => {
+src/features/identity/PersonaEditor.tsx:52:  const updateProfile = useCallback(
+src/features/identity/PersonaEditor.tsx:60:  const handleSave = useCallback(() => {
+src/features/identity/PersonaEditor.tsx:65:  const handleReset = useCallback(() => {
+src/components/chat/MessageReactions.tsx:36:  const reactionsService = useMemo(() => getReactionsService(), []);
+src/components/chat/MessageReactions.tsx:42:  const handleToggleReaction = useCallback(
+src/components/chat/MessageReactions.tsx:50:  const activeReactions = useMemo(() => {
+src/features/design-center/providers/UIThemeProvider.tsx:156:  const loadTokens = useCallback(async () => {
+src/features/design-center/providers/UIThemeProvider.tsx:180:  useEffect(() => {
+src/features/design-center/providers/UIThemeProvider.tsx:187:  const applyTokensToDOM = useCallback(() => {
+src/features/design-center/providers/UIThemeProvider.tsx:270:  useEffect(() => {
+src/features/design-center/providers/UIThemeProvider.tsx:279:  const updateToken = useCallback(
+src/features/design-center/providers/UIThemeProvider.tsx:299:  const updateCategory = useCallback(
+src/features/design-center/providers/UIThemeProvider.tsx:314:  const saveTokens = useCallback(async () => {
+src/features/design-center/providers/UIThemeProvider.tsx:340:  const reloadTokens = useCallback(async () => {
+src/features/design-center/providers/UIThemeProvider.tsx:344:  const resetToDefaults = useCallback(async () => {
+src/features/design-center/providers/UIThemeProvider.tsx:370:  const undoChanges = useCallback(() => {
+src/components/chat/ConversationsSidebar.tsx:110:  useEffect(() => {
+src/components/chat/ConversationsSidebar.tsx:120:  useEffect(() => {
+src/components/chat/ConversationsSidebar.tsx:135:  useEffect(() => {
+src/components/chat/ConversationsSidebar.tsx:146:  useEffect(() => {
+src/features/kernel/SentinelAlerts.tsx:22:  useEffect(() => {
+src/components/chat/VirtualMessageList.tsx:84:  useEffect(() => {
+src/components/chat/VirtualMessageList.tsx:104:  const handleScroll = useCallback(
+src/components/chat/VirtualMessageList.tsx:125:  useEffect(() => {
+src/components/chat/VirtualMessageList.tsx:135:  const { visibleRange, totalHeight, offsetTop } = useMemo(() => {
+src/components/chat/VirtualMessageList.tsx:193:  const visibleMessages = useMemo(() => {
+src/components/chat/VirtualMessageList.tsx:201:  const measureItem = useCallback(
+src/components/chat/VirtualMessageList.tsx:310:  const scrollToBottom = useCallback(
+src/components/chat/VirtualMessageList.tsx:322:  const scrollToMessage = useCallback(
+src/components/chat/ChatToolbar.tsx:193:    const handleFileImportClick = useCallback(() => {
+src/components/chat/ChatToolbar.tsx:197:    const handleFileChange = useCallback(
+src/components/chat/ChatToolbar.tsx:240:    const handleScreenCapture = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:290:    const handleImageUploadClick = useCallback(() => {
+src/components/chat/ChatToolbar.tsx:294:    const handleImageChange = useCallback(
+src/components/chat/ChatToolbar.tsx:312:    const handleCameraCapture = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:360:    const handleDictationToggle = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:403:    const handleAudioRecordToggle = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:480:    const handleAudioTranscriptionClick = useCallback(() => {
+src/components/chat/ChatToolbar.tsx:484:    const handleAudioFileChange = useCallback(
+src/components/chat/ChatToolbar.tsx:530:    const handleAudioConversationToggle = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:584:    const handleCameraLiveToggle = useCallback(async () => {
+src/components/chat/ChatToolbar.tsx:617:    const handleTTSToggle = useCallback(() => {
+src/components/chat/ChatFallback.tsx:97:  const generateDiagnostic = useCallback((): string => {
+src/components/chat/ChatFallback.tsx:112:  const handleCopyDiagnostic = useCallback(() => {
+src/components/conversation/ModeBuilder.tsx:122:  const generateSystemPrompt = useCallback(async () => {
+src/components/conversation/ModeBuilder.tsx:202:  const applyTemplate = useCallback((template: (typeof modeTemplates)[0]) => {
+src/components/conversation/ModeBuilder.tsx:214:  const handleSave = useCallback(() => {
+src/components/chat/ChatBubble.tsx:168:  useEffect(() => {
+src/components/chat/ChatBubble.tsx:173:  useEffect(() => {
+src/components/chat/ChatBubble.tsx:181:  useEffect(() => {
+src/components/chat/ChatBubble.tsx:195:  const handleOpen = useCallback(() => {
+src/components/chat/ChatBubble.tsx:202:  const handleClose = useCallback(() => {
+src/components/chat/ChatBubble.tsx:207:  const handleSend = useCallback(async () => {
+src/components/chat/ChatBubble.tsx:222:  const handleKeyDown = useCallback(
+src/components/chat/ChatBubble.tsx:233:  const handleCameraToggle = useCallback(async () => {
+src/components/chat/ChatBubble.tsx:242:  const handleVideoModeToggle = useCallback(() => {
+src/components/chat/ChatBubble.tsx:250:  const handleFileSelect = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
+src/components/chat/ChatBubble.tsx:284:  const handleRemoveFile = useCallback((fileId: string) => {
+src/components/chat/ChatBubble.tsx:289:  const handleDragOver = useCallback((e: React.DragEvent) => {
+src/components/chat/ChatBubble.tsx:294:  const handleDragLeave = useCallback((e: React.DragEvent) => {
+src/components/chat/ChatBubble.tsx:299:  const handleDrop = useCallback(async (e: React.DragEvent) => {
+src/components/chat/ChatBubble.tsx:319:  const handleClearConversation = useCallback(() => {
+src/features/transformation/TransformationRoadmap.tsx:40:  const roadmapMilestones = useMemo(() => {
+src/features/transformation/TransformationRoadmap.tsx:46:  const filteredMilestones = useMemo(() => {
+src/features/design-center/hooks/useUIThemeCommands.ts:27:  const isAuthorized = useCallback((userId: string): boolean => {
+src/features/design-center/hooks/useUIThemeCommands.ts:34:  const executeCommand = useCallback(
+src/features/design-center/hooks/useUIThemeCommands.ts:226:  const parseTextCommand = useCallback((text: string): UICommand | null => {
+src/components/experience/ExpPanel.tsx:69:  useEffect(() => {
+src/components/experience/XPBar.tsx:25:  useEffect(() => {
+src/components/experience/GlobalExpBar.tsx:35:  useEffect(() => {
+src/components/monitoring/GlobalMetricsSummary.tsx:38:  const loadStats = React.useCallback(() => {
+src/components/monitoring/GlobalMetricsSummary.tsx:52:  useEffect(() => {
+src/components/monitoring/PredictiveAlertsDashboard.tsx:34:  useEffect(() => {
+src/components/monitoring/SystemHealthMonitor.tsx:46:  const fetchMetrics = useCallback(async () => {
+src/components/monitoring/SystemHealthMonitor.tsx:65:  const fetchEngines = useCallback(async () => {
+src/components/monitoring/SystemHealthMonitor.tsx:80:  useEffect(() => {
+src/components/monitoring/CommandStatsTable.tsx:46:  const loadStats = React.useCallback(() => {
+src/components/monitoring/CommandStatsTable.tsx:69:  useEffect(() => {
+src/components/monitoring/CommandStatsTable.tsx:90:  const sortedStats = React.useMemo(() => {
+src/components/monitoring/AnomalyDashboard.tsx:39:  const loadData = React.useCallback(() => {
+src/components/monitoring/AnomalyDashboard.tsx:52:  useEffect(() => {
+src/components/monitoring/ServiceMetricsPanel.tsx:40:  const loadStats = React.useCallback(() => {
+src/components/monitoring/ServiceMetricsPanel.tsx:54:  useEffect(() => {
+src/components/monitoring/SingularityDashboard.tsx:777:  const fetchSystemMetrics = useCallback(async () => {
+src/components/monitoring/SingularityDashboard.tsx:795:  useEffect(() => {
+src/components/monitoring/SingularityDashboard.tsx:926:  useEffect(() => {

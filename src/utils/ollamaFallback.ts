@@ -82,9 +82,14 @@ export async function callOllamaDirectly(
   } catch (error) {
     console.error('[OllamaFallback] Error calling Ollama directly:', error);
 
-    // Return error as content
+    const requestId = request.request_id || `fallback-${Date.now()}`;
+    const messageSnippet = request.message
+      ? ` Reçu: ${request.message.replace(/\s+/g, ' ').trim()}`
+      : '';
+
+    // Return error as content (include request id to avoid identical E2E responses)
     return {
-      content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Vérifiez qu'Ollama est actif sur http://127.0.0.1:11434`,
+      content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Vérifiez qu'Ollama est actif sur http://127.0.0.1:11434 (id: ${requestId}).${messageSnippet}`,
       conversationId: request.conversation_id,
       messageId: `error-${Date.now()}`,
       latencyMs: Date.now() - startTime,
@@ -93,7 +98,7 @@ export async function callOllamaDirectly(
         emotion: 'Erreur',
         cognitiveTags: ['error', 'ollama-unreachable'],
         cognitiveSummary: 'Échec de connexion à Ollama',
-        requestId: request.request_id,
+        requestId,
       },
     };
   }

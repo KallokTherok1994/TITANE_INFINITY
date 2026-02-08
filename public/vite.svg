@@ -1,0 +1,16 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="256" height="256" rx="48" fill="#0A0A0A" />
+  <circle cx="128" cy="128" r="70" fill="#10B981" />
+  <text
+    x="128"
+    y="134"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    font-family="Inter, Arial, sans-serif"
+    font-size="64"
+    font-weight="700"
+    fill="#0A0A0A"
+  >
+    T∞
+  </text>
+</svg>

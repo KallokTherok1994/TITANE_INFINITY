@@ -1,0 +1,3 @@
+src/lib/ipc.ts:4: * **Règle absolue:** Interdit fetch("ipc://...") — passer par l'IPC wrapper uniquement
+src/lib/ipc.ts:38: * Wrapper IPC centralisé — remplace tout fetch("ipc://...")
+src/lib/ipc.ts:40: * **RÈGLE CRITIQUE:** Aucun fetch("ipc://localhost/...") autorisé

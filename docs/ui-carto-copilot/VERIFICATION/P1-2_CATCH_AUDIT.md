@@ -262,7 +262,7 @@ A catch block is considered **silent** if:
 
 Per **UI_FREEZE_GATES.md** constitutional protocol, **cannot self-close P1-2** without authority approval.
 
-### Option A: MICRO-PATCH TO COMPLETE P1-2
+### Option A: MICRO-PATCH TO TERMINER P1-2
 
 **Action:**
 - Add `console.error(error)` to all 6 catches
@@ -373,4 +373,4 @@ grep -A 3 "} catch" src/utils/aiPredictiveEngine.ts | grep -n ""
 
 ---
 
-**P1-2 CATCH AUDIT COMPLETE**
+**P1-2 CATCH AUDIT TERMINÉ**

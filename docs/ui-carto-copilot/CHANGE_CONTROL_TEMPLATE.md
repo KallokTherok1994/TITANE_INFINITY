@@ -251,7 +251,7 @@ Before submitting this change control:
 - [ ] ✅ Minimal change (smallest possible scope)
 - [ ] ✅ Rollback plan executable (tested mentally)
 - [ ] ✅ Freeze gates passed (all 14 checked)
-- [ ] ✅ No forbidden terms (SEALED/PRODUCTION READY)
+- [ ] ✅ No forbidden terms (SCELLÉ/PRÊT PRODUCTION)
 - [ ] ✅ Registries updated (manifest, arbitration, issues)
 
 ---

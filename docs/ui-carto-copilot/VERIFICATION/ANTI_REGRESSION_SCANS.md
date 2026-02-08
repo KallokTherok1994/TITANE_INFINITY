@@ -383,4 +383,4 @@ rg -n 'ipc://' src --type ts | wc -l
 
 ---
 
-**Status:** ✅ SCAN SPECIFICATIONS COMPLETE
+**Status:** ✅ SCAN SPECIFICATIONS TERMINÉ

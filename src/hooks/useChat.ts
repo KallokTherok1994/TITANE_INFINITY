@@ -1176,6 +1176,55 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         chatLogger.warn('Camera command check failed', { error: cameraError });
         // Continuer normalement si erreur
       }
+      
+      const isE2EOffline =
+        typeof window !== 'undefined' &&
+        Boolean((window as Window & { __E2E_OFFLINE__?: boolean }).__E2E_OFFLINE__);
+      
+      if (isE2EOffline) {
+        const cleanMessage = content.trim();
+        const userMessage: AIMessage = {
+          role: 'user',
+          content: cleanMessage,
+          timestamp: Date.now(),
+          metadata: withUiId({
+            inputLength: cleanMessage.length,
+            mode: currentModeState,
+            requestId,
+          }),
+        };
+
+        const offlineResponse: AIMessage = {
+          role: 'assistant',
+          content: `🧪 Mode hors-ligne E2E actif.
+
+Reçu: ${cleanMessage}
+
+Réponse de secours locale (aucun appel réseau).`,
+          timestamp: Date.now(),
+          provider: 'e2e-offline',
+          metadata: withUiId({
+            status: 'fallback',
+            fallbackReason: 'e2e-offline',
+            requestId,
+          }),
+        };
+
+        applyMessagesSafely(
+          [...messagesRef.current, userMessage, offlineResponse],
+          'e2e-offline-fallback'
+        );
+
+        try {
+          await saveMessage(userMessage);
+          await saveMessage(offlineResponse);
+        } catch (persistError) {
+          console.warn('[useChat] ⚠️ e2e-offline persistence failed', persistError);
+        }
+
+        setLastProviderUsed('e2e-offline');
+        return offlineResponse;
+      }
 
       // FIX v19.3Ω: Activer le verrou d'opération AVANT tout changement d'état
       operationLockRef.current = true;

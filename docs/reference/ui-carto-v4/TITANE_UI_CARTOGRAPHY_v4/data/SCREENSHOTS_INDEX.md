@@ -1,0 +1,69 @@
+# Index des captures
+
+- `Capture d’écran du 2026-02-07 08-48-12.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-19.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-24.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-29.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-55.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-49-00.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-16.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-21.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-25.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-27.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-30.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-53.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-57.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-50-14.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-54-51.png` → TITANE/XP
+- `Capture d’écran du 2026-02-07 08-55-02.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-55-23.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-55-28.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-55-31.png` → TIME/Timeline
+- `Capture d’écran du 2026-02-07 08-55-35.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-55-38.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-55-42.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-08.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-18.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-21.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-25.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-28.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-34.png` → TITANE/Audio Center
+- `Capture d’écran du 2026-02-07 08-56-38.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-41.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-45.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-50.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-56-52.png` → DEV/Vue d'ensemble
+- `Capture d’écran du 2026-02-07 08-56-58.png` → DEV/Dev Tools
+- `Capture d’écran du 2026-02-07 08-57-01.png` → DEV/Command Center
+- `Capture d’écran du 2026-02-07 08-57-03.png` → DEV/System Commands
+- `Capture d’écran du 2026-02-07 08-57-05.png` → DEV/QA Tests
+- `Capture d’écran du 2026-02-07 08-57-16.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-57-20.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-57-25.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-57-28.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-57-31.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-58-33.png` → DEV/Ultimate Optimization (full)
+- `Capture d’écran du 2026-02-07 08-59-14.png` → ErrorBoundary (crash)
+- `Capture d’écran du 2026-02-07 08-59-16.png` → DEV/Security
+- `Capture d’écran du 2026-02-07 08-59-59.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 09-00-02.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 09-00-11.png` → STATS/Global Health
+- `Capture d’écran du 2026-02-07 09-01-08.png` → DEV/Ultimate Optimization (zoom)
+- `Capture d’écran du 2026-02-07 09-06-50.png` → TITANE/Chat (empty state)
+- `Capture d’écran du 2026-02-07 08-48-12.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-54-51.png` → TITANE/XP
+- `Capture d’écran du 2026-02-07 08-55-31.png` → TIME/Timeline
+- `Capture d’écran du 2026-02-07 08-56-34.png` → TITANE/Audio Center
+- `Capture d’écran du 2026-02-07 08-56-52.png` → DEV/Vue d'ensemble
+- `Capture d’écran du 2026-02-07 08-58-33.png` → DEV/Ultimate Optimization (full)
+- `Capture d’écran du 2026-02-07 09-00-11.png` → STATS/Global Health
+- `Capture d’écran du 2026-02-07 09-06-50.png` → TITANE/Chat (empty state)
+- `Capture d’écran du 2026-02-07 08-48-12.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-19.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-24.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-29.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-48-55.png` → TITANE/Overview or Chat
+- `Capture d’écran du 2026-02-07 08-49-00.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-16.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-21.png` → UNKNOWN
+- `Capture d’écran du 2026-02-07 08-49-25.png` → UNKNOWN

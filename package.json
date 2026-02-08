@@ -16,6 +16,7 @@
     "ollama:bundle": "bash scripts/prepare-ollama-bundle.sh",
     "build": "vite build",
     "postbuild": "bash scripts/post-build.sh",
+    "build:tauri:e2e": "bash scripts/e2e/require-e2e-build-authorization.sh && vite build && tauri build --config src-tauri/tauri.conf.json",
     "build:production": "pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && vite build && tauri build && bash scripts/post-build.sh",
     "preview": "echo '🔒 TAURI-ONLY MODE' && exit 1",
     "start": "echo '🔒 TAURI-ONLY MODE: Use pnpm run dev instead' && exit 1",
@@ -44,6 +45,9 @@
     "test:browser": "vitest --config vitest.browser.config.ts --run",
     "test:browser:ui": "vitest --config vitest.browser.config.ts --ui",
     "test:browser:watch": "vitest --config vitest.browser.config.ts",
+    "e2e:desktop:ensure": "bash scripts/e2e/ensure-linux-desktop-driver.sh",
+    "e2e:desktop:run": "bash scripts/e2e/run-e2e-desktop.sh",
+    "e2e:desktop": "pnpm run e2e:desktop:ensure && pnpm run e2e:desktop:run",
     "test:100": "pnpm run test && pnpm run test:browser",
     "test:100:full": "pnpm run test && cross-env RUN_E2E_TESTS=1 pnpm run test:e2e:vitest && pnpm run test:browser",
     "test:rust": "mkdir -p dist && cd src-tauri && cargo test",
@@ -101,7 +105,9 @@
     "verify:registry:sync": "node scripts/verify/registry-sync.js",
     "verify:registry:integrity": "node scripts/verify/registry-integrity.js",
     "verify:registry:quality": "node scripts/verify/registry-quality.js",
-    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality"
+    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality",
+    "g4:export": "node scripts/g4/export_logpack.mjs",
+    "g4:collect": "node scripts/g4/collect.mjs"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.20",
@@ -170,6 +176,10 @@
     "@vitest/browser-playwright": "4.0.18",
     "@vitest/coverage-v8": "4.0.18",
     "@vitest/ui": "4.0.18",
+    "@wdio/cli": "^9.19.1",
+    "@wdio/local-runner": "^9.19.1",
+    "@wdio/mocha-framework": "^9.19.1",
+    "@wdio/spec-reporter": "^9.19.1",
     "autoprefixer": "^10.4.24",
     "axe-core": "^4.11.1",
     "baseline-browser-mapping": "^2.9.19",
@@ -202,6 +212,7 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-tsconfig-paths": "^6.0.5",
     "vitest": "4.0.18",
+    "webdriverio": "^9.19.1",
     "workbox-build": "^7.4.0"
   },
   "pnpm": {

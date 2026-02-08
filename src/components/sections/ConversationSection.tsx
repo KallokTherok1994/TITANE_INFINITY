@@ -29,6 +29,8 @@ import {
 import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
+import { ConversationsButton } from '@/components/chat/ConversationsButton';
+import { ConversationsSidebar } from '@/components/chat/ConversationsSidebar';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
@@ -36,6 +38,8 @@ import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { colors } from '@themes/tokens';
 import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
+import { useConversationsContext } from '@/contexts/ConversationsContext';
+import { g4Log } from '@/lib/telemetry/convG4Collector';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -143,7 +147,11 @@ const ConversationMessage = memo(
     }, [message.id, onDelete]);
 
     return (
-      <div className={`conversation-message ${message.role}`}>
+      <div
+        className={`conversation-message ${message.role}`}
+        data-testid="chat-message"
+        data-role={message.role}
+      >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
         </div>
@@ -162,7 +170,16 @@ const ConversationMessage = memo(
               </div>
             )}
           </div>
-          <div className="conversation-message-text">{message.content}</div>
+          <div
+            className="conversation-message-text"
+            data-testid={
+              message.role === 'assistant'
+                ? 'chat-message-assistant'
+                : 'chat-message-user'
+            }
+          >
+            {message.content}
+          </div>
           {message.metadata?.intention && (
             <div className="conversation-message-meta">
               <span className="meta-intention">{message.metadata.intention}</span>
@@ -216,6 +233,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
   const {
+    conversations,
+    activeConversationId,
+    storageCount,
+    setActiveConversation,
+  } = useConversationsContext();
+  const {
     messages,
     isLoading,
     error,
@@ -235,6 +258,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   // ═══ STATE ═══
   const [selectedProvider, setSelectedProvider] = useState('gemini');
   const [inputValue, setInputValue] = useState('');
+  const [inputError, setInputError] = useState<string | null>(null);
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
@@ -373,6 +397,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     [filteredMessages, isLoading, handleCopyMessage, handleRetryMessage, deleteMessage]
   );
 
+  const lastAssistantMessage = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const msg = messages[i];
+      if (msg?.role === 'assistant' && msg.content) {
+        return msg.content;
+      }
+    }
+    return '';
+  }, [messages]);
+
   const suggestionButtons = useMemo(
     () =>
       CONVERSATION_SUGGESTIONS.map(suggestion => (
@@ -413,12 +447,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const handleSend = useCallback(async () => {
     const rawInput = inputValue;
     const trimmedInput = rawInput.trim();
-    if (!trimmedInput || isLoading || sendingRef.current) return;
+    if (!trimmedInput) {
+      setInputError('Le message est vide.');
+      return;
+    }
+    if (isLoading || sendingRef.current) return;
     sendingRef.current = true;
+    setInputError(null);
 
     const sanitized = sanitizeInput(rawInput);
     if (!sanitized || sanitized.length === 0) {
       pageLogger.debug('Input vide apres sanitization');
+      setInputError('Le message est vide.');
       sendingRef.current = false;
       return;
     }
@@ -464,6 +504,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       }
     },
     [handleSend]
+  );
+
+  const handleInputChange = useCallback(
+    (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+      setInputValue(event.target.value);
+      if (inputError) {
+        setInputError(null);
+      }
+    },
+    [inputError]
   );
 
   const handleClearChat = useCallback(() => {
@@ -615,9 +665,78 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     setCameraActive(prev => !prev);
   }, []);
 
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputValue(e.target.value);
-  }, []);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const handleToggleSidebar = useCallback(() => {
+    setIsSidebarOpen(prev => {
+      const next = !prev;
+      console.log('[CONV_UI] SIDEBAR_TOGGLE', { open: next });
+      void g4Log('CONV_UI', {
+        phase: next ? 'SIDEBAR_OPEN' : 'SIDEBAR_CLOSE',
+        len: conversations.length,
+        storageCount,
+        activeId: activeConversationId,
+      });
+      return next;
+    });
+  }, [activeConversationId, conversations.length, storageCount]);
+
+  const handleCloseSidebar = useCallback(() => {
+    setIsSidebarOpen(false);
+    console.log('[CONV_UI] SIDEBAR_CLOSE');
+    void g4Log('CONV_UI', {
+      phase: 'SIDEBAR_CLOSE',
+      len: conversations.length,
+      storageCount,
+      activeId: activeConversationId,
+    });
+  }, [activeConversationId, conversations.length, storageCount]);
+
+  useEffect(() => {
+    console.log('[CONV_HOST] MOUNT');
+    void g4Log('CONV_HOST', {
+      phase: 'MOUNT',
+      len: conversations.length,
+      storageCount,
+      activeId: activeConversationId,
+    });
+    return () => {
+      console.log('[CONV_HOST] UNMOUNT');
+      void g4Log('CONV_HOST', {
+        phase: 'UNMOUNT',
+        len: conversations.length,
+        storageCount,
+        activeId: activeConversationId,
+      });
+    };
+  }, [activeConversationId, conversations.length, storageCount]);
+
+  useEffect(() => {
+    const w = window as typeof window & {
+      __G4_CONV__?: {
+        toggleSidebar: () => void;
+        openSidebar: () => void;
+        closeSidebar: () => void;
+        clickConversation: (index: number) => Promise<void>;
+        getConversationsCount: () => number;
+      };
+    };
+    w.__G4_CONV__ = {
+      toggleSidebar: handleToggleSidebar,
+      openSidebar: () => setIsSidebarOpen(true),
+      closeSidebar: handleCloseSidebar,
+      clickConversation: async index => {
+        const conv = conversations[index];
+        if (conv) {
+          await setActiveConversation(conv.id);
+        }
+      },
+      getConversationsCount: () => conversations.length,
+    };
+    return () => {
+      delete w.__G4_CONV__;
+    };
+  }, [conversations, handleCloseSidebar, handleToggleSidebar, setActiveConversation]);
 
   const handleCloseModeBuilder = useCallback(() => {
     setShowModeBuilder(false);
@@ -635,6 +754,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         {/* ═══ TOOLBAR ═══ */}
         <div className="conversation-toolbar">
           <div className="conversation-toolbar-left">
+            <ConversationsButton
+              onClick={handleToggleSidebar}
+              conversationCount={conversations.length}
+              hasActiveConversation={Boolean(activeConversationId)}
+            />
             <ChatProviderSelector
               selectedProvider={selectedProvider}
               onChange={setSelectedProvider}
@@ -779,7 +903,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         />
 
         {/* ═══ MESSAGES AREA ═══ */}
-        <div className="conversation-messages">
+        <div className="conversation-messages" data-testid="chat-messages">
           {messages.length === 0 && !thinking.isThinking && (
             <div className="conversation-empty">
               <div className="conversation-empty-icon">🧠⚡∞</div>
@@ -795,6 +919,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           {messageItems}
 
+          <span data-testid="chat-last-response" style={{ display: 'none' }}>
+            {lastAssistantMessage}
+          </span>
+
           {isLoading && (
             <div className="conversation-message assistant loading">
               <div className="conversation-message-avatar">🧠</div>
@@ -809,9 +937,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             </div>
           )}
 
-          {error && (
-            <div className="conversation-error">
-              <strong>❌ Erreur:</strong> {error}
+          {(inputError || error) && (
+            <div className="conversation-error" data-testid="chat-error">
+              <strong>❌ Erreur:</strong> {inputError || error}
             </div>
           )}
 
@@ -838,6 +966,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         <div className="conversation-input-container">
           <textarea
             className="conversation-input"
+            data-testid="chat-input"
             placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
             value={inputValue}
             onChange={handleInputChange}
@@ -847,6 +976,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           />
           <button
             className="conversation-send-btn"
+            data-testid="chat-send"
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
           >
@@ -859,6 +989,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           <ModeBuilder onClose={handleCloseModeBuilder} onSave={handleSaveCustomMode} />
         )}
       </div>
+
+      <ConversationsSidebar isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
     </div>
   );
 });

@@ -150,16 +150,16 @@ git diff docs/ui-carto-copilot/VERIFICATION/VERDICT.md
 grep -i "sealed\|production ready\|complete" docs/reference/kevin-v5/*.md docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_*.md
 
 # Result: No matches in verdict-related context
-# Note: "COMPLETE" may appear in status contexts (e.g., "readiness complete") but NOT in verdict statements
+# Note: "TERMINÉ" may appear in status contexts (e.g., "readiness terminé") but NOT in verdict statements
 ```
 
-✅ **CONFIRMED:** No forbidden terms (SEALED, PRODUCTION READY) in verdict context
+✅ **CONFIRMED:** No forbidden terms (SCELLÉ, PRÊT PRODUCTION) in verdict context
 
 **Allowed Usage:**
 - ✅ "Import readiness complete" (status, not verdict)
 - ✅ "Spec complete" (documentation status)
-- ❌ "SEALED" (forbidden in verdict)
-- ❌ "PRODUCTION READY" (forbidden in verdict)
+- ❌ "SCELLÉ" (forbidden in verdict)
+- ❌ "PRÊT PRODUCTION" (forbidden in verdict)
 
 ---
 

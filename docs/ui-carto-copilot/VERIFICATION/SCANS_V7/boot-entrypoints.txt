@@ -1,0 +1,22 @@
+src/CARTE_POINTS_CRITIQUES.ts:20: *   ✅ <script type="module" src="/src/main.tsx"></script>
+src/CARTE_POINTS_CRITIQUES.ts:32: * Fichier : src/main.tsx
+src/CARTE_POINTS_CRITIQUES.ts:33: * Emplacement : /home/titane/Documents/TITANE_INFINITY/src/main.tsx
+src/CARTE_POINTS_CRITIQUES.ts:37: *   1. Importer React, ReactDOM, App, CSS
+src/CARTE_POINTS_CRITIQUES.ts:40: *   4. Monter React avec ReactDOM.createRoot()
+src/CARTE_POINTS_CRITIQUES.ts:244: *      → <script src="/src/main.tsx"> présent ✅
+src/CARTE_POINTS_CRITIQUES.ts:246: *   5. ✅ Vérifier src/main.tsx
+src/CARTE_POINTS_CRITIQUES.ts:247: *      → ReactDOM.createRoot(...).render(...) présent ✅
+src/utils/bootRecoverySystem.ts:234:      const { createRoot } = await import('react-dom/client');
+src/utils/bootRecoverySystem.ts:245:      if (!createRoot || !App || !React) {
+src/utils/bootRecoverySystem.ts:261:        const root = createRoot(container);
+src/utils/bootRecoverySystem.ts:301:      const { createRoot } = await import('react-dom/client');
+src/utils/bootRecoverySystem.ts:343:      const root = createRoot(container);
+src/modules/devSudo/devSudoExtendedHandlers.ts:278:-rw-r--r--  main.tsx
+src/__tests__/setup.ts:45:      (args[0].includes('Warning: ReactDOM.render') ||
+src/monitoring/index.ts:366: * Initialize monitoring (call from main.tsx)
+src/monitoring/index.ts:382: * ## Initialize in main.tsx
+src/main.tsx:10:console.log('[BOOT] main.tsx start');
+src/main.tsx:42:import ReactDOM from 'react-dom/client';
+src/main.tsx:375:  setBootStage('main.tsx: boot handlers registered');
+src/main.tsx:953:  //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
+src/main.tsx:956:  ReactDOM.createRoot(rootElement).render(
