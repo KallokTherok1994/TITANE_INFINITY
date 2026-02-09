@@ -24,12 +24,12 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 ### 1. 🏗️ Rapports d'Architecture & Développement
 
-| Document | Description | Autorité | Référence |
-|----------|-------------|----------|-----------|
-| [COGNITIVE_CORE_COMPLETE.md](COGNITIVE_CORE_COMPLETE.md) | Architecture Cognitive Core complète | ⭐ **CANONIQUE** | Production Ready |
-| [COGNITIVE_CORE_README.md](COGNITIVE_CORE_README.md) | Guide d'utilisation Cognitive Core | 📘 Guide Utilisateur | Opérationnel |
-| [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) | Système d'intelligence conversationnelle | ⭐ **CANONIQUE** | v1.0 Sealed |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Architecture globale TITANE∞ | Voir note¹ | Fusionné |
+| Document                                                                                           | Description                              | Autorité             | Référence        |
+| -------------------------------------------------------------------------------------------------- | ---------------------------------------- | -------------------- | ---------------- |
+| [COGNITIVE_CORE_COMPLETE.md](COGNITIVE_CORE_COMPLETE.md)                                           | Architecture Cognitive Core complète     | ⭐ **CANONIQUE**     | Production Ready |
+| [COGNITIVE_CORE_README.md](COGNITIVE_CORE_README.md)                                               | Guide d'utilisation Cognitive Core       | 📘 Guide Utilisateur | Opérationnel     |
+| [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) | Système d'intelligence conversationnelle | ⭐ **CANONIQUE**     | v1.0 Sealed      |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                                                                 | Architecture globale TITANE∞             | Voir note¹           | Fusionné         |
 
 > **Note¹**: Le fichier ARCHITECTURE.md existait déjà dans TITANE_INFINITY. Vérifier la fusion/priorité.
 
@@ -37,76 +37,76 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 ### 2. 📊 Rapports de Sprint & Audits de Code
 
-| Document | Description | Autorité | Période |
-|----------|-------------|----------|---------|
-| [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit des changements Sprint 1 | 🔍 **AUDIT** | Historique |
-| [SPRINT_1_FINAL_REPORT.md](SPRINT_1_FINAL_REPORT.md) | Rapport final Sprint 1 | 📊 Rapport | Historique |
-| [SPRINT_2_FINAL_REPORT.md](SPRINT_2_FINAL_REPORT.md) | Rapport final Sprint 2 | 📊 Rapport | Historique |
-| [SPRINT_3_FINAL_REPORT.md](SPRINT_3_FINAL_REPORT.md) | Rapport final Sprint 3 | 📊 Rapport | Historique |
-| [SPRINT_4_FINAL_REPORT.md](SPRINT_4_FINAL_REPORT.md) | Rapport final Sprint 4 | 📊 Rapport | Historique |
+| Document                                                         | Description                      | Autorité     | Période     |
+| ---------------------------------------------------------------- | -------------------------------- | ------------ | ----------- |
+| [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit des changements Sprint 1   | 🔍 **AUDIT** | Historique  |
+| [SPRINT_1_FINAL_REPORT.md](SPRINT_1_FINAL_REPORT.md)             | Rapport final Sprint 1           | 📊 Rapport   | Historique  |
+| [SPRINT_2_FINAL_REPORT.md](SPRINT_2_FINAL_REPORT.md)             | Rapport final Sprint 2           | 📊 Rapport   | Historique  |
+| [SPRINT_3_FINAL_REPORT.md](SPRINT_3_FINAL_REPORT.md)             | Rapport final Sprint 3           | 📊 Rapport   | Historique  |
+| [SPRINT_4_FINAL_REPORT.md](SPRINT_4_FINAL_REPORT.md)             | Rapport final Sprint 4           | 📊 Rapport   | Historique  |
 | [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit détaillé des modifications | 🔍 **AUDIT** | Gouvernance |
 
 ---
 
 ### 3. 🚀 Déploiement & Production (v27.4.1)
 
-| Document | Description | Autorité | Version |
-|----------|-------------|----------|---------|
-| [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](deployment/v27.4.1/DEPLOYMENT_EXECUTED.md) | Rapport de déploiement production v27.4.1 | ⭐ **CANONIQUE** | v27.4.1-SEALED |
-| [deployment/v27.4.1/README_DEPLOYMENT.md](deployment/v27.4.1/README_DEPLOYMENT.md) | Instructions déploiement v27.4.1 | 📘 Guide | v27.4.1 |
-| [deployment/v27.4.1/checksums/SHA256SUMS](deployment/v27.4.1/checksums/SHA256SUMS) | Checksums officiels des artefacts | 🔐 **SÉCURITÉ** | Production |
-| [deployment/v27.4.1/checksums/SHA256SUMS.local](deployment/v27.4.1/checksums/SHA256SUMS.local) | Checksums locaux (validation) | 🔐 Validation | Build Local |
+| Document                                                                                       | Description                               | Autorité         | Version        |
+| ---------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------- | -------------- |
+| [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](deployment/v27.4.1/DEPLOYMENT_EXECUTED.md)         | Rapport de déploiement production v27.4.1 | ⭐ **CANONIQUE** | v27.4.1-SEALED |
+| [deployment/v27.4.1/README_DEPLOYMENT.md](deployment/v27.4.1/README_DEPLOYMENT.md)             | Instructions déploiement v27.4.1          | 📘 Guide         | v27.4.1        |
+| [deployment/v27.4.1/checksums/SHA256SUMS](deployment/v27.4.1/checksums/SHA256SUMS)             | Checksums officiels des artefacts         | 🔐 **SÉCURITÉ**  | Production     |
+| [deployment/v27.4.1/checksums/SHA256SUMS.local](deployment/v27.4.1/checksums/SHA256SUMS.local) | Checksums locaux (validation)             | 🔐 Validation    | Build Local    |
 
 ---
 
 ### 4. 🧰 Bootstrap & Configuration
 
-| Document | Description | Autorité | Statut |
-|----------|-------------|----------|--------|
-| [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](BOOTSTRAP_COMPLETE_FINAL_REPORT.md) | Rapport final bootstrap complet | 📊 Rapport | Complété |
-| [BOOTSTRAP_REPORT.md](BOOTSTRAP_REPORT.md) | Rapport bootstrap initial | 📊 Rapport | Historique |
-| [ENV_REPORT.md](ENV_REPORT.md) | Configuration environnement | 🛠️ Config | Référence |
+| Document                                                                 | Description                     | Autorité   | Statut     |
+| ------------------------------------------------------------------------ | ------------------------------- | ---------- | ---------- |
+| [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](BOOTSTRAP_COMPLETE_FINAL_REPORT.md) | Rapport final bootstrap complet | 📊 Rapport | Complété   |
+| [BOOTSTRAP_REPORT.md](BOOTSTRAP_REPORT.md)                               | Rapport bootstrap initial       | 📊 Rapport | Historique |
+| [ENV_REPORT.md](ENV_REPORT.md)                                           | Configuration environnement     | 🛠️ Config  | Référence  |
 
 ---
 
 ### 5. 🔍 Meta-Audits & Super Prompts
 
-| Document | Description | Autorité | Niveau |
-|----------|-------------|----------|--------|
-| [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) | Audit complet Super Prompt | 🔍 **AUDIT** | Meta |
+| Document                                                                     | Description                | Autorité     | Niveau |
+| ---------------------------------------------------------------------------- | -------------------------- | ------------ | ------ |
+| [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) | Audit complet Super Prompt | 🔍 **AUDIT** | Meta   |
 
 ---
 
 ### 6. 📄 Documentation de Portage (Meta)
 
-| Document | Description | Autorité | Usage |
-|----------|-------------|----------|-------|
-| [PORT_FROM_LITE.md](PORT_FROM_LITE.md) | Méthodologie portage complète | ⭐ **CANONICAL** | Gouvernance |
-| [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md) | Instructions finales portage | 📘 Guide | Post-Portage |
-| [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md) | Rapport exécutif portage | 📊 Rapport | Traçabilité |
-| [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md) | Template création PR | 📘 Template | Procédure |
+| Document                                                                     | Description                   | Autorité         | Usage        |
+| ---------------------------------------------------------------------------- | ----------------------------- | ---------------- | ------------ |
+| [PORT_FROM_LITE.md](PORT_FROM_LITE.md)                                       | Méthodologie portage complète | ⭐ **CANONICAL** | Gouvernance  |
+| [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md)     | Instructions finales portage  | 📘 Guide         | Post-Portage |
+| [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md) | Rapport exécutif portage      | 📊 Rapport       | Traçabilité  |
+| [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md)                           | Template création PR          | 📘 Template      | Procédure    |
 
 ---
 
 ### 7. 🛣️ Planification & Prochaines Étapes
 
-| Document | Description | Autorité | Statut |
-|----------|-------------|----------|--------|
-| [FINAL_STATUS_AND_NEXT_STEPS.md](FINAL_STATUS_AND_NEXT_STEPS.md) | Statut final & roadmap | 📍 **ROADMAP** | Actif |
+| Document                                                         | Description            | Autorité       | Statut |
+| ---------------------------------------------------------------- | ---------------------- | -------------- | ------ |
+| [FINAL_STATUS_AND_NEXT_STEPS.md](FINAL_STATUS_AND_NEXT_STEPS.md) | Statut final & roadmap | 📍 **ROADMAP** | Actif  |
 
 ---
 
 ## 🔐 Nomenclature d'Autorité
 
-| Symbole | Signification | Usage |
-|---------|---------------|-------|
-| ⭐ **CANONIQUE** | Source de vérité absolue | Production, architecture, décisions irrevocables |
-| 🔍 **AUDIT** | Rapport d'audit officiel | Traçabilité, gouvernance, compliance |
-| 📊 **RAPPORT** | Rapport informatif historique | Historique de développement, lessons learned |
-| 📘 **GUIDE** | Documentation utilisateur/dev | Instructions opérationnelles |
-| 🔐 **SÉCURITÉ** | Artefacts critiques de sécurité | Checksums, signatures, validations |
-| 🛠️ **CONFIG** | Configuration référence | Setup, environment variables |
-| 📍 **ROADMAP** | Planification active | Prochaines étapes, objectifs futurs |
+| Symbole          | Signification                   | Usage                                            |
+| ---------------- | ------------------------------- | ------------------------------------------------ |
+| ⭐ **CANONIQUE** | Source de vérité absolue        | Production, architecture, décisions irrevocables |
+| 🔍 **AUDIT**     | Rapport d'audit officiel        | Traçabilité, gouvernance, compliance             |
+| 📊 **RAPPORT**   | Rapport informatif historique   | Historique de développement, lessons learned     |
+| 📘 **GUIDE**     | Documentation utilisateur/dev   | Instructions opérationnelles                     |
+| 🔐 **SÉCURITÉ**  | Artefacts critiques de sécurité | Checksums, signatures, validations               |
+| 🛠️ **CONFIG**    | Configuration référence         | Setup, environment variables                     |
+| 📍 **ROADMAP**   | Planification active            | Prochaines étapes, objectifs futurs              |
 
 ---
 
@@ -115,12 +115,14 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 Pour préserver l'intégrité du portage:
 
 ❌ **NE PAS**:
+
 - Modifier les documents portés sans créer une nouvelle version datée
-- Supprimer les documents historiques (SPRINT_*_FINAL_REPORT.md)
-- Éditer les checksums (deployment/v27.4.1/checksums/*)
+- Supprimer les documents historiques (SPRINT\_\*\_FINAL_REPORT.md)
+- Éditer les checksums (deployment/v27.4.1/checksums/\*)
 - Déplacer PORT_FROM_LITE.md (audit trail protégé)
 
 ✅ **AUTORISÉ**:
+
 - Ajouter des **Notes de Clarification** en bas de document (section "## Addendum Post-Portage")
 - Créer des **documents de synthèse** qui référencent les portés
 - Mettre à jour **cet index** (PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
@@ -156,6 +158,7 @@ Commits portage:           2 (squashed to ef72a56b)
 ### Validation Post-Merge
 
 ✅ **Checks effectués**:
+
 - [x] Aucun fichier binaire transféré
 - [x] Aucun fichier runtime/config modifié
 - [x] Structure de repo intacte
@@ -170,10 +173,10 @@ En cas de problème, voir [PORT_FROM_LITE.md](PORT_FROM_LITE.md#rollback-procedu
 
 ## 📝 Changelog Post-Portage
 
-| Date | Action | Auteur | Note |
-|------|--------|--------|------|
-| 2026-02-08 | Portage initial v27.4.1 | GitHub Copilot | PR #132, commit ef72a56b |
-| 2026-02-08 | Création index canonique | GitHub Copilot | Ce fichier |
+| Date       | Action                   | Auteur         | Note                     |
+| ---------- | ------------------------ | -------------- | ------------------------ |
+| 2026-02-08 | Portage initial v27.4.1  | GitHub Copilot | PR #132, commit ef72a56b |
+| 2026-02-08 | Création index canonique | GitHub Copilot | Ce fichier               |
 
 ---
 

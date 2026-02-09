@@ -54,7 +54,7 @@ Binary Artifacts:
   - deployment/v27.4.1/deb/TITANE-Lite_27.4.1_amd64.deb (9.7 MB)
   - deployment/v27.4.1/rpm/TITANE-Lite-27.4.1-1.x86_64.rpm (9.7 MB)
 
-Reasoning: Binaries exceed GitHub's recommended 50MB per file; available in 
+Reasoning: Binaries exceed GitHub's recommended 50MB per file; available in
 TITANE_LITE deployment/ for reference or external CDN deployment.
 ```
 
@@ -137,7 +137,7 @@ Files Touched:        0 (documentation only)
 Code Files Modified:  0 (no source changes)
 Config Changes:       0 (no build/Tauri config changes)
 
-Reason: Transfer was documentation-centric (no code divergence detected 
+Reason: Transfer was documentation-centric (no code divergence detected
 between the two repos in the source layer for v27.4.1).
 ```
 
@@ -150,18 +150,21 @@ between the two repos in the source layer for v27.4.1).
 ### If Merge Rejected / Issues Found
 
 **Option 1: Revert Single Commit**
+
 ```bash
 git revert 12e07392 --no-edit
 git push origin port/from-lite-v27.4.1
 ```
 
 **Option 2: Hard Reset Branch**
+
 ```bash
 git reset --hard a3a77a26  # Reset to MAIN before port
 git push -f origin port/from-lite-v27.4.1
 ```
 
 **Option 3: Delete Branch**
+
 ```bash
 git branch -D port/from-lite-v27.4.1
 git push origin --delete port/from-lite-v27.4.1
@@ -173,35 +176,35 @@ git push origin --delete port/from-lite-v27.4.1
 
 ## ⚠️ REMAINING RISKS & MITIGATIONS
 
-| Risk | Probability | Mitigation |
-|------|-------------|-----------|
-| Large documentation footprint | Medium | Review before merge; use .gitignore if needed |
-| Deployment docs reference LITE artifacts | Low | Checksums are compatible; docs are for reference |
-| Storage growth in INFINITY repo | Low | 4651 insertions = ~1.5 MB in repo; acceptable |
-| Merge conflicts on MAIN before PR merge | Low | Recommend squash merge to minimize impact |
+| Risk                                     | Probability | Mitigation                                       |
+| ---------------------------------------- | ----------- | ------------------------------------------------ |
+| Large documentation footprint            | Medium      | Review before merge; use .gitignore if needed    |
+| Deployment docs reference LITE artifacts | Low         | Checksums are compatible; docs are for reference |
+| Storage growth in INFINITY repo          | Low         | 4651 insertions = ~1.5 MB in repo; acceptable    |
+| Merge conflicts on MAIN before PR merge  | Low         | Recommend squash merge to minimize impact        |
 
 ---
 
 ## 📊 TRANSFER STATISTICS
 
-| Metric | Value |
-|--------|-------|
-| **Files Transferred** | 17 |
-| **Files Excluded** | 3 (binaries) |
-| **Lines Added** | 4,651 |
-| **Lines Removed** | 0 |
-| **Commit Message Size** | 487 bytes |
+| Metric                  | Value                        |
+| ----------------------- | ---------------------------- |
+| **Files Transferred**   | 17                           |
+| **Files Excluded**      | 3 (binaries)                 |
+| **Lines Added**         | 4,651                        |
+| **Lines Removed**       | 0                            |
+| **Commit Message Size** | 487 bytes                    |
 | **Transfer Patch Size** | 4.0 MB (reduced from 250 MB) |
-| **Transfer Time** | <1 minute |
-| **Conflicts** | 0 |
-| **Tests Affected** | 0 (docs-only) |
+| **Transfer Time**       | <1 minute                    |
+| **Conflicts**           | 0                            |
+| **Tests Affected**      | 0 (docs-only)                |
 
 ---
 
 ## 🎯 NEXT STEPS
 
 1. **Review & Approve**: Inspect PR for correctness
-2. **Test in CI/CD**: Verify no downstream breakage  
+2. **Test in CI/CD**: Verify no downstream breakage
 3. **Merge**: Squash-merge to MAIN (optional) or merge as-is
 4. **Tag**: Create v27.4.1-from-lite tag after merge (optional)
 5. **Monitor**: Check metrics on merged main
