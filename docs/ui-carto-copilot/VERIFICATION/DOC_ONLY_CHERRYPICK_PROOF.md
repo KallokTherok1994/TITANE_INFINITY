@@ -26,6 +26,7 @@ fa72defd (MAIN) docs(ui-carto): production handoff + final seal (doc-only)
 ## git diff --name-only origin/MAIN...HEAD
 
 - docs/ui-carto-copilot/09_MANIFEST.json
+- docs/ui-carto-copilot/VERIFICATION/DOC_ONLY_CHERRYPICK_PROOF.md
 - docs/ui-carto-copilot/FINAL_SEAL/FINAL_SEAL.md
 - docs/ui-carto-copilot/FINAL_SEAL/FINAL_SEAL_PROOF.md
 - docs/ui-carto-copilot/FINAL_SEAL/FINAL_STATE_SNAPSHOT.md
