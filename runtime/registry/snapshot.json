@@ -1,8 +1,8 @@
 {
   "$schema": "./schemas/snapshot.schema.json",
   "version": "1.0.0",
-  "lastUpdate": "2026-01-24T01:50:13.261Z",
-  "eventCount": 5,
+  "lastUpdate": "2026-02-09T15:28:37.420Z",
+  "eventCount": 10,
   "suites": {
     "vitest-core": {
       "id": "vitest-core",
@@ -147,21 +147,25 @@
     },
     "test-100-full": {
       "command": "pnpm test:100:full",
-      "includes": ["vitest-core", "vitest-e2e", "vitest-browser"]
+      "includes": [
+        "vitest-core",
+        "vitest-e2e",
+        "vitest-browser"
+      ]
     }
   },
   "registry": {
     "schemaVersion": 2,
-    "activeCycleId": null,
-    "currentObjective": null,
+    "activeCycleId": "01KFPVBPNG1KB0ZHD8KT6K5D7Y",
+    "currentObjective": "Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.",
     "lastDecision": null,
     "lastTestRun": null,
-    "nextBlocker": null,
-    "priorityActionUnique": null,
+    "nextBlocker": "Registry incohérent: snapshot/dashboard obsolètes",
+    "priorityActionUnique": "Regenerate registry snapshot",
     "lastEvent": {
-      "id": "01KFPV3HTK74D43Z74XMENHS9Y",
-      "timestamp": "2026-01-24T01:50:09.747Z",
-      "type": "CYCLE_END"
+      "id": "01KH1G9K82NENB8KYJD1BA4F0B",
+      "timestamp": "2026-02-09T15:28:34.050Z",
+      "type": "WORKFLOW_CHANGED"
     }
   }
 }

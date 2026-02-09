@@ -59,12 +59,15 @@ jobs:
       - name: '🔧 Setup Node.js'
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: '📦 Setup pnpm'
         uses: pnpm/action-setup@v4
-        with:
-          version: latest
+
+      - name: '🧩 Install system dependencies'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
 
       - name: '📦 Install dependencies'
         run: pnpm install --frozen-lockfile
