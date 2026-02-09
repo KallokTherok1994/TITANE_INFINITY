@@ -17,7 +17,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 
 ## 📊 Surface Stable Actuelle
 
-### 1. COMMANDS (Tauri Invoke) - 57 Commands Total
+### 1. COMMANDS (Tauri Invoke) - 66 Commands Total
 ```json
 // src-tauri/allowlist.whitelist.stable.json (Production Allowlist)
 {
@@ -30,6 +30,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           "get_runtime_config",       // READ: configuration runtime
           "get_system_info",          // READ: infos système
           "get_system_health",        // READ: santé système
+          "ping",                     // READ: ping bridge
           
           // === ONBOARDING ===
           "is_onboarding_complete",   // READ: état onboarding
@@ -42,6 +43,10 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           "memory_ingest_file",       // WRITE: ingestion fichier en mémoire
           "write_snapshot",           // WRITE: sauvegarde snapshot
           "read_snapshot",            // READ: lecture snapshot
+          "check_sqlite_available",   // READ: vérification SQLite
+          "memory_clear",             // WRITE: purge mémoire OS
+          "clear_all_memory",         // WRITE: purge mémoire chat
+          "delete_conversation",      // WRITE: suppression conversation
           
           // === TIMELINE & EVENTS ===
           "add_timeline_event",       // WRITE: ajout événement timeline
@@ -61,6 +66,14 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           "save_chat_interaction",    // WRITE: sauvegarde interaction
           "cp_get_ai_config",         // READ: config IA Copilot
           "cp_set_ai_config",         // WRITE: config IA Copilot
+
+          // === STATE & IDENTITY ===
+          "set_state",                // WRITE: set state bridge
+          "delete_state",             // WRITE: delete state bridge
+          "identity_set_matrix",      // WRITE: update identity matrix
+
+          // === LOGGING ===
+          "log_entries",              // WRITE: ingestion logs structurés
           
           // === SINGULARITY ENGINE (16 commands) ===
           "get_singularity_state",    // READ: état singularité
@@ -103,7 +116,7 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
           "tts_speak_parler",         // SENSITIVE: synthèse vocale
           "tts_stop",                 // WRITE: arrêt synthèse
           "tts_is_speaking",          // READ: statut synthèse
-          "tts_get_status",            // READ: état TTS
+          "tts_get_status",           // READ: état TTS
         ]
       }]
     }
@@ -111,12 +124,12 @@ Toute modification de l'allowlist stable doit être documentée et justifiée.
 }
 ```
 
-**Total Commands** : 57 commands  
+**Total Commands** : 66 commands  
 **Classification** :
-- **READ** (23) : lecture données/état système
-- **WRITE** (12) : modification données utilisateur
-- **SYSTEM** (12) : opérations système/IA contrôlées
-- **SENSITIVE** (5) : accès privilégié (fichiers, audio)
+- **READ** : lecture données/état système
+- **WRITE** : modification données utilisateur
+- **SYSTEM** : opérations système/IA contrôlées
+- **SENSITIVE** : accès privilégié (fichiers, audio)
 
 ### 2. PERMISSIONS (Tauri Capabilities)
 ```json
