@@ -59,11 +59,13 @@ https://github.com/KallokTherok1994/TITANE_INFINITY/pull/new/port/from-lite-v27.
 #### 2. Remplir le formulaire
 
 **Title** (copiez exactement):
+
 ```
 port: Transfer v27.4.1 documentation from TITANE_LITE
 ```
 
 **Description** (copiez-collez):
+
 ```markdown
 ## Portage v27.4.1 from TITANE_LITE
 
@@ -74,6 +76,7 @@ port: Transfer v27.4.1 documentation from TITANE_LITE
 ### Transferred Files
 
 **Assessment Reports**:
+
 - BOOTSTRAP_COMPLETE_FINAL_REPORT.md
 - COGNITIVE_CORE_COMPLETE.md
 - CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md
@@ -87,22 +90,25 @@ port: Transfer v27.4.1 documentation from TITANE_LITE
 - ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md
 
 **Deployment Records**:
+
 - deployment/v27.4.1/DEPLOYMENT_EXECUTED.md
 - deployment/v27.4.1/README_DEPLOYMENT.md
 - deployment/v27.4.1/checksums/SHA256SUMS
 - deployment/v27.4.1/checksums/SHA256SUMS.local
 
 **Audit Trail**:
+
 - PORT_FROM_LITE.md (complete methodology)
 
 ### Excluded (Intentionally)
 
 Binary artifacts (too large for GitHub):
+
 - AppImage (82 MB)
 - DEB package (9.7 MB)
 - RPM package (9.7 MB)
 
-*Available in TITANE_LITE deployment/ for reference.*
+_Available in TITANE_LITE deployment/ for reference._
 
 ### Transfer Method
 
@@ -124,6 +130,7 @@ Binary artifacts (too large for GitHub):
 ### Audit Trail
 
 See [PORT_FROM_LITE.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/port/from-lite-v27.4.1/PORT_FROM_LITE.md) for:
+
 - Complete methodology
 - Conflict resolution
 - Risk assessment
@@ -154,10 +161,12 @@ See [PORT_FROM_LITE.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob
 #### 3. Configurer les options
 
 **Labels**: Cliquez sur "Labels" et ajoutez:
+
 - `documentation` (si disponible)
 - `port` (si disponible - sinon créez-le)
 
 **Assignees**: Cliquez sur "Assignees" et sélectionnez:
+
 - `KallokTherok1994`
 
 **Base branch**: Vérifier que c'est `MAIN`
@@ -196,16 +205,16 @@ gh pr create \
 
 ### Métrique Clé
 
-| Élément | Valeur |
-|---------|--------|
-| Méthode | Méthode C (Selective Transfer) |
-| Fichiers transférés | 18 |
-| Lignes ajoutées | 4,894 |
-| Conflits | 0 |
-| Durée totale | ~5 minutes |
-| Patch size | 4 MB (vs 250 MB brut) |
-| Tests | ✅ Smoke tests passés |
-| Risque | 🟢 LOW (docs-only) |
+| Élément             | Valeur                         |
+| ------------------- | ------------------------------ |
+| Méthode             | Méthode C (Selective Transfer) |
+| Fichiers transférés | 18                             |
+| Lignes ajoutées     | 4,894                          |
+| Conflits            | 0                              |
+| Durée totale        | ~5 minutes                     |
+| Patch size          | 4 MB (vs 250 MB brut)          |
+| Tests               | ✅ Smoke tests passés          |
+| Risque              | 🟢 LOW (docs-only)             |
 
 ### Branches & Commits
 
@@ -301,6 +310,7 @@ Si la PR doit être fermée ou des problèmes sont trouvés:
 ### Avant Merge
 
 Simplement fermer la PR sur GitHub:
+
 - La branche `port/from-lite-v27.4.1` reste
 - MAIN n'est pas affecté
 - Zéro impact

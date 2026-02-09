@@ -24,9 +24,7 @@
     "date_utc": "2026-02-08",
     "inputs_present": true,
     "gateF_status": "BLOCKED_BASELINE_MISSING",
-    "scans_paths": [
-      "docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/SCANS/"
-    ],
+    "scans_paths": ["docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/SCANS/"],
     "updated_files": [
       "docs/ui-carto-copilot/README.md",
       "docs/ui-carto-copilot/09_MANIFEST.json",
@@ -48,7 +46,7 @@
       "No source code changes"
     ]
   },
-  
+
   "freeze_status": {
     "frozen": true,
     "freeze_date": "2026-02-07",
@@ -64,7 +62,7 @@
       "Sprint N+6 or 3 months"
     ]
   },
-  
+
   "issues_summary": {
     "open_P0_count": 0,
     "open_P1_count": 1,
@@ -73,9 +71,11 @@
     "closed_count": 2,
     "total_count": 10,
     "closed_issues": ["UI-003 (Dual Router)", "UI-010 (Silent Catch - 1 critical fixed)"],
-    "rearbitraged_issues": ["P1-2 (Silent IPC Failures): FIX_NOW → MONITOR (6 non-critical exceptions)"]
+    "rearbitraged_issues": [
+      "P1-2 (Silent IPC Failures): FIX_NOW → MONITOR (6 non-critical exceptions)"
+    ]
   },
-  
+
   "accepted_exceptions": [
     {
       "id": "NC-UI-SILENCE-EXEMPT-001",
@@ -96,7 +96,7 @@
       "date_accepted": "2026-02-08"
     }
   ],
-  
+
   "router": {
     "canonical_file": "src/AppRoutes.tsx",
     "router_type": "Lazy imports via React.Suspense",
@@ -109,7 +109,7 @@
       "note": "Moved from src/router.tsx to src/_deprecated/router.tsx with deprecation header"
     }
   },
-  
+
   "counts": {
     "routes_total": 87,
     "routes_active": 9,
@@ -125,7 +125,7 @@
     "persistent_widgets": 6,
     "tabs_total": 27
   },
-  
+
   "structure": {
     "topnav_sections": ["TITANE", "TIME", "STATS", "ADMIN", "DEV", "PLUS", "MORE"],
     "primary_pages": [
@@ -155,7 +155,7 @@
       "time": 1
     }
   },
-  
+
   "contracts": {
     "ipc": {
       "total_commands": 180,
@@ -171,7 +171,7 @@
       "proof": "vite.config.ts:109-122"
     }
   },
-  
+
   "observability": {
     "boot_markers": true,
     "boot_diagnostic_object": "window.__TITANE_BOOT__",
@@ -180,23 +180,20 @@
     "prod_boot_risks": ["CSP", "allowlist", "module_scripts", "lazy_chunks"],
     "proof": "docs/ui-carto-copilot/VERIFICATION/TRUTH_PROD_BOOT.md"
   },
-  
+
   "issues": {
     "p0_count": 0,
     "p1_count": 2,
     "p2_count": 8,
     "p3_count": 2,
     "total": 12,
-    "top_p1": [
-      "UI-003: router.tsx dead code",
-      "UI-007: No auth guards"
-    ],
+    "top_p1": ["UI-003: router.tsx dead code", "UI-007: No auth guards"],
     "top_p2": [
       "UI-IPC-001: Direct invoke() violations (5 instances)",
       "UI-SILENCE-001: Empty catch blocks (10 instances)"
     ]
   },
-  
+
   "known_risks": [
     {
       "id": "PROD-001",
@@ -220,7 +217,7 @@
       "mitigation": "Verify Ollama config"
     }
   ],
-  
+
   "architecture": {
     "model": "4-Ring",
     "rings": {
@@ -236,7 +233,7 @@
       "ring4": "100%"
     }
   },
-  
+
   "technology": {
     "frontend": {
       "react": "18.3.1",
@@ -257,7 +254,7 @@
       "rust": "1.83"
     }
   },
-  
+
   "gates": {
     "A_routes": "PASS",
     "B_ipc": "PARTIAL",
@@ -267,7 +264,7 @@
     "F_kevin_v5_delta": "BLOCKED_BASELINE_MISSING",
     "score": "4.5/6"
   },
-  
+
   "delta_runner": {
     "ready": true,
     "protocol_version": "v1.0",
@@ -330,7 +327,7 @@
     ],
     "based_on": "PRODUCTION_HANDOFF"
   },
-  
+
   "future_proof_pack": {
     "ready": true,
     "version": "v1",
@@ -399,10 +396,16 @@
       "forbidden_terms_absent": true
     }
   },
-  
+
   "documentation": {
     "phase_a_preflight": ["00-context.md", "01-repo-fingerprint.md"],
-    "phase_b_navigation": ["10-topbar-map.md", "11-sections-map.md", "12-routes-map.md", "13-layout-shell.md", "14-persistent-widgets.md"],
+    "phase_b_navigation": [
+      "10-topbar-map.md",
+      "11-sections-map.md",
+      "12-routes-map.md",
+      "13-layout-shell.md",
+      "14-persistent-widgets.md"
+    ],
     "phase_c_components": ["20-inventory-by-feature.md", "21-inventory-by-filetree.md"],
     "phase_d_contracts": ["30-ipc-invocations-index.md"],
     "phase_e_observability": ["40-boot-pipeline.md", "41-error-boundaries.md"],
@@ -458,7 +461,7 @@
       "09_MANIFEST.json"
     ]
   },
-  
+
   "status": {
     "cartography": "V7.0",
     "kevin_v5_delta": "PENDING",
@@ -466,7 +469,7 @@
     "seal": "NOT_ALLOWED (delta incomplete)",
     "production_ready": "CONDITIONAL (see issues P1/P2)"
   },
-  
+
   "clarity_lock": {
     "version": "V6.1",
     "date": "2026-02-07",
