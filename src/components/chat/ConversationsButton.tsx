@@ -30,6 +30,7 @@ export const ConversationsButton: React.FC<ConversationsButtonProps> = ({
       onClick={onClick}
       aria-label="Ouvrir les conversations"
       title={`${conversationCount} conversation${conversationCount > 1 ? 's' : ''}`}
+      data-testid="conversations-button"
     >
       <svg
         width="20"

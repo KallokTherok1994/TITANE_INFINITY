@@ -50,6 +50,7 @@ export const ChatProviderSelector: React.FC<ChatProviderSelectorProps> = React.m
           value={selectedProvider}
           onChange={e => onChange(e.target.value)}
           className="rounded-lg border border-gray-600 bg-gray-700 px-3 py-1.5 text-sm text-white outline-none transition-colors focus:border-blue-500"
+          data-testid="provider-select"
         >
           {options}
         </select>

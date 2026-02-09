@@ -78,6 +78,113 @@ interface OmegaGenerateResponse {
   provider?: string;
 }
 
+const E2E_CHAT_DEFAULT_MARKER = '[MOCK_OK]';
+const e2eChatState: { counter: number; conversationId: string | null } = {
+  counter: 0,
+  conversationId: null,
+};
+
+type E2EChatMockConfig = {
+  enabled: boolean;
+  provider: string;
+  marker: string;
+};
+
+function resolveE2EChatMockConfig(): E2EChatMockConfig {
+  const env = import.meta.env ?? {};
+  const envEnabled =
+    env.VITE_TITANE_E2E === '1' ||
+    env.VITE_E2E_CHAT_MOCK === '1' ||
+    env.VITE_TITANE_E2E_CHAT_MOCK === '1';
+
+  const globalRef =
+    typeof globalThis !== 'undefined'
+      ? (globalThis as Record<string, unknown>)
+      : {};
+  const globalEnabled =
+    globalRef.__TITANE_E2E__ === true ||
+    globalRef.__TITANE_E2E__ === '1' ||
+    globalRef.__TITANE_E2E_CHAT_MOCK__ === true ||
+    globalRef.__TITANE_E2E_CHAT_MOCK__ === '1';
+
+  const providerFromGlobal =
+    typeof globalRef.__TITANE_E2E_CHAT_PROVIDER__ === 'string'
+      ? (globalRef.__TITANE_E2E_CHAT_PROVIDER__ as string)
+      : '';
+  const providerFromEnv =
+    typeof env.VITE_TITANE_E2E_CHAT_PROVIDER === 'string'
+      ? env.VITE_TITANE_E2E_CHAT_PROVIDER
+      : '';
+
+  const markerFromGlobal =
+    typeof globalRef.__TITANE_E2E_CHAT_MARKER__ === 'string'
+      ? (globalRef.__TITANE_E2E_CHAT_MARKER__ as string)
+      : '';
+  const markerFromEnv =
+    typeof env.VITE_TITANE_E2E_CHAT_MARKER === 'string'
+      ? env.VITE_TITANE_E2E_CHAT_MARKER
+      : '';
+
+  return {
+    enabled: envEnabled || globalEnabled,
+    provider: providerFromGlobal || providerFromEnv || 'mock-e2e',
+    marker: markerFromGlobal || markerFromEnv || E2E_CHAT_DEFAULT_MARKER,
+  };
+}
+
+function resolveE2EConversationId(provided?: string): string {
+  if (provided) return provided;
+
+  const globalRef =
+    typeof globalThis !== 'undefined'
+      ? (globalThis as Record<string, unknown>)
+      : {};
+  const forceNew =
+    globalRef.__TITANE_E2E_NEW_CONVERSATION__ === true ||
+    globalRef.__TITANE_E2E_NEW_CONVERSATION__ === '1';
+
+  if (!e2eChatState.conversationId || forceNew) {
+    e2eChatState.conversationId = `e2e-conv-${Date.now()}`;
+    if (forceNew) {
+      globalRef.__TITANE_E2E_NEW_CONVERSATION__ = false;
+    }
+  }
+
+  return e2eChatState.conversationId;
+}
+
+function buildE2EChatResponse(
+  message: string,
+  conversationId: string,
+  config: E2EChatMockConfig
+): ConversationResponse {
+  e2eChatState.counter += 1;
+  const messageId = `e2e-msg-${e2eChatState.counter}`;
+  const assistantMessage = `${config.marker} E2E réponse #${e2eChatState.counter} — ${message}`;
+
+  return {
+    assistant_message: assistantMessage,
+    conversation_id: conversationId,
+    message_id: messageId,
+    detected_intention: 'Question',
+    detected_emotion: {
+      valence: 0,
+      intensity: 0,
+      energy: 0,
+    },
+    cognitive_tags: ['e2e', 'mock'],
+    cognitive_summary: 'E2E mock response',
+    metadata: {
+      timestamp: Date.now(),
+      provider_used: config.provider,
+      latency_ms: 3,
+      tokens_used: 0,
+      memory_effect: 'New',
+      links_to_contexts: [],
+    },
+  };
+}
+
 function isMemoryEffect(val: unknown): val is MemoryEffect {
   return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
 }
@@ -140,6 +247,18 @@ export async function processMessage(
   }
 ): Promise<ConversationResponse> {
   let conversationId = options?.conversationId;
+
+  const e2eConfig = resolveE2EChatMockConfig();
+  if (e2eConfig.enabled) {
+    const resolvedConversationId = resolveE2EConversationId(conversationId);
+    const response = buildE2EChatResponse(userMessage, resolvedConversationId, e2eConfig);
+    console.info('[E2E_CHAT] ✅ Mock response generated', {
+      conversationId: resolvedConversationId,
+      messageId: response.message_id,
+      provider: response.metadata.provider_used,
+    });
+    return response;
+  }
 
   if (!conversationId) {
     try {
