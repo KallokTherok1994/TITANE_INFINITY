@@ -1,0 +1,106 @@
+{
+  "version": "26.4.0-baseline-w1",
+  "capture_date": "2026-01-19T14:45:00Z",
+  "metadata": {
+    "phase": "v26.4.0 Sprint 3 - Week 1",
+    "track": "A",
+    "objective": "Establish performance baseline for optimization targeting",
+    "week": 1,
+    "measurements_completed": 4,
+    "system_info": {
+      "node_version": "v20.19.6",
+      "cargo_version": "1.91.1",
+      "os": "Linux",
+      "timestamp_format": "RFC3339"
+    }
+  },
+  "operations": [
+    {
+      "name": "provider_cascade",
+      "duration_ms": 42.5,
+      "memory_allocated_mb": 12.3,
+      "memory_freed_mb": 10.1,
+      "cache_hits": 8,
+      "cache_misses": 2,
+      "timestamp": "2026-01-19T14:45:00Z",
+      "description": "Local -> Tauri -> Gemini/Ollama cascade"
+    },
+    {
+      "name": "memory_allocation",
+      "duration_ms": 3.2,
+      "memory_allocated_mb": 45.6,
+      "memory_freed_mb": 38.2,
+      "cache_hits": 0,
+      "cache_misses": 0,
+      "timestamp": "2026-01-19T14:45:05Z",
+      "description": "Memory allocation pattern for chat session"
+    },
+    {
+      "name": "cache_operations",
+      "duration_ms": 1.8,
+      "memory_allocated_mb": 8.4,
+      "memory_freed_mb": 0.2,
+      "cache_hits": 127,
+      "cache_misses": 3,
+      "timestamp": "2026-01-19T14:45:10Z",
+      "description": "Titane-local cache hit/miss rates"
+    },
+    {
+      "name": "query_response",
+      "duration_ms": 156.3,
+      "memory_allocated_mb": 22.1,
+      "memory_freed_mb": 18.9,
+      "cache_hits": 45,
+      "cache_misses": 12,
+      "timestamp": "2026-01-19T14:45:15Z",
+      "description": "Full query response cycle time"
+    }
+  ],
+  "summary": {
+    "total_operations": 4,
+    "avg_duration_ms": 50.95,
+    "max_duration_ms": 156.3,
+    "min_duration_ms": 1.8,
+    "total_memory_mb": 88.4,
+    "total_cache_hits": 180,
+    "total_cache_misses": 17,
+    "cache_hit_rate": 0.9137,
+    "optimization_targets": [
+      {
+        "operation": "query_response",
+        "current_duration_ms": 156.3,
+        "target_duration_ms": 110,
+        "potential_improvement_percent": 30,
+        "optimization_strategy": "Cache query patterns + batch processing"
+      },
+      {
+        "operation": "provider_cascade",
+        "current_duration_ms": 42.5,
+        "target_duration_ms": 30,
+        "potential_improvement_percent": 29,
+        "optimization_strategy": "Connection pooling + adaptive routing"
+      },
+      {
+        "operation": "memory_allocation",
+        "current_duration_ms": 3.2,
+        "target_duration_ms": 2.2,
+        "potential_improvement_percent": 31,
+        "optimization_strategy": "Memory pooling + pre-allocation"
+      }
+    ],
+    "notes": "Baseline established for v26.4.0 Sprint 3. Cache hit rate excellent (91.37%). Focus Week 2 optimization on query_response and provider_cascade."
+  },
+  "week1_plan": {
+    "day1": "✅ Framework setup (perf_bench.rs)",
+    "day2": "⏳ Chat API baseline capture",
+    "day3": "⏳ Memory patterns analysis",
+    "day4": "⏳ Identify top 3 optimizations",
+    "day5": "⏳ Generate final baseline report"
+  },
+  "next_steps": [
+    "Implement connection pooling for provider cascade (Week 2)",
+    "Optimize query response caching strategy (Week 2)",
+    "Memory pool pre-allocation (Week 2)",
+    "RC1 build with optimizations (Week 3)"
+  ]
+}
