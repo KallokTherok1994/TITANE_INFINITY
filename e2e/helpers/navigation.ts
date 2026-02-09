@@ -18,6 +18,8 @@ export async function openTitane(page: Page): Promise<void> {
 export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
   await page.goto('/admin');
 
+  await closeBootBeaconIfPresent(page);
+
   const adminHeading = page.getByRole('heading', { name: /^ADMIN$/i });
   await expect(adminHeading).toBeVisible({ timeout: 30000 });
 
@@ -29,17 +31,11 @@ export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
   const tabButton = tabsNav.getByRole('button', { name: tabName }).first();
   await expect(tabButton).toBeVisible({ timeout: 15000 });
   await tabButton.scrollIntoViewIfNeeded();
-  await tabButton.evaluate(el => (el as HTMLButtonElement).click());
+  await tabButton.evaluate(el => {
+    el.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
+  });
 
-  const activeTab = tabsNav.locator('button.admin-tab--active').first();
-  await expect(activeTab).toBeVisible({ timeout: 15000 });
-
-  const activeText = (await activeTab.textContent()) ?? '';
-  if (!tabName.test(activeText)) {
-    await tabButton.evaluate(el => (el as HTMLButtonElement).click());
-  }
-
-  await expect(activeTab).toContainText(tabName, { timeout: 15000 });
+  await expect(tabButton).toHaveClass(/admin-tab--active/, { timeout: 15000 });
 }
 
 export async function closeBootBeaconIfPresent(page: Page): Promise<void> {

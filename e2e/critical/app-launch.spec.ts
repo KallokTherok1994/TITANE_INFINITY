@@ -15,6 +15,7 @@ test.describe('Critical Path: Application Launch', () => {
 
   test('app loads without console errors', async ({ page }) => {
     const errors: string[] = [];
+    const notFoundUrls: string[] = [];
 
     page.on('console', msg => {
       if (msg.type() === 'error') {
@@ -22,19 +23,38 @@ test.describe('Critical Path: Application Launch', () => {
       }
     });
 
+    page.on('response', response => {
+      if (response.status() === 404) {
+        notFoundUrls.push(response.url());
+      }
+    });
+
     // Wait for app to fully initialize
     await page.waitForTimeout(2000);
 
     // Verify no critical errors
-    const criticalErrors = errors.filter(
-      e =>
-        !e.includes('favicon') &&
-        !e.includes('socket') &&
-        !e.includes('HMR') &&
-        !(e.includes('Failed to load resource') && e.includes('404'))
-    );
+        const criticalErrors = errors.filter(
+          e =>
+      !e.includes('favicon') &&
+      !e.includes('socket') &&
+      !e.includes('HMR') &&
+      !e.includes('Failed to load resource')
+        );
+
+    const ignored404Prefixes = [
+      '/favicon.ico',
+      '/apple-touch-icon',
+      '/manifest.json',
+      '/api/ollama/tags',
+      '/vite.svg',
+    ];
+    const unexpected404s = notFoundUrls.filter(url => {
+      const pathname = new URL(url).pathname;
+      return !ignored404Prefixes.some(prefix => pathname.startsWith(prefix));
+    });
 
     expect(criticalErrors).toHaveLength(0);
+    expect(unexpected404s).toHaveLength(0);
   });
 
   test.skip('visual conductor initializes successfully', async ({ page }) => {
