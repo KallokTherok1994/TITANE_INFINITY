@@ -5,22 +5,16 @@
  * User journey: Navigate to TitanePage Memory section, interact with Memory Tree Viewer
  */
 
-import { test, expect, Page } from '@playwright/test';
-
-async function openTitane(page: Page) {
-  await page.goto('/');
-  const mainNav = page.getByRole('navigation', { name: 'Main navigation' });
-  await expect(mainNav).toBeVisible({ timeout: 30000 });
-  await mainNav.getByRole('button', { name: 'TITANE' }).click();
-  await expect(page).toHaveURL(/\/titane(\?|$)/, { timeout: 15000 });
-}
+import { test, expect } from '@playwright/test';
+import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
 async function openTitaneMemorySection(page: Page) {
   await openTitane(page);
+  await closeBootBeaconIfPresent(page);
 
   const memoryTab = page.locator('#titane-tab-memory');
   await expect(memoryTab).toBeVisible({ timeout: 10000 });
-  await memoryTab.click();
+  await memoryTab.evaluate(el => (el as HTMLButtonElement).click());
 
   await expect(page.locator('.titane-section-memory')).toBeVisible({ timeout: 15000 });
 }

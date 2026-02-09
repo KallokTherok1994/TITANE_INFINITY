@@ -21,15 +21,24 @@ export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
   const adminHeading = page.getByRole('heading', { name: /^ADMIN$/i });
   await expect(adminHeading).toBeVisible({ timeout: 30000 });
 
+  await closeBootBeaconIfPresent(page);
+
   const tabsNav = page.locator('nav.admin-tabs');
   await expect(tabsNav).toBeVisible({ timeout: 15000 });
 
   const tabButton = tabsNav.getByRole('button', { name: tabName }).first();
   await expect(tabButton).toBeVisible({ timeout: 15000 });
-  await tabButton.click({ force: true });
+  await tabButton.scrollIntoViewIfNeeded();
+  await tabButton.evaluate(el => (el as HTMLButtonElement).click());
 
   const activeTab = tabsNav.locator('button.admin-tab--active').first();
   await expect(activeTab).toBeVisible({ timeout: 15000 });
+
+  const activeText = (await activeTab.textContent()) ?? '';
+  if (!tabName.test(activeText)) {
+    await tabButton.evaluate(el => (el as HTMLButtonElement).click());
+  }
+
   await expect(activeTab).toContainText(tabName, { timeout: 15000 });
 }
 
