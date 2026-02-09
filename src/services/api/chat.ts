@@ -17,20 +17,28 @@ const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
 const E2E_CHAT_CONV_ID = '__TITANE_E2E_CHAT_CONVERSATION_ID__';
 
-const isE2EChatMockEnabled = (): boolean => {
+const getWindowRecord = (): Record<string, unknown> | null => {
   if (typeof window === 'undefined') {
+    return null;
+  }
+
+  return window as unknown as Record<string, unknown>;
+};
+
+const isE2EChatMockEnabled = (): boolean => {
+  const win = getWindowRecord();
+  if (!win) {
     return false;
   }
 
-  return (window as Record<string, unknown>)[E2E_CHAT_MOCK_FLAG] === true;
+  return win[E2E_CHAT_MOCK_FLAG] === true;
 };
 
 const createE2EConversationId = (): string => {
-  if (typeof window === 'undefined') {
+  const win = getWindowRecord();
+  if (!win) {
     return `e2e-conv-${Date.now()}`;
   }
-
-  const win = window as Record<string, unknown>;
   const nextSeq =
     typeof win[E2E_CHAT_CONV_SEQ] === 'number'
       ? (win[E2E_CHAT_CONV_SEQ] as number) + 1
@@ -44,11 +52,12 @@ const createE2EConversationId = (): string => {
 };
 
 const rememberE2EConversationId = (conversationId: string): void => {
-  if (typeof window === 'undefined') {
+  const win = getWindowRecord();
+  if (!win) {
     return;
   }
 
-  (window as Record<string, unknown>)[E2E_CHAT_CONV_ID] = conversationId;
+  win[E2E_CHAT_CONV_ID] = conversationId;
 };
 
 const getChatEngine = async () => chatEngine;
