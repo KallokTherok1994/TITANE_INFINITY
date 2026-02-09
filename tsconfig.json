@@ -57,6 +57,7 @@
     "**/*.spec.ts",
     "**/*.spec.tsx",
     "src/hooks/archived/**",
+    "src/_deprecated/**",
     "src/examples/**",
     "src/tests/**",
     "src/stories/**",
