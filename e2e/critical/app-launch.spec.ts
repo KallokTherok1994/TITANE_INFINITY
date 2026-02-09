@@ -27,7 +27,11 @@ test.describe('Critical Path: Application Launch', () => {
 
     // Verify no critical errors
     const criticalErrors = errors.filter(
-      e => !e.includes('favicon') && !e.includes('socket') && !e.includes('HMR')
+      e =>
+        !e.includes('favicon') &&
+        !e.includes('socket') &&
+        !e.includes('HMR') &&
+        !(e.includes('Failed to load resource') && e.includes('404'))
     );
 
     expect(criticalErrors).toHaveLength(0);

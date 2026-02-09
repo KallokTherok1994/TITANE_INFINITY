@@ -8,141 +8,70 @@
  * Unit tests (C1-C6) provide comprehensive coverage.
  */
 
-import { test, expect } from '@playwright/test';
-import { openTitane } from '../helpers/navigation';
+import { test, expect, type Page } from '@playwright/test';
+import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
+
+const enableE2EChatMock = async (page: Page) => {
+  await page.addInitScript(() => {
+    (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
+    (window as { __TITANE_E2E_CHAT_CONV_SEQ__?: number }).__TITANE_E2E_CHAT_CONV_SEQ__ =
+      0;
+  });
+};
+
+const getChatInput = (page: Page) =>
+  page
+    .getByPlaceholder(/Tapez votre message/i)
+    .or(page.locator('textarea.conversation-input'))
+    .first();
+
+const getSendButton = (page: Page) =>
+  page.getByRole('button', { name: /Envoyer/i }).first();
 
 test.describe('Critical Path: Chat Interaction', () => {
   test.beforeEach(async ({ page }) => {
+    await enableE2EChatMock(page);
     await openTitane(page);
+    await closeBootBeaconIfPresent(page);
   });
 
-  test.skip('chat interface is accessible', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
+  test('NEW_CONVERSATION: message et réponse mock', async ({ page }) => {
+    const chatInput = getChatInput(page);
     await expect(chatInput).toBeVisible({ timeout: 15000 });
+
+    await chatInput.fill('Bonjour TITANE');
+    await getSendButton(page).click({ force: true });
+
+    await expect(page.getByText('Bonjour TITANE', { exact: true })).toBeVisible({
+      timeout: 15000,
+    });
+    await expect(page.getByText('[MOCK_OK] Bonjour TITANE')).toBeVisible({
+      timeout: 15000,
+    });
   });
 
-  test.skip('can type message in chat input', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
+  test('SEND_MESSAGE_ALWAYS_RESPOND: deux messages', async ({ page }) => {
+    const chatInput = getChatInput(page);
 
-    await chatInput.click();
-    await chatInput.fill('Hello TITANE');
+    await chatInput.fill('Alpha');
+    await getSendButton(page).click({ force: true });
+    await expect(page.getByText('[MOCK_OK] Alpha')).toBeVisible({ timeout: 15000 });
 
-    const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();
-    await expect(sendButton).toBeVisible({ timeout: 15000 });
-    await expect(sendButton).toBeEnabled({ timeout: 15000 });
+    await chatInput.fill('Beta');
+    await getSendButton(page).click({ force: true });
+    await expect(page.getByText('[MOCK_OK] Beta')).toBeVisible({ timeout: 15000 });
   });
 
-  test.skip('send button is present and enabled', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-    await chatInput.fill('ping');
-
-    const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();
-    await expect(sendButton).toBeVisible({ timeout: 15000 });
-    await expect(sendButton).toBeEnabled({ timeout: 15000 });
-  });
-
-  test.skip('message appears in chat history after sending', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-    const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();
-
-    await chatInput.fill('Test message');
-    await sendButton.click({ force: true });
-
-    await expect(page.getByText('Test message')).toBeVisible({ timeout: 15000 });
-  });
-
-  test.skip('AI response mechanism is functional', async ({ page }) => {
-    // This test verifies the response pipeline exists
-    // (actual AI response depends on backend availability)
-
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-    await chatInput.fill('ping');
-
-    // Look for send action
-    await page.keyboard.press('Enter');
-
-    // Wait for potential response (pipeline may be offline en CI/dev)
-    await page.waitForTimeout(1500);
-
-    // At minimum, the sent message should exist in the UI
-    await expect(page.getByText('ping')).toBeVisible({ timeout: 15000 });
-  });
-
-  test.skip('chat pipeline handles rapid messages', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-
-    // Send 3 rapid messages
-    for (let i = 0; i < 3; i++) {
-      await chatInput.fill(`Rapid test ${i}`);
-      await page.keyboard.press('Enter');
-      await page.waitForTimeout(100);
-    }
-
-    // App should not crash
-    await expect(page.locator('body')).toBeVisible();
-  });
-
-  test.skip('chat UI updates without full page reload', async ({ page }) => {
-    // Get initial load time
+  test('SWITCH_CONVERSATION_PERSISTS: UI reste en SPA', async ({ page }) => {
     const initialUrl = page.url();
+    const chatInput = getChatInput(page);
 
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-    await chatInput.fill('Navigation test');
-    await page.keyboard.press('Enter');
-    await page.waitForTimeout(500);
+    await chatInput.fill('Statut URL');
+    await getSendButton(page).click({ force: true });
+    await expect(page.getByText('[MOCK_OK] Statut URL')).toBeVisible({
+      timeout: 15000,
+    });
 
-    // URL should remain same (SPA behavior)
     expect(page.url()).toBe(initialUrl);
-  });
-
-  test.skip('empty message handling', async ({ page }) => {
-    const chatInput = page
-      .getByPlaceholder(/Tapez votre message/i)
-      .or(page.locator('textarea.conversation-input'))
-      .first();
-    const sendButton = page.getByRole('button', { name: /Envoyer/i }).first();
-
-    // Try to send empty message
-    await chatInput.fill('');
-    await expect(sendButton).toBeVisible({ timeout: 15000 });
-
-    // Button should be disabled or action prevented
-    const isDisabled = await sendButton.isDisabled().catch(() => false);
-    if (!isDisabled) {
-      await sendButton.click({ force: true });
-      await expect(page.locator('body')).toBeVisible();
-    }
-  });
-
-  test.skip('chat accessibility: keyboard navigation', async ({ page }) => {
-    // Tab should focus chat input
-    await page.keyboard.press('Tab');
-    await page.waitForTimeout(200);
-
-    const focusedElement = await page.evaluate(() => document.activeElement?.tagName);
-
-    // Should focus an input element eventually
-    expect(['TEXTAREA', 'INPUT', 'BUTTON', 'A', 'DIV']).toContain(focusedElement);
   });
 });

@@ -78,7 +78,7 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Statut | Count | Détail |
 |--------|-------|--------|
-| **STABLE** | 57 | Commands production-ready avec rétrocompatibilité |
+| **STABLE** | 66 | Commands production-ready avec rétrocompatibilité |
 | **QUALIFIED** | 2 | Commands avec API figée, tests complets, prêts pour STABLE |
 | **EXPERIMENTAL** | 0 | Commands en développement, API instable |
 | **DEPRECATED** | 0 | Commands marqués obsolètes, migration path définie |
@@ -88,9 +88,9 @@ EXPERIMENTAL ──→ QUALIFIED ──→ STABLE ──→ DEPRECATED ──→
 
 | Version | STABLE | QUALIFIED | EXPERIMENTAL | DEPRECATED | Notes |
 |---------|--------|-----------|-------------|------------|-------|
-| v26.3.0 | 57 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
-| v26.3.0+ | 57 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
-| v26.3.0++ | 57 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
+| v26.3.0 | 66 | 0 | 0 | 0 | État initial PHASE 6 (migration depuis PHASE 5) |
+| v26.3.0+ | 66 | 0 | 2 | 0 | Première capability PHASE 6: memory-core-encryption |
+| v26.3.0++ | 66 | 2 | 0 | 0 | memory-core-encryption EXPERIMENTAL → QUALIFIED |
 
 **Migration PHASE 5 → PHASE 6**: Toutes les capabilities PHASE 5 "stable" sont automatiquement promues **STABLE** PHASE 6 avec grandfathering (pas de re-qualification requise).
 
@@ -119,7 +119,7 @@ command: <nom>
 
 ## Couche STABLE
 
-**Total commands stable**: 57 (au 2026-01-15) - **Grandfathered PHASE 5 → PHASE 6**
+**Total commands stable**: 66 (au 2026-01-15) - **Grandfathered PHASE 5 → PHASE 6**
 
 *Note: Toutes les commands ci-dessous ont été automatiquement promues **STABLE** lors de la migration PHASE 5 → PHASE 6 avec grandfathering. Aucune re-qualification requise.*
 
@@ -130,6 +130,7 @@ command: <nom>
 | `get_runtime_config` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.0.0 | v26.3.0 | Config runtime initiale (P5→P6) |
 | `get_system_info` | **STABLE** | system | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.0.0 | v26.3.0 | Informations système (P5→P6) |
 | `get_system_health` | **STABLE** | system | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Santé système PHASE_5 (P5→P6) |
+| `ping` | **STABLE** | system | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Ping état bridge (P5→P6) |
 
 ### Onboarding
 
@@ -151,8 +152,26 @@ command: <nom>
 |---------|--------|-------------|---------------|---------|-------|-----------|-------|
 | `get_memory_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.0.0 | v26.3.0 | État memory core ancien (P5→P6) |
 | `memory_get_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.0.0 | v26.3.0 | Alias get_memory_state (P5→P6) |
+| `memory_clear` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.3.0 | v26.3.0 | Reset mémoire OS (P5→P6) |
+| `clear_all_memory` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.3.0 | v26.3.0 | Purge mémoire chat (P5→P6) |
+| `delete_conversation` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.3.0 | v26.3.0 | Suppression conversation (P5→P6) |
+| `check_sqlite_available` | **STABLE** | filesystem | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.3.0 | v26.3.0 | Vérifie disponibilité SQLite (P5→P6) |
 | `write_snapshot` | **STABLE** | filesystem, memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.0.0 | v26.3.0 | Sauvegarde snapshot (P5→P6) |
 | `read_snapshot` | **STABLE** | filesystem, memory | tests/contract/tauri.contract.test.ts | docs/MEMORY_CORE.md | v26.0.0 | v26.3.0 | Lecture snapshot (P5→P6) |
+
+### Identity & State
+
+| Command | Status | Permissions | Contract Test | Doc Ref | Added | Stable At | Notes |
+|---------|--------|-------------|---------------|---------|-------|-----------|-------|
+| `set_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge set (P5→P6) |
+| `delete_state` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | State bridge delete (P5→P6) |
+| `identity_set_matrix` | **STABLE** | memory | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Identity matrix update (P5→P6) |
+
+### Logging
+
+| Command | Status | Permissions | Contract Test | Doc Ref | Added | Stable At | Notes |
+|---------|--------|-------------|---------------|---------|-------|-----------|-------|
+| `log_entries` | **STABLE** | filesystem | tests/contract/tauri.contract.test.ts | docs/API_SURFACE.md | v26.3.0 | v26.3.0 | Ingestion logs structurés (P5→P6) |
 
 ### Timeline & Projects
 
