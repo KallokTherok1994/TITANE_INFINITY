@@ -13,6 +13,44 @@ import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { getSystemPrompt } from '@/config/chatModes.config';
 
+const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
+const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
+const E2E_CHAT_CONV_ID = '__TITANE_E2E_CHAT_CONVERSATION_ID__';
+
+const isE2EChatMockEnabled = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return (window as Record<string, unknown>)[E2E_CHAT_MOCK_FLAG] === true;
+};
+
+const createE2EConversationId = (): string => {
+  if (typeof window === 'undefined') {
+    return `e2e-conv-${Date.now()}`;
+  }
+
+  const win = window as Record<string, unknown>;
+  const nextSeq =
+    typeof win[E2E_CHAT_CONV_SEQ] === 'number'
+      ? (win[E2E_CHAT_CONV_SEQ] as number) + 1
+      : 1;
+
+  win[E2E_CHAT_CONV_SEQ] = nextSeq;
+
+  const conversationId = `e2e-conv-${nextSeq}`;
+  win[E2E_CHAT_CONV_ID] = conversationId;
+  return conversationId;
+};
+
+const rememberE2EConversationId = (conversationId: string): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  (window as Record<string, unknown>)[E2E_CHAT_CONV_ID] = conversationId;
+};
+
 const getChatEngine = async () => chatEngine;
 
 /**
@@ -93,6 +131,31 @@ export interface ChatResponse {
   metadata?: ChatResponseMetadata;
   omegaMetadata?: Record<string, unknown>;
 }
+
+const buildE2EChatMockResponse = (
+  message: string,
+  conversationId: ConversationId,
+  provider?: string
+): ChatResponse => {
+  const now = Date.now();
+  return {
+    content: `[MOCK_OK] ${message}`,
+    finishReason: 'stop',
+    model: 'titane-e2e-mock',
+    provider: 'e2e-mock',
+    latencyMs: 0,
+    metadata: {
+      source: 'e2e-mock',
+      messageId: `e2e-${now}`,
+      timestamp: now,
+      conversationId,
+      selectedProvider: provider ?? 'auto',
+    },
+    omegaMetadata: {
+      mock: true,
+    },
+  };
+};
 
 interface BackendChatMessage {
   id: string;
@@ -187,6 +250,14 @@ class ChatService {
    * @returns L'ID de la nouvelle conversation.
    */
   async startNewConversation(): Promise<ConversationId> {
+    if (isE2EChatMockEnabled()) {
+      const conversationId = createE2EConversationId();
+      console.info('[ChatService-OMEGA] 🧪 E2E mock conversation créée:', {
+        conversationId,
+      });
+      return conversationId;
+    }
+
     console.log('[ChatService-OMEGA] 🚀 Démarrage d’une nouvelle conversation...');
     try {
       const response = await invokeWithRetry<StartConversationResponse>(
@@ -220,6 +291,11 @@ class ChatService {
     this.lastEndpoint = 'OMEGA';
     if (!conversationId) {
       throw new Error('conversationId est requis pour utiliser le pipeline OMEGA.');
+    }
+
+    if (isE2EChatMockEnabled()) {
+      rememberE2EConversationId(conversationId);
+      return buildE2EChatMockResponse(message, conversationId, config?.provider);
     }
 
     // 🛡️ BROWSER MODE PROTECTION - Backend web (chatEngine) si Tauri indisponible

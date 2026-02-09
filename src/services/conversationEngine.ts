@@ -13,6 +13,32 @@
 import { secureInvoke } from '@/lib/security';
 import { getSystemPrompt } from '@/config/chatModes.config';
 
+const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
+const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
+
+const isE2EChatMockEnabled = (): boolean => {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return (window as Record<string, unknown>)[E2E_CHAT_MOCK_FLAG] === true;
+};
+
+const createE2EConversationId = (): string => {
+  if (typeof window === 'undefined') {
+    return `e2e-conv-${Date.now()}`;
+  }
+
+  const win = window as Record<string, unknown>;
+  const nextSeq =
+    typeof win[E2E_CHAT_CONV_SEQ] === 'number'
+      ? (win[E2E_CHAT_CONV_SEQ] as number) + 1
+      : 1;
+
+  win[E2E_CHAT_CONV_SEQ] = nextSeq;
+  return `e2e-conv-${nextSeq}`;
+};
+
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
@@ -140,6 +166,35 @@ export async function processMessage(
   }
 ): Promise<ConversationResponse> {
   let conversationId = options?.conversationId;
+
+  if (isE2EChatMockEnabled()) {
+    if (!conversationId) {
+      conversationId = createE2EConversationId();
+    }
+
+    const now = Date.now();
+    return {
+      assistant_message: `[MOCK_OK] ${userMessage}`,
+      conversation_id: conversationId,
+      message_id: `e2e-${now}`,
+      detected_intention: 'Question',
+      detected_emotion: {
+        valence: 0,
+        intensity: 0,
+        energy: 0,
+      },
+      cognitive_tags: ['e2e', 'mock'],
+      cognitive_summary: 'E2E mock response',
+      metadata: {
+        timestamp: now,
+        provider_used: 'e2e-mock',
+        latency_ms: 0,
+        tokens_used: 0,
+        memory_effect: 'New',
+        links_to_contexts: [],
+      },
+    };
+  }
 
   if (!conversationId) {
     try {

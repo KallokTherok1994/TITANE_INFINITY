@@ -281,6 +281,7 @@ async function detectMemoryLeaks(cycles: number): Promise<MemoryLeakReport> {
       height: 600,
     });
 
+    await renderer.initialize();
     renderer.initializeAvatar();
     renderer.startRenderLoop();
 
@@ -356,7 +357,7 @@ describe.skipIf(!hasThreeJSRenderer)('Floating Window Performance Tests', () => 
   let canvas: any;
   let renderer: ThreeJSAvatarRenderer;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     mockTime = 0;
     deterministicRandom = createDeterministicRandomGenerator();
     canvas = new MockCanvas();
@@ -365,6 +366,7 @@ describe.skipIf(!hasThreeJSRenderer)('Floating Window Performance Tests', () => 
       height: 600,
       antialias: false, // Disable for performance tests
     });
+    await renderer.initialize();
     renderer.initializeAvatar();
   });
 
