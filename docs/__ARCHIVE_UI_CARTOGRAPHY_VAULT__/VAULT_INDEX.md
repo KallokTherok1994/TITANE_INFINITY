@@ -1,11 +1,19 @@
 # UI Cartography Vault Index
 
 Date (UTC): 2026-02-09T01:16:56Z
+**Status:** Active (append-only)
 
 ## Objectif
 Cette archive contient l’intégralité du travail UI Cartography & Governance,
 figé volontairement hors pipeline Git actif, réutilisable ultérieurement
 pour reprise, audit ou migration.
+
+## Manifests
+- VAULT_MANIFEST_2026-02-09T16:44:46Z.md
+
+## Notes
+- No archived items recorded in this run.
+- Future archive operations must follow SAFE DELETE: archive -> index -> proof -> delete.
 
 ## Sous-dossiers
 - ui-carto-copilot/

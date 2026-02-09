@@ -20,6 +20,13 @@
 - 📖 [**Guides Index**](./04_guides/INDEX.md) — 6 guides (quickstart + dev + advanced)
 - 👥 [**Contributing Guide**](../CONTRIBUTING.md) — Onboarding contributeurs (standards + workflow)
 
+**Latest Audits (2026-02-09):**
+- [docs/__AUDITS__/SNAPSHOT_INITIAL_2026-02-09T15:55:35Z.md](./__AUDITS__/SNAPSHOT_INITIAL_2026-02-09T15:55:35Z.md)
+- [docs/__AUDITS__/AUDIT_GLOBAL_2026-02-09T16:44:46Z.md](./__AUDITS__/AUDIT_GLOBAL_2026-02-09T16:44:46Z.md)
+- [docs/__AUDITS__/HOUSEKEEPING_2026-02-09T16:44:46Z.md](./__AUDITS__/HOUSEKEEPING_2026-02-09T16:44:46Z.md)
+- [docs/__ARCHIVE_UI_CARTOGRAPHY_VAULT__/VAULT_INDEX.md](./__ARCHIVE_UI_CARTOGRAPHY_VAULT__/VAULT_INDEX.md)
+- [docs/__ARCHIVE_UI_CARTOGRAPHY_VAULT__/VAULT_MANIFEST_2026-02-09T16:44:46Z.md](./__ARCHIVE_UI_CARTOGRAPHY_VAULT__/VAULT_MANIFEST_2026-02-09T16:44:46Z.md)
+
 **Métriques clés Phase 0-7:**
 - ✅ **42 documents créés** (~17,110 lignes) — +10.5% Phase 7
 - ✅ **14/14 modules core** documentés (**100% API coverage**)
