@@ -38,10 +38,13 @@ echo "📋 Phase 1: Extraction invoke() frontend..."
 
 # Extraire tous les invoke() depuis le code TypeScript (ignorer commentaires)
 FRONTEND_INVOKES=$(mktemp)
-find "$SRC_DIR" -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" | \
+find "$SRC_DIR" -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.jsx" \) \
+    ! -path "*/__tests__/*" \
+    ! -path "*/modules/devSudo/*" | \
     xargs grep -h -v "^\s*\*" | grep -h -v "^\s*//" | \
     grep -h -o "invoke(['\"][^'\"]*['\"]" 2>/dev/null | \
     sed "s/invoke(['\"]//g" | sed "s/['\"]//g" | \
+    grep -v "\${" | \
     sort | uniq > "$FRONTEND_INVOKES" || true
 
 echo "📋 Phase 2: Extraction allowlist backend..."
