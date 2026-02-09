@@ -143,7 +143,11 @@ const ConversationMessage = memo(
     }, [message.id, onDelete]);
 
     return (
-      <div className={`conversation-message ${message.role}`}>
+      <div
+        className={`conversation-message ${message.role}`}
+        data-testid={message.role === 'assistant' ? 'assistant-message' : 'user-message'}
+        data-role={message.role}
+      >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
         </div>
@@ -735,6 +739,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
               onClick={handleClearChat}
               title="Effacer l'historique"
               aria-label="Effacer l'historique du chat"
+              data-testid="clear-chat-button"
             >
               <Trash2 size={16} aria-hidden="true" />
             </button>
@@ -779,7 +784,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         />
 
         {/* ═══ MESSAGES AREA ═══ */}
-        <div className="conversation-messages">
+        <div className="conversation-messages" data-testid="conversation-messages">
           {messages.length === 0 && !thinking.isThinking && (
             <div className="conversation-empty">
               <div className="conversation-empty-icon">🧠⚡∞</div>
@@ -810,7 +815,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           )}
 
           {error && (
-            <div className="conversation-error">
+            <div className="conversation-error" data-testid="error-message">
               <strong>❌ Erreur:</strong> {error}
             </div>
           )}
@@ -844,11 +849,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             onKeyPress={handleKeyPress}
             disabled={isLoading}
             rows={3}
+            data-testid="chat-input"
           />
           <button
             className="conversation-send-btn"
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
+            data-testid="send-button"
           >
             {isLoading ? '⏳' : '📤'} Envoyer
           </button>

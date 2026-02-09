@@ -107,7 +107,11 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
 
   return (
     <div className="conversations-sidebar-overlay" onClick={onClose}>
-      <div className="conversations-sidebar" onClick={e => e.stopPropagation()}>
+      <div
+        className="conversations-sidebar"
+        onClick={e => e.stopPropagation()}
+        data-testid="conversations-sidebar"
+      >
         {/* Header */}
         <div className="conversations-sidebar__header">
           <h2>Conversations</h2>
@@ -125,13 +129,14 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
           className="conversations-sidebar__new-btn"
           onClick={handleNewConversation}
           disabled={isLoading}
+          data-testid="new-conversation-button"
         >
           <span className="icon">+</span>
           <span>Nouvelle conversation</span>
         </button>
 
         {/* Liste des conversations */}
-        <div className="conversations-sidebar__list">
+        <div className="conversations-sidebar__list" data-testid="conversation-list">
           {isLoading && conversations.length === 0 ? (
             <div className="conversations-sidebar__loading">Chargement...</div>
           ) : conversations.length === 0 ? (
@@ -148,6 +153,8 @@ export const ConversationsSidebar: React.FC<ConversationsSidebarProps> = ({
                 role="button"
                 tabIndex={0}
                 aria-current={conv.id === activeConversationId ? 'true' : undefined}
+                data-testid="conversation-item"
+                data-conversation-id={conv.id}
                 onClick={() => handleSelectConversation(conv)}
                 onKeyDown={event => handleConversationKeyDown(event, conv)}
                 onContextMenu={e => {
