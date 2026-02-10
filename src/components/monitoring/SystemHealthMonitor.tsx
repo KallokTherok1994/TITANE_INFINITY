@@ -4,7 +4,7 @@
  * Design System: Monochrome TITANE
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useState, useEffect, useCallback, memo } from 'react';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -45,7 +45,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   // Fetch system metrics
   const fetchMetrics = useCallback(async () => {
     try {
-      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
+      const result = (await tauriClient.getSystemMetrics()) as SystemMetrics;
       setMetrics(result);
       setLastUpdate(Date.now());
       setError(null);
@@ -64,7 +64,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
   // Fetch engine statuses
   const fetchEngines = useCallback(async () => {
     try {
-      const result = await secureInvoke<EngineStatus[]>('get_engines_status');
+      const result = (await tauriClient.getEnginesStatus()) as EngineStatus[];
       setEngines(result);
     } catch {
       // Fallback avec engines mock

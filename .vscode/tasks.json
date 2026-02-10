@@ -1140,6 +1140,101 @@
 				"showReuseMessage": false
 			},
 			"detail": "Test complet de la connexion Ollama + Tauri"
+		},
+		{
+			"label": "copilot: test:architecture",
+			"type": "shell",
+			"command": "pnpm",
+			"args": [
+				"test:architecture"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "copilot: test:architecture (pnpm path)",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"args": [
+				"test:architecture"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "copilot: test:architecture (pnpm path)",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"args": [
+				"test:architecture"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "copilot: test:architecture (pnpm path)",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"args": [
+				"test:architecture"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "copilot: test:architecture (pnpm path)",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"args": [
+				"test:architecture"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "final: lint",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run lint",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "final: format:check",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run format:check",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "final: check",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run check",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "final: test:100",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run test:100",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "final: test:rust",
+			"type": "shell",
+			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run test:rust",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
 		}
 	],
 	"inputs": [

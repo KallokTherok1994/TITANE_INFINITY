@@ -25,7 +25,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 /**
  * Transcription event from backend
@@ -128,7 +128,7 @@ export function useWhisperStream(
       console.log('[useWhisperStream] 🎙️ Starting...');
 
       // Start backend streaming
-      await secureInvoke('start_whisper_streaming', {
+      await tauriClient.startWhisperStreaming({
         model: config.model || 'base',
         language: config.language || 'fr',
       });
@@ -215,7 +215,7 @@ export function useWhisperStream(
       console.log('[useWhisperStream] 🛑 Stopping...');
 
       // Stop backend streaming
-      await secureInvoke('stop_whisper_streaming');
+      await tauriClient.stopWhisperStreaming();
 
       // Unlisten events
       if (unlistenPartialRef.current) {
@@ -278,7 +278,7 @@ export function useWhisperStream(
       vadConfidence: number
     ) => {
       try {
-        await secureInvoke('send_audio_chunk', {
+        await tauriClient.sendAudioChunk({
           data: Array.from(data),
           sampleRate,
           hasSpeech,
@@ -307,7 +307,7 @@ export function useWhisperStream(
       }
 
       // Stop streaming
-      secureInvoke('stop_whisper_streaming').catch(console.error);
+      tauriClient.stopWhisperStreaming().catch(console.error);
     };
   }, []);
 

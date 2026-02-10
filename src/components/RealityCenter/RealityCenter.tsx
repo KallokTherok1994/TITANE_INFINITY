@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import './RealityCenter.css';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -219,9 +219,9 @@ export const RealityCenter: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      const currentState = await secureInvoke<RealityRendererState>(
-        'reality_get_state'
-      ).catch(async () => secureInvoke<RealityRendererState>('reality_init'));
+      const currentState = (await tauriClient.realityGetState().catch(async () => {
+        return (await tauriClient.realityInit()) as RealityRendererState;
+      })) as RealityRendererState;
       setState(currentState);
       setError(null);
     } catch (err) {
@@ -240,7 +240,7 @@ export const RealityCenter: React.FC = () => {
 
     const interval = setInterval(async () => {
       try {
-        const stats = await secureInvoke<FrameStats>('reality_render_frame');
+        const stats = (await tauriClient.realityRenderFrame()) as FrameStats;
         setFrameStats(stats);
         await loadState();
       } catch (err) {
@@ -253,7 +253,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleRenderModeChange = async (mode: string) => {
     try {
-      await secureInvoke('reality_set_render_config', { mode });
+      await tauriClient.realitySetRenderConfig({ mode });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -262,7 +262,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleTogglePhysics = async (enabled: boolean) => {
     try {
-      await secureInvoke('reality_toggle_physics', { enabled });
+      await tauriClient.realityTogglePhysics({ enabled });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -271,7 +271,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleCreateEntity = async (params: CreateEntityParams) => {
     try {
-      await secureInvoke('reality_add_entity', { params });
+      await tauriClient.realityAddEntity({ params });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -280,7 +280,7 @@ export const RealityCenter: React.FC = () => {
 
   const handleRenderFrame = async () => {
     try {
-      const stats = await secureInvoke<FrameStats>('reality_render_frame');
+      const stats = (await tauriClient.realityRenderFrame()) as FrameStats;
       setFrameStats(stats);
       await loadState();
     } catch (err) {
@@ -396,18 +396,18 @@ export const RealityCenter: React.FC = () => {
                   label="Antialiasing"
                   checked={state.render_config.antialiasing}
                   onChange={v =>
-                    secureInvoke('reality_set_render_config', { antialiasing: v }).then(
-                      loadState
-                    )
+                    tauriClient
+                      .realitySetRenderConfig({ antialiasing: v })
+                      .then(loadState)
                   }
                 />
                 <ToggleSwitch
                   label="Shadows"
                   checked={state.render_config.shadows}
                   onChange={v =>
-                    secureInvoke('reality_set_render_config', { shadows: v }).then(
-                      loadState
-                    )
+                    tauriClient
+                      .realitySetRenderConfig({ shadows: v })
+                      .then(loadState)
                   }
                 />
                 <ToggleSwitch

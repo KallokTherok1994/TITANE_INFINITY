@@ -6,7 +6,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import React, { useState, useEffect, useCallback } from 'react';
 import VaultStatus from './VaultStatus';
@@ -38,7 +38,7 @@ const CloudCenter: React.FC = () => {
   // Charger le statut initial
   const loadStatus = useCallback(async () => {
     try {
-      const result = await secureInvoke<CloudStatus>('cloud_get_status');
+      const result = (await tauriClient.cloudGetStatus()) as CloudStatus;
       setStatus(result);
       setInitialized(result.initialized);
     } catch (err) {
@@ -62,10 +62,10 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const result = await secureInvoke<CloudStatus>('cloud_init', {
+      const result = (await tauriClient.cloudInit({
         passphrase,
         deviceName,
-      });
+      })) as CloudStatus;
       setStatus(result);
       setInitialized(true);
       setShowInitForm(false);
@@ -83,7 +83,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      await secureInvoke<SyncResult>('cloud_sync_push');
+      await tauriClient.cloudSyncPush();
       await loadStatus();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
@@ -98,7 +98,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      await secureInvoke<SyncResult>('cloud_sync_pull');
+      await tauriClient.cloudSyncPull();
       await loadStatus();
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));
@@ -113,7 +113,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const isValid = await secureInvoke<boolean>('cloud_verify_integrity');
+      const isValid = (await tauriClient.cloudVerifyIntegrity()) as boolean;
       if (isValid) {
         success("L'intégrité du vault est validée");
       } else {
@@ -132,7 +132,7 @@ const CloudCenter: React.FC = () => {
     setError(null);
 
     try {
-      const backupPath = await secureInvoke<string>('cloud_backup_vault');
+      const backupPath = (await tauriClient.cloudBackupVault()) as string;
       success(`Sauvegarde créée: ${backupPath}`);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : String(err));

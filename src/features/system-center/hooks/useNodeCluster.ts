@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type { ClusterStatus, ClusterStats, NodeInfo } from '../types/systemCenter.types';
 
 export interface UseNodeClusterReturn {
@@ -42,7 +42,7 @@ export function useNodeCluster(
     setError(null);
 
     try {
-      const result = await secureInvoke<ClusterStatus>('sc_get_cluster_status');
+      const result = (await tauriClient.scGetClusterStatus()) as ClusterStatus;
       if (!result) {
         setError('Cluster status unavailable');
         return;
@@ -65,7 +65,7 @@ export function useNodeCluster(
 
   const refreshPeers = useCallback(async () => {
     try {
-      const result = await secureInvoke<NodeInfo[]>('sc_get_cluster_peers');
+      const result = (await tauriClient.scGetClusterPeers()) as NodeInfo[];
       if (result) {
         setPeers(result);
       }
@@ -80,7 +80,7 @@ export function useNodeCluster(
       setError(null);
 
       try {
-        await secureInvoke('sc_initialize_cluster', { nodeId, port });
+        await tauriClient.scInitializeCluster({ nodeId, port });
         setIsInitialized(true);
         await refreshStatus();
       } catch (err) {
@@ -96,7 +96,7 @@ export function useNodeCluster(
 
   const shutdown = useCallback(async () => {
     try {
-      await secureInvoke('sc_shutdown_cluster');
+      await tauriClient.scShutdownCluster();
       setIsInitialized(false);
       setStats(null);
       setPeers([]);

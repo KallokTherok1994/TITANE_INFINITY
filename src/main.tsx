@@ -472,7 +472,7 @@ type RuntimeConfigPayload = {
 };
 
 const DEFAULT_RUNTIME_CONFIG: RuntimeConfigPayload = Object.freeze({
-  ollamaUrl: 'http://127.0.0.1:11434',
+  ollamaUrl: '/api/ollama',
   ollamaModel: 'llama3.1',
   secretsMode: 'ephemeral',
   geminiConfigured: false,

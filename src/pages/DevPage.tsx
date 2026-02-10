@@ -8,7 +8,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { logger } from '@/lib/logger';
@@ -633,9 +633,8 @@ function DevPageContent(): JSX.Element {
 
       // Load orchestration state
       try {
-        const orchState = await secureInvoke<OrchestrationState>(
-          'orchestration_get_unified_state'
-        );
+        const orchState =
+          (await tauriClient.orchestrationGetUnifiedState()) as OrchestrationState;
         setOrchestration(orchState);
       } catch {
         // Fallback mock data

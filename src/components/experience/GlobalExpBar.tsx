@@ -10,7 +10,7 @@
 // Cliquer → ouvre ExpPanel complet
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import '../../styles/exp-fusion.css';
@@ -40,7 +40,7 @@ export const GlobalExpBar: React.FC<{ onOpenPanel: () => void }> = ({ onOpenPane
 
   const fetchExpState = async () => {
     try {
-      const state = await secureInvoke<GlobalExpState>('exp_get_global_state');
+      const state = (await tauriClient.expGetGlobalState()) as GlobalExpState;
       setExpState(state);
     } catch (error) {
       const err = error instanceof Error ? error : new Error(String(error));

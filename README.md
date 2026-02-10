@@ -84,6 +84,12 @@ pnpm run dev:tauri
 # Ou via task VSCode: "🟢 Launch Titan-Dev"
 ```
 
+## 🧭 Structure Repo (Index)
+
+- [docs/INDEX_REPO_STRUCTURE.md](docs/INDEX_REPO_STRUCTURE.md) — carte des dossiers + points d’entrée
+- [docs/ui/INDEX_UI.md](docs/ui/INDEX_UI.md) — index UI (pages/features/components/hooks)
+- Registre UI obligatoire: chaque changement UI doit ajouter une entry append-only dans `registry/ui-events.jsonl`.
+
 ### Corepack Quickstart (recommandé)
 
 ```bash

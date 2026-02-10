@@ -13,7 +13,7 @@
  */
 
 import React, { useRef, useState, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { XP } from '../../core/experience/XP_ENGINE';
 import { awardExperience } from '../../services/experienceService';
 import { XPSource, XP_REWARDS } from '../../types/experience';
@@ -295,7 +295,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
           if (result.status === 'done' && result.content) {
             try {
               // Ingestion dans la mémoire IA permanente
-              const memoryResult = await secureInvoke('memory_ingest_file', {
+              const memoryResult = await tauriClient.memoryIngestFile({
                 path: result.name,
                 content: result.content,
                 category: result.category,

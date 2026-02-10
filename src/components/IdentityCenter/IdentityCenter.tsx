@@ -10,7 +10,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
@@ -145,19 +145,26 @@ const IdentityCenterContent: React.FC = () => {
         modesListData,
         rulesData,
         coherenceData,
-      ] = await Promise.all([
-        secureInvoke<IdentityMatrix>('identity_get_matrix').catch(() => null),
-        secureInvoke<PersonalitySnapshot>('identity_get_personality_snapshot').catch(
-          () => null
-        ),
+      ] = (await Promise.all([
+        tauriClient.identityGetMatrix().catch(() => null),
+        tauriClient.identityGetPersonalitySnapshot().catch(() => null),
         // FIX: Commande correcte = 'identity_list_voice_profiles' (pas 'identity_get_voice_profiles')
-        secureInvoke<VoiceProfile[]>('identity_list_voice_profiles').catch(() => []),
-        secureInvoke<ToneState>('identity_get_current_tone').catch(() => null),
-        secureInvoke<OperationalMode>('identity_get_current_mode').catch(() => null),
-        secureInvoke<OperationalMode[]>('identity_get_available_modes').catch(() => []),
-        secureInvoke<BehaviorRule[]>('identity_get_active_rules').catch(() => []),
-        secureInvoke<number>('identity_get_coherence_score').catch(() => 0.85),
-      ]);
+        tauriClient.identityListVoiceProfiles().catch(() => []),
+        tauriClient.identityGetCurrentTone().catch(() => null),
+        tauriClient.identityGetCurrentMode().catch(() => null),
+        tauriClient.identityGetAvailableModes().catch(() => []),
+        tauriClient.identityGetActiveRules().catch(() => []),
+        tauriClient.identityGetCoherenceScore().catch(() => 0.85),
+      ])) as [
+        IdentityMatrix | null,
+        PersonalitySnapshot | null,
+        VoiceProfile[],
+        ToneState | null,
+        OperationalMode | null,
+        OperationalMode[],
+        BehaviorRule[],
+        number,
+      ];
 
       setIdentityMatrix(matrixData);
       setPersonality(personalityData);
@@ -380,7 +387,7 @@ const IdentityCenterContent: React.FC = () => {
 
   const handleModeChange = async (modeType: string) => {
     try {
-      await secureInvoke('identity_set_mode', { mode: modeType });
+      await tauriClient.identitySetMode({ mode: modeType });
       const newMode = availableModes.find(m => m.type === modeType);
       if (newMode) setCurrentMode(newMode);
     } catch (err) {
@@ -395,7 +402,7 @@ const IdentityCenterContent: React.FC = () => {
   const handleVoiceChange = async (voiceId: string) => {
     try {
       // FIX: Commande correcte = 'identity_set_active_voice_profile' (pas 'identity_set_voice_profile')
-      await secureInvoke('identity_set_active_voice_profile', {
+      await tauriClient.identitySetActiveVoiceProfile({
         voiceProfileId: voiceId,
       });
       const newVoice = voiceProfiles.find(v => v.id === voiceId);
@@ -418,9 +425,9 @@ const IdentityCenterContent: React.FC = () => {
 
     try {
       if (rule.is_active) {
-        await secureInvoke('identity_disable_rule', { ruleId });
+        await tauriClient.identityDisableRule({ ruleId });
       } else {
-        await secureInvoke('identity_enable_rule', { ruleId });
+        await tauriClient.identityEnableRule({ ruleId });
       }
       setRules(rules.map(r => (r.id === ruleId ? { ...r, is_active: !r.is_active } : r)));
     } catch (err) {

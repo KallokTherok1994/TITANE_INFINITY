@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -206,19 +206,19 @@ const HyperCenterContent: React.FC = () => {
 
   const loadState = useCallback(async () => {
     try {
-      const currentState = await secureInvoke<HyperIntelligenceState>(
-        'hyper_get_state'
-      ).catch(async () => secureInvoke<HyperIntelligenceState>('hyper_init'));
+      const currentState = (await tauriClient
+        .hyperGetState()
+        .catch(async () => tauriClient.hyperInit())) as HyperIntelligenceState;
       setState(currentState);
 
-      const recentThoughts = await secureInvoke<Thought[]>('hyper_get_thoughts', {
+      const recentThoughts = (await tauriClient.hyperGetThoughts({
         limit: 10,
-      });
+      })) as Thought[];
       setThoughts(recentThoughts);
 
-      const recentInsights = await secureInvoke<Insight[]>('hyper_get_insights', {
+      const recentInsights = (await tauriClient.hyperGetInsights({
         limit: 5,
-      });
+      })) as Insight[];
       setInsights(recentInsights);
 
       setError(null);
@@ -237,7 +237,7 @@ const HyperCenterContent: React.FC = () => {
 
   const handleModeChange = async (mode: string) => {
     try {
-      await secureInvoke('hyper_set_mode', { mode });
+      await tauriClient.hyperSetMode({ mode });
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -248,7 +248,7 @@ const HyperCenterContent: React.FC = () => {
     if (!thinkPrompt.trim()) return;
     setThinking(true);
     try {
-      const thought = await secureInvoke<Thought>('hyper_think', { prompt: thinkPrompt });
+      const thought = (await tauriClient.hyperThink({ prompt: thinkPrompt })) as Thought;
       setThoughts(prev => [thought, ...prev].slice(0, 10));
       setThinkPrompt('');
       await loadState();
@@ -266,9 +266,9 @@ const HyperCenterContent: React.FC = () => {
       return;
     }
     try {
-      const result = await secureInvoke<Conclusion>('hyper_reason', {
+      const result = (await tauriClient.hyperReason({
         premises: validPremises,
-      });
+      })) as Conclusion;
       setConclusion(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -278,9 +278,9 @@ const HyperCenterContent: React.FC = () => {
   const handleImagine = async () => {
     if (!imagineSeed.trim()) return;
     try {
-      const result = await secureInvoke<Imagination>('hyper_imagine', {
+      const result = (await tauriClient.hyperImagine({
         seed: imagineSeed,
-      });
+      })) as Imagination;
       setImagination(result);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
@@ -289,7 +289,7 @@ const HyperCenterContent: React.FC = () => {
 
   const handleGenerateInsight = async () => {
     try {
-      await secureInvoke<Insight>('hyper_generate_insight', {
+      await tauriClient.hyperGenerateInsight({
         context: thinkPrompt || 'current context',
       });
       await loadState();

@@ -2,7 +2,7 @@
 // Zoom (CTRL+Scroll) & Fullscreen (F11) keyboard shortcuts
 
 import { useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 
 export interface WindowControlsOptions {
@@ -41,7 +41,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 
   const handleZoomIn = useCallback(async () => {
     try {
-      const newLevel = await secureInvoke<number>('window_zoom_in');
+      const newLevel = (await tauriClient.windowZoomIn()) as number;
       applyZoom(newLevel);
       return newLevel;
     } catch (error) {
@@ -51,7 +51,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 
   const handleZoomOut = useCallback(async () => {
     try {
-      const newLevel = await secureInvoke<number>('window_zoom_out');
+      const newLevel = (await tauriClient.windowZoomOut()) as number;
       applyZoom(newLevel);
       return newLevel;
     } catch (error) {
@@ -61,7 +61,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 
   const handleZoomReset = useCallback(async () => {
     try {
-      await secureInvoke('window_zoom_reset');
+      await tauriClient.windowZoomReset();
       applyZoom(1.0);
       console.log('[WindowControls] Zoom reset: 100%');
     } catch (error) {
@@ -71,7 +71,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
 
   const handleToggleFullscreen = useCallback(async () => {
     try {
-      const isFullscreen = await secureInvoke<boolean>('window_toggle_fullscreen');
+      const isFullscreen = (await tauriClient.windowToggleFullscreen()) as boolean;
       console.log(`[WindowControls] Fullscreen: ${isFullscreen ? 'ON' : 'OFF'}`);
       return isFullscreen;
     } catch (error) {
@@ -186,35 +186,35 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
  */
 export const windowControls = {
   async getZoom(): Promise<number> {
-    return secureInvoke<number>('window_get_zoom');
+    return (await tauriClient.windowGetZoom()) as number;
   },
 
   async setZoom(level: number): Promise<void> {
-    return secureInvoke('window_set_zoom', { level });
+    return tauriClient.windowSetZoom({ level }) as Promise<void>;
   },
 
   async zoomIn(): Promise<number> {
-    return secureInvoke<number>('window_zoom_in');
+    return (await tauriClient.windowZoomIn()) as number;
   },
 
   async zoomOut(): Promise<number> {
-    return secureInvoke<number>('window_zoom_out');
+    return (await tauriClient.windowZoomOut()) as number;
   },
 
   async zoomReset(): Promise<void> {
-    return secureInvoke('window_zoom_reset');
+    return tauriClient.windowZoomReset() as Promise<void>;
   },
 
   async toggleFullscreen(): Promise<boolean> {
-    return secureInvoke<boolean>('window_toggle_fullscreen');
+    return (await tauriClient.windowToggleFullscreen()) as boolean;
   },
 
   async setFullscreen(fullscreen: boolean): Promise<void> {
-    return secureInvoke('window_set_fullscreen', { fullscreen });
+    return tauriClient.windowSetFullscreen({ fullscreen }) as Promise<void>;
   },
 
   async isFullscreen(): Promise<boolean> {
-    return secureInvoke<boolean>('window_is_fullscreen');
+    return (await tauriClient.windowIsFullscreen()) as boolean;
   },
 };
 

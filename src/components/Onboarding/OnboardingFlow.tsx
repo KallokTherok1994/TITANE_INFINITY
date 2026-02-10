@@ -12,7 +12,7 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import type { OnboardingStep, OnboardingFlowProps, OnboardingPreferences } from './types';
 import { WelcomeStep } from './WelcomeStep';
@@ -74,7 +74,7 @@ export const OnboardingFlow: React.FC<OnboardingFlowProps> = ({ onComplete }) =>
     if (currentStep === STEPS.length - 1) {
       // Dernier step, sauvegarder et compléter
       try {
-        await secureInvoke('complete_onboarding', {
+        await tauriClient.completeOnboarding({
           preferences: {
             ...preferences,
             completedAt: new Date().toISOString(),

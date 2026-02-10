@@ -5,7 +5,7 @@
 // ============================================================================
 
 import { useCallback, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type {
   QASystemState,
   TestSuite,
@@ -32,28 +32,28 @@ export function useQAMonitoring() {
    * Obtenir l'état global du système QA
    */
   const getState = useCallback(async (): Promise<QASystemState> => {
-    return await secureInvoke<QASystemState>('qa_get_state');
+    return await tauriClient.qaGetState() as QASystemState;
   }, []);
 
   /**
    * Lister toutes les suites de tests
    */
   const listTestSuites = useCallback(async (): Promise<TestSuite[]> => {
-    return await secureInvoke<TestSuite[]>('qa_list_test_suites');
+    return await tauriClient.qaListTestSuites() as TestSuite[];
   }, []);
 
   /**
    * Exécuter une suite de tests
    */
   const runTestSuite = useCallback(async (suiteId: string): Promise<TestResult[]> => {
-    return await secureInvoke<TestResult[]>('qa_run_test_suite', { suiteId });
+    return await tauriClient.qaRunTestSuite({ suiteId }) as TestResult[];
   }, []);
 
   /**
    * Obtenir un résultat de test spécifique
    */
   const getTestResult = useCallback(async (testId: string): Promise<TestResult> => {
-    return await secureInvoke<TestResult>('qa_get_test_result', { testId });
+    return await tauriClient.qaGetTestResult({ testId }) as TestResult;
   }, []);
 
   // =========================================================================
@@ -64,7 +64,7 @@ export function useQAMonitoring() {
    * Lister tous les moniteurs
    */
   const listMonitors = useCallback(async (): Promise<Monitor[]> => {
-    return await secureInvoke<Monitor[]>('qa_list_monitors');
+    return await tauriClient.qaListMonitors() as Monitor[];
   }, []);
 
   /**
@@ -78,13 +78,13 @@ export function useQAMonitoring() {
       thresholdWarning: number,
       thresholdCritical: number
     ): Promise<Monitor> => {
-      return await secureInvoke<Monitor>('qa_create_monitor', {
+      return await tauriClient.qaCreateMonitor({
         name,
         target,
         intervalMs,
         thresholdWarning,
         thresholdCritical,
-      });
+      }) as Monitor;
     },
     []
   );
@@ -94,7 +94,7 @@ export function useQAMonitoring() {
    */
   const toggleMonitor = useCallback(
     async (monitorId: string, active: boolean): Promise<Monitor> => {
-      return await secureInvoke<Monitor>('qa_toggle_monitor', { monitorId, active });
+      return await tauriClient.qaToggleMonitor({ monitorId, active }) as Monitor;
     },
     []
   );
@@ -103,14 +103,14 @@ export function useQAMonitoring() {
    * Supprimer un moniteur
    */
   const deleteMonitor = useCallback(async (monitorId: string): Promise<boolean> => {
-    return await secureInvoke<boolean>('qa_delete_monitor', { monitorId });
+    return await tauriClient.qaDeleteMonitor({ monitorId }) as boolean;
   }, []);
 
   /**
    * Obtenir les métriques système
    */
   const getSystemMetrics = useCallback(async (): Promise<SystemMetrics> => {
-    return await secureInvoke<SystemMetrics>('qa_get_system_metrics');
+    return await tauriClient.qaGetSystemMetrics() as SystemMetrics;
   }, []);
 
   // =========================================================================
@@ -122,7 +122,7 @@ export function useQAMonitoring() {
    */
   const listAlerts = useCallback(
     async (includeResolved: boolean = false): Promise<Alert[]> => {
-      return await secureInvoke<Alert[]>('qa_list_alerts', { includeResolved });
+      return await tauriClient.qaListAlerts({ includeResolved }) as Alert[];
     },
     []
   );
@@ -131,7 +131,7 @@ export function useQAMonitoring() {
    * Acquitter une alerte
    */
   const acknowledgeAlert = useCallback(async (alertId: string): Promise<Alert> => {
-    return await secureInvoke<Alert>('qa_acknowledge_alert', { alertId });
+    return await tauriClient.qaAcknowledgeAlert({ alertId }) as Alert;
   }, []);
 
   /**
@@ -139,7 +139,7 @@ export function useQAMonitoring() {
    */
   const resolveAlert = useCallback(
     async (alertId: string, resolutionNote: string): Promise<Alert> => {
-      return await secureInvoke<Alert>('qa_resolve_alert', { alertId, resolutionNote });
+      return await tauriClient.qaResolveAlert({ alertId, resolutionNote }) as Alert;
     },
     []
   );
@@ -152,7 +152,7 @@ export function useQAMonitoring() {
    * Obtenir la configuration hardening
    */
   const getHardeningConfig = useCallback(async (): Promise<HardeningConfig> => {
-    return await secureInvoke<HardeningConfig>('qa_get_hardening_config');
+    return await tauriClient.qaGetHardeningConfig() as HardeningConfig;
   }, []);
 
   /**
@@ -160,9 +160,9 @@ export function useQAMonitoring() {
    */
   const updateHardeningConfig = useCallback(
     async (config: HardeningConfig): Promise<HardeningConfig> => {
-      return await secureInvoke<HardeningConfig>('qa_update_hardening_config', {
+      return await tauriClient.qaUpdateHardeningConfig({
         config,
-      });
+      }) as HardeningConfig;
     },
     []
   );
@@ -171,7 +171,7 @@ export function useQAMonitoring() {
    * Exécuter un audit de sécurité
    */
   const runSecurityAudit = useCallback(async (): Promise<SecurityAuditResult> => {
-    return await secureInvoke<SecurityAuditResult>('qa_run_security_audit');
+    return await tauriClient.qaRunSecurityAudit() as SecurityAuditResult;
   }, []);
 
   // =========================================================================
@@ -183,9 +183,9 @@ export function useQAMonitoring() {
    */
   const getPerformanceReport = useCallback(
     async (period: string): Promise<PerformanceReport> => {
-      return await secureInvoke<PerformanceReport>('qa_get_performance_report', {
+      return await tauriClient.qaGetPerformanceReport({
         period,
-      });
+      }) as PerformanceReport;
     },
     []
   );
@@ -195,7 +195,7 @@ export function useQAMonitoring() {
    */
   const getLogs = useCallback(
     async (level?: string, source?: string, limit?: number): Promise<LogEntry[]> => {
-      return await secureInvoke<LogEntry[]>('qa_get_logs', { level, source, limit });
+      return await tauriClient.qaGetLogs({ level, source, limit }) as LogEntry[];
     },
     []
   );
@@ -204,14 +204,14 @@ export function useQAMonitoring() {
    * Exporter les métriques au format Prometheus
    */
   const exportPrometheus = useCallback(async (): Promise<string> => {
-    return await secureInvoke<string>('qa_export_metrics_prometheus');
+    return await tauriClient.qaExportMetricsPrometheus() as string;
   }, []);
 
   /**
    * Vérification de santé complète
    */
   const healthCheck = useCallback(async (): Promise<HealthCheckResult> => {
-    return await secureInvoke<HealthCheckResult>('qa_health_check');
+    return await tauriClient.qaHealthCheck() as HealthCheckResult;
   }, []);
 
   return useMemo(

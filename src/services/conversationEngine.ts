@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
@@ -206,7 +206,7 @@ export async function processMessage(
 
   if (!conversationId) {
     try {
-      conversationId = await secureInvoke<string>('create_new_conversation');
+      conversationId = (await tauriClient.createNewConversation()) as string;
     } catch (error) {
       console.warn('[conversationEngine] ⚠️ Failed to create conversation:', error);
       conversationId = `fallback-${Date.now()}`;
@@ -226,7 +226,7 @@ export async function processMessage(
   const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-  const raw = (await secureInvoke<unknown>('conversation_generate', {
+  const raw = (await tauriClient.conversationGenerate({
     message: userMessage,
     conversation_id: conversationId,
     mode: options?.mode || 'default',
@@ -309,14 +309,14 @@ export async function processMessage(
  * Vérifier la santé du système conversationnel
  */
 export async function healthCheck(): Promise<ConversationHealthReport> {
-  return secureInvoke<ConversationHealthReport>('conversation_health_check');
+  return (await tauriClient.conversationHealthCheck()) as ConversationHealthReport;
 }
 
 /**
  * Obtenir les statistiques mémoire
  */
 export async function getMemoryStats(): Promise<ConversationMemoryStats> {
-  return secureInvoke<ConversationMemoryStats>('conversation_memory_stats');
+  return (await tauriClient.conversationMemoryStats()) as ConversationMemoryStats;
 }
 
 // ═══════════════════════════════════════════════════════════════════

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface SystemMetrics {
   timestamp: number;
@@ -37,7 +37,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
   const fetchMetrics = useCallback(async () => {
     try {
-      const data = await secureInvoke<SystemMetrics>('get_system_metrics');
+      const data = (await tauriClient.getSystemMetrics()) as SystemMetrics;
       setMetrics(data);
       setHistory(prev => [...prev.slice(-29), data]);
 
@@ -59,7 +59,7 @@ const HyperVisionDashboard: React.FC = React.memo(() => {
 
   const startMonitoring = useCallback(async () => {
     try {
-      await secureInvoke('sc_hypervision_start');
+      await tauriClient.scHypervisionStart();
       setIsMonitoring(true);
     } catch (err) {
       console.error('Failed to start monitoring:', err);

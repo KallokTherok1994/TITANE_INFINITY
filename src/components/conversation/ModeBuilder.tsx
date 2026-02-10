@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useCallback } from 'react';
 import { colors, spacing } from '@themes/tokens';
 import './ModeBuilder.css';
@@ -129,18 +129,15 @@ export const ModeBuilder: React.FC<ModeBuilderProps> = ({ onClose, onSave }) => 
 
     try {
       // ✅ v25.4.2: Appel au backend Tauri pour générer le prompt via IA
-      const response = await secureInvoke<GeneratePromptResponse>(
-        'generate_mode_prompt',
-        {
-          request: {
-            concept: concept.trim(),
-            expertise: 'advanced',
-            tone: 'professional',
-            include_examples: true,
-            max_tokens: 500,
-          },
-        }
-      );
+      const response = (await tauriClient.generateModePrompt({
+        request: {
+          concept: concept.trim(),
+          expertise: 'advanced',
+          tone: 'professional',
+          include_examples: true,
+          max_tokens: 500,
+        },
+      })) as GeneratePromptResponse;
 
       if (response.success) {
         console.log(

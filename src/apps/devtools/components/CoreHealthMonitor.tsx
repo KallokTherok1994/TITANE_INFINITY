@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import './CoreHealthMonitor.css';
 
 type CoreHealth = 'Healthy' | 'Degraded' | 'Failing' | 'Unknown';
@@ -33,7 +33,7 @@ export const CoreHealthMonitor: React.FC = () => {
   // Fetch core health
   const fetchCoreHealth = async () => {
     try {
-      const response = await secureInvoke<CoreHealthResponse>('get_core_info');
+      const response = (await tauriClient.getCoreInfo()) as CoreHealthResponse;
       if (response.success && response.data) {
         setCores(response.data);
       }
@@ -56,7 +56,7 @@ export const CoreHealthMonitor: React.FC = () => {
     try {
       const failingCores = cores.filter(c => c.health === 'Failing').map(c => c.id);
       if (failingCores.length > 0) {
-        await secureInvoke('restart_cores', { coreIds: failingCores });
+        await tauriClient.restartCores({ coreIds: failingCores });
         fetchCoreHealth();
       }
     } catch (error) {

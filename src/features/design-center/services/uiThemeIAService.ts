@@ -5,7 +5,7 @@
  * @license AGPL-3.0 - TITANE AI Project
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type {
   UICommand,
   UICommandResult,
@@ -228,7 +228,7 @@ export const uiThemeIAService = {
             contrast: 'contrast',
           };
 
-          await secureInvoke<UIThemeTokens>('update_ui_token', {
+          await tauriClient.updateUiToken({
             category: categoryMap[category] ?? category,
             key: command.key,
             value: command.value,
@@ -242,7 +242,7 @@ export const uiThemeIAService = {
         }
 
         case 'reset_defaults': {
-          await secureInvoke<UIThemeTokens>('reset_ui_theme');
+          await tauriClient.resetUiTheme();
           return {
             success: true,
             message: '✅ Thème réinitialisé aux valeurs par défaut',
@@ -250,8 +250,8 @@ export const uiThemeIAService = {
         }
 
         case 'save_theme': {
-          const tokens = await secureInvoke<UIThemeTokens>('load_ui_theme');
-          await secureInvoke('save_ui_theme', { tokens });
+          const tokens = (await tauriClient.loadUiTheme()) as UIThemeTokens;
+          await tauriClient.saveUiTheme({ tokens });
           return {
             success: true,
             message: '✅ Thème sauvegardé',
@@ -259,7 +259,7 @@ export const uiThemeIAService = {
         }
 
         case 'reload_theme': {
-          await secureInvoke<UIThemeTokens>('load_ui_theme');
+          await tauriClient.loadUiTheme();
           return {
             success: true,
             message: '✅ Thème rechargé',

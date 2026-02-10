@@ -139,6 +139,48 @@ class TauriClient {
     );
   }
 
+  async aiCheckOllamaStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.AI_CHECK_OLLAMA_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async aiGenerateLocal(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.AI_GENERATE_LOCAL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async aiScanLocalModels(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.AI_SCAN_LOCAL_MODELS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async aiSetLocalModel(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.AI_SET_LOCAL_MODEL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async aiStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.AI_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async analyzeBundleSize(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ANALYZE_BUNDLE_SIZE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async autofixAddMutex(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.AUTOFIX_ADD_MUTEX,
@@ -397,6 +439,27 @@ class TauriClient {
     );
   }
 
+  async chatGenerateOpenai(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CHAT_GENERATE_OPENAI,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async generateModePrompt(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GENERATE_MODE_PROMPT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async createModule(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CREATE_MODULE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async checkSqliteAvailable(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CHECK_SQLITE_AVAILABLE,
@@ -460,9 +523,86 @@ class TauriClient {
     );
   }
 
+  async cloudAutoHeal(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_AUTO_HEAL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudBackupVault(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_BACKUP_VAULT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudGetDevices(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_GET_DEVICES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudGetStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_GET_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudGetSyncHistory(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_GET_SYNC_HISTORY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudInit(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_INIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudListBackups(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_LIST_BACKUPS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudSyncPull(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_SYNC_PULL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudSyncPush(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_SYNC_PUSH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cloudVerifyIntegrity(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CLOUD_VERIFY_INTEGRITY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async cognitiveGetMap(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.COGNITIVE_GET_MAP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cognitiveGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.COGNITIVE_GET_STATE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -488,9 +628,37 @@ class TauriClient {
     );
   }
 
+  async createConversation(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CREATE_CONVERSATION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async createNewConversation(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CREATE_NEW_CONVERSATION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async conversationGenerate(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CONVERSATION_GENERATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async conversationHealthCheck(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CONVERSATION_HEALTH_CHECK,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async conversationMemoryStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CONVERSATION_MEMORY_STATS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -509,9 +677,51 @@ class TauriClient {
     );
   }
 
+  async cpGetAiConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_GET_AI_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async cpSetDesignConfig(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CP_SET_DESIGN_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cpGetDesignConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_GET_DESIGN_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getDesignConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_GET_DESIGN_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cpGetModulesStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_GET_MODULES_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getModulesStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_GET_MODULES_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async cpCheckForUpdates(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_CHECK_FOR_UPDATES,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -526,6 +736,13 @@ class TauriClient {
   async crashguardClearMemory(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CRASHGUARD_CLEAR_MEMORY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async crashguardDetectThreats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CRASHGUARD_DETECT_THREATS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -572,6 +789,55 @@ class TauriClient {
     );
   }
 
+  async exportConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXPORT_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async expGetGlobalState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXP_GET_GLOBAL_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async expGetCategories(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXP_GET_CATEGORIES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async expGetProjects(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXP_GET_PROJECTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async expGetTalents(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXP_GET_TALENTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getAllConfigs(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_ALL_CONFIGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async importConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IMPORT_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async deleteConversation(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.DELETE_CONVERSATION,
@@ -582,6 +848,20 @@ class TauriClient {
   async deleteSnapshot(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.DELETE_SNAPSHOT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getTravelStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_TRAVEL_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async listSnapshots(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.LIST_SNAPSHOTS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -628,6 +908,20 @@ class TauriClient {
     );
   }
 
+  async devtoolsDebugLast(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_DEBUG_LAST,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsDebugStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_DEBUG_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async devtoolsDisable(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.DEVTOOLS_DISABLE,
@@ -642,9 +936,72 @@ class TauriClient {
     );
   }
 
+  async devtoolsMemoryStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_MEMORY_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsMemoryHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_MEMORY_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsMemorySearch(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_MEMORY_SEARCH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsKnn(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_KNN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsAnalyze(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_ANALYZE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devtoolsStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DEVTOOLS_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async engineInit(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.ENGINE_INIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async engineMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINE_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async engineHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINE_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async engineModules(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINE_MODULES,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -659,6 +1016,48 @@ class TauriClient {
   async enginesMonitoringGetDashboard(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.ENGINES_MONITORING_GET_DASHBOARD,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesGetDashboard(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_MONITORING_GET_DASHBOARD,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesMonitoringGetHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_MONITORING_GET_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesMonitoringGetMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_MONITORING_GET_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async engineGetNexusState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINE_GET_NEXUS_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async engineGetSingularityState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINE_GET_SINGULARITY_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async executeShellCommand(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.EXECUTE_SHELL_COMMAND,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -754,6 +1153,34 @@ class TauriClient {
     );
   }
 
+  async getCpuMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CPU_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getEngineHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_ENGINE_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getEnginesStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_ENGINES_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getHeliosState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_HELIOS_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async getModuleHealth(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.GET_MODULE_HEALTH,
@@ -768,9 +1195,58 @@ class TauriClient {
     );
   }
 
+  async getSystemInfo(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SYSTEM_INFO,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSystemMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SYSTEM_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async getSystemHealth(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.GET_SYSTEM_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getRuntimeConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_RUNTIME_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async stateGet(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.STATE_GET,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getCognitiveState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_COGNITIVE_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSingularityState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SINGULARITY_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSingularityStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SINGULARITY_STATE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -803,9 +1279,135 @@ class TauriClient {
     );
   }
 
+  async hyperGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperInit(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_INIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperGetThoughts(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_GET_THOUGHTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperGetInsights(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_GET_INSIGHTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperThink(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_THINK,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperReason(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_REASON,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperImagine(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_IMAGINE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperGenerateInsight(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_GENERATE_INSIGHT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperPredictIssues(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_PREDICT_ISSUES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async hyperAccelerate(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPER_ACCELERATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async hypervisionStart(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.HYPERVISION_START,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetMatrix(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_MATRIX,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetPersonalitySnapshot(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_PERSONALITY_SNAPSHOT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityListVoiceProfiles(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_LIST_VOICE_PROFILES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetCurrentTone(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_CURRENT_TONE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetCurrentMode(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_CURRENT_MODE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetAvailableModes(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_AVAILABLE_MODES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetActiveRules(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_ACTIVE_RULES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async identityGetCoherenceScore(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_COHERENCE_SCORE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -838,9 +1440,9 @@ class TauriClient {
     );
   }
 
-  async identitySetVoiceProfile(params?: unknown): Promise<unknown> {
+  async identitySetActiveVoiceProfile(params?: unknown): Promise<unknown> {
     return await this.invoke(
-      TAURI_COMMANDS.IDENTITY_SET_VOICE_PROFILE,
+      TAURI_COMMANDS.IDENTITY_SET_ACTIVE_VOICE_PROFILE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -848,6 +1450,13 @@ class TauriClient {
   async installUpdate(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.INSTALL_UPDATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async checkForUpdates(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.CP_CHECK_FOR_UPDATES,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -873,6 +1482,27 @@ class TauriClient {
     );
   }
 
+  async listConfigPresets(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.LIST_CONFIG_PRESETS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async listConversations(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.LIST_CONVERSATIONS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async loadConversation(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.LOAD_CONVERSATION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async logEntries(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.LOG_ENTRIES,
@@ -890,6 +1520,13 @@ class TauriClient {
   async memoryCheckAndRepair(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.MEMORY_CHECK_AND_REPAIR,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async memoryGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_GET_STATE,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -943,6 +1580,20 @@ class TauriClient {
     );
   }
 
+  async memoryEvolutionStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_EVOLUTION_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async memoryGetClusters(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_GET_CLUSTERS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async memoryGetActiveProjects(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.MEMORY_GET_ACTIVE_PROJECTS,
@@ -950,9 +1601,37 @@ class TauriClient {
     );
   }
 
+  async memoryGetAllKeys(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_GET_ALL_KEYS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async memoryGetEntry(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_GET_ENTRY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async memoryGetStats(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.MEMORY_GET_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getMemoryStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_GET_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async memoryHierarchyHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_HIERARCHY_HEALTH,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -981,6 +1660,13 @@ class TauriClient {
   async memoryPrune(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.MEMORY_PRUNE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async memorySearch(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_SEARCH,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1020,9 +1706,23 @@ class TauriClient {
     );
   }
 
+  async memoryEvolveFull(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MEMORY_EVOLVE_FULL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async meshInitialize(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.MESH_INITIALIZE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async meshGetStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MESH_GET_STATS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1069,6 +1769,62 @@ class TauriClient {
     );
   }
 
+  async multiAiGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.MULTI_AI_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async nexusGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.NEXUS_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async harmoniaGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HARMONIA_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async orchestratorGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ORCHESTRATOR_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async orchestratorGetMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ORCHESTRATOR_GET_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async orchestratorInit(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ORCHESTRATOR_INIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async orchestrationGetUnifiedState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ORCHESTRATION_GET_UNIFIED_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async orchestrationGetCognitiveState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ORCHESTRATION_GET_COGNITIVE_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async orchestratorRunCycle(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.ORCHESTRATOR_RUN_CYCLE,
@@ -1090,9 +1846,23 @@ class TauriClient {
     );
   }
 
+  async detectFileFormat(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.DETECT_FILE_FORMAT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async performanceCompressMemory(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.PERFORMANCE_COMPRESS_MEMORY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async performanceGetMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERFORMANCE_GET_METRICS,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1139,6 +1909,20 @@ class TauriClient {
     );
   }
 
+  async persistentMemoryCreateBundle(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_CREATE_BUNDLE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryCreateSummary(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_CREATE_SUMMARY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async persistentMemoryDeleteEntry(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.PERSISTENT_MEMORY_DELETE_ENTRY,
@@ -1146,9 +1930,51 @@ class TauriClient {
     );
   }
 
+  async persistentMemoryExport(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_EXPORT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryGetBundles(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_GET_BUNDLES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryGetContext(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_GET_CONTEXT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryGetStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_GET_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryRead(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_READ,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async persistentMemoryPromoteEntry(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.PERSISTENT_MEMORY_PROMOTE_ENTRY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async persistentMemoryWriteEntry(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PERSISTENT_MEMORY_WRITE_ENTRY,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1198,6 +2024,27 @@ class TauriClient {
   async realityAddEntity(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.REALITY_ADD_ENTITY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async realityGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.REALITY_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async realityInit(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.REALITY_INIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async realityRenderFrame(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.REALITY_RENDER_FRAME,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1272,9 +2119,37 @@ class TauriClient {
     );
   }
 
+  async runSystemDiagnostic(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.RUN_SYSTEM_DIAGNOSTIC,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async saveConfigPreset(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SAVE_CONFIG_PRESET,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async updateUiToken(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.UPDATE_UI_TOKEN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async loadUiTheme(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.LOAD_UI_THEME,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async resetUiTheme(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.RESET_UI_THEME,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1296,6 +2171,69 @@ class TauriClient {
   async scClearLogs(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SC_CLEAR_LOGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetClusterStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_CLUSTER_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetClusterPeers(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_CLUSTER_PEERS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetLogs(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_LOGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetLogStats(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_LOG_STATS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scHypervisionGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_HYPERVISION_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scHypervisionGetMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_HYPERVISION_GET_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scHypervisionGetLayers(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_HYPERVISION_GET_LAYERS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scHypervisionGetAnomalies(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_HYPERVISION_GET_ANOMALIES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scHypervisionStart(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HYPERVISION_START,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1335,6 +2273,13 @@ class TauriClient {
     );
   }
 
+  async hasSecret(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.HAS_SECRET,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async secureListFiles(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SECURE_LIST_FILES,
@@ -1345,6 +2290,34 @@ class TauriClient {
   async secureStoreKey(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SECURE_STORE_KEY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSelfHealingHealth(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SELFHEAL_GET_HEALTH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSelfHealingState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SELFHEAL_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSelfHealingPrediction(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SELFHEAL_GET_PREDICTION,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async forceSelfHealingEvaluation(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SELFHEAL_FORCE_EVALUATION,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1450,6 +2423,62 @@ class TauriClient {
   async sendAudioChunk(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SEND_AUDIO_CHUNK,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getDashboardMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_DASHBOARD_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getCoreInfo(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CORE_INFO,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSystemLogs(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SYSTEM_LOGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getEventStream(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_EVENT_STREAM,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getLogs(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_LOGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getAudioOutputDevices(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_AUDIO_OUTPUT_DEVICES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getAudioInputDevices(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_AUDIO_INPUT_DEVICES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async vadTest(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.VAD_TEST,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1643,16 +2672,27 @@ class TauriClient {
     );
   }
 
-  async testMicrophone(params?: unknown): Promise<unknown> {
+  async testMicrophone(
+    params?: unknown,
+    options?: TauriInvokeOptions
+  ): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TEST_MICROPHONE,
-      (params as Record<string, unknown>) || {}
+      (params as Record<string, unknown>) || {},
+      options
     );
   }
 
   async testTts(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TEST_TTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async testAiLocal(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TEST_AI_LOCAL,
       (params as Record<string, unknown>) || {}
     );
   }
@@ -1809,6 +2849,41 @@ class TauriClient {
     );
   }
 
+  async windowGetZoom(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.WINDOW_GET_ZOOM,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async windowIsFullscreen(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.WINDOW_IS_FULLSCREEN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async windowToggleFullscreen(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.WINDOW_TOGGLE_FULLSCREEN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async windowZoomIn(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.WINDOW_ZOOM_IN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async windowZoomOut(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.WINDOW_ZOOM_OUT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async writeLog(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.WRITE_LOG,
@@ -1823,9 +2898,484 @@ class TauriClient {
     );
   }
 
+  async xpGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.XP_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async xpSyncState(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.XP_SYNC_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DEVELOPER MODE WRAPPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async devmodeGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeEnable(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_ENABLE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeDisable(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_DISABLE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeValidatePatch(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_VALIDATE_PATCH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeApplyPatch(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_APPLY_PATCH,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodePreview(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_PREVIEW,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeRollback(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_ROLLBACK,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeGetHistory(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_GET_HISTORY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeCreateBackup(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_CREATE_BACKUP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeRestoreBackup(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_RESTORE_BACKUP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeGetSuggestions(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_GET_SUGGESTIONS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeChangelog(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_CHANGELOG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesBuildStart(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_BUILD_START,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesBuildGetStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_BUILD_GET_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesBuildGetResult(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_BUILD_GET_RESULT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesBuildCancel(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_BUILD_CANCEL,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async enginesBuildClean(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_BUILD_CLEAN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // QA MONITORING WRAPPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async qaGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaListTestSuites(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_LIST_TEST_SUITES,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaRunTestSuite(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_RUN_TEST_SUITE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaGetTestResult(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_TEST_RESULT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaListMonitors(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_LIST_MONITORS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaCreateMonitor(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_CREATE_MONITOR,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaToggleMonitor(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_TOGGLE_MONITOR,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaDeleteMonitor(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_DELETE_MONITOR,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaGetSystemMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_SYSTEM_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaListAlerts(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_LIST_ALERTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaAcknowledgeAlert(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_ACKNOWLEDGE_ALERT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaResolveAlert(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_RESOLVE_ALERT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaGetHardeningConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_HARDENING_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaUpdateHardeningConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_UPDATE_HARDENING_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaRunSecurityAudit(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_RUN_SECURITY_AUDIT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaGetPerformanceReport(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_PERFORMANCE_REPORT,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaGetLogs(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_GET_LOGS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaExportMetricsPrometheus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_EXPORT_METRICS_PROMETHEUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async qaHealthCheck(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.QA_HEALTH_CHECK,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ONE CORE WRAPPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async oneCoreGetState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_GET_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreGetMetrics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_GET_METRICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreListCommands(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_LIST_COMMANDS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreGetEventHistory(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_GET_EVENT_HISTORY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreExecuteCommand(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_EXECUTE_COMMAND,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreRunDiagnostic(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_RUN_DIAGNOSTIC,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreForceSync(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_FORCE_SYNC,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreCleanup(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_CLEANUP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreSetMode(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_SET_MODE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreVerifyIntegrity(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_VERIFY_INTEGRITY,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async oneCoreGetEngineStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ONE_CORE_GET_ENGINE_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // SYSTEM CENTER HOOKS WRAPPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async scRunQuickDiagnostics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_RUN_QUICK_DIAGNOSTICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scRunFullDiagnostics(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_RUN_FULL_DIAGNOSTICS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetEnv(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_ENV,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scGetDiagnosticStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_GET_DIAGNOSTIC_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scIntrospectionGenerate(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_GENERATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scIntrospectionPreview(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_PREVIEW,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scIntrospectionAutoFix(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_AUTO_FIX,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scIntrospectionQuickScan(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_QUICK_SCAN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async scIntrospectionFullScan(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_FULL_SCAN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async introspectionScan(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.INTROSPECTION_SCAN,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async introspectionAutoFix(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SC_INTROSPECTION_AUTO_FIX,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getMemoryState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_MEMORY_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getSystemState(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_SYSTEM_STATE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getPersistenceStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_PERSISTENCE_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async titanGetPersistenceStatus(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.TITAN_GET_PERSISTENCE_STATUS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async devmodeAnalyzeFile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.ENGINES_DEVMODE_ANALYZE_FILE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // AUDIO CENTER WRAPPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  async sttTranscribe(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.STT_TRANSCRIBE,
       (params as Record<string, unknown>) || {}
     );
   }

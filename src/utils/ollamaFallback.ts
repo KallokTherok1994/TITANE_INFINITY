@@ -1,6 +1,6 @@
 /**
  * TITANE∞ Ollama Fallback v20.5
- * Fallback direct vers Ollama quand le backend Tauri est indisponible
+ * Fallback via proxy Ollama quand le backend Tauri est indisponible
  */
 
 export interface OllamaRequest {
@@ -27,13 +27,13 @@ export interface OllamaResponse {
 }
 
 /**
- * Appel direct à Ollama via HTTP (fallback mode)
+ * Appel via proxy Ollama (fallback mode)
  */
 export async function callOllamaDirectly(
   request: OllamaRequest
 ): Promise<OllamaResponse> {
   const startTime = Date.now();
-  const ollamaEndpoint = 'http://127.0.0.1:11434/api/generate';
+  const ollamaEndpoint = '/api/ollama/generate';
 
   try {
     const controller = new AbortController();
@@ -84,7 +84,7 @@ export async function callOllamaDirectly(
 
     // Return error as content
     return {
-      content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Vérifiez qu'Ollama est actif sur http://127.0.0.1:11434`,
+      content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Vérifiez qu'Ollama est actif.`,
       conversationId: request.conversation_id,
       messageId: `error-${Date.now()}`,
       latencyMs: Date.now() - startTime,

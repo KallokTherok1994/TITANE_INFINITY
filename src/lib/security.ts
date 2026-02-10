@@ -263,6 +263,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_restore',
   'context_clear',
 
+  // Persistent Memory (frontend hooks)
+  'persistent_memory_write_entry',
+  'persistent_memory_create_summary',
+  'persistent_memory_create_bundle',
+  'persistent_memory_add_to_bundle',
+  'persistent_memory_promote_entry',
+  'persistent_memory_archive_entry',
+  'persistent_memory_delete_entry',
+  'persistent_memory_export',
+
   // ═══════════════════════════════════════════════════════════════
   // AI / CHAT COMMANDS
   // ═══════════════════════════════════════════════════════════════
@@ -286,6 +296,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'chat_create_conversation',
   'chat_get_conversation',
   'chat_delete_conversation',
+  'create_conversation',
+  'list_conversations',
+  'load_conversation',
   'chat_set_gemini_key',
   'chat_stream_message',
   'chat_generate_suggestions', // ✅ v∞ Suggestions IA
@@ -523,6 +536,13 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'sc_get_diagnostic_status',
   'sc_get_cluster_status',
   'sc_get_cluster_peers',
+  'sc_get_logs',
+  'sc_get_log_stats',
+  'sc_hypervision_get_state',
+  'sc_hypervision_get_metrics',
+  'sc_hypervision_get_layers',
+  'sc_hypervision_get_anomalies',
+  'sc_hypervision_start',
   'sc_initialize_cluster',
   'sc_shutdown_cluster',
 

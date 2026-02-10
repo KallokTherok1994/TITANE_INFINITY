@@ -18,7 +18,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { promises as fsPromises, join as joinPath } from '@/utils/tauriFsAdapter';
 import { gstreamerCheck } from '@/services/audio/gstreamerCheck';
 
@@ -55,8 +55,9 @@ const checkDiagEnabled = async (): Promise<boolean> => {
   // 3. Tauri runtime envs (requires Tauri API)
   if (typeof window !== 'undefined' && '__TAURI__' in window) {
     try {
-      const { invoke } = await import('@tauri-apps/api/core');
-      const val = await invoke<string | null>('sc_get_env', { key: 'TITANE_DIAG' });
+      const val = (await tauriClient.scGetEnv({ key: 'TITANE_DIAG' })) as
+        | string
+        | null;
       if (val === '1') {
         return true;
       }
@@ -192,7 +193,7 @@ const useBootWatchdog = () => {
         setTimedOut(true);
 
         // Tenter de récupérer status backend
-        secureInvoke<unknown>('get_system_health')
+        tauriClient.getSystemHealth()
           .then(health => {
             const derivedStatus = deriveBackendStatus(health);
             const gstStatus = gstreamerCheck.getGStreamerStatus();

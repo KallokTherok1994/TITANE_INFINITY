@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect, lazy, Suspense, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { SystemInfo } from '../../../types/tauri';
 import { ControlPanelLayout } from './components/ControlPanelLayout';
@@ -96,7 +96,7 @@ export const ControlPanel: React.FC = () => {
 
   const loadSystemInfo = useCallback(async () => {
     try {
-      const info = await secureInvoke<SystemInfo>('get_system_info');
+      const info = (await tauriClient.getSystemInfo()) as SystemInfo;
       setSystemInfo(info);
       setLoading(false);
     } catch (error) {

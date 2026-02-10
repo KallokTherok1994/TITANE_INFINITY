@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type {
   IntrospectionReport,
   AutoFixResult,
@@ -44,12 +44,9 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<IntrospectionReport>(
-        'sc_introspection_quick_scan',
-        {
+      const result = await tauriClient.scIntrospectionQuickScan({
           projectPath,
-        }
-      );
+        }) as IntrospectionReport;
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -65,12 +62,9 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<IntrospectionReport>(
-        'sc_introspection_full_scan',
-        {
+      const result = await tauriClient.scIntrospectionFullScan({
           projectPath,
-        }
-      );
+        }) as IntrospectionReport;
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -87,9 +81,9 @@ export function useIntrospection(): UseIntrospectionReturn {
       setError(null);
 
       try {
-        const result = await secureInvoke<AutoFixResult>('sc_introspection_auto_fix', {
+        const result = await tauriClient.scIntrospectionAutoFix({
           projectPath,
-        });
+        }) as AutoFixResult;
 
         // Re-scan after fix
         await runFullScan(projectPath);

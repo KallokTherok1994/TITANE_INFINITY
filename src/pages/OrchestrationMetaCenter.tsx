@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -720,24 +720,20 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   const loadAllState = useCallback(async () => {
     try {
       // Load Meta Orchestrator state
-      const metaState = await secureInvoke<MetaOrchestratorState>(
-        'orchestrator_get_state'
-      ).catch(async () => {
-        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
-      });
+      const metaState = (await tauriClient.orchestratorGetState().catch(async () => {
+        return (await tauriClient.orchestratorInit()) as MetaOrchestratorState;
+      })) as MetaOrchestratorState;
 
       // Load Cognitive orchestration states (with fallbacks)
-      const multiAiState = await secureInvoke<MultiAIState>('multi_ai_get_state').catch(
-        () => ({
+      const multiAiState = (await tauriClient.multiAiGetState().catch(() => ({
           providers: [],
           bestProvider: 'claude',
           autoMode: true,
           globalScore: 85,
           lastUpdate: Date.now(),
-        })
-      );
+        }))) as MultiAIState;
 
-      const nexusState = await secureInvoke<NexusState>('nexus_get_state').catch(() => ({
+      const nexusState = (await tauriClient.nexusGetState().catch(() => ({
         activeNodes: 12,
         totalNodes: 15,
         linkCount: 45,
@@ -745,10 +741,9 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         nodes: [],
         anomalies: [],
         lastUpdate: Date.now(),
-      }));
+      }))) as NexusState;
 
-      const harmoniaState = await secureInvoke<HarmoniaState>('harmonia_get_state').catch(
-        () => ({
+      const harmoniaState = (await tauriClient.harmoniaGetState().catch(() => ({
           activeFlows: [],
           cpuUsage: 35,
           ramUsage: 45,
@@ -756,12 +751,9 @@ const OrchestrationMetaCenterContent: React.FC = () => {
           harmonyScore: 82,
           mode: 'balanced',
           lastUpdate: Date.now(),
-        })
-      );
+        }))) as HarmoniaState;
 
-      const cognitiveState = await secureInvoke<CognitiveState>(
-        'cognitive_get_state'
-      ).catch(() => ({
+      const cognitiveState = (await tauriClient.cognitiveGetState().catch(() => ({
         provider: 'claude',
         mode: 'deep',
         depth: 7,
@@ -771,7 +763,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         reasoningQuality: 91,
         activeProcesses: [],
         lastUpdate: Date.now(),
-      }));
+      }))) as CognitiveState;
 
       // Calculate global score
       const globalScore = Math.round(
@@ -808,7 +800,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
   const handleModeChange = useCallback(
     async (mode: string) => {
       try {
-        await secureInvoke('orchestrator_set_mode', { mode });
+        await tauriClient.orchestratorSetMode({ mode });
         await loadAllState();
       } catch (err) {
         setError(err instanceof Error ? err.message : String(err));
@@ -819,7 +811,7 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
   const handleRunCycle = useCallback(async () => {
     try {
-      await secureInvoke('orchestrator_run_cycle');
+      await tauriClient.orchestratorRunCycle();
       await loadAllState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

@@ -12,7 +12,7 @@
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -241,26 +241,36 @@ export function useSystemHealth(): UseSystemHealthReturn {
     try {
       // Fetch all health metrics in parallel
       const [convHealthRaw, memStats, singState, sysHealth] = await Promise.all([
-        secureInvoke<{
-          status: string;
-          active_conversations: number;
-          total_messages: number;
-          avg_response_time_ms: number;
-          error_rate: number;
-        }>('conversation_health_check').catch(() => null),
-        secureInvoke<{
-          total_entries: number;
-          total_size_bytes: number;
-          health_score: number;
-        }>('memory_get_stats').catch(() => null),
-        secureInvoke<{ engines: Array<{ name: string; status: string }> }>(
-          'engine_get_singularity_state'
-        ).catch(() => null),
-        secureInvoke<{
-          uptime_ms: number;
-          cpu_usage: number;
-          memory_usage_mb: number;
-        }>('system_health').catch(() => null),
+        tauriClient.conversationHealthCheck().catch(() => null) as Promise<
+          | {
+              status: string;
+              active_conversations: number;
+              total_messages: number;
+              avg_response_time_ms: number;
+              error_rate: number;
+            }
+          | null
+        >,
+        tauriClient.memoryGetStats().catch(() => null) as Promise<
+          | {
+              total_entries: number;
+              total_size_bytes: number;
+              health_score: number;
+            }
+          | null
+        >,
+        tauriClient.engineGetSingularityState().catch(() => null) as Promise<
+          | { engines: Array<{ name: string; status: string }> }
+          | null
+        >,
+        tauriClient.getSystemHealth().catch(() => null) as Promise<
+          | {
+              uptime_ms: number;
+              cpu_usage: number;
+              memory_usage_mb: number;
+            }
+          | null
+        >,
       ]);
 
       // Build conversation health
@@ -429,17 +439,17 @@ export function useSystemHealth(): UseSystemHealthReturn {
       try {
         switch (component) {
           case 'conversation':
-            await secureInvoke('conversation_reset');
+            await tauriClient.conversationReset();
             break;
           case 'memory':
-            await secureInvoke('memory_compress');
+            await tauriClient.memoryCompress();
             break;
           case 'singularity':
-            await secureInvoke('engine_singularity_reset');
+            await tauriClient.engineSingularityReset();
             break;
           case 'system':
             // System recovery handled by backend
-            await secureInvoke('system_recovery');
+            await tauriClient.systemRecovery();
             break;
         }
 

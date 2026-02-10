@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import {
   Activity,
   Zap,
@@ -61,7 +61,8 @@ export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
   const loadPredictions = useCallback(async () => {
     setLoading(true);
     try {
-      const report = await secureInvoke<PredictionReport>('hyper_predict_issues');
+      const report =
+        (await tauriClient.hyperPredictIssues()) as PredictionReport;
       setPredictionReport(report);
     } catch (error) {
       console.error('Failed to load predictions:', error);
@@ -73,7 +74,7 @@ export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
   const loadAcceleration = useCallback(async () => {
     setLoading(true);
     try {
-      const report = await secureInvoke<AccelerationReport>('hyper_accelerate');
+      const report = (await tauriClient.hyperAccelerate()) as AccelerationReport;
       setAccelerationReport(report);
     } catch (error) {
       console.error('Failed to load acceleration:', error);

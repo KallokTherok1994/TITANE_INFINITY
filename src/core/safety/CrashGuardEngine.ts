@@ -18,7 +18,7 @@
  * @created 2025-11-27
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -248,7 +248,7 @@ export class CrashGuardEngine {
    */
   private async detectThreats(): Promise<void> {
     try {
-      const threats = await secureInvoke<CrashThreat[]>('crashguard_detect_threats');
+      const threats = (await tauriClient.crashguardDetectThreats()) as CrashThreat[];
 
       for (const threat of threats) {
         this.registerThreat(threat);
@@ -293,31 +293,31 @@ export class CrashGuardEngine {
       switch (threat.type) {
         case 'memory_overflow':
           recoveryType = 'clear_memory';
-          await secureInvoke('crashguard_clear_memory');
+          await tauriClient.crashguardClearMemory();
           success = true;
           break;
 
         case 'infinite_loop':
           recoveryType = 'kill_thread';
-          await secureInvoke('crashguard_kill_thread', { source: threat.source });
+          await tauriClient.crashguardKillThread({ source: threat.source });
           success = true;
           break;
 
         case 'deadlock':
           recoveryType = 'restart_module';
-          await secureInvoke('crashguard_restart_module', { module: threat.source });
+          await tauriClient.crashguardRestartModule({ module: threat.source });
           success = true;
           break;
 
         case 'panic':
           recoveryType = 'emergency_shutdown';
-          await secureInvoke('crashguard_emergency_shutdown');
+          await tauriClient.crashguardEmergencyShutdown();
           success = true;
           break;
 
         default:
           recoveryType = 'reset_pipeline';
-          await secureInvoke('crashguard_reset_pipeline');
+          await tauriClient.crashguardResetPipeline();
           success = true;
       }
 
@@ -357,7 +357,7 @@ export class CrashGuardEngine {
     if (this.config.emergency_rollback) {
       try {
         // Rollback état
-        await secureInvoke('crashguard_emergency_rollback');
+        await tauriClient.crashguardEmergencyRollback();
 
         // Clear toutes les menaces
         this.activeThreats.clear();

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface Metric {
   name: string;
@@ -35,13 +35,13 @@ export const MetricsDisplay: React.FC<MetricsDisplayProps> = ({
     const fetchMetrics = async () => {
       try {
         // Fetch dashboard metrics
-        const dashboard = await secureInvoke<{
+        const dashboard = (await tauriClient.getDashboardMetrics()) as {
           error_count: number;
           warning_count: number;
           total_logs: number;
           active_cores: number;
           system_health: number;
-        }>('get_dashboard_metrics');
+        };
 
         // Organize into categories
         const metricsData: MetricCategory[] = [

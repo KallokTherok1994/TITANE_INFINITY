@@ -27,10 +27,6 @@ export function cleanupLegacyConversationKeys(): void {
         keysToRemove.push(key);
       }
 
-      // Legacy mode-based message keys
-      if (key.startsWith('titane_chat_mode_')) {
-        keysToRemove.push(key);
-      }
     }
 
     // Remove all legacy keys

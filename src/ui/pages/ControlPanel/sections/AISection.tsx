@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { envFlag } from '@/config/featureFlags';
 import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
@@ -62,7 +62,7 @@ export const AISection: React.FC = () => {
 
   const loadConfig = useCallback(async () => {
     try {
-      const aiConfig = await secureInvoke<AIConfig>('cp_get_ai_config');
+      const aiConfig = (await tauriClient.cpGetAiConfig()) as AIConfig;
       const masked = aiConfig.gemini_api_key === GEMINI_KEY_SENTINEL;
 
       setHasStoredKey(masked || Boolean(runtimeConfig?.geminiConfigured));
@@ -159,7 +159,7 @@ export const AISection: React.FC = () => {
         max_tokens: config.max_tokens,
       };
 
-      await secureInvoke('cp_set_ai_config', { config: payload });
+      await tauriClient.cpSetAiConfig({ config: payload });
 
       setHasStoredKey(payload.gemini_api_key !== '');
       setPersistedConfig({
@@ -183,7 +183,7 @@ export const AISection: React.FC = () => {
       setSaving(true);
       setError(null);
 
-      await secureInvoke('cp_set_ai_config', {
+      await tauriClient.cpSetAiConfig({
         config: {
           gemini_api_key: '',
           gemini_model: config.gemini_model,

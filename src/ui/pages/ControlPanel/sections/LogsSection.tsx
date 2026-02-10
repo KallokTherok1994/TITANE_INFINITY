@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface LogEntry {
   timestamp: string;
@@ -27,7 +27,7 @@ export const LogsSection: React.FC = () => {
 
   const loadLogs = useCallback(async () => {
     try {
-      const logEntries = await secureInvoke<LogEntry[]>('get_logs', { limit: 100 });
+      const logEntries = (await tauriClient.getLogs({ limit: 100 })) as LogEntry[];
       setLogs(logEntries);
     } catch (error) {
       console.error('Erreur chargement logs:', error);
@@ -44,7 +44,7 @@ export const LogsSection: React.FC = () => {
 
   const clearLogs = useCallback(async () => {
     try {
-      await secureInvoke('clear_logs');
+      await tauriClient.clearLogs();
       setLogs([]);
     } catch (error) {
       console.error('Erreur nettoyage logs:', error);

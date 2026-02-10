@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { ControlPanelToggle } from '../components/ControlPanelToggle';
 
 interface ModuleStatus {
@@ -21,7 +21,8 @@ export const ModulesSection: React.FC = () => {
 
   const loadModules = useCallback(async () => {
     try {
-      const modulesList = await secureInvoke<ModuleStatus[]>('get_modules_status');
+      const modulesList =
+        (await tauriClient.getModulesStatus()) as ModuleStatus[];
       setModules(modulesList);
     } catch (error) {
       console.error('Erreur chargement modules:', error);
@@ -35,7 +36,7 @@ export const ModulesSection: React.FC = () => {
   const toggleModule = useCallback(
     async (moduleId: string) => {
       try {
-        await secureInvoke('cp_toggle_module', { module_id: moduleId });
+        await tauriClient.cpToggleModule({ module_id: moduleId });
         await loadModules();
       } catch (error) {
         console.error('Erreur toggle module:', error);

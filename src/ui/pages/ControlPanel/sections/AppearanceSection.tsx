@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import {
   ControlPanelToggleList,
   type ToggleConfig,
@@ -189,7 +189,8 @@ export const AppearanceSection: React.FC = () => {
 
   const loadConfig = useCallback(async () => {
     try {
-      const loadedConfig = await secureInvoke<DesignSystemConfig>('get_design_config');
+      const loadedConfig =
+        (await tauriClient.getDesignConfig()) as DesignSystemConfig;
       setConfig({ ...DEFAULT_CONFIG, ...loadedConfig });
     } catch (error) {
       console.error('Erreur chargement config:', error);
@@ -204,7 +205,7 @@ export const AppearanceSection: React.FC = () => {
     try {
       setIsSaving(true);
       setSaved(false);
-      await secureInvoke('cp_set_design_config', { config: newConfig });
+      await tauriClient.cpSetDesignConfig({ config: newConfig });
       setConfig(newConfig);
       setSaved(true);
       // Reset saved indicator après 2s

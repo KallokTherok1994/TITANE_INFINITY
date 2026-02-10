@@ -9,7 +9,7 @@
 // 🎯 ExpPanel — Panneau principal EXP Fusion
 // Vue globale : XP, catégories, projets, talents, timeline
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect } from 'react';
 import { logger as _logger } from '@/lib/logger';
 import '../../styles/exp-fusion.css';
@@ -73,10 +73,10 @@ export const ExpPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const fetchAllData = async () => {
     try {
       const [global, cats, projs, tals] = await Promise.all([
-        secureInvoke<GlobalExpState>('exp_get_global_state'),
-        secureInvoke<CategoryState[]>('exp_get_categories'),
-        secureInvoke<ProjectState[]>('exp_get_projects'),
-        secureInvoke<TalentTreeState>('exp_get_talents'),
+        tauriClient.expGetGlobalState() as Promise<GlobalExpState>,
+        tauriClient.expGetCategories() as Promise<CategoryState[]>,
+        tauriClient.expGetProjects() as Promise<ProjectState[]>,
+        tauriClient.expGetTalents() as Promise<TalentTreeState>,
       ]);
       setGlobalState(global);
       setCategories(cats);

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import './EventStream.css';
 
 type EventType = 'System' | 'Core' | 'Memory' | 'IPC' | 'User' | 'Error';
@@ -41,9 +41,9 @@ export const EventStream: React.FC = () => {
     if (isPaused) return;
 
     try {
-      const response = await secureInvoke<EventStreamResponse>('get_event_stream', {
+      const response = (await tauriClient.getEventStream({
         limit: 100,
-      });
+      })) as EventStreamResponse;
       if (response.success && response.data) {
         setEvents(response.data);
       }
@@ -104,7 +104,7 @@ export const EventStream: React.FC = () => {
   // Clear events
   const handleClear = async () => {
     try {
-      await secureInvoke('clear_event_stream');
+      await tauriClient.clearEventStream();
       setEvents([]);
       setFilteredEvents([]);
     } catch (error) {

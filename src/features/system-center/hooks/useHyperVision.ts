@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type {
   HyperVisionState,
   SystemMetrics,
@@ -53,7 +53,7 @@ export function useHyperVision(
 
   const refreshState = useCallback(async () => {
     try {
-      const result = await secureInvoke<HyperVisionState>('sc_hypervision_get_state');
+      const result = (await tauriClient.scHypervisionGetState()) as HyperVisionState;
       setState(result);
       setIsMonitoring(result.is_monitoring);
     } catch (err) {
@@ -63,7 +63,7 @@ export function useHyperVision(
 
   const refreshMetrics = useCallback(async () => {
     try {
-      const result = await secureInvoke<SystemMetrics>('sc_hypervision_get_metrics');
+      const result = (await tauriClient.scHypervisionGetMetrics()) as SystemMetrics;
       setMetrics(result);
 
       // Update history (keep last 60 entries = 2 minutes at 2s interval)
@@ -78,7 +78,7 @@ export function useHyperVision(
 
   const refreshLayers = useCallback(async () => {
     try {
-      const result = await secureInvoke<LayerHealth[]>('sc_hypervision_get_layers');
+      const result = (await tauriClient.scHypervisionGetLayers()) as LayerHealth[];
       setLayers(result);
     } catch (err) {
       console.error('[useHyperVision] Layers refresh failed:', err);
@@ -87,9 +87,9 @@ export function useHyperVision(
 
   const refreshAnomalies = useCallback(async (includeResolved = false) => {
     try {
-      const result = await secureInvoke<Anomaly[]>('sc_hypervision_get_anomalies', {
+      const result = (await tauriClient.scHypervisionGetAnomalies({
         includeResolved,
-      });
+      })) as Anomaly[];
       setAnomalies(result);
     } catch (err) {
       console.error('[useHyperVision] Anomalies refresh failed:', err);
@@ -101,7 +101,7 @@ export function useHyperVision(
     setError(null);
 
     try {
-      const result = await secureInvoke<HyperVisionState>('sc_hypervision_start');
+      const result = (await tauriClient.scHypervisionStart()) as HyperVisionState;
       setState(result);
       setIsMonitoring(true);
 
@@ -122,7 +122,7 @@ export function useHyperVision(
 
   const stopMonitoring = useCallback(async () => {
     try {
-      await secureInvoke('sc_hypervision_stop');
+      await tauriClient.scHypervisionStop();
       setIsMonitoring(false);
 
       // Stop polling
@@ -141,7 +141,7 @@ export function useHyperVision(
 
   const clearAnomalies = useCallback(async () => {
     try {
-      await secureInvoke('sc_hypervision_clear_anomalies');
+      await tauriClient.scHypervisionClearAnomalies();
       setAnomalies([]);
     } catch (err) {
       console.error('[useHyperVision] Clear anomalies failed:', err);
@@ -151,7 +151,7 @@ export function useHyperVision(
   const resolveAnomaly = useCallback(
     async (id: string) => {
       try {
-        await secureInvoke('sc_hypervision_resolve_anomaly', { anomalyId: id });
+        await tauriClient.scHypervisionResolveAnomaly({ anomalyId: id });
         await refreshAnomalies();
       } catch (err) {
         console.error('[useHyperVision] Resolve anomaly failed:', err);

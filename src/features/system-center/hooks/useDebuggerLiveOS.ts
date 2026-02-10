@@ -9,7 +9,7 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import {
   formatUserError,
   sanitizeErrorForUser,
@@ -172,11 +172,11 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
     try {
       // ✅ System Health (WHITELIST)
-      const systemHealth = await secureInvoke<{
+      const systemHealth = (await tauriClient.getSystemHealth()) as {
         healthy: boolean;
         status: string;
         issues?: string[];
-      }>('get_system_health');
+      };
       metrics.systemHealth = systemHealth;
     } catch (err) {
       console.warn('[LiveMonitor] System health not available:', err);
@@ -184,12 +184,12 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
     try {
       // ✅ Module Health (WHITELIST)
-      const moduleHealth = await secureInvoke<{
+      const moduleHealth = (await tauriClient.getModuleHealth()) as {
         all_healthy: boolean;
         healthy_count: number;
         total_count: number;
         unhealthy_modules?: string[];
-      }>('get_module_health');
+      };
       metrics.moduleHealth = moduleHealth;
     } catch (err) {
       console.warn('[LiveMonitor] Module health not available:', err);
@@ -197,8 +197,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
     try {
       // ✅ Helios Metrics (WHITELIST)
-      const heliosMetrics =
-        await secureInvoke<Record<string, unknown>>('get_helios_metrics');
+      const heliosMetrics = (await tauriClient.getHeliosMetrics()) as Record<
+        string,
+        unknown
+      >;
       metrics.heliosMetrics = heliosMetrics;
     } catch (err) {
       console.warn('[LiveMonitor] Helios metrics not available:', err);
@@ -206,9 +208,10 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
     try {
       // ✅ Singularity State (WHITELIST)
-      const singularityState = await secureInvoke<Record<string, unknown>>(
-        'get_singularity_state'
-      );
+      const singularityState = (await tauriClient.getSingularityState()) as Record<
+        string,
+        unknown
+      >;
       metrics.singularityState = singularityState;
     } catch (err) {
       console.warn('[LiveMonitor] Singularity state not available:', err);
@@ -216,7 +219,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
 
     try {
       // ✅ Engines Health (WHITELIST)
-      const enginesHealth = await secureInvoke<{
+      const enginesHealth = (await tauriClient.enginesMonitoringGetHealth()) as {
         overall_health: number;
         engines: Array<{
           name: string;
@@ -224,7 +227,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
           load: number;
           errors: number;
         }>;
-      }>('engines_monitoring_get_health');
+      };
       metrics.enginesHealth = enginesHealth;
     } catch (err) {
       console.warn('[LiveMonitor] Engines health not available:', err);
@@ -459,23 +462,22 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const _captureCognitiveSnapshot = useCallback(async (): Promise<CognitiveSnapshot> => {
     try {
       // ✅ Get cognitive state (WHITELIST)
-      const cognitiveState =
-        await secureInvoke<Record<string, unknown>>('get_cognitive_state');
+      const cognitiveState = await tauriClient.getCognitiveState() as Record<string, unknown>;
 
       // ✅ Get singularity state (WHITELIST)
-      const singularity = await secureInvoke<{
+      const singularity = await tauriClient.singularityGetFullState() as {
         physical: Record<string, unknown>;
         cognitive: Record<string, unknown>;
         symbolic: Record<string, unknown>;
         adaptive: Record<string, unknown>;
         meta: Record<string, unknown>;
-      }>('singularity_get_full_state');
+      };
 
       // ✅ Get memory state (WHITELIST)
-      const memoryState = await secureInvoke<{
+      const memoryState = await tauriClient.memoryGetState() as {
         usage_percent: number;
         active_connections: number;
-      }>('memory_get_state');
+      };
 
       return {
         id: `snapshot_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -508,13 +510,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       try {
         // Capture all system state
         const [health, modules, metrics, singularity, runtimeConfig] = await Promise.all([
-          secureInvoke<Record<string, unknown>>('get_system_health').catch(() => ({})),
-          secureInvoke<Record<string, unknown>>('get_module_health').catch(() => ({})),
-          secureInvoke<Record<string, unknown>>('get_helios_metrics').catch(() => ({})),
-          secureInvoke<Record<string, unknown>>('get_singularity_state').catch(
+          (tauriClient.getSystemHealth() as Promise<Record<string, unknown>>).catch(() => ({})),
+          (tauriClient.getModuleHealth() as Promise<Record<string, unknown>>).catch(() => ({})),
+          (tauriClient.getHeliosMetrics() as Promise<Record<string, unknown>>).catch(() => ({})),
+          (tauriClient.getSingularityState() as Promise<Record<string, unknown>>).catch(
             () => ({})
           ),
-          secureInvoke<Record<string, unknown>>('get_runtime_config').catch(() => ({})),
+          (tauriClient.getRuntimeConfig() as Promise<Record<string, unknown>>).catch(() => ({})),
         ]);
 
         const endTime = performance.now();
@@ -522,11 +524,11 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         // Try to get persistence info
         let persistence;
         try {
-          const persistenceStatus = await secureInvoke<{
+          const persistenceStatus = await tauriClient.titanGetPersistenceStatus() as {
             snapshot_id: string;
             events_count: number;
             integrity_hash: string;
-          }>('titan_get_persistence_status');
+          };
           persistence = persistenceStatus;
         } catch (err) {
           // Persistence not available
@@ -665,13 +667,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const captureVisualSyncState = useCallback(async (): Promise<VisualSyncState> => {
     try {
       // Get OS state
-      const cognitiveState = await secureInvoke<{
+      const cognitiveState = (await (tauriClient.getCognitiveState() as Promise<{
         mode: string;
-      }>('get_cognitive_state').catch(() => ({ mode: 'unknown' }));
+      }>).catch(() => ({ mode: 'unknown' })));
 
-      const systemState = await secureInvoke<{
+      const systemState = (await (tauriClient.getSystemState() as Promise<{
         cpu_usage: number;
-      }>('get_system_state').catch(() => ({ cpu_usage: 0 }));
+      }>).catch(() => ({ cpu_usage: 0 })));
 
       // Visual Engine state would be captured from the Visual Engine instance
       // For now, we'll use placeholder values
@@ -930,12 +932,12 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
             // Apply fixes based on category
             if (risk.category === 'HighMemory') {
               // ✅ Use whitelist commands
-              await secureInvoke('memory_prune');
+              await tauriClient.memoryPrune();
               fixes_applied++;
               fixed_risks.push(risk.id);
             } else if (risk.category === 'StateInconsistency') {
               // Try to sync singularity
-              await secureInvoke('singularity_self_check');
+              await tauriClient.singularitySelfCheck();
               fixes_applied++;
               fixed_risks.push(risk.id);
             }
@@ -1006,9 +1008,7 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
 
     try {
       // Check system health
-      const health = await secureInvoke<{ healthy: boolean; status: string }>(
-        'get_system_health'
-      );
+      const health = await tauriClient.getSystemHealth() as { healthy: boolean; status: string };
       checks.push({
         id: 'system_health',
         name: 'Santé Système',
@@ -1027,7 +1027,7 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
 
     try {
       // Check module health
-      const modules = await secureInvoke<{ all_healthy: boolean }>('get_module_health');
+      const modules = await tauriClient.getModuleHealth() as { all_healthy: boolean };
       checks.push({
         id: 'module_health',
         name: 'Santé Modules',
@@ -1069,7 +1069,7 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
 
   const syncWithSingularity = useCallback(async () => {
     try {
-      await secureInvoke('singularity_self_check');
+      await tauriClient.singularitySelfCheck();
       addToHistory('synced_with_singularity');
     } catch (err) {
       handleError(err);

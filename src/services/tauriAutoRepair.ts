@@ -13,6 +13,7 @@ import {
   repairSingularityState,
   calculateTitaneAlignment,
 } from '@/utils/tauriCommandMapper';
+import { tauriClient } from '@/lib/tauriClient';
 import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 
@@ -333,7 +334,7 @@ export class TauriAutoRepairEngine {
 
       // Self-check
       try {
-        await secureInvoke('singularity_self_check');
+        await tauriClient.singularitySelfCheck();
         repairs_applied.push('singularity_self_check: exécuté');
       } catch (err) {
         console.warn('[AutoRepair] Self-check failed (non-critical):', err);
@@ -341,7 +342,7 @@ export class TauriAutoRepairEngine {
 
       // Autonomy heal
       try {
-        await secureInvoke('singularity_autonomy_heal');
+        await tauriClient.singularityAutonomyHeal();
         repairs_applied.push('singularity_autonomy_heal: exécuté');
       } catch (err) {
         console.warn('[AutoRepair] Autonomy heal unavailable');
@@ -395,7 +396,7 @@ export class TauriAutoRepairEngine {
 
     // Crypto integrity
     try {
-      await secureInvoke('run_hardening_selftest');
+      await tauriClient.runHardeningSelftest();
       crypto_integrity = true;
       warnings_resolved++;
     } catch (err) {
@@ -405,7 +406,7 @@ export class TauriAutoRepairEngine {
 
     // Snapshots
     try {
-      const persistence = await secureInvoke<any>('titan_get_persistence_status');
+      const persistence = await tauriClient.titanGetPersistenceStatus() as any;
       snapshots_count = persistence?.snapshots_count || 0;
       if (snapshots_count === 0) {
         warnings_resolved++;
@@ -417,12 +418,12 @@ export class TauriAutoRepairEngine {
 
     // XP state
     try {
-      const xpState = await secureInvoke<any>('xp_get_state');
+      const xpState = await tauriClient.xpGetState() as any;
       if (xpState && xpState.xp != null && xpState.level != null) {
         xp_state = 'complete';
       } else {
         // Réparer
-        await secureInvoke('xp_sync_state');
+        await tauriClient.xpSyncState();
         xp_state = 'repaired';
         warnings_resolved++;
       }
