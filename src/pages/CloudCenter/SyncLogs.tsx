@@ -5,7 +5,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect } from 'react';
 import { SyncHistoryEntry } from './types';
 
@@ -23,9 +23,9 @@ const SyncLogs: React.FC = () => {
   const loadLogs = async () => {
     setLoading(true);
     try {
-      const result = await secureInvoke<SyncHistoryResponse>('cloud_get_sync_history', {
+      const result = (await tauriClient.cloudGetSyncHistory({
         limit: 100,
-      });
+      })) as SyncHistoryResponse;
       setLogs(result.entries);
       setTotalCount(result.total_count);
     } catch (err) {

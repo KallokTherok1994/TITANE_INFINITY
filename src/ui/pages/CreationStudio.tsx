@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface GeneratedArtifact {
   id: string;
@@ -42,10 +42,10 @@ const CreationStudio = memo(function CreationStudio() {
     setError(null);
 
     try {
-      const result = await secureInvoke<GeneratedArtifact>('create_module', {
+      const result = (await tauriClient.createModule({
         intent: intent.trim(),
         targetType,
-      });
+      })) as GeneratedArtifact;
       setArtifact(result);
     } catch (err) {
       setError(`Échec de la génération : ${err}`);

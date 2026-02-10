@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { systemCenterAutoFix, type DetectedError } from './SystemCenterAutoFix';
 
 // ═══════════════════════════════════════════════════════════════
@@ -58,13 +58,42 @@ export interface EngineMetrics {
 // ═══════════════════════════════════════════════════════════════
 
 export class SystemAPI {
+  private static async invokeCommand(
+    command: string,
+    params: Record<string, unknown> = {}
+  ): Promise<unknown> {
+    switch (command) {
+      case 'get_system_health':
+        return await tauriClient.getSystemHealth(params);
+      case 'engines_monitoring_get_metrics':
+        return await tauriClient.enginesMonitoringGetMetrics(params);
+      case 'performance_get_metrics':
+        return await tauriClient.performanceGetMetrics(params);
+      case 'get_helios_metrics':
+        return await tauriClient.getHeliosMetrics(params);
+      case 'get_module_health':
+        return await tauriClient.getModuleHealth(params);
+      case 'get_cognitive_state':
+        return await tauriClient.getCognitiveState(params);
+      case 'singularity_get_state':
+        return await tauriClient.getSingularityState(params);
+      case 'get_runtime_config':
+        return await tauriClient.getRuntimeConfig(params);
+      case 'state_get':
+        return await tauriClient.stateGet(params);
+      case 'engines_monitoring_get_dashboard':
+        return await tauriClient.enginesMonitoringGetDashboard(params);
+      default:
+        throw new Error(`Unsupported system command: ${command}`);
+    }
+  }
   /**
    * Obtenir l'état de santé global du système
    * Auto-repair si command échoue
    */
   static async getSystemHealth(): Promise<DiagnosticResult> {
     try {
-      const data = await secureInvoke<SystemHealth>('get_system_health', {});
+      const data = await tauriClient.getSystemHealth();
       return {
         success: true,
         data,
@@ -76,7 +105,7 @@ export class SystemAPI {
 
       if (fix.success && fix.newCommand) {
         try {
-          const data = await secureInvoke(fix.newCommand, {});
+          const data = await this.invokeCommand(fix.newCommand);
           return {
             success: true,
             data,
@@ -113,7 +142,7 @@ export class SystemAPI {
 
     for (const command of commands) {
       try {
-        const data = await secureInvoke<MonitoringMetrics>(command, {});
+        const data = await this.invokeCommand(command);
         return {
           success: true,
           data,
@@ -144,7 +173,7 @@ export class SystemAPI {
    */
   static async getModuleHealth(moduleName: string): Promise<DiagnosticResult> {
     try {
-      const data = await secureInvoke('get_module_health', { module: moduleName });
+      const data = await tauriClient.getModuleHealth({ module: moduleName });
       return {
         success: true,
         data,
@@ -172,7 +201,7 @@ export class SystemAPI {
 
     for (const command of commands) {
       try {
-        const data = await secureInvoke(command, {});
+        const data = await this.invokeCommand(command);
         return {
           success: true,
           data,
@@ -195,7 +224,7 @@ export class SystemAPI {
    */
   static async getHeliosMetrics(): Promise<DiagnosticResult> {
     try {
-      const data = await secureInvoke('get_helios_metrics', {});
+      const data = await tauriClient.getHeliosMetrics();
       return {
         success: true,
         data,
@@ -214,7 +243,7 @@ export class SystemAPI {
 
     for (const command of commands) {
       try {
-        const data = await secureInvoke(command, {});
+        const data = await this.invokeCommand(command);
         return {
           success: true,
           data,
@@ -265,7 +294,7 @@ export class SystemAPI {
    */
   static async getMonitoringDashboard(): Promise<DiagnosticResult> {
     try {
-      const data = await secureInvoke('engines_monitoring_get_dashboard', {});
+      const data = await tauriClient.enginesMonitoringGetDashboard();
       return {
         success: true,
         data,
@@ -290,7 +319,7 @@ export class SystemAPI {
    */
   static async isCommandAvailable(command: string): Promise<boolean> {
     try {
-      await secureInvoke(command, {});
+      await this.invokeCommand(command);
       return true;
     } catch (error) {
       return false;

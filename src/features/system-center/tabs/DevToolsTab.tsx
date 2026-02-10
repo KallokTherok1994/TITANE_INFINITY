@@ -14,7 +14,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 // 🔧 v20.1: Consolidated DevTools components (migrated from src/components/devtools/)
 import { LogViewer, MetricsDisplay, CoreHealthMonitor } from '@/apps/devtools/components';
 
@@ -205,8 +205,8 @@ const DebuggerPanel: React.FC = () => {
   const fetchDebugger = useCallback(async () => {
     try {
       const [eventsRes, statsRes] = await Promise.all([
-        secureInvoke<DevToolsResponse<DebuggerEvent[]>>('devtools_debug_last', { n: 50 }),
-        secureInvoke<DevToolsResponse<DebuggerStats>>('devtools_debug_stats'),
+        tauriClient.devtoolsDebugLast({ n: 50 }) as Promise<DevToolsResponse<DebuggerEvent[]>>,
+        tauriClient.devtoolsDebugStats() as Promise<DevToolsResponse<DebuggerStats>>,
       ]);
       if (eventsRes.success && eventsRes.data) setEvents(eventsRes.data);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
@@ -225,7 +225,7 @@ const DebuggerPanel: React.FC = () => {
   }, [autoRefresh, fetchDebugger]);
 
   const handleClear = async () => {
-    await secureInvoke('devtools_debug_clear');
+    await tauriClient.devtoolsDebugClear();
     fetchDebugger();
   };
 
@@ -320,8 +320,8 @@ const MemoryPanel: React.FC = () => {
     setLoading(true);
     try {
       const [statsRes, healthRes] = await Promise.all([
-        secureInvoke<DevToolsResponse<MemorySystemStats>>('devtools_memory_stats'),
-        secureInvoke<DevToolsResponse<MemoryHealthReport>>('devtools_memory_health'),
+        tauriClient.devtoolsMemoryStats() as Promise<DevToolsResponse<MemorySystemStats>>,
+        tauriClient.devtoolsMemoryHealth() as Promise<DevToolsResponse<MemoryHealthReport>>,
       ]);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
       if (healthRes.success && healthRes.data) setHealth(healthRes.data);
@@ -338,13 +338,10 @@ const MemoryPanel: React.FC = () => {
   const handleSearch = async () => {
     if (!searchQuery.trim()) return;
     try {
-      const res = await secureInvoke<DevToolsResponse<unknown[]>>(
-        'devtools_memory_search',
-        {
-          query: searchQuery,
-          limit: 10,
-        }
-      );
+      const res = (await tauriClient.devtoolsMemorySearch({
+        query: searchQuery,
+        limit: 10,
+      })) as DevToolsResponse<unknown[]>;
       if (res.success && res.data) setSearchResults(res.data);
     } catch {
       // Silently fail
@@ -354,10 +351,10 @@ const MemoryPanel: React.FC = () => {
   const handleKNN = async () => {
     if (!searchQuery.trim()) return;
     try {
-      const res = await secureInvoke<DevToolsResponse<unknown[]>>('devtools_knn', {
+      const res = (await tauriClient.devtoolsKnn({
         text: searchQuery,
         k: 5,
-      });
+      })) as DevToolsResponse<unknown[]>;
       if (res.success && res.data) setSearchResults(res.data);
     } catch {
       // Silently fail
@@ -538,12 +535,9 @@ const AnalyzerPanel: React.FC = () => {
   const runAnalysis = async () => {
     setLoading(true);
     try {
-      const res = await secureInvoke<DevToolsResponse<AnalyzerReport>>(
-        'devtools_analyze',
-        {
-          systemMetrics: null,
-        }
-      );
+      const res = (await tauriClient.devtoolsAnalyze({
+        systemMetrics: null,
+      })) as DevToolsResponse<AnalyzerReport>;
       if (res.success && res.data) setReport(res.data);
     } catch {
       // Silently fail
@@ -735,7 +729,7 @@ export const DevToolsTab: React.FC = () => {
     const fetchStatus = async () => {
       try {
         const res =
-          await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+          (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
         if (res.success && res.data) setStatus(res.data);
       } catch {
         // DevTools may not be available
@@ -747,11 +741,11 @@ export const DevToolsTab: React.FC = () => {
   const toggleDevTools = async () => {
     try {
       if (status?.enabled) {
-        await secureInvoke('devtools_disable');
+        await tauriClient.devtoolsDisable();
       } else {
-        await secureInvoke('devtools_enable');
+        await tauriClient.devtoolsEnable();
       }
-      const res = await secureInvoke<DevToolsResponse<DevToolsStatus>>('devtools_status');
+      const res = (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
       if (res.success && res.data) setStatus(res.data);
     } catch {
       // Silently fail

@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface NodeInfo {
   id: string;
@@ -35,7 +35,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
 
   const initialize = useCallback(async () => {
     try {
-      await secureInvoke('mesh_initialize', { node_id: nodeId, port });
+      await tauriClient.meshInitialize({ node_id: nodeId, port });
       setIsInitialized(true);
       setError(null);
     } catch (err) {
@@ -49,7 +49,7 @@ const NodeClusterDashboard = memo(function NodeClusterDashboard() {
         if (!isInitialized) return;
 
         try {
-          const data = await secureInvoke<MeshStats>('mesh_get_stats');
+          const data = (await tauriClient.meshGetStats()) as MeshStats;
           setStats(data);
           // Mock peers for now (backend will return actual peers later)
           setPeers([

@@ -11,7 +11,7 @@
  */
 
 import { detectEnvironment } from '@/core/tauri/environment';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import {
   type TTSSettings,
   type VoiceProfile,
@@ -108,12 +108,9 @@ class AudioService {
     // Prefer secure backend storage in Tauri mode
     if (this.isTauri) {
       try {
-        const res = await secureInvoke<{ ok: boolean; data: boolean | null }>(
-          'has_secret',
-          {
-            key: 'elevenlabs_api_key',
-          }
-        );
+        const res = (await tauriClient.hasSecret({
+          key: 'elevenlabs_api_key',
+        })) as { ok: boolean; data: boolean | null } | boolean;
         if (res && typeof res === 'object' && 'data' in res) {
           return Boolean((res as { data: boolean | null }).data);
         }
@@ -168,7 +165,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        devices = await secureInvoke<AudioDevice[]>('get_audio_output_devices');
+        devices = (await tauriClient.getAudioOutputDevices()) as AudioDevice[];
       } catch (error) {
         console.warn('Failed to get output devices from Tauri:', error);
       }
@@ -238,7 +235,7 @@ class AudioService {
 
     if (this.isTauri) {
       try {
-        devices = await secureInvoke<AudioDevice[]>('get_audio_input_devices');
+        devices = (await tauriClient.getAudioInputDevices()) as AudioDevice[];
       } catch (error) {
         console.warn('Failed to get input devices from Tauri:', error);
       }
@@ -307,7 +304,7 @@ class AudioService {
     if (this.isTauri) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
-        await secureInvoke('set_audio_output_device', { deviceId });
+        await tauriClient.setAudioOutputDevice({ deviceId });
       } catch (error) {
         console.warn('Failed to set output device:', error);
       }
@@ -321,7 +318,7 @@ class AudioService {
     if (this.isTauri) {
       try {
         // Tauri 2.0 attend camelCase pour les paramètres
-        await secureInvoke('set_audio_input_device', { deviceId });
+        await tauriClient.setAudioInputDevice({ deviceId });
       } catch (error) {
         console.warn('Failed to set input device:', error);
       }
@@ -354,7 +351,7 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        await secureInvoke('test_tts', { text, settings: this.config.tts });
+        await tauriClient.testTts({ text, settings: this.config.tts });
       } else if (this.isWebSpeechAvailable()) {
         // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
@@ -403,11 +400,10 @@ class AudioService {
         // Timeout = durée enregistrement + 5s de marge pour traitement
         const timeoutMs = durationMs + 5000;
         // Tauri 2.0 attend camelCase pour les paramètres de commande
-        const result = await secureInvoke<MicrophoneTestResult>(
-          'test_microphone',
+        const result = (await tauriClient.testMicrophone(
           { durationMs },
           { timeout: timeoutMs }
-        );
+        )) as MicrophoneTestResult;
         console.log('[AudioService] test_microphone result:', result);
         return result;
       }
@@ -520,7 +516,7 @@ class AudioService {
       if (this.isTauri) {
         try {
           console.log('[AudioService] Invoking tts_speak via Tauri...');
-          await secureInvoke('tts_speak', {
+          await tauriClient.ttsSpeak({
             text,
             settings: this.config.tts,
           });
@@ -597,7 +593,7 @@ class AudioService {
 
     // Stop Tauri TTS
     if (this.isTauri) {
-      secureInvoke('tts_stop').catch(err => {
+      tauriClient.ttsStop().catch(err => {
         console.error('[AudioService] tts_stop error:', err);
       });
     }
@@ -619,9 +615,10 @@ class AudioService {
       return { state: 'silence', isSpeaking: false };
     }
     try {
-      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
-        'vad_get_state'
-      );
+      const result = (await tauriClient.vadGetState()) as {
+        state: string;
+        isSpeaking: boolean;
+      };
       return result;
     } catch (error) {
       console.error('[AudioService] VAD get state error:', error);
@@ -641,12 +638,9 @@ class AudioService {
     }
     try {
       const samples = Array.from(audioData);
-      const result = await secureInvoke<{ state: string; isSpeaking: boolean }>(
-        'vad_process_frame',
-        {
-          audioData: samples,
-        }
-      );
+      const result = (await tauriClient.vadProcessFrame({
+        audioData: samples,
+      })) as { state: string; isSpeaking: boolean };
       return result;
     } catch (error) {
       console.error('[AudioService] VAD process frame error:', error);
@@ -666,13 +660,13 @@ class AudioService {
       return 'VAD configuration not available (browser mode)';
     }
     try {
-      const result = await secureInvoke<string>('vad_configure', {
+      const result = (await tauriClient.vadConfigure({
         config: {
           threshold: config.threshold ?? 0.02,
           minSpeechFrames: config.minSpeechFrames ?? 10,
           minSilenceFrames: config.minSilenceFrames ?? 20,
         },
-      });
+      })) as string;
       console.log('[AudioService] VAD configured:', result);
       return result;
     } catch (error) {
@@ -689,7 +683,7 @@ class AudioService {
       return 'VAD reset not available (browser mode)';
     }
     try {
-      const result = await secureInvoke<string>('vad_reset');
+      const result = await tauriClient.vadReset() as string;
       console.log('[AudioService] VAD reset:', result);
       return result;
     } catch (error) {
@@ -724,7 +718,16 @@ class AudioService {
       };
     }
     try {
-      const result = await secureInvoke<{
+      const result = await (tauriClient.vadTest?.() || Promise.resolve({
+        success: false,
+        tests: {
+          silence_detection: false,
+          speech_detection: false,
+          speech_transition: false,
+          silenceTransition: false,
+        },
+        message: 'vad_test command not available',
+      })) as {
         success: boolean;
         tests: {
           silence_detection: boolean;
@@ -733,7 +736,7 @@ class AudioService {
           silence_transition: boolean;
         };
         message: string;
-      }>('vad_test');
+      };
 
       console.log('[AudioService] VAD test result:', result);
 

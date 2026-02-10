@@ -7,7 +7,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import './MemoryEvolutionCenter.css';
 
@@ -451,9 +451,8 @@ export const MemoryEvolutionCenter: React.FC = () => {
   // Fetch initial data
   const fetchStatus = useCallback(async () => {
     try {
-      const statusData = await secureInvoke<MemoryEvolutionStatus>(
-        'memory_evolution_status'
-      );
+      const statusData =
+        (await tauriClient.memoryEvolutionStatus()) as MemoryEvolutionStatus;
       setStatus(statusData);
       if (statusData.last_evolution) {
         setLastResult(statusData.last_evolution);
@@ -469,7 +468,8 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchHealth = useCallback(async () => {
     try {
-      const healthData = await secureInvoke<HierarchyHealth>('memory_hierarchy_health');
+      const healthData =
+        (await tauriClient.memoryHierarchyHealth()) as HierarchyHealth;
       setHealth(healthData);
     } catch (err) {
       logger.error(
@@ -482,7 +482,8 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchClusters = useCallback(async () => {
     try {
-      const clustersData = await secureInvoke<MemoryCluster[]>('memory_get_clusters');
+      const clustersData =
+        (await tauriClient.memoryGetClusters()) as MemoryCluster[];
       // Vérifier que clustersData est bien un tableau
       if (Array.isArray(clustersData)) {
         setClusters(clustersData);
@@ -526,34 +527,34 @@ export const MemoryEvolutionCenter: React.FC = () => {
       let result;
       switch (action) {
         case 'parse':
-          result = await secureInvoke('memory_parse');
+          result = await tauriClient.memoryParse();
           break;
         case 'synthesize':
-          result = await secureInvoke('memory_synthesize');
+          result = await tauriClient.memorySynthesize();
           break;
         case 'cluster':
-          result = await secureInvoke('memory_cluster');
+          result = await tauriClient.memoryCluster();
           await fetchClusters();
           break;
         case 'compress':
-          result = await secureInvoke('memory_compress');
+          result = await tauriClient.memoryCompress();
           break;
         case 'patterns':
-          result = await secureInvoke('memory_extract_patterns');
+          result = await tauriClient.memoryExtractPatterns();
           break;
         case 'stability':
-          result = await secureInvoke('memory_check_and_repair');
+          result = await tauriClient.memoryCheckAndRepair();
           break;
         case 'grow':
-          result = await secureInvoke('memory_grow');
+          result = await tauriClient.memoryGrow();
           break;
         case 'backup':
-          result = await secureInvoke('memory_create_backup');
+          result = await tauriClient.memoryCreateBackup();
           break;
         case 'full':
-          result = await secureInvoke<EvolutionResult>('memory_evolve_full', {
+          result = (await tauriClient.memoryEvolveFull({
             kevin_authorized: kevinAuthorized,
-          });
+          })) as EvolutionResult;
           if (result) setLastResult(result);
           break;
       }

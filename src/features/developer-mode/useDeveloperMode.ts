@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════════
 
 import { useState, useCallback, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type {
   DeveloperModeState,
   PatchAction,
@@ -29,7 +29,7 @@ export function useDeveloperMode() {
   const fetchState = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await secureInvoke<DeveloperModeState>('engines_devmode_get_state');
+      const result = await tauriClient.devmodeGetState() as DeveloperModeState;
       setState(result);
       setError(null);
     } catch (err) {
@@ -42,9 +42,9 @@ export function useDeveloperMode() {
   const enable = useCallback(
     async (authToken: string) => {
       try {
-        const success = await secureInvoke<boolean>('engines_devmode_enable', {
+        const success = await tauriClient.devmodeEnable({
           authToken,
-        });
+        }) as boolean;
         if (success) {
           await fetchState();
         }
@@ -59,7 +59,7 @@ export function useDeveloperMode() {
 
   const disable = useCallback(async () => {
     try {
-      const success = await secureInvoke<boolean>('engines_devmode_disable');
+      const success = await tauriClient.devmodeDisable() as boolean;
       if (success) {
         await fetchState();
       }
@@ -89,9 +89,9 @@ export function usePatchOperations() {
     async (patch: PatchAction): Promise<PatchResult | null> => {
       try {
         setLoading(true);
-        const result = await secureInvoke<PatchResult>('engines_devmode_validate_patch', {
+        const result = await tauriClient.devmodeValidatePatch({
           patch,
-        });
+        }) as PatchResult;
         setError(null);
         return result;
       } catch (err) {
@@ -108,9 +108,9 @@ export function usePatchOperations() {
     async (patch: PatchAction): Promise<PatchResult | null> => {
       try {
         setLoading(true);
-        const result = await secureInvoke<PatchResult>('engines_devmode_apply_patch', {
+        const result = await tauriClient.devmodeApplyPatch({
           patch,
-        });
+        }) as PatchResult;
         setError(null);
         return result;
       } catch (err) {
@@ -127,9 +127,9 @@ export function usePatchOperations() {
     async (patch: PatchAction): Promise<DiffPreview | null> => {
       try {
         setLoading(true);
-        const result = await secureInvoke<DiffPreview>('engines_devmode_preview', {
+        const result = await tauriClient.devmodePreview({
           patch,
-        });
+        }) as DiffPreview;
         setError(null);
         return result;
       } catch (err) {
@@ -145,9 +145,9 @@ export function usePatchOperations() {
   const rollback = useCallback(async (patchId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_devmode_rollback', {
+      const success = await tauriClient.devmodeRollback({
         patchId,
-      });
+      }) as boolean;
       setError(null);
       return success;
     } catch (err) {
@@ -173,9 +173,9 @@ export function usePatchHistory() {
   const fetchHistory = useCallback(async (limit?: number) => {
     try {
       setLoading(true);
-      const result = await secureInvoke<PatchHistory>('engines_devmode_get_history', {
+      const result = await tauriClient.devmodeGetHistory({
         limit,
-      });
+      }) as PatchHistory;
       setHistory(result);
       setError(null);
     } catch (err) {
@@ -203,9 +203,9 @@ export function useBackupOperations() {
   const createBackup = useCallback(async (name: string): Promise<string | null> => {
     try {
       setLoading(true);
-      const backupId = await secureInvoke<string>('engines_devmode_create_backup', {
+      const backupId = await tauriClient.devmodeCreateBackup({
         name,
-      });
+      }) as string;
       setError(null);
       return backupId;
     } catch (err) {
@@ -219,9 +219,9 @@ export function useBackupOperations() {
   const restoreBackup = useCallback(async (backupId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_devmode_restore_backup', {
+      const success = await tauriClient.devmodeRestoreBackup({
         backupId,
-      });
+      }) as boolean;
       setError(null);
       return success;
     } catch (err) {
@@ -247,10 +247,7 @@ export function useFileAnalysis() {
   const analyzeFile = useCallback(async (filePath: string) => {
     try {
       setLoading(true);
-      const result = await secureInvoke<CodeSuggestion[]>(
-        'engines_devmode_analyze_file',
-        { filePath }
-      );
+      const result = await tauriClient.devmodeAnalyzeFile({ filePath }) as CodeSuggestion[];
       setSuggestions(result);
       setError(null);
     } catch (err) {
@@ -277,7 +274,7 @@ export function useBuildPipeline() {
     async (config?: Record<string, unknown>): Promise<string | null> => {
       try {
         setLoading(true);
-        const buildId = await secureInvoke<string>('engines_build_start', { config });
+        const buildId = await tauriClient.enginesBuildStart({ config }) as string;
         setError(null);
         return buildId;
       } catch (err) {
@@ -292,9 +289,9 @@ export function useBuildPipeline() {
 
   const getStatus = useCallback(async (buildId: string) => {
     try {
-      const result = await secureInvoke<BuildStatus>('engines_build_get_status', {
+      const result = await tauriClient.enginesBuildGetStatus({
         buildId,
-      });
+      }) as BuildStatus;
       setStatus(result);
       setError(null);
     } catch (err) {
@@ -304,9 +301,9 @@ export function useBuildPipeline() {
 
   const getResult = useCallback(async (buildId: string) => {
     try {
-      const res = await secureInvoke<BuildResult>('engines_build_get_result', {
+      const res = await tauriClient.enginesBuildGetResult({
         buildId,
-      });
+      }) as BuildResult;
       setResult(res);
       setError(null);
     } catch (err) {
@@ -317,7 +314,7 @@ export function useBuildPipeline() {
   const cancelBuild = useCallback(async (buildId: string): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_build_cancel', { buildId });
+      const success = await tauriClient.enginesBuildCancel({ buildId }) as boolean;
       setError(null);
       return success;
     } catch (err) {
@@ -331,7 +328,7 @@ export function useBuildPipeline() {
   const cleanArtifacts = useCallback(async (): Promise<boolean> => {
     try {
       setLoading(true);
-      const success = await secureInvoke<boolean>('engines_build_clean');
+      const success = await tauriClient.enginesBuildClean() as boolean;
       setError(null);
       return success;
     } catch (err) {
@@ -367,7 +364,7 @@ export function useEnginesDashboard() {
   const fetchDashboard = useCallback(async () => {
     try {
       setLoading(true);
-      const result = await secureInvoke<UnifiedEnginesDashboard>('engines_get_dashboard');
+      const result = await tauriClient.enginesGetDashboard() as UnifiedEnginesDashboard;
       setDashboard(result);
       setError(null);
     } catch (err) {
@@ -398,7 +395,7 @@ export function useChangelog() {
   const generateChangelog = useCallback(async (since?: string) => {
     try {
       setLoading(true);
-      const result = await secureInvoke<string>('engines_devmode_changelog', { since });
+      const result = await tauriClient.devmodeChangelog({ since }) as string;
       setChangelog(result);
       setError(null);
     } catch (err) {

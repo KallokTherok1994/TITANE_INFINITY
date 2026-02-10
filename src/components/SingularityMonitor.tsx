@@ -6,7 +6,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import type { EngineMetrics, ModuleInfo } from '../types/tauri';
 
@@ -22,7 +22,7 @@ export function SingularityMonitor() {
 
     const init = async () => {
       try {
-        await secureInvoke('engine_init');
+        await tauriClient.engineInit();
         if (mounted) {
           console.log('✅ SingularityEngine v15 initialized');
         }
@@ -33,21 +33,21 @@ export function SingularityMonitor() {
 
           try {
             // Tick the engine
-            await secureInvoke('engine_tick');
+            await tauriClient.engineTick();
 
             // Get metrics
-            const m = await secureInvoke<EngineMetrics>('engine_metrics');
+            const m = (await tauriClient.engineMetrics()) as EngineMetrics;
             setMetrics(m);
 
             // Get health
-            const h = await secureInvoke<{ status: 'healthy' | 'degraded' | 'failing' }>(
-              'engine_health'
-            );
+            const h = (await tauriClient.engineHealth()) as {
+              status: 'healthy' | 'degraded' | 'failing';
+            };
             setHealth(h.status || 'Unknown');
 
             // Get modules (less frequently)
             if (m.ticks % 5 === 0) {
-              const mods = await secureInvoke<ModuleInfo[]>('engine_modules');
+              const mods = (await tauriClient.engineModules()) as ModuleInfo[];
               setModules(mods);
             }
 
@@ -76,7 +76,7 @@ export function SingularityMonitor() {
     return () => {
       mounted = false;
       clearInterval(interval);
-      secureInvoke('engine_stop').catch(err => {
+      tauriClient.engineStop().catch(err => {
         const error = err instanceof Error ? err : new Error(String(err));
         logger.error(
           'Engine stop failed during cleanup',

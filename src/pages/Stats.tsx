@@ -14,8 +14,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
 import React, { useMemo, useState, useEffect } from 'react';
+import { tauriClient } from '@/lib/tauriClient';
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -83,9 +83,9 @@ export const Stats: React.FC = () => {
 
     const fetchCognitive = async () => {
       try {
-        const data = await secureInvoke<CognitiveMetrics>(
-          'orchestration_get_cognitive_state'
-        );
+        const data = (await tauriClient.orchestrationGetCognitiveState()) as
+          | CognitiveMetrics
+          | null;
         if (mounted) {
           setCognitiveMetrics(data);
           setCognitiveLoading(false);

@@ -10,7 +10,7 @@
 // React hook for conversational memory management
 
 import { useState, useCallback, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 
 export interface MemoryEntry {
@@ -57,7 +57,7 @@ export function useMemory() {
     setError(null);
 
     try {
-      const conversationsJson = await secureInvoke<string>('list_conversations');
+      const conversationsJson = (await tauriClient.listConversations()) as string;
       const parsed: ConversationSummary[] = JSON.parse(conversationsJson);
       setConversations(parsed);
     } catch (err) {
@@ -75,9 +75,9 @@ export function useMemory() {
       setError(null);
 
       try {
-        const conversationId = await secureInvoke<string>('create_conversation', {
+        const conversationId = (await tauriClient.createConversation({
           title,
-        });
+        })) as string;
 
         await loadConversations();
 
@@ -99,9 +99,9 @@ export function useMemory() {
     setError(null);
 
     try {
-      const conversationJson = await secureInvoke<string>('load_conversation', {
+      const conversationJson = (await tauriClient.loadConversation({
         conversationId,
-      });
+      })) as string;
 
       const conversation: Conversation = JSON.parse(conversationJson);
       setCurrentConversation(conversation);
@@ -124,8 +124,7 @@ export function useMemory() {
 
       try {
         // Note: delete_conversation est legacy, pas de service équivalent - garder invoke direct
-        const { invoke } = await import('@tauri-apps/api/core');
-        await invoke('delete_conversation', { conversationId });
+        await tauriClient.deleteConversation({ conversationId });
 
         if (currentConversation?.id === conversationId) {
           setCurrentConversation(null);
@@ -149,8 +148,7 @@ export function useMemory() {
 
     try {
       // Note: clear_all_memory est legacy, pas de service équivalent - garder invoke direct
-      const { invoke } = await import('@tauri-apps/api/core');
-      await invoke('clear_all_memory');
+      await tauriClient.clearAllMemory();
       setCurrentConversation(null);
       setConversations([]);
     } catch (err) {

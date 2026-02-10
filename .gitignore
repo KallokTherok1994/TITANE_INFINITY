@@ -165,3 +165,9 @@ tmp_import_useChat.mjs
 src-tauri/memory/*.json
 src-tauri/memory/*.db
 *.memory.json
+
+# P1.2 Git Clean: Exclude build/audit artifacts (2026-02-10)
+src-tauri/*.BACKUP_*.json
+runtime/dev/proofs/
+runtime/*.ok
+memory/memory_core_state.json

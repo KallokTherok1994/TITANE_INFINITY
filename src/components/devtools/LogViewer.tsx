@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface LogEntry {
   timestamp: string;
@@ -43,12 +43,12 @@ export const LogViewer: React.FC<LogViewerProps> = ({
     if (isPaused) return;
 
     try {
-      const result = await secureInvoke<LogsResponse>('get_logs', {
+      const result = (await tauriClient.getLogs({
         level: filter === 'all' ? null : filter,
         source: null,
         limit: maxLines,
         offset: 0,
-      });
+      })) as LogsResponse;
 
       setLogs(result.logs);
 
@@ -89,11 +89,11 @@ export const LogViewer: React.FC<LogViewerProps> = ({
   // Clear all logs
   const clearLogs = async () => {
     try {
-      await secureInvoke('clear_logs');
+      await tauriClient.clearLogs();
       setLogs([]);
     } catch (error) {
       try {
-        await secureInvoke('clear_system_logs');
+        await tauriClient.clearSystemLogs();
         setLogs([]);
       } catch {
         console.error('Failed to clear logs:', error);

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { CloudStatus } from './types';
 
 interface BackupInfo {
@@ -41,7 +41,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
 
   const loadBackups = async () => {
     try {
-      const list = await secureInvoke<BackupInfo[]>('cloud_list_backups');
+      const list = (await tauriClient.cloudListBackups()) as BackupInfo[];
       setBackups(list);
     } catch (e) {
       console.error('[VaultStatus] Failed to load backups:', e);
@@ -51,7 +51,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const handleAutoHeal = async () => {
     setIsHealing(true);
     try {
-      const report = await secureInvoke<HealReport>('cloud_auto_heal');
+      const report = (await tauriClient.cloudAutoHeal()) as HealReport;
       setHealReport(report);
       if (report.backup_created) {
         await loadBackups();
@@ -67,7 +67,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const handleCreateBackup = async () => {
     setIsCreatingBackup(true);
     try {
-      await secureInvoke<string>('cloud_backup_vault');
+      await tauriClient.cloudBackupVault();
       await loadBackups();
     } catch (e) {
       console.error('[VaultStatus] Backup failed:', e);
@@ -80,7 +80,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
     if (!confirm('Restaurer cette sauvegarde ? Les données actuelles seront écrasées.'))
       return;
     try {
-      await secureInvoke('cloud_restore_vault', { backupPath: path });
+      await tauriClient.cloudRestoreVault({ backupPath: path });
       onRefresh();
     } catch (e) {
       console.error('[VaultStatus] Restore failed:', e);

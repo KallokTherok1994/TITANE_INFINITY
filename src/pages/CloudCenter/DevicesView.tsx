@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { DeviceIdentity } from './types';
 
@@ -25,7 +25,7 @@ const DevicesView: React.FC = () => {
   const loadDevices = async () => {
     setLoading(true);
     try {
-      const result = await secureInvoke<DevicesResponse>('cloud_get_devices');
+      const result = (await tauriClient.cloudGetDevices()) as DevicesResponse;
       setLocalDevice(result.local_device);
       setKnownDevices(result.known_devices);
     } catch (err) {
@@ -46,7 +46,7 @@ const DevicesView: React.FC = () => {
 
     setRemoving(deviceId);
     try {
-      await secureInvoke('cloud_remove_device', { deviceId });
+      await tauriClient.cloudRemoveDevice({ deviceId });
       await loadDevices();
     } catch (err) {
       console.error('[DevicesView] Failed to remove device:', err);

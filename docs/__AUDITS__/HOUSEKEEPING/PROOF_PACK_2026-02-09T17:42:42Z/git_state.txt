@@ -1,0 +1,19 @@
+# git_state.txt
+
+branch: MAIN
+head: 5e8b469abd52382ca96f828fabc0c6787465cd87
+status:
+?? docs/__ARCHIVE_REPO_HOUSEKEEPING_VAULT__/
+?? docs/__AUDITS__/HOUSEKEEPING/
+
+log (last 10):
+5e8b469a (HEAD -> MAIN) Ω∞ VERIFY + AUTO-FIX + CLEAN + ARCHIVE + MERGE MAIN
+eebf481e chore(tsconfig): exclude deprecated sources from build
+5e69680c style(prettier): format files (post-rebase verify fix)
+64e4f4f0 docs(ui-carto): add post-merge final seal proof
+9fbb61fa docs(ui-carto): update doc-only cherry-pick proof
+fbeaafe3 docs(ui-carto): add doc-only cherry-pick proof
+36e57693 docs(ui-carto): production handoff + final seal (doc-only)
+25b669be docs(kevin-v5): import baseline files - phase 0 unblocked
+7266e49f docs(ui-carto): production seal blocked - kevin v5 baseline missing
+40899a56 docs(ui-carto): seal readiness v1 proof pack + verdict

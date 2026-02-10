@@ -6,6 +6,7 @@
  * Connecteurs vers Helios, Nexus, Memory, Self-Heal
  */
 
+import { tauriClient } from '@/lib/tauriClient';
 import { cognitiveLayoutEngine } from '@/engines/cognitive/cognitiveLayoutEngine';
 
 // ═══════════════════════════════════════════════════════════════════
@@ -65,14 +66,13 @@ export class HeliosConnector {
     regularity: number;
   }> {
     try {
-      // Connexion réelle à Helios via secureInvoke
-      const { secureInvoke } = await import('@/lib/security');
-      const heliosData = await secureInvoke<{
+      // Connexion réelle à Helios via tauriClient
+      const heliosData = await tauriClient.getHeliosState() as {
         cpu_usage: number;
         ram_usage: number;
         uptime_seconds: number;
         timestamp: number;
-      }>('get_helios_state');
+      };
 
       if (heliosData) {
         // Calculer score d'énergie basé sur les métriques système
@@ -185,13 +185,12 @@ export class NexusConnector {
     activeModules: string[];
   }> {
     try {
-      // Connexion réelle à Nexus via secureInvoke
-      const { secureInvoke } = await import('@/lib/security');
-      const nexusData = await secureInvoke<{
+      // Connexion réelle à Nexus via tauriClient
+      const nexusData = await tauriClient.engineGetNexusState() as {
         health: number;
         active_modules: string[];
         timestamp: number;
-      }>('engine_get_nexus_state');
+      };
 
       if (nexusData) {
         // Déterminer priorité basée sur health et modules actifs

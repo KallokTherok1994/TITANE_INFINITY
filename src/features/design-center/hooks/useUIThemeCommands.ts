@@ -6,7 +6,7 @@
  */
 
 import { useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useUITheme } from '../providers/UIThemeProvider';
 import type {
   UICommand,
@@ -49,7 +49,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.colors[command.key as keyof typeof tokens.colors];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'colors',
               key: command.key,
               value: command.value,
@@ -72,7 +72,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.typography[command.key as keyof typeof tokens.typography];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'typography',
               key: command.key,
               value: command.value,
@@ -95,7 +95,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.spacing[command.key as keyof typeof tokens.spacing];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'spacing',
               key: command.key,
               value: command.value,
@@ -118,7 +118,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.borders[command.key as keyof typeof tokens.borders];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'borders',
               key: command.key,
               value: command.value,
@@ -141,7 +141,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.animations[command.key as keyof typeof tokens.animations];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'animations',
               key: command.key,
               value: command.value,
@@ -164,7 +164,7 @@ export function useUIThemeCommands() {
             }
             const previousValue =
               tokens.contrast[command.key as keyof typeof tokens.contrast];
-            await secureInvoke<UIThemeTokens>('update_ui_token', {
+            await tauriClient.updateUiToken({
               category: 'contrast',
               key: command.key,
               value: command.value,
@@ -179,7 +179,7 @@ export function useUIThemeCommands() {
           }
 
           case 'reset_defaults': {
-            await secureInvoke<UIThemeTokens>('reset_ui_theme');
+            await tauriClient.resetUiTheme();
             await reloadTokens();
             return {
               success: true,
@@ -188,7 +188,7 @@ export function useUIThemeCommands() {
           }
 
           case 'save_theme': {
-            await secureInvoke('save_ui_theme', { tokens });
+            await tauriClient.saveUiTheme({ tokens });
             return {
               success: true,
               message: 'Thème sauvegardé',

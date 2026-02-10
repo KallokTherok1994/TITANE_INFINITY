@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface KnowledgeDocument {
   id: string;
@@ -44,9 +44,9 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
       setError(null);
 
       // Detect format
-      const format = await secureInvoke<string>('detect_file_format', {
+      const format = (await tauriClient.detectFileFormat({
         file_path: filePath,
-      });
+      })) as string;
       setDetectedFormat(format);
     } catch (err) {
       setError(`Détection du format échouée : ${err}`);
@@ -60,9 +60,9 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
     setError(null);
 
     try {
-      const doc = await secureInvoke<KnowledgeDocument>('parse_document', {
+      const doc = (await tauriClient.parseDocument({
         file_path: selectedFile,
-      });
+      })) as KnowledgeDocument;
       setParsedDoc(doc);
 
       // Add to vault

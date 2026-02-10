@@ -12,6 +12,10 @@
 
 **Résultat:** ✅ **MISSION ACCOMPLIE**
 
+**Indexes clés:**
+- [docs/INDEX_REPO_STRUCTURE.md](../INDEX_REPO_STRUCTURE.md) — carte des dossiers + points d’entrée
+- [docs/ui/INDEX_UI.md](../ui/INDEX_UI.md) — pages, features, composants, hooks
+
 ---
 
 ## 🎯 MÉTRIQUES CLÉS

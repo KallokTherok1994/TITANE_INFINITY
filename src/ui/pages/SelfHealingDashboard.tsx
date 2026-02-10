@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { HUDFrame } from '../components/HUDFrame';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './styles/SelfHealingDashboard.css';
@@ -227,11 +227,11 @@ export const SelfHealingDashboard: React.FC = () => {
   const fetchData = useCallback(async () => {
     try {
       // Try to invoke Tauri commands
-      const [healthData, stateData, predictionData] = await Promise.all([
-        secureInvoke<SystemHealth>('get_self_healing_health').catch(() => null),
-        secureInvoke<HealingState>('get_self_healing_state').catch(() => null),
-        secureInvoke<AnomalyPrediction>('get_self_healing_prediction').catch(() => null),
-      ]);
+      const [healthData, stateData, predictionData] = (await Promise.all([
+        tauriClient.getSelfHealingHealth().catch(() => null),
+        tauriClient.getSelfHealingState().catch(() => null),
+        tauriClient.getSelfHealingPrediction().catch(() => null),
+      ])) as [SystemHealth | null, HealingState | null, AnomalyPrediction | null];
 
       if (healthData) setHealth(healthData);
       if (stateData) setHealingState(stateData);
@@ -256,7 +256,8 @@ export const SelfHealingDashboard: React.FC = () => {
   // Force evaluation
   const handleForceEvaluation = async () => {
     try {
-      const report = await secureInvoke<HealingReport>('force_self_healing_evaluation');
+      const report =
+        (await tauriClient.forceSelfHealingEvaluation()) as HealingReport;
       setHistory(prev => [report, ...prev].slice(0, 10));
       await fetchData();
     } catch {
@@ -267,7 +268,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Confirm pending action
   const handleConfirmAction = async (action: string) => {
     try {
-      await secureInvoke('confirm_self_healing_action', { action });
+      await tauriClient.confirmSelfHealingAction({ action });
       setPendingActions(prev => prev.filter(a => a !== action));
       await fetchData();
     } catch {
@@ -278,7 +279,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Reject pending action
   const handleRejectAction = async (action: string) => {
     try {
-      await secureInvoke('reject_self_healing_action', { action });
+      await tauriClient.rejectSelfHealingAction({ action });
       setPendingActions(prev => prev.filter(a => a !== action));
     } catch {
       console.warn('Action rejection not available');
@@ -288,7 +289,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Toggle Safe Mode
   const handleToggleSafeMode = async () => {
     try {
-      await secureInvoke('toggle_safe_mode', { enable: !healingState.safe_mode_active });
+      await tauriClient.toggleSafeMode({ enable: !healingState.safe_mode_active });
       await fetchData();
     } catch {
       // Toggle locally for demo

@@ -6,7 +6,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { CloudStatus } from './types';
 
 interface SyncConfigProps {
@@ -72,7 +72,7 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
     setMessage(null);
 
     try {
-      await secureInvoke('cloud_update_config', {
+      await tauriClient.cloudUpdateConfig({
         backend: config.backend,
         mode: config.mode,
         conflictResolution: config.conflict_resolution,

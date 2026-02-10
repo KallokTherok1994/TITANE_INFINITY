@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import './TimeNavigator.css';
@@ -59,7 +59,7 @@ export const TimeNavigator: React.FC = () => {
     try {
       setLoading(true);
       // v24.7 - Appel Tauri list_snapshots
-      const response = await secureInvoke<Snapshot[]>('list_snapshots');
+      const response = (await tauriClient.listSnapshots()) as Snapshot[];
       setSnapshots(response.sort((a, b) => b.timestamp - a.timestamp));
     } catch (error) {
       console.error('Failed to load snapshots:', error);
@@ -71,7 +71,7 @@ export const TimeNavigator: React.FC = () => {
   const loadStats = async () => {
     try {
       // v24.7 - Appel Tauri get_travel_stats
-      const response = await secureInvoke<TravelStats>('get_travel_stats');
+      const response = (await tauriClient.getTravelStats()) as TravelStats;
       setStats(response);
     } catch (error) {
       console.error('Failed to load stats:', error);
@@ -89,7 +89,7 @@ export const TimeNavigator: React.FC = () => {
 
     try {
       setLoading(true);
-      await secureInvoke('restore_snapshot', { snapshot_id: snapshot.id });
+      await tauriClient.restoreSnapshot({ snapshot_id: snapshot.id });
       success('Restauration réussie ! Redémarrage requis.');
       // v24.7 - Recharge l&apos;application après restauration
       window.location.reload();
@@ -106,7 +106,7 @@ export const TimeNavigator: React.FC = () => {
     }
 
     try {
-      await secureInvoke('delete_snapshot', { snapshot_id: snapshot.id });
+      await tauriClient.deleteSnapshot({ snapshot_id: snapshot.id });
       loadSnapshots();
     } catch (error) {
       errorToast(`Erreur: ${error}`);

@@ -27,22 +27,17 @@ import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional loggin
 const logger = createLogger('Ollama'); // ✨ v21.1
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 
-// ✅ v27: Use Vite proxy in dev mode (/api/ollama → http://127.0.0.1:11435)
-const isDevelopment = import.meta.env.DEV;
-const OLLAMA_BASE_URL = isDevelopment
-  ? '/api/ollama' // Proxy Vite (évite CORS)
-  : typeof runtimeConfig.ollamaUrl === 'string' &&
-      runtimeConfig.ollamaUrl.trim().length > 0
-    ? runtimeConfig.ollamaUrl.trim()
-    : 'http://127.0.0.1:11434';
+// ✅ AUDIT FIX #3: Boot ready gate — tracks if Ollama initialized successfully
+export let IS_OLLAMA_READY = false;
+
+// ✅ v27: Always route through the Tauri/Vite proxy (/api/ollama)
+const OLLAMA_API_BASE = '/api/ollama';
+const OLLAMA_BASE_URL = OLLAMA_API_BASE;
 
 // ✅ v27: Helper to construct full API URLs
 const getOllamaURL = (endpoint: string): string => {
-  // En dev avec proxy: /api/ollama déjà mappé vers /api/* du serveur Ollama
-  // Donc on ajoute directement l'endpoint sans dupliquer /api
-  return isDevelopment
-    ? `${OLLAMA_BASE_URL}${endpoint}` // /api/ollama/tags (proxy redirige vers /api/tags)
-    : `${OLLAMA_BASE_URL}/api${endpoint}`; // http://127.0.0.1:11434/api/tags
+  // Proxy path already maps to /api/* in backend
+  return `${OLLAMA_API_BASE}${endpoint}`;
 };
 
 const OLLAMA_MODEL =
@@ -70,6 +65,7 @@ export async function initializeOllama(): Promise<boolean> {
   try {
     const healthy = await checkEndpointHealth();
     endpointHealthy = healthy;
+    IS_OLLAMA_READY = healthy; // ✅ AUDIT FIX #3: Set boot ready gate
     lastHealthCheck = Date.now();
 
     if (healthy) {
@@ -83,6 +79,7 @@ export async function initializeOllama(): Promise<boolean> {
 
     return healthy;
   } catch (error) {
+    IS_OLLAMA_READY = false; // ✅ AUDIT FIX #3: Mark not ready on error
     handleOllamaError(error, 'initialization', { url: OLLAMA_BASE_URL });
     logger.error('❌ Initialization failed:', error);
     return false;

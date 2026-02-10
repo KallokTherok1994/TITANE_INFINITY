@@ -1,0 +1,20 @@
+# commands_ran.txt
+
+- date -u +%Y-%m-%dT%H:%M:%SZ
+- pwd
+- git rev-parse --abbrev-ref HEAD
+- git rev-parse HEAD
+- git status --porcelain
+- git log -n 50 --oneline --decorate
+- git branch -a
+- git remote -v
+- git diff --name-only
+- git diff
+- ls -la
+- find . -maxdepth 2 -type d | sort
+- du -sh *
+- rg -n (paths|baseUrl|@/|alias|vite.config|tsconfig) .
+- rg -n (tauri|capabilit|allowlist|csp|connect-src|invoke) .
+- rg -n (_archive|archive_cleanup|legacy|deprecated|OBSOLETE|TODO\() .
+- rg -n (from ['"][^'"]+['"];|require\(|import\() src packages apps
+- create inventory/target/plan/vault/other docs

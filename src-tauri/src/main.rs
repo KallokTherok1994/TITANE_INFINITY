@@ -140,6 +140,11 @@ mod commands {
     pub mod copilot_commands {
         include!("commands/copilot_commands.rs");
     }
+
+    // ✅ AUDIT FIX #1: Unified Ollama provider command
+    pub mod ollama_command {
+        include!("commands/ollama_command.rs");
+    }
 }
 
 // Auth OS v∞ - Unified Authentication System

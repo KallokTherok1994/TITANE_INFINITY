@@ -18,6 +18,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 // Note: Performance API requires 'any' types for PerformanceObserver entries and memory metrics
 
+import { tauriClient } from '@/lib/tauriClient';
 import { secureInvoke } from '@/lib/security';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -240,7 +241,7 @@ export class AdvancedPerformanceMonitor {
    */
   private async collectCPUMetrics(): Promise<CPUMetrics> {
     try {
-      const metrics = await secureInvoke<CPUMetrics>('get_cpu_metrics');
+      const metrics = await tauriClient.getCpuMetrics() as CPUMetrics;
       return metrics;
     } catch {
       // Fallback approximation via Performance API
@@ -395,7 +396,7 @@ export class AdvancedPerformanceMonitor {
    */
   private async collectBundleMetrics(): Promise<BundleMetrics> {
     try {
-      const metrics = await secureInvoke<BundleMetrics>('analyze_bundle_size');
+      const metrics = await tauriClient.analyzeBundleSize() as BundleMetrics;
       return metrics;
     } catch {
       // Fallback estimation

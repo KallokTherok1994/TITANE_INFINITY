@@ -13,7 +13,7 @@ import React, {
   useMemo,
   useReducer,
 } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
 import {
   DEFAULT_UI_THEME_TOKENS,
@@ -156,7 +156,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const loadTokens = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await secureInvoke<UIThemeTokens | null>('load_ui_theme');
+      const tokens = (await tauriClient.loadUiTheme()) as UIThemeTokens | null;
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {
@@ -322,7 +322,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      await secureInvoke('save_ui_theme', { tokens: state.tokens });
+      await tauriClient.saveUiTheme({ tokens: state.tokens });
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       dispatch({ type: 'SET_LOADING', isLoading: false });
@@ -344,7 +344,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const resetToDefaults = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = await secureInvoke<UIThemeTokens | null>('reset_ui_theme');
+      const tokens = (await tauriClient.resetUiTheme()) as UIThemeTokens | null;
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {

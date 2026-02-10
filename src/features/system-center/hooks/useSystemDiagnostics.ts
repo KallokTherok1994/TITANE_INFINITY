@@ -7,7 +7,7 @@
  */
 
 import { useState, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import type { SystemDiagnostics, OverallStatus } from '../types/systemCenter.types';
 
 export interface UseSystemDiagnosticsReturn {
@@ -35,7 +35,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<SystemDiagnostics>('sc_run_quick_diagnostics');
+      const result = await tauriClient.scRunQuickDiagnostics() as SystemDiagnostics;
       setDiagnostics(result);
       setStatus(result.overall_status);
     } catch (err) {
@@ -52,7 +52,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
     setError(null);
 
     try {
-      const result = await secureInvoke<SystemDiagnostics>('sc_run_full_diagnostics');
+      const result = await tauriClient.scRunFullDiagnostics() as SystemDiagnostics;
       setDiagnostics(result);
       setStatus(result.overall_status);
     } catch (err) {
@@ -66,7 +66,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
 
   const refreshStatus = useCallback(async () => {
     try {
-      const result = await secureInvoke<OverallStatus>('sc_get_diagnostic_status');
+      const result = await tauriClient.scGetDiagnosticStatus() as OverallStatus;
       setStatus(result);
     } catch (err) {
       console.error('[useSystemDiagnostics] Status refresh failed:', err);

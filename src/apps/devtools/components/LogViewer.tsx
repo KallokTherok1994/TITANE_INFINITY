@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import './LogViewer.css';
 
 interface LogEntry {
@@ -64,9 +64,9 @@ export const LogViewer: React.FC = () => {
   // Fetch logs from backend
   const fetchLogs = useCallback(async () => {
     try {
-      const response = await secureInvoke<LogsResponse>('get_system_logs', {
+      const response = (await tauriClient.getSystemLogs({
         limit: 500,
-      });
+      })) as LogsResponse;
       if (response.success && response.data) {
         setLogs(response.data);
         updateStats(response.data);
@@ -114,7 +114,7 @@ export const LogViewer: React.FC = () => {
   // Clear logs
   const handleClear = async () => {
     try {
-      await secureInvoke('clear_system_logs');
+      await tauriClient.clearSystemLogs();
       setLogs([]);
       setFilteredLogs([]);
     } catch (error) {

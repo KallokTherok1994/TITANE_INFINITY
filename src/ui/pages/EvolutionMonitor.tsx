@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useEffect, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface EvolutionMetrics {
   stability: number;
@@ -45,7 +45,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const data = await secureInvoke<EvolutionStats>('evolution_get_stats');
+      const data = (await tauriClient.evolutionGetStats()) as EvolutionStats;
       setStats(data);
     } catch (err) {
       console.error('Failed to fetch stats:', err);
@@ -55,7 +55,7 @@ const EvolutionMonitor = memo(function EvolutionMonitor() {
   const runEvolutionCycle = useCallback(async () => {
     setIsEvolving(true);
     try {
-      const report = await secureInvoke<EvolutionReport>('evolution_run_cycle');
+      const report = (await tauriClient.evolutionRunCycle()) as EvolutionReport;
       setLastReport(report);
       await fetchStats();
     } catch (err) {

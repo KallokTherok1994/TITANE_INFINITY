@@ -9,7 +9,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { useIdentityMatrix } from '@/hooks/useIdentityMatrix';
 import { useSingularityStateSafe } from '@/hooks/useSingularityStateSafe';
@@ -220,18 +220,15 @@ const MetaCenterContent: React.FC = () => {
   const loadState = async () => {
     try {
       // Try to get state, if not initialized, init first
-      const currentState = await secureInvoke<MetaOrchestratorState>(
-        'orchestrator_get_state'
-      ).catch(async () => {
-        // Initialize if not done
-        return secureInvoke<MetaOrchestratorState>('orchestrator_init');
-      });
+      const currentState = (await tauriClient.orchestratorGetState().catch(async () => {
+        return (await tauriClient.orchestratorInit()) as MetaOrchestratorState;
+      })) as MetaOrchestratorState;
 
       setState(currentState);
 
-      const currentMetrics = await secureInvoke<MetaMetrics>(
-        'orchestrator_get_metrics'
-      ).catch(() => null);
+      const currentMetrics = (await tauriClient.orchestratorGetMetrics().catch(
+        () => null
+      )) as MetaMetrics | null;
       if (currentMetrics) {
         setMetrics(currentMetrics);
         setSelectedMode(currentMetrics.orchestration_mode.toLowerCase());
@@ -247,7 +244,7 @@ const MetaCenterContent: React.FC = () => {
 
   const handleModeChange = async (mode: string) => {
     try {
-      await secureInvoke('orchestrator_set_mode', { mode });
+      await tauriClient.orchestratorSetMode({ mode });
       setSelectedMode(mode);
       await loadState();
     } catch (err) {
@@ -257,7 +254,7 @@ const MetaCenterContent: React.FC = () => {
 
   const handleRunCycle = async () => {
     try {
-      await secureInvoke('orchestrator_run_cycle');
+      await tauriClient.orchestratorRunCycle();
       await loadState();
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));

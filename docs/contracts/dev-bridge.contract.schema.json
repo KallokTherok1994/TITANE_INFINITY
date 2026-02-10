@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://titane.local/contracts/dev-bridge.contract.schema.json",
+  "title": "TITANE_DEV_BRIDGE Contract",
+  "type": "object",
+  "oneOf": [
+    { "$ref": "#/definitions/response" }
+  ],
+  "definitions": {
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action", "scope", "input", "options", "correlation_id"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": ["ask", "audit", "verify", "export"]
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["repo", "ring2", "ring3", "ring4", "docs", "ci"]
+        },
+        "input": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "text": { "type": "string" }
+          }
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["mode", "timeout_ms"],
+          "properties": {
+            "mode": { "type": "string", "enum": ["DEV"] },
+            "timeout_ms": { "type": "integer", "minimum": 1000, "maximum": 120000 }
+          }
+        },
+        "correlation_id": { "type": "string", "minLength": 6 }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "result": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "ok",
+        "action",
+        "scope",
+        "correlation_id",
+        "timestamp",
+        "mode"
+      ],
+      "properties": {
+        "schema_version": { "type": "string" },
+        "ok": { "type": "boolean" },
+        "action": {
+          "type": "string",
+          "enum": ["ask", "audit", "verify", "export"]
+        },
+        "scope": {
+          "type": "string",
+          "enum": ["repo", "ring2", "ring3", "ring4", "docs", "ci"]
+        },
+        "correlation_id": { "type": "string", "minLength": 6 },
+        "timestamp": { "type": "string" },
+        "mode": { "type": "string", "enum": ["DEV"] },
+        "result": { "$ref": "#/definitions/result" },
+        "error": { "$ref": "#/definitions/error" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "ok": { "const": true } } },
+          "then": { "required": ["result"] }
+        },
+        {
+          "if": { "properties": { "ok": { "const": false } } },
+          "then": { "required": ["error"] }
+        }
+      ]
+    }
+  }
+}

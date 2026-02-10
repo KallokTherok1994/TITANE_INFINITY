@@ -8,7 +8,7 @@
 
 // TITANE∞ v15 - Memory Core Hook
 import { useState, useCallback, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { memoryService } from '../services/api';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 
@@ -106,7 +106,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
     try {
       setLoading(true);
       setError(null);
-      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+      const state = (await tauriClient.memoryGetState()) as Partial<MemoryState>;
       const normalized = memoizedNormalizeMemoryState(state);
       setEntries(normalized.entries);
       return normalized;
@@ -149,8 +149,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
       setLoading(true);
       setError(null);
       // Note: memory_clear est legacy, pas de service équivalent - garder invoke direct
-      const { invoke } = await import('@tauri-apps/api/core');
-      await invoke('memory_clear');
+      await tauriClient.memoryClear();
       setEntries([]);
     } catch (err) {
       const message = err instanceof Error ? err.message : 'Failed to clear memory';
@@ -163,7 +162,7 @@ export const useMemoryCore = (): UseMemoryCoreReturn => {
 
   const getMemoryState = useCallback(async () => {
     try {
-      const state = await secureInvoke<Partial<MemoryState>>('memory_get_state');
+      const state = (await tauriClient.memoryGetState()) as Partial<MemoryState>;
       const normalized = memoizedNormalizeMemoryState(state);
       setEntries(normalized.entries);
       return normalized;

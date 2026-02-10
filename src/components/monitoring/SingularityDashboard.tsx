@@ -18,7 +18,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useSingularity } from '@/hooks/useSingularity';
 
@@ -776,7 +776,7 @@ export const SingularityDashboard = memo(function SingularityDashboard({
   // Fetch system metrics
   const fetchSystemMetrics = useCallback(async () => {
     try {
-      const result = await secureInvoke<SystemMetrics>('get_system_metrics');
+      const result = (await tauriClient.getSystemMetrics()) as SystemMetrics;
       setSystemMetrics(result);
       setLastUpdate(Date.now());
     } catch {

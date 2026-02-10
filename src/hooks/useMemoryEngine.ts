@@ -12,7 +12,7 @@
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -299,7 +299,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
   // ═══ REFRESH STATS ═══
   const refreshStats = useCallback(async () => {
     try {
-      const memoryStats = await secureInvoke<MemoryStats>('memory_get_stats');
+      const memoryStats = (await tauriClient.memoryGetStats()) as MemoryStats;
       setStats(memoryStats);
       setError(null);
     } catch (err) {
@@ -331,7 +331,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
           metadata,
         };
 
-        await secureInvoke('memory_save_entry', {
+        await tauriClient.memorySaveEntry({
           key: entry.id,
           value: JSON.stringify(entry),
         });
@@ -361,18 +361,20 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       try {
         // Backend search (si disponible)
         try {
-          const result = await secureInvoke<MemorySearchResult>('memory_search', {
+          const result = (await tauriClient.memorySearch({
             query,
             max_results: maxResults,
-          });
+          })) as MemorySearchResult;
           return result.entries;
         } catch {
           // Fallback: get all + filter locally
-          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+          const allKeys = (await tauriClient.memoryGetAllKeys()) as string[];
           const memories: MemoryEntry[] = [];
 
           for (const key of allKeys.slice(0, maxResults)) {
-            const value = await secureInvoke<string | null>('memory_get_entry', { key });
+            const value = (await tauriClient.memoryGetEntry({
+              key,
+            })) as string | null;
             if (value) {
               try {
                 const entry: MemoryEntry = JSON.parse(value);
@@ -408,7 +410,9 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     setError(null);
 
     try {
-      const value = await secureInvoke<string | null>('memory_get_entry', { key: id });
+      const value = (await tauriClient.memoryGetEntry({
+        key: id,
+      })) as string | null;
       if (!value) return null;
 
       const entry: MemoryEntry = JSON.parse(value);
@@ -430,7 +434,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       setError(null);
 
       try {
-        await secureInvoke('memory_delete_entry', { key: id });
+        await tauriClient.memoryDeleteEntry({ key: id });
         await refreshStats();
       } catch (err) {
         const error = err instanceof Error ? err : new Error('Failed to delete memory');
@@ -453,15 +457,15 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
       try {
         if (type) {
           // Clear specific type
-          const allKeys = await secureInvoke<string[]>('memory_get_all_keys');
+          const allKeys = (await tauriClient.memoryGetAllKeys()) as string[];
           for (const key of allKeys) {
             if (key.includes(`_${type}_`)) {
-              await secureInvoke('memory_delete_entry', { key });
+              await tauriClient.memoryDeleteEntry({ key });
             }
           }
         } else {
           // Clear all
-          await secureInvoke('memory_clear_all');
+          await tauriClient.memoryClearAll();
         }
 
         await refreshStats();
@@ -483,7 +487,7 @@ export function useMemoryEngine(): UseMemoryEngineReturn {
     setError(null);
 
     try {
-      await secureInvoke('memory_compress');
+      await tauriClient.memoryCompress();
       await refreshStats();
     } catch (err) {
       const error = err instanceof Error ? err : new Error('Failed to compress memory');

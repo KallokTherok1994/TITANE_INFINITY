@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useCallback, useMemo, memo } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface CodeIssue {
   id: string;
@@ -38,9 +38,9 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
   const handleScan = useCallback(async () => {
     setIsScanning(true);
     try {
-      const result = await secureInvoke<ScanReport>('introspection_scan', {
+      const result = (await tauriClient.introspectionScan({
         projectRoot: projectPath,
-      });
+      })) as ScanReport;
       setReport(result);
     } catch (err) {
       console.error('Scan failed:', err);
@@ -52,9 +52,9 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
   const handleAutoFix = useCallback(async () => {
     setIsFixing(true);
     try {
-      const result = await secureInvoke<ScanReport>('introspection_auto_fix', {
+      const result = (await tauriClient.introspectionAutoFix({
         projectRoot: projectPath,
-      });
+      })) as ScanReport;
       setReport(result);
     } catch (err) {
       console.error('Auto-fix failed:', err);

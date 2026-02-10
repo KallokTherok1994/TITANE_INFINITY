@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface CoreHealth {
   name: string;
@@ -48,13 +48,15 @@ export const CoreHealthMonitor: React.FC<CoreHealthMonitorProps> = ({
         // Fetch health for each core
         const healthPromises = NINE_CORES.map(async coreName => {
           try {
-            const info = await secureInvoke<{
+            const info = (await tauriClient.getCoreInfo({
+              core_name: coreName.toLowerCase(),
+            })) as {
               name: string;
               version: string;
               status: string;
               dependencies: string[];
               metrics: Array<{ name: string; value: number; unit: string }>;
-            }>('get_core_info', { core_name: coreName.toLowerCase() });
+            };
 
             // Parse metrics
             const cpuMetric = info.metrics.find(m => m.name.includes('cpu'));

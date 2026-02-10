@@ -16,7 +16,7 @@
  * © 2025 Kevin Thibault / TITANE Team. Tous droits réservés.
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -338,7 +338,7 @@ export class HybridEngine {
    */
   private async inspectModule(target: string): Promise<string> {
     try {
-      const result = await secureInvoke<string>('dev_inspect_file', { path: target });
+      const result = await tauriClient.devInspectFile({ path: target }) as string;
       return result;
     } catch (error) {
       return `Failed to inspect ${target}: ${error}`;
@@ -350,7 +350,7 @@ export class HybridEngine {
    */
   private async applyPatch(target: string): Promise<string> {
     try {
-      const result = await secureInvoke<string>('dev_apply_patch', { file: target });
+      const result = await tauriClient.devApplyPatch({ file: target }) as string;
       return result;
     } catch (error) {
       return `Failed to apply patch to ${target}: ${error}`;
@@ -362,7 +362,7 @@ export class HybridEngine {
    */
   private async getLogs(filter?: string): Promise<string> {
     try {
-      const result = await secureInvoke<string>('dev_get_logs', { filter });
+      const result = await tauriClient.devGetLogs({ filter }) as string;
       return result;
     } catch (error) {
       return `Failed to get logs: ${error}`;
@@ -374,7 +374,7 @@ export class HybridEngine {
    */
   private async runDiagnostic(target: string): Promise<string> {
     try {
-      const result = await secureInvoke<string>('hybrid_analyze_code', { target });
+      const result = await tauriClient.hybridAnalyzeCode({ target }) as string;
       return result;
     } catch (error) {
       return `Failed to run diagnostic: ${error}`;
@@ -386,7 +386,7 @@ export class HybridEngine {
    */
   private async runDevCommand(command: string): Promise<string> {
     try {
-      const result = await secureInvoke<string>('dev_run_command', { command });
+      const result = (await tauriClient.devRunCommand({ command })) as string;
       return result;
     } catch (error) {
       return `Command failed: ${error}`;
@@ -417,7 +417,7 @@ export class HybridEngine {
    */
   async applyAutoPatch(patch: AutoPatch): Promise<boolean> {
     try {
-      await secureInvoke('dev_apply_patch', {
+      await tauriClient.devApplyPatch({
         file: patch.file,
         lineStart: patch.lineStart,
         lineEnd: patch.lineEnd,
@@ -441,7 +441,7 @@ export class HybridEngine {
     const diagnostics: DevDiagnostic[] = [];
 
     try {
-      const result = await secureInvoke<string>('hybrid_analyze_code', { target: 'all' });
+      const result = (await tauriClient.hybridAnalyzeCode({ target: 'all' })) as string;
 
       // Parse result (format: JSON array of diagnostics)
       const parsed = JSON.parse(result) as DevDiagnostic[];

@@ -11,7 +11,7 @@
  */
 
 import React, { useEffect, useState } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import './ModulePages.css';
@@ -67,7 +67,7 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
-      const snapshot = await secureInvoke<ConfigSnapshot>('get_all_configs');
+      const snapshot = (await tauriClient.getAllConfigs()) as ConfigSnapshot;
       console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
       setConfig(snapshot);
       setLastRefresh(new Date());
@@ -141,7 +141,7 @@ export const ConfigurationHub: React.FC = () => {
       // Save runtime config if changed
       if (Object.keys(editedRuntime).length > 0) {
         console.log('📤 [ConfigHub] Updating runtime config:', editedRuntime);
-        await secureInvoke('update_runtime_config', {
+        await tauriClient.updateRuntimeConfig({
           update: {
             ollama_url: editedRuntime.ollama_url,
             ollama_model: editedRuntime.ollama_model,
@@ -153,7 +153,7 @@ export const ConfigurationHub: React.FC = () => {
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
         console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
-        await secureInvoke('update_chat_engine_config', {
+        await tauriClient.updateChatEngineConfig({
           update: editedChatEngine,
         });
         console.log('✅ [ConfigHub] Chat engine config updated');
@@ -194,7 +194,7 @@ export const ConfigurationHub: React.FC = () => {
       const filename = `config-${new Date().toISOString().replace(/[:.]/g, '-')}`;
       console.log('📤 [ConfigHub] Exporting configuration to:', filename);
 
-      const filePath = await secureInvoke<string>('export_config', { filename });
+      const filePath = (await tauriClient.exportConfig({ filename })) as string;
       console.log('✅ [ConfigHub] Configuration exported to:', filePath);
 
       success(`Configuration exportée vers:\n${filePath}`);
@@ -216,9 +216,9 @@ export const ConfigurationHub: React.FC = () => {
     try {
       console.log('📥 [ConfigHub] Importing configuration from:', filePath);
 
-      const importedConfig = await secureInvoke<ConfigSnapshot>('import_config', {
+      const importedConfig = (await tauriClient.importConfig({
         filePath,
-      });
+      })) as ConfigSnapshot;
       console.log('✅ [ConfigHub] Configuration imported:', importedConfig);
 
       // Reload config to show imported values
@@ -238,10 +238,10 @@ export const ConfigurationHub: React.FC = () => {
 
   const loadPresets = async () => {
     try {
-      const presetsList =
-        await secureInvoke<Array<{ name: string; description: string }>>(
-          'list_config_presets'
-        );
+      const presetsList = (await tauriClient.listConfigPresets()) as Array<{
+        name: string;
+        description: string;
+      }>;
       setPresets(presetsList);
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load presets:', err);
@@ -255,7 +255,7 @@ export const ConfigurationHub: React.FC = () => {
     const description = prompt('Description (optionnel):') || '';
 
     try {
-      await secureInvoke('save_config_preset', { name, description });
+      await tauriClient.saveConfigPreset({ name, description });
       success(`Preset "${name}" sauvegardé.`);
       await loadPresets();
     } catch (err) {
@@ -272,7 +272,7 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      await secureInvoke('load_config_preset', { name });
+      await tauriClient.loadConfigPreset({ name });
       await loadConfig();
       success(`Preset "${name}" chargé.`);
     } catch (err) {
@@ -287,7 +287,7 @@ export const ConfigurationHub: React.FC = () => {
     }
 
     try {
-      await secureInvoke('delete_config_preset', { name });
+      await tauriClient.deleteConfigPreset({ name });
       success(`Preset "${name}" supprimé.`);
       await loadPresets();
     } catch (err) {

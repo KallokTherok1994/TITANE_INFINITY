@@ -3,7 +3,7 @@
  * Real-time dashboard metrics (CSS-only version, Chart.js removed)
  */
 
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useMemo } from 'react';
 import './MetricsDisplay.css';
 
@@ -46,7 +46,7 @@ export const MetricsDisplay: React.FC = () => {
   // Fetch metrics
   const fetchMetrics = async () => {
     try {
-      const response = await secureInvoke<MetricsResponse>('get_dashboard_metrics');
+      const response = (await tauriClient.getDashboardMetrics()) as MetricsResponse;
       if (response.success && response.data) {
         const newMetrics = response.data;
         setMetrics(newMetrics);

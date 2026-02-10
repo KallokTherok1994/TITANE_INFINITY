@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 import { InstructionMode, instructionModeManager } from './InstructionModeManager';
 import { useToastActions } from '../../../stores/uiStore.selectors';
 import './ModeEditor.css';
@@ -220,11 +220,7 @@ ${aiAssistRequest}
 
 Les instructions doivent être en français, claires et directes.`;
 
-      const response = await secureInvoke<{
-        ok: boolean;
-        data: { content: string } | null;
-        error: string | null;
-      }>('chat_generate_openai', {
+      const result = (await tauriClient.chatGenerateOpenai({
         message: userMessage,
         history: [
           {
@@ -238,17 +234,20 @@ Les instructions doivent être en français, claires et directes.`;
           temperature: 0.7,
           maxTokens: 1024,
         },
-      });
-
-      if (response.ok && response.data?.content) {
-        setAIAssistResponse(response.data.content);
+      })) as {
+        ok: boolean;
+        data: { content: string } | null;
+        error: string | null;
+      };
+      if (result.ok && result.data?.content) {
+        setAIAssistResponse(result.data.content);
         addToast({
           type: 'success',
           message: '✨ Instructions générées avec succès !',
           duration: 3000,
         });
       } else {
-        throw new Error(response.error || 'Erreur inconnue');
+        throw new Error(result.error || 'Erreur inconnue');
       }
     } catch (error) {
       console.error('[ModeEditor] Erreur assistance IA:', error);

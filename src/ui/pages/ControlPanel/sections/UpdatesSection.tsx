@@ -5,7 +5,7 @@
  */
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { secureInvoke } from '@/lib/security';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface UpdateInfo {
   current_version: string;
@@ -22,7 +22,7 @@ export const UpdatesSection: React.FC = () => {
   const checkForUpdates = useCallback(async () => {
     setChecking(true);
     try {
-      const info = await secureInvoke<UpdateInfo>('check_for_updates');
+      const info = (await tauriClient.checkForUpdates()) as UpdateInfo;
       setUpdateInfo(info);
     } catch (error) {
       console.error('Erreur vérification updates:', error);
@@ -38,7 +38,7 @@ export const UpdatesSection: React.FC = () => {
   const installUpdate = useCallback(async () => {
     setUpdating(true);
     try {
-      await secureInvoke('install_update');
+      await tauriClient.installUpdate();
       await checkForUpdates();
     } catch (error) {
       console.error('Erreur installation update:', error);

@@ -18,6 +18,8 @@
 - 📊 [**Evolution Report**](../DOCUMENTATION_EVOLUTION_REPORT.md) — Rapport détaillé phases 0-6D
 - 📚 [**Modules Index**](./05_modules/INDEX.md) — 14/14 modules core (100% coverage)
 - 📖 [**Guides Index**](./04_guides/INDEX.md) — 6 guides (quickstart + dev + advanced)
+- 🧭 [**Repo Structure Index**](./INDEX_REPO_STRUCTURE.md) — carte des dossiers + points d’entrée
+- 🎨 [**UI Index**](./ui/INDEX_UI.md) — pages, features, composants, hooks
 - 👥 [**Contributing Guide**](../CONTRIBUTING.md) — Onboarding contributeurs (standards + workflow)
 
 **Latest Audits (2026-02-09):**
