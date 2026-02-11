@@ -129,6 +129,9 @@
               "command": "conversation_memory_stats"
             },
             {
+              "command": "ai_check_ollama_status"
+            },
+            {
               "command": "create_new_conversation"
             },
             {

@@ -166,7 +166,7 @@ class TauriChatProvider implements AIProvider {
       // Construit la requête
       const request: ChatRequest = {
         message: message.trim(),
-        provider: 'auto', // Rust choisira gemini → ollama → local
+        provider: 'local', // Local-first: force local-only in backend
         streaming: false,
         system_prompt: this.buildSystemPrompt(history),
         request_id: requestId,
@@ -175,7 +175,7 @@ class TauriChatProvider implements AIProvider {
       logger.debug('Request details', {
         message: message.substring(0, 50) + (message.length > 50 ? '...' : ''),
         historyLength: history.length,
-        provider: 'auto (cascade)',
+        provider: 'local (forced)',
       });
 
       // OMEGA: Protected invoke with timeout and retry
@@ -404,8 +404,8 @@ export const tauriChatProvider = new TauriChatProvider();
  * ];
  * ```
  *
- * Le backend Rust chat_orchestrator.rs implémente déjà la cascade:
- * Gemini Cloud → Ollama Local → Local Fallback
+ * Le backend Rust peut cascader (Gemini → Ollama → Local) quand les externes sont autorisés.
+ * En local-first, on force provider=local pour éviter tout appel cloud.
  *
  * Si le backend n'est pas disponible, l'orchestrateur passera
  * automatiquement aux providers frontend.

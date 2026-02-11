@@ -470,7 +470,7 @@ cd /home/titane/Documents/TITANE_INFINITY
 3. ✅ Télécharger LLama 3.1 (~4.7GB)
 4. ✅ Créer le modèle titane-local depuis Modelfile
 5. ✅ Tester le modèle avec un prompt
-6. ✅ Vérifier l'API HTTP (localhost:11434)
+6. ✅ Vérifier le proxy Ollama (/api/ollama)
 7. ✅ Afficher les instructions d'utilisation
 
 ⏱️ **Durée**: ~10-15 minutes (selon connexion internet)
@@ -522,8 +522,9 @@ ollama serve
 
 💡 **Vérification**:
 \`\`\`bash
-curl http://localhost:11434/api/tags
-\`\`\``,
+curl http://localhost:4000/api/tags
+\`\`\`
+`,
       };
     }
 
@@ -575,7 +576,7 @@ curl http://localhost:11434/api/tags
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
 2. Le modèle est-il installé ? → \`ollama list\`
-3. L'API répond-elle ? → \`curl http://localhost:11434/api/tags\`
+3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
 
 📦 **Réinstallation**:
 \`\`\`bash
@@ -642,10 +643,11 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
 
 ⚠️ ${error instanceof Error ? error.message : String(error)}
 
-💡 **Vérifications**:
-- Le modèle existe-t-il ? → \`ia scan\`
-- Ollama est-il démarré ? → \`ollama serve\``,
-      error: error instanceof Error ? error.message : String(error),
+💡 **Vérification**:
+\`\`\`bash
+curl http://localhost:4000/api/tags
+\`\`\`
+`,
     };
   }
 }
@@ -740,7 +742,7 @@ ${modelsList}
 ia set-default <model>
 \`\`\`
 
-✅ **Ollama fonctionne** → http://localhost:11434`,
+✅ **Ollama fonctionne** → /api/ollama`,
       actions: [
         {
           type: 'ia-scan',
@@ -760,7 +762,7 @@ ia set-default <model>
 
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
-2. L'API répond-elle ? → \`curl http://localhost:11434/api/tags\`
+2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
 
 📦 **Installation**: \`./install_titane_local.sh\``,
       error: error instanceof Error ? error.message : String(error),
@@ -799,7 +801,7 @@ ollama serve
 
 💡 **Vérification manuelle**:
 \`\`\`bash
-curl http://localhost:11434/api/tags
+curl http://localhost:4000/api/tags
 \`\`\``,
       };
     }
@@ -814,12 +816,12 @@ curl http://localhost:11434/api/tags
       success: true,
       response: `✅ **TITANE∞ LOCAL — Status Ollama**
 
-🟢 **ONLINE** → http://localhost:11434
+🟢 **ONLINE** → /api/ollama
 
 📊 **Configuration**:
 - **Version**: ${status.version || 'unknown'}
 - **Modèles**: ${status.models.length}
-- **Endpoint**: http://localhost:11434/api/generate
+- **Endpoint**: /api/ollama/generate
 - **Status**: OPERATIONAL
 
 📦 **Modèles installés**:
@@ -860,7 +862,7 @@ ${modelsList}
 🔧 **Dépannage**:
 1. Vérifier service: \`pgrep ollama\`
 2. Démarrer: \`ollama serve\`
-3. Tester API: \`curl http://localhost:11434/api/tags\`
+3. Tester proxy: \`curl http://localhost:4000/api/tags\`
 4. Réinstaller: \`./install_titane_local.sh\``,
       error: error instanceof Error ? error.message : String(error),
     };

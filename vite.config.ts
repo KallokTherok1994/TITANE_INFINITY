@@ -108,10 +108,12 @@ export default defineConfig(({ command }) => ({
     },
     proxy: {
       // ✅ v27: Proxy Ollama API to avoid CORS issues
-      '/api': {
+      // ✅ Phase 4: Strip /ollama prefix for correct routing
+      '/api/ollama': {
         target: 'http://127.0.0.1:11434',
         changeOrigin: true,
-        // Direct /api/* pass-through to Ollama (it already exposes /api/...)
+        // Rewrite /api/ollama/* → /api/* (Ollama expects /api/tags not /api/ollama/tags)
+        rewrite: (path) => path.replace(/^\/api\/ollama/, '/api'),
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.error('🔴 Ollama proxy error:', err.message);

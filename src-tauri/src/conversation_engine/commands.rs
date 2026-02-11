@@ -62,12 +62,19 @@ pub async fn conversation_generate(
         conversation_mode
     );
 
+    // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
+    let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+        Some("local".to_string())
+    } else {
+        provider
+    };
+
     // Créer la requête OMEGA
     let request = ConversationRequest {
         user_message: message,
         conversation_id: Some(conversation_id.clone()),
         mode: conversation_mode,
-        ai_config: provider.map(|p| {
+        ai_config: effective_provider.map(|p| {
             let provider_pref = match p.as_str() {
                 "gemini" => super::types::ProviderPreference::Gemini,
                 "ollama" => super::types::ProviderPreference::Ollama,

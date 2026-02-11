@@ -138,7 +138,7 @@ export const KNOWN_SECRETS: {
     key: 'ollama_url',
     label: 'Ollama URL',
     category: 'api_key',
-    description: 'URL du serveur Ollama local (default: http://localhost:11434)',
+    description: 'URL du proxy Ollama local (default: /api/ollama)',
   },
   {
     key: 'github_token',

@@ -28,7 +28,7 @@ export const API_ENDPOINTS = {
   // ✅ AUDIT FIX #2: All Ollama calls go through Tauri command (not direct HTTP)
   // Use invoke('ollama_generate') instead of direct HTTP
   // Keeping this for reference only — DO NOT USE directly
-  // ollama: 'http://localhost:11434',  // ❌ DEPRECATED
+  // ollama: '/api/ollama',  // ❌ DEPRECATED
 
   // Local endpoints (toujours disponibles)
   localLLM: 'http://localhost:8000',
