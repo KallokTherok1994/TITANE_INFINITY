@@ -248,7 +248,7 @@ Créer \`useSingularityUnifiedStore.ts\` avec état par défaut:
 async function handleStatusFull(): Promise<DevSudoResult> {
   try {
     // Appel au backend pour diagnostic complet
-    const diagnostic = await tauriClient.runSystemDiagnostic() as {
+    const diagnostic = (await tauriClient.runSystemDiagnostic()) as {
       status: string;
       modules: Array<{ name: string; status: string }>;
       errors: string[];
@@ -497,7 +497,10 @@ cd /home/titane/Documents/TITANE_INFINITY
  */
 async function handleIATest(): Promise<DevSudoResult> {
   try {
-    const status = await tauriClient.aiCheckOllamaStatus() as { available: boolean; models: string[] };
+    const status = (await tauriClient.aiCheckOllamaStatus()) as {
+      available: boolean;
+      models: string[];
+    };
 
     if (!status.available) {
       return {
@@ -525,7 +528,7 @@ curl http://localhost:11434/api/tags
     }
 
     // Test avec un prompt simple
-    const testResponse = await tauriClient.aiGenerateLocal({
+    const testResponse = (await tauriClient.aiGenerateLocal({
       request: {
         prompt: 'Dis "Hello from TITANE∞ Local!" en une phrase.',
         model: 'titane-local',
@@ -533,7 +536,7 @@ curl http://localhost:11434/api/tags
         temperature: 0.7,
         max_tokens: 50,
       },
-    }) as { content: string; model: string };
+    })) as { content: string; model: string };
 
     return {
       handled: true,
@@ -605,7 +608,7 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
   }
 
   try {
-    const result = await tauriClient.aiSetLocalModel({ modelName }) as string;
+    const result = (await tauriClient.aiSetLocalModel({ modelName })) as string;
 
     return {
       handled: true,
@@ -699,7 +702,7 @@ async function handleIAEnableDevMode(): Promise<DevSudoResult> {
  */
 async function handleIAScan(): Promise<DevSudoResult> {
   try {
-    const models = await tauriClient.aiScanLocalModels() as string[];
+    const models = (await tauriClient.aiScanLocalModels()) as string[];
 
     if (models.length === 0) {
       return {
@@ -770,7 +773,7 @@ ia set-default <model>
  */
 async function handleIAStatus(): Promise<DevSudoResult> {
   try {
-    const status = await tauriClient.aiCheckOllamaStatus() as {
+    const status = (await tauriClient.aiCheckOllamaStatus()) as {
       available: boolean;
       version?: string;
       models: string[];
@@ -874,10 +877,10 @@ ${modelsList}
  */
 async function handleIATrain(): Promise<DevSudoResult> {
   try {
-    const result = await tauriClient.executeShellCommand({
+    const result = (await tauriClient.executeShellCommand({
       command: './train_titane_local.sh',
       workingDir: '.',
-    }) as string;
+    })) as string;
 
     return {
       handled: true,
@@ -937,10 +940,10 @@ ${result}
  */
 async function handleIADataset(): Promise<DevSudoResult> {
   try {
-    const result = await tauriClient.executeShellCommand({
+    const result = (await tauriClient.executeShellCommand({
       command: 'python3 build_titane_dataset.py',
       workingDir: '.',
-    }) as string;
+    })) as string;
 
     return {
       handled: true,
@@ -999,16 +1002,16 @@ ${result}
 async function handleIATestModel(): Promise<DevSudoResult> {
   try {
     // Test 1: Identité
-    const test1 = await tauriClient.executeShellCommand({
+    const test1 = (await tauriClient.executeShellCommand({
       command: 'ollama run titane-local "Qui es-tu en une ligne ?"',
       workingDir: '.',
-    }) as string;
+    })) as string;
 
     // Test 2: Singularity
-    const test2 = await tauriClient.executeShellCommand({
+    const test2 = (await tauriClient.executeShellCommand({
       command: 'ollama run titane-local "Liste les 6 couches Singularity"',
       workingDir: '.',
-    }) as string;
+    })) as string;
 
     return {
       handled: true,

@@ -256,8 +256,7 @@ export const SelfHealingDashboard: React.FC = () => {
   // Force evaluation
   const handleForceEvaluation = async () => {
     try {
-      const report =
-        (await tauriClient.forceSelfHealingEvaluation()) as HealingReport;
+      const report = (await tauriClient.forceSelfHealingEvaluation()) as HealingReport;
       setHistory(prev => [report, ...prev].slice(0, 10));
       await fetchData();
     } catch {

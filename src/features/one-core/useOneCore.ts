@@ -63,9 +63,11 @@ export function useOneCore(): UseOneCoreReturn {
           tauriClient.oneCoreGetState().catch(() => null),
           tauriClient.oneCoreGetMetrics().catch(() => null),
           tauriClient.oneCoreListCommands().catch(() => []),
-          tauriClient.oneCoreGetEventHistory({
-            limit: 20,
-          }).catch(() => []),
+          tauriClient
+            .oneCoreGetEventHistory({
+              limit: 20,
+            })
+            .catch(() => []),
         ])) as [
           OneCoreState | null,
           OneCoreMetrics | null,
@@ -189,7 +191,9 @@ export function useOneCore(): UseOneCoreReturn {
   const executeCommand = useCallback(
     async (commandId: string): Promise<OneCoreActionResult | null> => {
       try {
-        const result = await tauriClient.oneCoreExecuteCommand({ commandId }) as OneCoreActionResult;
+        const result = (await tauriClient.oneCoreExecuteCommand({
+          commandId,
+        })) as OneCoreActionResult;
         await refresh();
         return result;
       } catch (err) {
@@ -208,7 +212,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Lancer un diagnostic
   const runDiagnostic = useCallback(async () => {
     try {
-      const result = await tauriClient.oneCoreRunDiagnostic() as OneCoreDiagnostic;
+      const result = (await tauriClient.oneCoreRunDiagnostic()) as OneCoreDiagnostic;
       setDiagnostic(result);
     } catch (err) {
       console.error('[ONE_CORE] Diagnostic error:', err);
@@ -229,7 +233,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Force sync
   const forceSync = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await tauriClient.oneCoreForceSync() as OneCoreActionResult;
+      const result = (await tauriClient.oneCoreForceSync()) as OneCoreActionResult;
       await refresh();
       return result;
     } catch (err) {
@@ -245,7 +249,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Cleanup
   const cleanup = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      const result = await tauriClient.oneCoreCleanup() as OneCoreActionResult;
+      const result = (await tauriClient.oneCoreCleanup()) as OneCoreActionResult;
       return result;
     } catch (err) {
       return {
@@ -261,9 +265,9 @@ export function useOneCore(): UseOneCoreReturn {
   const setMode = useCallback(
     async (mode: string): Promise<OneCoreActionResult | null> => {
       try {
-        const result = await tauriClient.oneCoreSetMode({
+        const result = (await tauriClient.oneCoreSetMode({
           mode,
-        }) as OneCoreActionResult;
+        })) as OneCoreActionResult;
         await refresh();
         return result;
       } catch (err) {
@@ -281,7 +285,7 @@ export function useOneCore(): UseOneCoreReturn {
   // Verify integrity
   const verifyIntegrity = useCallback(async (): Promise<OneCoreActionResult | null> => {
     try {
-      return await tauriClient.oneCoreVerifyIntegrity() as OneCoreActionResult;
+      return (await tauriClient.oneCoreVerifyIntegrity()) as OneCoreActionResult;
     } catch (err) {
       return {
         success: true,
@@ -296,9 +300,9 @@ export function useOneCore(): UseOneCoreReturn {
   const getEngineStatus = useCallback(
     async (engineName: string): Promise<EngineStatus | null> => {
       try {
-        return await tauriClient.oneCoreGetEngineStatus({
+        return (await tauriClient.oneCoreGetEngineStatus({
           engineName,
-        }) as EngineStatus;
+        })) as EngineStatus;
       } catch (err) {
         return {
           name: engineName,

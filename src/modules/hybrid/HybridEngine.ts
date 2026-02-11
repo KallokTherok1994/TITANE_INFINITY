@@ -338,7 +338,7 @@ export class HybridEngine {
    */
   private async inspectModule(target: string): Promise<string> {
     try {
-      const result = await tauriClient.devInspectFile({ path: target }) as string;
+      const result = (await tauriClient.devInspectFile({ path: target })) as string;
       return result;
     } catch (error) {
       return `Failed to inspect ${target}: ${error}`;
@@ -350,7 +350,7 @@ export class HybridEngine {
    */
   private async applyPatch(target: string): Promise<string> {
     try {
-      const result = await tauriClient.devApplyPatch({ file: target }) as string;
+      const result = (await tauriClient.devApplyPatch({ file: target })) as string;
       return result;
     } catch (error) {
       return `Failed to apply patch to ${target}: ${error}`;
@@ -362,7 +362,7 @@ export class HybridEngine {
    */
   private async getLogs(filter?: string): Promise<string> {
     try {
-      const result = await tauriClient.devGetLogs({ filter }) as string;
+      const result = (await tauriClient.devGetLogs({ filter })) as string;
       return result;
     } catch (error) {
       return `Failed to get logs: ${error}`;
@@ -374,7 +374,7 @@ export class HybridEngine {
    */
   private async runDiagnostic(target: string): Promise<string> {
     try {
-      const result = await tauriClient.hybridAnalyzeCode({ target }) as string;
+      const result = (await tauriClient.hybridAnalyzeCode({ target })) as string;
       return result;
     } catch (error) {
       return `Failed to run diagnostic: ${error}`;

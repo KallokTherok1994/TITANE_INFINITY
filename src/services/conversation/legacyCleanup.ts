@@ -26,7 +26,6 @@ export function cleanupLegacyConversationKeys(): void {
       if (key === 'titane_current_conversation_id') {
         keysToRemove.push(key);
       }
-
     }
 
     // Remove all legacy keys

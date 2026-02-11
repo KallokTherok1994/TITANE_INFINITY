@@ -241,36 +241,26 @@ export function useSystemHealth(): UseSystemHealthReturn {
     try {
       // Fetch all health metrics in parallel
       const [convHealthRaw, memStats, singState, sysHealth] = await Promise.all([
-        tauriClient.conversationHealthCheck().catch(() => null) as Promise<
-          | {
-              status: string;
-              active_conversations: number;
-              total_messages: number;
-              avg_response_time_ms: number;
-              error_rate: number;
-            }
-          | null
-        >,
-        tauriClient.memoryGetStats().catch(() => null) as Promise<
-          | {
-              total_entries: number;
-              total_size_bytes: number;
-              health_score: number;
-            }
-          | null
-        >,
-        tauriClient.engineGetSingularityState().catch(() => null) as Promise<
-          | { engines: Array<{ name: string; status: string }> }
-          | null
-        >,
-        tauriClient.getSystemHealth().catch(() => null) as Promise<
-          | {
-              uptime_ms: number;
-              cpu_usage: number;
-              memory_usage_mb: number;
-            }
-          | null
-        >,
+        tauriClient.conversationHealthCheck().catch(() => null) as Promise<{
+          status: string;
+          active_conversations: number;
+          total_messages: number;
+          avg_response_time_ms: number;
+          error_rate: number;
+        } | null>,
+        tauriClient.memoryGetStats().catch(() => null) as Promise<{
+          total_entries: number;
+          total_size_bytes: number;
+          health_score: number;
+        } | null>,
+        tauriClient.engineGetSingularityState().catch(() => null) as Promise<{
+          engines: Array<{ name: string; status: string }>;
+        } | null>,
+        tauriClient.getSystemHealth().catch(() => null) as Promise<{
+          uptime_ms: number;
+          cpu_usage: number;
+          memory_usage_mb: number;
+        } | null>,
       ]);
 
       // Build conversation health

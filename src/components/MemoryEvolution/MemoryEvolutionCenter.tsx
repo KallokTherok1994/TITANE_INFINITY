@@ -468,8 +468,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchHealth = useCallback(async () => {
     try {
-      const healthData =
-        (await tauriClient.memoryHierarchyHealth()) as HierarchyHealth;
+      const healthData = (await tauriClient.memoryHierarchyHealth()) as HierarchyHealth;
       setHealth(healthData);
     } catch (err) {
       logger.error(
@@ -482,8 +481,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
 
   const fetchClusters = useCallback(async () => {
     try {
-      const clustersData =
-        (await tauriClient.memoryGetClusters()) as MemoryCluster[];
+      const clustersData = (await tauriClient.memoryGetClusters()) as MemoryCluster[];
       // Vérifier que clustersData est bien un tableau
       if (Array.isArray(clustersData)) {
         setClusters(clustersData);

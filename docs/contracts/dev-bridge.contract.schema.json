@@ -3,9 +3,7 @@
   "$id": "https://titane.local/contracts/dev-bridge.contract.schema.json",
   "title": "TITANE_DEV_BRIDGE Contract",
   "type": "object",
-  "oneOf": [
-    { "$ref": "#/definitions/response" }
-  ],
+  "oneOf": [{ "$ref": "#/definitions/response" }],
   "definitions": {
     "request": {
       "type": "object",

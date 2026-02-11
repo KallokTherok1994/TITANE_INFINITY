@@ -205,7 +205,9 @@ const DebuggerPanel: React.FC = () => {
   const fetchDebugger = useCallback(async () => {
     try {
       const [eventsRes, statsRes] = await Promise.all([
-        tauriClient.devtoolsDebugLast({ n: 50 }) as Promise<DevToolsResponse<DebuggerEvent[]>>,
+        tauriClient.devtoolsDebugLast({ n: 50 }) as Promise<
+          DevToolsResponse<DebuggerEvent[]>
+        >,
         tauriClient.devtoolsDebugStats() as Promise<DevToolsResponse<DebuggerStats>>,
       ]);
       if (eventsRes.success && eventsRes.data) setEvents(eventsRes.data);
@@ -321,7 +323,9 @@ const MemoryPanel: React.FC = () => {
     try {
       const [statsRes, healthRes] = await Promise.all([
         tauriClient.devtoolsMemoryStats() as Promise<DevToolsResponse<MemorySystemStats>>,
-        tauriClient.devtoolsMemoryHealth() as Promise<DevToolsResponse<MemoryHealthReport>>,
+        tauriClient.devtoolsMemoryHealth() as Promise<
+          DevToolsResponse<MemoryHealthReport>
+        >,
       ]);
       if (statsRes.success && statsRes.data) setStats(statsRes.data);
       if (healthRes.success && healthRes.data) setHealth(healthRes.data);
@@ -745,7 +749,8 @@ export const DevToolsTab: React.FC = () => {
       } else {
         await tauriClient.devtoolsEnable();
       }
-      const res = (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
+      const res =
+        (await tauriClient.devtoolsStatus()) as DevToolsResponse<DevToolsStatus>;
       if (res.success && res.data) setStatus(res.data);
     } catch {
       // Silently fail

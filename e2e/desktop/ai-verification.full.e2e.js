@@ -104,14 +104,11 @@ async function ensureChatOpen(selectors) {
     } catch {
       await browser.execute(el => el.click(), trigger);
     }
-    await browser.waitUntil(
-      async () => (await $(selectors.input)).isExisting(),
-      {
-        timeout: 5000,
-        interval: 200,
-        timeoutMsg: 'timeout waiting for chat input to appear',
-      }
-    );
+    await browser.waitUntil(async () => (await $(selectors.input)).isExisting(), {
+      timeout: 5000,
+      interval: 200,
+      timeoutMsg: 'timeout waiting for chat input to appear',
+    });
   }
 }
 
@@ -184,7 +181,11 @@ async function sendPrompt(selectors, prompt) {
         }
       );
     } catch (error) {
-      return { prompt, response: null, error: error?.message || 'timeout waiting for response' };
+      return {
+        prompt,
+        response: null,
+        error: error?.message || 'timeout waiting for response',
+      };
     }
 
     return { prompt, response, error: null };
@@ -287,13 +288,28 @@ describe('ai-verification (desktop/full)', () => {
 
   it('error handling (3 scenarios)', async () => {
     const empty = await sendPrompt(selectors, '');
-    results.errors.push({ scenario: ERROR_SCENARIOS[0].description, ui: empty.response || empty.error || 'EMPTY' });
+    results.errors.push({
+      scenario: ERROR_SCENARIOS[0].description,
+      ui: empty.response || empty.error || 'EMPTY',
+    });
 
-    const impossible = await sendPrompt(selectors, 'Fais une action impossible et explique pourquoi.');
-    results.errors.push({ scenario: ERROR_SCENARIOS[1].description, ui: impossible.response || impossible.error || 'EMPTY' });
+    const impossible = await sendPrompt(
+      selectors,
+      'Fais une action impossible et explique pourquoi.'
+    );
+    results.errors.push({
+      scenario: ERROR_SCENARIOS[1].description,
+      ui: impossible.response || impossible.error || 'EMPTY',
+    });
 
-    const offline = await sendPrompt(selectors, 'Provider indisponible : réponds avec un fallback utile.');
-    results.errors.push({ scenario: ERROR_SCENARIOS[2].description, ui: offline.response || offline.error || 'EMPTY' });
+    const offline = await sendPrompt(
+      selectors,
+      'Provider indisponible : réponds avec un fallback utile.'
+    );
+    results.errors.push({
+      scenario: ERROR_SCENARIOS[2].description,
+      ui: offline.response || offline.error || 'EMPTY',
+    });
   });
 
   after(() => {
@@ -304,19 +320,33 @@ describe('ai-verification (desktop/full)', () => {
     const uiComplete = results.uiMatrix.length === UI_PAGES.length;
 
     const alwaysOk = alwaysComplete && results.always.every(r => r.response && !r.error);
-    const offlineOk = offlineComplete && results.offline.every(r => r.response && !r.error);
+    const offlineOk =
+      offlineComplete && results.offline.every(r => r.response && !r.error);
     const memoryOk = memoryComplete && results.memory.every(r => r.response && !r.error);
-    const errorsOk = errorsComplete && results.errors.every(r => r.ui && r.ui !== 'EMPTY');
+    const errorsOk =
+      errorsComplete && results.errors.every(r => r.ui && r.ui !== 'EMPTY');
 
     const alwaysContent = results.always
-      .map((r, i) => `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`)
+      .map(
+        (r, i) =>
+          `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`
+      )
       .join('\n\n');
-    appendReport('ALWAYS_RESPOND.md', `${alwaysContent}\n\nVerdict: ${alwaysOk ? 'PASS' : 'FAIL'}`);
+    appendReport(
+      'ALWAYS_RESPOND.md',
+      `${alwaysContent}\n\nVerdict: ${alwaysOk ? 'PASS' : 'FAIL'}`
+    );
 
     const offlineContent = results.offline
-      .map((r, i) => `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`)
+      .map(
+        (r, i) =>
+          `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`
+      )
       .join('\n\n');
-    appendReport('OFFLINE.md', `Preuve: fetch override (window.fetch)\n\n${offlineContent}\n\nVerdict: ${offlineOk ? 'PASS' : 'FAIL'}`);
+    appendReport(
+      'OFFLINE.md',
+      `Preuve: fetch override (window.fetch)\n\n${offlineContent}\n\nVerdict: ${offlineOk ? 'PASS' : 'FAIL'}`
+    );
 
     const uiRows = results.uiMatrix
       .map(entry => {
@@ -326,17 +356,29 @@ describe('ai-verification (desktop/full)', () => {
         return `| ${entry.page} | ${q1} | ${q2} | ${q3} |`;
       })
       .join('\n');
-    appendReport('UI_MATRIX.md', `| Page | Page ouverte | Actions possibles | Aide principale |\n| ---- | ----------- | ----------------- | -------------- |\n${uiRows}`);
+    appendReport(
+      'UI_MATRIX.md',
+      `| Page | Page ouverte | Actions possibles | Aide principale |\n| ---- | ----------- | ----------------- | -------------- |\n${uiRows}`
+    );
 
     const memoryContent = results.memory
-      .map((r, i) => `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`)
+      .map(
+        (r, i) =>
+          `Q${i + 1}: ${r.prompt}\nA${i + 1}: ${r.response || 'NOT_RUN'}${r.error ? `\nERR: ${r.error}` : ''}`
+      )
       .join('\n\n');
-    appendReport('MEMORY_METACOG.md', `${memoryContent}\n\nVerdict: ${memoryOk ? 'PASS' : 'FAIL'}`);
+    appendReport(
+      'MEMORY_METACOG.md',
+      `${memoryContent}\n\nVerdict: ${memoryOk ? 'PASS' : 'FAIL'}`
+    );
 
     const errorContent = results.errors
       .map((r, i) => `Scenario ${i + 1}: ${r.scenario}\nUI: ${r.ui}`)
       .join('\n\n');
-    appendReport('ERROR_HANDLING.md', `${errorContent}\n\nVerdict: ${errorsOk ? 'PASS' : 'FAIL'}`);
+    appendReport(
+      'ERROR_HANDLING.md',
+      `${errorContent}\n\nVerdict: ${errorsOk ? 'PASS' : 'FAIL'}`
+    );
 
     const blockers = [];
     if (!alwaysOk) blockers.push('ALWAYS_RESPOND');
@@ -365,7 +407,13 @@ describe('ai-verification (desktop/full)', () => {
       certification_scope: CERTIFICATION_SCOPE,
       status,
       blockers,
-      suites_executed: ['ALWAYS_RESPOND', 'OFFLINE', 'UI_MATRIX', 'MEMORY_METACOG', 'ERROR_HANDLING'],
+      suites_executed: [
+        'ALWAYS_RESPOND',
+        'OFFLINE',
+        'UI_MATRIX',
+        'MEMORY_METACOG',
+        'ERROR_HANDLING',
+      ],
       suites_ignored: [],
       proofs: {
         always: 'reports/titane-ai-cert/auto-ui/mode-full/ALWAYS_RESPOND.md',
@@ -378,6 +426,9 @@ describe('ai-verification (desktop/full)', () => {
     };
 
     fs.mkdirSync(REPORT_ROOT, { recursive: true });
-    fs.writeFileSync(path.join(REPORT_ROOT, 'RUN_LEDGER.json'), JSON.stringify(ledger, null, 2));
+    fs.writeFileSync(
+      path.join(REPORT_ROOT, 'RUN_LEDGER.json'),
+      JSON.stringify(ledger, null, 2)
+    );
   });
 });

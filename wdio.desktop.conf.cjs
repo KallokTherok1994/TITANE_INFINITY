@@ -44,11 +44,18 @@ exports.config = {
       fs.mkdirSync(REPORTS_DIR, { recursive: true });
       fs.appendFileSync(
         CAPS_LOG,
-        `${new Date().toISOString()}\n${JSON.stringify({ config: {
-          hostname: config.hostname,
-          port: config.port,
-          path: config.path,
-        }, capabilities }, null, 2)}\n\n`
+        `${new Date().toISOString()}\n${JSON.stringify(
+          {
+            config: {
+              hostname: config.hostname,
+              port: config.port,
+              path: config.path,
+            },
+            capabilities,
+          },
+          null,
+          2
+        )}\n\n`
       );
     } catch {
       // ignore logging failures

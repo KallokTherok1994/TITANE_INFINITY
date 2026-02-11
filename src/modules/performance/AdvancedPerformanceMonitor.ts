@@ -241,7 +241,7 @@ export class AdvancedPerformanceMonitor {
    */
   private async collectCPUMetrics(): Promise<CPUMetrics> {
     try {
-      const metrics = await tauriClient.getCpuMetrics() as CPUMetrics;
+      const metrics = (await tauriClient.getCpuMetrics()) as CPUMetrics;
       return metrics;
     } catch {
       // Fallback approximation via Performance API
@@ -396,7 +396,7 @@ export class AdvancedPerformanceMonitor {
    */
   private async collectBundleMetrics(): Promise<BundleMetrics> {
     try {
-      const metrics = await tauriClient.analyzeBundleSize() as BundleMetrics;
+      const metrics = (await tauriClient.analyzeBundleSize()) as BundleMetrics;
       return metrics;
     } catch {
       // Fallback estimation

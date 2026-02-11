@@ -40,7 +40,8 @@ console.log(`✅ Extracted ${commandMap.size} command constants`);
 
 // Build wrapper → command map (by parsing tauriClient methods)
 const wrapperToCommand = new Map();
-const methodRegex = /async\s+([a-zA-Z_][a-zA-Z0-9_]*)\([^)]*\)[^{]*{\s*return\s+await\s+this\.invoke\(\s*TAURI_COMMANDS\.([A-Z_]+)/g;
+const methodRegex =
+  /async\s+([a-zA-Z_][a-zA-Z0-9_]*)\([^)]*\)[^{]*{\s*return\s+await\s+this\.invoke\(\s*TAURI_COMMANDS\.([A-Z_]+)/g;
 while ((match = methodRegex.exec(tauriClientContent)) !== null) {
   const wrapperName = match[1];
   const constantName = match[2];
@@ -55,7 +56,7 @@ console.log(`✅ Mapped ${wrapperToCommand.size} wrappers to commands\n`);
 // Get used commands
 const usedCommands = new Set();
 const unmappedWrappers = [];
-usedWrappers.forEach((wrapper) => {
+usedWrappers.forEach(wrapper => {
   const cmd = wrapperToCommand.get(wrapper);
   if (cmd) {
     usedCommands.add(cmd);
@@ -66,8 +67,10 @@ usedWrappers.forEach((wrapper) => {
 
 console.log(`✅ ${usedCommands.size} unique commands actually used`);
 if (unmappedWrappers.length > 0) {
-  console.log(`⚠️  ${unmappedWrappers.length} wrappers not mapped (likely edge cases):\n`);
-  unmappedWrappers.slice(0, 10).forEach((w) => console.log(`   - ${w}`));
+  console.log(
+    `⚠️  ${unmappedWrappers.length} wrappers not mapped (likely edge cases):\n`
+  );
+  unmappedWrappers.slice(0, 10).forEach(w => console.log(`   - ${w}`));
   if (unmappedWrappers.length > 10) {
     console.log(`   ... and ${unmappedWrappers.length - 10} more`);
   }
@@ -78,8 +81,8 @@ const allowlistedCommands = new Set(allowlist.allowed_commands || []);
 console.log(`\n✅ ${allowlistedCommands.size} commands in allowlist\n`);
 
 // Compare
-const missing = [...usedCommands].filter((cmd) => !allowlistedCommands.has(cmd));
-const unused = [...allowlistedCommands].filter((cmd) => !usedCommands.has(cmd));
+const missing = [...usedCommands].filter(cmd => !allowlistedCommands.has(cmd));
+const unused = [...allowlistedCommands].filter(cmd => !usedCommands.has(cmd));
 
 console.log('═══════════════════════════════════════════════════════════════');
 console.log('ALLOWLIST COMPARISON REPORT');
@@ -93,7 +96,7 @@ if (missing.length > 0) {
   console.log('──────────────────────────────────────────────────────────────');
   console.log('❌ COMMANDS USED BUT NOT IN ALLOWLIST (MUST ADD):');
   console.log('──────────────────────────────────────────────────────────────');
-  missing.forEach((cmd) => console.log(`  - ${cmd}`));
+  missing.forEach(cmd => console.log(`  - ${cmd}`));
   console.log('');
 }
 
@@ -101,7 +104,7 @@ if (unused.length > 0 && unused.length < 50) {
   console.log('──────────────────────────────────────────────────────────────');
   console.log('⚠️  COMMANDS IN ALLOWLIST BUT NOT USED (Consider removing):');
   console.log('──────────────────────────────────────────────────────────────');
-  unused.forEach((cmd) => console.log(`  - ${cmd}`));
+  unused.forEach(cmd => console.log(`  - ${cmd}`));
   console.log('');
 } else if (unused.length >= 50) {
   console.log('──────────────────────────────────────────────────────────────');
@@ -163,10 +166,13 @@ if (unused.length > 0) {
 reportLines.push('');
 reportLines.push('---');
 reportLines.push('');
-reportLines.push(`## Gate: P1.ALLOWLIST.MATCH — ${missing.length === 0 ? '✅ PASSED' : '❌ FAILED'}`);
+reportLines.push(
+  `## Gate: P1.ALLOWLIST.MATCH — ${missing.length === 0 ? '✅ PASSED' : '❌ FAILED'}`
+);
 reportLines.push('');
 
 import { writeFileSync } from 'fs';
-const reportPath = 'reports/auto_ipc_features/2026-02-10T20-36-36Z/04_ALLOWLIST_ALIGNMENT.md';
+const reportPath =
+  'reports/auto_ipc_features/2026-02-10T20-36-36Z/04_ALLOWLIST_ALIGNMENT.md';
 writeFileSync(reportPath, reportLines.join('\n'), 'utf-8');
 console.log(`📝 Report written to ${reportPath}\n`);
