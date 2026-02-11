@@ -1,0 +1,148 @@
+[2m[WebServer] [22mnpm warn Unknown env config "manage-package-manager-versions". This will stop working in the next major version of npm.
+[2m[WebServer] [22mnpm warn Unknown env config "verify-deps-before-run". This will stop working in the next major version of npm.
+[2m[WebServer] [22m
+[2m[WebServer] [22m  [32m[1mVITE[22m v7.3.1[39m  [2mready in [0m[1m487[22m[2m[0m ms[22m
+[2m[WebServer] [22m
+[2m[WebServer] [22m  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m4000[22m/[39m
+
+Running 4 tests using 1 worker
+
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✘  1 [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:68:3 › Runtime Validation: Chat AR20 Suite › TEST A: Simple prompt "allo" receives response (26.2s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✘  2 [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:81:3 › Runtime Validation: Chat AR20 Suite › TEST B: Offline mode - fallback response exists (27.9s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✘  3 [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:103:3 › Runtime Validation: Chat AR20 Suite › TEST C: Invalid external keys - no silence (22.6s)
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+[2m[WebServer] [22m🔵 Proxying: GET /api/tags → /api/tags
+  ✘  4 [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:118:3 › Runtime Validation: Chat AR20 Suite › TEST AR20: 20 consecutive messages all answered (18.1s)
+
+
+  1) [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:68:3 › Runtime Validation: Chat AR20 Suite › TEST A: Simple prompt "allo" receives response 
+
+    Error: ❌ TEST A FAIL: No response after 40 attempts
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      72 |     const result = await waitForResponse(page, testMsg, 20000);
+      73 |     
+    > 74 |     expect(result.success, `❌ TEST A FAIL: No response after ${result.attempts} attempts`).toBe(true);
+         |                                                                                            ^
+      75 |     expect(result.response, '❌ TEST A FAIL: Empty response').not.toBe(null);
+      76 |     expect(result.response!.length, '❌ TEST A FAIL: Response too short').toBeGreaterThan(0);
+      77 |     
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/runtime-validation/chat-ar20.spec.ts:74:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-121d2-ompt-allo-receives-response-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-121d2-ompt-allo-receives-response-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/runtime-validation-chat-ar-121d2-ompt-allo-receives-response-chromium/error-context.md
+
+  2) [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:81:3 › Runtime Validation: Chat AR20 Suite › TEST B: Offline mode - fallback response exists 
+
+    Error: ❌ TEST B FAIL: No fallback response after 50 attempts
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+       95 |     const result = await waitForResponse(page, testMsg, 25000);
+       96 |     
+    >  97 |     expect(result.success, `❌ TEST B FAIL: No fallback response after ${result.attempts} attempts`).toBe(true);
+          |                                                                                                     ^
+       98 |     expect(result.response, '❌ TEST B FAIL: Empty fallback').not.toBe(null);
+       99 |     
+      100 |     console.log(`✅ TEST B PASS: Fallback response received (offline mode)`);
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/runtime-validation/chat-ar20.spec.ts:97:101
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-b0340----fallback-response-exists-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-b0340----fallback-response-exists-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/runtime-validation-chat-ar-b0340----fallback-response-exists-chromium/error-context.md
+
+  3) [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:103:3 › Runtime Validation: Chat AR20 Suite › TEST C: Invalid external keys - no silence 
+
+    Error: ❌ TEST C FAIL: Silence detected with invalid keys
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      110 |     const result = await waitForResponse(page, testMsg, 20000);
+      111 |     
+    > 112 |     expect(result.success, `❌ TEST C FAIL: Silence detected with invalid keys`).toBe(true);
+          |                                                                                 ^
+      113 |     expect(result.response, '❌ TEST C FAIL: No fallback triggered').not.toBe(null);
+      114 |     
+      115 |     console.log(`✅ TEST C PASS: No silence despite invalid/missing external keys`);
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/runtime-validation/chat-ar20.spec.ts:112:81
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-259cf--external-keys---no-silence-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-259cf--external-keys---no-silence-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/runtime-validation-chat-ar-259cf--external-keys---no-silence-chromium/error-context.md
+
+  4) [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:118:3 › Runtime Validation: Chat AR20 Suite › TEST AR20: 20 consecutive messages all answered 
+
+    Error: ❌ AR20 FAIL: No response for message 1/20
+
+    [2mexpect([22m[31mreceived[39m[2m).[22mtoBe[2m([22m[32mexpected[39m[2m) // Object.is equality[22m
+
+    Expected: [32mtrue[39m
+    Received: [31mfalse[39m
+
+      133 |       });
+      134 |
+    > 135 |       expect(result.success, `❌ AR20 FAIL: No response for message ${i}/${messageCount}`).toBe(true);
+          |                                                                                           ^
+      136 |       
+      137 |       // Short delay between messages
+      138 |       await page.waitForTimeout(1000);
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/e2e/runtime-validation/chat-ar20.spec.ts:135:91
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-396e1-utive-messages-all-answered-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    test-results/runtime-validation-chat-ar-396e1-utive-messages-all-answered-chromium/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results/runtime-validation-chat-ar-396e1-utive-messages-all-answered-chromium/error-context.md
+
+  4 failed
+    [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:68:3 › Runtime Validation: Chat AR20 Suite › TEST A: Simple prompt "allo" receives response 
+    [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:81:3 › Runtime Validation: Chat AR20 Suite › TEST B: Offline mode - fallback response exists 
+    [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:103:3 › Runtime Validation: Chat AR20 Suite › TEST C: Invalid external keys - no silence 
+    [chromium] › e2e/runtime-validation/chat-ar20.spec.ts:118:3 › Runtime Validation: Chat AR20 Suite › TEST AR20: 20 consecutive messages all answered 

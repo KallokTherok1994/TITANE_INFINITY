@@ -226,18 +226,26 @@ impl ConversationEngineState {
     async fn create_offline_response(&self) -> Result<ConversationResponse, ConversationEngineError> {
         log::info!("[CONV-ENGINE] 🟢 Creating autonomous offline response (guaranteed <1s)");
         
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_millis() as u64)
+            .unwrap_or(0);
+        
         Ok(ConversationResponse {
-            id: uuid::Uuid::new_v4().to_string(),
-            conversation_id: uuid::Uuid::new_v4().to_string(),
             assistant_message: "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
-            message_metadata: None,
-            metadata: crate::conversation_engine::types::ResponseMetadata {
-                mode: crate::conversation_engine::types::ConversationMode::Default,
-                provider: "offline".to_string(),
-                latency_ms: 50,
-                confidence: 0.75,
-                intent: "autonomous_fallback".to_string(),
-                emotion: "neutral".to_string(),
+            conversation_id: uuid::Uuid::new_v4().to_string(),
+            message_id: uuid::Uuid::new_v4().to_string(),
+            detected_intention: Intention::Question,
+            detected_emotion: EmotionState::default(),
+            cognitive_tags: vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
+            cognitive_summary: "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
+            metadata: ConversationMetadata {
+                timestamp: now,
+                provider_used: "offline".to_string(),
+                latency_ms: 40,
+                tokens_used: 0,
+                memory_effect: MemoryEffect::New,
+                links_to_contexts: vec![],
             },
         })
     }
