@@ -74,7 +74,7 @@ describe('IAService', () => {
     describe('Ollama provider', () => {
       it('should always accept Ollama (no API key required, min 16 chars)', () => {
         // Ollama still checks minimum length but allows any format
-        const result = IAService.validateKeyFormat('ollama', 'http://localhost:11434');
+        const result = IAService.validateKeyFormat('ollama', 'ollama-proxy-endpoint');
         expect(result.valid).toBe(true);
       });
     });

@@ -149,8 +149,8 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
               <p className="text-sm text-gray-300">
                 {isEnabled ? (
                   <>
-                    ✅ Ollama est opérationnel sur{' '}
-                    <code className="text-amber-400">localhost:11434</code>
+                    ✅ Ollama est opérationnel via le proxy{' '}
+                    <code className="text-amber-400">/api/ollama</code>
                   </>
                 ) : (
                   <>

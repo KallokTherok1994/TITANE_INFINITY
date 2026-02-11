@@ -6,7 +6,7 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 TARGET_DIR="$ROOT/src"
-PATTERN="127\.0\.0\.1:11434"
+PATTERN="(127\.0\.0\.1|localhost):11434"
 
 if command -v rg >/dev/null 2>&1; then
   MATCHES="$(rg -n "$PATTERN" "$TARGET_DIR" || true)"

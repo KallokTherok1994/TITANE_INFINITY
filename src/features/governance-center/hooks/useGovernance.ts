@@ -102,7 +102,7 @@ export function useGovernance() {
     const status: OllamaStatus = {
       provider_enabled: false,
       available: false,
-      url: 'http://localhost:11434',
+      url: '/api/ollama',
       models: [],
     };
 
@@ -123,24 +123,11 @@ export function useGovernance() {
     }
 
     try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3s timeout
-
-      const response = await fetch(
-        // @network-allowed
-        'http://localhost:11434/api/tags',
-        {
-          signal: controller.signal,
-        }
-      );
-
-      clearTimeout(timeoutId);
-
-      if (response.ok) {
-        const data = await response.json();
+      const response = await governanceService.getOllamaStatus();
+      if (response.ok && response.data) {
         status.provider_enabled = true;
-        status.available = true;
-        status.models = data.models?.map((m: { name: string }) => m.name) || [];
+        status.available = Boolean(response.data.available);
+        status.models = response.data.models ?? [];
       }
     } catch {
       // ✅ v24.3.8: Silent fallback - Ollama est optionnel

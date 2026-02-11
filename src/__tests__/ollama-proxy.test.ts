@@ -15,7 +15,9 @@ describe('Ollama proxy routing', () => {
     const source = readFileSync(target, 'utf8');
 
     const forbidden = ['127', '0', '0', '1'].join('.') + ':11434';
+    const forbiddenLocalhost = ['local', 'host', ':', '11434'].join('');
     expect(source).toContain("const OLLAMA_API_BASE = '/api/ollama';");
     expect(source).not.toContain(forbidden);
+    expect(source).not.toContain(forbiddenLocalhost);
   });
 });

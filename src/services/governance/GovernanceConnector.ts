@@ -232,7 +232,7 @@ export class GovernanceConnector {
     try {
       // Vérifier Ollama (local)
       const ollamaStatus = await secureInvoke<{ available: boolean }>(
-        'check_ollama_status'
+        'ai_check_ollama_status'
       );
       if (ollamaStatus) {
         this.config.providers.ollama.isConfigured = ollamaStatus.available;

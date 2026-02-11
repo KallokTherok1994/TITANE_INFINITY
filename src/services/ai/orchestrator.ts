@@ -867,7 +867,7 @@ class AIOrchestrator {
       });
 
       // 🧠 Exécuter le processus cognitif complet
-      const cognitiveDecision = cognitiveKernel.executeCognitiveProcess({
+      const cognitiveDecision = await cognitiveKernel.executeCognitiveProcess({
         message: sanitized,
         providers: this.providers.map(p => p.name),
         metrics: { ...realtimeMetrics } as unknown as MetricsData,

@@ -55,7 +55,7 @@ const getFetchUrl = (input: any): string => {
 const fetchMock = vi.fn(async (input: any) => {
   const url = getFetchUrl(input);
 
-  if (url.includes('localhost:11434') && url.endsWith('/api/tags')) {
+  if (url.includes('/api/ollama') && url.endsWith('/tags')) {
     return createMockResponse(JSON.stringify({ models: [] }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

@@ -20,6 +20,7 @@ import type {
   PermissionAudit,
   SecurityLogEntry,
   SecurityLogFilters,
+  OllamaStatus,
 } from '../types';
 
 // ═══════════════════════════════════════════════════════════════
@@ -53,12 +54,24 @@ const keyStatusCaches = {
     backoffBaseMs: 1000,
     backoffMaxMs: 10000,
   }),
+  ollama: new StatusCache<SecureResponse<OllamaStatus>>({
+    name: 'ollama-status',
+    ttlMs: 10000,
+    backoffBaseMs: 1000,
+    backoffMaxMs: 5000,
+  }),
 };
 
 const backoffKeyStatusFallback = (provider: string): SecureResponse<GeminiKeyStatus> => ({
   ok: false,
   data: null,
   error: `Backoff actif (${provider})`,
+});
+
+const backoffOllamaFallback = (): SecureResponse<OllamaStatus> => ({
+  ok: false,
+  data: null,
+  error: 'Backoff actif (ollama)',
 });
 
 function normalizeResponse<T>(
@@ -178,6 +191,22 @@ async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
       );
     },
     () => backoffKeyStatusFallback('copilot')
+  );
+}
+
+/**
+ * Obtenir le statut d'Ollama (via Tauri)
+ */
+async function getOllamaStatus(): Promise<SecureResponse<OllamaStatus>> {
+  return keyStatusCaches.ollama.get(
+    async () => {
+      const raw = await safeInvoke<unknown>('ai_check_ollama_status');
+      return normalizeResponse<OllamaStatus>(
+        raw,
+        'Impossible de récupérer le statut Ollama'
+      );
+    },
+    () => backoffOllamaFallback()
   );
 }
 
@@ -398,6 +427,7 @@ export const governanceService = {
   setAnthropicKey,
   getCopilotStatus,
   setCopilotKey,
+  getOllamaStatus,
   storeSecret,
   getSecretsStatus,
   hasSecret,

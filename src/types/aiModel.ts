@@ -92,7 +92,7 @@ export const AI_MODELS: Record<AIProvider, AIModelConfig> = {
   'titane-local': {
     provider: 'titane-local',
     modelName: 'titane-local',
-    endpoint: 'http://localhost:11434',
+    endpoint: '/api/ollama',
     localOnly: true,
     devMode: true,
     fallback: 'gemini',
