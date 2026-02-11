@@ -44,9 +44,9 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await tauriClient.scIntrospectionQuickScan({
-          projectPath,
-        }) as IntrospectionReport;
+      const result = (await tauriClient.scIntrospectionQuickScan({
+        projectPath,
+      })) as IntrospectionReport;
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -62,9 +62,9 @@ export function useIntrospection(): UseIntrospectionReturn {
     setError(null);
 
     try {
-      const result = await tauriClient.scIntrospectionFullScan({
-          projectPath,
-        }) as IntrospectionReport;
+      const result = (await tauriClient.scIntrospectionFullScan({
+        projectPath,
+      })) as IntrospectionReport;
       setReport(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : String(err);
@@ -81,9 +81,9 @@ export function useIntrospection(): UseIntrospectionReturn {
       setError(null);
 
       try {
-        const result = await tauriClient.scIntrospectionAutoFix({
+        const result = (await tauriClient.scIntrospectionAutoFix({
           projectPath,
-        }) as AutoFixResult;
+        })) as AutoFixResult;
 
         // Re-scan after fix
         await runFullScan(projectPath);

@@ -683,7 +683,7 @@ class AudioService {
       return 'VAD reset not available (browser mode)';
     }
     try {
-      const result = await tauriClient.vadReset() as string;
+      const result = (await tauriClient.vadReset()) as string;
       console.log('[AudioService] VAD reset:', result);
       return result;
     } catch (error) {
@@ -718,16 +718,17 @@ class AudioService {
       };
     }
     try {
-      const result = await (tauriClient.vadTest?.() || Promise.resolve({
-        success: false,
-        tests: {
-          silence_detection: false,
-          speech_detection: false,
-          speech_transition: false,
-          silenceTransition: false,
-        },
-        message: 'vad_test command not available',
-      })) as {
+      const result = (await (tauriClient.vadTest?.() ||
+        Promise.resolve({
+          success: false,
+          tests: {
+            silence_detection: false,
+            speech_detection: false,
+            speech_transition: false,
+            silenceTransition: false,
+          },
+          message: 'vad_test command not available',
+        }))) as {
         success: boolean;
         tests: {
           silence_detection: boolean;

@@ -29,7 +29,7 @@ export const API_ENDPOINTS = {
   // Use invoke('ollama_generate') instead of direct HTTP
   // Keeping this for reference only — DO NOT USE directly
   // ollama: 'http://localhost:11434',  // ❌ DEPRECATED
-  
+
   // Local endpoints (toujours disponibles)
   localLLM: 'http://localhost:8000',
 

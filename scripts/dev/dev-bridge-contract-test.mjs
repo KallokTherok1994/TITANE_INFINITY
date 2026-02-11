@@ -7,9 +7,7 @@ const root = process.cwd();
 const schemaPath = path.join(root, 'docs/contracts/dev-bridge.contract.schema.json');
 
 function fail(message) {
-  process.stdout.write(
-    `${JSON.stringify({ ok: false, error: { message } }, null, 2)}\n`
-  );
+  process.stdout.write(`${JSON.stringify({ ok: false, error: { message } }, null, 2)}\n`);
   process.exit(1);
 }
 
@@ -27,7 +25,7 @@ try {
 let output = '';
 try {
   output = execSync('pnpm -s run titane:dev -- ask --json', {
-    encoding: 'utf8'
+    encoding: 'utf8',
   }).trim();
 } catch (err) {
   fail(`titane:dev execution failed: ${err.message}`);

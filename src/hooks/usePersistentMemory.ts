@@ -274,9 +274,9 @@ export function usePersistentMemory(
         limit: 500,
       };
 
-      const response = await tauriClient.persistentMemoryRead({
+      const response = (await tauriClient.persistentMemoryRead({
         request,
-      }) as MemoryReadResponse;
+      })) as MemoryReadResponse;
 
       // Filtrer selon les permissions du mode
       const filteredEntries = filterByPermissions(response.entries, modeId);
@@ -295,14 +295,14 @@ export function usePersistentMemory(
       }
 
       // Charger les bundles séparément
-      const bundles = await tauriClient.persistentMemoryGetBundles() as MemoryBundle[];
+      const bundles = (await tauriClient.persistentMemoryGetBundles()) as MemoryBundle[];
       if (enableCache) {
         persistentMemoryCache.bundles.clear();
         bundles.forEach(b => persistentMemoryCache.bundles.set(b.id, b));
       }
 
       // Charger les stats
-      const stats = await tauriClient.persistentMemoryGetStats() as MemoryStats;
+      const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
 
       setState({
         entries: filteredEntries,
@@ -347,9 +347,9 @@ export function usePersistentMemory(
           minRelevanceScore: minScore,
         };
 
-        const response = await tauriClient.persistentMemoryRead({
+        const response = (await tauriClient.persistentMemoryRead({
           request,
-        }) as MemoryReadResponse;
+        })) as MemoryReadResponse;
 
         // Re-scorer et trier côté frontend pour plus de précision
         const ranked = rankByRelevance(response.entries, query);
@@ -389,14 +389,14 @@ export function usePersistentMemory(
       if (entries.length === 0) {
         // Charger depuis Rust
         try {
-          const response = await tauriClient.persistentMemoryRead({
+          const response = (await tauriClient.persistentMemoryRead({
             request: {
               levels,
               currentMode: modeId,
               query,
               limit: 100,
             },
-          }) as MemoryReadResponse;
+          })) as MemoryReadResponse;
           entries = response.entries;
         } catch {
           return { context: '', usedEntries: [] };
@@ -708,10 +708,10 @@ export function usePersistentMemoryContext(
     const fetchContext = async () => {
       setIsLoading(true);
       try {
-        const response = await tauriClient.persistentMemoryGetContext({
+        const response = (await tauriClient.persistentMemoryGetContext({
           modeId,
           query,
-        }) as { context: string; usedEntries: string[] };
+        })) as { context: string; usedEntries: string[] };
         setContext(response.context);
         setUsedEntries(response.usedEntries);
       } catch (err) {

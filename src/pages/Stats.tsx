@@ -83,9 +83,8 @@ export const Stats: React.FC = () => {
 
     const fetchCognitive = async () => {
       try {
-        const data = (await tauriClient.orchestrationGetCognitiveState()) as
-          | CognitiveMetrics
-          | null;
+        const data =
+          (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
         if (mounted) {
           setCognitiveMetrics(data);
           setCognitiveLoading(false);

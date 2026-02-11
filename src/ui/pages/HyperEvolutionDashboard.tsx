@@ -61,8 +61,7 @@ export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
   const loadPredictions = useCallback(async () => {
     setLoading(true);
     try {
-      const report =
-        (await tauriClient.hyperPredictIssues()) as PredictionReport;
+      const report = (await tauriClient.hyperPredictIssues()) as PredictionReport;
       setPredictionReport(report);
     } catch (error) {
       console.error('Failed to load predictions:', error);

@@ -35,7 +35,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
     setError(null);
 
     try {
-      const result = await tauriClient.scRunQuickDiagnostics() as SystemDiagnostics;
+      const result = (await tauriClient.scRunQuickDiagnostics()) as SystemDiagnostics;
       setDiagnostics(result);
       setStatus(result.overall_status);
     } catch (err) {
@@ -52,7 +52,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
     setError(null);
 
     try {
-      const result = await tauriClient.scRunFullDiagnostics() as SystemDiagnostics;
+      const result = (await tauriClient.scRunFullDiagnostics()) as SystemDiagnostics;
       setDiagnostics(result);
       setStatus(result.overall_status);
     } catch (err) {
@@ -66,7 +66,7 @@ export function useSystemDiagnostics(): UseSystemDiagnosticsReturn {
 
   const refreshStatus = useCallback(async () => {
     try {
-      const result = await tauriClient.scGetDiagnosticStatus() as OverallStatus;
+      const result = (await tauriClient.scGetDiagnosticStatus()) as OverallStatus;
       setStatus(result);
     } catch (err) {
       console.error('[useSystemDiagnostics] Status refresh failed:', err);

@@ -726,12 +726,12 @@ const OrchestrationMetaCenterContent: React.FC = () => {
 
       // Load Cognitive orchestration states (with fallbacks)
       const multiAiState = (await tauriClient.multiAiGetState().catch(() => ({
-          providers: [],
-          bestProvider: 'claude',
-          autoMode: true,
-          globalScore: 85,
-          lastUpdate: Date.now(),
-        }))) as MultiAIState;
+        providers: [],
+        bestProvider: 'claude',
+        autoMode: true,
+        globalScore: 85,
+        lastUpdate: Date.now(),
+      }))) as MultiAIState;
 
       const nexusState = (await tauriClient.nexusGetState().catch(() => ({
         activeNodes: 12,
@@ -744,14 +744,14 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       }))) as NexusState;
 
       const harmoniaState = (await tauriClient.harmoniaGetState().catch(() => ({
-          activeFlows: [],
-          cpuUsage: 35,
-          ramUsage: 45,
-          ioBalance: 78,
-          harmonyScore: 82,
-          mode: 'balanced',
-          lastUpdate: Date.now(),
-        }))) as HarmoniaState;
+        activeFlows: [],
+        cpuUsage: 35,
+        ramUsage: 45,
+        ioBalance: 78,
+        harmonyScore: 82,
+        mode: 'balanced',
+        lastUpdate: Date.now(),
+      }))) as HarmoniaState;
 
       const cognitiveState = (await tauriClient.cognitiveGetState().catch(() => ({
         provider: 'claude',

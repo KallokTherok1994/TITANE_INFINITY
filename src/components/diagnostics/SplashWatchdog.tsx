@@ -55,9 +55,7 @@ const checkDiagEnabled = async (): Promise<boolean> => {
   // 3. Tauri runtime envs (requires Tauri API)
   if (typeof window !== 'undefined' && '__TAURI__' in window) {
     try {
-      const val = (await tauriClient.scGetEnv({ key: 'TITANE_DIAG' })) as
-        | string
-        | null;
+      const val = (await tauriClient.scGetEnv({ key: 'TITANE_DIAG' })) as string | null;
       if (val === '1') {
         return true;
       }
@@ -193,7 +191,8 @@ const useBootWatchdog = () => {
         setTimedOut(true);
 
         // Tenter de récupérer status backend
-        tauriClient.getSystemHealth()
+        tauriClient
+          .getSystemHealth()
           .then(health => {
             const derivedStatus = deriveBackendStatus(health);
             const gstStatus = gstreamerCheck.getGStreamerStatus();

@@ -226,9 +226,9 @@ const MetaCenterContent: React.FC = () => {
 
       setState(currentState);
 
-      const currentMetrics = (await tauriClient.orchestratorGetMetrics().catch(
-        () => null
-      )) as MetaMetrics | null;
+      const currentMetrics = (await tauriClient
+        .orchestratorGetMetrics()
+        .catch(() => null)) as MetaMetrics | null;
       if (currentMetrics) {
         setMetrics(currentMetrics);
         setSelectedMode(currentMetrics.orchestration_mode.toLowerCase());

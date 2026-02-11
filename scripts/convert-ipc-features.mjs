@@ -99,7 +99,7 @@ const COMMAND_MAPS = {
 
 function convertFile(filePath) {
   console.log(`\n🔄 Processing: ${filePath}`);
-  
+
   let content = readFileSync(filePath, 'utf-8');
   let changeCount = 0;
 
@@ -124,22 +124,16 @@ function convertFile(filePath) {
       changeCount++;
       return `await tauriClient.${wrapper}(${params}) as ${type}`;
     });
-    
+
     // Pattern 2: await secureInvoke<Type>('command')
-    const pattern2 = new RegExp(
-      `await\\s+secureInvoke<([^>]+)>\\('${cmd}'\\)`,
-      'g'
-    );
+    const pattern2 = new RegExp(`await\\s+secureInvoke<([^>]+)>\\('${cmd}'\\)`, 'g');
     content = content.replace(pattern2, (match, type) => {
       changeCount++;
       return `await tauriClient.${wrapper}() as ${type}`;
     });
 
     // Pattern 3: secureInvoke<Type>('command').catch (no await, used in Promise.all)
-    const pattern3 = new RegExp(
-      `secureInvoke<([^>]+)>\\('${cmd}'\\)\\.catch`,
-      'g'
-    );
+    const pattern3 = new RegExp(`secureInvoke<([^>]+)>\\('${cmd}'\\)\\.catch`, 'g');
     content = content.replace(pattern3, (match, type) => {
       changeCount++;
       return `tauriClient.${wrapper}().catch`;
@@ -156,10 +150,7 @@ function convertFile(filePath) {
     });
 
     // Pattern 5: const result = await secureInvoke<Type>(\n      'command'
-    const pattern5 = new RegExp(
-      `await\\s+secureInvoke<([^>]+)>\\(\\s*'${cmd}'`,
-      'g'
-    );
+    const pattern5 = new RegExp(`await\\s+secureInvoke<([^>]+)>\\(\\s*'${cmd}'`, 'g');
     content = content.replace(pattern5, (match, type) => {
       changeCount++;
       return `await tauriClient.${wrapper}() as ${type}`;
@@ -168,7 +159,7 @@ function convertFile(filePath) {
 
   // 3. Write back
   writeFileSync(filePath, content, 'utf-8');
-  
+
   console.log(`  📝 Total changes: ${changeCount}`);
   return changeCount;
 }
@@ -193,7 +184,7 @@ console.log(' ══════════════════════
 console.log('TITANE∞ IPC Conversion Script');
 console.log('═══════════════════════════════════════════════════════════════\n');
 
-FILES.forEach((file) => {
+FILES.forEach(file => {
   const fullPath = resolve(process.cwd(), file);
   try {
     const changes = convertFile(fullPath);

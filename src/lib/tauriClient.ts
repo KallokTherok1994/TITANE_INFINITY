@@ -2672,10 +2672,7 @@ class TauriClient {
     );
   }
 
-  async testMicrophone(
-    params?: unknown,
-    options?: TauriInvokeOptions
-  ): Promise<unknown> {
+  async testMicrophone(params?: unknown, options?: TauriInvokeOptions): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TEST_MICROPHONE,
       (params as Record<string, unknown>) || {},

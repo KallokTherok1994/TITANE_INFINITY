@@ -49,8 +49,8 @@ if (!jsonFlag) {
       mode: 'DEV',
       error: {
         code: 'E_JSON_REQUIRED',
-        message: 'Missing --json flag for structured output.'
-      }
+        message: 'Missing --json flag for structured output.',
+      },
     },
     1
   );
@@ -68,8 +68,8 @@ if (!action || !allowedActions.has(action)) {
       mode: 'DEV',
       error: {
         code: 'E_ACTION_INVALID',
-        message: 'Action must be one of: ask, audit, verify, export.'
-      }
+        message: 'Action must be one of: ask, audit, verify, export.',
+      },
     },
     1
   );
@@ -87,8 +87,8 @@ if (!allowedScopes.has(scope)) {
       mode: 'DEV',
       error: {
         code: 'E_SCOPE_INVALID',
-        message: 'Scope must be one of: repo, ring2, ring3, ring4, docs, ci.'
-      }
+        message: 'Scope must be one of: repo, ring2, ring3, ring4, docs, ci.',
+      },
     },
     1
   );
@@ -116,7 +116,7 @@ const baseResponse = {
   scope,
   correlation_id: correlationId,
   timestamp: nowIso,
-  mode: 'DEV'
+  mode: 'DEV',
 };
 
 if (action === 'ask') {
@@ -133,15 +133,15 @@ if (action === 'ask') {
         inventory: inventoryPath,
         proof_pack: proofPackPath,
         contract: contractPath,
-        capability_doc: capabilityDocPath
+        capability_doc: capabilityDocPath,
       },
       constraints: [
         'local-first',
         'tauri-only',
         'no network server',
-        'structured output'
-      ]
-    }
+        'structured output',
+      ],
+    },
   });
 }
 
@@ -151,18 +151,18 @@ if (action === 'audit') {
     result: {
       inventory: {
         path: inventoryPath,
-        ...fileInfo(inventoryPath)
+        ...fileInfo(inventoryPath),
       },
       capability_doc: {
         path: capabilityDocPath,
-        ...fileInfo(capabilityDocPath)
+        ...fileInfo(capabilityDocPath),
       },
       contract_schema: {
         path: contractPath,
-        ...fileInfo(contractPath)
+        ...fileInfo(contractPath),
       },
-      note: 'Audit is local and file-based only.'
-    }
+      note: 'Audit is local and file-based only.',
+    },
   });
 }
 
@@ -174,10 +174,10 @@ if (action === 'verify') {
         { name: 'inventory', ...fileInfo(inventoryPath) },
         { name: 'proof_pack', ...fileInfo(proofPackPath) },
         { name: 'capability_doc', ...fileInfo(capabilityDocPath) },
-        { name: 'contract_schema', ...fileInfo(contractPath) }
+        { name: 'contract_schema', ...fileInfo(contractPath) },
       ],
-      note: 'Run pnpm run guard:dev-bridge for stop-the-line checks.'
-    }
+      note: 'Run pnpm run guard:dev-bridge for stop-the-line checks.',
+    },
   });
 }
 
@@ -186,8 +186,8 @@ respond({
   result: {
     proof_pack: {
       path: proofPackPath,
-      ...fileInfo(proofPackPath)
+      ...fileInfo(proofPackPath),
     },
-    export_note: 'Export is a file reference only; no network operations.'
-  }
+    export_note: 'Export is a file reference only; no network operations.',
+  },
 });

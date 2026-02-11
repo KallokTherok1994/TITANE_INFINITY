@@ -21,8 +21,7 @@ export const ModulesSection: React.FC = () => {
 
   const loadModules = useCallback(async () => {
     try {
-      const modulesList =
-        (await tauriClient.getModulesStatus()) as ModuleStatus[];
+      const modulesList = (await tauriClient.getModulesStatus()) as ModuleStatus[];
       setModules(modulesList);
     } catch (error) {
       console.error('Erreur chargement modules:', error);

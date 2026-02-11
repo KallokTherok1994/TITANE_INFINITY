@@ -189,8 +189,7 @@ export const AppearanceSection: React.FC = () => {
 
   const loadConfig = useCallback(async () => {
     try {
-      const loadedConfig =
-        (await tauriClient.getDesignConfig()) as DesignSystemConfig;
+      const loadedConfig = (await tauriClient.getDesignConfig()) as DesignSystemConfig;
       setConfig({ ...DEFAULT_CONFIG, ...loadedConfig });
     } catch (error) {
       console.error('Erreur chargement config:', error);

@@ -67,7 +67,7 @@ export class HeliosConnector {
   }> {
     try {
       // Connexion réelle à Helios via tauriClient
-      const heliosData = await tauriClient.getHeliosState() as {
+      const heliosData = (await tauriClient.getHeliosState()) as {
         cpu_usage: number;
         ram_usage: number;
         uptime_seconds: number;
@@ -186,7 +186,7 @@ export class NexusConnector {
   }> {
     try {
       // Connexion réelle à Nexus via tauriClient
-      const nexusData = await tauriClient.engineGetNexusState() as {
+      const nexusData = (await tauriClient.engineGetNexusState()) as {
         health: number;
         active_modules: string[];
         timestamp: number;

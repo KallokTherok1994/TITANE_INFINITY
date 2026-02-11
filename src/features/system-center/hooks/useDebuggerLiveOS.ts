@@ -462,10 +462,13 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const _captureCognitiveSnapshot = useCallback(async (): Promise<CognitiveSnapshot> => {
     try {
       // ✅ Get cognitive state (WHITELIST)
-      const cognitiveState = await tauriClient.getCognitiveState() as Record<string, unknown>;
+      const cognitiveState = (await tauriClient.getCognitiveState()) as Record<
+        string,
+        unknown
+      >;
 
       // ✅ Get singularity state (WHITELIST)
-      const singularity = await tauriClient.singularityGetFullState() as {
+      const singularity = (await tauriClient.singularityGetFullState()) as {
         physical: Record<string, unknown>;
         cognitive: Record<string, unknown>;
         symbolic: Record<string, unknown>;
@@ -474,7 +477,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       };
 
       // ✅ Get memory state (WHITELIST)
-      const memoryState = await tauriClient.memoryGetState() as {
+      const memoryState = (await tauriClient.memoryGetState()) as {
         usage_percent: number;
         active_connections: number;
       };
@@ -510,13 +513,21 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
       try {
         // Capture all system state
         const [health, modules, metrics, singularity, runtimeConfig] = await Promise.all([
-          (tauriClient.getSystemHealth() as Promise<Record<string, unknown>>).catch(() => ({})),
-          (tauriClient.getModuleHealth() as Promise<Record<string, unknown>>).catch(() => ({})),
-          (tauriClient.getHeliosMetrics() as Promise<Record<string, unknown>>).catch(() => ({})),
+          (tauriClient.getSystemHealth() as Promise<Record<string, unknown>>).catch(
+            () => ({})
+          ),
+          (tauriClient.getModuleHealth() as Promise<Record<string, unknown>>).catch(
+            () => ({})
+          ),
+          (tauriClient.getHeliosMetrics() as Promise<Record<string, unknown>>).catch(
+            () => ({})
+          ),
           (tauriClient.getSingularityState() as Promise<Record<string, unknown>>).catch(
             () => ({})
           ),
-          (tauriClient.getRuntimeConfig() as Promise<Record<string, unknown>>).catch(() => ({})),
+          (tauriClient.getRuntimeConfig() as Promise<Record<string, unknown>>).catch(
+            () => ({})
+          ),
         ]);
 
         const endTime = performance.now();
@@ -524,7 +535,7 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
         // Try to get persistence info
         let persistence;
         try {
-          const persistenceStatus = await tauriClient.titanGetPersistenceStatus() as {
+          const persistenceStatus = (await tauriClient.titanGetPersistenceStatus()) as {
             snapshot_id: string;
             events_count: number;
             integrity_hash: string;
@@ -667,13 +678,17 @@ export function useDebuggerLiveOS(): UseDebuggerLiveOSReturn {
   const captureVisualSyncState = useCallback(async (): Promise<VisualSyncState> => {
     try {
       // Get OS state
-      const cognitiveState = (await (tauriClient.getCognitiveState() as Promise<{
-        mode: string;
-      }>).catch(() => ({ mode: 'unknown' })));
+      const cognitiveState = await (
+        tauriClient.getCognitiveState() as Promise<{
+          mode: string;
+        }>
+      ).catch(() => ({ mode: 'unknown' }));
 
-      const systemState = (await (tauriClient.getSystemState() as Promise<{
-        cpu_usage: number;
-      }>).catch(() => ({ cpu_usage: 0 })));
+      const systemState = await (
+        tauriClient.getSystemState() as Promise<{
+          cpu_usage: number;
+        }>
+      ).catch(() => ({ cpu_usage: 0 }));
 
       // Visual Engine state would be captured from the Visual Engine instance
       // For now, we'll use placeholder values
@@ -1008,7 +1023,10 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
 
     try {
       // Check system health
-      const health = await tauriClient.getSystemHealth() as { healthy: boolean; status: string };
+      const health = (await tauriClient.getSystemHealth()) as {
+        healthy: boolean;
+        status: string;
+      };
       checks.push({
         id: 'system_health',
         name: 'Santé Système',
@@ -1027,7 +1045,7 @@ ${trace.result ? `Result: ${JSON.stringify(trace.result, null, 2)}` : ''}
 
     try {
       // Check module health
-      const modules = await tauriClient.getModuleHealth() as { all_healthy: boolean };
+      const modules = (await tauriClient.getModuleHealth()) as { all_healthy: boolean };
       checks.push({
         id: 'module_health',
         name: 'Santé Modules',

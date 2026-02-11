@@ -405,9 +405,7 @@ export const RealityCenter: React.FC = () => {
                   label="Shadows"
                   checked={state.render_config.shadows}
                   onChange={v =>
-                    tauriClient
-                      .realitySetRenderConfig({ shadows: v })
-                      .then(loadState)
+                    tauriClient.realitySetRenderConfig({ shadows: v }).then(loadState)
                   }
                 />
                 <ToggleSwitch
