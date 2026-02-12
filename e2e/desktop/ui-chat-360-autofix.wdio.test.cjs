@@ -737,9 +737,9 @@ function buildPageClassificationMarkdown(report) {
 async function ensureChatPage() {
   console.log('🔎 Ensuring chat page is accessible...');
 
-  // 🧪 Give Tauri app 3 seconds to fully load from dev server
-  console.log('   ⏳ Waiting for Tauri WebView to load (3s)...');
-  await browser.pause(3000);
+  // 🧪 Give Tauri app + React more time to fully load
+  console.log('   ⏳ Waiting for Tauri WebView + React to load (8s)...');
+  await browser.pause(8000);
 
   // Quick sanity check
   const currentUrl = await browser.getUrl();
