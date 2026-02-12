@@ -271,8 +271,8 @@ const AppRouter: React.FC = () => {
   // ✨ v19.5.2 - User Onboarding State
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   // 🧪 E2E MODE: Detect VITE_E2E environment and FORCE onboarding skip for E2E tests
-  const isE2EMode = import.meta.env.VITE_E2E === '1' || import.meta.env.DEV;
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isE2EMode ? true : true);
+  const isE2EMode = import.meta.env.VITE_E2E === '1';
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isE2EMode ? true : false);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
   // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
