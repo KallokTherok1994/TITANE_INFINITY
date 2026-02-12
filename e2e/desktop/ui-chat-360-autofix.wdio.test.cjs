@@ -810,24 +810,31 @@ async function ensureChatPage() {
     if (finalClass === 'CHAT') {
       console.log('   → Checking for onboarding carousel...');
       try {
-        const skipped = await browser.execute(() => {
-          const nextButton = Array.from(document.querySelectorAll('button, a'))
-            .find(el => {
-              const text = (el.innerText || el.textContent || '').toLowerCase().trim();
-              return text.includes('suivant') || text.includes('next');
-            });
-          
-          if (nextButton) {
-            nextButton.click();
-            return true;
-          }
-          return false;
-        });
+        // Click through all onboarding slides (up to 5+ times)
+        for (let slideClick = 0; slideClick < 6; slideClick++) {
+          const skipped = await browser.execute(() => {
+            const nextButton = Array.from(document.querySelectorAll('button, a'))
+              .find(el => {
+                const text = (el.innerText || el.textContent || '').toLowerCase().trim();
+                return text.includes('suivant') || text.includes('next');
+              });
+            
+            if (nextButton) {
+              nextButton.click();
+              return true;
+            }
+            return false;
+          });
 
-        if (skipped) {
-          console.log('   ✓ Clicked onboarding next button');
-          await browser.pause(500);
+          if (skipped) {
+            await browser.pause(300);
+          } else {
+            console.log(`   ✓ No more onboarding slides after ${slideClick} clicks`);
+            break;
+          }
         }
+        
+        console.log('   ✓ Onboarding carousel complete');
       } catch (err) {
         console.warn(`   ⚠️ Onboarding skip attempt failed: ${err.message}`);
       }
