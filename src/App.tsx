@@ -272,6 +272,11 @@ const AppRouter: React.FC = () => {
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
   // 🧪 E2E MODE: Detect VITE_E2E environment and FORCE onboarding skip for E2E tests
   const isE2EMode = import.meta.env.VITE_E2E === '1';
+  console.log('[App.tsx] E2E Mode Detection:', {
+    VITE_E2E: import.meta.env.VITE_E2E,
+    isE2EMode,
+    allEnv: import.meta.env,
+  });
   const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isE2EMode ? true : false);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
