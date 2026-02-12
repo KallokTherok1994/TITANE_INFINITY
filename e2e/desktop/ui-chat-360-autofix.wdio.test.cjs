@@ -808,18 +808,24 @@ async function ensureChatPage() {
 
     // Extra step: Handle onboarding carousel (Suivant/Next button) if chat route was reached but onboarding is showing
     if (finalClass === 'CHAT') {
-      console.log('   → Checking for onboarding carousel...');
+      console.log('   → Attempting to skip onboarding carousel...');
+      
+      const startTime = Date.now();
+      const maxTimeMs = 10000; // 10 second max for carousel loop
+      let carouselSkipped = 0;
+      
       try {
-        // Click through all onboarding slides (up to 5+ times)
-        for (let slideClick = 0; slideClick < 6; slideClick++) {
+        // Click through carousel slides with time limit
+        while (Date.now() - startTime < maxTimeMs && carouselSkipped < 10) {
           const skipped = await browser.execute(() => {
             const nextButton = Array.from(document.querySelectorAll('button, a'))
               .find(el => {
                 const text = (el.innerText || el.textContent || '').toLowerCase().trim();
-                return text.includes('suivant') || text.includes('next');
+                return text.includes('suivant') || text.includes('next') || text.includes('continuer');
               });
             
             if (nextButton) {
+              console.log(`[DOM] Clicking "${nextButton.innerText || nextButton.textContent}"`);
               nextButton.click();
               return true;
             }
@@ -827,16 +833,23 @@ async function ensureChatPage() {
           });
 
           if (skipped) {
-            await browser.pause(300);
+            carouselSkipped++;
+            await browser.pause(400);
           } else {
-            console.log(`   ✓ No more onboarding slides after ${slideClick} clicks`);
+            console.log(`   ✓ Carousel complete after ${carouselSkipped} slide(s)`);
             break;
           }
         }
         
-        console.log('   ✓ Onboarding carousel complete');
+        if (carouselSkipped >= 10) {
+          console.warn(`   ⚠️ Carousel appeared to loop (${carouselSkipped}+ clicks). Attempting direct /chat navigation...`);
+          await browser.url('http://127.0.0.1:1420/chat');
+          await browser.pause(1000);
+        }
+        
+        console.log(`   ✓ Onboarding bypass complete (${carouselSkipped} clicks)`);
       } catch (err) {
-        console.warn(`   ⚠️ Onboarding skip attempt failed: ${err.message}`);
+        console.warn(`   ⚠️ Carousel skip failed: ${err.message}`);
       }
     }
   } catch (err) {
