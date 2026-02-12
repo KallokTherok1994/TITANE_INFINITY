@@ -84,6 +84,10 @@ try {
     cwd: path.join(__dirname, '../..'),
     stdio: ['ignore', 'pipe', 'pipe'],
     detached: false,
+    env: {
+      ...process.env,
+      VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
+    },
   });
   
   viteProcess.stdout.on('data', (data) => {
