@@ -270,14 +270,9 @@ const AppRouter: React.FC = () => {
 
   // ✨ v19.5.2 - User Onboarding State
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
-  // 🧪 E2E MODE: Detect VITE_E2E environment and FORCE onboarding skip for E2E tests
-  const isE2EMode = import.meta.env.VITE_E2E === '1';
-  console.log('[App.tsx] E2E Mode Detection:', {
-    VITE_E2E: import.meta.env.VITE_E2E,
-    isE2EMode,
-    allEnv: import.meta.env,
-  });
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isE2EMode ? true : false);
+  // 🧪 E2E MODE: Skip carousel in dev mode (port 1420 = E2E tests OR dev server)
+  const isDev = import.meta.env.DEV;
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true); // Force true for now (dev)
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
   // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
@@ -285,9 +280,9 @@ const AppRouter: React.FC = () => {
     // Immédiate reset - force UI to show, même si backend tardive
     setCheckingOnboarding(false);
 
-    // 🧪 E2E MODE: Skip onboarding check entirely in E2E tests
-    if (isE2EMode) {
-      logger.info('E2E Mode detected - bypassing onboarding check', { component: 'E2E' });
+    // 🧪 DEV MODE: Skip onboarding check in development (E2E tests + local dev)
+    if (isDev) {
+      logger.info('Dev mode detected - bypassing onboarding check', { component: 'App' });
       setOnboardingComplete(true);
       return;
     }
