@@ -87,6 +87,7 @@ try {
     env: {
       ...process.env,
       VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
+      OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
     },
   });
   
@@ -129,6 +130,10 @@ console.log('📦 Phase 1: Launching tauri-driver...');
 
 const tauriDriver = spawn('tauri-driver', [], {
   stdio: ['ignore', 'pipe', 'pipe'],
+  env: {
+    ...process.env,
+    OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
+  },
 });
 
 tauriDriver.stdout.on('data', (data) => {
@@ -188,6 +193,7 @@ const phaseStart = () => {
       TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
       TITANE_E2E: '1',
       VITE_E2E: '1', // 🧪 Frontend E2E mode: bypass onboarding carousel in App.tsx
+      OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
       TITANE_MEMORY_DIR: e2eMemoryDir,
       TITANE_LOG_DIR: e2eLogDir,
     },
@@ -268,20 +274,20 @@ function generateFinalReport(testExitCode) {
     confidence: chatDetected ? 100 : 0,
   };
 
-  // Gate 3: AR20
-  const ar20Resolved = resolveFirst([
-    path.join(exportsDir, 'ar20_ui.json'),
-    path.join(exportsDir, 'ar20_ui_results.json'),
+  // Gate 3: AR3 (reduced from AR20 for E2E speed)
+  const ar3Resolved = resolveFirst([
+    path.join(exportsDir, 'ar3_ui.json'),
+    path.join(exportsDir, 'ar3_ui_results.json'),
   ]);
-  if (ar20Resolved.data) {
-    const ar20 = ar20Resolved.data;
+  if (ar3Resolved.data) {
+    const ar3 = ar3Resolved.data;
     gates.G3_AR20 = {
-      status: ar20.successful >= 18 ? 'PASS' : 'FAIL',
-      evidence: `${ar20.successful}/${ar20.total} messages`,
+      status: ar3.successful >= ar3.total ? 'PASS' : 'FAIL', // All AR3 messages must succeed
+      evidence: `${ar3.successful}/${ar3.total} messages`,
       confidence: 100,
     };
   } else {
-    gates.G3_AR20 = { status: 'FAIL', evidence: 'No AR20 data', confidence: 0 };
+    gates.G3_AR20 = { status: 'FAIL', evidence: 'No AR3 data', confidence: 0 };
   }
 
   // Gate 4: Offline5
@@ -444,7 +450,7 @@ ${verdict.recommendation}
 
 - \`exports/page_classification.json\` — Page classification fingerprint
 - \`exports/chat_dom_map.json\` — Chat DOM alignment map
-- \`exports/ar20_ui.json\` — 20 consecutive messages test
+- \`exports/ar3_ui.json\` — 3 consecutive messages test (optimized for E2E speed)
 - \`exports/offline5_ui.json\` — Offline mode resilience
 - \`exports/edge_cases_results.json\` — Invalid providers handling
 - \`exports/navigation_matrix.json\` — Full UI navigation

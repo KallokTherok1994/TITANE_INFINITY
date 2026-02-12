@@ -3,7 +3,10 @@ use serde_json::Value;
 use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
+use std::sync::Once;
 use std::time::{SystemTime, UNIX_EPOCH};
+
+static E2E_GUARD_LOG: Once = Once::new();
 
 /// Resolve the base directory storing persisted memory JSON files.
 pub fn resolve_memory_dir() -> PathBuf {
@@ -11,13 +14,21 @@ pub fn resolve_memory_dir() -> PathBuf {
     let is_e2e = is_truthy_env("TITANE_E2E");
 
     if is_e2e {
-        if let Some(custom) = custom_dir {
+        let resolved = if let Some(custom) = custom_dir {
             if is_disallowed_e2e_dir(&custom) {
-                return e2e_guard_dir();
+                e2e_guard_dir()
+            } else {
+                custom
             }
-            return custom;
-        }
-        return e2e_guard_dir();
+        } else {
+            e2e_guard_dir()
+        };
+
+        E2E_GUARD_LOG.call_once(|| {
+            log::info!("[E2E Guard] TITANE_E2E=1 -> memory dir: {}", resolved.display());
+        });
+
+        return resolved;
     }
 
     if let Some(custom) = custom_dir {

@@ -49,6 +49,10 @@ export TITANE_E2E=1
 export TAURI_DEV_SERVER_URL="${TAURI_DEV_SERVER_URL:-http://127.0.0.1:1420}"
 echo "[E2E_WRAPPER] TAURI_DEV_SERVER_URL=$TAURI_DEV_SERVER_URL" >&2
 
+# Pass Ollama model configuration to Tauri binary
+export OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
+echo "[E2E_WRAPPER] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL" >&2
+
 # Log activation (memory dir will be decided by Rust guard fallback: /tmp/titane-infinity/memory-e2e)
 echo "[E2E_WRAPPER] TITANE_E2E=$TITANE_E2E" >&2
 echo "[E2E_WRAPPER] Memory dir: (Rust fallback /tmp/titane-infinity/memory-e2e)" >&2
