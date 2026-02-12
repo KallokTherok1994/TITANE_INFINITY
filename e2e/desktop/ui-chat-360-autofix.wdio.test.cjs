@@ -339,6 +339,19 @@ const DOM_DISCOVERY = {
   },
 };
 
+const DOM_DISCOVERY_SOURCE = Object.fromEntries(
+  Object.entries(DOM_DISCOVERY).map(([key, fn]) => [key, fn.toString()])
+);
+
+async function injectDomDiscovery() {
+  await browser.execute((source) => {
+    window.DOM_DISCOVERY = {};
+    Object.entries(source).forEach(([key, fnBody]) => {
+      window.DOM_DISCOVERY[key] = eval('(' + fnBody + ')');
+    });
+  }, DOM_DISCOVERY_SOURCE);
+}
+
 /**
  * Wait for element with retry + self-healing
  */
@@ -767,12 +780,91 @@ async function ensureChatPage() {
   writeReport('page_classification.json', classification);
   writeMarkdown('01_PAGE_CLASSIFICATION.md', buildPageClassificationMarkdown(classification));
 
+  console.log('🔎 Phase 2: ONBOARDING skip (if needed)...');
+
+  // Check if we're on ONBOARDING instead of CHAT UI
+  if (finalClass === 'CHAT') {
+    const snapshot = await browser.execute(() => ({
+      h1: document.querySelector('h1')?.innerText || '',
+      url: window.location.href,
+      buttonTexts: Array.from(document.querySelectorAll('button')).map(b => b.innerText || b.textContent || '').filter(Boolean).slice(0, 20),
+    }));
+    
+    const isOnboarding = snapshot.h1.includes('Bienvenue') || 
+                         snapshot.h1.includes('Welcome') || 
+                         snapshot.h1.includes('Getting Started');
+
+    if (isOnboarding) {
+      console.log('⏭️ ONBOARDING detected, attempting skip...');
+      
+      let skipAttempts = 0;
+      const MAX_SKIP_ATTEMPTS = 3;
+      
+      while (skipAttempts < MAX_SKIP_ATTEMPTS) {
+        skipAttempts++;
+        console.log(`  Attempt ${skipAttempts}/${MAX_SKIP_ATTEMPTS}`);
+        
+        // Try primary buttons in priority order
+        const buttonSelectors = [
+          'button*=Commencer',
+          'button*=Start',
+          'button*=Suivant',
+          'button*=Next',
+          'button*=Skip',
+          'button*=Ignorer',
+        ];
+        
+        let clicked = false;
+        for (const selector of buttonSelectors) {
+          try {
+            const buttons = await browser.$$(selector);
+            if (buttons.length > 0) {
+              const btn = buttons[0];
+              if (await btn.isExisting() && await btn.isDisplayed()) {
+                await browser.saveScreenshot(
+                  path.join(REPORT_DIR, 'artifacts', `onboarding_skip_${skipAttempts}.png`)
+                ).catch(() => {});
+                
+                await btn.click();
+                console.log(`  ✅ Clicked: ${selector}`);
+                clicked = true;
+                await browser.pause(1200);
+                break;
+              }
+            }
+          } catch (err) {
+            // ignore button click errors
+          }
+        }
+        
+        if (!clicked) {
+          console.log('  ⚠️ No skip button found');
+          break;
+        }
+        
+        // Check if we're still on onboarding
+        const checkSnapshot = await browser.execute(() => ({
+          h1: document.querySelector('h1')?.innerText || '',
+        }));
+        
+        const stillOnboarding = checkSnapshot.h1.includes('Bienvenue') || 
+                                checkSnapshot.h1.includes('Welcome') || 
+                                checkSnapshot.h1.includes('Getting Started');
+        
+        if (!stillOnboarding) {
+          console.log('  ✅ Exited onboarding');
+          break;
+        }
+      }
+    } else {
+      console.log('✅ Not on onboarding page, continuing...');
+    }
+  }
+
   console.log('🔎 Phase 4: DOM alignment (chat input + send button)...');
 
-  const chatDomMap = await browser.execute((discoveryCode) => {
-    window.DOM_DISCOVERY = eval('(' + discoveryCode + ')');
-    return window.DOM_DISCOVERY.getChatDomMap();
-  }, JSON.stringify(DOM_DISCOVERY));
+  await injectDomDiscovery();
+  const chatDomMap = await browser.execute(() => window.DOM_DISCOVERY.getChatDomMap());
 
   writeReport('chat_dom_map.json', chatDomMap);
 
@@ -853,11 +945,8 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       await browser.pause(2000);
       
       // Inject discovery functions and get signature
-      const domSignature = await browser.execute((discoveryCode) => {
-        // Parse and inject DOM_DISCOVERY object
-        window.DOM_DISCOVERY = eval('(' + discoveryCode + ')');
-        return window.DOM_DISCOVERY.getDOMSignature();
-      }, JSON.stringify(DOM_DISCOVERY));
+      await injectDomDiscovery();
+      const domSignature = await browser.execute(() => window.DOM_DISCOVERY.getDOMSignature());
 
       console.log('📋 DOM Signature:', JSON.stringify(domSignature, null, 2));
       
@@ -1057,8 +1146,8 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       console.log('🧭 Phase H: Navigation 360° starting...');
       
       // Detect navigation links dynamically
-      const navLinks = await browser.execute((discoveryCode) => {
-        window.DOM_DISCOVERY = eval('(' + discoveryCode + ')');
+      await injectDomDiscovery();
+      const navLinks = await browser.execute(() => {
         const links = window.DOM_DISCOVERY.detectChatNavigation();
         return links.map((l, idx) => ({
           index: idx,
@@ -1066,7 +1155,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
           href: l.getAttribute('href'),
           tagName: l.tagName,
         }));
-      }, '(' + JSON.stringify(DOM_DISCOVERY) + ')');
+      });
 
       console.log(`📋 Found ${navLinks.length} navigation links (dynamic detection)`);
 
@@ -1097,11 +1186,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
         try {
           // Click the link by index
-          await browser.execute((idx, discoveryCode) => {
-            window.DOM_DISCOVERY = eval('(' + discoveryCode + ')');
+          await browser.execute((idx) => {
             const links = window.DOM_DISCOVERY.detectChatNavigation();
             if (links[idx]) links[idx].click();
-          }, i, JSON.stringify(DOM_DISCOVERY));
+          }, i);
           
           await browser.pause(1000); // Wait for page load
 

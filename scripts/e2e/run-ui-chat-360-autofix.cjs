@@ -33,6 +33,14 @@ if (!fs.existsSync(REPORT_DIR)) {
   console.log('✅ Report structure created');
 }
 
+const e2eMemoryDir = path.join(REPORT_DIR, 'memory');
+const e2eLogDir = path.join(REPORT_DIR, 'logs', 'app');
+fs.mkdirSync(e2eMemoryDir, { recursive: true });
+fs.mkdirSync(e2eLogDir, { recursive: true });
+
+// E2E wrapper path (for memory/log isolation)
+const WRAPPER_PATH = path.resolve(__dirname, 'tauri-wrapper.sh');
+
 // Check prerequisites
 console.log('🔍 Checking prerequisites...');
 
@@ -153,6 +161,9 @@ setTimeout(() => {
       ...process.env,
       REPORT_TS,
       TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
+      TITANE_E2E: '1',
+      TITANE_MEMORY_DIR: e2eMemoryDir,
+      TITANE_LOG_DIR: e2eLogDir,
     },
   });
 

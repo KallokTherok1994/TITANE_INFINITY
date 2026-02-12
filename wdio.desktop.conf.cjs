@@ -4,9 +4,12 @@ const fs = require('node:fs');
 const ROOT = __dirname;
 const REPORTS_DIR = path.resolve(ROOT, 'reports/e2e-desktop');
 const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
+
+// Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
+const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
 const APP_PATH = process.env.TAURI_BINARY_PATH
   ? path.resolve(process.env.TAURI_BINARY_PATH)
-  : path.resolve(ROOT, 'src-tauri/target/release/titane-infinity');
+  : path.resolve(ROOT, 'src-tauri/target/debug/titane-infinity');
 
 exports.config = {
   runner: 'local',
@@ -22,7 +25,7 @@ exports.config = {
       browserName: 'wry',
       'wdio:enforceWebDriverClassic': true,
       'tauri:options': {
-        application: APP_PATH,
+        application: WRAPPER_PATH,
       },
     },
   ],
