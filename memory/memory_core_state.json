@@ -1,6 +1,42 @@
 {
   "snapshots": [],
-  "logs": [],
+  "logs": [
+    {
+      "id": "ui-1770899723201-g9rq0ecf",
+      "timestamp": 1770899723201,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1770899597969-42xv2k1i",
+      "timestamp": 1770899597969,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1770899232777-rv9hdxam",
+      "timestamp": 1770899232777,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1770898552231-3e7i6auc",
+      "timestamp": 1770898552231,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    },
+    {
+      "id": "ui-1770897856243-alns1lx4",
+      "timestamp": 1770897856243,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "main.tsx: boot handlers registered"
+    }
+  ],
   "events": [],
   "timeline_entries": [],
   "chat_history": [],
@@ -9,7 +45,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1765811584690,
+    "last_validation_ts": 1770899723389,
     "last_compaction_ts": null
   }
 }

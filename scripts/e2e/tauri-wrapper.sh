@@ -4,6 +4,9 @@
 
 set -euo pipefail
 
+echo "[E2E_WRAPPER] start" >&2
+echo "[E2E_WRAPPER] env TITANE_E2E=${TITANE_E2E:-}" >&2
+
 # Proof witness file (to detect wrapper execution even if stderr is lost)
 WITNESS_FILE="/tmp/e2e-wrapper-executed-$(date +%s).flag"
 touch "$WITNESS_FILE"
@@ -37,9 +40,14 @@ if [ -z "$TAURI_BINARY" ]; then
 fi
 
 echo "[E2E_WRAPPER] Using binary: $TAURI_BINARY" >&2
+echo "[E2E_WRAPPER] binary=$TAURI_BINARY" >&2
 
 # E2E mode: activate guard only (let Rust resolver choose memory dir)
 export TITANE_E2E=1
+
+# Force dev server URL to IPv4 to avoid localhost (::1) connection refused
+export TAURI_DEV_SERVER_URL="${TAURI_DEV_SERVER_URL:-http://127.0.0.1:1420}"
+echo "[E2E_WRAPPER] TAURI_DEV_SERVER_URL=$TAURI_DEV_SERVER_URL" >&2
 
 # Log activation (memory dir will be decided by Rust guard fallback: /tmp/titane-infinity/memory-e2e)
 echo "[E2E_WRAPPER] TITANE_E2E=$TITANE_E2E" >&2

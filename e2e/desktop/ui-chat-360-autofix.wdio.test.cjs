@@ -15,6 +15,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { expect } = require('chai');
 
 // Report directory (will be set dynamically)
 const REPORT_TS = process.env.REPORT_TS || '2026-02-11T22:21:01Z';
@@ -784,6 +785,52 @@ async function ensureChatPage() {
       finalFingerprint = fingerprint2;
       
       console.log(`   ✓ Classification after nav: ${class2}`);
+      
+      // If still not CHAT, force direct route navigation
+      if (class2 !== 'CHAT') {
+        console.log('   → Forcing /chat route...');
+        try {
+          await browser.url('http://127.0.0.1:1420/chat');
+          await browser.pause(1000);
+          
+          const fingerprint3 = await collectPageFingerprint();
+          const class3 = classifyPageFingerprint(fingerprint3);
+          classification.attempts.push({ attempt: 3, pageClass: class3, fingerprint: fingerprint3 });
+          finalClass = class3;
+          finalFingerprint = fingerprint3;
+          
+          console.log(`   ✓ Classification after route force: ${class3}`);
+        } catch (err) {
+          console.warn(`   ⚠️ Route force failed: ${err.message}`);
+        }
+      }
+    }
+
+    // Extra step: Handle onboarding carousel (Suivant/Next button) if chat route was reached but onboarding is showing
+    if (finalClass === 'CHAT') {
+      console.log('   → Checking for onboarding carousel...');
+      try {
+        const skipped = await browser.execute(() => {
+          const nextButton = Array.from(document.querySelectorAll('button, a'))
+            .find(el => {
+              const text = (el.innerText || el.textContent || '').toLowerCase().trim();
+              return text.includes('suivant') || text.includes('next');
+            });
+          
+          if (nextButton) {
+            nextButton.click();
+            return true;
+          }
+          return false;
+        });
+
+        if (skipped) {
+          console.log('   ✓ Clicked onboarding next button');
+          await browser.pause(500);
+        }
+      } catch (err) {
+        console.warn(`   ⚠️ Onboarding skip attempt failed: ${err.message}`);
+      }
     }
   } catch (err) {
     console.warn(`⚠️ Page classification error: ${err.message}`);

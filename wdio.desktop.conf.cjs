@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const ROOT = __dirname;
 const REPORTS_DIR = path.resolve(ROOT, 'reports/e2e-desktop');
 const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
+const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
 
 // Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
@@ -59,6 +60,32 @@ exports.config = {
           null,
           2
         )}\n\n`
+      );
+    } catch {
+      // ignore logging failures
+    }
+  },
+  onWorkerStart(cid, caps, specs, args, execArgv) {
+    try {
+      fs.mkdirSync(REPORTS_DIR, { recursive: true });
+      fs.appendFileSync(
+        WORKER_LOG,
+        `${new Date().toISOString()} START ${cid}\n` +
+          `specs=${JSON.stringify(specs)}\n` +
+          `args=${JSON.stringify(args)}\n` +
+          `execArgv=${JSON.stringify(execArgv)}\n\n`
+      );
+    } catch {
+      // ignore logging failures
+    }
+  },
+  onWorkerEnd(cid, exitCode, specs, retries) {
+    try {
+      fs.mkdirSync(REPORTS_DIR, { recursive: true });
+      fs.appendFileSync(
+        WORKER_LOG,
+        `${new Date().toISOString()} END ${cid} exitCode=${exitCode} retries=${retries}\n` +
+          `specs=${JSON.stringify(specs)}\n\n`
       );
     } catch {
       // ignore logging failures
