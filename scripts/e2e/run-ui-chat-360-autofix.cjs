@@ -183,6 +183,7 @@ const phaseStart = () => {
       REPORT_TS,
       TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
       TITANE_E2E: '1',
+      VITE_E2E: '1', // 🧪 Frontend E2E mode: bypass onboarding carousel in App.tsx
       TITANE_MEMORY_DIR: e2eMemoryDir,
       TITANE_LOG_DIR: e2eLogDir,
     },
