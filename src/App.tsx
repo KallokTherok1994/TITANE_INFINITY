@@ -270,13 +270,22 @@ const AppRouter: React.FC = () => {
 
   // ✨ v19.5.2 - User Onboarding State
   // 🔧 vΩ.3 PROD-BOOT FIX: Override checkingOnboarding to false ALWAYS to prevent loader hang
-  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(true);
+  // 🧪 E2E MODE: Detect VITE_E2E environment and FORCE onboarding skip for E2E tests
+  const isE2EMode = import.meta.env.VITE_E2E === '1' || import.meta.env.DEV;
+  const [onboardingComplete, setOnboardingComplete] = useState<boolean>(isE2EMode ? true : true);
   const [checkingOnboarding, setCheckingOnboarding] = useState<boolean>(false);
 
   // vΩ.3: Garantir checkingOnboarding = false SANS JAMAIS bloquer - spinner ne s'affiche pas
   useEffect(() => {
     // Immédiate reset - force UI to show, même si backend tardive
     setCheckingOnboarding(false);
+
+    // 🧪 E2E MODE: Skip onboarding check entirely in E2E tests
+    if (isE2EMode) {
+      logger.info('E2E Mode detected - bypassing onboarding check', { component: 'E2E' });
+      setOnboardingComplete(true);
+      return;
+    }
 
     // Puis check le backend EN ARRIÈRE-PLAN UNIQUEMENT (ne modifie pas checkingOnboarding)
     const checkOnboarding = async () => {
