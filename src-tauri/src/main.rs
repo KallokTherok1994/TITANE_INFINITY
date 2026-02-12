@@ -578,11 +578,13 @@ fn main() {
 
             // AIRouter initialization (for OMEGA pipeline)
             // FIX v26.4.1: Initialize with default Ollama model to avoid "No AI provider available"
-            let default_ollama_model = Some("llama3.1".to_string());
+            let default_ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
+                .or_else(|_| std::env::var("OLLAMA_MODEL"))
+                .unwrap_or_else(|_| "llama3.1".to_string());
             let ai_router = Arc::new(tokio::sync::RwLock::new(
-                titane_infinity::ai::router::AIRouter::new(None, default_ollama_model)
+                titane_infinity::ai::router::AIRouter::new(None, Some(default_ollama_model.clone()))
             ));
-            log::info!("[AI Router] Initialized with default Ollama model: llama3.1");
+            log::info!("[AI Router] Initialized with default Ollama model: {}", default_ollama_model);
 
             // SingularityState reference (already managed)
             let singularity_state = Arc::new(tokio::sync::RwLock::new(
