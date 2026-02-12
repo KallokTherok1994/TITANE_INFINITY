@@ -1012,6 +1012,12 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase B-D: AR20 Full Test (UI-Driven)', () => {
 
+    beforeEach(async () => {
+      // Force navigation to chat page before this phase
+      console.log('🔄 beforeEach: Ensuring chat page for AR20...');
+      await ensureChatPage();
+    });
+
     it('should send 20 consecutive messages via UI and receive 20 responses', async () => {
       console.log('🔄 Starting AR20 full test (UI-driven)...');
       
@@ -1081,6 +1087,12 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase E: Offline Simulation', () => {
 
+    beforeEach(async () => {
+      // Force navigation to chat page before this phase  
+      console.log('🔌 beforeEach: Ensuring chat page for Offline...');
+      await ensureChatPage();
+    });
+
     it('should handle offline mode gracefully (5 messages)', async () => {
       console.log('🔌 Phase E: Offline simulation starting...');
       
@@ -1131,6 +1143,12 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
   });
 
   describe('Phase F-G: Edge Cases (Invalid Providers + Watchdog)', () => {
+
+    beforeEach(async () => {
+      // Force navigation to chat page before this phase
+      console.log('⚠️ beforeEach: Ensuring chat page for Edge Cases...');
+      await ensureChatPage();
+    });
 
     it('should never stay silent even with edge cases', async () => {
       console.log('⚠️ Phase F-G: Edge cases testing...');
@@ -1282,6 +1300,12 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
   });
 
   describe('Phase I: Stability Burst (50 Messages)', () => {
+
+    beforeEach(async () => {
+      // Force navigation to chat page before this phase
+      console.log('💪 beforeEach: Ensuring chat page for Stability...');
+      await ensureChatPage();
+    });
 
     it('should handle 50 rapid messages without crash', async () => {
       console.log('💥 Phase I: Stability burst (50 messages)...');
