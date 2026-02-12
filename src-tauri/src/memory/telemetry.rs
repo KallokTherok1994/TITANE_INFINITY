@@ -7,16 +7,31 @@ use std::time::{SystemTime, UNIX_EPOCH};
 
 /// Resolve the base directory storing persisted memory JSON files.
 pub fn resolve_memory_dir() -> PathBuf {
-    if let Ok(custom) = env::var("TITANE_MEMORY_DIR") {
-        if !custom.trim().is_empty() {
-            return PathBuf::from(custom.trim());
+    let custom_dir = resolve_env_dir("TITANE_MEMORY_DIR");
+    let is_e2e = is_truthy_env("TITANE_E2E");
+
+    if is_e2e {
+        if let Some(custom) = custom_dir {
+            if is_disallowed_e2e_dir(&custom) {
+                return e2e_guard_dir();
+            }
+            return custom;
         }
+        return e2e_guard_dir();
+    }
+
+    if let Some(custom) = custom_dir {
+        return custom;
     }
 
     // Default behavior historically used CWD, but packaged artifacts (e.g. AppImage)
     // can run from a read-only mount. In that case, fall back to a writable per-user
     // data directory.
-    let cwd_candidate = env::current_dir().ok().map(|cwd| cwd.join("memory"));
+    resolve_default_memory_dir()
+}
+
+fn resolve_default_memory_dir() -> PathBuf {
+    let cwd_candidate = candidate_cwd_memory_dir();
     if let Some(candidate) = cwd_candidate {
         if fs::create_dir_all(&candidate).is_ok() {
             return candidate;
@@ -25,8 +40,51 @@ pub fn resolve_memory_dir() -> PathBuf {
 
     // Writability-first fallback: ~/.local/share/titane-infinity/memory (Linux),
     // %LOCALAPPDATA%\titane-infinity\memory (Windows), etc.
+    fallback_memory_dir()
+}
+
+fn candidate_cwd_memory_dir() -> Option<PathBuf> {
+    env::current_dir().ok().map(|cwd| cwd.join("memory"))
+}
+
+fn fallback_memory_dir() -> PathBuf {
     let base = dirs::data_local_dir().unwrap_or_else(env::temp_dir);
     base.join("titane-infinity").join("memory")
+}
+
+fn resolve_env_dir(var_name: &str) -> Option<PathBuf> {
+    env::var(var_name)
+        .ok()
+        .map(|value| value.trim().to_string())
+        .filter(|value| !value.is_empty())
+        .map(PathBuf::from)
+}
+
+fn is_truthy_env(var_name: &str) -> bool {
+    match env::var(var_name) {
+        Ok(value) => {
+            let normalized = value.trim().to_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        }
+        Err(_) => false,
+    }
+}
+
+fn e2e_guard_dir() -> PathBuf {
+    env::temp_dir()
+        .join("titane-infinity")
+        .join("memory-e2e")
+}
+
+fn is_disallowed_e2e_dir(path: &Path) -> bool {
+    let cwd_candidate = candidate_cwd_memory_dir();
+    let fallback = fallback_memory_dir();
+    let matches_cwd = cwd_candidate
+        .as_ref()
+        .map(|candidate| candidate == path)
+        .unwrap_or(false);
+
+    matches_cwd || fallback == path
 }
 
 /// Scan the memory directory and return lightweight telemetry for observability.
@@ -147,6 +205,7 @@ mod tests {
             .expect("ENV_LOCK mutex should not be poisoned");
         // Clear env var to test default behavior
         std::env::remove_var("TITANE_MEMORY_DIR");
+        std::env::remove_var("TITANE_E2E");
 
         let dir = resolve_memory_dir();
         assert!(dir.to_string_lossy().contains("memory"));
@@ -158,6 +217,7 @@ mod tests {
             .lock()
             .expect("ENV_LOCK mutex should not be poisoned");
         std::env::set_var("TITANE_MEMORY_DIR", "/custom/memory/path");
+        std::env::remove_var("TITANE_E2E");
         let dir = resolve_memory_dir();
         assert_eq!(dir.to_string_lossy(), "/custom/memory/path");
 
@@ -171,12 +231,59 @@ mod tests {
             .lock()
             .expect("ENV_LOCK mutex should not be poisoned");
         std::env::set_var("TITANE_MEMORY_DIR", "   ");
+        std::env::remove_var("TITANE_E2E");
         let dir = resolve_memory_dir();
         // Should fall back to default
         assert!(dir.to_string_lossy().contains("memory"));
 
         // Clean up
         std::env::remove_var("TITANE_MEMORY_DIR");
+    }
+
+    #[test]
+    fn test_resolve_memory_dir_e2e_default() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
+        std::env::remove_var("TITANE_MEMORY_DIR");
+        std::env::set_var("TITANE_E2E", "1");
+
+        let dir = resolve_memory_dir();
+        assert!(dir.to_string_lossy().ends_with("memory-e2e"));
+
+        std::env::remove_var("TITANE_E2E");
+    }
+
+    #[test]
+    fn test_resolve_memory_dir_e2e_custom_override() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
+        let custom_dir = env::temp_dir().join("titane_e2e_custom");
+        std::env::set_var("TITANE_MEMORY_DIR", custom_dir.to_string_lossy().to_string());
+        std::env::set_var("TITANE_E2E", "true");
+
+        let dir = resolve_memory_dir();
+        assert_eq!(dir, custom_dir);
+
+        std::env::remove_var("TITANE_MEMORY_DIR");
+        std::env::remove_var("TITANE_E2E");
+    }
+
+    #[test]
+    fn test_resolve_memory_dir_e2e_blocks_default_dir() {
+        let _env_guard = ENV_LOCK
+            .lock()
+            .expect("ENV_LOCK mutex should not be poisoned");
+        let default_dir = fallback_memory_dir();
+        std::env::set_var("TITANE_MEMORY_DIR", default_dir.to_string_lossy().to_string());
+        std::env::set_var("TITANE_E2E", "yes");
+
+        let dir = resolve_memory_dir();
+        assert!(dir.to_string_lossy().ends_with("memory-e2e"));
+
+        std::env::remove_var("TITANE_MEMORY_DIR");
+        std::env::remove_var("TITANE_E2E");
     }
 
     #[test]
