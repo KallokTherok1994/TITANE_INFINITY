@@ -137,12 +137,33 @@ tauriDriver.stderr.on('data', (data) => {
   fs.appendFileSync(logPath, data.toString());
 });
 
-// Wait for tauri-driver ready
-setTimeout(() => {
-  console.log('✅ tauri-driver ready (port 4444)');
-  console.log('');
+// Wait for tauri-driver to actually be listening on port 4444
+console.log('⏳ Waiting for tauri-driver to listen on port 4444...');
+let driverReady = false;
+for (let i = 0; i < 30; i++) {
+  try {
+    execSync('ss -ltn | grep :4444', { stdio: 'pipe' });
+    driverReady = true;
+    console.log(`✅ tauri-driver ready on port 4444 (after ${i + 1}s)`);
+    break;
+  } catch {
+    // Not ready yet
+    execSync('sleep 1', { stdio: 'inherit' });
+  }
+}
 
-  // Phase 2: Run WebDriver tests
+if (!driverReady) {
+  console.error('❌ tauri-driver failed to listen after 30s');
+  console.error('Check logs: logs/tauri_driver_error.log');
+  tauriDriver.kill();
+  if (viteProcess) viteProcess.kill();
+  process.exit(1);
+}
+
+console.log('');
+
+// Phase 2 now begins with guaranteed tauri-driver readiness
+const phaseStart = () => {
   console.log('🧪 Phase 2: Running WebDriver tests...');
   console.log('');
 
@@ -187,8 +208,10 @@ setTimeout(() => {
     // Phase 3: Generate final report
     generateFinalReport(code);
   });
+};
 
-}, 3000);
+// Execute phase start immediately
+phaseStart();
 
 /**
  * Generate final report and verdict
