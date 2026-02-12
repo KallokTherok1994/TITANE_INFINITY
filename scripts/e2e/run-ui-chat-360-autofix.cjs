@@ -57,6 +57,61 @@ console.log('✅ Tauri binary found');
 
 console.log('');
 
+// **PHASE 0.5: Start Vite dev server (CRITICAL for debug binary)**
+// Note: tauri.conf.json specifies devUrl port1420, we match that
+console.log('🔧 Phase 0.5: Starting Vite dev server (standalone on port 1420)...');
+
+let viteProcess = null;
+const VITE_PORT = 1420;
+
+// Check if Vite already running on port 1420
+try {
+  execSync(`ss -ltn | grep :${VITE_PORT}`, { stdio: 'pipe' });
+  console.log(`✅ Vite already running on port ${VITE_PORT}`);
+} catch {
+  console.log('⏳ Starting Vite standalone...');
+  
+  // Launch VITE ONLY (not tauri dev) on port 1420 to match tauri.conf.json
+  viteProcess = spawn('pnpm', ['exec', 'vite', 'dev', '--port', String(VITE_PORT), '--host', '127.0.0.1'], {
+    cwd: path.join(__dirname, '../..'),
+    stdio: ['ignore', 'pipe', 'pipe'],
+    detached: false,
+  });
+  
+  viteProcess.stdout.on('data', (data) => {
+    const logPath = path.join(REPORT_DIR, 'logs', 'vite_standalone.log');
+    fs.appendFileSync(logPath, data.toString());
+  });
+  
+  viteProcess.stderr.on('data', (data) => {
+    const logPath = path.join(REPORT_DIR, 'logs', 'vite_standalone_error.log');
+    fs.appendFileSync(logPath, data.toString());
+  });
+  
+  // Wait for Vite to be ready (check port listening)
+  let viteReady = false;
+  for (let i = 0; i < 30; i++) {
+    try {
+      execSync(`ss -ltn | grep :${VITE_PORT}`, { stdio: 'pipe' });
+      viteReady = true;
+      console.log(`✅ Vite ready on port ${VITE_PORT} (after ${i + 1}s)`);
+      break;
+    } catch {
+      // Not ready yet
+      execSync('sleep 1', { stdio: 'inherit' });
+    }
+  }
+  
+  if (!viteReady) {
+    console.error(`❌ Vite failed to start after 30s on port ${VITE_PORT}`);
+    console.error('Check logs: logs/vite_standalone.log');
+    if (viteProcess) viteProcess.kill();
+    process.exit(1);
+  }
+}
+
+console.log('');
+
 // Phase 1: Launch tauri-driver
 console.log('📦 Phase 1: Launching tauri-driver...');
 
@@ -97,6 +152,7 @@ setTimeout(() => {
     env: {
       ...process.env,
       REPORT_TS,
+      TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
     },
   });
 
@@ -108,6 +164,13 @@ setTimeout(() => {
     // Kill tauri-driver
     tauriDriver.kill();
     console.log('🛑 tauri-driver stopped');
+    
+    // Kill Vite if we started it
+    if (viteProcess) {
+      viteProcess.kill();
+      console.log('🛑 Vite stopped');
+    }
+    
     console.log('');
 
     // Phase 3: Generate final report
@@ -125,50 +188,100 @@ function generateFinalReport(testExitCode) {
   const exportsDir = path.join(REPORT_DIR, 'exports');
   const gates = {};
 
-  // Gate 1: AR20
-  const ar20File = path.join(exportsDir, 'ar20_ui_results.json');
-  if (fs.existsSync(ar20File)) {
-    const ar20 = JSON.parse(fs.readFileSync(ar20File, 'utf8'));
-    gates.G2_AR20 = {
+  const readJsonIfExists = (filePath) => {
+    if (!fs.existsSync(filePath)) return null;
+    try {
+      return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+    } catch (err) {
+      console.warn(`⚠️ Failed to parse ${filePath}: ${err.message}`);
+      return null;
+    }
+  };
+
+  const resolveFirst = (paths) => {
+    for (const filePath of paths) {
+      const data = readJsonIfExists(filePath);
+      if (data) return { data, filePath };
+    }
+    return { data: null, filePath: null };
+  };
+
+  // Gate 1: Chat page accessible
+  const classificationFile = path.join(exportsDir, 'page_classification.json');
+  const classification = readJsonIfExists(classificationFile);
+  const finalClass = classification?.final?.pageClass || classification?.attempts?.slice(-1)?.[0]?.pageClass || null;
+
+  const chatDomFile = path.join(exportsDir, 'chat_dom_map.json');
+  const chatDom = readJsonIfExists(chatDomFile);
+  const chatDetected = !!chatDom?.chatInput?.found;
+
+  const chatAccessible = finalClass === 'CHAT' || chatDetected;
+  gates.G1_CHAT_ACCESSIBLE = {
+    status: chatAccessible ? 'PASS' : 'FAIL',
+    evidence: finalClass ? `Class=${finalClass}` : (chatDetected ? 'Textarea detected' : 'No classification'),
+    confidence: chatAccessible ? 100 : 0,
+  };
+
+  // Gate 2: Textarea detected
+  gates.G2_TEXTAREA_DETECTED = {
+    status: chatDetected ? 'PASS' : 'FAIL',
+    evidence: chatDetected ? `Reason=${chatDom.chatInput.reason}` : 'Textarea not detected',
+    confidence: chatDetected ? 100 : 0,
+  };
+
+  // Gate 3: AR20
+  const ar20Resolved = resolveFirst([
+    path.join(exportsDir, 'ar20_ui.json'),
+    path.join(exportsDir, 'ar20_ui_results.json'),
+  ]);
+  if (ar20Resolved.data) {
+    const ar20 = ar20Resolved.data;
+    gates.G3_AR20 = {
       status: ar20.successful >= 18 ? 'PASS' : 'FAIL',
       evidence: `${ar20.successful}/${ar20.total} messages`,
       confidence: 100,
     };
   } else {
-    gates.G2_AR20 = { status: 'FAIL', evidence: 'No AR20 data', confidence: 0 };
+    gates.G3_AR20 = { status: 'FAIL', evidence: 'No AR20 data', confidence: 0 };
   }
 
-  // Gate 2: Offline5
-  const offline5File = path.join(exportsDir, 'offline5_results.json');
-  if (fs.existsSync(offline5File)) {
-    const offline5 = JSON.parse(fs.readFileSync(offline5File, 'utf8'));
-    gates.G3_OFFLINE5 = {
+  // Gate 4: Offline5
+  const offlineResolved = resolveFirst([
+    path.join(exportsDir, 'offline5_ui.json'),
+    path.join(exportsDir, 'offline5_results.json'),
+  ]);
+  if (offlineResolved.data) {
+    const offline5 = offlineResolved.data;
+    gates.G4_OFFLINE5 = {
       status: offline5.successful >= 4 ? 'PASS' : 'FAIL',
       evidence: `${offline5.successful}/5 offline responses`,
       confidence: 100,
     };
   } else {
-    gates.G3_OFFLINE5 = { status: 'FAIL', evidence: 'No offline data', confidence: 0 };
+    gates.G4_OFFLINE5 = { status: 'FAIL', evidence: 'No offline data', confidence: 0 };
   }
 
-  // Gate 3: Edge cases
+  // Edge cases (used for G5 Always Respond)
   const edgeCasesFile = path.join(exportsDir, 'edge_cases_results.json');
   if (fs.existsSync(edgeCasesFile)) {
     const edgeCases = JSON.parse(fs.readFileSync(edgeCasesFile, 'utf8'));
     const allSuccess = edgeCases.every(c => c.success && !c.isEmpty);
-    gates.G4_EDGE_CASES = {
-      status: allSuccess ? 'PASS' : 'FAIL',
+    gates.G5_ALWAYS_RESPOND = {
+      status: allSuccess && gates.G3_AR20.status === 'PASS' ? 'PASS' : 'FAIL',
       evidence: `${edgeCases.length} edge cases tested`,
       confidence: 100,
     };
   } else {
-    gates.G4_EDGE_CASES = { status: 'FAIL', evidence: 'No edge case data', confidence: 0 };
+    gates.G5_ALWAYS_RESPOND = { status: 'FAIL', evidence: 'No edge case data', confidence: 0 };
   }
 
-  // Gate 4: Navigation
-  const navFile = path.join(exportsDir, 'navigation_360_results.json');
-  if (fs.existsSync(navFile)) {
-    const nav = JSON.parse(fs.readFileSync(navFile, 'utf8'));
+  // Gate 7: Navigation
+  const navResolved = resolveFirst([
+    path.join(exportsDir, 'navigation_matrix.json'),
+    path.join(exportsDir, 'navigation_360_results.json'),
+  ]);
+  if (navResolved.data) {
+    const nav = navResolved.data;
     const successRate = (nav.successful / nav.total) * 100;
     gates.G7_NAVIGATION = {
       status: successRate >= 80 ? 'PASS' : 'FAIL',
@@ -179,10 +292,13 @@ function generateFinalReport(testExitCode) {
     gates.G7_NAVIGATION = { status: 'FAIL', evidence: 'No navigation data', confidence: 0 };
   }
 
-  // Gate 5: Stability
-  const stabilityFile = path.join(exportsDir, 'stability_burst_results.json');
-  if (fs.existsSync(stabilityFile)) {
-    const stability = JSON.parse(fs.readFileSync(stabilityFile, 'utf8'));
+  // Gate 8: Stability
+  const stabilityResolved = resolveFirst([
+    path.join(exportsDir, 'stability_burst.json'),
+    path.join(exportsDir, 'stability_burst_results.json'),
+  ]);
+  if (stabilityResolved.data) {
+    const stability = stabilityResolved.data;
     const successRate = (stability.successful / stability.total) * 100;
     gates.G8_STABILITY = {
       status: successRate >= 90 ? 'PASS' : 'FAIL',
@@ -193,23 +309,15 @@ function generateFinalReport(testExitCode) {
     gates.G8_STABILITY = { status: 'FAIL', evidence: 'No stability data', confidence: 0 };
   }
 
-  // Additional implicit gates
-  gates.G1_CHAT_ACCESSIBLE = {
-    status: testExitCode === 0 ? 'PASS' : 'PENDING',
-    evidence: 'Tests executed',
-    confidence: 90,
-  };
-
-  gates.G5_ALWAYS_RESPOND = {
-    status: gates.G2_AR20.status === 'PASS' && gates.G4_EDGE_CASES.status === 'PASS' ? 'PASS' : 'FAIL',
-    evidence: 'Derived from AR20 + edge cases',
-    confidence: 95,
-  };
-
+  // Gate 6: No console fatal errors
+  const consoleLogFile = path.join(REPORT_DIR, 'logs', 'console_errors_final.log');
+  const consoleErrors = readJsonIfExists(consoleLogFile);
+  const consoleErrorCount = Array.isArray(consoleErrors) ? consoleErrors.length : null;
+  const noFatalErrors = consoleErrorCount === 0;
   gates.G6_NO_FATAL_ERRORS = {
-    status: 'PENDING',
-    evidence: 'Check console_errors_final.log',
-    confidence: 80,
+    status: noFatalErrors ? 'PASS' : 'FAIL',
+    evidence: consoleErrorCount !== null ? `${consoleErrorCount} console errors` : 'Missing console log',
+    confidence: consoleErrorCount !== null ? 100 : 0,
   };
 
   // Calculate verdict
@@ -228,8 +336,8 @@ function generateFinalReport(testExitCode) {
       pending: Object.values(gates).filter(g => g.status === 'PENDING').length,
       passRate: passRate.toFixed(1) + '%',
     },
-    finalVerdict: passRate >= 87.5 ? 'PASS' : 'FAIL', // 7/8 gates minimum
-    recommendation: passRate >= 87.5
+    finalVerdict: passCount === totalCount ? 'PASS' : 'FAIL',
+    recommendation: passCount === totalCount
       ? 'System validated. Production-ready.'
       : 'Issues detected. Review failed gates and apply patches.',
   };
@@ -295,11 +403,13 @@ ${verdict.recommendation}
 
 ## Report Files
 
-- \`exports/ar20_ui_results.json\` — 20 consecutive messages test
-- \`exports/offline5_results.json\` — Offline mode resilience
+- \`exports/page_classification.json\` — Page classification fingerprint
+- \`exports/chat_dom_map.json\` — Chat DOM alignment map
+- \`exports/ar20_ui.json\` — 20 consecutive messages test
+- \`exports/offline5_ui.json\` — Offline mode resilience
 - \`exports/edge_cases_results.json\` — Invalid providers handling
-- \`exports/navigation_360_results.json\` — Full UI navigation
-- \`exports/stability_burst_results.json\` — Stress test (50 messages)
+- \`exports/navigation_matrix.json\` — Full UI navigation
+- \`exports/stability_burst.json\` — Stress test (50 messages)
 - \`logs/tauri_driver.log\` — tauri-driver output
 - \`logs/console_errors_final.log\` — Browser console errors
 - \`artifacts/*.png\` — Navigation screenshots
