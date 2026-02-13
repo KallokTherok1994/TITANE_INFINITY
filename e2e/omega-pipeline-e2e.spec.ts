@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from './fixtures';
+import { Page } from '@playwright/test';
 
 async function gotoTitane(page: Page) {
   // IMPORTANT: ne pas deep-linker sur /titane.

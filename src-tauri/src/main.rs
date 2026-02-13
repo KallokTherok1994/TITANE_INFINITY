@@ -580,7 +580,7 @@ fn main() {
             // FIX v26.4.1: Initialize with default Ollama model to avoid "No AI provider available"
             let default_ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
                 .or_else(|_| std::env::var("OLLAMA_MODEL"))
-                .unwrap_or_else(|_| "llama3.1".to_string());
+                .unwrap_or_else(|_| "gemma2:2b".to_string());
             let ai_router = Arc::new(tokio::sync::RwLock::new(
                 titane_infinity::ai::router::AIRouter::new(None, Some(default_ollama_model.clone()))
             ));
@@ -681,7 +681,7 @@ fn main() {
                         message: "Réponds uniquement: OK".to_string(),
                         conversation_id: Some("smoke-runtime-chat".to_string()),
                         provider: "ollama".to_string(),
-                        model: Some("llama3.1:latest".to_string()),
+                        model: Some("gemma2:2b".to_string()),
                         streaming: false,
                         images: None,
                         system_prompt: Some("Réponds uniquement: OK".to_string()),

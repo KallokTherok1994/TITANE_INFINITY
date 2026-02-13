@@ -10,6 +10,8 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
+// Always use manual server mode to prevent Playwright from killing servers mid-test
+const useWebServer = false;
 
 export default defineConfig({
   // Test directories
@@ -38,7 +40,7 @@ export default defineConfig({
   use: {
     baseURL: process.env.TITANE_E2E_PORT
       ? `http://localhost:${process.env.TITANE_E2E_PORT}`
-      : 'http://localhost:4000',
+      : 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -78,14 +80,18 @@ export default defineConfig({
   ],
 
   // Dev server configuration
-  webServer: {
-    command: 'npx vite dev --host 127.0.0.1 --port 4000 --strictPort',
-    url: process.env.TITANE_E2E_PORT
-      ? `http://localhost:${process.env.TITANE_E2E_PORT}`
-      : 'http://localhost:4000',
-    reuseExistingServer: !process.env.CI,
-    timeout: 180000, // 3min to start (CI heavy load)
-    stdout: 'pipe',
-    stderr: 'pipe',
-  },
+  // Use Tauri dev locally so runtime-dependent tests (chat/IPC) have a backend.
+  // Keep Vite-only in CI where GUI/Tauri may be unavailable.
+  webServer: useWebServer
+    ? {
+        command: './.tools/node/current/bin/pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort',
+        url: process.env.TITANE_E2E_PORT
+          ? `http://localhost:${process.env.TITANE_E2E_PORT}`
+          : 'http://localhost:5173',
+        reuseExistingServer: !process.env.CI,
+        timeout: 180000, // 3min to start (CI heavy load)
+        stdout: 'pipe',
+        stderr: 'pipe',
+      }
+    : undefined,
 });

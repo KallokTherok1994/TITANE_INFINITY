@@ -83,7 +83,7 @@ Format the response as a complete, ready-to-use system prompt."#,
             Ok(GeneratePromptResponse {
                 prompt: generated_text,
                 generated_by: "ollama".to_string(),
-                model: "llama3.1".to_string(),
+                model: "gemma2:2b".to_string(),
                 latency_ms: latency,
                 success: true,
                 error: None,
@@ -128,7 +128,7 @@ async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String
 
     let model = std::env::var("OLLAMA_DEFAULT_MODEL")
         .or_else(|_| std::env::var("OLLAMA_MODEL"))
-        .unwrap_or_else(|_| "llama3.1".to_string());
+        .unwrap_or_else(|_| "gemma2:2b".to_string());
 
     let request_body = json!({
         "model": model,

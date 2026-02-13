@@ -246,7 +246,7 @@ async fn initialize_providers(state: &ChatOrchestratorState) {
         provider: "ollama".to_string(),
         available: false, // À vérifier avec http://localhost:11434
         latency_ms: 0,
-        models: vec!["llama3.1".to_string(), "qwen2.5".to_string()],
+        models: vec!["gemma2:2b".to_string(), "qwen2.5".to_string()],
         error: None,
     });
 
@@ -780,8 +780,8 @@ async fn send_to_ollama(
     request: &ChatRequest,
     _state: &ChatOrchestratorState,
 ) -> Result<ChatMessage, TAPIError> {
-    // 🚨 FIX: llama2:latest n'existe pas → utiliser llama3.1:latest (vérifié disponible)
-    let model = request.model.as_deref().unwrap_or("llama3.1:latest");
+    // 🚨 FIX: default to an installed local model
+    let model = request.model.as_deref().unwrap_or("gemma2:2b");
     let url = "http://localhost:11434/api/generate";
 
     // Adaptive timeout for Ollama (local, typically faster)
@@ -1237,7 +1237,7 @@ fn generate_local_response(message_lower: &str, original_message: &str) -> Strin
         || message_lower.contains("programmation")
         || message_lower.contains("développement")
     {
-        return "Pour la génération de code et l'assistance au développement, je recommande d'activer Ollama (local) ou Gemini (cloud). En mode local basique, mes capacités de codage sont limitées.\n\nPour démarrer Ollama : `ollama serve` puis `ollama pull llama3.1`".to_string();
+        return "Pour la génération de code et l'assistance au développement, je recommande d'activer Ollama (local) ou Gemini (cloud). En mode local basique, mes capacités de codage sont limitées.\n\nPour démarrer Ollama : `ollama serve` puis `ollama pull gemma2:2b`".to_string();
     }
 
     // État du système
@@ -1982,7 +1982,7 @@ mod smoke_tests {
             message: "Réponds uniquement: OK".to_string(),
             conversation_id: Some("smoke-test-ollama".to_string()),
             provider: "ollama".to_string(),
-            model: Some("llama3.1:latest".to_string()),
+                        model: Some("gemma2:2b".to_string()),
             streaming: false,
             images: None,
             system_prompt: Some("Réponds uniquement: OK".to_string()),
@@ -1992,7 +1992,7 @@ mod smoke_tests {
             Ok(message) => message,
             Err(err) => {
                 eprintln!(
-                    "Ollama smoke test failed (ollama sur :11434 ? modèle llama3.1:latest présent ?): {err}"
+                        "Ollama smoke test failed (ollama sur :11434 ? modèle gemma2:2b présent ?): {err}"
                 );
                 return; // Early return in test - graceful failure instead of panic
             }

@@ -264,7 +264,7 @@ mod tests {
 
     #[test]
     fn test_validate_ollama_model() {
-        assert!(validate_ollama_model("llama3.1").is_ok());
+        assert!(validate_ollama_model("gemma2:2b").is_ok());
         assert!(validate_ollama_model("qwen2.5:latest").is_ok());
         assert!(validate_ollama_model("mistral-7b-instruct").is_ok());
         assert!(validate_ollama_model("").is_err());

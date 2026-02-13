@@ -137,13 +137,12 @@ async fn pick_fallback_model(client: &Client) -> Result<String, String> {
 
     // Ordre de préférence: modèles généralistes rapides puis fallback sur le premier dispo.
     let preferred = [
+        "gemma2:2b",
+        "gemma2:latest",
         "qwen2.5:latest",
         "llama3.2:latest",
-        "llama3.1:latest",
         "mistral:latest",
         "phi3.5:latest",
-        "gemma2:latest",
-        "gemma2:2b",
     ];
 
     for name in preferred {

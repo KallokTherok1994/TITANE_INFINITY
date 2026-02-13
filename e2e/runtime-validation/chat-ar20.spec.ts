@@ -18,28 +18,30 @@
 
 import { test, expect } from '@playwright/test';
 
+const TAURI_E2E_ENABLED = process.env.TITANE_E2E_TAURI === '1';
+
 const CHAT_INPUT_SELECTOR =
-  'textarea.conversation-input, #chat-input-textarea, textarea.chat-input';
+  '#chat-input-textarea, textarea.chat-input, [data-testid="chat-input"]';
 const SEND_BUTTON_SELECTOR =
-  'button.conversation-send-btn, button[type="submit"].chat-send-btn, button.chat-send-omega';
-const MESSAGE_CONTAINER_SELECTOR =
-  '.conversation-content, .message-list, [class*="messages"]';
+  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
+const MESSAGE_CONTAINER_SELECTOR = '.chat-messages';
+const ASSISTANT_MESSAGE_SELECTOR =
+  `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
+const USER_MESSAGE_SELECTOR =
+  `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-user .message-text`;
 
 // Helper: wait for response in chat UI
-async function waitForResponse(page, userMessage: string, timeoutMs = 15000) {
+async function waitForResponse(page, _userMessage: string, timeoutMs = 15000) {
   const startTime = Date.now();
   let attempts = 0;
+  const messages = page.locator(ASSISTANT_MESSAGE_SELECTOR);
+  const initialCount = await messages.count();
 
   while (Date.now() - startTime < timeoutMs) {
     attempts++;
-    const messages = await page
-      .locator(
-        `${MESSAGE_CONTAINER_SELECTOR} .message-assistant, ${MESSAGE_CONTAINER_SELECTOR} .chat-bubble-message.assistant`
-      )
-      .all();
-
-    if (messages.length > 0) {
-      const lastMsg = messages[messages.length - 1];
+    const count = await messages.count();
+    if (count > initialCount) {
+      const lastMsg = messages.nth(count - 1);
       const text = await lastMsg.textContent();
       if (text && text.trim().length > 0) {
         return { success: true, response: text.trim(), attempts };
@@ -58,14 +60,24 @@ async function sendChatMessage(page, message: string) {
   await input.waitFor({ state: 'visible', timeout: 10000 });
   await input.fill(message);
 
+  const userMessages = page.locator(USER_MESSAGE_SELECTOR);
+  const initialCount = await userMessages.count();
+
   const sendBtn = page.locator(SEND_BUTTON_SELECTOR).first();
   await sendBtn.waitFor({ state: 'visible', timeout: 5000 });
   await sendBtn.click();
+
+  await expect(userMessages).toHaveCount(initialCount + 1, { timeout: 10000 });
 }
 
 test.describe('Runtime Validation: Chat AR20 Suite', () => {
+  test.skip(
+    !TAURI_E2E_ENABLED,
+    'Tauri runtime not enabled (set TITANE_E2E_TAURI=1 to run AR20 tests)'
+  );
   test.beforeEach(async ({ page, baseURL }) => {
-    await page.goto(baseURL || 'http://localhost:4000');
+    const base = (baseURL || 'http://localhost:5173').replace(/\/$/, '');
+    await page.goto(`${base}/chat`);
     await page.waitForLoadState('networkidle');
 
     // Wait for chat UI ready
