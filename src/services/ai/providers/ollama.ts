@@ -44,7 +44,7 @@ const OLLAMA_MODEL =
   typeof runtimeConfig.ollamaModel === 'string' &&
   runtimeConfig.ollamaModel.trim().length > 0
     ? runtimeConfig.ollamaModel.trim()
-    : 'llama3.1';
+    : 'gemma2:2b';
 const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking

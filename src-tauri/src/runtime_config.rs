@@ -93,7 +93,7 @@ mod tests {
         let engine = SecureSecretsEngine::default();
         let config = collect_runtime_config(&engine);
         assert_eq!(config.ollama_url, "http://127.0.0.1:11434");
-        assert_eq!(config.ollama_model, "llama3.1");
+        assert_eq!(config.ollama_model, "gemma2:2b");
         assert_eq!(config.secrets_mode, "ephemeral");
         assert!(!config.gemini_configured);
     }
