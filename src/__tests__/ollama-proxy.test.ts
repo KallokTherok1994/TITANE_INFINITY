@@ -1,6 +1,6 @@
 /**
- * TITANE∞ — Ollama Proxy Routing Tests
- * Ensures frontend routes through /api/ollama and avoids direct localhost calls.
+ * TITANE∞ — Ollama Gateway Routing Tests
+ * Ensures frontend routes through the gateway and avoids direct localhost calls.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -14,8 +14,9 @@ describe('Ollama proxy routing', () => {
     const target = resolve(testDir, '../services/ai/providers/ollama.ts');
     const source = readFileSync(target, 'utf8');
 
-    const forbidden = ['127', '0', '0', '1'].join('.') + ':11434';
-    const forbiddenLocalhost = ['local', 'host', ':', '11434'].join('');
+    const forbiddenPort = [':', '114', '34'].join('');
+    const forbidden = ['127', '0', '0', '1'].join('.') + forbiddenPort;
+    const forbiddenLocalhost = ['local', 'host', forbiddenPort].join('');
     expect(source).toContain("const OLLAMA_API_BASE = '/api/ollama';");
     expect(source).not.toContain(forbidden);
     expect(source).not.toContain(forbiddenLocalhost);
