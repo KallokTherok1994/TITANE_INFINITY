@@ -38,7 +38,7 @@ fn sanitize_url(url: &str) -> String {
 fn sanitize_model(model: &str) -> String {
     let trimmed = model.trim();
     if trimmed.is_empty() {
-        "llama3.1".to_string()
+        "gemma2:2b".to_string()
     } else {
         trimmed.to_string()
     }
@@ -53,7 +53,7 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
 
     let ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
         .or_else(|_| std::env::var("OLLAMA_MODEL"))
-        .unwrap_or_else(|_| "llama3.1".to_string());
+        .unwrap_or_else(|_| "gemma2:2b".to_string());
 
     let secrets_mode = match secrets.mode() {
         SecretsMode::Encrypted { .. } => "encrypted".to_string(),

@@ -13,7 +13,7 @@ use std::time::Duration;
 use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
-const DEFAULT_OLLAMA_MODEL: &str = "llama3.1";
+const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const TIMEOUT_SECONDS: u64 = 60;
 
 fn ollama_base_url() -> String {
