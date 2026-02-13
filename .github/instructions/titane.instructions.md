@@ -1,292 +1,186 @@
 ---
-# GitHub Copilot Instructions for TITANE_INFINITY
-# This file provides detailed coding guidelines for the entire codebase
+# TITANE_INFINITY — Constitution Copilot (Performance-First)
 # Applies to: src/, src-tauri/, tests/, scripts/
 ---
 
-# TITANE_INFINITY — Instructions Globales
-
-**Version:** 26.2.0  
-**Conformité:** 98/100 🎯  
-**Dernière mise à jour:** 2026-01-02
-
----
-
-## ⚠️ RÈGLE CRITIQUE #1 — MODE DÉVELOPPEMENT PERMANENT (2026-01-02)
-
-**AUTORITÉ:** Kevin Thibault (Créateur TITANE∞)
-
-**INTERDICTION ABSOLUE jusqu'à nouvelle ordre:**
-
-❌ **NE JAMAIS déployer AppImage/DEB** sans autorisation écrite explicite  
-❌ **NE JAMAIS lancer builds de production** (Titan-Stable, bundles, packages)  
-❌ **NE JAMAIS exécuter** `pnpm run build`, `tauri build`, tâche "🔵 Build Titan-Stable"
-
-✅ **Mode de travail OBLIGATOIRE:**
-
-- **Titan-Dev uniquement** (tâche "🟢 Launch Titan-Dev")
-- Console / Scripts / Terminal pour tous les tests
-- Paramètres de sécurité MINIMAUX (dev-friendly)
-- Pas de restrictions qui bloquent le développement
-
-**Conditions pour autoriser un déploiement production:**
-
-1. ✅ Tests CLI: **100/100 passés**
-2. ✅ Tests Rust (cargo test): **100% success**
-3. ✅ Tests E2E Playwright: **3/3 scénarios OK**
-4. ✅ Message explicite: **"GO FOR PRODUCTION DEPLOY - Kevin Thibault"**
-
-**Philosophie:** Privilégier la **fluidité du développement** sur la rigidité de production.  
-**Rationale:** Éviter les bugs bloquants en production tant que tous les systèmes ne sont pas validés.
+**Version:** 26.3.0  
+**NOW UTC:** 2026-02-13T23:18:12Z  
+**Scope:** src/, src-tauri/, tests/, scripts/  
+**Mode:** Doc-only unless explicitly authorized  
+**Gouvernance:** Policy labels only (no human identity attribution)
 
 ---
 
-## ⚠️ RÈGLE CRITIQUE #2 — REGISTRE UI OBLIGATOIRE (2026-02-02)
+## FAST PATH — 90 secondes
 
-**OBLIGATION PERMANENTE :**
+- `git status --porcelain=v1`
+- `pnpm test:architecture`
+- `pnpm test`
+- `pnpm test:e2e` (si changement UI/IPC)  
 
-- **TOUTE modification UI** (pages, layout, navigation, styles) **DOIT** être enregistrée dans `registry/ui-events.jsonl`.
-- **UN changement UI = UNE entry append-only** (JSONL) avec champs obligatoires complets.
-- **CHAQUE phase UI** (fix, tests, governance, polish) **doit** ajouter une entry si elle modifie l’UI.
-- **Le gate `GATE_UI_INDEX` doit passer** avant toute validation QUALIFIED/STABLE.
+**Triage rapide:**
 
-**Champs obligatoires:** `id`, `ts`, `category`, `scope`, `change_type`, `summary`, `reason`, `files_changed`, `tests_run`, `proofs`, `risk_level`, `rollback`, `status`.
+- P0: crash, data loss, UI silence, OMEGA v2 broken → STOP.
+- P1: degradation, missing proofs, gate fail → fix before any extra work.
+- P2: improvements → plan + backlog.
 
-**Interdictions:**
-
-- ❌ Modifier un fichier UI sans entry registre.
-- ❌ Écraser/supprimer une entry (append-only strict).
-- ❌ Valider un changement UI sans `tests_run` + `rollback`.
+**Si FAIL:** 1 corrective iteration max, puis rollback et STOP.
 
 ---
 
-## Vision
+## Stop-the-line (zero-derive)
 
-Assistant IA local-first, privacy-first, cognitif révolutionnaire.
-
----
-
-## Stack Technique
-
-### Frontend
-
-- **React 18.3.1** + **Vite 6.0.5** + **TypeScript 5.7.3**
-- **Zustand 5.0.2** (state management)
-- **Vitest 4.0.13** (testing) — **NO JEST**
-- **Playwright 1.56.1** (E2E)
-
-### Backend
-
-- **Tauri v2.2.0** + **Rust 1.83** (async)
-- **Tokio** async runtime
-- **Serde** serialization
-
-### Testing
-
-- **Vitest:** Unit/integration
-- **Playwright:** E2E (3 scenarios OMEGA v2)
-- **cargo test:** Rust tests
-- **Architecture tests:** Automated ring isolation
+- Build/packaging PROD sans gate explicite.
+- Changement UI sans entry append-only dans `registry/ui-events.jsonl`.
+- Break du contrat OMEGA v2 ou IPC canonique.
+- E2E sans wrapper tauri-driver ou sans isolation memoire.
+- Boucle de debug non bornee.
 
 ---
 
-## Architecture 4-Ring Model (v24.3.0)
+## Doc-only session policy
 
-**RÈGLE FONDAMENTALE:** Les anneaux intérieurs ne peuvent JAMAIS importer les anneaux extérieurs.
-
-### Ring 1: Core (Fondations Pures)
-
-**Localisation:** src/types/, src/constants/  
-**Responsabilité:** Types, interfaces, constantes universelles  
-**Imports autorisés:** ZÉRO (auto-suffisant)  
-**Exemples:**
-
-- src/types/voice.ts — EmotionalState, ThinkingState, MentalColor
-- src/types/memoryEngine.ts — MemoryMetadata, ConversationMode
-
-**Règle d or:** Si ça import quelque chose, ce n est PAS du Core.
+- Changer UNIQUEMENT les documents si la demande est doc-only.
+- Aucun refactor gratuit, aucun deplacement massif.
+- Aucune modification runtime/feature sauf si requise pour corriger ce fichier.
 
 ---
 
-### Ring 2: Engines (Logique Métier Pure)
+## Non-negotiables (securite + prod)
 
-**Localisation:** src/engines/\*/  
-**Responsabilité:** Algorithmes, transformations, logique métier SANS I/O  
-**Imports autorisés:** Ring 1 (Core) uniquement  
-**Interdictions:** Services, OS, API externes, localStorage, Tauri commands
-
-**9 Moteurs:**
-
-1. **Orchestrator** — Coordination globale
-2. **StyleEngine** — Thèmes et apparence
-3. **CoherenceEngine** — Cohérence contextuelle
-4. **ReflectionEngine** — Analyse réflexive
-5. **EmotionEngine** — États émotionnels
-6. **UnifiedMemory** — Mémoire persistante
-7. **BehaviorEngine** — Patterns comportementaux
-8. **AdaptationEngine** — Adaptation contextuelle
-9. **SystemHealth** — Monitoring santé système
-
-**Architecture DÉFINITIVE — Ne PAS modifier sans validation.**
+- ❌ Aucun build PROD, packaging, AppImage/DEB sans gate explicite.
+- ❌ Ne jamais executer `pnpm run build`, `tauri build`, ou tache "🔵 Build Titan-Stable".
+- ✅ Travail en mode dev seulement (Titan-Dev / scripts).
+- ✅ Zero secrets, zero credentials en clair.
+- ✅ Rollback documente pour chaque changement.
 
 ---
 
-### Ring 3: Services (Orchestration I/O)
+## Architecture & invariants (4-Ring + OMEGA v2 + IPC)
 
-**Localisation:** src/services/\*/  
-**Responsabilité:** Abstractions I/O, appels Tauri, API externes, localStorage  
-**Imports autorisés:** Ring 1 (Core) + Ring 2 (Engines)
+**4-Ring model (import rules):**
 
-**Services Wrappers:**
+- Ring 1 (Core): `src/types/`, `src/constants/` — no imports.
+- Ring 2 (Engines): `src/engines/*/` — imports Ring 1 only, no I/O.
+- Ring 3 (Services): `src/services/*/` — I/O orchestration, imports Ring 1-2.
+- Ring 4 (OS/UI): `src-tauri/src/`, React components — can import all rings.
 
-- src/services/agenda/agendaService.ts — CRUD événements (Tauri)
-- src/services/cognitive/cognitiveLayoutService.ts — État Helios/Nexus
-- src/lib/security.ts — secureInvoke wrapper
+**OMEGA v2 (mandatory):**
 
-**Règle:** Tout I/O DOIT passer par un service, jamais directement dans un engine.
+- Use `conversation_generate` with `conversationId` required.
+- `chat_send_message` is deprecated.
 
----
+**IPC canonical contract:**
 
-### Ring 4: OS/UI (Frontière Système)
+- Always return `{ ok, content, error }`.
+- UI must never be silent: bounded response time + fallback path.
 
-**Localisation:** src-tauri/src/, React components  
-**Responsabilité:** UI React, Tauri backend, système d exploitation  
-**Imports autorisés:** TOUS les rings (accès total)
+**Always Respond:**
 
-**Exceptions documentées:**
-
-- cognitiveLayoutIntegrations.ts — Pont nécessaire Engines↔Services
-- tauriBridge.ts — Interface système critique
+- If provider fails, fall back to local/offline generator.
+- Max wait time is bounded; no infinite waits.
 
 ---
 
-## OMEGA Pipeline v2 (BREAKING CHANGE)
+## IA locale TITANE (obligation constitutionnelle)
 
-**AVANT (v1 — DEPRECATED):**
-Utiliser chat_send_message
-
-**APRÈS (v2 — REQUIS):**
-Utiliser conversation_generate avec conversationId MANDATORY
-
-**Guide complet:** docs/guides/MIGRATION_OMEGA_V2.md
+- Chat must work without external providers.
+- External providers are optional and never hard deps.
+- Circuit breaker + timeouts for every provider.
+- Offline generator is required fallback.
 
 ---
 
-## Conventions de Code
+## E2E Constitution (Playwright + tauri-driver)
 
-### Rust
-
-- async/await pour tout I/O
-- Result<T, E> pour error handling
-- **ZERO unwrap()** — Utiliser expect("message")
-- Tests unitaires (#[cfg(test)])
-- Documentation (/// pour public API)
-
-### TypeScript
-
-- **Strict mode** activé (tsconfig.json)
-- Types explicites
-- **ZERO any** en production
-- try/catch pour async/await
-- Composants purs
+- `scripts/e2e/tauri-wrapper.sh` is mandatory; no direct tauri-driver call.
+- `TITANE_E2E=1` + isolated `TITANE_MEMORY_DIR` + isolated `TITANE_LOG_DIR`.
+- Proof: no real writes to user data paths.
+- Phase 0.5: start Vite automatically if debug binary requires `devUrl`.
+- Default dev port: 1420.
+- Onboarding skip must be deterministic (no random navigation).
+- UI Chat 360 expected exports: `page_classification`, `chat_dom_map`, `AR20`, `OFFLINE5`, `navigation`, `stability`.
+- Stop-the-line if wrapper or memory guard is missing.
 
 ---
 
-## Communication IPC
+## Qualite + performance (speed with proofs)
 
-Uniquement via Tauri IPC avec secureInvoke wrapper.
-
----
-
-## Gestion des Scripts
-
-**Organisation obligatoire (170 scripts):**
-scripts/
-├── build/ # 5 scripts
-├── deploy/ # 5 scripts
-├── dev/ # 5 scripts
-├── diagnostic/ # 5 scripts
-├── fix/ # 7 scripts
-├── install/ # 8 scripts
-├── launch/ # 6 scripts
-├── maintenance/ # 6 scripts
-├── setup/ # 10 scripts
-├── test/ # 38 scripts
-└── verify/ # 10 scripts
-
-**Règle:** ZÉRO script à la racine du projet.
+- Minimal patch, idempotent commands.
+- No unbounded retries; use capped backoff.
+- Run smoke tests before long suites.
+- Structured logs + markers for diagnostics.
+- One change = one proof = UI registry entry if UI changes.
 
 ---
 
-## Politique /legacy/
+## Repo hygiene
 
-**Critères:** Code obsolète, API dépréciées, types any temporaires
-**Processus:** Marquer @deprecated → Alternative moderne → Déplacer /legacy/ → Supprimer après 6 mois
-
----
-
-## Tests
-
-### Commandes
-
-- pnpm test # Vitest unit tests
-- pnpm test:e2e # Playwright E2E
-- pnpm test:architecture # Architecture validation
-- pnpm test:rust # Cargo tests
-- pnpm verify # ALL tests + lint + check
-
-### Couverture Minimale
-
-- Unit tests: 80% des engines
-- Integration: 60% des services
-- E2E: 3 scenarios critiques (OMEGA v2)
-- Architecture: 100% (automatisé)
+- All scripts live in `scripts/` (no root scripts).
+- `/legacy/`: @deprecated → replacement → move → remove after 6 months.
+- `reports/` is gitignored by default; commit only when explicitly required.
+- Use conventional commits: `<type>(<scope>): <desc>`.
 
 ---
 
-## Commits Conventionnels
+## Tests (canonical commands)
 
-Format:
-<type>(<scope>): <description>
+- `pnpm test` (Vitest)
+- `pnpm test:architecture` (4-Ring enforcement)
+- `pnpm test:e2e` (Playwright)
+- `pnpm test:rust` (cargo test)
+- `pnpm verify` (all gates)
 
-- Point 1
-- Point 2
+Coverage minimums:
 
-Breaking Changes: <si applicable>
-Task: <ID optionnel>
-
-Types: feat, fix, docs, refactor, test, chore, perf, build
-Scopes: architecture, omega, engines, services, ui, backend
-
----
-
-## Conformité Actuelle (v24.3.0)
-
-| Métrique      | Score      | Status |
-| ------------- | ---------- | ------ |
-| **Overall**   | **98/100** | ✅     |
-| Structure     | 98/100     | ✅     |
-| Testing       | 95/100     | ✅     |
-| Architecture  | 98/100     | ✅     |
-| Documentation | 95/100     | ✅     |
-| Code Quality  | 97/100     | ✅     |
-
-**Progression:** v24.2.0 (78/100) → v24.3.0 (98/100) = **+20 points** 🎯
+- Engines: 80% unit
+- Services: 60% integration
+- E2E: 3 scenarios OMEGA v2
+- Architecture: 100%
 
 ---
 
-## Règles d Or
+## Gates & certification (binary)
 
-1. ✅ **Architecture 4-Ring** — Respecter strictement la hiérarchie
-2. ✅ **ZERO unwrap()** — Rust error handling explicite
-3. ✅ **ZERO any** — TypeScript type safety maximale
-4. ✅ **Tests automatisés** — Architecture + E2E + unit
-5. ✅ **Documentation** — Tout changement architectural documenté
-6. ✅ **OMEGA v2** — conversation_generate obligatoire
-7. ✅ **Scripts organisés** — 0 script à la racine
-8. ✅ **/legacy/** — Politique de dépréciation stricte
+| Gate | PASS criteria | Evidence |
+| --- | --- | --- |
+| DEV readiness | tests smoke + zero P0/P1 | logs + proof pack |
+| E2E readiness | wrapper + memory guard + UI exports | E2E logs + artifacts |
+| PROD readiness | all suites + phrase `GO FOR PRODUCTION DEPLOY` | full reports |
+
+- If "skipped by design", gate is FAIL until replaced by an equivalent test.
 
 ---
 
-**Dernière révision:** 2025-12-15  
-**Version:** 24.3.0 — Architecture Overhaul Complete 🎯
+## Proof Pack (instructions updates)
+
+Required files (append-only):
+
+- `00_SNAPSHOT.md`
+- `01_CURRENT_INSTRUCTIONS.md`
+- `02_VERSIONS_REALITY.md`
+- `03_ACCELERATION_SIGNALS.md`
+- `04_SCOPE_GATE.md`
+- `05_REFERENCE_GATE.md`
+- `06_PERFORMANCE_RULES_PRESENT.md`
+- `VERDICT.md`
+- `INDEX.md`
+
+Rollback:
+
+- `git restore -- <instructions-file>`
+
+---
+
+## Code conventions (tight)
+
+**TypeScript:** strict mode, zero `any`, explicit types, try/catch for async.
+
+**Rust:** async/await for I/O, zero `unwrap()`, use `expect("message")` or `Result`.
+
+---
+
+## Reference policy
+
+- Source of truth for versions is `package.json`.
+- Paths in docs must exist or be explicitly called out as exceptions.
