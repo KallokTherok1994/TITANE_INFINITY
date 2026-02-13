@@ -285,3 +285,62 @@ export interface AIProviderAdapter {
   getStats?(): Record<string, unknown>;
   resetErrors?(): void;
 }
+
+// ═══════════════════════════════════════════════════════════════════
+//   AI RESULT CONTRACT (v27.2Ω — OLLAMA PROXY SEAL)
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Standard error structure for AI operations
+ * Enforces "Always Respond" contract - NO silent failures
+ */
+export interface AiError {
+  /** Machine-readable error code (e.g., 'OLLAMA_TIMEOUT', 'OLLAMA_UNREACHABLE') */
+  code: string;
+  
+  /** Human-readable error message (French, user-facing) */
+  message: string;
+  
+  /** Optional hint for user action (e.g., "Démarre Ollama puis réessaie") */
+  hint?: string;
+  
+  /** Whether this error is retryable (true = show "Réessayer" button) */
+  retryable: boolean;
+  
+  /** Optional technical details (for debugging, not shown to user) */
+  details?: Record<string, unknown>;
+}
+
+/**
+ * Success result with content
+ */
+export interface AiOk<T = string> {
+  ok: true;
+  provider: ProviderName;
+  content: T;
+  meta?: Record<string, unknown>;
+}
+
+/**
+ * Error result with actionable information
+ */
+export interface AiErr {
+  ok: false;
+  provider: ProviderName;
+  error: AiError;
+}
+
+/**
+ * Universal AI result type (replaces throw-based error handling)
+ * 
+ * Usage:
+ * ```typescript
+ * const result = await ollamaGenerate(req);
+ * if (result.ok) {
+ *   console.log(result.content);
+ * } else {
+ *   displayError(result.error.message, result.error.hint);
+ * }
+ * ```
+ */
+export type AiResult<T = string> = AiOk<T> | AiErr;
