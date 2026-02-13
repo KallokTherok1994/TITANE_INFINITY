@@ -16,7 +16,7 @@ describe('Direct WebDriver Connection Test', () => {
     console.log('🧪 DIRECT TEST: Checking current URL...');
     const currentUrl = await browser.getUrl();
     console.log(`📍 DIRECT TEST: Current URL: ${currentUrl}`);
-    
+
     if (currentUrl === 'about:blank') {
       console.warn('⚠️ DIRECT TEST: Detected about:blank, navigating...');
       await browser.url('http://127.0.0.1:1420/');

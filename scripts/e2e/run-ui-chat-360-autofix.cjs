@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /**
  * Ω∞.UI.CHAT.360.AUTOFIX — Test Runner
- * 
+ *
  * Orchestrates:
  * 1. Report setup
  * 2. tauri-driver launch
@@ -78,29 +78,33 @@ try {
   console.log(`✅ Vite already running on port ${VITE_PORT}`);
 } catch {
   console.log('⏳ Starting Vite standalone...');
-  
+
   // Launch VITE ONLY (not tauri dev) on port 1420 to match tauri.conf.json
-  viteProcess = spawn('pnpm', ['exec', 'vite', 'dev', '--port', String(VITE_PORT), '--host', '127.0.0.1'], {
-    cwd: path.join(__dirname, '../..'),
-    stdio: ['ignore', 'pipe', 'pipe'],
-    detached: false,
-    env: {
-      ...process.env,
-      VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
-      OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
-    },
-  });
-  
-  viteProcess.stdout.on('data', (data) => {
+  viteProcess = spawn(
+    'pnpm',
+    ['exec', 'vite', 'dev', '--port', String(VITE_PORT), '--host', '127.0.0.1'],
+    {
+      cwd: path.join(__dirname, '../..'),
+      stdio: ['ignore', 'pipe', 'pipe'],
+      detached: false,
+      env: {
+        ...process.env,
+        VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
+        OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
+      },
+    }
+  );
+
+  viteProcess.stdout.on('data', data => {
     const logPath = path.join(REPORT_DIR, 'logs', 'vite_standalone.log');
     fs.appendFileSync(logPath, data.toString());
   });
-  
-  viteProcess.stderr.on('data', (data) => {
+
+  viteProcess.stderr.on('data', data => {
     const logPath = path.join(REPORT_DIR, 'logs', 'vite_standalone_error.log');
     fs.appendFileSync(logPath, data.toString());
   });
-  
+
   // Wait for Vite to be ready (check port listening)
   let viteReady = false;
   for (let i = 0; i < 30; i++) {
@@ -114,7 +118,7 @@ try {
       execSync('sleep 1', { stdio: 'inherit' });
     }
   }
-  
+
   if (!viteReady) {
     console.error(`❌ Vite failed to start after 30s on port ${VITE_PORT}`);
     console.error('Check logs: logs/vite_standalone.log');
@@ -136,14 +140,16 @@ const tauriDriver = spawn('tauri-driver', [], {
   },
 });
 
-tauriDriver.stdout.on('data', (data) => {
+tauriDriver.stdout.on('data', data => {
   const logPath = path.join(REPORT_DIR, 'logs', 'tauri_driver.log');
   fs.appendFileSync(logPath, data.toString());
 });
 
-tauriDriver.stderr.on('data', (data) => {
+tauriDriver.stderr.on('data', data => {
   const logPath = path.join(REPORT_DIR, 'logs', 'tauri_driver_error.log');
-  fs.appendFileSync(logPath, data.toString());
+  const chunk = data.toString();
+  fs.appendFileSync(logPath, chunk);
+  process.stdout.write(chunk);
 });
 
 // Wait for tauri-driver to actually be listening on port 4444
@@ -199,7 +205,7 @@ const phaseStart = () => {
     },
   });
 
-  wdio.on('close', (code) => {
+  wdio.on('close', code => {
     console.log('');
     console.log(`🧪 Tests finished with code: ${code}`);
     console.log('');
@@ -207,13 +213,13 @@ const phaseStart = () => {
     // Kill tauri-driver
     tauriDriver.kill();
     console.log('🛑 tauri-driver stopped');
-    
+
     // Kill Vite if we started it
     if (viteProcess) {
       viteProcess.kill();
       console.log('🛑 Vite stopped');
     }
-    
+
     console.log('');
 
     // Phase 3: Generate final report
@@ -233,7 +239,7 @@ function generateFinalReport(testExitCode) {
   const exportsDir = path.join(REPORT_DIR, 'exports');
   const gates = {};
 
-  const readJsonIfExists = (filePath) => {
+  const readJsonIfExists = filePath => {
     if (!fs.existsSync(filePath)) return null;
     try {
       return JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -243,7 +249,7 @@ function generateFinalReport(testExitCode) {
     }
   };
 
-  const resolveFirst = (paths) => {
+  const resolveFirst = paths => {
     for (const filePath of paths) {
       const data = readJsonIfExists(filePath);
       if (data) return { data, filePath };
@@ -254,7 +260,10 @@ function generateFinalReport(testExitCode) {
   // Gate 1: Chat page accessible
   const classificationFile = path.join(exportsDir, 'page_classification.json');
   const classification = readJsonIfExists(classificationFile);
-  const finalClass = classification?.final?.pageClass || classification?.attempts?.slice(-1)?.[0]?.pageClass || null;
+  const finalClass =
+    classification?.final?.pageClass ||
+    classification?.attempts?.slice(-1)?.[0]?.pageClass ||
+    null;
 
   const chatDomFile = path.join(exportsDir, 'chat_dom_map.json');
   const chatDom = readJsonIfExists(chatDomFile);
@@ -263,14 +272,20 @@ function generateFinalReport(testExitCode) {
   const chatAccessible = finalClass === 'CHAT' || chatDetected;
   gates.G1_CHAT_ACCESSIBLE = {
     status: chatAccessible ? 'PASS' : 'FAIL',
-    evidence: finalClass ? `Class=${finalClass}` : (chatDetected ? 'Textarea detected' : 'No classification'),
+    evidence: finalClass
+      ? `Class=${finalClass}`
+      : chatDetected
+        ? 'Textarea detected'
+        : 'No classification',
     confidence: chatAccessible ? 100 : 0,
   };
 
   // Gate 2: Textarea detected
   gates.G2_TEXTAREA_DETECTED = {
     status: chatDetected ? 'PASS' : 'FAIL',
-    evidence: chatDetected ? `Reason=${chatDom.chatInput.reason}` : 'Textarea not detected',
+    evidence: chatDetected
+      ? `Reason=${chatDom.chatInput.reason}`
+      : 'Textarea not detected',
     confidence: chatDetected ? 100 : 0,
   };
 
@@ -317,7 +332,11 @@ function generateFinalReport(testExitCode) {
       confidence: 100,
     };
   } else {
-    gates.G5_ALWAYS_RESPOND = { status: 'FAIL', evidence: 'No edge case data', confidence: 0 };
+    gates.G5_ALWAYS_RESPOND = {
+      status: 'FAIL',
+      evidence: 'No edge case data',
+      confidence: 0,
+    };
   }
 
   // Gate 7: Navigation
@@ -334,7 +353,11 @@ function generateFinalReport(testExitCode) {
       confidence: 100,
     };
   } else {
-    gates.G7_NAVIGATION = { status: 'FAIL', evidence: 'No navigation data', confidence: 0 };
+    gates.G7_NAVIGATION = {
+      status: 'FAIL',
+      evidence: 'No navigation data',
+      confidence: 0,
+    };
   }
 
   // Gate 8: Stability
@@ -361,7 +384,10 @@ function generateFinalReport(testExitCode) {
   const noFatalErrors = consoleErrorCount === 0;
   gates.G6_NO_FATAL_ERRORS = {
     status: noFatalErrors ? 'PASS' : 'FAIL',
-    evidence: consoleErrorCount !== null ? `${consoleErrorCount} console errors` : 'Missing console log',
+    evidence:
+      consoleErrorCount !== null
+        ? `${consoleErrorCount} console errors`
+        : 'Missing console log',
     confidence: consoleErrorCount !== null ? 100 : 0,
   };
 
@@ -382,9 +408,10 @@ function generateFinalReport(testExitCode) {
       passRate: passRate.toFixed(1) + '%',
     },
     finalVerdict: passCount === totalCount ? 'PASS' : 'FAIL',
-    recommendation: passCount === totalCount
-      ? 'System validated. Production-ready.'
-      : 'Issues detected. Review failed gates and apply patches.',
+    recommendation:
+      passCount === totalCount
+        ? 'System validated. Production-ready.'
+        : 'Issues detected. Review failed gates and apply patches.',
   };
 
   // Write verdict
@@ -433,10 +460,12 @@ function generateVerdictMarkdown(verdict) {
 
 **Pass Rate:** ${verdict.summary.passRate} (${verdict.summary.pass}/${verdict.summary.total} gates)
 
-${Object.entries(verdict.gates).map(([name, gate]) => {
-  const icon = gate.status === 'PASS' ? '✅' : gate.status === 'FAIL' ? '❌' : '⏳';
-  return `### ${icon} ${name}\n\n- **Status:** ${gate.status}\n- **Evidence:** ${gate.evidence}\n- **Confidence:** ${gate.confidence}%\n`;
-}).join('\n')}
+${Object.entries(verdict.gates)
+  .map(([name, gate]) => {
+    const icon = gate.status === 'PASS' ? '✅' : gate.status === 'FAIL' ? '❌' : '⏳';
+    return `### ${icon} ${name}\n\n- **Status:** ${gate.status}\n- **Evidence:** ${gate.evidence}\n- **Confidence:** ${gate.confidence}%\n`;
+  })
+  .join('\n')}
 
 ---
 

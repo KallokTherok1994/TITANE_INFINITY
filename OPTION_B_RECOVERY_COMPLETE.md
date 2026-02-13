@@ -17,12 +17,14 @@
 ## The Complete Recovery Journey
 
 ### PHASE 1: Stopline Recovery (Earlier in Session) ✅
+
 - **Issue:** Stop-the-line triggered (real memory modified + markers missing)
 - **Action:** Executed stopline recovery protocol per Ω∞.E2E spec
 - **Result:** Memory cleaned ✅, markers added ✅, guards confirmed ✅
 - **Status:** 3/3 gates PASS (memory, markers, no-real-writes)
 
 ### PHASE 2: Diagnostic Loop (Marker Gates + Checkpoint Logging) ⚠️
+
 - **Issue:** After memory/markers passed, exports still empty
 - **Attempts:** Added wrapper logging, checkpoint logging, worker logging
 - **Discovery:** Worker START logged, no END logged (process hangs before test body)
@@ -30,6 +32,7 @@
 - **Realization:** Need to isolate the hang point differently
 
 ### PHASE 3: OPTION B — Direct WDIO Isolation ✅✅✅
+
 - **Strategy:** Bypass orchestrator completely, test WDIO→tauri-driver connection directly
 - **Created:** `e2e/desktop/test-direct-wdio-connection.wdio.test.cjs` (minimal fixture)
 - **Executed:** `npx wdio run wdio.desktop.conf.cjs --spec=test-direct-wdio-connection.wdio.test.cjs`
@@ -37,14 +40,16 @@
 - **Insight:** tauri-driver was NOT listening when WDIO tried to connect
 
 ### PHASE 4: Root Cause Analysis (5 minutes) ✅
+
 - **Examined:** `scripts/e2e/run-ui-chat-360-autofix.cjs`
 - **Found:** Line 160: `setTimeout(() => { ... }, 3000);` ← **HARDCODED WAIT, NO VERIFICATION**
-- **Diagnosis:** 
+- **Diagnosis:**
   - Tauri-driver spawned but NOT guaranteed ready in 3 seconds
   - WDIO launched before driver listening → hangs forever
   - No port check = silent failure
 
 ### PHASE 5: Fix Implementation (2 minutes) ✅
+
 - **Replaced:** Hardcoded setTimeout with **active port verification loop**
 - **Logic:**
   ```bash
@@ -58,6 +63,7 @@
 - **Validation:** Test now runs (27 seconds) instead of hanging (180+ seconds)
 
 ### PHASE 6: Fix Validation & Commit ✅
+
 - **Test Result:**
   - Worker: ✅ Executes (no START/no END hang)
   - Test body: ✅ Runs (27s execution)
@@ -71,21 +77,22 @@
 
 ## Before & After Comparison
 
-| Metric | Before Fix | After Fix | Status |
-|--------|-----------|-----------|--------|
-| **Worker state** | Hangs forever | Executes | ✅ FIXED |
-| **Test duration** | 180s timeout + fail | 27s execution | ✅ 6.7x faster |
-| **WebDriver connection** | Silent hang | Active verification | ✅ Visible |
-| **Page classification** | Never reached | **DETECTED** | ✅ WORKING |
-| **Exports generated** | 0 files | 1 file | ✅ Progress |
-| **Gate 1 (chat)** | FAIL | **PASS** | ✅ Fixed |
-| **Diagnostic clarity** | Black box hang | Clear error path | ✅ Debuggable |
+| Metric                   | Before Fix          | After Fix           | Status         |
+| ------------------------ | ------------------- | ------------------- | -------------- |
+| **Worker state**         | Hangs forever       | Executes            | ✅ FIXED       |
+| **Test duration**        | 180s timeout + fail | 27s execution       | ✅ 6.7x faster |
+| **WebDriver connection** | Silent hang         | Active verification | ✅ Visible     |
+| **Page classification**  | Never reached       | **DETECTED**        | ✅ WORKING     |
+| **Exports generated**    | 0 files             | 1 file              | ✅ Progress    |
+| **Gate 1 (chat)**        | FAIL                | **PASS**            | ✅ Fixed       |
+| **Diagnostic clarity**   | Black box hang      | Clear error path    | ✅ Debuggable  |
 
 ---
 
 ## What's Now Possible
 
 ### ✅ Unlocked Capabilities
+
 1. **E2E Framework Operational** — Tests run instead of hanging
 2. **Page Detection** — Can now classify app pages (CHAT detected!)
 3. **Export Pipeline** — Can generate audit exports (page_classification.json created)
@@ -93,6 +100,7 @@
 5. **Debugging** — Clear error messages if driver fails to start
 
 ### ⚠️ Remaining Work
+
 1. **Session Invalidation** — WebDriver session fails in beforeAll hook
    - Error: `invalid session id` during DOM injection
    - Likely: Execute timeout or session cleanup race
@@ -120,16 +128,20 @@ This demonstrates the **power of Option B** — isolating dependencies removes d
 ## Files Modified This Phase
 
 ### Created
+
 - ✅ `e2e/desktop/test-direct-wdio-connection.wdio.test.cjs` — Minimal WDIO fixture (diagnostic)
 
 ### Updated
+
 - ✅ `scripts/e2e/run-ui-chat-360-autofix.cjs` — Replaced setTimeout with port loop (CRITICAL FIX)
 - ✅ `registry/ui-events.jsonl` — Appended entry via append-only pattern
 
 ### Documentation
+
 - ✅ `reports/e2e_stopline_recovery/2026-02-12T11:49:24Z/11_BREAKTHROUGH_DIAGNOSIS.md` — Complete root cause analysis
 
 ### Git Commit
+
 ```
 Commit: 0e1f27e6
 Message: Fix: E2E orchestrator WebDriver hang — replace hardcoded 3s timeout with port verification
@@ -141,6 +153,7 @@ Impact: Worker hang FIXED, test execution UNBLOCKED
 ## Next Recommended Action
 
 **IMMEDIATE (5-10 min):**
+
 1. Fix WebDriver session invalidation in beforeAll hook
    - Increase `browser.execute()` timeout
    - Or debug DOM injection race condition
@@ -150,6 +163,7 @@ Impact: Worker hang FIXED, test execution UNBLOCKED
    - Measure: Full 180s completion with comprehensive exports
 
 **FOLLOW-UP:**
+
 - Document E2E orchestration best practices (always verify service readiness)
 - Review other test runners for similar hardcoded timeouts
 
@@ -176,6 +190,7 @@ This session proved that systematic **debugging by decomposition** (Option B) tr
 ## Recommendation
 
 **🟢 APPROVED FOR PRODUCTION MERGE**
+
 - ✅ Root cause confirmed (hardcoded timeout)
 - ✅ Fix validated (test now executes 27s vs hang 180s)
 - ✅ Risk assessed (LOW, orchestrator only)
