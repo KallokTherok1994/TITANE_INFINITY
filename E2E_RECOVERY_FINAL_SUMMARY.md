@@ -17,7 +17,7 @@ Two **blocking infrastructure bugs** that prevented E2E testing entirely have be
    - Fix: Active port verification loop (30s max)
    - Result: Test now initiates properly
 
-2. **Bug #2: Session invalidation in beforeAll hook** ✅ FIXED  
+2. **Bug #2: Session invalidation in beforeAll hook** ✅ FIXED
    - Effect: WebDriver session died during page classification
    - Root cause: Too many sequential operations causing timeout/session loss
    - Symptom: `invalid session id` error at line 347
@@ -28,35 +28,36 @@ Two **blocking infrastructure bugs** that prevented E2E testing entirely have be
 
 ## Metrics: Before & After
 
-### Overall Execution Timeline  
+### Overall Execution Timeline
 
-| Phase | Before Fix | After Fix #1 | After Fix #2 | Status |
-|-------|-----------|------------|------------|--------|
-| **Vite startup** | 2s | 2s | 2s | ✅ OK |
-| **tauri-driver wait** | 30s (timeout) | 1s (verified!) | 1s | ✅ 30x faster |
-| **WDIO session init** | N/A (hung) | 4s | 4s | ✅ NOW WORKS |
-| **beforeAll hook** | N/A (hung at line 347) | N/A (invalid session) | 5s | ✅ FIXED |
-| **Test execution** | N/A (hung) | 27s (partial) | 57s (full) | ✅ 2x progress |
-| **Total runtime** | 180s (timeout) | 34s | 70s | ✅ >2x faster |
+| Phase                 | Before Fix             | After Fix #1          | After Fix #2 | Status         |
+| --------------------- | ---------------------- | --------------------- | ------------ | -------------- |
+| **Vite startup**      | 2s                     | 2s                    | 2s           | ✅ OK          |
+| **tauri-driver wait** | 30s (timeout)          | 1s (verified!)        | 1s           | ✅ 30x faster  |
+| **WDIO session init** | N/A (hung)             | 4s                    | 4s           | ✅ NOW WORKS   |
+| **beforeAll hook**    | N/A (hung at line 347) | N/A (invalid session) | 5s           | ✅ FIXED       |
+| **Test execution**    | N/A (hung)             | 27s (partial)         | 57s (full)   | ✅ 2x progress |
+| **Total runtime**     | 180s (timeout)         | 34s                   | 70s          | ✅ >2x faster  |
 
 ### Test Execution Coverage
 
-| Aspect | Before Fixes | After Fix #1 | After Fix #2 | Target |
-|--------|-------------|-------------|------------|--------|
-| **Worker starts** | ❌ NO (hangs) | ✅ YES | ✅ YES | ✅ YES |
-| **Page classification** | ❌ NO | ✅ YES (partial) | ✅ YES | ✅ YES |
-| **DOM injection** | ❌ NO | ✅ YES | ✅ YES | ✅ YES |
-| **beforeAll completes** | ❌ NO | ⚠️ Partial (27s) | ✅ YES (5s) | ✅ YES |
-| **Test phases run** | ❌ 0/8 | ⚠️ 0/8 (stalled after init) | ✅ 8/8 (all attempted) | ✅ 8/8 |
-| **Gates passing** | ❌ 0/8 | ✅ 2/8 | ⚠️ 1/8* | 🎯 8/8 |
+| Aspect                  | Before Fixes  | After Fix #1                | After Fix #2           | Target |
+| ----------------------- | ------------- | --------------------------- | ---------------------- | ------ |
+| **Worker starts**       | ❌ NO (hangs) | ✅ YES                      | ✅ YES                 | ✅ YES |
+| **Page classification** | ❌ NO         | ✅ YES (partial)            | ✅ YES                 | ✅ YES |
+| **DOM injection**       | ❌ NO         | ✅ YES                      | ✅ YES                 | ✅ YES |
+| **beforeAll completes** | ❌ NO         | ⚠️ Partial (27s)            | ✅ YES (5s)            | ✅ YES |
+| **Test phases run**     | ❌ 0/8        | ⚠️ 0/8 (stalled after init) | ✅ 8/8 (all attempted) | ✅ 8/8 |
+| **Gates passing**       | ❌ 0/8        | ✅ 2/8                      | ⚠️ 1/8\*               | 🎯 8/8 |
 
-*Note: 1/8 gates passing (G6_NO_FATAL_ERRORS) — other failures are test setup/logic, not infrastructure.
+\*Note: 1/8 gates passing (G6_NO_FATAL_ERRORS) — other failures are test setup/logic, not infrastructure.
 
 ---
 
 ## What's Now Possible
 
 ### ✅ Operational Capabilities
+
 1. **E2E Framework** — Tests run from start to finish (no hangs)
 2. **Page Detection** — App classification working (detects pages)
 3. **DOM Injection** — Browser-side utilities available
@@ -64,6 +65,7 @@ Two **blocking infrastructure bugs** that prevented E2E testing entirely have be
 5. **Full Diagnostics** — Real errors visible (not hidden by timeouts)
 
 ### ⏳ Remaining Issues (NOT infrastructure)
+
 1. **Test Setup** — `expect` assertion library not configured
 2. **Chat Input** — App not routing to /chat or textarea structure different
 3. **Assertions** — Some test assertions have binding issues
@@ -78,6 +80,7 @@ Two **blocking infrastructure bugs** that prevented E2E testing entirely have be
 **File:** `scripts/e2e/run-ui-chat-360-autofix.cjs` (lines 140-160)
 
 **Before:**
+
 ```javascript
 setTimeout(() => {
   console.log('✅ tauri-driver ready (port 4444)'); // LIE: no verification
@@ -86,6 +89,7 @@ setTimeout(() => {
 ```
 
 **After:**
+
 ```javascript
 for (let i = 0; i < 30; i++) {
   try {
@@ -99,7 +103,8 @@ for (let i = 0; i < 30; i++) {
 }
 ```
 
-**Impact:** 
+**Impact:**
+
 - Before: 180s timeout (driver not ready)
 - After: 1s verification (driver ready immediate)
 
@@ -110,12 +115,14 @@ for (let i = 0; i < 30; i++) {
 **File:** `e2e/desktop/ui-chat-360-autofix.wdio.test.cjs`
 
 **Changes:**
+
 1. Simplified `ensureChatPage()`: 5 classification retries → 2 retries
-2. Reduced navigation complexity: Removed 3-attempt onboarding skip logic  
+2. Reduced navigation complexity: Removed 3-attempt onboarding skip logic
 3. Added error recovery: Try/catch wraps major phases
 4. Graceful degradation: Continue on errors (best-effort, not fail-fast)
 
 **Impact:**
+
 - Before: Session timeout in beforeAll (line 347)
 - After: beforeAll completes (5s), test body runs fully
 
@@ -124,6 +131,7 @@ for (let i = 0; i < 30; i++) {
 ## Next Recommended Actions
 
 ### IMMEDIATE (10-15 minutes)
+
 1. **Fix test assertion library**
    - Import `expect` from `chai` or add assertion setup
    - Error: `Cannot read properties of undefined (reading 'have')`
@@ -139,6 +147,7 @@ for (let i = 0; i < 30; i++) {
    - Examine DOM_DISCOVERY functions vs actual app markup
 
 ### SECONDARY (20-30 minutes)
+
 1. **Add app health monitoring**
    - Check app process is still alive during test
    - Verify no crashes in tauri-driver logs
@@ -148,9 +157,10 @@ for (let i = 0; i < 30; i++) {
    - Likely related to discovery functions or report writing
 
 ### TERTIARY (Optimization)
-1. **Reduce smoke-test timeout**  
+
+1. **Reduce smoke-test timeout**
    - Currently 180s wrapper — could reduce to 120s since infrastructure now works
-2. **Add diagnostic CLI flags** 
+2. **Add diagnostic CLI flags**
    - `--verbose`, `--keep-logs` for debugging failures
 3. **Implement retry logic for flaky assertions**
 
@@ -159,6 +169,7 @@ for (let i = 0; i < 30; i++) {
 ## Validation Checklist
 
 ✅ **Infrastructure:**
+
 - [x] Port verification working (verified in 1s)
 - [x] tauri-driver connecting reliably
 - [x] WebDriver session stays alive during beforeAll
@@ -166,6 +177,7 @@ for (let i = 0; i < 30; i++) {
 - [x] Test completes without hang
 
 ✅ **Tests:**
+
 - [x] Page classification running
 - [x] DOM injection working
 - [x] Report generation functional
@@ -173,6 +185,7 @@ for (let i = 0; i < 30; i++) {
 - [x] Error handling graceful
 
 ⚠️ **Currently Failing (not infrastructure):**
+
 - [ ] Assertion library (expect/chai binding)
 - [ ] Chat page routing
 - [ ] Chat input detection
@@ -183,8 +196,9 @@ for (let i = 0; i < 30; i++) {
 ## Governance Compliance
 
 ✅ **All Requirements Met:**
+
 - Memory safety: ✅ E2E guard active (no real writes)
-- Append-only registry: ✅ New entries appended 
+- Append-only registry: ✅ New entries appended
 - Git commit trail: ✅ All changes committed with clear messages
 - Rollback plan: ✅ Available for both fixes
 - Risk assessment: ✅ LOW (infrastructure only)
@@ -197,13 +211,15 @@ for (let i = 0; i < 30; i++) {
 
 **Status:** Gateway unblocked, E2E framework operational
 
-**Next Phase:** 
+**Next Phase:**
+
 1. Fix test setup (expect assertions) - 10 min
-2. Debug chat input detection - 10 min  
+2. Debug chat input detection - 10 min
 3. Re-run full test with fixes - 5 min
 4. **Target:** 50%+ gates PASS (was 0% with hangs)
 
 **If Issues Arise:**
+
 - Rollback available: `git revert [commit]`
 - Both fixes are backward compatible
 - No production impact (test-only changes)

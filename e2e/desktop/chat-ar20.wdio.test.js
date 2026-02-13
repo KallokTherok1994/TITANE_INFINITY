@@ -96,7 +96,12 @@ async function waitForUIResponse(selectors, timeoutMs = 20000) {
       const lastResponse = responses[responses.length - 1];
       const text = await lastResponse.getText();
       if (text && text.trim().length > 0) {
-        return { success: true, response: text.trim(), attempts, latencyMs: Date.now() - startTime };
+        return {
+          success: true,
+          response: text.trim(),
+          attempts,
+          latencyMs: Date.now() - startTime,
+        };
       }
     }
 
@@ -182,7 +187,9 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
       return typeof window.__TAURI__ !== 'undefined';
     });
 
-    console.log(`\n🔍 Tauri IPC Available: ${results.tauriIPCAvailable ? '✅ YES' : '❌ NO'}`);
+    console.log(
+      `\n🔍 Tauri IPC Available: ${results.tauriIPCAvailable ? '✅ YES' : '❌ NO'}`
+    );
 
     // Resolve chat UI selectors
     chatSelectors = await resolveChatSelectors();
@@ -205,14 +212,21 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
     const startTime = Date.now();
 
     try {
-      assert.equal(results.tauriIPCAvailable, true, 'Tauri IPC not available (CRITICAL BLOCKER)');
+      assert.equal(
+        results.tauriIPCAvailable,
+        true,
+        'Tauri IPC not available (CRITICAL BLOCKER)'
+      );
 
       const result = await sendChatViaIPC(testMsg);
       const latencyMs = Date.now() - startTime;
 
       assert.equal(result.success, true, `IPC call failed: ${result.error}`);
       assert.notEqual(result.response, null, 'IPC returned null response');
-      assert.ok(result.response.assistant_message, 'Response missing assistant_message field');
+      assert.ok(
+        result.response.assistant_message,
+        'Response missing assistant_message field'
+      );
       assert.ok(result.response.assistant_message.length > 0, 'Empty assistant_message');
       assert.ok(latencyMs < 20000, `Response too slow: ${latencyMs}ms (max 20000ms)`);
 
@@ -290,10 +304,20 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
       const result = await sendChatViaIPC(testMsg);
       const latencyMs = Date.now() - startTime;
 
-      assert.equal(result.success, true, `IPC call failed (silence detected): ${result.error}`);
+      assert.equal(
+        result.success,
+        true,
+        `IPC call failed (silence detected): ${result.error}`
+      );
       assert.notEqual(result.response, null, 'Silence detected (null response)');
-      assert.ok(result.response.assistant_message, 'Silence detected (no assistant_message)');
-      assert.ok(result.response.assistant_message.length > 0, 'Silence detected (empty message)');
+      assert.ok(
+        result.response.assistant_message,
+        'Silence detected (no assistant_message)'
+      );
+      assert.ok(
+        result.response.assistant_message.length > 0,
+        'Silence detected (empty message)'
+      );
 
       results.tests.push({
         name: testName,
@@ -336,8 +360,14 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
 
         assert.equal(result.success, true, `Message ${i}/20 failed: ${result.error}`);
         assert.notEqual(result.response, null, `Message ${i}/20 returned null`);
-        assert.ok(result.response.assistant_message, `Message ${i}/20 missing assistant_message`);
-        assert.ok(result.response.assistant_message.length > 0, `Message ${i}/20 empty response`);
+        assert.ok(
+          result.response.assistant_message,
+          `Message ${i}/20 missing assistant_message`
+        );
+        assert.ok(
+          result.response.assistant_message.length > 0,
+          `Message ${i}/20 empty response`
+        );
         assert.ok(msgLatencyMs < 20000, `Message ${i}/20 timeout: ${msgLatencyMs}ms`);
 
         responses.push({
@@ -396,7 +426,11 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
       const result = await waitForUIResponse(chatSelectors, 20000);
       const latencyMs = Date.now() - startTime;
 
-      assert.equal(result.success, true, `UI response timeout after ${result.attempts} attempts`);
+      assert.equal(
+        result.success,
+        true,
+        `UI response timeout after ${result.attempts} attempts`
+      );
       assert.notEqual(result.response, null, 'UI response null');
       assert.ok(result.response.length > 0, 'UI response empty');
 

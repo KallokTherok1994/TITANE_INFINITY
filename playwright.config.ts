@@ -36,7 +36,9 @@ export default defineConfig({
 
   // Browser options
   use: {
-    baseURL: process.env.TITANE_E2E_PORT ? `http://localhost:${process.env.TITANE_E2E_PORT}` : 'http://localhost:4000',
+    baseURL: process.env.TITANE_E2E_PORT
+      ? `http://localhost:${process.env.TITANE_E2E_PORT}`
+      : 'http://localhost:4000',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
@@ -78,7 +80,9 @@ export default defineConfig({
   // Dev server configuration
   webServer: {
     command: 'npx vite dev --host 127.0.0.1 --port 4000 --strictPort',
-    url: process.env.TITANE_E2E_PORT ? `http://localhost:${process.env.TITANE_E2E_PORT}` : 'http://localhost:4000',
+    url: process.env.TITANE_E2E_PORT
+      ? `http://localhost:${process.env.TITANE_E2E_PORT}`
+      : 'http://localhost:4000',
     reuseExistingServer: !process.env.CI,
     timeout: 180000, // 3min to start (CI heavy load)
     stdout: 'pipe',

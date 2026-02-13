@@ -113,7 +113,7 @@ export default defineConfig(({ command }) => ({
         target: 'http://127.0.0.1:11434',
         changeOrigin: true,
         // Rewrite /api/ollama/* → /api/* (Ollama expects /api/tags not /api/ollama/tags)
-        rewrite: (path) => path.replace(/^\/api\/ollama/, '/api'),
+        rewrite: path => path.replace(/^\/api\/ollama/, '/api'),
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, _res) => {
             console.error('🔴 Ollama proxy error:', err.message);
