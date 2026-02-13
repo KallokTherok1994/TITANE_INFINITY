@@ -5,8 +5,8 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v27.2Ω — OLLAMA PROVIDER (UNIFIED TRANSPORT)
- *   PHASE OMEGA PROXY SEAL: Dual transport (HTTP + IPC)
+ *   TITANE∞ v27.3Ω — OLLAMA PROVIDER (TAURI GATEWAY)
+ *   PHASE OMEGA PROXY SEAL: Tauri-only gateway
  *   Provider Ollama avec protection maximale + Always Respond
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -25,11 +25,8 @@ import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
 // ✅ v27.2Ω: Import unified transport layer (dual mode HTTP + IPC)
-import { 
-  ollamaCheckHealth, 
-  ollamaGenerate,
-  getTransportMode,
-} from '../transports/ollamaTransport';
+import { ollamaCheckHealth, ollamaGenerate } from '../transports/ollamaTransport';
+import { titaneLocalProvider } from './titaneLocal';
 
 const logger = createLogger('Ollama'); // ✨ v21.1
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
@@ -50,39 +47,44 @@ let lastHealthCheck = 0;
 let errorCount = 0;
 const HEALTH_CHECK_INTERVAL = 45000; // 45 secondes
 const MAX_ENDPOINT_ERRORS = 5;
-const ENDPOINT_TIMEOUT = 8000; // 8s for health checks (optimisé)
+
+const CIRCUIT_FAILURE_WINDOW_MS = 60000;
+const CIRCUIT_FAILURE_THRESHOLD = 3;
+const CIRCUIT_OPEN_MS = 120000;
+let circuitOpenUntil = 0;
+let failureTimestamps: number[] = [];
 
 /**
  * OMEGA: Initialize Ollama provider at startup (v27.2Ω)
  * Tests endpoint health via unified transport (HTTP dev / IPC prod)
  */
 export async function initializeOllama(): Promise<boolean> {
-  const transportMode = getTransportMode();
-  logger.debug(`🚀 Initializing Ollama provider (transport: ${transportMode})...`);
+  logger.debug('🚀 Initializing Ollama provider (gateway)...');
 
   try {
     const healthResult = await ollamaCheckHealth();
     const healthy = healthResult.ok;
-    
+
     endpointHealthy = healthy;
     IS_OLLAMA_READY = healthy; // ✅ AUDIT FIX #3: Set boot ready gate
     lastHealthCheck = Date.now();
 
     if (healthy) {
       errorCount = 0;
-      logger.info(`✅ Health check passed (${transportMode})`);
+      logger.info('✅ Health check passed (gateway)');
       logger.debug(`📦 Model: ${OLLAMA_MODEL}`);
     } else {
-      logger.warn(`⚠️ Endpoint offline (${transportMode})`);
-      logger.warn(`❌ ${healthResult.error.message}`);
-      logger.warn(`💡 ${healthResult.error.hint}`);
-      logger.warn(`🔄 Falling back to titaneLocal provider`);
+      logger.warn('⚠️ Endpoint offline (gateway)');
+      if (!healthResult.ok && healthResult.error) {
+        logger.warn(`❌ ${healthResult.error.message}`);
+      }
+      logger.warn('🔄 Falling back to local provider');
     }
 
     return healthy;
   } catch (error) {
     IS_OLLAMA_READY = false; // ✅ AUDIT FIX #3: Mark not ready on error
-    handleOllamaError(error, 'initialization', { transport: transportMode });
+    handleOllamaError(error, 'initialization', { transport: 'gateway' });
     logger.error('❌ Initialization failed:', error);
     return false;
   }
@@ -225,9 +227,45 @@ async function checkEndpointHealth(): Promise<boolean> {
     const result = await ollamaCheckHealth();
     return result.ok;
   } catch (error) {
-    handleOllamaError(error, 'health_check', { transport: getTransportMode() });
+    handleOllamaError(error, 'health_check', { transport: 'gateway' });
     return false;
   }
+}
+
+function isCircuitOpen(): boolean {
+  return Date.now() < circuitOpenUntil;
+}
+
+function recordFailure(): void {
+  const now = Date.now();
+  failureTimestamps = failureTimestamps.filter(
+    ts => now - ts <= CIRCUIT_FAILURE_WINDOW_MS
+  );
+  failureTimestamps.push(now);
+  if (failureTimestamps.length >= CIRCUIT_FAILURE_THRESHOLD) {
+    circuitOpenUntil = now + CIRCUIT_OPEN_MS;
+  }
+}
+
+function resetFailures(): void {
+  failureTimestamps = [];
+  circuitOpenUntil = 0;
+}
+
+async function fallbackToLocal(
+  message: string,
+  history: AIMessage[],
+  reason: string
+): Promise<AIResponse> {
+  const localResponse = await titaneLocalProvider.generate(message, history);
+  return {
+    ...localResponse,
+    metadata: {
+      ...localResponse.metadata,
+      fallbackUsed: true,
+      fallbackReason: reason,
+    },
+  };
 }
 
 /**
@@ -270,6 +308,10 @@ export const ollamaProvider: AIProvider = {
   async isAvailable(): Promise<boolean> {
     const now = Date.now();
 
+    if (isCircuitOpen()) {
+      return false;
+    }
+
     const bypassCache = isTestEnv;
 
     // OMEGA: Use cached health status if recent (unless test forces re-check)
@@ -299,6 +341,7 @@ export const ollamaProvider: AIProvider = {
 
     if (endpointHealthy) {
       errorCount = 0; // Reset on success
+      resetFailures();
     }
 
     logger.debug(
@@ -323,16 +366,19 @@ export const ollamaProvider: AIProvider = {
       message: message.substring(0, 100),
       historyLength: history.length,
       model: OLLAMA_MODEL,
-      transport: 'unified',
+      transport: 'gateway',
       timestamp: new Date().toISOString(),
     });
+
+    if (isCircuitOpen()) {
+      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
+    }
 
     // OMEGA: Pre-check endpoint health
     const isHealthy = await this.isAvailable();
     if (!isHealthy) {
-      const error = new Error('Ollama endpoint not available');
-      handleOllamaError(error, 'pre_check', { provider: 'ollama' });
-      throw error;
+      recordFailure();
+      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
     }
 
     console.log('[ollamaProvider] ✅ Health check passed, proceeding...');
@@ -362,7 +408,7 @@ export const ollamaProvider: AIProvider = {
             // ✨ v21 - Use memory-enriched prompt
             const prompt = await buildPromptWithMemory(sanitizedMessage, history);
 
-            // ✅ v27.2Ω: Use unified transport (HTTP dev / IPC prod)
+            // ✅ Gateway via Tauri command
             const generateResult = await ollamaGenerate({
               model: OLLAMA_MODEL,
               prompt,
@@ -371,13 +417,14 @@ export const ollamaProvider: AIProvider = {
               timeout_secs: Math.floor((finalConfig.timeout || 30000) / 1000),
             });
 
-            // ✅ v27.2Ω: Always Respond contract - handle both ok/err
             if (!generateResult.ok) {
-              // Convert AiErr to Error for SecureAI compatibility
+              recordFailure();
               const error = new Error(generateResult.error.message);
               error.name = generateResult.error.code;
               throw error;
             }
+
+            resetFailures();
 
             // Return in ChatResponse format
             return {
@@ -386,7 +433,7 @@ export const ollamaProvider: AIProvider = {
               timestamp: Date.now(),
               metadata: {
                 model: OLLAMA_MODEL,
-                transport: getTransportMode(),
+                transport: 'gateway',
                 latency_ms: generateResult.content.latency_ms,
               },
             };
@@ -394,7 +441,7 @@ export const ollamaProvider: AIProvider = {
             // 🚨 DEBUG CRITICAL: Log erreur Ollama
             console.error('[ollamaProvider] ❌ Generate error', {
               error: error instanceof Error ? error.message : String(error),
-              transport: getTransportMode(),
+              transport: 'gateway',
               timestamp: new Date().toISOString(),
             });
 
@@ -474,12 +521,13 @@ export const ollamaProvider: AIProvider = {
         ) {
           handleOllamaError(error, 'generate_final', { stage: 'catch_all' });
         }
-        throw error;
+        return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
       }
 
-      const finalError = new Error('Ollama: Unknown error');
-      handleOllamaError(finalError, 'generate_unknown', { error });
-      throw finalError;
+      handleOllamaError(new Error('Ollama: Unknown error'), 'generate_unknown', {
+        error,
+      });
+      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
     }
   },
 
@@ -513,104 +561,8 @@ export const ollamaProvider: AIProvider = {
   // Streaming pour Ollama
   // TODO v27.2Ω: Streaming via transport layer (requires IPC streaming support)
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    // ✨ v21 - Use memory-enriched prompt
-    const prompt = await buildPromptWithMemory(message, history);
-
-    let fullResponse = ''; // Track complete response for memory save
-
-    try {
-      // ⚠️ TEMPORARY: Stream still uses direct fetch() (HTTP mode only)
-      // IPC streaming requires additional Tauri command implementation
-      const transportMode = getTransportMode();
-      if (transportMode === 'IPC') {
-        throw new Error('Streaming not supported in IPC mode (use generate() instead)');
-      }
-
-      const response = await fetch(
-        // @network-allowed
-        `/api/ollama/generate`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            model: OLLAMA_MODEL,
-            prompt,
-            stream: true,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Ollama streaming error: ${response.status}`);
-      }
-
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error('Ollama: No response body');
-      }
-
-      const decoder = new TextDecoder();
-      let buffer = '';
-
-      // ✨ v24.2.1: Add timeout and iteration limits to prevent infinite loops
-      const STREAM_TIMEOUT_MS = 60000; // 60s max stream duration
-      const MAX_ITERATIONS = 50000; // Safety limit
-      const streamStart = Date.now();
-      let iterations = 0;
-
-      while (iterations < MAX_ITERATIONS) {
-        // Check timeout
-        if (Date.now() - streamStart > STREAM_TIMEOUT_MS) {
-          logger.warn('Ollama stream timeout reached', {
-            iterations,
-            elapsed: Date.now() - streamStart,
-          });
-          break;
-        }
-
-        const { done, value } = await reader.read();
-
-        if (done) break;
-
-        iterations++;
-        buffer += decoder.decode(value, { stream: true });
-        const lines = buffer.split('\n');
-        buffer = lines.pop() || '';
-
-        for (const line of lines) {
-          if (!line.trim()) continue;
-
-          try {
-            const data = JSON.parse(line);
-            if (data.response) {
-              fullResponse += data.response;
-              yield data.response;
-            }
-          } catch {
-            // Ignore invalid JSON
-          }
-        }
-      }
-
-      // ✨ v21 - Save streaming interaction to memory after completion
-      if (fullResponse) {
-        memoryIntegration
-          .saveInteraction({
-            userMessage: message,
-            aiResponse: fullResponse,
-            mode: 'chat',
-          })
-          .catch(err => {
-            logger.warn('Failed to save streaming interaction', { error: err });
-          });
-      }
-    } catch (error) {
-      handleOllamaError(error, 'stream_error');
-      logger.error('Streaming error', { error });
-      throw error;
-    }
+    const fallbackResponse = await this.generate(message, history);
+    yield fallbackResponse.content;
   },
 };
 

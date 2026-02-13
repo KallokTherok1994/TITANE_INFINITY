@@ -1,10 +1,10 @@
 /**
  * TITANE∞ v27.2Ω — Ollama Transport Layer (Dual Mode)
- * 
+ *
  * Universal Ollama transport supporting:
- * - Dev mode: HTTP fetch via Vite proxy (/api/ollama → 127.0.0.1:11434)
+ * - Dev mode: HTTP fetch via Vite proxy (/api/ollama → local Ollama port)
  * - Production: Tauri IPC invoke ('ollama_generate')
- * 
+ *
  * This module provides the SINGLE SOURCE OF TRUTH for all Ollama communications.
  * NO OTHER code should call Ollama directly.
  */
@@ -136,9 +136,10 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
       provider: 'ollama',
       error: {
         code: err.name === 'AbortError' ? 'OLLAMA_TIMEOUT' : 'OLLAMA_UNREACHABLE',
-        message: err.name === 'AbortError' 
-          ? 'Délai de réponse dépassé (8s)' 
-          : `Connexion impossible: ${err.message}`,
+        message:
+          err.name === 'AbortError'
+            ? 'Délai de réponse dépassé (8s)'
+            : `Connexion impossible: ${err.message}`,
         hint: 'Ollama est indisponible. Démarre le service puis réessaie.',
         retryable: true,
       },
@@ -154,7 +155,7 @@ async function httpGenerate(
 ): Promise<AiResult<OllamaGenerateResponse>> {
   try {
     const timeoutMs = (req.timeout_secs || 30) * 1000;
-    
+
     const response = await fetchWithTimeout(
       getOllamaURL('/generate'),
       {
@@ -217,9 +218,10 @@ async function httpGenerate(
       provider: 'ollama',
       error: {
         code: err.name === 'AbortError' ? 'OLLAMA_TIMEOUT' : 'OLLAMA_UNREACHABLE',
-        message: err.name === 'AbortError'
-          ? `Délai de réponse dépassé (${req.timeout_secs || 30}s)`
-          : `Connexion impossible: ${err.message}`,
+        message:
+          err.name === 'AbortError'
+            ? `Délai de réponse dépassé (${req.timeout_secs || 30}s)`
+            : `Connexion impossible: ${err.message}`,
         hint: 'Ollama est indisponible (service local). Démarre Ollama puis réessaie.',
         retryable: true,
       },
@@ -279,7 +281,7 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
       error: {
         code: 'OLLAMA_IPC_FAILED',
         message: `Invoke failed: ${err.message}`,
-        hint: 'Le service Ollama local n\'est pas accessible.',
+        hint: "Le service Ollama local n'est pas accessible.",
         retryable: true,
       },
     };
@@ -340,7 +342,7 @@ async function ipcGenerate(
       error: {
         code: 'OLLAMA_IPC_EXCEPTION',
         message: `Invoke exception: ${err.message}`,
-        hint: 'Le backend Tauri n\'a pas pu appeler Ollama. Vérifie que le service est démarré.',
+        hint: "Le backend Tauri n'a pas pu appeler Ollama. Vérifie que le service est démarré.",
         retryable: true,
       },
     };
