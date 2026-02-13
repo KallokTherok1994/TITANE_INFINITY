@@ -5,7 +5,8 @@
  * User journey: Navigate to TitanePage Memory section, interact with Memory Tree Viewer
  */
 
-import { test, expect, Page } from '@playwright/test';
+import { test, expect } from '../fixtures';
+import { Page } from '@playwright/test';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
 async function openTitaneMemorySection(page: Page) {

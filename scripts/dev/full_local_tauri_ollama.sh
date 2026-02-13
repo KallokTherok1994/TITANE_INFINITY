@@ -19,7 +19,7 @@ if [[ -d "$ROOT_DIR/.tools/node/current/bin" ]]; then
 fi
 
 BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
-MODEL_NAME="llama3.2:latest"
+MODEL_NAME="gemma2:2b"
 PULL_MODEL=false
 NO_OLLAMA=false
 
