@@ -293,13 +293,13 @@ const isProviderPreference = (value: unknown): value is ProviderPreference =>
 
 const readStoredPreferredProvider = (): ProviderPreference => {
   if (typeof window === 'undefined') {
-    return 'auto';
+    return 'local'; // 🔧 MODE LOCAL PAR DÉFAUT
   }
 
   const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
-  // ✅ v26.2.3: Mode cascade (auto) par défaut - permet au backend de choisir
-  // le meilleur provider disponible (Gemini → Ollama → Local fallback)
-  return isProviderPreference(stored) ? stored : 'auto';
+  // 🔧 MODE LOCAL PAR DÉFAUT: Force 'local' (Ollama) au lieu de 'auto' (cascade)
+  // Pour réactiver le mode cascade automatique, retourner 'auto'
+  return isProviderPreference(stored) ? stored : 'local';
 };
 
 const normalizeMessages = (
@@ -553,14 +553,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
   const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
   const [preferredProviderState, setPreferredProviderState] =
     useState<ProviderPreference>(() => {
-      // ✅ v26.2.3: Force 'auto' (cascade mode) par défaut
+      // 🔧 MODE LOCAL PAR DÉFAUT: Force 'local' (Ollama) au lieu de 'auto' (cascade)
       const stored = readStoredPreferredProvider();
-      // Si aucune préférence stockée, forcer 'auto' dans localStorage
+      // Si aucune préférence stockée, forcer 'local' dans localStorage
       if (
         typeof window !== 'undefined' &&
         !window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)
       ) {
-        window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
+        window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'local');
       }
       return stored;
     });
