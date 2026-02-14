@@ -56,9 +56,11 @@ export const DEFAULT_OLLAMA_CONFIG = {
 
 export function getOllamaConfig() {
   // 1. Try environment variables first
-  const envModel = typeof process !== 'undefined' ? (process as any).env?.OLLAMA_MODEL : undefined;
-  const envEndpoint = typeof process !== 'undefined' ? (process as any).env?.OLLAMA_ENDPOINT : undefined;
-  
+  const envModel =
+    typeof process !== 'undefined' ? (process as any).env?.OLLAMA_MODEL : undefined;
+  const envEndpoint =
+    typeof process !== 'undefined' ? (process as any).env?.OLLAMA_ENDPOINT : undefined;
+
   if (envModel || envEndpoint) {
     return {
       ...DEFAULT_OLLAMA_CONFIG,
@@ -66,10 +68,13 @@ export function getOllamaConfig() {
       ...(envEndpoint && { endpoint: envEndpoint.trim() }),
     };
   }
-  
+
   // 2. Try localStorage (persisted user config)
   try {
-    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('titane_ollama_config') : null;
+    const stored =
+      typeof localStorage !== 'undefined'
+        ? localStorage.getItem('titane_ollama_config')
+        : null;
     if (stored) {
       const parsed = JSON.parse(stored);
       return { ...DEFAULT_OLLAMA_CONFIG, ...parsed };
@@ -77,7 +82,7 @@ export function getOllamaConfig() {
   } catch (err) {
     console.warn('[Ollama] Failed to load stored config:', err);
   }
-  
+
   // 3. Return defaults
   return { ...DEFAULT_OLLAMA_CONFIG };
 }
