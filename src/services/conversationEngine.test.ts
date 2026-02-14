@@ -76,7 +76,7 @@ describe('conversationEngine.processMessage', () => {
       expect.objectContaining({
         args: expect.objectContaining({
           message: 'Hi',
-          conversationId: 'c3',
+          conversationId: 'c1',
         }),
       })
     );

@@ -1,0 +1,10 @@
+{
+  "utc": "2026-02-14T16:05:00Z",
+  "branch": "MAIN",
+  "commit": "588a58eacd277f807874ee4769494096f71852af",
+  "node_version": "v24.0.0",
+  "pnpm_version": "10.28.2",
+  "os": "Linux TITANE-OS 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64 x86_64 x86_64 GNU/Linux",
+  "phase": "chat-ipc-args-verify",
+  "objective": "verify IPC args wrapper gates and seal"
+}
