@@ -22,15 +22,21 @@ const logger = createLogger('OllamaTransport');
 
 /**
  * Détecte si l'app tourne dans Tauri (production) ou web/dev
+ * 
+ * 🔧 MODE LOCAL FORCÉ: Toujours utiliser HTTP (Ollama local direct)
+ * Pour réactiver IPC en production, retourner: typeof window !== 'undefined' && '__TAURI__' in window
  */
 function isTauriEnvironment(): boolean {
-  return typeof window !== 'undefined' && '__TAURI__' in window;
+  // FORCE LOCAL MODE: Always use HTTP transport (direct Ollama)
+  return false;
+  
+  // Original: return typeof window !== 'undefined' && '__TAURI__' in window;
 }
 
 const IS_TAURI = isTauriEnvironment();
 const TRANSPORT_MODE = IS_TAURI ? 'IPC' : 'HTTP';
 
-logger.info(`🚀 Ollama Transport Mode: ${TRANSPORT_MODE}`);
+logger.info(`🚀 Ollama Transport Mode: ${TRANSPORT_MODE} (LOCAL FORCÉ)`);
 
 // ============================================================
 // TYPES
