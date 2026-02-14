@@ -53,7 +53,7 @@ describe('ControlPanel', () => {
     render(<ControlPanel />);
 
     await waitFor(() => {
-      expect(secureInvoke).toHaveBeenCalledWith('get_system_info');
+      expect(secureInvoke).toHaveBeenCalledWith('get_system_info', {}, undefined);
     });
   });
 

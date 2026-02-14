@@ -11,7 +11,7 @@ import { dirname, resolve } from 'node:path';
 describe('Ollama proxy routing', () => {
   it('uses /api/ollama as base and forbids direct localhost', () => {
     const testDir = dirname(fileURLToPath(import.meta.url));
-    const target = resolve(testDir, '../services/ai/providers/ollama.ts');
+    const target = resolve(testDir, '../services/ai/transports/ollamaTransport.ts');
     const source = readFileSync(target, 'utf8');
 
     const forbiddenPort = [':', '114', '34'].join('');

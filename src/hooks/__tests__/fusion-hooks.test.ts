@@ -232,7 +232,8 @@ describe('useMemoryEngine', () => {
       'memory_save_entry',
       expect.objectContaining({
         key: id,
-      })
+      }),
+      undefined
     );
   });
 
@@ -555,6 +556,7 @@ describe('Integration Tests', () => {
       uptime_ms: 3600000,
       cpu_usage: 35,
       memory_usage_mb: 250,
+      network_status: 'online',
     };
 
     // Use mockImplementation to handle dynamic calls
@@ -565,7 +567,7 @@ describe('Integration Tests', () => {
       if (cmd === 'memory_save_entry') return undefined;
       if (cmd === 'conversation_health_check') return mockConvHealth;
       if (cmd === 'engine_get_singularity_state') return mockSingState;
-      if (cmd === 'system_health') return mockSysHealth;
+      if (cmd === 'get_system_health') return mockSysHealth;
       return undefined;
     });
 

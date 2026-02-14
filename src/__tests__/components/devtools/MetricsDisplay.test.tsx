@@ -42,7 +42,7 @@ describe('MetricsDisplay Component', () => {
       });
 
       // Check IPC call made
-      expect(secureInvoke).toHaveBeenCalledWith('get_dashboard_metrics');
+      expect(secureInvoke).toHaveBeenCalledWith('get_dashboard_metrics', {}, undefined);
 
       // Check rendered categories (based on DashboardMetrics schema)
       expect(screen.getByText(/system health/i)).toBeInTheDocument();

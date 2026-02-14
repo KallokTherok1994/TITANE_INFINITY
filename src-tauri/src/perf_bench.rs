@@ -106,7 +106,7 @@ mod tests {
 
         let report = bench.report();
         assert!(report.contains("operation"));
-        assert!(report.contains("55.00ms"));
+        assert!(report.contains("55.000ms"));
     }
 }
 

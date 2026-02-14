@@ -148,10 +148,7 @@ export const APIProviderCard: React.FC<APIProviderCardProps> = ({
             >
               <p className="text-sm text-gray-300">
                 {isEnabled ? (
-                  <>
-                    ✅ Ollama est opérationnel via le proxy{' '}
-                    <code className="text-amber-400">/api/ollama</code>
-                  </>
+                  <>✅ Ollama est opérationnel via la passerelle locale Tauri</>
                 ) : (
                   <>
                     ⚠️ Ollama n&apos;est pas détecté. Assurez-vous qu&apos;il est installé

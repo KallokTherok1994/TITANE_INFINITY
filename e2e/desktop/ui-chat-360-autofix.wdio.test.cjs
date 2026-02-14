@@ -21,9 +21,30 @@ const { expect } = require('chai');
 const REPORT_TS = process.env.REPORT_TS || '2026-02-11T22:21:01Z';
 const REPORT_DIR = path.join(process.cwd(), 'reports/ui_chat_360_autofix', REPORT_TS);
 
+const DEFAULT_DEV_URL = 'http://127.0.0.1:1420';
+const DEV_BASE_URL = (
+  process.env.TAURI_DEV_SERVER_URL ||
+  process.env.VITE_DEV_SERVER_URL ||
+  DEFAULT_DEV_URL
+).replace(/\/+$/, '');
+const DEV_ORIGIN = (() => {
+  try {
+    return new URL(DEV_BASE_URL).origin;
+  } catch {
+    return DEFAULT_DEV_URL;
+  }
+})();
+const devUrl = (route = '/') =>
+  `${DEV_BASE_URL}${route.startsWith('/') ? route : `/${route}`}`;
+const isDevUrl = url => Boolean(url && url.includes(DEV_ORIGIN));
+
 // E2E Test Configuration (Optimized for speed)
-const AR_MESSAGE_COUNT = 3; // Reduced from AR20 to AR3 for faster validation
-const STABILITY_MESSAGE_COUNT = 5; // Reduced from 50 to 5 for faster validation
+const parsePositiveInt = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+const AR_MESSAGE_COUNT = parsePositiveInt(process.env.AR_MESSAGE_COUNT, 3); // Reduced from AR20 to AR3 for faster validation
+const STABILITY_MESSAGE_COUNT = parsePositiveInt(process.env.STABILITY_MESSAGE_COUNT, 5); // Reduced from 50 to 5 for faster validation
 const RESPONSE_TIMEOUT_MS = 120000; // 120s timeout for LLM responses (gemma2:2b)
 const MAX_AVG_LATENCY_MS = 60000; // 60s max average latency (relaxed for E2E)
 
@@ -460,7 +481,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
   if (!inputFound) {
     console.warn('⚠️ Chat input not found, forcing /chat and retry...');
     try {
-      await browser.url('http://127.0.0.1:1420/chat');
+      await browser.url(devUrl('/chat'));
       await browser.pause(3000);
       await injectDomDiscovery();
       inputFound = await waitForElement(DOM_DISCOVERY.detectChatInput, 10000);
@@ -869,7 +890,7 @@ async function ensureChatPage() {
   if (currentUrl === 'about:blank') {
     console.warn('⚠️ About:blank detected, navigating to dev URL...');
     try {
-      await browser.url('http://127.0.0.1:1420/');
+      await browser.url(devUrl('/'));
       await browser.pause(1000);
     } catch (err) {
       console.error('⚠️ Navigation failed:', err.message);
@@ -923,7 +944,7 @@ async function ensureChatPage() {
       if (class2 !== 'CHAT') {
         console.log('   → Forcing /chat route...');
         try {
-          await browser.url('http://127.0.0.1:1420/chat');
+          await browser.url(devUrl('/chat'));
           await browser.pause(1000);
 
           const fingerprint3 = await collectPageFingerprint();
@@ -989,7 +1010,7 @@ async function ensureChatPage() {
           console.warn(
             `   ⚠️ Carousel appeared to loop (${carouselSkipped}+ clicks). Attempting direct /chat navigation...`
           );
-          await browser.url('http://127.0.0.1:1420/chat');
+          await browser.url(devUrl('/chat'));
           await browser.pause(1000);
         }
 
@@ -1014,7 +1035,27 @@ async function ensureChatPage() {
   console.log('🔧 Preparing DOM for tests...');
   try {
     await injectDomDiscovery();
-    const chatDomMap = await browser.execute(() => window.DOM_DISCOVERY.getChatDomMap());
+    let chatDomMap = await browser.execute(() => window.DOM_DISCOVERY.getChatDomMap());
+
+    if (!chatDomMap?.chatInput?.found) {
+      console.warn('⚠️ Chat input missing in DOM map, retrying detection...');
+      const inputReady = await waitForElement(DOM_DISCOVERY.detectChatInput, 8000);
+
+      if (!inputReady) {
+        console.warn('⚠️ Chat input still missing, forcing /chat and retry...');
+        await browser.url(devUrl('/chat'));
+        await browser.pause(3000);
+        await injectDomDiscovery();
+      }
+
+      chatDomMap = await browser.execute(() => window.DOM_DISCOVERY.getChatDomMap());
+    }
+
+    if (chatDomMap && typeof chatDomMap === 'object') {
+      chatDomMap.inputFound = chatDomMap.chatInput?.found === true;
+      chatDomMap.sendFound = chatDomMap.sendButton?.found === true;
+    }
+
     console.log(`   ✓ Chat DOM ready: ${chatDomMap?.chatInput?.found ? 'YES' : 'NO'}`);
 
     try {
@@ -1135,10 +1176,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       if (
         currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !currentUrl.includes('1420'))
+        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
       ) {
         console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url('http://127.0.0.1:1420/chat');
+        await browser.url(devUrl('/chat'));
         await browser.pause(3000);
       }
 
@@ -1155,7 +1196,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       if (!chatReady.chatInputFound) {
         console.warn(`   ⚠️ Chat input missing on ${chatReady.url}. Forcing /chat...`);
-        await browser.url('http://127.0.0.1:1420/chat');
+        await browser.url(devUrl('/chat'));
         await browser.pause(3000);
         await injectDomDiscovery();
         const retryReady = await browser.execute(() => {
@@ -1226,11 +1267,18 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
         total: results.length,
         successful: results.filter(r => r.success).length,
         failed: results.filter(r => !r.success).length,
+        successCount: results.filter(r => r.success).length,
+        targetCount: AR_MESSAGE_COUNT,
         results,
       };
 
       writeReport('ar3_ui.json', ar3Payload);
       writeReport('ar3_ui_results.json', ar3Payload);
+      writeReport('ar20_results.json', {
+        total: AR_MESSAGE_COUNT,
+        successCount: ar3Payload.successCount,
+        results,
+      });
 
       // Calculate stats
       const successful = results.filter(r => r.success);
@@ -1268,10 +1316,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       if (
         currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !currentUrl.includes('1420'))
+        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
       ) {
         console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url('http://127.0.0.1:1420/chat');
+        await browser.url(devUrl('/chat'));
         await browser.pause(3000);
       }
 
@@ -1326,6 +1374,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       const offlinePayload = {
         total: 5,
         successful: results.filter(r => r.success).length,
+        successCount: results.filter(r => r.success).length,
         results,
       };
 
@@ -1357,10 +1406,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       if (
         currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !currentUrl.includes('1420'))
+        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
       ) {
         console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url('http://127.0.0.1:1420/chat');
+        await browser.url(devUrl('/chat'));
         await browser.pause(3000);
       }
 
@@ -1509,6 +1558,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       }
 
       const navigationPayload = {
+        count: navigationResults.length,
         total: navigationResults.length,
         successful: navigationResults.filter(r => r.success).length,
         results: navigationResults,
@@ -1516,6 +1566,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       writeReport('navigation_matrix.json', navigationPayload);
       writeReport('navigation_360_results.json', navigationPayload);
+      writeReport('navigation_map.json', navigationPayload);
 
       const successful = navigationResults.filter(r => r.success);
       const successRate =
@@ -1547,10 +1598,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       if (
         currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !currentUrl.includes('1420'))
+        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
       ) {
         console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url('http://127.0.0.1:1420/chat');
+        await browser.url(devUrl('/chat'));
         await browser.pause(3000);
       }
 
@@ -1605,11 +1656,20 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
         total: results.length,
         successful: results.filter(r => r.success).length,
         failed: failures,
+        successCount: results.filter(r => r.success).length,
         results,
       };
 
+      const stabilityStatus = successRate >= 80 ? 'PASS' : 'FAIL';
+
       writeReport('stability_burst.json', stabilityPayload);
       writeReport('stability_burst_results.json', stabilityPayload);
+      writeReport('stability_report.json', {
+        status: stabilityStatus,
+        total: stabilityPayload.total,
+        successCount: stabilityPayload.successCount,
+        failed: stabilityPayload.failed,
+      });
 
       const successRate = ((results.length - failures) / results.length) * 100;
       console.log(

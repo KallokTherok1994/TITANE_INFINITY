@@ -1,6 +1,6 @@
 /**
  * Playwright Global Setup
- * 
+ *
  * Installs Tauri IPC mocks when running without TITANE_E2E_TAURI=1
  */
 

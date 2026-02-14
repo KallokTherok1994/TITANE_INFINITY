@@ -1,6 +1,6 @@
 /**
  * Playwright Custom Fixtures
- * 
+ *
  * Extends base test with Tauri IPC mocks when running without real backend
  */
 

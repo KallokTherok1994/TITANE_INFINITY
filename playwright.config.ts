@@ -84,7 +84,8 @@ export default defineConfig({
   // Keep Vite-only in CI where GUI/Tauri may be unavailable.
   webServer: useWebServer
     ? {
-        command: './.tools/node/current/bin/pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort',
+        command:
+          './.tools/node/current/bin/pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort',
         url: process.env.TITANE_E2E_PORT
           ? `http://localhost:${process.env.TITANE_E2E_PORT}`
           : 'http://localhost:5173',

@@ -176,6 +176,7 @@ describe('🟣 OMEGA Phase 7Ω - Test Suite 3: Ollama Offline', () => {
     // Mock fetch to simulate offline Ollama
     const mockFetch = vi.fn().mockRejectedValue(new Error('Network error'));
     vi.stubGlobal('fetch', mockFetch);
+    vi.spyOn(tauriCore, 'invoke').mockRejectedValue(new Error('IPC unavailable'));
 
     const isAvailable = await ollamaProvider.isAvailable();
     expect(isAvailable).toBe(false);

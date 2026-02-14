@@ -33,13 +33,13 @@ test.describe('Critical Path: Application Launch', () => {
     await page.waitForTimeout(2000);
 
     // Verify no critical errors
-        const criticalErrors = errors.filter(
-          e =>
-      !e.includes('favicon') &&
-      !e.includes('socket') &&
-      !e.includes('HMR') &&
-      !e.includes('Failed to load resource')
-        );
+    const criticalErrors = errors.filter(
+      e =>
+        !e.includes('favicon') &&
+        !e.includes('socket') &&
+        !e.includes('HMR') &&
+        !e.includes('Failed to load resource')
+    );
 
     const ignored404Prefixes = [
       '/favicon.ico',

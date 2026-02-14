@@ -1,6 +1,6 @@
 /**
  * Tauri IPC Mock - Inline Version for Playwright addInitScript
- * 
+ *
  * This is a self-contained version that can be injected via page.addInitScript()
  * It provides mock responses for Tauri backend commands.
  */
@@ -134,7 +134,7 @@
     }
 
     // Simulate latency
-    await new Promise((resolve) => setTimeout(resolve, MOCK_LATENCY));
+    await new Promise(resolve => setTimeout(resolve, MOCK_LATENCY));
 
     // Memory commands
     if (command === 'get_memory_state' || command === 'memory::get_tree_state') {

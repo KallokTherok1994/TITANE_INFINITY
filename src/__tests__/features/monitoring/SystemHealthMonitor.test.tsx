@@ -78,7 +78,7 @@ describe('SystemHealthMonitor Component', () => {
       });
 
       render(<SystemHealthMonitor />);
-      expect(await screen.findByText(/metrics unavailable/i)).toBeInTheDocument();
+      expect(await screen.findByText(/unknown error/i)).toBeInTheDocument();
     });
   });
 

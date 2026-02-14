@@ -46,7 +46,7 @@ echo "[E2E_WRAPPER] binary=$TAURI_BINARY" >&2
 export TITANE_E2E=1
 
 # Force dev server URL to IPv4 to avoid localhost (::1) connection refused
-export TAURI_DEV_SERVER_URL="${TAURI_DEV_SERVER_URL:-http://127.0.0.1:1420}"
+export TAURI_DEV_SERVER_URL="${TAURI_DEV_SERVER_URL:-http://127.0.0.1:5173}"
 echo "[E2E_WRAPPER] TAURI_DEV_SERVER_URL=$TAURI_DEV_SERVER_URL" >&2
 
 # Pass Ollama model configuration to Tauri binary

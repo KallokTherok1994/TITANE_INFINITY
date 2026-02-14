@@ -16,7 +16,7 @@
 - `git status --porcelain=v1`
 - `pnpm test:architecture`
 - `pnpm test`
-- `pnpm test:e2e` (si changement UI/IPC)  
+- `pnpm test:e2e` (si changement UI/IPC)
 
 **Triage rapide:**
 
@@ -142,11 +142,11 @@ Coverage minimums:
 
 ## Gates & certification (binary)
 
-| Gate | PASS criteria | Evidence |
-| --- | --- | --- |
-| DEV readiness | tests smoke + zero P0/P1 | logs + proof pack |
-| E2E readiness | wrapper + memory guard + UI exports | E2E logs + artifacts |
-| PROD readiness | all suites + phrase `GO FOR PRODUCTION DEPLOY` | full reports |
+| Gate           | PASS criteria                                  | Evidence             |
+| -------------- | ---------------------------------------------- | -------------------- |
+| DEV readiness  | tests smoke + zero P0/P1                       | logs + proof pack    |
+| E2E readiness  | wrapper + memory guard + UI exports            | E2E logs + artifacts |
+| PROD readiness | all suites + phrase `GO FOR PRODUCTION DEPLOY` | full reports         |
 
 - If "skipped by design", gate is FAIL until replaced by an equivalent test.
 
