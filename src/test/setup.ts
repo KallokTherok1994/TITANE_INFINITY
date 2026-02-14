@@ -533,7 +533,9 @@ const handleTauriInvoke = async (
         provider?: string;
       };
       if (Object.prototype.hasOwnProperty.call(args, 'conversation_id')) {
-        throw new Error('IPC contract error: snake_case key "conversation_id" not allowed');
+        throw new Error(
+          'IPC contract error: snake_case key "conversation_id" not allowed'
+        );
       }
       return {
         content: 'Réponse mock TITANE∞',

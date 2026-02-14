@@ -271,11 +271,11 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
     },
   });
 
-  const raw = await invokeTauriCommand<unknown>(
-    'conversation_generate',
-    payload,
-    { timeout: 30000, retries: 2, retryDelay: 1000 }
-  );
+  const raw = await invokeTauriCommand<unknown>('conversation_generate', payload, {
+    timeout: 30000,
+    retries: 2,
+    retryDelay: 1000,
+  });
 
   // conversation_generate retourne directement le contenu généré
   if ((raw as any)?.success === false) {

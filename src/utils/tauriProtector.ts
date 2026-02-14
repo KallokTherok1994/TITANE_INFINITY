@@ -572,7 +572,8 @@ export class TauriInvokeProtector {
       const classification = classifyError(errorMessage);
       const traceId = `trace_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
       const normalizedMessage = errorMessage.toLowerCase();
-      let ipcCode: 'IPC_INVALID_ARGS' | 'IPC_FORBIDDEN' | 'IPC_CONTRACT_MISMATCH' | null = null;
+      let ipcCode: 'IPC_INVALID_ARGS' | 'IPC_FORBIDDEN' | 'IPC_CONTRACT_MISMATCH' | null =
+        null;
 
       if (
         normalizedMessage.includes('security:') &&

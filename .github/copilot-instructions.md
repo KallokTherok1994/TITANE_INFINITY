@@ -70,7 +70,7 @@ Scope: repo-wide
 
 - Always respond with success or visible error.
 - IPC returns { ok, content, error }.
-- Les erreurs doivent être attribuées à leur cause racine: IPC_* ≠ ProviderDown.
+- Les erreurs doivent être attribuées à leur cause racine: IPC\_\* ≠ ProviderDown.
 - Toujours en français dans tes instructions.
 
 **DONT**
