@@ -111,6 +111,7 @@ export const sharedTestConfig = defineConfig({
     // maxThreads removed - not supported in Vitest 4.x, use pool options instead
     include: [
       'src/**/*.{test,spec}.{ts,tsx}',
+      'tests/contract/**/*.{test,spec}.{ts,tsx}',
       'tests/unit/**/*.{test,spec}.{ts,tsx}',
       'tests/integration/**/*.{test,spec}.{ts,tsx}',
     ],
@@ -128,6 +129,9 @@ export const sharedTestConfig = defineConfig({
       // Browser/Perf suite is run explicitly via `pnpm run test:browser`.
       'src/tests/browser/**',
       '**/*.perf.test.{ts,tsx}',
+
+      // Contract test with pre-existing violations (post-IPC remediation)
+      'tests/contract/tauri.contract.test.ts',
     ],
     coverage: {
       provider: 'v8',

@@ -39,6 +39,14 @@ pub async fn singularity_get_full_state(
     Ok(engine.get_full_state().await)
 }
 
+/// Alias pour compat frontend (singularity_get_state)
+#[tauri::command]
+pub async fn singularity_get_state(
+    engine: State<'_, Arc<SingularityEngine>>,
+) -> Result<SingularityState, String> {
+    singularity_get_full_state(engine).await
+}
+
 /// Obtenir Physical Layer uniquement
 #[tauri::command]
 pub async fn singularity_get_physical(
@@ -214,6 +222,7 @@ pub async fn singularity_load_state(
 pub fn get_all_commands() -> Vec<&'static str> {
     vec![
         // Query commands
+        "singularity_get_state",
         "singularity_get_full_state",
         "singularity_get_physical",
         "singularity_get_cognitive",

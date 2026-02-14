@@ -503,11 +503,10 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
   it('should complete complex multi-module workflow', async () => {
     // Step 1: Chat IA → Memory → Timeline
     const step1 = await measureStep('AI chat + memory save', async () => {
-      const message = await invoke('chat_send_message', {
-        request: {
-          message: 'Analyse mes projets actifs',
-          conversation_id: 'complex-001',
-        },
+      const message = await invoke('conversation_generate', {
+        message: 'Analyse mes projets actifs',
+        conversationId: 'complex-001',
+        mode: 'default',
       });
       await invoke('memory_save_chat_interaction', {
         interaction: {

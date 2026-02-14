@@ -96,6 +96,14 @@ pub async fn health_check_system(
     ))
 }
 
+/// Alias for health_check_system (frontend compatibility)
+#[tauri::command]
+pub async fn health_check(
+    singularity: State<'_, Arc<RwLock<SingularityState>>>,
+) -> Result<String, String> {
+    health_check_system(singularity).await
+}
+
 /// Initialize system health
 #[tauri::command]
 pub async fn health_initialize(

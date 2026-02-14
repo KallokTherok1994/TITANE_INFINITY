@@ -7,11 +7,11 @@ import { classifyError } from '@/lib/errorClassification';
 
 export interface OllamaRequest {
   message: string;
-  conversation_id: string;
+  conversationId: string;
   mode?: string;
   provider?: string;
-  system_prompt?: string;
-  request_id?: string;
+  systemPrompt?: string;
+  requestId?: string;
 }
 
 export interface OllamaResponse {
@@ -70,7 +70,7 @@ export async function callOllamaDirectly(
 
     return {
       content: data.response || "Désolé, je n'ai pas pu générer de réponse.",
-      conversationId: request.conversation_id,
+      conversationId: request.conversationId,
       messageId,
       latencyMs,
       metadata: {
@@ -78,7 +78,7 @@ export async function callOllamaDirectly(
         emotion: 'Neutre', // Default emotion
         cognitiveTags: ['ollama-fallback', 'direct-call'],
         cognitiveSummary: `Réponse générée via Ollama direct en ${latencyMs}ms`,
-        requestId: request.request_id,
+        requestId: request.requestId,
       },
     };
   } catch (error) {
@@ -94,7 +94,7 @@ export async function callOllamaDirectly(
     // Return error as content
     return {
       content: message,
-      conversationId: request.conversation_id,
+      conversationId: request.conversationId,
       messageId: `error-${Date.now()}`,
       latencyMs: Date.now() - startTime,
       metadata: {
@@ -108,7 +108,7 @@ export async function callOllamaDirectly(
           classification.type === 'ipc'
             ? 'Erreur IPC contract'
             : 'Échec de connexion à Ollama',
-        requestId: request.request_id,
+        requestId: request.requestId,
       },
     };
   }

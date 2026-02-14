@@ -29,8 +29,17 @@ vi.mock('@/lib/security', async importOriginal => {
         return Promise.resolve({ success: true, id: `vec-${Date.now()}` });
       }
       if (cmd === 'conversation_generate') {
-        const conversationId =
-          args?.conversation_id ?? args?.conversationId ?? 'test-conversation';
+        const payload = (args ?? {}) as {
+          conversationId?: string;
+          conversation_id?: string;
+          provider?: string;
+        };
+        if (Object.prototype.hasOwnProperty.call(payload, 'conversation_id')) {
+          throw new Error(
+            'IPC contract error: snake_case key "conversation_id" not allowed'
+          );
+        }
+        const conversationId = payload.conversationId ?? 'test-conversation';
         return Promise.resolve({
           content: `Mock omega response: ${args?.message ?? 'test'}`,
           conversationId,
@@ -38,7 +47,7 @@ vi.mock('@/lib/security', async importOriginal => {
           frenchMasteryApplied: true,
           latencyMs: 5,
           metadata: {
-            provider: args?.provider ?? 'mock',
+            provider: payload.provider ?? 'mock',
           },
         });
       }

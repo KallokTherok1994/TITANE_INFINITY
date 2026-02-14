@@ -523,6 +523,10 @@ fn main() {
     let helios_core = HeliosCore::new();
     let memory_core = MemoryCore::new();
 
+    let core_singularity_state = Arc::new(tokio::sync::RwLock::new(
+        titane_infinity::core::state::SingularityState::default(),
+    ));
+
     log::info!("✅ HeliosCore and MemoryCore initialized successfully");
 
     let app_state = AppState {
@@ -545,6 +549,7 @@ fn main() {
         .manage(chat_orchestrator.clone())
         .manage(helios_core)
         .manage(memory_core)
+        .manage(core_singularity_state)
         .manage(avatar::AvatarEngineGlobal::default())
         .manage(singularity_fusion::AutoFixState::default())
         .manage(singularity_fusion::AutoHealState::default())
@@ -934,6 +939,7 @@ fn main() {
             singularity_fusion::pipeline_validate,
 
             // Singularity State Commands (SINGULARITY API v21 REPAIR - 18 commands)
+            singularity_state::commands::singularity_get_state,
             singularity_state::commands::singularity_get_full_state,
             singularity_state::commands::singularity_get_physical,
             singularity_state::commands::singularity_get_cognitive,
@@ -995,6 +1001,7 @@ fn main() {
             secure_commands::get_openai_key_status,
             secure_commands::chat_set_anthropic_key,
             secure_commands::get_anthropic_key_status,
+            secure_commands::get_secrets_status,
             secure_commands::get_permission_audit, // ✅ v26.2.3: Permission audit log
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
             // Runtime Configuration Bridge v∞ (Frontend config without secrets)
@@ -1108,6 +1115,7 @@ fn main() {
             system_health_commands::health_get_state,
             system_health_commands::health_get_report,
             system_health_commands::health_check_system,
+            system_health_commands::health_check,
             system_health_commands::health_initialize,
             system_health_commands::health_set_auto_heal,
             system_health_commands::health_get_metrics,

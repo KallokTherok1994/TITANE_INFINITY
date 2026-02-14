@@ -8,6 +8,7 @@
 
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
+import { validateIpcPayload } from '@/lib/ipcContract';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
@@ -388,16 +389,18 @@ class ChatService {
       const systemPrompt =
         config?.systemPrompt ?? getSystemPrompt(config?.mode ?? 'default');
 
+      const payload = validateIpcPayload('conversation_generate', {
+        message,
+        conversationId,
+        mode: config?.mode ?? null,
+        provider: config?.provider ?? 'auto',
+        systemPrompt,
+        requestId,
+      });
+
       const backendResponse = await invokeWithRetry<any>(
         'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA
-        {
-          message,
-          conversation_id: conversationId,
-          mode: config?.mode ?? null,
-          provider: config?.provider ?? 'auto',
-          system_prompt: systemPrompt,
-          request_id: requestId,
-        },
+        payload,
         { ...LONG_COMMAND_OPTIONS, context: 'ChatOmega' }
       );
 
