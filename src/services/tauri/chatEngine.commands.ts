@@ -276,7 +276,10 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
     },
   });
 
-  return invokeCommand<OmegaResponse>('conversation_generate', payload);
+  return invokeCommand<OmegaResponse>(
+    'conversation_generate',
+    payload as Record<string, unknown>
+  );
 }
 
 export const chatEngineCommands = {

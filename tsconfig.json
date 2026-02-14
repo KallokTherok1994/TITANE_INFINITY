@@ -59,7 +59,6 @@
     "src/hooks/archived/**",
     "src/_deprecated/**",
     "src/examples/**",
-    "src/tests/**",
     "src/stories/**",
     "src/modules/avatar/camera/**",
     "src/modules/avatar/core/AudioVisualSyncEngine.ts",
