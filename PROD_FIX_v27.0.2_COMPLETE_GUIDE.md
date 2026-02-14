@@ -1,9 +1,11 @@
 # TITANE∞ v27.0.2 PRODUCTION FIX
+
 # Complete Installation & Verification Guide
 
 **Date:** 14 février 2026  
 **Version:** 27.0.2  
 **Issues Fixed:**
+
 - ❌ Ollama not auto-launching in PROD (DEB/AppImage)
 - ❌ Configurations showing undefined in Governance + Admin
 - ❌ DevTools disabled in PROD (F12 not working)
@@ -16,7 +18,9 @@
 ## 🔧 PATCHES APPLIED
 
 ### 1. **Ollama Default Configuration** (`src/services/ai/providers/ollama.ts`)
+
 ✅ Added `DEFAULT_OLLAMA_CONFIG` with sensible defaults:
+
 - Endpoint: `http://127.0.0.1:11434`
 - Model: `gemma2:2b` (fallback)
 - Timeout: 60s with 3 retries
@@ -29,17 +33,20 @@ export const DEFAULT_OLLAMA_CONFIG = {
   port: 11434,
   model: 'gemma2:2b',
   // ... (full config below)
-}
+};
 ```
 
 ### 2. **DevTools Enable in PROD** (`src-tauri/src/main.rs` line ~800)
+
 ✅ Changed from:
+
 ```rust
 #[cfg(debug_assertions)]
 { main_window.open_devtools(); }
 ```
 
 To:
+
 ```rust
 let devtools_enabled = cfg!(debug_assertions)
     || std::env::var("TITANE_DEVTOOLS").ok().is_some_and(|v| v == "1");
@@ -52,7 +59,9 @@ if devtools_enabled {
 Now opens with: `TITANE_DEVTOOLS=1` environment variable
 
 ### 3. **Improved Ollama Auto-Start** (`src-tauri/src/main.rs` line ~625)
+
 ✅ Enhanced starter with 4-step fallback strategy:
+
 1. Check if Ollama already running
 2. Try bundled binary (AppImage/custom)
 3. Try system `ollama` command
@@ -61,7 +70,9 @@ Now opens with: `TITANE_DEVTOOLS=1` environment variable
 Logs ALL steps for debugging.
 
 ### 4. **Configuration Persistence** (`src/services/ai/providers/ollama.ts`)
+
 ✅ Added functions:
+
 - `getOllamaConfig()` - retrieves with fallback hierarchy
 - `setOllamaConfig(config)` - saves to localStorage persistently
 
@@ -72,6 +83,7 @@ Logs ALL steps for debugging.
 To enable all fixes, rebuild the application:
 
 ### Step 1: Build Production
+
 ```bash
 cd ~/Documents/GitHub/TITANE_INFINITY
 pnpm run build:production
@@ -80,6 +92,7 @@ pnpm run build:production
 **Expected build time:** ~7 minutes
 
 **Key output should show:**
+
 ```
 ✅ ESLint PASS
 ✅ Prettier PASS
@@ -90,12 +103,14 @@ pnpm run build:production
 ```
 
 ### Step 2: Test Locally (PRE-INSTALL)
+
 ```bash
 # In development mode with enhanced Ollama startup
 TITANE_DEVTOOLS=1 pnpm run dev:tauri
 ```
 
 Expected logs:
+
 ```
 [Ollama] ═════════════════════════════════════════════════
 [Ollama] PROD FIX v27.0.2: Enhanced Auto-Start Routine
@@ -110,6 +125,7 @@ Expected logs:
 ## 🚀 INSTALLATION OPTIONS
 
 ### Option A: DEB (Linux - Recommended)
+
 ```bash
 # 1. Create systemd service for Ollama auto-start
 sudo bash << 'EOF'
@@ -163,6 +179,7 @@ journalctl -u titane-infinity -f
 ```
 
 ### Option B: AppImage (All Linux)
+
 ```bash
 # 1. Make executable
 chmod +x deployment/latest/TITANE-Infinity_27.0.2_amd64.AppImage
@@ -196,6 +213,7 @@ titane-infinity ~/TITANE-Infinity_27.0.2_amd64.AppImage
 ```
 
 ### Option C: macOS
+
 ```bash
 # 1. Install Ollama
 brew install ollama
@@ -212,6 +230,7 @@ TITANE_DEVTOOLS=1 ./TITANE-Infinity_27.0.2.AppImage
 ## ✅ VERIFICATION CHECKLIST
 
 ### Ollama Endpoint
+
 ```bash
 # Should return list of models
 curl http://127.0.0.1:11434/api/tags | jq .
@@ -226,6 +245,7 @@ curl http://127.0.0.1:11434/api/tags | jq .
 ```
 
 ### Configuration Persistence
+
 1. Open TITANE∞ → Admin Panel
 2. Go to Configuration Hub
 3. Change Ollama model to `llama2:latest` (if available)
@@ -233,11 +253,13 @@ curl http://127.0.0.1:11434/api/tags | jq .
 5. ✅ Configuration should still be `llama2:latest`
 
 ### DevTools
+
 - **DEV mode:** Press `F12` → Should open immediately
 - **PROD mode:** Set `TITANE_DEVTOOLS=1`, press `F12` → Should open
 - **Without env var:** Press `F12` → Should NOT open
 
 ### Logs
+
 ```bash
 # DEB
 journalctl -u titane-infinity -f
@@ -257,6 +279,7 @@ pnpm run dev:tauri 2>&1 | grep Ollama
 
 **Cause:** Ollama not running
 **Fix:**
+
 ```bash
 # Start Ollama manually
 ollama serve
@@ -269,12 +292,16 @@ sudo systemctl start ollama
 
 **Cause:** Browser cache or localStorage cleared
 **Fix:**
+
 ```javascript
 // In browser console (F12):
-localStorage.setItem('titane_ollama_config', JSON.stringify({
-  endpoint: 'http://127.0.0.1:11434',
-  model: 'gemma2:2b'
-}));
+localStorage.setItem(
+  'titane_ollama_config',
+  JSON.stringify({
+    endpoint: 'http://127.0.0.1:11434',
+    model: 'gemma2:2b',
+  })
+);
 location.reload();
 ```
 
@@ -282,6 +309,7 @@ location.reload();
 
 **Cause:** TITANE_DEVTOOLS not set
 **Fix:**
+
 ```bash
 # Restart with environment variable
 TITANE_DEVTOOLS=1 titane-infinity
@@ -294,19 +322,20 @@ Environment="TITANE_DEVTOOLS=1"
 
 ## 📋 ENVIRONMENT VARIABLES
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `OLLAMA_HOST` | `127.0.0.1:11434` | Ollama endpoint |
-| `OLLAMA_MODEL` | `gemma2:2b` | Default AI model |
-| `TITANE_DEVTOOLS` | `0` (prod) | Enable DevTools (F12) |
-| `TITANE_DATA_DIR` | `~/.local/share/TITANE_INFINITY` | Data directory |
-| `RUST_BACKTRACE` | `0` | Enable Rust traces if `=1` |
+| Variable          | Default                          | Description                |
+| ----------------- | -------------------------------- | -------------------------- |
+| `OLLAMA_HOST`     | `127.0.0.1:11434`                | Ollama endpoint            |
+| `OLLAMA_MODEL`    | `gemma2:2b`                      | Default AI model           |
+| `TITANE_DEVTOOLS` | `0` (prod)                       | Enable DevTools (F12)      |
+| `TITANE_DATA_DIR` | `~/.local/share/TITANE_INFINITY` | Data directory             |
+| `RUST_BACKTRACE`  | `0`                              | Enable Rust traces if `=1` |
 
 ---
 
 ## 🎯 EXPECTED BEHAVIOR (FIXED)
 
 ### Launch DEB:
+
 ```
 ✅ Systemd starts Ollama automatically (5-10 seconds)
 ✅ TITANE∞ waits for Ollama availability
@@ -317,6 +346,7 @@ Environment="TITANE_DEVTOOLS=1"
 ```
 
 ### Change Configuration:
+
 ```
 1. User opens Admin → Configuration Hub
 2. Changes Ollama model to llama2 (if available)
@@ -327,6 +357,7 @@ Environment="TITANE_DEVTOOLS=1"
 ```
 
 ### First Run (No Ollama):
+
 ```
 ✅ Clear error message:
    "Please start Ollama manually:
@@ -340,15 +371,15 @@ Environment="TITANE_DEVTOOLS=1"
 
 ## 📊 IMPLEMENTATION STATUS
 
-| Component | Status | Details |
-|-----------|--------|---------|
-| Ollama auto-detect | ✅ FIXED | Checks before launch, detects running instance |
-| Ollama auto-start | ✅ FIXED | 4-step fallback with detailed logging |
-| DevTools PROD | ✅ FIXED | Enabled via `TITANE_DEVTOOLS=1` env var |
-| Config defaults | ✅ FIXED | `DEFAULT_OLLAMA_CONFIG` with sensible values |
-| Config persistence | ✅ FIXED | localStorage + `getOllamaConfig()`/`setOllamaConfig()` |
-| Governance defaults | ⏳ PENDING | Needs Tauri command integration (v27.0.3) |
-| Error messages | ✅ ENHANCED | Clear, actionable instructions for all issues |
+| Component           | Status      | Details                                                |
+| ------------------- | ----------- | ------------------------------------------------------ |
+| Ollama auto-detect  | ✅ FIXED    | Checks before launch, detects running instance         |
+| Ollama auto-start   | ✅ FIXED    | 4-step fallback with detailed logging                  |
+| DevTools PROD       | ✅ FIXED    | Enabled via `TITANE_DEVTOOLS=1` env var                |
+| Config defaults     | ✅ FIXED    | `DEFAULT_OLLAMA_CONFIG` with sensible values           |
+| Config persistence  | ✅ FIXED    | localStorage + `getOllamaConfig()`/`setOllamaConfig()` |
+| Governance defaults | ⏳ PENDING  | Needs Tauri command integration (v27.0.3)              |
+| Error messages      | ✅ ENHANCED | Clear, actionable instructions for all issues          |
 
 ---
 

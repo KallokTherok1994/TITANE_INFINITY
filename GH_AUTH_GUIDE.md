@@ -15,12 +15,14 @@ gh auth login
 ```
 
 **Réponses attendues:**
+
 1. What account do you want to log into? → **GitHub.com**
 2. What is your preferred protocol for Git operations? → **HTTPS**
 3. Authenticate Git with your GitHub credentials? → **Yes**
 4. How would you like to authenticate GitHub CLI? → **Login with a web browser**
 
 **Résultat:**
+
 - Un code de 8 caractères s'affiche
 - Votre navigateur s'ouvre sur https://github.com/login/device
 - Entrer le code → Authorize GitHub CLI
@@ -32,6 +34,7 @@ gh auth login --with-token < ~/.github/token.txt
 ```
 
 **Créer un PAT:**
+
 1. Aller sur https://github.com/settings/tokens/new
 2. Note: "TITANE Release Workflow"
 3. Scopes requis:
@@ -46,11 +49,13 @@ gh auth login --with-token < ~/.github/token.txt
 ## 🚀 Workflow Post-Authentification
 
 ### 1. Vérifier Authentification
+
 ```bash
 gh auth status
 ```
 
 **Output attendu:**
+
 ```
 ✓ Logged in to github.com as KallokTherok1994 (oauth_token)
 ✓ Git operations for github.com configured to use https protocol.
@@ -58,11 +63,13 @@ gh auth status
 ```
 
 ### 2. Créer Release avec Script Helper
+
 ```bash
 ./scripts/create-release-v27.0.2.sh
 ```
 
 **Le script va:**
+
 - ✅ Vérifier l'authentification
 - ✅ Vérifier les artifacts (AppImage + DEB)
 - ✅ Créer la release v27.0.2 sur GitHub
@@ -70,6 +77,7 @@ gh auth status
 - ✅ Afficher le lien vers la release
 
 ### 3. Vérifier Release
+
 ```bash
 gh release view v27.0.2 --web
 ```
@@ -140,23 +148,27 @@ Si `gh` CLI pose problème:
 ## 🐛 Troubleshooting
 
 ### Erreur: "Could not resolve to a Repository"
+
 ```bash
 gh auth refresh -s repo,write:packages
 ```
 
 ### Erreur: "authentication token is required"
+
 ```bash
 gh auth logout
 gh auth login
 ```
 
 ### Erreur: "Resource protected by organization SAML"
+
 ```bash
 gh auth status
 # Suivre le lien SSO dans l'output pour autoriser le token
 ```
 
 ### Vérifier Permissions du Token
+
 ```bash
 gh auth status -t
 ```
@@ -189,6 +201,7 @@ sha256sum TITANE-Infinity_27.0.2_amd64.deb
 ---
 
 **Status Actuel:**
+
 - ✅ Code pushé (commit 8238c666)
 - ✅ Tag v27.0.2 créé et pushé
 - ✅ Artifacts validés (96MB AppImage, 26MB DEB)
