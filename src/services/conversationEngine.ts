@@ -11,6 +11,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
+import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
@@ -226,14 +227,16 @@ export async function processMessage(
   const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-  const raw = (await tauriClient.conversationGenerate({
-    message: userMessage,
-    conversation_id: conversationId,
-    mode: options?.mode || 'default',
-    provider: 'auto',
-    system_prompt: systemPrompt,
-    request_id: requestId,
-  })) as OmegaGenerateResponse;
+    const payload = validateIpcPayload('conversation_generate', {
+      message: userMessage,
+      conversationId,
+      mode: options?.mode || 'default',
+      provider: 'auto',
+      systemPrompt,
+      requestId,
+    });
+
+    const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
 
   const content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {

@@ -11,6 +11,17 @@ use uuid::Uuid;
 use super::types::*;
 use super::ConversationEngineState;
 
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ConversationGenerateArgs {
+    pub message: String,
+    pub conversation_id: String,
+    pub mode: Option<String>,
+    pub provider: Option<String>,
+    pub system_prompt: Option<String>,
+    pub request_id: Option<String>,
+}
+
 type CommandResult<T> = Result<T, String>;
 
 // ═══════════════════════════════════════════════════════════════════
@@ -35,13 +46,16 @@ pub async fn create_new_conversation(
 #[tauri::command]
 pub async fn conversation_generate(
     engine: State<'_, Arc<ConversationEngineState>>,
-    message: String,
-    conversation_id: String,
-    mode: Option<String>,
-    provider: Option<String>,
-    system_prompt: Option<String>, // Ajout: system prompt personnalisé
-    request_id: Option<String>,
+    args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
+    let ConversationGenerateArgs {
+        message,
+        conversation_id,
+        mode,
+        provider,
+        system_prompt,
+        request_id,
+    } = args;
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
         Some("coach") => ConversationMode::Default, // Coach = Default avec personnalité

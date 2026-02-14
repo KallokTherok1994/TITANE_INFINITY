@@ -271,7 +271,7 @@ pub async fn get_copilot_key_status(
 ) -> Result<CopilotKeyStatus, String> {
     // Permission check
     PERMISSION_GUARD
-        .require("ai_read", Role::User, "get_copilot_key_status")
+        .require("config_read", Role::User, "get_copilot_key_status")
         .await
         .map_err(|e| format!("Permission denied: {}", e))?;
 

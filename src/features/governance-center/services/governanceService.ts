@@ -240,23 +240,11 @@ async function storeSecret(
  * Obtenir le statut de tous les secrets configurés
  */
 async function getSecretsStatus(): Promise<SecureResponse<SecretStatus[]>> {
-  // ✅ IPC FIX (Ω∞.v1): get_secrets_status DOES NOT EXIST in backend
-  // Backend has provider-specific commands: get_gemini_key_status, get_openai_key_status, get_anthropic_key_status
-  // TODO: Refactor to call all 3 and aggregate results
-  // For now, return empty array with warning (non-blocking degradation)
-  console.warn(
-    '[GovernanceService] get_secrets_status not implemented - returning empty status'
+  const raw = await safeInvoke<unknown>('get_secrets_status');
+  return normalizeResponse<SecretStatus[]>(
+    raw,
+    'Impossible de récupérer les statuts des secrets'
   );
-  return {
-    ok: true,
-    data: [],
-    error: null,
-  };
-  // const raw = await safeInvoke<unknown>('get_secrets_status');
-  // return normalizeResponse<SecretStatus[]>(
-  //   raw,
-  //   'Impossible de récupérer les statuts des secrets'
-  // );
 }
 
 /**

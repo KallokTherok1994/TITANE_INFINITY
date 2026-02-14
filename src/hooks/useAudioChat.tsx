@@ -13,6 +13,7 @@ import type {
   SpeechRecognitionEvent,
   SpeechRecognitionErrorEvent,
 } from '@/types/web-speech-api';
+import { buildTtsSettingsDefaults } from '@/features/audio-center/types';
 
 export interface AudioChatConfig {
   enabled: boolean;
@@ -199,8 +200,10 @@ export function useAudioChat(config: AudioChatConfig = { enabled: true }) {
         // Try Tauri TTS first
         const result = await safeInvoke<{ success: boolean }>('tts_speak', {
           text,
-          voice_id: config.voiceId || 'default',
-          language: config.language || 'fr',
+          settings: buildTtsSettingsDefaults({
+            voiceId: config.voiceId || 'default',
+            language: config.language || 'fr-FR',
+          }),
         });
 
         if (result?.success) {

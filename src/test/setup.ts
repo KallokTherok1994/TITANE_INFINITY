@@ -527,15 +527,22 @@ const handleTauriInvoke = async (
         suggestions: ['Continuer'],
       };
     case 'conversation_generate': {
-      const payload = (args ?? {}) as { conversation_id?: string; provider?: string };
+      const args = (payload ?? {}) as {
+        conversationId?: string;
+        conversation_id?: string;
+        provider?: string;
+      };
+      if (Object.prototype.hasOwnProperty.call(args, 'conversation_id')) {
+        throw new Error('IPC contract error: snake_case key "conversation_id" not allowed');
+      }
       return {
         content: 'Réponse mock TITANE∞',
-        conversationId: payload.conversation_id ?? 'mock-conversation',
+        conversationId: args.conversationId ?? 'mock-conversation',
         messageId: 'mock-message',
         frenchMasteryApplied: true,
         latencyMs: 5,
         metadata: {
-          provider: payload.provider ?? 'mock',
+          provider: args.provider ?? 'mock',
         },
       };
     }

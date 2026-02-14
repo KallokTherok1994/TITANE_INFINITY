@@ -48,6 +48,37 @@ pub use persistence::PersistenceLayer;
 pub use sync::EventSyncLayer;
 
 // ═══════════════════════════════════════════════════════════════════
+// XP / PROGRESSION (compat frontend)
+// ═══════════════════════════════════════════════════════════════════
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProgressionEvent {
+    pub source: String,
+    pub amount: f64,
+    pub timestamp: u64,
+    pub description: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ProgressionState {
+    pub xp: f64,
+    pub level: u32,
+    pub events: Vec<ProgressionEvent>,
+}
+
+impl Default for ProgressionState {
+    fn default() -> Self {
+        Self {
+            xp: 0.0,
+            level: 0,
+            events: Vec::new(),
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // CORE STRUCTURES
 // ═══════════════════════════════════════════════════════════════════
 
@@ -75,6 +106,9 @@ pub struct SingularityState {
     /// DEEP SYNC ENGINE v18: État de synchronisation profonde
     pub deep_sync_status: Option<SyncedState>,
 
+    /// XP/Progression (frontend compatibility)
+    pub progression: Option<ProgressionState>,
+
     /// Timestamp dernière mise à jour (ms)
     pub timestamp: u64,
 
@@ -92,6 +126,7 @@ impl Default for SingularityState {
             meta: MetaLayer::default(),
             meta_cognition_report: None,
             deep_sync_status: None,
+            progression: Some(ProgressionState::default()),
             timestamp: current_timestamp(),
             signature: generate_signature(),
         }

@@ -106,7 +106,7 @@ describe('Regression Test 2: Missing Commands', () => {
       'memory_get_stats',
       'singularity_get_full_state',
       'meta_get_state',
-      'chat_send_message',
+      'conversation_generate',
       'add_timeline_event',
       'qa_run_all', // Nouvelle commande v19.8
     ];
@@ -328,11 +328,10 @@ describe('Regression Test 7: Invalid IA Responses', () => {
     const alerts: RegressionAlert[] = [];
 
     try {
-      const response = await invoke('chat_send_message', {
-        request: {
-          message: 'Test régression',
-          conversation_id: 'regression-test',
-        },
+      const response = await invoke('conversation_generate', {
+        message: 'Test régression',
+        conversationId: 'regression-test',
+        mode: 'default',
       });
 
       if (typeof response !== 'string' && typeof response !== 'object') {
@@ -340,7 +339,7 @@ describe('Regression Test 7: Invalid IA Responses', () => {
           module: 'chat',
           cause: 'Réponse IA invalide - type inattendu',
           severity: 'HIGH',
-          solution_suggeree: 'Vérifier format retour chat_send_message',
+          solution_suggeree: 'Vérifier format retour conversation_generate',
           timestamp: new Date().toISOString(),
         });
       }
@@ -358,9 +357,9 @@ describe('Regression Test 7: Invalid IA Responses', () => {
     } catch (error) {
       alerts.push({
         module: 'chat',
-        cause: `Échec chat_send_message: ${error}`,
+        cause: `Échec conversation_generate: ${error}`,
         severity: 'CRITICAL',
-        solution_suggeree: 'Vérifier Chat Orchestrator',
+        solution_suggeree: 'Vérifier pipeline conversation_generate',
         timestamp: new Date().toISOString(),
       });
     }

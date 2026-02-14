@@ -18,6 +18,7 @@
     "postbuild": "bash scripts/post-build.sh",
     "guard:ollama-proxy": "bash scripts/guard/guard-ollama-proxy.sh",
     "guard:dev-bridge": "node scripts/guard/guard-dev-bridge.mjs",
+    "guard:ipc-contract": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run tests/contract/tauri-ipc-contract.test.ts",
     "build:tauri:e2e": "pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && vite build && tauri build --config src-tauri/tauri.conf.json",
     "build:production": "pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && vite build && tauri build && bash scripts/post-build.sh",
     "preview": "echo '🔒 TAURI-ONLY MODE' && exit 1",

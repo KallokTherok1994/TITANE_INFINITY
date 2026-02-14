@@ -6,6 +6,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { validateIpcPayload } from '@/lib/ipcContract';
 import { detectEnvironment } from '@/core/tauri/environment';
 import { createLogger } from '@/utils/logger';
 import type {
@@ -251,25 +252,26 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
 
   const request = {
     message: userMessage,
-    conversation_id: `chat-${Date.now()}`,
+    conversationId: `chat-${Date.now()}`,
     provider: 'auto',
     model: (config as any)?.model,
     streaming: false,
-    system_prompt: systemPrompt,
-    request_id: requestId,
+    systemPrompt,
+    requestId,
   };
+
+  const payload = validateIpcPayload('conversation_generate', {
+    message: request.message,
+    conversationId: request.conversationId,
+    mode: 'default',
+    provider: request.provider,
+    systemPrompt: request.systemPrompt,
+    requestId: request.requestId,
+  });
 
   const raw = await invokeTauriCommand<unknown>(
     'conversation_generate',
-    {
-      message: request.message,
-      conversation_id: request.conversation_id,
-      mode: 'default',
-      provider: request.provider,
-      system_prompt: request.system_prompt,
-      request_id: request.request_id,
-      streaming: request.streaming,
-    },
+    payload,
     { timeout: 30000, retries: 2, retryDelay: 1000 }
   );
 

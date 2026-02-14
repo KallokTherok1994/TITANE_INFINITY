@@ -13,6 +13,7 @@
 import { secureInvoke } from '@/lib/security';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import { validateIpcPayload } from '@/lib/ipcContract';
 
 const COMMANDS = {
   generate: 'generate_response',
@@ -264,14 +265,16 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
   const requestId =
     args.requestId ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-  return invokeCommand<OmegaResponse>('conversation_generate', {
+  const payload = validateIpcPayload('conversation_generate', {
     message: args.message,
-    conversation_id: args.conversationId,
+    conversationId: args.conversationId,
     mode: args.mode ?? null,
     provider: args.provider ?? null,
-    system_prompt: systemPrompt, // ✨ Transmission du system prompt
-    request_id: requestId,
+    systemPrompt,
+    requestId,
   });
+
+  return invokeCommand<OmegaResponse>('conversation_generate', payload);
 }
 
 export const chatEngineCommands = {

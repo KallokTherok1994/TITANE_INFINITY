@@ -49,6 +49,17 @@ export const DEFAULT_TTS_SETTINGS: TTSSettings = {
   autoFallback: true,
 };
 
+export function buildTtsSettingsDefaults(
+  overrides: Partial<TTSSettings> = {}
+): TTSSettings {
+  const merged = { ...DEFAULT_TTS_SETTINGS, ...overrides };
+  return {
+    ...merged,
+    voiceId: merged.voiceId || DEFAULT_TTS_SETTINGS.voiceId,
+    language: merged.language || DEFAULT_TTS_SETTINGS.language,
+  };
+}
+
 // ─────────────────────────────────────────────────────────────────
 //  Audio Device Types
 // ─────────────────────────────────────────────────────────────────

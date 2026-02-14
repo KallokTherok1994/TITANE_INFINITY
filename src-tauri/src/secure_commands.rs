@@ -12,6 +12,7 @@ use crate::security::permission_guard::PERMISSION_GUARD;
 use crate::security::permissions::Role;
 use crate::security::sandbox::FileImportSandbox;
 use crate::security::validation::PayloadValidator;
+use crate::security::secrets_engine::{KEY_COPILOT, KEY_GEMINI, KEY_OPENAI};
 use serde::{Deserialize, Serialize};
 use tauri::State;
 
@@ -70,6 +71,57 @@ pub struct SecretOperationResult {
     pub stored: bool,
     pub env_purged: bool,
 }
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SecretStatus {
+    pub key: String,
+    pub configured: bool,
+    pub masked_value: Option<String>,
+    pub last_updated: Option<u64>,
+    pub category: String,
+}
+
+struct KnownSecret {
+    key: &'static str,
+    category: &'static str,
+}
+
+const KEY_ANTHROPIC: &str = "anthropic_api_key";
+const KEY_OLLAMA_URL: &str = "ollama_url";
+const KEY_GITHUB_TOKEN: &str = "github_token";
+const KEY_BACKUP_ENCRYPTION: &str = "backup_encryption_key";
+
+const KNOWN_SECRETS: &[KnownSecret] = &[
+    KnownSecret {
+        key: KEY_GEMINI,
+        category: "api_key",
+    },
+    KnownSecret {
+        key: KEY_OPENAI,
+        category: "api_key",
+    },
+    KnownSecret {
+        key: KEY_ANTHROPIC,
+        category: "api_key",
+    },
+    KnownSecret {
+        key: KEY_COPILOT,
+        category: "api_key",
+    },
+    KnownSecret {
+        key: KEY_OLLAMA_URL,
+        category: "api_key",
+    },
+    KnownSecret {
+        key: KEY_GITHUB_TOKEN,
+        category: "token",
+    },
+    KnownSecret {
+        key: KEY_BACKUP_ENCRYPTION,
+        category: "credential",
+    },
+];
 
 fn mask_secret_for_display(secret: &str) -> String {
     if secret.is_empty() {
@@ -405,6 +457,41 @@ pub async fn get_anthropic_key_status(
         env_purged: false,
         was_updated: false,
     }))
+}
+
+/// Obtenir le statut des secrets connus
+#[tauri::command]
+pub async fn get_secrets_status(
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<SecureResponse<Vec<SecretStatus>>, String> {
+    PERMISSION_GUARD
+        .require("secret_status", Role::System, "get_secrets_status")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let mut statuses = Vec::with_capacity(KNOWN_SECRETS.len());
+
+    for secret in KNOWN_SECRETS {
+        let configured = secrets.has_secret(secret.key).unwrap_or(false);
+        let masked_value = secrets
+            .get_secret(secret.key)
+            .ok()
+            .flatten()
+            .map(|value| {
+                let zero = zeroize_string(value);
+                mask_secret_for_display(zero.as_str())
+            });
+
+        statuses.push(SecretStatus {
+            key: secret.key.to_string(),
+            configured,
+            masked_value: if configured { masked_value } else { None },
+            last_updated: None,
+            category: secret.category.to_string(),
+        });
+    }
+
+    Ok(SecureResponse::success(statuses))
 }
 
 /// Stocker un secret arbitraire dans le SecureSecretsEngine

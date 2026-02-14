@@ -148,6 +148,24 @@ global.__TAURI__ = {
         case 'experience_get_state':
         case 'xp_get_state':
           return { level: 1, xp: 0, categories: {} };
+        case 'conversation_generate': {
+          const payload = (args ?? {}) as {
+            conversationId?: string;
+            conversation_id?: string;
+          };
+          if (Object.prototype.hasOwnProperty.call(payload, 'conversation_id')) {
+            throw new Error(
+              'IPC contract error: snake_case key "conversation_id" not allowed'
+            );
+          }
+          return {
+            content: 'Réponse mock TITANE∞',
+            conversationId: payload.conversationId ?? 'mock-conversation',
+            messageId: `mock-${Date.now()}`,
+            frenchMasteryApplied: true,
+            latencyMs: 5,
+          };
+        }
         default:
           // Retourner un objet vide par défaut au lieu de null
           return {};

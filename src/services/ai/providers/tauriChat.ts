@@ -19,6 +19,7 @@ import { createLogger } from '@/utils/logger';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { StatusCache } from '../statusCache';
 import { REQUEST_BUDGETS } from '@/config/aiTimeouts.config';
+import { validateIpcPayload } from '@/lib/ipcContract';
 
 const logger = createLogger('TauriChat');
 
@@ -46,13 +47,13 @@ interface ChatMessage {
 
 interface ChatRequest {
   message: string;
-  conversation_id?: string;
+  conversationId?: string;
   provider: string; // 'auto'|'gemini'|'ollama'|'local'
   model?: string;
   streaming: boolean;
   images?: string[];
-  system_prompt?: string;
-  request_id?: string;
+  systemPrompt?: string;
+  requestId?: string;
 }
 
 interface ChatResponse {
@@ -164,12 +165,14 @@ class TauriChatProvider implements AIProvider {
       const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
       // Construit la requête
+      const conversationId = `conv_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
       const request: ChatRequest = {
         message: message.trim(),
+        conversationId,
         provider: 'local', // Local-first: force local-only in backend
         streaming: false,
-        system_prompt: this.buildSystemPrompt(history),
-        request_id: requestId,
+        systemPrompt: this.buildSystemPrompt(history),
+        requestId,
       };
 
       logger.debug('Request details', {
@@ -179,16 +182,17 @@ class TauriChatProvider implements AIProvider {
       });
 
       // OMEGA: Protected invoke with timeout and retry
+      const payload = validateIpcPayload('conversation_generate', {
+        message: request.message,
+        conversationId: request.conversationId,
+        mode: null,
+        provider: request.provider,
+        systemPrompt: request.systemPrompt,
+        requestId: request.requestId,
+      });
+
       const response = await Promise.race([
-        safeInvokeTauri<ChatResponse>('conversation_generate', {
-          message: request.message,
-          conversation_id: request.conversation_id,
-          mode: null,
-          provider: request.provider,
-          system_prompt: request.system_prompt,
-          request_id: request.request_id,
-          streaming: request.streaming,
-        }),
+        safeInvokeTauri<ChatResponse>('conversation_generate', payload),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
         ),

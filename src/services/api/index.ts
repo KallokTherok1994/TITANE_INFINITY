@@ -137,7 +137,7 @@ export {
  *    → `memoryService.getActiveProjects()`
  *
  * 2. Chat:
- *    `invoke('conversation_generate', { message, conversation_id, mode })`
+ *    `invoke('conversation_generate', { message, conversationId, mode })`
  *    → `chatService.sendMessage(messages, config)`
  *
  * 3. Voice:
