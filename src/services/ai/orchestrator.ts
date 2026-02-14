@@ -661,15 +661,18 @@ class AIOrchestrator {
           break;
 
         case 'ollama':
-          // #5: Ollama = MÉMOIRE LOCALE (toujours actif pour analyse/sauvegarde)
-          // Pas de boost sauf si mode local explicitement demandé
+          // #5: Ollama = LOCAL FIRST avec cascade cloud
+          // Mode auto: Score élevé (~85) pour être prioritaire mais permettre cascade
+          // Mode local: Boost +200 pour forcer Ollama exclusivement
           if (preferredProvider === 'local') {
-            score += 200; // Mode local forcé uniquement
-            logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama prioritaire');
+            score += 200; // Mode local forcé
+            logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else {
-            score += 5; // Score faible = fallback seulement
+            score += 80; // Score élevé en mode auto = prioritaire avec cascade
+            logger.debug('   🏠 AUTO MODE: Ollama prioritaire (score élevé + cascade cloud)');
           }
-          score += messageLength < 500 ? 10 : 0; // Légèrement bon sur court
+          score += messageLength < 500 ? 10 : 0; // Bonus messages courts
+          score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK
           break;
 
         case 'titane-local':
