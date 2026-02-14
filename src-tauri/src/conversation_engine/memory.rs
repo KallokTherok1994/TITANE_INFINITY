@@ -61,7 +61,8 @@ impl ConversationMemoryEngine {
                     Ok(id)
                 } else {
                     // Créer nouvelle conversation avec cet ID
-                    let conversation = Conversation::new("Session".to_string());
+                    let mut conversation = Conversation::new("Session".to_string());
+                    conversation.id = id.clone();
                     self.storage
                         .save_conversation(&conversation)
                         .map_err(|e| ConversationEngineError::MemoryError(e.to_string()))?;

@@ -513,7 +513,11 @@ export class TauriInvokeProtector {
    */
   private createFallbackResponse<T>(command: string | undefined, error: unknown): T {
     const safeCommand = command || 'unknown_command';
-    console.log(`[TauriProtector] Using fallback for ${safeCommand}`);
+    if (safeCommand.includes('conversation_generate')) {
+      console.log('[TauriProtector] Fallback engaged for conversation_generate');
+    } else {
+      console.log(`[TauriProtector] Using fallback for ${safeCommand}`);
+    }
 
     const errorMessage = error instanceof Error ? error.message : String(error);
 
@@ -566,10 +570,62 @@ export class TauriInvokeProtector {
     if (safeCommand.includes('conversation_generate')) {
       // ✅ IPC FIX (Ω∞.v1): Classify error before showing fallback message
       const classification = classifyError(errorMessage);
+      const traceId = `trace_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const normalizedMessage = errorMessage.toLowerCase();
+      let ipcCode: 'IPC_INVALID_ARGS' | 'IPC_FORBIDDEN' | 'IPC_CONTRACT_MISMATCH' | null = null;
+
+      if (
+        normalizedMessage.includes('security:') &&
+        (normalizedMessage.includes('not allowed') ||
+          normalizedMessage.includes('whitelist'))
+      ) {
+        ipcCode = 'IPC_FORBIDDEN';
+      } else if (
+        normalizedMessage.includes('missing required') ||
+        normalizedMessage.includes('invalid field') ||
+        normalizedMessage.includes('snake_case') ||
+        normalizedMessage.includes('payload')
+      ) {
+        ipcCode = 'IPC_INVALID_ARGS';
+      } else if (classification.type === 'ipc') {
+        ipcCode = 'IPC_CONTRACT_MISMATCH';
+      }
+
+      if (ipcCode) {
+        console.warn('[TauriProtector] conversation_generate IPC error', {
+          traceId,
+          code: ipcCode,
+          error: errorMessage,
+        });
+
+        return {
+          content: `${ipcCode}: ${classification.message}`,
+          conversationId: `fallback-${Date.now()}`,
+          messageId: `fallback-${Date.now()}`,
+          latencyMs: 0,
+          metadata: {
+            fallback: true,
+            error: errorMessage,
+            source: 'tauri-protector',
+            traceId,
+            errorCode: ipcCode,
+            errorMessage: classification.message,
+          },
+        } as T;
+      }
+
       const message =
-        classification.type === 'ipc'
-          ? classification.message
-          : 'Ollama indisponible. TITANE bascule en mode local.';
+        classification.type === 'ollama'
+          ? 'Ollama indisponible. TITANE bascule en mode local.'
+          : classification.type === 'network'
+            ? 'Erreur réseau ou timeout.'
+            : classification.message;
+
+      console.warn('[TauriProtector] conversation_generate fallback', {
+        traceId,
+        classification: classification.type,
+        error: errorMessage,
+      });
 
       return {
         content: message,
@@ -580,6 +636,9 @@ export class TauriInvokeProtector {
           fallback: true,
           error: errorMessage,
           source: 'tauri-protector',
+          traceId,
+          errorCode: classification.type,
+          errorMessage: classification.message,
         },
       } as T;
     }

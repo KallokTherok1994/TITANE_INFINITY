@@ -42,21 +42,19 @@ test.describe('Critical Path: System Resilience', () => {
   test('handles rapid user interactions without crashing', async ({ page }) => {
     // Close boot beacon first
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
-    if (await closeBeacon.isVisible()) {
+    if (await closeBeacon.isVisible().catch(() => false)) {
       await closeBeacon.click();
       await page.waitForTimeout(300);
     }
 
-    // Rapid clicks on various elements
-    const buttons = await page.locator('button');
-    const buttonCount = await buttons.count();
-
-    if (buttonCount > 0) {
-      for (let i = 0; i < Math.min(5, buttonCount); i++) {
-        await buttons
-          .nth(i)
-          .click()
-          .catch(() => {}); // Ignore failures
+    // Rapid clicks on the main surface to avoid closing the app via controls
+    const body = page.locator('body');
+    const box = await body.boundingBox();
+    if (box) {
+      const centerX = box.x + box.width * 0.5;
+      const centerY = box.y + box.height * 0.4;
+      for (let i = 0; i < 5; i++) {
+        await page.mouse.click(centerX, centerY, { delay: 10 });
         await page.waitForTimeout(50);
       }
     }
