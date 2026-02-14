@@ -74,3 +74,16 @@ Append-only log:
 - 2026-02-13: Phase 0 matrix created (critical commands only).
 - 2026-02-13: get_secrets_status implemented, Y match achieved (7/7 critical commands).
 - 2026-02-14: STABLE certification re-validation complete, all commands maintain Y match, coverage 100%.
+
+---
+
+## Matrix Update (2026-02-14)
+
+conversation_generate IPC args shape updated to require wrapper `{ args: ConversationGenerateArgs }`.
+
+| Command | Frontend args (current) | Backend signature | Match |
+| --- | --- | --- | --- |
+| conversation_generate | { args: { message, conversationId, mode, provider, systemPrompt, requestId } } | conversation_generate(engine, args: ConversationGenerateArgs) with serde rename_all=camelCase | Y |
+
+Append-only log:
+- 2026-02-14: conversation_generate now requires args wrapper; IPC contract schema updated accordingly.

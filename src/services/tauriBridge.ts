@@ -261,12 +261,14 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
   };
 
   const payload = validateIpcPayload('conversation_generate', {
-    message: request.message,
-    conversationId: request.conversationId,
-    mode: 'default',
-    provider: request.provider,
-    systemPrompt: request.systemPrompt,
-    requestId: request.requestId,
+    args: {
+      message: request.message,
+      conversationId: request.conversationId,
+      mode: 'default',
+      provider: request.provider,
+      systemPrompt: request.systemPrompt,
+      requestId: request.requestId,
+    },
   });
 
   const raw = await invokeTauriCommand<unknown>(

@@ -266,12 +266,14 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
     args.requestId ?? `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   const payload = validateIpcPayload('conversation_generate', {
-    message: args.message,
-    conversationId: args.conversationId,
-    mode: args.mode ?? null,
-    provider: args.provider ?? null,
-    systemPrompt,
-    requestId,
+    args: {
+      message: args.message,
+      conversationId: args.conversationId,
+      mode: args.mode ?? null,
+      provider: args.provider ?? null,
+      systemPrompt,
+      requestId,
+    },
   });
 
   return invokeCommand<OmegaResponse>('conversation_generate', payload);

@@ -329,9 +329,11 @@ describe('Regression Test 7: Invalid IA Responses', () => {
 
     try {
       const response = await invoke('conversation_generate', {
-        message: 'Test régression',
-        conversationId: 'regression-test',
-        mode: 'default',
+        args: {
+          message: 'Test régression',
+          conversationId: 'regression-test',
+          mode: 'default',
+        },
       });
 
       if (typeof response !== 'string' && typeof response !== 'object') {
