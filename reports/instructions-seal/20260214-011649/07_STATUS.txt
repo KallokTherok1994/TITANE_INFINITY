@@ -1,0 +1,32 @@
+ M .github/copilot-instructions.md
+ M .github/instructions/titane.instructions.md
+ M .prettierignore
+ M e2e/critical/app-launch.spec.ts
+ M e2e/desktop/ui-chat-360-autofix.wdio.test.cjs
+ M e2e/fixtures/global-setup.ts
+ M e2e/fixtures/index.ts
+ M e2e/fixtures/tauri-ipc-mock-inline.js
+ M e2e/fixtures/tauri-ipc-mock.ts
+ M e2e/runtime-validation/chat-ar20.spec.ts
+ M package.json
+ M playwright.config.ts
+ M scripts/e2e/run-ui-chat-360-autofix.cjs
+ M scripts/e2e/tauri-wrapper.sh
+ M src-tauri/src/perf_bench.rs
+ M src-tauri/src/perf_metrics_capture.rs
+ M src/__tests__/components/devtools/LogViewer.test.tsx
+ M src/__tests__/components/devtools/MetricsDisplay.test.tsx
+ M src/__tests__/features/monitoring/SystemHealthMonitor.test.tsx
+ M src/__tests__/hooks/useSystemHealth.test.tsx
+ M src/__tests__/ollama-proxy.test.ts
+ M src/__tests__/omega-provider-tests.test.ts
+ M src/features/governance-center/components/APIProviderCard.tsx
+ M src/hooks/__tests__/fusion-hooks.test.ts
+ M src/services/ai/types.ts
+ M tests/unit/ControlPanel.test.tsx
+?? .github/instructions/docs-registry.instructions.md
+?? .github/instructions/frontend.instructions.md
+?? .github/instructions/tauri.instructions.md
+?? .github/instructions/tests-e2e.instructions.md
+?? docs/current/GOV_COPILOT_INSTRUCTIONS.md
+?? scripts/verify/verify-copilot-instructions.sh
