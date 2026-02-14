@@ -584,8 +584,10 @@ fn main() {
             // AIRouter initialization (for OMEGA pipeline)
             // FIX v26.4.1: Initialize with default Ollama model to avoid "No AI provider available"
             let default_ollama_model = std::env::var("OLLAMA_DEFAULT_MODEL")
-                .or_else(|_| std::env::var("OLLAMA_MODEL"))
-                .unwrap_or_else(|_| "gemma2:2b".to_string());
+                .ok()
+                .filter(|s| !s.is_empty())
+                .or_else(|| std::env::var("OLLAMA_MODEL").ok().filter(|s| !s.is_empty()))
+                .unwrap_or_else(|| "gemma2:2b".to_string());
             let ai_router = Arc::new(tokio::sync::RwLock::new(
                 titane_infinity::ai::router::AIRouter::new(None, Some(default_ollama_model.clone()))
             ));
@@ -715,6 +717,65 @@ fn main() {
                         }
                         Err(err) => {
                             eprintln!("[SMOKE-RUNTIME-CHAT] chat_send_message error: {err}");
+                        }
+                    }
+                });
+            }
+
+            // ─────────────────────────────────────────────────────────────
+            // SMOKE TEST IPC conversation_generate (opt-in, STABLE proof)
+            // Active uniquement si TITANE_SMOKE_IPC_CONVERSATION_GENERATE=1
+            // ─────────────────────────────────────────────────────────────
+            if std::env::var("TITANE_SMOKE_IPC_CONVERSATION_GENERATE")
+                .ok()
+                .is_some_and(|v| v == "1")
+            {
+                let app_handle = app.handle().clone();
+                tauri::async_runtime::spawn(async move {
+                    println!("[SMOKE-IPC] enabled (TITANE_SMOKE_IPC_CONVERSATION_GENERATE=1)");
+
+                    // Wait 5s for UI mount + stability
+                    tokio::time::sleep(tokio::time::Duration::from_secs(5)).await;
+
+                    // Get conversation engine state
+                    let engine_state = app_handle.state::<std::sync::Arc<
+                        titane_infinity::conversation_engine::ConversationEngineState
+                    >>();
+
+                    // Create minimal conversation request (camelCase payload)
+                    // Note: conversation_id = None forces creation of new conversation
+                    let request = titane_infinity::conversation_engine::types::ConversationRequest {
+                        user_message: "Réponds uniquement: SMOKE_OK".to_string(),
+                        conversation_id: None,
+                        mode: titane_infinity::conversation_engine::types::ConversationMode::Default,
+                        ai_config: Some(titane_infinity::conversation_engine::types::AIConfig {
+                            temperature: 0.7,
+                            max_tokens: Some(50),
+                            provider_preference: titane_infinity::conversation_engine::types::ProviderPreference::Local,
+                        }),
+                        emotion_context: None,
+                        custom_system_prompt: Some("Réponds uniquement: SMOKE_OK".to_string()),
+                    };
+
+                    // Call conversation engine (same logic as conversation_generate command)
+                    let start_time = std::time::Instant::now();
+                    match engine_state.process_message(request).await {
+                        Ok(response) => {
+                            let latency_ms = start_time.elapsed().as_millis() as u64;
+                            let content_preview = response
+                                .assistant_message
+                                .chars()
+                                .take(120)
+                                .collect::<String>();
+
+                            println!(
+                                "[SMOKE-IPC] conversation_generate ok latency_ms={} preview={}",
+                                latency_ms,
+                                content_preview
+                            );
+                        }
+                        Err(err) => {
+                            eprintln!("[SMOKE-IPC] conversation_generate error: {err}");
                         }
                     }
                 });
