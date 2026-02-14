@@ -3,6 +3,8 @@
  * Fallback via proxy Ollama quand le backend Tauri est indisponible
  */
 
+import { classifyError } from '@/lib/errorClassification';
+
 export interface OllamaRequest {
   message: string;
   conversation_id: string;
@@ -82,17 +84,30 @@ export async function callOllamaDirectly(
   } catch (error) {
     console.error('[OllamaFallback] Error calling Ollama directly:', error);
 
+    // ✅ IPC FIX (Ω∞.v1): Classify error before assuming Ollama unavailable
+    const classification = classifyError(error);
+    const message =
+      classification.type === 'ipc'
+        ? classification.message
+        : `Ollama indisponible. TITANE bascule en mode local.`;
+
     // Return error as content
     return {
-      content: `Ollama indisponible. TITANE bascule en mode local.`,
+      content: message,
       conversationId: request.conversation_id,
       messageId: `error-${Date.now()}`,
       latencyMs: Date.now() - startTime,
       metadata: {
         intention: 'Error',
         emotion: 'Erreur',
-        cognitiveTags: ['error', 'ollama-unreachable'],
-        cognitiveSummary: 'Échec de connexion à Ollama',
+        cognitiveTags: [
+          'error',
+          classification.type === 'ipc' ? 'ipc-error' : 'ollama-unreachable',
+        ],
+        cognitiveSummary:
+          classification.type === 'ipc'
+            ? 'Erreur IPC contract'
+            : 'Échec de connexion à Ollama',
         requestId: request.request_id,
       },
     };

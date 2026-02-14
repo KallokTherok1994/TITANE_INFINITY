@@ -176,11 +176,19 @@ class AutomationXPService {
 
   private async syncWithBackend(): Promise<void> {
     try {
-      await secureInvoke('xp_sync_state', {
-        total_xp: this.xpState.total_xp,
-        level: this.xpState.level,
-        streak: this.xpState.current_streak,
-      });
+      // ✅ IPC FIX (Ω∞.v1): xp_sync_state DOES NOT EXIST in backend
+      // Backend exp_fusion commands are read-only (exp_get_global_state, exp_get_talents, etc.)
+      // No write/sync command exists → This sync is a NOOP
+      // Keeping for future implementation when write endpoint is added
+      console.warn(
+        '[AutomationXPService] xp_sync_state not implemented in backend - skipping sync'
+      );
+      return;
+      // await secureInvoke('xp_sync_state', {
+      //   total_xp: this.xpState.total_xp,
+      //   level: this.xpState.level,
+      //   streak: this.xpState.current_streak,
+      // });
     } catch {
       // Backend non disponible - continuer en mode local
     }

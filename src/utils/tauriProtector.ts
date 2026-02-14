@@ -15,6 +15,7 @@ import type {
   SymbolicLayer,
 } from '@/types/singularityState';
 import type { TauriCore, TauriCommandArgs, TauriCacheEntry } from '@/types/tauri';
+import { classifyError } from '@/lib/errorClassification';
 
 type TauriCoreBridge = {
   core?: TauriCore;
@@ -563,9 +564,15 @@ export class TauriInvokeProtector {
     }
 
     if (safeCommand.includes('conversation_generate')) {
-      // ✨ v20.5: Retourner message d'erreur simple sans fetch direct
+      // ✅ IPC FIX (Ω∞.v1): Classify error before showing fallback message
+      const classification = classifyError(errorMessage);
+      const message =
+        classification.type === 'ipc'
+          ? classification.message
+          : 'Ollama indisponible. TITANE bascule en mode local.';
+
       return {
-        content: 'Ollama indisponible. TITANE bascule en mode local.',
+        content: message,
         conversationId: `fallback-${Date.now()}`,
         messageId: `fallback-${Date.now()}`,
         latencyMs: 0,
@@ -619,7 +626,9 @@ export class TauriInvokeProtector {
   private normalizeInvokeError(command: string, error: unknown): Error {
     const err = error instanceof Error ? error : new Error(String(error));
     const isAbort =
-      err.name === 'AbortError' || /aborted/i.test(err.message) || /abort/i.test(err.name);
+      err.name === 'AbortError' ||
+      /aborted/i.test(err.message) ||
+      /abort/i.test(err.name);
 
     if (!isAbort) {
       return err;

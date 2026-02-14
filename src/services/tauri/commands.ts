@@ -157,7 +157,8 @@ export const exp = {
     source: string,
     description: string
   ): Promise<ExpProfile> {
-    return invokeWithValidation('exp_add', ExpProfileSchema, {
+    // ✅ IPC FIX (Ω∞.v1): exp_add → exp_add_knowledge (backend command name)
+    return invokeWithValidation('exp_add_knowledge', ExpProfileSchema, {
       amount,
       category,
       source,
@@ -169,14 +170,16 @@ export const exp = {
    * Obtenir le profil d'expérience
    */
   async getProfile(): Promise<ExpProfile> {
-    return invokeWithValidation('exp_get_profile', ExpProfileSchema);
+    // ✅ IPC FIX (Ω∞.v1): exp_get_profile → exp_get_global_state (backend command name)
+    return invokeWithValidation('exp_get_global_state', ExpProfileSchema);
   },
 
   /**
    * Lister tous les talents
    */
   async listTalents(): Promise<Talent[]> {
-    const result = await secureInvoke<Talent[]>('exp_list_talents');
+    // ✅ IPC FIX (Ω∞.v1): exp_list_talents → exp_get_talents (backend command name)
+    const result = await secureInvoke<Talent[]>('exp_get_talents');
     return result.map(t => TalentSchema.parse(t));
   },
 
@@ -196,7 +199,8 @@ export const exp = {
    * Obtenir l'historique des level-ups
    */
   async getLevelUpHistory(): Promise<LevelUpEvent[]> {
-    const result = await secureInvoke<LevelUpEvent[]>('exp_get_level_up_history');
+    // ✅ IPC FIX (Ω∞.v1): exp_get_level_up_history → exp_get_timeline (backend command name)
+    const result = await secureInvoke<LevelUpEvent[]>('exp_get_timeline');
     return result.map(e => LevelUpEventSchema.parse(e));
   },
 };

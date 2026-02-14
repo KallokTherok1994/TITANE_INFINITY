@@ -228,8 +228,9 @@ class XPEngine {
     if (this.initialized) return;
 
     try {
+      // ✅ IPC FIX (Ω∞.v1): xp_get_state → exp_get_global_state (backend command name)
       // Essayer de charger depuis Tauri backend
-      const backendState = await secureInvoke<ProgressionState>('xp_get_state');
+      const backendState = await secureInvoke<ProgressionState>('exp_get_global_state');
       if (backendState) {
         this.state = { ...createDefaultState(), ...backendState };
         console.log(

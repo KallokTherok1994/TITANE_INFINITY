@@ -431,15 +431,20 @@ export class UnifiedCognitivePipeline {
    */
   private async prepareTTS(text: string): Promise<TTSAudio> {
     try {
-      // FIX: Commande correcte = 'speak' ou 'tts_speak' (pas 'tts_generate_audio')
-      // Note: 'speak' retourne async void, donc on utilise 'tts_speak' pour récupérer l'audio
+      // ✅ IPC CONTRACT FIX (Ω∞.v1): tts_speak requires full TTSSettings with camelCase
+      // Backend signature: tts_speak(text: String, settings: TTSSettings)
+      // TTSSettings requires ALL 8 fields: engine, voiceId, rate, pitch, volume, language, emotionEnabled, autoFallback
       const result = await secureInvoke<TTSAudio>('tts_speak', {
         text,
         settings: {
-          voice_id: this.config.tts_voice,
-          speed: this.config.tts_speed,
+          engine: 'piper', // ✅ ADDED (required)
+          voiceId: this.config.tts_voice, // ✅ FIXED: snake_case → camelCase
+          rate: this.config.tts_speed, // ✅ FIXED: speed → rate (correct field name)
           pitch: 1.0,
           volume: 1.0,
+          language: 'fr-FR', // ✅ ADDED (required)
+          emotionEnabled: true, // ✅ ADDED (required)
+          autoFallback: true, // ✅ ADDED (required)
         },
       });
 
