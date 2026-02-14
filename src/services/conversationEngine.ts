@@ -228,14 +228,15 @@ export async function processMessage(
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
     const payload = validateIpcPayload('conversation_generate', {
-      message: userMessage,
-      conversationId,
-      mode: options?.mode || 'default',
-      provider: 'auto',
-      systemPrompt,
-      requestId,
+      args: {
+        message: userMessage,
+        conversationId,
+        mode: options?.mode || 'default',
+        provider: 'auto',
+        systemPrompt,
+        requestId,
+      },
     });
-
     const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
 
   const content = typeof raw?.content === 'string' ? raw.content : '';

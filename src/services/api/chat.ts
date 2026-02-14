@@ -9,6 +9,7 @@
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { validateIpcPayload } from '@/lib/ipcContract';
+import { isIPCError } from '@/lib/errorClassification';
 import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
@@ -390,12 +391,14 @@ class ChatService {
         config?.systemPrompt ?? getSystemPrompt(config?.mode ?? 'default');
 
       const payload = validateIpcPayload('conversation_generate', {
-        message,
-        conversationId,
-        mode: config?.mode ?? null,
-        provider: config?.provider ?? 'auto',
-        systemPrompt,
-        requestId,
+        args: {
+          message,
+          conversationId,
+          mode: config?.mode ?? null,
+          provider: config?.provider ?? 'auto',
+          systemPrompt,
+          requestId,
+        },
       });
 
       const backendResponse = await invokeWithRetry<any>(
@@ -511,6 +514,13 @@ class ChatService {
         mode: config?.mode,
       });
       monitoring.trackPipelineError();
+
+      if (isIPCError(error)) {
+        console.error(
+          '[ChatService-OMEGA] ❌ IPC payload mismatch (expected {args:{...}})'
+        );
+        throw new Error('IPC payload mismatch (expected {args:{...}})');
+      }
 
       const reason = error instanceof Error ? error.message : String(error);
       throw new Error(`Chat OMEGA envoi échoué: ${reason}`);

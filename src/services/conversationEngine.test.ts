@@ -54,4 +54,31 @@ describe('conversationEngine.processMessage', () => {
     expect(response.metadata.memory_effect).toBe('Recall');
     expect(response.metadata.links_to_contexts).toEqual(['a', 'b']);
   });
+
+  it('wraps conversation_generate payload under args', async () => {
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce('c3')
+      .mockResolvedValueOnce({
+        content: 'Ok',
+        conversationId: 'c3',
+        messageId: 'm3',
+        metadata: {},
+      });
+
+    await processMessage('Hi');
+
+    const generateCall = vi
+      .mocked(secureInvoke)
+      .mock.calls.find(([command]) => command === 'conversation_generate');
+
+    expect(generateCall).toBeDefined();
+    expect(generateCall?.[1]).toEqual(
+      expect.objectContaining({
+        args: expect.objectContaining({
+          message: 'Hi',
+          conversationId: 'c3',
+        }),
+      })
+    );
+  });
 });

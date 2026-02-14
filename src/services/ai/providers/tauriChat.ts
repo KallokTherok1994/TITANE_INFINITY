@@ -183,12 +183,14 @@ class TauriChatProvider implements AIProvider {
 
       // OMEGA: Protected invoke with timeout and retry
       const payload = validateIpcPayload('conversation_generate', {
-        message: request.message,
-        conversationId: request.conversationId,
-        mode: null,
-        provider: request.provider,
-        systemPrompt: request.systemPrompt,
-        requestId: request.requestId,
+        args: {
+          message: request.message,
+          conversationId: request.conversationId,
+          mode: null,
+          provider: request.provider,
+          systemPrompt: request.systemPrompt,
+          requestId: request.requestId,
+        },
       });
 
       const response = await Promise.race([

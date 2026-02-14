@@ -125,9 +125,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
     // Step 3: Générer message de bienvenue IA via OMEGA Pipeline
     const step3 = await measureStep('Generate AI welcome message', async () => {
       const response = await invoke('conversation_generate', {
-        message: 'Bonjour, je suis un nouvel utilisateur',
-        conversationId: 'onboarding-001',
-        mode: 'coach',
+        args: {
+          message: 'Bonjour, je suis un nouvel utilisateur',
+          conversationId: 'onboarding-001',
+          mode: 'coach',
+        },
       });
       expect(response).toBeDefined();
       // Extract content from OMEGA response
@@ -239,9 +241,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
     // Step 3: Générer analyse IA du document via OMEGA Pipeline
     const step3 = await measureStep('AI document analysis', async () => {
       const analysis = await invoke('conversation_generate', {
-        message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
-        conversationId: 'legal-001',
-        mode: 'synthesis',
+        args: {
+          message: 'Analyse ce contrat: CONTRAT DE PRESTATION - Article 1: Objet',
+          conversationId: 'legal-001',
+          mode: 'synthesis',
+        },
       });
       expect(analysis).toBeDefined();
       const content =
@@ -342,9 +346,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
     // Step 3: Générer synthèse IA des résultats via OMEGA Pipeline
     const step3 = await measureStep('AI synthesis', async () => {
       const synthesis = await invoke('conversation_generate', {
-        message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
-        conversationId: 'websearch-001',
-        mode: 'synthesis',
+        args: {
+          message: 'Synthétise ces résultats web: Cognitive Architecture, TITANE Design',
+          conversationId: 'websearch-001',
+          mode: 'synthesis',
+        },
       });
       expect(synthesis).toBeDefined();
       const content =
@@ -504,9 +510,11 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', ()
     // Step 1: Chat IA → Memory → Timeline
     const step1 = await measureStep('AI chat + memory save', async () => {
       const message = await invoke('conversation_generate', {
-        message: 'Analyse mes projets actifs',
-        conversationId: 'complex-001',
-        mode: 'default',
+        args: {
+          message: 'Analyse mes projets actifs',
+          conversationId: 'complex-001',
+          mode: 'default',
+        },
       });
       await invoke('memory_save_chat_interaction', {
         interaction: {

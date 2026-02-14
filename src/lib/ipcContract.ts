@@ -11,13 +11,17 @@ export type IpcCommandName =
   | 'singularity_get_full_state'
   | 'get_copilot_key_status';
 
-const ConversationGenerateSchema = z.object({
+const ConversationGenerateArgsSchema = z.object({
   message: z.string().min(1),
   conversationId: z.string().min(1),
   mode: z.string().nullable().optional(),
   provider: z.string().nullable().optional(),
   systemPrompt: z.string().nullable().optional(),
   requestId: z.string().nullable().optional(),
+});
+
+const ConversationGenerateSchema = z.object({
+  args: ConversationGenerateArgsSchema,
 });
 
 const TtsSettingsSchema = z.object({

@@ -216,17 +216,30 @@ describe('TITANE∞ - IPC Contract Tests', () => {
   it('should reject snake_case IPC payloads for conversation_generate', () => {
     expect(() =>
       validateIpcPayload('conversation_generate', {
-        message: 'test',
-        conversation_id: 'bad',
+        args: {
+          message: 'test',
+          conversation_id: 'bad',
+        },
       })
     ).toThrow(/snake_case/i);
 
     const ok = validateIpcPayload('conversation_generate', {
-      message: 'test',
-      conversationId: 'ok',
+      args: {
+        message: 'test',
+        conversationId: 'ok',
+      },
     });
 
-    expect(ok.conversationId).toBe('ok');
+    expect(ok.args.conversationId).toBe('ok');
+  });
+
+  it('should require args wrapper for conversation_generate', () => {
+    expect(() =>
+      validateIpcPayload('conversation_generate', {
+        message: 'test',
+        conversationId: 'flat',
+      })
+    ).toThrow(/missing required field/i);
   });
 
   // Test de performance du contrat
