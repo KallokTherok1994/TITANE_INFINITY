@@ -18,14 +18,18 @@ const TIMEOUT_SECONDS: u64 = 60;
 
 fn ollama_base_url() -> String {
     std::env::var("OLLAMA_BASE_URL")
-        .or_else(|_| std::env::var("OLLAMA_URL"))
-        .unwrap_or_else(|_| DEFAULT_OLLAMA_BASE_URL.to_string())
+        .ok()
+        .filter(|s| !s.is_empty())
+        .or_else(|| std::env::var("OLLAMA_URL").ok().filter(|s| !s.is_empty()))
+        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string())
 }
 
 fn ollama_default_model() -> String {
     std::env::var("OLLAMA_DEFAULT_MODEL")
-        .or_else(|_| std::env::var("OLLAMA_MODEL"))
-        .unwrap_or_else(|_| DEFAULT_OLLAMA_MODEL.to_string())
+        .ok()
+        .filter(|s| !s.is_empty())
+        .or_else(|| std::env::var("OLLAMA_MODEL").ok().filter(|s| !s.is_empty()))
+        .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -424,8 +428,11 @@ impl OllamaClient {
             .build()
             .unwrap_or_else(|_| reqwest::Client::new());
 
+        let resolved_model = model.unwrap_or_else(ollama_default_model);
+        log::info!("[OllamaClient] new() | resolved_model={}", resolved_model);
+
         Self {
-            model: model.unwrap_or_else(ollama_default_model),
+            model: resolved_model,
             client,
             shell_guard: ShellGuard::new(),
         }
@@ -469,9 +476,17 @@ impl OllamaClient {
             },
         };
 
+        let url = format!("{}/api/generate", ollama_base_url());
+        log::debug!(
+            "[OllamaClient] POST {} | model={} | prompt_len={}",
+            url,
+            self.model,
+            request.prompt.len()
+        );
+
         let response = self
             .client
-            .post(format!("{}/api/generate", ollama_base_url()))
+            .post(&url)
             .json(&ollama_request)
             .send()
             .await

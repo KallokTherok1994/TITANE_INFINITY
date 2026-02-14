@@ -28,8 +28,8 @@ impl LocalProvider {
         Self {
             ollama_url: ollama_url.unwrap_or_else(Self::default_ollama_url),
             client: Client::new(),
-            model_fast: "llama3".to_string(),
-            model_quality: "mistral".to_string(),
+            model_fast: "gemma2:2b".to_string(),  // ✨ Use installed model (was "llama3")
+            model_quality: "mistral:latest".to_string(),  // ✨ Use explicit tag
         }
     }
 
