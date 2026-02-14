@@ -91,7 +91,11 @@ describe('LogViewer Component', () => {
       fireEvent.change(levelSelect, { target: { value: 'error' } });
 
       await waitFor(() => {
-        expect(mockSecureInvoke).toHaveBeenCalledWith('get_logs', expect.any(Object));
+        expect(mockSecureInvoke).toHaveBeenCalledWith(
+          'get_logs',
+          expect.any(Object),
+          undefined
+        );
         expect(screen.getByText('Error message')).toBeInTheDocument();
         expect(screen.queryByText('Info message')).not.toBeInTheDocument();
       });
@@ -157,7 +161,7 @@ describe('LogViewer Component', () => {
       const clearButton = screen.getByRole('button', { name: /clear/i });
       fireEvent.click(clearButton);
 
-      expect(mockSecureInvoke).toHaveBeenCalledWith('clear_logs');
+      expect(mockSecureInvoke).toHaveBeenCalledWith('clear_logs', {}, undefined);
     });
 
     it('should export logs', () => {

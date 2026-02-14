@@ -297,16 +297,16 @@ export interface AIProviderAdapter {
 export interface AiError {
   /** Machine-readable error code (e.g., 'OLLAMA_TIMEOUT', 'OLLAMA_UNREACHABLE') */
   code: string;
-  
+
   /** Human-readable error message (French, user-facing) */
   message: string;
-  
+
   /** Optional hint for user action (e.g., "Démarre Ollama puis réessaie") */
   hint?: string;
-  
+
   /** Whether this error is retryable (true = show "Réessayer" button) */
   retryable: boolean;
-  
+
   /** Optional technical details (for debugging, not shown to user) */
   details?: Record<string, unknown>;
 }
@@ -332,7 +332,7 @@ export interface AiErr {
 
 /**
  * Universal AI result type (replaces throw-based error handling)
- * 
+ *
  * Usage:
  * ```typescript
  * const result = await ollamaGenerate(req);

@@ -1,9 +1,9 @@
 /**
  * Tauri IPC Mock for E2E Tests
- * 
+ *
  * Provides realistic mock responses for Tauri backend commands
  * when running E2E tests without a real Tauri dev server.
- * 
+ *
  * Coverage:
  * - Memory Tree Viewer: memory::get_tree_state, get_memory_node
  * - OMEGA Pipeline: orchestrator::send_message, chat interactions
@@ -35,7 +35,7 @@ export function installTauriMocks(config: TauriMockConfig = {}): void {
         }
 
         // Simulate latency
-        await new Promise((resolve) => setTimeout(resolve, cfg.mockLatency));
+        await new Promise(resolve => setTimeout(resolve, cfg.mockLatency));
 
         // Route to appropriate handler
         return handleTauriCommand(command, args, cfg);
@@ -246,7 +246,7 @@ async function mockChatResponse(message: string, cfg: TauriMockConfig) {
   if ((window as any).__TAURI__?.event?.emit) {
     const words = responseText.split(' ');
     for (let i = 0; i < words.length; i++) {
-      await new Promise((resolve) => setTimeout(resolve, 20));
+      await new Promise(resolve => setTimeout(resolve, 20));
       (window as any).__TAURI__.event.emit('chat:token', {
         token: words[i] + ' ',
         done: i === words.length - 1,

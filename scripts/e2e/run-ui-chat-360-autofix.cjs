@@ -66,20 +66,20 @@ console.log('✅ Tauri binary found');
 console.log('');
 
 // **PHASE 0.5: Start Vite dev server (CRITICAL for debug binary)**
-// Note: tauri.conf.json specifies devUrl port1420, we match that
-console.log('🔧 Phase 0.5: Starting Vite dev server (standalone on port 1420)...');
+// Align devUrl with 5173 for WebDriver stability
+console.log('🔧 Phase 0.5: Starting Vite dev server (standalone on port 5173)...');
 
 let viteProcess = null;
-const VITE_PORT = 1420;
+const VITE_PORT = 5173;
 
-// Check if Vite already running on port 1420
+// Check if Vite already running on port 5173
 try {
   execSync(`ss -ltn | grep :${VITE_PORT}`, { stdio: 'pipe' });
   console.log(`✅ Vite already running on port ${VITE_PORT}`);
 } catch {
   console.log('⏳ Starting Vite standalone...');
 
-  // Launch VITE ONLY (not tauri dev) on port 1420 to match tauri.conf.json
+  // Launch VITE ONLY (not tauri dev) on port 5173 for E2E stability
   viteProcess = spawn(
     'pnpm',
     ['exec', 'vite', 'dev', '--port', String(VITE_PORT), '--host', '127.0.0.1'],
@@ -91,6 +91,7 @@ try {
         ...process.env,
         VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
         OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
+        TAURI_DEV_SERVER_URL: `http://127.0.0.1:${VITE_PORT}`,
       },
     }
   );

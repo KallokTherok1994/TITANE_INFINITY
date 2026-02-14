@@ -41,7 +41,7 @@ describe('useSystemHealth Hook', () => {
         status: 'active',
       })),
     },
-    system_health: {
+    get_system_health: {
       uptime_ms: 1000,
       cpu_usage: 10,
       memory_usage_mb: 256,
@@ -96,9 +96,9 @@ describe('useSystemHealth Hook', () => {
   describe('Alerts', () => {
     it('should generate warnings when thresholds exceeded', async () => {
       vi.mocked(secureInvoke).mockImplementation(async command => {
-        if (command === 'system_health') {
+        if (command === 'get_system_health') {
           return {
-            ...mockHealthPayloads.system_health,
+            ...mockHealthPayloads.get_system_health,
             cpu_usage: 90,
           };
         }

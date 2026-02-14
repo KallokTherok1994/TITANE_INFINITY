@@ -25,10 +25,8 @@ const CHAT_INPUT_SELECTOR =
 const SEND_BUTTON_SELECTOR =
   'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
 const MESSAGE_CONTAINER_SELECTOR = '.chat-messages';
-const ASSISTANT_MESSAGE_SELECTOR =
-  `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
-const USER_MESSAGE_SELECTOR =
-  `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-user .message-text`;
+const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
+const USER_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-user .message-text`;
 
 // Helper: wait for response in chat UI
 async function waitForResponse(page, _userMessage: string, timeoutMs = 15000) {

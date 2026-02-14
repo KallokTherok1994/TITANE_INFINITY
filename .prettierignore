@@ -66,7 +66,7 @@ EVOLUTION_*.md
 TITANE_MEMORY_OS*.md
 TITANE_DEVTOOLS_OS_REPORT.md
 TITANE_KERNEL_v20Ω_REPORT.md
-docs/**/*.md
+docs/**
 **/AUDIT_*.md
 **/ARCHITECTURE_*.md
 **/ANALYSE_*.md
@@ -104,3 +104,6 @@ scripts/**/*REPORT*.js
 # Other specific files
 E2E_TIER1_RESULTS_ANALYSIS.md
 REPORTS_INDEX_SESSION_2.md
+baseline_measurements_real_w1.json
+OPTIMIZATION_TARGETS_W1.md
+runtime/registry/**

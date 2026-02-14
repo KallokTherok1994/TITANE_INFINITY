@@ -212,10 +212,14 @@ mod tests {
     #[test]
     fn test_generate_baseline_report() {
         let mut capture = PerfMetricsCapture::new();
-        capture.record(capture.capture_provider_cascade());
-        capture.record(capture.capture_memory_allocation());
-        capture.record(capture.capture_cache_operations());
-        capture.record(capture.capture_query_response());
+        let provider_metric = capture.capture_provider_cascade();
+        let memory_metric = capture.capture_memory_allocation();
+        let cache_metric = capture.capture_cache_operations();
+        let query_metric = capture.capture_query_response();
+        capture.record(provider_metric);
+        capture.record(memory_metric);
+        capture.record(cache_metric);
+        capture.record(query_metric);
         
         let report = capture.generate_baseline_report();
         
@@ -228,7 +232,8 @@ mod tests {
     #[test]
     fn test_export_json() {
         let mut capture = PerfMetricsCapture::new();
-        capture.record(capture.capture_provider_cascade());
+        let metric = capture.capture_provider_cascade();
+        capture.record(metric);
         
         let json = capture.export_json();
         assert!(json.contains("provider_cascade"));
