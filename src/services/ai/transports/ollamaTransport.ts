@@ -117,7 +117,7 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
         error: {
           code: 'OLLAMA_HTTP_ERROR',
           message: `HTTP ${response.status}: ${response.statusText}`,
-          hint: 'Vérifie que Ollama est démarré et accessible.',
+          hint: 'Ollama indisponible. TITANE bascule en mode local.',
           retryable: true,
         },
       };
@@ -131,17 +131,15 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
     };
   } catch (error) {
     const err = error as Error;
+    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: err.name === 'AbortError' ? 'OLLAMA_TIMEOUT' : 'OLLAMA_UNREACHABLE',
-        message:
-          err.name === 'AbortError'
-            ? 'Délai de réponse dépassé (8s)'
-            : `Connexion impossible: ${err.message}`,
-        hint: 'Ollama est indisponible. Démarre le service puis réessaie.',
-        retryable: true,
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_UNREACHABLE',
+        message: isAbort ? 'Requete annulee' : `Connexion impossible: ${err.message}`,
+        hint: 'Ollama indisponible. TITANE bascule en mode local.',
+        retryable: !isAbort,
       },
     };
   }
@@ -182,7 +180,7 @@ async function httpGenerate(
         error: {
           code: 'OLLAMA_HTTP_ERROR',
           message: `HTTP ${response.status}`,
-          hint: 'Vérifie que Ollama fonctionne correctement.',
+          hint: 'Ollama indisponible. TITANE bascule en mode local.',
           retryable: response.status >= 500,
         },
       };
@@ -213,17 +211,17 @@ async function httpGenerate(
     };
   } catch (error) {
     const err = error as Error;
+    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: err.name === 'AbortError' ? 'OLLAMA_TIMEOUT' : 'OLLAMA_UNREACHABLE',
-        message:
-          err.name === 'AbortError'
-            ? `Délai de réponse dépassé (${req.timeout_secs || 30}s)`
-            : `Connexion impossible: ${err.message}`,
-        hint: 'Ollama est indisponible (service local). Démarre Ollama puis réessaie.',
-        retryable: true,
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_UNREACHABLE',
+        message: isAbort
+          ? `Requete annulee`
+          : `Connexion impossible: ${err.message}`,
+        hint: 'Ollama indisponible. TITANE bascule en mode local.',
+        retryable: !isAbort,
       },
     };
   }
@@ -259,7 +257,7 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
         error: {
           code: 'OLLAMA_IPC_ERROR',
           message: testResult.error,
-          hint: 'Ollama est indisponible (service local). Démarre Ollama puis réessaie.',
+          hint: 'Ollama indisponible. TITANE bascule en mode local.',
           retryable: true,
         },
       };
@@ -275,14 +273,15 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
     };
   } catch (error) {
     const err = error as Error;
+    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: 'OLLAMA_IPC_FAILED',
-        message: `Invoke failed: ${err.message}`,
-        hint: "Le service Ollama local n'est pas accessible.",
-        retryable: true,
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_IPC_FAILED',
+        message: isAbort ? 'Requete annulee' : `Invoke failed: ${err.message}`,
+        hint: 'Ollama indisponible. TITANE bascule en mode local.',
+        retryable: !isAbort,
       },
     };
   }
@@ -317,9 +316,7 @@ async function ipcGenerate(
         error: {
           code: 'OLLAMA_IPC_ERROR',
           message: result.error,
-          hint: result.error.includes('offline')
-            ? 'Ollama est indisponible. Démarre le service puis réessaie.'
-            : 'Une erreur est survenue. Réessaie ou vérifie les logs.',
+          hint: 'Ollama indisponible. TITANE bascule en mode local.',
           retryable: true,
         },
       };
@@ -336,14 +333,15 @@ async function ipcGenerate(
     };
   } catch (error) {
     const err = error as Error;
+    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: 'OLLAMA_IPC_EXCEPTION',
-        message: `Invoke exception: ${err.message}`,
-        hint: "Le backend Tauri n'a pas pu appeler Ollama. Vérifie que le service est démarré.",
-        retryable: true,
+        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_IPC_EXCEPTION',
+        message: isAbort ? 'Requete annulee' : `Invoke exception: ${err.message}`,
+        hint: 'Ollama indisponible. TITANE bascule en mode local.',
+        retryable: !isAbort,
       },
     };
   }

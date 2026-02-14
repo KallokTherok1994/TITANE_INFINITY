@@ -39,8 +39,8 @@ export default defineConfig({
   // Browser options
   use: {
     baseURL: process.env.TITANE_E2E_PORT
-      ? `http://localhost:${process.env.TITANE_E2E_PORT}`
-      : 'http://localhost:5173',
+      ? `http://127.0.0.1:${process.env.TITANE_E2E_PORT}`
+      : 'http://127.0.0.1:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',

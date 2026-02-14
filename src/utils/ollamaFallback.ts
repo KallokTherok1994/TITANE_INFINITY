@@ -84,7 +84,7 @@ export async function callOllamaDirectly(
 
     // Return error as content
     return {
-      content: `Erreur lors de l'appel à Ollama : ${error instanceof Error ? error.message : String(error)}. Assurez-vous que le service local est actif.`,
+      content: `Ollama indisponible. TITANE bascule en mode local.`,
       conversationId: request.conversation_id,
       messageId: `error-${Date.now()}`,
       latencyMs: Date.now() - startTime,

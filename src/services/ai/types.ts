@@ -301,7 +301,7 @@ export interface AiError {
   /** Human-readable error message (French, user-facing) */
   message: string;
 
-  /** Optional hint for user action (e.g., "Démarre Ollama puis réessaie") */
+  /** Optional hint for user action (e.g., "Vérifie ta connexion") */
   hint?: string;
 
   /** Whether this error is retryable (true = show "Réessayer" button) */
