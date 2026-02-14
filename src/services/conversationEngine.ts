@@ -227,17 +227,17 @@ export async function processMessage(
   const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-    const payload = validateIpcPayload('conversation_generate', {
-      args: {
-        message: userMessage,
-        conversationId,
-        mode: options?.mode || 'default',
-        provider: 'auto',
-        systemPrompt,
-        requestId,
-      },
-    });
-    const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
+  const payload = validateIpcPayload('conversation_generate', {
+    args: {
+      message: userMessage,
+      conversationId,
+      mode: options?.mode || 'default',
+      provider: 'auto',
+      systemPrompt,
+      requestId,
+    },
+  });
+  const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
 
   const content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {

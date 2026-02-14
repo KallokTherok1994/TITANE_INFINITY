@@ -39,7 +39,7 @@ function getRustCommands(): Set<string> {
         const commandRegex = /#\[(tauri::)?command\]\s*\n\s*pub\s+(async\s+)?fn\s+(\w+)/g;
         let match;
         while ((match = commandRegex.exec(content)) !== null) {
-          commands.add(match[3]);  // match[3] = nom fonction
+          commands.add(match[3]); // match[3] = nom fonction
         }
       }
     }
@@ -101,9 +101,7 @@ describe('TITANE∞ - IPC Contract Tests', () => {
 
   const rustNormalized = new Set(Array.from(rustCommands).map(normalize));
   const wrappersNormalized = new Set(Array.from(clientWrappers).map(normalize));
-  const canonicalNormalized = new Set(
-    Array.from(canonicalCommands).map(normalize)
-  );
+  const canonicalNormalized = new Set(Array.from(canonicalCommands).map(normalize));
   const allowedNormalized = new Set(Array.from(allowedCommands).map(normalize));
 
   it('should have Rust commands for all canonical commands', () => {
@@ -140,7 +138,10 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     }
 
     if (missingImplementations.length > 80) {
-      console.error(`[IPC Guard] ⚠️ Missing implementations (${missingImplementations.length}/80):`, missingImplementations.slice(0, 20));
+      console.error(
+        `[IPC Guard] ⚠️ Missing implementations (${missingImplementations.length}/80):`,
+        missingImplementations.slice(0, 20)
+      );
     }
 
     expect(missingImplementations.length).toBeLessThanOrEqual(80);
@@ -187,7 +188,10 @@ describe('TITANE∞ - IPC Contract Tests', () => {
     }
 
     if (orphanedCommands.length > 500) {
-      console.error(`[IPC Guard] ⚠️ Orphaned commands (${orphanedCommands.length}/500):`, orphanedCommands.slice(0, 20));
+      console.error(
+        `[IPC Guard] ⚠️ Orphaned commands (${orphanedCommands.length}/500):`,
+        orphanedCommands.slice(0, 20)
+      );
     }
 
     // Note: Certains commands peuvent être utilisés via des mécanismes dynamiques

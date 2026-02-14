@@ -669,7 +669,9 @@ class AIOrchestrator {
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else {
             score += 80; // Score élevé en mode auto = prioritaire avec cascade
-            logger.debug('   🏠 AUTO MODE: Ollama prioritaire (score élevé + cascade cloud)');
+            logger.debug(
+              '   🏠 AUTO MODE: Ollama prioritaire (score élevé + cascade cloud)'
+            );
           }
           score += messageLength < 500 ? 10 : 0; // Bonus messages courts
           score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK

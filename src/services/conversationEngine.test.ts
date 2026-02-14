@@ -56,14 +56,12 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('wraps conversation_generate payload under args', async () => {
-    vi.mocked(secureInvoke)
-      .mockResolvedValueOnce('c3')
-      .mockResolvedValueOnce({
-        content: 'Ok',
-        conversationId: 'c3',
-        messageId: 'm3',
-        metadata: {},
-      });
+    vi.mocked(secureInvoke).mockResolvedValueOnce('c3').mockResolvedValueOnce({
+      content: 'Ok',
+      conversationId: 'c3',
+      messageId: 'm3',
+      metadata: {},
+    });
 
     await processMessage('Hi');
 
