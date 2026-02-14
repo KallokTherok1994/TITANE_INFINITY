@@ -139,6 +139,33 @@ Documentation guides organisée pour:
 
 ---
 
+## 🌐 INSTALLATION & DEPLOYMENT GUIDES
+
+**Path:** `docs/` (root level guides)
+
+### [GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md](../GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md) (1,593 lignes) ⭐⭐⭐ **NEW**
+**Description:** Guide complet installation TITANE∞ + Ollama en réseau production  
+**Consolidation:** Installation knowledge + Network deployment → enterprise-ready guide
+
+**Contenu:**
+- 🏗️ **Architecture Réseau** - Client-serveur, multi-nœuds, haute disponibilité
+- 🔧 **Prérequis Infrastructure** - Serveur Ollama, clients TITANE, réseau requirements
+- 🖥️ **Installation Serveur Ollama** - Configuration réseau, modèles, systemd service
+- 💻 **Configuration Clients TITANE** - Variables environnement, fichiers config, tests connexion
+- 🔒 **Sécurité Réseau** - Pare-feu (UFW, iptables), TLS/SSL, authentification, audit logs
+- 🔄 **Proxy Reverse & Load Balancing** - Nginx, HAProxy, Traefik configurations
+- 📊 **Monitoring & Observabilité** - Prometheus, Grafana, Node Exporter, alerting
+- ⚡ **Haute Disponibilité** - Cluster multi-nœuds, synchronisation modèles, failover automatique
+- 🐛 **Troubleshooting Réseau** - Diagnostic, latence, load balancer, GPU non détecté
+- ⚡ **Optimisation Performance** - Réseau (MTU, TCP tuning), GPU, cache, benchmarking
+- 🏢 **Scénarios Architecture** - PME (10-50 users), Moyenne entreprise (50-200), Grande (200+), Multi-sites, Cloud hybride
+
+**Target audience:** Administrateurs systèmes, DevOps, DSI, Architectes infrastructure  
+**Prerequisites:** Connaissances Linux, réseau, administration système  
+**Temps lecture:** 60-90 minutes (référence complète)
+
+---
+
 ## 🎨 FEATURES GUIDES (À VENIR)
 
 **Path:** `docs/04_guides/features/` (Phase 8+ pending)
@@ -169,14 +196,17 @@ Documentation guides organisée pour:
 - **👤 Nouvel utilisateur** → [QUICKSTART.md](quickstart/QUICKSTART.md)
 - **👨‍💻 Nouveau développeur** → [SETUP.md](development/SETUP.md) → [TESTING.md](development/TESTING.md)
 - **🧪 QA engineer** → [TESTING.md](development/TESTING.md)
+- **🏢 Admin système / DevOps** → [GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md](../GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md)
 - **🎨 Feature specialist** → features/ (à venir)
 
 ### Par objectif:
 - **⚡ Installation rapide** → [QUICKSTART.md § Installation](quickstart/QUICKSTART.md#installation-rapide)
+- **🌐 Installation réseau production** → [GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md](../GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md)
 - **💬 Configurer Chat IA** → [QUICKSTART.md § Chat IA](quickstart/QUICKSTART.md#chat-ia---premiers-pas)
 - **🛠️ Setup dev environment** → [SETUP.md](development/SETUP.md)
 - **🧪 Lancer tests** → [TESTING.md § Tests Frontend/Backend](development/TESTING.md#tests-frontend)
 - **🔧 Dépannage** → [QUICKSTART.md § Dépannage](quickstart/QUICKSTART.md#dépannage)
+- **📊 Monitoring production** → [GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md § Monitoring](../GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md#monitoring--observabilité)
 
 ### Par feature:
 - **UnifiedMemory OS** → [QUICKSTART.md § Features](quickstart/QUICKSTART.md#features-essentielles) + (future: features/MEMORY_OS.md)
