@@ -75,10 +75,20 @@
 - Always return `{ ok, content, error }`.
 - UI must never be silent: bounded response time + fallback path.
 
+**Anti-silence (UI/IPC/Chat)**
+
+**NO_LYING_FALLBACK (bloquant)**
+- Un fallback ne peut jamais **changer la cause**.
+- Erreur IPC / allowlist / schema / invalid payload ⇒ doit produire une erreur visible **IPC_*** (pas “provider down”).
+- “Ollama indisponible” ne peut être affiché que si un **healthcheck Ollama** échoue (preuve ≤ 3s) ou si l’erreur réseau est clairement Ollama.
+
 **Always Respond:**
 
 - If provider fails, fall back to local/offline generator.
 - Max wait time is bounded; no infinite waits.
+- Always Respond = toujours une réponse UI **ou erreur visible**, avec code stable:
+	`{ ok:false, error:{ code, message, details }, traceId }`
+- Interdiction des messages trompeurs.
 
 ---
 
@@ -88,6 +98,11 @@
 - External providers are optional and never hard deps.
 - Circuit breaker + timeouts for every provider.
 - Offline generator is required fallback.
+
+**LOCAL-FIRST (clarification stricte)**
+- Local-first = mémoire, persistance, gouvernance et UX **en local par défaut**.
+- Local-first **≠** interdiction du réseau.
+- Les providers externes sont **optionnels**, utilisés seulement si configurés, et doivent respecter: timeouts, breakers, logs, attribution vraie des erreurs.
 
 ---
 

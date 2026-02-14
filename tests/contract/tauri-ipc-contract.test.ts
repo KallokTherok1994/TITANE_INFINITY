@@ -239,7 +239,7 @@ describe('TITANE∞ - IPC Contract Tests', () => {
         message: 'test',
         conversationId: 'flat',
       })
-    ).toThrow(/invalid field args/i);
+    ).toThrow(/IPC contract error: (Missing required field|Invalid field)[: ]?args/i);
   });
 
   // Test de performance du contrat
