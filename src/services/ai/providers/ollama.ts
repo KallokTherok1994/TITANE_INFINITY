@@ -34,11 +34,74 @@ const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 // ✅ AUDIT FIX #3: Boot ready gate — tracks if Ollama initialized successfully
 export let IS_OLLAMA_READY = false;
 
+// ✅ PROD FIX v27.0.2: Default Ollama Configuration
+export const DEFAULT_OLLAMA_CONFIG = {
+  endpoint: 'http://127.0.0.1:11434',
+  host: '127.0.0.1',
+  port: 11434,
+  model: 'gemma2:2b',
+  temperature: 0.7,
+  top_p: 0.9,
+  top_k: 40,
+  num_predict: 128,
+  repeat_penalty: 1.1,
+  timeout_ms: 60000,
+  connect_timeout_ms: 5000,
+  retry_count: 3,
+  retry_delay_ms: 1000,
+  auto_start: true,
+  check_on_startup: true,
+  fallback_provider: 'titane-local',
+} as const;
+
+export function getOllamaConfig() {
+  // 1. Try environment variables first
+  const envModel = typeof process !== 'undefined' ? (process as any).env?.OLLAMA_MODEL : undefined;
+  const envEndpoint = typeof process !== 'undefined' ? (process as any).env?.OLLAMA_ENDPOINT : undefined;
+  
+  if (envModel || envEndpoint) {
+    return {
+      ...DEFAULT_OLLAMA_CONFIG,
+      ...(envModel && { model: envModel.trim() }),
+      ...(envEndpoint && { endpoint: envEndpoint.trim() }),
+    };
+  }
+  
+  // 2. Try localStorage (persisted user config)
+  try {
+    const stored = typeof localStorage !== 'undefined' ? localStorage.getItem('titane_ollama_config') : null;
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      return { ...DEFAULT_OLLAMA_CONFIG, ...parsed };
+    }
+  } catch (err) {
+    console.warn('[Ollama] Failed to load stored config:', err);
+  }
+  
+  // 3. Return defaults
+  return { ...DEFAULT_OLLAMA_CONFIG };
+}
+
+export function setOllamaConfig(config: Partial<typeof DEFAULT_OLLAMA_CONFIG>) {
+  try {
+    const current = getOllamaConfig();
+    const updated = { ...current, ...config };
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('titane_ollama_config', JSON.stringify(updated));
+      console.log('[Ollama] Configuration updated and persisted:', config);
+    }
+    return true;
+  } catch (err) {
+    console.error('[Ollama] Failed to save config:', err);
+    return false;
+  }
+}
+
 const OLLAMA_MODEL =
   typeof runtimeConfig.ollamaModel === 'string' &&
   runtimeConfig.ollamaModel.trim().length > 0
     ? runtimeConfig.ollamaModel.trim()
-    : 'gemma2:2b';
+    : getOllamaConfig().model;
 const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
 
 // OMEGA: Endpoint health tracking

@@ -622,38 +622,99 @@ fn main() {
             });
 
             // ─────────────────────────────────────────────────────────────
-            // OLLAMA BUNDLED AUTO-START (AppImage/DEB)
-            // Starts bundled Ollama if local endpoint is not available.
+            // OLLAMA BUNDLED AUTO-START (AppImage/DEB/macOS)
+            // PROD FIX v27.0.2: Enhanced startup with multiple fallback strategies
+            // Attempts: 1) Check if running, 2) Bundled binary, 3) System ollama, 4) Warn user
             // ─────────────────────────────────────────────────────────────
             let app_handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
+                log::info!("[Ollama] ═══════════════════════════════════════════════════");
+                log::info!("[Ollama] PROD FIX v27.0.2: Enhanced Auto-Start Routine");
+                log::info!("[Ollama] ═══════════════════════════════════════════════════");
+                
+                // STEP 1: Check if Ollama already running
                 if let Ok(status) = titane_infinity::ai::ollama::ai_check_ollama_status().await {
                     if status.available {
-                        log::info!("[Ollama] Endpoint already available");
+                        log::info!("[Ollama] ✅ Endpoint already available");
+                        log::info!("[Ollama]    Endpoint: {}", status.endpoint);
                         return;
                     }
                 }
-
-                let bundled = app_handle
-                    .path()
-                    .resolve("resources/ollama/ollama", tauri::path::BaseDirectory::Resource)
-                    .ok();
-
-                let Some(ollama_path) = bundled.filter(|p| p.exists()) else {
-                    log::warn!("[Ollama] Bundled binary not found; skipping auto-start");
-                    return;
-                };
-
-                match ProcessCommand::new(ollama_path)
+                
+                log::warn!("[Ollama] ⚠️ Ollama endpoint not responding. Attempting to start...");
+                
+                // STEP 2: Try bundled binary (AppImage/custom builds)
+                if let Ok(resource_dir) = app_handle.path().resource_dir() {
+                    let bundled_paths = vec![
+                        resource_dir.join("resources/ollama/ollama"),
+                        resource_dir.join("ollama/ollama"),
+                        resource_dir.join("bin/ollama"),
+                        resource_dir.join("../ollama"),
+                    ];
+                    
+                    for ollama_path in bundled_paths {
+                        if ollama_path.exists() {
+                            log::info!("[Ollama] 🔍 Found bundled binary at: {:?}", ollama_path);
+                            match ProcessCommand::new(&ollama_path)
+                                .arg("serve")
+                                .env("OLLAMA_HOST", "127.0.0.1:11434")
+                                .stdout(Stdio::null())
+                                .stderr(Stdio::null())
+                                .spawn()
+                            {
+                                Ok(_) => {
+                                    log::info!("[Ollama] ✅ Bundled Ollama started successfully");
+                                    log::info!("[Ollama]    Binary: {:?}", ollama_path);
+                                    log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+                                    return;
+                                }
+                                Err(err) => {
+                                    log::warn!("[Ollama] ❌ Failed to start bundled: {}", err);
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                // STEP 3: Try system `ollama` command (Linux/macOS)
+                log::info!("[Ollama] 🔍 Trying system ollama command...");
+                match ProcessCommand::new("ollama")
                     .arg("serve")
                     .env("OLLAMA_HOST", "127.0.0.1:11434")
                     .stdout(Stdio::null())
                     .stderr(Stdio::null())
                     .spawn()
                 {
-                    Ok(_) => log::info!("[Ollama] Bundled server started"),
-                    Err(err) => log::warn!("[Ollama] Failed to start bundled server: {err}"),
+                    Ok(_) => {
+                        log::info!("[Ollama] ✅ System ollama started successfully");
+                        log::info!("[Ollama]    Command: ollama serve");
+                        log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+                        return;
+                    }
+                    Err(err) => {
+                        log::warn!("[Ollama] ❌ System ollama failed: {}", err);
+                    }
                 }
+                
+                // STEP 4: Final warning and instructions
+                log::error!("[Ollama] ═══════════════════════════════════════════════════");
+                log::error!("[Ollama] ❌ CRITICAL: Could not auto-start Ollama");
+                log::error!("[Ollama] ═══════════════════════════════════════════════════");
+                log::error!("[Ollama] Please start Ollama manually:");
+                log::error!("[Ollama]");
+                log::error!("[Ollama] 📱 macOS / Linux with Homebrew:");
+                log::error!("[Ollama]    brew install ollama");
+                log::error!("[Ollama]    ollama serve");
+                log::error!("[Ollama]");
+                log::error!("[Ollama] 🐧 Linux (apt):");
+                log::error!("[Ollama]    sudo apt-get install ollama");
+                log::error!("[Ollama]    sudo systemctl start ollama");
+                log::error!("[Ollama]");
+                log::error!("[Ollama] 🐳 Docker (all platforms):");
+                log::error!("[Ollama]    docker run -d -p 11434:11434 ollama/ollama");
+                log::error!("[Ollama]");
+                log::error!("[Ollama] 🌐 Once running, TITANE∞ will auto-connect");
+                log::error!("[Ollama] ═══════════════════════════════════════════════════");
             });
 
             // ─────────────────────────────────────────────────────────────
@@ -790,11 +851,23 @@ fn main() {
                     if let Err(err) = main_window.show() {
                         eprintln!("❌ Failed to show main window: {err}");
                     } else {
-                        // Auto-open DevTools in dev mode
-                        #[cfg(debug_assertions)]
-                        {
-                            main_window.open_devtools();
-                            log::info!("🛠️ DevTools opened automatically (dev mode)");
+                        // Auto-open DevTools (dev mode or TITANE_DEVTOOLS env var)
+                        let devtools_enabled = cfg!(debug_assertions)
+                            || std::env::var("TITANE_DEVTOOLS")
+                                .ok()
+                                .is_some_and(|v| v == "1" || v == "true");
+                        
+                        if devtools_enabled {
+                            if let Err(err) = main_window.open_devtools() {
+                                log::warn!("⚠️ Failed to open DevTools: {}", err);
+                            } else {
+                                let source = if cfg!(debug_assertions) { 
+                                    "dev mode" 
+                                } else { 
+                                    "TITANE_DEVTOOLS=1" 
+                                };
+                                log::info!("🛠️ DevTools opened automatically ({})", source);
+                            }
                         }
 
                         log::info!("✅ Main window shown successfully");
