@@ -12,6 +12,7 @@
 import { invoke } from '@tauri-apps/api/core';
 import { createLogger } from '@/utils/logger';
 import type { AiResult, AiOk, AiErr } from '../types';
+import { classifyError, isAbortError } from '@/lib/errorClassification';
 
 const logger = createLogger('OllamaTransport');
 
@@ -130,16 +131,22 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
       content: data,
     };
   } catch (error) {
-    const err = error as Error;
-    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_UNREACHABLE',
-        message: isAbort ? 'Requete annulee' : `Connexion impossible: ${err.message}`,
-        hint: 'Ollama indisponible. TITANE bascule en mode local.',
-        retryable: !isAbort,
+        code: isAbort
+          ? 'OLLAMA_ABORTED'
+          : classification.type === 'ipc'
+            ? 'IPC_CONTRACT_ERROR'
+            : 'OLLAMA_UNREACHABLE',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
       },
     };
   }
@@ -174,6 +181,7 @@ async function httpGenerate(
     );
 
     if (!response.ok) {
+      // HTTP errors from Ollama are provider-specific, not IPC
       return {
         ok: false,
         provider: 'ollama',
@@ -210,18 +218,22 @@ async function httpGenerate(
       },
     };
   } catch (error) {
-    const err = error as Error;
-    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_UNREACHABLE',
-        message: isAbort
-          ? `Requete annulee`
-          : `Connexion impossible: ${err.message}`,
-        hint: 'Ollama indisponible. TITANE bascule en mode local.',
-        retryable: !isAbort,
+        code: isAbort
+          ? 'OLLAMA_ABORTED'
+          : classification.type === 'ipc'
+            ? 'IPC_CONTRACT_ERROR'
+            : 'OLLAMA_UNREACHABLE',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
       },
     };
   }
@@ -251,14 +263,16 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
     });
 
     if (testResult.error) {
+      // ✅ IPC FIX (Ω∞.v1): Classify backend error
+      const classification = classifyError(testResult.error);
       return {
         ok: false,
         provider: 'ollama',
         error: {
-          code: 'OLLAMA_IPC_ERROR',
-          message: testResult.error,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: true,
+          code: classification.type === 'ipc' ? 'IPC_CONTRACT_ERROR' : 'OLLAMA_IPC_ERROR',
+          message: classification.message,
+          hint: classification.hint,
+          retryable: classification.retryable,
         },
       };
     }
@@ -272,16 +286,22 @@ async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
       },
     };
   } catch (error) {
-    const err = error as Error;
-    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_IPC_FAILED',
-        message: isAbort ? 'Requete annulee' : `Invoke failed: ${err.message}`,
-        hint: 'Ollama indisponible. TITANE bascule en mode local.',
-        retryable: !isAbort,
+        code: isAbort
+          ? 'OLLAMA_ABORTED'
+          : classification.type === 'ipc'
+            ? 'IPC_CONTRACT_ERROR'
+            : 'OLLAMA_IPC_FAILED',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
       },
     };
   }
@@ -310,14 +330,16 @@ async function ipcGenerate(
     });
 
     if (result.error) {
+      // ✅ IPC FIX (Ω∞.v1): Classify backend error
+      const classification = classifyError(result.error);
       return {
         ok: false,
         provider: 'ollama',
         error: {
-          code: 'OLLAMA_IPC_ERROR',
-          message: result.error,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: true,
+          code: classification.type === 'ipc' ? 'IPC_CONTRACT_ERROR' : 'OLLAMA_IPC_ERROR',
+          message: classification.message,
+          hint: classification.hint,
+          retryable: classification.retryable,
         },
       };
     }
@@ -332,16 +354,22 @@ async function ipcGenerate(
       },
     };
   } catch (error) {
-    const err = error as Error;
-    const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
+    const classification = classifyError(error);
+    const isAbort = isAbortError(error);
+
     return {
       ok: false,
       provider: 'ollama',
       error: {
-        code: isAbort ? 'OLLAMA_ABORTED' : 'OLLAMA_IPC_EXCEPTION',
-        message: isAbort ? 'Requete annulee' : `Invoke exception: ${err.message}`,
-        hint: 'Ollama indisponible. TITANE bascule en mode local.',
-        retryable: !isAbort,
+        code: isAbort
+          ? 'OLLAMA_ABORTED'
+          : classification.type === 'ipc'
+            ? 'IPC_CONTRACT_ERROR'
+            : 'OLLAMA_IPC_EXCEPTION',
+        message: isAbort ? 'Requete annulee' : classification.message,
+        hint: classification.hint,
+        retryable: !isAbort && classification.retryable,
       },
     };
   }

@@ -1717,7 +1717,8 @@ function normalizeInvokeError(command: string, error: unknown): Error {
   }
 
   const normalized = new Error('Invoke aborted');
-  const isOllamaCommand = command.includes('ollama') || command === 'conversation_generate';
+  const isOllamaCommand =
+    command.includes('ollama') || command === 'conversation_generate';
   normalized.name = isOllamaCommand ? 'OLLAMA_ABORTED' : 'TAURI_ABORTED';
   return normalized;
 }

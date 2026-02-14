@@ -22,6 +22,23 @@ vi.mock('@/lib/security', () => ({
 
 /**
  * ═══════════════════════════════════════════════════════════════════
+ * IPC CONTRACT FIX (Ω∞.v1): DEFAULT TEST TTS SETTINGS
+ * Backend tts_speak signature requires full TTSSettings object
+ * ═══════════════════════════════════════════════════════════════════
+ */
+const DEFAULT_TEST_TTS_SETTINGS = {
+  engine: 'piper',
+  voiceId: 'fr_FR-siwis-medium',
+  rate: 1.0,
+  pitch: 1.0,
+  volume: 1.0,
+  language: 'fr-FR',
+  emotionEnabled: true,
+  autoFallback: true,
+} as const;
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
  * HELPER: Simulate Voice Commands
  * ═══════════════════════════════════════════════════════════════════
  */
@@ -232,7 +249,10 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should speak text via TTS', async () => {
-    await secureInvoke('tts_speak', { text: 'Hello World' });
+    await secureInvoke('tts_speak', {
+      text: 'Hello World',
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
     expect(mockBackend.isSpeaking()).toBe(false); // After completion
   });
 
@@ -242,7 +262,10 @@ describe('Voice E2E Tests — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should stop TTS speaking', async () => {
-    const speakPromise = secureInvoke('tts_speak', { text: 'Long text...' });
+    const speakPromise = secureInvoke('tts_speak', {
+      text: 'Long text...',
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
 
     // Stop before completion
     await new Promise(resolve => setTimeout(resolve, 10));
@@ -260,9 +283,12 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should handle TTS playback errors', async () => {
     mockBackend.setConfig({ ttsError: true });
-    await expect(secureInvoke('tts_speak', { text: 'Error test' })).rejects.toThrow(
-      'TTS playback failed'
-    );
+    await expect(
+      secureInvoke('tts_speak', {
+        text: 'Error test',
+        settings: DEFAULT_TEST_TTS_SETTINGS,
+      })
+    ).rejects.toThrow('TTS playback failed');
   });
 
   /**
@@ -331,7 +357,10 @@ describe('Voice E2E Tests — Phase 8', () => {
     const aiResponse = `You said: ${transcript}`;
 
     // 4. Speak AI response
-    await secureInvoke('tts_speak', { text: aiResponse });
+    await secureInvoke('tts_speak', {
+      text: aiResponse,
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
     expect(mockBackend.isSpeaking()).toBe(false); // After completion
   });
 
@@ -357,7 +386,10 @@ describe('Voice E2E Tests — Phase 8', () => {
     audioStateMachine.transition('START_TTS');
     expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
 
-    await secureInvoke('tts_speak', { text: 'Response' });
+    await secureInvoke('tts_speak', {
+      text: 'Response',
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
 
     // End TTS → IDLE
     audioStateMachine.transition('END_TTS');
@@ -465,7 +497,10 @@ describe('Voice E2E Tests — Phase 8', () => {
       expect(transcript).toBe('Hello TITANE');
 
       // Speak response
-      await secureInvoke('tts_speak', { text: `Loop ${i + 1}` });
+      await secureInvoke('tts_speak', {
+        text: `Loop ${i + 1}`,
+        settings: DEFAULT_TEST_TTS_SETTINGS,
+      });
       expect(mockBackend.isSpeaking()).toBe(false);
     }
   });
@@ -489,7 +524,10 @@ describe('Voice E2E Tests — Phase 8', () => {
 
     // Slow TTS
     const ttsStartTime = Date.now();
-    await secureInvoke('tts_speak', { text: 'Slow response' });
+    await secureInvoke('tts_speak', {
+      text: 'Slow response',
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
     const ttsDuration = Date.now() - ttsStartTime;
 
     expect(ttsDuration).toBeGreaterThanOrEqual(200);
@@ -529,7 +567,10 @@ describe('Voice E2E Tests — Phase 8', () => {
 
     // PROCESSING → SPEAKING
     audioStateMachine.transition('START_TTS');
-    await secureInvoke('tts_speak', { text: `You said: ${transcript}` });
+    await secureInvoke('tts_speak', {
+      text: `You said: ${transcript}`,
+      settings: DEFAULT_TEST_TTS_SETTINGS,
+    });
 
     expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
 
