@@ -53,6 +53,10 @@ const RETRIABLE_ERROR_PATTERNS = [
  * Erreurs NON retriables (fatal, ne pas retry)
  */
 const NON_RETRIABLE_ERROR_PATTERNS = [
+  /abort/i,
+  /aborted/i,
+  /AbortError/i,
+  /OLLAMA_ABORTED/i,
   /invalid.?api.?key/i,
   /401/,
   /403/,

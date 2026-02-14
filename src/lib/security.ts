@@ -1708,6 +1708,20 @@ export function sanitizeResponse<T>(response: T): T {
  * );
  * ```
  */
+function normalizeInvokeError(command: string, error: unknown): Error {
+  const err = error instanceof Error ? error : new Error(String(error));
+  const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+
+  if (!isAbort) {
+    return err;
+  }
+
+  const normalized = new Error('Invoke aborted');
+  const isOllamaCommand = command.includes('ollama') || command === 'conversation_generate';
+  normalized.name = isOllamaCommand ? 'OLLAMA_ABORTED' : 'TAURI_ABORTED';
+  return normalized;
+}
+
 export async function secureInvoke<T>(
   command: string,
   payload: Record<string, unknown> = {},
@@ -1896,13 +1910,11 @@ export async function secureInvoke<T>(
 
     return sanitized as T;
   } catch (error) {
-    // Log et re-throw
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, errorMsg);
+    const normalized = normalizeInvokeError(command, error);
+    console.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
 
     try {
-      const err = error instanceof Error ? error : new Error(String(error));
-      monitoring.trackError(err, {
+      monitoring.trackError(normalized, {
         command,
         stage: 'invoke',
         latencyMs: Date.now() - startedAt,
@@ -1911,7 +1923,7 @@ export async function secureInvoke<T>(
       // ignore monitoring errors
     }
 
-    throw error;
+    throw normalized;
   }
 }
 

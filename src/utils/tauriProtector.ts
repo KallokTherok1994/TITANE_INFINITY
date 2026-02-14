@@ -340,38 +340,15 @@ export class TauriInvokeProtector {
         this.pendingInvokes.delete(command);
       }
 
-      console.warn(`[TauriProtector] Command ${command} failed:`, error);
+      const normalizedError = this.normalizeInvokeError(command, error);
 
-      // ✨ v20.5: Special handling for conversation_generate - try Ollama fallback
-      if (command === 'conversation_generate') {
-        try {
-          const { callOllamaDirectly } = await import('./ollamaFallback');
-          console.log(
-            '[TauriProtector] 🤖 Using Ollama fallback for conversation_generate'
-          );
-
-          const ollamaRequest = {
-            message: (args as any)?.message || '',
-            conversation_id: (args as any)?.conversation_id || `fallback-${Date.now()}`,
-            mode: (args as any)?.mode,
-            provider: (args as any)?.provider,
-            system_prompt: (args as any)?.system_prompt,
-            request_id: (args as any)?.request_id,
-          };
-
-          const result = await callOllamaDirectly(ollamaRequest);
-          return result as T;
-        } catch (ollamaError) {
-          console.error('[TauriProtector] ❌ Ollama fallback also failed:', ollamaError);
-          // Fall through to standard fallback below
-        }
-      }
+      console.warn(`[TauriProtector] Command ${command} failed:`, normalizedError);
 
       if (this.isTestEnv) {
         // En mode test, propager l'erreur pour permettre les assertions
-        throw error;
+        throw normalizedError;
       }
-      return this.createFallbackResponse<T>(command, error);
+      return this.createFallbackResponse<T>(command, normalizedError);
     }
   }
 
@@ -586,9 +563,9 @@ export class TauriInvokeProtector {
     }
 
     if (safeCommand.includes('conversation_generate')) {
-      // ✨ v20.5: Retourner message d'erreur simple - Ollama fallback sera tenté dans safeInvoke
+      // ✨ v20.5: Retourner message d'erreur simple sans fetch direct
       return {
-        content: `Backend indisponible. Tentative de fallback Ollama en cours...`,
+        content: 'Ollama indisponible. TITANE bascule en mode local.',
         conversationId: `fallback-${Date.now()}`,
         messageId: `fallback-${Date.now()}`,
         latencyMs: 0,
@@ -637,6 +614,22 @@ export class TauriInvokeProtector {
       fallback: true,
       timestamp: Date.now(),
     } as T;
+  }
+
+  private normalizeInvokeError(command: string, error: unknown): Error {
+    const err = error instanceof Error ? error : new Error(String(error));
+    const isAbort =
+      err.name === 'AbortError' || /aborted/i.test(err.message) || /abort/i.test(err.name);
+
+    if (!isAbort) {
+      return err;
+    }
+
+    const normalized = new Error('Invoke aborted');
+    const isOllamaCommand =
+      command.includes('ollama') || command === 'conversation_generate';
+    normalized.name = isOllamaCommand ? 'OLLAMA_ABORTED' : 'TAURI_ABORTED';
+    return normalized;
   }
 
   /**
