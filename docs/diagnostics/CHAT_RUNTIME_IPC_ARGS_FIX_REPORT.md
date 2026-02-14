@@ -46,3 +46,4 @@ Frontend must send `{ args: payload }` to match Rust/Tauri IPC contract. Flat pa
 
 Append-only log:
 - 2026-02-14: Report created; Gates pending re-run after patch.
+- 2026-02-14: Verification attempted; Gate-1 blocked (pnpm test not executed via tool). See reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/.
