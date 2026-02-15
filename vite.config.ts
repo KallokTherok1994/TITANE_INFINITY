@@ -77,11 +77,17 @@ export default defineConfig(({ command }) => ({
 
   // 🔧 Server configuration with proper headers + Network + Ollama Proxy
   server: {
-    host: '0.0.0.0', // Listen on all network interfaces for WiFi access
+    // Local-only by default; opt-in LAN via TITANE_DEV_LAN=1
+    host: process.env.TITANE_DEV_LAN === '1' ? '0.0.0.0' : '127.0.0.1',
     port: 4000,
     strictPort: false,
     cors: true,
     open: false, // Don't auto-open browser
+    // Keep file access scoped to the repo root
+    fs: {
+      strict: true,
+      allow: [ROOT_DIR],
+    },
     headers: {
       // Vite gère automatiquement Content-Type selon l'extension (.tsx → application/javascript)
       'X-Content-Type-Options': 'nosniff',
@@ -105,6 +111,14 @@ export default defineConfig(({ command }) => ({
         '**/logs/**',
         '**/deployment/**',
       ],
+      // Polling is off by default; opt-in via TITANE_WATCH_POLL=1
+      usePolling: process.env.TITANE_WATCH_POLL === '1',
+      interval: 250,
+      binaryInterval: 500,
+      awaitWriteFinish: {
+        stabilityThreshold: 200,
+        pollInterval: 50,
+      },
     },
     proxy: {
       // ✅ v27: Proxy Ollama API to avoid CORS issues
