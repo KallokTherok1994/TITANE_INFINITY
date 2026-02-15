@@ -399,7 +399,7 @@ class ChatService {
           systemPrompt,
           requestId,
         },
-      });
+      }) as Record<string, unknown>;
 
       const backendResponse = await invokeWithRetry<any>(
         'conversation_generate', // 🎯 NOUVELLE commande Tauri OMEGA

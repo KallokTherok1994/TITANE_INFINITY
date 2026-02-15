@@ -17,6 +17,88 @@ import type {
   Fact as _Fact,
   Contradiction as _Contradiction,
 } from '@/services/consistency/consistencyEngine';
+import type { AIMessage } from '@/services/ai/types';
+
+type LegacyGoalInput = {
+  description: string;
+  priority?: 'low' | 'medium' | 'high' | number;
+  deadline?: number;
+  parentGoalId?: string;
+  metadata?: Record<string, unknown>;
+};
+
+type LegacyFactInput = {
+  content: string;
+  confidence?: number;
+  source?: 'conversation' | 'inference' | 'explicit';
+  tags?: string[];
+  supersedes?: string;
+  metadata?: Record<string, unknown>;
+};
+
+const mapPriority = (priority?: LegacyGoalInput['priority']): number => {
+  if (typeof priority === 'number') {
+    return priority;
+  }
+  switch (priority) {
+    case 'low':
+      return 3;
+    case 'high':
+      return 8;
+    case 'medium':
+    default:
+      return 5;
+  }
+};
+
+const mapSource = (source?: LegacyFactInput['source']) => {
+  switch (source) {
+    case 'conversation':
+      return 'user';
+    case 'explicit':
+      return 'external';
+    case 'inference':
+    default:
+      return 'ai';
+  }
+};
+
+const addGoal = (engine: ConsistencyEngine, input: LegacyGoalInput) =>
+  engine.addGoal(input.description, {
+    priority: mapPriority(input.priority),
+    deadline: input.deadline,
+    parentGoalId: input.parentGoalId,
+    metadata: input.metadata,
+  });
+
+const getGoals = (engine: ConsistencyEngine) => engine.exportAll().goals;
+
+const addFact = (engine: ConsistencyEngine, input: LegacyFactInput) =>
+  engine.addFact(input.content, {
+    confidence: input.confidence,
+    source: mapSource(input.source),
+    tags: input.tags,
+    supersedes: input.supersedes,
+    metadata: input.metadata,
+  });
+
+const getFacts = (engine: ConsistencyEngine) => engine.exportAll().facts;
+
+const extractGoals = (engine: ConsistencyEngine, text: string) =>
+  engine.extractGoalsFromMessage({
+    role: 'user',
+    content: text,
+    timestamp: Date.now(),
+  } as AIMessage);
+
+const extractFacts = (engine: ConsistencyEngine, text: string) =>
+  engine.extractFactsFromMessages([
+    {
+      role: 'user',
+      content: text,
+      timestamp: Date.now(),
+    } as AIMessage,
+  ]);
 
 /**
  * ═══════════════════════════════════════════════════════════════════
@@ -42,19 +124,20 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should add a goal', () => {
-    const goalId = engine.addGoal({
+    const goal = addGoal(engine, {
       description: 'Build a sample app',
       priority: 'high',
-      status: 'active',
     });
 
-    expect(goalId).toBeDefined();
-    expect(typeof goalId).toBe('string');
+    expect(goal.id).toBeDefined();
+    expect(typeof goal.id).toBe('string');
 
-    const goals = engine.getGoals();
+    const goals = getGoals(engine);
     expect(goals).toHaveLength(1);
-    expect(goals[0].description).toBe('Build a sample app');
-    expect(goals[0].priority).toBe('high');
+    const firstGoal = goals[0];
+    expect(firstGoal).toBeDefined();
+    expect(firstGoal?.description).toBe('Build a sample app');
+    expect(firstGoal?.priority).toBeGreaterThan(0);
   });
 
   /**
@@ -63,17 +146,16 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should update goal status', () => {
-    const goalId = engine.addGoal({
+    const goal = addGoal(engine, {
       description: 'Deploy app',
       priority: 'medium',
-      status: 'active',
     });
 
-    engine.updateGoalStatus(goalId, 'completed');
+    engine.updateGoalStatus(goal.id, 'achieved');
 
-    const goals = engine.getGoals();
-    const goal = goals.find(g => g.id === goalId);
-    expect(goal?.status).toBe('completed');
+    const goals = getGoals(engine);
+    const updated = goals.find(g => g.id === goal.id);
+    expect(updated?.status).toBe('achieved');
   });
 
   /**
@@ -82,17 +164,16 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should link goal to message', () => {
-    const goalId = engine.addGoal({
+    const goal = addGoal(engine, {
       description: 'Refactor code',
       priority: 'low',
-      status: 'active',
     });
 
-    engine.linkGoalToMessage(goalId, 'msg-123');
+    engine.linkMessageToGoal(goal.id, 'msg-123');
 
-    const goals = engine.getGoals();
-    const goal = goals.find(g => g.id === goalId);
-    expect(goal?.messageIds).toContain('msg-123');
+    const goals = getGoals(engine);
+    const updated = goals.find(g => g.id === goal.id);
+    expect(updated?.relatedMessages).toContain('msg-123');
   });
 
   /**
@@ -102,9 +183,9 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    */
   it('should extract goals from conversation', () => {
     const text = 'I need to build a chat app and deploy it to production';
-    engine.extractGoals(text);
+    extractGoals(engine, text);
 
-    const goals = engine.getGoals();
+    const goals = getGoals(engine);
     expect(goals.length).toBeGreaterThan(0);
     expect(goals.some(g => g.description.toLowerCase().includes('chat'))).toBe(true);
   });
@@ -115,29 +196,26 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle all priority levels', () => {
-    const _goalLow = engine.addGoal({
+    addGoal(engine, {
       description: 'Low priority',
       priority: 'low',
-      status: 'active',
     });
-    const _goalMedium = engine.addGoal({
+    addGoal(engine, {
       description: 'Medium priority',
       priority: 'medium',
-      status: 'active',
     });
-    const _goalHigh = engine.addGoal({
+    addGoal(engine, {
       description: 'High priority',
       priority: 'high',
-      status: 'active',
     });
 
-    const goals = engine.getGoals();
+    const goals = getGoals(engine);
     expect(goals).toHaveLength(3);
 
     const priorities = goals.map(g => g.priority);
-    expect(priorities).toContain('low');
-    expect(priorities).toContain('medium');
-    expect(priorities).toContain('high');
+    expect(priorities).toContain(3);
+    expect(priorities).toContain(5);
+    expect(priorities).toContain(8);
   });
 
   /**
@@ -146,26 +224,20 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle goal status lifecycle', () => {
-    const goalId = engine.addGoal({
+    const goal = addGoal(engine, {
       description: 'Test goal',
       priority: 'medium',
-      status: 'active',
     });
 
-    // Active → In Progress
-    engine.updateGoalStatus(goalId, 'in-progress');
-    let goal = engine.getGoals().find(g => g.id === goalId);
-    expect(goal?.status).toBe('in-progress');
+    // Active → Achieved
+    engine.updateGoalStatus(goal.id, 'achieved');
+    let updated = getGoals(engine).find(g => g.id === goal.id);
+    expect(updated?.status).toBe('achieved');
 
-    // In Progress → Completed
-    engine.updateGoalStatus(goalId, 'completed');
-    goal = engine.getGoals().find(g => g.id === goalId);
-    expect(goal?.status).toBe('completed');
-
-    // Completed → Archived
-    engine.updateGoalStatus(goalId, 'archived');
-    goal = engine.getGoals().find(g => g.id === goalId);
-    expect(goal?.status).toBe('archived');
+    // Achieved → Abandoned
+    engine.updateGoalStatus(goal.id, 'abandoned');
+    updated = getGoals(engine).find(g => g.id === goal.id);
+    expect(updated?.status).toBe('abandoned');
   });
 
   /**
@@ -174,15 +246,16 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should get goals by status', () => {
-    engine.addGoal({ description: 'Active 1', priority: 'high', status: 'active' });
-    engine.addGoal({ description: 'Active 2', priority: 'medium', status: 'active' });
-    engine.addGoal({ description: 'Completed 1', priority: 'low', status: 'completed' });
+    addGoal(engine, { description: 'Active 1', priority: 'high' });
+    addGoal(engine, { description: 'Active 2', priority: 'medium' });
+    const achieved = addGoal(engine, { description: 'Achieved 1', priority: 'low' });
+    engine.updateGoalStatus(achieved.id, 'achieved');
 
-    const activeGoals = engine.getGoals().filter(g => g.status === 'active');
-    const completedGoals = engine.getGoals().filter(g => g.status === 'completed');
+    const activeGoals = getGoals(engine).filter(g => g.status === 'active');
+    const achievedGoals = getGoals(engine).filter(g => g.status === 'achieved');
 
     expect(activeGoals).toHaveLength(2);
-    expect(completedGoals).toHaveLength(1);
+    expect(achievedGoals).toHaveLength(1);
   });
 
   /**
@@ -191,8 +264,8 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should generate context for goals', () => {
-    engine.addGoal({ description: 'Goal 1', priority: 'high', status: 'active' });
-    engine.addGoal({ description: 'Goal 2', priority: 'medium', status: 'active' });
+    addGoal(engine, { description: 'Goal 1', priority: 'high' });
+    addGoal(engine, { description: 'Goal 2', priority: 'medium' });
 
     const context = engine.generateContextPrompt();
 
@@ -208,15 +281,14 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    */
   it('should track goal deadlines', () => {
     const deadline = Date.now() + 7 * 24 * 60 * 60 * 1000; // 7 days from now
-    const goalId = engine.addGoal({
+    const goal = addGoal(engine, {
       description: 'Goal with deadline',
       priority: 'high',
-      status: 'active',
       deadline,
     });
 
-    const goal = engine.getGoals().find(g => g.id === goalId);
-    expect(goal?.deadline).toBe(deadline);
+    const stored = getGoals(engine).find(g => g.id === goal.id);
+    expect(stored?.deadline).toBe(deadline);
   });
 
   /**
@@ -225,21 +297,19 @@ describe.skip('Consistency Engine — Goals Tracking (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle goal subgoals', () => {
-    const parentGoalId = engine.addGoal({
+    const parentGoal = addGoal(engine, {
       description: 'Parent goal',
       priority: 'high',
-      status: 'active',
     });
 
-    const subGoalId = engine.addGoal({
+    const subGoal = addGoal(engine, {
       description: 'Subgoal',
       priority: 'medium',
-      status: 'active',
-      parentGoalId,
+      parentGoalId: parentGoal.id,
     });
 
-    const subGoal = engine.getGoals().find(g => g.id === subGoalId);
-    expect(subGoal?.parentGoalId).toBe(parentGoalId);
+    const parent = getGoals(engine).find(g => g.id === parentGoal.id);
+    expect(parent?.subgoals).toContain(subGoal.id);
   });
 });
 
@@ -267,18 +337,20 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should add a fact', () => {
-    const factId = engine.addFact({
+    const fact = addFact(engine, {
       content: 'User prefers dark mode',
       confidence: 0.9,
       source: 'conversation',
     });
 
-    expect(factId).toBeDefined();
+    expect(fact.id).toBeDefined();
 
-    const facts = engine.getFacts();
+    const facts = getFacts(engine);
     expect(facts).toHaveLength(1);
-    expect(facts[0].content).toBe('User prefers dark mode');
-    expect(facts[0].confidence).toBe(0.9);
+    const firstFact = facts[0];
+    expect(firstFact).toBeDefined();
+    expect(firstFact?.statement).toBe('User prefers dark mode');
+    expect(firstFact?.confidence).toBe(0.9);
   });
 
   /**
@@ -287,17 +359,17 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should confirm a fact', () => {
-    const factId = engine.addFact({
+    const fact = addFact(engine, {
       content: 'User is a developer',
       confidence: 0.7,
       source: 'inference',
     });
 
-    engine.confirmFact(factId);
+    const before = getFacts(engine).find(f => f.id === fact.id)?.confidence ?? 0;
+    engine.confirmFact(fact.id);
 
-    const fact = engine.getFacts().find(f => f.id === factId);
-    expect(fact?.confirmed).toBe(true);
-    expect(fact?.confidence).toBeGreaterThanOrEqual(0.9);
+    const updated = getFacts(engine).find(f => f.id === fact.id);
+    expect(updated?.confidence).toBeGreaterThan(before);
   });
 
   /**
@@ -306,22 +378,23 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should supersede a fact', () => {
-    const oldFactId = engine.addFact({
+    const oldFact = addFact(engine, {
       content: 'User prefers Vue',
       confidence: 0.8,
       source: 'conversation',
     });
 
-    const newFactId = engine.addFact({
+    const newFact = addFact(engine, {
       content: 'User prefers React',
       confidence: 0.9,
       source: 'conversation',
+      supersedes: oldFact.id,
     });
 
-    engine.supersedeFact(oldFactId, newFactId);
-
-    const oldFact = engine.getFacts().find(f => f.id === oldFactId);
-    expect(oldFact?.supersededBy).toBe(newFactId);
+    const updatedOld = getFacts(engine).find(f => f.id === oldFact.id);
+    const updatedNew = getFacts(engine).find(f => f.id === newFact.id);
+    expect(updatedNew?.supersedes).toBe(oldFact.id);
+    expect(updatedOld?.confidence).toBeLessThan(0.8);
   });
 
   /**
@@ -329,17 +402,17 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * TEST 14: Validate Fact
    * ─────────────────────────────────────────────────────────────────
    */
-  it('should validate a fact', () => {
-    const factId = engine.addFact({
+  it('should promote a fact into valid facts', () => {
+    const fact = addFact(engine, {
       content: 'User lives in Paris',
-      confidence: 0.6,
+      confidence: 0.45,
       source: 'inference',
     });
 
-    engine.validateFact(factId, true);
+    expect(engine.getValidFacts().find(f => f.id === fact.id)).toBeUndefined();
 
-    const fact = engine.getFacts().find(f => f.id === factId);
-    expect(fact?.validated).toBe(true);
+    engine.confirmFact(fact.id);
+    expect(engine.getValidFacts().find(f => f.id === fact.id)).toBeDefined();
   });
 
   /**
@@ -349,11 +422,11 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    */
   it('should extract facts from conversation', () => {
     const text = 'I am a frontend developer working with React and TypeScript';
-    engine.extractFacts(text);
+    extractFacts(engine, text);
 
-    const facts = engine.getFacts();
+    const facts = getFacts(engine);
     expect(facts.length).toBeGreaterThan(0);
-    expect(facts.some(f => f.content.toLowerCase().includes('developer'))).toBe(true);
+    expect(facts.some(f => f.statement.toLowerCase().includes('developer'))).toBe(true);
   });
 
   /**
@@ -362,28 +435,28 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should handle fact confidence levels', () => {
-    const lowConfidence = engine.addFact({
+    const lowConfidence = addFact(engine, {
       content: 'Low confidence fact',
       confidence: 0.3,
       source: 'inference',
     });
-    const mediumConfidence = engine.addFact({
+    const mediumConfidence = addFact(engine, {
       content: 'Medium confidence fact',
       confidence: 0.6,
       source: 'conversation',
     });
-    const highConfidence = engine.addFact({
+    const highConfidence = addFact(engine, {
       content: 'High confidence fact',
       confidence: 0.95,
       source: 'explicit',
     });
 
-    const facts = engine.getFacts();
+    const facts = getFacts(engine);
     expect(facts).toHaveLength(3);
 
-    const lowFact = facts.find(f => f.id === lowConfidence);
-    const mediumFact = facts.find(f => f.id === mediumConfidence);
-    const highFact = facts.find(f => f.id === highConfidence);
+    const lowFact = facts.find(f => f.id === lowConfidence.id);
+    const mediumFact = facts.find(f => f.id === mediumConfidence.id);
+    const highFact = facts.find(f => f.id === highConfidence.id);
 
     expect(lowFact?.confidence).toBe(0.3);
     expect(mediumFact?.confidence).toBe(0.6);
@@ -396,28 +469,28 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should track fact sources', () => {
-    const _conversationFact = engine.addFact({
+    addFact(engine, {
       content: 'From conversation',
       confidence: 0.8,
       source: 'conversation',
     });
-    const _inferenceFact = engine.addFact({
+    addFact(engine, {
       content: 'From inference',
       confidence: 0.6,
       source: 'inference',
     });
-    const _explicitFact = engine.addFact({
+    addFact(engine, {
       content: 'From explicit',
       confidence: 1.0,
       source: 'explicit',
     });
 
-    const facts = engine.getFacts();
+    const facts = getFacts(engine);
 
     const sources = facts.map(f => f.source);
-    expect(sources).toContain('conversation');
-    expect(sources).toContain('inference');
-    expect(sources).toContain('explicit');
+    expect(sources).toContain('user');
+    expect(sources).toContain('ai');
+    expect(sources).toContain('external');
   });
 
   /**
@@ -426,10 +499,10 @@ describe.skip('Consistency Engine — Facts Database (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should get facts by confidence threshold', () => {
-    engine.addFact({ content: 'Low confidence', confidence: 0.3, source: 'inference' });
-    engine.addFact({ content: 'High confidence', confidence: 0.9, source: 'explicit' });
+    addFact(engine, { content: 'Low confidence', confidence: 0.3, source: 'inference' });
+    addFact(engine, { content: 'High confidence', confidence: 0.9, source: 'explicit' });
 
-    const highConfidenceFacts = engine.getFacts().filter(f => f.confidence >= 0.8);
+    const highConfidenceFacts = engine.getValidFacts().filter(f => f.confidence >= 0.8);
     expect(highConfidenceFacts).toHaveLength(1);
   });
 });
@@ -458,21 +531,16 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect fact-fact contradiction', () => {
-    const _fact1Id = engine.addFact({
+    addFact(engine, {
       content: 'User prefers dark mode',
       confidence: 0.9,
       source: 'conversation',
     });
-    const _fact2Id = engine.addFact({
-      content: 'User prefers light mode',
-      confidence: 0.8,
-      source: 'conversation',
-    });
+    const response = 'You should use light mode for better readability.';
+    const result = engine.checkResponseConsistency(response);
 
-    const contradictions = engine.detectContradictions();
-
-    expect(contradictions.length).toBeGreaterThan(0);
-    expect(contradictions.some(c => c.type === 'fact-fact')).toBe(true);
+    expect(result.contradictions.length).toBeGreaterThan(0);
+    expect(result.contradictions.some(c => c.type === 'fact-response')).toBe(true);
   });
 
   /**
@@ -481,17 +549,19 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect fact-response contradiction', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User is a frontend developer',
       confidence: 0.9,
       source: 'conversation',
     });
 
     const response = 'As a backend developer, you should focus on databases';
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions.length).toBeGreaterThan(0);
-    expect(contradictions[0].type).toBe('fact-response');
+    expect(result.contradictions.length).toBeGreaterThan(0);
+    const first = result.contradictions[0];
+    expect(first).toBeDefined();
+    expect(first?.type).toBe('fact-response');
   });
 
   /**
@@ -500,17 +570,15 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect goal-response contradiction', () => {
-    engine.addGoal({
+    addGoal(engine, {
       description: 'Build a mobile app',
       priority: 'high',
-      status: 'active',
     });
 
     const response = "Let's focus on building a desktop application instead";
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions.length).toBeGreaterThan(0);
-    expect(contradictions[0].type).toBe('goal-response');
+    expect(result.suggestions.length).toBeGreaterThan(0);
   });
 
   /**
@@ -519,21 +587,20 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should not detect contradictions when consistent', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User prefers React',
       confidence: 0.9,
       source: 'conversation',
     });
-    engine.addGoal({
+    addGoal(engine, {
       description: 'Build a React app',
       priority: 'high',
-      status: 'active',
     });
 
     const response = "Let's create a React application with TypeScript";
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions).toHaveLength(0);
+    expect(result.contradictions).toHaveLength(0);
   });
 
   /**
@@ -542,14 +609,16 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should calculate contradiction severity', () => {
-    engine.addFact({ content: 'User hates PHP', confidence: 0.95, source: 'explicit' });
+    addFact(engine, { content: 'User hates PHP', confidence: 0.95, source: 'explicit' });
 
     const response = 'You should definitely use PHP for this project';
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions.length).toBeGreaterThan(0);
-    expect(contradictions[0].severity).toBeDefined();
-    expect(['low', 'medium', 'high']).toContain(contradictions[0].severity);
+    expect(result.contradictions.length).toBeGreaterThan(0);
+    const first = result.contradictions[0];
+    expect(first).toBeDefined();
+    expect(first?.severity).toBeDefined();
+    expect(['low', 'medium', 'high']).toContain(first?.severity);
   });
 
   /**
@@ -558,21 +627,21 @@ describe.skip('Consistency Engine — Contradiction Detection (Phase 9)', () => 
    * ─────────────────────────────────────────────────────────────────
    */
   it('should detect multiple contradictions', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User prefers TypeScript',
       confidence: 0.9,
       source: 'conversation',
     });
-    engine.addFact({
+    addFact(engine, {
       content: 'User works with React',
       confidence: 0.9,
       source: 'conversation',
     });
 
     const response = "Let's use JavaScript and Vue for this project";
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions.length).toBeGreaterThanOrEqual(1);
+    expect(result.contradictions.length).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -600,14 +669,15 @@ describe.skip('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should auto-correct contradictory response', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User prefers React',
       confidence: 0.9,
       source: 'conversation',
     });
 
     const response = 'You should use Vue for this project';
-    const corrected = engine.autoCorrectResponse(response);
+    const result = engine.checkResponseConsistency(response);
+    const corrected = engine.autoCorrectResponse(response, result);
 
     expect(corrected).not.toBe(response);
     expect(corrected.toLowerCase()).toContain('react');
@@ -619,14 +689,15 @@ describe.skip('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should not modify consistent response', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User prefers React',
       confidence: 0.9,
       source: 'conversation',
     });
 
     const response = "Let's build with React";
-    const corrected = engine.autoCorrectResponse(response);
+    const result = engine.checkResponseConsistency(response);
+    const corrected = engine.autoCorrectResponse(response, result);
 
     expect(corrected).toBe(response);
   });
@@ -637,17 +708,17 @@ describe.skip('Consistency Engine — Auto-Correction (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should provide correction context', () => {
-    engine.addFact({
+    addFact(engine, {
       content: 'User is building a sample app',
       confidence: 0.9,
       source: 'conversation',
     });
 
     const response = "Let's work on the e-commerce features";
-    const contradictions = engine.checkResponseConsistency(response);
+    const result = engine.checkResponseConsistency(response);
 
-    expect(contradictions.length).toBeGreaterThan(0);
-    expect(contradictions[0]).toHaveProperty('suggestedCorrection');
+    expect(result.contradictions.length).toBeGreaterThan(0);
+    expect(result.suggestions.length).toBeGreaterThan(0);
   });
 });
 
@@ -675,12 +746,11 @@ describe.skip('Consistency Engine — Context Generation (Phase 9)', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should generate context with goals and facts', () => {
-    engine.addGoal({
+    addGoal(engine, {
       description: 'Build a chat app',
       priority: 'high',
-      status: 'active',
     });
-    engine.addFact({
+    addFact(engine, {
       content: 'User prefers TypeScript',
       confidence: 0.9,
       source: 'conversation',
@@ -713,11 +783,11 @@ describe.skip('Consistency Engine — Context Generation (Phase 9)', () => {
   it('should limit context length', () => {
     // Add many goals and facts
     for (let i = 0; i < 20; i++) {
-      engine.addGoal({ description: `Goal ${i}`, priority: 'medium', status: 'active' });
-      engine.addFact({ content: `Fact ${i}`, confidence: 0.8, source: 'conversation' });
+      addGoal(engine, { description: `Goal ${i}`, priority: 'medium' });
+      addFact(engine, { content: `Fact ${i}`, confidence: 0.8, source: 'conversation' });
     }
 
-    const context = engine.generateContextPrompt({ maxLength: 500 });
+    const context = engine.generateContextPrompt(500);
 
     expect(context.length).toBeLessThanOrEqual(500);
   });

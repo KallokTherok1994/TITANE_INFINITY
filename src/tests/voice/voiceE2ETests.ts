@@ -334,7 +334,10 @@ describe('Voice E2E Tests — Phase 8', () => {
     const result = await secureInvoke('vad_reset');
     expect(result).toBe('VAD reset');
 
-    const state = await secureInvoke('vad_get_state');
+    const state = (await secureInvoke('vad_get_state')) as {
+      state: string;
+      isSpeaking: boolean;
+    };
     expect(state.state).toBe('silence');
   });
 
@@ -371,20 +374,20 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should sync with Audio State Machine', async () => {
     // Start recording → LISTENING
-    audioStateMachine.transition('START_RECORDING');
-    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
+    audioStateMachine.transition('VAD_SPEECH_START');
+    expect(audioStateMachine.getState()).toBe('user_speaking');
 
     await secureInvoke('start_recording');
 
     // Stop recording → PROCESSING
-    audioStateMachine.transition('STOP_RECORDING');
-    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
+    audioStateMachine.transition('VAD_SPEECH_END');
+    expect(audioStateMachine.getState()).toBe('processing');
 
     await secureInvoke('stop_recording');
 
     // Start TTS → SPEAKING
-    audioStateMachine.transition('START_TTS');
-    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
+    audioStateMachine.transition('TTS_START');
+    expect(audioStateMachine.getState()).toBe('ai_speaking');
 
     await secureInvoke('tts_speak', {
       text: 'Response',
@@ -392,8 +395,8 @@ describe('Voice E2E Tests — Phase 8', () => {
     });
 
     // End TTS → IDLE
-    audioStateMachine.transition('END_TTS');
-    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
+    audioStateMachine.transition('TTS_END');
+    expect(audioStateMachine.getState()).toBe('idle');
   });
 
   /**
@@ -404,14 +407,14 @@ describe('Voice E2E Tests — Phase 8', () => {
   it('should sync with Halo Engine breathing', async () => {
     // Start breathing on recording
     haloEngine.startBreathing();
-    expect(haloEngine.getCurrentState()).toBe('breathing');
+    expect(haloEngine.getState()).toBe('breathing');
 
     await secureInvoke('start_recording');
 
     // Stop breathing on complete
     const transcript = await secureInvoke('stop_recording');
-    haloEngine.stopBreathing();
-    expect(haloEngine.getCurrentState()).toBe('idle');
+    haloEngine.stop();
+    expect(haloEngine.getState()).toBe('idle');
 
     expect(transcript).toBe('Hello TITANE');
   });
@@ -465,19 +468,27 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should detect speech via VAD', async () => {
     // Initially silence
-    let state = await secureInvoke('vad_get_state');
+    let state = (await secureInvoke('vad_get_state')) as {
+      state: string;
+      isSpeaking: boolean;
+    };
     expect(state.state).toBe('silence');
     expect(state.isSpeaking).toBe(false);
 
     // Change to speech
     mockBackend.setConfig({ vadState: 'speech' });
-    state = await secureInvoke('vad_get_state');
+    state = (await secureInvoke('vad_get_state')) as {
+      state: string;
+      isSpeaking: boolean;
+    };
     expect(state.state).toBe('speech');
     expect(state.isSpeaking).toBe(true);
 
     // Process frame with speech
     const audioData = new Float32Array(1600);
-    const frameResult = await secureInvoke('vad_process_frame', { audioData });
+    const frameResult = (await secureInvoke('vad_process_frame', {
+      audioData,
+    })) as { state: string; isSpeaking: boolean };
     expect(frameResult.isSpeaking).toBe(true);
   });
 
@@ -549,37 +560,37 @@ describe('Voice E2E Tests — Phase 8', () => {
    */
   it('should execute full voice loop with all state transitions', async () => {
     // IDLE → LISTENING
-    audioStateMachine.transition('START_RECORDING');
+    audioStateMachine.transition('VAD_SPEECH_START');
     haloEngine.startBreathing();
     await secureInvoke('start_recording');
 
-    expect(audioStateMachine.getCurrentState()).toBe('LISTENING');
-    expect(haloEngine.getCurrentState()).toBe('breathing');
+    expect(audioStateMachine.getState()).toBe('user_speaking');
+    expect(haloEngine.getState()).toBe('breathing');
     expect(mockBackend.isRecording()).toBe(true);
 
     // LISTENING → PROCESSING
-    audioStateMachine.transition('STOP_RECORDING');
+    audioStateMachine.transition('VAD_SPEECH_END');
     const transcript = await secureInvoke('stop_recording');
 
-    expect(audioStateMachine.getCurrentState()).toBe('PROCESSING');
+    expect(audioStateMachine.getState()).toBe('processing');
     expect(transcript).toBe('Hello TITANE');
     expect(mockBackend.isRecording()).toBe(false);
 
     // PROCESSING → SPEAKING
-    audioStateMachine.transition('START_TTS');
+    audioStateMachine.transition('TTS_START');
     await secureInvoke('tts_speak', {
       text: `You said: ${transcript}`,
       settings: DEFAULT_TEST_TTS_SETTINGS,
     });
 
-    expect(audioStateMachine.getCurrentState()).toBe('SPEAKING');
+    expect(audioStateMachine.getState()).toBe('ai_speaking');
 
     // SPEAKING → IDLE
-    audioStateMachine.transition('END_TTS');
-    haloEngine.stopBreathing();
+    audioStateMachine.transition('TTS_END');
+    haloEngine.stop();
 
-    expect(audioStateMachine.getCurrentState()).toBe('IDLE');
-    expect(haloEngine.getCurrentState()).toBe('idle');
+    expect(audioStateMachine.getState()).toBe('idle');
+    expect(haloEngine.getState()).toBe('idle');
   });
 });
 
