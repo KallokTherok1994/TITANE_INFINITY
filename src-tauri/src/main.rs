@@ -636,7 +636,6 @@ fn main() {
                 if let Ok(status) = titane_infinity::ai::ollama::ai_check_ollama_status().await {
                     if status.available {
                         log::info!("[Ollama] ✅ Endpoint already available");
-                        log::info!("[Ollama]    Endpoint: {}", status.endpoint);
                         return;
                     }
                 }
@@ -858,16 +857,13 @@ fn main() {
                                 .is_some_and(|v| v == "1" || v == "true");
                         
                         if devtools_enabled {
-                            if let Err(err) = main_window.open_devtools() {
-                                log::warn!("⚠️ Failed to open DevTools: {}", err);
-                            } else {
-                                let source = if cfg!(debug_assertions) { 
-                                    "dev mode" 
-                                } else { 
-                                    "TITANE_DEVTOOLS=1" 
-                                };
-                                log::info!("🛠️ DevTools opened automatically ({})", source);
-                            }
+                            main_window.open_devtools();
+                            let source = if cfg!(debug_assertions) { 
+                                "dev mode" 
+                            } else { 
+                                "TITANE_DEVTOOLS=1" 
+                            };
+                            log::info!("🛠️ DevTools opened automatically ({})", source);
                         }
 
                         log::info!("✅ Main window shown successfully");

@@ -10,6 +10,10 @@ import { secureInvoke } from '@/lib/security';
 import { processMessage } from '@/services/conversationEngine';
 
 describe('conversationEngine.processMessage', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('normalizes missing metadata with safe defaults', async () => {
     vi.mocked(secureInvoke).mockResolvedValueOnce('c1').mockResolvedValueOnce({
       content: 'Hello',
@@ -56,14 +60,14 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('wraps conversation_generate payload under args', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce('c3').mockResolvedValueOnce({
+    vi.mocked(secureInvoke).mockResolvedValueOnce({
       content: 'Ok',
       conversationId: 'c3',
       messageId: 'm3',
       metadata: {},
     });
 
-    await processMessage('Hi');
+    await processMessage('Hi', { conversationId: 'c3' });
 
     const generateCall = vi
       .mocked(secureInvoke)

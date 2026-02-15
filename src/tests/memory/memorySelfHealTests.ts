@@ -129,9 +129,11 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
 
     expect(report.healthy).toBe(false);
     expect(report.corruptions.length).toBeGreaterThan(0);
-    expect(report.corruptions[0].type).toBe('parse-error');
-    expect(report.corruptions[0].layer).toBe('localStorage');
-    expect(report.corruptions[0].severity).toBe('high');
+    const firstCorruption = report.corruptions[0];
+    expect(firstCorruption).toBeDefined();
+    expect(firstCorruption?.type).toBe('parse-error');
+    expect(firstCorruption?.layer).toBe('localStorage');
+    expect(firstCorruption?.severity).toBe('high');
   });
 
   /**
@@ -146,8 +148,10 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
 
     expect(report.healthy).toBe(false);
     expect(report.corruptions.length).toBeGreaterThan(0);
-    expect(report.corruptions[0].type).toBe('invalid-format');
-    expect(report.corruptions[0].layer).toBe('localStorage');
+    const firstCorruption = report.corruptions[0];
+    expect(firstCorruption).toBeDefined();
+    expect(firstCorruption?.type).toBe('invalid-format');
+    expect(firstCorruption?.layer).toBe('localStorage');
   });
 
   /**
@@ -164,7 +168,9 @@ describe('Memory Self-Heal Engine — Health Checks (Phase 9)', () => {
 
     // Should detect quota warning
     expect(report.layers.localStorage.issues.length).toBeGreaterThan(0);
-    expect(report.layers.localStorage.issues[0]).toContain('Storage size');
+    const firstIssue = report.layers.localStorage.issues[0];
+    expect(firstIssue).toBeDefined();
+    expect(firstIssue).toContain('Storage size');
   });
 
   /**
@@ -280,7 +286,9 @@ describe('Memory Self-Heal Engine — Repair (Phase 9)', () => {
     const results = await engine.repair();
 
     expect(results.length).toBeGreaterThan(0);
-    expect(results[0].corruptionsFixed).toBeGreaterThan(0);
+    const firstResult = results[0];
+    expect(firstResult).toBeDefined();
+    expect(firstResult?.corruptionsFixed).toBeGreaterThan(0);
     expect(localStorage.getItem('titane_corrupted')).toBeNull();
     expect(localStorage.getItem('titane_valid')).not.toBeNull();
   });

@@ -12,6 +12,7 @@
  */
 
 import type { AIMessage, AIProvider, AIResponse } from '../types';
+import type { TauriCommandArgs } from '@/types/tauri';
 import { TAURI_COMMANDS } from '../../../core/commands/TAURI_COMMANDS';
 import { safeInvokeTauri } from '../../../utils/tauriProtector';
 import { autoHealEngine } from '../autoHealEngine';
@@ -191,7 +192,7 @@ class TauriChatProvider implements AIProvider {
           systemPrompt: request.systemPrompt,
           requestId: request.requestId,
         },
-      });
+      }) as TauriCommandArgs;
 
       const response = await Promise.race([
         safeInvokeTauri<ChatResponse>('conversation_generate', payload),

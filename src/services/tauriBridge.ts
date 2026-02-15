@@ -269,7 +269,7 @@ export async function sendChatMessage(messages: ChatMessage[], config: ChatConfi
       systemPrompt: request.systemPrompt,
       requestId: request.requestId,
     },
-  });
+  }) as Record<string, unknown>;
 
   const raw = await invokeTauriCommand<unknown>('conversation_generate', payload, {
     timeout: 30000,

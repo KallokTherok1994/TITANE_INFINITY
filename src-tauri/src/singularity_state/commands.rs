@@ -304,7 +304,7 @@ mod tests {
     #[test]
     fn test_get_all_commands_count() {
         let commands = get_all_commands();
-        assert_eq!(commands.len(), 16);
+        assert_eq!(commands.len(), 17);
     }
 
     #[test]

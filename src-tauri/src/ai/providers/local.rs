@@ -172,8 +172,8 @@ mod tests {
     fn test_model_selection() {
         let provider = LocalProvider::new(None);
 
-        assert_eq!(provider.select_model(AiMode::Fast), "llama3");
-        assert_eq!(provider.select_model(AiMode::Quality), "mistral");
+        assert_eq!(provider.select_model(AiMode::Fast), "gemma2:2b");
+        assert_eq!(provider.select_model(AiMode::Quality), "mistral:latest");
     }
 
     #[test]
