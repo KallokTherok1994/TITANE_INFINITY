@@ -856,14 +856,10 @@ fn main() {
                                 .ok()
                                 .is_some_and(|v| v == "1" || v == "true");
                         
+                        // Note: open_devtools() method may not be available in all Tauri versions
+                        // Skipping auto-open devtools for now - not critical for production
                         if devtools_enabled {
-                            main_window.open_devtools();
-                            let source = if cfg!(debug_assertions) { 
-                                "dev mode" 
-                            } else { 
-                                "TITANE_DEVTOOLS=1" 
-                            };
-                            log::info!("🛠️ DevTools opened automatically ({})", source);
+                            log::info!("🛠️ DevTools enabled via environment (manual open required)");
                         }
 
                         log::info!("✅ Main window shown successfully");
