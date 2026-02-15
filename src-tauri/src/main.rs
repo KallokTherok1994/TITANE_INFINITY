@@ -414,6 +414,54 @@ async fn send_message(
 }
 
 fn main() {
+    fn apply_gpu_mode() {
+        let raw_mode = std::env::var("TITANE_GPU_MODE").unwrap_or_else(|_| "AUTO".to_string());
+        let mode = raw_mode.trim().to_uppercase();
+        let is_valid = matches!(mode.as_str(), "AUTO" | "FORCE_SOFTWARE" | "FORCE_HARDWARE");
+        let normalized = if is_valid { mode.as_str() } else { "AUTO" };
+
+        if !is_valid {
+            log::warn!(
+                "[GPU_MODE] invalid value '{}', falling back to AUTO",
+                raw_mode
+            );
+        }
+
+        #[cfg(target_os = "linux")]
+        {
+            let mut applied_vars: Vec<String> = Vec::new();
+            match normalized {
+                "FORCE_SOFTWARE" => {
+                    std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "1");
+                    applied_vars.push("WEBKIT_DISABLE_COMPOSITING_MODE=1".to_string());
+                }
+                "FORCE_HARDWARE" => {
+                    std::env::set_var("WEBKIT_DISABLE_COMPOSITING_MODE", "0");
+                    applied_vars.push("WEBKIT_DISABLE_COMPOSITING_MODE=0".to_string());
+                }
+                _ => {}
+            }
+
+            let applied = if applied_vars.is_empty() {
+                "none".to_string()
+            } else {
+                applied_vars.join(",")
+            };
+            log::info!(
+                "[GPU_MODE] mode={} applied_vars={} platform=linux",
+                normalized,
+                applied
+            );
+        }
+
+        #[cfg(not(target_os = "linux"))]
+        {
+            log::info!(
+                "[GPU_MODE] mode={} applied_vars=none platform=non-linux",
+                normalized
+            );
+        }
+    }
     fn resolve_log_dir() -> std::path::PathBuf {
         if let Ok(custom) = std::env::var("TITANE_LOG_DIR") {
             return std::path::PathBuf::from(custom);
@@ -477,6 +525,8 @@ fn main() {
             log_file_path.display()
         );
     }
+
+    apply_gpu_mode();
 
     let security_manager = Arc::new(SecurityManager::new(log_dir.join("audit.log")));
 
