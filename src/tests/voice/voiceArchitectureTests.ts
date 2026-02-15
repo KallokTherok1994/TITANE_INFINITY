@@ -378,7 +378,13 @@ describe.skip('Voice Components Validation — Phase 8', () => {
    * ─────────────────────────────────────────────────────────────────
    */
   it('should support all required states', () => {
-    const requiredStates = ['idle', 'user_speaking', 'processing', 'ai_speaking', 'error'];
+    const requiredStates = [
+      'idle',
+      'user_speaking',
+      'processing',
+      'ai_speaking',
+      'error',
+    ];
 
     // Test each state is reachable
     audioStateMachine.reset();

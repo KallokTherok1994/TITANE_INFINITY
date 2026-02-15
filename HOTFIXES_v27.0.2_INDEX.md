@@ -9,6 +9,7 @@
 ## 🎯 Quick Start
 
 **I just installed v27.0.2 - what's new?**
+
 - **Ollama** now auto-starts automatically
 - **DevTools** (F12) accessible with: `TITANE_DEVTOOLS=1 /usr/bin/titane-infinity`
 - **Settings** now persist when you restart the app
@@ -21,6 +22,7 @@
 ## 📚 Documentation Index
 
 ### For First Time Users
+
 1. **[PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md](PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md)** (313 lines)
    - High-level overview of all 3 fixes
    - What changed and why it matters
@@ -28,6 +30,7 @@
    - Best for: Understanding the campaign
 
 ### For Installation & Troubleshooting
+
 2. **[PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](PROD_FIX_v27.0.2_COMPLETE_GUIDE.md)** (500+ lines)
    - Step-by-step installation (DEB, AppImage, macOS)
    - Verification checklist
@@ -36,6 +39,7 @@
    - Best for: Installing and getting help if things break
 
 ### For Pre-Deployment Verification
+
 3. **[DEPLOYMENT_READY_v27.0.2.txt](DEPLOYMENT_READY_v27.0.2.txt)** (375 lines)
    - Complete deployment readiness checklist
    - All verification criteria
@@ -45,6 +49,7 @@
    - Best for: Confirming everything is ready
 
 ### For Technical Details
+
 4. **[PROD_FIX_v27.0.2_VALIDATION_REPORT.md](PROD_FIX_v27.0.2_VALIDATION_REPORT.md)** (229 lines)
    - Compilation verification
    - Source code changes
@@ -53,6 +58,7 @@
    - Best for: Technical verification and audits
 
 ### For Code Review
+
 5. **[PROD_FIX_v27.0.2_PATCHES.md](PROD_FIX_v27.0.2_PATCHES.md)** (400+ lines)
    - Detailed patch specifications
    - Before/after code comparison
@@ -61,6 +67,7 @@
    - Best for: Code reviewers and developers
 
 ### For Automation
+
 6. **[scripts/fix-prod-v27.0.2.sh](scripts/fix-prod-v27.0.2.sh)** (300+ lines)
    - Automated systemd setup script
    - Service templates for Ollama
@@ -104,12 +111,14 @@ User sees helpful error or working Ollama
 **Solution**: Use environment variable `TITANE_DEVTOOLS=1`
 
 Before (doesn't work in PROD):
+
 ```rust
 #[cfg(debug_assertions)]
 { main_window.open_devtools(); }
 ```
 
 After (works in PROD):
+
 ```rust
 let devtools_enabled = cfg!(debug_assertions)
     || std::env::var("TITANE_DEVTOOLS").ok().is_some_and(|v| v == "1" || v == "true");
@@ -119,6 +128,7 @@ if devtools_enabled {
 ```
 
 **Usage**:
+
 ```bash
 TITANE_DEVTOOLS=1 /usr/bin/titane-infinity
 # Then press F12 to open console
@@ -132,6 +142,7 @@ TITANE_DEVTOOLS=1 /usr/bin/titane-infinity
 ### Hotfix #3: Configuration Defaults + Persistence
 
 **Problems**:
+
 - Admin settings show "undefined"
 - User changes don't survive restarts
 - Governance parameters don't work
@@ -146,7 +157,7 @@ export const DEFAULT_OLLAMA_CONFIG = {
   timeout_ms: 60000,
   retry_count: 3,
   // ...
-}
+};
 
 // 2. Get config (checks env, localStorage, defaults)
 export function getOllamaConfig() {
@@ -160,11 +171,13 @@ export function setOllamaConfig(config) {
 ```
 
 **Priority Chain**:
+
 1. Environment variables (`OLLAMA_MODEL`, `OLLAMA_ENDPOINT`)
 2. localStorage (saved user settings)
 3. `DEFAULT_OLLAMA_CONFIG` (hardcoded defaults)
 
 **Result**:
+
 - Settings persist across app restarts
 - Admin UI shows real values
 - Environment variables can override everything
@@ -177,33 +190,37 @@ export function setOllamaConfig(config) {
 
 All available in: `src-tauri/target/release/bundle/`
 
-| Package | Size | SHA256 | Format | Status |
-|---------|------|--------|--------|--------|
-| DEB | 26M | `969d05...fd265` | Debian/Ubuntu | ✅ Ready |
-| AppImage | 96M | `460f1f...327ed1` | Portable Linux | ✅ Ready |
-| RPM | ~26M | Available | RedHat/Fedora | ✅ Ready |
+| Package  | Size | SHA256            | Format         | Status   |
+| -------- | ---- | ----------------- | -------------- | -------- |
+| DEB      | 26M  | `969d05...fd265`  | Debian/Ubuntu  | ✅ Ready |
+| AppImage | 96M  | `460f1f...327ed1` | Portable Linux | ✅ Ready |
+| RPM      | ~26M | Available         | RedHat/Fedora  | ✅ Ready |
 
 ---
 
 ## 🚀 Deployment
 
 ### Quick Start (Linux)
+
 ```bash
 sudo dpkg -i TITANE-Infinity_27.0.2_amd64.deb
 titane-infinity
 ```
 
 ### With Debugging
+
 ```bash
 TITANE_DEVTOOLS=1 /usr/bin/titane-infinity
 ```
 
 ### Custom Model
+
 ```bash
 OLLAMA_MODEL=neural-chat /usr/bin/titane-infinity
 ```
 
 ### Custom Ollama Location
+
 ```bash
 OLLAMA_ENDPOINT=http://192.168.1.100:11434 /usr/bin/titane-infinity
 ```
@@ -227,16 +244,16 @@ After installation, verify:
 
 ## 📊 Build Metrics
 
-| Metric | Result |
-|--------|--------|
-| Lint | ✅ PASS |
-| Format | ✅ PASS |
-| Type Check | ✅ PASS |
-| Compilation | ✅ PASS (6m 47s) |
-| Code Changes | 200 lines |
-| Files Modified | 2 files |
+| Metric              | Result                 |
+| ------------------- | ---------------------- |
+| Lint                | ✅ PASS                |
+| Format              | ✅ PASS                |
+| Type Check          | ✅ PASS                |
+| Compilation         | ✅ PASS (6m 47s)       |
+| Code Changes        | 200 lines              |
+| Files Modified      | 2 files                |
 | Artifacts Generated | 3 (DEB, AppImage, RPM) |
-| Quality Gates | 10/10 PASS |
+| Quality Gates       | 10/10 PASS             |
 
 ---
 
@@ -259,6 +276,7 @@ After installation, verify:
 **Origin**: `https://github.com/KallokTherok1994/TITANE_INFINITY.git`
 
 Recent commits:
+
 ```
 54fe2313 - docs: Final deployment readiness checklist
 54af2b7b - docs: Final v27.0.2 production hotfixes summary
@@ -313,4 +331,3 @@ f7f4ce1f - fix(prod): PROD v27.0.2 hotfixes (source changes)
 **Production Readiness**: ✅ APPROVED
 
 For more information, see individual documentation files listed above.
-
