@@ -214,6 +214,10 @@
 - P3-0 reference: `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/20260216_144056/`
 **Notes:** Contract version P3_META_V1 defined. OFFLINE_SIM is test-only; FORCE_LOCAL_PROVIDER is not offline.
 
+#### Addenda
+
+**2026-02-16T15:18:00Z:** Commit corrected to 2efdb00f (P3-1 docs + registry append).
+
 ---
 
 ## INCIDENT — Unintended tag pushed via --follow-tags — 2026-02-16
