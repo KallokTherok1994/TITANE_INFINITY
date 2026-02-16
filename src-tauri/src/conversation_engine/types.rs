@@ -413,6 +413,71 @@ pub struct ConversationMetadata {
     pub links_to_contexts: Vec<String>,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ProviderClass {
+    Local,
+    Remote,
+    Hybrid,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum Mode {
+    Local,
+    Remote,
+    Offline,
+    Cached,
+    Error,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ReasonCode {
+    Ok,
+    PolicyLocalOnly,
+    PolicyRemoteAllowed,
+    AllowlistDenied,
+    ProviderDown,
+    Timeout,
+    RateLimit,
+    InvalidConfig,
+    NetworkError,
+    FallbackOffline,
+    CacheHit,
+    CacheMiss,
+    SerializationDropped,
+    ProviderUnavailable,
+    ToolRequired,
+    ToolDenied,
+    Unknown,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProviderAttemptMeta {
+    pub provider_id: String,
+    pub provider_class: ProviderClass,
+    pub latency_ms: u128,
+    pub outcome: String,
+    pub reason_code: ReasonCode,
+    pub network_used_attempt: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProviderDecisionMeta {
+    pub provider_used: String,
+    pub provider_class: ProviderClass,
+    pub mode: Mode,
+    pub reason_code: ReasonCode,
+    pub latency_ms_total: u128,
+    pub timeout_ms: u64,
+    pub retries: u32,
+    pub attempts: Vec<ProviderAttemptMeta>,
+    pub network_used: bool,
+    pub cache_hit: bool,
+    pub policy: String,
+}
+
 // ═══════════════════════════════════════════════════════════════════
 // HEALTH REPORT
 // ═══════════════════════════════════════════════════════════════════
