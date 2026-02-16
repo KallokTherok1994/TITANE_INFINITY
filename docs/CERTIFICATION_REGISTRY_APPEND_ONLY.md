@@ -160,3 +160,16 @@
   - BUILD_VERIFIED: ✅ YES (local proof)
   - CI_VERIFIED: ⏳ PENDING (not captured in this session)
 - Next step: capture GitHub CI status for 97b566d3 and append CI_VERIFIED=YES/NO with evidence.
+
+## INCIDENT — Unintended tag pushed via --follow-tags — 2026-02-16
+- Context: Post-merge build proof push for 97b566d3
+- Intended tag: P2_POST_MERGE_BUILD_VERIFIED_97b566d3
+- Unintended tag observed on remote: v27.0.1-STABLE_CHAT_QUALIFIED
+- Cause: git push --follow-tags propagated an additional local tag
+- Corrective action: remote tag ref deleted (no commit history changed)
+- Proof required:
+  - ls-remote tags BEFORE/AFTER
+  - command used: git push origin :refs/tags/v27.0.1-STABLE_CHAT_QUALIFIED
+- Guard update:
+  - Never use --follow-tags on certification pushes
+  - Push tags explicitly: git push origin <tagname>
