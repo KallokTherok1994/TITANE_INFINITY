@@ -252,3 +252,18 @@ Policy:
 - Reason: v27.0.2 already exists on remote (commit e3aade8a, Feb 14 production build)
 - Decision: Use v27.0.3 to maintain clean version sequence
 - Status: ✅ RELEASED (tag v27.0.3 on origin pointing to 97b566d3)
+
+---
+
+### P3-2 TYPES CANON — 2026-02-16T15:31:00Z
+
+**Commit:** 0d108c3f  
+**Verdict:** ✅ PASS  
+**Scope:** Ring 1 only. Canonical provider meta types (Rust + TypeScript).  
+**Out-of-Scope:** Routing, fallback, IPC exposure, provider list changes.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_2_TYPES_20260216_152400/`  
+**Evidence:**
+- `src-tauri/src/conversation_engine/types.rs`
+- `src/types/providerMeta.ts`
+- `src/types/index.ts`
+**Notes:** Types mirror P3_META_V1 contract; no runtime behavior changes.
