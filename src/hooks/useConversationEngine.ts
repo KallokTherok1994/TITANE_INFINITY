@@ -27,6 +27,7 @@ import {
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
+import type { ProviderDecisionMeta } from '@/types/providerMeta';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -50,6 +51,7 @@ export interface ConversationMessage {
     intention?: string;
     emotion?: EmotionState;
     tags?: string[];
+    providerMeta?: ProviderDecisionMeta;
   };
 }
 
@@ -281,6 +283,7 @@ export function useConversationEngine(
             intention: response.detected_intention,
             emotion: response.detected_emotion,
             tags: response.cognitive_tags,
+            providerMeta: response.meta,
           },
         };
 

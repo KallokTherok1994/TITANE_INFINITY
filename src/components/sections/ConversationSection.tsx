@@ -36,6 +36,7 @@ import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { colors } from '@themes/tokens';
 import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
+import type { ProviderDecisionMeta } from '@/types/providerMeta';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -52,6 +53,7 @@ interface ConversationMessageItem {
   metadata?: {
     tags?: string[];
     intention?: string;
+    providerMeta?: ProviderDecisionMeta;
   };
 }
 
@@ -128,6 +130,13 @@ const ConversationMessage = memo(
     onRetry: (content: string) => void;
     onDelete: (id: string) => void;
   }) => {
+    const providerMeta = message.metadata?.providerMeta;
+    const providerLabel = providerMeta?.provider_used ?? 'unknown';
+    const modeLabel = providerMeta?.mode ?? 'UNKNOWN';
+    const classLabel = providerMeta?.provider_class ?? 'unknown';
+    const reasonLabel = providerMeta?.reason_code;
+    const cacheHit = providerMeta?.cache_hit === true;
+
     const handleCopy = useCallback(
       () => onCopy(message.content),
       [message.content, onCopy]
@@ -152,6 +161,17 @@ const ConversationMessage = memo(
             <span className="conversation-message-role">
               {message.role === 'user' ? 'Vous' : 'TITANE'}
             </span>
+            {message.role === 'assistant' && (
+              <div className="conversation-message-tags">
+                <span className="conversation-tag">{providerLabel}</span>
+                <span className="conversation-tag">{modeLabel}</span>
+                <span className="conversation-tag">{classLabel}</span>
+                {cacheHit && <span className="conversation-tag">CACHE</span>}
+                {reasonLabel && reasonLabel !== 'OK' && (
+                  <span className="conversation-tag">{reasonLabel}</span>
+                )}
+              </div>
+            )}
             {message.metadata?.tags && message.metadata.tags.length > 0 && (
               <div className="conversation-message-tags">
                 {message.metadata.tags.slice(0, 3).map((tag, i) => (
