@@ -411,6 +411,8 @@ pub struct ConversationMetadata {
     pub tokens_used: usize,
     pub memory_effect: MemoryEffect,
     pub links_to_contexts: Vec<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub provider_meta: Option<ProviderDecisionMeta>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -431,7 +433,7 @@ pub enum Mode {
     Error,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ReasonCode {
     Ok,
@@ -1126,6 +1128,7 @@ mod tests {
             tokens_used: 500,
             memory_effect: MemoryEffect::New,
             links_to_contexts: vec!["ctx1".to_string()],
+            provider_meta: None,
         };
         assert_eq!(metadata.timestamp, 1234567890);
         assert_eq!(metadata.tokens_used, 500);
@@ -1235,6 +1238,7 @@ mod tests {
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
+                provider_meta: None,
             },
         };
         assert_eq!(response.assistant_message, "Reply");
