@@ -284,3 +284,22 @@ Policy:
 - `src-tauri/src/conversation_engine/pipeline.rs`
 - `src-tauri/src/conversation_engine/types.rs`
 **Notes:** OFFLINE_SIM returns deterministic offline response using `ReasonCode::FallbackOffline` (contract-aligned); IPC response shape unchanged.
+
+---
+
+### P3-4 IPC META EXPOSE — 2026-02-16T16:02:00Z
+
+**Commit:** 2848224b  
+**Verdict:** ✅ PASS  
+**Scope:** Ring 4 only. IPC response extended to include ProviderDecisionMeta as `meta`.  
+**Out-of-Scope:** Routing changes, provider order changes, UI changes.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_4_IPC_EXPOSE_20260216_155157/`  
+**Evidence:**
+- `src-tauri/src/conversation_engine/commands.rs`
+- `scripts/guard_ipc_provider_meta.cjs`
+- `03_IPC_CONTRACT_RUN1.json`
+- `04_IPC_CONTRACT_RUN2.json`
+- `05_IPC_CONTRACT_RUN3.json`
+- `06_OFFLINE_RUNS.json`
+- `07_DETERMINISM.md`
+**Notes:** Meta is always present; OFFLINE_SIM validated; determinism check PASS; IPC shape extended only.
