@@ -223,3 +223,10 @@ Policy:
 - When CI is introduced, append CI_INFRA_DEPLOYED=YES + CI_VERIFIED=PASS/FAIL with proof links.
 - Tag pushes must be explicit. --follow-tags is forbidden.
 - Deployment decision is OPERATIONAL (governance complete, ops to execute).
+
+### Addenda (Version Assignment)
+
+**2026-02-16T14:28:42Z:** Release tag v27.0.3 created and pushed for commit 97b566d3 (Phase 2A certified).
+- Reason: v27.0.2 already exists on remote (commit e3aade8a, Feb 14 production build)
+- Decision: Use v27.0.3 to maintain clean version sequence
+- Status: ✅ RELEASED (tag v27.0.3 on origin pointing to 97b566d3)
