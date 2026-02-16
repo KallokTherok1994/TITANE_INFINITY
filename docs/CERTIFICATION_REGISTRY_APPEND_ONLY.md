@@ -303,3 +303,20 @@ Policy:
 - `06_OFFLINE_RUNS.json`
 - `07_DETERMINISM.md`
 **Notes:** Meta is always present; OFFLINE_SIM validated; determinism check PASS; IPC shape extended only.
+
+---
+
+### P3-5 UI META TAGS — 2026-02-16T16:10:00Z
+
+**Commit:** f63e5a85  
+**Verdict:** ✅ PASS  
+**Scope:** Ring 4 UI only. UI reads IPC meta and renders provider/mode tags.  
+**Out-of-Scope:** Routing changes, provider order changes, IPC schema changes, backend logic.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_5_UI_META_TAGS_20260216_160414/`  
+**Evidence:**
+- `src/services/conversationEngine.ts`
+- `src/hooks/useConversationEngine.ts`
+- `src/components/sections/ConversationSection.tsx`
+- `04_OFFLINE_SIM_SMOKE.md`
+- `05_GUARD_RECHECK.json`
+**Notes:** Meta is single source of truth; no DOM inference.
