@@ -267,3 +267,20 @@ Policy:
 - `src/types/providerMeta.ts`
 - `src/types/index.ts`
 **Notes:** Types mirror P3_META_V1 contract; no runtime behavior changes.
+
+---
+
+### P3-3 BACKEND INSTRUMENTATION — 2026-02-16T15:40:00Z
+
+**Commit:** ced74af0  
+**Verdict:** ✅ PASS  
+**Scope:** Ring 3 only. Provider decision meta instrumentation + OFFLINE_SIM test-only hook.  
+**Out-of-Scope:** IPC exposure, routing order changes, provider additions, UI changes.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_3_INSTRUMENTATION_20260216_153653/`  
+**Evidence:**
+- `src-tauri/src/conversation_engine/meta_accumulator.rs`
+- `src-tauri/src/conversation_engine/mod.rs`
+- `src-tauri/src/conversation_engine/omega_integration.rs`
+- `src-tauri/src/conversation_engine/pipeline.rs`
+- `src-tauri/src/conversation_engine/types.rs`
+**Notes:** OFFLINE_SIM returns deterministic offline response using `ReasonCode::FallbackOffline` (contract-aligned); IPC response shape unchanged.
