@@ -13,6 +13,7 @@ pub mod intent;
 pub mod literary_engine;
 pub mod memory;
 pub mod multilayer_memory;
+mod meta_accumulator;
 pub mod omega_integration; // R05 P1: OMEGA Pipeline integration
 pub mod pipeline;
 pub mod realism;
@@ -35,6 +36,8 @@ pub mod types;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 use tokio::time::{timeout, Duration};
+
+use meta_accumulator::{build_offline_meta, build_timeout_meta};
 
 use crate::ai::router::AIRouter;
 use crate::memory::storage::MemoryStorage;
@@ -157,6 +160,11 @@ impl ConversationEngineState {
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
+        if std::env::var("OFFLINE_SIM").is_ok() {
+            log::warn!("[CONV-ENGINE] 🟡 OFFLINE_SIM enabled — returning deterministic offline response");
+            return self.create_offline_sim_response().await;
+        }
+
         // ✨ v27.0.3: 20s timeout wrapper — Guarantees Always Respond
         match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
             Ok(result) => result,
@@ -246,6 +254,35 @@ impl ConversationEngineState {
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
+                provider_meta: Some(build_timeout_meta()),
+            },
+        })
+    }
+
+    async fn create_offline_sim_response(
+        &self,
+    ) -> Result<ConversationResponse, ConversationEngineError> {
+        let now = std::time::SystemTime::now()
+            .duration_since(std::time::UNIX_EPOCH)
+            .map(|d| d.as_millis() as u64)
+            .unwrap_or(0);
+
+        Ok(ConversationResponse {
+            assistant_message: "Mode OFFLINE_SIM actif. Réponse hors ligne déterministe.".to_string(),
+            conversation_id: uuid::Uuid::new_v4().to_string(),
+            message_id: uuid::Uuid::new_v4().to_string(),
+            detected_intention: Intention::Question,
+            detected_emotion: EmotionState::default(),
+            cognitive_tags: vec!["offline".to_string(), "simulated".to_string()],
+            cognitive_summary: "Réponse simulée hors ligne (OFFLINE_SIM=1).".to_string(),
+            metadata: ConversationMetadata {
+                timestamp: now,
+                provider_used: "offline".to_string(),
+                latency_ms: 0,
+                tokens_used: 0,
+                memory_effect: MemoryEffect::New,
+                links_to_contexts: vec![],
+                provider_meta: Some(build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM")),
             },
         })
     }

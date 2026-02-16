@@ -14,6 +14,7 @@ use crate::singularity::singularity_state::{ChatContext, SingularityState};
 use super::french_mastery::{
     FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
 };
+use super::meta_accumulator::build_success_meta;
 use super::types::*;
 use super::ConversationEngineError;
 
@@ -386,13 +387,15 @@ impl OmegaConversationBridge {
 
         // Build metadata
         let total_latency = start.elapsed().as_millis() as u64 + omega_result.latency_ms;
+        let provider_used = format!("{} (OMEGA+Singularity)", omega_result.model);
         let metadata = ConversationMetadata {
             timestamp: chrono::Utc::now().timestamp_millis() as u64,
-            provider_used: format!("{} (OMEGA+Singularity)", omega_result.model),
+            provider_used: provider_used.clone(),
             latency_ms: total_latency,
             tokens_used: omega_result.tokens as usize,
             memory_effect: MemoryEffect::New, // OMEGA provides new information
             links_to_contexts: omega_result.sources.clone(),
+            provider_meta: Some(build_success_meta(&provider_used, total_latency as u128)),
         };
 
         log::info!(

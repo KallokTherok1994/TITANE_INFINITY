@@ -18,6 +18,7 @@ use super::emotion::EmotionAnalyzer;
 use super::french_mastery::{
     FrenchMasteryProcessor, FrenchMasteryRequest, PostProcessingConstraints, ProcessingMode,
 };
+use super::meta_accumulator::build_success_meta;
 use super::intent::IntentAnalyzer;
 use super::memory::ConversationMemoryEngine;
 use super::self_healing::SelfHealingConversation;
@@ -257,6 +258,7 @@ impl ConversationPipeline {
         );
 
         // Construction réponse ENRICHIE par Singularity
+        let provider_used = neutralized_response.provider.clone();
         Ok(ConversationResponse {
             assistant_message: final_message,
             conversation_id,
@@ -267,11 +269,12 @@ impl ConversationPipeline {
             cognitive_summary: cognitive_summary.summary,
             metadata: ConversationMetadata {
                 timestamp: chrono::Utc::now().timestamp_millis() as u64,
-                provider_used: neutralized_response.provider,
+                provider_used: provider_used.clone(),
                 latency_ms: final_latency,
                 tokens_used: neutralized_response.tokens_used,
                 memory_effect: cognitive_summary.memory_effect,
                 links_to_contexts: cognitive_summary.links,
+                provider_meta: Some(build_success_meta(&provider_used, final_latency as u128)),
             },
         })
     }
