@@ -421,3 +421,54 @@ Policy:
 **Status:** 🔒 **LOCKED FOR DEPLOYMENT (authorization tokens required)**
 
 **Next Phase:** Deployment authorization (GO_FOR_PROD_BUILD, GO_FOR_PROD_DEPLOY) — separate gate.
+
+---
+
+## P4-1A: Production Build Mode Hardening
+
+**Date:** 2026-02-16T23:21:37Z  
+**Verdict:** ✅ **PROD_BUILD_MODE_LOCKED**  
+**Commit:** 26224ff1 (P3-7 baseline) + modified files  
+**Scope:** Governance hardening: lock production-safe build path `build:prod-safe` (no postbuild mutations in CI/prod)  
+**Out-of-Scope:** Build execution, deployment, code modifications  
+**Proof Pack:** reports/ai_local_vΩ3/P4_1A_BUILD_MODE_HARDENING_20260216_232137/ (8 documents)
+
+### Problem Identified (P4-0.5)
+
+Post-build hook contains system-level mutations incompatible with production CI:
+- Desktop registry updates (`$HOME/.local/share/applications/`)
+- System cache invalidation (`update-desktop-database`, `gtk-update-icon-cache`)
+- User home creation (`$HOME/.titane/logs/`)
+
+**Blocker**: Cannot execute unattended production builds with postbuild active.
+
+### Solution Implemented
+
+1. **Official Prod Script**: `build:prod-safe` (NPM_CONFIG_IGNORE_SCRIPTS=1 vite build)
+2. **Guard Gate**: 6-step verification (5/5 PASS ✅)
+3. **Policy Doc**: PRODUCTION_BUILD_POLICY.md (governance locked)
+
+### Verification Results
+
+```
+✅ [1/5] build:prod-safe exists with NPM_CONFIG_IGNORE_SCRIPTS=1
+✅ [2/5] postbuild hook retained (not removed)
+✅ [3/5] build:prod-safe:verify script present
+✅ [4/5] PRODUCTION_BUILD_POLICY.md present
+✅ [5/5] Archive LOCK.md immutable
+
+VERDICT: PROD_BUILD_MODE_LOCKED
+```
+
+### Governance
+
+**Mandatory Production Commands**:
+- Dev: `pnpm run build` (includes postbuild, local-only)
+- Prod: `pnpm run build:prod-safe` (skips postbuild, zero mutations) ← **REQUIRED for P4+**
+
+**Token Gates**:
+- P4-1: Requires `GO_FOR_PROD_BUILD__TITANE_INFINITY` token
+- P4-3: Requires two tokens + two-step confirmation
+
+**Status**: 🔒 **READY FOR P4-1 PRODUCTION BUILD TOKEN**
+

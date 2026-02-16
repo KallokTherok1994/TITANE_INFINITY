@@ -16,6 +16,8 @@
     "ollama:bundle": "bash scripts/prepare-ollama-bundle.sh",
     "build": "vite build",
     "postbuild": "bash scripts/post-build.sh",
+    "build:prod-safe": "NPM_CONFIG_IGNORE_SCRIPTS=1 vite build",
+    "build:prod-safe:verify": "node scripts/guards/guard-prod-safe-build.mjs",
     "guard:ollama-proxy": "bash scripts/guard/guard-ollama-proxy.sh",
     "guard:dev-bridge": "node scripts/guard/guard-dev-bridge.mjs",
     "guard:ipc-contract": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run tests/contract/tauri-ipc-contract.test.ts",
