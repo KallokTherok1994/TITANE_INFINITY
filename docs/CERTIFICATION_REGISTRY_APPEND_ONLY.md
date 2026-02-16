@@ -320,3 +320,40 @@ Policy:
 - `04_OFFLINE_SIM_SMOKE.md`
 - `05_GUARD_RECHECK.json`
 **Notes:** Meta is single source of truth; no DOM inference.
+
+---
+
+### P3-6 GATES (STRICT NO-SERVER) — 2026-02-16T22:10:00Z
+
+**Commit:** UNCOMMITTED (BLOCKED)  
+**Verdict:** ❌ FAIL (BLOCKED)  
+**Scope:** P3-6 gates executed without pnpm build and without Vite dev server (Tauri-only constraint).  
+**Out-of-Scope:** Browser E2E via Vite dev server; any UI-driven Playwright runs.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_6_GATES_NO_SERVER_20260216_165207/`  
+**Evidence:**
+- `10_ipc_contract_run1.log`, `11_ipc_contract_run2.log`, `12_ipc_contract_run3.log`
+- `10_DETERMINISM.md`, `11_DETERMINISM.md`, `12_DETERMINISM.md`
+- `23_tauri_dev_log.txt`, `24_vite_log.txt`
+- `07_no_network_scan_src_tauri.txt`, `08_no_network_scan_src.txt`
+- `90_VERDICT.md`
+**Notes:** Stop-the-line triggered: Tauri beforeDevCommand started Vite (127.0.0.1:5173), violating strict no-server policy. G2/G3/G4 blocked.
+
+---
+
+### P3-6 GATES RECOVERY (NO_VITE) — 2026-02-16T22:25:00Z
+
+**Commit:** UNCOMMITTED (PENDING)  
+**Verdict:** ✅ PASS  
+**Scope:** P3-6 gates executed via Rust harness without Vite or pnpm build (engine-only).  
+**Out-of-Scope:** Browser E2E via Vite dev server; any UI-driven Playwright runs.  
+**Proof Pack:** `reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_6_GATES_NO_VITE_20260216_170753/`  
+**Evidence:**
+- `10_test_run1.log`, `11_test_run2.log`, `12_test_run3.log`
+- `20_no_network_scan_src_tauri.txt`, `21_no_network_scan_src.txt`
+- `30_anti_vite_scan.txt`
+- `90_VERDICT.md`
+**Notes:** AR20/STABILITY/OFFLINE5 executed under OFFLINE_SIM to avoid external provider dependency. Anti-Vite scan matches are static references in repo scans, not runtime server logs.
+
+#### Addenda
+
+**2026-02-16T22:30:00Z:** Harness commit recorded: 08cefd66.
