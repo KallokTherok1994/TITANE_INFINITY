@@ -210,3 +210,16 @@
 - Guard update:
   - Never use --follow-tags on certification pushes
   - Push tags explicitly: git push origin <tagname>
+
+## DEPLOYMENT_READY — 2026-02-16T19:25:44Z
+- Commit: 97b566d3
+- Local Build: PASS (3 runs) — evidence: reports/ai_local_vΩ3/P2_POST_MERGE_BUILD_PROOF_97b566d3_20260216_133237
+- P1 Gates: PASS (AR20/OFFLINE5/STABILITY) — evidence: Phase 2C pack (referenced in deployment/latest/certification/phase2)
+- CI_VERIFIED: UNKNOWN (no CI infrastructure configured) — evidence: reports/ai_local_vΩ3/P2_POST_MERGE_CI_PROOF_97b566d3_20260216_140514
+- Decision: DEPLOYMENT_READY=YES (Local-first proofs are primary until CI exists)
+
+Policy:
+- CI is optional and non-blocking until a CI baseline is deployed.
+- When CI is introduced, append CI_INFRA_DEPLOYED=YES + CI_VERIFIED=PASS/FAIL with proof links.
+- Tag pushes must be explicit. --follow-tags is forbidden.
+- Deployment decision is OPERATIONAL (governance complete, ops to execute).
