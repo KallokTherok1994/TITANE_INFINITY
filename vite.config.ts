@@ -312,14 +312,52 @@ export default defineConfig(({ command }) => ({
           }
 
           // ────────────────────────────────────────────────────────────────────
-          // 3️⃣ SERVICES CORE CLUSTER (service-ai ↔ service-memory ↔ service-audio
-          //                           ↔ services-common ↔ service-cognitive
-          //                           ↔ devtools-sudo)
+          // 3️⃣ SERVICES SPLIT (P2_BUNDLE_OPTIMIZATION: boot vs lazy chunks)
+          //    - services-boot: initializeOllama, consoleMonitor only (~50KB)
+          //    - services-ai: chatEngine, orchestrator (lazy on chat) (~500KB)
+          //    - services-voice: voice services (lazy on voice toggle) (~350KB)
+          //    - services-memory: memory compactor (lazy on admin) (~120KB)
+          //    - services-telemetry: performance engine (lazy on dashboard) (~150KB)
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
-            if (id.includes('/services/') || id.includes('/modules/devSudo/')) {
-              // ALL service modules + devtools-sudo → ONE CHUNK
-              return 'services-core';
+            if (id.includes('/services/')) {
+              // ✅ BOOT CRITICAL: Only 2 services imported at boot (App.tsx lines 56, 61)
+              if (
+                id.includes('/services/ai/providers/ollama') ||
+                id.includes('/services/monitoring/consoleMonitor')
+              ) {
+                return 'services-boot';
+              }
+              // 🔄 LAZY: AI services (chat engine + orchestrator)
+              if (
+                id.includes('/services/ai/chatEngine') ||
+                id.includes('/services/ai/orchestrator') ||
+                id.includes('/services/ai/metaKernel') ||
+                id.includes('/services/ai/singularityKernel')
+              ) {
+                return 'services-ai';
+              }
+              // 🔄 LAZY: Voice services
+              if (id.includes('/services/voice/')) {
+                return 'services-voice';
+              }
+              // 🔄 LAZY: Memory management
+              if (
+                id.includes('/services/chatMemoryCompactor') ||
+                id.includes('/services/contextualMemory')
+              ) {
+                return 'services-memory';
+              }
+              // 🔄 LAZY: Performance/telemetry
+              if (id.includes('/services/performanceEngine')) {
+                return 'services-telemetry';
+              }
+              // All other services → lazy chunk
+              return 'services-other';
+            }
+            // DevSudo → lazy chunk
+            if (id.includes('/modules/devSudo/')) {
+              return 'services-other';
             }
           }
 
