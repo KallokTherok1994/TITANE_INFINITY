@@ -13,6 +13,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import type { ProviderDecisionMeta } from '@/types/providerMeta';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -91,6 +92,7 @@ export interface ConversationResponse {
   cognitive_tags: string[];
   cognitive_summary: string;
   metadata: ConversationMetadata;
+  meta?: ProviderDecisionMeta;
 }
 
 export interface ConversationMetadata {
@@ -111,6 +113,15 @@ interface OmegaGenerateResponse {
   latencyMs?: number;
   metadata?: Record<string, unknown>;
   provider?: string;
+  meta?: ProviderDecisionMeta;
+}
+
+function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return undefined;
+  }
+
+  return raw as ProviderDecisionMeta;
 }
 
 function isMemoryEffect(val: unknown): val is MemoryEffect {
@@ -247,6 +258,7 @@ export async function processMessage(
   }
 
   const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
+  const providerMeta = normalizeProviderMeta(raw?.meta);
   const cognitiveTagsRaw = metadata['cognitiveTags'];
   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
@@ -297,6 +309,7 @@ export async function processMessage(
         (typeof raw?.latencyMs === 'number' ? raw.latencyMs : undefined) ??
         (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
     }),
+    meta: providerMeta,
   };
 
   console.log('[conversationEngine] 📥 Backend response:', {
