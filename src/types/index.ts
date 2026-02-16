@@ -8,6 +8,7 @@ export * from './audio';
 export * from './ai';
 export * from './logger';
 export * from './conversation'; // 🆕 P1: Multi-conversations types
+export * from './providerMeta';
 
 // System exports (LogEntry, MemoryState prioritaires)
 export * from './system';
