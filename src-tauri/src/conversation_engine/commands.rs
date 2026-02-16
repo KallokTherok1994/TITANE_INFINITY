@@ -8,6 +8,7 @@ use std::sync::Arc;
 use tauri::State;
 use uuid::Uuid;
 
+use super::meta_accumulator::{build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id};
 use super::types::*;
 use super::ConversationEngineState;
 
@@ -129,6 +130,8 @@ pub async fn conversation_generate(
         latency_ms
     );
 
+    let meta = ensure_provider_meta(&response.metadata, latency_ms as u128);
+
     // Construire la réponse JSON compatible avec le frontend
     Ok(serde_json::json!({
         "content": response.assistant_message,
@@ -136,6 +139,7 @@ pub async fn conversation_generate(
         "messageId": response.message_id,
         "frenchMasteryApplied": true, // OMEGA utilise toujours FrenchMastery
         "latencyMs": latency_ms,
+        "meta": meta,
         "metadata": {
             "intention": format!("{:?}", response.detected_intention),
             "emotion": format!("{:?}", response.detected_emotion),
@@ -144,6 +148,126 @@ pub async fn conversation_generate(
             "requestId": req_id,
         }
     }))
+}
+
+fn ensure_provider_meta(metadata: &ConversationMetadata, latency_ms_total: u128) -> ProviderDecisionMeta {
+    if let Some(meta) = metadata.provider_meta.clone() {
+        if !meta.provider_used.is_empty() {
+            return meta;
+        }
+    }
+
+    let provider_used = if metadata.provider_used.is_empty() {
+        "unknown".to_string()
+    } else {
+        metadata.provider_used.clone()
+    };
+
+    let provider_class = provider_class_from_id(&provider_used);
+    let reason_code = ReasonCode::Unknown;
+    let mode = mode_from(provider_class.clone(), &provider_used, reason_code.clone());
+    let network_used = matches!(provider_class, ProviderClass::Remote);
+    let policy = policy_from_env();
+    let attempts = vec![build_attempt(
+        provider_used.clone(),
+        provider_class.clone(),
+        latency_ms_total,
+        "success",
+        reason_code.clone(),
+        network_used,
+    )];
+
+    build_decision_meta(
+        provider_used,
+        provider_class,
+        mode,
+        reason_code,
+        latency_ms_total,
+        policy,
+        attempts,
+        network_used,
+        false,
+    )
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::conversation_engine::meta_accumulator::{build_offline_meta, build_success_meta};
+    use std::fs;
+    use std::path::PathBuf;
+
+    fn sample_response(provider_used: &str, provider_meta: ProviderDecisionMeta) -> ConversationResponse {
+        ConversationResponse {
+            assistant_message: "OK".to_string(),
+            conversation_id: "conv-1".to_string(),
+            message_id: "msg-1".to_string(),
+            detected_intention: Intention::Question,
+            detected_emotion: EmotionState::default(),
+            cognitive_tags: vec!["tag".to_string()],
+            cognitive_summary: "summary".to_string(),
+            metadata: ConversationMetadata {
+                timestamp: 0,
+                provider_used: provider_used.to_string(),
+                latency_ms: 1,
+                tokens_used: 1,
+                memory_effect: MemoryEffect::New,
+                links_to_contexts: vec![],
+                provider_meta: Some(provider_meta),
+            },
+        }
+    }
+
+    fn write_output(value: &serde_json::Value) {
+        let out = match std::env::var("P3_IPC_CONTRACT_OUT") {
+            Ok(path) => path,
+            Err(_) => return,
+        };
+
+        let path = PathBuf::from(out);
+        if let Some(parent) = path.parent() {
+            let _ = fs::create_dir_all(parent);
+        }
+        let _ = fs::write(path, serde_json::to_string_pretty(value).unwrap_or_else(|_| "{}".to_string()));
+    }
+
+    #[test]
+    fn ipc_meta_contract_smoke() {
+        let mode = std::env::var("P3_IPC_MODE").unwrap_or_else(|_| "default".to_string());
+        let provider_meta = if mode == "offline" {
+            build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM")
+        } else {
+            build_success_meta("local", 1)
+        };
+
+        let response = sample_response("local", provider_meta);
+        let json = serde_json::json!({
+            "content": response.assistant_message,
+            "conversationId": response.conversation_id,
+            "messageId": response.message_id,
+            "frenchMasteryApplied": true,
+            "latencyMs": 1,
+            "meta": ensure_provider_meta(&response.metadata, 1),
+            "metadata": {
+                "intention": format!("{:?}", response.detected_intention),
+                "emotion": format!("{:?}", response.detected_emotion),
+                "cognitiveTags": response.cognitive_tags,
+                "cognitiveSummary": response.cognitive_summary,
+                "requestId": "req_test",
+            }
+        });
+
+        let meta = json.get("meta").expect("meta missing");
+        assert!(meta.get("provider_used").is_some());
+        assert!(meta.get("provider_class").is_some());
+        assert!(meta.get("mode").is_some());
+        assert!(meta.get("reason_code").is_some());
+        assert!(meta.get("network_used").is_some());
+        assert!(meta.get("attempts").is_some());
+        assert!(meta.get("latency_ms_total").is_some());
+
+        write_output(&json);
+    }
 }
 
 /// Traiter un message (ancienne interface - conservée pour compatibilité)
