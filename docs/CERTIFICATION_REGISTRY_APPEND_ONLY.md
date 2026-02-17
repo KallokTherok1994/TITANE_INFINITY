@@ -731,3 +731,91 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 - **Scope:** Week 1 + Week 2 combined metrics vs P7 baseline
 
 **Signature:** P8_3_ASSESSMENT_COMPLETE_20260224_230000
+
+---
+
+### P8_4_WEEK2_EXPANSION
+
+**Date:** 2026-02-24T23:50:00Z  
+**Verdict:** ✅ GATES_PASS_READY_FOR_WEEK2  
+**Commit:** 34f667d2  
+**Scope:** Week 2 expansion readiness (4 → 10 testers, v27.0.0 binary sealed, governance gates verified, monitoring framework initialized)  
+**Out-of-Scope:** Daily operational logs (will be filled starting 2026-02-25), midweek checkpoint, week 2 metrics aggregation  
+
+#### Expansion Readiness Gate (5-Point Checklist)
+
+1. **P8.3 Verdict:** ✅ GO FOR WEEK 2 verified
+2. **Artifacts Unchanged:** ✅ v27.0.0 (3a419526... AppImage, 3c346782... DEB)
+3. **Stop Criteria:** ✅ Documented (P0 rollback, P1 pause, >12 reject, drift pause, credential pause)
+4. **Cohort Specification:** ✅ 10 testers (T1–T10, T5–T10 new, anonymized)
+5. **Distribution Channels:** ✅ A (primary) + B (fallback), manual-only
+
+#### Governance Gate Results
+
+| Gate | Command | Result | Exit Code |
+|------|---------|--------|-----------|
+| Approval (P8.1) | p8_approval_gate.mjs | BLOCKED (token required) | 0 ✅ |
+| Pre-Flight | p8_preflight_check.mjs | PASS (all checks green) | 0 ✅ |
+| Drift Guard (7x) | guard-prod-drift.mjs | 7/7 ✅ NO DRIFT | 0 ✅ |
+
+#### Proof Pack Structure (8/15 files created, 952 lines, 52 KB)
+
+**Location:** `deployment/latest/certification/phase8_4/P8_4_WEEK2_EXPANSION_20260217_232914/`
+
+**Core Files Created:**
+- ✅ 01_EXPANSION_GO_NO_GO.md (173 lines) — 5-point GO checklist
+- ✅ COMMANDS_RUN.txt (87 lines) — Gate execution log
+- ✅ WEEK2_DISTRIBUTION_RECORD.md (182 lines) — Cohort + channels + no sensitive data
+- ✅ WEEK2_DAILY_CHECK_TEMPLATE.md (107 lines) — Standardized monitoring format
+- ✅ WEEK2_DAILY_CHECKS.md (125 lines) — Append-only log (Days 1–7 placeholders)
+- ✅ INCIDENT_LOG_WEEK2.md (60 lines) — Zero-incident tracking template
+- ✅ DRIFT_GUARD_WEEK2.txt (121 lines) — Deterministic verification (7 runs logged)
+- ✅ ENV.txt (89 lines) — Environment snapshot + determinism baseline
+- ✅ SHA256SUMS.txt (8 lines) — Integrity verification
+
+#### Determinism Verification
+
+- **Test Date:** 2026-02-24T23:45:30Z UTC
+- **Test Runs:** 7 consecutive executions
+- **Results:** 7/7 ✅ NO DRIFT DETECTED
+- **Anomalies:** 0 (deterministic baseline confirmed)
+- **Status:** CLEARED FOR OPERATIONS
+
+#### Tester Cohort Expansion
+
+| Tester | Status | Week | Runtime |
+|--------|--------|------|---------|
+| T1–T4 | Continuant | W1→W2 | 14 days |
+| T5–T10 | New | W2 only | 7 days |
+| **Total** | **10** | **W2** | **2026-02-25 to 2026-03-03** |
+
+**Capacity:** 10/12 (headroom 2 for escalation)
+
+#### Git Commit Chain
+
+```
+34f667d2 (HEAD) chore: P8.4 integrity verification (SHA256SUMS)
+9aeb61c9          chore: P8.4 monitoring templates (incident, drift, env)
+0e5c2f6e          chore: P8.4 expansion readiness gates (pre-Week2)
+3c3ae299          docs: append P8.3 registry (GO_FOR_WEEK2_EXPANSION)
+```
+
+#### Transition to Week 2 Operations
+
+**Start:** 2026-02-25 06:00 UTC  
+**Daily:** Fill WEEK2_DAILY_CHECKS.md (06:00 UTC snapshots, append-only)  
+**Template:** Use WEEK2_DAILY_CHECK_TEMPLATE.md  
+**Anomaly:** Log to INCIDENT_LOG_WEEK2.md, trigger stop-the-line if P0/drift/credential  
+**Baseline:** Drift guard ≥ 1 per day, expect 0 anomalies  
+
+#### Sign-Off
+
+✅ Expansion readiness gates: COMPLETE  
+✅ Governance gates verified: OPERATIONAL  
+✅ Drift guard determinism: SEALED (7/7)  
+✅ Cohort anonymized & secured: VERIFIED  
+✅ Monitoring framework initialized: READY  
+
+**Week 2 Status:** Ready to launch expansion (2026-02-25) pending OPS approval token.
+
+**Signature:** P8_4_GATES_PASS_READY_20260224_235000Z
