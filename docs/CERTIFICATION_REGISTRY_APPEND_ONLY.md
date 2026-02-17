@@ -819,3 +819,17 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 **Week 2 Status:** Ready to launch expansion (2026-02-25) pending OPS approval token.
 
 **Signature:** P8_4_GATES_PASS_READY_20260224_235000Z
+ 
+---
+
+### P8_5_BLOCKED_TOKEN_MISSING
+
+**Date:** 2026-02-17T23:40:47Z  
+**Verdict:** ❌ BLOCKED_TOKEN_MISSING  
+**Commit:** 334d645f  
+**Scope:** Week 2 launch execution (token-gated) for cohort 10; execution halted before distribution  
+**Out-of-Scope:** Distribution, preflight, wrapper execution, approval record (not run due to token missing)  
+**Proof Pack:** deployment/latest/certification/phase8_5/P8_5_WEEK2_LAUNCH_20260217_234047/  
+**Seal Pack:** None (blocked)  
+**Evidence:** APPROVAL_GATE_OUTPUT.txt, VERDICT.md, COMMANDS_RUN.txt  
+**Notes:** P8_APPROVAL_TOKEN absent; approval gate exit 10; stop-the-line enforced; no distribution executed.
