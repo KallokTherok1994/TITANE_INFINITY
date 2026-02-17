@@ -1,0 +1,13 @@
+ nouveau paquet Debian, version 2.0.
+ taille 9989722 octets : archive de contrôle=645 octets.
+     462 bytes,     9 lines      control
+     409 bytes,     5 lines      md5sums
+ Package: titan-stable
+ Version: 27.0.0
+ Architecture: amd64
+ Installed-Size: 22405
+ Maintainer: Kevin Thibault / Humain Total / TITANE Team
+ Priority: optional
+ Depends: libayatana-appindicator3-1, libwebkit2gtk-4.1-0, libgtk-3-0
+ Description: TITANE∞ - Cognitive Operating System (Stable Runtime)
+  TITANE∞ Stable Runtime - Your daily cognitive operating system with full OMEGA pipeline, MemoryOS, and multi-dimensional visual engine. Optimized for production use.

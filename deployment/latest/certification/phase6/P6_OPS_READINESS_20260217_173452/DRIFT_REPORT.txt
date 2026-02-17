@@ -1,0 +1,55 @@
+# P6 Drift Detection Report
+
+**Date:** 2026-02-17T17:37:52Z
+
+## Archive Integrity Scan
+
+### Phase3 / Phase4 / Phase5 Mutation Check
+Command: `git diff --name-only HEAD -- deployment/latest/certification/phase3 deployment/latest/certification/phase4 deployment/latest/certification/phase5`
+
+**Result:** [EMPTY] ← **No mutations detected**
+
+### Git Status Verification
+Command: `git status --porcelain=v1 -- deployment/latest/certification/phase3 deployment/latest/certification/phase4 deployment/latest/certification/phase5`
+
+**Result:** [EMPTY] ← **No staged/modified files**
+
+---
+
+## Detailed Checks
+
+| Archive | Status | Evidence |
+|---------|--------|----------|
+| phase3  | ✅ SEALED (immutable) | 0 diffs, 0 status changes |
+| phase4  | ✅ SEALED (immutable) | 0 diffs, 0 status changes |
+| phase5  | ✅ SEALED (immutable) | 0 diffs, 0 status changes |
+
+---
+
+## Drift Verdict
+
+**Status:** ✅ **NO DRIFT DETECTED**
+
+- Production release (`deployment/latest/release/p4_deploy_20260217_171400/`) unchanged
+- Registry append-only (6 P5 entries locked)
+- All phase seals intact (LOCK.md + MANIFEST.txt + SHA256SUMS.txt present)
+- Repository HEAD: 0c7c3101 (P5 final commit)
+
+**Action Required:** None. Archives stable.
+
+---
+
+## Scheduled Checks (Weekly)
+
+To monitor ongoing drift:
+
+```bash
+# Run drift guard
+node scripts/guards/guard-prod-drift.mjs
+
+# Expected exit codes:
+# 0 = stable (no drift)
+# 2 = drift detected (alert & investigate)
+```
+
+**Next baseline check:** 2026-02-24T17:37:52Z
