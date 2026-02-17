@@ -1,0 +1,72 @@
+=== ÉTAPE D: EXECUTION WRAPPER (MANUAL INSTRUCTIONS) ===
+
+========== P8 DISTRIBUTION EXECUTION WRAPPER ==========
+
+[P8 DISTRIBUTION] Step 1: Verifying approval gate...
+
+
+[P8.1 APPROVAL GATE] Starting P8.1 Approval Gate...
+
+[P8.1 APPROVAL GATE] ✅ Token format valid (550e8400...)
+[P8.1 APPROVAL GATE] ✅ P8 VERDICT status confirmed: PASS
+[P8.1 APPROVAL GATE] ✅ Sealed archives verified in INVENTORY (immutable)
+
+[P8.1 APPROVAL GATE] ✅ APPROVAL GATE: PASS
+[P8.1 APPROVAL GATE]    Ready for controlled distribution (manual only)
+
+
+[P8 DISTRIBUTION] Step 2: Verifying git state...
+
+[P8 DISTRIBUTION] ✅ Git clean (branch: MAIN, commit: b12c675b)
+
+[P8 DISTRIBUTION] Step 3: Verifying artifacts...
+
+[P8 DISTRIBUTION] ✅ AppImage
+           Size: 83594.5 KB
+           SHA256: 3a419526b59c3dd83455586d03d0dc28c08d0ca9737c66585fe6de3527b89214
+[P8 DISTRIBUTION] ✅ DEB
+           Size: 9755.6 KB
+           SHA256: 3c346782dd3a42dc0cfacf0f1e9f2c8d79acc6f17c9b6af49ac77f4ae24b7da8
+
+[P8 DISTRIBUTION] Step 4: Logging distribution metadata...
+
+[P8 DISTRIBUTION] ❌ Logging failed: require is not defined
+[P8 DISTRIBUTION] ⚠️  Logging failed (non-fatal, continuing...)
+[P8 DISTRIBUTION] Step 5: Manual distribution instructions
+
+================== MANUAL DISTRIBUTION READY ==================
+
+✅ Approval gate: PASSED
+✅ Git state: CLEAN
+✅ Artifacts: VERIFIED
+
+NEXT STEPS (Human-Driven):
+
+1. NOTIFY BETA TESTERS (via approved channels):
+   Subject: P8 Beta v27.0.0-beta — Distribution Ready
+
+2. DISTRIBUTE ARTIFACTS MANUALLY:
+   AppImage:  deployment/latest/stable/titane-infinity.AppImage
+   DEB:       deployment/latest/stable/titan-stable.deb
+
+3. UPLOAD VIA APPROVED CHANNELS (NO automated GitHub API):
+   - Channel A: Direct tester email
+   - Channel B: Team storage (SharePoint / OneDrive)
+   - Channel C: Secure portal
+
+4. TRACK DISTRIBUTION IN REGISTRY:
+   - Run: P8_APPROVAL_TOKEN=<token> node scripts/ops/p8_record_approval.mjs
+   - Or manually append to: docs/BETA_APPROVAL_LOG.md
+
+5. START WEEK 1 MONITORING:
+   - Collect tester feedback hourly
+   - Monitor error logs (see: docs/OPS_WEEK1_PLAYBOOK.md)
+   - If P0 incident → activate rollback procedures
+
+============================================================
+
+⚠️  NO automatic release has been created.
+    Distribution is 100% manual and human-controlled.
+
+[P8 DISTRIBUTION] ✅ Execution complete. Ready for manual distribution.
+

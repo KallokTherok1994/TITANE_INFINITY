@@ -1,0 +1,34 @@
+=== ÉTAPE B: APPROVAL GATE (WITHOUT TOKEN) ===
+
+Command: node scripts/ops/p8_approval_gate.mjs
+
+
+[P8.1 APPROVAL GATE] Starting P8.1 Approval Gate...
+
+[P8.1 APPROVAL GATE] ❌ BLOCKED: Approval token required (P8_APPROVAL_TOKEN not set)
+[P8.1 APPROVAL GATE]    To proceed, provide token: export P8_APPROVAL_TOKEN=<token>
+[P8.1 APPROVAL GATE] ✅ P8 VERDICT status confirmed: PASS
+[P8.1 APPROVAL GATE] ✅ Sealed archives verified in INVENTORY (immutable)
+
+[P8.1 APPROVAL GATE] ❌ APPROVAL GATE: BLOCKED
+[P8.1 APPROVAL GATE]    Distribution cannot proceed until all checks pass
+
+
+Exit Code: 10 (expected: 10)
+
+=== WITH TEST APPROVAL TOKEN ===
+
+Command: P8_APPROVAL_TOKEN=<TOKEN> node scripts/ops/p8_approval_gate.mjs
+
+
+[P8.1 APPROVAL GATE] Starting P8.1 Approval Gate...
+
+[P8.1 APPROVAL GATE] ✅ Token format valid (550e8400...)
+[P8.1 APPROVAL GATE] ✅ P8 VERDICT status confirmed: PASS
+[P8.1 APPROVAL GATE] ✅ Sealed archives verified in INVENTORY (immutable)
+
+[P8.1 APPROVAL GATE] ✅ APPROVAL GATE: PASS
+[P8.1 APPROVAL GATE]    Ready for controlled distribution (manual only)
+
+
+Exit Code: 0 (expected: 0)
