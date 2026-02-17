@@ -171,3 +171,4 @@ src-tauri/*.BACKUP_*.json
 runtime/dev/proofs/
 runtime/*.ok
 memory/memory_core_state.json
+deployment/latest/release/
