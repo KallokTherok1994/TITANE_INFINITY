@@ -24,6 +24,17 @@ const repoRoot = path.resolve(__dirname, '../../');
 const LOG_PREFIX = '[P8 RECORD APPROVAL]';
 
 /**
+ * Get approver info
+ */
+function getApproverInfo() {
+  const user = process.env.USER || 'unknown';
+  const timestamp = new Date().toISOString();
+  const gitUser = execSync('git config user.name', { cwd: repoRoot, encoding: 'utf8' }).trim() || user;
+
+  return { user: gitUser || user, timestamp };
+}
+
+/**
  * Get artifact info (from INVENTORY.md)
  */
 function getArtifactInfo() {
