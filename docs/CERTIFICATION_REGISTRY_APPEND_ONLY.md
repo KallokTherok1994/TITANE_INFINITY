@@ -198,6 +198,30 @@
 
 ---
 
+## P4_PROD_BLOCKED_MISSING_TOKEN (LOCAL)
+
+**Date:** 2026-02-17T01:23:14Z  
+**Verdict:** ⚪ OUT_OF_SCOPE (BLOCKED_MISSING_TOKEN)  
+**Commit:** NOT_COLLECTED (blocked at G0)  
+**Scope:** P4-1 build (prod-safe) + P4-2 validate (local) + P4-3 optional  
+**Out-of-Scope:** Any deploy, tags, follow-tags  
+**Proof Pack:** `reports/ai_local_vΩ3/P4_PROD_20260217_012311/`  
+**Seal Pack:** N/A  
+**Evidence:** Token build gate missing; no preflight/build/validation commands executed  
+**Notes:** Token present = NO; prod-safe used = NO; artifacts = NONE
+
+## P4_1_BUILD_AND_P4_2_VALIDATE_BLOCKED (LOCAL)
+
+**Date:** 2026-02-17T00:39:20Z  
+**Verdict:** ⚪ OUT_OF_SCOPE (BLOCKED_MISSING_TOKEN)  
+**Commit:** NOT_COLLECTED (blocked at G0)  
+**Scope:** P4-1 production build (prod-safe) + P4-2 validation (local)  
+**Out-of-Scope:** P4-3 deploy, tags, follow-tags  
+**Proof Pack:** `reports/ai_local_vΩ3/P4_1_BUILD_AND_P4_2_VALIDATE_20260217_003918/`  
+**Seal Pack:** N/A  
+**Evidence:** G0 token missing; no commands beyond guard  
+**Notes:** Token gate satisfied = NO; prod-safe used = NO; artifacts = NONE
+
 ### P3_PROVIDER_ORCH_CERT_P3_1 (RING 0 CONTRACTS)
 
 **Date:** 2026-02-16T15:15:24Z  
