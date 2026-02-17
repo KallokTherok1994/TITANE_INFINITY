@@ -1,0 +1,33 @@
+=== ÉTAPE C: PREFLIGHT SAFETY CHECK ===
+
+Command: node scripts/ops/p8_preflight_check.mjs
+
+
+========== P8 PRE-FLIGHT SAFETY CHECK ==========
+
+[P8 PRE-FLIGHT] Check 1: No critical dev processes running...
+
+[P8 PRE-FLIGHT] ✅ No critical dev processes (Vite/server)
+
+[P8 PRE-FLIGHT] Check 2: Drift guard status...
+
+[P8 PRE-FLIGHT] ✅ Drift guard: DETERMINISTIC (exit 2 - acceptable)
+
+[P8 PRE-FLIGHT] Check 3: Git HEAD consistency...
+
+[P8 PRE-FLIGHT] ✅ Git consistent (branch: MAIN, commit: 340bcbd2)
+
+[P8 PRE-FLIGHT] Check 4: P8 LOCK.md status...
+
+[P8 PRE-FLIGHT] ⚠️  P8 LOCK.md not found (will be created during final seal)
+
+[P8 PRE-FLIGHT] Check 5: SHA256 artifact validation...
+
+[P8 PRE-FLIGHT] ✅ SHA256 entries found in INVENTORY
+
+
+[P8 PRE-FLIGHT] ✅ PRE-FLIGHT CHECK: PASS
+[P8 PRE-FLIGHT]    Safe to proceed with distribution
+
+
+Exit Code: 0 (expected: 0 or 2)
