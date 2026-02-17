@@ -1,0 +1,11 @@
+
+[P8.1 APPROVAL GATE] Starting P8.1 Approval Gate...
+
+[P8.1 APPROVAL GATE] ❌ BLOCKED: Approval token required (P8_APPROVAL_TOKEN not set)
+[P8.1 APPROVAL GATE]    To proceed, provide token: export P8_APPROVAL_TOKEN=<token>
+[P8.1 APPROVAL GATE] ✅ P8 VERDICT status confirmed: PASS
+[P8.1 APPROVAL GATE] ✅ Sealed archives verified in INVENTORY (immutable)
+
+[P8.1 APPROVAL GATE] ❌ APPROVAL GATE: BLOCKED
+[P8.1 APPROVAL GATE]    Distribution cannot proceed until all checks pass
+
