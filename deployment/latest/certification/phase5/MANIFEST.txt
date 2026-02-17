@@ -1,0 +1,15 @@
+deployment/latest/certification/phase5/
+├── LOCK.md (this seal)
+├── MANIFEST.txt (file listing)
+├── SHA256SUMS.txt (integrity checksums)
+├── proof_pack/ (linked from reports/)
+├── seal/ (governance documentation)
+└── immutability/ (archive records)
+
+Production Release: p4_deploy_20260217_171400
+Archive Commit: 210f0cf0
+Baseline UTC: 20260217_172127
+Seal UTC: 20260217_172530
+
+This archive is immutable post-deployment.
+All changes appended to registry only.
