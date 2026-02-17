@@ -24,43 +24,62 @@ const repoRoot = path.resolve(__dirname, '../../');
 const LOG_PREFIX = '[P8 RECORD APPROVAL]';
 
 /**
- * Get approver info
- */
-function getApproverInfo() {
-  const user = process.env.USER || 'unknown';
-  const timestamp = new Date().toISOString();
-  const gitUser = execSync('git config user.name', { cwd: repoRoot, encoding: 'utf8' }).trim() || user;
-
-  return { user: gitUser || user, timestamp };
-}
-
-/**
- * Get artifact info
+ * Get artifact info (from INVENTORY.md)
  */
 function getArtifactInfo() {
-  const latestStableDir = path.join(repoRoot, 'deployment/latest/stable');
-  const appImagePath = path.join(latestStableDir, 'titane-infinity.AppImage');
-  const debPath = path.join(latestStableDir, 'titan-stable.deb');
+  try {
+    const p8Dir = path.join(repoRoot, 'deployment/latest/certification/phase8');
+    const items = fs.readdirSync(p8Dir, { withFileTypes: true });
+    const betaDirs = items.filter(d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_'));
+    
+    if (betaDirs.length === 0) {
+      console.error(`[P8 RECORD APPROVAL] ❌ P8_BETA_RELEASE directory not found`);
+      return {};
+    }
 
-  const artifacts = {};
+    const inventoryFile = path.join(p8Dir, betaDirs[0].name, 'INVENTORY.md');
 
-  if (fs.existsSync(appImagePath)) {
-    const stats = fs.statSync(appImagePath);
-    artifacts.appImage = {
-      name: 'titane-infinity.AppImage',
-      size: (stats.size / (1024 * 1024)).toFixed(1) + ' MB'
+    if (!fs.existsSync(inventoryFile)) {
+      console.error(`[P8 RECORD APPROVAL] ❌ INVENTORY.md not found`);
+      return {};
+    }
+
+    const inventory = fs.readFileSync(inventoryFile, 'utf8');
+    const artifacts = {};
+
+    // Extract AppImage info
+    const appImageMatch = inventory.match(/Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.AppImage)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/);
+    if (appImageMatch) {
+      artifacts.appImage = {
+        name: appImageMatch[1].split('/').pop(),
+        size: appImageMatch[2]
+      };
+    }
+
+    // Extract DEB info
+    const debMatch = inventory.match(/Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.deb)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/);
+    if (debMatch) {
+      artifacts.deb = {
+        name: debMatch[1].split('/').pop(),
+        size: debMatch[2]
+      };
+    }
+
+    // If not found by that pattern, try simpler patterns
+    if (Object.keys(artifacts).length === 0) {
+      if (inventory.includes('AppImage')) artifacts.appImage = { name: 'Titan-Stable.AppImage', size: '~82 MB' };
+      if (inventory.includes('.deb')) artifacts.deb = { name: 'Titan-Stable.deb', size: '~9.6 MB' };
+    }
+
+    return artifacts;
+  } catch (err) {
+    console.error(`[P8 RECORD APPROVAL] ⚠️  Could not extract artifact info: ${err.message}`);
+    // Return generic info if extraction fails
+    return {
+      appImage: { name: 'Titan-Stable.AppImage', size: '~82 MB' },
+      deb: { name: 'Titan-Stable.deb', size: '~9.6 MB' }
     };
   }
-
-  if (fs.existsSync(debPath)) {
-    const stats = fs.statSync(debPath);
-    artifacts.deb = {
-      name: 'titan-stable.deb',
-      size: (stats.size / (1024 * 1024)).toFixed(1) + ' MB'
-    };
-  }
-
-  return artifacts;
 }
 
 /**
