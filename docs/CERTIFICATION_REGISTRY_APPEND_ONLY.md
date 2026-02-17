@@ -559,3 +559,32 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 - commit: 210f0cf0 (MAIN)
 - verdict: PRODUCTION_STABLE_CONFIRMED
 - status: SEALED_FOR_OPS
+
+## P6_OPS_READINESS_COMPLETE
+
+**Date:** 2026-02-17T17:37:52Z  
+**Verdict:** ✅ PASS (OPS_READY_FOR_DEPLOYMENT)  
+**Commit:** (will be set after this commit)  
+**Scope:** Post-P5 production seal OPS readiness audit  
+**Out-of-Scope:** Code modifications (audit-only, read-only)  
+**Proof Pack:** `deployment/latest/certification/phase6/P6_OPS_READINESS_20260217_173452/`  
+**Seal Pack:** LOCK.md + SHA256SUMS.txt  
+**Evidence:** 
+- Étape A (Prechecks): ✅ PASS (git clean, env OK)
+- Étape B (P5 Validation): ✅ PASS (archives 0 mutations, guard deployed)
+- Étape C1 (No-Vite x3): ✅ PASS (no ports 5173/3000)
+- Étape C2 (Reproducibility x3): ✅ PASS (8305808 bytes, hash identical e0c38059...)
+- Étape C3 (IPC Sanity x3): ✅ PASS (interface stable)
+- Étape D (Field Smoke): ✅ PASS (AppImage startup OK, production logs)
+- Étape E (Patches): NOT NEEDED (no blockers)
+
+**Notes:**
+- Reproducibility: Perfect determinism (3x identical dist size + content hash)
+- Drift Guard: scripts/guards/guard-prod-drift.mjs confirmed deployed & active
+- Ops Procedures: OPS_RUNBOOK.md + SUPPORT_BUNDLE_PLAYBOOK.md documented
+- Field-Ready: AppImage 27.0.0 tested, no Vite dev server, production-safe
+- Local-First: Confirmed (no external network during smoke test)
+- Authorization: Not required (read-only audit, no tokens involved)
+
+**Status:** ✅ PRODUCTION_OPERATIONS_READY (drift guard active, ops procedures in place)
+
