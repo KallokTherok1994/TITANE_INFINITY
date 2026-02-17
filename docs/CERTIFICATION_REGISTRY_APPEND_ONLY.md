@@ -833,3 +833,17 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 **Seal Pack:** None (blocked)  
 **Evidence:** APPROVAL_GATE_OUTPUT.txt, VERDICT.md, COMMANDS_RUN.txt  
 **Notes:** P8_APPROVAL_TOKEN absent; approval gate exit 10; stop-the-line enforced; no distribution executed.
+ 
+---
+
+### P8_5_1_TOKEN_WAIT_STATE
+
+**Date:** 2026-02-17T23:47:19Z  
+**Verdict:** ⚪ STANDBY_ACTIVE_WAITING_TOKEN  
+**Commit:** 7aff1f31  
+**Scope:** Token wait state protocol for Week 2 launch (governance-only, no runtime actions)  
+**Out-of-Scope:** Distribution, preflight, wrapper execution, approval record  
+**Proof Pack:** deployment/latest/certification/phase8_5_1/P8_5_1_TOKEN_WAIT_20260217_234719/  
+**Seal Pack:** None (standby)  
+**Evidence:** WAIT_STATE_DECLARATION.md, VERDICT.md, TIMEOUT_POLICY.md, RESUME_PROCEDURE.md  
+**Notes:** Controlled standby; single authority notification template; 48h timeout policy; resume steps fixed.
