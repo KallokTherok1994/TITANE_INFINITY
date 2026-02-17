@@ -496,3 +496,35 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 
 **Status**: 🔒 **READY FOR P4-1 PRODUCTION BUILD TOKEN**
 
+
+---
+
+## P4_1_BUILD_RECOVERY_SUCCESS (LOCAL)
+
+**Date:** 2026-02-17T12:32:04Z  
+**Verdict:** ✅ PASS (BUILD ONLY, NO DEPLOY)  
+**Commit:** 54009788 (MAIN)  
+**Scope:** P4-1 production build (prod-safe) + P4-2 validation after recovery from interrupted run (exit 130)  
+**Out-of-Scope:** P4-3 deploy, tags, follow-tags (explicitly forbidden)  
+**Proof Pack:** `reports/ai_local_vΩ3/P4_PROD_RECOVERY_20260217_123204/`  
+**Seal Pack:** N/A (deploy not executed)  
+**Evidence:** Build logs, dist 8.4M, SHA256SUMS, mutation checks, archive verification  
+**Notes:**
+- Token present: YES (value never printed)
+- Prod-safe used: YES (NPM_CONFIG_IGNORE_SCRIPTS=1)
+- Artifacts: deployment/staging/p4_build_20260217_123158/
+- Dist size: 8.4M (stable, matches P2 baseline)
+- System mutations: NONE (verified ~/.local/share/applications/, ~/.titane/)
+- Archive integrity: PASS (0 files changed)
+- Git clean: PASS (0 uncommitted)
+- Deploy: NOT EXECUTED (as required)
+- Tags: NOT PUSHED (as required)
+
+**Validation P4-2:**
+- ✅ V1: No system mutations
+- ✅ V2: Archive untouched (0 diffs)
+- ✅ V3: Git clean
+- ✅ V4: Checksums generated (SHA256SUMS.txt)
+- ✅ V5: Build output verified (8.4M, top chunks present)
+
+**Status:** ✅ **READY FOR P4-3 DEPLOY** (requires separate deploy token + intent)
