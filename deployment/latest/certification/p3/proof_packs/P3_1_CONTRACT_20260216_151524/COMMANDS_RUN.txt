@@ -1,0 +1,273 @@
+P3-1 command log (outputs captured below).
+
+════════════════════════════════════════════════════════════
+P3-1 COMMAND LOG
+════════════════════════════════════════════════════════════
+$ git status --porcelain=v1
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+99b06a44764efd4cd5db3ba737b527c0d8cf3893
+
+$ ls -la docs | sed -n '1,200p'
+total 13856
+drwxrwxr-x 57 titane-os titane-os   20480 févr. 16 14:25 .
+drwxrwxr-x 55 titane-os titane-os   36864 févr. 16 15:10 ..
+drwxrwxr-x  3 titane-os titane-os    4096 févr. 13 18:27 00_core
+drwxrwxr-x  2 titane-os titane-os    4096 déc.   9 10:57 00_SYSTEME
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 01_architecture
+drwxrwxr-x  2 titane-os titane-os    4096 déc.   9 10:57 02_ARCHITECTURE
+drwxrwxr-x  6 titane-os titane-os    4096 févr. 16 13:02 04_guides
+drwxrwxr-x  4 titane-os titane-os    4096 janv.  3 18:40 05_modules
+drwxrwxr-x  2 titane-os titane-os    4096 déc.  15 19:15 06_api
+drwxrwxr-x 28 titane-os titane-os    4096 janv. 19 15:24 99_ARCHIVE
+-rw-rw-r--  1 titane-os titane-os 6140140 janv. 10 03:08 99_ARCHIVE_compressed_2026-01-10.tar.gz
+-rw-rw-r--  1 titane-os titane-os     915 janv.  3 18:40 ACCESSIBILITY.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 26 18:46 adr
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 ai
+-rw-rw-r--  1 titane-os titane-os   21837 janv. 15 19:35 ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md
+-rw-rw-r--  1 titane-os titane-os     342 janv. 19 15:24 ANALYSIS_REPORT.md
+-rw-rw-r--  1 titane-os titane-os   19855 déc.   9 10:57 ANS_README.md
+drwxrwxr-x  6 titane-os titane-os    4096 févr.  1 09:54 api
+-rw-rw-r--  1 titane-os titane-os   13230 déc.   9 10:57 API_REFERENCE_v24.30.md
+-rw-rw-r--  1 titane-os titane-os    7219 janv. 15 21:24 API_SURFACE.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 architecture
+-rw-rw-r--  1 titane-os titane-os    6596 janv.  7 19:10 ARCHITECTURE_IMPACT_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os    8608 déc.   9 10:57 ARCHITECTURE.md
+-rw-rw-r--  1 titane-os titane-os   13814 janv. 19 15:24 ARCHITECTURE_MODULAIRE_v17.2.0_README.md
+-rw-rw-r--  1 titane-os titane-os   21281 déc.  15 20:15 ARCHITECTURE_RINGS.md
+drwxrwxr-x  8 titane-os titane-os    4096 janv. 12 12:19 archive
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 13 18:27 __ARCHIVE_REPO_HOUSEKEEPING_VAULT__
+drwxrwxr-x  5 titane-os titane-os    4096 févr. 13 18:21 __ARCHIVE_UI_CARTOGRAPHY_VAULT__
+drwxrwxr-x  2 titane-os titane-os    4096 déc.   9 10:57 audio
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 audit
+-rw-rw-r--  1 titane-os titane-os    4895 janv.  9 17:37 AUDIT_COMPLET_2026-01-09.md
+-rw-rw-r--  1 titane-os titane-os    7054 janv. 31 22:46 AUDIT_DEPENDENCIES_DEPRECATED_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os   16520 janv. 19 15:24 AUDIT_FINAL_v26.2.1.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 13 18:27 audits
+drwxrwxr-x  3 titane-os titane-os    4096 févr. 16 13:46 __AUDITS__
+-rw-rw-r--  1 titane-os titane-os    7309 janv. 12 08:57 AUDIT_UPDATE_2026-01-10.md
+-rw-rw-r--  1 titane-os titane-os   21420 déc.  10 16:47 AUTH_MIGRATION_PLAN.md
+-rw-rw-r--  1 titane-os titane-os   14247 janv. 19 15:24 AUTO_HEAL_SYSTEMS.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 backend
+-rw-------  1 titane-os titane-os   33654 janv.  7 19:39 BACKEND_CONSOLIDATION_PROPOSAL.md
+-rw-rw-r--  1 titane-os titane-os    4498 déc.   9 10:57 BACKEND_PERFORMANCE_AUDIT_v19.3.md
+drwxrwxr-x  2 titane-os titane-os   20480 janv. 19 15:24 backup_20251218_122526
+drwxrwxr-x  2 titane-os titane-os   20480 janv. 19 15:24 backup_20251218_122540
+drwxrwxr-x  2 titane-os titane-os   20480 janv. 19 15:24 backup_20251218_123316
+-rw-rw-r--  1 titane-os titane-os 3791924 janv. 10 03:08 backups_20251218_compressed_2026-01-10.tar.gz
+-rw-rw-r--  1 titane-os titane-os     578 janv. 16 19:48 BETA_QUICKSTART.md
+-rw-rw-r--  1 titane-os titane-os     463 janv. 16 19:50 BETA_RELEASE_CHECKLIST.md
+-rw-rw-r--  1 titane-os titane-os     828 janv. 16 19:48 BETA_TROUBLESHOOTING.md
+-rw-rw-r--  1 titane-os titane-os    9666 janv. 19 15:24 BRANCH_CONSOLIDATION_IMPLEMENTATION.md
+-rw-rw-r--  1 titane-os titane-os    8882 janv. 19 15:24 BRANCH_CONSOLIDATION_INDEX.md
+-rw-rw-r--  1 titane-os titane-os   11802 janv. 19 15:24 BRANCH_CONSOLIDATION_REPORT_v26.2.2.md
+-rw-rw-r--  1 titane-os titane-os    3774 janv.  3 18:40 BRANCH_MERGE_QUICK_REF.md
+-rw-rw-r--  1 titane-os titane-os    7494 janv. 19 15:24 BRANCH_SYNC_RECONCILIATION.md
+-rw-rw-r--  1 titane-os titane-os    6840 janv. 19 15:24 BUILD_RELEASE_OPTIMIZATION.md
+-rw-rw-r--  1 titane-os titane-os   14623 janv. 10 12:04 BUNDLE_OPTIMIZATION_ANALYSIS_2026-01-10.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 13 18:27 capabilities
+-rw-rw-r--  1 titane-os titane-os   24138 févr. 13 18:21 CAPABILITIES_REGISTRY.md
+-rw-rw-r--  1 titane-os titane-os   11698 janv. 15 21:37 CAPABILITY_QUALIFICATION_PROTOCOL.md
+-rw-rw-r--  1 titane-os titane-os   11113 févr. 16 14:29 CERTIFICATION_REGISTRY_APPEND_ONLY.md
+-rw-rw-r--  1 titane-os titane-os    2353 janv. 16 09:26 CERTIFICATION_STATUS_FINAL.md
+-rw-rw-r--  1 titane-os titane-os   14138 janv. 19 15:24 CHANGELOG.md
+-rw-rw-r--  1 titane-os titane-os    8698 janv.  4 19:58 CHAT_IA_VOICE_MODE_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    1957 janv. 19 15:24 CHECKLIST_FINAL.md
+-rw-rw-r--  1 titane-os titane-os   15160 janv. 10 12:10 CIRCULAR_DEPENDENCY_GUIDE_2026-01-10.md
+-rw-------  1 titane-os titane-os    6381 janv.  7 09:18 CLEANUP_SESSION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    7502 janv.  3 18:40 CLOUD_AGENT_TIMEOUT_FIX.md
+-rw-rw-r--  1 titane-os titane-os    3517 déc.  21 23:05 CLOUD_AGENT_TIMEOUT_FIX_QUICK_REF.md
+-rw-rw-r--  1 titane-os titane-os   10967 déc.  22 17:45 COMMANDES_TAURI_COMPLETE_v26.3.0.md
+-rw-------  1 titane-os titane-os   33219 janv. 15 19:35 COMPLETE_FRONTEND_BACKEND_FUSION_AUDIT.md
+-rw-------  1 titane-os titane-os   21308 janv. 12 08:57 COMPLETE_GO_ALL_REPORT_2026-01-07.md
+-rw-------  1 titane-os titane-os    2698 janv.  7 09:00 CONSOLE_LOG_CLEANUP_PLAN.md
+-rw-rw-r--  1 titane-os titane-os   10622 janv. 12 08:57 CONTINUATION_STATUS_2026-01-10.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 13 18:27 contracts
+-rw-rw-r--  1 titane-os titane-os   10817 janv. 19 15:24 COPILOT_SETUP.md
+-rw-rw-r--  1 titane-os titane-os   18333 déc.   9 10:57 CORTEX_README.md
+-rw-------  1 titane-os titane-os   12502 janv.  7 19:41 COVERAGE_BASELINE_2026-01-07.md
+-rw-rw-r--  1 titane-os titane-os    7880 janv. 19 15:24 CRITICAL_FIXES_v26.2.1.md
+drwxrwxr-x  7 titane-os titane-os    4096 févr. 13 19:04 current
+-rw-rw-r--  1 titane-os titane-os    9745 déc.   9 11:26 CYCLE_ENGINE_QUICKSTART.md
+-rw-rw-r--  1 titane-os titane-os   23783 déc.   9 11:26 CYCLE_ENGINE_SCHEMA.md
+-rw-------  1 titane-os titane-os   17685 janv.  7 15:17 DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md
+-rw-------  1 titane-os titane-os   14901 janv. 11 18:59 DEEP_REFLECTION_SUMMARY_2026-01-07.md
+-rw-rw-r--  1 titane-os titane-os   18263 janv. 31 18:26 DEPLOIEMENT_PRODUCTION_COMPLETE_v27.0.0.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 12 20:02 deployment
+-rw-rw-r--  1 titane-os titane-os   12308 janv. 19 15:24 DEPLOYMENT_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    1843 janv.  3 18:40 DEPLOYMENT.md
+-rw-rw-r--  1 titane-os titane-os    9156 janv. 15 21:30 DEPLOYMENT_REPORT_v26.3.0.md
+-rw-rw-r--  1 titane-os titane-os   16051 janv. 19 15:24 DEPLOYMENT_SYSTEM_CENTER_AUTOFIX_v21.md
+-rw-rw-r--  1 titane-os titane-os    8646 déc.   9 10:57 DESIGN_SYSTEM_TITANE.md
+-rw-rw-r--  1 titane-os titane-os    7805 janv.  4 19:58 DESKTOP_ICON_AUTO_UPDATE.md
+-rw-rw-r--  1 titane-os titane-os   13008 janv. 29 12:22 DEVELOPER_GUIDE.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 development
+-rw-rw-r--  1 titane-os titane-os   22545 janv.  4 19:58 DEVOPS_GUIDE_v26.0.md
+-rw-rw-r--  1 titane-os titane-os   15174 janv. 10 03:07 DEVSUDOHANDLER_REFACTORING_PLAN.md
+-rw-rw-r--  1 titane-os titane-os    6518 janv.  3 18:40 DEV_TO_MAIN_MERGE_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os    9701 déc.   9 10:57 DEVTOOLS_OVERVIEW.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr.  2 10:26 diagnostic
+-rw-rw-r--  1 titane-os titane-os   27451 janv.  3 18:40 DIAGNOSTIC_COMPLET_ARCHITECTURE_v17.3.0.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 14 10:51 diagnostics
+-rw-rw-r--  1 titane-os titane-os   16761 janv. 31 14:27 DOCUMENTATION_INDEX_v27.0.0_EN.md
+-rw-rw-r--  1 titane-os titane-os   34422 janv. 19 15:24 DUAL_RUNTIME_WORKFLOW.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr. 13 18:27 e2e
+-rw-rw-r--  1 titane-os titane-os    2114 janv. 31 23:09 E2E_TAURI_SETUP.md
+drwxrwxr-x 13 titane-os titane-os    4096 janv. 16 09:50 _evidence
+drwxrwxr-x  2 titane-os titane-os    4096 févr.  1 09:54 examples
+-rw-rw-r--  1 titane-os titane-os   10574 déc.   9 10:57 EXECUTIVE_LAYER_TECHNICAL_GUIDE.md
+-rw-------  1 titane-os titane-os   13770 janv. 12 08:57 EXECUTIVE_SUMMARY_2026-01-07.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 31 13:36 feedback
+-rw-------  1 titane-os titane-os   19328 janv.  7 15:44 FILES_CREATED_INDEX.md
+-rw-rw-r--  1 titane-os titane-os   18013 déc.   9 10:57 FINAL_ARCHITECTURE_v17.2.0.md
+-rw-------  1 titane-os titane-os    9600 janv.  7 09:31 FINAL_CLEANUP_REPORT.md
+-rw-rw-r--  1 titane-os titane-os   12385 janv. 31 14:07 FINAL_REPORT_v27.0.0_COMPLETE.md
+-rw-------  1 titane-os titane-os   18050 janv. 12 08:57 FINAL_SESSION_SUMMARY_2026-01-07.md
+-rw-------  1 titane-os titane-os   15756 janv.  7 15:46 FINAL_VERIFICATION_CHECKLIST.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 26 09:38 fixes
+-rw-rw-r--  1 titane-os titane-os   14266 janv. 15 19:35 FIX_VALIDATION_2026-01-09.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 frontend
+-rw-rw-r--  1 titane-os titane-os    3230 déc.   9 10:57 FRONTEND_PERFORMANCE_AUDIT_v19.3.md
+-rw-rw-r--  1 titane-os titane-os   24315 janv.  3 18:40 FUNDAMENTAL_CONCEPTS.md
+-rw-rw-r--  1 titane-os titane-os    9890 janv.  3 18:40 GEMINI_CONFIGURATION.md
+-rw-rw-r--  1 titane-os titane-os   10765 janv. 19 15:24 GETTING_STARTED.md
+-rw-------  1 titane-os titane-os   17204 janv. 12 08:57 GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md
+-rw-------  1 titane-os titane-os   13255 janv.  7 21:12 GO_ALL_SESSION_2026-01-07.md
+-rw-------  1 titane-os titane-os   11324 janv.  8 09:22 GO_ALL_SESSION_2026-01-08_CONTINUATION-2.md
+-rw-------  1 titane-os titane-os   12328 janv.  8 09:34 GO_ALL_SESSION_2026-01-08_CONTINUATION-3.md
+-rw-rw-r--  1 titane-os titane-os   13115 janv.  8 17:04 GO_ALL_SESSION_2026-01-08_CONTINUATION-4.md
+-rw-rw-r--  1 titane-os titane-os   17724 janv.  8 17:19 GO_ALL_SESSION_2026-01-08_CONTINUATION-5.md
+-rw-rw-r--  1 titane-os titane-os   12448 janv.  8 17:55 GO_ALL_SESSION_2026-01-08_CONTINUATION-6.md
+-rw-rw-r--  1 titane-os titane-os   29390 janv. 10 03:20 GO_ALL_SESSION_2026-01-10_COMPLETE.md
+drwxrwxr-x  2 titane-os titane-os    4096 févr.  2 09:47 governance
+-rw-rw-r--  1 titane-os titane-os   42402 févr. 16 13:02 GUIDE_INSTALLATION_TITANE_OLLAMA_RESEAU_PROD.md
+-rw-rw-r--  1 titane-os titane-os    8918 déc.  16 18:33 GUIDE_PERFORMANCE_CHAT.md
+-rw-rw-r--  1 titane-os titane-os   13039 janv.  4 19:58 GUIDE_PRATIQUE_COMPLET_v26.3.0.md
+-rw-rw-r--  1 titane-os titane-os    6878 janv. 19 15:24 GUIDE_RAPIDE_RESTRUCTURATION.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 19 15:24 guides
+-rw-rw-r--  1 titane-os titane-os    9591 janv. 15 19:35 HMR_ANALYSIS_SUMMARY_2026-01-09.md
+-rw-rw-r--  1 titane-os titane-os   13314 janv.  9 09:12 HMR_FIX_INDEX.md
+-rw-rw-r--  1 titane-os titane-os    7286 janv. 15 19:35 HMR_FIX_QUICK_REFERENCE.md
+-rw-rw-r--  1 titane-os titane-os    9561 janv. 15 21:46 HOW_TO_ADD_CAPABILITY.md
+-rw-rw-r--  1 titane-os titane-os   10478 janv. 19 15:24 HUSKY_ESLINT_PIPELINE_FIX_v21.md
+-rw-rw-r--  1 titane-os titane-os    1073 déc.   9 10:57 I18N.md
+-rw-rw-r--  1 titane-os titane-os    7614 janv. 12 08:57 IMMEDIATE_ACTIONS_STATUS_2026-01-10.md
+-rw-rw-r--  1 titane-os titane-os    8127 déc.   9 10:57 INDEX_DOCUMENTATION_v17.2.0.md
+-rw-rw-r--  1 titane-os titane-os   15124 janv.  4 19:58 INDEX_DOCUMENTATION_v26.3.0.md
+-rw-rw-r--  1 titane-os titane-os   12347 févr. 13 18:21 INDEX_MASTER.md
+-rw-rw-r--  1 titane-os titane-os   20531 févr. 13 18:27 INDEX.md
+-rw-rw-r--  1 titane-os titane-os     965 févr. 13 18:27 INDEX_REPO_STRUCTURE.md
+-rw-rw-r--  1 titane-os titane-os   18629 janv. 31 14:27 INSTALLATION_GUIDE_v27.0.0_EN.md
+-rw-rw-r--  1 titane-os titane-os    7671 déc.   9 10:57 INVARIANTS_TITANE.md
+-rw-rw-r--  1 titane-os titane-os     426 janv. 16 19:48 IPC_CONTRACT.md
+-rw-rw-r--  1 titane-os titane-os   10194 janv. 19 15:24 LEARNING_PATH.md
+-rw-rw-r--  1 titane-os titane-os    4115 déc.   9 10:57 LEGACY_CODE_AUDIT_v19.3.md
+-rw-rw-r--  1 titane-os titane-os    8198 déc.   9 10:57 LOCALSTORAGE_AUDIT_v∞.md
+drwxrwxr-x  2 titane-os titane-os    4096 janv. 31 13:33 maintenance
+-rw-rw-r--  1 titane-os titane-os   14560 janv. 31 14:36 MAINTENANCE_OPERATIONS_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os   11115 janv. 19 15:24 MAI_README.md
+-rw-rw-r--  1 titane-os titane-os   10579 janv. 19 15:24 MAI_STATUS.md
+-rw-rw-r--  1 titane-os titane-os   12583 déc.   9 10:57 MAI_TECHNICAL_GUIDE.md
+-rw-------  1 titane-os titane-os   11694 janv. 12 08:57 MASSIVE_CLEANUP_SUCCESS_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     208 janv.  7 18:01 memory-migration-report.txt
+-rw-rw-r--  1 titane-os titane-os    5283 janv.  3 18:40 MEMORY_QA_CHECKLIST.md
+-rw-rw-r--  1 titane-os titane-os   16981 janv. 19 15:24 MEMORY_SYSTEM.md
+-rw-rw-r--  1 titane-os titane-os    6148 janv.  3 18:40 MERGE_DEV_TO_MAIN_GUIDE.md
+-rw-------  1 titane-os titane-os   18426 janv.  7 15:27 MIGRATION_GUIDE_AI_CONSOLIDATION.md
+-rw-------  1 titane-os titane-os   12143 janv.  7 15:23 MIGRATION_GUIDE_MEMORY_v2.md
+-rw-rw-r--  1 titane-os titane-os    7002 janv. 19 15:24 MIGRATION_UBUNTU_24.04.3_LTS.md
+-rw-rw-r--  1 titane-os titane-os   17491 déc.   9 10:57 MODULE_16_LOWFLOW_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os   21272 déc.   9 10:57 MODULES_14_15_16_SECURITY_STACK.md
+-rw-rw-r--  1 titane-os titane-os    7904 déc.   9 10:57 MODULES.md
+-rw-rw-r--  1 titane-os titane-os   17863 déc.   9 10:57 MONITORING_LAYER_TECHNICAL_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os   11588 janv.  3 18:40 MULTIMODAL_FUSION_ENGINE_OPUS_v∞.3.md
+-rw-rw-r--  1 titane-os titane-os   12056 janv. 10 11:18 NEXT_STEPS_ROADMAP_2026-01-10.md
+-rw-rw-r--  1 titane-os titane-os    8403 janv.  4 19:58 NPM_TO_PNPM_AUDIT_REPORT.md
+-rw-rw-r--  1 titane-os titane-os   13521 janv.  5 12:53 NPM_TO_PNPM_MIGRATION.md
+-rw-rw-r--  1 titane-os titane-os    5099 déc.   9 10:57 OBSERVABILITY_AUDIT_v19.3.md
+-rw-rw-r--  1 titane-os titane-os    5508 janv. 12 20:02 OLLAMA_CONFIGURATION_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os    4412 janv.  5 12:53 OLLAMA_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    3997 janv. 12 20:02 OLLAMA_SETUP.md
+-rw-rw-r--  1 titane-os titane-os    5403 févr.  2 14:17 OLLAMA_TAURI_CONFIG.md
+-rw-rw-r--  1 titane-os titane-os    4408 janv. 19 15:24 OPTIMISATION_FINALE_v25.2.2.md
+-rw-------  1 titane-os titane-os   33648 janv. 11 18:24 OPTIMIZATION_ROADMAP_2026.md
+-rw-rw-r--  1 titane-os titane-os   10655 déc.  18 17:17 OPTIMIZATION_ROADMAP_v27.md
+-rw-rw-r--  1 titane-os titane-os   22019 déc.   9 10:57 OPUS_ENGINES_v∞.4_v∞.5_v∞.6.md
+-rw-------  1 titane-os titane-os   11587 janv. 11 18:59 P0_IMPLEMENTATION_REPORT_2026-01-07.md
+-rw-------  1 titane-os titane-os   17188 janv. 11 18:59 P1.2_ALERTS_2026-01-07.md
+-rw-------  1 titane-os titane-os   19133 janv. 11 18:59 P1_ENHANCEMENTS_2026-01-07.md
+-rw-------  1 titane-os titane-os   14070 janv. 11 18:59 P1_IMPLEMENTATION_REPORT_2026-01-07.md
+-rw-rw-r--  1 titane-os titane-os    7365 févr. 16 12:39 P2_SYNC_FASTFS_TO_MAIN.md
+-rw-rw-r--  1 titane-os titane-os    7055 janv.  4 19:58 PERFECTION_PLAN.md
+-rw-rw-r--  1 titane-os titane-os   12284 déc.   9 10:57 PERFECT_SINGULARITY_AUDIT_v19.3.md
+-rw-rw-r--  1 titane-os titane-os    3246 févr.  2 10:22 PHASE0_EXEC_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os    9449 févr.  2 10:21 PHASE0_STABLE_READY_FINAL.md
+-rw-rw-r--  1 titane-os titane-os   10322 janv.  4 19:58 PHASE_12_INTEGRATION_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os   13437 janv. 10 03:10 PHASE1_CLEANUP_REPORT_2026-01-10.md
+-rw-------  1 titane-os titane-os   14631 janv.  7 18:18 PHASE1_EXECUTION_LOG.md
+-rw-------  1 titane-os titane-os    7403 janv.  7 19:11 PHASE1_QUICK_WIN_TIME_DEPRECATION.md
+-rw-------  1 titane-os titane-os    9491 janv.  7 18:50 PHASE1_SESSION_SUMMARY_2026-01-07.md
+-rw-------  1 titane-os titane-os    6454 janv.  7 18:58 PHASE2_ANALYSIS_2026-01-07.md
+-rw-rw-r--  1 titane-os titane-os    9719 déc.   9 10:57 PHASE_2B_API_MIGRATION_v17.2.0.md
+
+$ rg -n "PROVIDER_ORCHESTRATION_CONTRACT|PROVIDER_REASON_CODES|PROVIDER_CAPABILITY_MATRIX" docs -S || true
+
+════════════════════════════════════════════════════════════
+P3-1 COHERENCE SCANS
+════════════════════════════════════════════════════════════
+$ rg -n "OFFLINE_SIM|FORCE_LOCAL_PROVIDER|network_used|attempts\[\]|provider_class|reason_code" docs -S
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:10:- **provider_class**: `local` | `remote` | `hybrid`.
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:12:- **reason_code**: Canonical enum defined in [PROVIDER_REASON_CODES](PROVIDER_REASON_CODES.md).
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:23:- `provider_class` (`local`|`remote`|`hybrid`)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:25:- `reason_code` (enum)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:29:- `attempts[]` (array)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:30:- `network_used` (bool)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:34:## attempts[] Schema (v1)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:38:- `provider_class` (`local`|`remote`|`hybrid`)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:42:- `reason_code` (enum)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:43:- `network_used_attempt` (bool)
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:47:- `FORCE_LOCAL_PROVIDER=1` is **not** offline. It is a local policy override.
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:48:- `OFFLINE_SIM=1` (test-only) **forces offline fallback**:
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:50:  - `reason_code=FALLBACK_OFFLINE`
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:51:  - `network_used=false`
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:54:## Local-first and network_used
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:56:- `network_used=true` only if the request reaches the public internet.
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:57:- Loopback (e.g., `127.0.0.1`, `localhost`) is **local** and does not set `network_used`.
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:62:- If an allowlist rule denies a route, return `reason_code=ALLOWLIST_DENIED` and `network_used=false`.
+docs/PROVIDER_ORCHESTRATION_CONTRACT.md:63:- UI must render the reason based on `reason_code`, not on inference.
+docs/PROVIDER_CAPABILITY_MATRIX.md:8:| Provider | provider_class | Network | Capabilities | Constraints | Availability |
+docs/PROVIDER_CAPABILITY_MATRIX.md:31:- Local-first is maintained by `network_used=false` for local/loopback paths.
+docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md:65:- OFFLINE5 contract clarified: requires offline/fallback path triggered + visual tags present (not just FORCE_LOCAL_PROVIDER=1)
+docs/PROVIDER_REASON_CODES.md:10:| POLICY_LOCAL_ONLY | Policy forces local provider | `FORCE_LOCAL_PROVIDER=1` or equivalent |
+docs/PROVIDER_REASON_CODES.md:18:| FALLBACK_OFFLINE | Offline fallback triggered | `OFFLINE_SIM=1` or offline path forced |
+docs/PROVIDER_REASON_CODES.md:29:| Outcome | Expected reason_code |
+docs/PROVIDER_REASON_CODES.md:47:    "provider_class": "local",
+docs/PROVIDER_REASON_CODES.md:49:    "reason_code": "OK",
+docs/PROVIDER_REASON_CODES.md:56:        "provider_class": "local",
+docs/PROVIDER_REASON_CODES.md:60:        "reason_code": "OK",
+docs/PROVIDER_REASON_CODES.md:61:        "network_used_attempt": false
+docs/PROVIDER_REASON_CODES.md:64:    "network_used": false,
+
+$ rg -n "SERIALIZATION_DROPPED" docs -S
+docs/PROVIDER_REASON_CODES.md:21:| SERIALIZATION_DROPPED | Meta dropped in IPC serialization | Detected loss of meta in IPC |
+
+════════════════════════════════════════════════════════════
+P3-2 RUN (STOP-THE-LINE REGEN)
+Timestamp: 2026-02-16T20:24:52Z
+Shell: /bin/bash
+════════════════════════════════════════════════════════════
+$ git status --porcelain=v1
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+48174b7529f744295e6af376b059a4641a53ef8c
+
+$ git diff -- reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_1_CONTRACT_20260216_151524/FILES_CHANGED.txt reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_1_CONTRACT_20260216_151524/COMMANDS_RUN.txt
+
+$ git restore --source=HEAD -- <FILES_CHANGED.txt> <COMMANDS_RUN.txt>
+ERROR: files not tracked by git; restore skipped

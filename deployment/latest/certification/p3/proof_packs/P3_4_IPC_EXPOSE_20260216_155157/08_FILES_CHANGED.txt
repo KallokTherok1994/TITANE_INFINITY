@@ -1,0 +1,2 @@
+A	scripts/guard_ipc_provider_meta.cjs
+M	src-tauri/src/conversation_engine/commands.rs

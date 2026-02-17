@@ -1,0 +1,200 @@
+./OPTIMIZATION_PHASE2_REPORT.md:138:  - pnpm build-storybook
+./SESSION_2_FINAL_STATUS.md:91:- ✅ Dev server boots in 2.7-3.7 seconds
+./vite_no_tsconfig_test.txt:9:error when starting dev server:
+./registry/ui-events.jsonl:15:{"id":"P1_BUILD_CHUNKS_FIX","ts":"2026-02-05T$(date -u +%H:%M:%S)Z","category":"build-optimization","scope":"vite-rollup-chunking","change_type":"fix","summary":"Eliminated 100% circular chunks + unified RealTimeCharts/chatEngine import strategy","reason":"Vite/Rollup circular chunk warnings caused by manualChunks overlapping rules. (1) onnxruntime <-> vendor-utils, (2) service-ai <-> service-memory <-> service-audio <-> services-common <-> service-cognitive <-> devtools-sudo, (3) ui-layout <-> ui-common <-> ui-primitives. RealTimeCharts conflict: static export (dashboard/index.ts) + lazy dynamic (OverviewSection.tsx). chatEngine.commands: static re-export (tauri/index.ts) + dynamic imports (chatEngine.ts, ConversationManager.ts). Solution: merge circular groups into unified buckets (vendor-onnx, services-core, ui-core), remove RealTimeCharts from static exports (100% lazy), remove chatEngine re-exports from tauri/index (direct imports), fix react-vendor match order (scheduler overlap).","files_changed":["vite.config.ts","src/features/dashboard/index.ts","src/services/tauri/index.ts","src/services/ai/ConversationManager.ts","src/services/tts/hybridTTS.ts"],"changes_detail":{"vite.config.ts":["manualChunks reordered: onnxruntime check BEFORE generic vendor-utils","React cluster checks /react/, /react-dom/, /scheduler/ (specific before generic)","ui-core: merged ui-layout + ui-common + ui-primitives (single bucket)","services-core: merged service-ai + service-memory + service-audio + services-common + service-cognitive + devtools-sudo (single bucket)","vendor-onnx: merged onnxruntime-web + former vendor-utils matches","All rules deterministic: most specific → most general"],"dashboard/index.ts":["Removed static export of RealTimeCharts","Added comment: 100% lazy via React.lazy() for performance"],"tauri/index.ts":["Removed chatEngineCommands static re-exports","Added comment: avoid static/dynamic conflict, use direct imports"],"ConversationManager.ts":["Changed import to dynamic: await import('@/services/tauri/chatEngine.commands')","Prevents static bundling forcing chatEngine eager load"],"hybridTTS.ts":["Changed import to direct: from '@/services/tauri/chatEngine.commands'","Aliased healthCheck as chatEngineHealthCheck, speakText as chatEngineSpeakText","Fixed type import: SpeechMode as ChatEngineSpeechMode"]},"tests_run":["pnpm build (full production build)","grep 'Circular chunk' → 0 results","grep 'dynamically imported' → 0 results","Build completed successfully in ~12s"],"proofs":["Build log /tmp/p1_final_check.log: zero circular/dynamic warnings","dist/ artifacts generated correctly","Post-build script completed (AppImage updated)","All chunk sizes within expected ranges"],"risk_level":"low","rollback":"git revert HEAD~1 (restore old manualChunks + static exports)","status":"QUALIFIED"}
+./UI_SEAL_P2-P9_CONSOLIDATED.md:209:$ pnpm build
+./PHASE_4_COMPLETION_REPORT.md:190:Command: pnpm build
+./PO_PHASE5_BUILD_LOGS_STABILITY.md:11:**Last Build:** `pnpm build`
+./PO_PHASE5_BUILD_LOGS_STABILITY.md:123:| **Build regression**       | ✅ NONE | Zero new errors                 | Verified with pnpm build |
+./installer/install.sh:86:pnpm build
+./installer/update.sh:40:pnpm build
+./UI_SEAL_P0_PREFLIGHT.md:40:pnpm build               # Vite build (no Tauri binary)
+./FINAL_SESSION_REPORT_COMPLETE.md:71:**Issue:** E2E tests couldn't connect to dev server
+./FINAL_SESSION_REPORT_COMPLETE.md:298:- ✅ Dev server ready (pnpm run dev:tauri)
+./E2E_RECOVERY_SUCCESS.md:50:- ✅ Vite dev server (port 1420) — Stable
+./PHASE3C_COMPLETION_REPORT.md:244:✅ Build successful: `pnpm build` ✓
+./PHASE3C_COMPLETION_REPORT.md:327:| Build verification    | ✅ DONE | `pnpm build` successful (9.5M)        |
+./README.md:212:pnpm run dev              # Vite dev server
+./E2E_TEST_STATUS_REPORT.md:13:- Dev servers (Vite + Tauri) terminating mid-test run (~2-4 min into suite)
+./E2E_TEST_STATUS_REPORT.md:23:- Running **Vite-only** dev server (no Tauri backend) for UI-focused E2E tests
+./E2E_TEST_STATUS_REPORT.md:109:- `scripts/e2e/run-stable-e2e.sh`: NEW — Stable wrapper that manages Vite dev server independently
+./e2e/smoke.test.ts:16:    // OBSOLETE: Tauri no longer uses HTTP dev server
+./P_INFINITY_P0_PREFLIGHT.md:35:| `pnpm build` | ✅ Available | `vite build` — production build |
+./AUTONOMY_AUDIT_FINAL_COMPREHENSIVE_VERDICT.md:286:2. Restart Vite dev server (auto at rebuild)
+./RELEASE_NOTES_v27.0.2.md:124:**Local-First**: No web server, no implicit network dependencies  
+./playwright.config.ts:4: * E2E testing for Vite dev server (http://localhost:5173)
+./playwright.config.ts:82:  // Dev server configuration
+./E2E_BREAKTHROUGH_REPORT.md:94:- Vite dev server (port 1420): ✅ Stable
+./installer_gui/titane_updater.sh:44:pnpm build 2>&1
+./P_INFINITY_P6_BUILD_TESTS.md:10:**Previous successful build:** ✅ `pnpm build` (from Phase 3-5 audits)
+./BOOTSTRAP_REPORT.md:129:## 🚀 DEV SERVER STARTUP (SMOKE TEST) — ✅ **PASS**
+./BOOTSTRAP_REPORT.md:148:✅ Stage 1: Vite dev server started
+./BOOTSTRAP_REPORT.md:189:| **Impact** | Vite config load failed; prevented dev server startup |
+./BOOTSTRAP_REPORT.md:266:| vite | 7.3.1 | Build / dev server |
+./BOOTSTRAP_REPORT.md:334:- ✅ Dev server launches successfully
+./e2e/critical/app-launch.spec.ts:12:    // Navigate to Vite dev server (Tauri webview context)
+./BETA_DEPLOYMENT_GO_LIVE.md:106:- React 19.2.4 UI (Vite dev server)
+./PHASE_3_E2E_STRATEGY_UPDATED.md:12:- **Playwright startup:** 180s (3 min) to start dev server
+./UI_FINAL_SEAL_EXECUTIVE_SUMMARY.md:109:✅ Build Command: pnpm build
+./SESSION_EXECUTION_SUMMARY_KEVIN.md:84:**Issue Identified:** E2E tests couldn't connect to dev server
+./SESSION_EXECUTION_SUMMARY_KEVIN.md:160:- ✅ Dev server boots correctly
+./vite_standalone_test.txt:9:error when starting dev server:
+./pnpm-alias.sh:21:echo "  titane-dev         - Start dev server"
+./RAPPORT_VERIFICATION_COMPLET_27.0.0.md:181:- Restart dev server
+./RAPPORT_VERIFICATION_COMPLET_27.0.0.md:254:- ✅ Dev server ready: 728ms
+./e2e/fixtures/tauri-ipc-mock.ts:5: * when running E2E tests without a real Tauri dev server.
+./installer_gui/modules/build_frontend.sh:15:pnpm build
+./BOOTSTRAP_COMPLETE_FINAL_REPORT.md:21:│  └─ Dev server smoke test ✅ PASS                          │
+./BOOTSTRAP_COMPLETE_FINAL_REPORT.md:199:║  Dev Server Readiness             ✅  OPERATIONAL         ║
+./BOOTSTRAP_COMPLETE_FINAL_REPORT.md:227:# 2. Test dev server
+./BOOTSTRAP_COMPLETE_FINAL_REPORT.md:270:| Dev server won't start | Check logs in `runtime/dev/logs/` | Verify Vite on :5173 not blocked |
+./FINAL_STATUS_REPORT_v27.0.1_BETA.md:168:- Initial: ~150MB (Vite dev server)
+./EXECUTIVE_FINAL_REPORT_PO_FINAL_SEAL.md:103:- ✅ Build test: `pnpm build` → SUCCESS (3432 modules, zero new errors)
+./deployment/v27.0.3/certification/phase2/ci_proof/FINAL_REPORT.md:71:- Tauri-only build (no web server)
+./docs/audits/NETTOYAGE_DOCS_PHASE2.md:66:   - 🔗 Utilise `http://localhost:1420` (Tauri dev server → OK)
+./vite_standalone_test2.txt:9:error when starting dev server:
+./P_INFINITY_P3_P4_P5_AUDIT.md:66:- ✅ No new warnings detected in `pnpm build`
+./tests/e2e/provider-flow.test.ts:372: * - App dev server running (corepack pnpm run tauri:dev)
+./PHASE_5_QUICK_WINS_APPLIED.md:180:Command: pnpm build (30s timeout)
+./tests/run_all_tests.sh:127:pnpm build 2>&1 | grep -E "dist/|kB|Build|chunks" | tail -10
+./SESSION_COMPLETE_2026-02-03.md:251:pnpm run dev:tauri              # Start dev server
+./NEXT_STEPS_v27.0.0.md:102:# Stop dev server (Ctrl+C)
+./src/App.tsx:273:  // 🧪 E2E MODE: Skip carousel in dev mode (port 1420 = E2E tests OR dev server)
+./src/CARTE_POINTS_CRITIQUES.ts:240: *      → "devUrl": "http://localhost:5173" ✅ (dev server encapsulé par Tauri)
+./docs/backup_20251218_122540/CONTRIBUTING_v24.md:86:pnpm build
+./scripts/network/start-tunnel.sh:3:# Expose TITANE∞ dev server on LAN + Internet via Cloudflare Tunnel
+./scripts/network/start-tunnel.sh:12:# - AUTO_START_WEB=1  : start web dev server automatically if not running
+./scripts/network/start-tunnel.sh:30:# Check if Vite dev server is running
+./scripts/network/start-tunnel.sh:32:    echo "⚠️  Vite dev server not detected on port $DEV_PORT"
+./scripts/network/start-tunnel.sh:33:    echo "💡 Suggested: start web dev server (no Tauri)"
+./scripts/network/start-tunnel.sh:38:        echo "🚀 Starting web dev server (Vite standalone)..."
+./scripts/network/start-tunnel.sh:46:            echo "❌ Dev server still not running. Start it first:" 
+./scripts/network/start-tunnel.sh:51:        read -p "Start web dev server now? (y/n) " -n 1 -r
+./scripts/network/start-tunnel.sh:54:            echo "🚀 Starting web dev server..."
+./scripts/network/start-tunnel.sh:59:            echo "❌ Tunnel requires running dev server. Exiting."
+./scripts/network/start-tunnel.sh:65:echo "✅ Vite dev server detected"
+./docs/backup_20251218_122540/PHASE_4_FINAL_SUMMARY_v25.7.5.md:738:pnpm run preview  # Vite preview server with SW
+./scripts/network/validate-network.sh:101:    echo "⏭️  SKIP: No HTML fetched (dev server down?)"
+./docs/backup_20251218_122540/REFLEXION_AUTO_ALL_FUSION_v25.3.2_COMPLETE.md:452:# Lancer dev server
+./docs/backup_20251218_122540/ANALYSE_CONTINUE_PERFECTION_v25.7.4_ULTIMATE.md:620:# Start preview server
+./docs/backup_20251218_122540/PHASE_5_BUGFIX_REPORT_v25.1.0.md:381:- [x] Dev server starts (`pnpm run dev`)
+./docs/backup_20251218_122540/QUICK_START_CHAT_IA_v19.5.2.md:439:### 🐛 Dev Server ne démarre pas
+./docs/backup_20251218_122540/QUICK_START_CHAT_IA_v19.5.2.md:524:1. Lancer dev server: `pnpm run dev:tauri`
+./docs/backup_20251218_122540/AURA_QUICK_START_GUIDE.md:222:4. Redémarrer dev server
+./docs/audit/50_master_report.md:624:pnpm run dev          # Dev server
+./docs/audit/00_system_map.md:187:| `pnpm build` | Build Vite production |
+./docs/backup_20251218_122540/COMMANDES_ESSENTIELLES.md:230:# Logs Vite dev server
+./docs/backup_20251218_122540/README.md:160:pnpm run dev              # Vite dev server
+./docs/backup_20251218_122540/README_v19.5.2_OLD.md:363:pnpm build        # Frontend (241 KB gzip)
+./docs/backup_20251218_122526/README.md:160:pnpm run dev              # Vite dev server
+./docs/backup_20251218_122540/RAPPORT_FUSION_ADMIN_v25.2.2.md:352:pnpm run dev              # Vite dev server
+./docs/backup_20251218_122540/GUIDE_INTEGRATION_FUSION_v25.3.2.md:229:1. **Démarrer dev server:**
+./docs/backup_20251218_122526/COMMANDES_ESSENTIELLES.md:230:# Logs Vite dev server
+./docs/backup_20251218_122540/SYNTHESE_COMPLETE_RESPONSIVE_v25.7.4.md:554:# Lancer dev server
+./docs/backup_20251218_122526/README_v19.5.2_OLD.md:363:pnpm build        # Frontend (241 KB gzip)
+./docs/backup_20251218_122526/GUIDE_INTEGRATION_FUSION_v25.3.2.md:229:1. **Démarrer dev server:**
+./docs/backup_20251218_122526/SYNTHESE_COMPLETE_RESPONSIVE_v25.7.4.md:554:# Lancer dev server
+./docs/STATUS_REPO_V27.md:215:4. **PR-4 (dev server)**: revoir `vite.config.ts` (`server.host`) si “local-only strict” est requis.
+./docs/backup_20251218_122526/RAPPORT_FUSION_ADMIN_v25.2.2.md:352:pnpm run dev              # Vite dev server
+./docs/super-prompts/frontend/SUPER_PROMPT_01_FRONTEND_FINAL_FORM.md:430:- [ ] Un `pnpm run build` ou `pnpm build` passe sans erreur
+./docs/super-prompts/TEMPLATE_SUPER_PROMPT.md:78:- [ ] Un `pnpm run build` ou `pnpm build` passe sans erreur
+./docs/super-prompts/QUICK_START.md:65:pnpm build
+./docs/backup_20251218_122526/AURA_QUICK_START_GUIDE.md:222:4. Redémarrer dev server
+./docs/registry/UI_VΩ_EVENT_FINAL_CHECKPOINT.md:626:- [x] No web server dependencies added
+./docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md:31:http://localhost:4000 (Vite dev server)
+./docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md:43:- Playwright launches a **web browser** pointing to Vite dev server
+./docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md:71:- No web server intermediary needed
+./docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md:125:- ❌ Requires Vite dev server running
+./docs/PHASE0_STABLE_READY_FINAL.md:146:- Vite dev server nécessite `unsafe-eval` pour HMR
+./docs/backup_20251218_122526/QUICK_START_CHAT_IA_v19.5.2.md:439:### 🐛 Dev Server ne démarre pas
+./docs/backup_20251218_122526/QUICK_START_CHAT_IA_v19.5.2.md:524:1. Lancer dev server: `pnpm run dev:tauri`
+./docs/diagnostics/CHAT_STABLE_CHAT_PROD_DECISION.md:41:  - `boot/`: Tauri dev server verified accessible
+./docs/backup_20251218_122526/REFLEXION_AUTO_ALL_FUSION_v25.3.2_COMPLETE.md:452:# Lancer dev server
+./docs/backup_20251218_122526/ANALYSE_CONTINUE_PERFECTION_v25.7.4_ULTIMATE.md:620:# Start preview server
+./docs/backup_20251218_122526/PHASE_5_BUGFIX_REPORT_v25.1.0.md:381:- [x] Dev server starts (`pnpm run dev`)
+./docs/backup_20251218_122526/CONTRIBUTING_v24.md:86:pnpm build
+./docs/backup_20251218_122526/PHASE_4_FINAL_SUMMARY_v25.7.5.md:738:pnpm run preview  # Vite preview server with SW
+./docs/01_architecture/ARCHITECTURE_CURRENT_v24.md:474:- Vite Dev Server (HMR) → Port 5173
+./docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt:3:526a1848 chore(vite): limiter le dev server à localhost
+./docs/_evidence/v27/A9_pr4_vite_host_localonly_2026-01-13T184642Z.txt:12:    chore(vite): limiter le dev server à localhost
+./docs/PHASE_8_PRODUCTION_HARDENING_COMPLETE_v17.3.0.md:654:pnpm build
+./docs/PHASE_8_PRODUCTION_HARDENING_COMPLETE_v17.3.0.md:838:$ pnpm build
+./docs/PHASE_8_PRODUCTION_HARDENING_COMPLETE_v17.3.0.md:1193:        run: pnpm build
+./docs/DUAL_RUNTIME_WORKFLOW.md:334:4. Start Vite dev server (background)
+./docs/DUAL_RUNTIME_WORKFLOW.md:345:| **Ctrl+C** | Stop dev server (terminal) |
+./docs/DUAL_RUNTIME_WORKFLOW.md:397:# Watch Vite logs (React dev server)
+./docs/DUAL_RUNTIME_WORKFLOW.md:441:| **📊 Dev Logs (Vite)** | Watch Vite dev server logs |
+./docs/systems/TRUTH_MAP_v27.md:33:- Vite (dev server) est configuré en local-only.
+./docs/guides/PERFORMANCE_TESTING.md:232:# Run audit (requires dev server)
+./docs/backup_20251218_123316/README.md:160:pnpm run dev              # Vite dev server
+./docs/ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md:134:- **+2-5s dev server startup** (all hooks pre-loaded)
+./docs/ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md:188:1. **PATH issues** when running dev server from Tauri
+./docs/ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md:555:   pnpm build && ls -lh dist/assets/*.js
+./docs/ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md:568:- [x] Dev server runs stable
+./docs/ANALYSIS_HMR_INFINITE_LOOP_2026-01-09.md:716:- **Dev server startup**: <5s (currently ~8s)
+./docs/backup_20251218_123316/COMMANDES_ESSENTIELLES.md:230:# Logs Vite dev server
+./docs/backup_20251218_123316/RAPPORT_FUSION_ADMIN_v25.2.2.md:352:pnpm run dev              # Vite dev server
+./docs/backup_20251218_123316/README_v19.5.2_OLD.md:363:pnpm build        # Frontend (241 KB gzip)
+./docs/backup_20251218_123316/GUIDE_INTEGRATION_FUSION_v25.3.2.md:229:1. **Démarrer dev server:**
+./docs/backup_20251218_123316/SYNTHESE_COMPLETE_RESPONSIVE_v25.7.4.md:554:# Lancer dev server
+./scripts/test/test_api_integration.sh:235:# Check if dev server is running
+./scripts/test/test_api_integration.sh:237:    test_pass "Vite dev server is running (port 5173)"
+./scripts/test/test_api_integration.sh:239:    test_skip "Vite dev server" "Not running (start with 'pnpm run dev:tauri')"
+./scripts/test/verify_version_coherence.sh:54:echo "✅ Vite Dev Server:     pnpm run vite:dev (au lieu de build:watch)"
+./docs/backup_20251218_123316/PHASE_5_BUGFIX_REPORT_v25.1.0.md:381:- [x] Dev server starts (`pnpm run dev`)
+./docs/backup_20251218_123316/QUICK_START_CHAT_IA_v19.5.2.md:439:### 🐛 Dev Server ne démarre pas
+./docs/backup_20251218_123316/QUICK_START_CHAT_IA_v19.5.2.md:524:1. Lancer dev server: `pnpm run dev:tauri`
+./docs/backup_20251218_123316/AURA_QUICK_START_GUIDE.md:222:4. Redémarrer dev server
+./docs/backup_20251218_123316/REFLEXION_AUTO_ALL_FUSION_v25.3.2_COMPLETE.md:452:# Lancer dev server
+./scripts/profile-runtime.sh:295:# Stop dev server
+./docs/backup_20251218_123316/ANALYSE_CONTINUE_PERFECTION_v25.7.4_ULTIMATE.md:620:# Start preview server
+./docs/backup_20251218_123316/PHASE_4_FINAL_SUMMARY_v25.7.5.md:738:pnpm run preview  # Vite preview server with SW
+./docs/backup_20251218_123316/CONTRIBUTING_v24.md:86:pnpm build
+./src/modules/devSudo/devSudoHandler.ts:2232:- PID 728875: Vite dev server (actif sur port 5173)
+./src/modules/devSudo/devSudoHandler.ts:2360:  ✅ Vite dev server: Port 5173 actif
+./docs/UI_IMPROVEMENTS_v26.2.3.md:221:# Lancer le dev server
+./scripts/test-100-percent-suite.sh:47:echo "⏸️  Playwright E2E: SKIPPED (requires Vite dev server running)"
+./src/modules/devSudo/devSudoExtendedHandlers.ts:246:  1. Tauri dev server actif ? → \`restart tauri\`
+./scripts/tauri/before-dev.sh:4:# v26.3.0 - Robust dev server management
+./scripts/tauri/before-dev.sh:106:log "${BLUE}Starting Vite dev server...${NC}"
+./docs/PHASE_7_ADVANCED_FEATURES_COMPLETE_v17.3.0.md:651:$ pnpm build
+./docs/HMR_FIX_QUICK_REFERENCE.md:116:# Start dev server
+./docs/HMR_FIX_QUICK_REFERENCE.md:321:- Only affects Vite dev server
+./docs/PHASE_5_OPTIMIZATION_COMPLETE_v17.3.0.md:425:pnpm build
+./docs/PHASE_5_OPTIMIZATION_COMPLETE_v17.3.0.md:570:pnpm build
+./src/modules/devSudo/devSudoBuiltins.ts:147:- PID 728875: Vite dev server (actif sur port 5173)
+./src/modules/devSudo/devSudoBuiltins.ts:275:  ✅ Vite dev server: Port 5173 actif
+./docs/proof/OLLAMA_PROXY_SEAL.md:190:- `HTTP`: Vite dev server (fetch + proxy)
+./docs/proof/ollama_abort_normalization/PROOF.md:90:- E2E tests can now connect to Vite dev server (binds to 127.0.0.1 only)
+./docs/proof/ollama_abort_normalization/PROOF.md:233:| Playwright config | ✅ FIXED | No | baseURL now 127.0.0.1 (matches dev server) |
+./docs/proof/ollama_abort_normalization/ROLLBACK.md:66:- `playwright.config.ts` — Revert baseURL to `localhost:5173` (or keep 127.0.0.1 if dev server prefers it)
+./docs/proof/ollama_abort_normalization/VERDICT.md:65:This fix resolved ERR_CONNECTION_REFUSED in E2E tests (Vite dev server binds to 127.0.0.1 only).
+./docs/HMR_ANALYSIS_SUMMARY_2026-01-09.md:196:- **Benefit**: Better debugging when dev server fails
+./docs/STRATEGIE_TESTS_E2E.md:122:   - Port 5173 disponible (Vite dev server)
+./docs/ui/PRODUCTION_VERIFICATION.md:159:# Start dev server
+./docs/ui/PRODUCTION_VERIFICATION.md:317:- ✅ Vite dev server starts without errors
+./docs/04_guides/development/SETUP.md:558:# 2. Restart dev server
+./docs/ui/polish/UI_POLISH_INTEGRATION_COMPLETE_v21.md:629:2. **🔄 Test build** : `pnpm build` → Vérifier bundle size
+./docs/99_ARCHIVE/obsolete/CHANGELOG_v17.1.0.md:487:- **Logs:** Vite dev server console
+./TIMEOUT_WRAPPER_PATCH_v27.0.3.md:149:   - Restart Vite dev server
+./final-validation.sh:65:echo "5️⃣  Vérification Vite dev server..."
+./docs/99_ARCHIVE/obsolete/ACCOMPLISSEMENTS_v24_COMPLETE.md:264:**Impact** : Impossible de lancer frontend dev server  
+./docs/99_ARCHIVE/obsolete/README_V17.1.md:143:pnpm dev                # Lance Vite dev server
+./docs/99_ARCHIVE/obsolete/README_V17.1.md:147:pnpm build              # Build production
+./docs/RUNTIME_OBSERVABILITY.md:25:│       ├── vite.log          # Frontend dev server
+./docs/current/guides/E2E_TESTING_GUIDE.md:21:# Terminal 1: Start dev server
+./docs/current/guides/E2E_TESTING_GUIDE.md:125:# Start dev server in background
+./docs/current/guides/E2E_TESTING_GUIDE.md:161:      - name: Start dev server
+./docs/current/guides/E2E_TESTING_GUIDE.md:227:# Check if dev server is running
+./docs/current/guides/E2E_TESTING_GUIDE.md:230:# Start dev server
+./docs/current/guides/QUICK_START_CHAT_IA_v19.5.2.md:439:### 🐛 Dev Server ne démarre pas
+./docs/current/guides/QUICK_START_CHAT_IA_v19.5.2.md:524:1. Lancer dev server: `pnpm run dev:tauri`
+./runtime/dev/run-dev.sh:60:echo "  • Ctrl+C: Stop dev server"
+./docs/current/guides/AURA_QUICK_START_GUIDE.md:222:4. Redémarrer dev server
+./runtime/dev/README.md:41:| **Ctrl+C** | Stop dev server            |
+./runtime/dev/README.md:123:# Watch Vite logs (React dev server)
+./runtime/dev/README.md:162:  # Stop dev server (Ctrl+C)
+./runtime/dev/README.md:345:    ├── vite.log            # Vite dev server logs
+./runtime/dev/README.md:380:# Stop dev server (Ctrl+C)
+./docs/99_ARCHIVE/obsolete/INSTALL_NODEJS_SUCCESS_v24.md:113:pnpm run dev          # Dev server
+./docs/99_ARCHIVE/obsolete/INSTALL_NODEJS_SUCCESS_v24.md:132:### Test 1 : Frontend Dev Server ✅
