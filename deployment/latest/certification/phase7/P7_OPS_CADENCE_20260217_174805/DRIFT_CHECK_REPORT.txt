@@ -1,0 +1,4 @@
+[P5-2] Drift Detector Starting...
+✓ Release dir exists
+✓ Checksums present
+✗ Unexpected git changes: ?? deployment/latest/certification/phase6/

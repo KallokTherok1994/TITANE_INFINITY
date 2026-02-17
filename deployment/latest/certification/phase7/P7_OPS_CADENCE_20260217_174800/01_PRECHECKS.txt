@@ -1,0 +1,22 @@
+]633;E;{   echo "=== PRÉCHECKS P7 ($(date -u +'%Y-%m-%dT%H:%M:%SZ')) ==="\x3b   echo ""\x3b   echo "date -u: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"\x3b   echo ""\x3b   echo "--- Git Status (porcelain) ---"\x3b   git status --porcelain=v1 || echo "[ERROR] git status failed"\x3b   echo ""\x3b   echo "--- Git HEAD ---"\x3b   git rev-parse HEAD\x3b   echo ""\x3b   echo "--- Git Branch ---"\x3b   git branch --show-current\x3b   echo ""\x3b   echo "--- Git Log (1) ---"\x3b   git log -1 --oneline --decorate\x3b   echo ""\x3b   echo "--- Environment Versions ---"\x3b   echo "node: $(node -v 2>&1 || echo '[N/A]')"\x3b   echo "pnpm: $(pnpm -v 2>&1 || echo '[N/A]')"\x3b   echo "rustc: $(rustc -V 2>&1 || echo '[N/A]')"\x3b   echo "cargo: $(cargo -V 2>&1 || echo '[N/A]')"\x3b } > "$CHECKS_FILE";cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C=== PRÉCHECKS P7 (2026-02-17T17:48:00Z) ===
+
+date -u: 2026-02-17T17:48:00Z
+
+--- Git Status (porcelain) ---
+?? deployment/latest/certification/phase6/
+?? deployment/latest/certification/phase7/
+
+--- Git HEAD ---
+ab5e0f4629cc9994ceb04573a17296aba7681b7f
+
+--- Git Branch ---
+MAIN
+
+--- Git Log (1) ---
+ab5e0f46 (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(certification): P6 OPS_READINESS audit complete - drift guard active, ops procedures deployed
+
+--- Environment Versions ---
+node: v24.0.0
+pnpm: 10.28.2
+rustc: rustc 1.91.1 (ed61e7d7e 2025-11-07)
+cargo: cargo 1.91.1 (ea2d97820 2025-10-10)

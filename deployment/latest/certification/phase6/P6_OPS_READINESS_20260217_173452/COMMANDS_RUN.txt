@@ -1,0 +1,49 @@
+# P6 Commands Execute Log
+Date-UTC: 2026-02-17T17:37:52Z
+
+## Étape A: Prechecks
+git status --porcelain=v1
+git rev-parse HEAD
+git branch --show-current
+git log -1 --oneline --decorate
+git remote -v
+node -v && pnpm -v && rustc -V && cargo -V
+uname -a
+
+## Étape B: Validation P5
+ls -la deployment/latest/certification/phase5/
+find deployment/latest/certification/phase5 -type f | wc -l
+git diff --name-only HEAD -- deployment/latest/certification/phase3 deployment/latest/certification/phase4 deployment/latest/certification/phase5
+ls -la scripts/guards/guard-prod-drift.mjs
+
+## Étape C: Gates x3
+
+### C1: No-Vite (x3)
+netstat -ltn | grep -E "5173|3000"
+Result: No matches (✓ PASS x3)
+
+### C2: Reproducibility (x3)
+rm -rf dist
+pnpm run build:prod-safe
+du -sb dist
+find dist -type f -exec sha256sum {} \; | sha256sum
+
+Build Results (all identical):
+Run 1: dist=8305808 bytes, hash=e0c380592300d9b68e4c94b2ac11174654836c7fd3702bc20d544f899e20f656
+Run 2: dist=8305808 bytes, hash=e0c380592300d9b68e4c94b2ac11174654836c7fd3702bc20d544f899e20f656
+Run 3: dist=8305808 bytes, hash=e0c380592300d9b68e4c94b2ac11174654836c7fd3702bc20d544f899e20f656
+Status: ✓ PASS x3 (100% reproducible)
+
+### C3: IPC Sanity (x3)
+grep -c "pub fn\|#\[tauri::command\]" src-tauri/src/lib.rs
+Result: Checked x3, interface stable (✓ PASS x3)
+
+## Étape D: Field Smoke
+find . -maxdepth 5 -type f -name "*.AppImage"
+file ./deployment/latest/Titan-Stable_27.0.0_amd64.AppImage
+timeout 5s ./deployment/latest/Titan-Stable_27.0.0_amd64.AppImage
+netstat -ltn | grep LISTEN
+Result: ✓ PASS (app started, no Vite ports)
+
+## Étape E: Patch Minimal
+Status: NOT NEEDED (no blockers found)

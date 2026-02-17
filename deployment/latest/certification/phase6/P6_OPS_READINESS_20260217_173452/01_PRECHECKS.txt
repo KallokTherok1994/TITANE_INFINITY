@@ -1,0 +1,31 @@
+]633;E;{   echo "=== PRÉCHECKS P6 ($(date -u +'%Y-%m-%dT%H:%M:%SZ')) ==="\x3b   echo ""\x3b   echo "date -u: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"\x3b   echo ""\x3b   echo "--- Git Status (porcelain) ---"\x3b   git status --porcelain=v1 || echo "[ERROR] git status failed"\x3b   echo ""\x3b   echo "--- Git HEAD ---"\x3b   git rev-parse HEAD\x3b   echo ""\x3b   echo "--- Git Branch ---"\x3b   git branch --show-current\x3b   echo ""\x3b   echo "--- Git Log (1) ---"\x3b   git log -1 --oneline --decorate\x3b   echo ""\x3b   echo "--- Git Remote ---"\x3b   git remote -v\x3b   echo ""\x3b   echo "--- Environment Versions ---"\x3b   echo "node: $(node -v 2>&1 || echo '[N/A]')"\x3b   echo "pnpm: $(pnpm -v 2>&1 || echo '[N/A]')"\x3b   echo "rustc: $(rustc -V 2>&1 || echo '[N/A]')"\x3b   echo "cargo: $(cargo -V 2>&1 || echo '[N/A]')"\x3b   echo ""\x3b   echo "--- System Info ---"\x3b   echo "uname: $(uname -a)"\x3b   echo "kernel: $(uname -r)"\x3b } > "$CHECKS_FILE";e3e498a0-beeb-484e-9d6c-ecfd6ac74ba2]633;C=== PRÉCHECKS P6 (2026-02-17T17:34:52Z) ===
+
+date -u: 2026-02-17T17:34:52Z
+
+--- Git Status (porcelain) ---
+?? deployment/latest/certification/phase6/
+
+--- Git HEAD ---
+0c7c3101e3a3a44ba30b8e6c43f7750528831578
+
+--- Git Branch ---
+MAIN
+
+--- Git Log (1) ---
+0c7c3101 (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(governance): P5 complete - seal + archive immutable, drift guard deployed
+
+--- Git Remote ---
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (fetch)
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (push)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (fetch)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (push)
+
+--- Environment Versions ---
+node: v24.0.0
+pnpm: 10.28.2
+rustc: rustc 1.91.1 (ed61e7d7e 2025-11-07)
+cargo: cargo 1.91.1 (ea2d97820 2025-10-10)
+
+--- System Info ---
+uname: Linux TITANE-OS 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+kernel: 6.17.0-14-generic
