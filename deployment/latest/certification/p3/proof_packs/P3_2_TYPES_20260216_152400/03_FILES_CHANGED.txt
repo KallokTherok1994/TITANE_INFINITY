@@ -1,0 +1,5 @@
+P3-2 files changed (types only):
+
+- src-tauri/src/conversation_engine/types.rs
+- src/types/providerMeta.ts
+- src/types/index.ts

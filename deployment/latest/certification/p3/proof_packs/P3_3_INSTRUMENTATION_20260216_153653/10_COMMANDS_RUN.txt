@@ -1,0 +1,1346 @@
+════════════════════════════════════════════════════════════
+P3-3 DISCOVERY
+Timestamp: 2026-02-16T20:37:01Z
+════════════════════════════════════════════════════════════
+$ git status --porcelain=v1
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+79ac0be85695fe5f7b6961e093fab6a85a9ef6ea
+
+$ rg -n "conversation_generate|process_message|ConversationEngine::process_message" src-tauri -S
+src-tauri/tauri.conf.json:193:            { "command": "conversation_generate" },
+src-tauri/allowlist.whitelist.stable.json:123:              "command": "conversation_generate"
+src-tauri/src/api/chat_commands.rs:36:/// **DEPRECATED**: Use `conversation_generate` from OMEGA Pipeline v2 instead.
+src-tauri/src/api/chat_commands.rs:45:/// conversation_generate(message, conversation_id, mode, provider, system_prompt)
+src-tauri/src/api/chat_commands.rs:50:    note = "Use conversation_generate from OMEGA Pipeline v2 instead"
+src-tauri/src/api/chat_commands.rs:56:    log::warn!("[BLOCKED] chat_send_message is disabled. Use conversation_generate.");
+src-tauri/src/api/chat_commands.rs:57:    Err("chat_send_message is disabled; migrate to conversation_generate".to_string())
+src-tauri/src/singularity/singularity_state.rs:8: * Usage: process_message() → ConversationPipeline → Singularity
+src-tauri/src/singularity/singularity_os.rs:541:    async fn test_process_message() {
+src-tauri/src/conversation_engine/commands.rs:47:pub async fn conversation_generate(
+src-tauri/src/conversation_engine/commands.rs:113:        .process_message(request)
+src-tauri/src/conversation_engine/commands.rs:151:pub async fn conversation_process_message(
+src-tauri/src/conversation_engine/commands.rs:158:        "[conversation_process_message] 📨 Request received | msg_len={} | conv_id={:?} | mode={:?}",
+src-tauri/src/conversation_engine/commands.rs:183:        "[conversation_process_message] 🚀 Processing through engine | mode={:?}",
+src-tauri/src/conversation_engine/commands.rs:187:    match engine.process_message(request).await {
+src-tauri/src/conversation_engine/commands.rs:190:                "[conversation_process_message] ✅ Success | msg_id={} | tokens={}",
+src-tauri/src/conversation_engine/commands.rs:198:                "[conversation_process_message] ❌ Error | msg='{}' | error={}",
+src-tauri/src/conversation_engine/mod.rs:156:    pub async fn process_message(
+src-tauri/src/conversation_engine/mod.rs:161:        match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
+src-tauri/src/conversation_engine/mod.rs:170:    /// Internal message processing (wrapped by process_message with timeout)
+src-tauri/src/conversation_engine/mod.rs:171:    async fn process_message_internal(
+src-tauri/src/qa/qa_engine.rs:574:        // Integration point: Use chat_send_message or conversation_generate
+src-tauri/src/main.rs:12:#![allow(deprecated)] // Migration to conversation_engine::conversation_generate in progress
+src-tauri/src/main.rs:786:            // SMOKE TEST IPC conversation_generate (opt-in, STABLE proof)
+src-tauri/src/main.rs:820:                    // Call conversation engine (same logic as conversation_generate command)
+src-tauri/src/main.rs:822:                    match engine_state.process_message(request).await {
+src-tauri/src/main.rs:832:                                "[SMOKE-IPC] conversation_generate ok latency_ms={} preview={}",
+src-tauri/src/main.rs:838:                            eprintln!("[SMOKE-IPC] conversation_generate error: {err}");
+src-tauri/src/main.rs:901:            conversation_engine::commands::conversation_generate,
+src-tauri/src/main.rs:902:            conversation_engine::commands::conversation_process_message,
+src-tauri/src/overdrive/chat_orchestrator.rs:7:// PLAN v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
+src-tauri/src/overdrive/chat_orchestrator.rs:435:/// **DEPRECATED**: Use `conversation_generate` from ConversationEngine (OMEGA Pipeline v2)
+src-tauri/src/overdrive/chat_orchestrator.rs:438:/// Migration: Use conversation_engine::commands::conversation_generate instead
+src-tauri/src/overdrive/chat_orchestrator.rs:442:    note = "Use conversation_generate from OMEGA Pipeline v2 (conversation_engine)"
+src-tauri/src/overdrive/chat_orchestrator.rs:448:    log::warn!("[DEPRECATED] overdrive::chat_send_message called - migrate to conversation_engine::conversation_generate");
+
+$ rg -n "ConversationMetadata|ProviderDecisionMeta|ReasonCode" src-tauri -S
+src-tauri/src/conversation_engine/types.rs:59:    pub metadata: ConversationMetadata,
+src-tauri/src/conversation_engine/types.rs:407:pub struct ConversationMetadata {
+src-tauri/src/conversation_engine/types.rs:436:pub enum ReasonCode {
+src-tauri/src/conversation_engine/types.rs:462:    pub reason_code: ReasonCode,
+src-tauri/src/conversation_engine/types.rs:467:pub struct ProviderDecisionMeta {
+src-tauri/src/conversation_engine/types.rs:471:    pub reason_code: ReasonCode,
+src-tauri/src/conversation_engine/types.rs:1122:        let metadata = ConversationMetadata {
+src-tauri/src/conversation_engine/types.rs:1231:            metadata: ConversationMetadata {
+src-tauri/src/conversation_engine/omega_integration.rs:389:        let metadata = ConversationMetadata {
+src-tauri/src/conversation_engine/mod.rs:242:            metadata: ConversationMetadata {
+src-tauri/src/conversation_engine/pipeline.rs:268:            metadata: ConversationMetadata {
+src-tauri/src/memory/model.rs:16:    pub metadata: ConversationMetadata,
+src-tauri/src/memory/model.rs:20:pub struct ConversationMetadata {
+src-tauri/src/memory/model.rs:36:            metadata: ConversationMetadata {
+src-tauri/src/memory/model.rs:270:    // ConversationMetadata Tests
+src-tauri/src/memory/model.rs:284:        let meta = ConversationMetadata {
+src-tauri/src/memory/model.rs:297:        let meta = ConversationMetadata {
+src-tauri/src/memory/model.rs:304:        assert!(debug_str.contains("ConversationMetadata"));
+src-tauri/src/memory/model.rs:309:        let meta = ConversationMetadata {
+src-tauri/src/memory/model.rs:317:            serde_json::to_string(&meta).expect("ConversationMetadata should serialize to JSON");
+src-tauri/src/memory/model.rs:318:        let restored: ConversationMetadata =
+src-tauri/src/memory/model.rs:319:            serde_json::from_str(&json).expect("ConversationMetadata should deserialize from JSON");
+
+$ rg -n "provider_used|metadata\." src-tauri -S
+src-tauri/src/persistence/memory_health.rs:215:        // Source: singularity_state.metadata.schema_version
+src-tauri/src/cloud/commands.rs:443:                        size_bytes: metadata.len(),
+src-tauri/src/persistence/backup.rs:370:        validation.metadata = Some(metadata.clone());
+src-tauri/src/persistence/backup.rs:376:        if metadata.schema_version >= min_supported && metadata.schema_version <= current_schema {
+src-tauri/src/persistence/backup.rs:381:                metadata.schema_version, current_schema
+src-tauri/src/persistence/backup.rs:395:                    if computed_checksum == metadata.checksum {
+src-tauri/src/persistence/backup.rs:461:        report.schema_version = metadata.schema_version;
+src-tauri/src/time/snapshot.rs:100:        base_dir.join(format!("{}.snapshot", self.metadata.id))
+src-tauri/src/time/snapshot.rs:105:        base_dir.join(format!("{}.sig", self.metadata.id))
+src-tauri/src/time/snapshot.rs:204:        assert!(!snapshot.metadata.id.is_empty());
+src-tauri/src/time/snapshot.rs:205:        assert_eq!(snapshot.metadata.compressed_size, 4);
+src-tauri/src/doc_engine/versioning.rs:44:        let document_id = document.metadata.id.clone();
+src-tauri/src/doc_engine/versioning.rs:52:            author: document.metadata.author.clone(),
+src-tauri/src/time/travel_engine.rs:119:        index.add(snapshot.metadata.clone());
+src-tauri/src/time/travel_engine.rs:129:        log::info!("✅ Snapshot created: {}", snapshot.metadata.id);
+src-tauri/src/time/travel_engine.rs:130:        Ok(snapshot.metadata.id.clone())
+src-tauri/src/time/travel_engine.rs:140:            if let Some(snapshot) = cache.iter().find(|s| s.metadata.id == id) {
+src-tauri/src/time/travel_engine.rs:196:        cache.retain(|s| s.metadata.id != id);
+src-tauri/src/persistence/types.rs:435:        metadata.insert("key".to_string(), serde_json::json!("value"));
+src-tauri/src/persistence/types.rs:440:        assert!(event.metadata.is_some());
+src-tauri/src/persistence/commands.rs:271:        schema_version: validation.metadata.as_ref().map(|m| m.schema_version),
+src-tauri/src/persistence/commands.rs:272:        created_at: validation.metadata.as_ref().map(|m| m.created_at),
+src-tauri/src/doc_engine/storage.rs:46:        let filename = format!("{}.{}", document.metadata.id, if self.encryption_enabled { "enc" } else { "json" });
+src-tauri/src/doc_engine/storage.rs:91:        let metadata_path = self.storage_path.join("metadata.json");
+src-tauri/src/doc_engine/storage.rs:204:        let metadata_path = self.storage_path.join("metadata.json");
+src-tauri/src/doc_engine/storage.rs:215:        if let Some(pos) = metadata_list.iter().position(|m| m.id == document.metadata.id) {
+src-tauri/src/doc_engine/storage.rs:216:            metadata_list[pos] = document.metadata.clone();
+src-tauri/src/doc_engine/storage.rs:218:            metadata_list.push(document.metadata.clone());
+src-tauri/src/doc_engine/storage.rs:231:        let metadata_path = self.storage_path.join("metadata.json");
+src-tauri/src/singularity_state/persistence.rs:87:            metadata.len()
+src-tauri/src/doc_engine/export.rs:29:        let filename = format!("{}.md", self.sanitize_filename(&document.metadata.title));
+src-tauri/src/doc_engine/export.rs:49:            document.metadata.version,
+src-tauri/src/doc_engine/export.rs:50:            document.metadata.created_at.format("%Y-%m-%d")
+src-tauri/src/doc_engine/export.rs:127:        let filename = format!("{}.html", self.sanitize_filename(&document.metadata.title));
+src-tauri/src/doc_engine/export.rs:165:            document.metadata.version,
+src-tauri/src/doc_engine/export.rs:166:            document.metadata.created_at.format("%Y-%m-%d")
+src-tauri/src/doc_engine/export.rs:190:        let filename = format!("{}.txt", self.sanitize_filename(&document.metadata.title));
+src-tauri/src/doc_engine/export.rs:210:            document.metadata.version,
+src-tauri/src/doc_engine/export.rs:211:            document.metadata.created_at.format("%Y-%m-%d")
+src-tauri/src/doc_engine/export.rs:237:        let filename = format!("{}.json", self.sanitize_filename(&document.metadata.title));
+src-tauri/src/commands/orchestration_center.rs:821:        metadata: metadata.unwrap_or_default(),
+src-tauri/src/commands/hybrid.rs:131:    let size = metadata.len();
+src-tauri/src/api_hub/mod.rs:130:    pub provider_used: Provider,
+src-tauri/src/api_hub/mod.rs:314:            provider_used: decision.provider,
+src-tauri/src/evolution/evolution_commands.rs:561:        metadata: metadata.unwrap_or_default(),
+src-tauri/src/overdrive/project_autopilot.rs:249:        description: project.metadata.description.clone(),
+src-tauri/src/overdrive/project_autopilot.rs:256:    project.metadata = metadata.clone();
+src-tauri/src/overdrive/project_autopilot.rs:575:    if project.metadata.health_score < 70 {
+src-tauri/src/overdrive/project_autopilot.rs:588:    if project.metadata.total_files > 100 {
+src-tauri/src/api_hub/multimodal_router.rs:144:            providers_used: vec![response.provider_used],
+src-tauri/src/api_hub/multimodal_router.rs:201:            providers_used.push(vision_response.provider_used);
+src-tauri/src/api_hub/multimodal_router.rs:236:            providers_used.push(audio_response.provider_used);
+src-tauri/src/api_hub/multimodal_router.rs:282:        providers_used.push(synthesis_response.provider_used);
+src-tauri/src/api_hub/multimodal_router.rs:377:            providers_used.push(response.provider_used);
+src-tauri/src/engines/temporal/temporal_state.rs:48:        self.metadata.insert(key, value);
+src-tauri/src/overdrive/chat_orchestrator.rs:1645:        content: completion_metadata.to_string(),
+src-tauri/src/overdrive/chat_orchestrator.rs:1860:        content: completion_metadata.to_string(),
+src-tauri/src/meta_orchestrator/commands.rs:149:        metadata: metadata.unwrap_or_default(),
+src-tauri/src/overdrive/memory_engine.rs:104:            serde_json::json!({ "entry_type": metadata.entry_type, "content_length": content.len() }),
+src-tauri/src/overdrive/memory_engine.rs:118:        content, metadata.entry_type
+src-tauri/src/overdrive/memory_engine.rs:215:            if !filters.contains(&entry.metadata.entry_type) {
+src-tauri/src/overdrive/memory_engine.rs:336:        .filter(|e| e.metadata.entry_type == "conversation")
+src-tauri/src/overdrive/memory_engine.rs:341:        .filter(|e| e.metadata.entry_type == "fact")
+src-tauri/src/overdrive/memory_engine.rs:474:    match metadata.entry_type.as_str() {
+src-tauri/src/overdrive/memory_engine.rs:487:    if metadata.tags.contains(&"important".to_string()) {
+src-tauri/src/commands/mod.rs:355:/// a MemoryCollection with entries array and metadata.
+src-tauri/src/engines/developer_mode.rs:277:    let patch_safe = patch.metadata.reversible && issues.is_empty();
+src-tauri/src/semantic/query.rs:180:            if let Some(doc_type) = metadata.get("doc_type") {
+src-tauri/src/semantic/query.rs:191:            if let Some(doc_tags) = metadata.get("tags") {
+src-tauri/src/semantic/query.rs:204:            if let Some(date_str) = metadata.get("created_at") {
+src-tauri/src/semantic/vector_store.rs:122:                    metadata: point.metadata.clone(),
+src-tauri/src/commands/persistent_memory.rs:367:                    if e.metadata.project_id.as_ref() != Some(pid) {
+src-tauri/src/commands/persistent_memory.rs:735:        entry.metadata.updated_at = Utc::now().timestamp_millis();
+src-tauri/src/commands/persistent_memory.rs:753:            entry.metadata.updated_at = Utc::now().timestamp_millis();
+src-tauri/src/commands/persistent_memory.rs:810:                entry.metadata.updated_at = Utc::now().timestamp_millis();
+src-tauri/src/commands/persistent_memory.rs:950:            .map(|e| e.metadata.created_at)
+src-tauri/src/commands/persistent_memory.rs:955:            .map(|e| e.metadata.created_at)
+src-tauri/src/semantic/reranker.rs:73:                metadata: result.metadata.clone(),
+src-tauri/src/semantic/reranker.rs:126:            if let Some(doc_context) = metadata.get("context") {
+src-tauri/src/semantic/reranker.rs:142:                if let Some(tags) = metadata.get("tags") {
+src-tauri/src/semantic/reranker.rs:155:        if let Some(created_at) = metadata.get("created_at") {
+src-tauri/src/semantic/reranker.rs:174:        if let Some(doc_type) = metadata.get("doc_type") {
+src-tauri/src/semantic/reranker.rs:184:        if let Some(validated) = metadata.get("validated") {
+src-tauri/src/semantic/reranker.rs:191:        if let Some(author) = metadata.get("author") {
+src-tauri/src/semantic/reranker.rs:203:        if let Some(connections_str) = metadata.get("graph_connections") {
+src-tauri/src/semantic/reranker.rs:297:        metadata.insert("doc_type".to_string(), "technical".to_string());
+src-tauri/src/semantic/reranker.rs:298:        metadata.insert("created_at".to_string(), chrono::Utc::now().to_rfc3339());
+src-tauri/src/semantic/reranker.rs:299:        metadata.insert("context".to_string(), "development".to_string());
+src-tauri/src/knowledge/parser.rs:179:            size_bytes: metadata.len(),
+src-tauri/src/memory_compactor.rs:216:        if metadata.len() as usize > self.config.max_file_size {
+src-tauri/src/memory_compactor.rs:217:            return Err(format!("File too large: {} bytes", metadata.len()));
+src-tauri/src/commands/cognitive_center.rs:318:        size_bytes: metadata.len(),
+src-tauri/src/unified_memory_v2/api.rs:155:            // CALCULATION: Total bytes = sum(entry.content.len() + entry.metadata.len())
+src-tauri/src/omega/merger.rs:585:        assert_eq!(metadata.successful_tasks, 3);
+src-tauri/src/omega/merger.rs:586:        assert_eq!(metadata.failed_tasks, 0);
+src-tauri/src/omega/merger.rs:587:        assert!(metadata.safety.is_some());
+src-tauri/src/omega/merger.rs:780:        assert_eq!(metadata.successful_tasks, 0);
+src-tauri/src/omega/merger.rs:781:        assert_eq!(metadata.failed_tasks, 0);
+src-tauri/src/omega/merger.rs:782:        assert_eq!(metadata.total_task_time_ms, 0);
+src-tauri/src/omega/merger.rs:783:        assert!(metadata.identity.is_none());
+src-tauri/src/omega/merger.rs:878:        metadata.successful_tasks = 5;
+src-tauri/src/omega/merger.rs:880:        let cloned = metadata.clone();
+src-tauri/src/omega/tests_pipeline.rs:193:    assert!(!output.metadata.intent.is_empty());
+src-tauri/src/omega/tests_pipeline.rs:194:    assert!(output.metadata.confidence >= 0.0 && output.metadata.confidence <= 1.0);
+src-tauri/src/omega/tests_pipeline.rs:195:    assert!(!output.metadata.mode.is_empty());
+src-tauri/src/omega/tests_pipeline.rs:196:    assert!(output.metadata.safety_score >= 0.0 && output.metadata.safety_score <= 1.0);
+src-tauri/src/omega/tests_pipeline.rs:197:    assert!(!output.metadata.model.is_empty());
+src-tauri/src/omega/context_v2.rs:252:        self.metadata.priority >= 8
+src-tauri/src/core/legacy.rs:148:            last_validation_ts: Some(data.metadata.last_validation_ts),
+src-tauri/src/core/legacy.rs:149:            last_compaction_ts: data.metadata.last_compaction_ts,
+src-tauri/src/core/legacy.rs:157:        data.metadata.mark_write();
+src-tauri/src/core/legacy.rs:187:        data.metadata.mark_write();
+src-tauri/src/core/legacy.rs:204:        data.metadata.mark_write();
+src-tauri/src/core/legacy.rs:327:        data.metadata.mark_write();
+src-tauri/src/core/legacy.rs:846:        if data.metadata.last_validation_ts == 0 {
+src-tauri/src/core/legacy.rs:847:            data.metadata.last_validation_ts = current_millis();
+src-tauri/src/omega/executor.rs:851:        assert!(context.metadata.is_empty());
+src-tauri/src/omega/guardrails.rs:453:                .check_identity_consistency(response, merge_result.metadata.identity.as_ref()),
+src-tauri/src/identity/rules_engine.rs:683:        metadata.insert("key".to_string(), "value".to_string());
+src-tauri/src/identity/rules_engine.rs:690:        assert_eq!(ctx.metadata.get("key"), Some(&"value".to_string()));
+src-tauri/src/control_panel_commands.rs:221:            let mut perms = metadata.permissions();
+src-tauri/src/omega/multimodal.rs:252:            metadata.sources.push("vision_analysis".to_string());
+src-tauri/src/omega/multimodal.rs:255:            metadata.sources.push("audio3d_analysis".to_string());
+src-tauri/src/omega/multimodal.rs:258:            metadata.confidence = (metadata.confidence + fusion.confidence) / 2.0;
+src-tauri/src/security/vault_engine.rs:163:        index.push(metadata.clone());
+src-tauri/src/security/vault_engine.rs:269:            if let Err(e) = self.verify_file_integrity(&metadata.file_id).await {
+src-tauri/src/security/vault_engine.rs:270:                corrupted.push(format!("{}: {}", metadata.file_id, e));
+src-tauri/src/security/vault_engine.rs:386:        assert_eq!(metadata.file_id, "test_data");
+src-tauri/src/security/vault_engine.rs:387:        assert!(metadata.encrypted_size > 0);
+src-tauri/src/security/vault_engine.rs:537:        assert!(metadata.encrypted_size < metadata.original_size);
+src-tauri/src/security/vault_engine.rs:553:        assert_eq!(metadata.file_id, "metadata_test");
+src-tauri/src/security/vault_engine.rs:554:        assert!(metadata.original_size > 0);
+src-tauri/src/security/vault_engine.rs:555:        assert!(metadata.encrypted_size > 0);
+src-tauri/src/security/vault_engine.rs:556:        assert!(!metadata.checksum.is_empty());
+src-tauri/src/security/vault_engine.rs:557:        assert!(metadata.timestamp > 0);
+src-tauri/src/security/vault_engine.rs:558:        assert_eq!(metadata.version, "v∞");
+src-tauri/src/core/modules/unified_memory.rs:403:                let tags_smallvec: MemoryTags = metadata.tags.iter().cloned().collect();
+src-tauri/src/core/modules/unified_memory.rs:406:                    content: format!("[LTM:{}]", metadata.memory_type as u8),
+src-tauri/src/core/modules/unified_memory.rs:407:                    memory_type: metadata.memory_type,
+src-tauri/src/core/modules/unified_memory.rs:408:                    importance: metadata.importance,
+src-tauri/src/core/modules/unified_memory.rs:410:                    created_at: metadata.created_at,
+src-tauri/src/backend_selftest.rs:131:        Ok(metadata) => metadata.is_dir(),
+src-tauri/src/types/memory_chat.rs:515:        assert!(entry.metadata.is_none());
+src-tauri/src/types/memory_chat.rs:526:        assert!(entry.metadata.is_some());
+src-tauri/src/types/memory_chat.rs:527:        let meta = entry.metadata.expect("metadata should exist");
+src-tauri/src/types/memory_chat.rs:542:        assert!(cloned.metadata.is_some());
+src-tauri/src/memory_os/forgetting.rs:275:                        if result.metadata.importance < entry.importance {
+src-tauri/src/types/memory.rs:634:        metadata.insert("version".to_string(), "v1.0".to_string());
+src-tauri/src/types/memory.rs:635:        metadata.insert("creator".to_string(), "system".to_string());
+src-tauri/src/types/memory.rs:647:        assert_eq!(snapshot.metadata.len(), 2);
+src-tauri/src/types/memory.rs:648:        assert_eq!(snapshot.metadata.get("version"), Some(&"v1.0".to_string()));
+src-tauri/src/meta/auto_healing.rs:176:                    // - Iteration: For each active engine in singularity.metadata.active_engines
+src-tauri/src/memory_os/semantic_search.rs:123:                metadata: metadata.clone(),
+src-tauri/src/conversation_os/output.rs:162:            response.metadata.response_id,
+src-tauri/src/conversation_os/output.rs:163:            response.metadata.intent_type,
+src-tauri/src/conversation_os/output.rs:286:        assert!(!response.metadata.response_id.is_empty());
+src-tauri/src/conversation_os/output.rs:294:        assert!(response.metadata.tags.contains(&"error".to_string()));
+src-tauri/src/system_center/diagnostics.rs:104:                "is_dir": metadata.is_dir(),
+src-tauri/src/system_center/diagnostics.rs:105:                "permissions": format!("{:?}", metadata.permissions())
+src-tauri/src/memory_os/ltm.rs:198:        let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
+src-tauri/src/memory_os/ltm.rs:217:            metadata.access_count = entry.access_count;
+src-tauri/src/memory_os/ltm.rs:218:            metadata.last_accessed = entry.last_accessed;
+src-tauri/src/memory_os/ltm.rs:307:            let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
+src-tauri/src/memory_os/ltm.rs:358:            for tag in &metadata.tags {
+src-tauri/src/memory_os/ltm.rs:423:            let file_path = self.storage_path.join(DATA_DIR).join(&metadata.file_path);
+src-tauri/src/memory_os/ltm.rs:743:        assert_eq!(metadata.id, entry.id);
+src-tauri/src/memory_os/ltm.rs:744:        assert_eq!(metadata.importance, 0.75);
+src-tauri/src/memory_os/ltm.rs:745:        assert_eq!(metadata.memory_type, MemoryType::Knowledge);
+src-tauri/src/memory_os/ltm.rs:746:        assert_eq!(metadata.tags.len(), 2);
+src-tauri/src/memory_os/ltm.rs:747:        assert_eq!(metadata.file_path, "test.json");
+src-tauri/src/memory_os/ltm.rs:748:        assert!(!metadata.content_preview.is_empty());
+src-tauri/src/memory_os/vector_hnsw.rs:219:            metadata.config.m,
+src-tauri/src/memory_os/vector_hnsw.rs:220:            metadata.config.max_elements,
+src-tauri/src/memory_os/vector_hnsw.rs:221:            metadata.config.ef_construction,
+src-tauri/src/memory_os/vector_hnsw.rs:222:            metadata.config.ef_construction,
+src-tauri/src/memory_os/vector_hnsw.rs:227:        for (idx, id) in &metadata.reverse_map {
+src-tauri/src/memory_os/vector_hnsw.rs:228:            if let Some(vector) = metadata.vectors.get(id) {
+src-tauri/src/memory_os/vector_hnsw.rs:235:        self.id_map = metadata.id_map;
+src-tauri/src/memory_os/vector_hnsw.rs:236:        self.reverse_map = metadata.reverse_map;
+src-tauri/src/memory_os/vector_hnsw.rs:237:        self.vectors = metadata.vectors;
+src-tauri/src/memory_os/vector_hnsw.rs:238:        self.config = metadata.config;
+src-tauri/src/memory_os/vector_hnsw.rs:239:        self.next_idx = metadata.next_idx;
+src-tauri/src/audio/commands.rs:148:                log::info!("[TTS] Output file size: {} bytes", metadata.len());
+src-tauri/src/audio/commands.rs:149:                if metadata.len() == 0 {
+src-tauri/src/audio/commands.rs:666:                let file_size = metadata.len();
+src-tauri/src/audio/recording_engine.rs:231:                    let size = metadata.len();
+src-tauri/src/conversation_os/formatter.rs:314:        assert_eq!(metadata.word_count, 6);
+src-tauri/src/conversation_os/formatter.rs:315:        assert!(metadata.char_count > 0);
+src-tauri/src/chat_engine/memory.rs:105:        if conversation.metadata.total_tokens <= self.retention_tokens {
+src-tauri/src/chat_engine/memory.rs:115:        conversation.metadata.total_tokens =
+src-tauri/src/chat_engine/memory.rs:117:        conversation.metadata.message_count = conversation.entries.len();
+src-tauri/src/conversation_engine/memory.rs:34:    pub provider_used: String,
+src-tauri/src/conversation_engine/memory.rs:139:            provider_used: provider.to_string(),
+src-tauri/src/conversation_engine/memory.rs:232:                    provider_used: "unknown".to_string(),
+src-tauri/src/conversation_engine/omega_integration.rs:236:            intent: output.metadata.intent,
+src-tauri/src/conversation_engine/omega_integration.rs:237:            confidence: output.metadata.confidence,
+src-tauri/src/conversation_engine/omega_integration.rs:238:            safety_score: output.metadata.safety_score,
+src-tauri/src/conversation_engine/omega_integration.rs:239:            sources: output.metadata.sources,
+src-tauri/src/conversation_engine/omega_integration.rs:240:            model: output.metadata.model,
+src-tauri/src/conversation_engine/omega_integration.rs:241:            tokens: output.metadata.tokens,
+src-tauri/src/conversation_engine/omega_integration.rs:391:            provider_used: format!("{} (OMEGA+Singularity)", omega_result.model),
+src-tauri/src/conversation_engine/omega_integration.rs:605:            response.metadata.latency_ms < 300,
+src-tauri/src/conversation_engine/omega_integration.rs:611:            response.metadata.latency_ms
+src-tauri/src/tts/elevenlabs_tts.rs:486:                if let Ok(modified) = metadata.modified() {
+src-tauri/src/conversation_engine/mod.rs:200:                            response.metadata.latency_ms
+src-tauri/src/conversation_engine/mod.rs:244:                provider_used: "offline".to_string(),
+src-tauri/tests/omega_p2_performance_test.rs:61:        response.metadata.latency_ms
+src-tauri/src/conversation_engine/api_neutralizer.rs:29:            // - Field: response.metadata.get("tokens") or response.usage.total_tokens
+src-tauri/src/conversation_engine/api_neutralizer.rs:30:            // - Gemini: response.usage_metadata.total_token_count
+src-tauri/src/conversation_engine/api_neutralizer.rs:34:            // - Parse: metadata.get("tokens").and_then(|v| v.as_u64()).unwrap_or(0)
+src-tauri/src/conversation_engine/types.rs:409:    pub provider_used: String,
+src-tauri/src/conversation_engine/types.rs:468:    pub provider_used: String,
+src-tauri/src/conversation_engine/types.rs:1124:            provider_used: "Gemini".to_string(),
+src-tauri/src/conversation_engine/types.rs:1130:        assert_eq!(metadata.timestamp, 1234567890);
+src-tauri/src/conversation_engine/types.rs:1131:        assert_eq!(metadata.tokens_used, 500);
+src-tauri/src/conversation_engine/types.rs:1233:                provider_used: "Test".to_string(),
+src-tauri/src/ai/fusion.rs:53:            result.metadata.fallback_triggered = true;
+src-tauri/src/ai/fusion.rs:78:                mode: primary.metadata.mode.clone(),
+src-tauri/src/ai/fusion.rs:79:                temperature_used: primary.metadata.temperature_used,
+src-tauri/src/ai/fusion.rs:112:                mode: primary.metadata.mode.clone(),
+src-tauri/src/ai/fusion.rs:113:                temperature_used: primary.metadata.temperature_used,
+src-tauri/src/ai/fusion.rs:138:                mode: primary.metadata.mode.clone(),
+src-tauri/src/ai/fusion.rs:139:                temperature_used: primary.metadata.temperature_used,
+src-tauri/src/conversation_engine/pipeline.rs:270:                provider_used: neutralized_response.provider,
+src-tauri/src/conversation_engine/commands.rs:192:                response.metadata.tokens_used
+src-tauri/src/memory/telemetry.rs:134:        let size_bytes = metadata.len();
+src-tauri/src/ai/providers/titane_engine.rs:247:        assert!(res.metadata.fallback_triggered);
+src-tauri/src/neural_memory/ltm.rs:153:        let file_path = self.storage_path.join("entries").join(&metadata.file_path);
+src-tauri/src/neural_memory/ltm.rs:180:            let file_path = self.storage_path.join("entries").join(&metadata.file_path);
+src-tauri/src/neural_memory/vector.rs:82:                    content_preview: self.metadata.get(id).cloned().unwrap_or_default(),
+src-tauri/src/neural_memory/vector.rs:102:        self.metadata.remove(id);
+src-tauri/src/neural_memory/vector.rs:113:        self.metadata.clear();
+src-tauri/src/multimodal/image_memory.rs:122:            .filter(|e| tags.iter().any(|tag| e.metadata.tags.contains(tag)))
+src-tauri/src/multimodal/multimodal_context.rs:75:        self.fusion_metadata.primary_modality = Modality::Text;
+src-tauri/src/multimodal/multimodal_context.rs:81:        self.fusion_metadata.secondary_modalities.push(Modality::Image);
+src-tauri/src/multimodal/multimodal_context.rs:87:        self.fusion_metadata.secondary_modalities.push(Modality::Audio);
+src-tauri/src/multimodal/multimodal_context.rs:96:        !self.fusion_metadata.secondary_modalities.is_empty()
+src-tauri/src/multimodal/multimodal_context.rs:100:        1 + self.fusion_metadata.secondary_modalities.len()
+src-tauri/src/memory/model.rs:56:        self.metadata.total_tokens += tokens;
+src-tauri/src/memory/model.rs:57:        self.metadata.message_count += 1;
+src-tauri/src/memory/model.rs:80:        self.metadata.total_tokens = 0;
+src-tauri/src/memory/model.rs:81:        self.metadata.message_count = 0;
+src-tauri/src/memory/model.rs:110:            message_count: conv.metadata.message_count,
+src-tauri/src/memory/model.rs:111:            is_archived: conv.metadata.is_archived,
+src-tauri/src/memory/model.rs:128:        assert_eq!(conv.metadata.message_count, 0);
+src-tauri/src/memory/model.rs:152:        assert_eq!(conv.metadata.message_count, 1);
+src-tauri/src/memory/model.rs:161:        assert_eq!(conv.metadata.total_tokens, 15);
+src-tauri/src/memory/model.rs:235:        assert_eq!(conv.metadata.total_tokens, 0);
+src-tauri/src/memory/model.rs:236:        assert_eq!(conv.metadata.message_count, 0);
+src-tauri/src/memory/model.rs:276:        assert_eq!(conv.metadata.total_tokens, 0);
+src-tauri/src/memory/model.rs:277:        assert_eq!(conv.metadata.message_count, 0);
+src-tauri/src/memory/model.rs:278:        assert!(conv.metadata.tags.is_empty());
+src-tauri/src/memory/model.rs:279:        assert!(!conv.metadata.is_archived);
+src-tauri/src/memory/model.rs:437:        conv.metadata.is_archived = true;
+src-tauri/src/memory/model.rs:513:        assert_eq!(conv.metadata.message_count, 5);
+src-tauri/src/memory/model.rs:514:        assert_eq!(conv.metadata.total_tokens, 21);
+src-tauri/src/memory/model.rs:527:        assert_eq!(conv.metadata.message_count, 0);
+src-tauri/src/ai/router.rs:347:                        // - Auto-detect: Parse unified_response.metadata.provider field
+src-tauri/src/ai/router.rs:349:                        // - Example: AIProvider::from_str(&metadata.provider).unwrap_or(AIProvider::Gemini)
+src-tauri/src/memory_os/vector_store.rs:152:                    metadata: v.metadata.clone(),
+
+$ rg -n "OFFLINE_SIM|FORCE_LOCAL_PROVIDER" src-tauri src -S
+src-tauri/src/conversation_engine/commands.rs:80:    let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+
+$ rg -n "reqwest|hyper|ureq|surf|fetch\(|http://" src-tauri src -S
+src-tauri/tauri.conf.json:7:    "devUrl": "http://localhost:1420",
+src-tauri/tauri.conf.json:66:      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://127.0.0.1:1420 ws://127.0.0.1:1420; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+src-tauri/tauri.conf.json:255:            { "command": "hypervision_start" },
+src-tauri/tauri.conf.json:456:            { "_comment": "HYPER INTELLIGENCE v∞.Ω" },
+src-tauri/tauri.conf.json:460:            { "command": "hyper_init" },
+src-tauri/tauri.conf.json:461:            { "command": "hyper_get_state" },
+src-tauri/tauri.conf.json:462:            { "command": "hyper_get_metrics" },
+src-tauri/tauri.conf.json:463:            { "command": "hyper_set_mode" },
+src-tauri/tauri.conf.json:464:            { "command": "hyper_think" },
+src-tauri/tauri.conf.json:465:            { "command": "hyper_generate_insight" },
+src-tauri/tauri.conf.json:466:            { "command": "hyper_reason" },
+src-tauri/tauri.conf.json:467:            { "command": "hyper_imagine" },
+src-tauri/tauri.conf.json:468:            { "command": "hyper_get_thoughts" },
+src-tauri/tauri.conf.json:469:            { "command": "hyper_get_insights" },
+src-tauri/tauri.conf.json:470:            { "command": "hyper_get_report" },
+src-tauri/tauri.conf.json:519:            { "command": "sc_hypervision_get_state" },
+src-tauri/tauri.conf.json:520:            { "command": "sc_hypervision_get_metrics" },
+src-tauri/tauri.conf.json:521:            { "command": "sc_hypervision_get_layers" },
+src-tauri/tauri.conf.json:522:            { "command": "sc_hypervision_get_anomalies" },
+src-tauri/tauri.conf.json:523:            { "command": "sc_hypervision_start" },
+src-tauri/tauri.conf.json:668:            { "_comment": "HYPER EVOLUTION v∞.Ω" },
+src-tauri/tauri.conf.json:672:            { "command": "hyper_predict_issues" },
+src-tauri/tauri.conf.json:673:            { "command": "hyper_accelerate" },
+src-tauri/tauri.conf.json:674:            { "command": "hyper_analyze_structure" },
+src-tauri/tauri.conf.json:675:            { "command": "hyper_detect_regeneration" },
+src-tauri/tauri.conf.json:676:            { "command": "hyper_analyze_rewrite" },
+src-tauri/tauri.conf.json:677:            { "command": "hyper_validate" },
+src-tauri/tauri.conf.json:1081:        "http://localhost:11434/**"
+src-tauri/TAURI_CONFIG_NOTES.md:8:"devUrl": "http://localhost:5173"
+src-tauri/TAURI_CONFIG_NOTES.md:17:- Démarre un serveur Vite local sur http://localhost:5173
+src-tauri/TAURI_CONFIG_NOTES.md:46:│  │ http://localhost:5173 (dev)       │  │  ← Accessible UNIQUEMENT
+src-tauri/gen/schemas/linux-schema.json:2:  "$schema": "http://json-schema.org/draft-07/schema#",
+src-tauri/gen/schemas/desktop-schema.json:2:  "$schema": "http://json-schema.org/draft-07/schema#",
+src-tauri/gen/schemas/capabilities.json:1:{"audio-tts":{"identifier":"audio-tts","description":"Capability pour le système Audio/TTS/ASR TITANE∞ v19.3","local":true,"windows":["main"],"permissions":["core:default"]},"chat-ai":{"identifier":"chat-ai","description":"Capability pour le Chat IA TITANE∞ (Gemini, Ollama, Local)","remote":{"urls":["https://generativelanguage.googleapis.com/**","http://localhost:11434/**","http://127.0.0.1:11434/**"]},"local":true,"windows":["main"],"permissions":["core:default"]},"developer-mode":{"identifier":"developer-mode","description":"Capability pour le Developer Mode TITANE∞ (Kevin only)","local":true,"windows":["main"],"permissions":["core:default"]},"persistence":{"identifier":"persistence","description":"Capability pour le système de persistence TITANE∞ (Event Sourcing + Snapshots)","local":true,"windows":["main"],"permissions":["core:default"]},"secrets":{"identifier":"secrets","description":"Capability pour la gestion sécurisée des secrets TITANE∞","remote":{"urls":[]},"local":true,"windows":["main"],"permissions":["core:default"]},"self-heal":{"identifier":"self-heal","description":"Capability pour le Self-Healing et l'autonomie TITANE∞","local":true,"windows":["main"],"permissions":["core:default"]},"singularity":{"identifier":"singularity","description":"Capability pour le Singularity Engine TITANE∞ (état global unifié)","local":true,"windows":["main"],"permissions":["core:default"]}}
+src-tauri/memory/memory_core_state.json:2284:      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=d2eee3a9:903:34)"
+src-tauri/memory/memory_core_state.json:2333:      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=9ed7acde:903:34)"
+src-tauri/Cargo.toml:47:reqwest          = { version = "0.11", features = ["json", "stream"] }
+src-tauri/Cargo.toml:63:# Super-Prompts P-U - Phases 5-10 (Node-Cluster, Knowledge, HyperVision, Création, Introspection, Évolution)
+src-tauri/capabilities/chat_ai.json:28:      "http://localhost:11434/**",
+src-tauri/capabilities/chat_ai.json:29:      "http://127.0.0.1:11434/**"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:58:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:87:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:145:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:187:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:221:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:269:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:308:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:344:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:392:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:421:              xmlns="http://www.w3.org/2000/svg"
+src-tauri/src/control_panel_commands.rs:682:    // Implementation note: Requires reqwest dependency
+src-tauri/src/control_panel_commands.rs:690:    // Future implementation with reqwest:
+src-tauri/src/control_panel_commands.rs:691:    // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
+src-tauri/tests/security_tests.rs:43:    let result = guard.execute_verified("wget", &["http://evil.com"]);
+src-tauri/allowlist.whitelist.stable.json:438:              "command": "hyper_get_insights"
+src-tauri/allowlist.whitelist.stable.json:441:              "command": "hyper_get_thoughts"
+src-tauri/allowlist.whitelist.stable.json:597:              "command": "sc_hypervision_get_anomalies"
+src-tauri/allowlist.whitelist.stable.json:600:              "command": "sc_hypervision_get_layers"
+src-tauri/allowlist.whitelist.stable.json:603:              "command": "sc_hypervision_get_metrics"
+src-tauri/allowlist.whitelist.stable.json:606:              "command": "sc_hypervision_get_state"
+src/__tests__/features/monitoring/__snapshots__/SystemHealthMonitor.test.tsx.snap:47:        class="mt-2 h-1 bg-titane-bg-surface rounded-full overflow-hidden"
+src-tauri/src/meta_orchestrator/awareness.rs:259:            AwarenessLevel::HyperAware
+src-tauri/src/meta_orchestrator/awareness.rs:267:            AwarenessLevel::HyperAware
+src-tauri/src/meta_orchestrator/awareness.rs:351:            AwarenessLevel::HyperAware,
+src-tauri/src/api/chat_commands.rs:5:use reqwest::Client;
+src-tauri/src/meta_orchestrator/mod.rs:64:    HyperAware,   // Surveillance maximale
+src/__tests__/edge-cases/ErrorHandling.test.tsx:252:      const promises = Array.from({ length: 5 }, () => fetch('/api/test')); // @network-allowed: mocked API calls for concurrency test
+src-tauri/test-chat-quick.sh:3:curl -s http://localhost:11434/api/tags | jq -r '.models[0].name' && echo "✅ Ollama" || echo "❌ Ollama"
+src-tauri/tauri.base.json:7:    "devUrl": "http://localhost:5173",
+src-tauri/src/config/presets.rs:60:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/config/io.rs:60:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/ollama.rs:5:use reqwest::{Client, StatusCode};
+src-tauri/src/ollama.rs:8:const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+src-tauri/src/config/update.rs:50:    // Vérifier que ça commence par http:// ou https://
+src-tauri/src/config/update.rs:51:    if !url.starts_with("http://") && !url.starts_with("https://") {
+src-tauri/src/config/update.rs:52:        return Err("URL Ollama doit commencer par http:// ou https://".to_string());
+src-tauri/src/config/update.rs:258:        assert!(validate_ollama_url("http://localhost:11434").is_ok());
+src-tauri/src/config/mod.rs:103:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/config/mod.rs:150:            ollama_url: "http://test:11434".to_string(),
+src-tauri/src/core/tapi_error.rs:156:impl From<reqwest::Error> for TAPIError {
+src-tauri/src/core/tapi_error.rs:157:    fn from(err: reqwest::Error) -> Self {
+src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml:2:<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+src-tauri/src/commands/orchestration_center.rs:148:    let client = reqwest::Client::builder()
+src-tauri/src/commands/orchestration_center.rs:215:        .unwrap_or_else(|_| "http://127.0.0.1:11434".into());
+src-tauri/src/commands/orchestration_center.rs:221:    let client = reqwest::Client::builder()
+src-tauri/src/commands/orchestration_center.rs:1161:    let client = reqwest::Client::builder()
+src-tauri/src/hyper_evolution/structural_engine.rs:91:pub async fn hyper_analyze_structure() -> Result<StructuralReport, String> {
+src-tauri/src/hyper_evolution/rewrite_core.rs:88:pub async fn hyper_analyze_rewrite() -> Result<RewriteReport, String> {
+src-tauri/src/tts/elevenlabs_tts.rs:7:use reqwest::Client;
+src-tauri/src/hyper_evolution/validation.rs:3: * Valide toutes les transformations HyperEvolution
+src-tauri/src/hyper_evolution/validation.rs:96:pub async fn hyper_validate(targets: Vec<String>) -> Result<ValidationReport, String> {
+src-tauri/src/hyper_evolution/predictor.rs:172:pub async fn hyper_predict_issues() -> Result<PredictionReport, String> {
+src-tauri/src/hyper_evolution/regeneration.rs:135:pub async fn hyper_detect_regeneration() -> Result<RegenerationReport, String> {
+src-tauri/src/tts/online_tts.rs:26:            reqwest::get("https://www.google.com"),
+src-tauri/src/tts/online_tts.rs:46:        let response = reqwest::get(&url)
+src-tauri/src/hyper_evolution/accelerator.rs:105:pub async fn hyper_accelerate() -> Result<AccelerationReport, String> {
+src-tauri/src/commands/ai_chat.rs:450:        reqwest::get("https://www.google.com"),
+src-tauri/src/hyper_evolution/mod.rs:3: * TITANE∞ v∞ Phase V - HyperEvolution Engine
+src-tauri/src/handlers.rs:157:                    $crate::hypervision::hypervision_start,
+src-tauri/src/handlers.rs:158:                    $crate::hypervision::get_system_metrics,
+src-tauri/src/handlers.rs:164:                    $crate::hyper_evolution::hyper_predict_issues,
+src-tauri/src/handlers.rs:165:                    $crate::hyper_evolution::hyper_accelerate,
+src-tauri/src/handlers.rs:166:                    $crate::hyper_evolution::hyper_analyze_structure,
+src-tauri/src/handlers.rs:167:                    $crate::hyper_evolution::hyper_detect_regeneration,
+src-tauri/src/handlers.rs:168:                    $crate::hyper_evolution::hyper_analyze_rewrite,
+src-tauri/src/handlers.rs:169:                    $crate::hyper_evolution::hyper_validate,
+src-tauri/src/commands/ollama_command.rs:34:    let url = "http://127.0.0.1:11434/api/generate";
+src-tauri/src/commands/ollama_command.rs:43:    let client = reqwest::Client::builder()
+src-tauri/src/types/memory.rs:43:/// Directory scan snapshot surfaced to the frontend
+src-tauri/src/commands/system_center_commands.rs:123:pub async fn sc_hypervision_stop() -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:124:    log::info!("[SYSTEM_CENTER] sc_hypervision_stop called");
+src-tauri/src/commands/system_center_commands.rs:129:pub async fn sc_hypervision_clear_anomalies() -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:130:    log::info!("[SYSTEM_CENTER] sc_hypervision_clear_anomalies called");
+src-tauri/src/commands/system_center_commands.rs:135:pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:137:        "[SYSTEM_CENTER] sc_hypervision_resolve_anomaly: {}",
+src-tauri/src/commands/ai_prompt_generator.rs:117:    use reqwest::Client;
+src-tauri/src/commands/ai_prompt_generator.rs:127:        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/src/semantic/embedder.rs:66:        // Dependencies: reqwest = "0.11", serde_json = "1.0"
+src-tauri/src/semantic/embedder.rs:75:        // Endpoint: http://localhost:11434/api/embeddings
+src-tauri/src/semantic/embedder.rs:82:        // Dependencies: reqwest = "0.11", tokio for async
+src-tauri/src/audio/asr.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/singularity/security.rs:116:            "HyperEvolution",
+src-tauri/src/singularity/security.rs:200:            "HyperEvolution",
+src-tauri/src/system_center/hypervision.rs:1://! TITANE∞ v∞ — System Center: HyperVision
+src-tauri/src/system_center/hypervision.rs:19:            log::error!("[Hypervision] CRITICAL: Mutex poisoned, recovering...");
+src-tauri/src/system_center/hypervision.rs:80:pub struct HyperVisionState {
+src-tauri/src/system_center/hypervision.rs:96:struct HyperVisionInternalState {
+src-tauri/src/system_center/hypervision.rs:103:static HV_STATE: Lazy<Arc<Mutex<HyperVisionInternalState>>> =
+src-tauri/src/system_center/hypervision.rs:104:    Lazy::new(|| Arc::new(Mutex::new(HyperVisionInternalState::default())));
+src-tauri/src/system_center/hypervision.rs:241:/// Start HyperVision monitoring
+src-tauri/src/system_center/hypervision.rs:243:pub async fn sc_hypervision_start() -> Result<HyperVisionState, String> {
+src-tauri/src/system_center/hypervision.rs:247:        return Err("HyperVision already running".to_string());
+src-tauri/src/system_center/hypervision.rs:258:    println!("[SystemCenter::HyperVision] Monitoring started");
+src-tauri/src/system_center/hypervision.rs:260:    Ok(HyperVisionState {
+src-tauri/src/system_center/hypervision.rs:269:/// Stop HyperVision monitoring
+src-tauri/src/system_center/hypervision.rs:271:pub async fn sc_hypervision_stop() -> Result<(), String> {
+src-tauri/src/system_center/hypervision.rs:276:    println!("[SystemCenter::HyperVision] Monitoring stopped");
+src-tauri/src/system_center/hypervision.rs:283:pub async fn sc_hypervision_get_state() -> Result<HyperVisionState, String> {
+src-tauri/src/system_center/hypervision.rs:286:    Ok(HyperVisionState {
+src-tauri/src/system_center/hypervision.rs:297:pub async fn sc_hypervision_get_metrics() -> Result<SystemMetricsSnapshot, String> {
+src-tauri/src/system_center/hypervision.rs:321:pub async fn sc_hypervision_get_history(
+src-tauri/src/system_center/hypervision.rs:338:pub async fn sc_hypervision_get_layers() -> Result<Vec<LayerHealth>, String> {
+src-tauri/src/system_center/hypervision.rs:345:pub async fn sc_hypervision_get_anomalies(
+src-tauri/src/system_center/hypervision.rs:363:pub async fn sc_hypervision_clear_anomalies() -> Result<(), String> {
+src-tauri/src/system_center/hypervision.rs:371:pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), String> {
+src-tauri/src/design_center/theme_manager.rs:22:    pub surface: String,
+src-tauri/src/design_center/theme_manager.rs:23:    #[serde(rename = "surfaceElevated")]
+src-tauri/src/design_center/theme_manager.rs:24:    pub surface_elevated: String,
+src-tauri/src/design_center/theme_manager.rs:186:            surface: "#161616".to_string(),
+src-tauri/src/design_center/theme_manager.rs:187:            surface_elevated: "#1e1e1e".to_string(),
+src-tauri/src/design_center/theme_manager.rs:325:                "surface" => colors.surface = value.as_str().unwrap_or(&colors.surface).to_string(),
+src-tauri/src/design_center/theme_manager.rs:326:                "surfaceElevated" => {
+src-tauri/src/design_center/theme_manager.rs:327:                    colors.surface_elevated = value
+src-tauri/src/design_center/theme_manager.rs:329:                        .unwrap_or(&colors.surface_elevated)
+src-tauri/src/design_center/theme_manager.rs:465:  --color-surface: {};
+src-tauri/src/design_center/theme_manager.rs:466:  --color-surface-elevated: {};
+src-tauri/src/design_center/theme_manager.rs:511:        tokens.colors.surface,
+src-tauri/src/design_center/theme_manager.rs:512:        tokens.colors.surface_elevated,
+src-tauri/src/system_center/mod.rs:8://! - HyperVision monitoring
+src-tauri/src/system_center/mod.rs:14:pub mod hypervision;
+src-tauri/src/system_center/mod.rs:21:pub use hypervision::*;
+src-tauri/src/commands/memory_kv_commands.rs:2:// MEMORY KV COMMANDS (legacy surface helper)
+src-tauri/src/commands/memory_kv_commands.rs:8:// Note: This file may not be wired into the active command surface yet.
+src-tauri/src/commands/memory_kv_commands.rs:121:// Minimal commands (namespaced) — safe helper surface.
+src-tauri/src/lib.rs:168:pub mod hypervision; // ✅ HyperVision
+src-tauri/src/lib.rs:176:pub mod system_center; // ✅ Centre Système Unifié (Diagnostics, DevTools, Cluster, Introspection, HyperVision)
+src-tauri/src/lib.rs:189:pub mod hyper_evolution; // ✅ HyperEvolution
+src-tauri/src/lib.rs:250:// HYPER-INTELLIGENCE ENGINE v∞ (OPUS #20)
+src-tauri/src/lib.rs:253:pub mod hyper_intelligence; // ✅ Hyper-Intelligence v∞ (Reasoning, Creativity, Cognition)
+src-tauri/src/api_hub/openai.rs:77:        // Simulation de l'appel API (en production, utiliser reqwest)
+src-tauri/src/main.rs:667:                                    log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+src-tauri/src/main.rs:690:                        log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+src-tauri/src/main.rs:1215:            commands_v21::system_center_commands::sc_hypervision_stop,
+src-tauri/src/main.rs:1216:            commands_v21::system_center_commands::sc_hypervision_clear_anomalies,
+src-tauri/src/main.rs:1217:            commands_v21::system_center_commands::sc_hypervision_resolve_anomaly,
+src-tauri/src/singularity/core.rs:28:                "HyperEvolution".to_string(),
+src-tauri/src/memory_evolution/memory_vectorizer.rs:81:            ollama_url: "http://localhost:11434".to_string(),
+src-tauri/src/memory_evolution/memory_vectorizer.rs:232:            let client = reqwest::Client::new();
+src-tauri/src/api_hub/copilot.rs:10:use reqwest::{header, Client};
+src-tauri/src/singularity/singularity_state.rs:121:                "HyperEvolution".to_string(),
+src-tauri/src/digital_twin_v14_1/mod.rs:156:            0.4 // Surface seulement
+src-tauri/src/singularity/coherence.rs:39:                "HyperEvolution-SelfRepair".to_string(),
+src-tauri/src/hyper_intelligence/cognition.rs:6:use super::HyperIntelligenceError;
+src-tauri/src/hyper_intelligence/cognition.rs:167:    pub async fn initialize(&mut self) -> Result<(), HyperIntelligenceError> {
+src-tauri/src/runtime_config.rs:32:        "http://127.0.0.1:11434".to_string()
+src-tauri/src/runtime_config.rs:52:        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/src/runtime_config.rs:95:        assert_eq!(config.ollama_url, "http://127.0.0.1:11434");
+src-tauri/src/hyper_intelligence/commands.rs:2://! TITANE∞ v∞ — HYPER-INTELLIGENCE COMMANDS
+src-tauri/src/hyper_intelligence/commands.rs:3://! Commandes Tauri pour le Hyper-Intelligence Engine
+src-tauri/src/hyper_intelligence/commands.rs:7:    Conclusion, HyperIntelligenceEngine, HyperIntelligenceState, HyperMetrics, Imagination,
+src-tauri/src/hyper_intelligence/commands.rs:20:static HYPER_INTELLIGENCE: Lazy<Arc<RwLock<Option<HyperIntelligenceEngine>>>> =
+src-tauri/src/hyper_intelligence/commands.rs:27:/// Initialise le Hyper-Intelligence Engine
+src-tauri/src/hyper_intelligence/commands.rs:29:pub async fn hyper_init() -> Result<HyperIntelligenceState, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:30:    log::info!("[HyperIntelligence] Awakening consciousness...");
+src-tauri/src/hyper_intelligence/commands.rs:32:    let engine = HyperIntelligenceEngine::new();
+src-tauri/src/hyper_intelligence/commands.rs:40:    let mut global = HYPER_INTELLIGENCE.write().await;
+src-tauri/src/hyper_intelligence/commands.rs:43:    log::info!("[HyperIntelligence] ✅ Consciousness online");
+src-tauri/src/hyper_intelligence/commands.rs:49:pub async fn hyper_get_state() -> Result<HyperIntelligenceState, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:50:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:55:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:62:pub async fn hyper_get_metrics() -> Result<HyperMetrics, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:63:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:68:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:75:pub async fn hyper_set_mode(mode: String) -> Result<(), AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:76:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:94:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:101:pub async fn hyper_think(prompt: String) -> Result<Thought, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:102:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:110:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:117:pub async fn hyper_generate_insight(context: String) -> Result<Insight, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:118:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:126:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:133:pub async fn hyper_reason(premises: Vec<String>) -> Result<Conclusion, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:134:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:142:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:149:pub async fn hyper_imagine(seed: String) -> Result<Imagination, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:150:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:158:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:165:pub async fn hyper_get_thoughts(limit: Option<usize>) -> Result<Vec<Thought>, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:166:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:171:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:178:pub async fn hyper_get_insights(limit: Option<usize>) -> Result<Vec<Insight>, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:179:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:184:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:191:pub struct HyperIntelligenceReport {
+src-tauri/src/hyper_intelligence/commands.rs:192:    pub state: HyperIntelligenceState,
+src-tauri/src/hyper_intelligence/commands.rs:193:    pub metrics: HyperMetrics,
+src-tauri/src/hyper_intelligence/commands.rs:200:pub async fn hyper_get_report() -> Result<HyperIntelligenceReport, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:201:    let global = HYPER_INTELLIGENCE.read().await;
+src-tauri/src/hyper_intelligence/commands.rs:211:                "Hyper-Intelligence: {:?} mode, {:?} consciousness, {} thoughts, {} insights",
+src-tauri/src/hyper_intelligence/commands.rs:215:            Ok(HyperIntelligenceReport {
+src-tauri/src/hyper_intelligence/commands.rs:224:            "Hyper-Intelligence not initialized".to_string(),
+src-tauri/src/gemini_provider_refactor.rs:71:    client: reqwest::Client,
+src-tauri/src/gemini_provider_refactor.rs:78:        let client = reqwest::Client::builder()
+src-tauri/src/memory_os/embeddings.rs:108:        let client = reqwest::Client::new();
+src-tauri/src/memory_os/embeddings.rs:155:        let client = reqwest::Client::new();
+src-tauri/src/backend_selftest.rs:161:    //   * Ollama: Test http://localhost:11434/api/tags with 1s timeout
+src-tauri/src/hyper_intelligence/mod.rs:2://! TITANE∞ v∞ — HYPER-INTELLIGENCE ENGINE (OPUS #20)
+src-tauri/src/hyper_intelligence/mod.rs:3://! Moteur d'hyper-intelligence avec raisonnement, créativité et cognition
+src-tauri/src/hyper_intelligence/mod.rs:22:pub enum HyperIntelligenceError {
+src-tauri/src/hyper_intelligence/mod.rs:33:pub type HyperResult<T> = Result<T, HyperIntelligenceError>;
+src-tauri/src/hyper_intelligence/mod.rs:156:/// État du Hyper-Intelligence Engine
+src-tauri/src/hyper_intelligence/mod.rs:158:pub struct HyperIntelligenceState {
+src-tauri/src/hyper_intelligence/mod.rs:172:impl Default for HyperIntelligenceState {
+src-tauri/src/hyper_intelligence/mod.rs:190:/// Métriques Hyper-Intelligence
+src-tauri/src/hyper_intelligence/mod.rs:192:pub struct HyperMetrics {
+src-tauri/src/hyper_intelligence/mod.rs:203:impl Default for HyperMetrics {
+src-tauri/src/hyper_intelligence/mod.rs:219:// HYPER-INTELLIGENCE ENGINE
+src-tauri/src/hyper_intelligence/mod.rs:222:/// Moteur d'Hyper-Intelligence
+src-tauri/src/hyper_intelligence/mod.rs:223:pub struct HyperIntelligenceEngine {
+src-tauri/src/hyper_intelligence/mod.rs:224:    state: Arc<RwLock<HyperIntelligenceState>>,
+src-tauri/src/hyper_intelligence/mod.rs:230:    metrics: Arc<RwLock<HyperMetrics>>,
+src-tauri/src/hyper_intelligence/mod.rs:234:impl HyperIntelligenceEngine {
+src-tauri/src/hyper_intelligence/mod.rs:237:            state: Arc::new(RwLock::new(HyperIntelligenceState::default())),
+src-tauri/src/hyper_intelligence/mod.rs:243:            metrics: Arc::new(RwLock::new(HyperMetrics::default())),
+src-tauri/src/hyper_intelligence/mod.rs:248:    pub async fn initialize(&self) -> HyperResult<()> {
+src-tauri/src/hyper_intelligence/mod.rs:249:        log::info!("[HyperIntelligence] Initializing consciousness...");
+src-tauri/src/hyper_intelligence/mod.rs:264:        log::info!("[HyperIntelligence] ✅ Consciousness initialized - Level: Aware");
+src-tauri/src/hyper_intelligence/mod.rs:268:    pub async fn get_state(&self) -> HyperIntelligenceState {
+src-tauri/src/hyper_intelligence/mod.rs:288:    pub async fn get_metrics(&self) -> HyperMetrics {
+src-tauri/src/hyper_intelligence/mod.rs:292:    pub async fn set_mode(&self, mode: IntelligenceMode) -> HyperResult<()> {
+src-tauri/src/hyper_intelligence/mod.rs:296:        log::info!("[HyperIntelligence] Mode changed to: {:?}", mode);
+src-tauri/src/hyper_intelligence/mod.rs:300:    pub async fn think(&self, prompt: &str) -> HyperResult<Thought> {
+src-tauri/src/hyper_intelligence/mod.rs:301:        log::debug!("[HyperIntelligence] Processing thought: {}", prompt);
+src-tauri/src/hyper_intelligence/mod.rs:331:    pub async fn generate_insight(&self, context: &str) -> HyperResult<Insight> {
+src-tauri/src/hyper_intelligence/mod.rs:332:        log::debug!("[HyperIntelligence] Generating insight from: {}", context);
+src-tauri/src/hyper_intelligence/mod.rs:356:    pub async fn reason(&self, premises: Vec<String>) -> HyperResult<reasoning::Conclusion> {
+src-tauri/src/hyper_intelligence/mod.rs:361:    pub async fn imagine(&self, seed: &str) -> HyperResult<creativity::Imagination> {
+src-tauri/src/hyper_intelligence/mod.rs:392:impl Default for HyperIntelligenceEngine {
+src-tauri/src/hyper_intelligence/creativity.rs:6:use super::HyperIntelligenceError;
+src-tauri/src/hyper_intelligence/creativity.rs:121:    pub async fn initialize(&mut self) -> Result<(), HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/creativity.rs:172:    pub async fn generate_idea(&self, context: &str) -> Result<Idea, HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/creativity.rs:207:    pub async fn imagine(&self, seed: &str) -> Result<Imagination, HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/reasoning.rs:6:use super::HyperIntelligenceError;
+src-tauri/src/hyper_intelligence/reasoning.rs:105:    pub async fn initialize(&mut self) -> Result<(), HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/reasoning.rs:116:    pub async fn analyze(&self, input: &str) -> Result<AnalysisResult, HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/reasoning.rs:149:    ) -> Result<Conclusion, HyperIntelligenceError> {
+src-tauri/src/hyper_intelligence/reasoning.rs:151:            return Err(HyperIntelligenceError::Reasoning(
+src-tauri/src/ai/security.rs:17:    "http://localhost:11434",
+src-tauri/src/ai/security.rs:18:    "http://127.0.0.1:11434",
+src-tauri/src/ai/security.rs:192:        assert!(validate_endpoint("http://localhost:11434/api/generate").is_ok());
+src-tauri/src/ai/config_multi.rs:140:            ollama_url: "http://localhost:11434".to_string(),
+src-tauri/src/local_provider_refactor.rs:3:use reqwest::Client;
+src-tauri/src/local_provider_refactor.rs:29:            .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/src/monitoring/health/mod.rs:3://   System diagnostics, hypervision, alerts
+src-tauri/src/ai/providers/claude.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/openai.rs:9:use reqwest::Client;
+src-tauri/src/ollama_provider_refactor.rs:10:use reqwest::Client;
+src-tauri/src/ollama_provider_refactor.rs:28:            base_url: "http://localhost:11434".to_string(),
+src-tauri/src/ollama_provider_refactor.rs:393:        assert_eq!(endpoint, "http://localhost:11434/api/generate");
+src-tauri/src/ai/providers/local.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/local.rs:24:            .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string())
+src-tauri/src/hypervision/monitor.rs:2: * TITANE∞ v∞ Phase 7 - HyperVision (Super-Prompt R)
+src-tauri/src/hypervision/monitor.rs:58:// HYPERVISION ENGINE
+src-tauri/src/hypervision/monitor.rs:61:pub struct HyperVisionEngine {
+src-tauri/src/hypervision/monitor.rs:68:impl HyperVisionEngine {
+src-tauri/src/hypervision/monitor.rs:124:        println!("[HyperVision] Monitoring started");
+src-tauri/src/hypervision/monitor.rs:227:// UTILISER: sc_hypervision_start depuis system_center/hypervision.rs
+src-tauri/src/hypervision/monitor.rs:233:    note = "DANGER: Cette fonction crée des fuites mémoire. Utiliser sc_hypervision_start"
+src-tauri/src/hypervision/monitor.rs:235:pub async fn hypervision_start() -> Result<String, String> {
+src-tauri/src/hypervision/monitor.rs:236:    log::error!("[HyperVision] DEPRECATED: hypervision_start() appelé - RISQUE DE CRASH");
+src-tauri/src/hypervision/monitor.rs:237:    log::error!("[HyperVision] Utiliser sc_hypervision_start depuis system_center");
+src-tauri/src/hypervision/monitor.rs:238:    Err("DEPRECATED: Utiliser sc_hypervision_start à la place".to_string())
+src-tauri/src/hypervision/monitor.rs:244:    Ok(HyperVisionEngine::collect_system_metrics().await)
+src-tauri/src/hypervision/monitor.rs:619:    // Tests HyperVisionEngine
+src-tauri/src/hypervision/monitor.rs:623:    fn test_hypervision_engine_new() {
+src-tauri/src/hypervision/monitor.rs:624:        let engine = HyperVisionEngine::new(1000);
+src-tauri/src/hypervision/monitor.rs:629:    fn test_hypervision_engine_different_intervals() {
+src-tauri/src/hypervision/monitor.rs:630:        let fast = HyperVisionEngine::new(100);
+src-tauri/src/hypervision/monitor.rs:631:        let slow = HyperVisionEngine::new(5000);
+src-tauri/src/hypervision/monitor.rs:637:    fn test_hypervision_engine_get_current_metrics_empty() {
+src-tauri/src/hypervision/monitor.rs:638:        let engine = HyperVisionEngine::new(1000);
+src-tauri/src/hypervision/monitor.rs:644:    fn test_hypervision_engine_get_metrics_history_empty() {
+src-tauri/src/hypervision/monitor.rs:645:        let engine = HyperVisionEngine::new(1000);
+src-tauri/src/hypervision/monitor.rs:651:    fn test_hypervision_engine_get_layer_metrics_empty() {
+src-tauri/src/hypervision/monitor.rs:652:        let engine = HyperVisionEngine::new(1000);
+src-tauri/src/hypervision/monitor.rs:658:    fn test_hypervision_engine_get_anomalies_empty() {
+src-tauri/src/hypervision/monitor.rs:659:        let engine = HyperVisionEngine::new(1000);
+src-tauri/src/hypervision/monitor.rs:665:    async fn test_hypervision_engine_collect_system_metrics() {
+src-tauri/src/hypervision/monitor.rs:666:        let metrics = HyperVisionEngine::collect_system_metrics().await;
+src-tauri/src/hypervision/monitor.rs:672:    async fn test_hypervision_engine_scan_layer() {
+src-tauri/src/hypervision/monitor.rs:673:        let layer = HyperVisionEngine::scan_layer(0).await;
+src-tauri/src/hypervision/monitor.rs:679:    async fn test_hypervision_engine_scan_all_layers() {
+src-tauri/src/hypervision/monitor.rs:681:            let layer = HyperVisionEngine::scan_layer(i).await;
+src-tauri/src/hypervision/monitor.rs:687:    async fn test_hypervision_engine_detect_anomaly_normal() {
+src-tauri/src/hypervision/monitor.rs:699:        let anomaly = HyperVisionEngine::detect_anomaly(&metrics).await;
+src-tauri/src/hypervision/monitor.rs:704:    async fn test_hypervision_engine_detect_anomaly_high_cpu() {
+src-tauri/src/hypervision/monitor.rs:716:        let anomaly = HyperVisionEngine::detect_anomaly(&metrics).await;
+src-tauri/src/hypervision/monitor.rs:728:    async fn test_hypervision_engine_detect_anomaly_critical_memory() {
+src-tauri/src/hypervision/monitor.rs:740:        let anomaly = HyperVisionEngine::detect_anomaly(&metrics).await;
+src/__tests__/e2e-automated-validation.test.tsx:447:      return originalFetch(url);
+src/__tests__/e2e-automated-validation.test.tsx:997:      return originalFetch(url);
+src-tauri/src/monitoring/mod.rs:12://! - `hypervision/` → `health/`
+src-tauri/src/monitoring/mod.rs:23://! ├── health/        - Health checks (system, hypervision, alerts)
+src-tauri/src/ai/ollama.rs:9:use reqwest;
+src-tauri/src/ai/ollama.rs:15:const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+src-tauri/src/ai/ollama.rs:127:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:192:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:279:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:349:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:420:    client: reqwest::Client,
+src-tauri/src/ai/ollama.rs:426:        let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:429:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/ai/router.rs:70:            reqwest::get("https://www.google.com"),
+src-tauri/src/ai/gemini.rs:59:    client: reqwest::Client,
+src-tauri/src/ai/gemini.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/ai/gemini.rs:67:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/memory/telemetry.rs:160:/// Heuristic disk-mode detection to surface read/write capability to the UI.
+src-tauri/src/meta_mode_engine/mod.rs:167:    pub adapted_depth: String,           // surface, medium, deep, profound
+src-tauri/src/meta_mode_engine/mod.rs:529:            "surface".to_string()
+src-tauri/src/ia/anthropic_claude.rs:8:use reqwest::Client;
+src-tauri/src/ia/openai_gpt.rs:8:use reqwest::Client;
+src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx:30:      await fetch('/transcribe'); // @network-allowed: mocked voice transcription endpoint for E2E
+src-tauri/src/engines/unified_memory/embeddings.rs:213:    use reqwest;
+src-tauri/src/engines/unified_memory/embeddings.rs:216:    let client = reqwest::Client::new();
+src/apps/devtools/components/EngineCard.tsx:99:                style={{ background: 'var(--bg-surface, #181c21)' }}
+src/apps/devtools/components/EngineCard.tsx:133:                style={{ background: 'var(--bg-surface, #181c21)' }}
+src/apps/devtools/components/EngineCard.tsx:186:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/components/EngineCard.tsx:199:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/components/EngineCard.tsx:212:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/components/LogFilters.tsx:56:        background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/components/LogFilters.tsx:142:          background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/components/MemoryTree.tsx:95:            background: 'var(--bg-surface, #181c21)',
+src-tauri/src/overdrive/api_bridge.rs:106:            base_url: "http://localhost:11434".to_string(),
+src-tauri/src/overdrive/api_bridge.rs:213:    // IMPLEMENTATION: reqwest HTTP client for AI API calls
+src-tauri/src/overdrive/api_bridge.rs:214:    // Dependencies: reqwest = "0.11" with features = ["json", "rustls-tls"]
+src-tauri/src/overdrive/api_bridge.rs:216:    //   let client = reqwest::Client::builder()
+src-tauri/src/overdrive/api_bridge.rs:226:    // let client = reqwest::Client::new();
+src-tauri/src/overdrive/api_bridge.rs:576:    //   GET http://localhost:11434/api/tags
+src/ui/Modal.tsx:57:  background: colors.rubis.surface.solid,
+src/types/flow.ts:49:  | 'surfacing' // Remontée du flow
+src/types/flow.ts:125:  depthTrend: 'deepening' | 'stable' | 'surfacing';
+src/components/RealityCenter/RealityCenter.css:15:    var(--bg-surface, #1a1a1a) 100%
+src-tauri/src/overdrive/chat_orchestrator.rs:247:        available: false, // À vérifier avec http://localhost:11434
+src-tauri/src/overdrive/chat_orchestrator.rs:309:            // Ping rapide http://localhost:11434/api/tags
+src-tauri/src/overdrive/chat_orchestrator.rs:311:            match reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:317:                        client.get("http://localhost:11434/api/tags").send().await,
+src-tauri/src/overdrive/chat_orchestrator.rs:667:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:785:    let url = "http://localhost:11434/api/generate";
+src-tauri/src/overdrive/chat_orchestrator.rs:815:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:921:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1076:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1447:    // - Ollama: GET http://localhost:11434/api/tags to list available models
+src-tauri/src/overdrive/chat_orchestrator.rs:1694:    let url = "http://localhost:11434/api/generate";
+src-tauri/src/overdrive/chat_orchestrator.rs:1706:    let client = match reqwest::Client::builder()
+src/apps/devtools/sections/Metrics.tsx:193:                  background: 'var(--bg-surface, #181c21)',
+src-tauri/src/overdrive/memory_engine.rs:436:    // Endpoint: POST http://localhost:11434/api/embeddings
+src-tauri/src/overdrive/memory_engine.rs:446:    // For production: Add reqwest HTTP client + error handling
+src/apps/devtools/sections/Errors.tsx:225:                            background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Errors.tsx:362:                      background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Errors.tsx:379:                      background: 'var(--bg-surface, #181c21)',
+src/core/http/httpClient.ts:128: * - Toutes requêtes HTTP passent par Tauri (pas de fetch() direct)
+src/core/http/httpClient.ts:311: * Wrapper compatibilité fetch() standard
+src/core/http/httpClient.ts:316:export async function secureFetch(url: string, init?: RequestInit): Promise<Response> {
+src/components/config/ConfigFieldEditable.tsx:144:        placeholder={valueType === 'url' ? 'http://...' : ''}
+src/apps/devtools/sections/Logs.tsx:63:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/OmegaPipeline.tsx:27:    bg: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/OmegaPipeline.tsx:143:                          background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/OmegaPipeline.tsx:191:                                style={{ background: 'var(--bg-surface, #181c21)' }}
+src/apps/devtools/sections/OmegaPipeline.tsx:222:                                    background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Memory.tsx:41:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Memory.tsx:51:                background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Memory.tsx:267:                    background: 'var(--bg-surface, #181c21)',
+src/apps/devtools/sections/Memory.tsx:277:                    background: 'var(--bg-surface, #181c21)',
+src/modules/devSudo/devSudoVisionHandlers.ts:44:    • #727B81 (titane foncé) - Backgrounds, surfaces
+src/core/visual/DS_COLORS.ts:13:  surface: '#1E293B',
+src/core/engines/ENGINE_BRIDGE.ts:10:// Pont de synchronisation entre tous les moteurs (Visual, Sound, HoloMesh, HyperDepth)
+src/core/engines/ENGINE_BRIDGE.ts:17:import { hyperDepthEngine } from '../hyperdepth/HYPERDEPTH_ENGINE';
+src/core/engines/ENGINE_BRIDGE.ts:64:    // 2. HyperDepth Engine : adapter profondeur
+src/core/engines/ENGINE_BRIDGE.ts:65:    hyperDepthEngine.setGlobalIntensity(stateConfig.intensity);
+src/core/engines/ENGINE_BRIDGE.ts:200:    hyperDepthEngine.setGlobalIntensity(stateConfig.intensity);
+src/core/engines/ENGINE_BRIDGE.ts:264:    hyperDepthEngine.reset();
+src/core/engines/ENGINE_BRIDGE.ts:294:      depthLayers: hyperDepthEngine.getConfig().layers.length,
+src/core/engines/ENGINE_BRIDGE.ts:309:  hyperDepthEngine,
+src/ui/components/PageLoadingFallback.css:67:  background: var(--bg-surface, #1a1a1a);
+src/ui/components/PageLoadingFallback.css:135:  background: var(--bg-surface, #1a1a1a);
+src/core/visual/DS_CONSTANTS.ts:13:  // Extended constants for hyperdepth/holography
+src/core/index.ts:31:export * from './hyperdepth/HYPERDEPTH_ENGINE';
+src/core/index.ts:52:export { hyperDepthEngine } from './hyperdepth/HYPERDEPTH_ENGINE';
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:9:// ⚡ TITANE∞ v22 — HyperDepth Engine
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:30:// 🧬 Configuration complète HyperDepth
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:31:export interface HyperDepthConfig {
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:37:// 🌠 HyperDepth Engine principal
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:38:export class HyperDepthEngine {
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:237:   * Générer le CSS complet HyperDepth
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:303:  getConfig(): HyperDepthConfig {
+src/core/hyperdepth/HYPERDEPTH_ENGINE.ts:322:export const hyperDepthEngine = new HyperDepthEngine();
+src/core/types/cognitive.types.ts:221:// HYPER INTELLIGENCE
+src/core/types/cognitive.types.ts:225: * Insight généré par Hyper Intelligence
+src/core/types/cognitive.types.ts:227:export interface HyperInsight {
+src/core/types/cognitive.types.ts:239: * Pattern détecté par Hyper Intelligence
+src/core/types/index.ts:23:  HyperInsight,
+src/ui/components/styles/HUDFrame.css:132:  background: var(--color-surface-light, rgba(30, 30, 30, 0.9));
+src/modules/devSudo/devSudoHandler.ts:2610:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoHandler.ts:2663:3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2848:2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2887:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoHandler.ts:2948:3. Tester proxy: \`curl http://localhost:4000/api/tags\`
+src/core/types/system.types.ts:173:    surface: string;
+src/core/state/SingularityState.ts:97:    hyperdepth: EngineState | null;
+src/core/state/SingularityState.ts:195:        hyperdepth: null,
+src/ui/components/styles/ExpandButton.css:21:  background: var(--color-surface-hover, rgba(40, 40, 40, 0.9));
+src/core/types/orchestration.types.ts:16:  | 'hyper'
+src/ui/components/styles/ProjectCard.css:227:  background: var(--color-surface, rgba(20, 20, 20, 0.8));
+src/core/state/SingularityState.selectors.ts:91:export const useHyperDepthEngine = () =>
+src/core/state/SingularityState.selectors.ts:92:  useSingularityState(state => state.engines.hyperdepth);
+src/ui/components/Skeleton.css:6:  background: var(--bg-surface, #1a1a1a);
+src/components/ui/LazyImage.tsx:47:  placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%231a1a1a'/%3E%3C/svg%3E",
+src/core/tauri/environment.ts:18:  /** Protocole utilisé (tauri://, http://, https://) */
+src/core/holography/HOLOMESH_ENGINE.ts:215:    let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" class="holomesh">`;
+src/components/ui/card.tsx:4: * Elevated surface with subtle shadows and borders
+src/components/ui/button.tsx:77:          xmlns="http://www.w3.org/2000/svg"
+src/modules/devSudo/devSudoBackendHandlers.ts:30:   │  ├─ hyper_intelligence/ (HyperIntelligence Module)
+src/modules/devSudo/devSudoBackendHandlers.ts:38:   ✅ hyper_init, hyper_get_state, hyper_get_metrics
+src/modules/devSudo/devSudoBackendHandlers.ts:39:   ✅ hyper_set_mode, hyper_think, hyper_generate_insight
+src/modules/devSudo/devSudoBackendHandlers.ts:40:   ✅ hyper_reason, hyper_imagine, hyper_get_thoughts
+src/modules/devSudo/devSudoBackendHandlers.ts:41:   ✅ hyper_get_insights, hyper_get_report
+src/modules/devSudo/devSudoBackendHandlers.ts:97:   ├─ hyper_intelligence/ (existing)
+src/modules/devSudo/devSudoBackendHandlers.ts:213:   État détecté: ${['auto_heal_scan', 'hyper_think', 'memory_scan'].includes(handlerName) ? '✅ Trouvé' : '⚠️ Non trouvé'}
+src/modules/devSudo/devSudoBackendHandlers.ts:218:     ['auto_heal_scan', 'hyper_think'].includes(handlerName)
+src/components/ui/LazyImage.css:29:  background-color: var(--color-surface-secondary, #1a1a1a);
+src/features/system-center/index.ts:17:export { HyperVisionTab } from './tabs/HyperVisionTab';
+src/features/system-center/index.ts:24:export { useHyperVision } from './hooks/useHyperVision';
+src/features/system-center/index.ts:53:  // HyperVision
+src/features/system-center/index.ts:58:  HyperVisionState,
+src/core/cognitive/INTERFACE_MIRROR.ts:14:import { hyperDepthEngine } from '../hyperdepth/HYPERDEPTH_ENGINE';
+src/core/cognitive/INTERFACE_MIRROR.ts:100:      hyperDepthEngine.setGlobalIntensity(0.2);
+src/core/cognitive/INTERFACE_MIRROR.ts:105:      hyperDepthEngine.setGlobalIntensity(0.6);
+src/core/cognitive/INTERFACE_MIRROR.ts:123:      hyperDepthEngine.setGlobalIntensity(1.0);
+src/core/cognitive/INTERFACE_MIRROR.ts:128:      hyperDepthEngine.setGlobalIntensity(0.3);
+src/core/cognitive/INTERFACE_MIRROR.ts:135:      if (this.config.syncDepth) hyperDepthEngine.setGlobalIntensity(0.1);
+src/engines/phasespace/phaseSpaceEngine.ts:4: *   Hyper-Dimensional State Manifold · Trajectory Prediction · Attractor Basins
+src/engines/phasespace/phaseSpaceEngine.ts:9: *            système comme un manifold hyper-dimensionnel. Il prédit les
+src/engines/presence/_stubs.ts:299:  emotionalDepth: 'surface' | 'moderate' | 'deep' | 'profound';
+src/modules/devSudo/devSudoBuiltins.ts:525:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:579:3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:648:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:765:2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:804:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:865:3. Tester proxy: \`curl http://localhost:4000/api/tags\`
+src/features/system-center/hooks/useHyperVision.ts:2: * TITANE∞ v∞ — useHyperVision Hook
+src/features/system-center/hooks/useHyperVision.ts:12:  HyperVisionState,
+src/features/system-center/hooks/useHyperVision.ts:18:export interface UseHyperVisionReturn {
+src/features/system-center/hooks/useHyperVision.ts:20:  state: HyperVisionState | null;
+src/features/system-center/hooks/useHyperVision.ts:39:export function useHyperVision(
+src/features/system-center/hooks/useHyperVision.ts:42:): UseHyperVisionReturn {
+src/features/system-center/hooks/useHyperVision.ts:43:  const [state, setState] = useState<HyperVisionState | null>(null);
+src/features/system-center/hooks/useHyperVision.ts:56:      const result = (await tauriClient.scHypervisionGetState()) as HyperVisionState;
+src/features/system-center/hooks/useHyperVision.ts:60:      console.error('[useHyperVision] State refresh failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:66:      const result = (await tauriClient.scHypervisionGetMetrics()) as SystemMetrics;
+src/features/system-center/hooks/useHyperVision.ts:75:      console.error('[useHyperVision] Metrics refresh failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:81:      const result = (await tauriClient.scHypervisionGetLayers()) as LayerHealth[];
+src/features/system-center/hooks/useHyperVision.ts:84:      console.error('[useHyperVision] Layers refresh failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:90:      const result = (await tauriClient.scHypervisionGetAnomalies({
+src/features/system-center/hooks/useHyperVision.ts:95:      console.error('[useHyperVision] Anomalies refresh failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:104:      const result = (await tauriClient.scHypervisionStart()) as HyperVisionState;
+src/features/system-center/hooks/useHyperVision.ts:117:      console.error('[useHyperVision] Start failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:125:      await tauriClient.scHypervisionStop();
+src/features/system-center/hooks/useHyperVision.ts:138:      console.error('[useHyperVision] Stop failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:144:      await tauriClient.scHypervisionClearAnomalies();
+src/features/system-center/hooks/useHyperVision.ts:147:      console.error('[useHyperVision] Clear anomalies failed:', err);
+src/features/system-center/hooks/useHyperVision.ts:154:        await tauriClient.scHypervisionResolveAnomaly({ anomalyId: id });
+src/features/system-center/hooks/useHyperVision.ts:157:        console.error('[useHyperVision] Resolve anomaly failed:', err);
+src/modules/avatar/rendering/PBRMaterialSystem.ts:62:    normalScale: 0.2, // Surface lisse
+src/modules/avatar/rendering/PBRMaterialSystem.ts:71:    normalScale: 0.1, // Surface très lisse
+src/engines/uiux/UIUXEngine.ts:94:    surfaceOpacity: 0.95,
+src/features/system-center/SystemCenterPage.css:785:   HYPERVISION TAB
+src/components/chat/DictationButton.css:24:  background: var(--surface-secondary, rgba(255, 255, 255, 0.05));
+src/components/chat/DictationButton.css:31:  background: var(--surface-hover, rgba(255, 255, 255, 0.1));
+src/components/chat/DictationButton.css:53:  background: var(--surface-danger, rgba(255, 68, 68, 0.2));
+src/engines/uiux/adapters/ThemeAdapter.ts:13:    surfaceOpacity: 1.0,
+src/engines/uiux/adapters/ThemeAdapter.ts:19:    surfaceOpacity: 0.95,
+src/engines/uiux/adapters/ThemeAdapter.ts:25:    surfaceOpacity: 0.9,
+src/engines/uiux/adapters/ThemeAdapter.ts:31:    surfaceOpacity: 1.0,
+src/engines/uiux/adapters/ThemeAdapter.ts:37:    surfaceOpacity: 1.0,
+src/engines/uiux/adapters/ThemeAdapter.ts:50:  surfaceOpacity: 0.95,
+src/engines/uiux/adapters/ThemeAdapter.ts:114:      theme.surfaceOpacity = 1.0;
+src/engines/uiux/adapters/ThemeAdapter.ts:177:      '--theme-surface-opacity': String(theme.surfaceOpacity),
+src/ui/pages/ControlPanel/components/ControlPanelLayout.css:14:  background: var(--color-surface);
+src/features/system-center/tabs/HyperVisionTab.tsx:2: * TITANE∞ v∞ — HyperVision Tab
+src/features/system-center/tabs/HyperVisionTab.tsx:11:import { useHyperVision } from '../hooks/useHyperVision';
+src/features/system-center/tabs/HyperVisionTab.tsx:65:export const HyperVisionTab: React.FC = () => {
+src/features/system-center/tabs/HyperVisionTab.tsx:66:  const hvData = useHyperVision(true, 3000);
+src/features/system-center/tabs/HyperVisionTab.tsx:91:    <div className="sc-hypervision">
+src/features/system-center/tabs/HyperVisionTab.tsx:368:          <p>HyperVision désactivé</p>
+src/features/system-center/tabs/HyperVisionTab.tsx:378:export default HyperVisionTab;
+src/components/chat/ChatModeSelector.css:267:  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+src/features/system-center/SystemCenterPage.tsx:9: * - HyperVision
+src/features/system-center/SystemCenterPage.tsx:22:import { HyperVisionTab } from './tabs/HyperVisionTab';
+src/features/system-center/SystemCenterPage.tsx:43:    case 'hypervision':
+src/features/system-center/SystemCenterPage.tsx:44:      return <HyperVisionTab />;
+src/ui/pages/ControlPanel/ControlPanel.css:64:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:171:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:194:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:260:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:288:  background: var(--color-surface-alt, rgba(255, 255, 255, 0.04));
+src/ui/pages/ControlPanel/ControlPanel.css:305:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:352:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:430:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:501:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:549:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:576:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:623:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:651:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:728:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:767:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:859:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:904:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:977:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:1029:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:1075:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:1128:  background: var(--color-surface);
+src/ui/pages/ControlPanel/ControlPanel.css:1164:  background: var(--color-surface);
+src/modules/singularity/SingularityIntrospectionEngine.ts:137:    engines: ['CognitiveEngine', 'ReasoningEngine', 'HyperIntelligenceEngine'],
+src/modules/singularity/SingularityIntrospectionEngine.ts:181:  'HyperIntelligenceEngine',
+src/features/system-center/types/systemCenter.types.ts:9: * - HyperVision
+src/features/system-center/types/systemCenter.types.ts:148:// HYPERVISION TYPES
+src/features/system-center/types/systemCenter.types.ts:192:export interface HyperVisionState {
+src/features/system-center/types/systemCenter.types.ts:209:  | 'hypervision';
+src/features/system-center/types/systemCenter.types.ts:244:    id: 'hypervision',
+src/features/system-center/types/systemCenter.types.ts:245:    label: 'HyperVision',
+src/engines/uiux/types.ts:88:  surfaceOpacity: number;
+src/pages/DevPage.css:23:  --dev-surface: rgba(26, 26, 30, 0.95);
+src/pages/DevPage.css:24:  --dev-surface-glass: rgba(26, 26, 30, 0.85);
+src/pages/DevPage.css:519:  background: var(--dev-surface);
+src/pages/DevPage.css:576:  background: var(--dev-surface);
+src/pages/DevPage.css:616:  background: var(--dev-surface);
+src/pages/DevPage.css:643:  background: var(--dev-surface);
+src/pages/DevPage.css:715:  background: var(--dev-surface);
+src/pages/DevPage.css:786:  background: var(--dev-surface);
+src/pages/DevPage.css:847:  background: var(--dev-surface);
+src/pages/DevPage.css:901:  background: var(--dev-surface);
+src/pages/DevPage.css:982:  background: var(--dev-surface);
+src/pages/DevPage.css:996:  background: var(--dev-surface);
+src/engines/selfHealing/selfHealingEngine.ts:239:  // Use lightweight probes to surface UI/UX anomalies without touching network APIs.
+src/ui/pages/ControlPanel/sections/NetworkSection.tsx:103:                placeholder="http://proxy.example.com:8080"
+src/engines/uiux/policies/SafetyPolicy.ts:73:            surfaceOpacity: 1.0,
+src/engines/uiux/policies/SafetyPolicy.ts:237:            surfaceOpacity: 1.0,
+src/design-system/tokens.ts:86: * Backgrounds & Surfaces
+src/design-system/tokens.ts:93:  surface: '#181c21',
+src/engines/interoception/interoceptionEngine.ts:45:  // Profondeur (0 = surface, 1 = profond)
+src/pages/EvoPage.tsx:10: * Fusion ultime de 5 modules en un seul centre hyper-puissant:
+src/engines/identity/unifiedIdentityKernel.ts:93:  depth: number; // 0..1 - Surface → Profond
+src/components/chat/ConversationsButton.tsx:39:        xmlns="http://www.w3.org/2000/svg"
+src/features/cognitive/MemoryTimeline.tsx:151:                    e.currentTarget.style.background = colors.rubis.surface.translucent;
+src/design-system/titane-fusion.css:26:  --surface: #161616; /* Surface élevée */
+src/design-system/titane-fusion.css:71:  --bg-surface: #1a1a1a; /* Surfaces */
+src/design-system/titane-fusion.css:289:  background: var(--bg-surface);
+src/design-system/titane-fusion.css:360:  background: var(--bg-surface);
+src/design-system/titane-fusion.css:377:/* ═══ Surfaces ═══ */
+src/design-system/titane-fusion.css:378:.titane-surface {
+src/design-system/titane-fusion.css:385:.glass-surface {
+src/design-system/titane-fusion.css:537:  background: var(--bg-surface);
+src/features/cognitive/HeliosVisualization.tsx:161:            background: colors.rubis.surface.translucent,
+src/ui/pages/HyperEvolutionDashboard.tsx:2: * TITANE∞ v∞ - HyperEvolution Dashboard
+src/ui/pages/HyperEvolutionDashboard.tsx:54:export const HyperEvolutionDashboard = memo(function HyperEvolutionDashboard() {
+src/ui/pages/HyperEvolutionDashboard.tsx:64:      const report = (await tauriClient.hyperPredictIssues()) as PredictionReport;
+src/ui/pages/HyperEvolutionDashboard.tsx:76:      const report = (await tauriClient.hyperAccelerate()) as AccelerationReport;
+src/ui/pages/HyperEvolutionDashboard.tsx:111:            HyperEvolution Engine
+src/features/cognitive/HarmoniaPatterns.tsx:156:                    ? colors.rubis.surface.translucent
+src/design-system/visual-states.ts:257:    background: backgrounds.surface,
+src/design-system/visual-states.ts:332:    background: backgrounds.surface,
+src/pages/DesignSystemShowcase.tsx:187:                <CardDescription>Base elevated surface</CardDescription>
+src/engines/flow/FlowEngine.ts:869:        this.state.currentTransition = 'surfacing';
+src/engines/flow/FlowEngine.ts:944:      depthDiff > 0.01 ? 'deepening' : depthDiff < -0.01 ? 'surfacing' : 'stable';
+src/components/cognitive/CognitiveLayoutControl.css:135:  background: var(--surface-hover, #2a2a2a);
+src/components/cognitive/CognitiveLayoutControl.css:147:  background: var(--surface-elevated, #333);
+src/components/cognitive/CognitiveLayoutControl.css:351:  background: var(--surface-hover, #2a2a2a);
+src/components/cognitive/CognitiveLayoutControl.css:361:  background: var(--surface-elevated, #333);
+src/components/cognitive/CognitiveLayoutControl.css:394:  background: var(--surface-elevated, #2a2a2a);
+src/components/cognitive/CognitiveLayoutControl.css:408:  background: var(--surface-base, #1e1e1e);
+src/components/cognitive/CognitiveLayoutControl.css:674:    var(--surface-hover, #2a2a2a) 25%,
+src/components/cognitive/CognitiveLayoutControl.css:675:    var(--surface-elevated, #333) 50%,
+src/components/cognitive/CognitiveLayoutControl.css:676:    var(--surface-hover, #2a2a2a) 75%
+src/components/cognitive/CognitiveLayoutControl.css:753:  background: var(--surface-elevated, #1e1e1e);
+src/components/cognitive/CognitiveLayoutControl.css:766:  background: var(--surface-hover, #2a2a2a);
+src/ui/pages/HyperVisionDashboard.tsx:2: * TITANE∞ v∞ Phase 7 - HyperVision
+src/ui/pages/HyperVisionDashboard.tsx:32:const HyperVisionDashboard: React.FC = React.memo(() => {
+src/ui/pages/HyperVisionDashboard.tsx:62:      await tauriClient.scHypervisionStart();
+src/ui/pages/HyperVisionDashboard.tsx:91:            HyperVision
+src/ui/pages/HyperVisionDashboard.tsx:297:HyperVisionDashboard.displayName = 'HyperVisionDashboard';
+src/ui/pages/HyperVisionDashboard.tsx:299:export default HyperVisionDashboard;
+src/engines/expression/expressionEngine.ts:74:    argumentationDepth: number; // 0-1 - Surface → Deep
+src/components/chat/ChatToolbar.tsx:255:          video: { displaySurface: 'monitor' } as MediaTrackConstraints,
+src/lib/logger.ts:306:      // await fetch('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
+src/features/chat/ChatContextPanel.tsx:79:          background: colors.rubis.surface.solid,
+src/features/chat/ChatContextPanel.tsx:110:        background: colors.rubis.surface.solid,
+src/App.tsx:202:// ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
+src/App.tsx:203:const HyperCenter = lazy(() =>
+src/App.tsx:204:  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
+src/App.tsx:967:          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1083:          {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
+src/App.tsx:1085:            path="/hyper-center"
+src/App.tsx:1087:              <ErrorBoundary context="HyperCenter">
+src/App.tsx:1088:                <HyperCenter />
+src/App.tsx:1092:          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1093:          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+src/pages/CloudCenter/CloudCenter.css:14:  --cloud-surface: var(--bg-secondary, #141414);
+src/pages/CloudCenter/CloudCenter.css:44:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:111:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:179:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:326:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:399:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:572:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:759:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:777:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:804:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:918:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:1050:  background: var(--cloud-surface);
+src/pages/CloudCenter/CloudCenter.css:1064:  background: var(--cloud-surface);
+src/components/IdentityCenter/IdentityCenter.css:17:  --identity-surface: #141414;
+src/components/IdentityCenter/IdentityCenter.css:18:  --identity-surface-alt: #1a1a1a;
+src/components/IdentityCenter/IdentityCenter.css:82:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:160:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:181:  background: var(--identity-surface-alt);
+src/components/IdentityCenter/IdentityCenter.css:217:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:320:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:378:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:401:  background: var(--identity-surface-alt);
+src/components/IdentityCenter/IdentityCenter.css:428:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:483:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:523:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:593:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:649:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:682:  background: var(--identity-surface-alt);
+src/components/IdentityCenter/IdentityCenter.css:722:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:814:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:862:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:911:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:955:  background: var(--identity-surface-alt);
+src/components/IdentityCenter/IdentityCenter.css:1014:  background: var(--identity-surface);
+src/components/IdentityCenter/IdentityCenter.css:1048:  background: var(--identity-surface);
+src/components/core/TitaneSphereCore.tsx:9: * - Micro-déformations de surface (living surface effect)
+src/components/core/TitaneSphereCore.tsx:178:      // Draw deformed circle (living surface)
+src/lib/tauriCommands.ts:261:  HYPER_GET_STATE: 'hyper_get_state',
+src/lib/tauriCommands.ts:262:  HYPER_INIT: 'hyper_init',
+src/lib/tauriCommands.ts:263:  HYPER_GET_THOUGHTS: 'hyper_get_thoughts',
+src/lib/tauriCommands.ts:264:  HYPER_GET_INSIGHTS: 'hyper_get_insights',
+src/lib/tauriCommands.ts:265:  HYPER_SET_MODE: 'hyper_set_mode',
+src/lib/tauriCommands.ts:266:  HYPER_THINK: 'hyper_think',
+src/lib/tauriCommands.ts:267:  HYPER_REASON: 'hyper_reason',
+src/lib/tauriCommands.ts:268:  HYPER_IMAGINE: 'hyper_imagine',
+src/lib/tauriCommands.ts:269:  HYPER_GENERATE_INSIGHT: 'hyper_generate_insight',
+src/lib/tauriCommands.ts:270:  HYPER_PREDICT_ISSUES: 'hyper_predict_issues',
+src/lib/tauriCommands.ts:271:  HYPER_ACCELERATE: 'hyper_accelerate',
+src/lib/tauriCommands.ts:272:  HYPERVISION_START: 'sc_hypervision_start',
+src/lib/tauriCommands.ts:393:  SC_HYPERVISION_GET_STATE: 'sc_hypervision_get_state',
+src/lib/tauriCommands.ts:394:  SC_HYPERVISION_GET_METRICS: 'sc_hypervision_get_metrics',
+src/lib/tauriCommands.ts:395:  SC_HYPERVISION_GET_LAYERS: 'sc_hypervision_get_layers',
+src/lib/tauriCommands.ts:396:  SC_HYPERVISION_GET_ANOMALIES: 'sc_hypervision_get_anomalies',
+src/lib/tauriCommands.ts:397:  SC_HYPERVISION_CLEAR_ANOMALIES: 'sc_hypervision_clear_anomalies',
+src/lib/tauriCommands.ts:398:  SC_HYPERVISION_RESOLVE_ANOMALY: 'sc_hypervision_resolve_anomaly',
+src/lib/tauriCommands.ts:399:  SC_HYPERVISION_STOP: 'sc_hypervision_stop',
+src/CARTE_POINTS_CRITIQUES.ts:137: *     "devUrl": "http://localhost:5173",
+src/CARTE_POINTS_CRITIQUES.ts:142: *   "devUrl": "http://localhost:1420"  ❌ (mode HTTP obsolète)
+src/CARTE_POINTS_CRITIQUES.ts:240: *      → "devUrl": "http://localhost:5173" ✅ (dev server encapsulé par Tauri)
+src/assets/titane-arc-emerald.svg:5:  xmlns="http://www.w3.org/2000/svg"
+src/assets/titane-reactor-awen.svg:5:  xmlns="http://www.w3.org/2000/svg"
+src/components/HyperCenter/HyperCenter.css:3: * TITANE∞ v∞ — HYPER CENTER STYLES (OPUS #20)
+src/components/HyperCenter/HyperCenter.css:7:.hyper-center {
+src/components/HyperCenter/HyperCenter.css:15:    var(--bg-surface, #1a1a1a) 100%
+src/components/HyperCenter/HyperCenter.css:22:.hyper-center.loading,
+src/components/HyperCenter/HyperCenter.css:23:.hyper-center.error {
+src/components/HyperCenter/HyperCenter.css:84:.hyper-header {
+src/components/HyperCenter/HyperCenter.css:103:.hyper-header h2 {
+src/components/HyperCenter/HyperCenter.css:303:.hyper-tabs {
+src/components/HyperCenter/HyperCenter.css:311:.hyper-tabs button {
+src/components/HyperCenter/HyperCenter.css:322:.hyper-tabs button:hover {
+src/components/HyperCenter/HyperCenter.css:327:.hyper-tabs button.active {
+src/components/HyperCenter/HyperCenter.css:334:.hyper-content {
+src/components/monitoring/SingularityDashboard.tsx:64:  surface: '#141414',
+src/components/monitoring/SingularityDashboard.tsx:99:        background: COLORS.surface,
+src/components/monitoring/SingularityDashboard.tsx:280:        background: COLORS.surface,
+src/components/monitoring/SingularityDashboard.tsx:399:        background: COLORS.surface,
+src/components/monitoring/SingularityDashboard.tsx:576:          background: COLORS.surface,
+src/components/monitoring/SingularityDashboard.tsx:604:        background: COLORS.surface,
+src/components/audio/AudioDiagnosticsPanel.css:16:  --adp-surface: var(--titane-surface, hsl(0, 0%, 12%));
+src/components/audio/AudioDiagnosticsPanel.css:17:  --adp-surface-alt: var(--titane-surface-alt, hsl(0, 0%, 15%));
+src/components/audio/AudioDiagnosticsPanel.css:48:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:73:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:109:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:143:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:161:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:231:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:257:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:268:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:314:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:335:  background: var(--adp-surface-alt);
+src/components/audio/AudioDiagnosticsPanel.css:351:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:431:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:502:  background: var(--adp-surface);
+src/components/audio/AudioDiagnosticsPanel.css:553:  background: var(--adp-surface);
+src/features/governance-center/GovernanceCenterPage.tsx:204:          background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/GovernanceCenterPage.tsx:294:          background: 'var(--color-surface, #1a1a2e)',
+src/components/HyperCenter/HyperCenter.tsx:3: * TITANE∞ v∞ — HYPER CENTER (OPUS #20)
+src/components/HyperCenter/HyperCenter.tsx:4: * Interface de contrôle du Hyper-Intelligence Engine
+src/components/HyperCenter/HyperCenter.tsx:14:import './HyperCenter.css';
+src/components/HyperCenter/HyperCenter.tsx:20:interface HyperIntelligenceState {
+src/components/HyperCenter/HyperCenter.tsx:185:const HyperCenterContent: React.FC = () => {
+src/components/HyperCenter/HyperCenter.tsx:186:  const [state, setState] = useState<HyperIntelligenceState | null>(null);
+src/components/HyperCenter/HyperCenter.tsx:210:        .hyperGetState()
+src/components/HyperCenter/HyperCenter.tsx:211:        .catch(async () => tauriClient.hyperInit())) as HyperIntelligenceState;
+src/components/HyperCenter/HyperCenter.tsx:214:      const recentThoughts = (await tauriClient.hyperGetThoughts({
+src/components/HyperCenter/HyperCenter.tsx:219:      const recentInsights = (await tauriClient.hyperGetInsights({
+src/components/HyperCenter/HyperCenter.tsx:240:      await tauriClient.hyperSetMode({ mode });
+src/components/HyperCenter/HyperCenter.tsx:251:      const thought = (await tauriClient.hyperThink({ prompt: thinkPrompt })) as Thought;
+src/components/HyperCenter/HyperCenter.tsx:269:      const result = (await tauriClient.hyperReason({
+src/components/HyperCenter/HyperCenter.tsx:281:      const result = (await tauriClient.hyperImagine({
+src/components/HyperCenter/HyperCenter.tsx:292:      await tauriClient.hyperGenerateInsight({
+src/components/HyperCenter/HyperCenter.tsx:310:      <div className="hyper-center loading">
+src/components/HyperCenter/HyperCenter.tsx:322:      <div className="hyper-center error">
+src/components/HyperCenter/HyperCenter.tsx:340:    <div className="hyper-center">
+src/components/HyperCenter/HyperCenter.tsx:342:      <header className="hyper-header">
+src/components/HyperCenter/HyperCenter.tsx:345:          <h2>Hyper-Intelligence Engine</h2>
+src/components/HyperCenter/HyperCenter.tsx:393:      <nav className="hyper-tabs">
+src/components/HyperCenter/HyperCenter.tsx:409:      <main className="hyper-content">
+src/components/HyperCenter/HyperCenter.tsx:561:export const HyperCenter: React.FC = () => {
+src/components/HyperCenter/HyperCenter.tsx:563:    <ErrorBoundary context="HyperCenter">
+src/components/HyperCenter/HyperCenter.tsx:564:      <HyperCenterContent />
+src/components/HyperCenter/HyperCenter.tsx:569:export default HyperCenter;
+src/components/monitoring/SystemHealthMonitor.tsx:173:          <div className="mt-2 h-1 bg-titane-bg-surface rounded-full overflow-hidden">
+src/utils/__tests__/webVitals.test.ts:131:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:149:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:169:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:189:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:209:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:231:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:248:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:278:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:305:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:316:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:433:      url: 'http://localhost',
+src/lib/security.ts:541:  'sc_hypervision_get_state',
+src/lib/security.ts:542:  'sc_hypervision_get_metrics',
+src/lib/security.ts:543:  'sc_hypervision_get_layers',
+src/lib/security.ts:544:  'sc_hypervision_get_anomalies',
+src/lib/security.ts:545:  'sc_hypervision_start',
+src/lib/security.ts:965:  // HYPER CENTER (v24.4+)
+src/lib/security.ts:967:  'hyper_set_mode',
+src/features/governance-center/tabs/PoliciesTab.tsx:149:                  background: 'var(--color-surface, #1a1a2e)',
+src/styles/css-vars.css:330:  --bg-surface: var(--color-bg-secondary);
+src/features/governance-center/tabs/PermissionsTab.tsx:191:                          background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/PermissionsTab.tsx:246:                    background: 'var(--color-surface)',
+src/features/governance-center/tabs/PermissionsTab.tsx:266:                    background: 'var(--color-surface)',
+src/features/governance-center/tabs/SecretsTab.tsx:280:            background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/SecretsTab.tsx:357:              background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/SecretsTab.tsx:439:              background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/SecretsTab.tsx:521:              background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/SecretsTab.tsx:648:                      background: 'var(--color-surface, #1a1a2e)',
+src/features/governance-center/tabs/SecurityLogTab.tsx:209:              background: 'var(--color-surface)',
+src/features/governance-center/tabs/SecurityLogTab.tsx:222:              background: 'var(--color-surface)',
+src/components/Onboarding/INTEGRATION_GUIDE.md:180:    await page.goto('http://localhost:5173');
+src/components/Onboarding/INTEGRATION_GUIDE.md:216:    await page.goto('http://localhost:5173');
+src/styles/titanium-dark-tokens.css:26:  /* Elevated surfaces - Cards, panels, containers */
+src/styles/titanium-dark-tokens.css:29:  /* Interactive surfaces - Hover states, active elements */
+src/styles/titanium-dark-tokens.css:32:  /* Overlay surfaces - Modals, dropdowns, tooltips */
+src/styles/titanium-dark-tokens.css:36:  --titanium-surface-glass: rgba(26, 26, 26, 0.8);
+src/styles/titanium-dark-tokens.css:37:  --titanium-surface-frosted: rgba(36, 36, 36, 0.9);
+src/styles/titanium-dark-tokens.css:101:  /* Metallic reflection - Light reflection on surfaces */
+src/styles/titanium-dark-tokens.css:270:  background: var(--titanium-surface-glass);
+src/styles/titanium-dark-tokens.css:276:  background: var(--titanium-surface-frosted);
+src/styles/experience.css:44:  background: var(--surface);
+src/styles/experience.css:94:  background: var(--surface);
+src/styles/experience.css:122:  background: var(--surface);
+src/styles/experience.css:169:  background: var(--surface);
+src/styles/experience.css:282:  background: var(--surface);
+src/styles/experience.css:321:  background: var(--surface);
+src/styles/experience.css:359:  background: var(--surface);
+src/features/design-center/providers/UIThemeProvider.tsx:203:    root.style.setProperty('--color-surface', tokens.colors.surface);
+src/features/design-center/providers/UIThemeProvider.tsx:204:    root.style.setProperty('--color-surface-elevated', tokens.colors.surfaceElevated);
+src/lib/tauriClient.ts:1275:  async hyperSetMode(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1277:      TAURI_COMMANDS.HYPER_SET_MODE,
+src/lib/tauriClient.ts:1282:  async hyperGetState(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1284:      TAURI_COMMANDS.HYPER_GET_STATE,
+src/lib/tauriClient.ts:1289:  async hyperInit(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1291:      TAURI_COMMANDS.HYPER_INIT,
+src/lib/tauriClient.ts:1296:  async hyperGetThoughts(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1298:      TAURI_COMMANDS.HYPER_GET_THOUGHTS,
+src/lib/tauriClient.ts:1303:  async hyperGetInsights(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1305:      TAURI_COMMANDS.HYPER_GET_INSIGHTS,
+src/lib/tauriClient.ts:1310:  async hyperThink(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1312:      TAURI_COMMANDS.HYPER_THINK,
+src/lib/tauriClient.ts:1317:  async hyperReason(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1319:      TAURI_COMMANDS.HYPER_REASON,
+src/lib/tauriClient.ts:1324:  async hyperImagine(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1326:      TAURI_COMMANDS.HYPER_IMAGINE,
+src/lib/tauriClient.ts:1331:  async hyperGenerateInsight(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1333:      TAURI_COMMANDS.HYPER_GENERATE_INSIGHT,
+src/lib/tauriClient.ts:1338:  async hyperPredictIssues(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1340:      TAURI_COMMANDS.HYPER_PREDICT_ISSUES,
+src/lib/tauriClient.ts:1345:  async hyperAccelerate(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1347:      TAURI_COMMANDS.HYPER_ACCELERATE,
+src/lib/tauriClient.ts:1352:  async hypervisionStart(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:1354:      TAURI_COMMANDS.HYPERVISION_START,
+src/lib/tauriClient.ts:2206:  async scHypervisionGetState(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2208:      TAURI_COMMANDS.SC_HYPERVISION_GET_STATE,
+src/lib/tauriClient.ts:2213:  async scHypervisionGetMetrics(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2215:      TAURI_COMMANDS.SC_HYPERVISION_GET_METRICS,
+src/lib/tauriClient.ts:2220:  async scHypervisionGetLayers(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2222:      TAURI_COMMANDS.SC_HYPERVISION_GET_LAYERS,
+src/lib/tauriClient.ts:2227:  async scHypervisionGetAnomalies(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2229:      TAURI_COMMANDS.SC_HYPERVISION_GET_ANOMALIES,
+src/lib/tauriClient.ts:2234:  async scHypervisionStart(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2236:      TAURI_COMMANDS.HYPERVISION_START,
+src/lib/tauriClient.ts:2241:  async scHypervisionClearAnomalies(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2243:      TAURI_COMMANDS.SC_HYPERVISION_CLEAR_ANOMALIES,
+src/lib/tauriClient.ts:2248:  async scHypervisionResolveAnomaly(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2250:      TAURI_COMMANDS.SC_HYPERVISION_RESOLVE_ANOMALY,
+src/lib/tauriClient.ts:2255:  async scHypervisionStop(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2257:      TAURI_COMMANDS.SC_HYPERVISION_STOP,
+src/components/feedback/Skeleton.tsx:34:      'linear-gradient(90deg, var(--bg-surface, #181c21) 0%, var(--bg-panel, #101216) 50%, var(--bg-surface, #181c21) 100%)',
+src/components/QuantumCenter/QuantumCenter.css:16:  --quantum-surface: #141414;
+src/components/QuantumCenter/QuantumCenter.css:17:  --quantum-surface-alt: #1a1a1a;
+src/components/QuantumCenter/QuantumCenter.css:50:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:74:  background: var(--quantum-surface-alt);
+src/components/QuantumCenter/QuantumCenter.css:101:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:122:  background: var(--quantum-surface-alt);
+src/components/QuantumCenter/QuantumCenter.css:157:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:179:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:221:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:265:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:293:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:334:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:346:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:380:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:415:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:464:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:490:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:559:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:585:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:599:  background: var(--quantum-surface-alt);
+src/components/QuantumCenter/QuantumCenter.css:631:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:670:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:689:  background: var(--quantum-surface-alt);
+src/components/QuantumCenter/QuantumCenter.css:739:  background: var(--quantum-surface);
+src/components/QuantumCenter/QuantumCenter.css:770:  background: var(--quantum-surface);
+src/utils/webVitals.ts:292:    // fetch('/api/analytics/web-vitals', {
+src/features/design-center/DesignCenterPage.tsx:124:          background: var(--color-surface, #161616);
+src/features/design-center/DesignCenterPage.tsx:155:          background: var(--color-surface-elevated, #1e1e1e);
+src/features/design-center/DesignCenterPage.tsx:178:          background: var(--color-surface, #161616);
+src/features/design-center/DesignCenterPage.tsx:199:          background: var(--color-surface-elevated, #1e1e1e);
+src/features/design-center/DesignCenterPage.tsx:247:          background: var(--color-surface, #161616);
+src/features/design-center/DesignCenterPage.tsx:255:          background: var(--color-surface-elevated, #1e1e1e);
+src/services/systemCenter/SystemCenterAutoFix.ts:80:  hypervision: [
+src/services/systemCenter/SystemCenterAutoFix.ts:98:  // hypervision_start: Commande désormais migrée vers sc_hypervision_start (v26.4.1 fix crash)
+src/services/systemCenter/SystemCenterAutoFix.ts:282:      error.originalCommand?.includes('hypervision')
+src/services/systemCenter/SystemCenterAutoFix.ts:442:### Monitoring HyperVision
+src/services/systemCenter/SystemCenterAutoFix.ts:444:  moduleErrors.some(e => e.componentName?.includes('HyperVision'))
+src/services/systemCenter/SystemCenterAutoFix.ts:767:          e.componentName?.includes('HyperVision') ||
+src/services/systemCenter/SystemCenterAutoFix.ts:776:- HyperVision ne démarre pas
+src/services/systemCenter/SystemCenterAutoFix.ts:780:1. Vérifier si Monitoring ou HyperVision peut démarrer via commandes autorisées
+src/services/systemCenter/SystemCenterAutoFix.ts:782:   - hypervision_start → engines_monitoring_get_dashboard
+src/lib/ipc.ts:4: * **Règle absolue:** Interdit fetch("ipc://...") — passer par l'IPC wrapper uniquement
+src/lib/ipc.ts:38: * Wrapper IPC centralisé — remplace tout fetch("ipc://...")
+src/lib/ipc.ts:40: * **RÈGLE CRITIQUE:** Aucun fetch("ipc://localhost/...") autorisé
+src/services/selfHealing/selfHealingObserver.ts:444:        const response = await originalFetch(...args);
+src/features/design-center/tabs/DesignSystemTab.tsx:81:              backgroundColor: tokens.colors.surface,
+src/features/design-center/tabs/DesignSystemTab.tsx:109:            backgroundColor: tokens.colors.surface,
+src/features/design-center/tabs/DesignSystemTab.tsx:135:            backgroundColor: tokens.colors.surface,
+src/features/design-center/tabs/DesignSystemTab.tsx:299:              <h4>Surfaces</h4>
+src/features/design-center/tabs/DesignSystemTab.tsx:308:                  label="Surface"
+src/features/design-center/tabs/DesignSystemTab.tsx:309:                  colorKey="surface"
+src/features/design-center/tabs/DesignSystemTab.tsx:310:                  value={tokens.colors.surface}
+src/features/design-center/tabs/DesignSystemTab.tsx:314:                  label="Surface Elevated"
+src/features/design-center/tabs/DesignSystemTab.tsx:315:                  colorKey="surfaceElevated"
+src/features/design-center/tabs/DesignSystemTab.tsx:316:                  value={tokens.colors.surfaceElevated}
+src/features/design-center/tabs/DesignSystemTab.tsx:497:          background: var(--color-surface, #161616);
+src/features/design-center/tabs/DesignSystemTab.tsx:502:        .dc-btn-action:hover { background: var(--color-surface-elevated, #1e1e1e); }
+src/features/design-center/tabs/DesignSystemTab.tsx:537:          background: var(--color-surface, #161616);
+src/features/design-center/tabs/DesignSystemTab.tsx:546:          background: var(--color-surface, #161616);
+src/features/design-center/tabs/AppearanceTab.tsx:362:          background: var(--color-surface, #161616);
+src/features/design-center/tabs/AppearanceTab.tsx:438:          background: var(--color-surface-elevated, #1e1e1e);
+src/features/design-center/types/designCenter.types.ts:25:  /** Surface élevée - Gris très foncé #161616 */
+src/features/design-center/types/designCenter.types.ts:26:  surface: string;
+src/features/design-center/types/designCenter.types.ts:27:  /** Surface élevée niveau 2 #1e1e1e */
+src/features/design-center/types/designCenter.types.ts:28:  surfaceElevated: string;
+src/features/design-center/types/designCenter.types.ts:347:    surface: '#161616',
+src/features/design-center/types/designCenter.types.ts:348:    surfaceElevated: '#1e1e1e',
+src/utils/performanceOptimizer.ts:767:        const response = await fetch(
+src/components/evolution/EvolutionDashboard.css:17:  --evolution-surface: rgba(255, 255, 255, 0.05);
+src/components/evolution/EvolutionDashboard.css:77:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:104:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:135:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:140:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:223:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:270:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:325:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:366:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:381:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:424:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:458:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:536:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:605:  background: var(--evolution-surface);
+src/components/evolution/EvolutionDashboard.css:735:  background: var(--evolution-surface);
+src/utils/aiPredictiveEngine.ts:531:      await fetch('/vite.svg', { method: 'HEAD', cache: 'no-cache' }); // @network-allowed
+src/components/diagnostics/SplashWatchdog.tsx:261:          const response = await fetch(moduleSrc, { method: 'HEAD' }); // @network-allowed: probe local module script for diagnostics
+src/utils/ollamaFallback.ts:44:    const response = await fetch(ollamaEndpoint, {
+src/services/orchestration/compat/mcpCompat.ts:61: * while maintaining the original API surface.
+src/services/ai/transports/ollamaTransport.ts:88:    const response = await fetch(url, {
+src/services/orchestration/compat/cognitiveCompat.ts:46: * while maintaining the original API surface.
+src/features/meta-dashboard/MetaDashboardRouter.tsx:42:  | 'hypervision' // HyperVision real-time
+src/features/meta-dashboard/MetaDashboardRouter.tsx:80:    id: 'hypervision',
+src/features/meta-dashboard/MetaDashboardRouter.tsx:81:    label: 'HyperVision',
+src/services/tts/hybridTTS.ts:236:      console.log(`📡 Mode: Local API (http://localhost:8765)`);
+src/services/tts/parlerTTSBridge.ts:16:  /** URL de l'API TTS locale (défaut: http://localhost:8765) */
+src/services/tts/parlerTTSBridge.ts:70:    this.apiUrl = config?.apiUrl || 'http://localhost:8765';
+src/services/tts/parlerTTSBridge.ts:113:      const response = await fetch(
+src/services/tts/parlerTTSBridge.ts:192:      const response = await fetch(
+src/services/tts/parlerTTSBridge.ts:263:      const response = await fetch(
+src/themes/tokens.ts:25:  surface: '#161616', // Surface élevée
+src/themes/tokens.ts:72:    surface: {
+src/themes/tokens.ts:98:    surface: {
+src/themes/tokens.ts:124:    surface: {
+src/themes/tokens.ts:150:    surface: {
+src/themes/tokens.ts:332:    surface: metalPalette.surface,
+src/tests/security.test.ts:30:      expect(Sanitizer.validateUrl('http://example.com')).toBe(true);
+src/features/conversation/ChatContextPanel.tsx:79:          background: colors.rubis.surface.solid,
+src/features/conversation/ChatContextPanel.tsx:110:        background: colors.rubis.surface.solid,
+src/visual-engine/OSIntegrationBridge.ts:501:      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+src/services/ai/providers/glm46v.ts:29:  baseUrl: 'http://127.0.0.1:8000/v1',
+src/services/ai/providers/glm46v.ts:143:    const response = await fetch(
+src/services/ai/providers/glm46v.ts:305:            const response = await fetch(
+src/tests/activeListeningIntegration.test.ts:125:    origin: 'http://localhost',
+src/services/ai/providers/ollama.ts:39:  endpoint: 'http://127.0.0.1:11434',
+src/services/ai/retryStrategy.ts:111: *   async () => fetch('https://api.example.com/generate'),
+src/features/admin/types.ts:8:  | 'system' // Centre Système (Diagnostics, DevTools, Cluster, Introspection, HyperVision)
+src/features/admin/types.ts:27:    description: 'Diagnostics, DevTools, Cluster, Introspection, HyperVision',
+src/config/offline-first.ts:34:  localLLM: 'http://localhost:8000',
+src/features/progression/TalentTree.tsx:269:                        background: colors.rubis.surface.solid,
+src/config/index.ts:26:      if (env.isBrowser && env.isDev) return 'http://localhost:1420';
+src-tauri/src/engines/unified_memory/summarizer.rs:288:- reqwest = "0.11" with json feature
+src-tauri/src/engines/unified_memory/summarizer.rs:298:    use reqwest;
+src-tauri/src/engines/unified_memory/summarizer.rs:315:    let client = reqwest::Client::new();
+src/stories/Page.tsx:71:            xmlns="http://www.w3.org/2000/svg"
+src/stories/Header.tsx:25:          xmlns="http://www.w3.org/2000/svg"
+src/stories/LazyImage.stories.tsx:144:      'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"%3E%3Crect width="320" height="180" fill="%230A0A0A"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23666" font-family="Arial" font-size="14"%3ELoading...%3C/text%3E%3C/svg%3E',
+src/stories/LazyImage.stories.tsx:318:          background: 'var(--color-surface-secondary)',
+src/stories/assets/discord.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" fill="none" viewBox="0 0 33 32"><g clip-path="url(#clip0_10031_177575)"><mask id="mask0_10031_177575" style="mask-type:luminance" width="33" height="25" x="0" y="4" maskUnits="userSpaceOnUse"><path fill="#fff" d="M32.5034 4.00195H0.503906V28.7758H32.5034V4.00195Z"/></mask><g mask="url(#mask0_10031_177575)"><path fill="#5865F2" d="M27.5928 6.20817C25.5533 5.27289 23.3662 4.58382 21.0794 4.18916C21.0378 4.18154 20.9962 4.20057 20.9747 4.23864C20.6935 4.73863 20.3819 5.3909 20.1637 5.90358C17.7042 5.53558 15.2573 5.53558 12.8481 5.90358C12.6299 5.37951 12.307 4.73863 12.0245 4.23864C12.003 4.20184 11.9614 4.18281 11.9198 4.18916C9.63431 4.58255 7.44721 5.27163 5.40641 6.20817C5.38874 6.21578 5.3736 6.22848 5.36355 6.24497C1.21508 12.439 0.078646 18.4809 0.636144 24.4478C0.638667 24.477 0.655064 24.5049 0.677768 24.5227C3.41481 26.5315 6.06609 27.7511 8.66815 28.5594C8.70979 28.5721 8.75392 28.5569 8.78042 28.5226C9.39594 27.6826 9.94461 26.7968 10.4151 25.8653C10.4428 25.8107 10.4163 25.746 10.3596 25.7244C9.48927 25.3945 8.66058 24.9922 7.86343 24.5354C7.80038 24.4986 7.79533 24.4084 7.85333 24.3653C8.02108 24.2397 8.18888 24.109 8.34906 23.977C8.37804 23.9529 8.41842 23.9478 8.45249 23.963C13.6894 26.3526 19.359 26.3526 24.5341 23.963C24.5682 23.9465 24.6086 23.9516 24.6388 23.9757C24.799 24.1077 24.9668 24.2397 25.1358 24.3653C25.1938 24.4084 25.19 24.4986 25.127 24.5354C24.3298 25.0011 23.5011 25.3945 22.6296 25.7232C22.5728 25.7447 22.5476 25.8107 22.5754 25.8653C23.0559 26.7955 23.6046 27.6812 24.2087 28.5213C24.234 28.5569 24.2794 28.5721 24.321 28.5594C26.9357 27.7511 29.5869 26.5315 32.324 24.5227C32.348 24.5049 32.3631 24.4783 32.3656 24.4491C33.0328 17.5506 31.2481 11.5584 27.6344 6.24623C27.6256 6.22848 27.6105 6.21578 27.5928 6.20817ZM11.1971 20.8146C9.62043 20.8146 8.32129 19.3679 8.32129 17.5913C8.32129 15.8146 9.59523 14.368 11.1971 14.368C12.8115 14.368 14.0981 15.8273 14.0729 17.5913C14.0729 19.3679 12.7989 20.8146 11.1971 20.8146ZM21.8299 20.8146C20.2533 20.8146 18.9541 19.3679 18.9541 17.5913C18.9541 15.8146 20.228 14.368 21.8299 14.368C23.4444 14.368 24.7309 15.8273 24.7057 17.5913C24.7057 19.3679 23.4444 20.8146 21.8299 20.8146Z"/></g></g><defs><clipPath id="clip0_10031_177575"><rect width="32" height="32" fill="#fff" transform="translate(0.5)"/></clipPath></defs></svg>
+src/stories/assets/tutorials.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" fill="none" viewBox="0 0 33 32"><g clip-path="url(#clip0_10031_177597)"><path fill="#B7F0EF" fill-rule="evenodd" d="M17 7.87059C17 6.48214 17.9812 5.28722 19.3431 5.01709L29.5249 2.99755C31.3238 2.64076 33 4.01717 33 5.85105V22.1344C33 23.5229 32.0188 24.7178 30.6569 24.9879L20.4751 27.0074C18.6762 27.3642 17 25.9878 17 24.1539L17 7.87059Z" clip-rule="evenodd" opacity=".7"/><path fill="#87E6E5" fill-rule="evenodd" d="M1 5.85245C1 4.01857 2.67623 2.64215 4.47507 2.99895L14.6569 5.01848C16.0188 5.28861 17 6.48354 17 7.87198V24.1553C17 25.9892 15.3238 27.3656 13.5249 27.0088L3.34311 24.9893C1.98119 24.7192 1 23.5242 1 22.1358V5.85245Z" clip-rule="evenodd"/><path fill="#61C1FD" fill-rule="evenodd" d="M15.543 5.71289C15.543 5.71289 16.8157 5.96289 17.4002 6.57653C17.9847 7.19016 18.4521 9.03107 18.4521 9.03107C18.4521 9.03107 18.4521 25.1106 18.4521 26.9629C18.4521 28.8152 19.3775 31.4174 19.3775 31.4174L17.4002 28.8947L16.2575 31.4174C16.2575 31.4174 15.543 29.0765 15.543 27.122C15.543 25.1674 15.543 5.71289 15.543 5.71289Z" clip-rule="evenodd"/></g><defs><clipPath id="clip0_10031_177597"><rect width="32" height="32" fill="#fff" transform="translate(0.5)"/></clipPath></defs></svg>
+src/stories/assets/accessibility.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 48 48"><title>Accessibility</title><circle cx="24.334" cy="24" r="24" fill="#A849FF" fill-opacity=".3"/><path fill="#A470D5" fill-rule="evenodd" d="M27.8609 11.585C27.8609 9.59506 26.2497 7.99023 24.2519 7.99023C22.254 7.99023 20.6429 9.65925 20.6429 11.585C20.6429 13.575 22.254 15.1799 24.2519 15.1799C26.2497 15.1799 27.8609 13.575 27.8609 11.585ZM21.8922 22.6473C21.8467 23.9096 21.7901 25.4788 21.5897 26.2771C20.9853 29.0462 17.7348 36.3314 17.3325 37.2275C17.1891 37.4923 17.1077 37.7955 17.1077 38.1178C17.1077 39.1519 17.946 39.9902 18.9802 39.9902C19.6587 39.9902 20.253 39.6293 20.5814 39.0889L20.6429 38.9874L24.2841 31.22C24.2841 31.22 27.5529 37.9214 27.9238 38.6591C28.2948 39.3967 28.8709 39.9902 29.7168 39.9902C30.751 39.9902 31.5893 39.1519 31.5893 38.1178C31.5893 37.7951 31.3639 37.2265 31.3639 37.2265C30.9581 36.3258 27.698 29.0452 27.0938 26.2771C26.8975 25.4948 26.847 23.9722 26.8056 22.7236C26.7927 22.333 26.7806 21.9693 26.7653 21.6634C26.7008 21.214 27.0231 20.8289 27.4097 20.7005L35.3366 18.3253C36.3033 18.0685 36.8834 16.9773 36.6256 16.0144C36.3678 15.0515 35.2722 14.4737 34.3055 14.7305C34.3055 14.7305 26.8619 17.1057 24.2841 17.1057C21.7062 17.1057 14.456 14.7947 14.456 14.7947C13.4893 14.5379 12.3937 14.9873 12.0715 15.9502C11.7493 16.9131 12.3293 18.0044 13.3604 18.3253L21.2873 20.7005C21.674 20.8289 21.9318 21.214 21.9318 21.6634C21.9174 21.9493 21.9053 22.2857 21.8922 22.6473Z" clip-rule="evenodd"/></svg>
+src/stories/assets/github.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#161614" d="M16.0001 0C7.16466 0 0 7.17472 0 16.0256C0 23.1061 4.58452 29.1131 10.9419 31.2322C11.7415 31.3805 12.0351 30.8845 12.0351 30.4613C12.0351 30.0791 12.0202 28.8167 12.0133 27.4776C7.56209 28.447 6.62283 25.5868 6.62283 25.5868C5.89499 23.7345 4.8463 23.2419 4.8463 23.2419C3.39461 22.2473 4.95573 22.2678 4.95573 22.2678C6.56242 22.3808 7.40842 23.9192 7.40842 23.9192C8.83547 26.3691 11.1514 25.6609 12.0645 25.2514C12.2081 24.2156 12.6227 23.5087 13.0803 23.1085C9.52648 22.7032 5.7906 21.3291 5.7906 15.1886C5.7906 13.4389 6.41563 12.0094 7.43916 10.8871C7.27303 10.4834 6.72537 8.85349 7.59415 6.64609C7.59415 6.64609 8.93774 6.21539 11.9953 8.28877C13.2716 7.9337 14.6404 7.75563 16.0001 7.74953C17.3599 7.75563 18.7297 7.9337 20.0084 8.28877C23.0623 6.21539 24.404 6.64609 24.404 6.64609C25.2749 8.85349 24.727 10.4834 24.5608 10.8871C25.5868 12.0094 26.2075 13.4389 26.2075 15.1886C26.2075 21.3437 22.4645 22.699 18.9017 23.0957C19.4756 23.593 19.9869 24.5683 19.9869 26.0634C19.9869 28.2077 19.9684 29.9334 19.9684 30.4613C19.9684 30.8877 20.2564 31.3874 21.0674 31.2301C27.4213 29.1086 32 23.1037 32 16.0256C32 7.17472 24.8364 0 16.0001 0ZM5.99257 22.8288C5.95733 22.9084 5.83227 22.9322 5.71834 22.8776C5.60229 22.8253 5.53711 22.7168 5.57474 22.6369C5.60918 22.5549 5.7345 22.5321 5.85029 22.587C5.9666 22.6393 6.03284 22.7489 5.99257 22.8288ZM6.7796 23.5321C6.70329 23.603 6.55412 23.5701 6.45291 23.4581C6.34825 23.3464 6.32864 23.197 6.40601 23.125C6.4847 23.0542 6.62937 23.0874 6.73429 23.1991C6.83895 23.3121 6.85935 23.4605 6.7796 23.5321ZM7.31953 24.4321C7.2215 24.5003 7.0612 24.4363 6.96211 24.2938C6.86407 24.1513 6.86407 23.9804 6.96422 23.9119C7.06358 23.8435 7.2215 23.905 7.32191 24.0465C7.41968 24.1914 7.41968 24.3623 7.31953 24.4321ZM8.23267 25.4743C8.14497 25.5712 7.95818 25.5452 7.82146 25.413C7.68156 25.2838 7.64261 25.1004 7.73058 25.0035C7.81934 24.9064 8.00719 24.9337 8.14497 25.0648C8.28381 25.1938 8.3262 25.3785 8.23267 25.4743ZM9.41281 25.8262C9.37413 25.9517 9.19423 26.0088 9.013 25.9554C8.83203 25.9005 8.7136 25.7535 8.75016 25.6266C8.78778 25.5003 8.96848 25.4408 9.15104 25.4979C9.33174 25.5526 9.45044 25.6985 9.41281 25.8262ZM10.7559 25.9754C10.7604 26.1076 10.6067 26.2172 10.4165 26.2196C10.2252 26.2238 10.0704 26.1169 10.0683 25.9868C10.0683 25.8534 10.2185 25.7448 10.4098 25.7416C10.6001 25.7379 10.7559 25.8441 10.7559 25.9754ZM12.0753 25.9248C12.0981 26.0537 11.9658 26.1862 11.7769 26.2215C11.5912 26.2554 11.4192 26.1758 11.3957 26.0479C11.3726 25.9157 11.5072 25.7833 11.6927 25.7491C11.8819 25.7162 12.0512 25.7937 12.0753 25.9248Z"/></svg>
+src/stories/assets/youtube.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#ED1D24" d="M31.3313 8.44657C30.9633 7.08998 29.8791 6.02172 28.5022 5.65916C26.0067 5.00026 16 5.00026 16 5.00026C16 5.00026 5.99333 5.00026 3.4978 5.65916C2.12102 6.02172 1.03665 7.08998 0.668678 8.44657C0 10.9053 0 16.0353 0 16.0353C0 16.0353 0 21.1652 0.668678 23.6242C1.03665 24.9806 2.12102 26.0489 3.4978 26.4116C5.99333 27.0703 16 27.0703 16 27.0703C16 27.0703 26.0067 27.0703 28.5022 26.4116C29.8791 26.0489 30.9633 24.9806 31.3313 23.6242C32 21.1652 32 16.0353 32 16.0353C32 16.0353 32 10.9053 31.3313 8.44657Z"/><path fill="#fff" d="M12.7266 20.6934L21.0902 16.036L12.7266 11.3781V20.6934Z"/></svg>
+
+════════════════════════════════════════════════════════════
+P3-3 BUILD + SCANS
+Timestamp: 2026-02-16T20:44:24Z
+════════════════════════════════════════════════════════════
+$ mkdir -p dist
+(executed)
+
+$ cargo check (src-tauri)
+(see 01_RUST_CHECK.log)
+
+$ cargo build (src-tauri)
+(see 02_RUST_BUILD.log)
+
+$ rg -n "OFFLINE_SIM|ProviderDecisionMeta|attempts\[\]|network_used|cache_hit|timeout_ms|reason_code" src-tauri -S
+(see 03_META_GREP_PROOF.txt)
+
+$ rg -n "reqwest|hyper|ureq|http::|TcpStream|https?://" src-tauri -S
+(see 04_NO_NETWORK_SCAN.txt)
+
+════════════════════════════════════════════════════════════
+P3-3 FILES_CHANGED GENERATION
+Timestamp: 2026-02-16T20:45:57Z
+════════════════════════════════════════════════════════════
+$ git diff --name-status ced74af0^ ced74af0

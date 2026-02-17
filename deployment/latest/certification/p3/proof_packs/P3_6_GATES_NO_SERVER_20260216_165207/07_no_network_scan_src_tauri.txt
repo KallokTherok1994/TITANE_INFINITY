@@ -1,0 +1,276 @@
+src-tauri/tauri.conf.json:2:  "$schema": "https://schema.tauri.app/config/2.0",
+src-tauri/tauri.conf.json:7:    "devUrl": "http://localhost:1420",
+src-tauri/tauri.conf.json:66:      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://127.0.0.1:1420 ws://127.0.0.1:1420; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+src-tauri/tauri.conf.json:255:            { "command": "hypervision_start" },
+src-tauri/tauri.conf.json:460:            { "command": "hyper_init" },
+src-tauri/tauri.conf.json:461:            { "command": "hyper_get_state" },
+src-tauri/tauri.conf.json:462:            { "command": "hyper_get_metrics" },
+src-tauri/tauri.conf.json:463:            { "command": "hyper_set_mode" },
+src-tauri/tauri.conf.json:464:            { "command": "hyper_think" },
+src-tauri/tauri.conf.json:465:            { "command": "hyper_generate_insight" },
+src-tauri/tauri.conf.json:466:            { "command": "hyper_reason" },
+src-tauri/tauri.conf.json:467:            { "command": "hyper_imagine" },
+src-tauri/tauri.conf.json:468:            { "command": "hyper_get_thoughts" },
+src-tauri/tauri.conf.json:469:            { "command": "hyper_get_insights" },
+src-tauri/tauri.conf.json:470:            { "command": "hyper_get_report" },
+src-tauri/tauri.conf.json:519:            { "command": "sc_hypervision_get_state" },
+src-tauri/tauri.conf.json:520:            { "command": "sc_hypervision_get_metrics" },
+src-tauri/tauri.conf.json:521:            { "command": "sc_hypervision_get_layers" },
+src-tauri/tauri.conf.json:522:            { "command": "sc_hypervision_get_anomalies" },
+src-tauri/tauri.conf.json:523:            { "command": "sc_hypervision_start" },
+src-tauri/tauri.conf.json:672:            { "command": "hyper_predict_issues" },
+src-tauri/tauri.conf.json:673:            { "command": "hyper_accelerate" },
+src-tauri/tauri.conf.json:674:            { "command": "hyper_analyze_structure" },
+src-tauri/tauri.conf.json:675:            { "command": "hyper_detect_regeneration" },
+src-tauri/tauri.conf.json:676:            { "command": "hyper_analyze_rewrite" },
+src-tauri/tauri.conf.json:677:            { "command": "hyper_validate" },
+src-tauri/tauri.conf.json:1080:        "https://generativelanguage.googleapis.com/**",
+src-tauri/tauri.conf.json:1081:        "http://localhost:11434/**"
+src-tauri/TAURI_CONFIG_NOTES.md:8:"devUrl": "http://localhost:5173"
+src-tauri/TAURI_CONFIG_NOTES.md:17:- Démarre un serveur Vite local sur http://localhost:5173
+src-tauri/TAURI_CONFIG_NOTES.md:46:│  │ http://localhost:5173 (dev)       │  │  ← Accessible UNIQUEMENT
+src-tauri/gen/schemas/linux-schema.json:2:  "$schema": "http://json-schema.org/draft-07/schema#",
+src-tauri/gen/schemas/linux-schema.json:57:          "description": "Configure remote URLs that can use the capability permissions.\n\nThis setting is optional and defaults to not being set, as our default use case is that the content is served from our local application.\n\n:::caution Make sure you understand the security implications of providing remote sources with local system access. :::\n\n## Example\n\n```json { \"urls\": [\"https://*.mydomain.dev\"] } ```",
+src-tauri/gen/schemas/linux-schema.json:114:          "description": "Remote domains this capability refers to using the [URLPattern standard](https://urlpattern.spec.whatwg.org/).\n\n## Examples\n\n- \"https://*.mydomain.dev\": allows subdomains of mydomain.dev - \"https://mydomain.dev/api/*\": allows any subpath of mydomain.dev/api",
+src-tauri/gen/schemas/desktop-schema.json:2:  "$schema": "http://json-schema.org/draft-07/schema#",
+src-tauri/gen/schemas/desktop-schema.json:57:          "description": "Configure remote URLs that can use the capability permissions.\n\nThis setting is optional and defaults to not being set, as our default use case is that the content is served from our local application.\n\n:::caution Make sure you understand the security implications of providing remote sources with local system access. :::\n\n## Example\n\n```json { \"urls\": [\"https://*.mydomain.dev\"] } ```",
+src-tauri/gen/schemas/desktop-schema.json:114:          "description": "Remote domains this capability refers to using the [URLPattern standard](https://urlpattern.spec.whatwg.org/).\n\n## Examples\n\n- \"https://*.mydomain.dev\": allows subdomains of mydomain.dev - \"https://mydomain.dev/api/*\": allows any subpath of mydomain.dev/api",
+src-tauri/gen/schemas/capabilities.json:1:{"audio-tts":{"identifier":"audio-tts","description":"Capability pour le système Audio/TTS/ASR TITANE∞ v19.3","local":true,"windows":["main"],"permissions":["core:default"]},"chat-ai":{"identifier":"chat-ai","description":"Capability pour le Chat IA TITANE∞ (Gemini, Ollama, Local)","remote":{"urls":["https://generativelanguage.googleapis.com/**","http://localhost:11434/**","http://127.0.0.1:11434/**"]},"local":true,"windows":["main"],"permissions":["core:default"]},"developer-mode":{"identifier":"developer-mode","description":"Capability pour le Developer Mode TITANE∞ (Kevin only)","local":true,"windows":["main"],"permissions":["core:default"]},"persistence":{"identifier":"persistence","description":"Capability pour le système de persistence TITANE∞ (Event Sourcing + Snapshots)","local":true,"windows":["main"],"permissions":["core:default"]},"secrets":{"identifier":"secrets","description":"Capability pour la gestion sécurisée des secrets TITANE∞","remote":{"urls":[]},"local":true,"windows":["main"],"permissions":["core:default"]},"self-heal":{"identifier":"self-heal","description":"Capability pour le Self-Healing et l'autonomie TITANE∞","local":true,"windows":["main"],"permissions":["core:default"]},"singularity":{"identifier":"singularity","description":"Capability pour le Singularity Engine TITANE∞ (état global unifié)","local":true,"windows":["main"],"permissions":["core:default"]}}
+src-tauri/memory/memory_core_state.json:2291:      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=d2eee3a9:903:34)"
+src-tauri/memory/memory_core_state.json:2340:      "message": "Erreur UI (non capturée): Importing a module script failed. (http://127.0.0.1:5173/.vite-cache/deps/chunk-GX3VV2FZ.js?v=9ed7acde:903:34)"
+src-tauri/src/api/chat_commands.rs:5:use reqwest::Client;
+src-tauri/src/config/presets.rs:60:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/config/io.rs:60:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/config/update.rs:50:    // Vérifier que ça commence par http:// ou https://
+src-tauri/src/config/update.rs:51:    if !url.starts_with("http://") && !url.starts_with("https://") {
+src-tauri/src/config/update.rs:52:        return Err("URL Ollama doit commencer par http:// ou https://".to_string());
+src-tauri/src/config/update.rs:258:        assert!(validate_ollama_url("http://localhost:11434").is_ok());
+src-tauri/src/config/update.rs:259:        assert!(validate_ollama_url("https://api.ollama.com").is_ok());
+src-tauri/src/config/mod.rs:103:            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
+src-tauri/src/config/mod.rs:150:            ollama_url: "http://test:11434".to_string(),
+src-tauri/tests/security_tests.rs:43:    let result = guard.execute_verified("wget", &["http://evil.com"]);
+src-tauri/src/local_provider_refactor.rs:3:use reqwest::Client;
+src-tauri/src/local_provider_refactor.rs:29:            .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/allowlist.whitelist.stable.json:2:  "$schema": "https://schema.tauri.app/config/2.0",
+src-tauri/allowlist.whitelist.stable.json:438:              "command": "hyper_get_insights"
+src-tauri/allowlist.whitelist.stable.json:441:              "command": "hyper_get_thoughts"
+src-tauri/allowlist.whitelist.stable.json:597:              "command": "sc_hypervision_get_anomalies"
+src-tauri/allowlist.whitelist.stable.json:600:              "command": "sc_hypervision_get_layers"
+src-tauri/allowlist.whitelist.stable.json:603:              "command": "sc_hypervision_get_metrics"
+src-tauri/allowlist.whitelist.stable.json:606:              "command": "sc_hypervision_get_state"
+src-tauri/src/doc_engine/technical.rs:230:                params.get("base_url").cloned().unwrap_or_else(|| "https://api.example.com".to_string()),
+src-tauri/src/doc_engine/technical.rs:370:            url: Some("https://tools.ietf.org/html/rfc7231".to_string()),
+src-tauri/src/hypervision/monitor.rs:227:// UTILISER: sc_hypervision_start depuis system_center/hypervision.rs
+src-tauri/src/hypervision/monitor.rs:233:    note = "DANGER: Cette fonction crée des fuites mémoire. Utiliser sc_hypervision_start"
+src-tauri/src/hypervision/monitor.rs:235:pub async fn hypervision_start() -> Result<String, String> {
+src-tauri/src/hypervision/monitor.rs:236:    log::error!("[HyperVision] DEPRECATED: hypervision_start() appelé - RISQUE DE CRASH");
+src-tauri/src/hypervision/monitor.rs:237:    log::error!("[HyperVision] Utiliser sc_hypervision_start depuis system_center");
+src-tauri/src/hypervision/monitor.rs:238:    Err("DEPRECATED: Utiliser sc_hypervision_start à la place".to_string())
+src-tauri/src/hypervision/monitor.rs:623:    fn test_hypervision_engine_new() {
+src-tauri/src/hypervision/monitor.rs:629:    fn test_hypervision_engine_different_intervals() {
+src-tauri/src/hypervision/monitor.rs:637:    fn test_hypervision_engine_get_current_metrics_empty() {
+src-tauri/src/hypervision/monitor.rs:644:    fn test_hypervision_engine_get_metrics_history_empty() {
+src-tauri/src/hypervision/monitor.rs:651:    fn test_hypervision_engine_get_layer_metrics_empty() {
+src-tauri/src/hypervision/monitor.rs:658:    fn test_hypervision_engine_get_anomalies_empty() {
+src-tauri/src/hypervision/monitor.rs:665:    async fn test_hypervision_engine_collect_system_metrics() {
+src-tauri/src/hypervision/monitor.rs:672:    async fn test_hypervision_engine_scan_layer() {
+src-tauri/src/hypervision/monitor.rs:679:    async fn test_hypervision_engine_scan_all_layers() {
+src-tauri/src/hypervision/monitor.rs:687:    async fn test_hypervision_engine_detect_anomaly_normal() {
+src-tauri/src/hypervision/monitor.rs:704:    async fn test_hypervision_engine_detect_anomaly_high_cpu() {
+src-tauri/src/hypervision/monitor.rs:728:    async fn test_hypervision_engine_detect_anomaly_critical_memory() {
+src-tauri/src/control_panel_commands.rs:682:    // Implementation note: Requires reqwest dependency
+src-tauri/src/control_panel_commands.rs:683:    // API endpoint: https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest
+src-tauri/src/control_panel_commands.rs:690:    // Future implementation with reqwest:
+src-tauri/src/control_panel_commands.rs:691:    // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
+src-tauri/src/control_panel_commands.rs:702:        changelog: "Update checking requires network connectivity. Check manually at: https://github.com/KallokTherok1994/TITANE_INFINITY/releases".to_string(),
+src-tauri/src/control_panel_commands.rs:725:    Err("Automatic updates not yet implemented. Please update manually from: https://github.com/KallokTherok1994/TITANE_INFINITY/releases".to_string())
+src-tauri/test-chat-quick.sh:3:curl -s http://localhost:11434/api/tags | jq -r '.models[0].name' && echo "✅ Ollama" || echo "❌ Ollama"
+src-tauri/Cargo.toml:7:repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
+src-tauri/Cargo.toml:47:reqwest          = { version = "0.11", features = ["json", "stream"] }
+src-tauri/src/commands/orchestration_center.rs:148:    let client = reqwest::Client::builder()
+src-tauri/src/commands/orchestration_center.rs:155:                "https://generativelanguage.googleapis.com/v1beta/models?key={}",
+src-tauri/src/commands/orchestration_center.rs:215:        .unwrap_or_else(|_| "http://127.0.0.1:11434".into());
+src-tauri/src/commands/orchestration_center.rs:221:    let client = reqwest::Client::builder()
+src-tauri/src/commands/orchestration_center.rs:1161:    let client = reqwest::Client::builder()
+src-tauri/src/commands/orchestration_center.rs:1167:            "https://generativelanguage.googleapis.com/v1beta/models?key={}",
+src-tauri/src/ollama_provider_refactor.rs:10:use reqwest::Client;
+src-tauri/src/ollama_provider_refactor.rs:28:            base_url: "http://localhost:11434".to_string(),
+src-tauri/src/ollama_provider_refactor.rs:393:        assert_eq!(endpoint, "http://localhost:11434/api/generate");
+src-tauri/src/commands/ai_chat.rs:450:        reqwest::get("https://www.google.com"),
+src-tauri/UNSAFE_DOCUMENTATION.md:242:- **Rust Nomicon:** https://doc.rust-lang.org/nomicon/
+src-tauri/UNSAFE_DOCUMENTATION.md:243:- **Unsafe Code Guidelines:** https://rust-lang.github.io/unsafe-code-guidelines/
+src-tauri/tauri.base.json:2:  "$schema": "https://schema.tauri.app/config/2.0",
+src-tauri/tauri.base.json:7:    "devUrl": "http://localhost:5173",
+src-tauri/tauri.base.json:47:      "csp": "default-src 'self'; img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; font-src 'self' data:; script-src 'self' 'wasm-unsafe-eval'; connect-src 'self' https://api.openai.com https://generativelanguage.googleapis.com"
+src-tauri/tauri.base.json:55:      "scope": ["https://api.openai.com/*", "https://generativelanguage.googleapis.com/*"]
+src-tauri/src/commands/ollama_command.rs:34:    let url = "http://127.0.0.1:11434/api/generate";
+src-tauri/src/commands/ollama_command.rs:43:    let client = reqwest::Client::builder()
+src-tauri/src/hyper_evolution/structural_engine.rs:91:pub async fn hyper_analyze_structure() -> Result<StructuralReport, String> {
+src-tauri/src/commands/system_center_commands.rs:123:pub async fn sc_hypervision_stop() -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:124:    log::info!("[SYSTEM_CENTER] sc_hypervision_stop called");
+src-tauri/src/commands/system_center_commands.rs:129:pub async fn sc_hypervision_clear_anomalies() -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:130:    log::info!("[SYSTEM_CENTER] sc_hypervision_clear_anomalies called");
+src-tauri/src/commands/system_center_commands.rs:135:pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), TitaneError> {
+src-tauri/src/commands/system_center_commands.rs:137:        "[SYSTEM_CENTER] sc_hypervision_resolve_anomaly: {}",
+src-tauri/src/hyper_evolution/rewrite_core.rs:88:pub async fn hyper_analyze_rewrite() -> Result<RewriteReport, String> {
+src-tauri/src/hyper_evolution/validation.rs:96:pub async fn hyper_validate(targets: Vec<String>) -> Result<ValidationReport, String> {
+src-tauri/src/hyper_evolution/predictor.rs:172:pub async fn hyper_predict_issues() -> Result<PredictionReport, String> {
+src-tauri/src/hyper_evolution/regeneration.rs:135:pub async fn hyper_detect_regeneration() -> Result<RegenerationReport, String> {
+src-tauri/src/commands/ai_prompt_generator.rs:117:    use reqwest::Client;
+src-tauri/src/commands/ai_prompt_generator.rs:127:        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/capabilities/self_heal.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/src/hyper_evolution/accelerator.rs:105:pub async fn hyper_accelerate() -> Result<AccelerationReport, String> {
+src-tauri/capabilities/singularity.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/capabilities/persistence.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/capabilities/chat_ai.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/capabilities/chat_ai.json:27:      "https://generativelanguage.googleapis.com/**",
+src-tauri/capabilities/chat_ai.json:28:      "http://localhost:11434/**",
+src-tauri/capabilities/chat_ai.json:29:      "http://127.0.0.1:11434/**"
+src-tauri/capabilities/developer_mode.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/capabilities/audio_tts.json:2:  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+src-tauri/icons/android/mipmap-anydpi-v26/ic_launcher.xml:2:<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+src-tauri/src/conversation_engine/french_mastery.rs:310:        // - Endpoint: https://api.languagetool.org/v2/check or self-hosted instance
+src-tauri/src/ollama.rs:5:use reqwest::{Client, StatusCode};
+src-tauri/src/ollama.rs:8:const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+src-tauri/src/core/tapi_error.rs:156:impl From<reqwest::Error> for TAPIError {
+src-tauri/src/core/tapi_error.rs:157:    fn from(err: reqwest::Error) -> Self {
+src-tauri/src/runtime_config.rs:32:        "http://127.0.0.1:11434".to_string()
+src-tauri/src/runtime_config.rs:52:        .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string());
+src-tauri/src/runtime_config.rs:95:        assert_eq!(config.ollama_url, "http://127.0.0.1:11434");
+src-tauri/src/audio/asr.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/gemini_provider_refactor.rs:71:    client: reqwest::Client,
+src-tauri/src/gemini_provider_refactor.rs:78:        let client = reqwest::Client::builder()
+src-tauri/src/gemini_provider_refactor.rs:118:            "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent?key={}",
+src-tauri/src/api_hub/anthropic.rs:23:            base_url: "https://api.anthropic.com/v1".to_string(),
+src-tauri/src/tts/elevenlabs_tts.rs:7:use reqwest::Client;
+src-tauri/src/tts/elevenlabs_tts.rs:25:const ELEVENLABS_API_BASE: &str = "https://api.elevenlabs.io/v1";
+src-tauri/src/api_hub/copilot.rs:10:use reqwest::{header, Client};
+src-tauri/src/api_hub/copilot.rs:15:const COPILOT_API_BASE: &str = "https://api.github.com/models";
+src-tauri/src/system_center/hypervision.rs:243:pub async fn sc_hypervision_start() -> Result<HyperVisionState, String> {
+src-tauri/src/system_center/hypervision.rs:271:pub async fn sc_hypervision_stop() -> Result<(), String> {
+src-tauri/src/system_center/hypervision.rs:283:pub async fn sc_hypervision_get_state() -> Result<HyperVisionState, String> {
+src-tauri/src/system_center/hypervision.rs:297:pub async fn sc_hypervision_get_metrics() -> Result<SystemMetricsSnapshot, String> {
+src-tauri/src/system_center/hypervision.rs:321:pub async fn sc_hypervision_get_history(
+src-tauri/src/system_center/hypervision.rs:338:pub async fn sc_hypervision_get_layers() -> Result<Vec<LayerHealth>, String> {
+src-tauri/src/system_center/hypervision.rs:345:pub async fn sc_hypervision_get_anomalies(
+src-tauri/src/system_center/hypervision.rs:363:pub async fn sc_hypervision_clear_anomalies() -> Result<(), String> {
+src-tauri/src/system_center/hypervision.rs:371:pub async fn sc_hypervision_resolve_anomaly(anomaly_id: String) -> Result<(), String> {
+src-tauri/src/tts/online_tts.rs:26:            reqwest::get("https://www.google.com"),
+src-tauri/src/tts/online_tts.rs:42:            "https://translate.google.com/translate_tts?ie=UTF-8&tl=fr&client=tw-ob&q={}",
+src-tauri/src/tts/online_tts.rs:46:        let response = reqwest::get(&url)
+src-tauri/src/tts/online_tts.rs:145:                 See: https://docs.rs/winapi/*/winapi/um/mmsystem/fn.PlaySoundW.html"
+src-tauri/src/engines/unified_memory/summarizer.rs:288:- reqwest = "0.11" with json feature
+src-tauri/src/engines/unified_memory/summarizer.rs:298:    use reqwest;
+src-tauri/src/engines/unified_memory/summarizer.rs:315:    let client = reqwest::Client::new();
+src-tauri/src/api_hub/gemini.rs:23:            base_url: "https://generativelanguage.googleapis.com/v1beta".to_string(),
+src-tauri/src/system_center/mod.rs:14:pub mod hypervision;
+src-tauri/src/system_center/mod.rs:21:pub use hypervision::*;
+src-tauri/src/engines/unified_memory/embeddings.rs:75:            // POST https://api.openai.com/v1/embeddings
+src-tauri/src/engines/unified_memory/embeddings.rs:213:    use reqwest;
+src-tauri/src/engines/unified_memory/embeddings.rs:216:    let client = reqwest::Client::new();
+src-tauri/src/engines/unified_memory/embeddings.rs:218:        .post("https://api.openai.com/v1/embeddings")
+src-tauri/src/api_hub/openai.rs:24:            base_url: "https://api.openai.com/v1".to_string(),
+src-tauri/src/api_hub/openai.rs:77:        // Simulation de l'appel API (en production, utiliser reqwest)
+src-tauri/src/api_hub/openai.rs:352:            "https://mock-dalle-image-url.com/generated.png".to_string()
+src-tauri/src/handlers.rs:157:                    $crate::hypervision::hypervision_start,
+src-tauri/src/handlers.rs:158:                    $crate::hypervision::get_system_metrics,
+src-tauri/src/handlers.rs:164:                    $crate::hyper_evolution::hyper_predict_issues,
+src-tauri/src/handlers.rs:165:                    $crate::hyper_evolution::hyper_accelerate,
+src-tauri/src/handlers.rs:166:                    $crate::hyper_evolution::hyper_analyze_structure,
+src-tauri/src/handlers.rs:167:                    $crate::hyper_evolution::hyper_detect_regeneration,
+src-tauri/src/handlers.rs:168:                    $crate::hyper_evolution::hyper_analyze_rewrite,
+src-tauri/src/handlers.rs:169:                    $crate::hyper_evolution::hyper_validate,
+src-tauri/src/memory_evolution/memory_vectorizer.rs:81:            ollama_url: "http://localhost:11434".to_string(),
+src-tauri/src/memory_evolution/memory_vectorizer.rs:232:            let client = reqwest::Client::new();
+src-tauri/src/main.rs:667:                                    log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+src-tauri/src/main.rs:690:                        log::info!("[Ollama]    Endpoint: http://127.0.0.1:11434");
+src-tauri/src/main.rs:1215:            commands_v21::system_center_commands::sc_hypervision_stop,
+src-tauri/src/main.rs:1216:            commands_v21::system_center_commands::sc_hypervision_clear_anomalies,
+src-tauri/src/main.rs:1217:            commands_v21::system_center_commands::sc_hypervision_resolve_anomaly,
+src-tauri/src/semantic/embedder.rs:61:        // Endpoint: https://generativelanguage.googleapis.com/v1/models/text-embedding-004:embedContent
+src-tauri/src/semantic/embedder.rs:66:        // Dependencies: reqwest = "0.11", serde_json = "1.0"
+src-tauri/src/semantic/embedder.rs:75:        // Endpoint: http://localhost:11434/api/embeddings
+src-tauri/src/semantic/embedder.rs:82:        // Dependencies: reqwest = "0.11", tokio for async
+src-tauri/src/monitoring/health/mod.rs:3://   System diagnostics, hypervision, alerts
+src-tauri/src/monitoring/mod.rs:12://! - `hypervision/` → `health/`
+src-tauri/src/monitoring/mod.rs:23://! ├── health/        - Health checks (system, hypervision, alerts)
+src-tauri/src/ai/security.rs:16:    "https://generativelanguage.googleapis.com",
+src-tauri/src/ai/security.rs:17:    "http://localhost:11434",
+src-tauri/src/ai/security.rs:18:    "http://127.0.0.1:11434",
+src-tauri/src/ai/security.rs:191:        assert!(validate_endpoint("https://generativelanguage.googleapis.com/v1/models").is_ok());
+src-tauri/src/ai/security.rs:192:        assert!(validate_endpoint("http://localhost:11434/api/generate").is_ok());
+src-tauri/src/ai/security.rs:193:        assert!(validate_endpoint("https://evil.com/api").is_err());
+src-tauri/src/ai/config_multi.rs:140:            ollama_url: "http://localhost:11434".to_string(),
+src-tauri/src/hyper_intelligence/commands.rs:29:pub async fn hyper_init() -> Result<HyperIntelligenceState, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:49:pub async fn hyper_get_state() -> Result<HyperIntelligenceState, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:62:pub async fn hyper_get_metrics() -> Result<HyperMetrics, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:75:pub async fn hyper_set_mode(mode: String) -> Result<(), AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:101:pub async fn hyper_think(prompt: String) -> Result<Thought, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:117:pub async fn hyper_generate_insight(context: String) -> Result<Insight, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:133:pub async fn hyper_reason(premises: Vec<String>) -> Result<Conclusion, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:149:pub async fn hyper_imagine(seed: String) -> Result<Imagination, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:165:pub async fn hyper_get_thoughts(limit: Option<usize>) -> Result<Vec<Thought>, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:178:pub async fn hyper_get_insights(limit: Option<usize>) -> Result<Vec<Insight>, AppError> {
+src-tauri/src/hyper_intelligence/commands.rs:200:pub async fn hyper_get_report() -> Result<HyperIntelligenceReport, AppError> {
+src-tauri/src/hyper_intelligence/mod.rs:3://! Moteur d'hyper-intelligence avec raisonnement, créativité et cognition
+src-tauri/src/ai/providers/claude.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/claude.rs:59:            .post("https://api.anthropic.com/v1/messages")
+src-tauri/src/ai/providers/openai.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/openai.rs:59:            .post("https://api.openai.com/v1/chat/completions")
+src-tauri/src/memory_os/embeddings.rs:108:        let client = reqwest::Client::new();
+src-tauri/src/memory_os/embeddings.rs:127:            .post("https://api.openai.com/v1/embeddings")
+src-tauri/src/memory_os/embeddings.rs:155:        let client = reqwest::Client::new();
+src-tauri/src/memory_os/embeddings.rs:183:            "https://generativelanguage.googleapis.com/v1beta/models/{}:embedContent?key={}",
+src-tauri/src/lib.rs:168:pub mod hypervision; // ✅ HyperVision
+src-tauri/src/lib.rs:189:pub mod hyper_evolution; // ✅ HyperEvolution
+src-tauri/src/lib.rs:253:pub mod hyper_intelligence; // ✅ Hyper-Intelligence v∞ (Reasoning, Creativity, Cognition)
+src-tauri/src/ia/anthropic_claude.rs:8:use reqwest::Client;
+src-tauri/src/ia/anthropic_claude.rs:12:const CLAUDE_API_URL: &str = "https://api.anthropic.com/v1/messages";
+src-tauri/src/ai/providers/local.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/local.rs:24:            .unwrap_or_else(|_| "http://127.0.0.1:11434".to_string())
+src-tauri/src/backend_selftest.rs:161:    //   * Ollama: Test http://localhost:11434/api/tags with 1s timeout
+src-tauri/src/ia/openai_gpt.rs:8:use reqwest::Client;
+src-tauri/src/ia/openai_gpt.rs:12:const OPENAI_API_URL: &str = "https://api.openai.com/v1/chat/completions";
+src-tauri/src/overdrive/api_bridge.rs:93:            base_url: "https://generativelanguage.googleapis.com/v1beta".to_string(),
+src-tauri/src/overdrive/api_bridge.rs:106:            base_url: "http://localhost:11434".to_string(),
+src-tauri/src/overdrive/api_bridge.rs:119:            base_url: "https://api.github.com".to_string(),
+src-tauri/src/overdrive/api_bridge.rs:213:    // IMPLEMENTATION: reqwest HTTP client for AI API calls
+src-tauri/src/overdrive/api_bridge.rs:214:    // Dependencies: reqwest = "0.11" with features = ["json", "rustls-tls"]
+src-tauri/src/overdrive/api_bridge.rs:216:    //   let client = reqwest::Client::builder()
+src-tauri/src/overdrive/api_bridge.rs:226:    // let client = reqwest::Client::new();
+src-tauri/src/overdrive/api_bridge.rs:572:    //   GET https://generativelanguage.googleapis.com/v1/models
+src-tauri/src/overdrive/api_bridge.rs:576:    //   GET http://localhost:11434/api/tags
+src-tauri/src/overdrive/api_bridge.rs:580:    //   GET https://api.github.com/
+src-tauri/src/overdrive/memory_engine.rs:436:    // Endpoint: POST http://localhost:11434/api/embeddings
+src-tauri/src/overdrive/memory_engine.rs:446:    // For production: Add reqwest HTTP client + error handling
+src-tauri/src/ai/router.rs:70:            reqwest::get("https://www.google.com"),
+src-tauri/src/ai/gemini.rs:10:    "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent";
+src-tauri/src/ai/gemini.rs:59:    client: reqwest::Client,
+src-tauri/src/ai/gemini.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/ai/gemini.rs:67:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/ai/gemini.rs:75:            .get("https://www.google.com")
+src-tauri/src/ai/ollama.rs:9:use reqwest;
+src-tauri/src/ai/ollama.rs:15:const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+src-tauri/src/ai/ollama.rs:127:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:192:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:279:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:349:    let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:420:    client: reqwest::Client,
+src-tauri/src/ai/ollama.rs:426:        let client = reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:429:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/overdrive/chat_orchestrator.rs:247:        available: false, // À vérifier avec http://localhost:11434
+src-tauri/src/overdrive/chat_orchestrator.rs:309:            // Ping rapide http://localhost:11434/api/tags
+src-tauri/src/overdrive/chat_orchestrator.rs:311:            match reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:317:                        client.get("http://localhost:11434/api/tags").send().await,
+src-tauri/src/overdrive/chat_orchestrator.rs:629:        "https://generativelanguage.googleapis.com/v1beta/models/{}:generateContent",
+src-tauri/src/overdrive/chat_orchestrator.rs:667:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:785:    let url = "http://localhost:11434/api/generate";
+src-tauri/src/overdrive/chat_orchestrator.rs:815:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:888:    let url = "https://api.openai.com/v1/chat/completions";
+src-tauri/src/overdrive/chat_orchestrator.rs:921:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1043:    let url = "https://api.anthropic.com/v1/messages";
+src-tauri/src/overdrive/chat_orchestrator.rs:1076:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1445:    // - Gemini: HEAD request to https://generativelanguage.googleapis.com/v1/models?key={API_KEY}
+src-tauri/src/overdrive/chat_orchestrator.rs:1447:    // - Ollama: GET http://localhost:11434/api/tags to list available models
+src-tauri/src/overdrive/chat_orchestrator.rs:1694:    let url = "http://localhost:11434/api/generate";
+src-tauri/src/overdrive/chat_orchestrator.rs:1706:    let client = match reqwest::Client::builder()

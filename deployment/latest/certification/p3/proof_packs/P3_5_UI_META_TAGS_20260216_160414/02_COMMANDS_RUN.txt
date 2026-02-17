@@ -1,0 +1,95 @@
+════════════════════════════════════════════════════════════
+P3-5 STOP-THE-LINE SNAPSHOT
+Timestamp: 2026-02-16T21:04:21Z
+════════════════════════════════════════════════════════════
+$ git status --porcelain=v1
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+37e17403206944cb5cd936811bc2531ebd0b6f14
+
+$ git log -1 --oneline --decorate
+37e17403 (HEAD -> MAIN) docs(p3): append P3-4 IPC meta certification
+
+$ ls -la reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/ | tail -200
+total 32
+drwxrwxr-x  8 titane-os titane-os 4096 févr. 16 16:04 .
+drwxrwxr-x 18 titane-os titane-os 4096 févr. 16 14:40 ..
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 14:46 20260216_144056
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 15:16 P3_1_CONTRACT_20260216_151524
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 15:27 P3_2_TYPES_20260216_152400
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 15:44 P3_3_INSTRUMENTATION_20260216_153653
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 15:56 P3_4_IPC_EXPOSE_20260216_155157
+drwxrwxr-x  2 titane-os titane-os 4096 févr. 16 16:04 P3_5_UI_META_TAGS_20260216_160414
+
+════════════════════════════════════════════════════════════
+P3-5 FILE TRACKING
+Timestamp: 2026-02-16T21:04:28Z
+════════════════════════════════════════════════════════════
+$ rg -n "08_FILES_CHANGED\.txt" reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT -S || true
+reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_4_IPC_EXPOSE_20260216_155157/INDEX.md:17:- 08_FILES_CHANGED.txt
+
+Resolved FILE: reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_4_IPC_EXPOSE_20260216_155157/INDEX.md
+$ git ls-files --error-unmatch "reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_4_IPC_EXPOSE_20260216_155157/INDEX.md"
+UNTRACKED
+
+════════════════════════════════════════════════════════════
+P3-5 FILE DIFF
+Timestamp: 2026-02-16T21:04:37Z
+════════════════════════════════════════════════════════════
+# P3-4 IPC META EXPOSE — PROOF PACK INDEX
+
+**Phase:** P3-4 (Ring 4)
+**Scope:** IPC meta exposure + contract tests
+**Timestamp:** 2026-02-16T15:51:57Z
+
+## Files
+
+- 00_DISCOVERY.md
+- 01_CODE_CHANGES.md
+- 02_BUILD.log
+- 03_IPC_CONTRACT_RUN1.json
+- 04_IPC_CONTRACT_RUN2.json
+- 05_IPC_CONTRACT_RUN3.json
+- 06_OFFLINE_RUNS.json
+- 07_DETERMINISM.md
+- 08_FILES_CHANGED.txt
+- 09_COMMANDS_RUN.txt
+- FINAL_VERDICT.md
+- ROLLBACK.md
+
+════════════════════════════════════════════════════════════
+P3-5 REGENERATION
+Timestamp: 2026-02-16T21:04:55Z
+════════════════════════════════════════════════════════════
+BASE_COMMIT=2848224b0e2f339525d9ccd4b0476acab8d40dde
+$ git diff --name-status 2848224b0e2f339525d9ccd4b0476acab8d40dde..HEAD
+DETERMINISTIC_OK
+
+════════════════════════════════════════════════════════════
+P3-5 BUILD CHECKS
+Timestamp: 2026-02-16T21:12:15Z
+════════════════════════════════════════════════════════════
+$ cargo check (src-tauri)
+
+$ cargo build (src-tauri)
+
+════════════════════════════════════════════════════════════
+P3-5 IPC GUARD
+Timestamp: 2026-02-16T21:12:22Z
+════════════════════════════════════════════════════════════
+$ node scripts/guard_ipc_provider_meta.cjs reports/ai_local_vΩ3/P3_PROVIDER_ORCH_CERT/P3_5_UI_META_TAGS_20260216_160414
+
+════════════════════════════════════════════════════════════
+P3-5 OFFLINE_SIM SMOKE
+Timestamp: 2026-02-16T21:12:31Z
+════════════════════════════════════════════════════════════
+$ OFFLINE_SIM=1 scripts/smoke/dev-tauri-ipc-conversation-generate.sh
+
+════════════════════════════════════════════════════════════
+P3-5 FILES_CHANGED
+Timestamp: 2026-02-16T21:14:35Z
+════════════════════════════════════════════════════════════
+$ git diff --name-status f63e5a85^ f63e5a85

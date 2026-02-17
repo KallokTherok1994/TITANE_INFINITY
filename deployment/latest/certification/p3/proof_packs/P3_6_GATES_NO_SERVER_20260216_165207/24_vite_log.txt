@@ -1,0 +1,168 @@
+
+  VITE v7.3.1  ready in 389 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+
+[2m[0.20ms][22m [@tailwindcss/postcss] index.html?html-proxy&index=0.css
+[2m[0.19ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.01ms][22m [@tailwindcss/postcss] index.html?html-proxy&index=1.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] index.html?html-proxy&index=0.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] index.html?html-proxy&index=1.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.07ms][22m [@tailwindcss/postcss] src/design-system/responsive-tokens.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/design-system/responsive-utilities.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/styles/experience.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.04ms][22m [@tailwindcss/postcss] src/styles/exp-fusion.css
+[2m[0.04ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/pages/styles.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.08ms][22m [@tailwindcss/postcss] src/components/psyche/DeepPsychePanel.css
+[2m[0.07ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/components/AutoHealErrorBoundary.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.04ms][22m [@tailwindcss/postcss] src/ui/components/Toast.css
+[2m[0.04ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/ui/components/PageLoadingFallback.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.07ms][22m [@tailwindcss/postcss] src/components/Onboarding/OnboardingFlow.css
+[2m[0.07ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/ui/components/Skeleton.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/components/branding/TitaneLogo.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.01ms][22m [@tailwindcss/postcss] src/apps/devtools/components/MetricsDisplay.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/apps/devtools/components/LogViewer.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.01ms][22m [@tailwindcss/postcss] src/apps/devtools/components/CoreHealthMonitor.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.04ms][22m [@tailwindcss/postcss] src/apps/devtools/components/EventStream.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[1228.15ms][22m [@tailwindcss/postcss] src/index.css
+[2m[   0.01ms][22m  [2m ↳ [22mQuick bail check
+[2m[  18.26ms][22m  [2m ↳ [22mSetup compiler
+[2m[   1.12ms][22m    [2m ↳ [22mPostCSS AST -> Tailwind CSS AST
+[2m[  17.12ms][22m    [2m ↳ [22mCreate compiler
+[2m[   0.12ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[   1.01ms][22m  [2m ↳ [22mSetup scanner
+[2m[ 582.40ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 438.45ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 179.31ms][22m  [2m ↳ [22mBuild utilities
+[2m[   5.44ms][22m  [2m ↳ [22mTransform Tailwind CSS AST into PostCSS AST
+[2m[   2.81ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+16:56:34 [vite] (client) hmr update /src/index.css
+
+[2m[144.96ms][22m [@tailwindcss/postcss] src/index.css
+[2m[  0.02ms][22m  [2m ↳ [22mQuick bail check
+[2m[  0.03ms][22m  [2m ↳ [22mRegister full rebuild paths
+[2m[ 63.21ms][22m  [2m ↳ [22mScan for candidates
+[2m[ 61.06ms][22m  [2m ↳ [22mRegister dependency messages
+[2m[ 17.85ms][22m  [2m ↳ [22mBuild utilities
+[2m[  2.56ms][22m  [2m ↳ [22mUpdate PostCSS AST
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/components/dev/ConsoleMonitorDashboard.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.08ms][22m [@tailwindcss/postcss] src/components/chat/ChatBubble-ArcReactor.css
+[2m[0.07ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.12ms][22m [@tailwindcss/postcss] src/components/cognitive/CognitiveLayoutControl.css
+[2m[0.12ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/components/dev/DevSudoBadge.css
+[2m[0.03ms][22m  [2m ↳ [22mQuick bail check
+
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+
+[2m[0.01ms][22m [@tailwindcss/postcss] src/pages/TitanePage-local.css
+[2m[0.01ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.23ms][22m [@tailwindcss/postcss] src/pages/TitanePage.css
+[2m[0.22ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.04ms][22m [@tailwindcss/postcss] src/features/chat/ThinkingPanel.css
+[2m[0.04ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/components/vision/CameraPreview.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/features/progression/AchievementCard.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/components/conversation/ModeBuilder.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/components/chat/ChatToolbar.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.03ms][22m [@tailwindcss/postcss] src/components/chat/RecordingTimer.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+
+
+[2m[0.02ms][22m [@tailwindcss/postcss] src/features/dashboard/QuickStatCard.css
+[2m[0.02ms][22m  [2m ↳ [22mQuick bail check
+

@@ -1,0 +1,327 @@
+src-tauri/src/cache/streaming_cache.rs:161:    fn test_streaming_cache_hit() {
+src-tauri/src/cache/streaming_cache.rs:208:    fn test_streaming_cache_hit_rate() {
+src-tauri/src/cache/semantic_cache.rs:223:    pub cache_hits: u64,
+src-tauri/src/cache/semantic_cache.rs:237:            (self.cache_hits + self.partial_hits) as f32 / self.total_lookups as f32
+src-tauri/src/cache/semantic_cache.rs:297:                    stats.cache_hits += 1;
+src-tauri/src/cache/semantic_cache.rs:739:        assert!(stats.cache_hits >= 1 || stats.partial_hits >= 1);
+src-tauri/src/system/system_health.rs:26:    pub cache_hit_rate: f32,
+src-tauri/src/system/system_health.rs:46:            cache_hit_rate: 0.8,
+src-tauri/src/system/self_heal.rs:108:        if health.cache_hit_rate < 0.4 {
+src-tauri/tests/intelligent_cache_test.rs:169:async fn test_cache_hit_rate() {
+src-tauri/tests/omega_p2_performance_test.rs:23:        timeout_ms: 200,
+src-tauri/src/unified_memory_v2/api.rs:173:            cache_hit_rate: 0.0,
+src-tauri/src/system/anomaly_detector.rs:17:    pub cache_hit_min: f32,
+src-tauri/src/system/anomaly_detector.rs:29:            cache_hit_min: 0.5,
+src-tauri/src/system/anomaly_detector.rs:101:        if health.cache_hit_rate < self.thresholds.cache_hit_min {
+src-tauri/src/system/anomaly_detector.rs:152:        if health.cache_hit_rate < self.thresholds.cache_hit_min {
+src-tauri/src/system/anomaly_detector.rs:155:                health.cache_hit_rate * 100.0
+src-tauri/src/unified_memory_v2/types.rs:198:    pub cache_hit_rate: f32,
+src-tauri/src/kernel/runtime.rs:148:                    timeout_ms: timeout_secs * 1000,
+src-tauri/src/kernel/events.rs:36:    TaskTimeout { task_id: String, timeout_ms: u64 },
+src-tauri/src/omega/context_v2.rs:186:    pub timeout_ms: u64,
+src-tauri/src/omega/context_v2.rs:198:            timeout_ms: 5000,
+src-tauri/src/omega/diagnostics.rs:606:            cache_hit_rate: metrics.cache.hit_rate,
+src-tauri/src/omega/executor.rs:35:    pub timeout_ms: u64,
+src-tauri/src/omega/executor.rs:63:    pub fn default_timeout_ms(&self) -> u64 {
+src-tauri/src/omega/executor.rs:136:        let estimated_time_ms = tasks.iter().map(|t| t.timeout_ms).sum();
+src-tauri/src/omega/executor.rs:158:            timeout_ms: TaskType::Safety.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:168:            timeout_ms: TaskType::Identity.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:178:            timeout_ms: TaskType::Memory.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:190:                    timeout_ms: TaskType::Knowledge.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:200:                    timeout_ms: TaskType::Reasoning.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:208:                    timeout_ms: TaskType::CodeGen.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:218:                    timeout_ms: TaskType::Reasoning.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:226:                    timeout_ms: TaskType::TextGen.default_timeout_ms() * 2, // More time for creative
+src-tauri/src/omega/executor.rs:237:                    timeout_ms: TaskType::Context.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:245:                    timeout_ms: TaskType::TextGen.default_timeout_ms(),
+src-tauri/src/omega/executor.rs:261:            task.timeout_ms = (task.timeout_ms as f64 * multiplier) as u64;
+src-tauri/src/omega/executor.rs:406:    global_timeout_ms: u64,
+src-tauri/src/omega/executor.rs:443:            global_timeout_ms: 200,
+src-tauri/src/omega/executor.rs:456:    pub fn with_config(max_parallel: usize, timeout_ms: u64) -> Self {
+src-tauri/src/omega/executor.rs:459:        executor.global_timeout_ms = timeout_ms;
+src-tauri/src/omega/executor.rs:519:                    let task_timeout = Duration::from_millis(task.timeout_ms);
+src-tauri/src/omega/executor.rs:528:                                execution_ms: task.timeout_ms,
+src-tauri/src/omega/executor.rs:539:        let global_timeout = Duration::from_millis(self.global_timeout_ms);
+src-tauri/src/omega/executor.rs:549:            Err(_) => Err(OmegaError::Timeout(self.global_timeout_ms)),
+src-tauri/src/omega/executor.rs:681:        assert!(TaskType::Safety.default_timeout_ms() < 50);
+src-tauri/src/omega/executor.rs:682:        assert!(TaskType::CodeGen.default_timeout_ms() >= 100);
+src-tauri/src/omega/executor.rs:694:            cache_hit: false,
+src-tauri/src/omega/executor.rs:711:                timeout_ms: 30,
+src-tauri/src/omega/executor.rs:719:                timeout_ms: 30,
+src-tauri/src/omega/executor.rs:727:                timeout_ms: 80,
+src-tauri/src/omega/executor.rs:751:            cache_hit: false,
+src-tauri/src/omega/executor.rs:765:        assert!(TaskType::Knowledge.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:766:        assert!(TaskType::Memory.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:767:        assert!(TaskType::Reasoning.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:768:        assert!(TaskType::CodeGen.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:769:        assert!(TaskType::TextGen.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:770:        assert!(TaskType::Identity.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:771:        assert!(TaskType::Safety.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:772:        assert!(TaskType::Context.default_timeout_ms() > 0);
+src-tauri/src/omega/executor.rs:800:            timeout_ms: 100,
+src-tauri/src/omega/executor.rs:889:            timeout_ms: 50,
+src-tauri/src/omega/executor.rs:908:            timeout_ms: 20,
+src-tauri/src/omega/executor.rs:929:        assert_eq!(executor.global_timeout_ms, 500);
+src-tauri/src/omega/executor.rs:956:            cache_hit: false,
+src-tauri/src/omega/executor.rs:976:            cache_hit: false,
+src-tauri/src/omega/executor.rs:998:            cache_hit: false,
+src-tauri/src/omega/executor.rs:1079:            timeout_ms: 30,
+src-tauri/src/omega/executor.rs:1097:            cache_hit: false,
+src-tauri/src/omega/executor.rs:1107:            cache_hit: false,
+src-tauri/src/omega/executor.rs:1126:                timeout_ms: 30,
+src-tauri/src/omega/executor.rs:1134:                timeout_ms: 20,
+src-tauri/src/conversation_os/router.rs:48:    pub stage_timeout_ms: u64,
+src-tauri/src/conversation_os/router.rs:65:            stage_timeout_ms: 1000,
+src-tauri/src/conversation_os/router.rs:189:        let estimated_time = stages.len() as u64 * self.config.stage_timeout_ms / 2;
+src-tauri/src/omega/scheduler.rs:164:    pub default_timeout_ms: u64,
+src-tauri/src/omega/scheduler.rs:177:            default_timeout_ms: 200,
+src-tauri/src/omega/scheduler.rs:486:            self.config.default_timeout_ms as f64
+src-tauri/src/omega/scheduler.rs:779:        assert_eq!(config.default_timeout_ms, 200);
+src-tauri/src/omega/mod.rs:60:    pub timeout_ms: u64,
+src-tauri/src/omega/mod.rs:78:            timeout_ms: 200, // <200ms target
+src-tauri/src/omega/mod.rs:324:    pub cache_hit_rate: f64,
+src-tauri/src/omega/mod.rs:351:        assert_eq!(config.timeout_ms, 200);
+src-tauri/src/omega/pipeline.rs:74:            default_timeout_ms: config.timeout_ms,
+src-tauri/src/omega/pipeline.rs:120:        let timeout_duration = Duration::from_millis(self.config.timeout_ms);
+src-tauri/src/omega/pipeline.rs:150:                Err(OmegaError::Timeout(self.config.timeout_ms))
+src-tauri/src/omega/pipeline.rs:195:        if routing.cache_hit {
+src-tauri/src/omega/pipeline.rs:463:    pub fn timeout_ms(mut self, timeout: u64) -> Self {
+src-tauri/src/omega/pipeline.rs:464:        self.config.timeout_ms = timeout;
+src-tauri/src/omega/pipeline.rs:560:            .timeout_ms(500)
+src-tauri/src/omega/pipeline.rs:566:        assert_eq!(pipeline.config.timeout_ms, 500);
+src-tauri/src/omega/router.rs:127:    pub cache_hit: bool,
+src-tauri/src/omega/router.rs:450:                cache_hit: true,
+src-tauri/src/omega/router.rs:509:            cache_hit: false,
+src-tauri/src/omega/router.rs:723:        assert!(!result1.cache_hit);
+src-tauri/src/omega/router.rs:729:        assert!(result2.cache_hit);
+src-tauri/src/omega/router.rs:903:            cache_hit: false,
+src-tauri/src/performance/executor.rs:55:    pub async fn execute_with_timeout<F, T>(&self, future: F, timeout_ms: u64) -> TitaneResult<T>
+src-tauri/src/performance/executor.rs:60:        let timeout = tokio::time::Duration::from_millis(timeout_ms);
+src-tauri/src/performance/executor.rs:63:            crate::utils::AppError::System(format!("Task timed out after {}ms", timeout_ms))
+src-tauri/src/omega/tests_pipeline.rs:20:    assert!(pipeline.config().timeout_ms > 0);
+src-tauri/src/omega/tests_pipeline.rs:30:        timeout_ms: 5000,
+src-tauri/src/omega/tests_pipeline.rs:42:    assert_eq!(pipeline.config().timeout_ms, 5000);
+src-tauri/src/omega/tests_pipeline.rs:53:        .timeout_ms(8000)
+src-tauri/src/omega/tests_pipeline.rs:56:    assert_eq!(pipeline.config().timeout_ms, 8000);
+src-tauri/src/omega/tests_pipeline.rs:411:        timeout_ms: 100, // Timeout très court
+src-tauri/src/performance/task_queue.rs:48:    pub fn timeout_ms(&self) -> u64 {
+src-tauri/src/performance/task_queue.rs:101:        self.age_ms() > self.priority.timeout_ms() as i64
+src-tauri/src/omega/self_healing_hook.rs:25:    pub cache_hit_rate: f32,
+src-tauri/src/omega/self_healing_hook.rs:38:            cache_hit_rate: 0.8,
+src-tauri/src/omega/self_healing_hook.rs:255:        if health.cache_hit_rate < 0.5 {
+src-tauri/src/omega/self_healing_hook.rs:371:        if health.cache_hit_rate < 0.4 {
+src-tauri/src/performance/config.rs:39:    pub task_timeout_ms: u64,
+src-tauri/src/performance/config.rs:40:    pub engine_timeout_ms: u64,
+src-tauri/src/performance/config.rs:41:    pub vector_search_timeout_ms: u64,
+src-tauri/src/performance/config.rs:79:            task_timeout_ms: 30_000,         // 30s
+src-tauri/src/performance/config.rs:80:            engine_timeout_ms: 10_000,       // 10s
+src-tauri/src/performance/config.rs:81:            vector_search_timeout_ms: 5_000, // 5s
+src-tauri/src/commands/automations.rs:151:    pub timeout_ms: u64,
+src-tauri/src/commands/automations.rs:275:            timeout_ms: 300000,
+src-tauri/src/commands/automations.rs:291:            timeout_ms: 60000,
+src-tauri/src/commands/automations.rs:312:            timeout_ms: 600000,
+src-tauri/src/commands/automations.rs:329:            timeout_ms: 60000,
+src-tauri/src/commands/automations.rs:349:            timeout_ms: 180000,
+src-tauri/src/commands/automations.rs:370:            timeout_ms: 600000,
+src-tauri/src/commands/automations.rs:387:            timeout_ms: 10000,
+src-tauri/src/commands/automations.rs:403:            timeout_ms: 30000,
+src-tauri/src/commands/automations.rs:424:            timeout_ms: 300000,
+src-tauri/src/commands/automations.rs:441:            timeout_ms: 30000,
+src-tauri/src/commands/automations.rs:457:            timeout_ms: 10000,
+src-tauri/src/commands/automations.rs:473:            timeout_ms: 60000,
+src-tauri/src/commands/automations.rs:490:            timeout_ms: 10000,
+src-tauri/src/commands/automations.rs:506:            timeout_ms: 30000,
+src-tauri/src/commands/automations.rs:527:            timeout_ms: 300000,
+src-tauri/src/commands/automations.rs:547:            timeout_ms: 120000,
+src-tauri/src/commands/automations.rs:996:            timeout_ms: 1000,
+src-tauri/src/commands/automations.rs:1026:            timeout_ms: 1000,
+src-tauri/src/config/io.rs:142:    super::update::validate_timeout_ms(config.chat_engine.timeout_ms)?;
+src-tauri/src/conversation_engine/meta_accumulator.rs:1:use super::types::{Mode, ProviderAttemptMeta, ProviderClass, ProviderDecisionMeta, ReasonCode};
+src-tauri/src/conversation_engine/meta_accumulator.rs:6:    if std::env::var("OFFLINE_SIM").is_ok() {
+src-tauri/src/conversation_engine/meta_accumulator.rs:7:        "OFFLINE_SIM".to_string()
+src-tauri/src/conversation_engine/meta_accumulator.rs:30:pub fn mode_from(provider_class: ProviderClass, provider_id: &str, reason_code: ReasonCode) -> Mode {
+src-tauri/src/conversation_engine/meta_accumulator.rs:31:    if reason_code == ReasonCode::FallbackOffline || provider_id == "offline" {
+src-tauri/src/conversation_engine/meta_accumulator.rs:47:    reason_code: ReasonCode,
+src-tauri/src/conversation_engine/meta_accumulator.rs:48:    network_used_attempt: bool,
+src-tauri/src/conversation_engine/meta_accumulator.rs:55:        reason_code,
+src-tauri/src/conversation_engine/meta_accumulator.rs:56:        network_used_attempt,
+src-tauri/src/conversation_engine/meta_accumulator.rs:64:    reason_code: ReasonCode,
+src-tauri/src/conversation_engine/meta_accumulator.rs:68:    network_used: bool,
+src-tauri/src/conversation_engine/meta_accumulator.rs:69:    cache_hit: bool,
+src-tauri/src/conversation_engine/meta_accumulator.rs:70:) -> ProviderDecisionMeta {
+src-tauri/src/conversation_engine/meta_accumulator.rs:71:    ProviderDecisionMeta {
+src-tauri/src/conversation_engine/meta_accumulator.rs:75:        reason_code,
+src-tauri/src/conversation_engine/meta_accumulator.rs:77:        timeout_ms: DEFAULT_TIMEOUT_MS,
+src-tauri/src/conversation_engine/meta_accumulator.rs:80:        network_used,
+src-tauri/src/conversation_engine/meta_accumulator.rs:81:        cache_hit,
+src-tauri/src/conversation_engine/meta_accumulator.rs:86:pub fn build_success_meta(provider_used: &str, latency_ms_total: u128) -> ProviderDecisionMeta {
+src-tauri/src/conversation_engine/meta_accumulator.rs:88:    let reason_code = ReasonCode::Ok;
+src-tauri/src/conversation_engine/meta_accumulator.rs:89:    let network_used = matches!(provider_class, ProviderClass::Remote);
+src-tauri/src/conversation_engine/meta_accumulator.rs:91:    let mode = mode_from(provider_class.clone(), provider_used, reason_code.clone());
+src-tauri/src/conversation_engine/meta_accumulator.rs:97:        reason_code.clone(),
+src-tauri/src/conversation_engine/meta_accumulator.rs:98:        network_used,
+src-tauri/src/conversation_engine/meta_accumulator.rs:105:        reason_code,
+src-tauri/src/conversation_engine/meta_accumulator.rs:109:        network_used,
+src-tauri/src/conversation_engine/meta_accumulator.rs:114:pub fn build_offline_meta(reason_code: ReasonCode, policy: &str) -> ProviderDecisionMeta {
+src-tauri/src/conversation_engine/meta_accumulator.rs:123:        reason_code.clone(),
+src-tauri/src/conversation_engine/meta_accumulator.rs:131:        reason_code,
+src-tauri/src/conversation_engine/meta_accumulator.rs:140:pub fn build_timeout_meta() -> ProviderDecisionMeta {
+src-tauri/src/conversation_engine/meta_accumulator.rs:144:    let reason_code = ReasonCode::Timeout;
+src-tauri/src/conversation_engine/meta_accumulator.rs:150:        reason_code.clone(),
+src-tauri/src/conversation_engine/meta_accumulator.rs:158:        reason_code,
+src-tauri/src/config/update.rs:33:    pub timeout_ms: Option<u64>,
+src-tauri/src/config/update.rs:83:pub fn validate_timeout_ms(timeout_ms: u64) -> Result<(), String> {
+src-tauri/src/config/update.rs:84:    if timeout_ms == 0 {
+src-tauri/src/config/update.rs:88:    if timeout_ms < 1000 {
+src-tauri/src/config/update.rs:92:    if timeout_ms > 3_600_000 {
+src-tauri/src/config/update.rs:215:    if let Some(timeout_ms) = update.timeout_ms {
+src-tauri/src/config/update.rs:216:        validate_timeout_ms(timeout_ms)?;
+src-tauri/src/config/update.rs:217:        log::info!("✅ [CONFIG] Timeout validated: {}ms", timeout_ms);
+src-tauri/src/config/update.rs:275:    fn test_validate_timeout_ms() {
+src-tauri/src/config/update.rs:276:        assert!(validate_timeout_ms(1000).is_ok());
+src-tauri/src/config/update.rs:277:        assert!(validate_timeout_ms(45000).is_ok());
+src-tauri/src/config/update.rs:278:        assert!(validate_timeout_ms(400_000).is_ok()); // OK: < 3600000ms (1h)
+src-tauri/src/config/update.rs:279:        assert!(validate_timeout_ms(3_600_000).is_ok()); // OK: exactement 1h
+src-tauri/src/config/update.rs:280:        assert!(validate_timeout_ms(0).is_err());
+src-tauri/src/config/update.rs:281:        assert!(validate_timeout_ms(500).is_err());
+src-tauri/src/config/update.rs:282:        assert!(validate_timeout_ms(3_600_001).is_err()); // Invalide: > 1h
+src-tauri/src/config/mod.rs:36:    pub timeout_ms: u64,
+src-tauri/src/config/mod.rs:45:            timeout_ms: 45000,
+src-tauri/src/ipc/cache.rs:176:    fn test_cache_hit() {
+src-tauri/src/conversation_engine/types.rs:415:    pub provider_meta: Option<ProviderDecisionMeta>,
+src-tauri/src/conversation_engine/types.rs:464:    pub reason_code: ReasonCode,
+src-tauri/src/conversation_engine/types.rs:465:    pub network_used_attempt: bool,
+src-tauri/src/conversation_engine/types.rs:469:pub struct ProviderDecisionMeta {
+src-tauri/src/conversation_engine/types.rs:473:    pub reason_code: ReasonCode,
+src-tauri/src/conversation_engine/types.rs:475:    pub timeout_ms: u64,
+src-tauri/src/conversation_engine/types.rs:478:    pub network_used: bool,
+src-tauri/src/conversation_engine/types.rs:479:    pub cache_hit: bool,
+src-tauri/P2-2_COMPLETION_REPORT.md:39:5. `test_cache_hit_rate` - Metrics validation
+src-tauri/P2-2_COMPLETION_REPORT.md:48:test test_cache_hit_rate ... ok
+src-tauri/P2-2_COMPLETION_REPORT.md:389:**Problem:** `test_cache_hit_rate` failing - first `get()` didn't record miss  
+src-tauri/src/conversation_engine/omega_integration.rs:39:    pub timeout_ms: u64,
+src-tauri/src/conversation_engine/omega_integration.rs:50:            timeout_ms: 200, // <200ms target
+src-tauri/src/conversation_engine/omega_integration.rs:63:            timeout_ms: config.timeout_ms,
+src-tauri/src/conversation_engine/omega_integration.rs:68:            target_latency_ms: config.timeout_ms,
+src-tauri/src/ai/config_multi.rs:55:    pub timeout_ms: u64,
+src-tauri/src/ai/config_multi.rs:65:            timeout_ms: 30_000,
+src-tauri/src/ai/config_multi.rs:94:    pub timeout_ms: u64,
+src-tauri/src/ai/config_multi.rs:104:            timeout_ms: 30_000,
+src-tauri/src/ai/config_multi.rs:133:    pub timeout_ms: u64,
+src-tauri/src/ai/config_multi.rs:146:            timeout_ms: 60_000,
+src-tauri/src/conversation_engine/mod.rs:163:        if std::env::var("OFFLINE_SIM").is_ok() {
+src-tauri/src/conversation_engine/mod.rs:164:            log::warn!("[CONV-ENGINE] 🟡 OFFLINE_SIM enabled — returning deterministic offline response");
+src-tauri/src/conversation_engine/mod.rs:271:            assistant_message: "Mode OFFLINE_SIM actif. Réponse hors ligne déterministe.".to_string(),
+src-tauri/src/conversation_engine/mod.rs:277:            cognitive_summary: "Réponse simulée hors ligne (OFFLINE_SIM=1).".to_string(),
+src-tauri/src/conversation_engine/mod.rs:285:                provider_meta: Some(build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM")),
+src-tauri/src/api_hub/anthropic.rs:392:            timeout_ms: None,
+src-tauri/src/agents/config.rs:31:    pub message_delivery_timeout_ms: u64,
+src-tauri/src/agents/config.rs:61:            message_delivery_timeout_ms: 5000,
+src-tauri/src/api_hub/temporal_integration_tests.rs:114:            timeout_ms: None,
+src-tauri/src/api_hub/temporal_integration_tests.rs:246:            timeout_ms: None,
+src-tauri/src/perf_metrics_capture.rs:15:    pub cache_hits: u32,
+src-tauri/src/perf_metrics_capture.rs:37:    pub total_cache_hits: u32,
+src-tauri/src/perf_metrics_capture.rs:39:    pub cache_hit_rate: f64,
+src-tauri/src/perf_metrics_capture.rs:64:        let cache_hits = 8;
+src-tauri/src/perf_metrics_capture.rs:72:            cache_hits,
+src-tauri/src/perf_metrics_capture.rs:85:            cache_hits: 0,
+src-tauri/src/perf_metrics_capture.rs:98:            cache_hits: 127,
+src-tauri/src/perf_metrics_capture.rs:111:            cache_hits: 45,
+src-tauri/src/perf_metrics_capture.rs:145:            summary.total_cache_hits = self.operations.iter()
+src-tauri/src/perf_metrics_capture.rs:146:                .map(|m| m.cache_hits)
+src-tauri/src/perf_metrics_capture.rs:153:            let total_cache_ops = summary.total_cache_hits as f64 
+src-tauri/src/perf_metrics_capture.rs:157:                summary.cache_hit_rate = summary.total_cache_hits as f64 / total_cache_ops;
+src-tauri/src/perf_metrics_capture.rs:229:        assert!(report.summary.cache_hit_rate >= 0.0 && report.summary.cache_hit_rate <= 1.0);
+src-tauri/src/api_hub/safety_bridge.rs:415:            timeout_ms: None,
+src-tauri/src/api_hub/safety_bridge.rs:438:            timeout_ms: None,
+src-tauri/src/api_hub/safety_bridge.rs:457:            timeout_ms: None,
+src-tauri/src/api_hub/temporal_cache.rs:295:    async fn test_cache_hit_tracking() {
+src-tauri/src/api_hub/openai.rs:465:            timeout_ms: None,
+src-tauri/src/api_hub/mod.rs:104:    pub timeout_ms: Option<u64>,
+src-tauri/src/api_hub/mod.rs:346:            timeout_ms: Some(30000),
+src-tauri/src/api_hub/mod.rs:374:            timeout_ms: Some(60000),
+src-tauri/src/api_hub/mod.rs:399:            timeout_ms: Some(60000),
+src-tauri/src/api_hub/multimodal_router.rs:23:    pub timeout_ms: Option<u64>,
+src-tauri/src/api_hub/multimodal_router.rs:129:            timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:181:                timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:216:                timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:260:            timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:353:                timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:436:                timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:481:            timeout_ms: request.timeout_ms,
+src-tauri/src/api_hub/multimodal_router.rs:530:            timeout_ms: Some(30000),
+src-tauri/src/agent_system/lifecycle.rs:275:    pub initialization_timeout_ms: u64,
+src-tauri/src/agent_system/lifecycle.rs:276:    pub shutdown_timeout_ms: u64,
+src-tauri/src/agent_system/lifecycle.rs:284:            initialization_timeout_ms: 30000,
+src-tauri/src/agent_system/lifecycle.rs:285:            shutdown_timeout_ms: 10000,
+src-tauri/src/api_hub/config.rs:17:    pub default_timeout_ms: u64,
+src-tauri/src/api_hub/config.rs:51:            default_timeout_ms: 60000,
+src-tauri/src/api_hub/config.rs:99:            default_timeout_ms: 120000, // Plus long pour debug
+src-tauri/src/api_hub/config.rs:244:        assert_eq!(config.default_timeout_ms, 60000);
+src-tauri/src/api_hub/config.rs:262:        assert_eq!(config.default_timeout_ms, 120000);
+src-tauri/src/api_hub/config.rs:300:        assert_eq!(cloned.default_timeout_ms, config.default_timeout_ms);
+src-tauri/src/api_hub/router.rs:443:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:469:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:493:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:684:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:708:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:732:            timeout_ms: None,
+src-tauri/src/api_hub/router.rs:756:            timeout_ms: None,
+src-tauri/src/api_hub/gemini.rs:460:            timeout_ms: None,
+src-tauri/src/agent_system/config.rs:22:    pub default_task_timeout_ms: u64,
+src-tauri/src/agent_system/config.rs:23:    pub collaboration_timeout_ms: u64,
+src-tauri/src/agent_system/config.rs:53:            default_task_timeout_ms: 90000, // 90s - REQUIS STRUCT - NE PAS SUPPRIMER
+src-tauri/src/agent_system/config.rs:54:            collaboration_timeout_ms: 3600000, // AUGMENTÉ: 5min → 1h
+src-tauri/src/agent_system/config.rs:79:            default_task_timeout_ms: 30000, // 30s - REQUIS STRUCT - NE PAS SUPPRIMER
+src-tauri/src/agent_system/config.rs:80:            collaboration_timeout_ms: 60000,
+src-tauri/src/agent_system/config.rs:83:                timeout_ms: 30000,
+src-tauri/src/agent_system/config.rs:110:            default_task_timeout_ms: 90000, // 90s - REQUIS STRUCT - NE PAS SUPPRIMER
+src-tauri/src/agent_system/config.rs:111:            collaboration_timeout_ms: 3600000, // AUGMENTÉ: 10min → 1h
+src-tauri/src/agent_system/config.rs:114:                timeout_ms: 90000, // ✨ v26.2.1: Match default_task_timeout_ms
+src-tauri/src/agent_system/config.rs:145:            default_task_timeout_ms: 60000, // 60s - REQUIS STRUCT - NE PAS SUPPRIMER
+src-tauri/src/agent_system/config.rs:146:            collaboration_timeout_ms: 1800000, // AUGMENTÉ: 3min → 30min
+src-tauri/src/agent_system/config.rs:179:        if self.default_task_timeout_ms < 1000 {
+src-tauri/src/agent_system/config.rs:181:                "default_task_timeout_ms must be >= 1000".to_string(),
+src-tauri/src/agent_system/supervisor.rs:35:    pub timeout_ms: u64,
+src-tauri/src/agent_system/supervisor.rs:45:            timeout_ms: 600000,              // AUGMENTÉ: 60s → 600s (10 min)
+src-tauri/src/agent_system/supervisor.rs:192:        let timeout = task.timeout_ms.min(self.config.timeout_ms);
+src-tauri/src/agent_system/mod.rs:342:    pub timeout_ms: u64,
+src-tauri/src/agent_system/mod.rs:355:            timeout_ms: 75000, // ✨ v26.2.1: Increased from 60s to 75s (cloud-aligned)
+src-tauri/src/meta_orchestrator/priority_scheduler.rs:24:    pub task_timeout_ms: u64,
+src-tauri/src/meta_orchestrator/priority_scheduler.rs:34:            task_timeout_ms: 60000,
+src-tauri/src/meta_orchestrator/priority_scheduler.rs:176:                if now - started > self.config.task_timeout_ms {
+src-tauri/src/constitution/governance.rs:96:    pub timeout_ms: u64,
+src-tauri/src/constitution/governance.rs:158:                timeout_ms: 5000,
+src-tauri/src/constitution/governance.rs:168:                timeout_ms: 60000,
+src-tauri/src/constitution/governance.rs:178:                timeout_ms: 1000,
+src-tauri/src/constitution/governance.rs:188:                timeout_ms: 86400000, // 24 heures
+src-tauri/src/multimodal/commands.rs.disabled:220:    pub cache_hits: u64,
+src-tauri/src/multimodal/commands.rs.disabled:239:        cache_hits: 0,
+src-tauri/src/healing/health_scheduler.rs:29:    pub timeout_ms: u64,
+src-tauri/src/healing/health_scheduler.rs:297:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:315:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:334:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:354:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:372:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:403:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:433:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:462:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:502:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:531:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:588:            timeout_ms: 1000,
+src-tauri/src/healing/health_scheduler.rs:709:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:719:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:759:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:779:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:810:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:850:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:881:            timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:910:                timeout_ms: 500,
+src-tauri/src/healing/health_scheduler.rs:928:            timeout_ms: 5000,
+src-tauri/src/healing/health_scheduler.rs:937:        assert_eq!(config.timeout_ms, 5000);
+src-tauri/src/healing/health_scheduler.rs:993:            timeout_ms: 500,
+src-tauri/src/overdrive/api_bridge.rs:23:    pub timeout_ms: u64,
+src-tauri/src/overdrive/api_bridge.rs:96:            timeout_ms: 30000,
+src-tauri/src/overdrive/api_bridge.rs:109:            timeout_ms: 60000,
+src-tauri/src/overdrive/api_bridge.rs:129:            timeout_ms: 10000,
+src-tauri/src/overdrive/api_bridge.rs:254:    // req = req.timeout(std::time::Duration::from_millis(config.timeout_ms));

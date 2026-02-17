@@ -1,0 +1,5 @@
+A	src-tauri/src/conversation_engine/meta_accumulator.rs
+M	src-tauri/src/conversation_engine/mod.rs
+M	src-tauri/src/conversation_engine/omega_integration.rs
+M	src-tauri/src/conversation_engine/pipeline.rs
+M	src-tauri/src/conversation_engine/types.rs
