@@ -52,17 +52,21 @@ function runApprovalGate() {
 }
 
 /**
- * Check git working tree is clean
+ * Check git working tree is clean (or only has untracked files)
  */
 function verifyGitClean() {
   console.log(`${LOG_PREFIX} Step 2: Verifying git state...\n`);
 
   try {
-    const status = execSync('git status --porcelain', { cwd: repoRoot, encoding: 'utf8' }).trim();
-    
-    if (status) {
-      console.error(`${LOG_PREFIX} ❌ Git working tree is not clean:`);
-      console.error(status);
+    // Check for staged but uncommitted changes (committed files modified)
+    const stagedChanges = execSync('git diff --cached --name-only', { cwd: repoRoot, encoding: 'utf8' }).trim();
+    const unstagedChanges = execSync('git diff --name-only', { cwd: repoRoot, encoding: 'utf8' }).trim();
+
+    // Allow untracked files (??), but not staged/unstaged changes
+    if (stagedChanges || unstagedChanges) {
+      console.error(`${LOG_PREFIX} ❌ Git working tree has uncommitted changes:`);
+      if (stagedChanges) console.error(`Staged: ${stagedChanges}`);
+      if (unstagedChanges) console.error(`Unstaged: ${unstagedChanges}`);
       console.error(`${LOG_PREFIX}    Run: git add . && git commit -m "message"`);
       return false;
     }
