@@ -1,0 +1,13 @@
+P9.3A Clean Tree Protocol
+Timestamp: 2026-02-18T00:31:40Z
+
+Executed:
+- date -u
+- git status --porcelain=v1
+- git rev-parse HEAD
+- git log -5 --oneline --decorate
+- out-of-scope detection
+- snapshot out-of-scope files
+- git restore / git clean for out-of-scope
+- git status --porcelain=v1 (after)
+- sha256sum (P9.3A pack)

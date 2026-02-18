@@ -1,0 +1,5 @@
+67372e3c (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(governance): update P9.1 verdict after push
+cb0e1619 docs(governance): seal P9.1 proof pack
+b9a7efba docs(registry): append P9 public readiness entry
+919cbf51 docs(governance): P9 public readiness framework (sealed)
+bbf00a89 docs: finalize P8.5.1 token wait state

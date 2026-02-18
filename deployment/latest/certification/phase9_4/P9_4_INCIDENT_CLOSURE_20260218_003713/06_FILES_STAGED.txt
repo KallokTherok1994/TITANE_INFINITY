@@ -1,0 +1,88 @@
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/01_PRECHECKS.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/02_DIFF_FULL.patch
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/03_DIFF_CLASSIFICATION.md
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/04_BLAME_HEAD.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/05_PROVENANCE.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/06_POLICY_DECISION.md
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/07_REMEDIATION_PLAN.md
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/08_EXECUTION_LOG.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/09_VERDICT.md
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/10_LOCK.md
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/11_SHA256SUMS.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/COMMANDS_RUN.txt
+deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_003236/ENV.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/00_TIME.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/01_GIT_STATUS_BEFORE.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/02_GIT_HEAD.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/03_OUT_OF_SCOPE_LIST.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/04_COPY_OUT_OF_SCOPE.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/05_GIT_STATUS_AFTER.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/COMMANDS_RUN.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/ENV.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/LOCK.md
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/OUT_OF_SCOPE_SNAPSHOT/deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/FILES_STAGED.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/SHA256SUMS.txt
+deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/VERDICT.md
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/COMMIT_LOG.txt
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/EXECUTION_LOG.txt
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/LOCK.md
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/REGISTRY_POST_DIFF.patch
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/SHA256SUMS.txt
+deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/VERDICT.md
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/01_PRECHECKS.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/02_SCOPE_GUARD.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/03_HASH_VERIFY_P9_3A.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/04_HASH_VERIFY_P9_3.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/05_HASH_VERIFY_P9_3B.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/06_FILES_STAGED.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/07_REGISTRY_DIFF.patch
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/09_VERDICT.md
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/10_LOCK.md
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/11_SHA256SUMS.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/COMMANDS_RUN.txt
+deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/ENV.txt
+
+ .../01_PRECHECKS.txt                               |  13 +
+ .../02_DIFF_FULL.patch                             |   0
+ .../03_DIFF_CLASSIFICATION.md                      |   2 +
+ .../04_BLAME_HEAD.txt                              | 863 +++++++++++++++++++++
+ .../05_PROVENANCE.txt                              |  29 +
+ .../06_POLICY_DECISION.md                          |  14 +
+ .../07_REMEDIATION_PLAN.md                         |  10 +
+ .../08_EXECUTION_LOG.txt                           |  16 +
+ .../09_VERDICT.md                                  |  11 +
+ .../10_LOCK.md                                     |   6 +
+ .../11_SHA256SUMS.txt                              |  12 +
+ .../COMMANDS_RUN.txt                               |  15 +
+ .../P9_3_REGISTRY_INCIDENT_20260218_003236/ENV.txt |   7 +
+ .../P9_3A_CLEAN_TREE_20260218_003140/00_TIME.txt   |   1 +
+ .../01_GIT_STATUS_BEFORE.txt                       |   3 +
+ .../02_GIT_HEAD.txt                                |   6 +
+ .../03_OUT_OF_SCOPE_LIST.txt                       |   1 +
+ .../04_COPY_OUT_OF_SCOPE.txt                       |   1 +
+ .../05_GIT_STATUS_AFTER.txt                        |   2 +
+ .../COMMANDS_RUN.txt                               |  13 +
+ .../P9_3A_CLEAN_TREE_20260218_003140/ENV.txt       |   7 +
+ .../P9_3A_CLEAN_TREE_20260218_003140/LOCK.md       |   6 +
+ .../FILES_STAGED.txt                               |  38 +
+ .../SHA256SUMS.txt                                 |   8 +
+ .../P9_3A_CLEAN_TREE_20260218_003140/VERDICT.md    |  11 +
+ .../COMMIT_LOG.txt                                 |   5 +
+ .../EXECUTION_LOG.txt                              |   9 +
+ .../P9_3B_REMEDIATION_20260218_003400/LOCK.md      |   6 +
+ .../REGISTRY_POST_DIFF.patch                       |   0
+ .../SHA256SUMS.txt                                 |   5 +
+ .../P9_3B_REMEDIATION_20260218_003400/VERDICT.md   |   8 +
+ .../01_PRECHECKS.txt                               |  12 +
+ .../02_SCOPE_GUARD.txt                             |  46 ++
+ .../03_HASH_VERIFY_P9_3A.txt                       |   8 +
+ .../04_HASH_VERIFY_P9_3.txt                        |  12 +
+ .../05_HASH_VERIFY_P9_3B.txt                       |   5 +
+ .../06_FILES_STAGED.txt                            |  90 +++
+ .../07_REGISTRY_DIFF.patch                         |  23 +
+ .../09_VERDICT.md                                  |  12 +
+ .../10_LOCK.md                                     |   6 +
+ .../11_SHA256SUMS.txt                              |  11 +
+ .../COMMANDS_RUN.txt                               |  13 +
+ .../P9_4_INCIDENT_CLOSURE_20260218_003713/ENV.txt  |   6 +
+ 43 files changed, 1372 insertions(+)

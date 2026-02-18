@@ -1,0 +1,8 @@
+00_TIME.txt: Réussi
+01_GIT_STATUS_BEFORE.txt: Réussi
+02_GIT_HEAD.txt: Réussi
+03_OUT_OF_SCOPE_LIST.txt: Réussi
+04_COPY_OUT_OF_SCOPE.txt: Réussi
+05_GIT_STATUS_AFTER.txt: Réussi
+LOCK.md: Réussi
+VERDICT.md: Réussi
