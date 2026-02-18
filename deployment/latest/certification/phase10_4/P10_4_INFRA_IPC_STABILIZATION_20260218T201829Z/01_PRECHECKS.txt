@@ -1,0 +1,31 @@
+# Prechecks
+
+## Binary Location
+Expected: /opt/titane/titane-infinity
+❌ Not found at default
+
+Searching...
+/home/titane-os/.local/bin/titane-infinity
+/home/titane-os/.local/share/Trash/files/TITANE-DOC/data/usr/bin/titane-infinity
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/v27.0.0-PRODUCTION/titane-infinity
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/titane-infinity
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity
+
+## Binary Path (Selected)
+/home/titane-os/.local/bin/titane-infinity
+
+## Permissions
+-rwxr-xr-x 1 titane-os titane-os 85M févr.  6 10:12 /home/titane-os/.local/bin/titane-infinity
+
+## Size
+85M
+
+## Architecture
+/home/titane-os/.local/bin/titane-infinity: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), static-pie linked, BuildID[sha1]=3431b1791bd57db9eaf4e95cd888823b203605b4, stripped
+
+## System
+- Uname: Linux TITANE-OS 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+- User: titane-os
+- Hostname: TITANE-OS
+- Time: 2026-02-18T20:18:32Z
+

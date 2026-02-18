@@ -1,0 +1,96 @@
+# P10.4 Execution Log
+# Phase: Infrastructure IPC Stabilization
+# Start UTC: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+
+EOF
+
+[2026-02-18T20:18:29Z] PHASE A: Prechecks initiated
+[2026-02-18T20:18:32Z] PRECHECKS complete
+[2026-02-18T20:18:55Z] Binary check complete
+[2026-02-18T20:19:01Z] Phase B: Binary launch test complete
+[2026-02-18T20:19:50Z] RUN 1: Starting
+=== INFRA DIAGNOSTIC RUN 1 ===
+Start: 2026-02-18T20:19:50Z
+
+PRE-RUN CHECKS:
+- Ollama availability:
+  ✅ Ollama ready
+- No stray titane processes:
+  Found: 0 processes (expect 0)
+
+LAUNCHING WITH WRAPPER:
+[2026-02-18T20:19:50Z] Starting headless wrapper (timeout: 20s)
+✅ Using Xvfb for dummy display
+(EE) 
+Fatal server error:
+(EE) Server is already active for display 99
+	If this server is no longer running, remove /tmp/.X99-lock
+	and start again.
+(EE) 
+[2026-02-18T20:19:51Z] Launching /usr/bin/titane-infinity
+[2026-02-18T20:19:51Z] Binary PID: 698031
+[2026-02-18T20:19:51.230Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-02-18T20:19:51.230Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-02-18T20:19:51.230Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+libEGL warning: DRI3 error: Could not get DRI3 device
+libEGL warning: Ensure your X server supports DRI3 to get accelerated rendering
+[2026-02-18T20:19:51.361Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-02-18T20:19:51.361Z INFO  titane_infinity::auth] ✓ Keystore chargé: 0 secrets configurés
+[2026-02-18T20:19:51.361Z INFO  titane_infinity::auth::roles] ✓ Role Owner créé pour Kevin Thibault
+[2026-02-18T20:19:51.361Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-02-18T20:19:51.361Z WARN  titane_infinity::auth] ⚠ Dev Token absent — Génération requise
+[2026-02-18T20:19:51.361Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-02-18T20:19:51.361Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-02-18T20:19:51.394Z INFO  titane_infinity::ai::ollama] [OllamaClient] new() | resolved_model=gemma2:2b
+[2026-02-18T20:19:51.394Z INFO  titane_infinity] [AI Router] Initialized with default Ollama model: gemma2:2b
+[2026-02-18T20:19:51.394Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-02-18T20:19:51.395Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-02-18T20:19:51.395Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-02-18T20:19:51.434Z INFO  titane_infinity] [Ollama] Endpoint already available
+[2026-02-18T20:19:51.957Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+[2026-02-18T20:19:51.961Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-02-18T20:19:51.989Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-02-18T20:19:52.003Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+
+LAUNCH METRICS:
+- Exit code: 1
+- Duration: 2s
+
+STARTUP MARKERS:
+- Backend ready at: 2026-02-18T20:19:51.395Z INFO  titane_infinity
+- Panic count: 0
+0
+- Crash indicators: 0
+
+IPC BRIDGE:
+- IPC references: 4
+
+End: 2026-02-18T20:19:52Z
+Status: FAIL
+[2026-02-18T20:19:52.368Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-02-18T20:19:52.396Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-02-18T20:19:52.534Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-02-18T20:19:52.534Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/tmp/titane_p10_4_home_698002/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-02-18T20:19:52.535Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-02-18T20:19:57.662Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-18T20:19:57.662Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-18T20:19:57.663Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-18T20:19:57.825Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-18T20:19:57.825Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-18T20:19:57.825Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-18T20:19:59.159Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-18T20:19:59.159Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-18T20:19:59.376Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-18T20:19:59.376Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-18T20:20:00.323Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-18T20:20:00.323Z INFO  titane_infinity::audio::commands] [Audio] File size: 28044 bytes, expected min: 16000
+[2026-02-18T20:20:00.323Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+[2026-02-18T20:20:00.410Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-18T20:20:00.410Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 16000
+[2026-02-18T20:20:00.410Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
