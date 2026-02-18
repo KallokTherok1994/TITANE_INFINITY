@@ -1,0 +1,18 @@
+[2026-02-18T21:13:10Z] ═══════════════════════════════════════════════════════════
+[2026-02-18T21:13:10Z] PHASE P10.4: INFRA IPC STABILIZATION CERT
+[2026-02-18T21:13:10Z] ═══════════════════════════════════════════════════════════
+[2026-02-18T21:13:10Z] 
+[2026-02-18T21:13:10Z] ═══ PRECHECK: Clean Git Tree ===
+[2026-02-18T21:13:10Z] ✅ Git tree clean (tracked files)
+[2026-02-18T21:13:10Z] ✅ Safe: src-tauri/tauri.conf.json unchanged
+[2026-02-18T21:13:10Z] ✅ Safe: src-tauri/Cargo.toml unchanged
+[2026-02-18T21:13:10Z] ✅ Safe: package.json unchanged
+[2026-02-18T21:13:10Z] ✅ Safe: pnpm-lock.yaml unchanged
+[2026-02-18T21:13:10Z] ✅ PRECHECK PASS
+[2026-02-18T21:13:10Z] Sandbox: /tmp/P10_4_sandbox_1771449190
+[2026-02-18T21:13:10Z] 
+[2026-02-18T21:13:10Z] GATE 1: PRECHECK
+[2026-02-18T21:13:10Z] ✅ Binary found
+[2026-02-18T21:13:10Z] 
+[2026-02-18T21:13:10Z] RUN 1/3: Binary Launch + IPC
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/certification/p10_4_infra_ipc.sh: ligne 45 : local: utilisable seulement dans une fonction
