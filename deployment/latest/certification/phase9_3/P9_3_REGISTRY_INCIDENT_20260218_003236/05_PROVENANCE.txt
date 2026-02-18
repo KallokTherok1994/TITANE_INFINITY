@@ -1,0 +1,29 @@
+b9a7efba docs(registry): append P9 public readiness entry
+bbf00a89 docs: finalize P8.5.1 token wait state
+c65a45fd docs: append P8.5 blocked token missing
+75ec78a2 docs: append P8.4 week2 expansion gates (GATES_PASS_READY)
+3c3ae299 docs: append P8.3 week 1 certification to registry (GO_FOR_WEEK2_EXPANSION)
+51ad2571 chore: P8.2 proof pack finalized (COMMANDS_RUN, VERDICT, LOCK, SHA256SUMS, registry entry)
+6b4b3774 docs(certification): P7 OPS_CADENCE audit complete - DEB ✅ PASS, field distribution approved
+ab5e0f46 docs(certification): P6 OPS_READINESS audit complete - drift guard active, ops procedures deployed
+58ab3eb0 docs(governance): P5-5 seal + archive immutable, production stable
+5512c75b docs(governance): append P4-3 deploy executed (099af19e → 20260217_171400)
+695a6d54 docs(governance): append P4-3 deploy final record
+34a264e9 docs(governance): append P4-3 deploy executed
+099af19e docs: P4-1 build recovery + staging artifacts
+f4f2dfb3 chore(p4): append registry entries for blocked P4 runs (proof packs only)
+6b8b73ed chore(p4-1a): lock prod-safe build path (governance + guard + policy)
+26224ff1 chore(p3-seal): append final registry entry + archive ipc scripts as isolated tools
+fbd99372 docs(governance): append P3-6 gates recovery (NO_VITE harness) verdict
+c35f3d1a docs(p3): append P3-5 UI meta certification
+37e17403 docs(p3): append P3-4 IPC meta certification
+1f6fbd0e docs(p3): append P3-3 instrumentation certification
+79ac0be8 docs(p3): append P3-2 types certification
+48174b75 docs(p3): append P3-1 registry addendum
+2efdb00f docs(p3): add provider orchestration contracts (meta v1)
+b1fe85d1 docs(governance): append version decision for Phase 2A → v27.0.3
+ca3d7c36 docs(governance): append DEPLOYMENT_READY for 97b566d3 (CI optional, local-first)
+388ef9a7 docs(governance): append CI_VERIFIED_UNKNOWN for 97b566d3 (P2 post-merge CI check)
+f523fa68 docs(governance): append incident for unintended follow-tags tag push
+dbc8e4a4 (tag: P2_POST_MERGE_BUILD_VERIFIED_97b566d3) docs(p2): append post-merge local build proof for 97b566d3 (ci pending)
+ffd1db4f docs(cert): append P2 Phase 2A sync registry entry

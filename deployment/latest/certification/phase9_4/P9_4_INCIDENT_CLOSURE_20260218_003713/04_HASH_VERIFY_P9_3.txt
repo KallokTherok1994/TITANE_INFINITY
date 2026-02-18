@@ -1,0 +1,12 @@
+01_PRECHECKS.txt: Réussi
+02_DIFF_FULL.patch: Réussi
+03_DIFF_CLASSIFICATION.md: Réussi
+04_BLAME_HEAD.txt: Réussi
+05_PROVENANCE.txt: Réussi
+06_POLICY_DECISION.md: Réussi
+07_REMEDIATION_PLAN.md: Réussi
+08_EXECUTION_LOG.txt: Réussi
+09_VERDICT.md: Réussi
+10_LOCK.md: Réussi
+COMMANDS_RUN.txt: Réussi
+ENV.txt: Réussi

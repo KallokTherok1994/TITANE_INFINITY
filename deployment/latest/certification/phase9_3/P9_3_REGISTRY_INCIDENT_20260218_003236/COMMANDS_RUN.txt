@@ -1,0 +1,15 @@
+P9.3 Registry Incident Triage
+Timestamp: 2026-02-18T00:32:36Z
+
+Executed:
+- git status --porcelain=v1
+- git rev-parse HEAD
+- git log -10 --oneline --decorate
+- git diff -- docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md > 02_DIFF_FULL.patch
+- git blame -n docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md > 04_BLAME_HEAD.txt
+- git log --follow --oneline --decorate -- docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md | head -n 50 > 05_PROVENANCE.txt
+- git show <SUSPECT_COMMIT> --patch -- docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md >> 05_PROVENANCE.txt
+- git show <SUSPECT_COMMIT> --name-only >> 05_PROVENANCE.txt
+
+Notes:
+- git show pipeline returned exit 141; outputs captured in files.

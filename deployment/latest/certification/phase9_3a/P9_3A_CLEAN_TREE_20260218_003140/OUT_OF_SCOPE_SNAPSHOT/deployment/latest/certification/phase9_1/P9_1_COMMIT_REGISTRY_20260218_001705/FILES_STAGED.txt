@@ -1,0 +1,38 @@
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/BETA_MATURITY_CRITERIA.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/COMMANDS_RUN.txt
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/COMMUNICATION_PLAN.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/ENV.txt
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/GO_PUBLIC_DECISION_FRAMEWORK.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/INCIDENT_ESCALATION_MATRIX.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/LOAD_SCALING_PLAN.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/LOCK.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/PUBLIC_RELEASE_REQUIREMENTS.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/RISK_MATRIX.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/SHA256SUMS.txt
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/SUPPORT_CAPACITY_MODEL.md
+deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/VERDICT.md
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/01_PRECHECKS.txt
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/COMMANDS_RUN.txt
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/FILES_STAGED.txt
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/HASH_VERIFY.txt
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/REGISTRY_DIFF.txt
+
+ .../BETA_MATURITY_CRITERIA.md                      | 19 ++++++++++++
+ .../COMMANDS_RUN.txt                               |  5 +++
+ .../COMMUNICATION_PLAN.md                          | 27 ++++++++++++++++
+ .../P9_PUBLIC_READINESS_20260217_235953/ENV.txt    |  7 +++++
+ .../GO_PUBLIC_DECISION_FRAMEWORK.md                | 19 ++++++++++++
+ .../INCIDENT_ESCALATION_MATRIX.md                  | 13 ++++++++
+ .../LOAD_SCALING_PLAN.md                           | 33 ++++++++++++++++++++
+ .../P9_PUBLIC_READINESS_20260217_235953/LOCK.md    |  7 +++++
+ .../PUBLIC_RELEASE_REQUIREMENTS.md                 | 14 +++++++++
+ .../RISK_MATRIX.md                                 | 11 +++++++
+ .../SHA256SUMS.txt                                 | 12 ++++++++
+ .../SUPPORT_CAPACITY_MODEL.md                      | 15 +++++++++
+ .../P9_PUBLIC_READINESS_20260217_235953/VERDICT.md |  9 ++++++
+ .../01_PRECHECKS.txt                               |  6 ++++
+ .../COMMANDS_RUN.txt                               | 18 +++++++++++
+ .../FILES_STAGED.txt                               | 36 ++++++++++++++++++++++
+ .../HASH_VERIFY.txt                                | 12 ++++++++
+ .../REGISTRY_DIFF.txt                              | 22 +++++++++++++
+ 18 files changed, 285 insertions(+)
