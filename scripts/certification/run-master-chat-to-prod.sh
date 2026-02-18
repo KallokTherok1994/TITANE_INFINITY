@@ -257,8 +257,8 @@ log_cmd "MASTER_RUN_ID: $MASTER_RUN_ID"
 log_cmd ""
 log_cmd "PHASE VERDICTS:"
 for phase in P10_4 P10_3_2R P10_5 P10_6 P10_7 P10_8 P11; do
-  local verdict="${PHASE_RESULTS[$phase]:-UNKNOWN}"
-  local loops="${PHASE_LOOPS[$phase]:-0}"
+  verdict="${PHASE_RESULTS[$phase]:-UNKNOWN}"
+  loops="${PHASE_LOOPS[$phase]:-0}"
   log_cmd "  $phase: $verdict (autofix loops: $loops)"
 done
 log_cmd ""
@@ -266,8 +266,8 @@ log_cmd "TOTAL AUTOFIX LOOPS: $TOTAL_AUTOFIX_LOOPS / $MAX_TOTAL_AUTOFIX_LOOPS"
 log_cmd ""
 
 # Determine final system status
-local phases_pass=0
-local phases_fail=0
+phases_pass=0
+phases_fail=0
 for phase in P10_4 P10_3_2R P10_5 P10_6 P10_7 P10_8; do
   if [ "${PHASE_RESULTS[$phase]}" = "PASS" ]; then
     ((phases_pass++))
