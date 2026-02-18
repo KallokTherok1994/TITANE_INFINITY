@@ -1,0 +1,210 @@
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY]633;E;exec 2>&1;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "Pack: $PACK_DIR"
+[?2004l]633;E;echo "Pack: $PACK_DIR";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CPack: deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+[?2004l]633;E;echo "Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CTimestamp: 2026-02-18T20:59:43Z
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B# ===== 1. SECURITY CHECKS =====
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "=== P11.1: SECURITY AUDIT ==="
+[?2004l]633;E;echo "=== P11.1: SECURITY AUDIT ===";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C=== P11.1: SECURITY AUDIT ===
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "Scanning for hardcoded secrets..."
+[?2004l]633;E;echo "Scanning for hardcoded secrets...";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CScanning for hardcoded secrets...
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bgrep -r "password\|api_key\|secret" src/ 2>/dev/null | grep -v "node_modules\|\.git" | wc -l | xargs echo "  Potential secrets found:"
+[?2004l]633;E;grep -r "password\\|api_key\\|secret" src/ 2>/dev/null | grep -v "node_modules\\|\\.git" | wc -l | xargs echo "  Potential secrets found:";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C  Potential secrets found: 190
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "Checking dependencies for known vulnerabilities..."
+[?2004l]633;E;echo "Checking dependencies for known vulnerabilities...";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CChecking dependencies for known vulnerabilities...
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bnpm audit --audit-level=high 2>/dev/null | tail -3 || echo "  (npm audit not configured)"
+[?2004l]633;E;npm audit --audit-level=high 2>/dev/null | tail -3 || echo "  (npm audit not configured)";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "License compliance check..."
+[?2004l]633;E;echo "License compliance check...";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CLicense compliance check...
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bnpm list --depth=0 2>/dev/null | head -10
+[?2004l]633;E;npm list --depth=0 2>/dev/null | head -10;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;Ctitane-infinity@27.0.2 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+├── @axe-core/playwright@4.11.0 -> ./node_modules/.pnpm/@axe-core+playwright@4.11.0_playwright-core@1.58.1/node_modules/@axe-core/playwright
+├── @axe-core/react@4.11.0 -> ./node_modules/.pnpm/@axe-core+react@4.11.0/node_modules/@axe-core/react
+├── @chromatic-com/storybook@5.0.0 -> ./node_modules/.pnpm/@chromatic-com+storybook@5.0.0_storybook@10.2.3_@testing-library+dom@10.4.1_prettier@3._8eb32ece1f01ac98be3862d2e7d53338/node_modules/@chromatic-com/storybook
+├── @eslint/eslintrc@3.3.3 -> ./node_modules/.pnpm/@eslint+eslintrc@3.3.3/node_modules/@eslint/eslintrc
+├── @eslint/js@9.39.2 -> ./node_modules/.pnpm/@eslint+js@9.39.2/node_modules/@eslint/js
+├── @playwright/test@1.58.1 -> ./node_modules/.pnpm/@playwright+test@1.58.1/node_modules/@playwright/test
+├── @sentry/react@10.38.0 -> ./node_modules/.pnpm/@sentry+react@10.38.0_react@19.2.4/node_modules/@sentry/react
+├── @storybook/addon-a11y@10.2.3 -> ./node_modules/.pnpm/@storybook+addon-a11y@10.2.3_storybook@10.2.3_@testing-library+dom@10.4.1_prettier@3.8._a1fc4c4b11a06835fa07f0744802f9ea/node_modules/@storybook/addon-a11y
+├── @storybook/addon-docs@10.2.3 -> ./node_modules/.pnpm/@storybook+addon-docs@10.2.3_@types+react@19.2.10_esbuild@0.27.2_rollup@2.79.2_storyboo_ace60b8076dece1c46173446406ba656/node_modules/@storybook/addon-docs
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B# ===== 2. BINARY METRICS =====
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "=== P11.2: BINARY METRICS ==="
+[?2004l]633;E;echo "=== P11.2: BINARY METRICS ===";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C=== P11.2: BINARY METRICS ===
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;BBINARY="src-tauri/target/release/titane-infinity"
+[?2004l]633;E;BINARY="src-tauri/target/release/titane-infinity";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bif [ -f "$BINARY" ]; then
+[?2004l[?2004h]633;F> ]633;G  SIZE=$(du -h "$BINARY" | cut -f1)
+[?2004l[?2004h]633;F> ]633;G  SIZE_BYTES=$(stat -c %s "$BINARY")
+[?2004l[?2004h]633;F> ]633;G  STRIPPED_SIZE=$(objcopy -s "$BINARY" /tmp/test_stripped 2>/dev/null && du -h /tmp/test_stripped | cut -f1 || echo "N/A")
+[?2004l[?2004h]633;F> ]633;G  
+[?2004l[?2004h]633;F> ]633;G  echo "Binary size: $SIZE ($SIZE_BYTES bytes)"
+[?2004l[?2004h]633;F> ]633;G  echo "Can strip: $STRIPPED_SIZE"
+[?2004l[?2004h]633;F> ]633;G  
+[?2004l[?2004h]633;F> ]633;G  # Startup time
+[?2004l[?2004h]633;F> ]633;G  echo ""
+[?2004l[?2004h]633;F> ]633;G  echo "Measuring cold startup..."
+[?2004l[?2004h]633;F> ]633;G  time timeout 3 "$BINARY" --help > /dev/null 2>&1 || true
+[?2004l[?2004h]633;F> ]633;Gfi
+[?2004l]633;E;if [ -f "$BINARY" ]\x3b then   SIZE=$(du -h "$BINARY" | cut -f1)\x3b   SIZE_BYTES=$(stat -c %s "$BINARY")\x3b   STRIPPED_SIZE=$(objcopy -s "$BINARY" /tmp/test_stripped 2>/dev/null && du -h /tmp/test_stripped | cut -f1 || echo "N/A")\x3b      echo "Binary size: $SIZE ($SIZE_BYTES bytes)"\x3b   echo "Can strip: $STRIPPED_SIZE"\x3b   \x0aecho ""\x3b   echo "Measuring cold startup..."\x3b   time timeout 3 "$BINARY" --help > /dev/null 2>&1 || true\x3b fi;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CBinary size: 23M (23147360 bytes)
+Can strip: N/A
+
+Measuring cold startup...
+
+real	0m2,471s
+user	0m0,517s
+sys	0m0,099s
+
+]633;D;130]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B 
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bsleep 30 && ps aux | grep -E "titane-infinity|npm|titane" | grep -v grep | head -3
+[?2004l]633;E;sleep 30 && ps aux | grep -E "titane-infinity|npm|titane" | grep -v grep | head -3;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;Ctitane-+    3240  0.0  0.0  21788 13116 ?        Ss   févr.17   0:04 /usr/lib/systemd/systemd --user
+titane-+    3246  0.0  0.0  21472  3680 ?        S    févr.17   0:00 (sd-pam)
+titane-+    3256  0.0  0.0 123476 22340 ?        S<sl févr.17   0:01 /usr/bin/pipewire
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B 
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bcd /home/titane-os/Documents/GitHub/TITANE_INFINITY
+[?2004l]633;E;cd /home/titane-os/Documents/GitHub/TITANE_INFINITY;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bchmod +x scripts/certification/p12_integration_tests.sh
+[?2004l]633;E;chmod +x scripts/certification/p12_integration_tests.sh;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;BPACK_DIR=$(find deployment/latest/certification -maxdepth 1 -type d -name "P11*" | sort -r | head -1)
+[?2004l]633;E;PACK_DIR=$(find deployment/latest/certification -maxdepth 1 -type d -name "P11*" | sort -r | head -1);ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bif [ -z "$PACK_DIR" ]; then
+[?2004l[?2004h]633;F> ]633;G  PACK_DIR="deployment/latest/certification/P11_RESULTS_$(date -u +'%Y%m%dT%H%M%SZ')"
+[?2004l[?2004h]633;F> ]633;G  mkdir -p "$PACK_DIR"
+[?2004l[?2004h]633;F> ]633;Gfi
+[?2004l]633;E;if [ -z "$PACK_DIR" ]\x3b then   PACK_DIR="deployment/latest/certification/P11_RESULTS_$(date -u +'%Y%m%dT%H%M%SZ')"\x3b   mkdir -p "$PACK_DIR"\x3b fi;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "═══════════════════════════════════════════════════════════"
+[?2004l]633;E;echo "═══════════════════════════════════════════════════════════";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C═══════════════════════════════════════════════════════════
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "P12: INTEGRATION TESTS (parallel)"
+[?2004l]633;E;echo "P12: INTEGRATION TESTS (parallel)";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;CP12: INTEGRATION TESTS (parallel)
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "═══════════════════════════════════════════════════════════"
+[?2004l]633;E;echo "═══════════════════════════════════════════════════════════";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C═══════════════════════════════════════════════════════════
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bbash scripts/certification/p12_integration_tests.sh "$PACK_DIR" 2>&1 | head -100
+[?2004l]633;E;bash scripts/certification/p12_integration_tests.sh "$PACK_DIR" 2>&1 | head -100;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C════════════════════════════════════════════════════════════
+P12: INTEGRATION TEST SUITE
+════════════════════════════════════════════════════════════
+
+Timestamp: 2026-02-18T21:00:46Z
+Pack: deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z
+
+=== Test 1: Ollama Endpoint Availability ===
+✅ Ollama endpoint reachable at localhost:11434
+
+Fetching available models...
+"gemma2:2b"
+"qwen2.5:latest"
+"codellama:latest"
+"deepseek-coder-v2:latest"
+"gemma2:latest"
+
+=== Test 2: Model Inference Test ===
+Testing LLM response generation...
+✅ Model inference successful
+  Response preview: "2 + 2 = 4 😊 \n"...
+
+=== Test 3: Conversation Memory Persistence ===
+Checking memory database...
+⚠️ Memory directory not found (expected after first run)
+
+=== Test 4: IPC Bridge Configuration ===
+⚠️ IPC guard not found in main.rs
+
+=== Test 5: Backend Service Health ===
+Checking for backend initialization errors...
+  Found 0 error lines in tauri_driver.log
+✅ Error count acceptable
+
+════════════════════════════════════════════════════════════
+✅ P12 Integration Tests Complete
+════════════════════════════════════════════════════════════
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B 
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;BPACK_DIR=$(find /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification -maxdepth 1 -type d -name "P11*" | sort -r | head -1)
+[?2004l]633;E;PACK_DIR=$(find /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification -maxdepth 1 -type d -name "P11*" | sort -r | head -1);ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bif [ -z "$PACK_DIR" ]; then
+[?2004l[?2004h]633;F> ]633;G  PACK_DIR="/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/P11_RESULTS_$(date -u +'%Y%m%dT%H%M%SZ')"
+[?2004l[?2004h]633;F> ]633;G  mkdir -p "$PACK_DIR"
+[?2004l[?2004h]633;F> ]633;Gfi
+[?2004l]633;E;if [ -z "$PACK_DIR" ]\x3b then   PACK_DIR="/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/P11_RESULTS_$(date -u +'%Y%m%dT%H%M%SZ')"\x3b   mkdir -p "$PACK_DIR"\x3b fi;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bbash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/certification/p12_integration_tests.sh "$PACK_DIR"
+[?2004l]633;E;bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/certification/p12_integration_tests.sh "$PACK_DIR";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C════════════════════════════════════════════════════════════
+P12: INTEGRATION TEST SUITE
+════════════════════════════════════════════════════════════
+
+Timestamp: 2026-02-18T21:00:51Z
+Pack: /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z
+
+=== Test 1: Ollama Endpoint Availability ===
+✅ Ollama endpoint reachable at localhost:11434
+
+Fetching available models...
+"gemma2:2b"
+"qwen2.5:latest"
+"codellama:latest"
+"deepseek-coder-v2:latest"
+"gemma2:latest"
+
+=== Test 2: Model Inference Test ===
+Testing LLM response generation...
+✅ Model inference successful
+  Response preview: "2 + 2 = 4 \n"...
+
+=== Test 3: Conversation Memory Persistence ===
+Checking memory database...
+⚠️ Memory directory not found (expected after first run)
+
+=== Test 4: IPC Bridge Configuration ===
+⚠️ IPC guard not found in main.rs
+
+=== Test 5: Backend Service Health ===
+Checking for backend initialization errors...
+  Found 0 error lines in tauri_driver.log
+✅ Error count acceptable
+
+════════════════════════════════════════════════════════════
+✅ P12 Integration Tests Complete
+════════════════════════════════════════════════════════════
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B 
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bsleep 10
+[?2004l]633;E;sleep 10;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bfind /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification -name "P12_INTEGRATION_TESTS.txt" -o -name "P11_CHECKS.txt" 2>/dev/null | xargs ls -lh 2>/dev/null | head -5
+[?2004l]633;E;find /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification -name "P12_INTEGRATION_TESTS.txt" -o -name "P11_CHECKS.txt" 2>/dev/null | xargs ls -lh 2>/dev/null | head -5;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C-rw-rw-r-- 1 titane-os titane-os  28K févr. 18 16:01 /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z/P11_CHECKS.txt
+-rw-rw-r-- 1 titane-os titane-os 1,7K févr. 18 16:00 /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z/P12_INTEGRATION_TESTS.txt
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B 
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bcd /home/titane-os/Documents/GitHub/TITANE_INFINITY
+[?2004l]633;E;cd /home/titane-os/Documents/GitHub/TITANE_INFINITY;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "=== Git Status (new files) ==="
+[?2004l]633;E;echo "=== Git Status (new files) ===";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C=== Git Status (new files) ===
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bgit status -s | head -20 [A[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K0
+[?2004l]633;E;git status -s | head -20;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C M deployment/latest/certification/phase10_3_1/P10_3_1_FAST_TRACK_20260218T135700Z/COMMANDS_RUN.txt
+ M memory/memory_core_state.json
+?? deployment/latest/certification/CERTIFICATION_STATUS_SUMMARY.md
+?? deployment/latest/certification/P11_NEXT_PHASES_PLAN.md
+?? deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z/
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/07_ITER_2_ROOT_CAUSE_ANALYSIS.md
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/ITER_2_E2E_LOG_ENHANCED.txt
+?? scripts/certification/p12_integration_tests.sh
+?? scripts/e2e/p10_6_enhanced_debug.sh
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;B
+[?2004l]633;E;;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C]633;D]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho ""
+[?2004l]633;E;echo "";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Becho "=== Staging P11+P12 files ==="
+[?2004l]633;E;echo "=== Staging P11+P12 files ===";ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C=== Staging P11+P12 files ===
+]633;D;0]633;P;Cwd=/home/titane-os/Documents/GitHub/TITANE_INFINITY[?2004h]633;A]0;titane-os@TITANE-OS: ~/Documents/GitHub/TITANE_INFINITY[01;32mtitane-os@TITANE-OS[00m:[01;34m~/Documents/GitHub/TITANE_INFINITY[00m$ ]633;Bgit add deployment/latest/certification/P11* scripts/certification/p12_integration_tests.sh deployment/latest/certification/CERTIFICATION_STATUS_SUMMARY.md deployment/latest/certification/P11_NEXT_PHASES_PLAN.md
+[?2004l]633;E;git add deployment/latest/certification/P11* scripts/certification/p12_integration_tests.sh deployment/latest/certification/CERTIFICATION_STATUS_SUMMARY.md deployment/latest/certification/P11_NEXT_PHASES_PLAN.md;ba0db3fc-f078-48c8-ae19-7821c84a3a5e]633;C
