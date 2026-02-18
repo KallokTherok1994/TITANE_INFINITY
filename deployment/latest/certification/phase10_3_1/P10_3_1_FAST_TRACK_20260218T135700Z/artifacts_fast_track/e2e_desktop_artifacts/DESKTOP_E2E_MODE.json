@@ -1,0 +1,9 @@
+{
+  "tauri_driver": "OK",
+  "native_driver": "OK",
+  "mode": "AUTO_UI_FULL",
+  "os": "linux",
+  "timestamp": "2026-02-08T16:17:25-05:00",
+  "tauri_driver_path": "/home/titane-os/.cargo/bin/tauri-driver",
+  "native_driver_path": "/usr/bin/WebKitWebDriver"
+}

@@ -1,0 +1,8 @@
+
+> titane-infinity@27.0.2 guard:ollama-proxy /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/guard/guard-ollama-proxy.sh
+
+🔐 GUARD: Checking for direct Ollama calls (11434) in src/
+✅ PASS: No direct 11434 calls in frontend
+
+EXIT_CODE=0

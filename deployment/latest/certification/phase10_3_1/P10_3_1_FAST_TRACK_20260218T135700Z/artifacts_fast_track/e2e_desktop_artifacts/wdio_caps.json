@@ -1,0 +1,3820 @@
+2026-02-09T20:06:19.114Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "maxInstances": 1,
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:06:20.279Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "maxInstances": 1,
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:06:38.266Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:06:39.471Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:07:30.157Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:07:31.326Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:09:18.261Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:09:19.280Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:09:46.023Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:09:48.997Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:10:21.305Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:10:24.238Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:10:44.932Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:11:03.668Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:11:24.089Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:12:31.429Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:13:05.442Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:14:12.431Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T20:14:40.395Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T21:02:25.046Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T21:46:42.353Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T21:48:39.325Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T21:49:01.215Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T22:17:48.339Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T22:18:46.516Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T22:52:49.321Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-09T22:57:23.374Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:05:11.047Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:07:37.582Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:12:26.311Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:13:11.919Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:21:11.425Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T00:22:22.743Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T01:27:10.821Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T01:27:12.014Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T01:55:23.704Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T01:55:24.874Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T11:28:57.419Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T11:28:58.651Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T19:23:06.659Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-10T19:23:07.915Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:01:24.311Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:01:42.991Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:01:46.302Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:02:54.812Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:03:33.797Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:03:52.482Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:03:56.133Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:03:57.876Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:25:56.017Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:26:34.222Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:27:07.771Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:47:04.004Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:52:39.421Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:54:19.087Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T22:55:48.202Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-11T23:16:59.008Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T00:17:55.755Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T00:18:15.251Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T00:18:34.989Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T00:20:53.401Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T00:53:22.075Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/debug/titane-infinity"
+    }
+  }
+}
+
+2026-02-12T01:11:01.520Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:12:29.169Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:14:16.574Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:14:22.186Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:14:52.255Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:14:57.114Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:25:30.178Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:25:35.808Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:27:16.148Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:27:24.980Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:28:51.154Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:29:56.302Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T01:30:02.897Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T11:10:11.477Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T11:50:33.002Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T11:55:47.777Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T11:58:13.144Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T11:59:19.426Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:00:20.777Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:04:10.161Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:14:10.616Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:15:46.971Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:26:21.739Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:27:07.725Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:33:13.262Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:35:18.198Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:38:08.869Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:40:44.422Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:45:00.152Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:49:12.978Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:51:36.693Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T12:59:17.965Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:01:57.855Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:04:31.526Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:07:35.441Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:14:03.460Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:16:24.588Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:20:49.038Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:23:09.280Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:27:48.586Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:37:46.009Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T13:43:36.484Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T17:18:18.631Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T17:24:21.820Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T17:30:35.118Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T17:38:47.155Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T18:00:46.884Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T21:41:15.097Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T21:47:06.747Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T21:59:37.205Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:12:04.957Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:25:14.590Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:41:17.879Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:51:46.907Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:55:08.545Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T22:57:24.212Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:05:08.008Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:23:11.996Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:23:56.446Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:44:06.646Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:49:36.058Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-12T23:52:07.589Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T00:03:51.884Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T00:05:49.756Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T00:07:53.376Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T00:09:40.167Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T22:07:41.787Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T22:07:43.395Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T22:07:45.048Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T22:07:46.544Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:37:03.957Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:37:46.243Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:39:34.349Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:44:17.278Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:47:47.783Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:52:02.636Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-13T23:53:33.473Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T01:36:32.754Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T01:36:34.432Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T01:36:36.097Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T01:36:37.716Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T15:52:49.647Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T15:52:51.918Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T15:52:54.105Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T15:52:56.346Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T16:12:44.940Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T16:12:47.109Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T16:12:49.084Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T16:12:51.709Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:08:00.622Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:08:02.367Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:08:04.154Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:08:06.135Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:16:04.613Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:16:06.232Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:16:08.166Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T17:16:09.960Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T18:09:00.289Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T18:09:02.464Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T18:09:04.590Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-14T18:09:06.558Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:31:30.018Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:32:10.253Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:33:39.354Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:37:29.586Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:41:10.809Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T22:49:42.970Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T23:08:10.349Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T23:09:54.406Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T23:23:22.099Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T23:28:35.711Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-15T23:52:12.386Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T00:06:06.243Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T00:22:19.882Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T00:40:28.597Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T00:48:29.725Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T00:54:17.051Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:10:22.401Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:13:36.586Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:16:39.186Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:28:05.705Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:30:50.186Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:32:50.719Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:34:56.851Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:50:27.065Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T01:52:49.148Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T02:01:58.199Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T02:06:18.854Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T02:09:42.436Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-16T02:12:51.218Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:18:40.623Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:18:59.245Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:02.410Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:05.964Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:09.368Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:27.800Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:30.295Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:33.662Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:37.344Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:55.197Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:19:57.724Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:20:01.018Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:28:20.833Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:28:39.173Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:28:42.265Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:28:45.694Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:28:49.502Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:08.020Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:11.096Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:15.149Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:18.791Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:36.716Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:39.179Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:29:42.648Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:46:54.377Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:49:15.098Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:49:52.883Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:50:47.615Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:51:30.831Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T01:52:08.638Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T02:31:18.429Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T02:31:20.003Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T02:31:21.639Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T02:31:23.128Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:13:36.727Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:43:25.282Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:43:43.722Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:43:46.607Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:43:50.473Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:51:27.458Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:51:45.799Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:51:48.773Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:51:52.680Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:57:35.169Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:57:53.640Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:57:56.701Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
+2026-02-18T13:58:00.655Z
+{
+  "config": {
+    "hostname": "127.0.0.1",
+    "port": 4444,
+    "path": "/"
+  },
+  "capabilities": {
+    "browserName": "wry",
+    "wdio:enforceWebDriverClassic": true,
+    "tauri:options": {
+      "application": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/e2e/tauri-wrapper.sh"
+    }
+  }
+}
+
