@@ -1,0 +1,721 @@
+$ rg -n "test:integration|integration" package.json
+45:    "test:coverage:integration": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run -c vitest.integration.config.ts --coverage",
+
+$ ls -la
+total 110672
+drwxrwxr-x 57 titane-os titane-os    36864 févr. 17 20:39 .
+drwxrwxr-x  5 titane-os titane-os     4096 janv. 18 20:50 ..
+drwxr-xr-x  4 titane-os titane-os     4096 janv. 16 09:44 actions-runner
+-rwxrwxr-x  1 titane-os titane-os     4746 févr.  3 07:20 analyze-bundle.sh
+-rwxrwxr-x  1 titane-os titane-os     6976 févr.  2 08:36 analyze-ui.sh
+-rw-rw-r--  1 titane-os titane-os     6415 févr.  9 09:54 ANOMALIES_REGISTER.md
+-rw-rw-r--  1 titane-os titane-os     9727 févr.  1 09:54 API_REFERENCE.md
+drwxrwxr-x  2 titane-os titane-os     4096 janv. 18 11:04 approvals
+-rw-rw-r--  1 titane-os titane-os    18309 févr.  8 10:27 ARCHITECTURE.md
+drwxrwxr-x  3 titane-os titane-os     4096 janv. 26 21:05 .archive
+drwxrwxr-x  8 titane-os titane-os     4096 janv. 17 01:34 _archive
+drwxrwxr-x 17 titane-os titane-os     4096 févr.  6 21:37 .archive_cleanup
+-rw-rw-r--  1 titane-os titane-os     1065 févr.  5 11:49 ARTIFACTS_SHA256_v27.0.1.md
+-rw-rw-r--  1 titane-os titane-os     1427 févr. 14 13:37 ARTIFACTS_SHA256_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os     6682 févr.  8 10:27 AUDIT_GATES_CHECKLIST.md
+-rw-rw-r--  1 titane-os titane-os    12129 janv. 31 15:16 AUDIT_PRODUCTION_FINAL_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     2090 févr.  5 08:41 AUDIT_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     4611 févr.  5 13:27 AUDIT_RESULTS_v27.0.1_BETA.md
+-rw-rw-r--  1 titane-os titane-os     6982 févr.  1 09:54 AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     2574 févr.  6 16:00 AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.1.md
+-rw-rw-r--  1 titane-os titane-os     6762 févr. 13 18:27 AUTONOMY_AUDIT_FINAL_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os    14601 févr. 13 18:27 AUTONOMY_AUDIT_FINAL_COMPREHENSIVE_VERDICT.md
+-rw-rw-r--  1 titane-os titane-os     4436 févr. 13 18:27 AUTONOMY_AUDIT_FINAL_VERDICT.md
+-rw-rw-r--  1 titane-os titane-os     3610 févr.  1 09:54 AUTORISATION_PRODUCTION_v27.0.0.md
+drwxrwxr-x  2 titane-os titane-os     4096 déc.  18 15:25 .backup_20251218_152527
+-rw-rw-r--  1 titane-os titane-os     6983 févr. 13 18:21 baseline_measurements_real_w1.json
+-rw-rw-r--  1 titane-os titane-os     3303 févr. 13 18:21 baseline_metrics_w1.json
+-rw-rw-r--  1 titane-os titane-os     5619 févr.  5 15:27 BETA_DEPLOYMENT_CHECKLIST.md
+-rw-rw-r--  1 titane-os titane-os    11130 févr.  5 15:30 BETA_DEPLOYMENT_GO_LIVE.md
+-rw-rw-r--  1 titane-os titane-os     7117 févr.  6 10:34 BETA_DISTRIBUTION_INVITATION.md
+-rw-rw-r--  1 titane-os titane-os     6700 févr.  5 13:29 BETA_RELEASE_v27.0.1.md
+-rw-rw-r--  1 titane-os titane-os    11150 févr.  5 15:30 BETA_ROLLOUT_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     8374 févr.  5 15:30 BETA_TESTER_TRACKING.md
+-rw-rw-r--  1 titane-os titane-os    14786 févr.  8 10:27 BOOTSTRAP_COMPLETE_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    12165 févr.  8 10:27 BOOTSTRAP_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    28303 janv. 16 15:31 build_log.txt
+-rw-rw-r--  1 titane-os titane-os    47523 févr. 14 14:10 build_prod_hotfix_final.log
+-rw-rw-r--  1 titane-os titane-os      790 févr. 14 14:07 build_prod_hotfix.log
+-rw-rw-r--  1 titane-os titane-os    49258 févr. 12 19:27 build_production_attempt_2_1770941958.log
+-rw-rw-r--  1 titane-os titane-os     1721 févr. 12 19:18 build_production_full_1770941835.log
+-rw-rw-r--  1 titane-os titane-os    26542 févr.  4 16:56 build-tauri-vomega2.log
+-rw-rw-r--  1 titane-os titane-os    25680 févr.  4 17:43 build-v27.0.1-final.log
+-rw-rw-r--  1 titane-os titane-os    25680 févr.  4 17:37 build-v27.0.1-rebundle.log
+-rw-rw-r--  1 titane-os titane-os    18257 janv. 30 20:22 build-v34-baseline.log
+-rw-rw-r--  1 titane-os titane-os    10318 févr.  3 08:05 BUNDLE_OPTIMIZATION_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os    15184 févr.  1 09:54 BUNDLE_OPTIMIZATION_v34.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6512 févr.  1 09:54 BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md
+-rw-rw-r--  1 titane-os titane-os     9416 févr.  5 08:58 C1_PHASE_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     8237 févr.  5 09:01 C2_PHASE_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     8999 févr.  5 09:05 C7_RELEASE_SEALING.md
+-rw-rw-r--  1 titane-os titane-os    14562 févr. 14 14:16 CAMPAIGN_COMPLETE_v27.0.2.txt
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 .cargo
+-rw-rw-r--  1 titane-os titane-os   149133 févr. 14 12:57 CHANGELOG.md
+-rw-rw-r--  1 titane-os titane-os     8403 févr.  6 16:00 CHANGELOG_v27.0.1_PRODUCTION.md
+-rw-rw-r--  1 titane-os titane-os     7848 févr.  3 08:05 CHANGELOG_v27.1.0.md
+-rw-rw-r--  1 titane-os titane-os    11424 févr.  5 08:50 CHAT_MEM_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os    17285 févr.  5 08:48 CHAT_MEM_DISCOVERY.md
+-rw-rw-r--  1 titane-os titane-os    24454 févr.  5 08:50 CHAT_MEM_PATCH_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     8791 févr.  5 08:50 CHAT_MEM_PROOFS.md
+-rw-rw-r--  1 titane-os titane-os    12305 févr.  5 08:51 CHAT_MEM_TEST_RESULTS.md
+-rw-rw-r--  1 titane-os titane-os     2790 févr.  2 14:22 check-tauri-backend.sh
+-rwxrwxr-x  1 titane-os titane-os     1420 janv. 30 12:01 check_tauri_build_status.sh
+-rwxrwxr-x  1 titane-os titane-os     2153 janv. 12 20:02 check-tunnel-access.sh
+drwx------  2 titane-os titane-os     4096 janv. 10 20:09 .claude
+-rw-rw-r--  1 titane-os titane-os     2286 janv.  3 01:19 cliff.toml
+drwxrwxr-x  2 titane-os titane-os     4096 janv. 19 15:24 .cline
+drwxrwxr-x  4 titane-os titane-os     4096 janv.  4 20:05 .clinerules
+-rw-rw-r--  1 titane-os titane-os    10372 févr.  9 09:54 COGNITIVE_CORE_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os    10793 févr.  9 09:54 COGNITIVE_CORE_README.md
+-rw-rw-r--  1 titane-os titane-os    11747 févr.  5 09:18 COMPLETION_REPORT_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     2773 févr. 13 18:27 COMPLETION_SUMMARY.md
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 config
+drwxrwxr-x  2 titane-os titane-os     4096 janv. 16 11:12 .congratulations
+-rw-rw-r--  1 titane-os titane-os     6612 janv.  2 18:31 CONSOLE_ERRORS_FIXED.txt
+-rw-rw-r--  1 titane-os titane-os    10369 févr.  4 14:37 CONSTITUTION_LOCK_v27.md
+-rw-rw-r--  1 titane-os titane-os    11399 févr.  9 09:54 CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md
+-rw-rw-r--  1 titane-os titane-os    15397 janv. 19 16:13 .copilot-rules-permanent.md
+-rw-rw-r--  1 titane-os titane-os    10016 févr.  1 09:54 CORRECTION_PROBLEMES_WARNINGS_v27.0.0.md
+drwxrwxr-x  3 titane-os titane-os     4096 févr. 17 20:28 coverage
+-rw-rw-r--  1 titane-os titane-os     7514 janv.  1 14:10 coverage-rust-generation.log
+-rw-rw-r--  1 titane-os titane-os      960 janv.  2 18:06 .current-server-info
+-rw-rw-r--  1 titane-os titane-os      221 janv. 15 18:14 .current-server-info.example
+drwxrwxr-x  2 titane-os titane-os     4096 janv.  4 20:05 dashboard
+drwxrwxr-x  3 titane-os titane-os     4096 déc.   9 10:57 data
+-rw-rw-r--  1 titane-os titane-os    11211 févr.  2 08:42 DEEP_ANALYSIS_EXECUTIVE_SUMMARY_v37.0.0.txt
+-rw-rw-r--  1 titane-os titane-os    14335 févr.  3 08:05 DEEP_DIVE_ANALYSIS_FINAL_v37.0.0.md
+drwxrwxr-x 11 titane-os titane-os     4096 févr. 17 07:10 deployment
+-rw-rw-r--  1 titane-os titane-os     1556 févr.  1 09:54 DEPLOYMENT_APPROVAL.md
+drwxrwxr-x 14 titane-os titane-os     4096 janv. 18 15:10 .deployment_backups
+-rw-rw-r--  1 titane-os titane-os     7578 févr.  5 11:49 DEPLOYMENT_COMPLETE_EXECUTIVE_SUMMARY_v27.0.1.md
+-rw-rw-r--  1 titane-os titane-os     9390 févr.  5 03:02 DEPLOYMENT_COMPLETE_v27.0.1_OMEGA3.md
+-rw-rw-r--  1 titane-os titane-os     6591 févr.  1 09:54 DEPLOYMENT_IN_PROGRESS_REALTIME_STATUS.md
+-rw-rw-r--  1 titane-os titane-os     3889 févr.  3 08:05 DEPLOYMENT_LOG_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os    17002 févr. 14 14:13 DEPLOYMENT_READY_v27.0.2.txt
+-rw-rw-r--  1 titane-os titane-os     8616 févr.  3 08:05 DEPLOYMENT_REPORT_PRODUCTION_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6916 févr.  1 09:54 DEPLOYMENT_REPORT_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     7963 févr. 14 13:43 DEPLOYMENT_REPORT_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os     5030 févr.  3 08:05 DEPLOYMENT_STATUS_FINAL.md
+-rw-rw-r--  1 titane-os titane-os     9878 févr.  1 09:54 DEPLOYMENT_SUCCESS_v35.0.0.md
+-rw-rw-r--  1 titane-os titane-os     9752 févr.  1 09:54 DEPLOYMENT_SUCCESS_v36.0.0.md
+-rw-rw-r--  1 titane-os titane-os     7592 févr.  4 14:37 DEPLOYMENT_SUMMARY_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     5517 janv. 16 16:33 dev_output.log
+-rw-rw-r--  1 titane-os titane-os    13052 janv. 16 15:32 dev_tauri_clean_log.txt
+-rw-rw-r--  1 titane-os titane-os     4293 janv. 16 15:34 dev_tauri_fixed_log.txt
+-rw-rw-r--  1 titane-os titane-os    17434 janv. 16 15:30 dev_tauri_log.txt
+-rw-rw-r--  1 titane-os titane-os     1203 janv. 16 15:32 dev_tauri_npm_log.txt
+-rw-rw-r--  1 titane-os titane-os     8040 janv. 26 20:45 dev_tauri_session.log
+-rw-rw-r--  1 titane-os titane-os     7128 févr.  3 08:05 DIAGNOSTIC_CHAT_NOT_WORKING.md
+drwxrwxr-x  3 titane-os titane-os     4096 déc.   9 10:57 .disabled
+drwxrwxr-x  3 titane-os titane-os     4096 févr. 17 20:21 dist
+-rw-rw-r--  1 titane-os titane-os     1863 févr.  4 14:37 DISTRIBUTION_AUTHORIZED.md
+-rw-rw-r--  1 titane-os titane-os     1225 févr.  5 15:27 DISTRIBUTION_MANIFEST_v27.0.1_BETA.md
+-rw-rw-r--  1 titane-os titane-os     5663 févr.  6 10:34 DISTRIBUTION_VERIFICATION_v27.0.1.md
+drwxrwxr-x  2 titane-os titane-os     4096 janv.  4 21:26 dist_stub
+drwxrwxr-x 57 titane-os titane-os    20480 févr. 17 17:49 docs
+-rw-rw-r--  1 titane-os titane-os    16916 févr.  1 09:54 DOCUMENTATION_INDEX_v27.0.0.md
+drwxrwxr-x  9 titane-os titane-os     4096 févr. 14 00:59 e2e
+-rw-rw-r--  1 titane-os titane-os     9105 févr. 13 18:27 E2E_AUTOFIX_INFRASTRUCTURE_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os     7546 févr. 13 18:27 E2E_BREAKTHROUGH_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     8246 févr. 13 18:27 E2E_RECOVERY_FINAL_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os     7332 févr. 13 18:27 E2E_RECOVERY_SUCCESS.md
+-rw-rw-r--  1 titane-os titane-os     5856 févr. 13 18:27 E2E_TEST_STATUS_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     6526 févr.  5 11:30 E2E_TIER1_RESULTS_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os     6363 févr.  7 15:52 .env
+-rw-rw-r--  1 titane-os titane-os      397 janv. 15 18:14 .env.deploy.example
+-rw-rw-r--  1 titane-os titane-os     6292 janv.  3 18:40 .env.example
+-rw-rw-r--  1 titane-os titane-os     1290 janv. 15 18:14 .env.gpg.example
+-rw-rw-r--  1 titane-os titane-os      346 févr.  2 14:14 .env.local
+-rw-rw-r--  1 titane-os titane-os     2141 janv. 15 18:14 .env.ollama.example
+-rw-rw-r--  1 titane-os titane-os     4362 févr.  8 10:27 ENV_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     1560 févr.  8 10:27 eslint.config.js
+-rw-rw-r--  1 titane-os titane-os      340 déc.   9 10:57 .eslint-overrides.json
+-rw-rw-r--  1 titane-os titane-os     9174 févr.  1 08:30 .eslintrc.cjs
+-rw-rw-r--  1 titane-os titane-os    28832 févr.  3 08:05 EVOLVE_EXECUTION_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    13575 févr.  3 08:05 EXECUTIVE_FINAL_REPORT_PHASES_1-4.md
+-rw-rw-r--  1 titane-os titane-os    14544 févr.  5 03:02 EXECUTIVE_FINAL_REPORT_PO_FINAL_SEAL.md
+-rw-rw-r--  1 titane-os titane-os    13583 févr.  1 09:54 EXECUTIVE_SUMMARY_v35-v36.md
+-rw-rw-r--  1 titane-os titane-os     6674 déc.   9 18:44 figma-tokens.json
+-rw-rw-r--  1 titane-os titane-os     1285 janv. 17 01:32 FILE_INDEX.csv
+-rw-rw-r--  1 titane-os titane-os     5631 févr.  4 10:40 FINAL100_G_ALL_GAPS_FIXED.md
+-rw-rw-r--  1 titane-os titane-os     7166 févr.  8 10:27 FINAL_ACTIONS_EXECUTION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    11385 févr. 14 13:45 FINAL_DEPLOYMENT_STATUS_v27.0.2.txt
+-rw-rw-r--  1 titane-os titane-os     1442 janv. 16 16:38 final_dev.log
+-rw-rw-r--  1 titane-os titane-os    10160 févr.  5 11:30 FINAL_SESSION_REPORT_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os     9633 févr.  8 10:27 FINAL_STATUS_AND_NEXT_STEPS.md
+-rw-rw-r--  1 titane-os titane-os    10340 févr.  5 15:27 FINAL_STATUS_REPORT_v27.0.1_BETA.md
+-rw-rw-r--  1 titane-os titane-os    12282 févr.  3 08:05 FINAL_STATUS_REPORT_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     5366 janv. 31 08:11 FINAL_STATUS_SNAPSHOT.txt
+-rw-rw-r--  1 titane-os titane-os     5718 févr. 16 13:02 FINAL_SUMMARY_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os    22385 janv. 16 15:35 final_test_log.txt
+-rw-rw-r--  1 titane-os titane-os     4183 févr.  2 18:56 final-validation.sh
+-rw-rw-r--  1 titane-os titane-os    10285 janv. 16 15:37 final_verification_log.txt
+-rw-rw-r--  1 titane-os titane-os     3621 févr.  3 08:05 FIX_APPLIED.md
+-rw-rw-r--  1 titane-os titane-os     5749 févr.  3 08:05 FIX_CHAT_COMPLETE_v20.5.1.md
+-rw-rw-r--  1 titane-os titane-os     4400 févr.  3 08:05 FIX_CHAT_OLLAMA_FALLBACK_v20.5.md
+-rw-rw-r--  1 titane-os titane-os     3912 févr.  5 12:15 FIX_INFINITE_LOADING_v27.0.1.md
+-rw-rw-r--  1 titane-os titane-os     4886 févr.  3 08:05 FIX_TAURI_DETECTION_v20.1.md
+-rw-rw-r--  1 titane-os titane-os     6011 févr.  3 08:05 FIX_TAURI_INVOKE_CACHE_v20.2.md
+-rw-rw-r--  1 titane-os titane-os     6189 févr.  3 08:05 FIX_TAURI_MODULE_CACHE_v20.3.md
+-rwxrwxr-x  1 titane-os titane-os     3847 janv. 17 08:47 fix-typescript-errors.sh
+-rw-rw-r--  1 titane-os titane-os    11265 févr.  5 13:17 FIX_VITE_BEFOREDEV_CRASH_v27.0.1.md
+-rwxrwxr-x  1 titane-os titane-os      875 janv.  2 18:18 force-browser-reload.sh
+-rwxrwxr-x  1 titane-os titane-os     1869 janv.  4 10:11 force-menu-reload.sh
+-rw-rw-r--  1 titane-os titane-os     1310 févr.  4 14:37 FULL_DEPLOYMENT_AUTHORIZED.md
+-rw-rw-r--  1 titane-os titane-os     1350 janv. 16 16:37 full_dev.log
+-rw-rw-r--  1 titane-os titane-os    12733 févr.  8 10:27 FULL_INTEGRATION_AUDIT_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os     7550 févr.  5 11:30 GATE_E2E_PASS.md
+-rw-rw-r--  1 titane-os titane-os    20118 déc.  11 13:35 GATEWAY_IMPLEMENTATION_PLAN.rs
+-rw-rw-r--  1 titane-os titane-os     5459 févr. 14 14:07 GH_AUTH_GUIDE.md
+drwxrwxr-x 11 titane-os titane-os     4096 févr. 17 20:42 .git
+-rw-rw-r--  1 titane-os titane-os     3360 janv. 19 15:24 .gitattributes
+-rw-rw-r--  1 titane-os titane-os      638 janv.  2 17:50 .gitattributes-security
+-rw-rw-r--  1 titane-os titane-os     1760 janv. 16 15:49 .gitguardian.yml
+drwxrwxr-x  9 titane-os titane-os     4096 févr. 16 13:02 .github
+-rw-rw-r--  1 titane-os titane-os    11049 févr.  9 09:54 GITHUB_RELEASE_INSTRUCTIONS.md
+-rw-rw-r--  1 titane-os titane-os     2834 févr. 16 13:02 GITHUB_RELEASE_INSTRUCTIONS_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os     2522 févr. 17 12:21 .gitignore
+-rw-rw-r--  1 titane-os titane-os      231 janv. 18 07:05 .gitignore.additions
+-rw-rw-r--  1 titane-os titane-os      936 janv. 15 18:25 .gitleaks.toml
+-rw-rw-r--  1 titane-os titane-os     4696 févr.  3 08:05 GO_ALL_EXECUTION_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    10377 févr.  1 09:54 GO_ALL_OPERATION_COMPLETE_FINAL_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os    11190 févr.  1 09:54 GO_ALL_PRODUCTION_DEPLOYMENT_CHECKLIST_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os    15858 févr.  3 08:05 GOVERNANCE_EVOLUTION_PROTOCOL.md
+-rw-rw-r--  1 titane-os titane-os    26300 févr.  1 09:54 GUIDE_INSTALLATION_SETUP_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     8746 févr. 15 09:34 HOTFIXES_v27.0.2_INDEX.md
+drwxrwxr-x  3 titane-os titane-os     4096 janv. 30 09:30 .husky
+-rw-rw-r--  1 titane-os titane-os     7101 févr.  6 16:39 index.html
+drwxrwxr-x  3 titane-os titane-os     4096 janv.  4 09:42 installer
+drwxrwxr-x  3 titane-os titane-os     4096 déc.   9 10:57 installer_gui
+-rw-rw-r--  1 titane-os titane-os      335 janv. 16 15:29 install_log.txt
+-rwxrwxr-x  1 titane-os titane-os      131 janv. 19 15:24 launch-titane.sh
+drwxrwxr-x  6 titane-os titane-os     4096 févr.  4 08:41 legacy
+-rw-rw-r--  1 titane-os titane-os     5574 déc.   9 10:57 LICENSE.md
+-rw-rw-r--  1 titane-os titane-os     9359 févr. 13 18:27 LOCAL_AI_ABSOLUTE_VERDICT.md
+drwxrwxr-x  3 titane-os titane-os     4096 févr. 15 09:38 logs
+-rw-rw-r--  1 titane-os titane-os     7421 févr.  8 10:27 MANUAL_FINALIZATION_STATUS.md
+-rw-rw-r--  1 titane-os titane-os    69177 févr.  1 09:54 MANUEL_UTILISATEUR_COMPLET_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os    13458 janv. 18 15:02 mega_deploy_dry_run.log
+-rw-rw-r--  1 titane-os titane-os     4726 janv. 18 15:11 mega_deploy_final2.log
+-rw-rw-r--  1 titane-os titane-os     4754 janv. 18 15:04 mega_deploy_production.log
+-rwxrwxr-x  1 titane-os titane-os    26248 janv. 18 12:49 mega-deploy.sh
+drwxrwxr-x  2 titane-os titane-os     4096 févr. 15 09:34 memory
+-rw-rw-r--  1 titane-os titane-os    11073 janv. 16 15:39 minimal_config_test_log.txt
+-rw-rw-r--  1 titane-os titane-os    10614 févr.  3 08:05 MISSION_COMPLETE_CHAT_v20.5.1.md
+-rw-rw-r--  1 titane-os titane-os     9382 janv. 18 15:13 MISSION_COMPLETE.txt
+-rw-rw-r--  1 titane-os titane-os     6071 janv. 19 15:24 Modelfile
+drwxrwxr-x  2 titane-os titane-os     4096 janv. 28 17:20 monitoring-logs
+-rwxrwxr-x  1 titane-os titane-os    12685 janv. 28 11:29 monitoring.sh
+-rw-rw-r--  1 titane-os titane-os    13485 févr.  5 03:02 MULTI_CONVERSATION_FINAL_STATUS.md
+-rw-rw-r--  1 titane-os titane-os     6412 févr.  1 09:54 NETTOYAGE_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6385 févr.  1 09:54 NEXT_STEPS_v27.0.0.md
+drwxrwxr-x 22 titane-os titane-os     4096 févr. 17 20:39 node_modules
+-rw-rw-r--  1 titane-os titane-os      109 janv. 19 15:24 .npmrc
+-rw-rw-r--  1 titane-os titane-os        3 janv.  4 00:57 .nvmrc
+-rw-rw-r--  1 titane-os titane-os     6299 févr.  3 08:05 OLLAMA_CONFIG_SUCCESS.md
+-rw-rw-r--  1 titane-os titane-os     3225 févr.  3 08:05 OLLAMA_QUICKSTART.md
+-rw-rw-r--  1 titane-os titane-os     7043 févr.  9 09:54 OPERATIONAL_SILENCE_NOTICE.md
+-rw-rw-r--  1 titane-os titane-os     8352 févr.  3 08:05 OPTIMIZATION_ANALYSIS_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6792 févr.  3 08:05 OPTIMIZATION_PHASE2_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    13851 févr.  3 08:05 OPTIMIZATION_PHASES_1-3C_FINAL_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os    12595 févr.  3 08:05 OPTIMIZATION_PHASES_1-5_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     7938 févr.  1 09:54 OPTIMIZATION_REPORT_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os     3969 févr.  1 09:54 OPTIMIZATION_REPORT_v27.0.3.md
+-rw-rw-r--  1 titane-os titane-os     7826 févr.  1 09:54 OPTIMIZATION_REPORT_v27.1.0.md
+-rw-rw-r--  1 titane-os titane-os     7854 févr.  1 09:54 OPTIMIZATION_REPORT_v27.2.0.md
+-rw-rw-r--  1 titane-os titane-os     6919 févr.  1 09:54 OPTIMIZATION_REPORT_v27.3.0.md
+-rw-rw-r--  1 titane-os titane-os     7403 févr.  1 09:54 OPTIMIZATION_REPORT_v28.0.0.md
+-rw-rw-r--  1 titane-os titane-os     8399 févr.  1 09:54 OPTIMIZATION_REPORT_v28.1.0.md
+-rw-rw-r--  1 titane-os titane-os    10623 févr.  1 09:54 OPTIMIZATION_REPORT_v28.2.0.md
+-rw-rw-r--  1 titane-os titane-os    17615 févr.  1 09:54 OPTIMIZATION_REPORT_v29.0.0.md
+-rw-rw-r--  1 titane-os titane-os    14540 févr.  1 09:54 OPTIMIZATION_REPORT_v29.1.0.md
+-rw-rw-r--  1 titane-os titane-os    12288 févr.  1 09:54 OPTIMIZATION_STACK_v27-v35.md
+-rw-rw-r--  1 titane-os titane-os    14684 févr.  1 09:54 OPTIMIZATION_SUMMARY_v29_FINAL.md
+-rw-rw-r--  1 titane-os titane-os     8258 févr. 13 18:21 OPTIMIZATION_TARGETS_W1.md
+-rw-rw-r--  1 titane-os titane-os     3816 févr.  3 07:14 optimize-workspace.sh
+-rw-rw-r--  1 titane-os titane-os     7745 févr. 13 18:27 OPTION_B_RECOVERY_COMPLETE.md
+drwxrwxr-x  4 titane-os titane-os     4096 janv. 19 15:24 orchestration
+-rw-rw-r--  1 titane-os titane-os     7726 févr.  5 15:53 P0_OMEGA_PROD_SPLASH_PERMASEAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     9711 févr.  5 03:02 P1_BUILD_CHUNKS_FIX_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     6763 févr.  5 01:40 P1_BUILD_PROOF.txt
+-rw-rw-r--  1 titane-os titane-os     8711 févr.  5 03:02 P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     9875 févr.  5 03:02 P2_AUDIT_COMPLETE_EXECUTIVE_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os    11660 févr.  5 03:02 P2_AUDIT_INDEX.md
+-rw-rw-r--  1 titane-os titane-os    12460 févr.  5 03:02 P2_AUDIT_PHASE_3_SECURITY_STABILITY.md
+-rw-rw-r--  1 titane-os titane-os    16103 févr.  5 03:02 P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    14440 févr. 17 18:13 P8_2_EXECUTION_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os    11930 févr. 17 18:38 P8_4_FINALIZATION_REPORT_FR.md
+-rw-rw-r--  1 titane-os titane-os    14307 févr. 16 18:22 package.json
+-rw-rw-r--  1 titane-os titane-os      946 déc.   9 10:57 package.ui.json
+-rw-rw-r--  1 titane-os titane-os     2864 févr.  5 08:41 PATCH_PLAN.md
+-rw-rw-r--  1 titane-os titane-os    13481 févr.  1 09:54 PERFECTION_REPORT_v27.0.1.md
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 performance-reports
+-rw-rw-r--  1 titane-os titane-os     6437 févr.  3 08:05 PERFORMANCE_REPORT_v27.md
+-rw-rw-r--  1 titane-os titane-os    11499 févr.  1 09:54 PERFORMANCE_REPORT_v35.0.0.md
+drwxrwxr-x  2 titane-os titane-os     4096 janv. 18 19:55 .performance-results
+-rw-rw-r--  1 titane-os titane-os     8392 févr.  1 09:54 PERFORMANCE_TUNING.md
+-rw-rw-r--  1 titane-os titane-os     8737 févr.  4 08:41 PHASE2_COMPLETED.txt
+-rw-rw-r--  1 titane-os titane-os     1598 févr.  2 17:43 phase2-execution.log
+-rw-rw-r--  1 titane-os titane-os     6438 févr.  3 08:05 PHASE2_EXECUTION_VERIFICATION.md
+-rw-rw-r--  1 titane-os titane-os     9247 févr.  4 08:41 PHASE2_MANUAL_EXECUTION_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os     4275 févr.  3 08:05 PHASE2_READY_TO_EXECUTE.md
+-rw-rw-r--  1 titane-os titane-os     8796 févr.  1 09:54 PHASE_2_UI_LAZY_COMPONENTS_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6799 févr.  3 08:05 PHASE3A_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     9170 févr.  3 08:05 PHASE3B_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    11120 févr.  3 08:05 PHASE3C_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     6573 févr.  3 08:05 PHASE3_CI_STABILIZATION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     4554 févr.  1 09:54 PHASE_3_CSS_AUDIT_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     5323 févr.  5 11:21 PHASE_3_E2E_STRATEGY_UPDATED.md
+-rw-rw-r--  1 titane-os titane-os     6408 févr.  5 11:12 PHASE_3_E2E_VALIDATION_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     7166 févr.  3 08:05 PHASE3_REFACTORING_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     7636 févr.  3 08:05 PHASE3_SESSION_FINAL_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os     3649 févr.  3 08:05 PHASE3_SESSION_STATUS.md
+-rw-rw-r--  1 titane-os titane-os    10304 févr.  3 08:05 PHASE_4_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     6222 févr.  3 08:05 PHASE4_FINAL_CLEANUP_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     7622 févr.  3 08:05 PHASE_5_PROFILING_STRATEGY.md
+-rw-rw-r--  1 titane-os titane-os     6734 févr.  3 08:05 PHASE_5_QUICK_WINS_APPLIED.md
+-rw-rw-r--  1 titane-os titane-os    10619 févr.  3 08:05 PHASE_6_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     7897 févr.  3 08:05 PHASE_6_HOTSPOT_ANALYSIS.md
+-rw-rw-r--  1 titane-os titane-os     8783 févr.  3 08:05 PHASE_6_PROFILING_STRATEGY.md
+-rw-rw-r--  1 titane-os titane-os     6947 févr.  4 14:37 PHASE_A_PRODUCTION_GO_PROTOCOL.md
+-rw-rw-r--  1 titane-os titane-os    10492 févr.  5 08:58 PHASE_C1_COMPLETION_REPORT.ts
+-rw-rw-r--  1 titane-os titane-os     8748 févr.  5 03:02 P_INFINITY_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     3269 févr.  5 03:02 P_INFINITY_P0_PREFLIGHT.md
+-rw-rw-r--  1 titane-os titane-os    14149 févr.  5 03:02 P_INFINITY_P1_SYSTEM_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os     4417 févr.  5 03:02 P_INFINITY_P2_TESTS.md
+-rw-rw-r--  1 titane-os titane-os     8471 févr.  5 03:02 P_INFINITY_P3_P4_P5_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os     2323 févr.  5 03:02 P_INFINITY_P6_BUILD_TESTS.md
+-rw-rw-r--  1 titane-os titane-os     5915 févr.  5 03:02 P_INFINITY_P7_P8_P9_DELIVERY.md
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 plans
+-rw-rw-r--  1 titane-os titane-os     3118 févr. 13 20:51 playwright.config.ts
+-rw-rw-r--  1 titane-os titane-os     2551 févr. 11 07:23 playwright.config.ts.backup-1770812583
+-rw-rw-r--  1 titane-os titane-os      370 janv. 16 18:12 playwright.global-setup.ts
+drwxrwxr-x  3 titane-os titane-os     4096 févr. 15 16:09 playwright-report
+-rw-rw-r--  1 titane-os titane-os     1353 janv.  1 23:26 pnpm-alias.sh
+-rwxrwxr-x  1 titane-os titane-os      245 janv. 19 15:24 pnpm-local.sh
+-rw-rw-r--  1 titane-os titane-os   549644 févr. 13 18:27 pnpm-lock.yaml
+-rw-rw-r--  1 titane-os titane-os     1802 févr.  5 03:02 PO_CHAT_SYSTEM_AUDIT_CRITICAL_FINDING.md
+-rw-rw-r--  1 titane-os titane-os     6286 févr.  5 03:02 PO_PHASE3_CORRECTION_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     6281 févr.  5 03:02 PO_PHASE4_ARCHITECTURE_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os     5475 févr.  5 03:02 PO_PHASE5_BUILD_LOGS_STABILITY.md
+-rw-rw-r--  1 titane-os titane-os     7364 févr.  5 03:02 PO_PHASE6_DOCUMENTATION_ALIGNMENT.md
+-rw-rw-r--  1 titane-os titane-os    11178 févr.  5 03:02 PO_PHASE7_FINAL_REGISTRY.md
+-rw-rw-r--  1 titane-os titane-os    10016 févr.  9 09:54 PORTAGE_COMPLETION_INSTRUCTIONS.md
+-rw-rw-r--  1 titane-os titane-os    12992 févr.  8 10:27 PORTAGE_V27.4.1_CANON_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    19260 févr.  9 09:54 PORTAGE_V27.4.1_CANON_VERIFICATION.md
+-rw-rw-r--  1 titane-os titane-os    10342 févr.  9 09:54 PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md
+-rw-rw-r--  1 titane-os titane-os    12822 févr.  9 09:54 PORTAGE_V27.4.1_FINAL_OUTPUT.md
+-rw-rw-r--  1 titane-os titane-os    12165 févr.  8 10:27 PORTAGE_V27.4.1_INTERNAL_VERIFICATION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    13450 févr.  9 09:54 PORTAGE_V27.4.1_SEAL.md
+-rw-rw-r--  1 titane-os titane-os     6846 févr.  9 09:54 PORT_FROM_LITE.md
+-rw-rw-r--  1 titane-os titane-os    12149 févr.  8 10:27 PORT_TITANE_INFINITY_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os      183 janv. 30 09:39 postcss.config.js
+-rw-rw-r--  1 titane-os titane-os     1662 févr. 13 19:12 .prettierignore
+-rw-rw-r--  1 titane-os titane-os      222 déc.   9 10:57 .prettierrc
+-rw-rw-r--  1 titane-os titane-os     9303 févr. 14 14:07 PROD_FIX_v27.0.2_COMPLETE_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    12889 févr. 14 14:07 PROD_FIX_v27.0.2_PATCHES.md
+-rw-rw-r--  1 titane-os titane-os     6306 févr. 14 14:09 PROD_FIX_v27.0.2_VALIDATION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     5367 févr.  3 08:05 PRODUCTION_AUTHORIZATION_APPROVAL_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     7488 févr.  3 08:05 PRODUCTION_AUTHORIZATION_FINAL_v8_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os     7799 févr.  3 08:05 PRODUCTION_AUTHORIZATION.md
+-rw-rw-r--  1 titane-os titane-os     7876 févr.  1 09:54 PRODUCTION_AUTHORIZATION_v35.0.0.md
+-rw-rw-r--  1 titane-os titane-os    12551 févr.  1 09:54 PRODUCTION_AUTHORIZATION_v36.0.0.md
+-rw-rw-r--  1 titane-os titane-os     5640 janv. 30 10:55 PRODUCTION_CERTIFICATION_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os    13580 janv. 29 13:57 PRODUCTION_DEPLOYMENT_COMPLIANCE_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     7458 févr.  5 11:49 PRODUCTION_DEPLOYMENT_v27.0.1_FINAL.md
+-rw-rw-r--  1 titane-os titane-os      842 févr.  4 11:44 PRODUCTION_GO_SIGNED.md
+-rw-rw-r--  1 titane-os titane-os     4595 févr. 13 18:27 PRODUCTION_HOTFIX_OLLAMA_AUTOSTART.md
+-rw-rw-r--  1 titane-os titane-os    10651 févr.  4 14:38 PRODUCTION_JOURNEY_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os     4740 févr.  3 08:05 PRODUCTION_READY_CERTIFICATION_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     9405 févr.  3 08:05 PRODUCTION_RELEASE_v28.0.0.md
+-rw-rw-r--  1 titane-os titane-os     8543 févr.  8 10:27 PRODUCTION_SEAL_FINAL_OUTPUT.md
+-rw-rw-r--  1 titane-os titane-os    10322 févr.  8 10:27 PRODUCTION_SEAL_v27.4.1.md
+-rw-rw-r--  1 titane-os titane-os     6868 févr. 13 18:27 PRODUCTION_STATUS_v27.0.1_OPERATIONAL.md
+-rw-rw-r--  1 titane-os titane-os     8276 févr. 14 14:12 PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os    12204 févr.  2 08:37 PROJECT_SNAPSHOT_v37.0.0.txt
+-rw-rw-r--  1 titane-os titane-os     1045 févr.  5 08:41 PROOFS.md
+-rw-rw-r--  1 titane-os titane-os     3569 févr.  9 09:54 PR_TEMPLATE_CREATION.md
+drwxrwxr-x  2 titane-os titane-os     4096 févr. 13 18:21 public
+-rwxrwxr-x  1 titane-os titane-os     1142 janv. 18 07:05 push_corrections.sh
+-rw-rw-r--  1 titane-os titane-os     3528 janv. 16 21:40 quantum_system_test_20260116_214045.log
+-rw-rw-r--  1 titane-os titane-os     2562 févr.  3 08:05 QUICK_FIX_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os    13549 janv. 28 11:06 QUICK_START_TESTING.sh
+-rw-rw-r--  1 titane-os titane-os     6466 févr.  3 08:05 RAPPORT_FINAL_STABLE+.md
+-rw-rw-r--  1 titane-os titane-os     9911 févr.  1 09:54 RAPPORT_FINAL_STRUCTURE_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     8962 févr.  1 09:54 RAPPORT_VERIFICATION_COMPLET_27.0.0.md
+-rw-rw-r--  1 titane-os titane-os    10538 févr.  1 09:54 REACT_OPTIMIZATION_v30.0.0.md
+-rw-rw-r--  1 titane-os titane-os    11896 févr.  1 09:54 REACT_OPTIMIZATION_v31.0.0.md
+-rw-rw-r--  1 titane-os titane-os    10623 févr.  1 09:54 REACT_OPTIMIZATION_v33.0.0.md
+-rw-rw-r--  1 titane-os titane-os    10897 févr.  1 09:54 README_EN.md
+-rw-rw-r--  1 titane-os titane-os    21850 févr. 13 18:27 README.md
+-rw-rw-r--  1 titane-os titane-os    10060 févr.  1 09:54 README_v27.0.0.md
+drwxrwxr-x  2 titane-os titane-os     4096 févr. 16 09:34 registry
+-rw-rw-r--  1 titane-os titane-os      963 févr.  5 08:51 REGISTRY_APPEND_CHAT_MEM.jsonl
+-rw-rw-r--  1 titane-os titane-os      841 févr.  5 08:41 REGISTRY_APPEND.jsonl
+drwxrwxr-x  4 titane-os titane-os     4096 janv. 18 11:15 release
+-rw-rw-r--  1 titane-os titane-os      280 févr.  5 15:27 RELEASE_ARTIFACTS_CHECKSUMS.txt
+-rw-rw-r--  1 titane-os titane-os     2914 févr. 16 13:02 RELEASE_CHECKLIST_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os     6309 févr.  4 14:38 RELEASE_NOTES_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6225 févr.  5 15:27 RELEASE_NOTES_v27.0.1_BETA.md
+-rw-rw-r--  1 titane-os titane-os     5413 févr. 16 13:02 RELEASE_NOTES_v27.0.2.md
+drwxrwxr-x 68 titane-os titane-os    12288 févr. 16 14:34 reports
+-rw-rw-r--  1 titane-os titane-os     6936 févr.  5 11:04 REPORTS_INDEX_SESSION_2.md
+-rw-rw-r--  1 titane-os titane-os     1451 févr.  2 14:22 restart-clean.sh
+-rwxrwxr-x  1 titane-os titane-os     1506 févr.  2 14:29 restart-complete-fix.sh
+-rwxrwxr-x  1 titane-os titane-os     2642 janv. 19 15:24 run
+-rw-rw-r--  1 titane-os titane-os     6499 févr. 13 18:21 run_baseline_measurements.rs
+drwxrwxr-x  6 titane-os titane-os     4096 févr. 16 13:46 runtime
+drwxrwxr-x 45 titane-os titane-os    12288 févr. 17 20:10 scripts
+-rw-rw-r--  1 titane-os titane-os     5227 févr.  4 09:08 SEAL_PROCESS_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os        8 janv.  5 17:26 .server.pid
+-rw-rw-r--  1 titane-os titane-os        0 janv.  5 21:39 service
+-rw-rw-r--  1 titane-os titane-os     7580 févr.  5 11:04 SESSION_2_FINAL_STATUS.md
+-rw-rw-r--  1 titane-os titane-os     8327 févr.  3 08:05 SESSION_COMPLETE_2026-02-03.md
+-rw-rw-r--  1 titane-os titane-os    11442 févr.  5 03:02 SESSION_COMPLETE_FINAL_INDEX.md
+-rw-rw-r--  1 titane-os titane-os     5799 févr.  2 18:38 SESSION_COMPLETE.txt
+-rw-rw-r--  1 titane-os titane-os     7921 févr. 13 18:27 SESSION_COMPLETION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     7806 févr.  5 11:04 SESSION_EXECUTION_SUMMARY_KEVIN.md
+-rwxrwxr-x  1 titane-os titane-os    14229 janv.  4 20:05 setup-dev.sh
+-rw-rw-r--  1 titane-os titane-os     6740 janv.  2 18:37 SINGULARITYBRIDGE_DISABLED.txt
+-rw-rw-r--  1 titane-os titane-os     3817 févr. 15 09:34 SMOKE_TEST_RESULTS_v27.0.2.md
+-rw-rw-r--  1 titane-os titane-os    12850 févr.  9 09:54 SPRINT_1_CODE_CHANGES_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os    10087 févr.  8 10:27 SPRINT_1_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    12338 févr.  8 10:27 SPRINT_2_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     9683 févr.  8 10:27 SPRINT_3_FINAL_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    10817 févr.  8 10:27 SPRINT_4_FINAL_REPORT.md
+drwxrwxr-x 46 titane-os titane-os     4096 févr. 13 18:27 src
+drwxrwxr-x 18 titane-os titane-os     4096 févr. 15 09:34 src-tauri
+-rw-rw-r--  1 titane-os titane-os     5831 janv.  2 18:18 STANDARDS_MODE_VERIFICATION.txt
+-rw-rw-r--  1 titane-os titane-os        0 janv.  5 21:39 start
+-rwxrwxr-x  1 titane-os titane-os     2338 janv. 12 20:02 start-with-ollama.sh
+-rw-rw-r--  1 titane-os titane-os        0 janv.  5 21:39 status
+-rw-rw-r--  1 titane-os titane-os     8192 févr.  3 08:05 STATUS_v20.5.1_READY.md
+-rwxrwxr-x  1 titane-os titane-os     3035 janv.  2 17:30 stop-http-server.sh
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 .storybook
+-rw-rw-r--  1 titane-os titane-os    14366 janv. 19 16:13 tailwind.config.ts
+-rw-rw-r--  1 titane-os titane-os        0 déc.   9 10:57 tauri
+-rw-rw-r--  1 titane-os titane-os     4332 févr.  3 08:05 TAURI_BACKEND_FIX.md
+-rw-rw-r--  1 titane-os titane-os     6278 janv. 19 15:24 tauri.base.json
+-rw-rw-r--  1 titane-os titane-os   155205 janv. 17 19:56 tauri-build-final.log
+-rw-rw-r--  1 titane-os titane-os      219 févr.  5 20:52 tauri_build_gstreamer.log
+-rw-rw-r--  1 titane-os titane-os    24157 févr.  6 09:45 tauri_build_icon_refresh.log
+-rw-rw-r--  1 titane-os titane-os      280 janv. 17 19:43 tauri-build.log
+-rw-rw-r--  1 titane-os titane-os    23881 févr.  6 10:31 tauri_build_ollama_bundle.log
+-rw-rw-r--  1 titane-os titane-os      280 janv. 18 07:49 tauri-build-output.log
+-rw-rw-r--  1 titane-os titane-os      949 févr.  5 16:13 tauri_build_prod_FINAL.log
+-rw-rw-r--  1 titane-os titane-os     2860 févr.  5 16:10 tauri_build_prod_FULL.log
+-rw-rw-r--  1 titane-os titane-os     3548 févr.  5 16:08 tauri_build_prod.log
+-rw-rw-r--  1 titane-os titane-os     1326 févr.  5 16:12 tauri_build_prod_v2.log
+-rw-rw-r--  1 titane-os titane-os      269 févr.  5 19:38 tauri_build_sc_get_env.log
+-rw-rw-r--  1 titane-os titane-os     5236 févr.  3 14:29 tauri-dev.log
+-rw-rw-r--  1 titane-os titane-os    18080 janv. 16 15:43 tauri_test_clean_config.txt
+-rw-rw-r--  1 titane-os titane-os     4929 févr.  1 09:54 TECHNICAL_DEBT_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     2563 janv.  4 20:05 test_chat_backend.py
+-rw-rw-r--  1 titane-os titane-os     3768 févr.  3 08:05 test-chat-direct.mjs
+-rwxrwxr-x  1 titane-os titane-os     2750 févr.  2 17:01 test-chat-system.sh
+-rwxrwxr-x  1 titane-os titane-os     3710 févr.  3 07:12 test-chat-ui-auto.sh
+-rw-rw-r--  1 titane-os titane-os     4354 févr.  3 08:05 test-chat-ui.html
+-rwxrwxr-x  1 titane-os titane-os     1508 janv.  4 00:16 test-copilot-whitelist.sh
+-rw-rw-r--  1 titane-os titane-os     5460 janv. 13 07:51 test-evo-integration.sh
+-rwxrwxr-x  1 titane-os titane-os      900 déc.  16 21:06 test-evo-validation.sh
+-rw-rw-r--  1 titane-os titane-os      468 janv. 17 00:30 test_finetuned.py
+-rwxrwxr-x  1 titane-os titane-os     2438 janv.  2 18:31 test-mime-types.sh
+-rw-rw-r--  1 titane-os titane-os     1158 févr.  2 14:17 test-ollama-chat.sh
+-rw-rw-r--  1 titane-os titane-os     3956 janv. 16 15:49 test-ollama-connection.js
+-rwxrwxr-x  1 titane-os titane-os     5606 févr.  2 14:15 test-ollama-connection.sh
+-rw-rw-r--  1 titane-os titane-os    12446 déc.   9 10:57 test_persona_engine.rs
+-rwxrwxr-x  1 titane-os titane-os     9410 janv. 16 21:47 test-quantum-integration.sh
+-rw-rw-r--  1 titane-os titane-os     1366 janv. 28 11:05 TEST_REPORT_2026-01-28_11-05-08.txt
+drwxrwxr-x 54 titane-os titane-os    12288 févr. 15 16:09 test-results
+-rw-rw-r--  1 titane-os titane-os  8898959 janv. 26 21:15 test_results_20260126_211255.log
+-rw-rw-r--  1 titane-os titane-os      402 févr.  5 08:41 TEST_RESULTS.md
+drwxrwxr-x 20 titane-os titane-os     4096 févr.  2 11:45 tests
+-rwxrwxr-x  1 titane-os titane-os    15697 janv. 28 11:05 test-sprint6-phase3.sh
+-rw-rw-r--  1 titane-os titane-os     2670 févr.  3 08:05 test-tauri-detection-fix.ts
+-rwxrwxr-x  1 titane-os titane-os     1761 févr.  2 14:25 test-tauri-detection.sh
+-rw-rw-r--  1 titane-os titane-os     1894 janv. 16 15:49 test-titane-ollama.mjs
+-rw-rw-r--  1 titane-os titane-os     1371 déc.   9 18:45 test-uilogger.mjs
+-rw-rw-r--  1 titane-os titane-os    64044 déc.   9 10:57 test.wav
+-rw-rw-r--  1 titane-os titane-os     8896 févr.  1 09:54 THREE_JS_LAZY_RESULTS_v36.0.0.md
+-rw-rw-r--  1 titane-os titane-os     7655 févr.  1 09:54 THREE_JS_OPTIMIZATION_v36.0.0.md
+-rw-rw-r--  1 titane-os titane-os     5608 févr. 13 18:27 TIMEOUT_WRAPPER_PATCH_v27.0.3.md
+lrwxrwxrwx  1 titane-os titane-os        9 janv. 19 15:24 titane -> titane.sh
+-rw-rw-r--  1 titane-os titane-os    11747 févr.  5 09:41 TITANE_ABSOLUTE_ASSURANCE_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    11191 févr.  5 09:41 TITANE_ABSOLUTE_FIXLOG.md
+-rw-rw-r--  1 titane-os titane-os    13844 févr.  5 09:41 TITANE_ABSOLUTE_PROOFS.md
+-rw-rw-r--  1 titane-os titane-os    10148 févr.  5 09:41 TITANE_ABSOLUTE_TEST_RESULTS.md
+-rw-rw-r--  1 titane-os titane-os    25985 déc.   9 10:57 titane-app-icon.png
+-rw-rw-r--  1 titane-os titane-os      280 févr. 14 14:08 TITANE_ARTIFACTS_SHA256_v27.0.2_HOTFIX.txt
+-rw-rw-r--  1 titane-os titane-os    11635 févr.  5 09:18 TITANE_FINAL_STATUS_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     4476 févr.  3 08:05 TITANE_FULL_AUDIT_READY.md
+-rw-rw-r--  1 titane-os titane-os     8124 févr.  5 09:35 TITANE_GLOBAL_AUDIT.md
+-rw-rw-r--  1 titane-os titane-os     6020 févr.  5 09:35 TITANE_GLOBAL_DISCOVERY.md
+-rw-rw-r--  1 titane-os titane-os     7494 févr.  5 09:35 TITANE_GLOBAL_PATCH_PLAN.md
+-rw-rw-r--  1 titane-os titane-os     9708 févr.  5 09:35 TITANE_GLOBAL_PROOFS.md
+-rw-rw-r--  1 titane-os titane-os     9762 févr.  5 09:35 TITANE_GLOBAL_TEST_RESULTS.md
+-rw-rw-r--  1 titane-os titane-os        0 déc.   9 10:57 titane-infinity@16.2.3
+-rw-rw-r--  1 titane-os titane-os        0 déc.   9 10:57 titane-infinity@9.0.0
+-rwxrwxr-x  1 titane-os titane-os      872 févr. 17 20:21 titane-infinity.desktop
+-rw-rw-r--  1 titane-os titane-os 98228899 janv.  4 20:05 TITANE_INFINITY-main.zip
+-rw-rw-r--  1 titane-os titane-os    11428 févr.  5 03:02 TITANE_INFINITY_STATUS_FINAL_vOMEGA2.md
+drwxrwxr-x  2 titane-os titane-os     4096 déc.   9 10:57 titane_local_training
+-rw-rw-r--  1 titane-os titane-os     1160 janv.  2 17:50 .titane-security-config.json
+-rwxrwxr-x  1 titane-os titane-os    30294 janv. 19 16:51 titane.sh
+-rwxrwxr-x  1 titane-os titane-os    41090 janv. 19 15:24 titane.sh.new
+drwxrwxr-x  2 titane-os titane-os     4096 janv.  4 22:15 .tmp
+-rw-rw-r--  1 titane-os titane-os      159 janv. 19 15:24 tmp_import_useChat.mjs
+drwxrwxr-x  3 titane-os titane-os     4096 janv.  4 01:17 .tools
+-rwxrwxr-x  1 titane-os titane-os     7287 déc.  15 21:37 transformation-start.sh
+-rw-rw-r--  1 titane-os titane-os     9891 févr.  1 09:54 TROUBLESHOOTING.md
+-rw-rw-r--  1 titane-os titane-os     2568 févr. 14 13:05 tsconfig.json
+-rw-rw-r--  1 titane-os titane-os      256 déc.   9 10:57 tsconfig.node.json
+-rw-rw-r--  1 titane-os titane-os      476 janv. 27 16:50 tsconfig.test.json
+drwxrwxr-x  3 titane-os titane-os     4096 janv.  4 20:05 tts-service
+-rw-rw-r--  1 titane-os titane-os      210 janv. 15 18:14 .tunnel-access.example.txt
+-rw-rw-r--  1 titane-os titane-os     3820 janv. 13 07:51 .tunnel-access.txt
+-rw-rw-r--  1 titane-os titane-os     7909 janv.  2 18:35 TUNNEL_ISSUES.txt
+-rw-rw-r--  1 titane-os titane-os    29071 févr.  1 09:54 TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md
+-rw-rw-r--  1 titane-os titane-os     1002 déc.   9 18:45 typedoc.json
+-rw-rw-r--  1 titane-os titane-os    13195 févr.  3 08:05 UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md
+-rw-rw-r--  1 titane-os titane-os     7766 févr.  5 03:02 UI_FINAL_SEAL_EXECUTIVE_SUMMARY.md
+-rw-rw-r--  1 titane-os titane-os     5558 févr.  5 03:02 UI_SEAL_P0_PREFLIGHT.md
+-rw-rw-r--  1 titane-os titane-os    12776 févr.  5 03:02 UI_SEAL_P1_CARTE.md
+-rw-rw-r--  1 titane-os titane-os    20831 févr.  5 03:02 UI_SEAL_P2-P9_CONSOLIDATED.md
+-rw-rw-r--  1 titane-os titane-os     8566 févr.  3 08:05 UI_TEST_VERIFICATION_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    10836 févr.  8 10:27 ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md
+-rw-rw-r--  1 titane-os titane-os     7516 févr.  1 09:54 V37_1_DEPLOYMENT_REPORT.md
+-rw-rw-r--  1 titane-os titane-os     9555 févr.  1 09:54 V37_COMPLETE_OPTIMIZATION_FINAL.md
+-rw-rw-r--  1 titane-os titane-os    10112 févr.  1 09:54 V37_OPTIMIZATION_COMPLETE.md
+-rwxrwxr-x  1 titane-os titane-os     2722 janv.  2 18:19 validate-standards-mode.sh
+drwxrwxr-x  6 titane-os titane-os     4096 janv. 31 23:10 .venv
+-rwxrwxr-x  1 titane-os titane-os     2838 janv.  4 17:13 verify-copilot-fix.sh
+-rwxrwxr-x  1 titane-os titane-os     2104 déc.  16 21:09 verify-evo-final.sh
+-rw-rw-r--  1 titane-os titane-os     3730 janv. 12 20:02 verify-ollama.sh
+-rwxrwxr-x  1 titane-os titane-os     4703 déc.  16 21:18 verify-time-fusion.sh
+-rw-rw-r--  1 titane-os titane-os        0 déc.   9 10:57 vite
+drwxrwxr-x  3 titane-os titane-os     4096 févr. 13 18:37 .vite-cache
+-rw-rw-r--  1 titane-os titane-os     1163 janv. 16 15:41 vite_clean_test.txt
+-rw-rw-r--  1 titane-os titane-os    23574 févr. 16 13:02 vite.config.ts
+-rw-rw-r--  1 titane-os titane-os      108 janv. 16 15:32 vite_direct_log.txt
+-rw-rw-r--  1 titane-os titane-os    16576 janv. 16 15:40 vite_minimal_test.txt
+-rw-rw-r--  1 titane-os titane-os     1624 janv. 16 15:40 vite_no_tsconfig_test.txt
+-rw-rw-r--  1 titane-os titane-os     1624 janv. 16 15:39 vite_standalone_test2.txt
+-rw-rw-r--  1 titane-os titane-os     1624 janv. 16 15:39 vite_standalone_test.txt
+-rw-rw-r--  1 titane-os titane-os     1891 janv. 24 22:54 vitest.browser.config.ts
+-rw-rw-r--  1 titane-os titane-os     7198 févr. 13 23:13 vitest.config.ts
+-rw-rw-r--  1 titane-os titane-os     1530 janv. 29 22:39 vitest.integration.config.ts
+-rw-rw-r--  1 titane-os titane-os     2981 janv. 29 22:39 vitest.unit.config.ts
+-rw-rw-r--  1 titane-os titane-os   412963 janv. 27 11:46 vitest_validation_20260127_114458.log
+-rw-rw-r--  1 titane-os titane-os      141 déc.   9 18:45 vitest.workspace.ts
+drwxrwxr-x  2 titane-os titane-os     4096 févr. 16 09:34 .vscode
+-rw-rw-r--  1 titane-os titane-os      711 déc.   9 10:57 .vscodeignore
+-rw-rw-r--  1 titane-os titane-os     2533 févr. 13 18:27 wdio.desktop.conf.cjs
+-rw-rw-r--  1 titane-os titane-os     8420 févr.  1 09:54 WEB_VITALS_v35.0.0.md
+-rw-rw-r--  1 titane-os titane-os     6088 févr.  3 08:05 WORKSPACE_CLEANUP_REPORT.md
+-rw-rw-r--  1 titane-os titane-os    17789 févr.  1 09:54 ZUSTAND_OPTIMIZATION_GUIDE.md
+-rw-rw-r--  1 titane-os titane-os     5183 févr.  1 09:54 ZUSTAND_OPTIMIZATION_STATUS_v32.0.0.md
+
+$ ls -la tests || true
+total 184
+drwxrwxr-x 20 titane-os titane-os  4096 févr.  2 11:45 .
+drwxrwxr-x 57 titane-os titane-os 36864 févr. 17 20:39 ..
+drwxrwxr-x  2 titane-os titane-os  4096 déc.   9 10:57 a11y
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 chat
+-rw-rw-r--  1 titane-os titane-os 18763 janv. 17 12:49 cognitive-engines-e2e.test.ts
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 contract
+drwxrwxr-x  2 titane-os titane-os  4096 févr.  2 08:30 e2e
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  2 23:20 fixtures
+-rw-rw-r--  1 titane-os titane-os 15895 janv. 19 16:13 glm46v-integration.test.ts
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 integration
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 24 22:03 mocks
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 performance
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 phase2
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 phase3
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 phase4
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 phase5
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 phase6
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  1 19:08 polyfills
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 release
+-rw-rw-r--  1 titane-os titane-os  2885 janv.  4 20:15 run_all_autonomous_tests.sh
+-rwxrwxr-x  1 titane-os titane-os  9104 janv. 19 15:24 run_all_tests.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 security
+-rw-rw-r--  1 titane-os titane-os  1239 janv. 17 12:49 setup.ts
+-rw-rw-r--  1 titane-os titane-os  8239 févr.  3 08:05 ui-navigation.test.tsx
+drwxrwxr-x  9 titane-os titane-os  4096 févr. 13 17:55 unit
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 17 12:49 verification
+
+$ ls -la tests/integration || true
+total 80
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 .
+drwxrwxr-x 20 titane-os titane-os  4096 févr.  2 11:45 ..
+-rw-rw-r--  1 titane-os titane-os  9364 janv. 17 12:49 audit-system.test.ts
+-rw-rw-r--  1 titane-os titane-os  6831 janv. 17 12:49 control_panel_integration.test.ts
+-rw-rw-r--  1 titane-os titane-os 11677 janv. 19 16:13 deployment.test.ts
+-rw-rw-r--  1 titane-os titane-os 18639 janv. 17 12:49 devops-pipeline.test.ts
+-rw-rw-r--  1 titane-os titane-os 17998 janv. 17 12:49 full-pipeline.test.ts
+
+$ rg -n "include|exclude|testMatch|dir|root|coverage" vitest*.config* tests -S
+vitest.browser.config.ts:16:      '@': path.resolve(__dirname, './src'),
+vitest.browser.config.ts:17:      '@tauri-apps/api/core': path.resolve(__dirname, './src/__mocks__/tauri.mock.ts'),
+vitest.browser.config.ts:33:    include: [
+vitest.browser.config.ts:43:    coverage: {
+vitest.browser.config.ts:44:      enabled: false, // Disable for browser tests (focus on node coverage)
+vitest.integration.config.ts:16:    include: [],
+vitest.integration.config.ts:18:    exclude: ['src/**/*', 'tests/**/*', 'node_modules'],
+vitest.integration.config.ts:21:    dir: '.',
+vitest.integration.config.ts:23:    coverage: {
+vitest.integration.config.ts:26:      reportsDirectory: 'coverage/integration',
+vitest.integration.config.ts:27:      exclude: [
+vitest.unit.config.ts:17:    include: [
+vitest.unit.config.ts:25:    exclude: [
+vitest.unit.config.ts:55:    coverage: {
+vitest.unit.config.ts:58:      reportsDirectory: 'coverage/unit',
+vitest.unit.config.ts:59:      exclude: [
+vitest.config.ts:13:  { find: '@', replacement: resolve(__dirname, './src') },
+vitest.config.ts:14:  { find: '@app', replacement: resolve(__dirname, './src/app') },
+vitest.config.ts:15:  { find: '@pages', replacement: resolve(__dirname, './src/pages') },
+vitest.config.ts:16:  { find: '@features', replacement: resolve(__dirname, './src/features') },
+vitest.config.ts:17:  { find: '@components', replacement: resolve(__dirname, './src/components') },
+vitest.config.ts:18:  { find: '@ui', replacement: resolve(__dirname, './src/ui') },
+vitest.config.ts:19:  { find: '@hooks', replacement: resolve(__dirname, './src/hooks') },
+vitest.config.ts:20:  { find: '@services', replacement: resolve(__dirname, './src/services') },
+vitest.config.ts:21:  { find: '@stores', replacement: resolve(__dirname, './src/stores') },
+vitest.config.ts:22:  { find: '@themes', replacement: resolve(__dirname, './src/themes') },
+vitest.config.ts:23:  { find: '@utils', replacement: resolve(__dirname, './src/utils') },
+vitest.config.ts:24:  { find: '@types', replacement: resolve(__dirname, './src/types') },
+vitest.config.ts:25:  { find: '@assets', replacement: resolve(__dirname, './src/assets') },
+vitest.config.ts:26:  { find: '@styles', replacement: resolve(__dirname, './src/styles') },
+vitest.config.ts:29:    replacement: resolve(__dirname, './tests/mocks/tauri.ts'),
+vitest.config.ts:33:    replacement: resolve(__dirname, './tests/mocks/tauriCore.ts'),
+vitest.config.ts:37:    replacement: resolve(__dirname, './tests/mocks/tauriEvent.ts'),
+vitest.config.ts:45:        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts'),
+vitest.config.ts:49:        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts'),
+vitest.config.ts:53:        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts'),
+vitest.config.ts:57:        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatCore.mock.ts'),
+vitest.config.ts:61:        replacement: resolve(__dirname, './src/hooks/__mocks__/useChatMemory.mock.ts'),
+vitest.config.ts:65:        replacement: resolve(__dirname, './src/services/tts/__mocks__/hybridTTS.mock.ts'),
+vitest.config.ts:72:  root: '.',
+vitest.config.ts:112:    include: [
+vitest.config.ts:118:    exclude: [
+vitest.config.ts:136:    coverage: {
+vitest.config.ts:139:      reportsDirectory: 'coverage/unit',
+vitest.config.ts:140:      exclude: [
+vitest.config.ts:159:    include: ['react', 'react-dom', 'react/jsx-runtime'],
+vitest.config.ts:179:          if (id.includes('node_modules')) {
+vitest.config.ts:180:            if (id.includes('react') || id.includes('react-dom')) {
+vitest.config.ts:183:            if (id.includes('framer-motion')) {
+tests/contract/tauri.contract.test.ts:5: * - Aucun invoke() direct hors src/lib/tauriClient.ts
+tests/contract/tauri.contract.test.ts:18:  describe('P2.4.1: no_direct_invoke', () => {
+tests/contract/tauri.contract.test.ts:40:            cwd: path.resolve(__dirname, '../..'),
+tests/contract/tauri.contract.test.ts:61:        console.error('❌ invoke() direct détecté dans:', violations);
+tests/contract/tauri.contract.test.ts:63:          `PHASE_2 GATE FAILED: ${violations.length} fichier(s) avec invoke() direct hors tauriClient.ts:\n${violations.join('\n')}`
+tests/contract/tauri.contract.test.ts:71:  describe('P2.4.2: full_coverage', () => {
+tests/contract/tauri.contract.test.ts:74:      const commandsFilePath = path.resolve(__dirname, '../../src/lib/tauriCommands.ts');
+tests/contract/tauri.contract.test.ts:88:      const clientFilePath = path.resolve(__dirname, '../../src/lib/tauriClient.ts');
+tests/contract/tauri.contract.test.ts:96:        if (!clientContent.includes(`'${cmd}'`) && !wrapperRegex.test(clientContent)) {
+tests/contract/tauri.contract.test.ts:100:          if (!clientContent.includes(cmd)) {
+tests/contract/tauri.contract.test.ts:117:      const coverageRatio = 1 - missingWrappers.length / commands.length;
+tests/contract/tauri.contract.test.ts:118:      expect(coverageRatio).toBeGreaterThan(0.3); // Au moins 30% couvert pour cette base minimale
+tests/contract/tauri.contract.test.ts:128:          cwd: path.resolve(__dirname, '../..'),
+tests/contract/tauri.contract.test.ts:151:      const clientFilePath = path.resolve(__dirname, '../../src/lib/tauriClient.ts');
+tests/contract/tauri.contract.test.ts:160:      const commandsFilePath = path.resolve(__dirname, '../../src/lib/tauriCommands.ts');
+tests/contract/tauri-ipc-contract.test.ts:18:  function scanFiles(dir: string) {
+tests/contract/tauri-ipc-contract.test.ts:19:    const files = fs.readdirSync(dir);
+tests/contract/tauri-ipc-contract.test.ts:22:      const filePath = path.join(dir, file);
+tests/contract/tauri-ipc-contract.test.ts:26:        if (['tests', 'target', 'node_modules', 'dist'].includes(file)) {
+tests/verification/comprehensive.test.ts:23:    it.each(requiredDirs)('should have %s directory', dir => {
+tests/verification/comprehensive.test.ts:24:      expect(fs.existsSync(dir)).toBe(true);
+tests/verification/comprehensive.test.ts:25:      expect(fs.statSync(dir).isDirectory()).toBe(true);
+tests/phase6/gate-p6.test.ts:19:const ROOT = resolve(__dirname, '../..');
+tests/phase6/gate-p6.test.ts:80:        console.log('ℹ️  Performance tests directory found');
+tests/phase6/gate-p6.test.ts:83:        console.log('ℹ️  Performance tests directory not found (optional)');
+tests/integration/devops-pipeline.test.ts:234:          root_causes: [],
+tests/integration/devops-pipeline.test.ts:282:          root_causes: [],
+tests/integration/devops-pipeline.test.ts:453:          root_causes: [],
+tests/integration/audit-system.test.ts:23:      { name: '04-test-coverage.sh', description: 'Test Coverage' },
+tests/integration/audit-system.test.ts:193:    it('should have reports directory', () => {
+tests/integration/audit-system.test.ts:198:    it('reports directory should be in .gitignore', () => {
+tests/integration/audit-system.test.ts:204:        content.includes('reports/') ||
+tests/integration/audit-system.test.ts:205:        content.includes('reports') ||
+tests/integration/audit-system.test.ts:206:        content.includes('/reports');
+tests/integration/audit-system.test.ts:228:    it('should have complete audit coverage', () => {
+tests/integration/audit-system.test.ts:233:        'coverage', // test-coverage script
+tests/integration/audit-system.test.ts:237:      const scripts = fs.readdirSync(AUDIT_SCRIPTS_DIR);
+tests/integration/audit-system.test.ts:240:        const hasScript = scripts.some(s => s.toLowerCase().includes(category));
+tests/integration/audit-system.test.ts:246:      const scripts = fs.readdirSync(AUDIT_SCRIPTS_DIR);
+tests/integration/audit-system.test.ts:252:      const scripts = fs.readdirSync(AUDIT_SCRIPTS_DIR);
+tests/integration/audit-system.test.ts:253:      const hasAutoFix = scripts.some(s => s.includes('auto-fix'));
+tests/integration/audit-system.test.ts:258:      const scripts = fs.readdirSync(AUDIT_SCRIPTS_DIR);
+tests/integration/audit-system.test.ts:259:      const hasQualityGates = scripts.some(s => s.includes('quality-gates'));
+tests/integration/full-pipeline.test.ts:9: * Deterministic, fully mocked coverage of the autonomous stack.
+tests/integration/full-pipeline.test.ts:75:      intention: baseHistory.length > 5 ? 'multi_turn_assist' : 'direct_answer',
+tests/integration/deployment.test.ts:14:// Project root path
+tests/integration/deployment.test.ts:187:        targets === 'all' || (Array.isArray(targets) && targets.includes('appimage'));
+tests/integration/deployment.test.ts:296:    it('should have icons directory', () => {
+tests/integration/deployment.test.ts:326:    it.each(requiredDirs)('should have %s directory', dir => {
+tests/integration/deployment.test.ts:327:      expect(fs.existsSync(dir)).toBe(true);
+tests/integration/deployment.test.ts:328:      expect(fs.statSync(dir).isDirectory()).toBe(true);
+tests/unit/devops/VisualDevOpsEngine.test.ts:159:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:263:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:326:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:407:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:454:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:499:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:570:          root_causes: [],
+tests/unit/devops/VisualDevOpsEngine.test.ts:636:          root_causes: [],
+tests/unit/devops/LocalAgentEngine.test.ts:72:      expect(analysis.project_root).toBe(projectRoot);
+tests/unit/devops/LocalAgentEngine.test.ts:118:      expect(analysis.build_config.output_directory).toBeDefined();
+tests/unit/devops/LocalAgentEngine.test.ts:184:    it('should include clean command', async () => {
+tests/unit/devops/LocalAgentEngine.test.ts:191:    it('should include build command', async () => {
+tests/unit/devops/LocalAgentEngine.test.ts:232:    it('should include test command', async () => {
+tests/unit/devops/LocalAgentEngine.test.ts:238:          cmd.args?.includes('pnpm') &&
+tests/unit/devops/LocalAgentEngine.test.ts:239:          cmd.args?.includes('test')
+tests/unit/devops/LocalAgentEngine.test.ts:278:      const buildCommand = action.commands?.find(cmd => cmd.args?.includes('build'));
+tests/unit/devops/LocalAgentEngine.test.ts:501:    it('should include issues', async () => {
+tests/unit/devops/LocalAgentEngine.test.ts:507:    it('should include recommendations', async () => {
+tests/glm46v-integration.test.ts:10:    it('should include GLM-4.6V in provider list', () => {
+tests/glm46v-integration.test.ts:29:    it('should include GLM-4.6V in provider preferences', () => {
+tests/glm46v-integration.test.ts:108:    it('should be included in allowlist', () => {
+tests/glm46v-integration.test.ts:240:    // Verify system prompt was included in the request
+tests/glm46v-integration.test.ts:279:    // Verify image was included in request
+tests/run_all_tests.sh:7:SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+tests/run_all_tests.sh:8:PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+tests/phase3/gate-p3.test.ts:18:const ROOT = resolve(__dirname, '../..');
+tests/phase3/gate-p3.test.ts:74:          cmd.includes('qa_') || cmd.includes('devtools') || cmd.includes('one_core_')
+tests/phase5/gate-p5.test.ts:19:const ROOT = resolve(__dirname, '../..');
+tests/phase5/gate-p5.test.ts:39:    it('should have distinct runtime directories', () => {
+tests/phase5/gate-p5.test.ts:84:      expect(existsSync(evidenceDir), `Missing evidence directory: ${evidenceDir}`).toBe(
+tests/cognitive-engines-e2e.test.ts:233:      const convBHasPythonFromA = convBContext.facts.includes('Python');
+tests/phase2/gate-p2.test.ts:22:const ROOT = resolve(__dirname, '../../');
+tests/phase2/gate-p2.test.ts:55:      expect(content).toContain('no_direct_invoke');
+tests/phase4/gate-p4.test.ts:15:import { existsSync, readFileSync, accessSync, constants, readdirSync } from 'node:fs';
+tests/phase4/gate-p4.test.ts:19:const ROOT = resolve(__dirname, '../..');
+tests/phase4/gate-p4.test.ts:48:      expect(content).toContain('No direct invoke() in application code');
+tests/phase4/gate-p4.test.ts:224:        console.log('  ⚠️  No reports directory (audit not run yet)');
+tests/phase4/gate-p4.test.ts:228:      const reports = readdirSync(reportsDir)
+tests/phase4/gate-p4.test.ts:272:        console.log('  ⚠️  No reports directory (audit not run yet)');
+tests/phase4/gate-p4.test.ts:276:      const reports = readdirSync(reportsDir)
+tests/e2e/ui-comprehensive.spec.ts:231:        !e.includes('ResizeObserver') &&
+tests/e2e/ui-comprehensive.spec.ts:232:        !e.includes('Non-Error promise rejection') &&
+tests/e2e/ui-comprehensive.spec.ts:233:        !e.includes('Deprecation')
+tests/e2e/chat-accessibility-axe.spec.ts:33:      .include('[role="button"][aria-label="Ouvrir TITANE∞ AI Companion"]')
+tests/e2e/chat-accessibility-axe.spec.ts:59:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:85:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:147:      .include('[role="dialog"]')
+tests/e2e/chat-accessibility-axe.spec.ts:152:      v => v.id.includes('aria') || v.id.includes('label')
+tests/e2e/chat-accessibility-axe.spec.ts:219:      .include('[role="dialog"]')
+tests/e2e/chat-race-conditions.spec.ts:157:      if (msg.text().includes('validMessages recalculé')) {
+tests/release/gate-release.test.ts:26:const ROOT = resolve(__dirname, '../../');
+tests/e2e/provider-flow.test.ts:34:  test('Test 1: Local Mode force Ollama direct', async ({ page }) => {
+tests/e2e/provider-flow.test.ts:85:      log => log.includes('LOCAL') || log.includes('Ollama') || log.includes('provider')
+tests/e2e/provider-flow.test.ts:155:    const hasContext = responseText?.includes('Alice') || responseText?.includes('bleu');
+tests/e2e/provider-flow.test.ts:166:      log => log.includes('Memory') || log.includes('STM') || log.includes('context')
+tests/e2e/provider-flow.test.ts:171:      console.log(logs.filter(l => l.includes('Memory')).join('\n'));
+tests/e2e/provider-flow.test.ts:215:    const hasUserIdLogs = logs.some(log => log.includes('test-user-e2e-123'));
+tests/e2e/provider-flow.test.ts:232:    const hasAnonymousLogs = logs.some(log => log.includes('anonymous'));
+tests/mocks/better-sqlite3.ts:111:    return pragma.includes('=') ? undefined : [];

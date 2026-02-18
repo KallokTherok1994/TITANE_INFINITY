@@ -1,0 +1,22 @@
+]633;E;{   echo "$ git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo ""\x3b   echo "$ git rev-parse --abbrev-ref HEAD"\x3b   git rev-parse --abbrev-ref HEAD\x3b   echo ""\x3b   echo "$ git rev-parse HEAD"\x3b   git rev-parse HEAD\x3b   echo ""\x3b   echo "$ node -v"\x3b   node -v\x3b   echo ""\x3b   echo "$ pnpm -v"\x3b   pnpm -v\x3b   echo ""\x3b   echo "$ rustc -V"\x3b   rustc -V\x3b   echo ""\x3b   echo "$ cargo -V"\x3b   cargo -V\x3b } > "${P10_1_DIR}/01_PRECHECKS.txt";cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C$ git status --porcelain=v1
+ M deployment/latest/certification/phase10/P10_E2E_DESKTOP_FULL_CERT_20260218_012110/COMMANDS_RUN.txt
+?? deployment/latest/certification/phase10/P10_E2E_DESKTOP_FULL_CERT_20260218_012110/14_FINAL_OUTPUT.txt
+?? deployment/latest/certification/phase10_1/
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+3b635ca32dbf95271298b403335f8b0d88737658
+
+$ node -v
+v24.0.0
+
+$ pnpm -v
+10.28.2
+
+$ rustc -V
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+
+$ cargo -V
+cargo 1.91.1 (ea2d97820 2025-10-10)

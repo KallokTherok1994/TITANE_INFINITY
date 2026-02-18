@@ -1,0 +1,824 @@
+]633;E;{   echo "$ pnpm run test:coverage:integration"\x3b   pnpm run test:coverage:integration\x3b } > "${P10_1_PATH}/06_INT_RUN_ATTEMPT_3.txt" 2>&1;aa4a9fda-9375-453d-abe5-fc9a8730b450]633;C$ pnpm run test:coverage:integration
+
+> titane-infinity@27.0.2 test:coverage:integration /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run -c vitest.integration.config.ts --coverage
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+      [2mCoverage enabled with [22m[33mv8[39m
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts
+[22m[39m[TauriProtector] ✅ Tauri confirmed available (strategies: {
+  hasTauriGlobal: [33mtrue[39m,
+  hasTauriInternals: [90mundefined[39m,
+  hasTauriInvoke: [90mundefined[39m,
+  hasTauriFlag: [33mfalse[39m
+} )
+[TauriProtector] 🛡️ Initialized - isTauriAvailable: [33mtrue[39m
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts
+[22m[39m[VisualDevOpsEngine] Initialized v25.5
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts
+[22m[39m[LocalAgentEngine] Initialized v26.0
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m1[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Proposing action: fix_error
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'fix_error'[39m, validation_required: [33mtrue[39m, security_checks: [33m3[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Action validated: 1771379122386-gvcxtbncf
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Action executed: { id: [32m'1771379122386-gvcxtbncf'[39m, success: [33mtrue[39m, duration_ms: [33m2[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+[LocalAgentEngine] Using cached analysis
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Health check complete: { overall_health: [33m100[39m, issues: [33m0[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122383-traxah7gb
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mFull Pipeline[2m > [22m[2mshould execute complete DevOps pipeline
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Pipeline generated: {
+  name: [32m'Production Pipeline'[39m,
+  stages: [33m3[39m,
+  estimated_duration: [32m'5-15 minutes'[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122390-rolgrhkwk
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mCI/CD Pipeline[2m > [22m[2mshould generate and validate full CI/CD pipeline
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Workflow created: { id: [32m'1771379122393-1krreb5ew'[39m, name: [32m'Auto Build & Test'[39m, steps: [33m2[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122393-kzg0imi2u
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould create workflow with file change triggers
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Workflow created: {
+  id: [32m'1771379122394-p84bto3b5'[39m,
+  name: [32m'Deployment Workflow'[39m,
+  steps: [33m3[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122393-12loe85ji
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mAutomated Workflow[2m > [22m[2mshould handle workflow with validation points
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Proposing action: build
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'build'[39m, validation_required: [33mtrue[39m, security_checks: [33m3[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Proposing action: test
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'test'[39m, validation_required: [33mtrue[39m, security_checks: [33m2[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Proposing action: optimize
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'optimize'[39m, validation_required: [33mtrue[39m, security_checks: [33m3[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122394-duqhfmflv
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould validate all actions for security
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[VisualDevOpsEngine] Proposing action: generate_script
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[VisualDevOpsEngine] Action proposed: {
+  type: [32m'generate_script'[39m,
+  validation_required: [33mtrue[39m,
+  security_checks: [33m3[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122396-rzjkihted
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mSecurity Validation[2m > [22m[2mshould block dangerous script generation
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m1[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Analyzing project: /nonexistent
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122396-ojzmzkppu
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle backend failures gracefully
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122397-goutn8zm6
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle invalid action IDs
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122399-nuft4l44u
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mError Handling[2m > [22m[2mshould handle missing project
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m0[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122400-sz25caozz
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze screen in < 500ms
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+[LocalAgentEngine] Using cached analysis
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122401-g6kwfdk6k
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould analyze project in < 1000ms
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Pipeline generated: { name: [32m'Test'[39m, stages: [33m2[39m, estimated_duration: [32m'5-15 minutes'[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122401-0f0ogroj8
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould generate pipeline in < 200ms
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+[VisualDevOpsEngine] Analyzing screen...
+[LocalAgentEngine] Health check complete: { overall_health: [33m100[39m, issues: [33m0[39m }
+[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m0[39m,
+  confidence: [33m0[39m
+}
+[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m0[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122402-1bva7cex8
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mPerformance[2m > [22m[2mshould handle multiple concurrent operations
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m1[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Proposing action: fix_error
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'fix_error'[39m, validation_required: [33mtrue[39m, security_checks: [33m2[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Action validated: 1771379122403-58hf1ktuh
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Action executed: { id: [32m'1771379122403-58hf1ktuh'[39m, success: [33mtrue[39m, duration_ms: [33m1[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Health check complete: { overall_health: [33m100[39m, issues: [33m0[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122403-ql8agpeob
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould collaborate on error detection and fix
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m0[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Proposing action: build
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'build'[39m, validation_required: [33mtrue[39m, security_checks: [33m3[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122404-bu9cgbx07
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEngine Collaboration[2m > [22m[2mshould integrate reports from both engines
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Enabling...
+[VisualDevOpsEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Enabling...
+[LocalAgentEngine] Analyzing project: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Project type: unknown
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Technologies: []
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Project analysis complete: { type: [32m'unknown'[39m, technologies: [33m0[39m, issues: [33m0[39m, health_score: [33m100[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Current project analyzed: unknown
+[LocalAgentEngine] Enabled successfully
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Analyzing screen...
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Screen analysis complete: {
+  context_type: [32m'unknown'[39m,
+  elements_found: [33m0[39m,
+  errors_found: [33m0[39m,
+  confidence: [33m0[39m
+}
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Proposing action: fix_error
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Action proposed: { type: [32m'fix_error'[39m, validation_required: [33mtrue[39m, security_checks: [33m2[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Action validated: 1771379122405-e8qxiq9q6
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Action executed: { id: [32m'1771379122405-e8qxiq9q6'[39m, success: [33mtrue[39m, duration_ms: [33m1[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Pipeline generated: { name: [32m'Dev Pipeline'[39m, stages: [33m3[39m, estimated_duration: [32m'5-15 minutes'[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39mStage: build
+  Command: rm -rf dist
+  Command: corepack pnpm run build
+Stage: test
+  Command: corepack pnpm test
+Stage: deploy
+  Command: corepack pnpm run build
+  Command: echo Build artifacts ready in dist
+[LocalAgentEngine] Health check complete: { overall_health: [33m100[39m, issues: [33m0[39m }
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Disabling...
+[VisualDevOpsEngine] Saving session: 1771379122404-ga45mm5hc
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[VisualDevOpsEngine] Disabled
+
+[90mstdout[2m | tests/integration/devops-pipeline.test.ts[2m > [22m[2mDevOps Pipeline Integration[2m > [22m[2mEnd-to-End Scenarios[2m > [22m[2mshould handle complete development workflow
+[22m[39m[LocalAgentEngine] Disabling...
+[LocalAgentEngine] Disabled
+
+ [32m✓[39m [30m[42m integration-core [49m[39m tests/integration/devops-pipeline.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m [30m[42m integration-core [49m[39m tests/integration/audit-system.test.ts [2m([22m[2m54 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m [30m[42m integration-core [49m[39m tests/integration/deployment.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m [30m[42m integration-core [49m[39m tests/integration/full-pipeline.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m [30m[42m integration-core [49m[39m tests/integration/control_panel_integration.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m      Tests [22m [1m[32m140 passed[39m[22m[90m (140)[39m
+[2m   Start at [22m 20:45:21
+[2m   Duration [22m 2.86s[2m (transform 242ms, setup 791ms, import 242ms, tests 67ms, environment 960ms)[22m
+
+[34m % [39m[2mCoverage report from [22m[33mv8[39m
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   40.49 |     26.3 |   46.09 |   41.53 |                   
+ core/devops       |   69.09 |    49.57 |   72.64 |   70.79 |                   
+  ...gentEngine.ts |   67.03 |     48.2 |   63.63 |   69.88 | ...1020-1024,1033 
+  ...vOpsEngine.ts |   70.72 |    50.47 |   79.03 |   71.51 | ...1059,1073-1086 
+ lib               |   38.61 |    26.88 |   32.43 |   40.24 |                   
+  ...sification.ts |    4.54 |        0 |       0 |     5.4 | 61-188            
+  security.ts      |   45.58 |    33.52 |   41.37 |   46.41 | ...1900,1914-1963 
+ lib/security      |    7.63 |     0.78 |   51.21 |    8.01 |                   
+  ...tSanitizer.ts |    10.6 |        0 |   66.66 |   10.76 | 155-292           
+  AIRateLimiter.ts |      12 |        4 |    7.69 |   13.33 | 104-242           
+  ...eValidator.ts |    6.52 |        0 |    62.5 |    6.97 | 133-358           
+  ...eAIService.ts |       0 |        0 |     100 |       0 | 98-394            
+ monitoring        |     9.3 |     1.92 |    7.14 |    9.87 |                   
+  index.ts         |     9.3 |     1.92 |    7.14 |    9.87 | ...82,303-356,369 
+ utils             |   17.68 |     9.21 |   13.63 |   18.11 |                   
+  logger.ts        |   21.33 |    14.28 |   14.28 |   23.43 | 24-41,79,100-224  
+  ...iProtector.ts |   16.33 |     7.73 |   13.04 |   16.41 | ...82-710,726-733 
+-------------------|---------|----------|---------|---------|-------------------
+-------------------|---------|----------|---------|---------|-------------------
+File               | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s 
+-------------------|---------|----------|---------|---------|-------------------
+All files          |   40.49 |     26.3 |   46.09 |   41.53 |                   
+ core/devops       |   69.09 |    49.57 |   72.64 |   70.79 |                   
+  ...gentEngine.ts |   67.03 |     48.2 |   63.63 |   69.88 | ...1020-1024,1033 
+  ...vOpsEngine.ts |   70.72 |    50.47 |   79.03 |   71.51 | ...1059,1073-1086 
+ lib               |   38.61 |    26.88 |   32.43 |   40.24 |                   
+  ...sification.ts |    4.54 |        0 |       0 |     5.4 | 61-188            
+  security.ts      |   45.58 |    33.52 |   41.37 |   46.41 | ...1900,1914-1963 
+ lib/security      |    7.63 |     0.78 |   51.21 |    8.01 |                   
+  ...tSanitizer.ts |    10.6 |        0 |   66.66 |   10.76 | 155-292           
+  AIRateLimiter.ts |      12 |        4 |    7.69 |   13.33 | 104-242           
+  ...eValidator.ts |    6.52 |        0 |    62.5 |    6.97 | 133-358           
+  ...eAIService.ts |       0 |        0 |     100 |       0 | 98-394            
+ monitoring        |     9.3 |     1.92 |    7.14 |    9.87 |                   
+  index.ts         |     9.3 |     1.92 |    7.14 |    9.87 | ...82,303-356,369 
+ utils             |   17.68 |     9.21 |   13.63 |   18.11 |                   
+  logger.ts        |   21.33 |    14.28 |   14.28 |   23.43 | 24-41,79,100-224  
+  ...iProtector.ts |   16.33 |     7.73 |   13.04 |   16.41 | ...82-710,726-733 
+-------------------|---------|----------|---------|---------|-------------------
