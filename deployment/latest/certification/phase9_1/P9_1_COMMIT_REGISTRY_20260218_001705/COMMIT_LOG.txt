@@ -1,0 +1,12 @@
+]633;E;cat deployment/latest/certification/phase8_4/P8_4_WEEK2_EXPANSION_20260217_232914/ENV.txt;cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;Cb9a7efba (HEAD -> MAIN) docs(registry): append P9 public readiness entry
+919cbf51 docs(governance): P9 public readiness framework (sealed)
+bbf00a89 docs: finalize P8.5.1 token wait state
+
+commit b9a7efbaada535d2065f22c07fba313dcfbb1fa9
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Tue Feb 17 19:19:34 2026 -0500
+
+    docs(registry): append P9 public readiness entry
+
+deployment/latest/certification/phase9_1/P9_1_COMMIT_REGISTRY_20260218_001705/REGISTRY_DIFF.txt
+docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md
