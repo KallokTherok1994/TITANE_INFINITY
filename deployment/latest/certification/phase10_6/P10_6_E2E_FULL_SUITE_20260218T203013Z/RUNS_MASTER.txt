@@ -1,0 +1,9 @@
+P10.6 E2E Full Suite Execution — mer. 18 févr. 2026 20:31:16 UTC
+Wrapper: /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_4/P10_4_INFRA_IPC_STABILIZATION_20260218T201829Z/tauri-wrapper-headless.sh
+
+Starting at mer. 18 févr. 2026 20:31:16 UTC
+Log: /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_6/P10_6_E2E_FULL_SUITE_20260218T203013Z/RUN_1_FULL.txt
+❌ FAIL | Run 1 complete
+
+Starting at mer. 18 févr. 2026 20:31:47 UTC
+Log: /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_6/P10_6_E2E_FULL_SUITE_20260218T203013Z/RUN_2_FULL.txt

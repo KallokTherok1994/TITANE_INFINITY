@@ -1,0 +1,6 @@
+2026-02-18T20:44:56.996Z Artifacts dir: /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop
+2026-02-18T20:44:56.997Z WDIO config: /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs
+2026-02-18T20:44:56.998Z TAURI_BINARY_PATH: <unset>
+2026-02-18T20:44:56.998Z tauri-driver args: tauri-driver --port 4444 --native-port 4445 --native-host 127.0.0.1 --native-driver /usr/bin/WebKitWebDriver
+2026-02-18T20:44:57.004Z wdio command: pnpm exec wdio run /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs
+[2026-02-18T20:45:03Z] Run 2: exit=1 duration=10332ms
