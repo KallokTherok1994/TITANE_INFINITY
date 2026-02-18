@@ -1,0 +1,29 @@
+$ set -euo pipefail
+# Created deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217 and base files
+$ git restore deployment/latest/certification/phase10/P10_E2E_DESKTOP_FULL_CERT_20260218_012110/COMMANDS_RUN.txt
+$ rm -f deployment/latest/certification/phase10/P10_E2E_DESKTOP_FULL_CERT_20260218_012110/14_FINAL_OUTPUT.txt
+]633;E;{   echo "$ rg -n \\"test:integration|integration\\" package.json"\x3b   echo "$ ls -la"\x3b   echo "$ ls -la tests || true"\x3b   echo "$ ls -la tests/integration || true"\x3b   echo "$ rg -n \\"include|exclude|testMatch|dir|root|coverage\\" vitest*.config* tests -S"\x3b } >> "${P10_1_DIR}/COMMANDS_RUN.txt";cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C$ rg -n "test:integration|integration" package.json
+$ ls -la
+$ ls -la tests || true
+$ ls -la tests/integration || true
+$ rg -n "include|exclude|testMatch|dir|root|coverage" vitest*.config* tests -S
+]633;E;{   echo "$ find tests -type f | sort | sed -n '1,200p'"\x3b   echo "$ find tests -type f \\( -name \\"*.test.*\\" -o -name \\"*.spec.*\\" -o -name \\"*integration*\\" -o -name \\"*.int.*\\" \\) | sort"\x3b } >> "${P10_1_DIR}/COMMANDS_RUN.txt";cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C$ find tests -type f | sort | sed -n '1,200p'
+$ find tests -type f \( -name "*.test.*" -o -name "*.spec.*" -o -name "*integration*" -o -name "*.int.*" \) | sort
+$ git diff -- vitest.integration.config.ts > deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/05_INT_FIX_ATTEMPT_1.patch
+$ cat > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/04_INT_CLASSIFICATION.md
+$ git diff -- vitest.integration.config.ts > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/05_INT_FIX_ATTEMPT_2.patch
+$ git diff -- vitest.integration.config.ts > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/05_INT_FIX_ATTEMPT_3.patch
+]633;E;{   echo "$ pnpm run test:coverage:integration"\x3b } >> "${P10_1_PATH}/COMMANDS_RUN.txt";aa4a9fda-9375-453d-abe5-fc9a8730b450]633;C$ pnpm run test:coverage:integration
+]633;E;{   echo "$ rg -n \\"run-desktop-suite|wdio|tauri-wrapper|webdriver\\" scripts e2e wdio* -S"\x3b   echo "$ ls -la scripts/e2e e2e/desktop || true"\x3b } >> "${P10_1_PATH}/COMMANDS_RUN.txt";2c717400-9fb5-4cb0-9f35-9a5c72740c92]633;C$ rg -n "run-desktop-suite|wdio|tauri-wrapper|webdriver" scripts e2e wdio* -S
+$ ls -la scripts/e2e e2e/desktop || true
+$ git diff -- scripts/e2e/run-desktop-suite.js scripts/e2e/tauri-wrapper.sh > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/08_E2E_LOGGING_PATCH.patch
+$ cat > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/10_E2E_CLASSIFICATION.md
+$ git diff -- e2e/desktop/ai-verification.full.e2e.js > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/11_E2E_FIX_ATTEMPT_1.patch
+$ git diff -- e2e/desktop/ai-verification.full.e2e.js > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/11_E2E_FIX_ATTEMPT_2.patch
+$ git diff -- e2e/desktop/ai-verification.full.e2e.js > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/11_E2E_FIX_ATTEMPT_3.patch
+$ git diff -- scripts/e2e/tauri-wrapper.sh > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/11_E2E_FIX_ATTEMPT_4.patch
+$ git diff -- e2e/desktop/ai-verification.full.e2e.js > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/11_E2E_FIX_ATTEMPT_5.patch
+$ cat > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/VERDICT.md
+$ cat > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/ROLLBACK.md
+$ cat > /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/LOCK.md
+$ sha256sum (proof pack)

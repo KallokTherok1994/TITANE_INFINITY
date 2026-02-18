@@ -1,0 +1,31 @@
+diff --git a/e2e/desktop/ai-verification.full.e2e.js b/e2e/desktop/ai-verification.full.e2e.js
+index be6b71f8..eeedc4c3 100644
+--- a/e2e/desktop/ai-verification.full.e2e.js
++++ b/e2e/desktop/ai-verification.full.e2e.js
+@@ -88,6 +88,15 @@ async function resolveSelectors() {
+       open: null,
+     };
+   }
++  const appInput = await $('#chat-input-textarea');
++  if (await appInput.isExisting()) {
++    return {
++      input: '#chat-input-textarea',
++      send: '.chat-input__send-btn',
++      response: '.message-bubble-assistant .message-bubble-text',
++      open: null,
++    };
++  }
+   return null;
+ }
+ 
+@@ -224,7 +233,9 @@ describe('ai-verification (desktop/full)', () => {
+         const bubbleInput = await $('.chat-bubble-input');
+         if (await bubbleInput.isExisting()) return true;
+         const windowInput = await $('#chat-window-textarea');
+-        return windowInput.isExisting();
++        if (await windowInput.isExisting()) return true;
++        const appInput = await $('#chat-input-textarea');
++        return appInput.isExisting();
+       },
+       {
+         timeout: 15000,

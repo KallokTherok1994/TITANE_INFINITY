@@ -1,0 +1,69 @@
+diff --git a/e2e/desktop/ai-verification.full.e2e.js b/e2e/desktop/ai-verification.full.e2e.js
+index be6b71f8..bc626269 100644
+--- a/e2e/desktop/ai-verification.full.e2e.js
++++ b/e2e/desktop/ai-verification.full.e2e.js
+@@ -88,9 +88,43 @@ async function resolveSelectors() {
+       open: null,
+     };
+   }
++  const appInput = await $('#chat-input-textarea');
++  if (await appInput.isExisting()) {
++    return {
++      input: '#chat-input-textarea',
++      send: '.chat-input__send-btn',
++      response: '.message-bubble-assistant .message-bubble-text',
++      open: null,
++    };
++  }
+   return null;
+ }
+ 
++async function attemptOnboardingSkip(maxClicks = 6) {
++  for (let i = 0; i < maxClicks; i += 1) {
++    const clicked = await browser.execute(() => {
++      const candidates = Array.from(document.querySelectorAll('button, a')).filter(
++        el => {
++          const text = (el.innerText || el.textContent || '').toLowerCase().trim();
++          return (
++            text.includes('suivant') ||
++            text.includes('next') ||
++            text.includes('continuer') ||
++            text.includes('commencer') ||
++            text.includes('demarrer') ||
++            text.includes('skip')
++          );
++        }
++      );
++      if (!candidates.length) return false;
++      candidates[0].click();
++      return true;
++    });
++    if (!clicked) return;
++    await browser.pause(400);
++  }
++}
++
+ async function ensureChatOpen(selectors) {
+   if (!selectors?.open) return;
+   const input = await $(selectors.input);
+@@ -216,7 +250,9 @@ describe('ai-verification (desktop/full)', () => {
+ 
+   before(async () => {
+     await browser.url('tauri://localhost');
++    await browser.url('tauri://localhost/#/chat');
+     await browser.pause(1500);
++    await attemptOnboardingSkip();
+     await browser.waitUntil(
+       async () => {
+         const bubbleTrigger = await $('.chat-bubble-trigger');
+@@ -224,7 +260,9 @@ describe('ai-verification (desktop/full)', () => {
+         const bubbleInput = await $('.chat-bubble-input');
+         if (await bubbleInput.isExisting()) return true;
+         const windowInput = await $('#chat-window-textarea');
+-        return windowInput.isExisting();
++        if (await windowInput.isExisting()) return true;
++        const appInput = await $('#chat-input-textarea');
++        return appInput.isExisting();
+       },
+       {
+         timeout: 15000,

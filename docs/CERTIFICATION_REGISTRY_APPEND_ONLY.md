@@ -198,6 +198,20 @@
 
 ---
 
+## P10.1_AUTOFIX_TO_PASS
+
+**Date:** 2026-02-18T01:53:30Z  
+**Verdict:** ❌ FAIL (E2E)  
+**Commit:** a536bfa0  
+**Scope:** Integration discovery fixes + E2E harness logging + selector/navigation adjustments (Ring 4)  
+**Out-of-Scope:** Full P10 rerun (blocked by E2E failures); runtime/UI changes  
+**Proof Pack:** `deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/`  
+**Seal Pack:** `deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/`  
+**Evidence:** 06_INT_RUN_ATTEMPT_3.txt (PASS), 12_E2E_RUN_ATTEMPT_1..5.txt (FAIL), artifacts/e2e_attempt_*  
+**Notes:** E2E loop max (5) reached; chat surface selectors not found in Tauri session.
+
+---
+
 ## P4_PROD_BLOCKED_MISSING_TOKEN (LOCAL)
 
 **Date:** 2026-02-17T01:23:14Z  

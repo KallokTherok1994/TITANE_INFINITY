@@ -1,0 +1,92 @@
+$ rg -n "run-desktop-suite|wdio|tauri-wrapper|webdriver" scripts e2e wdio* -S
+wdio.desktop.conf.cjs:6:const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
+wdio.desktop.conf.cjs:7:const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
+wdio.desktop.conf.cjs:10:const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
+wdio.desktop.conf.cjs:21:  specs: ['./e2e/desktop/**/*.e2e.js', './e2e/desktop/**/*.wdio.test.js'],
+wdio.desktop.conf.cjs:27:      'wdio:enforceWebDriverClassic': true,
+wdio.desktop.conf.cjs:35:    webdriver: 'trace',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:2: * Ω∞.UI.CHAT.360.AUTOFIX — WebDriver UI-Driven Tests
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:422:      throw new Error('WebDriver session invalidated during injection');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:659:  // Tauri WebDriver doesn't support getLogs API
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1345:      // Note: We can't stop Ollama from WebDriver, so we test resilience
+e2e/desktop/diagnostic-tauri-api.wdio.test.js:2: * Diagnostic WebDriver: Check Tauri API Availability
+e2e/desktop/diagnostic-tauri-api.wdio.test.js:4: * This test inspects what Tauri APIs are available in the WebDriver context
+e2e/desktop/test-direct-wdio-connection.wdio.test.cjs:2: * Direct WDIO Connection Test
+e2e/desktop/test-direct-wdio-connection.wdio.test.cjs:3: * Minimal test to isolate WebDriver session hang point
+e2e/desktop/test-direct-wdio-connection.wdio.test.cjs:4: * Bypasses orchestrator; runs directly via wdio CLI
+e2e/desktop/test-direct-wdio-connection.wdio.test.cjs:7:describe('Direct WebDriver Connection Test', () => {
+e2e/desktop/chat-ar20.wdio.test.js:2: * E2E Runtime Validation: Chat Always Respond (AR20) - WebDriver Native
+e2e/desktop/chat-ar20.wdio.test.js:18: * - tauri-driver + WebDriverIO infrastructure
+e2e/desktop/chat-ar20.wdio.test.js:19: * - Run via: pnpm run e2e:desktop OR node scripts/e2e/run-desktop-suite.js
+e2e/desktop/chat-ar20.wdio.test.js:35:  framework: 'WebDriverIO + tauri-driver',
+e2e/desktop/chat-ar20.wdio.test.js:173:describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
+scripts/certification/run-p10-desktop-cert.sh:87:H) DESKTOP E2E x3 (WebdriverIO, sandboxed, artifacts collected)
+scripts/certification/run-p10-desktop-cert.sh:181:        npx wdio --version || echo "wdio: not found"
+scripts/certification/run-p10-desktop-cert.sh:182:        ls -lh scripts/e2e/run-desktop-suite.js
+scripts/certification/run-p10-desktop-cert.sh:183:        ls -lh scripts/e2e/tauri-wrapper.sh
+scripts/certification/run-p10-desktop-cert.sh:184:        ls -lh scripts/e2e/ensure-webkit-webdriver.sh
+scripts/certification/run-p10-desktop-cert.sh:521:        # Ensure webdriver prerequisites
+scripts/certification/run-p10-desktop-cert.sh:522:        bash scripts/e2e/ensure-webkit-webdriver.sh >> "${run_file}" 2>&1 || true
+scripts/e2e/ensure-webkit-webdriver.sh:2:# filepath: scripts/e2e/ensure-webkit-webdriver.sh
+scripts/e2e/ensure-webkit-webdriver.sh:6:echo "🔍 Vérification de WebKitWebDriver..."
+scripts/e2e/ensure-webkit-webdriver.sh:8:# Vérifier si WebKitWebDriver est dans le PATH
+scripts/e2e/ensure-webkit-webdriver.sh:9:if command -v WebKitWebDriver >/dev/null 2>&1; then
+scripts/e2e/ensure-webkit-webdriver.sh:10:  echo "✅ WebKitWebDriver trouvé dans le PATH : $(command -v WebKitWebDriver)"
+scripts/e2e/ensure-webkit-webdriver.sh:11:  export WEBKIT_WEBDRIVER_PATH=$(command -v WebKitWebDriver)
+scripts/e2e/ensure-webkit-webdriver.sh:12:  echo "DEBUG: WEBKIT_WEBDRIVER_PATH=$WEBKIT_WEBDRIVER_PATH"
+scripts/e2e/ensure-webkit-webdriver.sh:18:  "/usr/libexec/webkit2gtk-4.1/WebKitWebDriver"
+scripts/e2e/ensure-webkit-webdriver.sh:19:  "/usr/libexec/webkit2gtk-4.0/WebKitWebDriver"
+scripts/e2e/ensure-webkit-webdriver.sh:20:  "/usr/lib/webkit2gtk-4.1/WebKitWebDriver"
+scripts/e2e/ensure-webkit-webdriver.sh:21:  "/usr/lib/webkit2gtk-4.0/WebKitWebDriver"
+scripts/e2e/ensure-webkit-webdriver.sh:26:    echo "✅ WebKitWebDriver trouvé : $path"
+scripts/e2e/ensure-webkit-webdriver.sh:27:    export WEBKIT_WEBDRIVER_PATH="$path"
+scripts/e2e/ensure-webkit-webdriver.sh:28:    echo "DEBUG: WEBKIT_WEBDRIVER_PATH=$WEBKIT_WEBDRIVER_PATH"
+scripts/e2e/ensure-webkit-webdriver.sh:34:echo "❌ WebKitWebDriver introuvable."
+scripts/e2e/ensure-webkit-webdriver.sh:40:echo "Après installation, vérifiez avec : which WebKitWebDriver"
+scripts/e2e/run-desktop-suite.js:9:const WDIO_LOG = path.join(REPORTS, 'wdio.log');
+scripts/e2e/run-desktop-suite.js:14:await fs.writeFile(WDIO_LOG, '');
+scripts/e2e/run-desktop-suite.js:51:let nativeDriverPath = process.env.WEBKIT_WEBDRIVER_PATH || '';
+scripts/e2e/run-desktop-suite.js:54:    nativeDriverPath = execSync('which WebKitWebDriver', {
+scripts/e2e/run-desktop-suite.js:79:const wdio = spawnLogged(
+scripts/e2e/run-desktop-suite.js:81:  ['exec', 'wdio', 'run', 'wdio.desktop.conf.cjs'],
+scripts/e2e/run-desktop-suite.js:82:  WDIO_LOG
+scripts/e2e/run-desktop-suite.js:86:  for (const child of [wdio, tauriDriver]) {
+scripts/e2e/run-desktop-suite.js:96:wdio.on('exit', code => {
+scripts/e2e/start-tauri-desktop.js:46:// IMPORTANT: The WDIO onPrepare hook waits for this script to exit.
+scripts/e2e/tauri-wrapper.sh:2:# Ω∞.E2E.TAURI.WRAPPER — Memory/Log isolation for WebDriver runs
+scripts/e2e/run-ui-chat-360-autofix.cjs:8: * 3. WebDriver test execution
+scripts/e2e/run-ui-chat-360-autofix.cjs:42:const WRAPPER_PATH = path.resolve(__dirname, 'tauri-wrapper.sh');
+scripts/e2e/run-ui-chat-360-autofix.cjs:69:// Align devUrl with 5173 for WebDriver stability
+scripts/e2e/run-ui-chat-360-autofix.cjs:183:  console.log('🧪 Phase 2: Running WebDriver tests...');
+scripts/e2e/run-ui-chat-360-autofix.cjs:186:  const wdioArgs = [
+scripts/e2e/run-ui-chat-360-autofix.cjs:188:    'wdio',
+scripts/e2e/run-ui-chat-360-autofix.cjs:190:    'wdio.desktop.conf.cjs',
+scripts/e2e/run-ui-chat-360-autofix.cjs:192:    'e2e/desktop/ui-chat-360-autofix.wdio.test.cjs',
+scripts/e2e/run-ui-chat-360-autofix.cjs:195:  const wdio = spawn('pnpm', wdioArgs, {
+scripts/e2e/run-ui-chat-360-autofix.cjs:200:      TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
+scripts/e2e/run-ui-chat-360-autofix.cjs:209:  wdio.on('close', code => {
+
+$ ls -la scripts/e2e e2e/desktop || true
+e2e/desktop:
+total 108
+drwxrwxr-x 2 titane-os titane-os  4096 févr. 16 09:34 .
+drwxrwxr-x 9 titane-os titane-os  4096 févr. 14 00:59 ..
+-rw-rw-r-- 1 titane-os titane-os 14094 févr. 13 18:27 ai-verification.full.e2e.js
+-rw-rw-r-- 1 titane-os titane-os 13799 févr. 13 18:27 chat-ar20.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os  3204 févr. 13 18:27 diagnostic-tauri-api.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os   300 févr. 13 18:27 smoke.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os  1259 févr. 13 18:27 test-direct-wdio-connection.wdio.test.cjs
+-rw-rw-r-- 1 titane-os titane-os 55205 févr. 16 09:34 ui-chat-360-autofix.wdio.test.cjs
+
+scripts/e2e:
+total 60
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 13 18:27 .
+drwxrwxr-x 45 titane-os titane-os 12288 févr. 17 20:10 ..
+-rwxrwxr-x  1 titane-os titane-os  1230 janv. 16 20:35 ensure-webkit-webdriver.sh
+-rwxrwxr-x  1 titane-os titane-os   682 févr. 13 18:27 require-e2e-build-authorization.sh
+-rw-rw-r--  1 titane-os titane-os  2495 févr. 13 18:27 run-desktop-suite.js
+-rwxrwxr-x  1 titane-os titane-os  2499 févr. 13 18:27 run-stable-e2e.sh
+-rwxrwxr-x  1 titane-os titane-os 15980 févr. 13 18:52 run-ui-chat-360-autofix.cjs
+-rw-rw-r--  1 titane-os titane-os  1892 janv. 25 08:20 start-tauri-desktop.js
+-rw-rw-r--  1 titane-os titane-os   978 janv. 25 08:20 stop-tauri-desktop.js
+-rwxrwxr-x  1 titane-os titane-os  2098 févr. 13 18:52 tauri-wrapper.sh
