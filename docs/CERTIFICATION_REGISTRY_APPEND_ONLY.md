@@ -847,3 +847,17 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 **Seal Pack:** None (standby)  
 **Evidence:** WAIT_STATE_DECLARATION.md, VERDICT.md, TIMEOUT_POLICY.md, RESUME_PROCEDURE.md  
 **Notes:** Controlled standby; single authority notification template; 48h timeout policy; resume steps fixed.
+
+---
+
+### P9_PUBLIC_READINESS_FRAMEWORK_READY
+
+**Date:** 2026-02-17T23:59:53Z  
+**Verdict:** ✅ PUBLIC_READINESS_FRAMEWORK_READY  
+**Commit:** 919cbf51  
+**Scope:** Public release readiness framework (doc-only, no runtime actions)  
+**Out-of-Scope:** Any build, distribution, runtime execution  
+**Proof Pack:** deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/  
+**Seal Pack:** None (doc-only)  
+**Evidence:** BETA_MATURITY_CRITERIA.md, RISK_MATRIX.md, GO_PUBLIC_DECISION_FRAMEWORK.md  
+**Notes:** Framework prepared ahead of decision; no artifacts modified.

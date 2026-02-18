@@ -1,5 +1,5 @@
 diff --git a/docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md b/docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md
-index de1a7d94..707080eb 100644
+index de1a7d94..844e2e54 100644
 --- a/docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md
 +++ b/docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md
 @@ -847,3 +847,17 @@ VERDICT: PROD_BUILD_MODE_LOCKED
@@ -13,7 +13,7 @@ index de1a7d94..707080eb 100644
 +
 +**Date:** 2026-02-17T23:59:53Z  
 +**Verdict:** ✅ PUBLIC_READINESS_FRAMEWORK_READY  
-+**Commit:** TBD (P9 commit pending)  
++**Commit:** 919cbf51  
 +**Scope:** Public release readiness framework (doc-only, no runtime actions)  
 +**Out-of-Scope:** Any build, distribution, runtime execution  
 +**Proof Pack:** deployment/latest/certification/phase9/P9_PUBLIC_READINESS_20260217_235953/  
