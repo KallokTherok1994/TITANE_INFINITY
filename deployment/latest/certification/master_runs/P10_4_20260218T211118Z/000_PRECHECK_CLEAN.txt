@@ -1,0 +1,36 @@
+[2026-02-18T21:11:18Z] ═══ PRECHECK: Clean Git Tree ===
+[2026-02-18T21:11:18Z] ❌ FAIL: Dirty git tree
+ M deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z/P11_CHECKS.txt
+ M deployment/latest/certification/phase10_3_1/P10_3_1_FAST_TRACK_20260218T135700Z/COMMANDS_RUN.txt
+ M memory/memory_core_state.json
+?? -
+?? deployment/latest/certification/master_runs/
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/07_ITER_2_ROOT_CAUSE_ANALYSIS.md
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/ITER_2_E2E_LOG_ENHANCED.txt
+?? scripts/certification/lib_cert.sh
+?? scripts/certification/p10_3_2r_e2e_full.sh
+?? scripts/certification/p10_4_infra_ipc.sh
+?? scripts/certification/p10_5_chat_functional.sh
+?? scripts/certification/p10_6_prod_build.sh
+?? scripts/certification/p10_7_packaging_smoke.sh
+?? scripts/certification/p10_8_ops_support.sh
+?? scripts/certification/run-master-chat-to-prod.sh
+?? scripts/e2e/p10_6_enhanced_debug.sh
+[2026-02-18T21:11:20Z] ═══ PRECHECK: Clean Git Tree ===
+[2026-02-18T21:11:20Z] ❌ FAIL: Dirty git tree
+ M deployment/latest/certification/P11_PRODUCTION_READINESS_20260218T205943Z/P11_CHECKS.txt
+ M deployment/latest/certification/phase10_3_1/P10_3_1_FAST_TRACK_20260218T135700Z/COMMANDS_RUN.txt
+ M memory/memory_core_state.json
+?? -
+?? deployment/latest/certification/master_runs/
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/07_ITER_2_ROOT_CAUSE_ANALYSIS.md
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/ITER_2_E2E_LOG_ENHANCED.txt
+?? scripts/certification/lib_cert.sh
+?? scripts/certification/p10_3_2r_e2e_full.sh
+?? scripts/certification/p10_4_infra_ipc.sh
+?? scripts/certification/p10_5_chat_functional.sh
+?? scripts/certification/p10_6_prod_build.sh
+?? scripts/certification/p10_7_packaging_smoke.sh
+?? scripts/certification/p10_8_ops_support.sh
+?? scripts/certification/run-master-chat-to-prod.sh
+?? scripts/e2e/p10_6_enhanced_debug.sh
