@@ -1,0 +1,38 @@
+# Restore File List - P10.2 Proof Pack
+
+**UTC File Check**: 2026-02-18T12:45:50+00:00
+
+## File Count After Restore
+
+**Total files**: 18 ✅
+
+## File Listing (sorted)
+
+```
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/00_SCOPE.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/01_PRECHECKS.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/02_OVERRIDE_AUTHORIZATION.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/03_BUILD_SAFE_LOG.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/04_BUILD_SAFE_SCAN.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/05_SANDBOX_SETUP.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/06_E2E_RUNS_SUMMARY.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/07_NO_DEV_SERVER_SCAN.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/08_NO_NETWORK_SCAN.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/09_NO_REAL_WRITES_PROOF.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/10_TRIAGE.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/11_UNIT_RUN_ATTEMPT_1.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/COMMANDS_RUN.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ENV.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/LOCK.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ROLLBACK.md
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/SHA256SUMS.txt
+deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/VERDICT.md
+```
+
+## Recovery Status
+
+**Expected files**: 18 (from git ls-tree)  
+**Actual files**: 18 ✅  
+**Match**: 100% ✅
+
+All files recovered successfully.

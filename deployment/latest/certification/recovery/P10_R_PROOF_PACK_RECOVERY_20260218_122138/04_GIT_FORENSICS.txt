@@ -1,0 +1,63 @@
+# Git Forensics - Provenance
+
+## Recent Commits
+
+$ git log --oneline -n 5
+
+97d49b01 (HEAD -> MAIN) docs(certification): log unit run attempt
+c38db812 docs(certification): add P10.2 override rollback + hashes
+6f2b5855 (origin/MAIN, origin/HEAD) docs(cert): add P10.1 proof pack (FAIL_E2E)
+a536bfa0 test(harness): fix integration discovery + E2E logging
+3b635ca3 docs(cert): P10 E2E desktop certification FAIL
+
+## Most Recent Commits Affecting Proof Pack
+
+$ git log --name-status -n 20 -- deployment/latest/certification/phase10_2_override/ | head -100
+
+### Commit 97d49b01 (HEAD)
+
+Date: Tue Feb 17 23:20:12 2026 -0500
+Message: docs(certification): log unit run attempt
+
+Changes:
+M deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/10_TRIAGE.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/11_UNIT_RUN_ATTEMPT_1.txt
+M deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/SHA256SUMS.txt
+
+### Commit c38db812
+
+Date: Tue Feb 17 23:16:42 2026 -0500
+Message: docs(certification): add P10.2 override rollback + hashes
+
+Changes:
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/00_SCOPE.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/01_PRECHECKS.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/02_OVERRIDE_AUTHORIZATION.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/03_BUILD_SAFE_LOG.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/04_BUILD_SAFE_SCAN.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/05_SANDBOX_SETUP.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/06_E2E_RUNS_SUMMARY.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/07_NO_DEV_SERVER_SCAN.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/08_NO_NETWORK_SCAN.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/09_NO_REAL_WRITES_PROOF.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/10_TRIAGE.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/COMMANDS_RUN.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ENV.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/LOCK.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ROLLBACK.md
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/SHA256SUMS.txt
+A deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/VERDICT.md
+
+## Conclusion
+
+**Files WERE committed** in two commits:
+- c38db812 (2026-02-17T23:16:42-0500): Initial proof pack creation (17 files)
+- 97d49b01 (2026-02-17T23:20:12-0500): Added test output + updated hashes (18th file)
+
+**No deletion commit exists**: Files are NOT tracked as deleted in git history.
+
+**Current state**: Files shown as ' D' in git status (deleted from working tree but still in git objects).
+
+**Provenance verdict**: DELETED_GIT - Files exist in commits c38db812 and 97d49b01 (current HEAD).
+
+Restorability: **HIGH** - `git restore` or `git checkout` will recover all files from HEAD.

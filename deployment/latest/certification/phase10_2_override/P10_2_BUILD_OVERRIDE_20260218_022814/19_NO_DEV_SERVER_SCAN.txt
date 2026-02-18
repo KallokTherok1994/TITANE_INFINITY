@@ -1,0 +1,14 @@
+=== SCAN 1: NO_DEV_SERVER ===
+[2026-02-18T12:59:52+00:00]
+
+✓ Port 5173: clear
+✓ Port 3000: clear
+✓ Port 8080: clear
+✓ Port 9000: clear
+✓ Port 4444: clear
+
+Grep dev server patterns in test logs:
+0
+✓ No dev server patterns detected in test logs
+
+

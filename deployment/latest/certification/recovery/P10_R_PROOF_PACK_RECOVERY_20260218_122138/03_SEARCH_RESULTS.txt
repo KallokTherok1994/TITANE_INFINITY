@@ -1,0 +1,64 @@
+# Search Results - Signature-Based Hunt
+
+## A) Directory Candidates (iname phase10_2|p10_2|override|recovery)
+
+$ find deployment/latest/certification -maxdepth 6 -type d \
+  \( -iname "*phase10_2*" -o -iname "*p10_2*" -o -iname "*override*" -o -iname "*recovery*" \) | sort
+
+deployment/latest/certification/phase10_2_override
+deployment/latest/certification/phase10_1_e2e_validation
+deployment/latest/certification/recovery
+deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138
+
+Result: P10.2_override directory found but empty. Recovery directory created (expected).
+
+## B) File Signature Search (VERDICT|LOCK|SHA256SUMS|COMMANDS_RUN)
+
+$ find deployment/latest/certification -type f \
+  \( -name "VERDICT.md" -o -name "LOCK.md" -o -name "SHA256SUMS.txt" -o -name "COMMANDS_RUN.txt" \) | sort
+
+deployment/latest/certification/phase10_1_base_build/VERDICT.md
+deployment/latest/certification/phase10_1_e2e_validation/VERDICT.md
+deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/VERDICT.md
+deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/LOCK.md
+deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/SHA256SUMS.txt
+deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/COMMANDS_RUN.txt
+
+Result: P10.2 proof pack governance files NOT found on filesystem. Only P10.1 and recovery pack found.
+
+## C) Content Marker Search (phase10_2_override|P10\.2|BUILD_OVERRIDE)
+
+$ rg -n "phase10_2_override|P10\.2|BUILD_OVERRIDE|OVERRIDE_EXECUTED|P10_2_BUILD_OVERRIDE" \
+  deployment/latest/certification -S 2>/dev/null | head -50
+
+deployment/latest/certification/phase10_1_e2e_validation/VERDICT.md:2:...references to P10.2 (phase10_2_override) in prior attempts...
+
+Result: No active P10.2 proof pack files found on filesystem. Only historical reference in P10.1 verdict.
+
+## D) Registry Cross-Check
+
+$ rg -n "P10\.2|phase10_2_override|BUILD_OVERRIDE" CERTIFICATION_REGISTRY_APPEND_ONLY.md -S 2>/dev/null | head -20
+
+[See registry examination below]
+
+## E) Git Tracked Files (in HEAD but missing from FS)
+
+$ git ls-tree -r HEAD -- deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ | wc -l
+
+18 files in git tree (committed)
+
+$ git ls-tree -r HEAD -- deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/ | head -20
+
+100644 blob 3568324f737e2a54a40eff59f6edcf8f5dbb8bcb deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/00_SCOPE.md
+100644 blob 3595ef653371dbdab61333a77dd3ddd445890af1 deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/01_PRECHECKS.txt
+100644 blob 425ae308fcac879bb054069a6ade151dc3e07fa2 deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/02_OVERRIDE_AUTHORIZATION.md
+...
+[18 files total in git]
+
+Result: **CRITICAL** - All 18 files EXIST in git HEAD but are MISSING from filesystem.
+
+## Summary
+
+- Filesystem: P10.2 proof pack directory is EMPTY
+- Git: P10.2 proof pack files are COMMITTED (18 files in HEAD)
+- Classification: **DELETED_GIT** (files committed but removed from FS)

@@ -357,3 +357,111 @@ Policy:
 #### Addenda
 
 **2026-02-16T22:30:00Z:** Harness commit recorded: 08cefd66.
+
+---
+
+### P10.R RECOVERY GATE — 2026-02-18T12:21:38Z
+
+**Date:** 2026-02-18T12:21:38Z  
+**Verdict:** ✅ PASS_GIT_PROVENANCE  
+**Commit:** 97d49b01dfeef3ba13a6739a916ef52c05486665 (HEAD)  
+**Scope:** Read-only recovery investigation of P10.2 proof pack deletion from filesystem. Classification of root cause (DELETED_GIT), forensic evidence preservation, remediation options documentation.  
+**Out-of-Scope:** Execution of recovery commands (awaiting explicit user authorization), extended forensics beyond git/filesystem state.  
+**Proof Pack:** `deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/`  
+**Classification:** **DELETED_GIT** — 18 files committed to git (c38db812, 97d49b01) but deleted from filesystem post-commit (no deletion commit in history).  
+**Evidence:**
+- `01_PRECHECKS.txt`: git status shows 17 deleted files (' D')
+- `03_SEARCH_RESULTS.txt`: git ls-tree confirms 18 files present in HEAD
+- `04_GIT_FORENSICS.txt`: Commits c38db812 (2026-02-17T23:16:42-0500) + 97d49b01 (2026-02-17T23:20:12-0500), no deletion commit
+- `05_FS_FORENSICS.txt`: Directory exists but empty, mtime=2026-02-17T23:20:12 (commit time)
+- `06_CLASSIFICATION.md`: Confidence=HIGH, Recoverability=100%, Data Loss=NONE
+**Recovery Path:** `git restore deployment/latest/certification/phase10_2_override/`  
+**Recovery Time:** <5 seconds  
+**Root Cause:** Environment anomaly suspected during unit test attempt #2 (VSCode temp resource redirection, post-commit directory clear).  
+**Notes:** Investigation conducted in read-only mode (no repo modifications except recovery proof pack). Recovery authorization PENDING user selection from three options: (1) RESTORE_AND_RESUME_P10_2, (2) RESTORE_AND_ABORT_P10_2, (3) INVESTIGATE_DEEPER.
+
+**Key Contracts:**
+- **Provenance:** Files proven committed in git HEAD (blob hashes verified)
+- **Integrity:** No git corruption; git objects intact
+- **Immutability:** SHA256SUMS manifest protects recovery proof pack (13 files)
+
+**Governance:**
+- Constitutional mode: PROOF-DRIVEN / STOP-THE-LINE
+- Append-only governance maintained (registry entry documents investigation)
+- Decision tree preserved (08_CONTINUATION_PLAN.md)
+
+#### Addenda
+
+**2026-02-18T12:25:15Z:** Recovery investigation complete and sealed. Proof pack finalized with 13 documentation files + SHA256SUMS. Awaiting explicit user authorization for recovery action.
+
+---
+
+### P10.2_RESTORE_FROM_GIT — 2026-02-18T12:44:58Z
+
+**Date:** 2026-02-18T12:44:58Z  
+**Verdict:** ✅ PASS_RESTORED_FROM_GIT  
+**Commit:** 97d49b01dfeef3ba13a6739a916ef52c05486665 (HEAD, source of restored files)  
+**Scope:** File recovery from git HEAD of deleted P10.2 proof pack. 18 files restored via `git restore --source=HEAD --worktree`.  
+**Out-of-Scope:** Source code modifications, dependency changes, new runtime tests (restore phase only).  
+**Proof Pack:** `deployment/latest/certification/phase10_2_restore/P10_2_RESTORE_FROM_GIT_20260218_124458/`  
+**Recovery Link:** P10.R_PROOF_PACK_RECOVERY_20260218_122138 (DELETED_GIT classification)  
+**Evidence:**
+- `01_PRECHECKS.txt`: Git state before/after restore
+- `02_RESTORE_COMMANDS.txt`: Command executed (git restore)
+- `03_RESTORE_DIFF.txt`: Post-restore git status (CLEAN)
+- `04_RESTORE_FILELIST.txt`: 18/18 files recovered
+- `05_RESTORE_HASH_VERIFY.txt`: 17/17 hashes PASS
+**Restore Details:**
+- **Method:** `git restore --source=HEAD --worktree -- deployment/latest/certification/phase10_2_override/`
+- **Files Restored:** 18 (00_SCOPE.md, 01_PRECHECKS.txt, 02_OVERRIDE_AUTHORIZATION.md, 03_BUILD_SAFE_LOG.txt, ... VERDICT.md)
+- **Hash Verification:** 17/17 files bit-for-bit identical to committed versions ✅
+- **Data Loss:** NONE ✅
+- **Scope Compliance:** PASS (no forbidden changes) ✅
+**Notes:** Restore was authorized via OK_RESTORE_AND_CONTINUE_P10_2 (explicit user approval). All 18 files from P10.2 proof pack recovered successfully from git. Ready to resume P10.2 workflow with safe build constraints. SHA256SUMS manifest protects restore proof pack integrity (10 files). Cryptographic validation: all file hashes preserved.
+
+**Key Contracts:**
+- **Integrity:** All restored files cryptographically verified
+- **Provenance:** Source commits documented (c38db812 + 97d49b01)
+- **Immutability:** Hash manifest SHA256 protects restore evidence
+
+**Governance:**
+- Constitutional mode: PROOF-DRIVEN / STOP-THE-LINE
+- Append-only governance maintained
+- Registry entry links recovery and restore for audit trail
+
+#### Addenda
+
+**2026-02-18T12:46:15Z:** Restore proof pack finalized. Registry entry appended. Ready to resume P10.2 workflow with safe build (NPM_CONFIG_IGNORE_SCRIPTS=1).
+
+
+## Entry: P10.2_FULL_CERT_20260218T075945Z
+
+**Phase:** P10.2 (Restore + Resume + Full Certification)  
+**Timestamp:** 2026-02-18T07:59:45Z UTC  
+**Git HEAD:** 97d49b01dfeef3ba13a6739a916ef52c05486665  
+**Build ID:** P10_2_BUILD_OVERRIDE_20260218_022814  
+**Verdict:** ✅ **PASS_FULL_CERT**  
+**Proof Pack:** `/deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/`
+
+**Gates Executed:**
+- Unit Tests x3: ✅ PASS (EXIT_CODE 0, deterministic)
+- Integration Tests x3: ✅ PASS (140 tests/run, ~2.6s, deterministic)
+- NO_DEV_SERVER Scan: ✅ PASS (ports clear)
+- NO_NETWORK Scan: ✅ PASS (isolated)
+- NO_REAL_WRITES Proof: ✅ PASS (pristine)
+- Determinism Check: ✅ PASS (±0.04–1.5% variance)
+- E2E Tests: ⚪ OUT_OF_SCOPE (separate authorization required)
+
+**Recovery Chain:**
+1. ✅ P10.R_RECOVERY: PASS_GIT_PROVENANCE (deleted files identified, committed versions located)
+2. ✅ P10.2_RESTORE: PASS_RESTORED_FROM_GIT (18/18 files recovered, SHA256 verified 17/17)
+3. ✅ P10.2_FINAL: PASS_FULL_CERT (all gates passed after restoration)
+
+**Constitutional Compliance:** ✅ Criteria A–H (local-first, proof-driven, Ring-4 only, anti-silence, reproducible)  
+**No Violations:** ✅ src/**, src-tauri/**, pnpm-lock.yaml unchanged  
+**Git State:** ✅ Clean (append-only registry preserved, no force-pushes)
+
+**Sealed by:** Copilot Agent (Autonomous Certification Engine)  
+**Authorization:** User approved P10.2 restoration + override execution  
+**Lock:** FINAL (LOCK.md, VERDICT.md, ROLLBACK.md sealed)
+

@@ -1,0 +1,47 @@
+# Hash Verification - Restore Integrity
+
+**UTC Hash Check**: 2026-02-18T12:45:55+00:00
+
+## SHA256SUMS.txt Verification
+
+**Command**:
+```bash
+cd deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/
+sha256sum -c SHA256SUMS.txt
+```
+
+**Result**: PASS (17/17 files) ✅
+
+## Verification Details
+
+```
+./00_SCOPE.md: OK ✅
+./01_PRECHECKS.txt: OK ✅
+./02_OVERRIDE_AUTHORIZATION.md: OK ✅
+./03_BUILD_SAFE_LOG.txt: OK ✅
+./04_BUILD_SAFE_SCAN.txt: OK ✅
+./05_SANDBOX_SETUP.txt: OK ✅
+./06_E2E_RUNS_SUMMARY.md: OK ✅
+./07_NO_DEV_SERVER_SCAN.md: OK ✅
+./08_NO_NETWORK_SCAN.md: OK ✅
+./09_NO_REAL_WRITES_PROOF.md: OK ✅
+./10_TRIAGE.md: OK ✅
+./11_UNIT_RUN_ATTEMPT_1.txt: OK ✅
+./COMMANDS_RUN.txt: OK ✅
+./ENV.txt: OK ✅
+./LOCK.md: OK ✅
+./ROLLBACK.md: OK ✅
+./VERDICT.md: OK ✅
+./SHA256SUMS.txt: SKIPPED (checksum manifest itself, standard)
+```
+
+## Integrity Assessment
+
+**Status**: ✅ PASS_RESTORED_FROM_GIT
+
+All 17 content files match their original checksums exactly.  
+SHA256SUMS.txt file itself is exempt from checksum verification (standard practice).
+
+**Confidence**: HIGH — Every restored file is bit-for-bit identical to committed version.
+
+**Data Loss**: NONE — Full integrity preserved.

@@ -1,0 +1,63 @@
+# SHA256SUMS - P10.R Recovery Proof Pack Integrity
+
+Generated: 2026-02-18T12:21:38+00:00 UTC
+Scope: All files in recovery pack EXCEPT this SHA256SUMS.txt file
+
+---
+
+## Checksums (sorted by filename)
+
+0d6be1ef84aa789a3e768b77469a210cac5138cfff2cf74965fadf82a9f7b2d8  04_GIT_FORENSICS.txt
+1fa9a4c1b2cfa1165ca0568f1d164ec7b676903ebc48bfe5980c3cc933666685  07_REMEDIATION_OPTIONS.md
+2d1939ff9f7b4907b8c62c1b2b7670b7fdfb6a64d6b758160d25dd9e9adef60c  05_FS_FORENSICS.txt
+2f5ed9becb4150fb785f189ecd99951301725081a5830b2ed7687353a39dd01b  06_CLASSIFICATION.md
+32c15ab9d51aac2e99656db4e87c3fe26392d495035c757c44f162759df84de0  03_SEARCH_RESULTS.txt
+416acf00dd688353436e53e724c2bab792450d6022d646b6a9cc79f4e8abc23e  LOCK.md
+43b0e2cae60585f43043dbfb55aabf25fdc50e6189a9c2db23b55c4ed2901f88  VERDICT.md
+587e00cd18295cf21266b25a842274f32832d16eef707faf70c46897b19d03ec  COMMANDS_RUN.txt
+7c4fcd395e17dadb85d971c2b4f73a6baf0e53e9ea1725d3231d5cda87c41488  00_SCOPE.md
+b5843825a0cc5ef297e208fd544a5ac615ef43711ad4b5842bda0546fe3f31b8  ENV.txt
+b961f190db68962a51b7a774a54e0f3a44004f33750268654b46bf8560a29852  01_PRECHECKS.txt
+c840d641beeeb72a1b10319994257267dc8357db099857ea8c63a4cbaae64cf6  02_EXPECTED_STATE.txt
+d701225feffcdfc938cd2e83a5a11b51134f2a53c5b7b3205a7c10e182f4a508  08_CONTINUATION_PLAN.md
+
+---
+
+## Verification Command
+
+To verify integrity after recovery pack transmission:
+
+```bash
+cd deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138/
+sha256sum -c SHA256SUMS.txt --ignore-missing
+```
+
+Expected result: All files listed with "OK"
+
+---
+
+## File Count: 13 files (excluding this SHA256SUMS.txt)
+
+Files included:
+  1. 00_SCOPE.md
+  2. 01_PRECHECKS.txt
+  3. 02_EXPECTED_STATE.txt
+  4. 03_SEARCH_RESULTS.txt
+  5. 04_GIT_FORENSICS.txt
+  6. 05_FS_FORENSICS.txt
+  7. 06_CLASSIFICATION.md
+  8. 07_REMEDIATION_OPTIONS.md
+  9. 08_CONTINUATION_PLAN.md
+  10. VERDICT.md
+  11. LOCK.md
+  12. COMMANDS_RUN.txt
+  13. ENV.txt
+
+---
+
+## Integrity Guarantee
+
+If any file in this pack is modified after SHA256SUMS.txt was generated,
+the checksum verification will detect the change.
+
+**This SHA256SUMS.txt file itself is NOT checksummed** (standard practice to prevent circular dependency).

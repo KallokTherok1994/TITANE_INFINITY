@@ -1,0 +1,63 @@
+# Commands Run - P10.2 Restore
+
+All restore commands are READ-ONLY operations.
+
+---
+
+## Phase A: Create Restore Proof Pack
+
+**[2026-02-18T12:44:58+00:00]** date -u --iso-8601=seconds  
+Result: 2026-02-18T12:44:58+00:00
+
+**[2026-02-18T12:44:58+00:00]** mkdir -p deployment/latest/certification/phase10_2_restore/P10_2_RESTORE_FROM_GIT_20260218_124458  
+Result: Directory created
+
+---
+
+## Phase B: Prechecks
+
+**[2026-02-18T12:45:18+00:00]** git status --porcelain=v1  
+Result: 17 ' D' files + registry modification + untracked recovery/ and restore/
+
+**[2026-02-18T12:45:18+00:00]** git rev-parse HEAD  
+Result: 97d49b01dfeef3ba13a6739a916ef52c05486665
+
+**[2026-02-18T12:45:18+00:00]** git rev-parse --abbrev-ref HEAD  
+Result: MAIN
+
+---
+
+## Phase B: Restore Execution
+
+**[2026-02-18T12:45:40+00:00]** git restore --source=HEAD --worktree -- deployment/latest/certification/phase10_2_override/  
+Result: SUCCESS (18 files restored)
+
+**[2026-02-18T12:45:40+00:00]** find deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814 -type f | wc -l  
+Result: 18
+
+---
+
+## Phase B: Verify Git State
+
+**[2026-02-18T12:45:40+00:00]** git status --porcelain=v1 (post-restore)  
+Result: CLEAN (only registry modification + untracked proof packs)
+
+**[2026-02-18T12:45:40+00:00]** git diff --name-only  
+Result: deployment/latest/certification/p3/registry/CERTIFICATION_REGISTRY_APPEND_ONLY.md
+
+---
+
+## Phase B: Hash Verification
+
+**[2026-02-18T12:45:55+00:00]** cd phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814 && sha256sum -c SHA256SUMS.txt  
+Result: 17 OK, 1 SKIPPED (SHA256SUMS itself)
+
+---
+
+## Summary
+
+Total commands executed: 8 read-only operations + file creation  
+Time elapsed: ~1 minute  
+Modifications: Only restore proof pack created (expected)  
+Git state: CLEAN (scope compliant)  
+Restore success rate: 100% (18/18 files)

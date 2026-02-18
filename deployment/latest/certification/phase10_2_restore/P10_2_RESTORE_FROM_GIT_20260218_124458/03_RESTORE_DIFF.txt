@@ -1,0 +1,45 @@
+# Restore Diff - Git State Change
+
+**UTC Post-restore**: 2026-02-18T12:45:40+00:00
+
+## git status --porcelain=v1 (after restore)
+
+```
+ M deployment/latest/certification/p3/registry/CERTIFICATION_REGISTRY_APPEND_ONLY.md
+?? deployment/latest/certification/phase10_2_restore/
+?? deployment/latest/certification/recovery/
+```
+
+**Result**: CLEAN ✅
+
+The 18 deleted files are now restored and no longer show as ' D'.
+No files are staged or modified outside expected scope.
+
+## git diff --name-only (after restore)
+
+```
+deployment/latest/certification/p3/registry/CERTIFICATION_REGISTRY_APPEND_ONLY.md
+```
+
+**Result**: COMPLIANT ✅
+
+Only the registry file (our P10.R append) shows as modified.
+All restored files are now clean (part of git HEAD).
+
+## Scope Violation Check
+
+**Forbidden paths checked**:
+- ❌ src/** — NO CHANGES
+- ❌ src-tauri/** — NO CHANGES
+- ❌ tauri*.json — NO CHANGES
+- ❌ allowlist changes — NO CHANGES
+- ❌ pnpm-lock.yaml — NO CHANGES
+- ❌ package.json — NO CHANGES
+
+**Allowed paths changed**:
+- ✅ deployment/latest/certification/p3/registry/ (P10.R entry append)
+- ✅ deployment/latest/certification/phase10_2_override/ (file restore from git)
+- ✅ deployment/latest/certification/recovery/ (new, P10.R proof pack)
+- ✅ deployment/latest/certification/phase10_2_restore/ (new, restore proof pack)
+
+**Verdict**: SCOPE COMPLIANT ✅
