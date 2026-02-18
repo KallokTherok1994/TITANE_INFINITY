@@ -1,0 +1,13 @@
+
+[P8.1 APPROVAL GATE] Starting P8.1 Approval Gate...
+
+[P8.1 APPROVAL GATE] ❌ BLOCKED: Approval token required (P8_APPROVAL_TOKEN not set)
+[P8.1 APPROVAL GATE]    To proceed, provide token: export P8_APPROVAL_TOKEN=<token>
+[P8.1 APPROVAL GATE] ❌ P8 directory not found: /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase8
+[P8.1 APPROVAL GATE] ❌ Archive verification failed: ENOENT: no such file or directory, scandir '/home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase8'
+
+[P8.1 APPROVAL GATE] ❌ APPROVAL GATE: BLOCKED
+[P8.1 APPROVAL GATE]    Distribution cannot proceed until all checks pass
+
+
+Exit code: 10

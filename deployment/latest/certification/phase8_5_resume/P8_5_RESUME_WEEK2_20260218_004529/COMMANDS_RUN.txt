@@ -1,0 +1,70 @@
+=== P8.5-R RESUME EXECUTION COMMANDS LOG ===
+Date: 2026-02-18 00:45:29 UTC
+Pack: P8_5_RESUME_WEEK2_20260218_004529
+Mode: BLOCKED_TOKEN_MISSING
+
+--- STEP 0: Verify preconditions ---
+✅ P8.5.1 RESUME_PROCEDURE.md exists
+✅ Git HEAD at 43a3b74a (P9.4 closure pushed)
+
+--- STEP 1: Create proof pack structure ---
+mkdir -p deployment/latest/certification/phase8_5_resume/P8_5_RESUME_WEEK2_20260218_004529
+
+--- STEP 2: Execute prechecks (ÉTAPE A) ---
+{
+  echo "=== Date UTC ===" 
+  date -u
+  echo ""
+  echo "=== Git Status (porcelain) ==="
+  git status --porcelain=v1
+  echo ""
+  echo "=== Branch ==="
+  git rev-parse --abbrev-ref HEAD
+  echo ""
+  echo "=== HEAD Commit ==="
+  git rev-parse HEAD
+  echo ""
+  echo "=== Recent Log (5) ==="
+  git log -5 --oneline --decorate
+} > 01_PRECHECKS.txt 2>&1
+
+Result: ✅ Git clean (only untracked), branch=MAIN, HEAD=43a3b74a
+
+--- STEP 3: Capture environment (filtered) ---
+{
+  echo "=== Environment (filtered) ==="
+  env | sort | grep -E '(NODE_|npm_|TAURI_|RUST_|CARGO_|PATH=|PWD=|HOME=|USER=|SHELL=)' | grep -v -E '(TOKEN|SECRET|KEY|PASSWORD)' | head -30
+  echo ""
+  echo "=== Token Check (existence only) ==="
+  if [ -n "$P8_APPROVAL_TOKEN" ]; then
+    echo "P8_APPROVAL_TOKEN=present"
+  else
+    echo "P8_APPROVAL_TOKEN=absent"
+  fi
+} > ENV.txt 2>&1
+
+Result: ✅ P8_APPROVAL_TOKEN=absent
+
+--- STEP 4: Run approval gate (ÉTAPE B) ---
+cd /home/titane-os/Documents/GitHub/TITANE_INFINITY
+node scripts/ops/p8_approval_gate.mjs > 02_APPROVAL_GATE_OUTPUT.txt 2>&1
+EXIT_CODE=$?
+
+Result: ✅ Exit code 10 (BLOCKED - token absent, as expected)
+
+--- STEP 5-8: SKIPPED ---
+Reason: TOKEN_PRESENT=no → per protocol, skip:
+  - ÉTAPE C: preflight check
+  - ÉTAPE D: distribution wrapper
+  - ÉTAPE E: record approval
+  - ÉTAPE F: distribution record
+  - ÉTAPE G: Day0 check
+  - ÉTAPE H: daily monitoring bootstrap
+
+--- STEP 9: Create VERDICT, LOCK, SHA256SUMS ---
+Status: in-progress
+
+=== FINAL STATUS ===
+PACK_STATUS: BLOCKED_TOKEN_MISSING
+TOKEN_REQUIRED: P8_APPROVAL_TOKEN must be provided to resume
+NEXT_ACTION: Provide token and re-execute resume protocol from P8.5.1/RESUME_PROCEDURE.md

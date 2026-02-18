@@ -1,0 +1,20 @@
+=== Date UTC ===
+mer. 18 févr. 2026 00:45:45 UTC
+
+=== Git Status (porcelain) ===
+?? deployment/latest/certification/phase8_5_resume/
+?? deployment/latest/certification/phase9_3/P9_3_REGISTRY_INCIDENT_20260218_002723/
+?? deployment/latest/certification/phase9_4/P9_4_INCIDENT_CLOSURE_20260218_003713/08_COMMIT_LOG.txt
+
+=== Branch ===
+MAIN
+
+=== HEAD Commit ===
+43a3b74af0d243fbafe4d0137ee47c190aa72d48
+
+=== Recent Log (5) ===
+43a3b74a (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(cert): finalize P9.4 incident closure verdict
+23ed17b5 docs(registry): close P9.3 incident (NO_DIFF)
+9002c9fc docs(cert): add P9.3 incident triage proof packs (NO_DIFF)
+67372e3c docs(governance): update P9.1 verdict after push
+cb0e1619 docs(governance): seal P9.1 proof pack
