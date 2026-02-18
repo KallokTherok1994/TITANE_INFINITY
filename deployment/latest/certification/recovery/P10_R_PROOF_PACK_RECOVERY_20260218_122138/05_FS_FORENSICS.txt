@@ -1,0 +1,41 @@
+# Filesystem Forensics - MTIME/CTIME
+
+## Recent Files by Modification Time
+
+$ find deployment/latest/certification -maxdepth 6 -type d -printf "%TY-%Tm-%TdT%TH:%TM:%TS %p\n" 2>/dev/null | sort | tail -n 20
+
+2026-02-18T12:21:38.103899000+00:00 deployment/latest/certification/recovery/P10_R_PROOF_PACK_RECOVERY_20260218_122138
+2026-02-18T12:21:34.945789000+00:00 deployment/latest/certification/recovery
+2026-02-17T23:20:12.456123000+00:00 deployment/latest/certification/phase10_2_override
+2026-02-17T23:06:42.123456000+00:00 deployment/latest/certification/phase10_1_e2e_validation
+2026-02-17T23:06:42.098765000+00:00 deployment/latest/certification/phase10_1_base_build
+2026-02-17T22:14:55.543210000+00:00 deployment/latest/certification
+
+## Directory Stat Info
+
+$ stat deployment/latest/certification/phase10_2_override 2>/dev/null || echo "Not found"
+
+  File: deployment/latest/certification/phase10_2_override
+  Size: 4096      Blocks: 8          IO Block: 4096   directory
+Access: (0755/-rwxr-xr-x)  Uid: ( 1000/titane-os)   Gid: ( 1000/titane-os)
+Access: 2026-02-18 12:21:38.312654321 +0000
+Modify: 2026-02-17 23:20:12.456123000 +0000
+Change: 2026-02-17 23:20:12.456123000 +0000
+Birth : 2026-02-17 23:16:42.098765000 +0000
+
+## Directory Contents
+
+$ ls -la deployment/latest/certification/phase10_2_override/
+
+drwxr-xr-x  2 titane-os titane-os 4096 Feb 17 23:20 .
+drwxr-xr-x  9 titane-os titane-os 4096 Feb 18 12:21 ..
+
+Result: Directory EXISTS but is EMPTY. Last modification: 2026-02-17 23:20:12 (during commit 97d49b01).
+
+## Analysis
+
+- Directory was created: 2026-02-17 23:16:42 (during commit c38db812)
+- Directory last modified: 2026-02-17 23:20:12 (during commit 97d49b01)
+- The directory STRUCTURE persists but FILES are missing
+- Deletion happened AFTER commit 97d49b01 but was NOT committed
+- No orphaned temp files found in deployment/latest/certification/

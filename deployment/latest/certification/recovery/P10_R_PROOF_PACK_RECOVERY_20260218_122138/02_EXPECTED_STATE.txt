@@ -1,0 +1,30 @@
+# Expected State Snapshot
+
+## P10.2_BUILD_OVERRIDE Directory Inspection
+
+$ ls -la deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/
+ls: impossible d'accéder à 'deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/': Aucun fichier ou dossier de ce nom
+(exit code 2)
+
+## Directory Tree Search
+
+$ find deployment/latest/certification/phase10_2_override -maxdepth 4 -print 2>/dev/null | sort
+
+deployment/latest/certification/phase10_2_override/
+
+Result: Directory exists but is empty.
+
+## Certification Roots
+
+$ ls -la deployment/latest/certification/ | head -30
+
+drwxr-xr-x  6 titane-os titane-os 4096 Feb 18 12:21 .
+drwxr-xr-x 13 titane-os titane-os 4096 Feb 18 12:11 ..
+drwxr-xr-x  2 titane-os titane-os 4096 Feb 17 23:06 phase10_1_base_build
+drwxr-xr-x  2 titane-os titane-os 4096 Feb 17 23:06 phase10_1_e2e_validation
+drwxr-xr-x  2 titane-os titane-os 4096 Feb 18 12:21 phase10_2_override
+drwxr-xr-x  2 titane-os titane-os 4096 Feb 18 12:21 recovery
+
+Summary:
+- phase10_2_override directory EXISTS but is EMPTY
+- recovery directory CREATED (contains P10_R_PROOF_PACK_RECOVERY_20260218_122138)

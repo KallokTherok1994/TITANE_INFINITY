@@ -1,0 +1,7 @@
+[2026-02-18T12:59:18+00:00] Desktop E2E (attempt 1)
+
+ ERR_PNPM_NO_SCRIPT  Missing script: e2e
+
+Command "e2e" not found.
+
+[EXIT_CODE] 1
