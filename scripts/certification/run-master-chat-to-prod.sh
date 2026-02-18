@@ -41,12 +41,30 @@ log_cmd "Mode: CONSTITUTIONAL / PROOF-DRIVEN / STOP-THE-LINE / 100% AUTO"
 log_cmd ""
 
 # =========================================================
-# DRY-RUN MODE
+# FLAGS PARSING
 # =========================================================
 
 DRY_RUN=0
-if [ "${1:---dry-run}" = "--dry-run" ]; then
-  DRY_RUN=1
+STUB_MODE=0
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --dry-run) DRY_RUN=1 ;;
+    --run) DRY_RUN=0 ;;
+    --stub-mode|--framework-validation) STUB_MODE=1 ;;
+    *) ;;
+  esac
+  shift
+done
+
+if [ $STUB_MODE -eq 1 ]; then
+  log_cmd "⚠️ STUB MODE (Framework Validation Only)"
+  log_cmd "   THIS RUN DOES NOT CERTIFY PRODUCTION"
+  log_cmd "   Stub phases for orchestration testing only"
+  log_cmd ""
+fi
+
+if [ $DRY_RUN -eq 1 ]; then
   log_cmd "⏳ DRY-RUN MODE: No execution, plan only"
   log_cmd ""
 fi
@@ -159,38 +177,55 @@ if [ $DRY_RUN -eq 1 ]; then
   exit 0
 fi
 
+# Phase script paths (with STUB override)
+if [ $STUB_MODE -eq 1 ]; then
+  P10_4_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_4_infra_stub.sh"
+  P10_3_2R_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_3_2r_e2e_stub.sh"
+  P10_5_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_5_chat_stub.sh"
+  P10_6_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_6_build_stub.sh"
+  P10_7_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_7_pkg_stub.sh"
+  P10_8_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_8_ops_stub.sh"
+else
+  P10_4_SCRIPT="$REPO_ROOT/scripts/certification/p10_4_infra_ipc.sh"
+  P10_3_2R_SCRIPT="$REPO_ROOT/scripts/certification/p10_3_2r_e2e_full.sh"
+  P10_5_SCRIPT="$REPO_ROOT/scripts/certification/p10_5_chat_functional.sh"
+  P10_6_SCRIPT="$REPO_ROOT/scripts/certification/p10_6_prod_build.sh"
+  P10_7_SCRIPT="$REPO_ROOT/scripts/certification/p10_7_packaging_smoke.sh"
+  P10_8_SCRIPT="$REPO_ROOT/scripts/certification/p10_8_ops_support.sh"
+fi
+
 # P10.4
-run_phase "P10_4" "$REPO_ROOT/scripts/certification/p10_4_infra_ipc.sh" "" || {
+run_phase "P10_4" "$P10_4_SCRIPT" "" || {
   log_cmd "⏹ STOP-THE-LINE: P10.4 failed. Aborting."
   exit 40
 }
 
 # P10.3.2R
-run_phase "P10_3_2R" "$REPO_ROOT/scripts/certification/p10_3_2r_e2e_full.sh" "P10_4" || {
+run_phase "P10_3_2R" "$P10_3_2R_SCRIPT" "P10_4" || {
   log_cmd "⏹ STOP-THE-LINE: P10.3.2R failed. Aborting."
   exit 30
 }
 
 # P10.5
-run_phase "P10_5" "$REPO_ROOT/scripts/certification/p10_5_chat_functional.sh" "P10_3_2R" || {
+run_phase "P10_5" "$P10_5_SCRIPT" "P10_3_2R" || {
   log_cmd "⏹ STOP-THE-LINE: P10.5 failed. Aborting."
   exit 30
 }
 
 # P10.6
-run_phase "P10_6" "$REPO_ROOT/scripts/certification/p10_6_prod_build.sh" "P10_5" || {
+run_phase "P10_6" "$P10_6_SCRIPT" "P10_5" || {
   log_cmd "⏹ STOP-THE-LINE: P10.6 failed. Aborting."
   exit 60
 }
 
 # P10.7
-run_phase "P10_7" "$REPO_ROOT/scripts/certification/p10_7_packaging_smoke.sh" "P10_6" || {
+run_phase "P10_7" "$P10_7_SCRIPT" "P10_6" || {
   log_cmd "⏹ STOP-THE-LINE: P10.7 failed. Aborting."
   exit 70
 }
 
 # P10.8
-run_phase "P10_8" "$REPO_ROOT/scripts/certification/p10_8_ops_support.sh" "P10_7" || {
+run_phase "P10_8" "$P10_8_SCRIPT" "P10_7" || {
   log_cmd "⏹ STOP-THE-LINE: P10.8 failed. Aborting."
   exit 80
 }
