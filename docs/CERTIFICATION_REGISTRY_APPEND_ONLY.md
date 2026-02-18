@@ -933,3 +933,21 @@ Full autonomous P10 orchestration: unit x3, integration x3, desktop E2E x3, scan
 ### Next Phase
 
 Triage failures, minimal fixes, re-run P10
+
+---
+
+## P10.2_BUILD_OVERRIDE_QUALIFIED
+
+**Date**: 2026-02-18T02:31:30Z  
+**Verdict**: BLOCKED  
+**Commit**: 6f2b58558ee6958c1e1861a2897ab2e530aac32d  
+**Scope**: Single-use SAFE build override + prechecks + sandbox setup; tests blocked by runner tooling mismatch  
+**Out-of-Scope**: Full P10 rerun (blocked); runtime/UI changes  
+**Proof Pack**: deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/  
+**Seal Pack**: deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814/  
+**Evidence**: 01_PRECHECKS.txt, 02_OVERRIDE_AUTHORIZATION.md, 03_BUILD_SAFE_LOG.txt, 04_BUILD_SAFE_SCAN.txt, 10_TRIAGE.md, VERDICT.md, LOCK.md, SHA256SUMS.txt
+
+### Notes
+
+- Build safe executed once with scripts ignored; no dev server patterns detected.
+- `runTests` tool executed Playwright E2E by default, blocking required unit/integration x3.

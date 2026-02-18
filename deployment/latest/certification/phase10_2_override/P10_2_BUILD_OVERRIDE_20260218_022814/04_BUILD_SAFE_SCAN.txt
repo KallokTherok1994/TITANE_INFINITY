@@ -1,0 +1,5 @@
+]633;E;{   echo "Scan patterns in 03_BUILD_SAFE_LOG.txt"\x3b   echo "Patterns: dev server|listening|localhost:|http://|vite dev|5173|3000|8080"\x3b   rg -n "dev server|listening|localhost:|http://|vite dev|5173|3000|8080" "$P10_2_PATH/03_BUILD_SAFE_LOG.txt" || true\x3b   echo ""\x3b   echo "Matches count:"\x3b   rg -n "dev server|listening|localhost:|http://|vite dev|5173|3000|8080" "$P10_2_PATH/03_BUILD_SAFE_LOG.txt" | wc -l || true\x3b } > "$P10_2_PATH/04_BUILD_SAFE_SCAN.txt";43a353c4-0ea6-433e-a1a7-4ffcf7f7e01f]633;CScan patterns in 03_BUILD_SAFE_LOG.txt
+Patterns: dev server|listening|localhost:|http://|vite dev|5173|3000|8080
+
+Matches count:
+0

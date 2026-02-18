@@ -1,0 +1,39 @@
+]633;E;{   echo "$ date -u"\x3b   date -u\x3b   echo ""\x3b   echo "$ git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo ""\x3b   echo "$ git rev-parse --abbrev-ref HEAD"\x3b   git rev-parse --abbrev-ref HEAD\x3b   echo ""\x3b   echo "$ git rev-parse HEAD"\x3b   git rev-parse HEAD\x3b   echo ""\x3b   echo "$ git diff --name-only"\x3b   git diff --name-only\x3b   echo ""\x3b   echo "$ node -v"\x3b   node -v\x3b   echo ""\x3b   echo "$ pnpm -v"\x3b   pnpm -v\x3b   echo ""\x3b   echo "$ rg -n \\"post-build\\.sh|postbuild\\" package.json scripts -S || true"\x3b   rg -n "post-build\\.sh|postbuild" package.json scripts -S || true\x3b   echo ""\x3b   echo "$ ss -ltn | grep -E ':(5173|3000|8080|9000|4444)\\\\s'"\x3b   ss -ltn | grep -E ':(5173|3000|8080|9000|4444)\\s' || true\x3b } > "${P10_2_DIR}/01_PRECHECKS.txt";ea2326e6-9117-4585-b55c-9080f7fd5a8e]633;C$ date -u
+mer. 18 févr. 2026 02:28:21 UTC
+
+$ git status --porcelain=v1
+?? deployment/latest/certification/phase10_2_override/
+
+$ git rev-parse --abbrev-ref HEAD
+MAIN
+
+$ git rev-parse HEAD
+6f2b58558ee6958c1e1861a2897ab2e530aac32d
+
+$ git diff --name-only
+
+$ node -v
+v24.0.0
+
+$ pnpm -v
+10.28.2
+
+$ rg -n "post-build\.sh|postbuild" package.json scripts -S || true
+package.json:18:    "postbuild": "bash scripts/post-build.sh",
+package.json:25:    "build:production": "pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && vite build && tauri build && bash scripts/post-build.sh",
+scripts/certification/run-p10-desktop-cert.sh:84:E) BUILD SAFE (NPM_CONFIG_IGNORE_SCRIPTS=1, no postbuild)
+scripts/certification/run-p10-desktop-cert.sh:106:- NO postbuild execution (writes ~/.local/share)
+scripts/guards/guard-prod-safe-build.mjs:8: * 2. postbuild exists (must never be removed)
+scripts/guards/guard-prod-safe-build.mjs:9: * 3. build:prod-safe does NOT contain postbuild side-effects
+scripts/guards/guard-prod-safe-build.mjs:29:  'postbuild',
+scripts/guards/guard-prod-safe-build.mjs:30:  'post-build.sh',
+scripts/guards/guard-prod-safe-build.mjs:31:  'bash scripts/post-build.sh',
+scripts/guards/guard-prod-safe-build.mjs:98:  // 3. Verify postbuild exists
+scripts/guards/guard-prod-safe-build.mjs:99:  console.log('[2/5] Verify postbuild hook retained...');
+scripts/guards/guard-prod-safe-build.mjs:100:  if (packageJson && !packageJson.scripts['postbuild']) {
+scripts/guards/guard-prod-safe-build.mjs:101:    errors.push('❌ scripts.postbuild removed (must remain)');
+scripts/guards/guard-prod-safe-build.mjs:104:    console.log('  ✅ postbuild script present (not removed)');
+scripts/guards/guard-prod-safe-build.mjs:174:    if (!packageJson?.scripts['postbuild']) {
+scripts/guards/guard-prod-safe-build.mjs:175:      console.log('  2. Restore postbuild script (must not be removed)');
+
+$ ss -ltn | grep -E ':(5173|3000|8080|9000|4444)\s'

@@ -1,0 +1,17 @@
+# P10.2 proof pack created: deployment/latest/certification/phase10_2_override/P10_2_BUILD_OVERRIDE_20260218_022814
+]633;E;{   echo "$ date -u"\x3b   echo "$ git status --porcelain=v1"\x3b   echo "$ git rev-parse --abbrev-ref HEAD"\x3b   echo "$ git rev-parse HEAD"\x3b   echo "$ git diff --name-only"\x3b   echo "$ node -v"\x3b   echo "$ pnpm -v"\x3b   echo "$ rg -n \\"post-build\\.sh|postbuild\\" package.json scripts -S || true"\x3b   echo "$ ss -ltn | grep -E ':(5173|3000|8080|9000|4444)\\\\s'"\x3b } >> "${P10_2_DIR}/COMMANDS_RUN.txt";ea2326e6-9117-4585-b55c-9080f7fd5a8e]633;C$ date -u
+$ git status --porcelain=v1
+$ git rev-parse --abbrev-ref HEAD
+$ git rev-parse HEAD
+$ git diff --name-only
+$ node -v
+$ pnpm -v
+$ rg -n "post-build\.sh|postbuild" package.json scripts -S || true
+$ ss -ltn | grep -E ':(5173|3000|8080|9000|4444)\s'
+[2026-02-18T02:29:08+00:00] cat > 02_OVERRIDE_AUTHORIZATION.md
+[2026-02-18T02:29:49+00:00] rg scan build log
+[2026-02-18T02:30:02+00:00] SANDBOX_DIR=/tmp/titane_p10_2_sandbox_20260218_023002
+[2026-02-18T02:30:51+00:00] chmod +x scripts/certification/run-p10-desktop-cert-nobuild.sh
+[2026-02-18T02:32:47+00:00] rm -f scripts/certification/run-p10-desktop-cert-nobuild.sh
+[2026-02-18T02:33:07+00:00] write 06..10 proof files
+[2026-02-18T02:33:25+00:00] sha256sum proof pack

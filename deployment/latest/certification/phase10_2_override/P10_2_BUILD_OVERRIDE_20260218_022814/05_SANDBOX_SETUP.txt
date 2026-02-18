@@ -1,0 +1,52 @@
+]633;E;{   echo "Timestamp: $(date -u --iso-8601=seconds)"\x3b   echo "SANDBOX_DIR=$SANDBOX_DIR"\x3b   echo "REAL_HOME=$REAL_HOME"\x3b   echo ""\x3b   echo "Exports (for runtime):"\x3b   echo "HOME=$SANDBOX_DIR/home"\x3b   echo "XDG_CACHE_HOME=$SANDBOX_DIR/xdg_cache"\x3b   echo "XDG_CONFIG_HOME=$SANDBOX_DIR/xdg_config"\x3b   echo "XDG_DATA_HOME=$SANDBOX_DIR/xdg_data"\x3b   echo "TMPDIR=$SANDBOX_DIR"\x3b   echo ""\x3b   echo "Real HOME baseline (top-level):"\x3b   ls -la "$REAL_HOME" | head -40\x3b } > "$P10_2_PATH/05_SANDBOX_SETUP.txt";43a353c4-0ea6-433e-a1a7-4ffcf7f7e01f]633;CTimestamp: 2026-02-18T02:30:02+00:00
+SANDBOX_DIR=/tmp/titane_p10_2_sandbox_20260218_023002
+REAL_HOME=/home/titane-os
+
+Exports (for runtime):
+HOME=/tmp/titane_p10_2_sandbox_20260218_023002/home
+XDG_CACHE_HOME=/tmp/titane_p10_2_sandbox_20260218_023002/xdg_cache
+XDG_CONFIG_HOME=/tmp/titane_p10_2_sandbox_20260218_023002/xdg_config
+XDG_DATA_HOME=/tmp/titane_p10_2_sandbox_20260218_023002/xdg_data
+TMPDIR=/tmp/titane_p10_2_sandbox_20260218_023002
+
+Real HOME baseline (top-level):
+total 26760
+drwxr-x--- 46 titane-os titane-os     4096 févr. 17 21:29 .
+drwxr-xr-x  3 root      root          4096 déc.   9 10:25 ..
+drwxrwxr-x  5 titane-os titane-os    12288 févr. 17 07:27 .aitk
+drwxr-xr-x  4 titane-os titane-os     4096 févr. 17 07:26 .anydesk
+-rw-------  1 titane-os titane-os   155463 févr. 17 21:29 .bash_history
+-rw-------  1 titane-os titane-os   129654 janv.  6 10:03 .bash_history-09183.tmp
+-rw-------  1 titane-os titane-os    98650 janv. 18 20:00 .bash_history-12356.tmp
+-rw-------  1 titane-os titane-os        0 déc.  22 22:15 .bash_history-16330.tmp
+-rw-------  1 titane-os titane-os        0 janv.  3 00:14 .bash_history-17897.tmp
+-rw-------  1 titane-os titane-os   132129 déc.  16 16:43 .bash_history-67653.tmp
+-rw-------  1 titane-os titane-os        0 janv. 26 19:02 .bash_history-81497.tmp
+-rw-------  1 titane-os titane-os   130884 déc.  21 02:22 .bash_history-87614.tmp
+-rw-r--r--  1 titane-os titane-os      220 mars  31  2024 .bash_logout
+-rw-r--r--  1 titane-os titane-os     5704 janv. 17 11:29 .bashrc
+drwxr-xr-x  2 titane-os titane-os     4096 janv. 29 17:20 Bureau
+drwx------ 43 titane-os titane-os     4096 févr. 17 07:15 .cache
+drwxrwxr-x  5 titane-os titane-os     4096 févr. 17 12:24 .cargo
+-rw-rw-r--  1 titane-os titane-os     1348 janv. 30 22:53 CHECKSUMS.txt
+drwxrwxr-x 10 titane-os titane-os     4096 févr. 10 21:05 .claude
+-rw-------  1 titane-os titane-os     4499 févr. 13 16:50 .claude.json
+-rw-------  1 titane-os titane-os     3266 janv. 10 19:50 .claude.json.backup
+-rw-------  1 titane-os titane-os     4501 févr. 10 21:05 .claude.json.backup.1770775507878
+-rw-------  1 titane-os titane-os     4501 févr. 13 16:50 .claude.json.backup.1771019431518
+-rw-------  1 titane-os titane-os     4500 févr. 13 16:50 .claude.json.backup.1771019431588
+-rw-------  1 titane-os titane-os     4500 févr. 13 16:50 .claude.json.backup.1771019431610
+-rw-------  1 titane-os titane-os     4500 févr. 13 16:50 .claude.json.backup.1771019433221
+drwxr-xr-x  4 titane-os titane-os     4096 janv.  2 23:06 .cline
+drwxrwxr-x  3 titane-os titane-os     4096 janv. 23 21:35 .clinerules
+drwx------ 33 titane-os titane-os     4096 févr. 15 16:52 .config
+drwxrwxr-x  4 titane-os titane-os     4096 févr. 13 16:50 .copilot
+drwxrwxr-x  2 titane-os titane-os     4096 janv.  5 15:50 Desktop
+drwxr-xr-x  8 titane-os titane-os     4096 févr. 16 15:27 Documents
+drwxrwxr-x  3 titane-os titane-os     4096 déc.   9 10:59 .dotnet
+drwxrwxr-x  2 titane-os titane-os     4096 févr.  4 18:08 Downloads
+-rw-rw-r--  1 titane-os titane-os      211 janv. 18 07:48 final-tauri-build.log
+-rw-rw-r--  1 titane-os titane-os      471 janv. 15 17:48 .gitconfig
+drwx------  2 titane-os titane-os     4096 févr. 11 16:57 .gnupg
+drwxrwxr-x  4 titane-os titane-os     4096 janv.  4 01:09 go
+drwxrwxr-x  3 titane-os titane-os     4096 déc.  22 22:07 .hf-cli
