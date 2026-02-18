@@ -1,0 +1,18 @@
+P9.1 Commit + Registry Append (doc-only)
+Timestamp: 2026-02-18T00:17:11Z
+
+Executed:
+- date -u
+- git status --porcelain=v1
+- git rev-parse HEAD
+- git branch --show-current
+- git log -1 --oneline --decorate
+- git add deployment/latest/certification/phase9/ deployment/latest/certification/phase9_1/
+- git diff --name-only --staged
+- git diff --stat --staged
+- sha256sum -c SHA256SUMS.txt > HASH_VERIFY.txt
+- git diff -- docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md > REGISTRY_DIFF.txt
+
+Notes:
+- Hash verify initially failed due to SHA256SUMS self-entry; regenerated without self entry.
+- No runtime actions executed.
