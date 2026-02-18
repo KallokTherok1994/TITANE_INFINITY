@@ -1,0 +1,14 @@
+P10.3.1 E2E Selector Repair — Phase A Prechecks
+
+Date: $(date -u '+%Y-%m-%dT%H:%M:%SZ')
+
+Git Status (must be clean except ollama.ts):
+ M src/services/ai/providers/ollama.ts
+?? deployment/latest/certification/phase10_3/P10_3_DESKTOP_E2E_X3_20260218T133727Z/
+?? deployment/latest/certification/phase10_3_1/
+?? deployment/latest/certification/phase10_3_unblock/
+
+Branch: $(git rev-parse --abbrev-ref HEAD)
+HEAD: $(git rev-parse HEAD)
+
+Prechecks PASS: $(git status --porcelain | grep -v "^ M src/services/ai/providers/ollama.ts" | wc -l) == 0
