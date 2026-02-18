@@ -1,0 +1,24 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUARD FAILURE EVIDENCE: guard:ollama-proxy
+═══════════════════════════════════════════════════════════════════════════════
+
+Guard Command: pnpm run guard:ollama-proxy
+Expected:      EXIT_CODE=0 (PASS - no direct Ollama endpoint usage)
+Actual:        EXIT_CODE=1 (FAIL - direct endpoint reference detected)
+
+Detected Violation:
+  File:    src/services/ai/providers/ollama.ts
+  Pattern: (127\.0\.0\.1|localhost):11434
+  Match:   endpoint: 'http://127.0.0.1:11434'
+
+Guard Script: scripts/guard/guard-ollama-proxy.sh
+Guard Purpose: Enforce unified transport — no direct localhost:11434 calls in frontend
+
+Full Guard Output (from execution attempt):
+❌ Guard failed: direct Ollama localhost usage detected in src/
+src/services/ai/providers/ollama.ts:39:  endpoint: 'http://127.0.0.1:11434',
+
+Frontend MUST use unified transport (src/services/ai/transports/ollamaTransport.ts)
+
+═══════════════════════════════════════════════════════════════════════════════
+

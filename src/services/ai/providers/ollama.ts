@@ -36,8 +36,6 @@ export let IS_OLLAMA_READY = false;
 
 // ✅ PROD FIX v27.0.2: Default Ollama Configuration
 export const DEFAULT_OLLAMA_CONFIG = {
-  endpoint: 'http://127.0.0.1:11434',
-  host: '127.0.0.1',
   port: 11434,
   model: 'gemma2:2b',
   temperature: 0.7,

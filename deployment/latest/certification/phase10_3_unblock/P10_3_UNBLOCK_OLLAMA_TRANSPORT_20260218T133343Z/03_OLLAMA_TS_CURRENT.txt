@@ -1,0 +1,99 @@
+# Ollama.ts Current Implementation — Violation Scope
+
+## File Location
+src/services/ai/providers/ollama.ts
+
+## Violation Lines (35-45)
+
+```typescript
+// ✅ PROD FIX v27.0.2: Default Ollama Configuration
+export const DEFAULT_OLLAMA_CONFIG = {
+  endpoint: 'http://127.0.0.1:11434',    ← LINE 39: DIRECT LOCALHOST REFERENCE (VIOLATION)
+  host: '127.0.0.1',                      ← LINE 40: DIRECT LOCALHOST REFERENCE (VIOLATION)
+  port: 11434,
+  model: 'gemma2:2b',
+  temperature: 0.7,
+  top_p: 0.9,
+  top_k: 40,
+  num_predict: 128,
+  repeat_penalty: 1.1,
+  timeout_ms: 60000,
+  connect_timeout_ms: 5000,
+  retry_count: 3,
+  retry_delay_ms: 1000,
+  auto_start: true,
+  check_on_startup: true,
+  fallback_provider: 'titane-local',
+} as const;
+```
+
+## Usage Analysis
+
+### getOllamaConfig() Function (Lines 57-87)
+```typescript
+export function getOllamaConfig() {
+  // 1. Try environment variables first
+  const envModel = ...;
+  const envEndpoint = ...;
+  
+  if (envModel || envEndpoint) {
+    return { ...DEFAULT_OLLAMA_CONFIG, ...(envEndpoint && { endpoint: envEndpoint.trim() }) };
+  }
+  
+  // 2. Try localStorage (persisted user config)
+  const stored = localStorage.getItem('titane_ollama_config');
+  if (stored) {
+    return { ...DEFAULT_OLLAMA_CONFIG, ...parsed };
+  }
+  
+  // 3. Return defaults
+  return { ...DEFAULT_OLLAMA_CONFIG };  ← RETURNS DIRECT ENDPOINT
+}
+```
+
+### Key Finding: Where Endpoint is Actually Used
+- Line 39-40: **DEFINED** in DEFAULT_OLLAMA_CONFIG (direct localhost)
+- Line 66, 80, 87: **PROPAGATED** via spread operator in getOllamaConfig()
+- **ACTUAL USAGE**: Searched across ollama.ts — `endpoint` property NOT explicitly called in current codebase
+  - Transport layer (`ollamaTransport.ts`) already abstracts HTTP via `/api/ollama` proxy
+  - IPC mode uses Tauri invoke, not direct endpoint
+  - Deprecated buildPrompt() functions don't reference endpoint
+  - ollamaCheckHealth() and ollamaGenerate() use transport abstraction, not DEFAULT_OLLAMA_CONFIG.endpoint
+
+### Implication
+The direct endpoint reference is **NOT ACTIVELY USED** in the current code path:
+- HTTP (dev): Uses `/api/ollama` proxy via Vite (ollamaTransport.ts line 62)
+- IPC (prod): Uses Tauri invoke (ollamaTransport.ts, not direct endpoint)
+- Config storage: Only persists model, not endpoint reference
+
+## Guard Detection
+Script: `scripts/guard/guard-ollama-proxy.sh`
+Pattern: Scans for `localhost:11434` or `127.0.0.1:11434` in src/ files
+Result: **MATCH at ollama.ts:39** (literal string in code)
+Severity: STOP-THE-LINE (constitutional violation)
+
+## Canonical Transport Path
+File: `src/services/ai/transports/ollamaTransport.ts`
+- Line 24: `const IS_TAURI = isTauriEnvironment();`
+- Line 25: `const TRANSPORT_MODE = IS_TAURI ? 'IPC' : 'HTTP';`
+- Line 62: `const OLLAMA_API_BASE = '/api/ollama';` (removes direct endpoint reference)
+- Line 136+: `ollamaCheckHealth()` uses transport abstraction
+- Line 180+: `ollamaGenerate()` uses transport abstraction
+
+## Minimal Patch Strategy
+**OPTION A: Remove endpoint entirely from DEFAULT_OLLAMA_CONFIG**
+- Remove lines 39-40 (direct localhost references)
+- Keep host, port for metadata/documentation only
+- Transport layer handles all actual connectivity
+
+**OPTION B: Move to runtime config instead of source**
+- Remove direct endpoint from source
+- Set via environment variable only (OLLAMA_ENDPOINT)
+- Ensures no direct localhost in source code
+
+**RECOMMENDATION: OPTION A**
+- Simplest minimal patch
+- No API breaking change (endpoint never actively used in current code)
+- Transport layer already abstracts connectivity
+- Reduces proliferation of duplicate configurations
+

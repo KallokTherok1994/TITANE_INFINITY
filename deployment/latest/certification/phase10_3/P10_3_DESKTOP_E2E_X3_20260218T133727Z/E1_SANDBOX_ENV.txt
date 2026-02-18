@@ -1,0 +1,16 @@
+Sandbox Environment — Phase E1
+Date: 2026-02-18T13:43:23Z
+
+HOME: /tmp/titane_e2e_home_1771422203
+XDG_CONFIG_HOME: /tmp/titane_e2e_home_1771422203/config
+TMPDIR: /tmp/titane_e2e_home_1771422203/tmp
+
+Verified:
+drwxrwxr-x 4 titane-os titane-os 4096 févr. 18 08:43 /tmp/titane_e2e_home_1771422203
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:43 /tmp/titane_e2e_home_1771422203/config
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:43 /tmp/titane_e2e_home_1771422203/tmp
+
+Sanity check before E2E runs:
+- E2E will execute with isolated HOME (no persistent state)
+- XDG dirs isolated per run
+- All temp files in isolated TMPDIR
