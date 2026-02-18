@@ -1,0 +1,14 @@
+XDG_CONFIG_DIRS=/etc/xdg/xdg-ubuntu:/etc/xdg
+XDG_MENU_PREFIX=gnome-
+XDG_DATA_HOME=/tmp/titane_p10_3_2_sandbox_20260218T200801Z/xdg_data
+XDG_CONFIG_HOME=/tmp/titane_p10_3_2_sandbox_20260218T200801Z/xdg_config
+XDG_SESSION_DESKTOP=ubuntu
+XDG_SESSION_TYPE=x11
+PNPM_HOME=/home/titane-os/.local/share/pnpm
+HOME=/tmp/titane_p10_3_2_sandbox_20260218T200801Z/home
+XDG_CURRENT_DESKTOP=ubuntu:GNOME
+TMPDIR=/tmp/titane_p10_3_2_sandbox_20260218T200801Z/tmp
+XDG_CACHE_HOME=/tmp/titane_p10_3_2_sandbox_20260218T200801Z/xdg_cache
+XDG_SESSION_CLASS=user
+XDG_RUNTIME_DIR=/run/user/1000
+XDG_DATA_DIRS=/usr/share/ubuntu:/usr/share/gnome:/home/titane-os/.local/share/flatpak/exports/share:/var/lib/flatpak/exports/share:/usr/local/share/:/usr/share/:/var/lib/snapd/desktop

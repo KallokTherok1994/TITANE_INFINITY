@@ -1,0 +1,20 @@
+# PHASE A–I: P10.3.2 Full Desktop E2E x3 Certification
+# Commands executed during this run (append-only log)
+
+[2026-02-18T20:07:39Z] PHASE A: Proof pack created at deployment/latest/certification/phase10_3_2/P10_3_2_FULL_DESKTOP_E2E_X3_20260218T200739Z
+[2026-02-18T20:07:39Z] PHASE B: Starting prechecks
+[2026-02-18T20:07:39Z] prechecks captured
+[2026-02-18T20:08:01Z] PHASE C-D: Environment snapshot
+[2026-02-18T20:08:01Z] Sandbox isolation configured
+[2026-02-18T20:08:01Z] PHASE E: Running guard:ollama-proxy pre-run
+[2026-02-18T20:08:01Z] PHASE E PASS: guard:ollama-proxy EXIT_CODE=0
+[2026-02-18T20:08:17Z] PHASE F: Starting E2E x3 sequential runs
+[2026-02-18T20:08:17Z] E2E run 1 started
+[2026-02-18T20:08:46Z] E2E run 1 exit=1 duration=28s
+[2026-02-18T20:08:46Z] NO_DEV_SERVER scan run 1
+[2026-02-18T20:08:46Z] NO_NETWORK scan run 1
+[2026-02-18T20:08:46Z] NO_REAL_WRITES proof run 1
+[2026-02-18T20:08:46Z] PHASE F complete: E2E_FAILURE_RUN_1 (ALL_PASS=0)
+[2026-02-18T20:11:20Z] PHASE G: Determinism analysis
+[2026-02-18T20:11:20Z] PHASE H: Verdict and sealing
+[2026-02-18T20:11:20Z] PHASE H complete: VERDICT=FAIL_E2E_FAILURE_RUN_1
