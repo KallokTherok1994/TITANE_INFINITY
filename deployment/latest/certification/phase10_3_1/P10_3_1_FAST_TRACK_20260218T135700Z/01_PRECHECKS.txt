@@ -1,0 +1,15 @@
+=== GIT STATE SNAPSHOT ===
+mer. 18 févr. 2026 13:57:00 UTC
+
+Branch:
+MAIN
+
+HEAD:
+c6988d45e9d892a302c27ce884335946d677971e
+
+Status --porcelain:
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/07_ITER_2_ROOT_CAUSE_ANALYSIS.md
+?? deployment/latest/certification/phase10_3_1/P10_3_1_E2E_SELECTOR_REPAIR_20260218T134929Z/ITER_2_E2E_LOG_ENHANCED.txt
+?? deployment/latest/certification/phase10_3_1/P10_3_1_FAST_TRACK_20260218T135700Z/
+
+Diff --name-only:

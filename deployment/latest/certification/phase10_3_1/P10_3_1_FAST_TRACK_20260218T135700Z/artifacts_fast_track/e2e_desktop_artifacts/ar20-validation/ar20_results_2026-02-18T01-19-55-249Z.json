@@ -1,0 +1,40 @@
+{
+  "runTimestamp": "2026-02-18T01:19:55.249Z",
+  "framework": "WebDriverIO + tauri-driver",
+  "tauriIPCAvailable": false,
+  "tests": [
+    {
+      "name": "TEST A: IPC Simple",
+      "status": "FAIL",
+      "method": "IPC",
+      "prompt": "allo",
+      "error": "Tauri IPC not available (CRITICAL BLOCKER)\n\nfalse !== true\n",
+      "latencyMs": 5
+    },
+    {
+      "name": "TEST B: IPC Offline Fallback",
+      "status": "FAIL",
+      "method": "IPC",
+      "prompt": "test offline mode",
+      "error": "Tauri IPC not available\n\nfalse !== true\n",
+      "latencyMs": 1
+    },
+    {
+      "name": "TEST C: IPC No Silence",
+      "status": "FAIL",
+      "method": "IPC",
+      "prompt": "test with invalid keys",
+      "error": "Tauri IPC not available\n\nfalse !== true\n",
+      "latencyMs": 1
+    },
+    {
+      "name": "TEST AR20: 20 Messages IPC",
+      "status": "FAIL",
+      "method": "IPC",
+      "messagesCount": 0,
+      "responses": [],
+      "error": "Tauri IPC not available\n\nfalse !== true\n",
+      "totalLatencyMs": 0
+    }
+  ]
+}
