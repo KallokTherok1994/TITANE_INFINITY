@@ -1,19 +1,31 @@
 import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
-import { openSync, closeSync } from 'node:fs';
+import { createWriteStream } from 'node:fs';
 import path from 'node:path';
 import net from 'node:net';
 
 const ROOT = process.cwd();
-const REPORTS = path.resolve(ROOT, 'reports/e2e-desktop');
+const REPORTS = process.env.TITANE_E2E_ARTIFACTS_DIR
+  ? path.resolve(process.env.TITANE_E2E_ARTIFACTS_DIR)
+  : path.resolve(ROOT, 'reports/e2e-desktop');
+const DIAG_LOG = path.join(REPORTS, 'diagnostics.log');
 const WDIO_LOG = path.join(REPORTS, 'wdio.log');
 const TAURI_DRIVER_LOG = path.join(REPORTS, 'tauri_driver.log');
 const WEBKIT_LOG = path.join(REPORTS, 'webkit_driver.log');
+const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
+const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
 
 await fs.mkdir(REPORTS, { recursive: true });
+await fs.writeFile(DIAG_LOG, '');
 await fs.writeFile(WDIO_LOG, '');
 await fs.writeFile(TAURI_DRIVER_LOG, '');
 await fs.writeFile(WEBKIT_LOG, '');
+
+const appendDiag = async line => {
+  const entry = `${new Date().toISOString()} ${line}\n`;
+  process.stderr.write(entry);
+  await fs.appendFile(DIAG_LOG, entry);
+};
 
 function waitForPort(port, timeoutMs = 15000) {
   return new Promise((resolve, reject) => {
@@ -38,13 +50,14 @@ function waitForPort(port, timeoutMs = 15000) {
 }
 
 function spawnLogged(cmd, args, logFile, envOverrides = {}) {
-  const fd = openSync(logFile, 'a');
+  const output = createWriteStream(logFile, { flags: 'a' });
   const child = spawn(cmd, args, {
     cwd: ROOT,
     env: { ...process.env, ...envOverrides },
-    stdio: ['ignore', fd, fd],
+    stdio: ['ignore', 'pipe', 'pipe'],
   });
-  closeSync(fd);
+  child.stdout.pipe(output);
+  child.stderr.pipe(output);
   return child;
 }
 
@@ -70,17 +83,19 @@ if (nativeDriverPath) {
   );
 }
 
+await appendDiag(`Artifacts dir: ${REPORTS}`);
+await appendDiag(`WDIO config: ${WDIO_CONFIG}`);
+await appendDiag(`TAURI_BINARY_PATH: ${TAURI_BINARY_PATH || '<unset>'}`);
+await appendDiag(`tauri-driver args: ${['tauri-driver', ...tauriArgs].join(' ')}`);
+
 const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
   RUST_LOG: process.env.RUST_LOG || 'debug',
 });
 
 await waitForPort(4444).catch(() => false);
 
-const wdio = spawnLogged(
-  'pnpm',
-  ['exec', 'wdio', 'run', 'wdio.desktop.conf.cjs'],
-  WDIO_LOG
-);
+await appendDiag(`wdio command: pnpm exec wdio run ${WDIO_CONFIG}`);
+const wdio = spawnLogged('pnpm', ['exec', 'wdio', 'run', WDIO_CONFIG], WDIO_LOG);
 
 const shutdown = () => {
   for (const child of [wdio, tauriDriver]) {
@@ -93,7 +108,14 @@ const shutdown = () => {
   }
 };
 
-wdio.on('exit', code => {
+wdio.on('exit', async code => {
+  if (code && code !== 0) {
+    await appendDiag('FAILURE SUMMARY');
+    await appendDiag(`exit_code=${code}`);
+    await appendDiag(`wdio_log=${WDIO_LOG}`);
+    await appendDiag(`tauri_driver_log=${TAURI_DRIVER_LOG}`);
+    await appendDiag(`webkit_log=${WEBKIT_LOG}`);
+  }
   shutdown();
   process.exit(code ?? 1);
 });
