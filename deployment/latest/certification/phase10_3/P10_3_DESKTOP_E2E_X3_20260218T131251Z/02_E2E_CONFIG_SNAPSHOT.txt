@@ -1,0 +1,97 @@
+═══════════════════════════════════════════════════════════════════════════════
+  E2E HARNESS CONFIG SNAPSHOT
+═══════════════════════════════════════════════════════════════════════════════
+
+[2026-02-18T13:13:10+00:00]
+
+E2E Directory Structure:
+e2e/desktop:
+total 108
+drwxrwxr-x 2 titane-os titane-os  4096 févr. 16 09:34 .
+drwxrwxr-x 9 titane-os titane-os  4096 févr. 14 00:59 ..
+-rw-rw-r-- 1 titane-os titane-os 15344 févr. 17 21:22 ai-verification.full.e2e.js
+-rw-rw-r-- 1 titane-os titane-os 13799 févr. 13 18:27 chat-ar20.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os  3204 févr. 13 18:27 diagnostic-tauri-api.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os   300 févr. 13 18:27 smoke.wdio.test.js
+-rw-rw-r-- 1 titane-os titane-os  1259 févr. 13 18:27 test-direct-wdio-connection.wdio.test.cjs
+-rw-rw-r-- 1 titane-os titane-os 55205 févr. 16 09:34 ui-chat-360-autofix.wdio.test.cjs
+
+scripts/e2e:
+total 60
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 13 18:27 .
+drwxrwxr-x 45 titane-os titane-os 12288 févr. 17 20:10 ..
+-rwxrwxr-x  1 titane-os titane-os  1230 janv. 16 20:35 ensure-webkit-webdriver.sh
+-rwxrwxr-x  1 titane-os titane-os   682 févr. 13 18:27 require-e2e-build-authorization.sh
+-rw-rw-r--  1 titane-os titane-os  3631 févr. 17 20:46 run-desktop-suite.js
+-rwxrwxr-x  1 titane-os titane-os  2499 févr. 13 18:27 run-stable-e2e.sh
+-rwxrwxr-x  1 titane-os titane-os 15980 févr. 13 18:52 run-ui-chat-360-autofix.cjs
+-rw-rw-r--  1 titane-os titane-os  1892 janv. 25 08:20 start-tauri-desktop.js
+-rw-rw-r--  1 titane-os titane-os   978 janv. 25 08:20 stop-tauri-desktop.js
+-rwxrwxr-x  1 titane-os titane-os  3095 févr. 17 21:22 tauri-wrapper.sh
+
+WDIO + Tauri Config:
+wdio.desktop.conf.cjs:6:const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
+wdio.desktop.conf.cjs:7:const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
+wdio.desktop.conf.cjs:10:const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
+wdio.desktop.conf.cjs:11:const APP_PATH = process.env.TAURI_BINARY_PATH
+wdio.desktop.conf.cjs:12:  ? path.resolve(process.env.TAURI_BINARY_PATH)
+wdio.desktop.conf.cjs:13:  : path.resolve(ROOT, 'src-tauri/target/debug/titane-infinity');
+wdio.desktop.conf.cjs:19:  port: 4444,
+wdio.desktop.conf.cjs:21:  specs: ['./e2e/desktop/**/*.e2e.js', './e2e/desktop/**/*.wdio.test.js'],
+wdio.desktop.conf.cjs:24:  capabilities: [
+wdio.desktop.conf.cjs:27:      'wdio:enforceWebDriverClassic': true,
+wdio.desktop.conf.cjs:28:      'tauri:options': {
+wdio.desktop.conf.cjs:29:        application: WRAPPER_PATH,
+wdio.desktop.conf.cjs:46:  beforeSession(config, capabilities) {
+wdio.desktop.conf.cjs:58:            capabilities,
+scripts/e2e/require-e2e-build-authorization.sh:2:# TITANE∞ — E2E Tauri Build Authorization Gate
+scripts/e2e/require-e2e-build-authorization.sh:7:AUTH_FILE="$ROOT/runtime/ALLOW_E2E_TAURI_BUILD.ok"
+scripts/e2e/require-e2e-build-authorization.sh:8:EXPECTED_CONTENT="I_AUTHORIZE_E2E_TAURI_BUILD"
+scripts/e2e/require-e2e-build-authorization.sh:11:  echo "❌ E2E TAURI BUILD BLOCKED — NO AUTHORIZATION"
+scripts/e2e/require-e2e-build-authorization.sh:18:  echo "❌ E2E TAURI BUILD BLOCKED — INVALID AUTHORIZATION"
+scripts/e2e/run-desktop-suite.js:12:const WDIO_LOG = path.join(REPORTS, 'wdio.log');
+scripts/e2e/run-desktop-suite.js:13:const TAURI_DRIVER_LOG = path.join(REPORTS, 'tauri_driver.log');
+scripts/e2e/run-desktop-suite.js:15:const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
+scripts/e2e/run-desktop-suite.js:16:const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
+scripts/e2e/run-desktop-suite.js:20:await fs.writeFile(WDIO_LOG, '');
+scripts/e2e/run-desktop-suite.js:21:await fs.writeFile(TAURI_DRIVER_LOG, '');
+scripts/e2e/run-desktop-suite.js:74:const tauriArgs = ['--port', '4444'];
+scripts/e2e/run-desktop-suite.js:76:  tauriArgs.push(
+scripts/e2e/run-desktop-suite.js:87:await appendDiag(`WDIO config: ${WDIO_CONFIG}`);
+scripts/e2e/run-desktop-suite.js:88:await appendDiag(`TAURI_BINARY_PATH: ${TAURI_BINARY_PATH || '<unset>'}`);
+scripts/e2e/run-desktop-suite.js:89:await appendDiag(`tauri-driver args: ${['tauri-driver', ...tauriArgs].join(' ')}`);
+scripts/e2e/run-desktop-suite.js:91:const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
+scripts/e2e/run-desktop-suite.js:95:await waitForPort(4444).catch(() => false);
+scripts/e2e/run-desktop-suite.js:97:await appendDiag(`wdio command: pnpm exec wdio run ${WDIO_CONFIG}`);
+scripts/e2e/run-desktop-suite.js:98:const wdio = spawnLogged('pnpm', ['exec', 'wdio', 'run', WDIO_CONFIG], WDIO_LOG);
+scripts/e2e/run-desktop-suite.js:101:  for (const child of [wdio, tauriDriver]) {
+scripts/e2e/run-desktop-suite.js:111:wdio.on('exit', async code => {
+scripts/e2e/run-desktop-suite.js:115:    await appendDiag(`wdio_log=${WDIO_LOG}`);
+scripts/e2e/run-desktop-suite.js:116:    await appendDiag(`tauri_driver_log=${TAURI_DRIVER_LOG}`);
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:4: * NO dependency on window.__TAURI__ or window.__TAURI_INTERNALS__
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:8: * A. Tauri bridge discovery (non-blocking)
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:26:  process.env.TAURI_DEV_SERVER_URL ||
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:656: * Get console errors (tauri-driver doesn't support browser.getLogs)
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:659:  // Tauri WebDriver doesn't support getLogs API
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:882:  // 🧪 Give Tauri app + React more time to fully load
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:883:  console.log('   ⏳ Waiting for Tauri WebView + React to load (8s)...');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1097:  describe('Phase A: Tauri Bridge Discovery (Non-Blocking)', () => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1098:    it('should detect Tauri namespace (discovery only, no fail)', async () => {
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1102:          tauri_v1: typeof window.__TAURI__ !== 'undefined',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1103:          tauri_v2: typeof window.__TAURI_INTERNALS__ !== 'undefined',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1104:          tauri_keys: [],
+
+Node + pnpm versions:
+v24.0.0
+10.28.2
+
+Available E2E scripts in package.json:
+    "build:tauri:e2e": "pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && vite build && tauri build --config src-tauri/tauri.conf.json",
+    "e2e:desktop:ensure": "bash scripts/e2e/ensure-webkit-webdriver.sh",
+    "e2e:desktop:run": "node scripts/e2e/run-desktop-suite.js",
+    "e2e:desktop": "pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && pnpm run e2e:desktop:ensure && pnpm run e2e:desktop:run",
+    "test:e2e": "playwright test e2e",
+    "test:e2e:playwright": "playwright test e2e",
+    "test:e2e:vitest": "bash -lc 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts'",
+
+✓ E2E SNAPSHOT COMPLETE

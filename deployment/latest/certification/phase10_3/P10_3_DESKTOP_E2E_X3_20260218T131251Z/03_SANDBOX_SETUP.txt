@@ -1,0 +1,44 @@
+═══════════════════════════════════════════════════════════════════════════════
+  SANDBOX SETUP: P10.3 Desktop E2E
+═══════════════════════════════════════════════════════════════════════════════
+
+[2026-02-18T13:13:23+00:00]
+
+Sandbox Configuration:
+SANDBOX_DIR=/tmp/titane_p10_3_sandbox_1771420403
+HOME=/tmp/titane_p10_3_sandbox_1771420403/home
+XDG_CACHE_HOME=/tmp/titane_p10_3_sandbox_1771420403/xdg_cache
+XDG_CONFIG_HOME=/tmp/titane_p10_3_sandbox_1771420403/xdg_config
+XDG_DATA_HOME=/tmp/titane_p10_3_sandbox_1771420403/xdg_data
+TMPDIR=/tmp/titane_p10_3_sandbox_1771420403/tmp
+
+Directories Created:
+/tmp/titane_p10_3_sandbox_1771420403:
+total 24
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 artifacts
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 home
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 tmp
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 xdg_cache
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 xdg_config
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 18 08:13 xdg_data
+
+/tmp/titane_p10_3_sandbox_1771420403/artifacts:
+total 0
+
+/tmp/titane_p10_3_sandbox_1771420403/home:
+total 0
+
+/tmp/titane_p10_3_sandbox_1771420403/tmp:
+total 0
+
+/tmp/titane_p10_3_sandbox_1771420403/xdg_cache:
+total 0
+
+/tmp/titane_p10_3_sandbox_1771420403/xdg_config:
+total 0
+
+/tmp/titane_p10_3_sandbox_1771420403/xdg_data:
+total 0
+
+✓ SANDBOX INITIALIZED
+

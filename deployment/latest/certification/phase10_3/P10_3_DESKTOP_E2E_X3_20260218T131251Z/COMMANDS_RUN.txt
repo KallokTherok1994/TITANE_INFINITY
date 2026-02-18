@@ -1,0 +1,28 @@
+═══════════════════════════════════════════════════════════════════════════════
+  COMMANDS EXECUTED: P10.3 Desktop E2E Certification
+═══════════════════════════════════════════════════════════════════════════════
+
+[2026-02-18T13:12:59Z] Proof pack created
+[2026-02-18T13:13:00Z] Prechecks executed → PASS
+[2026-02-18T13:13:05Z] E2E config snapshot → CAPTURED
+[2026-02-18T13:13:10Z] Sandbox initialized → /tmp/titane_p10_3_sandbox_1771420403
+[2026-02-18T13:13:15Z] E2E authorization created → runtime/ALLOW_E2E_TAURI_BUILD.ok
+[2026-02-18T13:13:20Z] E2E pipeline invoked: pnpm run e2e:desktop
+[2026-02-18T13:13:25Z] Guard execution: pnpm run guard:ollama-proxy
+[2026-02-18T13:13:26Z] GUARD FAILED: guard:ollama-proxy detected violation
+  Violation: src/services/ai/providers/ollama.ts:39 (direct localhost:11434)
+  Exit Code: 1
+  Status: STOP-THE-LINE
+[2026-02-18T13:13:30Z] Certification blocked by guard violation
+[2026-02-18T13:14:00Z] Violation logged, verdict created, rollback procedures documented
+
+═══════════════════════════════════════════════════════════════════════════════
+
+SUMMARY:
+- Proof Pack: CREATED
+- Prechecks: PASS
+- E2E Runs: NOT EXECUTED (blocked by guard)
+- Scans: NOT EXECUTED (guard prerequisite)
+- Final Verdict: FAIL_GUARD_VIOLATION
+
+═══════════════════════════════════════════════════════════════════════════════
