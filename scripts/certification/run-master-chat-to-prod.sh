@@ -186,12 +186,13 @@ if [ $STUB_MODE -eq 1 ]; then
   P10_7_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_7_pkg_stub.sh"
   P10_8_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_8_ops_stub.sh"
 else
-  P10_4_SCRIPT="$REPO_ROOT/scripts/certification/p10_4_infra_ipc.sh"
-  P10_3_2R_SCRIPT="$REPO_ROOT/scripts/certification/p10_3_2r_e2e_full.sh"
-  P10_5_SCRIPT="$REPO_ROOT/scripts/certification/p10_5_chat_functional.sh"
-  P10_6_SCRIPT="$REPO_ROOT/scripts/certification/p10_6_prod_build.sh"
-  P10_7_SCRIPT="$REPO_ROOT/scripts/certification/p10_7_packaging_smoke.sh"
-  P10_8_SCRIPT="$REPO_ROOT/scripts/certification/p10_8_ops_support.sh"
+  # REAL phases (progressive upgrade from stubs)
+  P10_4_SCRIPT="$REPO_ROOT/scripts/certification/phases_real/p10_4_infra_real.sh"
+  P10_3_2R_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_3_2r_e2e_stub.sh"  # Still stub
+  P10_5_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_5_chat_stub.sh"  # Still stub
+  P10_6_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_6_build_stub.sh"  # Still stub
+  P10_7_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_7_pkg_stub.sh"  # Still stub
+  P10_8_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_8_ops_stub.sh"  # Still stub
 fi
 
 # P10.4
