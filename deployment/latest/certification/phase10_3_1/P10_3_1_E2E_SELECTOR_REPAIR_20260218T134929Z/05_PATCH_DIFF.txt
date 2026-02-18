@@ -1,0 +1,67 @@
+diff --git a/e2e/desktop/ai-verification.full.e2e.js b/e2e/desktop/ai-verification.full.e2e.js
+index bc626269..447b159f 100644
+--- a/e2e/desktop/ai-verification.full.e2e.js
++++ b/e2e/desktop/ai-verification.full.e2e.js
+@@ -70,13 +70,13 @@ function appendReport(fileName, body) {
+ 
+ async function resolveSelectors() {
+   const bubbleInput = await $('.chat-bubble-input');
+-  const bubbleTrigger = await $('.chat-bubble-trigger');
++  const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+   if ((await bubbleInput.isExisting()) || (await bubbleTrigger.isExisting())) {
+     return {
+       input: '.chat-bubble-input',
+       send: '.chat-bubble-send',
+       response: '.chat-bubble-message.assistant .message-content',
+-      open: '.chat-bubble-trigger',
++      open: '[data-testid="chat-bubble-trigger"]',
+     };
+   }
+   const windowInput = await $('#chat-window-textarea');
+@@ -255,7 +255,7 @@ describe('ai-verification (desktop/full)', () => {
+     await attemptOnboardingSkip();
+     await browser.waitUntil(
+       async () => {
+-        const bubbleTrigger = await $('.chat-bubble-trigger');
++        const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+         if (await bubbleTrigger.isExisting()) return true;
+         const bubbleInput = await $('.chat-bubble-input');
+         if (await bubbleInput.isExisting()) return true;
+diff --git a/e2e/desktop/chat-ar20.wdio.test.js b/e2e/desktop/chat-ar20.wdio.test.js
+index 239c4be8..df61ddc2 100644
+--- a/e2e/desktop/chat-ar20.wdio.test.js
++++ b/e2e/desktop/chat-ar20.wdio.test.js
+@@ -120,7 +120,7 @@ async function resolveChatSelectors() {
+       input: '.chat-bubble-input',
+       send: '.chat-bubble-send',
+       response: '.chat-bubble-message.assistant .message-content',
+-      trigger: '.chat-bubble-trigger',
++      trigger: '[data-testid="chat-bubble-trigger"]',
+     };
+   }
+ 
+diff --git a/src/components/chat/ChatBubble.tsx b/src/components/chat/ChatBubble.tsx
+index a24a35f6..7d9f2b00 100644
+--- a/src/components/chat/ChatBubble.tsx
++++ b/src/components/chat/ChatBubble.tsx
+@@ -340,6 +340,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+       <AnimatePresence>
+         {!isOpen && (
+           <motion.button
++            data-testid="chat-bubble-trigger"
+             className={`chat-bubble-trigger ${position} ${isDragging ? 'dragging' : ''}`}
+             onClick={handleOpen}
+             drag
+diff --git a/src/services/ai/providers/ollama.ts b/src/services/ai/providers/ollama.ts
+index e7537d8c..81d21697 100644
+--- a/src/services/ai/providers/ollama.ts
++++ b/src/services/ai/providers/ollama.ts
+@@ -36,8 +36,6 @@ export let IS_OLLAMA_READY = false;
+ 
+ // ✅ PROD FIX v27.0.2: Default Ollama Configuration
+ export const DEFAULT_OLLAMA_CONFIG = {
+-  endpoint: 'http://127.0.0.1:11434',
+-  host: '127.0.0.1',
+   port: 11434,
+   model: 'gemma2:2b',
+   temperature: 0.7,

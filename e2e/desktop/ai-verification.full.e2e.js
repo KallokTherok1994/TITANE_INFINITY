@@ -70,13 +70,13 @@ function appendReport(fileName, body) {
 
 async function resolveSelectors() {
   const bubbleInput = await $('.chat-bubble-input');
-  const bubbleTrigger = await $('.chat-bubble-trigger');
+  const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
   if ((await bubbleInput.isExisting()) || (await bubbleTrigger.isExisting())) {
     return {
       input: '.chat-bubble-input',
       send: '.chat-bubble-send',
       response: '.chat-bubble-message.assistant .message-content',
-      open: '.chat-bubble-trigger',
+      open: '[data-testid="chat-bubble-trigger"]',
     };
   }
   const windowInput = await $('#chat-window-textarea');
@@ -255,7 +255,7 @@ describe('ai-verification (desktop/full)', () => {
     await attemptOnboardingSkip();
     await browser.waitUntil(
       async () => {
-        const bubbleTrigger = await $('.chat-bubble-trigger');
+        const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
         if (await bubbleTrigger.isExisting()) return true;
         const bubbleInput = await $('.chat-bubble-input');
         if (await bubbleInput.isExisting()) return true;

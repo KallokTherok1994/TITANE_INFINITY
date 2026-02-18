@@ -120,7 +120,7 @@ async function resolveChatSelectors() {
       input: '.chat-bubble-input',
       send: '.chat-bubble-send',
       response: '.chat-bubble-message.assistant .message-content',
-      trigger: '.chat-bubble-trigger',
+      trigger: '[data-testid="chat-bubble-trigger"]',
     };
   }
 

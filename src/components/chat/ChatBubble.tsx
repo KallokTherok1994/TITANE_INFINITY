@@ -340,6 +340,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       <AnimatePresence>
         {!isOpen && (
           <motion.button
+            data-testid="chat-bubble-trigger"
             className={`chat-bubble-trigger ${position} ${isDragging ? 'dragging' : ''}`}
             onClick={handleOpen}
             drag
