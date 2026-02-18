@@ -8,6 +8,6 @@ Checks:
 - Registry append-only: yes
 - Runtime actions: none
 - Build/test execution: none
-- Push status: pending (to be executed immediately after commit)
+- Push status: OK (origin HEAD updated)
 
 Status: P9.1 sealing ready
