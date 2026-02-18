@@ -876,3 +876,20 @@ VERDICT: PROD_BUILD_MODE_LOCKED
 - deployment/latest/certification/phase9_3b/P9_3B_REMEDIATION_20260218_003400/  
 **Verdict:** PASS  
 **Note:** false alarm caused by dirty tree/out-of-scope artifact; registry unchanged.
+
+---
+
+### P8_5_RESUME_BLOCKED_TOKEN_MISSING_20260218_004529
+
+**Date:** 2026-02-18T00:45:29Z  
+**Verdict:** ❌ BLOCKED_TOKEN_MISSING  
+**Commit:** 26f3e5fe  
+**Scope:** P8.5-R resume execution from standby; approval gate executed (exit 10 BLOCKED), token absent  
+**Out-of-Scope:** Preflight, distribution wrapper, approval record, week2 distribution record, day0 check, monitoring bootstrap (all skipped per protocol)  
+**Proof Pack:** deployment/latest/certification/phase8_5_resume/P8_5_RESUME_WEEK2_20260218_004529/  
+**Seal Pack:** Yes (LOCK.md + SHA256SUMS.txt)  
+**Evidence:** 01_PRECHECKS.txt, 02_APPROVAL_GATE_OUTPUT.txt, ENV.txt (token=absent), COMMANDS_RUN.txt, 09_VERDICT.md, 10_LOCK.md, 11_SHA256SUMS.txt  
+**Resume Path:** P8.5.1/RESUME_PROCEDURE.md (provide P8_APPROVAL_TOKEN and re-execute)  
+**Timeout:** 48h from P8.5.1 creation (2026-02-19 23:47:19 UTC)  
+**Next Phase:** P8.5-R2 (after token provision) or timeout auto-expire  
+**Notes:** Stop-the-line enforced correctly; no token logged in clear text; no build/runtime/network actions; week2 launch blocked until token provided.
