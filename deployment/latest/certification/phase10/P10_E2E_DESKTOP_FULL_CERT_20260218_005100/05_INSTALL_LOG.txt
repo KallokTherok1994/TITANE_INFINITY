@@ -1,0 +1,69 @@
+]633;E;git status --porcelain=v1 > deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/05_GIT_STATUS_AFTER.txt;cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C=== Install Phase ===
+Date: mer. 18 févr. 2026 00:53:08 UTC
+
+=== Pre-Install Check ===
+drwxrwxr-x 21 titane-os titane-os 4096 févr. 17 19:51 node_modules
+node_modules: PRE-EXISTING
+
+=== Lockfile State (before) ===
+-rw-rw-r-- 1 titane-os titane-os 537K févr. 13 18:27 pnpm-lock.yaml
+4991d0fea2aa8d29c2b5a1dd7b49de4e  pnpm-lock.yaml
+
+=== Install Command ===
+Command: pnpm install --frozen-lockfile
+Rationale: Frozen lockfile prevents unexpected changes
+Starting install...
+
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+
+> titane-infinity@27.0.2 preinstall /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/install/enforce-package-manager.cjs
+
+
+> titane-infinity@27.0.2 prepare /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> husky
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: edgedriver@6.3.0, geckodriver@6.1.0,                │
+│   tauri@0.15.0.                                                              │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 950ms using pnpm v10.28.2
+
+=== Install Exit Code ===
+Exit code: 0
+Status: SUCCESS
+
+=== Lockfile State (after) ===
+-rw-rw-r-- 1 titane-os titane-os 537K févr. 13 18:27 pnpm-lock.yaml
+4991d0fea2aa8d29c2b5a1dd7b49de4e  pnpm-lock.yaml
+
+=== Lockfile Drift Check ===
+Lockfile: UNCHANGED (no drift)
+
+=== Install Summary ===
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+
+> titane-infinity@27.0.2 preinstall /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/install/enforce-package-manager.cjs
+
+
+> titane-infinity@27.0.2 prepare /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> husky
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: edgedriver@6.3.0, geckodriver@6.1.0,                │
+│   tauri@0.15.0.                                                              │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 950ms using pnpm v10.28.2

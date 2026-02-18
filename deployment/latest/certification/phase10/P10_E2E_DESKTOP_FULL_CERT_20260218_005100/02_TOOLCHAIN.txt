@@ -1,0 +1,42 @@
+]633;E;git status --porcelain=v1 > deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/05_GIT_STATUS_AFTER.txt;cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C=== Toolchain Gate Check ===
+Date: mer. 18 févr. 2026 00:52:02 UTC
+
+=== Package Manager ===
+Expected: pnpm@10.28.2 (from package.json)
+Found: 10.28.2
+Verdict: MATCH
+
+=== Lockfile Check ===
+-rw-rw-r-- 1 titane-os titane-os 537K févr. 13 18:27 pnpm-lock.yaml
+pnpm-lock.yaml: FOUND
+
+=== Node.js Check ===
+Node.js executable: OK
+
+=== Playwright Check ===
+Version 1.58.1
+
+=== WebdriverIO Check ===
+9.23.3
+
+=== E2E Scripts Check ===
+-rw-rw-r-- 1 titane-os titane-os 2,5K févr. 13 18:27 scripts/e2e/run-desktop-suite.js
+run-desktop-suite.js: FOUND
+-rwxrwxr-x 1 titane-os titane-os 2,1K févr. 13 18:52 scripts/e2e/tauri-wrapper.sh
+tauri-wrapper.sh: FOUND
+-rwxrwxr-x 1 titane-os titane-os 1,3K janv. 16 20:35 scripts/e2e/ensure-webkit-webdriver.sh
+ensure-webkit-webdriver.sh: FOUND
+
+=== Tauri Binary Check (pre-build) ===
+-rwxrwxr-x 2 titane-os titane-os 128M févr. 16 15:55 src-tauri/target/debug/titane-infinity
+titane-infinity: FOUND (pre-existing)
+
+=== Toolchain Gate Verdict ===
+pnpm: OK
+node: v24.0.0
+OK
+cargo: cargo 1.91.1 (ea2d97820 2025-10-10)
+OK
+rustc: rustc 1.91.1 (ed61e7d7e 2025-11-07)
+OK
+e2e scripts: OK

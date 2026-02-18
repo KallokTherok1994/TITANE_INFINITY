@@ -1,0 +1,8 @@
+🔍 Vérification de WebKitWebDriver...
+✅ WebKitWebDriver trouvé dans le PATH : /usr/bin/WebKitWebDriver
+DEBUG: WEBKIT_WEBDRIVER_PATH=/usr/bin/WebKitWebDriver
+
+> titane-infinity@27.0.2 e2e:desktop:run /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/e2e/run-desktop-suite.js
+
+ ELIFECYCLE  Command failed with exit code 1.

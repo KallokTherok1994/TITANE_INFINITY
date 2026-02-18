@@ -1,0 +1,76 @@
+]633;E;git status --porcelain=v1 > deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/05_GIT_STATUS_AFTER.txt;cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C=== Sandbox Setup ===
+Date: mer. 18 févr. 2026 00:52:39 UTC
+
+SANDBOX_DIR=/tmp/titane_e2e_sandbox_20260218_005100
+
+=== Creating Sandbox Structure ===
+total 460
+drwxrwxr-x  8 titane-os titane-os   4096 févr. 17 19:52 .
+drwxrwxrwt 32 root      root      438272 févr. 17 19:52 ..
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 artifacts
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 home
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 logs
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 xdg_cache
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 xdg_config
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 19:52 xdg_data
+
+=== Sandbox Directory Tree ===
+/tmp/titane_e2e_sandbox_20260218_005100/
+/tmp/titane_e2e_sandbox_20260218_005100/logs
+/tmp/titane_e2e_sandbox_20260218_005100/home
+/tmp/titane_e2e_sandbox_20260218_005100/xdg_data
+/tmp/titane_e2e_sandbox_20260218_005100/xdg_cache
+/tmp/titane_e2e_sandbox_20260218_005100/xdg_config
+/tmp/titane_e2e_sandbox_20260218_005100/artifacts
+
+=== Real Home Snapshot (before) ===
+Real HOME: /home/titane-os
+Real HOME files (limited sample):
+total 26748
+drwxr-x--- 46 titane-os titane-os     4096 févr. 17 12:34 .
+drwxr-xr-x  3 root      root          4096 déc.   9 10:25 ..
+drwxrwxr-x  5 titane-os titane-os    12288 févr. 17 07:27 .aitk
+drwxr-xr-x  4 titane-os titane-os     4096 févr. 17 07:26 .anydesk
+-rw-------  1 titane-os titane-os   141685 févr. 17 12:34 .bash_history
+-rw-------  1 titane-os titane-os   129654 janv.  6 10:03 .bash_history-09183.tmp
+-rw-------  1 titane-os titane-os    98650 janv. 18 20:00 .bash_history-12356.tmp
+-rw-------  1 titane-os titane-os        0 déc.  22 22:15 .bash_history-16330.tmp
+-rw-------  1 titane-os titane-os        0 janv.  3 00:14 .bash_history-17897.tmp
+-rw-------  1 titane-os titane-os   132129 déc.  16 16:43 .bash_history-67653.tmp
+-rw-------  1 titane-os titane-os        0 janv. 26 19:02 .bash_history-81497.tmp
+-rw-------  1 titane-os titane-os   130884 déc.  21 02:22 .bash_history-87614.tmp
+-rw-r--r--  1 titane-os titane-os      220 mars  31  2024 .bash_logout
+-rw-r--r--  1 titane-os titane-os     5704 janv. 17 11:29 .bashrc
+drwxr-xr-x  2 titane-os titane-os     4096 janv. 29 17:20 Bureau
+drwx------ 43 titane-os titane-os     4096 févr. 17 07:15 .cache
+drwxrwxr-x  5 titane-os titane-os     4096 févr. 17 12:24 .cargo
+-rw-rw-r--  1 titane-os titane-os     1348 janv. 30 22:53 CHECKSUMS.txt
+drwxrwxr-x 10 titane-os titane-os     4096 févr. 10 21:05 .claude
+Cannot list (permission)
+
+=== Real XDG Paths (before) ===
+XDG_CACHE_HOME: /home/titane-os/.cache
+XDG_CONFIG_HOME: /home/titane-os/.config
+XDG_DATA_HOME: /home/titane-os/.local/share
+
+=== Sandbox Isolation Plan ===
+The following environment variables will be SET during E2E test runs ONLY:
+  export HOME="/tmp/titane_e2e_sandbox_20260218_005100/home"
+  export XDG_CACHE_HOME="/tmp/titane_e2e_sandbox_20260218_005100/xdg_cache"
+  export XDG_CONFIG_HOME="/tmp/titane_e2e_sandbox_20260218_005100/xdg_config"
+  export XDG_DATA_HOME="/tmp/titane_e2e_sandbox_20260218_005100/xdg_data"
+  export TMPDIR="/tmp/titane_e2e_sandbox_20260218_005100"
+
+These will NOT be applied during:
+  - pnpm install (uses real cache for performance)
+  - vite build (uses real node_modules)
+  - cargo build (uses real target/)
+
+Rationale: Sandbox isolation only for runtime E2E tests to prove no real writes.
+Install/build phases are deterministic and do not involve user data access.
+
+=== Sandbox Setup Complete ===
+SANDBOX_DIR: /tmp/titane_e2e_sandbox_20260218_005100
+Artifacts dir: /tmp/titane_e2e_sandbox_20260218_005100/artifacts/
+Logs dir: /tmp/titane_e2e_sandbox_20260218_005100/logs/
+Status: READY

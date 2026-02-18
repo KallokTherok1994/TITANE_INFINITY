@@ -1,0 +1,55 @@
+=== PHASE C: SANDBOX SETUP ===
+Timestamp: 2026-02-18T01:11:18+00:00
+Sandbox: /tmp/titane_e2e_sandbox_20260218_011116
+
+=== CREATING SANDBOX STRUCTURE ===
+total 460
+drwxrwxr-x  8 titane-os titane-os   4096 févr. 17 20:11 .
+drwxrwxrwt 33 root      root      438272 févr. 17 20:11 ..
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 artifacts
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 home
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 logs
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 xdg_cache
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 xdg_config
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 17 20:11 xdg_data
+
+=== REAL HOME SNAPSHOT (BEFORE) ===
+Total files in real HOME:
+1174075
+
+Real ~/.local/share listing (limited):
+total 720
+drwx------ 40 titane-os titane-os   4096 févr. 17 20:03 .
+drwx------  8 titane-os titane-os   4096 janv. 24 00:51 ..
+drwx------  2 titane-os titane-os   4096 févr. 17 19:54 applications
+drwxrwxr-x  4 titane-os titane-os   4096 janv.  2 11:35 audacity
+drwxrwxr-x  2 titane-os titane-os   4096 déc.   9 11:19 backgrounds
+drwxrwxr-x  2 titane-os titane-os   4096 déc.  23 00:15 CMakeTools
+drwxrwxr-x  9 titane-os titane-os   4096 janv. 16 15:08 com.titane.infinity
+drwxrwxr-x  9 titane-os titane-os   4096 févr. 14 21:10 com.titane.infinity.dev
+drwxrwxr-x  8 titane-os titane-os   4096 janv. 12 11:43 com.titane.infinity.stable
+drwx------  7 titane-os titane-os   4096 déc.   9 10:27 evolution
+drwxr-xr-x  4 titane-os titane-os   4096 déc.  17 11:29 flatpak
+drwxr-xr-x  4 titane-os titane-os   4096 févr. 13 16:50 GitKrakenCLI
+drwxrwxr-x  2 titane-os titane-os   4096 févr. 16 13:32 gk
+drwxr-xr-x  2 titane-os titane-os   4096 déc.   9 10:27 gnome-settings-daemon
+drwx------  2 titane-os titane-os   4096 févr. 17 20:10 gnome-shell
+drwxrwxr-x  2 titane-os titane-os   4096 janv. 18 03:05 grilo-plugins
+drwxr-xr-x  3 titane-os titane-os   4096 déc.  11 17:02 gstreamer-1.0
+drwx------  2 titane-os titane-os   4096 févr. 17 20:04 gvfs-metadata
+drwxrwxr-x  2 titane-os titane-os   4096 déc.   9 10:27 ibus-table
+
+Real ~/.local/share/applications listing:
+total 36
+drwx------  2 titane-os titane-os 4096 févr. 17 19:54 .
+drwx------ 40 titane-os titane-os 4096 févr. 17 20:03 ..
+-rwxr-xr-x  1 titane-os titane-os  297 déc.  17 14:24 chrome-kippjfofjhjlffjecoapiogbkgbpmgej-Default.desktop
+-rwxr-xr-x  1 titane-os titane-os  302 janv.  1 15:00 chrome-ncmjhecbjeaamljdfahankockkkdmedg-Default.desktop
+-rw-rw-r--  1 titane-os titane-os   13 févr. 17 19:54 mimeinfo.cache
+-rw-rw-r--  1 titane-os titane-os  183 déc.  17 11:28 notion.desktop
+-rwxr-xr-x  1 titane-os titane-os  872 févr. 17 19:54 titane-infinity.desktop
+-rwxrwxr-x  1 titane-os titane-os  872 févr. 17 19:54 TITANE-Infinity.desktop
+-rw-rw-r--  1 titane-os titane-os   88 déc.  23 21:31 Titan-Stable.desktop
+
+=== BASELINE HASHES (key dirs metadata) ===
+9a97ef4dbeca1660a2441552f82b83f8  -
