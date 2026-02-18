@@ -1,0 +1,45 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GUARD VIOLATION: P10.3 Desktop E2E Certification BLOCKED
+═══════════════════════════════════════════════════════════════════════════════
+
+[$(date -u --iso-8601=seconds)]
+
+STOP-THE-LINE: Constitutional Guard Failure
+
+Guard Name:         guard:ollama-proxy
+Guard Purpose:      Enforce unified transport for Ollama in frontend (no direct localhost:11434)
+Violation Details:  Direct reference detected at src/services/ai/providers/ollama.ts:39
+Violation Pattern:  endpoint: 'http://127.0.0.1:11434'
+Guard Status:       FAIL (exit code 1)
+
+Constitutional Constraint:
+  P10.3 scope forbids: src/** modifications
+  Guard requires: No direct localhost:11434 in src/**
+  Conflict: Cannot fix violation without modifying src/**
+
+Resolution:
+  1. Fix src/services/ai/providers/ollama.ts to use unified transport
+  2. Re-authorize transport mechanism with security review
+  3. Re-run P10.3 E2E certification
+
+Current State:
+  - Proof pack created: YES (/deployment/latest/certification/phase10_3/)
+  - Prechecks: PASS (git clean, no forbidden path edits)
+  - Sandbox: INITIALIZED (HOME isolated at /tmp/titane_p10_3_sandbox_*)
+  - E2E Config Snapshot: CAPTURED
+  - E2E Runs: BLOCKED (guard failed before execution)
+  
+Reason for Block:
+  E2E pipeline invokes `pnpm run guard:ollama-proxy` before desktop test execution.
+  Guard correctly detects constitutional violation in source code.
+  This is not a test harness issue but a source-level security requirement.
+
+Recommendation:
+  Apply security patch to use unified transport, then retry P10.3.
+  This ensures E2E tests run with approved architecture.
+
+Security Classification: MEDIUM (Ollama proxy bypass risk)
+Blocked By:           Constitutional Guard
+Stop-The-Line:        YES
+Rollback Required:    Yes (cleanup sandbox, revert proof pack)
+
