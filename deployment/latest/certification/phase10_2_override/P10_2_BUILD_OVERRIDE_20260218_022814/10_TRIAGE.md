@@ -10,6 +10,7 @@
 
 ## Evidence
 - `runTests` output: localhost:5173 connection refused across Playwright E2E specs.
+- `11_UNIT_RUN_ATTEMPT_1.txt`: runTests could not detect tests in unit file list.
 
 ## Required Decision
 - Approve an explicit exception to run unit/integration via `pnpm run test` and `pnpm run test:coverage:integration`, OR

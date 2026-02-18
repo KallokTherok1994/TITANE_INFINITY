@@ -1,0 +1,18 @@
+[2026-02-18T04:19:39+00:00] runTests attempt (unit suite)
+
+Result: FAILED
+Reason: No tests found in the files. Ensure the correct absolute paths are passed to the tool.
+
+Files:
+- tests/unit/advancedBootMonitor.test.ts
+- tests/unit/ControlPanel.test.tsx
+- tests/unit/context/LongContextOptimizer.test.ts
+- tests/unit/safeLazyImport.test.ts
+- tests/unit/devops/VisualDevOpsEngine.test.ts
+- tests/unit/autonomy/SingularityAutonomyEngine.test.ts
+- tests/unit/control_panel_commands.test.ts
+- tests/unit/devops/LocalAgentEngine.test.ts
+- tests/unit/fusion/SingularityFusionEngine.test.ts
+- tests/unit/cognitive/CognitiveOptimizationEngine.test.ts
+- tests/unit/realtime/RealTimeExecutionEngine.test.ts
+- tests/unit/services/monitoring.test.ts
