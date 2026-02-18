@@ -494,6 +494,13 @@ phase_h_desktop_e2e() {
     
     local all_pass=true
     
+    # Backup real env
+    local REAL_HOME="${HOME}"
+    local REAL_XDG_CACHE="${XDG_CACHE_HOME:-}"
+    local REAL_XDG_CONFIG="${XDG_CONFIG_HOME:-}"
+    local REAL_XDG_DATA="${XDG_DATA_HOME:-}"
+    local REAL_TMPDIR="${TMPDIR:-}"
+    
     for i in 1 2 3; do
         log "Desktop E2E run ${i}/3..."
         
@@ -552,10 +559,30 @@ phase_h_desktop_e2e() {
         echo "| ${i} | ${exit_code} | ${duration}s | ${key_output} |" >> "${summary_file}"
         
         log "Desktop E2E run ${i}/3: exit=${exit_code}, duration=${duration}s"
-        
-        # Restore real env
-        unset HOME XDG_CACHE_HOME XDG_CONFIG_HOME XDG_DATA_HOME TMPDIR
     done
+    
+    # Restore real env
+    export HOME="${REAL_HOME}"
+    if [[ -n "${REAL_XDG_CACHE}" ]]; then
+        export XDG_CACHE_HOME="${REAL_XDG_CACHE}"
+    else
+        unset XDG_CACHE_HOME
+    fi
+    if [[ -n "${REAL_XDG_CONFIG}" ]]; then
+        export XDG_CONFIG_HOME="${REAL_XDG_CONFIG}"
+    else
+        unset XDG_CONFIG_HOME
+    fi
+    if [[ -n "${REAL_XDG_DATA}" ]]; then
+        export XDG_DATA_HOME="${REAL_XDG_DATA}"
+    else
+        unset XDG_DATA_HOME
+    fi
+    if [[ -n "${REAL_TMPDIR}" ]]; then
+        export TMPDIR="${REAL_TMPDIR}"
+    else
+        unset TMPDIR
+    fi
     
     if [[ "${all_pass}" == "true" ]]; then
         DESKTOP_E2E_X3="PASS"
