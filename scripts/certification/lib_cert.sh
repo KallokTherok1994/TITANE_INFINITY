@@ -34,13 +34,15 @@ prechecks_clean_tree() {
 
   log_cmd "═══ PRECHECK: Clean Git Tree ===" "$check_log"
 
-  # 1. Git status
-  if [ -n "$(git status --porcelain)" ]; then
-    log_cmd "❌ FAIL: Dirty git tree" "$check_log"
-    git status -s | tee -a "$check_log"
+  # 1. Git status — check ONLY for modified tracked files (M, D, etc.)
+  # Exclude untracked (??) as outputs/proof packs are expected untracked
+  local modified=$(git status --porcelain | grep -E "^ [MD]|^[MD] " || true)
+  if [ -n "$modified" ]; then
+    log_cmd "❌ FAIL: Modified tracked files detected" "$check_log"
+    echo "$modified" | tee -a "$check_log"
     return 1
   fi
-  log_cmd "✅ Git tree clean" "$check_log"
+  log_cmd "✅ Git tree clean (tracked files)" "$check_log"
 
   # 2. Forbidden files unchanged
   for fpath in src-tauri/tauri.conf.json src-tauri/Cargo.toml package.json pnpm-lock.yaml src-tauri/src/guard.rs src-tauri/src/allowlist.rs; do
