@@ -1,0 +1,36 @@
+]633;E;git status --porcelain=v1 > deployment/latest/certification/phase9_3a/P9_3A_CLEAN_TREE_20260218_003140/05_GIT_STATUS_AFTER.txt;cabcb7b7-7dc1-4b49-ba75-a9bc95b60115]633;C=== Date UTC ===
+mer. 18 févr. 2026 00:51:49 UTC
+
+=== System Info ===
+Linux TITANE-OS 6.17.0-14-generic #14~24.04.1-Ubuntu SMP PREEMPT_DYNAMIC Thu Jan 15 15:52:10 UTC 2 x86_64 x86_64 x86_64 GNU/Linux
+
+=== Node Version ===
+v24.0.0
+
+=== PNPM Version ===
+10.28.2
+
+=== NPM Version (fallback) ===
+11.3.0
+
+=== Cargo Version ===
+cargo 1.91.1 (ea2d97820 2025-10-10)
+
+=== Rustc Version ===
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+
+=== Git Status (porcelain) ===
+?? deployment/latest/certification/phase10/
+
+=== Git Branch ===
+MAIN
+
+=== Git HEAD ===
+8df6f662d36dac07c6b6ed63bd56dcded37e2168
+
+=== Git Log (5) ===
+8df6f662 (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(registry): append P8.5-R blocked entry
+26f3e5fe docs(cert): P8.5-R resume blocked (token absent)
+43a3b74a docs(cert): finalize P9.4 incident closure verdict
+23ed17b5 docs(registry): close P9.3 incident (NO_DIFF)
+9002c9fc docs(cert): add P9.3 incident triage proof packs (NO_DIFF)

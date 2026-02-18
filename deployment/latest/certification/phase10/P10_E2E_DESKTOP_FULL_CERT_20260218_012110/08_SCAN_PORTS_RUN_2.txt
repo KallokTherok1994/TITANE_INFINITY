@@ -1,0 +1,13 @@
+=== PORT SNAPSHOT (after run 2) ===
+State  Recv-Q Send-Q Local Address:Port  Peer Address:PortProcess                          
+LISTEN 0      4096       127.0.0.1:631        0.0.0.0:*                                    
+LISTEN 0      10           0.0.0.0:7070       0.0.0.0:*                                    
+LISTEN 0      4096   127.0.0.53%lo:53         0.0.0.0:*                                    
+LISTEN 0      511        127.0.0.1:3377       0.0.0.0:*    users:(("code",pid=10652,fd=36))
+LISTEN 0      511        127.0.0.1:39913      0.0.0.0:*    users:(("code",pid=4883,fd=144))
+LISTEN 0      511        127.0.0.1:41071      0.0.0.0:*    users:(("node",pid=7389,fd=24)) 
+LISTEN 0      4096      127.0.0.54:53         0.0.0.0:*                                    
+LISTEN 0      4096       127.0.0.1:11434      0.0.0.0:*                                    
+LISTEN 0      511        127.0.0.1:28776      0.0.0.0:*    users:(("code",pid=4883,fd=55)) 
+LISTEN 0      10              [::]:7070          [::]:*                                    
+LISTEN 0      4096           [::1]:631           [::]:*                                    

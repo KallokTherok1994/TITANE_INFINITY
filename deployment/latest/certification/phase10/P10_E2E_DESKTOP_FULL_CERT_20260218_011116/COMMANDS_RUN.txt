@@ -1,0 +1,36 @@
+[P10] 01:11:16 Phase A complete: workdir /home/titane-os/Documents/GitHub/TITANE_INFINITY/deployment/latest/certification/phase10/P10_E2E_DESKTOP_FULL_CERT_20260218_011116
+[P10] 01:11:16 === PHASE B: PRECHECKS ===
+[P10] 01:11:18 Phase B complete: prechecks PASS
+[P10] 01:11:18 === PHASE C: SANDBOX SETUP ===
+[P10] 01:11:28 Phase C complete: sandbox /tmp/titane_e2e_sandbox_20260218_011116 created
+[P10] 01:11:28 === PHASE D: INSTALL ===
+[P10] 01:11:29 Phase D complete: install PASS (no drift)
+[P10] 01:11:29 === PHASE E: BUILD SAFE ===
+[P10] 01:11:47 Phase E complete: build PASS (safe, no dev server)
+[P10] 01:11:47 === PHASE F: UNIT TESTS x3 ===
+[P10] 01:11:47 Unit test run 1/3...
+[P10] 01:14:05 Unit test run 1/3: exit=0, duration=138s
+[P10] 01:14:05 Unit test run 2/3...
+[P10] 01:16:21 Unit test run 2/3: exit=0, duration=136s
+[P10] 01:16:21 Unit test run 3/3...
+[P10] 01:18:36 Unit test run 3/3: exit=0, duration=135s
+[P10] 01:18:36 Phase F complete: unit tests x3 PASS
+[P10] 01:18:36 === PHASE G: INTEGRATION TESTS x3 ===
+[P10] 01:18:36 Integration test run 1/3...
+[P10] 01:18:37 Integration test run 1/3: exit=1, duration=1s
+[P10] 01:18:37 Integration test run 2/3...
+[P10] 01:18:37 Integration test run 2/3: exit=1, duration=0s
+[P10] 01:18:37 Integration test run 3/3...
+[P10] 01:18:38 Integration test run 3/3: exit=1, duration=1s
+[P10] 01:18:38 Phase G complete: integration tests x3 FAIL (see logs)
+[P10] 01:18:38 === PHASE H: DESKTOP E2E x3 ===
+[P10] 01:18:38 Desktop E2E run 1/3...
+[P10] 01:19:08 Desktop E2E run 1/3: exit=1, duration=29s
+[P10] 01:19:08 Desktop E2E run 2/3...
+[P10] 01:19:36 Desktop E2E run 2/3: exit=1, duration=28s
+[P10] 01:19:36 Desktop E2E run 3/3...
+[P10] 01:20:03 Desktop E2E run 3/3: exit=1, duration=26s
+[P10] 01:20:03 Phase H complete: desktop E2E x3 FAIL (see logs)
+[P10] 01:20:03 === PHASE I: SCANS x3 (NO DEV SERVER / NO NETWORK) ===
+[P10] 01:20:03 Phase I complete: scans done (dev_server=PASS, network=PASS)
+[P10] 01:20:03 === PHASE J: NO REAL WRITES PROOF ===

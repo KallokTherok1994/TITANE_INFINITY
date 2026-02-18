@@ -1,0 +1,214 @@
+=== P10 DISCOVERY LOG ===
+Date: 2026-02-18 00:51:00 UTC
+Phase: P10 E2E Desktop Full Certification
+Mode: CONSTITUTIONAL / PROOF-DRIVEN / STOP-THE-LINE
+
+---
+
+## REPOSITORY ROOT
+/home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+---
+
+## KEY DIRECTORIES
+Found via filesystem exploration:
+- e2e/ (E2E test suites)
+- src-tauri/ (Tauri backend)
+- scripts/e2e/ (E2E automation scripts)
+- tests/ (unit + integration tests)
+- deployment/latest/certification/ (proof packs)
+
+---
+
+## PACKAGE MANAGER DISCOVERY
+File: package.json
+Field: "packageManager": "pnpm@10.28.2"
+
+**VERDICT**: PNPM (locked version 10.28.2)
+Lockfile expected: pnpm-lock.yaml
+Install command: pnpm install --frozen-lockfile
+
+---
+
+## E2E HARNESS DISCOVERY
+
+### WebdriverIO (Desktop E2E) ✅ FOUND
+Config: wdio.desktop.conf.cjs
+Runner: local
+Protocol: http://127.0.0.1:4444
+Specs: 
+  - ./e2e/desktop/**/*.e2e.js
+  - ./e2e/desktop/**/*.wdio.test.js
+Capabilities:
+  - browserName: wry
+  - tauri:options.application: scripts/e2e/tauri-wrapper.sh
+LogLevel: trace
+Timeout: 1800000ms (30 min)
+Workers: 1 (maxInstances)
+
+**Wrapper**: scripts/e2e/tauri-wrapper.sh (injects TITANE_E2E env vars)
+**Binary**: $TAURI_BINARY_PATH or src-tauri/target/debug/titane-infinity
+
+### Playwright (Web E2E) ✅ FOUND
+Config: playwright.config.ts
+TestDir: e2e/
+TestMatch: **/*.spec.ts
+BaseURL: http://127.0.0.1:5173 (or $TITANE_E2E_PORT)
+Workers: 1
+Timeout: 60000ms
+Browsers: chromium, firefox, webkit
+
+**VERDICT**: PLAYWRIGHT_FOUND (but web-oriented, not desktop Tauri)
+
+---
+
+## TEST SCRIPTS DISCOVERY (package.json)
+
+### Unit Tests ✅ FOUND
+Script: "test": "cross-env NODE_OPTIONS='...' vitest run"
+Command: pnpm run test
+Coverage: pnpm run test:coverage
+Config: vitest.config.ts (default)
+Polyfill: tests/polyfills/resizable-arraybuffer.cjs
+
+### Integration Tests ✅ FOUND
+Script: "test:coverage:integration"
+Command: pnpm run test:coverage:integration
+Config: vitest.integration.config.ts
+Polyfill: tests/polyfills/resizable-arraybuffer.cjs
+
+### Desktop E2E ✅ FOUND (MANDATORY)
+Script: "e2e:desktop:run": "node scripts/e2e/run-desktop-suite.js"
+Full script: "e2e:desktop": includes guards + ensure-webkit-webdriver.sh
+Prerequisites:
+  - pnpm run guard:ollama-proxy
+  - bash scripts/e2e/require-e2e-build-authorization.sh
+  - pnpm run e2e:desktop:ensure (webkit driver)
+  - pnpm run e2e:desktop:run
+
+Commands:
+  - Ensure driver: bash scripts/e2e/ensure-webkit-webdriver.sh
+  - Run suite: node scripts/e2e/run-desktop-suite.js
+
+**VERDICT**: DESKTOP_E2E_HARNESS_FOUND (WebdriverIO + tauri-wrapper)
+
+### Browser/Vitest E2E ✅ FOUND (optional)
+Script: "test:browser": "vitest --config vitest.browser.config.ts --run"
+
+---
+
+## BUILD DISCOVERY
+
+### Production Build ✅ FOUND
+Script: "build": "vite build"
+Postbuild: "postbuild": "bash scripts/post-build.sh"
+
+### E2E Build ✅ FOUND
+Script: "build:tauri:e2e": guards + vite build + tauri build
+Config: src-tauri/tauri.conf.json
+Guards:
+  - pnpm run guard:ollama-proxy
+  - bash scripts/e2e/require-e2e-build-authorization.sh
+
+### Prod-Safe Build ✅ FOUND
+Script: "build:prod-safe": "NPM_CONFIG_IGNORE_SCRIPTS=1 vite build"
+Verify: "build:prod-safe:verify": "node scripts/guards/guard-prod-safe-build.mjs"
+
+**VERDICT**: BUILD_COMMANDS_FOUND
+
+---
+
+## GUARDS DISCOVERY
+
+### Tauri-Only Guard ✅ FOUND
+Script: "verify:tauri-only": "bash scripts/verify/enforce-tauri-only.sh"
+
+### Local-First Guard ✅ FOUND
+Script: "verify:local-first": "bash scripts/verify/enforce-local-first.sh"
+
+### Ollama Proxy Guard ✅ FOUND
+Script: "guard:ollama-proxy": "bash scripts/guard/guard-ollama-proxy.sh"
+
+### Dev Bridge Guard ✅ FOUND
+Script: "guard:dev-bridge": "node scripts/guard/guard-dev-bridge.mjs"
+
+---
+
+## TAURI CONFIG DISCOVERY
+Primary: src-tauri/tauri.conf.json
+Dev: runtime/dev/tauri.conf.json
+
+---
+
+## LOCKFILE CHECK
+Expected: pnpm-lock.yaml
+Status: (will verify in prechecks)
+
+---
+
+## TOOLCHAIN REQUIREMENTS
+
+### Node.js ✅ REQUIRED
+check: node -v
+
+### PNPM ✅ REQUIRED
+check: pnpm -v
+expected: 10.28.2
+
+### Cargo ✅ REQUIRED
+check: cargo -V
+
+### Rustc ✅ REQUIRED
+check: rustc -V
+
+### Playwright (optional for web E2E)
+check: npx playwright --version
+
+### WebDriver (for desktop E2E) ✅ REQUIRED
+Script: scripts/e2e/ensure-webkit-webdriver.sh
+Purpose: Download/install webkit webdriver for wdio
+
+---
+
+## FINAL DISCOVERY VERDICT
+
+✅ **E2E HARNESS FOUND**
+Harness: WebdriverIO + tauri-wrapper.sh
+Config: wdio.desktop.conf.cjs
+Runner: node scripts/e2e/run-desktop-suite.js
+Binary: src-tauri/target/debug/titane-infinity (or $TAURI_BINARY_PATH)
+
+✅ **UNIT TESTS FOUND**
+Command: pnpm run test (vitest)
+
+✅ **INTEGRATION TESTS FOUND**
+Command: pnpm run test:coverage:integration (vitest)
+
+✅ **BUILD COMMANDS FOUND**
+Build: pnpm run build (vite build)
+E2E Build: pnpm run build:tauri:e2e (full tauri build)
+
+✅ **PACKAGE MANAGER CONFIRMED**
+Manager: pnpm
+Version: 10.28.2
+Lockfile: pnpm-lock.yaml
+
+---
+
+## NEXT STEPS
+1. Run PRECHECKS (git state, toolchain versions)
+2. Setup SANDBOX (isolated HOME/XDG_*)
+3. Install deps (pnpm install --frozen-lockfile)
+4. Build (ensure Tauri binary exists)
+5. Run tests x3:
+   - Unit tests x3
+   - Integration tests x3
+   - Desktop E2E x3 (MANDATORY)
+6. Scan for dev servers (x3)
+7. Scan for network usage (x3)
+8. Proof: no real writes
+9. Seal proof pack
+
+---
+
+**Discovery Complete**: 2026-02-18 00:51:30 UTC
