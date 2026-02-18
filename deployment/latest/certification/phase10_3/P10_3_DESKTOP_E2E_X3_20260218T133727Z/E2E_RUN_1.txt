@@ -1,0 +1,34 @@
+
+> titane-infinity@27.0.2 e2e:desktop /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && pnpm run e2e:desktop:ensure && pnpm run e2e:desktop:run
+
+
+> titane-infinity@27.0.2 guard:ollama-proxy /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/guard/guard-ollama-proxy.sh
+
+🔐 GUARD: Checking for direct Ollama calls (11434) in src/
+✅ PASS: No direct 11434 calls in frontend
+✅ E2E build authorized
+
+> titane-infinity@27.0.2 e2e:desktop:ensure /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/e2e/ensure-webkit-webdriver.sh
+
+🔍 Vérification de WebKitWebDriver...
+✅ WebKitWebDriver trouvé dans le PATH : /usr/bin/WebKitWebDriver
+DEBUG: WEBKIT_WEBDRIVER_PATH=/usr/bin/WebKitWebDriver
+
+> titane-infinity@27.0.2 e2e:desktop:run /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/e2e/run-desktop-suite.js
+
+2026-02-18T13:43:24.232Z Artifacts dir: /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop
+2026-02-18T13:43:24.233Z WDIO config: /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs
+2026-02-18T13:43:24.234Z TAURI_BINARY_PATH: <unset>
+2026-02-18T13:43:24.234Z tauri-driver args: tauri-driver --port 4444 --native-port 4445 --native-host 127.0.0.1 --native-driver /usr/bin/WebKitWebDriver
+2026-02-18T13:43:24.239Z wdio command: pnpm exec wdio run /home/titane-os/Documents/GitHub/TITANE_INFINITY/wdio.desktop.conf.cjs
+2026-02-18T13:43:52.880Z FAILURE SUMMARY
+2026-02-18T13:43:52.880Z exit_code=1
+2026-02-18T13:43:52.880Z wdio_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/wdio.log
+2026-02-18T13:43:52.881Z tauri_driver_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/tauri_driver.log
+2026-02-18T13:43:52.881Z webkit_log=/home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/e2e-desktop/webkit_driver.log
+ ELIFECYCLE  Command failed with exit code 1.
+ ELIFECYCLE  Command failed with exit code 1.

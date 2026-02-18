@@ -1,0 +1,16 @@
+═══════════════════════════════════════════════════════════════════════════════
+  PRECHECKS: P10.3 Unblock — Ollama Transport Violation Fix
+═══════════════════════════════════════════════════════════════════════════════
+
+mer. 18 févr. 2026 13:33:50 UTC
+
+Git Status:
+?? deployment/latest/certification/phase10_3_unblock/
+
+Git Branch:
+MAIN
+
+Git HEAD:
+6046d1e43a7e2d79bea13fdfb317ff666bb8a890
+
+✓ PRECHECKS PASSED
