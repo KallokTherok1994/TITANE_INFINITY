@@ -1,0 +1,32 @@
+=== INFRA DIAGNOSTIC RUN 1 ===
+Start: 2026-02-18T20:20:04Z
+
+PRE-RUN CHECKS:
+- Ollama availability:
+  ✅ Ollama ready
+- No stray titane processes:
+  Found: 0 processes (expect 0)
+
+LAUNCHING WITH WRAPPER:
+[2026-02-18T20:20:04Z] Starting headless wrapper (timeout: 20s)
+✅ Using Xvfb :100 for dummy display
+[2026-02-18T20:20:05Z] Launching /usr/bin/titane-infinity
+[2026-02-18T20:20:05Z] Binary PID: 698894
+✅ Backend ready detected
+[2026-02-18T20:20:06Z] Wrapper complete (duration: 1s, exit: 0)
+
+LAUNCH METRICS:
+- Exit code: 0
+- Duration: 2s
+
+STARTUP MARKERS:
+- Backend ready at: 2026-02-18T20:19:51.395Z INFO  titane_infinity
+- Panic count: 0
+0
+- Crash indicators: 0
+
+IPC BRIDGE:
+- IPC references: 4
+
+End: 2026-02-18T20:20:06Z
+Status: PASS

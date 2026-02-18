@@ -1,0 +1,35 @@
+# Tauri Binary Check
+
+## Binary Details
+Path: /usr/bin/titane-infinity
+Exists: ✅ YES
+Size: 22M
+Checksum: 05330db12996d32c7e1ba1788291b12530ca5b59b682269cf7f67552ec9b30a6
+Permissions: -rwxr-xr-x
+Built: 2026-02-14 13:24
+
+## Architecture
+/usr/bin/titane-infinity: ELF 64-bit LSB pie executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=d6b82e7b6564e2af5876645cafe83757a18ae7eb, with debug_info, not stripped
+
+## Dynamic Dependencies
+	linux-vdso.so.1 (0x0000747306b0b000)
+	libssl.so.3 => /lib/x86_64-linux-gnu/libssl.so.3 (0x0000747305756000)
+	libcrypto.so.3 => /lib/x86_64-linux-gnu/libcrypto.so.3 (0x0000747305200000)
+	libgdk-3.so.0 => /lib/x86_64-linux-gnu/libgdk-3.so.0 (0x0000747305105000)
+	libgdk_pixbuf-2.0.so.0 => /lib/x86_64-linux-gnu/libgdk_pixbuf-2.0.so.0 (0x0000747306ac0000)
+	libcairo.so.2 => /lib/x86_64-linux-gnu/libcairo.so.2 (0x0000747304fc1000)
+	libgobject-2.0.so.0 => /lib/x86_64-linux-gnu/libgobject-2.0.so.0 (0x0000747306a5b000)
+	libglib-2.0.so.0 => /lib/x86_64-linux-gnu/libglib-2.0.so.0 (0x0000747304e78000)
+	libwebkit2gtk-4.1.so.0 => /lib/x86_64-linux-gnu/libwebkit2gtk-4.1.so.0 (0x00007472ff800000)
+	libgtk-3.so.0 => /lib/x86_64-linux-gnu/libgtk-3.so.0 (0x00007472ff000000)
+	libsoup-3.0.so.0 => /lib/x86_64-linux-gnu/libsoup-3.0.so.0 (0x00007472fef66000)
+	libgio-2.0.so.0 => /lib/x86_64-linux-gnu/libgio-2.0.so.0 (0x00007472fed96000)
+	libjavascriptcoregtk-4.1.so.0 => /lib/x86_64-linux-gnu/libjavascriptcoregtk-4.1.so.0 (0x00007472fce00000)
+	libgcc_s.so.1 => /lib/x86_64-linux-gnu/libgcc_s.so.1 (0x0000747305728000)
+	libm.so.6 => /lib/x86_64-linux-gnu/libm.so.6 (0x00007472fecad000)
+	libc.so.6 => /lib/x86_64-linux-gnu/libc.so.6 (0x00007472fca00000)
+	libpango-1.0.so.0 => /lib/x86_64-linux-gnu/libpango-1.0.so.0 (0x00007472fcd95000)
+	libfribidi.so.0 => /lib/x86_64-linux-gnu/libfribidi.so.0 (0x00007472ff7e2000)
+	libcairo-gobject.so.2 => /lib/x86_64-linux-gnu/libcairo-gobject.so.2 (0x000074730571c000)
+	libepoxy.so.0 => /lib/x86_64-linux-gnu/libepoxy.so.0 (0x00007472fcc72000)
+
