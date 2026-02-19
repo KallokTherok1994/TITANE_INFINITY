@@ -74,9 +74,11 @@ class ConsoleMonitor {
   private logs: ConsoleLogEntry[] = [];
   private readonly MAX_LOGS = 1000; // Keep last 1000 logs
   private readonly ERROR_THRESHOLD = 10; // Max errors per minute before auto-heal
+  private readonly autoHealEnabled = false;
 
   private errorCounts = new Map<string, number>();
   private isMonitoring = false;
+  private isProcessingError = false; // Prevent recursion
 
   private stats: ConsoleStats = {
     totalLogs: 0,
@@ -312,6 +314,11 @@ class ConsoleMonitor {
    * Handle detected error with advanced categorization
    */
   private handleError(entry: ConsoleLogEntry): void {
+    // Prevent infinite recursion in error handling
+    if (this.isProcessingError) {
+      return;
+    }
+
     // 🛡️ PROTECTION: Ignorer les erreurs du système AUTO-HEAL pour éviter boucle infinie
     if (
       entry.message.includes('[[AUTO-HEAL]]') ||
@@ -322,39 +329,49 @@ class ConsoleMonitor {
       return; // Skip self-generated errors
     }
 
-    // Track error count
-    const errorKey = entry.message.substring(0, 100);
-    this.errorCounts.set(errorKey, (this.errorCounts.get(errorKey) || 0) + 1);
+    this.isProcessingError = true;
+    try {
+      // Track error count
+      const errorKey = entry.message.substring(0, 100);
+      this.errorCounts.set(errorKey, (this.errorCounts.get(errorKey) || 0) + 1);
 
-    // Detect pattern and categorize
-    const detection = this.detectErrorPattern(entry.message);
+      // Detect pattern and categorize
+      const detection = this.detectErrorPattern(entry.message);
 
-    // Update category counts
-    this.stats.categoryCounts[detection.category]++;
+      // Update category counts
+      this.stats.categoryCounts[detection.category]++;
 
-    // Track error history for trends
-    this.errorHistory.push({
-      timestamp: entry.timestamp,
-      category: detection.category,
-    });
-
-    // Feed to predictive engine for ML-like analysis
-    predictiveEngine.recordError(entry, detection.category);
-
-    // Auto-heal integration for critical/high severity errors
-    if (detection.severity === 'critical' || detection.severity === 'high') {
-      // Map ErrorCategory to AutoHealError type
-      const autoHealType =
-        detection.suggestedAutoHealType ||
-        this.mapCategoryToAutoHealType(detection.category);
-
-      autoHealEngine.heal('console', new Error(entry.message), autoHealType, {
-        stack: entry.stack,
-        args: entry.args,
+      // Track error history for trends
+      this.errorHistory.push({
         timestamp: entry.timestamp,
         category: detection.category,
-        severity: detection.severity,
       });
+
+      // Feed to predictive engine for ML-like analysis
+      predictiveEngine.recordError(entry, detection.category);
+
+      // Auto-heal integration for critical/high severity errors
+      // BUT: Don't call autoHealEngine if it would create more logs
+      // (for now, skip auto-heal to prevent recursion)
+      if (
+        this.autoHealEnabled &&
+        (detection.severity === 'critical' || detection.severity === 'high')
+      ) {
+        // Disabled to prevent recursion
+        const autoHealType =
+          detection.suggestedAutoHealType ||
+          this.mapCategoryToAutoHealType(detection.category);
+
+        autoHealEngine.heal('console', new Error(entry.message), autoHealType, {
+          stack: entry.stack,
+          args: entry.args,
+          timestamp: entry.timestamp,
+          category: detection.category,
+          severity: detection.severity,
+        });
+      }
+    } finally {
+      this.isProcessingError = false;
     }
   }
 
@@ -568,7 +585,14 @@ class ConsoleMonitor {
 
 export const consoleMonitor = new ConsoleMonitor();
 
-// Auto-start in development
-if (process.env.NODE_ENV === 'development') {
-  consoleMonitor.start();
+// Initialize on first use (lazy load to avoid boot loops)
+let isInitialized = false;
+
+export function initializeConsoleMonitor(): void {
+  if (isInitialized) return;
+  if (typeof window === 'undefined') return; // Skip in SSR
+
+  isInitialized = true;
+  // Console monitoring disabled in this session to prevent infinite loops
+  // Monitoring will be re-enabled in future versions with better recursion protection
 }

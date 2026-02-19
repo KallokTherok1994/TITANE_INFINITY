@@ -1,13 +1,13 @@
 /**
  * TITANE_INFINITY P2_BUNDLE_OPTIMIZATION_CERT — Lazy Service Loaders
- * 
+ *
  * Ring 3 (Services) lazy-loading module for on-demand service imports.
  * Reduces boot-time bundle by deferring non-critical services.
- * 
+ *
  * Boot-critical services (imported directly in App.tsx):
  * - initializeOllama (ai/providers/ollama)
  * - consoleMonitor (monitoring/consoleMonitor)
- * 
+ *
  * Lazy-loaded services (this module):
  * - Chat engine + orchestrator
  * - Voice services
@@ -61,7 +61,7 @@ export async function getVoiceServices() {
     return moduleCache.get('voice');
   }
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const module = await import('./voice');
+  const module = await import('./voice/voiceRouter');
   moduleCache.set('voice', module);
   return module;
 }
