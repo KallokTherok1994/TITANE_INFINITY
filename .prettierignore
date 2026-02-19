@@ -107,3 +107,4 @@ REPORTS_INDEX_SESSION_2.md
 baseline_measurements_real_w1.json
 OPTIMIZATION_TARGETS_W1.md
 runtime/registry/**
+**/wdio_caps.json

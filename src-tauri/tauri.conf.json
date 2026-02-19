@@ -21,7 +21,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": ["../dist", "resources/ollama/ollama"],
+    "resources": ["../dist"],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ v27.0.0 - Production Final Release, Stable & Perfect",
