@@ -217,9 +217,10 @@ pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests
 ```
 
-### External AI (opt-in, local-first par défaut)
+### AI Providers (online-first, local fallback)
 
-Par défaut, TITANE∞ est **local-only** (aucun cloud requis) et les providers externes sont **désactivés**.
+Par défaut, TITANE∞ utilise des providers externes **si configurés**, avec fallback automatique vers Ollama local.  
+Mode 100% local disponible en désactivant les providers cloud dans les paramètres.
 
 - **Autoriser au build (dev/stable)** : lancer avec `VITE_ENABLE_EXTERNAL_AI=1`
   - Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev:tauri`

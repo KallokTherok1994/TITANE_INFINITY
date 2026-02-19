@@ -661,16 +661,16 @@ class AIOrchestrator {
           break;
 
         case 'ollama':
-          // #5: Ollama = LOCAL FIRST avec cascade cloud
-          // Mode auto: Score élevé (~85) pour être prioritaire mais permettre cascade
+          // #5: Ollama = CLOUD FIRST (local fallback only)
+          // Mode auto: Score bas (~30) pour fallback après clouds
           // Mode local: Boost +200 pour forcer Ollama exclusivement
           if (preferredProvider === 'local') {
             score += 200; // Mode local forcé
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else {
-            score += 80; // Score élevé en mode auto = prioritaire avec cascade
+            score += 30; // Score bas en mode auto = fallback après clouds
             logger.debug(
-              '   🏠 AUTO MODE: Ollama prioritaire (score élevé + cascade cloud)'
+              '   🏠 AUTO MODE: Ollama fallback local (après clouds)'
             );
           }
           score += messageLength < 500 ? 10 : 0; // Bonus messages courts

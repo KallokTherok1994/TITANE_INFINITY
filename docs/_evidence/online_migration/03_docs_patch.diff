@@ -1,0 +1,54 @@
+diff --git a/.github/copilot-instructions.md b/.github/copilot-instructions.md
+index 02e87fe3..ba3ee2a1 100644
+--- a/.github/copilot-instructions.md
++++ b/.github/copilot-instructions.md
+@@ -8,7 +8,7 @@ Scope: repo-wide
+ 
+ **DO**
+ 
+-- Local-first only. No implicit cloud or network dependency.
++- Online-first governed. Network allowed via controlled surfaces only. Local fallback mandatory.
+ - Tauri-only. No web server/preview and no internal HTTP "server/" API.
+ - 4-Ring architecture (Types -> Engines -> Services -> Modules/UI).
+ - allowlist/capabilities are stable and justified with gates and tests.
+diff --git a/.github/instructions/titane.instructions.md b/.github/instructions/titane.instructions.md
+index ffd57cd5..e0e7bee2 100644
+--- a/.github/instructions/titane.instructions.md
++++ b/.github/instructions/titane.instructions.md
+@@ -100,11 +100,14 @@
+ - Circuit breaker + timeouts for every provider.
+ - Offline generator is required fallback.
+ 
+-**LOCAL-FIRST (clarification stricte)**
+-
+-- Local-first = mémoire, persistance, gouvernance et UX **en local par défaut**.
+-- Local-first **≠** interdiction du réseau.
+-- Les providers externes sont **optionnels**, utilisés seulement si configurés, et doivent respecter: timeouts, breakers, logs, attribution vraie des erreurs.
++**ONLINE-FIRST GOVERNED (doctrine nouvelle)**
++
++- Online-first = réseau ON par défaut, via **surfaces contrôlées uniquement**.
++- Surfaces permises : `NetworkService`, `ApiClient`, Tauri IPC network commands (annotés).
++- Fallback local **obligatoire** : Ollama local doit toujours être fonctionnel.
++- Providers externes : disponibles par défaut si configurés (clés API, endpoints).
++- Mode 100% local possible : désactiver providers externes dans gouvernance UI.
++- Gouvernance : `pnpm run verify:online-first` obligatoire avant push (remplace `verify:local-first`).
+ 
+ ---
+ 
+diff --git a/README.md b/README.md
+index bcd80818..186f5e10 100644
+--- a/README.md
++++ b/README.md
+@@ -217,9 +217,10 @@ pnpm run test             # Run tests
+ pnpm run test:rust        # Cargo tests
+ ```
+ 
+-### External AI (opt-in, local-first par défaut)
++### AI Providers (online-first, local fallback)
+ 
+-Par défaut, TITANE∞ est **local-only** (aucun cloud requis) et les providers externes sont **désactivés**.
++Par défaut, TITANE∞ utilise des providers externes **si configurés**, avec fallback automatique vers Ollama local.  
++Mode 100% local disponible en désactivant les providers cloud dans les paramètres.
+ 
+ - **Autoriser au build (dev/stable)** : lancer avec `VITE_ENABLE_EXTERNAL_AI=1`
+   - Exemple dev : `VITE_ENABLE_EXTERNAL_AI=1 pnpm run dev:tauri`

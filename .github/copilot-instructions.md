@@ -8,7 +8,7 @@ Scope: repo-wide
 
 **DO**
 
-- Local-first only. No implicit cloud or network dependency.
+- Online-first governed. Network allowed via controlled surfaces only. Local fallback mandatory.
 - Tauri-only. No web server/preview and no internal HTTP "server/" API.
 - 4-Ring architecture (Types -> Engines -> Services -> Modules/UI).
 - allowlist/capabilities are stable and justified with gates and tests.

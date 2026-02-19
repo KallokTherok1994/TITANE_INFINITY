@@ -1,0 +1,12 @@
+diff --git a/src-tauri/tauri.conf.json b/src-tauri/tauri.conf.json
+index 2431e4e7..0173522e 100644
+--- a/src-tauri/tauri.conf.json
++++ b/src-tauri/tauri.conf.json
+@@ -63,6 +63,7 @@
+       }
+     ],
+     "security": {
++      "__comment_network_policy": "ONLINE-FIRST: External AI APIs (OpenAI/Anthropic/Gemini/Copilot) allowed via Rust backend reqwest. Frontend CSP: connect-src 'self' for IPC + localhost only. All cloud HTTP traffic flows through controlled Rust services with timeouts, logs, and error handling. Local fallback: Ollama (127.0.0.1:11434), GLM-4V vLLM (127.0.0.1:8000).",
+       "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://127.0.0.1:1420 ws://127.0.0.1:1420; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
+       "dangerousDisableAssetCspModification": true,
+       "assetProtocol": {

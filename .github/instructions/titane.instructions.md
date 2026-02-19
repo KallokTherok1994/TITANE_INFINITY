@@ -100,11 +100,14 @@
 - Circuit breaker + timeouts for every provider.
 - Offline generator is required fallback.
 
-**LOCAL-FIRST (clarification stricte)**
+**ONLINE-FIRST GOVERNED (doctrine nouvelle)**
 
-- Local-first = mémoire, persistance, gouvernance et UX **en local par défaut**.
-- Local-first **≠** interdiction du réseau.
-- Les providers externes sont **optionnels**, utilisés seulement si configurés, et doivent respecter: timeouts, breakers, logs, attribution vraie des erreurs.
+- Online-first = réseau ON par défaut, via **surfaces contrôlées uniquement**.
+- Surfaces permises : `NetworkService`, `ApiClient`, Tauri IPC network commands (annotés).
+- Fallback local **obligatoire** : Ollama local doit toujours être fonctionnel.
+- Providers externes : disponibles par défaut si configurés (clés API, endpoints).
+- Mode 100% local possible : désactiver providers externes dans gouvernance UI.
+- Gouvernance : `pnpm run verify:online-first` obligatoire avant push (remplace `verify:local-first`).
 
 ---
 

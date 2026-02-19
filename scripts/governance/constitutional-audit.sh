@@ -22,7 +22,7 @@ WARNINGS=0
 echo "📋 Audit des LOIS ABSOLUES du PROD CERTIFICATION..."
 echo ""
 
-echo "📋 L1: LOCAL-FIRST STRICT - Interdiction réseau en production..."
+echo "📋 L1: ONLINE-FIRST GOVERNED - Réseau via surfaces contrôlées uniquement..."
 
 # Vérifier absence serveurs HTTP (ignorer node_modules, dist, .vite-cache, commentaires et faux positifs)
 HTTP_SERVERS=$(find "$PROJECT_ROOT" -name "*.ts" -o -name "*.js" -o -name "*.rs" | \
@@ -202,7 +202,7 @@ AUDIT_REPORT="$EVIDENCE_DIR/P4_constitutional_audit_$TIMESTAMP.txt"
     echo "Warnings: $WARNINGS"
     echo ""
     echo "=== LOIS ABSOLUES STATUS ==="
-    echo "L1 (LOCAL-FIRST): $([ -z "$HTTP_SERVERS" ] && echo "PASS" || echo "FAIL")"
+    echo "L1 (ONLINE-FIRST): $([ -z "$HTTP_SERVERS" ] && echo "PASS" || echo "FAIL")"
     echo "L2 (DUAL RUNTIME): $([ -d "$PROJECT_ROOT/runtime/stable" ] && echo "PASS" || echo "FAIL")"
     echo "L3 (ZERO SECRETS): $([ -f "$PROJECT_ROOT/scripts/security/secret-scan.sh" ] && echo "VALIDATED" || echo "UNKNOWN")"
     echo "L4 (NO EXPANSION): $([ -z "$NEW_FEATURES" ] && echo "PASS" || echo "WARNING")"
