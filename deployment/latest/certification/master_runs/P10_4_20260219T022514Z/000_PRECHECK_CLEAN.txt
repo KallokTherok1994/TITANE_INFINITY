@@ -1,0 +1,3 @@
+[2026-02-19T02:25:14Z] ═══ PRECHECK: Clean Git Tree ===
+[2026-02-19T02:25:14Z] ❌ FAIL: Modified tracked files detected
+ M deployment/latest/certification/MASTER_REGISTRY.jsonl
