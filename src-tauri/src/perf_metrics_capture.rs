@@ -1,8 +1,7 @@
 /// Performance metrics capture for baseline establishment
 /// Week 1 Track A: Capture baseline measurements for optimization targeting
 
-use std::time::{Duration, Instant};
-use std::collections::HashMap;
+use std::time::Instant;
 use serde::{Deserialize, Serialize};
 
 /// Baseline metrics for a single operation

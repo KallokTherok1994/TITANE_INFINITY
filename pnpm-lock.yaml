@@ -42,8 +42,8 @@ importers:
         specifier: ^5.90.20
         version: 5.90.20(react@19.2.4)
       '@tauri-apps/api':
-        specifier: ^2.9.1
-        version: 2.9.1
+        specifier: ^2.10.1
+        version: 2.10.1
       '@tauri-apps/plugin-dialog':
         specifier: ^2.6.0
         version: 2.6.0
@@ -1936,8 +1936,8 @@ packages:
     peerDependencies:
       react: ^18 || ^19
 
-  '@tauri-apps/api@2.9.1':
-    resolution: {integrity: sha512-IGlhP6EivjXHepbBic618GOmiWe4URJiIeZFlB7x3czM0yDHHYviH1Xvoiv4FefdkQtn6v7TuwWCRfOGdnVUGw==}
+  '@tauri-apps/api@2.10.1':
+    resolution: {integrity: sha512-hKL/jWf293UDSUN09rR69hrToyIXBb8CjGaWC7gfinvnQrBVvnLr08FeFi38gxtugAVyVcTa5/FD/Xnkb1siBw==}
 
   '@tauri-apps/cli-darwin-arm64@2.9.6':
     resolution: {integrity: sha512-gf5no6N9FCk1qMrti4lfwP77JHP5haASZgVbBgpZG7BUepB3fhiLCXGUK8LvuOjP36HivXewjg72LTnPDScnQQ==}
@@ -9532,7 +9532,7 @@ snapshots:
       '@tanstack/query-core': 5.90.20
       react: 19.2.4
 
-  '@tauri-apps/api@2.9.1': {}
+  '@tauri-apps/api@2.10.1': {}
 
   '@tauri-apps/cli-darwin-arm64@2.9.6':
     optional: true
@@ -9583,19 +9583,19 @@ snapshots:
 
   '@tauri-apps/plugin-dialog@2.6.0':
     dependencies:
-      '@tauri-apps/api': 2.9.1
+      '@tauri-apps/api': 2.10.1
 
   '@tauri-apps/plugin-fs@2.4.5':
     dependencies:
-      '@tauri-apps/api': 2.9.1
+      '@tauri-apps/api': 2.10.1
 
   '@tauri-apps/plugin-http@2.5.6':
     dependencies:
-      '@tauri-apps/api': 2.9.1
+      '@tauri-apps/api': 2.10.1
 
   '@tauri-apps/plugin-shell@2.3.4':
     dependencies:
-      '@tauri-apps/api': 2.9.1
+      '@tauri-apps/api': 2.10.1
 
   '@tauri-apps/tauri-inliner@1.14.1':
     dependencies:
