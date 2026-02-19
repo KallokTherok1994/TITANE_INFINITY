@@ -172,3 +172,4 @@ runtime/dev/proofs/
 runtime/*.ok
 memory/memory_core_state.json
 deployment/latest/release/
+deployment/latest/certification/master_runs/
