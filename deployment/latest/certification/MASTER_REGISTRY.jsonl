@@ -190,3 +190,9 @@
   "pack_path": "deployment/latest/certification/master_runs/P11_20260219T014014Z",
   "timestamp": "2026-02-19T01:40:14Z"
 }
+{
+  "phase": "P10_4",
+  "verdict": "FAIL",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T021931Z",
+  "timestamp": "2026-02-19T02:19:33Z"
+}
