@@ -226,3 +226,93 @@
   "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023239Z",
   "timestamp": "2026-02-19T02:32:41Z"
 }
+{
+  "phase": "P10_4",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023255Z",
+  "timestamp": "2026-02-19T02:32:56Z"
+}
+{
+  "phase": "P10_3_2R",
+  "verdict": "FAIL",
+  "pack_path": "deployment/latest/certification/master_runs/P10_3_2R_20260219T023256Z",
+  "timestamp": "2026-02-19T02:32:58Z"
+}
+{
+  "phase": "P10_4",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023408Z",
+  "timestamp": "2026-02-19T02:34:08Z"
+}
+{
+  "phase": "P10_3_2R",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_3_2R_20260219T023408Z",
+  "timestamp": "2026-02-19T02:34:08Z"
+}
+{
+  "phase": "P10_5",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_5_20260219T023408Z",
+  "timestamp": "2026-02-19T02:34:09Z"
+}
+{
+  "phase": "P10_6",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_6_20260219T023409Z",
+  "timestamp": "2026-02-19T02:34:09Z"
+}
+{
+  "phase": "P10_7",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_7_20260219T023409Z",
+  "timestamp": "2026-02-19T02:34:09Z"
+}
+{
+  "phase": "P10_8",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_8_20260219T023409Z",
+  "timestamp": "2026-02-19T02:34:09Z"
+}
+{
+  "phase": "P10_4",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023451Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P10_3_2R",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_3_2R_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P10_5",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_5_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P10_6",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_6_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P10_7",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_7_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P10_8",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P10_8_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
+{
+  "phase": "P11",
+  "verdict": "PASS",
+  "pack_path": "deployment/latest/certification/master_runs/P11_20260219T023452Z",
+  "timestamp": "2026-02-19T02:34:52Z"
+}
