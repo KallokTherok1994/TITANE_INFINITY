@@ -1,0 +1,17 @@
+.github/copilot-instructions.md
+.github/instructions/titane.instructions.md
+package.json
+scripts/verify/enforce-local-first.sh
+scripts/verify/enforce-online-first.sh
+README.md
+src-tauri/src/overdrive/chat_orchestrator.rs
+src/services/ai/orchestrator.ts
+docs/adr/001-tauri-local-first-architecture.md
+vite.config.ts
+scripts/governance/constitutional-audit.sh
+scripts/governance/prod-cert-release.sh
+docs/backup_20251218_122540/CONTRIBUTING.md
+docs/adr/002-omega-conversation-manager.md
+src-tauri/Cargo.toml
+src-tauri/tauri.conf.json
+scripts/guards/guard-network-policy.mjs

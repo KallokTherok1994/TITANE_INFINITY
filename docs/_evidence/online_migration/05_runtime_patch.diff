@@ -1,0 +1,42 @@
+diff --git a/src-tauri/src/overdrive/chat_orchestrator.rs b/src-tauri/src/overdrive/chat_orchestrator.rs
+index 8d0e31a5..90e00848 100644
+--- a/src-tauri/src/overdrive/chat_orchestrator.rs
++++ b/src-tauri/src/overdrive/chat_orchestrator.rs
+@@ -489,9 +489,9 @@ pub async fn chat_send_message(
+         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
+     }
+ 
+-    // 🔒 LOCAL-FIRST: mode offline par défaut
+-    // APIs externes (OpenAI/Anthropic/Gemini) = uniquement si provider demandé explicitement.
+-    // In release, avoid localhost probes unless explicitly enabled.
++    // 🔒 ONLINE-FIRST: mode online par défaut via orchestrator TS (Rust cascade = local fallback only)
++    // APIs externes (OpenAI/Anthropic/Gemini) = prioritaires en mode auto via orchestrator.ts scoring.
++    // Backend Rust = cascade locale uniquement (Ollama → local) si TS orchestrator échoue.
+     let requested_provider = request.provider.clone();
+     let ollama_auto_enabled = requested_provider == "auto" && is_ollama_auto_enabled();
+ 
+diff --git a/src/services/ai/orchestrator.ts b/src/services/ai/orchestrator.ts
+index 4f8e47c1..b28177cc 100644
+--- a/src/services/ai/orchestrator.ts
++++ b/src/services/ai/orchestrator.ts
+@@ -661,16 +661,16 @@ class AIOrchestrator {
+           break;
+ 
+         case 'ollama':
+-          // #5: Ollama = LOCAL FIRST avec cascade cloud
+-          // Mode auto: Score élevé (~85) pour être prioritaire mais permettre cascade
++          // #5: Ollama = CLOUD FIRST (local fallback only)
++          // Mode auto: Score bas (~30) pour fallback après clouds
+           // Mode local: Boost +200 pour forcer Ollama exclusivement
+           if (preferredProvider === 'local') {
+             score += 200; // Mode local forcé
+             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
+           } else {
+-            score += 80; // Score élevé en mode auto = prioritaire avec cascade
++            score += 30; // Score bas en mode auto = fallback après clouds
+             logger.debug(
+-              '   🏠 AUTO MODE: Ollama prioritaire (score élevé + cascade cloud)'
++              '   🏠 AUTO MODE: Ollama fallback local (après clouds)'
+             );
+           }
+           score += messageLength < 500 ? 10 : 0; // Bonus messages courts

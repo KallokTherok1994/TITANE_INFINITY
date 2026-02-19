@@ -489,9 +489,9 @@ pub async fn chat_send_message(
         return Err(TAPIError::validation("Message too long (max 10000 chars)").into());
     }
 
-    // 🔒 LOCAL-FIRST: mode offline par défaut
-    // APIs externes (OpenAI/Anthropic/Gemini) = uniquement si provider demandé explicitement.
-    // In release, avoid localhost probes unless explicitly enabled.
+    // 🔒 ONLINE-FIRST: mode online par défaut via orchestrator TS (Rust cascade = local fallback only)
+    // APIs externes (OpenAI/Anthropic/Gemini) = prioritaires en mode auto via orchestrator.ts scoring.
+    // Backend Rust = cascade locale uniquement (Ollama → local) si TS orchestrator échoue.
     let requested_provider = request.provider.clone();
     let ollama_auto_enabled = requested_provider == "auto" && is_ollama_auto_enabled();
 

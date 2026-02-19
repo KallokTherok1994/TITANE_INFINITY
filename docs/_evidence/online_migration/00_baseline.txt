@@ -1,0 +1,47 @@
+=== PHASE 0: BASELINE CAPTURE ===
+
+Date: 2026-02-19 03:32:26 UTC
+Workspace: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+--- Git Status ---
+ M reports/final100/PHASE_A_PRODUCTION_AUTHORIZED.md
+?? docs/_evidence/online_migration/
+
+--- Git Head ---
+cce78fae4b9b226ff6291f1e913d323ece379663
+
+--- Git Branch ---
+MAIN
+
+--- Package Manager ---
+10.28.2
+v24.0.0
+
+--- Rust Toolchain ---
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+cargo 1.91.1 (ea2d97820 2025-10-10)
+
+--- Install Check ---
+Attempting frozen lockfile install...
+Lockfile is up to date, resolution step is skipped
+Already up to date
+
+
+> titane-infinity@27.0.2 preinstall /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> node scripts/install/enforce-package-manager.cjs
+
+
+> titane-infinity@27.0.2 prepare /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> husky
+
+╭ Warning ─────────────────────────────────────────────────────────────────────╮
+│                                                                              │
+│   Ignored build scripts: edgedriver@6.3.0, geckodriver@6.1.0,                │
+│   tauri@0.15.0.                                                              │
+│   Run "pnpm approve-builds" to pick which dependencies should be allowed     │
+│   to run scripts.                                                            │
+│                                                                              │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Done in 987ms using pnpm v10.28.2
+
+=== BASELINE COMPLETE ===

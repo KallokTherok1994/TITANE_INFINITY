@@ -1,0 +1,53 @@
+diff --git a/package.json b/package.json
+index 056a1652..d7839b65 100644
+--- a/package.json
++++ b/package.json
+@@ -31,11 +31,11 @@
+     "format": "prettier --write .",
+     "format:check": "prettier --check .",
+     "check": "tsc --noEmit",
+-    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:local-first && pnpm run verify:instructions && pnpm run verify:tauri-configs",
++    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:online-first && pnpm run verify:instructions && pnpm run verify:tauri-configs",
+     "verify:final100": "pnpm run check && pnpm run lint && pnpm run format:check && pnpm run verify:tauri-only",
+     "verify:prod-boot": "node scripts/gates/vite-base-relative-gate.cjs",
+     "verify:tauri-only": "bash scripts/verify/enforce-tauri-only.sh",
+-    "verify:local-first": "bash scripts/verify/enforce-local-first.sh",
++    "verify:online-first": "bash scripts/verify/enforce-online-first.sh",
+     "verify:instructions": "bash scripts/verify/verify-copilot-instructions.sh",
+     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
+     "test": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run",
+diff --git a/scripts/governance/constitutional-audit.sh b/scripts/governance/constitutional-audit.sh
+index 6c2f910c..1ff07fe3 100755
+--- a/scripts/governance/constitutional-audit.sh
++++ b/scripts/governance/constitutional-audit.sh
+@@ -22,7 +22,7 @@ WARNINGS=0
+ echo "📋 Audit des LOIS ABSOLUES du PROD CERTIFICATION..."
+ echo ""
+ 
+-echo "📋 L1: LOCAL-FIRST STRICT - Interdiction réseau en production..."
++echo "📋 L1: ONLINE-FIRST GOVERNED - Réseau via surfaces contrôlées uniquement..."
+ 
+ # Vérifier absence serveurs HTTP (ignorer node_modules, dist, .vite-cache, commentaires et faux positifs)
+ HTTP_SERVERS=$(find "$PROJECT_ROOT" -name "*.ts" -o -name "*.js" -o -name "*.rs" | \
+@@ -202,7 +202,7 @@ AUDIT_REPORT="$EVIDENCE_DIR/P4_constitutional_audit_$TIMESTAMP.txt"
+     echo "Warnings: $WARNINGS"
+     echo ""
+     echo "=== LOIS ABSOLUES STATUS ==="
+-    echo "L1 (LOCAL-FIRST): $([ -z "$HTTP_SERVERS" ] && echo "PASS" || echo "FAIL")"
++    echo "L1 (ONLINE-FIRST): $([ -z "$HTTP_SERVERS" ] && echo "PASS" || echo "FAIL")"
+     echo "L2 (DUAL RUNTIME): $([ -d "$PROJECT_ROOT/runtime/stable" ] && echo "PASS" || echo "FAIL")"
+     echo "L3 (ZERO SECRETS): $([ -f "$PROJECT_ROOT/scripts/security/secret-scan.sh" ] && echo "VALIDATED" || echo "UNKNOWN")"
+     echo "L4 (NO EXPANSION): $([ -z "$NEW_FEATURES" ] && echo "PASS" || echo "WARNING")"
+diff --git a/scripts/governance/prod-cert-release.sh b/scripts/governance/prod-cert-release.sh
+index e51362fb..ed89fa74 100755
+--- a/scripts/governance/prod-cert-release.sh
++++ b/scripts/governance/prod-cert-release.sh
+@@ -108,7 +108,7 @@ cat > "$EVIDENCE_DIR/release/PROD_CERTIFICATION_MANIFEST_${TIMESTAMP}.md" << EOF
+ - **Build Readiness**: VALIDATED
+ 
+ ## LOIS ABSOLUES Compliance Summary
+-- **L1 LOCAL-FIRST**: ✅ No HTTP servers in production
++- **L1 NETWORK POLICY**: ✅ Network via controlled surfaces only (no scattered fetch)
+ - **L2 DUAL RUNTIME**: ✅ Dev/Stable separation maintained
+ - **L3 ZERO SECRETS**: ✅ No secrets in version control
+ - **L4 NO EXPANSION**: ⚠️ Controlled feature expansion

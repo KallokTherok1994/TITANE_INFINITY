@@ -108,7 +108,7 @@ cat > "$EVIDENCE_DIR/release/PROD_CERTIFICATION_MANIFEST_${TIMESTAMP}.md" << EOF
 - **Build Readiness**: VALIDATED
 
 ## LOIS ABSOLUES Compliance Summary
-- **L1 LOCAL-FIRST**: ✅ No HTTP servers in production
+- **L1 NETWORK POLICY**: ✅ Network via controlled surfaces only (no scattered fetch)
 - **L2 DUAL RUNTIME**: ✅ Dev/Stable separation maintained
 - **L3 ZERO SECRETS**: ✅ No secrets in version control
 - **L4 NO EXPANSION**: ⚠️ Controlled feature expansion

@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "generated": "2026-02-19T03:35:00Z",
+    "scan_source": "01_scan_raw.txt",
+    "total_raw_matches": 1446,
+    "critical_files": 18,
+    "note": "Fichiers prioritaires pour migration LOCAL-FIRST → ONLINE-FIRST"
+  },
+  "inventory": [
+    {
+      "id": 1,
+      "file": ".github/copilot-instructions.md",
+      "line": 22,
+      "match": "Local-first only. No implicit cloud or network dependency.",
+      "context": "Core invariant doctrine",
+      "category": "INSTRUCTIONS",
+      "action": "REWRITE",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": 2,
+      "file": ".github/instructions/titane.instructions.md",
+      "line": null,
+      "match": "Local-first ≠ interdiction du réseau (doctrine clarification)",
+      "context": "Architecture instructions",
+      "category": "INSTRUCTIONS",
+      "action": "REWRITE",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": 3,
+      "file": "package.json",
+      "line": 34,
+      "match": "verify:local-first",
+      "context": "Verify pipeline script",
+      "category": "CONFIG",
+      "action": "RENAME",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": 4,
+      "file": "package.json",
+      "line": 38,
+      "match": "verify:local-first\": \"bash scripts/verify/enforce-local-first.sh",
+      "context": "Script definition",
+      "category": "CONFIG",
+      "action": "RENAME",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": 5,
+      "file": "scripts/verify/enforce-local-first.sh",
+      "line": null,
+      "match": "Entire script enforces local-first doctrine",
+      "context": "Enforcement script",
+      "category": "SCRIPTS",
+      "action": "REPLACE",
+      "priority": "CRITICAL"
+    },
+    {
+      "id": 6,
+      "file": "README.md",
+      "line": 220,
+      "match": "External AI (opt-in, local-first par défaut)",
+      "context": "User-facing doctrine",
+      "category": "DOC",
+      "action": "REWRITE",
+      "priority": "HIGH"
+    },
+    {
+      "id": 7,
+      "file": "README.md",
+      "line": 222,
+      "match": "Par défaut, TITANE∞ est local-only (aucun cloud requis)",
+      "context": "Default mode description",
+      "category": "DOC",
+      "action": "REWRITE",
+      "priority": "HIGH"
+    },
+    {
+      "id": 8,
+      "file": "src-tauri/src/overdrive/chat_orchestrator.rs",
+      "line": 492,
+      "match": "LOCAL-FIRST: mode offline par défaut",
+      "context": "Runtime offline default",
+      "category": "TAURI",
+      "action": "INVERT",
+      "priority": "HIGH"
+    },
+    {
+      "id": 9,
+      "file": "src/services/ai/orchestrator.ts",
+      "line": 664,
+      "match": "Ollama = LOCAL FIRST avec cascade cloud",
+      "context": "Provider priority",
+      "category": "RUNTIME_CODE",
+      "action": "VERIFY",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": 10,
+      "file": "docs/adr/001-tauri-local-first-architecture.md",
+      "line": 6,
+      "match": "Tags: #architecture #tauri #security #local-first",
+      "context": "ADR tagging",
+      "category": "DOC",
+      "action": "REWRITE",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": 11,
+      "file": "vite.config.ts",
+      "line": null,
+      "match": "server.host may be 127.0.0.1 (local-only strict)",
+      "context": "Dev server host config",
+      "category": "CONFIG",
+      "action": "VERIFY",
+      "priority": "LOW"
+    },
+    {
+      "id": 12,
+      "file": "scripts/governance/constitutional-audit.sh",
+      "line": 25,
+      "match": "L1: LOCAL-FIRST STRICT - Interdiction réseau en production",
+      "context": "Constitutional check",
+      "category": "SCRIPTS",
+      "action": "INVERT",
+      "priority": "HIGH"
+    },
+    {
+      "id": 13,
+      "file": "scripts/governance/prod-cert-release.sh",
+      "line": 111,
+      "match": "L1 LOCAL-FIRST: ✅ No HTTP servers in production",
+      "context": "Certification check",
+      "category": "SCRIPTS",
+      "action": "REMOVE",
+      "priority": "HIGH"
+    },
+    {
+      "id": 14,
+      "file": "docs/CONTRIBUTING.md",
+      "line": 3,
+      "match": "OS cognitif vivant, 100% local-first, construit sur Tauri",
+      "context": "Contributor-facing doctrine",
+      "category": "DOC",
+      "action": "REWRITE",
+      "priority": "MEDIUM"
+    },
+    {
+      "id": 15,
+      "file": "docs/adr/002-omega-conversation-manager.md",
+      "line": 460,
+      "match": "sync_strategy: 'p2p' | 'relay' | 'local-only'",
+      "context": "Sync design",
+      "category": "DOC",
+      "action": "VERIFY",
+      "priority": "LOW"
+    },
+    {
+      "id": 16,
+      "file": "src-tauri/Cargo.toml",
+      "line": null,
+      "match": "Potentiellement requis HTTP plugin/capabilities",
+      "context": "Tauri dependencies",
+      "category": "TAURI",
+      "action": "ADD_ALLOWLIST",
+      "priority": "HIGH"
+    },
+    {
+      "id": 17,
+      "file": "src-tauri/tauri.conf.json",
+      "line": null,
+      "match": "Allowlist/capabilities réseau à vérifier/ajouter",
+      "context": "Tauri config",
+      "category": "TAURI",
+      "action": "ADD_ALLOWLIST",
+      "priority": "HIGH"
+    },
+    {
+      "id": 18,
+      "file": "scripts/guards/guard-network-policy.mjs",
+      "line": null,
+      "match": "NEW: Guard anti-bypass pour surfaces contrôlées",
+      "context": "Guard to create",
+      "category": "SCRIPTS",
+      "action": "CREATE",
+      "priority": "HIGH"
+    }
+  ],
+  "actions_summary": {
+    "REWRITE": ["Instructions Copilot", "Titane instructions", "README", "CONTRIBUTING", "ADRs"],
+    "RENAME": ["package.json verify:local-first → verify:online-first"],
+    "REPLACE": ["enforce-local-first.sh → enforce-online-first.sh"],
+    "INVERT": ["chat_orchestrator offline default", "constitutional-audit checks"],
+    "REMOVE": ["prod-cert-release L1 check"],
+    "ADD_ALLOWLIST": ["Tauri config HTTP plugin", "Cargo.toml dependencies"],
+    "CREATE": ["guard-network-policy.mjs"],
+    "VERIFY": ["orchestrator provider priority", "vite server host", "sync strategy"]
+  }
+}
