@@ -1,8 +1,0 @@
-# PHASE P10_3_2R — VERDICT
-
-PHASE_ID: P10_3_2R
-PROOF_PACK_PATH: deployment/latest/certification/master_runs/P10_3_2R_20260218T215250Z
-FINAL_VERDICT: PASS
-TIMESTAMP: 2026-02-18T21:52:50Z
-
-See LOG*.txt for details.

@@ -1,6 +1,0 @@
-[2026-02-19T02:24:22Z] ═══════════════════════════════
-[2026-02-19T02:24:22Z] STUB: Desktop E2E x3 Full Cert
-[2026-02-19T02:24:22Z] ═══════════════════════════════
-[2026-02-19T02:24:22Z] ═══ PRECHECK: Clean Git Tree ===
-[2026-02-19T02:24:22Z] ❌ FAIL: Modified tracked files detected
- M deployment/latest/certification/MASTER_REGISTRY.jsonl
