@@ -1,0 +1,2 @@
+timeout: intervalle de temps «bash» incorrect
+Saisissez « timeout --help » pour plus d'informations.
