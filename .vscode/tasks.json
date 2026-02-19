@@ -885,7 +885,7 @@
 		{
 			"label": "🧪 Run Playwright E2E (critical)",
 			"type": "shell",
-			"command": "set -euo pipefail\ncd /home/titane-os/Documents/GitHub/TITANE_INFINITY\nexport PATH=\"$PWD/.tools/node/current/bin:$PATH\"\ncleanup() {\n  ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true\n  bash scripts/verify/check-dev-ports-processes.sh\n}\ntrap cleanup EXIT INT TERM\n./.tools/node/current/bin/pnpm run test:e2e\n",
+			"command": "set -euo pipefail\ncd ${workspaceFolder}\nexport PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\"\ncleanup() {\n  ./runtime/dev/cleanup.sh >/dev/null 2>&1 || true\n  bash scripts/verify/check-dev-ports-processes.sh\n}\ntrap cleanup EXIT INT TERM\n./.tools/node/current/bin/pnpm run test:e2e\n",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1188,7 +1188,7 @@
 		{
 			"label": "copilot: test:architecture (pnpm path)",
 			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm",
 			"args": [
 				"test:architecture"
 			],
@@ -1199,7 +1199,7 @@
 		{
 			"label": "final: lint",
 			"type": "shell",
-			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run lint",
+			"command": "export PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\" && pnpm run lint",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1207,7 +1207,7 @@
 		{
 			"label": "final: format:check",
 			"type": "shell",
-			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run format:check",
+			"command": "export PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\" && pnpm run format:check",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1215,7 +1215,7 @@
 		{
 			"label": "final: check",
 			"type": "shell",
-			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run check",
+			"command": "export PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\" && pnpm run check",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1223,7 +1223,7 @@
 		{
 			"label": "final: test:100",
 			"type": "shell",
-			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run test:100",
+			"command": "export PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\" && pnpm run test:100",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1231,7 +1231,7 @@
 		{
 			"label": "final: test:rust",
 			"type": "shell",
-			"command": "export PATH=\"/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin:$PATH\" && pnpm run test:rust",
+			"command": "export PATH=\"${workspaceFolder}/.tools/node/current/bin:$PATH\" && pnpm run test:rust",
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
