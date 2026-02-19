@@ -87,9 +87,11 @@ export async function callOllamaDirectly(
     // ✅ IPC FIX (Ω∞.v1): Classify error before assuming Ollama unavailable
     const classification = classifyError(error);
     const message =
-      classification.type === 'ipc'
+      classification.type === 'ipc' ||
+      classification.type === 'timeout' ||
+      classification.type === 'abort'
         ? classification.message
-        : `Ollama indisponible. TITANE bascule en mode local.`;
+        : 'Ollama indisponible. TITANE bascule en mode local.';
 
     // Return error as content
     return {

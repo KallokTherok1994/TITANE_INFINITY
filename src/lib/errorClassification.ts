@@ -43,11 +43,25 @@ const IPC_ERROR_PATTERNS = [
 ] as const;
 
 /**
- * Network/timeout patterns that could be Ollama OR connectivity
+ * Timeout patterns (local invoke or HTTP request timeout)
+ */
+const TIMEOUT_ERROR_PATTERNS = [
+  /timed out/i,
+  /timeout after/i,
+  /request timeout/i,
+  /command ".*" timed out/i,
+  /\btimeout\b/i,
+] as const;
+
+/**
+ * Abort/cancel patterns (user cancel or AbortController)
+ */
+const ABORT_ERROR_PATTERNS = [/abort/i, /aborted/i, /aborterror/i] as const;
+
+/**
+ * Network patterns that imply connectivity issues
  */
 const NETWORK_ERROR_PATTERNS = [
-  /timeout/i,
-  /aborted/i,
   /connection refused/i,
   /econnrefused/i,
   /network error/i,
@@ -80,10 +94,22 @@ export function isNetworkError(error: unknown): boolean {
 }
 
 /**
+ * Check if error is timeout-related
+ */
+export function isTimeoutError(error: unknown): boolean {
+  if (!error) return false;
+
+  const message = getErrorMessage(error);
+  if (!message) return false;
+
+  return TIMEOUT_ERROR_PATTERNS.some(pattern => pattern.test(message));
+}
+
+/**
  * Get user-friendly error message based on classification
  */
 export function classifyError(error: unknown): {
-  type: 'ipc' | 'network' | 'ollama' | 'unknown';
+  type: 'ipc' | 'timeout' | 'abort' | 'network' | 'ollama' | 'unknown';
   message: string;
   hint: string;
   retryable: boolean;
@@ -97,11 +123,29 @@ export function classifyError(error: unknown): {
     };
   }
 
+  if (isAbortError(error)) {
+    return {
+      type: 'abort',
+      message: 'Opération annulée',
+      hint: 'Aucune action supplémentaire requise.',
+      retryable: false,
+    };
+  }
+
+  if (isTimeoutError(error)) {
+    return {
+      type: 'timeout',
+      message: "Délai d'attente dépassé",
+      hint: "Le service local a pris trop de temps à répondre. Réessayer.",
+      retryable: true,
+    };
+  }
+
   if (isNetworkError(error)) {
     return {
       type: 'network',
-      message: 'Erreur réseau ou timeout',
-      hint: 'Vérifier la connexion ou attendre avant de réessayer.',
+      message: 'Erreur réseau',
+      hint: 'Vérifier la connexion avant de réessayer.',
       retryable: true,
     };
   }
@@ -162,7 +206,7 @@ export function isAbortError(error: unknown): boolean {
   }
 
   const message = getErrorMessage(error);
-  return /abort/i.test(message);
+  return ABORT_ERROR_PATTERNS.some(pattern => pattern.test(message));
 }
 
 /**

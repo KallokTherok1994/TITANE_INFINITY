@@ -618,9 +618,13 @@ export class TauriInvokeProtector {
       const message =
         classification.type === 'ollama'
           ? 'Ollama indisponible. TITANE bascule en mode local.'
-          : classification.type === 'network'
-            ? 'Erreur réseau ou timeout.'
-            : classification.message;
+          : classification.type === 'timeout'
+            ? "Délai d'attente dépassé. Réessaie."
+            : classification.type === 'abort'
+              ? 'Opération annulée.'
+              : classification.type === 'network'
+                ? 'Erreur réseau. Vérifie la connexion.'
+                : classification.message;
 
       console.warn('[TauriProtector] conversation_generate fallback', {
         traceId,
