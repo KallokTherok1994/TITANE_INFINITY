@@ -2,36 +2,35 @@
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 
-**Version:** v26.4.0  
+**Version:** v26.3.0  
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Qualité (v26.4.0) :** Tests 93.0% (2675/2875) — Production Ready ✅ — Au-dessus standards industrie 🏆
+**Qualité (v26.3.0) :** Certification P10.4 → P11 PASS (2026-02-19) — Production Ready ✅
 
 ---
 
 ## 📦 Téléchargement
 
-### ✨ **Version Stable : v26.4.0** — Nouvelle Identité Holographique ∞
+### ✨ **Version Stable : v26.3.0** — Release stable
 
 **Télécharger pour Linux (Debian/Ubuntu):**
 
 ```bash
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.4.0/TITANE-Infinity_26.4.0_amd64.deb
-sudo dpkg -i TITANE-Infinity_26.4.0_amd64.deb
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.deb
+sudo dpkg -i TITANE-Infinity_26.3.0_amd64.deb
 ```
 
-**Nouveautés v26.4.0 :**
+**Points cles v26.3.0 :**
 
-- 🎨 **Icône holographique ∞** (symbole infini avec dégradé bleu titanium → cyan)
-- ✅ 2508/2508 tests validés (100%)
-- 🛡️ Performance Guards + Télémétrie avancée
-- 🔒 Score d'infaillibilité : 110%
+- ✅ Certification P10.4 → P11 PASS (pipeline complet)
+- 🧠 Fix Ollama: modele par defaut `gemma2:2b`
+- 📦 Artefacts stables actualises (AppImage/DEB)
 
 **Compatibilité :**  
 ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
-📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v26.4.0) | 🔐 [SHA256 Checksum](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.4.0/TITANE-Infinity_26.4.0_amd64.deb.sha256)
+📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v26.3.0) | 🔐 [SHA256 Checksum](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.deb.sha256)
 
 ---
 
@@ -109,7 +108,7 @@ corepack prepare pnpm@9 --activate
 
 ---
 
-## 📐 Architecture v26.4.0
+## 📐 Architecture v26.3.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
