@@ -1,0 +1,6 @@
+[2026-02-19T02:25:23Z] ═══════════════════════════════════════════════════════════
+[2026-02-19T02:25:23Z] REAL PHASE: Infrastructure IPC Stabilization (REAL)
+[2026-02-19T02:25:23Z] ═══════════════════════════════════════════════════════════
+[2026-02-19T02:25:23Z] ═══ PRECHECK: Clean Git Tree ===
+[2026-02-19T02:25:23Z] ❌ FAIL: Modified tracked files detected
+ M deployment/latest/certification/MASTER_REGISTRY.jsonl
