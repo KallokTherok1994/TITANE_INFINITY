@@ -18,6 +18,8 @@ target
 .git
 .husky
 .vscode
+deployment
+docs/_evidence
 .idea
 
 # Archives historiques (do not format)

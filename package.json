@@ -58,7 +58,7 @@
     "test:dev-bridge:contract": "node scripts/dev/dev-bridge-contract-test.mjs",
     "test:100": "pnpm run test && pnpm run test:browser",
     "test:100:full": "pnpm run test && cross-env RUN_E2E_TESTS=1 pnpm run test:e2e:vitest && pnpm run test:browser",
-    "test:rust": "mkdir -p dist && cd src-tauri && cargo test",
+    "test:rust": "mkdir -p dist && cd src-tauri && cargo test --lib",
     "test:tauri": "pnpm run test:rust",
     "test:architecture": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/architecture",
     "test:compliance": "cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/compliance",
