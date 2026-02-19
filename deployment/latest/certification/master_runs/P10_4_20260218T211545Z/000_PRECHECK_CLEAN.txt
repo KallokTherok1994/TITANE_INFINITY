@@ -1,7 +1,0 @@
-[2026-02-18T21:15:45Z] ═══ PRECHECK: Clean Git Tree ===
-[2026-02-18T21:15:45Z] ✅ Git tree clean (tracked files)
-[2026-02-18T21:15:45Z] ✅ Safe: src-tauri/tauri.conf.json unchanged
-[2026-02-18T21:15:45Z] ✅ Safe: src-tauri/Cargo.toml unchanged
-[2026-02-18T21:15:45Z] ✅ Safe: package.json unchanged
-[2026-02-18T21:15:45Z] ✅ Safe: pnpm-lock.yaml unchanged
-[2026-02-18T21:15:45Z] ✅ PRECHECK PASS
