@@ -193,6 +193,7 @@ else
   P10_6_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_6_build_stub.sh"  # Still stub
   P10_7_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_7_pkg_stub.sh"  # Still stub
   P10_8_SCRIPT="$REPO_ROOT/scripts/certification/phases_stub/p10_8_ops_stub.sh"  # Still stub
+  P11_SCRIPT="$REPO_ROOT/scripts/certification/phases_real/p11_human_acceptance_real.sh"
 fi
 
 # P10.4
@@ -231,17 +232,41 @@ run_phase "P10_8" "$P10_8_SCRIPT" "P10_7" || {
   exit 80
 }
 
-# P11 (Human acceptance — Kevin only, manual approval)
-# This phase is non-executable by automation
+# P11 (Human acceptance — now automated with token approval)
+run_phase_p11() {
+  local script="$1"
+  if [ -z "${APPROVAL_TOKEN:-}" ]; then
+    log_cmd ""
+    log_cmd "╔════════════════════════════════════════════════════════════╗"
+    log_cmd "║  PHASE: P11 (FINAL HUMAN ACCEPTANCE)                      ║"
+    log_cmd "╚════════════════════════════════════════════════════════════╝"
+    log_cmd ""
+    log_cmd "⏸ AWAITING HUMAN DECISION (Kevin manual testing)"
+    log_cmd "   This phase requires explicit user approval token:"
+    log_cmd "   export APPROVAL_TOKEN='GO_FOR_HUMAN_ACCEPTANCE_P11__TITANE_INFINITY'"
+    log_cmd "   Then re-run: bash $SCRIPT_PATH --run"
+    PHASE_RESULTS["P11"]="PENDING_HUMAN"
+    return 0  # Non-fatal (awaits token)
+  else
+    # Run P11 with token
+    APPROVAL_TOKEN="$APPROVAL_TOKEN" run_phase "P11" "$script" "P10_8" || return 1
+  fi
+}
+
 log_cmd ""
 log_cmd "╔════════════════════════════════════════════════════════════╗"
 log_cmd "║  PHASE: P11 (FINAL HUMAN ACCEPTANCE)                      ║"
 log_cmd "╚════════════════════════════════════════════════════════════╝"
 log_cmd ""
-log_cmd "⏸ AWAITING HUMAN DECISION (Kevin manual testing)"
-log_cmd "   This phase requires explicit user approval and cannot be automated."
-log_cmd "   Kevin will test manually and provide approval token."
-PHASE_RESULTS["P11"]="PENDING_HUMAN"
+
+run_phase_p11 "$P11_SCRIPT" || {
+  if [ "${PHASE_RESULTS[P11]:-}" = "PENDING_HUMAN" ]; then
+    log_cmd "⏸ P11 awaiting human approval token"
+  else
+    log_cmd "⏹ STOP-THE-LINE: P11 failed. Aborting."
+    exit 110
+  fi
+}
 
 # =========================================================
 # MASTER EPILOGUE
