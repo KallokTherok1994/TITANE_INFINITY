@@ -1,3 +1,6 @@
+TITANE-Infinity_26.3.0_amd64.AppImage 85600760
+TITANE-Infinity_26.3.0_amd64.deb 9989722
 TITANE-Infinity_26.4.0_amd64.AppImage 85580280
 TITANE-Infinity_26.4.0_amd64.deb 9967846
 TITANE-Infinity-26.4.0-1.x86_64.rpm 9968942
+titane-infinity 23147360
