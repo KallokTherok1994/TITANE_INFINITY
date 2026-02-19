@@ -1,0 +1,14 @@
+Binary Release Manifest
+========================
+
+File: titane-infinity (Tauri desktop app)
+Path: ./src-tauri/target/release/titane-infinity
+Size: 23147360 bytes
+SHA256: f6481b9cc0efd89b50db20692edbeecf9e607ad40baf3cc930cd47a3664ea65c
+Date: 2026-02-18 15:40:35.443901862 -0500
+
+Approved by: Human (Kevin Thibault)
+Approval Method: Token-based (GO_FOR_HUMAN_ACCEPTANCE_P11__TITANE_INFINITY)
+Approval Date: 2026-02-19T01:40:14Z
+
+Status: PRODUCTION READY
