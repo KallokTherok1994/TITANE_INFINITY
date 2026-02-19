@@ -18,41 +18,47 @@ elif [ -n "${BASH_VERSION:-}" ]; then
 fi
 
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "  TITANE∞ — Configuration de l'alias /ollama"
+echo "  TITANE∞ — Configuration Ollama Launcher"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo ""
 
-# Vérifier si l'alias existe déjà
-if grep -q "alias /ollama=" "$SHELL_CONFIG" 2>/dev/null; then
-    echo "⚠️  L'alias /ollama existe déjà dans $SHELL_CONFIG"
+# Vérifier si la configuration existe déjà
+if grep -q "ollama_titane()" "$SHELL_CONFIG" 2>/dev/null; then
+    echo "⚠️  Configuration Ollama existe déjà dans $SHELL_CONFIG"
     echo ""
-    read -p "Voulez-vous le remplacer? (o/N) " -n 1 -r
+    read -p "Voulez-vous la remplacer? (o/N) " -n 1 -r
     echo ""
     if [[ ! $REPLY =~ ^[Oo]$ ]]; then
         echo "❌ Annulé"
         exit 0
     fi
     
-    # Supprimer l'ancien alias
-    sed -i '/alias \/ollama=/d' "$SHELL_CONFIG"
+    # Supprimer l'ancienne configuration
+    sed -i '/ollama_titane/d' "$SHELL_CONFIG"
+    sed -i '/TITANE∞ — Ollama Launcher/d' "$SHELL_CONFIG"
 fi
 
-# Ajouter l'alias
+# Ajouter une fonction shell (bash ne supporte pas les "/" dans les noms d'alias)
 cat >> "$SHELL_CONFIG" << EOF
 
 # ═══════════════════════════════════════════════════════════════════════════
-# TITANE∞ — Ollama Launcher Alias
+# TITANE∞ — Ollama Launcher Function (aliases can't use "/" in their names)
 # ═══════════════════════════════════════════════════════════════════════════
-alias /ollama='$LAUNCHER_SCRIPT'
+ollama_titane() {
+  exec '$LAUNCHER_SCRIPT' "\$@"
+}
+
+# Make it available as a command
+export PATH="$(dirname '$LAUNCHER_SCRIPT'):\$PATH"
 EOF
 
-echo "✅ Alias ajouté à $SHELL_CONFIG"
+echo "✅ Configuration ajoutée à $SHELL_CONFIG"
 echo ""
 echo "Pour l'activer immédiatement:"
 echo "  source $SHELL_CONFIG"
 echo ""
-echo "Ou ouvrez un nouveau terminal et tapez:"
-echo "  /ollama help"
+echo "Ou ouvrez un nouveau terminal et utilisez:"
+echo "  ollama_titane help"
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 echo "  Configuration terminée!"
