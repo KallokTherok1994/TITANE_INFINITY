@@ -114,7 +114,7 @@ mod tests {
 // Run: cargo test -- --nocapture perf_bench
 // Expected: Establish baseline for all critical operations
 pub fn capture_baseline() {
-    let mut bench = PerfBench::new();
+    let bench = PerfBench::new();
 
     // Will be populated with real measurements
     println!("📊 Baseline metrics framework ready for Week 1 measurements");

@@ -281,7 +281,7 @@ pub mod compat;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 pub mod modules;
 
-#[cfg(all(not(feature = "mock"), feature = "full"))]
+// Audio module available in both mock and full modes (capture has internal stubs)
 pub mod audio;
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]

@@ -1,0 +1,43 @@
+================================================================================
+BASELINE — CLEANROOM STATE (vΩ.FINAL PRODUCTION LOCKDOWN)
+================================================================================
+
+Date: jeu. 19 févr. 2026 13:22:43 UTC
+Campaign: ULTRA SUPER PROMPT vΩ.FINAL — PRODUCTION INTEGRITY LOCKDOWN
+
+GIT STATE
+---------
+Branch: MAIN
+HEAD SHA: abb1fedd07c8c19d52b7bea0de746d1f396f94ab
+Commits ahead origin/MAIN: 4
+Status: CLEAN (working tree restored to abb1fedd)
+
+TOOL VERSIONS
+-------------
+pnpm: 10.28.2
+node: v24.0.0
+rustc: rustc 1.91.1 (ed61e7d7e 2025-11-07)
+cargo: cargo 1.91.1 (ea2d97820 2025-10-10)
+git: git version 2.43.0
+
+LOCKED DEPENDENCIES
+-------------------
+pnpm-lock.yaml: 549644 bytes
+Cargo.lock: 190082 bytes
+
+PROJECT STRUCTURE
+-----------------
+src/ TS files: 1498
+src-tauri/ RS files: 910
+docs/ files: 3985
+e2e/ files: 28
+
+KNOWN PRE-EXISTING ISSUE (MUST FIX)
+-----------------------------------
+BP08: Binary build blocker (E0432: unresolved import crate::audio::capture)
+Status: MUST BE FIXED FOR PROD AUTHORIZATION
+Impact: pnpm tauri build fails at Rust compilation (binary target)
+Library tests: PASS (4309 tests)
+Evidence: docs/_evidence/online_migration/BP08_build_blocker_note.md
+
+================================================================================

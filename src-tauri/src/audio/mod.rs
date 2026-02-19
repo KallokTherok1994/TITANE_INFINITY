@@ -5,8 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod asr;
-#[cfg(feature = "audio-capture")]
-pub mod capture;
+pub mod capture;  // Module always available; contents gated below
 pub mod commands;
 pub mod recorder;
 pub mod recording_engine;
