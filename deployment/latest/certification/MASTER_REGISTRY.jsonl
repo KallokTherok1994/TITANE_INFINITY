@@ -214,3 +214,15 @@
   "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023123Z",
   "timestamp": "2026-02-19T02:31:25Z"
 }
+{
+  "phase": "P10_4",
+  "verdict": "FAIL",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023213Z",
+  "timestamp": "2026-02-19T02:32:16Z"
+}
+{
+  "phase": "P10_4",
+  "verdict": "FAIL",
+  "pack_path": "deployment/latest/certification/master_runs/P10_4_20260219T023239Z",
+  "timestamp": "2026-02-19T02:32:41Z"
+}
