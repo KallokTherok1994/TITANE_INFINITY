@@ -36,7 +36,8 @@ prechecks_clean_tree() {
 
   # 1. Git status — check ONLY for modified tracked files (M, D, etc.)
   # Exclude untracked (??) as outputs/proof packs are expected untracked
-  local modified=$(git status --porcelain | grep -E "^ [MD]|^[MD] " || true)
+  # Also exclude: MASTER_REGISTRY.jsonl (orchestration artifact, can be modified)
+  local modified=$(git status --porcelain | grep -E "^ [MD]|^[MD] " | grep -v "MASTER_REGISTRY.jsonl" || true)
   if [ -n "$modified" ]; then
     log_cmd "❌ FAIL: Modified tracked files detected" "$check_log"
     echo "$modified" | tee -a "$check_log"
