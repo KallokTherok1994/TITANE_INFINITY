@@ -101,7 +101,7 @@ tracing = "0.1.43"
 bincode = "1.3.3"
 
 [features]
-default = ["custom-protocol", "mock"]
+default = ["custom-protocol", "mock", "audio-capture"]
 custom-protocol = ["tauri/custom-protocol"]
 mock = [] # Mock backend mode for frontend-only development
 full = [] # Full backend mode with all real implementations
