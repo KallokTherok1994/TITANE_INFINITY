@@ -6,7 +6,7 @@ use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 
 const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
-const DEFAULT_OLLAMA_MODEL: &str = "titane-local";
+const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const OLLAMA_MODEL_ENV: &str = "TITANE_OLLAMA_MODEL";
 
 #[derive(Serialize)]
