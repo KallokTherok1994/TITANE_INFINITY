@@ -26,7 +26,8 @@ import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional loggin
 
 // ✅ v27.2Ω: Import unified transport layer (dual mode HTTP + IPC)
 import { ollamaCheckHealth, ollamaGenerate } from '../transports/ollamaTransport';
-import { titaneLocalProvider } from './titaneLocal';
+// ✨ v27.4: Deferred import to break circular dependency with orchestrator
+// import { titaneLocalProvider } from './titaneLocal';
 
 const logger = createLogger('Ollama'); // ✨ v21.1
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
@@ -323,6 +324,8 @@ async function fallbackToLocal(
   history: AIMessage[],
   reason: string
 ): Promise<AIResponse> {
+  // ✨ v27.4: Lazy import to prevent circular dependency at module load time
+  const { titaneLocalProvider } = await import('./titaneLocal');
   const localResponse = await titaneLocalProvider.generate(message, history);
   return {
     ...localResponse,
