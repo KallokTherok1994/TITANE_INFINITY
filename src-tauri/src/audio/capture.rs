@@ -20,12 +20,23 @@ use std::sync::{
 #[cfg(feature = "audio-capture")]
 use std::time::Duration;
 
+/// Wrapper for cpal::Stream to make it Send + Sync
+/// SAFETY: Audio streams in TITANE are only accessed from a single thread (main audio thread)
+/// The stream is created, used, and dropped within the same thread context.
+#[cfg(feature = "audio-capture")]
+struct SafeStream(Option<cpal::Stream>);
+
+#[cfg(feature = "audio-capture")]
+unsafe impl Send for SafeStream {}
+#[cfg(feature = "audio-capture")]
+unsafe impl Sync for SafeStream {}
+
 #[cfg(feature = "audio-capture")]
 pub struct AudioCaptureState {
     buffer: Arc<Mutex<RingBuffer>>,
     is_capturing: Arc<AtomicBool>,
     config: AudioConfig,
-    stream: Option<cpal::Stream>,
+    stream: SafeStream,
 }
 
 #[cfg(feature = "audio-capture")]
@@ -94,7 +105,7 @@ impl AudioCaptureState {
             buffer: Arc::new(Mutex::new(RingBuffer::new(buffer_size))),
             is_capturing: Arc::new(AtomicBool::new(false)),
             config,
-            stream: None,
+            stream: SafeStream(None),
         }
     }
 
@@ -114,7 +125,7 @@ impl AudioCaptureState {
             _ => Err(AudioError::DeviceError("Unsupported format".into())),
         }?;
         stream.play().map_err(|e| AudioError::RecordingError(format!("Stream fail: {}", e)))?;
-        self.stream = Some(stream);
+        self.stream = SafeStream(Some(stream));
         self.is_capturing.store(true, Ordering::SeqCst);
         Ok(())
     }
@@ -144,7 +155,7 @@ impl AudioCaptureState {
     pub fn stop_capture(&mut self) -> AudioResult<()> {
         if !self.is_capturing.load(Ordering::SeqCst) { return Ok(()); }
         self.is_capturing.store(false, Ordering::SeqCst);
-        self.stream = None;
+        self.stream = SafeStream(None);
         Ok(())
     }
 

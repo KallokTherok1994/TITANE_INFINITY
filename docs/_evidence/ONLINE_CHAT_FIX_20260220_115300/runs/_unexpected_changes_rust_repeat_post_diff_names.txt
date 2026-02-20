@@ -1,0 +1,10 @@
+registry/ui-events.jsonl
+scripts/e2e/tauri-wrapper.sh
+src/__tests__/c3-latency.test.ts
+src/__tests__/cloud-agent-timeout-config.test.ts
+src/components/chat/ChatBubble.tsx
+src/config/aiTimeouts.config.ts
+src/constants/timeouts.ts
+src/services/conversationEngine.ts
+src/types/providerMeta.ts
+src/utils/tauriProtector.ts

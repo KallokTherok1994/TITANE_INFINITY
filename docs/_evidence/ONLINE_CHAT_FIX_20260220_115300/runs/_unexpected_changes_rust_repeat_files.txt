@@ -1,0 +1,4 @@
+src-tauri/src/config/mod.rs
+src-tauri/src/conversation_engine/commands.rs
+src-tauri/src/conversation_engine/meta_accumulator.rs
+src-tauri/src/conversation_engine/mod.rs

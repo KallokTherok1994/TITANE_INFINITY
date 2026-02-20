@@ -1,0 +1,27 @@
+]633;E;{   echo "# Checking working tree state"\x3b   echo ""\x3b   git status --porcelain=v1 | while IFS= read -r line\x3b do     file=$(echo "$line" | awk '{print $2}')\x3b     if echo "$file" | grep -qE "^docs/_evidence/|^registry/ui-events.jsonl$"\x3b then       echo "ALLOWED: $file"\x3b     else       echo "UNEXPECTED: $file"\x3b     fi\x3b   done\x3b      UNEXPECTED_COUNT=$(git status --porcelain=v1 | awk '{print $2}' | grep -vE "^docs/_evidence/|^registry/ui-events.jsonl$" | wc -l)\x3b      if [ "$UNEXPECTED_COUNT" -eq 0 ]\x3b then     echo ""\x3b     echo "STATE_STABLE=YES"\x3b   else     echo ""\x3b     echo "STATE_STABLE=NO"\x3b     echo "UNEXPECTED_FILES_COUNT=$UNEXPECTED_COUNT"\x3b   fi\x3b } > "$RUNS_DIR/_auto_state_check.txt";25054337-157d-412d-833f-c30814df6142]633;C# Checking working tree state
+
+ALLOWED: registry/ui-events.jsonl
+UNEXPECTED: scripts/e2e/tauri-wrapper.sh
+UNEXPECTED: src/__tests__/c3-latency.test.ts
+UNEXPECTED: src/__tests__/cloud-agent-timeout-config.test.ts
+UNEXPECTED: src/components/chat/ChatBubble.tsx
+UNEXPECTED: src/config/aiTimeouts.config.ts
+UNEXPECTED: src/constants/timeouts.ts
+UNEXPECTED: src/services/conversationEngine.ts
+UNEXPECTED: src/types/providerMeta.ts
+UNEXPECTED: src/utils/tauriProtector.ts
+UNEXPECTED: ANALYSE_APPROFONDIE_v27.md
+UNEXPECTED: CHAT_PROVIDER_FIX_v27_TEST.md
+UNEXPECTED: FOOTER_DIAGNOSTIC.md
+ALLOWED: docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+ALLOWED: docs/_evidence/online_migration/BP08_build_blocker_note.md
+UNEXPECTED: e2e/desktop/online-chat-proof-ui.wdio.test.js
+UNEXPECTED: e2e/desktop/online-chat-proof.wdio.test.js
+UNEXPECTED: scripts/test/test-bootstrap-api-keys.sh
+UNEXPECTED: scripts/test/test-provider-status.sh
+UNEXPECTED: scripts/tools/e2e_chat_proof_campaign.sh
+UNEXPECTED: scripts/tools/e2e_chat_proof_harvest.sh
+UNEXPECTED: scripts/verify/verify_chat_online.sh
+
+STATE_STABLE=NO
+UNEXPECTED_FILES_COUNT=19

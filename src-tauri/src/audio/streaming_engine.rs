@@ -241,7 +241,7 @@ impl StreamingAudioEngine {
         } else {
             log::error!("[StreamingEngine] ⚠️ State mutex poisoned, recovering");
             // Mutex poisoned but stream is still active - recover
-            let recovered = self.state.lock().unwrap_or_else(|e| e.into_inner());
+            let mut recovered = self.state.lock().unwrap_or_else(|e| e.into_inner());
             *recovered = StreamingState::Listening;
         }
 
@@ -278,7 +278,7 @@ impl StreamingAudioEngine {
             return;
         }
 
-        let vad_result = if let Ok(vad_detector) = vad.lock() {
+        let vad_result = if let Ok(mut vad_detector) = vad.lock() {
             vad_detector.detect(data)
         } else {
             return;
@@ -347,7 +347,7 @@ impl StreamingAudioEngine {
         };
 
         // Get final VAD result
-        let (has_speech, confidence) = if let Ok(vad) = self.vad.lock() {
+        let (has_speech, confidence) = if let Ok(mut vad) = self.vad.lock() {
             let result = vad.detect(&audio_data);
             (result.has_speech, result.confidence)
         } else {

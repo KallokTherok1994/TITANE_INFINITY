@@ -1,0 +1,2 @@
+NOT REQUESTED
+reason=Rollback validation (git revert + build) was not requested/executed in this automated harvest pass.

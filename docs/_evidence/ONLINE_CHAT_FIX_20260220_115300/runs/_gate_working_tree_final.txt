@@ -1,0 +1,3 @@
+ M registry/ui-events.jsonl
+?? docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+?? docs/_evidence/online_migration/BP08_build_blocker_note.md

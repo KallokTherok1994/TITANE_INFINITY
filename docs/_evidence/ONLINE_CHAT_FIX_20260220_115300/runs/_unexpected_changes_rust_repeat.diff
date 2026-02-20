@@ -1,0 +1,768 @@
+diff --git a/registry/ui-events.jsonl b/registry/ui-events.jsonl
+index bf640e9c..80275a4e 100644
+--- a/registry/ui-events.jsonl
++++ b/registry/ui-events.jsonl
+@@ -57,3 +57,4 @@
+ {"id":"ui-035","ts":"2026-02-18T23:45:00Z","category":"ui","scope":"vocal-dev-console|audio","change_type":"fix","summary":"Fix mic click errors: register audio recording commands and catch recording failures in UI","reason":"Mic click raised an unhandled promise because start_recording was not registered in the Tauri invoke handler.","files_changed":["src-tauri/src/main.rs","src/components/VocalDevConsole.tsx"],"tests_run":["Not run (not requested)"] ,"proofs":["start_recording/start/stop/cancel now registered in main invoke handler","VocalDevConsole mic handler catches start/stop errors to avoid unhandled promise"],"risk_level":"low","rollback":"git checkout -- src-tauri/src/main.rs src/components/VocalDevConsole.tsx","status":"pending-validation"}
+ {"id":"ui-036","ts":"2026-02-18T23:55:00Z","category":"ui","scope":"governance-center","change_type":"perf-fix","summary":"Defer heavy governance loads and cap security log fetch size","reason":"Le chargement initial du centre Gouvernance declenchait des appels lourds (audit/logs) provoquant lag et crash. Les donnees lourdes sont maintenant chargees a l'ouverture de l'onglet et le journal est limite par defaut.","files_changed":["src/features/governance-center/hooks/useGovernance.ts"],"tests_run":["Not run (not requested)"],"proofs":["Chargement initial: secrets + status uniquement","Onglets policies/permissions/logs chargent a la demande","Security log limite a 200 entrees par defaut"],"risk_level":"low","rollback":"git checkout -- src/features/governance-center/hooks/useGovernance.ts","status":"pending-validation"}
+ {"id":"ui-037","ts":"2026-02-18T23:59:30Z","category":"ui","scope":"error-messaging|ipc|fallback","change_type":"fix","summary":"Clarify timeout vs network vs abort fallback messages","reason":"Le message 'Erreur réseau ou timeout.' etait affiche pour des timeouts ou annulations locales, ce qui etait trompeur. La classification distingue maintenant timeout/abort/reseau avec messages precis.","files_changed":["src/lib/errorClassification.ts","src/utils/tauriProtector.ts","src/utils/ollamaFallback.ts"],"tests_run":["Not run (not requested)"],"proofs":["Timeout et abort ont des messages dedies","Erreur reseau n'inclut plus 'timeout'","Fallback Ollama ne ment pas sur un timeout/abort"],"risk_level":"low","rollback":"git checkout -- src/lib/errorClassification.ts src/utils/tauriProtector.ts src/utils/ollamaFallback.ts","status":"pending-validation"}
++{"id":"ui-038","ts":"2026-02-20T13:25:00Z","category":"ui","scope":"chat|e2e-desktop|wrapper","change_type":"fix","summary":"Stabilize desktop chat E2E selectors and force explicit binary path in wrapper/campaign","reason":"WDIO desktop proof remained blocked by missing chat selectors; added stable data-testid anchors and hardened proof runner path selection.","files_changed":["src/components/chat/ChatBubble.tsx","e2e/desktop/online-chat-proof-ui.wdio.test.js","scripts/e2e/tauri-wrapper.sh","scripts/tools/e2e_chat_proof_campaign.sh","docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/CHANGES.md","docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/FINDINGS.md","docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/E2E_RUNS.md","docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/VERDICT.md","docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/COMMANDS_RUN.txt"],"tests_run":["pnpm exec wdio run wdio.desktop.conf.cjs --spec e2e/desktop/online-chat-proof-ui.wdio.test.js","TAURI_BINARY_PATH=$(command -v titane-infinity) pnpm exec wdio run wdio.desktop.conf.cjs --spec e2e/desktop/online-chat-proof-ui.wdio.test.js"],"proofs":["DOM_DIAG shows static fallback page only (React not mounted)","No chat selectors available at runtime despite selector patch"],"risk_level":"low","rollback":"git restore -- src/components/chat/ChatBubble.tsx e2e/desktop/online-chat-proof-ui.wdio.test.js scripts/e2e/tauri-wrapper.sh scripts/tools/e2e_chat_proof_campaign.sh docs/_evidence/ONLINE_CHAT_FIX_20260220_115300 registry/ui-events.jsonl","status":"experimental"}
+diff --git a/scripts/e2e/tauri-wrapper.sh b/scripts/e2e/tauri-wrapper.sh
+index e6274cfe..abb128f1 100755
+--- a/scripts/e2e/tauri-wrapper.sh
++++ b/scripts/e2e/tauri-wrapper.sh
+@@ -43,8 +43,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+ 
+ # Prioritize debug build for E2E tests
+ BINARY_PATHS=(
++  "${TAURI_BINARY_PATH:-}"
+   "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
+   "$REPO_ROOT/src-tauri/target/release/titane-infinity"
++  "$HOME/.local/bin/titane-infinity"
+   "/usr/bin/titane-infinity"
+ )
+ 
+diff --git a/src-tauri/src/config/mod.rs b/src-tauri/src/config/mod.rs
+index 6360153e..39b95b24 100644
+--- a/src-tauri/src/config/mod.rs
++++ b/src-tauri/src/config/mod.rs
+@@ -106,10 +106,11 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
+         secrets_mode: "encrypted".to_string(), // Implementation: Get from SecureSecretsEngine.get_mode()
+         // - Query: SecureSecretsEngine::get_encryption_mode() → "encrypted"/"plaintext"/"keyring"
+         // - Fallback: "encrypted" if SecureSecretsEngine not initialized
+-        gemini_configured: false, // Implementation: Check if Gemini API key exists in SecureSecretsEngine
+-        // - Check: SecureSecretsEngine::has_secret("gemini_api_key").await
+-        // - Validation: Optionally ping Gemini API to verify key validity
+-        // - Return: true if key exists and valid, false otherwise
++        gemini_configured: std::env::var("GEMINI_API_KEY")
++            .ok()
++            .map(|v| !v.trim().is_empty())
++            .unwrap_or(false),
++        // TODO: Check SecureSecretsEngine::has_secret("gemini_api_key") when available.
+         timestamp: SystemTime::now()
+             .duration_since(UNIX_EPOCH)
+             .map(|d| d.as_secs())
+diff --git a/src-tauri/src/conversation_engine/commands.rs b/src-tauri/src/conversation_engine/commands.rs
+index 5b24fc19..47e65cd7 100644
+--- a/src-tauri/src/conversation_engine/commands.rs
++++ b/src-tauri/src/conversation_engine/commands.rs
+@@ -131,6 +131,16 @@ pub async fn conversation_generate(
+     );
+ 
+     let meta = ensure_provider_meta(&response.metadata, latency_ms as u128);
++    let online = matches!(meta.mode, Mode::Remote) || meta.network_used;
++    let reason_code_contract = map_reason_code(&meta.reason_code);
++    log::info!(
++        "[CHAT_DECISION] online={} reason_code={} provider={} mode={:?}",
++        online,
++        reason_code_contract,
++        meta.provider_used,
++        meta.mode
++    );
++    let decision = build_decision_contract(&meta);
+ 
+     // Construire la réponse JSON compatible avec le frontend
+     Ok(serde_json::json!({
+@@ -140,6 +150,7 @@ pub async fn conversation_generate(
+         "frenchMasteryApplied": true, // OMEGA utilise toujours FrenchMastery
+         "latencyMs": latency_ms,
+         "meta": meta,
++        "decision": decision,
+         "metadata": {
+             "intention": format!("{:?}", response.detected_intention),
+             "emotion": format!("{:?}", response.detected_emotion),
+@@ -190,6 +201,39 @@ fn ensure_provider_meta(metadata: &ConversationMetadata, latency_ms_total: u128)
+     )
+ }
+ 
++fn build_decision_contract(meta: &ProviderDecisionMeta) -> serde_json::Value {
++    let mode = serde_json::to_value(&meta.mode)
++        .unwrap_or_else(|_| serde_json::Value::String("ERROR".to_string()));
++    let reason_code_contract = map_reason_code(&meta.reason_code);
++
++    serde_json::json!({
++        "online": matches!(meta.mode, Mode::Remote) || meta.network_used,
++        "reasonCode": reason_code_contract,
++        "providerSelected": meta.provider_used,
++        "attempts": meta.attempts,
++        "networkUsed": meta.network_used,
++        "mode": mode,
++    })
++}
++
++fn map_reason_code(reason: &ReasonCode) -> &'static str {
++    match reason {
++        ReasonCode::Ok | ReasonCode::CacheHit | ReasonCode::CacheMiss | ReasonCode::PolicyRemoteAllowed => {
++            "ONLINE_OK"
++        }
++        ReasonCode::PolicyLocalOnly => "OFFLINE_USER_FORCED",
++        ReasonCode::AllowlistDenied | ReasonCode::NetworkError => "OFFLINE_NETWORK_BLOCKED",
++        ReasonCode::ProviderDown | ReasonCode::ProviderUnavailable | ReasonCode::RateLimit => {
++            "OFFLINE_PROVIDER_DOWN"
++        }
++        ReasonCode::Timeout => "OFFLINE_TIMEOUT",
++        ReasonCode::InvalidConfig => "OFFLINE_NO_KEYS",
++        ReasonCode::FallbackOffline | ReasonCode::SerializationDropped | ReasonCode::ToolRequired | ReasonCode::ToolDenied | ReasonCode::Unknown => {
++            "OFFLINE_INTERNAL_ERROR"
++        }
++    }
++}
++
+ #[cfg(test)]
+ mod tests {
+     use super::*;
+diff --git a/src-tauri/src/conversation_engine/meta_accumulator.rs b/src-tauri/src/conversation_engine/meta_accumulator.rs
+index 25632fd6..b77bc469 100644
+--- a/src-tauri/src/conversation_engine/meta_accumulator.rs
++++ b/src-tauri/src/conversation_engine/meta_accumulator.rs
+@@ -138,28 +138,35 @@ pub fn build_offline_meta(reason_code: ReasonCode, policy: &str) -> ProviderDeci
+ }
+ 
+ pub fn build_timeout_meta() -> ProviderDecisionMeta {
+-    let provider_used = "offline".to_string();
+-    let provider_class = ProviderClass::Local;
+-    let mode = Mode::Offline;
++    build_timeout_meta_with_policy("offline", Mode::Offline, "TIMEOUT", false)
++}
++
++pub fn build_timeout_meta_with_policy(
++    provider_used: &str,
++    mode: Mode,
++    policy: &str,
++    network_used: bool,
++) -> ProviderDecisionMeta {
++    let provider_class = provider_class_from_id(provider_used);
+     let reason_code = ReasonCode::Timeout;
+     let attempts = vec![build_attempt(
+-        provider_used.clone(),
++        provider_used.to_string(),
+         provider_class.clone(),
+         0,
+         "timeout",
+         reason_code.clone(),
+-        false,
++        network_used,
+     )];
+ 
+     build_decision_meta(
+-        provider_used,
++        provider_used.to_string(),
+         provider_class,
+         mode,
+         reason_code,
+         0,
+-        "TIMEOUT".to_string(),
++        policy.to_string(),
+         attempts,
+-        false,
++        network_used,
+         false,
+     )
+ }
+diff --git a/src-tauri/src/conversation_engine/mod.rs b/src-tauri/src/conversation_engine/mod.rs
+index f7303caf..9d094da5 100644
+--- a/src-tauri/src/conversation_engine/mod.rs
++++ b/src-tauri/src/conversation_engine/mod.rs
+@@ -37,9 +37,9 @@ use std::sync::Arc;
+ use tokio::sync::RwLock;
+ use tokio::time::{timeout, Duration};
+ 
+-use meta_accumulator::{build_offline_meta, build_timeout_meta};
++use meta_accumulator::{build_offline_meta, build_timeout_meta_with_policy};
+ 
+-use crate::ai::router::AIRouter;
++use crate::ai::router::{AIRouter, AIRouterStatus};
+ use crate::memory::storage::MemoryStorage;
+ use crate::singularity::singularity_state::SingularityState;
+ 
+@@ -155,7 +155,7 @@ impl ConversationEngineState {
+ 
+     /// Traiter un message utilisateur (point d'entrée principal)
+     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
+-    /// v27.0.3: Added 20s timeout guarantee — Always Respond contract
++    /// v27.0.3: Added 60s timeout guarantee — Always Respond contract
+     pub async fn process_message(
+         &self,
+         request: ConversationRequest,
+@@ -165,12 +165,14 @@ impl ConversationEngineState {
+             return self.create_offline_sim_response().await;
+         }
+ 
+-        // ✨ v27.0.3: 20s timeout wrapper — Guarantees Always Respond
+-        match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
++        // ✨ v27.0.3: 60s timeout wrapper — Guarantees Always Respond
++        match timeout(Duration::from_secs(60), self.process_message_internal(request)).await {
+             Ok(result) => result,
+             Err(_timeout_err) => {
+-                log::error!("[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 20s, returning offline response");
+-                self.create_offline_response().await
++                log::error!(
++                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 60s, returning fallback response"
++                );
++                self.create_timeout_response().await
+             }
+         }
+     }
+@@ -230,31 +232,54 @@ impl ConversationEngineState {
+         }
+     }
+ 
+-    /// Create offline response when timeout triggered (Always Respond guarantee)
+-    async fn create_offline_response(&self) -> Result<ConversationResponse, ConversationEngineError> {
+-        log::info!("[CONV-ENGINE] 🟢 Creating autonomous offline response (guaranteed <1s)");
++    /// Create fallback response when timeout triggered (Always Respond guarantee)
++    async fn create_timeout_response(
++        &self,
++    ) -> Result<ConversationResponse, ConversationEngineError> {
++        let status = self.ai_router.read().await.get_status().await;
++        let decision = timeout_decision(&status);
++
++        if matches!(status, AIRouterStatus::Online | AIRouterStatus::Degraded) {
++            log::error!(
++                "[NO_FALSE_OFFLINE] CRITICAL_CONTRADICTION timeout with providers_ready status={:?}",
++                status
++            );
++        }
++
++        log::info!(
++            "[CHAT_DECISION] online={} reason=TIMEOUT provider={} status={:?}",
++            decision.network_used,
++            decision.provider_used,
++            status
++        );
+         
+         let now = std::time::SystemTime::now()
+             .duration_since(std::time::UNIX_EPOCH)
+             .map(|d| d.as_millis() as u64)
+             .unwrap_or(0);
++        let provider_used = decision.provider_used.clone();
+         
+         Ok(ConversationResponse {
+-            assistant_message: "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
++            assistant_message: decision.message,
+             conversation_id: uuid::Uuid::new_v4().to_string(),
+             message_id: uuid::Uuid::new_v4().to_string(),
+             detected_intention: Intention::Question,
+             detected_emotion: EmotionState::default(),
+-            cognitive_tags: vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
+-            cognitive_summary: "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
++            cognitive_tags: decision.cognitive_tags,
++            cognitive_summary: decision.cognitive_summary,
+             metadata: ConversationMetadata {
+                 timestamp: now,
+-                provider_used: "offline".to_string(),
++                provider_used: provider_used.clone(),
+                 latency_ms: 40,
+                 tokens_used: 0,
+                 memory_effect: MemoryEffect::New,
+                 links_to_contexts: vec![],
+-                provider_meta: Some(build_timeout_meta()),
++                provider_meta: Some(build_timeout_meta_with_policy(
++                    &provider_used,
++                    decision.mode,
++                    &decision.policy,
++                    decision.network_used,
++                )),
+             },
+         })
+     }
+@@ -300,6 +325,68 @@ impl ConversationEngineState {
+     }
+ }
+ 
++struct TimeoutDecision {
++    message: String,
++    provider_used: String,
++    cognitive_tags: Vec<String>,
++    cognitive_summary: String,
++    policy: String,
++    mode: Mode,
++    network_used: bool,
++}
++
++fn timeout_decision(status: &AIRouterStatus) -> TimeoutDecision {
++    match status {
++        AIRouterStatus::Online => TimeoutDecision {
++            message: "⏱️ Délai dépassé. La réponse en ligne n'a pas terminé à temps. Voici une réponse de secours locale.".to_string(),
++            provider_used: "timeout".to_string(),
++            cognitive_tags: vec!["timeout".to_string(), "fallback".to_string()],
++            cognitive_summary: "Réponse de secours après délai dépassé (online disponible).".to_string(),
++            policy: "TIMEOUT_ONLINE".to_string(),
++            mode: Mode::Error,
++            network_used: true,
++        },
++        AIRouterStatus::Degraded => TimeoutDecision {
++            message: "⏱️ Délai dépassé. Réponse de secours locale en mode dégradé.".to_string(),
++            provider_used: "timeout".to_string(),
++            cognitive_tags: vec!["timeout".to_string(), "fallback".to_string()],
++            cognitive_summary: "Réponse de secours après délai dépassé (mode dégradé).".to_string(),
++            policy: "TIMEOUT_DEGRADED".to_string(),
++            mode: Mode::Error,
++            network_used: false,
++        },
++        AIRouterStatus::Offline => TimeoutDecision {
++            message: "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
++            provider_used: "offline".to_string(),
++            cognitive_tags: vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
++            cognitive_summary: "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
++            policy: "TIMEOUT_OFFLINE".to_string(),
++            mode: Mode::Offline,
++            network_used: false,
++        },
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    #[test]
++    fn no_false_offline_when_online() {
++        let decision = timeout_decision(&AIRouterStatus::Online);
++        assert!(matches!(decision.mode, Mode::Error));
++        assert_ne!(decision.provider_used, "offline");
++        assert!(!decision.message.to_lowercase().contains("mode hors ligne"));
++    }
++
++    #[test]
++    fn offline_message_when_offline() {
++        let decision = timeout_decision(&AIRouterStatus::Offline);
++        assert!(matches!(decision.mode, Mode::Offline));
++        assert!(decision.message.to_lowercase().contains("mode hors ligne"));
++    }
++}
++
+ #[derive(Debug)]
+ pub enum ConversationEngineError {
+     MemoryError(String),
+diff --git a/src/__tests__/c3-latency.test.ts b/src/__tests__/c3-latency.test.ts
+index cbdbcf45..5871443f 100644
+--- a/src/__tests__/c3-latency.test.ts
++++ b/src/__tests__/c3-latency.test.ts
+@@ -2,7 +2,8 @@
+  * TITANE∞ v27.0.0 — PHASE C3 LATENCY BOUNDARIES TESTS
+  * ═════════════════════════════════════════════════════════════════════════════
+  * Test Suite for PHASE C3: LATENCY BOUNDARIES (GATE_LATENCY)
+- * Validates: Global timeout (25s), per-provider timeout (8s), max retries (3)
++ * Validates: Global timeout (60s), per-provider timeout (8s), max retries (3)
++ * ✨ v27+ FIX: Global timeout 25s → 60s for complex AI requests
+  * ═════════════════════════════════════════════════════════════════════════════
+  */
+ 
+@@ -13,15 +14,15 @@ import { REQUEST_BUDGETS, getProviderTimeout } from '@/config/aiTimeouts.config'
+ // C3.1: Global Budget Enforcement
+ // ─────────────────────────────────────────────────────────────────
+ 
+-describe('C3.1: Global Latency Budget (25s)', () => {
++describe('C3.1: Global Latency Budget (60s)', () => {
+   
+-  it('[C3.1.1] Global budget constant is 25000ms', () => {
+-    expect(REQUEST_BUDGETS.globalRequestMs).toBe(25000);
++  it('[C3.1.1] Global budget constant is 60000ms', () => {
++    expect(REQUEST_BUDGETS.globalRequestMs).toBe(60000);
+   });
+ 
+   it('[C3.1.2] Budget enforcement breaks early if < 100ms remaining', () => {
+-    // Simulate: 3 providers × 8s each = 24s, leave 1s
+-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 25000
++    // Simulate: 3 providers × 8s each = 24s, leave 36s
++    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
+     const startTime = Date.now();
+     
+     // Simulate: 24 seconds have elapsed
+@@ -29,17 +30,17 @@ describe('C3.1: Global Latency Budget (25s)', () => {
+     const remainingBudgetMs = globalBudgetMs - simulatedElapsedMs;
+     
+     expect(remainingBudgetMs).toBeGreaterThan(100);
+-    expect(remainingBudgetMs).toBeLessThan(1500);
++    expect(remainingBudgetMs).toBeGreaterThan(30000);
+     
+-    // If next provider takes 8s, would exceed budget
++    // If next provider takes 8s, would still fit
+     const nextAttemptDurationMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
+     const wouldExceedBudget = nextAttemptDurationMs > remainingBudgetMs;
+     
+-    expect(wouldExceedBudget).toBe(true);
++    expect(wouldExceedBudget).toBe(false);
+   });
+ 
+   it('[C3.1.3] After 3 provider attempts (8s each = 24s), stops', () => {
+-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 25000
++    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
+     const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
+     const maxAttempts = REQUEST_BUDGETS.maxAttempts; // 3
+     
+@@ -48,13 +49,13 @@ describe('C3.1: Global Latency Budget (25s)', () => {
+     // 3 × 8000 = 24000ms
+     expect(totalTimeFor3Attempts).toBe(24000);
+     
+-    // This fits within 25s budget (1s margin)
++    // This fits within 60s budget (36s margin)
+     expect(totalTimeFor3Attempts).toBeLessThan(globalBudgetMs);
+     
+-    // A 4th attempt would exceed
++    // A 4th attempt would still fit in 60s
+     const fourthAttemptStartTime = totalTimeFor3Attempts;
+     const fourthWouldEndAt = fourthAttemptStartTime + perProviderMs;
+-    expect(fourthWouldEndAt).toBeGreaterThan(globalBudgetMs);
++    expect(fourthWouldEndAt).toBeLessThan(globalBudgetMs);
+   });
+ 
+   it('[C3.1.4] getRemainingBudget logic', () => {
+@@ -67,7 +68,7 @@ describe('C3.1: Global Latency Budget (25s)', () => {
+     const remainingMs = globalBudgetMs - elapsedMs;
+     
+     expect(elapsedMs).toBe(10000);
+-    expect(remainingMs).toBe(15000);
++    expect(remainingMs).toBe(50000);
+     expect(remainingMs).toBeGreaterThan(REQUEST_BUDGETS.providerAttemptMs);
+   });
+ });
+@@ -98,7 +99,7 @@ describe('C3.2: Per-Provider Timeout (8s)', () => {
+   });
+ 
+   it('[C3.2.3] Provider timeout never exceeds remaining global budget', () => {
+-    const globalBudget = REQUEST_BUDGETS.globalRequestMs; // 25000
++    const globalBudget = REQUEST_BUDGETS.globalRequestMs; // 60000
+     const perProvider = REQUEST_BUDGETS.providerAttemptMs; // 8000
+     
+     // Each provider timeout should be ≤ remaining global budget
+@@ -155,8 +156,8 @@ describe('C3.3: Max Retries (3 attempts)', () => {
+ 
+ describe('C3.4: Latency Boundary Integration', () => {
+   
+-  it('[C3.4.1] Scenario: 3 failed providers (8s each) → stops under 25s', () => {
+-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 25000
++  it('[C3.4.1] Scenario: 3 failed providers (8s each) → stops under 60s', () => {
++    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
+     const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
+     const maxAttempts = REQUEST_BUDGETS.maxAttempts; // 3
+     
+@@ -181,15 +182,21 @@ describe('C3.4: Latency Boundary Integration', () => {
+     expect(totalElapsedMs).toBeLessThan(globalBudgetMs);
+   });
+ 
+-  it('[C3.4.2] Budget enforcement prevents 4th attempt', () => {
+-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 25000
++  it('[C3.4.2] Budget enforcement + maxAttempts limits', () => {
++    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
+     const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
++    const maxAttemptsLimit = REQUEST_BUDGETS.maxAttempts; // 3 - hard cap
+     
+     let totalElapsedMs = 0;
+     let providersTried = 0;
+-    const maxAttempts = 5; // Try more than allowed
++    const maxAttempts = 5; // Theoretically try more than allowed
+     
+     for (let attempt = 0; attempt < maxAttempts; attempt++) {
++      // Check if maxAttempts limit reached
++      if (providersTried >= maxAttemptsLimit) {
++        break;
++      }
++      
+       const remainingMs = globalBudgetMs - totalElapsedMs;
+       
+       // Check if budget allows another attempt
+@@ -203,8 +210,9 @@ describe('C3.4: Latency Boundary Integration', () => {
+       providersTried++;
+     }
+     
+-    // Should stop at 3 (4th would be 32s, exceeds 25s budget)
++    // Should stop at 3 due to maxAttempts limit, not budget
+     expect(providersTried).toBe(3);
++    expect(totalElapsedMs).toBe(24000);
+   });
+ 
+   it('[C3.4.3] Readiness check: skip unavailable providers', () => {
+diff --git a/src/__tests__/cloud-agent-timeout-config.test.ts b/src/__tests__/cloud-agent-timeout-config.test.ts
+index 5702b72e..06a1af6d 100644
+--- a/src/__tests__/cloud-agent-timeout-config.test.ts
++++ b/src/__tests__/cloud-agent-timeout-config.test.ts
+@@ -49,14 +49,16 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
+   describe('UI Timeouts', () => {
+     it('should enforce UI cloud timeouts', () => {
+       // Cloud provider timeouts aligned to global budget
+-      expect(UI_TIMEOUTS.cloudProvider.short).toBe(12000);
+-      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(18000);
+-      expect(UI_TIMEOUTS.cloudProvider.long).toBe(25000);
++      // ✨ v27+ FIX: Augmentés de 25s → 60s
++      expect(UI_TIMEOUTS.cloudProvider.short).toBe(15000);
++      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(30000);
++      expect(UI_TIMEOUTS.cloudProvider.long).toBe(60000);
+     });
+ 
+     it('should enforce max request timeout', () => {
+-      // Max request should be 25s
+-      expect(UI_TIMEOUTS.maxRequest).toBe(25000);
++      // Max request should be 60s (was 25s)
++      // ✨ v27+ FIX: Augmenté de 25s → 60s
++      expect(UI_TIMEOUTS.maxRequest).toBe(60000);
+     });
+ 
+     it('should ensure UI timeout >= backend timeout', () => {
+@@ -89,8 +91,9 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
+ 
+   describe('Streaming Timeouts', () => {
+     it('should enforce streaming timeouts', () => {
+-      // Total stream timeout should be 25s
+-      expect(STREAM_CONFIG.totalTimeoutMs).toBe(25000);
++      // Total stream timeout should be 60s (was 25s)
++      // ✨ v27+ FIX: Augmenté de 25s → 60s
++      expect(STREAM_CONFIG.totalTimeoutMs).toBe(60000);
+ 
+       // Per-chunk timeout should be 4s
+       expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(4000);
+@@ -106,8 +109,9 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
+ 
+   describe('General API Timeouts', () => {
+     it('should enforce AI generation timeout', () => {
+-      // AI generation should be 25s
+-      expect(API_TIMEOUTS.AI_GENERATION).toBe(25000);
++      // AI generation should be 60s (was 25s)
++      // ✨ v27+ FIX: Augmenté de 25s → 60s
++      expect(API_TIMEOUTS.AI_GENERATION).toBe(60000);
+     });
+ 
+     it('should enforce long operation timeout', () => {
+diff --git a/src/components/chat/ChatBubble.tsx b/src/components/chat/ChatBubble.tsx
+index 7d9f2b00..25de0ace 100644
+--- a/src/components/chat/ChatBubble.tsx
++++ b/src/components/chat/ChatBubble.tsx
+@@ -423,6 +423,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+       <AnimatePresence>
+         {isOpen && (
+           <motion.div
++            data-testid="chat-bubble-panel"
+             className={`chat-bubble-panel ${position} ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : ''}`}
+             drag
+             dragMomentum={false}
+@@ -664,7 +665,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+             )}
+ 
+             {/* Messages */}
+-            <div className="chat-bubble-messages">
++            <div className="chat-bubble-messages" data-testid="chat-bubble-messages">
+               {/* ✨ Listening Indicator */}
+               <ListeningIndicator isActive={isListening} />
+ 
+@@ -687,6 +688,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+                   <motion.div
+                     key={msg.metadata?.uiId ? String(msg.metadata.uiId) : idx}
+                     className={`chat-bubble-message ${msg.role}`}
++                    data-testid={
++                      msg.role === 'assistant'
++                        ? 'chat-bubble-message-assistant'
++                        : 'chat-bubble-message-user'
++                    }
+                     initial={{ opacity: 0, y: 10 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     transition={{ delay: idx * 0.05 }}
+@@ -703,7 +709,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+                         <span />
+                       </div>
+                     ) : (
+-                      <div className="message-content">{msg.content}</div>
++                      <div
++                        className="message-content"
++                        data-testid={
++                          msg.role === 'assistant'
++                            ? 'chat-bubble-assistant-content'
++                            : undefined
++                        }
++                      >
++                        {msg.content}
++                      </div>
+                     )}
+                   </motion.div>
+                 ))
+@@ -744,6 +759,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+ 
+               <div className="chat-bubble-input-wrapper">
+                 <textarea
++                  data-testid="chat-bubble-input"
+                   className="chat-bubble-input"
+                   placeholder={
+                     importedFiles.length > 0
+@@ -775,6 +791,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
+                     <Paperclip size={16} />
+                   </button>
+                   <button
++                    data-testid="chat-bubble-send"
+                     className="chat-bubble-send"
+                     onClick={handleSend}
+                     disabled={
+diff --git a/src/config/aiTimeouts.config.ts b/src/config/aiTimeouts.config.ts
+index 5f492350..4e0ae82f 100644
+--- a/src/config/aiTimeouts.config.ts
++++ b/src/config/aiTimeouts.config.ts
+@@ -23,9 +23,10 @@ export const PROVIDER_TIMEOUTS = {
+  * - globalRequestMs: budget maximal par requête
+  * - providerAttemptMs: budget maximal par tentative provider
+  * - maxAttempts: nombre max de tentatives
++ * ✨ v27+ FIX: Augmenté de 25s → 60s pour requests IA complexes
+  */
+ export const REQUEST_BUDGETS = {
+-  globalRequestMs: 25000,
++  globalRequestMs: 60000,
+   providerAttemptMs: 8000,
+   maxAttempts: 3,
+ } as const;
+@@ -42,14 +43,14 @@ export const MEMORY_TIMEOUTS = {
+ 
+ /**
+  * UI-facing timeouts (ms)
+- * ✨ vΩ.2: Alignés sur le budget global (<= 25s)
++ * ✨ v27+ FIX: Augmentés de 25s → 60s pour requests IA complexes
+  */
+ export const UI_TIMEOUTS = {
+-  maxRequest: 25000, // Hard cap global
+-  failsafe: 25000, // Failsafe reset aligned
++  maxRequest: 60000, // Hard cap global
++  failsafe: 60000, // Failsafe reset aligned
+   localProvider: { short: 6000, long: 8000 },
+   ollamaProvider: { short: 8000, long: 12000 },
+-  cloudProvider: { short: 12000, medium: 18000, long: 25000 },
++  cloudProvider: { short: 15000, medium: 30000, long: 60000 },
+ } as const;
+ 
+ /**
+@@ -73,12 +74,12 @@ export const CIRCUIT_BREAKER = {
+ 
+ /**
+  * Streaming configuration (OPT11: Chunk batching)
+- * ✨ vΩ.2: Bornes alignées sur le budget global
++ * ✨ v27+ FIX: totalTimeoutMs augmenté de 25s → 60s
+  */
+ export const STREAM_CONFIG = {
+   chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
+   chunkBatchDelayMs: 50, // Max delay before flushing batch
+-  totalTimeoutMs: 25000, // 25s max for entire stream
++  totalTimeoutMs: 60000, // 60s max for entire stream
+   perChunkTimeoutMs: 4000, // 4s max between chunks
+ } as const;
+ 
+diff --git a/src/constants/timeouts.ts b/src/constants/timeouts.ts
+index a36b858f..876904f5 100644
+--- a/src/constants/timeouts.ts
++++ b/src/constants/timeouts.ts
+@@ -5,13 +5,13 @@
+ 
+ /**
+  * Timeouts API et réseau (ms)
+- * ✨ vΩ.2: Budgets bornés pour respecter la latence max
++ * ✨ v27+ FIX: Augmentés de 25s → 60s pour requests IA complexes
+  */
+ export const API_TIMEOUTS = {
+-  /** Timeout par défaut pour les appels API (25s) */
+-  DEFAULT: 25000,
+-  /** Timeout pour les opérations IA (25s max global) */
+-  AI_GENERATION: 25000,
++  /** Timeout par défaut pour les appels API (60s) */
++  DEFAULT: 60000,
++  /** Timeout pour les opérations IA (60s max global) */
++  AI_GENERATION: 60000,
+   /** Timeout court pour les checks rapides (5s) */
+   QUICK_CHECK: 5000,
+   /** Timeout pour les opérations longues (60s) */
+diff --git a/src/services/conversationEngine.ts b/src/services/conversationEngine.ts
+index c0f51666..cf3922ce 100644
+--- a/src/services/conversationEngine.ts
++++ b/src/services/conversationEngine.ts
+@@ -13,7 +13,7 @@
+ import { tauriClient } from '@/lib/tauriClient';
+ import { validateIpcPayload } from '@/lib/ipcContract';
+ import { getSystemPrompt } from '@/config/chatModes.config';
+-import type { ProviderDecisionMeta } from '@/types/providerMeta';
++import type { OnlineDecision, ProviderDecisionMeta } from '@/types/providerMeta';
+ 
+ const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
+ const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
+@@ -93,6 +93,7 @@ export interface ConversationResponse {
+   cognitive_summary: string;
+   metadata: ConversationMetadata;
+   meta?: ProviderDecisionMeta;
++  decision?: OnlineDecision;
+ }
+ 
+ export interface ConversationMetadata {
+@@ -114,6 +115,7 @@ interface OmegaGenerateResponse {
+   metadata?: Record<string, unknown>;
+   provider?: string;
+   meta?: ProviderDecisionMeta;
++  decision?: OnlineDecision;
+ }
+ 
+ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
+@@ -124,6 +126,14 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
+   return raw as ProviderDecisionMeta;
+ }
+ 
++function normalizeDecision(raw: unknown): OnlineDecision | undefined {
++  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
++    return undefined;
++  }
++
++  return raw as OnlineDecision;
++}
++
+ function isMemoryEffect(val: unknown): val is MemoryEffect {
+   return val === 'New' || val === 'Recall' || val === 'Connect' || val === 'Evolve';
+ }
+@@ -259,6 +269,7 @@ export async function processMessage(
+ 
+   const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
+   const providerMeta = normalizeProviderMeta(raw?.meta);
++  const decision = normalizeDecision(raw?.decision);
+   const cognitiveTagsRaw = metadata['cognitiveTags'];
+   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
+     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
+@@ -310,6 +321,7 @@ export async function processMessage(
+         (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
+     }),
+     meta: providerMeta,
++    decision,
+   };
+ 
+   console.log('[conversationEngine] 📥 Backend response:', {
+diff --git a/src/types/providerMeta.ts b/src/types/providerMeta.ts
+index 87ca21bb..53f40304 100644
+--- a/src/types/providerMeta.ts
++++ b/src/types/providerMeta.ts
+@@ -43,3 +43,19 @@ export interface ProviderDecisionMeta {
+   cache_hit: boolean;
+   policy: string;
+ }
++
++export interface OnlineDecision {
++  online: boolean;
++  reasonCode:
++    | 'ONLINE_OK'
++    | 'OFFLINE_USER_FORCED'
++    | 'OFFLINE_NO_KEYS'
++    | 'OFFLINE_PROVIDER_DOWN'
++    | 'OFFLINE_NETWORK_BLOCKED'
++    | 'OFFLINE_TIMEOUT'
++    | 'OFFLINE_INTERNAL_ERROR';
++  providerSelected: string;
++  attempts: ProviderAttemptMeta[];
++  networkUsed: boolean;
++  mode: Mode;
++}
+diff --git a/src/utils/tauriProtector.ts b/src/utils/tauriProtector.ts
+index e5142ca4..1cd2fd45 100644
+--- a/src/utils/tauriProtector.ts
++++ b/src/utils/tauriProtector.ts
+@@ -291,11 +291,12 @@ export class TauriInvokeProtector {
+   /**
+    * Invoke protégé avec fallback intelligent
+    * ✅ v∞: Anti-debounce pour start_recording et autres commandes critiques
++   * ✨ v27+ FIX: Default timeout 10s → 60s pour IA requests complexes
+    */
+   async safeInvoke<T>(
+     command: string,
+     args?: TauriCommandArgs,
+-    timeoutMs = 10000
++    timeoutMs = 60000
+   ): Promise<T> {
+     const cacheKey = `${command}:${JSON.stringify(args)}`;
+ 

@@ -13,6 +13,14 @@ pub enum VADState {
     Speech,
 }
 
+/// Result of VAD detection
+#[derive(Debug, Clone, Copy)]
+pub struct VADResult {
+    pub has_speech: bool,
+    pub confidence: f32,
+    pub state: VADState,
+}
+
 pub struct VoiceActivityDetector {
     threshold: f32,
     min_speech_frames: usize,
@@ -99,6 +107,24 @@ impl VoiceActivityDetector {
 
     pub fn is_speaking(&self) -> bool {
         self.state == VADState::Speech
+    }
+
+    /// Detect speech in audio frame and return result with confidence
+    /// This is a wrapper around process_frame() that returns more detailed info
+    pub fn detect(&mut self, audio_data: &[f32]) -> VADResult {
+        let state = self.process_frame(audio_data);
+        let has_speech = state == VADState::Speech;
+        let confidence = if has_speech {
+            // Simple confidence based on speech frame count
+            (self.speech_frame_count as f32 / self.min_speech_frames as f32).min(1.0)
+        } else {
+            0.0
+        };
+        VADResult {
+            has_speech,
+            confidence,
+            state,
+        }
     }
 }
 

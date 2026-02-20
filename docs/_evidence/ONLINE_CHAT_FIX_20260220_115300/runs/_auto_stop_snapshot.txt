@@ -1,0 +1,50 @@
+]633;E;{   echo "# date -Is"\x3b   date -Is\x3b   echo "# git rev-parse HEAD"\x3b   git rev-parse HEAD\x3b   echo "# git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo "# git diff --name-only"\x3b   git diff --name-only\x3b   echo "# git diff --stat"\x3b   git diff --stat\x3b } > "$RUNS_DIR/_auto_stop_snapshot.txt";25054337-157d-412d-833f-c30814df6142]633;C# date -Is
+2026-02-20T09:39:15-05:00
+# git rev-parse HEAD
+67fa100e293336abd48806d128db546b40ab6790
+# git status --porcelain=v1
+ M registry/ui-events.jsonl
+ M scripts/e2e/tauri-wrapper.sh
+ M src/__tests__/c3-latency.test.ts
+ M src/__tests__/cloud-agent-timeout-config.test.ts
+ M src/components/chat/ChatBubble.tsx
+ M src/config/aiTimeouts.config.ts
+ M src/constants/timeouts.ts
+ M src/services/conversationEngine.ts
+ M src/types/providerMeta.ts
+ M src/utils/tauriProtector.ts
+?? ANALYSE_APPROFONDIE_v27.md
+?? CHAT_PROVIDER_FIX_v27_TEST.md
+?? FOOTER_DIAGNOSTIC.md
+?? docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+?? docs/_evidence/online_migration/BP08_build_blocker_note.md
+?? e2e/desktop/online-chat-proof-ui.wdio.test.js
+?? e2e/desktop/online-chat-proof.wdio.test.js
+?? scripts/test/test-bootstrap-api-keys.sh
+?? scripts/test/test-provider-status.sh
+?? scripts/tools/e2e_chat_proof_campaign.sh
+?? scripts/tools/e2e_chat_proof_harvest.sh
+?? scripts/verify/verify_chat_online.sh
+# git diff --name-only
+registry/ui-events.jsonl
+scripts/e2e/tauri-wrapper.sh
+src/__tests__/c3-latency.test.ts
+src/__tests__/cloud-agent-timeout-config.test.ts
+src/components/chat/ChatBubble.tsx
+src/config/aiTimeouts.config.ts
+src/constants/timeouts.ts
+src/services/conversationEngine.ts
+src/types/providerMeta.ts
+src/utils/tauriProtector.ts
+# git diff --stat
+ registry/ui-events.jsonl                         |  1 +
+ scripts/e2e/tauri-wrapper.sh                     |  2 +
+ src/__tests__/c3-latency.test.ts                 | 50 ++++++++++++++----------
+ src/__tests__/cloud-agent-timeout-config.test.ts | 22 ++++++-----
+ src/components/chat/ChatBubble.tsx               | 21 +++++++++-
+ src/config/aiTimeouts.config.ts                  | 15 +++----
+ src/constants/timeouts.ts                        | 10 ++---
+ src/services/conversationEngine.ts               | 14 ++++++-
+ src/types/providerMeta.ts                        | 16 ++++++++
+ src/utils/tauriProtector.ts                      |  3 +-
+ 10 files changed, 108 insertions(+), 46 deletions(-)

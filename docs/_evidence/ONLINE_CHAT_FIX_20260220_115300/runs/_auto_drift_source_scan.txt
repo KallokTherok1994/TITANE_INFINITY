@@ -1,0 +1,287 @@
+]633;E;{   echo "# git config --list"\x3b   git config --list || true\x3b   echo ""\x3b   echo "# .gitattributes"\x3b   cat .gitattributes 2>/dev/null || true\x3b   echo ""\x3b   echo "# Source scan (rustfmt/hooks)"\x3b   rg -n "rustfmt|cargo fmt|precommit|postinstall|prepare|hook" -S . 2>/dev/null | head -100 || true\x3b } > "$RUNS_DIR/_auto_drift_source_scan.txt";25054337-157d-412d-833f-c30814df6142]633;C# git config --list
+user.name=Kevin Thibault
+user.email=investissement.kevin@gmail.com
+init.defaultbranch=main
+core.editor=code --wait
+filter.lfs.clean=git-lfs clean -- %f
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.process=git-lfs filter-process
+filter.lfs.required=true
+credential.https://github.com.helper=
+credential.https://github.com.helper=!/home/titane-os/.local/bin/gh auth git-credential
+credential.https://gist.github.com.helper=
+credential.https://gist.github.com.helper=!/home/titane-os/.local/bin/gh auth git-credential
+core.repositoryformatversion=0
+core.filemode=true
+core.bare=false
+core.logallrefupdates=true
+core.hookspath=.husky/_
+submodule.active=.
+remote.origin.url=https://github.com/KallokTherok1994/TITANE_INFINITY.git
+remote.origin.fetch=+refs/heads/*:refs/remotes/origin/*
+branch.MAIN.remote=origin
+branch.MAIN.vscode-merge-base=origin/MAIN
+branch.MAIN.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#8
+branch.MAIN.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#8
+branch.MAIN.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#stable-runtime
+branch.MAIN.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#dev
+branch.MAIN.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#dev
+branch.MAIN.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#feature/window-controls-zoom-fix
+branch.MAIN.merge=refs/heads/MAIN
+lfs.repositoryformatversion=0
+lfs.https://github.com/KallokTherok1994/TITANE_INFINITY.git/info/lfs.access=basic
+filter.lfs.required=true
+filter.lfs.clean=git-lfs clean -- %f
+filter.lfs.smudge=git-lfs smudge -- %f
+filter.lfs.process=git-lfs filter-process
+pull.rebase=false
+branch.dev.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.dev.vscode-merge-base=origin/MAIN
+branch.phase-4/sprint-1-lz4-emotion.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.phase-4/sprint-1-lz4-emotion.vscode-merge-base=origin/MAIN
+branch.phase-4/sprint-2-streaming-bloom.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.phase-4/sprint-2-streaming-bloom.vscode-merge-base=origin/MAIN
+branch.phase-4/sprint-3-prefetch-ipc.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.phase-4/sprint-3-prefetch-ipc.vscode-merge-base=origin/MAIN
+branch.v26.4.0-sprint-3.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.v26.4.0-sprint-3.vscode-merge-base=origin/MAIN
+branch.v26.4.0-sprint-3.remote=origin
+branch.v26.4.0-sprint-3.merge=refs/heads/v26.4.0-sprint-3
+branch.v27.0-dev-epic1.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#v26.4.0-sprint-3
+branch.v27.0-dev-epic1.vscode-merge-base=origin/v26.4.0-sprint-3
+branch.v27.0-dev-epic1.remote=origin
+branch.v27.0-dev-epic1.merge=refs/heads/v27.0-dev-epic1
+branch.feature/ui-vΩ.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.feature/ui-vΩ.vscode-merge-base=origin/MAIN
+branch.fix/seal-gap-004.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.fix/seal-gap-004.vscode-merge-base=origin/MAIN
+branch.fix/seal-gap-002.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.fix/seal-gap-002.vscode-merge-base=origin/MAIN
+branch.fix/seal-gap-001.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.fix/seal-gap-001.vscode-merge-base=origin/MAIN
+branch.chore/hors-scope-snapshot.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#MAIN
+branch.chore/hors-scope-snapshot.vscode-merge-base=origin/MAIN
+branch.ui/doc-only-final-seal.remote=origin
+branch.ui/doc-only-final-seal.vscode-merge-base=origin/MAIN
+branch.ui/doc-only-final-seal.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#111
+branch.ui/doc-only-final-seal.merge=refs/heads/MAIN
+branch.ui/doc-only-cleanroom.remote=origin
+branch.ui/doc-only-cleanroom.merge=refs/heads/MAIN
+branch.ui/doc-only-cleanroom.vscode-merge-base=origin/MAIN
+branch.ui/doc-only-cleanroom.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#111
+branch.ops/worktree-cleanup-snapshot-20260209-1350.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#ui/doc-only-cleanroom
+branch.ops/worktree-cleanup-snapshot-20260209-1350.vscode-merge-base=origin/MAIN
+branch.copilot/generate-installation-guide-titane-ollama.remote=origin
+branch.copilot/generate-installation-guide-titane-ollama.merge=refs/heads/copilot/generate-installation-guide-titane-ollama
+branch.copilot/generate-installation-guide-titane-ollama.vscode-merge-base=origin/MAIN
+branch.copilot/generate-installation-guide-titane-ollama.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#142
+branch.copilot/generate-installation-guide-titane-ollama.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#142
+branch.copilot/generate-installation-guide-titane-ollama.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#142
+branch.copilot/vscode-mlnton06-iove.remote=origin
+branch.copilot/vscode-mlnton06-iove.merge=refs/heads/copilot/vscode-mlnton06-iove
+branch.copilot/vscode-mlnton06-iove.vscode-merge-base=origin/MAIN
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.copilot/vscode-mlnton06-iove.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#143
+branch.p2/bundle-phase2a.remote=origin
+branch.p2/bundle-phase2a.merge=refs/heads/MAIN
+branch.p2/bundle-phase2a.vscode-merge-base=origin/MAIN
+branch.p2/bundle-phase2a.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#140
+branch.p2/bundle-phase2a-fastfs.vscode-merge-base=origin/MAIN
+remote.fastfs.url=/home/titane-os/.cache/titane_fastfs/p2_bundle/repo
+remote.fastfs.fetch=+refs/heads/*:refs/remotes/fastfs/*
+branch.p2/sync-fastfs-to-main-20260216_122357.vscode-merge-base=origin/MAIN
+branch.p2/sync-fastfs-to-main-20260216_122357.remote=origin
+branch.p2/sync-fastfs-to-main-20260216_122357.merge=refs/heads/p2/sync-fastfs-to-main-20260216_122357
+
+# .gitattributes
+# ═══════════════════════════════════════════════════════════════════
+# TITANE∞ v∞.40 — Git LFS Configuration
+# ═══════════════════════════════════════════════════════════════════
+# 🤖 AI Models (should be excluded from Git entirely - use external storage)
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.gguf filter=lfs diff=lfs merge=lfs -text
+*.ggml filter=lfs diff=lfs merge=lfs -text
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.model filter=lfs diff=lfs merge=lfs -text
+# 📦 Archives (generally should be excluded)
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+# 🎵 Audio files
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.m4a filter=lfs diff=lfs merge=lfs -text
+*.aac filter=lfs diff=lfs merge=lfs -text
+# 🎥 Video files
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.avi filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+# 🖼️ Large images
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.ai filter=lfs diff=lfs merge=lfs -text
+*.xcf filter=lfs diff=lfs merge=lfs -text
+# 🚀 Production builds (only if you need to version them)
+# Commented out - prefer excluding from Git entirely
+# *.AppImage filter=lfs diff=lfs merge=lfs -text
+# *.dmg filter=lfs diff=lfs merge=lfs -text
+# *.deb filter=lfs diff=lfs merge=lfs -text
+# *.rpm filter=lfs diff=lfs merge=lfs -text
+# ═══════════════════════════════════════════════════════════════════
+# Line Endings (Windows/Unix compatibility)
+# ═══════════════════════════════════════════════════════════════════
+* text=auto
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+
+# 🧰 Toolchain binaries (vendored)
+.tools/node/_extract/**/bin/node filter=lfs diff=lfs merge=lfs -text
+*.html text eol=lf
+*.rs text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+# ═══════════════════════════════════════════════════════════════════
+# END TITANE∞ .gitattributes
+# ═══════════════════════════════════════════════════════════════════
+
+# Source scan (rustfmt/hooks)
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:10:TITANE∞ v37.0.0 UI has been comprehensively analyzed across **all 46 pages, 190 components, and 110 custom hooks**. The interface is **fully functional, well-structured, and production-ready**.
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:116:### React Hooks Analysis:
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:118:| Hook Type    | Count | Status                   |
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:125:| Custom Hooks | 110   | ✅ All functional        |
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:127:### Custom Hooks Verified:
+./UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md:523:| **Hooks**         | ✅ 110/110  | Properly implemented          |
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:48:4. **useChat Hook Integration**
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:54:   - Migrated from deprecated 2-arg pattern to `useShallow()` hook
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:110:   - Lazy-load full-body avatar hook (-2-3KB deferred)
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:116:2. **useLazyAvatar Hooks** (4 specialized hooks)
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:117:   - `useLazyAvatar`: Main hook with auto-load option
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:171:- **v33**: Hook memoization (-75% computations, -5-10% latency)
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:186:src/hooks/useLazyAvatar.ts                           (240 lines)
+./V37_COMPLETE_OPTIMIZATION_FINAL.md:195:src/hooks/useChat.ts                         - Lazy provider loading
+./V37_OPTIMIZATION_COMPLETE.md:195:**v33.0.0 - Hook Memoization**:
+./V37_OPTIMIZATION_COMPLETE.md:198:- useMemoryCore, useIdentityMatrix, useProviderStatus: -80% hook overhead
+./V37_OPTIMIZATION_COMPLETE.md:199:- Net impact: -5-10% hook latency
+./V37_OPTIMIZATION_COMPLETE.md:218:- Hook latency: -70-75% (v33)
+./V37_OPTIMIZATION_COMPLETE.md:233:src/hooks/
+./OPTIMIZATION_PHASES_1-3C_FINAL_SUMMARY.md:328:2. **useChat.ts Refactoring:** Extract 2,155-line hook
+./PORTAGE_V27.4.1_FINAL_OUTPUT.md:130:  Hooks: INTACT
+./vitest.unit.config.ts:21:      'src/__tests__/hooks/useMediaQuery.test.tsx',
+./vitest.unit.config.ts:27:      // Hooked tests avec 0 implémentations/dépendances
+./vitest.unit.config.ts:28:      'src/__tests__/hooks/useLocalStorage.test.tsx',
+./vitest.unit.config.ts:29:      'src/__tests__/hooks/useOmegaPipeline.test.tsx',
+./vitest.unit.config.ts:30:      'src/__tests__/hooks/useChat.test.tsx',
+./vitest.unit.config.ts:31:      'src/__tests__/hooks/useSystemHealth.test.tsx',
+./vitest.unit.config.ts:32:      'src/__tests__/hooks/useResponsive.test.tsx',
+./vitest.unit.config.ts:33:      'src/__tests__/hooks/useKeyboardShortcuts.test.tsx',
+./vitest.unit.config.ts:34:      'src/__tests__/hooks/useThrottle.test.tsx',
+./vitest.unit.config.ts:35:      'src/__tests__/hooks/useMemory.test.tsx',
+./vitest.unit.config.ts:36:      'src/__tests__/hooks/useIdentity.test.tsx',
+./vitest.unit.config.ts:37:      'src/__tests__/hooks/useSingularity.test.tsx',
+./vitest.unit.config.ts:38:      'src/__tests__/hooks/useWindowControls.test.tsx',
+./vitest.unit.config.ts:39:      'src/__tests__/hooks/usePresenceOS.test.tsx',
+./PRODUCTION_AUTHORIZATION.md:35:  - src/: 9 files (hooks, components, tests)
+./SPRINT_1_FINAL_REPORT.md:16:| **FIX #2 Applied** | ✅ COMPLETE | Assimilation service hooks in executeGemini/OpenAI/Anthropic |
+./SPRINT_1_FINAL_REPORT.md:228:| Prepare SPRINT 2 | ✅ READY | Code ready, tests need minor fixture cleanup |
+./AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md:64:║  ✅ All documentation prepared                        ║
+./TITANE_GLOBAL_PROOFS.md:167:Function: prepareContextInjection(entries, maxTokens = 500)
+./TITANE_GLOBAL_PROOFS.md:240:   - Tracks: prepareContextInjection output
+./DEPLOYMENT_SUCCESS_v35.0.0.md:288:v33 ├── React hooks (-75%)
+./DEPLOYMENT_SUCCESS_v35.0.0.md:322:2026-01-29: v33.0.0 — React hooks
+./BETA_ROLLOUT_PLAN.md:17:5. **Prepare for production release** (v27.1.0 or immediate v27.0.1)
+./BETA_ROLLOUT_PLAN.md:355:- [x] GitHub release prepared (v27.0.1-BETA tag exists)
+./SPRINT_2_FINAL_REPORT.md:16:| **GAP_4 Applied** | ✅ COMPLETE | UIWatchdog hook integration in useChat.ts |
+./SPRINT_2_FINAL_REPORT.md:54:**File Updated**: `src/hooks/useChat.ts` (45 lines modified)
+./SPRINT_2_FINAL_REPORT.md:57:- ✅ Imported `useUIWatchdog` hook
+./SPRINT_2_FINAL_REPORT.md:86:- ✅ Provides fallback generation hook
+./SPRINT_2_FINAL_REPORT.md:196:- **Validation**: Code compiles, hook properly initialized
+./SPRINT_2_FINAL_REPORT.md:237:- [x] GAP_4: UIWatchdog hook properly integrated
+./PERFORMANCE_TUNING.md:139:- `src/hooks/`
+./PERFORMANCE_TUNING.md:187:import { useIDB } from '@/hooks/useIDB';
+./PERFORMANCE_TUNING.md:318:import { performance } from 'perf_hooks';
+./PRODUCTION_AUTHORIZATION_v36.0.0.md:211:  - v27-v35: ~92-95% optimization (Web Vitals + React hooks)
+./PRODUCTION_AUTHORIZATION_v36.0.0.md:386:v32: React hooks                 (-75%)
+./PRODUCTION_AUTHORIZATION_v36.0.0.md:400:| v27-v33 | 1.2 MB      | 3.5s           | 5.0s         | React hooks + selectors |
+./REGISTRY_APPEND.jsonl:1:{"id":"ui-010","ts":"2026-02-05T12:30:00Z","category":"ui","scope":"chat|system-monitor","change_type":"perf-fix","summary":"request_in_flight global + throttling cycles during chat generation","reason":"Réduire la contention UI pendant la génération (polling vitals/engines et readiness), limiter le bruit et stabiliser l’expérience.","files_changed":["src/hooks/useChat.ts","src/hooks/useSystemMonitor.ts","src/stores/useRequestInFlightStore.ts"],"tests_run":["Non exécutés (changement local)"],"proofs":["request_in_flight partagé via store Zustand","pollIntervals vitals/engines multipliés x4 pendant in-flight","readiness polling suspendu durant génération"],"risk_level":"low","rollback":"git revert HEAD -- src/hooks/useChat.ts src/hooks/useSystemMonitor.ts src/stores/useRequestInFlightStore.ts","status":"experimental"}
+./DEPLOYMENT_REPORT_v27.0.0.md:257:**Prepared by:** GitHub Copilot (Automated Verification)  
+./P8_2_EXECUTION_COMPLETE.md:265:- **Scenario B (HOLD):** Investigate blocker → Prepare patch → Retry
+./P8_2_EXECUTION_COMPLETE.md:271:- [ ] Prepare P9 audit for production readiness
+./PHASE_2_UI_LAZY_COMPONENTS_v37.0.0.md:61:#### Category 2: Hook Optimization (v33 Stack Already Applied)
+./PHASE_2_UI_LAZY_COMPONENTS_v37.0.0.md:70:**Status**: Phase 33.2 complete, -80% total hook overhead achieved.
+./PHASE_2_UI_LAZY_COMPONENTS_v37.0.0.md:295:- **v33.0.0 Stack**: `OPTIMIZATION_STACK_v27-v35.md` - Hook memoization completed
+./PERFECTION_REPORT_v27.0.1.md:136:- AI Services API (TypeScript types, React hooks)
+./PERFECTION_REPORT_v27.0.1.md:137:- Storage API (useStorage hook, direct access)
+./PERFECTION_REPORT_v27.0.1.md:313:- [ ] Pre-commit hooks
+./DEEP_DIVE_ANALYSIS_FINAL_v37.0.0.md:424:- 46 pages, 190 components, 110 hooks, 237 services
+./DEPLOYMENT_SUCCESS_v36.0.0.md:262:v33 ├── React hooks (-75%)
+./DEPLOYMENT_SUCCESS_v36.0.0.md:297:2026-01-29: v33.0.0 — React hooks
+./PHASE_6_COMPLETION_REPORT.md:54:Risk Score = (lines × hooks_count) / (memo_coverage × optimization_factor)
+./PO_PHASE3_CORRECTION_PLAN.md:140:  // this hook should reflect the change
+./ANALYSE_APPROFONDIE_v27.md:12:   - Ligne 676-683: Bootstrap appelé dans setup hook avec logs
+./PHASE3A_COMPLETION_REPORT.md:95:  • src/hooks/useChat.ts - Existing lazy-loading works as-is
+./CHAT_MEM_PROOFS.md:193:export function prepareContextInjection(
+./CHAT_MEM_PROOFS.md:270:- ✅ Ring 4 (UI): `src/hooks/useChat.ts` — imports all, used by React components
+./CHAT_MEM_PROOFS.md:312:| 8. Memory Injection | `prepareContextInjection()` | ✅ EXISTS |
+./PHASE3_SESSION_STATUS.md:84:- useChat.ts (2,155 lines) → Extract focused hooks
+./BETA_DEPLOYMENT_CHECKLIST.md:212:4. Prepare production release (v27.1.0+)
+./BETA_DEPLOYMENT_CHECKLIST.md:226:**Release prepared:** 2026-02-05 02:30 UTC  
+./CONSTITUTION_LOCK_v27.md:174:**File**: `src/__tests__/hooks/useFusionEngine.test.tsx`  
+./CONSTITUTION_LOCK_v27.md:176:**Tests**: All hook tests  
+./CONSTITUTION_LOCK_v27.md:177:**Justification**: Hook exporté mais JAMAIS utilisé en production (vérifié via `rg "useFusionEngine" src/`)  
+./CONSTITUTION_LOCK_v27.md:179:**Alternative**: Si hook devient utilisé, désactiver skips + valider tests
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:66:### Components/Hooks Optimized (8 Total)
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:98:| Component/Hook             | Before                | After                    | Reduction |
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:155:- 1 hook optimisé
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:161:- Prioriser hooks/composants avec multiplicateurs > 5×
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:197:- 7 hooks optimisés (constants + memoization)
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:204:- 12 components/hooks avec selectors appliqués
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:230:- 8 components/hooks optimized
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:247:- Application wave 1 (8 components/hooks)
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:394:- **Selectors créés:** 75+ hooks
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:397:- **Hooks optimisés:** 7 (v27-v28) + 4 (v29)
+./OPTIMIZATION_SUMMARY_v29_FINAL.md:470:- 12 components/hooks appliqués
+./package.json:16:    "ollama:bundle": "bash scripts/prepare-ollama-bundle.sh",
+./package.json:99:    "prepare": "husky",
+./package.json:101:    "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
+./package.json:105:    "cline:install": "bash .clinerules/install-hooks.sh",
+./package.json:106:    "cline:test-hooks": "bash -c 'echo Testing hooks... && .clinerules/hooks/TaskStart < tests/fixtures/hook-test-input.json'",
+DRIFT_SOURCE=UNKNOWN
