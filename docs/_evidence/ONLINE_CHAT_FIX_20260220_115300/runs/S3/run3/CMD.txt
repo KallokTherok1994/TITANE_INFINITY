@@ -1,1 +1,1 @@
-TITANE_PROOF_SCENARIO=S3 TITANE_PROOF_RUN=run3 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm exec wdio run wdio.desktop.conf.cjs --spec e2e/desktop/online-chat-proof-ui.wdio.test.js
+TITANE_PROOF_SCENARIO=S3 TITANE_PROOF_RUN=run3 TAURI_BINARY_PATH=/home/titane-os/.local/bin/titane-infinity /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm exec wdio run wdio.desktop.conf.cjs --spec e2e/desktop/online-chat-proof-ui.wdio.test.js
