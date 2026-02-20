@@ -13,7 +13,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
-import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import type { OnlineDecision, ProviderDecisionMeta } from '@/types/providerMeta';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -93,6 +93,7 @@ export interface ConversationResponse {
   cognitive_summary: string;
   metadata: ConversationMetadata;
   meta?: ProviderDecisionMeta;
+  decision?: OnlineDecision;
 }
 
 export interface ConversationMetadata {
@@ -114,6 +115,7 @@ interface OmegaGenerateResponse {
   metadata?: Record<string, unknown>;
   provider?: string;
   meta?: ProviderDecisionMeta;
+  decision?: OnlineDecision;
 }
 
 function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
@@ -122,6 +124,14 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
   }
 
   return raw as ProviderDecisionMeta;
+}
+
+function normalizeDecision(raw: unknown): OnlineDecision | undefined {
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
+    return undefined;
+  }
+
+  return raw as OnlineDecision;
 }
 
 function isMemoryEffect(val: unknown): val is MemoryEffect {
@@ -259,6 +269,7 @@ export async function processMessage(
 
   const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
   const providerMeta = normalizeProviderMeta(raw?.meta);
+  const decision = normalizeDecision(raw?.decision);
   const cognitiveTagsRaw = metadata['cognitiveTags'];
   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
@@ -310,6 +321,7 @@ export async function processMessage(
         (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
     }),
     meta: providerMeta,
+    decision,
   };
 
   console.log('[conversationEngine] 📥 Backend response:', {

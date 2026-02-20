@@ -49,14 +49,16 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
   describe('UI Timeouts', () => {
     it('should enforce UI cloud timeouts', () => {
       // Cloud provider timeouts aligned to global budget
-      expect(UI_TIMEOUTS.cloudProvider.short).toBe(12000);
-      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(18000);
-      expect(UI_TIMEOUTS.cloudProvider.long).toBe(25000);
+      // ✨ v27+ FIX: Augmentés de 25s → 60s
+      expect(UI_TIMEOUTS.cloudProvider.short).toBe(15000);
+      expect(UI_TIMEOUTS.cloudProvider.medium).toBe(30000);
+      expect(UI_TIMEOUTS.cloudProvider.long).toBe(60000);
     });
 
     it('should enforce max request timeout', () => {
-      // Max request should be 25s
-      expect(UI_TIMEOUTS.maxRequest).toBe(25000);
+      // Max request should be 60s (was 25s)
+      // ✨ v27+ FIX: Augmenté de 25s → 60s
+      expect(UI_TIMEOUTS.maxRequest).toBe(60000);
     });
 
     it('should ensure UI timeout >= backend timeout', () => {
@@ -89,8 +91,9 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('Streaming Timeouts', () => {
     it('should enforce streaming timeouts', () => {
-      // Total stream timeout should be 25s
-      expect(STREAM_CONFIG.totalTimeoutMs).toBe(25000);
+      // Total stream timeout should be 60s (was 25s)
+      // ✨ v27+ FIX: Augmenté de 25s → 60s
+      expect(STREAM_CONFIG.totalTimeoutMs).toBe(60000);
 
       // Per-chunk timeout should be 4s
       expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(4000);
@@ -106,8 +109,9 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('General API Timeouts', () => {
     it('should enforce AI generation timeout', () => {
-      // AI generation should be 25s
-      expect(API_TIMEOUTS.AI_GENERATION).toBe(25000);
+      // AI generation should be 60s (was 25s)
+      // ✨ v27+ FIX: Augmenté de 25s → 60s
+      expect(API_TIMEOUTS.AI_GENERATION).toBe(60000);
     });
 
     it('should enforce long operation timeout', () => {

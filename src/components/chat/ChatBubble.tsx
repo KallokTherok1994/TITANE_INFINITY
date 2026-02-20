@@ -423,6 +423,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            data-testid="chat-bubble-panel"
             className={`chat-bubble-panel ${position} ${isDragging ? 'dragging' : ''} ${isExpanded ? 'expanded' : ''}`}
             drag
             dragMomentum={false}
@@ -664,7 +665,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
             )}
 
             {/* Messages */}
-            <div className="chat-bubble-messages">
+            <div className="chat-bubble-messages" data-testid="chat-bubble-messages">
               {/* ✨ Listening Indicator */}
               <ListeningIndicator isActive={isListening} />
 
@@ -687,6 +688,11 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                   <motion.div
                     key={msg.metadata?.uiId ? String(msg.metadata.uiId) : idx}
                     className={`chat-bubble-message ${msg.role}`}
+                    data-testid={
+                      msg.role === 'assistant'
+                        ? 'chat-bubble-message-assistant'
+                        : 'chat-bubble-message-user'
+                    }
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: idx * 0.05 }}
@@ -703,7 +709,16 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                         <span />
                       </div>
                     ) : (
-                      <div className="message-content">{msg.content}</div>
+                      <div
+                        className="message-content"
+                        data-testid={
+                          msg.role === 'assistant'
+                            ? 'chat-bubble-assistant-content'
+                            : undefined
+                        }
+                      >
+                        {msg.content}
+                      </div>
                     )}
                   </motion.div>
                 ))
@@ -744,6 +759,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
 
               <div className="chat-bubble-input-wrapper">
                 <textarea
+                  data-testid="chat-bubble-input"
                   className="chat-bubble-input"
                   placeholder={
                     importedFiles.length > 0
@@ -775,6 +791,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({
                     <Paperclip size={16} />
                   </button>
                   <button
+                    data-testid="chat-bubble-send"
                     className="chat-bubble-send"
                     onClick={handleSend}
                     disabled={
