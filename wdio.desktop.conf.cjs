@@ -10,7 +10,7 @@ const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
 const APP_PATH = process.env.TAURI_BINARY_PATH
   ? path.resolve(process.env.TAURI_BINARY_PATH)
-  : path.resolve(ROOT, 'src-tauri/target/debug/titane-infinity');
+  : path.resolve(ROOT, 'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage');
 
 exports.config = {
   runner: 'local',
