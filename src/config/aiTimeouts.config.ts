@@ -23,9 +23,10 @@ export const PROVIDER_TIMEOUTS = {
  * - globalRequestMs: budget maximal par requête
  * - providerAttemptMs: budget maximal par tentative provider
  * - maxAttempts: nombre max de tentatives
+ * ✨ v27+ FIX: Augmenté de 25s → 60s pour requests IA complexes
  */
 export const REQUEST_BUDGETS = {
-  globalRequestMs: 25000,
+  globalRequestMs: 60000,
   providerAttemptMs: 8000,
   maxAttempts: 3,
 } as const;
@@ -42,14 +43,14 @@ export const MEMORY_TIMEOUTS = {
 
 /**
  * UI-facing timeouts (ms)
- * ✨ vΩ.2: Alignés sur le budget global (<= 25s)
+ * ✨ v27+ FIX: Augmentés de 25s → 60s pour requests IA complexes
  */
 export const UI_TIMEOUTS = {
-  maxRequest: 25000, // Hard cap global
-  failsafe: 25000, // Failsafe reset aligned
+  maxRequest: 60000, // Hard cap global
+  failsafe: 60000, // Failsafe reset aligned
   localProvider: { short: 6000, long: 8000 },
   ollamaProvider: { short: 8000, long: 12000 },
-  cloudProvider: { short: 12000, medium: 18000, long: 25000 },
+  cloudProvider: { short: 15000, medium: 30000, long: 60000 },
 } as const;
 
 /**
@@ -73,12 +74,12 @@ export const CIRCUIT_BREAKER = {
 
 /**
  * Streaming configuration (OPT11: Chunk batching)
- * ✨ vΩ.2: Bornes alignées sur le budget global
+ * ✨ v27+ FIX: totalTimeoutMs augmenté de 25s → 60s
  */
 export const STREAM_CONFIG = {
   chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
   chunkBatchDelayMs: 50, // Max delay before flushing batch
-  totalTimeoutMs: 25000, // 25s max for entire stream
+  totalTimeoutMs: 60000, // 60s max for entire stream
   perChunkTimeoutMs: 4000, // 4s max between chunks
 } as const;
 

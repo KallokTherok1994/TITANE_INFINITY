@@ -43,3 +43,19 @@ export interface ProviderDecisionMeta {
   cache_hit: boolean;
   policy: string;
 }
+
+export interface OnlineDecision {
+  online: boolean;
+  reasonCode:
+    | 'ONLINE_OK'
+    | 'OFFLINE_USER_FORCED'
+    | 'OFFLINE_NO_KEYS'
+    | 'OFFLINE_PROVIDER_DOWN'
+    | 'OFFLINE_NETWORK_BLOCKED'
+    | 'OFFLINE_TIMEOUT'
+    | 'OFFLINE_INTERNAL_ERROR';
+  providerSelected: string;
+  attempts: ProviderAttemptMeta[];
+  networkUsed: boolean;
+  mode: Mode;
+}

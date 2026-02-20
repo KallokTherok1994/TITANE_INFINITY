@@ -43,8 +43,10 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
 # Prioritize debug build for E2E tests
 BINARY_PATHS=(
+  "${TAURI_BINARY_PATH:-}"
   "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
   "$REPO_ROOT/src-tauri/target/release/titane-infinity"
+  "$HOME/.local/bin/titane-infinity"
   "/usr/bin/titane-infinity"
 )
 

@@ -291,11 +291,12 @@ export class TauriInvokeProtector {
   /**
    * Invoke protégé avec fallback intelligent
    * ✅ v∞: Anti-debounce pour start_recording et autres commandes critiques
+   * ✨ v27+ FIX: Default timeout 10s → 60s pour IA requests complexes
    */
   async safeInvoke<T>(
     command: string,
     args?: TauriCommandArgs,
-    timeoutMs = 10000
+    timeoutMs = 60000
   ): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
 
