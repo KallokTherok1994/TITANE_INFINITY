@@ -1,3 +1,0 @@
-RESULT=BLOCKED
-reason=wdio_or_driver_failed_exit_1
-exit_code=1
