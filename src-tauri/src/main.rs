@@ -110,6 +110,12 @@ mod diagnostic_commands {
     include!("commands/diagnostic_commands.rs");
 }
 mod audio {
+    // Re-export types from lib for inline modules
+    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+    
+    pub mod capture {
+        include!("audio/capture.rs");
+    }
     pub mod recording_engine {
         include!("audio/recording_engine.rs");
     }

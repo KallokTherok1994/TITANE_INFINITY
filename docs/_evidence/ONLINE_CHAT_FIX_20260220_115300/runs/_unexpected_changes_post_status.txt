@@ -1,0 +1,28 @@
+Post-revert git status (porcelain v1)
+
+ M registry/ui-events.jsonl
+ M scripts/e2e/tauri-wrapper.sh
+ M src-tauri/src/config/mod.rs
+ M src-tauri/src/conversation_engine/commands.rs
+ M src-tauri/src/conversation_engine/meta_accumulator.rs
+ M src-tauri/src/conversation_engine/mod.rs
+ M src/__tests__/c3-latency.test.ts
+ M src/__tests__/cloud-agent-timeout-config.test.ts
+ M src/components/chat/ChatBubble.tsx
+ M src/config/aiTimeouts.config.ts
+ M src/constants/timeouts.ts
+ M src/services/conversationEngine.ts
+ M src/types/providerMeta.ts
+ M src/utils/tauriProtector.ts
+?? ANALYSE_APPROFONDIE_v27.md
+?? CHAT_PROVIDER_FIX_v27_TEST.md
+?? FOOTER_DIAGNOSTIC.md
+?? docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+?? docs/_evidence/online_migration/BP08_build_blocker_note.md
+?? e2e/desktop/online-chat-proof-ui.wdio.test.js
+?? e2e/desktop/online-chat-proof.wdio.test.js
+?? scripts/test/test-bootstrap-api-keys.sh
+?? scripts/test/test-provider-status.sh
+?? scripts/tools/e2e_chat_proof_campaign.sh
+?? scripts/tools/e2e_chat_proof_harvest.sh
+?? scripts/verify/verify_chat_online.sh

@@ -11,7 +11,7 @@ use std::collections::VecDeque;
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Manager};
+use tauri::{AppHandle, Emitter, Manager};
 use tokio::sync::mpsc;
 
 /// Macro for safe mutex locking with auto-recovery from poisoned state
@@ -208,7 +208,7 @@ impl WhisperStreamingEngine {
                                 };
 
                                 // Emit to frontend
-                                let _ = app_handle.emit_all("whisper:partial", &event);
+                                let _ = app_handle.emit("whisper:partial", &event);
                                 println!("[WhisperStreaming] 📝 Partial: {}", event.text);
                             }
                         }
@@ -255,7 +255,7 @@ impl WhisperStreamingEngine {
                                 };
 
                                 // Emit to frontend
-                                let _ = app_handle.emit_all("whisper:final", &event);
+                                let _ = app_handle.emit("whisper:final", &event);
                                 println!("[WhisperStreaming] ✅ Final: {}", event.text);
                             }
                         }
@@ -311,7 +311,7 @@ impl WhisperStreamingEngine {
                                 timestamp: chunk.timestamp.elapsed().as_millis() as u64,
                             };
 
-                            let _ = app_handle.emit_all("whisper:final", &event);
+                            let _ = app_handle.emit("whisper:final", &event);
                         }
                     }
 
@@ -354,18 +354,24 @@ impl WhisperStreamingEngine {
         let temp_path =
             std::env::temp_dir().join(format!("titane_whisper_stream_{}.wav", timestamp_ms));
 
+        // Clone for cleanup after spawn_blocking
+        let temp_path_for_cleanup = temp_path.clone();
+
         std::fs::write(&temp_path, wav_data)
             .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
+        // Clone shell_guard to avoid lifetime issues
+        let shell_guard_cloned = shell_guard.clone();
+
         // Call Whisper via ShellGuard
         let result =
-            tokio::task::spawn_blocking(move || shell_guard.execute_asr_whisper(&temp_path))
+            tokio::task::spawn_blocking(move || shell_guard_cloned.execute_asr_whisper(&temp_path))
                 .await
                 .map_err(|e| AudioError::ProcessingError(e.to_string()))?
                 .map_err(|e| AudioError::ProcessingError(e))?;
 
         // Cleanup temp file
-        let _ = std::fs::remove_file(&temp_path);
+        let _ = std::fs::remove_file(&temp_path_for_cleanup);
 
         Ok(result.trim().to_string())
     }

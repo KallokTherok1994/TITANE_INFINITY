@@ -1,0 +1,25 @@
+]633;E;{   echo "# GATE 0 A2 — PRECHECKS SNAPSHOT"\x3b   echo ""\x3b   echo "## Date"\x3b   date -Is\x3b   echo ""\x3b   echo "## Git State"\x3b   echo "### HEAD"\x3b   git rev-parse HEAD\x3b   echo "### Branch"\x3b   git branch --show-current\x3b   echo ""\x3b   echo "## Versions"\x3b   echo "### pnpm"\x3b   pnpm -v\x3b   echo "### node"\x3b   node -v\x3b   echo "### rustc"\x3b   rustc -V\x3b   echo "### cargo"\x3b   cargo -V\x3b   echo ""\x3b   echo "## Working Tree"\x3b   git status --porcelain=v1\x3b } > "$RUNS_DIR/_build_gate0_snapshot.txt";e6971827-1d09-4713-b006-5d2d91ab7c84]633;C# GATE 0 A2 — PRECHECKS SNAPSHOT
+
+## Date
+2026-02-20T10:13:43-05:00
+
+## Git State
+### HEAD
+78b45f727508319e4e5171ce8f5b4e339b5ffd16
+### Branch
+MAIN
+
+## Versions
+### pnpm
+10.28.2
+### node
+v24.0.0
+### rustc
+rustc 1.91.1 (ed61e7d7e 2025-11-07)
+### cargo
+cargo 1.91.1 (ea2d97820 2025-10-10)
+
+## Working Tree
+ M registry/ui-events.jsonl
+?? docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+?? docs/_evidence/online_migration/BP08_build_blocker_note.md

@@ -1,0 +1,32 @@
+commit 78b45f727508319e4e5171ce8f5b4e339b5ffd16
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Fri Feb 20 09:52:38 2026 -0500
+
+    ONLINE_CHAT_FIX__ISOLATED_SCOPE
+    
+    Ring 2/3: Timeout budget 25s → 60s for complex AI requests
+    Ring 3: OnlineDecision contract + conversationEngine IPC layer
+    Ring 4: E2E data-testid selectors in ChatBubble
+    E2E harness: tauri-wrapper.sh + WDIO specs + proof scripts
+    
+    Scope: NO_FALSE_OFFLINE runtime fix + S1/S2/S3 E2E proof infrastructure
+    Context: STOP-THE-LINE stabilization cycle after 3x Rust drift reverts
+    Proof pack: docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/
+
+ e2e/desktop/online-chat-proof-ui.wdio.test.js    | 182 +++++++++++++++++++++++
+ e2e/desktop/online-chat-proof.wdio.test.js       |  77 ++++++++++
+ scripts/e2e/tauri-wrapper.sh                     |   2 +
+ scripts/test/test-bootstrap-api-keys.sh          |  75 ++++++++++
+ scripts/test/test-provider-status.sh             |  63 ++++++++
+ scripts/tools/e2e_chat_proof_campaign.sh         | 142 ++++++++++++++++++
+ scripts/tools/e2e_chat_proof_harvest.sh          | 135 +++++++++++++++++
+ scripts/verify/verify_chat_online.sh             |  55 +++++++
+ src/__tests__/c3-latency.test.ts                 |  50 ++++---
+ src/__tests__/cloud-agent-timeout-config.test.ts |  22 +--
+ src/components/chat/ChatBubble.tsx               |  21 ++-
+ src/config/aiTimeouts.config.ts                  |  15 +-
+ src/constants/timeouts.ts                        |  10 +-
+ src/services/conversationEngine.ts               |  14 +-
+ src/types/providerMeta.ts                        |  16 ++
+ src/utils/tauriProtector.ts                      |   3 +-
+ 16 files changed, 836 insertions(+), 46 deletions(-)

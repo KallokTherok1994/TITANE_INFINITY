@@ -720,6 +720,9 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 //  Audio Transcription (STT/ASR) - Whisper Native
 // ─────────────────────────────────────────────────────────────────
 
+// These commands are only compiled when NOT using mock feature
+// mock_commands.rs provides alternative implementations when feature="mock"
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
@@ -882,6 +885,7 @@ static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 /// Start recording with configuration
 /// Returns unique recording ID
 /// ✅ v∞.8 FIX: Auto-retry avec force_reset si "Recording already in progress"
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult<String> {
     log::info!("[Audio::start_recording] Called with config: {:?}", config);
@@ -940,6 +944,7 @@ pub async fn start_recording(config: Option<serde_json::Value>) -> CommandResult
 }
 
 /// Stop recording and return transcription result
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn stop_recording() -> CommandResult<serde_json::Value> {
     log::info!("[Audio::stop_recording] Called");
@@ -1037,6 +1042,7 @@ pub async fn get_recording_status() -> CommandResult<serde_json::Value> {
 //  Speech Commands (v19.3.0) - Aliases for TTS
 // ─────────────────────────────────────────────────────────────────
 
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn speak(
     text: String,
@@ -1099,6 +1105,7 @@ pub async fn speak(
     result
 }
 
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn stop_speaking() -> CommandResult<()> {
     log::info!("[Audio] stop_speaking() called");
@@ -1106,6 +1113,7 @@ pub async fn stop_speaking() -> CommandResult<()> {
     tts_stop().await
 }
 
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn is_speaking() -> CommandResult<bool> {
     Ok(IS_SPEAKING.load(Ordering::Relaxed))

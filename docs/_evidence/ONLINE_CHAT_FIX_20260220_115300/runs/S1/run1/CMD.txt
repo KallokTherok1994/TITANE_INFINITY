@@ -1,0 +1,1 @@
+TITANE_PROOF_SCENARIO=S1 TITANE_PROOF_RUN=run1 /home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm exec wdio run wdio.desktop.conf.cjs --spec e2e/desktop/online-chat-proof-ui.wdio.test.js

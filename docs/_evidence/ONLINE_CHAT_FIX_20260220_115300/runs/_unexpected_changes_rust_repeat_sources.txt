@@ -1,0 +1,775 @@
+]633;E;{   echo "# git config --list | rg -n \\"filter|clean|smudge|autocrlf|eol|attributes\\""\x3b   git config --list | rg -n "filter|clean|smudge|autocrlf|eol|attributes" || true\x3b   echo "# .gitattributes"\x3b   cat .gitattributes 2>/dev/null || true\x3b   echo "# rg rustfmt/cargo fmt (scripts, src-tauri, src)"\x3b   rg -n "rustfmt|cargo fmt|fmt\\\\b" -S . scripts src-tauri src 2>/dev/null || true\x3b   echo "# rg lifecycle hooks"\x3b   rg -n "postinstall|preinstall|prepare|precommit|husky" package.json pnpm-lock.yaml .husky -S 2>/dev/null || true\x3b   echo "# rg cargo fmt/rustfmt (scripts, .github, src-tauri)"\x3b   rg -n "cargo fmt|rustfmt" -S scripts .github src-tauri 2>/dev/null || true\x3b } > "$RUNS_DIR/_unexpected_changes_rust_repeat_sources.txt";25054337-157d-412d-833f-c30814df6142]633;C# git config --list | rg -n "filter|clean|smudge|autocrlf|eol|attributes"
+5:filter.lfs.clean=git-lfs clean -- %f
+6:filter.lfs.smudge=git-lfs smudge -- %f
+7:filter.lfs.process=git-lfs filter-process
+8:filter.lfs.required=true
+32:filter.lfs.required=true
+33:filter.lfs.clean=git-lfs clean -- %f
+34:filter.lfs.smudge=git-lfs smudge -- %f
+35:filter.lfs.process=git-lfs filter-process
+67:branch.ui/doc-only-cleanroom.remote=origin
+68:branch.ui/doc-only-cleanroom.merge=refs/heads/MAIN
+69:branch.ui/doc-only-cleanroom.vscode-merge-base=origin/MAIN
+70:branch.ui/doc-only-cleanroom.github-pr-owner-number=KallokTherok1994#TITANE_INFINITY#111
+71:branch.ops/worktree-cleanup-snapshot-20260209-1350.github-pr-base-branch=KallokTherok1994#TITANE_INFINITY#ui/doc-only-cleanroom
+72:branch.ops/worktree-cleanup-snapshot-20260209-1350.vscode-merge-base=origin/MAIN
+# .gitattributes
+# ═══════════════════════════════════════════════════════════════════
+# TITANE∞ v∞.40 — Git LFS Configuration
+# ═══════════════════════════════════════════════════════════════════
+# 🤖 AI Models (should be excluded from Git entirely - use external storage)
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.gguf filter=lfs diff=lfs merge=lfs -text
+*.ggml filter=lfs diff=lfs merge=lfs -text
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.safetensors filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
+*.pb filter=lfs diff=lfs merge=lfs -text
+*.h5 filter=lfs diff=lfs merge=lfs -text
+*.model filter=lfs diff=lfs merge=lfs -text
+# 📦 Archives (generally should be excluded)
+*.zip filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+*.7z filter=lfs diff=lfs merge=lfs -text
+*.rar filter=lfs diff=lfs merge=lfs -text
+# 🎵 Audio files
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.mp3 filter=lfs diff=lfs merge=lfs -text
+*.flac filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.m4a filter=lfs diff=lfs merge=lfs -text
+*.aac filter=lfs diff=lfs merge=lfs -text
+# 🎥 Video files
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.avi filter=lfs diff=lfs merge=lfs -text
+*.mkv filter=lfs diff=lfs merge=lfs -text
+# 🖼️ Large images
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.ai filter=lfs diff=lfs merge=lfs -text
+*.xcf filter=lfs diff=lfs merge=lfs -text
+# 🚀 Production builds (only if you need to version them)
+# Commented out - prefer excluding from Git entirely
+# *.AppImage filter=lfs diff=lfs merge=lfs -text
+# *.dmg filter=lfs diff=lfs merge=lfs -text
+# *.deb filter=lfs diff=lfs merge=lfs -text
+# *.rpm filter=lfs diff=lfs merge=lfs -text
+# ═══════════════════════════════════════════════════════════════════
+# Line Endings (Windows/Unix compatibility)
+# ═══════════════════════════════════════════════════════════════════
+* text=auto
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.scss text eol=lf
+
+# 🧰 Toolchain binaries (vendored)
+.tools/node/_extract/**/bin/node filter=lfs diff=lfs merge=lfs -text
+*.html text eol=lf
+*.rs text eol=lf
+*.toml text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+# ═══════════════════════════════════════════════════════════════════
+# END TITANE∞ .gitattributes
+# ═══════════════════════════════════════════════════════════════════
+# rg rustfmt/cargo fmt (scripts, src-tauri, src)
+scripts/auto/weekly-diagnostic.sh:95:if cargo fmt --check 2> /tmp/format.log; then
+./SEAL_PROCESS_COMPLETE.md:103:2. ✅ **Linting propre** - ESLint (0 errors) + Rustfmt conforme
+src-tauri/src/agi_core/mod.rs:291:impl std::fmt::Display for AGIError {
+src-tauri/src/agi_core/mod.rs:292:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./tts-service/test_integration.sh:63:echo "   Taille: $(numfmt --to=iec-i --suffix=B $FILE_SIZE)"
+src-tauri/src/commands/chat_modes.rs:252:impl std::fmt::Display for ModeValidationError {
+src-tauri/src/commands/chat_modes.rs:253:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./CHANGELOG.md:2338:- ✅ Phase 8: Cleanup Global (MutexGuard fixes, cargo fmt)
+./CHANGELOG.md:2379:- cargo fmt appliqué (formatting complet)
+./CHANGELOG.md:2400:✅ Formatting       : cargo fmt appliqué
+src-tauri/src/auth/error.rs:8:use std::fmt;
+src-tauri/src/auth/error.rs:33:impl fmt::Display for AuthError {
+src-tauri/src/auth/error.rs:34:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+src-tauri/src/resilience/retry.rs:8:use std::fmt::Display;
+src-tauri/src/resilience/retry.rs:80:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/resilience/retry.rs:663:        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/time/travel_engine.rs:30:impl std::fmt::Display for TravelError {
+./src-tauri/src/time/travel_engine.rs:31:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./src-tauri/src/time/backup_engine.rs:38:impl std::fmt::Display for BackupError {
+./src-tauri/src/time/backup_engine.rs:39:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./scripts/auto/weekly-diagnostic.sh:95:if cargo fmt --check 2> /tmp/format.log; then
+./src-tauri/src/audio/whisper_streaming.rs:390:        // fmt chunk
+./src-tauri/src/audio/whisper_streaming.rs:391:        wav_data.extend_from_slice(b"fmt ");
+./src-tauri/src/audio/mod.rs:59:impl std::fmt::Display for AudioError {
+./src-tauri/src/audio/mod.rs:60:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/tts/mod.rs:39:impl std::fmt::Display for TTSError {
+./src-tauri/src/tts/mod.rs:40:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/singularity/singularity_os.rs:502:impl std::fmt::Display for SingularityError {
+./src-tauri/src/singularity/singularity_os.rs:503:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/chat_engine/errors.rs:1:use std::fmt::{self, Display, Formatter};
+./src-tauri/src/chat_engine/errors.rs:25:    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+./src-tauri/src/singularity_cortex/state.rs:174:impl std::fmt::Display for CognitiveMode {
+./src-tauri/src/singularity_cortex/state.rs:175:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/core/types.rs:7:use std::fmt;
+./src-tauri/src/core/types.rs:26:impl fmt::Display for EngineError {
+./src-tauri/src/core/types.rs:27:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+./src-tauri/src/core/types.rs:76:impl fmt::Display for EngineHealth {
+./src-tauri/src/core/types.rs:77:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+./src-tauri/src/core/tapi_error.rs:8:use std::fmt;
+./src-tauri/src/core/tapi_error.rs:128:impl fmt::Display for TAPIError {
+./src-tauri/src/core/tapi_error.rs:129:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+./src-tauri/src/api_hub/temporal_circuit_breaker.rs:203:impl std::fmt::Display for CircuitBreakerError {
+./src-tauri/src/api_hub/temporal_circuit_breaker.rs:204:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/api_hub/mod.rs:82:impl std::fmt::Display for Provider {
+./src-tauri/src/api_hub/mod.rs:83:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/api_hub/mod.rs:457:impl std::fmt::Display for APIHubError {
+./src-tauri/src/api_hub/mod.rs:458:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/audit/20_backend_audit.md:517:- [ ] Rustfmt appliqué
+./src-tauri/src/agi_core/mod.rs:291:impl std::fmt::Display for AGIError {
+./src-tauri/src/agi_core/mod.rs:292:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/audit/90_audit_final_ultra_complet.md:371:$ cargo fmt -- --check
+scripts/fix_p0_issues.sh:73:        E: std::fmt::Display;
+scripts/fix_p0_issues.sh:78:        E: std::fmt::Display;
+scripts/fix_p0_issues.sh:84:        E: std::fmt::Display,
+scripts/fix_p0_issues.sh:97:        E: std::fmt::Display,
+./src-tauri/src/updates/update_engine.rs:36:impl std::fmt::Display for UpdateError {
+./src-tauri/src/updates/update_engine.rs:37:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./src-tauri/src/commands/chat_modes.rs:252:impl std::fmt::Display for ModeValidationError {
+./src-tauri/src/commands/chat_modes.rs:253:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/numeric_twin/mod.rs:994:impl std::fmt::Display for TwinError {
+./src-tauri/src/numeric_twin/mod.rs:995:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/kernel/priorities.rs:104:impl std::fmt::Display for CognitivePriority {
+./src-tauri/src/kernel/priorities.rs:105:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agents/contract.rs:42:impl std::fmt::Display for ContractViolation {
+./src-tauri/src/agents/contract.rs:43:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agents/agent.rs:74:impl std::fmt::Display for AgentError {
+./src-tauri/src/agents/agent.rs:75:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agents/agent.rs:334:impl std::fmt::Debug for Agent {
+./src-tauri/src/agents/agent.rs:335:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/auth/error.rs:8:use std::fmt;
+./src-tauri/src/auth/error.rs:33:impl fmt::Display for AuthError {
+./src-tauri/src/auth/error.rs:34:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+scripts/test/validate_environment.sh:206:if rustup component list | grep -q "rustfmt.*installed"; then
+scripts/test/validate_environment.sh:207:    echo -e "  ${GREEN}✅ rustfmt${NC}: Installé"
+scripts/test/validate_environment.sh:210:    echo -e "  ${YELLOW}⚠️  rustfmt${NC}: Manquant"
+scripts/test/test_install_script.sh:92:test_check "rustfmt installé" "grep -q 'rustfmt' '$INSTALL_SCRIPT'"
+scripts/test/test_audio_complete.sh:89:        echo "   Fichier: $OUTPUT_FILE ($(numfmt --to=iec-i --suffix=B $FILE_SIZE))"
+./src-tauri/src/semantic/query.rs:273:impl std::fmt::Display for QueryError {
+./src-tauri/src/semantic/query.rs:274:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/semantic/vector_store.rs:260:impl std::fmt::Display for VectorStoreError {
+./src-tauri/src/semantic/vector_store.rs:261:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/cycle_engine/config.rs:41:impl std::fmt::Display for CycleError {
+src-tauri/src/cycle_engine/config.rs:42:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+scripts/pipeline/TITANE_PIPELINE_v12.sh:84:cargo fmt --all
+src-tauri/src/unified_memory_v2/types.rs:216:impl std::fmt::Display for MemoryError {
+src-tauri/src/unified_memory_v2/types.rs:217:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./scripts/fix_p0_issues.sh:73:        E: std::fmt::Display;
+./scripts/fix_p0_issues.sh:78:        E: std::fmt::Display;
+./scripts/fix_p0_issues.sh:84:        E: std::fmt::Display,
+./scripts/fix_p0_issues.sh:97:        E: std::fmt::Display,
+./src-tauri/src/temporal_engine/config.rs:272:impl std::fmt::Display for ConfigError {
+./src-tauri/src/temporal_engine/config.rs:273:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/temporal_engine/mod.rs:279:impl std::fmt::Display for TemporalError {
+./src-tauri/src/temporal_engine/mod.rs:280:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/conversation_os/mod.rs:279:impl std::fmt::Display for ConversationError {
+./src-tauri/src/conversation_os/mod.rs:280:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/devtools/memory_inspector.rs:43:impl std::fmt::Display for MemoryLayer {
+./src-tauri/src/devtools/memory_inspector.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/error_handling.rs:13:        E: std::fmt::Display;
+./src-tauri/src/error_handling.rs:18:        E: std::fmt::Display;
+./src-tauri/src/error_handling.rs:24:        E: std::fmt::Display,
+./src-tauri/src/error_handling.rs:37:        E: std::fmt::Display,
+./src-tauri/src/memory_os/types.rs:15:impl std::fmt::Display for MemoryOSError {
+./src-tauri/src/memory_os/types.rs:16:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/memory_os/ltm.rs:472:impl std::fmt::Display for LTMError {
+./src-tauri/src/memory_os/ltm.rs:473:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/memory_os/vector_store.rs:300:impl std::fmt::Display for VectorStoreError {
+./src-tauri/src/memory_os/vector_store.rs:301:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/memory_os/core.rs:671:impl std::fmt::Display for MemoryOSError {
+./src-tauri/src/memory_os/core.rs:672:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/conversation_engine/mod.rs:312:impl std::fmt::Display for ConversationEngineError {
+./src-tauri/src/conversation_engine/mod.rs:313:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agent_system/config.rs:43:#[rustfmt::skip]
+./src-tauri/src/agent_system/config.rs:70:    #[rustfmt::skip]
+./src-tauri/src/agent_system/config.rs:101:    #[rustfmt::skip]
+./src-tauri/src/agent_system/config.rs:136:    #[rustfmt::skip]
+./src-tauri/src/agent_system/config.rs:254:impl std::fmt::Display for ConfigError {
+./src-tauri/src/agent_system/config.rs:255:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agent_system/mod.rs:424:impl std::fmt::Display for AgentSystemError {
+./src-tauri/src/agent_system/mod.rs:425:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/agent_system/agent.rs:101:impl std::fmt::Display for AgentType {
+./src-tauri/src/agent_system/agent.rs:102:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/epic1_provider_refactor.rs:7:use std::fmt;
+./src-tauri/src/epic1_provider_refactor.rs:20:impl fmt::Display for ProviderError {
+./src-tauri/src/epic1_provider_refactor.rs:21:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+./docs/backup_20251218_122540/CHANGELOG.md:1803:- ✅ Phase 8: Cleanup Global (MutexGuard fixes, cargo fmt)
+./docs/backup_20251218_122540/CHANGELOG.md:1844:- cargo fmt appliqué (formatting complet)
+./docs/backup_20251218_122540/CHANGELOG.md:1865:✅ Formatting       : cargo fmt appliqué
+./src-tauri/src/constitution/mod.rs:325:impl std::fmt::Display for ConstitutionError {
+./src-tauri/src/constitution/mod.rs:326:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/unified_memory_v2/types.rs:216:impl std::fmt::Display for MemoryError {
+./src-tauri/src/unified_memory_v2/types.rs:217:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/backup_20251218_122540/AUTO_IMPROVEMENTS_YOLO_v24.2.1.md:205:- ✅ Linting (ESLint + rustfmt)
+./src-tauri/src/security/vault_engine.rs:43:impl std::fmt::Display for VaultError {
+./src-tauri/src/security/vault_engine.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./src-tauri/src/meta_energy/config.rs:359:impl std::fmt::Display for ConfigError {
+./src-tauri/src/meta_energy/config.rs:360:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/security/validation.rs:45:impl std::fmt::Display for ValidationError {
+./src-tauri/src/security/validation.rs:46:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./src-tauri/src/security/validation.rs:153:    pub fn validate_number<T: PartialOrd + std::fmt::Display>(
+./src-tauri/src/meta_energy/recovery.rs:486:impl std::fmt::Display for RecoveryError {
+./src-tauri/src/meta_energy/recovery.rs:487:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/meta_energy/mod.rs:390:impl std::fmt::Display for MetaEnergyError {
+./src-tauri/src/meta_energy/mod.rs:391:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/backup_20251218_122540/QUICKSTART_UBUNTU_24.04.md:38:- ✅ **rustfmt** (formatage code)
+./docs/backup_20251218_122540/QUICKSTART_UBUNTU_24.04.md:127:cargo fmt
+./src-tauri/src/security/sandbox.rs:93:impl std::fmt::Display for SandboxError {
+./src-tauri/src/security/sandbox.rs:94:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./docs/backup_20251218_122540/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./src-tauri/src/system_center/logs.rs:29:impl std::fmt::Display for LogLevel {
+./src-tauri/src/system_center/logs.rs:30:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:20:║  ⚠️  Rust:             ATTENTION (fmt warnings)           ║
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:37:| 🔴 **HAUTE** | Rust | Formatage non-conforme | CI peut fail | `cargo fmt` |
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:738:cargo fmt --check
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:750:cargo fmt
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:753:cargo fmt --check
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:776:**Score Cargo: 75/100** ⭐⭐⭐⭐☆ (fmt warnings -25 points)
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:987:cargo fmt
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:988:cargo fmt --check  # Vérifier
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:990:git commit -m "style(rust): format code with cargo fmt"
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1068:- [ ] Exécuter `cargo fmt`
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1069:- [ ] Vérifier `cargo fmt --check` (0 diff)
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1111:Cargo:       75/100 ⭐⭐⭐⭐☆  ← FMT
+./docs/backup_20251218_122540/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1158:║  2. cargo fmt (Rust)                                      ║
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:258:rustup component add rustfmt clippy 2>&1 | tee -a "$LOG_FILE"
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:259:log_success "rustfmt et clippy installés"
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:269:echo -e "${CYAN}  rustfmt: $(rustfmt --version)${NC}"
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:25:| 🔴 CRITIQUE | Formater code Rust            | ✅ COMPLÉTÉ | 0 warnings cargo fmt        |
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:226:$ cargo fmt --check
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:371:$ cargo fmt --check
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:590:cargo fmt --check    # ✅ 0 diff
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:634:- Format all code (cargo fmt)
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:677:- `cargo fmt` refuse whitespace trailing (bon pour consistance)
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:678:- `sed` cleanup avant fmt résout tout
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:679:- `cargo fmt --check` dans CI prévient les drift
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:687:cargo fmt --check || exit 1
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:714:- ✅ Ajouter pre-commit hooks (lint + fmt)
+./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:755:   - 0 diff `cargo fmt --check`
+./src-tauri/src/ai/mod.rs:52:impl std::fmt::Display for AiMode {
+./src-tauri/src/ai/mod.rs:53:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/ai/mod.rs:151:impl std::fmt::Display for AIError {
+./src-tauri/src/ai/mod.rs:152:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/memory/mod.rs:43:impl std::fmt::Display for MessageRole {
+./src-tauri/src/memory/mod.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/memory/mod.rs:63:impl std::fmt::Display for MemoryError {
+./src-tauri/src/memory/mod.rs:64:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/backup_20251218_122540/README_INSTALL_SUITE.md:112:- rustfmt, clippy
+./docs/backup_20251218_122540/README_INSTALL_SUITE.md:168:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/backup_20251218_122540/MANIFEST_INSTALLATION.md:156:- rustfmt, clippy
+./docs/backup_20251218_122540/MANIFEST_INSTALLATION.md:218:| **rustfmt**    | Installé                 |
+./src-tauri/src/multimodal/config.rs:41:impl std::fmt::Display for MultimodalError {
+./src-tauri/src/multimodal/config.rs:42:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/cycle_engine/config.rs:41:impl std::fmt::Display for CycleError {
+./src-tauri/src/cycle_engine/config.rs:42:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/TITANE_OS/TITANE_DOCUMENTATION_INDEX.md:125:cargo fmt --check
+./src-tauri/src/resilience/retry.rs:8:use std::fmt::Display;
+./src-tauri/src/resilience/retry.rs:80:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./src-tauri/src/resilience/retry.rs:663:        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/QUICK_START_IMPLEMENTATION.md:588:      - name: Run rustfmt
+./docs/QUICK_START_IMPLEMENTATION.md:589:        run: cargo fmt --check
+./docs/QUICK_START_IMPLEMENTATION.md:651:echo "cargo fmt --check && cargo clippy -- -D warnings" >> .husky/pre-commit
+./docs/TITANE_OS/TITANE_DEVOPS_AND_TESTING.md:207:cargo fmt --check
+./docs/TITANE_OS/TITANE_DEVOPS_AND_TESTING.md:210:cargo fmt
+./docs/TITANE_OS/TITANE_DEVOPS_AND_TESTING.md:308:        run: cargo fmt --check
+./docs/TITANE_OS/TITANE_DEVOPS_AND_TESTING.md:652:cargo fmt
+./docs/TITANE_OS/TITANE_DEVOPS_AND_TESTING.md:668:- [ ] Code formatted (`cargo fmt --check`)
+./docs/OBSERVABILITY_AUDIT_v19.3.md:137:        .with(tracing_subscriber::fmt::layer())
+scripts/README.md:216:- `cargo fmt --all` (formatage)
+./docs/TITANE_INFINITY_MULTIMODAL.md:822:- Follow `rustfmt` defaults
+./docs/TITANE_INFINITY_MULTIMODAL.md:830:cargo fmt
+src-tauri/src/time/travel_engine.rs:30:impl std::fmt::Display for TravelError {
+src-tauri/src/time/travel_engine.rs:31:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+./docs/development/GITHUB_COPILOT_SUPER_PROMPTS.md:164:pub fn not_found<T: std::fmt::Display>(item: T) -> AppError {
+./docs/development/GITHUB_COPILOT_SUPER_PROMPTS.md:169:pub fn internal<T: std::fmt::Display>(msg: T) -> AppError {
+./docs/development/GITHUB_COPILOT_SUPER_PROMPTS.md:1195:    "cargo fmt --",
+./docs/development/GITHUB_COPILOT_SUPER_PROMPTS.md:1215:  cargo fmt -- --check
+./docs/development/GITHUB_COPILOT_SUPER_PROMPTS.md:1428:cargo fmt && cargo clippy && cargo test  # Rust
+src-tauri/src/time/backup_engine.rs:38:impl std::fmt::Display for BackupError {
+src-tauri/src/time/backup_engine.rs:39:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+src-tauri/src/security/vault_engine.rs:43:impl std::fmt::Display for VaultError {
+src-tauri/src/security/vault_engine.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+src-tauri/src/security/validation.rs:45:impl std::fmt::Display for ValidationError {
+src-tauri/src/security/validation.rs:46:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+src-tauri/src/security/validation.rs:153:    pub fn validate_number<T: PartialOrd + std::fmt::Display>(
+src-tauri/src/security/sandbox.rs:93:impl std::fmt::Display for SandboxError {
+src-tauri/src/security/sandbox.rs:94:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+src-tauri/src/system_center/logs.rs:29:impl std::fmt::Display for LogLevel {
+src-tauri/src/system_center/logs.rs:30:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/ai/mod.rs:52:impl std::fmt::Display for AiMode {
+src-tauri/src/ai/mod.rs:53:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/ai/mod.rs:151:impl std::fmt::Display for AIError {
+src-tauri/src/ai/mod.rs:152:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/memory/mod.rs:43:impl std::fmt::Display for MessageRole {
+src-tauri/src/memory/mod.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/memory/mod.rs:63:impl std::fmt::Display for MemoryError {
+src-tauri/src/memory/mod.rs:64:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./scripts/test/validate_environment.sh:206:if rustup component list | grep -q "rustfmt.*installed"; then
+./scripts/test/validate_environment.sh:207:    echo -e "  ${GREEN}✅ rustfmt${NC}: Installé"
+./scripts/test/validate_environment.sh:210:    echo -e "  ${YELLOW}⚠️  rustfmt${NC}: Manquant"
+src-tauri/src/multimodal/config.rs:41:impl std::fmt::Display for MultimodalError {
+src-tauri/src/multimodal/config.rs:42:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./scripts/test/test_install_script.sh:92:test_check "rustfmt installé" "grep -q 'rustfmt' '$INSTALL_SCRIPT'"
+./scripts/test/test_audio_complete.sh:89:        echo "   Fichier: $OUTPUT_FILE ($(numfmt --to=iec-i --suffix=B $FILE_SIZE))"
+./docs/99_ARCHIVE/obsolete/STATUS_FINAL_v12.0.0.md:45:✅ cargo fmt:              Appliqué (commands/mod.rs, main.rs)
+./scripts/pipeline/TITANE_PIPELINE_v12.sh:84:cargo fmt --all
+./scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:258:rustup component add rustfmt clippy 2>&1 | tee -a "$LOG_FILE"
+./scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:259:log_success "rustfmt et clippy installés"
+./scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:269:echo -e "${CYAN}  rustfmt: $(rustfmt --version)${NC}"
+./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:40:- **Action:** `sed` cleanup + `cargo fmt`
+./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:241:cargo fmt --check
+./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122540/POST_INSTALL_README.md:56:- Composants : `rustfmt`, `clippy`
+./scripts/README.md:216:- `cargo fmt --all` (formatage)
+src-tauri/src/chat_engine/errors.rs:1:use std::fmt::{self, Display, Formatter};
+src-tauri/src/chat_engine/errors.rs:25:    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+./docs/backup_20251218_122540/INDEX.md:86:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/99_ARCHIVE/obsolete/RAPPORT_BACKEND_ENGINE_v12_FINAL.md:180:| **Format** | `cargo fmt --check` | ✅ Formatted |
+./docs/99_ARCHIVE/obsolete/RAPPORT_BACKEND_ENGINE_v12_FINAL.md:191:cargo fmt --check        # ✅ All formatted
+./docs/99_ARCHIVE/obsolete/RAPPORT_BACKEND_ENGINE_v12_FINAL.md:377:- [x] cargo fmt --check PASS
+./docs/FUNDAMENTAL_CONCEPTS.md:742:**rustfmt (Rust)** :
+./docs/FUNDAMENTAL_CONCEPTS.md:744:cargo fmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_FRONTEND_v12.md:706:| `validate_autofix.sh` | Validation backend (cargo fmt/fix/clippy) |
+./docs/99_ARCHIVE/obsolete/MANIFEST_FINAL_v10.txt:114:      • cargo fmt --all : Code formaté
+./docs/99_ARCHIVE/obsolete/MANIFEST_FINAL_v10.txt:144:✅ cargo fmt --all              → Code formaté (style Rust canonique)
+./docs/99_ARCHIVE/obsolete/MANIFEST_FINAL_v10.txt:255:   • cargo fmt : Style unifié
+src-tauri/src/agents/contract.rs:42:impl std::fmt::Display for ContractViolation {
+src-tauri/src/agents/contract.rs:43:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/RAPPORT_FULL_FIX_v11.1.md:16:- **Code formaté** avec rustfmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_FULL_FIX_v11.1.md:222:1. ✅ `cargo fmt --all` - Formatage réussi
+src-tauri/src/agents/agent.rs:74:impl std::fmt::Display for AgentError {
+src-tauri/src/agents/agent.rs:75:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/agents/agent.rs:334:impl std::fmt::Debug for Agent {
+src-tauri/src/agents/agent.rs:335:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/ETAT_ACTUEL.md:347:cargo fmt
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_PREDEPLOY_v12.sh:81:log_step "Formatage automatique (cargo fmt)..."
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_PREDEPLOY_v12.sh:82:cargo fmt --all
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_PREDEPLOY_v12.sh:268:- **cargo fmt** : Appliqué ✅
+src-tauri/src/updates/update_engine.rs:36:impl std::fmt::Display for UpdateError {
+src-tauri/src/updates/update_engine.rs:37:    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+src-tauri/src/conversation_os/mod.rs:279:impl std::fmt::Display for ConversationError {
+src-tauri/src/conversation_os/mod.rs:280:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/RAPPORT_AUDIT_FINAL_v12.md:306:- **cargo fmt --all** : Code formaté selon style Rust standard
+./docs/99_ARCHIVE/obsolete/RAPPORT_AUDIT_FINAL_v12.md:320:✅ cargo fmt --all           # Formatage appliqué
+./docs/99_ARCHIVE/obsolete/RAPPORT_AUDIT_FINAL_v12.md:385:2. **Audit & auto-fix Rust** : cargo fmt, clippy --fix, check, clippy final
+src-tauri/src/error_handling.rs:13:        E: std::fmt::Display;
+src-tauri/src/error_handling.rs:18:        E: std::fmt::Display;
+src-tauri/src/error_handling.rs:24:        E: std::fmt::Display,
+src-tauri/src/error_handling.rs:37:        E: std::fmt::Display,
+src-tauri/src/semantic/query.rs:273:impl std::fmt::Display for QueryError {
+src-tauri/src/semantic/query.rs:274:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/semantic/vector_store.rs:260:impl std::fmt::Display for VectorStoreError {
+src-tauri/src/semantic/vector_store.rs:261:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/CHANGELOG_v12.0.0.md:147:cargo fmt --all       ✅ Format OK
+./docs/99_ARCHIVE/obsolete/SOLUTION_BUILD_DOCKER.md:135:### Méthode 3: rustfmt + rust-analyzer CLI
+./docs/99_ARCHIVE/obsolete/SOLUTION_BUILD_DOCKER.md:141:rustfmt --edition 2021 src/main.rs || true
+src-tauri/src/temporal_engine/config.rs:272:impl std::fmt::Display for ConfigError {
+src-tauri/src/temporal_engine/config.rs:273:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/GUIDE_DEPLOIEMENT_SCRIPT.md:100:[3] Backend  : cargo fmt → clean → fix → clippy → check → build --release
+src-tauri/src/temporal_engine/mod.rs:279:impl std::fmt::Display for TemporalError {
+src-tauri/src/temporal_engine/mod.rs:280:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/conversation_engine/mod.rs:312:impl std::fmt::Display for ConversationEngineError {
+src-tauri/src/conversation_engine/mod.rs:313:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/_evidence/v27/A2_find_maxdepth4_sorted.txt:6849:./src-tauri/.rustfmt.toml
+src-tauri/src/devtools/memory_inspector.rs:43:impl std::fmt::Display for MemoryLayer {
+src-tauri/src/devtools/memory_inspector.rs:44:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/RAPPORT_AUTO_FIX_PHASE_8_BLOCAGE.md:238:1. **Linting automatique** (clippy, rustfmt en pre-commit)
+./docs/99_ARCHIVE/obsolete/RAPPORT_VALIDATION_ULTIME_v12.0.0.md:90:✅ **cargo fmt (simulé)**
+./docs/99_ARCHIVE/obsolete/RAPPORT_SCRIPTS_v12.md:260:- cargo fmt --all
+src-tauri/src/constitution/mod.rs:325:impl std::fmt::Display for ConstitutionError {
+src-tauri/src/constitution/mod.rs:326:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/RESUME_CORRECTIONS_v12.txt:21:           └─ cargo fmt appliqué
+./docs/99_ARCHIVE/obsolete/AUDIT_INTEGRAL_TITANE_v10.0.0.md:724:cargo fmt SUCCESS
+src-tauri/src/meta_energy/config.rs:359:impl std::fmt::Display for ConfigError {
+src-tauri/src/meta_energy/config.rs:360:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/GUIDE_DEPLOIEMENT.md:65:- ✅ Validation code Rust (fmt, check, clippy)
+./docs/99_ARCHIVE/obsolete/GUIDE_DEPLOIEMENT.md:154:1. `cargo fmt --all` : Formatage canonique
+./docs/99_ARCHIVE/obsolete/GUIDE_DEPLOIEMENT.md:391:| Validation code (fmt/check/clippy) | ✅ Oui | ❌ Non |
+./docs/_evidence/v27/snapshot-20260113-081652/A2_find_maxdepth4.txt:6865:./src-tauri/.rustfmt.toml
+./docs/99_ARCHIVE/obsolete/ANALYSE_FINALE_v12.md:359:2. Rust audit (fmt, clippy, check)
+./docs/99_ARCHIVE/obsolete/RAPPORT_FINAL_COMPLET_v10.md:29:| **cargo fmt** | ⚠️ Partiel | Erreur non-ASCII tests.rs (non-bloquant) |
+./docs/99_ARCHIVE/obsolete/RAPPORT_FINAL_COMPLET_v10.md:371:**Impact**: ❌ Bloque `cargo fmt` uniquement  
+./docs/99_ARCHIVE/obsolete/RAPPORT_FINAL_COMPLET_v10.md:523:- [x] cargo fmt appliqué
+./docs/phases/PHASE_3_SPRINT_13_RUST_COVERAGE_BASELINE.md:133:**Pattern:** Code formatter (rustfmt) removes manual struct field additions.
+src-tauri/src/memory_os/types.rs:15:impl std::fmt::Display for MemoryOSError {
+src-tauri/src/memory_os/types.rs:16:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/STRATEGIC_ROADMAP_2026.md:238:      - Run cargo fmt --check
+./docs/STRATEGIC_ROADMAP_2026.md:282:cargo fmt --check
+./docs/99_ARCHIVE/legacy_reports/MISSION_COMPLETE_v19.2.2.txt:74:     - cargo fmt (formatting complet)
+./docs/99_ARCHIVE/legacy_reports/MISSION_COMPLETE_v19.2.2.txt:217:   └─ cargo fmt                : Formatting complet
+./docs/current/guides/QUICKSTART_UBUNTU_24.04.md:38:- ✅ **rustfmt** (formatage code)
+./docs/current/guides/QUICKSTART_UBUNTU_24.04.md:127:cargo fmt
+./docs/current/guides/DEV_COMMANDS.md:269:cargo fmt
+./docs/current/guides/DEV_COMMANDS.md:272:cargo fmt -- --check
+src-tauri/src/memory_os/ltm.rs:472:impl std::fmt::Display for LTMError {
+src-tauri/src/memory_os/ltm.rs:473:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/memory_os/vector_store.rs:300:impl std::fmt::Display for VectorStoreError {
+src-tauri/src/memory_os/vector_store.rs:301:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/memory_os/core.rs:671:impl std::fmt::Display for MemoryOSError {
+src-tauri/src/memory_os/core.rs:672:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:20:║  ⚠️  Rust:             ATTENTION (fmt warnings)           ║
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:37:| 🔴 **HAUTE** | Rust | Formatage non-conforme | CI peut fail | `cargo fmt` |
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:738:cargo fmt --check
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:750:cargo fmt
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:753:cargo fmt --check
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:776:**Score Cargo: 75/100** ⭐⭐⭐⭐☆ (fmt warnings -25 points)
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:987:cargo fmt
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:988:cargo fmt --check  # Vérifier
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:990:git commit -m "style(rust): format code with cargo fmt"
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1068:- [ ] Exécuter `cargo fmt`
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1069:- [ ] Vérifier `cargo fmt --check` (0 diff)
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1111:Cargo:       75/100 ⭐⭐⭐⭐☆  ← FMT
+./docs/current/audits/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1158:║  2. cargo fmt (Rust)                                      ║
+src-tauri/src/agent_system/config.rs:43:#[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:70:    #[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:101:    #[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:136:    #[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:254:impl std::fmt::Display for ConfigError {
+src-tauri/src/agent_system/config.rs:255:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/agent_system/mod.rs:424:impl std::fmt::Display for AgentSystemError {
+src-tauri/src/agent_system/mod.rs:425:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/agent_system/agent.rs:101:impl std::fmt::Display for AgentType {
+src-tauri/src/agent_system/agent.rs:102:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/tts/mod.rs:39:impl std::fmt::Display for TTSError {
+src-tauri/src/tts/mod.rs:40:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/epic1_provider_refactor.rs:7:use std::fmt;
+src-tauri/src/epic1_provider_refactor.rs:20:impl fmt::Display for ProviderError {
+src-tauri/src/epic1_provider_refactor.rs:21:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+src-tauri/src/audio/whisper_streaming.rs:390:        // fmt chunk
+src-tauri/src/audio/whisper_streaming.rs:391:        wav_data.extend_from_slice(b"fmt ");
+src-tauri/src/numeric_twin/mod.rs:994:impl std::fmt::Display for TwinError {
+src-tauri/src/numeric_twin/mod.rs:995:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/audio/mod.rs:59:impl std::fmt::Display for AudioError {
+src-tauri/src/audio/mod.rs:60:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/rapports/SUPER_PROMPTS_COMPLETION_REPORT_v21.1.md:329:cargo fmt -- --check
+src-tauri/src/kernel/priorities.rs:104:impl std::fmt::Display for CognitivePriority {
+src-tauri/src/kernel/priorities.rs:105:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/singularity/singularity_os.rs:502:impl std::fmt::Display for SingularityError {
+src-tauri/src/singularity/singularity_os.rs:503:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/meta_energy/recovery.rs:486:impl std::fmt::Display for RecoveryError {
+src-tauri/src/meta_energy/recovery.rs:487:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/stabilization/STABILIZATION_PHASE_2_COMPLETE.md:272:cargo fmt
+src-tauri/src/meta_energy/mod.rs:390:impl std::fmt::Display for MetaEnergyError {
+src-tauri/src/meta_energy/mod.rs:391:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/stabilization/STABILIZATION_PHASE_1D_1E_REPORT.md:98:- ✅ **cargo fmt successful**
+./docs/99_ARCHIVE/stabilization/STABILIZATION_PHASE_1D_1E_REPORT.md:183:- ✅ **Clean code** passing rustfmt
+./docs/99_ARCHIVE/stabilization/STABILIZATION_PHASE_1D_1E_REPORT.md:286:- [x] ✅ cargo fmt successful
+./docs/99_ARCHIVE/stabilization/STABILIZATION_PHASE_1D_1E_REPORT.md:348:cargo fmt
+./docs/99_ARCHIVE/stabilization/STABILIZATION_QUICK_BOOST.md:375:cargo fmt  # ✅ Applied
+src-tauri/src/core/types.rs:7:use std::fmt;
+src-tauri/src/core/types.rs:26:impl fmt::Display for EngineError {
+src-tauri/src/core/types.rs:27:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+src-tauri/src/core/types.rs:76:impl fmt::Display for EngineHealth {
+src-tauri/src/core/types.rs:77:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+src-tauri/src/core/tapi_error.rs:8:use std::fmt;
+src-tauri/src/core/tapi_error.rs:128:impl fmt::Display for TAPIError {
+src-tauri/src/core/tapi_error.rs:129:    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+./docs/99_ARCHIVE/obsolete/RAPPORT_CORRECTION_ENVIRONNEMENT_NATIF.txt:87:   • cargo fmt --all
+src-tauri/src/api_hub/temporal_circuit_breaker.rs:203:impl std::fmt::Display for CircuitBreakerError {
+src-tauri/src/api_hub/temporal_circuit_breaker.rs:204:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/CHECKLIST_FINALE_v12.md:22:  ✅ cargo fmt appliqué
+./docs/99_ARCHIVE/obsolete/CHECKLIST_FINALE_v12.md:133:cargo fmt
+./docs/99_ARCHIVE/obsolete/CHECKLIST_FINALE_v12.md:252:  ☑ Code formaté (cargo fmt)
+./docs/99_ARCHIVE/obsolete/RAPPORT_SUPER_REPAIR_v12.8.md:329:cargo fmt --all
+./docs/99_ARCHIVE/obsolete/RAPPORT_SUPER_REPAIR_v12.8.md:419:cargo fmt --all
+src-tauri/src/api_hub/mod.rs:82:impl std::fmt::Display for Provider {
+src-tauri/src/api_hub/mod.rs:83:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/api_hub/mod.rs:457:impl std::fmt::Display for APIHubError {
+src-tauri/src/api_hub/mod.rs:458:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+src-tauri/src/singularity_cortex/state.rs:174:impl std::fmt::Display for CognitiveMode {
+src-tauri/src/singularity_cortex/state.rs:175:    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_SECURE_PIPELINE_v12.sh:253:    if cargo fmt --all -- --check 2>&1 | tee -a "$LOG_FILE"; then
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_SECURE_PIPELINE_v12.sh:256:        log FIX "Application cargo fmt..."
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_SECURE_PIPELINE_v12.sh:257:        cargo fmt --all 2>&1 | tee -a "$LOG_FILE"
+./docs/99_ARCHIVE/obsolete/TITANE_INFINITY_SECURE_PIPELINE_v12.sh:455:- cargo fmt
+./docs/99_ARCHIVE/obsolete/SESSION_COMPLETE_20_NOV_2025.md:285:cargo fmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_STRUCTURE_REPAIR_v12.md:19:| **Rust toolchain** | ✅ **INSTALLÉ** | rustc 1.91.1, rustfmt disponible |
+./docs/99_ARCHIVE/obsolete/RAPPORT_STRUCTURE_REPAIR_v12.md:236:which rustfmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_STRUCTURE_REPAIR_v12.md:237:# Résultat: /home/titane_os/.cargo/bin/rustfmt ✅
+./docs/99_ARCHIVE/obsolete/RAPPORT_STRUCTURE_REPAIR_v12.md:392:✅ TEST 10/10 : Rust toolchain (rustc 1.91.1, cargo 1.91.1, rustfmt)
+./docs/99_ARCHIVE/obsolete/INVENTAIRE_MODULES_60_70.md:245:cargo fmt --check
+./docs/99_ARCHIVE/obsolete/RAPPORT_SECURITE_FINAL_v12.md:137:- ✅ Build & test backend (cargo fmt/fix/clippy/check/test)
+./docs/99_ARCHIVE/obsolete/RAPPORT_SECURITE_FINAL_v12.md:151:✅ cargo fmt --all      # Formatting applied
+./docs/99_ARCHIVE/obsolete/RAPPORT_SECURITE_FINAL_v12.md:325:5. ✅ Build backend (fmt/fix/clippy/check/test)
+./docs/99_ARCHIVE/obsolete/INSTALLATION_GUIDE.md:341:cargo fmt                     # Format Rust
+./docs/99_ARCHIVE/obsolete/RAPPORT_CORRECTION_WARNINGS_v12.md:143:1️⃣ EXÉCUTER cargo fmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_CORRECTION_WARNINGS_v12.md:146:   cargo fmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_CORRECTION_WARNINGS_v12.md:222:  ✅ Code prêt pour cargo fmt
+./docs/99_ARCHIVE/obsolete/README_DEPLOIEMENT.md:102:3. ✅ Validation code Rust (fmt + check + clippy)
+./docs/99_ARCHIVE/obsolete/README_DEPLOIEMENT.md:185:| **Validation code** | ❌ | ✅ fmt/check/clippy | ❌ |
+./docs/99_ARCHIVE/merged/VERIFICATION_FINALE_v19.2.2.md:284:- [x] **Formatting**: cargo fmt appliqué
+./docs/99_ARCHIVE/merged/GPT_CLAUDE_FINAL_SUMMARY_v∞.md:469:- ✅ Format code (rustfmt)
+./docs/99_ARCHIVE/merged/AUDIT_FINAL_OMEGA_v∞.md:542:cargo fmt
+./docs/99_ARCHIVE/obsolete/RAPPORT_AUTO_FIX_TOTAL_v10.8.md:390:- ❌ Impossible `cargo fmt` (formateur)
+./docs/99_ARCHIVE/obsolete/PRE_LAUNCH_REPORT_v10.4.md:240:cargo fmt --manifest-path src-tauri/Cargo.toml
+./docs/99_ARCHIVE/obsolete/RAPPORT_FULL_AUTOFIX_v12.8.md:146:cargo fmt --all
+./docs/99_ARCHIVE/versions/v14/BACKEND_MIGRATION_PLAN_v14.md:415:   cargo fmt --check
+./docs/99_ARCHIVE/versions/v14/BACKEND_MIGRATION_PLAN_v14.md:437:- ✅ `cargo fmt --check` pass
+./docs/backup_20251218_123316/CHANGELOG.md:1803:- ✅ Phase 8: Cleanup Global (MutexGuard fixes, cargo fmt)
+./docs/backup_20251218_123316/CHANGELOG.md:1844:- cargo fmt appliqué (formatting complet)
+./docs/backup_20251218_123316/CHANGELOG.md:1865:✅ Formatting       : cargo fmt appliqué
+./docs/04_guides/advanced/DEPLOYMENT.md:31:cargo fmt --check
+./docs/04_guides/advanced/DEPLOYMENT.md:503:        .with(tracing_subscriber::fmt::layer()
+./docs/backup_20251218_123316/AUTO_IMPROVEMENTS_YOLO_v24.2.1.md:205:- ✅ Linting (ESLint + rustfmt)
+./docs/04_guides/development/SETUP.md:80:rustup component add clippy rustfmt --toolchain stable
+./docs/99_ARCHIVE/versions/v17/BACKEND_REFACTOR_SUMMARY_v17.2.0.md:280:cargo fmt                # Formater code
+./docs/99_ARCHIVE/versions/v17/BACKEND_REFACTOR_REPORT_v17.3.0.md:591:11. CI/CD avec clippy + fmt + tests
+./docs/backup_20251218_123316/QUICKSTART_UBUNTU_24.04.md:38:- ✅ **rustfmt** (formatage code)
+./docs/backup_20251218_123316/QUICKSTART_UBUNTU_24.04.md:127:cargo fmt
+./docs/backup_20251218_123316/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:20:║  ⚠️  Rust:             ATTENTION (fmt warnings)           ║
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:37:| 🔴 **HAUTE** | Rust | Formatage non-conforme | CI peut fail | `cargo fmt` |
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:738:cargo fmt --check
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:750:cargo fmt
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:753:cargo fmt --check
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:776:**Score Cargo: 75/100** ⭐⭐⭐⭐☆ (fmt warnings -25 points)
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:987:cargo fmt
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:988:cargo fmt --check  # Vérifier
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:990:git commit -m "style(rust): format code with cargo fmt"
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1068:- [ ] Exécuter `cargo fmt`
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1069:- [ ] Vérifier `cargo fmt --check` (0 diff)
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1111:Cargo:       75/100 ⭐⭐⭐⭐☆  ← FMT
+./docs/backup_20251218_123316/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1158:║  2. cargo fmt (Rust)                                      ║
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:25:| 🔴 CRITIQUE | Formater code Rust            | ✅ COMPLÉTÉ | 0 warnings cargo fmt        |
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:226:$ cargo fmt --check
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:371:$ cargo fmt --check
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:590:cargo fmt --check    # ✅ 0 diff
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:634:- Format all code (cargo fmt)
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:677:- `cargo fmt` refuse whitespace trailing (bon pour consistance)
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:678:- `sed` cleanup avant fmt résout tout
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:679:- `cargo fmt --check` dans CI prévient les drift
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:687:cargo fmt --check || exit 1
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:714:- ✅ Ajouter pre-commit hooks (lint + fmt)
+./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:755:   - 0 diff `cargo fmt --check`
+./docs/backup_20251218_123316/README_INSTALL_SUITE.md:112:- rustfmt, clippy
+./docs/backup_20251218_123316/README_INSTALL_SUITE.md:168:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/backup_20251218_123316/MANIFEST_INSTALLATION.md:156:- rustfmt, clippy
+./docs/backup_20251218_123316/MANIFEST_INSTALLATION.md:218:| **rustfmt**    | Installé                 |
+./docs/99_ARCHIVE/versions/v19/RUST_ANALYZER_FIX_v19.2.2.md:72:rustfmt-x86_64-unknown-linux-gnu
+./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:40:- **Action:** `sed` cleanup + `cargo fmt`
+./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:241:cargo fmt --check
+./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_123316/POST_INSTALL_README.md:56:- Composants : `rustfmt`, `clippy`
+./docs/00_core/PHASE_7_COMPLETE_REPORT.md:32:  - Backend Rust (rustfmt, clippy, examples ✅ BON vs ❌ MAUVAIS, tests)
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_PHASES_4-6_SUCCESS_v14.txt:363:    • cargo fmt --check pass
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_MIGRATION_SUCCESS_BANNER_v14.txt:101:   ✅ cargo fmt (formatting complet)
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_MIGRATION_SUCCESS_BANNER_v14.txt:164:   ✅ Formatting       : cargo fmt appliqué
+./src/modules/devSudo/devSudoTitaneOneHandlers.ts:765:  output += '   ✅ Rustfmt: formaté\n';
+./docs/99_ARCHIVE/old_sessions/2025-12-10/RUST_FIXES_COMPLETE_v1.0.0.txt:17:   error: unused import: `std::fmt`
+./docs/99_ARCHIVE/old_sessions/2025-12-10/RUST_FIXES_COMPLETE_v1.0.0.txt:50:use std::fmt;
+./docs/99_ARCHIVE/old_sessions/2025-12-10/RUST_FIXES_COMPLETE_v1.0.0.txt:56:Raison: `std::fmt` n'était pas utilisé dans le fichier
+./docs/backup_20251218_123316/INDEX.md:86:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_MIGRATION_COMPLETE_v14.txt:222:  [✓] Formatting: cargo fmt pass
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_MIGRATION_COMPLETE_v14.txt:230:  ✅ cargo fmt --check                 → Formatting OK
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_MIGRATION_COMPLETE_v14.txt:297:  ✅ cargo fmt (formatting appliqué)
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_PHASES_1-3_BANNER_v14.txt:282:    • cargo fmt --check
+./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_FRONTEND_INTEGRATION_PHASES_5_6_7_COMPLETE_v14.txt:254:   ✅ cargo fmt --manifest-path src-tauri/Cargo.toml --check
+./docs/backend/BACKEND_MAP.md:668:- Added 50+ formatting fixes (cargo fmt compliance)
+./docs/backend/AUDIT_SUMMARY.md:104:  1. Run `cargo fmt --all` ✅ DONE
+./docs/backend/AUDIT_SUMMARY.md:240:1. ✅ **Run `cargo fmt --all`** — DONE (102 files formatted)
+./docs/backend/FINAL_VERIFICATION_REPORT.md:54:### 2. Rust Formatting (cargo fmt)
+./docs/backend/FINAL_VERIFICATION_REPORT.md:62:- Warnings about `workspace` config are ignorable (rustfmt.toml configuration issue)
+./docs/backend/BACKEND_AUDIT_REPORT.md:15:1. **50+ files need Rust formatting** (`cargo fmt`)
+./docs/backend/BACKEND_AUDIT_REPORT.md:22:1. Run `cargo fmt --all` (non-destructive, 2 seconds)
+./docs/backend/BACKEND_AUDIT_REPORT.md:50:### 1. Rust Formatting (`cargo fmt --check`)
+./docs/backend/BACKEND_AUDIT_REPORT.md:56:cd src-tauri && cargo fmt --all
+./docs/backend/BACKEND_AUDIT_REPORT.md:270:| Rust formatting | ✅ Fixed | 0 | `cargo fmt --all` (already done) |
+./docs/backend/BACKEND_AUDIT_REPORT.md:503:### 1. Run `cargo fmt --all` ✅ **DONE**
+./docs/backend/BACKEND_AUDIT_REPORT.md:647:        run: cd src-tauri && cargo fmt --all -- --check
+./docs/backend/BACKEND_AUDIT_REPORT.md:894:1. ✅ **Run `cargo fmt --all`** (DONE)
+./docs/backend/TEST_BASELINE.md:24:cd src-tauri && cargo fmt --all -- --check
+./docs/backend/TEST_BASELINE.md:31:cd src-tauri && cargo fmt --all
+./docs/backend/TEST_BASELINE.md:189:**Current Status:** ⚠️ **PARTIAL PASS** (lint warnings, cargo fmt failures)
+./docs/backend/TEST_BASELINE.md:231:#### Format Issues (cargo fmt --check)
+./docs/backend/TEST_BASELINE.md:247:**Fix:** Run `cargo fmt --all` (non-destructive)
+./docs/backend/TEST_BASELINE.md:526:      - cargo fmt --check
+./docs/backend/TEST_BASELINE.md:553:| `cargo fmt --check` | 2s | Every commit |
+./docs/backend/TEST_BASELINE.md:566:| Rust lint (fmt + clippy) | 32s | ✅ Parallel with frontend |
+./docs/backend/TEST_BASELINE.md:579:1. **Fix cargo fmt:** Run `cargo fmt --all` (50+ files) ← P0
+./docs/backend/BACKEND_OPTIMIZATION_PLAN.md:885:use tracing_subscriber::{fmt, EnvFilter};
+./docs/backend/BACKEND_OPTIMIZATION_PLAN.md:888:    tracing_subscriber::fmt()
+./docs/backend/contribution-guide.md:193:- [ ] Format OK (`cargo fmt`)
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:68027:src-tauri/.rustfmt.toml
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:85760:src-tauri/target/debug/deps/libpowerfmt-42203701f9b0b150.rmeta
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:85761:src-tauri/target/debug/deps/libpowerfmt-f70fad5bd4d1d5f0.rlib
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:85762:src-tauri/target/debug/deps/libpowerfmt-f70fad5bd4d1d5f0.rmeta
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:89424:src-tauri/target/debug/deps/powerfmt-42203701f9b0b150.d
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:89425:src-tauri/target/debug/deps/powerfmt-f70fad5bd4d1d5f0.d
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:89426:src-tauri/target/debug/deps/powerfmt-f70fad5bd4d1d5f0.powerfmt.20132abf5f5e170b-cgu.0.rcgu.dwo
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122490:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/dep-lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122491:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/invoked.timestamp
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122492:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122493:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/lib-powerfmt.json
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122494:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/dep-lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122495:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/invoked.timestamp
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122496:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:122497:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/lib-powerfmt.json
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:161271:src-tauri/target/release/deps/libpowerfmt-7cacad48ad858a18.rlib
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:161272:src-tauri/target/release/deps/libpowerfmt-7cacad48ad858a18.rmeta
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:161845:src-tauri/target/release/deps/powerfmt-7cacad48ad858a18.d
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:163816:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/dep-lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:163817:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/invoked.timestamp
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:163818:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/lib-powerfmt
+./docs/_evidence/audit-2026-01-15/inventory_files.txt:163819:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/lib-powerfmt.json
+./docs/99_ARCHIVE/sessions/STATUS_IMPLEMENTATION_SUPER_PROMPTS_PHASE_2.md:348:cargo fmt                      # Formatage automatique
+./docs/99_ARCHIVE/sessions/BACKEND_ARCHITECTURE.md:407:cargo fmt
+./docs/99_ARCHIVE/sessions/SUPER_PROMPT_SINGULARITY_ONE_v∞.md:391:- **Code Quality** : Clippy 0 warnings, Rustfmt, test coverage
+./docs/backup_20251218_122526/CHANGELOG.md:1803:- ✅ Phase 8: Cleanup Global (MutexGuard fixes, cargo fmt)
+./docs/backup_20251218_122526/CHANGELOG.md:1844:- cargo fmt appliqué (formatting complet)
+./docs/backup_20251218_122526/CHANGELOG.md:1865:✅ Formatting       : cargo fmt appliqué
+./docs/99_ARCHIVE/guides/QUICKSTART_UBUNTU_24.04.md:38:- ✅ **rustfmt** (formatage code)
+./docs/99_ARCHIVE/guides/QUICKSTART_UBUNTU_24.04.md:127:cargo fmt
+./docs/99_ARCHIVE/guides/README_INSTALL_SUITE.md:112:- rustfmt, clippy
+./docs/99_ARCHIVE/guides/README_INSTALL_SUITE.md:168:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/99_ARCHIVE/guides/POST_INSTALL_README.md:56:- Composants : `rustfmt`, `clippy`
+./docs/99_ARCHIVE/sessions/VOICE_PIPELINE_README_v∞.7.md:495:- **Rust** : rustfmt + clippy
+./docs/backup_20251218_122526/AUTO_IMPROVEMENTS_YOLO_v24.2.1.md:205:- ✅ Linting (ESLint + rustfmt)
+./docs/backup_20251218_122526/QUICKSTART_UBUNTU_24.04.md:38:- ✅ **rustfmt** (formatage code)
+./docs/backup_20251218_122526/QUICKSTART_UBUNTU_24.04.md:127:cargo fmt
+./docs/backup_20251218_122526/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:20:║  ⚠️  Rust:             ATTENTION (fmt warnings)           ║
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:37:| 🔴 **HAUTE** | Rust | Formatage non-conforme | CI peut fail | `cargo fmt` |
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:738:cargo fmt --check
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:750:cargo fmt
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:753:cargo fmt --check
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:776:**Score Cargo: 75/100** ⭐⭐⭐⭐☆ (fmt warnings -25 points)
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:987:cargo fmt
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:988:cargo fmt --check  # Vérifier
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:990:git commit -m "style(rust): format code with cargo fmt"
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1068:- [ ] Exécuter `cargo fmt`
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1069:- [ ] Vérifier `cargo fmt --check` (0 diff)
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1111:Cargo:       75/100 ⭐⭐⭐⭐☆  ← FMT
+./docs/backup_20251218_122526/AUDIT_TOOLS_CONFIGS_v26.2_COMPLETE.md:1158:║  2. cargo fmt (Rust)                                      ║
+./docs/99_ARCHIVE/sessions/TITANE_PRECOMMIT_PIPELINE_REPORT.md:366:    "cargo fmt"
+./docs/99_ARCHIVE/sessions/TITANE_PRECOMMIT_PIPELINE_REPORT.md:414:- [ ] **cargo fmt** pour Rust (src-tauri)
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:25:| 🔴 CRITIQUE | Formater code Rust            | ✅ COMPLÉTÉ | 0 warnings cargo fmt        |
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:226:$ cargo fmt --check
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:371:$ cargo fmt --check
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:590:cargo fmt --check    # ✅ 0 diff
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:634:- Format all code (cargo fmt)
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:677:- `cargo fmt` refuse whitespace trailing (bon pour consistance)
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:678:- `sed` cleanup avant fmt résout tout
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:679:- `cargo fmt --check` dans CI prévient les drift
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:687:cargo fmt --check || exit 1
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:714:- ✅ Ajouter pre-commit hooks (lint + fmt)
+./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:755:   - 0 diff `cargo fmt --check`
+./docs/backup_20251218_122526/README_INSTALL_SUITE.md:112:- rustfmt, clippy
+./docs/backup_20251218_122526/README_INSTALL_SUITE.md:168:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/backup_20251218_122526/MANIFEST_INSTALLATION.md:156:- rustfmt, clippy
+./docs/backup_20251218_122526/MANIFEST_INSTALLATION.md:218:| **rustfmt**    | Installé                 |
+src/modules/devSudo/devSudoTitaneOneHandlers.ts:765:  output += '   ✅ Rustfmt: formaté\n';
+./docs/backup_20251218_122526/POST_INSTALL_README.md:56:- Composants : `rustfmt`, `clippy`
+./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:40:- **Action:** `sed` cleanup + `cargo fmt`
+./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:241:cargo fmt --check
+./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/backup_20251218_122526/INDEX.md:86:- ✅ Composants Rust (rustfmt, clippy, wasm32)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12364:./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12366:./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12374:./docs/backup_20251218_122540/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12621:./docs/backend/BACKEND_AUDIT_REPORT.md:56:cd src-tauri && cargo fmt --all
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12629:./docs/backend/BACKEND_AUDIT_REPORT.md:647:        run: cd src-tauri && cargo fmt --all -- --check
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12681:./docs/backend/TEST_BASELINE.md:24:cd src-tauri && cargo fmt --all -- --check
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:12682:./docs/backend/TEST_BASELINE.md:31:cd src-tauri && cargo fmt --all
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:13428:./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:13436:./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:13440:./docs/backup_20251218_122540/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:14346:./docs/backup_20251218_122540/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:14830:./docs/backup_20251218_122526/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:15340:./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:15348:./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:15352:./docs/backup_20251218_122526/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:18091:./docs/99_ARCHIVE/old_sessions/2025-12-10/BACKEND_FRONTEND_INTEGRATION_PHASES_5_6_7_COMPLETE_v14.txt:254:   ✅ cargo fmt --manifest-path src-tauri/Cargo.toml --check
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:21716:./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:21718:./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:21726:./docs/backup_20251218_122526/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:23363:./docs/_evidence/v27/A2_find_maxdepth4_sorted.txt:6849:./src-tauri/.rustfmt.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:25543:./docs/_evidence/v27/snapshot-20260113-081652/A2_find_maxdepth4.txt:6865:./src-tauri/.rustfmt.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:30310:./docs/99_ARCHIVE/sessions/TITANE_PRECOMMIT_PIPELINE_REPORT.md:414:- [ ] **cargo fmt** pour Rust (src-tauri)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:32979:./docs/99_ARCHIVE/obsolete/PRE_LAUNCH_REPORT_v10.4.md:240:cargo fmt --manifest-path src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34823:./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:189:src-tauri/src/**/*.rs              # Formaté (cargo fmt all)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34825:./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:237:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34833:./docs/backup_20251218_123316/AUTO_ALL_v26.2_COMPLETE.md:536:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34878:./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:218:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34886:./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:564:src-tauri/src/**/*.rs            Formaté     (cargo fmt)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:34890:./docs/backup_20251218_123316/REFLEXION_APPROFONDIE_CORRECTIONS_v26.2_COMPLETE.md:686:cargo fmt --manifest-path=src-tauri/Cargo.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:35069:./docs/backup_20251218_123316/CODE_STYLE.md:448:cd src-tauri && cargo fmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:37640:./docs/_evidence/audit-2026-01-15/inventory_files.txt:68027:src-tauri/.rustfmt.toml
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:55373:./docs/_evidence/audit-2026-01-15/inventory_files.txt:85760:src-tauri/target/debug/deps/libpowerfmt-42203701f9b0b150.rmeta
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:55374:./docs/_evidence/audit-2026-01-15/inventory_files.txt:85761:src-tauri/target/debug/deps/libpowerfmt-f70fad5bd4d1d5f0.rlib
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:55375:./docs/_evidence/audit-2026-01-15/inventory_files.txt:85762:src-tauri/target/debug/deps/libpowerfmt-f70fad5bd4d1d5f0.rmeta
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:59037:./docs/_evidence/audit-2026-01-15/inventory_files.txt:89424:src-tauri/target/debug/deps/powerfmt-42203701f9b0b150.d
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:59038:./docs/_evidence/audit-2026-01-15/inventory_files.txt:89425:src-tauri/target/debug/deps/powerfmt-f70fad5bd4d1d5f0.d
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:59039:./docs/_evidence/audit-2026-01-15/inventory_files.txt:89426:src-tauri/target/debug/deps/powerfmt-f70fad5bd4d1d5f0.powerfmt.20132abf5f5e170b-cgu.0.rcgu.dwo
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92103:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122490:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/dep-lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92104:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122491:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/invoked.timestamp
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92105:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122492:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92106:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122493:src-tauri/target/debug/.fingerprint/powerfmt-42203701f9b0b150/lib-powerfmt.json
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92107:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122494:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/dep-lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92108:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122495:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/invoked.timestamp
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92109:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122496:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:92110:./docs/_evidence/audit-2026-01-15/inventory_files.txt:122497:src-tauri/target/debug/.fingerprint/powerfmt-f70fad5bd4d1d5f0/lib-powerfmt.json
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:130884:./docs/_evidence/audit-2026-01-15/inventory_files.txt:161271:src-tauri/target/release/deps/libpowerfmt-7cacad48ad858a18.rlib
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:130885:./docs/_evidence/audit-2026-01-15/inventory_files.txt:161272:src-tauri/target/release/deps/libpowerfmt-7cacad48ad858a18.rmeta
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:131458:./docs/_evidence/audit-2026-01-15/inventory_files.txt:161845:src-tauri/target/release/deps/powerfmt-7cacad48ad858a18.d
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:133429:./docs/_evidence/audit-2026-01-15/inventory_files.txt:163816:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/dep-lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:133430:./docs/_evidence/audit-2026-01-15/inventory_files.txt:163817:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/invoked.timestamp
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:133431:./docs/_evidence/audit-2026-01-15/inventory_files.txt:163818:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/lib-powerfmt
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:133432:./docs/_evidence/audit-2026-01-15/inventory_files.txt:163819:src-tauri/target/release/.fingerprint/powerfmt-7cacad48ad858a18/lib-powerfmt.json
+# rg lifecycle hooks
+package.json:9:    "preinstall": "node scripts/install/enforce-package-manager.cjs",
+package.json:16:    "ollama:bundle": "bash scripts/prepare-ollama-bundle.sh",
+package.json:99:    "prepare": "husky",
+package.json:101:    "copilot-xs:precommit": "node .github/copilot-xs/scripts/precommit.js",
+package.json:201:    "husky": "^9.1.7",
+pnpm-lock.yaml:279:      husky:
+pnpm-lock.yaml:4471:  husky@9.1.7:
+pnpm-lock.yaml:12597:  husky@9.1.7: {}
+.husky/pre-commit:14:node ./.github/copilot-xs/scripts/precommit.js
+.husky/pre-commit-autoheal:2:# Husky pre-commit hook with auto-fix
+# rg cargo fmt/rustfmt (scripts, .github, src-tauri)
+.github/PULL_REQUEST_TEMPLATE.md:45:- [ ] Code Rust formaté (`cargo fmt`)
+.github/workflows/ci-unified.yml:266:          components: clippy, rustfmt
+scripts/auto/weekly-diagnostic.sh:95:if cargo fmt --check 2> /tmp/format.log; then
+.github/workflows/release-unified.yml:74:          components: rustfmt, clippy
+.github/agents/implement-subagent.agent.md:41:cargo fmt
+scripts/README.md:216:- `cargo fmt --all` (formatage)
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:258:rustup component add rustfmt clippy 2>&1 | tee -a "$LOG_FILE"
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:259:log_success "rustfmt et clippy installés"
+scripts/setup/TITANE_POST_INSTALL_UBUNTU.sh:269:echo -e "${CYAN}  rustfmt: $(rustfmt --version)${NC}"
+scripts/pipeline/TITANE_PIPELINE_v12.sh:84:cargo fmt --all
+scripts/test/test_install_script.sh:92:test_check "rustfmt installé" "grep -q 'rustfmt' '$INSTALL_SCRIPT'"
+scripts/test/validate_environment.sh:206:if rustup component list | grep -q "rustfmt.*installed"; then
+scripts/test/validate_environment.sh:207:    echo -e "  ${GREEN}✅ rustfmt${NC}: Installé"
+scripts/test/validate_environment.sh:210:    echo -e "  ${YELLOW}⚠️  rustfmt${NC}: Manquant"
+src-tauri/src/agent_system/config.rs:43:#[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:70:    #[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:101:    #[rustfmt::skip]
+src-tauri/src/agent_system/config.rs:136:    #[rustfmt::skip]
