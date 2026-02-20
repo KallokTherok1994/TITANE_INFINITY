@@ -191,19 +191,30 @@ const diagnosticTests: DiagnosticTest[] = [
     description:
       'Interroge la passerelle Tauri pour récupérer la disponibilité des providers IA.',
     group: 'core',
-    run: () => safeInvoke<Record<string, unknown>>('chat_get_providers_status'),
-    successMessage: 'Providers récupérés via le backend Tauri.',
+    run: () => safeInvoke<Record<string, unknown>>('chat_check_providers'),
+    successMessage: 'Providers vérifiés et rafraîchis via le backend Tauri.',
     fallbackMessage: 'Backend indisponible — informations en mode fallback.',
     transformData: response => {
-      if (!response || typeof response !== 'object') {
+      const providers = Array.isArray(response)
+        ? response
+        : (response as { providers?: unknown }).providers;
+      if (!Array.isArray(providers)) {
         return response;
       }
-      const data = response as Record<string, unknown> & {
-        providers?: Array<{ name: string; status: string }>;
-      };
+
+      const total = providers.length;
+      const available = providers.filter(provider =>
+        Boolean((provider as { available?: boolean }).available)
+      ).length;
+      const onlinePercent = total > 0 ? Math.round((available / total) * 100) : 0;
+
       return {
-        providers: data.providers,
-        summary: Object.keys(data),
+        providers,
+        summary: {
+          total,
+          available,
+          onlinePercent,
+        },
       };
     },
   },

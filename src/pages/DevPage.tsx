@@ -15,6 +15,7 @@ import { logger } from '@/lib/logger';
 import { useDeveloperMode } from '@/features/developer-mode/useDeveloperMode';
 import { useOneCore } from '@/features/one-core/useOneCore';
 import { useQAMonitoring } from '@/features/qa-monitoring/useQAMonitoring';
+import { OnlineDiagnostic } from '@/components/diagnostic/OnlineDiagnostic';
 import type {
   QASystemState,
   TestSuite,
@@ -40,7 +41,8 @@ type SectionId =
   | 'orchestration'
   | 'security'
   | 'metrics'
-  | 'optimization';
+  | 'optimization'
+  | 'diagnostic';
 
 interface OrchestrationState {
   multiAi: {
@@ -751,6 +753,7 @@ function DevPageContent(): JSX.Element {
 
   const sections = [
     { id: 'overview' as const, label: "Vue d'ensemble", icon: '🎯' },
+    { id: 'diagnostic' as const, label: 'Diagnostic Online', icon: '🌐' },
     { id: 'devtools' as const, label: 'Dev Tools', icon: '💻' },
     { id: 'command-center' as const, label: 'Command Center', icon: '🎯' },
     { id: 'system-commands' as const, label: 'System Commands', icon: '📊' },
@@ -794,6 +797,7 @@ function DevPageContent(): JSX.Element {
             orchestration={orchestration}
           />
         )}
+        {activeSection === 'diagnostic' && <OnlineDiagnostic />}
         {activeSection === 'devtools' && <DevToolsSection />}
         {activeSection === 'command-center' && (
           <CommandCenterSection state={oneCoreState} />

@@ -112,7 +112,7 @@ class TauriChatProvider implements AIProvider {
 
       // OMEGA: Protected invoke with timeout
       const status = await Promise.race([
-        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+        safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS),
         new Promise<null>((_, reject) =>
           setTimeout(() => reject(new Error('Backend check timeout')), 5000)
         ),
@@ -195,7 +195,7 @@ class TauriChatProvider implements AIProvider {
       }) as TauriCommandArgs;
 
       const response = await Promise.race([
-        safeInvokeTauri<ChatResponse>('conversation_generate', payload),
+        safeInvokeTauri<ChatResponse>('conversation_generate', payload, this.TIMEOUT_MS),
         new Promise<never>((_, reject) =>
           setTimeout(() => reject(new Error('Backend invoke timeout')), this.TIMEOUT_MS)
         ),
@@ -328,7 +328,7 @@ class TauriChatProvider implements AIProvider {
       .get(
         async () => {
           const status = await Promise.race([
-            safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_GET_PROVIDERS_STATUS),
+            safeInvokeTauri<ProviderStatus[]>(TAURI_COMMANDS.CHAT_CHECK_PROVIDERS),
             new Promise<ProviderStatus[]>((_, reject) =>
               setTimeout(() => reject(new Error('Status check timeout')), 10000)
             ),

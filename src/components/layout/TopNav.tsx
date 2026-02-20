@@ -22,9 +22,13 @@ import {
   Wrench,
   MoreHorizontal,
   ChevronDown,
+  Zap,
+  ZapOff,
 } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
+import { safeInvoke } from '@/utils/invoke';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -44,6 +48,12 @@ export interface TopNavProps {
   onNavigate: (route: string) => void;
   maxVisibleItems?: number;
   className?: string;
+}
+
+interface ProviderStatus {
+  name: string;
+  available: boolean;
+  reason?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -66,9 +76,62 @@ export const TopNav: React.FC<TopNavProps> = ({
   const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
   const moreMenuRef = useRef<HTMLDivElement>(null);
 
+  // ✨ v27 AI Provider Status Indicator
+  const [aiStatus, setAiStatus] = useState<{
+    percent: number | null;
+    available: number;
+    total: number;
+  }>({
+    percent: null,
+    available: 0,
+    total: 0,
+  });
+
   // Séparer items visibles vs menu "Plus"
   const visibleItems = items.slice(0, maxVisibleItems);
   const moreItems = items.slice(maxVisibleItems);
+
+  // ✨ v27 - Polling providers status every 30s
+  useEffect(() => {
+    let active = true;
+
+    const refreshProviders = async () => {
+      if (!isTauriRuntimeAvailable()) {
+        if (active) {
+          setAiStatus({ percent: null, available: 0, total: 0 });
+        }
+        return;
+      }
+
+      try {
+        const providers = await safeInvoke<ProviderStatus[]>('chat_check_providers');
+        if (!active) return;
+
+        if (Array.isArray(providers) && providers.length > 0) {
+          const available = providers.filter(p => p.available).length;
+          const total = providers.length;
+          const percent = Math.round((available / total) * 100);
+          setAiStatus({ percent, available, total });
+        } else {
+          setAiStatus({ percent: 0, available: 0, total: 0 });
+        }
+      } catch {
+        if (active) {
+          setAiStatus({ percent: null, available: 0, total: 0 });
+        }
+      }
+    };
+
+    void refreshProviders();
+    const interval = window.setInterval(() => {
+      void refreshProviders();
+    }, 30000);
+
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
 
   // Fermer menu "Plus" si clic extérieur
   useEffect(() => {
@@ -103,7 +166,7 @@ export const TopNav: React.FC<TopNavProps> = ({
   return (
     <nav
       className={cn(
-        'app-topnav fixed top-0 inset-x-0 z-[10000] flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default pointer-events-auto',
+        'app-topnav fixed top-0 inset-x-0 z-10000 flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default pointer-events-auto',
         'shadow-sm backdrop-blur-md',
         className
       )}
@@ -226,9 +289,43 @@ export const TopNav: React.FC<TopNavProps> = ({
         )}
       </div>
 
-      {/* Actions secondaires (slot réservé) */}
-      <div className="flex items-center gap-2 shrink-0">
-        {/* Placeholder pour actions futures (settings, user menu, etc.) */}
+      {/* Actions secondaires */}
+      <div className="flex items-center gap-3 shrink-0">
+        {/* ✨ v27 AI Provider Status Indicator */}
+        {aiStatus.percent !== null && (
+          <div
+            className={cn(
+              'flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium',
+              'transition-colors duration-200',
+              aiStatus.percent === 100
+                ? 'bg-green-500/10 text-green-500 border border-green-500/20'
+                : aiStatus.percent >= 50
+                  ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
+                  : 'bg-red-500/10 text-red-500 border border-red-500/20'
+            )}
+            title={`${aiStatus.available}/${aiStatus.total} providers disponibles`}
+          >
+            {aiStatus.percent === 100 ? (
+              <Zap size={14} className="animate-pulse" />
+            ) : (
+              <ZapOff size={14} />
+            )}
+            <span className="hidden sm:inline">
+              IA: {aiStatus.percent}%
+            </span>
+            <span className="sm:hidden">{aiStatus.percent}%</span>
+          </div>
+        )}
+        {aiStatus.percent === null && (
+          <div
+            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-500/10 text-gray-500 border border-gray-500/20"
+            title="Statut IA indisponible"
+          >
+            <ZapOff size={14} />
+            <span className="hidden sm:inline">IA: --</span>
+            <span className="sm:hidden">--</span>
+          </div>
+        )}
       </div>
     </nav>
   );
