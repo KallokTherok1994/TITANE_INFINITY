@@ -204,6 +204,53 @@ pub async fn initialize_providers_async(state: &ChatOrchestratorState) {
     initialize_providers(state).await;
 }
 
+/// ✅ v27 FIX: Bootstrap API keys from SecureSecretsEngine into orchestrator state
+/// Called once at app startup to populate orchestrator with stored API keys
+pub async fn bootstrap_api_keys(
+    state: &ChatOrchestratorState,
+    secrets_engine: &crate::security::secrets_engine::SecureSecretsEngine,
+) {
+    log::info!("[ChatOrchestrator] 🔑 bootstrap_api_keys() called - loading keys from SecureSecretsEngine");
+    
+    // Read stored API keys from SecureSecretsEngine
+    let gemini_key = secrets_engine
+        .get_secret("gemini_api_key")
+        .ok()
+        .flatten();
+    let openai_key = secrets_engine
+        .get_secret("openai_api_key")
+        .ok()
+        .flatten();
+    let anthropic_key = secrets_engine
+        .get_secret("anthropic_api_key")
+        .ok()
+        .flatten();
+
+    // Populate orchestrator state
+    if let Some(key) = gemini_key {
+        *state.gemini_api_key.write().await = Some(key);
+        log::info!("[ChatOrchestrator] ✅ Gemini API key loaded from SecureSecretsEngine");
+    } else {
+        log::warn!("[ChatOrchestrator] ⚠️  No Gemini API key found in SecureSecretsEngine");
+    }
+    
+    if let Some(key) = openai_key {
+        *state.openai_api_key.write().await = Some(key);
+        log::info!("[ChatOrchestrator] ✅ OpenAI API key loaded from SecureSecretsEngine");
+    } else {
+        log::warn!("[ChatOrchestrator] ⚠️  No OpenAI API key found in SecureSecretsEngine");
+    }
+    
+    if let Some(key) = anthropic_key {
+        *state.anthropic_api_key.write().await = Some(key);
+        log::info!("[ChatOrchestrator] ✅ Anthropic API key loaded from SecureSecretsEngine");
+    } else {
+        log::warn!("[ChatOrchestrator] ⚠️  No Anthropic API key found in SecureSecretsEngine");
+    }
+    
+    log::info!("[ChatOrchestrator] 🔑 bootstrap_api_keys() completed");
+}
+
 async fn initialize_providers(state: &ChatOrchestratorState) {
     let mut status_list = state.provider_status.write().await;
 
@@ -1441,19 +1488,55 @@ pub async fn chat_get_providers_status(
 pub async fn chat_check_providers(
     state: State<'_, ChatOrchestratorState>,
 ) -> Result<Vec<ProviderStatus>, TAPIError> {
-    // Implementation: Ping all AI providers with health checks
-    // - Gemini: HEAD request to https://generativelanguage.googleapis.com/v1/models?key={API_KEY}
-    //   * Response: 200 OK = healthy, 401 = invalid key, timeout = offline
-    // - Ollama: GET http://localhost:11434/api/tags to list available models
-    //   * Response: JSON with {"models": [...]} = healthy, connection refused = offline
-    // - Local: Always return healthy (no external dependency)
-    // - Timeout: 5s per provider with tokio::time::timeout()
-    // - Parallel: Use tokio::spawn for concurrent health checks
-    // - Update state: Write results to provider_status with RwLock
-    // - Return: Vec of {provider, available, latency_ms, error?}
+    if state.provider_status.read().await.is_empty() {
+        initialize_providers(&state).await;
+    }
 
-    let status_list = state.provider_status.read().await;
-    Ok(status_list.clone())
+    // ✅ v27 FIX: Read API keys from orchestrator state (already populated by chat_set_*_key)
+    // Orchestrator state is the single source of truth, pre-filled from SecureSecretsEngine
+    // No fallback to env vars needed: governance page sets keys directly in orchestrator
+    // Keys are read inside is_provider_available() checks below
+
+    let allow_ollama_probe = is_ollama_auto_enabled();
+    let existing = state.provider_status.read().await.clone();
+    let mut updated = Vec::with_capacity(existing.len());
+
+    for mut entry in existing {
+        let start = std::time::Instant::now();
+        let available = is_provider_available(&entry.provider, &state, allow_ollama_probe).await;
+        let latency_ms = start.elapsed().as_millis() as u64;
+
+        entry.available = available;
+        entry.latency_ms = if available { latency_ms } else { 0 };
+        entry.error = if available {
+            None
+        } else {
+            Some(match entry.provider.as_str() {
+                "gemini" => "API key not configured".to_string(),
+                "openai" => "API key not configured".to_string(),
+                "anthropic" => "API key not configured".to_string(),
+                "ollama" => {
+                    if allow_ollama_probe {
+                        "Ollama unreachable".to_string()
+                    } else {
+                        "Ollama probe disabled".to_string()
+                    }
+                }
+                _ => "Provider unavailable".to_string(),
+            })
+        };
+
+        if available {
+            reset_provider_failures(&entry.provider, &state).await;
+        } else {
+            increment_provider_failures(&entry.provider, &state).await;
+        }
+
+        updated.push(entry);
+    }
+
+    *state.provider_status.write().await = updated.clone();
+    Ok(updated)
 }
 
 // ───────────────────────────────────────────────────────────────────────────

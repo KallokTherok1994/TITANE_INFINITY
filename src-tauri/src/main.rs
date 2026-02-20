@@ -105,7 +105,10 @@ mod devops_commands {
     include!("commands/devops.rs");
 }
 
-// Audio commands v19.2
+// Diagnostic commands v27 (Internet + Providers check)
+mod diagnostic_commands {
+    include!("commands/diagnostic_commands.rs");
+}
 mod audio {
     pub mod recording_engine {
         include!("audio/recording_engine.rs");
@@ -499,6 +502,10 @@ fn main() {
     // Initialize Chat Orchestrator with provider management
     let chat_orchestrator = overdrive::chat_orchestrator::init();
 
+    // ✅ v27 FIX: Bootstrap API keys from SecureSecretsEngine will be done in setup hook
+    // Cannot call async here (no tokio runtime yet), deferred to setup phase
+    log::info!("✅ Chat orchestrator initialized (API keys will be loaded in setup)");
+
     // ✨ v26.3: Initialize Copilot State
     let copilot_api_key = secrets_engine
         .get_secret(security::secrets_engine::KEY_COPILOT)
@@ -539,6 +546,9 @@ fn main() {
 
     // Initialize Multi-IA Orchestrator v∞ (SUPER PROMPT #8)
     let multi_ai_orchestrator = OrchestratorState::new();
+
+    // ✅ v27 FIX: Clone secrets_engine for use in setup closure before moving
+    let secrets_engine_for_setup = secrets_engine.clone();
 
     let builder = tauri::Builder::default()
         .manage(app_state)
@@ -619,6 +629,17 @@ fn main() {
             let chat_orch_clone = chat_orchestrator.clone();
             tauri::async_runtime::spawn(async move {
                 overdrive::chat_orchestrator::initialize_providers_async(&chat_orch_clone).await;
+            });
+
+            // ✅ v27 FIX: Bootstrap API keys from SecureSecretsEngine into orchestrator
+            // Must be done here (inside setup) where tokio runtime is available
+            log::info!(" [main.rs] Spawning bootstrap_api_keys task...");
+            let chat_orch_for_bootstrap = chat_orchestrator.clone();
+            let secrets_for_bootstrap = secrets_engine_for_setup.clone();
+            tauri::async_runtime::spawn(async move {
+                log::info!("[main.rs] bootstrap_api_keys task started");
+                overdrive::chat_orchestrator::bootstrap_api_keys(&chat_orch_for_bootstrap, &secrets_for_bootstrap).await;
+                log::info!("[main.rs] ✅ Chat orchestrator: API keys bootstrapped from SecureSecretsEngine");
             });
 
             // ─────────────────────────────────────────────────────────────
@@ -912,6 +933,9 @@ fn main() {
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_generate_suggestions,
             overdrive::chat_orchestrator::chat_get_memory_stats, // R04 FIX
+            
+            // Diagnostic Commands v27 (Online capabilities check)
+            diagnostic_commands::check_online_capabilities,
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)
             overdrive::voice_engine::voice_start_listening,
             overdrive::voice_engine::voice_stop_listening,

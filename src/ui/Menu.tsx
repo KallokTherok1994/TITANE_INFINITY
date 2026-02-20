@@ -16,7 +16,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Edit3,
   Atom,
@@ -29,6 +29,8 @@ import {
 } from 'lucide-react';
 import { MenuEditor } from '../features/menu-editor/MenuEditor';
 import { TitaneLogo } from '../components/branding/TitaneLogo';
+import { safeInvoke } from '@/utils/invoke';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import './styles/Menu.css';
 
 // ✨ v25.4.2 - Icon mapping for Lucide icons (professional, themeable)
@@ -56,6 +58,13 @@ interface MenuSection {
   description: string;
   route: string;
   visible?: boolean;
+}
+
+interface ProviderStatus {
+  provider: string;
+  available: boolean;
+  latency_ms?: number;
+  error?: string;
 }
 
 const MENU_SECTIONS: MenuSection[] = [
@@ -153,6 +162,65 @@ export const Menu: React.FC<MenuProps> = ({
 
     return MENU_SECTIONS;
   });
+
+  const [aiStatus, setAiStatus] = useState<{
+    percent: number | null;
+    available: number;
+    total: number;
+    error?: string;
+  }>({
+    percent: null,
+    available: 0,
+    total: 0,
+  });
+
+  useEffect(() => {
+    let active = true;
+
+    const refreshProviders = async () => {
+      if (!isTauriRuntimeAvailable()) {
+        if (active) {
+          setAiStatus({ percent: null, available: 0, total: 0, error: 'runtime' });
+        }
+        return;
+      }
+
+      try {
+        const providers = await safeInvoke<ProviderStatus[]>('chat_check_providers');
+        if (!active) return;
+
+        if (Array.isArray(providers) && providers.length > 0) {
+          const available = providers.filter(provider => provider.available).length;
+          const total = providers.length;
+          const percent = Math.round((available / total) * 100);
+
+          setAiStatus({ percent, available, total });
+        } else {
+          setAiStatus({ percent: 0, available: 0, total: 0, error: 'empty' });
+        }
+      } catch (error) {
+        if (active) {
+          setAiStatus({ percent: null, available: 0, total: 0, error: 'check' });
+        }
+      }
+    };
+
+    void refreshProviders();
+    const interval = window.setInterval(() => {
+      void refreshProviders();
+    }, 30000);
+
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+    };
+  }, []);
+
+  const aiStatusText =
+    aiStatus.percent !== null
+      ? `IA online: ${aiStatus.percent}% (${aiStatus.available}/${aiStatus.total})`
+      : 'IA online: indisponible';
+  const aiStatusClass = aiStatus.percent === 100 ? 'online' : 'offline';
 
   const handleSectionClick = (section: MenuSection) => {
     onNavigate(section.route);
@@ -330,8 +398,10 @@ export const Menu: React.FC<MenuProps> = ({
         {!isCollapsed && (
           <div className="menu-footer">
             <div className="menu-status">
-              <div className="menu-status-indicator online" />
-              <span className="menu-status-text">Système opérationnel</span>
+              <div className={`menu-status-indicator ${aiStatusClass}`} />
+              <span className="menu-status-text" data-testid="menu-status-ai">
+                {aiStatusText}
+              </span>
             </div>
           </div>
         )}
