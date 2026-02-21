@@ -328,14 +328,22 @@ export default defineConfig(({ command }) => ({
               ) {
                 return 'services-boot';
               }
-              // 🔄 LAZY: AI services (chat engine + orchestrator)
+              // 🔄 LAZY: AI services (chat engine + orchestrator ONLY - NO metaKernel to avoid circular deps)
               if (
                 id.includes('/services/ai/chatEngine') ||
-                id.includes('/services/ai/orchestrator') ||
-                id.includes('/services/ai/metaKernel') ||
-                id.includes('/services/ai/singularityKernel')
+                id.includes('/services/ai/orchestrator')
               ) {
                 return 'services-ai';
+              }
+              // 🔄 BOOTSTRAP: metaKernel, cognitiveKernel, singularityKernel → services-other (avoid circular deps)
+              if (
+                id.includes('/services/ai/metaKernel') ||
+                id.includes('/services/ai/cognitiveKernel') ||
+                id.includes('/services/ai/singularityKernel') ||
+                id.includes('/services/ai/system') ||
+                id.includes('/services/ai/systemUtilities')
+              ) {
+                return 'services-other';
               }
               // 🔄 LAZY: Voice services
               if (id.includes('/services/voice/')) {
