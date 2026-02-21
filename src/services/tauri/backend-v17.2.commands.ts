@@ -29,6 +29,7 @@ import type {
   EvolutionState,
   SystemState,
 } from './backend-v17.2.types';
+import { normalizeSnapshot } from './snapshotFactory';
 
 /**
  * Utilitaire d'invocation avec gestion d'erreur
@@ -210,7 +211,7 @@ export const composite = {
   async captureSnapshot(description: string): Promise<Snapshot> {
     const state = await safeInvoke<SystemState>('get_full_system_state');
 
-    const snapshot: Snapshot = {
+    const snapshot = normalizeSnapshot({
       id: crypto.randomUUID(),
       timestamp: Date.now(),
       helios: state.helios,
@@ -218,7 +219,7 @@ export const composite = {
       harmonia: state.harmonia,
       sentinel: state.sentinel,
       metadata: {},
-    };
+    });
 
     await safeInvoke<void>('write_snapshot', { snapshot });
 

@@ -143,6 +143,7 @@ export interface Snapshot {
   nexus: NexusState;
   harmonia: HarmoniaState;
   sentinel: SentinelState;
+  metadata?: Record<string, string>;
 }
 
 export interface LogEntry {
