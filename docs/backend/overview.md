@@ -383,7 +383,7 @@ pnpm install
 
 ### 2. Lancer en Dev
 ```bash
-pnpm run tauri:dev
+pnpm run dev:tauri
 # ou
 pnpm run dev  # Lance aussi le frontend
 ```
@@ -396,7 +396,7 @@ pnpm run verify:backend  # Backend seul (à créer)
 
 ### 4. Build Production
 ```bash
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ---

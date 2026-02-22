@@ -215,10 +215,11 @@ src-tauri/src/
 ### Scripts Principaux
 
 ```bash
-pnpm run dev              # Vite dev server
-pnpm run dev:tauri        # Launch Titan-Dev
+pnpm run dev              # Launch Titan-Dev (wrapper local complet)
+pnpm run dev:tauri        # Alias de dev (wrapper local complet)
+pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run build            # Build frontend
-pnpm run tauri:build      # Build Titan-Stable
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
 pnpm run lint             # ESLint + Prettier
 pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests

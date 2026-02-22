@@ -35,13 +35,13 @@
 
 ```bash
 # 🔒 DÉVELOPPEMENT (Tauri Native exclusif)
-pnpm run dev  # Build statique + Tauri (PAS de http://localhost)
+pnpm run dev  # Titan-Dev via wrapper local complet (Tauri + orchestration locale)
 
 # 🏗️ Build production
 pnpm run build
 
 # 📦 Package Tauri
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
 # ❌ INTERDITS (Mode HTTP bloqué)
 pnpm run preview  # ❌ Bloqué - "🔒 TAURI-ONLY MODE"
@@ -520,14 +520,15 @@ cd .. && pnpm run dev
 ### Commandes Directes
 ```bash
 # TAURI-ONLY MODE (100% Local, 0% HTTP)
-pnpm run dev          # → Tauri app (après WebKit install)
+pnpm run dev          # → Titan-Dev (wrapper local complet)
+pnpm run dev:tauri:no-ollama  # → Titan-Dev sans Ollama
 
 # ⚠️ BLOQUÉ: pnpm run preview (HTTP server interdit)
 # ⚠️ BLOQUÉ: vite:dev (HTTP server interdit)
 
 # Build production
 pnpm run build        # Frontend → dist/ (1,93s, 131KB gzip)
-pnpm run tauri:build  # Application native (.deb, .AppImage)
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Application native (.deb, .AppImage)
 ```
 
 ### Installation WebKitGTK 4.1 (Requis)
@@ -1149,7 +1150,7 @@ sudo do-release-upgrade
 ```bash
 # Ouvrir : Ctrl+Alt+T (PAS VSCode Flatpak)
 cd /home/titane_os/Documents/TITANE_NEWGEN/TITANE_INFINITY
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 **Diagnostic** : `./test-build-natif.sh`

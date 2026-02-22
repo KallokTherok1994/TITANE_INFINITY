@@ -401,11 +401,11 @@ pub enum PersistenceError {
 
 ```bash
 # Développement
-pnpm run tauri:dev
+pnpm run dev:tauri
 # → vite dev + cargo build + run
 
 # Production
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 # → tsc --noEmit + vite build + cargo build --release + bundle
 
 # Tests Rust
@@ -417,8 +417,8 @@ pnpm run test:rust
 
 ```json
 {
-  "🚀 Tauri Dev": "pnpm run tauri:dev",
-  "🔨 Tauri Build": "pnpm run tauri:build",
+  "🚀 Tauri Dev": "pnpm run dev:tauri",
+  "🔨 Tauri Build": "GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json",
   "⚡ Vite Build": "pnpm run build",
   "🧹 Clean All": "pnpm run clean",
   "🔍 Type Check": "pnpm run type-check",
