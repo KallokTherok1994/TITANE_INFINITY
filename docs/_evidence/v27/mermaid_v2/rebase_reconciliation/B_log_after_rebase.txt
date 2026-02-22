@@ -1,0 +1,5 @@
+21770022 docs(mermaid): fix hash registry determinism + append-only (stopline)
+aece2bac docs(mermaid): fix hash registry determinism + append-only (stopline)
+158687ba ci(mermaid): add CI gate + drift detection
+199fc94c docs(mermaid): canon diagrams + render sync + guards (online-first)
+f98f801a docs(mermaid): add canon diagrams + render sync + guards (online-first)
