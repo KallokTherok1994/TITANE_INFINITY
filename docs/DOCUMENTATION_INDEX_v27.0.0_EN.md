@@ -1,12 +1,12 @@
-# 📚 TITANE∞ DOCUMENTATION INDEX v27.0.0 (English)
+# 📚 TITANE∞ DOCUMENTATION INDEX v27.0.5 (English)
 
-**Version:** 27.0.0 | **Language:** English | **Last Updated:** 31 January 2026
+**Version:** 27.0.5 | **Language:** English | **Last Updated:** 22 February 2026
 
 ---
 
 ## 🌍 Welcome to TITANE∞ English Documentation
 
-**Complete bilingual reference for TITANE∞ v27.0.0**
+**Complete bilingual reference for TITANE∞ v27.0.5**
 
 This index guides you through 4 comprehensive English documents covering everything from first launch to advanced workflows.
 
