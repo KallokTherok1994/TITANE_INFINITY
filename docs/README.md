@@ -1,6 +1,6 @@
-# TITANE∞ v8.0
+# TITANE∞ v27.0.5
 
-![Version](https://img.shields.io/badge/version-8.0.0-blue)
+![Version](https://img.shields.io/badge/version-27.0.5-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -12,7 +12,7 @@
 
 TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinity) est une plateforme cognitive de nouvelle génération avec **60+ modules intelligents** organisés en **10+ stacks hiérarchiques**, construite pour l'auto-régulation, l'adaptation intelligente et l'évolution continue.
 
-## 🌟 Caractéristiques v8.0
+## 🌟 Caractéristiques v27.0.5
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
 - **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
@@ -26,7 +26,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - **Interface Moderne** : React 18 + TypeScript strict
 - **DevTools Intégrés** : Monitoring et dashboard en temps réel
 
-## 🏗️ Architecture v8.0
+## 🏗️ Architecture v27.0.5
 
 ```
 TITANE∞ - 10+ Stacks Hiérarchiques
@@ -106,25 +106,25 @@ source $HOME/.cargo/env
 
 ### 3. Installer les dépendances
 ```bash
-chmod +x system/scripts/*.sh
-./system/scripts/install_deps.sh
+corepack enable
+pnpm install
 ```
 
 ## ▶️ Utilisation
 
 ### Mode Développement
 ```bash
-./system/scripts/run.sh
+pnpm run dev:tauri
 ```
 
 ### Build Production
 ```bash
-./system/scripts/build.sh
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ### Nettoyage
 ```bash
-./system/scripts/clean.sh
+pnpm run clean:all
 ```
 
 ## 🧩 Modules
