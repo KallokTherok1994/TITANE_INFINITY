@@ -53,7 +53,7 @@ if [[ -z "$BASELINE_SHA" ]]; then
   exit 1
 fi
 
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v11"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v12"
 latest_pack=""
 if [[ -d "$PROOF_PACK_DIR" ]]; then
   latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
@@ -97,6 +97,8 @@ cat <<EOF > "$STATUS_PATH.tmp"
 - Registry Status: $REGISTRY_STATUS
 - Change Request Required: $CHANGE_REQ_REQUIRED
 - Last Proof Pack: $latest_pack
+- System Mode: DORMANT (V12)
+- Last Active Phase: V11
 EOF
 
 if [[ "$MODE" == "check" ]]; then

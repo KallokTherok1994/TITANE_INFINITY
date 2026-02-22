@@ -1,0 +1,14 @@
+{
+  "pack_id": "mermaid_v12_20260222T171854Z_19f3b9d9",
+  "pack_version": "mermaid_v12",
+  "timestamp_utc": "2026-02-22T17:18:54Z",
+  "head_sha_at_time": "19f3b9d9d36fde2c5ff1321c05532e03eb5dc48c",
+  "baseline_sha": "3a5026995a2e4390a47a98cad9dcdc315dde6194",
+  "registry_hash_before": "a7a7cedd1a40342613e8c174fdb5c91cef4dac48e0f74d56ec21f71d332f0fae",
+  "registry_hash_after": "a7a7cedd1a40342613e8c174fdb5c91cef4dac48e0f74d56ec21f71d332f0fae",
+  "change_request": "",
+  "baseline_nodes": 20,
+  "baseline_links": 22,
+  "current_nodes": 20,
+  "current_links": 22
+}
