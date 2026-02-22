@@ -1,8 +1,8 @@
-# Moteur Adaptatif Intégral (MAI) v8.0
+# Moteur Adaptatif Intégral (MAI) v27.0.5
 
 ## 🧠 Vue d'ensemble
 
-Le **Moteur Adaptatif Intégral (MAI)** est le système d'analyse et de régulation adaptative multi-dimensionnelle de TITANE∞ v8.0. Il surveille en temps réel l'état de tous les modules système et applique une régulation intelligente pour maintenir la stabilité, l'harmonie et les performances optimales.
+Le **Moteur Adaptatif Intégral (MAI)** est le système d'analyse et de régulation adaptative multi-dimensionnelle de TITANE∞ v27.0.5. Il surveille en temps réel l'état de tous les modules système et applique une régulation intelligente pour maintenir la stabilité, l'harmonie et les performances optimales.
 
 ## 🎯 Objectifs
 

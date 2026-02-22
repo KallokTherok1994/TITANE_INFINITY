@@ -1,4 +1,4 @@
-# 🌟 TITANE∞ v27.0.0 — English Quick Start
+# 🌟 TITANE∞ v27.0.5 — English Quick Start
 
 **English | [Français](./README.md)**
 
@@ -12,9 +12,9 @@
 
 ```bash
 # Linux
-wget https://releases.titane.dev/titane-stable.AppImage
-chmod +x titane-stable.AppImage
-./titane-stable.AppImage
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.AppImage
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 
 # macOS
 brew tap titane/tap
