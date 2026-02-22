@@ -196,10 +196,10 @@ pnpm run lint
 pnpm run build
 
 # Dev Tauri
-pnpm run tauri:dev
+pnpm run dev:tauri
 
 # Build Tauri
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ## 🤝 Contribution

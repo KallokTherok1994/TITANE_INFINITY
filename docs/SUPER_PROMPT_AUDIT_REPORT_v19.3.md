@@ -150,7 +150,7 @@ pnpm run test
 cargo check --manifest-path src-tauri/Cargo.toml
 
 # Build Tauri (validation complète)
-pnpm run tauri:build
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
 
 ### Scénarios à tester manuellement
