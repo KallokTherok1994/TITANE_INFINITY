@@ -1,5 +1,5 @@
-# 📚 TITANE∞ — COMPLETE USER MANUAL v27.0.0
-**Version:** 27.0.0 | **Language:** English | **Date:** 31 January 2026
+# 📚 TITANE∞ — COMPLETE USER MANUAL v27.0.5
+**Version:** 27.0.5 | **Language:** English | **Date:** 22 February 2026
 
 ---
 
@@ -66,9 +66,9 @@ TITANE∞ is designed for:
 
 ```bash
 # Linux (AppImage)
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_amd64.AppImage
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
-./Titan-Stable_27.0.0_amd64.AppImage
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.AppImage
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 
 # Or via package manager (if available)
 sudo apt install titane-infinity
@@ -86,14 +86,14 @@ On first launch, TITANE will guide you through:
 
 **Quick launch:**
 ```bash
-./Titan-Stable_27.0.0_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 ```
 
 **With options:**
 ```bash
-./Titan-Stable_27.0.0_amd64.AppImage --dev        # Development mode
-./Titan-Stable_27.0.0_amd64.AppImage --offline    # Offline mode
-./Titan-Stable_27.0.0_amd64.AppImage --memory     # Load memory
+./TITANE-Infinity_27.0.5_amd64.AppImage --dev        # Development mode
+./TITANE-Infinity_27.0.5_amd64.AppImage --offline    # Offline mode
+./TITANE-Infinity_27.0.5_amd64.AppImage --memory     # Load memory
 ```
 
 **Startup time:** ~585ms (ultra-fast)
@@ -1074,7 +1074,7 @@ tail -f ~/.titane/logs/app.log
 **Solution 3 — Reset:**
 ```bash
 rm -rf ~/.titane/cache
-./Titan-Stable_27.0.0_amd64.AppImage --reset
+./TITANE-Infinity_27.0.5_amd64.AppImage --reset
 ```
 
 #### "Chat is very slow"
@@ -1656,7 +1656,7 @@ Your conversations:
 
 4. **Use offline mode**
    ```bash
-   ./Titan-Stable_27.0.0_amd64.AppImage --offline
+  ./TITANE-Infinity_27.0.5_amd64.AppImage --offline
    ```
 
 #### 🟡 For Cloud Users (Gemini)
@@ -1698,7 +1698,7 @@ cargo tree
 
 ## ⚡ PERFORMANCE & OPTIMIZATION
 
-### v27.0.0 Benchmarks — Overview
+### v27.0.5 Benchmarks — Overview
 
 | Metric | Value | Notes |
 |--------|-------|-------|
@@ -1786,7 +1786,7 @@ To get started best:
 
 ---
 
-**TITANE∞ v27.0.0 — Complete User Manual**
+**TITANE∞ v27.0.5 — Complete User Manual**
 *Created: 31 January 2026 | Validated by Kevin Thibault*
-*Last updated: 31 January 2026 | Version: 27.0.0*
+*Last updated: 22 February 2026 | Version: 27.0.5*
 *Copyright © 2025 Humain Total / TITANE Team. All rights reserved.*

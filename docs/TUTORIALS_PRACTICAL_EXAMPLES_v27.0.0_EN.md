@@ -1,6 +1,6 @@
-# 🎓 TITANE∞ — PRACTICAL TUTORIALS & EXAMPLES v27.0.0
+# 🎓 TITANE∞ — PRACTICAL TUTORIALS & EXAMPLES v27.0.5
 
-**Version:** 27.0.0 | **Language:** English | **For:** All user levels
+**Version:** 27.0.5 | **Language:** English | **For:** All user levels
 
 ---
 
@@ -1021,8 +1021,8 @@ RESULT: 10x better tailored response! 🎯
 
 ---
 
-**TITANE∞ v27.0.0 — Practical Tutorials & Examples**
+**TITANE∞ v27.0.5 — Practical Tutorials & Examples**
 *Created: 31 January 2026 | Validated by Kevin Thibault*
-*Last updated: 31 January 2026 | Version: 27.0.0*
+*Last updated: 22 February 2026 | Version: 27.0.5*
 *For all levels: Beginner → Expert*
 *Copyright © 2025 Humain Total / TITANE Team. All rights reserved.*

@@ -1,6 +1,6 @@
-# 🚀 TITANE∞ — INSTALLATION & SETUP GUIDE v27.0.0
+# 🚀 TITANE∞ — INSTALLATION & SETUP GUIDE v27.0.5
 
-**Version:** 27.0.0 | **Date:** 31 January 2026
+**Version:** 27.0.5 | **Date:** 22 February 2026
 
 ---
 
@@ -94,13 +94,13 @@ choco install git curl
 ```bash
 # 1. Download
 cd ~/Downloads
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_amd64.AppImage
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.AppImage
 
 # 2. Make executable
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
 
 # 3. Launch
-./Titan-Stable_27.0.0_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 ```
 
 **Duration:** ~2 minutes
@@ -111,10 +111,10 @@ chmod +x Titan-Stable_27.0.0_amd64.AppImage
 
 ```bash
 # Download .deb
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/titane-infinity_27.0.0_amd64.deb
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.deb
 
 # Install
-sudo dpkg -i titane-infinity_27.0.0_amd64.deb
+sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 # Or via apt (if repository enabled)
 sudo apt install titane-infinity
@@ -168,10 +168,10 @@ ls src-tauri/target/release/bundle/appimage/Titan-Stable_*.AppImage
 
 ```bash
 # 1. Download
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_x64.dmg
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_x64.dmg
 
 # 2. Mount DMG
-open Titan-Stable_27.0.0_x64.dmg
+open TITANE-Infinity_27.0.5_x64.dmg
 
 # 3. Drag-drop to Applications
 # Appears in DMG automount
@@ -228,11 +228,11 @@ ls src-tauri/target/release/bundle/macos/
 
 ```powershell
 # 1. Download MSI
-Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_x64.msi" `
-  -OutFile "$env:USERPROFILE\Downloads\Titan-Stable_27.0.0_x64.msi"
+Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_x64.msi" `
+  -OutFile "$env:USERPROFILE\Downloads\TITANE-Infinity_27.0.5_x64.msi"
 
 # 2. Launch installer
-& "$env:USERPROFILE\Downloads\Titan-Stable_27.0.0_x64.msi"
+& "$env:USERPROFILE\Downloads\TITANE-Infinity_27.0.5_x64.msi"
 
 # 3. Follow wizard (Next → Next → Finish)
 
@@ -245,7 +245,7 @@ Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/rele
 
 ```powershell
 # 1. Download portable ZIP
-Invoke-WebRequest -Uri "https://github.com/.../Titan-Stable_27.0.0_portable.zip" `
+Invoke-WebRequest -Uri "https://github.com/.../TITANE-Infinity_27.0.5_portable.zip" `
   -OutFile "TITANE_portable.zip"
 
 # 2. Extract
@@ -311,7 +311,7 @@ On first startup, TITANE displays a **Setup Wizard**:
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Welcome to TITANE∞ v27.0.0                 │
+│  Welcome to TITANE∞ v27.0.5                 │
 │                                              │
 │  🎯 Step 1/4: Accept Terms                  │
 └──────────────────────────────────────────────┘
@@ -621,8 +621,8 @@ Settings → Memory → [Export/Import]
 
 **Solution 1 — Check permissions:**
 ```bash
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
-./Titan-Stable_27.0.0_amd64.AppImage --help
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage --help
 ```
 
 **Solution 2 — Install FUSE:**
@@ -637,7 +637,7 @@ sudo dnf install fuse libfuse
 **Solution 3 — Extract & launch:**
 ```bash
 # Extract AppImage
-./Titan-Stable_27.0.0_amd64.AppImage --appimage-extract
+./TITANE-Infinity_27.0.5_amd64.AppImage --appimage-extract
 cd squashfs-root
 ./AppRun
 ```
@@ -828,7 +828,7 @@ Before using TITANE in production:
 
 ---
 
-**TITANE∞ v27.0.0 — Complete Installation & Setup Guide**
+**TITANE∞ v27.0.5 — Complete Installation & Setup Guide**
 *Created: 31 January 2026 | Validated by Kevin Thibault*
 *Last updated: 31 January 2026 | Version: 27.0.0*
 *For detailed support: support@titane.dev or Discord community*
