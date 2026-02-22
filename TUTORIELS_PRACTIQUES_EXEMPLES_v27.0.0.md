@@ -1,6 +1,6 @@
-# 🎓 TITANE∞ — TUTORIELS PRATIQUES & EXEMPLES v27.0.0
+# 🎓 TITANE∞ — TUTORIELS PRATIQUES & EXEMPLES v27.0.5
 
-**Version:** 27.0.0 | **Langue:** Français | **Pour:** Utilisateurs tous niveaux
+**Version:** 27.0.5 | **Langue:** Français | **Pour:** Utilisateurs tous niveaux
 
 ---
 
@@ -1393,8 +1393,8 @@ Compétences validées:
 
 ---
 
-**TITANE∞ v27.0.0 — Tutoriels & Exemples Complets**
+**TITANE∞ v27.0.5 — Tutoriels & Exemples Complets**
 _Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
-_Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
+_Dernière mise à jour: 22 Février 2026 | Version: 27.0.5_
 _Pour tous niveaux: Débutant → Expert_
 _Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés._
