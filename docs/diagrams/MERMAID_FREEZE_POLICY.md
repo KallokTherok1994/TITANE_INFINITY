@@ -27,3 +27,20 @@ Avant toute release majeure de TITANE∞ :
 - `bash scripts/verify/mermaid-proof-pack.sh`
 
 Archiver le proof pack.
+
+## Governance Boundary (V13)
+
+Mermaid ne couvre que :
+
+- Architecture 4-Ring
+- Surface réseau online-first
+- Pipeline certification
+- Data flow critique
+
+Mermaid ne couvre pas :
+
+- UX
+- Feature roadmap
+- Performance tuning
+- Optimisation interne engines
+- Documentation marketing
