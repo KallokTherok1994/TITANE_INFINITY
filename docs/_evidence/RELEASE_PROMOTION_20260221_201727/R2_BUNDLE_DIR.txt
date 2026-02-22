@@ -1,0 +1,6 @@
+total 20
+drwxrwxr-x 5 titane-os titane-os 4096 févr. 21 14:05 .
+drwxrwxr-x 9 titane-os titane-os 4096 févr. 21 14:04 ..
+drwxrwxr-x 3 titane-os titane-os 4096 févr. 21 14:05 appimage
+drwxrwxr-x 3 titane-os titane-os 4096 févr. 21 14:04 deb
+drwxrwxr-x 3 titane-os titane-os 4096 févr. 21 14:04 rpm

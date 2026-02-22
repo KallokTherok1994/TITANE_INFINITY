@@ -1,0 +1,12 @@
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/E2E_RUNS.md
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/SHA256SUMS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/VERDICT.md
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S1/run2/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S1/run3/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S2/run1/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S2/run2/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S2/run3/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S3/run1/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S3/run2/TS.txt
+docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/S3/run3/TS.txt
+registry/ui-events.jsonl

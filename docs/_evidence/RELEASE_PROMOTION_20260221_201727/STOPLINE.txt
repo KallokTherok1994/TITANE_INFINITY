@@ -1,0 +1,2 @@
+STOPLINE: Dirty tree outside allowed paths
+e2e/desktop/chat-uiux-cert.wdio.test.js

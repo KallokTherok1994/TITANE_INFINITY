@@ -1,0 +1,1 @@
+-rwxr-xr-x 1 titane-os titane-os 89217528 févr. 21 14:05 src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.0.2_amd64.AppImage
