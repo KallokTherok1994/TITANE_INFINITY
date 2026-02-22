@@ -1,0 +1,2 @@
+docs/diagrams/MERMAID_HASH_REGISTRY.json
+scripts/verify/verify-mermaid-drift.sh

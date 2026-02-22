@@ -1,0 +1,10 @@
+
+> titane-infinity@27.0.5 render:docs:mermaid /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/verify/mermaid-render-sync.sh
+
+SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+PASS: mermaid-render-sync

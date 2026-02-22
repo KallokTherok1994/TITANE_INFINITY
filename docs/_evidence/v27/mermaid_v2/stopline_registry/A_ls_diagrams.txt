@@ -1,0 +1,8 @@
+total 48
+drwxrwxr-x  4 titane-os titane-os  4096 févr. 22 10:14 .
+drwxrwxr-x 60 titane-os titane-os 20480 févr. 22 09:47 ..
+-rw-rw-r--  1 titane-os titane-os  1317 févr. 22 10:06 CANON_INDEX.md
+-rw-rw-r--  1 titane-os titane-os  1033 févr. 22 10:15 MERMAID_HASH_REGISTRY.json
+-rw-rw-r--  1 titane-os titane-os   515 févr. 22 10:06 README.md
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:48 rendered
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:47 sources

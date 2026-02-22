@@ -109,11 +109,67 @@ fi
 
 echo "CHECK: Network surface sync complete"
 
-# Drift 3 - Mermaid hash registry (append-only, deterministic)
-if ! bash scripts/verify/mermaid-hash-registry.sh --check; then
-  echo "FAIL: Mermaid hash registry check failed"
+# Drift 3 - Mermaid hash registry (append-only)
+mkdir -p "$(dirname "$REGISTRY_PATH")"
+
+hash_tmp=$(mktemp)
+for source in "${sources[@]}"; do
+  sha256sum "$source" >> "$hash_tmp"
+done
+
+if ! python3 - "$REGISTRY_PATH" "$hash_tmp" <<'PY'
+import json
+import os
+import sys
+import time
+
+registry_path = sys.argv[1]
+hash_path = sys.argv[2]
+
+current = {}
+with open(hash_path, "r", encoding="utf-8") as handle:
+    for line in handle:
+        if not line.strip():
+            continue
+        digest, file_path = line.strip().split(maxsplit=1)
+        current[file_path] = digest
+
+if os.path.exists(registry_path):
+    with open(registry_path, "r", encoding="utf-8") as handle:
+        data = json.load(handle)
+else:
+    data = {"entries": []}
+
+entries = data.get("entries", [])
+known_files = {e.get("file") for e in entries if isinstance(e, dict)}
+missing = sorted(f for f in known_files if f not in current)
+if missing:
+    print("FAIL: hash registry references missing files: " + ", ".join(missing))
+    sys.exit(2)
+
+latest = {}
+for entry in entries:
+    file_name = entry.get("file")
+    digest = entry.get("sha256")
+    if file_name and digest:
+        latest[file_name] = digest
+
+now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+for file_name, digest in current.items():
+    if latest.get(file_name) != digest:
+        entries.append({"timestamp": now, "file": file_name, "sha256": digest})
+
+with open(registry_path, "w", encoding="utf-8") as handle:
+    json.dump({"entries": entries}, handle, indent=2)
+
+print("HASH_REGISTRY_UPDATED")
+PY
+then
+  echo "FAIL: unable to update Mermaid hash registry"
   FAIL=1
 fi
+
+rm -f "$hash_tmp"
 
 if [[ "$FAIL" -ne 0 ]]; then
   echo "FAIL: MERMAID_DRIFT_DETECTION"

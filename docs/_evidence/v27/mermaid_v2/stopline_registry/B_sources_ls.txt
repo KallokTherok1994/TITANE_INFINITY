@@ -1,0 +1,8 @@
+total 28
+drwxrwxr-x 2 titane-os titane-os 4096 févr. 22 09:47 .
+drwxrwxr-x 4 titane-os titane-os 4096 févr. 22 10:14 ..
+-rw-rw-r-- 1 titane-os titane-os  127 févr. 22 10:06 architecture_4_ring.mmd
+-rw-rw-r-- 1 titane-os titane-os  215 févr. 22 10:06 certification_gates.mmd
+-rw-rw-r-- 1 titane-os titane-os  224 févr. 22 10:06 data_flow_chat.mmd
+-rw-rw-r-- 1 titane-os titane-os  282 févr. 22 10:06 network_surface_online_first.mmd
+-rw-rw-r-- 1 titane-os titane-os   75 févr. 22 10:06 omega_pipeline_v2.mmd

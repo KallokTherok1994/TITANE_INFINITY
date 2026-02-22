@@ -1,0 +1,20 @@
+158687ba (HEAD -> MAIN, origin/MAIN, origin/HEAD) ci(mermaid): add CI gate + drift detection
+199fc94c docs(mermaid): canon diagrams + render sync + guards (online-first)
+f98f801a docs(mermaid): add canon diagrams + render sync + guards (online-first)
+106087e9 reports(prod): add v27.0.5 release proof pack
+649bed42 release(prod): refresh v27.0.5 artifacts and metadata
+35bb1fe7 build(tauri): align cli and add bundler warning verifier
+13b881bb governance(prod): enforce mandatory version sync gate before production
+09ad459f docs: finalize version consistency in readme + changelog
+ff3e3be1 docs(fr): align core guides content to v27.0.5
+b03cd322 docs(en): align core guides content to v27.0.5
+4d3ff89b docs(readme): align root README to v27.0.5
+6a54f16c docs: update readme/docs to v27.0.5
+46159769 chore(release): align required files to v27.0.5
+e8640862 chore(release): v27.0.5 build cleanup + latest deployment metadata
+315a06ef docs: add deployment readiness v27.0.3
+d8663268 docs: Archive v27.0.3 proof pack + release notes (post-release finalization)
+5d10f12b docs: Add v27.0.3 release seal summary (production ready)
+02d256b8 Release: v27.0.3 sealed (R0–R6 gates PASS, token authorized)
+6c27c7f1 Revert "SNAPSHOT_CONTRACT_GUARD: Enforce write_snapshot metadata via normalizeSnapshot"
+6ed32e1e SNAPSHOT_CONTRACT_GUARD: Enforce write_snapshot metadata via normalizeSnapshot
