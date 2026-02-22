@@ -7,6 +7,7 @@ use once_cell::sync::Lazy;
 #[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::process::Command;
+#[cfg(not(feature = "mock"))]
 use std::sync::atomic::{AtomicBool, Ordering};
 
 type CommandResult<T> = Result<T, String>;
@@ -878,8 +879,10 @@ except Exception as e:
 //  Recording Commands (v∞) - NEW PRODUCTION ENGINE
 // ─────────────────────────────────────────────────────────────────
 
+#[cfg(not(feature = "mock"))]
 use super::recording_engine::{RecordingConfig, RECORDING_ENGINE};
 
+#[cfg(not(feature = "mock"))]
 static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
 /// Start recording with configuration
@@ -1007,6 +1010,7 @@ pub async fn stop_recording() -> CommandResult<serde_json::Value> {
 }
 
 /// Cancel recording without transcription
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn cancel_recording() -> CommandResult<()> {
     log::info!("[Audio::cancel_recording] Called");
@@ -1024,6 +1028,7 @@ pub async fn cancel_recording() -> CommandResult<()> {
 }
 
 /// Check if recording is in progress
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn is_recording() -> CommandResult<bool> {
     let state = RECORDING_ENGINE.is_recording();
@@ -1032,6 +1037,7 @@ pub async fn is_recording() -> CommandResult<bool> {
 }
 
 /// Get current recording state (for UI/debugging)
+#[cfg(not(feature = "mock"))]
 #[tauri::command]
 pub async fn get_recording_status() -> CommandResult<serde_json::Value> {
     let state = RECORDING_ENGINE.get_state();
