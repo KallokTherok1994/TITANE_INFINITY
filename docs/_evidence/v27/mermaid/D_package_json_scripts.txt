@@ -1,0 +1,2 @@
+41:    "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",
+42:    "verify:docs:mermaid": "bash scripts/verify/verify-mermaid-diagrams.sh",

@@ -1,0 +1,5 @@
+
+> titane-infinity@27.0.5 lint /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> eslint "src/**/*.{ts,tsx,js,jsx}"
+
+ ELIFECYCLE  Command failed.

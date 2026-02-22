@@ -1,0 +1,14 @@
+flowchart TD
+    IN[Conversation Input]
+    Router[Router]
+    Executor[Executor]
+    Merger[Merger]
+    Guardrails[Guardrails]
+    OUT[Conversation Output]
+
+    IN --> Router
+    Router --> Executor
+    Executor --> Merger
+    Merger --> Guardrails
+    Guardrails --> OUT
+    Guardrails -. policy checks .-> Router

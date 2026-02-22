@@ -1,0 +1,35 @@
+
+> titane-infinity@27.0.5 format:check /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> prettier --check .
+
+Checking formatting...
+[warn] .github/copilot-instructions.md
+[warn] .github/dependabot.yml
+[warn] CERTIFICATION_PRODUCTION_FINAL.md
+[warn] CERTIFICATION_REGISTRY_APPEND_ONLY.md
+[warn] CHANGELOG.md
+[warn] e2e/desktop/ai-verification.full.e2e.js
+[warn] e2e/desktop/online-chat-proof.wdio.test.js
+[warn] GITHUB_RELEASE_INSTRUCTIONS_v27.0.2.md
+[warn] GO_LIVE_AUTHORIZATION_v27.0.3.md
+[warn] OLLAMA_SETUP_GUIDE.md
+[warn] P8_2_EXECUTION_COMPLETE.md
+[warn] scripts/guard_ipc_provider_meta.cjs
+[warn] scripts/guards/guard-prod-drift.mjs
+[warn] scripts/guards/guard-prod-safe-build.mjs
+[warn] scripts/ops/p8_approval_gate.mjs
+[warn] scripts/ops/p8_execute_distribution.mjs
+[warn] scripts/ops/p8_preflight_check.mjs
+[warn] scripts/ops/p8_record_approval.mjs
+[warn] scripts/tools/ipc/ipc-ar20.cjs
+[warn] scripts/tools/ipc/ipc-offline5.cjs
+[warn] scripts/tools/ipc/README.md
+[warn] src/components/diagnostic/OnlineDiagnostic.tsx
+[warn] src/components/layout/TopNav.tsx
+[warn] src/lib/errorClassification.ts
+[warn] src/services/ai/orchestrator.ts
+[warn] src/services/ai/systemUtilities.ts
+[warn] src/services/voice/index.ts
+[warn] wdio.desktop.conf.cjs
+[warn] Code style issues found in 28 files. Run Prettier with --write to fix.
+ ELIFECYCLE  Command failed with exit code 1.

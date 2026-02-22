@@ -1,0 +1,40 @@
+commit 73342b04b488dd1c25e08398ab90050084231058
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 09:50:39 2026 -0500
+
+    docs(mermaid): add canon diagrams + render sync + guards (online-first)
+
+A	docs/_evidence/v27/mermaid/A_evidence_presence.txt
+A	docs/_evidence/v27/mermaid/A_repo_state.txt
+A	docs/_evidence/v27/mermaid/A_verify_map.txt
+A	docs/_evidence/v27/mermaid/B_files_created.txt
+A	docs/_evidence/v27/mermaid/C_render_sync_run.txt
+A	docs/_evidence/v27/mermaid/D_guard_script_head.txt
+A	docs/_evidence/v27/mermaid/D_package_json_scripts.txt
+A	docs/_evidence/v27/mermaid/E_format_check.txt
+A	docs/_evidence/v27/mermaid/E_lint.txt
+A	docs/_evidence/v27/mermaid/E_render_run.txt
+A	docs/_evidence/v27/mermaid/E_verify_run1.txt
+A	docs/_evidence/v27/mermaid/E_verify_run2.txt
+A	docs/_evidence/v27/mermaid/E_verify_run3.txt
+A	docs/_evidence/v27/mermaid/F_changed_files.txt
+A	docs/_evidence/v27/mermaid/F_diff.txt
+A	docs/_evidence/v27/mermaid/F_diffstat.txt
+A	docs/_evidence/v27/mermaid/ROLLBACK.md
+A	docs/_evidence/v27/mermaid/VERDICT.md
+A	docs/diagrams/CANON_INDEX.md
+A	docs/diagrams/README.md
+A	docs/diagrams/rendered/architecture_4_ring.md
+A	docs/diagrams/rendered/certification_gates.md
+A	docs/diagrams/rendered/data_flow_chat.md
+A	docs/diagrams/rendered/network_surface_online_first.md
+A	docs/diagrams/rendered/omega_pipeline_v2.md
+A	docs/diagrams/sources/architecture_4_ring.mmd
+A	docs/diagrams/sources/certification_gates.mmd
+A	docs/diagrams/sources/data_flow_chat.mmd
+A	docs/diagrams/sources/network_surface_online_first.mmd
+A	docs/diagrams/sources/omega_pipeline_v2.mmd
+A	docs/standards/MERMAID_STANDARDS.md
+M	package.json
+A	scripts/verify/mermaid-render-sync.sh
+A	scripts/verify/verify-mermaid-diagrams.sh

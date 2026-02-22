@@ -1,0 +1,249 @@
+### ls -la scripts || true
+total 1404
+drwxrwxr-x 45 titane-os titane-os 12288 févr. 19 08:22 .
+drwxrwxr-x 57 titane-os titane-os 36864 févr. 22 09:44 ..
+-rw-rw-r--  1 titane-os titane-os   441 janv.  4 02:37 activate-node24.sh
+-rwxrwxr-x  1 titane-os titane-os 19904 janv. 16 21:07 advanced-diagnostic.sh
+-rwx--x--x  1 titane-os titane-os  7630 janv.  7 15:22 analyze-memory-migration.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 audit
+-rwxrwxr-x  1 titane-os titane-os  4714 févr.  3 07:24 audit-charts.sh
+-rw-rw-r--  1 titane-os titane-os  7091 janv.  4 11:19 audit-complete.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 18 23:05 auto
+-rwxrwxr-x  1 titane-os titane-os  8618 janv. 19 15:24 auto-all.sh
+-rwxrwxr-x  1 titane-os titane-os 16442 janv. 19 15:24 autobuild_full.sh
+-rwxrwxr-x  1 titane-os titane-os  3493 déc.   9 10:57 auto_fix.sh
+-rwx--x--x  1 titane-os titane-os  1115 janv.  7 09:01 auto-replace-console.sh
+-rwxrwxr-x  1 titane-os titane-os  9871 déc.  15 08:49 auto-test-phase3.sh
+-rw-rw-r--  1 titane-os titane-os   354 janv.  3 18:40 benchmark.sh
+-rw-rw-r--  1 titane-os titane-os  1124 janv. 17 12:55 beta-doctor.js
+-rwxrwxr-x  1 titane-os titane-os  2032 janv. 16 20:01 beta-doctor.sh
+-rw-rw-r--  1 titane-os titane-os  3489 janv.  4 11:19 brotli-compress.mjs
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 15 22:33 build
+-rwxrwxr-x  1 titane-os titane-os  1824 janv. 19 15:24 build-fast.sh
+-rwxrwxr-x  1 titane-os titane-os  2834 déc.   9 10:57 build-in-docker.sh
+-rwxrwxr-x  1 titane-os titane-os 11506 janv.  4 00:57 build_optimized.sh
+-rwxrwxr-x  1 titane-os titane-os  9219 janv.  3 18:40 build_titane.sh
+drwxrwxr-x  4 titane-os titane-os  4096 févr. 18 16:38 certification
+-rw-rw-r--  1 titane-os titane-os  7492 févr. 13 18:27 check-allowlist-alignment.mjs
+-rwxrwxr-x  1 titane-os titane-os  6331 janv. 29 12:49 check_forbidden_files.sh
+-rwxrwxr-x  1 titane-os titane-os 11175 janv.  3 18:40 checklist-interactive.sh
+-rwxrwxr-x  1 titane-os titane-os  4880 janv.  4 09:42 check_system.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 15 21:41 ci
+-rwxrwxr-x  1 titane-os titane-os   920 déc.   9 10:57 clean_build.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 31 22:45 cleanup
+-rwx--x--x  1 titane-os titane-os  3025 janv.  7 08:38 cleanup-console-logs.sh
+-rwxrwxr-x  1 titane-os titane-os  6134 déc.   9 10:57 cleanup_ds_legacy.sh
+-rw-rw-r--  1 titane-os titane-os  4564 déc.  19 13:04 command_surface_diff.py
+-rwxrwxr-x  1 titane-os titane-os  4873 janv. 19 15:24 commit-session.sh
+-rw-rw-r--  1 titane-os titane-os  2240 févr. 13 18:27 convert-debugger-liveos.py
+-rw-rw-r--  1 titane-os titane-os  8099 févr. 13 18:27 convert-ipc-features.mjs
+drwxrwxr-x  6 titane-os titane-os  4096 janv. 24 22:03 core
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  1 13:59 coverage
+-rwxrwxr-x  1 titane-os titane-os  2734 févr. 14 13:39 create-release-v27.0.2.sh
+drwxrwxr-x  2 titane-os titane-os  4096 déc.  15 20:19 deploy
+-rwxrwxr-x  1 titane-os titane-os 15023 janv. 18 12:49 deploy-complete.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 deployment
+-rwxrwxr-x  1 titane-os titane-os 11762 janv. 18 12:49 deploy-orchestrator.py
+-rwxrwxr-x  1 titane-os titane-os 17736 déc.   9 10:57 deploy-production.sh
+-rwxrwxr-x  1 titane-os titane-os  8315 déc.   9 10:57 deploy_titane.sh
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 13 18:27 dev
+-rwxrwxr-x  1 titane-os titane-os   622 janv. 16 20:40 dev-clean.sh
+drwxrwxr-x  3 titane-os titane-os  4096 janv. 19 15:24 diagnostic
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  3 18:40 docs
+-rw-rw-r--  1 titane-os titane-os  4167 janv. 16 18:12 doctor.cjs
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 18 15:58 e2e
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 env
+-rwxrwxr-x  1 titane-os titane-os 13836 déc.   9 21:08 explore-concepts.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 31 13:36 feedback
+-rwxrwxr-x  1 titane-os titane-os  3849 janv. 19 15:24 final-build.sh
+-rwxrwxr-x  1 titane-os titane-os  3746 déc.   9 10:57 finalize_100_percent.sh
+-rwxrwxr-x  1 titane-os titane-os  5342 janv. 25 18:54 final-validation.sh
+-rwxrwxr-x  1 titane-os titane-os  2785 déc.   9 10:57 final_validation.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 fix
+-rwxrwxr-x  1 titane-os titane-os  8422 déc.   9 10:57 fix_all_remaining.sh
+-rwxrwxr-x  1 titane-os titane-os  1982 déc.  18 14:13 fix_jsx_apostrophes.py
+-rwxrwxr-x  1 titane-os titane-os  2741 déc.  18 14:21 fix-jsx-apostrophes.sh
+-rw-rw-r--  1 titane-os titane-os  4951 déc.  18 14:31 fix-jsx-batch.py
+-rwxrwxr-x  1 titane-os titane-os 11596 janv.  4 11:22 fix_p0_issues.sh
+-rw-rw-r--  1 titane-os titane-os  3929 janv.  4 11:02 fix-pipeline.js
+-rw-rw-r--  1 titane-os titane-os 12342 févr. 14 14:00 fix-prod-v27.0.2.sh
+-rwxrwxr-x  1 titane-os titane-os  4180 déc.   9 10:57 fix_rust_modules.sh
+-rwxrwxr-x  1 titane-os titane-os  2608 janv.  4 10:21 fix_security_and_ts.sh
+-rwxrwxr-x  1 titane-os titane-os  2722 déc.   9 10:57 fix_ts_errors.sh
+-rwxrwxr-x  1 titane-os titane-os 11004 janv.  4 11:19 fix_typescript_complete.sh
+-rwx--x--x  1 titane-os titane-os  2893 janv.  7 13:01 fix-unwrap-patterns.sh
+-rwxrwxr-x  1 titane-os titane-os  2319 févr. 14 11:51 gate3_smoke.sh
+-rw-rw-r--  1 titane-os titane-os  3353 févr.  6 16:00 gate-appimage-index.mjs
+-rwxrwxr-x  1 titane-os titane-os  3155 févr.  5 15:53 gate-dist-assets.mjs
+-rwxrwxr-x  1 titane-os titane-os  2789 févr.  5 15:53 gate-prod-boot.sh
+drwxrwxr-x  2 titane-os titane-os  4096 févr.  4 14:35 gates
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 git
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 19 10:21 governance
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 13 18:27 guard
+-rw-rw-r--  1 titane-os titane-os  2448 févr. 19 08:22 guard_ipc_provider_meta.cjs
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 19 10:21 guards
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 15 20:55 health
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 images
+-rwxrwxr-x  1 titane-os titane-os 13675 janv.  4 11:22 init-copilot-xs.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 18:31 install
+-rwxrwxr-x  1 titane-os titane-os 15192 janv. 19 15:16 install-all.sh
+-rwxrwxr-x  1 titane-os titane-os  4180 févr.  6 10:12 install-appimage.sh
+-rwxrwxr-x  1 titane-os titane-os  5716 janv. 17 12:50 install-deps.sh
+-rwxrwxr-x  1 titane-os titane-os   518 janv. 16 20:20 install-tauri-driver.sh
+-rwxrwxr-x  1 titane-os titane-os  6380 janv.  4 10:21 integrate-fusion-dashboard.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 launch
+drwxrwxr-x  2 titane-os titane-os  4096 déc.  22 17:42 logs
+drwxrwxr-x  3 titane-os titane-os  4096 janv. 31 14:35 maintenance
+-rwxrwxr-x  1 titane-os titane-os  7282 déc.   9 10:57 memory_profiling.sh
+-rwxrwxr-x  1 titane-os titane-os  8710 janv.  1 19:11 merge-all-branches.sh
+-rwxrwxr-x  1 titane-os titane-os  5428 janv.  3 18:40 merge-dev-to-main.sh
+-rwxrwxr-x  1 titane-os titane-os  5301 déc.  18 11:07 migrate-console-to-logger.cjs
+-rwxrwxr-x  1 titane-os titane-os  3645 janv. 27 21:08 monitor_chat_logs.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  5 21:39 network
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 ollama
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 19 08:22 ops
+-rwxrwxr-x  1 titane-os titane-os  7522 janv.  3 18:40 optimize-frontend-quick.sh
+-rwxrwxr-x  1 titane-os titane-os  9850 janv.  3 18:40 optimize_vscode.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 pipeline
+-rw-rw-r--  1 titane-os titane-os   927 févr. 21 22:32 post-build.sh
+-rw-rw-r--  1 titane-os titane-os   632 févr.  6 10:23 prepare-ollama-bundle.sh
+-rwxrwxr-x  1 titane-os titane-os 12260 janv.  4 11:04 profile-runtime.sh
+-rwxrwxr-x  1 titane-os titane-os  7783 janv.  3 18:40 progress-tracker.sh
+-rwxrwxr-x  1 titane-os titane-os  2325 janv.  3 18:40 quick-auto.sh
+-rwxrwxr-x  1 titane-os titane-os  3677 janv. 25 18:54 quick-boot-test.sh
+-rwxrwxr-x  1 titane-os titane-os  3161 janv.  4 10:21 quick-test-v3.sh
+-rwxrwxr-x  1 titane-os titane-os  9919 janv. 17 12:50 quick-verify.sh
+-rw-rw-r--  1 titane-os titane-os   887 déc.   9 10:57 README_AUTOFIX.md
+-rw-rw-r--  1 titane-os titane-os  9768 janv. 19 15:24 README.md
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 24 22:03 registry
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  5 21:39 remote
+-rwxrwxr-x  1 titane-os titane-os  3847 déc.   9 10:57 repair_backend.sh
+-rwxrwxr-x  1 titane-os titane-os  4009 janv.  4 10:08 run-e2e-tests.sh
+-rw-rw-r--  1 titane-os titane-os   962 janv.  5 21:39 run-vite-build.mjs
+-rw-rw-r--  1 titane-os titane-os   866 déc.   9 18:44 run-vitest.mjs
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 13 18:21 security
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 19 15:24 setup
+-rwxrwxr-x  1 titane-os titane-os  3130 janv. 18 19:59 setup-branch-protection.sh
+-rw-rw-r--  1 titane-os titane-os  1298 janv.  4 10:21 setup-dev.sh
+-rwxrwxr-x  1 titane-os titane-os  8156 janv.  3 18:40 setup-gemini.sh
+-rwxrwxr-x  1 titane-os titane-os  7148 déc.  19 12:10 setup-monitoring.sh
+-rwxrwxr-x  1 titane-os titane-os  7664 janv. 19 15:24 show-summary.sh
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 16 17:31 smoke
+-rwxrwxr-x  1 titane-os titane-os 11918 janv. 19 15:24 system-check.sh
+drwxrwxr-x  2 titane-os titane-os  4096 déc.  22 17:45 systemd
+drwxrwxr-x  2 titane-os titane-os  4096 janv. 24 22:03 tauri
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 19 12:07 test
+-rwxrwxr-x  1 titane-os titane-os  4504 janv. 29 22:42 test-100-percent-suite.sh
+-rw-rw-r--  1 titane-os titane-os   567 janv.  3 18:40 test-all.sh
+-rwxrwxr-x  1 titane-os titane-os  9055 janv.  4 11:04 test-apis-openai-anthropic.sh
+-rwxrwxr-x  1 titane-os titane-os  8049 déc.   9 10:57 test_audio.sh
+-rwxrwxr-x  1 titane-os titane-os  5387 janv. 26 09:43 test-chat-fallback-live.sh
+-rwxrwxr-x  1 titane-os titane-os   656 janv.  3 18:40 test-chat-fix.sh
+-rwxrwxr-x  1 titane-os titane-os  8695 janv. 27 19:02 test_chat_ia.sh
+-rwxrwxr-x  1 titane-os titane-os  9614 janv. 19 15:24 test-final-e2e.sh
+-rwxrwxr-x  1 titane-os titane-os 16439 janv. 19 15:20 test-final-integration.sh
+-rwxrwxr-x  1 titane-os titane-os  7906 janv. 28 07:56 test_perfection_chat_ia.sh
+-rwxrwxr-x  1 titane-os titane-os  5415 janv.  4 11:04 test-ui-polish.sh
+-rwxrwxr-x  1 titane-os titane-os  7651 janv. 17 12:50 test-wrapper.sh
+-rwxrwxr-x  1 titane-os titane-os  6249 janv.  4 11:04 titane_autofix_frontend.sh
+-rwxrwxr-x  1 titane-os titane-os 18270 janv.  4 17:13 titane_autofix.sh
+-rw-rw-r--  1 titane-os titane-os   875 déc.  21 02:41 titane-infinity.desktop
+-rwxrwxr-x  1 titane-os titane-os 16730 janv. 19 15:24 titane_installer.sh
+drwxrwxr-x  3 titane-os titane-os  4096 févr. 20 07:50 tools
+-rwxrwxr-x  1 titane-os titane-os  9611 janv. 16 21:09 ultimate-health.sh
+-rwxrwxr-x  1 titane-os titane-os 22482 janv. 16 21:09 ultra-diagnostic.sh
+-rwxrwxr-x  1 titane-os titane-os  7330 janv. 19 15:24 update-desktop-icon.sh
+drwxrwxr-x  2 titane-os titane-os  4096 janv.  4 10:49 utils
+-rwxrwxr-x  1 titane-os titane-os  9562 janv. 19 15:24 validate-all.sh
+-rwxrwxr-x  1 titane-os titane-os  9937 janv.  3 18:40 validate_all.sh
+-rwxrwxr-x  1 titane-os titane-os  8362 janv.  4 10:21 validate-apis-complete.sh
+-rwxrwxr-x  1 titane-os titane-os  4502 janv. 19 15:24 validate-auto-heal.sh
+-rwxrwxr-x  1 titane-os titane-os  1506 janv. 16 20:40 validate-boot.sh
+-rwxrwxr-x  1 titane-os titane-os  4217 janv. 26 09:41 validate-chat-fallback-fix.sh
+-rwxrwxr-x  1 titane-os titane-os 10022 janv.  3 18:40 validate-chat-pipeline.sh
+-rwxrwxr-x  1 titane-os titane-os 11671 janv.  4 11:02 validate-fusion-complete.sh
+-rwxrwxr-x  1 titane-os titane-os  7715 janv.  4 10:21 validate-integration-v3.sh
+-rwxrwxr-x  1 titane-os titane-os  7945 janv.  3 18:40 validate-phase3.sh
+-rwxrwxr-x  1 titane-os titane-os  7180 déc.  12 16:44 validate-phase4.sh
+-rw-rw-r--  1 titane-os titane-os  2498 janv. 19 15:24 validate-production.sh
+-rwxrwxr-x  1 titane-os titane-os  2214 janv. 16 10:03 validate_production.sh
+-rwxrwxr-x  1 titane-os titane-os  8298 déc.  10 01:05 validate-super-prompts-v21.1.sh
+-rwxrwxr-x  1 titane-os titane-os 10884 janv.  3 18:40 validate-tauri-only.sh
+-rw-rw-r--  1 titane-os titane-os  4931 janv. 30 21:17 validate-v35.0.0.sh
+-rwxrwxr-x  1 titane-os titane-os  5871 janv. 18 10:05 validate-webkit-fix.sh
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:05 verify
+-rwxrwxr-x  1 titane-os titane-os  9383 janv. 19 15:24 verify-and-merge-branches.sh
+-rwxrwxr-x  1 titane-os titane-os  6235 janv.  3 18:40 verify_backend.sh
+-rwxrwxr-x  1 titane-os titane-os  8211 janv.  1 19:11 verify-branch-sync.sh
+-rwxrwxr-x  1 titane-os titane-os  8750 déc.   9 10:57 verify_ds_tokens.sh
+-rwxrwxr-x  1 titane-os titane-os  8639 janv.  4 11:19 verify_env.sh
+-rwxrwxr-x  1 titane-os titane-os  8472 déc.   9 10:57 verify_frontend_structure.sh
+-rwxrwxr-x  1 titane-os titane-os  2254 déc.   9 10:57 verify_git_secure.sh
+-rwxrwxr-x  1 titane-os titane-os  2022 déc.   9 10:57 verify_import_hygiene.sh
+-rwxrwxr-x  1 titane-os titane-os  2450 déc.   9 10:57 verify_memory_integrity.sh
+-rwxrwxr-x  1 titane-os titane-os  2863 janv.  2 17:49 verify-security-disabled.sh
+-rwxrwxr-x  1 titane-os titane-os 15295 janv.  3 18:40 verify_singularity_v∞.sh
+-rwxrwxr-x  1 titane-os titane-os 12588 déc.  18 11:07 verify_system.sh
+-rwxrwxr-x  1 titane-os titane-os  2184 déc.   9 10:57 verify_tauri_local_only.sh
+
+### ls -la scripts/verify scripts/guards 2>/dev/null || true
+scripts/guards:
+total 40
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 19 10:21 .
+drwxrwxr-x 45 titane-os titane-os 12288 févr. 19 08:22 ..
+-rwxrwxr-x  1 titane-os titane-os  8599 févr. 19 10:21 guard-network-policy.sh
+-rwxrwxr-x  1 titane-os titane-os  1776 févr. 19 08:22 guard-prod-drift.mjs
+-rw-rw-r--  1 titane-os titane-os  5967 févr. 20 05:35 guard-prod-safe-build.mjs
+
+scripts/verify:
+total 200
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:05 .
+drwxrwxr-x 45 titane-os titane-os 12288 févr. 19 08:22 ..
+-rw-rw-r--  1 titane-os titane-os  4791 janv. 25 19:52 check-dev-ports-processes.sh
+-rwxrwxr-x  1 titane-os titane-os  2957 janv. 25 12:02 enforce-local-first.sh
+-rwxrwxr-x  1 titane-os titane-os  2083 févr. 19 10:21 enforce-online-first.sh
+-rwxrwxr-x  1 titane-os titane-os  2359 janv.  4 11:04 enforce-tauri-only.sh
+-rw-rw-r--  1 titane-os titane-os   798 févr. 13 21:01 guard-dist-no-ollama-11434.sh
+-rw-rw-r--  1 titane-os titane-os   928 févr. 13 20:34 guard-no-frontend-ollama-direct.sh
+-rwxrwxr-x  1 titane-os titane-os  3244 janv. 17 10:22 guard-pnpm-only.sh
+-rwxrwxr-x  1 titane-os titane-os   593 janv. 30 09:22 no-tauri-old.sh
+-rwxrwxr-x  1 titane-os titane-os 22478 janv. 19 15:24 pre-deployment-check.sh
+-rw-rw-r--  1 titane-os titane-os  2664 janv. 25 09:02 registry-integrity.js
+-rw-rw-r--  1 titane-os titane-os  3317 janv. 25 09:02 registry-quality.js
+-rw-rw-r--  1 titane-os titane-os  4397 janv. 31 23:09 registry-sync.js
+-rwxrwxr-x  1 titane-os titane-os  2215 févr.  5 13:26 smoke_boot.sh
+-rwxrwxr-x  1 titane-os titane-os  2749 janv.  4 01:16 validate-architecture.sh
+-rwxrwxr-x  1 titane-os titane-os  1873 janv. 19 15:24 validate-tauri-configs.sh
+-rwxrwxr-x  1 titane-os titane-os   871 janv. 17 12:50 verify-aliases.sh
+-rwxrwxr-x  1 titane-os titane-os  9617 janv. 17 00:27 verify-bootfix.sh
+-rwxrwxr-x  1 titane-os titane-os  1462 févr. 19 11:27 verify_chat_online.sh
+-rw-rw-r--  1 titane-os titane-os  2164 févr. 13 19:04 verify-copilot-instructions.sh
+-rwxrwxr-x  1 titane-os titane-os  4692 janv.  3 18:40 verify-coverage.sh
+-rwxrwxr-x  1 titane-os titane-os  2573 déc.   9 10:57 verify_cpu_load.sh
+-rwxrwxr-x  1 titane-os titane-os  4849 janv. 13 13:55 verify-gitguardian-integration.sh
+-rwxrwxr-x  1 titane-os titane-os  2705 déc.   9 10:57 verify_git_secure.sh
+-rwxrwxr-x  1 titane-os titane-os  2291 déc.   9 10:57 verify_global_system.sh
+-rwxrwxr-x  1 titane-os titane-os  2567 déc.   9 10:57 verify_import_hygiene.sh
+-rwxrwxr-x  1 titane-os titane-os  2570 déc.   9 10:57 verify_memory_integrity.sh
+-rwxrwxr-x  1 titane-os titane-os  9649 janv. 16 23:32 verify-preprod.sh
+-rwxrwxr-x  1 titane-os titane-os  2924 déc.   9 10:57 verify_react_hooks.sh
+-rwxrwxr-x  1 titane-os titane-os  3213 déc.   9 10:57 verify_rust_hardening.sh
+-rwxrwxr-x  1 titane-os titane-os  2106 janv. 15 19:16 verify-stable-surface-allowlist.sh
+-rwxrwxr-x  1 titane-os titane-os   999 févr. 22 09:07 verify-tauri-bundle-type-warning.sh
+-rwxrwxr-x  1 titane-os titane-os  2077 déc.   9 10:57 verify_tauri_local_only.sh
+-rwxrwxr-x  1 titane-os titane-os  3035 déc.   9 10:57 verify_typescript_strict.sh
+
+### rg -n "verify:|online-first|network-guard|guard-network|tauri-only|instructions|validate-tauri-configs" package.json || true
+34:    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:online-first && pnpm run verify:network-guard && pnpm run verify:instructions && pnpm run verify:tauri-configs",
+35:    "verify:final100": "pnpm run check && pnpm run lint && pnpm run format:check && pnpm run verify:tauri-only",
+36:    "verify:prod-boot": "node scripts/gates/vite-base-relative-gate.cjs",
+37:    "verify:tauri-only": "bash scripts/verify/enforce-tauri-only.sh",
+38:    "verify:online-first": "bash scripts/verify/enforce-online-first.sh",
+39:    "verify:network-guard": "bash scripts/guards/guard-network-policy.sh",
+40:    "verify:instructions": "bash scripts/verify/verify-copilot-instructions.sh",
+41:    "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
+42:    "verify:tauri-bundle-type": "bash scripts/verify/verify-tauri-bundle-type-warning.sh",
+115:    "verify:registry:sync": "node scripts/verify/registry-sync.js",
+116:    "verify:registry:integrity": "node scripts/verify/registry-integrity.js",
+117:    "verify:registry:quality": "node scripts/verify/registry-quality.js",
+118:    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality"
