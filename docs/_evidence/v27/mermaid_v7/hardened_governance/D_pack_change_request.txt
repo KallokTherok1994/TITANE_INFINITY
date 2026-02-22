@@ -1,0 +1,2 @@
+152:CHANGE_REQUEST_SRC="docs/diagrams/CHANGE_REQUEST.md"
+155:  CHANGE_REQUEST_PACK="$PACK_DIR/change_request.md"
