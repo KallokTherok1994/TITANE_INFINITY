@@ -1,0 +1,2 @@
+docs/diagrams/MERMAID_STATUS.md
+docs/diagrams/MERMAID_TERMINAL_SEAL.md
