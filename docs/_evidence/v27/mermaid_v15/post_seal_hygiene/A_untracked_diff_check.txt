@@ -1,0 +1,1 @@
+PASS: expected 4 untracked files only
