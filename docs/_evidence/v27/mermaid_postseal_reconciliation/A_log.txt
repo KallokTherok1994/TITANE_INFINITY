@@ -1,0 +1,10 @@
+cc831dc2 (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(mermaid): V17 proof-pack namespace alignment (non-regressive)
+3e84c60d docs(mermaid): V16 terminal seal (state assertion + stop rule)
+bf86e2ae docs(evidence): V15 post-seal hygiene (archive untracked + repo clean)
+c163bea8 docs(mermaid): V14 final seal (archive snapshot + integrity certificate + zero-touch)
+af83036e docs(mermaid): V13 governance closure (boundary + anti-iteration clause)
+c80822ac docs(mermaid): V12 dormant mode (archive lock + reactivation triggers)
+19f3b9d9 docs(mermaid): seal v11 long-term autopilot governance
+69a4118d docs(mermaid): V10 stability plateau (freeze + drift scope + noise reduction)
+929daf54 docs(mermaid): V9 single-commit discipline (no-self-hash + guard + release notes)
+c891da3e docs(mermaid): V8 final sha record
