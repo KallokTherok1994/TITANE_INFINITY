@@ -1,0 +1,15 @@
+* 3a502699 (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(mermaid): V5 baseline lock + auto-surveillance + diff intelligence
+* 34538c82 docs(mermaid): seal ops + standard proof pack + evolution policy
+* d29b13be docs(mermaid): enforce canon via CI + strict drift + docs wiring
+* 310ed42a docs(mermaid): enforce canon via CI + strict drift + docs wiring
+* 82de3661 docs(mermaid): add rebase reconciliation proof pack
+* 21770022 docs(mermaid): fix hash registry determinism + append-only (stopline)
+* aece2bac docs(mermaid): fix hash registry determinism + append-only (stopline)
+* 158687ba ci(mermaid): add CI gate + drift detection
+* 199fc94c docs(mermaid): canon diagrams + render sync + guards (online-first)
+* f98f801a docs(mermaid): add canon diagrams + render sync + guards (online-first)
+* 106087e9 reports(prod): add v27.0.5 release proof pack
+* 649bed42 release(prod): refresh v27.0.5 artifacts and metadata
+* 35bb1fe7 build(tauri): align cli and add bundler warning verifier
+* 13b881bb governance(prod): enforce mandatory version sync gate before production
+* 09ad459f docs: finalize version consistency in readme + changelog

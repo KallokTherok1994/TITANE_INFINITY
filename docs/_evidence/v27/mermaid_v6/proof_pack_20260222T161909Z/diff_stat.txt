@@ -1,0 +1,6 @@
+ docs/diagrams/MERMAID_BASELINE_LOCK.json |  9 ++--
+ docs/diagrams/MERMAID_STATUS.md          |  8 +--
+ scripts/verify/mermaid-baseline-guard.sh | 86 +++++++++++++++++++++++++++++++-
+ scripts/verify/mermaid-proof-pack.sh     |  2 +-
+ scripts/verify/mermaid-status-report.sh  | 33 +++++++++++-
+ 5 files changed, 128 insertions(+), 10 deletions(-)
