@@ -1,7 +1,7 @@
 [package]
 name         = "titane-infinity"
 version      = "27.0.5"
-description  = "TITANE∞ v27.0.2 - Cognitive Operating System: Production Hotfix (vΩ.1 Boot + vΩ.2 UI Loading)"
+description  = "TITANE∞ v27.0.5 - Cognitive Operating System: Stable Release"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
 repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
