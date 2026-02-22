@@ -7,8 +7,8 @@ cd "$ROOT_DIR"
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"
 REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
 STATUS_PATH="docs/diagrams/MERMAID_STATUS.md"
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v6"
-LINEAGE_DIR="docs/_evidence/v27/mermaid_v6/lineage_audit"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v7"
+LINEAGE_DIR="docs/_evidence/v27/mermaid_v7/hardened_governance"
 BASELINE_HASH_PATH="$LINEAGE_DIR/baseline_lock_hash.txt"
 
 REANCHOR=0
@@ -58,7 +58,7 @@ for file in "${diff_files[@]}"; do
   if [[ "$file" == "$REGISTRY_PATH" ]]; then
     registry_changed=1
   fi
-  if [[ "$file" == docs/_evidence/v27/mermaid_v5/baseline/baseline_lock_hash.txt ]]; then
+  if [[ "$file" == "$BASELINE_HASH_PATH" ]]; then
     baseline_proof_changed=1
   fi
   if [[ "$file" == $PROOF_PACK_DIR/proof_pack_*/* || "$file" == $PROOF_PACK_DIR/proof_pack_* ]]; then

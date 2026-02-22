@@ -6,7 +6,7 @@ cd "$ROOT_DIR"
 
 STAMP=$(date -u +"%Y%m%dT%H%M%SZ")
 ISO_STAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-PACK_VERSION="mermaid_v6"
+PACK_VERSION="mermaid_v7"
 PACK_DIR="docs/_evidence/v27/${PACK_VERSION}/proof_pack_${STAMP}"
 ALLOWLIST="docs/diagrams/DRIFT_ALLOWLIST.txt"
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"
@@ -149,6 +149,13 @@ if [[ -f "$REGISTRY_PATH" ]]; then
   REGISTRY_HASH_AFTER=$(sha256sum "$REGISTRY_PATH" | awk '{print $1}')
 fi
 
+CHANGE_REQUEST_SRC="docs/diagrams/CHANGE_REQUEST.md"
+CHANGE_REQUEST_PACK=""
+if [[ -f "$CHANGE_REQUEST_SRC" ]]; then
+  CHANGE_REQUEST_PACK="$PACK_DIR/change_request.md"
+  cp "$CHANGE_REQUEST_SRC" "$CHANGE_REQUEST_PACK"
+fi
+
 cat > "$PACK_DIR/comparison.md" <<EOF
 # Mermaid Baseline Comparison
 
@@ -167,6 +174,7 @@ cat > "$PACK_DIR/pack_meta.json" <<EOF
   "baseline_sha": "${BASELINE_SHA}",
   "registry_hash_before": "${REGISTRY_HASH_BEFORE}",
   "registry_hash_after": "${REGISTRY_HASH_AFTER}",
+  "change_request": "${CHANGE_REQUEST_PACK}",
   "baseline_nodes": ${baseline_nodes},
   "baseline_links": ${baseline_links},
   "current_nodes": ${current_nodes},

@@ -1,4 +1,4 @@
-name: Mermaid Canon Gate
+name: Mermaid Governance
 
 on:
   push:
@@ -10,22 +10,8 @@ env:
   PNPM_VERSION: '10.28.2'
 
 jobs:
-  mermaid-baseline-guard:
-    name: Mermaid Baseline Guard
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Mermaid baseline guard
-        run: bash scripts/verify/mermaid-baseline-guard.sh
-
-  mermaid-canon:
-    name: Mermaid Canon + Drift
+  mermaid_governance:
+    name: mermaid_governance (required)
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
@@ -49,20 +35,17 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Render Mermaid docs
-        run: pnpm run render:docs:mermaid
+      - name: Mermaid change request guard
+        run: bash scripts/verify/mermaid-change-request-guard.sh
 
-      - name: Verify Mermaid docs
-        run: pnpm run verify:docs:mermaid
+      - name: Mermaid governance (op)
+        run: pnpm run op:mermaid
 
-      - name: Verify Mermaid registry
-        run: bash scripts/verify/mermaid-hash-registry.sh --check
-
-      - name: Mermaid status report (check)
-        run: bash scripts/verify/mermaid-status-report.sh --check
+      - name: Mermaid baseline guard
+        run: bash scripts/verify/mermaid-baseline-guard.sh
 
       - name: Mermaid diff intelligence
         run: bash scripts/verify/mermaid-diff-intel.sh
 
-      - name: Verify Mermaid drift (strict)
-        run: bash scripts/verify/verify-mermaid-drift.sh --strict
+      - name: Mermaid status report (check)
+        run: bash scripts/verify/mermaid-status-report.sh --check

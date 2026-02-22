@@ -1,0 +1,21 @@
+PROOF_PACK_PATH: docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z
+ROLLBACK.md
+VERDICT.md
+baseline_delta.txt
+baseline_lock.json
+comparison.md
+diff_intel.txt
+diff_names.txt
+diff_stat.txt
+drift.txt
+drift_report.md
+git_head.txt
+git_status.txt
+pack_meta.json
+registry_check.txt
+render.txt
+status_report.txt
+status_report_update.txt
+verify_1.txt
+verify_2.txt
+verify_3.txt

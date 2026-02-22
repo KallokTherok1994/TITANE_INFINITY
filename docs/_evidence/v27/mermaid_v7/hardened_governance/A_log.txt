@@ -1,0 +1,5 @@
+d5e35bbd (HEAD -> MAIN, origin/MAIN, origin/HEAD) docs(mermaid): V6 verdict finalize sha
+ecea3c95 docs(mermaid): V6 baseline lineage fix + guard hardening
+3a502699 docs(mermaid): V5 baseline lock + auto-surveillance + diff intelligence
+34538c82 docs(mermaid): seal ops + standard proof pack + evolution policy
+d29b13be docs(mermaid): enforce canon via CI + strict drift + docs wiring

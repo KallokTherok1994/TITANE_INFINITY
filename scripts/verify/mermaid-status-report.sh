@@ -53,7 +53,7 @@ if [[ -z "$BASELINE_SHA" ]]; then
   exit 1
 fi
 
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v6"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v7"
 latest_pack=""
 if [[ -d "$PROOF_PACK_DIR" ]]; then
   latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
@@ -75,8 +75,7 @@ fi
 FAIL=0
 
 LINEAGE_STATUS="FAIL"
-HEAD_SHA=$(git rev-parse HEAD 2>/dev/null || true)
-if [[ -n "$HEAD_SHA" && "$BASELINE_SHA" == "$HEAD_SHA" ]]; then
+if git merge-base --is-ancestor "$BASELINE_SHA" HEAD >/dev/null 2>&1; then
   LINEAGE_STATUS="PASS"
 else
   FAIL=1

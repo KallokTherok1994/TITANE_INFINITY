@@ -1,0 +1,68 @@
+name: Mermaid Canon Gate
+
+on:
+  push:
+    branches: [MAIN]
+  pull_request:
+    branches: [MAIN]
+
+env:
+  PNPM_VERSION: '10.28.2'
+
+jobs:
+  mermaid-baseline-guard:
+    name: Mermaid Baseline Guard
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Mermaid baseline guard
+        run: bash scripts/verify/mermaid-baseline-guard.sh
+
+  mermaid-canon:
+    name: Mermaid Canon + Drift
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Render Mermaid docs
+        run: pnpm run render:docs:mermaid
+
+      - name: Verify Mermaid docs
+        run: pnpm run verify:docs:mermaid
+
+      - name: Verify Mermaid registry
+        run: bash scripts/verify/mermaid-hash-registry.sh --check
+
+      - name: Mermaid status report (check)
+        run: bash scripts/verify/mermaid-status-report.sh --check
+
+      - name: Mermaid diff intelligence
+        run: bash scripts/verify/mermaid-diff-intel.sh
+
+      - name: Verify Mermaid drift (strict)
+        run: bash scripts/verify/verify-mermaid-drift.sh --strict

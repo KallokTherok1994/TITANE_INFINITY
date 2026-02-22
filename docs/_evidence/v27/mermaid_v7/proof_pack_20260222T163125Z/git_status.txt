@@ -1,0 +1,11 @@
+## MAIN...origin/MAIN
+ M .github/workflows/mermaid.yml
+ M docs/diagrams/MERMAID_STATUS.md
+ M package.json
+ M scripts/verify/mermaid-baseline-guard.sh
+ M scripts/verify/mermaid-proof-pack.sh
+ M scripts/verify/mermaid-status-report.sh
+?? docs/_evidence/v27/mermaid_v7/
+?? docs/diagrams/CHANGE_REQUEST_TEMPLATE.md
+?? docs/diagrams/VERDICT_SHA_POLICY.md
+?? scripts/verify/mermaid-change-request-guard.sh
