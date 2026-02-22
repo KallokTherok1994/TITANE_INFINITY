@@ -1,0 +1,12 @@
+total 64
+drwxrwxr-x  4 titane-os titane-os  4096 févr. 22 10:52 .
+drwxrwxr-x 60 titane-os titane-os 20480 févr. 22 09:47 ..
+-rw-rw-r--  1 titane-os titane-os  1317 févr. 22 10:06 CANON_INDEX.md
+-rw-rw-r--  1 titane-os titane-os   245 févr. 22 10:52 DRIFT_ALLOWLIST.txt
+-rw-rw-r--  1 titane-os titane-os   429 févr. 22 10:47 DRIFT_REPORT_TEMPLATE.md
+-rw-rw-r--  1 titane-os titane-os   678 févr. 22 10:52 MERMAID_EVOLUTION_POLICY.md
+-rw-rw-r--  1 titane-os titane-os  1253 févr. 22 10:25 MERMAID_HASH_REGISTRY.json
+-rw-rw-r--  1 titane-os titane-os   695 févr. 22 10:47 MERMAID_REGISTRY_POLICY.md
+-rw-rw-r--  1 titane-os titane-os   515 févr. 22 10:06 README.md
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:48 rendered
+drwxrwxr-x  2 titane-os titane-os  4096 févr. 22 09:47 sources

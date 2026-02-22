@@ -1,0 +1,11 @@
+# Mermaid drift allowlist (regex per line)
+# Keep minimal; avoid broad patterns.
+
+# Docs and markdown fixtures
+^docs/
+
+# Tests and mocks
+^src/.*\b(mocks?|fixtures?|__tests__|tests)\b
+
+# Non-network demo strings
+network_surface_online_first\.mmd

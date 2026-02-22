@@ -1,0 +1,2 @@
+43:    "op:mermaid": "pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt",
+44:    "op:mermaid:pack": "bash scripts/verify/mermaid-proof-pack.sh",

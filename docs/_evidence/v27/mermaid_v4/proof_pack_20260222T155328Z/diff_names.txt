@@ -1,0 +1,2 @@
+package.json
+scripts/verify/verify-mermaid-drift.sh
