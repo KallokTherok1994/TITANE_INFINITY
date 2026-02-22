@@ -1,0 +1,1 @@
+docs/diagrams/VERDICT_SHA_POLICY.md:9:- Record the observed value as `HEAD_SHA_AT_TIME`.

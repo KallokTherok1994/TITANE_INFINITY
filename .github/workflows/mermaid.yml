@@ -41,6 +41,9 @@ jobs:
       - name: Mermaid governance (op)
         run: pnpm run op:mermaid
 
+      - name: Mermaid no-self-hash guard
+        run: bash scripts/verify/mermaid-no-self-hash-guard.sh
+
       - name: Mermaid baseline guard
         run: bash scripts/verify/mermaid-baseline-guard.sh --ci
 
@@ -59,13 +62,14 @@ jobs:
         if: always()
         run: |
           set +e
+          head_sha_at_time=$(git rev-parse HEAD)
           baseline_sha=$(python3 - <<'PY'
 import json
 with open("docs/diagrams/MERMAID_BASELINE_LOCK.json", "r", encoding="utf-8") as handle:
     print(json.load(handle).get("baseline_sha", ""))
 PY
           )
-          status_report=$?
+          no_self_hash=$?
 
           bash scripts/verify/mermaid-status-report.sh --check >/tmp/mermaid_status.txt 2>&1
           status_report=$?
@@ -75,6 +79,8 @@ PY
           baseline_guard=$?
           bash scripts/verify/mermaid-diff-intel.sh --ci >/tmp/mermaid_diff_intel.txt 2>&1
           diff_intel=$?
+          bash scripts/verify/mermaid-no-self-hash-guard.sh >/tmp/mermaid_no_self_hash.txt 2>&1
+          no_self_hash=$?
           bash scripts/verify/mermaid-hash-registry.sh --check >/tmp/mermaid_registry.txt 2>&1
           registry=$?
           bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt >/tmp/mermaid_drift.txt 2>&1
@@ -83,6 +89,7 @@ PY
           {
             echo "## Mermaid Governance Summary"
             echo
+            echo "- HEAD_SHA_AT_TIME: ${head_sha_at_time}"
             echo "- Baseline SHA: ${baseline_sha}"
             echo "- Status report: $([[ $status_report -eq 0 ]] && echo PASS || echo FAIL)"
             echo "- Drift strict: $([[ $drift -eq 0 ]] && echo PASS || echo FAIL)"
@@ -90,7 +97,10 @@ PY
             echo "- Change request guard: $([[ $change_guard -eq 0 ]] && echo PASS || echo FAIL)"
             echo "- Baseline guard: $([[ $baseline_guard -eq 0 ]] && echo PASS || echo FAIL)"
             echo "- Diff intelligence: $([[ $diff_intel -eq 0 ]] && echo PASS || echo FAIL)"
+            echo "- No-self-hash guard: $([[ $no_self_hash -eq 0 ]] && echo PASS || echo FAIL)"
             echo "- Canon index: docs/diagrams/CANON_INDEX.md"
+            echo "- Proof pack: run bash scripts/verify/mermaid-proof-pack.sh"
+            echo "- No-self-hash policy: docs/diagrams/VERDICT_SHA_POLICY.md"
             if [[ -f reports/mermaid_drift_report.md ]]; then
               echo "- Drift report: reports/mermaid_drift_report.md"
             fi

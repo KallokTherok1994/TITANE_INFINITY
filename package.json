@@ -43,7 +43,7 @@
     "verify:docs:mermaid:change": "bash scripts/verify/mermaid-change-request-guard.sh",
     "verify:docs:mermaid:diff": "bash scripts/verify/mermaid-diff-intel.sh",
     "verify:docs:mermaid:status": "bash scripts/verify/mermaid-status-report.sh --check",
-    "op:mermaid": "pnpm run verify:docs:mermaid:change && pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt",
+    "op:mermaid": "pnpm run verify:docs:mermaid:change && pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt && bash scripts/verify/mermaid-no-self-hash-guard.sh",
     "op:mermaid:pack": "bash scripts/verify/mermaid-proof-pack.sh",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
     "verify:tauri-bundle-type": "bash scripts/verify/verify-tauri-bundle-type-warning.sh",
