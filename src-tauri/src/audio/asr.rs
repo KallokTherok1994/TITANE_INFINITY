@@ -5,7 +5,6 @@
 
 use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
-use std::path::Path;
 use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]

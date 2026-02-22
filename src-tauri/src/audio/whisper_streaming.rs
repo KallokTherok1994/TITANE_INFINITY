@@ -8,10 +8,9 @@ use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
 use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
-use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
-use tauri::{AppHandle, Emitter, Manager};
+use tauri::{AppHandle, Emitter};
 use tokio::sync::mpsc;
 
 /// Macro for safe mutex locking with auto-recovery from poisoned state
@@ -88,7 +87,7 @@ pub struct TranscriptionEvent {
 
 /// Whisper streaming state
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum StreamState {
+pub(crate) enum StreamState {
     Idle,
     Buffering,
     Processing,
@@ -417,7 +416,7 @@ impl WhisperStreamingEngine {
     }
 
     /// Get current state
-    pub fn get_state(&self) -> StreamState {
+    pub(crate) fn get_state(&self) -> StreamState {
         *lock_or_recover!(self.state)
     }
 

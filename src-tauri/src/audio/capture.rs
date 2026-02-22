@@ -17,8 +17,6 @@ use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc, Mutex,
 };
-#[cfg(feature = "audio-capture")]
-use std::time::Duration;
 
 /// Wrapper for cpal::Stream to make it Send + Sync
 /// SAFETY: Audio streams in TITANE are only accessed from a single thread (main audio thread)

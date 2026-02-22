@@ -4,12 +4,12 @@
 //   Replaces arecord batch recording with continuous streaming
 // ═══════════════════════════════════════════════════════════════
 
-use super::vad::{VADResult, VoiceActivityDetector};
-use super::{AudioConfig, AudioError, AudioResult};
+use super::vad::VoiceActivityDetector;
+use super::{AudioError, AudioResult};
 use serde::{Deserialize, Serialize};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
-use std::time::{Duration, Instant};
+use std::time::Instant;
 
 #[cfg(feature = "audio-capture")]
 use cpal::{
