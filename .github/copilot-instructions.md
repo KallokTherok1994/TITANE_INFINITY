@@ -64,6 +64,27 @@ Scope: repo-wide
 
 - VERDICT.md in proof pack.
 
+## C.1) Version Sync Gate (mandatory before PROD)
+
+**DO (before any prod build/deploy):**
+
+- Synchronize release version in all canonical files:
+	- `package.json`
+	- `src-tauri/Cargo.toml`
+	- `src-tauri/tauri.conf.json`
+- Synchronize deployment metadata with the same target version:
+	- `deployment/latest/MANIFEST.json`
+	- `deployment/latest/SHA256SUMS_v<version>.txt`
+	- `deployment/latest/SIZES_v<version>.txt`
+
+**DONT:**
+
+- Launch prod build/deploy with mixed versions (stop-the-line).
+
+**Gate:**
+
+- Any mismatch between app/bundle/deployment version = FAIL.
+
 ## D) Anti-silence (UI/IPC/Chat)
 
 **DO**
