@@ -7,8 +7,8 @@ cd "$ROOT_DIR"
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"
 REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
 STATUS_PATH="docs/diagrams/MERMAID_STATUS.md"
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v12"
-LINEAGE_DIR="docs/_evidence/v27/mermaid_v12"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v13"
+LINEAGE_DIR="docs/_evidence/v27/mermaid_v13"
 BASELINE_HASH_PATH="$LINEAGE_DIR/baseline_lock_hash.txt"
 
 REANCHOR=0

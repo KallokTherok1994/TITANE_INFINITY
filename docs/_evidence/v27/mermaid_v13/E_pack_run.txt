@@ -1,0 +1,15 @@
+PROOF_PACK_PATH: docs/_evidence/v27/mermaid_v13/proof_pack_20260222T172655Z
+ROLLBACK.md
+VERDICT.md
+baseline_guard.txt
+baseline_lock.json
+change_guard.txt
+drift.txt
+drift_report.md
+pack_meta.json
+registry_check.txt
+status.txt
+status_report.txt
+verify_1.txt
+verify_2.txt
+verify_3.txt
