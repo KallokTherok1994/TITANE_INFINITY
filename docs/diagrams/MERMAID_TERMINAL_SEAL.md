@@ -1,0 +1,44 @@
+# Mermaid Terminal Seal
+
+## 1) Terminal State
+
+- State: TERMINALLY SEALED (V16)
+- Operational Mode: DORMANT
+- Governance: CLOSED
+- Zero-Touch: ACTIVE
+- Repo Hygiene: CLEAN (V15)
+
+## 2) Authority Chain (chronologie)
+
+- V12 Dormant Mode
+- V13 Governance Closure
+- V14 Final Seal
+- V15 Post-Seal Hygiene (repo clean, untracked traité)
+- V16 Terminal Seal (this doc)
+
+## 3) Non-Negotiables
+
+- No V17.
+- No new scripts / guards / workflows.
+- No optimization, no refactor, no aesthetic changes.
+
+## 4) Reactivation Triggers (the only allowed reasons)
+
+- /api surface change
+- provider change
+- architecture 4-ring change
+- bug proven in drift/registry/guards
+
+## 5) Reactivation Procedure (the only allowed procedure)
+
+1. Create `docs/diagrams/CHANGE_REQUEST.md` from template
+2. Run:
+   - `pnpm run op:mermaid`
+   - `bash scripts/verify/mermaid-proof-pack.sh`
+3. Update only what the trigger requires
+4. PASS x3 mandatory
+5. Commit once
+
+## 6) Stop Rule
+
+If no trigger → STOP.
