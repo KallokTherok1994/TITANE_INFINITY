@@ -1,0 +1,62 @@
+Timestamp: 20260222-093006
+Cmd: titane-infinity
+Running with timeout 60s...
+----------------------------------------
+[2026-02-22T14:30:06.218Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-02-22T14:30:06.221Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-02-22T14:30:06.223Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-02-22T14:30:06.381Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-02-22T14:30:06.381Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-02-22T14:30:06.416Z INFO  titane_infinity::ai::ollama] [OllamaClient] new() | resolved_model=gemma2:2b
+[2026-02-22T14:30:06.416Z INFO  titane_infinity] [AI Router] Initialized with default Ollama model: gemma2:2b
+[2026-02-22T14:30:06.417Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-02-22T14:30:06.419Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-02-22T14:30:06.419Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-02-22T14:30:06.479Z INFO  titane_infinity] [Ollama] Endpoint already available
+[2026-02-22T14:30:06.990Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-02-22T14:30:07.011Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+[2026-02-22T14:30:07.027Z INFO  ui] page_load label=main url=tauri://localhost
+[2026-02-22T14:30:07.054Z INFO  ui] page_load label=avatar-floating url=tauri://localhost
+[2026-02-22T14:30:07.420Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-02-22T14:30:07.421Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-02-22T14:30:07.584Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-02-22T14:30:07.584Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-02-22T14:30:07.584Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-02-22T14:30:07.585Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-02-22T14:30:07.585Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-02-22T14:30:07.585Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-02-22T14:30:07.585Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-02-22T14:30:07.585Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-02-22T14:30:12.724Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-22T14:30:12.725Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-22T14:30:12.725Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-22T14:30:12.857Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-22T14:30:12.857Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-22T14:30:12.860Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-22T14:30:13.369Z INFO  titane_infinity::audio::commands] [TTS] tts_speak called with text: 'Erreur lors de l'appel à Ollama : Load failed. Vér...' engine: piper
+[2026-02-22T14:30:13.369Z INFO  titane_infinity::audio::commands] [TTS] Piper binary: /home/titane-os/.local/bin/piper
+[2026-02-22T14:30:13.369Z INFO  titane_infinity::audio::commands] [TTS] Model path: /home/titane-os/.local/share/piper/voices/default.onnx
+[2026-02-22T14:30:13.369Z WARN  titane_infinity::audio::commands] [TTS] Piper not found at /home/titane-os/.local/bin/piper
+[2026-02-22T14:30:13.564Z INFO  titane_infinity::audio::commands] [TTS] tts_speak called with text: 'Erreur lors de l'appel à Ollama : Load failed. Vér...' engine: piper
+[2026-02-22T14:30:13.564Z INFO  titane_infinity::audio::commands] [TTS] Piper binary: /home/titane-os/.local/bin/piper
+[2026-02-22T14:30:13.564Z INFO  titane_infinity::audio::commands] [TTS] Model path: /home/titane-os/.local/share/piper/voices/default.onnx
+[2026-02-22T14:30:13.564Z WARN  titane_infinity::audio::commands] [TTS] Piper not found at /home/titane-os/.local/bin/piper
+[2026-02-22T14:30:14.008Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-22T14:30:14.008Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-22T14:30:14.178Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-22T14:30:14.178Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-22T14:30:15.173Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-22T14:30:15.173Z INFO  titane_infinity::audio::commands] [Audio] File size: 28044 bytes, expected min: 16000
+[2026-02-22T14:30:15.173Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+[2026-02-22T14:30:15.216Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-22T14:30:15.216Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 16000
+[2026-02-22T14:30:15.216Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+----------------------------------------
+ExitCode: 124
+OK: installed app stayed running for 60s (killed by timeout)
