@@ -1,0 +1,53 @@
+commit 929daf544832c4508a545ff429a48e005d624c3c
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 11:51:27 2026 -0500
+
+    docs(mermaid): V9 single-commit discipline (no-self-hash + guard + release notes)
+
+M	.github/workflows/mermaid.yml
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/ROLLBACK.md
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/VERDICT.md
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/baseline_delta.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/baseline_lock.json
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/comparison.md
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/diff_intel.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/diff_names.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/diff_stat.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/drift.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/drift_report.md
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/git_head.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/git_status.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/pack_meta.json
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/registry_check.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/render.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/status_report.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/status_report_update.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/verify_1.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/verify_2.txt
+A	docs/_evidence/v27/mermaid_v9/proof_pack_20260222T165101Z/verify_3.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/A_head.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/A_log.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/A_sha_policy_scan.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/A_status.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/B_no_self_hash_guard.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/B_pack_script.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/C_workflow_summary_grep.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/D_release_notes_tail.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_baseline_guard.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_change_guard.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_no_self_hash_guard.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_op_mermaid.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_pack_run.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_verify_1.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_verify_2.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/E_verify_3.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/F_changed_files.txt
+A	docs/_evidence/v27/mermaid_v9/single_commit/VERDICT_V9.md
+A	docs/_evidence/v27/mermaid_v9/single_commit/baseline_lock_hash.txt
+A	docs/diagrams/MERMAID_RELEASE_NOTES.md
+M	docs/diagrams/MERMAID_STATUS.md
+M	package.json
+M	scripts/verify/mermaid-baseline-guard.sh
+A	scripts/verify/mermaid-no-self-hash-guard.sh
+M	scripts/verify/mermaid-proof-pack.sh
+M	scripts/verify/mermaid-status-report.sh

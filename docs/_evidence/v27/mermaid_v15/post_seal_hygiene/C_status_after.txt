@@ -1,0 +1,12 @@
+## MAIN...origin/MAIN
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/A_porcelain_before.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/A_status_before.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/A_untracked_count.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/A_untracked_diff_check.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/A_untracked_list.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/B_archive_copy.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/B_untracked_rm.txt
+AM docs/_evidence/v27/mermaid_v15/post_seal_hygiene/C_status_after.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/C_untracked_after.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/untracked_archive/F_commit_show.txt
+A  docs/_evidence/v27/mermaid_v15/post_seal_hygiene/untracked_archive/F_final_sha.txt
