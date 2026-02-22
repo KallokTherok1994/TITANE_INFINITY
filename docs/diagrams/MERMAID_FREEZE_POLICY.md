@@ -21,12 +21,12 @@ La stabilite et la lisibilite priment sur la sophistication.
 
 ## Regression Sentinel
 
-Avant toute release majeure de TITANE∞ :
+En cas de reactivation exceptionnelle uniquement :
 
 - `pnpm run op:mermaid`
 - `bash scripts/verify/mermaid-proof-pack.sh`
 
-Archiver le proof pack.
+Archiver le proof pack dans le dossier d'evidence actif.
 
 ## Governance Boundary (V13)
 

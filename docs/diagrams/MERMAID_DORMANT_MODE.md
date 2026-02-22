@@ -4,6 +4,8 @@
 
 Mermaid System Status: **DORMANT (since V11)**
 
+Archive Mode: **PASSIVE**
+
 ## 2. What Dormant Means
 
 - Aucun changement attendu
@@ -30,3 +32,5 @@ Avant toute modification :
 
 Creer `CHANGE_REQUEST.md`.
 Passer par tous les guards.
+
+Aucune maintenance planifiee n'est appliquee en mode archive.

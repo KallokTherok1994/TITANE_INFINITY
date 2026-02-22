@@ -1,0 +1,7 @@
+# ARCHIVAL_TEXT_NORMALIZATION
+
+- MERMAID_STATUS.md: archival banner added (`ARCHIVED — DO NOT OPERATE`) with explicit no-monitoring/no-cadence statement.
+- MERMAID_MAINTENANCE_CADENCE.md: periodic review language removed; converted to passive archive trigger matrix only.
+- MERMAID_FREEZE_POLICY.md: regression sentinel wording switched from release cadence to exceptional reactivation only.
+- MERMAID_DORMANT_MODE.md: passive archive statement added; explicit no planned maintenance.
+- MERMAID_ARCHIVE_NOTE.md: factual closure note added with date and HEAD SHA.
