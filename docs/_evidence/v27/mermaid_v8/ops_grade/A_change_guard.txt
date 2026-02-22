@@ -4,47 +4,8 @@ set -euo pipefail
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT_DIR"
 
-BASE_REF=""
-CI_MODE=0
-
-while [[ $# -gt 0 ]]; do
-  case "$1" in
-    --base-ref)
-      BASE_REF="${2:-}"
-      shift 2
-      ;;
-    --ci)
-      CI_MODE=1
-      shift
-      ;;
-    *)
-      echo "FAIL: unknown argument: $1"
-      exit 2
-      ;;
-  esac
-done
-
-if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
-  CI_MODE=1
-fi
-
-if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
-  BASE_REF="origin/${GITHUB_BASE_REF}"
-  if [[ "$CI_MODE" -eq 1 ]]; then
-    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
-  fi
-fi
-
-if [[ -z "$BASE_REF" ]]; then
-  BASE_REF="origin/MAIN"
-fi
-
+BASE_REF="origin/MAIN"
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
-  if [[ "$CI_MODE" -eq 1 ]]; then
-    echo "FAIL: base ref not found in CI: $BASE_REF"
-    exit 1
-  fi
-  echo "WARN: base ref not found, falling back to local diff"
   BASE_REF=""
 fi
 
@@ -72,7 +33,7 @@ for file in "${mmd_changed[@]}"; do
     echo "FAIL: change request does not list modified canon: $base_name"
     missing=1
   fi
-done
+ done
 
 if ! rg -q "^\- Rollback:" "$CHANGE_REQUEST"; then
   echo "FAIL: change request missing Rollback field"

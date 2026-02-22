@@ -7,15 +7,25 @@ cd "$ROOT_DIR"
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"
 REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
 STATUS_PATH="docs/diagrams/MERMAID_STATUS.md"
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v7"
-LINEAGE_DIR="docs/_evidence/v27/mermaid_v7/hardened_governance"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v8"
+LINEAGE_DIR="docs/_evidence/v27/mermaid_v8/ops_grade"
 BASELINE_HASH_PATH="$LINEAGE_DIR/baseline_lock_hash.txt"
 
 REANCHOR=0
+BASE_REF=""
+CI_MODE=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --reanchor)
       REANCHOR=1
+      shift
+      ;;
+    --base-ref)
+      BASE_REF="${2:-}"
+      shift 2
+      ;;
+    --ci)
+      CI_MODE=1
       shift
       ;;
     *)
@@ -30,10 +40,29 @@ if [[ ! -f "$BASELINE_LOCK" ]]; then
   exit 1
 fi
 
-BASE_REF="origin/MAIN"
+if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+  CI_MODE=1
+fi
+
+if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+  BASE_REF="origin/${GITHUB_BASE_REF}"
+  if [[ "$CI_MODE" -eq 1 ]]; then
+    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+  fi
+fi
+
+if [[ -z "$BASE_REF" ]]; then
+  BASE_REF="origin/MAIN"
+fi
+
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+  if [[ "$CI_MODE" -eq 1 ]]; then
+    echo "FAIL: base ref not found in CI: $BASE_REF"
+    exit 1
+  fi
   BASE_REF="HEAD~1"
 fi
+
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
   echo "WARN: no base ref available for baseline guard"
   echo "PASS: MERMAID_BASELINE_GUARD"

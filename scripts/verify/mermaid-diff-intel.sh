@@ -4,10 +4,49 @@ set -euo pipefail
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)
 cd "$ROOT_DIR"
 
-BASE_REF="${MERMAID_DIFF_BASE:-origin/MAIN}"
+BASE_REF=""
+CI_MODE=0
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --base-ref)
+      BASE_REF="${2:-}"
+      shift 2
+      ;;
+    --ci)
+      CI_MODE=1
+      shift
+      ;;
+    *)
+      echo "FAIL: unknown argument: $1"
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+  CI_MODE=1
+fi
+
+if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+  BASE_REF="origin/${GITHUB_BASE_REF}"
+  if [[ "$CI_MODE" -eq 1 ]]; then
+    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+  fi
+fi
+
+if [[ -z "$BASE_REF" ]]; then
+  BASE_REF="${MERMAID_DIFF_BASE:-origin/MAIN}"
+fi
+
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+  if [[ "$CI_MODE" -eq 1 ]]; then
+    echo "FAIL: base ref not found in CI: $BASE_REF"
+    exit 1
+  fi
   BASE_REF="HEAD~1"
 fi
+
 if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
   echo "WARN: no valid base ref for diff intelligence"
   echo "PASS: MERMAID_DIFF_INTEL"
