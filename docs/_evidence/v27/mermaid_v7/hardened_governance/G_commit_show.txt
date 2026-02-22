@@ -1,0 +1,54 @@
+commit dfdd1171f5fcdea56acfddc37243b629329fc3ef
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 11:32:02 2026 -0500
+
+    docs(mermaid): V7 hardened governance (change intent + required check ready)
+
+M	.github/workflows/mermaid.yml
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/A_head.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/A_log.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/A_mermaid_workflow.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/A_status.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/B_workflow_names.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/C_change_guard.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/D_pack_change_request.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_baseline_guard.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_change_guard.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_diff_intel.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_op_mermaid.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_proof_pack.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_status.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_verify_1.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_verify_2.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/F_verify_3.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/G_changed_files.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/VERDICT_V7.md
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/baseline_lock_hash.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/ROLLBACK.md
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/VERDICT.md
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/baseline_delta.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/baseline_lock.json
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/comparison.md
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/diff_intel.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/diff_names.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/diff_stat.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/drift.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/drift_report.md
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/git_head.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/git_status.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/pack_meta.json
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/registry_check.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/render.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/status_report.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/status_report_update.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/verify_1.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/verify_2.txt
+A	docs/_evidence/v27/mermaid_v7/proof_pack_20260222T163125Z/verify_3.txt
+A	docs/diagrams/CHANGE_REQUEST_TEMPLATE.md
+M	docs/diagrams/MERMAID_STATUS.md
+A	docs/diagrams/VERDICT_SHA_POLICY.md
+M	package.json
+M	scripts/verify/mermaid-baseline-guard.sh
+A	scripts/verify/mermaid-change-request-guard.sh
+M	scripts/verify/mermaid-proof-pack.sh
+M	scripts/verify/mermaid-status-report.sh

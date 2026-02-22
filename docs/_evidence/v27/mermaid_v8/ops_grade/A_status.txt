@@ -1,0 +1,4 @@
+## MAIN...origin/MAIN
+?? docs/_evidence/v27/mermaid_v7/hardened_governance/G_commit_show.txt
+?? docs/_evidence/v27/mermaid_v7/hardened_governance/G_final_sha.txt
+?? docs/_evidence/v27/mermaid_v8/

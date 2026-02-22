@@ -1,0 +1,51 @@
+name: Mermaid Governance
+
+on:
+  push:
+    branches: [MAIN]
+  pull_request:
+    branches: [MAIN]
+
+env:
+  PNPM_VERSION: '10.28.2'
+
+jobs:
+  mermaid_governance:
+    name: mermaid_governance (required)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Mermaid change request guard
+        run: bash scripts/verify/mermaid-change-request-guard.sh
+
+      - name: Mermaid governance (op)
+        run: pnpm run op:mermaid
+
+      - name: Mermaid baseline guard
+        run: bash scripts/verify/mermaid-baseline-guard.sh
+
+      - name: Mermaid diff intelligence
+        run: bash scripts/verify/mermaid-diff-intel.sh
+
+      - name: Mermaid status report (check)
+        run: bash scripts/verify/mermaid-status-report.sh --check

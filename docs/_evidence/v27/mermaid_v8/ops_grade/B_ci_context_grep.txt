@@ -1,0 +1,8 @@
+scripts/verify/mermaid-baseline-guard.sh:23:    --base-ref)
+scripts/verify/mermaid-baseline-guard.sh:47:if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:48:  BASE_REF="origin/${GITHUB_BASE_REF}"
+scripts/verify/mermaid-baseline-guard.sh:50:    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+scripts/verify/mermaid-change-request-guard.sh:12:    --base-ref)
+scripts/verify/mermaid-change-request-guard.sh:31:if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:32:  BASE_REF="origin/${GITHUB_BASE_REF}"
+scripts/verify/mermaid-change-request-guard.sh:34:    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true

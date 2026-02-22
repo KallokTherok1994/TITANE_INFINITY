@@ -1,0 +1,8 @@
+ .github/workflows/mermaid.yml                  | 60 ++++++++++++++++++++++++--
+ docs/diagrams/MERMAID_STATUS.md                |  2 +-
+ scripts/verify/mermaid-baseline-guard.sh       | 35 +++++++++++++--
+ scripts/verify/mermaid-change-request-guard.sh | 43 +++++++++++++++++-
+ scripts/verify/mermaid-diff-intel.sh           | 41 +++++++++++++++++-
+ scripts/verify/mermaid-proof-pack.sh           |  2 +-
+ scripts/verify/mermaid-status-report.sh        |  2 +-
+ 7 files changed, 173 insertions(+), 12 deletions(-)
