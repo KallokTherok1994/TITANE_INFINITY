@@ -1,0 +1,1 @@
+FAIL: baseline hash evidence missing: docs/_evidence/v27/mermaid_v10/baseline_lock_hash.txt

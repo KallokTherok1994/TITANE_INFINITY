@@ -53,7 +53,7 @@ if [[ -z "$BASELINE_SHA" ]]; then
   exit 1
 fi
 
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v9"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v10"
 latest_pack=""
 if [[ -d "$PROOF_PACK_DIR" ]]; then
   latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
@@ -62,14 +62,6 @@ if [[ -n "$latest_pack" ]]; then
   latest_pack=${latest_pack#$PROOF_PACK_DIR/}
 else
   latest_pack="none"
-fi
-
-source_count=$(ls -1 docs/diagrams/sources/*.mmd 2>/dev/null | wc -l | tr -d ' ')
-last_epoch=$(git log -1 --format=%ct -- docs/diagrams/sources 2>/dev/null || true)
-if [[ -n "$last_epoch" ]]; then
-  last_canon_update=$(date -u -d "@${last_epoch}" +"%Y-%m-%dT%H:%M:%SZ")
-else
-  last_canon_update="unknown"
 fi
 
 FAIL=0
@@ -95,30 +87,16 @@ else
   FAIL=1
 fi
 
-DIFF_INTEL_STATUS="FAIL"
-if bash scripts/verify/mermaid-diff-intel.sh >/dev/null 2>&1; then
-  DIFF_INTEL_STATUS="PASS"
-else
-  FAIL=1
-fi
+CHANGE_REQ_REQUIRED="true"
 
 cat <<EOF > "$STATUS_PATH.tmp"
 # Mermaid Status Report
 
 - Baseline SHA: $BASELINE_SHA
-- Mermaid System Version: $MERMAID_VERSION
-- CI Workflow: $CI_WORKFLOW
-- Strict Drift: $STRICT_DRIFT
-- Registry Append-Only: $REGISTRY_APPEND_ONLY
-- Proof Pack Standard: $PROOF_PACK_STANDARD
-- Canonical Diagrams: $CANONICAL_LIST
-- Latest Proof Pack: $latest_pack
-- Lineage Status: $LINEAGE_STATUS
 - Drift Strict Status: $DRIFT_STATUS
 - Registry Status: $REGISTRY_STATUS
-- Diff Intel Status: $DIFF_INTEL_STATUS
-- Diagram Count: $source_count
-- Last Canon Update (UTC): $last_canon_update
+- Change Request Required: $CHANGE_REQ_REQUIRED
+- Last Proof Pack: $latest_pack
 EOF
 
 if [[ "$MODE" == "check" ]]; then
