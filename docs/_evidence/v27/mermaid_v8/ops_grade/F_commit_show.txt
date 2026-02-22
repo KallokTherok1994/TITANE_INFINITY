@@ -1,0 +1,55 @@
+commit 2645dc42862880e3fc957382ab48981d57a65a7d
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 11:40:41 2026 -0500
+
+    docs(mermaid): V8 ops-grade protection (CI context + summaries + playbooks)
+
+M	.github/workflows/mermaid.yml
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/G_commit_show.txt
+A	docs/_evidence/v27/mermaid_v7/hardened_governance/G_final_sha.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/A_change_guard.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/A_head.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/A_log.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/A_mermaid_workflow.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/A_status.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/B_ci_context_grep.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/C_mermaid_workflow_after.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/D_docs_list.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_baseline_guard.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_change_guard.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_op_mermaid.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_proof_pack.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_verify_1.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_verify_2.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/E_verify_3.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/F_changed_files.txt
+A	docs/_evidence/v27/mermaid_v8/ops_grade/VERDICT_V8.md
+A	docs/_evidence/v27/mermaid_v8/ops_grade/baseline_lock_hash.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/ROLLBACK.md
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/VERDICT.md
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/baseline_delta.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/baseline_lock.json
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/comparison.md
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/diff_intel.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/diff_names.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/diff_stat.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/drift.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/drift_report.md
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/git_head.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/git_status.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/pack_meta.json
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/registry_check.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/render.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/status_report.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/status_report_update.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/verify_1.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/verify_2.txt
+A	docs/_evidence/v27/mermaid_v8/proof_pack_20260222T163940Z/verify_3.txt
+A	docs/diagrams/BRANCH_PROTECTION_PLAYBOOK.md
+M	docs/diagrams/MERMAID_STATUS.md
+A	docs/diagrams/PR_FIX_PLAYBOOK.md
+M	scripts/verify/mermaid-baseline-guard.sh
+M	scripts/verify/mermaid-change-request-guard.sh
+M	scripts/verify/mermaid-diff-intel.sh
+M	scripts/verify/mermaid-proof-pack.sh
+M	scripts/verify/mermaid-status-report.sh
