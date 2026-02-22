@@ -10,19 +10,11 @@ Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
 - Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
 
 ```mermaid
-sequenceDiagram
-    participant UI as Modules/UI (Ring 4)
-    participant Bridge as TS-Tauri Bridge
-    participant IPC as IPC Commands (UNKNOWN exact command set)
-    participant Pipe as Chat Pipeline (UNKNOWN exact module name)
-    participant Mem as Memory Service
-
-    UI->>Bridge: User prompt
-    Bridge->>IPC: invoke request
-    IPC->>Pipe: route prompt
-    Pipe->>Mem: read/write context
-    Mem-->>Pipe: memory context
-    Pipe-->>IPC: response payload
-    IPC-->>Bridge: {ok, content, error}
-    Bridge-->>UI: render response or visible error
+flowchart LR
+    UI[UI (React/Tauri)] --> BR[Bridge / IPC]
+    BR --> CMD[Tauri Commands]
+    CMD --> OMEGA[OMEGA Pipeline]
+    OMEGA --> MEM[Unified Memory (STM/MTM/LTM)]
+    MEM --> OMEGA
+    OMEGA --> OUT[Response -> UI]
 ```

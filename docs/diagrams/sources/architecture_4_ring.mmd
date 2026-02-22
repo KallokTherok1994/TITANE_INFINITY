@@ -1,14 +1,4 @@
 flowchart TD
-    R1[Ring 1: Types]
-    R2[Ring 2: Engines]
-    R3[Ring 3: Services]
-    R4[Ring 4: Modules/UI]
-
-    R1 --> R2
-    R2 --> R3
-    R3 --> R4
-
-    R1 -. No I/O .- R1
-    R2 -. Pure logic .- R2
-    R3 -. Controlled I/O .- R3
-    R4 -. Visible errors .- R4
+    R1[Ring 1: Types] --> R2[Ring 2: Engines]
+    R2 --> R3[Ring 3: Services]
+    R3 --> R4[Ring 4: Modules / UI]

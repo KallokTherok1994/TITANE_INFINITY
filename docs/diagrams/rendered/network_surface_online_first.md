@@ -10,23 +10,10 @@ Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
 - Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
 
 ```mermaid
-flowchart TD
-    UI[UI Modules - INTERNAL]
-    API[/api/* - INTERNAL]
-    Backend[Backend API (UNKNOWN exact module name) - INTERNAL]
-    Providers[Providers Gateway - INTERNAL]
-    ExtA[External Provider A - EXTERNAL]
-    ExtB[External Provider B - EXTERNAL]
-    Policy[Policy/Guards - INTERNAL]
-    Auth[Auth/Token Checks - INTERNAL]
-    Resilience[Timeout/Retry/Fallback - INTERNAL]
-
-    UI --> API
-    API --> Backend
-    Backend --> Providers
-    Providers --> ExtA
-    Providers --> ExtB
-    Backend --> Policy
-    Policy --> Auth
-    Policy --> Resilience
+flowchart LR
+    UI[UI] -->|INTERNAL| API[/api/* (Backend API)/]
+    API -->|EXTERNAL| P1[Provider 1 (AUTH/TOKEN + timeout/retry/fallback)]
+    API -->|EXTERNAL| P2[Provider 2 (AUTH/TOKEN + timeout/retry/fallback)]
+    API -->|INTERNAL| POL[Network Policy / Guards]
+    POL --> API
 ```

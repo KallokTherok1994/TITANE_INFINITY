@@ -11,17 +11,9 @@ Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
 
 ```mermaid
 flowchart TD
-    Orch[Orchestrator]
-    Verify[Verify Gates]
-    E2E[E2E Suite]
-    Build[Build Checks]
-    Proof[Proof Pack]
-    Verdict[Final Verdict]
-
-    Orch --> Verify
-    Verify --> E2E
-    E2E --> Build
-    Build --> Proof
-    Proof --> Verdict
-    Verify -. stop-the-line on FAIL .-> Verdict
+    DEV[Changes] --> VERIFY[Verify Scripts]
+    VERIFY --> E2E[E2E Desktop]
+    E2E --> BUILD[Build / Package]
+    BUILD --> PROOF[Proof Pack (append-only)]
+    PROOF --> VERDICT[PASS / FAIL / BLOCKED]
 ```

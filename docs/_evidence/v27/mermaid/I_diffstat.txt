@@ -1,0 +1,17 @@
+ docs/_evidence/v27/mermaid/A_repo_state.txt        |  2 +-
+ docs/_evidence/v27/mermaid/VERDICT.md              | 43 +++++++---------
+ docs/diagrams/CANON_INDEX.md                       | 18 +++----
+ docs/diagrams/README.md                            | 32 ++++--------
+ docs/diagrams/rendered/architecture_4_ring.md      | 16 ++----
+ docs/diagrams/rendered/certification_gates.md      | 18 ++-----
+ docs/diagrams/rendered/data_flow_chat.md           | 22 +++-----
+ .../rendered/network_surface_online_first.md       | 25 +++------
+ docs/diagrams/rendered/omega_pipeline_v2.md        | 16 +-----
+ docs/diagrams/sources/architecture_4_ring.mmd      | 16 ++----
+ docs/diagrams/sources/certification_gates.mmd      | 18 ++-----
+ docs/diagrams/sources/data_flow_chat.mmd           | 22 +++-----
+ .../sources/network_surface_online_first.mmd       | 25 +++------
+ docs/diagrams/sources/omega_pipeline_v2.mmd        | 16 +-----
+ docs/standards/MERMAID_STANDARDS.md                | 60 ++++++++++++----------
+ scripts/verify/verify-mermaid-diagrams.sh          | 50 +++++++++++++++---
+ 16 files changed, 159 insertions(+), 240 deletions(-)
