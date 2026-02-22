@@ -1,0 +1,153 @@
+# Dependency Surface Analysis
+
+## package.json mermaid-related scripts
+34:    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:online-first && pnpm run verify:network-guard && pnpm run verify:instructions && pnpm run verify:docs:mermaid && pnpm run verify:tauri-configs",
+41:    "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",
+42:    "verify:docs:mermaid": "bash scripts/verify/verify-mermaid-diagrams.sh",
+43:    "verify:docs:mermaid:change": "bash scripts/verify/mermaid-change-request-guard.sh",
+44:    "verify:docs:mermaid:diff": "bash scripts/verify/mermaid-diff-intel.sh",
+45:    "verify:docs:mermaid:status": "bash scripts/verify/mermaid-status-report.sh --check",
+46:    "op:mermaid": "pnpm run verify:docs:mermaid:change && pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt && bash scripts/verify/mermaid-no-self-hash-guard.sh",
+47:    "op:mermaid:pack": "bash scripts/verify/mermaid-proof-pack.sh",
+
+## workflows referencing mermaid/docs verification
+.github/workflows/mermaid.yml:13:  mermaid_governance:
+.github/workflows/mermaid.yml:14:    name: mermaid_governance (required)
+.github/workflows/mermaid.yml:39:        run: bash scripts/verify/mermaid-change-request-guard.sh --ci
+.github/workflows/mermaid.yml:42:        run: pnpm run op:mermaid
+.github/workflows/mermaid.yml:45:        run: bash scripts/verify/mermaid-no-self-hash-guard.sh
+.github/workflows/mermaid.yml:48:        run: bash scripts/verify/mermaid-baseline-guard.sh --ci
+.github/workflows/mermaid.yml:51:        run: bash scripts/verify/mermaid-diff-intel.sh --ci
+.github/workflows/mermaid.yml:54:        run: bash scripts/verify/mermaid-status-report.sh --check
+.github/workflows/mermaid.yml:59:          bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt --report reports/mermaid_drift_report.md
+.github/workflows/mermaid.yml:74:          bash scripts/verify/mermaid-status-report.sh --check >/tmp/mermaid_status.txt 2>&1
+.github/workflows/mermaid.yml:76:          bash scripts/verify/mermaid-change-request-guard.sh --ci >/tmp/mermaid_change_guard.txt 2>&1
+.github/workflows/mermaid.yml:78:          bash scripts/verify/mermaid-baseline-guard.sh --ci >/tmp/mermaid_baseline_guard.txt 2>&1
+.github/workflows/mermaid.yml:80:          bash scripts/verify/mermaid-diff-intel.sh --ci >/tmp/mermaid_diff_intel.txt 2>&1
+.github/workflows/mermaid.yml:82:          bash scripts/verify/mermaid-no-self-hash-guard.sh >/tmp/mermaid_no_self_hash.txt 2>&1
+.github/workflows/mermaid.yml:84:          bash scripts/verify/mermaid-hash-registry.sh --check >/tmp/mermaid_registry.txt 2>&1
+.github/workflows/mermaid.yml:86:          bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt >/tmp/mermaid_drift.txt 2>&1
+.github/workflows/mermaid.yml:102:            echo "- Proof pack: run bash scripts/verify/mermaid-proof-pack.sh"
+.github/workflows/mermaid.yml:104:            if [[ -f reports/mermaid_drift_report.md ]]; then
+.github/workflows/mermaid.yml:105:              echo "- Drift report: reports/mermaid_drift_report.md"
+.github/workflows/mermaid.yml:113:          name: mermaid-drift-report
+.github/workflows/mermaid.yml:114:          path: reports/mermaid_drift_report.md
+.github/workflows/mermaid-verify.yml:13:  mermaid-verify:
+.github/workflows/mermaid-verify.yml:37:        run: pnpm run render:docs:mermaid
+.github/workflows/mermaid-verify.yml:40:        run: pnpm run verify:docs:mermaid
+.github/workflows/mermaid-verify.yml:43:        run: bash scripts/verify/verify-mermaid-drift.sh
+
+## verify scripts referencing env variables (MERMAID|GITHUB|CI|BASE_REF)
+scripts/verify/mermaid-baseline-guard.sh:38:if [[ ! -f "$BASELINE_LOCK" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:39:  echo "FAIL: missing baseline lock file: $BASELINE_LOCK"
+scripts/verify/mermaid-baseline-guard.sh:43:if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:47:if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:48:  BASE_REF="origin/${GITHUB_BASE_REF}"
+scripts/verify/mermaid-baseline-guard.sh:49:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-baseline-guard.sh:50:    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+scripts/verify/mermaid-baseline-guard.sh:54:if [[ -z "$BASE_REF" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:58:if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+scripts/verify/mermaid-baseline-guard.sh:59:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-baseline-guard.sh:60:    echo "FAIL: base ref not found in CI: $BASE_REF"
+scripts/verify/mermaid-baseline-guard.sh:66:if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+scripts/verify/mermaid-baseline-guard.sh:72:mapfile -t diff_files < <(git diff --name-only "$BASE_REF"...HEAD | sort)
+scripts/verify/mermaid-baseline-guard.sh:84:  if [[ "$file" == "$BASELINE_LOCK" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:90:  if [[ "$file" == "$BASELINE_HASH_PATH" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:99:  python3 - "$BASELINE_LOCK" <<'PY'
+scripts/verify/mermaid-baseline-guard.sh:117:if [[ -z "$BASELINE_SHA" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:118:  echo "FAIL: baseline sha missing in $BASELINE_LOCK"
+scripts/verify/mermaid-baseline-guard.sh:122:if ! git cat-file -e "$BASELINE_SHA"^{commit} 2>/dev/null; then
+scripts/verify/mermaid-baseline-guard.sh:123:  echo "FAIL: baseline sha not found in git history: $BASELINE_SHA"
+scripts/verify/mermaid-baseline-guard.sh:138:  python3 - "$BASELINE_LOCK" "$head_sha" "$now_utc" <<'PY'
+scripts/verify/mermaid-baseline-guard.sh:161:  git hash-object "$BASELINE_LOCK" > "$BASELINE_HASH_PATH"
+scripts/verify/mermaid-baseline-guard.sh:168:if ! git merge-base --is-ancestor "$BASELINE_SHA" HEAD; then
+scripts/verify/mermaid-baseline-guard.sh:189:if [[ ! -f "$BASELINE_HASH_PATH" ]]; then
+scripts/verify/mermaid-baseline-guard.sh:190:  echo "FAIL: baseline hash evidence missing: $BASELINE_HASH_PATH"
+scripts/verify/mermaid-baseline-guard.sh:194:baseline_hash=$(git hash-object "$BASELINE_LOCK")
+scripts/verify/mermaid-baseline-guard.sh:195:baseline_hash_evidence=$(cat "$BASELINE_HASH_PATH" 2>/dev/null || true)
+scripts/verify/mermaid-baseline-guard.sh:227:if [[ -z "$status_baseline" || "$status_baseline" != "$BASELINE_SHA" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:27:if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:31:if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:32:  BASE_REF="origin/${GITHUB_BASE_REF}"
+scripts/verify/mermaid-change-request-guard.sh:33:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-change-request-guard.sh:34:    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+scripts/verify/mermaid-change-request-guard.sh:38:if [[ -z "$BASE_REF" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:42:if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+scripts/verify/mermaid-change-request-guard.sh:43:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-change-request-guard.sh:44:    echo "FAIL: base ref not found in CI: $BASE_REF"
+scripts/verify/mermaid-change-request-guard.sh:51:if [[ -n "$BASE_REF" ]]; then
+scripts/verify/mermaid-change-request-guard.sh:52:  mapfile -t mmd_changed < <(git diff --name-only "$BASE_REF"...HEAD -- 'docs/diagrams/sources/*.mmd' | sort)
+scripts/verify/mermaid-diff-intel.sh:27:if [[ "${GITHUB_ACTIONS:-}" == "true" ]]; then
+scripts/verify/mermaid-diff-intel.sh:31:if [[ -z "$BASE_REF" && -n "${GITHUB_BASE_REF:-}" ]]; then
+scripts/verify/mermaid-diff-intel.sh:32:  BASE_REF="origin/${GITHUB_BASE_REF}"
+scripts/verify/mermaid-diff-intel.sh:33:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-diff-intel.sh:34:    git fetch origin "${GITHUB_BASE_REF}:refs/remotes/origin/${GITHUB_BASE_REF}" >/dev/null 2>&1 || true
+scripts/verify/mermaid-diff-intel.sh:38:if [[ -z "$BASE_REF" ]]; then
+scripts/verify/mermaid-diff-intel.sh:39:  BASE_REF="${MERMAID_DIFF_BASE:-origin/MAIN}"
+scripts/verify/mermaid-diff-intel.sh:42:if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+scripts/verify/mermaid-diff-intel.sh:43:  if [[ "$CI_MODE" -eq 1 ]]; then
+scripts/verify/mermaid-diff-intel.sh:44:    echo "FAIL: base ref not found in CI: $BASE_REF"
+scripts/verify/mermaid-diff-intel.sh:50:if ! git rev-parse --verify "$BASE_REF" >/dev/null 2>&1; then
+scripts/verify/mermaid-diff-intel.sh:56:mapfile -t changed_files < <(git diff --name-only "$BASE_REF"...HEAD -- 'docs/diagrams/sources/*.mmd' | sort)
+scripts/verify/mermaid-diff-intel.sh:102:  diff_output=$(git diff "$BASE_REF"...HEAD -- "$file")
+scripts/verify/mermaid-diff-intel.sh:124:  base_edges=$(count_edges "$BASE_REF" "$file")
+scripts/verify/mermaid-proof-pack.sh:31:  python3 - "$BASELINE_LOCK" <<'PY'
+scripts/verify/mermaid-proof-pack.sh:43:if [[ ! -f "$BASELINE_LOCK" ]]; then
+scripts/verify/mermaid-proof-pack.sh:44:  echo "FAIL: missing baseline lock: $BASELINE_LOCK" >> "$PACK_DIR/FAILURES.txt"
+scripts/verify/mermaid-proof-pack.sh:49:if [[ -f "$BASELINE_LOCK" ]]; then
+scripts/verify/mermaid-proof-pack.sh:53:if [[ -z "$BASELINE_SHA" ]]; then
+scripts/verify/mermaid-proof-pack.sh:64:run_capture "baseline_lock" "$PACK_DIR/baseline_lock.json" bash -c "cat $BASELINE_LOCK"
+scripts/verify/mermaid-proof-pack.sh:82:  run_capture "baseline_delta" "$PACK_DIR/baseline_delta.txt" bash -c "git diff --stat ${BASELINE_SHA}...HEAD -- docs/diagrams/sources/*.mmd"
+scripts/verify/mermaid-proof-pack.sh:137:if [[ -n "$BASELINE_SHA" ]]; then
+scripts/verify/mermaid-proof-pack.sh:138:  BASELINE_COUNTS=$(count_nodes_links "$BASELINE_SHA")
+scripts/verify/mermaid-proof-pack.sh:142:baseline_nodes=$(echo "$BASELINE_COUNTS" | awk '{print $1}')
+scripts/verify/mermaid-proof-pack.sh:143:baseline_links=$(echo "$BASELINE_COUNTS" | awk '{print $2}')
+scripts/verify/mermaid-proof-pack.sh:177:  "baseline_sha": "${BASELINE_SHA}",
+scripts/verify/mermaid-proof-pack.sh:201:- Baseline SHA: $BASELINE_SHA
+scripts/verify/mermaid-status-report.sh:17:if [[ ! -f "$BASELINE_LOCK" ]]; then
+scripts/verify/mermaid-status-report.sh:18:  echo "FAIL: missing baseline lock file: $BASELINE_LOCK"
+scripts/verify/mermaid-status-report.sh:23:  python3 - "$BASELINE_LOCK" <<'PY'
+scripts/verify/mermaid-status-report.sh:51:if [[ -z "$BASELINE_SHA" ]]; then
+scripts/verify/mermaid-status-report.sh:52:  echo "FAIL: baseline sha missing in $BASELINE_LOCK"
+scripts/verify/mermaid-status-report.sh:70:if git merge-base --is-ancestor "$BASELINE_SHA" HEAD >/dev/null 2>&1; then
+scripts/verify/mermaid-status-report.sh:95:- Baseline SHA: $BASELINE_SHA
+
+## proof-pack path/version anchors
+9:PACK_VERSION="mermaid_v16"
+10:PACK_DIR="docs/_evidence/v27/${PACK_VERSION}/proof_pack_${STAMP}"
+14:PACK_ID="${PACK_VERSION}_${STAMP}_$(git rev-parse --short HEAD)"
+16:mkdir -p "$PACK_DIR"
+25:    echo "FAIL: $label" >> "$PACK_DIR/FAILURES.txt"
+44:  echo "FAIL: missing baseline lock: $BASELINE_LOCK" >> "$PACK_DIR/FAILURES.txt"
+54:  echo "FAIL: baseline sha missing" >> "$PACK_DIR/FAILURES.txt"
+64:run_capture "baseline_lock" "$PACK_DIR/baseline_lock.json" bash -c "cat $BASELINE_LOCK"
+67:  run_capture "verify_${i}" "$PACK_DIR/verify_${i}.txt" bash -c 'pnpm run verify:docs:mermaid'
+70:run_capture "registry_check" "$PACK_DIR/registry_check.txt" bash -c 'bash scripts/verify/mermaid-hash-registry.sh --check'
+71:run_capture "drift_strict" "$PACK_DIR/drift.txt" bash -c "bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist ${ALLOWLIST} --report ${PACK_DIR}/drift_report.md"
+72:run_capture "change_guard" "$PACK_DIR/change_guard.txt" bash -c 'bash scripts/verify/mermaid-change-request-guard.sh'
+73:run_capture "baseline_guard" "$PACK_DIR/baseline_guard.txt" bash -c 'bash scripts/verify/mermaid-baseline-guard.sh'
+75:run_capture "status_report" "$PACK_DIR/status.txt" bash -c 'bash scripts/verify/mermaid-status-report.sh'
+76:run_capture "status_report" "$PACK_DIR/status_report.txt" bash -c 'bash scripts/verify/mermaid-status-report.sh --check'
+80:  run_capture "git_diff_names" "$PACK_DIR/diff_names.txt" bash -c 'git diff --name-only'
+81:  run_capture "git_diff_stat" "$PACK_DIR/diff_stat.txt" bash -c 'git diff --stat'
+82:  run_capture "baseline_delta" "$PACK_DIR/baseline_delta.txt" bash -c "git diff --stat ${BASELINE_SHA}...HEAD -- docs/diagrams/sources/*.mmd"
+155:  CHANGE_REQUEST_PACK="$PACK_DIR/change_request.md"
+160:  cat > "$PACK_DIR/comparison.md" <<EOF
+171:cat > "$PACK_DIR/pack_meta.json" <<EOF
+174:  "pack_version": "${PACK_VERSION}",
+193:cat > "$PACK_DIR/VERDICT.md" <<EOF
+198:- Pack: $PACK_DIR
+205:cat > "$PACK_DIR/ROLLBACK.md" <<EOF
+211:echo "PROOF_PACK_PATH: $PACK_DIR"
+212:ls -1 "$PACK_DIR" | LC_ALL=C sort
+
+## baseline/status path anchors
+scripts/verify/mermaid-status-report.sh:56:PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v14"
+scripts/verify/mermaid-status-report.sh:58:if [[ -d "$PROOF_PACK_DIR" ]]; then
+scripts/verify/mermaid-status-report.sh:59:  latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
+scripts/verify/mermaid-status-report.sh:62:  latest_pack=${latest_pack#$PROOF_PACK_DIR/}
+scripts/verify/mermaid-baseline-guard.sh:10:PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v14"
+scripts/verify/mermaid-baseline-guard.sh:11:LINEAGE_DIR="docs/_evidence/v27/mermaid_v14"
+scripts/verify/mermaid-baseline-guard.sh:12:BASELINE_HASH_PATH="$LINEAGE_DIR/baseline_lock_hash.txt"
+scripts/verify/mermaid-baseline-guard.sh:93:  if [[ "$file" == $PROOF_PACK_DIR/proof_pack_*/* || "$file" == $PROOF_PACK_DIR/proof_pack_* ]]; then
+scripts/verify/mermaid-baseline-guard.sh:160:  mkdir -p "$LINEAGE_DIR"

@@ -1,0 +1,129 @@
+# Doc Consistency Audit
+
+## docs/diagrams/MERMAID_STATUS.md
+# Mermaid Status Report
+
+- Baseline SHA: 3a5026995a2e4390a47a98cad9dcdc315dde6194
+- Drift Strict Status: PASS
+- Registry Status: PASS
+- Change Request Required: true
+- Last Proof Pack: proof_pack_20260222T174557Z
+- System Mode: DORMANT (V12)
+- Last Active Phase: V11
+- Post-seal repair: V17 proof-pack namespace alignment (non-regressive).
+- Last maintenance: V17.
+
+## docs/diagrams/MERMAID_TERMINAL_SEAL.md
+# Mermaid Terminal Seal
+
+## 1) Terminal State
+
+- State: TERMINALLY SEALED (V16)
+- Operational Mode: DORMANT
+- Governance: CLOSED
+- Zero-Touch: ACTIVE
+- Repo Hygiene: CLEAN (V15)
+
+## 2) Authority Chain (chronologie)
+
+- V12 Dormant Mode
+- V13 Governance Closure
+- V14 Final Seal
+- V15 Post-Seal Hygiene (repo clean, untracked traité)
+- V16 Terminal Seal (this doc)
+
+## 3) Non-Negotiables
+
+- No further Mermaid phases. Post-seal repairs are allowed only if non-regressive and strictly limited (see addendum).
+- No new scripts / guards / workflows.
+- No optimization, no refactor, no aesthetic changes.
+
+## 4) Reactivation Triggers (the only allowed reasons)
+
+- /api surface change
+- provider change
+- architecture 4-ring change
+- bug proven in drift/registry/guards
+
+## 5) Reactivation Procedure (the only allowed procedure)
+
+1. Create `docs/diagrams/CHANGE_REQUEST.md` from template
+2. Run:
+   - `pnpm run op:mermaid`
+   - `bash scripts/verify/mermaid-proof-pack.sh`
+3. Update only what the trigger requires
+4. PASS x3 mandatory
+5. Commit once
+
+## 6) Stop Rule
+
+If no trigger → STOP.
+
+## docs/diagrams/MERMAID_ZERO_TOUCH_COMMITMENT.md
+# Mermaid Zero-Touch Commitment
+
+À partir de V14 :
+
+- Aucun commit Mermaid sans changement système réel
+- Aucun commit Mermaid pour “amélioration”
+- Aucun commit Mermaid pour “propreté”
+- Aucun commit Mermaid pour “optimisation”
+
+Mermaid n’est plus un chantier.
+Mermaid est une infrastructure scellée.
+
+## docs/diagrams/MERMAID_FREEZE_POLICY.md
+# Mermaid Freeze Policy
+
+Mermaid system is considered feature-complete as of V9.
+
+## Rules
+
+- Aucun nouveau guard sans justification exceptionnelle.
+- Aucun nouveau workflow sans validation strategique.
+
+## Modifications autorisees
+
+- Correction de bug
+- Evolution architecture reelle
+- Mise a jour surface reseau
+
+Toute evolution exige une Change Request.
+
+## Why freeze?
+
+La stabilite et la lisibilite priment sur la sophistication.
+
+## Regression Sentinel
+
+Avant toute release majeure de TITANE∞ :
+
+- `pnpm run op:mermaid`
+- `bash scripts/verify/mermaid-proof-pack.sh`
+
+Archiver le proof pack.
+
+## Governance Boundary (V13)
+
+Mermaid ne couvre que :
+
+- Architecture 4-Ring
+- Surface réseau online-first
+- Pipeline certification
+- Data flow critique
+
+Mermaid ne couvre pas :
+
+- UX
+- Feature roadmap
+- Performance tuning
+- Optimisation interne engines
+- Documentation marketing
+
+## Heuristic ambiguity scan
+docs/diagrams/MERMAID_FREEZE_POLICY.md:43:- Feature roadmap
+
+## Conclusion
+- No explicit instruction opening a new phase was found in audited files.
+- Reactivation remains trigger-based and bounded by change-request process.
+- Terminal seal language is present; no runtime dependency statements detected.
