@@ -9,21 +9,21 @@
 ### AppImage (Linux Universal)
 - **File:** TITANE-Infinity_27.0.5_amd64.AppImage
 - **Size:** 89.2 MB
-- **SHA256:** `37463c478138c2d39bfc2ebae3de571cfcc0cb1a754af2582a0ee7d8ea5b72be`
+- **SHA256:** `90ff21ab844bc6050938938c148cea90840ff7772a22f7ef4f0c4a33f7d88cda`
 - **Permissions:** 755 (executable)
 - **Usage:** `./TITANE-Infinity_27.0.5_amd64.AppImage`
 
 ### DEB Package (Debian/Ubuntu)
 - **File:** TITANE-Infinity_27.0.5_amd64.deb
 - **Size:** 13.8 MB
-- **SHA256:** `e9d44ff4c04ca447bac6fb270e55ffc6c00c18bc4c8f3529d9a2d3c2bcb8474d`
+- **SHA256:** `1cb08e973a43b6bf740dc35108524bbc240ba514780175fde53bbaa69dcb85be`
 - **Install:** `sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb`
 - **Binary Path:** `/usr/bin/titane-infinity`
 
 ### RPM Package (RedHat/Fedora)
 - **File:** TITANE-Infinity-27.0.5-1.x86_64.rpm
 - **Size:** 13.8 MB
-- **SHA256:** `98fc3f16a6b3ef88839757a10d2a898bddc97370590cfa0a2b600ebb99dd701d`
+- **SHA256:** `fbed6fe2ec55475afb08b60bcaa979843c2d0b1d66c9295f2d880e07dc9b44e3`
 - **Install:** `sudo rpm -i TITANE-Infinity-27.0.5-1.x86_64.rpm`
 
 ## Deployment Checklist
