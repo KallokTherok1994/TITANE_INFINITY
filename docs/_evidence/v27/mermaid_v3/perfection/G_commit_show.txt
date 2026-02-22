@@ -1,0 +1,31 @@
+commit 310ed42ac31a4f834125f1830a3e5c1924c6afae
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 10:41:10 2026 -0500
+
+    docs(mermaid): enforce canon via CI + strict drift + docs wiring
+
+A	.github/workflows/mermaid.yml
+M	README.md
+M	docs/ARCHITECTURE.md
+M	docs/ARCHITECTURE_RINGS.md
+A	docs/_evidence/v27/mermaid_v3/perfection/A_head.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/A_log.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/A_pkg_scripts.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/A_status.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/A_workflows_ls.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/E_registry_script.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_drift.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_registry_check.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_render.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_verify_1.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_verify_2.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/F_verify_3.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/G_changed_files.txt
+A	docs/_evidence/v27/mermaid_v3/perfection/VERDICT_V3.md
+A	docs/diagrams/DRIFT_REPORT_TEMPLATE.md
+A	docs/diagrams/MERMAID_REGISTRY_POLICY.md
+M	scripts/verify/mermaid-hash-registry.sh
+M	scripts/verify/verify-mermaid-drift.sh
