@@ -1,0 +1,1 @@
+docs/_evidence/v27/mermaid_v2/stopline_registry/E_commit_show.txt

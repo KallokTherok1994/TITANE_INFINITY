@@ -1,0 +1,5 @@
+2e9dd589 (HEAD -> MAIN) docs(mermaid): fix hash registry determinism + append-only (stopline)
+158687ba ci(mermaid): add CI gate + drift detection
+199fc94c docs(mermaid): canon diagrams + render sync + guards (online-first)
+f98f801a docs(mermaid): add canon diagrams + render sync + guards (online-first)
+106087e9 reports(prod): add v27.0.5 release proof pack
