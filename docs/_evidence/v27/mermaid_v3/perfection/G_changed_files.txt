@@ -1,0 +1,5 @@
+README.md
+docs/ARCHITECTURE.md
+docs/ARCHITECTURE_RINGS.md
+scripts/verify/mermaid-hash-registry.sh
+scripts/verify/verify-mermaid-drift.sh

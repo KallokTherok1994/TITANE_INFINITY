@@ -1,0 +1,325 @@
+README.md:4:![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
+README.md:93:## Mermaid Canon
+README.md:95:- Index Mermaid: [docs/diagrams/README.md](docs/diagrams/README.md)
+README.md:96:- Diagrammes rendus: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md), [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md), [omega_pipeline_v2](docs/diagrams/rendered/omega_pipeline_v2.md), [certification_gates](docs/diagrams/rendered/certification_gates.md), [network_surface_online_first](docs/diagrams/rendered/network_surface_online_first.md)
+README.md:97:- CI enforce Mermaid canon et drift strict
+docs/INDEX.md:344:- Interactive diagrams (Mermaid live)
+docs/INDEX.md:397:| **Phase 9** | Q2 2026 | Interactive content (Mermaid live, REPL) | Medium |
+docs/audit/AUDIT_360_COMPLETE.md:782:- [ ] Architecture diagrams (Mermaid)
+docs/audit/README.md:27:- Diagrammes architecture Mermaid
+docs/architecture/ARCHITECTURE_TARGET_9.md:406:## 📈 Diagramme Mermaid
+docs/INDEX_DOCUMENTATION_v26.3.0.md:426:- [ ] Créer diagrammes architecture colorés (Mermaid/PlantUML)
+docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:513:2. **Architecture Diagrams** - Pas de Mermaid/PlantUML
+docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:523:# Diagrammes Mermaid
+docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:524:docs/diagrams/
+docs/backup_20251218_122540/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/backup_20251218_122540/DOCUMENTATION_EVOLUTION_REPORT.md:585:- [ ] Diagrammes architecture (Mermaid)
+docs/backup_20251218_122526/DOCUMENTATION_EVOLUTION_REPORT.md:587:- [ ] Diagrammes architecture (Mermaid)
+docs/backup_20251218_122526/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/standards/MERMAID_STANDARDS.md:9:Mermaid est une carte doc, pas le runtime. Les diagrammes décrivent des invariants et flux de référence sans dépendance d'exécution.
+docs/standards/MERMAID_STANDARDS.md:22:- Source of truth = `docs/diagrams/sources/*.mmd`.
+docs/standards/MERMAID_STANDARDS.md:23:- Les rendus se font uniquement via script vers `docs/diagrams/rendered/*.md`.
+docs/standards/MERMAID_STANDARDS.md:41:- CDN Mermaid.
+docs/standards/MERMAID_STANDARDS.md:42:- URL externes (`http://`, `https://`) dans les blocs Mermaid.
+docs/standards/MERMAID_STANDARDS.md:47:- Ajouter un diagramme = mettre à jour `CANON_INDEX.md` + passer `verify:docs:mermaid`.
+docs/standards/MERMAID_DEV_PREVIEW.md:5:Prévisualiser les diagrammes Mermaid pendant l'édition dans VS Code, sans impact build/runtime.
+docs/standards/MERMAID_DEV_PREVIEW.md:10:- Optionnel: extension Mermaid/Markdown pour confort d'édition local.
+docs/standards/MERMAID_DEV_PREVIEW.md:15:- Aucune dépendance Mermaid ne doit être ajoutée au frontend/runtime.
+docs/STRATEGIC_ROADMAP_2026.md:342:□ Architecture diagrams (Mermaid)
+docs/05_modules/INDEX.md:534:- Interactive diagrams (Mermaid, PlantUML)
+docs/backup_20251218_123316/DOCUMENTATION_EVOLUTION_REPORT.md:585:- [ ] Diagrammes architecture (Mermaid)
+docs/backup_20251218_123316/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/ARCHITECTURE.md:9:- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
+docs/ARCHITECTURE.md:10:- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+docs/ARCHITECTURE.md:11:- Flux: [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md)
+docs/diagrams/MERMAID_REGISTRY_POLICY.md:1:# Mermaid Registry Policy
+docs/diagrams/MERMAID_REGISTRY_POLICY.md:9:- Source unique: `docs/diagrams/sources/*.mmd`.
+docs/diagrams/MERMAID_HASH_REGISTRY.json:3:    "docs/diagrams/sources/architecture_4_ring.mmd": {
+docs/diagrams/MERMAID_HASH_REGISTRY.json:11:    "docs/diagrams/sources/certification_gates.mmd": {
+docs/diagrams/MERMAID_HASH_REGISTRY.json:19:    "docs/diagrams/sources/data_flow_chat.mmd": {
+docs/diagrams/MERMAID_HASH_REGISTRY.json:27:    "docs/diagrams/sources/network_surface_online_first.mmd": {
+docs/diagrams/MERMAID_HASH_REGISTRY.json:35:    "docs/diagrams/sources/omega_pipeline_v2.mmd": {
+docs/diagrams/rendered/network_surface_online_first.md:3:Diagramme canon généré automatiquement depuis la source Mermaid.
+docs/diagrams/rendered/network_surface_online_first.md:6:En cas d'écart, exécuter render sync puis verify Mermaid.
+docs/diagrams/rendered/network_surface_online_first.md:7:Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
+docs/diagrams/rendered/network_surface_online_first.md:10:- Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
+docs/diagrams/rendered/certification_gates.md:3:Diagramme canon généré automatiquement depuis la source Mermaid.
+docs/diagrams/rendered/certification_gates.md:6:En cas d'écart, exécuter render sync puis verify Mermaid.
+docs/diagrams/rendered/certification_gates.md:7:Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
+docs/diagrams/rendered/certification_gates.md:10:- Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
+docs/diagrams/rendered/architecture_4_ring.md:3:Diagramme canon généré automatiquement depuis la source Mermaid.
+docs/diagrams/rendered/architecture_4_ring.md:6:En cas d'écart, exécuter render sync puis verify Mermaid.
+docs/diagrams/rendered/architecture_4_ring.md:7:Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
+docs/diagrams/rendered/architecture_4_ring.md:10:- Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
+docs/diagrams/rendered/data_flow_chat.md:3:Diagramme canon généré automatiquement depuis la source Mermaid.
+docs/diagrams/rendered/data_flow_chat.md:6:En cas d'écart, exécuter render sync puis verify Mermaid.
+docs/diagrams/rendered/data_flow_chat.md:7:Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
+docs/diagrams/rendered/data_flow_chat.md:10:- Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
+docs/diagrams/rendered/omega_pipeline_v2.md:3:Diagramme canon généré automatiquement depuis la source Mermaid.
+docs/diagrams/rendered/omega_pipeline_v2.md:6:En cas d'écart, exécuter render sync puis verify Mermaid.
+docs/diagrams/rendered/omega_pipeline_v2.md:7:Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
+docs/diagrams/rendered/omega_pipeline_v2.md:10:- Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
+docs/diagrams/README.md:1:# Mermaid Diagrams (DOC + GUARDS)
+docs/diagrams/README.md:5:- Sources canons: `docs/diagrams/sources/*.mmd`
+docs/diagrams/README.md:6:- Rendus générés: `docs/diagrams/rendered/*.md`
+docs/diagrams/README.md:7:- Index canon: `docs/diagrams/CANON_INDEX.md`
+docs/diagrams/DRIFT_REPORT_TEMPLATE.md:1:# Mermaid Drift Report (Template)
+docs/diagrams/DRIFT_REPORT_TEMPLATE.md:15:- Mettre a jour `docs/diagrams/sources/network_surface_online_first.mmd` si des endpoints ou clients reseau sont detectes.
+docs/diagrams/DRIFT_REPORT_TEMPLATE.md:16:- Mettre a jour `docs/diagrams/sources/architecture_4_ring.mmd` si la structure ring ne correspond plus.
+docs/diagrams/CANON_INDEX.md:1:# Canon Mermaid Index
+docs/diagrams/CANON_INDEX.md:9:| `architecture_4_ring` | 4-Ring Types → Engines → Services → Modules/UI | `docs/diagrams/sources/architecture_4_ring.mmd` | `docs/diagrams/rendered/architecture_4_ring.md` | TITANE∞ Docs | 2026-02-22 |
+docs/diagrams/CANON_INDEX.md:10:| `data_flow_chat` | Flux Chat UI → IPC → commandes → OMEGA → mémoire → UI | `docs/diagrams/sources/data_flow_chat.mmd` | `docs/diagrams/rendered/data_flow_chat.md` | TITANE∞ Docs | 2026-02-22 |
+docs/diagrams/CANON_INDEX.md:11:| `omega_pipeline_v2` | Pipeline OMEGA v2 Router → Executor → Merger → Guardrails | `docs/diagrams/sources/omega_pipeline_v2.mmd` | `docs/diagrams/rendered/omega_pipeline_v2.md` | TITANE∞ Docs | 2026-02-22 |
+docs/diagrams/CANON_INDEX.md:12:| `certification_gates` | Chaîne de gates verify → e2e → build → proof pack → verdict | `docs/diagrams/sources/certification_gates.mmd` | `docs/diagrams/rendered/certification_gates.md` | TITANE∞ Docs | 2026-02-22 |
+docs/diagrams/CANON_INDEX.md:13:| `network_surface_online_first` | Surface réseau Online-First + Network Policy | `docs/diagrams/sources/network_surface_online_first.mmd` | `docs/diagrams/rendered/network_surface_online_first.md` | TITANE∞ Docs | 2026-02-22 |
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:1:name: Mermaid Canon Gate
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:14:    name: Mermaid Canon + Drift
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:36:      - name: Render Mermaid docs
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:39:      - name: Verify Mermaid docs
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:42:      - name: Verify Mermaid registry
+docs/_evidence/v27/mermaid_v3/perfection/B_workflow_mermaid.txt:45:      - name: Verify Mermaid drift (strict)
+docs/_evidence/v27/mermaid_v3/perfection/E_registry_script.txt:12:SOURCE_DIR="docs/diagrams/sources"
+docs/_evidence/v27/mermaid_v3/perfection/E_registry_script.txt:13:REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
+docs/_evidence/v27/mermaid_v3/perfection/E_registry_script.txt:16:  echo "FAIL: missing Mermaid sources directory: $SOURCE_DIR"
+docs/_evidence/v27/mermaid_v3/perfection/E_registry_script.txt:25:  echo "FAIL: no Mermaid sources found"
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:34:+SOURCE_DIR="docs/diagrams/sources"
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:39:+  echo "FAIL: missing Mermaid sources directory: $SOURCE_DIR"
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:48:+  echo "FAIL: no Mermaid sources found"
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:91:+# Mermaid Drift Report
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:201:+# Drift 3 - Mermaid hash registry (append-only, deterministic)
+docs/_evidence/v27/mermaid_v3/perfection/C_drift_script.txt:203:+  echo "FAIL: Mermaid hash registry check failed"
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:1:README.md:4:![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:2:README.md:93:## Mermaid Canon
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:3:README.md:95:- Index Mermaid: [docs/diagrams/README.md](docs/diagrams/README.md)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:4:README.md:96:- Diagrammes rendus: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md), [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md), [omega_pipeline_v2](docs/diagrams/rendered/omega_pipeline_v2.md), [certification_gates](docs/diagrams/rendered/certification_gates.md), [network_surface_online_first](docs/diagrams/rendered/network_surface_online_first.md)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:5:README.md:97:- CI enforce Mermaid canon et drift strict
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:6:docs/INDEX.md:344:- Interactive diagrams (Mermaid live)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:7:docs/INDEX.md:397:| **Phase 9** | Q2 2026 | Interactive content (Mermaid live, REPL) | Medium |
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:8:docs/audit/AUDIT_360_COMPLETE.md:782:- [ ] Architecture diagrams (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:9:docs/audit/README.md:27:- Diagrammes architecture Mermaid
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:10:docs/architecture/ARCHITECTURE_TARGET_9.md:406:## 📈 Diagramme Mermaid
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:11:docs/INDEX_DOCUMENTATION_v26.3.0.md:426:- [ ] Créer diagrammes architecture colorés (Mermaid/PlantUML)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:12:docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:513:2. **Architecture Diagrams** - Pas de Mermaid/PlantUML
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:13:docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:523:# Diagrammes Mermaid
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:14:docs/01_architecture/DEEP_ANALYSIS_v24.2.0.md:524:docs/diagrams/
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:15:docs/backup_20251218_122540/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:16:docs/backup_20251218_122540/DOCUMENTATION_EVOLUTION_REPORT.md:585:- [ ] Diagrammes architecture (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:17:docs/backup_20251218_122526/DOCUMENTATION_EVOLUTION_REPORT.md:587:- [ ] Diagrammes architecture (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:18:docs/backup_20251218_122526/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:19:docs/standards/MERMAID_STANDARDS.md:9:Mermaid est une carte doc, pas le runtime. Les diagrammes décrivent des invariants et flux de référence sans dépendance d'exécution.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:20:docs/standards/MERMAID_STANDARDS.md:22:- Source of truth = `docs/diagrams/sources/*.mmd`.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:21:docs/standards/MERMAID_STANDARDS.md:23:- Les rendus se font uniquement via script vers `docs/diagrams/rendered/*.md`.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:22:docs/standards/MERMAID_STANDARDS.md:41:- CDN Mermaid.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:23:docs/standards/MERMAID_STANDARDS.md:42:- URL externes (`http://`, `https://`) dans les blocs Mermaid.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:24:docs/standards/MERMAID_STANDARDS.md:47:- Ajouter un diagramme = mettre à jour `CANON_INDEX.md` + passer `verify:docs:mermaid`.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:25:docs/standards/MERMAID_DEV_PREVIEW.md:5:Prévisualiser les diagrammes Mermaid pendant l'édition dans VS Code, sans impact build/runtime.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:26:docs/standards/MERMAID_DEV_PREVIEW.md:10:- Optionnel: extension Mermaid/Markdown pour confort d'édition local.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:27:docs/standards/MERMAID_DEV_PREVIEW.md:15:- Aucune dépendance Mermaid ne doit être ajoutée au frontend/runtime.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:28:docs/STRATEGIC_ROADMAP_2026.md:342:□ Architecture diagrams (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:29:docs/05_modules/INDEX.md:534:- Interactive diagrams (Mermaid, PlantUML)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:30:docs/backup_20251218_123316/DOCUMENTATION_EVOLUTION_REPORT.md:585:- [ ] Diagrammes architecture (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:31:docs/backup_20251218_123316/AUTO_SYNC_REPORT_v24.2.0.md:249:   - Architecture diagrams (Mermaid)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:32:docs/ARCHITECTURE.md:9:- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:33:docs/ARCHITECTURE.md:10:- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:34:docs/ARCHITECTURE.md:11:- Flux: [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md)
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:35:docs/diagrams/MERMAID_REGISTRY_POLICY.md:1:# Mermaid Registry Policy
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:36:docs/diagrams/MERMAID_REGISTRY_POLICY.md:9:- Source unique: `docs/diagrams/sources/*.mmd`.
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:37:docs/diagrams/MERMAID_HASH_REGISTRY.json:3:    "docs/diagrams/sources/architecture_4_ring.mmd": {
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:38:docs/diagrams/MERMAID_HASH_REGISTRY.json:11:    "docs/diagrams/sources/certification_gates.mmd": {
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:39:docs/diagrams/MERMAID_HASH_REGISTRY.json:19:    "docs/diagrams/sources/data_flow_chat.mmd": {
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:40:docs/diagrams/MERMAID_HASH_REGISTRY.json:27:    "docs/diagrams/sources/network_surface_online_first.mmd": {
+docs/_evidence/v27/mermaid_v3/perfection/D_wiring_grep.txt:41:docs/diagrams/MERMAID_HASH_REGISTRY.json:35:    "docs/diagrams/sources/omega_pipeline_v2.mmd": {
+docs/00_core/STRATEGIC_VISION_POST_PHASE7.md:247:  - **Mermaid live diagrams** (architecture diagrams editable).
+docs/00_core/STRATEGIC_VISION_POST_PHASE7.md:251:  - Mermaid.js for diagrams.
+docs/00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md:234:- **Interactive Diagrams** — Mermaid live + PlantUML
+docs/00_core/HANDOFF_GUIDE_VALIDATION.md:309:| **Phase 9: Interactive** | MEDIUM | 2-3 months | Q2 2026 | Mermaid live, REPL, Docusaurus |
+docs/00_core/MISSION_COMPLETE_REPORT.md:284:| **Phase 9: Interactive Content** | MEDIUM (defer Q2) | Q2 2026 | 2-3 months | Mermaid live, REPL, Docusaurus |
+docs/00_core/PHASE_7_COMPLETE_REPORT.md:345:- **Objective:** Interactive diagrams (Mermaid live), code playgrounds (REPL)
+docs/00_core/PHASE_7_COMPLETE_REPORT.md:406:   - Mermaid live diagrams
+docs/ARCHITECTURE_RINGS.md:15:- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
+docs/ARCHITECTURE_RINGS.md:16:- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+docs/_evidence/v27/mermaid_v2/I_commit.txt:19:A	docs/diagrams/MERMAID_HASH_REGISTRY.json
+docs/_evidence/v27/mermaid_v2/rebase_reconciliation/C_render.txt:5:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid_v2/rebase_reconciliation/C_render.txt:6:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid_v2/rebase_reconciliation/C_render.txt:7:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid_v2/rebase_reconciliation/C_render.txt:8:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid_v2/rebase_reconciliation/C_render.txt:9:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid_v2/D_render_run.txt:5:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid_v2/D_render_run.txt:6:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid_v2/D_render_run.txt:7:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid_v2/D_render_run.txt:8:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid_v2/D_render_run.txt:9:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt:5:      "file": "docs/diagrams/sources/architecture_4_ring.mmd",
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt:10:      "file": "docs/diagrams/sources/certification_gates.mmd",
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt:15:      "file": "docs/diagrams/sources/data_flow_chat.mmd",
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt:20:      "file": "docs/diagrams/sources/network_surface_online_first.mmd",
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt:25:      "file": "docs/diagrams/sources/omega_pipeline_v2.mmd",
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:5:SOURCE_DIR="$ROOT_DIR/docs/diagrams/sources"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:6:RENDER_DIR="$ROOT_DIR/docs/diagrams/rendered"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:8:INDEX_REL="../CANON_INDEX.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:22:  echo "FAIL: no Mermaid sources found in $SOURCE_DIR"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:28:    echo "FAIL: empty Mermaid source: $source_file"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:39:    echo "Diagramme canon généré automatiquement depuis la source Mermaid."
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:42:    echo "En cas d'écart, exécuter render sync puis verify Mermaid."
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt:43:    echo "Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd."
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt:1:02732265c52c4b8ae34efa8988c7341a4b3123b26ae619010903c03af44823bb  docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt:2:439074da1252a95553c31427d4bc71ef3b895760879dc322b2d08187e982e749  docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt:3:e8181185da749bf17541ce5f04b6ac9f1fde2c79dcc8c2df71811c2f7ba83023  docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt:4:dbe819ae2eedf0adb98b02efd04f48849d607aecfd7e5b028e940c49247bd253  docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt:5:8d3a4574436e66afe52ad3eb077e552f5b9d68d2c74d0ded8817cf159f3af462  docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/_evidence/v27/mermaid_v2/stopline_registry/E_commit_show.txt:29:M	docs/diagrams/MERMAID_HASH_REGISTRY.json
+docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt:5:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt:6:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt:7:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt:8:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt:9:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/A_ls_diagrams.txt:4:-rw-rw-r--  1 titane-os titane-os  1317 févr. 22 10:06 CANON_INDEX.md
+docs/_evidence/v27/mermaid_v2/stopline_registry/E_changed_files.txt:1:docs/diagrams/MERMAID_HASH_REGISTRY.json
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:10:SOURCE_DIR="docs/diagrams/sources"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:13:REGISTRY_PATH="docs/diagrams/MERMAID_HASH_REGISTRY.json"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:16:  echo "FAIL: missing Mermaid sources directory: $SOURCE_DIR"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:25:  echo "FAIL: no Mermaid sources found"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:112:# Drift 3 - Mermaid hash registry (append-only)
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt:168:  echo "FAIL: unable to update Mermaid hash registry"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:11:  "docs/diagrams/CANON_INDEX.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:12:  "docs/diagrams/sources/architecture_4_ring.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:13:  "docs/diagrams/sources/data_flow_chat.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:14:  "docs/diagrams/sources/omega_pipeline_v2.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:15:  "docs/diagrams/sources/certification_gates.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:16:  "docs/diagrams/sources/network_surface_online_first.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:27:  "docs/diagrams/rendered/architecture_4_ring.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:28:  "docs/diagrams/rendered/data_flow_chat.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:29:  "docs/diagrams/rendered/omega_pipeline_v2.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:30:  "docs/diagrams/rendered/certification_gates.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:31:  "docs/diagrams/rendered/network_surface_online_first.md"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:44:    echo "FAIL: unable to generate rendered Mermaid files"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:56:for rendered in docs/diagrams/rendered/*.md; do
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:96:    echo "FAIL: forbidden URL (http/https) in Mermaid block: $rendered"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:101:NETWORK_FILE="docs/diagrams/sources/network_surface_online_first.mmd"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:113:for source in docs/diagrams/sources/*.mmd; do
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:124:if rg -n 'http://|https://' docs/diagrams/sources/*.mmd >/dev/null 2>&1; then
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:125:  echo "FAIL: forbidden URL (http/https) in Mermaid source"
+docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt:126:  rg -n 'http://|https://' docs/diagrams/sources/*.mmd || true
+docs/_evidence/v27/mermaid/C_render_sync_run.txt:1:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/C_render_sync_run.txt:2:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/C_render_sync_run.txt:3:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/C_render_sync_run.txt:4:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/C_render_sync_run.txt:5:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:25:A	docs/diagrams/CANON_INDEX.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:26:A	docs/diagrams/README.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:27:A	docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:28:A	docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:29:A	docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:30:A	docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:31:A	docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/F_commit_show.txt:32:A	docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid/F_commit_show.txt:33:A	docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid/F_commit_show.txt:34:A	docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid/F_commit_show.txt:35:A	docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid/F_commit_show.txt:36:A	docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/99_ARCHIVE/old_sessions/2025-12-10/SESSION_REPORT_v20.0_PHASE_2.md:28:   - Architecture Mermaid complète (Micro → Speaker)
+docs/99_ARCHIVE/obsolete/INDEX_DOCUMENTATION_v24.md:158:- [ ] Diagrammes architecture (Mermaid/PlantUML)
+docs/_evidence/v27/mermaid/F_render_run.txt:5:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/F_render_run.txt:6:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/F_render_run.txt:7:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/F_render_run.txt:8:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/F_render_run.txt:9:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/I_diffstat.txt:3: docs/diagrams/CANON_INDEX.md                       | 18 +++----
+docs/_evidence/v27/mermaid/I_diffstat.txt:4: docs/diagrams/README.md                            | 32 ++++--------
+docs/_evidence/v27/mermaid/I_diffstat.txt:5: docs/diagrams/rendered/architecture_4_ring.md      | 16 ++----
+docs/_evidence/v27/mermaid/I_diffstat.txt:6: docs/diagrams/rendered/certification_gates.md      | 18 ++-----
+docs/_evidence/v27/mermaid/I_diffstat.txt:7: docs/diagrams/rendered/data_flow_chat.md           | 22 +++-----
+docs/_evidence/v27/mermaid/I_diffstat.txt:9: docs/diagrams/rendered/omega_pipeline_v2.md        | 16 +-----
+docs/_evidence/v27/mermaid/I_diffstat.txt:10: docs/diagrams/sources/architecture_4_ring.mmd      | 16 ++----
+docs/_evidence/v27/mermaid/I_diffstat.txt:11: docs/diagrams/sources/certification_gates.mmd      | 18 ++-----
+docs/_evidence/v27/mermaid/I_diffstat.txt:12: docs/diagrams/sources/data_flow_chat.mmd           | 22 +++-----
+docs/_evidence/v27/mermaid/I_diffstat.txt:14: docs/diagrams/sources/omega_pipeline_v2.mmd        | 16 +-----
+docs/_evidence/v27/mermaid/H_changed_files.txt:3:docs/diagrams/CANON_INDEX.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:4:docs/diagrams/README.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:5:docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:6:docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:7:docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:8:docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:9:docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/H_changed_files.txt:10:docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid/H_changed_files.txt:11:docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid/H_changed_files.txt:12:docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid/H_changed_files.txt:13:docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid/H_changed_files.txt:14:docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/_evidence/v27/mermaid/C_render_sync.txt:1:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/C_render_sync.txt:2:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/C_render_sync.txt:3:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/C_render_sync.txt:4:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/C_render_sync.txt:5:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/B_files.txt:1:docs/diagrams/CANON_INDEX.md
+docs/_evidence/v27/mermaid/B_files.txt:2:docs/diagrams/README.md
+docs/_evidence/v27/mermaid/B_files.txt:3:docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/B_files.txt:4:docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/B_files.txt:5:docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/B_files.txt:6:docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/B_files.txt:7:docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/B_files.txt:8:docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid/B_files.txt:9:docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid/B_files.txt:10:docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid/B_files.txt:11:docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid/B_files.txt:12:docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/_evidence/v27/mermaid/E_render_run.txt:5:SYNC: docs/diagrams/sources/architecture_4_ring.mmd -> docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/E_render_run.txt:6:SYNC: docs/diagrams/sources/certification_gates.mmd -> docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/E_render_run.txt:7:SYNC: docs/diagrams/sources/data_flow_chat.mmd -> docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/E_render_run.txt:8:SYNC: docs/diagrams/sources/network_surface_online_first.mmd -> docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/E_render_run.txt:9:SYNC: docs/diagrams/sources/omega_pipeline_v2.mmd -> docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/B_files_created.txt:1:docs/diagrams/CANON_INDEX.md
+docs/_evidence/v27/mermaid/B_files_created.txt:2:docs/diagrams/README.md
+docs/_evidence/v27/mermaid/B_files_created.txt:3:docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/B_files_created.txt:4:docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/B_files_created.txt:5:docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/B_files_created.txt:6:docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/B_files_created.txt:7:docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/B_files_created.txt:8:docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid/B_files_created.txt:9:docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid/B_files_created.txt:10:docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid/B_files_created.txt:11:docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid/B_files_created.txt:12:docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:11:  "docs/diagrams/CANON_INDEX.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:12:  "docs/diagrams/README.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:13:  "docs/diagrams/sources/architecture_4_ring.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:14:  "docs/diagrams/sources/data_flow_chat.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:15:  "docs/diagrams/sources/omega_pipeline_v2.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:16:  "docs/diagrams/sources/certification_gates.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:17:  "docs/diagrams/sources/network_surface_online_first.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:18:  "docs/diagrams/rendered/architecture_4_ring.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:19:  "docs/diagrams/rendered/data_flow_chat.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:20:  "docs/diagrams/rendered/omega_pipeline_v2.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:21:  "docs/diagrams/rendered/certification_gates.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:22:  "docs/diagrams/rendered/network_surface_online_first.md"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:32:for rendered in docs/diagrams/rendered/*.md; do
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:63:NETWORK_FILE="docs/diagrams/sources/network_surface_online_first.mmd"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:75:for source in docs/diagrams/sources/*.mmd; do
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:86:if rg -n 'CDN|https://' docs/diagrams/sources/*.mmd >/dev/null 2>&1; then
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:87:  echo "FAIL: forbidden external reference (CDN or https://) in Mermaid source"
+docs/_evidence/v27/mermaid/D_guard_script_head.txt:88:  rg -n 'CDN|https://' docs/diagrams/sources/*.mmd || true
+docs/_evidence/v27/mermaid/I_commit.txt:20:M	docs/diagrams/CANON_INDEX.md
+docs/_evidence/v27/mermaid/I_commit.txt:21:M	docs/diagrams/README.md
+docs/_evidence/v27/mermaid/I_commit.txt:22:M	docs/diagrams/rendered/architecture_4_ring.md
+docs/_evidence/v27/mermaid/I_commit.txt:23:M	docs/diagrams/rendered/certification_gates.md
+docs/_evidence/v27/mermaid/I_commit.txt:24:M	docs/diagrams/rendered/data_flow_chat.md
+docs/_evidence/v27/mermaid/I_commit.txt:25:M	docs/diagrams/rendered/network_surface_online_first.md
+docs/_evidence/v27/mermaid/I_commit.txt:26:M	docs/diagrams/rendered/omega_pipeline_v2.md
+docs/_evidence/v27/mermaid/I_commit.txt:27:M	docs/diagrams/sources/architecture_4_ring.mmd
+docs/_evidence/v27/mermaid/I_commit.txt:28:M	docs/diagrams/sources/certification_gates.mmd
+docs/_evidence/v27/mermaid/I_commit.txt:29:M	docs/diagrams/sources/data_flow_chat.mmd
+docs/_evidence/v27/mermaid/I_commit.txt:30:M	docs/diagrams/sources/network_surface_online_first.mmd
+docs/_evidence/v27/mermaid/I_commit.txt:31:M	docs/diagrams/sources/omega_pipeline_v2.mmd
+docs/99_ARCHIVE/merged/AUDIT_COMPLET_v16.2.2+_FINAL.md:355:   - Architecture diagrams (Mermaid)
+docs/99_ARCHIVE/merged/PLAN_ULTIME_GITHUB_COPILOT_v1.0.md:176:**Génère un diagramme Mermaid et sauvegarde dans : ARCHITECTURE_CURRENT_DETAILED.md**
+docs/99_ARCHIVE/merged/PLAN_ULTIME_GITHUB_COPILOT_v1.0.md:180:- [ ] Diagramme Mermaid créé
+docs/99_ARCHIVE/merged/PHASE_1_VALIDATION_COMPLETE.md:71:**Diagrammes Mermaid :**
+docs/99_ARCHIVE/sessions/PROJECT_STRUCTURE_ANALYZED.md:608:**PROMPT #3 :** Diagramme architecture Mermaid  
+docs/99_ARCHIVE/sessions/TITANE_ULTIMATE_COPILOT_PLAN_v∞.md:114:Crée un diagramme Mermaid des interactions principales :
+docs/99_ARCHIVE/sessions/TITANE_ULTIMATE_COPILOT_PLAN_v∞.md:128:5. **Graphe d'interactions** (diagramme Mermaid)
+docs/99_ARCHIVE/sessions/TITANE_ULTIMATE_COPILOT_PLAN_v∞.md:886:2. Architecture finale (diagramme Mermaid)
+docs/_evidence/v27/mermaid/ROLLBACK.md:11:- git clean -fd docs/diagrams docs/standards scripts/verify docs/_evidence/v27/mermaid
+docs/_evidence/v27/mermaid/A_scan.txt:110595:docs/_evidence/v27/mermaid/ROLLBACK.md:11:- git clean -fd docs/diagrams docs/standards scripts/verify docs/_evidence/v27/mermaid
+docs/_evidence/v27/mermaid/A_scan.txt:110905:docs/diagrams/CANON_INDEX.md:15:| `network_surface_online_first` | Cartographier la surface réseau gouvernée Online-First | TITANE∞ Docs | 2026-02-22 |
+docs/_evidence/v27/mermaid/A_scan.txt:110906:docs/diagrams/README.md:12:4. Exécuter `pnpm run verify:docs:mermaid` jusqu'à PASS reproductible.
+docs/_evidence/v27/mermaid/A_scan.txt:110907:docs/diagrams/README.md:20:- Contraintes Online-First Network Truth respectées.

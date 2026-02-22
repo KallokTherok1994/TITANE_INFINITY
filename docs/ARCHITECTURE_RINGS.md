@@ -10,6 +10,11 @@
 
 TITANE∞ suit une **architecture en anneaux concentriques** inspirée des principes de Clean Architecture et Domain-Driven Design. Cette organisation garantit la séparation des responsabilités, la testabilité et l'évolutivité du système.
 
+## Diagrams
+
+- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
+- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │                    ANNEAU 4: OS                         │

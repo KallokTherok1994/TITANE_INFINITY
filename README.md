@@ -90,6 +90,12 @@ pnpm run dev:tauri
 - [docs/ui/INDEX_UI.md](docs/ui/INDEX_UI.md) — index UI (pages/features/components/hooks)
 - Registre UI obligatoire: chaque changement UI doit ajouter une entry append-only dans `registry/ui-events.jsonl`.
 
+## Mermaid Canon
+
+- Index Mermaid: [docs/diagrams/README.md](docs/diagrams/README.md)
+- Diagrammes rendus: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md), [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md), [omega_pipeline_v2](docs/diagrams/rendered/omega_pipeline_v2.md), [certification_gates](docs/diagrams/rendered/certification_gates.md), [network_surface_online_first](docs/diagrams/rendered/network_surface_online_first.md)
+- CI enforce Mermaid canon et drift strict
+
 ### Corepack Quickstart (recommandé)
 
 ```bash
