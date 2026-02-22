@@ -74,7 +74,8 @@ dashmap = "6.0" # Concurrent HashMap (replaces RwLock<HashMap>)
 parking_lot = "0.12" # Fast synchronization primitives (Mutex, RwLock)
 
 # SUPER PROMPT #3: Performance & Latence v20.1
-lru = "0.12" # LRU cache for AI responses (AIRouterCache)
+# v27.0.6: Updated from 0.12 to 0.16 to fix RUSTSEC-2026-0002 (unsound IterMut)
+lru = "0.16" # LRU cache for AI responses (AIRouterCache)
 
 # SUPER PROMPT #8: Multi-IA Orchestrator vΩ.5
 async-trait = "0.1" # Async trait support for providers
