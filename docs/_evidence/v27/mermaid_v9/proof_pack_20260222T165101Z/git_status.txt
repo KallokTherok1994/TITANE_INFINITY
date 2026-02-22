@@ -1,0 +1,9 @@
+## MAIN...origin/MAIN
+ M .github/workflows/mermaid.yml
+ M package.json
+ M scripts/verify/mermaid-baseline-guard.sh
+ M scripts/verify/mermaid-proof-pack.sh
+ M scripts/verify/mermaid-status-report.sh
+?? docs/_evidence/v27/mermaid_v9/
+?? docs/diagrams/MERMAID_RELEASE_NOTES.md
+?? scripts/verify/mermaid-no-self-hash-guard.sh

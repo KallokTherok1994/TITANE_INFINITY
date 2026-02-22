@@ -1,0 +1,5 @@
+44:      - name: Mermaid no-self-hash guard
+45:        run: bash scripts/verify/mermaid-no-self-hash-guard.sh
+82:          bash scripts/verify/mermaid-no-self-hash-guard.sh >/tmp/mermaid_no_self_hash.txt 2>&1
+92:            echo "- HEAD_SHA_AT_TIME: ${head_sha_at_time}"
+107:          } >> "$GITHUB_STEP_SUMMARY"

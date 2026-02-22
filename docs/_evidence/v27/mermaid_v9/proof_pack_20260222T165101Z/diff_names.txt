@@ -1,0 +1,6 @@
+.github/workflows/mermaid.yml
+docs/diagrams/MERMAID_STATUS.md
+package.json
+scripts/verify/mermaid-baseline-guard.sh
+scripts/verify/mermaid-proof-pack.sh
+scripts/verify/mermaid-status-report.sh
