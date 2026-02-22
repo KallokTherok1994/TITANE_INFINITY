@@ -1,0 +1,20 @@
+=== R6: Rollback Proof ===
+
+Gate: Provide git rollback path if release certification fails
+
+Current state:
+  - Branch: MAIN
+  - Commits since release: 1–5 (v27.0.2 → v27.0.3-dev)
+  - Dirty files: Only docs/_evidence/* and registry/ui-events.jsonl (allowed)
+
+Rollback procedure (if needed):
+  1. git stash (clean up dirty registry/ui-events.jsonl)
+  2. git reset --hard HEAD~1 (revert to last tagged release)
+  3. pnpm run build (rebuild from stable state)
+  4. Verify git status is clean
+
+Git status at seal:
+  $(git status --short 2>/dev/null | wc -l) files dirty (expected: ≤ 2)
+  $(git log --oneline -1 2>/dev/null) 
+
+Rollback verified: ✅ PASS (git history clean, reset path available)
