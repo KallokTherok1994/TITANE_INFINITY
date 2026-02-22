@@ -1,6 +1,6 @@
-# 📚 TITANE∞ — MANUEL UTILISATEUR COMPLET v27.0.0
+# 📚 TITANE∞ — MANUEL UTILISATEUR COMPLET v27.0.5
 
-**Version:** 27.0.0 | **Langue:** Français | **Date:** 31 Janvier 2026
+**Version:** 27.0.5 | **Langue:** Français | **Date:** 22 Février 2026
 
 ---
 
@@ -69,9 +69,9 @@ TITANE∞ est conçu pour :
 
 ```bash
 # Linux (AppImage)
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_amd64.AppImage
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
-./Titan-Stable_27.0.0_amd64.AppImage
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.AppImage
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 
 # Ou via package manager (si disponible)
 sudo apt install titane-infinity
@@ -91,15 +91,15 @@ Au premier lancement, TITANE vous guidera à travers :
 **Lancement rapide:**
 
 ```bash
-./Titan-Stable_27.0.0_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 ```
 
 **Avec options:**
 
 ```bash
-./Titan-Stable_27.0.0_amd64.AppImage --dev        # Mode développement
-./Titan-Stable_27.0.0_amd64.AppImage --offline    # Mode hors ligne
-./Titan-Stable_27.0.0_amd64.AppImage --memory     # Charger mémoire
+./TITANE-Infinity_27.0.5_amd64.AppImage --dev        # Mode développement
+./TITANE-Infinity_27.0.5_amd64.AppImage --offline    # Mode hors ligne
+./TITANE-Infinity_27.0.5_amd64.AppImage --memory     # Charger mémoire
 ```
 
 **Temps de démarrage:** ~585ms (ultra-rapide)
@@ -1148,7 +1148,7 @@ tail -f ~/.titane/logs/app.log
 
 ```bash
 rm -rf ~/.titane/cache
-./Titan-Stable_27.0.0_amd64.AppImage --reset
+./TITANE-Infinity_27.0.5_amd64.AppImage --reset
 ```
 
 #### "Chat très lent"
@@ -2221,7 +2221,7 @@ Vos conversations:
 
 4. **Utilisez le mode hors ligne**
    ```bash
-   ./Titan-Stable_27.0.0_amd64.AppImage --offline
+   ./TITANE-Infinity_27.0.5_amd64.AppImage --offline
    ```
 
 #### 🟡 Pour Utilisateurs Cloud (Gemini)
@@ -2263,7 +2263,7 @@ cargo tree
 
 ## ⚡ PERFORMANCE & OPTIMISATION
 
-### Benchmarks v27.0.0 — Vue d'Ensemble
+### Benchmarks v27.0.5 — Vue d'Ensemble
 
 | Métrique             | Valeur    | Notes               |
 | -------------------- | --------- | ------------------- |
@@ -2647,7 +2647,7 @@ Pour démarrer au mieux:
 
 ---
 
-**TITANE∞ v27.0.0 — Manuel Utilisateur Complet**
+**TITANE∞ v27.0.5 — Manuel Utilisateur Complet**
 _Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
-_Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
+_Dernière mise à jour: 22 Février 2026 | Version: 27.0.5_
 _Copyright © 2025 Humain Total / TITANE Team. Tous droits réservés._

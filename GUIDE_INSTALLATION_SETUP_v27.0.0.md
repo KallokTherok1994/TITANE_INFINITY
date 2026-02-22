@@ -1,6 +1,6 @@
-# 🚀 TITANE∞ — GUIDE D'INSTALLATION & SETUP v27.0.0
+# 🚀 TITANE∞ — GUIDE D'INSTALLATION & SETUP v27.0.5
 
-**Version:** 27.0.0 | **Date:** 31 Janvier 2026
+**Version:** 27.0.5 | **Date:** 22 Février 2026
 
 ---
 
@@ -94,13 +94,13 @@ choco install git curl
 ```bash
 # 1. Télécharger
 cd ~/Downloads
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_amd64.AppImage
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.AppImage
 
 # 2. Rendre exécutable
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
 
 # 3. Lancer
-./Titan-Stable_27.0.0_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage
 ```
 
 **Durée:** ~2 minutes
@@ -111,10 +111,10 @@ chmod +x Titan-Stable_27.0.0_amd64.AppImage
 
 ```bash
 # Télécharger le .deb
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/titane-infinity_27.0.0_amd64.deb
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.deb
 
 # Installer
-sudo dpkg -i titane-infinity_27.0.0_amd64.deb
+sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 # Ou via apt (si repository activé)
 sudo apt install titane-infinity
@@ -168,10 +168,10 @@ ls src-tauri/target/release/bundle/appimage/Titan-Stable_*.AppImage
 
 ```bash
 # 1. Télécharger
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_x64.dmg
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_x64.dmg
 
 # 2. Monter le DMG
-open Titan-Stable_27.0.0_x64.dmg
+open TITANE-Infinity_27.0.5_x64.dmg
 
 # 3. Drag-drop dans Applications
 # Apparaît dans le DMG automount
@@ -228,11 +228,11 @@ ls src-tauri/target/release/bundle/macos/
 
 ```powershell
 # 1. Télécharger MSI
-Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.0/Titan-Stable_27.0.0_x64.msi" `
-  -OutFile "$env:USERPROFILE\Downloads\Titan-Stable_27.0.0_x64.msi"
+Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_x64.msi" `
+  -OutFile "$env:USERPROFILE\Downloads\TITANE-Infinity_27.0.5_x64.msi"
 
 # 2. Lancer l'installateur
-& "$env:USERPROFILE\Downloads\Titan-Stable_27.0.0_x64.msi"
+& "$env:USERPROFILE\Downloads\TITANE-Infinity_27.0.5_x64.msi"
 
 # 3. Suivre l'assistant (Next → Next → Finish)
 
@@ -245,7 +245,7 @@ Invoke-WebRequest -Uri "https://github.com/KallokTherok1994/TITANE_INFINITY/rele
 
 ```powershell
 # 1. Télécharger ZIP portable
-Invoke-WebRequest -Uri "https://github.com/.../Titan-Stable_27.0.0_portable.zip" `
+Invoke-WebRequest -Uri "https://github.com/.../TITANE-Infinity_27.0.5_portable.zip" `
   -OutFile "TITANE_portable.zip"
 
 # 2. Extraire
@@ -313,7 +313,7 @@ Au premier démarrage, TITANE affiche un **Setup Wizard** (assistant):
 
 ```
 ┌──────────────────────────────────────────────┐
-│  Bienvenue dans TITANE∞ v27.0.0             │
+│  Bienvenue dans TITANE∞ v27.0.5             │
 │                                              │
 │  🎯 Étape 1/4: Accepter Conditions         │
 └──────────────────────────────────────────────┘
@@ -637,8 +637,8 @@ Settings → Memory → [Export/Import]
 **Solution 1 — Vérifier permissions:**
 
 ```bash
-chmod +x Titan-Stable_27.0.0_amd64.AppImage
-./Titan-Stable_27.0.0_amd64.AppImage --help
+chmod +x TITANE-Infinity_27.0.5_amd64.AppImage
+./TITANE-Infinity_27.0.5_amd64.AppImage --help
 ```
 
 **Solution 2 — Installer FUSE:**
@@ -655,7 +655,7 @@ sudo dnf install fuse libfuse
 
 ```bash
 # Extraire AppImage
-./Titan-Stable_27.0.0_amd64.AppImage --appimage-extract
+./TITANE-Infinity_27.0.5_amd64.AppImage --appimage-extract
 cd squashfs-root
 ./AppRun
 ```
@@ -862,10 +862,10 @@ fallback = true  # Utilisé si autres échouent
 ```bash
 # Linux (DEB) - Silent install
 sudo DEBIAN_FRONTEND=noninteractive \
-  apt-get install -y ./titan-stable_27.0.0_amd64.deb
+  apt-get install -y ./TITANE-Infinity_27.0.5_amd64.deb
 
 # Windows (MSI) - Silent install
-msiexec /i Titan-Stable_27.0.0.msi /quiet /norestart
+msiexec /i TITANE-Infinity_27.0.5_x64.msi /quiet /norestart
 
 # Configuration automatique
 titane-infinity --init-config --profile=enterprise
@@ -1179,7 +1179,7 @@ Avant d'utiliser TITANE en production:
 
 ---
 
-**TITANE∞ v27.0.0 — Guide Installation & Setup Complet**
+**TITANE∞ v27.0.5 — Guide Installation & Setup Complet**
 _Créé: 31 Janvier 2026 | Validé par Kevin Thibault_
 _Dernière mise à jour: 31 Janvier 2026 | Version: 27.0.0_
 _Pour support détaillé: support@titane.dev ou Discord community_
