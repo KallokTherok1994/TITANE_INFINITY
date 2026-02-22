@@ -1,0 +1,4 @@
+.github/workflows/mermaid.yml
+docs/diagrams/README.md
+package.json
+scripts/verify/mermaid-proof-pack.sh

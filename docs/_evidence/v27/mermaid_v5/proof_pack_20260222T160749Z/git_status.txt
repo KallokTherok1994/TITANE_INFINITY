@@ -1,0 +1,11 @@
+## MAIN...origin/MAIN [ahead 2, behind 1]
+ M .github/workflows/mermaid.yml
+ M docs/diagrams/README.md
+ M package.json
+ M scripts/verify/mermaid-proof-pack.sh
+?? docs/_evidence/v27/mermaid_v5/
+?? docs/diagrams/MERMAID_BASELINE_LOCK.json
+?? docs/diagrams/MERMAID_STATUS.md
+?? scripts/verify/mermaid-baseline-guard.sh
+?? scripts/verify/mermaid-diff-intel.sh
+?? scripts/verify/mermaid-status-report.sh

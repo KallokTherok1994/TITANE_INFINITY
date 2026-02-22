@@ -1,0 +1,16 @@
+{
+  "baseline_sha": "61099aa3a8c4935fa4bcb5be20217c4846282b5e",
+  "date_utc": "2026-02-22T16:04:18Z",
+  "version_mermaid_system": "V5",
+  "ci_workflow": "mermaid.yml",
+  "strict_drift": true,
+  "registry_append_only": true,
+  "proof_pack_standard": true,
+  "canonical_diagrams": [
+    "architecture_4_ring.mmd",
+    "data_flow_chat.mmd",
+    "omega_pipeline_v2.mmd",
+    "certification_gates.mmd",
+    "network_surface_online_first.mmd"
+  ]
+}
