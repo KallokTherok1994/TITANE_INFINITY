@@ -24,14 +24,14 @@
     "resources": ["../dist"],
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
-    "shortDescription": "TITANE∞ v27.0.0 - Production Final Release, Stable & Perfect",
-    "longDescription": "TITANE Infinity v27.0.0 - Cognitive Operating System: Production Final Release with Full Validation, Complete Functionality, Stability Guaranteed"
+    "shortDescription": "TITANE∞ v27.0.5 - Stable Release",
+    "longDescription": "TITANE Infinity v27.0.5 - Cognitive Operating System, stable production release"
   },
   "app": {
     "windows": [
       {
         "label": "main",
-        "title": "TITANE Infinity v27.0.0 - Multi-Provider AI",
+        "title": "TITANE Infinity v27.0.5 - Multi-Provider AI",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,

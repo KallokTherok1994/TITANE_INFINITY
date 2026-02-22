@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
   "version": "27.0.5",
-  "description": "TITANE∞ v27.0.1 - Cognitive Operating System: Production Hotfix (vΩ.1 Boot + vΩ.2 UI Loading)",
+  "description": "TITANE∞ v27.0.5 - Cognitive Operating System: Stable Release",
   "type": "module",
   "license": "SEE LICENSE.md",
   "packageManager": "pnpm@10.28.2",

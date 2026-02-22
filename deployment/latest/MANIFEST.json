@@ -1,23 +1,23 @@
 {
   "name": "TITANE-Infinity",
-  "version": "26.2.0",
-  "buildDate": "2026-01-25T18:48:22.585Z",
+  "version": "27.0.5",
+  "buildDate": "2026-02-22T08:26:00Z",
   "platform": "linux-x86_64",
   "bundles": {
     "appimage": {
-      "file": "TITANE-Infinity_26.2.0_amd64.AppImage",
-      "sha256": "3158b4d201d890ab17b4ab09737dbe5c5bf57f0d4655a31bd8d0ed1d7cc87d46",
-      "size": "81.6MB"
+      "file": "TITANE-Infinity_27.0.5_amd64.AppImage",
+      "sha256": "37463c478138c2d39bfc2ebae3de571cfcc0cb1a754af2582a0ee7d8ea5b72be",
+      "size": "89.2MB"
     },
     "deb": {
-      "file": "TITANE-Infinity_26.2.0_amd64.deb",
-      "sha256": "236f8cef99b6686b719a14f0d22be04ebd93c8769a81b22b51ea3f7b6cee9968",
-      "size": "9.5MB"
+      "file": "TITANE-Infinity_27.0.5_amd64.deb",
+      "sha256": "e9d44ff4c04ca447bac6fb270e55ffc6c00c18bc4c8f3529d9a2d3c2bcb8474d",
+      "size": "13.8MB"
     },
     "binary": {
       "file": "titane-infinity",
-      "sha256": "19ce8df54fe0443f99eea96333dae458f24b2683ebf1d37cc34f4973d11898d2",
-      "size": "21.6MB"
+      "sha256": "80ffdbd8bf1ad9c9311690e4513b2a1a525b2e1561fe5ed7dce09319db5f1ca7",
+      "size": "23.3MB"
     }
   },
   "features": [
