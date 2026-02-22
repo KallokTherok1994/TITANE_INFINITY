@@ -4,6 +4,12 @@
 
 TITANE∞ est construit sur une architecture **modulaire, décentralisée et adaptative** qui permet une évolution continue et une résilience maximale.
 
+## Diagrams
+
+- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
+- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
+- Flux: [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md)
+
 ## 🏛️ Architecture Globale
 
 ```
