@@ -2,35 +2,35 @@
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 
-**Version:** v26.3.0  
+**Version:** v27.0.5  
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Qualité (v26.3.0) :** Certification P10.4 → P11 PASS (2026-02-19) — Production Ready ✅
+**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
 
 ---
 
 ## 📦 Téléchargement
 
-### ✨ **Version Stable : v26.3.0** — Release stable
+### ✨ **Version Stable : v27.0.5** — Release stable
 
 **Télécharger pour Linux (Debian/Ubuntu):**
 
 ```bash
-wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.deb
-sudo dpkg -i TITANE-Infinity_26.3.0_amd64.deb
+wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0.5/TITANE-Infinity_27.0.5_amd64.deb
+sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 ```
 
-**Points cles v26.3.0 :**
+**Points cles v27.0.5 :**
 
-- ✅ Certification P10.4 → P11 PASS (pipeline complet)
-- 🧠 Fix Ollama: modele par defaut `gemma2:2b`
-- 📦 Artefacts stables actualises (AppImage/DEB)
+- ✅ Warnings Rust audio corrigés (build release clean)
+- 🧠 Alignement complet des versions app/frontend/backend
+- 📦 Artefacts stables actualisés (AppImage/DEB/RPM)
 
 **Compatibilité :**  
 ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
-📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v26.3.0) | 🔐 [SHA256 Checksum](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v26.3.0/TITANE-Infinity_26.3.0_amd64.deb.sha256)
+📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums](./deployment/latest/SHA256SUMS_v27.0.5.txt)
 
 ---
 
@@ -100,20 +100,20 @@ corepack prepare pnpm@9 --activate
 ### Build Production (Titan-Stable)
 
 ```bash
-# Build optimisé pour production
-./runtime/stable/build.sh
+# Build production token-gated
+GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
 # Ou via task VSCode: "🔵 Build Titan-Stable"
 ```
 
 ---
 
-## 📐 Architecture v26.3.0
+## 📐 Architecture v27.0.5
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v26.3.0
+TITANE∞ v27.0.5
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
