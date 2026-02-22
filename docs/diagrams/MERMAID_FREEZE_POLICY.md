@@ -18,3 +18,12 @@ Toute evolution exige une Change Request.
 ## Why freeze?
 
 La stabilite et la lisibilite priment sur la sophistication.
+
+## Regression Sentinel
+
+Avant toute release majeure de TITANE∞ :
+
+- `pnpm run op:mermaid`
+- `bash scripts/verify/mermaid-proof-pack.sh`
+
+Archiver le proof pack.

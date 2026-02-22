@@ -53,7 +53,7 @@ if [[ -z "$BASELINE_SHA" ]]; then
   exit 1
 fi
 
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v10"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v11"
 latest_pack=""
 if [[ -d "$PROOF_PACK_DIR" ]]; then
   latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
