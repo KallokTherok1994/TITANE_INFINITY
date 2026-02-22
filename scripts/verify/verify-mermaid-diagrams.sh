@@ -9,12 +9,21 @@ FAIL=0
 REQUIRED_FILES=(
   "docs/standards/MERMAID_STANDARDS.md"
   "docs/diagrams/CANON_INDEX.md"
-  "docs/diagrams/README.md"
   "docs/diagrams/sources/architecture_4_ring.mmd"
   "docs/diagrams/sources/data_flow_chat.mmd"
   "docs/diagrams/sources/omega_pipeline_v2.mmd"
   "docs/diagrams/sources/certification_gates.mmd"
   "docs/diagrams/sources/network_surface_online_first.mmd"
+)
+
+for file in "${REQUIRED_FILES[@]}"; do
+  if [[ ! -f "$file" ]]; then
+    echo "FAIL: missing required file: $file"
+    FAIL=1
+  fi
+done
+
+RENDER_REQUIRED=(
   "docs/diagrams/rendered/architecture_4_ring.md"
   "docs/diagrams/rendered/data_flow_chat.md"
   "docs/diagrams/rendered/omega_pipeline_v2.md"
@@ -22,9 +31,24 @@ REQUIRED_FILES=(
   "docs/diagrams/rendered/network_surface_online_first.md"
 )
 
-for file in "${REQUIRED_FILES[@]}"; do
+NEED_SYNC=0
+for file in "${RENDER_REQUIRED[@]}"; do
   if [[ ! -f "$file" ]]; then
-    echo "FAIL: missing required file: $file"
+    NEED_SYNC=1
+    break
+  fi
+done
+
+if [[ "$NEED_SYNC" -eq 1 ]]; then
+  if ! bash scripts/verify/mermaid-render-sync.sh; then
+    echo "FAIL: unable to generate rendered Mermaid files"
+    FAIL=1
+  fi
+fi
+
+for file in "${RENDER_REQUIRED[@]}"; do
+  if [[ ! -f "$file" ]]; then
+    echo "FAIL: missing rendered file after sync: $file"
     FAIL=1
   fi
 done
@@ -58,6 +82,20 @@ for rendered in docs/diagrams/rendered/*.md; do
     echo "FAIL: invalid mermaid fences in $rendered"
     FAIL=1
   fi
+
+  if ! awk '
+    BEGIN { in_block=0; bad=0 }
+    /^```mermaid[[:space:]]*$/ { in_block=1; next }
+    /^```[[:space:]]*$/ { if (in_block==1) in_block=0; next }
+    {
+      if (in_block==1 && $0 ~ /http:\/\//) bad=1
+      if (in_block==1 && $0 ~ /https:\/\//) bad=1
+    }
+    END { if (bad==1) exit 1 }
+  ' "$rendered"; then
+    echo "FAIL: forbidden URL (http/https) in Mermaid block: $rendered"
+    FAIL=1
+  fi
 done
 
 NETWORK_FILE="docs/diagrams/sources/network_surface_online_first.mmd"
@@ -83,9 +121,9 @@ for source in docs/diagrams/sources/*.mmd; do
   fi
 done
 
-if rg -n 'CDN|https://' docs/diagrams/sources/*.mmd >/dev/null 2>&1; then
-  echo "FAIL: forbidden external reference (CDN or https://) in Mermaid source"
-  rg -n 'CDN|https://' docs/diagrams/sources/*.mmd || true
+if rg -n 'http://|https://' docs/diagrams/sources/*.mmd >/dev/null 2>&1; then
+  echo "FAIL: forbidden URL (http/https) in Mermaid source"
+  rg -n 'http://|https://' docs/diagrams/sources/*.mmd || true
   FAIL=1
 fi
 

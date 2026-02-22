@@ -1,43 +1,47 @@
 # MERMAID Standards (DOC-ONLY)
 
-Phase: MERMAID_DOC_GUARDS_V1  
+Phase: MERMAID_V1_DOC_GUARDS  
 Ring: Doc + Tooling  
-Statut: STABLE (DOC-ONLY)
+Statut: DOC=STABLE ; GUARDS=QUALIFIED
 
-## Objet
+## But
 
-Mermaid est une carte documentaire, pas le territoire runtime. Les diagrammes décrivent les invariants et flux validés sans introduire de dépendance d'exécution.
+Mermaid est une carte doc, pas le runtime. Les diagrammes décrivent des invariants et flux de référence sans dépendance d'exécution.
 
-## Règles canoniques
+## 5 diagrammes canons
 
-1. Un diagramme = une intention.
-2. Source of Truth = `docs/diagrams/sources/*.mmd`.
-3. Rendus = `docs/diagrams/rendered/*.md` générés par script.
-4. Complexité maximale par diagramme: ≤ 30 nœuds/liaisons heuristiques.
-5. Nommage stable: pas de synonymes multiples pour un même concept.
-6. Éviter les éléments décoratifs inutiles (ex: cloud non nécessaire).
+1. `architecture_4_ring`
+2. `data_flow_chat`
+3. `omega_pipeline_v2`
+4. `certification_gates`
+5. `network_surface_online_first`
 
-## Online-First Network Truth
+## Naming strict + pas de cosmétique
 
-- Tout élément réseau doit être taggé explicitement: `INTERNAL` ou `EXTERNAL`.
-- Mentionner le contexte Auth/Token quand applicable (niveau doc).
-- Mentionner Timeouts/Retry/Fallback (niveau doc) sur les surfaces réseau.
-- Aucun endpoint non gouverné dans les diagrammes canons.
+- Un diagramme = une intention.
+- Source of truth = `docs/diagrams/sources/*.mmd`.
+- Les rendus se font uniquement via script vers `docs/diagrams/rendered/*.md`.
+- Pas de variantes synonymes pour un même concept.
+- Pas d'éléments décoratifs non nécessaires.
+
+## Network Truth (online-first)
+
+- Toute arête réseau doit expliciter `INTERNAL` ou `EXTERNAL`.
+- Auth/Token doivent être mentionnés au niveau doc si applicables.
+- Timeout/Retry/Fallback doivent être mentionnés au niveau doc.
+- Aucun endpoint non gouverné.
+
+## Limite de complexité
+
+- Maximum `<= 30` liens (heuristique sur `-->`, `---`, `==>`, `..>`, `=>`).
+- Au-delà: segmentation du diagramme obligatoire.
 
 ## Interdits
 
-- CDN Mermaid ou dépendance externe d'exécution.
-- Fetch externe pour rendre les diagrammes.
-- Liens d'exécution ou mode in-app Mermaid.
-- `startOnLoad` en rendu applicatif: antipattern (non utilisé ici).
+- CDN Mermaid.
+- URL externes (`http://`, `https://`) dans les blocs Mermaid.
+- Endpoints non gouvernés.
 
-## Styles recommandés
+## Process
 
-- `flowchart TD`
-- `sequenceDiagram`
-- `stateDiagram-v2`
-
-## Gouvernance
-
-- Mode strict: DOC + Tooling uniquement.
-- Toute divergence déclenche `FAIL` via `verify:docs:mermaid`.
+- Ajouter un diagramme = mettre à jour `CANON_INDEX.md` + passer `verify:docs:mermaid`.

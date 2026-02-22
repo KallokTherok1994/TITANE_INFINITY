@@ -10,18 +10,6 @@ Le contenu du bloc Mermaid ci-dessous reprend exactement la source .mmd.
 - Index canon: [../CANON_INDEX.md](../CANON_INDEX.md)
 
 ```mermaid
-flowchart TD
-    IN[Conversation Input]
-    Router[Router]
-    Executor[Executor]
-    Merger[Merger]
-    Guardrails[Guardrails]
-    OUT[Conversation Output]
-
-    IN --> Router
-    Router --> Executor
-    Executor --> Merger
-    Merger --> Guardrails
-    Guardrails --> OUT
-    Guardrails -. policy checks .-> Router
+flowchart LR
+    R[Router] --> E[Executor] --> M[Merger] --> G[Guardrails]
 ```

@@ -1,6 +1,6 @@
 ### git status --porcelain=v1 -b
 ## MAIN...origin/MAIN
-?? docs/_evidence/v27/mermaid/
+ M docs/_evidence/v27/mermaid/A_repo_state.txt
 
 ### git rev-parse --abbrev-ref HEAD
 MAIN

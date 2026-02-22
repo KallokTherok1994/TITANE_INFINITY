@@ -1,0 +1,34 @@
+commit 05b6309b2986db4b52587d977cd2be975d85dd28
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 10:05:06 2026 -0500
+
+    docs(mermaid): canon diagrams + render sync + guards (online-first)
+
+M	docs/_evidence/v27/mermaid/A_repo_state.txt
+A	docs/_evidence/v27/mermaid/A_scan.txt
+A	docs/_evidence/v27/mermaid/B_files.txt
+A	docs/_evidence/v27/mermaid/C_render_sync.txt
+A	docs/_evidence/v27/mermaid/E_pkg_scripts.txt
+A	docs/_evidence/v27/mermaid/F_pnpm_version.txt
+A	docs/_evidence/v27/mermaid/F_render_run.txt
+A	docs/_evidence/v27/mermaid/F_verify_1.txt
+A	docs/_evidence/v27/mermaid/F_verify_2.txt
+A	docs/_evidence/v27/mermaid/F_verify_3.txt
+A	docs/_evidence/v27/mermaid/H_changed_files.txt
+A	docs/_evidence/v27/mermaid/I_diffstat.txt
+M	docs/_evidence/v27/mermaid/VERDICT.md
+M	docs/diagrams/CANON_INDEX.md
+M	docs/diagrams/README.md
+M	docs/diagrams/rendered/architecture_4_ring.md
+M	docs/diagrams/rendered/certification_gates.md
+M	docs/diagrams/rendered/data_flow_chat.md
+M	docs/diagrams/rendered/network_surface_online_first.md
+M	docs/diagrams/rendered/omega_pipeline_v2.md
+M	docs/diagrams/sources/architecture_4_ring.mmd
+M	docs/diagrams/sources/certification_gates.mmd
+M	docs/diagrams/sources/data_flow_chat.mmd
+M	docs/diagrams/sources/network_surface_online_first.mmd
+M	docs/diagrams/sources/omega_pipeline_v2.mmd
+A	docs/standards/MERMAID_DEV_PREVIEW.md
+M	docs/standards/MERMAID_STANDARDS.md
+M	scripts/verify/verify-mermaid-diagrams.sh

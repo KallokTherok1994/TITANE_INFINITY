@@ -1,0 +1,3 @@
+34:    "verify": "pnpm run lint && pnpm run format:check && pnpm run check && pnpm run test:all && pnpm run verify:tauri-only && pnpm run verify:online-first && pnpm run verify:network-guard && pnpm run verify:instructions && pnpm run verify:docs:mermaid && pnpm run verify:tauri-configs",
+41:    "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",
+42:    "verify:docs:mermaid": "bash scripts/verify/verify-mermaid-diagrams.sh",
