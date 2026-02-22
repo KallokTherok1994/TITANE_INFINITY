@@ -1,0 +1,15 @@
+### git status --porcelain=v1 -b
+## MAIN...origin/MAIN
+?? docs/_evidence/v27/mermaid/
+
+### git rev-parse --abbrev-ref HEAD
+MAIN
+
+### git remote -v
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (fetch)
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (push)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (fetch)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (push)
+
+### git rev-list --left-right --count origin/MAIN...HEAD || true
+0	0
