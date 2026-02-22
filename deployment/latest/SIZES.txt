@@ -1,2 +1,2 @@
 89217528 bytes  TITANE-Infinity_27.0.5_amd64.AppImage
-13790350 bytes  TITANE-Infinity_27.0.5_amd64.deb
+13798174 bytes  TITANE-Infinity_27.0.5_amd64.deb
