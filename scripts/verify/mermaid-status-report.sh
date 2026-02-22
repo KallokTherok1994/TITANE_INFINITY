@@ -53,7 +53,7 @@ if [[ -z "$BASELINE_SHA" ]]; then
   exit 1
 fi
 
-PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v5"
+PROOF_PACK_DIR="docs/_evidence/v27/mermaid_v6"
 latest_pack=""
 if [[ -d "$PROOF_PACK_DIR" ]]; then
   latest_pack=$(ls -1d "$PROOF_PACK_DIR"/proof_pack_* 2>/dev/null | sort | tail -n 1 || true)
@@ -72,14 +72,35 @@ else
   last_canon_update="unknown"
 fi
 
+FAIL=0
+
+LINEAGE_STATUS="FAIL"
+HEAD_SHA=$(git rev-parse HEAD 2>/dev/null || true)
+if [[ -n "$HEAD_SHA" && "$BASELINE_SHA" == "$HEAD_SHA" ]]; then
+  LINEAGE_STATUS="PASS"
+else
+  FAIL=1
+fi
+
 DRIFT_STATUS="FAIL"
 if bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist "$ALLOWLIST" >/dev/null 2>&1; then
   DRIFT_STATUS="PASS"
+else
+  FAIL=1
 fi
 
 REGISTRY_STATUS="FAIL"
 if bash scripts/verify/mermaid-hash-registry.sh --check >/dev/null 2>&1; then
   REGISTRY_STATUS="PASS"
+else
+  FAIL=1
+fi
+
+DIFF_INTEL_STATUS="FAIL"
+if bash scripts/verify/mermaid-diff-intel.sh >/dev/null 2>&1; then
+  DIFF_INTEL_STATUS="PASS"
+else
+  FAIL=1
 fi
 
 cat <<EOF > "$STATUS_PATH.tmp"
@@ -93,8 +114,10 @@ cat <<EOF > "$STATUS_PATH.tmp"
 - Proof Pack Standard: $PROOF_PACK_STANDARD
 - Canonical Diagrams: $CANONICAL_LIST
 - Latest Proof Pack: $latest_pack
+- Lineage Status: $LINEAGE_STATUS
 - Drift Strict Status: $DRIFT_STATUS
 - Registry Status: $REGISTRY_STATUS
+- Diff Intel Status: $DIFF_INTEL_STATUS
 - Diagram Count: $source_count
 - Last Canon Update (UTC): $last_canon_update
 EOF
@@ -111,9 +134,17 @@ if [[ "$MODE" == "check" ]]; then
     exit 1
   fi
   rm -f "$STATUS_PATH.tmp"
+  if [[ "$FAIL" -ne 0 ]]; then
+    echo "FAIL: MERMAID_STATUS_REPORT"
+    exit 1
+  fi
   echo "PASS: MERMAID_STATUS_REPORT"
   exit 0
 fi
 
 mv "$STATUS_PATH.tmp" "$STATUS_PATH"
+if [[ "$FAIL" -ne 0 ]]; then
+  echo "FAIL: MERMAID_STATUS_REPORT"
+  exit 1
+fi
 echo "PASS: MERMAID_STATUS_REPORT"

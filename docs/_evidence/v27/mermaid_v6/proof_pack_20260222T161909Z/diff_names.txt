@@ -1,0 +1,5 @@
+docs/diagrams/MERMAID_BASELINE_LOCK.json
+docs/diagrams/MERMAID_STATUS.md
+scripts/verify/mermaid-baseline-guard.sh
+scripts/verify/mermaid-proof-pack.sh
+scripts/verify/mermaid-status-report.sh

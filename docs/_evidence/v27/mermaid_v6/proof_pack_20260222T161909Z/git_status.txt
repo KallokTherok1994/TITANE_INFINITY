@@ -1,0 +1,7 @@
+## MAIN...origin/MAIN
+ M docs/diagrams/MERMAID_BASELINE_LOCK.json
+ M docs/diagrams/MERMAID_STATUS.md
+ M scripts/verify/mermaid-baseline-guard.sh
+ M scripts/verify/mermaid-proof-pack.sh
+ M scripts/verify/mermaid-status-report.sh
+?? docs/_evidence/v27/mermaid_v6/
