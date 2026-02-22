@@ -276,7 +276,36 @@ Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 
 ---
 
-## 📚 Documentation
+## �️ Governance Pattern Rules
+
+TITANE∞ implements **constitutional governance rules** to prevent accumulation of unmanaged subsystems and ensure clean archival of bounded governance patterns.
+
+### The Anti-Recursive System Rule
+
+**Key Principle:** Any governance subsystem must be designed for archival upfront (not retrofit) and must eliminate all residual maintenance burden post-archival.
+
+**Applies to:**
+- Diagram governance subsystems (e.g., Mermaid diagrams)
+- Schema validation subsystems  
+- Security audit subsystems
+- Performance metrics governance
+- Any other bounded micro-governance pattern
+
+**Core Requirement:**
+1. **Exit criteria declared upfront** (during design, not after sealing)
+2. **No "dormant with cadence" states** (choose ACTIVE or ARCHIVED only)
+3. **Explicit reactivation conditions** (max 4, must be specific)
+4. **Archival documentation** (immutable post-archival summary)
+5. **Zero residual maintenance** (no ongoing CI burden post-archive)
+
+**See Also:**
+- [Anti-Recursive System Rule](docs/governance/ANTI-RECURSIVE_SYSTEM_RULE.md) — Constitutional rule + checklist
+- [Governance Pattern Lessons](docs/governance/GOVERNANCE_PATTERN_LESSONS.md) — Mermaid lifecycle (V1→V19) case study
+- [.github/copilot-instructions.md](.github/copilot-instructions.md) — System-wide governance invariants
+
+---
+
+## �📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
 > **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
