@@ -1,0 +1,14 @@
+PROOF_PACK_PATH: docs/_evidence/v27/mermaid_v4/proof_pack_20260222T155627Z
+diff_names.txt
+diff_stat.txt
+drift_report.md
+drift.txt
+git_head.txt
+git_status.txt
+registry_check.txt
+render.txt
+ROLLBACK.md
+VERDICT.md
+verify_1.txt
+verify_2.txt
+verify_3.txt

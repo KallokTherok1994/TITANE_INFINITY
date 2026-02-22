@@ -1,0 +1,2 @@
+scripts/verify/verify-mermaid-drift.sh: ligne 217: avertissement : « here-document » à la ligne 82 délimité par la fin du fichier (au lieu de « EOF »)
+scripts/verify/verify-mermaid-drift.sh: ligne 218: erreur de syntaxe : fin de fichier prématurée

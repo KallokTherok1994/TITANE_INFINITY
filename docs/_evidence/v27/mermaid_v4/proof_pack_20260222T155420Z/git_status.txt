@@ -1,0 +1,7 @@
+## MAIN...origin/MAIN [ahead 1, behind 1]
+ M package.json
+ M scripts/verify/verify-mermaid-drift.sh
+?? docs/_evidence/v27/mermaid_v4/
+?? docs/diagrams/DRIFT_ALLOWLIST.txt
+?? docs/diagrams/MERMAID_EVOLUTION_POLICY.md
+?? scripts/verify/mermaid-proof-pack.sh

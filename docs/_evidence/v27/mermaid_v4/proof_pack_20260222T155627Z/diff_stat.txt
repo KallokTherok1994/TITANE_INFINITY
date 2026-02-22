@@ -1,0 +1,3 @@
+ package.json                           |   2 +
+ scripts/verify/verify-mermaid-drift.sh | 349 +++++++++++++++++----------------
+ 2 files changed, 177 insertions(+), 174 deletions(-)

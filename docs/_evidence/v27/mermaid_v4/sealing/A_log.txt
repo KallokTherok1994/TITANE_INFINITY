@@ -1,0 +1,5 @@
+042a9a6c (HEAD -> MAIN) docs(mermaid): enforce canon via CI + strict drift + docs wiring
+82de3661 docs(mermaid): add rebase reconciliation proof pack
+21770022 docs(mermaid): fix hash registry determinism + append-only (stopline)
+aece2bac docs(mermaid): fix hash registry determinism + append-only (stopline)
+158687ba ci(mermaid): add CI gate + drift detection

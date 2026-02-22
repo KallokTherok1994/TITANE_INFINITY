@@ -40,6 +40,8 @@
     "verify:instructions": "bash scripts/verify/verify-copilot-instructions.sh",
     "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",
     "verify:docs:mermaid": "bash scripts/verify/verify-mermaid-diagrams.sh",
+    "op:mermaid": "pnpm run render:docs:mermaid && pnpm run verify:docs:mermaid && bash scripts/verify/mermaid-hash-registry.sh --check && bash scripts/verify/verify-mermaid-drift.sh --strict --allowlist docs/diagrams/DRIFT_ALLOWLIST.txt",
+    "op:mermaid:pack": "bash scripts/verify/mermaid-proof-pack.sh",
     "verify:tauri-configs": "bash scripts/verify/validate-tauri-configs.sh",
     "verify:tauri-bundle-type": "bash scripts/verify/verify-tauri-bundle-type-warning.sh",
     "test": "cross-env NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run",
