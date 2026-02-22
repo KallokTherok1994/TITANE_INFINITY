@@ -1,0 +1,5 @@
+ .github/workflows/mermaid.yml        |  22 ++++++
+ docs/diagrams/README.md              |   4 +
+ package.json                         |   2 +
+ scripts/verify/mermaid-proof-pack.sh | 145 ++++++++++++++++++++++++++++++++++-
+ 4 files changed, 170 insertions(+), 3 deletions(-)
