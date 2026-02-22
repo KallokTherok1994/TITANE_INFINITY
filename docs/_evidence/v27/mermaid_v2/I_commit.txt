@@ -1,0 +1,20 @@
+commit 306ba5060ad22a77d2b67c8d2a925a794fd07aae
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 10:15:52 2026 -0500
+
+    ci(mermaid): add CI gate + drift detection
+
+A	.github/workflows/mermaid-verify.yml
+M	README.md
+A	docs/_evidence/v27/mermaid_v2/A_repo_state.txt
+A	docs/_evidence/v27/mermaid_v2/B_workflows.txt
+A	docs/_evidence/v27/mermaid_v2/D_drift_run.txt
+A	docs/_evidence/v27/mermaid_v2/D_render_run.txt
+A	docs/_evidence/v27/mermaid_v2/D_verify_1.txt
+A	docs/_evidence/v27/mermaid_v2/D_verify_2.txt
+A	docs/_evidence/v27/mermaid_v2/D_verify_3.txt
+A	docs/_evidence/v27/mermaid_v2/H_changed_files.txt
+A	docs/_evidence/v27/mermaid_v2/I_diffstat.txt
+A	docs/_evidence/v27/mermaid_v2/VERDICT_V2.md
+A	docs/diagrams/MERMAID_HASH_REGISTRY.json
+A	scripts/verify/verify-mermaid-drift.sh
