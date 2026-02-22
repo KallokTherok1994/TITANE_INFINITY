@@ -54,6 +54,17 @@
 - ✅ Zero secrets, zero credentials en clair.
 - ✅ Rollback documente pour chaque changement.
 
+## Version gate avant PROD (obligatoire)
+
+- ✅ Avant toute operation PROD autorisee, aligner strictement la version cible dans:
+  - `package.json`
+  - `src-tauri/Cargo.toml`
+  - `src-tauri/tauri.conf.json`
+  - `deployment/latest/MANIFEST.json`
+  - `deployment/latest/SHA256SUMS_v<version>.txt`
+  - `deployment/latest/SIZES_v<version>.txt`
+- ❌ Interdit de lancer un cycle PROD si ces versions ne sont pas identiques.
+
 ---
 
 ## Architecture & invariants (4-Ring + OMEGA v2 + IPC)
