@@ -61,9 +61,16 @@ pub struct CacheConfig {
 
 impl Default for CacheConfig {
     fn default() -> Self {
+        // V24 OPTIMIZATION: Aggressive cache sizing
+        // - max_entries: 1000 → 500 (50% reduction)
+        //   Reason: Typical session uses 100-200 unique queries, 500 cap is safe buffer
+        //   Memory: 1000 entries × 1KB ≈ 1MB → 500KB savings
+        // - default_ttl: 5s → 2s
+        //   Reason: Response cache is unlikely to hit after 2s (user moved on)
+        //   Benefit: Older entries cleared faster
         Self {
-            max_entries: 1000,
-            default_ttl: Duration::from_secs(5),
+            max_entries: 500,                           // V24: Reduced from 1000
+            default_ttl: Duration::from_secs(2),        // V24: Reduced from 5s
             enable_persistence: false,
             persistence_path: None,
         }
@@ -190,10 +197,18 @@ impl IntelligentCache {
     }
 
     /// Set value with TTL
+    /// V24 OPTIMIZATION: More aggressive eviction
     pub fn set(&self, key: CacheKey, value: serde_json::Value, ttl: Duration) {
-        // Check if we need to evict
+        // V24: First, clean up expired entries (lazy TTL cleanup)
+        self.evict_expired_entries();
+
+        // Then check if we need to evict LRU
         if self.data.len() >= self.config.max_entries {
-            self.evict_lru();
+            // V24 OPTIMIZATION: Evict more aggressively (10% of cap)
+            let evict_count = std::cmp::max(1, self.config.max_entries / 10);
+            for _ in 0..evict_count {
+                self.evict_lru();
+            }
         }
 
         // Create entry
@@ -209,6 +224,22 @@ impl IntelligentCache {
 
         // Update LRU
         self.lru.insert(key, Instant::now());
+    }
+
+    /// V24: Evict all expired entries (TTL-based cleanup)
+    fn evict_expired_entries(&self) {
+        let keys_to_remove: Vec<CacheKey> = self
+            .data
+            .iter()
+            .filter(|entry| entry.value().is_expired())
+            .map(|entry| entry.key().clone())
+            .collect();
+
+        for key in keys_to_remove {
+            self.data.remove(&key);
+            self.lru.remove(&key);
+            self.metrics.record_eviction();
+        }
     }
 
     /// Evict least recently used entry
