@@ -459,7 +459,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v26.3.0 — Validation finale complétée (score 10/10, cf. [CHANGELOG v26.3.0](CHANGELOG.md#v26-3-0))**  
+> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](CHANGELOG.md))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -490,7 +490,7 @@ git push origin feature/my-awesome-feature
 3. **Troubleshooting** (2-3 engineers, 10 issues, ≥80% resolution)
 4. **Performance** (1-2 engineers, ≥20% improvement)
 
-**Success Criteria:** (atteints v26.3.0)
+**Success Criteria:** (atteints v27.0.5)
 
 - ≥80% pass rate across all tests
 - ≥8/10 user satisfaction
@@ -601,14 +601,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify you're on latest version (v26.3.0)
+2. ✅ Verify you're on latest version (v27.0.5)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-- Current Phase: **v26.3.0 — Validation finale complétée (Score 10/10)**
+- Current Phase: **v27.0.5 — Stable release alignée (build + artefacts + docs)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -662,4 +662,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v26.3.0** — _Votre système d'exploitation cognitif_
+**TITANE∞ v27.0.5** — _Votre système d'exploitation cognitif_
