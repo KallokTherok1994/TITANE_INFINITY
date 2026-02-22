@@ -21,3 +21,14 @@
 ## Stability > Novelty
 
 La stabilite et la sobriete priment sur la nouveaute.
+
+## Reactivation Trigger Matrix
+
+| Événement | Action | Mermaid requis ? |
+|-----------|--------|------------------|
+| Changement UI | Non | ❌ |
+| Refactor interne non réseau | Non | ❌ |
+| Nouveau endpoint /api | Oui | ✅ |
+| Nouveau provider externe | Oui | ✅ |
+| Changement architecture engines | Oui | ✅ |
+| Bug drift détecté | Oui | ✅ |

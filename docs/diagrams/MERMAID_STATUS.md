@@ -4,4 +4,6 @@
 - Drift Strict Status: PASS
 - Registry Status: PASS
 - Change Request Required: true
-- Last Proof Pack: proof_pack_20260222T170846Z
+- Last Proof Pack: proof_pack_20260222T171854Z
+- System Mode: DORMANT (V12)
+- Last Active Phase: V11
