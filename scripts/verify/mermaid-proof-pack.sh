@@ -6,7 +6,7 @@ cd "$ROOT_DIR"
 
 STAMP=$(date -u +"%Y%m%dT%H%M%SZ")
 ISO_STAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-PACK_VERSION="mermaid_v14"
+PACK_VERSION="mermaid_v16"
 PACK_DIR="docs/_evidence/v27/${PACK_VERSION}/proof_pack_${STAMP}"
 ALLOWLIST="docs/diagrams/DRIFT_ALLOWLIST.txt"
 BASELINE_LOCK="docs/diagrams/MERMAID_BASELINE_LOCK.json"

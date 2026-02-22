@@ -1,0 +1,5 @@
+10:PACK_DIR="docs/_evidence/v27/${PACK_VERSION}/proof_pack_${STAMP}"
+9:PACK_VERSION="mermaid_v14"
+10:PACK_DIR="docs/_evidence/v27/${PACK_VERSION}/proof_pack_${STAMP}"
+14:PACK_ID="${PACK_VERSION}_${STAMP}_$(git rev-parse --short HEAD)"
+174:  "pack_version": "${PACK_VERSION}",
