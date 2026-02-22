@@ -1,6 +1,7 @@
 # TITANE∞ — Cognitive Operating System
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
+![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
 **Version:** v27.0.5  
 **Status:** Production Ready ✅  

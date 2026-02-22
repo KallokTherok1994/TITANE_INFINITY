@@ -1,0 +1,43 @@
+name: Mermaid Verify
+
+on:
+  push:
+    branches: [MAIN]
+  pull_request:
+    branches: [MAIN]
+
+env:
+  PNPM_VERSION: '10.28.2'
+
+jobs:
+  mermaid-verify:
+    name: Mermaid Canon Verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Render Mermaid docs
+        run: pnpm run render:docs:mermaid
+
+      - name: Verify Mermaid docs
+        run: pnpm run verify:docs:mermaid
+
+      - name: Mermaid drift detection
+        run: bash scripts/verify/verify-mermaid-drift.sh
