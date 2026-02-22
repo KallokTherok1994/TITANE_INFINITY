@@ -4,7 +4,7 @@
   See LICENSE.md for full legal terms (FR/EN).
 -->
 
-# CHANGELOG — TITANE∞ v27.0.2
+# CHANGELOG — TITANE∞
 
 **© 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.**
 
