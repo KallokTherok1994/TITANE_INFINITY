@@ -1,0 +1,11 @@
+=== Release Artifact Hashes (v27.0.3) ===
+
+Frontend bundle (dist/):
+  Manifest: f78adeae0107856b798bc181d18913e6c9f84c182096319ceea68ef7a03fdeb3
+  Files: 104
+
+Backend binary:
+1c6c557d11b84194d61d1f1401a7b5a7fadfd886380f63b367488852c49bc4ef  src-tauri/target/release/titane-infinity
+
+Desktop integration:
+caf1ae848852bf3b284592103674f9daf1c86515b59b6cb5d0e5d74accd4df20  /home/titane-os/.local/share/applications/titane-infinity.desktop

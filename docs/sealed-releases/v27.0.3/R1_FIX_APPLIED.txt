@@ -1,0 +1,6 @@
+=== R1 Fix Applied ===
+File: scripts/post-build.sh
+Issue: set -e caused ELIFECYCLE failure when update-desktop-icon.sh exited non-zero
+Fix: Wrapped call in || { echo warning; } to permit non-zero exit for desktop update
+
+This allows the frontend build (Vite) to complete successfully without being blocked by desktop update script failures, which are non-critical for release builds.
