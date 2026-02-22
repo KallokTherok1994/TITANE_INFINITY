@@ -1,0 +1,31 @@
+commit aece2bac6f6d50ab3c4382ff7811a27340de100a
+Author: Kevin Thibault <investissement.kevin@gmail.com>
+Date:   Sun Feb 22 10:25:54 2026 -0500
+
+    docs(mermaid): fix hash registry determinism + append-only (stopline)
+
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_changed_files.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_diffstat.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_ls_diagrams.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_recent_commits.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_registry_diff.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/A_status.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_registry_full.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_render_sync_head.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_ls.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_sources_sha256sum.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_diagrams_head.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/B_verify_drift_head.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/C_ROOT_CAUSE.md
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/C_registry_update.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_drift.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_registry_check.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_render.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_verify_1.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_verify_2.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/D_verify_3.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/E_changed_files.txt
+A	docs/_evidence/v27/mermaid_v2/stopline_registry/VERDICT_STOPLINE_REGISTRY.md
+M	docs/diagrams/MERMAID_HASH_REGISTRY.json
+A	scripts/verify/mermaid-hash-registry.sh
+M	scripts/verify/verify-mermaid-drift.sh
