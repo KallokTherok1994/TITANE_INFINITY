@@ -1,0 +1,29 @@
+{
+  "timestamp_utc": "2026-02-23T17:56:15Z",
+  "test_run": "continuous_diff_check_1",
+  "baseline_avg_latency_ms": 14.5,
+  "current_measurements": [
+    { "message_id": 1, "input": "hello", "latency_ms": 12, "status": "ok" },
+    { "message_id": 2, "input": "how are you", "latency_ms": 15, "status": "ok" },
+    { "message_id": 3, "input": "test message", "latency_ms": 13, "status": "ok" },
+    { "message_id": 4, "input": "another test", "latency_ms": 14, "status": "ok" },
+    { "message_id": 5, "input": "final message", "latency_ms": 16, "status": "ok" }
+  ],
+  "trend_analysis": {
+    "current_avg_latency_ms": 14.0,
+    "baseline_avg_latency_ms": 14.5,
+    "delta_ms": -0.5,
+    "delta_percent": -3.4,
+    "max_latency_ms": 16,
+    "min_latency_ms": 12,
+    "error_count": 0,
+    "error_rate_percent": 0.0
+  },
+  "threshold_evaluation": {
+    "warning_threshold_ms": 25,
+    "critical_threshold_ms": 50,
+    "current_status": "PASS",
+    "remarks": "Latency improved vs baseline, well below all thresholds"
+  },
+  "verdict": "STABLE"
+}

@@ -1,0 +1,49 @@
+{
+  "timestamp_utc": "2026-02-23T17:56:35Z",
+  "baseline_timestamp": "2026-02-23T17:52:55Z",
+  "drift_metrics": {
+    "cpu_percent": {
+      "baseline": 8.5,
+      "current": 9.2,
+      "delta": 0.7,
+      "delta_percent": 8.2,
+      "threshold_warning_percent": 12.0,
+      "threshold_critical_percent": 20.0,
+      "status": "PASS"
+    },
+    "memory_mb": {
+      "baseline": 245,
+      "current": 248,
+      "delta": 3,
+      "delta_percent": 1.2,
+      "threshold_warning_mb": 350,
+      "threshold_critical_mb": 500,
+      "status": "PASS"
+    },
+    "event_count_total": {
+      "baseline": 47,
+      "current": 52,
+      "delta": 5,
+      "delta_percent": 10.6,
+      "status": "NORMAL"
+    }
+  },
+  "provider_metrics": {
+    "mock": {
+      "baseline_requests": 15,
+      "current_requests": 16,
+      "baseline_latency_avg": 12.0,
+      "current_latency_avg": 11.8,
+      "status": "NOMINAL"
+    }
+  },
+  "conversation_engine": {
+    "baseline_messages": 8,
+    "current_messages": 13,
+    "baseline_response_time_avg": 14.5,
+    "current_response_time_avg": 14.0,
+    "status": "IMPROVED"
+  },
+  "overall_telemetry_verdict": "STABLE",
+  "anomalies": []
+}

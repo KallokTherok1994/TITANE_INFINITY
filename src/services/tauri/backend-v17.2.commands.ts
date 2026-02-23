@@ -217,7 +217,6 @@ export const composite = {
       nexus: state.nexus,
       harmonia: state.harmonia,
       sentinel: state.sentinel,
-      metadata: {},
     };
 
     await safeInvoke<void>('write_snapshot', { snapshot });

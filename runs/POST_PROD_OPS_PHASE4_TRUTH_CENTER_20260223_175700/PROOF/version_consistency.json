@@ -1,0 +1,27 @@
+{
+  "timestamp_utc": "2026-02-23T17:57:00Z",
+  "canonical_files": {
+    "package.json": {
+      "version": "27.0.5",
+      "expected": "27.0.5",
+      "match": "PASS"
+    },
+    "src-tauri/Cargo.toml": {
+      "version": "",
+      "expected": "27.0.5",
+      "match": "FAIL"
+    },
+    "src-tauri/tauri.conf.json": {
+      "version": "27.0.5",
+      "expected": "27.0.5",
+      "match": "PASS"
+    }
+  },
+  "deployment_metadata": {
+    "manifest_file": "deployment/latest/MANIFEST_v27.0.5.md",
+    "exists": "yes",
+    "checksums_file": "deployment/latest/SHA256SUMS_v27.0.5.txt",
+    "checksums_exists": "yes"
+  },
+  "verdict": "PASS"
+}

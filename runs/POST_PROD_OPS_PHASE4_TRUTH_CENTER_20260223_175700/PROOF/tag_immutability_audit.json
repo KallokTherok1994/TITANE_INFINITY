@@ -1,0 +1,13 @@
+{
+  "timestamp_utc": "2026-02-23T17:57:10Z",
+  "production_tag": "v27.0.5-prod",
+  "tag_sha_actual": "a1bf79e29be3e6188bd4ab0f9c4d864dd433ab69",
+  "tag_sha_expected": "a1bf79e29be3e6188bd4ab0f9c4d864dd433ab69",
+  "tag_match": "PASS",
+  "tag_status": "IMMUTABLE",
+  "tag_created_date": "2026-02-23T09:09:00Z",
+  "tag_message": "Production release v27.0.5 (OMEGA_FINAL seal)",
+  "commits_on_tag": 1,
+  "uncommitted_changes": "none",
+  "verdict": "PASS_IMMUTABLE"
+}

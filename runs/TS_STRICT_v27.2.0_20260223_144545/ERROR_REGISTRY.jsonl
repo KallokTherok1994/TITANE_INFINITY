@@ -1,0 +1,1 @@
+{"file":"src/services/tauri/backend-v17.2.commands.ts","line":220,"col":7,"code":"TS2353","message":"Object literal may only specify known properties, and 'metadata' does not exist in type 'Snapshot'","ring_guess":"Ring3-Services","category":"type_property_mismatch","first_seen_ts":"2026-02-23T19:46:35Z","status":"FIXED"}
