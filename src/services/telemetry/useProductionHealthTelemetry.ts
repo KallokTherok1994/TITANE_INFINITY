@@ -32,10 +32,7 @@ function isProductionHealthSummary(value: unknown): value is ProductionHealthSum
 export function useProductionHealthTelemetry(
   options: UseProductionHealthTelemetryOptions = {}
 ) {
-  const {
-    refreshIntervalMs = 60000,
-    autoRefresh = true,
-  } = options;
+  const { refreshIntervalMs = 60000, autoRefresh = true } = options;
 
   const [data, setData] = useState<ProductionHealthSummary | null>(null);
   const [loading, setLoading] = useState(false);
@@ -72,8 +69,7 @@ export function useProductionHealthTelemetry(
       const summary = response;
       setData(summary);
     } catch (err) {
-      const errorMsg =
-        err instanceof Error ? err.message : String(err);
+      const errorMsg = err instanceof Error ? err.message : String(err);
       setError(errorMsg);
       if (!data) {
         setData(null);

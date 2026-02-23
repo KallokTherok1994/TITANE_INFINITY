@@ -33,15 +33,15 @@ const providersStatusCache = new StatusCache<ProviderStatus[]>({
 
 /**
  * ⚠️ LEGACY PROVIDER — TEST USE ONLY
- * 
+ *
  * This provider is DEPRECATED for production use.
  * Forces provider='local' without checking ENABLE_EXTERNAL_AI gate.
- * 
+ *
  * Modern production code uses:
  * - src/services/conversationEngine.ts (frontend service)
  * - src/hooks/useConversationEngine.ts (UI hook)
  * - Direct IPC via tauriClient (no provider wrapper)
- * 
+ *
  * This file remains for:
  * - Test suite compatibility (aiOrchestrator tests)
  * - Health checks (isAvailable() only)
@@ -183,12 +183,12 @@ class TauriChatProvider implements AIProvider {
 
       // Construit la requête
       const conversationId = `conv_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`;
-      
+
       // ⚠️ LEGACY: This provider forces local mode and does NOT respect ENABLE_EXTERNAL_AI gate.
       // Modern code should use conversationEngine.ts (src/services/conversationEngine.ts) instead.
       // This provider is used ONLY in tests. Production UI uses conversationEngine → tauriClient IPC.
       logger.warn('[LEGACY] TauriChatProvider forces provider=local (gate not checked)');
-      
+
       const request: ChatRequest = {
         message: message.trim(),
         conversationId,

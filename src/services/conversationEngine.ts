@@ -259,7 +259,9 @@ export async function processMessage(
   const externalAllowed = FEATURE_FLAGS.ENABLE_EXTERNAL_AI;
   console.log('[CONV_SEND] External AI gate', {
     buildFlagEnabled: envFlag('VITE_ENABLE_EXTERNAL_AI'),
-    runtimeToggleEnabled: import.meta.env.DEV ? true : runtimeFlag('titane.enable_external_ai'),
+    runtimeToggleEnabled: import.meta.env.DEV
+      ? true
+      : runtimeFlag('titane.enable_external_ai'),
     allowed: externalAllowed,
     requested_provider: 'auto',
   });

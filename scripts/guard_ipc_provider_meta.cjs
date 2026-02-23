@@ -23,15 +23,11 @@ function runTest(outputPath, mode) {
     P3_IPC_MODE: mode || 'default',
   };
 
-  execFileSync(
-    'cargo',
-    ['test', 'ipc_meta_contract_smoke', '--', '--nocapture'],
-    {
-      cwd: srcTauriDir,
-      env,
-      stdio: 'inherit',
-    }
-  );
+  execFileSync('cargo', ['test', 'ipc_meta_contract_smoke', '--', '--nocapture'], {
+    cwd: srcTauriDir,
+    env,
+    stdio: 'inherit',
+  });
 }
 
 function readJson(filePath) {
@@ -65,7 +61,7 @@ fs.unlinkSync(offline2);
 fs.unlinkSync(offline3);
 
 const determinism = [readJson(run1), readJson(run2), readJson(run3)];
-const keys = determinism.map((item) => {
+const keys = determinism.map(item => {
   const meta = item.meta || {};
   return {
     provider_used: meta.provider_used,
@@ -75,7 +71,7 @@ const keys = determinism.map((item) => {
 });
 
 const determinismOk = keys.every(
-  (entry) =>
+  entry =>
     entry.provider_used === keys[0].provider_used &&
     entry.mode === keys[0].mode &&
     entry.reason_code === keys[0].reason_code

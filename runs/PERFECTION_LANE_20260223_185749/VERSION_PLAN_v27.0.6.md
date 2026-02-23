@@ -3,6 +3,7 @@
 ## Release Track Decision
 
 ### Chantier Nature: API Documentation Sync
+
 - **Category**: Docs-only (zero runtime impact)
 - **Risk**: MINIMAL (P2 policy)
 - **Rollback**: Trivial (git revert)
@@ -10,6 +11,7 @@
 ### Version Selection: v27.0.6 (Hotfix)
 
 **Rationale**:
+
 - Documentation sync = patch-level change (docs fix)
 - No feature additions, no breaking changes
 - No version bump in package.json/Cargo.toml/tauri.conf.json needed
@@ -22,16 +24,19 @@
 ## Deployment Strategy
 
 ### Wave Strategy (Conservative)
+
 **Wave 1**: 5% early adopters (today)
 **Wave 2**: 25% mainstream (after 24h verification)
 **Wave 3**: 100% GA (after 48h full validation)
 
 ### Build Artifacts
+
 - AppImage (unified)
 - DEB (Ubuntu/Debian)
 - RPM (RHEL/Fedora compatible)
 
 ### Timeline
+
 1. **Now**: Merge perfection/lane-optimization → main
 2. **+5 min**: Git tag v27.0.6
 3. **+15 min**: Build artifacts (AppImage + DEB)
@@ -46,6 +51,7 @@
 ## Critical Path
 
 ### Merge & Tag
+
 ```bash
 git checkout main
 git merge perfection/lane-optimization
@@ -54,29 +60,32 @@ git push origin main v27.0.6
 ```
 
 ### Build Sequence
+
 ```bash
 GO_FOR_PROD_BUILD__TITANE_INFINITY=APPROVED pnpm run build:tauri:e2e
 ```
 
 ### Deployment Gate
+
 All 9 governance gates: ✅ PASS (verified in Phase 7)
 
 ---
 
 ## Success Metrics
 
-| Metric | Baseline | Target |
-|--------|----------|--------|
-| Build time | ~45 min | <50 min |
-| Artifact size | 86M AppImage | ±2% |
-| Test pass rate | 100% | 100% |
-| Deployment lag | N/A | <2h |
+| Metric         | Baseline     | Target  |
+| -------------- | ------------ | ------- |
+| Build time     | ~45 min      | <50 min |
+| Artifact size  | 86M AppImage | ±2%     |
+| Test pass rate | 100%         | 100%    |
+| Deployment lag | N/A          | <2h     |
 
 ---
 
 ## Rollback Plan
 
 **If issues detected**:
+
 ```bash
 git revert v27.0.6
 git tag -d v27.0.6
@@ -84,4 +93,3 @@ git push origin :v27.0.6
 ```
 
 Rollback time: <10 min (docs revert)
-

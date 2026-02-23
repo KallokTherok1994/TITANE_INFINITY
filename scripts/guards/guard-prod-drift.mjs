@@ -10,7 +10,8 @@ import path from 'path';
 import { execSync } from 'child_process';
 
 const RELEASE_DIR = 'deployment/latest/release/p4_deploy_20260217_171400';
-const BASELINE_MANIFEST = 'reports/ai_local_vΩ3/P5_POST_PROD_BASELINE_20260217_172127/02_RELEASE_TREE.txt';
+const BASELINE_MANIFEST =
+  'reports/ai_local_vΩ3/P5_POST_PROD_BASELINE_20260217_172127/02_RELEASE_TREE.txt';
 
 console.log('[P5-2] Drift Detector Starting...');
 
@@ -32,7 +33,11 @@ console.log(`✓ Checksums present`);
 // Check 3: Git state unchanged
 try {
   const gitStatus = execSync('git status --porcelain=v1', { encoding: 'utf8' }).trim();
-  if (gitStatus && !gitStatus.includes('reports/') && !gitStatus.includes('_quarantine')) {
+  if (
+    gitStatus &&
+    !gitStatus.includes('reports/') &&
+    !gitStatus.includes('_quarantine')
+  ) {
     console.error(`✗ Unexpected git changes: ${gitStatus.split('\n')[0]}`);
     process.exit(2);
   }

@@ -1,13 +1,13 @@
 /**
  * TITANE∞ — P3 CERTIFICATION — STRUCTURAL TEST
  * Chat Provider Decision — Invariant Validation
- * 
+ *
  * Approche: SANS E2E complexe
  * Méthode: Code synthesis + JSON parsing + invariant checks
- * 
+ *
  * Objectif: Valider que les logs [CONV_SEND] et [CONV_RECV]
  * existent, peuvent être parsés, et respectent invariants P3.
- * 
+ *
  * Avantage: Zéro infrastructure requise. Test reproductible x3.
  */
 
@@ -26,11 +26,15 @@ function extractLogPatterns(filePath: string): {
 
   // Pattern pour [CONV_SEND]
   const sendMatches = content.match(/console\.log\('[^']*\[CONV_SEND\][^']*'/g) || [];
-  const sendPatterns = sendMatches.map(m => m.replace(/console\.log\('/g, '').replace(/'$/g, ''));
+  const sendPatterns = sendMatches.map(m =>
+    m.replace(/console\.log\('/g, '').replace(/'$/g, '')
+  );
 
   // Pattern pour [CONV_RECV]
   const recvMatches = content.match(/console\.log\('[^']*\[CONV_RECV\][^']*'/g) || [];
-  const recvPatterns = recvMatches.map(m => m.replace(/console\.log\('/g, '').replace(/'$/g, ''));
+  const recvPatterns = recvMatches.map(m =>
+    m.replace(/console\.log\('/g, '').replace(/'$/g, '')
+  );
 
   return { send: sendPatterns, recv: recvPatterns };
 }
@@ -55,8 +59,13 @@ function generateSimulatedMeta(runId: number): SimulatedMeta {
   // - RUN 1: allowed=true, REMOTE mode (successful external provider)
   // - RUN 2: allowed=true, OFFLINE mode (provider timeout, offline fallback)
   // - RUN 3: allowed=false (external AI disabled), LOCAL mode
-  
-  const reasons = ['NO_API_KEY', 'PROVIDER_TIMEOUT', 'NETWORK_OFFLINE', 'FALLBACK_OFFLINE'];
+
+  const reasons = [
+    'NO_API_KEY',
+    'PROVIDER_TIMEOUT',
+    'NETWORK_OFFLINE',
+    'FALLBACK_OFFLINE',
+  ];
 
   let mode: 'REMOTE' | 'LOCAL' | 'OFFLINE';
   let allowed: boolean;
@@ -124,9 +133,7 @@ function validateInvariants(
   if (allowed && meta.mode === 'OFFLINE') {
     // Toléré si reason_code présent
     if (!meta.reason_code) {
-      violations.push(
-        '[INV-B1] Mode OFFLINE malgré allowed=true, mais NO reason_code'
-      );
+      violations.push('[INV-B1] Mode OFFLINE malgré allowed=true, mais NO reason_code');
     }
   }
 
@@ -162,10 +169,7 @@ test.describe('P3 Certification: Structural Meta Validation', () => {
    * Test 1: Vérifier que logs patterns existent dans source
    */
   test('STRUCT-1: Log patterns [CONV_SEND] and [CONV_RECV] exist in source', () => {
-    const filePath = join(
-      process.cwd(),
-      'src/services/conversationEngine.ts'
-    );
+    const filePath = join(process.cwd(), 'src/services/conversationEngine.ts');
 
     const { send, recv } = extractLogPatterns(filePath);
 

@@ -4,40 +4,48 @@ const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
 
 async function invokeConversationGenerate(message) {
-  return await browser.executeAsync((payload, done) => {
-    const run = async () => {
-      if (window.__TAURI_INTERNALS__?.invoke) {
-        return await window.__TAURI_INTERNALS__.invoke('conversation_generate', payload);
+  return await browser
+    .executeAsync(
+      (payload, done) => {
+        const run = async () => {
+          if (window.__TAURI_INTERNALS__?.invoke) {
+            return await window.__TAURI_INTERNALS__.invoke(
+              'conversation_generate',
+              payload
+            );
+          }
+
+          if (window.__TAURI__?.tauri?.invoke) {
+            return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
+          }
+
+          if (window.__TAURI__?.invoke) {
+            return await window.__TAURI__.invoke('conversation_generate', payload);
+          }
+
+          if (window.__TAURI__?.core?.invoke) {
+            return await window.__TAURI__.core.invoke('conversation_generate', payload);
+          }
+
+          if (window.__TAURI__ || window.__TAURI_INTERNALS__) {
+            throw new Error('Tauri API present but invoke is unavailable');
+          }
+
+          throw new Error('Tauri IPC unavailable');
+        };
+
+        run()
+          .then(res => done({ ok: true, res }))
+          .catch(err => done({ ok: false, err: String(err?.message || err) }));
+      },
+      { message, conversationId: null }
+    )
+    .then(result => {
+      if (!result?.ok) {
+        throw new Error(result?.err || 'IPC invocation failed');
       }
-
-      if (window.__TAURI__?.tauri?.invoke) {
-        return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
-      }
-
-      if (window.__TAURI__?.invoke) {
-        return await window.__TAURI__.invoke('conversation_generate', payload);
-      }
-
-      if (window.__TAURI__?.core?.invoke) {
-        return await window.__TAURI__.core.invoke('conversation_generate', payload);
-      }
-
-      if (window.__TAURI__ || window.__TAURI_INTERNALS__) {
-        throw new Error('Tauri API present but invoke is unavailable');
-      }
-
-      throw new Error('Tauri IPC unavailable');
-    };
-
-    run()
-      .then(res => done({ ok: true, res }))
-      .catch(err => done({ ok: false, err: String(err?.message || err) }));
-  }, { message, conversationId: null }).then(result => {
-    if (!result?.ok) {
-      throw new Error(result?.err || 'IPC invocation failed');
-    }
-    return result.res;
-  });
+      return result.res;
+    });
 }
 
 describe('ONLINE_CHAT_FIX proof driver', () => {
@@ -71,7 +79,9 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     const provider = decision.providerSelected || 'unknown';
 
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
-    console.log(`[CHAT_DECISION] online=${String(online)} reason=${String(reason)} provider=${provider}`);
+    console.log(
+      `[CHAT_DECISION] online=${String(online)} reason=${String(reason)} provider=${provider}`
+    );
     console.log(`[ASSISTANT_TEXT] ${String(response.assistant_message).slice(0, 200)}`);
   });
 });

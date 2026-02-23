@@ -69,13 +69,13 @@ Scope: repo-wide
 **DO (before any prod build/deploy):**
 
 - Synchronize release version in all canonical files:
-	- `package.json`
-	- `src-tauri/Cargo.toml`
-	- `src-tauri/tauri.conf.json`
+  - `package.json`
+  - `src-tauri/Cargo.toml`
+  - `src-tauri/tauri.conf.json`
 - Synchronize deployment metadata with the same target version:
-	- `deployment/latest/MANIFEST.json`
-	- `deployment/latest/SHA256SUMS_v<version>.txt`
-	- `deployment/latest/SIZES_v<version>.txt`
+  - `deployment/latest/MANIFEST.json`
+  - `deployment/latest/SHA256SUMS_v<version>.txt`
+  - `deployment/latest/SIZES_v<version>.txt`
 
 **DONT:**
 

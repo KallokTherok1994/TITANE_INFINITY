@@ -669,9 +669,7 @@ class AIOrchestrator {
             logger.debug('   🏠 LOCAL MODE FORCÉ: Ollama exclusif');
           } else {
             score += 30; // Score bas en mode auto = fallback après clouds
-            logger.debug(
-              '   🏠 AUTO MODE: Ollama fallback local (après clouds)'
-            );
+            logger.debug('   🏠 AUTO MODE: Ollama fallback local (après clouds)');
           }
           score += messageLength < 500 ? 10 : 0; // Bonus messages courts
           score += !requiresRealtime ? 5 : 0; // Légèrement bon si async OK

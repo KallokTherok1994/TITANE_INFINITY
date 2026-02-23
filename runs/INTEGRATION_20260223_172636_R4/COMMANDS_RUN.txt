@@ -1,0 +1,6 @@
+$ bash scripts/gates/g8-provider-api-only.sh
+$ bash scripts/gates/g4-provider-decision-certified.sh
+]633;E;{  echo "$ pgrep -fa 'target/debug/titane-infinity|cargo run --no-default-features --features mock,audio-capture'"\x3b  echo "$ bash scripts/test/test-provider-status.sh"\x3b  echo "$ bash scripts/gates/g8-provider-api-only.sh"\x3b  echo "$ bash scripts/gates/g4-provider-decision-certified.sh"\x3b } >> "$RUN_DIR/COMMANDS_RUN.txt";29c553aa-d695-424c-87b0-801179e755d4]633;C$ pgrep -fa 'target/debug/titane-infinity|cargo run --no-default-features --features mock,audio-capture'
+$ bash scripts/test/test-provider-status.sh
+$ bash scripts/gates/g8-provider-api-only.sh
+$ bash scripts/gates/g4-provider-decision-certified.sh

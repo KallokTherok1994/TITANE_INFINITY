@@ -3,6 +3,7 @@
 ## Critical Metrics Tracked
 
 ### System Health (every 5 minutes)
+
 ```
 ✅ Error Rate: target < 0.1% (alert > 0.5%)
 ✅ Crash Count: target = 0 (alert > 5/hour)
@@ -12,6 +13,7 @@
 ```
 
 ### User Experience Metrics (every 15 minutes)
+
 ```
 ✅ UI Load Time: baseline 1198ms ± 5% (alert > 1400ms)
 ✅ Conversation Latency: baseline 14ms ± 5% (alert > 20ms)
@@ -20,6 +22,7 @@
 ```
 
 ### Infrastructure Metrics (continuous)
+
 ```
 ✅ CPU Usage: target 8-12% (alert > 20%)
 ✅ Memory: target 240-300MB (alert > 400MB)
@@ -28,6 +31,7 @@
 ```
 
 ### Business Metrics (hourly)
+
 ```
 ✅ Active Users: by wave (Wave 1: growth 5% baseline)
 ✅ Adoption Rate: target 80%+ within 7 days post-GA
@@ -40,6 +44,7 @@
 ## Alerting Rules (Automated)
 
 ### Severity: CRITICAL (page on-call immediately)
+
 ```
 ERROR_RATE > 1% for 5 consecutive checks
 CRASH_RATE > 20/minute
@@ -50,6 +55,7 @@ DATA_CORRUPTION detected
 ```
 
 ### Severity: HIGH (notify team within 5 min)
+
 ```
 ERROR_RATE 0.5% - 1% for 10 consecutive checks
 CRASH_RATE 5-20/minute
@@ -59,6 +65,7 @@ PROVIDER_CONNECTION_LOSS > 1% of users
 ```
 
 ### Severity: MEDIUM (daily summary)
+
 ```
 ERROR_RATE 0.1% - 0.5% trending up
 UI_LOAD_TIME 1400-2000ms
@@ -71,6 +78,7 @@ SUPPORT_TICKETS > 10 with same topic
 ## Monitoring Dashboards
 
 ### Real-Time Dashboard (displayed in control room)
+
 ```
 ┌─────────────────────────────────────────────┐
 │ v27.0.5-prod LIVE STATUS - Last 24h        │
@@ -91,6 +99,7 @@ SUPPORT_TICKETS > 10 with same topic
 ```
 
 ### Trend Dashboard (24h, 7d, 30d views)
+
 ```
 Charts displayed:
 - Error rate trend (should stay flat or improve)
@@ -101,6 +110,7 @@ Charts displayed:
 ```
 
 ### Wave-Specific Dashboard
+
 ```
 Wave 1 (5% early adopters):
   └─ Error Rate: 0.04% (excellent)
@@ -120,23 +130,27 @@ Wave 3 GA (coming T+96h):
 ## Monitoring Cadence
 
 ### Minute 0-60 (Immediate post-deployment)
+
 - Every 1 minute: Error rate, crashes, latency
 - Team on high alert status
 - Someone monitoring dashboard continuously
 
 ### Hour 1-24 (Wave 1 steady state)
+
 - Every 5 minutes: Core metrics
 - Every 15 minutes: User experience metrics
 - Every 30 minutes: Support ticket count
 - Team on-call, monitoring dashboard
 
 ### Day 2-7 (Multi-wave deployment)
+
 - Every 15 minutes: Core metrics
 - Every 60 minutes: Detailed analysis
 - Daily standups: review metrics, plan next wave
 - Team normal hours coverage
 
 ### Week 2+ (Production stable)
+
 - Every 60 minutes: automated checks
 - Dashboard updates on anomaly detection
 - Weekly trend reports
@@ -151,14 +165,14 @@ Wave 3 GA (coming T+96h):
 **Triage** (1 min): Is this real? What's the impact?
 ↓
 **Response** (depends on severity):
-  - CRITICAL: Page on-call → immediate investigation + possible rollback
-  - HIGH: Notify team → root cause analysis within 30 min
-  - MEDIUM: Log & defer to next daily review
-↓
-**Action**:
-  - Rollback? (< 5 min decision)
-  - Fix? (design hotfix for v27.0.6)
-  - Monitor? (track for patterns)
-↓
-**Communication**: Auto-notify users if needed
 
+- CRITICAL: Page on-call → immediate investigation + possible rollback
+- HIGH: Notify team → root cause analysis within 30 min
+- MEDIUM: Log & defer to next daily review
+  ↓
+  **Action**:
+- Rollback? (< 5 min decision)
+- Fix? (design hotfix for v27.0.6)
+- Monitor? (track for patterns)
+  ↓
+  **Communication**: Auto-notify users if needed

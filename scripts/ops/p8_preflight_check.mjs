@@ -2,11 +2,11 @@
 
 /**
  * P8 PRE-FLIGHT SAFETY CHECK
- * 
+ *
  * Final validation gate before any distribution attempt.
- * Ensures no dev processes are running, drift is stable, 
+ * Ensures no dev processes are running, drift is stable,
  * and sealed state is intact.
- * 
+ *
  * Exit codes:
  * - 0: All checks pass
  * - 2: Deterministic/acceptable drift (stable)
@@ -32,10 +32,13 @@ function checkNoDevProcesses() {
 
   try {
     // Check for Vite on port 4000 (this is critical - blocks dist)
-    const viteCheck = execSync('lsof -i :4000 2>/dev/null | grep -E "node|vite" || true', {
-      encoding: 'utf8',
-      cwd: repoRoot
-    }).trim();
+    const viteCheck = execSync(
+      'lsof -i :4000 2>/dev/null | grep -E "node|vite" || true',
+      {
+        encoding: 'utf8',
+        cwd: repoRoot,
+      }
+    ).trim();
 
     if (viteCheck) {
       console.error(`${LOG_PREFIX} ❌ Vite dev server detected on port 4000 (critical):`);
@@ -44,7 +47,7 @@ function checkNoDevProcesses() {
     }
 
     // Cargo test is OK (tests can run during finalization)
-    console.log(`${LOG_PREFIX} ✅ No critical dev processes (Vite/server)`);  
+    console.log(`${LOG_PREFIX} ✅ No critical dev processes (Vite/server)`);
     console.log('');
     return true;
   } catch (err) {
@@ -61,7 +64,7 @@ function checkDriftGuard() {
 
   try {
     const guardScript = path.join(repoRoot, 'scripts/guards/guard-prod-drift.mjs');
-    
+
     if (!fs.existsSync(guardScript)) {
       console.warn(`${LOG_PREFIX} ⚠️  Drift guard script not found (skipping)`);
       return true;
@@ -70,7 +73,7 @@ function checkDriftGuard() {
     const result = execSync(`node "${guardScript}"`, {
       cwd: repoRoot,
       encoding: 'utf8',
-      stdio: 'pipe'
+      stdio: 'pipe',
     });
 
     // Exit code 0 or 2 is acceptable (deterministic/stable)
@@ -96,16 +99,29 @@ function checkGitHeadP8() {
   console.log(`${LOG_PREFIX} Check 3: Git HEAD consistency...\n`);
 
   try {
-    const headCommit = execSync('git rev-parse HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
-    const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
-    const status = execSync('git status --porcelain', { cwd: repoRoot, encoding: 'utf8' }).trim();
+    const headCommit = execSync('git rev-parse HEAD', {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    }).trim();
+    const branch = execSync('git rev-parse --abbrev-ref HEAD', {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    }).trim();
+    const status = execSync('git status --porcelain', {
+      cwd: repoRoot,
+      encoding: 'utf8',
+    }).trim();
 
     if (status && !status.includes('??')) {
-      console.warn(`${LOG_PREFIX} ⚠️  Git working tree has uncommitted changes (may be OK for governance layer)`);
+      console.warn(
+        `${LOG_PREFIX} ⚠️  Git working tree has uncommitted changes (may be OK for governance layer)`
+      );
     }
 
     // LOCK.md is created during final P8 sealing, not required for gate testing
-    console.log(`${LOG_PREFIX} ✅ Git consistent (branch: ${branch}, commit: ${headCommit.slice(0, 8)})`);
+    console.log(
+      `${LOG_PREFIX} ✅ Git consistent (branch: ${branch}, commit: ${headCommit.slice(0, 8)})`
+    );
     console.log('');
     return true;
   } catch (err) {
@@ -123,17 +139,23 @@ function checkP8LockSealed() {
   try {
     const lockDir = path.join(repoRoot, 'deployment/latest/certification/phase8');
     const items = fs.readdirSync(lockDir, { withFileTypes: true });
-    const betaDirs = items.filter(d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_'));
+    const betaDirs = items.filter(
+      d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_')
+    );
 
     if (betaDirs.length === 0) {
-      console.warn(`${LOG_PREFIX} ⚠️  P8_BETA_RELEASE directory not found (will be created during final seal)`);
+      console.warn(
+        `${LOG_PREFIX} ⚠️  P8_BETA_RELEASE directory not found (will be created during final seal)`
+      );
       return true; // Non-fatal for governance layer testing
     }
 
     const lockFile = path.join(lockDir, betaDirs[0].name, 'LOCK.md');
 
     if (!fs.existsSync(lockFile)) {
-      console.warn(`${LOG_PREFIX} ⚠️  P8 LOCK.md not found (will be created during final seal)`);
+      console.warn(
+        `${LOG_PREFIX} ⚠️  P8 LOCK.md not found (will be created during final seal)`
+      );
       console.log('');
       return true; // Non-fatal for governance layer testing
     }
@@ -164,10 +186,14 @@ function checkSHA256Validity() {
   try {
     const lockDir = path.join(repoRoot, 'deployment/latest/certification/phase8');
     const items = fs.readdirSync(lockDir, { withFileTypes: true });
-    const betaDirs = items.filter(d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_'));
+    const betaDirs = items.filter(
+      d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_')
+    );
 
     if (betaDirs.length === 0) {
-      console.warn(`${LOG_PREFIX} ⚠️  P8 INVENTORY not found (governance layer, non-fatal)`);
+      console.warn(
+        `${LOG_PREFIX} ⚠️  P8 INVENTORY not found (governance layer, non-fatal)`
+      );
       console.log('');
       return true;
     }
@@ -175,7 +201,9 @@ function checkSHA256Validity() {
     const inventoryFile = path.join(lockDir, betaDirs[0].name, 'INVENTORY.md');
 
     if (!fs.existsSync(inventoryFile)) {
-      console.warn(`${LOG_PREFIX} ⚠️  INVENTORY.md not found (governance layer, non-fatal)`);
+      console.warn(
+        `${LOG_PREFIX} ⚠️  INVENTORY.md not found (governance layer, non-fatal)`
+      );
       console.log('');
       return true;
     }

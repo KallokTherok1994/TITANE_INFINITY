@@ -3,6 +3,7 @@
 Objectif: Sceller tous les artefacts du sprint + générer prompt de déploiement
 
 ## 6.1 Run Pack Inventory
+
 runs/TS_STRICT_v27.2.0_20260223_144545/CHANGES.md
 runs/TS_STRICT_v27.2.0_20260223_144545/ERROR_REGISTRY.jsonl
 runs/TS_STRICT_v27.2.0_20260223_144545/ERROR_SUMMARY.md
@@ -23,6 +24,7 @@ runs/TS_STRICT_v27.2.0_20260223_144545/PROOF/repro_run_3.log
 17 files
 
 ## 6.2 SHA256 Checksums Generation
+
 ✅ SHA256SUMS.txt created (17 checksums)
 
 ## 6.3 VERDICT.md Generation
@@ -37,6 +39,7 @@ SHA256SUMS.txt: Generated with 17 checksums
 Status: SEALED ✅
 
 All phases complete (P0-P6):
+
 - ✅ Phase 0: Branch creation
 - ✅ Phase 1: Baseline snapshot
 - ✅ Phase 2: Error registry

@@ -42,11 +42,13 @@ COMMUNICATION:
 **Detection**: Alert "ErrorRateTooHigh" (> 0.5% for 5 min)
 
 **IMMEDIATE** (< 2 min):
+
 - [ ] SSH into metrics: `ssh prod-mon`
 - [ ] Dashboard: Check graph - is it really 0.5%+?
 - [ ] Check if Wave 1 only or multi-wave affected
 
 **INVESTIGATION** (< 5 min):
+
 ```bash
 # Last 50 errors
 tail -50 /var/log/titane/error.log
@@ -59,6 +61,7 @@ curl -s https://api.provider.ai/health
 ```
 
 **Decision Tree**:
+
 ```
 Is error rate rising or stable?
 ├─ Rising: ROLLBACK (likely cascade failure)
@@ -73,6 +76,7 @@ What type of errors?
 ```
 
 **ACTION**:
+
 - Rollback: `scripts/rollback-v27-0-5.sh` (< 2 min)
 - Investigate: Post to #incidents, start root cause analysis
 - Monitor: Set 15-minute alert threshold for same metric
@@ -84,11 +88,13 @@ What type of errors?
 **Detection**: Alert "ProviderLatencyHigh" (> 50ms for 2 min)
 
 **IMMEDIATE** (< 2 min):
+
 - [ ] Check provider status page: provider.ai/status
 - [ ] Check IPC metrics: `curl localhost:9090/metrics | grep ipc`
 - [ ] Is latency spike on provider side or our IPC layer?
 
 **INVESTIGATION** (< 5 min):
+
 ```bash
 # IPC latency histogram
 grep "ipc_latency" /var/log/titane/metrics.log | tail -20
@@ -101,6 +107,7 @@ mtr -c 1 provider.ai
 ```
 
 **Decision Tree**:
+
 ```
 Is provider status page showing issues?
 ├─ YES: Their problem, monitor and alert them
@@ -114,6 +121,7 @@ Is latency getting worse or stable?
 ```
 
 **ACTION**:
+
 - If provider down: Contact provider team, prepare v27.0.4 rollback
 - If IPC issue: Post to #incidents, investigate Tauri IPC layer
 - If stable: MONITOR, set 30-minute escalation alert
@@ -125,6 +133,7 @@ Is latency getting worse or stable?
 **Detection**: Alert "MemoryGrowingTooFast" (> 350MB for 1h)
 
 **Investigation** (< 10 min):
+
 ```bash
 # Memory over time
 grep "memory_usage" /var/log/titane/metrics.log | tail -60
@@ -137,6 +146,7 @@ ps aux --sort=-%mem | head -5
 ```
 
 **Decision Tree**:
+
 ```
 Is memory usage:
 ├─ Plateau'ing? → Normal, likely GC recovered
@@ -149,9 +159,9 @@ Correlation with user count?
 ```
 
 **ACTION**:
+
 - If plateaued: Log & continue monitoring
 - If leak suspected: Page on-call Dev (memory profiling needed)
 - If growing > 400MB: Consider graceful restart (off-peak)
 
 **DO NOT**: Rollback for memory - often not critical
-

@@ -6,15 +6,17 @@ Objectif: Synchroniser versions canoniques + merge propre + tag sealed
 
 Fichiers canoniques:
 Current versions discovered
+
 ```
 package.json: 27.0.5
-Cargo.toml: 
+Cargo.toml:
 tauri.conf.json: 27.0.5
 ```
 
 ## 5.2 Version Bump Execution (v27.2.0)
 
 Changed files:
+
 - package.json: 27.0.5 → 27.2.0
 - src-tauri/Cargo.toml: 27.0.5 → 27.2.0
 - src-tauri/tauri.conf.json: 27.0.5 → 27.2.0
@@ -22,13 +24,16 @@ Changed files:
 Descriptions updated for v27.2.0 (TypeScript Strict Mode - 0 errors)
 
 Verification:
+
 ```
 package.json: 27.2.0
 Cargo.toml: 27.2.0
 tauri.conf.json: 27.2.0
 ```
+
 ✅ All 3 canonical files synchronized to v27.2.0
 Git diff for version changes:
+
 ```diff
 diff --git a/package.json b/package.json
 index 334b9a4a..ee3ce06b 100644

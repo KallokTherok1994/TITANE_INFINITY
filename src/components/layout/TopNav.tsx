@@ -310,9 +310,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             ) : (
               <ZapOff size={14} />
             )}
-            <span className="hidden sm:inline">
-              IA: {aiStatus.percent}%
-            </span>
+            <span className="hidden sm:inline">IA: {aiStatus.percent}%</span>
             <span className="sm:hidden">{aiStatus.percent}%</span>
           </div>
         )}

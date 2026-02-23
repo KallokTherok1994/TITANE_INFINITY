@@ -2,16 +2,16 @@
 
 /**
  * Guard: Production-Safe Build Mode Lock
- * 
+ *
  * Verifies that:
  * 1. build:prod-safe exists and contains NPM_CONFIG_IGNORE_SCRIPTS=1 + vite build
  * 2. postbuild exists (must never be removed)
  * 3. build:prod-safe does NOT contain postbuild side-effects
  * 4. deployment/latest/certification/ untouched
- * 
+ *
  * Authority: P4-1A Production Build Mode Hardening
  * Policy: Stop-the-line strict
- * 
+ *
  * Exit 0: PASS (build:prod-safe locked)
  * Exit 1: FAIL (invalid config)
  */
@@ -35,10 +35,7 @@ const FORBIDDEN_PATTERNS = [
   '.titane/logs',
 ];
 
-const REQUIRED_PATTERNS = [
-  'NPM_CONFIG_IGNORE_SCRIPTS=1',
-  'vite build',
-];
+const REQUIRED_PATTERNS = ['NPM_CONFIG_IGNORE_SCRIPTS=1', 'vite build'];
 
 /**
  * Main guard logic
@@ -70,7 +67,7 @@ async function verifyBuildMode() {
       status = 'BLOCKED';
     } else {
       const buildProdSafeCmd = packageJson.scripts['build:prod-safe'];
-      
+
       // Check required patterns
       let hasRequired = true;
       for (const pattern of REQUIRED_PATTERNS) {
@@ -118,8 +115,10 @@ async function verifyBuildMode() {
     warnings.push('⚠️  PRODUCTION_BUILD_POLICY.md not found (should exist)');
   } else {
     const docContent = fs.readFileSync(designDocPath, 'utf-8');
-    if (!docContent.includes('NPM_CONFIG_IGNORE_SCRIPTS') ||
-        !docContent.includes('build:prod-safe')) {
+    if (
+      !docContent.includes('NPM_CONFIG_IGNORE_SCRIPTS') ||
+      !docContent.includes('build:prod-safe')
+    ) {
       warnings.push('⚠️  PRODUCTION_BUILD_POLICY.md missing key references');
     } else {
       console.log('  ✅ PRODUCTION_BUILD_POLICY.md present and references policy');
