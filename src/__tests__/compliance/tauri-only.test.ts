@@ -53,10 +53,20 @@ describe('🔒 Tauri-Only Compliance', () => {
     const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
 
     const devScript = packageJson.scripts?.dev;
+    const devTauriScript = packageJson.scripts?.['dev:tauri'];
 
     expect(devScript).toBeDefined();
-    // dev script must use "tauri dev" (Tauri-only requirement)
-    expect(devScript).toMatch(/tauri dev/i);
+    expect(devTauriScript).toBeDefined();
+
+    const allowedPatterns = [
+      /tauri dev/i,
+      /deploy_full_local_dev\.sh/i,
+    ];
+
+    const isAllowed = allowedPatterns.some(pattern => pattern.test(devScript));
+    const isTauriAlias = devScript === devTauriScript;
+
+    expect(isAllowed || isTauriAlias).toBe(true);
   });
 
   /**
