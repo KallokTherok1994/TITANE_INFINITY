@@ -2,7 +2,7 @@
 
 **Purpose:** Minimal daily go/no-go triggers for Days 1-7  
 **Format:** One checkpoint per day, flag-based  
-**Review Time:** 2-3 minutes each morning  
+**Review Time:** 2-3 minutes each morning
 
 ---
 
@@ -11,11 +11,13 @@
 ### Checkpoint: Initial Stabilization
 
 **Success Condition:**
+
 - ✅ TITANE process started without crashes
 - ✅ CSV observation running (≥1 sample + header)
 - ✅ Initial RSS < 210 MB
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    Initial RSS 180-210 MB range (matches lab baseline)
        Observation script working
@@ -29,8 +31,10 @@ NO-GO: Initial RSS ≥ 235 MB (anomalous startup)
 **Action if NO-GO:** Debug startup, check for background load
 
 **Daily Notes Template:**
+
 ```markdown
 #### Day 1 (2026-02-23)
+
 - **RAM**: [status] X MB
 - **CPU**: [status] X%
 - **Lag**: [status] X ms
@@ -45,11 +49,13 @@ NO-GO: Initial RSS ≥ 235 MB (anomalous startup)
 ### Checkpoint: Growth Rate Validation
 
 **Success Condition:**
+
 - ✅ 24 hourly samples collected (86400+ seconds)
 - ✅ RSS stable or slightly rising (not accelerating)
 - ✅ No unplanned crashes recorded
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    RSS range 195-215 MB (within ±5% of baseline)
        Linear or flat growth pattern
@@ -74,11 +80,13 @@ NO-GO: RSS ≥ 235 MB (exceed 30% growth too early)
 ### Checkpoint: Sustained Trend Confirmation
 
 **Success Condition:**
+
 - ✅ 72 samples collected (3-day trend line visible)
 - ✅ Growth rate confirmed stable (slope unchanging)
 - ✅ No resilience signal spikes
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    Plateau confirmed (RSS stable ±2 MB for 24+ hours)
        Event loop lag <100 ms average
@@ -95,7 +103,8 @@ NO-GO: RSS ≥ 235 MB (exceeds growth target)
        Error count >10 (silent failures)
 ```
 
-**Team Decision Point:** 
+**Team Decision Point:**
+
 - If CAUTION: Schedule optional Deep Dive investigation
 - If NO-GO: Initiate rollback planning
 
@@ -108,12 +117,14 @@ NO-GO: RSS ≥ 235 MB (exceeds growth target)
 ### Checkpoint: Sustained Stability Under Load
 
 **Success Condition:**
+
 - ✅ 96+ samples (4-day trend solid)
 - ✅ No new crash incidents
 - ✅ Provider recovery from any timeout events observed
 - ✅ RSS plateau holding firm
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    RSS stable (±1-2 MB variation only, no trending)
        Crash count remains 0
@@ -131,7 +142,8 @@ NO-GO: Multiple crashes or stuck state
        Lag >150 ms sustained (event loop congestion)
 ```
 
-**Optional Decision Point:** 
+**Optional Decision Point:**
+
 - Go: Schedule resilience_guard.sh test (Days 5-6)
 - Caution: Run resilience test ASAP to validate recovery
 - No-Go: Halt testing, focus on stabilization
@@ -143,11 +155,13 @@ NO-GO: Multiple crashes or stuck state
 ### Checkpoint: Pre-Verdict Full System Test
 
 **Success Condition (if running resilience_guard.sh):**
+
 - ✅ Provider failure scenario: Recovered cleanly
 - ✅ Slow response scenario: No event loop blocking
 - ✅ Memory pressure scenario: Graceful degradation
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    resilience_guard.sh exit code = 0 (PASS)
        Recovery time <30 seconds per scenario
@@ -179,12 +193,14 @@ NO-GO: Exit code = 2 (CRITICAL failure)
 ### Checkpoint: 6-Day Trend Lock
 
 **Success Condition:**
+
 - ✅ 144+ samples (6-day comprehensive history)
 - ✅ Trend line mathematically confirmed stable
 - ✅ All resilience metrics green
 - ✅ No surprises in past 24 hours
 
 **Go/No-Go Criteria:**
+
 ```
 GO:    RSS plateau locked ±1-2 MB range for full 24 hours
        Final projected RSS at Day 7: <213 MB
@@ -211,6 +227,7 @@ NO-GO: Any metric breached (Red zone triggers)
 **Steps:**
 
 1. **Run analysis script (5 min):**
+
    ```bash
    /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/titane_production_analyze.sh
    cat /tmp/titane_week1_verdict.txt
@@ -227,34 +244,37 @@ NO-GO: Any metric breached (Red zone triggers)
 3. **Make Decision (1 min):**
 
    **PASS (All 5 criteria met):**
+
    ```
    ✅ Final RSS <213 MB
    ✅ No unplanned crashes
    ✅ Avg lag <100 ms
    ✅ Timeouts <5/hour
    ✅ Errors <10 total
-   
+
    → Deploy v27.1.0 to 10% production users immediately
    → Continue monitoring for 1 additional week
    → Prepare gradual rollout schedule
    ```
 
    **PARTIAL (2-3 criteria met, none critical):**
+
    ```
    🟡 Some metrics yellow but acceptable
-   
+
    → Decision options:
      A) Deploy v27.1.0 with increased monitoring
      B) Launch optional Medium Wins phase (v28.0.0)
      C) Investigate cause, extend observation 3 days
-   
+
    → Requires team discussion & stakeholder approval
    ```
 
    **FAIL (1+ critical criteria failed):**
+
    ```
    🔴 RSS >239 MB, OR multiple crashes, OR lag >300ms, OR unrecoverable errors
-   
+
    → Immediate rollback to v27.0.5
    → Root cause analysis required
    → Review optimization strategy
@@ -267,36 +287,36 @@ NO-GO: Any metric breached (Red zone triggers)
 
 ### Green Zone (Proceed)
 
-| Metric | Range | Status |
-|--------|-------|--------|
-| RSS | <213 MB | ✅ Optimal |
-| CPU | <20% | ✅ Normal |
-| Lag | <100 ms | ✅ Responsive |
-| Crashes | 0 | ✅ Stable |
-| Errors | <10/day | ✅ Clean |
-| Timeouts | <5/hour | ✅ API OK |
+| Metric   | Range   | Status        |
+| -------- | ------- | ------------- |
+| RSS      | <213 MB | ✅ Optimal    |
+| CPU      | <20%    | ✅ Normal     |
+| Lag      | <100 ms | ✅ Responsive |
+| Crashes  | 0       | ✅ Stable     |
+| Errors   | <10/day | ✅ Clean      |
+| Timeouts | <5/hour | ✅ API OK     |
 
 ### Yellow Zone (Caution)
 
-| Metric | Range | Status |
-|--------|-------|--------|
-| RSS | 213-239 MB | 🟡 Investigate |
-| CPU | 20-40% | 🟡 Elevated |
-| Lag | 100-200 ms | 🟡 Lagging |
-| Crashes | 1 | 🟡 Watch |
-| Errors | 10-20/day | 🟡 Signals |
-| Timeouts | 5-15/hour | 🟡 API stress |
+| Metric   | Range      | Status         |
+| -------- | ---------- | -------------- |
+| RSS      | 213-239 MB | 🟡 Investigate |
+| CPU      | 20-40%     | 🟡 Elevated    |
+| Lag      | 100-200 ms | 🟡 Lagging     |
+| Crashes  | 1          | 🟡 Watch       |
+| Errors   | 10-20/day  | 🟡 Signals     |
+| Timeouts | 5-15/hour  | 🟡 API stress  |
 
 ### Red Zone (Escalate)
 
-| Metric | Range | Status |
-|--------|-------|--------|
-| RSS | >239 MB | 🔴 Rollback |
-| CPU | >40% | 🔴 Overload |
-| Lag | >200 ms | 🔴 Blocked |
-| Crashes | >1 | 🔴 Unstable |
-| Errors | >20/day | 🔴 Failing |
-| Timeouts | >15/hour | 🔴 Down |
+| Metric   | Range    | Status      |
+| -------- | -------- | ----------- |
+| RSS      | >239 MB  | 🔴 Rollback |
+| CPU      | >40%     | 🔴 Overload |
+| Lag      | >200 ms  | 🔴 Blocked  |
+| Crashes  | >1       | 🔴 Unstable |
+| Errors   | >20/day  | 🔴 Failing  |
+| Timeouts | >15/hour | 🔴 Down     |
 
 ---
 
@@ -308,11 +328,13 @@ NO-GO: Any metric breached (Red zone triggers)
 #### Day N (YYYY-MM-DD)
 
 **Morning Review (2 min):**
+
 - [ ] Ran v26_daily_check.sh
 - [ ] Reviewed CSV latest entry
 - [ ] Checked for anomalies
 
 **Metrics:**
+
 - **RAM**: [OK/CAUTION/RED] X MB (growth: Y%)
 - **CPU**: [OK/CAUTION/RED] Z%
 - **Lag**: [OK/CAUTION/RED] A ms
@@ -338,6 +360,7 @@ After verdict is rendered:
 #### Week 1 Summary (2026-02-23 → 2026-03-01)
 
 **Final Metrics:**
+
 - Initial RSS: 180 MB
 - Final RSS: X MB
 - Growth: Y%
@@ -357,12 +380,12 @@ After verdict is rendered:
 
 ## Monitoring Frequency by Day
 
-| Phase | Frequency | Tool |
-|-------|-----------|------|
-| Days 1-2 | Every hour (auto) + 2x daily manual check | cron + v26_daily_check.sh |
-| Days 3-4 | Every hour (auto) + 1x daily manual check | cron + v26_daily_check.sh |
+| Phase    | Frequency                                 | Tool                                  |
+| -------- | ----------------------------------------- | ------------------------------------- |
+| Days 1-2 | Every hour (auto) + 2x daily manual check | cron + v26_daily_check.sh             |
+| Days 3-4 | Every hour (auto) + 1x daily manual check | cron + v26_daily_check.sh             |
 | Days 5-6 | Every hour (auto) + 1x daily manual check | cron + resilience_guard.sh (optional) |
-| Day 7 | 1x final analysis | titane_production_analyze.sh |
+| Day 7    | 1x final analysis                         | titane_production_analyze.sh          |
 
 ---
 
@@ -396,6 +419,7 @@ nohup ./target/release/titane-infinity >> /tmp/fallback.log 2>&1 &
 **Week 1 is SUCCESSFUL if Day 7 verdict = PASS**
 
 **PASS means:**
+
 1. All 5 success criteria met
 2. Lab baseline confirmed reproducible in production
 3. v27.1.0 optimization = production-validated

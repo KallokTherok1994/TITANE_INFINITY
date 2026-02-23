@@ -1,6 +1,7 @@
 # Top 10 Opportunities Ranked by ROI (Impact / (Risk × Effort))
 
 ## Scorecard Legend
+
 - **Impact**: SLO dimension (Perf=P, Stability=S, Reliability=R, UX=U)
 - **Risk**: Governance (G1-G9), network, IPC, allowlist (L1-L5, higher=riskier)
 - **Effort**: S=small, M=medium, L=large
@@ -11,6 +12,7 @@
 ## Ranked Opportunities
 
 ### 1️⃣ **IPC Message Batching** (Current: single-call per request)
+
 - **Evidence**: Phase 2-3 showed provider latency baseline 12ms → 11ms. IPC round-trip dominates.
 - **Impact**: Performance (P) - target -2% provider latency (11ms → 10.8ms)
 - **Risk**: L3 (IPC contract, allowlist stable)
@@ -21,6 +23,7 @@
 - **Rollback**: Git revert (straightforward IPC change)
 
 ### 2️⃣ **Provider Fallback Prewarming** (No current telemetry yet)
+
 - **Evidence**: Phase 1-7 showed zero fallback events. Opportunity: warm cache before timeout.
 - **Impact**: Reliability (R) - improve provider availability > 99.95%
 - **Risk**: L2 (provider state, no new network)
@@ -31,6 +34,7 @@
 - **Rollback**: Disable flag in config
 
 ### 3️⃣ **TypeScript Strict Mode Expansion** (Current coverage unknown)
+
 - **Evidence**: Post-campaign analysis often finds null pointer edge cases during strict mode.
 - **Impact**: Stability (S) - catch early, prevent crashes
 - **Risk**: L1 (compile-time only, zero runtime risk)
@@ -41,6 +45,7 @@
 - **Rollback**: Revert tsconfig
 
 ### 4️⃣ **UI Render Path Optimization** (1198ms baseline)
+
 - **Evidence**: Phase 3 UI load 1198ms can profile further. Target: 1174ms (-2%).
 - **Impact**: Performance (P) - UX responsiveness
 - **Risk**: L2 (UI only, no IPC contract change)
@@ -51,6 +56,7 @@
 - **Rollback**: Revert memoization commits
 
 ### 5️⃣ **Conversation Latency Variance Smoothing** (P95/P5 ratio unknown)
+
 - **Evidence**: Phase 2-3 stabilized latency but variance pattern unknown. Opportunity: reduce spikes.
 - **Impact**: UX (U) - consistent experience, lower perceived latency
 - **Risk**: L2 (conversation engine logic, no external change)
@@ -61,6 +67,7 @@
 - **Rollback**: Disable queuing flag
 
 ### 6️⃣ **Test Coverage Audit (UI Critical Paths)** (Coverage % unknown)
+
 - **Evidence**: Phase 9 showed monitoring ready. Need verification of test coverage on critical UI paths.
 - **Impact**: Stability (S) - catch regressions earlier
 - **Risk**: L1 (test-only, zero runtime)
@@ -71,6 +78,7 @@
 - **Rollback**: Revert test commits
 
 ### 7️⃣ **Memory Allocator Efficiency** (248MB baseline + 1.2% observed)
+
 - **Evidence**: Phase 3 showed memory +1.2% (within budget). Opportunity: reduce peak.
 - **Impact**: Performance (P) - extend session duration on constrained devices
 - **Risk**: L2 (memory management, no contract change)
@@ -81,6 +89,7 @@
 - **Rollback**: Remove GC markers
 
 ### 8️⃣ **API Documentation Sync** (Docs ↔ Runtime)
+
 - **Evidence**: Post-prod survey often reveals API docs ≠ runtime. Low effort, high value for users.
 - **Impact**: Reliability (R) - user confidence
 - **Risk**: L1 (docs only, zero runtime)
@@ -91,6 +100,7 @@
 - **Rollback**: Git revert doc commits
 
 ### 9️⃣ **Telemetry Overhead Quantification** (Overhead % unknown)
+
 - **Evidence**: Phase 9 monitoring active. Opportunity: measure telemetry CPU cost, optimize.
 - **Impact**: Performance (P) - save CPU for user code
 - **Risk**: L2 (telemetry logic, no external change)
@@ -101,6 +111,7 @@
 - **Rollback**: Disable telemetry if needed
 
 ### 🔟 **Provider Error Message Clarity** (Edge case UX)
+
 - **Evidence**: Phase 1-9 showed 0 errors logged, but provider errors might be vague to users.
 - **Impact**: UX (U) - user debugging ease
 - **Risk**: L1 (message formatting only)
@@ -113,6 +124,7 @@
 ---
 
 ## Top 3 by Score
+
 1. **Provider Fallback Prewarming** (50) - Reliability lever
 2. **TypeScript Strict Mode** (50) - Stability lever
 3. **API Documentation Sync** (60) - Reliability + UX lever ⭐ WINNER
@@ -120,9 +132,10 @@
 5. **IPC Message Batching** (16.7) - Performance lever (smallest impact but feasible)
 
 ## Recommendation for Phase 4
+
 **Selected**: #2 TypeScript Strict Mode Expansion
+
 - **Why**: Highest impact on future safety, zero runtime risk, medium effort
 - **Secondary**: #8 API Documentation Sync (very high score, pair with TS strict for adjacent value)
 - **Validation**: TS strict can be enable incrementally, doc sync is parallel work
 - **Proof**: Before/after: warning count (TS) + doc validation (docs)
-

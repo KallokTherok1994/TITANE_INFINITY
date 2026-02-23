@@ -3,7 +3,7 @@
 **Date:** 2026-02-23  
 **Target:** Activate v27.1.0 production observation  
 **Timeline:** 6 steps, ~30 minutes total  
-**Checkpoint:** All CSV collection running by end of day  
+**Checkpoint:** All CSV collection running by end of day
 
 ---
 
@@ -18,6 +18,7 @@ bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/V26_INFRASTRUCTURE_READY.s
 ```
 
 **Expected output:**
+
 ```
 ✅ All scripts ready (4/4)
 ✅ All documentation ready (4/4)
@@ -34,14 +35,14 @@ bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/V26_INFRASTRUCTURE_READY.s
 
 ### V24 Lab Measurement Results
 
-| Metric | Value | Status |
-|--------|-------|--------|
-| **Initial RSS** | 180 MB | Baseline (t=0) |
-| **Peak RSS (before plateau)** | 200 MB | t=10 min |
-| **Plateau RSS (stable)** | 200 MB | t=10-120+ min |
-| **Growth %** | +11.11% | PASS (<15% target) |
-| **Improvement vs v23** | -59% vs +27% | Excellent |
-| **Plateau Duration** | 110+ min | Excellent |
+| Metric                        | Value        | Status             |
+| ----------------------------- | ------------ | ------------------ |
+| **Initial RSS**               | 180 MB       | Baseline (t=0)     |
+| **Peak RSS (before plateau)** | 200 MB       | t=10 min           |
+| **Plateau RSS (stable)**      | 200 MB       | t=10-120+ min      |
+| **Growth %**                  | +11.11%      | PASS (<15% target) |
+| **Improvement vs v23**        | -59% vs +27% | Excellent          |
+| **Plateau Duration**          | 110+ min     | Excellent          |
 
 ### Day 1-7 Target Thresholds
 
@@ -65,6 +66,7 @@ cd src-tauri && cargo build --release 2>&1 | tail -10
 ```
 
 **Expected:**
+
 ```
 Finished release [optimized] target(s) in XXs
 ```
@@ -127,6 +129,7 @@ ps aux | grep -E 'titane-infinity' | grep -v grep
 ```
 
 **Expected output:**
+
 ```
 ✅ Observation complete
 CSV: /tmp/titane_production_week1.csv
@@ -142,6 +145,7 @@ head -2 /tmp/titane_production_week1.csv
 ```
 
 **Expected:**
+
 ```
 timestamp,elapsed_hours,rss_mb,vsz_mb,cpu_percent,session_count,crash_count,failover_count,event_loop_lag_ms,provider_timeouts_per_hour,error_count
 2026-02-23 HH:MM:SS,0.0,[RSS_VALUE],[VSZ_VALUE],X.X,X,0,0,[LAG],[TIMEOUTS],[ERRORS]
@@ -182,6 +186,7 @@ crontab -l | grep titane_production_observe
 ```
 
 **Expected:**
+
 ```
 0 * * * * /home/titane-os/... titane_production_observe.sh ...
 ```
@@ -266,6 +271,7 @@ git log --oneline | head -1
 **Copy into daily notes:**
 
 Edit `PRODUCTION_WEEK1_DAILY_NOTES.md`:
+
 - Update Day N entry with latest metrics
 - Keep format: one sentence per field
 
@@ -333,6 +339,7 @@ Log result in daily notes: "Resilience test: [PASS/PARTIAL/CRITICAL]"
 ```
 
 **Expected output:**
+
 ```
 CSV rows: 169 (24 hours × 7 days = ~168 samples)
 Initial RSS: 180 MB
@@ -552,7 +559,7 @@ tail -100 /tmp/titane_week1_memory/debug.log | grep -i "cache\|memory\|alloc"
 - [ ] Infrastructure verified (V26_INFRASTRUCTURE_READY.sh = PASS)
 - [ ] v27.1.0 binary deployed and running
 - [ ] First observation captured in CSV
-- [ ] Initial RSS recorded (_____ MB)
+- [ ] Initial RSS recorded (**\_** MB)
 - [ ] Cron job scheduled for hourly observations
 - [ ] Day 1 notes populated in PRODUCTION_WEEK1_DAILY_NOTES.md
 - [ ] Day 1 notes committed to git

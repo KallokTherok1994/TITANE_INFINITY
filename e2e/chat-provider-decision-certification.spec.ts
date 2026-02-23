@@ -1,13 +1,13 @@
 /**
  * TITANE∞ — E2E CERTIFICATION TEST
  * Chat Provider Decision Observability — P3 Validation
- * 
+ *
  * Objectif: Valider automatiquement la gouvernance provider decision
  * Invariants ONLINE-FIRST:
  * - Si externalAllowed=true ET provider READY → mode ≠ OFFLINE
  * - Si mode=OFFLINE → reason_code présent + UI "Mode hors ligne:"
  * - Si mode=REMOTE → UI NE contient PAS "hors ligne"
- * 
+ *
  * Méthode:
  * 1. Capture logs console [CONV_SEND] et [CONV_RECV]
  * 2. Parse decision meta (mode, reason_code, provider_used, network_used)
@@ -130,7 +130,7 @@ test.describe('P3 Certification: Chat Provider Decision', () => {
     // Navigation vers la page chat
     await page.goto('/chat');
     await page.waitForLoadState('networkidle');
-    
+
     // Attendre que l'app soit prête (présence du composant chat)
     await page.waitForSelector('[data-testid="chat-input"]', { timeout: 10000 });
   });
@@ -310,10 +310,9 @@ async function runCertificationTest(page: Page, runId: string): Promise<void> {
       uiText?.includes('hors ligne') ||
       uiText?.includes('offline');
 
-    expect(
-      hasOfflineText,
-      '[INVARIANT] UI must NOT show offline when mode≠OFFLINE'
-    ).toBe(false);
+    expect(hasOfflineText, '[INVARIANT] UI must NOT show offline when mode≠OFFLINE').toBe(
+      false
+    );
   }
 
   console.log(`\n[${runId}] ✅ ALL ASSERTIONS PASSED\n`);
@@ -321,7 +320,9 @@ async function runCertificationTest(page: Page, runId: string): Promise<void> {
   // Dump tous les logs pour evidence
   console.log(`\n[${runId}] === ALL CAPTURED LOGS ===`);
   captured.allLogs
-    .filter(log => log.includes('[CONV_') || log.includes('provider') || log.includes('mode'))
+    .filter(
+      log => log.includes('[CONV_') || log.includes('provider') || log.includes('mode')
+    )
     .forEach(log => console.log(log));
   console.log(`\n========================================`);
 }

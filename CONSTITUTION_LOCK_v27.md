@@ -1,5 +1,13 @@
 # CONSTITUTION_LOCK_v27.md
 
+> **⚠️ DEPRECATION NOTICE (Added 2026-02-23)**  
+> This constitutional lock defined the v27.0.0-v27.4.x architecture (**local-first**).  
+> **Superseded by v27.5.0 constitutional migration (local-first → online-first).**  
+> Preserved for historical reference only.  
+> See: [README.md](README.md#-vision) for current architecture (online-first).
+
+---
+
 **TITANE∞ — Baseline Constitutionnelle**  
 Version: `v27.0.0-CONSTITUTION`  
 Commit: `2d48b9de7f1e3c2a8b4d5e6f7a8b9c0d1e2f3a4b` (HEAD)  

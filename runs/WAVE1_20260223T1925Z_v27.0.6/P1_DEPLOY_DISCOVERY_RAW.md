@@ -1,6 +1,7 @@
 # PHASE 1 — DEPLOY MECHANISM DISCOVERY
 
 ## Search 1: Deployment keywords in scripts/
+
 ```
 scripts/deployment/tauri-full-deploy.sh
 scripts/deployment/deploy-fix-complete.sh
@@ -28,6 +29,7 @@ scripts/deploy-production.sh
 ```
 
 ## Search 2: Deployment directory structure
+
 ```
 total 164
 drwxrwxr-x 12 titane-os titane-os  4096 févr. 20 12:22 .
@@ -102,19 +104,22 @@ drwxrwxr-x  2 titane-os titane-os      4096 janv. 29 22:51 v27.0.0
 ```
 
 ## Search 3: Updater configuration in Tauri
+
 ```
+
 ```
 
 ## Search 4: Release/channel keywords in codebase
+
 README.md:10:**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
 README.md:34:📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums](./deployment/latest/SHA256SUMS_v27.0.5.txt)
 README.md:335:- **[Deployment Guide](docs/DEPLOYMENT.md)** — Production deployment guide
-deployment/POST_DEPLOY_VALIDATION.md:649:- **Quick Deploy:** `deployment/QUICK_DEPLOY.md`
+deployment/POST*DEPLOY_VALIDATION.md:649:- **Quick Deploy:** `deployment/QUICK_DEPLOY.md`
 deployment/POST_DEPLOY_VALIDATION.md:650:- **Admin Access:** `deployment/ADMIN_ACCESS_GUIDE.md`
 deployment/production/v27.0.0/DEPLOYMENT_MANIFEST.md:29:Latest stable baseline available at: `deployment/stable/` directory
 deployment/deploy-to-server.sh:108:# Create deployment directory
-deployment/deploy-to-server.sh:129:    deployment/nginx/titane-infinity.conf \
-deployment/deploy-to-server.sh:163:    deployment/setup-admin-access.sh \
+deployment/deploy-to-server.sh:129: deployment/nginx/titane-infinity.conf \
+deployment/deploy-to-server.sh:163: deployment/setup-admin-access.sh \
 deployment/v27.0.2_prod_final/FINAL_VERIFICATION_REPORT.md:56:- **Command**: `./deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage`
 deployment/v27.0.2_prod_final/FINAL_VERIFICATION_REPORT.md:108:- Monitoring configured for first 24h after deployment
 deployment/v27.0.2_prod_final/FINAL_VERIFICATION_REPORT.md:186:# Deploy v27.0.1 from deployment/latest/
@@ -122,7 +127,7 @@ deployment/v27.0.2_prod_final/VERDICT.md:61:**Verification**: SHA256 hashes reco
 deployment/v27.0.2_prod_final/VERDICT.md:118:**Artifacts location**: `deployment/v27.0.2_prod_final/`
 deployment/v27.0.3/certification/SEAL_v27.0.3.md:11:- `phase2/deployment_gate/` — Full POST-P2 deployment gate (14 phases)
 scripts/install-appimage.sh:26:if [ ! -f "deployment/latest/${APPIMAGE_NAME}" ]; then
-scripts/install-appimage.sh:28:    echo "  Chemin attendu: deployment/latest/${APPIMAGE_NAME}"
+scripts/install-appimage.sh:28: echo " Chemin attendu: deployment/latest/${APPIMAGE_NAME}"
 scripts/install-appimage.sh:42:cp "deployment/latest/${APPIMAGE_NAME}" "$INSTALL_DIR/titane-infinity"
 deployment/v27.0.3/certification/phase2/ci_proof/06_CI_VERDICT.md:23:- Gateway: Does NOT block deployment; local proof is primary evidence
 deployment/v27.0.3/certification/phase2/ci_proof/05_commit_status_curl.json:74:    "deployments_url": "https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/deployments"
@@ -133,7 +138,6 @@ deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:1:08fc200b0dd71088f2
 deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:2:0b84c07eab80621e275295d90012c5532ca0e8008fb54afd01220da543490bc7  ./deployment_gate/11_DEPLOYMENT_GATE_SUMMARY.md
 deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:5:192fdc2e755463d2a210996e652bac3c2c235a7163843fabe9874239192bb194  ./deployment_gate/17_instructions_echoed.txt
 scripts/validate-auto-heal.sh:66:test_script "scripts/verify/pre-deployment-check.sh" "Pre-Deployment Check"
-scripts/certification/lib_cert.sh:15:  local pack_dir="deployment/latest/certification/master_runs/${phase_id}_${utc}"
+scripts/certification/lib_cert.sh:15:  local pack_dir="deployment/latest/certification/master_runs/${phase_id}*${utc}"
 scripts/certification/lib_cert.sh:223:  local registry="deployment/latest/certification/MASTER_REGISTRY.jsonl"
 scripts/certification/run-master-chat-to-prod.sh:10:MASTER_DIR="$REPO_ROOT/deployment/latest/certification/master_runs/$MASTER_RUN_ID"
-

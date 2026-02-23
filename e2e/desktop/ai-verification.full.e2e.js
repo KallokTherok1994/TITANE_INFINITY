@@ -103,19 +103,17 @@ async function resolveSelectors() {
 async function attemptOnboardingSkip(maxClicks = 6) {
   for (let i = 0; i < maxClicks; i += 1) {
     const clicked = await browser.execute(() => {
-      const candidates = Array.from(document.querySelectorAll('button, a')).filter(
-        el => {
-          const text = (el.innerText || el.textContent || '').toLowerCase().trim();
-          return (
-            text.includes('suivant') ||
-            text.includes('next') ||
-            text.includes('continuer') ||
-            text.includes('commencer') ||
-            text.includes('demarrer') ||
-            text.includes('skip')
-          );
-        }
-      );
+      const candidates = Array.from(document.querySelectorAll('button, a')).filter(el => {
+        const text = (el.innerText || el.textContent || '').toLowerCase().trim();
+        return (
+          text.includes('suivant') ||
+          text.includes('next') ||
+          text.includes('continuer') ||
+          text.includes('commencer') ||
+          text.includes('demarrer') ||
+          text.includes('skip')
+        );
+      });
       if (!candidates.length) return false;
       candidates[0].click();
       return true;

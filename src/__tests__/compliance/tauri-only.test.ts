@@ -58,10 +58,7 @@ describe('🔒 Tauri-Only Compliance', () => {
     expect(devScript).toBeDefined();
     expect(devTauriScript).toBeDefined();
 
-    const allowedPatterns = [
-      /tauri dev/i,
-      /deploy_full_local_dev\.sh/i,
-    ];
+    const allowedPatterns = [/tauri dev/i, /deploy_full_local_dev\.sh/i];
 
     const isAllowed = allowedPatterns.some(pattern => pattern.test(devScript));
     const isTauriAlias = devScript === devTauriScript;

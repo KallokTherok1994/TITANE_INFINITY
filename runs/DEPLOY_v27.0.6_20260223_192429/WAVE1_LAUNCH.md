@@ -1,10 +1,13 @@
 # Wave 1 Deployment (5% Early Adopters)
 
 ## Deployment Status
+
 Status: ✅ READY FOR IMMEDIATE DEPLOYMENT
 
 ## Release Metrics (Baseline)
+
 From BASELINE_SNAPSHOT.md:
+
 - Provider latency: 11ms (target: ≤11.1ms)
 - UI responsiveness: 1198ms (target: ≤1210ms)
 - CPU usage: 9.2% (target: <12%)
@@ -14,6 +17,7 @@ From BASELINE_SNAPSHOT.md:
 - Uptime: 99.99%
 
 ## Wave 1 Success Criteria
+
 ✅ Zero critical errors in logs
 ✅ Crash rate = 0
 ✅ No latency regression (provider ≤11.1ms, UI ≤1210ms)
@@ -21,11 +25,13 @@ From BASELINE_SNAPSHOT.md:
 ✅ 24h elapsed without incident
 
 ## Monitoring Cadence
+
 Frequency: Every 5 minutes
 Duration: 24 hours continuous
 Escalation: If any metric exceeds alert threshold
 
 ## Deployment Command (when ready)
+
 ```bash
 # 1. Deploy v27.0.6 to 5% user cohort
 # (execute via release automation system)
@@ -37,13 +43,16 @@ bash scripts/monitoring/monitor-wave1.sh
 ```
 
 ## Rollback Trigger
+
 If any of these occur → immediate rollback (<5 min):
+
 - Crash rate > 0 (ANY crash)
 - Provider latency > 11.5ms (>4% regression)
 - UI latency > 1250ms (>4% regression)
 - Critical error rate > 0.1%
 
 Rollback command:
+
 ```bash
 git revert <merge-commit>
 git tag -d v27.0.6

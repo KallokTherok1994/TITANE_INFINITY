@@ -3,6 +3,7 @@
 ## Automated Feedback Channels
 
 ### In-App Feedback Widget
+
 ```
 Trigger: After 5 minutes of usage with v27.0.5
 Prompt: "How's v27.0.5 working for you?"
@@ -23,6 +24,7 @@ Data sent to: logs/feedback/wave_[n]_feedback.jsonl
 ```
 
 ### Crash Report Opt-In
+
 ```
 If app crashes:
 "Would you like to help us fix this?"
@@ -35,6 +37,7 @@ Trigger: Incident management system
 ```
 
 ### Performance Monitoring Telemetry
+
 ```
 Silent collection (no user action needed):
   • Response latency: provider_latency_ms
@@ -49,6 +52,7 @@ Data sent to: logs/telemetry/wave_[n]_metrics.jsonl (anonymized)
 ## Manual Feedback Channels
 
 ### Support Email
+
 ```
 support@titane.app
 Subject: v27.0.5 feedback
@@ -63,6 +67,7 @@ SLA: Response within 12 hours
 ```
 
 ### In-App Support Chat
+
 ```
 "Contact Support" → Live chat
 Topic: v27.0.5 experience
@@ -70,6 +75,7 @@ Logged: support/live_chat_v27_0_5.jsonl
 ```
 
 ### Surveys
+
 ```
 Wave 1 (24h after deployment):
   • Quick poll (3 questions, 1 min)
@@ -80,7 +86,7 @@ Wave 1→2 Transition (48h):
   • Detailed NPS survey (5-10 questions)
   • Feature satisfaction?
   • Recommendation likelihood?
-  
+
 Post-GA (7 days):
   • Net Promoter Score survey
   • Comparative: v27.0.5 vs v27.0.4?
@@ -112,10 +118,9 @@ Decision Gate
 
 ## Success Metrics from Feedback
 
-| Metric | Wave 1 | Wave 2 | Wave 3 (GA) |
-|--------|--------|--------|-----------|
-| Average Rating | ≥ 4.0/5 | ≥ 4.1/5 | ≥ 4.2/5 |
-| NPS Score | ≥ 60 | ≥ 65 | ≥ 70 |
-| Critical Issues | 0 | 0 | ≤ 1 |
-| "Would Recommend" | ≥ 85% | ≥ 90% | ≥ 92% |
-
+| Metric            | Wave 1  | Wave 2  | Wave 3 (GA) |
+| ----------------- | ------- | ------- | ----------- |
+| Average Rating    | ≥ 4.0/5 | ≥ 4.1/5 | ≥ 4.2/5     |
+| NPS Score         | ≥ 60    | ≥ 65    | ≥ 70        |
+| Critical Issues   | 0       | 0       | ≤ 1         |
+| "Would Recommend" | ≥ 85%   | ≥ 90%   | ≥ 92%       |

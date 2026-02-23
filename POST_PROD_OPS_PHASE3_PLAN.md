@@ -9,6 +9,7 @@
 ## Purpose
 
 After Phase 2 established baseline monitoring metrics, Phase 3 now:
+
 - **Compare** current operational metrics AGAINST Phase 2 baseline
 - **Detect** provider availability changes
 - **Alert** on UI health deviations (errors, slowdowns, crashes)
@@ -20,20 +21,21 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 
 ## What Phase 3 Does Differently From Phase 2
 
-| Aspect | Phase 2 (Baseline) | Phase 3 (Continuous Diff) |
-|--------|-------------------|--------------------------|
-| **Goal** | Capture baseline metrics | Compare to baseline, detect deviations |
-| **Scope** | Single snapshot | Multiple checks (iterative) |
-| **Detection** | Establish patterns | Measure drift from patterns |
-| **Thresholds** | None (baseline only) | Set thresholds: WARNING/CRITICAL |
-| **Action** | Record data | Report anomalies if drift detected |
-| **Duration** | ~4 min single run | ~10 min (3x checks at 3min intervals) |
+| Aspect         | Phase 2 (Baseline)       | Phase 3 (Continuous Diff)              |
+| -------------- | ------------------------ | -------------------------------------- |
+| **Goal**       | Capture baseline metrics | Compare to baseline, detect deviations |
+| **Scope**      | Single snapshot          | Multiple checks (iterative)            |
+| **Detection**  | Establish patterns       | Measure drift from patterns            |
+| **Thresholds** | None (baseline only)     | Set thresholds: WARNING/CRITICAL       |
+| **Action**     | Record data              | Report anomalies if drift detected     |
+| **Duration**   | ~4 min single run        | ~10 min (3x checks at 3min intervals)  |
 
 ---
 
 ## Phase 3 Structure
 
 ### Step 3.1: Health Check Delta #1 (3 minutes)
+
 - Query current provider status
 - Compare vs Phase 2 baseline
 - Measure: Availability change, latency change
@@ -44,6 +46,7 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 - Export: `PROOF/delta_check_1.json`
 
 ### Step 3.2: Conversation Engine Latency Trend (3 minutes)
+
 - Send 5 test messages vs Phase 2 sample
 - Measure response time, error rate
 - Compare: Current avg latency vs baseline (baseline: 14.5ms)
@@ -53,6 +56,7 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 - Export: `PROOF/conversation_latency_trend.json`
 
 ### Step 3.3: UI Continuous Snapshot #1 (3 minutes)
+
 - Re-capture DOM render time, console errors
 - Compare: Load time, hydration, first paint vs Phase 2
 - **Thresholds**:
@@ -62,6 +66,7 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 - Export: `PROOF/ui_continuous_snapshot_1.html`
 
 ### Step 3.4: Telemetry Drift Analysis (3 minutes)
+
 - Re-sample CPU, memory, event counts
 - Measure % change vs Phase 2 baseline
 - **Thresholds**:
@@ -72,6 +77,7 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 - Export: `PROOF/telemetry_drift_analysis.json`
 
 ### Step 3.5: Anomaly Pattern Update (2 minutes)
+
 - Scan new logs for patterns NOT in Phase 2 baseline
 - Flag: New error types, new warnings, new slow operations
 - Expected: Most anomalies = NOISE (cached, transient)
@@ -79,12 +85,14 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 - Export: `PROOF/anomaly_pattern_update.txt`
 
 ### Step 3.6: Governance Status Report (1 minute)
+
 - Aggregate Phases 3.1-3.5 into single verdict
 - Status: STABLE / WARNING / CRITICAL
 - Metrics: # deviations, max % drift, anomalies detected
 - Export: `PROOF/governance_status_report.json`
 
 ### Step 3.7: Registry Event & Decision (1 minute)
+
 - Log Phase 3 results to append-only registry
 - Verdict: Can proceed to Phase 4 Y/N
 - If WARNING: Log context, recommendation
@@ -95,17 +103,18 @@ After Phase 2 established baseline monitoring metrics, Phase 3 now:
 
 ## Acceptance Criteria
 
-| Criterion | STABLE | WARNING | CRITICAL (STOP) |
-|-----------|--------|---------|-----------------|
-| Provider latency | ≤ 30ms | 30-50ms | > 50ms |
-| Conv. engine latency | ≤ 25ms | 25-50ms | > 50ms |
-| UI load time | ≤ 2.0s | 2.0-3.0s | > 3.0s |
-| CPU usage | ≤ 12% | 12-20% | > 20% |
-| Memory | ≤ 350MB | 350-500MB | > 500MB |
-| Console errors | 0 | 0 (warnings OK) | > 0 RED errors |
-| Anomaly patterns | < 2 repeats | 2-5 repeats | > 5 or UNKNOWN |
+| Criterion            | STABLE      | WARNING         | CRITICAL (STOP) |
+| -------------------- | ----------- | --------------- | --------------- |
+| Provider latency     | ≤ 30ms      | 30-50ms         | > 50ms          |
+| Conv. engine latency | ≤ 25ms      | 25-50ms         | > 50ms          |
+| UI load time         | ≤ 2.0s      | 2.0-3.0s        | > 3.0s          |
+| CPU usage            | ≤ 12%       | 12-20%          | > 20%           |
+| Memory               | ≤ 350MB     | 350-500MB       | > 500MB         |
+| Console errors       | 0           | 0 (warnings OK) | > 0 RED errors  |
+| Anomaly patterns     | < 2 repeats | 2-5 repeats     | > 5 or UNKNOWN  |
 
 **Verdict**:
+
 - STABLE: All metrics nominal → Proceed to Phase 4
 - WARNING: Some elevated but acceptable → Proceed to Phase 4 + monitor closely
 - CRITICAL: One or more thresholds exceeded → PAUSE + investigate
@@ -147,6 +156,7 @@ CHANGES.md                             ← Deviations from baseline logged
 ## Success Criteria for Phase 3
 
 ### For PASS (STABLE):
+
 - ✅ All metrics within normal range vs Phase 2 baseline
 - ✅ Provider latency < 30ms (baseline: 12ms)
 - ✅ Conversation engine < 25ms (baseline: 14.5ms)
@@ -158,12 +168,14 @@ CHANGES.md                             ← Deviations from baseline logged
 - → **Can proceed to Phase 4**
 
 ### For PROCEED WITH CAUTION (WARNING):
+
 - ⚠️ Some metrics elevated but not critical (e.g., CPU 15%, Memory 380MB)
 - ⚠️ A few expected warnings in console
 - ⚠️ Some anomalies observed but repeats < 5x
 - → **Can proceed to Phase 4 + close monitoring recommended**
 
 ### For STOP (CRITICAL):
+
 - 🛑 Provider latency > 50ms OR Ollama/provider crashes
 - 🛑 Conversation engine latency > 50ms (3.4x baseline)
 - 🛑 UI load > 3s (multiple page loads affected)
@@ -177,6 +189,7 @@ CHANGES.md                             ← Deviations from baseline logged
 ## Ready to Execute
 
 When ready, command:
+
 ```bash
 # Interactive execution
 SUPER_PROMPT=2 PHASE=3 bash scripts/e2e/phase-post-prod-ops-continuous-diff.sh

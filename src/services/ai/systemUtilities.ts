@@ -8,10 +8,10 @@
  *   TITANE∞ v20Ω+ — AI SYSTEM UTILITIES (TDZ CRISIS FIX v26.3.1)
  *   Séparation des fonctions utilitaires pour éviter dépendances circulaires
  *   lors de la bundlification Vite (services-ai chunk).
- *   
+ *
  *   ISSUE: Utilité initializeAISystem() appelle directement les instances,
  *   créant un cycle lors de la fusion des chunks Vite.
- *   
+ *
  *   FIX: Lazy imports à l'intérieur des fonctions (pas au top-level).
  * ═══════════════════════════════════════════════════════════════════
  */

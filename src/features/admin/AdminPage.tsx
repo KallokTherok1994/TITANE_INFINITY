@@ -60,7 +60,9 @@ const GovernanceCenterPage = lazy(() =>
 );
 
 const ProductionHealthPanel = lazy(() =>
-  import('../production-health/ProductionHealthPanel').then(m => ({ default: m.ProductionHealthPanel }))
+  import('../production-health/ProductionHealthPanel').then(m => ({
+    default: m.ProductionHealthPanel,
+  }))
 );
 
 // ══════════════════════════════════════════════════════════════════

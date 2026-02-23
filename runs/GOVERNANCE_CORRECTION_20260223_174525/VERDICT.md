@@ -10,15 +10,15 @@
 
 ### Findings (Proven)
 
-| Element | Status | Evidence |
-|---------|--------|----------|
-| Prod tag v27.0.5-prod exists | ✅ PASS | SHA a1bf79e |
-| Prod artifacts shipped | ✅ PASS | AppImage/DEB/RPM present, built 09:04 UTC |
-| Artifacts immutable | ✅ PASS | Built BEFORE tag creation (09:09 UTC) |
-| Git divergence detected | ✅ PASS | 15 commits post-tag (HEAD d6604b28) |
-| Runtime source changes | ✅ PASS | 4 files, 83 insertions in src/src-tauri |
-| Governance scripts added | ✅ PASS | All 9 gates (G1-G9) + orchestrator |
-| Documentation complete | ✅ PASS | 48 files evidence/sealing pack |
+| Element                      | Status  | Evidence                                  |
+| ---------------------------- | ------- | ----------------------------------------- |
+| Prod tag v27.0.5-prod exists | ✅ PASS | SHA a1bf79e                               |
+| Prod artifacts shipped       | ✅ PASS | AppImage/DEB/RPM present, built 09:04 UTC |
+| Artifacts immutable          | ✅ PASS | Built BEFORE tag creation (09:09 UTC)     |
+| Git divergence detected      | ✅ PASS | 15 commits post-tag (HEAD d6604b28)       |
+| Runtime source changes       | ✅ PASS | 4 files, 83 insertions in src/src-tauri   |
+| Governance scripts added     | ✅ PASS | All 9 gates (G1-G9) + orchestrator        |
+| Documentation complete       | ✅ PASS | 48 files evidence/sealing pack            |
 
 ---
 
@@ -30,15 +30,17 @@
 
 ---
 
-## Strategic Decision (Pragmatic) 
+## Strategic Decision (Pragmatic)
 
 **Situation Analysis**:
+
 1. Current shipped v27.0.5-prod is SAFE (frozen binary)
 2. Post-tag changes include: conversation_engine + TS service hooks (83 lines)
 3. Governance infrastructure (gates G1-G9) added post-tag (10 files)
 4. Evidence/documentation packs comprehensive (48 files)
 
 **Options Evaluated**:
+
 - **A**: Hard reset MAIN to tag (loses all governance infrastructure)
 - **B**: Full P1 cherry-pick + rebuild (1-2 hours, full test cycle)
 - **C**: Branch snapshot with semantic decision (30 min, governance clarity)
@@ -50,11 +52,13 @@
 ## Executive Action ✅
 
 ### For v27.0.5-prod (LIVE)
+
 ✅ **CONFIRMED SAFE** — Users continue on stable v27.0.5-prod  
 ✅ **No changes required** — Production release sealed and immutable  
 ✅ **No rollback needed** — Artifacts work as tested
 
 ### For MAIN branch (Development)
+
 Actions taken:
 
 1. **Create abstract hotfix marker**: Document v27.0.6-hotfix intent (branch name reserved, not yet created)
@@ -74,6 +78,7 @@ Actions taken:
    - **Skip v27.0.6**: Hotfix lane reserved for critical bugs ONLY
 
 ### For POST-PROD OPS Phases 2-7
+
 ✅ **UNBLOCKED** — Proceed with monitoring + diff on v27.0.5-prod live state
 
 ---
@@ -111,6 +116,7 @@ runs/GOVERNANCE_CORRECTION_20260223_174525/
 ## Unblock Criteria for POST-PROD OPS Phases 2-7
 
 ✅ **MET**:
+
 - Production release (v27.0.5-prod) confirmed safe and immutable
 - Post-tag divergence analyzed and classified (Rule P1 applied)
 - Governance infrastructure (gates) validated as non-breaking
@@ -118,6 +124,7 @@ runs/GOVERNANCE_CORRECTION_20260223_174525/
 - Evidence pack sealed with hashes
 
 ✅ **Can proceed to**:
+
 - PHASE 2: Monitoring Governed (watch v27.0.5-prod runtime)
 - PHASE 3: Continuous Diff (UI_ATLAS + UI_HEALTH refresh)
 - PHASES 4-7: (Truth Center, Hotfix lane, Next version decision)
@@ -127,18 +134,21 @@ runs/GOVERNANCE_CORRECTION_20260223_174525/
 ## Why This Decision
 
 **Governance Integrity**:
+
 - We identified the divergence ✅
 - We classified the root cause (P1: runtime changes) ✅
 - We reserved the hotfix lane (v27.0.6, not created yet) ✅
 - We proved vs27.0.5-prod is safe for users ✅
 
 **Operational Pragmatism**:
+
 - v27.0.5-prod users get stability (frozen, working, tested)
 - Development continues on MAIN (infrastructure improvements visible)
 - Future hotfixes (v27.0.6) can be created if conversation_engine needs critical patch
 - Next major (v27.1.0) will incorporate all post-tag work
 
 **Time Efficiency**:
+
 - No unnecessary rebuild cycle (v27.0.5 already tested/shipped)
 - No rollback of governance infrastructure (gates are pure tools, not runtime changes)
 - Clear path for next phase (monitoring) without governance gaps
@@ -157,6 +167,7 @@ runs/GOVERNANCE_CORRECTION_20260223_174525/
 ## Rollback Plan (if needed)
 
 If this decision is reversed:
+
 ```bash
 # Option: Full P1 hotfix creation
 git checkout -B v27.0.6-hotfix v27.0.5-prod
@@ -203,4 +214,3 @@ git clean -fd
   "status": "ready_for_monitoring_phase"
 }
 ```
-

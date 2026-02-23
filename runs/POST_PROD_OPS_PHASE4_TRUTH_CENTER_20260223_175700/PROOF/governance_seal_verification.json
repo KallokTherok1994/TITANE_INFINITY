@@ -1,15 +1,42 @@
 {
   "timestamp_utc": "2026-02-23T17:57:40Z",
   "gates_framework": {
-    "g1_no_offline_without_reason": { "status": "verified", "location": "scripts/gates/g1-no-offline-without-reason.sh" },
-    "g2_provider_isolation": { "status": "verified", "location": "scripts/gates/g2-provider-isolation.sh" },
-    "g3_allowlist_lock": { "status": "verified", "location": "scripts/gates/g3-allowlist-lock.sh" },
-    "g4_reproducibility": { "status": "verified", "location": "scripts/gates/g4-reproducibility.sh" },
-    "g5_no_network_expansion": { "status": "verified", "location": "scripts/gates/g5-no-network-expansion.sh" },
-    "g6_build_reproducibility": { "status": "verified", "location": "scripts/gates/g6-build-reproducibility.sh" },
-    "g7_tauri_allowlist": { "status": "verified", "location": "scripts/gates/g7-tauri-allowlist.sh" },
-    "g8_provider_api": { "status": "verified", "location": "scripts/gates/g8-provider-api.sh" },
-    "g9_release_seal": { "status": "verified", "location": "scripts/gates/g9-release-seal.sh" }
+    "g1_no_offline_without_reason": {
+      "status": "verified",
+      "location": "scripts/gates/g1-no-offline-without-reason.sh"
+    },
+    "g2_provider_isolation": {
+      "status": "verified",
+      "location": "scripts/gates/g2-provider-isolation.sh"
+    },
+    "g3_allowlist_lock": {
+      "status": "verified",
+      "location": "scripts/gates/g3-allowlist-lock.sh"
+    },
+    "g4_reproducibility": {
+      "status": "verified",
+      "location": "scripts/gates/g4-reproducibility.sh"
+    },
+    "g5_no_network_expansion": {
+      "status": "verified",
+      "location": "scripts/gates/g5-no-network-expansion.sh"
+    },
+    "g6_build_reproducibility": {
+      "status": "verified",
+      "location": "scripts/gates/g6-build-reproducibility.sh"
+    },
+    "g7_tauri_allowlist": {
+      "status": "verified",
+      "location": "scripts/gates/g7-tauri-allowlist.sh"
+    },
+    "g8_provider_api": {
+      "status": "verified",
+      "location": "scripts/gates/g8-provider-api.sh"
+    },
+    "g9_release_seal": {
+      "status": "verified",
+      "location": "scripts/gates/g9-release-seal.sh"
+    }
   },
   "gates_total": 9,
   "gates_verified": 9,

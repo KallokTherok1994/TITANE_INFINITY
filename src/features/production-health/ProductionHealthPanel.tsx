@@ -184,11 +184,7 @@ export const ProductionHealthPanel: React.FC = () => {
           >
             {loading ? '⟳ Actualisation...' : '🔄 Actualiser'}
           </button>
-          <button
-            className="ph-button"
-            onClick={handleCopySnapshot}
-            disabled={!data}
-          >
+          <button className="ph-button" onClick={handleCopySnapshot} disabled={!data}>
             {copied ? '✅ Copié!' : '📋 Copier données'}
           </button>
         </div>

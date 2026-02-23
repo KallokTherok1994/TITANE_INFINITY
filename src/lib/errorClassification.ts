@@ -136,7 +136,7 @@ export function classifyError(error: unknown): {
     return {
       type: 'timeout',
       message: "Délai d'attente dépassé",
-      hint: "Le service local a pris trop de temps à répondre. Réessayer.",
+      hint: 'Le service local a pris trop de temps à répondre. Réessayer.',
       retryable: true,
     };
   }

@@ -1,65 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>UI Continuous Snapshot #1 — Phase 3</title>
-  <style>
-    body { font-family: monospace; margin: 20px; background: #f5f5f5; }
-    .header { background: #1976d2; color: white; padding: 15px; border-radius: 5px; }
-    .metric { background: white; padding: 12px; margin: 8px 0; border-left: 4px solid #1976d2; }
-    .pass { color: #2e7d32; font-weight: bold; }
-    .warn { color: #f57c00; font-weight: bold; }
-    .stable { color: #1976d2; }
-    .delta { color: #666; font-size: 0.9em; }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>UI Continuous Snapshot #1 — Phase 3</h1>
-    <p>Check Date: 2026-02-23T17:56:20Z | Baseline: 2026-02-23T17:52:45Z</p>
-  </div>
+  <head>
+    <title>UI Continuous Snapshot #1 — Phase 3</title>
+    <style>
+      body {
+        font-family: monospace;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      .header {
+        background: #1976d2;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+      }
+      .metric {
+        background: white;
+        padding: 12px;
+        margin: 8px 0;
+        border-left: 4px solid #1976d2;
+      }
+      .pass {
+        color: #2e7d32;
+        font-weight: bold;
+      }
+      .warn {
+        color: #f57c00;
+        font-weight: bold;
+      }
+      .stable {
+        color: #1976d2;
+      }
+      .delta {
+        color: #666;
+        font-size: 0.9em;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>UI Continuous Snapshot #1 — Phase 3</h1>
+      <p>Check Date: 2026-02-23T17:56:20Z | Baseline: 2026-02-23T17:52:45Z</p>
+    </div>
 
-  <div class="metric">
-    <h3>DOM Ready Metrics</h3>
-    <ul>
-      <li>Baseline: 1243ms</li>
-      <li>Current: 1198ms</li>
-      <li><span class="delta">Delta: -45ms (-3.6%)</span></li>
-      <li><span class="pass">✓ Status: PASS</span> (target: < 2000ms)</li>
-    </ul>
-  </div>
+    <div class="metric">
+      <h3>DOM Ready Metrics</h3>
+      <ul>
+        <li>Baseline: 1243ms</li>
+        <li>Current: 1198ms</li>
+        <li><span class="delta">Delta: -45ms (-3.6%)</span></li>
+        <li><span class="pass">✓ Status: PASS</span> (target: < 2000ms)</li>
+      </ul>
+    </div>
 
-  <div class="metric">
-    <h3>Hydration & Rendering</h3>
-    <ul>
-      <li>Hydration (Baseline): 1089ms → (Current): 1055ms <span class="delta">(-34ms)</span> <span class="pass">✓</span></li>
-      <li>First Paint (Baseline): 245ms → (Current): 239ms <span class="delta">(-6ms)</span> <span class="pass">✓</span></li>
-      <li>Engine Init (Baseline): 156ms → (Current): 151ms <span class="delta">(-5ms)</span> <span class="pass">✓</span></li>
-    </ul>
-  </div>
+    <div class="metric">
+      <h3>Hydration & Rendering</h3>
+      <ul>
+        <li>
+          Hydration (Baseline): 1089ms → (Current): 1055ms
+          <span class="delta">(-34ms)</span> <span class="pass">✓</span>
+        </li>
+        <li>
+          First Paint (Baseline): 245ms → (Current): 239ms
+          <span class="delta">(-6ms)</span> <span class="pass">✓</span>
+        </li>
+        <li>
+          Engine Init (Baseline): 156ms → (Current): 151ms
+          <span class="delta">(-5ms)</span> <span class="pass">✓</span>
+        </li>
+      </ul>
+    </div>
 
-  <div class="metric">
-    <h3>Console Health</h3>
-    <ul>
-      <li>Errors: <span class="pass">0</span> (Baseline was 0) <span class="pass">✓</span></li>
-      <li>Warnings: <span class="warn">2</span> (expected deprecations, same as baseline) <span class="stable">STABLE</span></li>
-      <li>Info: 14 (Baseline was 14) <span class="stable">STABLE</span></li>
-    </ul>
-  </div>
+    <div class="metric">
+      <h3>Console Health</h3>
+      <ul>
+        <li>
+          Errors: <span class="pass">0</span> (Baseline was 0) <span class="pass">✓</span>
+        </li>
+        <li>
+          Warnings: <span class="warn">2</span> (expected deprecations, same as baseline)
+          <span class="stable">STABLE</span>
+        </li>
+        <li>Info: 14 (Baseline was 14) <span class="stable">STABLE</span></li>
+      </ul>
+    </div>
 
-  <div class="metric">
-    <h3>Component Status</h3>
-    <ul>
-      <li><span class="pass">✓</span> Conversation Panel: Mounted (responsive)</li>
-      <li><span class="pass">✓</span> Provider Selector: Reactive</li>
-      <li><span class="pass">✓</span> Settings Modal: Renderable</li>
-      <li><span class="pass">✓</span> Message History: Queryable</li>
-    </ul>
-  </div>
+    <div class="metric">
+      <h3>Component Status</h3>
+      <ul>
+        <li><span class="pass">✓</span> Conversation Panel: Mounted (responsive)</li>
+        <li><span class="pass">✓</span> Provider Selector: Reactive</li>
+        <li><span class="pass">✓</span> Settings Modal: Renderable</li>
+        <li><span class="pass">✓</span> Message History: Queryable</li>
+      </ul>
+    </div>
 
-  <div class="metric">
-    <h3>Verdict</h3>
-    <p><span class="pass">✓ PASS</span> — UI Health <span class="stable">STABLE</span></p>
-    <p><span class="stable">All metrics improved or unchanged vs baseline. No RED errors.</span></p>
-  </div>
-</body>
+    <div class="metric">
+      <h3>Verdict</h3>
+      <p>
+        <span class="pass">✓ PASS</span> — UI Health <span class="stable">STABLE</span>
+      </p>
+      <p>
+        <span class="stable"
+          >All metrics improved or unchanged vs baseline. No RED errors.</span
+        >
+      </p>
+    </div>
+  </body>
 </html>

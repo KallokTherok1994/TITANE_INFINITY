@@ -12,7 +12,8 @@
 
 2. **Choose a tag**: Sélectionner `v27.0.2` (déjà créé et pushé)
 
-3. **Release title**: 
+3. **Release title**:
+
    ```
    TITANE∞ v27.0.2 - Production Release
    ```
@@ -36,6 +37,7 @@
 ## Option 2: GitHub CLI (Après Authentification)
 
 ### Authentification:
+
 ```bash
 gh auth login
 ```
@@ -43,6 +45,7 @@ gh auth login
 Suivre les instructions interactives.
 
 ### Créer la release:
+
 ```bash
 gh release create v27.0.2 \
   --title "TITANE∞ v27.0.2 - Production Release" \
@@ -101,4 +104,3 @@ Après création de la release, vérifier:
    - Vérifier downloads
    - Suivre les issues reportées
    - Préparer hotfixes si nécessaire
-

@@ -2,12 +2,12 @@
 
 /**
  * P8 RECORD APPROVAL
- * 
+ *
  * Appends a human-approved beta distribution to the immutable BETA_APPROVAL_LOG.
- * 
+ *
  * Usage:
  *   P8_APPROVAL_TOKEN=<token> node scripts/ops/p8_record_approval.mjs
- * 
+ *
  * DOES NOT trigger distribution. Purely a logging/audit function.
  */
 
@@ -29,7 +29,8 @@ const LOG_PREFIX = '[P8 RECORD APPROVAL]';
 function getApproverInfo() {
   const user = process.env.USER || 'unknown';
   const timestamp = new Date().toISOString();
-  const gitUser = execSync('git config user.name', { cwd: repoRoot, encoding: 'utf8' }).trim() || user;
+  const gitUser =
+    execSync('git config user.name', { cwd: repoRoot, encoding: 'utf8' }).trim() || user;
 
   return { user: gitUser || user, timestamp };
 }
@@ -41,8 +42,10 @@ function getArtifactInfo() {
   try {
     const p8Dir = path.join(repoRoot, 'deployment/latest/certification/phase8');
     const items = fs.readdirSync(p8Dir, { withFileTypes: true });
-    const betaDirs = items.filter(d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_'));
-    
+    const betaDirs = items.filter(
+      d => d.isDirectory() && d.name.startsWith('P8_BETA_RELEASE_')
+    );
+
     if (betaDirs.length === 0) {
       console.error(`[P8 RECORD APPROVAL] ❌ P8_BETA_RELEASE directory not found`);
       return {};
@@ -59,36 +62,44 @@ function getArtifactInfo() {
     const artifacts = {};
 
     // Extract AppImage info
-    const appImageMatch = inventory.match(/Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.AppImage)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/);
+    const appImageMatch = inventory.match(
+      /Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.AppImage)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/
+    );
     if (appImageMatch) {
       artifacts.appImage = {
         name: appImageMatch[1].split('/').pop(),
-        size: appImageMatch[2]
+        size: appImageMatch[2],
       };
     }
 
     // Extract DEB info
-    const debMatch = inventory.match(/Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.deb)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/);
+    const debMatch = inventory.match(
+      /Artifact:.*?\n\*\*Artifact:\*\* `([^`]+\.deb)`[\s\S]*?\*\*Size:\*\* ([0-9,M\.]+)/
+    );
     if (debMatch) {
       artifacts.deb = {
         name: debMatch[1].split('/').pop(),
-        size: debMatch[2]
+        size: debMatch[2],
       };
     }
 
     // If not found by that pattern, try simpler patterns
     if (Object.keys(artifacts).length === 0) {
-      if (inventory.includes('AppImage')) artifacts.appImage = { name: 'Titan-Stable.AppImage', size: '~82 MB' };
-      if (inventory.includes('.deb')) artifacts.deb = { name: 'Titan-Stable.deb', size: '~9.6 MB' };
+      if (inventory.includes('AppImage'))
+        artifacts.appImage = { name: 'Titan-Stable.AppImage', size: '~82 MB' };
+      if (inventory.includes('.deb'))
+        artifacts.deb = { name: 'Titan-Stable.deb', size: '~9.6 MB' };
     }
 
     return artifacts;
   } catch (err) {
-    console.error(`[P8 RECORD APPROVAL] ⚠️  Could not extract artifact info: ${err.message}`);
+    console.error(
+      `[P8 RECORD APPROVAL] ⚠️  Could not extract artifact info: ${err.message}`
+    );
     // Return generic info if extraction fails
     return {
       appImage: { name: 'Titan-Stable.AppImage', size: '~82 MB' },
-      deb: { name: 'Titan-Stable.deb', size: '~9.6 MB' }
+      deb: { name: 'Titan-Stable.deb', size: '~9.6 MB' },
     };
   }
 }
@@ -97,8 +108,14 @@ function getArtifactInfo() {
  * Get git info
  */
 function getGitInfo() {
-  const commit = execSync('git rev-parse HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
-  const branch = execSync('git rev-parse --abbrev-ref HEAD', { cwd: repoRoot, encoding: 'utf8' }).trim();
+  const commit = execSync('git rev-parse HEAD', {
+    cwd: repoRoot,
+    encoding: 'utf8',
+  }).trim();
+  const branch = execSync('git rev-parse --abbrev-ref HEAD', {
+    cwd: repoRoot,
+    encoding: 'utf8',
+  }).trim();
 
   return { commit: commit.slice(0, 8), branch };
 }
@@ -192,7 +209,13 @@ function recordApproval() {
       process.exit(1);
     }
 
-    const entry = buildApprovalEntry(approverInfo.user, approverInfo.timestamp, tokenHash, gitInfo, artifacts);
+    const entry = buildApprovalEntry(
+      approverInfo.user,
+      approverInfo.timestamp,
+      tokenHash,
+      gitInfo,
+      artifacts
+    );
 
     console.log(`${LOG_PREFIX} Approval Details:`);
     console.log(`  Approver: ${approverInfo.user}`);
@@ -205,7 +228,9 @@ function recordApproval() {
       console.log(`${LOG_PREFIX} ✅ APPROVAL RECORDED\n`);
       console.log(`Next steps:`);
       console.log(`1. Review the approval entry just added`);
-      console.log(`2. Commit: git add docs/BETA_APPROVAL_LOG.md && git commit -m "docs: record P8 beta approval"`);
+      console.log(
+        `2. Commit: git add docs/BETA_APPROVAL_LOG.md && git commit -m "docs: record P8 beta approval"`
+      );
       console.log(`3. Start manual distribution (NO automatic release)\n`);
       process.exit(0);
     } else {

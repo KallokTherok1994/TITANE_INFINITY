@@ -1,6 +1,7 @@
 # Rollout Monitoring Checklist
 
 ## Pre-Rollout (T-24h)
+
 - [ ] All Phase 1-7 completed successfully
 - [ ] Production metrics baseline established (Phase 2)
 - [ ] Hotfix lane ready (Phase 5 verified)
@@ -11,6 +12,7 @@
 - [ ] Wave 1 user segment identified (power users list)
 
 ## Wave 1 Rollout (T-0 to T+24h)
+
 - [ ] Publish to 5% (early adopters)
 - [ ] Monitor every 5 minutes
 - [ ] Check error rate < 0.5%
@@ -22,6 +24,7 @@
 - [ ] Hourly confidence check (continue? rollback? hold?)
 
 ## Wave 1→2 Transition (T+24h)
+
 - [ ] Review Wave 1 metrics
 - [ ] Zero critical issues confirmed
 - [ ] User feedback positive
@@ -30,6 +33,7 @@
 - [ ] Set Wave 2 monitoring parameters
 
 ## Wave 2 Rollout (T+48h to T+72h)
+
 - [ ] Publish to 25% (mainstream users)
 - [ ] Monitor every 15 minutes
 - [ ] Check error rate < 0.2%
@@ -40,6 +44,7 @@
 - [ ] Monitor competitor/peer feedback
 
 ## Wave 2→3 Transition (T+72h)
+
 - [ ] Review Wave 2 metrics (24h data)
 - [ ] All success criteria met
 - [ ] No critical issues reported
@@ -48,6 +53,7 @@
 - [ ] Publish "GA" announcement
 
 ## GA Rollout (T+96h+)
+
 - [ ] Publish to 100% (all users)
 - [ ] Switch to normal monitoring (hourly)
 - [ ] Configure automated anomaly alerts
@@ -57,9 +63,9 @@
 - [ ] NPS survey (1 week post-GA)
 
 ## Post-GA (T+7d onwards)
+
 - [ ] Stabilization metrics (should improve/stay flat)
 - [ ] User feature requests logged for v27.1.0
 - [ ] Edge cases catalogued
 - [ ] Performance wins validated
 - [ ] Plan v27.1.0 development kickoff
-

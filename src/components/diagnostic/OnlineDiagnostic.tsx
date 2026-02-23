@@ -226,7 +226,11 @@ export const OnlineDiagnostic: React.FC = () => {
                       : 'text-gray-500'
                 )}
               >
-                {provider.can_reach ? '✓ Online' : provider.configured ? '~ Config' : '- Setup'}
+                {provider.can_reach
+                  ? '✓ Online'
+                  : provider.configured
+                    ? '~ Config'
+                    : '- Setup'}
               </span>
             </div>
           ))}
