@@ -1,0 +1,14 @@
+total 2252
+drwxrwxr-x  3 titane-os titane-os    4096 févr. 22 22:55 .
+drwxrwxr-x 57 titane-os titane-os   36864 févr. 23 07:34 ..
+drwxrwxr-x  2 titane-os titane-os   12288 févr. 22 22:55 assets
+-rw-rw-r--  1 titane-os titane-os    9293 févr. 22 22:55 index.html
+-rw-------  1 titane-os titane-os    1634 févr. 22 22:54 manifest.json
+-rw-rw-r--  1 titane-os titane-os 1879813 févr. 22 22:55 stats.html
+-rw-rw-r--  1 titane-os titane-os  127900 févr. 22 22:55 stats.html.br
+-rw-rw-r--  1 titane-os titane-os  186512 févr. 22 22:55 stats.html.gz
+-rw-rw-r--  1 titane-os titane-os   12360 févr. 22 22:55 sw.js
+-rw-rw-r--  1 titane-os titane-os    3108 févr. 22 22:55 sw.js.br
+-rw-rw-r--  1 titane-os titane-os    3686 févr. 22 22:55 sw.js.gz
+-rw-rw-r--  1 titane-os titane-os    3376 févr. 22 22:54 sw-source.js
+-rw-rw-r--  1 titane-os titane-os     272 févr. 22 22:54 vite.svg
