@@ -1,0 +1,36 @@
+src/__tests__/api/tauriClient.test.ts:21:    const { tauri } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:33:    const { tauri } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:47:    const { tauri } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:61:    const { tauriWithRetry } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:86:    const { tauriWithRetry } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:107:    const { tauriBatch } = await import('../../api/tauriClient');
+src/__tests__/api/tauriClient.test.ts:117:    const { isTauriAvailable } = await import('../../api/tauriClient');
+src/__tests__/useChat-streaming.test.ts:6:vi.mock('@/services/api/chat', () => ({
+src/__tests__/ollama-proxy.test.ts:12:  it('uses /api/ollama as base and forbids direct localhost', () => {
+src/__tests__/ollama-proxy.test.ts:20:    expect(source).toContain("const OLLAMA_API_BASE = '/api/ollama';");
+src/__tests__/ui-first-10-responses.test.tsx:12:vi.mock('@/services/api/chat', () => ({
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:17:  it('invokeTauri() devrait appeler @tauri-apps/api/core.invoke', async () => {
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:20:    vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:45:    vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:64:    vi.doMock('@tauri-apps/api/core', () => ({ invoke: undefined }));
+src/__tests__/omega-provider-tests.test.ts:22:import * as tauriCore from '@tauri-apps/api/core';
+src/__tests__/singularity-fusion-mocked.test.ts:11:vi.mock('@tauri-apps/api/core', () => ({
+src/__tests__/singularity-fusion-mocked.test.ts:82:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:94:      const { invoke } = await import('@tauri-apps/api/core');
+src/__tests__/singularity-fusion-mocked.test.ts:103:      const { invoke } = await import('@tauri-apps/api/core');
+---TAURI---
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:17:  it('invokeTauri() devrait appeler @tauri-apps/api/core.invoke', async () => {
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:20:    vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:45:    vi.doMock('@tauri-apps/api/core', () => ({ invoke }));
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:64:    vi.doMock('@tauri-apps/api/core', () => ({ invoke: undefined }));
+src/__tests__/singularity-fusion-integration.test.ts:11:import { invoke } from '@tauri-apps/api/core';
+src/__tests__/singularity-fusion-integration.test.ts:16:      const state = await invoke('singularity_get_fusion_state');
+src/__tests__/singularity-fusion-integration.test.ts:24:      const score = await invoke('singularity_perform_sync');
+src/__tests__/singularity-fusion-integration.test.ts:31:      const integrity = await invoke('singularity_check_integrity');
+src/__tests__/singularity-fusion-integration.test.ts:38:      const snapshotId = await invoke('singularity_create_snapshot', {
+src/__tests__/singularity-fusion-integration.test.ts:46:      const metrics = await invoke('singularity_get_metrics');
+src/__tests__/singularity-fusion-integration.test.ts:53:      const diagnostics = await invoke('singularity_get_diagnostics');
+src/__tests__/singularity-fusion-integration.test.ts:62:      const intention = await invoke('pipeline_analyze_intention', {
+src/__tests__/singularity-fusion-integration.test.ts:71:      const response = await invoke('pipeline_generate_cognitive_response', {
+src/__tests__/singularity-fusion-integration.test.ts:81:      const tts = await invoke('pipeline_prepare_tts', {
+src/__tests__/singularity-fusion-integration.test.ts:90:      const stats = await invoke('pipeline_get_stats');

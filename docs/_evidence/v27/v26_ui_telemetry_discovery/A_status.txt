@@ -1,0 +1,4 @@
+## MAIN...origin/MAIN
+ M EXECUTIVE_SUMMARY_V24_TO_V27.1.0.md
+ M WEEK1_MONITORING_CHECKPOINTS.md
+?? docs/_evidence/v27/v26_ui_telemetry_discovery/

@@ -1,0 +1,30 @@
+src/__tests__/ui/ui-navigation.test.ts:10:import { BrowserRouter } from 'react-router-dom';
+src/__tests__/ui/ui-navigation.test.ts:38:        BrowserRouter,
+src/__tests__/ui/ui-navigation.test.ts:45:              currentRoute: '/titane',
+src/__tests__/ui/ui-navigation.test.ts:115:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:130:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:146:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:195:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/services/voice/voiceRouter.test.ts:74:describe('services/voice/voiceRouter', () => {
+src/__tests__/services/voice/voiceRouter.test.ts:92:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:95:    const result = await voiceRouter.processVoiceTurn('   ', send);
+src/__tests__/services/voice/voiceRouter.test.ts:105:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:123:    const resultPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:164:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:171:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:177:    const promise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:194:    expect(voiceRouter.getState()).toBe('error');
+src/__tests__/services/voice/voiceRouter.test.ts:196:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:201:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:217:    const turnPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:221:    // Attendre que le router soit effectivement en "speaking".
+src/__tests__/services/voice/voiceRouter.test.ts:224:      if (voiceRouter.getState() === 'speaking') break;
+src/__tests__/services/voice/voiceRouter.test.ts:230:    expect(voiceRouter.getState()).toBe('speaking');
+src/__tests__/services/voice/voiceRouter.test.ts:233:    await voiceRouter.abort();
+src/__tests__/services/voice/voiceRouter.test.ts:238:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:250:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/unifiedMemory.test.ts:27:  it('devrait router vers STM quand importance < 0.3', async () => {
+src/__tests__/unifiedMemory.test.ts:38:  it('devrait router vers MTM quand importance entre 0.3 et 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:53:  it('devrait router vers LTM quand importance > 0.7', async () => {
+src/__tests__/unifiedMemory.test.ts:65:  it('devrait router vers LTM quand importance = 0.7 exactement', async () => {
+src/main.tsx:852:        console.log('   → UI Router → MetaLayer');
