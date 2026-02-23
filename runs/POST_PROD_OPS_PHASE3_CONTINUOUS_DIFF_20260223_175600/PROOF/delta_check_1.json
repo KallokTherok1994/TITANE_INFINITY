@@ -1,0 +1,25 @@
+{
+  "timestamp_utc": "2026-02-23T17:56:00Z",
+  "check_number": 1,
+  "baseline_timestamp": "2026-02-23T17:52:30Z",
+  "delta_provider_comparison": {
+    "mock": {
+      "baseline_latency_ms": 12,
+      "current_latency_ms": 11,
+      "delta_ms": -1,
+      "delta_percent": -8.3,
+      "status": "PASS",
+      "threshold_warning_ms": 30,
+      "threshold_critical_ms": 50
+    },
+    "ollama": {
+      "baseline_status": "offline",
+      "current_status": "offline",
+      "delta": "no_change",
+      "reason": "expected_in_mock_environment",
+      "status": "PASS"
+    }
+  },
+  "overall_provider_verdict": "STABLE",
+  "anomalies": []
+}
