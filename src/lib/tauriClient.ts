@@ -3377,6 +3377,10 @@ class TauriClient {
     );
   }
 
+  async readProductionWeek1Csv(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.READ_PRODUCTION_WEEK1_CSV, {});
+  }
+
   // ═══════════════════════════════════════════════════════════════════════════
 }
 

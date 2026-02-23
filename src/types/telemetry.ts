@@ -30,8 +30,8 @@ export interface ProductionHealthSample {
 
 export interface ProductionHealthSummary {
   status: ProductionHealthStatus;
-  windowStartISO: string;
-  windowEndISO: string;
+  windowStartIso: string;
+  windowEndIso: string;
   initialRssMb: number;
   growthMb: number;
   growthPercent: number;

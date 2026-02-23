@@ -10,6 +10,7 @@ use std::fs;
 use std::path::Path;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProductionHealthSample {
     pub timestamp: String,
     pub rss_initial_mb: f64,
@@ -25,6 +26,7 @@ pub struct ProductionHealthSample {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct ProductionHealthSummary {
     pub status: String,
     pub window_start_iso: String,
@@ -41,7 +43,7 @@ const CSV_PATH: &str = "/tmp/titane_production_week1.csv";
 const MAX_CSV_SIZE: usize = 2 * 1024 * 1024;
 
 const THRESHOLD_GREEN_MAX_MB: f64 = 213.0;
-const THRESHOLD_YELLOW_MAX_MB: f64 = 239.0;
+const THRESHOLD_RED_MIN_MB: f64 = 240.0;
 
 #[tauri::command]
 pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, String> {
@@ -84,13 +86,18 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
 }
 
 fn parse_and_summarize(csv: &str) -> Result<ProductionHealthSummary, String> {
-    let lines: Vec<&str> = csv.lines().collect();
+    let mut lines = csv.lines();
+    let _header = lines.next();
 
-    if lines.is_empty() {
+    let data_lines: Vec<&str> = lines
+        .filter(|line| !line.trim().is_empty())
+        .collect();
+
+    if data_lines.is_empty() {
         return Err("CSV is empty".to_string());
     }
 
-    if lines.len() < 2 {
+    if data_lines.len() < 2 {
         return Ok(ProductionHealthSummary {
             status: "UNKNOWN".to_string(),
             window_start_iso: chrono::Utc::now().to_rfc3339(),
@@ -116,8 +123,8 @@ fn parse_and_summarize(csv: &str) -> Result<ProductionHealthSummary, String> {
         });
     }
 
-    let first_data_line = lines[1];
-    let last_data_line = lines[lines.len() - 1];
+    let first_data_line = data_lines[0];
+    let last_data_line = data_lines[data_lines.len() - 1];
 
     let first_sample = parse_csv_line(first_data_line)?;
     let last_sample = parse_csv_line(last_data_line)?;
@@ -141,13 +148,13 @@ fn parse_and_summarize(csv: &str) -> Result<ProductionHealthSummary, String> {
         growth_mb,
         growth_percent,
         last_sample: last_sample.clone(),
-        samples_collected: lines.len() - 1,
+        samples_collected: data_lines.len(),
         notes: None,
     })
 }
 
 fn parse_csv_line(line: &str) -> Result<ProductionHealthSample, String> {
-    let parts: Vec<&str> = line.split('|').collect();
+    let parts: Vec<&str> = line.split(',').collect();
 
     if parts.len() < 3 {
         return Err(format!("Invalid CSV line: {}", line));
@@ -180,7 +187,7 @@ fn parse_csv_line(line: &str) -> Result<ProductionHealthSample, String> {
 }
 
 fn compute_status(rss_mb: f64, growth_percent: f64) -> &'static str {
-    if rss_mb >= THRESHOLD_YELLOW_MAX_MB {
+    if rss_mb >= THRESHOLD_RED_MIN_MB {
         "RED"
     } else if rss_mb >= THRESHOLD_GREEN_MAX_MB || growth_percent >= 22.0 {
         "YELLOW"

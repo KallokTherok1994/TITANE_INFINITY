@@ -156,8 +156,8 @@ export const ProductionHealthPanel: React.FC = () => {
             <div className="ph-metric-row">
               <span className="ph-label">Fenêtre:</span>
               <span className="ph-value ph-value-small">
-                {formatDateShort(data.windowStartISO)} →{' '}
-                {formatDateShort(data.windowEndISO)}
+                {formatDateShort(data.windowStartIso)} →{' '}
+                {formatDateShort(data.windowEndIso)}
               </span>
             </div>
             {data.samplesCollected !== undefined && (
@@ -180,6 +180,7 @@ export const ProductionHealthPanel: React.FC = () => {
             className="ph-button ph-button-primary"
             onClick={refresh}
             disabled={loading}
+            data-testid="production-health-refresh"
           >
             {loading ? '⟳ Actualisation...' : '🔄 Actualiser'}
           </button>
@@ -201,12 +202,18 @@ export const ProductionHealthPanel: React.FC = () => {
 
   return (
     <ErrorBoundary context="ProductionHealthPanel">
-      <div className="production-health-panel">{renderContent()}</div>
+      <div className="production-health-panel" data-testid="production-health-panel">
+        {renderContent()}
+      </div>
     </ErrorBoundary>
   );
 };
 
 function getTimeAgo(date: Date): string {
+  if (Number.isNaN(date.getTime())) {
+    return 'Date invalide';
+  }
+
   const now = new Date();
   const diffMs = now.getTime() - date.getTime();
   const diffSec = Math.floor(diffMs / 1000);
@@ -223,6 +230,10 @@ function getTimeAgo(date: Date): string {
 
 function formatDateShort(isoString: string): string {
   const date = new Date(isoString);
+  if (Number.isNaN(date.getTime())) {
+    return 'n/a';
+  }
+
   return date.toLocaleDateString('fr-FR', {
     month: 'short',
     day: 'numeric',
