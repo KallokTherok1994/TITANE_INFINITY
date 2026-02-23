@@ -1,0 +1,5 @@
+# SHA256 Checksums - TITANE∞ v27.2.0
+# Generated: 2026-02-23T20:20:35Z
+
+1972c2709a1cad6f36444d68ff6ab098614adceea00fe2679fb338f894f1fa38  appimage/TITANE-Infinity_27.2.0_amd64.AppImage
+5b925c8dc283cb87eb19c578481f0484368b451ced7c04016ccd5c29f61328fa  deb/TITANE-Infinity_27.2.0_amd64.deb
