@@ -72,3 +72,23 @@ index cd3d6800..e057f71d 100644
    "build": {
      "devUrl": "http://localhost:1420",
 ```
+
+## 5.3 Git Commit + Merge
+
+Feature branch commit: 28724a194c4bc16d7cd5ab5e76c5cc9e7a0b762d
+Main merge commit: 28724a194c4bc16d7cd5ab5e76c5cc9e7a0b762d
+
+Merge strategy: --no-ff (preserve history)
+
+✅ Branch merged to main
+
+## 5.3 Git Commit + Merge (Updated)
+
+Feature branch: feature/typescript-strict-v27.2.0
+Feature HEAD: 28724a194c4bc16d7cd5ab5e76c5cc9e7a0b762d
+
+Main branch: MAIN (uppercase)
+Merge commit: 28724a194c4bc16d7cd5ab5e76c5cc9e7a0b762d
+Merge strategy: --no-ff (history preserved)
+
+✅ Branch merged to MAIN successfully
