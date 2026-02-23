@@ -17,7 +17,7 @@ THRESHOLD_CRITICAL=239  # 22% growth critical (180 + 59)
 
 # Initialize logs on first run
 if [ ! -f "$LOG_CSV" ]; then
-    echo "timestamp,elapsed_hours,rss_mb,vsz_mb,cpu_percent,session_count,crash_count,failover_count" > "$LOG_CSV"
+    echo "timestamp,elapsed_hours,rss_mb,vsz_mb,cpu_percent,session_count,crash_count,failover_count,event_loop_lag_ms,provider_timeouts_per_hour,error_count" > "$LOG_CSV"
     echo "Production monitoring started: $(date)" > "$CRASH_LOG"
     echo "Production monitoring started: $(date)" > "$FAILOVER_LOG"
 fi
@@ -62,8 +62,25 @@ CRASH_COUNT=$(grep -c "CRASH:" "$CRASH_LOG" || echo "0")
 # Get failover count (look for provider switch messages in app logs)
 FAILOVER_COUNT=$(grep -c "provider.*failover\|provider.*switch" /tmp/titan_v24_app.log 2>/dev/null || echo "0")
 
-# Log the metrics
-echo "$CURRENT_TIME,$ELAPSED_HOURS,$RSS_MB,$VSZ_MB,$CPU_PCT,$SESSION_COUNT,$CRASH_COUNT,$FAILOVER_COUNT" >> "$LOG_CSV"
+# V26 RESILIENCE METRICS
+# 1. Event Loop Lag (detect subtle blocking even if RAM stable)
+# Look for lag detection in logs (simple heuristic)
+EVENT_LOOP_LAG=$(grep -oP 'event.*lag[:\s]+\K\d+' /tmp/titan_v24_app.log 2>/dev/null | tail -1 || echo "0")
+
+# 2. Provider Timeout Count (detect network/API fragility)
+PROVIDER_TIMEOUTS=$(grep -c "timeout\|connection.*refused\|http.*5\|provider.*error" /tmp/titan_v24_app.log 2>/dev/null || echo "0")
+# Normalize to per-hour (rough estimate if this is first hour)
+if [ "$ELAPSED_HOURS" -gt 0 ]; then
+    PROVIDER_TIMEOUTS_PER_HOUR=$((PROVIDER_TIMEOUTS / (ELAPSED_HOURS + 1)))
+else
+    PROVIDER_TIMEOUTS_PER_HOUR="$PROVIDER_TIMEOUTS"
+fi
+
+# 3. Unhandled Promise / Panic logs count (detect silent errors)
+ERROR_COUNT=$(grep -c "unhandled.*error\|panic\|fatal\|unhandled.*rejection" /tmp/titan_v24_app.log 2>/dev/null || echo "0")
+
+# Log the metrics (now with 3 new columns)
+echo "$CURRENT_TIME,$ELAPSED_HOURS,$RSS_MB,$VSZ_MB,$CPU_PCT,$SESSION_COUNT,$CRASH_COUNT,$FAILOVER_COUNT,$EVENT_LOOP_LAG,$PROVIDER_TIMEOUTS_PER_HOUR,$ERROR_COUNT" >> "$LOG_CSV"
 
 # Check thresholds
 if [ "$RSS_MB" -gt "$THRESHOLD_CRITICAL" ]; then
