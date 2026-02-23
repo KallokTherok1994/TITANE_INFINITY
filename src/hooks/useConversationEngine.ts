@@ -294,6 +294,31 @@ export function useConversationEngine(
           return updated;
         });
 
+        // ✨ OBSERVABILITY: Mode detection based on meta
+        const mode = response.meta?.mode || 'UNKNOWN';
+        const reasonCode = response.meta?.reason_code || 'UNKNOWN';
+
+        if (mode === 'OFFLINE') {
+          const message =
+            reasonCode !== 'UNKNOWN'
+              ? `Mode hors ligne: ${reasonCode}`
+              : 'Mode hors ligne (raison inconnue)';
+          setError(message);
+          logger.warn('[useConversationEngine] OFFLINE mode', { reasonCode });
+        } else if (mode === 'LOCAL') {
+          logger.info('[useConversationEngine] LOCAL mode', { reasonCode });
+          // Clear error if any
+          if (error) setError(null);
+        } else if (mode === 'REMOTE') {
+          logger.info('[useConversationEngine] REMOTE mode', {
+            provider: response.meta?.provider_used,
+            network_used: response.meta?.network_used,
+          });
+          if (error) setError(null);
+        } else {
+          logger.warn('[useConversationEngine] UNKNOWN mode', { meta: response.meta });
+        }
+
         // ✅ PERSIST MESSAGES TO LOCALSTORAGE
         try {
           const userAIMessage: AIMessage = {
