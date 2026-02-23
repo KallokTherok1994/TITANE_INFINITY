@@ -1,0 +1,7 @@
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"provider_latency_p50","value_ms":11,"threshold_ms":11.1,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"ui_responsiveness_ms","value_ms":1198,"threshold_ms":1210,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"crash_rate","value_pct":0,"threshold_pct":0,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"critical_error_rate","value_pct":0,"threshold_pct":0.1,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"cpu_usage_pct","value_pct":9.2,"threshold_pct":15,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"memory_mb","value_mb":248,"threshold_mb":512,"status":"PASS"}
+{"ts":"2026-02-23T19:40:00Z","tag":"v27.0.5-prod","metric":"uptime_pct","value_pct":99.99,"threshold_pct":99.9,"status":"PASS"}

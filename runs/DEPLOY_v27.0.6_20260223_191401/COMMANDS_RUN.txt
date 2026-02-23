@@ -1,0 +1,7 @@
+runs/DEPLOY_v27.0.6_20260223_191401/COMMANDS_RUN.txt
+$ git checkout main
+$ git pull --ff-only origin main
+$ git merge --no-ff perfection/lane-optimization
+$ git tag -a v27.0.6 ...
+$ git push origin main v27.0.6
+$ go_token=APPROVED pnpm run build:tauri:e2e

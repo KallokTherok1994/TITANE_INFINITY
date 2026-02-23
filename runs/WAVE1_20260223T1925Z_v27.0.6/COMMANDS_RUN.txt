@@ -1,0 +1,34 @@
+# WAVE1 v27.0.6 Commands Log
+
+## Phase 0: Prechecks
+- date -Is
+- git status --porcelain=v1
+- git rev-parse --abbrev-ref HEAD
+- git rev-parse HEAD
+- git tag -l "v27.0.6" "v27.0.5-prod"
+- git rev-list -n 1 v27.0.6
+- git rev-list -n 1 v27.0.5-prod
+
+## Phase 1: Deploy Discovery
+- find scripts -maxdepth 4 -type f -iname "*deploy*"
+- ls -la deployment/latest/
+- grep -r "updater" src-tauri/tauri.conf.json
+- rg -n "deploy|rollout|wave|cohort" scripts deployment
+
+## Phase 2: Deployment Decision
+- Created MANIFEST_v27.0.6_DOCS_ONLY.json
+- Recorded deployment decision (NO BINARY DEPLOYMENT)
+
+## Phase 3: Monitoring Setup
+- Created MONITORING_BASELINE.ndjson
+- Defined monitoring loop configuration
+
+## Phase 5: Verdict Generation
+- Validated baseline metrics
+- Appended registry event: WAVE1_VERDICT_v27.0.6
+- Generated v27.2.0 sprint plan
+
+## Phase 6: Seal
+- Generated SHA256SUMS.txt
+- Created COMMANDS_RUN.txt
+- Generated FINAL_VERDICT.md
