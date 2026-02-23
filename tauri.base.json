@@ -132,7 +132,8 @@
             { "command": "tts_speak_parler" },
             { "command": "tts_stop" },
             { "command": "tts_is_speaking" },
-            { "command": "tts_get_status" }
+            { "command": "tts_get_status" },
+            { "command": "read_production_week1_csv" }
           ],
           "deny": []
         }

@@ -9,7 +9,8 @@ export type AdminTab =
   | 'config' // Configuration HUB
   | 'audio' // Audio & Voix
   | 'design' // Design (Gesign)
-  | 'governance'; // Gouvernance & Sécurité
+  | 'governance' // Gouvernance & Sécurité
+  | 'production-health'; // V25 Week 1 Production Telemetry (V26)
 
 export interface AdminTabDefinition {
   id: AdminTab;
@@ -54,5 +55,12 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
     icon: '🛡️',
     description: 'Sécurité, Secrets, Politiques IA, Permissions',
     badge: 'SECURE',
+  },
+  {
+    id: 'production-health',
+    label: 'Santé Prod (V25)',
+    icon: '📊',
+    description: 'Métriques production Week 1 - Observabilité temps réel',
+    badge: 'V26',
   },
 ];

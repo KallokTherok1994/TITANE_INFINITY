@@ -8,3 +8,8 @@ pub mod chat_commands;
 // VECTOR STORE API - Backend SQLite + Vector Search (v19.5.2 Phase 2)
 // ═══════════════════════════════════════════════════════════════════════════
 pub mod vector_store_api;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// TELEMETRY API - V26 Production Health Metrics (v26.0.0)
+// ═══════════════════════════════════════════════════════════════════════════
+pub mod telemetry_api;
