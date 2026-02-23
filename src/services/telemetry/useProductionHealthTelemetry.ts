@@ -5,12 +5,28 @@
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient } from '@/lib/tauriClient';
 import type { ProductionHealthSummary } from '@/types/telemetry';
 
 export interface UseProductionHealthTelemetryOptions {
   refreshIntervalMs?: number;
   autoRefresh?: boolean;
+}
+
+function isProductionHealthSummary(value: unknown): value is ProductionHealthSummary {
+  if (!value || typeof value !== 'object') return false;
+  const candidate = value as Record<string, unknown>;
+  return (
+    typeof candidate.status === 'string' &&
+    typeof candidate.windowStartIso === 'string' &&
+    typeof candidate.windowEndIso === 'string' &&
+    typeof candidate.initialRssMb === 'number' &&
+    typeof candidate.growthMb === 'number' &&
+    typeof candidate.growthPercent === 'number' &&
+    typeof candidate.samplesCollected === 'number' &&
+    candidate.lastSample !== null &&
+    typeof candidate.lastSample === 'object'
+  );
 }
 
 export function useProductionHealthTelemetry(
@@ -30,9 +46,30 @@ export function useProductionHealthTelemetry(
     setLoading(true);
     setError(null);
     try {
-      const summary = await invoke<ProductionHealthSummary>(
-        'read_production_week1_csv'
-      );
+      const response = await tauriClient.readProductionWeek1Csv();
+      if (
+        response &&
+        typeof response === 'object' &&
+        'ok' in (response as Record<string, unknown>)
+      ) {
+        const envelope = response as {
+          ok?: boolean;
+          error?: { message?: string } | string;
+        };
+        if (!envelope.ok) {
+          const envelopeError =
+            typeof envelope.error === 'string'
+              ? envelope.error
+              : envelope.error?.message || 'IPC error';
+          throw new Error(envelopeError);
+        }
+      }
+
+      if (!isProductionHealthSummary(response)) {
+        throw new Error('Invalid telemetry payload');
+      }
+
+      const summary = response;
       setData(summary);
     } catch (err) {
       const errorMsg =

@@ -214,6 +214,9 @@ mod api {
     pub mod memory_api {
         include!("api/memory_api.rs");
     }
+    pub mod telemetry_api {
+        include!("api/telemetry_api.rs");
+    }
 }
 
 mod core {
@@ -942,6 +945,8 @@ fn main() {
             
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,
+            // V26 Production Health Telemetry
+            api::telemetry_api::read_production_week1_csv,
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)
             overdrive::voice_engine::voice_start_listening,
             overdrive::voice_engine::voice_stop_listening,
