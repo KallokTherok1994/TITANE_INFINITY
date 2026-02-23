@@ -1,0 +1,12 @@
+total 80
+drwxrwxr-x   2 titane-os titane-os  4096 janv. 19 15:24 .
+drwxrwxr-x 105 titane-os titane-os  4096 févr. 20 09:03 ..
+-rw-rw-r--   1 titane-os titane-os  2769 déc.  22 22:29 chat_commands.rs
+-rw-rw-r--   1 titane-os titane-os  3087 déc.   9 10:57 engine_api.rs
+-rw-rw-r--   1 titane-os titane-os 14663 déc.   9 10:57 handlers_v14.rs
+-rw-rw-r--   1 titane-os titane-os   694 déc.  11 15:37 helios_api.rs
+-rw-rw-r--   1 titane-os titane-os  4708 janv. 19 15:24 memory_api.rs
+-rw-rw-r--   1 titane-os titane-os  1046 déc.   9 10:57 mod.rs
+-rw-rw-r--   1 titane-os titane-os  5339 déc.   9 10:57 system_api.rs
+-rw-rw-r--   1 titane-os titane-os 23353 déc.   9 19:39 vector_store_api.rs
+---TAURI CONF---

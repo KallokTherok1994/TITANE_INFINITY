@@ -69,12 +69,8 @@ EVENT_LOOP_LAG=$(grep -oP 'event.*lag[:\s]+\K\d+' /tmp/titan_v24_app.log 2>/dev/
 
 # 2. Provider Timeout Count (detect network/API fragility)
 PROVIDER_TIMEOUTS=$(grep -c "timeout\|connection.*refused\|http.*5\|provider.*error" /tmp/titan_v24_app.log 2>/dev/null || echo "0")
-# Normalize to per-hour (rough estimate if this is first hour)
-if [ "$ELAPSED_HOURS" -gt 0 ]; then
-    PROVIDER_TIMEOUTS_PER_HOUR=$((PROVIDER_TIMEOUTS / (ELAPSED_HOURS + 1)))
-else
-    PROVIDER_TIMEOUTS_PER_HOUR="$PROVIDER_TIMEOUTS"
-fi
+# Normalize to per-hour (awk-based to avoid bc)
+PROVIDER_TIMEOUTS_PER_HOUR=$(echo "$PROVIDER_TIMEOUTS $ELAPSED_HOURS" | awk '{if ($2 > 0) printf "%.1f", $1 / ($2 + 1); else print $1}')
 
 # 3. Unhandled Promise / Panic logs count (detect silent errors)
 ERROR_COUNT=$(grep -c "unhandled.*error\|panic\|fatal\|unhandled.*rejection" /tmp/titan_v24_app.log 2>/dev/null || echo "0")
