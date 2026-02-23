@@ -59,6 +59,10 @@ const GovernanceCenterPage = lazy(() =>
   import('../governance-center').then(m => ({ default: m.GovernanceCenterPage }))
 );
 
+const ProductionHealthPanel = lazy(() =>
+  import('../production-health/ProductionHealthPanel').then(m => ({ default: m.ProductionHealthPanel }))
+);
+
 // ══════════════════════════════════════════════════════════════════
 // LOADING SPINNER
 // ══════════════════════════════════════════════════════════════════
@@ -123,6 +127,15 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
         <Suspense fallback={<LoadingSpinner message="Chargement Gouvernance..." />}>
           <ErrorBoundary context="AdminGovernanceCenter">
             <GovernanceCenterPage />
+          </ErrorBoundary>
+        </Suspense>
+      );
+
+    case 'production-health':
+      return (
+        <Suspense fallback={<LoadingSpinner message="Chargement Santé Production..." />}>
+          <ErrorBoundary context="AdminProductionHealth">
+            <ProductionHealthPanel />
           </ErrorBoundary>
         </Suspense>
       );
