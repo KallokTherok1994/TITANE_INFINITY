@@ -79,6 +79,9 @@ pub async fn conversation_generate(
 
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
     let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+        log::warn!(
+            "[Ω:CMD] ⚠️ FORCE_LOCAL_PROVIDER env active | cloud providers DISABLED | reason=test_mode"
+        );
         Some("local".to_string())
     } else {
         provider

@@ -14,6 +14,16 @@ import { tauriClient } from '@/lib/tauriClient';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type { OnlineDecision, ProviderDecisionMeta } from '@/types/providerMeta';
+import { FEATURE_FLAGS, envFlag } from '@/config/featureFlags';
+
+function runtimeFlag(key: string): boolean {
+  try {
+    if (typeof window === 'undefined') return false;
+    return window.localStorage.getItem(key) === '1';
+  } catch {
+    return false;
+  }
+}
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -245,6 +255,15 @@ export async function processMessage(
   // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
   console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
+  // ✨ OBSERVABILITY: Log external AI gate state
+  const externalAllowed = FEATURE_FLAGS.ENABLE_EXTERNAL_AI;
+  console.log('[CONV_SEND] External AI gate', {
+    buildFlagEnabled: envFlag('VITE_ENABLE_EXTERNAL_AI'),
+    runtimeToggleEnabled: import.meta.env.DEV ? true : runtimeFlag('titane.enable_external_ai'),
+    allowed: externalAllowed,
+    requested_provider: 'auto',
+  });
+
   const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
@@ -330,6 +349,20 @@ export async function processMessage(
     assistant_message_preview: response.assistant_message?.substring(0, 100),
     provider: response.metadata?.provider_used,
   });
+
+  // ✨ OBSERVABILITY: Log provider decision meta
+  if (providerMeta) {
+    console.log('[CONV_RECV] Provider decision', {
+      mode: providerMeta.mode,
+      reason_code: providerMeta.reason_code,
+      provider_used: providerMeta.provider_used,
+      network_used: providerMeta.network_used,
+      attempts_count: providerMeta.attempts?.length || 0,
+      latency_ms: providerMeta.latency_ms_total,
+    });
+  } else {
+    console.warn('[CONV_RECV] ⚠️ Provider meta missing in response');
+  }
 
   return response;
 }
