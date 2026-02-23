@@ -1,0 +1,19 @@
+{
+  "timestamp_utc": "2026-02-23T17:57:30Z",
+  "registry_file": "registry/ui-events.jsonl",
+  "format": "JSONL (append-only immutable log)",
+  "line_count": 71,
+  "expected_min_events": 5,
+  "events_found": 71,
+  "key_events_present": {
+    "go_all_campaign_start": true,
+    "go_all_phases_complete": true,
+    "governance_correction_sealed": true,
+    "phase_2_monitoring_verdict": true,
+    "phase_3_continuous_diff_verdict": true
+  },
+  "append_only_check": "PASS",
+  "integrity_hash_verified": "yes",
+  "registry_status": "IMMUTABLE_AND_COMPLETE",
+  "verdict": "PASS"
+}
