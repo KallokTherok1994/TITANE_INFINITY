@@ -292,3 +292,39 @@ Malgré la correction des FAIL tests, le sealing **PROD complet reste BLOQUÉ** 
 - `G_fetch.txt`
 - `G_origin_main_sha.txt`
 - `G_status_after.txt`
+
+---
+
+## Addendum — Finalisation PROD du 2026-02-23 (post-autorisation)
+
+### Autorisation reçue
+
+- Token build: `GO_FOR_PROD_BUILD__TITANE_INFINITY`
+- Token deploy: `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+
+### Exécution et correction racine
+
+- Build/deploy stable exécuté.
+- Écart de version détecté puis corrigé: `runtime/stable/tauri.conf.json` aligné en `27.0.5`.
+- Build canonique release exécuté avec `src-tauri/tauri.conf.json` pour produire les artefacts `TITANE-Infinity_*`.
+- `deployment/latest` resynchronisé sur les artefacts buildés (manifest + checksums + sizes).
+
+### Scellement Git (explicite, sans follow-tags)
+
+- Commit de sealing: `a1bf79e29be3e6188bd4ab0f9c4d864dd433ab69`
+- Tag annoté: `v27.0.5-prod` (objet tag `702e5cbf30b376bb874997fd25eb9940afdffb19`)
+- Push branche: `MAIN -> origin/MAIN` ✅
+- Push tag explicite: `v27.0.5-prod -> origin` ✅
+
+### Vérification remote
+
+- `origin/MAIN`: `a1bf79e29be3e6188bd4ab0f9c4d864dd433ab69`
+- `origin tag v27.0.5-prod`: `702e5cbf30b376bb874997fd25eb9940afdffb19`
+
+### Décision finale mise à jour
+
+- **Qualité tests**: ✅ PASS
+- **Version Sync Gate**: ✅ PASS
+- **Build PROD**: ✅ PASS
+- **Deploy PROD**: ✅ PASS
+- **Sealing final**: ✅ **QUALIFIED / SEALED (v27.0.5-prod)**
