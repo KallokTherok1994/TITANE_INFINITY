@@ -21,6 +21,8 @@ const DEFAULT_RAG_TOP_K: usize = 5;
 const MAX_EXCERPT_WORDS: usize = 25;
 /// Strategy name reported in markers
 pub const STRATEGY_EXTRACTIVE: &str = "EXTRACTIVE_FALLBACK";
+/// P10 strategy — LLM generation (currently BLOCKED — NONE provider)
+pub const STRATEGY_LOCAL_LLM: &str = "LOCAL_LLM_BLOCKED";
 
 // ─────────────────────────────────────────────────────────────────
 // OUTPUT
@@ -123,6 +125,34 @@ pub fn generate_answer(query: &str, passages: &[RetrievedPassage], top_k: usize)
         used_passages: used.len(),
         strategy: STRATEGY_EXTRACTIVE,
     }
+}
+
+// ─────────────────────────────────────────────────────────────────
+// P10 — LLM HOOK (BLOCKED — always falls back to EXTRACTIVE)
+// ─────────────────────────────────────────────────────────────────
+
+/// P10.0 — LLM hook entry point.
+///
+/// If `ENABLE_LOCAL_LLM=true` AND the active provider `is_available()`
+/// (both must hold), generation is delegated to the provider.
+/// In P10.0 `NullLlmProvider` is always active → always falls back to
+/// `generate_answer` with strategy `EXTRACTIVE_FALLBACK`.
+///
+/// This function is the stable interface; callers should use this
+/// instead of `generate_answer` so future LLM providers slot in
+/// transparently without changing call sites.
+pub fn generate_answer_with_llm_hook(
+    query: &str,
+    passages: &[RetrievedPassage],
+    top_k: usize,
+) -> RagOutput {
+    if crate::services::local_llm_service::is_enabled() {
+        // Future: delegate to provider (P10.1+)
+        // For now: NullLlmProvider::is_available() == false, so this branch
+        // is never reached in P10.0. Kept for forward-compatibility.
+    }
+    // Always: extractive fallback
+    generate_answer(query, passages, top_k)
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -347,5 +377,44 @@ mod tests {
         let (answer, lims) = guard_no_hallucination("extractive answer text", &[&p]);
         assert_eq!(answer, "extractive answer text");
         assert!(lims.is_empty());
+    }
+
+    // ── P10: LLM HOOK ─────────────────────────────────────────────
+
+    #[test]
+    fn test_llm_hook_disabled_falls_back_to_extractive() {
+        let passages = vec![
+            make_passage(
+                "https://hook.example.com/a",
+                "P10 hook test passage evidence alpha beta",
+                4,
+            ),
+            make_passage(
+                "https://hook.example.com/b",
+                "Second hook test passage evidence gamma delta",
+                2,
+            ),
+        ];
+        let out = generate_answer_with_llm_hook("hook test", &passages, 5);
+        assert_eq!(
+            out.strategy,
+            STRATEGY_EXTRACTIVE,
+            "Hook must fall back to EXTRACTIVE_FALLBACK when LLM disabled"
+        );
+        assert!(!out.citations.is_empty());
+        assert!(!out.answer_text.contains("Insufficient evidence"));
+    }
+
+    #[test]
+    fn test_llm_hook_empty_passages_falls_back_to_extractive() {
+        let out = generate_answer_with_llm_hook("no data query", &[], 5);
+        assert_eq!(out.strategy, STRATEGY_EXTRACTIVE);
+        assert!(out.answer_text.contains("Insufficient evidence"));
+        assert_eq!(out.used_passages, 0);
+    }
+
+    #[test]
+    fn test_strategy_local_llm_constant() {
+        assert_eq!(STRATEGY_LOCAL_LLM, "LOCAL_LLM_BLOCKED");
     }
 }

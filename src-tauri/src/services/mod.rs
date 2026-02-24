@@ -9,6 +9,7 @@ pub mod extract_service; // P4: WebResearch — deterministic HTML→text extrac
 pub mod fetch_service; // P2: WebResearch — single network gate
 pub mod index_service; // P5: WebResearch — Tantivy lexical index (BM25)
 pub mod io_service;
+pub mod local_llm_service; // P10: WebResearch — local LLM hook (BLOCKED — NONE provider)
 pub mod network_policy; // P2: WebResearch — policy guard
 pub mod rag_service; // P6: WebResearch — extractive RAG, citations, no-hallucination guard
 pub mod rate_limit_service; // P3: WebResearch — token bucket per domain
