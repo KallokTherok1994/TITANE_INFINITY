@@ -6,13 +6,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
- *   Contrats IPC stables pour WebResearch Engine (P2.0 QUALIFIED)
+ *   Contrats IPC stables pour WebResearch Engine (P3.0 QUALIFIED++)
  *   Tauri-only • Zéro réseau UI • Gouvernance stricte
  * ═══════════════════════════════════════════════════════════════════
  */
 
-/** P2.0 contract version — adds NetworkEvent, target_url, budget fields */
-export const RESEARCH_CONTRACT_VERSION = 'P2.0' as const;
+/** P3.0 contract version — adds CacheEvent, RobotsEvent, RateLimitEvent */
+export const RESEARCH_CONTRACT_VERSION = 'P3.0' as const;
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -21,7 +21,7 @@ export const RESEARCH_CONTRACT_VERSION = 'P2.0' as const;
 /**
  * Research execution mode.
  * - OFFLINE: no network (OFFLINE_HARDSTOP_ENFORCED)
- * - LOCAL_INDEX: local semantic index (stub in P2)
+ * - LOCAL_INDEX: local semantic index (stub in P3)
  * - WEB_LIVE: governed fetch via NetworkPolicyGuard + FetchService
  */
 export type ResearchMode = 'OFFLINE' | 'LOCAL_INDEX' | 'WEB_LIVE';
@@ -50,8 +50,12 @@ export interface ResearchOptions {
   max_requests?: number | null;
   respect_robots?: boolean | null;
   rate_limit_profile?: string | null;
-  /** Optional target URL for WEB_LIVE P2 controlled single fetch */
+  /** Optional target URL for WEB_LIVE controlled single fetch */
   target_url?: string | null;
+  /** Allow writing cache to disk (default true in WEB_LIVE) */
+  cache_enabled?: boolean | null;
+  /** Override sandbox root path (default: data/research) */
+  sandbox_root?: string | null;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -67,6 +71,53 @@ export interface NetworkEvent {
   bytes: number;
   duration_ms: number;
   cache_hit: boolean;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CACHE EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+export type CacheEventKind = 'HIT' | 'MISS' | 'WRITE' | 'SKIP';
+
+/** Cache event emitted by CacheService */
+export interface CacheEvent {
+  kind: CacheEventKind;
+  url: string;
+  blob_hash?: string | null;
+  bytes?: number | null;
+  ts: number; // unix ms
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ROBOTS EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+export type RobotsStatus =
+  | 'ALLOW'
+  | 'DISALLOW'
+  | 'ERROR_FALLBACK_ALLOW'
+  | 'ERROR_FALLBACK_BLOCK';
+
+/** Robots check event emitted by RobotsService */
+export interface RobotsEvent {
+  domain: string;
+  status: RobotsStatus;
+  fetched: boolean;
+  cached: boolean;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RATE LIMIT EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+export type RateLimitAction = 'ALLOW' | 'DELAY' | 'BLOCK';
+
+/** Rate-limit decision event emitted by RateLimitService */
+export interface RateLimitEvent {
+  domain: string;
+  action: RateLimitAction;
+  delay_ms?: number | null;
+  reason?: string | null;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -105,7 +156,7 @@ export interface ResearchAnswer {
   trace_id: string;
 }
 
-/** Execution trace for observability (P2: typed network_events) */
+/** Execution trace for observability (P3: all event types typed) */
 export interface ResearchTrace {
   trace_id: string;
   markers: string[];
@@ -113,7 +164,12 @@ export interface ResearchTrace {
   budgets?: Record<string, number> | null;
   /** Structured network events from FetchService (P2+) */
   network_events?: NetworkEvent[] | null;
-  cache_events?: string[] | null;
+  /** Cache events from CacheService (P3+) */
+  cache_events?: CacheEvent[] | null;
+  /** Robots events from RobotsService (P3+) */
+  robots_events?: RobotsEvent[] | null;
+  /** Rate-limit events from RateLimitService (P3+) */
+  rate_limit_events?: RateLimitEvent[] | null;
   index_events?: string[] | null;
   errors: string[];
 }
