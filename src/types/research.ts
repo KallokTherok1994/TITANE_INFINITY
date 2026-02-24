@@ -6,13 +6,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
- *   Contrats IPC stables pour WebResearch Engine (P3.0 QUALIFIED++)
+ *   Contrats IPC stables pour WebResearch Engine (P5.0 QUALIFIED++++)
  *   Tauri-only • Zéro réseau UI • Gouvernance stricte
  * ═══════════════════════════════════════════════════════════════════
  */
 
-/** P4.0 contract version — adds ExtractEvent, extract_events in ResearchTrace */
-export const RESEARCH_CONTRACT_VERSION = 'P4.0' as const;
+/** P5.0 contract version — adds IndexEvent, RetrievedPassage, sources_count, retrieved_passages_count */
+export const RESEARCH_CONTRACT_VERSION = 'P5.0' as const;
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -167,6 +167,31 @@ export interface ExtractEvent {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// INDEX EVENT (P5)
+// ─────────────────────────────────────────────────────────────────
+
+export type IndexWriteStatus = 'WRITTEN' | 'SKIPPED_DUPLICATE' | 'FAILED';
+export type IndexQueryStatus = 'OK' | 'EMPTY' | 'FAILED';
+
+/** Index write/query event emitted by IndexService (P5+) */
+export interface IndexEvent {
+  url?: string | null;
+  query?: string | null;
+  write_status?: IndexWriteStatus | null;
+  query_status?: IndexQueryStatus | null;
+  hits_count?: number | null;
+  passages_count?: number | null;
+  error?: string | null;
+}
+
+/** A retrieved text passage from the Tantivy index (P5+) */
+export interface RetrievedPassage {
+  url: string;
+  passage: string;
+  score: number;
+}
+
+// ─────────────────────────────────────────────────────────────────
 // OUTPUT
 // ─────────────────────────────────────────────────────────────────
 
@@ -177,9 +202,13 @@ export interface ResearchAnswer {
   confidence?: number | null;
   limitations: string[];
   trace_id: string;
+  /** Number of indexed documents used (P5+) */
+  sources_count: number;
+  /** Number of retrieved passages (P5+) */
+  retrieved_passages_count: number;
 }
 
-/** Execution trace for observability (P4: ExtractEvent added) */
+/** Execution trace for observability (P5: IndexEvent added, index_events typed) */
 export interface ResearchTrace {
   trace_id: string;
   markers: string[];
@@ -195,7 +224,8 @@ export interface ResearchTrace {
   rate_limit_events?: RateLimitEvent[] | null;
   /** Extraction events from ExtractService (P4+) */
   extract_events?: ExtractEvent[] | null;
-  index_events?: string[] | null;
+  /** Index events from IndexService (P5+) */
+  index_events?: IndexEvent[] | null;
   errors: string[];
 }
 

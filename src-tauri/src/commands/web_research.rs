@@ -1,12 +1,13 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — WEB RESEARCH COMMAND (P4.0 QUALIFIED+++)
+//   TITANE∞ — WEB RESEARCH COMMAND (P5.0 QUALIFIED++++)
 //   Commande Tauri unique : web_research
-//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract
+//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract → Index
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::cache_service::CacheService;
 use crate::services::extract_service::ExtractService;
 use crate::services::fetch_service::{FetchError, FetchService};
+use crate::services::index_service::{IndexService, IndexWriteResult};
 use crate::services::network_policy::apply_policy;
 use crate::services::network_policy::extract_domain;
 use crate::services::rate_limit_service::{
@@ -14,16 +15,17 @@ use crate::services::rate_limit_service::{
 };
 use crate::services::robots_service::{RobotsErrorPolicy, RobotsService};
 use crate::types::research::{
-    CacheEvent, CacheEventKind, ExtractEvent, ExtractQuality, ExtractStatus, NetworkEvent,
-    RateLimitAction, RateLimitEvent, ResearchAnswer, ResearchMode, ResearchOptions, ResearchQuery,
-    ResearchReport, ResearchTrace, RobotsEvent, RobotsStatus, RESEARCH_CONTRACT_VERSION,
+    CacheEvent, CacheEventKind, ExtractEvent, ExtractQuality, ExtractStatus, IndexEvent,
+    IndexQueryStatus, IndexWriteStatus, NetworkEvent, RateLimitAction, RateLimitEvent,
+    ResearchAnswer, ResearchMode, ResearchOptions, ResearchQuery, ResearchReport, ResearchTrace,
+    RetrievedPassage, RobotsEvent, RobotsStatus, RESEARCH_CONTRACT_VERSION,
 };
 use std::collections::HashMap;
 use std::path::PathBuf;
 use uuid::Uuid;
 
 // ─────────────────────────────────────────────────────────────────
-// MARKERS (canonical — P2/P3 preserved, P4 extended)
+// MARKERS (canonical — P2/P3/P4 preserved, P5 extended)
 // ─────────────────────────────────────────────────────────────────
 
 const M_START: &str = "RESEARCH_START";
@@ -50,11 +52,21 @@ const M_EXTRACT_START: &str = "EXTRACT_START";
 const M_EXTRACT_OK: &str = "EXTRACT_OK";
 const M_EXTRACT_FAIL: &str = "EXTRACT_FAIL";
 const M_TEXT_HASH_OK: &str = "TEXT_HASH_OK";
-const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P4";
-const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P4";
-const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P4";
-const M_RAG_SKIP: &str = "RAG_SKIPPED_P4";
-const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P4";
+const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P5";
+// P5 index markers
+const M_INDEX_WRITE_START: &str = "INDEX_WRITE_START";
+const M_INDEX_WRITE_OK: &str = "INDEX_WRITE_OK";
+const M_INDEX_WRITE_SKIP_DUP: &str = "INDEX_WRITE_SKIPPED_DUP";
+const M_INDEX_WRITE_FAIL: &str = "INDEX_WRITE_FAIL";
+const M_INDEX_QUERY_START: &str = "INDEX_QUERY_START";
+const M_INDEX_QUERY_OK: &str = "INDEX_QUERY_OK";
+const M_INDEX_QUERY_EMPTY: &str = "INDEX_QUERY_EMPTY";
+const M_RETRIEVE_START: &str = "RETRIEVE_PASSAGES_START";
+const M_RETRIEVE_OK: &str = "RETRIEVE_PASSAGES_OK";
+const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P5";
+const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P5";
+const M_RAG_SKIP: &str = "RAG_SKIPPED_P5";
+const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P5";
 const M_END: &str = "RESEARCH_END";
 
 // Default sandbox root (relative to working dir; Tauri would use app_data_dir in production)
@@ -74,6 +86,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     let mut robots_events: Vec<RobotsEvent> = Vec::new();
     let mut rate_limit_events: Vec<RateLimitEvent> = Vec::new();
     let mut extract_events: Vec<ExtractEvent> = Vec::new();
+    let mut index_events: Vec<IndexEvent> = Vec::new();
+    let mut sources_count: usize = 0;
+    let mut retrieved_passages_count: usize = 0;
     let mut budgets: Option<HashMap<String, f64>> = None;
 
     // M1
@@ -100,6 +115,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 None,
                 None,
                 None,
+                None,
+                sources_count,
+                retrieved_passages_count,
                 budgets,
                 query,
                 false,
@@ -107,7 +125,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             );
         }
 
-        limitations.push("No index in P4".to_string());
+        limitations.push("No index in P5 offline mode".to_string());
         push_skip_markers(&mut markers);
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
@@ -121,6 +139,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             None,
             None,
             None,
+            None,
+            sources_count,
+            retrieved_passages_count,
             budgets,
             query,
             false,
@@ -128,11 +149,92 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         );
     }
 
-    // ── LOCAL_INDEX stub ──────────────────────────────────────────
+    // ── LOCAL_INDEX (P5 — real Tantivy query) ────────────────────
     if options.mode == ResearchMode::LocalIndex {
         markers.push(M_POLICY_APPLIED.to_string());
-        limitations.push("Index not implemented in P4".to_string());
-        push_skip_markers(&mut markers);
+
+        let sandbox_root = PathBuf::from(
+            options
+                .sandbox_root
+                .as_deref()
+                .unwrap_or(DEFAULT_SANDBOX_ROOT),
+        );
+
+        markers.push(M_INDEX_QUERY_START.to_string());
+
+        match IndexService::init_or_open(&sandbox_root) {
+            Ok(index_svc) => {
+                let top_k = options.max_sources.map(|s| s as usize).unwrap_or(5);
+                let query_str = &query.question;
+
+                match index_svc.search(query_str, Some(top_k)) {
+                    Ok(hits) if !hits.is_empty() => {
+                        markers.push(M_INDEX_QUERY_OK.to_string());
+                        sources_count = hits.len();
+
+                        // Retrieve passages from each hit
+                        markers.push(M_RETRIEVE_START.to_string());
+                        let mut all_passages: Vec<RetrievedPassage> = Vec::new();
+                        for hit in &hits {
+                            let passages = IndexService::retrieve_passages(
+                                &hit.snippet,
+                                query_str,
+                                3,
+                                &hit.url,
+                            );
+                            all_passages.extend(passages);
+                        }
+                        retrieved_passages_count = all_passages.len();
+                        markers.push(M_RETRIEVE_OK.to_string());
+
+                        index_events.push(IndexEvent {
+                            url: None,
+                            query: Some(query_str.clone()),
+                            write_status: None,
+                            query_status: Some(IndexQueryStatus::Ok),
+                            hits_count: Some(sources_count),
+                            passages_count: Some(retrieved_passages_count),
+                            error: None,
+                        });
+                    }
+                    Ok(_) => {
+                        markers.push(M_INDEX_QUERY_EMPTY.to_string());
+                        limitations.push("No indexed evidence found for query".to_string());
+                        index_events.push(IndexEvent {
+                            url: None,
+                            query: Some(query_str.clone()),
+                            write_status: None,
+                            query_status: Some(IndexQueryStatus::Empty),
+                            hits_count: Some(0),
+                            passages_count: Some(0),
+                            error: None,
+                        });
+                    }
+                    Err(e) => {
+                        let err_msg = e.to_string();
+                        errors.push(format!("Index query failed: {}", err_msg));
+                        limitations.push("Index query failed".to_string());
+                        index_events.push(IndexEvent {
+                            url: None,
+                            query: Some(query_str.clone()),
+                            write_status: None,
+                            query_status: Some(IndexQueryStatus::Failed),
+                            hits_count: None,
+                            passages_count: None,
+                            error: Some(err_msg),
+                        });
+                    }
+                }
+            }
+            Err(e) => {
+                let err_msg = e.to_string();
+                errors.push(format!("Index init failed: {}", err_msg));
+                limitations.push("Index unavailable".to_string());
+                markers.push(M_INDEX_QUERY_EMPTY.to_string());
+            }
+        }
+
+        push_rag_skip_markers(&mut markers);
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
         return make_report(
@@ -145,6 +247,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             None,
             None,
             None,
+            opt_vec(index_events),
+            sources_count,
+            retrieved_passages_count,
             budgets,
             query,
             false,
@@ -176,6 +281,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 None,
                 None,
                 None,
+                None,
+                0,
+                0,
                 budgets,
                 query,
                 true,
@@ -237,6 +345,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     Some(robots_events),
                     None,
                     None,
+                    None,
+                    0,
+                    0,
                     budgets,
                     query,
                     true,
@@ -290,6 +401,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             Some(robots_events),
             Some(rate_limit_events),
             None,
+            None,
+            0,
+            0,
             budgets,
             query,
             true,
@@ -418,6 +532,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     opt_vec(robots_events),
                     opt_vec(rate_limit_events),
                     None,
+                    None,
+                    0,
+                    0,
                     budgets,
                     query,
                     false,
@@ -431,6 +548,10 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     markers.push(M_EXTRACT_START.to_string());
 
     let extract_svc = ExtractService::new();
+    let mut extracted_text: Option<String> = None;
+    let mut extracted_title: Option<String> = None;
+    let mut extracted_hash: Option<String> = None;
+
     if let Some(ref html_bytes) = html_bytes_for_extract {
         match extract_svc.extract(html_bytes) {
             Ok(result) => {
@@ -450,11 +571,15 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     );
                 }
 
+                extracted_text = Some(result.text.clone());
+                extracted_title = result.title.clone();
+                extracted_hash = Some(result.text_hash.clone());
+
                 extract_events.push(ExtractEvent {
                     url: target_url.to_string(),
-                    title: result.title.clone(),
+                    title: result.title,
                     text_bytes: result.text_len,
-                    text_hash: Some(result.text_hash.clone()),
+                    text_hash: Some(result.text_hash),
                     quality: ExtractQuality {
                         text_len: result.text_len,
                         lines: result.lines,
@@ -500,7 +625,69 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         });
     }
 
-    push_index_skip_markers(&mut markers);
+    // ── WEB_LIVE — Index (P5) ──────────────────────────────────────
+    if let (Some(text), Some(hash)) = (&extracted_text, &extracted_hash) {
+        markers.push(M_INDEX_WRITE_START.to_string());
+
+        match IndexService::init_or_open(&sandbox_root) {
+            Ok(index_svc) => {
+                let title = extracted_title.as_deref().unwrap_or("");
+                match index_svc.index_document(
+                    target_url, title, text, &domain, 0, // fetched_at not tracked here; use 0
+                    hash,
+                ) {
+                    Ok(IndexWriteResult::Written) => {
+                        markers.push(M_INDEX_WRITE_OK.to_string());
+                        sources_count = 1;
+                        index_events.push(IndexEvent {
+                            url: Some(target_url.to_string()),
+                            query: None,
+                            write_status: Some(IndexWriteStatus::Written),
+                            query_status: None,
+                            hits_count: None,
+                            passages_count: None,
+                            error: None,
+                        });
+                    }
+                    Ok(IndexWriteResult::SkippedDuplicate) => {
+                        markers.push(M_INDEX_WRITE_SKIP_DUP.to_string());
+                        index_events.push(IndexEvent {
+                            url: Some(target_url.to_string()),
+                            query: None,
+                            write_status: Some(IndexWriteStatus::SkippedDuplicate),
+                            query_status: None,
+                            hits_count: None,
+                            passages_count: None,
+                            error: None,
+                        });
+                    }
+                    Err(e) => {
+                        let err_msg = e.to_string();
+                        markers.push(M_INDEX_WRITE_FAIL.to_string());
+                        errors.push(format!("Index write failed: {}", err_msg));
+                        index_events.push(IndexEvent {
+                            url: Some(target_url.to_string()),
+                            query: None,
+                            write_status: Some(IndexWriteStatus::Failed),
+                            query_status: None,
+                            hits_count: None,
+                            passages_count: None,
+                            error: Some(err_msg),
+                        });
+                    }
+                }
+            }
+            Err(e) => {
+                let err_msg = e.to_string();
+                markers.push(M_INDEX_WRITE_FAIL.to_string());
+                errors.push(format!("Index init failed: {}", err_msg));
+            }
+        }
+    } else {
+        markers.push(M_INDEX_SKIP.to_string());
+    }
+
+    push_rag_skip_markers(&mut markers);
     markers.push(M_END.to_string());
     markers.push("VERDICT_PASS".to_string());
 
@@ -514,6 +701,9 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         opt_vec(robots_events),
         opt_vec(rate_limit_events),
         opt_vec(extract_events),
+        opt_vec(index_events),
+        sources_count,
+        retrieved_passages_count,
         budgets,
         query,
         false,
@@ -546,11 +736,11 @@ fn push_fetch_skip_markers(markers: &mut Vec<String>) {
 
 fn push_extract_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_EXTRACT_SKIP.to_string());
-    push_index_skip_markers(markers);
+    markers.push(M_INDEX_SKIP.to_string());
+    push_rag_skip_markers(markers);
 }
 
-fn push_index_skip_markers(markers: &mut Vec<String>) {
-    markers.push(M_INDEX_SKIP.to_string());
+fn push_rag_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_RETRIEVE_SKIP.to_string());
     markers.push(M_RAG_SKIP.to_string());
     markers.push(M_CITATIONS_EMPTY.to_string());
@@ -567,6 +757,9 @@ fn make_report(
     robots_events: Option<Vec<RobotsEvent>>,
     rate_limit_events: Option<Vec<RateLimitEvent>>,
     extract_events: Option<Vec<ExtractEvent>>,
+    index_events: Option<Vec<IndexEvent>>,
+    sources_count: usize,
+    retrieved_passages_count: usize,
     budgets: Option<HashMap<String, f64>>,
     query: &ResearchQuery,
     is_blocked: bool,
@@ -584,9 +777,9 @@ fn make_report(
         )
     } else {
         format!(
-            "[P4] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
-             Query: \"{}\". Index/RAG not yet implemented.",
-            query.question
+            "[P5] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
+             Query: \"{}\". Sources: {}. Passages: {}. RAG not yet implemented.",
+            query.question, sources_count, retrieved_passages_count
         )
     };
 
@@ -596,6 +789,8 @@ fn make_report(
         confidence: None,
         limitations,
         trace_id: trace_id.clone(),
+        sources_count,
+        retrieved_passages_count,
     };
 
     let trace = ResearchTrace {
@@ -608,7 +803,7 @@ fn make_report(
         robots_events,
         rate_limit_events,
         extract_events,
-        index_events: None,
+        index_events,
         errors,
     };
 
@@ -619,11 +814,11 @@ fn make_report(
 // TAURI COMMAND
 // ─────────────────────────────────────────────────────────────────
 
-/// Web research command — P4.0 QUALIFIED+++.
+/// Web research command — P5.0 QUALIFIED++++.
 ///
 /// OFFLINE: hard-stop, zero network, VERDICT_PASS
-/// LOCAL_INDEX: stub, VERDICT_PASS
-/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write → Extract
+/// LOCAL_INDEX: real Tantivy query, VERDICT_PASS
+/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write → Extract → Index
 #[tauri::command]
 pub async fn web_research(
     query: ResearchQuery,
@@ -941,5 +1136,155 @@ mod tests {
         assert!(h1.is_some(), "run1 missing text_hash");
         assert_eq!(h1, h2, "run1 != run2 hash");
         assert_eq!(h2, h3, "run2 != run3 hash");
+    }
+
+    // G_INDEX_WRITE_OK after extract from cache
+    #[tokio::test]
+    async fn g_index_write_ok_after_extract() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://index-write.example.com/page";
+        let html = b"<html><head><title>Index Write Test</title></head><body><p>TITANE index write test content</p></body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        let q = make_query("TITANE index write");
+        let o = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox.clone()),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&q, &o).await;
+
+        // Either INDEX_WRITE_OK or INDEX_WRITE_SKIPPED_DUP (idempotent)
+        let has_index_write = report
+            .trace
+            .markers
+            .iter()
+            .any(|m| m == "INDEX_WRITE_OK" || m == "INDEX_WRITE_SKIPPED_DUP");
+        assert!(
+            has_index_write,
+            "Expected INDEX_WRITE_OK or DUP, markers: {:?}",
+            report.trace.markers
+        );
+
+        // Index write must exist in index_events
+        assert!(report.trace.index_events.is_some(), "Expected index_events");
+    }
+
+    // G_LOCAL_INDEX_NO_NETWORK: LOCAL_INDEX → network_events must be None
+    #[tokio::test]
+    async fn g_local_index_no_network() {
+        let sandbox = tmp_sandbox();
+        let q = make_query("TITANE local query");
+        let o = ResearchOptions {
+            mode: ResearchMode::LocalIndex,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&q, &o).await;
+
+        assert!(
+            report.trace.network_events.is_none()
+                || report.trace.network_events.as_ref().unwrap().is_empty(),
+            "LOCAL_INDEX must not produce network events"
+        );
+        assert!(report.trace.markers.iter().any(|m| m == "VERDICT_PASS"));
+    }
+
+    // G_LOCAL_INDEX_QUERY_AFTER_WEBLIVE: fetch+index then query
+    #[tokio::test]
+    async fn g_local_index_query_after_weblive_index() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://local-query.example.com/page";
+        let html = b"<html><head><title>TITANE Engine</title></head><body><p>TITANE local index retrieval test unique42</p></body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        // Step 1: WEB_LIVE → extract + index
+        let web_opts = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox.clone()),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let web_report = run_research(&make_query("index content"), &web_opts).await;
+        // Ensure index write happened
+        assert!(
+            web_report
+                .trace
+                .markers
+                .iter()
+                .any(|m| m == "INDEX_WRITE_OK" || m == "INDEX_WRITE_SKIPPED_DUP"),
+            "Step1 must index: {:?}",
+            web_report.trace.markers
+        );
+
+        // Step 2: LOCAL_INDEX → query
+        let local_opts = ResearchOptions {
+            mode: ResearchMode::LocalIndex,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: Some(5),
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let local_report = run_research(&make_query("unique42"), &local_opts).await;
+        assert!(
+            local_report
+                .trace
+                .markers
+                .iter()
+                .any(|m| m == "INDEX_QUERY_OK"),
+            "LOCAL_INDEX query must return INDEX_QUERY_OK, markers: {:?}",
+            local_report.trace.markers
+        );
+        assert!(
+            local_report.answer.sources_count >= 1,
+            "Expected sources_count >= 1"
+        );
     }
 }

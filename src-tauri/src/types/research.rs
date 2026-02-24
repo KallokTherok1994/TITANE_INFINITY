@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
-//   Contrats IPC stables pour WebResearch Engine (P4.0 QUALIFIED+++)
+//   Contrats IPC stables pour WebResearch Engine (P5.0 QUALIFIED++++)
 //   Tauri-only • Zéro réseau UI • Gouvernance stricte
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// Contract version — P4.0 adds ExtractEvent, extract_events in ResearchTrace
-pub const RESEARCH_CONTRACT_VERSION: &str = "P4.0";
+/// Contract version — P5.0 adds IndexEvent, RetrievedPassage, index_events typed, sources_count/retrieved_passages_count
+pub const RESEARCH_CONTRACT_VERSION: &str = "P5.0";
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -176,6 +176,46 @@ pub struct ExtractEvent {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// INDEX EVENT (P5)
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum IndexWriteStatus {
+    Written,
+    SkippedDuplicate,
+    Failed,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum IndexQueryStatus {
+    Ok,
+    Empty,
+    Failed,
+}
+
+/// Index write/query event emitted by IndexService (P5+)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct IndexEvent {
+    pub url: Option<String>,
+    pub query: Option<String>,
+    pub write_status: Option<IndexWriteStatus>,
+    pub query_status: Option<IndexQueryStatus>,
+    pub hits_count: Option<usize>,
+    pub passages_count: Option<usize>,
+    pub error: Option<String>,
+}
+
+/// A retrieved text passage from the index (P5+)
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RetrievedPassage {
+    pub url: String,
+    pub passage: String,
+    pub score: usize,
+}
+
+// ─────────────────────────────────────────────────────────────────
 // RESULT PRIMITIVES
 // ─────────────────────────────────────────────────────────────────
 
@@ -212,9 +252,13 @@ pub struct ResearchAnswer {
     pub confidence: Option<f64>,
     pub limitations: Vec<String>,
     pub trace_id: String,
+    /// Number of indexed documents used (P5+)
+    pub sources_count: usize,
+    /// Number of retrieved passages (P5+)
+    pub retrieved_passages_count: usize,
 }
 
-/// Execution trace for observability (P4: ExtractEvent added)
+/// Execution trace for observability (P5: IndexEvent added, index_events typed)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResearchTrace {
     pub trace_id: String,
@@ -231,7 +275,8 @@ pub struct ResearchTrace {
     pub rate_limit_events: Option<Vec<RateLimitEvent>>,
     /// Extraction events from ExtractService (P4+)
     pub extract_events: Option<Vec<ExtractEvent>>,
-    pub index_events: Option<Vec<String>>,
+    /// Index events from IndexService (P5+)
+    pub index_events: Option<Vec<IndexEvent>>,
     pub errors: Vec<String>,
 }
 
