@@ -1,0 +1,6 @@
+# G_E2E_NO_REAL_WRITES — Dirty Paths Check BEFORE tests
+# Date: 2026-02-24T18:31:25Z
+
+?? docs/_evidence/RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011/
+
+STATUS: 1 modified files

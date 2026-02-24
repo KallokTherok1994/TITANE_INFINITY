@@ -1,0 +1,14 @@
+# G_E2E_NO_REAL_WRITES — Dirty Paths Check AFTER proof pack generation
+# Date: 2026-02-24T18:37:00Z
+
+## Files modified/added during P8 proof pack generation:
+
+M  docs/CERTIFICATION_REGISTRY_APPEND_ONLY.md        <- registry append (allowlisted)
+?? docs/04_guides/WEB_RESEARCH.md                    <- stable documentation (doc-only, allowlisted)
+?? docs/_evidence/RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011/  <- this proof pack (allowlisted)
+   data/research/evidence/no_frontend_network_report.txt           <- audit output (allowlisted)
+
+## Verdict: ALL modified paths are within allowlist.
+## No writes to: src/, src-tauri/, package.json, Cargo.toml, or any runtime files.
+
+VERDICT: PASS
