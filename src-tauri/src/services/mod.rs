@@ -14,6 +14,7 @@ pub mod network_policy; // P2: WebResearch — policy guard
 pub mod rag_service; // P6: WebResearch — extractive RAG, citations, no-hallucination guard
 pub mod rate_limit_service; // P3: WebResearch — token bucket per domain
 pub mod robots_service; // P3: WebResearch — robots.txt check
+pub mod seed_pack_service; // P12: WebResearch — versioned JSON seed packs
 pub mod storage_service;
 pub mod system_service;
 pub mod vector_service; // P7: WebResearch — local TF-IDF vector reranking (EXPERIMENTAL)

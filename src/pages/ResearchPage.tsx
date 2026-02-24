@@ -77,7 +77,12 @@ const CitationCard: React.FC<{ citation: Citation; index: number }> = ({
       </blockquote>
     )}
     <div className="rp-citation-meta">
-      {citation.locator && (
+      {citation.locator_text && (
+        <span className="rp-locator-text" data-testid={`locator-text-${index}`}>
+          📍 {citation.locator_text}
+        </span>
+      )}
+      {!citation.locator_text && citation.locator && (
         <span className="rp-locator">{citation.locator}</span>
       )}
       {citation.paragraph_index != null && (
@@ -102,7 +107,7 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
         data-testid="trace-toggle"
         type="button"
       >
-        {open ? '▲ Hide trace' : '▼ Show trace'}
+        {open ? '▲ Hide trace' : '▼ Show trace'} ({trace.markers.length} markers)
       </button>
       {open && (
         <div className="rp-trace-body" data-testid="trace-body">
@@ -116,6 +121,22 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
               ))}
             </ul>
           </div>
+          {trace.budgets && Object.keys(trace.budgets).length > 0 && (
+            <div className="rp-trace-budgets">
+              <strong>Budgets:</strong>
+              <ul>
+                {Object.entries(trace.budgets).map(([k, v]) => (
+                  <li key={k}><code>{k}</code>: {v}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {trace.cache_events && trace.cache_events.length > 0 && (
+            <div className="rp-trace-cache">
+              <strong>Cache ({trace.cache_events.filter(e => e.kind === 'HIT').length} hits
+                / {trace.cache_events.filter(e => e.kind === 'MISS').length} misses):</strong>
+            </div>
+          )}
           {trace.errors && trace.errors.length > 0 && (
             <div className="rp-trace-errors">
               <strong>Errors:</strong>

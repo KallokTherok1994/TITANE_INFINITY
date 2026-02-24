@@ -268,6 +268,118 @@ fn is_non_html_extension(url: &str) -> bool {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// P12 — SITEMAP / RSS PARSING (pure Rust, no network)
+// ─────────────────────────────────────────────────────────────────
+
+/// P12 feature flags (default OFF — activated by env var)
+pub const ENABLE_DISCOVERY_SITEMAP: bool = false;
+pub const ENABLE_DISCOVERY_RSS: bool = false;
+pub const P12_DISCOVERY_VERSION: &str = "P12.0";
+
+/// Result of sitemap/RSS URL extraction
+#[derive(Debug, Clone)]
+pub struct XmlDiscoveryResult {
+    /// Format detected: "sitemap", "rss", "atom", or "unknown"
+    pub format: &'static str,
+    /// Extracted URLs (filtered + capped)
+    pub urls: Vec<String>,
+    /// Whether any URLs were dropped by budget
+    pub budget_enforced: bool,
+}
+
+/// Parse URLs from a sitemap XML string.
+///
+/// Extracts `<loc>` elements from sitemap format.
+/// Rules:
+/// - No network, no execution — pure string parsing
+/// - Domain-locked to `seed_domain`
+/// - Capped at `max_urls`
+/// - Non-HTML extensions filtered
+/// - Returns empty on parse error (never panics)
+pub fn parse_sitemap_urls(xml: &str, seed_domain: &str, max_urls: usize) -> XmlDiscoveryResult {
+    let enabled = std::env::var("ENABLE_DISCOVERY_SITEMAP").as_deref() == Ok("true");
+    if !enabled {
+        return XmlDiscoveryResult {
+            format: "sitemap",
+            urls: vec![],
+            budget_enforced: false,
+        };
+    }
+    extract_xml_urls(xml, "sitemap", seed_domain, max_urls, "<loc>", "</loc>")
+}
+
+/// Parse URLs from an RSS/Atom feed XML string.
+///
+/// Extracts `<link>` (RSS) and `<id>` (Atom) elements.
+/// Rules:
+/// - No network, no execution — pure string parsing
+/// - Domain-locked to `seed_domain`
+/// - Capped at `max_urls`
+/// - Non-HTML extensions filtered
+/// - Returns empty on parse error (never panics)
+pub fn parse_rss_urls(xml: &str, seed_domain: &str, max_urls: usize) -> XmlDiscoveryResult {
+    let enabled = std::env::var("ENABLE_DISCOVERY_RSS").as_deref() == Ok("true");
+    if !enabled {
+        return XmlDiscoveryResult {
+            format: "rss",
+            urls: vec![],
+            budget_enforced: false,
+        };
+    }
+    // Try <link> (RSS) first, then <id> (Atom)
+    let mut result = extract_xml_urls(xml, "rss", seed_domain, max_urls, "<link>", "</link>");
+    if result.urls.is_empty() {
+        result = extract_xml_urls(xml, "atom", seed_domain, max_urls, "<id>", "</id>");
+    }
+    result
+}
+
+/// Internal: extract text between open/close tags, filter, and cap.
+fn extract_xml_urls(
+    xml: &str,
+    format: &'static str,
+    seed_domain: &str,
+    max_urls: usize,
+    open_tag: &str,
+    close_tag: &str,
+) -> XmlDiscoveryResult {
+    let cap = max_urls.min(DISCOVERY_MAX_PAGES_HARD_CAP);
+    let mut urls: Vec<String> = Vec::new();
+    let mut search_from = 0;
+
+    while let Some(start) = xml[search_from..].find(open_tag) {
+        let abs_start = search_from + start + open_tag.len();
+        if let Some(end_offset) = xml[abs_start..].find(close_tag) {
+            let url = xml[abs_start..abs_start + end_offset].trim().to_string();
+            search_from = abs_start + end_offset + close_tag.len();
+
+            // Validate and filter
+            if url.starts_with("http") && !is_non_html_extension(&url) {
+                if let Some(domain) = extract_domain(&url) {
+                    if domain == seed_domain {
+                        urls.push(url);
+                    }
+                }
+            }
+        } else {
+            break;
+        }
+    }
+
+    let budget_enforced = urls.len() > cap;
+    urls.truncate(cap);
+    // Stable sort for reproducibility
+    urls.sort();
+    urls.dedup();
+
+    XmlDiscoveryResult {
+        format,
+        urls,
+        budget_enforced,
+    }
+}
+
+// ─────────────────────────────────────────────────────────────────
 // UNIT TESTS
 // ─────────────────────────────────────────────────────────────────
 
@@ -416,5 +528,81 @@ mod tests {
             result.urls.len(),
             DISCOVERY_MAX_PAGES_HARD_CAP
         );
+    }
+
+    // ── P12: SITEMAP PARSING ──────────────────────────────────────
+
+    #[test]
+    fn g_p12_sitemap_disabled_by_default() {
+        // Feature flag ENABLE_DISCOVERY_SITEMAP is false by default
+        // parse_sitemap_urls should return empty
+        std::env::remove_var("ENABLE_DISCOVERY_SITEMAP");
+        let xml = r#"<?xml version="1.0"?><urlset><url><loc>https://example.com/page</loc></url></urlset>"#;
+        let result = parse_sitemap_urls(xml, "example.com", 10);
+        assert_eq!(result.format, "sitemap");
+        assert!(result.urls.is_empty(), "Sitemap must be empty when feature disabled");
+    }
+
+    #[test]
+    fn g_p12_sitemap_enabled_extracts_locs() {
+        std::env::set_var("ENABLE_DISCOVERY_SITEMAP", "true");
+        let xml = r#"<?xml version="1.0"?><urlset>
+            <url><loc>https://example.com/page-a</loc></url>
+            <url><loc>https://example.com/page-b</loc></url>
+            <url><loc>https://other.com/page</loc></url>
+        </urlset>"#;
+        let result = parse_sitemap_urls(xml, "example.com", 10);
+        assert_eq!(result.urls.len(), 2, "Only same-domain URLs should be included");
+        assert!(result.urls.contains(&"https://example.com/page-a".to_string()));
+        assert!(result.urls.contains(&"https://example.com/page-b".to_string()));
+        std::env::remove_var("ENABLE_DISCOVERY_SITEMAP");
+    }
+
+    #[test]
+    fn g_p12_sitemap_budget_enforced() {
+        std::env::set_var("ENABLE_DISCOVERY_SITEMAP", "true");
+        let locs: String = (0..30)
+            .map(|i| format!("<url><loc>https://example.com/p{}</loc></url>", i))
+            .collect();
+        let xml = format!("<?xml version=\"1.0\"?><urlset>{}</urlset>", locs);
+        let result = parse_sitemap_urls(&xml, "example.com", 5);
+        assert!(
+            result.urls.len() <= 5,
+            "Sitemap budget not enforced: {} > 5",
+            result.urls.len()
+        );
+        std::env::remove_var("ENABLE_DISCOVERY_SITEMAP");
+    }
+
+    // ── P12: RSS PARSING ──────────────────────────────────────────
+
+    #[test]
+    fn g_p12_rss_disabled_by_default() {
+        std::env::remove_var("ENABLE_DISCOVERY_RSS");
+        let xml = r#"<rss version="2.0"><channel><item><link>https://example.com/news</link></item></channel></rss>"#;
+        let result = parse_rss_urls(xml, "example.com", 10);
+        assert!(result.urls.is_empty(), "RSS must be empty when feature disabled");
+    }
+
+    #[test]
+    fn g_p12_rss_domain_lock() {
+        std::env::set_var("ENABLE_DISCOVERY_RSS", "true");
+        let xml = r#"<rss version="2.0"><channel>
+            <item><link>https://example.com/article-1</link></item>
+            <item><link>https://external.com/article-2</link></item>
+        </channel></rss>"#;
+        let result = parse_rss_urls(xml, "example.com", 10);
+        assert_eq!(result.urls.len(), 1, "Only same-domain URL should survive");
+        assert_eq!(result.urls[0], "https://example.com/article-1");
+        std::env::remove_var("ENABLE_DISCOVERY_RSS");
+    }
+
+    // ── P12: CONSTANTS ────────────────────────────────────────────
+
+    #[test]
+    fn g_p12_constants() {
+        assert!(!ENABLE_DISCOVERY_SITEMAP);
+        assert!(!ENABLE_DISCOVERY_RSS);
+        assert_eq!(P12_DISCOVERY_VERSION, "P12.0");
     }
 }

@@ -204,6 +204,7 @@ pub fn build_citations(passages: &[&RetrievedPassage], accessed_at: &str) -> Vec
             accessed_at: accessed_at.to_string(),
             paragraph_index: p.paragraph_index,
             char_start: p.char_start,
+            locator_text: make_locator_text(p.paragraph_index, p.char_start),
         });
     }
     citations
@@ -220,6 +221,17 @@ fn make_excerpt(text: &str, max_words: usize) -> String {
         words.join(" ")
     } else {
         format!("{}…", words[..max_words].join(" "))
+    }
+}
+
+/// Build a human-readable stable locator string from optional paragraph/char indices.
+/// Format: "p={para}, c≈{char}" or None if no indices available.
+pub fn make_locator_text(paragraph_index: Option<u32>, char_start: Option<u32>) -> Option<String> {
+    match (paragraph_index, char_start) {
+        (Some(p), Some(c)) => Some(format!("p={}, c≈{}", p, c)),
+        (Some(p), None) => Some(format!("p={}", p)),
+        (None, Some(c)) => Some(format!("c≈{}", c)),
+        (None, None) => None,
     }
 }
 
@@ -416,5 +428,55 @@ mod tests {
     #[test]
     fn test_strategy_local_llm_constant() {
         assert_eq!(STRATEGY_LOCAL_LLM, "LOCAL_LLM_BLOCKED");
+    }
+
+    // ── P13: LOCATOR_TEXT ─────────────────────────────────────────
+
+    #[test]
+    fn test_locator_text_both() {
+        let result = make_locator_text(Some(3), Some(120));
+        assert_eq!(result, Some("p=3, c≈120".to_string()));
+    }
+
+    #[test]
+    fn test_locator_text_para_only() {
+        let result = make_locator_text(Some(5), None);
+        assert_eq!(result, Some("p=5".to_string()));
+    }
+
+    #[test]
+    fn test_locator_text_char_only() {
+        let result = make_locator_text(None, Some(200));
+        assert_eq!(result, Some("c≈200".to_string()));
+    }
+
+    #[test]
+    fn test_locator_text_none() {
+        let result = make_locator_text(None, None);
+        assert!(result.is_none());
+    }
+
+    #[test]
+    fn test_build_citations_locator_text_populated() {
+        let passages = vec![RetrievedPassage {
+            url: "https://example.com/p".to_string(),
+            passage: "test passage for locator".to_string(),
+            score: 5,
+            paragraph_index: Some(2),
+            char_start: Some(50),
+        }];
+        let refs: Vec<&RetrievedPassage> = passages.iter().collect();
+        let citations = build_citations(&refs, "2026-01-01T00:00:00Z");
+        assert_eq!(citations.len(), 1);
+        assert_eq!(citations[0].locator_text, Some("p=2, c≈50".to_string()));
+    }
+
+    #[test]
+    fn test_build_citations_locator_text_none_when_no_indices() {
+        let passages = vec![make_passage("https://example.com/q", "test passage no index", 3)];
+        let refs: Vec<&RetrievedPassage> = passages.iter().collect();
+        let citations = build_citations(&refs, "2026-01-01T00:00:00Z");
+        assert_eq!(citations.len(), 1);
+        assert!(citations[0].locator_text.is_none());
     }
 }
