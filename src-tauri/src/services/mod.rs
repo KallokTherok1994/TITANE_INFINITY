@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod cache_service; // P3: WebResearch — SQLite meta + blob cache
+pub mod discovery_service; // P7: WebResearch — governed multi-URL discovery (seeded, breadth-limited)
 pub mod extract_service; // P4: WebResearch — deterministic HTML→text extractor
 pub mod fetch_service; // P2: WebResearch — single network gate
 pub mod index_service; // P5: WebResearch — Tantivy lexical index (BM25)
@@ -14,6 +15,7 @@ pub mod rate_limit_service; // P3: WebResearch — token bucket per domain
 pub mod robots_service; // P3: WebResearch — robots.txt check
 pub mod storage_service;
 pub mod system_service;
+pub mod vector_service; // P7: WebResearch — local TF-IDF vector reranking (EXPERIMENTAL)
 
 pub use storage_service::StorageService;
 pub use system_service::SystemService;

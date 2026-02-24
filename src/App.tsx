@@ -244,6 +244,7 @@ const AdaptiveEngine = lazy(() =>
   import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
 );
 const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
+const ResearchPage = lazy(() => import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage })));
 
 /**
  * ═══════════════════════════════════════════════════════════════
@@ -1157,6 +1158,7 @@ const AppRouter: React.FC = () => {
           <Route path="/selfheal" element={<SelfHeal />} />
           <Route path="/adaptive" element={<AdaptiveEngine />} />
           <Route path="/memory" element={<Memory />} />
+          <Route path="/research" element={<ResearchPage />} />
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
           {/* Catch-all - Redirection vers Dashboard */}

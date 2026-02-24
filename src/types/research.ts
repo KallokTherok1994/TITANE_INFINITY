@@ -56,6 +56,10 @@ export interface ResearchOptions {
   cache_enabled?: boolean | null;
   /** Override sandbox root path (default: data/research) */
   sandbox_root?: string | null;
+  /** Seed URLs for multi-URL discovery (P7+) */
+  seed_urls?: string[] | null;
+  /** Maximum discovery depth — P7 supports max 1 */
+  max_depth?: number | null;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -141,6 +145,10 @@ export interface Citation {
   excerpt: string;
   locator?: string | null;
   accessed_at: string;
+  /** Paragraph index within the source document (P7+) */
+  paragraph_index?: number | null;
+  /** Approximate character offset of the passage start (P7+) */
+  char_start?: number | null;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -189,6 +197,10 @@ export interface RetrievedPassage {
   url: string;
   passage: string;
   score: number;
+  /** Paragraph index within the source document (P7+) */
+  paragraph_index?: number | null;
+  /** Approximate character offset of the passage start (P7+) */
+  char_start?: number | null;
 }
 
 // ─────────────────────────────────────────────────────────────────

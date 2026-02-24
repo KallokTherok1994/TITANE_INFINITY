@@ -58,6 +58,10 @@ pub struct ResearchOptions {
     pub cache_enabled: Option<bool>,
     /// Path prefix for sandbox (default: data/research)
     pub sandbox_root: Option<String>,
+    /// Seed URLs for multi-URL discovery (P7+). If set, enables governed multi-URL crawl.
+    pub seed_urls: Option<Vec<String>>,
+    /// Maximum discovery depth (P7: max 1)
+    pub max_depth: Option<u32>,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -213,6 +217,10 @@ pub struct RetrievedPassage {
     pub url: String,
     pub passage: String,
     pub score: usize,
+    /// Paragraph index within the source document (P7+, optional)
+    pub paragraph_index: Option<u32>,
+    /// Approximate character offset of the passage start within the document (P7+, optional)
+    pub char_start: Option<u32>,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -238,6 +246,10 @@ pub struct Citation {
     pub excerpt: String,
     pub locator: Option<String>,
     pub accessed_at: String,
+    /// Paragraph index within the source document (P7+, optional)
+    pub paragraph_index: Option<u32>,
+    /// Approximate character offset of the passage start within the document (P7+, optional)
+    pub char_start: Option<u32>,
 }
 
 // ─────────────────────────────────────────────────────────────────
