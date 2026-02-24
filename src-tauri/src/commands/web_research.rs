@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — WEB RESEARCH COMMAND (P5.0 QUALIFIED++++)
+//   TITANE∞ — WEB RESEARCH COMMAND (P6.0 QUALIFIED→CANDIDATE STABLE)
 //   Commande Tauri unique : web_research
-//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract → Index
+//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract → Index → RAG
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::cache_service::CacheService;
@@ -10,12 +10,13 @@ use crate::services::fetch_service::{FetchError, FetchService};
 use crate::services::index_service::{IndexService, IndexWriteResult};
 use crate::services::network_policy::apply_policy;
 use crate::services::network_policy::extract_domain;
+use crate::services::rag_service;
 use crate::services::rate_limit_service::{
     apply_rate_limit_delay, RateLimitProfile, RateLimitService,
 };
 use crate::services::robots_service::{RobotsErrorPolicy, RobotsService};
 use crate::types::research::{
-    CacheEvent, CacheEventKind, ExtractEvent, ExtractQuality, ExtractStatus, IndexEvent,
+    CacheEvent, CacheEventKind, Citation, ExtractEvent, ExtractQuality, ExtractStatus, IndexEvent,
     IndexQueryStatus, IndexWriteStatus, NetworkEvent, RateLimitAction, RateLimitEvent,
     ResearchAnswer, ResearchMode, ResearchOptions, ResearchQuery, ResearchReport, ResearchTrace,
     RetrievedPassage, RobotsEvent, RobotsStatus, RESEARCH_CONTRACT_VERSION,
@@ -25,7 +26,7 @@ use std::path::PathBuf;
 use uuid::Uuid;
 
 // ─────────────────────────────────────────────────────────────────
-// MARKERS (canonical — P2/P3/P4 preserved, P5 extended)
+// MARKERS (canonical — P2/P3/P4/P5 preserved, P6 extended)
 // ─────────────────────────────────────────────────────────────────
 
 const M_START: &str = "RESEARCH_START";
@@ -52,7 +53,7 @@ const M_EXTRACT_START: &str = "EXTRACT_START";
 const M_EXTRACT_OK: &str = "EXTRACT_OK";
 const M_EXTRACT_FAIL: &str = "EXTRACT_FAIL";
 const M_TEXT_HASH_OK: &str = "TEXT_HASH_OK";
-const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P5";
+const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P6";
 // P5 index markers
 const M_INDEX_WRITE_START: &str = "INDEX_WRITE_START";
 const M_INDEX_WRITE_OK: &str = "INDEX_WRITE_OK";
@@ -63,14 +64,38 @@ const M_INDEX_QUERY_OK: &str = "INDEX_QUERY_OK";
 const M_INDEX_QUERY_EMPTY: &str = "INDEX_QUERY_EMPTY";
 const M_RETRIEVE_START: &str = "RETRIEVE_PASSAGES_START";
 const M_RETRIEVE_OK: &str = "RETRIEVE_PASSAGES_OK";
-const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P5";
-const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P5";
-const M_RAG_SKIP: &str = "RAG_SKIPPED_P5";
-const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P5";
+const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P6";
+const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P6";
+// P6 RAG markers
+const M_RAG_START: &str = "RAG_START";
+const M_RAG_CONTEXT_READY: &str = "RAG_CONTEXT_READY";
+const M_RAG_OK: &str = "RAG_OK";
+const M_RAG_SKIP: &str = "RAG_SKIPPED_P6";
+const M_CITATIONS_BUILD_OK: &str = "CITATIONS_BUILD_OK";
+const M_CITATIONS_EMPTY_P6: &str = "CITATIONS_EMPTY_OK_P6";
+const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P6"; // alias for skip paths
 const M_END: &str = "RESEARCH_END";
 
 // Default sandbox root (relative to working dir; Tauri would use app_data_dir in production)
 const DEFAULT_SANDBOX_ROOT: &str = "data/research";
+
+// ─────────────────────────────────────────────────────────────────
+// RAG CONTEXT (carries the P6 answer + citations across make_report call)
+// ─────────────────────────────────────────────────────────────────
+
+struct RagContext {
+    answer: Option<String>,
+    citations: Vec<Citation>,
+}
+
+impl Default for RagContext {
+    fn default() -> Self {
+        RagContext {
+            answer: None,
+            citations: vec![],
+        }
+    }
+}
 
 // ─────────────────────────────────────────────────────────────────
 // ORCHESTRATOR
@@ -90,6 +115,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     let mut sources_count: usize = 0;
     let mut retrieved_passages_count: usize = 0;
     let mut budgets: Option<HashMap<String, f64>> = None;
+    let mut rag_ctx = RagContext::default();
 
     // M1
     markers.push(M_START.to_string());
@@ -120,13 +146,100 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 retrieved_passages_count,
                 budgets,
                 query,
+                RagContext::default(),
                 false,
                 true,
             );
         }
 
-        limitations.push("No index in P5 offline mode".to_string());
-        push_skip_markers(&mut markers);
+        // ── OFFLINE + P6: query local index if available (no network) ──
+        let offline_sandbox = PathBuf::from(
+            options
+                .sandbox_root
+                .as_deref()
+                .unwrap_or(DEFAULT_SANDBOX_ROOT),
+        );
+        markers.push(M_DISCOVERY_SKIP.to_string());
+        markers.push(M_FETCH_SKIP.to_string());
+        markers.push(M_EXTRACT_SKIP.to_string());
+        markers.push(M_INDEX_QUERY_START.to_string());
+
+        let mut offline_passages: Vec<RetrievedPassage> = Vec::new();
+
+        match IndexService::init_or_open(&offline_sandbox) {
+            Ok(ref index_svc) if index_svc.doc_count() > 0 => {
+                let top_k = options.max_sources.map(|s| s as usize).unwrap_or(5);
+                match index_svc.search(&query.question, Some(top_k)) {
+                    Ok(hits) if !hits.is_empty() => {
+                        markers.push(M_INDEX_QUERY_OK.to_string());
+                        sources_count = hits.len();
+                        markers.push(M_RETRIEVE_START.to_string());
+                        for hit in &hits {
+                            let p = IndexService::retrieve_passages(
+                                &hit.body,
+                                &query.question,
+                                3,
+                                &hit.url,
+                            );
+                            offline_passages.extend(p);
+                        }
+                        retrieved_passages_count = offline_passages.len();
+                        markers.push(M_RETRIEVE_OK.to_string());
+                        index_events.push(IndexEvent {
+                            url: None,
+                            query: Some(query.question.clone()),
+                            write_status: None,
+                            query_status: Some(IndexQueryStatus::Ok),
+                            hits_count: Some(sources_count),
+                            passages_count: Some(retrieved_passages_count),
+                            error: None,
+                        });
+                    }
+                    _ => {
+                        markers.push(M_INDEX_QUERY_EMPTY.to_string());
+                        limitations.push("No indexed evidence for offline query".to_string());
+                        index_events.push(IndexEvent {
+                            url: None,
+                            query: Some(query.question.clone()),
+                            write_status: None,
+                            query_status: Some(IndexQueryStatus::Empty),
+                            hits_count: Some(0),
+                            passages_count: Some(0),
+                            error: None,
+                        });
+                    }
+                }
+            }
+            _ => {
+                markers.push(M_INDEX_QUERY_EMPTY.to_string());
+                limitations.push("No indexed evidence for offline query".to_string());
+            }
+        }
+
+        // RAG
+        markers.push(M_RAG_START.to_string());
+        let rag_out = rag_service::generate_answer(
+            &query.question,
+            &offline_passages,
+            options.max_sources.map(|s| s as usize).unwrap_or(5),
+        );
+        markers.push(M_RAG_CONTEXT_READY.to_string());
+        markers.push(M_RAG_OK.to_string());
+        limitations.extend(rag_out.limitations.iter().cloned());
+        markers.push(format!("RAG_STRATEGY:{}", rag_out.strategy));
+        markers.push(
+            if rag_out.citations.is_empty() {
+                M_CITATIONS_EMPTY_P6
+            } else {
+                M_CITATIONS_BUILD_OK
+            }
+            .to_string(),
+        );
+        rag_ctx = RagContext {
+            answer: Some(rag_out.answer_text),
+            citations: rag_out.citations,
+        };
+
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
         return make_report(
@@ -139,17 +252,18 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             None,
             None,
             None,
-            None,
+            opt_vec(index_events),
             sources_count,
             retrieved_passages_count,
             budgets,
             query,
+            rag_ctx,
             false,
             false,
         );
     }
 
-    // ── LOCAL_INDEX (P5 — real Tantivy query) ────────────────────
+    // ── LOCAL_INDEX (P6 — real Tantivy query + RAG) ──────────────
     if options.mode == ResearchMode::LocalIndex {
         markers.push(M_POLICY_APPLIED.to_string());
 
@@ -162,6 +276,8 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
 
         markers.push(M_INDEX_QUERY_START.to_string());
 
+        let mut all_passages: Vec<RetrievedPassage> = Vec::new();
+
         match IndexService::init_or_open(&sandbox_root) {
             Ok(index_svc) => {
                 let top_k = options.max_sources.map(|s| s as usize).unwrap_or(5);
@@ -172,16 +288,11 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                         markers.push(M_INDEX_QUERY_OK.to_string());
                         sources_count = hits.len();
 
-                        // Retrieve passages from each hit
+                        // Retrieve passages from full body of each hit
                         markers.push(M_RETRIEVE_START.to_string());
-                        let mut all_passages: Vec<RetrievedPassage> = Vec::new();
                         for hit in &hits {
-                            let passages = IndexService::retrieve_passages(
-                                &hit.snippet,
-                                query_str,
-                                3,
-                                &hit.url,
-                            );
+                            let passages =
+                                IndexService::retrieve_passages(&hit.body, query_str, 3, &hit.url);
                             all_passages.extend(passages);
                         }
                         retrieved_passages_count = all_passages.len();
@@ -234,7 +345,30 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             }
         }
 
-        push_rag_skip_markers(&mut markers);
+        // ── RAG (P6) ─────────────────────────────────────────────
+        markers.push(M_RAG_START.to_string());
+        let rag_out = rag_service::generate_answer(
+            &query.question,
+            &all_passages,
+            options.max_sources.map(|s| s as usize).unwrap_or(5),
+        );
+        markers.push(M_RAG_CONTEXT_READY.to_string());
+        markers.push(M_RAG_OK.to_string());
+        limitations.extend(rag_out.limitations.iter().cloned());
+        markers.push(format!("RAG_STRATEGY:{}", rag_out.strategy));
+        markers.push(
+            if rag_out.citations.is_empty() {
+                M_CITATIONS_EMPTY_P6
+            } else {
+                M_CITATIONS_BUILD_OK
+            }
+            .to_string(),
+        );
+        rag_ctx = RagContext {
+            answer: Some(rag_out.answer_text),
+            citations: rag_out.citations,
+        };
+
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
         return make_report(
@@ -252,6 +386,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             retrieved_passages_count,
             budgets,
             query,
+            rag_ctx,
             false,
             false,
         );
@@ -286,6 +421,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 0,
                 budgets,
                 query,
+                RagContext::default(),
                 true,
                 false,
             );
@@ -350,6 +486,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     0,
                     budgets,
                     query,
+                    RagContext::default(),
                     true,
                     false,
                 );
@@ -406,6 +543,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             0,
             budgets,
             query,
+            RagContext::default(),
             true,
             false,
         );
@@ -537,6 +675,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     0,
                     budgets,
                     query,
+                    RagContext::default(),
                     false,
                     true,
                 );
@@ -658,7 +797,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                             query_status: None,
                             hits_count: None,
                             passages_count: None,
-                            error: None,
+                            error: Some("duplicate".to_string()),
                         });
                     }
                     Err(e) => {
@@ -687,7 +826,36 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         markers.push(M_INDEX_SKIP.to_string());
     }
 
-    push_rag_skip_markers(&mut markers);
+    // ── WEB_LIVE — RAG (P6) ────────────────────────────────────────
+    if let Some(ref text) = extracted_text {
+        markers.push(M_RAG_START.to_string());
+        let rag_passages = IndexService::retrieve_passages(text, &query.question, 5, target_url);
+        retrieved_passages_count = rag_passages.len();
+        let rag_out = rag_service::generate_answer(
+            &query.question,
+            &rag_passages,
+            options.max_sources.map(|s| s as usize).unwrap_or(5),
+        );
+        markers.push(M_RAG_CONTEXT_READY.to_string());
+        markers.push(M_RAG_OK.to_string());
+        limitations.extend(rag_out.limitations.iter().cloned());
+        markers.push(format!("RAG_STRATEGY:{}", rag_out.strategy));
+        markers.push(
+            if rag_out.citations.is_empty() {
+                M_CITATIONS_EMPTY_P6
+            } else {
+                M_CITATIONS_BUILD_OK
+            }
+            .to_string(),
+        );
+        rag_ctx = RagContext {
+            answer: Some(rag_out.answer_text),
+            citations: rag_out.citations,
+        };
+    } else {
+        push_rag_skip_markers(&mut markers);
+    }
+
     markers.push(M_END.to_string());
     markers.push("VERDICT_PASS".to_string());
 
@@ -706,6 +874,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         retrieved_passages_count,
         budgets,
         query,
+        rag_ctx,
         false,
         false,
     )
@@ -762,6 +931,7 @@ fn make_report(
     retrieved_passages_count: usize,
     budgets: Option<HashMap<String, f64>>,
     query: &ResearchQuery,
+    rag: RagContext,
     is_blocked: bool,
     is_fail: bool,
 ) -> ResearchReport {
@@ -776,16 +946,24 @@ fn make_report(
             query.question
         )
     } else {
-        format!(
-            "[P5] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
-             Query: \"{}\". Sources: {}. Passages: {}. RAG not yet implemented.",
-            query.question, sources_count, retrieved_passages_count
-        )
+        rag.answer.unwrap_or_else(|| {
+            format!(
+                "[P6] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
+                 Query: \"{}\". Sources: {}. Passages: {}.",
+                query.question, sources_count, retrieved_passages_count
+            )
+        })
+    };
+
+    let citations = if is_blocked || is_fail {
+        vec![]
+    } else {
+        rag.citations
     };
 
     let answer = ResearchAnswer {
         answer: answer_text,
-        citations: vec![],
+        citations,
         confidence: None,
         limitations,
         trace_id: trace_id.clone(),
@@ -814,11 +992,11 @@ fn make_report(
 // TAURI COMMAND
 // ─────────────────────────────────────────────────────────────────
 
-/// Web research command — P5.0 QUALIFIED++++.
+/// Web research command — P6.0 QUALIFIED→CANDIDATE STABLE.
 ///
-/// OFFLINE: hard-stop, zero network, VERDICT_PASS
-/// LOCAL_INDEX: real Tantivy query, VERDICT_PASS
-/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write → Extract → Index
+/// OFFLINE: hard-stop, then local index query + RAG if docs available
+/// LOCAL_INDEX: real Tantivy query + RAG (EXTRACTIVE_FALLBACK), VERDICT_PASS
+/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write → Extract → Index → RAG
 #[tauri::command]
 pub async fn web_research(
     query: ResearchQuery,
@@ -1286,5 +1464,281 @@ mod tests {
             local_report.answer.sources_count >= 1,
             "Expected sources_count >= 1"
         );
+    }
+
+    // ── G_CITATIONS_REQUIRED: passages > 0 → citations >= 1 ──────
+
+    #[tokio::test]
+    async fn g_citations_required_when_passages_found() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://citations.example.com/page";
+        let html = b"<html><head><title>Citations Test</title></head><body>\
+            <p>TITANE RAG citations test unique_citation_token_99 evidence passage one.</p>\
+            <p>Second paragraph for evidence passage two TITANE research.</p>\
+            </body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        // Step 1: WEB_LIVE to index
+        let web_opts = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox.clone()),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        run_research(&make_query("unique_citation_token_99"), &web_opts).await;
+
+        // Step 2: LOCAL_INDEX query → should get citations
+        let local_opts = ResearchOptions {
+            mode: ResearchMode::LocalIndex,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: Some(5),
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&make_query("unique_citation_token_99"), &local_opts).await;
+
+        let has_passages =
+            report.answer.retrieved_passages_count > 0 || report.answer.sources_count > 0;
+
+        if has_passages {
+            assert!(
+                !report.answer.citations.is_empty(),
+                "G_CITATIONS_REQUIRED FAIL: passages > 0 but citations empty. markers: {:?}",
+                report.trace.markers
+            );
+        }
+        // Verify RAG_OK marker is present
+        assert!(
+            report.trace.markers.iter().any(|m| m == "RAG_OK"),
+            "Expected RAG_OK marker, got: {:?}",
+            report.trace.markers
+        );
+    }
+
+    // ── G_EVIDENCE_BOUND: empty index → insufficient evidence ─────
+
+    #[tokio::test]
+    async fn g_evidence_bound_empty_index() {
+        let sandbox = tmp_sandbox();
+        // Local index is empty (no WEB_LIVE indexing)
+        let q = make_query("nonexistent_query_token_xyz");
+        let o = ResearchOptions {
+            mode: ResearchMode::LocalIndex,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&q, &o).await;
+        // Must still have RAG_OK (from RAG with empty passages → insufficient evidence)
+        assert!(
+            report.trace.markers.iter().any(|m| m == "RAG_OK"),
+            "Expected RAG_OK even for empty index, markers: {:?}",
+            report.trace.markers
+        );
+        assert!(
+            report.answer.answer.contains("Insufficient evidence")
+                || report.answer.answer.contains("insufficient"),
+            "Expected insufficient-evidence answer for empty index, got: {}",
+            report.answer.answer
+        );
+        assert!(
+            report.answer.citations.is_empty(),
+            "No citations expected for empty index"
+        );
+    }
+
+    // ── G_OFFLINE_ANSWER_FROM_INDEX ───────────────────────────────
+
+    #[tokio::test]
+    async fn g_offline_answer_from_index() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://offline-answer.example.com/page";
+        let html = b"<html><head><title>Offline Answer Test</title></head><body>\
+            <p>TITANE offline answer test unique_offline_token_77 research engine evidence.</p>\
+            </body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        // Step 1: WEB_LIVE to populate index
+        let web_opts = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox.clone()),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        run_research(&make_query("unique_offline_token_77"), &web_opts).await;
+
+        // Step 2: OFFLINE mode → must not use network, may answer from index
+        let offline_opts = ResearchOptions {
+            mode: ResearchMode::Offline,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: Some(5),
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&make_query("unique_offline_token_77"), &offline_opts).await;
+
+        // G_OFFLINE invariant: no network events
+        assert!(
+            report.trace.network_events.is_none()
+                || report.trace.network_events.as_ref().unwrap().is_empty(),
+            "OFFLINE must produce no network events"
+        );
+        assert!(
+            report
+                .trace
+                .markers
+                .iter()
+                .any(|m| m == "OFFLINE_HARDSTOP_ENFORCED"),
+            "OFFLINE_HARDSTOP must be present"
+        );
+        assert!(
+            report.trace.markers.iter().any(|m| m == "RAG_OK"),
+            "OFFLINE with indexed docs must produce RAG_OK"
+        );
+        assert!(
+            report.trace.markers.iter().any(|m| m == "VERDICT_PASS"),
+            "VERDICT_PASS must be present"
+        );
+    }
+
+    // ── G_REPRODUCIBILITY_RAG_X3 ─────────────────────────────────
+
+    #[tokio::test]
+    async fn g_reproducibility_rag_x3() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://rag-repro.example.com/page";
+        let html = b"<html><head><title>RAG Repro</title></head><body>\
+            <p>TITANE RAG reproducibility test unique_repro_token_42.</p>\
+            </body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        // Index
+        let web_opts = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox.clone()),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        run_research(&make_query("unique_repro_token_42"), &web_opts).await;
+
+        let local_opts = ResearchOptions {
+            mode: ResearchMode::LocalIndex,
+            target_url: None,
+            max_requests: None,
+            max_bytes_total: None,
+            timeout_ms: None,
+            cache_enabled: None,
+            respect_robots: None,
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: Some(5),
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let q = make_query("unique_repro_token_42");
+        let r1 = run_research(&q, &local_opts).await;
+        let r2 = run_research(&q, &local_opts).await;
+        let r3 = run_research(&q, &local_opts).await;
+
+        // Same citations count + same RAG strategy across 3 runs
+        assert_eq!(
+            r1.answer.citations.len(),
+            r2.answer.citations.len(),
+            "run1 citations != run2"
+        );
+        assert_eq!(
+            r2.answer.citations.len(),
+            r3.answer.citations.len(),
+            "run2 citations != run3"
+        );
+        let strat1 = r1
+            .trace
+            .markers
+            .iter()
+            .find(|m| m.starts_with("RAG_STRATEGY:"))
+            .cloned();
+        let strat2 = r2
+            .trace
+            .markers
+            .iter()
+            .find(|m| m.starts_with("RAG_STRATEGY:"))
+            .cloned();
+        let strat3 = r3
+            .trace
+            .markers
+            .iter()
+            .find(|m| m.starts_with("RAG_STRATEGY:"))
+            .cloned();
+        assert_eq!(strat1, strat2, "run1 strategy != run2");
+        assert_eq!(strat2, strat3, "run2 strategy != run3");
     }
 }
