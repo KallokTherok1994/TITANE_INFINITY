@@ -804,6 +804,29 @@ git push origin feature/my-awesome-feature
 
 ---
 
+## 🔍 Truth & Proof
+
+TITANE∞ applique une politique **proof-driven** : aucune conclusion sans preuve reproductible.
+
+### Où trouver les preuves
+
+| Preuve | Chemin |
+|--------|--------|
+| Proof Pack Online-First (vΩ) | `docs/_evidence/online_first_vΩ/VERDICT.md` |
+| Proof Pack Online-Final | `docs/_evidence/online_final/VERDICT.md` |
+| Proof Pack Final Clean Seal | `docs/_evidence/final_clean_seal/VERDICT.md` |
+| Truth Contract (types + guards) | `src/types/providerDecisionMeta.ts` |
+| Registry audit trail (append-only) | `registry/ui-events.jsonl` |
+| SHA256 manifests | `docs/_evidence/*/SHA256SUMS.txt` |
+| Terminology canon | `docs/TERMINOLOGY_ALIGNMENT_FINAL.md` |
+
+### Règles
+- `mode === "REMOTE"` est prouvé par `network_used === true` — jamais déclaré sans preuve réseau.
+- Toute bascule fallback expose un `reason_code` stable (non NONE).
+- Tests invariants : `src/__tests__/online-availability.test.ts` + `src/__tests__/provider-decision-invariants.test.ts`
+
+---
+
 ## 📜 License
 
 **Proprietary License** — © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
