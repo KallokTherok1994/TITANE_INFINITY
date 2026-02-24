@@ -3,7 +3,9 @@
 //   Technical isolation layer
 // ═══════════════════════════════════════════════════════════════
 
+pub mod fetch_service; // P2: WebResearch — single network gate
 pub mod io_service;
+pub mod network_policy; // P2: WebResearch — policy guard
 pub mod storage_service;
 pub mod system_service;
 
