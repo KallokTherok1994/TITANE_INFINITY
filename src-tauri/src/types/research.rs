@@ -250,6 +250,8 @@ pub struct Citation {
     pub paragraph_index: Option<u32>,
     /// Approximate character offset of the passage start within the document (P7+, optional)
     pub char_start: Option<u32>,
+    /// Human-readable stable locator text e.g. "p=3, c≈120" (P13+, optional)
+    pub locator_text: Option<String>,
 }
 
 // ─────────────────────────────────────────────────────────────────

@@ -149,6 +149,8 @@ export interface Citation {
   paragraph_index?: number | null;
   /** Approximate character offset of the passage start (P7+) */
   char_start?: number | null;
+  /** Human-readable stable locator text e.g. "p=3, c≈120" (P13+) */
+  locator_text?: string | null;
 }
 
 // ─────────────────────────────────────────────────────────────────
