@@ -520,12 +520,7 @@ const handleTauriInvoke = async (
         global_coherence: coherence,
       };
     }
-    case 'chat_send_message':
-      return {
-        content: 'Réponse mock TITANE∞',
-        provider: 'mock',
-        suggestions: ['Continuer'],
-      };
+    // [RETRAIT v27.0.5-prod] chat_send_message fallback removed from mock handler (legacy)
     case 'conversation_generate': {
       const args = (payload ?? {}) as {
         conversationId?: string;
