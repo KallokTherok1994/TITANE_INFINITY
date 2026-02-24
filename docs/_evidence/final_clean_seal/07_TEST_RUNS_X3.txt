@@ -1,0 +1,39 @@
+# 07_TEST_RUNS_X3 — FINAL CLEAN SEAL
+
+## Tests exécutés
+- `src/__tests__/online-availability.test.ts` (14 tests)
+- `src/__tests__/provider-decision-invariants.test.ts` (15 tests)
+
+## Run 1
+```
+ Test Files  2 passed (2)
+      Tests  29 passed (29)
+   Start at  14:12:20
+   Duration  1.21s
+```
+**RESULT: PASS**
+
+## Run 2
+```
+ Test Files  2 passed (2)
+      Tests  29 passed (29)
+   Start at  14:12:22
+   Duration  1.21s
+```
+**RESULT: PASS**
+
+## Run 3
+```
+ Test Files  2 passed (2)
+      Tests  29 passed (29)
+   Start at  14:12:24
+   Duration  1.22s
+```
+**RESULT: PASS**
+
+## Gate G5 (Phase 7): PASS — 3/3 PASS, 0 skips, 29 tests chaque run
+
+## Verify scripts
+- `verify:online-first` — PASS (avec rg dans PATH)
+- `verify:tauri-only` — WARN (faux positif pré-existant sur `dev` script, `dev:tauri` conforme)
+- Build PROD — BLOCKED_TOKEN_MISSING (policy: GO_FOR_PROD_BUILD__TITANE_INFINITY requis)

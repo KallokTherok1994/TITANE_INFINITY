@@ -1,0 +1,44 @@
+# COMMANDS RUN — FINAL CLEAN SEAL (append-only)
+
+## Phase 0 — Baseline
+```bash
+git status -sb
+git rev-parse HEAD
+git branch --show-current
+git diff --stat
+node -v
+pnpm -v
+cargo -V
+```
+
+## Phase 1 — Inventory
+```bash
+grep -rn "TODO|FIXME|WIP|HACK|TEMP|DEBUG ONLY" src/ src-tauri/ --include="*.ts" --include="*.tsx" --include="*.rs"
+grep -rn "OFFLINE|offline|local-first|local_only|LOCAL_ONLY" docs/ README.md
+grep -rn "should|maybe|soon|eventually|TBD" docs/ README.md
+find docs/ -name "*.md" > docs/_evidence/final_clean_seal/04_MD_FILES.txt
+```
+
+## Phase 7 — Tests x3
+```bash
+cross-env NODE_OPTIONS='...' vitest run src/__tests__/online-availability.test.ts src/__tests__/provider-decision-invariants.test.ts
+# (x3)
+```
+
+## Phase 7 — Verify scripts
+```bash
+bash scripts/verify/enforce-online-first.sh
+bash scripts/verify/enforce-tauri-only.sh
+```
+
+## Phase 8 — SHA256
+```bash
+( cd docs/_evidence/final_clean_seal && find . -maxdepth 2 -type f -print0 | sort -z | xargs -0 sha256sum ) > docs/_evidence/final_clean_seal/SHA256SUMS.txt
+```
+
+## Phase 9 — Registry append
+```bash
+tail -n 3 registry/ui-events.jsonl  # before
+echo '{...FINAL_SEAL_APPLIED...}' >> registry/ui-events.jsonl
+tail -n 3 registry/ui-events.jsonl  # after
+```
