@@ -1,0 +1,50 @@
+# COMMANDS RUN — ONLINE-FIRST vΩ
+
+## Phase 0 — Baseline
+
+```bash
+git status -sb
+git rev-parse HEAD
+git branch --show-current
+node -v
+cargo -V
+```
+
+## Phase 1 — Inventory
+
+```bash
+grep -rn --include="*.ts" --include="*.tsx" --include="*.rs" --include="*.sh" \
+  "OFFLINE|offline|MODE HORS LIGNE|LOCAL_FIRST|local-first|local_only|LOCAL_ONLY|FORCE_LOCAL|network_used|provider_used|\"REMOTE\"|'REMOTE'|REMOTE_ONLY|LOCAL_MODE" \
+  src/ scripts/ > docs/_evidence/online_first_vΩ/G1_INVENTORY_RAW.txt
+```
+
+## Phase 2 — Truth Contract
+
+Modifications manuelles (patch minimal):
+- `src/types/providerMeta.ts` → +`CONTRACT_VIOLATION_CLAMPED`
+- `src/types/providerDecisionMeta.ts` → nouveau fichier
+- `src/services/conversationEngine.ts` → fix P0 (mode REMOTE→LOCAL)
+- `src/hooks/useConversationEngine.ts` → guard frontend
+
+## Phase 3 — Tests x3
+
+```bash
+NODE_OPTIONS='--max-old-space-size=4096 --require ./tests/polyfills/resizable-arraybuffer.cjs' \
+  ./node_modules/.bin/vitest run src/__tests__/provider-decision-invariants.test.ts
+# Run 1: PASS (15/15)
+# Run 2: PASS (15/15)
+# Run 3: PASS (15/15)
+```
+
+## Phase 4 — Build (BLOCKED — token requis)
+
+```
+BLOCKED_TOKEN_MISSING: GO_FOR_PROD_BUILD__TITANE_INFINITY not provided.
+pnpm build / tauri build non exécutés conformément à la policy.
+```
+
+## Phase 5 — SHA256
+
+```bash
+( cd docs/_evidence/online_first_vΩ && find . -type f -maxdepth 2 -print0 | sort -z | xargs -0 sha256sum ) > docs/_evidence/online_first_vΩ/SHA256SUMS.txt
+```

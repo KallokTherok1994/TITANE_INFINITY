@@ -288,7 +288,7 @@ export async function processMessage(
       meta: {
         provider_used: 'local_only',
         provider_class: 'local' as const,
-        mode: 'REMOTE' as Mode,
+        mode: 'LOCAL' as Mode,
         reason_code: 'POLICY_BLOCKED' as ReasonCode,
         latency_ms_total: 50,
         timeout_ms: 20000,
@@ -304,7 +304,7 @@ export async function processMessage(
         providerSelected: 'local_only',
         attempts: [],
         networkUsed: false,
-        mode: 'REMOTE' as Mode,
+        mode: 'LOCAL' as Mode,
       },
     };
     console.log('[CONV_RECV] Immediate response (gated)', {
