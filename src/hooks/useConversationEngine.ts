@@ -310,10 +310,18 @@ export function useConversationEngine(
           // Clear error if any
           if (error) setError(null);
         } else if (mode === 'REMOTE') {
-          logger.info('[useConversationEngine] REMOTE mode', {
-            provider: response.meta?.provider_used,
-            network_used: response.meta?.network_used,
-          });
+          // NO_LYING_VIOLATION_FRONTEND guard: REMOTE requires network_used=true
+          if (response.meta?.network_used === false) {
+            console.error('[NO_LYING_VIOLATION_FRONTEND] mode=REMOTE but network_used=false — displaying as LOCAL/RESTRICTED');
+            logger.warn('[useConversationEngine] NO_LYING_VIOLATION_FRONTEND: REMOTE+network_used=false', {
+              provider: response.meta?.provider_used,
+            });
+          } else {
+            logger.info('[useConversationEngine] REMOTE mode', {
+              provider: response.meta?.provider_used,
+              network_used: response.meta?.network_used,
+            });
+          }
           if (error) setError(null);
         } else {
           logger.warn('[useConversationEngine] UNKNOWN mode', { meta: response.meta });

@@ -1,0 +1,38 @@
+# G4 TEST RUNS x3 — ONLINE-FIRST vΩ
+
+## Gate G4 — Tests invariants bloquants (x3 runs)
+
+### Run 1
+```
+RUN  v4.0.18 /home/runner/work/TITANE_INFINITY/TITANE_INFINITY
+ ✓  core  src/__tests__/provider-decision-invariants.test.ts (15 tests) 11ms
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  13:37:59
+   Duration  790ms
+```
+**RESULT: PASS**
+
+### Run 2
+```
+RUN  v4.0.18 /home/runner/work/TITANE_INFINITY/TITANE_INFINITY
+ ✓  core  src/__tests__/provider-decision-invariants.test.ts (15 tests) 11ms
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  13:38:53
+   Duration  775ms
+```
+**RESULT: PASS**
+
+### Run 3
+```
+RUN  v4.0.18 /home/runner/work/TITANE_INFINITY/TITANE_INFINITY
+ ✓  core  src/__tests__/provider-decision-invariants.test.ts (15 tests) 11ms
+ Test Files  1 passed (1)
+      Tests  15 passed (15)
+   Start at  13:38:54
+   Duration  958ms
+```
+**RESULT: PASS**
+
+## Gate G4: PASS — 3/3 PASS, 0 skips
