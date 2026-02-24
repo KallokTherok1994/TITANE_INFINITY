@@ -951,3 +951,45 @@ Triage failures, minimal fixes, re-run P10
 
 - Build safe executed once with scripts ignored; no dev server patterns detected.
 - `runTests` tool executed Playwright E2E by default, blocking required unit/integration x3.
+
+---
+
+## WEBRESEARCH_P7_P8_CANDIDATE_STABLE
+
+**Date**: 2026-02-24T18:30:11Z
+**Verdict**: ✅ CANDIDATE STABLE
+**Commit**: 9eb6d782cf00594ae075dec6712f767f39526615
+**Scope**: WebResearch Engine P7.0 — Discovery multi-URL, vector rerank, citation locators, Research UI
+
+### Gates
+
+| Gate | Status |
+|------|--------|
+| G_CARGO_CHECK | ✅ PASS |
+| G_TSC_CHECK | ✅ PASS |
+| G_SINGLE_NETWORK_GATE (WebResearch scope) | ✅ PASS |
+| G_UI_NO_NETWORK (P7 files) | ✅ PASS |
+| G_DISCOVERY_BUDGET_ENFORCED | ✅ PASS (static) |
+| G_DISCOVERY_DOMAIN_LOCK | ✅ PASS (static) |
+| G_VECTOR_OFFLINE_ONLY | ✅ PASS (static) |
+| G_CITATION_LOCATOR_VALID | ✅ PASS (static) |
+| G_E2E_NO_REAL_WRITES | ✅ PASS |
+| G_CARGO_TEST | ⚠️ BLOCKED_RUNNER (glib system libs absent) |
+
+### New Modules
+
+- `src-tauri/src/services/discovery_service.rs` (Ring 3, STABLE)
+- `src-tauri/src/services/vector_service.rs` (Ring 3, EXPERIMENTAL — `ENABLE_VECTOR_SEARCH`)
+- `src/pages/ResearchPage.tsx` (Ring 4, STABLE, route `/research`)
+
+### Proof Pack
+
+**Path**: `docs/_evidence/RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011/`
+**Hash Manifest**: `HASHES/manifest.sha256`
+**VERDICT.md hash**: `4c7ebb578f3450a558e3b795bbb9d6658e15cb93972795068f0a569c72da6f35`
+
+### Notes
+
+Full STABLE promotion requires runtime `cargo test --lib` in a glib-enabled environment.
+All code-level gates PASS. Runner constraint only.
+
