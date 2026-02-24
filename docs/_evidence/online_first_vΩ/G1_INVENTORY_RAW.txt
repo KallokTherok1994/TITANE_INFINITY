@@ -1,0 +1,300 @@
+src/types/providerMeta.ts:3:export type Mode = 'LOCAL' | 'REMOTE' | 'OFFLINE' | 'CACHED' | 'ERROR';
+src/types/providerMeta.ts:7:  | 'POLICY_LOCAL_ONLY'
+src/types/providerMeta.ts:16:  | 'FALLBACK_OFFLINE'
+src/types/providerMeta.ts:31:  network_used_attempt: boolean;
+src/types/providerMeta.ts:35:  provider_used: string;
+src/types/providerMeta.ts:43:  network_used: boolean;
+src/types/providerMeta.ts:52:    | 'OFFLINE_USER_FORCED'
+src/types/providerMeta.ts:53:    | 'OFFLINE_NO_KEYS'
+src/types/providerMeta.ts:54:    | 'OFFLINE_PROVIDER_DOWN'
+src/types/providerMeta.ts:55:    | 'OFFLINE_NETWORK_BLOCKED'
+src/types/providerMeta.ts:56:    | 'OFFLINE_TIMEOUT'
+src/types/providerMeta.ts:57:    | 'OFFLINE_INTERNAL_ERROR';
+src/utils/cloudAPIConfirmation.ts:7: * Garantit le respect du principe OFFLINE FIRST
+src/utils/cloudAPIConfirmation.ts:14:import { getAIConfig } from '../config/offline-first';
+src/utils/cloudAPIConfirmation.ts:157:          ⚠️ Mode OFFLINE FIRST activé - Votre permission est requise
+src/utils/tauriProtector.ts:84:      name: 'TITANE∞ (offline)',
+src/utils/tauriProtector.ts:137:      version: 'dev-offline',
+src/utils/tauriProtector.ts:567:        message: 'Backend offline - using local AI fallback',
+src/utils/tauriProtector.ts:674:        status: 'offline',
+src/engines/selfHealing/selfHealingEngine.ts:715:          anomalies.push(`module:${module}:offline`);
+src/services/ai/healthMonitor.ts:42:    status: 'healthy' | 'degraded' | 'critical' | 'offline';
+src/services/ai/healthMonitor.ts:246:        // ollama peut être offline (optionnel)
+src/services/ai/healthMonitor.ts:361:                : 'offline',
+src/services/ai/metaKernel.ts:49:  status: 'active' | 'degraded' | 'critical' | 'offline';
+src/services/ai/autoHealEngine.ts:132:      status: 'healthy' | 'degraded' | 'critical' | 'offline';
+src/services/ai/autoHealEngine.ts:641:        current.status = 'offline';
+src/services/ai/providers/ollama.ts:144:      logger.warn('⚠️ Endpoint offline (gateway)');
+src/services/ai/providers/ollama.ts:224:    `- Système local-first (priorité absolue à la vie privée)`,
+src/services/ai/providers/glm46v.ts:57:      logger.warn(`⚠️ GLM-4.6V endpoint offline at ${GLM46V_CONFIG.baseUrl}`);
+src/services/ai/providers/titaneLocal.ts:123:        /(santé|health|online|offline|disponible)/i,
+src/services/ai/providers/titaneLocal.ts:156:        /(autonome|local|offline|sans réseau|fallback)/i,
+src/services/ai/providers/titaneLocal.ts:255:  local_only: boolean;
+src/services/ai/providers/titaneLocal.ts:365:      local_only: true,
+src/services/ai/providers/titaneLocal.ts:434:          local_only: true,
+src/services/ai/providers/tauriChat.ts:437: * En local-first, on force provider=local pour éviter tout appel cloud.
+src/services/ai/__tests__/ollamaAbortFallback.test.ts:12:    getStatus: vi.fn().mockResolvedValue({ status: 'offline' }),
+src/services/ai/__tests__/ollamaAbortFallback.test.ts:24:    getStatus: vi.fn().mockResolvedValue({ status: 'offline' }),
+src/services/ai/orchestrator.ts:85:  status: 'healthy' | 'degraded' | 'critical' | 'offline';
+src/services/ai/orchestrator.ts:113:  // v37.0.0: Eager providers (local-first, always available)
+src/services/ai/orchestrator.ts:340:        status: 'offline', // Mark as offline until loaded
+src/services/ai/orchestrator.ts:363:      // v37.0.0: Warmup only eager providers (local-first)
+src/services/ai/orchestrator.ts:379:            stats.status = isAvailable ? 'healthy' : 'offline';
+src/services/ai/orchestrator.ts:629:          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+src/services/ai/orchestrator.ts:637:          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+src/services/ai/orchestrator.ts:645:          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+src/services/ai/orchestrator.ts:653:          score -= !IS_VITEST && stats.status === 'offline' ? 30 : 0; // Malus réduit
+src/services/ai/orchestrator.ts:1739:          if (stats && !isAvailable && stats.status !== 'offline') {
+src/services/ai/orchestrator.ts:1740:            stats.status = 'offline';
+src/services/api/voice.ts:70:   * @param useOnline - Mode online (Google TTS) vs offline (espeak/piper)
+src/services/adminEngine/stateAggregator.ts:276:      return -1; // -1 = offline
+src/services/adminEngine/stateAggregator.ts:352:      offline: 'OFFLINE',
+src/services/adminEngine/stateAggregator.ts:560:    const offlineModules = Object.values(modules).filter(m => m.status === 'OFFLINE');
+src/services/adminEngine/stateAggregator.ts:570:        if (offlineModules.length > 0) {
+src/services/adminEngine/stateAggregator.ts:571:          return `${offlineModules.length} module(s) hors ligne`;
+src/services/adminEngine/adminEngine.config.ts:53:  | 'OFFLINE'
+src/services/adminEngine/adminEngine.config.ts:1209:  OFFLINE: '#6b7280', // gris
+src/services/adminEngine/adminEngine.config.ts:1383:  const offlineModules = moduleValues.filter(m => m.status === 'OFFLINE').length;
+src/services/adminEngine/adminEngine.config.ts:1387:  score -= offlineModules * 5;
+src/services/voice/voiceRouter.ts:47:  /** Mode TTS (offline prioritaire par défaut) */
+src/services/selfHealing/selfHealing.config.ts:30:export type ModuleStatus = 'healthy' | 'degraded' | 'critical' | 'offline' | 'recovering';
+src/services/selfHealing/selfHealing.config.ts:442:    id: 'ollama-offline',
+src/services/selfHealing/selfHealing.config.ts:446:    detectionPattern: /Ollama (offline|unavailable|connection refused)/i,
+src/services/cognitive/CognitiveObservabilityEngine.ts:16: * - Export for offline analysis
+src/services/governance/GovernanceConnector.ts:76:// Fallback order par défaut (local-first)
+src/services/conversationEngine.test.ts:28:    expect(response.metadata.provider_used).toBe('fallback');
+src/services/conversationEngine.test.ts:44:          provider_used: 'local',
+src/services/conversationEngine.test.ts:55:    expect(response.metadata.provider_used).toBe('local');
+src/services/conversationEngine.ts:111:  provider_used: string;
+src/services/conversationEngine.ts:160:    provider_used: typeof m.provider_used === 'string' ? m.provider_used : 'fallback',
+src/services/conversationEngine.ts:230:        provider_used: 'e2e-mock',
+src/services/conversationEngine.ts:284:        provider_used: 'local_only',
+src/services/conversationEngine.ts:289:        provider_used: 'local_only',
+src/services/conversationEngine.ts:291:        mode: 'REMOTE' as Mode,
+src/services/conversationEngine.ts:297:        network_used: false, // No actual network call made
+src/services/conversationEngine.ts:304:        providerSelected: 'local_only',
+src/services/conversationEngine.ts:307:        mode: 'REMOTE' as Mode,
+src/services/conversationEngine.ts:313:      provider_used: response.meta?.provider_used,
+src/services/conversationEngine.ts:314:      network_used: response.meta?.network_used,
+src/services/conversationEngine.ts:383:      provider_used:
+src/services/conversationEngine.ts:387:        (typeof metadata['provider_used'] === 'string'
+src/services/conversationEngine.ts:388:          ? metadata['provider_used']
+src/services/conversationEngine.ts:403:    provider: response.metadata?.provider_used,
+src/services/conversationEngine.ts:411:      provider_used: providerMeta.provider_used,
+src/services/conversationEngine.ts:412:      network_used: providerMeta.network_used,
+src/pages/OrchestrationMetaCenter.tsx:252:      case 'offline':
+src/pages/OrchestrationMetaCenter.tsx:579:                <StatusBadge status={provider.available ? 'available' : 'offline'} />
+src/components/diagnostics/SplashWatchdog.tsx:91:      ['degraded', 'critical', 'unhealthy', 'error', 'offline', 'unavailable'].includes(
+src/components/sections/ConversationSection.tsx:134:    const providerLabel = providerMeta?.provider_used ?? 'unknown';
+src/components/system/BackendDownIndicator.tsx:122:                {unavailableReason === 'ollama-offline' && (
+src/components/system/__tests__/BackendDownIndicator.test.tsx:39:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:55:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:82:    it('should display message for ollama-offline', () => {
+src/components/system/__tests__/BackendDownIndicator.test.tsx:88:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:137:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:155:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:173:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:191:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:213:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:229:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:245:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:263:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:281:        unavailableReason: 'ollama-offline',
+src/components/system/__tests__/BackendDownIndicator.test.tsx:306:        unavailableReason: 'ollama-offline',
+src/lib/tauriCommands.ts:20:  AI_SCAN_LOCAL_MODELS: 'ai_scan_local_models',
+src/lib/tauriCommands.ts:21:  AI_SET_LOCAL_MODEL: 'ai_set_local_model',
+src/lib/tauriClient.ts:158:      TAURI_COMMANDS.AI_SCAN_LOCAL_MODELS,
+src/lib/tauriClient.ts:165:      TAURI_COMMANDS.AI_SET_LOCAL_MODEL,
+src/hooks/useVoiceMode.ts:33:import { getAIConfig } from '../config/offline-first';
+src/hooks/useVoiceMode.ts:149:      // Mode OFFLINE FIRST : toujours essayer local d'abord
+src/hooks/useBackendHealth.ts:25:  | 'ollama-offline'
+src/hooks/useBackendHealth.ts:183:      unavailableReason = 'ollama-offline';
+src/hooks/useVoiceEngine.ts:12: *   - Priorité: Tauri Backend (100% offline) → WebSpeech fallback (dev)
+src/hooks/useVoiceEngine.ts:479:          useOnlineTTS: false, // Priorité offline
+src/hooks/useVisualEngines.ts:43:      offline: 5,
+src/hooks/useSystemHealth.ts:62:  network_status: 'online' | 'offline' | 'degraded';
+src/hooks/useSystemHealth.ts:199:  if (health.system.network_status === 'offline') {
+src/hooks/useSystemHealth.ts:204:      message: 'Network offline',
+src/hooks/__tests__/useBackendHealth.test.ts:149:      const validReasons = ['ollama-offline', 'tauri-backend-down', 'unknown-error'];
+src/hooks/useConversationEngine.ts:301:        if (mode === 'OFFLINE') {
+src/hooks/useConversationEngine.ts:307:          logger.warn('[useConversationEngine] OFFLINE mode', { reasonCode });
+src/hooks/useConversationEngine.ts:312:        } else if (mode === 'REMOTE') {
+src/hooks/useConversationEngine.ts:314:            provider: response.meta?.provider_used,
+src/hooks/useConversationEngine.ts:315:            network_used: response.meta?.network_used,
+src/hooks/useConversationEngine.ts:357:          provider: response.metadata?.provider_used ?? 'unknown',
+src/ui/pages/Chat.tsx:428:  status: 'online' | 'offline' | 'connecting' | 'error';
+src/ui/pages/Chat.tsx:716:        return attemptedProviders.length > 0 ? 'offline' : 'error';
+src/ui/Menu.tsx:223:  const aiStatusClass = aiStatus.percent === 100 ? 'online' : 'offline';
+src/visual-engine/OSIntegrationBridge.ts:127:    // Disabled by default (Tauri-only, local-first). Provide a URL explicitly to enable.
+src/main.tsx:987:  // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
+src/core/ARCHITECTURE_TYPES_v24-v∞.ts:35:  | 'offline';
+src/core/commands/TAURI_COMMANDS.ts:270:      status: 'offline',
+src/core/types/orchestration.types.ts:146:  status: 'available' | 'busy' | 'offline' | 'error';
+src/core/services/orchestrator.ts:49:  status: 'healthy' | 'degraded' | 'critical' | 'offline';
+src/core/services/orchestrator.ts:195:            stats.status = isAvailable ? 'healthy' : 'offline';
+src/core/services/orchestrator.ts:397:          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+src/core/services/orchestrator.ts:403:          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+src/core/services/orchestrator.ts:408:          score -= stats.status === 'offline' ? 50 : 0; // Malus hors ligne
+src/core/services/orchestrator.ts:1209:          if (stats && !isAvailable && stats.status !== 'offline') {
+src/core/services/orchestrator.ts:1210:            stats.status = 'offline';
+src/core/ARCHITECTURE_TYPES_v∞.ts:12:export type HealthStatus = 'healthy' | 'degraded' | 'critical' | 'offline';
+src/core/cognitive/INTERFACE_MIRROR.ts:132:    if (systemState === 'offline') {
+src/core/cognitive/ADAPTIVE_UI.ts:106:      case 'offline':
+src/core/cognitive/ADAPTIVE_UI.ts:107:        // Système offline → UI minimaliste
+src/core/visual/STATE_ENGINE.ts:15:  | 'offline';
+src/core/visual/STATE_ENGINE.ts:33:    offline: '#444444',
+src/core/visual/STATE_ENGINE.ts:45:    offline: 500,
+src/config/offline-first.ts:2:// 🌐 TITANE∞ v16.1 — OFFLINE FIRST CONFIG
+src/config/offline-first.ts:41:export const OFFLINE_FEATURES = {
+src/config/offline-first.ts:42:  // Features disponibles en mode offline
+src/config/offline-first.ts:49:  // Features nécessitant Internet (désactivées si offline)
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:42:        provider_used: 'mock',
+src/__tests__/e2e/ChatWorkflow.e2e.test.tsx:219:            provider_used: 'mock',
+src/__tests__/edge-cases/ErrorHandling.test.tsx:19:      setStatus('offline');
+src/__tests__/edge-cases/ErrorHandling.test.tsx:167:    it('should handle offline mode', async () => {
+src/__tests__/edge-cases/ErrorHandling.test.tsx:168:      // Mock offline
+src/__tests__/edge-cases/ErrorHandling.test.tsx:177:        expect(screen.getByText(/offline|no connection/i)).toBeInTheDocument();
+src/__tests__/edge-cases/ErrorHandling.test.tsx:202:    it('should queue operations while offline', async () => {
+src/__tests__/edge-cases/ErrorHandling.test.tsx:210:      // Attempt operation while offline
+src/__tests__/services/adminEngine/adminEngine.test.ts:202:      expect(MODULE_STATUS_COLORS.OFFLINE).toBeDefined();
+src/__tests__/omega-provider-tests.test.ts:167:// OMEGA TEST SUITE 3: OLLAMA OFFLINE
+src/__tests__/omega-provider-tests.test.ts:176:    // Mock fetch to simulate offline Ollama
+src/__tests__/omega-provider-tests.test.ts:503:// OMEGA TEST SUITE 8: COMPLETE OFFLINE MODE
+src/__tests__/omega-provider-tests.test.ts:518:  it('should work completely offline using titane-local', async () => {
+src/__tests__/omega-provider-tests.test.ts:519:    const result = await aiOrchestrator.generate('Test offline mode', []);
+src/__tests__/omega-provider-tests.test.ts:527:  it('should provide intelligent responses offline', async () => {
+src/__tests__/omega-provider-tests.test.ts:552:  it('should maintain conversation context offline', async () => {
+src/__tests__/omega-provider-tests.test.ts:572:  it('should show offline indicators when appropriate', async () => {
+src/__tests__/omega-provider-tests.test.ts:573:    const result = await aiOrchestrator.generate('Test offline indicators', []);
+src/__tests__/omega-provider-tests.test.ts:576:    // Local provider should work even when others are offline
+src/__tests__/e2e-automated-validation.test.tsx:1612:    // 7. Fonctionner sans réseau (offline functionality)
+src/__tests__/e2e-automated-validation.test.tsx:1613:    // Already tested - titane-local works offline
+src/__tests__/core/commands/TAURI_COMMANDS.test.ts:75:        status: 'offline',
+src/__tests__/ai-orchestrator-neural-fixed.test.ts:158:        expect(['healthy', 'degraded', 'critical', 'offline']).toContain(provider.status);
+src/App.tsx:895:      {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
+src/features/one-core/useOneCore.ts:86:      // Fallback mock data (offline / backend unavailable)
+src/features/conversation/ProviderStatusPanel.tsx:22:  status: 'online' | 'offline' | 'degraded';
+src/features/conversation/ProviderStatusPanel.tsx:61:      status: 'offline',
+src/features/conversation/ProviderStatusPanel.tsx:114:      case 'offline':
+src/features/conversation/ProviderStatusPanel.tsx:125:      case 'offline':
+src/features/chat/ProviderStatusPanel.tsx:22:  status: 'online' | 'offline' | 'degraded';
+src/features/chat/ProviderStatusPanel.tsx:61:      status: 'offline',
+src/features/chat/ProviderStatusPanel.tsx:114:      case 'offline':
+src/features/chat/ProviderStatusPanel.tsx:125:      case 'offline':
+src/modules/talkToTitane/TalkToTitaneEngine.ts:699:    // INTEGRATION: Hybrid TTS (online + offline synthesis)
+src/modules/devSudo/devSudoHandler.ts:2563:📖 **Documentation complète**: \`SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md\`
+src/modules/devSudo/devSudoHandler.ts:2871:        response: `❌ **TITANE∞ LOCAL — Ollama OFFLINE**
+src/modules/devSudo/devSudoVisionHandlers.ts:1007:  5. Service Worker (offline support)
+src/modules/devSudo/devSudoBuiltins.ts:478:📖 **Documentation complète**: \`SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md\`
+src/modules/devSudo/devSudoBuiltins.ts:788:        response: `❌ **TITANE∞ LOCAL — Ollama OFFLINE**
+scripts/diagnostic/status_dashboard.sh:60:  echo -e "  🔴 Ollama:            ${RED}OFFLINE${NC}"
+scripts/diagnostic/canary_monitor_v27.2.0.sh:96:    NETWORK_ERRORS=$(grep -i "network.*error\|offline.*false\|online.*false" "$LOGFILE" 2>/dev/null | wc -l)
+scripts/utils/common.sh:220:        corepack pnpm install --frozen-lockfile --prefer-offline --no-audit
+scripts/utils/common.sh:223:        pnpm install --frozen-lockfile --prefer-offline --no-audit
+scripts/init-copilot-xs.sh:63:- Tauri-only (no HTTP servers); keep the project local-first.
+scripts/init-copilot-xs.sh:178:Focus: prompt safety, token budgets, eval harness, offline-first where possible.
+scripts/tools/e2e_chat_proof_harvest.sh:73:  rg -n "CHAT_DECISION|CRITICAL_CONTRADICTION|NO_FALSE_OFFLINE|Reponse en mode hors ligne|Réponse en mode hors ligne" src src-tauri -S > "$A2_FILE" 2>&1 || true
+scripts/tools/e2e_chat_proof_harvest.sh:120:  echo "NO_MATCHES" > "$run_dir/EXTRACT_OFFLINE_TEXT.txt"
+scripts/tools/e2e_chat_proof_harvest.sh:121:  echo "NO_MATCHES" > "$run_dir/EXTRACT_NO_FALSE_OFFLINE.txt"
+scripts/tools/e2e_chat_proof_campaign.sh:51:    export OFFLINE_SIM=1
+scripts/tools/e2e_chat_proof_campaign.sh:53:    unset OFFLINE_SIM || true
+scripts/tools/e2e_chat_proof_campaign.sh:74:  } > "$run_dir/EXTRACT_OFFLINE_TEXT.txt"
+scripts/tools/e2e_chat_proof_campaign.sh:75:  if [[ ! -s "$run_dir/EXTRACT_OFFLINE_TEXT.txt" ]]; then
+scripts/tools/e2e_chat_proof_campaign.sh:76:    echo "NO_MATCHES" > "$run_dir/EXTRACT_OFFLINE_TEXT.txt"
+scripts/tools/e2e_chat_proof_campaign.sh:80:    rg -n "CRITICAL_CONTRADICTION|NO_FALSE_OFFLINE" "$run_dir/RAW.log" || true
+scripts/tools/e2e_chat_proof_campaign.sh:81:    rg -n "CRITICAL_CONTRADICTION|NO_FALSE_OFFLINE" "$run_dir/TAURI_DRIVER.log" || true
+scripts/tools/e2e_chat_proof_campaign.sh:82:  } > "$run_dir/EXTRACT_NO_FALSE_OFFLINE.txt"
+scripts/tools/e2e_chat_proof_campaign.sh:83:  if [[ ! -s "$run_dir/EXTRACT_NO_FALSE_OFFLINE.txt" ]]; then
+scripts/tools/e2e_chat_proof_campaign.sh:84:    echo "NO_MATCHES" > "$run_dir/EXTRACT_NO_FALSE_OFFLINE.txt"
+scripts/tools/e2e_chat_proof_campaign.sh:96:        if rg -q "CHAT_DECISION\] online=true reason(_code)?=ONLINE_OK" "$run_dir/EXTRACT_CHAT_DECISION.txt" && ! rg -q "Réponse en mode hors ligne|Reponse en mode hors ligne" "$run_dir/EXTRACT_OFFLINE_TEXT.txt"; then
+scripts/tools/e2e_chat_proof_campaign.sh:98:          reason="online_ok_no_offline_text"
+scripts/tools/e2e_chat_proof_campaign.sh:101:          reason="missing_online_ok_or_offline_text_present"
+scripts/tools/e2e_chat_proof_campaign.sh:105:        if rg -q "CHAT_DECISION\] online=false reason(_code)?=OFFLINE_" "$run_dir/EXTRACT_CHAT_DECISION.txt" && rg -q "Réponse en mode hors ligne|Reponse en mode hors ligne" "$run_dir/EXTRACT_OFFLINE_TEXT.txt"; then
+scripts/tools/e2e_chat_proof_campaign.sh:107:          reason="offline_real_confirmed"
+scripts/tools/e2e_chat_proof_campaign.sh:110:          reason="missing_offline_decision_or_offline_text"
+scripts/tools/e2e_chat_proof_campaign.sh:114:        if rg -q "CHAT_DECISION\] online=true reason(_code)?=ONLINE_OK" "$run_dir/EXTRACT_CHAT_DECISION.txt" && ! rg -q "Réponse en mode hors ligne|Reponse en mode hors ligne" "$run_dir/EXTRACT_OFFLINE_TEXT.txt"; then
+scripts/deployment/deploy-fix-complete.sh:491:    "${PM[@]}" run verify:local-first >> "$LOG_FILE" 2>&1 || warning "Local-first verification had warnings"
+scripts/gates/g9-release-seal.sh:118:  "docs/_evidence/g1-no-offline-without-reason-report.md"
+scripts/gates/g9-release-seal.sh:155:- [x] G1: No offline without reason
+scripts/gates/g9-release-seal.sh:156:- [x] G2: No FORCE_LOCAL in prod
+scripts/gates/run-all.sh:41:  "1:g1-no-offline-without-reason.sh"
+scripts/gates/g5-ci-wiring.sh:32:  if grep -q "g1-no-offline" scripts/gates/run-all.sh 2>/dev/null; then
+scripts/gates/g8-provider-api-only.sh:88:# Check 6: Verify FORCE_LOCAL_PROVIDER doesn't cause crashes
+scripts/gates/g8-provider-api-only.sh:89:log "Checking FORCE_LOCAL_PROVIDER safety..."
+scripts/gates/g8-provider-api-only.sh:90:if grep -r "FORCE_LOCAL_PROVIDER" src/ --include="*.ts" --include="*.tsx" --include="*.rs" 2>/dev/null | grep -v "test\|comment"; then
+scripts/gates/g8-provider-api-only.sh:91:  if grep -r "FORCE_LOCAL_PROVIDER" src-tauri/src/ --include="*.rs" 2>/dev/null | grep -q "warn\|log"; then
+scripts/gates/g8-provider-api-only.sh:92:    pass "FORCE_LOCAL_PROVIDER has observability markers"
+scripts/gates/g8-provider-api-only.sh:94:    fail "FORCE_LOCAL_PROVIDER lacks observability markers"
+scripts/gates/g8-provider-api-only.sh:97:  log "ℹ️  FORCE_LOCAL_PROVIDER not currently used"
+scripts/gates/g8-provider-api-only.sh:129:6. **FORCE_LOCAL_PROVIDER**: ✅ Safe (observable)
+scripts/gates/g3-legacy-divergence.sh:44:FORCE_LOCAL=$(rg -n "provider:.*'local'" src/services/ai/providers/tauriChat.ts || true)
+scripts/gates/g3-legacy-divergence.sh:46:if [ -z "$FORCE_LOCAL" ]; then
+scripts/gates/g3-legacy-divergence.sh:51:  echo "$FORCE_LOCAL"
+scripts/gates/g2-no-force-local-in-prod.sh:2:# Gate G2: NO_FORCE_LOCAL_PROVIDER_IN_PROD
+scripts/gates/g2-no-force-local-in-prod.sh:3:# Vérifie que FORCE_LOCAL_PROVIDER n'est pas set en production
+scripts/gates/g2-no-force-local-in-prod.sh:7:echo "=== GATE G2: NO_FORCE_LOCAL_PROVIDER_IN_PROD ==="
+scripts/gates/g2-no-force-local-in-prod.sh:13:echo "[Check 1] Vérifier FORCE_LOCAL_PROVIDER not set..."
+scripts/gates/g2-no-force-local-in-prod.sh:15:if [ -n "$FORCE_LOCAL_PROVIDER" ]; then
+scripts/gates/g2-no-force-local-in-prod.sh:16:  echo "❌ FAIL: FORCE_LOCAL_PROVIDER is SET in current environment"
+scripts/gates/g2-no-force-local-in-prod.sh:17:  echo "   Value: $FORCE_LOCAL_PROVIDER"
+scripts/gates/g2-no-force-local-in-prod.sh:20:  echo "✅ PASS: FORCE_LOCAL_PROVIDER not set in current env"
+scripts/gates/g2-no-force-local-in-prod.sh:31:  FORCE_IN_SCRIPTS=$(grep -r "FORCE_LOCAL_PROVIDER" $DEPLOY_SCRIPTS || true)
+scripts/gates/g2-no-force-local-in-prod.sh:34:    echo "⚠️  WARNING: FORCE_LOCAL_PROVIDER found in scripts:"
+scripts/gates/g2-no-force-local-in-prod.sh:39:    echo "✅ PASS: FORCE_LOCAL_PROVIDER not in deploy scripts"
+scripts/gates/g2-no-force-local-in-prod.sh:53:  FORCE_IN_ENV=$(grep -h "^FORCE_LOCAL_PROVIDER=" $ENV_FILES 2>/dev/null || true)
+scripts/gates/g2-no-force-local-in-prod.sh:56:    echo "⚠️  WARNING: FORCE_LOCAL_PROVIDER found in .env files:"
+scripts/gates/g2-no-force-local-in-prod.sh:63:      PROD_FORCE=$(grep "^FORCE_LOCAL_PROVIDER=" .env.production || true)
+scripts/gates/g2-no-force-local-in-prod.sh:65:        echo "❌ FAIL: FORCE_LOCAL_PROVIDER SET in .env.production"
+scripts/gates/g2-no-force-local-in-prod.sh:72:    echo "✅ PASS: FORCE_LOCAL_PROVIDER not in .env files"
+scripts/gates/g2-no-force-local-in-prod.sh:81:echo "[Check 4] Vérifier backend log FORCE_LOCAL_PROVIDER..."
+scripts/gates/g2-no-force-local-in-prod.sh:83:RUST_WARN=$(rg -n "FORCE_LOCAL_PROVIDER.*WARN" src-tauri/src/ --type rust || true)
+scripts/gates/g2-no-force-local-in-prod.sh:86:  echo "✅ PASS: Backend logs WARN if FORCE_LOCAL_PROVIDER active"
+scripts/gates/g2-no-force-local-in-prod.sh:90:  echo "⚠️  INFO: No explicit WARN for FORCE_LOCAL_PROVIDER in Rust"
+scripts/gates/g1-no-offline-without-reason.sh:2:# Gate G1: NO_OFFLINE_WITHOUT_REASON
+scripts/gates/g1-no-offline-without-reason.sh:3:# Vérifie que toute occurrence de "mode hors ligne" ou setError("offline") exige reason_code
+scripts/gates/g1-no-offline-without-reason.sh:7:echo "=== GATE G1: NO_OFFLINE_WITHOUT_REASON ==="
+scripts/gates/g1-no-offline-without-reason.sh:13:echo "[Check 1] Vérifier que UI offline display requiert reason_code..."
+scripts/gates/g1-no-offline-without-reason.sh:15:# Chercher patterns "hors ligne" ou "offline" dans setError/messages
+scripts/gates/g1-no-offline-without-reason.sh:16:MATCHES=$(rg -n "hors ligne|offline" src/ --type ts --type tsx -g '!*.test.*' -g '!__tests__' || true)
+scripts/gates/g1-no-offline-without-reason.sh:19:  echo "Found offline messages:"
+scripts/gates/g1-no-offline-without-reason.sh:33:    CONTEXT=$(rg -C 5 "hors ligne|offline" "$file" | rg "reason_?code|reasonCode" || true)
+scripts/gates/g1-no-offline-without-reason.sh:36:      echo "    ⚠️  WARNING: No reason_code found near offline message in $file"
+scripts/gates/g1-no-offline-without-reason.sh:37:      # Note: Not a hard FAIL since some offline messages might be generic headers
+scripts/gates/g1-no-offline-without-reason.sh:47:# Check 2: Code logic — setError avec "offline" doit avoir condition sur reason_code
+scripts/gates/g1-no-offline-without-reason.sh:48:echo "[Check 2] Vérifier logic setError + mode OFFLINE..."
+scripts/gates/g1-no-offline-without-reason.sh:51:SETERROR_MATCHES=$(rg -n "setError.*offline|setError.*hors.ligne" src/ --type ts --type tsx -A 5 -B 10 || true)
+scripts/gates/g1-no-offline-without-reason.sh:54:  echo "Found setError with offline:"
+scripts/gates/g1-no-offline-without-reason.sh:58:  # Vérifier que c'est conditionnel sur mode='OFFLINE' et reason_code présent
+scripts/gates/g1-no-offline-without-reason.sh:59:  # Pattern attendu: if (mode === 'OFFLINE') { setError(...reason_code...) }
+scripts/gates/g1-no-offline-without-reason.sh:61:  VALID_PATTERN=$(echo "$SETERROR_MATCHES" | rg "mode.*OFFLINE.*reason_?code|reason_?code.*mode.*OFFLINE" || true)
+scripts/gates/g1-no-offline-without-reason.sh:64:    echo "❌ FAIL: setError with offline NOT conditional on mode+reason_code"
+scripts/gates/g1-no-offline-without-reason.sh:67:    echo "✅ PASS: setError offline conditional on mode+reason_code"
+scripts/gates/g1-no-offline-without-reason.sh:70:  echo "✅ No setError with offline found (expected if using modern pattern)"
+scripts/gates/g1-no-offline-without-reason.sh:75:# Check 3: Backend — offline sans reason_code
+scripts/gates/g1-no-offline-without-reason.sh:76:echo "[Check 3] Vérifier backend Rust offline logic..."
+scripts/gates/g1-no-offline-without-reason.sh:78:# Chercher "offline" dans conversation_engine Rust code
+scripts/gates/g1-no-offline-without-reason.sh:79:RUST_OFFLINE=$(rg -n "offline" src-tauri/src/conversation_engine/ --type rust || true)
+scripts/gates/g1-no-offline-without-reason.sh:81:if [ -n "$RUST_OFFLINE" ]; then
+scripts/gates/g1-no-offline-without-reason.sh:82:  echo "Found offline in Rust:"
+scripts/gates/g1-no-offline-without-reason.sh:83:  echo "$RUST_OFFLINE"
+scripts/gates/g4-provider-decision-certified.sh:113:  "scripts/gates/g1-no-offline-without-reason.sh"
+scripts/install/install_titane_local.sh:290:echo "  SUPER_PROMPT_TITANE_LOCAL_MODEL_v∞.md"
+scripts/dev/full_local_tauri_ollama.sh:3:# Runtime dev Tauri + Ollama (local-first)
+scripts/ci/check-promotion-stable.sh:81:        "mode dégradé local-first opérationnel"
+scripts/verify/enforce-online-first.sh:7:# - No "local-first only" or "offline: true" by default
+scripts/verify/enforce-online-first.sh:8:# - No references to "verify:local-first" in package.json
+scripts/verify/enforce-online-first.sh:12:# - Old doctrine "local-first only" still present
+scripts/verify/enforce-online-first.sh:13:# - verify:local-first still referenced
+scripts/verify/enforce-online-first.sh:25:# Check 1: No "local-first only" doctrine
+scripts/verify/enforce-online-first.sh:26:echo "✓ Check 1: Doctrine 'local-first only' removed..."
+scripts/verify/enforce-online-first.sh:28:  echo "❌ FAIL: Old 'local-first only' doctrine still present"
+scripts/verify/enforce-online-first.sh:35:# Check 2: No verify:local-first in package.json
+scripts/verify/enforce-online-first.sh:36:echo "✓ Check 2: Old gate 'verify:local-first' removed..."
+scripts/verify/enforce-online-first.sh:37:if rg "verify:local-first" package.json 2>/dev/null; then
+scripts/verify/enforce-online-first.sh:38:  echo "❌ FAIL: verify:local-first still referenced in package.json"
+scripts/verify/pre-deployment-check.sh:283:    if grep -q "offline" src-tauri/tauri.conf.json || grep -q "local-first" package.json; then
+scripts/launch/deploy_full_local_dev.sh:3:# Scope: local-first, dev runtime only (Tauri backend + frontend + Ollama).
+scripts/launch/run-titane.sh:172:    echo -e "${YELLOW}⚠️  Internet connection: OFFLINE${NC}"
+scripts/launch/run-titane.sh:173:    echo -e "${CYAN}ℹ️  TITANE will work in offline mode (APIs unavailable)${NC}"
+scripts/launch/run-titane.sh:174:    INTERNET_STATUS="offline"
+scripts/launch/run-titane.sh:197:        $PNPM_CMD install --frozen-lockfile --prefer-offline --no-audit
