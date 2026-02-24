@@ -1,8 +1,8 @@
 # TITANE∞ — WebResearch Engine Guide
 
-**Status:** CANDIDATE STABLE · P7.0  
+**Status:** STABLE · P7.0 · Runtime Certified P9  
 **Updated:** 2026-02-24  
-**Pipeline:** P1→P7 gates verified · Proof pack: `docs/_evidence/RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011/`
+**Pipeline:** P1→P9 gates verified · Proof packs: `docs/_evidence/RELEASE_P8_*/` + `docs/_evidence/RELEASE_P9_*/`
 
 ---
 
@@ -224,5 +224,4 @@ git revert HEAD  # reverts commit 9eb6d78
 
 ## Status
 
-**P7.0 — CANDIDATE STABLE**  
-Awaiting P8 sealing (runtime test execution in glib-enabled environment).
+**P7.0 — STABLE** · Runtime Certified (P9, 4387/4394 tests pass)

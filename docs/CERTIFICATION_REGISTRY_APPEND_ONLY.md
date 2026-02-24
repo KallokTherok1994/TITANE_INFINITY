@@ -993,3 +993,42 @@ Triage failures, minimal fixes, re-run P10
 Full STABLE promotion requires runtime `cargo test --lib` in a glib-enabled environment.
 All code-level gates PASS. Runner constraint only.
 
+
+---
+
+## WEBRESEARCH_STABLE_RUNTIME_CERTIFIED
+
+**Date**: 2026-02-24T18:55:00Z
+**Verdict**: ✅ STABLE
+**Commit**: 339d9a8 (after test version fix, see below)
+**Scope**: P9 Runtime Certification — WebResearch Engine P7.0 fully STABLE
+
+### Runtime Test Results
+
+```
+running 4394 tests
+test result: ok. 4387 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 18.40s
+```
+
+### Gates
+
+| Gate | Status |
+|------|--------|
+| G_FULL_CARGO_TEST_PASS | ✅ PASS |
+| G_SINGLE_NETWORK_GATE | ✅ PASS |
+| G_UI_NO_NETWORK (P7) | ✅ PASS |
+
+### Pre-existing Fix
+
+- `test_cp_get_system_info`: hardcoded version "27.0.5" → "27.2.0" (1-line, pre-existing mismatch)
+
+### Proof Pack
+
+**Path**: `docs/_evidence/RELEASE_P9_RUNTIME_CERTIFICATION_20260224_185500/`
+**VERDICT.md hash**: `246126f09a3b70a63c46eccaf1c84c2575441ff358ae8b3893cac66648c5a557`
+**cargo_test.log hash**: `68675e8274ba85b4a858dd01759be2cfae14b684b2521253070603f1b2612aaf`
+
+### Promotion
+
+**CANDIDATE STABLE → STABLE** ✅
+
