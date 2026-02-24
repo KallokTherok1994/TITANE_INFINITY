@@ -118,7 +118,7 @@ macro_rules! generate_titane_handlers {
                     commands::get_module_status,
 
                     // AI Chat v15 — Frontend Integration Commands
-                    commands::chat_send_message,
+                    // [RETRAIT v27.0.5-prod] chat_send_message removed (legacy, use conversation_generate)
                     commands::chat_stream_message,
                     commands::chat_set_gemini_key,
                     commands::chat_get_providers_status,
@@ -290,7 +290,7 @@ macro_rules! generate_titane_handlers {
                     // Chat AI
                     mock_commands::chat_generate,
                     mock_commands::upload_and_process_file,
-                    mock_commands::chat_send_message,
+                    // [RETRAIT v27.0.5-prod] chat_send_message removed (legacy, use conversation_generate)
                     mock_commands::chat_get_providers_status,
                     mock_commands::chat_check_providers,
                     mock_commands::chat_create_conversation,

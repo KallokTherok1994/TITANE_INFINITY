@@ -51,14 +51,7 @@ vi.mock('@/lib/security', async importOriginal => {
           },
         });
       }
-      if (cmd === 'chat_send_message') {
-        return Promise.resolve({
-          content: `Mock response: ${args?.prompt || 'test'}`,
-          model: 'mock-gpt4',
-          tokens_used: 42,
-          finish_reason: 'stop',
-        });
-      }
+      // [RETRAIT v27.0.5-prod] chat_send_message fallback removed (legacy)
       return Promise.resolve({ success: true });
     }),
   };

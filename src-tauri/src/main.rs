@@ -782,33 +782,11 @@ fn main() {
                         streaming: false,
                         images: None,
                         system_prompt: Some("Réponds uniquement: OK".to_string()),
-                    };
+                    };  // request variable is now unused; left for reference (legacy chat_send_message removed)
 
-                    match overdrive::chat_orchestrator::chat_send_message(
-                        request,
-                        app_handle.state::<overdrive::chat_orchestrator::ChatOrchestratorState>(),
-                    )
-                    .await
-                    {
-                        Ok(response) => {
-                            let content_preview = response
-                                .message
-                                .content
-                                .chars()
-                                .take(120)
-                                .collect::<String>();
-
-                            println!(
-                                "[SMOKE-RUNTIME-CHAT] chat_send_message ok provider={} latency_ms={} preview={}",
-                                response.message.provider,
-                                response.latency_ms,
-                                content_preview
-                            );
-                        }
-                        Err(err) => {
-                            eprintln!("[SMOKE-RUNTIME-CHAT] chat_send_message error: {err}");
-                        }
-                    }
+                    // [RETRAIT v27.0.5-prod] chat_send_message smoke test disabled (legacy)
+                    // TODO: Migrate to conversation_generate if smoke testing needed
+                    println!("[SMOKE-RUNTIME-CHAT] chat_send_message test removed (legacy, use conversation_generate)");
                 });
             }
 
@@ -933,7 +911,7 @@ fn main() {
             conversation_engine::commands::conversation_health_check,
             conversation_engine::commands::conversation_memory_stats,
             // Chat Orchestrator Commands (CHAT PIPELINE v21 + R04 Memory Integration)
-            overdrive::chat_orchestrator::chat_send_message,
+            // [RETRAIT v27.0.5-prod] chat_send_message removed (legacy, use conversation_generate)
             overdrive::chat_orchestrator::chat_stream_message,
             overdrive::chat_orchestrator::chat_get_providers_status,
             overdrive::chat_orchestrator::chat_check_providers,

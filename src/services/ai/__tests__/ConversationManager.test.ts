@@ -39,15 +39,7 @@ vi.mock('@/lib/security', () => ({
       });
     }
 
-    // AI/Chat commands
-    if (cmd === 'chat_send_message') {
-      return Promise.resolve({
-        content: `Mock response to: ${args?.prompt || args?.message || 'unknown'}`,
-        model: 'mock-model',
-        tokens_used: 42,
-        finish_reason: 'stop',
-      });
-    }
+    // [RETRAIT v27.0.5-prod] chat_send_message fallback removed from mock (legacy)
 
     // Memory commands
     if (cmd === 'memory_store_conversation') {
