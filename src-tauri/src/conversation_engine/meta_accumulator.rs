@@ -137,18 +137,25 @@ pub fn build_offline_meta(reason_code: ReasonCode, policy: &str) -> ProviderDeci
     )
 }
 
-pub fn build_timeout_meta() -> ProviderDecisionMeta {
-    let provider_used = "offline".to_string();
-    let provider_class = ProviderClass::Local;
-    let mode = Mode::Offline;
+pub fn build_timeout_meta(network_available: bool) -> ProviderDecisionMeta {
+    // NO_LYING_FALLBACK: If network is available, do NOT claim offline mode
+    // Use Remote mode with Timeout reason to indicate degraded service attempt
+    let (provider_used, provider_class, mode, network_used) = if network_available {
+        // Network exists but provider timed out: use Remote mode to signal degraded state
+        ("timeout-degraded".to_string(), ProviderClass::Remote, Mode::Remote, true)
+    } else {
+        // No network: true offline fallback is justified
+        ("offline".to_string(), ProviderClass::Local, Mode::Offline, false)
+    };
+    
     let reason_code = ReasonCode::Timeout;
     let attempts = vec![build_attempt(
         provider_used.clone(),
         provider_class.clone(),
         0,
-        "timeout",
+        if network_available { "timeout" } else { "timeout_no_network" },
         reason_code.clone(),
-        false,
+        network_used,
     )];
 
     build_decision_meta(
@@ -159,7 +166,7 @@ pub fn build_timeout_meta() -> ProviderDecisionMeta {
         0,
         "TIMEOUT".to_string(),
         attempts,
-        false,
+        network_used,
         false,
     )
 }
