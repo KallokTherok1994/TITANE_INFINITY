@@ -236,10 +236,10 @@ while IFS= read -r line; do
   
   if [[ $ARTIFACT_MTIME -ge $BUILD_START_TS ]]; then
     echo "✅ FRESH: $ARTIFACT_NAME (mtime $ARTIFACT_MTIME >= build $BUILD_START_TS)" >> "$REPORT_DIR/D_ARTEFACTS_MTIMES.txt"
-    ((FRESH_COUNT++))
+    FRESH_COUNT=$((FRESH_COUNT + 1))
   else
     echo "❌ STALE: $ARTIFACT_NAME (mtime $ARTIFACT_MTIME < build $BUILD_START_TS)" >> "$REPORT_DIR/D_ARTEFACTS_MTIMES.txt"
-    ((STALE_COUNT++))
+    STALE_COUNT=$((STALE_COUNT + 1))
   fi
 done < "$ARTIFACTS_LIST"
 
