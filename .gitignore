@@ -174,3 +174,7 @@ memory/memory_core_state.json
 deployment/latest/release/
 deployment/latest/certification/master_runs/
 /-
+
+# P1: WebResearch Engine sandbox — generated evidence reports (not committed)
+data/research/evidence/*.txt
+data/research/evidence/*.json
