@@ -55,6 +55,8 @@ impl std::fmt::Display for IndexError {
 pub struct IndexHit {
     pub url: String,
     pub title: String,
+    /// Full stored body (capped at 1MB at write time) — used for passage retrieval
+    pub body: String,
     pub snippet: String,
     pub text_hash: String,
     pub score: f32,
@@ -235,6 +237,7 @@ impl IndexService {
                 hits.push(IndexHit {
                     url,
                     title,
+                    body,
                     snippet,
                     text_hash,
                     score,
