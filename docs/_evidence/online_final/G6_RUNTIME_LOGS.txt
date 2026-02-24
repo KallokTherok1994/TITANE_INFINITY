@@ -1,0 +1,34 @@
+# G6 RUNTIME LOGS — ONLINE-FINAL
+
+## Status: BLOCKED
+
+### Reason
+L'environnement sandbox Copilot Agent ne permet pas de lancer le binaire Tauri
+(`tauri build` / `pnpm dev:tauri`) — pas de display server, pas de GPU, accès réseau restreint.
+
+### Stop-the-line decision
+Conformément à la règle 0 (LOIS ABSOLUES) :
+> "Stop immédiat si une preuve demandée est manquante"
+> → Marquer **BLOCKED** + cause + alternative disponible
+
+### Alternative prouvée (mode dev Vitest)
+
+Les invariants de mode/network_used/provider_used sont validés par les tests unitaires (G5, 29/29 PASS x3).
+La logique de routing backend est validée par les tests Rust (`pnpm test:rust` — disponible).
+
+### Expected logs (si runtime disponible)
+
+#### Avec VITE_ENABLE_EXTERNAL_AI=1 et réseau disponible:
+```
+[Ω:CMD] 📨 Request | req_id=req_abc | msg_len=10 | conv_id=xxx | mode=Default
+[AI Router v20.1] Trying Gemini API (secondary)
+[AI Router v20.1] ✓ Gemini success: 85 tokens, 987ms
+provider_used=gemini mode=REMOTE network_used=true latency_ms=987
+```
+
+#### Sans VITE_ENABLE_EXTERNAL_AI (défaut production):
+```
+[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider=Some("gemini") | VITE_ENABLE_EXTERNAL_AI not set
+→ { mode: "LOCAL", reason_code: "POLICY_BLOCKED", network_used: false }
+```
+*(Note: mode était incorrectement "REMOTE" avant ce patch — maintenant corrigé)*
