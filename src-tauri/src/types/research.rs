@@ -1,23 +1,23 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
-//   Contrats IPC stables pour WebResearch Engine (P2.0 QUALIFIED)
+//   Contrats IPC stables pour WebResearch Engine (P3.0 QUALIFIED++)
 //   Tauri-only • Zéro réseau UI • Gouvernance stricte
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// Contract version — P2.0 adds NetworkEvent, target_url, budget fields
-pub const RESEARCH_CONTRACT_VERSION: &str = "P2.0";
+/// Contract version — P3.0 adds CacheEvent, RobotsEvent, RateLimitEvent
+pub const RESEARCH_CONTRACT_VERSION: &str = "P3.0";
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
 // ─────────────────────────────────────────────────────────────────
 
 /// Research execution mode.
-/// - Offline: no network, no index (OFFLINE_HARDSTOP_ENFORCED)
-/// - LocalIndex: local semantic index (stub in P2)
-/// - WebLive: live fetch via governed NetworkPolicyGuard + FetchService
+/// - Offline: no network (OFFLINE_HARDSTOP_ENFORCED)
+/// - LocalIndex: local semantic index (stub in P3)
+/// - WebLive: governed fetch via NetworkPolicyGuard + FetchService
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ResearchMode {
@@ -52,8 +52,12 @@ pub struct ResearchOptions {
     pub max_requests: Option<u32>,
     pub respect_robots: Option<bool>,
     pub rate_limit_profile: Option<String>,
-    /// Optional target URL for WEB_LIVE P2 controlled single fetch
+    /// Optional target URL for WEB_LIVE controlled single fetch
     pub target_url: Option<String>,
+    /// Allow writing cache to disk (default true in WEB_LIVE)
+    pub cache_enabled: Option<bool>,
+    /// Path prefix for sandbox (default: data/research)
+    pub sandbox_root: Option<String>,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -68,8 +72,77 @@ pub struct NetworkEvent {
     /// HTTP status code (0 = error/timeout)
     pub status: u16,
     pub bytes: u64,
+    /// Network round-trip time in milliseconds.
+    /// 0 when cache_hit = true (served from disk, no network latency).
     pub duration_ms: u64,
     pub cache_hit: bool,
+}
+
+// ─────────────────────────────────────────────────────────────────
+// CACHE EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum CacheEventKind {
+    Hit,
+    Miss,
+    Write,
+    Skip, // dedup: blob already exists
+}
+
+/// Cache event emitted by CacheService
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct CacheEvent {
+    pub kind: CacheEventKind,
+    pub url: String,
+    pub blob_hash: Option<String>,
+    pub bytes: Option<u64>,
+    pub ts: u64, // unix ms
+}
+
+// ─────────────────────────────────────────────────────────────────
+// ROBOTS EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum RobotsStatus {
+    Allow,
+    Disallow,
+    /// robots.txt fetch error — policy fallback applied
+    ErrorFallbackAllow,
+    ErrorFallbackBlock,
+}
+
+/// Robots check event emitted by RobotsService
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RobotsEvent {
+    pub domain: String,
+    pub status: RobotsStatus,
+    pub fetched: bool,
+    pub cached: bool,
+}
+
+// ─────────────────────────────────────────────────────────────────
+// RATE LIMIT EVENT (P3)
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum RateLimitAction {
+    Allow,
+    Delay,
+    Block,
+}
+
+/// Rate-limit decision event emitted by RateLimitService
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct RateLimitEvent {
+    pub domain: String,
+    pub action: RateLimitAction,
+    pub delay_ms: Option<u64>,
+    pub reason: Option<String>,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -111,7 +184,7 @@ pub struct ResearchAnswer {
     pub trace_id: String,
 }
 
-/// Execution trace for observability (P2: typed network_events)
+/// Execution trace for observability (P3: typed P3 events added)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResearchTrace {
     pub trace_id: String,
@@ -120,7 +193,12 @@ pub struct ResearchTrace {
     pub budgets: Option<HashMap<String, f64>>,
     /// Structured network events from FetchService (P2+)
     pub network_events: Option<Vec<NetworkEvent>>,
-    pub cache_events: Option<Vec<String>>,
+    /// Cache events from CacheService (P3+)
+    pub cache_events: Option<Vec<CacheEvent>>,
+    /// Robots events from RobotsService (P3+)
+    pub robots_events: Option<Vec<RobotsEvent>>,
+    /// Rate-limit events from RateLimitService (P3+)
+    pub rate_limit_events: Option<Vec<RateLimitEvent>>,
     pub index_events: Option<Vec<String>>,
     pub errors: Vec<String>,
 }
