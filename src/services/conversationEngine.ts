@@ -13,7 +13,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
-import type { OnlineDecision, ProviderDecisionMeta } from '@/types/providerMeta';
+import type { OnlineDecision, ProviderDecisionMeta, Mode, ReasonCode } from '@/types/providerMeta';
 import { FEATURE_FLAGS, envFlag } from '@/config/featureFlags';
 
 function runtimeFlag(key: string): boolean {
@@ -265,6 +265,57 @@ export async function processMessage(
     allowed: externalAllowed,
     requested_provider: 'auto',
   });
+
+  // 🔒 v27.1: ENFORCE external AI gate (ONLINE-ALL-TIME fix)
+  // If external AI is blocked, return immediate response (do NOT wait 20s for timeout)
+  if (!externalAllowed) {
+    console.warn(
+      '[CONV_SEND] ⚠️ External AI gate BLOCKED: returning immediate REMOTE_BLOCKED response (no 20s wait)',
+    );
+    const response: ConversationResponse = {
+      assistant_message: 'Service en ligne, mais accès aux providers externes bloqué par policy/configuration.',
+      conversation_id: conversationId,
+      message_id: `msg_${Date.now()}_blocked`,
+      detected_intention: 'Question',
+      detected_emotion: { valence: 0, intensity: 0, energy: 0 },
+      cognitive_tags: ['online', 'policy-blocked', 'no-external-ai'],
+      cognitive_summary: 'Service en ligne mais provider externe non autorisé.',
+      metadata: normalizeConversationMetadata({
+        provider_used: 'local_only',
+        latency_ms: 50,
+        policy_blocked: true,
+      }),
+      meta: {
+        provider_used: 'local_only',
+        provider_class: 'local' as const,
+        mode: 'REMOTE' as Mode,
+        reason_code: 'POLICY_BLOCKED' as ReasonCode,
+        latency_ms_total: 50,
+        timeout_ms: 20000,
+        retries: 0,
+        attempts: [],
+        network_used: false, // No actual network call made
+        cache_hit: false,
+        policy: 'EXTERNAL_AI_DISABLED',
+      },
+      decision: {
+        online: true,
+        reasonCode: 'ONLINE_OK',
+        providerSelected: 'local_only',
+        attempts: [],
+        networkUsed: false,
+        mode: 'REMOTE' as Mode,
+      },
+    };
+    console.log('[CONV_RECV] Immediate response (gated)', {
+      mode: response.meta?.mode,
+      reason_code: response.meta?.reason_code,
+      provider_used: response.meta?.provider_used,
+      network_used: response.meta?.network_used,
+      latency_ms: response.meta?.latency_ms_total,
+    });
+    return response;
+  }
 
   const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;

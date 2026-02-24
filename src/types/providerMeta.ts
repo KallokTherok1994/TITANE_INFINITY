@@ -6,6 +6,7 @@ export type ReasonCode =
   | 'OK'
   | 'POLICY_LOCAL_ONLY'
   | 'POLICY_REMOTE_ALLOWED'
+  | 'POLICY_BLOCKED'
   | 'ALLOWLIST_DENIED'
   | 'PROVIDER_DOWN'
   | 'TIMEOUT'

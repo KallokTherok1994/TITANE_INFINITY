@@ -156,6 +156,7 @@ impl ConversationEngineState {
     /// Traiter un message utilisateur (point d'entrée principal)
     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
     /// v27.0.3: Added 20s timeout guarantee — Always Respond contract
+    /// v27.0.4: NO_LYING_FALLBACK — check network_available before deciding OFFLINE
     pub async fn process_message(
         &self,
         request: ConversationRequest,
@@ -169,8 +170,16 @@ impl ConversationEngineState {
         match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
             Ok(result) => result,
             Err(_timeout_err) => {
-                log::error!("[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 20s, returning offline response");
-                self.create_offline_response().await
+                // v27.0.4: Check router status before deciding OFFLINE mode
+                // NO_LYING_FALLBACK: Only claim OFFLINE if router reports no connectivity
+                let router_status = self.ai_router.read().await.get_status().await;
+                let network_available = matches!(router_status, crate::ai::router::AIRouterStatus::Online | crate::ai::router::AIRouterStatus::Degraded);
+                log::error!(
+                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 20s | router_status={:?} | mode={}",
+                    router_status,
+                    if network_available { "DEGRADED" } else { "OFFLINE" }
+                );
+                self.create_offline_response(network_available).await
             }
         }
     }
@@ -230,31 +239,51 @@ impl ConversationEngineState {
         }
     }
 
-    /// Create offline response when timeout triggered (Always Respond guarantee)
-    async fn create_offline_response(&self) -> Result<ConversationResponse, ConversationEngineError> {
-        log::info!("[CONV-ENGINE] 🟢 Creating autonomous offline response (guaranteed <1s)");
+    /// Create offline/degraded response when timeout triggered (Always Respond guarantee)
+    /// v27.0.4: NO_LYING_FALLBACK — only use OFFLINE if network is truly unavailable
+    async fn create_offline_response(&self, network_available: bool) -> Result<ConversationResponse, ConversationEngineError> {
+        let mode_label = if network_available { "DÉGRADÉ" } else { "hors ligne" };
+        log::info!(
+            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={}",
+            mode_label,
+            network_available
+        );
         
         let now = std::time::SystemTime::now()
             .duration_since(std::time::UNIX_EPOCH)
             .map(|d| d.as_millis() as u64)
             .unwrap_or(0);
         
+        let (message, tags, summary) = if network_available {
+            (
+                "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.".to_string(),
+                vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
+                "Réponse en mode dégradé suite à un délai provider dépassé (réseau disponible).".to_string(),
+            )
+        } else {
+            (
+                "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
+                vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
+                "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
+            )
+        };
+        
         Ok(ConversationResponse {
-            assistant_message: "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
+            assistant_message: message,
             conversation_id: uuid::Uuid::new_v4().to_string(),
             message_id: uuid::Uuid::new_v4().to_string(),
             detected_intention: Intention::Question,
             detected_emotion: EmotionState::default(),
-            cognitive_tags: vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
-            cognitive_summary: "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
+            cognitive_tags: tags,
+            cognitive_summary: summary,
             metadata: ConversationMetadata {
                 timestamp: now,
-                provider_used: "offline".to_string(),
+                provider_used: if network_available { "timeout-degraded" } else { "offline" }.to_string(),
                 latency_ms: 40,
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
-                provider_meta: Some(build_timeout_meta()),
+                provider_meta: Some(build_timeout_meta(network_available)),
             },
         })
     }
