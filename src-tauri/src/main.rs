@@ -313,6 +313,7 @@ mod config;
 // ═══════════════════════════════════════════════════════════════
 mod memory;
 mod memory_compactor;
+mod services; // P2: WebResearch network gate
 mod types;
 mod utils;
 

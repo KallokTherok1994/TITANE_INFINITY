@@ -1,23 +1,23 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
-//   Contrats IPC stables pour WebResearch Engine (P1.0 EXPERIMENTAL)
-//   Tauri-only • Zéro réseau • Gouvernance stricte
+//   Contrats IPC stables pour WebResearch Engine (P2.0 QUALIFIED)
+//   Tauri-only • Zéro réseau UI • Gouvernance stricte
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// P1.0 contract version — increment on breaking change
-pub const RESEARCH_CONTRACT_VERSION: &str = "P1.0";
+/// Contract version — P2.0 adds NetworkEvent, target_url, budget fields
+pub const RESEARCH_CONTRACT_VERSION: &str = "P2.0";
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
 // ─────────────────────────────────────────────────────────────────
 
 /// Research execution mode.
-/// - Offline: no network, no index (stub answer)
-/// - LocalIndex: local semantic index (stub in P1)
-/// - WebLive: live web crawl (BLOCKED in P1 — network disabled)
+/// - Offline: no network, no index (OFFLINE_HARDSTOP_ENFORCED)
+/// - LocalIndex: local semantic index (stub in P2)
+/// - WebLive: live fetch via governed NetworkPolicyGuard + FetchService
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum ResearchMode {
@@ -52,6 +52,24 @@ pub struct ResearchOptions {
     pub max_requests: Option<u32>,
     pub respect_robots: Option<bool>,
     pub rate_limit_profile: Option<String>,
+    /// Optional target URL for WEB_LIVE P2 controlled single fetch
+    pub target_url: Option<String>,
+}
+
+// ─────────────────────────────────────────────────────────────────
+// NETWORK EVENT (P2)
+// ─────────────────────────────────────────────────────────────────
+
+/// A single structured network event recorded by FetchService
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NetworkEvent {
+    pub domain: String,
+    pub url: String,
+    /// HTTP status code (0 = error/timeout)
+    pub status: u16,
+    pub bytes: u64,
+    pub duration_ms: u64,
+    pub cache_hit: bool,
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -93,14 +111,15 @@ pub struct ResearchAnswer {
     pub trace_id: String,
 }
 
-/// Execution trace for observability
+/// Execution trace for observability (P2: typed network_events)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResearchTrace {
     pub trace_id: String,
     pub markers: Vec<String>,
     pub timings: Option<HashMap<String, f64>>,
     pub budgets: Option<HashMap<String, f64>>,
-    pub network_events: Option<Vec<String>>,
+    /// Structured network events from FetchService (P2+)
+    pub network_events: Option<Vec<NetworkEvent>>,
     pub cache_events: Option<Vec<String>>,
     pub index_events: Option<Vec<String>>,
     pub errors: Vec<String>,

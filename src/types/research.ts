@@ -6,13 +6,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
- *   Contrats IPC stables pour WebResearch Engine (P1.0 EXPERIMENTAL)
+ *   Contrats IPC stables pour WebResearch Engine (P2.0 QUALIFIED)
  *   Tauri-only • Zéro réseau UI • Gouvernance stricte
  * ═══════════════════════════════════════════════════════════════════
  */
 
-/** P1.0 contract version — increment on breaking change */
-export const RESEARCH_CONTRACT_VERSION = 'P1.0' as const;
+/** P2.0 contract version — adds NetworkEvent, target_url, budget fields */
+export const RESEARCH_CONTRACT_VERSION = 'P2.0' as const;
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -20,9 +20,9 @@ export const RESEARCH_CONTRACT_VERSION = 'P1.0' as const;
 
 /**
  * Research execution mode.
- * - OFFLINE: no network, no index (stub answer)
- * - LOCAL_INDEX: local semantic index (stub in P1)
- * - WEB_LIVE: live web crawl (BLOCKED in P1 — network disabled)
+ * - OFFLINE: no network (OFFLINE_HARDSTOP_ENFORCED)
+ * - LOCAL_INDEX: local semantic index (stub in P2)
+ * - WEB_LIVE: governed fetch via NetworkPolicyGuard + FetchService
  */
 export type ResearchMode = 'OFFLINE' | 'LOCAL_INDEX' | 'WEB_LIVE';
 
@@ -50,6 +50,23 @@ export interface ResearchOptions {
   max_requests?: number | null;
   respect_robots?: boolean | null;
   rate_limit_profile?: string | null;
+  /** Optional target URL for WEB_LIVE P2 controlled single fetch */
+  target_url?: string | null;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// NETWORK EVENT (P2)
+// ─────────────────────────────────────────────────────────────────
+
+/** A single structured network event recorded by FetchService */
+export interface NetworkEvent {
+  domain: string;
+  url: string;
+  /** HTTP status code (0 = error/timeout) */
+  status: number;
+  bytes: number;
+  duration_ms: number;
+  cache_hit: boolean;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -88,13 +105,14 @@ export interface ResearchAnswer {
   trace_id: string;
 }
 
-/** Execution trace for observability */
+/** Execution trace for observability (P2: typed network_events) */
 export interface ResearchTrace {
   trace_id: string;
   markers: string[];
   timings?: Record<string, number> | null;
   budgets?: Record<string, number> | null;
-  network_events?: string[] | null;
+  /** Structured network events from FetchService (P2+) */
+  network_events?: NetworkEvent[] | null;
   cache_events?: string[] | null;
   index_events?: string[] | null;
   errors: string[];
