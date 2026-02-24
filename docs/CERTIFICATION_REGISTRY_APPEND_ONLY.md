@@ -1066,3 +1066,18 @@ Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
 ProofPack: docs/_evidence/P10_P13_FUSION_FINAL/
 Status: PASS_WITH_BLOCKED
 Date: 2026-02-24T19:46:00Z
+
+---
+
+## EVENT: FINAL_SEAL_STABLE
+
+| Field            | Value                                              |
+|------------------|----------------------------------------------------|
+| timestamp        | 2026-02-24T20:30:53Z                               |
+| commit           | f0758313547fc009cc611595d0fdeb1f2228d27d           |
+| proof_pack       | docs/_evidence/FINAL_SEAL_20260224_195849/         |
+| manifest_sha256  | 5cfbeec17bca7b10fcb821c849cf9d07225ba5f776f0b375d4ac792dc88450b9 |
+| verdict          | PASS_WITH_BLOCKED (P10 BLOCKED, P11.1 BLOCKED)     |
+| test_result      | 4387 pass / 0 fail / 7 ignored (x3 runs)           |
+| tsc_result       | PASS                                               |
+| sealed_by        | Copilot TITANE∞ FINAL_SEAL_v1                      |
