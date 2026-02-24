@@ -1,10 +1,11 @@
 // ═══════════════════════════════════════════════════════════════
-//   TITANE∞ — WEB RESEARCH COMMAND (P3.0 QUALIFIED++)
+//   TITANE∞ — WEB RESEARCH COMMAND (P4.0 QUALIFIED+++)
 //   Commande Tauri unique : web_research
-//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch
+//   Ring 3 orchestrator — Policy → Robots → RateLimit → Cache → Fetch → Extract
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::cache_service::CacheService;
+use crate::services::extract_service::ExtractService;
 use crate::services::fetch_service::{FetchError, FetchService};
 use crate::services::network_policy::apply_policy;
 use crate::services::network_policy::extract_domain;
@@ -13,16 +14,16 @@ use crate::services::rate_limit_service::{
 };
 use crate::services::robots_service::{RobotsErrorPolicy, RobotsService};
 use crate::types::research::{
-    CacheEvent, CacheEventKind, NetworkEvent, RateLimitAction, RateLimitEvent, ResearchAnswer,
-    ResearchMode, ResearchOptions, ResearchQuery, ResearchReport, ResearchTrace, RobotsEvent,
-    RobotsStatus, RESEARCH_CONTRACT_VERSION,
+    CacheEvent, CacheEventKind, ExtractEvent, ExtractQuality, ExtractStatus, NetworkEvent,
+    RateLimitAction, RateLimitEvent, ResearchAnswer, ResearchMode, ResearchOptions, ResearchQuery,
+    ResearchReport, ResearchTrace, RobotsEvent, RobotsStatus, RESEARCH_CONTRACT_VERSION,
 };
 use std::collections::HashMap;
 use std::path::PathBuf;
 use uuid::Uuid;
 
 // ─────────────────────────────────────────────────────────────────
-// MARKERS (canonical — P2 preserved, P3 extended)
+// MARKERS (canonical — P2/P3 preserved, P4 extended)
 // ─────────────────────────────────────────────────────────────────
 
 const M_START: &str = "RESEARCH_START";
@@ -45,11 +46,15 @@ const M_CACHE_WRITE_SKIP: &str = "CACHE_WRITE_SKIPPED";
 const M_DISCOVERY_SKIP: &str = "DISCOVERY_SKIPPED_P3";
 const M_FETCH_DONE: &str = "FETCH_DONE";
 const M_FETCH_SKIP: &str = "FETCH_SKIPPED_P3";
-const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P3";
-const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P3";
-const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P3";
-const M_RAG_SKIP: &str = "RAG_SKIPPED_P3";
-const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P3";
+const M_EXTRACT_START: &str = "EXTRACT_START";
+const M_EXTRACT_OK: &str = "EXTRACT_OK";
+const M_EXTRACT_FAIL: &str = "EXTRACT_FAIL";
+const M_TEXT_HASH_OK: &str = "TEXT_HASH_OK";
+const M_EXTRACT_SKIP: &str = "EXTRACT_SKIPPED_P4";
+const M_INDEX_SKIP: &str = "INDEX_SKIPPED_P4";
+const M_RETRIEVE_SKIP: &str = "RETRIEVE_SKIPPED_P4";
+const M_RAG_SKIP: &str = "RAG_SKIPPED_P4";
+const M_CITATIONS_EMPTY: &str = "CITATIONS_EMPTY_OK_P4";
 const M_END: &str = "RESEARCH_END";
 
 // Default sandbox root (relative to working dir; Tauri would use app_data_dir in production)
@@ -68,6 +73,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     let mut cache_events: Vec<CacheEvent> = Vec::new();
     let mut robots_events: Vec<RobotsEvent> = Vec::new();
     let mut rate_limit_events: Vec<RateLimitEvent> = Vec::new();
+    let mut extract_events: Vec<ExtractEvent> = Vec::new();
     let mut budgets: Option<HashMap<String, f64>> = None;
 
     // M1
@@ -93,6 +99,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 None,
                 None,
                 None,
+                None,
                 budgets,
                 query,
                 false,
@@ -100,7 +107,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             );
         }
 
-        limitations.push("No index in P3".to_string());
+        limitations.push("No index in P4".to_string());
         push_skip_markers(&mut markers);
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
@@ -109,6 +116,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             markers,
             errors,
             limitations,
+            None,
             None,
             None,
             None,
@@ -123,7 +131,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     // ── LOCAL_INDEX stub ──────────────────────────────────────────
     if options.mode == ResearchMode::LocalIndex {
         markers.push(M_POLICY_APPLIED.to_string());
-        limitations.push("Index not implemented in P3".to_string());
+        limitations.push("Index not implemented in P4".to_string());
         push_skip_markers(&mut markers);
         markers.push(M_END.to_string());
         markers.push("VERDICT_PASS".to_string());
@@ -132,6 +140,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             markers,
             errors,
             limitations,
+            None,
             None,
             None,
             None,
@@ -162,6 +171,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 markers,
                 errors,
                 limitations,
+                None,
                 None,
                 None,
                 None,
@@ -203,7 +213,6 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             let robots_svc = RobotsService::new(policy.timeout_ms, RobotsErrorPolicy::AllowOnError);
             let (allowed, robots_event) = robots_svc.is_allowed(target_url, cache_svc).await;
 
-            // Push robots marker
             let robots_marker = match &robots_event.status {
                 RobotsStatus::Allow => M_ROBOTS_OK,
                 RobotsStatus::Disallow => M_ROBOTS_BLOCKED,
@@ -227,6 +236,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     None,
                     Some(robots_events),
                     None,
+                    None,
                     budgets,
                     query,
                     true,
@@ -234,10 +244,10 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                 );
             }
         } else {
-            markers.push(M_ROBOTS_OK.to_string()); // no cache → skip robots (no CacheService)
+            markers.push(M_ROBOTS_OK.to_string());
         }
     } else {
-        markers.push(M_ROBOTS_OK.to_string()); // robots disabled by policy
+        markers.push(M_ROBOTS_OK.to_string());
     }
 
     // ── WEB_LIVE — Rate limit ─────────────────────────────────────
@@ -279,6 +289,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             None,
             Some(robots_events),
             Some(rate_limit_events),
+            None,
             budgets,
             query,
             true,
@@ -286,11 +297,13 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         );
     }
 
-    // Apply delay if needed (Delay action)
     apply_rate_limit_delay(&rl_event).await;
     rate_limit_events.push(rl_event);
 
     // ── WEB_LIVE — Cache lookup ───────────────────────────────────
+    // Collect bytes for extraction (cache HIT → read blob; MISS → fetch)
+    let mut html_bytes_for_extract: Option<Vec<u8>> = None;
+
     let cache_hit = if let Some(cache_svc) = &cache_svc_result {
         match cache_svc.lookup(target_url) {
             Ok(Some(entry)) => {
@@ -302,7 +315,6 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     bytes: Some(entry.bytes),
                     ts: entry.fetched_at,
                 });
-                // Build a synthetic NetworkEvent for the cache hit
                 network_events.push(NetworkEvent {
                     domain: domain.clone(),
                     url: target_url.to_string(),
@@ -311,6 +323,14 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     duration_ms: 0,
                     cache_hit: true,
                 });
+                // Read blob for extraction
+                let blob_path = sandbox_root
+                    .join("cache")
+                    .join("blobs")
+                    .join(format!("{}.bin", entry.blob_hash));
+                if let Ok(data) = std::fs::read(&blob_path) {
+                    html_bytes_for_extract = Some(data);
+                }
                 true
             }
             _ => {
@@ -332,12 +352,14 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
             Ok(result) => {
                 let status = result.event.status;
                 let bytes = result.event.bytes;
-                // Rate limit tracking
                 if status == 429 || status == 503 {
                     rate_svc.record_error_response(&domain, status);
                 } else {
                     rate_svc.record_success(&domain);
                 }
+
+                // Stash body for extraction before moving into cache
+                html_bytes_for_extract = Some(result.body.clone());
 
                 network_events.push(result.event);
                 markers.push(format!(
@@ -383,28 +405,7 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     FetchError::Timeout(_) => "FETCH_TIMEOUT",
                 };
                 markers.push(marker.to_string());
-
-                let opt_ne = if network_events.is_empty() {
-                    None
-                } else {
-                    Some(network_events)
-                };
-                let opt_ce = if cache_events.is_empty() {
-                    None
-                } else {
-                    Some(cache_events)
-                };
-                let opt_re = if robots_events.is_empty() {
-                    None
-                } else {
-                    Some(robots_events)
-                };
-                let opt_rl = if rate_limit_events.is_empty() {
-                    None
-                } else {
-                    Some(rate_limit_events)
-                };
-                push_extract_markers(&mut markers);
+                push_extract_skip_markers(&mut markers);
                 markers.push(M_END.to_string());
                 markers.push("VERDICT_FAIL".to_string());
                 return make_report(
@@ -412,10 +413,11 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
                     markers,
                     errors,
                     limitations,
-                    opt_ne,
-                    opt_ce,
-                    opt_re,
-                    opt_rl,
+                    opt_vec(network_events),
+                    opt_vec(cache_events),
+                    opt_vec(robots_events),
+                    opt_vec(rate_limit_events),
+                    None,
                     budgets,
                     query,
                     false,
@@ -425,40 +427,93 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
         }
     }
 
-    push_extract_markers(&mut markers);
+    // ── WEB_LIVE — Extract (P4) ────────────────────────────────────
+    markers.push(M_EXTRACT_START.to_string());
+
+    let extract_svc = ExtractService::new();
+    if let Some(ref html_bytes) = html_bytes_for_extract {
+        match extract_svc.extract(html_bytes) {
+            Ok(result) => {
+                markers.push(M_EXTRACT_OK.to_string());
+                markers.push(format!(
+                    "{}:{}",
+                    M_TEXT_HASH_OK,
+                    result.text_hash.get(..8).unwrap_or(&result.text_hash)
+                ));
+
+                // Update cache meta with text_hash (best-effort)
+                if let Some(cache_svc) = &cache_svc_result {
+                    let _ = cache_svc.update_extract_meta(
+                        target_url,
+                        &result.text_hash,
+                        result.text_len,
+                    );
+                }
+
+                extract_events.push(ExtractEvent {
+                    url: target_url.to_string(),
+                    title: result.title.clone(),
+                    text_bytes: result.text_len,
+                    text_hash: Some(result.text_hash.clone()),
+                    quality: ExtractQuality {
+                        text_len: result.text_len,
+                        lines: result.lines,
+                    },
+                    status: ExtractStatus::Ok,
+                    error: None,
+                });
+            }
+            Err(e) => {
+                let err_msg = e.to_string();
+                markers.push(M_EXTRACT_FAIL.to_string());
+                errors.push(format!("Extraction failed: {}", err_msg));
+                limitations.push("Extraction failed: insufficient evidence".to_string());
+
+                extract_events.push(ExtractEvent {
+                    url: target_url.to_string(),
+                    title: None,
+                    text_bytes: 0,
+                    text_hash: None,
+                    quality: ExtractQuality {
+                        text_len: 0,
+                        lines: 0,
+                    },
+                    status: ExtractStatus::Fail,
+                    error: Some(err_msg),
+                });
+            }
+        }
+    } else {
+        markers.push(M_EXTRACT_FAIL.to_string());
+        limitations.push("No HTML bytes available for extraction".to_string());
+        extract_events.push(ExtractEvent {
+            url: target_url.to_string(),
+            title: None,
+            text_bytes: 0,
+            text_hash: None,
+            quality: ExtractQuality {
+                text_len: 0,
+                lines: 0,
+            },
+            status: ExtractStatus::Fail,
+            error: Some("no bytes".to_string()),
+        });
+    }
+
+    push_index_skip_markers(&mut markers);
     markers.push(M_END.to_string());
     markers.push("VERDICT_PASS".to_string());
-
-    let opt_ne = if network_events.is_empty() {
-        None
-    } else {
-        Some(network_events)
-    };
-    let opt_ce = if cache_events.is_empty() {
-        None
-    } else {
-        Some(cache_events)
-    };
-    let opt_re = if robots_events.is_empty() {
-        None
-    } else {
-        Some(robots_events)
-    };
-    let opt_rl = if rate_limit_events.is_empty() {
-        None
-    } else {
-        Some(rate_limit_events)
-    };
 
     make_report(
         trace_id,
         markers,
         errors,
         limitations,
-        opt_ne,
-        opt_ce,
-        opt_re,
-        opt_rl,
+        opt_vec(network_events),
+        opt_vec(cache_events),
+        opt_vec(robots_events),
+        opt_vec(rate_limit_events),
+        opt_vec(extract_events),
         budgets,
         query,
         false,
@@ -470,19 +525,31 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
 // HELPERS
 // ─────────────────────────────────────────────────────────────────
 
+fn opt_vec<T>(v: Vec<T>) -> Option<Vec<T>> {
+    if v.is_empty() {
+        None
+    } else {
+        Some(v)
+    }
+}
+
 fn push_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_DISCOVERY_SKIP.to_string());
     markers.push(M_FETCH_SKIP.to_string());
-    push_extract_markers(markers);
+    push_extract_skip_markers(markers);
 }
 
 fn push_fetch_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_FETCH_SKIP.to_string());
-    push_extract_markers(markers);
+    push_extract_skip_markers(markers);
 }
 
-fn push_extract_markers(markers: &mut Vec<String>) {
+fn push_extract_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_EXTRACT_SKIP.to_string());
+    push_index_skip_markers(markers);
+}
+
+fn push_index_skip_markers(markers: &mut Vec<String>) {
     markers.push(M_INDEX_SKIP.to_string());
     markers.push(M_RETRIEVE_SKIP.to_string());
     markers.push(M_RAG_SKIP.to_string());
@@ -499,6 +566,7 @@ fn make_report(
     cache_events: Option<Vec<CacheEvent>>,
     robots_events: Option<Vec<RobotsEvent>>,
     rate_limit_events: Option<Vec<RateLimitEvent>>,
+    extract_events: Option<Vec<ExtractEvent>>,
     budgets: Option<HashMap<String, f64>>,
     query: &ResearchQuery,
     is_blocked: bool,
@@ -516,8 +584,8 @@ fn make_report(
         )
     } else {
         format!(
-            "[P3] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
-             Query: \"{}\". Extraction/Index/RAG not yet implemented.",
+            "[P4] Research completed (contract: {RESEARCH_CONTRACT_VERSION}). \
+             Query: \"{}\". Index/RAG not yet implemented.",
             query.question
         )
     };
@@ -539,6 +607,7 @@ fn make_report(
         cache_events,
         robots_events,
         rate_limit_events,
+        extract_events,
         index_events: None,
         errors,
     };
@@ -550,11 +619,11 @@ fn make_report(
 // TAURI COMMAND
 // ─────────────────────────────────────────────────────────────────
 
-/// Web research command — P3.0 QUALIFIED++.
+/// Web research command — P4.0 QUALIFIED+++.
 ///
 /// OFFLINE: hard-stop, zero network, VERDICT_PASS
 /// LOCAL_INDEX: stub, VERDICT_PASS
-/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write
+/// WEB_LIVE: Policy → Robots → RateLimit → Cache lookup → Fetch → Cache write → Extract
 #[tauri::command]
 pub async fn web_research(
     query: ResearchQuery,
@@ -775,5 +844,102 @@ mod tests {
             report.trace.markers
         );
         assert!(report.trace.markers.iter().any(|m| m == "VERDICT_BLOCKED"));
+    }
+
+    // G_EXTRACT_FROM_CACHED_BYTES: pre-populate cache with HTML, run research → EXTRACT_OK
+    #[tokio::test]
+    async fn g_extract_from_cached_html() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://extract.example.com/page";
+        let html =
+            b"<html><head><title>Extract Test</title></head><body><p>Hello World</p></body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        let q = make_query("extract test");
+        let o = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let report = run_research(&q, &o).await;
+
+        assert!(
+            report.trace.markers.iter().any(|m| m == "EXTRACT_OK"),
+            "Expected EXTRACT_OK, markers: {:?}",
+            report.trace.markers
+        );
+        assert!(
+            report
+                .trace
+                .markers
+                .iter()
+                .any(|m| m.starts_with("TEXT_HASH_OK")),
+            "Expected TEXT_HASH_OK, markers: {:?}",
+            report.trace.markers
+        );
+        assert!(report.trace.extract_events.is_some());
+        let evs = report.trace.extract_events.unwrap();
+        assert!(!evs.is_empty());
+        let ev = &evs[0];
+        assert_eq!(ev.status, crate::types::research::ExtractStatus::Ok);
+        assert!(ev.text_hash.is_some());
+    }
+
+    // G_EXTRACT_DETERMINISTIC_x3 via cache: same HTML → same text_hash
+    #[tokio::test]
+    async fn g_web_live_extract_deterministic_x3() {
+        let sandbox = tmp_sandbox();
+        let cache_svc = CacheService::new(PathBuf::from(&sandbox)).unwrap();
+        let url = "https://determ.example.com/page";
+        let html = b"<html><head><title>Determ</title></head><body><p>Deterministic content</p></body></html>";
+        cache_svc
+            .write(url, url, 200, "text/html", None, None, html)
+            .unwrap();
+
+        let opts = ResearchOptions {
+            mode: ResearchMode::WebLive,
+            target_url: Some(url.to_string()),
+            max_requests: Some(5),
+            max_bytes_total: Some(1024 * 1024),
+            timeout_ms: Some(5_000),
+            cache_enabled: Some(true),
+            respect_robots: Some(false),
+            sandbox_root: Some(sandbox),
+            domain_allowlist: None,
+            domain_denylist: None,
+            max_sources: None,
+            max_pages: None,
+            freshness_days: None,
+            rate_limit_profile: None,
+        };
+        let q = make_query("determ");
+
+        let r1 = run_research(&q, &opts).await;
+        let r2 = run_research(&q, &opts).await;
+        let r3 = run_research(&q, &opts).await;
+
+        fn text_hash(r: &ResearchReport) -> Option<String> {
+            r.trace.extract_events.as_ref()?.first()?.text_hash.clone()
+        }
+        let h1 = text_hash(&r1);
+        let h2 = text_hash(&r2);
+        let h3 = text_hash(&r3);
+        assert!(h1.is_some(), "run1 missing text_hash");
+        assert_eq!(h1, h2, "run1 != run2 hash");
+        assert_eq!(h2, h3, "run2 != run3 hash");
     }
 }

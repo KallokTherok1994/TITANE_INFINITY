@@ -11,8 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-/** P3.0 contract version — adds CacheEvent, RobotsEvent, RateLimitEvent */
-export const RESEARCH_CONTRACT_VERSION = 'P3.0' as const;
+/** P4.0 contract version — adds ExtractEvent, extract_events in ResearchTrace */
+export const RESEARCH_CONTRACT_VERSION = 'P4.0' as const;
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -144,6 +144,29 @@ export interface Citation {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// EXTRACT EVENT (P4)
+// ─────────────────────────────────────────────────────────────────
+
+export type ExtractStatus = 'OK' | 'FAIL';
+
+/** Quality signals for the extracted text */
+export interface ExtractQuality {
+  text_len: number;
+  lines: number;
+}
+
+/** Extraction event emitted by ExtractService */
+export interface ExtractEvent {
+  url: string;
+  title?: string | null;
+  text_bytes: number;
+  text_hash?: string | null;
+  quality: ExtractQuality;
+  status: ExtractStatus;
+  error?: string | null;
+}
+
+// ─────────────────────────────────────────────────────────────────
 // OUTPUT
 // ─────────────────────────────────────────────────────────────────
 
@@ -156,7 +179,7 @@ export interface ResearchAnswer {
   trace_id: string;
 }
 
-/** Execution trace for observability (P3: all event types typed) */
+/** Execution trace for observability (P4: ExtractEvent added) */
 export interface ResearchTrace {
   trace_id: string;
   markers: string[];
@@ -170,6 +193,8 @@ export interface ResearchTrace {
   robots_events?: RobotsEvent[] | null;
   /** Rate-limit events from RateLimitService (P3+) */
   rate_limit_events?: RateLimitEvent[] | null;
+  /** Extraction events from ExtractService (P4+) */
+  extract_events?: ExtractEvent[] | null;
   index_events?: string[] | null;
   errors: string[];
 }

@@ -158,6 +158,28 @@ impl CacheService {
              );",
         )
         .map_err(|e| CacheError::Db(e.to_string()))?;
+
+        // P4 idempotent migration: add text extraction columns if missing
+        let migrations = [
+            "ALTER TABLE cache_entries ADD COLUMN text_hash TEXT NULL",
+            "ALTER TABLE cache_entries ADD COLUMN extracted_at INTEGER NULL",
+            "ALTER TABLE cache_entries ADD COLUMN text_len INTEGER NULL",
+        ];
+        for sql in &migrations {
+            // Ignore "duplicate column" errors (SQLite error code 1 with message "duplicate column name")
+            match conn.execute_batch(sql) {
+                Ok(_) => {}
+                Err(e) => {
+                    let msg = e.to_string();
+                    if !msg.contains("duplicate column") {
+                        return Err(CacheError::Db(format!(
+                            "migration failed: {} — {}",
+                            sql, msg
+                        )));
+                    }
+                }
+            }
+        }
         Ok(())
     }
 
@@ -303,6 +325,26 @@ impl CacheService {
             "INSERT OR REPLACE INTO robots_cache (domain, content, fetched_at)
              VALUES (?1, ?2, ?3)",
             params![domain, content, now],
+        )
+        .map_err(|e| CacheError::Db(e.to_string()))?;
+        Ok(())
+    }
+
+    // ── Extraction meta (P4) ──────────────────────────────────────
+
+    /// Store text extraction metadata for a cached URL (P4 idempotent upsert).
+    pub fn update_extract_meta(
+        &self,
+        url: &str,
+        text_hash: &str,
+        text_len: usize,
+    ) -> Result<(), CacheError> {
+        let conn = self.open_db()?;
+        let now = now_unix_ms() as i64;
+        conn.execute(
+            "UPDATE cache_entries SET text_hash = ?1, extracted_at = ?2, text_len = ?3
+             WHERE url = ?4",
+            params![text_hash, now, text_len as i64, url],
         )
         .map_err(|e| CacheError::Db(e.to_string()))?;
         Ok(())

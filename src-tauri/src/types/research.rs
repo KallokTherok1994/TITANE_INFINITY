@@ -1,14 +1,14 @@
 // ═══════════════════════════════════════════════════════════════
 //   TITANE∞ — WEB RESEARCH TYPES (Ring 1)
-//   Contrats IPC stables pour WebResearch Engine (P3.0 QUALIFIED++)
+//   Contrats IPC stables pour WebResearch Engine (P4.0 QUALIFIED+++)
 //   Tauri-only • Zéro réseau UI • Gouvernance stricte
 // ═══════════════════════════════════════════════════════════════
 
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
-/// Contract version — P3.0 adds CacheEvent, RobotsEvent, RateLimitEvent
-pub const RESEARCH_CONTRACT_VERSION: &str = "P3.0";
+/// Contract version — P4.0 adds ExtractEvent, extract_events in ResearchTrace
+pub const RESEARCH_CONTRACT_VERSION: &str = "P4.0";
 
 // ─────────────────────────────────────────────────────────────────
 // ENUMS
@@ -146,6 +146,36 @@ pub struct RateLimitEvent {
 }
 
 // ─────────────────────────────────────────────────────────────────
+// EXTRACT EVENT (P4)
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum ExtractStatus {
+    Ok,
+    Fail,
+}
+
+/// Quality signals for the extracted text
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ExtractQuality {
+    pub text_len: usize,
+    pub lines: usize,
+}
+
+/// Extraction event emitted by ExtractService
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ExtractEvent {
+    pub url: String,
+    pub title: Option<String>,
+    pub text_bytes: usize,
+    pub text_hash: Option<String>,
+    pub quality: ExtractQuality,
+    pub status: ExtractStatus,
+    pub error: Option<String>,
+}
+
+// ─────────────────────────────────────────────────────────────────
 // RESULT PRIMITIVES
 // ─────────────────────────────────────────────────────────────────
 
@@ -184,7 +214,7 @@ pub struct ResearchAnswer {
     pub trace_id: String,
 }
 
-/// Execution trace for observability (P3: typed P3 events added)
+/// Execution trace for observability (P4: ExtractEvent added)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ResearchTrace {
     pub trace_id: String,
@@ -199,6 +229,8 @@ pub struct ResearchTrace {
     pub robots_events: Option<Vec<RobotsEvent>>,
     /// Rate-limit events from RateLimitService (P3+)
     pub rate_limit_events: Option<Vec<RateLimitEvent>>,
+    /// Extraction events from ExtractService (P4+)
+    pub extract_events: Option<Vec<ExtractEvent>>,
     pub index_events: Option<Vec<String>>,
     pub errors: Vec<String>,
 }
