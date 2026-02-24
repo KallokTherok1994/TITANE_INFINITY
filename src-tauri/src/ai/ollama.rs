@@ -9,12 +9,20 @@ use crate::security::shell_guard::ShellGuard;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use std::time::Duration;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
 use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const TIMEOUT_SECONDS: u64 = 60;
+
+// ✨ v27.2.1: Ollama status cache (anti-flapping)
+// Cache TTL: 10s to avoid repeated health checks
+const OLLAMA_STATUS_CACHE_TTL_SECS: u64 = 10;
+
+// Simple cache with Mutex (thread-safe)
+static OLLAMA_STATUS_CACHE: Mutex<Option<(OllamaStatus, Instant)>> = Mutex::new(None);
 
 fn ollama_base_url() -> String {
     std::env::var("OLLAMA_BASE_URL")
@@ -89,7 +97,7 @@ struct OllamaModelsResponse {
     models: Vec<OllamaModel>,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct OllamaStatus {
     pub available: bool,
     pub version: Option<String>,
@@ -340,12 +348,30 @@ pub async fn ai_set_local_model(model_name: String) -> Result<String, String> {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-//   HANDLER 5: AI_CHECK_OLLAMA_STATUS
+//   HANDLER 5: AI_CHECK_OLLAMA_STATUS (v27.2.1: with cache)
 //   Vérifie si Ollama est disponible + version + modèles
+//   ✨ Cache TTL: 10s to prevent flapping
 // ═══════════════════════════════════════════════════════════════════════════
 
 #[command]
 pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
+    // ✨ v27.2.1: Check cache first (anti-flapping)
+    {
+        let cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        if let Some((status, timestamp)) = cache.as_ref() {
+            let elapsed = timestamp.elapsed().as_secs();
+            if elapsed < OLLAMA_STATUS_CACHE_TTL_SECS {
+                log::debug!(
+                    "[OLLAMA] Cache hit | age={}s | available={}",
+                    elapsed,
+                    status.available
+                );
+                return Ok(status.clone());
+            }
+        }
+    }
+
+    // Cache miss or expired → perform actual check
     let client = reqwest::Client::builder()
         .timeout(Duration::from_secs(2))
         .build()
@@ -357,7 +383,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
         .send()
         .await;
 
-    match response {
+    let status = match response {
         Ok(resp) if resp.status().is_success() => {
             // Récupérer la liste des modèles
             let models_response: OllamaModelsResponse = resp
@@ -368,22 +394,38 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
             let model_names: Vec<String> =
                 models_response.models.into_iter().map(|m| m.name).collect();
 
-            Ok(OllamaStatus {
+            OllamaStatus {
                 available: true,
                 version: Some("unknown".to_string()), // Ollama n'expose pas facilement la version
                 models: model_names,
-            })
+            }
         }
-        Ok(resp) => Err(format!("Ollama error: HTTP {}", resp.status())),
-        Err(_) => {
-            // Ollama non disponible
-            Ok(OllamaStatus {
+        Ok(resp) => {
+            log::warn!("[OLLAMA] Health check failed | status={}", resp.status());
+            OllamaStatus {
                 available: false,
                 version: None,
                 models: vec![],
-            })
+            }
         }
+        Err(e) => {
+            // Ollama non disponible
+            log::debug!("[OLLAMA] Health check failed | error={}", e);
+            OllamaStatus {
+                available: false,
+                version: None,
+                models: vec![],
+            }
+        }
+    };
+
+    // ✨ Update cache
+    {
+        let mut cache = OLLAMA_STATUS_CACHE.lock().unwrap();
+        *cache = Some((status.clone(), Instant::now()));
     }
+
+    Ok(status)
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

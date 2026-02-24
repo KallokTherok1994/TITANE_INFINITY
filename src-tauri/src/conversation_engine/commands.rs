@@ -77,6 +77,39 @@ pub async fn conversation_generate(
         conversation_mode
     );
 
+    // ✨ v27.2.1: Backend gate verification (defense-in-depth)
+    // Frontend already enforces in conversationEngine.ts:272-314
+    // But we double-check here for security (Tauri-level validation)
+    let external_providers_allowed = std::env::var("VITE_ENABLE_EXTERNAL_AI")
+        .unwrap_or_default() == "1";
+    
+    let is_external_provider = provider.as_ref()
+        .map(|p| matches!(p.as_str(), "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
+        .unwrap_or(false);
+    
+    if is_external_provider && !external_providers_allowed {
+        log::warn!(
+            "[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider={:?} | VITE_ENABLE_EXTERNAL_AI not set | req_id={}",
+            provider,
+            req_id
+        );
+        
+        // Return immediate response (defense-in-depth, frontend should have already blocked)
+        let blocked_response = serde_json::json!({
+            "content": "Service externe bloqué au niveau backend (defence-in-depth).",
+            "meta": {
+                "mode": "REMOTE",
+                "reason_code": "POLICY_BLOCKED",
+                "network_used": false,
+                "provider_used": "none",
+                "latency_ms_total": 5,
+                "blocked_by": "backend_gate"
+            }
+        });
+        
+        return Ok(blocked_response);
+    }
+
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
     let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
         log::warn!(
