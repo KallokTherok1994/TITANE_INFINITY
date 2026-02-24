@@ -172,6 +172,8 @@ pub fn build_citations(passages: &[&RetrievedPassage], accessed_at: &str) -> Vec
             excerpt: make_excerpt(&p.passage, MAX_EXCERPT_WORDS),
             locator: Some(format!("passage #{}", i + 1)),
             accessed_at: accessed_at.to_string(),
+            paragraph_index: p.paragraph_index,
+            char_start: p.char_start,
         });
     }
     citations
@@ -204,6 +206,8 @@ mod tests {
             url: url.to_string(),
             passage: passage.to_string(),
             score,
+            paragraph_index: None,
+            char_start: None,
         }
     }
 

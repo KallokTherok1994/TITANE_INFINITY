@@ -1,0 +1,396 @@
+/**
+ * TITANE∞ — Proprietary License
+ * © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ */
+
+/**
+ * ═══════════════════════════════════════════════════════════════
+ *   TITANE∞ — RESEARCH PAGE (Ring 4 / UI)
+ *   P7.0 — UI intégration complète WebResearch Engine
+ *   Tauri-only bridge — zero fetch direct — zero réseau UI
+ *   Sections: Question · Mode · Answer · Sources · Limitations · Trace
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+import React, { useState, useCallback } from 'react';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { webResearch } from '@/services/webResearchService';
+import type {
+  ResearchMode,
+  ResearchOptions,
+  ResearchReport,
+  Citation,
+} from '@/types/research';
+
+// ─────────────────────────────────────────────────────────────────
+// TYPES
+// ─────────────────────────────────────────────────────────────────
+
+type ResearchState = 'idle' | 'running' | 'done' | 'error';
+
+// ─────────────────────────────────────────────────────────────────
+// HELPERS
+// ─────────────────────────────────────────────────────────────────
+
+function modeLabel(mode: ResearchMode): string {
+  switch (mode) {
+    case 'OFFLINE':
+      return '📴 OFFLINE (local index only)';
+    case 'LOCAL_INDEX':
+      return '🗄️ LOCAL INDEX (BM25 lexical)';
+    case 'WEB_LIVE':
+      return '🌐 WEB LIVE (governed fetch)';
+    default:
+      return mode;
+  }
+}
+
+function verdictClass(markers: string[]): string {
+  if (markers.includes('VERDICT_PASS')) return 'rp-verdict-pass';
+  if (markers.includes('VERDICT_BLOCKED')) return 'rp-verdict-blocked';
+  if (markers.includes('VERDICT_FAIL')) return 'rp-verdict-fail';
+  return 'rp-verdict-unknown';
+}
+
+// ─────────────────────────────────────────────────────────────────
+// SUB-COMPONENTS
+// ─────────────────────────────────────────────────────────────────
+
+const CitationCard: React.FC<{ citation: Citation; index: number }> = ({
+  citation,
+  index,
+}) => (
+  <div className="rp-citation" data-testid={`citation-${index}`}>
+    <span className="rp-citation-index">[{index + 1}]</span>
+    <a
+      href={citation.url}
+      className="rp-citation-url"
+      rel="noreferrer noopener"
+      onClick={(e) => e.preventDefault()} // Tauri-only: no browser navigation
+      title={citation.url}
+    >
+      {citation.url.length > 60 ? `${citation.url.slice(0, 57)}…` : citation.url}
+    </a>
+    {citation.excerpt && (
+      <blockquote className="rp-citation-excerpt">
+        &ldquo;{citation.excerpt}&rdquo;
+      </blockquote>
+    )}
+    <div className="rp-citation-meta">
+      {citation.locator && (
+        <span className="rp-locator">{citation.locator}</span>
+      )}
+      {citation.paragraph_index != null && (
+        <span className="rp-para-idx">¶{citation.paragraph_index}</span>
+      )}
+      {citation.char_start != null && (
+        <span className="rp-char-start">@{citation.char_start}</span>
+      )}
+      <span className="rp-accessed">accessed: {citation.accessed_at}</span>
+    </div>
+  </div>
+);
+
+const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
+  const [open, setOpen] = useState(false);
+  const { trace } = report;
+  return (
+    <div className="rp-trace-section">
+      <button
+        className="rp-trace-toggle"
+        onClick={() => setOpen((v) => !v)}
+        data-testid="trace-toggle"
+        type="button"
+      >
+        {open ? '▲ Hide trace' : '▼ Show trace'}
+      </button>
+      {open && (
+        <div className="rp-trace-body" data-testid="trace-body">
+          <div className="rp-trace-markers">
+            <strong>Markers:</strong>
+            <ul>
+              {trace.markers.map((m, i) => (
+                <li key={i} className={m.startsWith('VERDICT') ? 'rp-verdict-marker' : ''}>
+                  {m}
+                </li>
+              ))}
+            </ul>
+          </div>
+          {trace.errors && trace.errors.length > 0 && (
+            <div className="rp-trace-errors">
+              <strong>Errors:</strong>
+              <ul>
+                {trace.errors.map((e, i) => (
+                  <li key={i} className="rp-error-item">
+                    {e}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {trace.index_events && (
+            <div className="rp-trace-index">
+              <strong>Index events:</strong>
+              <pre className="rp-trace-pre">
+                {JSON.stringify(trace.index_events, null, 2)}
+              </pre>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ─────────────────────────────────────────────────────────────────
+// MAIN PAGE
+// ─────────────────────────────────────────────────────────────────
+
+export const ResearchPage: React.FC = () => {
+  const [question, setQuestion] = useState('');
+  const [mode, setMode] = useState<ResearchMode>('LOCAL_INDEX');
+  const [targetUrl, setTargetUrl] = useState('');
+  const [seedUrlsRaw, setSeedUrlsRaw] = useState('');
+  const [sandboxRoot, setSandboxRoot] = useState('data/research');
+  const [state, setState] = useState<ResearchState>('idle');
+  const [report, setReport] = useState<ResearchReport | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault();
+      if (!question.trim()) return;
+
+      setState('running');
+      setReport(null);
+      setErrorMsg(null);
+
+      const seedUrls: string[] | null = seedUrlsRaw.trim()
+        ? seedUrlsRaw
+            .split('\n')
+            .map((s) => s.trim())
+            .filter(Boolean)
+        : null;
+
+      const options: ResearchOptions = {
+        mode,
+        target_url: targetUrl.trim() || null,
+        sandbox_root: sandboxRoot.trim() || null,
+        seed_urls: seedUrls,
+        max_depth: 1,
+        cache_enabled: true,
+        respect_robots: true,
+      };
+
+      try {
+        const result = await webResearch({ question: question.trim() }, options);
+        setReport(result);
+        setState('done');
+      } catch (err) {
+        setErrorMsg(String(err));
+        setState('error');
+      }
+    },
+    [question, mode, targetUrl, seedUrlsRaw, sandboxRoot]
+  );
+
+  const resetForm = useCallback(() => {
+    setState('idle');
+    setReport(null);
+    setErrorMsg(null);
+  }, []);
+
+  return (
+    <ErrorBoundary>
+      <div className="rp-root" data-testid="research-page">
+        <header className="rp-header">
+          <h1 className="rp-title">🔍 TITANE Research Engine</h1>
+          <p className="rp-subtitle">
+            Evidence-bound · Citations ≤25 words · Offline-capable · P7.0
+          </p>
+        </header>
+
+        {/* ── QUERY FORM ── */}
+        <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">
+          <div className="rp-field">
+            <label className="rp-label" htmlFor="rp-question">
+              Question
+            </label>
+            <textarea
+              id="rp-question"
+              className="rp-textarea"
+              data-testid="research-question"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+              placeholder="Enter your research question…"
+              rows={3}
+              disabled={state === 'running'}
+            />
+          </div>
+
+          <div className="rp-field rp-field-row">
+            <div className="rp-field">
+              <label className="rp-label" htmlFor="rp-mode">
+                Mode
+              </label>
+              <select
+                id="rp-mode"
+                className="rp-select"
+                data-testid="research-mode"
+                value={mode}
+                onChange={(e) => setMode(e.target.value as ResearchMode)}
+                disabled={state === 'running'}
+              >
+                <option value="LOCAL_INDEX">LOCAL INDEX</option>
+                <option value="WEB_LIVE">WEB LIVE</option>
+                <option value="OFFLINE">OFFLINE</option>
+              </select>
+            </div>
+
+            {mode === 'WEB_LIVE' && (
+              <div className="rp-field rp-field-grow">
+                <label className="rp-label" htmlFor="rp-url">
+                  Target URL
+                </label>
+                <input
+                  id="rp-url"
+                  className="rp-input"
+                  data-testid="research-target-url"
+                  type="url"
+                  value={targetUrl}
+                  onChange={(e) => setTargetUrl(e.target.value)}
+                  placeholder="https://example.com/page"
+                  disabled={state === 'running'}
+                />
+              </div>
+            )}
+          </div>
+
+          {mode === 'WEB_LIVE' && (
+            <div className="rp-field">
+              <label className="rp-label" htmlFor="rp-seeds">
+                Seed URLs (one per line, optional — P7 multi-URL discovery)
+              </label>
+              <textarea
+                id="rp-seeds"
+                className="rp-textarea rp-seeds"
+                data-testid="research-seed-urls"
+                value={seedUrlsRaw}
+                onChange={(e) => setSeedUrlsRaw(e.target.value)}
+                placeholder="https://example.com&#10;https://other.com"
+                rows={2}
+                disabled={state === 'running'}
+              />
+            </div>
+          )}
+
+          <div className="rp-field">
+            <label className="rp-label" htmlFor="rp-sandbox">
+              Sandbox root
+            </label>
+            <input
+              id="rp-sandbox"
+              className="rp-input"
+              data-testid="research-sandbox"
+              type="text"
+              value={sandboxRoot}
+              onChange={(e) => setSandboxRoot(e.target.value)}
+              disabled={state === 'running'}
+            />
+          </div>
+
+          <div className="rp-actions">
+            <button
+              className="rp-btn rp-btn-primary"
+              data-testid="research-submit"
+              type="submit"
+              disabled={state === 'running' || !question.trim()}
+            >
+              {state === 'running' ? '⏳ Researching…' : '🔍 Research'}
+            </button>
+            {state !== 'idle' && (
+              <button
+                className="rp-btn rp-btn-secondary"
+                data-testid="research-reset"
+                type="button"
+                onClick={resetForm}
+              >
+                Reset
+              </button>
+            )}
+          </div>
+        </form>
+
+        {/* ── ERROR ── */}
+        {state === 'error' && errorMsg && (
+          <div className="rp-error-banner" data-testid="research-error" role="alert">
+            <strong>Error:</strong> {errorMsg}
+          </div>
+        )}
+
+        {/* ── RESULTS ── */}
+        {state === 'done' && report && (
+          <div className="rp-results" data-testid="research-results">
+            {/* Mode badge */}
+            <div className="rp-mode-badge" data-testid="research-mode-badge">
+              {modeLabel(mode)}
+            </div>
+
+            {/* Verdict */}
+            <div
+              className={`rp-verdict ${verdictClass(report.trace.markers)}`}
+              data-testid="research-verdict"
+            >
+              {report.trace.markers.find((m) => m.startsWith('VERDICT_')) ?? 'UNKNOWN'}
+            </div>
+
+            {/* Answer */}
+            <section className="rp-section" data-testid="research-answer-section">
+              <h2 className="rp-section-title">Answer</h2>
+              <div className="rp-answer-text" data-testid="research-answer">
+                {report.answer.answer}
+              </div>
+              <div className="rp-answer-meta">
+                Sources: {report.answer.sources_count} · Passages:{' '}
+                {report.answer.retrieved_passages_count}
+              </div>
+            </section>
+
+            {/* Citations / Sources */}
+            {report.answer.citations.length > 0 && (
+              <section className="rp-section" data-testid="research-sources-section">
+                <h2 className="rp-section-title">
+                  Sources ({report.answer.citations.length})
+                </h2>
+                <div className="rp-citations">
+                  {report.answer.citations.map((c, i) => (
+                    <CitationCard key={`${c.url}-${i}`} citation={c} index={i} />
+                  ))}
+                </div>
+              </section>
+            )}
+
+            {/* Limitations */}
+            {report.answer.limitations && report.answer.limitations.length > 0 && (
+              <section className="rp-section" data-testid="research-limitations-section">
+                <h2 className="rp-section-title">Limitations</h2>
+                <ul className="rp-limitations">
+                  {report.answer.limitations.map((l, i) => (
+                    <li key={i} className="rp-limitation">
+                      {l}
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
+            {/* Trace toggle */}
+            <TracePanel report={report} />
+          </div>
+        )}
+      </div>
+    </ErrorBoundary>
+  );
+};
+
+export default ResearchPage;

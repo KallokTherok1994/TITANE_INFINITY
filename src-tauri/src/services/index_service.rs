@@ -260,15 +260,25 @@ impl IndexService {
             .map(|t| t.to_lowercase())
             .collect();
 
-        let mut scored: Vec<(usize, &str)> = body
+        // Build (score, paragraph_index, char_start, text) tuples
+        let mut char_offset: usize = 0;
+        let mut scored: Vec<(usize, u32, u32, &str)> = body
             .split('\n')
-            .filter(|p| !p.trim().is_empty())
-            .map(|para| {
-                let lower = para.to_lowercase();
+            .enumerate()
+            .filter_map(|(para_idx, para)| {
+                let start = char_offset;
+                char_offset += para.len() + 1; // +1 for '\n'
+                let trimmed = para.trim();
+                if trimmed.is_empty() {
+                    return None;
+                }
+                let lower = trimmed.to_lowercase();
                 let score = terms.iter().filter(|t| lower.contains(t.as_str())).count();
-                (score, para)
+                if score == 0 {
+                    return None;
+                }
+                Some((score, para_idx as u32, start.min(u32::MAX as usize) as u32, trimmed))
             })
-            .filter(|(s, _)| *s > 0)
             .collect();
 
         // Sort by descending score
@@ -277,10 +287,12 @@ impl IndexService {
 
         scored
             .into_iter()
-            .map(|(score, passage)| RetrievedPassage {
+            .map(|(score, para_idx, char_start, passage)| RetrievedPassage {
                 url: url.to_string(),
-                passage: passage.trim().to_string(),
+                passage: passage.to_string(),
                 score,
+                paragraph_index: Some(para_idx),
+                char_start: Some(char_start),
             })
             .collect()
     }
