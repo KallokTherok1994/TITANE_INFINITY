@@ -277,12 +277,14 @@ update_deployment_manifest() {
     local appimage_hash="none"
     local deb_hash="none"
     
-    if ls "$DEPLOY_PATH"/*.AppImage >/dev/null 2>&1; then
-        appimage_hash=$(sha256sum "$DEPLOY_PATH"/*.AppImage | head -n1 | awk '{print $1}')
+    local appimage_files=("$DEPLOY_PATH"/*.AppImage)
+    if [ -f "${appimage_files[0]}" ]; then
+        appimage_hash=$(sha256sum "${appimage_files[0]}" | awk '{print $1}')
     fi
     
-    if ls "$DEPLOY_PATH"/*.deb >/dev/null 2>&1; then
-        deb_hash=$(sha256sum "$DEPLOY_PATH"/*.deb | head -n1 | awk '{print $1}')
+    local deb_files=("$DEPLOY_PATH"/*.deb)
+    if [ -f "${deb_files[0]}" ]; then
+        deb_hash=$(sha256sum "${deb_files[0]}" | awk '{print $1}')
     fi
     
     if [ "$DRY_RUN" = true ]; then
