@@ -20,6 +20,7 @@ export type ReasonCode =
   | 'PROVIDER_UNAVAILABLE'
   | 'TOOL_REQUIRED'
   | 'TOOL_DENIED'
+  | 'CONTRACT_VIOLATION_CLAMPED'
   | 'UNKNOWN';
 
 export interface ProviderAttemptMeta {

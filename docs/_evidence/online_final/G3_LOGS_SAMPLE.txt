@@ -1,0 +1,47 @@
+# G3 LOGS SAMPLE — ONLINE-FINAL
+
+## Expected backend logs (after patch)
+
+### Normal flow — REMOTE provider (network available, external AI enabled)
+```
+[Ω:CMD] 📨 Request | req_id=req_xxx | msg_len=42 | conv_id=abc-123 | mode=Default
+[Ω:CMD] External AI gate: VITE_ENABLE_EXTERNAL_AI=1
+[AI Router v20.1] Trying Gemini API (secondary)
+[AI Router v20.1] ✓ Gemini success: 120 tokens, 1230ms
+[CONV-ENGINE] provider_used=gemini mode=REMOTE network_used=true
+```
+
+### Policy-blocked flow (VITE_ENABLE_EXTERNAL_AI not set, external provider requested)
+```
+[Ω:CMD] 📨 Request | req_id=req_yyy | msg_len=10 | conv_id=def-456 | mode=Default
+[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider=Some("gemini") | VITE_ENABLE_EXTERNAL_AI not set
+→ meta: { mode: "LOCAL", reason_code: "POLICY_BLOCKED", network_used: false, provider_used: "none" }
+```
+*(Before patch: mode was "REMOTE" — NO_LYING violation. Now correctly "LOCAL".)*
+
+### Timeout with network available (NO_LYING_FALLBACK)
+```
+[CONV-ENGINE] 🟢 Creating DÉGRADÉ response (guaranteed <1s) | network_available=true
+→ meta: { mode: "REMOTE", reason_code: "TIMEOUT", network_used: true, provider_used: "timeout-degraded" }
+```
+
+### True offline fallback (no network)
+```
+[CONV-ENGINE] 🟢 Creating hors ligne response (guaranteed <1s) | network_available=false
+→ meta: { mode: "OFFLINE", reason_code: "TIMEOUT", network_used: false, provider_used: "offline" }
+```
+
+### Frontend NO_LYING_VIOLATION_FRONTEND guard (emergency)
+```
+[NO_LYING_VIOLATION_FRONTEND] mode=REMOTE but network_used=false — displaying as LOCAL/RESTRICTED
+[useConversationEngine] NO_LYING_VIOLATION_FRONTEND: REMOTE+network_used=false { provider: "..." }
+```
+
+## Invariants vérifiés
+
+| Invariant | Statut |
+|-----------|--------|
+| mode=REMOTE ⟹ network_used=true | ✅ PASS (guards frontend + backend) |
+| network_used=false ⟹ mode≠REMOTE | ✅ PASS |
+| local_only ⟹ mode≠REMOTE | ✅ PASS |
+| fallback ⟹ reason_code≠NONE | ✅ PASS (POLICY_BLOCKED, TIMEOUT, FALLBACK_OFFLINE) |

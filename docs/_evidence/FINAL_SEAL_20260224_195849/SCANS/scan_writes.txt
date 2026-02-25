@@ -1,0 +1,10 @@
+=== WRITE OPS SCAN ===
+Method: grep -rn "File::create|OpenOptions|create_dir|fs::write" src-tauri/src
+
+Findings:
+- cache_service.rs, storage_service.rs → data/research/* paths (sandboxed)
+- seed_pack_service.rs → data/research/seeds/ (sandboxed, P12)
+- discovery_service.rs → no direct writes
+- rag_service.rs → no writes
+
+VERDICT: G_DIRTY_PATHS = PASS — all writes within data/research/* sandbox
