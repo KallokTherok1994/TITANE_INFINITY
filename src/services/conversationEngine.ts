@@ -136,6 +136,98 @@ function normalizeProviderMeta(raw: unknown): ProviderDecisionMeta | undefined {
   return raw as ProviderDecisionMeta;
 }
 
+function deriveFallbackProviderMeta(
+  metadata: Record<string, unknown>,
+  decision?: OnlineDecision
+): ProviderDecisionMeta {
+  const reasonFromMetadataRaw =
+    typeof metadata['reason_code'] === 'string' ? metadata['reason_code'].toUpperCase() : undefined;
+
+  const modeFromMetadataRaw =
+    typeof metadata['mode'] === 'string' ? metadata['mode'].toUpperCase() : undefined;
+
+  const modeFromMetadata: Mode | undefined =
+    modeFromMetadataRaw === 'LOCAL' ||
+    modeFromMetadataRaw === 'REMOTE' ||
+    modeFromMetadataRaw === 'OFFLINE' ||
+    modeFromMetadataRaw === 'CACHED' ||
+    modeFromMetadataRaw === 'ERROR'
+      ? modeFromMetadataRaw
+      : undefined;
+
+  const reason_code: ReasonCode =
+    reasonFromMetadataRaw === 'OK' ||
+    reasonFromMetadataRaw === 'POLICY_BLOCKED' ||
+    reasonFromMetadataRaw === 'ALLOWLIST_DENIED' ||
+    reasonFromMetadataRaw === 'PROVIDER_DOWN' ||
+    reasonFromMetadataRaw === 'TIMEOUT' ||
+    reasonFromMetadataRaw === 'RATE_LIMIT' ||
+    reasonFromMetadataRaw === 'INVALID_CONFIG' ||
+    reasonFromMetadataRaw === 'NETWORK_ERROR' ||
+    reasonFromMetadataRaw === 'FALLBACK_OFFLINE' ||
+    reasonFromMetadataRaw === 'CACHE_HIT' ||
+    reasonFromMetadataRaw === 'CACHE_MISS' ||
+    reasonFromMetadataRaw === 'SERIALIZATION_DROPPED' ||
+    reasonFromMetadataRaw === 'PROVIDER_UNAVAILABLE' ||
+    reasonFromMetadataRaw === 'TOOL_REQUIRED' ||
+    reasonFromMetadataRaw === 'TOOL_DENIED' ||
+    reasonFromMetadataRaw === 'CONTRACT_VIOLATION_CLAMPED' ||
+    reasonFromMetadataRaw === 'UNKNOWN'
+      ? reasonFromMetadataRaw
+      : decision?.reasonCode === 'OFFLINE_TIMEOUT'
+        ? 'TIMEOUT'
+        : decision?.reasonCode === 'OFFLINE_NETWORK_BLOCKED'
+          ? 'NETWORK_ERROR'
+          : decision?.reasonCode === 'OFFLINE_INTERNAL_ERROR'
+            ? 'FALLBACK_OFFLINE'
+            : modeFromMetadata === 'LOCAL' || modeFromMetadata === 'REMOTE' || modeFromMetadata === 'CACHED'
+              ? 'OK'
+              : 'UNKNOWN';
+
+  const mode: Mode =
+    decision?.mode ||
+    modeFromMetadata ||
+    (reason_code === 'TIMEOUT' || reason_code === 'FALLBACK_OFFLINE'
+      ? 'OFFLINE'
+      : reason_code === 'OK'
+        ? 'LOCAL'
+        : 'ERROR');
+
+  const provider_used =
+    (typeof metadata['provider_used'] === 'string' && metadata['provider_used']) ||
+    decision?.providerSelected ||
+    'fallback';
+
+  const latency_ms_total =
+    typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0;
+
+  const timeout_ms = typeof metadata['timeout_ms'] === 'number' ? metadata['timeout_ms'] : 30000;
+  const retries = typeof metadata['retries'] === 'number' ? metadata['retries'] : 0;
+  const network_used =
+    typeof metadata['network_used'] === 'boolean'
+      ? metadata['network_used']
+      : (decision?.networkUsed ?? false);
+  const cache_hit = typeof metadata['cache_hit'] === 'boolean' ? metadata['cache_hit'] : false;
+  const policy =
+    typeof metadata['policy'] === 'string'
+      ? metadata['policy']
+      : 'conversation_engine_meta_fallback';
+
+  return {
+    provider_used,
+    provider_class: mode === 'REMOTE' ? 'remote' : mode === 'CACHED' ? 'hybrid' : 'local',
+    mode,
+    reason_code,
+    latency_ms_total,
+    timeout_ms,
+    retries,
+    attempts: decision?.attempts ?? [],
+    network_used,
+    cache_hit,
+    policy,
+  };
+}
+
 function normalizeDecision(raw: unknown): OnlineDecision | undefined {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {
     return undefined;
@@ -299,8 +391,12 @@ export async function processMessage(
   }
 
   const metadata = (raw?.metadata ?? {}) as Record<string, unknown>;
-  const providerMeta = normalizeProviderMeta(raw?.meta);
   const decision = normalizeDecision(raw?.decision);
+  const providerMeta =
+    normalizeProviderMeta(raw?.meta) ||
+    normalizeProviderMeta(metadata['providerMeta']) ||
+    normalizeProviderMeta(metadata['meta']) ||
+    deriveFallbackProviderMeta(metadata, decision);
   const cognitiveTagsRaw = metadata['cognitiveTags'];
   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')

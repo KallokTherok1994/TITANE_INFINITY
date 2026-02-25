@@ -8,7 +8,8 @@
   "scripts": {
     "preinstall": "node scripts/install/enforce-package-manager.cjs",
     "dev": "bash scripts/launch/deploy_full_local_dev.sh",
-    "dev:tauri": "bash scripts/launch/deploy_full_local_dev.sh",
+    "dev:tauri": "node scripts/launch/dev_tauri_monitor.mjs",
+    "dev:tauri:raw": "bash scripts/launch/deploy_full_local_dev.sh",
     "dev:tauri:no-ollama": "bash scripts/launch/deploy_full_local_dev.sh --no-ollama",
     "ollama:start": "ollama serve",
     "ollama:status": "curl -s http://127.0.0.1:11434/api/tags | jq . 2>/dev/null || echo 'Ollama not running'",

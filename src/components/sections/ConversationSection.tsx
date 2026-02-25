@@ -36,8 +36,9 @@ import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
 import { colors } from '@themes/tokens';
 import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
-import type { ProviderDecisionMeta } from '@/types/providerMeta';
-import { useNavigate } from 'react-router-dom';
+import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
+import { webResearch } from '@/services/webResearchService';
+import type { ResearchOptions, ResearchReport } from '@/types/research';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -131,6 +132,76 @@ function shouldHandoffToResearch(input: string): boolean {
   return hasResearchVerb && hasWebTarget;
 }
 
+function extractResearchTopic(input: string): string {
+  const normalized = input
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[’']/g, ' ')
+    .replace(/[,;:!?]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  const stripped = normalized
+    .replace(/^(effectue|fais|lance|peux[- ]?tu|merci de)?\s*/i, '')
+    .replace(/(une|un)?\s*recherche\s*(sur|dans)?\s*(internet|le web|web)?\s*/i, '')
+    .replace(/^(avec|sur|de|du|des|la|le|les|l)\s+/i, '')
+    .trim();
+
+  const stopWords = new Set([
+    'effectue',
+    'fais',
+    'lance',
+    'peux',
+    'tu',
+    'merci',
+    'recherche',
+    'chercher',
+    'search',
+    'internet',
+    'web',
+    'en',
+    'ligne',
+    'sur',
+    'dans',
+    'avec',
+    'pour',
+    'les',
+    'des',
+    'de',
+    'du',
+    'la',
+    'le',
+    'un',
+    'une',
+    'l',
+  ]);
+
+  const tokens = (stripped.length > 2 ? stripped : normalized)
+    .split(' ')
+    .map(token => token.trim())
+    .filter(token => token.length > 1 && !stopWords.has(token));
+
+  const normalizedTokens = tokens.map(token => {
+    if (token.endsWith('s') && token.length > 4) {
+      return token.slice(0, -1);
+    }
+    return token;
+  });
+
+  return normalizedTokens.join(' ').trim() || 'hiver';
+}
+
+function toTopicSlug(topic: string): string {
+  return topic
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9\s-]/g, ' ')
+    .trim()
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_');
+}
+
 function buildResearchHandoff(input: string): {
   q: string;
   mode: 'WEB_LIVE';
@@ -138,6 +209,7 @@ function buildResearchHandoff(input: string): {
   seed_urls: string[];
 } {
   const normalized = input.trim();
+  const topic = extractResearchTopic(normalized);
   const detectedUrl = normalized.match(/https?:\/\/\S+/i)?.[0]?.replace(/[),.;!?]+$/, '');
 
   if (detectedUrl) {
@@ -149,18 +221,267 @@ function buildResearchHandoff(input: string): {
     };
   }
 
-  const query = encodeURIComponent(normalized);
+  const topicQuery = encodeURIComponent(topic);
+  const topicSlug = toTopicSlug(topic);
   const seeds = [
-    `https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche?search=${query}`,
-    `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
-    `https://www.wikidata.org/w/index.php?search=${query}`,
+    `https://fr.wikipedia.org/wiki/${topicSlug}`,
+    `https://fr.wikipedia.org/w/index.php?search=${topicQuery}`,
+    `https://fr.wiktionary.org/wiki/${topicSlug}`,
+    `https://www.wikidata.org/wiki/Special:Search?search=${topicQuery}`,
   ];
 
   return {
-    q: normalized,
+    q: topic,
     mode: 'WEB_LIVE',
-    target_url: seeds[0] ?? `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
+    target_url: seeds[0] ?? `https://fr.wikipedia.org/wiki/${topicSlug}`,
     seed_urls: seeds,
+  };
+}
+
+function extractConfirmedPoints(citations: ResearchReport['answer']['citations']): string[] {
+  const stopWords = new Set([
+    'avec',
+    'dans',
+    'pour',
+    'plus',
+    'moins',
+    'cela',
+    'cette',
+    'comme',
+    'entre',
+    'depuis',
+    'selon',
+    'aussi',
+    'leurs',
+    'leurs',
+    'nous',
+    'vous',
+    'they',
+    'that',
+    'this',
+    'from',
+    'about',
+    'robot',
+    'policy',
+    'please',
+    'source',
+    'search',
+  ]);
+
+  const tokenToUrls = new Map<string, Set<string>>();
+
+  for (const citation of citations) {
+    const sourceKey = citation.url;
+    const text = `${citation.title || ''} ${citation.excerpt || ''}`
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, ' ');
+
+    const uniqueTokens = new Set(
+      text
+        .split(/\s+/)
+        .map(token => token.trim())
+        .filter(token => token.length >= 5 && !stopWords.has(token))
+    );
+
+    for (const token of uniqueTokens) {
+      if (!tokenToUrls.has(token)) {
+        tokenToUrls.set(token, new Set());
+      }
+      tokenToUrls.get(token)?.add(sourceKey);
+    }
+  }
+
+  return [...tokenToUrls.entries()]
+    .filter(([, urls]) => urls.size >= 2)
+    .sort((a, b) => b[1].size - a[1].size)
+    .slice(0, 4)
+    .map(([token]) => `Le thème « ${token} » revient dans plusieurs sources.`);
+}
+
+type ResearchOutcome = 'blocked' | 'limited' | 'pass';
+
+function detectBlockCause(report: ResearchReport): string {
+  const markers = report.trace.markers || [];
+  const errors = report.trace.errors || [];
+
+  if (markers.includes('ROBOTS_BLOCKED') || markers.includes('M_ROBOTS_BLOCKED')) {
+    return 'ROBOTS_BLOCKED';
+  }
+
+  if (markers.includes('RATE_LIMIT_BLOCKED') || markers.includes('M_RATE_BLOCKED')) {
+    return 'RATE_LIMIT_BLOCKED';
+  }
+
+  if (errors.some(error => error.toLowerCase().includes('policy'))) {
+    return 'POLICY_BLOCKED';
+  }
+
+  return 'POLICY_BLOCKED';
+}
+
+function classifyResearchOutcome(report: ResearchReport): ResearchOutcome {
+  const markers = report.trace.markers || [];
+  if (markers.includes('VERDICT_BLOCKED')) {
+    return 'blocked';
+  }
+
+  const answer = (report.answer.answer || '').toLowerCase();
+  const citations = report.answer.citations || [];
+  const limitations = report.answer.limitations || [];
+  const noModelSignal =
+    answer.includes('no generative model used') ||
+    answer.includes('please set a user-agent') ||
+    answer.includes('robot policy');
+
+  if (citations.length === 0) {
+    return 'limited';
+  }
+
+  if (noModelSignal) {
+    return 'limited';
+  }
+
+  if (report.answer.sources_count <= 1 && report.answer.retrieved_passages_count <= 1) {
+    return 'limited';
+  }
+
+  if (limitations.length >= 3 && citations.length < 2) {
+    return 'limited';
+  }
+
+  return 'pass';
+}
+
+function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): string {
+  const verdict = report.trace.markers.find((m) => m.startsWith('VERDICT_')) ?? 'VERDICT_UNKNOWN';
+  const verdictLabel = verdict.replace('VERDICT_', '');
+  const citations = report.answer.citations || [];
+  const limitations = report.answer.limitations || [];
+  const answer = (report.answer.answer || 'Aucune réponse générée.').trim();
+
+  if (outcome === 'blocked') {
+    const blockCause = detectBlockCause(report);
+    const source = citations[0]?.url || 'Aucune source exploitable pour cette tentative.';
+    return [
+      '🔎 Recherche web dans le chat (bloquée)',
+      '',
+      'Je ne peux pas collecter cette cible dans le cadre gouverné actuel, donc je ne peux pas synthétiser ce sujet de façon fiable pour le moment.',
+      '',
+      `Cause détectée: ${blockCause}`,
+      'Ce qui bloque actuellement',
+      '- La politique de gouvernance (robots/rate-limit/policy) a stoppé la collecte.',
+      '- Tant que la cible principale reste bloquée, la synthèse multi-sources est incomplète.',
+      '',
+      'Source observée',
+      `1. ${source}`,
+      '',
+      'Ce que je te propose maintenant',
+      '- Donne 2 à 4 URL publiques précises (sources officielles, encyclopédies, médias reconnus).',
+      '- Je referai une synthèse claire en français, avec points confirmés par plusieurs sources.',
+    ].join('\n');
+  }
+
+  if (outcome === 'limited') {
+    const keyCitations = citations
+      .slice(0, 4)
+      .map((citation, index) => {
+        const title = citation.title?.trim() || 'Source';
+        const excerpt = citation.excerpt?.trim();
+        const shortExcerpt = excerpt && excerpt.length > 120 ? `${excerpt.slice(0, 117)}…` : excerpt;
+        return `${index + 1}. ${title} — ${citation.url}${shortExcerpt ? `\n   ↳ ${shortExcerpt}` : ''}`;
+      })
+      .join('\n');
+
+    return [
+      `🔎 Recherche web dans le chat (${verdictLabel} · analyse partielle)`,
+      '',
+      'Je peux déjà te donner une première synthèse, mais le niveau de preuve reste partiel.',
+      '',
+      'Synthèse provisoire',
+      answer,
+      '',
+      `Sources utilisables (${citations.length})`,
+      keyCitations || 'Aucune source exploitable.',
+      '',
+      `Limites détectées: ${limitations.length ? limitations.slice(0, 3).join(' · ') : 'signal faible côté collecte.'}`,
+      'Si tu veux, je peux relancer avec des URLs plus ciblées pour obtenir une synthèse plus solide.',
+    ].join('\n');
+  }
+
+  const simpleSentences = answer
+    .replace(/\s+/g, ' ')
+    .split(/(?<=[.!?])\s+/)
+    .map(sentence => sentence.trim())
+    .filter(Boolean)
+    .slice(0, 6);
+
+  const keyPoints =
+    simpleSentences.length > 0
+      ? simpleSentences.map(sentence => `- ${sentence}`).join('\n')
+      : '- Aucun point clé exploitable extrait automatiquement.';
+
+  const confirmedPoints = extractConfirmedPoints(citations);
+  const confirmedText =
+    confirmedPoints.length > 0
+      ? confirmedPoints.map(point => `- ${point}`).join('\n')
+      : '- Je n’ai pas assez de recoupements textuels pour affirmer des confirmations fortes.';
+
+  const citationsText = citations.length
+    ? citations
+        .slice(0, 6)
+        .map((citation, index) => {
+          const title = citation.title?.trim() || 'Source';
+          return `${index + 1}. ${title} — ${citation.url}`;
+        })
+        .join('\n')
+    : 'Aucune source exploitable.';
+
+  return [
+    `🔎 Recherche web dans le chat (${verdictLabel})`,
+    '',
+    'Voici un résumé clair en français, avec vocabulaire simple :',
+    '',
+    'Résumé détaillé',
+    keyPoints,
+    '',
+    'Informations confirmées par plusieurs sources',
+    confirmedText,
+    '',
+    `Sources (${citations.length})`,
+    citationsText,
+    '',
+    `Limites: ${limitations.length ? limitations.slice(0, 3).join(' · ') : 'Aucune limitation explicite.'}`,
+  ].join('\n');
+}
+
+function deriveResearchProviderMeta(
+  report: ResearchReport,
+  outcome: ResearchOutcome
+): ProviderDecisionMeta {
+  const cacheHit = (report.trace.cache_events || []).some(event => event.kind === 'HIT');
+  const duration = typeof report.trace.timings?.total === 'number' ? report.trace.timings.total : 0;
+
+  let reasonCode: ReasonCode = 'OK';
+  if (outcome === 'blocked') {
+    reasonCode = detectBlockCause(report) === 'RATE_LIMIT_BLOCKED' ? 'RATE_LIMIT' : 'POLICY_BLOCKED';
+  } else if (outcome === 'limited') {
+    reasonCode = 'PROVIDER_UNAVAILABLE';
+  }
+
+  return {
+    provider_used: 'web_research',
+    provider_class: 'remote',
+    mode: outcome === 'blocked' ? 'OFFLINE' : 'REMOTE',
+    reason_code: reasonCode,
+    latency_ms_total: duration,
+    timeout_ms: 30000,
+    retries: 0,
+    attempts: [],
+    network_used: outcome !== 'blocked',
+    cache_hit: cacheHit,
+    policy: 'web_research_inline',
   };
 }
 
@@ -183,9 +504,9 @@ const ConversationMessage = memo(
     onDelete: (id: string) => void;
   }) => {
     const providerMeta = message.metadata?.providerMeta;
-    const providerLabel = providerMeta?.provider_used ?? 'unknown';
-    const modeLabel = providerMeta?.mode ?? 'UNKNOWN';
-    const classLabel = providerMeta?.provider_class ?? 'unknown';
+    const providerLabel = providerMeta?.provider_used;
+    const modeLabel = providerMeta?.mode;
+    const classLabel = providerMeta?.provider_class;
     const reasonLabel = providerMeta?.reason_code;
     const cacheHit = providerMeta?.cache_hit === true;
 
@@ -213,11 +534,11 @@ const ConversationMessage = memo(
             <span className="conversation-message-role">
               {message.role === 'user' ? 'Vous' : 'TITANE'}
             </span>
-            {message.role === 'assistant' && (
+            {message.role === 'assistant' && providerMeta && (
               <div className="conversation-message-tags">
-                <span className="conversation-tag">{providerLabel}</span>
-                <span className="conversation-tag">{modeLabel}</span>
-                <span className="conversation-tag">{classLabel}</span>
+                {providerLabel && <span className="conversation-tag">{providerLabel}</span>}
+                {modeLabel && <span className="conversation-tag">{modeLabel}</span>}
+                {classLabel && <span className="conversation-tag">{classLabel}</span>}
                 {cacheHit && <span className="conversation-tag">CACHE</span>}
                 {reasonLabel && reasonLabel !== 'OK' && (
                   <span className="conversation-tag">{reasonLabel}</span>
@@ -287,7 +608,6 @@ ConversationMessage.displayName = 'ConversationMessage';
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
-  const navigate = useNavigate();
   const {
     messages,
     isLoading,
@@ -295,6 +615,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     currentMode,
     setMode,
     sendMessage,
+    appendLocalExchange,
     clearMessages,
     deleteMessage,
     healthReport,
@@ -500,12 +821,71 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     setInputValue('');
 
     if (shouldHandoffToResearch(messageText)) {
-      const handoff = buildResearchHandoff(messageText);
-      navigate('/research', {
-        state: handoff,
-      });
-      toastSuccess('Demande orientée vers Research (web).');
-      sendingRef.current = false;
+      thinking.startThinking();
+      thinking.addStep('analysis', 'Détection recherche web (mode chat intégré)...');
+      try {
+        const handoff = buildResearchHandoff(messageText);
+        const options: ResearchOptions = {
+          mode: 'WEB_LIVE',
+          target_url: handoff.target_url,
+          seed_urls: handoff.seed_urls,
+          sandbox_root: 'data/research',
+          max_depth: 1,
+          max_sources: 8,
+          max_pages: 10,
+          max_requests: 16,
+          timeout_ms: 60000,
+          cache_enabled: true,
+          respect_robots: true,
+        };
+
+        thinking.addStep('reasoning', 'Exécution web_research gouvernée...');
+        const report = await webResearch({ question: handoff.q }, options);
+        const outcome = classifyResearchOutcome(report);
+        const assistantReply = buildResearchReply(report, outcome);
+        const providerMeta = deriveResearchProviderMeta(report, outcome);
+
+        await appendLocalExchange(messageText, assistantReply, {
+          intention: 'web_research',
+          tags: ['research', 'web_live', outcome],
+          providerMeta,
+        });
+
+        if (outcome === 'blocked') {
+          errorToast('Recherche bloquée par la gouvernance/robots pour cette cible.');
+        } else if (outcome === 'limited') {
+          toastSuccess('Recherche partielle terminée dans le chat IA.');
+        } else {
+          toastSuccess('Recherche web terminée dans le chat IA.');
+        }
+      } catch (researchError) {
+        pageLogger.error('Recherche web chat error', researchError);
+        await appendLocalExchange(
+          messageText,
+          '❌ Échec de la recherche web dans le chat. Réessaie avec une URL explicite pour une cible plus précise.',
+          {
+            intention: 'web_research',
+            tags: ['research', 'web_live', 'error'],
+            providerMeta: {
+              provider_used: 'web_research',
+              provider_class: 'remote',
+              mode: 'ERROR',
+              reason_code: 'FALLBACK_OFFLINE',
+              latency_ms_total: 0,
+              timeout_ms: 30000,
+              retries: 0,
+              attempts: [],
+              network_used: false,
+              cache_hit: false,
+              policy: 'web_research_inline',
+            },
+          }
+        );
+        errorToast('Recherche web indisponible.');
+      } finally {
+        thinking.stopThinking();
+        sendingRef.current = false;
+      }
       return;
     }
 
@@ -541,9 +921,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     inputValue,
     isLoading,
     sendMessage,
+    appendLocalExchange,
     audioEnabled,
     thinking,
-    navigate,
+    errorToast,
     toastSuccess,
   ]);
 
