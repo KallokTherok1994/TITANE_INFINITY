@@ -14,7 +14,16 @@ SPEC_PATH="e2e/desktop/online-chat-proof-ui.wdio.test.js"
 DRIVER_LOG="$OUT_DIR/tauri-driver.log"
 WDIO_LOG="$OUT_DIR/wdio-online-chat-proof-ui.log"
 
+if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
+  export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-dev-server}"
+else
+  export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-embedded}"
+fi
+export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
+
 echo "[E2E_CHAT_PROOF] OUT_DIR=$OUT_DIR"
+echo "[E2E_CHAT_PROOF] EXPECT_SOURCE=$TITANE_E2E_EXPECT_SOURCE"
+echo "[E2E_CHAT_PROOF] ENFORCE_SOURCE=$TITANE_E2E_ENFORCE_SOURCE"
 
 pkill -f 'tauri-driver|WebKitWebDriver' >/dev/null 2>&1 || true
 sleep 1

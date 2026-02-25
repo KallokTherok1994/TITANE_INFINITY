@@ -2,6 +2,39 @@ import assert from 'node:assert/strict';
 
 const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
+const expectedSource = process.env.TITANE_E2E_EXPECT_SOURCE || '';
+const enforceSource = process.env.TITANE_E2E_ENFORCE_SOURCE === '1';
+
+async function detectAppSourceMode() {
+  return await browser.execute(() => {
+    const scripts = Array.from(document.querySelectorAll('script[src]'))
+      .map(node => node.getAttribute('src') || '')
+      .filter(Boolean);
+    const href = window.location.href || '';
+    const hasDevScript = scripts.some(src =>
+      /127\.0\.0\.1:5173|localhost:5173/i.test(src)
+    );
+    const hasEmbeddedScript = scripts.some(src =>
+      /^tauri:\/\/localhost\/assets\//i.test(src) ||
+      /^\.\/assets\//i.test(src) ||
+      /^\/assets\//i.test(src)
+    );
+
+    let sourceMode = 'unknown';
+    if (hasDevScript && hasEmbeddedScript) sourceMode = 'mixed';
+    else if (hasDevScript) sourceMode = 'dev-server';
+    else if (hasEmbeddedScript) sourceMode = 'embedded';
+
+    return {
+      href,
+      sourceMode,
+      scriptCount: scripts.length,
+      scriptSample: scripts.slice(0, 8),
+      hasDevScript,
+      hasEmbeddedScript,
+    };
+  });
+}
 
 async function ensureTauriPageLoaded(appUrl) {
   const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
@@ -207,6 +240,14 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       },
       { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
     );
+
+    const sourceInfo = await detectAppSourceMode();
+    console.log(`[APP_SOURCE] ${JSON.stringify(sourceInfo)}`);
+    if (expectedSource && sourceInfo.sourceMode !== expectedSource && enforceSource) {
+      assert.fail(
+        `Source mismatch: expected=${expectedSource} actual=${sourceInfo.sourceMode}`
+      );
+    }
 
     try {
       await browser.waitUntil(
