@@ -122,7 +122,7 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("chat_generate");
     commands.insert("upload_and_process_file");
     // Chat Orchestrator (v21 - Complete Pipeline)
-    commands.insert("chat_send_message");
+    // [RETRAIT v27.0.5-prod] chat_send_message removed from allowlist (legacy, use conversation_generate)
     commands.insert("chat_stream_message");
     commands.insert("chat_get_providers_status");
     commands.insert("chat_check_providers");

@@ -119,8 +119,7 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // CHAT AI - Orchestrator Hybride (Gemini + Ollama + Local)
   // ═══════════════════════════════════════════════════════════════
-  /** @deprecated Disabled: use conversation_generate */
-  CHAT_SEND_MESSAGE: 'chat_send_message',
+  // [RETRAIT v27.0.5-prod] CHAT_SEND_MESSAGE removed (legacy, use conversation_generate)
   CHAT_STREAM_MESSAGE: 'chat_stream_message',
   CHAT_CREATE_CONVERSATION: 'chat_create_conversation',
   CHAT_GET_CONVERSATION: 'chat_get_conversation',
