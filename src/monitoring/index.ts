@@ -16,7 +16,52 @@ import { createLogger } from '@/utils/logger';
 import type * as SentryTypes from '@sentry/react';
 import type { Metric } from 'web-vitals';
 
-const logger = createLogger('Monitoring');
+let monitoringLogger: ReturnType<typeof createLogger> | null = null;
+const getMonitoringLogger = (): ReturnType<typeof createLogger> => {
+  if (!monitoringLogger) {
+    monitoringLogger = createLogger('Monitoring');
+  }
+  return monitoringLogger;
+};
+
+const logger = {
+  configure(config: Parameters<ReturnType<typeof createLogger>['configure']>[0]) {
+    getMonitoringLogger().configure(config);
+  },
+  trace(...args: Parameters<ReturnType<typeof createLogger>['trace']>) {
+    getMonitoringLogger().trace(...args);
+  },
+  debug(...args: Parameters<ReturnType<typeof createLogger>['debug']>) {
+    getMonitoringLogger().debug(...args);
+  },
+  info(...args: Parameters<ReturnType<typeof createLogger>['info']>) {
+    getMonitoringLogger().info(...args);
+  },
+  warn(...args: Parameters<ReturnType<typeof createLogger>['warn']>) {
+    getMonitoringLogger().warn(...args);
+  },
+  error(...args: Parameters<ReturnType<typeof createLogger>['error']>) {
+    getMonitoringLogger().error(...args);
+  },
+  fatal(...args: Parameters<ReturnType<typeof createLogger>['fatal']>) {
+    getMonitoringLogger().fatal(...args);
+  },
+  group(...args: Parameters<ReturnType<typeof createLogger>['group']>) {
+    getMonitoringLogger().group(...args);
+  },
+  groupEnd(...args: Parameters<ReturnType<typeof createLogger>['groupEnd']>) {
+    getMonitoringLogger().groupEnd(...args);
+  },
+  table(...args: Parameters<ReturnType<typeof createLogger>['table']>) {
+    getMonitoringLogger().table(...args);
+  },
+  time(...args: Parameters<ReturnType<typeof createLogger>['time']>) {
+    getMonitoringLogger().time(...args);
+  },
+  timeEnd(...args: Parameters<ReturnType<typeof createLogger>['timeEnd']>) {
+    getMonitoringLogger().timeEnd(...args);
+  },
+} as const;
 
 // Sentry integration (lazy-loaded)
 let Sentry: typeof SentryTypes | null = null;

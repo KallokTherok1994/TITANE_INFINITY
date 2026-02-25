@@ -39,6 +39,9 @@
           line: line,
           col: col,
           err: err && err.toString(),
+          name: err && err.name,
+          stack: err && err.stack,
+          source: 'window.onerror',
         };
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
@@ -46,7 +49,14 @@
         console.error('[BOOT-ERROR]', msg);
       };
       window.addEventListener('unhandledrejection', function (evt) {
-        var payload = { type: 'rejection', reason: evt.reason && evt.reason.toString() };
+        var reason = evt.reason;
+        var payload = {
+          type: 'rejection',
+          reason: reason && reason.toString(),
+          name: reason && reason.name,
+          stack: reason && reason.stack,
+          source: 'window.unhandledrejection',
+        };
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);

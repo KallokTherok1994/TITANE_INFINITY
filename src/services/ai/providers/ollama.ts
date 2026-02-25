@@ -29,7 +29,52 @@ import { ollamaCheckHealth, ollamaGenerate } from '../transports/ollamaTransport
 // ✨ v27.4: Deferred import to break circular dependency with orchestrator
 // import { titaneLocalProvider } from './titaneLocal';
 
-const logger = createLogger('Ollama'); // ✨ v21.1
+let ollamaLogger: ReturnType<typeof createLogger> | null = null;
+const getOllamaLogger = (): ReturnType<typeof createLogger> => {
+  if (!ollamaLogger) {
+    ollamaLogger = createLogger('Ollama');
+  }
+  return ollamaLogger;
+};
+
+const logger = {
+  configure(config: Parameters<ReturnType<typeof createLogger>['configure']>[0]) {
+    getOllamaLogger().configure(config);
+  },
+  trace(...args: Parameters<ReturnType<typeof createLogger>['trace']>) {
+    getOllamaLogger().trace(...args);
+  },
+  debug(...args: Parameters<ReturnType<typeof createLogger>['debug']>) {
+    getOllamaLogger().debug(...args);
+  },
+  info(...args: Parameters<ReturnType<typeof createLogger>['info']>) {
+    getOllamaLogger().info(...args);
+  },
+  warn(...args: Parameters<ReturnType<typeof createLogger>['warn']>) {
+    getOllamaLogger().warn(...args);
+  },
+  error(...args: Parameters<ReturnType<typeof createLogger>['error']>) {
+    getOllamaLogger().error(...args);
+  },
+  fatal(...args: Parameters<ReturnType<typeof createLogger>['fatal']>) {
+    getOllamaLogger().fatal(...args);
+  },
+  group(...args: Parameters<ReturnType<typeof createLogger>['group']>) {
+    getOllamaLogger().group(...args);
+  },
+  groupEnd(...args: Parameters<ReturnType<typeof createLogger>['groupEnd']>) {
+    getOllamaLogger().groupEnd(...args);
+  },
+  table(...args: Parameters<ReturnType<typeof createLogger>['table']>) {
+    getOllamaLogger().table(...args);
+  },
+  time(...args: Parameters<ReturnType<typeof createLogger>['time']>) {
+    getOllamaLogger().time(...args);
+  },
+  timeEnd(...args: Parameters<ReturnType<typeof createLogger>['timeEnd']>) {
+    getOllamaLogger().timeEnd(...args);
+  },
+} as const;
 const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
 
 // ✅ AUDIT FIX #3: Boot ready gate — tracks if Ollama initialized successfully
