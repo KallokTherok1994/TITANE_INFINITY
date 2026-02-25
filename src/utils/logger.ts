@@ -228,13 +228,83 @@ class Logger {
 /**
  * Export singleton par défaut
  */
-export const logger = new Logger();
+let defaultLoggerInstance: Logger | null = null;
+
+const getDefaultLogger = (): Logger => {
+  if (!defaultLoggerInstance) {
+    defaultLoggerInstance = new Logger();
+  }
+  return defaultLoggerInstance;
+};
+
+export const logger = {
+  configure(config: Partial<LoggerConfig>) {
+    getDefaultLogger().configure(config);
+  },
+  trace(...args: LogArgs) {
+    getDefaultLogger().trace(...args);
+  },
+  debug(...args: LogArgs) {
+    getDefaultLogger().debug(...args);
+  },
+  info(...args: LogArgs) {
+    getDefaultLogger().info(...args);
+  },
+  warn(...args: LogArgs) {
+    getDefaultLogger().warn(...args);
+  },
+  error(...args: LogArgs) {
+    getDefaultLogger().error(...args);
+  },
+  fatal(...args: LogArgs) {
+    getDefaultLogger().fatal(...args);
+  },
+  group(label: string, collapsed = false) {
+    getDefaultLogger().group(label, collapsed);
+  },
+  groupEnd() {
+    getDefaultLogger().groupEnd();
+  },
+  table(data: TableData) {
+    getDefaultLogger().table(data);
+  },
+  time(label: string) {
+    getDefaultLogger().time(label);
+  },
+  timeEnd(label: string) {
+    getDefaultLogger().timeEnd(label);
+  },
+} as const;
+
+const createNoopLogger = (_prefix: string): Logger => {
+  const noop = () => {};
+  const noopWithBoolean = (_label?: string, _collapsed?: boolean) => {};
+
+  return {
+    configure: noop,
+    trace: noop,
+    debug: noop,
+    info: noop,
+    warn: noop,
+    error: noop,
+    fatal: noop,
+    group: noopWithBoolean,
+    groupEnd: noop,
+    table: noop,
+    time: noop,
+    timeEnd: noop,
+  } as unknown as Logger;
+};
 
 /**
  * Export créateur de loggers avec préfixe custom
  */
 export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
-  return new Logger({ ...config, prefix });
+  try {
+    return new Logger({ ...config, prefix });
+  } catch {
+    return createNoopLogger(prefix);
+  }
 }
 
 /**
