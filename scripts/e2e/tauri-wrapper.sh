@@ -41,14 +41,33 @@ log_line "[E2E_WRAPPER] active"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
-# Prioritize debug build for E2E tests
-BINARY_PATHS=(
-  "${TAURI_BINARY_PATH:-}"
-  "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
-  "$REPO_ROOT/src-tauri/target/release/titane-infinity"
-  "$HOME/.local/bin/titane-infinity"
-  "/usr/bin/titane-infinity"
-)
+# Binary selection policy:
+# - If TAURI_BINARY_PATH is explicitly provided: use it first.
+# - If TAURI_DEV_SERVER_URL is set: prefer debug/release binaries.
+# - Otherwise: prefer packaged AppImage binaries with embedded assets.
+if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
+  BINARY_PATHS=(
+    "${TAURI_BINARY_PATH:-}"
+    "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
+    "$REPO_ROOT/src-tauri/target/release/titane-infinity"
+    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$HOME/.local/bin/titane-infinity"
+    "/usr/bin/titane-infinity"
+  )
+else
+  BINARY_PATHS=(
+    "${TAURI_BINARY_PATH:-}"
+    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$REPO_ROOT/src-tauri/target/release/titane-infinity"
+    "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
+    "$HOME/.local/bin/titane-infinity"
+    "/usr/bin/titane-infinity"
+  )
+fi
 
 TAURI_BINARY=""
 for path in "${BINARY_PATHS[@]}"; do

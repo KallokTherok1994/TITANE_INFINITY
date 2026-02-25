@@ -36,6 +36,20 @@ interface BootDiagnostics {
 const WATCHDOG_TIMEOUT_MS = 10000; // 10s
 const BOOT_COMPLETE_STAGE = '[BOOT] App render';
 
+const isLoadingFallbackVisible = (): boolean => {
+  if (typeof document === 'undefined') {
+    return false;
+  }
+  return Boolean(document.querySelector('.page-loading-fallback'));
+};
+
+const isBootReady = (stage: string): boolean => {
+  if (stage !== BOOT_COMPLETE_STAGE) {
+    return false;
+  }
+  return !isLoadingFallbackVisible();
+};
+
 /**
  * Runtime check: import.meta.env only captures build-time vars,
  * so we must read process.env at runtime via Tauri when available.
@@ -163,8 +177,8 @@ const useBootWatchdog = () => {
         errors,
       }));
 
-      // Si boot complété, désactiver watchdog
-      if (currentStage === BOOT_COMPLETE_STAGE) {
+      // Si boot complété ET plus de fallback de chargement visible, désactiver watchdog
+      if (isBootReady(currentStage)) {
         if (timeoutId) {
           clearTimeout(timeoutId);
         }
@@ -186,7 +200,7 @@ const useBootWatchdog = () => {
 
       const currentStage = w.__TITANE_BOOT__?.stage ?? 'unknown';
 
-      if (currentStage !== BOOT_COMPLETE_STAGE) {
+      if (!isBootReady(currentStage)) {
         console.error('⚠️ [WATCHDOG] Boot timeout - UI non montée après 10s');
         setTimedOut(true);
 
@@ -257,19 +271,10 @@ const useBootWatchdog = () => {
       } | null = null;
 
       if (moduleSrc) {
-        try {
-          const response = await fetch(moduleSrc, { method: 'HEAD' }); // @network-allowed: probe local module script for diagnostics
-          moduleProbe = {
-            ok: response.ok,
-            status: response.status,
-            contentType: response.headers.get('content-type'),
-          };
-        } catch (error) {
-          moduleProbe = {
-            ok: false,
-            error: String(error),
-          };
-        }
+        moduleProbe = {
+          ok: false,
+          error: 'module_probe_disabled_no_frontend_network',
+        };
       }
 
       const report = {

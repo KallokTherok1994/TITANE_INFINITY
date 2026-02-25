@@ -18,6 +18,3 @@ pub mod seed_pack_service; // P12: WebResearch — versioned JSON seed packs
 pub mod storage_service;
 pub mod system_service;
 pub mod vector_service; // P7: WebResearch — local TF-IDF vector reranking (EXPERIMENTAL)
-
-pub use storage_service::StorageService;
-pub use system_service::SystemService;

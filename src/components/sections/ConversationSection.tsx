@@ -37,6 +37,7 @@ import { colors } from '@themes/tokens';
 import { Card } from '@/ui';
 import { createLogger } from '@/utils/logger';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import { useNavigate } from 'react-router-dom';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -110,6 +111,24 @@ function sanitizeInput(input: string): string {
     .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '')
     .replace(/on\w+="[^"]*"/gi, '')
     .slice(0, 10000);
+}
+
+function shouldHandoffToResearch(input: string): boolean {
+  const normalized = input.toLowerCase();
+
+  const hasResearchVerb =
+    normalized.includes('recherche') ||
+    normalized.includes('chercher') ||
+    normalized.includes('search') ||
+    normalized.includes('look up');
+
+  const hasWebTarget =
+    normalized.includes('internet') ||
+    normalized.includes('web') ||
+    normalized.includes('en ligne') ||
+    normalized.includes('online');
+
+  return hasResearchVerb && hasWebTarget;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -235,6 +254,7 @@ ConversationMessage.displayName = 'ConversationMessage';
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
+  const navigate = useNavigate();
   const {
     messages,
     isLoading,
@@ -446,6 +466,18 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     const messageText = sanitized;
     setInputValue('');
 
+    if (shouldHandoffToResearch(messageText)) {
+      navigate('/research', {
+        state: {
+          q: messageText,
+          mode: 'WEB_LIVE',
+        },
+      });
+      toastSuccess('Demande orientée vers Research (web).');
+      sendingRef.current = false;
+      return;
+    }
+
     thinking.startThinking();
     thinking.addStep('analysis', 'Analyse de votre message...');
 
@@ -474,7 +506,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     } finally {
       sendingRef.current = false;
     }
-  }, [inputValue, isLoading, sendMessage, audioEnabled, thinking]);
+  }, [
+    inputValue,
+    isLoading,
+    sendMessage,
+    audioEnabled,
+    thinking,
+    navigate,
+    toastSuccess,
+  ]);
 
   const handleKeyPress = useCallback(
     (e: React.KeyboardEvent) => {

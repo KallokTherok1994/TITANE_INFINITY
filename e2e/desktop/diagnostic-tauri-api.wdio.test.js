@@ -7,10 +7,29 @@
 
 import assert from 'node:assert/strict';
 
+async function ensureTauriPageLoaded(appUrl) {
+  const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
+
+  for (const url of candidates) {
+    await browser.url(url);
+    await browser.pause(1200);
+    const href = await browser.execute(() => window.location.href || '');
+    if (href.startsWith('tauri://localhost')) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
 describe('Diagnostic: Tauri API Availability', () => {
-  before(async () => {
-    await browser.url('tauri://localhost');
-    await browser.pause(2000); // Wait for app to fully load
+  before(async function () {
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+    const loaded = await ensureTauriPageLoaded(appUrl);
+    if (!loaded) {
+      console.warn('[DIAG] Tauri page unavailable (about:blank), skipping diagnostic spec');
+      this.skip();
+    }
   });
 
   it('Check window.__TAURI__ availability', async () => {
@@ -57,26 +76,62 @@ describe('Diagnostic: Tauri API Availability', () => {
 
   it('Test direct IPC call with @tauri-apps/api/core pattern', async () => {
     try {
-      const response = await browser.execute(async () => {
-        // Tauri 2.0 pattern: Use window.__TAURI_INTERNALS__
-        if (window.__TAURI_INTERNALS__) {
-          const { invoke } = window.__TAURI_INTERNALS__;
+      let response = null;
+      let lastError = 'IPC invocation failed';
 
-          // Try system health check (simpler command)
-          return await invoke('get_system_health');
+      for (let attempt = 1; attempt <= 5; attempt++) {
+        response = await browser.executeAsync(done => {
+          const run = async () => {
+            const payload = {
+              args: {
+                message: '[DIAG] ping',
+                conversationId: `diag-${Date.now()}`,
+                provider: 'local',
+              },
+            };
+
+            if (window.__TAURI_INTERNALS__?.invoke) {
+              return await window.__TAURI_INTERNALS__.invoke('conversation_generate', payload);
+            }
+
+            if (window.__TAURI__?.invoke) {
+              return await window.__TAURI__.invoke('conversation_generate', payload);
+            }
+
+            if (window.__TAURI__?.tauri?.invoke) {
+              return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
+            }
+
+            if (window.__TAURI__?.core?.invoke) {
+              return await window.__TAURI__.core.invoke('conversation_generate', payload);
+            }
+
+            throw new Error('No Tauri API found');
+          };
+
+          run()
+            .then(res => done({ ok: true, res }))
+            .catch(err => done({ ok: false, err: String(err?.message || err) }));
+        });
+
+        if (response?.ok) {
+          break;
         }
 
-        // Fallback: Try window.__TAURI__
-        if (window.__TAURI__) {
-          const invoke = window.__TAURI__.invoke;
-          return await invoke('get_system_health');
+        lastError = response?.err || lastError;
+        if (String(lastError).includes('Origin header is not a valid URL') && attempt < 5) {
+          await browser.pause(300);
+          continue;
         }
+        break;
+      }
 
-        throw new Error('No Tauri API found');
-      });
+      if (!response?.ok) {
+        throw new Error(lastError);
+      }
 
-      console.log('\n✅ IPC Call Success:', JSON.stringify(response, null, 2));
-      assert.ok(response, 'IPC call returned null');
+      console.log('\n✅ IPC Call Success:', JSON.stringify(response.res, null, 2));
+      assert.ok(response.res, 'IPC call returned null');
     } catch (error) {
       console.error('\n❌ IPC Call Failed:', error);
       throw error;

@@ -1,163 +1,223 @@
 # TITANE_INFINITY - Copilot Instructions (Governed)
 
-Mode: AUTO, Stop-the-line strict
-Goal: Update and seal repo instructions with proofs
-Scope: repo-wide
+Mode : AUTO, arrêt immédiat strict
+Objectif : Mettre à jour et sceller les instructions du dépôt avec preuves
+Portée : dépôt complet
 
-## A) Invariants
+## A) Invariants gouvernés
 
-**DO**
+**À FAIRE**
 
-- Online-first governed. Network allowed via controlled surfaces only. Local fallback mandatory.
-- Tauri-only. No web server/preview and no internal HTTP "server/" API.
-- 4-Ring architecture (Types -> Engines -> Services -> Modules/UI).
-- allowlist/capabilities are stable and justified with gates and tests.
+- Online-first gouverné. Réseau autorisé uniquement via des surfaces contrôlées. Fallback local obligatoire.
+- Tauri-only. Aucun serveur web/preview et aucune API HTTP interne de type `server/`.
+- Architecture 4-Ring (Types -> Engines -> Services -> Modules/UI).
+- Les listes d’autorisation/capabilities restent stables et justifiées par des portes de contrôle et des tests.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Run any web server/preview or add network reach without explicit approval and gates.
-- Add new capabilities without a proof and rollback path.
+- Exécuter un serveur web/preview ou étendre la surface réseau sans approbation explicite et sans portes de contrôle.
+- Ajouter des capabilities sans preuve et sans chemin de rollback.
 
-**Proof**
+**Éléments de preuve attendus**
 
-- Verify scripts and logs in reports/.
+- Scripts de vérification et logs dans `reports/`.
 
-**Gate**
+**Porte de contrôle**
 
-- Stop-the-line if any invariant is broken.
+- Stop-the-line immédiat si un invariant est violé.
 
-## B) Workflow standard
+## B) Flux standard
 
-**DO**
+**À FAIRE**
 
-- diagnose -> plan -> apply -> verify -> report
-- Keep changes minimal and scoped.
+- diagnostiquer -> planifier -> appliquer -> vérifier -> rapporter.
+- Garder les changements minimaux et strictement bornés à la portée demandée.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Defer proof or verification to later.
+- Reporter la preuve ou la vérification à plus tard.
 
-**Proof**
+**Éléments de preuve attendus**
 
-- Logs, diffs, and PASS markers in reports/.
+- Logs, diffs et marqueurs PASS dans `reports/`.
 
-**Gate**
+**Porte de contrôle**
 
-- Any FAIL stops the run immediately.
+- Tout FAIL arrête immédiatement l’exécution.
 
-## C) Policy PROD (neutral)
+## C) Politique PROD (neutre)
 
-**DO**
+**À FAIRE**
 
-- Require exact tokens before any prod build or deploy.
+- Exiger les tokens exacts avant tout build ou déploiement de production.
 
 **Tokens**
 
 - `GO_FOR_PROD_BUILD__TITANE_INFINITY`
 - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Infer or approximate tokens.
+- Déduire, approximer ou reformuler les tokens.
 
-**Proof**
+**Éléments de preuve attendus**
 
-- VERDICT.md in proof pack.
+- `VERDICT.md` dans le proof pack.
 
-## C.1) Version Sync Gate (mandatory before PROD)
+## C.1) Porte de synchronisation de version (obligatoire avant PROD)
 
-**DO (before any prod build/deploy):**
+**À FAIRE (avant tout build/deploy PROD)**
 
-- Synchronize release version in all canonical files:
+- Synchroniser la version de release dans tous les fichiers canoniques :
   - `package.json`
   - `src-tauri/Cargo.toml`
   - `src-tauri/tauri.conf.json`
-- Synchronize deployment metadata with the same target version:
+- Synchroniser les métadonnées de déploiement avec la même version cible :
   - `deployment/latest/MANIFEST.json`
   - `deployment/latest/SHA256SUMS_v<version>.txt`
   - `deployment/latest/SIZES_v<version>.txt`
 
-**DONT:**
+**À NE PAS FAIRE**
 
-- Launch prod build/deploy with mixed versions (stop-the-line).
+- Lancer un build/déploiement PROD avec des versions incohérentes (stop-the-line).
 
-**Gate:**
+**Porte de contrôle**
 
-- Any mismatch between app/bundle/deployment version = FAIL.
+- Tout mismatch entre version app/bundle/deployment = FAIL.
+
+## C.2) Gouvernance IDE (VS Code)
+
+**Principe**
+
+- L’IDE fait partie de la surface gouvernée. La surface active doit être minimisée.
+
+**IA — autorité unique**
+
+- EXACT : un seul agent IA **exécutant** à la fois (capable d’écrire/committer/lancer).
+- Les autres agents IA doivent être désactivés au niveau espace de travail.
+- Multi-agents exécutants simultanés = dérive = stop-the-line.
+
+**E2E — autorité unique**
+
+- EXACT : un seul runner E2E autorité à la fois.
+- Runner autorisé : WebdriverIO **ou** Playwright, jamais les deux actifs simultanément.
+- Tout rapport de test doit nommer explicitement le runner autorité.
+
+**Extensions — minimisation (socle recommandé TITANE∞)**
+
+- `rust-analyzer`
+- `CodeLLDB`
+- `Tauri`
+- `Even Better TOML`
+- `ESLint`
+- `Prettier`
+- `Tailwind CSS IntelliSense`
+- `pnpm` (et helper uniquement si utilisé)
+- `Path IntelliSense`
+- `Error Lens`
+- `YAML`
+- `DotENV`
+- Git : choisir 1–2 outils (`GitLens` ou `GitHub Pull Requests`)
+
+**À éviter / supprimer si non requis pour TITANE∞**
+
+- Extensions langages hors scope (C/C++/Go/Unity/Firefox Debugger/.NET/Python) si non nécessaires au projet.
+- `TypeScript Nightly` ou variantes TS expérimentales.
+- Outils Remote/Containers si non utilisés.
+- Doublons de runner Vitest (garder un seul).
+- Extensions “open in browser” si elles poussent vers une dérive hors Tauri-only.
+
+**Règle opérationnelle**
+
+- Une fonction critique = un seul outil autorité actif.
+- Toute exception doit être documentée, justifiée, datée et réversible.
+
+## C.3) Clarification Tauri-only vs Vite dev
+
+**À FAIRE**
+
+- Le serveur Vite est acceptable uniquement comme outil de développement encapsulé dans le workflow Tauri (`tauri dev`).
+- Le serveur Vite ne doit jamais être présenté comme preview web autonome ni comme surface de production.
+- Les échanges réseau passent par les surfaces gouvernées (API Provider uniquement + garde anti-endpoints non autorisés).
+
+**À NE PAS FAIRE**
+
+- Exposer des endpoints frontend directs.
+- Faire des appels localhost hors surface gouvernée.
 
 ## D) Anti-silence (UI/IPC/Chat)
 
-**DO**
+**À FAIRE**
 
-- Always respond with success or visible error.
-- IPC returns { ok, content, error }.
-- Les erreurs doivent être attribuées à leur cause racine: IPC\_\* ≠ ProviderDown.
+- Toujours répondre avec succès ou erreur visible.
+- IPC retourne `{ ok, content, error }`.
+- Les erreurs doivent être attribuées à leur cause racine : `IPC_*` ≠ `ProviderDown`.
 - Toujours en français dans tes instructions.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Leave UI or IPC in a silent state.
+- Laisser l’UI ou l’IPC dans un état silencieux.
 
-**Proof**
+**Éléments de preuve attendus**
 
-- E2E logs and exports.
+- Logs E2E et exports.
 
-## E) Ring-by-ring rules
+## E) Règles ring par ring
 
-Ring 1 (Types):
+Ring 1 (Types)
 
-- DO: strict schemas, no runtime logic.
-- DONT: I/O or side effects.
+- À faire : schémas stricts, aucune logique runtime.
+- À ne pas faire : I/O ou effets de bord.
 
-Ring 2 (Engines):
+Ring 2 (Engines)
 
-- DO: pure logic, deterministic, no I/O.
-- DONT: network, file system, time-based randomness.
+- À faire : logique pure, déterministe, sans I/O.
+- À ne pas faire : réseau, système de fichiers, aléatoire basé sur le temps.
 
-Ring 3 (Services):
+Ring 3 (Services)
 
-- DO: controlled I/O, timeouts, breakers, logs.
-- DONT: unbounded retries.
+- À faire : I/O contrôlés, timeouts, circuit breakers, logs.
+- À ne pas faire : retries non bornés.
 
-Ring 4 (Modules/UI):
+Ring 4 (Modules/UI)
 
-- DO: visible errors, ErrorBoundary, stable data-testid when E2E.
-- DONT: silent failures.
+- À faire : erreurs visibles, ErrorBoundary, `data-testid` stables pour E2E.
+- À ne pas faire : échecs silencieux.
 
-## F) No direct invoke
+## F) Interdiction d’invoke direct
 
-**DO**
+**À FAIRE**
 
-- Use the canonical TS <-> Tauri client only.
+- Utiliser uniquement le client canonique TS <-> Tauri.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Scatter raw invoke calls across the codebase.
+- Disperser des appels `invoke` bruts dans le codebase.
 
-## G) Tests and gates before DONE
+## G) Tests et portes de contrôle avant DONE
 
-**DO**
+**À FAIRE**
 
-- Run required tests and gates for the touched ring.
-- Record proof in reports/.
+- Exécuter les tests et portes de contrôle requis pour le ring impacté.
+- Enregistrer les preuves dans `reports/`.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Mark DONE without PASS evidence.
+- Marquer DONE sans preuve PASS.
 
 ## H) Rollback
 
-**DO**
+**À FAIRE**
 
-- Provide git restore or git revert steps.
+- Fournir des étapes de `git restore` ou `git revert`.
 
-**DONT**
+**À NE PAS FAIRE**
 
-- Use destructive commands.
+- Utiliser des commandes destructives.
 
-## Change metadata requirement
+## Exigence de métadonnées de changement
 
-**DO**
+**À FAIRE**
 
-- For any change proposal, state Ring impacted and Status: EXPERIMENTAL, QUALIFIED, or STABLE.
-- For UI changes, append registry/ui-events.jsonl entry.
+- Pour toute proposition de changement, indiquer le Ring impacté et le statut : EXPERIMENTAL, QUALIFIED ou STABLE.
+- Pour tout changement UI, ajouter une entrée dans `registry/ui-events.jsonl`.

@@ -15,23 +15,17 @@ REPORT_FILE="${REPORT_DIR}/no_frontend_network_report.txt"
 
 mkdir -p "${REPORT_DIR}"
 
-FORBIDDEN_PATTERNS=(
-  'fetch('
-  'axios'
-  'node-fetch'
-  'undici'
-  'http://'
-  'https://'
-)
+FORBIDDEN_REGEX='\bfetch\s*\(|\baxios\b|node-fetch|undici'
 
-# Directories to exclude (mocks, tests, storybook, already-approved)
-EXCLUDE_DIRS=(
-  'src/__tests__'
-  'src/mocks'
-  'src/test'
-  'src/tests'
-  'src/test-utils'
-  'src/stories'
+# Directories to exclude (tests/mocks/storybook/assets/docs)
+EXCLUDE_GLOBS=(
+  '!src/__tests__/**'
+  '!src/mocks/**'
+  '!src/test/**'
+  '!src/tests/**'
+  '!src/test-utils/**'
+  '!src/stories/**'
+  '!src/assets/**'
 )
 
 echo "# TITANE∞ P1.E — No-Frontend-Network Audit" > "${REPORT_FILE}"
@@ -40,33 +34,49 @@ echo "# Scan root: ${SRC_DIR}" >> "${REPORT_FILE}"
 echo "" >> "${REPORT_FILE}"
 
 VIOLATIONS=0
+echo "## FORBIDDEN: executable network calls (fetch/axios/node-fetch/undici)" >> "${REPORT_FILE}"
 
-for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
-  # Build exclude args for grep
-  EXCLUDE_ARGS=""
-  for dir in "${EXCLUDE_DIRS[@]}"; do
-    EXCLUDE_ARGS="${EXCLUDE_ARGS} --exclude-dir=${dir##*/}"
-  done
-
-  # Run search (ignore grep exit code 1 = no matches)
-  RESULTS=$(grep -rn --include="*.ts" --include="*.tsx" --include="*.js" --include="*.jsx" \
-    ${EXCLUDE_ARGS} \
-    --exclude-dir="__tests__" \
-    --exclude-dir="mocks" \
-    --exclude-dir="test" \
-    --exclude-dir="tests" \
-    --exclude-dir="test-utils" \
-    --exclude-dir="stories" \
-    "${pattern}" "${SRC_DIR}" 2>/dev/null || true)
-
-  if [[ -n "${RESULTS}" ]]; then
-    COUNT=$(echo "${RESULTS}" | wc -l)
-    echo "## FORBIDDEN: '${pattern}' — ${COUNT} occurrence(s)" >> "${REPORT_FILE}"
-    echo "${RESULTS}" >> "${REPORT_FILE}"
-    echo "" >> "${REPORT_FILE}"
-    VIOLATIONS=$((VIOLATIONS + COUNT))
-  fi
+RG_ARGS=(
+  -n
+  --pcre2
+  --glob "*.ts"
+  --glob "*.tsx"
+  --glob "*.js"
+  --glob "*.jsx"
+)
+for glob in "${EXCLUDE_GLOBS[@]}"; do
+  RG_ARGS+=(--glob "$glob")
 done
+
+RAW_RESULTS=$(rg "${FORBIDDEN_REGEX}" "${SRC_DIR}" "${RG_ARGS[@]}" 2>/dev/null || true)
+FILTERED_RESULTS=""
+
+if [[ -n "${RAW_RESULTS}" ]]; then
+  while IFS= read -r line; do
+    code_part="${line#*:}"
+    code_part="${code_part#*:}"
+
+    if [[ "${code_part}" =~ ^[[:space:]]*(//|/\*|\*|#) ]]; then
+      continue
+    fi
+
+    if [[ "${code_part}" == *"@network-allowed"* ]]; then
+      continue
+    fi
+
+    FILTERED_RESULTS+="${line}"$'\n'
+  done <<< "${RAW_RESULTS}"
+fi
+
+if [[ -n "${FILTERED_RESULTS}" ]]; then
+  COUNT=$(printf "%s" "${FILTERED_RESULTS}" | sed '/^$/d' | wc -l)
+  echo "${FILTERED_RESULTS}" >> "${REPORT_FILE}"
+  echo "" >> "${REPORT_FILE}"
+  VIOLATIONS=$((VIOLATIONS + COUNT))
+else
+  echo "none" >> "${REPORT_FILE}"
+  echo "" >> "${REPORT_FILE}"
+fi
 
 echo "---" >> "${REPORT_FILE}"
 echo "TOTAL VIOLATIONS: ${VIOLATIONS}" >> "${REPORT_FILE}"

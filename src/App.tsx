@@ -116,12 +116,6 @@ const SingularityMonitor = lazy(() =>
   import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
 );
 
-// ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3)
-// ✨ PHASE 4.2 - Lazy load chat bubbles (defer ~150KB)
-const ChatBubble = lazy(() =>
-  import('./components/chat/ChatBubble').then(m => ({ default: m.ChatBubble }))
-);
-
 // ✨ v24.3.0 - Cognitive Layout Control
 const CognitiveLayoutControl = lazy(() =>
   import('./components/cognitive/CognitiveLayoutControl').then(m => ({
@@ -1166,20 +1160,8 @@ const AppRouter: React.FC = () => {
         </Routes>
       </Suspense>
 
-      {/* ✨ v∞.20.0 - Chat Bubble Global (Super Prompt #3) */}
-      {/* ✅ ACTIF - Bulle Arc Reactor style Iron Man 🔵⚡ */}
-      <Suspense fallback={null}>
-        <ChatBubble position="bottom-right" persistHistory />
-      </Suspense>
-
-      {/* ✨ v∞.25.0 - AI Bubble Engine (Super Prompt #14 - BUBBLE ENGINE v∞) */}
-      {/* DÉSACTIVÉ v19.5.0 - Doublon avec ChatBubble Arc Reactor */}
-      {/* <Suspense fallback={null}>
-        <AIChatBubble />
-      </Suspense> */}
-
       {/* ✨ v∞.26.0 - Hybrid Engine (Super Prompt #16 - AI + DEV CONSOLE FUSION ⚡🧠) */}
-      {/* DÉSACTIVÉ v19.5.0 - Doublon avec ChatBubble Arc Reactor */}
+      {/* DÉSACTIVÉ v19.5.0 - Doublon avec le chat de page dédié */}
       {/* <Suspense fallback={null}>
         <HybridBubble initialMode="bubble" />
       </Suspense> */}

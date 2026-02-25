@@ -168,6 +168,8 @@ mod tests {
             url: url.to_string(),
             passage: text.to_string(),
             score,
+            paragraph_index: None,
+            char_start: None,
         }
     }
 

@@ -7,6 +7,7 @@
  */
 
 // TITANE∞ v19 - Page Loading Fallback for Suspense boundaries
+import React, { useEffect, useState } from 'react';
 import { Skeleton, SkeletonText, SkeletonAvatar } from './Skeleton';
 import './PageLoadingFallback.css';
 
@@ -15,10 +16,28 @@ export interface PageLoadingFallbackProps {
   className?: string;
 }
 
+const LONG_LOADING_TIMEOUT_MS = 12000;
+
 export const PageLoadingFallback = ({
   variant = 'default',
   className = '',
 }: PageLoadingFallbackProps) => {
+  const [isLongLoading, setIsLongLoading] = useState(false);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setIsLongLoading(true);
+    }, LONG_LOADING_TIMEOUT_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
+
+  const handleReload = () => {
+    window.location.reload();
+  };
+
   const classes = [
     'page-loading-fallback',
     `page-loading-fallback--${variant}`,
@@ -33,6 +52,40 @@ export const PageLoadingFallback = ({
       {variant === 'dashboard' && <DashboardLoadingSkeleton />}
       {variant === 'settings' && <SettingsLoadingSkeleton />}
       {variant === 'default' && <DefaultLoadingSkeleton />}
+
+      {isLongLoading && (
+        <div
+          style={{
+            marginTop: '1rem',
+            padding: '0.75rem 1rem',
+            borderRadius: '0.5rem',
+            border: '1px solid rgba(255,255,255,0.12)',
+            background: 'rgba(0, 0, 0, 0.35)',
+            color: 'rgba(255,255,255,0.9)',
+            textAlign: 'center',
+            maxWidth: 520,
+          }}
+          data-testid="long-loading-warning"
+        >
+          <div style={{ marginBottom: '0.5rem' }}>
+            Chargement plus long que prévu. Vérification en cours…
+          </div>
+          <button
+            type="button"
+            onClick={handleReload}
+            style={{
+              border: '1px solid rgba(255,255,255,0.22)',
+              borderRadius: '0.4rem',
+              background: 'rgba(255,255,255,0.08)',
+              color: '#fff',
+              padding: '0.35rem 0.75rem',
+              cursor: 'pointer',
+            }}
+          >
+            Recharger l’interface
+          </button>
+        </div>
+      )}
     </div>
   );
 };

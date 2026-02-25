@@ -8,8 +8,10 @@
 use std::path::{Path, PathBuf};
 use tantivy::collector::TopDocs;
 use tantivy::query::QueryParser;
-use tantivy::schema::{Field, Schema, SchemaBuilder, FAST, INDEXED, STORED, STRING, TEXT};
+use tantivy::schema::{Field, Schema, SchemaBuilder, Value, FAST, INDEXED, STORED, STRING, TEXT};
 use tantivy::{Index, IndexReader, IndexWriter, ReloadPolicy, TantivyDocument};
+
+use crate::types::research::RetrievedPassage;
 
 // ─────────────────────────────────────────────────────────────────
 // CONSTANTS
@@ -60,13 +62,6 @@ pub struct IndexHit {
     pub snippet: String,
     pub text_hash: String,
     pub score: f32,
-}
-
-#[derive(Debug, Clone)]
-pub struct RetrievedPassage {
-    pub url: String,
-    pub passage: String,
-    pub score: usize,
 }
 
 #[derive(Debug, Clone)]

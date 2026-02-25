@@ -757,31 +757,7 @@ class AdvancedPerformanceOptimizer {
    */
   private async warmupCriticalAPIs(): Promise<void> {
     if (!this.isOptimizationActive) return;
-
-    const criticalEndpoints = ['/api/health', '/api/user/profile', '/api/system/status'];
-
-    console.log('🔥 [PERF-OPTIMIZER] Warming up critical APIs');
-
-    const warmupPromises = criticalEndpoints.map(async endpoint => {
-      try {
-        const response = await fetch(
-          // @network-allowed
-          endpoint,
-          {
-            method: 'HEAD',
-            cache: 'force-cache',
-          }
-        );
-
-        if (response.ok) {
-          console.log(`✅ [PERF-OPTIMIZER] API warmed up: ${endpoint}`);
-        }
-      } catch (error) {
-        console.warn(`⚠️ [PERF-OPTIMIZER] Failed to warm up ${endpoint}:`, error);
-      }
-    });
-
-    await Promise.allSettled(warmupPromises);
+    console.log('⏭️ [PERF-OPTIMIZER] API warmup skipped (tauri-only / no frontend network)');
   }
 
   /**

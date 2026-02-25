@@ -10,8 +10,9 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
-// Always use manual server mode to prevent Playwright from killing servers mid-test
-const useWebServer = false;
+// Start local dev server by default for deterministic E2E runs.
+// Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
+const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
 
 export default defineConfig({
   // Test directories
@@ -85,11 +86,11 @@ export default defineConfig({
   webServer: useWebServer
     ? {
         command:
-          './.tools/node/current/bin/pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort',
+          'node scripts/e2e/vite-e2e-watch.cjs --host 127.0.0.1 --port 5173 --strictPort',
         url: process.env.TITANE_E2E_PORT
           ? `http://localhost:${process.env.TITANE_E2E_PORT}`
           : 'http://localhost:5173',
-        reuseExistingServer: !process.env.CI,
+        reuseExistingServer: false,
         timeout: 180000, // 3min to start (CI heavy load)
         stdout: 'pipe',
         stderr: 'pipe',

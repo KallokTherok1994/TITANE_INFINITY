@@ -88,3 +88,45 @@ Replace 6-line heredoc Python script with functionally equivalent one-line `pyth
 ### Rollback
 **Branch**: `hotfix/v27.0.6-hotfix.1` (can be deleted, tag is immutable)  
 **Restore**: `git checkout v27.0.6-hotfix` (parent tag) if hotfix needs to be reverted
+
+---
+
+## v27.0.6-hotfix.2 (2026-02-24 20:27:00 UTC)
+
+**Type**: Hotfix Patch  
+**Commit**: b82e8ae776b977cda433bad28e7a610145a9c644  
+**Parent**: v27.0.6-hotfix.1 @ 897ff9e6b6992c062465db9898a80b4b95f9e4b4  
+**Tag**: v27.0.6-hotfix.2 (immutable, created once)  
+**Branch**: hotfix/v27.0.6-hotfix.1  
+**Status**: READY_FOR_DEPLOY
+
+### Summary
+Release transaction initiated after stopline rebuild proof and explicit clear. Build artefacts regenerated on current HEAD and checksummed.
+
+### Stopline Evidence
+- Proof Pack: `reports/FRESH_BUILD_PROOF_v27.0.6-hotfix.2_20260224_151031/`
+- Status: `READY_FOR_STOPLINE_CLEAR`
+- Stopline Request: `F_STOPLINE_CLEAR_REQUEST.txt`
+- Pack Seal: `CHECKSUMS.sha256`
+
+### Artifacts (from proof)
+- **AppImage**: `TITANE-Infinity_27.2.0_amd64.AppImage`
+  - SHA256: `0027ef8cc27dc33dc19f2b77f85c51e87fb060a98eb5ad9a3e8888af2f43c79d`
+- **DEB**: `TITANE-Infinity_27.2.0_amd64.deb`
+  - SHA256: `32a97c27163085e3b933974cc7045222aa4054a555320889898759039f5ae9bd`
+- **RPM**: `TITANE-Infinity-27.2.0-1.x86_64.rpm`
+  - SHA256: `9a4aeca2ad0ef9e8db3d6c3e4793bef6d631e2f3e19beaf91e85c4ac4bb3a3da`
+
+### Release Transaction Pack
+- `reports/RELEASE_TRANSACTION_v27.0.6-hotfix.2_20260224_151003/`
+- Phases complete: 1 (stopline), 2 (clear), 3 (tag), 4 (registry append)
+- Phases pending: 5 (certified deploy), 6 (QA E2E), 7 (monitoring 30m/4h/24h), 8 (final verdict)
+
+### Policy / Gates
+- PROD tokens: pending validation in deploy phase
+- No retag performed; immutability preserved
+- Append-only registry update only (no historical rewrite)
+
+### Rollback
+- Delete local tag only if release aborted before push: `git tag -d v27.0.6-hotfix.2`
+- Restore registry working tree change: `git restore CERTIFICATION_REGISTRY_APPEND_ONLY.md`

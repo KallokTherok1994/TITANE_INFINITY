@@ -526,13 +526,7 @@ class TitaneAIPredictiveEngine {
   }
 
   private async measureNetworkLatency(): Promise<number> {
-    try {
-      const start = performance.now();
-      await fetch('/vite.svg', { method: 'HEAD', cache: 'no-cache' }); // @network-allowed
-      return performance.now() - start;
-    } catch {
-      return 1000; // Défaut si erreur réseau
-    }
+    return 1000;
   }
 
   private getCacheHitRate(): number {

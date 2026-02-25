@@ -46,30 +46,104 @@ async function waitForElement(selector, timeoutMs = 15000) {
 
 // Helper: Invoke Tauri IPC command directly
 async function invokeTauriCommand(command, args = {}) {
-  return await browser.execute(
-    async (cmd, payload) => {
-      if (!window.__TAURI__) {
-        throw new Error('Tauri IPC not available (window.__TAURI__ undefined)');
-      }
-      const { invoke } = window.__TAURI__.tauri;
-      return await invoke(cmd, payload);
+  let lastError = 'invokeTauriCommand failed';
+
+  for (let attempt = 1; attempt <= 5; attempt++) {
+    const result = await browser.executeAsync(
+      (cmd, payload, done) => {
+        const run = async () => {
+          if (window.__TAURI_INTERNALS__?.invoke) {
+            return await window.__TAURI_INTERNALS__.invoke(cmd, payload);
+          }
+
+          if (window.__TAURI__?.tauri?.invoke) {
+            return await window.__TAURI__.tauri.invoke(cmd, payload);
+          }
+
+          if (window.__TAURI__?.core?.invoke) {
+            return await window.__TAURI__.core.invoke(cmd, payload);
+          }
+
+          if (window.__TAURI__?.invoke) {
+            return await window.__TAURI__.invoke(cmd, payload);
+          }
+
+          throw new Error('Tauri IPC not available (no invoke API found)');
+        };
+
+        run()
+          .then(res => done({ ok: true, res }))
+          .catch(err => done({ ok: false, err: String(err?.message || err) }));
+      },
+      command,
+      args
+    );
+
+    if (result?.ok) {
+      return result.res;
+    }
+
+    lastError = result?.err || lastError;
+
+    if (String(lastError).includes('Origin header is not a valid URL') && attempt < 5) {
+      await browser.pause(300);
+      continue;
+    }
+
+    break;
+  }
+
+  throw new Error(lastError);
+}
+
+async function recoverFromWindowLoss() {
+  const targetUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+  await browser.url(targetUrl);
+  await browser.waitUntil(
+    async () => {
+      const readyState = await browser.execute(() => document.readyState);
+      const href = await browser.execute(() => window.location.href || '');
+      return (
+        (readyState === 'interactive' || readyState === 'complete') &&
+        href.startsWith('tauri://localhost')
+      );
     },
-    command,
-    args
+    { timeout: 10000, interval: 250, timeoutMsg: 'AR20 recovery page not ready' }
   );
 }
 
 // Helper: Send chat message via IPC (bypasses UI)
 async function sendChatViaIPC(message) {
-  try {
-    const response = await invokeTauriCommand('conversation_generate', {
-      message,
-      conversationId: null,
-    });
-    return { success: true, response };
-  } catch (error) {
-    return { success: false, error: error.message };
+  let lastError = 'IPC send failed';
+
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    try {
+      const conversationId = `e2e-ar20-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const response = await invokeTauriCommand('conversation_generate', {
+        args: {
+          message,
+          conversationId,
+          provider: 'local',
+        },
+      });
+      return { success: true, response };
+    } catch (error) {
+      lastError = error.message;
+
+      if (String(lastError).includes('no such window') && attempt < 2) {
+        try {
+          await recoverFromWindowLoss();
+          continue;
+        } catch (recoveryError) {
+          lastError = `${lastError} | recovery_failed: ${recoveryError.message}`;
+        }
+      }
+
+      break;
+    }
   }
+
+  return { success: false, error: lastError };
 }
 
 // Helper: Send chat message via UI
@@ -175,8 +249,20 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
 
   before(async () => {
     // Navigate to Tauri app root
-    await browser.url('tauri://localhost');
+    await browser.url('tauri://localhost/#/chat');
     await browser.pause(1000);
+
+    await browser.waitUntil(
+      async () => {
+        const readyState = await browser.execute(() => document.readyState);
+        const href = await browser.execute(() => window.location.href || '');
+        return (
+          (readyState === 'interactive' || readyState === 'complete') &&
+          href.startsWith('tauri://localhost')
+        );
+      },
+      { timeout: 10000, interval: 250, timeoutMsg: 'AR20 page not fully ready' }
+    );
 
     // Verify body exists
     const body = await $('body');
@@ -184,7 +270,14 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
 
     // Check Tauri IPC availability
     results.tauriIPCAvailable = await browser.execute(() => {
-      return typeof window.__TAURI__ !== 'undefined';
+      const hasV1 = typeof window.__TAURI__ !== 'undefined';
+      const hasV2 = typeof window.__TAURI_INTERNALS__ !== 'undefined';
+      const hasInvoke =
+        !!window.__TAURI_INTERNALS__?.invoke ||
+        !!window.__TAURI__?.tauri?.invoke ||
+        !!window.__TAURI__?.core?.invoke ||
+        !!window.__TAURI__?.invoke;
+      return (hasV1 || hasV2) && hasInvoke;
     });
 
     console.log(
@@ -223,11 +316,10 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
 
       assert.equal(result.success, true, `IPC call failed: ${result.error}`);
       assert.notEqual(result.response, null, 'IPC returned null response');
-      assert.ok(
-        result.response.assistant_message,
-        'Response missing assistant_message field'
-      );
-      assert.ok(result.response.assistant_message.length > 0, 'Empty assistant_message');
+      const assistantText =
+        result.response.assistant_message || result.response.content || '';
+      assert.ok(assistantText, 'Response missing assistant_message/content field');
+      assert.ok(assistantText.length > 0, 'Empty assistant_message/content');
       assert.ok(latencyMs < 20000, `Response too slow: ${latencyMs}ms (max 20000ms)`);
 
       results.tests.push({
@@ -235,7 +327,7 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
         status: 'PASS',
         method: 'IPC',
         prompt: testMsg,
-        response: result.response.assistant_message.substring(0, 100),
+        response: assistantText.substring(0, 100),
         latencyMs,
       });
 
@@ -274,7 +366,10 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
         status: 'PASS',
         method: 'IPC',
         prompt: testMsg,
-        response: result.response.assistant_message?.substring(0, 100) || 'N/A',
+        response:
+          result.response.assistant_message?.substring(0, 100) ||
+          result.response.content?.substring(0, 100) ||
+          'N/A',
         latencyMs,
       });
 
@@ -310,12 +405,14 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
         `IPC call failed (silence detected): ${result.error}`
       );
       assert.notEqual(result.response, null, 'Silence detected (null response)');
+      const assistantText =
+        result.response.assistant_message || result.response.content || '';
       assert.ok(
-        result.response.assistant_message,
-        'Silence detected (no assistant_message)'
+        assistantText,
+        'Silence detected (no assistant_message/content)'
       );
       assert.ok(
-        result.response.assistant_message.length > 0,
+        assistantText.length > 0,
         'Silence detected (empty message)'
       );
 
@@ -324,7 +421,7 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
         status: 'PASS',
         method: 'IPC',
         prompt: testMsg,
-        response: result.response.assistant_message.substring(0, 100),
+        response: assistantText.substring(0, 100),
         latencyMs,
       });
 
@@ -360,24 +457,21 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
 
         assert.equal(result.success, true, `Message ${i}/20 failed: ${result.error}`);
         assert.notEqual(result.response, null, `Message ${i}/20 returned null`);
-        assert.ok(
-          result.response.assistant_message,
-          `Message ${i}/20 missing assistant_message`
-        );
-        assert.ok(
-          result.response.assistant_message.length > 0,
-          `Message ${i}/20 empty response`
-        );
+        const assistantText =
+          result.response.assistant_message || result.response.content || '';
+        assert.ok(assistantText, `Message ${i}/20 missing assistant_message/content`);
+        assert.ok(assistantText.length > 0, `Message ${i}/20 empty response`);
         assert.ok(msgLatencyMs < 20000, `Message ${i}/20 timeout: ${msgLatencyMs}ms`);
 
         responses.push({
           index: i,
           prompt: testMsg,
-          response: result.response.assistant_message.substring(0, 50),
+          response: assistantText.substring(0, 50),
           latencyMs: msgLatencyMs,
         });
 
         console.log(`  ✅ Message ${i}/20: ${msgLatencyMs}ms`);
+        await browser.pause(150);
       }
 
       const totalLatencyMs = Date.now() - startTime;

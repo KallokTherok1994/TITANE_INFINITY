@@ -2271,7 +2271,7 @@ async function handleTestBubble(): Promise<DevSudoResult> {
    - [ ] Commande "active la caméra" → Overlay
    - [ ] Commande "désactive la caméra" → Off
 
-📖 **Guide complet**: \`TEST_CHAT_BUBBLE_CAMERA.md\`
+📖 **Guide complet**: \`TEST_CHAT_PANEL_CAMERA.md\`
 
 ✅ **Implémentation**: v∞.20.0 (commit 25109d6)`,
     actions: [
@@ -2279,7 +2279,7 @@ async function handleTestBubble(): Promise<DevSudoResult> {
         type: 'check-implementation',
         description: 'Vérification code Chat Bubble',
         result: 'success',
-        details: 'ChatBubble.tsx intégré dans App.tsx ligne 561',
+        details: 'Chat panel intégré dans App.tsx ligne 561',
       },
     ],
   };

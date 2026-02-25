@@ -605,6 +605,27 @@ export class TauriInvokeProtector {
           conversationId: `fallback-${Date.now()}`,
           messageId: `fallback-${Date.now()}`,
           latencyMs: 0,
+          meta: {
+            provider_used: 'fallback',
+            provider_class: 'local',
+            mode: 'ERROR',
+            reason_code: 'CONTRACT_VIOLATION_CLAMPED',
+            latency_ms_total: 0,
+            timeout_ms: 0,
+            retries: 0,
+            attempts: [],
+            network_used: false,
+            cache_hit: false,
+            policy: 'tauri_protector_ipc_fallback',
+          },
+          decision: {
+            online: false,
+            reasonCode: 'OFFLINE_INTERNAL_ERROR',
+            providerSelected: 'fallback',
+            attempts: [],
+            networkUsed: false,
+            mode: 'ERROR',
+          },
           metadata: {
             fallback: true,
             error: errorMessage,
@@ -638,6 +659,32 @@ export class TauriInvokeProtector {
         conversationId: `fallback-${Date.now()}`,
         messageId: `fallback-${Date.now()}`,
         latencyMs: 0,
+        meta: {
+          provider_used: 'fallback',
+          provider_class: 'local',
+          mode: classification.type === 'timeout' ? 'OFFLINE' : 'ERROR',
+          reason_code: classification.type === 'timeout' ? 'TIMEOUT' : 'FALLBACK_OFFLINE',
+          latency_ms_total: 0,
+          timeout_ms: 30000,
+          retries: 0,
+          attempts: [],
+          network_used: false,
+          cache_hit: false,
+          policy: 'tauri_protector_runtime_fallback',
+        },
+        decision: {
+          online: false,
+          reasonCode:
+            classification.type === 'timeout'
+              ? 'OFFLINE_TIMEOUT'
+              : classification.type === 'network'
+                ? 'OFFLINE_NETWORK_BLOCKED'
+                : 'OFFLINE_INTERNAL_ERROR',
+          providerSelected: 'fallback',
+          attempts: [],
+          networkUsed: false,
+          mode: classification.type === 'timeout' ? 'OFFLINE' : 'ERROR',
+        },
         metadata: {
           fallback: true,
           error: errorMessage,
