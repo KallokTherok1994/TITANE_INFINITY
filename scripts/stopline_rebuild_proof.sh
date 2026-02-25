@@ -158,6 +158,7 @@ log_ok "Cleanroom prepared: $CLEANROOM_DIR"
 log_info "Block C: Build execution"
 BUILD_LOG="$CLEANROOM_DIR/build.log"
 BUILD_EXIT=0
+BUILD_START_TS="$(date +%s)"
 
 {
   echo "# Build Execution"
@@ -208,8 +209,6 @@ if [[ ! -d "$BUNDLE_DIR" ]]; then
 fi
 
 find "$BUNDLE_DIR" -type f \( -name "*.AppImage" -o -name "*.deb" -o -name "*.rpm" \) -exec ls -l --time-style=full-iso {} \; > "$ARTIFACTS_LIST"
-
-BUILD_START_TS="$(stat -c %Y "$REPORT_DIR/C_BUILD.txt")"
 
 {
   echo "# Artifacts Inventory"
