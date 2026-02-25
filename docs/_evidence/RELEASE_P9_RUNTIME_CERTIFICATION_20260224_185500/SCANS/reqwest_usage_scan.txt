@@ -1,0 +1,10 @@
+# G_SINGLE_NETWORK_GATE — reqwest scan (WebResearch scope)
+# Date: 2026-02-24T18:58:45Z
+
+## P7 new services
+PASS — zero reqwest in discovery_service.rs and vector_service.rs
+
+## WebResearch commands
+1970:        // rerank_passages is pure — no network, no reqwest
+
+VERDICT: PASS

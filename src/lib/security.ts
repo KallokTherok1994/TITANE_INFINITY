@@ -1199,6 +1199,11 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'window_toggle_fullscreen',
   'window_set_fullscreen',
   'window_is_fullscreen',
+
+  // ═══════════════════════════════════════════════════════════════
+  // WEB RESEARCH ENGINE (P1.0 EXPERIMENTAL)
+  // ═══════════════════════════════════════════════════════════════
+  'web_research',
 ]);
 
 /**

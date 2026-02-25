@@ -1,0 +1,17 @@
+=== SINGLE NETWORK GATE SCAN (reqwest) ===
+Method: grep -rn "reqwest" src-tauri/src --include="*.rs" -l
+
+FILES WITH REQWEST IN WebResearch PIPELINE:
+  src-tauri/src/services/fetch_service.rs    ← EXPECTED (single gate)
+  src-tauri/src/services/robots_service.rs   ← PRE-EXISTING (P3, before P10-P13)
+  src-tauri/src/commands/web_research.rs     ← comment only: "// no reqwest"
+  src-tauri/src/services/rag_service.rs      ← comment only: "// zero reqwest"
+
+NEW FILES (P10-P13):
+  src-tauri/src/services/local_llm_service.rs  → 0 reqwest
+  src-tauri/src/services/seed_pack_service.rs  → 0 reqwest
+  discovery_service.rs extensions              → 0 reqwest
+
+VERDICT: G_SINGLE_GATE: PASS for P10-P13 changes.
+NOTE: robots_service.rs uses reqwest directly — pre-existing P3 issue,
+not introduced by this lot. Classified as KNOWN_FINDING, out of P10-P13 scope.
