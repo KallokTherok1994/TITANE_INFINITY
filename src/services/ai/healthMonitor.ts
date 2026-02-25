@@ -11,7 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { metricsEngine, autoHealEngine } from './system';
+import { metricsEngine } from './metricsEngine';
+import { autoHealEngine } from './autoHealEngine';
 import { aiOrchestrator } from './orchestrator';
 import { createLogger } from '@/utils/logger';
 
