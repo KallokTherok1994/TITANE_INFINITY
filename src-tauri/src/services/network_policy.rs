@@ -184,6 +184,10 @@ mod tests {
             respect_robots: None,
             rate_limit_profile: None,
             target_url: Some("https://example.com/".to_string()),
+            cache_enabled: None,
+            sandbox_root: None,
+            seed_urls: None,
+            max_depth: None,
         }
     }
 

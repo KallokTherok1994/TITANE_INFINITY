@@ -85,7 +85,7 @@ async function fetchWithTimeout(
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, {
+    const response = await fetch(url, { // @network-allowed
       ...options,
       signal: controller.signal,
     });

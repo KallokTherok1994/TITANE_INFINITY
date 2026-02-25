@@ -1,48 +1,26 @@
 {
-  "version": "27.2.0",
-  "tag": "v27.2.0",
-  "tag_commit": "c4370c41",
-  "release_date": "2026-02-24",
-  "release_timestamp": "2026-02-24T00:00:00Z",
-  "scope": "Backend Gate + Ollama Cache + NO_LYING_FALLBACK",
-  "risk": "MINIMAL",
-  "breaking_changes": false,
-  "backward_compatible": true,
-  "deployment_strategy": "GA Immédiat",
+  "deployment": {
+    "timestamp": "2026-02-25 02:15:36 UTC",
+    "version": "27.2.0",
+    "commit": "2904a78cee00d6287d3444fb36e9ccf838ddfe06",
+    "branch": "hotfix/v27.0.6-hotfix.1",
+    "certification": "TITANE_INFINITY_RELEASE_20260224_211317_CERTIFIED",
+    "deployment_type": "post_certification"
+  },
   "artifacts": {
     "appimage": {
-      "filename": "TITANE-Infinity_27.2.0_amd64.AppImage",
-      "size_bytes": 89217528,
-      "size_human": "86M",
-      "sha256": "1972c2709a1cad6f36444d68ff6ab098614adceea00fe2679fb338f894f1fa38"
+      "available": true,
+      "sha256": "c48b8ed3d2cb73a2d891b56fb6f51a579e257fa53fd07a1dd3b0b3e6cfe12ac2"
     },
     "deb": {
-      "filename": "TITANE-Infinity_27.2.0_amd64.deb",
-      "size_bytes": 13783930,
-      "size_human": "14M",
-      "sha256": "5b925c8dc283cb87eb19c578481f0484368b451ced7c04016ccd5c29f61328fa"
-    },
-    "rpm": {
-      "filename": "TITANE-Infinity-27.2.0-1.x86_64.rpm",
-      "size_bytes": 13766038,
-      "size_human": "14M",
-      "sha256": "8fa895ed5ca45231a7e392ab3b7d3e3f846c24de4399728a94a838810445c416"
+      "available": true,
+      "sha256": "3964b75c97210104ea6e0a6637752d9415bea19723861cb7ad8b415316ec32a5"
     }
   },
-  "features": [
-    "Multi-Provider AI (Ollama, OpenAI, Anthropic, Gemini)",
-    "Backend Gate Enforcement (Defense-in-depth)",
-    "Ollama Cache (TTL 10s anti-flapping)",
-    "NO_LYING_FALLBACK (Network status verification)",
-    "Cognitive Operating System",
-    "Production Ready"
-  ],
-  "governance": {
-    "commits": ["fd7ccda5", "c4370c41"],
-    "breaking_changes": false,
-    "code_changes": 7,
-    "lines_added": 218
-  },
-  "verified": true,
-  "verified_timestamp": "2026-02-24T00:00:00Z"
+  "certification": {
+    "release_gate_status": "PASSED",
+    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
+    "security_posture": "MAXIMUM_HARDENED",
+    "production_readiness": "CERTIFIED_READY"
+  }
 }

@@ -5,10 +5,10 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::cache_service::{CacheError, CacheService};
+use crate::services::fetch_service::FetchService;
+use crate::services::network_policy::AppliedPolicy;
 use crate::services::network_policy::extract_domain;
 use crate::types::research::{RobotsEvent, RobotsStatus};
-use reqwest::Client;
-use std::time::Duration;
 
 // ─────────────────────────────────────────────────────────────────
 // CONFIG
@@ -28,28 +28,26 @@ pub enum RobotsErrorPolicy {
 // ─────────────────────────────────────────────────────────────────
 
 pub struct RobotsService {
-    client: Client,
     error_policy: RobotsErrorPolicy,
 }
 
 impl RobotsService {
     pub fn new(timeout_ms: u64, error_policy: RobotsErrorPolicy) -> Self {
-        let client = Client::builder()
-            .timeout(Duration::from_millis(timeout_ms))
-            .redirect(reqwest::redirect::Policy::limited(3))
-            .build()
-            .unwrap_or_else(|_| Client::new());
-        RobotsService {
-            client,
-            error_policy,
-        }
+        let _ = timeout_ms;
+        RobotsService { error_policy }
     }
 
     /// Check whether `url` is allowed by the domain's robots.txt.
     ///
     /// Returns (is_allowed, RobotsEvent).
     /// Reads from cache first; fetches from network if not cached.
-    pub async fn is_allowed(&self, url: &str, cache: &CacheService) -> (bool, RobotsEvent) {
+    pub async fn is_allowed(
+        &self,
+        url: &str,
+        cache: &CacheService,
+        fetch_svc: &mut FetchService,
+        policy: &AppliedPolicy,
+    ) -> (bool, RobotsEvent) {
         let domain = extract_domain(url).unwrap_or_else(|| url.to_string());
         let path = extract_path(url);
 
@@ -80,9 +78,9 @@ impl RobotsService {
 
         // Fetch robots.txt from network
         let robots_url = format!("https://{}/robots.txt", domain);
-        match self.client.get(&robots_url).send().await {
-            Ok(resp) if resp.status().is_success() => {
-                let text = resp.text().await.unwrap_or_default();
+        match fetch_svc.fetch(&robots_url, policy).await {
+            Ok(result) if (200..300).contains(&result.status) => {
+                let text = String::from_utf8_lossy(&result.body).into_owned();
                 // Best-effort cache write (ignore errors)
                 let _ = cache.put_robots(&domain, &text);
                 let allowed = parse_robots_allowed(&text, &path);
@@ -100,7 +98,7 @@ impl RobotsService {
                     },
                 )
             }
-            Ok(resp) if resp.status().as_u16() == 404 => {
+            Ok(result) if result.status == 404 => {
                 // No robots.txt → allow everything
                 let _ = cache.put_robots(&domain, "");
                 (

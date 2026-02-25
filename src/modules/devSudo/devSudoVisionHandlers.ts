@@ -758,12 +758,12 @@ export async function handleFrontendOptimize(): Promise<DevSudoResult> {
 
 \`\`\`typescript
 // Avant
-function ChatBubble({ message, onUpdate }) {
+function ChatPanel({ message, onUpdate }) {
   return <div>{/* render */}</div>;
 }
 
 // Après ✅
-const ChatBubble = memo(({ message, onUpdate }) => {
+const ChatPanel = memo(({ message, onUpdate }) => {
   return <div>{/* render */}</div>;
 }, (prev, next) => {
   return prev.message.id === next.message.id &&

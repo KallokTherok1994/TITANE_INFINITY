@@ -12,7 +12,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { webResearch } from '@/services/webResearchService';
 import type {
@@ -21,6 +22,14 @@ import type {
   ResearchReport,
   Citation,
 } from '@/types/research';
+
+type ResearchHandoffState = {
+  q?: string;
+  mode?: ResearchMode;
+  target_url?: string;
+  seed_urls?: string[] | string;
+  sandbox_root?: string;
+};
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES
@@ -168,6 +177,7 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
 // ─────────────────────────────────────────────────────────────────
 
 export const ResearchPage: React.FC = () => {
+  const location = useLocation();
   const [question, setQuestion] = useState('');
   const [mode, setMode] = useState<ResearchMode>('LOCAL_INDEX');
   const [targetUrl, setTargetUrl] = useState('');
@@ -176,6 +186,41 @@ export const ResearchPage: React.FC = () => {
   const [state, setState] = useState<ResearchState>('idle');
   const [report, setReport] = useState<ResearchReport | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  useEffect(() => {
+    const navState = (location.state as ResearchHandoffState | null) ?? null;
+    const params = new URLSearchParams(location.search);
+    const queryQuestion = navState?.q ?? params.get('q');
+    const queryMode = navState?.mode ?? params.get('mode');
+    const queryTargetUrl = navState?.target_url ?? params.get('target_url');
+    const querySeedUrls =
+      typeof navState?.seed_urls === 'string'
+        ? navState.seed_urls
+        : Array.isArray(navState?.seed_urls)
+          ? navState.seed_urls.join('\n')
+          : params.get('seed_urls');
+    const querySandboxRoot = navState?.sandbox_root ?? params.get('sandbox_root');
+
+    if (queryQuestion && queryQuestion.trim().length > 0) {
+      setQuestion(queryQuestion.trim());
+    }
+
+    if (queryMode === 'OFFLINE' || queryMode === 'LOCAL_INDEX' || queryMode === 'WEB_LIVE') {
+      setMode(queryMode);
+    }
+
+    if (queryTargetUrl && queryTargetUrl.trim().length > 0) {
+      setTargetUrl(queryTargetUrl.trim());
+    }
+
+    if (querySeedUrls && querySeedUrls.trim().length > 0) {
+      setSeedUrlsRaw(querySeedUrls.trim());
+    }
+
+    if (querySandboxRoot && querySandboxRoot.trim().length > 0) {
+      setSandboxRoot(querySandboxRoot.trim());
+    }
+  }, [location.search, location.state]);
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {

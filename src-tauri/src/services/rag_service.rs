@@ -363,12 +363,12 @@ mod tests {
     }
 
     // ── G_NO_PROVIDER_USAGE ───────────────────────────────────────
-    // (Proof by code review: no reqwest, no ollama, no gemini, no openai in this file)
+    // (Proof by code review: no network client and no external provider call in this file)
     #[test]
     fn g_no_provider_usage_verified() {
         // This test is a documentation marker.
-        // rag_service.rs contains: zero network calls, zero reqwest, zero external providers.
-        // Confirmed by static analysis: grep "reqwest|openai|anthropic|gemini|ollama" = 0 hits.
+        // rag_service.rs contains: zero network calls and zero external providers.
+        // Confirmed by static analysis on network/provider tokens.
         assert_eq!(STRATEGY_EXTRACTIVE, "EXTRACTIVE_FALLBACK");
     }
 

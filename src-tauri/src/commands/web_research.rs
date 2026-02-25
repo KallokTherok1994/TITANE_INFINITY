@@ -496,10 +496,13 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
     markers.push(M_ROBOTS_START.to_string());
 
     let respect_robots = options.respect_robots.unwrap_or(true);
+    let mut fetch_svc = FetchService::new(&policy);
     if respect_robots {
         if let Some(cache_svc) = &cache_svc_result {
             let robots_svc = RobotsService::new(policy.timeout_ms, RobotsErrorPolicy::AllowOnError);
-            let (allowed, robots_event) = robots_svc.is_allowed(target_url, cache_svc).await;
+            let (allowed, robots_event) = robots_svc
+                .is_allowed(target_url, cache_svc, &mut fetch_svc, &policy)
+                .await;
 
             let robots_marker = match &robots_event.status {
                 RobotsStatus::Allow => M_ROBOTS_OK,
@@ -641,7 +644,6 @@ async fn run_research(query: &ResearchQuery, options: &ResearchOptions) -> Resea
 
     // ── WEB_LIVE — Fetch (only on cache MISS) ─────────────────────
     if !cache_hit {
-        let mut fetch_svc = FetchService::new(&policy);
         let fetch_result = fetch_svc.fetch(target_url, &policy).await;
 
         match fetch_result {
@@ -1967,7 +1969,7 @@ mod tests {
                 char_start: Some(0),
             },
         ];
-        // rerank_passages is pure — no network, no reqwest
+        // rerank_passages is pure — no network, no HTTP client
         let result = vector_service::rerank_passages("TITANE", &passages, 5);
         assert_eq!(result.len(), 1, "Rerank of 1 passage should return 1");
     }

@@ -548,7 +548,7 @@ export async function handleAutoImport(): Promise<DevSudoResult> {
 📊 **Détection**:
   ⚠️ 3 imports manquants détectés
 
-**1. ChatBubble.tsx**:
+**1. ChatPanel.tsx**:
 \`\`\`typescript
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageSquare, X, Send } from 'lucide-react';

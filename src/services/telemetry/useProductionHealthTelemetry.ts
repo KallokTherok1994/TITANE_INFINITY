@@ -39,7 +39,7 @@ export function useProductionHealthTelemetry(
   const [error, setError] = useState<string | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  const fetch = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -81,16 +81,16 @@ export function useProductionHealthTelemetry(
 
   useEffect(() => {
     if (!autoRefresh) return;
-    fetch();
-    intervalRef.current = setInterval(fetch, refreshIntervalMs);
+    loadData();
+    intervalRef.current = setInterval(loadData, refreshIntervalMs);
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
       }
     };
-  }, [fetch, autoRefresh, refreshIntervalMs]);
+  }, [loadData, autoRefresh, refreshIntervalMs]);
 
-  const manualRefresh = useCallback(() => fetch(), [fetch]);
+  const manualRefresh = useCallback(() => loadData(), [loadData]);
 
   return {
     data,

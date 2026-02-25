@@ -38,7 +38,7 @@
 }
 
 /* Position variants */
-/* ✨ v25.4.2 - Ajusté pour éviter conflit avec ChatBubble (bottom: 2rem + 80px + 24px) */
+/* ✨ v25.4.2 - Ajusté pour éviter conflit avec le panneau chat flottant (bottom: 2rem + 80px + 24px) */
 .aura-control-toggle--bottom-right {
   bottom: 130px;
   right: 24px;
@@ -155,7 +155,7 @@
 }
 
 /* Position variants */
-/* ✨ v25.4.2 - Ajusté pour éviter conflit avec ChatBubble */
+/* ✨ v25.4.2 - Ajusté pour éviter conflit avec le panneau chat flottant */
 .aura-control-panel--bottom-right {
   bottom: 200px;
   right: 24px;
@@ -176,7 +176,7 @@
   left: 24px;
 }
 
-/* Header variant: panel opens from top-right (non-overlapping with ChatBubble) */
+/* Header variant: panel opens from top-right (non-overlapping with floating chat panel) */
 .aura-control-panel--header {
   top: 90px;
   right: 24px;

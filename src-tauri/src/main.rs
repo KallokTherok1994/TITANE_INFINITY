@@ -183,6 +183,9 @@ mod security {
     pub mod secrets_engine {
         include!("security/secrets_engine.rs");
     }
+    pub mod storage_guard {
+        include!("security/storage_guard.rs");
+    }
     pub mod permission_guard {
         include!("security/permission_guard.rs");
     }
@@ -779,7 +782,7 @@ fn main() {
                         }
                     }
 
-                    let request = overdrive::chat_orchestrator::ChatRequest {
+                    let _request = overdrive::chat_orchestrator::ChatRequest {
                         message: "Réponds uniquement: OK".to_string(),
                         conversation_id: Some("smoke-runtime-chat".to_string()),
                         provider: "ollama".to_string(),
