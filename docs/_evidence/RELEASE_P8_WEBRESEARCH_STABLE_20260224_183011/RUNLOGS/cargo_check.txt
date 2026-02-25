@@ -1,0 +1,7 @@
+# G_CARGO_CHECK — Rust type safety verification
+# Date: 2026-02-24T18:31:36Z
+
+## cargo check --lib
+error: could not find `Cargo.toml` in `/home/runner/work/TITANE_INFINITY/TITANE_INFINITY` or any parent directory
+
+## Exit code capture

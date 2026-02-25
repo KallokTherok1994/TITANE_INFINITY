@@ -109,6 +109,10 @@ mod devops_commands {
 mod diagnostic_commands {
     include!("commands/diagnostic_commands.rs");
 }
+// P1: WebResearch Engine (EXPERIMENTAL)
+mod web_research_commands {
+    include!("commands/web_research.rs");
+}
 mod audio {
     // Re-export types from lib for inline modules
     pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
@@ -309,6 +313,7 @@ mod config;
 // ═══════════════════════════════════════════════════════════════
 mod memory;
 mod memory_compactor;
+mod services; // P2: WebResearch network gate
 mod types;
 mod utils;
 
@@ -945,6 +950,8 @@ fn main() {
             
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,
+            // P1: WebResearch Engine (EXPERIMENTAL — stub, no network)
+            web_research_commands::web_research,
             // V26 Production Health Telemetry
             api::telemetry_api::read_production_week1_csv,
             // Voice Engine Commands (VOICE PIPELINE v21 REPAIR - 17 commands)

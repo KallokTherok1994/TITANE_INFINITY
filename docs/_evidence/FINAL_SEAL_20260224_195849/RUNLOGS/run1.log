@@ -1,0 +1,52 @@
+=== CARGO TEST RUN 1 ===
+   Compiling titane-infinity v27.2.0 (/home/runner/work/TITANE_INFINITY/TITANE_INFINITY/src-tauri)
+...(compilation output omitted)...
+test types::sentinel::tests::test_alert_creation ... ok
+test types::sentinel::tests::test_alert_debug ... ok
+test types::sentinel::tests::test_alert_serialization ... ok
+test types::sentinel::tests::test_sentinel_state_clone ... ok
+test types::sentinel::tests::test_sentinel_state_debug ... ok
+test types::sentinel::tests::test_sentinel_state_default ... ok
+test types::sentinel::tests::test_sentinel_state_serialization ... ok
+test types::sentinel::tests::test_sentinel_state_with_data ... ok
+test types::sentinel::tests::test_severity_clone ... ok
+test types::sentinel::tests::test_severity_copy ... ok
+test types::sentinel::tests::test_severity_debug ... ok
+test types::sentinel::tests::test_severity_equality ... ok
+test types::sentinel::tests::test_severity_serialization ... ok
+test types::sentinel::tests::test_severity_variants ... ok
+test types::shared::tests::test_health_status_needs_attention ... ok
+test types::shared::tests::test_health_status_score_conversion ... ok
+test types::shared::tests::test_module_health_info ... ok
+test security::pre_boot_validation::tests::test_pre_boot_validation ... ok
+test unified_memory_v2::encryption::tests::test_encryption_roundtrip ... ok
+test unified_memory_v2::tests_simple::integration_tests::test_clear_all ... ok
+test unified_memory_v2::tests_simple::integration_tests::test_memory_initialization ... ok
+test unified_memory_v2::tests_simple::integration_tests::test_recall_search ... ok
+test unified_memory_v2::tests_simple::integration_tests::test_store_and_retrieve ... ok
+test unified_memory_v2::types::tests::test_memory_entry_creation ... ok
+test unified_memory_v2::types::tests::test_memory_type_importance ... ok
+test unified_memory_v2::types::tests::test_relevance_score ... ok
+test unified_memory_v2::types::tests::test_tier_promotion ... ok
+test updates::update_engine::tests::test_manifest_signature ... ok
+test updates::update_engine::tests::test_update_engine_creation ... ok
+test utils::error::tests::test_error_creation ... ok
+test utils::error::tests::test_io_error_conversion ... ok
+test utils::logging::tests::test_logging ... ok
+test watchdog::fixer::tests::test_fixer_no_anomalies ... ok
+test watchdog::fixer::tests::test_fixer_partial_reset_no_rollback ... ok
+test watchdog::fixer::tests::test_fixer_rollback_critical ... ok
+test watchdog::fixer::tests::test_fixer_sanitize_warnings ... ok
+test watchdog::fixer::tests::test_force_rollback ... ok
+test watchdog::fixer::tests::test_full_reset ... ok
+test watchdog::scanner::tests::test_quick_scan ... ok
+test watchdog::scanner::tests::test_scanner_clean_state ... ok
+test watchdog::scanner::tests::test_scanner_detect_low_coherence ... ok
+test watchdog::scanner::tests::test_scanner_detect_nan ... ok
+test watchdog::scanner::tests::test_scanner_detect_overload ... ok
+test watchdog::selftest::tests::test_watchdog_selftest ... ok
+test unified_memory_v2::encryption::tests::test_encryption_different_passwords ... ok
+test kernel::watchdog::tests::test_watchdog_health_check ... ok
+test security::rate_limit::tests::test_cleanup ... ok
+
+test result: ok. 4387 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 18.52s
