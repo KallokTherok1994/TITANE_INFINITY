@@ -12,7 +12,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { chatMemoryCompactor } from '../services/chatMemoryCompactor';
-import type { ChatMode } from '../services/ai';
+import type { ChatMode } from '../services/ai/chatEngine';
 import type { AIMessage } from '../services/ai/types';
 import { awardExperience } from '../services/experienceService';
 import { XPSource } from '../types/experience';

@@ -29,8 +29,6 @@ import { tauriChatProvider } from './providers/tauriChat';
 import { ollamaProvider } from './providers/ollama';
 // v37.0.0: Cloud providers lazy-loaded on first use (OpenAI, Claude, Gemini, Copilot)
 import { getOrLoadProvider, type LazyProviderName } from './AIProviderLazyLoader';
-import { autoHealEngine } from './autoHealEngine';
-import { metricsEngine } from './metricsEngine';
 import { cognitiveKernel } from './cognitiveKernel'; // ← NOUVEAU v22Ω: Cognitive Kernel
 import { circuitBreaker } from './circuitBreaker'; // ← v24.5: Circuit Breaker Pattern
 import { rateLimiter } from './rateLimiter'; // ← v24.5: Frontend Rate Limiting
@@ -46,13 +44,25 @@ import {
 
 const logger = createLogger('Orchestrator');
 
-// Direct engine instances (no lazy loading needed)
-const _autoHeal = autoHealEngine;
-const _metrics = metricsEngine;
+type LoadedEngines = {
+  autoHeal: typeof import('./autoHealEngine').autoHealEngine;
+  metrics: typeof import('./metricsEngine').metricsEngine;
+};
 
-// Initialize engines on first use (now sync)
-const ensureEngines = () => {
-  return { autoHeal: _autoHeal, metrics: _metrics };
+let enginesPromise: Promise<LoadedEngines> | null = null;
+
+const ensureEngines = async (): Promise<LoadedEngines> => {
+  if (!enginesPromise) {
+    enginesPromise = Promise.all([
+      import('./autoHealEngine'),
+      import('./metricsEngine'),
+    ]).then(([autoHealModule, metricsModule]) => ({
+      autoHeal: autoHealModule.autoHealEngine,
+      metrics: metricsModule.metricsEngine,
+    }));
+  }
+
+  return enginesPromise;
 };
 
 const NULL_BYTE = String.fromCharCode(0);
@@ -174,12 +184,30 @@ class AIOrchestrator {
   private readonly METRICS_CACHE_TTL_MS = CACHE_TTL.metrics;
 
   constructor() {
+    const resolveProviderSafely = (
+      providerName: string,
+      getter: () => AIProvider | undefined
+    ): AIProvider | undefined => {
+      try {
+        return getter();
+      } catch (error) {
+        logger.warn(`Provider binding not ready during init: ${providerName}`, {
+          error: String((error as Error)?.message || error),
+        });
+        return undefined;
+      }
+    };
+
+    const tauriProvider = resolveProviderSafely('tauri-backend', () => tauriChatProvider);
+    const ollamaLocalProvider = resolveProviderSafely('ollama', () => ollamaProvider);
+    const localFallbackProvider = resolveProviderSafely('titane-local', () => titaneLocalProvider);
+
     // Initialize eager providers safely (they may be undefined at import time)
     // Order: Tauri (Rust backend) → Ollama (local memory) → TitaneLocal (fallback)
     const eagerCandidates: (AIProvider | undefined)[] = [
-      tauriChatProvider, // #1 Backend Rust (cascade interne)
-      ollamaProvider, // #2 Ollama (mémoire locale + analyse permanente)
-      titaneLocalProvider, // #3 Fallback local (noyau infaillible)
+      tauriProvider, // #1 Backend Rust (cascade interne)
+      ollamaLocalProvider, // #2 Ollama (mémoire locale + analyse permanente)
+      localFallbackProvider, // #3 Fallback local (noyau infaillible)
     ];
 
     // Filter out undefined providers and ensure we have the fallback
@@ -188,8 +216,11 @@ class AIOrchestrator {
     );
 
     // Ensure titaneLocalProvider is always available as fallback
-    if (!this.eagerProviders.includes(titaneLocalProvider) && titaneLocalProvider) {
-      this.eagerProviders.push(titaneLocalProvider);
+    if (
+      localFallbackProvider &&
+      !this.eagerProviders.includes(localFallbackProvider)
+    ) {
+      this.eagerProviders.push(localFallbackProvider);
     }
 
     this.initializeProviderStats();

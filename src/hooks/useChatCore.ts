@@ -11,7 +11,11 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
+import {
+  chatEngine,
+  type ChatMode,
+  type ChatEngineResponse,
+} from '../services/ai/chatEngine';
 import type { AIMessage } from '../services/ai/types';
 import { chatValidator } from '../services/chatValidator';
 import { getProviderTimeout, REQUEST_BUDGETS } from '@/config/aiTimeouts.config';

@@ -11,7 +11,11 @@
  */
 
 import { useState, useCallback, useRef } from 'react';
-import { chatEngine, type ChatMode, type ChatEngineResponse } from '../services/ai';
+import {
+  chatEngine,
+  type ChatMode,
+  type ChatEngineResponse,
+} from '../services/ai/chatEngine';
 import type { AIMessage } from '../services/ai/types';
 
 export interface UseChatStreamingOptions {
