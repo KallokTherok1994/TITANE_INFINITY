@@ -47,9 +47,7 @@ describe('TAURI_COMMANDS', () => {
     const { TAURI_COMMANDS, invokeTauri } =
       await import('../../../core/commands/TAURI_COMMANDS');
 
-    const result = await invokeTauri<Record<string, unknown>>(
-      TAURI_COMMANDS.CHAT_SEND_MESSAGE
-    );
+    const result = await invokeTauri<Record<string, unknown>>(TAURI_COMMANDS.CHAT_GENERATE);
 
     expect(result).toEqual(
       expect.objectContaining({

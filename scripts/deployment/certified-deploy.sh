@@ -46,6 +46,10 @@ UPDATE_MANIFEST=true
 DRY_RUN=false
 VERBOSE=false
 
+# Deployed artifacts (filled during execution)
+DEPLOYED_APPIMAGE=""
+DEPLOYED_DEB=""
+
 # Couleurs
 RED='\033[0;31m'
 GREEN='\033[0;32m' 
@@ -232,6 +236,7 @@ execute_deployment() {
             else
                 cp "$appimage_src" "$appimage_dest"
                 chmod +x "$appimage_dest"
+                DEPLOYED_APPIMAGE="$appimage_dest"
                 success "AppImage deployed: $appimage_name"
             fi
         fi
@@ -249,6 +254,7 @@ execute_deployment() {
                 info "[DRY-RUN] Would deploy: $deb_src -> $deb_dest"
             else
                 cp "$deb_src" "$deb_dest"
+                DEPLOYED_DEB="$deb_dest"
                 success "DEB deployed: $deb_name"
             fi
         fi
@@ -277,12 +283,22 @@ update_deployment_manifest() {
     local appimage_hash="none"
     local deb_hash="none"
     
-    if ls "$DEPLOY_PATH"/*.AppImage >/dev/null 2>&1; then
-        appimage_hash=$(sha256sum "$DEPLOY_PATH"/*.AppImage | head -n1 | awk '{print $1}')
+    if [ -n "$DEPLOYED_APPIMAGE" ] && [ -f "$DEPLOYED_APPIMAGE" ]; then
+        appimage_hash=$(sha256sum "$DEPLOYED_APPIMAGE" | awk '{print $1}')
+    else
+        local appimage_files=("$DEPLOY_PATH"/*.AppImage)
+        if [ -f "${appimage_files[0]}" ]; then
+            appimage_hash=$(sha256sum "${appimage_files[0]}" | awk '{print $1}')
+        fi
     fi
     
-    if ls "$DEPLOY_PATH"/*.deb >/dev/null 2>&1; then
-        deb_hash=$(sha256sum "$DEPLOY_PATH"/*.deb | head -n1 | awk '{print $1}')
+    if [ -n "$DEPLOYED_DEB" ] && [ -f "$DEPLOYED_DEB" ]; then
+        deb_hash=$(sha256sum "$DEPLOYED_DEB" | awk '{print $1}')
+    else
+        local deb_files=("$DEPLOY_PATH"/*.deb)
+        if [ -f "${deb_files[0]}" ]; then
+            deb_hash=$(sha256sum "${deb_files[0]}" | awk '{print $1}')
+        fi
     fi
     
     if [ "$DRY_RUN" = true ]; then
