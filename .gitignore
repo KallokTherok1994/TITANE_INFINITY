@@ -17,6 +17,7 @@ out/
 # Rust
 target/
 Cargo.lock
+!src-tauri/Cargo.lock
 **/*.rs.bk
 
 # IDEs

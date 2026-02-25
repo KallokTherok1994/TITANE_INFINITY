@@ -98,6 +98,8 @@
     "gate:appimage-index": "node scripts/gate-appimage-index.mjs",
     "gate:prod-boot": "bash scripts/gate-prod-boot.sh",
     "gate:all": "pnpm run gate:dist-assets && pnpm run gate:appimage-index",
+    "stopline:rebuild-proof": "bash scripts/stopline_rebuild_proof.sh",
+    "stopline:latest": "bash scripts/stopline_latest_report.sh",
     "auto-heal": "./scripts/maintenance/auto-heal.sh",
     "auto-fix": "pnpm run lint -- --fix && pnpm run format",
     "storybook": "storybook dev -p 6006",
