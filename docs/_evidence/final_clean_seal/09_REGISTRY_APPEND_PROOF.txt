@@ -1,0 +1,25 @@
+# 09_REGISTRY_APPEND_PROOF — FINAL CLEAN SEAL
+
+## Registry file: `registry/ui-events.jsonl`
+
+### BEFORE (tail -3)
+```
+[2026-02-23T19:24:29Z] RELEASE_v27.0.6_SEALED: tag=d3b3948904a69a3288e16a929635a26c23141025 chantier=api-docs-sync scope=P2-docs-only via_perfection_lane=yes
+[2026-02-23T19:39:49Z] WAVE1_VERDICT_v27.0.6: verdict=PASS scope=docs-only baseline_revalidated=yes deployment=none production=v27.0.5-prod
+{"event":"RELEASE_v27.2.0_SEALED","timestamp":"2026-02-23T20:05:00Z",...}
+```
+
+### APPENDED line
+```json
+{"event":"FINAL_SEAL_APPLIED","ts":"2026-02-24T14:15:00Z","head_sha":"bf9bb08ecdc9cfb3790f6cfbed16081b18f05b9b","branch":"copilot/implement-network-diagnostic-engine","proof_pack_path":"docs/_evidence/final_clean_seal","sha256_manifest":"docs/_evidence/final_clean_seal/SHA256SUMS.txt","verdict":"PASS","tests":"29/29 x3","p0_resolved":2,"p0_remaining":0,"scope":"final-clean-seal: docs alignment + terminology + Truth Contract proofs"}
+```
+
+### AFTER (tail -3)
+```
+[2026-02-23T19:39:49Z] WAVE1_VERDICT_v27.0.6: ...
+{"event":"RELEASE_v27.2.0_SEALED","timestamp":"2026-02-23T20:05:00Z",...}
+{"event":"FINAL_SEAL_APPLIED","ts":"2026-02-24T14:15:00Z",...}
+```
+
+## Gate: APPEND_ONLY_REGISTRY (G8) — PASS
+Ligne ajoutée, aucune modification de l'historique existant.

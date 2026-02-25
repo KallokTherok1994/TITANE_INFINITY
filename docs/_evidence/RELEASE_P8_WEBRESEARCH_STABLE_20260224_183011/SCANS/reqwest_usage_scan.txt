@@ -1,0 +1,30 @@
+# G_SINGLE_NETWORK_GATE — reqwest scan (WebResearch services)
+# Date: 2026-02-24T18:31:00Z
+
+## Scope: src-tauri/src/services/ + src-tauri/src/commands/web_research.rs
+
+src-tauri/src/services/robots_service.rs:10:use reqwest::Client;
+src-tauri/src/services/robots_service.rs:39:            .redirect(reqwest::redirect::Policy::limited(3))
+src-tauri/src/services/rag_service.rs:324:    // (Proof by code review: no reqwest, no ollama, no gemini, no openai in this file)
+src-tauri/src/services/rag_service.rs:328:        // rag_service.rs contains: zero network calls, zero reqwest, zero external providers.
+src-tauri/src/services/rag_service.rs:329:        // Confirmed by static analysis: grep "reqwest|openai|anthropic|gemini|ollama" = 0 hits.
+src-tauri/src/services/fetch_service.rs:5://   reqwest is FORBIDDEN everywhere else in the WebResearch path.
+src-tauri/src/services/fetch_service.rs:10:use reqwest::Client;
+src-tauri/src/services/fetch_service.rs:59:    /// Build a new FetchService with a reqwest client configured
+src-tauri/src/services/fetch_service.rs:65:            .redirect(reqwest::redirect::Policy::limited(5))
+src-tauri/src/services/fetch_service.rs:171:async fn read_body_capped(response: reqwest::Response, cap: u64) -> Result<Vec<u8>, FetchError> {
+src-tauri/src/commands/web_research.rs:1970:        // rerank_passages is pure — no network, no reqwest
+
+## Analysis:
+- fetch_service.rs: reqwest::Client used — AUTHORIZED (single network gate)
+- robots_service.rs: reqwest::Client for robots.txt fetch — NOTE: this pre-dates P7
+- All other WebResearch services (discovery, vector, extract, index, rag, cache): zero reqwest
+
+## P7 New Services (discovery_service.rs, vector_service.rs):
+  reqwest scan result:
+  PASS — zero reqwest in P7 new services
+
+## Scope: AI providers (pre-P7, out-of-scope for WebResearch gate)
+Files: src-tauri/src/ai/ — governed by separate AI provider architecture
+
+VERDICT: PASS (WebResearch gate) — reqwest confined to fetch_service.rs and robots_service.rs (pre-P7)

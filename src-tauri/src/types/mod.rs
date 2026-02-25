@@ -9,6 +9,7 @@ pub mod helios;
 pub mod memory;
 pub mod memory_chat; // ✨ NEW: Types Chat IA ↔ Memory Core
 pub mod nexus;
+pub mod research; // P1: WebResearch Engine types (EXPERIMENTAL)
 pub mod sentinel;
 pub mod shared; // ✨ NEW: Types partagés unifiés
 

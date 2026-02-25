@@ -481,6 +481,10 @@ export const TAURI_COMMANDS = {
   WRITE_SNAPSHOT: 'write_snapshot',
   XP_GET_STATE: 'xp_get_state',
   XP_SYNC_STATE: 'xp_sync_state',
+  // ─────────────────────────────────────────────────
+  // WEB RESEARCH ENGINE (P1.0 EXPERIMENTAL)
+  // ─────────────────────────────────────────────────
+  WEB_RESEARCH: 'web_research',
 } as const;
 
 export type TauriCommand = (typeof TAURI_COMMANDS)[keyof typeof TAURI_COMMANDS];

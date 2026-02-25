@@ -1,0 +1,31 @@
+# TITANE∞ P9 — Runtime Certification Environment
+# Generated: 2026-02-24T18:55:00Z
+
+## Tool Versions
+rustc: 1.93.0 (254b59607 2026-01-19)
+cargo: 1.93.0 (083ac5135 2025-12-15)
+node: v24.13.0
+
+## System Libraries (installed for P9)
+glib-2.0: 2.80.0 (libglib2.0-dev)
+gobject-2.0: 2.80.0 (included in libglib2.0-dev)
+gtk+-3.0: 3.24.41 (libgtk-3-dev)
+webkit2gtk-4.1: (libwebkit2gtk-4.1-dev)
+alsa: 1.2.11 (libasound2-dev)
+
+## System
+OS: Linux 6.11.0-1018-azure (Ubuntu 24.04)
+Arch: x86_64
+
+## Commit Tested
+SHA: 339d9a8 (after P8 docs + test fix)
+Branch: copilot/integrate-web-research-engine
+
+## Package Versions
+titane-infinity: 27.2.0 (src-tauri/Cargo.toml)
+
+## P9 Setup Steps
+1. sudo apt-get update
+2. sudo apt-get install -y libglib2.0-dev libgtk-3-dev libwebkit2gtk-4.1-dev libappindicator3-dev libsoup-3.0-dev libjavascriptcoregtk-4.1-dev libasound2-dev
+3. mkdir -p ../dist  (tauri build script requires frontendDist path to exist)
+4. cargo test --lib

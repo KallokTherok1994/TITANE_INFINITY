@@ -951,3 +951,133 @@ Triage failures, minimal fixes, re-run P10
 
 - Build safe executed once with scripts ignored; no dev server patterns detected.
 - `runTests` tool executed Playwright E2E by default, blocking required unit/integration x3.
+
+---
+
+## WEBRESEARCH_P7_P8_CANDIDATE_STABLE
+
+**Date**: 2026-02-24T18:30:11Z
+**Verdict**: ✅ CANDIDATE STABLE
+**Commit**: 9eb6d782cf00594ae075dec6712f767f39526615
+**Scope**: WebResearch Engine P7.0 — Discovery multi-URL, vector rerank, citation locators, Research UI
+
+### Gates
+
+| Gate | Status |
+|------|--------|
+| G_CARGO_CHECK | ✅ PASS |
+| G_TSC_CHECK | ✅ PASS |
+| G_SINGLE_NETWORK_GATE (WebResearch scope) | ✅ PASS |
+| G_UI_NO_NETWORK (P7 files) | ✅ PASS |
+| G_DISCOVERY_BUDGET_ENFORCED | ✅ PASS (static) |
+| G_DISCOVERY_DOMAIN_LOCK | ✅ PASS (static) |
+| G_VECTOR_OFFLINE_ONLY | ✅ PASS (static) |
+| G_CITATION_LOCATOR_VALID | ✅ PASS (static) |
+| G_E2E_NO_REAL_WRITES | ✅ PASS |
+| G_CARGO_TEST | ⚠️ BLOCKED_RUNNER (glib system libs absent) |
+
+### New Modules
+
+- `src-tauri/src/services/discovery_service.rs` (Ring 3, STABLE)
+- `src-tauri/src/services/vector_service.rs` (Ring 3, EXPERIMENTAL — `ENABLE_VECTOR_SEARCH`)
+- `src/pages/ResearchPage.tsx` (Ring 4, STABLE, route `/research`)
+
+### Proof Pack
+
+**Path**: `docs/_evidence/RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011/`
+**Hash Manifest**: `HASHES/manifest.sha256`
+**VERDICT.md hash**: `4c7ebb578f3450a558e3b795bbb9d6658e15cb93972795068f0a569c72da6f35`
+
+### Notes
+
+Full STABLE promotion requires runtime `cargo test --lib` in a glib-enabled environment.
+All code-level gates PASS. Runner constraint only.
+
+
+---
+
+## WEBRESEARCH_STABLE_RUNTIME_CERTIFIED
+
+**Date**: 2026-02-24T18:55:00Z
+**Verdict**: ✅ STABLE
+**Commit**: 339d9a8 (after test version fix, see below)
+**Scope**: P9 Runtime Certification — WebResearch Engine P7.0 fully STABLE
+
+### Runtime Test Results
+
+```
+running 4394 tests
+test result: ok. 4387 passed; 0 failed; 7 ignored; 0 measured; 0 filtered out; finished in 18.40s
+```
+
+### Gates
+
+| Gate | Status |
+|------|--------|
+| G_FULL_CARGO_TEST_PASS | ✅ PASS |
+| G_SINGLE_NETWORK_GATE | ✅ PASS |
+| G_UI_NO_NETWORK (P7) | ✅ PASS |
+
+### Pre-existing Fix
+
+- `test_cp_get_system_info`: hardcoded version "27.0.5" → "27.2.0" (1-line, pre-existing mismatch)
+
+### Proof Pack
+
+**Path**: `docs/_evidence/RELEASE_P9_RUNTIME_CERTIFICATION_20260224_185500/`
+**VERDICT.md hash**: `246126f09a3b70a63c46eccaf1c84c2575441ff358ae8b3893cac66648c5a557`
+**cargo_test.log hash**: `68675e8274ba85b4a858dd01759be2cfae14b684b2521253070603f1b2612aaf`
+
+### Promotion
+
+**CANDIDATE STABLE → STABLE** ✅
+
+
+---
+
+## P10–P13 POST-STABLE MASTER FUSION
+
+EVENT: P10_LOCAL_LLM_HOOK_QUALIFIED
+Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
+ProofPack: docs/_evidence/P10_LOCAL_LLM/
+Status: PASS (BLOCKED — NullLlmProvider)
+Date: 2026-02-24T19:46:00Z
+
+EVENT: P11_VECTOR_P110_CERTIFIED
+Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
+ProofPack: docs/_evidence/P10_P13_FUSION/EXPLORATION.md (§2.2)
+Status: PASS (P11.0 TF-IDF via P7, P11.1 BLOCKED)
+Date: 2026-02-24T19:46:00Z
+
+EVENT: P12_DISCOVERY_ROBUST_QUALIFIED
+Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
+ProofPack: docs/_evidence/P12_DISCOVERY/
+Status: QUALIFIED (seed_packs + sitemap/RSS feature-flagged)
+Date: 2026-02-24T19:46:00Z
+
+EVENT: P13_UX_PROOFS_QUALIFIED
+Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
+ProofPack: docs/_evidence/P13_UX_PROOFS/
+Status: QUALIFIED (locator_text + TracePanel enrichi)
+Date: 2026-02-24T19:46:00Z
+
+EVENT: P10_P13_FUSION_PASS_WITH_BLOCKED
+Commit: 7fcde10ca20db5f248a4bf6bfdfd1c282848b712
+ProofPack: docs/_evidence/P10_P13_FUSION_FINAL/
+Status: PASS_WITH_BLOCKED
+Date: 2026-02-24T19:46:00Z
+
+---
+
+## EVENT: FINAL_SEAL_STABLE
+
+| Field            | Value                                              |
+|------------------|----------------------------------------------------|
+| timestamp        | 2026-02-24T20:30:53Z                               |
+| commit           | f0758313547fc009cc611595d0fdeb1f2228d27d           |
+| proof_pack       | docs/_evidence/FINAL_SEAL_20260224_195849/         |
+| manifest_sha256  | 5cfbeec17bca7b10fcb821c849cf9d07225ba5f776f0b375d4ac792dc88450b9 |
+| verdict          | PASS_WITH_BLOCKED (P10 BLOCKED, P11.1 BLOCKED)     |
+| test_result      | 4387 pass / 0 fail / 7 ignored (x3 runs)           |
+| tsc_result       | PASS                                               |
+| sealed_by        | Copilot TITANE∞ FINAL_SEAL_v1                      |

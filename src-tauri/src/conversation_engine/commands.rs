@@ -95,10 +95,11 @@ pub async fn conversation_generate(
         );
         
         // Return immediate response (defense-in-depth, frontend should have already blocked)
+        // NO_LYING_FALLBACK: provider is local/none (network_used=false), so mode=LOCAL not REMOTE
         let blocked_response = serde_json::json!({
             "content": "Service externe bloqué au niveau backend (defence-in-depth).",
             "meta": {
-                "mode": "REMOTE",
+                "mode": "LOCAL",
                 "reason_code": "POLICY_BLOCKED",
                 "network_used": false,
                 "provider_used": "none",

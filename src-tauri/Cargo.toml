@@ -85,6 +85,7 @@ async-trait = "0.1" # Async trait support for providers
 cpal  = { version = "0.15", optional = true }
 hound = "3.5"                                 # WAV file reading/writing
 rusqlite = { version = "0.37.0", features = ["bundled"] }
+tantivy  = "0.22"                                   # P5: lexical index (BM25) for LOCAL_INDEX mode
 ndarray = "0.17.1"
 rustfft = "6.2"                               # FFT for spectral analysis (voice fingerprinting)
 

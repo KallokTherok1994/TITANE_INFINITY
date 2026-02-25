@@ -1,0 +1,17 @@
+# X3 REPRODUCIBILITY SUMMARY
+
+## Runs
+| Run | Passed | Failed | Ignored | Time    |
+|-----|--------|--------|---------|---------|
+| 1   | 4387   | 0      | 7       | 18.52s  |
+| 2   | 4387   | 0      | 7       | 18.46s  |
+| 3   | 4387   | 0      | 7       | 18.49s  |
+
+## Verdict
+- test count: STABLE (4387/4387 across all 3 runs)
+- failed count: STABLE (0)
+- ignored count: STABLE (7)
+- strategy markers: STABLE (extractive fallback, no LLM)
+- citations.len: STABLE (determined by test input fixtures)
+
+G_FUSION_REPRO_X3 = PASS
