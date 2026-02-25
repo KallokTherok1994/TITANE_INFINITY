@@ -99,6 +99,14 @@ else
   log_line "[E2E_WRAPPER] TAURI_DEV_SERVER_URL=<unset>"
 fi
 
+# Dev-server mode: run Tauri CLI dev flow so frontend assets are resolved from devUrl
+if [[ -n "${TAURI_DEV_SERVER_URL:-}" && "${TITANE_E2E_USE_TAURI_DEV:-1}" == "1" ]]; then
+  log_line "[E2E_WRAPPER] mode=tauri-dev"
+  cd "$REPO_ROOT"
+  export PATH="$REPO_ROOT/.tools/node/current/bin:$PATH"
+  exec pnpm exec tauri dev --config runtime/dev/tauri.conf.json --no-watch
+fi
+
 # Pass Ollama model configuration to Tauri binary
 export OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
 log_line "[E2E_WRAPPER] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
