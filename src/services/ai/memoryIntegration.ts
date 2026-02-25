@@ -13,7 +13,7 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import { memoryService } from '../api';
+import { memoryService } from '../api/memory';
 import type { StructuredMemoryEntry } from '@/core/prompts';
 import type {
   MemoryContext,
