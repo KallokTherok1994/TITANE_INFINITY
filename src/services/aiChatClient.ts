@@ -177,16 +177,10 @@ class AIChatClient {
     for (let attempt = 0; attempt < retries; attempt++) {
       try {
         return await this.circuitBreaker.execute(async () => {
-          const request: ChatRequest = {
-            message,
-            provider: 'auto',
-            model: options.model,
-            streaming: false,
-            system_prompt: options.systemPrompt,
-          };
-
-          const response = await tauriClient.chatSendMessage(request);
-          return response.message.content;
+          // [RETRAIT v27.0.5-prod] Legacy chatSendMessage removed; use ConversationManager instead
+          throw new Error(
+            'aiChatClient.sendMessage is deprecated. Use ConversationManager.generateResponse instead.'
+          );
         });
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));

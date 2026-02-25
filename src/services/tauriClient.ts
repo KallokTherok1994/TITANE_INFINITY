@@ -288,19 +288,7 @@ class TauriClient {
   // CHAT API
   // ─────────────────────────────────────────────────────────────────
 
-  /**
-   * Envoie un message chat (synchrone)
-   */
-  async chatSendMessage(
-    _request: ChatRequest,
-    _options?: InvokeOptions
-  ): Promise<ChatResponse> {
-    throw this.createError(
-      'SecurityError',
-      'Legacy chat_send_message is disabled. Use conversation_generate.',
-      'chat_send_message'
-    );
-  }
+  // [RETRAIT v27.0.5-prod] chatSendMessage() removed (legacy, use conversation_generate)
 
   /**
    * Envoie un message chat avec streaming

@@ -63,12 +63,7 @@ jobs:
         run: |
           set +e
           head_sha_at_time=$(git rev-parse HEAD)
-          baseline_sha=$(python3 - <<'PY'
-import json
-with open("docs/diagrams/MERMAID_BASELINE_LOCK.json", "r", encoding="utf-8") as handle:
-    print(json.load(handle).get("baseline_sha", ""))
-PY
-          )
+            baseline_sha=$(python3 -c "import json; print(json.load(open('docs/diagrams/MERMAID_BASELINE_LOCK.json', 'r', encoding='utf-8')).get('baseline_sha', ''))")
           no_self_hash=$?
 
           bash scripts/verify/mermaid-status-report.sh --check >/tmp/mermaid_status.txt 2>&1

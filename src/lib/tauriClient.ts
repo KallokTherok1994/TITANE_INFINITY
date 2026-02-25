@@ -433,11 +433,7 @@ class TauriClient {
     );
   }
 
-  async chatSendMessage(params?: unknown): Promise<unknown> {
-    throw new Error(
-      'Legacy chat_send_message is disabled. Use conversation_generate via ConversationManager.'
-    );
-  }
+  // [RETRAIT v27.0.5-prod] chatSendMessage() removed (legacy, use ConversationManager.generateResponse)
 
   async chatGenerateOpenai(params?: unknown): Promise<unknown> {
     return await this.invoke(

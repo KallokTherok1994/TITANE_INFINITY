@@ -649,20 +649,7 @@ export class TauriInvokeProtector {
       } as T;
     }
 
-    if (safeCommand.includes('chat_send_message') || safeCommand.includes('chat')) {
-      return {
-        success: false,
-        error: errorMessage,
-        fallback: true,
-        provider: 'titane-local',
-        message: {
-          id: `fallback-${Date.now()}`,
-          content: 'Backend unavailable. Please try again or use local mode.',
-          role: 'assistant',
-          timestamp: Date.now(),
-        },
-      } as T;
-    }
+    // [RETRAIT v27.0.5-prod] Fallback legacy chat_send_message removed from protector
 
     if (
       command &&

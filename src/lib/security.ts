@@ -1286,7 +1286,7 @@ let localNetworkMode: LocalNetworkSecurityConfig = {
   skipInjectionCheckForLocalCmds: true,
   trustedCommands: new Set([
     'conversation_process_message',
-    'chat_send_message',
+    // [RETRAIT v27.0.5-prod] chat_send_message removed from trusted list (legacy, use conversation_generate)
     'chat_stream_message',
     'memory_get_state',
     'memory_store',
