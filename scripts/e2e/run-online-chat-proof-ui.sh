@@ -16,14 +16,17 @@ WDIO_LOG="$OUT_DIR/wdio-online-chat-proof-ui.log"
 
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
   export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-dev-server}"
+  export TITANE_E2E_USE_TAURI_DEV="${TITANE_E2E_USE_TAURI_DEV:-1}"
 else
   export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-embedded}"
+  export TITANE_E2E_USE_TAURI_DEV="${TITANE_E2E_USE_TAURI_DEV:-0}"
 fi
 export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
 
 echo "[E2E_CHAT_PROOF] OUT_DIR=$OUT_DIR"
 echo "[E2E_CHAT_PROOF] EXPECT_SOURCE=$TITANE_E2E_EXPECT_SOURCE"
 echo "[E2E_CHAT_PROOF] ENFORCE_SOURCE=$TITANE_E2E_ENFORCE_SOURCE"
+echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
 
 pkill -f 'tauri-driver|WebKitWebDriver' >/dev/null 2>&1 || true
 sleep 1
@@ -43,7 +46,13 @@ for _ in $(seq 1 20); do
   sleep 1
 done
 
-TITANE_E2E_URL="${TITANE_E2E_URL:-tauri://localhost/#/chat}" \
+if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
+  TITANE_E2E_URL_DEFAULT="${TAURI_DEV_SERVER_URL%/}/#/chat"
+else
+  TITANE_E2E_URL_DEFAULT="tauri://localhost/#/chat"
+fi
+
+TITANE_E2E_URL="${TITANE_E2E_URL:-$TITANE_E2E_URL_DEFAULT}" \
 pnpm exec wdio run wdio.desktop.conf.cjs --spec "$SPEC_PATH" 2>&1 | tee "$WDIO_LOG"
 STATUS=${PIPESTATUS[0]}
 

@@ -4,6 +4,15 @@ const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
 const expectedSource = process.env.TITANE_E2E_EXPECT_SOURCE || '';
 const enforceSource = process.env.TITANE_E2E_ENFORCE_SOURCE === '1';
+const devServerUrl = process.env.TAURI_DEV_SERVER_URL || '';
+
+function getAllowedHrefPrefixes() {
+  const prefixes = ['tauri://localhost'];
+  if (devServerUrl) {
+    prefixes.push(devServerUrl);
+  }
+  return prefixes;
+}
 
 async function detectAppSourceMode() {
   return await browser.execute(() => {
@@ -12,7 +21,9 @@ async function detectAppSourceMode() {
       .filter(Boolean);
     const href = window.location.href || '';
     const hasDevScript = scripts.some(src =>
-      /127\.0\.0\.1:5173|localhost:5173/i.test(src)
+      /127\.0\.0\.1:5173|localhost:5173/i.test(src) ||
+      /^\/?@vite\/client/i.test(src) ||
+      /^\/?src\//i.test(src)
     );
     const hasEmbeddedScript = scripts.some(src =>
       /^tauri:\/\/localhost\/assets\//i.test(src) ||
@@ -37,13 +48,19 @@ async function detectAppSourceMode() {
 }
 
 async function ensureTauriPageLoaded(appUrl) {
-  const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
+  const candidates = [appUrl];
+  if (devServerUrl) {
+    candidates.push(`${devServerUrl}/#/chat`, devServerUrl);
+  }
+  candidates.push('tauri://localhost/#/chat', 'tauri://localhost');
+
+  const allowedPrefixes = getAllowedHrefPrefixes();
 
   for (const url of candidates) {
     await browser.url(url);
     await browser.pause(1200);
     const href = await browser.execute(() => window.location.href || '');
-    if (href.startsWith('tauri://localhost')) {
+    if (allowedPrefixes.some(prefix => href.startsWith(prefix))) {
       return true;
     }
   }
@@ -221,7 +238,11 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
   it('sends one message and captures assistant response', async function () {
     this.timeout(180000);
 
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+    const appUrl =
+      process.env.TITANE_E2E_URL ||
+      (expectedSource === 'dev-server' && devServerUrl
+        ? `${devServerUrl}/#/chat`
+        : 'tauri://localhost/#/chat');
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
       console.warn('[ONLINE_CHAT_FIX_UI] Tauri page unavailable (about:blank), skipping spec');
@@ -229,13 +250,14 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       return;
     }
 
+    const allowedPrefixes = getAllowedHrefPrefixes();
     await browser.waitUntil(
       async () => {
         const readyState = await browser.execute(() => document.readyState);
         const href = await browser.execute(() => window.location.href || '');
         return (
           (readyState === 'interactive' || readyState === 'complete') &&
-          href.startsWith('tauri://localhost')
+          allowedPrefixes.some(prefix => href.startsWith(prefix))
         );
       },
       { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
