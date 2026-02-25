@@ -131,6 +131,39 @@ function shouldHandoffToResearch(input: string): boolean {
   return hasResearchVerb && hasWebTarget;
 }
 
+function buildResearchHandoff(input: string): {
+  q: string;
+  mode: 'WEB_LIVE';
+  target_url: string;
+  seed_urls: string[];
+} {
+  const normalized = input.trim();
+  const detectedUrl = normalized.match(/https?:\/\/\S+/i)?.[0]?.replace(/[),.;!?]+$/, '');
+
+  if (detectedUrl) {
+    return {
+      q: normalized,
+      mode: 'WEB_LIVE',
+      target_url: detectedUrl,
+      seed_urls: [detectedUrl],
+    };
+  }
+
+  const query = encodeURIComponent(normalized);
+  const seeds = [
+    `https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche?search=${query}`,
+    `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
+    `https://www.wikidata.org/w/index.php?search=${query}`,
+  ];
+
+  return {
+    q: normalized,
+    mode: 'WEB_LIVE',
+    target_url: seeds[0] ?? `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
+    seed_urls: seeds,
+  };
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -467,11 +500,9 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     setInputValue('');
 
     if (shouldHandoffToResearch(messageText)) {
+      const handoff = buildResearchHandoff(messageText);
       navigate('/research', {
-        state: {
-          q: messageText,
-          mode: 'WEB_LIVE',
-        },
+        state: handoff,
       });
       toastSuccess('Demande orientée vers Research (web).');
       sendingRef.current = false;

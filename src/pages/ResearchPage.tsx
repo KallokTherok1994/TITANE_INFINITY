@@ -61,6 +61,69 @@ function verdictClass(markers: string[]): string {
   return 'rp-verdict-unknown';
 }
 
+function extractFirstUrl(input: string): string | null {
+  const urlMatch = input.match(/https?:\/\/\S+/i);
+  if (!urlMatch?.[0]) {
+    return null;
+  }
+  return urlMatch[0].replace(/[),.;!?]+$/, '');
+}
+
+function buildDefaultWebSeeds(question: string): string[] {
+  const query = encodeURIComponent(question.trim());
+  return [
+    `https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche?search=${query}`,
+    `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
+    `https://www.wikidata.org/w/index.php?search=${query}`,
+  ];
+}
+
+function resolveWebLiveTarget(
+  question: string,
+  targetUrl: string,
+  seedUrls: string[] | null
+): string | null {
+  const explicitTarget = targetUrl.trim();
+  if (explicitTarget.length > 0) {
+    return explicitTarget;
+  }
+
+  if (seedUrls && seedUrls.length > 0) {
+    return seedUrls[0] ?? null;
+  }
+
+  const detectedUrl = extractFirstUrl(question);
+  if (detectedUrl) {
+    return detectedUrl;
+  }
+
+  const normalizedQuestion = question.trim();
+  if (!normalizedQuestion) {
+    return null;
+  }
+
+  const defaultSeeds = buildDefaultWebSeeds(normalizedQuestion);
+  return defaultSeeds[0] ?? null;
+}
+
+function resolveWebLiveSeeds(question: string, seedUrls: string[] | null): string[] | null {
+  if (seedUrls && seedUrls.length > 0) {
+    return seedUrls;
+  }
+
+  const normalizedQuestion = question.trim();
+  if (!normalizedQuestion) {
+    return null;
+  }
+
+  const detectedUrl = extractFirstUrl(normalizedQuestion);
+  if (detectedUrl) {
+    return [detectedUrl];
+  }
+
+  return buildDefaultWebSeeds(normalizedQuestion);
+}
+
 // ─────────────────────────────────────────────────────────────────
 // SUB-COMPONENTS
 // ─────────────────────────────────────────────────────────────────
@@ -238,11 +301,19 @@ export const ResearchPage: React.FC = () => {
             .filter(Boolean)
         : null;
 
+      const resolvedTargetUrl =
+        mode === 'WEB_LIVE'
+          ? resolveWebLiveTarget(question, targetUrl, seedUrls)
+          : targetUrl.trim() || null;
+      const resolvedSeedUrls = mode === 'WEB_LIVE'
+        ? resolveWebLiveSeeds(question, seedUrls)
+        : seedUrls;
+
       const options: ResearchOptions = {
         mode,
-        target_url: targetUrl.trim() || null,
+        target_url: resolvedTargetUrl,
         sandbox_root: sandboxRoot.trim() || null,
-        seed_urls: seedUrls,
+        seed_urls: resolvedSeedUrls,
         max_depth: 1,
         cache_enabled: true,
         respect_robots: true,
