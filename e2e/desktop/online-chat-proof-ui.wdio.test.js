@@ -241,7 +241,21 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
     );
 
-    const sourceInfo = await detectAppSourceMode();
+    let sourceInfo = await detectAppSourceMode();
+    if (expectedSource && enforceSource && sourceInfo.scriptCount === 0) {
+      await browser.waitUntil(
+        async () => {
+          const current = await detectAppSourceMode();
+          sourceInfo = current;
+          return current.scriptCount > 0;
+        },
+        {
+          timeout: 15000,
+          interval: 500,
+          timeoutMsg: 'No script[src] detected for source classification',
+        }
+      );
+    }
     console.log(`[APP_SOURCE] ${JSON.stringify(sourceInfo)}`);
     if (expectedSource && sourceInfo.sourceMode !== expectedSource && enforceSource) {
       assert.fail(
