@@ -70,11 +70,20 @@ function extractFirstUrl(input: string): string | null {
 }
 
 function buildDefaultWebSeeds(question: string): string[] {
-  const query = encodeURIComponent(question.trim());
+  const normalized = question
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9\s-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const slug = normalized.replace(/\s+/g, '_');
+  const query = encodeURIComponent(normalized);
   return [
-    `https://fr.wikipedia.org/wiki/Sp%C3%A9cial:Recherche?search=${query}`,
-    `https://en.wikipedia.org/wiki/Special:Search?search=${query}`,
-    `https://www.wikidata.org/w/index.php?search=${query}`,
+    `https://fr.wikipedia.org/wiki/${slug}`,
+    `https://fr.wikipedia.org/w/index.php?search=${query}`,
+    `https://fr.wiktionary.org/wiki/${slug}`,
+    `https://www.wikidata.org/wiki/Special:Search?search=${query}`,
   ];
 }
 
@@ -315,6 +324,10 @@ export const ResearchPage: React.FC = () => {
         sandbox_root: sandboxRoot.trim() || null,
         seed_urls: resolvedSeedUrls,
         max_depth: 1,
+        max_sources: 8,
+        max_pages: 10,
+        max_requests: 16,
+        timeout_ms: 60000,
         cache_enabled: true,
         respect_robots: true,
       };

@@ -77,6 +77,11 @@ export interface UseConversationEngineReturn {
 
   // Actions
   sendMessage: (content: string) => Promise<ConversationResponse | null>;
+  appendLocalExchange: (
+    userContent: string,
+    assistantContent: string,
+    metadata?: ConversationMessage['metadata']
+  ) => Promise<void>;
   clearMessages: () => void;
   deleteMessage: (messageId: string) => void;
 
@@ -295,7 +300,7 @@ export function useConversationEngine(
         });
 
         // ✨ OBSERVABILITY: Mode detection based on meta
-        const mode = response.meta?.mode || 'UNKNOWN';
+        const mode = response.meta?.mode || 'ERROR';
         const reasonCode = response.meta?.reason_code || 'UNKNOWN';
 
         if (mode === 'OFFLINE') {
@@ -307,8 +312,7 @@ export function useConversationEngine(
           logger.warn('[useConversationEngine] OFFLINE mode', { reasonCode });
         } else if (mode === 'LOCAL') {
           logger.info('[useConversationEngine] LOCAL mode', { reasonCode });
-          // Clear error if any
-          if (error) setError(null);
+          setError(null);
         } else if (mode === 'REMOTE') {
           // NO_LYING_VIOLATION_FRONTEND guard: REMOTE requires network_used=true
           if (response.meta?.network_used === false) {
@@ -322,26 +326,19 @@ export function useConversationEngine(
               network_used: response.meta?.network_used,
             });
           }
-          if (error) setError(null);
+          setError(null);
         } else {
-          logger.warn('[useConversationEngine] UNKNOWN mode', { meta: response.meta });
+          logger.warn('[useConversationEngine] ERROR mode', { meta: response.meta });
         }
 
         // ✅ PERSIST MESSAGES TO LOCALSTORAGE
         try {
-          const userAIMessage: AIMessage = {
-            role: 'user',
-            content: userMessage.content,
-            timestamp: userMessage.timestamp,
-            metadata: {},
-          };
           const assistantAIMessage: AIMessage = {
             role: 'assistant',
             content: assistantMessage.content,
             timestamp: assistantMessage.timestamp,
             metadata: assistantMessage.metadata || {},
           };
-          await saveMessage(userAIMessage);
           await saveMessage(assistantAIMessage);
           // Ensure flush to localStorage
           chatMemoryCompactor.flushPendingSaves();
@@ -432,6 +429,60 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
   );
 
   // ═══ CLEAR MESSAGES ═══
+  const appendLocalExchange = useCallback(
+    async (
+      userContent: string,
+      assistantContent: string,
+      metadata?: ConversationMessage['metadata']
+    ) => {
+      const now = Date.now();
+      const userMessage: ConversationMessage = {
+        id: `user-local-${now}`,
+        role: 'user',
+        content: userContent,
+        timestamp: now,
+      };
+      const assistantMessage: ConversationMessage = {
+        id: `assistant-local-${now + 1}`,
+        role: 'assistant',
+        content: assistantContent,
+        timestamp: now + 1,
+        metadata,
+      };
+
+      setMessages(prev => {
+        const maxMessages = options.maxMessages ?? DEFAULT_MAX_MESSAGES;
+        const updated = [...prev, userMessage, assistantMessage];
+        return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
+      });
+
+      try {
+        const userAIMessage: AIMessage = {
+          role: 'user',
+          content: userMessage.content,
+          timestamp: userMessage.timestamp,
+          metadata: {},
+        };
+        const assistantAIMessage: AIMessage = {
+          role: 'assistant',
+          content: assistantMessage.content,
+          timestamp: assistantMessage.timestamp,
+          metadata: assistantMessage.metadata || {},
+        };
+        await saveMessage(userAIMessage);
+        await saveMessage(assistantAIMessage);
+        chatMemoryCompactor.flushPendingSaves();
+      } catch (persistError) {
+        console.warn(
+          '[useConversationEngine] ⚠️ Failed to persist local exchange',
+          persistError
+        );
+      }
+    },
+    [options.maxMessages, saveMessage]
+  );
+
+  // ═══ CLEAR MESSAGES ═══
   const clearMessages = useCallback(() => {
     setMessages([]);
     setConversationId(null);
@@ -462,6 +513,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     currentMode,
     setMode: setModeCallback,
     sendMessage,
+    appendLocalExchange,
     clearMessages,
     deleteMessage,
     healthReport,
