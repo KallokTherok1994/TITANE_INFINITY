@@ -24,6 +24,10 @@
 - `src/components/debug/index.ts`
 - `registry/ui-events.jsonl`
 
+### Commit `78b8e5ae`
+- `src-tauri/src/services/search_gateway.rs`
+- Nature: suppression du fallback implicite en absence de clé Brave, retour explicite `CREDENTIALS_MISSING` + test unitaire dédié
+
 ## Evidence pack (ce dossier)
 - `00_PLAN.md`
 - `01_TRUTH_SNAPSHOT.md`
@@ -37,3 +41,8 @@
 - `09_PROOF_LOGS.txt`
 - `10_VERDICT.md`
 - `11_ROLLBACK.md`
+
+## Addendum 2026-02-26
+- Ring impacté: **Ring 3 (Services)**
+- Statut changement: **QUALIFIED**
+- Preuve test ciblé: `reports/conversation_os_g1_remediation_search_credentials_x3.log`

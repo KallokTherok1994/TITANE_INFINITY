@@ -26,3 +26,19 @@
 ## Lecture stricte
 - Les exécutions x3 sont reproductibles pour le runbook unifié.
 - Le blocage final ne vient pas d’un échec de commande, mais d’un invariant global (G1) observé en scan global frontend.
+
+## Addendum remédiation 2026-02-26
+
+### A) SearchGateway credentials (Ring 3) — x3
+- Commande répétée x3:
+	- `cargo test --manifest-path src-tauri/Cargo.toml services::search_gateway::tests::test_search_requires_brave_api_key -- --nocapture`
+- Log: `reports/conversation_os_g1_remediation_search_credentials_x3.log`
+- Résultat:
+	- `EXIT_1:0`
+	- `EXIT_2:0`
+	- `EXIT_3:0`
+
+### B) Audit G1 périmètre Conversation OS v1
+- Commande scan ciblée (4 fichiers frontend canonique `conversation_generate`) avec vérification des primitives `fetch|axios|XMLHttpRequest|WebSocket`.
+- Log: `reports/conversation_os_g1_scoped_surface_audit_20260226.log`
+- Résultat attendu/obtenu: `DIRECT_NETWORK_EXIT:1` (aucun match détecté sur le périmètre ciblé).
