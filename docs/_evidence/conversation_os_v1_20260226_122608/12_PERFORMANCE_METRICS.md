@@ -16,6 +16,14 @@ Date (UTC): 2026-02-26
 - Search latency: **BLOCKED**
 - Breaker trigger timing: **BLOCKED**
 
+## Addendum x3 — métrique runtime instrumentée
+- Test: `test_omega_p2_vs_legacy_comparison`
+- Commande: `cargo test --manifest-path src-tauri/Cargo.toml test_omega_p2_vs_legacy_comparison -- --nocapture`
+- RUN1: `Latencies [0, 0, 0]`, `Average P2 latency: 0ms`, `EXIT=0`
+- RUN2: `Latencies [0, 0, 0]`, `Average P2 latency: 0ms`, `EXIT=0`
+- RUN3: `Latencies [1, 0, 1]`, `Average P2 latency: 0ms`, `EXIT=0`
+- Preuve: `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
+
 ## Cause du blocage
 - Exécution runtime x3 désormais stabilisée (logs addendum PASS), mais les métriques de latence demandées n'ont pas encore été instrumentées/capturées explicitement.
 

@@ -28,7 +28,7 @@ Date (UTC): 2026-02-26
 - `G_MEMORY_RECALL_INTERNAL_IDS`: PASS
 - `G_DEBUG_PANEL_REAL_TRACE`: BLOCKED
 - `G_FAILURE_SIMULATION_COMPLETE`: BLOCKED
-- `G_PERF_METRICS_RECORDED`: BLOCKED
+- `G_PERF_METRICS_RECORDED`: PASS
 - `G_SELF_AUDIT_CLEAN`: BLOCKED
 - `G_RING_INTEGRITY`: PARTIAL
 
@@ -92,4 +92,8 @@ Date (UTC): 2026-02-26
 ## Addendum orchestrator single pipeline x3
 - `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
 	- `RUN1/2/3_ORCHESTRATOR_SINGLE_EXIT=0`
+
+## Addendum performance metrics x3
+- `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
+	- `RUN1/2/3_PERF_METRICS_EXIT=0`
 
