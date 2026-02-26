@@ -264,3 +264,13 @@
 - Delta mesuré:
 	- `C2` (runtime allowlisté) `11 -> 0`
 	- `H2` code-only `51` (inchangé, blocant)
+
+## Addendum 2026-02-26 (Step-4 plan H2)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **EXPERIMENTAL**
+- Fichier ajouté:
+	- `28_H2_STEP4_PLAN.md`
+- Fichier mis à jour:
+	- `04_MICRO_PHASES.md`
+- Objet:
+	- plan d’exécution immuable pour fermeture du blocant `H2` (gateway unique backend)
