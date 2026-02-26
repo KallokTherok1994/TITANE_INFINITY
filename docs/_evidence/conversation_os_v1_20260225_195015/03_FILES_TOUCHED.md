@@ -461,3 +461,23 @@
 	- `engines/unified_memory/embeddings.rs` `2 -> 0`
 	- `memory_os/embeddings.rs` `2 -> 1`
 	- inventaire brut `src-tauri/src` `37 -> 34`
+
+## Addendum 2026-02-26 (Step-4 Lot B12 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichiers code modifiés:
+	- `src-tauri/src/services/network_gateway.rs`
+	- `src-tauri/src/tts/online_tts.rs`
+	- `src-tauri/src/semantic/embedder.rs`
+- Fichier ajouté:
+	- `41_H2_STEP4_LOTB12_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB12_20260226T114541Z.log`
+- Delta mesuré:
+	- `services/network_gateway.rs` `2 -> 1`
+	- `tts/online_tts.rs` `2 -> 1`
+	- `semantic/embedder.rs` `2 -> 0`
+	- inventaire brut `src-tauri/src` `34 -> 30`

@@ -1,0 +1,11 @@
+== H2 inventory lot B12 ==
+NETWORK_GATEWAY_RAW=1
+ONLINE_TTS_RAW=1
+SEMANTIC_EMBEDDER_RAW=0
+NETWORK_GATEWAY_LINES:
+7:use reqwest::{redirect::Policy, Client};
+ONLINE_TTS_LINES:
+8:use reqwest::Client;
+SEMANTIC_EMBEDDER_LINES:
+
+RAW_TOTAL=30

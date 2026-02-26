@@ -5,9 +5,11 @@
 
 use super::{TTSError, TTSRequest, TTSResult};
 use crate::security::shell_guard::ShellGuard;
+use reqwest::Client;
 
 pub struct OnlineTTS {
     api_key: Option<String>,
+    client: Client,
     shell_guard: ShellGuard,
 }
 
@@ -15,6 +17,7 @@ impl OnlineTTS {
     pub fn new(api_key: Option<String>) -> Self {
         Self {
             api_key,
+            client: Client::new(),
             shell_guard: ShellGuard::new(),
         }
     }
@@ -23,7 +26,7 @@ impl OnlineTTS {
         // Check internet connectivity
         tokio::time::timeout(
             std::time::Duration::from_secs(3),
-            reqwest::get("https://www.google.com"),
+            self.client.get("https://www.google.com").send(),
         )
         .await
         .is_ok()
@@ -43,7 +46,9 @@ impl OnlineTTS {
             urlencoding::encode(&request.text)
         );
 
-        let response = reqwest::get(&url)
+        let response = self.client
+            .get(&url)
+            .send()
             .await
             .map_err(|e| TTSError::NetworkError(e.to_string()))?;
 

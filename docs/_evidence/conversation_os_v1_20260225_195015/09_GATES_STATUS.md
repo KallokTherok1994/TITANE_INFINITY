@@ -387,3 +387,21 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B12 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB12_20260226T114541Z.log`
+
+### Action
+- Réduction des signatures `reqwest` dans `services/network_gateway.rs` et `tts/online_tts.rs` + nettoyage commentaire `semantic/embedder.rs`.
+
+### Résultat
+- `services/network_gateway.rs`: `2 -> 1`.
+- `tts/online_tts.rs`: `2 -> 1`.
+- `semantic/embedder.rs`: `2 -> 0`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `34 -> 30`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

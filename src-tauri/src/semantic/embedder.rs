@@ -63,7 +63,7 @@ impl Embedder {
         //   POST with JSON: {"content": {"parts": [{"text": text}]}}
         //   Header: x-goog-api-key: {GEMINI_API_KEY}
         // Response: {"embedding": {"values": [f32; 768]}}
-        // Dependencies: reqwest = "0.11", serde_json = "1.0"
+        // Dependencies: async HTTP client + serde_json = "1.0"
         // Rate limit: 1500 requests/min (free tier)
         // Cost: Free for < 100k requests/day
         // For now, simulated embedding
@@ -79,7 +79,7 @@ impl Embedder {
         // Setup: `ollama pull mxbai-embed-large` (670MB download)
         // Performance: ~50ms per embedding on GPU, ~200ms on CPU
         // Advantages: Fully local, no API key, privacy-preserving
-        // Dependencies: reqwest = "0.11", tokio for async
+        // Dependencies: async HTTP client, tokio for async
         // For now, simulated embedding
         Ok(self.generate_simulated_embedding(text))
     }
