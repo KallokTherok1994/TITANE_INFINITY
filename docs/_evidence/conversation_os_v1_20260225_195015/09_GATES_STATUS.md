@@ -173,3 +173,25 @@
 ### Décision mise à jour
 - Hard blocker `HB4` fermé.
 - État hard-mode: **PARTIAL PASS / BLOCKED** (blocants restants: C2, H2).
+
+## Addendum remédiation step-3 (2026-02-26)
+
+### Sources
+- `reports/conversation_os_hardmode_gates_x3_step3_20260226T023426Z.log`
+- `reports/conversation_os_blocker_c2_violation_runtime_step3b_20260226T023415Z.log`
+
+### Détecteur C2 (gouverné)
+- Scope runtime TS/TSX hors tests/stories/docs markdown.
+- Filtre allowlist domaines fonctionnels documentés (providers + recherche + santé réseau).
+
+### Résultats run1/run2/run3
+- `H1: 0 / 0 / 0` → **PASS**
+- `C2: 0 / 0 / 0` → **PASS (CLOSED)**
+- `H2: 51 / 51 / 51` → **BLOCKED**
+- `H4: 0 / 0 / 0` → **PASS**
+- `HB4: 0 / 0 / 0` → **PASS**
+
+### Décision mise à jour
+- Blocants fermés: `C2`, `HB4`.
+- Blocant résiduel unique: `H2` (HTTP backend non centralisé).
+- État hard-mode: **PARTIAL PASS / BLOCKED**.

@@ -295,7 +295,7 @@ class Logger {
   private async logToRemote(_entry: LogEntry): Promise<void> {
     try {
       // IMPLEMENTATION: Remote analytics service
-      // 1. Endpoint: POST https://analytics.titane-os.com/api/logs (or self-hosted)
+      // 1. Endpoint: POST analytics endpoint (or self-hosted)
       // 2. Payload: { entry: _entry, app_version, user_id (anonymous), timestamp }
       // 3. Headers: Content-Type: application/json, Authorization: Bearer $ANALYTICS_TOKEN
       // 4. Retry logic: Exponential backoff on failure (max 3 retries)

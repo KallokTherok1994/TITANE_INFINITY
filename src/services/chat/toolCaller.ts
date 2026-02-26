@@ -58,7 +58,7 @@ const DEFAULT_TOOLS: Record<string, ToolDefinition> = {
         results: [
           {
             title: `Result for "${query}"`,
-            url: 'https://example.com',
+            url: 'result.local/resource',
             snippet: 'Placeholder result',
           },
         ],

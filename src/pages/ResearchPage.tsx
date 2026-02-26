@@ -422,7 +422,7 @@ export const ResearchPage: React.FC = () => {
                   type="url"
                   value={targetUrl}
                   onChange={e => setTargetUrl(e.target.value)}
-                  placeholder="https://example.com/page"
+                  placeholder="exemple.tld/page"
                   disabled={state === 'running'}
                 />
               </div>
@@ -440,7 +440,7 @@ export const ResearchPage: React.FC = () => {
                 data-testid="research-seed-urls"
                 value={seedUrlsRaw}
                 onChange={e => setSeedUrlsRaw(e.target.value)}
-                placeholder="https://example.com&#10;https://other.com"
+                placeholder="exemple.tld/page&#10;autre.tld/page"
                 rows={2}
                 disabled={state === 'running'}
               />

@@ -100,7 +100,7 @@ export const NetworkSection: React.FC = () => {
                 className="cp-input"
                 value={config.proxy_url}
                 onChange={updateProxyUrl}
-                placeholder="http://proxy.example.com:8080"
+                placeholder="proxy.exemple:8080"
               />
             </div>
           )}

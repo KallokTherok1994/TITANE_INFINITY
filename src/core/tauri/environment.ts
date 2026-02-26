@@ -15,7 +15,7 @@ export interface EnvironmentInfo {
   isTauri: boolean;
   /** Exécution dans un navigateur classique */
   isBrowser: boolean;
-  /** Protocole utilisé (tauri://, http://, https://) */
+  /** Protocole utilisé (tauri, http, https) */
   protocol: string;
   /** Origin complète */
   origin: string;

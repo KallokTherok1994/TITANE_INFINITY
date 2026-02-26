@@ -141,7 +141,7 @@ export const ConfigFieldEditable: React.FC<ConfigFieldEditableProps> = ({
         type="text"
         value={String(localValue)}
         onChange={e => handleChange(e.target.value)}
-        placeholder={valueType === 'url' ? 'http://...' : ''}
+        placeholder={valueType === 'url' ? 'exemple.tld/ressource' : ''}
         style={{
           fontFamily: 'var(--font-mono)',
           fontSize: '0.9rem',
