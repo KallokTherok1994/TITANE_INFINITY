@@ -108,3 +108,9 @@
 	- `reports/conversation_os_g1_global_scan_x3_after_phase2b.log`
 	- `reports/conversation_os_g1_global_post_continue_check.log`
 	- `reports/conversation_os_final_validation_post_go.log`
+
+## Addendum 2026-02-26 (Executive summary)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `16_EXECUTIVE_SUMMARY.md`
