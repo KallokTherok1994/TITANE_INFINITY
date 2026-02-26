@@ -32,3 +32,21 @@
 ## Unknown (non prouvé)
 - Exhaustivité de l’inaccessibilité runtime des surfaces frontend legacy hors flux Conversation OS v1.
 - Couverture E2E desktop complète hors suite `e2e/critical`.
+
+## Addendum META-TRUTH (2026-02-26)
+
+### Fichiers/répertoires inconnus à ce stade
+- `src/legacy/**` (si présents) : statut runtime non prouvé.
+- `src/visual-engine/**` : surfaces historiques, usage runtime à re-prouver après chaque phase.
+- `runtime/**` : effets de bord d’exécution non documentés exhaustivement dans ce pack.
+
+### Surfaces réseau incertaines
+- Wrappers TS qui masquent des primitives réseau (détection regex requise).
+- URLs littérales hors allowlist backend potentiellement présentes côté UI.
+
+### Entrypoints chat incertains
+- Chemins legacy (`chat_send_message`) encore référencés indirectement.
+- Multiplicité potentielle de points d’appel `invoke` hors client canonique.
+
+### Décision de vérité
+- Tant que les scans de découverte C1..C5 ne sont pas consignés dans `reports/`, ces points restent **UNKNOWN** et bloquent toute conclusion “zéro dérive”.
