@@ -15,6 +15,7 @@
 ### Clôture Step-4 H2
 - Rapport fermeture gouvernée: `47_H2_STEP4_LOTB18_CLOSURE_REPORT.md`
 - Clôture finale Step-4: `48_STEP4_FINAL_CLOSURE.md`
+- Handoff 1 page: `50_RELEASE_HANDOFF_ONEPAGE.md`
 - Snapshot final H2: `reports/conversation_os_final_h2_snapshot_20260226T121502Z.log`
 - Vérification H2 allowlistée: `reports/conversation_os_h2_governed_allowlist_lotB18_20260226T121303Z.log`
 
