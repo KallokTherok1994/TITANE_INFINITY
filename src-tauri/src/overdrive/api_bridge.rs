@@ -210,10 +210,10 @@ async fn execute_http_request(
     _request: &ApiRequest,
     _config: &ApiConfig,
 ) -> Result<ApiResponse, String> {
-    // IMPLEMENTATION: reqwest HTTP client for AI API calls
-    // Dependencies: reqwest = "0.11" with features = ["json", "rustls-tls"]
+    // IMPLEMENTATION: HTTP client for AI API calls
+    // Dependencies: client HTTP async avec JSON + TLS rustls
     // Code:
-    //   let client = reqwest::Client::builder()
+    //   let client = HttpClient::builder()
     //       .timeout(Duration::from_secs(30))
     //       .build()?;
     //   let response = match request.method.as_str() {
@@ -223,7 +223,7 @@ async fn execute_http_request(
     //   }.send().await?;
     // Error handling: Retry 3x with exponential backoff (1s, 2s, 4s)
     // For production, uncomment and configure
-    // let client = reqwest::Client::new();
+    // let client = HttpClient::new();
     // let mut req = match request.method.as_str() {
     //     "GET" => client.get(url),
     //     "POST" => client.post(url),
