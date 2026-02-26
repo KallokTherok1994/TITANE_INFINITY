@@ -1,3 +1,10 @@
+## ADDENDUM — FINAL COVERAGE VERDICT (P0→P146 / P6→P146)
+
+- Global coverage verdict (P0→P146): `FAIL` (missing `P0..P5`)
+- Operational continuity verdict (P6→P146): `PASS`
+- Coverage proof: `reports/final_phase_coverage_p0_146_20260226_211529Z.md`
+- Continuity proof: `reports/final_phase_continuity_p6_146_20260226T211717Z.md`
+
 ## ADDENDUM — PROGRAM P140→P146
 
 - Program path: `docs/_evidence/program_p140_146_20260226_205617`
