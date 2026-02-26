@@ -48,6 +48,20 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:06:00Z
+
+### Liaison de scellement programme P28→P34
+- Seal ID documentaire: `seal-p28-34-20260226T1706Z`
+- Index de seal: `docs/_evidence/program_p28_34_20260226_165147/12_SEAL_INDEX.md`
+- Manifest de seal: `docs/_evidence/program_p28_34_20260226_165147/13_FINAL_SEAL_MANIFEST.md`
+- Digest de preuve: `docs/_evidence/program_p28_34_20260226_165147/14_PROOF_DIGEST.md`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T16:41:49Z
 
 ### Publication tag dédié P21→P27

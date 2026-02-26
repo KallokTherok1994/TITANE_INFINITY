@@ -49,6 +49,21 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:06:00Z
+
+### Extension de périmètre (programme P28→P34)
+- Pack lié: `docs/_evidence/program_p28_34_20260226_165147/`
+- Artefact d’intégrité: `reports/proof_pack_hash_manifest_program_p28_34_20260226T1706Z.txt`
+
+### État
+- Intégrité programme P28→P34: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:32:25Z
 
 ### Extension du périmètre
