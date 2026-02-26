@@ -30,6 +30,25 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:41:49Z
+
+### Nouveau tag de scellement publié
+- `evidence-seal-p21-27-20260226T1641Z`
+  - Type: annoté
+  - Portée: scellement dédié du lot P21→P27
+  - Commit scellé: `31abacd1`
+  - Référence: `refs/tags/evidence-seal-p21-27-20260226T1641Z`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p21-27-20260226T1641Z"`
+- `git ls-remote --tags origin | rg "evidence-seal-p21-27-20260226T1641Z"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:14:59Z
 
 ### Nouveau tag de scellement publié

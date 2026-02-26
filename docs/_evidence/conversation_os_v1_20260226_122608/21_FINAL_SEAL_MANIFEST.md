@@ -31,6 +31,23 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:41:49Z
+
+### Publication tag dédié P21→P27
+- Tag publié: `evidence-seal-p21-27-20260226T1641Z`
+- Commit de référence taggé: `31abacd1`
+- Portée: scellement dédié du programme P21→P27
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p21-27-20260226T1641Z"`
+- `git ls-remote --tags origin | rg "evidence-seal-p21-27-20260226T1641Z"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:23:00Z
 
 ### Cross-référence tags Pack 5.1
