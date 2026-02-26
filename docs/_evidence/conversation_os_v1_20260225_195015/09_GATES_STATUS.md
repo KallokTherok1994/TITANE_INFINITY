@@ -134,3 +134,25 @@
 
 ### Décision mise à jour
 - État hard-mode: **PARTIAL PASS / BLOCKED**.
+
+## Addendum remédiation step-1 (2026-02-26)
+
+### Changement appliqué
+- `src/services/ai/transports/ollamaTransport.ts`: `invoke` direct remplacé par `secureInvoke`.
+
+### Mesures post-fix
+- `reports/conversation_os_hardmode_gates_x3_postfix_20260226T021217Z.log`
+  - `H1: 0/0/0`
+  - `C2: 115/115/115`
+  - `H2: 73/73/73`
+  - `H4: 0/0/0`
+  - `HB4 (large): 10/10/10`
+- `reports/conversation_os_blocker_hb4_prodscope_postfix_20260226T021223Z.log`
+  - `HB4 (prod-scope): 7`
+
+### Delta
+- `HB4` prod-scope: `8 -> 7` (réduction mesurée)
+
+### Verdict
+- Micro-phase remédiation: **PASS**
+- État global hard-mode: **BLOCKED** (C2/H2/HB4 résiduel)

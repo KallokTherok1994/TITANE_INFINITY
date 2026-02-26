@@ -9,7 +9,7 @@
  * NO OTHER code should call Ollama directly.
  */
 
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke } from '@/lib/security';
 import { createLogger } from '@/utils/logger';
 import type { AiResult, AiOk, AiErr } from '../types';
 import { classifyError, isAbortError } from '@/lib/errorClassification';
@@ -250,7 +250,7 @@ async function httpGenerate(
 async function ipcCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
   try {
     // Tauri backend doesn't expose /tags via IPC, use generate as health check
-    const testResult = await invoke<{
+    const testResult = await secureInvoke<{
       content: string;
       latency_ms: number;
       model: string;
@@ -315,7 +315,7 @@ async function ipcGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
   try {
-    const result = await invoke<{
+    const result = await secureInvoke<{
       content: string;
       latency_ms: number;
       model: string;

@@ -61,3 +61,13 @@
 ## Addendum exécution (2026-02-26)
 - A0 ajouté comme blocant immédiat (governance hard-mode).
 - Verdict global mis à jour: **BLOCKED (A0 + A1 + A2 + A3)**.
+
+## Addendum remédiation step-1 (2026-02-26)
+- Action réalisée: suppression d’un import direct `invoke` dans `src/services/ai/transports/ollamaTransport.ts`.
+- Effet mesuré:
+  - `HB4` large: `11 -> 10`
+  - `HB4` prod-scope: `8 -> 7`
+- Preuves:
+  - `reports/conversation_os_blocker_hb4_postfix_20260226T021216Z.log`
+  - `reports/conversation_os_blocker_hb4_prodscope_postfix_20260226T021223Z.log`
+- Verdict: **PROGRESS**, mais état global toujours **BLOCKED**.
