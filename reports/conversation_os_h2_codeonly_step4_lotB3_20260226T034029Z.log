@@ -1,0 +1,88 @@
+== H2 code-only inventory (step-4 lot B3) ==
+src-tauri/src/api/chat_commands.rs:5:use reqwest::Client;
+src-tauri/src/control_panel_commands.rs:682:    // Implementation note: Requires reqwest dependency
+src-tauri/src/control_panel_commands.rs:690:    // Future implementation with reqwest:
+src-tauri/src/control_panel_commands.rs:691:    // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
+src-tauri/src/commands/ai_chat.rs:591:        reqwest::get("https://www.google.com"),
+src-tauri/src/commands/ollama_command.rs:43:    let client = reqwest::Client::builder()
+src-tauri/src/gemini_provider_refactor.rs:71:    client: reqwest::Client,
+src-tauri/src/gemini_provider_refactor.rs:78:        let client = reqwest::Client::builder()
+src-tauri/src/commands/ai_prompt_generator.rs:117:    use reqwest::Client;
+src-tauri/src/tts/elevenlabs_tts.rs:7:use reqwest::Client;
+src-tauri/src/tts/online_tts.rs:26:            reqwest::get("https://www.google.com"),
+src-tauri/src/tts/online_tts.rs:46:        let response = reqwest::get(&url)
+src-tauri/src/core/tapi_error.rs:156:impl From<reqwest::Error> for TAPIError {
+src-tauri/src/core/tapi_error.rs:157:    fn from(err: reqwest::Error) -> Self {
+src-tauri/src/ai/providers/claude.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/openai.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/local.rs:9:use reqwest::Client;
+src-tauri/src/audio/asr.rs:63:        let client = reqwest::Client::builder()
+src-tauri/src/ai/router.rs:70:            reqwest::get("https://www.google.com"),
+src-tauri/src/ai/gemini.rs:59:    client: reqwest::Client,
+src-tauri/src/ai/gemini.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/ai/gemini.rs:67:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/local_provider_refactor.rs:3:use reqwest::Client;
+src-tauri/src/ai/ollama.rs:9:use reqwest;
+src-tauri/src/ai/ollama.rs:43:    fn build_ollama_client(timeout_secs: u64) -> Result<reqwest::Client, String> {
+src-tauri/src/ai/ollama.rs:44:        reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:457:    client: reqwest::Client,
+src-tauri/src/ai/ollama.rs:464:            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/api_hub/openai.rs:77:        // Simulation de l'appel API (en production, utiliser reqwest)
+src-tauri/src/api_hub/copilot.rs:10:use reqwest::{header, Client};
+src-tauri/src/services/fetch_service.rs:5://   reqwest is FORBIDDEN everywhere else in the WebResearch path.
+src-tauri/src/services/fetch_service.rs:10:use reqwest::Client;
+src-tauri/src/services/fetch_service.rs:59:    /// Build a new FetchService with a reqwest client configured
+src-tauri/src/services/fetch_service.rs:65:            .redirect(reqwest::redirect::Policy::limited(5))
+src-tauri/src/services/fetch_service.rs:171:async fn read_body_capped(response: reqwest::Response, cap: u64) -> Result<Vec<u8>, FetchError> {
+src-tauri/src/services/network_gateway.rs:7:use reqwest::Client;
+src-tauri/src/services/network_gateway.rs:82:            .redirect(reqwest::redirect::Policy::limited(5))
+src-tauri/src/ollama_provider_refactor.rs:10:use reqwest::Client;
+src-tauri/src/semantic/embedder.rs:66:        // Dependencies: reqwest = "0.11", serde_json = "1.0"
+src-tauri/src/semantic/embedder.rs:82:        // Dependencies: reqwest = "0.11", tokio for async
+src-tauri/src/memory_os/embeddings.rs:108:        let client = reqwest::Client::new();
+src-tauri/src/memory_os/embeddings.rs:155:        let client = reqwest::Client::new();
+src-tauri/src/engines/unified_memory/summarizer.rs:288:- reqwest = "0.11" with json feature
+src-tauri/src/engines/unified_memory/summarizer.rs:298:    use reqwest;
+src-tauri/src/engines/unified_memory/summarizer.rs:315:    let client = reqwest::Client::new();
+src-tauri/src/engines/unified_memory/embeddings.rs:213:    use reqwest;
+src-tauri/src/engines/unified_memory/embeddings.rs:216:    let client = reqwest::Client::new();
+src-tauri/src/memory_evolution/memory_vectorizer.rs:232:            let client = reqwest::Client::new();
+src-tauri/src/ia/anthropic_claude.rs:8:use reqwest::Client;
+src-tauri/src/ia/openai_gpt.rs:8:use reqwest::Client;
+src-tauri/src/overdrive/api_bridge.rs:213:    // IMPLEMENTATION: reqwest HTTP client for AI API calls
+src-tauri/src/overdrive/api_bridge.rs:214:    // Dependencies: reqwest = "0.11" with features = ["json", "rustls-tls"]
+src-tauri/src/overdrive/api_bridge.rs:216:    //   let client = reqwest::Client::builder()
+src-tauri/src/overdrive/api_bridge.rs:226:    // let client = reqwest::Client::new();
+src-tauri/src/overdrive/chat_orchestrator.rs:64:) -> Result<reqwest::Client, TAPIError> {
+src-tauri/src/overdrive/chat_orchestrator.rs:65:    reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:71:fn build_http_client_with_secs(timeout_secs: u64) -> Result<reqwest::Client, TAPIError> {
+src-tauri/src/overdrive/memory_engine.rs:446:    // For production: Add reqwest HTTP client + error handling
+src-tauri/src/ollama.rs:5:use reqwest::{Client, StatusCode};
+
+== COUNT ==
+59
+
+== CHAT_ORCHESTRATOR_COUNT ==
+3
+
+== TOP FILES ==
+      5 src-tauri/src/services/fetch_service.rs
+      5 src-tauri/src/ai/ollama.rs
+      4 src-tauri/src/overdrive/api_bridge.rs
+      3 src-tauri/src/overdrive/chat_orchestrator.rs
+      3 src-tauri/src/engines/unified_memory/summarizer.rs
+      3 src-tauri/src/control_panel_commands.rs
+      3 src-tauri/src/ai/gemini.rs
+      2 src-tauri/src/tts/online_tts.rs
+      2 src-tauri/src/services/network_gateway.rs
+      2 src-tauri/src/semantic/embedder.rs
+      2 src-tauri/src/memory_os/embeddings.rs
+      2 src-tauri/src/gemini_provider_refactor.rs
+      2 src-tauri/src/engines/unified_memory/embeddings.rs
+      2 src-tauri/src/core/tapi_error.rs
+      1 src-tauri/src/tts/elevenlabs_tts.rs
+      1 src-tauri/src/overdrive/memory_engine.rs
+      1 src-tauri/src/ollama.rs
+      1 src-tauri/src/ollama_provider_refactor.rs
+      1 src-tauri/src/memory_evolution/memory_vectorizer.rs
+      1 src-tauri/src/local_provider_refactor.rs

@@ -59,6 +59,19 @@ fn calculate_adaptive_timeout(message_length: usize, is_local: bool) -> u64 {
     }
 }
 
+fn build_http_client_with_timeout(
+    timeout: std::time::Duration,
+) -> Result<reqwest::Client, TAPIError> {
+    reqwest::Client::builder()
+        .timeout(timeout)
+        .build()
+        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))
+}
+
+fn build_http_client_with_secs(timeout_secs: u64) -> Result<reqwest::Client, TAPIError> {
+    build_http_client_with_timeout(std::time::Duration::from_secs(timeout_secs))
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // STRUCTURES
 // ─────────────────────────────────────────────────────────────────────────────
@@ -355,10 +368,7 @@ async fn is_provider_available(
             }
             // Ping rapide http://localhost:11434/api/tags
             // ✅ FIX: Timeout augmenté 500ms → 3000ms (Ollama peut être lent au premier appel)
-            match reqwest::Client::builder()
-                .timeout(std::time::Duration::from_millis(3000))
-                .build()
-            {
+            match build_http_client_with_timeout(std::time::Duration::from_millis(3000)) {
                 Ok(client) => {
                     matches!(
                         client.get("http://localhost:11434/api/tags").send().await,
@@ -711,10 +721,7 @@ async fn send_to_gemini(
     });
 
     // HTTP client with adaptive timeout
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(timeout_secs))
-        .build()
-        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+    let client = build_http_client_with_secs(timeout_secs)?;
 
     // POST request with retry (3 attempts)
     let mut last_error = None;
@@ -859,10 +866,7 @@ async fn send_to_ollama(
     });
 
     // HTTP client with adaptive timeout
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(timeout_secs))
-        .build()
-        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+    let client = build_http_client_with_secs(timeout_secs)?;
 
     // POST request (no retry for Ollama local - fast fail)
     let response = client
@@ -965,10 +969,7 @@ async fn send_to_openai(
     });
 
     // HTTP client with adaptive timeout (R02 fix)
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(timeout_secs))
-        .build()
-        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+    let client = build_http_client_with_secs(timeout_secs)?;
 
     // POST request with retry (3 attempts)
     let mut last_error = None;
@@ -1120,10 +1121,7 @@ async fn send_to_anthropic(
     });
 
     // HTTP client with adaptive timeout (R02 fix)
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(timeout_secs))
-        .build()
-        .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))?;
+    let client = build_http_client_with_secs(timeout_secs)?;
 
     // POST request with retry (3 attempts)
     let mut last_error = None;
@@ -1786,10 +1784,7 @@ async fn stream_with_ollama(
         }
     });
 
-    let client = match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(45))
-        .build()
-    {
+    let client = match build_http_client_with_secs(45) {
         Ok(client) => client,
         Err(e) => {
             increment_provider_failures("ollama", state).await;

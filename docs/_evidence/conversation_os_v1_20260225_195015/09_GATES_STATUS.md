@@ -243,3 +243,18 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (hotspot principal restant: `overdrive/chat_orchestrator.rs`).
+
+## Addendum step-4 Lot B3 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB3_20260226T034029Z.log`
+
+### Action
+- Refactor `overdrive/chat_orchestrator.rs` avec helper central de construction client HTTP.
+
+### Résultat
+- Hotspot `chat_orchestrator.rs` (regex locale `reqwest|ureq`): `6 -> 3`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

@@ -316,3 +316,18 @@
 	- `reports/conversation_os_h2_codeonly_step4_lotB2_20260226T033710Z.log`
 - Delta mesuré:
 	- `H2` code-only `43 -> 39`
+
+## Addendum 2026-02-26 (Step-4 Lot B3 execution)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/overdrive/chat_orchestrator.rs`
+- Fichier ajouté:
+	- `32_H2_STEP4_LOTB3_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB3_20260226T034029Z.log`
+- Delta mesuré:
+	- hotspot `chat_orchestrator.rs` `6 -> 3`
