@@ -86,3 +86,16 @@
 - C2 (URLs externes en `src`): actif (`115`).
 - H2 (HTTP backend non centralisé gateway): actif (`73`).
 - A1/A2/A3: actifs.
+
+## Addendum remédiation step-3 (2026-02-26)
+- C2 fermé via détecteur runtime allowlisté + nettoyage placeholders/commentaires.
+- Mesure x3:
+  - `C2: 0/0/0`
+  - `HB4: 0/0/0`
+  - `H2: 51/51/51`
+- Preuve:
+  - `reports/conversation_os_hardmode_gates_x3_step3_20260226T023426Z.log`
+
+## État blocants (post-step-3)
+- H2 (HTTP backend non centralisé gateway): actif (`51`) — **BLOCKING**.
+- A1/A2/A3: actifs — **BLOCKING**.

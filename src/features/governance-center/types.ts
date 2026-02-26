@@ -113,19 +113,19 @@ export const KNOWN_SECRETS: {
     key: 'gemini_api_key',
     label: 'Gemini API Key',
     category: 'api_key',
-    description: 'Google Gemini API (https://ai.google.dev)',
+    description: 'Google Gemini API (ai.google.dev)',
   },
   {
     key: 'openai_api_key',
     label: 'OpenAI API Key',
     category: 'api_key',
-    description: 'OpenAI Platform API (https://platform.openai.com)',
+    description: 'OpenAI Platform API (platform.openai.com)',
   },
   {
     key: 'anthropic_api_key',
     label: 'Anthropic API Key',
     category: 'api_key',
-    description: 'Anthropic Claude API (https://console.anthropic.com)',
+    description: 'Anthropic Claude API (console.anthropic.com)',
   },
   {
     key: 'copilot_api_key',

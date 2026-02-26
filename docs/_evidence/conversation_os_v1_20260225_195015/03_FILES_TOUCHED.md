@@ -241,3 +241,26 @@
 - Delta mesuré:
 	- `HB4` prod-scope `7 -> 0`
 	- `HB4` x3 `0/0/0`
+
+## Addendum 2026-02-26 (Blocker reduction step-3)
+- Ring impacté: **Ring 4 (Modules/UI) + Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichiers code/docs modifiés:
+	- `src/core/http/httpClient.ts`
+	- `src/core/tauri/environment.ts`
+	- `src/ui/pages/ControlPanel/sections/NetworkSection.tsx`
+	- `src/components/config/ConfigFieldEditable.tsx`
+	- `src/lib/logger.ts`
+	- `src/pages/CloudCenter/SyncConfig.tsx`
+	- `src/features/governance-center/types.ts`
+	- `src/services/chat/toolCaller.ts`
+	- `src/services/ai/retryStrategy.ts`
+	- `src/pages/ResearchPage.tsx`
+- Fichier ajouté:
+	- `27_BLOCKER_REDUCTION_STEP3.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Delta mesuré:
+	- `C2` (runtime allowlisté) `11 -> 0`
+	- `H2` code-only `51` (inchangé, blocant)

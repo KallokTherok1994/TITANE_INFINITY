@@ -108,7 +108,7 @@ function delay(ms: number): Promise<void> {
  * @example
  * ```typescript
  * const response = await withRetry(
- *   async () => request('https://api.example.com/generate'),
+ *   async () => request(PROVIDER_GENERATE_URL),
  *   { maxAttempts: 3 },
  *   { provider: 'gemini', action: 'generate' }
  * );

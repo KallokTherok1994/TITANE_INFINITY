@@ -192,7 +192,7 @@ const SyncConfig: React.FC<SyncConfigProps> = ({ status, onUpdate }) => {
                   type="text"
                   value={config.s3_endpoint}
                   onChange={e => setConfig({ ...config, s3_endpoint: e.target.value })}
-                  placeholder="https://s3.example.com"
+                  placeholder="s3.exemple.tld"
                 />
               </div>
               <div className="form-group">

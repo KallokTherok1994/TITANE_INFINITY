@@ -134,10 +134,10 @@ function isUrlAllowed(url: string): boolean {
  * @example
  * ```typescript
  * // GET request
- * const response = await httpClient.get<{ data: string }>('https://api.example.com/data');
+ * const response = await httpClient.get<{ data: string }>(API_URL);
  *
  * // POST request
- * const response = await httpClient.post('https://api.example.com/submit', {
+ * const response = await httpClient.post(API_SUBMIT_URL, {
  *   body: { key: 'value' }
  * });
  * ```
