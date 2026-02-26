@@ -90,3 +90,11 @@
 - Statut: **QUALIFIED**
 - Preuve complémentaire:
 	- `reports/conversation_os_g1_global_post_continue_check.log`
+
+## Addendum 2026-02-26 (GO final validation)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier code ajusté:
+	- `src/visual-engine/OSIntegrationBridge.ts` (fix TypeScript alias config)
+- Preuves complémentaires:
+	- `reports/conversation_os_final_validation_post_go.log`
