@@ -6,7 +6,7 @@
 /// that replaces panics with proper error handling.
 
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

@@ -7,7 +7,7 @@
 
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use crate::types::research::NetworkEvent;
-use reqwest::{redirect::Policy, Client, Response};
+use crate::core::http_types::{Client, Policy, Response};
 use std::time::{Duration, Instant};
 
 /// Error types for FetchService

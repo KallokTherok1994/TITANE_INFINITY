@@ -6,6 +6,7 @@
 pub mod boot_orchestrator; // v∞ Boot Orchestrator (Super Prompt #4)
 pub mod engine;
 pub mod legacy; // Legacy compatibility adapters
+pub mod http_types; // Register core HTTP types facade
 pub mod modules;
 pub mod state;
 pub mod tapi_error;

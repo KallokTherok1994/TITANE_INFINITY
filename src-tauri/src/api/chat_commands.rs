@@ -2,7 +2,7 @@
 // ║  TITANE∞ - Chat IA Commands                                 ║
 // ╚══════════════════════════════════════════════════════════════╝
 
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::Mutex;

@@ -537,3 +537,32 @@
 - Delta mesuré:
 	- `audio/asr.rs` `1 -> 0`
 	- inventaire brut `src-tauri/src` `24 -> 23`
+
+## Addendum 2026-02-26 (Step-4 Lot B16 execution)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichiers code modifiés:
+	- `src-tauri/src/core/http_types.rs`
+	- `src-tauri/src/core/mod.rs`
+	- `src-tauri/src/main.rs`
+	- `src-tauri/src/api/chat_commands.rs`
+	- `src-tauri/src/tts/online_tts.rs`
+	- `src-tauri/src/memory_os/embeddings.rs`
+	- `src-tauri/src/gemini_provider_refactor.rs`
+	- `src-tauri/src/overdrive/chat_orchestrator.rs`
+	- `src-tauri/src/services/fetch_service.rs`
+	- `src-tauri/src/services/network_gateway.rs`
+	- `src-tauri/src/core/tapi_error.rs`
+	- `src-tauri/src/ai/ollama.rs`
+	- `src-tauri/src/ai/gemini.rs`
+- Fichier supprimé:
+	- `src-tauri/src/services/http_types.rs`
+- Fichier ajouté:
+	- `45_H2_STEP4_LOTB16_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB16_20260226T120836Z.log`
+- Delta mesuré:
+	- inventaire brut `src-tauri/src` `23 -> 14`

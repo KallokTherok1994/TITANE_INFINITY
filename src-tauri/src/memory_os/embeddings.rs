@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;

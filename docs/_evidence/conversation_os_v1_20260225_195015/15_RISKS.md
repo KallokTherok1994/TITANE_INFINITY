@@ -279,3 +279,13 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B16 (2026-02-26)
+- Action: consolidation des imports HTTP via façade interne `core/http_types` et migration des imports `reqwest` dispersés.
+- Mesure:
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `23 -> 14`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB16_20260226T120836Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
