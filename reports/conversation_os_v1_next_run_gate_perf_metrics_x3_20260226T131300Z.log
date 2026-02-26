@@ -1,0 +1,24 @@
+# PERF METRICS X3 2026-02-26T13:13:00Z
+
+===== RUN1: cargo test --manifest-path src-tauri/Cargo.toml test_omega_p2_vs_legacy_comparison -- --nocapture =====
+[P2 BENCHMARK]
+Sample size: 3
+Latencies: [0, 0, 0]
+Average P2 latency: 0ms
+[RUN1] EXIT=0
+
+===== RUN2: cargo test --manifest-path src-tauri/Cargo.toml test_omega_p2_vs_legacy_comparison -- --nocapture =====
+[P2 BENCHMARK]
+Sample size: 3
+Latencies: [0, 0, 0]
+Average P2 latency: 0ms
+[RUN2] EXIT=0
+
+===== RUN3: cargo test --manifest-path src-tauri/Cargo.toml test_omega_p2_vs_legacy_comparison -- --nocapture =====
+[P2 BENCHMARK]
+Sample size: 3
+Latencies: [1, 0, 1]
+Average P2 latency: 0ms
+[RUN3] EXIT=0
+
+# X3 RUN END 2026-02-26T13:13:00Z
