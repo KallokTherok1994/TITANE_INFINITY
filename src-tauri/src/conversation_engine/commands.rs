@@ -8,6 +8,11 @@ use std::sync::Arc;
 use tauri::State;
 use uuid::Uuid;
 
+use crate::engines::conversation_os::{
+    MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
+};
+use crate::engines::conversation_os::policy::{NetState, PolicyContext};
+
 use super::meta_accumulator::{build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id};
 use super::types::*;
 use super::ConversationEngineState;
@@ -77,6 +82,198 @@ pub async fn conversation_generate(
         conversation_mode
     );
 
+    // ─────────────────────────────────────────────────────────────
+    // Conversation OS v1 pipeline (Ring 2 + Ring 3 coordination)
+    // Router -> Policy -> Resilience -> Memory -> Search
+    // ─────────────────────────────────────────────────────────────
+    let router_engine = RouterEngine::new();
+    let policy_engine = PolicyEngine::new();
+    let mut resilience_engine = ResilienceEngine::new();
+    let memory_engine = MemoryEngine::new();
+    let search_engine = SearchEngine::new();
+
+    let router_decision = router_engine.classify(&message);
+
+    let allowlist = std::env::var("TITANE_CONVOS_ALLOWLIST")
+        .ok()
+        .map(|value| {
+            value
+                .split(',')
+                .map(|entry| entry.trim().to_string())
+                .filter(|entry| !entry.is_empty())
+                .collect::<Vec<String>>()
+        })
+        .filter(|entries| !entries.is_empty())
+        .unwrap_or_else(|| {
+            vec![
+                "localhost".to_string(),
+                "127.0.0.1".to_string(),
+                "api.search.brave.com".to_string(),
+                "duckduckgo.com".to_string(),
+            ]
+        });
+
+    let net_state = if std::env::var("OFFLINE_SIM").is_ok() {
+        NetState::Offline
+    } else {
+        NetState::Online
+    };
+
+    let policy_context = PolicyContext {
+        net_state,
+        has_ollama_credentials: true,
+        has_gemini_credentials: std::env::var("GEMINI_API_KEY")
+            .map(|value| !value.trim().is_empty())
+            .unwrap_or(false),
+        has_brave_credentials: std::env::var("BRAVE_API_KEY")
+            .map(|value| !value.trim().is_empty())
+            .unwrap_or(false),
+        endpoint_allowlist: allowlist,
+        user_preference_offline_mode: std::env::var("TITANE_OFFLINE_MODE")
+            .map(|value| value == "1" || value.eq_ignore_ascii_case("true"))
+            .unwrap_or(false),
+    };
+
+    let wants_external_ai = provider
+        .as_ref()
+        .map(|entry| !matches!(entry.as_str(), "ollama" | "local"))
+        .unwrap_or(false);
+
+    let policy_verdict = policy_engine.evaluate(
+        &policy_context,
+        router_decision.wants_search,
+        wants_external_ai,
+    );
+
+    let memory_plan = memory_engine.decide_memory_strategy(
+        &message,
+        router_decision.wants_memory,
+        Some(conversation_id.clone()),
+        false,
+    );
+
+    let (resilience_allowed, resilience_reason) = resilience_engine.is_request_allowed(1);
+
+    let mut search_citations_json = Vec::<serde_json::Value>::new();
+    if router_decision.wants_search && policy_verdict.allow_search {
+        let normalized = search_engine.normalize(
+            vec![crate::engines::conversation_os::search::RawSearchResult {
+                title: Some(format!("Search requested: {}", message)),
+                url: Some("https://duckduckgo.com/".to_string()),
+                description: Some(
+                    "Search intent detected by RouterEngine. External retrieval delegated to governed service layer."
+                        .to_string(),
+                ),
+                snippet: None,
+                source: "search_intent".to_string(),
+            }],
+            crate::engines::conversation_os::search::NormalizationOptions {
+                min_snippet_length: 20,
+                ..Default::default()
+            },
+        );
+
+        search_citations_json = normalized
+            .into_iter()
+            .map(|citation| {
+                serde_json::json!({
+                    "title": citation.title,
+                    "url": citation.url,
+                    "snippet": citation.snippet,
+                    "source": citation.source,
+                    "timestamp": citation.timestamp,
+                    "relevance": citation.relevance,
+                })
+            })
+            .collect();
+    }
+
+    let trace = serde_json::json!({
+        "phase": "conversation_generate",
+        "router": {
+            "intent": format!("{:?}", router_decision.intent),
+            "wants_search": router_decision.wants_search,
+            "wants_memory": router_decision.wants_memory,
+            "wants_write": router_decision.wants_write,
+            "confidence": router_decision.confidence,
+            "reasoning": router_decision.reasoning,
+        },
+        "policy": {
+            "allow_online": policy_verdict.allow_online,
+            "allow_external_ai": policy_verdict.allow_external_ai,
+            "allow_search": policy_verdict.allow_search,
+            "allow_tools": policy_verdict.allow_tools,
+            "hard_block": policy_verdict.hard_block,
+            "block_reason": policy_verdict.block_reason,
+            "fallback_to": policy_verdict.fallback_to,
+        },
+        "resilience": {
+            "allowed": resilience_allowed,
+            "reason": resilience_reason,
+            "state": resilience_engine.state_summary(),
+        },
+        "memory": {
+            "fetch_stm": memory_plan.fetch_stm,
+            "stm_limit": memory_plan.stm_limit,
+            "fetch_snapshot": memory_plan.fetch_snapshot,
+            "fetch_ltm": memory_plan.fetch_ltm,
+            "reasoning": memory_plan.reasoning,
+        },
+        "citations": search_citations_json,
+    });
+
+    if policy_verdict.hard_block {
+        let _ = persist_conversation_os_artifacts(
+            &conversation_id,
+            &req_id,
+            &message,
+            Some("Requête bloquée par la politique gouvernée."),
+            &trace,
+            None,
+            &search_citations_json,
+        );
+
+        let blocked_response = serde_json::json!({
+            "content": "Requête bloquée par la politique gouvernée.",
+            "meta": {
+                "mode": "LOCAL",
+                "reason_code": "POLICY_BLOCKED",
+                "network_used": false,
+                "provider_used": "none",
+                "latency_ms_total": 5,
+                "blocked_by": "policy_engine"
+            },
+            "trace": trace,
+        });
+        return Ok(blocked_response);
+    }
+
+    if !resilience_allowed {
+        let _ = persist_conversation_os_artifacts(
+            &conversation_id,
+            &req_id,
+            &message,
+            Some("Requête temporairement bloquée par la résilience (backoff/rate-limit/circuit-breaker)."),
+            &trace,
+            None,
+            &search_citations_json,
+        );
+
+        let blocked_response = serde_json::json!({
+            "content": "Requête temporairement bloquée par la résilience (backoff/rate-limit/circuit-breaker).",
+            "meta": {
+                "mode": "LOCAL",
+                "reason_code": "RESILIENCE_BLOCKED",
+                "network_used": false,
+                "provider_used": "none",
+                "latency_ms_total": 5,
+                "blocked_by": "resilience_engine"
+            },
+            "trace": trace,
+        });
+        return Ok(blocked_response);
+    }
+
     // ✨ v27.2.1: Backend gate verification (defense-in-depth)
     // Frontend already enforces in conversationEngine.ts:272-314
     // But we double-check here for security (Tauri-level validation)
@@ -94,6 +291,16 @@ pub async fn conversation_generate(
             req_id
         );
         
+        let _ = persist_conversation_os_artifacts(
+            &conversation_id,
+            &req_id,
+            &message,
+            Some("Service externe bloqué au niveau backend (defence-in-depth)."),
+            &trace,
+            None,
+            &search_citations_json,
+        );
+
         // Return immediate response (defense-in-depth, frontend should have already blocked)
         // NO_LYING_FALLBACK: provider is local/none (network_used=false), so mode=LOCAL not REMOTE
         let blocked_response = serde_json::json!({
@@ -105,7 +312,8 @@ pub async fn conversation_generate(
                 "provider_used": "none",
                 "latency_ms_total": 5,
                 "blocked_by": "backend_gate"
-            }
+            },
+            "trace": trace,
         });
         
         return Ok(blocked_response);
@@ -123,7 +331,7 @@ pub async fn conversation_generate(
 
     // Créer la requête OMEGA
     let request = ConversationRequest {
-        user_message: message,
+        user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
         mode: conversation_mode,
         ai_config: effective_provider.map(|p| {
@@ -169,6 +377,18 @@ pub async fn conversation_generate(
 
     let meta = ensure_provider_meta(&response.metadata, latency_ms as u128);
 
+    if let Err(err) = persist_conversation_os_artifacts(
+        &conversation_id,
+        &req_id,
+        &message,
+        Some(response.assistant_message.as_str()),
+        &trace,
+        Some(&meta),
+        &search_citations_json,
+    ) {
+        log::warn!("[Ω:CMD] Conversation OS persistence skipped: {}", err);
+    }
+
     // Construire la réponse JSON compatible avec le frontend
     Ok(serde_json::json!({
         "content": response.assistant_message,
@@ -177,6 +397,7 @@ pub async fn conversation_generate(
         "frenchMasteryApplied": true, // OMEGA utilise toujours FrenchMastery
         "latencyMs": latency_ms,
         "meta": meta,
+        "trace": trace,
         "metadata": {
             "intention": format!("{:?}", response.detected_intention),
             "emotion": format!("{:?}", response.detected_emotion),
@@ -227,10 +448,336 @@ fn ensure_provider_meta(metadata: &ConversationMetadata, latency_ms_total: u128)
     )
 }
 
+fn persist_conversation_os_artifacts(
+    conversation_id: &str,
+    req_id: &str,
+    user_message: &str,
+    assistant_message: Option<&str>,
+    trace: &serde_json::Value,
+    provider_meta: Option<&ProviderDecisionMeta>,
+    citations: &[serde_json::Value],
+) -> Result<(), String> {
+    persist_conversation_os_artifacts_with_path(
+        conversation_id,
+        req_id,
+        user_message,
+        assistant_message,
+        trace,
+        provider_meta,
+        citations,
+        None,
+    )
+}
+
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+fn persist_conversation_os_artifacts_with_path(
+    conversation_id: &str,
+    req_id: &str,
+    user_message: &str,
+    assistant_message: Option<&str>,
+    trace: &serde_json::Value,
+    provider_meta: Option<&ProviderDecisionMeta>,
+    citations: &[serde_json::Value],
+    db_path_override: Option<std::path::PathBuf>,
+) -> Result<(), String> {
+    use crate::services::db_service::{
+        create_event, create_provider_decision, create_source, DbService,
+    };
+    use std::path::PathBuf;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let db_path = db_path_override.unwrap_or_else(|| {
+        std::env::var("TITANE_CONVOS_DB_PATH")
+            .map(PathBuf::from)
+            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+    });
+
+    if let Some(parent) = db_path.parent() {
+        std::fs::create_dir_all(parent)
+            .map_err(|err| format!("create db dir failed: {}", err))?;
+    }
+
+    let db = DbService::new(db_path).map_err(|err| err.to_string())?;
+
+    let ts = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis() as i64)
+        .unwrap_or(0);
+
+    let user_payload = serde_json::json!({
+        "request_id": req_id,
+        "message": user_message,
+        "trace": trace,
+    })
+    .to_string();
+    let user_event = create_event(
+        format!("evt_user_{}_{}", conversation_id, req_id),
+        ts,
+        conversation_id.to_string(),
+        "user_message".to_string(),
+        user_payload,
+    );
+    db.insert_event(user_event)
+        .map_err(|err| format!("insert user event failed: {}", err))?;
+
+    if let Some(assistant_text) = assistant_message {
+        let assistant_payload = serde_json::json!({
+            "request_id": req_id,
+            "message": assistant_text,
+            "trace": trace,
+        })
+        .to_string();
+        let assistant_event = create_event(
+            format!("evt_assistant_{}_{}", conversation_id, req_id),
+            ts.saturating_add(1),
+            conversation_id.to_string(),
+            "assistant_message".to_string(),
+            assistant_payload,
+        );
+        db.insert_event(assistant_event)
+            .map_err(|err| format!("insert assistant event failed: {}", err))?;
+    }
+
+    let decision_json = if let Some(meta) = provider_meta {
+        serde_json::to_string(meta).unwrap_or_else(|_| "{}".to_string())
+    } else {
+        serde_json::json!({
+            "provider_used": "none",
+            "mode": "LOCAL",
+            "reason_code": "POLICY_BLOCKED",
+            "request_id": req_id,
+        })
+        .to_string()
+    };
+    let provider_decision = create_provider_decision(
+        format!("dec_{}_{}", conversation_id, req_id),
+        ts.saturating_add(2),
+        conversation_id.to_string(),
+        decision_json,
+    );
+    db.insert_provider_decision(provider_decision)
+        .map_err(|err| format!("insert provider decision failed: {}", err))?;
+
+    for (index, citation) in citations.iter().enumerate() {
+        let url = citation
+            .get("url")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_string();
+        if url.is_empty() {
+            continue;
+        }
+
+        let title = citation
+            .get("title")
+            .and_then(|value| value.as_str())
+            .unwrap_or("Sans titre")
+            .to_string();
+        let snippet = citation
+            .get("snippet")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_string();
+        let provider = citation
+            .get("source")
+            .and_then(|value| value.as_str())
+            .unwrap_or("unknown")
+            .to_string();
+
+        let source_row = create_source(
+            format!("src_{}_{}_{}", conversation_id, req_id, index),
+            ts.saturating_add(3 + index as i64),
+            conversation_id.to_string(),
+            provider,
+            url,
+            title,
+            snippet,
+            ts,
+        );
+        db.insert_source(source_row)
+            .map_err(|err| format!("insert source failed: {}", err))?;
+    }
+
+    Ok(())
+}
+
+#[cfg(not(all(not(feature = "mock"), feature = "full")))]
+fn persist_conversation_os_artifacts_with_path(
+    conversation_id: &str,
+    req_id: &str,
+    user_message: &str,
+    assistant_message: Option<&str>,
+    trace: &serde_json::Value,
+    provider_meta: Option<&ProviderDecisionMeta>,
+    citations: &[serde_json::Value],
+    db_path_override: Option<std::path::PathBuf>,
+) -> Result<(), String> {
+    use rusqlite::Connection;
+    use std::path::PathBuf;
+    use std::time::{SystemTime, UNIX_EPOCH};
+
+    let db_path = db_path_override.unwrap_or_else(|| {
+        std::env::var("TITANE_CONVOS_DB_PATH")
+            .map(PathBuf::from)
+            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+    });
+
+    if let Some(parent) = db_path.parent() {
+        std::fs::create_dir_all(parent)
+            .map_err(|err| format!("create db dir failed: {}", err))?;
+    }
+
+    let conn = Connection::open(db_path).map_err(|err| format!("open db failed: {}", err))?;
+
+    conn.execute_batch(
+        "
+        CREATE TABLE IF NOT EXISTS events (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            kind TEXT NOT NULL,
+            payload TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS provider_decisions (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            payload TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS sources (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            provider TEXT NOT NULL,
+            url TEXT NOT NULL,
+            title TEXT NOT NULL,
+            snippet TEXT NOT NULL,
+            source_ts INTEGER NOT NULL
+        );
+        ",
+    )
+    .map_err(|err| format!("create schema failed: {}", err))?;
+
+    let ts = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|duration| duration.as_millis() as i64)
+        .unwrap_or(0);
+
+    let user_payload = serde_json::json!({
+        "request_id": req_id,
+        "message": user_message,
+        "trace": trace,
+    })
+    .to_string();
+
+    conn.execute(
+        "INSERT OR REPLACE INTO events (id, ts, conversation_id, kind, payload) VALUES (?1, ?2, ?3, ?4, ?5)",
+        (
+            format!("evt_user_{}_{}", conversation_id, req_id),
+            ts,
+            conversation_id,
+            "user_message",
+            user_payload,
+        ),
+    )
+    .map_err(|err| format!("insert user event failed: {}", err))?;
+
+    if let Some(assistant_text) = assistant_message {
+        let assistant_payload = serde_json::json!({
+            "request_id": req_id,
+            "message": assistant_text,
+            "trace": trace,
+        })
+        .to_string();
+
+        conn.execute(
+            "INSERT OR REPLACE INTO events (id, ts, conversation_id, kind, payload) VALUES (?1, ?2, ?3, ?4, ?5)",
+            (
+                format!("evt_assistant_{}_{}", conversation_id, req_id),
+                ts.saturating_add(1),
+                conversation_id,
+                "assistant_message",
+                assistant_payload,
+            ),
+        )
+        .map_err(|err| format!("insert assistant event failed: {}", err))?;
+    }
+
+    let decision_json = if let Some(meta) = provider_meta {
+        serde_json::to_string(meta).unwrap_or_else(|_| "{}".to_string())
+    } else {
+        serde_json::json!({
+            "provider_used": "none",
+            "mode": "LOCAL",
+            "reason_code": "POLICY_BLOCKED",
+            "request_id": req_id,
+        })
+        .to_string()
+    };
+
+    conn.execute(
+        "INSERT OR REPLACE INTO provider_decisions (id, ts, conversation_id, payload) VALUES (?1, ?2, ?3, ?4)",
+        (
+            format!("dec_{}_{}", conversation_id, req_id),
+            ts.saturating_add(2),
+            conversation_id,
+            decision_json,
+        ),
+    )
+    .map_err(|err| format!("insert provider decision failed: {}", err))?;
+
+    for (index, citation) in citations.iter().enumerate() {
+        let url = citation
+            .get("url")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_string();
+        if url.is_empty() {
+            continue;
+        }
+
+        let title = citation
+            .get("title")
+            .and_then(|value| value.as_str())
+            .unwrap_or("Sans titre")
+            .to_string();
+        let snippet = citation
+            .get("snippet")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_string();
+        let provider = citation
+            .get("source")
+            .and_then(|value| value.as_str())
+            .unwrap_or("unknown")
+            .to_string();
+
+        conn.execute(
+            "INSERT OR REPLACE INTO sources (id, ts, conversation_id, provider, url, title, snippet, source_ts) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+            (
+                format!("src_{}_{}_{}", conversation_id, req_id, index),
+                ts.saturating_add(3 + index as i64),
+                conversation_id,
+                provider,
+                url,
+                title,
+                snippet,
+                ts,
+            ),
+        )
+        .map_err(|err| format!("insert source failed: {}", err))?;
+    }
+
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::conversation_engine::meta_accumulator::{build_offline_meta, build_success_meta};
+    use rusqlite::Connection;
     use std::fs;
     use std::path::PathBuf;
 
@@ -304,6 +851,100 @@ mod tests {
         assert!(meta.get("latency_ms_total").is_some());
 
         write_output(&json);
+    }
+
+    #[test]
+    fn no_silent_fallback_keeps_root_cause_offline() {
+        let provider_meta = build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM");
+        let response = sample_response("offline", provider_meta);
+        let meta = ensure_provider_meta(&response.metadata, 1);
+
+        assert_eq!(meta.provider_used, "offline");
+        assert!(matches!(meta.mode, Mode::Offline));
+        assert_eq!(meta.reason_code, ReasonCode::FallbackOffline);
+        assert_ne!(meta.reason_code, ReasonCode::ProviderDown);
+        assert!(!meta.network_used);
+    }
+
+    #[test]
+    fn reproducible_meta_same_input_same_output() {
+        let provider_meta = build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM");
+        let response = sample_response("offline", provider_meta);
+
+        let run1 = ensure_provider_meta(&response.metadata, 1);
+        let run2 = ensure_provider_meta(&response.metadata, 1);
+        let run3 = ensure_provider_meta(&response.metadata, 1);
+
+        let json1 = serde_json::to_string(&run1).expect("serialize run1");
+        let json2 = serde_json::to_string(&run2).expect("serialize run2");
+        let json3 = serde_json::to_string(&run3).expect("serialize run3");
+
+        assert_eq!(json1, json2);
+        assert_eq!(json2, json3);
+    }
+
+    #[test]
+    fn conversation_os_persistence_stores_events_and_sources() {
+        let db_path = std::env::temp_dir().join(format!(
+            "titane-conversation-os-{}.db",
+            Uuid::new_v4()
+        ));
+
+        let trace = serde_json::json!({
+            "phase": "test",
+            "router": { "intent": "Search" },
+        });
+
+        let citations = vec![serde_json::json!({
+            "title": "Source de test",
+            "url": "https://example.com/source",
+            "snippet": "Snippet de test",
+            "source": "test_source"
+        })];
+
+        let provider_meta = build_success_meta("local", 1);
+
+        persist_conversation_os_artifacts_with_path(
+            "conv-test",
+            "req-test",
+            "Message utilisateur",
+            Some("Réponse assistant"),
+            &trace,
+            Some(&provider_meta),
+            &citations,
+            Some(db_path.clone()),
+        )
+        .expect("persistence should succeed");
+
+        let conn = Connection::open(db_path.clone()).expect("db should open");
+        let events_count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM events WHERE conversation_id = ?1",
+                ["conv-test"],
+                |row| row.get(0),
+            )
+            .expect("events count query should succeed");
+        assert_eq!(events_count, 2);
+
+        let sources_count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM sources WHERE conversation_id = ?1",
+                ["conv-test"],
+                |row| row.get(0),
+            )
+            .expect("sources count query should succeed");
+        assert_eq!(sources_count, 1);
+
+        let source_url: String = conn
+            .query_row(
+                "SELECT url FROM sources WHERE conversation_id = ?1 LIMIT 1",
+                ["conv-test"],
+                |row| row.get(0),
+            )
+            .expect("source url query should succeed");
+        assert_eq!(source_url, "https://example.com/source");
+
+        let _ = std::fs::remove_file(db_path);
     }
 }
 

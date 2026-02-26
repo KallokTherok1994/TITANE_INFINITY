@@ -11,6 +11,7 @@ import React, {
   useRef,
   memo,
 } from 'react';
+import { TracePanel } from './TracePanel';
 
 // ═══════════════════════════════════════════════════════════════════
 // Types
@@ -294,6 +295,11 @@ interface DebugEntryViewProps {
 }
 
 const DebugEntryView = memo(function DebugEntryView({ entry }: DebugEntryViewProps) {
+  const trace =
+    entry.response && typeof entry.response === 'object'
+      ? (entry.response as { trace?: unknown }).trace
+      : undefined;
+
   return (
     <>
       <div style={{ fontSize: '0.8rem', lineHeight: 1.5 }}>
@@ -340,6 +346,8 @@ const DebugEntryView = memo(function DebugEntryView({ entry }: DebugEntryViewPro
           2
         )}
       </pre>
+
+      <TracePanel trace={trace} />
     </>
   );
 });
