@@ -268,3 +268,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B15 (2026-02-26)
+- Action: suppression du call-site `reqwest` placeholder dans `audio/asr.rs`.
+- Mesure:
+  - `audio/asr.rs`: `1 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `24 -> 23`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB15_20260226T120137Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

@@ -5,7 +5,6 @@
 
 use super::{AudioError, AudioResult};
 use crate::security::shell_guard::ShellGuard;
-use std::time::Duration;
 
 #[derive(Debug, Clone, Copy)]
 pub enum ASRProvider {
@@ -59,11 +58,6 @@ impl ASREngine {
         // Google Speech-to-Text API
         // This is a simplified implementation
         // In production, use proper Google Cloud Speech API
-
-        let client = reqwest::Client::builder()
-            .timeout(Duration::from_secs(10))
-            .build()
-            .map_err(|e| AudioError::ProcessingError(e.to_string()))?;
 
         // Implementation: Google Cloud Speech-to-Text API v1
         // - API: google-cloud-speech crate with RecognizeRequest
