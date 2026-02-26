@@ -508,7 +508,7 @@ export class OSIntegrationBridge {
     }
     this.pollTimer = setInterval(() => {
       // IMPLEMENTATION: Polling logic to fetch OS state from REST API
-      // 1. Endpoint: request('http://localhost:7890/api/os/state') or config.apiEndpoint
+      // 1. Endpoint: request(config.apiEndpoint) via surface gouvernée
       // 2. Response: JSON { cpu_usage, memory_usage, disk_usage, network_stats, processes }
       // 3. Parse and update: this.updateOSState(data) to trigger state change events
       // 4. Error handling: Exponential backoff on failure, max 5 retries
