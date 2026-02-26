@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { describe, it, expect } from 'vitest';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke as invoke } from '@/lib/security';
 
 /**
  * Alerte de régression détectée

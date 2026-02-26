@@ -500,19 +500,19 @@ export async function handleCreateAPI(apiName: string): Promise<DevSudoResult> {
    }
 
    // API Client
-   import { invoke } from '@tauri-apps/api/core';
+    import { tauriClient } from '@/lib/tauriClient';
 
    export const ${apiName}API = {
      async init(): Promise<${apiName}Config> {
-       return invoke('${apiName.toLowerCase()}_init');
+          return tauriClient.${apiName.toLowerCase()}Init();
      },
 
      async execute(input: string): Promise<${apiName}Response> {
-       return invoke('${apiName.toLowerCase()}_execute', { input });
+          return tauriClient.${apiName.toLowerCase()}Execute({ input });
      },
 
      async stop(): Promise<string> {
-       return invoke('${apiName.toLowerCase()}_stop');
+          return tauriClient.${apiName.toLowerCase()}Stop();
      },
    };
    \`\`\`

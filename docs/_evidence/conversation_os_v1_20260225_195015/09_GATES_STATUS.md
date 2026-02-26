@@ -156,3 +156,20 @@
 ### Verdict
 - Micro-phase remédiation: **PASS**
 - État global hard-mode: **BLOCKED** (C2/H2/HB4 résiduel)
+
+## Addendum remédiation step-2 (2026-02-26)
+
+### Source
+- `reports/conversation_os_hardmode_gates_x3_step2_20260226T023045Z.log`
+- `reports/conversation_os_blocker_hb4_prodscope_step2_20260226T023045Z.log`
+
+### Résultats run1/run2/run3
+- `H1: 0 / 0 / 0` → **PASS**
+- `C2: 115 / 115 / 115` → **BLOCKED**
+- `H2: 73 / 73 / 73` → **BLOCKED**
+- `H4: 0 / 0 / 0` → **PASS**
+- `HB4: 0 / 0 / 0` → **PASS (CLOSED)**
+
+### Décision mise à jour
+- Hard blocker `HB4` fermé.
+- État hard-mode: **PARTIAL PASS / BLOCKED** (blocants restants: C2, H2).

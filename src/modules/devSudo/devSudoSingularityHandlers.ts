@@ -974,7 +974,7 @@ interface ${componentName}Props {
 
 import { useEffect, useState, useCallback } from 'react';
 import { use${componentName}Store } from '@/stores/use${componentName}Store';
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient } from '@/lib/tauriClient';
 
 interface ${componentName}Props {
   id: string;
