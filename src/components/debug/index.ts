@@ -4,6 +4,7 @@
  */
 
 export { ChatDebugPanel, default as ChatDebugPanelDefault } from './ChatDebugPanel';
+export { TracePanel, default as TracePanelDefault } from './TracePanel';
 
 export type {
   ChatDebugPanelProps,
