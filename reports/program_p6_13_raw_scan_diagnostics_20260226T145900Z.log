@@ -1,0 +1,22 @@
+# RAW SCAN DIAGNOSTICS 2026-02-26T14:57:41Z
+$ rg -n "fetch\(|axios\(|https?://" -S src | wc -l
+159
+$ rg -n "reqwest|ureq|hyper" -S src-tauri | wc -l
+256
+$ rg -n "API_KEY|SECRET|TOKEN|BRAVE" -S src src-tauri | wc -l
+157
+\n## Frontend web-pattern by bucket
+$ rg -n "fetch\(|axios\(|https?://" -S src | rg "(__tests__|__snapshots__|\.stories\.|\.mdx$)" | wc -l
+66
+$ rg -n "fetch\(|axios\(|https?://" -S src | rg -v "(__tests__|__snapshots__|\.stories\.|\.mdx$)" | wc -l
+93
+\n## Backend http-client by bucket
+$ rg -n "reqwest|ureq|hyper" -S src-tauri | rg "Cargo.lock|tauri.conf.json|gen/schemas" | wc -l
+51
+$ rg -n "reqwest|ureq|hyper" -S src-tauri/src | wc -l
+197
+\n## Secret-marker by bucket
+$ rg -n "API_KEY|SECRET|TOKEN|BRAVE" -S src src-tauri | rg "MAX_TOKENS|TOKENS|__tests__|mock|comment|README|docs|examples" | wc -l
+57
+$ rg -n "API_KEY|SECRET|TOKEN|BRAVE" -S src src-tauri | rg -v "MAX_TOKENS|TOKENS|__tests__|mock|comment|README|docs|examples" | wc -l
+100

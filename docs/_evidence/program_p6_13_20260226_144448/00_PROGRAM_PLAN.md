@@ -17,3 +17,7 @@ Date (UTC): 2026-02-26
 
 ## Règle de verdict
 - Chaque phase: **PASS x3** ou **BLOCKED** avec preuve et prochaine action exacte.
+
+## Addendum append-only — 2026-02-26T14:57:41Z
+- Contrat de scan à requalifier documenté: `10_SCAN_CONTRACT_REQUALIFICATION.md`.
+- Sans approbation de ce contrat, l’ouverture de P6 reste bloquée.
