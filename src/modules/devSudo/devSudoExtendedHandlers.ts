@@ -495,7 +495,7 @@ export async function handleConnectAPI(api: string): Promise<DevSudoResult> {
 **Gemini**:
 \`\`\`bash
 # .env
-GEMINI_API_KEY=your_key_here
+GEMINI_API_KEY=<VOTRE_CLE_GEMINI>
 \`\`\`
 
 **Ollama**:
@@ -542,7 +542,7 @@ export async function handleVerifyKeys(): Promise<DevSudoResult> {
 💡 **Configuration**:
 \`\`\`bash
 # .env (root du projet)
-GEMINI_API_KEY=AIza...
+GEMINI_API_KEY=<VOTRE_CLE_GEMINI>
 \`\`\`
 
 🔒 **Sécurité**: Les clés sont chiffrées par SecureSecretsEngine`,
