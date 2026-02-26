@@ -1,3 +1,11 @@
+## ADDENDUM — AUTOHEAL AH V6 (20260226T2222Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_222226`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2222Z`
+  - `evidence-seal-autoheal-ah-v6-latest`
+- Statut run: `BLOCKED`
+
 ## ADDENDUM — AUTOHEAL AH V5 (20260226T2220Z)
 
 - Program: `docs/_evidence/program_autoheal_ah_20260226_222010`
