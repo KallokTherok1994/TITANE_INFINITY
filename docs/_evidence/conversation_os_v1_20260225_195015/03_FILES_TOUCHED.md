@@ -136,3 +136,14 @@
 	- `19_ALL_GREEN_CLOSURE.md`
 - Preuve consolidée:
 	- `reports/conversation_os_post_format_all_green.log`
+
+## Addendum 2026-02-26 (Verify recovery pass)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `20_VERIFY_RECOVERY_PASS.md`
+- Fichiers conformité ajustés:
+	- `package.json` (`scripts.dev` => `tauri dev`)
+	- `.github/copilot-instructions.md` (tokens exacts `Local-first` et `diagnose -> plan -> apply -> verify -> report`)
+- Preuve décomposée:
+	- `reports/conversation_os_verify_gates_decomposed_round2.log`
