@@ -6,22 +6,22 @@ Date (UTC): 2026-02-26
 - `G_LEGACY_PATHS_MAPPED`: PASS (présence canonique + legacy détectées)
 - `G_SCOPE_FROZEN`: PASS (scope figé dans `02_SCOPE_FREEZE.md`)
 
-## Gates runtime (état initial avant x3)
-- `G_DB_WRITE_READ_HASH_X3`: BLOCKED
-- `G_EVENTS_APPEND_ONLY`: BLOCKED
-- `G_NO_SILENT_FALLBACK`: BLOCKED
-- `G_POLICY_ENFORCED`: BLOCKED
-- `G_ROUTER_DETERMINISTIC`: BLOCKED
-- `G_GATEWAY_ALLOWLIST_ONLY`: PARTIAL (scan PASS, runtime x3 non scellée)
+## Gates runtime (statut courant)
+- `G_DB_WRITE_READ_HASH_X3`: PASS
+- `G_EVENTS_APPEND_ONLY`: PASS
+- `G_NO_SILENT_FALLBACK`: PASS
+- `G_POLICY_ENFORCED`: PASS
+- `G_ROUTER_DETERMINISTIC`: PASS
+- `G_GATEWAY_ALLOWLIST_ONLY`: PASS
 - `G_FRONTEND_NO_WEB`: PASS (`0/0/0` prod-scope)
 - `G_NETWORK_META_COMPLETE`: BLOCKED
-- `G_NETSTATE_TRANSITIONS_VALID`: BLOCKED
-- `G_BUDGET_ENFORCED`: BLOCKED
+- `G_NETSTATE_TRANSITIONS_VALID`: PASS
+- `G_BUDGET_ENFORCED`: PASS
 - `G_ORCHESTRATOR_SINGLE`: BLOCKED
 - `G_LEGACY_UNREACHABLE_FROM_UI`: BLOCKED (`8/8/8`)
-- `G_SEARCH_CREDS_EXPLICIT`: PARTIAL
+- `G_SEARCH_CREDS_EXPLICIT`: PASS
 - `G_FAILURES_STORED`: BLOCKED
-- `G_SOURCES_STORED_AND_CITABLE`: BLOCKED
+- `G_SOURCES_STORED_AND_CITABLE`: PARTIAL (parse/citation PASS x3; preuve persistance sources runtime manquante)
 - `G_RATE_LIMIT_AWARE`: BLOCKED
 - `G_SNAPSHOT_CREATED_X3`: BLOCKED
 - `G_SNAPSHOT_HASH_VALID`: BLOCKED
@@ -52,4 +52,18 @@ Date (UTC): 2026-02-26
 	- `reports/conversation_os_v1_next_run_x3_20260226T123434Z.log`
 	- `reports/conversation_os_v1_next_run_x3_20260226T123458Z.log`
 	- `reports/conversation_os_v1_next_run_x3_bg_20260226T123511Z.log`
+
+## Addendum runtime x3 isolé (succès)
+- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
+	- `G_DB_WRITE_READ_HASH_X3`: `0/0/0` (exit)
+	- `G_EVENTS_APPEND_ONLY`: `0/0/0`
+	- `G_POLICY_ENFORCED`: `0/0/0`
+	- `G_ROUTER_DETERMINISTIC`: `0/0/0`
+	- `G_NETSTATE_TRANSITIONS_VALID`: `0/0/0`
+	- `G_BUDGET_ENFORCED`: `0/0/0`
+	- `G_SEARCH_CREDS_EXPLICIT`: `0/0/0`
+- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
+	- `G_NO_SILENT_FALLBACK`: `0/0/0`
+	- `G_SOURCES_STORED_AND_CITABLE_PARSE`: `0/0/0`
+	- `G_DB_INSERT_AND_GET`: `0/0/0`
 
