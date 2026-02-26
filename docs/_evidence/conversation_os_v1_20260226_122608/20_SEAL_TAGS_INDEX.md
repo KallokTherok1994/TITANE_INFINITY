@@ -1,10 +1,18 @@
-## ADDENDUM — AUTOHEAL AH V4 PROD-ONLY (20260226T2211Z)
+## ADDENDUM — AUTOHEAL AH V5 (20260226T2220Z)
 
 - Program: 
 - Tags attendus:
   - 
   - 
 - Statut run: 
+
+## ADDENDUM — AUTOHEAL AH V4 PROD-ONLY (20260226T2211Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_221116`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2211Z`
+  - `evidence-seal-autoheal-ah-v4-latest`
+- Statut run: `BLOCKED`
 
 ## ADDENDUM — AUTOHEAL AH V3 ULTRA-CIBLÉ (20260226T2207Z)
 
