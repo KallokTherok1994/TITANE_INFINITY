@@ -49,6 +49,31 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:13:13Z
+
+### Tags de scellement publiés (P28→P34)
+- `evidence-seal-p28-34-20260226T1713Z`
+  - Type: annoté
+  - Portée: scellement dédié du lot P28→P34
+  - Commit scellé: `316e4d2b`
+  - Référence: `refs/tags/evidence-seal-p28-34-20260226T1713Z`
+
+- `evidence-seal-p28-34-20260226`
+  - Type: annoté
+  - Portée: alias court du scellement P28→P34
+  - Commit scellé: `316e4d2b`
+  - Référence: `refs/tags/evidence-seal-p28-34-20260226`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p28-34-20260226*"`
+- `git ls-remote --tags origin | rg "evidence-seal-p28-34-20260226"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:06:00Z
 
 ### Seal documentaire inter-pack (sans nouveau tag Git)

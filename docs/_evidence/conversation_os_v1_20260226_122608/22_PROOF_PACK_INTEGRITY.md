@@ -49,6 +49,26 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:13:13Z
+
+### Références tags de seal (programme P28→P34)
+- Tag dédié UTC: `evidence-seal-p28-34-20260226T1713Z`
+- Tag miroir court: `evidence-seal-p28-34-20260226`
+- Commit de référence: `316e4d2b`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p28-34-20260226*"`
+- `git ls-remote --tags origin | rg "evidence-seal-p28-34-20260226"`
+
+### État
+- Traçabilité des tags de scellement P28→P34: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:06:00Z
 
 ### Extension de périmètre (programme P28→P34)
