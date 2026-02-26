@@ -45,3 +45,18 @@ Date (UTC): 2026-02-26
 ### Métadonnées addendum
 - Ring impacté: **Governance/Repo hygiene**
 - Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T14:42:13Z
+
+### Borne terminale de session
+- Tag terminal: `evidence-seal-terminal-20260226T144213Z`
+- Commit de référence taggé: `651014c3`
+
+### Rôle
+- Marquer explicitement le point d’arrêt post-pass sans modifier le verdict.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**

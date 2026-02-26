@@ -49,6 +49,25 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T14:42:13Z
+
+### Tag terminal de session publié
+- `evidence-seal-terminal-20260226T144213Z`
+  - Type: annoté
+  - Portée: borne terminale post-pass de la session
+  - Commit scellé: `651014c3`
+  - Référence: `refs/tags/evidence-seal-terminal-20260226T144213Z`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-terminal-20260226T144213Z"`
+- `git ls-remote --tags origin | rg "evidence-seal-terminal-20260226T144213Z"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:20:00Z
 
 ### Tag miroir court publié
