@@ -1,0 +1,8 @@
+== H2 inventory lot B6 ==
+FETCH_SERVICE_RAW=1
+FETCH_SERVICE_LINES:
+10:use reqwest::{redirect::Policy, Client, Response};
+
+CHAT_ORCH_RAW=1
+AI_OLLAMA_RAW=1
+RAW_TOTAL=49

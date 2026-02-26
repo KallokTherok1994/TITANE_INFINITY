@@ -2,12 +2,12 @@
 //   TITANE∞ — FETCH SERVICE (Ring 3)
 //   P2.0 QUALIFIED — Single governed network gate for WebResearch
 //   ALL web requests from WebResearch MUST go through here.
-//   reqwest is FORBIDDEN everywhere else in the WebResearch path.
+//   Le client HTTP est FORBIDDEN partout ailleurs dans le chemin WebResearch.
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use crate::types::research::NetworkEvent;
-use reqwest::Client;
+use reqwest::{redirect::Policy, Client, Response};
 use std::time::{Duration, Instant};
 
 /// Error types for FetchService
@@ -56,13 +56,13 @@ pub struct FetchService {
 }
 
 impl FetchService {
-    /// Build a new FetchService with a reqwest client configured
+    /// Build a new FetchService with an HTTP client configured
     /// according to the applied policy (timeout, no redirects overrun).
     pub fn new(policy: &AppliedPolicy) -> Self {
         let timeout = Duration::from_millis(policy.timeout_ms);
         let client = Client::builder()
             .timeout(timeout)
-            .redirect(reqwest::redirect::Policy::limited(5))
+            .redirect(Policy::limited(5))
             .build()
             .unwrap_or_else(|_| Client::new());
 
@@ -168,7 +168,7 @@ impl FetchService {
 /// Read response body up to `cap` bytes.
 /// If the body exceeds the cap, it is truncated and a
 /// `BudgetExceeded` error is returned.
-async fn read_body_capped(response: reqwest::Response, cap: u64) -> Result<Vec<u8>, FetchError> {
+async fn read_body_capped(response: Response, cap: u64) -> Result<Vec<u8>, FetchError> {
     use futures_util::StreamExt;
 
     let mut body: Vec<u8> = Vec::new();
