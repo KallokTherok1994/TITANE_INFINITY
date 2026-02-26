@@ -46,3 +46,12 @@
 - Ring impacté: **Ring 3 (Services)**
 - Statut changement: **QUALIFIED**
 - Preuve test ciblé: `reports/conversation_os_g1_remediation_search_credentials_x3.log`
+
+## Addendum 2026-02-26 (Phase 1 G1)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut changement: **EXPERIMENTAL**
+- Fichier ajouté: `13_G1_PHASE1_INVENTORY.md`
+- Preuves: 
+	- `reports/conversation_os_g1_phase1_raw_20260226T010320Z.log`
+	- `reports/conversation_os_g1_phase1_summary_20260226T010320Z.md`
+	- `reports/conversation_os_g1_phase1_classification_20260226T010330Z.csv`

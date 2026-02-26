@@ -30,3 +30,17 @@ Aucun build/deploy PROD sans tokens exacts:
 ### Métadonnées de changement
 - Ring impacté: **Ring 3 (Services)**
 - Statut: **QUALIFIED**
+
+## Addendum Phase 1 (2026-02-26)
+
+### Exécution
+- Phase 1 (inventaire + classification exhaustive) exécutée et documentée.
+- Résultat: `85` matches globaux, dont `78` classés `LEGACY_HORS_SCOPE`.
+
+### Impact sur verdict
+- **Global pack:** reste `BLOCKED` (G1 global strict non levé)
+- **Progression:** Phase 1 validée, passage en attente de Phase 2 (neutralisation contrôlée)
+
+### Métadonnées
+- Ring impacté principal: **Ring 4 (Modules/UI)**
+- Statut: **EXPERIMENTAL** (phase de plan exécutée), cible suivante: **QUALIFIED** après Phase 2 + G1 x3
