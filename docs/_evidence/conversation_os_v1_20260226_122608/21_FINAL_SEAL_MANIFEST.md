@@ -28,3 +28,20 @@ Date (UTC): 2026-02-26
 ## Métadonnées de changement
 - Ring impacté: **Governance/Repo hygiene**
 - Statut: **STABLE**
+
+---
+
+## Addendum append-only — 2026-02-26T14:23:00Z
+
+### Cross-référence tags Pack 5.1
+- `evidence-seal-pack5-20260226T141459Z` (tag granulaire UTC)
+- `evidence-seal-pack5-20260226` (tag miroir court)
+
+### Lien avec la fermeture Pack 5.1
+- Commit fonctionnel scellé: `c6fe8237`
+- Commit index de traçabilité: `02888efe`
+- Commit addendum miroir court: `3b81e320`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
