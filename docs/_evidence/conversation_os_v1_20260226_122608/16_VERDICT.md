@@ -45,3 +45,9 @@ Date (UTC): 2026-02-26
 - Manifeste final de scellement: `21_FINAL_SEAL_MANIFEST.md`.
 - Manifeste d'intégrité SHA-256: `22_PROOF_PACK_INTEGRITY.md`.
 
+---
+
+## Addendum append-only — 2026-02-26T14:34:30Z
+- Digest de lecture unique Pack 5.1: `23_PACK5_1_PROOF_DIGEST.md`.
+- Ce pointeur sert de point d’entrée rapide sans modifier le verdict (**PASS** inchangé).
+
