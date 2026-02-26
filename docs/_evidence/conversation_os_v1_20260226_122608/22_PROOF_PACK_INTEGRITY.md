@@ -1,3 +1,12 @@
+## ADDENDUM — INTEGRITY AUTOHEAL AH V38 (A→H)
+
+- Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_232605.txt`
+- File count: `82`
+- Scope:
+  - `docs/_evidence/program_autoheal_ah_20260226_232605/**`
+  - `docs/_evidence/pA_20260226_232605/**` à `docs/_evidence/pH_20260226_232605/**`
+- Verdict pack: `PASS`
+
 ## ADDENDUM — INTEGRITY AUTOHEAL AH V37 (A→H)
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_232432.txt`
