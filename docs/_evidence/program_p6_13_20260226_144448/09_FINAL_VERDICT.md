@@ -86,3 +86,6 @@ Date (UTC): 2026-02-26
 
 ### Runbook de reprise immédiate
 - `docs/_evidence/program_p6_13_20260226_144448/11_UNBLOCK_EXECUTION_RUNBOOK.md`
+
+### Clôture des tâches en cours
+- `docs/_evidence/program_p6_13_20260226_144448/12_TASKS_CLOSURE_STATUS.md`
