@@ -37,6 +37,7 @@ Date (UTC): 2026-02-26
 - `G_MEMORY_RECALL_INTERNAL_IDS`: `0 / 0 / 0`
 - `G_ORCHESTRATOR_SINGLE`: `0 / 0 / 0`
 - `G_PERF_METRICS_RECORDED`: `0 / 0 / 0`
+- `G_SELF_AUDIT_CLEAN` (scan x3): `TYPES_TO_SERVICES=0`, `SERVICES_TO_UI=26`, `LEGACY_CHAT_SEND_MESSAGE_UI=25` (**BLOCKED**)
 
 ## Tentatives x3 runtime Rust
 - Tentatives initiales partiellement bloquées par contention `cargo` (conservées pour audit):
@@ -53,6 +54,7 @@ Date (UTC): 2026-02-26
 	- `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
 	- `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
 	- `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
+	- `reports/conversation_os_v1_next_run_gate_self_audit_scan_x3_20260226T131242Z.log`
 
 ## Verdict x3
 - Scans structurels: **PASS**.

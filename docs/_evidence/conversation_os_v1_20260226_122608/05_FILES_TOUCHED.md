@@ -40,11 +40,13 @@ Date (UTC): 2026-02-26
 	- Ajout test `test_recall_returns_internal_ids` pour preuve des IDs internes en recall
 - `src-tauri/src/conversation_engine/commands.rs`
 	- Ajout test `conversation_os_single_pipeline_trace_and_artifacts_are_canonical`
+- `src/types/ai.d.ts`
+	- Suppression dépendance Ring1 -> Services (`@/services/ai/types`) via définitions locales
 - `src/core/commands/TAURI_COMMANDS.ts`
 	- Nettoyage d'une référence legacy en commentaire pour éviter faux positif gate reachability
 
 ## Métadonnées
-- Ring impacté: **Ring 2 + Ring 3 + Ring 4**
+- Ring impacté: **Ring 1 + Ring 2 + Ring 3 + Ring 4**
 - Statut changement: **QUALIFIED**
 
 ## Logs de preuve générés
@@ -61,4 +63,5 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
 - `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
 - `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
+- `reports/conversation_os_v1_next_run_gate_self_audit_scan_x3_20260226T131242Z.log`
 
