@@ -28,11 +28,27 @@ impl SearchGatewayService {
         Self::new(NetworkGatewayService::default_governed())
     }
 
-    /// Perform search with preferred provider (Brave when key exists), fallback to DDG endpoint.
+    /// Perform search with Brave provider only.
+    /// If BRAVE_API_KEY is missing, return explicit CREDENTIALS_MISSING error.
     pub async fn search(&self, query: &str, max_results: usize) -> Result<Vec<SearchResult>, String> {
-        match std::env::var("BRAVE_API_KEY") {
-            Ok(key) if !key.trim().is_empty() => self.search_brave(query, max_results, &key).await,
-            _ => self.search_duckduckgo(query, max_results).await,
+        let brave_api_key = std::env::var("BRAVE_API_KEY")
+            .ok()
+            .map(|value| value.trim().to_string())
+            .filter(|value| !value.is_empty());
+
+        self.search_with_key(query, max_results, brave_api_key.as_deref())
+            .await
+    }
+
+    async fn search_with_key(
+        &self,
+        query: &str,
+        max_results: usize,
+        brave_api_key: Option<&str>,
+    ) -> Result<Vec<SearchResult>, String> {
+        match brave_api_key {
+            Some(key) => self.search_brave(query, max_results, key).await,
+            None => Err("CREDENTIALS_MISSING: BRAVE_API_KEY not configured".to_string()),
         }
     }
 
@@ -161,6 +177,17 @@ fn parse_duckduckgo_results(json: &Value) -> Vec<SearchResult> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn test_search_requires_brave_api_key() {
+        let service = SearchGatewayService::default_governed();
+        let result = service.search_with_key("rust", 5, None).await;
+
+        assert!(result.is_err());
+        assert!(result
+            .expect_err("missing key should fail")
+            .contains("CREDENTIALS_MISSING"));
+    }
 
     #[test]
     fn test_parse_brave_results() {
