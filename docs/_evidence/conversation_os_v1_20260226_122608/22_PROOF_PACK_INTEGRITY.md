@@ -51,6 +51,36 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:23:00Z
+
+### Extension de périmètre (programme P21→P27)
+- Pack lié: `docs/_evidence/program_p21_27_20260226_155906/`
+- Artefact d’intégrité: `reports/proof_pack_hash_manifest_program_p21_27_20260226T1623Z.txt`
+
+### État
+- Intégrité programme P21→P27: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T15:52:00Z
+
+### Extension de périmètre (programme P14→P20)
+- Pack lié: `docs/_evidence/program_p14_20_20260226_151353/`
+- Artefact d’intégrité: `reports/proof_pack_hash_manifest_program_p14_20_20260226T1552Z.txt`
+
+### État
+- Intégrité programme P14→P20: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:41:16Z
 
 ### Extension du périmètre post-pass

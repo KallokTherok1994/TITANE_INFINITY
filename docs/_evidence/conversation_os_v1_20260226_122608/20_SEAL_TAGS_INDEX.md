@@ -49,6 +49,38 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:23:00Z
+
+### Seal documentaire inter-pack (sans nouveau tag Git)
+- Seal ID: `seal-p21-27-20260226T1623Z`
+- Portée: pack `docs/_evidence/program_p21_27_20260226_155906/`
+- Référence index: `docs/_evidence/program_p21_27_20260226_155906/12_SEAL_INDEX.md`
+
+### Intégrité associée
+- `reports/proof_pack_hash_manifest_program_p21_27_20260226T1623Z.txt`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T15:52:00Z
+
+### Seal documentaire inter-pack (sans nouveau tag Git)
+- Seal ID: `seal-p14-20-20260226T1550Z`
+- Portée: pack `docs/_evidence/program_p14_20_20260226_151353/`
+- Référence index: `docs/_evidence/program_p14_20_20260226_151353/15_SEAL_INDEX.md`
+
+### Intégrité associée
+- `reports/proof_pack_hash_manifest_program_p14_20_20260226T1552Z.txt`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:42:13Z
 
 ### Tag terminal de session publié
