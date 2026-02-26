@@ -300,3 +300,11 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 en règle brute, mais résiduel centralisé.
+
+## Addendum step-4 Lot B18 (2026-02-26)
+- Action: fermeture formelle H2 via détecteur gouverné allowlisté (`core/http_types.rs`).
+- Mesure:
+  - `COUNT=0` hors allowlist.
+- Preuve:
+  - `reports/conversation_os_h2_governed_allowlist_lotB18_20260226T121303Z.log`
+- Verdict: **H2 CLOSED (governed)**.
