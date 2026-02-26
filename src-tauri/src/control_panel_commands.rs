@@ -679,7 +679,7 @@ pub async fn cp_check_for_updates() -> Result<UpdateInfo, String> {
     let current_version = env!("CARGO_PKG_VERSION").to_string();
 
     // Query GitHub API for latest release
-    // Implementation note: Requires reqwest dependency
+    // Implementation note: Requires an async HTTP client dependency
     // API endpoint: https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest
 
     log::info!(
@@ -687,8 +687,8 @@ pub async fn cp_check_for_updates() -> Result<UpdateInfo, String> {
         current_version
     );
 
-    // Future implementation with reqwest:
-    // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
+    // Future implementation with HTTP client:
+    // let response = http_client_get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
     //     .await
     //     .map_err(|e| format!("Failed to check updates: {}", e))?;
     // let release: GitHubRelease = response.json().await.map_err(|e| format!("Failed to parse release: {}", e))?;
