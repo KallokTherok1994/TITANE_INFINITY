@@ -48,3 +48,21 @@ Date (UTC): 2026-02-26
 ### Métadonnées addendum
 - Ring impacté: **Governance/Repo hygiene**
 - Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T14:41:16Z
+
+### Extension du périmètre post-pass
+- Nouveau fichier ajouté:
+  - `24_SESSION_CLOSURE_POST_PASS.md`
+
+### Nouvel artefact d’intégrité post-pass
+- `reports/proof_pack_hash_manifest_postpass_20260226T144116Z.txt`
+
+### État
+- Intégrité post-pass: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
