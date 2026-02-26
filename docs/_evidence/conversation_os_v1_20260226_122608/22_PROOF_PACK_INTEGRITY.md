@@ -1,3 +1,13 @@
+## ADDENDUM — INTEGRITY P77→P83
+
+- Hash manifest file: `reports/proof_pack_hash_manifest_program_p77_83_20260226_183739.txt`
+- File count: `42`
+- Scope:
+  - `docs/_evidence/program_p77_83_20260226_183739/**`
+  - `docs/_evidence/p77_20260226_183739/**` à `docs/_evidence/p83_20260226_183739/**`
+  - `reports/p77_83_bootstrap_precheck_20260226_183739Z.log`
+  - `reports/p77_83_execution_x3_20260226_183739Z.log`
+
 ## ADDENDUM — INTEGRITY P70→P76
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_p70_76_20260226_182438.txt`
