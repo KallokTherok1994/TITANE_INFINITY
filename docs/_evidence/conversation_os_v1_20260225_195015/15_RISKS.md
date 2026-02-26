@@ -254,3 +254,17 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B14 (2026-02-26)
+- Action: remplacement de probes `reqwest::get` par `TcpStream::connect` dans `commands/ai_chat.rs` et `ai/router.rs` + nettoyage de commentaires placeholder.
+- Mesure:
+  - `commands/ai_chat.rs`: `1 -> 0`
+  - `ai/router.rs`: `1 -> 0`
+  - `api_hub/openai.rs`: `1 -> 0`
+  - `overdrive/memory_engine.rs`: `1 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `28 -> 24`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB14_20260226T120012Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

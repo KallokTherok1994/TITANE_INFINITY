@@ -443,7 +443,7 @@ async fn generate_embedding(_text: &str, state: &MemoryEngineState) -> Result<Ve
     //   - mxbai-embed-large: 1024-dim, highest accuracy
     // Setup: `ollama pull nomic-embed-text` (274MB download)
     // Performance: ~50ms per embedding on GPU
-    // For production: Add reqwest HTTP client + error handling
+    // For production: Add async HTTP client + error handling
 
     // Simulation : vecteur de 768 dimensions (standard BERT/Nomic)
     let embedding = vec![0.1; 768];

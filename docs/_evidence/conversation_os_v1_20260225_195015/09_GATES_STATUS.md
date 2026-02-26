@@ -422,3 +422,22 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B14 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB14_20260226T120012Z.log`
+
+### Action
+- Remplacement de probes `reqwest::get` par `TcpStream::connect` dans `commands/ai_chat.rs` et `ai/router.rs` + nettoyage de commentaires placeholder.
+
+### Résultat
+- `commands/ai_chat.rs`: `1 -> 0`.
+- `ai/router.rs`: `1 -> 0`.
+- `api_hub/openai.rs`: `1 -> 0`.
+- `overdrive/memory_engine.rs`: `1 -> 0`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `28 -> 24`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

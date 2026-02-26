@@ -74,7 +74,7 @@ impl OpenAIProvider {
             stream: Some(false),
         };
 
-        // Simulation de l'appel API (en production, utiliser reqwest)
+        // Simulation de l'appel API (en production, utiliser un client HTTP)
         let response = self.mock_chat_response(&body).await?;
 
         Ok(HarmonizedResponse {
