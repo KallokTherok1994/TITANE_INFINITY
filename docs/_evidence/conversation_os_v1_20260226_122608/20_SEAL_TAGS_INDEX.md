@@ -1,3 +1,12 @@
+## ADDENDUM — TERMINAL SESSION SEAL (20260226T212337Z)
+
+- Tag terminal publié:
+  - `evidence-seal-terminal-20260226T212337Z`
+- Portée:
+  - clôture de session gouvernée append-only.
+- Preuve de snapshot:
+  - `reports/terminal_seal_snapshot_20260226T212337Z.md`
+
 ## ADDENDUM — COVERAGE SEAL TAGS (20260226T2121Z)
 
 - Tags publiés:
