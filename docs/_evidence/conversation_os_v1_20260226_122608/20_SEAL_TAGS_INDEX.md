@@ -1,3 +1,10 @@
+## ADDENDUM — P70→P76 (20260226T1833Z)
+
+- Program: `docs/_evidence/program_p70_76_20260226_182438`
+- Tags attendus:
+  - `evidence-seal-p70-76-20260226T1833Z`
+  - `evidence-seal-p70-76-latest`
+
 ## ADDENDUM — P63→P69 (20260226T1821Z)
 
 - Program: `docs/_evidence/program_p63_69_20260226_181226`

@@ -1,0 +1,3 @@
+P70_76 proof logs
+- reports/p70_76_bootstrap_precheck_20260226_182438Z.log
+- reports/p70_76_execution_x3_20260226_182438Z.log

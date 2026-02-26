@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM P70→P76
+
+- Program path: `docs/_evidence/program_p70_76_20260226_182438`
+- Verdict: `PASS_QUALIFIED`
+- Bootstrap proof: `reports/p70_76_bootstrap_precheck_20260226_182438Z.log`
+- X3 proof: `reports/p70_76_execution_x3_20260226_182438Z.log`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_p70_76_20260226_182438.txt`
+
 ## ADDENDUM — PROGRAM P63→P69
 
 - Program path: `docs/_evidence/program_p63_69_20260226_181226`
