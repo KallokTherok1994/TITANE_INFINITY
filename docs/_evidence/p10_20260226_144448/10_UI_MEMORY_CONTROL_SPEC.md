@@ -1,0 +1,4 @@
+# 10_UI_MEMORY_CONTROL_SPEC.md
+
+Phase: P10
+Statut: PENDING

@@ -1,0 +1,4 @@
+# 09_OBSERVABILITY_SPEC.md
+
+Phase: P12
+Statut: PENDING
