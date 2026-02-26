@@ -31,6 +31,23 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:43:46Z
+
+### Publication tag miroir court P21→P27
+- Tag publié: `evidence-seal-p21-27-20260226`
+- Commit de référence taggé: `89f5231c`
+- Portée: alias court du scellement dédié P21→P27
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p21-27-20260226"`
+- `git ls-remote --tags origin | rg "evidence-seal-p21-27-20260226"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T16:41:49Z
 
 ### Publication tag dédié P21→P27
