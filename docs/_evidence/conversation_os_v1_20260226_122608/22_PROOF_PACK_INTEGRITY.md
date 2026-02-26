@@ -3,6 +3,7 @@
 - Snapshot file: `reports/terminal_seal_snapshot_20260226T212337Z.md`
 - Related tags:
   - `evidence-seal-terminal-20260226T212337Z`
+  - `evidence-seal-terminal-latest`
   - `evidence-seal-coverage-20260226T2121Z`
   - `evidence-seal-coverage-latest`
 

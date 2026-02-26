@@ -1,3 +1,12 @@
+## ADDENDUM — TERMINAL LATEST TAG (20260226T214338Z)
+
+- Tag alias publié:
+  - `evidence-seal-terminal-latest`
+- Référence commit:
+  - `e25eb695`
+- Tag terminal UTC associé:
+  - `evidence-seal-terminal-20260226T212337Z`
+
 ## ADDENDUM — TERMINAL SESSION SEAL (20260226T212337Z)
 
 - Tag terminal publié:

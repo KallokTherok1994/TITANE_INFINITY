@@ -1,3 +1,9 @@
+## ADDENDUM — TERMINAL LATEST ALIAS
+
+- Tag alias terminal publié: `evidence-seal-terminal-latest`
+- Commit cible: `e25eb695`
+- Tag UTC de référence: `evidence-seal-terminal-20260226T212337Z`
+
 ## ADDENDUM — TERMINAL SESSION CLOSURE
 
 - Tag de clôture terminale: `evidence-seal-terminal-20260226T212337Z`
