@@ -3,6 +3,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::memory_os::types::{MemoryOSError, MemoryOSResult};
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tokio::sync::RwLock;
@@ -105,7 +106,7 @@ impl EmbeddingEngine {
             MemoryOSError::EmbeddingError("OpenAI API key not configured".to_string())
         })?;
 
-        let client = reqwest::Client::new();
+        let client = Client::new();
 
         #[derive(Serialize)]
         struct OpenAIRequest {
@@ -152,7 +153,7 @@ impl EmbeddingEngine {
             MemoryOSError::EmbeddingError("Gemini API key not configured".to_string())
         })?;
 
-        let client = reqwest::Client::new();
+        let client = Client::new();
 
         #[derive(Serialize)]
         struct GeminiRequest {

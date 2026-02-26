@@ -210,10 +210,10 @@ Supported providers:
 OpenAI Example:
 
 pub async fn embed_openai(text: &str, api_key: &str) -> Result<Vec<f32>, String> {
-    use reqwest;
+    use http_client;
     use serde_json::json;
 
-    let client = reqwest::Client::new();
+    let client = HttpClient::new();
     let response = client
         .post("https://api.openai.com/v1/embeddings")
         .header("Authorization", format!("Bearer {}", api_key))

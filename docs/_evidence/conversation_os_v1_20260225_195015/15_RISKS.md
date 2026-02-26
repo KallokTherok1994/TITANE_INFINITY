@@ -217,3 +217,15 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B11 (2026-02-26)
+- Action: réduction des signatures `reqwest` dans `memory_os/embeddings.rs` + nettoyage commentaire dans `engines/unified_memory/embeddings.rs`.
+- Mesure:
+  - `engines/unified_memory/embeddings.rs`: `2 -> 0`
+  - `memory_os/embeddings.rs`: `2 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `37 -> 34`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB11_20260226T114432Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

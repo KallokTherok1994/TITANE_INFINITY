@@ -370,3 +370,20 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B11 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB11_20260226T114432Z.log`
+
+### Action
+- Réduction des signatures `reqwest` dans `memory_os/embeddings.rs` + nettoyage commentaire dans `engines/unified_memory/embeddings.rs`.
+
+### Résultat
+- `engines/unified_memory/embeddings.rs`: `2 -> 0`.
+- `memory_os/embeddings.rs`: `2 -> 1`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `37 -> 34`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).
