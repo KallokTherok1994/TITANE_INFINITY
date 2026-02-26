@@ -1,3 +1,11 @@
+## ADDENDUM — FINAL COVERAGE INTEGRITY
+
+- Coverage report: `reports/final_phase_coverage_p0_146_20260226_211529Z.md`
+- Continuity report: `reports/final_phase_continuity_p6_146_20260226T211717Z.md`
+- Outcome summary:
+  - `P0→P146`: `FAIL` (missing `P0..P5`)
+  - `P6→P146`: `PASS` (no internal gap)
+
 ## ADDENDUM — INTEGRITY P140→P146
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_p140_146_20260226_205617.txt`

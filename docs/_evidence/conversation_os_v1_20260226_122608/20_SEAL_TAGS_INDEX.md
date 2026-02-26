@@ -1,3 +1,11 @@
+## ADDENDUM — FINAL COVERAGE CONTROL (20260226T2117Z)
+
+- Scope check: `P0→P146` + continuité opérationnelle `P6→P146`
+- Evidence reports:
+  - `reports/final_phase_coverage_p0_146_20260226_211529Z.md`
+  - `reports/final_phase_continuity_p6_146_20260226T211717Z.md`
+- Tags de seal inchangés (aucun nouveau tag requis pour ce contrôle).
+
 ## ADDENDUM — P140→P146 (20260226T2056Z)
 
 - Program: `docs/_evidence/program_p140_146_20260226_205617`
