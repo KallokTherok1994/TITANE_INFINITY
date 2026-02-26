@@ -1,3 +1,11 @@
+## ADDENDUM — AUTOHEAL AH V30 (20260226T2306Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_230638`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2306Z`
+  - `evidence-seal-autoheal-ah-v30-latest`
+- Statut run: `PASS`
+
 ## ADDENDUM — AUTOHEAL AH V29 (20260226T2304Z)
 
 - Program: `docs/_evidence/program_autoheal_ah_20260226_230409`
