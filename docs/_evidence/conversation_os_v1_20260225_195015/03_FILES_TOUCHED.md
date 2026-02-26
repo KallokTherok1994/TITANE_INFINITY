@@ -120,3 +120,11 @@
 - Statut: **QUALIFIED**
 - Fichier ajouté:
 	- `17_FINAL_STATE_SNAPSHOT.md`
+
+## Addendum 2026-02-26 (Audit handoff)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `18_AUDIT_HANDOFF.md`
+- Preuve inventaire terminal:
+	- `reports/conversation_os_pack_inventory_final.log`
