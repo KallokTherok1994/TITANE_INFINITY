@@ -1,9 +1,16 @@
-## ADDENDUM — PROGRAM AUTOHEAL AH V4 (A→H)
+## ADDENDUM — PROGRAM AUTOHEAL AH V5 (A→H)
 
 - Program path: 
 - Verdict: 
 - Master proof log: 
 - Hash manifest: 
+
+## ADDENDUM — PROGRAM AUTOHEAL AH V4 (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_221116`
+- Verdict: `BLOCKED`
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_221116/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_221116.txt`
 
 ## ADDENDUM — PROGRAM AUTOHEAL AH V3 (A→H)
 
