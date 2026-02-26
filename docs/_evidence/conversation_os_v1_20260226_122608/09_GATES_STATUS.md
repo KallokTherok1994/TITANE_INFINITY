@@ -97,3 +97,9 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
 	- `RUN1/2/3_PERF_METRICS_EXIT=0`
 
+## Addendum self-audit scan x3
+- `reports/conversation_os_v1_next_run_gate_self_audit_scan_x3_20260226T131242Z.log`
+	- `RUN1/2/3_TYPES_TO_SERVICES=0`
+	- `RUN1/2/3_SERVICES_TO_UI=26`
+	- `RUN1/2/3_LEGACY_CHAT_SEND_MESSAGE_UI=25`
+
