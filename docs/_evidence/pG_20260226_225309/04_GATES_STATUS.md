@@ -1,0 +1,3 @@
+# 04_GATES_STATUS.md
+
+Gates: BLOCKED

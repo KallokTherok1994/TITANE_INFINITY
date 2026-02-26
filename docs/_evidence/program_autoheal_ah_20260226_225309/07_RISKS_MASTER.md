@@ -1,0 +1,3 @@
+# 07_RISKS_MASTER.md
+
+Statut: OPEN_BLOCKING
