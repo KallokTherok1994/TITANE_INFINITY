@@ -74,3 +74,13 @@
 	- `src/services/tts/parlerTTSBridge.ts`
 - Preuve phase 3:
 	- `reports/conversation_os_g1_global_scan_x3_after_phase2.log`
+
+## Addendum 2026-02-26 (Phase 2B/3B)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut changement: **QUALIFIED**
+- Fichiers code touchés:
+	- `src/visual-engine/OSIntegrationBridge.ts`
+	- `src/visual-engine/TitaneVisualEngine.ts`
+	- `src/visual-engine/TitaneVisualEngineV21.ts`
+- Preuve phase 3B:
+	- `reports/conversation_os_g1_global_scan_x3_after_phase2b.log`

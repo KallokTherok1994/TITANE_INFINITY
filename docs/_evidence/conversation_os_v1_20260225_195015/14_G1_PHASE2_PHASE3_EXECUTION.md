@@ -38,3 +38,19 @@ Exécuter les Phases 2 et 3 du plan G1 après la Phase 1 validée.
 - Phase 2: **PARTIAL PASS**
 - Phase 3: **FAIL** (critère G1 strict global non atteint)
 - Verdict global pack: **BLOCKED** (inchangé)
+
+## Addendum final (Phase 2B/3B)
+
+### Exécution
+- Neutralisation ciblée des occurrences résiduelles dans `src/visual-engine/*`.
+- Rerun global x3 immédiatement après correctifs.
+
+### Résultats
+- `G1_GLOBAL_COUNT_1:0`
+- `G1_GLOBAL_COUNT_2:0`
+- `G1_GLOBAL_COUNT_3:0`
+
+### Décision mise à jour
+- Phase 2B: **PASS**
+- Phase 3B: **PASS x3**
+- Verdict global pack: **QUALIFIED**

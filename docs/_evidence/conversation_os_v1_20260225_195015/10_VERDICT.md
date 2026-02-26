@@ -58,3 +58,16 @@ Aucun build/deploy PROD sans tokens exacts:
 ### Statut changement
 - Ring principal: **Ring 4 (Modules/UI)**
 - Statut: **EXPERIMENTAL** (neutralisation partielle validée, blocage legacy restant)
+
+## Addendum final Phase 2B/3B (2026-02-26)
+
+### Résultat
+- G1 global strict passe désormais x3 avec `COUNT=0` sur chaque itération.
+- La cause bloquante résiduelle (`src/visual-engine/*`) est neutralisée.
+
+### Verdict final mis à jour
+- **Verdict unique:** `QUALIFIED`
+
+### Métadonnées
+- Ring impacté principal: **Ring 4 (Modules/UI)**
+- Statut changement: **QUALIFIED**

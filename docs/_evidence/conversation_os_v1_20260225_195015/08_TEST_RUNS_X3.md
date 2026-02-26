@@ -69,3 +69,12 @@
 	- `G1_GLOBAL_COUNT_3:63`
 - Conclusion:
 	- Reproductible x3, mais critère strict (`0` match) non atteint.
+
+### F) Phase 2B/3B G1 global x3 (post visual-engine)
+- Log: `reports/conversation_os_g1_global_scan_x3_after_phase2b.log`
+- Exécution x3:
+	- `G1_GLOBAL_EXIT_1:1`, `G1_GLOBAL_COUNT_1:0`
+	- `G1_GLOBAL_EXIT_2:1`, `G1_GLOBAL_COUNT_2:0`
+	- `G1_GLOBAL_EXIT_3:1`, `G1_GLOBAL_COUNT_3:0`
+- Conclusion:
+	- Reproductible x3 et critère strict atteint (`0` match).
