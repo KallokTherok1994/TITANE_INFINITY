@@ -662,3 +662,14 @@
 - Preuves associées:
 	- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
 	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
+
+## Addendum 2026-02-26 (Release terminale — changelog de preuve)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `53_RELEASE_TERMINAL_CHANGELOG.md`
+- Fichier mis à jour:
+	- `INDEX.md`
+- Preuves associées:
+	- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
+	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
