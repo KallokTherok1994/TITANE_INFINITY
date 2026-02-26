@@ -39,4 +39,5 @@ Date (UTC): 2026-02-26
 
 ## Addendum conformité
 - Exception technique documentée: `17_EXCEPTION_TECHNIQUE.md` (échec `apply_patch` sur `11_PROOF_LOGS.txt` lié à la volumétrie du fichier, sans impact sur le verdict PASS).
+- Dossier runtime non suivi qualifié: `18_RUNTIME_UNTRACKED_GOVERNANCE.md` (artefacts locaux ignorés explicitement, sans impact sur le verdict PASS).
 
