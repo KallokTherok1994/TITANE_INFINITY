@@ -1,0 +1,4 @@
+# 08_VERDICT.md
+
+Phase: P127
+Verdict: `PASS_QUALIFIED`
