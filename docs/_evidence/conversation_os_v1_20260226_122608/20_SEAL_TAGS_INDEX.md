@@ -1,3 +1,10 @@
+## ADDENDUM — P140→P146 (20260226T2056Z)
+
+- Program: `docs/_evidence/program_p140_146_20260226_205617`
+- Tags attendus:
+  - `evidence-seal-p140-146-20260226T2056Z`
+  - `evidence-seal-p140-146-latest`
+
 ## ADDENDUM — P133→P139 (20260226T2049Z)
 
 - Program: `docs/_evidence/program_p133_139_20260226_203720`
