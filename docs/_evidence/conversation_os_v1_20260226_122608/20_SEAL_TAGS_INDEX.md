@@ -27,3 +27,22 @@ Date (UTC): 2026-02-26
 ## Métadonnées de changement
 - Ring impacté: **Governance/Repo hygiene**
 - Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T14:14:59Z
+
+### Nouveau tag de scellement publié
+- `evidence-seal-pack5-20260226T141459Z`
+  - Type: annoté
+  - Portée: scellement Pack 5.1 (self-audit clean x3, verdict superseding)
+  - Commit scellé: `c6fe8237`
+  - Référence: `refs/tags/evidence-seal-pack5-20260226T141459Z`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-pack5-20260226T141459Z"`
+- `git ls-remote --tags origin | rg "evidence-seal-pack5-20260226T141459Z"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
