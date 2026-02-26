@@ -1,0 +1,15 @@
+]633;E;{   echo "# P49_55 BOOTSTRAP PRECHECK 2026-02-26T17:44:45Z"\x3b   echo "## git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo "## git log -5 --oneline"\x3b   git log -5 --oneline\x3b   echo "## git ls-remote --heads origin MAIN"\x3b   git ls-remote --heads origin MAIN\x3b   echo "## git ls-remote --tags origin | rg evidence-seal-p42-48-20260226"\x3b   git ls-remote --tags origin | rg "evidence-seal-p42-48-20260226"\x3b } > "$BOOT";86d12e66-fb32-4b21-8029-6864e88c7859]633;C# P49_55 BOOTSTRAP PRECHECK 2026-02-26T17:44:45Z
+## git status --porcelain=v1
+## git log -5 --oneline
+b5a642a5 docs(evidence): complete and seal program P42-P48
+76d0741c docs(evidence): complete and seal program P35-P41
+d0f9b0d2 docs(evidence): register P28-P34 seal tags
+316e4d2b docs(evidence): complete and seal program P28-P34
+ae4c2e1d docs(evidence): bootstrap governed program P28-P34
+## git ls-remote --heads origin MAIN
+b5a642a5a1519c32d960a3ec02a3a803cba52d12	refs/heads/MAIN
+## git ls-remote --tags origin | rg evidence-seal-p42-48-20260226
+ce6cfe0cd478cf406d6a305fc4aa55f5c33f3e7c	refs/tags/evidence-seal-p42-48-20260226
+b5a642a5a1519c32d960a3ec02a3a803cba52d12	refs/tags/evidence-seal-p42-48-20260226^{}
+89cfa2d24a9552b890aea1f682321d7fcffcb0c4	refs/tags/evidence-seal-p42-48-20260226T1734Z
+b5a642a5a1519c32d960a3ec02a3a803cba52d12	refs/tags/evidence-seal-p42-48-20260226T1734Z^{}
