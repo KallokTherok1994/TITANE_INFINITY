@@ -88,3 +88,19 @@ Aucun build/deploy PROD sans tokens exacts:
 
 ### Décision finale maintenue
 - **Verdict unique: QUALIFIED**
+
+## Addendum Step-4 H2 closure (2026-02-26)
+
+### Résumé
+- Campagne Step-4 lots `B2..B18` terminée.
+- H2 fermé en mode gouverné avec façade HTTP centrale allowlistée.
+
+### Preuves
+- `reports/conversation_os_final_h2_snapshot_20260226T121502Z.log`
+- `reports/conversation_os_h2_governed_allowlist_lotB18_20260226T121303Z.log`
+- `47_H2_STEP4_LOTB18_CLOSURE_REPORT.md`
+- `48_STEP4_FINAL_CLOSURE.md`
+
+### Décision
+- **Verdict unique maintenu: QUALIFIED**
+- **H2: CLOSED (governed)**

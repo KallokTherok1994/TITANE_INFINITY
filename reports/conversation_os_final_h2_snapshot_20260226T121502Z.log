@@ -1,0 +1,6 @@
+== FINAL H2 SNAPSHOT ==
+RAW_TOTAL=1
+GOVERNED_COUNT=0
+
+RAW_MATCHES:
+src-tauri/src/core/http_types.rs:2:pub use reqwest::{header, redirect::Policy, Client, Error as ReqwestError, Response, StatusCode};
