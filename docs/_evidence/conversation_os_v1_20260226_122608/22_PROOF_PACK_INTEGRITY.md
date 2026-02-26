@@ -49,6 +49,21 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T18:02:00Z
+
+### Extension de périmètre (programme P56→P62)
+- Pack lié: `docs/_evidence/program_p56_62_20260226_180004/`
+- Artefact d’intégrité: `reports/proof_pack_hash_manifest_program_p56_62_20260226T1802Z.txt`
+
+### État
+- Intégrité programme P56→P62: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:47:00Z
 
 ### Extension de périmètre (programme P49→P55)
