@@ -147,3 +147,14 @@
 	- `.github/copilot-instructions.md` (tokens exacts `Local-first` et `diagnose -> plan -> apply -> verify -> report`)
 - Preuve décomposée:
 	- `reports/conversation_os_verify_gates_decomposed_round2.log`
+
+## Addendum 2026-02-26 (Monolithic verify attempt)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `21_MONOLITHIC_VERIFY_ATTEMPT.md`
+- Logs monolithiques:
+	- `reports/conversation_os_verify_monolithic_final_20260226T015133Z.log`
+	- `reports/conversation_os_verify_monolithic_final_retry_20260226T015459Z.log`
+- Décision gouvernée:
+	- verdict maintenu sur preuve décomposée `reports/conversation_os_verify_gates_decomposed_round2.log`
