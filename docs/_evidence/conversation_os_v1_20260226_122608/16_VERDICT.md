@@ -43,4 +43,5 @@ Date (UTC): 2026-02-26
 - Snapshot post-seal scellé: `19_POST_SEAL_HYGIENE.md` (preuve d'hygiène repo finale).
 - Index des tags de scellement: `20_SEAL_TAGS_INDEX.md`.
 - Manifeste final de scellement: `21_FINAL_SEAL_MANIFEST.md`.
+- Manifeste d'intégrité SHA-256: `22_PROOF_PACK_INTEGRITY.md`.
 
