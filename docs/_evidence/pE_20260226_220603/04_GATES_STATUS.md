@@ -1,0 +1,4 @@
+# 04_GATES_STATUS.md
+
+Phase: PE
+Gates: BLOCKED

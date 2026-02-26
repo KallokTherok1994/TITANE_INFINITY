@@ -1,3 +1,11 @@
+## ADDENDUM — AUTOHEAL AH V3 ULTRA-CIBLÉ (20260226T2207Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_220603`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2207Z`
+  - `evidence-seal-autoheal-ah-v3-latest`
+- Statut run: `BLOCKED`
+
 ## ADDENDUM — AUTOHEAL AH FOLLOW-UP (20260226T2159Z)
 
 - Program: `docs/_evidence/program_autoheal_ah_20260226_215802`
