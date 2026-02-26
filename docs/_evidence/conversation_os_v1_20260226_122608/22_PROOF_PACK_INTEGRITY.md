@@ -49,6 +49,21 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:19:00Z
+
+### Extension de périmètre (programme P35→P41)
+- Pack lié: `docs/_evidence/program_p35_41_20260226_171750/`
+- Artefact d’intégrité: `reports/proof_pack_hash_manifest_program_p35_41_20260226T1719Z.txt`
+
+### État
+- Intégrité programme P35→P41: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:13:13Z
 
 ### Références tags de seal (programme P28→P34)
