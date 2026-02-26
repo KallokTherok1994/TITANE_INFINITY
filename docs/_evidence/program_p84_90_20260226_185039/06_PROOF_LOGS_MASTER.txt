@@ -1,0 +1,3 @@
+P84_90 proof logs
+- reports/p84_90_bootstrap_precheck_20260226_185039Z.log
+- reports/p84_90_execution_x3_20260226_185039Z.log
