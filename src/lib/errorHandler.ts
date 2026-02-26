@@ -5,9 +5,21 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useUIStore } from '../stores/uiStore';
 import { TimeoutError, RetryError, ValidationError } from './serviceInvoker';
 import { captureClassifiedError } from '../services/monitoring';
+
+type ToastType = 'info' | 'warning' | 'error';
+type ToastDispatcher = (payload: {
+  type: ToastType;
+  message: string;
+  duration: number;
+}) => void;
+
+let toastDispatcher: ToastDispatcher | null = null;
+
+export function setErrorToastDispatcher(dispatcher: ToastDispatcher | null): void {
+  toastDispatcher = dispatcher;
+}
 
 // ────────────────────────────────────────────────────────────────
 // Custom Error Types
@@ -245,7 +257,9 @@ export class ErrorHandler {
    * Afficher toast notification selon erreur
    */
   private static showToast(classified: ClassifiedError): void {
-    const { addToast } = useUIStore.getState();
+    if (!toastDispatcher) {
+      return;
+    }
 
     // Mapper sévérité → type toast
     const toastType =
@@ -262,7 +276,7 @@ export class ErrorHandler {
       ? `${classified.message}. ${classified.recovery}`
       : classified.message;
 
-    addToast({
+    toastDispatcher({
       type: toastType,
       message,
       duration: toastType === 'error' ? 5000 : 3000,

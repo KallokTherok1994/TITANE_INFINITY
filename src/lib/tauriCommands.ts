@@ -58,7 +58,7 @@ export const TAURI_COMMANDS = {
   CHAT_GENERATE_OPENAI: 'chat_generate_openai',
   CHAT_MODE_CHANGE: 'chat_mode_change',
   CHAT_MODE_SYNC: 'chat_mode_sync',
-  // [RETRAIT v27.0.5-prod] CHAT_SEND_MESSAGE removed (legacy, use conversation_generate)
+  // [RETRAIT v27.0.5-prod] Legacy chat command removed (use conversation_generate)
   READ_PRODUCTION_WEEK1_CSV: 'read_production_week1_csv',
   GENERATE_MODE_PROMPT: 'generate_mode_prompt',
   CREATE_MODULE: 'create_module',

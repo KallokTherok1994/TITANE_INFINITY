@@ -607,7 +607,7 @@ class TalkToTitaneEngine {
     // Process:
     //   1. Build prompt: intent + analysis + user history
     //   2. Select provider: Gemini (default), Ollama (local), Claude (fallback)
-    //   3. Stream response: chat_send_message(prompt, streaming=true)
+    //   3. Stream response: canonical conversation pipeline (streaming)
     //   4. Post-process: Emotion calibration, tone adjustment
     // Backend:
     //   - omega_generate(prompt, context) -> conversational response

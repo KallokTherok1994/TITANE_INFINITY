@@ -3,7 +3,7 @@
  *
  * Service centralisé pour gérer TOUTES les conversations IA (OMEGA v2 spec):
  *
- * ✅ Remplace: chat_send_message (Tauri command legacy)
+ * ✅ Remplace: ancien pipeline de chat Tauri (legacy)
  * ✅ Principe: Toute conversation passe par ConversationManager
  * ✅ Responsabilités:
  *    - Multi-agents orchestration (IA locale, APIs externes)

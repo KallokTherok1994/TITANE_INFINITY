@@ -696,7 +696,7 @@ export class TauriInvokeProtector {
       } as T;
     }
 
-    // [RETRAIT v27.0.5-prod] Fallback legacy chat_send_message removed from protector
+    // [RETRAIT v27.0.5-prod] Fallback legacy chat command removed from protector
 
     if (
       command &&

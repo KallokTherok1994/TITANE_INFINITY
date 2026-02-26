@@ -27,10 +27,10 @@ Date (UTC): 2026-02-26
 - `G_SNAPSHOT_HASH_VALID`: PASS
 - `G_MEMORY_RECALL_INTERNAL_IDS`: PASS
 - `G_DEBUG_PANEL_REAL_TRACE`: PASS
-- `G_FAILURE_SIMULATION_COMPLETE`: BLOCKED
+- `G_FAILURE_SIMULATION_COMPLETE`: PASS
 - `G_PERF_METRICS_RECORDED`: PASS
-- `G_SELF_AUDIT_CLEAN`: BLOCKED
-- `G_RING_INTEGRITY`: PARTIAL
+- `G_SELF_AUDIT_CLEAN`: PASS
+- `G_RING_INTEGRITY`: PASS
 
 ## Baseline discovery (preuve brute)
 - `BACKEND_HTTP_COUNT_GOV=0`
@@ -106,4 +106,11 @@ Date (UTC): 2026-02-26
 ## Addendum debug panel real trace x3
 - `reports/conversation_os_v1_next_run_gate_debug_panel_trace_x3_20260226T131700Z.log`
 	- `RUN1/2/3_DEBUG_PANEL_TRACE_EXIT=0`
+
+## Addendum final closure x3 (failure matrix + self-audit)
+- `reports/conversation_os_v1_next_run_gate_final_closure_x3_20260226T133128Z.log`
+	- `RUN1/2/3_FAILURE_MATRIX_EXIT=0`
+	- `RUN1/2/3_TYPES_TO_SERVICES=0`
+	- `RUN1/2/3_SERVICES_TO_UI=0`
+	- `RUN1/2/3_LEGACY_CHAT_SEND_MESSAGE_UI=0`
 
