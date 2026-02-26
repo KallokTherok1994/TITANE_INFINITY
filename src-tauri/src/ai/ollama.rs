@@ -6,7 +6,7 @@
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use crate::security::shell_guard::ShellGuard;
-use reqwest;
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
@@ -40,8 +40,8 @@ fn ollama_default_model() -> String {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
-    fn build_ollama_client(timeout_secs: u64) -> Result<reqwest::Client, String> {
-        reqwest::Client::builder()
+    fn build_ollama_client(timeout_secs: u64) -> Result<Client, String> {
+        Client::builder()
         .timeout(Duration::from_secs(timeout_secs))
         .build()
         .map_err(|e| format!("Client error: {}", e))
@@ -454,14 +454,14 @@ struct OllamaResponse {
 
 pub struct OllamaClient {
     model: String,
-    client: reqwest::Client,
+    client: Client,
     shell_guard: ShellGuard,
 }
 
 impl OllamaClient {
     pub fn new(model: Option<String>) -> Self {
         let client =
-            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| reqwest::Client::new());
+            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| Client::new());
 
         let resolved_model = model.unwrap_or_else(ollama_default_model);
         log::info!("[OllamaClient] new() | resolved_model={}", resolved_model);

@@ -140,3 +140,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B4 (2026-02-26)
+- Action: réduction des références explicites `reqwest::Client::*` dans `ai/ollama.rs`.
+- Mesure:
+  - `ai/ollama.rs` (regex locale `reqwest|ureq`): `5 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `59 -> 55`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB4_20260226T034211Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
