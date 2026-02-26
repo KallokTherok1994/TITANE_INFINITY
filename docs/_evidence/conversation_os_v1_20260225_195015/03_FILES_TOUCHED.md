@@ -395,3 +395,19 @@
 - Delta mesuré:
 	- `api_bridge.rs` `4 -> 0`
 	- inventaire brut `src-tauri/src` `49 -> 45`
+
+## Addendum 2026-02-26 (Step-4 Lot B8 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/ai/gemini.rs`
+- Fichier ajouté:
+	- `37_H2_STEP4_LOTB8_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB8_20260226T114040Z.log`
+- Delta mesuré:
+	- `ai/gemini.rs` `3 -> 1`
+	- inventaire brut `src-tauri/src` `45 -> 43`
