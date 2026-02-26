@@ -1,3 +1,10 @@
+## ADDENDUM — P119→P125 (20260226T2016Z)
+
+- Program: `docs/_evidence/program_p119_125_20260226_200535`
+- Tags attendus:
+  - `evidence-seal-p119-125-20260226T2016Z`
+  - `evidence-seal-p119-125-latest`
+
 ## ADDENDUM — P112→P118 (20260226T2002Z)
 
 - Program: `docs/_evidence/program_p112_118_20260226_195102`
