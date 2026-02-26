@@ -16,3 +16,9 @@ Date (UTC): 2026-02-26
 - `RUN1/2/3_FRONT_EXEC_WEB_CALLS=0`
 - `RUN1/2/3_BACKEND_HTTP_CLIENT_CALLS_GOV_SCOPE=0`
 - `RUN1/2/3_HARDCODED_SECRET_ASSIGNMENTS=0`
+
+## Addendum x3 — Gate canonique implémenté
+- Log: `reports/program_p6_13_verify_invariants_governed_x3_20260226T150200Z.log`
+- `RUN1_EXIT=0`
+- `RUN2_EXIT=0`
+- `RUN3_EXIT=0`
