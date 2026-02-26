@@ -37,3 +37,6 @@ Date (UTC): 2026-02-26
 ## Preuve de clôture finale
 - `reports/conversation_os_v1_next_run_gate_final_closure_x3_20260226T133128Z.log`
 
+## Addendum conformité
+- Exception technique documentée: `17_EXCEPTION_TECHNIQUE.md` (échec `apply_patch` sur `11_PROOF_LOGS.txt` lié à la volumétrie du fichier, sans impact sur le verdict PASS).
+
