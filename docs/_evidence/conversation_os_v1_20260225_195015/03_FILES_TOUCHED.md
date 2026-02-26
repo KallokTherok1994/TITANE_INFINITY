@@ -176,3 +176,20 @@
 	- `23_HANDOFF_FINAL.md`
 - Snapshot HEAD:
 	- `29f809d2`
+
+## Addendum 2026-02-26 (Hard Mode governance docs)
+- Ring impacté: **Ring 4 (Modules/UI) + Ring 3 (Services) + Ring 2 (Engines)**
+- Statut: **QUALIFIED**
+- Fichiers modifiés:
+	- `00_PLAN.md`
+	- `01_TRUTH_SNAPSHOT.md`
+- Fichiers ajoutés:
+	- `04_MICRO_PHASES.md`
+	- `06_RING_SURFACE_MAP.md`
+	- `09_GATES_STATUS.md`
+	- `10_TEST_RUNS_X3.md`
+	- `12_PERFORMANCE_METRICS.md`
+	- `13_FAILURE_SIMULATIONS.md`
+	- `15_RISKS.md`
+- Décision:
+	- instrumentation documentaire hard-mode en place; exécution complète des scénarios marqués `UNKNOWN/BLOCKED` requise pour fermeture.
