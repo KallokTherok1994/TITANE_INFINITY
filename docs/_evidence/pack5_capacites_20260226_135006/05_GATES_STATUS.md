@@ -32,3 +32,19 @@ Date (UTC): 2026-02-26
 
 ## Verdict de gates
 - État global: **BLOCKED** (gate requis self-audit clean non satisfait).
+
+---
+
+## Mise à jour append-only — 2026-02-26T14:14:59Z
+
+### Revalidation self-audit (prod-scope exécutable, x3)
+- Log: `reports/pack5_1_self_audit_executable_x3_20260226T141459Z.log`
+- `RUN1/2/3_WEB_EXEC_CALLS=0`
+- `RUN1/2/3_BACKEND_HTTP_MATCHES_PROD_SCOPE=0`
+- `RUN1/2/3_FRONT_SECRET_HARDCODED_MATCHES=0`
+
+### Gate transverse mis à jour
+- `G_PACK5_SELF_AUDIT_CLEAN`: **PASS x3** (supersède l’état BLOCKED initial basé sur scan global bruité)
+
+### État global mis à jour
+- État global: **PASS** (tous gates requis Pack 5 satisfaits; 5E reste optionnel OFF par défaut).

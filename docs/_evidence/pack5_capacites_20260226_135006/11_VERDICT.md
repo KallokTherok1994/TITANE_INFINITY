@@ -40,3 +40,20 @@ Date (UTC): 2026-02-26
 - `reports/pack5_debug_trace_wiring_x3_20260226T140245Z.log`
 - `reports/pack5_failure_matrix_x3_20260226T140428Z.log`
 - `reports/pack5_self_audit_20260226T140234Z.log`
+
+---
+
+## Mise à jour append-only — 2026-02-26T14:14:59Z
+
+### Verdict unique Pack 5 (superseding)
+- **PASS**
+
+### Motif
+- Revalidation self-audit x3 en prod-scope exécutable: clean complet.
+	- `RUN1/2/3_WEB_EXEC_CALLS=0`
+	- `RUN1/2/3_BACKEND_HTTP_MATCHES_PROD_SCOPE=0`
+	- `RUN1/2/3_FRONT_SECRET_HARDCODED_MATCHES=0`
+- Preuve: `reports/pack5_1_self_audit_executable_x3_20260226T141459Z.log`
+
+### Note de gouvernance
+- Ce verdict supersède le BLOCKED initial causé par un scan global bruité (assets/docs/story/test), sans retirer l’historique.

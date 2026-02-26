@@ -33,3 +33,11 @@ Résultats:
 - `conversation_os_persistence_stores_snapshot_and_failures_from_trace`
 - `conversation_os_persistence_stores_events_and_sources`
 - `memory_used_internal_ids_recall_10_prompts`
+
+## Campagne x3 — Self-audit exécutable clean (revalidation)
+- Log: `reports/pack5_1_self_audit_executable_x3_20260226T141459Z.log`
+
+Résultats:
+- `RUN1/2/3_WEB_EXEC_CALLS=0`
+- `RUN1/2/3_BACKEND_HTTP_MATCHES_PROD_SCOPE=0`
+- `RUN1/2/3_FRONT_SECRET_HARDCODED_MATCHES=0`
