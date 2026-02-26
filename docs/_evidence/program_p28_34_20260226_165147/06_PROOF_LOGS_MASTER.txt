@@ -1,0 +1,2 @@
+P28_34 bootstrap proof log references
+- reports/p28_34_bootstrap_precheck_20260226T165147Z.log
