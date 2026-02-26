@@ -1,3 +1,10 @@
+## ADDENDUM — PROGRAM AUTOHEAL AH V7 (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_222408`
+- Verdict: `BLOCKED`
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_222408/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_222408.txt`
+
 ## ADDENDUM — PROGRAM AUTOHEAL AH V6 (A→H)
 
 - Program path: `docs/_evidence/program_autoheal_ah_20260226_222226`
