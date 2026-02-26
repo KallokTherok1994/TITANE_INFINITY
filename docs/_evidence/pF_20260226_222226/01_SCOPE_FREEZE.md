@@ -1,0 +1,3 @@
+# 01_SCOPE_FREEZE.md
+
+Scope: FROZEN_BLOCKED
