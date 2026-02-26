@@ -49,6 +49,22 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:06:00Z
+
+### Seal documentaire inter-pack (sans nouveau tag Git)
+- Seal ID: `seal-p28-34-20260226T1706Z`
+- Portée: pack `docs/_evidence/program_p28_34_20260226_165147/`
+- Référence index: `docs/_evidence/program_p28_34_20260226_165147/12_SEAL_INDEX.md`
+
+### Intégrité associée
+- `reports/proof_pack_hash_manifest_program_p28_34_20260226T1706Z.txt`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T16:41:49Z
 
 ### Nouveau tag de scellement publié
