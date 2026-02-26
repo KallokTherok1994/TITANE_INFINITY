@@ -42,7 +42,9 @@ function startChild() {
     }
 
     const delayMs = 1000 * restartCount;
-    log(`exit: code=${code} signal=${signal} (restart ${restartCount}/${maxRestarts} in ${delayMs}ms)`);
+    log(
+      `exit: code=${code} signal=${signal} (restart ${restartCount}/${maxRestarts} in ${delayMs}ms)`
+    );
     setTimeout(startChild, delayMs);
   });
 }

@@ -104,7 +104,11 @@ describe('Truth Contract — Invariant 2: network_used=false implies mode!=REMOT
   });
 
   it('[INV2.4] network_used=false with mode=OFFLINE is valid', () => {
-    const valid: ProviderDecisionMeta = { ...validLocalMeta, mode: 'OFFLINE', reason_code: 'FALLBACK_OFFLINE' };
+    const valid: ProviderDecisionMeta = {
+      ...validLocalMeta,
+      mode: 'OFFLINE',
+      reason_code: 'FALLBACK_OFFLINE',
+    };
     expect(validateProviderDecisionMeta(valid)).toBeNull();
   });
 });
@@ -182,7 +186,7 @@ describe('clampProviderDecisionMeta — no-op on valid meta', () => {
     };
     clampProviderDecisionMeta(violating);
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('[NO_LYING_VIOLATION_BACKEND]'),
+      expect.stringContaining('[NO_LYING_VIOLATION_BACKEND]')
     );
     consoleSpy.mockRestore();
   });

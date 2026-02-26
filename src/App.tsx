@@ -238,7 +238,9 @@ const AdaptiveEngine = lazy(() =>
   import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
 );
 const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
-const ResearchPage = lazy(() => import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage })));
+const ResearchPage = lazy(() =>
+  import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
+);
 
 /**
  * ═══════════════════════════════════════════════════════════════

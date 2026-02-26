@@ -115,7 +115,10 @@ function resolveWebLiveTarget(
   return defaultSeeds[0] ?? null;
 }
 
-function resolveWebLiveSeeds(question: string, seedUrls: string[] | null): string[] | null {
+function resolveWebLiveSeeds(
+  question: string,
+  seedUrls: string[] | null
+): string[] | null {
   if (seedUrls && seedUrls.length > 0) {
     return seedUrls;
   }
@@ -147,7 +150,7 @@ const CitationCard: React.FC<{ citation: Citation; index: number }> = ({
       href={citation.url}
       className="rp-citation-url"
       rel="noreferrer noopener"
-      onClick={(e) => e.preventDefault()} // Tauri-only: no browser navigation
+      onClick={e => e.preventDefault()} // Tauri-only: no browser navigation
       title={citation.url}
     >
       {citation.url.length > 60 ? `${citation.url.slice(0, 57)}…` : citation.url}
@@ -184,7 +187,7 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
     <div className="rp-trace-section">
       <button
         className="rp-trace-toggle"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => setOpen(v => !v)}
         data-testid="trace-toggle"
         type="button"
       >
@@ -196,7 +199,10 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
             <strong>Markers:</strong>
             <ul>
               {trace.markers.map((m, i) => (
-                <li key={i} className={m.startsWith('VERDICT') ? 'rp-verdict-marker' : ''}>
+                <li
+                  key={i}
+                  className={m.startsWith('VERDICT') ? 'rp-verdict-marker' : ''}
+                >
                   {m}
                 </li>
               ))}
@@ -207,15 +213,19 @@ const TracePanel: React.FC<{ report: ResearchReport }> = ({ report }) => {
               <strong>Budgets:</strong>
               <ul>
                 {Object.entries(trace.budgets).map(([k, v]) => (
-                  <li key={k}><code>{k}</code>: {v}</li>
+                  <li key={k}>
+                    <code>{k}</code>: {v}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
           {trace.cache_events && trace.cache_events.length > 0 && (
             <div className="rp-trace-cache">
-              <strong>Cache ({trace.cache_events.filter(e => e.kind === 'HIT').length} hits
-                / {trace.cache_events.filter(e => e.kind === 'MISS').length} misses):</strong>
+              <strong>
+                Cache ({trace.cache_events.filter(e => e.kind === 'HIT').length} hits /{' '}
+                {trace.cache_events.filter(e => e.kind === 'MISS').length} misses):
+              </strong>
             </div>
           )}
           {trace.errors && trace.errors.length > 0 && (
@@ -277,7 +287,11 @@ export const ResearchPage: React.FC = () => {
       setQuestion(queryQuestion.trim());
     }
 
-    if (queryMode === 'OFFLINE' || queryMode === 'LOCAL_INDEX' || queryMode === 'WEB_LIVE') {
+    if (
+      queryMode === 'OFFLINE' ||
+      queryMode === 'LOCAL_INDEX' ||
+      queryMode === 'WEB_LIVE'
+    ) {
       setMode(queryMode);
     }
 
@@ -306,7 +320,7 @@ export const ResearchPage: React.FC = () => {
       const seedUrls: string[] | null = seedUrlsRaw.trim()
         ? seedUrlsRaw
             .split('\n')
-            .map((s) => s.trim())
+            .map(s => s.trim())
             .filter(Boolean)
         : null;
 
@@ -314,9 +328,8 @@ export const ResearchPage: React.FC = () => {
         mode === 'WEB_LIVE'
           ? resolveWebLiveTarget(question, targetUrl, seedUrls)
           : targetUrl.trim() || null;
-      const resolvedSeedUrls = mode === 'WEB_LIVE'
-        ? resolveWebLiveSeeds(question, seedUrls)
-        : seedUrls;
+      const resolvedSeedUrls =
+        mode === 'WEB_LIVE' ? resolveWebLiveSeeds(question, seedUrls) : seedUrls;
 
       const options: ResearchOptions = {
         mode,
@@ -371,7 +384,7 @@ export const ResearchPage: React.FC = () => {
               className="rp-textarea"
               data-testid="research-question"
               value={question}
-              onChange={(e) => setQuestion(e.target.value)}
+              onChange={e => setQuestion(e.target.value)}
               placeholder="Enter your research question…"
               rows={3}
               disabled={state === 'running'}
@@ -388,7 +401,7 @@ export const ResearchPage: React.FC = () => {
                 className="rp-select"
                 data-testid="research-mode"
                 value={mode}
-                onChange={(e) => setMode(e.target.value as ResearchMode)}
+                onChange={e => setMode(e.target.value as ResearchMode)}
                 disabled={state === 'running'}
               >
                 <option value="LOCAL_INDEX">LOCAL INDEX</option>
@@ -408,7 +421,7 @@ export const ResearchPage: React.FC = () => {
                   data-testid="research-target-url"
                   type="url"
                   value={targetUrl}
-                  onChange={(e) => setTargetUrl(e.target.value)}
+                  onChange={e => setTargetUrl(e.target.value)}
                   placeholder="https://example.com/page"
                   disabled={state === 'running'}
                 />
@@ -426,7 +439,7 @@ export const ResearchPage: React.FC = () => {
                 className="rp-textarea rp-seeds"
                 data-testid="research-seed-urls"
                 value={seedUrlsRaw}
-                onChange={(e) => setSeedUrlsRaw(e.target.value)}
+                onChange={e => setSeedUrlsRaw(e.target.value)}
                 placeholder="https://example.com&#10;https://other.com"
                 rows={2}
                 disabled={state === 'running'}
@@ -444,7 +457,7 @@ export const ResearchPage: React.FC = () => {
               data-testid="research-sandbox"
               type="text"
               value={sandboxRoot}
-              onChange={(e) => setSandboxRoot(e.target.value)}
+              onChange={e => setSandboxRoot(e.target.value)}
               disabled={state === 'running'}
             />
           </div>
@@ -491,7 +504,7 @@ export const ResearchPage: React.FC = () => {
               className={`rp-verdict ${verdictClass(report.trace.markers)}`}
               data-testid="research-verdict"
             >
-              {report.trace.markers.find((m) => m.startsWith('VERDICT_')) ?? 'UNKNOWN'}
+              {report.trace.markers.find(m => m.startsWith('VERDICT_')) ?? 'UNKNOWN'}
             </div>
 
             {/* Answer */}

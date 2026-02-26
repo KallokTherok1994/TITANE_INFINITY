@@ -12,9 +12,7 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import {
-  validateProviderDecisionMeta,
-} from '@/types/providerDecisionMeta';
+import { validateProviderDecisionMeta } from '@/types/providerDecisionMeta';
 import type { ProviderDecisionMeta, Mode, ReasonCode } from '@/types/providerMeta';
 
 // ─────────────────────────────────────────────────────────────────
@@ -188,7 +186,11 @@ describe('G5.3: fallback has explicit reason_code', () => {
 // ─────────────────────────────────────────────────────────────────
 describe('G5.4: UI display tags derived from meta fields', () => {
   it('[G5.4.1] REMOTE + network_used=true → UI should display remote indicator', () => {
-    const meta = buildMeta({ mode: 'REMOTE', network_used: true, provider_used: 'gemini' });
+    const meta = buildMeta({
+      mode: 'REMOTE',
+      network_used: true,
+      provider_used: 'gemini',
+    });
     // UI derives: mode=REMOTE, network indicator = true
     expect(meta.mode).toBe('REMOTE');
     expect(meta.network_used).toBe(true);

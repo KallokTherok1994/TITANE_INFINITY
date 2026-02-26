@@ -203,11 +203,9 @@ export function isOnlineCapable(state: NetState): boolean {
  * Check if failure is retriable
  */
 export function isRetriableFailure(failureClass: FailureClass): boolean {
-  return [
-    FailureClass.TIMEOUT,
-    FailureClass.HTTP_5XX,
-    FailureClass.RATE_LIMIT,
-  ].includes(failureClass);
+  return [FailureClass.TIMEOUT, FailureClass.HTTP_5XX, FailureClass.RATE_LIMIT].includes(
+    failureClass
+  );
 }
 
 /**

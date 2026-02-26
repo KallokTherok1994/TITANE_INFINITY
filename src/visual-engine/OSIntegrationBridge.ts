@@ -158,8 +158,7 @@ export class OSIntegrationBridge {
       const merged = { ...this.config, ...config };
       // Avoid overriding defaults with `undefined` when callers spread env vars.
       if (config.realtimeSocketUrl === undefined) {
-        merged.realtimeSocketUrl =
-          config.websocketUrl ?? this.config.realtimeSocketUrl;
+        merged.realtimeSocketUrl = config.websocketUrl ?? this.config.realtimeSocketUrl;
       }
       this.config = merged;
     }

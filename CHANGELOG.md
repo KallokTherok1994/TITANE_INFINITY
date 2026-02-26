@@ -77,7 +77,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 - VERDICT.md: Executive summary + governance compliance
 - ERROR_REGISTRY.jsonl: Structured error record (status=FIXED)
 - SHA256SUMS.txt: 17 checksums
-- PROOF/: baseline_check.log, after_fix_check.log, repro_run_{1,2,3}.log, lint.log, gates_all.log
+- PROOF/: baseline*check.log, after_fix_check.log, repro_run*{1,2,3}.log, lint.log, gates_all.log
 
 #### 🔄 Migration Notes
 

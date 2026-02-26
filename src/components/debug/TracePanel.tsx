@@ -18,7 +18,10 @@ export const TracePanel = memo(function TracePanel({
   }
 
   return (
-    <section data-testid="trace-panel" style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+    <section
+      data-testid="trace-panel"
+      style={{ display: 'flex', flexDirection: 'column', gap: 6 }}
+    >
       <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>{title}</div>
       <pre
         data-testid="trace-panel-json"

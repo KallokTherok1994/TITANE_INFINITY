@@ -668,7 +668,7 @@ export class TitaneVisualEngineV21 extends EventEmitter {
   }
 
   /**
-  * Handle incoming realtime socket messages
+   * Handle incoming realtime socket messages
    */
   private handleRealtimeSocketMessage(data: unknown): void {
     if (typeof data === 'object' && data !== null && 'type' in data) {
@@ -712,7 +712,10 @@ export class TitaneVisualEngineV21 extends EventEmitter {
           break;
 
         default:
-          console.warn('[VisualEngineV21] Unknown realtime socket message type:', message.type);
+          console.warn(
+            '[VisualEngineV21] Unknown realtime socket message type:',
+            message.type
+          );
       }
     }
 

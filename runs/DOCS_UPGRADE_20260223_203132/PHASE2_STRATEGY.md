@@ -21,14 +21,14 @@ The legacy_terms.txt file contains **30+ files** with "local-first" terminology.
 Documents that describe CURRENT system state:
 
 - README.md (✅ DONE in Phase 1)
-- ARCHITECTURE.md  
+- ARCHITECTURE.md
 - GOVERNANCE.md (if exists)
 - DEPLOYMENT.md (if referenced)
 - docs/ subdirectories (current documentation)
 - Contributing guides
 - API references (current)
 
-**Action**: Replace "local-first" → "online-first" 
+**Action**: Replace "local-first" → "online-first"
 
 ---
 
@@ -118,4 +118,3 @@ Create PROOF/PRESERVATION_DECISION.md explaining why historical reports are pres
 
 **Status**: STRATEGY DEFINED  
 **Next**: Execute classification and selective normalization
-

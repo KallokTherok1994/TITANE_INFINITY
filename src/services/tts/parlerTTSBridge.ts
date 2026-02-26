@@ -110,7 +110,8 @@ class ParlerTTSBridge {
     }
 
     try {
-      const response = await globalThis['fetch']( // @network-allowed
+      const response = await globalThis['fetch'](
+        // @network-allowed
         // @network-allowed
         `${this.apiUrl}/api/v1/tts/health`,
         {
@@ -189,7 +190,8 @@ class ParlerTTSBridge {
       });
 
       // Requête HTTP POST
-      const response = await globalThis['fetch']( // @network-allowed
+      const response = await globalThis['fetch'](
+        // @network-allowed
         // @network-allowed
         `${this.apiUrl}/api/v1/tts/synthesize`,
         {
@@ -260,7 +262,8 @@ class ParlerTTSBridge {
         throw new Error('Parler-TTS disabled in Vitest environment');
       }
 
-      const response = await globalThis['fetch']( // @network-allowed
+      const response = await globalThis['fetch'](
+        // @network-allowed
         // @network-allowed
         `${this.apiUrl}/api/v1/tts/update-style`,
         {

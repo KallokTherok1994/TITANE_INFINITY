@@ -1,7 +1,7 @@
 # TITANE∞ — DIAGNOSTIC CAUSAL (SECTION 2)
 
 **Date**: 2026-02-23  
-**Objectif**: Prouver la cause racine du timeout + fallback  
+**Objectif**: Prouver la cause racine du timeout + fallback
 
 ---
 
@@ -16,6 +16,7 @@
 3. **Besoin d'app ouverte + interaction manuelle** pour capturer conversation complète
 
 **SOLUTION CRÉÉE**:
+
 - Script: `scripts/diagnostic/reproduce_conversation_trace.sh`
 - Test stub: `src-tauri/src/conversation_engine/diagnostic_section2_test.rs`
 - ➡️ **Statut**: ⚠️ **PRÉPARÉ MAIS NON EXÉCUTÉ** (nécessite app running + action manuelle)
@@ -46,7 +47,7 @@
     };
   }
   ↓
-[USER] Voit message: 
+[USER] Voit message:
   "Service en ligne, mais accès aux providers externes bloqué par policy/configuration."
   Latency: <200ms ✅
 
@@ -111,12 +112,15 @@ RÉSULTAT: ✅ Pas de timeout (v27.1 fix fonctionne)
 ### Gate Inputs (PROUVÉ PAR CODE)
 
 #### Input 1: `buildFlagEnabled`
+
 **Fichier**: `src/config/featureFlags.ts:38`
+
 ```typescript
 const buildAllowsExternalAI = envFlag('VITE_ENABLE_EXTERNAL_AI');
 ```
 
 **Fonction `envFlag` (ligne 13-22)**:
+
 ```typescript
 export function envFlag(key: string): boolean {
   const value = env[key];  // env = import.meta.env
@@ -131,12 +135,15 @@ export function envFlag(key: string): boolean {
 ```
 
 **Valeur actuelle (PROUVÉ)**:
+
 - `.env` grep: AUCUNE ligne `VITE_ENABLE_EXTERNAL_AI=...`
-- `env | grep VITE_`: AUCUNE variable VITE_ dans shell
+- `env | grep VITE_`: AUCUNE variable VITE\_ dans shell
 - ➡️ **buildAllowsExternalAI = false** ✅ PROUVÉ
 
 #### Input 2: `runtimeToggleEnabled`
+
 **Fichier**: `src/config/featureFlags.ts:39-40`
+
 ```typescript
 const runtimeAllowsExternalAI = import.meta.env.DEV
   ? true  ← DEV mode bypass
@@ -144,6 +151,7 @@ const runtimeAllowsExternalAI = import.meta.env.DEV
 ```
 
 **Fonction `runtimeFlag` (ligne 24-30)**:
+
 ```typescript
 function runtimeFlag(key: string): boolean {
   try {
@@ -156,16 +164,20 @@ function runtimeFlag(key: string): boolean {
 ```
 
 **Valeur actuelle (PROUVÉ)**:
+
 - Mode: DEV (pnpm run dev:tauri)
 - ➡️ **runtimeAllowsExternalAI = true** (DEV bypass) ✅ PROUVÉ
 
 #### Gate Output: `externalAIEnabled`
+
 **Fichier**: `src/config/featureFlags.ts:41`
+
 ```typescript
 const externalAIEnabled = buildAllowsExternalAI && runtimeAllowsExternalAI;
 ```
 
 **Calcul actuel**:
+
 ```
 false && true = false
 ```
@@ -176,12 +188,12 @@ false && true = false
 
 ### Gate Outputs → Tableau Décisionnel
 
-| Condition | buildFlagEnabled | runtimeToggleEnabled | ENABLE_EXTERNAL_AI | Comportement |
-|-----------|------------------|----------------------|--------------------|--------------|
-| **Actuel (DEV, no .env)** | ❌ false | ✅ true | ❌ **false** | Gate BLOQUE (v27.1 immediate response) |
-| Prod, no localStorage | ❌ false | ❌ false | ❌ false | Gate BLOQUE |
-| DEV, .env=1 | ✅ true | ✅ true (DEV) | ✅ true | Gate OK → Providers externes accessibles |
-| Prod, .env=1, localStorage=1 | ✅ true | ✅ true | ✅ true | Gate OK |
+| Condition                    | buildFlagEnabled | runtimeToggleEnabled | ENABLE_EXTERNAL_AI | Comportement                             |
+| ---------------------------- | ---------------- | -------------------- | ------------------ | ---------------------------------------- |
+| **Actuel (DEV, no .env)**    | ❌ false         | ✅ true              | ❌ **false**       | Gate BLOQUE (v27.1 immediate response)   |
+| Prod, no localStorage        | ❌ false         | ❌ false             | ❌ false           | Gate BLOQUE                              |
+| DEV, .env=1                  | ✅ true          | ✅ true (DEV)        | ✅ true            | Gate OK → Providers externes accessibles |
+| Prod, .env=1, localStorage=1 | ✅ true          | ✅ true              | ✅ true            | Gate OK                                  |
 
 ---
 
@@ -225,6 +237,7 @@ const raw = await tauriClient.conversationGenerate(payload);
 ```
 
 **Conclusion Frontend**:
+
 - ✅ Gate enforcement ACTIF (v27.1)
 - ✅ Pas de call backend si `allowed=false`
 - ✅ Réponse immédiate (<200ms)
@@ -237,6 +250,7 @@ const raw = await tauriClient.conversationGenerate(payload);
 **Fichier**: `src-tauri/src/conversation_engine/commands.rs:47-130`
 
 **Code audit**:
+
 ```rust
 #[tauri::command]
 pub async fn conversation_generate(
@@ -244,28 +258,29 @@ pub async fn conversation_generate(
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
     // ... parsing args ...
-    
+
     // ✅ Check FORCE_LOCAL_PROVIDER (test mode)
     let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
         Some("local".to_string())
     } else {
         provider
     };
-    
+
     // ⚠️ AUCUNE vérification de VITE_ENABLE_EXTERNAL_AI ici
     // ⚠️ AUCUNE vérification de titane.enable_external_ai ici
-    
+
     // Traiter via pipeline
     let response = engine
         .process_message(request)
         .await
         .map_err(|e| e.to_string())?;
-    
+
     // ...
 }
 ```
 
 **Conclusion Backend**:
+
 - ⚠️ **Gate NOT verified** dans backend
 - Backend suppose frontend a déjà filtré
 - ⚠️ **RISK**: Direct IPC call bypass possible (si app modifiée)
@@ -276,6 +291,7 @@ pub async fn conversation_generate(
 ### Cohérence Metadata ✅
 
 **Frontend v27.1 Response Construction**:
+
 ```typescript
 meta: {
   mode: 'REMOTE',              // ← User IS online
@@ -292,6 +308,7 @@ decision: {
 ```
 
 **v27.0.4 Backend Timeout Response (si gate=enabled + timeout)**:
+
 ```rust
 // mod.rs:254-280
 let (message, tags, summary) = if network_available {
@@ -319,12 +336,12 @@ ProviderDecisionMeta {
 
 **Alignement Complet**:
 
-| Scénario | mode | reason_code | network_used | online | Cohérence |
-|----------|------|-------------|--------------|--------|-----------|
-| **Gate BLOCKED (v27.1)** | REMOTE | POLICY_BLOCKED | false | true | ✅ PARFAIT |
-| **Timeout, network OK (v27.0.4)** | REMOTE | TIMEOUT | false | true | ✅ CORRECT (degraded) |
-| **Timeout, network DOWN (v27.0.4)** | OFFLINE | TIMEOUT | false | N/A | ✅ CORRECT (offline) |
-| **Pre-v27.0.4 (OLD)** | REMOTE | TIMEOUT | false | ? | ⚠️ LYING (claimed remote but actually offline) |
+| Scénario                            | mode    | reason_code    | network_used | online | Cohérence                                      |
+| ----------------------------------- | ------- | -------------- | ------------ | ------ | ---------------------------------------------- |
+| **Gate BLOCKED (v27.1)**            | REMOTE  | POLICY_BLOCKED | false        | true   | ✅ PARFAIT                                     |
+| **Timeout, network OK (v27.0.4)**   | REMOTE  | TIMEOUT        | false        | true   | ✅ CORRECT (degraded)                          |
+| **Timeout, network DOWN (v27.0.4)** | OFFLINE | TIMEOUT        | false        | N/A    | ✅ CORRECT (offline)                           |
+| **Pre-v27.0.4 (OLD)**               | REMOTE  | TIMEOUT        | false        | ?      | ⚠️ LYING (claimed remote but actually offline) |
 
 ---
 
@@ -352,11 +369,13 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 **Le scénario "Réessaie après 20s timeout" était valide AVANT v27.1**:
 
 **Timeline**:
+
 - **Pre-v27.0.4**: Gate logged but not enforced → Provider timeout → Mode=REMOTE (lying) → User confused
 - **v27.0.4**: Gate logged but not enforced → Provider timeout → Mode=REMOTE if network OK, Mode=OFFLINE if network down ← NO_LYING fix
 - **v27.1** (actuel): Gate enforced frontend → NO provider call if gate=false → Immediate response ✅
 
 **État actuel** (commit 56fdd981):
+
 - v27.0.4: Backend NO_LYING ✅ ACTIF
 - v27.1: Frontend gate enforcement ✅ ACTIF
 - ➡️ **Plus de timeout silencieux sur policy block** ✅ RÉSOLU
@@ -368,20 +387,23 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 ### Causes Racines Identifiées
 
 **Cause Racine #1**: **buildFlagEnabled = false → All External Providers Blocked**
+
 - **Fichier**: `.env` (absence de `VITE_ENABLE_EXTERNAL_AI=1`)
 - **Impact**: Gemini/OpenAI/Anthropic toujours bloqués même avec clés valides
-- **Symptôme User**: 
+- **Symptôme User**:
   - Pre-v27.1: "Délai d'attente dépassé" (20s wait)
   - Post-v27.1: "Accès bloqué par policy" (50ms)
 - **Fix**: Documenter requirement OU ajouter `VITE_ENABLE_EXTERNAL_AI=1` au .env template
 
 **Cause Racine #2**: **Provider Timeout (20s) — Only if Gate=Enabled**
+
 - **Fichier**: `src-tauri/src/conversation_engine/mod.rs:171`
 - **Impact**: Si provider unreachable → 20s attente avant fallback
 - **Mitigation**: v27.0.4 NO_LYING wrapper ✅ ACTIF
 - **État**: ✅ HANDLED (network_available check before claiming OFFLINE)
 
 **Cause Racine #3**: **Frontend-Only Gate (Backend Pass-Through)**
+
 - **Fichier**: `src-tauri/src/conversation_engine/commands.rs:47`
 - **Impact**: Aucune double vérification backend
 - **RISK**: Sécurité (si frontend modifié)
@@ -393,16 +415,20 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 ## 2.6 SCÉNARIOS DE TEST REQUIS (NON EXÉCUTÉS)
 
 ### Test 1: Gate DISABLED (Actuel)
+
 **Setup**:
+
 - VITE_ENABLE_EXTERNAL_AI non défini
 - DEV mode
 
 **Steps**:
+
 1. Lancer app
 2. Envoyer message
 3. Observer response
 
 **Expected**:
+
 - Latency: <200ms
 - Message: "accès bloqué par policy"
 - mode='REMOTE', reason_code='POLICY_BLOCKED', network_used=false
@@ -410,16 +436,20 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 **Status**: ⚠️ **NON EXÉCUTÉ** (nécessite app + interaction)
 
 ### Test 2: Gate ENABLED + Provider OK
+
 **Setup**:
+
 - VITE_ENABLE_EXTERNAL_AI=1
 - GEMINI_API_KEY=<valid_key>
 - Réseau OK
 
 **Steps**:
+
 1. Envoyer message
 2. Observer génération
 
 **Expected**:
+
 - Latency: 500ms-5000ms (normal)
 - Content: Réponse Gemini
 - mode='REMOTE', reason_code='OK', network_used=true
@@ -427,16 +457,20 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 **Status**: ⚠️ **NON EXÉCUTÉ**
 
 ### Test 3: Gate ENABLED + Provider Timeout
+
 **Setup**:
+
 - VITE_ENABLE_EXTERNAL_AI=1
 - Provider API down (mock)
 - Network OK
 
 **Steps**:
+
 1. Envoyer message
 2. Attendre timeout
 
 **Expected**:
+
 - Latency: ~20s
 - Message: "Service moment anément dégradé"
 - mode='REMOTE', reason_code='TIMEOUT', network_used=false (v27.0.4)
@@ -452,18 +486,21 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 ### 3 Raisons:
 
 **Raison 1**: **Cause Racine #1 PROUVÉE par Code (pas par logs)**
+
 - buildFlagEnabled=false → Gate bloque tous providers externes
 - v27.1 fix fonctionne CORRECTEMENT (immediate response)
 - ➡️ Comportement actuel = **WORKING AS DESIGNED**
 - **Action**: Documenter claramente que `VITE_ENABLE_EXTERNAL_AI=1` requis pour providers externes
 
 **Raison 2**: **Scénario "Réessaie après 20s" NON REPRODUIT**
+
 - Logs fournis dans prompt: ABSENTS dans repository actuel
 - État actuel: v27.1 gate enforcement empêche le timeout
 - ➡️ **Scénario historical (pre-v27.1) déjà résolu**
 - **Action**: Confirmer si user report est sur version <v27.1
 
 **Raison 3**: **Tests E2E Manquants (Nécessaires pour SECTION 6)**
+
 - Aucun test automatisé ne valide:
   - Gate enforcement (frontend)
   - Timeout fallback (backend)
@@ -477,19 +514,22 @@ $ grep -r "Réessaie\|Délai d'attente" src/
 
 **DECISION POINT**: Fork du workflow
 
-**Option A**: **Documenter l'État Actuel (NO-FIX)** 
+**Option A**: **Documenter l'État Actuel (NO-FIX)**
+
 - v27.1 gate working correctly
 - buildFlagEnabled=false = feature, not bug
 - User doit configurer .env explicitement
 - ➡️ **Documentation PR** seulement
 
 **Option B**: **Auto-Fix (SECTION 3-5)**
+
 - Ajouter backend gate verification (defense-in-depth)
 - Améliorer Ollama healthcheck (si flapping prouvé)
 - Nettoyer warnings (cargo clippy)
 - ➡️ **Code changes PR**
 
 **Recommandation**: **Option A (Documentation)** sauf si:
+
 1. User report vient de version <v27.1 (fix déjà fait)
 2. Security requirement pour backend gate (defense-in-depth)
 3. Ollama flapping prouvé par logs

@@ -30,16 +30,24 @@ async function invokeConversationGenerate(message) {
           const attempts = [];
 
           if (window.__TAURI__?.core?.invoke) {
-            attempts.push(payload => window.__TAURI__.core.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.core.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI__?.tauri?.invoke) {
-            attempts.push(payload => window.__TAURI__.tauri.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.tauri.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI__?.invoke) {
-            attempts.push(payload => window.__TAURI__.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI_INTERNALS__?.invoke) {
-            attempts.push(payload => window.__TAURI_INTERNALS__.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI_INTERNALS__.invoke('conversation_generate', payload)
+            );
           }
 
           if (!attempts.length) {
@@ -76,7 +84,10 @@ async function invokeConversationGenerate(message) {
     }
 
     lastError = result?.err || lastError;
-    if (String(lastError).includes('Origin header is not a valid URL') && callAttempt < 5) {
+    if (
+      String(lastError).includes('Origin header is not a valid URL') &&
+      callAttempt < 5
+    ) {
       await browser.pause(300);
       continue;
     }
@@ -93,7 +104,9 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
-      console.warn('[ONLINE_CHAT_FIX] Tauri page unavailable (about:blank), skipping spec');
+      console.warn(
+        '[ONLINE_CHAT_FIX] Tauri page unavailable (about:blank), skipping spec'
+      );
       this.skip();
       return;
     }

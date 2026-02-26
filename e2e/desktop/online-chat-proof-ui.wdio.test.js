@@ -20,15 +20,17 @@ async function detectAppSourceMode() {
       .map(node => node.getAttribute('src') || '')
       .filter(Boolean);
     const href = window.location.href || '';
-    const hasDevScript = scripts.some(src =>
-      /127\.0\.0\.1:5173|localhost:5173/i.test(src) ||
-      /^\/?@vite\/client/i.test(src) ||
-      /^\/?src\//i.test(src)
+    const hasDevScript = scripts.some(
+      src =>
+        /127\.0\.0\.1:5173|localhost:5173/i.test(src) ||
+        /^\/?@vite\/client/i.test(src) ||
+        /^\/?src\//i.test(src)
     );
-    const hasEmbeddedScript = scripts.some(src =>
-      /^tauri:\/\/localhost\/assets\//i.test(src) ||
-      /^\.\/assets\//i.test(src) ||
-      /^\/assets\//i.test(src)
+    const hasEmbeddedScript = scripts.some(
+      src =>
+        /^tauri:\/\/localhost\/assets\//i.test(src) ||
+        /^\.\/assets\//i.test(src) ||
+        /^\/assets\//i.test(src)
     );
 
     let sourceMode = 'unknown';
@@ -80,16 +82,24 @@ async function invokeConversationGenerate(message) {
           const attempts = [];
 
           if (window.__TAURI__?.core?.invoke) {
-            attempts.push(payload => window.__TAURI__.core.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.core.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI__?.tauri?.invoke) {
-            attempts.push(payload => window.__TAURI__.tauri.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.tauri.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI__?.invoke) {
-            attempts.push(payload => window.__TAURI__.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI__.invoke('conversation_generate', payload)
+            );
           }
           if (window.__TAURI_INTERNALS__?.invoke) {
-            attempts.push(payload => window.__TAURI_INTERNALS__.invoke('conversation_generate', payload));
+            attempts.push(payload =>
+              window.__TAURI_INTERNALS__.invoke('conversation_generate', payload)
+            );
           }
 
           if (!attempts.length) {
@@ -245,7 +255,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         : 'tauri://localhost/#/chat');
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
-      console.warn('[ONLINE_CHAT_FIX_UI] Tauri page unavailable (about:blank), skipping spec');
+      console.warn(
+        '[ONLINE_CHAT_FIX_UI] Tauri page unavailable (about:blank), skipping spec'
+      );
       this.skip();
       return;
     }
@@ -297,9 +309,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
               !!document.querySelector('#chat-window-textarea') ||
               !!document.querySelector('#chat-input-textarea');
             return (
-              Boolean(boot.app_render) ||
-              (root?.childElementCount ?? 0) > 0 ||
-              hasChatUI
+              Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
             );
           });
         },

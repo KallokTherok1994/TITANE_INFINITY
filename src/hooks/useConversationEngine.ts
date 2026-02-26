@@ -316,10 +316,15 @@ export function useConversationEngine(
         } else if (mode === 'REMOTE') {
           // NO_LYING_VIOLATION_FRONTEND guard: REMOTE requires network_used=true
           if (response.meta?.network_used === false) {
-            console.error('[NO_LYING_VIOLATION_FRONTEND] mode=REMOTE but network_used=false — displaying as LOCAL/RESTRICTED');
-            logger.warn('[useConversationEngine] NO_LYING_VIOLATION_FRONTEND: REMOTE+network_used=false', {
-              provider: response.meta?.provider_used,
-            });
+            console.error(
+              '[NO_LYING_VIOLATION_FRONTEND] mode=REMOTE but network_used=false — displaying as LOCAL/RESTRICTED'
+            );
+            logger.warn(
+              '[useConversationEngine] NO_LYING_VIOLATION_FRONTEND: REMOTE+network_used=false',
+              {
+                provider: response.meta?.provider_used,
+              }
+            );
           } else {
             logger.info('[useConversationEngine] REMOTE mode', {
               provider: response.meta?.provider_used,

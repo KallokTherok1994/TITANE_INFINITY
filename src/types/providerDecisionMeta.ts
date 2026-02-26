@@ -14,9 +14,7 @@ import type { ProviderDecisionMeta, Mode, ReasonCode } from './providerMeta';
  * Vérifie si un ProviderDecisionMeta respecte tous les invariants du Truth Contract.
  * Retourne null si valide, ou un message d'erreur si une violation est détectée.
  */
-export function validateProviderDecisionMeta(
-  meta: ProviderDecisionMeta,
-): string | null {
+export function validateProviderDecisionMeta(meta: ProviderDecisionMeta): string | null {
   // Invariant 1: mode === 'REMOTE' => network_used === true
   // (also covers: network_used === false => mode !== 'REMOTE')
   if (meta.mode === 'REMOTE' && !meta.network_used) {
@@ -36,7 +34,7 @@ export function validateProviderDecisionMeta(
  * Log NO_LYING_VIOLATION_BACKEND et retourne un meta corrigé avec reason_code=CONTRACT_VIOLATION_CLAMPED.
  */
 export function clampProviderDecisionMeta(
-  meta: ProviderDecisionMeta,
+  meta: ProviderDecisionMeta
 ): ProviderDecisionMeta {
   const violation = validateProviderDecisionMeta(meta);
   if (!violation) {
@@ -46,9 +44,8 @@ export function clampProviderDecisionMeta(
   console.error(`[NO_LYING_VIOLATION_BACKEND] ${violation}`);
 
   // Clamp: si network_used=false ou provider=local_only, mode ne peut pas être REMOTE → forcer LOCAL
-  const clampedMode: Mode = !meta.network_used || meta.provider_used === 'local_only'
-    ? 'LOCAL'
-    : meta.mode;
+  const clampedMode: Mode =
+    !meta.network_used || meta.provider_used === 'local_only' ? 'LOCAL' : meta.mode;
 
   const clampedReasonCode: ReasonCode = 'CONTRACT_VIOLATION_CLAMPED';
 

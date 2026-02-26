@@ -13,6 +13,7 @@
 ### Change #1: Vision Section (Line 37)
 
 **BEFORE**:
+
 ```markdown
 TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif, privé et auto-réparateur.
 
@@ -25,6 +26,7 @@ TITANE∞ est un **OS cognitif local-first** : votre double numérique évolutif
 ```
 
 **AFTER**:
+
 ```markdown
 TITANE∞ est un **OS cognitif online-first** : votre double numérique évolutif, gouverné et auto-réparateur.
 
@@ -45,6 +47,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 ### Change #2: Security Section (Line 485)
 
 **BEFORE**:
+
 ```markdown
 ## 🔐 Sécurité
 
@@ -55,6 +58,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 ```
 
 **AFTER**:
+
 ```markdown
 ## 🔐 Sécurité
 
@@ -74,6 +78,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 ### Change #3: Added Version Timeline Section (After Vision)
 
 **NEW SECTION** (Added after line 47):
+
 ```markdown
 ## 📦 Version Timeline
 
@@ -109,6 +114,7 @@ See [CHANGELOG.md](CHANGELOG.md) for v24.x-v26.x history.
 ### Change #4: Added Governance & Quality Section (After Quick Start)
 
 **NEW SECTION** (Added after line 86):
+
 ```markdown
 ## 🛡️ Governance & Quality
 
@@ -140,13 +146,13 @@ TITANE∞ maintains an **immutable audit trail** of all UI changes, releases, an
 
 **Example Event**:
 {
-  "timestamp": "2026-02-23T20:31:32Z",
-  "event": "DOCS_SYSTEM_UPGRADE_SEALED",
-  "version": "v27.0.6",
-  "ring": "Ring-4",
-  "status": "QUALIFIED",
-  "proof": "SHA256: abc123...",
-  "metadata": { "files_changed": 6818, "critical_fixes": 3 }
+"timestamp": "2026-02-23T20:31:32Z",
+"event": "DOCS_SYSTEM_UPGRADE_SEALED",
+"version": "v27.0.6",
+"ring": "Ring-4",
+"status": "QUALIFIED",
+"proof": "SHA256: abc123...",
+"metadata": { "files_changed": 6818, "critical_fixes": 3 }
 }
 
 **Gate**: G8 (APPEND_ONLY_REGISTRY) enforces immutability.
@@ -205,6 +211,7 @@ Progressive rollout model (Strict & Perfection lanes only):
 **New Sections**: 2 (Version Timeline, Governance & Quality)
 
 **Gates Unblocked**:
+
 - ✅ G5 (NO_SILENT_DRIFT): Documentation now aligned with production architecture
 - ✅ G9 (STOP_THE_LINE): Critical contradictions resolved, release pipeline unblocked
 
