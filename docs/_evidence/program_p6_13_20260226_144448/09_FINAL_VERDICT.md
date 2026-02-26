@@ -34,3 +34,19 @@ Date (UTC): 2026-02-26
 
 ### Référence contrat
 - Dossier décision: `docs/_evidence/program_p6_13_20260226_144448/10_SCAN_CONTRACT_REQUALIFICATION.md`.
+
+---
+
+## Addendum append-only — Runbook vΩ.P6_13.RUNBOOK.AUTO.MAX.4
+
+### Conformité revalidée
+- Gate `verify:invariants-governed`: **PASS** (snapshot dans `06_PROOF_LOGS_MASTER.txt`).
+- Aucune ouverture web frontend exécutable détectée.
+- Aucune assignation secret hardcodée détectée.
+
+### Blocage actif
+- **P6 reste BLOCKED**: token `GO_FOR_PROD_BUILD__TITANE_INFINITY` absent au runtime.
+- Par stop-the-line, impossible de sceller `G6_BUILD_REPRODUCIBLE_X3` sans ce token exact.
+
+### Effet sur P7→P13
+- Plans détaillés préparés; exécution runtime différée jusqu’à levée du gate P6.
