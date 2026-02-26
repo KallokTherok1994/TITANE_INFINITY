@@ -162,3 +162,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B6 (2026-02-26)
+- Action: réduction de la signature `reqwest` dans `services/fetch_service.rs` (imports/types/commentaires non exécutables).
+- Mesure:
+  - `fetch_service.rs` (regex locale `reqwest|ureq`): `5 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `53 -> 49`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB6_20260226T113756Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

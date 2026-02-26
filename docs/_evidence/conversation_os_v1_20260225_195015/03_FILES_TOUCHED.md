@@ -363,3 +363,19 @@
 - Delta mesuré:
 	- `chat_orchestrator.rs` `3 -> 1`
 	- inventaire brut `src-tauri/src` `55 -> 53`
+
+## Addendum 2026-02-26 (Step-4 Lot B6 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/services/fetch_service.rs`
+- Fichier ajouté:
+	- `35_H2_STEP4_LOTB6_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB6_20260226T113756Z.log`
+- Delta mesuré:
+	- `fetch_service.rs` `5 -> 1`
+	- inventaire brut `src-tauri/src` `53 -> 49`
