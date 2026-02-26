@@ -212,3 +212,18 @@
 
 ### État
 - Hard-mode reste **BLOCKED** tant que `H2 != 0` ou non limité au fichier autorité.
+
+## Addendum step-4 Lot B1 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB1b_20260226T032930Z.log`
+
+### Action
+- Migration `commands/orchestration_center.rs` vers `NetworkGatewayService`.
+
+### Résultat
+- `H2` code-only: `46 -> 43`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel principal dans `ai/ollama.rs` + `overdrive/chat_orchestrator.rs`).

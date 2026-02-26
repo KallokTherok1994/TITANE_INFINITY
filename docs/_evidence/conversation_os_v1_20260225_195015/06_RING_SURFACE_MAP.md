@@ -50,3 +50,14 @@
 - Commandes de preuve:
   - `rg -n "(^\s*use\s+reqwest::|reqwest::Client::|reqwest::get\(|ureq::|hyper::client|hyper::Client)" src-tauri/src`
 - Conclusion: **PASS (réduction H2 mesurée 51 -> 46)**
+
+### Micro-phase MP-04 — Step-4 Lot B1 (H2)
+- Ring impacté: Ring 3 (Services) + Ring 4 (Orchestration)
+- Fichiers touchés:
+  - `src-tauri/src/commands/orchestration_center.rs`
+- Imports sensibles vérifiés:
+  - migration des probes providers vers gateway gouverné
+- Commandes de preuve:
+  - `cargo check --manifest-path src-tauri/Cargo.toml -q`
+  - détecteur H2 code-only
+- Conclusion: **PASS (réduction H2 mesurée 46 -> 43)**
