@@ -1,3 +1,10 @@
+## ADDENDUM — PROGRAM AUTOHEAL AH V35 (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_231832`
+- Verdict: `PASS`
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_231832/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_231832.txt`
+
 ## ADDENDUM — PROGRAM AUTOHEAL AH V34 (A→H)
 
 - Program path: `docs/_evidence/program_autoheal_ah_20260226_231710`
