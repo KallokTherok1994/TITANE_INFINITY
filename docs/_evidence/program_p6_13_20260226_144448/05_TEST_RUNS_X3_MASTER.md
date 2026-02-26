@@ -22,3 +22,7 @@ Date (UTC): 2026-02-26
 - `RUN1_EXIT=0`
 - `RUN2_EXIT=0`
 - `RUN3_EXIT=0`
+
+## Statut phases 7→13
+- Exécutions x3 non autorisées (blocage séquentiel tant que P6 non PASS).
+- Références: `docs/_evidence/p7_20260226_144448/05_TEST_RUNS_X3.md` ... `p13_20260226_144448/05_TEST_RUNS_X3.md`.

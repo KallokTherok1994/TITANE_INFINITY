@@ -4,4 +4,8 @@ Phase: P13
 Statut: BLOCKED
 
 ## Gates
-- Tous gates P13: BLOCKED (phase non ouverte, ordre immuable).
+- `G13_CI_MATRIX_BUILDS`: BLOCKED
+- `G13_SMOKE_TESTS_PASS`: BLOCKED
+- `G13_PATHS_OK_PER_OS`: BLOCKED
+
+Motif unique: P6 non PASS (ordre immuable).

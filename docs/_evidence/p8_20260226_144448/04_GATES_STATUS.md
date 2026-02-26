@@ -4,4 +4,9 @@ Phase: P8
 Statut: BLOCKED
 
 ## Gates
-- Tous gates P8: BLOCKED (phase non ouverte, ordre immuable).
+- `G8_OUTPUT_POLICY_ENFORCED`: BLOCKED
+- `G8_CITATIONS_WHEN_SEARCH_USED`: BLOCKED
+- `G8_EXPLICIT_UNKNOWN_WHEN_UNPROVEN`: BLOCKED
+- `G8_SELF_CHECK_PRESENT`: BLOCKED
+
+Motif unique: P6 non PASS (ordre immuable).

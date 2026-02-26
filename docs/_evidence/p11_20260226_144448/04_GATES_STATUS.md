@@ -4,4 +4,10 @@ Phase: P11
 Statut: BLOCKED
 
 ## Gates
-- Tous gates P11: BLOCKED (phase non ouverte, ordre immuable).
+- `G11_TOOL_CONTRACT_ENFORCED`: BLOCKED
+- `G11_TOOL_TRACE_REQUIRED`: BLOCKED
+- `G11_TOOL_NO_REAL_WRITES`: BLOCKED
+- `G11_TOOL_BUDGETED`: BLOCKED
+- `G11_TOOL_PERMISSIONS_DEFAULT_DENY`: BLOCKED
+
+Motif unique: P6 non PASS (ordre immuable).

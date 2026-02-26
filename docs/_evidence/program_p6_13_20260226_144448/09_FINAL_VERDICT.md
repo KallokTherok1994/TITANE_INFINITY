@@ -50,3 +50,36 @@ Date (UTC): 2026-02-26
 
 ### Effet sur P7→P13
 - Plans détaillés préparés; exécution runtime différée jusqu’à levée du gate P6.
+
+---
+
+## Addendum append-only — Synthèse RUNBOOK AUTO MAX.4
+
+### Verdicts par phase
+- P6: **BLOCKED** (token `GO_FOR_PROD_BUILD__TITANE_INFINITY` absent)
+- P7: **BLOCKED** (dépendance séquentielle P6)
+- P8: **BLOCKED** (dépendance séquentielle P6)
+- P9: **BLOCKED** (dépendance séquentielle P6)
+- P10: **BLOCKED** (dépendance séquentielle P6)
+- P11: **BLOCKED** (dépendance séquentielle P6)
+- P12: **BLOCKED** (dépendance séquentielle P6)
+- P13: **BLOCKED** (dépendance séquentielle P6)
+
+### Top 7 actions
+1. Exporter le token exact `GO_FOR_PROD_BUILD__TITANE_INFINITY`.
+2. Exécuter le protocole P6 build/hash en x3 et sceller `G6_BUILD_REPRODUCIBLE_X3`.
+3. Ouvrir P7 et exécuter redaction traces + capabilities/scopes explicites en x3.
+4. Ouvrir P8 et valider policy FR + self-check en x3.
+5. Ouvrir P9 avec stockage transitoire TTL+purge + headers rate-limit en x3.
+6. Ouvrir P10/P11 (mémoire outillée + tools default-deny) en x3.
+7. Ouvrir P12/P13 (observabilité + CI matrix/smoke) et conclure verdict global.
+
+### Top 3 risques
+1. Blocage prolongé si token PROD non fourni.
+2. Dérive de scope si P7→P13 démarrent sans P6 PASS.
+3. Non-conformité provider si P9 implémente un stockage long terme des résultats search.
+
+### Résumé conformité (Search & Rate-limit)
+- Stockage long terme des résultats provider: **interdit** (objectif P9 = cache transitoire TTL+purge).
+- Rate-limit provider via headers: **prévu** et tracé comme exigence de gate P7/P9.
+- Silent fallback: **interdit** (inchangé).

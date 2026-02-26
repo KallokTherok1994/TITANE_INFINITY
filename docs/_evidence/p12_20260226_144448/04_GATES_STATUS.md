@@ -4,4 +4,8 @@ Phase: P12
 Statut: BLOCKED
 
 ## Gates
-- Tous gates P12: BLOCKED (phase non ouverte, ordre immuable).
+- `G12_DASHBOARD_REAL_DATA`: BLOCKED
+- `G12_SUPPORT_PACK_NO_SECRETS`: BLOCKED
+- `G12_FAILURES_VIEW_CONSISTENT`: BLOCKED
+
+Motif unique: P6 non PASS (ordre immuable).
