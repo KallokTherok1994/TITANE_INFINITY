@@ -258,3 +258,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B4 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB4_20260226T034211Z.log`
+
+### Action
+- Refactor de notation `reqwest` dans `ai/ollama.rs` (`reqwest::Client::*` -> `Client::*`).
+
+### Résultat
+- `ai/ollama.rs` (regex locale `reqwest|ureq`): `5 -> 1`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `59 -> 55`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

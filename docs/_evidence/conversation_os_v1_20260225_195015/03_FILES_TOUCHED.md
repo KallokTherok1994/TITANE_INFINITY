@@ -331,3 +331,19 @@
 	- `reports/conversation_os_h2_codeonly_step4_lotB3_20260226T034029Z.log`
 - Delta mesuré:
 	- hotspot `chat_orchestrator.rs` `6 -> 3`
+
+## Addendum 2026-02-26 (Step-4 Lot B4 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/ai/ollama.rs`
+- Fichier ajouté:
+	- `33_H2_STEP4_LOTB4_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB4_20260226T034211Z.log`
+- Delta mesuré:
+	- `ai/ollama.rs` `5 -> 1`
+	- inventaire brut `src-tauri/src` `59 -> 55`
