@@ -55,7 +55,7 @@ Ordre: **IMMUTABLE**
 - Objectif: UI ne peut pas atteindre les chemins legacy.
 - Rings: 4
 - Gate: `G_LEGACY_UNREACHABLE_FROM_UI`
-- Verdict phase: BLOCKED (`chat_send_message` références UI résiduelles)
+- Verdict phase: PASS
 
 ## 6A — SearchGateway Credentials Missing Explicit (RUNTIME, QUALIFIED)
 - Objectif: `CREDENTIALS_MISSING` explicite + stockage failure.

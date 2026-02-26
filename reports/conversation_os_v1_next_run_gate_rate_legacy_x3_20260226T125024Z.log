@@ -1,0 +1,381 @@
+[RUN1] RATE_LIMIT cmd
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.24s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/titane_infinity-1b72106b7b929a96)
+
+running 1 test
+test engines::conversation_os::resilience::tests::test_rate_limiter_consume ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4443 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/titane_infinity-f5425128dd7b299a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 881 filtered out; finished in 0.00s
+
+     Running tests/integration/agent_ia_workflow_test.rs (src-tauri/target/debug/deps/agent_ia_workflow_test-61e4d00cd8db4c4a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/commands_v21_smoke_tests.rs (src-tauri/target/debug/deps/commands_v21_smoke_tests-7c0eae182f2efaa0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/stress/concurrent_access_test.rs (src-tauri/target/debug/deps/concurrent_access_test-69237e04a683daba)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/cycle_engine_tests.rs (src-tauri/target/debug/deps/cycle_engine_tests-a4af6a00b076ded9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.00s
+
+     Running tests/dashmap_performance_test.rs (src-tauri/target/debug/deps/dashmap_performance_test-34208319f72f76e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/integration/fallback_chain_test.rs (src-tauri/target/debug/deps/fallback_chain_test-89781b481f3952c7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/intelligent_cache_test.rs (src-tauri/target/debug/deps/intelligent_cache_test-bec7ef9a96e7d047)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running tests/ipc_cache_test.rs (src-tauri/target/debug/deps/ipc_cache_test-f5b21d22071f70f0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/kernel_integration_tests.rs (src-tauri/target/debug/deps/kernel_integration_tests-73883c594fdf1455)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/stress/metrics_stress_test.rs (src-tauri/target/debug/deps/metrics_stress_test-23730176c1e96df9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/multimodal_integration_test.rs (src-tauri/target/debug/deps/multimodal_integration_test-2ac583ded36cc1a2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/omega_p2_performance_test.rs (src-tauri/target/debug/deps/omega_p2_performance_test-cb4473076f0955af)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/p3_provider_meta_gates.rs (src-tauri/target/debug/deps/p3_provider_meta_gates-16eaacd8104c719f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/security/permission_enforcement_test.rs (src-tauri/target/debug/deps/permission_enforcement_test-db57f2f58743a956)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/secure_engine_tests.rs (src-tauri/target/debug/deps/secure_engine_tests-1b68e8df171ac563)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/security_tests.rs (src-tauri/target/debug/deps/security_tests-06099e4266f74d66)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+     Running tests/integration/singularity_integration_test.rs (src-tauri/target/debug/deps/singularity_integration_test-ccf73373b2f3f27a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/unified_memory_tests.rs (src-tauri/target/debug/deps/unified_memory_tests-6e20221bbdf685a6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+[RUN1] RATE_LIMIT EXIT=0
+[RUN1] LEGACY_UI_INVOKE cmd
+src/core/commands/TAURI_COMMANDS.ts:342: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+[RUN1] LEGACY_UI_INVOKE EXIT=1
+[RUN2] RATE_LIMIT cmd
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.25s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/titane_infinity-1b72106b7b929a96)
+
+running 1 test
+test engines::conversation_os::resilience::tests::test_rate_limiter_consume ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4443 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/titane_infinity-f5425128dd7b299a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 881 filtered out; finished in 0.00s
+
+     Running tests/integration/agent_ia_workflow_test.rs (src-tauri/target/debug/deps/agent_ia_workflow_test-61e4d00cd8db4c4a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/commands_v21_smoke_tests.rs (src-tauri/target/debug/deps/commands_v21_smoke_tests-7c0eae182f2efaa0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/stress/concurrent_access_test.rs (src-tauri/target/debug/deps/concurrent_access_test-69237e04a683daba)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/cycle_engine_tests.rs (src-tauri/target/debug/deps/cycle_engine_tests-a4af6a00b076ded9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.00s
+
+     Running tests/dashmap_performance_test.rs (src-tauri/target/debug/deps/dashmap_performance_test-34208319f72f76e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/integration/fallback_chain_test.rs (src-tauri/target/debug/deps/fallback_chain_test-89781b481f3952c7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/intelligent_cache_test.rs (src-tauri/target/debug/deps/intelligent_cache_test-bec7ef9a96e7d047)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running tests/ipc_cache_test.rs (src-tauri/target/debug/deps/ipc_cache_test-f5b21d22071f70f0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/kernel_integration_tests.rs (src-tauri/target/debug/deps/kernel_integration_tests-73883c594fdf1455)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/stress/metrics_stress_test.rs (src-tauri/target/debug/deps/metrics_stress_test-23730176c1e96df9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/multimodal_integration_test.rs (src-tauri/target/debug/deps/multimodal_integration_test-2ac583ded36cc1a2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/omega_p2_performance_test.rs (src-tauri/target/debug/deps/omega_p2_performance_test-cb4473076f0955af)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/p3_provider_meta_gates.rs (src-tauri/target/debug/deps/p3_provider_meta_gates-16eaacd8104c719f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/security/permission_enforcement_test.rs (src-tauri/target/debug/deps/permission_enforcement_test-db57f2f58743a956)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/secure_engine_tests.rs (src-tauri/target/debug/deps/secure_engine_tests-1b68e8df171ac563)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/security_tests.rs (src-tauri/target/debug/deps/security_tests-06099e4266f74d66)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+     Running tests/integration/singularity_integration_test.rs (src-tauri/target/debug/deps/singularity_integration_test-ccf73373b2f3f27a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/unified_memory_tests.rs (src-tauri/target/debug/deps/unified_memory_tests-6e20221bbdf685a6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+[RUN2] RATE_LIMIT EXIT=0
+[RUN2] LEGACY_UI_INVOKE cmd
+src/core/commands/TAURI_COMMANDS.ts:342: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+[RUN2] LEGACY_UI_INVOKE EXIT=1
+[RUN3] RATE_LIMIT cmd
+    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.27s
+     Running unittests src/lib.rs (src-tauri/target/debug/deps/titane_infinity-1b72106b7b929a96)
+
+running 1 test
+test engines::conversation_os::resilience::tests::test_rate_limiter_consume ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 4443 filtered out; finished in 0.00s
+
+     Running unittests src/main.rs (src-tauri/target/debug/deps/titane_infinity-f5425128dd7b299a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 881 filtered out; finished in 0.00s
+
+     Running tests/integration/agent_ia_workflow_test.rs (src-tauri/target/debug/deps/agent_ia_workflow_test-61e4d00cd8db4c4a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/commands_v21_smoke_tests.rs (src-tauri/target/debug/deps/commands_v21_smoke_tests-7c0eae182f2efaa0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+
+     Running tests/stress/concurrent_access_test.rs (src-tauri/target/debug/deps/concurrent_access_test-69237e04a683daba)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/cycle_engine_tests.rs (src-tauri/target/debug/deps/cycle_engine_tests-a4af6a00b076ded9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 23 filtered out; finished in 0.00s
+
+     Running tests/dashmap_performance_test.rs (src-tauri/target/debug/deps/dashmap_performance_test-34208319f72f76e5)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 6 filtered out; finished in 0.00s
+
+     Running tests/integration/fallback_chain_test.rs (src-tauri/target/debug/deps/fallback_chain_test-89781b481f3952c7)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/intelligent_cache_test.rs (src-tauri/target/debug/deps/intelligent_cache_test-bec7ef9a96e7d047)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 8 filtered out; finished in 0.00s
+
+     Running tests/ipc_cache_test.rs (src-tauri/target/debug/deps/ipc_cache_test-f5b21d22071f70f0)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/kernel_integration_tests.rs (src-tauri/target/debug/deps/kernel_integration_tests-73883c594fdf1455)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 11 filtered out; finished in 0.00s
+
+     Running tests/stress/metrics_stress_test.rs (src-tauri/target/debug/deps/metrics_stress_test-23730176c1e96df9)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 2 filtered out; finished in 0.00s
+
+     Running tests/multimodal_integration_test.rs (src-tauri/target/debug/deps/multimodal_integration_test-2ac583ded36cc1a2)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 1 filtered out; finished in 0.00s
+
+     Running tests/omega_p2_performance_test.rs (src-tauri/target/debug/deps/omega_p2_performance_test-cb4473076f0955af)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/p3_provider_meta_gates.rs (src-tauri/target/debug/deps/p3_provider_meta_gates-16eaacd8104c719f)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/security/permission_enforcement_test.rs (src-tauri/target/debug/deps/permission_enforcement_test-db57f2f58743a956)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 4 filtered out; finished in 0.00s
+
+     Running tests/secure_engine_tests.rs (src-tauri/target/debug/deps/secure_engine_tests-1b68e8df171ac563)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/security_tests.rs (src-tauri/target/debug/deps/security_tests-06099e4266f74d66)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+     Running tests/integration/singularity_integration_test.rs (src-tauri/target/debug/deps/singularity_integration_test-ccf73373b2f3f27a)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 3 filtered out; finished in 0.00s
+
+     Running tests/unified_memory_tests.rs (src-tauri/target/debug/deps/unified_memory_tests-6e20221bbdf685a6)
+
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 10 filtered out; finished in 0.00s
+
+[RUN3] RATE_LIMIT EXIT=0
+[RUN3] LEGACY_UI_INVOKE cmd
+src/core/commands/TAURI_COMMANDS.ts:342: *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+[RUN3] LEGACY_UI_INVOKE EXIT=1
