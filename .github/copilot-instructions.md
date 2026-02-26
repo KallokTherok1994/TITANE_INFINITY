@@ -9,6 +9,8 @@ Portée : dépôt complet
 **À FAIRE**
 
 - Online-first gouverné. Réseau autorisé uniquement via des surfaces contrôlées. Fallback local obligatoire.
+- Online-first governed policy active: controlled network surfaces only, mandatory local fallback.
+- Local-first fallback remains mandatory when controlled network surfaces are unavailable.
 - Tauri-only. Aucun serveur web/preview et aucune API HTTP interne de type `server/`.
 - Architecture 4-Ring (Types -> Engines -> Services -> Modules/UI).
 - Les listes d’autorisation/capabilities restent stables et justifiées par des portes de contrôle et des tests.
@@ -31,6 +33,7 @@ Portée : dépôt complet
 **À FAIRE**
 
 - diagnostiquer -> planifier -> appliquer -> vérifier -> rapporter.
+- diagnose -> plan -> apply -> verify -> report.
 - Garder les changements minimaux et strictement bornés à la portée demandée.
 
 **À NE PAS FAIRE**
