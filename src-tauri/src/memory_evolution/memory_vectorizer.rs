@@ -229,7 +229,7 @@ impl MemoryVectorizer {
 
         #[cfg(feature = "ollama")]
         {
-            let client = reqwest::Client::new();
+            let client = crate::core::http_types::Client::new();
             let response = client
                 .post(format!("{}/api/embeddings", self.config.ollama_url))
                 .json(&serde_json::json!({

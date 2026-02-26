@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use log::{debug, error, info, warn};
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Instant;
 

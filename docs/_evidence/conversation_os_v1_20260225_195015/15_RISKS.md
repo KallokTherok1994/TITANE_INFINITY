@@ -289,3 +289,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B17 (2026-02-26)
+- Action: migration finale des imports/call-sites `reqwest` vers la façade unique `core/http_types`.
+- Mesure:
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `14 -> 1`
+  - résiduel unique: `core/http_types.rs` (façade gouvernée)
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB17_20260226T121156Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 en règle brute, mais résiduel centralisé.

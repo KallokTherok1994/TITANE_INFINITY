@@ -1,0 +1,5 @@
+== H2 inventory lot B17 ==
+RAW_TOTAL=1
+
+MATCHES:
+src-tauri/src/core/http_types.rs:2:pub use reqwest::{header, redirect::Policy, Client, Error as ReqwestError, Response, StatusCode};

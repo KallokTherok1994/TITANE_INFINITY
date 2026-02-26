@@ -7,7 +7,7 @@
 #![cfg_attr(test, allow(clippy::unwrap_used))]
 
 use log::{debug, error, info};
-use reqwest::{header, Client};
+use crate::core::http_types::{header, Client};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

@@ -1,6 +1,6 @@
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
 use async_trait::async_trait;
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

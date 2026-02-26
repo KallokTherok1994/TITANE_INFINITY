@@ -6,6 +6,7 @@
 
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use crate::core::http_types::Client;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct OllamaRequest {
@@ -40,7 +41,7 @@ pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, Strin
         req.timeout_secs
     );
 
-    let client = reqwest::Client::builder()
+    let client = Client::builder()
         .timeout(Duration::from_secs(req.timeout_secs))
         .build()
         .map_err(|e| {

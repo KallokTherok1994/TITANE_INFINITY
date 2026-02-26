@@ -114,7 +114,7 @@ Format the response as a complete, ready-to-use system prompt."#,
 
 /// Call Ollama API for completion
 async fn call_ollama_api(prompt: &str, max_tokens: u32) -> Result<String, String> {
-    use reqwest::Client;
+    use crate::core::http_types::Client;
     use serde_json::json;
 
     let client = Client::builder()
