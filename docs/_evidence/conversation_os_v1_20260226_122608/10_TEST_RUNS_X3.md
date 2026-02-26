@@ -34,6 +34,7 @@ Date (UTC): 2026-02-26
 - `G_RATE_LIMIT_AWARE`: `0 / 0 / 0`
 - `G_LEGACY_UNREACHABLE_FROM_UI`: `0 / 0 / 0` (after cleanup)
 - `G_NETWORK_META_COMPLETE`: `0 / 0 / 0`
+- `G_MEMORY_RECALL_INTERNAL_IDS`: `0 / 0 / 0`
 
 ## Tentatives x3 runtime Rust
 - Tentatives initiales partiellement bloquées par contention `cargo` (conservées pour audit):
@@ -47,6 +48,7 @@ Date (UTC): 2026-02-26
 	- `reports/conversation_os_v1_next_run_gate_rate_legacy_x3_20260226T125024Z.log`
 	- `reports/conversation_os_v1_next_run_gate_legacy_afterfix_x3_20260226T125300Z.log`
 	- `reports/conversation_os_v1_next_run_gate_network_meta_x3_20260226T125642Z.log`
+	- `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
 
 ## Verdict x3
 - Scans structurels: **PASS**.

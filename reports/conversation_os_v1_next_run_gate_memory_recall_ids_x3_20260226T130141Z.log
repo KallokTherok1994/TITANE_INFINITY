@@ -1,0 +1,11 @@
+# MEMORY RECALL IDS X3 2026-02-26T13:01:41Z
+===== RUN1: cargo test test_recall_returns_internal_ids -- --nocapture =====
+[RUN1] EXIT=0
+
+===== RUN2: cargo test test_recall_returns_internal_ids -- --nocapture =====
+[RUN2] EXIT=0
+
+===== RUN3: cargo test test_recall_returns_internal_ids -- --nocapture =====
+[RUN3] EXIT=0
+
+# X3 RUN END 2026-02-26T13:04:00Z

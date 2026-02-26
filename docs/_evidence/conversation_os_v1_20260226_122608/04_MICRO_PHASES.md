@@ -79,7 +79,7 @@ Ordre: **IMMUTABLE**
 - Objectif: recall + IDs internes traçables.
 - Rings: 2+3
 - Gate: `G_MEMORY_RECALL_INTERNAL_IDS`
-- Verdict phase: BLOCKED (preuve recall x3 manquante)
+- Verdict phase: PASS
 
 ## 7B — Vector LTM (OPTIONAL, QUALIFIED)
 - Objectif: recall vectoriel si prouvé, sinon OFF justifié.
