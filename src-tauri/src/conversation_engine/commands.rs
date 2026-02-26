@@ -12,6 +12,8 @@ use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
 use crate::engines::conversation_os::policy::{NetState, PolicyContext};
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use crate::services::search_gateway::SearchGatewayService;
 
 use super::meta_accumulator::{build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id};
 use super::types::*;
@@ -29,6 +31,50 @@ pub struct ConversationGenerateArgs {
 }
 
 type CommandResult<T> = Result<T, String>;
+
+fn read_bool_env(key: &str, default: bool) -> bool {
+    std::env::var(key)
+        .ok()
+        .map(|value| value == "1" || value.eq_ignore_ascii_case("true"))
+        .unwrap_or(default)
+}
+
+fn build_memory_used_ids(
+    conversation_id: &str,
+    request_id: &str,
+    snapshots_enabled: bool,
+    ltm_enabled: bool,
+) -> Vec<String> {
+    let mut ids = vec![format!("evt_user_{}_{}", conversation_id, request_id)];
+    if snapshots_enabled {
+        ids.push(format!("snap_{}_{}", conversation_id, request_id));
+    }
+    if ltm_enabled {
+        ids.push(format!("ltm_session_{}", conversation_id));
+    }
+    ids
+}
+
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
+    let gateway = SearchGatewayService::default_governed();
+    let results = gateway.search(query, max_results).await?;
+    Ok(results
+        .into_iter()
+        .map(|result| crate::engines::conversation_os::search::RawSearchResult {
+            title: Some(result.title),
+            url: Some(result.url),
+            description: Some(result.snippet),
+            snippet: None,
+            source: result.source,
+        })
+        .collect())
+}
+
+#[cfg(not(all(not(feature = "mock"), feature = "full")))]
+async fn run_governed_search(_query: &str, _max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
+    Err("CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features".to_string())
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // OMEGA PIPELINE COMMANDS (Frontend API)
@@ -92,6 +138,12 @@ pub async fn conversation_generate(
     let memory_engine = MemoryEngine::new();
     let search_engine = SearchEngine::new();
 
+    let convos_search_enabled = read_bool_env("CONVOS_SEARCH", true);
+    let convos_sources_store = read_bool_env("CONVOS_SOURCES_STORE", true);
+    let convos_memory_snapshots_enabled = read_bool_env("CONVOS_MEMORY_SNAPSHOTS", true);
+    let convos_debug_panel_enabled = read_bool_env("CONVOS_DEBUG_PANEL", true);
+    let convos_memory_ltm_enabled = read_bool_env("CONVOS_MEMORY_LTM", false);
+
     let router_decision = router_engine.classify(&message);
 
     let allowlist = std::env::var("TITANE_CONVOS_ALLOWLIST")
@@ -149,47 +201,93 @@ pub async fn conversation_generate(
         &message,
         router_decision.wants_memory,
         Some(conversation_id.clone()),
-        false,
+        convos_memory_ltm_enabled,
     );
 
     let (resilience_allowed, resilience_reason) = resilience_engine.is_request_allowed(1);
 
     let mut search_citations_json = Vec::<serde_json::Value>::new();
-    if router_decision.wants_search && policy_verdict.allow_search {
-        let normalized = search_engine.normalize(
-            vec![crate::engines::conversation_os::search::RawSearchResult {
-                title: Some(format!("Search requested: {}", message)),
-                url: Some("https://duckduckgo.com/".to_string()),
-                description: Some(
-                    "Search intent detected by RouterEngine. External retrieval delegated to governed service layer."
-                        .to_string(),
-                ),
-                snippet: None,
-                source: "search_intent".to_string(),
-            }],
-            crate::engines::conversation_os::search::NormalizationOptions {
-                min_snippet_length: 20,
-                ..Default::default()
-            },
-        );
+    let mut failures_json = Vec::<serde_json::Value>::new();
+    let mut search_user_notice: Option<String> = None;
 
-        search_citations_json = normalized
-            .into_iter()
-            .map(|citation| {
-                serde_json::json!({
-                    "title": citation.title,
-                    "url": citation.url,
-                    "snippet": citation.snippet,
-                    "source": citation.source,
-                    "timestamp": citation.timestamp,
-                    "relevance": citation.relevance,
-                })
-            })
-            .collect();
+    if convos_search_enabled && router_decision.wants_search && policy_verdict.allow_search {
+        match run_governed_search(&message, 5).await {
+            Ok(results) => {
+                let normalized = search_engine.normalize(
+                    results,
+                    crate::engines::conversation_os::search::NormalizationOptions {
+                        min_snippet_length: 20,
+                        ..Default::default()
+                    },
+                );
+
+                search_citations_json = normalized
+                    .into_iter()
+                    .map(|citation| {
+                        serde_json::json!({
+                            "title": citation.title,
+                            "url": citation.url,
+                            "snippet": citation.snippet,
+                            "source": citation.source,
+                            "timestamp": citation.timestamp,
+                            "relevance": citation.relevance,
+                        })
+                    })
+                    .collect();
+            }
+            Err(err) => {
+                let lower = err.to_lowercase();
+                let failure_class = if lower.contains("credentials_missing") {
+                    "CREDENTIALS_MISSING"
+                } else if lower.contains("rate_limit") || lower.contains("429") {
+                    "RATE_LIMIT"
+                } else {
+                    "SEARCH_ERROR"
+                };
+
+                failures_json.push(serde_json::json!({
+                    "class": failure_class,
+                    "detail": {
+                        "component": "search_gateway",
+                        "reason": err,
+                        "query": message,
+                        "net_state": format!("{:?}", policy_context.net_state),
+                    }
+                }));
+
+                if failure_class == "CREDENTIALS_MISSING" {
+                    search_user_notice = Some(
+                        "Recherche web indisponible: clé API manquante côté backend. Activez BRAVE_API_KEY pour réactiver la recherche gouvernée.".to_string(),
+                    );
+                }
+            }
+        }
     }
+
+    if !convos_sources_store {
+        search_citations_json.clear();
+    }
+
+    let memory_used_ids = build_memory_used_ids(
+        &conversation_id,
+        &req_id,
+        convos_memory_snapshots_enabled,
+        convos_memory_ltm_enabled,
+    );
+
+    let snapshot_summary_fr = format!(
+        "Résumé canonique FR ({}) — intention={:?}, recherche={}, mémoire={}.",
+        conversation_id,
+        router_decision.intent,
+        router_decision.wants_search,
+        router_decision.wants_memory
+    );
 
     let trace = serde_json::json!({
         "phase": "conversation_generate",
+        "trace_id": req_id,
+        "session_id": conversation_id,
+        "net_state": format!("{:?}", policy_context.net_state),
         "router": {
             "intent": format!("{:?}", router_decision.intent),
             "wants_search": router_decision.wants_search,
@@ -216,10 +314,27 @@ pub async fn conversation_generate(
             "fetch_stm": memory_plan.fetch_stm,
             "stm_limit": memory_plan.stm_limit,
             "fetch_snapshot": memory_plan.fetch_snapshot,
-            "fetch_ltm": memory_plan.fetch_ltm,
+            "fetch_ltm": convos_memory_ltm_enabled && memory_plan.fetch_ltm,
             "reasoning": memory_plan.reasoning,
+            "memory_used": memory_used_ids,
+            "snapshot_summary_fr": snapshot_summary_fr,
+            "snapshot_state": {
+                "conversation_id": conversation_id,
+                "request_id": req_id,
+                "router_intent": format!("{:?}", router_decision.intent),
+                "wants_search": router_decision.wants_search,
+                "wants_memory": router_decision.wants_memory,
+            },
         },
         "citations": search_citations_json,
+        "failures": failures_json,
+        "feature_flags": {
+            "CONVOS_SEARCH": convos_search_enabled,
+            "CONVOS_SOURCES_STORE": convos_sources_store,
+            "CONVOS_MEMORY_SNAPSHOTS": convos_memory_snapshots_enabled,
+            "CONVOS_DEBUG_PANEL": convos_debug_panel_enabled,
+            "CONVOS_MEMORY_LTM": convos_memory_ltm_enabled,
+        }
     });
 
     if policy_verdict.hard_block {
@@ -390,8 +505,14 @@ pub async fn conversation_generate(
     }
 
     // Construire la réponse JSON compatible avec le frontend
+    let assistant_content = if let Some(notice) = search_user_notice {
+        format!("{}\n\n{}", notice, response.assistant_message)
+    } else {
+        response.assistant_message.clone()
+    };
+
     Ok(serde_json::json!({
-        "content": response.assistant_message,
+        "content": assistant_content,
         "conversationId": response.conversation_id,
         "messageId": response.message_id,
         "frenchMasteryApplied": true, // OMEGA utilise toujours FrenchMastery
@@ -481,7 +602,8 @@ fn persist_conversation_os_artifacts_with_path(
     db_path_override: Option<std::path::PathBuf>,
 ) -> Result<(), String> {
     use crate::services::db_service::{
-        create_event, create_provider_decision, create_source, DbService,
+        create_event, create_failure, create_provider_decision, create_snapshot, create_source,
+        DbService,
     };
     use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -558,44 +680,96 @@ fn persist_conversation_os_artifacts_with_path(
     db.insert_provider_decision(provider_decision)
         .map_err(|err| format!("insert provider decision failed: {}", err))?;
 
-    for (index, citation) in citations.iter().enumerate() {
-        let url = citation
-            .get("url")
-            .and_then(|value| value.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if url.is_empty() {
-            continue;
+    if read_bool_env("CONVOS_SOURCES_STORE", true) {
+        for (index, citation) in citations.iter().enumerate() {
+            let url = citation
+                .get("url")
+                .and_then(|value| value.as_str())
+                .unwrap_or_default()
+                .to_string();
+            if url.is_empty() {
+                continue;
+            }
+
+            let title = citation
+                .get("title")
+                .and_then(|value| value.as_str())
+                .unwrap_or("Sans titre")
+                .to_string();
+            let snippet = citation
+                .get("snippet")
+                .and_then(|value| value.as_str())
+                .unwrap_or_default()
+                .to_string();
+            let provider = citation
+                .get("source")
+                .and_then(|value| value.as_str())
+                .unwrap_or("unknown")
+                .to_string();
+
+            let source_row = create_source(
+                format!("src_{}_{}_{}", conversation_id, req_id, index),
+                ts.saturating_add(3 + index as i64),
+                conversation_id.to_string(),
+                provider,
+                url,
+                title,
+                snippet,
+                ts,
+            );
+            db.insert_source(source_row)
+                .map_err(|err| format!("insert source failed: {}", err))?;
         }
+    }
 
-        let title = citation
-            .get("title")
+    if read_bool_env("CONVOS_MEMORY_SNAPSHOTS", true) {
+        let summary_fr = trace
+            .get("memory")
+            .and_then(|value| value.get("snapshot_summary_fr"))
             .and_then(|value| value.as_str())
-            .unwrap_or("Sans titre")
+            .unwrap_or("Résumé FR canonique indisponible")
             .to_string();
-        let snippet = citation
-            .get("snippet")
-            .and_then(|value| value.as_str())
-            .unwrap_or_default()
-            .to_string();
-        let provider = citation
-            .get("source")
-            .and_then(|value| value.as_str())
-            .unwrap_or("unknown")
+        let state_json = trace
+            .get("memory")
+            .and_then(|value| value.get("snapshot_state"))
+            .cloned()
+            .unwrap_or_else(|| serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }))
             .to_string();
 
-        let source_row = create_source(
-            format!("src_{}_{}_{}", conversation_id, req_id, index),
-            ts.saturating_add(3 + index as i64),
+        let snapshot = create_snapshot(
+            format!("snap_{}_{}", conversation_id, req_id),
+            ts.saturating_add(40),
             conversation_id.to_string(),
-            provider,
-            url,
-            title,
-            snippet,
-            ts,
+            summary_fr,
+            state_json,
         );
-        db.insert_source(source_row)
-            .map_err(|err| format!("insert source failed: {}", err))?;
+        db.insert_snapshot(snapshot)
+            .map_err(|err| format!("insert snapshot failed: {}", err))?;
+    }
+
+    if let Some(failure_items) = trace.get("failures").and_then(|value| value.as_array()) {
+        for (index, failure) in failure_items.iter().enumerate() {
+            let class = failure
+                .get("class")
+                .and_then(|value| value.as_str())
+                .unwrap_or("UNKNOWN")
+                .to_string();
+            let detail_json = failure
+                .get("detail")
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!({ "reason": "missing_detail" }))
+                .to_string();
+
+            let failure_row = create_failure(
+                format!("fail_{}_{}_{}", conversation_id, req_id, index),
+                ts.saturating_add(60 + index as i64),
+                conversation_id.to_string(),
+                class,
+                detail_json,
+            );
+            db.insert_failure(failure_row)
+                .map_err(|err| format!("insert failure failed: {}", err))?;
+        }
     }
 
     Ok(())
@@ -655,6 +829,22 @@ fn persist_conversation_os_artifacts_with_path(
             title TEXT NOT NULL,
             snippet TEXT NOT NULL,
             source_ts INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS snapshots (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            summary_fr TEXT NOT NULL,
+            state_json TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS failures (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            class TEXT NOT NULL,
+            detail_json TEXT NOT NULL
         );
         ",
     )
@@ -728,46 +918,102 @@ fn persist_conversation_os_artifacts_with_path(
     )
     .map_err(|err| format!("insert provider decision failed: {}", err))?;
 
-    for (index, citation) in citations.iter().enumerate() {
-        let url = citation
-            .get("url")
-            .and_then(|value| value.as_str())
-            .unwrap_or_default()
-            .to_string();
-        if url.is_empty() {
-            continue;
-        }
+    if read_bool_env("CONVOS_SOURCES_STORE", true) {
+        for (index, citation) in citations.iter().enumerate() {
+            let url = citation
+                .get("url")
+                .and_then(|value| value.as_str())
+                .unwrap_or_default()
+                .to_string();
+            if url.is_empty() {
+                continue;
+            }
 
-        let title = citation
-            .get("title")
+            let title = citation
+                .get("title")
+                .and_then(|value| value.as_str())
+                .unwrap_or("Sans titre")
+                .to_string();
+            let snippet = citation
+                .get("snippet")
+                .and_then(|value| value.as_str())
+                .unwrap_or_default()
+                .to_string();
+            let provider = citation
+                .get("source")
+                .and_then(|value| value.as_str())
+                .unwrap_or("unknown")
+                .to_string();
+
+            conn.execute(
+                "INSERT OR REPLACE INTO sources (id, ts, conversation_id, provider, url, title, snippet, source_ts) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+                (
+                    format!("src_{}_{}_{}", conversation_id, req_id, index),
+                    ts.saturating_add(3 + index as i64),
+                    conversation_id,
+                    provider,
+                    url,
+                    title,
+                    snippet,
+                    ts,
+                ),
+            )
+            .map_err(|err| format!("insert source failed: {}", err))?;
+        }
+    }
+
+    if read_bool_env("CONVOS_MEMORY_SNAPSHOTS", true) {
+        let summary_fr = trace
+            .get("memory")
+            .and_then(|value| value.get("snapshot_summary_fr"))
             .and_then(|value| value.as_str())
-            .unwrap_or("Sans titre")
+            .unwrap_or("Résumé FR canonique indisponible")
             .to_string();
-        let snippet = citation
-            .get("snippet")
-            .and_then(|value| value.as_str())
-            .unwrap_or_default()
-            .to_string();
-        let provider = citation
-            .get("source")
-            .and_then(|value| value.as_str())
-            .unwrap_or("unknown")
+        let state_json = trace
+            .get("memory")
+            .and_then(|value| value.get("snapshot_state"))
+            .cloned()
+            .unwrap_or_else(|| serde_json::json!({ "conversation_id": conversation_id, "request_id": req_id }))
             .to_string();
 
         conn.execute(
-            "INSERT OR REPLACE INTO sources (id, ts, conversation_id, provider, url, title, snippet, source_ts) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)",
+            "INSERT OR REPLACE INTO snapshots (id, ts, conversation_id, summary_fr, state_json) VALUES (?1, ?2, ?3, ?4, ?5)",
             (
-                format!("src_{}_{}_{}", conversation_id, req_id, index),
-                ts.saturating_add(3 + index as i64),
+                format!("snap_{}_{}", conversation_id, req_id),
+                ts.saturating_add(40),
                 conversation_id,
-                provider,
-                url,
-                title,
-                snippet,
-                ts,
+                summary_fr,
+                state_json,
             ),
         )
-        .map_err(|err| format!("insert source failed: {}", err))?;
+        .map_err(|err| format!("insert snapshot failed: {}", err))?;
+    }
+
+    if let Some(failure_items) = trace.get("failures").and_then(|value| value.as_array()) {
+        for (index, failure) in failure_items.iter().enumerate() {
+            let class = failure
+                .get("class")
+                .and_then(|value| value.as_str())
+                .unwrap_or("UNKNOWN")
+                .to_string();
+            let detail_json = failure
+                .get("detail")
+                .cloned()
+                .unwrap_or_else(|| serde_json::json!({ "reason": "missing_detail" }))
+                .to_string();
+
+            conn.execute(
+                "INSERT OR REPLACE INTO failures (id, ts, conversation_id, class, detail_json) VALUES (?1, ?2, ?3, ?4, ?5)",
+                (
+                    format!("fail_{}_{}_{}", conversation_id, req_id, index),
+                    ts.saturating_add(60 + index as i64),
+                    conversation_id,
+                    class,
+                    detail_json,
+                ),
+            )
+            .map_err(|err| format!("insert failure failed: {}", err))?;
+        }
     }
 
     Ok(())
@@ -1030,6 +1276,87 @@ mod tests {
         assert!(trace_json.get("memory").is_some());
 
         let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn conversation_os_persistence_stores_snapshot_and_failures_from_trace() {
+        let db_path = std::env::temp_dir().join(format!(
+            "titane-conversation-os-snapshot-fail-{}.db",
+            Uuid::new_v4()
+        ));
+
+        let trace = serde_json::json!({
+            "phase": "conversation_generate",
+            "memory": {
+                "snapshot_summary_fr": "Résumé FR test",
+                "snapshot_state": { "k": "v" }
+            },
+            "failures": [
+                {
+                    "class": "CREDENTIALS_MISSING",
+                    "detail": { "provider": "brave", "reason": "missing key" }
+                }
+            ]
+        });
+
+        let provider_meta = build_success_meta("local", 7);
+        persist_conversation_os_artifacts_with_path(
+            "conv-pack5",
+            "req-pack5",
+            "message",
+            Some("assistant"),
+            &trace,
+            Some(&provider_meta),
+            &[],
+            Some(db_path.clone()),
+        )
+        .expect("persistence should succeed");
+
+        let conn = Connection::open(db_path.clone()).expect("db should open");
+
+        let snapshots_count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM snapshots WHERE conversation_id = ?1",
+                ["conv-pack5"],
+                |row| row.get(0),
+            )
+            .expect("snapshots count query should succeed");
+        assert_eq!(snapshots_count, 1);
+
+        let failures_count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM failures WHERE conversation_id = ?1",
+                ["conv-pack5"],
+                |row| row.get(0),
+            )
+            .expect("failures count query should succeed");
+        assert_eq!(failures_count, 1);
+
+        let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn memory_used_internal_ids_recall_10_prompts() {
+        let prompts = [
+            "rappelle le point 1",
+            "rappelle le point 2",
+            "rappelle le point 3",
+            "rappelle le point 4",
+            "rappelle le point 5",
+            "rappelle le point 6",
+            "rappelle le point 7",
+            "rappelle le point 8",
+            "rappelle le point 9",
+            "rappelle le point 10",
+        ];
+
+        for (index, _prompt) in prompts.iter().enumerate() {
+            let req_id = format!("req{}", index + 1);
+            let ids = build_memory_used_ids("conv-recall", &req_id, true, false);
+            assert!(ids.iter().any(|id| id.starts_with("evt_user_conv-recall_req")));
+            assert!(ids.iter().any(|id| id.starts_with("snap_conv-recall_req")));
+            assert!(!ids.iter().any(|id| id.contains("external")));
+        }
     }
 }
 

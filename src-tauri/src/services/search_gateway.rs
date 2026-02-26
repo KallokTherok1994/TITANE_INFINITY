@@ -46,6 +46,17 @@ impl SearchGatewayService {
         max_results: usize,
         brave_api_key: Option<&str>,
     ) -> Result<Vec<SearchResult>, String> {
+        let simulate_429 = std::env::var("TITANE_SEARCH_SIMULATE_429")
+            .map(|value| value == "1" || value.eq_ignore_ascii_case("true"))
+            .unwrap_or(false);
+        let test_mode = std::env::var("TITANE_TEST_MODE")
+            .map(|value| value == "1" || value.eq_ignore_ascii_case("true"))
+            .unwrap_or(false);
+
+        if simulate_429 && test_mode {
+            return Err("RATE_LIMIT: simulated_429_test_only".to_string());
+        }
+
         match brave_api_key {
             Some(key) => self.search_brave(query, max_results, key).await,
             None => Err("CREDENTIALS_MISSING: BRAVE_API_KEY not configured".to_string()),
@@ -187,6 +198,23 @@ mod tests {
         assert!(result
             .expect_err("missing key should fail")
             .contains("CREDENTIALS_MISSING"));
+    }
+
+    #[tokio::test]
+    async fn test_search_simulate_429_test_only() {
+        let service = SearchGatewayService::default_governed();
+        std::env::set_var("TITANE_TEST_MODE", "1");
+        std::env::set_var("TITANE_SEARCH_SIMULATE_429", "1");
+
+        let result = service.search_with_key("rust", 5, Some("fake-key")).await;
+
+        assert!(result.is_err());
+        assert!(result
+            .expect_err("simulated 429 should fail")
+            .contains("RATE_LIMIT"));
+
+        std::env::remove_var("TITANE_SEARCH_SIMULATE_429");
+        std::env::remove_var("TITANE_TEST_MODE");
     }
 
     #[test]
