@@ -1,0 +1,16 @@
+]633;E;{   echo "# P21_27 CONTINUATION READY ${TS}"\x3b   echo "## git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo "## git log -6 --oneline"\x3b   git log -6 --oneline\x3b   echo "## git ls-remote --heads origin MAIN"\x3b   git ls-remote --heads origin MAIN\x3b   echo "## git ls-remote --tags origin | rg evidence-seal-p21-27-20260226"\x3b   git ls-remote --tags origin | rg "evidence-seal-p21-27-20260226"\x3b } > "$OUT";5a62e150-0357-40c0-a627-621b3df1a968]633;C# P21_27 CONTINUATION READY 20260226T164913Z
+## git status --porcelain=v1
+## git log -6 --oneline
+60b6ba4a docs(evidence): append post-push closure proof for P21-P27
+1c521e15 docs(evidence): append integrity addendum for P21-P27 tag aliases
+864b5c00 docs(evidence): add short alias tag trace for P21-P27
+89f5231c docs(evidence): append seal-tag registry for P21-P27
+31abacd1 docs(evidence): seal P21-P27 and link global registries
+43a7e2be docs(evidence): seal internal tasks closure status for p6-13 program
+## git ls-remote --heads origin MAIN
+60b6ba4ac193d31d6beaf6e8add45ac43443cc3d	refs/heads/MAIN
+## git ls-remote --tags origin | rg evidence-seal-p21-27-20260226
+77ffba4895a0d769aa53566a2cbb767a5a3bf7d1	refs/tags/evidence-seal-p21-27-20260226
+864b5c003b71d3df0fcdd96197c1a81e20a48128	refs/tags/evidence-seal-p21-27-20260226^{}
+2ed303cca9461d851999e6c91ccff1010e8bb70e	refs/tags/evidence-seal-p21-27-20260226T1641Z
+89f5231c4805c3f041e6e4e135736036ee145cce	refs/tags/evidence-seal-p21-27-20260226T1641Z^{}

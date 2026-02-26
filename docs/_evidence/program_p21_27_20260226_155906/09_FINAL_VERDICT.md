@@ -51,3 +51,9 @@ Ring / statut:
 - Preuve de synchro remote consignée dans `reports/p21_27_post_push_closure_20260226T164648Z.log`.
 - Tags P21→P27 confirmés: `evidence-seal-p21-27-20260226T1641Z`, `evidence-seal-p21-27-20260226`.
 
+## Addendum append-only — 2026-02-26T16:49:13Z
+
+- Continuité enregistrée dans `17_CONTINUATION_READY.md`.
+- Preuve ready-for-next: `reports/p21_27_continuation_ready_20260226T164913Z.log`.
+- État opérationnel: `READY_FOR_CONTINUATION`.
+
