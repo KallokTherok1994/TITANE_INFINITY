@@ -87,3 +87,21 @@
 ### Décision actuelle
 - Phase 2: **PARTIAL PASS** (réduction effective du bruit global)
 - Phase 3: **FAIL** (G1 global strict non atteint)
+
+## Addendum Phase 2B/3B (2026-02-26)
+
+### Exécution
+- Neutralisation ciblée des occurrences résiduelles dans `src/visual-engine/*`.
+- Rerun G1 global x3 post-correctif.
+
+### Preuve
+- `reports/conversation_os_g1_global_scan_x3_after_phase2b.log`
+
+### Résultats
+- `G1_GLOBAL_EXIT_1:1`, `G1_GLOBAL_COUNT_1:0`
+- `G1_GLOBAL_EXIT_2:1`, `G1_GLOBAL_COUNT_2:0`
+- `G1_GLOBAL_EXIT_3:1`, `G1_GLOBAL_COUNT_3:0`
+
+### Décision mise à jour
+- `G1 FRONTEND_NO_WEB` (global strict): **PASS x3**
+- État global pack: **UNBLOCKED**

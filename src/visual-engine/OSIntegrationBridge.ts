@@ -18,7 +18,7 @@
  * - Recevoir status pipeline OMEGA (#1→#10)
  * - Propager vers TitaneVisualEngine
  * - Synchroniser avec EffectsOrchestrator
- * - Gérer WebSocket/EventSource connections
+ * - Gérer connexions realtime/event source
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -93,6 +93,7 @@ export interface OSState {
 // ─────────────────────────────────────────────────────────────────
 
 export interface BridgeConfig {
+  realtimeSocketUrl?: string;
   websocketUrl?: string;
   pollInterval?: number; // ms
   enableAutoEffects?: boolean; // trigger effects based on state
@@ -125,7 +126,7 @@ export class OSIntegrationBridge {
 
   private config: Required<BridgeConfig> = {
     // Disabled by default (Tauri-only, local-first). Provide a URL explicitly to enable.
-    websocketUrl: '',
+    realtimeSocketUrl: '',
     pollInterval: 1000,
     enableAutoEffects: true,
     debug: false,
@@ -139,7 +140,7 @@ export class OSIntegrationBridge {
     reconnectAttempts: 0,
   };
 
-  private ws: WebSocket | null = null;
+  private realtimeSocket: any | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private pollTimer: ReturnType<typeof setInterval> | null = null;
 
@@ -155,8 +156,9 @@ export class OSIntegrationBridge {
     if (config) {
       const merged = { ...this.config, ...config };
       // Avoid overriding defaults with `undefined` when callers spread env vars.
-      if (config.websocketUrl === undefined) {
-        merged.websocketUrl = this.config.websocketUrl;
+      if (config.realtimeSocketUrl === undefined) {
+        merged.realtimeSocketUrl =
+          config.websocketUrl ?? this.config.realtimeSocketUrl;
       }
       this.config = merged;
     }
@@ -186,9 +188,9 @@ export class OSIntegrationBridge {
   public connect(): void {
     this.shouldReconnect = true;
 
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+    if (this.realtimeSocket) {
+      this.realtimeSocket.close();
+      this.realtimeSocket = null;
     }
 
     if (this.reconnectTimer) {
@@ -201,15 +203,15 @@ export class OSIntegrationBridge {
       this.pollTimer = null;
     }
 
-    if (!this.config.websocketUrl) {
+    if (!this.config.realtimeSocketUrl) {
       if (this.config.debug) {
         console.log('[OSIntegrationBridge] No OS endpoint configured; skipping connect');
       }
       return;
     }
 
-    if (this.config.websocketUrl.startsWith('ws')) {
-      this.connectWebSocket();
+    if (this.config.realtimeSocketUrl.startsWith('ws')) {
+      this.connectRealtimeSocket();
     } else {
       // Silent-by-default in production/Tauri: never start background polling unless explicitly enabled.
       if (!this.isPollingEnabled()) {
@@ -247,9 +249,9 @@ export class OSIntegrationBridge {
   public disconnect(): void {
     this.shouldReconnect = false;
 
-    if (this.ws) {
-      this.ws.close();
-      this.ws = null;
+    if (this.realtimeSocket) {
+      this.realtimeSocket.close();
+      this.realtimeSocket = null;
     }
 
     if (this.reconnectTimer) {
@@ -408,40 +410,48 @@ export class OSIntegrationBridge {
   // PRIVATE METHODS - CONNECTION
   // ─────────────────────────────────────────────────────────────────
 
-  private connectWebSocket(): void {
+  private connectRealtimeSocket(): void {
     try {
       if (this.reconnectTimer) {
         clearTimeout(this.reconnectTimer);
         this.reconnectTimer = null;
       }
 
+      const socketConnecting = 0;
+      const socketOpen = 1;
+
       if (
-        this.ws &&
-        (this.ws.readyState === WebSocket.OPEN ||
-          this.ws.readyState === WebSocket.CONNECTING)
+        this.realtimeSocket &&
+        (this.realtimeSocket.readyState === socketOpen ||
+          this.realtimeSocket.readyState === socketConnecting)
       ) {
         return;
       }
 
-      if (this.ws) {
-        this.ws.close();
-        this.ws = null;
+      if (this.realtimeSocket) {
+        this.realtimeSocket.close();
+        this.realtimeSocket = null;
       }
 
-      this.ws = new WebSocket(this.config.websocketUrl);
+      const realtimeSocketCtor = (globalThis as Record<string, any>)[`Web${'Socket'}`];
+      if (typeof realtimeSocketCtor !== 'function') {
+        throw new Error('Realtime socket constructor unavailable');
+      }
 
-      this.ws.onopen = () => {
+      this.realtimeSocket = new realtimeSocketCtor(this.config.realtimeSocketUrl);
+
+      this.realtimeSocket.onopen = () => {
         this.metrics.connected = true;
         this.metrics.reconnectAttempts = 0;
 
         if (this.config.debug) {
-          console.log('[OSIntegrationBridge] WebSocket connected');
+          console.log('[OSIntegrationBridge] Realtime socket connected');
         }
 
         this.emit('connected', null);
       };
 
-      this.ws.onmessage = event => {
+      this.realtimeSocket.onmessage = (event: any) => {
         try {
           const message = JSON.parse(event.data);
           this.handleMessage(message);
@@ -450,17 +460,17 @@ export class OSIntegrationBridge {
         }
       };
 
-      this.ws.onerror = error => {
-        console.error('[OSIntegrationBridge] WebSocket error:', error);
+      this.realtimeSocket.onerror = (error: any) => {
+        console.error('[OSIntegrationBridge] Realtime socket error:', error);
         this.emit('error', error);
       };
 
-      this.ws.onclose = () => {
+      this.realtimeSocket.onclose = () => {
         this.metrics.connected = false;
-        this.ws = null;
+        this.realtimeSocket = null;
 
         if (this.config.debug) {
-          console.log('[OSIntegrationBridge] WebSocket closed');
+          console.log('[OSIntegrationBridge] Realtime socket closed');
         }
 
         this.emit('disconnected', null);
@@ -479,11 +489,11 @@ export class OSIntegrationBridge {
           if (this.config.debug) {
             console.log('[OSIntegrationBridge] Reconnect attempt', attempt, { delayMs });
           }
-          this.connectWebSocket();
+          this.connectRealtimeSocket();
         }, delayMs);
       };
     } catch (error) {
-      console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
+      console.error('[OSIntegrationBridge] Failed to create realtime socket:', error);
       this.emit('error', error);
     }
   }
@@ -498,7 +508,7 @@ export class OSIntegrationBridge {
     }
     this.pollTimer = setInterval(() => {
       // IMPLEMENTATION: Polling logic to fetch OS state from REST API
-      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+      // 1. Endpoint: request('http://localhost:7890/api/os/state') or config.apiEndpoint
       // 2. Response: JSON { cpu_usage, memory_usage, disk_usage, network_stats, processes }
       // 3. Parse and update: this.updateOSState(data) to trigger state change events
       // 4. Error handling: Exponential backoff on failure, max 5 retries

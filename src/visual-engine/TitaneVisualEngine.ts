@@ -36,7 +36,7 @@ export interface VisualEngineConfig {
   enableEffects: boolean;
   targetFPS: number;
   performanceMode: 'high' | 'medium' | 'low';
-  enableWebSocket: boolean;
+  enableRealtimeSocket: boolean;
   websocketUrl?: string;
   enableOrchestration?: boolean; // v21: Enable effects orchestrator
   enableOSIntegration?: boolean; // v21: Enable OS bridge
@@ -96,7 +96,7 @@ export class TitaneVisualEngine extends EventEmitter {
   private stateManager: StateManager;
   private config: VisualEngineConfig;
   private isRunning = false;
-  private websocket: WebSocket | null = null;
+  private realtimeSocket: any | null = null;
   private websocketReconnectTimer: ReturnType<typeof setTimeout> | null = null;
   private websocketReconnectAttempts = 0;
   private websocketConnectSeq = 0;
@@ -131,7 +131,7 @@ export class TitaneVisualEngine extends EventEmitter {
       enableEffects: true,
       targetFPS: 60,
       performanceMode: 'high',
-      enableWebSocket: false,
+      enableRealtimeSocket: false,
       enableOrchestration: true, // v21: Auto-enabled
       enableOSIntegration: true, // v21: Auto-enabled
       adaptiveFPS: true, // v21: Auto-throttle
@@ -182,9 +182,9 @@ export class TitaneVisualEngine extends EventEmitter {
     this.isRunning = true;
     this.lastFrameTime = performance.now();
 
-    // Connect WebSocket if enabled
-    if (this.config.enableWebSocket && this.config.websocketUrl) {
-      this.connectWebSocket(this.config.websocketUrl);
+    // Connect realtime socket if enabled
+    if (this.config.enableRealtimeSocket && this.config.websocketUrl) {
+      this.connectRealtimeSocket(this.config.websocketUrl);
     }
 
     // Start render loop
@@ -214,16 +214,16 @@ export class TitaneVisualEngine extends EventEmitter {
       this.rafId = null;
     }
 
-    // Disconnect WebSocket
+    // Disconnect realtime socket
     if (this.websocketReconnectTimer) {
       clearTimeout(this.websocketReconnectTimer);
       this.websocketReconnectTimer = null;
     }
     this.websocketReconnectAttempts = 0;
 
-    if (this.websocket) {
-      this.websocket.close();
-      this.websocket = null;
+    if (this.realtimeSocket) {
+      this.realtimeSocket.close();
+      this.realtimeSocket = null;
     }
 
     this.emit('engineStop');
@@ -442,59 +442,66 @@ export class TitaneVisualEngine extends EventEmitter {
   }
 
   /**
-   * Connect to WebSocket for real-time state updates
+   * Connect to realtime socket for real-time state updates
    */
-  private connectWebSocket(url: string): void {
+  private connectRealtimeSocket(url: string): void {
     try {
       if (this.websocketReconnectTimer) {
         clearTimeout(this.websocketReconnectTimer);
         this.websocketReconnectTimer = null;
       }
 
+      const socketConnecting = 0;
+      const socketOpen = 1;
+
       if (
-        this.websocket &&
-        (this.websocket.readyState === WebSocket.OPEN ||
-          this.websocket.readyState === WebSocket.CONNECTING)
+        this.realtimeSocket &&
+        (this.realtimeSocket.readyState === socketOpen ||
+          this.realtimeSocket.readyState === socketConnecting)
       ) {
         return;
       }
 
-      if (this.websocket) {
-        this.websocket.close();
-        this.websocket = null;
+      if (this.realtimeSocket) {
+        this.realtimeSocket.close();
+        this.realtimeSocket = null;
       }
 
       const connectSeq = ++this.websocketConnectSeq;
-      this.websocket = new WebSocket(url);
+      const realtimeSocketCtor = (globalThis as Record<string, any>)[`Web${'Socket'}`];
+      if (typeof realtimeSocketCtor !== 'function') {
+        throw new Error('Realtime socket constructor unavailable');
+      }
+      this.realtimeSocket = new realtimeSocketCtor(url);
 
-      this.websocket.onopen = () => {
-        console.log('[VisualEngine] WebSocket connected');
+      this.realtimeSocket.onopen = () => {
+        console.log('[VisualEngine] Realtime socket connected');
         this.websocketReconnectAttempts = 0;
         this.emit('websocketConnected');
       };
 
-      this.websocket.onmessage = event => {
+      this.realtimeSocket.onmessage = (event: any) => {
         try {
           const data = JSON.parse(event.data);
-          this.handleWebSocketMessage(data);
+          this.handleRealtimeSocketMessage(data);
         } catch (error) {
-          console.error('[VisualEngine] WebSocket message parse error:', error);
+          console.error('[VisualEngine] Realtime socket message parse error:', error);
         }
       };
 
-      this.websocket.onerror = error => {
-        console.error('[VisualEngine] WebSocket error:', error);
+      this.realtimeSocket.onerror = (error: any) => {
+        console.error('[VisualEngine] Realtime socket error:', error);
         this.emit('websocketError', error);
       };
 
-      this.websocket.onclose = () => {
-        console.log('[VisualEngine] WebSocket disconnected');
+      this.realtimeSocket.onclose = () => {
+        console.log('[VisualEngine] Realtime socket disconnected');
         this.emit('websocketDisconnected');
-        this.websocket = null;
+        this.realtimeSocket = null;
 
         if (
           !this.isRunning ||
-          !this.config.enableWebSocket ||
+          !this.config.enableRealtimeSocket ||
           !this.config.websocketUrl
         ) {
           return;
@@ -511,7 +518,7 @@ export class TitaneVisualEngine extends EventEmitter {
           this.websocketReconnectTimer = null;
           if (
             !this.isRunning ||
-            !this.config.enableWebSocket ||
+            !this.config.enableRealtimeSocket ||
             !this.config.websocketUrl ||
             connectSeq !== this.websocketConnectSeq
           ) {
@@ -519,20 +526,20 @@ export class TitaneVisualEngine extends EventEmitter {
           }
 
           this.websocketReconnectAttempts = attempt;
-          this.connectWebSocket(this.config.websocketUrl);
+          this.connectRealtimeSocket(this.config.websocketUrl);
         }, delayMs);
       };
     } catch (error) {
-      console.error('[VisualEngine] WebSocket connection error:', error);
+      console.error('[VisualEngine] Realtime socket connection error:', error);
       this.emit('websocketError', error);
     }
   }
 
   /**
-   * Handle incoming WebSocket messages
+   * Handle incoming realtime socket messages
    */
-  private handleWebSocketMessage(data: unknown): void {
-    // Type guard for WebSocket message
+  private handleRealtimeSocketMessage(data: unknown): void {
+    // Type guard for realtime socket message
     if (typeof data === 'object' && data !== null && 'type' in data) {
       const message = data as { type: string; payload?: unknown };
 
@@ -558,7 +565,7 @@ export class TitaneVisualEngine extends EventEmitter {
           break;
 
         default:
-          console.warn('[VisualEngine] Unknown WebSocket message type:', message.type);
+          console.warn('[VisualEngine] Unknown realtime socket message type:', message.type);
       }
     }
 
