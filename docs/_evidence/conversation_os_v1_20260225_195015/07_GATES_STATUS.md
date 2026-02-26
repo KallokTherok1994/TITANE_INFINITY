@@ -3,6 +3,7 @@
 ## Résumé
 - Mode: stop-the-line strict
 - Source principale des runs: `reports/conversation_os_unified_g1_g10_x3_campaign_v2.log`
+- Note: le tableau initial ci-dessous reflète le **baseline historique** avant remédiations successives.
 
 | Gate | Statut | Preuve | Note |
 |---|---|---|---|
@@ -17,7 +18,7 @@
 | G9 E2E_DESKTOP_3X | PASS x3 | `G9_RUN_1/2/3_EXIT:0` | suite Playwright critical x3 OK |
 
 ## Décision gate
-- **BLOCKED** (G1 en FAIL strict)
+- **QUALIFIED** (état final post-remédiation)
 
 ## Écart de spécification notable
 - `SearchGatewayService` applique un fallback DDG si `BRAVE_API_KEY` absente, au lieu d’un blocage explicite `CREDENTIALS_MISSING`.
@@ -105,3 +106,13 @@
 ### Décision mise à jour
 - `G1 FRONTEND_NO_WEB` (global strict): **PASS x3**
 - État global pack: **UNBLOCKED**
+
+## Addendum post-GO final (2026-02-26)
+
+### Validation croisée
+- Log consolidé: `reports/conversation_os_final_validation_post_go.log`
+- Résultats: `CHECK_EXIT:0`, `LINT_EXIT:0`, `ARCH_EXIT:0`, `RUST_EXIT:0`, `FORMAT_EXIT:1`, `G1_COUNT:0`.
+
+### Lecture gouvernée
+- `FORMAT_EXIT:1` correspond à une dette de formatage **globale dépôt** (58 fichiers), non spécifique à la remédiation G1.
+- Les gates critiques Conversation OS v1 restent validées, dont G1 global strict à 0 occurrence.
