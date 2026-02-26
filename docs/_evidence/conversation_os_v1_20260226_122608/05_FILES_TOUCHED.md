@@ -23,6 +23,7 @@ Date (UTC): 2026-02-26
 - `17_EXCEPTION_TECHNIQUE.md`
 - `18_RUNTIME_UNTRACKED_GOVERNANCE.md`
 - `19_POST_SEAL_HYGIENE.md`
+- `20_SEAL_TAGS_INDEX.md`
 
 ## Fichiers runtime lus pour validation (sans modification)
 - `src-tauri/src/conversation_engine/commands.rs`
@@ -82,4 +83,5 @@ Date (UTC): 2026-02-26
 - `17_EXCEPTION_TECHNIQUE.md` (traçabilité de l'exception patch sur `11_PROOF_LOGS.txt`)
 - `18_RUNTIME_UNTRACKED_GOVERNANCE.md` (qualification + décision sur `src-tauri/runtime/` non suivi)
 - `19_POST_SEAL_HYGIENE.md` (snapshot final de gouvernance post-seal)
+- `20_SEAL_TAGS_INDEX.md` (index centralisé des tags de seal)
 
