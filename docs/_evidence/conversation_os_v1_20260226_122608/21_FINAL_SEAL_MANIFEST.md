@@ -48,6 +48,20 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:19:00Z
+
+### Liaison de scellement programme P35→P41
+- Seal ID documentaire: `seal-p35-41-20260226T1719Z`
+- Index de seal: `docs/_evidence/program_p35_41_20260226_171750/12_SEAL_INDEX.md`
+- Manifest de seal: `docs/_evidence/program_p35_41_20260226_171750/13_FINAL_SEAL_MANIFEST.md`
+- Digest de preuve: `docs/_evidence/program_p35_41_20260226_171750/14_PROOF_DIGEST.md`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:13:13Z
 
 ### Publication tags dédiés P28→P34

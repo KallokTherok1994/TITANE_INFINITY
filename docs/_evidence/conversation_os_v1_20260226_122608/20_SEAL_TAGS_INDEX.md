@@ -49,6 +49,22 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T17:19:00Z
+
+### Seal documentaire inter-pack (sans nouveau tag Git)
+- Seal ID: `seal-p35-41-20260226T1719Z`
+- Portée: pack `docs/_evidence/program_p35_41_20260226_171750/`
+- Référence index: `docs/_evidence/program_p35_41_20260226_171750/12_SEAL_INDEX.md`
+
+### Intégrité associée
+- `reports/proof_pack_hash_manifest_program_p35_41_20260226T1719Z.txt`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:13:13Z
 
 ### Tags de scellement publiés (P28→P34)
