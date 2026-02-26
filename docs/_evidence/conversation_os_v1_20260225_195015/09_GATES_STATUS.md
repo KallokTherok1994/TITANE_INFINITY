@@ -472,3 +472,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B17 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB17_20260226T121156Z.log`
+
+### Action
+- Migration finale des imports/call-sites `reqwest` vers la façade unique `core/http_types`.
+
+### Résultat
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `14 -> 1`.
+- Résiduel unique centralisé: `core/http_types.rs` (façade gouvernée).
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** côté règle brute H2, mais résiduel désormais centralisé et gouverné.

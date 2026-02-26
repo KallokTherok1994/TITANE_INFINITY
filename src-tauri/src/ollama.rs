@@ -2,7 +2,7 @@
 use std::env;
 use std::time::Duration;
 
-use reqwest::{Client, StatusCode};
+use crate::core::http_types::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 
 const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";

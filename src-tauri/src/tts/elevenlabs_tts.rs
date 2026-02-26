@@ -4,7 +4,7 @@
 // Premium cloud TTS with emotional voice adaptation
 // Voice ID: FvmvwvObRqIHojkEGh5N (female, realistic, fluid)
 
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::Path;
