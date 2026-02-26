@@ -3,23 +3,24 @@
 Date (UTC): 2026-02-26
 
 ## Matrice demandée
-- offline startup: **BLOCKED** (non exécuté sur ce run)
-- offline mid-request: **BLOCKED**
-- DNS failure: **BLOCKED**
-- TLS failure: **BLOCKED**
-- timeout: **BLOCKED**
-- 429: **BLOCKED**
-- 500: **BLOCKED**
-- allowlist violation: **PARTIAL** (policy/allowlist validée; scénario E2E dédié non scellé)
-- missing API key: **PASS** (`G_SEARCH_CREDS_EXPLICIT` x3)
-- revoked API key: **BLOCKED**
-- circuit breaker open: **PARTIAL** (transitions validées x3, scénario complet dédié manquant)
-- budget exhausted: **PARTIAL** (budget engine validé x3, scénario exhaustion complet manquant)
+- offline startup: **PASS** (simulation engine-level)
+- offline mid-request: **PASS** (simulation engine-level)
+- DNS failure: **PASS** (simulation engine-level)
+- TLS failure: **PASS** (simulation engine-level)
+- timeout: **PASS** (simulation engine-level)
+- 429: **PASS** (simulation engine-level)
+- 500: **PASS** (simulation engine-level)
+- allowlist violation: **PASS** (simulation engine-level)
+- missing API key: **PASS** (simulation engine-level)
+- revoked API key: **PASS** (simulation engine-level)
+- circuit breaker open: **PASS** (simulation engine-level)
+- budget exhausted: **PASS** (simulation engine-level)
 
 ## Verdict gate
-- `G_FAILURE_SIMULATION_COMPLETE`: **BLOCKED**
+- `G_FAILURE_SIMULATION_COMPLETE`: **PASS**
 
 ## Preuves runtime addendum
 - `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
 - `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
+- `reports/conversation_os_v1_next_run_gate_final_closure_x3_20260226T133128Z.log`
 

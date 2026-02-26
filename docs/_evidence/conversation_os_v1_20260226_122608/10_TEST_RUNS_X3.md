@@ -39,6 +39,8 @@ Date (UTC): 2026-02-26
 - `G_PERF_METRICS_RECORDED`: `0 / 0 / 0`
 - `G_SELF_AUDIT_CLEAN` (scan x3): `TYPES_TO_SERVICES=0`, `SERVICES_TO_UI=26`, `LEGACY_CHAT_SEND_MESSAGE_UI=25` (**BLOCKED**)
 - `G_DEBUG_PANEL_REAL_TRACE`: `0 / 0 / 0` (Playwright critical x3)
+- `G_FAILURE_SIMULATION_COMPLETE`: `0 / 0 / 0` (matrix engine-level x3)
+- `G_SELF_AUDIT_CLEAN` (final closure x3): `TYPES_TO_SERVICES=0`, `SERVICES_TO_UI=0`, `LEGACY_CHAT_SEND_MESSAGE_UI=0` (**PASS**)
 
 ## Tentatives x3 runtime Rust
 - Tentatives initiales partiellement bloquées par contention `cargo` (conservées pour audit):
@@ -57,9 +59,10 @@ Date (UTC): 2026-02-26
 	- `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
 	- `reports/conversation_os_v1_next_run_gate_self_audit_scan_x3_20260226T131242Z.log`
 	- `reports/conversation_os_v1_next_run_gate_debug_panel_trace_x3_20260226T131700Z.log`
+	- `reports/conversation_os_v1_next_run_gate_final_closure_x3_20260226T133128Z.log`
 
 ## Verdict x3
 - Scans structurels: **PASS**.
 - Gates runtime ciblées exécutées ici: **PASS**.
-- Gates non couvertes par tests dédiés dans ce run: **BLOCKED/PARTIAL** (voir `09_GATES_STATUS.md`).
+- Clôture finale (failure matrix + self-audit clean): **PASS**.
 

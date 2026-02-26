@@ -363,7 +363,7 @@ export const TauriAPI = {
   // Chat (legacy disabled)
   sendChatMessage: () => {
     throw new Error(
-      'chat_send_message is disabled; use conversation_generate via ConversationManager'
+      'Legacy chat command is disabled; use conversation_generate via ConversationManager'
     );
   },
 

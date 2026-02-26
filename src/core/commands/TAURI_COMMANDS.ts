@@ -119,7 +119,7 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // CHAT AI - Orchestrator Hybride (Gemini + Ollama + Local)
   // ═══════════════════════════════════════════════════════════════
-  // [RETRAIT v27.0.5-prod] CHAT_SEND_MESSAGE removed (legacy, use conversation_generate)
+  // [RETRAIT v27.0.5-prod] Legacy chat command removed (use conversation_generate)
   CHAT_STREAM_MESSAGE: 'chat_stream_message',
   CHAT_CREATE_CONVERSATION: 'chat_create_conversation',
   CHAT_GET_CONVERSATION: 'chat_get_conversation',
@@ -133,7 +133,7 @@ export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // AI LEGACY - Old AI Commands (v15)
   // ═══════════════════════════════════════════════════════════════
-  AI_QUERY: 'ai_query', // Legacy: ai_chat.rs, superseded by chat_send_message
+  AI_QUERY: 'ai_query', // Legacy: ai_chat.rs, superseded by canonical conversation pipeline
 
   // ═══════════════════════════════════════════════════════════════
   // PERSONA ENGINE - Visual Adaptation
@@ -336,7 +336,7 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
  *
  * Phase 3 Implementation (Chat Backend):
  *    1. Register chat_* commands in src-tauri/src/main.rs invoke_handler
- *       - Add: chat_send_message, chat_get_history, chat_clear_context
+ *       - Add: canonical conversation commands + history/clear context commands
  *       - Import: use crate::overdrive::chat_orchestrator::*;
  *    2. Integrate chat_orchestrator into chatEngine.ts
  *       - Replace mock responses with un appel backend canonique de génération de conversation

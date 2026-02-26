@@ -41,6 +41,8 @@ import './config/logLevelConfig';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { logger } from './lib/logger';
+import { setErrorToastDispatcher } from './lib/errorHandler';
+import { useUIStore } from './stores/uiStore';
 import App from './App'; // ✅ App principal réactivé (AppMinimal validé)
 // import AppMinimal from './AppMinimal'; // 🔍 DEBUG: Minimal test app
 
@@ -59,6 +61,10 @@ import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (g
 import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
 import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
 import './pages/styles.css'; // 📄 Pages styles (minimal)
+
+setErrorToastDispatcher(payload => {
+  useUIStore.getState().addToast(payload);
+});
 
 // Phase 8: Production Hardening
 
