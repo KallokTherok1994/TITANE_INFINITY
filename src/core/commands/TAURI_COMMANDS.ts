@@ -339,7 +339,7 @@ function createFallbackResponse<T>(command: string, error: unknown): T {
  *       - Add: chat_send_message, chat_get_history, chat_clear_context
  *       - Import: use crate::overdrive::chat_orchestrator::*;
  *    2. Integrate chat_orchestrator into chatEngine.ts
- *       - Replace mock responses with await invoke(TAURI_COMMANDS.CHAT_SEND_MESSAGE, {message})
+ *       - Replace mock responses with un appel backend canonique de génération de conversation
  *       - Handle streaming responses if supported
  *    3. Add frontend fallback if backend unavailable
  *       - Try-catch: On InvokeError, fallback to local LLM or mock mode
