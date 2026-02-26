@@ -628,3 +628,13 @@
 - Preuves associées:
 	- `reports/conversation_os_final_h2_snapshot_20260226T121502Z.log`
 	- `reports/conversation_os_h2_governed_allowlist_lotB18_20260226T121303Z.log`
+
+## Addendum 2026-02-26 (Release handoff one-page)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `50_RELEASE_HANDOFF_ONEPAGE.md`
+- Fichier mis à jour:
+	- `INDEX.md`
+- Preuve associée:
+	- `reports/conversation_os_release_handoff_snapshot_20260226T121850Z.log`
