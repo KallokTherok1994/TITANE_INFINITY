@@ -27,3 +27,6 @@ Date (UTC): 2026-02-26
 
 ### Prochaine action exacte
 - Décision de gouvernance requise: adopter officiellement le contrat de scan exécutable/prod-scope comme gate canonique, puis rejouer précheck et ouvrir Phase 6.
+
+### Référence contrat
+- Dossier décision: `docs/_evidence/program_p6_13_20260226_144448/10_SCAN_CONTRACT_REQUALIFICATION.md`.
