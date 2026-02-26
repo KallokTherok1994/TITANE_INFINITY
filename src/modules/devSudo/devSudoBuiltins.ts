@@ -522,7 +522,7 @@ ollama serve
 
 💡 **Vérification**:
 \`\`\`bash
-curl http://localhost:4000/api/tags
+curl http://localhost:11434/api/tags
 \`\`\`
 `,
       };
@@ -576,7 +576,7 @@ curl http://localhost:4000/api/tags
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
 2. Le modèle est-il installé ? → \`ollama list\`
-3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+3. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
 
 📦 **Réinstallation**:
 \`\`\`bash
@@ -645,7 +645,7 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
 
 💡 **Vérification**:
 \`\`\`bash
-curl http://localhost:4000/api/tags
+curl http://localhost:11434/api/tags
 \`\`\`
 `,
     };
@@ -762,7 +762,7 @@ ia set-default <model>
 
 🔧 **Vérifications**:
 1. Ollama est-il démarré ? → \`ollama serve\`
-2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+2. Le proxy répond-il ? → \`curl http://localhost:11434/api/tags\`
 
 📦 **Installation**: \`./install_titane_local.sh\``,
       error: error instanceof Error ? error.message : String(error),
@@ -801,7 +801,7 @@ ollama serve
 
 💡 **Vérification manuelle**:
 \`\`\`bash
-curl http://localhost:4000/api/tags
+curl http://localhost:11434/api/tags
 \`\`\``,
       };
     }
@@ -862,7 +862,7 @@ ${modelsList}
 🔧 **Dépannage**:
 1. Vérifier service: \`pgrep ollama\`
 2. Démarrer: \`ollama serve\`
-3. Tester proxy: \`curl http://localhost:4000/api/tags\`
+3. Tester proxy: \`curl http://localhost:11434/api/tags\`
 4. Réinstaller: \`./install_titane_local.sh\``,
       error: error instanceof Error ? error.message : String(error),
     };
