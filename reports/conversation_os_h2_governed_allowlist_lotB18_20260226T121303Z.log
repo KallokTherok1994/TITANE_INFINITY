@@ -1,0 +1,4 @@
+== H2 governed allowlist inventory (B18) ==
+ALLOWLIST=src-tauri/src/core/http_types.rs
+
+COUNT=0

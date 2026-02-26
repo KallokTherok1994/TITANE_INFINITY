@@ -488,3 +488,18 @@
 
 ### État
 - Hard-mode reste **BLOCKED** côté règle brute H2, mais résiduel désormais centralisé et gouverné.
+
+## Addendum step-4 Lot B18 (2026-02-26) — fermeture gouvernée H2
+
+### Source
+- `reports/conversation_os_h2_governed_allowlist_lotB18_20260226T121303Z.log`
+
+### Action
+- Exécution du détecteur H2 en mode gouverné avec allowlist explicite:
+  - `src-tauri/src/core/http_types.rs` (façade centrale)
+
+### Résultat
+- `COUNT=0` hors allowlist.
+
+### État
+- **H2 CLOSED (governed)**.
