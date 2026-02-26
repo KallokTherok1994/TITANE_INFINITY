@@ -48,6 +48,20 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T18:02:00Z
+
+### Liaison de scellement programme P56→P62
+- Seal ID documentaire: `seal-p56-62-20260226T1802Z`
+- Index de seal: `docs/_evidence/program_p56_62_20260226_180004/12_SEAL_INDEX.md`
+- Manifest de seal: `docs/_evidence/program_p56_62_20260226_180004/13_FINAL_SEAL_MANIFEST.md`
+- Digest de preuve: `docs/_evidence/program_p56_62_20260226_180004/14_PROOF_DIGEST.md`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:47:00Z
 
 ### Liaison de scellement programme P49→P55

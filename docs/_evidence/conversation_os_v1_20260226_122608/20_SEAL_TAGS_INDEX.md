@@ -49,6 +49,22 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T18:02:00Z
+
+### Seal documentaire inter-pack (sans nouveau tag Git)
+- Seal ID: `seal-p56-62-20260226T1802Z`
+- Portée: pack `docs/_evidence/program_p56_62_20260226_180004/`
+- Référence index: `docs/_evidence/program_p56_62_20260226_180004/12_SEAL_INDEX.md`
+
+### Intégrité associée
+- `reports/proof_pack_hash_manifest_program_p56_62_20260226T1802Z.txt`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T17:47:00Z
 
 ### Seal documentaire inter-pack (sans nouveau tag Git)
