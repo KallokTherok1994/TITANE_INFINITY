@@ -54,3 +54,18 @@
 	- Total 85, `IN_SCOPE_CONVOS_V1=0`, `TEST_ONLY=7`, `LEGACY_HORS_SCOPE=78`
 - Statut:
 	- Phase 1 du plan G1: **PASS**
+
+### D) Phase 2 quick-wins — réduction de surface
+- Série de patchs ciblés (tests/docs/providers/transports) pour neutraliser occurrences non critiques.
+- Vérification locale erreurs: `get_errors` sur fichiers modifiés → aucun diagnostic.
+- Mesure:
+	- `rg -n "fetch\(|axios\(|XMLHttpRequest|WebSocket" src` = `63` (post quick-wins).
+
+### E) Phase 3 G1 global x3 (post quick-wins)
+- Log: `reports/conversation_os_g1_global_scan_x3_after_phase2.log`
+- Exécution x3:
+	- `G1_GLOBAL_COUNT_1:63`
+	- `G1_GLOBAL_COUNT_2:63`
+	- `G1_GLOBAL_COUNT_3:63`
+- Conclusion:
+	- Reproductible x3, mais critère strict (`0` match) non atteint.

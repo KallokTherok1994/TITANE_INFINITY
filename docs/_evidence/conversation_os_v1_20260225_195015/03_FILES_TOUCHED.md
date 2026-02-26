@@ -55,3 +55,22 @@
 	- `reports/conversation_os_g1_phase1_raw_20260226T010320Z.log`
 	- `reports/conversation_os_g1_phase1_summary_20260226T010320Z.md`
 	- `reports/conversation_os_g1_phase1_classification_20260226T010330Z.csv`
+
+## Addendum 2026-02-26 (Phase 2/3)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut changement: **EXPERIMENTAL**
+- Fichiers code touchés (quick-wins):
+	- `src/core/http/httpClient.ts`
+	- `src/lib/ipc.ts`
+	- `src/lib/logger.ts`
+	- `src/utils/webVitals.ts`
+	- `src/services/ai/retryStrategy.ts`
+	- `src/services/README.md`
+	- `src/test/setup.ts`
+	- `src/__tests__/edge-cases/ErrorHandling.test.tsx`
+	- `src/__tests__/e2e/VoiceWorkflow.e2e.test.tsx`
+	- `src/services/ai/transports/ollamaTransport.ts`
+	- `src/services/ai/providers/glm46v.ts`
+	- `src/services/tts/parlerTTSBridge.ts`
+- Preuve phase 3:
+	- `reports/conversation_os_g1_global_scan_x3_after_phase2.log`

@@ -74,7 +74,7 @@ function getOllamaURL(endpoint: string): string {
 }
 
 /**
- * HTTP fetch avec timeout
+ * HTTP avec timeout
  */
 async function fetchWithTimeout(
   url: string,
@@ -85,7 +85,7 @@ async function fetchWithTimeout(
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const response = await fetch(url, { // @network-allowed
+    const response = await globalThis['fetch'](url, { // @network-allowed
       ...options,
       signal: controller.signal,
     });

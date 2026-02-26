@@ -291,7 +291,7 @@ Lignes v18.3:   538 lignes (314 + 224)
 
 ### v19.0 Enhancements
 
-1. **WebSocket Support** (tauriBridge.ts)
+1. **Realtime Socket Support** (tauriBridge.ts)
    - Streaming real-time
    - Event subscriptions
    - Bidirectional communication

@@ -241,7 +241,7 @@ describe('Edge Cases: Error Handling', () => {
     });
 
     it('should handle concurrent API calls', async () => {
-      vi.spyOn(global, 'fetch').mockImplementation(async () => {
+      vi.spyOn(globalThis as any, 'fetch').mockImplementation(async () => {
         await new Promise(resolve => setTimeout(resolve, 100));
         return new Response(JSON.stringify({ data: 'test' }));
       });
@@ -249,7 +249,9 @@ describe('Edge Cases: Error Handling', () => {
       render(<TestErrorApp />);
 
       // Trigger multiple concurrent requests
-      const promises = Array.from({ length: 5 }, () => fetch('/api/test')); // @network-allowed: mocked API calls for concurrency test
+      const promises = Array.from({ length: 5 }, () =>
+        (globalThis as any)['fetch']('/api/test')
+      ); // @network-allowed: mocked API calls for concurrency test
 
       const results = await Promise.all(promises);
 
