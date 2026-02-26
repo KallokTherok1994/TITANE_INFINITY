@@ -25,6 +25,9 @@
 - Résultat non testable (UNKNOWN non traité).
 
 ### Statut actuel
-- Phase active: 2 (Hard Blockers + Gates)
-- Ring impacté: **Ring 4 (Modules/UI)**
-- Statut changement: **QUALIFIED**
+- Phase active: 4 (Network governance hardening)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut changement: **EXPERIMENTAL**
+
+### Plan en cours
+- Référence active: `28_H2_STEP4_PLAN.md`
