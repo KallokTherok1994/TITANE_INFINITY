@@ -1,0 +1,3 @@
+P77_83 proof logs
+- reports/p77_83_bootstrap_precheck_20260226_183739Z.log
+- reports/p77_83_execution_x3_20260226_183739Z.log
