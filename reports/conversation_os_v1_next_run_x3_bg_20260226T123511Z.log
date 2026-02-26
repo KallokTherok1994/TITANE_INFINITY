@@ -1,0 +1,17 @@
+# X3 RUN START 2026-02-26T12:35:11Z
+HEAD=fa973695
+===== G_DB_WRITE_READ_HASH_X3 =====
+[RUN1] CMD: timeout 120 cargo test --manifest-path src-tauri/Cargo.toml test_sha256_computation -- --nocapture
+    Blocking waiting for file lock on build directory
+[RUN1] EXIT=143
+[RUN2] CMD: timeout 120 cargo test --manifest-path src-tauri/Cargo.toml test_sha256_computation -- --nocapture
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+[RUN2] EXIT=143
+[RUN3] CMD: timeout 120 cargo test --manifest-path src-tauri/Cargo.toml test_sha256_computation -- --nocapture
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
