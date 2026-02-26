@@ -99,3 +99,13 @@
 ## État blocants (post-step-3)
 - H2 (HTTP backend non centralisé gateway): actif (`51`) — **BLOCKING**.
 - A1/A2/A3: actifs — **BLOCKING**.
+
+## Addendum step-4 Lot A (2026-02-26)
+- Action: migration `diagnostic_commands.rs` vers `NetworkGatewayService`.
+- Renfort service: ajout `head_status(url)` gouverné.
+- Mesure:
+  - `H2` code-only `51 -> 46`
+- Preuves:
+  - `reports/conversation_os_h2_lotA_inventory_20260226T032341Z.log`
+  - `reports/conversation_os_h2_codeonly_step4_lotA_20260226T032456Z.log`
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

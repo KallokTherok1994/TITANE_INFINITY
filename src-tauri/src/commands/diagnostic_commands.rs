@@ -6,6 +6,7 @@
 use serde::{Deserialize, Serialize};
 use tauri::State;
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::services::network_gateway::{NetworkGatewayConfig, NetworkGatewayService};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct InternetConnectivity {
@@ -36,6 +37,55 @@ pub struct ProviderOnlineStatus {
     pub configured: bool,
     pub can_reach: bool,
     pub error: Option<String>,
+}
+
+fn diagnostics_gateway() -> NetworkGatewayService {
+    NetworkGatewayService::new(NetworkGatewayConfig {
+        timeout_ms: 3_000,
+        max_requests: 16,
+        max_bytes_total: 32 * 1024,
+        domain_allowlist: vec![
+            "www.google.com".to_string(),
+            "www.cloudflare.com".to_string(),
+            "www.github.com".to_string(),
+            "api.openai.com".to_string(),
+            "ai.google.dev".to_string(),
+            "api.anthropic.com".to_string(),
+            "localhost".to_string(),
+            "127.0.0.1".to_string(),
+        ],
+        domain_denylist: vec![],
+    })
+}
+
+async fn check_provider_connectivity(name: &str, url: &str) -> ProviderOnlineStatus {
+    let start = std::time::Instant::now();
+    let gateway = diagnostics_gateway();
+
+    match gateway.head_status(url).await {
+        Ok(status) if (200..400).contains(&status) => {
+            let latency = start.elapsed().as_millis() as u64;
+            log::info!("[Diagnostics] {} reachable ({} ms)", name, latency);
+            ProviderOnlineStatus {
+                name: name.to_string(),
+                configured: true,
+                can_reach: true,
+                error: None,
+            }
+        }
+        Ok(status) => ProviderOnlineStatus {
+            name: name.to_string(),
+            configured: true,
+            can_reach: false,
+            error: Some(format!("HTTP {}", status)),
+        },
+        Err(e) => ProviderOnlineStatus {
+            name: name.to_string(),
+            configured: true,
+            can_reach: false,
+            error: Some(format!("Request failed: {}", e)),
+        },
+    }
 }
 
 /// Check all online capabilities: Internet + Providers
@@ -132,38 +182,33 @@ async fn check_internet_connectivity() -> InternetConnectivity {
         })
     });
 
-    // Check HTTP connectivity to major services
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build();
-
-    if let Ok(client) = client {
-        for (name, url) in &[
-            ("Google", "https://www.google.com"),
-            ("Cloudflare", "https://www.cloudflare.com"),
-            ("GitHub", "https://www.github.com"),
-        ] {
-            let start = std::time::Instant::now();
-            match client.head(*url).send().await {
-                Ok(resp) if resp.status().is_success() => {
-                    let latency = start.elapsed().as_millis() as u64;
-                    log::debug!("[Diagnostics] {} reachable ({} ms)", name, latency);
-                    api_endpoints.push(ApiEndpointStatus {
-                        name: name.to_string(),
-                        endpoint: url.to_string(),
-                        reachable: true,
-                        latency_ms: Some(latency),
-                    });
-                }
-                _ => {
-                    log::debug!("[Diagnostics] {} unreachable", name);
-                    api_endpoints.push(ApiEndpointStatus {
-                        name: name.to_string(),
-                        endpoint: url.to_string(),
-                        reachable: false,
-                        latency_ms: None,
-                    });
-                }
+    // Check HTTP connectivity to major services via governed gateway
+    let gateway = diagnostics_gateway();
+    for (name, url) in &[
+        ("Google", "https://www.google.com"),
+        ("Cloudflare", "https://www.cloudflare.com"),
+        ("GitHub", "https://www.github.com"),
+    ] {
+        let start = std::time::Instant::now();
+        match gateway.head_status(*url).await {
+            Ok(status) if (200..400).contains(&status) => {
+                let latency = start.elapsed().as_millis() as u64;
+                log::debug!("[Diagnostics] {} reachable ({} ms)", name, latency);
+                api_endpoints.push(ApiEndpointStatus {
+                    name: name.to_string(),
+                    endpoint: url.to_string(),
+                    reachable: true,
+                    latency_ms: Some(latency),
+                });
+            }
+            _ => {
+                log::debug!("[Diagnostics] {} unreachable", name);
+                api_endpoints.push(ApiEndpointStatus {
+                    name: name.to_string(),
+                    endpoint: url.to_string(),
+                    reachable: false,
+                    latency_ms: None,
+                });
             }
         }
     }
@@ -178,196 +223,23 @@ async fn check_internet_connectivity() -> InternetConnectivity {
 }
 
 async fn check_openai_connectivity() -> ProviderOnlineStatus {
-    let start = std::time::Instant::now();
-    match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build()
-    {
-        Ok(client) => match client.head("https://api.openai.com").send().await {
-            Ok(resp) if resp.status().is_success() => {
-                let latency = start.elapsed().as_millis() as u64;
-                log::info!("[Diagnostics] OpenAI reachable ({} ms)", latency);
-                ProviderOnlineStatus {
-                    name: "OpenAI".to_string(),
-                    configured: true,
-                    can_reach: true,
-                    error: None,
-                }
-            }
-            Ok(resp) => {
-                let error = format!("HTTP {}", resp.status());
-                log::warn!("[Diagnostics] OpenAI returned: {}", error);
-                ProviderOnlineStatus {
-                    name: "OpenAI".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-            Err(e) => {
-                let error = format!("Request failed: {}", e);
-                log::warn!("[Diagnostics] OpenAI error: {}", error);
-                ProviderOnlineStatus {
-                    name: "OpenAI".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-        },
-        Err(e) => {
-            let error = format!("Client error: {}", e);
-            ProviderOnlineStatus {
-                name: "OpenAI".to_string(),
-                configured: true,
-                can_reach: false,
-                error: Some(error),
-            }
-        }
-    }
+    check_provider_connectivity("OpenAI", "https://api.openai.com").await
 }
 
 async fn check_gemini_connectivity() -> ProviderOnlineStatus {
-    let start = std::time::Instant::now();
-    match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build()
-    {
-        Ok(client) => match client.head("https://ai.google.dev").send().await {
-            Ok(resp) if resp.status().is_success() => {
-                let latency = start.elapsed().as_millis() as u64;
-                log::info!("[Diagnostics] Gemini reachable ({} ms)", latency);
-                ProviderOnlineStatus {
-                    name: "Gemini".to_string(),
-                    configured: true,
-                    can_reach: true,
-                    error: None,
-                }
-            }
-            Ok(resp) => {
-                let error = format!("HTTP {}", resp.status());
-                ProviderOnlineStatus {
-                    name: "Gemini".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-            Err(e) => {
-                let error = format!("Request failed: {}", e);
-                ProviderOnlineStatus {
-                    name: "Gemini".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-        },
-        Err(e) => {
-            let error = format!("Client error: {}", e);
-            ProviderOnlineStatus {
-                name: "Gemini".to_string(),
-                configured: true,
-                can_reach: false,
-                error: Some(error),
-            }
-        }
-    }
+    check_provider_connectivity("Gemini", "https://ai.google.dev").await
 }
 
 async fn check_anthropic_connectivity() -> ProviderOnlineStatus {
-    let start = std::time::Instant::now();
-    match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build()
-    {
-        Ok(client) => match client.head("https://api.anthropic.com").send().await {
-            Ok(resp) if resp.status().is_success() => {
-                let latency = start.elapsed().as_millis() as u64;
-                log::info!("[Diagnostics] Anthropic reachable ({} ms)", latency);
-                ProviderOnlineStatus {
-                    name: "Anthropic".to_string(),
-                    configured: true,
-                    can_reach: true,
-                    error: None,
-                }
-            }
-            Ok(resp) => {
-                let error = format!("HTTP {}", resp.status());
-                ProviderOnlineStatus {
-                    name: "Anthropic".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-            Err(e) => {
-                let error = format!("Request failed: {}", e);
-                ProviderOnlineStatus {
-                    name: "Anthropic".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-        },
-        Err(e) => {
-            let error = format!("Client error: {}", e);
-            ProviderOnlineStatus {
-                name: "Anthropic".to_string(),
-                configured: true,
-                can_reach: false,
-                error: Some(error),
-            }
-        }
-    }
+    check_provider_connectivity("Anthropic", "https://api.anthropic.com").await
 }
 
 async fn check_ollama_connectivity() -> ProviderOnlineStatus {
-    let start = std::time::Instant::now();
-    match reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build()
-    {
-        Ok(client) => match client.get("http://localhost:11434/api/tags").send().await {
-            Ok(resp) if resp.status().is_success() => {
-                let latency = start.elapsed().as_millis() as u64;
-                log::info!("[Diagnostics] Ollama reachable ({} ms)", latency);
-                ProviderOnlineStatus {
-                    name: "Ollama (Local)".to_string(),
-                    configured: true,
-                    can_reach: true,
-                    error: None,
-                }
-            }
-            Ok(resp) => {
-                let error = format!("HTTP {}", resp.status());
-                ProviderOnlineStatus {
-                    name: "Ollama (Local)".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-            Err(e) => {
-                let error = format!("Cannot reach localhost:11434 (not running?): {}", e);
-                log::debug!("[Diagnostics] Ollama unreachable: {}", error);
-                ProviderOnlineStatus {
-                    name: "Ollama (Local)".to_string(),
-                    configured: true,
-                    can_reach: false,
-                    error: Some(error),
-                }
-            }
-        },
-        Err(e) => {
-            let error = format!("Client error: {}", e);
-            ProviderOnlineStatus {
-                name: "Ollama (Local)".to_string(),
-                configured: true,
-                can_reach: false,
-                error: Some(error),
-            }
-        }
+    let mut status = check_provider_connectivity("Ollama (Local)", "http://localhost:11434/api/tags").await;
+    if !status.can_reach {
+        status.error = status
+            .error
+            .map(|e| format!("Cannot reach localhost:11434 (not running?): {}", e));
     }
+    status
 }

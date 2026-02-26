@@ -195,3 +195,20 @@
 - Blocants fermés: `C2`, `HB4`.
 - Blocant résiduel unique: `H2` (HTTP backend non centralisé).
 - État hard-mode: **PARTIAL PASS / BLOCKED**.
+
+## Addendum step-4 Lot A (2026-02-26)
+
+### Sources
+- `reports/conversation_os_h2_lotA_inventory_20260226T032341Z.log`
+- `reports/conversation_os_h2_codeonly_step4_lotA_20260226T032456Z.log`
+
+### Action
+- Migration des commandes diagnostics vers `NetworkGatewayService`.
+- Ajout méthode gouvernée `head_status(url)` dans `network_gateway.rs`.
+
+### Résultat
+- `H2` code-only: `51 -> 46`.
+- Verdict lot A: **PASS (partiel)**.
+
+### État
+- Hard-mode reste **BLOCKED** tant que `H2 != 0` ou non limité au fichier autorité.

@@ -274,3 +274,17 @@
 	- `04_MICRO_PHASES.md`
 - Objet:
 	- plan d’exécution immuable pour fermeture du blocant `H2` (gateway unique backend)
+
+## Addendum 2026-02-26 (Step-4 Lot A execution)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichiers code modifiés:
+	- `src-tauri/src/services/network_gateway.rs`
+	- `src-tauri/src/commands/diagnostic_commands.rs`
+- Fichier ajouté:
+	- `29_H2_STEP4_LOTA_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Delta mesuré:
+	- `H2` code-only `51 -> 46`

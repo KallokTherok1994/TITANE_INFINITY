@@ -171,6 +171,21 @@ impl NetworkGatewayService {
         Ok(String::from_utf8_lossy(&body).to_string())
     }
 
+    pub async fn head_status(&self, url: &str) -> Result<u16, NetworkGatewayError> {
+        self.preflight(url).await?;
+
+        let response = self
+            .client
+            .head(url)
+            .send()
+            .await
+            .map_err(|err| NetworkGatewayError::NetworkError(err.to_string()))?;
+
+        self.postflight(0).await?;
+
+        Ok(response.status().as_u16())
+    }
+
     pub async fn get_json(&self, url: &str) -> Result<Value, NetworkGatewayError> {
         let text = self.get_text(url).await?;
         serde_json::from_str(&text)
