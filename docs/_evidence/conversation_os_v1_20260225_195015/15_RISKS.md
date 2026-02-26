@@ -14,6 +14,16 @@
 
 ## Registre anomalies
 
+### A0 — Blocants hard-mode détectés (exécution C1..C5 x3)
+- Sévérité: Critical
+- Faits observés:
+  - `C2` URLs externes prod-scope: `115/115/115`
+  - `H2` usages HTTP backend: `73/73/73`
+  - `HB4` imports directs `invoke`: `8/8/8`
+- Action: refactor gouverné vers gateway unique + client invoke canonique + triage URLs runtime.
+- Preuve: `reports/conversation_os_hardmode_gates_x3_20260226T020838Z.log`
+- Verdict conformité: BLOCKING
+
 ### A1 — Déterminisme hash RouterDecision non prouvé x3
 - Sévérité: High
 - Action: instrumenter hash décision et exécuter run1/run2/run3.
@@ -47,3 +57,7 @@
 - **BLOCKED** tant que A1/A2/A3 ne sont pas fermées.
 - Ring impacté: **Ring 4 (Modules/UI) + Ring 3 (Services)**
 - Statut changement: **QUALIFIED**
+
+## Addendum exécution (2026-02-26)
+- A0 ajouté comme blocant immédiat (governance hard-mode).
+- Verdict global mis à jour: **BLOCKED (A0 + A1 + A2 + A3)**.

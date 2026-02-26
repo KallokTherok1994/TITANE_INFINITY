@@ -113,3 +113,24 @@
 ## Décision
 - Tous les invariants listés ont une méthode de détection + commande.
 - État actuel: **QUALIFIED**
+
+## Exécution réelle des détecteurs (Addendum 2026-02-26)
+
+### Source
+- `reports/conversation_os_hardmode_gates_x3_20260226T020838Z.log`
+
+### Résultats run1/run2/run3
+- HB-01 (primitives réseau frontend prod-scope): `0 / 0 / 0` → **PASS**
+- HB-01b (URLs externes dans `src` prod-scope): `115 / 115 / 115` → **BLOCKED** (triage nécessaire: assets/docs/strings)
+- HB-02 (unicité gateway HTTP backend): `73 / 73 / 73` → **BLOCKED**
+- HB-03 (diff dépendances): `0 / 0 / 0` → **PASS**
+- HB-04 (imports directs `invoke`): `8 / 8 / 8` → **BLOCKED**
+- Entrypoints chat (legacy/canonique mix): `114 / 114 / 114` → **REVIEW**
+
+### Hard Blockers actifs
+- B1: client HTTP backend non centralisé uniquement dans un gateway.
+- B2: dispersion d’imports `invoke` hors client canonique.
+- B3: présence d’URLs externes en `src` sans triage de périmètre runtime.
+
+### Décision mise à jour
+- État hard-mode: **PARTIAL PASS / BLOCKED**.

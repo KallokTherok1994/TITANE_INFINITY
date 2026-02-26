@@ -193,3 +193,18 @@
 	- `15_RISKS.md`
 - Décision:
 	- instrumentation documentaire hard-mode en place; exécution complète des scénarios marqués `UNKNOWN/BLOCKED` requise pour fermeture.
+
+## Addendum 2026-02-26 (GO ALL PHASE execution)
+- Ring impacté: **Ring 4 (Modules/UI) + Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `24_ALL_PHASE_EXECUTION.md`
+- Fichiers mis à jour:
+	- `06_RING_SURFACE_MAP.md`
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuves principales:
+	- `reports/conversation_os_meta_discovery_summary_20260226T020736Z.md`
+	- `reports/conversation_os_hardmode_gates_x3_20260226T020838Z.log`
+- Verdict:
+	- **PARTIAL PASS / BLOCKED** (blocants A0 actifs)
