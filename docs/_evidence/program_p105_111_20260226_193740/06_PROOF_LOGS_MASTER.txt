@@ -1,0 +1,3 @@
+P105_111 proof logs
+- reports/p105_111_bootstrap_precheck_20260226_193740Z.log
+- reports/p105_111_execution_x3_20260226_193740Z.log
