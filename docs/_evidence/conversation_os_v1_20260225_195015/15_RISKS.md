@@ -71,3 +71,18 @@
   - `reports/conversation_os_blocker_hb4_postfix_20260226T021216Z.log`
   - `reports/conversation_os_blocker_hb4_prodscope_postfix_20260226T021223Z.log`
 - Verdict: **PROGRESS**, mais état global toujours **BLOCKED**.
+
+## Addendum remédiation step-2 (2026-02-26)
+- Actions: migration des imports `invoke` restants vers `secureInvoke` (tests) et `tauriClient` (docs/snippets/commentaires).
+- Effet mesuré:
+  - `HB4` prod-scope: `7 -> 0`
+  - `HB4` x3: `0/0/0`
+- Preuves:
+  - `reports/conversation_os_blocker_hb4_prodscope_step2_20260226T023045Z.log`
+  - `reports/conversation_os_hardmode_gates_x3_step2_20260226T023045Z.log`
+- Verdict: **HB4 CLOSED**.
+
+## État blocants (post-step-2)
+- C2 (URLs externes en `src`): actif (`115`).
+- H2 (HTTP backend non centralisé gateway): actif (`73`).
+- A1/A2/A3: actifs.

@@ -6,7 +6,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
-import { invoke } from '@tauri-apps/api/core';
+import { secureInvoke as invoke } from '@/lib/security';
 
 // Skip E2E tests unless explicitly opt-in.
 // These scenarios require a real Tauri app context (IPC), not unit-test mocks.

@@ -64,7 +64,7 @@ Modifiez `src/App.tsx` pour ajouter la détection du premier lancement :
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient } from '@/lib/tauriClient';
 import { OnboardingFlow } from './components/Onboarding';
 
 const App: React.FC = () => {
@@ -74,7 +74,7 @@ const App: React.FC = () => {
     // Vérifier si l'onboarding est complété
     const checkOnboarding = async () => {
       try {
-        const isComplete = await invoke<boolean>('is_onboarding_complete');
+        const isComplete = await tauriClient.isOnboardingComplete();
         setOnboardingComplete(isComplete);
       } catch (error) {
         console.error('Erreur lors de la vérification de l\'onboarding:', error);
@@ -145,7 +145,7 @@ corepack pnpm run dev
 
 # 5. Pour tester à nouveau (réinitialiser l'onboarding)
 # Ouvrez la console DevTools et lancez :
-await invoke('reset_onboarding');
+await tauriClient.resetOnboarding();
 window.location.reload();
 ```
 
@@ -248,13 +248,13 @@ corepack pnpm run test:e2e
 ### Exemple d'utilisation
 
 ```typescript
-import { invoke } from '@tauri-apps/api/core';
+import { tauriClient } from '@/lib/tauriClient';
 
 // Vérifier si complété
-const isComplete = await invoke<boolean>('is_onboarding_complete');
+const isComplete = await tauriClient.isOnboardingComplete();
 
 // Compléter l'onboarding
-await invoke('complete_onboarding', {
+await tauriClient.completeOnboarding({
   preferences: {
     theme: 'dark',
     language: 'fr',
@@ -264,10 +264,10 @@ await invoke('complete_onboarding', {
 });
 
 // Récupérer les préférences
-const prefs = await invoke('get_onboarding_preferences');
+const prefs = await tauriClient.getOnboardingPreferences();
 
 // Réinitialiser (debug/test)
-await invoke('reset_onboarding');
+await tauriClient.resetOnboarding();
 ```
 
 ---

@@ -222,3 +222,22 @@
 - Delta mesuré:
 	- `HB4` prod-scope `8 -> 7`
 	- `HB4` large `11 -> 10`
+
+## Addendum 2026-02-26 (Blocker reduction step-2)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichiers code/docs modifiés:
+	- `src/tests/e2e/titane_e2e.test.ts`
+	- `src/tests/regression/titane_regression.test.ts`
+	- `src/components/Onboarding/INTEGRATION_GUIDE.md`
+	- `src/modules/devSudo/devSudoBackendHandlers.ts`
+	- `src/modules/devSudo/devSudoSingularityHandlers.ts`
+	- `src/services/api/index.ts`
+- Fichier ajouté:
+	- `26_BLOCKER_REDUCTION_STEP2.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Delta mesuré:
+	- `HB4` prod-scope `7 -> 0`
+	- `HB4` x3 `0/0/0`

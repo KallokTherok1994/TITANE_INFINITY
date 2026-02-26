@@ -99,8 +99,8 @@ export {
 /**
  * AVANT (invoke dispersé):
  * ```ts
- * import { invoke } from '@tauri-apps/api/core';
- * const projects = await invoke('memory_get_active_projects', { limit: 5 });
+ * import { tauriClient } from '@/lib/tauriClient';
+ * const projects = await tauriClient.memoryGetActiveProjects({ limit: 5 });
  * ```
  *
  * APRÈS (service unifié):
