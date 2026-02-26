@@ -1,3 +1,13 @@
+## ADDENDUM — INTEGRITY P91→P97
+
+- Hash manifest file: `reports/proof_pack_hash_manifest_program_p91_97_20260226_190508.txt`
+- File count: `42`
+- Scope:
+  - `docs/_evidence/program_p91_97_20260226_190508/**`
+  - `docs/_evidence/p91_20260226_190508/**` à `docs/_evidence/p97_20260226_190508/**`
+  - `reports/p91_97_bootstrap_precheck_20260226_190508Z.log`
+  - `reports/p91_97_execution_x3_20260226_190508Z.log`
+
 ## ADDENDUM — INTEGRITY P84→P90
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_p84_90_20260226_185039.txt`

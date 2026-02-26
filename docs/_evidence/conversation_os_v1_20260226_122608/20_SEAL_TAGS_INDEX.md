@@ -1,3 +1,10 @@
+## ADDENDUM — P91→P97 (20260226T1914Z)
+
+- Program: `docs/_evidence/program_p91_97_20260226_190508`
+- Tags attendus:
+  - `evidence-seal-p91-97-20260226T1914Z`
+  - `evidence-seal-p91-97-latest`
+
 ## ADDENDUM — P84→P90 (20260226T1900Z)
 
 - Program: `docs/_evidence/program_p84_90_20260226_185039`
