@@ -26,4 +26,13 @@ Date (UTC): 2026-02-26
 
 ### Interprétation gouvernée
 - `G_MASTER_PRECHECK_INVARIANTS_EXECUTABLE_CLEAN`: **PASS x3**
-- `G_MASTER_PRECHECK_INVARIANTS_CLEAN` (scan brut global imposé): **reste BLOCKED** tant que le contrat de scan n’est pas officiellement requalifié.
+- `G_MASTER_PRECHECK_INVARIANTS_CLEAN` (gate canonique requalifié via `verify:invariants-governed`): **PASS x3**
+
+### Implémentation gate
+- Script: `scripts/verify/enforce-invariants-governed.sh`
+- NPM: `verify:invariants-governed`
+- CI: job `invariants-governed` dans `.github/workflows/ci.yml`
+
+### Statut programme courant
+- Précheck invariants: **UNBLOCKED**
+- Phase 6: **BLOCKED** (token build PROD absent)

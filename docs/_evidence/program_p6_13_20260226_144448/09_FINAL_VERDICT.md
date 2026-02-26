@@ -22,11 +22,15 @@ Date (UTC): 2026-02-26
 - Revalidation x3 exécutable/prod-scope: **clean (0/0/0)**.
 - Preuve: `reports/program_p6_13_invariant_clean_executable_x3_20260226T145443Z.log`.
 
+### Statut après implémentation gate canonique
+- `verify:invariants-governed` implémenté et validé x3.
+- Preuve: `reports/program_p6_13_verify_invariants_governed_x3_20260226T150200Z.log`.
+
 ### Verdict programme mis à jour
-- **BLOCKED (inchangé)** tant que la règle de précheck reste strictement liée au scan brut global non requalifié.
+- **BLOCKED** (motif déplacé): phase 6 bloquée par token build PROD absent.
 
 ### Prochaine action exacte
-- Décision de gouvernance requise: adopter officiellement le contrat de scan exécutable/prod-scope comme gate canonique, puis rejouer précheck et ouvrir Phase 6.
+- Fournir `GO_FOR_PROD_BUILD__TITANE_INFINITY`, exécuter le build reproductible x3 de phase 6, puis dérouler P7→P13.
 
 ### Référence contrat
 - Dossier décision: `docs/_evidence/program_p6_13_20260226_144448/10_SCAN_CONTRACT_REQUALIFICATION.md`.

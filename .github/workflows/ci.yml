@@ -266,12 +266,47 @@ jobs:
           echo "All assets use relative paths (no /vite.svg, /manifest.json absolutes)"
 
   # ═══════════════════════════════════════════════════════════════
+  # JOB 8: Invariants Governed Gate
+  # ═══════════════════════════════════════════════════════════════
+  invariants-governed:
+    name: 🛡️ Invariants Governed Gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: typescript-check
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: 🔧 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: 🧩 Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+
+      - name: 📚 Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: 🛡️ Run governed invariants gate
+        run: pnpm run verify:invariants-governed
+
+  # ═══════════════════════════════════════════════════════════════
   # JOB 8: Quality Gate Summary
   # ═══════════════════════════════════════════════════════════════
   quality-gate:
     name: 🎯 Quality Gate
     runs-on: ubuntu-latest
-    needs: [typescript-check, unit-tests, accessibility-tests, lint-check, dist-assets-gate]
+    needs: [typescript-check, unit-tests, accessibility-tests, lint-check, dist-assets-gate, invariants-governed]
     if: always()
 
     steps:
@@ -285,6 +320,7 @@ jobs:
           echo "Accessibility: ${{ needs.accessibility-tests.result }}"
           echo "Lint: ${{ needs.lint-check.result }}"
           echo "Dist Assets (P0.Ω∞): ${{ needs.dist-assets-gate.result }}"
+          echo "Invariants Governed: ${{ needs.invariants-governed.result }}"
           echo "═══════════════════════════════════════"
 
       - name: ❌ Quality gate FAILED
