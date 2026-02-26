@@ -227,3 +227,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel principal dans `ai/ollama.rs` + `overdrive/chat_orchestrator.rs`).
+
+## Addendum step-4 Lot B2 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB2_20260226T033710Z.log`
+
+### Action
+- Refactor `ai/ollama.rs` pour factoriser la création client HTTP (`build_ollama_client`).
+
+### Résultat
+- `H2` code-only: `43 -> 39`.
+- Contribution `ai/ollama.rs`: `6 -> 2`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (hotspot principal restant: `overdrive/chat_orchestrator.rs`).

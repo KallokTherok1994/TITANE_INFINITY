@@ -119,3 +119,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B2 (2026-02-26)
+- Action: refactor `ai/ollama.rs` avec factorisation `build_ollama_client(timeout_secs)`.
+- Mesure:
+  - `H2` code-only `43 -> 39`
+  - `ai/ollama.rs` `6 -> 2`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB2_20260226T033710Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif (hotspot principal `overdrive/chat_orchestrator.rs`).
