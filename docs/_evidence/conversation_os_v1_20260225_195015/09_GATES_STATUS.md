@@ -516,3 +516,17 @@
 
 ### État
 - **TERMINAL SEAL: PASS**.
+
+## Addendum snapshot terminal post-push (2026-02-26)
+
+### Source
+- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
+
+### Résultat
+- `HEAD=efc07321`
+- `BRANCH=MAIN`
+- `git status --short`: propre
+- `H2 gouverné hors allowlist`: `0`
+
+### État
+- **CLOSURE SNAPSHOT: PASS**.

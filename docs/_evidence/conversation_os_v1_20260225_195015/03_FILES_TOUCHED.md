@@ -649,3 +649,16 @@
 	- `INDEX.md`
 - Preuve associée:
 	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
+
+## Addendum 2026-02-26 (Terminal verdict + rollback ready)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `52_TERMINAL_VERDICT_ROLLBACK_READY.md`
+- Fichiers mis à jour:
+	- `03_FILES_TOUCHED.md`
+	- `09_GATES_STATUS.md`
+	- `INDEX.md`
+- Preuves associées:
+	- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
+	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
