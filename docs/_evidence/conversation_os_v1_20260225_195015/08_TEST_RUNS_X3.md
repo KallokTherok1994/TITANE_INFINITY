@@ -86,3 +86,13 @@
 - Recheck G1 global:
 	- Log: `reports/conversation_os_g1_global_post_continue_check.log`
 	- Résultat: `EXIT:1`, `COUNT:0`.
+
+### H) GO final validation (cross-gates)
+- Log consolidé: `reports/conversation_os_final_validation_post_go.log`
+- Résultats:
+	- `CHECK_EXIT:0`
+	- `LINT_EXIT:0`
+	- `ARCH_EXIT:0`
+	- `RUST_EXIT:0`
+	- `FORMAT_EXIT:1` (dette de formatage globale repo, non introduite par ce cycle seul)
+	- `G1_COUNT:0`

@@ -127,6 +127,7 @@ export class OSIntegrationBridge {
   private config: Required<BridgeConfig> = {
     // Disabled by default (Tauri-only, local-first). Provide a URL explicitly to enable.
     realtimeSocketUrl: '',
+    websocketUrl: '',
     pollInterval: 1000,
     enableAutoEffects: true,
     debug: false,
