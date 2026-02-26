@@ -1,0 +1,9 @@
+== H2 inventory lot B13 ==
+GEMINI_REFACTOR_RAW=1
+TAPI_ERROR_RAW=1
+GEMINI_REFACTOR_LINES:
+9:use reqwest::Client;
+TAPI_ERROR_LINES:
+7:use reqwest::Error as ReqwestError;
+
+RAW_TOTAL=28

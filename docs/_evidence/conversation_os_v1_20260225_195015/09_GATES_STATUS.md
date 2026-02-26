@@ -405,3 +405,20 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B13 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB13_20260226T114749Z.log`
+
+### Action
+- Réduction des signatures `reqwest` dans `gemini_provider_refactor.rs` et `core/tapi_error.rs` via imports de types dédiés.
+
+### Résultat
+- `gemini_provider_refactor.rs`: `2 -> 1`.
+- `core/tapi_error.rs`: `2 -> 1`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `30 -> 28`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

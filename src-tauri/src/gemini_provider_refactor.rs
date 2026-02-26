@@ -6,6 +6,7 @@
 /// that replaces panics with proper error handling.
 
 use crate::epic1_provider_refactor::{Provider, ProviderError, ProviderResult};
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -68,14 +69,14 @@ pub struct GeminiContent {
 /// Refactored Gemini Provider with Result-based error handling
 pub struct GeminiProvider {
     config: GeminiConfig,
-    client: reqwest::Client,
+    client: Client,
     health_status: bool,
 }
 
 impl GeminiProvider {
     /// Create new Gemini provider instance
     pub fn new(config: GeminiConfig) -> ProviderResult<Self> {
-        let client = reqwest::Client::builder()
+        let client = Client::builder()
             .timeout(Duration::from_secs(config.timeout_secs))
             .build()
             .map_err(|e| ProviderError::ConnectionFailed(

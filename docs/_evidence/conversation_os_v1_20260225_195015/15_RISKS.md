@@ -242,3 +242,15 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B13 (2026-02-26)
+- Action: réduction des signatures `reqwest` dans `gemini_provider_refactor` et `core/tapi_error` via imports de types dédiés.
+- Mesure:
+  - `gemini_provider_refactor.rs`: `2 -> 1`
+  - `core/tapi_error.rs`: `2 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `30 -> 28`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB13_20260226T114749Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
