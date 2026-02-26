@@ -24,6 +24,7 @@ Date (UTC): 2026-02-26
 - `18_RUNTIME_UNTRACKED_GOVERNANCE.md`
 - `19_POST_SEAL_HYGIENE.md`
 - `20_SEAL_TAGS_INDEX.md`
+- `21_FINAL_SEAL_MANIFEST.md`
 
 ## Fichiers runtime lus pour validation (sans modification)
 - `src-tauri/src/conversation_engine/commands.rs`
@@ -84,4 +85,5 @@ Date (UTC): 2026-02-26
 - `18_RUNTIME_UNTRACKED_GOVERNANCE.md` (qualification + décision sur `src-tauri/runtime/` non suivi)
 - `19_POST_SEAL_HYGIENE.md` (snapshot final de gouvernance post-seal)
 - `20_SEAL_TAGS_INDEX.md` (index centralisé des tags de seal)
+- `21_FINAL_SEAL_MANIFEST.md` (manifeste final commits/tags/logs de scellement)
 

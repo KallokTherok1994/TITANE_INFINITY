@@ -42,4 +42,5 @@ Date (UTC): 2026-02-26
 - Dossier runtime non suivi qualifié: `18_RUNTIME_UNTRACKED_GOVERNANCE.md` (artefacts locaux ignorés explicitement, sans impact sur le verdict PASS).
 - Snapshot post-seal scellé: `19_POST_SEAL_HYGIENE.md` (preuve d'hygiène repo finale).
 - Index des tags de scellement: `20_SEAL_TAGS_INDEX.md`.
+- Manifeste final de scellement: `21_FINAL_SEAL_MANIFEST.md`.
 
