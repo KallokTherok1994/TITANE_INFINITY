@@ -4,6 +4,7 @@
 // Format d'erreur standard pour toutes les APIs TITANE∞
 // ═══════════════════════════════════════════════════════════════════════════
 
+use reqwest::Error as ReqwestError;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -153,8 +154,8 @@ impl From<serde_json::Error> for TAPIError {
     }
 }
 
-impl From<reqwest::Error> for TAPIError {
-    fn from(err: reqwest::Error) -> Self {
+impl From<ReqwestError> for TAPIError {
+    fn from(err: ReqwestError) -> Self {
         if err.is_timeout() {
             TAPIError::timeout("HTTP request")
         } else if err.is_connect() {
