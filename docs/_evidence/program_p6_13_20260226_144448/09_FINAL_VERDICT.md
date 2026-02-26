@@ -83,3 +83,6 @@ Date (UTC): 2026-02-26
 - Stockage long terme des résultats provider: **interdit** (objectif P9 = cache transitoire TTL+purge).
 - Rate-limit provider via headers: **prévu** et tracé comme exigence de gate P7/P9.
 - Silent fallback: **interdit** (inchangé).
+
+### Runbook de reprise immédiate
+- `docs/_evidence/program_p6_13_20260226_144448/11_UNBLOCK_EXECUTION_RUNBOOK.md`
