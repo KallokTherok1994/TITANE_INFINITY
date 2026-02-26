@@ -4,7 +4,7 @@
 // Format d'erreur standard pour toutes les APIs TITANE∞
 // ═══════════════════════════════════════════════════════════════════════════
 
-use reqwest::Error as ReqwestError;
+use crate::core::http_types::ReqwestError;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 

@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
-use reqwest::{redirect::Policy, Client};
+use crate::core::http_types::{Client, Policy};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::time::Duration;

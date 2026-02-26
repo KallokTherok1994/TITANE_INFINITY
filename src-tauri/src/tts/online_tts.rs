@@ -5,7 +5,7 @@
 
 use super::{TTSError, TTSRequest, TTSResult};
 use crate::security::shell_guard::ShellGuard;
-use reqwest::Client;
+use crate::core::http_types::Client;
 
 pub struct OnlineTTS {
     api_key: Option<String>,

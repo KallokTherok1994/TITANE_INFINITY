@@ -3,7 +3,7 @@
 // Clean architecture v15: documented, production-ready
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 

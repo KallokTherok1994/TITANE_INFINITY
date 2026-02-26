@@ -457,3 +457,18 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B16 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB16_20260226T120836Z.log`
+
+### Action
+- Consolidation des imports HTTP via façade interne `core/http_types` + migration des call-sites/imports dispersés.
+
+### Résultat
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `23 -> 14`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

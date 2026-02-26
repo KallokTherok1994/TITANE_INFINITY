@@ -9,7 +9,7 @@
 use crate::core::tapi_error::TAPIError;
 use crate::core::{MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::Arc;

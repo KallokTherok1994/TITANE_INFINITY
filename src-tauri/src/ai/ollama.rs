@@ -6,7 +6,7 @@
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
 use crate::security::shell_guard::ShellGuard;
-use reqwest::Client;
+use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;

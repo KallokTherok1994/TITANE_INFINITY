@@ -1,0 +1,18 @@
+== H2 inventory lot B16 ==
+RAW_TOTAL=14
+
+TOP_FILES:
+      1 src-tauri/src/tts/elevenlabs_tts.rs
+      1 src-tauri/src/ollama.rs
+      1 src-tauri/src/ollama_provider_refactor.rs
+      1 src-tauri/src/memory_evolution/memory_vectorizer.rs
+      1 src-tauri/src/local_provider_refactor.rs
+      1 src-tauri/src/ia/openai_gpt.rs
+      1 src-tauri/src/ia/anthropic_claude.rs
+      1 src-tauri/src/core/http_types.rs
+      1 src-tauri/src/commands/ollama_command.rs
+      1 src-tauri/src/commands/ai_prompt_generator.rs
+      1 src-tauri/src/api_hub/copilot.rs
+      1 src-tauri/src/ai/providers/openai.rs
+      1 src-tauri/src/ai/providers/local.rs
+      1 src-tauri/src/ai/providers/claude.rs

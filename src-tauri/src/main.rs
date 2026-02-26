@@ -227,6 +227,9 @@ mod api {
 }
 
 mod core {
+    pub mod http_types {
+        include!("core/http_types.rs");
+    }
     pub mod tapi_error {
         include!("core/tapi_error.rs");
     }
