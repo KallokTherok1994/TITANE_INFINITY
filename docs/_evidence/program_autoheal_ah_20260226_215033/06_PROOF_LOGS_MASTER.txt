@@ -1,0 +1,1093 @@
+]633;E;{   echo "# MASTER PRECHECK AUTOHEAL"\x3b   echo "UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"\x3b   echo "\\n## 2.1 Repo baseline"\x3b   echo "$ git status --porcelain=v1"\x3b   git status --porcelain=v1\x3b   echo "$ git rev-parse --short HEAD"\x3b   git rev-parse --short HEAD\x3b   echo "$ git log -1 --oneline"\x3b   git log -1 --oneline\x3b   echo "$ ls"\x3b   ls\x3b   echo "$ ls docs/_evidence || true"\x3b   ls docs/_evidence || true\x3b    echo "\\n## 2.2 Prérequis evidence + tool contract"\x3b   echo "$ rg -n \\"program_p6_13|program_p14_20|program_p21_27|FINAL_VERDICT\\" -S docs/_evidence || true"\x3b   rg -n "program_p6_13|program_p14_20|program_p21_27|FINAL_VERDICT" -S docs/_evidence || true\x3b   echo "$ rg -n \\"TOOL_CONTRACT|capabilit|explicit|provider compliance|transient|TTL|purge\\" -S docs/_evidence src src-tauri || true"\x3b   rg -n "TOOL_CONTRACT|capabilit|explicit|provider compliance|transient|TTL|purge" -S docs/_evidence src src-tauri || true\x3b    echo "\\n## 2.3 Invariant scans"\x3b   echo "$ rg -n \\"fetch\\\\(|axios\\\\(|https?://\\" -S src || true"\x3b   rg -n "fetch\\(|axios\\(|https?://" -S src || true\x3b   echo "$ rg -n \\"API_KEY|SECRET|TOKEN|Authorization|Bearer\\" -S src src-tauri || true"\x3b   rg -n "API_KEY|SECRET|TOKEN|Authorization|Bearer" -S src src-tauri || true\x3b } > "$MASTERLOG";0fac5f22-4bfa-4341-a87c-a9afcbfde118]633;C# MASTER PRECHECK AUTOHEAL
+UTC=2026-02-26T21:50:48Z
+\n## 2.1 Repo baseline
+$ git status --porcelain=v1
+$ git rev-parse --short HEAD
+a34da7c1
+$ git log -1 --oneline
+a34da7c1 evidence: append terminal latest alias traceability
+$ ls
+-
+actions-runner
+analyze-bundle.sh
+analyze-ui.sh
+ANOMALIES_REGISTER.md
+API_REFERENCE.md
+approvals
+ARCHITECTURE.md
+_archive
+ARTIFACTS_SHA256_v27.0.1.md
+ARTIFACTS_SHA256_v27.0.2.md
+AUDIT_GATES_CHECKLIST.md
+AUDIT_PRODUCTION_FINAL_v27.0.0.md
+AUDIT_REPORT.md
+AUDIT_RESULTS_v27.0.1_BETA.md
+AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md
+AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.1.md
+AUTONOMY_AUDIT_FINAL_ANALYSIS.md
+AUTONOMY_AUDIT_FINAL_COMPREHENSIVE_VERDICT.md
+AUTONOMY_AUDIT_FINAL_VERDICT.md
+AUTORISATION_PRODUCTION_v27.0.0.md
+baseline_measurements_real_w1.json
+baseline_metrics_w1.json
+BETA_DEPLOYMENT_CHECKLIST.md
+BETA_DEPLOYMENT_GO_LIVE.md
+BETA_DISTRIBUTION_INVITATION.md
+BETA_RELEASE_v27.0.1.md
+BETA_ROLLOUT_PLAN.md
+BETA_TESTER_TRACKING.md
+BOOTSTRAP_COMPLETE_FINAL_REPORT.md
+BOOTSTRAP_REPORT.md
+build_log.txt
+build_prod_hotfix_final.log
+build_prod_hotfix.log
+build_production_attempt_2_1770941958.log
+build_production_full_1770941835.log
+build-tauri-vomega2.log
+build_tdz_fix.log
+build-v27.0.1-final.log
+build-v27.0.1-rebundle.log
+build-v34-baseline.log
+BUNDLE_OPTIMIZATION_ANALYSIS.md
+BUNDLE_OPTIMIZATION_v34.0.0.md
+BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md
+C1_PHASE_REPORT.md
+C2_PHASE_REPORT.md
+C7_RELEASE_SEALING.md
+CAMPAIGN_COMPLETE_v27.0.2.txt
+CAMPAIGN_CONCLUSION_SEAL.md
+CAMPAIGN_GO_ALL_EXTENDED_PLUS_COMPLETION_REPORT.md
+CAMPAIGN_GO_ALL_EXTENDED_SEAL.md
+CERTIFICATION_PRODUCTION_FINAL.md
+CERTIFICATION_REGISTRY_APPEND_ONLY.md
+CHANGELOG.md
+CHANGELOG_v27.0.1_PRODUCTION.md
+CHANGELOG_v27.1.0.md
+CHANGELOG_v27.2.0_ENTRY.md
+CHAT_MEM_AUDIT.md
+CHAT_MEM_DISCOVERY.md
+CHAT_MEM_PATCH_PLAN.md
+CHAT_MEM_PROOFS.md
+CHAT_MEM_TEST_RESULTS.md
+check-tauri-backend.sh
+check_tauri_build_status.sh
+check-tunnel-access.sh
+cliff.toml
+COGNITIVE_CORE_COMPLETE.md
+COGNITIVE_CORE_README.md
+COMPLETION_REPORT_v27.0.0.md
+COMPLETION_SUMMARY.md
+config
+CONSOLE_ERRORS_FIXED.txt
+CONSTITUTION_LOCK_v27.md
+CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md
+CORRECTION_PROBLEMES_WARNINGS_v27.0.0.md
+coverage
+coverage-rust-generation.log
+dashboard
+data
+DAY1_DEPLOYMENT_ACTIVATION_PLAYBOOK.md
+DAY1_GONO_SUMMARY.sh
+DEEP_ANALYSIS_EXECUTIVE_SUMMARY_v37.0.0.txt
+DEEP_DIVE_ANALYSIS_FINAL_v37.0.0.md
+deployment
+DEPLOYMENT_APPROVAL.md
+DEPLOYMENT_COMPLETE_EXECUTIVE_SUMMARY_v27.0.1.md
+DEPLOYMENT_COMPLETE_v27.0.1_OMEGA3.md
+DEPLOYMENT_DISTRIBUTION_v27.2.0.sh
+DEPLOYMENT_IN_PROGRESS_REALTIME_STATUS.md
+DEPLOYMENT_LOG_v37.0.0.md
+DEPLOYMENT_READINESS_v27.0.3.txt
+DEPLOYMENT_READY_v27.0.2.txt
+DEPLOYMENT_REPORT_PRODUCTION_v27.0.0.md
+DEPLOYMENT_REPORT_v27.0.0.md
+DEPLOYMENT_REPORT_v27.0.2.md
+DEPLOYMENT_STATUS_FINAL.md
+DEPLOYMENT_SUCCESS_v35.0.0.md
+DEPLOYMENT_SUCCESS_v36.0.0.md
+DEPLOYMENT_SUMMARY_v27.0.0.md
+DEPLOYMENT_v27.2.0_COMPLETE.md
+DEPLOYMENT_v27.2.0_STATUS.md
+dev_output.log
+dev_tauri_clean_log.txt
+dev_tauri_fixed_log.txt
+dev_tauri_log.txt
+dev_tauri_npm_log.txt
+dev_tauri_session.log
+DIAGNOSTIC_CHAT_NOT_WORKING.md
+dist
+distribution
+DISTRIBUTION_AUTHORIZED.md
+DISTRIBUTION_MANIFEST_v27.0.1_BETA.md
+DISTRIBUTION_VERIFICATION_v27.0.1.md
+dist_stub
+docs
+DOCUMENTATION_INDEX_v27.0.0.md
+e2e
+E2E_AUTOFIX_INFRASTRUCTURE_COMPLETE.md
+E2E_BREAKTHROUGH_REPORT.md
+E2E_RECOVERY_FINAL_SUMMARY.md
+E2E_RECOVERY_SUCCESS.md
+E2E_TEST_STATUS_REPORT.md
+E2E_TIER1_RESULTS_ANALYSIS.md
+ENV_REPORT.md
+eslint.config.js
+EVOLVE_EXECUTION_GUIDE.md
+EXECUTIVE_FINAL_REPORT_PHASES_1-4.md
+EXECUTIVE_FINAL_REPORT_PO_FINAL_SEAL.md
+EXECUTIVE_SUMMARY_V24_TO_V27.1.0.md
+EXECUTIVE_SUMMARY_v35-v36.md
+figma-tokens.json
+FILE_INDEX.csv
+FINAL100_G_ALL_GAPS_FIXED.md
+FINAL_ACTIONS_EXECUTION_REPORT.md
+FINAL_DEPLOYMENT_STATUS_v27.0.2.txt
+final_dev.log
+FINAL_SESSION_REPORT_COMPLETE.md
+FINAL_STATUS_AND_NEXT_STEPS.md
+FINAL_STATUS_REPORT_v27.0.1_BETA.md
+FINAL_STATUS_REPORT_v37.0.0.md
+FINAL_STATUS_SNAPSHOT.txt
+FINAL_SUMMARY_PHASES_1_4_COMPLETE.md
+FINAL_SUMMARY_v27.0.2.md
+final_test_log.txt
+final-validation.sh
+final_verification_log.txt
+FIX_APPLIED.md
+FIX_CHAT_COMPLETE_v20.5.1.md
+FIX_CHAT_OLLAMA_FALLBACK_v20.5.md
+FIX_INFINITE_LOADING_v27.0.1.md
+FIX_TAURI_DETECTION_v20.1.md
+FIX_TAURI_INVOKE_CACHE_v20.2.md
+FIX_TAURI_MODULE_CACHE_v20.3.md
+fix-typescript-errors.sh
+FIX_VITE_BEFOREDEV_CRASH_v27.0.1.md
+force-browser-reload.sh
+force-menu-reload.sh
+FULL_DEPLOYMENT_AUTHORIZED.md
+full_dev.log
+FULL_INTEGRATION_AUDIT_SUMMARY.md
+GATE_E2E_PASS.md
+GATEWAY_IMPLEMENTATION_PLAN.rs
+GH_AUTH_GUIDE.md
+GITHUB_RELEASE_INSTRUCTIONS.md
+GITHUB_RELEASE_INSTRUCTIONS_v27.0.2.md
+GO_ALL_CAMPAIGN_STATE.md
+GO_ALL_EXECUTION_GUIDE.md
+GO_ALL_OPERATION_COMPLETE_FINAL_SUMMARY.md
+GO_ALL_PHASE_EXECUTION_REPORT.md
+GO_ALL_PHASES_1_4_COMPLETE.md
+GO_ALL_PRODUCTION_DEPLOYMENT_CHECKLIST_v27.0.0.md
+GO_LIVE_AUTHORIZATION_v27.0.3.md
+GOVERNANCE_CORRECTION_SUMMARY.md
+GOVERNANCE_EVOLUTION_PROTOCOL.md
+GUIDE_INSTALLATION_SETUP_v27.0.0.md
+HANDOFF_v27.2.0_DEPLOYMENT_READY.md
+HOTFIXES_v27.0.2_INDEX.md
+index.html
+installer
+installer_gui
+install_log.txt
+LAUNCH_CHECKLIST_v27.2.0.md
+launch-titane.sh
+legacy
+LICENSE.md
+LOCAL_AI_ABSOLUTE_VERDICT.md
+logs
+MANUAL_FINALIZATION_STATUS.md
+MANUEL_UTILISATEUR_COMPLET_v27.0.0.md
+mega_deploy_dry_run.log
+mega_deploy_final2.log
+mega_deploy_production.log
+mega-deploy.sh
+memory
+minimal_config_test_log.txt
+MISSION_COMPLETE_CHAT_v20.5.1.md
+MISSION_COMPLETE.txt
+Modelfile
+monitoring-logs
+monitoring.sh
+MULTI_CONVERSATION_FINAL_STATUS.md
+NETTOYAGE_v27.0.0.md
+NEXT_PHASE_P10_3_2_FULL_E2E_X3.md
+NEXT_PHASE_READY.md
+NEXT_STEPS_v27.0.0.md
+node_modules
+OLLAMA_CONFIG_SUCCESS.md
+OLLAMA_FIX_REPORT.md
+OLLAMA_QUICKSTART.md
+OLLAMA_SETUP_GUIDE.md
+OPERATIONAL_SILENCE_NOTICE.md
+OPTIMIZATION_ANALYSIS_v27.0.0.md
+OPTIMIZATION_PHASE2_REPORT.md
+OPTIMIZATION_PHASES_1-3C_FINAL_SUMMARY.md
+OPTIMIZATION_PHASES_1-5_FINAL_REPORT.md
+OPTIMIZATION_REPORT_v27.0.2.md
+OPTIMIZATION_REPORT_v27.0.3.md
+OPTIMIZATION_REPORT_v27.1.0.md
+OPTIMIZATION_REPORT_v27.2.0.md
+OPTIMIZATION_REPORT_v27.3.0.md
+OPTIMIZATION_REPORT_v28.0.0.md
+OPTIMIZATION_REPORT_v28.1.0.md
+OPTIMIZATION_REPORT_v28.2.0.md
+OPTIMIZATION_REPORT_v29.0.0.md
+OPTIMIZATION_REPORT_v29.1.0.md
+OPTIMIZATION_STACK_v27-v35.md
+OPTIMIZATION_SUMMARY_v29_FINAL.md
+OPTIMIZATION_TARGETS_W1.md
+optimize-workspace.sh
+OPTION_B_RECOVERY_COMPLETE.md
+orchestration
+P0_OMEGA_PROD_SPLASH_PERMASEAL_REPORT.md
+P1_BUILD_CHUNKS_FIX_REPORT.md
+P1_BUILD_PROOF.txt
+P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md
+P2_AUDIT_COMPLETE_EXECUTIVE_SUMMARY.md
+P2_AUDIT_INDEX.md
+P2_AUDIT_PHASE_3_SECURITY_STABILITY.md
+P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md
+P8_2_EXECUTION_COMPLETE.md
+P8_4_FINALIZATION_REPORT_FR.md
+package.json
+package.ui.json
+PATCH_PLAN.md
+PERFECTION_REPORT_v27.0.1.md
+performance-reports
+PERFORMANCE_REPORT_v27.md
+PERFORMANCE_REPORT_v35.0.0.md
+PERFORMANCE_TUNING.md
+PHASE2_COMPLETED.txt
+PHASE_2_COMPLETE_PHASE_3_READY.md
+phase2-execution.log
+PHASE2_EXECUTION_VERIFICATION.md
+PHASE2_MANUAL_EXECUTION_GUIDE.md
+PHASE2_READY_TO_EXECUTE.md
+PHASE_2_UI_LAZY_COMPONENTS_v37.0.0.md
+PHASE3A_COMPLETION_REPORT.md
+PHASE3B_COMPLETION_REPORT.md
+PHASE3C_COMPLETION_REPORT.md
+PHASE3_CI_STABILIZATION_REPORT.md
+PHASE_3_CSS_AUDIT_v37.0.0.md
+PHASE_3_E2E_STRATEGY_UPDATED.md
+PHASE_3_E2E_VALIDATION_PLAN.md
+PHASE3_REFACTORING_PLAN.md
+PHASE3_SESSION_FINAL_SUMMARY.md
+PHASE3_SESSION_STATUS.md
+PHASE_4_COMPLETION_REPORT.md
+PHASE4_FINAL_CLEANUP_REPORT.md
+PHASE_5_PROFILING_STRATEGY.md
+PHASE_5_QUICK_WINS_APPLIED.md
+PHASE_6_COMPLETION_REPORT.md
+PHASE_6_HOTSPOT_ANALYSIS.md
+PHASE_6_PROFILING_STRATEGY.md
+PHASE_A_PRODUCTION_GO_PROTOCOL.md
+PHASE_C1_COMPLETION_REPORT.ts
+PHASES_2_3_COMPLETE_PHASE_4_READY.md
+P_INFINITY_FINAL_REPORT.md
+P_INFINITY_P0_PREFLIGHT.md
+P_INFINITY_P1_SYSTEM_AUDIT.md
+P_INFINITY_P2_TESTS.md
+P_INFINITY_P3_P4_P5_AUDIT.md
+P_INFINITY_P6_BUILD_TESTS.md
+P_INFINITY_P7_P8_P9_DELIVERY.md
+plans
+playwright.config.ts
+playwright.config.ts.backup-1770812583
+playwright.global-setup.ts
+playwright-report
+pnpm-alias.sh
+pnpm-local.sh
+pnpm-lock.yaml
+PO_CHAT_SYSTEM_AUDIT_CRITICAL_FINDING.md
+PO_PHASE3_CORRECTION_PLAN.md
+PO_PHASE4_ARCHITECTURE_AUDIT.md
+PO_PHASE5_BUILD_LOGS_STABILITY.md
+PO_PHASE6_DOCUMENTATION_ALIGNMENT.md
+PO_PHASE7_FINAL_REGISTRY.md
+PORTAGE_COMPLETION_INSTRUCTIONS.md
+PORTAGE_V27.4.1_CANON_FINAL_REPORT.md
+PORTAGE_V27.4.1_CANON_VERIFICATION.md
+PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md
+PORTAGE_V27.4.1_FINAL_OUTPUT.md
+PORTAGE_V27.4.1_INTERNAL_VERIFICATION_REPORT.md
+PORTAGE_V27.4.1_SEAL.md
+PORT_FROM_LITE.md
+PORT_TITANE_INFINITY_FINAL_REPORT.md
+postcss.config.js
+POST_DEPLOYMENT_SMOKE_TEST_REPORT.md
+POST_PROD_OPS_PHASE3_PLAN.md
+PROD_FIX_v27.0.2_COMPLETE_GUIDE.md
+PROD_FIX_v27.0.2_PATCHES.md
+PROD_FIX_v27.0.2_VALIDATION_REPORT.md
+PRODUCTION_AUTHORIZATION_APPROVAL_v37.0.0.md
+PRODUCTION_AUTHORIZATION_FINAL_v8_AUDIT.md
+PRODUCTION_AUTHORIZATION.md
+PRODUCTION_AUTHORIZATION_v35.0.0.md
+PRODUCTION_AUTHORIZATION_v36.0.0.md
+PRODUCTION_CERTIFICATION_v27.0.0.md
+PRODUCTION_DEPLOYMENT_CHECKLIST_v27.0.3.md
+PRODUCTION_DEPLOYMENT_COMPLIANCE_REPORT.md
+PRODUCTION_DEPLOYMENT_MANIFEST_v27.0.3.md
+PRODUCTION_DEPLOYMENT_v27.0.1_FINAL.md
+PRODUCTION_DEPLOYMENT_v27.2.0_SEALED.md
+PRODUCTION_DEPLOYMENT_VERDICT_v27.0.2.md
+PRODUCTION_GO_LIVE_AUTHORIZATION.md
+PRODUCTION_GO_SIGNED.md
+PRODUCTION_HOTFIX_OLLAMA_AUTOSTART.md
+PRODUCTION_JOURNEY_COMPLETE.md
+PRODUCTION_READY_CERTIFICATION_v37.0.0.md
+PRODUCTION_RELEASE_v28.0.0.md
+PRODUCTION_SEAL_FINAL_OUTPUT.md
+PRODUCTION_SEAL_v27.4.1.md
+PRODUCTION_STATUS_v27.0.1_OPERATIONAL.md
+PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md
+PRODUCTION_WEEK1_DAILY_NOTES.md
+PRODUCTION_WEEK1_OBSERVATION.md
+PROJECT_SNAPSHOT_v37.0.0.txt
+PROOFS.md
+PR_TEMPLATE_CREATION.md
+public
+push_corrections.sh
+quantum_system_test_20260116_214045.log
+QUICK_FIX_GUIDE.md
+QUICK_START_TESTING.sh
+RAPPORT_FINAL_STABLE+.md
+RAPPORT_FINAL_STRUCTURE_v27.0.0.md
+RAPPORT_VERIFICATION_COMPLET_27.0.0.md
+REACT_OPTIMIZATION_v30.0.0.md
+REACT_OPTIMIZATION_v31.0.0.md
+REACT_OPTIMIZATION_v33.0.0.md
+README_EN.md
+README.md
+README_v27.0.0.md
+registry
+REGISTRY_APPEND_CHAT_MEM.jsonl
+REGISTRY_APPEND.jsonl
+release
+RELEASE_ARTIFACTS_CHECKSUMS.txt
+RELEASE_CHECKLIST_v27.0.2.md
+RELEASE_NOTES_v27.0.0.md
+RELEASE_NOTES_v27.0.1_BETA.md
+RELEASE_NOTES_v27.0.2.md
+RELEASE_NOTES_v27.0.3.md
+RELEASE_NOTES_v27.2.0.md
+RELEASE_v27.0.3_SEALED.txt
+reports
+REPORTS_INDEX_SESSION_2.md
+restart-clean.sh
+restart-complete-fix.sh
+run
+run_baseline_measurements.rs
+runs
+runtime
+scripts
+SEAL_PROCESS_COMPLETE.md
+service
+SESSION_2_FINAL_STATUS.md
+SESSION_COMPLETE_2026-02-03.md
+SESSION_COMPLETE_FINAL_INDEX.md
+SESSION_COMPLETE.txt
+SESSION_COMPLETION_REPORT.md
+SESSION_EXECUTION_SUMMARY_KEVIN.md
+setup-dev.sh
+SINGULARITYBRIDGE_DISABLED.txt
+smoke_dev_tdz_fix.log
+SMOKE_TEST_RESULTS_v27.0.2.md
+SPRINT_1_CODE_CHANGES_AUDIT.md
+SPRINT_1_FINAL_REPORT.md
+SPRINT_2_FINAL_REPORT.md
+SPRINT_3_FINAL_REPORT.md
+SPRINT_4_FINAL_REPORT.md
+SPRINT_v27.2.0_COMPLETE.md
+src
+src-tauri
+STANDARDS_MODE_VERIFICATION.txt
+start
+start-with-ollama.sh
+status
+STATUS_v20.5.1_READY.md
+stop-http-server.sh
+SUPER_PROMPT_COMPLETION_v27.2.1.md
+tailwind.config.ts
+tauri
+TAURI_BACKEND_FIX.md
+tauri.base.json
+tauri-build-final.log
+tauri_build_gstreamer.log
+tauri_build_icon_refresh.log
+tauri-build.log
+tauri_build_ollama_bundle.log
+tauri-build-output.log
+tauri_build_prod_FINAL.log
+tauri_build_prod_FULL.log
+tauri_build_prod.log
+tauri_build_prod_v2.log
+tauri_build_sc_get_env.log
+tauri-dev.log
+tauri_test_clean_config.txt
+TECHNICAL_DEBT_v27.0.0.md
+test_chat_backend.py
+test-chat-direct.mjs
+test-chat-system.sh
+test-chat-ui-auto.sh
+test-chat-ui.html
+test-copilot-whitelist.sh
+test-evo-integration.sh
+test-evo-validation.sh
+test_finetuned.py
+test-mime-types.sh
+test-ollama-chat.sh
+test-ollama-connection.js
+test-ollama-connection.sh
+test_persona_engine.rs
+test-quantum-integration.sh
+TEST_REPORT_2026-01-28_11-05-08.txt
+test-results
+test_results_20260126_211255.log
+TEST_RESULTS.md
+tests
+test-sprint6-phase3.sh
+test-tauri-detection-fix.ts
+test-tauri-detection.sh
+test-titane-ollama.mjs
+test-uilogger.mjs
+test.wav
+THREE_JS_LAZY_RESULTS_v36.0.0.md
+THREE_JS_OPTIMIZATION_v36.0.0.md
+TIMEOUT_WRAPPER_PATCH_v27.0.3.md
+titane
+TITANE_ABSOLUTE_ASSURANCE_REPORT.md
+TITANE_ABSOLUTE_FIXLOG.md
+TITANE_ABSOLUTE_PROOFS.md
+TITANE_ABSOLUTE_TEST_RESULTS.md
+titane-app-icon.png
+TITANE_ARTIFACTS_SHA256_v27.0.2_HOTFIX.txt
+TITANE_FINAL_STATUS_v27.0.0.md
+TITANE_FULL_AUDIT_READY.md
+TITANE_GLOBAL_AUDIT.md
+TITANE_GLOBAL_DISCOVERY.md
+TITANE_GLOBAL_PATCH_PLAN.md
+TITANE_GLOBAL_PROOFS.md
+TITANE_GLOBAL_TEST_RESULTS.md
+titane-infinity@16.2.3
+titane-infinity@9.0.0
+titane-infinity.desktop
+TITANE_INFINITY-main.zip
+TITANE_INFINITY_STATUS_FINAL_vOMEGA2.md
+titane_local_training
+TITANE_OMEGA_BACKUP_20260223T122631Z.tar.gz
+titane.sh
+titane.sh.new
+tmp_import_useChat.mjs
+transformation-start.sh
+TROUBLESHOOTING.md
+tsconfig.json
+tsconfig.node.json
+tsconfig.test.json
+tts-service
+TUNNEL_ISSUES.txt
+TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md
+typedoc.json
+UI_COMPREHENSIVE_ANALYSIS_v37.0.0.md
+UI_FINAL_SEAL_EXECUTIVE_SUMMARY.md
+UI_SEAL_P0_PREFLIGHT.md
+UI_SEAL_P1_CARTE.md
+UI_SEAL_P2-P9_CONSOLIDATED.md
+UI_TEST_VERIFICATION_REPORT.md
+ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md
+V24_QUICK_WINS_FINAL_VERDICT.txt
+V25_DEPLOYMENT_QUICK_START.md
+V26_INFRASTRUCTURE_READY.sh
+V26_PHASE_COMPLETE.md
+V37_1_DEPLOYMENT_REPORT.md
+V37_COMPLETE_OPTIMIZATION_FINAL.md
+V37_OPTIMIZATION_COMPLETE.md
+validate-standards-mode.sh
+verify-copilot-fix.sh
+verify-evo-final.sh
+verify-ollama.sh
+verify-time-fusion.sh
+vite
+vite_clean_test.txt
+vite.config.ts
+vite_direct_log.txt
+vite_minimal_test.txt
+vite_no_tsconfig_test.txt
+vite_standalone_test2.txt
+vite_standalone_test.txt
+vitest.browser.config.ts
+vitest.config.ts
+vitest.integration.config.ts
+vitest.unit.config.ts
+vitest_validation_20260127_114458.log
+vitest.workspace.ts
+wdio.desktop.conf.cjs
+WEB_VITALS_v35.0.0.md
+WEEK1_MONITORING_CHECKPOINTS.md
+WORKSPACE_CLEANUP_REPORT.md
+ZUSTAND_OPTIMIZATION_GUIDE.md
+ZUSTAND_OPTIMIZATION_STATUS_v32.0.0.md
+$ ls docs/_evidence || true
+audit-2026-01-15
+CHAT_UI_MEMORY_E2E_CERT_20260225T180425Z
+CHAT_UIUX_CERT_20260221_192916
+conversation_os_v1_20260225_194957
+conversation_os_v1_20260225_195007
+conversation_os_v1_20260225_195015
+conversation_os_v1_20260225_224546
+conversation_os_v1_20260226_122608
+DEPLOYMENT_FINAL_AUTHORIZATION
+DEV_LOG_FIX_20260221_141718
+final_clean_seal
+final_production_lockdown
+FINAL_SEAL_20260224_195849
+FINAL_SEAL_20260225T131114Z
+FIX_CHAT_PROVIDER_GOV_20260223_092409
+FIX_CHAT_PROVIDER_GOV_P2_20260223_094235
+FIX_CHAT_PROVIDER_GOV_P3_20260223_101233
+FIX_CHAT_PROVIDER_GOV_P3_20260223_101506
+g7-tauri-allowlist-lock-report.md
+g8-provider-api-only-report.md
+gate-runs
+health
+ONLINE_CHAT_FIX_20260220_115300
+online_final
+online_first_vΩ
+online_migration
+ONLINE_RESEARCH_CHAT_UI_AUDIT_20260225T162524Z
+p0-secrets
+p0-surface
+p100_20260226_191719
+p101_20260226_191719
+p10_20260226_144448
+p102_20260226_191719
+p103_20260226_191719
+p104_20260226_191719
+p105_20260226_193740
+p106_20260226_193740
+p107_20260226_193740
+p108_20260226_193740
+p109_20260226_193740
+P10_LOCAL_LLM
+P10_P13_FUSION
+P10_P13_FUSION_FINAL
+p110_20260226_193740
+p111_20260226_193740
+p11_20260226_144448
+p112_20260226_195102
+p113_20260226_195102
+p114_20260226_195102
+p115_20260226_195102
+p116_20260226_195102
+p117_20260226_195102
+p118_20260226_195102
+p119_20260226_200535
+p120_20260226_200535
+p121_20260226_200535
+p12_20260226_144448
+p122_20260226_200535
+p123_20260226_200535
+p124_20260226_200535
+p125_20260226_200535
+p126_20260226_202126
+p127_20260226_202126
+p128_20260226_202126
+p129_20260226_202126
+P12_DISCOVERY
+p130_20260226_202126
+p131_20260226_202126
+p13_20260226_144448
+p132_20260226_202126
+p133_20260226_203720
+p134_20260226_203720
+p135_20260226_203720
+p136_20260226_203720
+p137_20260226_203720
+p138_20260226_203720
+p139_20260226_203720
+P13_UX_PROOFS
+p140_20260226_205617
+p141_20260226_205617
+p14_20260226_151353
+p142_20260226_205617
+p143_20260226_205617
+p144_20260226_205617
+p145_20260226_205617
+p146_20260226_205617
+p15_20260226_151353
+p16_20260226_151353
+p17_20260226_151353
+p18_20260226_151353
+p19_20260226_151353
+p20_20260226_151353
+p21_20260226_155906
+p22_20260226_155906
+p23_20260226_155906
+p24_20260226_155906
+p25_20260226_155906
+p26_20260226_155906
+p27_20260226_155906
+p28_20260226_165147
+p29_20260226_165147
+p2-contract
+p30_20260226_165147
+p31_20260226_165147
+p32_20260226_165147
+p33_20260226_165147
+p34_20260226_165147
+p35_20260226_171750
+p36_20260226_171750
+p37_20260226_171750
+p38_20260226_171750
+p39_20260226_171750
+p3-build
+p40_20260226_171750
+p41_20260226_171750
+p42_20260226_173016
+p43_20260226_173016
+p44_20260226_173016
+p45_20260226_173016
+p46_20260226_173016
+p47_20260226_173016
+p48_20260226_173016
+p49_20260226_174445
+p4-constitutional
+P4_CONSTITUTION_AUDIT.md
+p5
+p50_20260226_174445
+p51_20260226_174445
+p52_20260226_174445
+p53_20260226_174445
+p54_20260226_174445
+p55_20260226_174445
+p56_20260226_180004
+p57_20260226_180004
+p58_20260226_180004
+p59_20260226_180004
+P5_RUNTIME_GOVERNANCE.md
+p6
+p60_20260226_180004
+p61_20260226_180004
+p6_20260226_144448
+p62_20260226_180004
+p63_20260226_181226
+p64_20260226_181226
+p65_20260226_181226
+p66_20260226_181226
+p67_20260226_181226
+p68_20260226_181226
+p69_20260226_181226
+P6_CAPABILITY_QUALIFICATION.md
+p70_20260226_182438
+p71_20260226_182438
+p7_20260226_144448
+p72_20260226_182438
+p73_20260226_182438
+p74_20260226_182438
+p75_20260226_182438
+p76_20260226_182438
+p77_20260226_183739
+p78_20260226_183739
+p79_20260226_183739
+p80_20260226_183739
+p81_20260226_183739
+p8_20260226_144448
+p82_20260226_183739
+p83_20260226_183739
+p84_20260226_185039
+p85_20260226_185039
+p86_20260226_185039
+p87_20260226_185039
+p88_20260226_185039
+p89_20260226_185039
+p90_20260226_185039
+p91_20260226_190508
+p9_20260226_144448
+p92_20260226_190508
+p93_20260226_190508
+p94_20260226_190508
+p95_20260226_190508
+p96_20260226_190508
+p97_20260226_190508
+p98_20260226_191719
+p99_20260226_191719
+pA_20260226_215033
+pack5_capacites_20260226_135006
+pB_20260226_215033
+pC_20260226_215033
+pD_20260226_215033
+pE_20260226_215033
+perfect_assurance
+pF_20260226_215033
+pG_20260226_215033
+pH_20260226_215033
+program_autoheal_ah_20260226_215033
+program_p105_111_20260226_193740
+program_p112_118_20260226_195102
+program_p119_125_20260226_200535
+program_p126_132_20260226_202126
+program_p133_139_20260226_203720
+program_p140_146_20260226_205617
+program_p14_20_20260226_151353
+program_p21_27_20260226_155906
+program_p28_34_20260226_165147
+program_p35_41_20260226_171750
+program_p42_48_20260226_173016
+program_p49_55_20260226_174445
+program_p56_62_20260226_180004
+program_p6_13_20260226_144448
+program_p63_69_20260226_181226
+program_p70_76_20260226_182438
+program_p77_83_20260226_183739
+program_p84_90_20260226_185039
+program_p91_97_20260226_190508
+program_p98_104_20260226_191719
+release
+RELEASE_CERTIFICATION.md
+RELEASE_P8_WEBRESEARCH_STABLE_20260224_183011
+RELEASE_P9_RUNTIME_CERTIFICATION_20260224_185500
+RELEASE_PROMOTION_20260221_201727
+RELEASE_PROMOTION_P4_20260223_104213
+RELEASE_PROMOTION_P4_20260223_164044
+remediation_final
+SNAPSHOT_CONTRACT_GUARD_20260221_143225
+TITANE_INFINITY_CAMPAIGN_COMPLETE_v27.0.5.md
+v27
+\n## 2.2 Prérequis evidence + tool contract
+$ rg -n "program_p6_13|program_p14_20|program_p21_27|FINAL_VERDICT" -S docs/_evidence || true
+$ rg -n "TOOL_CONTRACT|capabilit|explicit|provider compliance|transient|TTL|purge" -S docs/_evidence src src-tauri || true
+\n## 2.3 Invariant scans
+$ rg -n "fetch\(|axios\(|https?://" -S src || true
+src/tests/security.test.ts:29:      expect(Sanitizer.validateUrl('https://example.com')).toBe(true);
+src/tests/security.test.ts:30:      expect(Sanitizer.validateUrl('http://example.com')).toBe(true);
+src/CARTE_POINTS_CRITIQUES.ts:137: *     "devUrl": "http://localhost:5173",
+src/CARTE_POINTS_CRITIQUES.ts:142: *   "devUrl": "http://localhost:1420"  ❌ (mode HTTP obsolète)
+src/CARTE_POINTS_CRITIQUES.ts:240: *      → "devUrl": "http://localhost:5173" ✅ (dev server encapsulé par Tauri)
+src/tests/activeListeningIntegration.test.ts:125:    origin: 'http://localhost',
+src/tests/e2e/titane_e2e.test.ts:338:        { title: 'Cognitive Architecture Overview', url: 'https://example.com/1' },
+src/tests/e2e/titane_e2e.test.ts:339:        { title: 'TITANE Systems Design', url: 'https://example.com/2' },
+src/utils/__tests__/webVitals.test.ts:131:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:149:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:169:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:189:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:209:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:231:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:248:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:278:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:305:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:316:        url: 'http://localhost',
+src/utils/__tests__/webVitals.test.ts:433:      url: 'http://localhost',
+src/types/aiModel.ts:67:    endpoint: 'https://generativelanguage.googleapis.com/v1beta/models',
+src/types/aiModel.ts:81:    endpoint: 'https://api.openai.com/v1/chat/completions',
+src/types/aiModel.ts:110:    endpoint: 'https://api.anthropic.com/v1/messages',
+src/__tests__/e2e-automated-validation.test.tsx:447:      return originalFetch(url);
+src/__tests__/e2e-automated-validation.test.tsx:997:      return originalFetch(url);
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/core/holography/HOLOMESH_ENGINE.ts:215:    let svg = `<svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg" class="holomesh">`;
+src/modules/fusion/DatasetBuilder.ts:340:    echo "   curl -fsSL https://ollama.com/install.sh | sh"
+src/components/ui/LazyImage.tsx:47:  placeholder = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1 1'%3E%3Crect width='1' height='1' fill='%231a1a1a'/%3E%3C/svg%3E",
+src/components/ui/button.tsx:77:          xmlns="http://www.w3.org/2000/svg"
+src/features/governance-center/components/APIProviderCard.tsx:28:    helpUrl: 'https://makersuite.google.com/app/apikey',
+src/features/governance-center/components/APIProviderCard.tsx:36:    helpUrl: 'https://platform.openai.com/api-keys',
+src/features/governance-center/components/APIProviderCard.tsx:44:    helpUrl: 'https://console.anthropic.com/settings/keys',
+src/features/governance-center/components/APIProviderCard.tsx:52:    helpUrl: 'https://ollama.com/download',
+src/features/governance-center/components/APIProviderCard.tsx:167:                  curl -fsSL https://ollama.com/install.sh | sh
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/features/governance-center/types.ts:135:      'GitHub Copilot / GitHub Models API (https://github.com/marketplace/models)',
+src/features/governance-center/tabs/SecretsTab.tsx:588:              href="https://github.com/settings/tokens"
+src/__tests__/components/ui/__snapshots__/Toast.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/panels/__snapshots__/ChatPanel.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/components/BootErrorFallback.tsx:200:              'https://github.com/KallokTherok1994/TITANE_INFINITY/issues',
+src/assets/titane-arc-emerald.svg:5:  xmlns="http://www.w3.org/2000/svg"
+src/assets/titane-reactor-awen.svg:5:  xmlns="http://www.w3.org/2000/svg"
+src/modules/devSudo/devSudoHandler.ts:2610:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoHandler.ts:2663:3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2848:2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoHandler.ts:2887:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoHandler.ts:2948:3. Tester proxy: \`curl http://localhost:4000/api/tags\`
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/core/http/httpClient.ts:316:export async function secureFetch(url: string, init?: RequestInit): Promise<Response> {
+src/__tests__/components/ui/__snapshots__/Alert.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/hooks/useChat.ts:1803:   curl -fsSL https://ollama.com/install.sh | sh
+src/lib/accessibility.ts:119: * https://www.w3.org/WAI/GL/wiki/Relative_luminance
+src/lib/accessibility.ts:132: * https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/config/index.ts:26:      if (env.isBrowser && env.isDev) return 'http://localhost:1420';
+src/modules/devSudo/devSudoBuiltins.ts:525:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:579:3. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:648:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:765:2. Le proxy répond-il ? → \`curl http://localhost:4000/api/tags\`
+src/modules/devSudo/devSudoBuiltins.ts:804:curl http://localhost:4000/api/tags
+src/modules/devSudo/devSudoBuiltins.ts:865:3. Tester proxy: \`curl http://localhost:4000/api/tags\`
+src/config/offline-first.ts:34:  localLLM: 'http://localhost:8000',
+src/config/offline-first.ts:37:  gemini: 'https://generativelanguage.googleapis.com/v1beta',
+src/config/offline-first.ts:38:  openai: 'https://api.openai.com/v1',
+src/config/offline-first.ts:77:    await httpClient.head('https://www.google.com/favicon.ico', {
+src/__tests__/apps/devtools/sections/__snapshots__/Errors.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/ui/__snapshots__/Switch.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/stories/Page.stories.ts:9:    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
+src/__tests__/features/chat/__snapshots__/TypingIndicator.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/ui/__snapshots__/Input.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/features/chat/__snapshots__/VirtualMessageList.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/ui/__snapshots__/Button.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/devtools/__snapshots__/EventStream.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/components/sections/ConversationSection.tsx:227:    `https://fr.wikipedia.org/wiki/${topicSlug}`,
+src/components/sections/ConversationSection.tsx:228:    `https://fr.wikipedia.org/w/index.php?search=${topicQuery}`,
+src/components/sections/ConversationSection.tsx:229:    `https://fr.wiktionary.org/wiki/${topicSlug}`,
+src/components/sections/ConversationSection.tsx:230:    `https://www.wikidata.org/wiki/Special:Search?search=${topicQuery}`,
+src/components/sections/ConversationSection.tsx:236:    target_url: seeds[0] ?? `https://fr.wikipedia.org/wiki/${topicSlug}`,
+src/pages/ResearchPage.tsx:83:    `https://fr.wikipedia.org/wiki/${slug}`,
+src/pages/ResearchPage.tsx:84:    `https://fr.wikipedia.org/w/index.php?search=${query}`,
+src/pages/ResearchPage.tsx:85:    `https://fr.wiktionary.org/wiki/${slug}`,
+src/pages/ResearchPage.tsx:86:    `https://www.wikidata.org/wiki/Special:Search?search=${query}`,
+src/__tests__/components/ui/__snapshots__/Dialog.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:58:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:87:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:145:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:187:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:221:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:269:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:308:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:344:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:392:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/chat/__snapshots__/ChatToolbar.test.tsx.snap:421:              xmlns="http://www.w3.org/2000/svg"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/components/chat/ChatModeSelector.css:267:  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+src/services/selfHealing/selfHealingObserver.ts:444:        const response = await originalFetch(...args);
+src/__tests__/components/devtools/__snapshots__/EngineCard.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/features/chat/__snapshots__/ChatMessage.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/ui/__snapshots__/Tabs.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/devtools/__snapshots__/MetricCard.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/components/chat/ConversationsButton.tsx:39:        xmlns="http://www.w3.org/2000/svg"
+src/__tests__/features/monitoring/__snapshots__/SystemHealthMonitor.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/services/ai/providers/glm46v.ts:29:  baseUrl: 'http://127.0.0.1:8000/v1',
+src/__tests__/components/ui/__snapshots__/Badge.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/devtools/__snapshots__/LogLine.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/services/tts/hybridTTS.ts:236:      console.log(`📡 Mode: Local API (http://localhost:8765)`);
+src/visual-engine/OSIntegrationBridge.ts:511:      // 1. Endpoint: request('http://localhost:7890/api/os/state') or config.apiEndpoint
+src/__tests__/features/voice/__snapshots__/VoiceControl.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/services/tts/parlerTTSBridge.ts:16:  /** URL de l'API TTS locale (défaut: http://localhost:8765) */
+src/services/tts/parlerTTSBridge.ts:70:    this.apiUrl = config?.apiUrl || 'http://localhost:8765';
+src/modules/dataCollector/DataCollectorEngine.ts:553:    echo "❌ Ollama not installed. Install: https://ollama.ai"
+src/__tests__/components/devtools/__snapshots__/LogFilters.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/components/Onboarding/INTEGRATION_GUIDE.md:180:    await page.goto('http://localhost:5173');
+src/components/Onboarding/INTEGRATION_GUIDE.md:216:    await page.goto('http://localhost:5173');
+src/components/Onboarding/INTEGRATION_GUIDE.md:351:- **Framer Motion** : https://www.framer.com/motion/
+src/components/Onboarding/INTEGRATION_GUIDE.md:352:- **Tauri Commands** : https://tauri.app/v2/reference/javascript/api/
+src/components/Onboarding/INTEGRATION_GUIDE.md:353:- **Playwright Tests** : https://playwright.dev/
+src/__tests__/components/ui/__snapshots__/Card.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/__tests__/components/devtools/__snapshots__/MetricsDisplay.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/stories/Page.tsx:26:          <a href="https://componentdriven.org" target="_blank" rel="noopener noreferrer">
+src/stories/Page.tsx:49:            href="https://storybook.js.org/tutorials/"
+src/stories/Page.tsx:57:            href="https://storybook.js.org/docs"
+src/stories/Page.tsx:71:            xmlns="http://www.w3.org/2000/svg"
+src/stories/LazyImage.stories.tsx:144:      'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180"%3E%3Crect width="320" height="180" fill="%230A0A0A"/%3E%3Ctext x="50%25" y="50%25" text-anchor="middle" fill="%23666" font-family="Arial" font-size="14"%3ELoading...%3C/text%3E%3C/svg%3E',
+src/stories/Header.stories.ts:12:  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+src/stories/Header.stories.ts:15:    // More on how to position stories at: https://storybook.js.org/docs/configure/story-layout
+src/stories/Button.stories.ts:9:// More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
+src/stories/Button.stories.ts:14:    // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
+src/stories/Button.stories.ts:17:  // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
+src/stories/Button.stories.ts:19:  // More on argTypes: https://storybook.js.org/docs/api/argtypes
+src/stories/Button.stories.ts:23:  // Use `fn` to spy on the onClick arg, which will appear in the actions panel once invoked: https://storybook.js.org/docs/essentials/actions#story-args
+src/stories/Button.stories.ts:30:// More on writing stories with args: https://storybook.js.org/docs/writing-stories/args
+src/stories/Configure.mdx:54:        href="https://storybook.js.org/docs/configure/styling-and-css/?renderer=react&ref=configure"
+src/stories/Configure.mdx:66:        href="https://storybook.js.org/docs/writing-stories/decorators/?renderer=react&ref=configure#context-for-mocking"
+src/stories/Configure.mdx:78:          href="https://storybook.js.org/docs/configure/images-and-assets/?renderer=react&ref=configure"
+src/stories/Configure.mdx:101:          href="https://storybook.js.org/docs/writing-docs/autodocs/?renderer=react&ref=configure"
+src/stories/Configure.mdx:110:          href="https://storybook.js.org/docs/sharing/publish-storybook/?renderer=react&ref=configure#publish-storybook-with-chromatic"
+src/stories/Configure.mdx:120:          href="https://storybook.js.org/docs/sharing/design-integrations/?renderer=react&ref=configure#embed-storybook-in-figma-with-the-plugin"
+src/stories/Configure.mdx:130:          href="https://storybook.js.org/docs/writing-tests/?renderer=react&ref=configure"
+src/stories/Configure.mdx:139:          href="https://storybook.js.org/docs/writing-tests/accessibility-testing/?renderer=react&ref=configure"
+src/stories/Configure.mdx:148:          href="https://storybook.js.org/docs/configure/theming/?renderer=react&ref=configure"
+src/stories/Configure.mdx:160:        href="https://storybook.js.org/addons/?ref=configure"
+src/stories/Configure.mdx:175:        href="https://github.com/storybookjs/storybook"
+src/stories/Configure.mdx:185:          href="https://discord.gg/storybook"
+src/stories/Configure.mdx:196:          href="https://www.youtube.com/@chromaticui"
+src/stories/Configure.mdx:206:          href="https://storybook.js.org/tutorials/?ref=configure"
+src/stories/Header.tsx:25:          xmlns="http://www.w3.org/2000/svg"
+src/services/monitoring/sentry.ts:44:    // Obtenir à : https://sentry.io/settings/projects/
+src/stories/assets/github.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#161614" d="M16.0001 0C7.16466 0 0 7.17472 0 16.0256C0 23.1061 4.58452 29.1131 10.9419 31.2322C11.7415 31.3805 12.0351 30.8845 12.0351 30.4613C12.0351 30.0791 12.0202 28.8167 12.0133 27.4776C7.56209 28.447 6.62283 25.5868 6.62283 25.5868C5.89499 23.7345 4.8463 23.2419 4.8463 23.2419C3.39461 22.2473 4.95573 22.2678 4.95573 22.2678C6.56242 22.3808 7.40842 23.9192 7.40842 23.9192C8.83547 26.3691 11.1514 25.6609 12.0645 25.2514C12.2081 24.2156 12.6227 23.5087 13.0803 23.1085C9.52648 22.7032 5.7906 21.3291 5.7906 15.1886C5.7906 13.4389 6.41563 12.0094 7.43916 10.8871C7.27303 10.4834 6.72537 8.85349 7.59415 6.64609C7.59415 6.64609 8.93774 6.21539 11.9953 8.28877C13.2716 7.9337 14.6404 7.75563 16.0001 7.74953C17.3599 7.75563 18.7297 7.9337 20.0084 8.28877C23.0623 6.21539 24.404 6.64609 24.404 6.64609C25.2749 8.85349 24.727 10.4834 24.5608 10.8871C25.5868 12.0094 26.2075 13.4389 26.2075 15.1886C26.2075 21.3437 22.4645 22.699 18.9017 23.0957C19.4756 23.593 19.9869 24.5683 19.9869 26.0634C19.9869 28.2077 19.9684 29.9334 19.9684 30.4613C19.9684 30.8877 20.2564 31.3874 21.0674 31.2301C27.4213 29.1086 32 23.1037 32 16.0256C32 7.17472 24.8364 0 16.0001 0ZM5.99257 22.8288C5.95733 22.9084 5.83227 22.9322 5.71834 22.8776C5.60229 22.8253 5.53711 22.7168 5.57474 22.6369C5.60918 22.5549 5.7345 22.5321 5.85029 22.587C5.9666 22.6393 6.03284 22.7489 5.99257 22.8288ZM6.7796 23.5321C6.70329 23.603 6.55412 23.5701 6.45291 23.4581C6.34825 23.3464 6.32864 23.197 6.40601 23.125C6.4847 23.0542 6.62937 23.0874 6.73429 23.1991C6.83895 23.3121 6.85935 23.4605 6.7796 23.5321ZM7.31953 24.4321C7.2215 24.5003 7.0612 24.4363 6.96211 24.2938C6.86407 24.1513 6.86407 23.9804 6.96422 23.9119C7.06358 23.8435 7.2215 23.905 7.32191 24.0465C7.41968 24.1914 7.41968 24.3623 7.31953 24.4321ZM8.23267 25.4743C8.14497 25.5712 7.95818 25.5452 7.82146 25.413C7.68156 25.2838 7.64261 25.1004 7.73058 25.0035C7.81934 24.9064 8.00719 24.9337 8.14497 25.0648C8.28381 25.1938 8.3262 25.3785 8.23267 25.4743ZM9.41281 25.8262C9.37413 25.9517 9.19423 26.0088 9.013 25.9554C8.83203 25.9005 8.7136 25.7535 8.75016 25.6266C8.78778 25.5003 8.96848 25.4408 9.15104 25.4979C9.33174 25.5526 9.45044 25.6985 9.41281 25.8262ZM10.7559 25.9754C10.7604 26.1076 10.6067 26.2172 10.4165 26.2196C10.2252 26.2238 10.0704 26.1169 10.0683 25.9868C10.0683 25.8534 10.2185 25.7448 10.4098 25.7416C10.6001 25.7379 10.7559 25.8441 10.7559 25.9754ZM12.0753 25.9248C12.0981 26.0537 11.9658 26.1862 11.7769 26.2215C11.5912 26.2554 11.4192 26.1758 11.3957 26.0479C11.3726 25.9157 11.5072 25.7833 11.6927 25.7491C11.8819 25.7162 12.0512 25.7937 12.0753 25.9248Z"/></svg>
+src/__tests__/components/devtools/__snapshots__/StatusPill.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/stories/assets/accessibility.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="none" viewBox="0 0 48 48"><title>Accessibility</title><circle cx="24.334" cy="24" r="24" fill="#A849FF" fill-opacity=".3"/><path fill="#A470D5" fill-rule="evenodd" d="M27.8609 11.585C27.8609 9.59506 26.2497 7.99023 24.2519 7.99023C22.254 7.99023 20.6429 9.65925 20.6429 11.585C20.6429 13.575 22.254 15.1799 24.2519 15.1799C26.2497 15.1799 27.8609 13.575 27.8609 11.585ZM21.8922 22.6473C21.8467 23.9096 21.7901 25.4788 21.5897 26.2771C20.9853 29.0462 17.7348 36.3314 17.3325 37.2275C17.1891 37.4923 17.1077 37.7955 17.1077 38.1178C17.1077 39.1519 17.946 39.9902 18.9802 39.9902C19.6587 39.9902 20.253 39.6293 20.5814 39.0889L20.6429 38.9874L24.2841 31.22C24.2841 31.22 27.5529 37.9214 27.9238 38.6591C28.2948 39.3967 28.8709 39.9902 29.7168 39.9902C30.751 39.9902 31.5893 39.1519 31.5893 38.1178C31.5893 37.7951 31.3639 37.2265 31.3639 37.2265C30.9581 36.3258 27.698 29.0452 27.0938 26.2771C26.8975 25.4948 26.847 23.9722 26.8056 22.7236C26.7927 22.333 26.7806 21.9693 26.7653 21.6634C26.7008 21.214 27.0231 20.8289 27.4097 20.7005L35.3366 18.3253C36.3033 18.0685 36.8834 16.9773 36.6256 16.0144C36.3678 15.0515 35.2722 14.4737 34.3055 14.7305C34.3055 14.7305 26.8619 17.1057 24.2841 17.1057C21.7062 17.1057 14.456 14.7947 14.456 14.7947C13.4893 14.5379 12.3937 14.9873 12.0715 15.9502C11.7493 16.9131 12.3293 18.0044 13.3604 18.3253L21.2873 20.7005C21.674 20.8289 21.9318 21.214 21.9318 21.6634C21.9174 21.9493 21.9053 22.2857 21.8922 22.6473Z" clip-rule="evenodd"/></svg>
+src/__tests__/components/devtools/__snapshots__/SectionHeader.test.tsx.snap:1:// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+src/stories/assets/youtube.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 32 32"><path fill="#ED1D24" d="M31.3313 8.44657C30.9633 7.08998 29.8791 6.02172 28.5022 5.65916C26.0067 5.00026 16 5.00026 16 5.00026C16 5.00026 5.99333 5.00026 3.4978 5.65916C2.12102 6.02172 1.03665 7.08998 0.668678 8.44657C0 10.9053 0 16.0353 0 16.0353C0 16.0353 0 21.1652 0.668678 23.6242C1.03665 24.9806 2.12102 26.0489 3.4978 26.4116C5.99333 27.0703 16 27.0703 16 27.0703C16 27.0703 26.0067 27.0703 28.5022 26.4116C29.8791 26.0489 30.9633 24.9806 31.3313 23.6242C32 21.1652 32 16.0353 32 16.0353C32 16.0353 32 10.9053 31.3313 8.44657Z"/><path fill="#fff" d="M12.7266 20.6934L21.0902 16.036L12.7266 11.3781V20.6934Z"/></svg>
+src/stories/assets/tutorials.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" fill="none" viewBox="0 0 33 32"><g clip-path="url(#clip0_10031_177597)"><path fill="#B7F0EF" fill-rule="evenodd" d="M17 7.87059C17 6.48214 17.9812 5.28722 19.3431 5.01709L29.5249 2.99755C31.3238 2.64076 33 4.01717 33 5.85105V22.1344C33 23.5229 32.0188 24.7178 30.6569 24.9879L20.4751 27.0074C18.6762 27.3642 17 25.9878 17 24.1539L17 7.87059Z" clip-rule="evenodd" opacity=".7"/><path fill="#87E6E5" fill-rule="evenodd" d="M1 5.85245C1 4.01857 2.67623 2.64215 4.47507 2.99895L14.6569 5.01848C16.0188 5.28861 17 6.48354 17 7.87198V24.1553C17 25.9892 15.3238 27.3656 13.5249 27.0088L3.34311 24.9893C1.98119 24.7192 1 23.5242 1 22.1358V5.85245Z" clip-rule="evenodd"/><path fill="#61C1FD" fill-rule="evenodd" d="M15.543 5.71289C15.543 5.71289 16.8157 5.96289 17.4002 6.57653C17.9847 7.19016 18.4521 9.03107 18.4521 9.03107C18.4521 9.03107 18.4521 25.1106 18.4521 26.9629C18.4521 28.8152 19.3775 31.4174 19.3775 31.4174L17.4002 28.8947L16.2575 31.4174C16.2575 31.4174 15.543 29.0765 15.543 27.122C15.543 25.1674 15.543 5.71289 15.543 5.71289Z" clip-rule="evenodd"/></g><defs><clipPath id="clip0_10031_177597"><rect width="32" height="32" fill="#fff" transform="translate(0.5)"/></clipPath></defs></svg>
+src/stories/assets/discord.svg:1:<svg xmlns="http://www.w3.org/2000/svg" width="33" height="32" fill="none" viewBox="0 0 33 32"><g clip-path="url(#clip0_10031_177575)"><mask id="mask0_10031_177575" style="mask-type:luminance" width="33" height="25" x="0" y="4" maskUnits="userSpaceOnUse"><path fill="#fff" d="M32.5034 4.00195H0.503906V28.7758H32.5034V4.00195Z"/></mask><g mask="url(#mask0_10031_177575)"><path fill="#5865F2" d="M27.5928 6.20817C25.5533 5.27289 23.3662 4.58382 21.0794 4.18916C21.0378 4.18154 20.9962 4.20057 20.9747 4.23864C20.6935 4.73863 20.3819 5.3909 20.1637 5.90358C17.7042 5.53558 15.2573 5.53558 12.8481 5.90358C12.6299 5.37951 12.307 4.73863 12.0245 4.23864C12.003 4.20184 11.9614 4.18281 11.9198 4.18916C9.63431 4.58255 7.44721 5.27163 5.40641 6.20817C5.38874 6.21578 5.3736 6.22848 5.36355 6.24497C1.21508 12.439 0.078646 18.4809 0.636144 24.4478C0.638667 24.477 0.655064 24.5049 0.677768 24.5227C3.41481 26.5315 6.06609 27.7511 8.66815 28.5594C8.70979 28.5721 8.75392 28.5569 8.78042 28.5226C9.39594 27.6826 9.94461 26.7968 10.4151 25.8653C10.4428 25.8107 10.4163 25.746 10.3596 25.7244C9.48927 25.3945 8.66058 24.9922 7.86343 24.5354C7.80038 24.4986 7.79533 24.4084 7.85333 24.3653C8.02108 24.2397 8.18888 24.109 8.34906 23.977C8.37804 23.9529 8.41842 23.9478 8.45249 23.963C13.6894 26.3526 19.359 26.3526 24.5341 23.963C24.5682 23.9465 24.6086 23.9516 24.6388 23.9757C24.799 24.1077 24.9668 24.2397 25.1358 24.3653C25.1938 24.4084 25.19 24.4986 25.127 24.5354C24.3298 25.0011 23.5011 25.3945 22.6296 25.7232C22.5728 25.7447 22.5476 25.8107 22.5754 25.8653C23.0559 26.7955 23.6046 27.6812 24.2087 28.5213C24.234 28.5569 24.2794 28.5721 24.321 28.5594C26.9357 27.7511 29.5869 26.5315 32.324 24.5227C32.348 24.5049 32.3631 24.4783 32.3656 24.4491C33.0328 17.5506 31.2481 11.5584 27.6344 6.24623C27.6256 6.22848 27.6105 6.21578 27.5928 6.20817ZM11.1971 20.8146C9.62043 20.8146 8.32129 19.3679 8.32129 17.5913C8.32129 15.8146 9.59523 14.368 11.1971 14.368C12.8115 14.368 14.0981 15.8273 14.0729 17.5913C14.0729 19.3679 12.7989 20.8146 11.1971 20.8146ZM21.8299 20.8146C20.2533 20.8146 18.9541 19.3679 18.9541 17.5913C18.9541 15.8146 20.228 14.368 21.8299 14.368C23.4444 14.368 24.7309 15.8273 24.7057 17.5913C24.7057 19.3679 23.4444 20.8146 21.8299 20.8146Z"/></g></g><defs><clipPath id="clip0_10031_177575"><rect width="32" height="32" fill="#fff" transform="translate(0.5)"/></clipPath></defs></svg>
+$ rg -n "API_KEY|SECRET|TOKEN|Authorization|Bearer" -S src src-tauri || true
+src/__tests__/c4-memory.test.ts:100:  const MAX_INJECTION_TOKENS = 500;
+src/__tests__/c4-memory.test.ts:103:    const maxTokens = MAX_INJECTION_TOKENS;
+src/__tests__/c4-memory.test.ts:112:    expect(estimatedTokens).toBeGreaterThanOrEqual(MAX_INJECTION_TOKENS / 2);
+src/__tests__/c4-memory.test.ts:113:    expect(estimatedTokens).toBeLessThanOrEqual(MAX_INJECTION_TOKENS);
+src/__tests__/c4-memory.test.ts:117:    expect(currentTokens).toBeLessThanOrEqual(MAX_INJECTION_TOKENS);
+src/__tests__/c4-memory.test.ts:137:      if (currentTokens + entryTokens > MAX_INJECTION_TOKENS) {
+src/__tests__/c4-memory.test.ts:149:    expect(currentTokens).toBeLessThanOrEqual(MAX_INJECTION_TOKENS);
+src/__tests__/c4-memory.test.ts:164:      if (currentTokens + tokens > MAX_INJECTION_TOKENS) {
+src/__tests__/c4-memory.test.ts:184:    const wouldExceed = currentTokens + sixthEntryTokens > MAX_INJECTION_TOKENS;
+src/__tests__/c4-memory.test.ts:257:    const MAX_TOKENS = 500;
+src/__tests__/c4-memory.test.ts:260:      const isValid = tc.memory_inject_tokens <= MAX_TOKENS;
+src/__tests__/persistentMemory.test.ts:36:  MAX_CONTEXT_INJECTION_TOKENS,
+src/__tests__/persistentMemory.test.ts:251:      expect(MAX_CONTEXT_INJECTION_TOKENS).toBe(2000);
+src/__tests__/persistentMemory.test.ts:530:      expect(containsSensitiveData('API_KEY=abc123xyz')).toBe(true);
+src/__tests__/persistentMemory.test.ts:540:      expect(containsSensitiveData('Authorization: Bearer eyJhbGc...')).toBe(true);
+src-tauri/tests/secure_engine_tests.rs:34:    fs::write(&env_path, "FOO=bar\nGEMINI_API_KEY=abc123\n").expect("write env");
+src-tauri/tests/secure_engine_tests.rs:39:    purge_env_key("GEMINI_API_KEY").await.expect("purge env");
+src-tauri/tests/secure_engine_tests.rs:42:    assert!(!contents.contains("GEMINI_API_KEY"));
+src-tauri/src/chat_engine/mod.rs:364:        .or_else(|| std::env::var("GEMINI_API_KEY").ok());
+src-tauri/src/tts/elevenlabs_tts.rs:229:        if let Ok(key) = std::env::var("ELEVENLABS_API_KEY") {
+src-tauri/src/doc_engine/technical.rs:244:                ```\nAuthorization: Bearer {token}\n```".to_string(),
+src-tauri/src/doc_engine/technical.rs:293:    ```bash\ncurl -X GET /users?page=1&limit=10 \\\n  -H \"Authorization: Bearer {token}\"\n```\n\n\
+src/components/MemoryEvolution/MemoryEvolutionCenter.tsx:592:            <span>Kevin Authorization</span>
+src-tauri/src/commands/orchestration_center.rs:134:    // Check if GEMINI_API_KEY is set (either from secrets engine or env var)
+src-tauri/src/commands/orchestration_center.rs:138:            _ => std::env::var("GEMINI_API_KEY").ok(),
+src-tauri/src/commands/orchestration_center.rs:141:        std::env::var("GEMINI_API_KEY").ok()
+src-tauri/src/commands/ai_chat.rs:76:            SecureSecretsEngine::new(std::env::var("TITANE_SECRETS_PASSPHRASE").ok())
+src-tauri/src/commands/ai_chat.rs:83:            .or_else(|| std::env::var("GEMINI_API_KEY").ok());
+src/components/monitoring/SingularityDashboard.tsx:57:// DESIGN TOKENS
+src/features/governance-center/services/governanceService.ts:103:// SECRETS
+src/features/governance-center/hooks/useGovernance.ts:65:  // SECRETS
+src/features/governance-center/types.ts:53:// SECRETS
+src/features/governance-center/types.ts:106:export const KNOWN_SECRETS: {
+src-tauri/src/engines/unified_memory/embeddings.rs:76:            // Header: Authorization: Bearer $OPENAI_API_KEY
+src-tauri/src/engines/unified_memory/embeddings.rs:219:        .header("Authorization", format!("Bearer {}", api_key))
+src/features/governance-center/tabs/SecretsTab.tsx:6: *   ONGLET SECRETS — Gestion sécurisée des clés API
+src/features/governance-center/tabs/SecretsTab.tsx:14:import { KNOWN_SECRETS as knownSecrets } from '../types';
+src/features/governance-center/tabs/SecretsTab.tsx:786:            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement avant
+src/pages/SecureSettings.tsx:190:          'Impossible d&apos;enregistrer la clé Gemini. Vérifiez la passphrase TITANE_SECRETS_PASSPHRASE.',
+src/pages/SecureSettings.tsx:357:                  ⚠️ Une valeur GEMINI_API_KEY est toujours présente dans le fichier .env.
+src/pages/SecureSettings.tsx:579:            Définir <code>TITANE_SECRETS_PASSPHRASE</code> dans l&apos;environnement
+src/pages/SecureSettings.tsx:590:            <code>GEMINI_API_KEY</code>.
+src-tauri/src/auth/dev_token.rs:5://   AUTH OS — DEV TOKEN MANAGER
+src/features/design-center/providers/UIThemeProvider.tsx:19:  DEFAULT_UI_THEME_TOKENS,
+src/features/design-center/providers/UIThemeProvider.tsx:30:  | { type: 'SET_TOKENS'; tokens: UIThemeTokens }
+src/features/design-center/providers/UIThemeProvider.tsx:35:  | { type: 'UPDATE_TOKEN'; category: keyof UIThemeTokens; key: string; value: unknown }
+src/features/design-center/providers/UIThemeProvider.tsx:51:    case 'SET_TOKENS':
+src/features/design-center/providers/UIThemeProvider.tsx:54:        tokens: action.tokens || DEFAULT_UI_THEME_TOKENS,
+src/features/design-center/providers/UIThemeProvider.tsx:66:    case 'UPDATE_TOKEN': {
+src/features/design-center/providers/UIThemeProvider.tsx:70:        logger.error('tokens est null dans UPDATE_TOKEN', {
+src/features/design-center/providers/UIThemeProvider.tsx:146:    tokens: DEFAULT_UI_THEME_TOKENS,
+src/features/design-center/providers/UIThemeProvider.tsx:166:        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+src/features/design-center/providers/UIThemeProvider.tsx:168:        dispatch({ type: 'SET_TOKENS', tokens });
+src/features/design-center/providers/UIThemeProvider.tsx:176:      dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+src/features/design-center/providers/UIThemeProvider.tsx:294:      dispatch({ type: 'UPDATE_TOKEN', category, key: String(key), value });
+src/features/design-center/providers/UIThemeProvider.tsx:354:        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+src/features/design-center/providers/UIThemeProvider.tsx:356:        dispatch({ type: 'SET_TOKENS', tokens });
+src/features/design-center/providers/UIThemeProvider.tsx:366:      dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+src/features/design-center/providers/UIThemeProvider.tsx:372:      dispatch({ type: 'SET_TOKENS', tokens: state.previousTokens });
+src/features/design-center/types/designCenter.types.ts:9:// TOKENS UI DYNAMIQUES
+src/features/design-center/types/designCenter.types.ts:279:export interface UICommandAuthorization {
+src/features/design-center/types/designCenter.types.ts:337:export const DEFAULT_UI_THEME_TOKENS: UIThemeTokens = {
+src/features/design-center/types/designCenter.types.ts:431:    ...DEFAULT_UI_THEME_TOKENS,
+src/features/design-center/types/designCenter.types.ts:433:    colors: { ...DEFAULT_UI_THEME_TOKENS.colors, ...partial.colors },
+src/features/design-center/types/designCenter.types.ts:434:    typography: { ...DEFAULT_UI_THEME_TOKENS.typography, ...partial.typography },
+src/features/design-center/types/designCenter.types.ts:435:    spacing: { ...DEFAULT_UI_THEME_TOKENS.spacing, ...partial.spacing },
+src/features/design-center/types/designCenter.types.ts:436:    borders: { ...DEFAULT_UI_THEME_TOKENS.borders, ...partial.borders },
+src/features/design-center/types/designCenter.types.ts:437:    animations: { ...DEFAULT_UI_THEME_TOKENS.animations, ...partial.animations },
+src/features/design-center/types/designCenter.types.ts:438:    contrast: { ...DEFAULT_UI_THEME_TOKENS.contrast, ...partial.contrast },
+src/features/design-center/types/designCenter.types.ts:439:    shadows: { ...DEFAULT_UI_THEME_TOKENS.shadows, ...partial.shadows },
+src-tauri/src/api_hub/vault_bridge.rs:253:            Provider::OpenAI => "OPENAI_API_KEY",
+src-tauri/src/api_hub/vault_bridge.rs:254:            Provider::Gemini => "GOOGLE_API_KEY",
+src-tauri/src/api_hub/vault_bridge.rs:255:            Provider::Anthropic => "ANTHROPIC_API_KEY",
+src-tauri/src/api_hub/vault_bridge.rs:256:            Provider::Copilot => "GITHUB_TOKEN", // ✅ P0 FIX
+src-tauri/src/memory_os/embeddings.rs:129:            .header("Authorization", format!("Bearer {}", api_key))
+src-tauri/src/api_hub/copilot.rs:80:            .header(header::AUTHORIZATION, format!("Bearer {}", self.api_key))
+src-tauri/src/mock_commands.rs:1276:        "Message reçu: \"{}\"\n\n🤖 **Mode Mock Backend**\nCeci est une réponse simulée du backend Rust. \n\nPour activer le backend sécurisé:\n• Définis `TITANE_SECRETS_PASSPHRASE` puis appelle `chat_set_gemini_key`\n• Ou lance Ollama: `ollama serve`\n\nArchitecture Chat IA v18 fonctionnelle ✅",
+src/styles/tokens.ts:2: * TITANE∞ v8.0 — DESIGN TOKENS (TypeScript)
+src/styles/tokens.ts:277:/* COMPLETE TOKEN OBJECT (for exhaustive access)                     */
+src/styles/css-vars.css:2: * TITANE∞ v25.4.2 — CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+src/styles/unified-tokens.css:2: * TITANE∞ v24.3.0 — UNIFIED DESIGN TOKENS
+src/styles/titanium-dark-tokens.css:2: * TITANE∞ v26.2.0 — TITANIUM DARK DESIGN TOKENS
+src-tauri/src/control_panel_commands.rs:111:const MIN_TOKENS: u32 = 64;
+src-tauri/src/control_panel_commands.rs:112:const MAX_TOKENS: u32 = 8192;
+src-tauri/src/control_panel_commands.rs:159:    value.clamp(MIN_TOKENS, MAX_TOKENS)
+src-tauri/src/security/secrets_engine.rs:2://   TITANE∞ v∞ — SECURE SECRETS ENGINE
+src-tauri/src/security/secrets_engine.rs:31:    #[error("Missing secrets passphrase (set TITANE_SECRETS_PASSPHRASE)")]
+src-tauri/src/security/permissions.rs:244:    // SECRETS
+src-tauri/src/security/pre_boot_validation.rs:337:    let passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
+src-tauri/src/security/pre_boot_validation.rs:338:        .map_err(|_| "TITANE_SECRETS_PASSPHRASE environment variable is missing".to_string())?;
+src-tauri/src/security/pre_boot_validation.rs:342:        return Err("TITANE_SECRETS_PASSPHRASE must be at least 12 characters".to_string());
+src-tauri/src/security/pre_boot_validation.rs:380:        std::env::set_var("TITANE_SECRETS_PASSPHRASE", "integration-test-pass");
+src-tauri/src/ai/orchestrator_multi.rs:267:        let claude_key = std::env::var("ANTHROPIC_API_KEY").ok();
+src-tauri/src/ai/orchestrator_multi.rs:268:        let openai_key = std::env::var("OPENAI_API_KEY").ok();
+src/core/context/LongContextOptimizer.ts:103:  private readonly DEFAULT_MAX_TOKENS = 8000;
+src/core/context/LongContextOptimizer.ts:136:      const maxTokens = options.maxTokens || this.DEFAULT_MAX_TOKENS;
+src/core/context/LongContextOptimizer.ts:485:      const maxTokens = options.maxTokens || this.DEFAULT_MAX_TOKENS;
+src-tauri/src/ai/config_multi.rs:63:            api_key: std::env::var("ANTHROPIC_API_KEY").ok(),
+src-tauri/src/ai/config_multi.rs:102:            api_key: std::env::var("OPENAI_API_KEY").ok(),
+src-tauri/src/ai/providers/openai.rs:60:            .header("Authorization", format!("Bearer {}", self.api_key))
+src-tauri/src/semantic/embedder.rs:64:        //   Header: x-goog-api-key: {GEMINI_API_KEY}
+src-tauri/src/services/vector_service.rs:245:    // ── G_TOKENIZE ────────────────────────────────────────────────
+src-tauri/src/services/search_gateway.rs:32:    /// If BRAVE_API_KEY is missing, return explicit CREDENTIALS_MISSING error.
+src-tauri/src/services/search_gateway.rs:34:        let brave_api_key = std::env::var("BRAVE_API_KEY")
+src-tauri/src/services/search_gateway.rs:62:            None => Err("CREDENTIALS_MISSING: BRAVE_API_KEY not configured".to_string()),
+src-tauri/src/services/rate_limit_service.rs:13:// TOKEN BUCKET (per domain, in-memory)
+src-tauri/src/secure_engine.rs:2://   TITANE∞ v∞ — SECURE SECRETS CORE
+src-tauri/src/secure_engine.rs:21:    #[error("Missing TITANE_SECRETS_PASSPHRASE environment variable")]
+src-tauri/src/secure_engine.rs:159:    match std::env::var("TITANE_SECRETS_PASSPHRASE") {
+src-tauri/src/memory_evolution/mod.rs:188:    #[error("Authorization required: Kevin-only operation")]
+src-tauri/src/memory_evolution/mod.rs:189:    AuthorizationRequired,
+src/lib/tauriCommands.ts:296:  HAS_SECRET: 'has_secret',
+src/lib/tauriCommands.ts:384:  UPDATE_UI_TOKEN: 'update_ui_token',
+src/lib/security/AIRateLimiter.ts:75:  private static readonly TOKEN_COSTS = {
+src/lib/security/AIRateLimiter.ts:175:      AIRateLimiter.TOKEN_COSTS[model as keyof typeof AIRateLimiter.TOKEN_COSTS] || 0;
+src/lib/security/AIResponseValidator.ts:104:  /TOKEN[:\s]+[\w-]{20,}/gi,
+src/lib/security/AIResponseValidator.ts:106:  /SECRET[:\s]+\w+/gi,
+src/lib/tauriClient.ts:2134:      TAURI_COMMANDS.UPDATE_UI_TOKEN,
+src/lib/tauriClient.ts:2274:      TAURI_COMMANDS.HAS_SECRET,
+src/lib/logger.ts:300:      // 3. Headers: Content-Type: application/json, Authorization: Bearer $ANALYTICS_TOKEN
+src-tauri/src/secure_commands.rs:92:const KEY_GITHUB_TOKEN: &str = "github_token";
+src-tauri/src/secure_commands.rs:95:const KNOWN_SECRETS: &[KnownSecret] = &[
+src-tauri/src/secure_commands.rs:117:        key: KEY_GITHUB_TOKEN,
+src-tauri/src/secure_commands.rs:213:    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+src-tauri/src/secure_commands.rs:214:    let env_purged = match purge_env_key("GEMINI_API_KEY").await {
+src-tauri/src/secure_commands.rs:216:            info!("[SecureCommands] Purged GEMINI_API_KEY from .env");
+src-tauri/src/secure_commands.rs:222:                    "[SecureCommands] Failed to purge GEMINI_API_KEY from .env: {}",
+src-tauri/src/secure_commands.rs:250:    let env_present = std::env::var("GEMINI_API_KEY").is_ok();
+src-tauri/src/secure_commands.rs:296:    let env_present = std::env::var("OPENAI_API_KEY").is_ok();
+src-tauri/src/secure_commands.rs:297:    let env_purged = match purge_env_key("OPENAI_API_KEY").await {
+src-tauri/src/secure_commands.rs:299:            info!("[SecureCommands] Purged OPENAI_API_KEY from .env");
+src-tauri/src/secure_commands.rs:305:                    "[SecureCommands] Failed to purge OPENAI_API_KEY from .env: {}",
+src-tauri/src/secure_commands.rs:352:        env_present: std::env::var("OPENAI_API_KEY").is_ok(),
+src-tauri/src/secure_commands.rs:400:    let env_present = std::env::var("ANTHROPIC_API_KEY").is_ok();
+src-tauri/src/secure_commands.rs:401:    let env_purged = match purge_env_key("ANTHROPIC_API_KEY").await {
+src-tauri/src/secure_commands.rs:403:            info!("[SecureCommands] Purged ANTHROPIC_API_KEY from .env");
+src-tauri/src/secure_commands.rs:409:                    "[SecureCommands] Failed to purge ANTHROPIC_API_KEY from .env: {}",
+src-tauri/src/secure_commands.rs:456:        env_present: std::env::var("ANTHROPIC_API_KEY").is_ok(),
+src-tauri/src/secure_commands.rs:472:    let mut statuses = Vec::with_capacity(KNOWN_SECRETS.len());
+src-tauri/src/secure_commands.rs:474:    for secret in KNOWN_SECRETS {
+src-tauri/src/ia/anthropic_claude.rs:15:const MAX_TOKENS: usize = 4096;
+src-tauri/src/ia/anthropic_claude.rs:108:            max_tokens: request.max_tokens.unwrap_or(MAX_TOKENS),
+src-tauri/src/ia/openai_gpt.rs:14:const MAX_TOKENS: usize = 4096;
+src-tauri/src/ia/openai_gpt.rs:114:            max_tokens: request.max_tokens.or(Some(MAX_TOKENS)),
+src-tauri/src/ia/openai_gpt.rs:122:            .header("Authorization", format!("Bearer {}", self.api_key))
+src-tauri/src/overdrive/api_bridge.rs:237:    //     req = req.header("Authorization", format!("Bearer {}", api_key));
+src-tauri/src/overdrive/api_bridge.rs:581:    //   Header: Authorization: token {token}
+src-tauri/src/overdrive/chat_orchestrator.rs:980:            .header("Authorization", format!("Bearer {}", key.as_str()))
+src-tauri/src/conversation_engine/commands.rs:177:        has_gemini_credentials: std::env::var("GEMINI_API_KEY")
+src-tauri/src/conversation_engine/commands.rs:180:        has_brave_credentials: std::env::var("BRAVE_API_KEY")
+src-tauri/src/conversation_engine/commands.rs:260:                        "Recherche web indisponible: clé API manquante côté backend. Activez BRAVE_API_KEY pour réactiver la recherche gouvernée.".to_string(),
+src/design-system/titane-fusion.css:146:     CHAT IA v∞ — TOKENS MONOCHROME (remplacement violet/bleu)
+src-tauri/src/main.rs:507:    let secrets_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
+src-tauri/src/main.rs:611:            let password = std::env::var("TITANE_SECRETS_PASSPHRASE")
+src/design-system/responsive-tokens.css:8: *   TITANE∞ v25.7.4 — RESPONSIVE DESIGN TOKENS
+src/ui/pages/Chat.tsx:1502:                        Voir .env pour VITE_GEMINI_API_KEY
+src/types/backend.d.ts:180:  | 'Authorization'
+src/services/ai/contextManager.ts:36:export const MODEL_TOKEN_LIMITS: Record<string, number> = {
+src/services/ai/contextManager.ts:159:  if (model in MODEL_TOKEN_LIMITS) {
+src/services/ai/contextManager.ts:160:    const limit = MODEL_TOKEN_LIMITS[model];
+src/services/ai/contextManager.ts:161:    return limit ?? MODEL_TOKEN_LIMITS.default ?? 8192;
+src/services/ai/contextManager.ts:165:  for (const [key, limit] of Object.entries(MODEL_TOKEN_LIMITS)) {
+src/services/ai/contextManager.ts:167:      return limit ?? MODEL_TOKEN_LIMITS.default;
+src/services/ai/contextManager.ts:173:  return MODEL_TOKEN_LIMITS.default ?? 8192;
+src/services/memory/persistentMemory.config.ts:451:export const MAX_CONTEXT_INJECTION_TOKENS = 2000;
+src/services/memory/memoryUtils.ts:29:  MAX_CONTEXT_INJECTION_TOKENS,
+src/services/memory/memoryUtils.ts:537:  const maxTokens = permissions.contextInjectionLimit || MAX_CONTEXT_INJECTION_TOKENS;
+src/modules/devSudo/devSudoExtendedHandlers.ts:498:GEMINI_API_KEY=<VOTRE_CLE_GEMINI>
+src/modules/devSudo/devSudoExtendedHandlers.ts:538:  ${process.env.GEMINI_API_KEY ? '✅' : '❌'} GEMINI_API_KEY
+src/modules/devSudo/devSudoExtendedHandlers.ts:539:  ${process.env.OPENAI_API_KEY ? '✅' : '❌'} OPENAI_API_KEY (optionnel)
+src/modules/devSudo/devSudoExtendedHandlers.ts:545:GEMINI_API_KEY=<VOTRE_CLE_GEMINI>
+src/modules/devSudo/devSudoBackendHandlers.ts:817:2) 🔒 SECRETS MANAGEMENT
+src/services/chat/tokenCounter.ts:53:// TOKEN ESTIMATION

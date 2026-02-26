@@ -1,3 +1,12 @@
+## ADDENDUM — INTEGRITY AUTOHEAL AH (A→H)
+
+- Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_215033.txt`
+- File count: `105`
+- Scope:
+  - `docs/_evidence/program_autoheal_ah_20260226_215033/**`
+  - `docs/_evidence/pA_20260226_215033/**` à `docs/_evidence/pH_20260226_215033/**`
+- Verdict pack: `BLOCKED` (preuve complète, exécution stoppée par hard gates)
+
 ## ADDENDUM — TERMINAL SEAL INTEGRITY
 
 - Snapshot file: `reports/terminal_seal_snapshot_20260226T212337Z.md`
