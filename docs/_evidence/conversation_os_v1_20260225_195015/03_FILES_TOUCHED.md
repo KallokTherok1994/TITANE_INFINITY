@@ -208,3 +208,17 @@
 	- `reports/conversation_os_hardmode_gates_x3_20260226T020838Z.log`
 - Verdict:
 	- **PARTIAL PASS / BLOCKED** (blocants A0 actifs)
+
+## Addendum 2026-02-26 (Blocker reduction step-1)
+- Ring impacté: **Ring 4 (Modules/UI)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src/services/ai/transports/ollamaTransport.ts`
+- Fichier ajouté:
+	- `25_BLOCKER_REDUCTION_STEP1.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Delta mesuré:
+	- `HB4` prod-scope `8 -> 7`
+	- `HB4` large `11 -> 10`
