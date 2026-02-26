@@ -4,7 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
-use reqwest::Client;
+use reqwest::{redirect::Policy, Client};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::time::Duration;
@@ -79,7 +79,7 @@ impl NetworkGatewayService {
         let timeout = Duration::from_millis(config.timeout_ms);
         let client = Client::builder()
             .timeout(timeout)
-            .redirect(reqwest::redirect::Policy::limited(5))
+            .redirect(Policy::limited(5))
             .build()
             .unwrap_or_else(|_| Client::new());
 

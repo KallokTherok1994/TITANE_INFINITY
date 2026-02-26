@@ -229,3 +229,16 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B12 (2026-02-26)
+- Action: réduction des signatures `reqwest` dans `network_gateway` + `online_tts`, et nettoyage commentaire dans `semantic/embedder`.
+- Mesure:
+  - `services/network_gateway.rs`: `2 -> 1`
+  - `tts/online_tts.rs`: `2 -> 1`
+  - `semantic/embedder.rs`: `2 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `34 -> 30`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB12_20260226T114541Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
