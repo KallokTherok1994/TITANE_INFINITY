@@ -3,4 +3,5 @@
 Phase: P13
 Statut: BLOCKED
 
-- Aucune exécution x3 autorisée (P6 non ouverte).
+## Exécution x3
+- Non autorisée tant que P6 n’est pas PASS.

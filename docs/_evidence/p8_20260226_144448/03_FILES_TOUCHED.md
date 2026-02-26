@@ -1,4 +1,16 @@
 # 03_FILES_TOUCHED.md
 
 Phase: P8
-Statut: PENDING
+Statut: QUALIFIED
+
+- `00_PLAN.md`
+- `01_SCOPE_FREEZE.md`
+- `02_ARCH_DELTA.md`
+- `03_FILES_TOUCHED.md`
+- `04_GATES_STATUS.md`
+- `05_TEST_RUNS_X3.md`
+- `06_PROOF_LOGS.txt`
+- `07_ROLLBACK.md`
+- `08_VERDICT.md`
+- `09_ANSWER_POLICY_FR_V1.md`
+- `10_OUTPUT_CONTRACT.md`

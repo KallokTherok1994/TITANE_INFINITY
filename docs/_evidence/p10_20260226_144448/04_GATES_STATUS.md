@@ -4,4 +4,9 @@ Phase: P10
 Statut: BLOCKED
 
 ## Gates
-- Tous gates P10: BLOCKED (phase non ouverte, ordre immuable).
+- `G10_MEMORY_PROVENANCE_ALWAYS`: BLOCKED
+- `G10_PIN_FORGET_AUDITED`: BLOCKED
+- `G10_RETENTION_POLICY_APPLIED`: BLOCKED
+- `G10_NO_PROVIDER_RESULTS_IN_USER_MEMORY`: BLOCKED
+
+Motif unique: P6 non PASS (ordre immuable).

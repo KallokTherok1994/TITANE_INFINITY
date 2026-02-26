@@ -1,4 +1,16 @@
 # 03_FILES_TOUCHED.md
 
 Phase: P13
-Statut: PENDING
+Statut: QUALIFIED
+
+- `00_PLAN.md`
+- `01_SCOPE_FREEZE.md`
+- `02_ARCH_DELTA.md`
+- `03_FILES_TOUCHED.md`
+- `04_GATES_STATUS.md`
+- `05_TEST_RUNS_X3.md`
+- `06_PROOF_LOGS.txt`
+- `07_ROLLBACK.md`
+- `08_VERDICT.md`
+- `09_CI_MATRIX_PLAN.md`
+- `10_SMOKE_TESTS.md`

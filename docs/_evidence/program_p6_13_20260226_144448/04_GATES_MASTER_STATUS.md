@@ -36,3 +36,6 @@ Date (UTC): 2026-02-26
 ### Statut programme courant
 - Précheck invariants: **UNBLOCKED**
 - Phase 6: **BLOCKED** (token build PROD absent)
+
+### Statut séquentiel consolidé
+- P7 à P13: **BLOCKED** par dépendance stricte à P6 PASS.

@@ -1,4 +1,7 @@
 # 02_ARCH_DELTA.md
 
 Phase: P12
-Statut: PENDING
+Statut: BLOCKED
+
+## Delta architecture
+- Aucun delta runtime appliqué (phase non ouverte).
