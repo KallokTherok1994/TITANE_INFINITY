@@ -40,4 +40,6 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_x3_20260226T123434Z.log` (partiel)
 - `reports/conversation_os_v1_next_run_x3_20260226T123458Z.log` (partiel)
 - `reports/conversation_os_v1_next_run_x3_bg_20260226T123511Z.log` (partiel)
+- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
+- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
 

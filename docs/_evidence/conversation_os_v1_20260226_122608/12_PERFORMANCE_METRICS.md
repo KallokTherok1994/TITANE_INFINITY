@@ -17,5 +17,9 @@ Date (UTC): 2026-02-26
 - Breaker trigger timing: **BLOCKED**
 
 ## Cause du blocage
-- Exécution runtime x3 non stabilisée dans ce run à cause de contention `cargo`/verrou build.
+- Exécution runtime x3 désormais stabilisée (logs addendum PASS), mais les métriques de latence demandées n'ont pas encore été instrumentées/capturées explicitement.
+
+## Preuves runtime x3 disponibles
+- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
+- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
 

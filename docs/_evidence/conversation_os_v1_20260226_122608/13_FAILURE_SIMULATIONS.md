@@ -10,12 +10,16 @@ Date (UTC): 2026-02-26
 - timeout: **BLOCKED**
 - 429: **BLOCKED**
 - 500: **BLOCKED**
-- allowlist violation: **PARTIAL** (policy/scan prouvés, simulation runtime non scellée)
-- missing API key: **PARTIAL** (`CREDENTIALS_MISSING` observé dans `search_gateway.rs`, x3 runtime incomplet)
+- allowlist violation: **PARTIAL** (policy/allowlist validée; scénario E2E dédié non scellé)
+- missing API key: **PASS** (`G_SEARCH_CREDS_EXPLICIT` x3)
 - revoked API key: **BLOCKED**
-- circuit breaker open: **PARTIAL** (engine présent, x3 runtime incomplet)
-- budget exhausted: **PARTIAL** (gateway budgets présents, x3 runtime incomplet)
+- circuit breaker open: **PARTIAL** (transitions validées x3, scénario complet dédié manquant)
+- budget exhausted: **PARTIAL** (budget engine validé x3, scénario exhaustion complet manquant)
 
 ## Verdict gate
 - `G_FAILURE_SIMULATION_COMPLETE`: **BLOCKED**
+
+## Preuves runtime addendum
+- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
+- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
 

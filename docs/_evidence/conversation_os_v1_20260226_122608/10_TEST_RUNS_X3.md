@@ -15,14 +15,28 @@ Date (UTC): 2026-02-26
 - `TYPES_TO_SERVICES`: `2 / 2 / 2`
 - `SERVICES_TO_UI`: `5 / 5 / 5`
 - `LEGACY_CHAT_SEND_MESSAGE_UI`: `8 / 8 / 8`
+- `G_DB_WRITE_READ_HASH_X3`: `0 / 0 / 0` (exit)
+- `G_EVENTS_APPEND_ONLY`: `0 / 0 / 0`
+- `G_POLICY_ENFORCED`: `0 / 0 / 0`
+- `G_ROUTER_DETERMINISTIC`: `0 / 0 / 0`
+- `G_NETSTATE_TRANSITIONS_VALID`: `0 / 0 / 0`
+- `G_BUDGET_ENFORCED`: `0 / 0 / 0`
+- `G_SEARCH_CREDS_EXPLICIT`: `0 / 0 / 0`
+- `G_NO_SILENT_FALLBACK`: `0 / 0 / 0`
+- `G_SOURCES_STORED_AND_CITABLE_PARSE`: `0 / 0 / 0`
+- `G_DB_INSERT_AND_GET`: `0 / 0 / 0`
 
 ## Tentatives x3 runtime Rust
-- Tentatives lancées mais non finalisées proprement à cause de contention `cargo` (verrou build partagé):
+- Tentatives initiales partiellement bloquées par contention `cargo` (conservées pour audit):
 	- `reports/conversation_os_v1_next_run_x3_20260226T123434Z.log`
 	- `reports/conversation_os_v1_next_run_x3_20260226T123458Z.log`
 	- `reports/conversation_os_v1_next_run_x3_bg_20260226T123511Z.log`
+- Run isolé réussi:
+	- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
+	- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
 
 ## Verdict x3
 - Scans structurels: **PASS**.
-- Gates runtime nécessitant tests Rust x3 complets: **BLOCKED** dans ce run.
+- Gates runtime ciblées exécutées ici: **PASS**.
+- Gates non couvertes par tests dédiés dans ce run: **BLOCKED/PARTIAL** (voir `09_GATES_STATUS.md`).
 

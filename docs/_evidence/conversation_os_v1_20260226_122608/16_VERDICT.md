@@ -6,10 +6,10 @@ Date (UTC): 2026-02-26
 - **BLOCKED**
 
 ## Raisons explicites
-1. Les gates runtime obligatoires n'ont pas toutes été prouvées en x3 dans ce run (contention `cargo` sur build lock).
-2. `G_FAILURE_SIMULATION_COMPLETE` non satisfait (scénarios obligatoires non scellés).
-3. `G_PERF_METRICS_RECORDED` non satisfait (latences runtime requises non mesurées).
-4. Signaux legacy encore présents (`chat_send_message` références UI) à qualifier par tests de reachability.
+1. `G_FAILURE_SIMULATION_COMPLETE` non satisfait (scénarios obligatoires non scellés).
+2. `G_PERF_METRICS_RECORDED` non satisfait (latences runtime requises non mesurées).
+3. `G_LEGACY_UNREACHABLE_FROM_UI` non satisfait (`chat_send_message` références UI: `8/8/8`).
+4. Gates fonctionnelles restantes non scellées (`G_ORCHESTRATOR_SINGLE`, `G_NETWORK_META_COMPLETE`, `G_FAILURES_STORED`, `G_RATE_LIMIT_AWARE`, `G_SNAPSHOT_*`, `G_MEMORY_RECALL_INTERNAL_IDS`, `G_DEBUG_PANEL_REAL_TRACE`, `G_SELF_AUDIT_CLEAN`).
 
 ## Ce qui est PASS dans ce run
 - Pack de preuve complet créé (fichiers 00→16 présents).
@@ -17,10 +17,15 @@ Date (UTC): 2026-02-26
 - Scans x3:
 	- frontend no-web prod-scope = `0/0/0`
 	- backend http gouverné hors allowlist = `0/0/0`
+- Runtime x3 isolé PASS:
+	- DB hash + append-only
+	- Policy + Router + Resilience + Budget
+	- Search creds explicite
+	- No silent fallback
 - Baseline qualité:
 	- `pnpm lint` = PASS
 	- `pnpm test` = PASS
 
 ## Condition de passage à PASS
-- Rejouer les gates runtime obligatoires x3 sans contention, compléter simulations d’échec + métriques performance, puis re-sceller le verdict.
+- Compléter simulations d’échec obligatoires + métriques performance + preuves reachability legacy/UI/debug panel et persistance failures/sources, puis re-sceller le verdict.
 

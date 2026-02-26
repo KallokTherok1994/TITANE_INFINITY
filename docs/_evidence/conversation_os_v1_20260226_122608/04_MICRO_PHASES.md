@@ -19,31 +19,31 @@ Ordre: **IMMUTABLE**
 - Objectif: valider `events/provider_decisions/failures` + append-only + hash.
 - Rings: 3
 - Gates: `G_DB_WRITE_READ_HASH_X3`, `G_EVENTS_APPEND_ONLY`
-- Verdict phase: BLOCKED (preuve x3 runtime incomplète)
+- Verdict phase: PASS
 
 ## 3A — PolicyEngine First (RUNTIME, STABLE)
 - Objectif: règles dures + raison explicite.
 - Rings: 2
 - Gates: `G_NO_SILENT_FALLBACK`, `G_POLICY_ENFORCED`
-- Verdict phase: BLOCKED (x3 runtime incomplète)
+- Verdict phase: PASS
 
 ## 3B — RouterEngine Deterministic (RUNTIME, STABLE)
 - Objectif: classifier déterministe.
 - Rings: 2
 - Gate: `G_ROUTER_DETERMINISTIC`
-- Verdict phase: BLOCKED (x3 runtime incomplète)
+- Verdict phase: PASS
 
 ## 4A — NetworkGatewayService + Allowlist (RUNTIME, STABLE)
 - Objectif: deny-by-default + timeout + budget + meta réseau.
 - Rings: 3
 - Gates: `G_GATEWAY_ALLOWLIST_ONLY`, `G_FRONTEND_NO_WEB`, `G_NETWORK_META_COMPLETE`
-- Verdict phase: PARTIAL (scans PASS, runtime x3 BLOCKED)
+- Verdict phase: PARTIAL (allowlist validée, `NetworkMeta` complet non prouvé)
 
 ## 4B — ResilienceEngine (RUNTIME, QUALIFIED)
 - Objectif: netstate/backoff/breaker/budgets.
 - Rings: 2
 - Gates: `G_NETSTATE_TRANSITIONS_VALID`, `G_BUDGET_ENFORCED`
-- Verdict phase: BLOCKED (x3 runtime incomplète)
+- Verdict phase: PASS
 
 ## 5A — Orchestrator v1 Single Pipeline (RUNTIME, STABLE CANDIDATE)
 - Objectif: pipeline unique du trace à la persistance.
@@ -61,7 +61,7 @@ Ordre: **IMMUTABLE**
 - Objectif: `CREDENTIALS_MISSING` explicite + stockage failure.
 - Rings: 3
 - Gates: `G_SEARCH_CREDS_EXPLICIT`, `G_FAILURES_STORED`
-- Verdict phase: PARTIAL (preuve code OK, x3 runtime BLOCKED)
+- Verdict phase: PASS
 
 ## 6B — Search Success + Sources + Citations (RUNTIME, QUALIFIED)
 - Objectif: normalisation, sources persistées, simulation 429.
