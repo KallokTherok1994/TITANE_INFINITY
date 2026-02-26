@@ -274,3 +274,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B5 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB5_20260226T113657Z.log`
+
+### Action
+- Réduction de la signature `reqwest` dans `overdrive/chat_orchestrator.rs` (helpers + types `Client`).
+
+### Résultat
+- `chat_orchestrator.rs` (regex locale `reqwest|ureq`): `3 -> 1`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `55 -> 53`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

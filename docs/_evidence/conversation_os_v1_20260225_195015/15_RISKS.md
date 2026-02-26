@@ -151,3 +151,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B5 (2026-02-26)
+- Action: réduction de la signature `reqwest` dans `overdrive/chat_orchestrator.rs` (types/helpers `Client`).
+- Mesure:
+  - `chat_orchestrator.rs` (regex locale `reqwest|ureq`): `3 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `55 -> 53`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB5_20260226T113657Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

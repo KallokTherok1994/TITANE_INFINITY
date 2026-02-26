@@ -9,6 +9,7 @@
 use crate::core::tapi_error::TAPIError;
 use crate::core::{MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::sync::Arc;
@@ -61,14 +62,14 @@ fn calculate_adaptive_timeout(message_length: usize, is_local: bool) -> u64 {
 
 fn build_http_client_with_timeout(
     timeout: std::time::Duration,
-) -> Result<reqwest::Client, TAPIError> {
-    reqwest::Client::builder()
+) -> Result<Client, TAPIError> {
+    Client::builder()
         .timeout(timeout)
         .build()
         .map_err(|e| TAPIError::network(format!("HTTP client error: {}", e)))
 }
 
-fn build_http_client_with_secs(timeout_secs: u64) -> Result<reqwest::Client, TAPIError> {
+fn build_http_client_with_secs(timeout_secs: u64) -> Result<Client, TAPIError> {
     build_http_client_with_timeout(std::time::Duration::from_secs(timeout_secs))
 }
 
