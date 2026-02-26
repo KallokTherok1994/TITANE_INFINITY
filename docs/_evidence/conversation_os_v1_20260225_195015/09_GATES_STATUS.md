@@ -503,3 +503,16 @@
 
 ### État
 - **H2 CLOSED (governed)**.
+
+## Addendum terminal seal x3 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
+
+### Résultat x3
+- `RUN1_COUNT=0`
+- `RUN2_COUNT=0`
+- `RUN3_COUNT=0`
+
+### État
+- **TERMINAL SEAL: PASS**.
