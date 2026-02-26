@@ -34,11 +34,13 @@ Date (UTC): 2026-02-26
 ## Fichier code modifié (gate-close)
 - `src-tauri/src/services/db_service.rs`
 	- Ajout de tests unitaires ciblés: snapshots, sources, failures (append-only + hash)
+- `src-tauri/src/services/network_gateway.rs`
+	- Ajout struct `NetworkMeta` + méthodes `*_with_meta` + test unitaire de complétude
 - `src/core/commands/TAURI_COMMANDS.ts`
 	- Nettoyage d'une référence legacy en commentaire pour éviter faux positif gate reachability
 
 ## Métadonnées
-- Ring impacté: **Ring 4 (documentation/scellage)**
+- Ring impacté: **Ring 3 + Ring 4**
 - Statut changement: **QUALIFIED**
 
 ## Logs de preuve générés
@@ -51,4 +53,5 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_runtime_x3_gateclose_bg_20260226T124749Z.log`
 - `reports/conversation_os_v1_next_run_gate_rate_legacy_x3_20260226T125024Z.log`
 - `reports/conversation_os_v1_next_run_gate_legacy_afterfix_x3_20260226T125300Z.log`
+- `reports/conversation_os_v1_next_run_gate_network_meta_x3_20260226T125642Z.log`
 

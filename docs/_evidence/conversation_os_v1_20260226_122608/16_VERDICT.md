@@ -8,7 +8,7 @@ Date (UTC): 2026-02-26
 ## Raisons explicites
 1. `G_FAILURE_SIMULATION_COMPLETE` non satisfait (scénarios obligatoires non scellés).
 2. `G_PERF_METRICS_RECORDED` non satisfait (latences runtime requises non mesurées).
-3. Gates fonctionnelles restantes non scellées (`G_ORCHESTRATOR_SINGLE` complet E2E, `G_NETWORK_META_COMPLETE`, `G_MEMORY_RECALL_INTERNAL_IDS`, `G_DEBUG_PANEL_REAL_TRACE`, `G_SELF_AUDIT_CLEAN`).
+3. Gates fonctionnelles restantes non scellées (`G_ORCHESTRATOR_SINGLE` complet E2E, `G_MEMORY_RECALL_INTERNAL_IDS`, `G_DEBUG_PANEL_REAL_TRACE`, `G_SELF_AUDIT_CLEAN`).
 
 ## Ce qui est PASS dans ce run
 - Pack de preuve complet créé (fichiers 00→16 présents).

@@ -5,6 +5,7 @@
 
 use crate::services::network_policy::{check_domain, extract_domain, AppliedPolicy, PolicyError};
 use crate::core::http_types::{Client, Policy};
+use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::collections::HashMap;
 use std::time::Duration;
@@ -66,6 +67,22 @@ impl From<PolicyError> for NetworkGatewayError {
 struct GatewayRuntime {
     requests_used: u32,
     bytes_used: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NetworkMeta {
+    pub url: String,
+    pub domain: Option<String>,
+    pub method: String,
+    pub status_code: u16,
+    pub latency_ms: u128,
+    pub response_bytes: usize,
+    pub requests_used: u32,
+    pub bytes_used: u64,
+    pub max_requests: u32,
+    pub max_bytes_total: u64,
+    pub budget_remaining_requests: u32,
+    pub budget_remaining_bytes: u64,
 }
 
 pub struct NetworkGatewayService {
@@ -152,6 +169,37 @@ impl NetworkGatewayService {
         Ok(())
     }
 
+    fn build_network_meta(
+        &self,
+        url: &str,
+        method: &str,
+        status_code: u16,
+        latency_ms: u128,
+        response_bytes: usize,
+        requests_used: u32,
+        bytes_used: u64,
+    ) -> NetworkMeta {
+        NetworkMeta {
+            url: url.to_string(),
+            domain: extract_domain(url),
+            method: method.to_string(),
+            status_code,
+            latency_ms,
+            response_bytes,
+            requests_used,
+            bytes_used,
+            max_requests: self.policy.max_requests,
+            max_bytes_total: self.policy.max_bytes_total,
+            budget_remaining_requests: self.policy.max_requests.saturating_sub(requests_used),
+            budget_remaining_bytes: self.policy.max_bytes_total.saturating_sub(bytes_used),
+        }
+    }
+
+    async fn runtime_snapshot(&self) -> (u32, u64) {
+        let runtime = self.runtime.lock().await;
+        (runtime.requests_used, runtime.bytes_used)
+    }
+
     pub async fn get_text(&self, url: &str) -> Result<String, NetworkGatewayError> {
         self.preflight(url).await?;
         let response = self
@@ -197,7 +245,18 @@ impl NetworkGatewayService {
         url: &str,
         headers: Vec<(String, String)>,
     ) -> Result<Value, NetworkGatewayError> {
+        let (json, _) = self.get_json_with_headers_and_meta(url, headers).await?;
+        Ok(json)
+    }
+
+    pub async fn get_json_with_headers_and_meta(
+        &self,
+        url: &str,
+        headers: Vec<(String, String)>,
+    ) -> Result<(Value, NetworkMeta), NetworkGatewayError> {
         self.preflight(url).await?;
+
+        let started = std::time::Instant::now();
 
         let mut request = self.client.get(url);
         for (key, value) in headers {
@@ -209,6 +268,8 @@ impl NetworkGatewayService {
             .await
             .map_err(|err| NetworkGatewayError::NetworkError(err.to_string()))?;
 
+        let status_code = response.status().as_u16();
+
         let body = response
             .bytes()
             .await
@@ -216,8 +277,21 @@ impl NetworkGatewayService {
 
         self.postflight(body.len()).await?;
 
-        serde_json::from_slice(&body)
-            .map_err(|err| NetworkGatewayError::SerializationError(err.to_string()))
+        let json = serde_json::from_slice(&body)
+            .map_err(|err| NetworkGatewayError::SerializationError(err.to_string()))?;
+
+        let (requests_used, bytes_used) = self.runtime_snapshot().await;
+        let meta = self.build_network_meta(
+            url,
+            "GET",
+            status_code,
+            started.elapsed().as_millis(),
+            body.len(),
+            requests_used,
+            bytes_used,
+        );
+
+        Ok((json, meta))
     }
 
     pub async fn post_json(
@@ -226,7 +300,19 @@ impl NetworkGatewayService {
         payload: &Value,
         headers: Vec<(String, String)>,
     ) -> Result<Value, NetworkGatewayError> {
+        let (json, _) = self.post_json_with_meta(url, payload, headers).await?;
+        Ok(json)
+    }
+
+    pub async fn post_json_with_meta(
+        &self,
+        url: &str,
+        payload: &Value,
+        headers: Vec<(String, String)>,
+    ) -> Result<(Value, NetworkMeta), NetworkGatewayError> {
         self.preflight(url).await?;
+
+        let started = std::time::Instant::now();
 
         let mut request = self.client.post(url).json(payload);
         for (key, value) in headers {
@@ -238,6 +324,8 @@ impl NetworkGatewayService {
             .await
             .map_err(|err| NetworkGatewayError::NetworkError(err.to_string()))?;
 
+        let status_code = response.status().as_u16();
+
         let body = response
             .bytes()
             .await
@@ -245,8 +333,21 @@ impl NetworkGatewayService {
 
         self.postflight(body.len()).await?;
 
-        serde_json::from_slice(&body)
-            .map_err(|err| NetworkGatewayError::SerializationError(err.to_string()))
+        let json = serde_json::from_slice(&body)
+            .map_err(|err| NetworkGatewayError::SerializationError(err.to_string()))?;
+
+        let (requests_used, bytes_used) = self.runtime_snapshot().await;
+        let meta = self.build_network_meta(
+            url,
+            "POST",
+            status_code,
+            started.elapsed().as_millis(),
+            body.len(),
+            requests_used,
+            bytes_used,
+        );
+
+        Ok((json, meta))
     }
 
     pub async fn telemetry(&self) -> HashMap<String, String> {
@@ -308,5 +409,37 @@ mod tests {
             NetworkGatewayService::domain_of("https://api.search.brave.com/res/v1"),
             Some("api.search.brave.com".to_string())
         );
+    }
+
+    #[test]
+    fn test_network_meta_contains_required_fields() {
+        let gateway = NetworkGatewayService::new(NetworkGatewayConfig {
+            max_requests: 20,
+            max_bytes_total: 1024,
+            ..NetworkGatewayConfig::default()
+        });
+
+        let meta = gateway.build_network_meta(
+            "https://api.search.brave.com/res/v1/web/search?q=rust",
+            "GET",
+            200,
+            42,
+            128,
+            3,
+            512,
+        );
+
+        assert_eq!(meta.url, "https://api.search.brave.com/res/v1/web/search?q=rust");
+        assert_eq!(meta.domain.as_deref(), Some("api.search.brave.com"));
+        assert_eq!(meta.method, "GET");
+        assert_eq!(meta.status_code, 200);
+        assert_eq!(meta.latency_ms, 42);
+        assert_eq!(meta.response_bytes, 128);
+        assert_eq!(meta.requests_used, 3);
+        assert_eq!(meta.bytes_used, 512);
+        assert_eq!(meta.max_requests, 20);
+        assert_eq!(meta.max_bytes_total, 1024);
+        assert_eq!(meta.budget_remaining_requests, 17);
+        assert_eq!(meta.budget_remaining_bytes, 512);
     }
 }

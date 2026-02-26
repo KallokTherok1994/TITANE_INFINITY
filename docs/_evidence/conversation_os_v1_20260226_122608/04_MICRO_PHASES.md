@@ -37,7 +37,7 @@ Ordre: **IMMUTABLE**
 - Objectif: deny-by-default + timeout + budget + meta réseau.
 - Rings: 3
 - Gates: `G_GATEWAY_ALLOWLIST_ONLY`, `G_FRONTEND_NO_WEB`, `G_NETWORK_META_COMPLETE`
-- Verdict phase: PARTIAL (allowlist validée, `NetworkMeta` complet non prouvé)
+- Verdict phase: PASS
 
 ## 4B — ResilienceEngine (RUNTIME, QUALIFIED)
 - Objectif: netstate/backoff/breaker/budgets.
@@ -103,5 +103,5 @@ Ordre: **IMMUTABLE**
 - Objectif: simulations d’échec + perf + auto-audit + verdict unique.
 - Rings: 4
 - Gates: `G_FAILURE_SIMULATION_COMPLETE`, `G_PERF_METRICS_RECORDED`, `G_SELF_AUDIT_CLEAN`
-- Verdict phase: PASS (verdict final explicite rédigé)
+- Verdict phase: BLOCKED (simulations/perf/self-audit non scellés)
 
