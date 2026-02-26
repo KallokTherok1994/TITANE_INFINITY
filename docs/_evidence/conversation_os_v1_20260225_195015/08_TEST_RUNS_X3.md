@@ -78,3 +78,11 @@
 	- `G1_GLOBAL_EXIT_3:1`, `G1_GLOBAL_COUNT_3:0`
 - Conclusion:
 	- Reproductible x3 et critère strict atteint (`0` match).
+
+### G) Continuation check (post-sealing)
+- Vitest ciblé visual-engine:
+	- `pnpm vitest run src/__tests__/stores/visualStateStore.test.ts src/components/panels/__tests__/panels.spec.tsx`
+	- Résultat: `2 files passed`, `34 tests passed`.
+- Recheck G1 global:
+	- Log: `reports/conversation_os_g1_global_post_continue_check.log`
+	- Résultat: `EXIT:1`, `COUNT:0`.
