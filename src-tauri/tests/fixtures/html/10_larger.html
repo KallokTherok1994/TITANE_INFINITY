@@ -1,38 +1,61 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>TITANE Research Engine — Test Page</title>
-  <style>body { font-family: sans-serif; } .hidden { display: none; }</style>
-  <script>
-    window.onload = function() { console.log("loaded"); };
-  </script>
-</head>
-<body>
-  <header>
-    <h1>TITANE Research Engine</h1>
-    <nav><ul><li><a href="/">Home</a></li><li><a href="/about">About</a></li></ul></nav>
-  </header>
-  <main>
-    <article>
-      <h2>About This Engine</h2>
-      <p>TITANE is a governed, local-first AI research assistant. It prioritizes privacy and determinism.</p>
-      <p>Features include:</p>
-      <ul>
-        <li>Offline-first operation</li>
-        <li>Deterministic text extraction</li>
-        <li>Governed network access</li>
-        <li>Sandbox-only writes</li>
-      </ul>
-      <h2>Technical Details</h2>
-      <p>The architecture follows a 4-ring model: Types &rarr; Engines &rarr; Services &rarr; Modules.</p>
-      <p>Rate limiting &amp; robots.txt respect are enforced by default.</p>
-      <p>All data is stored in <code>data/research/</code> only.</p>
-      <h3>Security</h3>
-      <p>No JavaScript execution. No external API calls from UI. All network goes through FetchService &mdash; the single gate.</p>
-      <p>Copyright &copy; 2026 TITANE Team. All rights reserved.</p>
-    </article>
-  </main>
-  <footer><p>&copy; 2026 TITANE &mdash; Governed AI Research</p></footer>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>TITANE Research Engine — Test Page</title>
+    <style>
+      body {
+        font-family: sans-serif;
+      }
+      .hidden {
+        display: none;
+      }
+    </style>
+    <script>
+      window.onload = function () {
+        console.log('loaded');
+      };
+    </script>
+  </head>
+  <body>
+    <header>
+      <h1>TITANE Research Engine</h1>
+      <nav>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <article>
+        <h2>About This Engine</h2>
+        <p>
+          TITANE is a governed, local-first AI research assistant. It prioritizes privacy
+          and determinism.
+        </p>
+        <p>Features include:</p>
+        <ul>
+          <li>Offline-first operation</li>
+          <li>Deterministic text extraction</li>
+          <li>Governed network access</li>
+          <li>Sandbox-only writes</li>
+        </ul>
+        <h2>Technical Details</h2>
+        <p>
+          The architecture follows a 4-ring model: Types &rarr; Engines &rarr; Services
+          &rarr; Modules.
+        </p>
+        <p>Rate limiting &amp; robots.txt respect are enforced by default.</p>
+        <p>All data is stored in <code>data/research/</code> only.</p>
+        <h3>Security</h3>
+        <p>
+          No JavaScript execution. No external API calls from UI. All network goes through
+          FetchService &mdash; the single gate.
+        </p>
+        <p>Copyright &copy; 2026 TITANE Team. All rights reserved.</p>
+      </article>
+    </main>
+    <footer><p>&copy; 2026 TITANE &mdash; Governed AI Research</p></footer>
+  </body>
 </html>

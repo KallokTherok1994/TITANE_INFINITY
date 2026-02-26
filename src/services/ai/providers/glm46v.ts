@@ -140,7 +140,8 @@ async function checkEndpointHealth(): Promise<boolean> {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
 
-    const response = await globalThis['fetch']( // @network-allowed
+    const response = await globalThis['fetch'](
+      // @network-allowed
       // @network-allowed
       `${GLM46V_CONFIG.baseUrl}/models`,
       {
@@ -302,7 +303,8 @@ export const glm46vProvider: AIProvider = {
           try {
             const payload = convertToGLM46VFormat(sanitizedMessage, history);
 
-            const response = await globalThis['fetch']( // @network-allowed
+            const response = await globalThis['fetch'](
+              // @network-allowed
               // @network-allowed
               `${GLM46V_CONFIG.baseUrl}/chat/completions`,
               {

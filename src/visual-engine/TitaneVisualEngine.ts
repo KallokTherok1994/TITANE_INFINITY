@@ -565,7 +565,10 @@ export class TitaneVisualEngine extends EventEmitter {
           break;
 
         default:
-          console.warn('[VisualEngine] Unknown realtime socket message type:', message.type);
+          console.warn(
+            '[VisualEngine] Unknown realtime socket message type:',
+            message.type
+          );
       }
     }
 

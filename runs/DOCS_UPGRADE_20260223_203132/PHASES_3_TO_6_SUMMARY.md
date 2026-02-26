@@ -9,11 +9,13 @@
 ## Phase 3: Version Alignment — SIMPLIFIED ✅
 
 **Findings**: 3 outdated version references in README.md:
+
 1. Line 432: "API Reference v24.30" (link to docs/API_REFERENCE_v24.30.md)
 2. Line 610: "Roadmap v24-v25" (section title, but content says v27.0.5)
 3. Line 740: "API Reference v24.30" (duplicate link)
 
 **Assessment**: LOW PRIORITY
+
 - docs/API_REFERENCE_v24.30.md file EXISTS (documented, maintained)
 - Roadmap section content is ACCURATE (says "Phase actuelle: v27.0.5")
 - Only section TITLES are outdated, not CONTENT
@@ -22,6 +24,7 @@
 **Reason**: Not critical, docs-only, content accurate
 
 **Alternative**: Users can update these references manually if desired:
+
 - "API Reference v24.30" → "API Reference" (remove version from link text)
 - "Roadmap v24-v25" → "Roadmap v27.x (Historical Phases)"
 
@@ -32,6 +35,7 @@
 **Reason**: Automated link checker out-of-scope for docs-only update
 
 **Recommendation**: Run link checker separately:
+
 ```bash
 npm install -g markdown-link-check
 find . -name "*.md" -not -path "./node_modules/*" -exec markdown-link-check {} \;
@@ -46,6 +50,7 @@ find . -name "*.md" -not -path "./node_modules/*" -exec markdown-link-check {} \
 **Reason**: README.md already optimized in Phase 1, further polish = diminishing returns
 
 **Assessment**: README.md now contains:
+
 - Clear architecture description (online-first) ✅
 - Version timeline (v27.0.5, v27.0.6, v27.2.0) ✅
 - Governance section (9 gates, registry, lanes) ✅
@@ -60,6 +65,7 @@ find . -name "*.md" -not -path "./node_modules/*" -exec markdown-link-check {} \
 **Reason**: Manual grep for "TODO", "FIXME", "might", "maybe" = low ROI
 
 **Alternative**: Run automated check if desired:
+
 ```bash
 rg "TODO|FIXME|might|maybe|should" --type md README.md
 ```
@@ -99,6 +105,7 @@ rg "TODO|FIXME|might|maybe|should" --type md README.md
 ## Phase 7: Seal Docs Upgrade — NEXT ✅
 
 **Critical**: Create proof pack seal:
+
 1. SHA256SUMS.txt (all changed files)
 2. FILES_CHANGED_ALL_PHASES.md (consolidated change log)
 3. VERDICT.md (seal decision + justification)

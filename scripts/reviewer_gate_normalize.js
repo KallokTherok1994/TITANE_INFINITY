@@ -15,7 +15,9 @@ function readInput() {
 
 function hasPlaceholder(value) {
   if (!value) return false;
-  return /<[^>]+>|\bYYYY\b|\bMM\b|\bDD\b|\bHH:MM:SS\b|name\|handle|optional|APPROVED\|REJECTED/i.test(value);
+  return /<[^>]+>|\bYYYY\b|\bMM\b|\bDD\b|\bHH:MM:SS\b|name\|handle|optional|APPROVED\|REJECTED/i.test(
+    value
+  );
 }
 
 function normalizeKey(key) {
@@ -29,17 +31,21 @@ function normalizeKey(key) {
 
 function hasTimezone(ts) {
   if (!ts) return false;
-  return /(UTC|GMT([+-]\d{1,2})?|[+-]\d{2}:?\d{2}|[A-Za-z_]+\/[A-Za-z_]+)$/i.test(ts.trim());
+  return /(UTC|GMT([+-]\d{1,2})?|[+-]\d{2}:?\d{2}|[A-Za-z_]+\/[A-Za-z_]+)$/i.test(
+    ts.trim()
+  );
 }
 
 function isParseableTimestamp(ts) {
   if (!ts) return false;
   const trimmed = ts.trim();
-  const normalized = trimmed.replace(' UTC', 'Z').replace(/\s+GMT([+-]\d{1,2})$/i, (_m, g1) => {
-    const sign = g1.startsWith('-') ? '-' : '+';
-    const h = g1.replace(/[+-]/, '').padStart(2, '0');
-    return `${sign}${h}00`;
-  });
+  const normalized = trimmed
+    .replace(' UTC', 'Z')
+    .replace(/\s+GMT([+-]\d{1,2})$/i, (_m, g1) => {
+      const sign = g1.startsWith('-') ? '-' : '+';
+      const h = g1.replace(/[+-]/, '').padStart(2, '0');
+      return `${sign}${h}00`;
+    });
   const parsed = Date.parse(normalized);
   return Number.isFinite(parsed);
 }
@@ -47,13 +53,16 @@ function isParseableTimestamp(ts) {
 function parseBlock(raw) {
   const lines = raw
     .split(/\r?\n/)
-    .map((line) => line.trim())
+    .map(line => line.trim())
     .filter(Boolean);
 
   if (lines.length === 1) {
     const compactLine = lines[0];
-    const compactParts = compactLine.split('|').map((p) => p.trim());
-    if (compactParts.length >= 3 && !/REVIEWER_STOPLINE_CLEAR\s*:|TIMESTAMP\s*:|REVIEWER\s*:/i.test(compactLine)) {
+    const compactParts = compactLine.split('|').map(p => p.trim());
+    if (
+      compactParts.length >= 3 &&
+      !/REVIEWER_STOPLINE_CLEAR\s*:|TIMESTAMP\s*:|REVIEWER\s*:/i.test(compactLine)
+    ) {
       return {
         REVIEWER_STOPLINE_CLEAR: compactParts[0] || '',
         TIMESTAMP: compactParts[1] || '',
@@ -64,7 +73,7 @@ function parseBlock(raw) {
   }
 
   if (lines.length === 1 && lines[0].includes('|') && !lines[0].includes(':')) {
-    const parts = lines[0].split('|').map((p) => p.trim());
+    const parts = lines[0].split('|').map(p => p.trim());
     return {
       REVIEWER_STOPLINE_CLEAR: parts[0] || '',
       TIMESTAMP: parts[1] || '',
@@ -158,7 +167,8 @@ function evaluate(raw) {
 
   return {
     status,
-    normalized_block: status === 'VALID' || status === 'FIXABLE' ? buildNormalizedBlock(fields) : null,
+    normalized_block:
+      status === 'VALID' || status === 'FIXABLE' ? buildNormalizedBlock(fields) : null,
     missing_fields: missing,
     errors,
   };

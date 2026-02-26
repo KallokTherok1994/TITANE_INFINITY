@@ -23,6 +23,7 @@
 **Change**: Added deprecation notice at top of file
 
 **BEFORE** (Line 1-7):
+
 ```markdown
 # CONSTITUTION_LOCK_v27.md
 
@@ -34,6 +35,7 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 ```
 
 **AFTER** (Line 1-15):
+
 ```markdown
 # CONSTITUTION_LOCK_v27.md
 
@@ -67,6 +69,7 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 **Files List**: See `PROOF/legacy_terms.txt`
 
 **Examples**:
+
 - P8_2_EXECUTION_COMPLETE.md (2026-02-17 snapshot)
 - SPRINT_1_FINAL_REPORT.md (2026-02-08 report)
 - FINAL_SUMMARY_v27.0.2.md (2026-02-14 summary)
@@ -77,13 +80,14 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 ### docs/ Archives (81 files)
 
 **Action**: NO MODIFICATION  
-**Reason**: Explicit archives (99_ARCHIVE/, __ARCHIVE_*)  
+**Reason**: Explicit archives (99*ARCHIVE/, \_\_ARCHIVE*\*)  
 **Files List**: See `PROOF/docs_living_legacy_terms.txt`
 
 **Directories**:
+
 - docs/99_ARCHIVE/ (50+ files)
-- docs/__ARCHIVE_UI_CARTOGRAPHY_VAULT__/ (10+ files)
-- docs/_evidence/online_migration/ (10+ files - migration proof pack itself!)
+- docs/**ARCHIVE_UI_CARTOGRAPHY_VAULT**/ (10+ files)
+- docs/\_evidence/online_migration/ (10+ files - migration proof pack itself!)
 - docs/adr/ (5+ files - historical Architecture Decision Records)
 
 ---
@@ -97,6 +101,7 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 **Size**: ~200 lines (comprehensive justification)
 
 **Key Points**:
+
 - G8 (APPEND_ONLY_REGISTRY) requires historical immutability
 - Historical documents = legal records of past state
 - Editing history = falsifying records (Orwell's "memory hole")
@@ -119,6 +124,7 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 **Impact**: MINIMAL (notice only, no content changes)
 
 **Gates Validated**:
+
 - ✅ G5 (NO_SILENT_DRIFT): README.md aligned (Phase 1), current docs accurate
 - ✅ G7 (PROOF_DRIVEN_WORKFLOW): Preservation decision documented
 - ✅ G8 (APPEND_ONLY_REGISTRY): Historical reports preserved, no edits

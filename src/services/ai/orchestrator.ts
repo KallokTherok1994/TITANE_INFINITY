@@ -200,7 +200,10 @@ class AIOrchestrator {
 
     const tauriProvider = resolveProviderSafely('tauri-backend', () => tauriChatProvider);
     const ollamaLocalProvider = resolveProviderSafely('ollama', () => ollamaProvider);
-    const localFallbackProvider = resolveProviderSafely('titane-local', () => titaneLocalProvider);
+    const localFallbackProvider = resolveProviderSafely(
+      'titane-local',
+      () => titaneLocalProvider
+    );
 
     // Initialize eager providers safely (they may be undefined at import time)
     // Order: Tauri (Rust backend) → Ollama (local memory) → TitaneLocal (fallback)
@@ -216,10 +219,7 @@ class AIOrchestrator {
     );
 
     // Ensure titaneLocalProvider is always available as fallback
-    if (
-      localFallbackProvider &&
-      !this.eagerProviders.includes(localFallbackProvider)
-    ) {
+    if (localFallbackProvider && !this.eagerProviders.includes(localFallbackProvider)) {
       this.eagerProviders.push(localFallbackProvider);
     }
 

@@ -163,7 +163,9 @@ function finalize(code, signal, extra = {}) {
   writeStatus({ finished: true, exit_code: code, exit_signal: signal, ...extra });
   out.end();
 
-  process.stdout.write(`\n[TAURI_MONITOR] session ended code=${code ?? 'null'} signal=${signal ?? 'null'}\n`);
+  process.stdout.write(
+    `\n[TAURI_MONITOR] session ended code=${code ?? 'null'} signal=${signal ?? 'null'}\n`
+  );
   process.stdout.write(`[TAURI_MONITOR] summary: ${SUMMARY_FILE}\n`);
   process.exit(code ?? 0);
 }
@@ -174,7 +176,9 @@ process.on('SIGTERM', () => shutdown('SIGTERM'));
 child.on('exit', (code, signal) => {
   clearInterval(interval);
   const normalizedCode =
-    isSmokeRun && (code === 143 || signal === 'SIGTERM' || signal === 'SIGINT') ? 0 : code;
+    isSmokeRun && (code === 143 || signal === 'SIGTERM' || signal === 'SIGINT')
+      ? 0
+      : code;
   const normalizedSignal = isSmokeRun ? null : signal;
   finalize(normalizedCode, normalizedSignal);
 });

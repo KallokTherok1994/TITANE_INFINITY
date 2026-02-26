@@ -1,4 +1,4 @@
-# Phase 2: Revised Strategy - Historical Preservation 
+# Phase 2: Revised Strategy - Historical Preservation
 
 **Date**: 2026-02-23 21:00:00 UTC  
 **Decision**: PRESERVE ALL TOP-LEVEL REPORTS (append-only audit trail)
@@ -8,6 +8,7 @@
 ## Critical Finding
 
 **ALL 30+ files** in legacy_terms.txt are **historical reports/archives**:
+
 - Sprint reports (SPRINT_1_FINAL_REPORT.md)
 - Deployment summaries (FINAL_SUMMARY_v27.0.2.md)
 - Phase execution records (P8_2_EXECUTION_COMPLETE.md)
@@ -40,6 +41,7 @@ Modifying historical reports to say "online-first" when they documented "local-f
 **Action**: Search for "local-first" in docs/ subdirectories  
 **Target**: Living documentation (not historical reports)  
 **Examples**:
+
 - docs/architecture/ (current architecture docs)
 - docs/guides/ (current user guides)
 - docs/api/ (current API reference)
@@ -77,12 +79,14 @@ rg "local-first|offline-first" --type md docs/ \
 
 ## Justification
 
-**Legal/Audit Perspective**: 
+**Legal/Audit Perspective**:
+
 - Historical reports = legal records of system state
 - Editing historical reports = falsifying records
 - G8 (APPEND_ONLY_REGISTRY) exists precisely to prevent this
 
 **Correct Approach**:
+
 - Preserve history AS-IS
 - Add new documents explaining evolution (e.g., "ARCHITECTURE_MIGRATION_v27.5.0.md")
 - Update ONLY living/current documentation
@@ -92,4 +96,3 @@ rg "local-first|offline-first" --type md docs/ \
 **Status**: STRATEGY REVISED  
 **Gate**: G8 (APPEND_ONLY_REGISTRY) compliance ENSURED  
 **Next**: Search docs/ for living documentation to normalize
-

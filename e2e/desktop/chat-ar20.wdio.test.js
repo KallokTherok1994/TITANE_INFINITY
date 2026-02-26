@@ -407,14 +407,8 @@ describe('Runtime Validation: Chat AR20 Suite (WebDriver Native)', () => {
       assert.notEqual(result.response, null, 'Silence detected (null response)');
       const assistantText =
         result.response.assistant_message || result.response.content || '';
-      assert.ok(
-        assistantText,
-        'Silence detected (no assistant_message/content)'
-      );
-      assert.ok(
-        assistantText.length > 0,
-        'Silence detected (empty message)'
-      );
+      assert.ok(assistantText, 'Silence detected (no assistant_message/content)');
+      assert.ok(assistantText.length > 0, 'Silence detected (empty message)');
 
       results.tests.push({
         name: testName,

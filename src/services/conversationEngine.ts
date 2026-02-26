@@ -13,7 +13,12 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
-import type { OnlineDecision, ProviderDecisionMeta, Mode, ReasonCode } from '@/types/providerMeta';
+import type {
+  OnlineDecision,
+  ProviderDecisionMeta,
+  Mode,
+  ReasonCode,
+} from '@/types/providerMeta';
 import { FEATURE_FLAGS, envFlag } from '@/config/featureFlags';
 
 function runtimeFlag(key: string): boolean {
@@ -141,7 +146,9 @@ function deriveFallbackProviderMeta(
   decision?: OnlineDecision
 ): ProviderDecisionMeta {
   const reasonFromMetadataRaw =
-    typeof metadata['reason_code'] === 'string' ? metadata['reason_code'].toUpperCase() : undefined;
+    typeof metadata['reason_code'] === 'string'
+      ? metadata['reason_code'].toUpperCase()
+      : undefined;
 
   const modeFromMetadataRaw =
     typeof metadata['mode'] === 'string' ? metadata['mode'].toUpperCase() : undefined;
@@ -180,7 +187,9 @@ function deriveFallbackProviderMeta(
           ? 'NETWORK_ERROR'
           : decision?.reasonCode === 'OFFLINE_INTERNAL_ERROR'
             ? 'FALLBACK_OFFLINE'
-            : modeFromMetadata === 'LOCAL' || modeFromMetadata === 'REMOTE' || modeFromMetadata === 'CACHED'
+            : modeFromMetadata === 'LOCAL' ||
+                modeFromMetadata === 'REMOTE' ||
+                modeFromMetadata === 'CACHED'
               ? 'OK'
               : 'UNKNOWN';
 
@@ -201,13 +210,15 @@ function deriveFallbackProviderMeta(
   const latency_ms_total =
     typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0;
 
-  const timeout_ms = typeof metadata['timeout_ms'] === 'number' ? metadata['timeout_ms'] : 30000;
+  const timeout_ms =
+    typeof metadata['timeout_ms'] === 'number' ? metadata['timeout_ms'] : 30000;
   const retries = typeof metadata['retries'] === 'number' ? metadata['retries'] : 0;
   const network_used =
     typeof metadata['network_used'] === 'boolean'
       ? metadata['network_used']
       : (decision?.networkUsed ?? false);
-  const cache_hit = typeof metadata['cache_hit'] === 'boolean' ? metadata['cache_hit'] : false;
+  const cache_hit =
+    typeof metadata['cache_hit'] === 'boolean' ? metadata['cache_hit'] : false;
   const policy =
     typeof metadata['policy'] === 'string'
       ? metadata['policy']
@@ -364,7 +375,7 @@ export async function processMessage(
 
   if (!externalAllowed) {
     console.warn(
-      '[CONV_SEND] ⚠️ External AI gate BLOCKED: forcing local provider (no remote calls)',
+      '[CONV_SEND] ⚠️ External AI gate BLOCKED: forcing local provider (no remote calls)'
     );
   }
 

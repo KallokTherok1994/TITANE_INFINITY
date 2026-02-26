@@ -1,13 +1,23 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <title>Script Style Test</title>
-  <style>.foo { color: red; font-size: 12px; }</style>
-</head>
-<body>
-  <script>var x = 42; function evil() { alert("xss"); }</script>
-  <p>Visible Content</p>
-  <noscript>Please enable JavaScript.</noscript>
-  <p>More text here.</p>
-</body>
+  <head>
+    <title>Script Style Test</title>
+    <style>
+      .foo {
+        color: red;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      var x = 42;
+      function evil() {
+        alert('xss');
+      }
+    </script>
+    <p>Visible Content</p>
+    <noscript>Please enable JavaScript.</noscript>
+    <p>More text here.</p>
+  </body>
 </html>

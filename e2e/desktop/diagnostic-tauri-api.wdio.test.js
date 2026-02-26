@@ -27,7 +27,9 @@ describe('Diagnostic: Tauri API Availability', () => {
     const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
-      console.warn('[DIAG] Tauri page unavailable (about:blank), skipping diagnostic spec');
+      console.warn(
+        '[DIAG] Tauri page unavailable (about:blank), skipping diagnostic spec'
+      );
       this.skip();
     }
   });
@@ -91,7 +93,10 @@ describe('Diagnostic: Tauri API Availability', () => {
             };
 
             if (window.__TAURI_INTERNALS__?.invoke) {
-              return await window.__TAURI_INTERNALS__.invoke('conversation_generate', payload);
+              return await window.__TAURI_INTERNALS__.invoke(
+                'conversation_generate',
+                payload
+              );
             }
 
             if (window.__TAURI__?.invoke) {
@@ -99,7 +104,10 @@ describe('Diagnostic: Tauri API Availability', () => {
             }
 
             if (window.__TAURI__?.tauri?.invoke) {
-              return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
+              return await window.__TAURI__.tauri.invoke(
+                'conversation_generate',
+                payload
+              );
             }
 
             if (window.__TAURI__?.core?.invoke) {
@@ -119,7 +127,10 @@ describe('Diagnostic: Tauri API Availability', () => {
         }
 
         lastError = response?.err || lastError;
-        if (String(lastError).includes('Origin header is not a valid URL') && attempt < 5) {
+        if (
+          String(lastError).includes('Origin header is not a valid URL') &&
+          attempt < 5
+        ) {
           await browser.pause(300);
           continue;
         }

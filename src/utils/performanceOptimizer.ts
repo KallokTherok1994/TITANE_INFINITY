@@ -757,7 +757,9 @@ class AdvancedPerformanceOptimizer {
    */
   private async warmupCriticalAPIs(): Promise<void> {
     if (!this.isOptimizationActive) return;
-    console.log('⏭️ [PERF-OPTIMIZER] API warmup skipped (tauri-only / no frontend network)');
+    console.log(
+      '⏭️ [PERF-OPTIMIZER] API warmup skipped (tauri-only / no frontend network)'
+    );
   }
 
   /**

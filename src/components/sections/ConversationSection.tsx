@@ -238,7 +238,9 @@ function buildResearchHandoff(input: string): {
   };
 }
 
-function extractConfirmedPoints(citations: ResearchReport['answer']['citations']): string[] {
+function extractConfirmedPoints(
+  citations: ResearchReport['answer']['citations']
+): string[] {
   const stopWords = new Set([
     'avec',
     'dans',
@@ -355,7 +357,8 @@ function classifyResearchOutcome(report: ResearchReport): ResearchOutcome {
 }
 
 function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): string {
-  const verdict = report.trace.markers.find((m) => m.startsWith('VERDICT_')) ?? 'VERDICT_UNKNOWN';
+  const verdict =
+    report.trace.markers.find(m => m.startsWith('VERDICT_')) ?? 'VERDICT_UNKNOWN';
   const verdictLabel = verdict.replace('VERDICT_', '');
   const citations = report.answer.citations || [];
   const limitations = report.answer.limitations || [];
@@ -389,7 +392,8 @@ function buildResearchReply(report: ResearchReport, outcome: ResearchOutcome): s
       .map((citation, index) => {
         const title = citation.title?.trim() || 'Source';
         const excerpt = citation.excerpt?.trim();
-        const shortExcerpt = excerpt && excerpt.length > 120 ? `${excerpt.slice(0, 117)}…` : excerpt;
+        const shortExcerpt =
+          excerpt && excerpt.length > 120 ? `${excerpt.slice(0, 117)}…` : excerpt;
         return `${index + 1}. ${title} — ${citation.url}${shortExcerpt ? `\n   ↳ ${shortExcerpt}` : ''}`;
       })
       .join('\n');
@@ -461,11 +465,13 @@ function deriveResearchProviderMeta(
   outcome: ResearchOutcome
 ): ProviderDecisionMeta {
   const cacheHit = (report.trace.cache_events || []).some(event => event.kind === 'HIT');
-  const duration = typeof report.trace.timings?.total === 'number' ? report.trace.timings.total : 0;
+  const duration =
+    typeof report.trace.timings?.total === 'number' ? report.trace.timings.total : 0;
 
   let reasonCode: ReasonCode = 'OK';
   if (outcome === 'blocked') {
-    reasonCode = detectBlockCause(report) === 'RATE_LIMIT_BLOCKED' ? 'RATE_LIMIT' : 'POLICY_BLOCKED';
+    reasonCode =
+      detectBlockCause(report) === 'RATE_LIMIT_BLOCKED' ? 'RATE_LIMIT' : 'POLICY_BLOCKED';
   } else if (outcome === 'limited') {
     reasonCode = 'PROVIDER_UNAVAILABLE';
   }
@@ -536,7 +542,9 @@ const ConversationMessage = memo(
             </span>
             {message.role === 'assistant' && providerMeta && (
               <div className="conversation-message-tags">
-                {providerLabel && <span className="conversation-tag">{providerLabel}</span>}
+                {providerLabel && (
+                  <span className="conversation-tag">{providerLabel}</span>
+                )}
                 {modeLabel && <span className="conversation-tag">{modeLabel}</span>}
                 {classLabel && <span className="conversation-tag">{classLabel}</span>}
                 {cacheHit && <span className="conversation-tag">CACHE</span>}

@@ -130,14 +130,14 @@ scripts/install-appimage.sh:26:if [ ! -f "deployment/latest/${APPIMAGE_NAME}" ];
 scripts/install-appimage.sh:28: echo " Chemin attendu: deployment/latest/${APPIMAGE_NAME}"
 scripts/install-appimage.sh:42:cp "deployment/latest/${APPIMAGE_NAME}" "$INSTALL_DIR/titane-infinity"
 deployment/v27.0.3/certification/phase2/ci_proof/06_CI_VERDICT.md:23:- Gateway: Does NOT block deployment; local proof is primary evidence
-deployment/v27.0.3/certification/phase2/ci_proof/05_commit_status_curl.json:74:    "deployments_url": "https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/deployments"
-deployment/v27.0.3/certification/phase2/ci_proof/FINAL_REPORT.md:27:   - Interpretation: CI infrastructure not deployed (not a failure)
+deployment/v27.0.3/certification/phase2/ci_proof/05_commit_status_curl.json:74: "deployments_url": "https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/deployments"
+deployment/v27.0.3/certification/phase2/ci_proof/FINAL_REPORT.md:27: - Interpretation: CI infrastructure not deployed (not a failure)
 deployment/v27.0.3/certification/phase2/ci_proof/FINAL_REPORT.md:50:| Archive Integrity | ✅ PASS | deployment/latest/certification/* unchanged |
 deployment/v27.0.3/certification/phase2/ci_proof/FINAL_REPORT.md:90:- Archive P2 proofs to deployment/v27.0.3/certification/ (if deploying)
-deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:1:08fc200b0dd71088f29e15bb5cad4ebd452ea2e3096165265a96c8b828f81114  ./deployment_gate/00_phase.txt
-deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:2:0b84c07eab80621e275295d90012c5532ca0e8008fb54afd01220da543490bc7  ./deployment_gate/11_DEPLOYMENT_GATE_SUMMARY.md
-deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:5:192fdc2e755463d2a210996e652bac3c2c235a7163843fabe9874239192bb194  ./deployment_gate/17_instructions_echoed.txt
+deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:1:08fc200b0dd71088f29e15bb5cad4ebd452ea2e3096165265a96c8b828f81114 ./deployment_gate/00_phase.txt
+deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:2:0b84c07eab80621e275295d90012c5532ca0e8008fb54afd01220da543490bc7 ./deployment_gate/11_DEPLOYMENT_GATE_SUMMARY.md
+deployment/v27.0.3/certification/phase2/MANIFEST_SHA256.txt:5:192fdc2e755463d2a210996e652bac3c2c235a7163843fabe9874239192bb194 ./deployment_gate/17_instructions_echoed.txt
 scripts/validate-auto-heal.sh:66:test_script "scripts/verify/pre-deployment-check.sh" "Pre-Deployment Check"
-scripts/certification/lib_cert.sh:15:  local pack_dir="deployment/latest/certification/master_runs/${phase_id}*${utc}"
-scripts/certification/lib_cert.sh:223:  local registry="deployment/latest/certification/MASTER_REGISTRY.jsonl"
+scripts/certification/lib_cert.sh:15: local pack_dir="deployment/latest/certification/master_runs/${phase_id}*${utc}"
+scripts/certification/lib_cert.sh:223: local registry="deployment/latest/certification/MASTER_REGISTRY.jsonl"
 scripts/certification/run-master-chat-to-prod.sh:10:MASTER_DIR="$REPO_ROOT/deployment/latest/certification/master_runs/$MASTER_RUN_ID"

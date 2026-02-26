@@ -99,7 +99,10 @@ async function invokeConversationGenerate(message) {
     (payload, done) => {
       const run = async () => {
         if (window.__TAURI_INTERNALS__?.invoke) {
-          return await window.__TAURI_INTERNALS__.invoke('conversation_generate', payload);
+          return await window.__TAURI_INTERNALS__.invoke(
+            'conversation_generate',
+            payload
+          );
         }
         if (window.__TAURI__?.tauri?.invoke) {
           return await window.__TAURI__.tauri.invoke('conversation_generate', payload);
@@ -345,7 +348,9 @@ describe('ai-verification (desktop/full)', () => {
         }
       );
     } catch (error) {
-      console.warn(`[AI-VERIF] UI chat surface unavailable, enabling IPC fallback: ${error.message}`);
+      console.warn(
+        `[AI-VERIF] UI chat surface unavailable, enabling IPC fallback: ${error.message}`
+      );
     }
 
     selectors = await resolveSelectors();
