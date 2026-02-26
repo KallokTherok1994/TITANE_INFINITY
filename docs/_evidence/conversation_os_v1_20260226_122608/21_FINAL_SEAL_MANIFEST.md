@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM AUTOHEAL AH FOLLOW-UP (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_215802`
+- Verdict: `BLOCKED`
+- Cause: précheck runtime strict non-clean + preuve explicite Tool Contract/Zero-Trust insuffisante
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_215802/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_215802.txt`
+
 ## ADDENDUM — PROGRAM AUTOHEAL AH (A→H)
 
 - Program path: `docs/_evidence/program_autoheal_ah_20260226_215033`
