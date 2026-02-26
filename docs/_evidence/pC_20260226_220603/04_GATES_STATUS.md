@@ -1,0 +1,4 @@
+# 04_GATES_STATUS.md
+
+Phase: PC
+Gates: BLOCKED

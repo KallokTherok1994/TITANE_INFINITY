@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM AUTOHEAL AH V3 (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_220603`
+- Verdict: `BLOCKED`
+- Cause: précheck ultra-ciblé non conforme
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_220603/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_220603.txt`
+
 ## ADDENDUM — PROGRAM AUTOHEAL AH FOLLOW-UP (A→H)
 
 - Program path: `docs/_evidence/program_autoheal_ah_20260226_215802`
