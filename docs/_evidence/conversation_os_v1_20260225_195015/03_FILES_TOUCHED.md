@@ -301,3 +301,18 @@
 	- `15_RISKS.md`
 - Delta mesuré:
 	- `H2` code-only `46 -> 43`
+
+## Addendum 2026-02-26 (Step-4 Lot B2 execution)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/ai/ollama.rs`
+- Fichier ajouté:
+	- `31_H2_STEP4_LOTB2_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB2_20260226T033710Z.log`
+- Delta mesuré:
+	- `H2` code-only `43 -> 39`

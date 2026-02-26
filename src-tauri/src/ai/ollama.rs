@@ -40,6 +40,13 @@ fn ollama_default_model() -> String {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
+    fn build_ollama_client(timeout_secs: u64) -> Result<reqwest::Client, String> {
+        reqwest::Client::builder()
+        .timeout(Duration::from_secs(timeout_secs))
+        .build()
+        .map_err(|e| format!("Client error: {}", e))
+    }
+
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES & STRUCTURES
 // ═══════════════════════════════════════════════════════════════════════════
@@ -132,10 +139,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         return Err(format!("Rate limit exceeded: {}", e));
     }
 
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(TIMEOUT_SECONDS))
-        .build()
-        .map_err(|e| format!("Client error: {}", e))?;
+    let client = build_ollama_client(TIMEOUT_SECONDS)?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -197,10 +201,7 @@ pub async fn ai_generate_local_stream(
     window: Window,
     request: LocalAIRequest,
 ) -> Result<String, String> {
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(TIMEOUT_SECONDS))
-        .build()
-        .map_err(|e| format!("Client error: {}", e))?;
+    let client = build_ollama_client(TIMEOUT_SECONDS)?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -284,10 +285,7 @@ pub async fn ai_generate_local_stream(
 
 #[command]
 pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(5))
-        .build()
-        .map_err(|e| format!("Client error: {}", e))?;
+    let client = build_ollama_client(5)?;
 
     let response = client
         .get(format!("{}/api/tags", ollama_base_url()))
@@ -372,10 +370,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     }
 
     // Cache miss or expired → perform actual check
-    let client = reqwest::Client::builder()
-        .timeout(Duration::from_secs(2))
-        .build()
-        .map_err(|e| format!("Client error: {}", e))?;
+    let client = build_ollama_client(2)?;
 
     // Test de disponibilité
     let response = client
@@ -465,10 +460,8 @@ pub struct OllamaClient {
 
 impl OllamaClient {
     pub fn new(model: Option<String>) -> Self {
-        let client = reqwest::Client::builder()
-            .timeout(Duration::from_secs(TIMEOUT_SECONDS))
-            .build()
-            .unwrap_or_else(|_| reqwest::Client::new());
+        let client =
+            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| reqwest::Client::new());
 
         let resolved_model = model.unwrap_or_else(ollama_default_model);
         log::info!("[OllamaClient] new() | resolved_model={}", resolved_model);

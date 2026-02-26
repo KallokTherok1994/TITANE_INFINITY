@@ -1,0 +1,39 @@
+src-tauri/src/api/chat_commands.rs:5:use reqwest::Client;
+src-tauri/src/control_panel_commands.rs:691:    // let response = reqwest::get("https://api.github.com/repos/KallokTherok1994/TITANE_INFINITY/releases/latest")
+src-tauri/src/commands/ai_chat.rs:591:        reqwest::get("https://www.google.com"),
+src-tauri/src/commands/ollama_command.rs:43:    let client = reqwest::Client::builder()
+src-tauri/src/commands/ai_prompt_generator.rs:117:    use reqwest::Client;
+src-tauri/src/ollama_provider_refactor.rs:10:use reqwest::Client;
+src-tauri/src/gemini_provider_refactor.rs:78:        let client = reqwest::Client::builder()
+src-tauri/src/local_provider_refactor.rs:3:use reqwest::Client;
+src-tauri/src/tts/elevenlabs_tts.rs:7:use reqwest::Client;
+src-tauri/src/memory_os/embeddings.rs:108:        let client = reqwest::Client::new();
+src-tauri/src/memory_os/embeddings.rs:155:        let client = reqwest::Client::new();
+src-tauri/src/tts/online_tts.rs:26:            reqwest::get("https://www.google.com"),
+src-tauri/src/tts/online_tts.rs:46:        let response = reqwest::get(&url)
+src-tauri/src/ollama.rs:5:use reqwest::{Client, StatusCode};
+src-tauri/src/api_hub/copilot.rs:10:use reqwest::{header, Client};
+src-tauri/src/memory_evolution/memory_vectorizer.rs:232:            let client = reqwest::Client::new();
+src-tauri/src/ai/providers/claude.rs:9:use reqwest::Client;
+src-tauri/src/audio/asr.rs:63:        let client = reqwest::Client::builder()
+src-tauri/src/ai/providers/openai.rs:9:use reqwest::Client;
+src-tauri/src/ai/providers/local.rs:9:use reqwest::Client;
+src-tauri/src/engines/unified_memory/summarizer.rs:315:    let client = reqwest::Client::new();
+src-tauri/src/engines/unified_memory/embeddings.rs:216:    let client = reqwest::Client::new();
+src-tauri/src/ia/openai_gpt.rs:8:use reqwest::Client;
+src-tauri/src/ai/router.rs:70:            reqwest::get("https://www.google.com"),
+src-tauri/src/ia/anthropic_claude.rs:8:use reqwest::Client;
+src-tauri/src/ai/gemini.rs:64:        let client = reqwest::Client::builder()
+src-tauri/src/ai/gemini.rs:67:            .unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/overdrive/api_bridge.rs:216:    //   let client = reqwest::Client::builder()
+src-tauri/src/overdrive/api_bridge.rs:226:    // let client = reqwest::Client::new();
+src-tauri/src/ai/ollama.rs:44:        reqwest::Client::builder()
+src-tauri/src/ai/ollama.rs:464:            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| reqwest::Client::new());
+src-tauri/src/services/fetch_service.rs:10:use reqwest::Client;
+src-tauri/src/overdrive/chat_orchestrator.rs:358:            match reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:714:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:862:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:968:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1123:    let client = reqwest::Client::builder()
+src-tauri/src/overdrive/chat_orchestrator.rs:1789:    let client = match reqwest::Client::builder()
+src-tauri/src/services/network_gateway.rs:7:use reqwest::Client;
