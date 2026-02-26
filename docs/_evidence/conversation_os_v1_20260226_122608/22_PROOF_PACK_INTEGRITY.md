@@ -1,3 +1,12 @@
+## ADDENDUM — INTEGRITY AUTOHEAL AH V4 (A→H)
+
+- Hash manifest file: 
+- File count: 
+- Scope:
+  - 
+  -  à 
+- Verdict pack: 
+
 ## ADDENDUM — INTEGRITY AUTOHEAL AH V3 (A→H)
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_220603.txt`
