@@ -1,3 +1,12 @@
+## ADDENDUM — COVERAGE SEAL PUBLICATION
+
+- Tags de scellement coverage:
+	- `evidence-seal-coverage-20260226T2121Z`
+	- `evidence-seal-coverage-latest`
+- Liés au contrôle final:
+	- `reports/final_phase_coverage_p0_146_20260226_211529Z.md`
+	- `reports/final_phase_continuity_p6_146_20260226T211717Z.md`
+
 ## ADDENDUM — FINAL COVERAGE VERDICT (P0→P146 / P6→P146)
 
 - Global coverage verdict (P0→P146): `FAIL` (missing `P0..P5`)

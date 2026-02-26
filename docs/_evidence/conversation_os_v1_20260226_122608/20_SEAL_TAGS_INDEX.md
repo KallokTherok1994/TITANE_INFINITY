@@ -1,3 +1,13 @@
+## ADDENDUM — COVERAGE SEAL TAGS (20260226T2121Z)
+
+- Tags publiés:
+  - `evidence-seal-coverage-20260226T2121Z`
+  - `evidence-seal-coverage-latest`
+- Portée: scellement dédié du contrôle final de couverture.
+- Références preuves:
+  - `reports/final_phase_coverage_p0_146_20260226_211529Z.md`
+  - `reports/final_phase_continuity_p6_146_20260226T211717Z.md`
+
 ## ADDENDUM — FINAL COVERAGE CONTROL (20260226T2117Z)
 
 - Scope check: `P0→P146` + continuité opérationnelle `P6→P146`
