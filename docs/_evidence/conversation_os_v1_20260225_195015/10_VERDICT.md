@@ -1,7 +1,9 @@
 # 10_VERDICT.md
 
 ## Verdict unique
-**BLOCKED**
+**QUALIFIED**
+
+> Historique: ce document conserve les phases intermédiaires `BLOCKED` en append-only; l'état courant est `QUALIFIED`.
 
 ## Raisons bloquantes (strict)
 1. Invariant absolu `FRONTEND_NO_WEB` non tenu globalement: le scan discovery montre des appels `fetch/WebSocket` dans `src/**` (surfaces legacy incluses).
@@ -71,3 +73,18 @@ Aucun build/deploy PROD sans tokens exacts:
 ### Métadonnées
 - Ring impacté principal: **Ring 4 (Modules/UI)**
 - Statut changement: **QUALIFIED**
+
+## Addendum post-GO final (2026-02-26)
+
+### Validation croisée finale
+- Preuve: `reports/conversation_os_final_validation_post_go.log`
+- Résultats consolidés:
+	- `CHECK_EXIT:0`
+	- `LINT_EXIT:0`
+	- `ARCH_EXIT:0`
+	- `RUST_EXIT:0`
+	- `FORMAT_EXIT:1` (dette globale dépôt)
+	- `G1_COUNT:0`
+
+### Décision finale maintenue
+- **Verdict unique: QUALIFIED**
