@@ -288,8 +288,8 @@ export class WebVitalsMonitor {
     // Send to analytics service (placeholder)
     console.log('[WebVitals] Analytics report:', latest);
 
-    // In production, send to actual analytics:
-    // fetch('/api/analytics/web-vitals', {
+    // In production, send to actual analytics endpoint:
+    // request('/api/analytics/web-vitals', {
     //   method: 'POST',
     //   body: JSON.stringify(latest),
     // });

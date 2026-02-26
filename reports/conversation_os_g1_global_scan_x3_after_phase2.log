@@ -1,0 +1,201 @@
+CAMPAIGN:G1_GLOBAL_SCAN_X3_AFTER_PHASE2
+START_UTC:2026-02-26T01:08:09Z
+ITERATION_1
+src/visual-engine/OSIntegrationBridge.ts:21: * - Gérer WebSocket/EventSource connections
+src/visual-engine/OSIntegrationBridge.ts:142:  private ws: WebSocket | null = null;
+src/visual-engine/OSIntegrationBridge.ts:212:      this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:411:  private connectWebSocket(): void {
+src/visual-engine/OSIntegrationBridge.ts:420:        (this.ws.readyState === WebSocket.OPEN ||
+src/visual-engine/OSIntegrationBridge.ts:421:          this.ws.readyState === WebSocket.CONNECTING)
+src/visual-engine/OSIntegrationBridge.ts:431:      this.ws = new WebSocket(this.config.websocketUrl);
+src/visual-engine/OSIntegrationBridge.ts:438:          console.log('[OSIntegrationBridge] WebSocket connected');
+src/visual-engine/OSIntegrationBridge.ts:454:        console.error('[OSIntegrationBridge] WebSocket error:', error);
+src/visual-engine/OSIntegrationBridge.ts:463:          console.log('[OSIntegrationBridge] WebSocket closed');
+src/visual-engine/OSIntegrationBridge.ts:482:          this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:486:      console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
+src/visual-engine/OSIntegrationBridge.ts:501:      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+src/visual-engine/TitaneVisualEngineV21.ts:10: * - WebSocket integration for backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:36:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngineV21.ts:60:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngineV21.ts:107:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngineV21.ts:137:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngineV21.ts:138:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngineV21.ts:139:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:168:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngineV21.ts:577:   * Connect to WebSocket for real-time backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:579:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngineV21.ts:588:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngineV21.ts:589:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngineV21.ts:600:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngineV21.ts:603:        console.log('[VisualEngineV21] WebSocket connected');
+src/visual-engine/TitaneVisualEngineV21.ts:611:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngineV21.ts:613:          console.error('[VisualEngineV21] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:618:        console.error('[VisualEngineV21] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:623:        console.log('[VisualEngineV21] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngineV21.ts:629:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:646:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:654:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:658:      console.error('[VisualEngineV21] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:664:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngineV21.ts:666:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngineV21.ts:708:          console.warn('[VisualEngineV21] Unknown WebSocket message type:', message.type);
+src/visual-engine/TitaneVisualEngine.ts:39:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngine.ts:99:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngine.ts:134:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngine.ts:185:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngine.ts:186:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngine.ts:187:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:217:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngine.ts:445:   * Connect to WebSocket for real-time state updates
+src/visual-engine/TitaneVisualEngine.ts:447:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngine.ts:456:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngine.ts:457:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngine.ts:468:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngine.ts:471:        console.log('[VisualEngine] WebSocket connected');
+src/visual-engine/TitaneVisualEngine.ts:479:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngine.ts:481:          console.error('[VisualEngine] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngine.ts:486:        console.error('[VisualEngine] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngine.ts:491:        console.log('[VisualEngine] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngine.ts:497:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:514:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:522:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:526:      console.error('[VisualEngine] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngine.ts:532:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngine.ts:534:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngine.ts:535:    // Type guard for WebSocket message
+src/visual-engine/TitaneVisualEngine.ts:561:          console.warn('[VisualEngine] Unknown WebSocket message type:', message.type);
+G1_GLOBAL_EXIT_1:0
+G1_GLOBAL_COUNT_1:63
+ITERATION_2
+src/visual-engine/OSIntegrationBridge.ts:21: * - Gérer WebSocket/EventSource connections
+src/visual-engine/OSIntegrationBridge.ts:142:  private ws: WebSocket | null = null;
+src/visual-engine/OSIntegrationBridge.ts:212:      this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:411:  private connectWebSocket(): void {
+src/visual-engine/OSIntegrationBridge.ts:420:        (this.ws.readyState === WebSocket.OPEN ||
+src/visual-engine/OSIntegrationBridge.ts:421:          this.ws.readyState === WebSocket.CONNECTING)
+src/visual-engine/OSIntegrationBridge.ts:431:      this.ws = new WebSocket(this.config.websocketUrl);
+src/visual-engine/OSIntegrationBridge.ts:438:          console.log('[OSIntegrationBridge] WebSocket connected');
+src/visual-engine/OSIntegrationBridge.ts:454:        console.error('[OSIntegrationBridge] WebSocket error:', error);
+src/visual-engine/OSIntegrationBridge.ts:463:          console.log('[OSIntegrationBridge] WebSocket closed');
+src/visual-engine/OSIntegrationBridge.ts:482:          this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:486:      console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
+src/visual-engine/OSIntegrationBridge.ts:501:      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+src/visual-engine/TitaneVisualEngineV21.ts:10: * - WebSocket integration for backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:36:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngineV21.ts:60:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngineV21.ts:107:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngineV21.ts:137:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngineV21.ts:138:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngineV21.ts:139:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:168:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngineV21.ts:577:   * Connect to WebSocket for real-time backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:579:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngineV21.ts:588:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngineV21.ts:589:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngineV21.ts:600:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngineV21.ts:603:        console.log('[VisualEngineV21] WebSocket connected');
+src/visual-engine/TitaneVisualEngineV21.ts:611:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngineV21.ts:613:          console.error('[VisualEngineV21] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:618:        console.error('[VisualEngineV21] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:623:        console.log('[VisualEngineV21] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngineV21.ts:629:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:646:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:654:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:658:      console.error('[VisualEngineV21] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:664:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngineV21.ts:666:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngineV21.ts:708:          console.warn('[VisualEngineV21] Unknown WebSocket message type:', message.type);
+src/visual-engine/TitaneVisualEngine.ts:39:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngine.ts:99:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngine.ts:134:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngine.ts:185:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngine.ts:186:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngine.ts:187:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:217:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngine.ts:445:   * Connect to WebSocket for real-time state updates
+src/visual-engine/TitaneVisualEngine.ts:447:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngine.ts:456:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngine.ts:457:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngine.ts:468:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngine.ts:471:        console.log('[VisualEngine] WebSocket connected');
+src/visual-engine/TitaneVisualEngine.ts:479:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngine.ts:481:          console.error('[VisualEngine] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngine.ts:486:        console.error('[VisualEngine] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngine.ts:491:        console.log('[VisualEngine] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngine.ts:497:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:514:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:522:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:526:      console.error('[VisualEngine] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngine.ts:532:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngine.ts:534:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngine.ts:535:    // Type guard for WebSocket message
+src/visual-engine/TitaneVisualEngine.ts:561:          console.warn('[VisualEngine] Unknown WebSocket message type:', message.type);
+G1_GLOBAL_EXIT_2:0
+G1_GLOBAL_COUNT_2:63
+ITERATION_3
+src/visual-engine/OSIntegrationBridge.ts:21: * - Gérer WebSocket/EventSource connections
+src/visual-engine/OSIntegrationBridge.ts:142:  private ws: WebSocket | null = null;
+src/visual-engine/OSIntegrationBridge.ts:212:      this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:411:  private connectWebSocket(): void {
+src/visual-engine/OSIntegrationBridge.ts:420:        (this.ws.readyState === WebSocket.OPEN ||
+src/visual-engine/OSIntegrationBridge.ts:421:          this.ws.readyState === WebSocket.CONNECTING)
+src/visual-engine/OSIntegrationBridge.ts:431:      this.ws = new WebSocket(this.config.websocketUrl);
+src/visual-engine/OSIntegrationBridge.ts:438:          console.log('[OSIntegrationBridge] WebSocket connected');
+src/visual-engine/OSIntegrationBridge.ts:454:        console.error('[OSIntegrationBridge] WebSocket error:', error);
+src/visual-engine/OSIntegrationBridge.ts:463:          console.log('[OSIntegrationBridge] WebSocket closed');
+src/visual-engine/OSIntegrationBridge.ts:482:          this.connectWebSocket();
+src/visual-engine/OSIntegrationBridge.ts:486:      console.error('[OSIntegrationBridge] Failed to create WebSocket:', error);
+src/visual-engine/OSIntegrationBridge.ts:501:      // 1. Endpoint: fetch('http://localhost:7890/api/os/state') or config.apiEndpoint
+src/visual-engine/TitaneVisualEngineV21.ts:10: * - WebSocket integration for backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:36:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngineV21.ts:60:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngineV21.ts:107:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngineV21.ts:137:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngineV21.ts:138:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngineV21.ts:139:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:168:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngineV21.ts:577:   * Connect to WebSocket for real-time backend sync
+src/visual-engine/TitaneVisualEngineV21.ts:579:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngineV21.ts:588:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngineV21.ts:589:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngineV21.ts:600:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngineV21.ts:603:        console.log('[VisualEngineV21] WebSocket connected');
+src/visual-engine/TitaneVisualEngineV21.ts:611:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngineV21.ts:613:          console.error('[VisualEngineV21] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:618:        console.error('[VisualEngineV21] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:623:        console.log('[VisualEngineV21] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngineV21.ts:629:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:646:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngineV21.ts:654:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngineV21.ts:658:      console.error('[VisualEngineV21] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngineV21.ts:664:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngineV21.ts:666:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngineV21.ts:708:          console.warn('[VisualEngineV21] Unknown WebSocket message type:', message.type);
+src/visual-engine/TitaneVisualEngine.ts:39:  enableWebSocket: boolean;
+src/visual-engine/TitaneVisualEngine.ts:99:  private websocket: WebSocket | null = null;
+src/visual-engine/TitaneVisualEngine.ts:134:      enableWebSocket: false,
+src/visual-engine/TitaneVisualEngine.ts:185:    // Connect WebSocket if enabled
+src/visual-engine/TitaneVisualEngine.ts:186:    if (this.config.enableWebSocket && this.config.websocketUrl) {
+src/visual-engine/TitaneVisualEngine.ts:187:      this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:217:    // Disconnect WebSocket
+src/visual-engine/TitaneVisualEngine.ts:445:   * Connect to WebSocket for real-time state updates
+src/visual-engine/TitaneVisualEngine.ts:447:  private connectWebSocket(url: string): void {
+src/visual-engine/TitaneVisualEngine.ts:456:        (this.websocket.readyState === WebSocket.OPEN ||
+src/visual-engine/TitaneVisualEngine.ts:457:          this.websocket.readyState === WebSocket.CONNECTING)
+src/visual-engine/TitaneVisualEngine.ts:468:      this.websocket = new WebSocket(url);
+src/visual-engine/TitaneVisualEngine.ts:471:        console.log('[VisualEngine] WebSocket connected');
+src/visual-engine/TitaneVisualEngine.ts:479:          this.handleWebSocketMessage(data);
+src/visual-engine/TitaneVisualEngine.ts:481:          console.error('[VisualEngine] WebSocket message parse error:', error);
+src/visual-engine/TitaneVisualEngine.ts:486:        console.error('[VisualEngine] WebSocket error:', error);
+src/visual-engine/TitaneVisualEngine.ts:491:        console.log('[VisualEngine] WebSocket disconnected');
+src/visual-engine/TitaneVisualEngine.ts:497:          !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:514:            !this.config.enableWebSocket ||
+src/visual-engine/TitaneVisualEngine.ts:522:          this.connectWebSocket(this.config.websocketUrl);
+src/visual-engine/TitaneVisualEngine.ts:526:      console.error('[VisualEngine] WebSocket connection error:', error);
+src/visual-engine/TitaneVisualEngine.ts:532:   * Handle incoming WebSocket messages
+src/visual-engine/TitaneVisualEngine.ts:534:  private handleWebSocketMessage(data: unknown): void {
+src/visual-engine/TitaneVisualEngine.ts:535:    // Type guard for WebSocket message
+src/visual-engine/TitaneVisualEngine.ts:561:          console.warn('[VisualEngine] Unknown WebSocket message type:', message.type);
+G1_GLOBAL_EXIT_3:0
+G1_GLOBAL_COUNT_3:63
+END_UTC:2026-02-26T01:08:09Z

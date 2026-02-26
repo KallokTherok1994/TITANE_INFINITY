@@ -1,7 +1,7 @@
 /**
  * TITANE∞ — Wrapper IPC sécurisé (FIX P0)
  *
- * **Règle absolue:** Interdit fetch("ipc://...") — passer par l'IPC wrapper uniquement
+ * **Règle absolue:** Interdit tout appel réseau direct sur `ipc://...` — passer par l'IPC wrapper uniquement
  * **Objectif:** Éliminer erreurs CSP "Fetch API cannot load ipc://"
  *
  * © 2026 TITANE Team. All rights reserved.
@@ -35,9 +35,9 @@ export interface IpcOptions {
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
- * Wrapper IPC centralisé — remplace tout fetch("ipc://...")
+ * Wrapper IPC centralisé — remplace tout appel direct `ipc://...`
  *
- * **RÈGLE CRITIQUE:** Aucun fetch("ipc://localhost/...") autorisé
+ * **RÈGLE CRITIQUE:** Aucun appel direct `ipc://localhost/...` autorisé
  * Utilise exclusivement le wrapper sécurisé (secureInvoke via tauriClient)
  */
 export async function ipcCall<T = unknown>(

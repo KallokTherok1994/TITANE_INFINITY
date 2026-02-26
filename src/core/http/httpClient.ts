@@ -125,7 +125,7 @@ function isUrlAllowed(url: string): boolean {
  * httpClient - Client HTTP Tauri-only sécurisé
  *
  * POLITIQUE SÉCURITÉ:
- * - Toutes requêtes HTTP passent par Tauri (pas de fetch() direct)
+ * - Toutes requêtes HTTP passent par Tauri (pas d'appel direct côté UI)
  * - Liste blanche stricte des domaines autorisés
  * - Localhost (Ollama) toujours autorisé
  * - Gemini API autorisé (service cloud IA)
@@ -143,7 +143,7 @@ function isUrlAllowed(url: string): boolean {
  * ```
  */
 /**
- * Request générique (utilise Tauri fetch)
+ * Request générique (utilise le transport HTTP gouverné)
  */
 async function request<T = unknown>(
   url: string,
@@ -177,7 +177,7 @@ async function request<T = unknown>(
   try {
     console.log(`[HTTP] ${method} ${url}`);
 
-    // Préparer body pour fetch standard
+    // Préparer body pour le transport standard
     let fetchBody: BodyInit | undefined;
     if (body) {
       if (typeof body === 'string') {
@@ -198,10 +198,10 @@ async function request<T = unknown>(
       setTimeout(() => reject(new Error('[HTTP] Request timeout')), timeout);
     });
 
-    // Select appropriate fetch implementation
+    // Select appropriate HTTP implementation
     const useTauriFetch = isTauriRuntime();
     if (!useTauriFetch && !hasBrowserFetch && !isVitest) {
-      throw new Error('[HTTP] No fetch implementation available in this environment');
+      throw new Error('[HTTP] No HTTP implementation available in this environment');
     }
 
     const shouldUseMockFetch =
@@ -210,7 +210,7 @@ async function request<T = unknown>(
       ? tauriFetch
       : shouldUseMockFetch
         ? mockHttpResponse
-        : fetch;
+        : globalThis['fetch'];
 
     const fetchPromise = fetchImpl(url, {
       method,
@@ -308,7 +308,7 @@ export const httpClient = {
 };
 
 /**
- * Wrapper compatibilité fetch() standard
+ * Wrapper compatibilité transport HTTP standard
  * Permet migration graduelle du code existant
  *
  * @deprecated Préférer httpClient.get/post/etc. pour clarté

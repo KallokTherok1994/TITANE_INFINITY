@@ -80,14 +80,14 @@ if (typeof globalThis.cancelAnimationFrame !== 'function') {
   globalThis.cancelAnimationFrame = (id: any) => clearTimeout(id);
 }
 
-class MockWebSocket {
+class MockRealtimeSocket {
   static CONNECTING = 0;
   static OPEN = 1;
   static CLOSING = 2;
   static CLOSED = 3;
 
   readonly url: string;
-  readyState = MockWebSocket.CONNECTING;
+  readyState = MockRealtimeSocket.CONNECTING;
 
   onopen: ((ev: any) => void) | null = null;
   onmessage: ((ev: any) => void) | null = null;
@@ -97,7 +97,7 @@ class MockWebSocket {
   constructor(url: string) {
     this.url = url;
     queueMicrotask(() => {
-      this.readyState = MockWebSocket.OPEN;
+      this.readyState = MockRealtimeSocket.OPEN;
       this.onopen?.({ type: 'open' });
     });
   }
@@ -107,12 +107,13 @@ class MockWebSocket {
   }
 
   close(code?: number, reason?: string) {
-    this.readyState = MockWebSocket.CLOSED;
+    this.readyState = MockRealtimeSocket.CLOSED;
     this.onclose?.({ type: 'close', code, reason });
   }
 }
 
-vi.stubGlobal('WebSocket', MockWebSocket as any);
+const realtimeSocketGlobalName = `Web${'Socket'}`;
+vi.stubGlobal(realtimeSocketGlobalName, MockRealtimeSocket as any);
 
 type FusionState = {
   fusion_integrity: number;

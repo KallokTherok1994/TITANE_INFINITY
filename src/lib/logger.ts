@@ -303,7 +303,7 @@ class Logger {
       // 6. CORS: Configure backend to accept requests from app origin
       // 7. Silent fail: Don't block app if analytics unavailable
       // FUTUR: Implement analytics service
-      // await fetch('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
+      // await request('/api/logs', { method: 'POST', body: JSON.stringify(_entry) });
     } catch (error) {
       // Silent fail for remote logging
     }

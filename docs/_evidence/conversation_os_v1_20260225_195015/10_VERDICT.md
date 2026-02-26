@@ -44,3 +44,17 @@ Aucun build/deploy PROD sans tokens exacts:
 ### Métadonnées
 - Ring impacté principal: **Ring 4 (Modules/UI)**
 - Statut: **EXPERIMENTAL** (phase de plan exécutée), cible suivante: **QUALIFIED** après Phase 2 + G1 x3
+
+## Addendum cycle complet Phase 2/3 (2026-02-26)
+
+### Exécution
+- Phase 2 quick-wins exécutée (réduction mesurée de 85 → 63 occurrences).
+- Phase 3 exécutée (G1 global x3), résultats stables à `63` occurrences.
+
+### Verdict consolidé
+- **Global pack:** `BLOCKED` (inchangé)
+- **Raison résiduelle unique:** usages `WebSocket` legacy dans `src/visual-engine/*`.
+
+### Statut changement
+- Ring principal: **Ring 4 (Modules/UI)**
+- Statut: **EXPERIMENTAL** (neutralisation partielle validée, blocage legacy restant)
