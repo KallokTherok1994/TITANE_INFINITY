@@ -39,3 +39,14 @@
   - `rg -n "from .*ui|from .*modules" src-tauri`
   - `rg -n "import.*services|from .*services" src/types --glob '!**/*.d.ts'`
 - Conclusion: **PASS (ring up-dependency non détectée dans le scope vérifié)**
+
+### Micro-phase MP-03 — Step-4 Lot A (H2)
+- Ring impacté: Ring 3 (Services) + Ring 4 (Orchestration)
+- Fichiers touchés:
+  - `src-tauri/src/services/network_gateway.rs`
+  - `src-tauri/src/commands/diagnostic_commands.rs`
+- Imports sensibles vérifiés:
+  - migration de `diagnostic_commands` vers service gouverné (plus de client `reqwest` local)
+- Commandes de preuve:
+  - `rg -n "(^\s*use\s+reqwest::|reqwest::Client::|reqwest::get\(|ureq::|hyper::client|hyper::Client)" src-tauri/src`
+- Conclusion: **PASS (réduction H2 mesurée 51 -> 46)**
