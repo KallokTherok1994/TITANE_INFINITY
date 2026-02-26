@@ -21,6 +21,7 @@ Date (UTC): 2026-02-26
 - `15_RISKS.md`
 - `16_VERDICT.md`
 - `17_EXCEPTION_TECHNIQUE.md`
+- `18_RUNTIME_UNTRACKED_GOVERNANCE.md`
 
 ## Fichiers runtime lus pour validation (sans modification)
 - `src-tauri/src/conversation_engine/commands.rs`
@@ -78,4 +79,5 @@ Date (UTC): 2026-02-26
 
 ## Addendum conformité documentaire
 - `17_EXCEPTION_TECHNIQUE.md` (traçabilité de l'exception patch sur `11_PROOF_LOGS.txt`)
+- `18_RUNTIME_UNTRACKED_GOVERNANCE.md` (qualification + décision sur `src-tauri/runtime/` non suivi)
 

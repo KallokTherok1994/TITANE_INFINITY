@@ -167,6 +167,10 @@ src-tauri/memory/*.json
 src-tauri/memory/*.db
 *.memory.json
 
+# Generated runtime artifacts (Tauri local runtime state)
+src-tauri/runtime/dev/logs/
+src-tauri/runtime/memory/*.db
+
 # P1.2 Git Clean: Exclude build/audit artifacts (2026-02-10)
 src-tauri/*.BACKUP_*.json
 runtime/dev/proofs/
