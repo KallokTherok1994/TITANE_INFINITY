@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM P126→P132
+
+- Program path: `docs/_evidence/program_p126_132_20260226_202126`
+- Verdict: `PASS_QUALIFIED`
+- Bootstrap proof: `reports/p126_132_bootstrap_precheck_20260226_202126Z.log`
+- X3 proof: `reports/p126_132_execution_x3_20260226_202126Z.log`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_p126_132_20260226_202126.txt`
+
 ## ADDENDUM — PROGRAM P119→P125
 
 - Program path: `docs/_evidence/program_p119_125_20260226_200535`
