@@ -25,7 +25,7 @@ Date (UTC): 2026-02-26
 - `G_RATE_LIMIT_AWARE`: PASS
 - `G_SNAPSHOT_CREATED_X3`: PASS
 - `G_SNAPSHOT_HASH_VALID`: PASS
-- `G_MEMORY_RECALL_INTERNAL_IDS`: BLOCKED
+- `G_MEMORY_RECALL_INTERNAL_IDS`: PASS
 - `G_DEBUG_PANEL_REAL_TRACE`: BLOCKED
 - `G_FAILURE_SIMULATION_COMPLETE`: BLOCKED
 - `G_PERF_METRICS_RECORDED`: BLOCKED
@@ -84,4 +84,8 @@ Date (UTC): 2026-02-26
 ## Addendum network meta complete x3
 - `reports/conversation_os_v1_next_run_gate_network_meta_x3_20260226T125642Z.log`
 	- `RUN1/2/3_NETWORK_META_EXIT=0`
+
+## Addendum memory recall internal IDs x3
+- `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
+	- `RUN1/2/3_MEMORY_RECALL_IDS_EXIT=0`
 

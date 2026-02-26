@@ -431,4 +431,39 @@ mod tests {
         let embedding = result.expect("embed should succeed for valid input");
         assert_eq!(embedding.len(), 384);
     }
+
+    #[tokio::test]
+    async fn test_recall_returns_internal_ids() {
+        let mut engine = UnifiedMemoryEngine::new();
+
+        let id1 = engine
+            .store(
+                "alpha memory with internal id".to_string(),
+                "user".to_string(),
+                0.7,
+            )
+            .await
+            .expect("store should succeed for id1");
+
+        let id2 = engine
+            .store(
+                "beta memory with internal id".to_string(),
+                "assistant".to_string(),
+                0.7,
+            )
+            .await
+            .expect("store should succeed for id2");
+
+        let bundle = engine
+            .recall("internal id", 10)
+            .await
+            .expect("recall should succeed");
+
+        assert!(bundle.total >= 2);
+
+        let recalled_ids: Vec<&str> = bundle.stm.iter().map(|entry| entry.id.as_str()).collect();
+        assert!(recalled_ids.iter().all(|id| !id.is_empty()));
+        assert!(recalled_ids.contains(&id1.as_str()));
+        assert!(recalled_ids.contains(&id2.as_str()));
+    }
 }
