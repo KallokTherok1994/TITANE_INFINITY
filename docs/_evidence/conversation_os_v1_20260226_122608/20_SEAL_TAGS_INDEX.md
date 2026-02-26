@@ -1,3 +1,11 @@
+## ADDENDUM — AUTOHEAL AH FOLLOW-UP (20260226T2159Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_215802`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2159Z`
+  - `evidence-seal-autoheal-ah-followup-latest`
+- Statut run: `BLOCKED` (déblocage refusé, stop-the-line maintenu)
+
 ## ADDENDUM — AUTOHEAL AH (20260226T2152Z)
 
 - Program: `docs/_evidence/program_autoheal_ah_20260226_215033`

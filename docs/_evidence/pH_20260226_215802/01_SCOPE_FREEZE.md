@@ -1,0 +1,4 @@
+# 01_SCOPE_FREEZE.md
+
+Phase: PH
+Scope: FROZEN_BLOCKED
