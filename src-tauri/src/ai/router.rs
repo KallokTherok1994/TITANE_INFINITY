@@ -65,12 +65,13 @@ impl AIRouter {
 
     /// Check internet connectivity (fast timeout)
     async fn check_internet(&self) -> bool {
-        tokio::time::timeout(
+        let connectivity = tokio::time::timeout(
             std::time::Duration::from_secs(3),
-            reqwest::get("https://www.google.com"),
+            tokio::net::TcpStream::connect("www.google.com:443"),
         )
-        .await
-        .is_ok()
+        .await;
+
+        matches!(connectivity, Ok(Ok(_)))
     }
 
     /// Update router status based on available providers

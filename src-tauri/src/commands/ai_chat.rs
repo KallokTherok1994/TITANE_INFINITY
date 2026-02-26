@@ -586,15 +586,13 @@ pub async fn clear_all_memory(state: State<'_, AIChatState>) -> Result<(), Strin
 
 #[tauri::command]
 pub async fn check_connection() -> Result<bool, String> {
-    match tokio::time::timeout(
+    let connectivity = tokio::time::timeout(
         std::time::Duration::from_secs(3),
-        reqwest::get("https://www.google.com"),
+        tokio::net::TcpStream::connect("www.google.com:443"),
     )
-    .await
-    {
-        Ok(Ok(response)) => Ok(response.status().is_success()),
-        _ => Ok(false),
-    }
+    .await;
+
+    Ok(matches!(connectivity, Ok(Ok(_))))
 }
 
 #[tauri::command]
