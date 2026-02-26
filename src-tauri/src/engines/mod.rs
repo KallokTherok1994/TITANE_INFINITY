@@ -95,6 +95,20 @@ pub mod monitoring_engine;
 /// - Accès Kevin-only
 pub mod developer_mode;
 
+/// Conversation OS Engine v1 - Governed conversation orchestration (Super Prompt 2026-02)
+///
+/// Fonctionnalités:
+/// - RouterEngine (intent classification)
+/// - PolicyEngine (hard rules enforcement)
+/// - ResilienceEngine (circuit breaker, backoff, rate limiting)
+/// - MemoryEngine (context fetch decisions)
+/// - SearchEngine (search result normalization)
+///
+/// **Ring:** 2 (Engines)
+/// **Status:** EXPERIMENTAL
+/// **Evidence:** docs/_evidence/conversation_os_v1_20260225_224546/
+pub mod conversation_os;
+
 // ═══════════════════════════════════════════════════════════════════════════════
 // RE-EXPORTS - API Publique
 // ═══════════════════════════════════════════════════════════════════════════════
@@ -112,6 +126,11 @@ pub use monitoring_engine::{
 pub use developer_mode::{
     ChangeSeverity, DeveloperModeState, DiffPreview, PatchAction, PatchChange, PatchHistory,
     PatchMetadata, PatchResult, PatchType, SecurityValidation,
+};
+
+// Conversation OS exports (Super Prompt 2026-02)
+pub use conversation_os::{
+    MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
 
 // Behavior Engine exports (Super Prompt #16)
