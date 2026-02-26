@@ -46,3 +46,22 @@ Date (UTC): 2026-02-26
 ### Métadonnées addendum
 - Ring impacté: **Governance/Repo hygiene**
 - Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T14:20:00Z
+
+### Tag miroir court publié
+- `evidence-seal-pack5-20260226`
+  - Type: annoté
+  - Portée: alias court du scellement Pack 5.1
+  - Commit scellé: `02888efe`
+  - Référence: `refs/tags/evidence-seal-pack5-20260226`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-pack5-20260226"`
+- `git ls-remote --tags origin | rg "evidence-seal-pack5-20260226"`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
