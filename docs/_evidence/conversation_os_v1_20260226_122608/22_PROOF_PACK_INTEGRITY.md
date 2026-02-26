@@ -29,6 +29,26 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:45:30Z
+
+### Références tags de seal (programme P21→P27)
+- Tag dédié UTC: `evidence-seal-p21-27-20260226T1641Z`
+- Tag miroir court: `evidence-seal-p21-27-20260226`
+- Commit de référence courant: `864b5c00`
+
+### Vérification rapide (addendum)
+- `git tag --list "evidence-seal-p21-27-20260226*"`
+- `git ls-remote --tags origin | rg "evidence-seal-p21-27-20260226"`
+
+### État
+- Traçabilité des tags de scellement P21→P27: **SCELLÉE**.
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:32:25Z
 
 ### Extension du périmètre
