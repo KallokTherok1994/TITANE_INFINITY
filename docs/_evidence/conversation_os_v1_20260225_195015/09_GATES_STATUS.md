@@ -338,3 +338,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B9 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB9_20260226T114140Z.log`
+
+### Action
+- Nettoyage des occurrences `reqwest` en commentaires placeholder dans `control_panel_commands.rs`.
+
+### Résultat
+- `control_panel_commands.rs` (regex locale `reqwest|ureq`): `3 -> 0`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `43 -> 40`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

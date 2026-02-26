@@ -195,3 +195,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B9 (2026-02-26)
+- Action: nettoyage des occurrences `reqwest` en commentaires placeholder dans `control_panel_commands.rs`.
+- Mesure:
+  - `control_panel_commands.rs` (regex locale `reqwest|ureq`): `3 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `43 -> 40`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB9_20260226T114140Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

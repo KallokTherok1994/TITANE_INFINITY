@@ -411,3 +411,19 @@
 - Delta mesuré:
 	- `ai/gemini.rs` `3 -> 1`
 	- inventaire brut `src-tauri/src` `45 -> 43`
+
+## Addendum 2026-02-26 (Step-4 Lot B9 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/control_panel_commands.rs`
+- Fichier ajouté:
+	- `38_H2_STEP4_LOTB9_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB9_20260226T114140Z.log`
+- Delta mesuré:
+	- `control_panel_commands.rs` `3 -> 0`
+	- inventaire brut `src-tauri/src` `43 -> 40`
