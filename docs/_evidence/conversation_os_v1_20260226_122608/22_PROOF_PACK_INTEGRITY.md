@@ -1,3 +1,11 @@
+## ADDENDUM — TERMINAL SEAL INTEGRITY
+
+- Snapshot file: `reports/terminal_seal_snapshot_20260226T212337Z.md`
+- Related tags:
+  - `evidence-seal-terminal-20260226T212337Z`
+  - `evidence-seal-coverage-20260226T2121Z`
+  - `evidence-seal-coverage-latest`
+
 ## ADDENDUM — FINAL COVERAGE INTEGRITY
 
 - Coverage report: `reports/final_phase_coverage_p0_146_20260226_211529Z.md`

@@ -1,3 +1,9 @@
+## ADDENDUM — TERMINAL SESSION CLOSURE
+
+- Tag de clôture terminale: `evidence-seal-terminal-20260226T212337Z`
+- Snapshot de clôture: `reports/terminal_seal_snapshot_20260226T212337Z.md`
+- Commit de référence au démarrage du snapshot: `27633ddd`
+
 ## ADDENDUM — COVERAGE SEAL PUBLICATION
 
 - Tags de scellement coverage:
