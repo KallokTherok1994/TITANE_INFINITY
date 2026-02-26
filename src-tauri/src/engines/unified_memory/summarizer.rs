@@ -285,7 +285,7 @@ Caching:
 - Storage: ~/.titane/cache/summaries/{hash}.json
 
 Dependencies:
-- reqwest = "0.11" with json feature
+- async HTTP client with json feature
 - serde_json for request/response serialization
 - tokio::time for timeout management
 
@@ -295,7 +295,7 @@ Cost Optimization:
 - Cache aggressively: 90%+ cache hit rate for repeated views
 
 pub async fn summarize_ai(entries: &[MemoryEntry], llm_api: &str) -> Result<String, String> {
-    use reqwest;
+    use http_client;
     use serde_json::json;
 
     // Prepare context
@@ -312,7 +312,7 @@ pub async fn summarize_ai(entries: &[MemoryEntry], llm_api: &str) -> Result<Stri
     );
 
     // Call LLM API
-    let client = reqwest::Client::new();
+    let client = HttpClient::new();
     let response = client
         .post(llm_api)
         .json(&json!({

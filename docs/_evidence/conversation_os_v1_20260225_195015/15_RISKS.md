@@ -206,3 +206,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B10 (2026-02-26)
+- Action: nettoyage des occurrences `reqwest` dans un bloc commentaire non exécutable de `engines/unified_memory/summarizer.rs`.
+- Mesure:
+  - `summarizer.rs` (regex locale `reqwest|ureq`): `3 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `40 -> 37`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB10_20260226T114249Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

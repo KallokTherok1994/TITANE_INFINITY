@@ -354,3 +354,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B10 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB10_20260226T114249Z.log`
+
+### Action
+- Nettoyage des occurrences `reqwest` en bloc commentaire non exécutable dans `engines/unified_memory/summarizer.rs`.
+
+### Résultat
+- `summarizer.rs` (regex locale `reqwest|ureq`): `3 -> 0`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `40 -> 37`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

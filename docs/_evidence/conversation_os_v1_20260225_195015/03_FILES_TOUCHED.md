@@ -427,3 +427,19 @@
 - Delta mesuré:
 	- `control_panel_commands.rs` `3 -> 0`
 	- inventaire brut `src-tauri/src` `43 -> 40`
+
+## Addendum 2026-02-26 (Step-4 Lot B10 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/engines/unified_memory/summarizer.rs`
+- Fichier ajouté:
+	- `39_H2_STEP4_LOTB10_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB10_20260226T114249Z.log`
+- Delta mesuré:
+	- `summarizer.rs` `3 -> 0`
+	- inventaire brut `src-tauri/src` `40 -> 37`
