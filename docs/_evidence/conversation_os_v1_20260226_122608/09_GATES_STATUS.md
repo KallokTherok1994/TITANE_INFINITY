@@ -17,7 +17,7 @@ Date (UTC): 2026-02-26
 - `G_NETWORK_META_COMPLETE`: PASS
 - `G_NETSTATE_TRANSITIONS_VALID`: PASS
 - `G_BUDGET_ENFORCED`: PASS
-- `G_ORCHESTRATOR_SINGLE`: BLOCKED
+- `G_ORCHESTRATOR_SINGLE`: PASS
 - `G_LEGACY_UNREACHABLE_FROM_UI`: PASS
 - `G_SEARCH_CREDS_EXPLICIT`: PASS
 - `G_FAILURES_STORED`: PASS
@@ -88,4 +88,8 @@ Date (UTC): 2026-02-26
 ## Addendum memory recall internal IDs x3
 - `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
 	- `RUN1/2/3_MEMORY_RECALL_IDS_EXIT=0`
+
+## Addendum orchestrator single pipeline x3
+- `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
+	- `RUN1/2/3_ORCHESTRATOR_SINGLE_EXIT=0`
 

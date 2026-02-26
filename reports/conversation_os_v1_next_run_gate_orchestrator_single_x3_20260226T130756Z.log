@@ -1,0 +1,11 @@
+# ORCHESTRATOR SINGLE X3 2026-02-26T13:07:56Z
+===== RUN1: cargo test conversation_os_single_pipeline_trace_and_artifacts_are_canonical -- --nocapture =====
+[RUN1] EXIT=0
+
+===== RUN2: cargo test conversation_os_single_pipeline_trace_and_artifacts_are_canonical -- --nocapture =====
+[RUN2] EXIT=0
+
+===== RUN3: cargo test conversation_os_single_pipeline_trace_and_artifacts_are_canonical -- --nocapture =====
+[RUN3] EXIT=0
+
+# X3 RUN END 2026-02-26T13:12:00Z

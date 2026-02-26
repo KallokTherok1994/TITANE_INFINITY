@@ -38,6 +38,8 @@ Date (UTC): 2026-02-26
 	- Ajout struct `NetworkMeta` + méthodes `*_with_meta` + test unitaire de complétude
 - `src-tauri/src/engines/unified_memory/mod.rs`
 	- Ajout test `test_recall_returns_internal_ids` pour preuve des IDs internes en recall
+- `src-tauri/src/conversation_engine/commands.rs`
+	- Ajout test `conversation_os_single_pipeline_trace_and_artifacts_are_canonical`
 - `src/core/commands/TAURI_COMMANDS.ts`
 	- Nettoyage d'une référence legacy en commentaire pour éviter faux positif gate reachability
 
@@ -57,4 +59,5 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_gate_legacy_afterfix_x3_20260226T125300Z.log`
 - `reports/conversation_os_v1_next_run_gate_network_meta_x3_20260226T125642Z.log`
 - `reports/conversation_os_v1_next_run_gate_memory_recall_ids_x3_20260226T130141Z.log`
+- `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
 
