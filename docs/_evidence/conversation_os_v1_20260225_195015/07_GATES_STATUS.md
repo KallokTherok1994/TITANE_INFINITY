@@ -21,3 +21,22 @@
 
 ## Écart de spécification notable
 - `SearchGatewayService` applique un fallback DDG si `BRAVE_API_KEY` absente, au lieu d’un blocage explicite `CREDENTIALS_MISSING`.
+
+## Addendum remédiation 2026-02-26
+
+### Delta validé
+- ✅ Écart SearchGateway corrigé via commit `78b8e5ae` (`src-tauri/src/services/search_gateway.rs`).
+- ✅ Test dédié x3 PASS: `services::search_gateway::tests::test_search_requires_brave_api_key` avec `EXIT_1/2/3:0` dans `reports/conversation_os_g1_remediation_search_credentials_x3.log`.
+
+### Lecture G1 (strict)
+- G1 global (`src/**` sans distinction legacy): **reste FAIL** tant que des surfaces historiques `fetch/WebSocket` existent.
+- G1 périmètre Conversation OS v1 (client canonique `conversation_generate`): **PASS (audit ciblé)**, aucune primitive réseau directe détectée dans:
+	- `src/services/tauriBridge.ts`
+	- `src/services/api/chat.ts`
+	- `src/services/ai/providers/tauriChat.ts`
+	- `src/services/tauri/chatEngine.commands.ts`
+	- preuve: `reports/conversation_os_g1_scoped_surface_audit_20260226.log` (`DIRECT_NETWORK_EXIT:1` attendu = aucun match)
+
+### Statut actuel
+- Décision globale du pack: **BLOCKED** (G1 global strict)
+- Décision du sous-scope Conversation OS v1: **QUALIFIED**

@@ -16,3 +16,17 @@
 Aucun build/deploy PROD sans tokens exacts:
 - `GO_FOR_PROD_BUILD__TITANE_INFINITY`
 - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+
+## Addendum remédiation 2026-02-26
+
+### État des écarts initiaux
+1. ✅ **Corrigé** — Search Gateway retourne désormais explicitement `CREDENTIALS_MISSING` si `BRAVE_API_KEY` absente (commit `78b8e5ae`, test dédié x3 PASS).
+2. ⛔ **Reste bloquant globalement** — `FRONTEND_NO_WEB` au sens strict `src/**` complet, du fait des surfaces legacy hors périmètre Conversation OS v1.
+
+### Verdict mis à jour
+- **Verdict global pack:** `BLOCKED` (inchangé, pour conformité stricte G1 global)
+- **Verdict sous-scope Conversation OS v1:** `QUALIFIED` (surface canonique sans appels réseau directs + gates techniques validées)
+
+### Métadonnées de changement
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**

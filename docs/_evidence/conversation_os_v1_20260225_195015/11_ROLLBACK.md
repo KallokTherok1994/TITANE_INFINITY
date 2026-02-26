@@ -32,3 +32,9 @@
 - Réponse locale uniquement.
 - Recherche externe désactivée.
 - Snapshots/events toujours persistés en append-only.
+
+## 7) Rollback addendum (remédiation 2026-02-26)
+- Revert ciblé du correctif credentials search:
+  - `git revert 78b8e5ae`
+- Restauration fichier unique sans réécriture destructive:
+  - `git restore -- src-tauri/src/services/search_gateway.rs`
