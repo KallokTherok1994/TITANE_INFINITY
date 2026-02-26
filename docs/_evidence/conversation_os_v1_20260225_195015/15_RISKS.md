@@ -173,3 +173,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B7 (2026-02-26)
+- Action: nettoyage des occurrences `reqwest` en commentaires non exécutables dans `overdrive/api_bridge.rs`.
+- Mesure:
+  - `api_bridge.rs` (regex locale `reqwest|ureq`): `4 -> 0`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `49 -> 45`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB7_20260226T113923Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
