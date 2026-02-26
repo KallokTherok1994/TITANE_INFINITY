@@ -49,7 +49,7 @@ Ordre: **IMMUTABLE**
 - Objectif: pipeline unique du trace à la persistance.
 - Rings: 2+3+4
 - Gate: `G_ORCHESTRATOR_SINGLE`
-- Verdict phase: BLOCKED (preuve x3 dédiée non finalisée)
+- Verdict phase: PARTIAL (preuves persistence/reproductibilité PASS; preuve pipeline UI bout-en-bout manquante)
 
 ## 5B — Legacy Path Kill (RUNTIME, STABLE)
 - Objectif: UI ne peut pas atteindre les chemins legacy.
@@ -67,13 +67,13 @@ Ordre: **IMMUTABLE**
 - Objectif: normalisation, sources persistées, simulation 429.
 - Rings: 3
 - Gates: `G_SOURCES_STORED_AND_CITABLE`, `G_RATE_LIMIT_AWARE`
-- Verdict phase: BLOCKED (simulation 429 non scellée)
+- Verdict phase: PARTIAL (sources/citations persistées PASS; simulation 429 reste manquante)
 
 ## 2B — Snapshots + Sources Full Schema (RUNTIME, STABLE)
 - Objectif: schéma complet snapshots/sources + hash.
 - Rings: 3
 - Gates: `G_SNAPSHOT_CREATED_X3`, `G_SNAPSHOT_HASH_VALID`
-- Verdict phase: PARTIAL (schéma observé, x3 runtime non scellée)
+- Verdict phase: PASS
 
 ## 7A — Canonical Memory (Snapshots First) (RUNTIME, STABLE)
 - Objectif: recall + IDs internes traçables.

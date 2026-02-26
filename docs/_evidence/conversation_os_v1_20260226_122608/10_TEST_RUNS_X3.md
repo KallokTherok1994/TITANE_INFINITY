@@ -25,6 +25,12 @@ Date (UTC): 2026-02-26
 - `G_NO_SILENT_FALLBACK`: `0 / 0 / 0`
 - `G_SOURCES_STORED_AND_CITABLE_PARSE`: `0 / 0 / 0`
 - `G_DB_INSERT_AND_GET`: `0 / 0 / 0`
+- `G_FAILURES_STORED`: `0 / 0 / 0`
+- `G_SNAPSHOT_CREATED_X3`: `0 / 0 / 0`
+- `G_SNAPSHOT_HASH_VALID`: `0 / 0 / 0`
+- `G_SOURCES_STORED_AND_CITABLE_PERSIST`: `0 / 0 / 0`
+- `G_ORCHESTRATOR_SINGLE_EVIDENCE`: `0 / 0 / 0`
+- `G_REPRODUCIBLE_META`: `0 / 0 / 0`
 
 ## Tentatives x3 runtime Rust
 - Tentatives initiales partiellement bloquées par contention `cargo` (conservées pour audit):
@@ -34,6 +40,7 @@ Date (UTC): 2026-02-26
 - Run isolé réussi:
 	- `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
 	- `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
+	- `reports/conversation_os_v1_next_run_runtime_x3_gateclose_bg_20260226T124749Z.log`
 
 ## Verdict x3
 - Scans structurels: **PASS**.

@@ -31,6 +31,10 @@ Date (UTC): 2026-02-26
 - `src-tauri/src/engines/conversation_os/resilience.rs`
 - `src-tauri/src/commands/security.rs`
 
+## Fichier code modifié (gate-close)
+- `src-tauri/src/services/db_service.rs`
+	- Ajout de tests unitaires ciblés: snapshots, sources, failures (append-only + hash)
+
 ## Métadonnées
 - Ring impacté: **Ring 4 (documentation/scellage)**
 - Statut changement: **QUALIFIED**
@@ -42,4 +46,5 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_x3_bg_20260226T123511Z.log` (partiel)
 - `reports/conversation_os_v1_next_run_runtime_x3_bg_20260226T124119Z.log`
 - `reports/conversation_os_v1_next_run_runtime_x3_addendum_bg_20260226T124237Z.log`
+- `reports/conversation_os_v1_next_run_runtime_x3_gateclose_bg_20260226T124749Z.log`
 

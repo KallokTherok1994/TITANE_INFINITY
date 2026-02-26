@@ -530,6 +530,83 @@ mod tests {
     }
 
     #[test]
+    fn test_snapshot_insert_and_get_latest() -> SqliteResult<()> {
+        let db = DbService::new(PathBuf::from(":memory:"))?;
+
+        let snapshot = create_snapshot(
+            "snap_test".to_string(),
+            get_timestamp_ms(),
+            "sess_snap".to_string(),
+            "Résumé FR".to_string(),
+            r#"{"state":"ok"}"#.to_string(),
+        );
+
+        db.insert_snapshot(snapshot.clone())?;
+
+        let latest = db.get_latest_snapshot("sess_snap")?;
+        assert!(latest.is_some());
+
+        let latest = latest.expect("snapshot should exist");
+        assert_eq!(latest.id, "snap_test");
+        assert_eq!(latest.session_id, "sess_snap");
+        assert_eq!(latest.sha256.len(), 64);
+        assert_eq!(latest.sha256, snapshot.sha256);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_source_insert_and_get() -> SqliteResult<()> {
+        let db = DbService::new(PathBuf::from(":memory:"))?;
+
+        let source = create_source(
+            "src_test".to_string(),
+            get_timestamp_ms(),
+            "sess_src".to_string(),
+            "brave".to_string(),
+            "https://example.com".to_string(),
+            "Example".to_string(),
+            "Snippet".to_string(),
+            get_timestamp_ms(),
+        );
+
+        db.insert_source(source.clone())?;
+
+        let sources = db.get_sources("sess_src", 10)?;
+        assert_eq!(sources.len(), 1);
+        assert_eq!(sources[0].id, "src_test");
+        assert_eq!(sources[0].url, "https://example.com");
+        assert_eq!(sources[0].sha256.len(), 64);
+        assert_eq!(sources[0].sha256, source.sha256);
+
+        Ok(())
+    }
+
+    #[test]
+    fn test_failure_insert_and_get() -> SqliteResult<()> {
+        let db = DbService::new(PathBuf::from(":memory:"))?;
+
+        let failure = create_failure(
+            "fail_test".to_string(),
+            get_timestamp_ms(),
+            "sess_fail".to_string(),
+            "CREDENTIALS_MISSING".to_string(),
+            r#"{"provider":"brave"}"#.to_string(),
+        );
+
+        db.insert_failure(failure.clone())?;
+
+        let failures = db.get_failures("sess_fail", 10)?;
+        assert_eq!(failures.len(), 1);
+        assert_eq!(failures[0].id, "fail_test");
+        assert_eq!(failures[0].class, "CREDENTIALS_MISSING");
+        assert_eq!(failures[0].sha256.len(), 64);
+        assert_eq!(failures[0].sha256, failure.sha256);
+
+        Ok(())
+    }
+
+    #[test]
     fn test_append_only_no_update() -> SqliteResult<()> {
         // This test documents that UPDATE is not provided in the API
         // (no update method exists)
