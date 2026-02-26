@@ -1,0 +1,5 @@
+# 00_PROGRAM_PLAN.md
+
+Statut: PASS_QUALIFIED
+Lot: P63→P69
+Timestamp: 20260226_181226
