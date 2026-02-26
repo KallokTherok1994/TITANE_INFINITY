@@ -109,3 +109,13 @@
   - `reports/conversation_os_h2_lotA_inventory_20260226T032341Z.log`
   - `reports/conversation_os_h2_codeonly_step4_lotA_20260226T032456Z.log`
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B1 (2026-02-26)
+- Action: migration `orchestration_center.rs` vers gateway gouverné.
+- Mesure:
+  - `H2` code-only `46 -> 43`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB1b_20260226T032930Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.

@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 use crate::security::secrets_engine::SecureSecretsEngine;
+use crate::services::network_gateway::{NetworkGatewayConfig, NetworkGatewayService};
 use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -35,6 +36,20 @@ fn now_ms() -> u64 {
         .duration_since(UNIX_EPOCH)
         .map(|d| d.as_millis() as u64)
         .unwrap_or(0)
+}
+
+fn orchestration_gateway() -> NetworkGatewayService {
+    NetworkGatewayService::new(NetworkGatewayConfig {
+        timeout_ms: 5_000,
+        max_requests: 20,
+        max_bytes_total: 64 * 1024,
+        domain_allowlist: vec![
+            "generativelanguage.googleapis.com".to_string(),
+            "localhost".to_string(),
+            "127.0.0.1".to_string(),
+        ],
+        domain_denylist: vec![],
+    })
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -144,62 +159,45 @@ async fn ping_gemini_internal(secrets: Option<&SecureSecretsEngine>) -> Provider
     // Phase 1 Stabilisation: Safe unwrap après check has_key
     let api_key = api_key.expect("API key checked above");
 
-    // Try to ping Gemini API (simplified check)
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(5))
-        .build();
+    // Try to ping Gemini API (simplified check) via governed gateway
+    let gateway = orchestration_gateway();
+    let url = format!(
+        "https://generativelanguage.googleapis.com/v1beta/models?key={}",
+        api_key
+    );
 
-    match client {
-        Ok(c) => {
-            let url = format!(
-                "https://generativelanguage.googleapis.com/v1beta/models?key={}",
-                api_key
-            );
+    match gateway.head_status(&url).await {
+        Ok(status) => {
+            let latency = start.elapsed().as_millis() as u64;
+            let available = (200..400).contains(&status);
+            let score = if available {
+                calculate_provider_score(latency, true, 95)
+            } else {
+                0
+            };
 
-            match c.get(&url).send().await {
-                Ok(resp) => {
-                    let latency = start.elapsed().as_millis() as u64;
-                    let available = resp.status().is_success();
-                    let score = if available {
-                        calculate_provider_score(latency, true, 95)
-                    } else {
-                        0
-                    };
-
-                    ProviderStatus {
-                        name: "gemini".into(),
-                        available,
-                        latency_ms: latency,
-                        score,
-                        last_checked: now,
-                        error: if available {
-                            None
-                        } else {
-                            Some(format!("HTTP {}", resp.status()))
-                        },
-                        model: Some("gemini-2.0-flash-exp".into()),
-                        capabilities: vec!["text".into(), "multimodal".into(), "streaming".into()],
-                    }
-                }
-                Err(e) => ProviderStatus {
-                    name: "gemini".into(),
-                    available: false,
-                    latency_ms: start.elapsed().as_millis() as u64,
-                    score: 0,
-                    last_checked: now,
-                    error: Some(format!("Connection error: {}", e)),
-                    model: Some("gemini-2.0-flash-exp".into()),
-                    capabilities: vec!["text".into(), "multimodal".into(), "streaming".into()],
+            ProviderStatus {
+                name: "gemini".into(),
+                available,
+                latency_ms: latency,
+                score,
+                last_checked: now,
+                error: if available {
+                    None
+                } else {
+                    Some(format!("HTTP {}", status))
                 },
+                model: Some("gemini-2.0-flash-exp".into()),
+                capabilities: vec!["text".into(), "multimodal".into(), "streaming".into()],
             }
         }
         Err(e) => ProviderStatus {
             name: "gemini".into(),
             available: false,
-            latency_ms: 0,
+            latency_ms: start.elapsed().as_millis() as u64,
             score: 0,
             last_checked: now,
-            error: Some(format!("Client error: {}", e)),
+            error: Some(format!("Connection error: {}", e)),
             model: Some("gemini-2.0-flash-exp".into()),
             capabilities: vec!["text".into(), "multimodal".into(), "streaming".into()],
         },
@@ -218,55 +216,43 @@ async fn ping_ollama_internal() -> ProviderStatus {
         .or_else(|_| std::env::var("OLLAMA_MODEL"))
         .unwrap_or_else(|_| "gemma2:2b".into());
 
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(3))
-        .build();
+    let gateway = orchestration_gateway();
+    match gateway
+        .head_status(&format!("{}/api/tags", ollama_url))
+        .await
+    {
+        Ok(status) => {
+            let latency = start.elapsed().as_millis() as u64;
+            let available = (200..400).contains(&status);
+            let score = if available {
+                calculate_provider_score(latency, true, 85)
+            } else {
+                0
+            };
 
-    match client {
-        Ok(c) => match c.get(format!("{}/api/tags", ollama_url)).send().await {
-            Ok(resp) => {
-                let latency = start.elapsed().as_millis() as u64;
-                let available = resp.status().is_success();
-                let score = if available {
-                    calculate_provider_score(latency, true, 85)
-                } else {
-                    0
-                };
-
-                ProviderStatus {
-                    name: "ollama".into(),
-                    available,
-                    latency_ms: latency,
-                    score,
-                    last_checked: now,
-                    error: if available {
-                        None
-                    } else {
-                        Some(format!("HTTP {}", resp.status()))
-                    },
-                    model: Some(ollama_model.clone()),
-                    capabilities: vec!["text".into(), "local".into(), "offline".into()],
-                }
-            }
-            Err(e) => ProviderStatus {
+            ProviderStatus {
                 name: "ollama".into(),
-                available: false,
-                latency_ms: start.elapsed().as_millis() as u64,
-                score: 0,
+                available,
+                latency_ms: latency,
+                score,
                 last_checked: now,
-                error: Some(format!("Not running: {}", e)),
+                error: if available {
+                    None
+                } else {
+                    Some(format!("HTTP {}", status))
+                },
                 model: Some(ollama_model.clone()),
                 capabilities: vec!["text".into(), "local".into(), "offline".into()],
-            },
-        },
+            }
+        }
         Err(e) => ProviderStatus {
             name: "ollama".into(),
             available: false,
-            latency_ms: 0,
+            latency_ms: start.elapsed().as_millis() as u64,
             score: 0,
             last_checked: now,
-            error: Some(format!("Client error: {}", e)),
-            model: Some("titane-local".into()),
+            error: Some(format!("Not running: {}", e)),
+            model: Some(ollama_model.clone()),
             capabilities: vec!["text".into(), "local".into(), "offline".into()],
         },
     }
@@ -1157,27 +1143,22 @@ pub async fn test_gemini_services(
         },
     ];
 
-    // Test core Generative Language API
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_secs(5))
-        .build();
+    // Test core Generative Language API via governed gateway
+    let gateway = orchestration_gateway();
+    let url = format!(
+        "https://generativelanguage.googleapis.com/v1beta/models?key={}",
+        api_key
+    );
 
-    if let Ok(c) = client {
-        let url = format!(
-            "https://generativelanguage.googleapis.com/v1beta/models?key={}",
-            api_key
-        );
-
-        match c.get(&url).send().await {
-            Ok(resp) => {
-                services[0].available = resp.status().is_success();
-                if !services[0].available {
-                    services[0].error = Some(format!("HTTP {}", resp.status()));
-                }
+    match gateway.head_status(&url).await {
+        Ok(status) => {
+            services[0].available = (200..400).contains(&status);
+            if !services[0].available {
+                services[0].error = Some(format!("HTTP {}", status));
             }
-            Err(e) => {
-                services[0].error = Some(format!("Connection error: {}", e));
-            }
+        }
+        Err(e) => {
+            services[0].error = Some(format!("Connection error: {}", e));
         }
     }
 
