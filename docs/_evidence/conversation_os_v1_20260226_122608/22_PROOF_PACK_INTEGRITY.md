@@ -1,3 +1,12 @@
+## ADDENDUM — INTEGRITY AUTOHEAL AH V18 (A→H)
+
+- Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_224222.txt`
+- File count: `105`
+- Scope:
+  - `docs/_evidence/program_autoheal_ah_20260226_224222/**`
+  - `docs/_evidence/pA_20260226_224222/**` à `docs/_evidence/pH_20260226_224222/**`
+- Verdict pack: `BLOCKED`
+
 ## ADDENDUM — INTEGRITY AUTOHEAL AH V17 (A→H)
 
 - Hash manifest file: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_224022.txt`
