@@ -130,3 +130,13 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif (hotspot principal `overdrive/chat_orchestrator.rs`).
+
+## Addendum step-4 Lot B3 (2026-02-26)
+- Action: refactor `overdrive/chat_orchestrator.rs` via helpers `build_http_client_with_timeout` et `build_http_client_with_secs`.
+- Mesure:
+  - `chat_orchestrator.rs` (regex locale `reqwest|ureq`): `6 -> 3`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB3_20260226T034029Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
