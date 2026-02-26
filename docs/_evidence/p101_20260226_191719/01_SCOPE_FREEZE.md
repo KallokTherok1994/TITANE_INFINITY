@@ -1,0 +1,4 @@
+# 01_SCOPE_FREEZE.md
+
+Phase: P101
+Statut: FROZEN
