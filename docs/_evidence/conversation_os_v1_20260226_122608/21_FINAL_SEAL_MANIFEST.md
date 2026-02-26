@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM AUTOHEAL AH (A→H)
+
+- Program path: `docs/_evidence/program_autoheal_ah_20260226_215033`
+- Verdict: `BLOCKED`
+- Cause: stop-the-line précheck (invariants/prérequis non conformes)
+- Master proof log: `docs/_evidence/program_autoheal_ah_20260226_215033/06_PROOF_LOGS_MASTER.txt`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_autoheal_ah_20260226_215033.txt`
+
 ## ADDENDUM — TERMINAL LATEST ALIAS
 
 - Tag alias terminal publié: `evidence-seal-terminal-latest`

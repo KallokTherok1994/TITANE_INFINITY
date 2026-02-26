@@ -1,3 +1,11 @@
+## ADDENDUM — AUTOHEAL AH (20260226T2152Z)
+
+- Program: `docs/_evidence/program_autoheal_ah_20260226_215033`
+- Tags attendus:
+  - `evidence-seal-autoheal-ah-20260226T2152Z`
+  - `evidence-seal-autoheal-ah-latest`
+- Statut run: `BLOCKED` (stop-the-line précheck)
+
 ## ADDENDUM — TERMINAL LATEST TAG (20260226T214338Z)
 
 - Tag alias publié:
