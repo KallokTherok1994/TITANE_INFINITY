@@ -3,6 +3,7 @@
 // Clean architecture v15: documented, production-ready
 
 use super::{AIError, AIProvider, AIRequest, AIResponse, AIResult};
+use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 
@@ -56,15 +57,15 @@ struct GeminiPartResponse {
 
 pub struct GeminiClient {
     api_key: String,
-    client: reqwest::Client,
+    client: Client,
 }
 
 impl GeminiClient {
     pub fn new(api_key: String) -> Self {
-        let client = reqwest::Client::builder()
+        let client = Client::builder()
             .timeout(Duration::from_secs(TIMEOUT_SECONDS))
             .build()
-            .unwrap_or_else(|_| reqwest::Client::new());
+            .unwrap_or_else(|_| Client::new());
 
         Self { api_key, client }
     }

@@ -1,0 +1,6 @@
+== H2 inventory lot B8 ==
+GEMINI_RAW=1
+GEMINI_LINES:
+6:use reqwest::Client;
+
+RAW_TOTAL=43

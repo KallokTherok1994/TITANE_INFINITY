@@ -322,3 +322,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B8 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB8_20260226T114040Z.log`
+
+### Action
+- Réduction de la signature `reqwest` dans `ai/gemini.rs` (`reqwest::Client::*` -> `Client::*`).
+
+### Résultat
+- `ai/gemini.rs` (regex locale `reqwest|ureq`): `3 -> 1`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `45 -> 43`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

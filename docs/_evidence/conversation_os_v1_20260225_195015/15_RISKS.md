@@ -184,3 +184,14 @@
 - Build:
   - `cargo check` PASS
 - Verdict: **PROGRESS**, blocant H2 toujours actif.
+
+## Addendum step-4 Lot B8 (2026-02-26)
+- Action: réduction de la signature `reqwest` dans `ai/gemini.rs` (types/constructeurs `Client`).
+- Mesure:
+  - `ai/gemini.rs` (regex locale `reqwest|ureq`): `3 -> 1`
+  - inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `45 -> 43`
+- Preuve:
+  - `reports/conversation_os_h2_codeonly_step4_lotB8_20260226T114040Z.log`
+- Build:
+  - `cargo check` PASS
+- Verdict: **PROGRESS**, blocant H2 toujours actif.
