@@ -638,3 +638,14 @@
 	- `INDEX.md`
 - Preuve associée:
 	- `reports/conversation_os_release_handoff_snapshot_20260226T121850Z.log`
+
+## Addendum 2026-02-26 (Terminal seal x3)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `51_TERMINAL_SEAL_X3.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `INDEX.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`

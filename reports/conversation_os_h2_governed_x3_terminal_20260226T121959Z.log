@@ -1,0 +1,5 @@
+== H2 GOVERNED X3 TERMINAL ==
+ALLOWLIST=src-tauri/src/core/http_types.rs
+RUN1_COUNT=0
+RUN2_COUNT=0
+RUN3_COUNT=0
