@@ -1,0 +1,7 @@
+== H2 inventory lot B5 ==
+CHAT_ORCH_RAW=1
+CHAT_ORCH_LINES:
+12:use reqwest::Client;
+
+AI_OLLAMA_RAW=1
+RAW_TOTAL=53

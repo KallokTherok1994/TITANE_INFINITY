@@ -347,3 +347,19 @@
 - Delta mesuré:
 	- `ai/ollama.rs` `5 -> 1`
 	- inventaire brut `src-tauri/src` `59 -> 55`
+
+## Addendum 2026-02-26 (Step-4 Lot B5 execution)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/overdrive/chat_orchestrator.rs`
+- Fichier ajouté:
+	- `34_H2_STEP4_LOTB5_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB5_20260226T113657Z.log`
+- Delta mesuré:
+	- `chat_orchestrator.rs` `3 -> 1`
+	- inventaire brut `src-tauri/src` `55 -> 53`
