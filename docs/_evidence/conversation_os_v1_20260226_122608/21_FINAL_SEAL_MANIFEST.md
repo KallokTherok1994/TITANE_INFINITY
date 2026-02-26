@@ -48,6 +48,34 @@ Date (UTC): 2026-02-26
 
 ---
 
+## Addendum append-only — 2026-02-26T16:23:00Z
+
+### Liaison de scellement programme P21→P27
+- Seal ID documentaire: `seal-p21-27-20260226T1623Z`
+- Index de seal: `docs/_evidence/program_p21_27_20260226_155906/12_SEAL_INDEX.md`
+- Manifest de seal: `docs/_evidence/program_p21_27_20260226_155906/13_FINAL_SEAL_MANIFEST.md`
+- Digest de preuve: `docs/_evidence/program_p21_27_20260226_155906/14_PROOF_DIGEST.md`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
+## Addendum append-only — 2026-02-26T15:52:00Z
+
+### Liaison de scellement programme P14→P20
+- Seal ID documentaire: `seal-p14-20-20260226T1550Z`
+- Index de seal: `docs/_evidence/program_p14_20_20260226_151353/15_SEAL_INDEX.md`
+- Manifest de seal: `docs/_evidence/program_p14_20_20260226_151353/16_FINAL_SEAL_MANIFEST.md`
+- Digest de preuve: `docs/_evidence/program_p14_20_20260226_151353/17_PROOF_DIGEST.md`
+
+### Métadonnées addendum
+- Ring impacté: **Governance/Repo hygiene**
+- Statut: **QUALIFIED**
+
+---
+
 ## Addendum append-only — 2026-02-26T14:42:13Z
 
 ### Borne terminale de session
