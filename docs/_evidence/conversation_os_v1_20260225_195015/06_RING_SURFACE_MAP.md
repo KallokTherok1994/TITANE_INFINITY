@@ -25,3 +25,17 @@
 
 ### Stop-the-line
 - Toute dépendance vers le haut (ex: Service dépend de UI) => **FAIL immédiat**.
+
+### Micro-phase MP-02 — Discovery C1..C5 + Ring checks
+- Ring impacté: Ring 4 (Docs/UI governance) + Ring 3 (Services)
+- Fichiers touchés:
+  - `09_GATES_STATUS.md`
+  - `15_RISKS.md`
+  - `24_ALL_PHASE_EXECUTION.md`
+- Imports sensibles vérifiés:
+  - `src/types -> services` (prod-scope hors `*.d.ts`): `0` match
+  - `src-tauri from .*ui|from .*modules`: matches observés majoritairement en commentaires/README, pas de dépendance de runtime validée dans cet addendum
+- Commandes de preuve:
+  - `rg -n "from .*ui|from .*modules" src-tauri`
+  - `rg -n "import.*services|from .*services" src/types --glob '!**/*.d.ts'`
+- Conclusion: **PASS (ring up-dependency non détectée dans le scope vérifié)**
