@@ -441,3 +441,19 @@
 
 ### État
 - Hard-mode reste **BLOCKED** (`H2` résiduel global).
+
+## Addendum step-4 Lot B15 (2026-02-26)
+
+### Source
+- `reports/conversation_os_h2_codeonly_step4_lotB15_20260226T120137Z.log`
+
+### Action
+- Suppression d’un call-site `reqwest` placeholder dans `audio/asr.rs`.
+
+### Résultat
+- `audio/asr.rs`: `1 -> 0`.
+- Inventaire brut `src-tauri/src` (regex `reqwest|ureq`): `24 -> 23`.
+- Build check: `cargo check` PASS.
+
+### État
+- Hard-mode reste **BLOCKED** (`H2` résiduel global).

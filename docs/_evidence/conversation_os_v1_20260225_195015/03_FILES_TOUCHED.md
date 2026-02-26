@@ -521,3 +521,19 @@
 	- `api_hub/openai.rs` `1 -> 0`
 	- `overdrive/memory_engine.rs` `1 -> 0`
 	- inventaire brut `src-tauri/src` `28 -> 24`
+
+## Addendum 2026-02-26 (Step-4 Lot B15 execution)
+- Ring impacté: **Ring 3 (Services)**
+- Statut: **QUALIFIED**
+- Fichier code modifié:
+	- `src-tauri/src/audio/asr.rs`
+- Fichier ajouté:
+	- `44_H2_STEP4_LOTB15_REPORT.md`
+- Fichiers mis à jour:
+	- `09_GATES_STATUS.md`
+	- `15_RISKS.md`
+- Preuve associée:
+	- `reports/conversation_os_h2_codeonly_step4_lotB15_20260226T120137Z.log`
+- Delta mesuré:
+	- `audio/asr.rs` `1 -> 0`
+	- inventaire brut `src-tauri/src` `24 -> 23`
