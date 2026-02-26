@@ -1,0 +1,3 @@
+P63_69 proof logs
+- reports/p63_69_bootstrap_precheck_20260226T181226Z.log
+- reports/p63_69_execution_x3_20260226T181226Z.log

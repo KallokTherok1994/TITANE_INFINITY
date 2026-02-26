@@ -1,3 +1,10 @@
+## ADDENDUM — P63→P69 (20260226T1821Z)
+
+- Program: `docs/_evidence/program_p63_69_20260226_181226`
+- Tags attendus:
+  - `evidence-seal-p63-69-20260226T1821Z`
+  - `evidence-seal-p63-69-latest`
+
 # 20_SEAL_TAGS_INDEX.md
 
 Date (UTC): 2026-02-26

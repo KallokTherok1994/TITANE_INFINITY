@@ -1,3 +1,11 @@
+## ADDENDUM — PROGRAM P63→P69
+
+- Program path: `docs/_evidence/program_p63_69_20260226_181226`
+- Verdict: `PASS_QUALIFIED`
+- Bootstrap proof: `reports/p63_69_bootstrap_precheck_20260226T181226Z.log`
+- X3 proof: `reports/p63_69_execution_x3_20260226T181226Z.log`
+- Hash manifest: `reports/proof_pack_hash_manifest_program_p63_69_20260226_181226.txt`
+
 # 21_FINAL_SEAL_MANIFEST.md
 
 Date (UTC): 2026-02-26

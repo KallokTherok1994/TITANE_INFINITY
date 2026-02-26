@@ -1,0 +1,40 @@
+]633;E;{   echo "# P63_69 EXECUTION X3 2026-02-26T18:12:26Z"\x3b   for i in 1 2 3\x3b do     echo "===== RUN${i} START ====="\x3b     echo "[RUN${i}] git status --porcelain=v1"\x3b     git status --porcelain=v1\x3b     echo "[RUN${i}] verify:invariants-governed"\x3b     if pnpm -s run verify:invariants-governed\x3b then       echo "[RUN${i}] EXIT=0"\x3b     else       echo "[RUN${i}] EXIT=1"\x3b     fi\x3b     echo "[RUN${i}] git ls-remote --heads origin MAIN"\x3b     git ls-remote --heads origin MAIN\x3b     echo "===== RUN${i} END ====="\x3b   done\x3b } > "$X3" 2>&1;86d12e66-fb32-4b21-8029-6864e88c7859]633;C# P63_69 EXECUTION X3 2026-02-26T18:12:26Z
+===== RUN1 START =====
+[RUN1] git status --porcelain=v1
+[RUN1] verify:invariants-governed
+🔒 Invariants Governed Check
+============================
+FRONT_EXEC_WEB_CALLS=0
+BACKEND_HTTP_CLIENT_CALLS_GOV_SCOPE=0
+HARDCODED_SECRET_ASSIGNMENTS=0
+✅ PASS: governed invariants clean
+[RUN1] EXIT=0
+[RUN1] git ls-remote --heads origin MAIN
+77665451102029631019230bdd17c52fc8f13173	refs/heads/MAIN
+===== RUN1 END =====
+===== RUN2 START =====
+[RUN2] git status --porcelain=v1
+[RUN2] verify:invariants-governed
+🔒 Invariants Governed Check
+============================
+FRONT_EXEC_WEB_CALLS=0
+BACKEND_HTTP_CLIENT_CALLS_GOV_SCOPE=0
+HARDCODED_SECRET_ASSIGNMENTS=0
+✅ PASS: governed invariants clean
+[RUN2] EXIT=0
+[RUN2] git ls-remote --heads origin MAIN
+77665451102029631019230bdd17c52fc8f13173	refs/heads/MAIN
+===== RUN2 END =====
+===== RUN3 START =====
+[RUN3] git status --porcelain=v1
+[RUN3] verify:invariants-governed
+🔒 Invariants Governed Check
+============================
+FRONT_EXEC_WEB_CALLS=0
+BACKEND_HTTP_CLIENT_CALLS_GOV_SCOPE=0
+HARDCODED_SECRET_ASSIGNMENTS=0
+✅ PASS: governed invariants clean
+[RUN3] EXIT=0
+[RUN3] git ls-remote --heads origin MAIN
+77665451102029631019230bdd17c52fc8f13173	refs/heads/MAIN
+===== RUN3 END =====
