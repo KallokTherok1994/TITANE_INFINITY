@@ -946,6 +946,91 @@ mod tests {
 
         let _ = std::fs::remove_file(db_path);
     }
+
+    #[test]
+    fn conversation_os_single_pipeline_trace_and_artifacts_are_canonical() {
+        let db_path = std::env::temp_dir().join(format!(
+            "titane-conversation-os-single-pipeline-{}.db",
+            Uuid::new_v4()
+        ));
+
+        let trace = serde_json::json!({
+            "phase": "conversation_generate",
+            "router": { "intent": "Question", "wants_search": false },
+            "policy": { "allow_online": true, "hard_block": false },
+            "resilience": { "allowed": true },
+            "memory": { "fetch_stm": true, "fetch_ltm": false },
+            "citations": []
+        });
+
+        let provider_meta = build_success_meta("local", 12);
+
+        persist_conversation_os_artifacts_with_path(
+            "conv-single",
+            "req-single",
+            "Message test pipeline unique",
+            Some("Réponse test pipeline unique"),
+            &trace,
+            Some(&provider_meta),
+            &[],
+            Some(db_path.clone()),
+        )
+        .expect("single-pipeline persistence should succeed");
+
+        let conn = Connection::open(db_path.clone()).expect("db should open");
+
+        let event_kinds: Vec<String> = {
+            let mut stmt = conn
+                .prepare(
+                    "SELECT kind FROM events WHERE conversation_id = ?1 ORDER BY ts ASC",
+                )
+                .expect("prepare event kinds query");
+
+            stmt.query_map(["conv-single"], |row| row.get(0))
+                .expect("query event kinds")
+                .collect::<Result<Vec<String>, _>>()
+                .expect("collect event kinds")
+        };
+
+        assert_eq!(event_kinds, vec!["user_message", "assistant_message"]);
+
+        let provider_decisions_count: i64 = conn
+            .query_row(
+                "SELECT COUNT(*) FROM provider_decisions WHERE conversation_id = ?1",
+                ["conv-single"],
+                |row| row.get(0),
+            )
+            .expect("provider decisions count query should succeed");
+        assert_eq!(provider_decisions_count, 1);
+
+        let first_payload: String = conn
+            .query_row(
+                "SELECT payload FROM events WHERE conversation_id = ?1 AND kind = 'user_message' LIMIT 1",
+                ["conv-single"],
+                |row| row.get(0),
+            )
+            .expect("user payload query should succeed");
+
+        let payload_json: serde_json::Value =
+            serde_json::from_str(&first_payload).expect("user payload should be valid json");
+        let trace_json = payload_json
+            .get("trace")
+            .expect("trace should be persisted in user payload");
+
+        assert_eq!(
+            trace_json
+                .get("phase")
+                .and_then(|value| value.as_str())
+                .unwrap_or_default(),
+            "conversation_generate"
+        );
+        assert!(trace_json.get("router").is_some());
+        assert!(trace_json.get("policy").is_some());
+        assert!(trace_json.get("resilience").is_some());
+        assert!(trace_json.get("memory").is_some());
+
+        let _ = std::fs::remove_file(db_path);
+    }
 }
 
 /// Traiter un message (ancienne interface - conservée pour compatibilité)

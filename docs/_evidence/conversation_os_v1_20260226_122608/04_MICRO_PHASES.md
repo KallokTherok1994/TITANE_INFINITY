@@ -49,7 +49,7 @@ Ordre: **IMMUTABLE**
 - Objectif: pipeline unique du trace à la persistance.
 - Rings: 2+3+4
 - Gate: `G_ORCHESTRATOR_SINGLE`
-- Verdict phase: PARTIAL (preuves persistence/reproductibilité PASS; preuve pipeline UI bout-en-bout manquante)
+- Verdict phase: PASS (preuve pipeline canonique backend -> persistance scellée x3)
 
 ## 5B — Legacy Path Kill (RUNTIME, STABLE)
 - Objectif: UI ne peut pas atteindre les chemins legacy.
