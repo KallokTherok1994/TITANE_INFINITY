@@ -40,3 +40,25 @@
 ### Statut actuel
 - Décision globale du pack: **BLOCKED** (G1 global strict)
 - Décision du sous-scope Conversation OS v1: **QUALIFIED**
+
+## Addendum Phase 1 (2026-02-26)
+
+### Exécution
+- Inventaire global `src/**` effectué via scan unique `fetch|axios|XMLHttpRequest|WebSocket`.
+- Classification exhaustive ligne par ligne produite.
+
+### Preuves
+- `reports/conversation_os_g1_phase1_raw_20260226T010320Z.log`
+- `reports/conversation_os_g1_phase1_summary_20260226T010320Z.md`
+- `reports/conversation_os_g1_phase1_classification_20260226T010330Z.csv`
+- Dossier pack: `13_G1_PHASE1_INVENTORY.md`
+
+### Résultat phase 1
+- Total matches: 85
+- `IN_SCOPE_CONVOS_V1`: 0
+- `TEST_ONLY`: 7
+- `LEGACY_HORS_SCOPE`: 78
+
+### Décision
+- Phase 1 = **PASS** (inventaire + classification complets)
+- Gate G1 global = **FAIL (inchangé)** en attente Phase 2

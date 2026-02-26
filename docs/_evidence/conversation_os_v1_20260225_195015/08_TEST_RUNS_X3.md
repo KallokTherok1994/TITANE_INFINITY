@@ -42,3 +42,15 @@
 - Commande scan ciblée (4 fichiers frontend canonique `conversation_generate`) avec vérification des primitives `fetch|axios|XMLHttpRequest|WebSocket`.
 - Log: `reports/conversation_os_g1_scoped_surface_audit_20260226.log`
 - Résultat attendu/obtenu: `DIRECT_NETWORK_EXIT:1` (aucun match détecté sur le périmètre ciblé).
+
+### C) Phase 1 G1 global — inventaire/classification
+- Commande globale:
+	- `rg -n "fetch\(|axios\(|XMLHttpRequest|WebSocket" src`
+- Artifacts:
+	- `reports/conversation_os_g1_phase1_raw_20260226T010320Z.log`
+	- `reports/conversation_os_g1_phase1_summary_20260226T010320Z.md`
+	- `reports/conversation_os_g1_phase1_classification_20260226T010330Z.csv`
+- Résultat consolidé:
+	- Total 85, `IN_SCOPE_CONVOS_V1=0`, `TEST_ONLY=7`, `LEGACY_HORS_SCOPE=78`
+- Statut:
+	- Phase 1 du plan G1: **PASS**
