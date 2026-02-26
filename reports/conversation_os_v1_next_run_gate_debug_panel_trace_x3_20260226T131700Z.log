@@ -1,0 +1,25 @@
+# DEBUG PANEL REAL TRACE X3 2026-02-26T13:17:00Z
+
+Target runner: Playwright (autorité unique)
+Task: shell: 🧪 Run Playwright E2E (critical)
+Spec hardened: e2e/chat-provider-decision-certification.spec.ts (console trace parser + captured state)
+
+===== RUN1 =====
+- Task executed: shell: 🧪 Run Playwright E2E (critical)
+- test-results/.last-run.json => status=passed
+- failedTests=[]
+- EXIT=0
+
+===== RUN2 =====
+- Task executed: shell: 🧪 Run Playwright E2E (critical)
+- test-results/.last-run.json => status=passed
+- failedTests=[]
+- EXIT=0
+
+===== RUN3 =====
+- Task executed: shell: 🧪 Run Playwright E2E (critical)
+- test-results/.last-run.json => status=passed
+- failedTests=[]
+- EXIT=0
+
+# X3 RUN END 2026-02-26T13:17:00Z

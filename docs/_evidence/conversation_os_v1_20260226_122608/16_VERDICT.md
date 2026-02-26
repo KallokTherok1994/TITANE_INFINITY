@@ -7,7 +7,7 @@ Date (UTC): 2026-02-26
 
 ## Raisons explicites
 1. `G_FAILURE_SIMULATION_COMPLETE` non satisfait (scénarios obligatoires non scellés).
-2. Gates fonctionnelles restantes non scellées (`G_DEBUG_PANEL_REAL_TRACE`, `G_SELF_AUDIT_CLEAN`).
+2. Gates fonctionnelles restantes non scellées (`G_SELF_AUDIT_CLEAN`).
 
 ## Ce qui est PASS dans ce run
 - Pack de preuve complet créé (fichiers 00→16 présents).
