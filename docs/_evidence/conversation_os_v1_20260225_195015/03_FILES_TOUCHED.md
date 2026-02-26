@@ -673,3 +673,13 @@
 - Preuves associées:
 	- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
 	- `reports/conversation_os_h2_governed_x3_terminal_20260226T121959Z.log`
+
+## Addendum 2026-02-26 (Fin de session opérateur)
+- Ring impacté: **Ring 3 (Services) + Ring 4 (Orchestration)**
+- Statut: **QUALIFIED**
+- Fichier ajouté:
+	- `54_SESSION_END.md`
+- Fichier mis à jour:
+	- `INDEX.md`
+- Preuve associée:
+	- `reports/conversation_os_terminal_closure_snapshot_20260226T122247Z.log`
