@@ -42,6 +42,8 @@ Date (UTC): 2026-02-26
 	- Ajout test `conversation_os_single_pipeline_trace_and_artifacts_are_canonical`
 - `src/types/ai.d.ts`
 	- Suppression dépendance Ring1 -> Services (`@/services/ai/types`) via définitions locales
+- `e2e/chat-provider-decision-certification.spec.ts`
+	- Durcissement parseur logs `[CONV_SEND]/[CONV_RECV]` + capture mutable pour preuve trace UI
 - `src/core/commands/TAURI_COMMANDS.ts`
 	- Nettoyage d'une référence legacy en commentaire pour éviter faux positif gate reachability
 
@@ -64,4 +66,5 @@ Date (UTC): 2026-02-26
 - `reports/conversation_os_v1_next_run_gate_orchestrator_single_x3_20260226T130756Z.log`
 - `reports/conversation_os_v1_next_run_gate_perf_metrics_x3_20260226T131300Z.log`
 - `reports/conversation_os_v1_next_run_gate_self_audit_scan_x3_20260226T131242Z.log`
+- `reports/conversation_os_v1_next_run_gate_debug_panel_trace_x3_20260226T131700Z.log`
 

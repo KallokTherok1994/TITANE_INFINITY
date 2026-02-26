@@ -91,7 +91,7 @@ Ordre: **IMMUTABLE**
 - Objectif: trace backend réelle visible UI.
 - Rings: 4
 - Gate: `G_DEBUG_PANEL_REAL_TRACE`
-- Verdict phase: BLOCKED (preuve E2E dédiée manquante)
+- Verdict phase: PASS
 
 ## 8B — Safe Optimizations (OPTIONAL, QUALIFIED)
 - Objectif: optimisations traçables derrière flags.

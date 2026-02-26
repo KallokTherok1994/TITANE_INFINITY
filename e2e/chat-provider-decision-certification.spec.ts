@@ -74,26 +74,47 @@ interface CapturedLogs {
   allLogs: string[];
 }
 
+function parseConsoleObjectPayload(raw: string): Record<string, unknown> | undefined {
+  const start = raw.indexOf('{');
+  const end = raw.lastIndexOf('}');
+  if (start === -1 || end === -1 || end <= start) {
+    return undefined;
+  }
+
+  const candidate = raw.slice(start, end + 1);
+
+  try {
+    return JSON.parse(candidate);
+  } catch {
+    // Handle console object style: { key: 'value', enabled: true }
+    const normalized = candidate
+      .replace(/([\{,]\s*)([A-Za-z0-9_]+)\s*:/g, '$1"$2":')
+      .replace(/'([^']*)'/g, '"$1"');
+
+    try {
+      return JSON.parse(normalized);
+    } catch {
+      return undefined;
+    }
+  }
+}
+
 /**
  * Helper: Capturer les logs console [CONV_SEND] et [CONV_RECV]
  */
 async function captureConversationLogs(page: Page): Promise<CapturedLogs> {
-  const allLogs: string[] = [];
-  let sendLog: ConvSendLog | undefined;
-  let recvLog: ConvRecvLog | undefined;
+  const captured: CapturedLogs = { allLogs: [] };
 
   page.on('console', (msg: ConsoleMessage) => {
     const text = msg.text();
-    allLogs.push(text);
+    captured.allLogs.push(text);
 
     // Parse [CONV_SEND]
     if (text.includes('[CONV_SEND]')) {
       try {
-        // Extract JSON après "[CONV_SEND] External AI gate"
-        const match = text.match(/\[CONV_SEND\].*?(\{.*\})/);
-        if (match) {
-          const parsed = JSON.parse(match[1]);
-          sendLog = {
+        const parsed = parseConsoleObjectPayload(text);
+        if (parsed) {
+          captured.send = {
             type: 'CONV_SEND',
             buildFlagEnabled: parsed.buildFlagEnabled ?? false,
             runtimeToggleEnabled: parsed.runtimeToggleEnabled ?? false,
@@ -109,11 +130,9 @@ async function captureConversationLogs(page: Page): Promise<CapturedLogs> {
     // Parse [CONV_RECV]
     if (text.includes('[CONV_RECV]')) {
       try {
-        // Extract JSON après "[CONV_RECV] Decision meta:"
-        const match = text.match(/\[CONV_RECV\].*?(\{.*\})/);
-        if (match) {
-          const parsed = JSON.parse(match[1]);
-          recvLog = {
+        const parsed = parseConsoleObjectPayload(text);
+        if (parsed) {
+          captured.recv = {
             type: 'CONV_RECV',
             mode: parsed.mode ?? 'UNKNOWN',
             reason_code: parsed.reason_code,
@@ -128,7 +147,7 @@ async function captureConversationLogs(page: Page): Promise<CapturedLogs> {
     }
   });
 
-  return { send: sendLog, recv: recvLog, allLogs };
+  return captured;
 }
 
 /**
