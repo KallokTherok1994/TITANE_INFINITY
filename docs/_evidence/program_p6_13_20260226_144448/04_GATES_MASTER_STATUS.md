@@ -13,3 +13,17 @@ Date (UTC): 2026-02-26
 
 ## État global
 - **BLOCKED**
+
+---
+
+## Addendum append-only — 2026-02-26T14:54:43Z
+
+### Revalidation remédiation (scan exécutable/prod-scope, x3)
+- Preuve: `reports/program_p6_13_invariant_clean_executable_x3_20260226T145443Z.log`
+- `RUN1/2/3_FRONT_EXEC_WEB_CALLS=0`
+- `RUN1/2/3_BACKEND_HTTP_CLIENT_CALLS_GOV_SCOPE=0`
+- `RUN1/2/3_HARDCODED_SECRET_ASSIGNMENTS=0`
+
+### Interprétation gouvernée
+- `G_MASTER_PRECHECK_INVARIANTS_EXECUTABLE_CLEAN`: **PASS x3**
+- `G_MASTER_PRECHECK_INVARIANTS_CLEAN` (scan brut global imposé): **reste BLOCKED** tant que le contrat de scan n’est pas officiellement requalifié.

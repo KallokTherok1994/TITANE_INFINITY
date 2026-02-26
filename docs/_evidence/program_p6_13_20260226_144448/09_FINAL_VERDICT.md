@@ -13,3 +13,17 @@ Date (UTC): 2026-02-26
 ## Justification blocage
 - Stop-the-line HARD déclenché avant Phase 6.
 - Preuve brute: `docs/_evidence/program_p6_13_20260226_144448/06_PROOF_LOGS_MASTER.txt`.
+
+---
+
+## Addendum append-only — 2026-02-26T14:54:43Z
+
+### Statut après remédiation ciblée
+- Revalidation x3 exécutable/prod-scope: **clean (0/0/0)**.
+- Preuve: `reports/program_p6_13_invariant_clean_executable_x3_20260226T145443Z.log`.
+
+### Verdict programme mis à jour
+- **BLOCKED (inchangé)** tant que la règle de précheck reste strictement liée au scan brut global non requalifié.
+
+### Prochaine action exacte
+- Décision de gouvernance requise: adopter officiellement le contrat de scan exécutable/prod-scope comme gate canonique, puis rejouer précheck et ouvrir Phase 6.
