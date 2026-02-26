@@ -1,0 +1,4 @@
+# 10_BUILD_HASH_ALIGNMENT.md
+
+Phase: P6
+Statut: PENDING

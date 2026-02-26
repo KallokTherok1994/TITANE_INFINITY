@@ -1,0 +1,4 @@
+# 09_MEMORY_V2_POLICY.md
+
+Phase: P10
+Statut: PENDING
