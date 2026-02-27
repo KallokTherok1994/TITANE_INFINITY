@@ -24,7 +24,7 @@ now_utc() {
 }
 
 latest_iter_slug_from_state() {
-  python - <<'PY'
+  python3 - <<'PY'
 import json, pathlib
 p=pathlib.Path('runs/_loop/state.json')
 if not p.exists():
@@ -148,7 +148,7 @@ apply_fix_contamination() {
 
   while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    python - "$f" <<'PY'
+    python3 - "$f" <<'PY'
 import re,sys,pathlib
 p=pathlib.Path(sys.argv[1])
 try:
@@ -181,7 +181,7 @@ apply_fix_window_target() {
   if [[ -z "$latest" ]]; then
     return 1
   fi
-  python - "$latest" <<'PY'
+  python3 - "$latest" <<'PY'
 import re,sys,pathlib
 latest=sys.argv[1]
 m=re.match(r'^program_p([0-9]+)_([0-9]+)_([0-9_]+)$',latest)
