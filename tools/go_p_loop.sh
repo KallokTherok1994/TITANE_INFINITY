@@ -92,14 +92,19 @@ while (( iter < MAX_ITERS )); do
 
   cp -a "$src_program_path" "$new_program_path"
 
+  expected_manifest_lines="$(find "$src_program_path" -type f | wc -l | tr -d ' ')"
+
   phase_paths=()
+  source_phase_paths=()
   for ((i=0; i<7; i++)); do
     old_p=$((10#$old_start + i))
     new_p=$((new_start + i))
     old_phase="docs/_evidence/p$(printf '%03d' "$old_p")_${old_ts}"
     new_phase="docs/_evidence/p$(printf '%03d' "$new_p")_${now_ts}"
+    source_phase_paths+=("$old_phase")
     cp -a "$old_phase" "$new_phase"
     phase_paths+=("$new_phase")
+    expected_manifest_lines=$((expected_manifest_lines + $(find "$old_phase" -type f | wc -l | tr -d ' ')))
   done
 
   mapfile -t target_files < <(find "$new_program_path" "${phase_paths[@]}" -type f | sort)
@@ -191,12 +196,12 @@ EOF
 
   find "$new_program_path" "${phase_paths[@]}" -type f | sort | xargs -r sha256sum > "$manifest"
   manifest_lines="$(wc -l < "$manifest" | tr -d ' ')"
-  if [[ "$manifest_lines" != "43" ]]; then
+  if [[ "$manifest_lines" != "$expected_manifest_lines" ]]; then
     cat > "$LOOP_DIR/ITER_p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end").md" <<EOF
 # ITER p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")
 
 - verdict: FAIL
-- reason: manifest line count mismatch ($manifest_lines != 43)
+- reason: manifest line count mismatch ($manifest_lines != $expected_manifest_lines)
 - manifest: $manifest
 EOF
     last_verdict="FAIL"
@@ -235,7 +240,7 @@ EOF
 - commit: $last_commit
 - program: $new_program_path
 - logs: $precheck_log, $x3_log
-- manifest: $manifest (43 lines)
+- manifest: $manifest ($manifest_lines lines)
 EOF
 
   write_state "running" "ITERATION_PASS" "$iter" "p$(printf '%03d' "$old_start")_$(printf '%03d' "$old_end")" "p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")" "$last_verdict" "$last_proof" "$last_commit"
