@@ -1,0 +1,3 @@
+# SCANS_INDEX
+- files: SCANS_NETWORK_UI.md, SCANS_SECRETS.md, SCANS_ALLOWLIST.md
+- generated: yes

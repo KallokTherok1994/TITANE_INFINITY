@@ -1,0 +1,12 @@
+]633;E;{   echo "# VERDICT"\x3b   echo "- Window: ${WINDOW} (${SLUG})"\x3b   echo "- UTC: ${UTC_NOW}"\x3b   echo "- RUN_1: EXIT=${RUN1_EXIT}"\x3b   echo "- RUN_2: EXIT=${RUN2_EXIT}"\x3b   echo "- RUN_3: EXIT=${RUN3_EXIT}"\x3b   echo "- No-skip hits: ${SKIP_HITS}"\x3b   echo "- Reproducibility hashes: ${SHA1} | ${SHA2} | ${SHA3}"\x3b   echo "- Scans/network markers: ${NETWORK_EXEC_OK}"\x3b   echo "- Real-secret hits (strict sk- pattern): ${REAL_SECRET_HITS}"\x3b   echo "- Decision: ${VERDICT}"\x3b   echo "- Root cause: ${CAUSE}"\x3b } > runs/current/00_VERDICT.md;c05eaf66-f80b-415d-8654-ee0b62769b90]633;C# VERDICT
+- Window: P462→P468 (p462_468)
+- UTC: 2026-02-27T15:08:42Z
+- RUN_1: EXIT=0
+- RUN_2: EXIT=0
+- RUN_3: EXIT=0
+- No-skip hits: 0
+- Reproducibility hashes: f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72 | f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72 | f8eaa9559d4997866eeb95f30bb2cf5200f2cf44bb150ca89f0df65bf9c5df72
+- Scans/network markers: 6
+- Real-secret hits (strict sk- pattern): 10
+- Decision: FAIL
+- Root cause: potential real secret pattern detected
