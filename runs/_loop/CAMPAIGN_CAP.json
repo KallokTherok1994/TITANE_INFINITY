@@ -1,0 +1,7 @@
+{
+  "last_evidence_dir": "program_p3206_3212_20260227_192758",
+  "last_window": "P3206\u2192P3212",
+  "auto_from": "p3206_3212",
+  "stop_at_p_end": 3912,
+  "cap_policy": "stop_at_p_end = last_end + 700 (deterministic global DONE)"
+}
