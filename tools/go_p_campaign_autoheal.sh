@@ -22,6 +22,9 @@ CURRENT_STEP="init"
 LAST_WINDOW=""
 CHECKPOINT_FILE="$LOOP_DIR/checkpoint.json"
 INTERRUPT_LOG="$LOOP_DIR/interrupt.log"
+RUNTIME_DIR="${TMPDIR:-/tmp}/titane_go_p_campaign"
+mkdir -p "$RUNTIME_DIR"
+CHECKPOINT_FILE="$RUNTIME_DIR/checkpoint_${USER:-user}.json"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

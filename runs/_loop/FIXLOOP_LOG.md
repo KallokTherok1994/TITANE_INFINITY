@@ -17,3 +17,6 @@
   - run_2: EXIT=0
   - run_3: START 2026-02-27T18:19:59Z
   - run_3: EXIT=0
+- iteration: 3
+- action: fix checkpoint path to tmp (avoid dirty tree before go_p_loop)
+- status: PATCH_APPLIED
