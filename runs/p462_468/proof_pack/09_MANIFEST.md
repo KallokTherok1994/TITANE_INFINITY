@@ -1,0 +1,18 @@
+# MANIFEST
+- 00_VERDICT.md | 1118 bytes
+- 01_BASELINE.md | 315 bytes
+- 02_DISCOVER_SUMMARY.md | 428 bytes
+- 03_RUNS_INDEX.md | 171 bytes
+- 04_RUNS_LOGS/RUN_1.txt | 351 bytes
+- 04_RUNS_LOGS/RUN_2.txt | 351 bytes
+- 04_RUNS_LOGS/RUN_3.txt | 351 bytes
+- 05_SCANS_ALLOWLIST.md | 7832620 bytes
+- 05_SCANS_INDEX.md | 98 bytes
+- 05_SCANS_NETWORK_UI.md | 42325 bytes
+- 05_SCANS_SECRETS.md | 306586 bytes
+- 06_DIFF.md | 0 bytes
+- 07_ROLLBACK.md | 541 bytes
+- 08_SHA256SUMS.txt | 1362 bytes
+- 09_MANIFEST.md | 480 bytes
+- SANITATION_AFTER.md | 56 bytes
+- SANITATION_BEFORE.md | 61 bytes
