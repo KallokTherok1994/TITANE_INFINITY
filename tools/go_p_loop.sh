@@ -8,7 +8,12 @@ LOOP_DIR="runs/_loop"
 mkdir -p "$LOOP_DIR"
 
 CAP_P="${CAP_P:-}"
+STOP_AT_P_END="${STOP_AT_P_END:-}"
 MAX_ITERS="${MAX_ITERS:-1}"
+
+if [[ -z "$STOP_AT_P_END" && -n "$CAP_P" ]]; then
+  STOP_AT_P_END="$CAP_P"
+fi
 
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "STOP: working tree is not clean" >&2
@@ -77,8 +82,8 @@ while (( iter < MAX_ITERS )); do
   new_start=$((10#$old_end + 1))
   new_end=$((new_start + 6))
 
-  if [[ -n "$CAP_P" ]] && (( new_end > CAP_P )); then
-    stop_reason="CAP_REACHED"
+  if [[ -n "$STOP_AT_P_END" ]] && (( new_end >= STOP_AT_P_END )); then
+    stop_reason="DONE_CAP_REACHED"
     break
   fi
 
@@ -173,7 +178,7 @@ EOF
 EOF
     last_verdict="FAIL"
     last_proof="$new_program_path"
-    stop_reason="VERIFY_FAIL"
+    stop_reason="STOP_THE_LINE_VERIFY_FAIL"
     write_state "stopped" "$stop_reason" "$iter" "p$(printf '%03d' "$old_start")_$(printf '%03d' "$old_end")" "p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")" "$last_verdict" "$last_proof" "$last_commit"
     break
   fi
@@ -189,7 +194,7 @@ EOF
 EOF
     last_verdict="FAIL"
     last_proof="$new_program_path"
-    stop_reason="X3_NON_REPRO"
+    stop_reason="STOP_THE_LINE_X3_NON_REPRO"
     write_state "stopped" "$stop_reason" "$iter" "p$(printf '%03d' "$old_start")_$(printf '%03d' "$old_end")" "p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")" "$last_verdict" "$last_proof" "$last_commit"
     break
   fi
@@ -206,7 +211,7 @@ EOF
 EOF
     last_verdict="FAIL"
     last_proof="$new_program_path"
-    stop_reason="MANIFEST_COUNT_FAIL"
+    stop_reason="STOP_THE_LINE_MANIFEST_COUNT_FAIL"
     write_state "stopped" "$stop_reason" "$iter" "p$(printf '%03d' "$old_start")_$(printf '%03d' "$old_end")" "p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")" "$last_verdict" "$last_proof" "$last_commit"
     break
   fi
@@ -220,7 +225,7 @@ EOF
 EOF
     last_verdict="FAIL"
     last_proof="$new_program_path"
-    stop_reason="CONTAMINATION_FAIL"
+    stop_reason="STOP_THE_LINE_CONTAMINATION_FAIL"
     write_state "stopped" "$stop_reason" "$iter" "p$(printf '%03d' "$old_start")_$(printf '%03d' "$old_end")" "p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end")" "$last_verdict" "$last_proof" "$last_commit"
     break
   fi
