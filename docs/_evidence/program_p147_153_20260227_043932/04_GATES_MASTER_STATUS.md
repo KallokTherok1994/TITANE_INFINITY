@@ -1,9 +1,9 @@
 # 04_GATES_MASTER_STATUS.md
 
-Statut: READY_TO_RUN
+Statut: PASS_QUALIFIED
 - Gate bootstrap: PASS
-- Gate X3 gouvernée: PENDING (non exécuté)
-- Gate complétude phases: PENDING (phase docs non générées)
+- Gate X3 gouvernée: PASS (RUN1/2/3 EXIT=0)
+- Gate complétude phases: PASS
 
 Preuves:
 - `reports/p147_153_bootstrap_precheck_20260227_043932Z.log`
