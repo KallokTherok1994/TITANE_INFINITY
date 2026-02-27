@@ -225,7 +225,7 @@ EOF
     break
   fi
 
-  git add "$new_program_path" "${phase_paths[@]}" "$precheck_log" "$x3_log" "$manifest"
+  git add -f "$new_program_path" "${phase_paths[@]}" "$precheck_log" "$x3_log" "$manifest"
   git commit -m "chore(evidence): publish p$(printf '%03d' "$new_start")_$(printf '%03d' "$new_end") governed x3" >/dev/null
   git push origin MAIN >/dev/null
 
