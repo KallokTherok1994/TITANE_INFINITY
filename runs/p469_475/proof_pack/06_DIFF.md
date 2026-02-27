@@ -1,13 +1,10 @@
- runs/current/.window_meta                       |     2 +-
- runs/current/00_VERDICT.md                      |    10 +-
- runs/current/01_BASELINE.md                     |    21 +-
- runs/current/02_DISCOVER_SUMMARY.md             |     3 +-
- runs/current/SCANS_ALLOWLIST.md                 | 55038 ++++++++++++++--------
- runs/current/SCANS_NETWORK_UI.md                |   290 +-
- runs/current/WINDOW_TARGET.md                   |    13 +-
- runs/current/triage_secrets/SCAN_TUNING.md      |     4 +-
- runs/current/triage_secrets/classification.json |  1049 +-
- runs/current/triage_secrets/classification.md   |   165 +-
- runs/current/triage_secrets/hits_context.md     |  1715 +-
- runs/current/triage_secrets/hits_raw.txt        |   165 +-
- 12 files changed, 37196 insertions(+), 21279 deletions(-)
+ runs/current/00_VERDICT.md                         |  8 +--
+ .../triage_secrets/CLASSIFICATION_REVIEW.md        | 40 +++++++++++-
+ runs/current/triage_secrets/classification.json    | 76 +++++++++++-----------
+ runs/current/triage_secrets/classification.md      | 76 +++++++++++-----------
+ runs/p469_475/proof_pack/00_VERDICT.md             |  8 +--
+ runs/p469_475/proof_pack/06_DIFF.md                | 13 ----
+ .../proof_pack/TRIAGE/CLASSIFICATION_REVIEW.md     | 40 +++++++++++-
+ .../p469_475/proof_pack/TRIAGE/classification.json | 76 +++++++++++-----------
+ runs/p469_475/proof_pack/TRIAGE/classification.md  | 76 +++++++++++-----------
+ 9 files changed, 236 insertions(+), 177 deletions(-)
