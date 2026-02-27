@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P531
+Statut: PASS_QUALIFIED
+Lot: P525→P531
