@@ -1,0 +1,24 @@
+# 09_MANIFEST_V39.md — MANIFEST V39
+
+## Fichiers du proof pack (V39)
+- `00_VERDICT.md`
+- `01_BASELINE.md`
+- `02_DISCOVER_SUMMARY.md`
+- `03_RUNS_INDEX.md`
+- `04_RUNS_LOGS/RUN_1.txt`
+- `04_RUNS_LOGS/RUN_2.txt`
+- `04_RUNS_LOGS/RUN_3.txt`
+- `05_SCANS_INDEX.md`
+- `05_SCANS_ALLOWLIST.md`
+- `05_SCANS_INDEX_ALLOWLIST.md`
+- `05_SCANS_NETWORK_UI.md`
+- `05_SCANS_INDEX_NETWORK.md`
+- `05_SCANS_SECRETS.md`
+- `05_SCANS_INDEX_SECRETS.md`
+- `06_DIFF.md`
+- `07_ROLLBACK.md`
+- `08_SHA256SUMS.txt`
+- `09_MANIFEST_V39.md`
+- `10_REGISTRY_APPEND.md`
+
+Source canonique des hash: `08_SHA256SUMS.txt`.
