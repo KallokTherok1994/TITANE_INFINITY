@@ -1,15 +1,156 @@
-./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
-./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
-./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
-./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
-./runs/current/SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
-./runs/current/SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
-./runs/current/SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
-./runs/current/SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-./runs/current/SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
-./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
-./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:8:  1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:19:  1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:30:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:32:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:39:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:41:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:43:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:50:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:52:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:63:  1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:74:  1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:85:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:87:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:94:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:96:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:98:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:105:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:107:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:118:   275 | MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:129:   308 | 4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:140:   111 |         'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:151:   179 |         'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_context.md:162:    37 |   logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/classification.md:3:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:4:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880 — `sk-test1234567890ABCDEF`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:5:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:6:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:7:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:8:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:1812 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:9:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:1880 — `sk-test1234567890ABCDEF`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:10:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2158 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:11:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2160 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:12:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2162 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:13:- **FALSE_POSITIVE** — ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:14:- **FALSE_POSITIVE** — ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308 — `sk-test1234567890ABCDEF`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:15:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.test.ts:111 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:16:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.test.ts:179 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.md:17:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.integration.ts:37 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/p462_468/proof_pack/TRIAGE/classification.json:5:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:7:    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:12:    "match": "sk-test1234567890ABCDEF",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:14:    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:19:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:21:    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:26:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:28:    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:33:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:35:    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:40:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:42:    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:47:    "match": "sk-test1234567890ABCDEF",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:49:    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:54:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:56:    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:61:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:63:    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:68:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:70:    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:75:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:77:    "text": "MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:82:    "match": "sk-test1234567890ABCDEF",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:84:    "text": "4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:89:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:91:    "text": "'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:96:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:98:    "text": "'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/p462_468/proof_pack/TRIAGE/classification.json:103:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/p462_468/proof_pack/TRIAGE/classification.json:105:    "text": "logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:1:./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:2:./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:3:./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:4:./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:5:./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:6:./runs/current/SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:7:./runs/current/SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:8:./runs/current/SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:9:./runs/current/SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:10:./runs/current/SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:11:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:12:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:13:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:14:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt:15:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/hits_context.md:8:  1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/current/triage_secrets/hits_context.md:19:  1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/current/triage_secrets/hits_context.md:30:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/current/triage_secrets/hits_context.md:32:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:39:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/current/triage_secrets/hits_context.md:41:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:43:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/hits_context.md:50:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:52:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/hits_context.md:63:  1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/current/triage_secrets/hits_context.md:74:  1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/current/triage_secrets/hits_context.md:85:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/current/triage_secrets/hits_context.md:87:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:94:  2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/current/triage_secrets/hits_context.md:96:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:98:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/hits_context.md:105:  2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:107:  2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/hits_context.md:118:   275 | MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./runs/current/triage_secrets/hits_context.md:129:   308 | 4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)
+./runs/current/triage_secrets/hits_context.md:140:   111 |         'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
+./runs/current/triage_secrets/hits_context.md:151:   179 |         'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
+./runs/current/triage_secrets/hits_context.md:162:    37 |   logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./runs/current/triage_secrets/classification.json:5:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/current/triage_secrets/classification.json:7:    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/current/triage_secrets/classification.json:12:    "match": "sk-test1234567890ABCDEF",
+./runs/current/triage_secrets/classification.json:14:    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/current/triage_secrets/classification.json:19:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:21:    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/current/triage_secrets/classification.json:26:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:28:    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/current/triage_secrets/classification.json:33:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:35:    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/current/triage_secrets/classification.json:40:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/current/triage_secrets/classification.json:42:    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/current/triage_secrets/classification.json:47:    "match": "sk-test1234567890ABCDEF",
+./runs/current/triage_secrets/classification.json:49:    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/current/triage_secrets/classification.json:54:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:56:    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/current/triage_secrets/classification.json:61:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:63:    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/current/triage_secrets/classification.json:68:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:70:    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/current/triage_secrets/classification.json:75:    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+./runs/current/triage_secrets/classification.json:77:    "text": "MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+./runs/current/triage_secrets/classification.json:82:    "match": "sk-test1234567890ABCDEF",
+./runs/current/triage_secrets/classification.json:84:    "text": "4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+./runs/current/triage_secrets/classification.json:89:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:91:    "text": "'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+./runs/current/triage_secrets/classification.json:96:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:98:    "text": "'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+./runs/current/triage_secrets/classification.json:103:    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+./runs/current/triage_secrets/classification.json:105:    "text": "logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+./runs/current/triage_secrets/classification.md:3:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/current/triage_secrets/classification.md:4:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880 — `sk-test1234567890ABCDEF`
+./runs/current/triage_secrets/classification.md:5:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:6:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:7:- **FALSE_POSITIVE** — ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:8:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:1812 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/current/triage_secrets/classification.md:9:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:1880 — `sk-test1234567890ABCDEF`
+./runs/current/triage_secrets/classification.md:10:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2158 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:11:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2160 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:12:- **FALSE_POSITIVE** — ./runs/current/SCANS_SECRETS.md:2162 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:13:- **FALSE_POSITIVE** — ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275 — `sk-xxxxxxxxxxxxxxxxxxxx`
+./runs/current/triage_secrets/classification.md:14:- **FALSE_POSITIVE** — ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308 — `sk-test1234567890ABCDEF`
+./runs/current/triage_secrets/classification.md:15:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.test.ts:111 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:16:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.test.ts:179 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
+./runs/current/triage_secrets/classification.md:17:- **FALSE_POSITIVE** — ./src/lib/__tests__/UILogger.integration.ts:37 — `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`
 ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'
 ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
 ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');
+./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx
+./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)

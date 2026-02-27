@@ -1,9 +1,6 @@
 # WINDOW TARGET
-- NS: 462
-- NE: 468
-- SLUG: p462_468
-- WINDOW: P462→P468
-- UTC_NOW: 2026-02-27T15:33:56Z
-- PACK_ROOT: runs/p462_468
-- PACK_DIR: runs/p462_468/proof_pack
-- TRIAGE_DIR: runs/current/triage_secrets
+- NS: 469
+- NE: 475
+- SLUG: p469_475
+- WINDOW: P469→P475
+- UTC_NOW: 2026-02-27T15:40:49Z
