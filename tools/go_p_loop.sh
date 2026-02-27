@@ -8,7 +8,7 @@ LOOP_DIR="runs/_loop"
 mkdir -p "$LOOP_DIR"
 
 CAP_P="${CAP_P:-}"
-MAX_ITERS="${MAX_ITERS:-1000}"
+MAX_ITERS="${MAX_ITERS:-1}"
 
 if ! git diff --quiet || ! git diff --cached --quiet; then
   echo "STOP: working tree is not clean" >&2
