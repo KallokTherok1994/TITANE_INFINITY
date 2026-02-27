@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P3026
+Statut: PASS_QUALIFIED
+Lot: P3024→P3030
