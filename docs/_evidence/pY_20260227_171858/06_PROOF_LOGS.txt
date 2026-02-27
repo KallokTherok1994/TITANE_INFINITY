@@ -1,0 +1,8 @@
+]633;E;{   echo "\\n=== EXEC_X3_Y_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[Y][RUN_$i] telemetry surfaces"\x3b     test -f src-tauri/src/api/telemetry_api.rs\x3b     rg -n "struct ProductionHealthSummary|provider_timeouts_per_hour|samples_collected" src-tauri/src/api/telemetry_api.rs > /dev/null\x3b     test -f src/utils/telemetryEngine.ts\x3b     rg -n "TelemetryMetric|AnalyticsPattern|TelemetryReport" src/utils/telemetryEngine.ts > /dev/null\x3b     echo "[Y][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_Y_END PASS ==="\x3b } >> "$LOGY";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_Y_START 2026-02-27T17:30:30-05:00 ===
+[Y][RUN_1] telemetry surfaces
+[Y][RUN_1] PASS
+[Y][RUN_2] telemetry surfaces
+[Y][RUN_2] PASS
+[Y][RUN_3] telemetry surfaces
+[Y][RUN_3] PASS
+=== EXEC_X3_Y_END PASS ===

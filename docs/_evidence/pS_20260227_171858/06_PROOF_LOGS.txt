@@ -1,0 +1,8 @@
+]633;E;{   echo "\\n=== EXEC_X3_S_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[S][RUN_$i] provider registry + meta + dispatch"\x3b     test -f src-tauri/src/api_hub/provider_registry.rs\x3b     rg -n "enum ProviderCapability|struct ProviderProfile|TextGeneration|LongContext" src-tauri/src/api_hub/provider_registry.rs > /dev/null\x3b     test -f src-tauri/src/chat_engine/providers.rs\x3b     rg -n "ProviderPreference::Auto|ProviderPreference::Local|health_check" src-tauri/src/chat_engine/providers.rs > /dev/null\x3b     test -f src/types/providerMeta.ts\x3b     rg -n "POLICY_LOCAL_ONLY|ALLOWLIST_DENIED|FALLBACK_OFFLINE|PROVIDER_UNAVAILABLE" src/types/providerMeta.ts > /dev/null\x3b     echo "[S][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_S_END PASS ==="\x3b } >> "$LOGS";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_S_START 2026-02-27T17:30:30-05:00 ===
+[S][RUN_1] provider registry + meta + dispatch
+[S][RUN_1] PASS
+[S][RUN_2] provider registry + meta + dispatch
+[S][RUN_2] PASS
+[S][RUN_3] provider registry + meta + dispatch
+[S][RUN_3] PASS
+=== EXEC_X3_S_END PASS ===
