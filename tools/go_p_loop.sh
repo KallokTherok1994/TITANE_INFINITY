@@ -26,7 +26,7 @@ latest_program_dir() {
 
 extract_window() {
   local d="$1"
-  echo "$d" | sed -E 's/^program_p([0-9]{3})_([0-9]{3})_([0-9]{8}_[0-9]{6})$/\1 \2 \3/'
+  echo "$d" | sed -E 's/^program_p([0-9]{3,})_([0-9]{3,})_([0-9]{8}_[0-9]{6})$/\1 \2 \3/'
 }
 
 write_state() {
@@ -79,6 +79,10 @@ while (( iter < MAX_ITERS )); do
   fi
 
   read -r old_start old_end old_ts < <(extract_window "$src_dir")
+  if [[ -z "${old_start:-}" || -z "${old_end:-}" || -z "${old_ts:-}" ]]; then
+    stop_reason="STOP_THE_LINE_PARSE_WINDOW"
+    break
+  fi
   new_start=$((10#$old_end + 1))
   new_end=$((new_start + 6))
 
