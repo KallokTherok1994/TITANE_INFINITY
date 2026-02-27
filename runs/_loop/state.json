@@ -1,12 +1,12 @@
 {
-  "status": "running",
-  "reason": "ITERATION_PASS",
-  "iteration": 4,
-  "current_window": "p2478_2484",
-  "next_window": "p2485_2491",
+  "status": "done",
+  "reason": "MAX_ITERS_REACHED",
+  "iteration": 10,
+  "current_window": "",
+  "next_window": "",
   "last_verdict": "PASS",
-  "last_proof_pack": "docs/_evidence/program_p2485_2491_20260227_184537",
-  "head": "142d0782d",
-  "last_commit": "142d0782d",
+  "last_proof_pack": "docs/_evidence/program_p2562_2568_20260227_184945",
+  "head": "ab9d65568",
+  "last_commit": "ab9d65568",
   "tags_at_head": ""
 }
