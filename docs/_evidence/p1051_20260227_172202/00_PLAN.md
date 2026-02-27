@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P1051
+Statut: PASS_QUALIFIED
+Lot: P1050→P1056
