@@ -149,3 +149,4 @@ Release transaction initiated after stopline rebuild proof and explicit clear. B
 
 - Delete local tag only if release aborted before push: `git tag -d v27.0.6-hotfix.2`
 - Restore registry working tree change: `git restore CERTIFICATION_REGISTRY_APPEND_ONLY.md`
+- 2026-02-27T15:36:56Z | P462→P468 | PASS x3 + autoheal | proof: runs/p462_468/proof_pack
