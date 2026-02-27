@@ -1,5 +1,6 @@
-# LAST EVIDENCE POINTER (post-run)
-- computed_at_utc: 2026-02-27T19:28:39Z
-- from_slug_used: p3136_3142
-- latest_evidence_dir: program_p3206_3212_20260227_192758
+# LAST EVIDENCE POINTER (post-batch)
+- computed_at_utc: 2026-02-27T19:46:54Z
+- from_slug_used: p3206_3212
+- latest_evidence_dir: program_p3276_3282_20260227_194651
 - source: docs/_evidence/program_p*
+- cap_stop_at_p_end: 3912
