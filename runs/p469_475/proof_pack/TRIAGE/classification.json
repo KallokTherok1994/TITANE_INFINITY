@@ -1,0 +1,1094 @@
+[
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 8,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 19,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 30,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 32,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 39,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 41,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 43,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 50,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 52,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 63,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 74,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 85,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 87,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 94,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 96,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 98,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 105,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 107,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 118,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "275 | MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 129,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "308 | 4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 140,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "111 |         'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 151,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "179 |         'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_context.md",
+    "line": 162,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "37 |   logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 3,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 4,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 5,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 6,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 7,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 8,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:1812 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 9,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:1880 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 10,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2158 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 11,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2160 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 12,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2162 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 13,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 14,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 15,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.test.ts:111 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 16,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.test.ts:179 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.md",
+    "line": 17,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.integration.ts:37 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 5,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 7,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 12,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 14,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 19,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 21,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 26,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 28,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 33,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 35,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 40,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 42,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 47,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 49,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 54,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 56,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 61,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 63,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 68,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 70,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 75,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 77,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 82,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 84,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 89,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 91,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"text\": \"'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 96,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 98,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 103,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/classification.json",
+    "line": 105,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"text\": \"logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 1,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 2,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 3,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 4,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 5,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 6,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/current/SCANS_SECRETS.md:1812:./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 7,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/current/SCANS_SECRETS.md:1880:./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 8,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/current/SCANS_SECRETS.md:2158:./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 9,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/current/SCANS_SECRETS.md:2160:./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 10,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./runs/current/SCANS_SECRETS.md:2162:./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 11,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 12,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 13,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 14,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/TRIAGE/hits_raw.txt",
+    "line": 15,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 8,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 19,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 30,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 32,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 39,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 41,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 43,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 50,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 52,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 63,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "1812 | ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 74,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "1880 | ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 85,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 87,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 94,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2158 | ./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 96,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 98,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 105,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2160 | ./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 107,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "2162 | ./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 118,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "275 | MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 129,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "308 | 4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 140,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "111 |         'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 151,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "179 |         'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/triage_secrets/hits_context.md",
+    "line": 162,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "37 |   logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 5,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 7,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 12,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 14,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 19,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 21,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 26,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 28,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 33,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 35,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 40,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 42,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 47,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 49,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 54,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 56,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 61,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 63,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 68,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 70,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 75,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-xxxxxxxxxxxxxxxxxxxx\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 77,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 82,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"match\": \"sk-test1234567890ABCDEF\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 84,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 89,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 91,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"text\": \"'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 96,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 98,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "\"text\": \"'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 103,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"match\": \"sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234\","
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.json",
+    "line": 105,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "\"text\": \"logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');\""
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 3,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1812 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 4,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:1880 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 5,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2158 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 6,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2160 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 7,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/p462_468/proof_pack/05_SCANS_SECRETS.md:2162 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 8,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:1812 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 9,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:1880 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 10,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2158 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 11,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2160 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 12,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "NEEDS_REVIEW",
+    "text": "- **FALSE_POSITIVE** \u2014 ./runs/current/SCANS_SECRETS.md:2162 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 13,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275 \u2014 `sk-xxxxxxxxxxxxxxxxxxxx`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 14,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308 \u2014 `sk-test1234567890ABCDEF`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 15,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.test.ts:111 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 16,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.test.ts:179 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./runs/current/triage_secrets/classification.md",
+    "line": 17,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "- **FALSE_POSITIVE** \u2014 ./src/lib/__tests__/UILogger.integration.ts:37 \u2014 `sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234`"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.test.ts",
+    "line": 111,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.test.ts",
+    "line": 179,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.integration.ts",
+    "line": 37,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md",
+    "line": 275,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md",
+    "line": 308,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  }
+]
