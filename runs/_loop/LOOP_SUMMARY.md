@@ -2,8 +2,8 @@
 
 - iterations: 10
 - stop_reason: MAX_ITERS_REACHED
-- head: fca239836
-- last_commit: fca239836
+- head: f28d22c4c
+- last_commit: f28d22c4c
 - last_verdict: PASS
-- last_proof_pack: docs/_evidence/program_p2331_2337_20260227_183727
+- last_proof_pack: docs/_evidence/program_p2401_2407_20260227_183754
 - tags_at_head: 
