@@ -1,14 +1,14 @@
 # CAMPAIGN FINAL REPORT
 - verdict: DONE
 - batches_executed: 1
-- stop_reason: DONE_MAX_WINDOWS
-- last_window: p3864_3870
-- last_commit: 90dab3c37
-- last_proof_pack: docs/_evidence/program_p3864_3870_20260227_195456
+- stop_reason: DONE_CAP_REACHED
+- last_window: p3899_3905
+- last_commit: 42719862a
+- last_proof_pack: docs/_evidence/program_p3899_3905_20260227_195512
 - autoheal: none
-- windows_done_total: 10
-- from_window: p3794_3800
+- windows_done_total: 5
+- from_window: p3864_3870
 - max_windows: 10
 - resume_mode: 1
-- head_final: 5e0d734d1
+- head_final: 49601faf6
 - tree_clean: no
