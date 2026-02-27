@@ -1,5 +1,5 @@
-# LAST EVIDENCE POINTER (post-run)
-- computed_at_utc: 2026-02-27T19:12:51Z
-- from_slug_used: p2653_2659
-- latest_evidence_dir: program_p2723_2729_20260227_191247
+# LAST EVIDENCE POINTER (pre-run)
+- computed_at_utc: 2026-02-27T19:19:40Z
+- from_slug: p2737_2743
+- latest_evidence_dir_pre: program_p2737_2743_20260227_191820
 - source: docs/_evidence/program_p*
