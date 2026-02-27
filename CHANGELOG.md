@@ -15,6 +15,45 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/lang/fr/).
 
 ---
 
+<a id="v27-5-1-rz-seal"></a>
+
+## [27.5.1] - 2026-02-27 - Evidence Sealing R→Z (x3) 📚
+
+### 🎯 EVENT: PROGRAM_MAX_RZ_SEALED
+
+**Type:** Documentation Governance Update (Patch Release)  
+**Scope:** Dossiers de preuve `docs/_evidence/program_max_rz_20260227_171858/` et `docs/_evidence/pR_20260227_171858/` → `pX_20260227_171858/`  
+**Runtime Impact:** Aucun (docs-only)  
+**Risk Level:** 🟢 MINIMAL  
+**Validation:** Gates d’entrée gouvernés PASS x3 + exécution séquentielle R→X scellée en x3
+
+#### ✅ Sealed - Programme MAX R→Z
+
+- **Séquence exécutée:** `R → S → Y → T → V → U → W → Z → X`
+- **Résultat phase:**
+  - `R`: `PASS_X3`
+  - `S`: `PASS_X3`
+  - `Y`: `PASS_X3`
+  - `T`: `PASS_X3`
+  - `V`: `PASS_X3`
+  - `U`: `PASS_X3_WITH_RESERVE`
+  - `W`: `PASS_X3`
+  - `Z`: `PASS_X3`
+  - `X`: `PASS_X3`
+- **Verdict programme:** `PASS_QUALIFIED_WITH_RESERVE`
+
+#### 🧩 Reserve - Phase U
+
+- Réserve explicite maintenue: compléter un gate exécutable dédié pour la chaîne updater/signature/rollback bout-en-bout.
+
+#### 📎 Evidence
+
+- Master verdict: `docs/_evidence/program_max_rz_20260227_171858/09_FINAL_VERDICT.md`
+- Master runs x3: `docs/_evidence/program_max_rz_20260227_171858/05_TEST_RUNS_X3_MASTER.md`
+- Phase logs: `docs/_evidence/pR_20260227_171858/06_PROOF_LOGS.txt` … `docs/_evidence/pX_20260227_171858/06_PROOF_LOGS.txt`
+
+---
+
 <a id="v27-2-0-typescript-strict"></a>
 
 ## [27.2.0] - 2026-02-23 - TypeScript Strict Mode (0 Errors) ✨
