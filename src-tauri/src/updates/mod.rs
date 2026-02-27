@@ -8,6 +8,7 @@
 
 pub mod manifest;
 pub mod migration;
+pub mod release_policy;
 pub mod update_engine;
 
 pub use manifest::{FileEntry, UpdateManifest};
