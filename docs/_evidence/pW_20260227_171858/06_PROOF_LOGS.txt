@@ -1,0 +1,8 @@
+]633;E;{   echo "\\n=== EXEC_X3_W_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[W][RUN_$i] safety lab components"\x3b     test -f src-tauri/src/conversation_os/safety.rs\x3b     rg -n "enum SafetyLevel|struct SafetyCheck|RiskCategory|suggestions" src-tauri/src/conversation_os/safety.rs > /dev/null\x3b     test -f src-tauri/src/api_hub/safety_bridge.rs\x3b     rg -n "enum RiskLevel|struct SafetyValidation|SafetyIssue|SafetyCategory" src-tauri/src/api_hub/safety_bridge.rs > /dev/null\x3b     test -f src/__tests__/stub-engines-safety.test.ts\x3b     rg -n "Safe Defaults|predictiveReflectionEngine|confidence" src/__tests__/stub-engines-safety.test.ts > /dev/null\x3b     echo "[W][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_W_END PASS ==="\x3b } >> "$LOGW";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_W_START 2026-02-27T17:31:01-05:00 ===
+[W][RUN_1] safety lab components
+[W][RUN_1] PASS
+[W][RUN_2] safety lab components
+[W][RUN_2] PASS
+[W][RUN_3] safety lab components
+[W][RUN_3] PASS
+=== EXEC_X3_W_END PASS ===
