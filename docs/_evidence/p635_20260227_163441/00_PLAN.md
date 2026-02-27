@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P635
+Statut: PASS_QUALIFIED
+Lot: P630→P636
