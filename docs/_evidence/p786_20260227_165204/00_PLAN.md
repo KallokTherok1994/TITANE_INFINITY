@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P786
+Statut: PASS_QUALIFIED
+Lot: P784→P790

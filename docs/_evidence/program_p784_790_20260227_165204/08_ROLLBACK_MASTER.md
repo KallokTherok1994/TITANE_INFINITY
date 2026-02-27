@@ -1,0 +1,5 @@
+# 08_ROLLBACK_MASTER.md
+
+Statut: READY
+- `git restore -- docs/_evidence/program_p784_790_20260227_165204 docs/_evidence/p784_20260227_165204 docs/_evidence/p785_20260227_165204 docs/_evidence/p786_20260227_165204 docs/_evidence/p787_20260227_165204 docs/_evidence/p788_20260227_165204 docs/_evidence/p789_20260227_165204 docs/_evidence/p790_20260227_165204 reports/p784_790_bootstrap_precheck_20260227_165204Z.log reports/p784_790_execution_x3_20260227_165204Z.log reports/proof_pack_hash_manifest_program_p784_790_20260227_165204.txt`
+
