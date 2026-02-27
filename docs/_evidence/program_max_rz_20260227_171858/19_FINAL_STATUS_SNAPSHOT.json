@@ -1,0 +1,33 @@
+{
+  "timestamp_utc": "2026-02-27T23:05:00Z",
+  "program": "MAX_R_TO_Z",
+  "status": "SEALED_AND_PUBLISHED",
+  "verdict": "PASS_QUALIFIED_WITH_RESERVE",
+  "release": {
+    "tag": "v27.5.1-docs-rz-seal",
+    "url": "https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.5.1-docs-rz-seal",
+    "published": true,
+    "draft": false,
+    "prerelease": false
+  },
+  "phase_results": {
+    "R": "PASS_X3",
+    "S": "PASS_X3",
+    "Y": "PASS_X3",
+    "T": "PASS_X3",
+    "V": "PASS_X3",
+    "U": "PASS_X3_WITH_RESERVE",
+    "W": "PASS_X3",
+    "Z": "PASS_X3",
+    "X": "PASS_X3"
+  },
+  "reserve": {
+    "phase": "U",
+    "reason": "Dedicated executable updater/signature/rollback gate pending"
+  },
+  "evidence": {
+    "master_verdict": "docs/_evidence/program_max_rz_20260227_171858/09_FINAL_VERDICT.md",
+    "release_proof": "docs/_evidence/program_max_rz_20260227_171858/16_RELEASE_PUBLISHED.md",
+    "handoff": "docs/_evidence/program_max_rz_20260227_171858/18_FINAL_HANDOFF.md"
+  }
+}
