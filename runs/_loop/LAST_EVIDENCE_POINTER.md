@@ -1,4 +1,4 @@
 # LAST EVIDENCE POINTER
-- evidence_dir: program_p2562_2568_20260227_184945
-- last_window: P2562→P2568
-- from_slug: p2562_2568
+- evidence_dir: program_p2653_2659_20260227_190740
+- last_window: P2653→P2659
+- from_slug: p2653_2659
