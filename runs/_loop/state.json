@@ -1,12 +1,12 @@
 {
   "status": "done",
-  "reason": "MAX_ITERS_REACHED",
-  "iteration": 10,
+  "reason": "DONE_CAP_REACHED",
+  "iteration": 5,
   "current_window": "",
   "next_window": "",
   "last_verdict": "PASS",
-  "last_proof_pack": "docs/_evidence/program_p3864_3870_20260227_195456",
-  "head": "90dab3c37",
-  "last_commit": "90dab3c37",
+  "last_proof_pack": "docs/_evidence/program_p3899_3905_20260227_195512",
+  "head": "42719862a",
+  "last_commit": "42719862a",
   "tags_at_head": ""
 }
