@@ -1,0 +1,107 @@
+[
+  {
+    "file": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md",
+    "line": 1812,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md",
+    "line": 1880,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md",
+    "line": 2158,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md",
+    "line": 2160,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/p462_468/proof_pack/05_SCANS_SECRETS.md",
+    "line": 2162,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./runs/current/SCANS_SECRETS.md",
+    "line": 1812,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md:275:MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./runs/current/SCANS_SECRETS.md",
+    "line": 1880,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md:308:4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./runs/current/SCANS_SECRETS.md",
+    "line": 2158,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:111:        'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./runs/current/SCANS_SECRETS.md",
+    "line": 2160,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.test.ts:179:        'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./runs/current/SCANS_SECRETS.md",
+    "line": 2162,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "./src/lib/__tests__/UILogger.integration.ts:37:  logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  },
+  {
+    "file": "./docs/maintenance/PROVIDER_ADDITION_WORKFLOW.md",
+    "line": 275,
+    "match": "sk-xxxxxxxxxxxxxxxxxxxx",
+    "class": "FALSE_POSITIVE",
+    "text": "MISTRAL_API_KEY=sk-xxxxxxxxxxxxxxxxxxxx"
+  },
+  {
+    "file": "./docs/99_ARCHIVE/complete-reports/API_CHAT_FIXES_COMPLETE_v21.md",
+    "line": 308,
+    "match": "sk-test1234567890ABCDEF",
+    "class": "FALSE_POSITIVE",
+    "text": "4. Enter test OpenAI key: `sk-test1234567890ABCDEF` (16+ chars)"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.test.ts",
+    "line": 111,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "'API call with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234'"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.test.ts",
+    "line": 179,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "'User user@example.com with key sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234 and token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9'"
+  },
+  {
+    "file": "./src/lib/__tests__/UILogger.integration.ts",
+    "line": 37,
+    "match": "sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234",
+    "class": "FALSE_POSITIVE",
+    "text": "logInfo('API key: sk-abc123xyz789def456ghi012jkl345mno678pqr901stu234');"
+  }
+]

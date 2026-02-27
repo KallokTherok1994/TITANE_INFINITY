@@ -1,5 +1,9 @@
 # WINDOW TARGET
-- Last detected program window: P455→P461
-- Next target window (auto): P462→P468
-- Slug: p462_468
-- UTC decided at runtime
+- NS: 462
+- NE: 468
+- SLUG: p462_468
+- WINDOW: P462→P468
+- UTC_NOW: 2026-02-27T15:33:56Z
+- PACK_ROOT: runs/p462_468
+- PACK_DIR: runs/p462_468/proof_pack
+- TRIAGE_DIR: runs/current/triage_secrets
