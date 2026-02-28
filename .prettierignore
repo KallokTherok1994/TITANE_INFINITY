@@ -19,6 +19,7 @@ target
 .husky
 .vscode
 deployment
+proof_packs
 docs/_evidence
 runs/**
 .idea
