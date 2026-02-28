@@ -260,6 +260,34 @@ Once manual steps are completed:
 
 ---
 
+## 📌 ADDENDUM — 2026-02-27 (UTC)
+
+### Delta de clôture (append-only)
+
+- Branch active: `MAIN`
+- HEAD: `40366da84`
+- Remote: `origin/MAIN` aligné sur `40366da84`
+- Commit publié: `fix(gates): harden f2/g6 reproducibility and seal final evidence`
+
+### Vérification F2 x3 (session de scellement)
+
+- Summary consolidé: `docs/_evidence/program_final_seal_f1f8_20260227_180218/f2_gates/summary_latest.txt`
+- Résultat: `OVERALL_FAIL_COUNT=0`
+- Runs: `run1=PASS`, `run2=PASS`, `run3=PASS`
+
+### Pack de preuve final (scellé)
+
+- `docs/_evidence/rc_final_seal_20260228T042343Z/VERDICT.md`
+- `FINAL_VERDICT=PASS`
+- `OVERALL_FAIL_COUNT=0`
+
+### État de travail local
+
+- Untracked hors commit: `deployment/latest/builds/`
+- Aucune divergence HEAD/origin détectée
+
+---
+
 **Document:** FINAL_ACTIONS_EXECUTION_REPORT.md  
 **Type:** Execution Status Report  
 **Date:** 2026-02-08 14:55 UTC  
