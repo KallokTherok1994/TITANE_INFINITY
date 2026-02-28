@@ -1,0 +1,5 @@
+2026-02-27T21:15:33Z | PASS | pnpm run verify:lab-runner-v2 | score=100 failed=0 file=reports/chaos-lab/scorecard-v2.json
+2026-02-27T21:15:33Z | PASS | pnpm run verify:scorecard-ci-gate-v2 | scorecard CI gate satisfied
+2026-02-27T21:15:33Z | PASS | pnpm run verify:autopr-v2 | AutoPR v2 policy ok on branch MAIN
+2026-02-27T21:34:00Z | PASS | pnpm run verify | lint+format+check+tests+gates global PASS
+

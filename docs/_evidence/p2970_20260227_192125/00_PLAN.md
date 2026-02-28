@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P2970
+Statut: PASS_QUALIFIED
+Lot: P2968→P2974

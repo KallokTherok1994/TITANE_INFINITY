@@ -196,10 +196,7 @@ export function BootErrorFallback({
                 window as unknown as { __TITANE_BOOT_DIAGNOSTICS__?: unknown }
               ).__TITANE_BOOT_DIAGNOSTICS__,
             });
-            window.open(
-              'https://github.com/KallokTherok1994/TITANE_INFINITY/issues',
-              '_blank'
-            );
+            alert('Ouverture web externe bloquée par gouvernance Tauri-only.');
           }}
           style={{
             background: 'linear-gradient(45deg, #6c757d, #868e96)',

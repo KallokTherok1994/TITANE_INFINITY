@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P2205
+Statut: PASS_QUALIFIED
+Lot: P2205→P2211

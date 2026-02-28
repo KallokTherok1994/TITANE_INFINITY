@@ -9,14 +9,110 @@ CAMPAIGN_MAX_BATCHES="${CAMPAIGN_MAX_BATCHES:-50}"
 AUTOHEAL_ENABLED="${AUTOHEAL_ENABLED:-1}"
 AUTOHEAL_MAX_ATTEMPTS_PER_WINDOW="${AUTOHEAL_MAX_ATTEMPTS_PER_WINDOW:-2}"
 STOP_AT_P_END="${STOP_AT_P_END:-}"
+RESUME_MODE=1
+FROM_WINDOW=""
+MAX_WINDOWS=""
+DRY_RUN=0
 
 LOOP_DIR="runs/_loop"
 AUTOHEAL_ROOT="$LOOP_DIR/autoheal"
 mkdir -p "$LOOP_DIR" "$AUTOHEAL_ROOT"
 
+CURRENT_STEP="init"
+LAST_WINDOW=""
+CHECKPOINT_FILE="$LOOP_DIR/checkpoint.json"
+INTERRUPT_LOG="$LOOP_DIR/interrupt.log"
+RUNTIME_DIR="${TMPDIR:-/tmp}/titane_go_p_campaign"
+mkdir -p "$RUNTIME_DIR"
+CHECKPOINT_FILE="$RUNTIME_DIR/checkpoint_${USER:-user}.json"
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --resume)
+      RESUME_MODE=1
+      shift
+      ;;
+    --from)
+      FROM_WINDOW="${2:-}"
+      shift 2
+      ;;
+    --max-windows)
+      MAX_WINDOWS="${2:-}"
+      shift 2
+      ;;
+    --dry-run)
+      DRY_RUN=1
+      shift
+      ;;
+    *)
+      echo "Unknown argument: $1" >&2
+      exit 64
+      ;;
+  esac
+done
+
+atomic_write() {
+  local target="$1"
+  local tmp
+  tmp="${target}.tmp.$$"
+  cat > "$tmp"
+  mv "$tmp" "$target"
+}
+
+checkpoint_write() {
+  local step="$1"
+  local window="$2"
+  CURRENT_STEP="$step"
+  LAST_WINDOW="$window"
+  atomic_write "$CHECKPOINT_FILE" <<EOF
+{
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "pid": $$,
+  "step": "$CURRENT_STEP",
+  "last_window": "$LAST_WINDOW",
+  "head": "$(git rev-parse --short HEAD)"
+}
+EOF
+}
+
+handle_interrupt() {
+  local sig="$1"
+  {
+    echo "ts=$(date -u +%Y-%m-%dT%H:%M:%SZ) sig=$sig pid=$$ step=$CURRENT_STEP window=$LAST_WINDOW caller=${FUNCNAME[1]:-main}"
+  } >> "$INTERRUPT_LOG"
+  checkpoint_write "interrupted_${sig}" "$LAST_WINDOW"
+  exit 130
+}
+
+trap 'handle_interrupt SIGINT' INT
+trap 'handle_interrupt SIGTERM' TERM
+
+latest_program_dir() {
+  find docs/_evidence -maxdepth 1 -type d -name 'program_p*' | sed 's#^.*/##' | sort -V | tail -n1
+}
+
+next_window_from_latest() {
+  local latest
+  latest="$(latest_program_dir)"
+  python3 - "$latest" <<'PY'
+import re,sys
+latest=sys.argv[1]
+m=re.match(r'^program_p([0-9]+)_([0-9]+)_([0-9_]+)$',latest)
+if not m:
+    print('')
+    raise SystemExit(0)
+ns=int(m.group(2))+1
+ne=ns+6
+print(f"p{ns}_{ne}")
+PY
+}
+
 if ! git diff --quiet || ! git diff --cached --quiet; then
-  echo "STOP: dirty tree at campaign start" >&2
-  exit 2
+  changed="$(git status --porcelain | awk '{print $2}')"
+  if [[ -n "$changed" ]] && echo "$changed" | rg -vq '^runs/_loop/'; then
+    echo "STOP: dirty tree at campaign start" >&2
+    exit 2
+  fi
 fi
 
 now_utc() {
@@ -24,7 +120,7 @@ now_utc() {
 }
 
 latest_iter_slug_from_state() {
-  python - <<'PY'
+  python3 - <<'PY'
 import json, pathlib
 p=pathlib.Path('runs/_loop/state.json')
 if not p.exists():
@@ -112,6 +208,22 @@ seal_loop_artifacts() {
   fi
 }
 
+recover_pending_loop_artifacts() {
+  if git diff --quiet && git diff --cached --quiet; then
+    return 0
+  fi
+  local changed
+  changed="$(git status --porcelain | awk '{print $2}')"
+  if [[ -z "$changed" ]]; then
+    return 0
+  fi
+  if echo "$changed" | rg -vq '^runs/_loop/'; then
+    echo "STOP: dirty tree contains non runs/_loop files" >&2
+    return 1
+  fi
+  seal_loop_artifacts "batch" "resume-recovery"
+}
+
 make_autoheal_dirs() {
   local slug="$1"
   local ts="$2"
@@ -148,7 +260,7 @@ apply_fix_contamination() {
 
   while IFS= read -r f; do
     [[ -z "$f" ]] && continue
-    python - "$f" <<'PY'
+    python3 - "$f" <<'PY'
 import re,sys,pathlib
 p=pathlib.Path(sys.argv[1])
 try:
@@ -181,7 +293,7 @@ apply_fix_window_target() {
   if [[ -z "$latest" ]]; then
     return 1
   fi
-  python - "$latest" <<'PY'
+  python3 - "$latest" <<'PY'
 import re,sys,pathlib
 latest=sys.argv[1]
 m=re.match(r'^program_p([0-9]+)_([0-9]+)_([0-9_]+)$',latest)
@@ -373,24 +485,77 @@ autoheal_window() {
 campaign_verdict="SAFETY_CAP_REACHED"
 campaign_stop_reason="CAMPAIGN_MAX_BATCHES_REACHED"
 batches_executed=0
+windows_done_total=0
 last_window=""
 last_commit="$(git rev-parse --short HEAD)"
 last_proof=""
 autoheal_summary="none"
 
+checkpoint_write "campaign_start" ""
+
+if (( DRY_RUN == 1 )); then
+  checkpoint_write "dry_run" ""
+  next_candidate="$(next_window_from_latest)"
+  atomic_write "$LOOP_DIR/dry_run_plan.md" <<EOF
+# DRY RUN PLAN
+
+- timestamp: $(now_utc)
+- head: $(git rev-parse --short HEAD)
+- next_candidate: ${next_candidate}
+- from_window: ${FROM_WINDOW}
+- batch_iters: ${BATCH_ITERS}
+- max_windows: ${MAX_WINDOWS}
+- resume: ${RESUME_MODE}
+EOF
+  echo "CAMPAIGN_DONE verdict=PASS_DRY_RUN batches=0 stop_reason=DRY_RUN head=$(git rev-parse --short HEAD)"
+  exit 0
+fi
+
 for ((batch=1; batch<=CAMPAIGN_MAX_BATCHES; batch++)); do
-  if ! git diff --quiet || ! git diff --cached --quiet; then
+  checkpoint_write "batch_${batch}_start" "$LAST_WINDOW"
+
+  if ! recover_pending_loop_artifacts; then
     campaign_verdict="STOP-THE-LINE"
     campaign_stop_reason="DIRTY_TREE_AT_BATCH_START"
     break
   fi
 
+  if [[ -n "$MAX_WINDOWS" ]]; then
+    if (( windows_done_total >= MAX_WINDOWS )); then
+      campaign_verdict="DONE"
+      campaign_stop_reason="DONE_MAX_WINDOWS"
+      break
+    fi
+  fi
+
   batches_executed=$batch
 
+  before_iters="$(find "$LOOP_DIR" -maxdepth 1 -type f -name 'ITER_p*.md' | wc -l | tr -d ' ')"
+
+  run_iters="$BATCH_ITERS"
+  if [[ -n "$MAX_WINDOWS" ]]; then
+    remaining=$((MAX_WINDOWS - windows_done_total))
+    if (( remaining < run_iters )); then
+      run_iters=$remaining
+    fi
+  fi
+  if (( run_iters <= 0 )); then
+    campaign_verdict="DONE"
+    campaign_stop_reason="DONE_MAX_WINDOWS"
+    break
+  fi
+
+  checkpoint_write "batch_${batch}_run" "$LAST_WINDOW"
+
   if [[ -n "$STOP_AT_P_END" ]]; then
-    STOP_AT_P_END="$STOP_AT_P_END" MAX_ITERS="$BATCH_ITERS" bash tools/go_p_loop.sh
+    STOP_AT_P_END="$STOP_AT_P_END" MAX_ITERS="$run_iters" bash tools/go_p_loop.sh
   else
-    MAX_ITERS="$BATCH_ITERS" bash tools/go_p_loop.sh
+    MAX_ITERS="$run_iters" bash tools/go_p_loop.sh
+  fi
+
+  after_iters="$(find "$LOOP_DIR" -maxdepth 1 -type f -name 'ITER_p*.md' | wc -l | tr -d ' ')"
+  if (( after_iters >= before_iters )); then
+    windows_done_total=$((windows_done_total + after_iters - before_iters))
   fi
 
   local_reason="$(read_stop_reason)"
@@ -399,7 +564,17 @@ for ((batch=1; batch<=CAMPAIGN_MAX_BATCHES; batch++)); do
   if [[ -z "$last_window" ]]; then
     last_window="$(latest_iter_slug)"
   fi
+  checkpoint_write "batch_${batch}_after_run" "$last_window"
   last_commit="$(git rev-parse --short HEAD)"
+
+  if [[ -n "$FROM_WINDOW" ]]; then
+    from_end="$(echo "$FROM_WINDOW" | sed -E 's/^p[0-9]+_([0-9]+)$/\1/')"
+    cur_end="$(echo "$last_window" | sed -E 's/^p[0-9]+_([0-9]+)$/\1/')"
+    if [[ -n "$from_end" && -n "$cur_end" ]] && (( cur_end < from_end )); then
+      checkpoint_write "batch_${batch}_skip_before_from" "$last_window"
+      continue
+    fi
+  fi
 
   if is_stop_the_line "$local_reason"; then
     if [[ "$AUTOHEAL_ENABLED" == "1" ]]; then
@@ -419,6 +594,7 @@ for ((batch=1; batch<=CAMPAIGN_MAX_BATCHES; batch++)); do
   fi
 
   seal_loop_artifacts "batch" ""
+  checkpoint_write "batch_${batch}_sealed" "$last_window"
 
   if [[ "$local_reason" == "DONE_CAP_REACHED" ]]; then
     campaign_verdict="DONE"
@@ -441,6 +617,10 @@ done
   echo "- last_commit: $last_commit"
   echo "- last_proof_pack: $last_proof"
   echo "- autoheal: $autoheal_summary"
+  echo "- windows_done_total: $windows_done_total"
+  echo "- from_window: $FROM_WINDOW"
+  echo "- max_windows: $MAX_WINDOWS"
+  echo "- resume_mode: $RESUME_MODE"
   echo "- head_final: $(git rev-parse --short HEAD)"
   echo "- tree_clean: $(if git diff --quiet && git diff --cached --quiet; then echo yes; else echo no; fi)"
 } > "$LOOP_DIR/CAMPAIGN_FINAL_REPORT.md"

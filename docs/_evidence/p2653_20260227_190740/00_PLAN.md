@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P2653
+Statut: PASS_QUALIFIED
+Lot: P2653→P2659

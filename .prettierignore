@@ -20,6 +20,7 @@ target
 .vscode
 deployment
 docs/_evidence
+runs/**
 .idea
 
 # Archives historiques (do not format)

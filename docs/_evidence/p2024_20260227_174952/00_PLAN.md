@@ -1,0 +1,5 @@
+# 00_PLAN.md
+
+Phase: P2024
+Statut: PASS_QUALIFIED
+Lot: P2023→P2029
