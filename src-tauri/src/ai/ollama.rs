@@ -25,11 +25,25 @@ const OLLAMA_STATUS_CACHE_TTL_SECS: u64 = 10;
 static OLLAMA_STATUS_CACHE: Mutex<Option<(OllamaStatus, Instant)>> = Mutex::new(None);
 
 fn ollama_base_url() -> String {
-    std::env::var("OLLAMA_BASE_URL")
+    let raw = std::env::var("OLLAMA_BASE_URL")
         .ok()
         .filter(|s| !s.is_empty())
         .or_else(|| std::env::var("OLLAMA_URL").ok().filter(|s| !s.is_empty()))
-        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string())
+        .unwrap_or_else(|| DEFAULT_OLLAMA_BASE_URL.to_string());
+
+    let mut normalized = raw.trim().trim_end_matches('/').to_string();
+    if normalized.ends_with("/v1") {
+        normalized = normalized.trim_end_matches("/v1").to_string();
+    }
+    if normalized.ends_with("/api") {
+        normalized = normalized.trim_end_matches("/api").to_string();
+    }
+
+    if normalized.is_empty() {
+        DEFAULT_OLLAMA_BASE_URL.to_string()
+    } else {
+        normalized
+    }
 }
 
 fn ollama_default_model() -> String {

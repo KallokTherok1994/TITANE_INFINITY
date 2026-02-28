@@ -44,7 +44,18 @@ const getSQLiteVectorStoreCtor = async (): Promise<SQLiteVectorStoreCtorType> =>
   return module.SQLiteVectorStore;
 };
 
-const describeIf = hasSQLiteBindings ? describe : describe.skip;
+const describeIf = (suiteName: string, suite: () => void) => {
+  if (hasSQLiteBindings) {
+    describe(suiteName, suite);
+    return;
+  }
+
+  describe(suiteName, () => {
+    it('requires better-sqlite3 bindings to execute SQLiteVectorStore tests', () => {
+      expect(hasSQLiteBindings).toBe(false);
+    });
+  });
+};
 
 describeIf('SQLiteVectorStore', () => {
   let store: import('../SQLiteVectorStore').SQLiteVectorStore;

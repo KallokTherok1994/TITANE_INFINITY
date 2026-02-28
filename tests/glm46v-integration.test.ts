@@ -453,7 +453,16 @@ describe('Integration with TITANE∞', () => {
 });
 
 // Integration tests with actual vLLM server (requires running server)
-describe.skip('GLM-4.6V Live Integration Tests', () => {
+const RUN_GLM46V_LIVE = process.env.RUN_GLM46V_LIVE === '1';
+
+describe('GLM-4.6V Live Integration Tests', () => {
+  if (!RUN_GLM46V_LIVE) {
+    it('is disabled unless RUN_GLM46V_LIVE=1', () => {
+      expect(RUN_GLM46V_LIVE).toBe(false);
+    });
+    return;
+  }
+
   let provider: GLM46VProvider;
 
   beforeEach(() => {

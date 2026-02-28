@@ -1235,6 +1235,91 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
+		},
+		{
+			"label": "UI Audit Tests x3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; : > \"$PP/09_TESTS_X3.log\"; for i in 1 2 3; do echo \"===== RUN $i START $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:architecture 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:compliance 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; echo \"===== RUN $i END $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; : > \"$PP/10_E2E_RESULTS.md\"; for i in 1 2 3; do echo \"## RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 pnpm run test:e2e:vitest >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 direct",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 direct2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit Tests x3 post-fix",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"===== POST_FIX_RUN $i START $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:architecture 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:compliance 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; echo \"===== POST_FIX_RUN $i END $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 post-fix",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## POST_FIX_DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"POST_FIX_DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"POST_FIX_DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "cert:verify-run1",
+			"type": "shell",
+			"command": "pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"isBackground": false
+		},
+		{
+			"label": "cert:verify-run1",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"args": [
+				"run",
+				"verify",
+				">",
+				"reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log",
+				"2>&1"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "cert:verify-run1-abs",
+			"type": "shell",
+			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"isBackground": false
 		}
 	],
 	"inputs": [

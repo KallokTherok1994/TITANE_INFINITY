@@ -1,17 +1,33 @@
 /**
- * Tests pour MemorySearch Component
- * Coverage: Recherche, Filtres, Résultats
+ * Tests pour MemorySearchPanel Component
+ * Coverage: recherche, filtres, callbacks
  */
-
-/* eslint-disable react/jsx-no-undef */
-// Ce fichier teste un composant non encore implémenté - skip activé
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-// import { MemorySearch } from '@/features/memory/MemorySearch'; // Component not implemented
+import { MemorySearchPanel } from '@/features/memory/MemorySearchPanel';
 
-describe.skip('MemorySearch Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
-  const mockOnSearch = vi.fn();
+describe('MemorySearchPanel Component', () => {
+  const entries = [
+    {
+      id: '1',
+      content: 'Architecture TITANE',
+      type: 'long' as const,
+      timestamp: Date.now(),
+      tags: ['architecture'],
+      relevance: 0.9,
+    },
+    {
+      id: '2',
+      content: 'Session active',
+      type: 'short' as const,
+      timestamp: Date.now(),
+      tags: ['session'],
+      relevance: 0.8,
+    },
+  ];
+
+  const mockOnEntryClick = vi.fn();
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -19,62 +35,50 @@ describe.skip('MemorySearch Component (NON IMPLÉMENTÉ - fichier inexistant)', 
 
   describe('Rendering', () => {
     it('should render search input', () => {
-      render(<MemorySearch onSearch={mockOnSearch} />);
-      expect(screen.getByPlaceholderText(/search/i)).toBeInTheDocument();
+      render(<MemorySearchPanel entries={entries} />);
+      expect(screen.getByPlaceholderText(/recherche sémantique/i)).toBeInTheDocument();
     });
 
-    it('should render search button', () => {
-      render(<MemorySearch onSearch={mockOnSearch} />);
-      expect(screen.getByRole('button', { name: /search/i })).toBeInTheDocument();
+    it('should render memory entries', () => {
+      render(<MemorySearchPanel entries={entries} />);
+      expect(screen.getByText('Architecture TITANE')).toBeInTheDocument();
+      expect(screen.getByText('Session active')).toBeInTheDocument();
     });
 
-    it('should render tier filters', () => {
-      render(<MemorySearch onSearch={mockOnSearch} showFilters />);
-      expect(screen.getByText(/STM|MTM|LTM/i)).toBeTruthy();
+    it('should render type and date filters', () => {
+      render(<MemorySearchPanel entries={entries} />);
+      const selects = screen.getAllByRole('combobox');
+      expect(selects.length).toBeGreaterThanOrEqual(2);
     });
   });
 
-  describe('Search', () => {
+  describe('Interactions', () => {
     it('should handle search input', () => {
-      render(<MemorySearch onSearch={mockOnSearch} />);
-      const input = screen.getByPlaceholderText(/search/i);
-      fireEvent.change(input, { target: { value: 'test query' } });
-      expect(input).toHaveValue('test query');
+      render(<MemorySearchPanel entries={entries} />);
+      const input = screen.getByPlaceholderText(/recherche sémantique/i);
+      fireEvent.change(input, { target: { value: 'architecture' } });
+      expect(screen.getByText('Architecture TITANE')).toBeInTheDocument();
+      expect(screen.queryByText('Session active')).not.toBeInTheDocument();
     });
 
-    it('should trigger search on submit', () => {
-      render(<MemorySearch onSearch={mockOnSearch} />);
-      const input = screen.getByPlaceholderText(/search/i);
-      fireEvent.change(input, { target: { value: 'test' } });
-      fireEvent.submit(input.closest('form') || input);
-      expect(mockOnSearch).toHaveBeenCalledWith('test');
+    it('should trigger onEntryClick callback', () => {
+      render(<MemorySearchPanel entries={entries} onEntryClick={mockOnEntryClick} />);
+      fireEvent.click(screen.getByText('Architecture TITANE'));
+      expect(mockOnEntryClick).toHaveBeenCalledTimes(1);
     });
 
-    it('should clear search', () => {
-      render(<MemorySearch onSearch={mockOnSearch} />);
-      const input = screen.getByPlaceholderText(/search/i);
-      fireEvent.change(input, { target: { value: 'test' } });
-      const clearBtn = screen.queryByRole('button', { name: /clear/i });
-      if (clearBtn) {
-        fireEvent.click(clearBtn);
-        expect(input).toHaveValue('');
-      }
-    });
-  });
-
-  describe('Filters', () => {
-    it('should filter by tier', () => {
-      render(<MemorySearch onSearch={mockOnSearch} showFilters />);
-      const stmFilter = screen.getByText(/STM/i);
-      fireEvent.click(stmFilter);
-      // Filter devrait être appliqué
-      expect(stmFilter).toBeTruthy();
+    it('should filter by type selection', () => {
+      render(<MemorySearchPanel entries={entries} />);
+      const [typeSelect] = screen.getAllByRole('combobox');
+      fireEvent.change(typeSelect, { target: { value: 'short' } });
+      expect(screen.getByText('Session active')).toBeInTheDocument();
+      expect(screen.queryByText('Architecture TITANE')).not.toBeInTheDocument();
     });
   });
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<MemorySearch onSearch={mockOnSearch} showFilters />);
+      const { container } = render(<MemorySearchPanel entries={entries} />);
       expect(container.firstChild).toMatchSnapshot();
     });
   });

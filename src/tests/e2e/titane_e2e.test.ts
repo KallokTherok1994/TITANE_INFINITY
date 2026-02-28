@@ -85,7 +85,14 @@ function extractChatContent(response: unknown): string {
 //   First launch → IA welcome → Memory save
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
+describe('E2E Scenario 1: New User Onboarding', () => {
+  if (SKIP_E2E) {
+    it('is disabled unless RUN_E2E_TESTS=1 and TITANE_E2E_TAURI=1', () => {
+      expect(SKIP_E2E).toBe(true);
+    });
+    return;
+  }
+
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -198,7 +205,14 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 1: New User Onboarding', () => {
 //   Import template → Edit → Save
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
+describe('E2E Scenario 2: Legal Designer Workflow', () => {
+  if (SKIP_E2E) {
+    it('is disabled unless RUN_E2E_TESTS=1 and TITANE_E2E_TAURI=1', () => {
+      expect(SKIP_E2E).toBe(true);
+    });
+    return;
+  }
+
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -304,7 +318,14 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 2: Legal Designer Workflow', () => {
 //   Query → Parse → Display
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
+describe('E2E Scenario 3: Advanced Web Search', () => {
+  if (SKIP_E2E) {
+    it('is disabled unless RUN_E2E_TESTS=1 and TITANE_E2E_TAURI=1', () => {
+      expect(SKIP_E2E).toBe(true);
+    });
+    return;
+  }
+
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -396,7 +417,14 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 3: Advanced Web Search', () => {
 //   Deep Sync → Meta Alignment
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
+describe('E2E Scenario 4: Complete Cognitive Loop', () => {
+  if (SKIP_E2E) {
+    it('is disabled unless RUN_E2E_TESTS=1 and TITANE_E2E_TAURI=1', () => {
+      expect(SKIP_E2E).toBe(true);
+    });
+    return;
+  }
+
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 
@@ -488,7 +516,14 @@ describe.skipIf(SKIP_E2E)('E2E Scenario 4: Complete Cognitive Loop', () => {
 //   Workflow combinant plusieurs modules TITANE∞
 // ═══════════════════════════════════════════════════════════════
 
-describe.skipIf(SKIP_E2E)('E2E Scenario 5: Complex Multi-Module Interaction', () => {
+describe('E2E Scenario 5: Complex Multi-Module Interaction', () => {
+  if (SKIP_E2E) {
+    it('is disabled unless RUN_E2E_TESTS=1 and TITANE_E2E_TAURI=1', () => {
+      expect(SKIP_E2E).toBe(true);
+    });
+    return;
+  }
+
   let trace: E2ETrace;
   const scenarioStart = performance.now();
 

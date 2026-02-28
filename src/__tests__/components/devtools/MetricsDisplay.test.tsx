@@ -3,7 +3,7 @@
  * Coverage: IPC-based metrics fetching, rendering, categories
  */
 
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MetricsDisplay } from '@/components/devtools/MetricsDisplay';
 
@@ -19,8 +19,13 @@ vi.mock('@/lib/security', async () => {
 import { secureInvoke } from '@/lib/security';
 
 describe('MetricsDisplay Component', () => {
+  let toLocaleTimeStringSpy: ReturnType<typeof vi.spyOn>;
+
   beforeEach(() => {
     vi.clearAllMocks();
+    toLocaleTimeStringSpy = vi
+      .spyOn(Date.prototype, 'toLocaleTimeString')
+      .mockReturnValue('12:00:00 PM');
 
     // Mock get_dashboard_metrics IPC call with valid schema
     (secureInvoke as ReturnType<typeof vi.fn>).mockResolvedValue({
@@ -30,6 +35,10 @@ describe('MetricsDisplay Component', () => {
       active_cores: 4,
       system_health: 1.0,
     });
+  });
+
+  afterEach(() => {
+    toLocaleTimeStringSpy.mockRestore();
   });
 
   describe('Rendering', () => {
@@ -104,7 +113,7 @@ describe('MetricsDisplay Component', () => {
   });
 
   describe('Snapshot', () => {
-    it.skip('should match snapshot', async () => {
+    it('should match snapshot', async () => {
       const { container } = render(<MetricsDisplay />);
 
       await waitFor(() => {
