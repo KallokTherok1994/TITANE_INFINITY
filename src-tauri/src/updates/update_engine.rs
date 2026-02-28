@@ -8,6 +8,10 @@
 
 use super::manifest::{FileEntry, UpdateManifest};
 use super::migration::MigrationScript;
+use super::release_policy::{
+    enforce_migration_signature_policy, enforce_post_update_gates_v2,
+    enforce_pre_update_policy, PostUpdateGatesV2, ReleaseRing, SignedUpdatesPolicy,
+};
 use crate::security::encryption::SigningKeypair;
 use sha2::{Digest, Sha256};
 use std::path::PathBuf;
@@ -30,6 +34,7 @@ pub enum UpdateError {
     DownloadFailed(String),
     RollbackFailed(String),
     MigrationFailed(String),
+    PolicyDenied(String),
     IoError(String),
 }
 
@@ -51,6 +56,7 @@ impl std::fmt::Display for UpdateError {
             UpdateError::DownloadFailed(e) => write!(f, "Download failed: {}", e),
             UpdateError::RollbackFailed(e) => write!(f, "Rollback failed: {}", e),
             UpdateError::MigrationFailed(e) => write!(f, "Migration failed: {}", e),
+            UpdateError::PolicyDenied(e) => write!(f, "Policy denied: {}", e),
             UpdateError::IoError(e) => write!(f, "IO error: {}", e),
         }
     }
@@ -110,6 +116,14 @@ impl UpdateEngine {
     pub async fn apply_update(&self, manifest: UpdateManifest) -> Result<(), UpdateError> {
         log::info!("🔄 [UPDATE] Starting update to {}", manifest.version);
 
+        let release_ring = ReleaseRing::from_env();
+        let signed_policy = SignedUpdatesPolicy::strict_for_ring(&release_ring);
+        let gates_v2 = PostUpdateGatesV2::default();
+        let current_version = self.current_version.read().await.clone();
+
+        enforce_pre_update_policy(&release_ring, &current_version, &manifest, &signed_policy)
+            .map_err(|e| UpdateError::PolicyDenied(e.to_string()))?;
+
         // 1. Vérifier signature du manifest
         *self.state.write().await = UpdateState::Verifying;
         self.verify_manifest_signature(&manifest)?;
@@ -148,11 +162,28 @@ impl UpdateEngine {
                     return Err(e);
                 }
             }
+
+            enforce_migration_signature_policy(&manifest, &signed_policy, true)
+                .map_err(|e| UpdateError::PolicyDenied(e.to_string()))?;
         }
 
         // 6. Mettre à jour version
         *self.current_version.write().await = manifest.version.clone();
         *self.state.write().await = UpdateState::Success;
+
+        let actual_version = self.current_version.read().await.clone();
+        if let Err(policy_error) = enforce_post_update_gates_v2(
+            &release_ring,
+            &manifest.version,
+            &actual_version,
+            &manifest,
+            &gates_v2,
+        ) {
+            log::error!("❌ [UPDATE] Post-update gates v2 failed: {}", policy_error);
+            self.rollback(backup_path).await?;
+            *self.state.write().await = UpdateState::RolledBack;
+            return Err(UpdateError::PolicyDenied(policy_error.to_string()));
+        }
 
         log::info!(
             "🎉 [UPDATE] Update completed successfully to {}",

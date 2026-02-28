@@ -1,0 +1,14 @@
+# CAMPAIGN FINAL REPORT
+- verdict: DONE
+- batches_executed: 1
+- stop_reason: DONE_MAX_WINDOWS
+- last_window: p2191_2197
+- last_commit: 06946c42a
+- last_proof_pack: docs/_evidence/program_p2191_2197_20260227_182114
+- autoheal: none
+- windows_done_total: 1
+- from_window: p2184_2190
+- max_windows: 1
+- resume_mode: 1
+- head_final: c955b541c
+- tree_clean: no

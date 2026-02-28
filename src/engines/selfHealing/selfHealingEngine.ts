@@ -11,6 +11,11 @@
 import { queryOllama } from '@/utils/ollama';
 import { safeInvoke } from '@/utils/invoke';
 import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
+import {
+  evaluateRemediationInstructionPermission,
+  type RemediationPermissionDecision,
+} from './remediationPermissionsEngine';
+import { AutoRcaEngine, type AutoRcaCategory } from './autoRcaEngine';
 
 type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
 type EngineSingularityPartial = Parameters<typeof singularityEngine.setState>[0];
@@ -102,6 +107,10 @@ type MinimalPatchInstruction =
   | MinimalStatePatch
   | MinimalStoreResetPatch;
 
+interface PatchExecutionOptions {
+  playbookId?: string;
+}
+
 const PLAYBOOK_REGISTRY: PlaybookPlan[] = [
   {
     id: 'runtime-errors',
@@ -158,7 +167,9 @@ export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunRe
   const prompt = await buildPrompt(context, JSON.stringify(playbook, null, 2));
   const rawResponse = await callTitaneLocal(prompt);
   const parsed = await parseLocalResponse(rawResponse);
-  const patchResult = await applyMinimalPatch(parsed.patch);
+  const patchResult = await applyMinimalPatch(parsed.patch, {
+    playbookId: playbook.id,
+  });
   const escalation = await escalateIfNeeded(parsed);
 
   const finalResult: SelfHealingRunResult = {
@@ -259,6 +270,22 @@ export async function collectContext(symptoms: string): Promise<SelfHealingConte
 
 export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
   const normalized = symptoms.toLowerCase();
+  const autoRcaEngine = new AutoRcaEngine();
+  const autoRca = autoRcaEngine.classify({
+    incidentId: `auto-rca-${normalized.slice(0, 24).replace(/\s+/g, '-') || 'incident'}`,
+    symptoms: normalized,
+    timeline: [],
+  });
+
+  const mappedPlaybookId = mapAutoRcaCategoryToPlaybookId(autoRca.category);
+  if (mappedPlaybookId) {
+    const mappedPlaybook = PLAYBOOK_REGISTRY.find(
+      playbook => playbook.id === mappedPlaybookId
+    );
+    if (mappedPlaybook) {
+      return mappedPlaybook;
+    }
+  }
 
   const match = PLAYBOOK_REGISTRY.find(playbook => {
     if (
@@ -296,6 +323,19 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
       successCriteria: 'Default success criteria',
     } as PlaybookPlan)
   );
+}
+
+function mapAutoRcaCategoryToPlaybookId(category: AutoRcaCategory): string | null {
+  switch (category) {
+    case 'runtime-errors':
+      return 'runtime-errors';
+    case 'ui-desync':
+      return 'ui-desync';
+    case 'performance-drift':
+      return 'performance-drift';
+    default:
+      return null;
+  }
 }
 
 export async function buildPrompt(
@@ -441,13 +481,27 @@ export async function parseLocalResponse(
 // PATCH APPLICATION
 // ═══════════════════════════════════════════════════════════════════════════
 
-export async function applyMinimalPatch(patch: unknown): Promise<ApplyPatchResult> {
+export async function applyMinimalPatch(
+  patch: unknown,
+  options?: PatchExecutionOptions
+): Promise<ApplyPatchResult> {
   const steps: string[] = [];
   const errors: string[] = [];
 
   const instructions = normalizePatch(patch);
 
   for (const instruction of instructions) {
+    const permission = evaluateRemediationInstructionPermission(
+      instruction,
+      options?.playbookId
+    );
+    await emitRemediationPermissionAudit(instruction, permission, options?.playbookId);
+
+    if (!permission.allowed) {
+      errors.push(`PERMISSION_DENIED:${permission.reason}`);
+      continue;
+    }
+
     try {
       switch (instruction.action) {
         case 'invoke': {
@@ -666,6 +720,37 @@ async function resetStore(storeName: string): Promise<void> {
   }
 
   await resetFn();
+}
+
+async function emitRemediationPermissionAudit(
+  instruction: MinimalPatchInstruction,
+  decision: RemediationPermissionDecision,
+  playbookId?: string
+): Promise<void> {
+  const kind = decision.allowed
+    ? 'remediation_permission_granted'
+    : 'remediation_permission_denied';
+
+  const payload = {
+    kind,
+    timestamp: Date.now(),
+    playbookId: playbookId ?? 'default',
+    action: instruction.action,
+    reason: decision.reason,
+    allowed: decision.allowed,
+  };
+
+  await Promise.allSettled([
+    safeInvoke('write_log', { log: payload }),
+    safeInvoke('add_timeline_event', {
+      event: {
+        id: `remediation-perm-${payload.timestamp}`,
+        timestamp: payload.timestamp,
+        event_type: kind,
+        description: `${payload.action} ${payload.allowed ? 'granted' : 'denied'} (${payload.reason})`,
+      },
+    }),
+  ]);
 }
 
 async function fetchRecentInvocations(): Promise<string[]> {

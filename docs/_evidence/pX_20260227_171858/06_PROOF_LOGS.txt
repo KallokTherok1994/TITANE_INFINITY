@@ -1,0 +1,8 @@
+]633;E;{   echo "\\n=== EXEC_X3_X_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[X][RUN_$i] score/degradation gates"\x3b     test -f scripts/verify/scorecard-ci-gate-v2.sh\x3b     rg -n "MIN_SCORE|scorecard-v2.json|PASS: scorecard CI gate" scripts/verify/scorecard-ci-gate-v2.sh > /dev/null\x3b     test -f runs/POST_PROD_OPS_PHASE_6_AUTONOMY_AUDIT_20260223_184137/PROOF/6_7_autonomy_scorecard.md\x3b     rg -n "AUTONOMY AUDIT SCORECARD|Stop-the-Line Gates|Rollback Paths" runs/POST_PROD_OPS_PHASE_6_AUTONOMY_AUDIT_20260223_184137/PROOF/6_7_autonomy_scorecard.md > /dev/null\x3b     echo "[X][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_X_END PASS ==="\x3b } >> "$LOGX";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_X_START 2026-02-27T17:31:01-05:00 ===
+[X][RUN_1] score/degradation gates
+[X][RUN_1] PASS
+[X][RUN_2] score/degradation gates
+[X][RUN_2] PASS
+[X][RUN_3] score/degradation gates
+[X][RUN_3] PASS
+=== EXEC_X3_X_END PASS ===

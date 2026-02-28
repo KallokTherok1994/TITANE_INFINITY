@@ -7,6 +7,8 @@
  * @module AIInputSanitizer
  */
 
+import { applyExfilGuardsV2, evaluatePolicyFirewallV2 } from './PolicyFirewallV2';
+
 // ═══════════════════════════════════════════════════════════════
 // TYPES
 // ═══════════════════════════════════════════════════════════════
@@ -154,8 +156,10 @@ export class AIInputSanitizer {
       allowUrls = true,
     } = options;
 
+    const exfilGuard = applyExfilGuardsV2(input, strictMode);
+
     const result: SanitizationResult = {
-      sanitized: input,
+      sanitized: exfilGuard.redacted,
       original: input,
       isBlocked: false,
       detectedPatterns: [],
@@ -212,6 +216,23 @@ export class AIInputSanitizer {
           return result;
         }
       }
+    }
+
+    // 5.b Policy Firewall v2 (deny-by-policy in strict mode)
+    const firewallDecision = evaluatePolicyFirewallV2(result.sanitized, {
+      strictMode,
+      allowUrls,
+      allowedDomains: ['localhost', '127.0.0.1'],
+    });
+    if (firewallDecision.reasonCodes.length > 0) {
+      result.detectedPatterns.push(
+        ...firewallDecision.reasonCodes.map(code => `Policy Firewall V2: ${code}`)
+      );
+      result.riskLevel = Math.max(result.riskLevel, firewallDecision.riskLevel);
+    }
+    if (firewallDecision.decision === 'deny') {
+      result.isBlocked = true;
+      return result;
     }
 
     // 6. Sanitize excessive patterns
