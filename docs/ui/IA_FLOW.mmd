@@ -1,0 +1,11 @@
+flowchart LR
+    UI[Chat UI action] --> TS[services/api/chat.ts sendMessage]
+    TS --> IPC[conversation_generate args]
+    IPC --> CMD[src-tauri conversation_engine::conversation_generate]
+    CMD --> ROUTER[RouterEngine]
+    ROUTER --> POLICY[PolicyEngine]
+    POLICY --> RES[ResilienceEngine]
+    RES --> MEM[MemoryEngine]
+    MEM --> SEARCH[SearchEngine or governed search gateway]
+    SEARCH --> OUT[Structured response content + meta + trace]
+    OUT --> UIR[UI render success or visible error]

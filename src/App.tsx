@@ -1048,7 +1048,6 @@ const AppRouter: React.FC = () => {
           <Route path="/one-core" element={<Navigate to="/dev" replace />} />
           <Route path="/command-center" element={<Navigate to="/dev" replace />} />
           <Route path="/unified" element={<Navigate to="/dev" replace />} />
-          <Route path="/singularity" element={<Navigate to="/dev" replace />} />
           <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
           <Route path="/qa" element={<Navigate to="/dev" replace />} />
           <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
