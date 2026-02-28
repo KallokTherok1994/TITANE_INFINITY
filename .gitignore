@@ -183,3 +183,6 @@ deployment/latest/certification/master_runs/
 # P1: WebResearch Engine sandbox — generated evidence reports (not committed)
 data/research/evidence/*.txt
 data/research/evidence/*.json
+
+# Proof packs — runtime evidence (generated; not committed by default)
+proof_packs/
