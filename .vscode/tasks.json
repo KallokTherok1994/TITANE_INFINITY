@@ -1144,10 +1144,16 @@
 		{
 			"label": "copilot: test:architecture",
 			"type": "shell",
-			"command": "pnpm",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm",
 			"args": [
 				"test:architecture"
 			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
