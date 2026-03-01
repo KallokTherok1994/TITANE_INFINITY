@@ -1098,3 +1098,20 @@ Date: 2026-02-24T19:46:00Z
 | scope            | Audit, migration ciblée, gate anti-drift structure |
 | gates            | PASS (MD outside docs, local md links, top dirs)  |
 | sealed_by        | Copilot TITANE∞ STRUCTURE_AUDIT_v1                |
+
+---
+
+## EVENT: STRUCTURE_REORG_SEAL
+
+| Field            | Value                                              |
+|------------------|----------------------------------------------------|
+| timestamp        | 2026-03-01T13:52:00-05:00                          |
+| commit           | 760e75bd3976                                       |
+| previous_commit  | 846e05b387dd                                       |
+| proof_pack       | docs/_evidence/structure_reorg_2026-03-01_133944/ |
+| seal_tag         | seal/structure-reorg-2026-03-01_133944            |
+| seal_tag_object  | 316a08b3fefd87c96311a553d2ecd3908e570c56           |
+| verdict          | SCELLE                                             |
+| scope            | Structure + docs + gouvernance + auto-fix unicode |
+| gates            | PASS (structure gate + links + unicode json audit) |
+| sealed_by        | Copilot TITANE∞ STRUCTURE_REORG_v1                |
