@@ -119,6 +119,9 @@ jobs:
       - name: Gate IPC-only Legacy Tests
         run: pnpm run guard:ipc-only-tests
 
+      - name: Gate Seal Post-Certification
+        run: pnpm run verify:seal-post-certification
+
       - name: Gate CSP Baseline
         env:
           CSP_ALLOW_UNSAFE: '1'
