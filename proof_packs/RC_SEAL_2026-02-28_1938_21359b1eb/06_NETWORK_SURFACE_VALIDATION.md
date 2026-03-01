@@ -29,3 +29,26 @@ CMD: /tmp/rc_network_gate.sh
 
 === run_x3 SUMMARY: PASS=3/3 FAIL=0/3 ===
 VERDICT: PASS (3/3)
+=== run_x3 START: 2026-03-01T15:25:53Z ===
+CMD: bash scripts/gates/rc-network-surface-gate.sh
+
+--- RUN 1/3: 15:25:53Z ---
+✅ RC network gate PASS: no executable network patterns found in src/
+   raw: /tmp/rc_network_raw.log
+   exec: /tmp/rc_network_exec.log
+--- RUN 1/3: PASS ---
+
+--- RUN 2/3: 15:25:53Z ---
+✅ RC network gate PASS: no executable network patterns found in src/
+   raw: /tmp/rc_network_raw.log
+   exec: /tmp/rc_network_exec.log
+--- RUN 2/3: PASS ---
+
+--- RUN 3/3: 15:25:53Z ---
+✅ RC network gate PASS: no executable network patterns found in src/
+   raw: /tmp/rc_network_raw.log
+   exec: /tmp/rc_network_exec.log
+--- RUN 3/3: PASS ---
+
+=== run_x3 SUMMARY: PASS=3/3 FAIL=0/3 ===
+VERDICT: PASS (3/3)
