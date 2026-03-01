@@ -223,13 +223,13 @@ Improvement:     +20 points in 50 hours 🚀
 
 - **Architecture:** [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)
 - **Migration:** [docs/guides/MIGRATION_OMEGA_V2.md](docs/guides/MIGRATION_OMEGA_V2.md)
-- **Changelog:** [CHANGELOG.md](CHANGELOG.md)
+- **Changelog:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)
 
 ### Developer
 
 - **Phase 2 Report:** [docs/audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md](docs/audits/PHASE_2_COMPLETE_RAPPORT_FINAL.md)
 - **Phase 3 Report:** [docs/audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md](docs/audits/PHASE_3_ARCHITECTURE_ENFORCEMENT.md)
-- **Legacy Policy:** [legacy/README.md](legacy/README.md)
+- **Legacy Policy:** [legacy/README.md](docs/00_core/README__legacy_README.md.md)
 
 ### Audits
 

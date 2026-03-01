@@ -362,8 +362,8 @@ console.log('⚡ Menu v25.3.0 - TITANE FUSION activée');
 
 ### Documentation Interne
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) — Architecture globale TITANE∞
-- [CHANGELOG.md](./CHANGELOG.md) — Historique versions
+- [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture globale TITANE∞
+- [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) — Historique versions
 - [CODE_STYLE.md](./CODE_STYLE.md) — Conventions code
 - [CONTRIBUTING.md](./CONTRIBUTING.md) — Guide contribution
 

@@ -45,7 +45,7 @@
 |----------|---------|-----------|
 | [QUICK_START_v23.md](./QUICK_START_v23.md) | Usage examples | 5 min |
 | [IMMERSIVE_AVATAR_COMPLETE_v23.md](./IMMERSIVE_AVATAR_COMPLETE_v23.md) | Technical guide | 30 min |
-| [src-tauri/src/avatar/README.md](./src-tauri/src/avatar/README.md) | Module quick start | 10 min |
+| [src-tauri/src/avatar/README.md](docs/00_core/README__src-tauri_src_avatar_README.md.md) | Module quick start | 10 min |
 | [ARCHITECTURE_VISUALIZATION_v23.md](./ARCHITECTURE_VISUALIZATION_v23.md) | System diagrams | 15 min |
 
 **Start With**: QUICK_START → README.md → COMPLETE
@@ -94,7 +94,7 @@
 
 ### Technical Guides (Deep Dive)
 3. **[IMMERSIVE_AVATAR_COMPLETE_v23.md](./IMMERSIVE_AVATAR_COMPLETE_v23.md)** — Comprehensive guide (30 min)
-4. **[src-tauri/src/avatar/README.md](./src-tauri/src/avatar/README.md)** — Module guide (10 min)
+4. **[src-tauri/src/avatar/README.md](docs/00_core/README__src-tauri_src_avatar_README.md.md)** — Module guide (10 min)
 5. **[ARCHITECTURE_VISUALIZATION_v23.md](./ARCHITECTURE_VISUALIZATION_v23.md)** — System diagrams (15 min)
 
 ### User Guides (How-To)
@@ -118,7 +118,7 @@
 - [IMMERSIVE_AVATAR_COMPLETE_v23.md](./IMMERSIVE_AVATAR_COMPLETE_v23.md) — Technical design, voice profile, lip-sync, expressions
 
 ### Implementation Details
-- [src-tauri/src/avatar/README.md](./src-tauri/src/avatar/README.md) — File structure, voice adjustments, testing
+- [src-tauri/src/avatar/README.md](docs/00_core/README__src-tauri_src_avatar_README.md.md) — File structure, voice adjustments, testing
 - [IMMERSIVE_AVATAR_COMPLETE_v23.md](./IMMERSIVE_AVATAR_COMPLETE_v23.md) — API reference, usage examples
 
 ### Usage & Examples
@@ -130,7 +130,7 @@
 - [FINAL_COMPLETION_REPORT_v23.0.0.md](./FINAL_COMPLETION_REPORT_v23.0.0.md) — Success metrics, benchmarks
 
 ### Testing & QA
-- [src-tauri/src/avatar/README.md](./src-tauri/src/avatar/README.md) — Self-tests instructions
+- [src-tauri/src/avatar/README.md](docs/00_core/README__src-tauri_src_avatar_README.md.md) — Self-tests instructions
 - [IMMERSIVE_AVATAR_COMPLETE_v23.md](./IMMERSIVE_AVATAR_COMPLETE_v23.md) — Testing section
 
 ### Deployment & Git
@@ -408,7 +408,7 @@ SESSION_SUMMARY_v23.0.0.md (10 min)
 | Deploy to production | [DEPLOYMENT_REPORT_v23.0.0.md](./DEPLOYMENT_REPORT_v23.0.0.md) |
 | Check project status | [FINAL_COMPLETION_REPORT_v23.0.0.md](./FINAL_COMPLETION_REPORT_v23.0.0.md) |
 | See what's new | [CHANGELOG_v23.0.0.md](./CHANGELOG_v23.0.0.md) |
-| Understand module | [src-tauri/src/avatar/README.md](./src-tauri/src/avatar/README.md) |
+| Understand module | [src-tauri/src/avatar/README.md](docs/00_core/README__src-tauri_src_avatar_README.md.md) |
 | Review session work | [SESSION_SUMMARY_v23.0.0.md](./SESSION_SUMMARY_v23.0.0.md) |
 | Write commit message | [COMMIT_MESSAGE_v23.0.0.md](./COMMIT_MESSAGE_v23.0.0.md) |
 

@@ -233,7 +233,7 @@ All agents enforce these constraints via .github/instructions/titane.instruction
 
 ## 📚 Documentation Links
 
-- [Architecture](orchestration/architecture.md) — 9-engine technical overview
+- [Architecture](docs/01_misc/architecture.md) — 9-engine technical overview
 - [Roadmap](orchestration/roadmap.yaml) — Complete task breakdown
 - [Conductor Agent](.github/agents/titane-conductor.agent.md) — Main workflow
 - [Global Instructions](.github/instructions/titane.instructions.md) — Project constraints

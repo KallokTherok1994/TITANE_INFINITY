@@ -577,7 +577,7 @@ Le projet est **prêt pour**:
 
 ### Scripts
 
-- [scripts/README.md](scripts/README.md)
+- [scripts/README.md](docs/00_core/README__scripts_README.md.md)
 - [scripts/verify-branch-sync.sh](scripts/verify-branch-sync.sh)
 - [scripts/merge-dev-to-main.sh](scripts/merge-dev-to-main.sh)
 

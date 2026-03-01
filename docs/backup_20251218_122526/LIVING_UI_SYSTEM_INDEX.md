@@ -487,7 +487,7 @@ enum PanelType {
 
 ## 🔗 Liens Utiles
 
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — Architecture globale TITANE∞
+- **[ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)** — Architecture globale TITANE∞
 - **[SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md](./SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md)** — Précédent travail UI
 - **[src/visual-engine/](./src/visual-engine/)** — Code source
 
