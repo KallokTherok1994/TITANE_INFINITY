@@ -42,3 +42,36 @@ Le fichier massif `proof_logs/phase1_rg_scans.log` préexistait dans le proof pa
 - Branche: `MAIN`
 - Sync: `origin/MAIN...HEAD = 0 0`
 - Objectif: inclure les artefacts de cartographie restants et refermer un état propre.
+
+## Addendum correctif de clôture — 2026-03-01
+
+### Remplacement de référence (nomenclature finale)
+- `docs/MAP_IPC.md` -> `docs/MAP_IPC_COMMANDS.md`
+- `docs/MAP_GATES.md` -> `docs/MAP_TESTS_GATES.md`
+
+### Fichiers réellement modifiés (git diff --name-only)
+- `.github/copilot-instructions.md`
+- `docs/MAP_INDEX.md`
+- `docs/MAP_SURFACES_NETWORK.md`
+- `scripts/map_refresh.sh`
+
+### Fichiers réellement ajoutés (git status --short)
+- `docs/MAP_IPC_COMMANDS.md`
+- `docs/MAP_TESTS_GATES.md`
+- `docs/ROLLBACK_INSTRUCTIONS_UPDATE.md`
+
+### Artefacts de preuve générés (hors suivi Git)
+- `reports/INSTRUCTIONS_UPGRADE_PROOFS.log`
+- `reports/MAP_PROOFS.log`
+- `reports/DIFF_SUMMARY.md`
+- `reports/VERDICT.md`
+- `reports/ROLLBACK.md`
+
+## Addendum de gouvernance finale — 2026-03-01
+
+### Alias legacy conservés en compatibilité (dépréciés)
+- `docs/MAP_IPC.md` (marqué `DEPRECATED`, renvoi vers `docs/MAP_IPC_COMMANDS.md`)
+- `docs/MAP_GATES.md` (marqué `DEPRECATED`, renvoi vers `docs/MAP_TESTS_GATES.md`)
+
+### Raison
+- Éviter toute ambiguïté documentaire résiduelle sans suppression destructive d’artefacts historiques.

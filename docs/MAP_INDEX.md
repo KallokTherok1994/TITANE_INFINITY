@@ -8,8 +8,8 @@ Index de navigation unique Search/Tracking/Vision.
 
 1. `docs/MAP_ARCHITECTURE_4RING.md`
 2. `docs/MAP_SURFACES_NETWORK.md`
-3. `docs/MAP_IPC.md`
-4. `docs/MAP_GATES.md`
+3. `docs/MAP_IPC_COMMANDS.md`
+4. `docs/MAP_TESTS_GATES.md`
 5. `docs/MAP_MERMAID_OVERVIEW.md`
 6. `reports/MAP_PROOFS.log`
 
@@ -39,8 +39,8 @@ Règle : sans preuve `rg`/`ls`/`cat`, statut `UNKNOWN`.
 - `G_MAP_INDEX_PRESENT`
 - `G_MAP_ARCHITECTURE_PRESENT`
 - `G_MAP_SURFACES_PRESENT`
-- `G_MAP_IPC_PRESENT`
-- `G_MAP_GATES_PRESENT`
+- `G_MAP_IPC_COMMANDS_PRESENT`
+- `G_MAP_TESTS_GATES_PRESENT`
 - `G_MERMAID_PRESENT`
 - `G_MAP_PROOF_LOG_PRESENT`
 - `G_MAP_NO_UNKNOWN_CRITICAL`
