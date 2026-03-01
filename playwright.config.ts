@@ -85,8 +85,7 @@ export default defineConfig({
   // Keep Vite-only in CI where GUI/Tauri may be unavailable.
   webServer: useWebServer
     ? {
-        command:
-          'node scripts/e2e/vite-e2e-watch.cjs --host 127.0.0.1 --port 5173 --strictPort',
+        command: `${process.execPath} scripts/e2e/vite-e2e-watch.cjs --host 127.0.0.1 --port 5173 --strictPort`,
         url: process.env.TITANE_E2E_PORT
           ? `http://localhost:${process.env.TITANE_E2E_PORT}`
           : 'http://localhost:5173',
