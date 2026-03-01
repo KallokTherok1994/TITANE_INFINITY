@@ -240,8 +240,8 @@ cp docs/backup_YYYYMMDD/*.md .
 
 - [Documentation Actuelle v26.2](docs/current/INDEX.md)
 - [Quick Start](QUICKSTART_UBUNTU_24.04.md)
-- [Architecture](ARCHITECTURE.md)
-- [Changelog](CHANGELOG.md)
+- [Architecture](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- [Changelog](docs/90_release/CHANGELOG__CHANGELOG.md.md)
 ```
 
 ---

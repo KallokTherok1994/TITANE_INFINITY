@@ -1269,7 +1269,7 @@ See full list in app: `Ctrl+/`
 
 ## Troubleshooting
 
-See [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)
+See [TROUBLESHOOTING.md](docs/01_misc/TROUBLESHOOTING.md)
 ```
 
 ```markdown

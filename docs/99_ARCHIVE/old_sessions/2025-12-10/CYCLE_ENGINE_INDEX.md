@@ -35,7 +35,7 @@
 
 | Fichier                                                                        | Description         | Lignes | Status |
 | ------------------------------------------------------------------------------ | ------------------- | ------ | ------ |
-| [`src-tauri/src/cycle_engine/README.md`](src-tauri/src/cycle_engine/README.md) | Introduction module | ~200   | ✅     |
+| [`src-tauri/src/cycle_engine/README.md`](docs/00_core/README__src-tauri_src_cycle_engine_README.md.md) | Introduction module | ~200   | ✅     |
 
 ---
 
@@ -132,7 +132,7 @@
 
 ### Pour Développer
 
-1. **Architecture** : [`src-tauri/src/cycle_engine/README.md`](src-tauri/src/cycle_engine/README.md)
+1. **Architecture** : [`src-tauri/src/cycle_engine/README.md`](docs/00_core/README__src-tauri_src_cycle_engine_README.md.md)
 2. **Code** : Voir modules dans `src-tauri/src/cycle_engine/`
 3. **Tests** : [`src-tauri/tests/cycle_engine_tests.rs`](src-tauri/tests/cycle_engine_tests.rs)
 4. **Schémas** : [`docs/CYCLE_ENGINE_SCHEMA.md`](docs/CYCLE_ENGINE_SCHEMA.md)

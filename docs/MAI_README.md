@@ -254,7 +254,7 @@ cargo test test_apply_constraints
 
 ## 📚 Références
 
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture globale TITANE∞
+- [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) - Architecture globale TITANE∞
 - [MODULES.md](./MODULES.md) - Documentation des modules système
 - [analysis.rs](../core/backend/system/adaptive_engine/analysis.rs) - Code source analyse
 - [regulation.rs](../core/backend/system/adaptive_engine/regulation.rs) - Code source régulation

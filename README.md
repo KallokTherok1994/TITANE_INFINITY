@@ -70,7 +70,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Legacy Versions
 
-See [CHANGELOG.md](CHANGELOG.md) for v24.x-v26.x history.
+See [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) for v24.x-v26.x history.
 
 ---
 
@@ -368,7 +368,7 @@ Ce dépôt est configuré avec des instructions personnalisées pour GitHub Copi
 
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
 - **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
-- **[.copilot-rules-permanent.md](.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+- **[.copilot-rules-permanent.md](docs/01_misc/.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
 
 **Validation automatique :**
 
@@ -612,7 +612,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](CHANGELOG.md))**  
+> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](docs/90_release/CHANGELOG__CHANGELOG.md.md))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)

@@ -207,7 +207,7 @@ src/
 - [Super Prompt #1 Complet](./frontend/SUPER_PROMPT_01_FRONTEND_FINAL_FORM.md)
 - [Quick Start](./QUICK_START.md)
 - [Guide Visuel](./VISUAL_GUIDE.md)
-- [Changelog](./CHANGELOG.md)
+- [Changelog](docs/90_release/CHANGELOG__CHANGELOG.md.md)
 - [Design System TITANE](../DESIGN_SYSTEM_TITANE.md)
 
 ---

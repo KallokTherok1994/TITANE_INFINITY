@@ -166,11 +166,11 @@ Stockage persistant et gestion mémoire.
 
 ### Documentation Principale
 
-- [Architecture Complète](ARCHITECTURE.md)
+- [Architecture Complète](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 - [Guide des Modules](MODULES.md)
 - [Sécurité](SECURITY.md)
 - [Guide Développeur](DEVELOPER_GUIDE.md)
-- [Changelog](CHANGELOG.md)
+- [Changelog](docs/90_release/CHANGELOG__CHANGELOG.md.md)
 
 ### 🧬 Super Prompts (Chirurgie Frontend/Backend)
 

@@ -160,7 +160,7 @@ cargo build --release   # Build optimized
 ## Support
 
 - **Documentation:** [ORCHESTRATION_MANIFEST.md](ORCHESTRATION_MANIFEST.md)
-- **Architecture:** [orchestration/architecture.md](orchestration/architecture.md)
+- **Architecture:** [orchestration/architecture.md](docs/01_misc/architecture.md)
 - **Roadmap:** [orchestration/roadmap.yaml](orchestration/roadmap.yaml)
 
 ---

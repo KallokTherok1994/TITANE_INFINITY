@@ -414,7 +414,7 @@ TITANE_INFINITY/
 
 ## 📜 License
 
-Voir [LICENSE.md](LICENSE.md) pour détails.
+Voir [LICENSE.md](docs/01_misc/LICENSE.md) pour détails.
 
 ---
 

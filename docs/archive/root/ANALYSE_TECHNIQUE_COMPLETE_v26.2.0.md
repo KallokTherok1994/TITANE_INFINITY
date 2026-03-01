@@ -1603,7 +1603,7 @@ docs/tutorials/    # Developer guides
 
 - 📄 [AUDIT_COMPLET_v26.2.0_2025-12-20.md](./AUDIT_COMPLET_v26.2.0_2025-12-20.md) — Rapport détaillé complet
 - 📄 [AUDIT_SUMMARY_EXECUTIF_v26.2.0.md](./AUDIT_SUMMARY_EXECUTIF_v26.2.0.md) — Résumé exécutif
-- 📄 [ARCHITECTURE.md](./ARCHITECTURE.md) — Architecture 4-Ring model
+- 📄 [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture 4-Ring model
 - 📄 [docs/SECURITY_HARDENING_v19.0.0.md](./docs/SECURITY_HARDENING_v19.0.0.md) — Security guide
 
 ---

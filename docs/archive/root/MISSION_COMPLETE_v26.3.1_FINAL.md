@@ -35,7 +35,7 @@
 
 ### ✅ 3. Changelog v26.3.0
 
-- [CHANGELOG.md](CHANGELOG.md) updated
+- [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) updated
 - Comprehensive entry: All sections populated
 - Metrics: TypeScript, ESLint, Tests, Performance
 - Score progression: 8.50 → 10.00 (+1.50 points)
