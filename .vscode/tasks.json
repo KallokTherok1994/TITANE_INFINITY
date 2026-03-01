@@ -820,7 +820,13 @@
 		{
 			"label": "🛠️ Rebuild better-sqlite3",
 			"type": "shell",
-			"command": "pnpm rebuild better-sqlite3",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm rebuild better-sqlite3",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "build"
@@ -1305,26 +1311,41 @@
 		{
 			"label": "cert:verify-run1",
 			"type": "shell",
-			"command": "pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false
 		},
 		{
 			"label": "cert:verify-run1",
 			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
+			"command": "bash",
 			"args": [
-				"run",
-				"verify",
-				">",
-				"reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log",
-				"2>&1"
+				"-lc",
+				"${workspaceFolder}/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1"
 			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false
 		},
 		{
 			"label": "cert:verify-run1-abs",
 			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false
 		}
 	],
