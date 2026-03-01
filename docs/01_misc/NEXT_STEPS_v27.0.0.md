@@ -293,8 +293,8 @@ sudo dpkg -i TITANE-Infinity_26.3.0_amd64.deb
 
 **Questions or Issues?**
 
-- Review: [DEPLOYMENT_REPORT_v27.0.0.md](docs/90_release/DEPLOYMENT_REPORT_v27.0.0.md)
-- Check: [TECHNICAL_DEBT_v27.0.0.md](docs/01_misc/TECHNICAL_DEBT_v27.0.0.md)
+- Review: [DEPLOYMENT_REPORT_v27.0.0.md](../90_release/DEPLOYMENT_REPORT_v27.0.0.md)
+- Check: [TECHNICAL_DEBT_v27.0.0.md](TECHNICAL_DEBT_v27.0.0.md)
 - Contact: Kevin Thibault (TITANE∞)
 
 ---

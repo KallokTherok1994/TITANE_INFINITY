@@ -294,8 +294,8 @@ TITANE∞ v25.2.1
 
 ### Documentation
 
-- [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture détaillée
-- [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) — Historique versions
+- [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture détaillée
+- [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) — Historique versions
 - [README.md](README.md) — Vue d'ensemble
 - [MENU_CLEAN_FINAL_v25.2.1.md](MENU_CLEAN_FINAL_v25.2.1.md) — Menu final
 

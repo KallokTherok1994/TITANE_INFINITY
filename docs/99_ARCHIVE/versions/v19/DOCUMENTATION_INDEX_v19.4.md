@@ -12,7 +12,7 @@
 
 **Documents principaux:**
 - 📖 [ACCESSIBILITY_GUIDE_v19.4.md](./ACCESSIBILITY_GUIDE_v19.4.md) — Guide complet d'accessibilité (500+ lignes)
-- ✅ [SESSION_COMPLETE_v19.4.md](./SESSION_COMPLETE_v19.4.md) — Résumé de session Phase 1
+- ✅ [SESSION_COMPLETE_v19.4.md](../../sessions/SESSION_COMPLETE_v19.4.md) — Résumé de session Phase 1
 - 📝 [CHANGELOG_v19.4.0.md](./CHANGELOG_v19.4.0.md) — Notes de release détaillées
 - 🗺️ [PRODUCTION_ROADMAP_v19.4.md](./PRODUCTION_ROADMAP_v19.4.md) — État des lieux global
 

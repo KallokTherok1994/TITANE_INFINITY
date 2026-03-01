@@ -487,12 +487,12 @@ const results = await invoke('search_images_by_text', {
 
 ### User Documentation
 
-1. **[MULTIMODAL_QUICK_START.md](MULTIMODAL_QUICK_START.md)** — 5-minute quick start
-2. **[IMPLEMENTATION_SUMMARY_v15.md](IMPLEMENTATION_SUMMARY_v15.md)** — Technical deep dive
+1. **[MULTIMODAL_QUICK_START.md](../../../current/guides/MULTIMODAL_QUICK_START.md)** — 5-minute quick start
+2. **[IMPLEMENTATION_SUMMARY_v15.md](../../versions/v15/IMPLEMENTATION_SUMMARY_v15.md)** — Technical deep dive
 
 ### Developer Documentation
 
-3. **[docs/TITANE_INFINITY_MULTIMODAL.md](docs/TITANE_INFINITY_MULTIMODAL.md)** — Complete API reference
+3. **[docs/TITANE_INFINITY_MULTIMODAL.md](../../../TITANE_INFINITY_MULTIMODAL.md)** — Complete API reference
 4. **[src-tauri/tests/multimodal_integration_test.rs](src-tauri/tests/multimodal_integration_test.rs)** — Test examples
 
 ### Project Documentation

@@ -256,9 +256,9 @@ git push origin :refs/tags/v27.4.1
 ## 📚 REFERENCE DOCUMENTS
 
 ### Audit Trail
-1. [FULL_INTEGRATION_AUDIT_SUMMARY.md](docs/01_misc/FULL_INTEGRATION_AUDIT_SUMMARY.md) - Main audit report
-2. [AUDIT_GATES_CHECKLIST.md](docs/91_reports/AUDIT_GATES_CHECKLIST.md) - Gate verification checklist
-3. [ANOMALIES_REGISTER.md](docs/01_misc/ANOMALIES_REGISTER.md) - Known issues register
+1. [FULL_INTEGRATION_AUDIT_SUMMARY.md](../01_misc/FULL_INTEGRATION_AUDIT_SUMMARY.md) - Main audit report
+2. [AUDIT_GATES_CHECKLIST.md](../91_reports/AUDIT_GATES_CHECKLIST.md) - Gate verification checklist
+3. [ANOMALIES_REGISTER.md](../01_misc/ANOMALIES_REGISTER.md) - Known issues register
 
 ### Historical Context
 - Previous seals: v27.4.1 portage documentation (2026-02-08)

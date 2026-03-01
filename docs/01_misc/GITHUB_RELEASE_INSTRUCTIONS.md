@@ -68,9 +68,9 @@ This release has passed comprehensive integration audit protocol **Ω∞.FULL.AP
 
 **Audit Reports:**
 
-- [Full Integration Audit Summary](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/FULL_INTEGRATION_AUDIT_SUMMARY.md)
-- [Audit Gates Checklist](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/AUDIT_GATES_CHECKLIST.md)
-- [Anomalies Register](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/ANOMALIES_REGISTER.md)
+- [Full Integration Audit Summary](FULL_INTEGRATION_AUDIT_SUMMARY.md)
+- [Audit Gates Checklist](../91_reports/AUDIT_GATES_CHECKLIST.md)
+- [Anomalies Register](ANOMALIES_REGISTER.md)
 
 ---
 
@@ -202,10 +202,10 @@ ollama pull mistral:latest
 
 ### Essential Docs
 
-- [Full Integration Audit](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/FULL_INTEGRATION_AUDIT_SUMMARY.md)
-- [Production Seal](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/PRODUCTION_SEAL_v27.4.1.md)
-- [Architecture](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/ARCHITECTURE.md)
-- [Cognitive Core](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/COGNITIVE_CORE_COMPLETE.md)
+- [Full Integration Audit](FULL_INTEGRATION_AUDIT_SUMMARY.md)
+- [Production Seal](../90_release/PRODUCTION_SEAL_v27.4.1.md)
+- [Architecture](../ARCHITECTURE.md)
+- [Cognitive Core](COGNITIVE_CORE_COMPLETE.md)
 
 ---
 
@@ -219,7 +219,7 @@ ollama pull mistral:latest
 - ✅ Append-only documentation allowed
 - ⚠️ Security-critical fixes only (with approval)
 
-See [Operational Silence Notice](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/copilot/verify-documentation-portage-v27/OPERATIONAL_SILENCE_NOTICE.md) for details.
+See [Operational Silence Notice](OPERATIONAL_SILENCE_NOTICE.md) for details.
 
 ---
 
@@ -249,7 +249,7 @@ See [Operational Silence Notice](https://github.com/KallokTherok1994/TITANE_INFI
 
 ## 📝 CHANGELOG
 
-See [CHANGELOG.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/CHANGELOG.md) for detailed version history.
+See [CHANGELOG.md](../90_release/CHANGELOG.md) for detailed version history.
 
 ---
 
@@ -261,7 +261,7 @@ See [CHANGELOG.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main
 
 ## 📄 LICENSE
 
-See [LICENSE.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/main/LICENSE.md)
+See [LICENSE.md](LICENSE.md)
 
 ---
 

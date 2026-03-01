@@ -751,7 +751,7 @@ TOTAL: 3,697 lignes de code production
 
 - [Phase 11 Documentation](PHASE_11_ADVANCED_FEATURES_v25.5.0.md)
 - [Session Report v25.5.0](SESSION_REPORT_REFLEXION_AUTO_ALL_v25.5.0.md)
-- [Architecture Globale](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- [Architecture Globale](../../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 
 ---
 

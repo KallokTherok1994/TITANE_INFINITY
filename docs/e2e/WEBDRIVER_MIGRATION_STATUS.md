@@ -54,7 +54,7 @@ Fichier: [e2e/desktop/diagnostic-tauri-api.wdio.test.js](../e2e/desktop/diagnost
 **Objectif:** Inspecter APIs Tauri disponibles dans contexte WebDriver
 
 ### 4. Documentation Complète
-Fichier: [docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md](../docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md)
+Fichier: [docs/e2e/MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md](MIGRATION_PLAYWRIGHT_TO_WEBDRIVER.md)
 
 **Contenu:**
 - Comparaison Playwright vs WebDriver

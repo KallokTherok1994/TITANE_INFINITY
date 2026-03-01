@@ -10,7 +10,7 @@
 
 ### 1. 📊 Pour Référence Rapide
 
-**[AUDIT_DASHBOARD_v26.2.0.md](AUDIT_DASHBOARD_v26.2.0.md)** (2KB)
+**[AUDIT_DASHBOARD_v26.2.0.md](../91_reports/AUDIT_DASHBOARD_v26.2.0.md)** (2KB)
 
 - Dashboard visuel avec scores par dimension
 - Forces principales et optimisations prioritaires
@@ -30,7 +30,7 @@
 
 ### 3. 📖 Pour Ingénieurs
 
-**[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)** (30KB)
+**[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](../91_reports/AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)** (30KB)
 
 - Rapport technique exhaustif (8 dimensions)
 - Analyse approfondie 7 zones techniques
@@ -88,21 +88,21 @@ Fondation:         93/100  🟢 EXCELLENT
 
 ### Je suis Tech Lead/Architecte
 
-➡️ Lire **[EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md](EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md)** puis **[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)**
+➡️ Lire **[EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md](EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md)** puis **[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](../91_reports/AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)**
 
 - ⏱️ Temps: 20-30 minutes
 - 🎯 Focus: Architecture, roadmap technique, priorités
 
 ### Je suis Développeur
 
-➡️ Lire **[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)**
+➡️ Lire **[AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](../91_reports/AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)**
 
 - ⏱️ Temps: 30-60 minutes
 - 🎯 Focus: Code, tests, implémentation détaillée
 
 ### Je veux juste un aperçu
 
-➡️ Lire **[AUDIT_DASHBOARD_v26.2.0.md](AUDIT_DASHBOARD_v26.2.0.md)**
+➡️ Lire **[AUDIT_DASHBOARD_v26.2.0.md](../91_reports/AUDIT_DASHBOARD_v26.2.0.md)**
 
 - ⏱️ Temps: 2 minutes
 - 🎯 Focus: Scores visuels, quick wins
@@ -216,7 +216,7 @@ Fondation:         93/100  🟢 EXCELLENT
 **Questions sur l'audit?**
 
 - 📧 Contact: Kevin Thibault / TITANE Team
-- 📁 Documents: [AUDIT_DASHBOARD_v26.2.0.md](AUDIT_DASHBOARD_v26.2.0.md), [EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md](EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md), [AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)
+- 📁 Documents: [AUDIT_DASHBOARD_v26.2.0.md](../91_reports/AUDIT_DASHBOARD_v26.2.0.md), [EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md](EXECUTIVE_SUMMARY_AUDIT_v26.2.0.md), [AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md](../91_reports/AUDIT_COMPLET_FINAL_v26.2.0_2025-12-22.md)
 - 🔗 Repo: [TITANE_INFINITY](https://github.com/KallokTherok1994/TITANE_INFINITY)
 
 **Prochaines étapes?**

@@ -122,7 +122,7 @@ Coller les logs ici
 **Documentation:**
 
 - [Guide concerné](<!-- lien -->)
-- [Troubleshooting](docs/04_guides/advanced/TROUBLESHOOTING.md)
+- [Troubleshooting](../../docs/01_misc/TROUBLESHOOTING.md)
 
 ---
 

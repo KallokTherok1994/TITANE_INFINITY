@@ -54,54 +54,54 @@ a3a77a26 (PRE)  →  ef72a56b (MERGE)  →  d4267f11 (POST)
 
 **Architecture & Cognitive (3 docs):**
 
-- ✅ [COGNITIVE_CORE_COMPLETE.md](docs/01_misc/COGNITIVE_CORE_COMPLETE.md) — ⭐ CANONIQUE
-- ✅ [COGNITIVE_CORE_README.md](docs/01_misc/COGNITIVE_CORE_README.md) — 📘 GUIDE
-- ✅ [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](docs/93_conversation/CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) — ⭐ CANONIQUE
+- ✅ [COGNITIVE_CORE_COMPLETE.md](COGNITIVE_CORE_COMPLETE.md) — ⭐ CANONIQUE
+- ✅ [COGNITIVE_CORE_README.md](COGNITIVE_CORE_README.md) — 📘 GUIDE
+- ✅ [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](../93_conversation/CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) — ⭐ CANONIQUE
 
 **Rapports Sprint (5 docs):**
 
-- ✅ [SPRINT_1_CODE_CHANGES_AUDIT.md](docs/01_misc/SPRINT_1_CODE_CHANGES_AUDIT.md) — 🔍 AUDIT
-- ✅ [SPRINT_1_FINAL_REPORT.md](docs/01_misc/SPRINT_1_FINAL_REPORT.md) — 📊 RAPPORT
-- ✅ [SPRINT_2_FINAL_REPORT.md](docs/01_misc/SPRINT_2_FINAL_REPORT.md) — 📊 RAPPORT
-- ✅ [SPRINT_3_FINAL_REPORT.md](docs/01_misc/SPRINT_3_FINAL_REPORT.md) — 📊 RAPPORT
-- ✅ [SPRINT_4_FINAL_REPORT.md](docs/01_misc/SPRINT_4_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) — 🔍 AUDIT
+- ✅ [SPRINT_1_FINAL_REPORT.md](SPRINT_1_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [SPRINT_2_FINAL_REPORT.md](SPRINT_2_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [SPRINT_3_FINAL_REPORT.md](SPRINT_3_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [SPRINT_4_FINAL_REPORT.md](SPRINT_4_FINAL_REPORT.md) — 📊 RAPPORT
 
 **Déploiement v27.4.1 (4 docs):**
 
-- ✅ [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](docs/90_release/DEPLOYMENT_EXECUTED.md) — ⭐ CANONIQUE
-- ✅ [deployment/v27.4.1/README_DEPLOYMENT.md](docs/00_core/README_DEPLOYMENT.md) — 📘 GUIDE
+- ✅ [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](../90_release/DEPLOYMENT_EXECUTED.md) — ⭐ CANONIQUE
+- ✅ [deployment/v27.4.1/README_DEPLOYMENT.md](../00_core/README_DEPLOYMENT.md) — 📘 GUIDE
 - ✅ [deployment/v27.4.1/checksums/SHA256SUMS](deployment/v27.4.1/checksums/SHA256SUMS) — 🔐 SÉCURITÉ
 - ✅ [deployment/v27.4.1/checksums/SHA256SUMS.local](deployment/v27.4.1/checksums/SHA256SUMS.local) — 🔐 SÉCURITÉ
 
 **Bootstrap & Configuration (3 docs):**
 
-- ✅ [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](docs/01_misc/BOOTSTRAP_COMPLETE_FINAL_REPORT.md) — 📊 RAPPORT
-- ✅ [BOOTSTRAP_REPORT.md](docs/01_misc/BOOTSTRAP_REPORT.md) — 📊 RAPPORT
-- ✅ [ENV_REPORT.md](docs/01_misc/ENV_REPORT.md) — 🛠️ CONFIG
+- ✅ [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](BOOTSTRAP_COMPLETE_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [BOOTSTRAP_REPORT.md](BOOTSTRAP_REPORT.md) — 📊 RAPPORT
+- ✅ [ENV_REPORT.md](ENV_REPORT.md) — 🛠️ CONFIG
 
 **Meta-Audits (1 doc):**
 
-- ✅ [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](docs/01_misc/ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) — 🔍 AUDIT
+- ✅ [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) — 🔍 AUDIT
 
 **Audit Trail Portage (4 docs):**
 
-- ✅ [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md) — ⭐ CANONIQUE
-- ✅ [PORTAGE_COMPLETION_INSTRUCTIONS.md](docs/01_misc/PORTAGE_COMPLETION_INSTRUCTIONS.md) — 📘 GUIDE
-- ✅ [PORT_TITANE_INFINITY_FINAL_REPORT.md](docs/01_misc/PORT_TITANE_INFINITY_FINAL_REPORT.md) — 📊 RAPPORT
-- ✅ [PR_TEMPLATE_CREATION.md](docs/01_misc/PR_TEMPLATE_CREATION.md) — 📘 GUIDE
+- ✅ [PORT_FROM_LITE.md](PORT_FROM_LITE.md) — ⭐ CANONIQUE
+- ✅ [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md) — 📘 GUIDE
+- ✅ [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md) — 📊 RAPPORT
+- ✅ [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md) — 📘 GUIDE
 
 **Planification (1 doc):**
 
-- ✅ [FINAL_STATUS_AND_NEXT_STEPS.md](docs/01_misc/FINAL_STATUS_AND_NEXT_STEPS.md) — 📍 ROADMAP
+- ✅ [FINAL_STATUS_AND_NEXT_STEPS.md](FINAL_STATUS_AND_NEXT_STEPS.md) — 📍 ROADMAP
 
 #### Documents Créés Post-Merge (4 fichiers)
 
 **Indices & Gouvernance:**
 
-- ✅ [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](docs/01_misc/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md) — ⭐ CANONIQUE (index principal)
-- ✅ [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md) — ✏️ UPDATED (section portage ajoutée)
-- ✅ [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) — ✏️ UPDATED (événement v27.4.1-PORTAGE)
-- ✅ [PORTAGE_V27.4.1_SEAL.md](docs/01_misc/PORTAGE_V27.4.1_SEAL.md) — 🔒 SEAL (décret officiel)
+- ✅ [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md) — ⭐ CANONIQUE (index principal)
+- ✅ [docs/INDEX_MASTER.md](../INDEX_MASTER.md) — ✏️ UPDATED (section portage ajoutée)
+- ✅ [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) — ✏️ UPDATED (événement v27.4.1-PORTAGE)
+- ✅ [PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md) — 🔒 SEAL (décret officiel)
 
 #### Référencement Total
 
@@ -208,7 +208,7 @@ git diff ef72a56b --stat | grep -E '\.(ts|tsx|rs|json|toml)$'
 
 #### Entrée CHANGELOG (Créée)
 
-**Fichier:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md#v27-4-1-portage)
+**Fichier:** [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md#v27-4-1-portage)
 
 **Entrée:**
 
@@ -226,7 +226,7 @@ git diff ef72a56b --stat | grep -E '\.(ts|tsx|rs|json|toml)$'
 **Risk Level:** 🟢 LOW (documentation only, no runtime impact)
 ```
 
-**Détails complets:** Voir section CHANGELOG complète dans [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) (ligne 18+)
+**Détails complets:** Voir section CHANGELOG complète dans [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) (ligne 18+)
 
 #### Format Registry Event
 
@@ -278,9 +278,9 @@ STATUS: SEALED
 
 - Git: commits `a3a77a26` → `ef72a56b` → `d4267f11`
 - GitHub: PR [#132](https://github.com/KallokTherok1994/TITANE_INFINITY/pull/132)
-- Documentation: [PORTAGE_V27.4.1_SEAL.md](docs/01_misc/PORTAGE_V27.4.1_SEAL.md)
-- Méthodologie: [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md)
-- Index: [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](docs/01_misc/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
+- Documentation: [PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md)
+- Méthodologie: [PORT_FROM_LITE.md](PORT_FROM_LITE.md)
+- Index: [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
 
 ---
 
@@ -315,7 +315,7 @@ STATUS: SEALED
 - ✅ **PHASE 3:** Intégration documentaire (index créé + master index mis à jour)
 - ✅ **PHASE 4:** Alignement TITANE Intelligence (aucune contradiction détectée)
 - ✅ **PHASE 5:** Traçabilité & Registry (CHANGELOG mis à jour)
-- ✅ **PHASE 6:** Scellement final ([PORTAGE_V27.4.1_SEAL.md](docs/01_misc/PORTAGE_V27.4.1_SEAL.md) créé)
+- ✅ **PHASE 6:** Scellement final ([PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md) créé)
 
 **Gates Validés (6/6):**
 
@@ -328,10 +328,10 @@ STATUS: SEALED
 
 **Artefacts Générés:**
 
-- 📄 Index canonique: [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](docs/01_misc/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
-- 🔒 Seal officiel: [PORTAGE_V27.4.1_SEAL.md](docs/01_misc/PORTAGE_V27.4.1_SEAL.md)
-- 📚 Méthodologie: [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md)
-- 📝 Registry: [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) (entrée v27.4.1-PORTAGE)
+- 📄 Index canonique: [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
+- 🔒 Seal officiel: [PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md)
+- 📚 Méthodologie: [PORT_FROM_LITE.md](PORT_FROM_LITE.md)
+- 📝 Registry: [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) (entrée v27.4.1-PORTAGE)
 
 **Statut Final:** 🔒 **SEALED & PERMANENT**
 

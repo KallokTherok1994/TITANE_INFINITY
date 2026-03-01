@@ -571,8 +571,8 @@ console.log("Quality:", result.quality_scores.linguistic_correctness);
 
 ### Architecture Docs
 
-- **[ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)** — System architecture
-- **[DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md)** — Data flow (French Mastery in Stage 8)
+- **[ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)** — System architecture
+- **[DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md)** — Data flow (French Mastery in Stage 8)
 
 ### Guides
 

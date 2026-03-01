@@ -711,9 +711,9 @@ sha256sum -c SHA256SUMS
 ## 📚 Documentation
 
 - **Installation Guide:** [docs/deployment/INSTALLATION_v26.3.0.md](docs/deployment/INSTALLATION_v26.3.0.md)
-- **User Guide:** [docs/guides/USER_GUIDE_v26.3.0.md](docs/guides/USER_GUIDE_v26.3.0.md)
-- **Architecture:** [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
-- **Changelog:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)
+- **User Guide:** [docs/guides/USER_GUIDE_v26.3.0.md](../01_misc/USER_GUIDE_v26.3.0.md)
+- **Architecture:** [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- **Changelog:** [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)
 - **Phase 1 Report:** [PHASE1_COMPLETION_FINALE_v26.3.0.md](PHASE1_COMPLETION_FINALE_v26.3.0.md)
 
 ---
@@ -729,7 +729,7 @@ sha256sum -c SHA256SUMS
 
 **Créateur:** Kevin Thibault (@KallokTherok1994)  
 **Contributors:** GitHub Copilot, Community  
-**License:** [LICENSE.md](docs/01_misc/LICENSE.md)
+**License:** [LICENSE.md](../01_misc/LICENSE.md)
 
 ---
 

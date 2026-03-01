@@ -279,10 +279,10 @@ git revert dfcc2a66
 
 ## Documentation Links
 
-- 📄 **[ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)** — Complete 4-Ring architecture explanation
-- 📋 **[P2_AUDIT_PHASE_3_SECURITY_STABILITY.md](docs/01_misc/P2_AUDIT_PHASE_3_SECURITY_STABILITY.md)** — Full security audit
-- ✅ **[P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md](docs/01_misc/P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md)** — Final validation checklist
-- 📝 **[P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md](docs/01_misc/P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md)** — Implementation report
+- 📄 **[ARCHITECTURE.md](ARCHITECTURE__ARCHITECTURE.md.md)** — Complete 4-Ring architecture explanation
+- 📋 **[P2_AUDIT_PHASE_3_SECURITY_STABILITY.md](P2_AUDIT_PHASE_3_SECURITY_STABILITY.md)** — Full security audit
+- ✅ **[P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md](P2_AUDIT_PHASE_6_FINAL_VALIDATION_REPORT.md)** — Final validation checklist
+- 📝 **[P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md](P1_CHAT_CONVERSATION_LIFECYCLE_REPORT.md)** — Implementation report
 - 📜 **[registry/ui-events.jsonl](registry/ui-events.jsonl)** — Append-only governance trail (entry P1_CHAT_CONVERSATION_LIFECYCLE marked QUALIFIED)
 
 ---

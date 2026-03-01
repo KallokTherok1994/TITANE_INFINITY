@@ -193,8 +193,8 @@ titane-infinity --version  # Should output: 27.0.2
 
 ## 📚 Documentation Associée
 
-- **SHA256 Checksums:** [ARTIFACTS_SHA256_v27.0.2.md](docs/01_misc/ARTIFACTS_SHA256_v27.0.2.md)
-- **Changelog:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) (v27.4.2-HOTFIX)
+- **SHA256 Checksums:** [ARTIFACTS_SHA256_v27.0.2.md](../01_misc/ARTIFACTS_SHA256_v27.0.2.md)
+- **Changelog:** [CHANGELOG.md](CHANGELOG__CHANGELOG.md.md) (v27.4.2-HOTFIX)
 - **Release Script:** [scripts/create-release-v27.0.2.sh](scripts/create-release-v27.0.2.sh)
 - **Build Log:** `/tmp/build_production_v2.log` (local)
 

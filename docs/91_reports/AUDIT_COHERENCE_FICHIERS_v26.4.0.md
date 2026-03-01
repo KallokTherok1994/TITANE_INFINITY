@@ -314,7 +314,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 5️⃣ ARCHITECTURE.md (MOYEN ⚠️)
 
-**Fichier**: [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)  
+**Fichier**: [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)  
 **Lignes concernées**: 3, 5  
 **Problème**: Header obsolète (v25.4.0)
 
@@ -341,7 +341,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 6️⃣ README.md — Statistiques Obsolètes (MINEUR ⚠️)
 
-**Fichier**: [README.md](README.md)  
+**Fichier**: [README.md](../../README.md)  
 **Ligne concernée**: 8  
 **Problème**: Statistiques tests obsolètes
 
@@ -372,7 +372,7 @@ Tests: 2675/2875 (93.0% passing)
 
 ### 7️⃣ README.md — Référence Architecture (MINEUR ⚠️)
 
-**Fichier**: [README.md](README.md)  
+**Fichier**: [README.md](../../README.md)  
 **Ligne concernée**: 99  
 **Problème**: Référence architecture obsolète
 

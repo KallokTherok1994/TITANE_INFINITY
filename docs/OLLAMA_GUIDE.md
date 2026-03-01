@@ -230,7 +230,7 @@ sudo rm -rf /usr/share/ollama
 
 - [Documentation Ollama](https://ollama.com/docs)
 - [Modèles disponibles](https://ollama.com/library)
-- [TITANE∞ Architecture](../ARCHITECTURE.md)
+- [TITANE∞ Architecture](ARCHITECTURE.md)
 
 ---
 

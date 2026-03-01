@@ -214,8 +214,8 @@ Tests:
 - [Tauri v2 Documentation](https://v2.tauri.app/)
 - [Tauri Security Best Practices](https://tauri.app/v1/references/architecture/security/)
 - [Electron vs Tauri Benchmark](https://github.com/tauri-apps/tauri/discussions/2639)
-- TITANE∞ [ARCHITECTURE.md](/home/titane-os/Documents/GitHub/TITANE_INFINITY/ARCHITECTURE.md)
-- TITANE∞ [.copilot-rules-permanent.md](/home/titane-os/Documents/GitHub/TITANE_INFINITY/.github/.copilot-rules-permanent.md)
+- TITANE∞ [ARCHITECTURE.md](../ARCHITECTURE.md)
+- TITANE∞ [.copilot-rules-permanent.md](../01_misc/.copilot-rules-permanent.md)
 
 ---
 

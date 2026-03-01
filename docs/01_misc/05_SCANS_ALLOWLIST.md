@@ -6149,7 +6149,7 @@ src-tauri/src/security/permissions.rs:331:        assert!(require_permission("sy
 ./src/features/governance-center/types.ts:355:  { id: 'permissions', label: 'Permissions', icon: '🛡️' },
 ./src/features/governance-center/types.ts:371:  permissions: ['*'], // Toutes les permissions
 ./docs/04_guides/features/INDEX.md:46:**Description:** Multimodal Engine — Vision, Audio 3D, Fusion capabilities  
-./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](VOICE.md)
+./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](../04_guides/features/VOICE.md)
 ./docs/TITANE_INFINITY_MULTIMODAL_vΩ.md:46:**Capabilities**:
 ./docs/04_guides/quickstart/QUICKSTART.md:486:# Ou changer port dans tauri.conf.json
 ./docs/99_ARCHIVE/obsolete/AUDIT_INTEGRAL_TITANE_v10.0.0.md:24:│   └── tauri.conf.json     # Config Tauri v2
@@ -12112,7 +12112,7 @@ src-tauri/src/security/permissions.rs:331:        assert!(require_permission("sy
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5798:./docs/capabilities/system-health-extended.md:160:# git tag -a v26.3.1-hotfix -m "Disable [capability] due to [issue]"
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5799:./docs/capabilities/system-health-extended.md:200:    target: "capability::[nom]",
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5800:./docs/04_guides/features/INDEX.md:46:**Description:** Multimodal Engine — Vision, Audio 3D, Fusion capabilities  
-./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5801:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](VOICE.md)
+./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5801:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](../04_guides/features/VOICE.md)
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5802:./docs/capabilities/memory-core-encryption.md:1:# Capability: Memory Core Encryption
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5803:./docs/capabilities/memory-core-encryption.md:8:Cette capability garantit que les données personnelles stockées dans le système de mémoire core sont chiffrées avec une clé dérivée du mot de passe utilisateur, empêchant la lecture des données en cas d'accès non autorisé au système de fichiers.
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:5804:./docs/capabilities/memory-core-encryption.md:168:1. Revert commits capability encryption
@@ -16640,7 +16640,7 @@ src-tauri/src/security/permissions.rs:331:        assert!(require_permission("sy
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10327:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29417:./docs/99_ARCHIVE/sessions/RAPPORT_VERIFICATION_FINALE_v17.2.0.md:145:| **tauri.conf.json** | Version | 17.2.1 → 17.2.0 + descriptions |
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10328:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29419:./docs/99_ARCHIVE/sessions/RAPPORT_VERIFICATION_FINALE_v17.2.0.md:184:- [x] tauri.conf.json → 17.2.0
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10329:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29466:./docs/04_guides/features/INDEX.md:46:**Description:** Multimodal Engine — Vision, Audio 3D, Fusion capabilities  
-./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10330:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29467:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](VOICE.md)
+./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10330:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29467:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](../04_guides/features/VOICE.md)
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10331:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29488:./docs/04_guides/quickstart/QUICKSTART.md:486:# Ou changer port dans tauri.conf.json
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10332:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29507:./docs/99_ARCHIVE/obsolete/TEST_TAURI_MODE.md:120:# Vérifier tauri.conf.json
 ./runs/p462_468/proof_pack/05_SCANS_ALLOWLIST.md:10333:./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29508:./docs/99_ARCHIVE/obsolete/TEST_TAURI_MODE.md:121:cat src-tauri/tauri.conf.json | grep -A 2 'beforeDevCommand'
@@ -23488,7 +23488,7 @@ src-tauri/src/security/permissions.rs:331:        assert!(require_permission("sy
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29417:./docs/99_ARCHIVE/sessions/RAPPORT_VERIFICATION_FINALE_v17.2.0.md:145:| **tauri.conf.json** | Version | 17.2.1 → 17.2.0 + descriptions |
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29419:./docs/99_ARCHIVE/sessions/RAPPORT_VERIFICATION_FINALE_v17.2.0.md:184:- [x] tauri.conf.json → 17.2.0
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29466:./docs/04_guides/features/INDEX.md:46:**Description:** Multimodal Engine — Vision, Audio 3D, Fusion capabilities  
-./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29467:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](VOICE.md)
+./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29467:./docs/04_guides/features/INDEX.md:107:- **🎤 Voice capabilities** → [VOICE.md](../04_guides/features/VOICE.md)
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29488:./docs/04_guides/quickstart/QUICKSTART.md:486:# Ou changer port dans tauri.conf.json
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29507:./docs/99_ARCHIVE/obsolete/TEST_TAURI_MODE.md:120:# Vérifier tauri.conf.json
 ./docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt:29508:./docs/99_ARCHIVE/obsolete/TEST_TAURI_MODE.md:121:cat src-tauri/tauri.conf.json | grep -A 2 'beforeDevCommand'

@@ -279,11 +279,11 @@ pnpm run beta:build        # Creates AppImage + DEB
 
 ### Key Documentation
 - **This File**: Complete bootstrap overview
-- [README.md](runtime/diagnostics/bootstrap/README.md): Index & checklist
+- [README.md](../../README.md): Index & checklist
 - [BOOTSTRAP_vOmega_2_COMPLETION.md](runtime/diagnostics/bootstrap/BOOTSTRAP_vOmega_2_COMPLETION.md): Executive summary
 - [ESLint_VIOLATIONS.md](runtime/diagnostics/bootstrap/ESLint_VIOLATIONS.md): Lint debt details
-- [.github/copilot-instructions.md](.github/copilot-instructions.md): Repo rules
-- [CONTRIBUTING.md](CONTRIBUTING.md): Development guidelines
+- [.github/copilot-instructions.md](../../.github/copilot-instructions.md): Repo rules
+- [CONTRIBUTING.md](../00_core/CONTRIBUTING.md): Development guidelines
 
 ### Commands Reference
 ```bash

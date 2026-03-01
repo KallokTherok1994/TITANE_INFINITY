@@ -389,7 +389,7 @@ Score Sécurité:   100/100 🎯
 
 - **Rust Book:** [Error Handling](https://doc.rust-lang.org/book/ch09-00-error-handling.html)
 - **Clippy Lints:** [unwrap_used](https://rust-lang.github.io/rust-clippy/master/index.html#unwrap_used)
-- **TITANE∞ Guidelines:** [.github/copilot-instructions.md](.github/copilot-instructions.md)
+- **TITANE∞ Guidelines:** [.github/copilot-instructions.md](../../.github/copilot-instructions.md)
 
 ---
 

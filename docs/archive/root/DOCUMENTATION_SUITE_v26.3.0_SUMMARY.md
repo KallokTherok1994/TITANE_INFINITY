@@ -390,7 +390,7 @@ Engagement:
 
 ### Questions & Aide
 
-- **Documentation Index:** [INDEX_DOCUMENTATION_v26.3.0.md](docs/INDEX_DOCUMENTATION_v26.3.0.md) ⭐
+- **Documentation Index:** [INDEX_DOCUMENTATION_v26.3.0.md](../../INDEX_DOCUMENTATION_v26.3.0.md) ⭐
 - **GitHub Issues:** [Label: documentation](https://github.com/KallokTherok1994/TITANE_INFINITY/issues?q=label%3Adocumentation)
 - **Discussions:** [GitHub Discussions](https://github.com/KallokTherok1994/TITANE_INFINITY/discussions)
 
@@ -423,18 +423,18 @@ Voir **CONTRIBUTING.md** pour:
 
 ### Documents v26.3.0
 
-- **[INDEX_DOCUMENTATION_v26.3.0.md](docs/INDEX_DOCUMENTATION_v26.3.0.md)** ⭐ **START HERE**
-- [REFERENCE_UTILISATEUR_TITANE_v26.3.0.md](docs/REFERENCE_UTILISATEUR_TITANE_v26.3.0.md)
-- [COMMANDES_TAURI_COMPLETE_v26.3.0.md](docs/COMMANDES_TAURI_COMPLETE_v26.3.0.md)
-- [SERVICES_FRONTEND_COMPLET_v26.3.0.md](docs/SERVICES_FRONTEND_COMPLET_v26.3.0.md)
-- [GUIDE_PRATIQUE_COMPLET_v26.3.0.md](docs/GUIDE_PRATIQUE_COMPLET_v26.3.0.md)
+- **[INDEX_DOCUMENTATION_v26.3.0.md](../../INDEX_DOCUMENTATION_v26.3.0.md)** ⭐ **START HERE**
+- [REFERENCE_UTILISATEUR_TITANE_v26.3.0.md](../../REFERENCE_UTILISATEUR_TITANE_v26.3.0.md)
+- [COMMANDES_TAURI_COMPLETE_v26.3.0.md](../../COMMANDES_TAURI_COMPLETE_v26.3.0.md)
+- [SERVICES_FRONTEND_COMPLET_v26.3.0.md](../../SERVICES_FRONTEND_COMPLET_v26.3.0.md)
+- [GUIDE_PRATIQUE_COMPLET_v26.3.0.md](../../GUIDE_PRATIQUE_COMPLET_v26.3.0.md)
 
 ### Ressources Complémentaires
 
-- [README.md](README.md) - Présentation projet
-- [ARCHITECTURE.md](docs/ARCHITECTURE.md) - Architecture détaillée
-- [CONTRIBUTING.md](CONTRIBUTING.md) - Guide contribution
-- [API_REFERENCE_v24.30.md](docs/API_REFERENCE_v24.30.md) - API 14 modules
+- [README.md](../../../README.md) - Présentation projet
+- [ARCHITECTURE.md](../../ARCHITECTURE.md) - Architecture détaillée
+- [CONTRIBUTING.md](../../00_core/CONTRIBUTING.md) - Guide contribution
+- [API_REFERENCE_v24.30.md](../../API_REFERENCE_v24.30.md) - API 14 modules
 
 ---
 

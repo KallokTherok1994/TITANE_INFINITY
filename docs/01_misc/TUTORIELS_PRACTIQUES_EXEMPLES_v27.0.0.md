@@ -17,15 +17,15 @@
 
 ## 🟢 TUTORIELS DÉBUTANT
 
-💡 **Référence complète:** Pour comprendre tous les concepts, consultez le [Manuel Utilisateur Complet](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md).
+💡 **Référence complète:** Pour comprendre tous les concepts, consultez le [Manuel Utilisateur Complet](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md).
 
-💡 **Avant de commencer:** Si TITANE n'est pas encore installé, suivez le [Guide d'Installation](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md).
+💡 **Avant de commencer:** Si TITANE n'est pas encore installé, suivez le [Guide d'Installation](GUIDE_INSTALLATION_SETUP_v27.0.0.md).
 
 ### Tuto 1: Première Conversation (3 min)
 
 **Objectif:** Démarrer & avoir une conversation simple
 
-**Prérequis:** TITANE installé ([voir Guide Installation](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md#installation-linux))
+**Prérequis:** TITANE installé ([voir Guide Installation](GUIDE_INSTALLATION_SETUP_v27.0.0.md#installation-linux))
 
 **Étapes:**
 
@@ -410,7 +410,7 @@ Résultat: 2 heures = 500+ XP
 
 ### Tuto 7: API Tauri Commands (15 min)
 
-💡 **Référence API complète:** Consultez la section [API & Commandes Tauri](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#api--commandes-tauri) du manuel pour la documentation exhaustive.
+💡 **Référence API complète:** Consultez la section [API & Commandes Tauri](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#api--commandes-tauri) du manuel pour la documentation exhaustive.
 
 **Objectif:** Accéder aux données TITANE par code
 
@@ -1105,7 +1105,7 @@ Résultat: Analyse complète en 15 min ✅
 
 ## 🔬 CAS D'USAGE RECHERCHE
 
-💡 **Automatisation avancée:** Pour automatiser ces workflows, consultez la [documentation API & Commandes Tauri](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#api--commandes-tauri).
+💡 **Automatisation avancée:** Pour automatiser ces workflows, consultez la [documentation API & Commandes Tauri](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#api--commandes-tauri).
 
 ### Cas 1: Literature Review (Doctorat)
 
@@ -1157,7 +1157,7 @@ Résultat: Proposal solide en 1 semaine ✅
 
 ## 🎓 PROGRESSION LEARNING PATH
 
-💡 **Référence structurée:** Suivez les chapitres du [Manuel Utilisateur](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) dans l'ordre pour une progression optimale.
+💡 **Référence structurée:** Suivez les chapitres du [Manuel Utilisateur](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) dans l'ordre pour une progression optimale.
 
 ### Semaine 1: Fondements
 

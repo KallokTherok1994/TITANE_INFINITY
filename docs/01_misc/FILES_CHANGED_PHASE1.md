@@ -102,7 +102,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Legacy Versions
 
-See [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) for v24.x-v26.x history.
+See [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) for v24.x-v26.x history.
 ```
 
 **Reason**: Provide explicit version context (v27.0.5, v27.0.6, v27.2.0)  

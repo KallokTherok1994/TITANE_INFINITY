@@ -285,7 +285,7 @@ pnpm tauri build
 - **Product Owner:** Kevin Thibault (TITANE∞ Creator)
 - **Repository:** https://github.com/KallokTherok1994/TITANE_INFINITY
 - **Release:** https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.0-PRODUCTION
-- **License:** [LICENSE.md](docs/01_misc/LICENSE.md)
+- **License:** [LICENSE.md](LICENSE.md)
 
 ---
 

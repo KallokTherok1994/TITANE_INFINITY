@@ -113,7 +113,7 @@ drwxrwxr-x  2 titane-os titane-os      4096 janv. 29 22:51 v27.0.0
 
 README.md:10:**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
 README.md:34:📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums](./deployment/latest/SHA256SUMS_v27.0.5.txt)
-README.md:335:- **[Deployment Guide](docs/DEPLOYMENT.md)** — Production deployment guide
+README.md:335:- **[Deployment Guide](../DEPLOYMENT.md)** — Production deployment guide
 deployment/POST*DEPLOY_VALIDATION.md:649:- **Quick Deploy:** `deployment/QUICK_DEPLOY.md`
 deployment/POST_DEPLOY_VALIDATION.md:650:- **Admin Access:** `deployment/ADMIN_ACCESS_GUIDE.md`
 deployment/production/v27.0.0/DEPLOYMENT_MANIFEST.md:29:Latest stable baseline available at: `deployment/stable/` directory

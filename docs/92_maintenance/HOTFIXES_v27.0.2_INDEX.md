@@ -23,7 +23,7 @@
 
 ### For First Time Users
 
-1. **[PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md](docs/90_release/PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md)** (313 lines)
+1. **[PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md](../90_release/PRODUCTION_v27.0.2_HOTFIXES_SUMMARY.md)** (313 lines)
    - High-level overview of all 3 fixes
    - What changed and why it matters
    - How to test each feature
@@ -31,7 +31,7 @@
 
 ### For Installation & Troubleshooting
 
-2. **[PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](docs/01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md)** (500+ lines)
+2. **[PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](../01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md)** (500+ lines)
    - Step-by-step installation (DEB, AppImage, macOS)
    - Verification checklist
    - Troubleshoot Ollama issues
@@ -50,7 +50,7 @@
 
 ### For Technical Details
 
-4. **[PROD_FIX_v27.0.2_VALIDATION_REPORT.md](docs/01_misc/PROD_FIX_v27.0.2_VALIDATION_REPORT.md)** (229 lines)
+4. **[PROD_FIX_v27.0.2_VALIDATION_REPORT.md](../01_misc/PROD_FIX_v27.0.2_VALIDATION_REPORT.md)** (229 lines)
    - Compilation verification
    - Source code changes
    - Environment variables reference
@@ -59,7 +59,7 @@
 
 ### For Code Review
 
-5. **[PROD_FIX_v27.0.2_PATCHES.md](docs/01_misc/PROD_FIX_v27.0.2_PATCHES.md)** (400+ lines)
+5. **[PROD_FIX_v27.0.2_PATCHES.md](../01_misc/PROD_FIX_v27.0.2_PATCHES.md)** (400+ lines)
    - Detailed patch specifications
    - Before/after code comparison
    - Function signatures
@@ -291,7 +291,7 @@ f7f4ce1f - fix(prod): PROD v27.0.2 hotfixes (source changes)
 ## 🆘 Troubleshooting
 
 **Ollama won't start**
-→ See: [PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](docs/01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md#troubleshooting)
+→ See: [PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](../01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md#troubleshooting)
 
 **F12 DevTools still not showing**
 → Check: `TITANE_DEVTOOLS=1` environment variable is set before launch
@@ -306,9 +306,9 @@ f7f4ce1f - fix(prod): PROD v27.0.2 hotfixes (source changes)
 
 ## 📞 Support Resources
 
-- **Installation Help**: [PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](docs/01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md)
+- **Installation Help**: [PROD_FIX_v27.0.2_COMPLETE_GUIDE.md](../01_misc/PROD_FIX_v27.0.2_COMPLETE_GUIDE.md)
 - **Troubleshooting**: [DEPLOYMENT_READY_v27.0.2.txt](DEPLOYMENT_READY_v27.0.2.txt#support--troubleshooting)
-- **Technical Details**: [PROD_FIX_v27.0.2_PATCHES.md](docs/01_misc/PROD_FIX_v27.0.2_PATCHES.md)
+- **Technical Details**: [PROD_FIX_v27.0.2_PATCHES.md](../01_misc/PROD_FIX_v27.0.2_PATCHES.md)
 - **Code Review**: Compare `f7f4ce1f` commit on GitHub
 - **Automation**: [scripts/fix-prod-v27.0.2.sh](scripts/fix-prod-v27.0.2.sh)
 

@@ -466,7 +466,7 @@ CHANGELOG.md - Ajouter v26.2.1
 
 ### Documentation
 
-- [CHANGELOG_v26.2.0.md](CHANGELOG_v26.2.0.md)
+- [CHANGELOG_v26.2.0.md](../90_release/CHANGELOG_v26.2.0.md)
 - [RAPPORT_OPTIMISATIONS_v26.2.0.md](RAPPORT_OPTIMISATIONS_v26.2.0.md)
 
 ### Tools

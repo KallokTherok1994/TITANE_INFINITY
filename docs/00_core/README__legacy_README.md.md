@@ -179,8 +179,8 @@ npm run test:migration-parity
 ## 🔗 Ressources
 
 - **Architecture v24**: [ARCHITECTURE.md](../ARCHITECTURE.md)
-- **Guide de contribution**: [CONTRIBUTING.md](../CONTRIBUTING.md)
-- **Code Style**: [CODE_STYLE.md](../CODE_STYLE.md)
+- **Guide de contribution**: [CONTRIBUTING.md](CONTRIBUTING.md)
+- **Code Style**: [CODE_STYLE.md](../01_misc/CODE_STYLE.md)
 - **OMEGA v2 Spec**: [docs/OMEGA_v2_SPEC.md](../docs/OMEGA_v2_SPEC.md)
 
 ---

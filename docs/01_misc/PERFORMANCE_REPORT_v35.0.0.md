@@ -379,10 +379,10 @@ dfd86226 v35.0.0 Phase 1: Critical path optimization
 
 ## Related Documentation
 
-- [WEB_VITALS_v35.0.0.md](docs/01_misc/WEB_VITALS_v35.0.0.md) — Implementation strategy
-- [REACT_OPTIMIZATION_v33.0.0.md](docs/01_misc/REACT_OPTIMIZATION_v33.0.0.md) — React optimization details
-- [BUNDLE_OPTIMIZATION_v34.0.0.md](docs/01_misc/BUNDLE_OPTIMIZATION_v34.0.0.md) — Bundle analysis
-- [BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md](docs/01_misc/BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md) — Phase 3 details
+- [WEB_VITALS_v35.0.0.md](WEB_VITALS_v35.0.0.md) — Implementation strategy
+- [REACT_OPTIMIZATION_v33.0.0.md](REACT_OPTIMIZATION_v33.0.0.md) — React optimization details
+- [BUNDLE_OPTIMIZATION_v34.0.0.md](BUNDLE_OPTIMIZATION_v34.0.0.md) — Bundle analysis
+- [BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md](BUNDLE_OPTIMIZATION_v34.0.0_PHASE3.md) — Phase 3 details
 
 ---
 

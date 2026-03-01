@@ -335,7 +335,7 @@ logs/update_report.json
 ## 📚 DOCUMENTATION
 
 ### Développement
-- [Architecture Backend](./BACKEND_ARCHITECTURE_v17.3.0.md)
+- [Architecture Backend](../versions/v17/BACKEND_ARCHITECTURE_v17.3.0.md)
 - [Rapport Audit](./RAPPORT_AUDIT_FINAL_v∞_COMPLETE.md)
 - [Rapport Tests](./RAPPORT_TESTS_FINAL_v19.1.0.md)
 

@@ -120,8 +120,8 @@ chmod +x INSTALL.sh
 ## 📞 Support
 
 - **Issues:** https://github.com/KallokTherok1994/TITANE_INFINITY/issues
-- **Documentation:** [README.md](README.md)
-- **Changelog:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)
+- **Documentation:** [README.md](../../README.md)
+- **Changelog:** [CHANGELOG.md](CHANGELOG__CHANGELOG.md.md)
 
 ---
 

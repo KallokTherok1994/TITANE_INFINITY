@@ -402,7 +402,7 @@ git commit -m "feat: Re-enable fusion_activate_modules command"
 
 ## 📚 RÉFÉRENCES
 
-- [AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md) - Audit complet qui a identifié le problème
+- [AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](../91_reports/AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md) - Audit complet qui a identifié le problème
 - [SPRINT_6_AUDIT_COMPLETION_SUMMARY.md](SPRINT_6_AUDIT_COMPLETION_SUMMARY.md) - Contexte audit Sprint 6
 - Commit: 4787ecab - "fix: Disable 8 unimplemented fusion\_\* commands"
 

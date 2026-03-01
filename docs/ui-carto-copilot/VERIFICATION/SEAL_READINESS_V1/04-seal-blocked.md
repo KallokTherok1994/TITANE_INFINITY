@@ -7,8 +7,8 @@ Statut: BLOCKED
 - Règle: sans baseline admissible, aucun scellement n’est autorisé.
 
 Preuve:
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md)
-- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](00-prefight.md)
+- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](../MISSING_KEVIN_V5.md)
 
 ## À fournir pour débloquer
 - Ajouter un fichier baseline Kevin V5 admissible dans docs/reference/kevin-v5/ (md/pdf/zip/docx), hors fichiers ignorés.

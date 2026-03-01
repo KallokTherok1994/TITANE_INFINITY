@@ -43,7 +43,7 @@ Protocol: vΩ.BA.ULTIMATE (FINAL100 → Constitutional Lock)
 > This constitutional lock defined the v27.0.0-v27.4.x architecture (**local-first**).  
 > **Superseded by v27.5.0 constitutional migration (local-first → online-first).**  
 > Preserved for historical reference only.  
-> See: [README.md](README.md#-vision) for current architecture (online-first).
+> See: [README.md](../../README.md#-vision) for current architecture (online-first).
 
 ---
 

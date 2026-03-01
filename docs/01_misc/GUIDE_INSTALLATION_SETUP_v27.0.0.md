@@ -303,9 +303,9 @@ ls src-tauri\target\release\bundle\msi\
 
 ## ⚙️ CONFIGURATION INITIALE
 
-💡 **Après configuration:** Découvrez toutes les fonctionnalités dans le [Manuel Utilisateur Complet](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md).
+💡 **Après configuration:** Découvrez toutes les fonctionnalités dans le [Manuel Utilisateur Complet](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md).
 
-💡 **Pour les concepts détaillés:** Consultez la [section Paramètres du Manuel](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#paramètres--personnalisation) pour personnalisation avancée.
+💡 **Pour les concepts détaillés:** Consultez la [section Paramètres du Manuel](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#paramètres--personnalisation) pour personnalisation avancée.
 
 ### Premier Lancement
 
@@ -452,7 +452,7 @@ Cliquez [Terminer Setup] et c'est parti! 🚀
 
 ## 🔧 SETUP PROVIDERS IA
 
-💡 **Exemples pratiques:** Voir [Tutoriel #1 : Première Conversation](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-1-première-conversation-3-min) pour tester votre provider après configuration.
+💡 **Exemples pratiques:** Voir [Tutoriel #1 : Première Conversation](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-1-première-conversation-3-min) pour tester votre provider après configuration.
 
 ### Provider: Ollama (Local)
 
@@ -548,7 +548,7 @@ Latence: ~1 second (très rapide)
 
 ## ⚡ OPTIMISATION PERFORMANCE
 
-💡 **Benchmarks détaillés:** Consultez la [section Performance du Manuel](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#⚡-performance--optimisation) pour comparatifs complets par provider et mode.
+💡 **Benchmarks détaillés:** Consultez la [section Performance du Manuel](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#⚡-performance--optimisation) pour comparatifs complets par provider et mode.
 
 ### Régler Température IA
 

@@ -40,19 +40,19 @@ Index des preuves (sans invention). Timestamps issus de `ls -la`.
 - [docs/ui-carto-copilot/09_MANIFEST.json](docs/ui-carto-copilot/09_MANIFEST.json)
   - But: registre principal UI.
   - Dernière modif (ls -la): févr. 8 12:36.
-- [docs/ui-carto-copilot/README.md](docs/ui-carto-copilot/README.md)
+- [docs/ui-carto-copilot/README.md](../../../../README.md)
   - But: résumé de la cartographie UI.
   - Dernière modif (ls -la): févr. 8 12:36.
-- [docs/ui-carto-copilot/INDEX.md](docs/ui-carto-copilot/INDEX.md)
+- [docs/ui-carto-copilot/INDEX.md](../../../00_core/DOCS_INDEX.md)
   - But: points d’entrée et références.
   - Dernière modif (ls -la): févr. 8 12:36.
-- [docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md](docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md)
+- [docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md](../../55-nonconformities/55-nonconformities-register.md)
   - But: registre des non‑conformités.
   - Dernière modif (ls -la): févr. 8 12:36.
-- [docs/ui-carto-copilot/UI_ARBITRATION_LOG.md](docs/ui-carto-copilot/UI_ARBITRATION_LOG.md)
+- [docs/ui-carto-copilot/UI_ARBITRATION_LOG.md](../../UI_ARBITRATION_LOG.md)
   - But: arbitrage UI.
   - Dernière modif (ls -la): févr. 8 12:28.
-- [docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md](docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md)
+- [docs/ui-carto-copilot/VERIFICATION/UI_FREEZE_GATES.md](../UI_FREEZE_GATES.md)
   - But: règles de gel et gates.
   - Dernière modif (ls -la): févr. 8 12:28.
 
@@ -61,13 +61,13 @@ Index des preuves (sans invention). Timestamps issus de `ls -la`.
 - [docs/ui-carto-copilot/VERIFICATION/UI_DOCS_UPDATE_BLOCKED.md](docs/ui-carto-copilot/VERIFICATION/UI_DOCS_UPDATE_BLOCKED.md)
   - But: preuve de blocage préflight baseline.
   - Dernière modif (ls -la): févr. 8 11:06.
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_PRODUCTION_BLOCKED.md](docs/ui-carto-copilot/VERIFICATION/SEAL_PRODUCTION_BLOCKED.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_PRODUCTION_BLOCKED.md](../SEAL_PRODUCTION_BLOCKED.md)
   - But: blocage de scellement (gate F).
   - Dernière modif (ls -la): févr. 8 12:28.
-- [docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_FAIL.md](docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_FAIL.md)
+- [docs/ui-carto-copilot/VERIFICATION/KEVIN_V5_IMPORT_FAIL.md](../KEVIN_V5_IMPORT_FAIL.md)
   - But: preuve d’échec d’import baseline.
   - Dernière modif (ls -la): févr. 8 12:36.
-- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md)
+- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](../MISSING_KEVIN_V5.md)
   - But: preuve baseline manquante.
   - Dernière modif (ls -la): févr. 8 12:28.
 - [docs/ui-carto-copilot/VERIFICATION/BASELINE_IMPORT_BLOCKED_FINAL.md](docs/ui-carto-copilot/VERIFICATION/BASELINE_IMPORT_BLOCKED_FINAL.md)

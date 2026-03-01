@@ -671,7 +671,7 @@ ls -lh src-tauri/target/release/
 
 ### Documentation
 
-- [CHANGELOG_v26.2.0.md](CHANGELOG_v26.2.0.md) - Changelog détaillé
+- [CHANGELOG_v26.2.0.md](../90_release/CHANGELOG_v26.2.0.md) - Changelog détaillé
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
 - [ESLint React Plugin](https://github.com/jsx-eslint/eslint-plugin-react/blob/master/docs/rules/no-unescaped-entities.md)
 - [Vite Build Optimization](https://vitejs.dev/guide/build.html)

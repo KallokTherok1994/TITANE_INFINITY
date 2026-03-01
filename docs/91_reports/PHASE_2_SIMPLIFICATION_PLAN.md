@@ -649,9 +649,9 @@ src/stores/
 
 ### Documentation Référence
 
-- [4-Ring Architecture](/home/runner/work/TITANE_INFINITY/TITANE_INFINITY/.copilot-rules-permanent.md) — Règles architecture
-- [CONTRIBUTING.md](/home/runner/work/TITANE_INFINITY/TITANE_INFINITY/CONTRIBUTING.md) — Guide contributions
-- [OMEGA Pipeline v2](/home/runner/work/TITANE_INFINITY/TITANE_INFINITY/docs/guides/OMEGA_PIPELINE_v2.md) — Context pipeline
+- [4-Ring Architecture](../01_misc/.copilot-rules-permanent.md) — Règles architecture
+- [CONTRIBUTING.md](../00_core/CONTRIBUTING.md) — Guide contributions
+- [OMEGA Pipeline v2](../guides/OMEGA_PIPELINE_v2.md) — Context pipeline
 
 ### Outils
 

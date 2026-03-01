@@ -410,9 +410,9 @@ pnpm run e2e:desktop
 - [wdio-tauri-plugin](https://github.com/webdriverio/wdio-tauri-plugin)
 
 ### Related Files
-- [FINAL_VERDICT.md](../reports/local_ai_runtime_full_pass/2026-02-11T17:29:36Z/FINAL_VERDICT.md) — Original audit verdict
-- [03_AR20_PROOF_FINAL.md](../reports/local_ai_runtime_full_pass/2026-02-11T17:29:36Z/03_AR20_PROOF_FINAL.md) — Playwright blocker RCA
-- [10_GATES_SUMMARY.md](../reports/local_ai_runtime_full_pass/2026-02-11T17:29:36Z/10_GATES_SUMMARY.md) — Gate scorecard
+- [FINAL_VERDICT.md](../01_misc/FINAL_VERDICT.md) — Original audit verdict
+- [03_AR20_PROOF_FINAL.md](../01_misc/03_AR20_PROOF_FINAL.md) — Playwright blocker RCA
+- [10_GATES_SUMMARY.md](../01_misc/10_GATES_SUMMARY.md) — Gate scorecard
 
 ---
 

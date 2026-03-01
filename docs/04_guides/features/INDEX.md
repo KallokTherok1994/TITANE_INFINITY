@@ -56,7 +56,7 @@ Documentation spécialisée features TITANE∞:
 
 **Cross-refs:**
 - [QUICKSTART.md § Features](../quickstart/QUICKSTART.md#features-essentielles)
-- [OMEGA_PIPELINE_DETAILED.md](../../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md)
+- [OMEGA_PIPELINE_DETAILED.md](../../01_architecture/OMEGA_PIPELINE_DETAILED.md)
 
 ---
 
@@ -76,8 +76,8 @@ Documentation spécialisée features TITANE∞:
 
 **Cross-refs:**
 - [QUICKSTART.md § Features](../quickstart/QUICKSTART.md#features-essentielles)
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md)
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md)
 
 ---
 
@@ -97,7 +97,7 @@ Documentation spécialisée features TITANE∞:
 
 **Cross-refs:**
 - [QUICKSTART.md § Features](../quickstart/QUICKSTART.md#features-essentielles)
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)
 
 ---
 
@@ -131,10 +131,10 @@ Documentation spécialisée features TITANE∞:
 - 🗺️ [docs/04_guides/INDEX.md](../INDEX.md) — Navigation master
 
 ### Liens vers architecture:
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md)
-- [OMEGA_PIPELINE_DETAILED.md](../../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md)
-- [TAURI_COMMANDS_REFERENCE.md](../../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md)
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md)
+- [OMEGA_PIPELINE_DETAILED.md](../../01_architecture/OMEGA_PIPELINE_DETAILED.md)
+- [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md)
 
 ---
 

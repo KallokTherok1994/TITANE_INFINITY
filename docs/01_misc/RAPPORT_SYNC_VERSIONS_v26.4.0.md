@@ -194,7 +194,7 @@ grep -r "v24\.3\.0|v25\.|v26\.2\.0" *.{md,html,json,tsx,rs}
 
 ### 2️⃣ Documentation Audit (2 minutes)
 
-**Fichier créé**: [AUDIT_COHERENCE_FICHIERS_v26.4.0.md](AUDIT_COHERENCE_FICHIERS_v26.4.0.md)
+**Fichier créé**: [AUDIT_COHERENCE_FICHIERS_v26.4.0.md](../91_reports/AUDIT_COHERENCE_FICHIERS_v26.4.0.md)
 
 Contenu:
 

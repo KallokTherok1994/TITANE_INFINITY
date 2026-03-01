@@ -379,7 +379,7 @@ Modules Rust:
 - [src/engines/time/AgendaEngine.ts](src/engines/time/AgendaEngine.ts#L29)
 - [src/engines/time/ChatScheduler.ts](src/engines/time/ChatScheduler.ts#L29)
 
-**Recommandation**: Refactorer pour conformité [ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)
+**Recommandation**: Refactorer pour conformité [ARCHITECTURE_RINGS.md](../ARCHITECTURE_RINGS.md)
 
 ---
 
@@ -625,7 +625,7 @@ Documentation:           Complète ⭐⭐⭐⭐
 | [ANALYSE_COMPLETE_PRODUCTION_v24.2.0.md](ANALYSE_COMPLETE_PRODUCTION_v24.2.0.md) | Ce fichier | Rapport complet production |
 | [BUILD_VALIDATION_REPORT.md](BUILD_VALIDATION_REPORT.md) | 170 | Validation build |
 | [RUST_WARNINGS_FIXED.md](RUST_WARNINGS_FIXED.md) | 120 | Fix warnings Rust |
-| [ANALYSE_APPROFONDIE_v24.2.0.md](ANALYSE_APPROFONDIE_v24.2.0.md) | 350 | Analyse approfondie système |
+| [ANALYSE_APPROFONDIE_v24.2.0.md](../archive/v24/ANALYSE_APPROFONDIE_v24.2.0.md) | 350 | Analyse approfondie système |
 
 **Total documentation**: ~2000 lignes générées
 

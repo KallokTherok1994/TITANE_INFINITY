@@ -140,8 +140,8 @@ TITANE-Infinity v26.3.0 a passé avec succès les **9 gates de certification** a
 ## 📖 Documentation Complète
 
 - **README Principal:** [README.md](../../README.md)
-- **Changelog Complet:** [CHANGELOG.md](../../CHANGELOG.md)
-- **Build Success Report:** [BUILD_SUCCESS_v26.3.0.md](../../BUILD_SUCCESS_v26.3.0.md)
+- **Changelog Complet:** [CHANGELOG.md](../90_release/CHANGELOG.md)
+- **Build Success Report:** [BUILD_SUCCESS_v26.3.0.md](BUILD_SUCCESS_v26.3.0.md)
 - **Documentation Technique:** [docs/](../../docs/)
 
 ---

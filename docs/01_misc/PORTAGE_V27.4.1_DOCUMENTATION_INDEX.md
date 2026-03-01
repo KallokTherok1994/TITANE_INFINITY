@@ -26,10 +26,10 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                                                           | Description                              | Autorité             | Référence        |
 | -------------------------------------------------------------------------------------------------- | ---------------------------------------- | -------------------- | ---------------- |
-| [COGNITIVE_CORE_COMPLETE.md](docs/01_misc/COGNITIVE_CORE_COMPLETE.md)                                           | Architecture Cognitive Core complète     | ⭐ **CANONIQUE**     | Production Ready |
-| [COGNITIVE_CORE_README.md](docs/01_misc/COGNITIVE_CORE_README.md)                                               | Guide d'utilisation Cognitive Core       | 📘 Guide Utilisateur | Opérationnel     |
-| [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](docs/93_conversation/CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) | Système d'intelligence conversationnelle | ⭐ **CANONIQUE**     | v1.0 Sealed      |
-| [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)                                                                 | Architecture globale TITANE∞             | Voir note¹           | Fusionné         |
+| [COGNITIVE_CORE_COMPLETE.md](COGNITIVE_CORE_COMPLETE.md)                                           | Architecture Cognitive Core complète     | ⭐ **CANONIQUE**     | Production Ready |
+| [COGNITIVE_CORE_README.md](COGNITIVE_CORE_README.md)                                               | Guide d'utilisation Cognitive Core       | 📘 Guide Utilisateur | Opérationnel     |
+| [CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md](../93_conversation/CONVERSATION_INTELLIGENCE_CORE_COMPLETE_v1.0.md) | Système d'intelligence conversationnelle | ⭐ **CANONIQUE**     | v1.0 Sealed      |
+| [ARCHITECTURE.md](ARCHITECTURE__ARCHITECTURE.md.md)                                                                 | Architecture globale TITANE∞             | Voir note¹           | Fusionné         |
 
 > **Note¹**: Le fichier ARCHITECTURE.md existait déjà dans TITANE_INFINITY. Vérifier la fusion/priorité.
 
@@ -39,12 +39,12 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                         | Description                      | Autorité     | Période     |
 | ---------------------------------------------------------------- | -------------------------------- | ------------ | ----------- |
-| [SPRINT_1_CODE_CHANGES_AUDIT.md](docs/01_misc/SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit des changements Sprint 1   | 🔍 **AUDIT** | Historique  |
-| [SPRINT_1_FINAL_REPORT.md](docs/01_misc/SPRINT_1_FINAL_REPORT.md)             | Rapport final Sprint 1           | 📊 Rapport   | Historique  |
-| [SPRINT_2_FINAL_REPORT.md](docs/01_misc/SPRINT_2_FINAL_REPORT.md)             | Rapport final Sprint 2           | 📊 Rapport   | Historique  |
-| [SPRINT_3_FINAL_REPORT.md](docs/01_misc/SPRINT_3_FINAL_REPORT.md)             | Rapport final Sprint 3           | 📊 Rapport   | Historique  |
-| [SPRINT_4_FINAL_REPORT.md](docs/01_misc/SPRINT_4_FINAL_REPORT.md)             | Rapport final Sprint 4           | 📊 Rapport   | Historique  |
-| [SPRINT_1_CODE_CHANGES_AUDIT.md](docs/01_misc/SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit détaillé des modifications | 🔍 **AUDIT** | Gouvernance |
+| [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit des changements Sprint 1   | 🔍 **AUDIT** | Historique  |
+| [SPRINT_1_FINAL_REPORT.md](SPRINT_1_FINAL_REPORT.md)             | Rapport final Sprint 1           | 📊 Rapport   | Historique  |
+| [SPRINT_2_FINAL_REPORT.md](SPRINT_2_FINAL_REPORT.md)             | Rapport final Sprint 2           | 📊 Rapport   | Historique  |
+| [SPRINT_3_FINAL_REPORT.md](SPRINT_3_FINAL_REPORT.md)             | Rapport final Sprint 3           | 📊 Rapport   | Historique  |
+| [SPRINT_4_FINAL_REPORT.md](SPRINT_4_FINAL_REPORT.md)             | Rapport final Sprint 4           | 📊 Rapport   | Historique  |
+| [SPRINT_1_CODE_CHANGES_AUDIT.md](SPRINT_1_CODE_CHANGES_AUDIT.md) | Audit détaillé des modifications | 🔍 **AUDIT** | Gouvernance |
 
 ---
 
@@ -52,8 +52,8 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                                                       | Description                               | Autorité         | Version        |
 | ---------------------------------------------------------------------------------------------- | ----------------------------------------- | ---------------- | -------------- |
-| [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](docs/90_release/DEPLOYMENT_EXECUTED.md)         | Rapport de déploiement production v27.4.1 | ⭐ **CANONIQUE** | v27.4.1-SEALED |
-| [deployment/v27.4.1/README_DEPLOYMENT.md](docs/00_core/README_DEPLOYMENT.md)             | Instructions déploiement v27.4.1          | 📘 Guide         | v27.4.1        |
+| [deployment/v27.4.1/DEPLOYMENT_EXECUTED.md](../90_release/DEPLOYMENT_EXECUTED.md)         | Rapport de déploiement production v27.4.1 | ⭐ **CANONIQUE** | v27.4.1-SEALED |
+| [deployment/v27.4.1/README_DEPLOYMENT.md](../00_core/README_DEPLOYMENT.md)             | Instructions déploiement v27.4.1          | 📘 Guide         | v27.4.1        |
 | [deployment/v27.4.1/checksums/SHA256SUMS](deployment/v27.4.1/checksums/SHA256SUMS)             | Checksums officiels des artefacts         | 🔐 **SÉCURITÉ**  | Production     |
 | [deployment/v27.4.1/checksums/SHA256SUMS.local](deployment/v27.4.1/checksums/SHA256SUMS.local) | Checksums locaux (validation)             | 🔐 Validation    | Build Local    |
 
@@ -63,9 +63,9 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                                 | Description                     | Autorité   | Statut     |
 | ------------------------------------------------------------------------ | ------------------------------- | ---------- | ---------- |
-| [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](docs/01_misc/BOOTSTRAP_COMPLETE_FINAL_REPORT.md) | Rapport final bootstrap complet | 📊 Rapport | Complété   |
-| [BOOTSTRAP_REPORT.md](docs/01_misc/BOOTSTRAP_REPORT.md)                               | Rapport bootstrap initial       | 📊 Rapport | Historique |
-| [ENV_REPORT.md](docs/01_misc/ENV_REPORT.md)                                           | Configuration environnement     | 🛠️ Config  | Référence  |
+| [BOOTSTRAP_COMPLETE_FINAL_REPORT.md](BOOTSTRAP_COMPLETE_FINAL_REPORT.md) | Rapport final bootstrap complet | 📊 Rapport | Complété   |
+| [BOOTSTRAP_REPORT.md](BOOTSTRAP_REPORT.md)                               | Rapport bootstrap initial       | 📊 Rapport | Historique |
+| [ENV_REPORT.md](ENV_REPORT.md)                                           | Configuration environnement     | 🛠️ Config  | Référence  |
 
 ---
 
@@ -73,7 +73,7 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                                     | Description                | Autorité     | Niveau |
 | ---------------------------------------------------------------------------- | -------------------------- | ------------ | ------ |
-| [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](docs/01_misc/ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) | Audit complet Super Prompt | 🔍 **AUDIT** | Meta   |
+| [ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md](ULTRA_SUPER_PROMPT_AUDIT_COMPLETE.md) | Audit complet Super Prompt | 🔍 **AUDIT** | Meta   |
 
 ---
 
@@ -81,10 +81,10 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                                     | Description                   | Autorité         | Usage        |
 | ---------------------------------------------------------------------------- | ----------------------------- | ---------------- | ------------ |
-| [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md)                                       | Méthodologie portage complète | ⭐ **CANONICAL** | Gouvernance  |
-| [PORTAGE_COMPLETION_INSTRUCTIONS.md](docs/01_misc/PORTAGE_COMPLETION_INSTRUCTIONS.md)     | Instructions finales portage  | 📘 Guide         | Post-Portage |
-| [PORT_TITANE_INFINITY_FINAL_REPORT.md](docs/01_misc/PORT_TITANE_INFINITY_FINAL_REPORT.md) | Rapport exécutif portage      | 📊 Rapport       | Traçabilité  |
-| [PR_TEMPLATE_CREATION.md](docs/01_misc/PR_TEMPLATE_CREATION.md)                           | Template création PR          | 📘 Template      | Procédure    |
+| [PORT_FROM_LITE.md](PORT_FROM_LITE.md)                                       | Méthodologie portage complète | ⭐ **CANONICAL** | Gouvernance  |
+| [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md)     | Instructions finales portage  | 📘 Guide         | Post-Portage |
+| [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md) | Rapport exécutif portage      | 📊 Rapport       | Traçabilité  |
+| [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md)                           | Template création PR          | 📘 Template      | Procédure    |
 
 ---
 
@@ -92,7 +92,7 @@ Ce portage a transféré **21 fichiers de documentation** de TITANE_LITE vers TI
 
 | Document                                                         | Description            | Autorité       | Statut |
 | ---------------------------------------------------------------- | ---------------------- | -------------- | ------ |
-| [FINAL_STATUS_AND_NEXT_STEPS.md](docs/01_misc/FINAL_STATUS_AND_NEXT_STEPS.md) | Statut final & roadmap | 📍 **ROADMAP** | Actif  |
+| [FINAL_STATUS_AND_NEXT_STEPS.md](FINAL_STATUS_AND_NEXT_STEPS.md) | Statut final & roadmap | 📍 **ROADMAP** | Actif  |
 
 ---
 
@@ -133,9 +133,9 @@ Pour préserver l'intégrité du portage:
 
 ### Intégration avec Documentation Existante
 
-- **Architecture globale**: Voir [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) (à harmoniser avec COGNITIVE_CORE_COMPLETE.md)
-- **Index maître**: [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md)
-- **API Reference**: [API_REFERENCE.md](docs/01_misc/API_REFERENCE.md)
+- **Architecture globale**: Voir [ARCHITECTURE.md](ARCHITECTURE__ARCHITECTURE.md.md) (à harmoniser avec COGNITIVE_CORE_COMPLETE.md)
+- **Index maître**: [docs/INDEX_MASTER.md](../INDEX_MASTER.md)
+- **API Reference**: [API_REFERENCE.md](API_REFERENCE.md)
 - **Roadmap**: Intégrer FINAL_STATUS_AND_NEXT_STEPS.md dans planification globale
 
 ---
@@ -167,7 +167,7 @@ Commits portage:           2 (squashed to ef72a56b)
 
 ### Procédure de Rollback
 
-En cas de problème, voir [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md#rollback-procedures) section **Rollback**.
+En cas de problème, voir [PORT_FROM_LITE.md](PORT_FROM_LITE.md#rollback-procedures) section **Rollback**.
 
 ---
 

@@ -205,10 +205,10 @@ Follow vΩ.EVOLVE protocol for future changes:
 
 ## SUPPORT
 
-**Documentation**: See [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)  
+**Documentation**: See [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)  
 **Issues**: Report on GitHub Issues  
-**Constitutional**: See [CONSTITUTION_LOCK_v27.md](docs/01_misc/CONSTITUTION_LOCK_v27.md)  
-**Authorization**: See [PRODUCTION_GO_SIGNED.md](docs/90_release/PRODUCTION_GO_SIGNED.md)
+**Constitutional**: See [CONSTITUTION_LOCK_v27.md](CONSTITUTION_LOCK_v27.md)  
+**Authorization**: See [PRODUCTION_GO_SIGNED.md](../90_release/PRODUCTION_GO_SIGNED.md)
 
 ---
 

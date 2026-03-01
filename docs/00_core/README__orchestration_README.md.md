@@ -70,16 +70,16 @@ Marks task as complete, shows next task.
 
 ### System Architecture
 
-- **[Orchestration Configuration](./ORCHESTRATION.md)** — Setup, workflow, troubleshooting
-- **[Global Instructions](../.github/instructions/titane.instructions.md)** — Architecture, coding standards
+- **[Orchestration Configuration](../01_misc/ORCHESTRATION.md)** — Setup, workflow, troubleshooting
+- **[Global Instructions](../../.github/instructions/titane.instructions.md)** — Architecture, coding standards
 - **[Task Roadmap](./roadmap.yaml)** — All 39 tasks with dependencies, estimates
 
 ### Copilot Agents
 
-- **[Titane Conductor](../.github/agents/titane-conductor.agent.md)** — Master orchestrator
-- **[Audit Subagent](../.github/agents/audit-subagent.agent.md)** — Code analysis
-- **[Implement Subagent](../.github/agents/implement-subagent.agent.md)** — TDD development
-- **[Review Subagent](../.github/agents/review-subagent.agent.md)** — Quality review
+- **[Titane Conductor](../../.github/agents/titane-conductor.agent.md)** — Master orchestrator
+- **[Audit Subagent](../../.github/agents/audit-subagent.agent.md)** — Code analysis
+- **[Implement Subagent](../../.github/agents/implement-subagent.agent.md)** — TDD development
+- **[Review Subagent](../../.github/agents/review-subagent.agent.md)** — Quality review
 
 ### Helper Scripts
 
@@ -206,8 +206,8 @@ npm run next
 
 ## 📖 Learning Path
 
-1. Read [ORCHESTRATION.md](./ORCHESTRATION.md) for setup and workflow
-2. Read [Global Instructions](../.github/instructions/titane.instructions.md) for code standards
+1. Read [ORCHESTRATION.md](../01_misc/ORCHESTRATION.md) for setup and workflow
+2. Read [Global Instructions](../../.github/instructions/titane.instructions.md) for code standards
 3. Skim [Roadmap](./roadmap.yaml) for overview of all tasks
 4. Read specific agent file (conductor, audit, implement, or review)
 5. Run `npm run next` to get your first task
@@ -302,14 +302,14 @@ Status: 🔄 in-progress
 
 ### Troubleshooting
 
-See [ORCHESTRATION.md — Troubleshooting](./ORCHESTRATION.md#troubleshooting-section)
+See [ORCHESTRATION.md — Troubleshooting](../01_misc/ORCHESTRATION.md#troubleshooting-section)
 
 ### Questions About
 
 - **Architecture** → Read `.github/instructions/titane.instructions.md`
 - **Agents** → Read `.github/agents/*.agent.md` files
 - **Tasks** → Check `orchestration/roadmap.yaml`
-- **Workflow** → See [ORCHESTRATION.md](./ORCHESTRATION.md)
+- **Workflow** → See [ORCHESTRATION.md](../01_misc/ORCHESTRATION.md)
 
 ### Common Issues
 

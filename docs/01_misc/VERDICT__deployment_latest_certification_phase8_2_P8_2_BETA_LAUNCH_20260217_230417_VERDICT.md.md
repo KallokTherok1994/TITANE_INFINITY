@@ -51,7 +51,7 @@
 - OPS on-call (monitoring 2026-02-18 — 2026-02-24)
 - Security team (if breach detected)
 
-**Rollback Procedure Reference:** [P8_ROLLBACK.md](../../phase8_1/P8_1_CERTIFICATION_20260217_192834/ROLLBACK.md)
+**Rollback Procedure Reference:** [P8_ROLLBACK.md](ROLLBACK.md)
 
 ---
 

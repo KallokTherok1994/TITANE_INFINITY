@@ -642,8 +642,8 @@ await cognitiveOrchestrator.storeMemory(finalOutput, "assistant", 0.7, ["respons
 
 ### Architecture Docs
 
-- **[ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md)** — System architecture
-- **[DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md)** — Data flow (cognitive integration)
+- **[ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)** — System architecture
+- **[DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md)** — Data flow (cognitive integration)
 
 ### Guides
 

@@ -158,11 +158,11 @@ pnpm run build:app
 
 | Document                                                                   | Description                            |
 | -------------------------------------------------------------------------- | -------------------------------------- |
-| [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)                                             | Historique complet des versions        |
-| [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)                                       | Architecture détaillée du système      |
-| [LICENSE.md](docs/01_misc/LICENSE.md)                                                 | Conditions de licence propriétaire     |
-| [NETTOYAGE_v27.0.0.md](docs/01_misc/NETTOYAGE_v27.0.0.md)                             | Rapport de nettoyage complet           |
-| [RAPPORT_FINAL_STRUCTURE_v27.0.0.md](docs/01_misc/RAPPORT_FINAL_STRUCTURE_v27.0.0.md) | Rapport final structure projet         |
+| [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)                                             | Historique complet des versions        |
+| [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)                                       | Architecture détaillée du système      |
+| [LICENSE.md](../01_misc/LICENSE.md)                                                 | Conditions de licence propriétaire     |
+| [NETTOYAGE_v27.0.0.md](../01_misc/NETTOYAGE_v27.0.0.md)                             | Rapport de nettoyage complet           |
+| [RAPPORT_FINAL_STRUCTURE_v27.0.0.md](../01_misc/RAPPORT_FINAL_STRUCTURE_v27.0.0.md) | Rapport final structure projet         |
 | [docs/](./docs/)                                                           | Documentation technique (297 fichiers) |
 
 ---
@@ -254,7 +254,7 @@ Les contributions sont **bienvenues** ! Voir [CONTRIBUTING.md](./CONTRIBUTING.md
 TITANE∞ est **propriétaire** et sous license exclusive.  
 © 2025-2026 **Humain Total / Kevin Thibault**
 
-Voir [LICENSE.md](docs/01_misc/LICENSE.md) pour les conditions complètes.
+Voir [LICENSE.md](../01_misc/LICENSE.md) pour les conditions complètes.
 
 ---
 

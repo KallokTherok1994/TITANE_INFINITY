@@ -56,4 +56,4 @@ _Optional: propose exact wording or example._
 
 ---
 
-**Note**: Documentation PRs are welcome! See [CONTRIBUTING.md](../CONTRIBUTING.md)
+**Note**: Documentation PRs are welcome! See [CONTRIBUTING.md](../../docs/00_core/CONTRIBUTING.md)

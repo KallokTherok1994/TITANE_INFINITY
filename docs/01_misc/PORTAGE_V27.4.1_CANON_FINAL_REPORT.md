@@ -275,19 +275,19 @@ f48399a2 ← CANON VERIFICATION (all gates passed)
 
 ### Documents Principaux (TITANE_INFINITY)
 
-1. **[PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](file:///home/titane/Documents/TITANE_INFINITY/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)**  
+1. **[PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)**  
    ⭐ Index canonique, point d'entrée unique
 
-2. **[PORTAGE_V27.4.1_SEAL.md](file:///home/titane/Documents/TITANE_INFINITY/PORTAGE_V27.4.1_SEAL.md)**  
+2. **[PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md)**  
    🔒 Seal officiel, décision irrevocable
 
-3. **[PORTAGE_V27.4.1_FINAL_OUTPUT.md](file:///home/titane/Documents/TITANE_INFINITY/PORTAGE_V27.4.1_FINAL_OUTPUT.md)**  
+3. **[PORTAGE_V27.4.1_FINAL_OUTPUT.md](PORTAGE_V27.4.1_FINAL_OUTPUT.md)**  
    📊 Rapport executive (SUPER PROMPT §7)
 
-4. **[PORT_FROM_LITE.md](file:///home/titane/Documents/TITANE_INFINITY/PORT_FROM_LITE.md)**  
+4. **[PORT_FROM_LITE.md](PORT_FROM_LITE.md)**  
    🔍 Audit trail, méthodologie complète
 
-5. **[PORTAGE_V27.4.1_CANON_VERIFICATION.md](file:///home/titane/Documents/TITANE_INFINITY/PORTAGE_V27.4.1_CANON_VERIFICATION.md)**  
+5. **[PORTAGE_V27.4.1_CANON_VERIFICATION.md](PORTAGE_V27.4.1_CANON_VERIFICATION.md)**  
    ✅ Certificat de vérification finale
 
 ### Archive Source (TITANE_LITE)

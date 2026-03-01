@@ -424,14 +424,14 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 ## �📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
 **Role-Based Quick Start:**
 
 - **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
-- **Want to Contribute:** [Contributing Guide](CONTRIBUTING.md) → Onboarding <2h with validation
+- **Want to Contribute:** [Contributing Guide](docs/00_core/CONTRIBUTING.md) → Onboarding <2h with validation
 - **Need API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) → 14 modules, comprehensive coverage
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
@@ -523,13 +523,13 @@ pnpm run test:all
 
 ## 🤝 Contribution
 
-> **🎯 NEW: [Complete Contributing Guide](CONTRIBUTING.md) — Validated <2h onboarding**
+> **🎯 NEW: [Complete Contributing Guide](docs/00_core/CONTRIBUTING.md) — Validated <2h onboarding**
 
 ### Quick Start for Contributors
 
 **🎯 First Contribution in 3 Steps:**
 
-1. **Read:** [CONTRIBUTING.md](CONTRIBUTING.md) (15 min)
+1. **Read:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) (15 min)
 2. **Setup:** Environment + dev runtime (30 min)
 3. **First PR:** Choose good-first-issue, code, test, submit (60 min)
 
@@ -594,7 +594,7 @@ git push origin feature/my-awesome-feature
 - **[Documentation Issue](.github/ISSUE_TEMPLATE/documentation.md)** — Fix docs
 
 **Before Submitting PR:**
-✅ Code follows [CONTRIBUTING.md](CONTRIBUTING.md) standards  
+✅ Code follows [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) standards  
 ✅ All tests pass (`pnpm run test`)  
 ✅ ESLint/Prettier clean (`pnpm run lint`)  
 ✅ Documentation updated (if needed)  
@@ -741,7 +741,7 @@ git push origin feature/my-awesome-feature
 - 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
 - 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
 - **API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) — 14 modules, comprehensive coverage
-- 💬 **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) — <2h onboarding
+- 💬 **Contributing:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues
 
@@ -797,7 +797,7 @@ git push origin feature/my-awesome-feature
 - **GitHub:** [KallokTherok1994/TITANE_INFINITY](https://github.com/KallokTherok1994/TITANE_INFINITY)
 - **Issues:** Bug reports, feature requests
 - **Discussions:** General questions, ideas
-- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](CONTRIBUTING.md))
+- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md))
 
 ### 📧 Contact
 

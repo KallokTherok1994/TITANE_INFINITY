@@ -127,7 +127,7 @@
 
 ### Documentation
 
-12. [STABILIZATION_SESSION_PHASE1_REPORT.md](STABILIZATION_SESSION_PHASE1_REPORT.md) - Session documentation
+12. [STABILIZATION_SESSION_PHASE1_REPORT.md](../../stabilization/STABILIZATION_SESSION_PHASE1_REPORT.md) - Session documentation
 
 ---
 
@@ -263,7 +263,7 @@ git push origin feature/TITANE_OS
 
 ## 📚 DOCUMENTATION CREATED
 
-1. [STABILIZATION_SESSION_PHASE1_REPORT.md](STABILIZATION_SESSION_PHASE1_REPORT.md)
+1. [STABILIZATION_SESSION_PHASE1_REPORT.md](../../stabilization/STABILIZATION_SESSION_PHASE1_REPORT.md)
    - Phase 1A detailed report
    - ~280 lines of documentation
    - Complete unwrap() mapping
@@ -279,9 +279,9 @@ git push origin feature/TITANE_OS
 
 ## 🔗 RELATED DOCUMENTATION
 
-- [SESSION_PIPELINE_v21_FINAL.md](SESSION_PIPELINE_v21_FINAL.md) - Previous pipeline fixes
-- [PIPELINE_v21_SUCCESS_SUMMARY.md](PIPELINE_v21_SUCCESS_SUMMARY.md) - Pipeline summary
-- [STABILIZATION_SESSION_PHASE1_REPORT.md](STABILIZATION_SESSION_PHASE1_REPORT.md) - Phase 1A report
+- [SESSION_PIPELINE_v21_FINAL.md](../../old_sessions/2025-12-10/SESSION_PIPELINE_v21_FINAL.md) - Previous pipeline fixes
+- [PIPELINE_v21_SUCCESS_SUMMARY.md](../../complete-reports/PIPELINE_v21_SUCCESS_SUMMARY.md) - Pipeline summary
+- [STABILIZATION_SESSION_PHASE1_REPORT.md](../../stabilization/STABILIZATION_SESSION_PHASE1_REPORT.md) - Phase 1A report
 
 ---
 

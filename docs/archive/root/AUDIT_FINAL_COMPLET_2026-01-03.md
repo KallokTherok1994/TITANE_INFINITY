@@ -574,7 +574,7 @@ npm run copilot-xs:test
 - [TypeScript exactOptionalPropertyTypes](https://www.typescriptlang.org/tsconfig#exactOptionalPropertyTypes)
 - [React useCallback Hook](https://react.dev/reference/react/useCallback)
 - [Vitest Configuration](https://vitest.dev/config/)
-- [TITANE∞ Architecture](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- [TITANE∞ Architecture](../../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 
 ---
 

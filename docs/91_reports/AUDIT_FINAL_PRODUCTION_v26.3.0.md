@@ -179,9 +179,9 @@ ls -lh src-tauri/target/release/bundle/
 ## 📝 DOCUMENTATION COMPLÈTE
 
 Fichiers créés pour ce fix:
-1. **[WEBKIT_FIX_VALIDATION_v26.3.0.md](./WEBKIT_FIX_VALIDATION_v26.3.0.md)** — Protocole de validation
-2. **[VALIDATION_REPORT_FINAL.md](./VALIDATION_REPORT_FINAL.md)** — Rapport technique détaillé
-3. **[EXECUTIVE_SUMMARY_WEBKIT_FIX.md](./EXECUTIVE_SUMMARY_WEBKIT_FIX.md)** — Résumé exécutif
+1. **[WEBKIT_FIX_VALIDATION_v26.3.0.md](../01_misc/WEBKIT_FIX_VALIDATION_v26.3.0.md)** — Protocole de validation
+2. **[VALIDATION_REPORT_FINAL.md](../01_misc/VALIDATION_REPORT_FINAL.md)** — Rapport technique détaillé
+3. **[EXECUTIVE_SUMMARY_WEBKIT_FIX.md](../01_misc/EXECUTIVE_SUMMARY_WEBKIT_FIX.md)** — Résumé exécutif
 4. **[AUDIT_FINAL_PRODUCTION_v26.3.0.md](./AUDIT_FINAL_PRODUCTION_v26.3.0.md)** — Ce fichier
 
 ---

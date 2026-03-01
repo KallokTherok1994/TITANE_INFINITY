@@ -397,7 +397,7 @@ Progressive rollout model (Strict & Perfection lanes only):
 
 ### Legacy Versions (v24.x-v26.x)
 
-See [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) for historical versions.
+See [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) for historical versions.
 ```
 
 ---

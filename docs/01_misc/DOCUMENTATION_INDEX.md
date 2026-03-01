@@ -26,7 +26,7 @@
 
 ### For Detailed Tests (30 min)
 
-👉 **[PRODUCTION_TEST_REPORT.md](PRODUCTION_TEST_REPORT.md)**
+👉 **[PRODUCTION_TEST_REPORT.md](../90_release/PRODUCTION_TEST_REPORT.md)**
 
 - 19/23 automated tests passed
 - 9 manual test cases with expected results
@@ -282,7 +282,7 @@ git show eb5602a3
 
 - Run quick tests: `bash QUICK_START_TESTING.sh`
 - Run auto tests: `bash test-sprint6-phase3.sh`
-- Read test report: [PRODUCTION_TEST_REPORT.md](PRODUCTION_TEST_REPORT.md)
+- Read test report: [PRODUCTION_TEST_REPORT.md](../90_release/PRODUCTION_TEST_REPORT.md)
 
 ### Development
 
@@ -315,7 +315,7 @@ git show eb5602a3
 
 ### Quick Answers
 
-See **[PRODUCTION_TEST_REPORT.md](PRODUCTION_TEST_REPORT.md)** → Troubleshooting section
+See **[PRODUCTION_TEST_REPORT.md](../90_release/PRODUCTION_TEST_REPORT.md)** → Troubleshooting section
 
 ### Test Help
 

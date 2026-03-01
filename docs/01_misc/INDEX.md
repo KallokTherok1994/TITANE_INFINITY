@@ -48,7 +48,7 @@ cline "implement feature X with tests and validation"
 
 ### 📖 GUIDE UTILISATEUR
 
-**[README.md](./README.md)** (4 KB)
+**[README.md](../../README.md)** (4 KB)
 
 - 📦 Installation et configuration
 - 🔧 Paramètres optimisés
@@ -262,4 +262,4 @@ cline "document [API/function] with JSDoc"
 
 ---
 
-_Navigation rapide: [Rules](./rules.md) | [Instructions](./custom-instructions.md) | [README](./README.md) | [Status](./STATUS.md) | [Safeguards](./deployment-safeguards.json)_
+_Navigation rapide: [Rules](./rules.md) | [Instructions](./custom-instructions.md) | [README](../../README.md) | [Status](./STATUS.md) | [Safeguards](./deployment-safeguards.json)_

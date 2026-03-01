@@ -82,7 +82,7 @@ Available in TITANE_LITE deployment/ for reference.
 
 ## Link to Transfer Report
 
-See [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md) for complete methodology,
+See [PORT_FROM_LITE.md](PORT_FROM_LITE.md) for complete methodology,
 conflict resolution, and rollback procedures.
 
 ## Checklist

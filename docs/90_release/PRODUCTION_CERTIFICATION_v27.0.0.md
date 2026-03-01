@@ -159,9 +159,9 @@ Distribution: deployment/latest/v27.0.0
 
 ## 🔗 Related Documentation
 
-- [AUDIT_GLOBAL_PAGES_MODULES_ONGLETS_2026-01-29.md](AUDIT_GLOBAL_PAGES_MODULES_ONGLETS_2026-01-29.md)
-- [AUDIT_SYNCHRONISATION_GLOBALE_2026-01-06.md](AUDIT_SYNCHRONISATION_GLOBALE_2026-01-06.md)
-- [.github/copilot-instructions.md](.github/copilot-instructions.md)
+- [AUDIT_GLOBAL_PAGES_MODULES_ONGLETS_2026-01-29.md](../91_reports/AUDIT_GLOBAL_PAGES_MODULES_ONGLETS_2026-01-29.md)
+- [AUDIT_SYNCHRONISATION_GLOBALE_2026-01-06.md](../91_reports/AUDIT_SYNCHRONISATION_GLOBALE_2026-01-06.md)
+- [.github/copilot-instructions.md](../../.github/copilot-instructions.md)
 
 ---
 

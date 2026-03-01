@@ -444,8 +444,8 @@ Err(e) => {
 ## 🔗 RELATED DOCUMENTATION
 
 - **R05 P1 Completion**: [R05_OMEGA_INTEGRATION_PHASE1_COMPLETE.md](./R05_OMEGA_INTEGRATION_PHASE1_COMPLETE.md)
-- **OMEGA Pipeline Spec**: [src-tauri/src/omega/README.md](./src-tauri/src/omega/README.md)
-- **ConversationEngine Spec**: [src-tauri/src/conversation_engine/README.md](./src-tauri/src/conversation_engine/README.md)
+- **OMEGA Pipeline Spec**: [src-tauri/src/omega/README.md](../../../README.md)
+- **ConversationEngine Spec**: [src-tauri/src/conversation_engine/README.md](../../../README.md)
 - **FrenchMastery Docs**: [src-tauri/src/conversation_engine/french_mastery.rs](./src-tauri/src/conversation_engine/french_mastery.rs)
 
 ---

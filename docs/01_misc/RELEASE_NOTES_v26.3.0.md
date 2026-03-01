@@ -131,8 +131,8 @@ titane-infinity
 
 - **[Full Deployment Report](FINAL_DEPLOYMENT_REPORT_v26.3.0.md)** — Build details, test results, artifact information
 - **[All Corrections Applied](CORRECTIONS_100_PERCENT_v26.3.0.md)** — Technical details of all fixes
-- **[Production Audit Report](AUDIT_FINAL_PRODUCTION_v26.3.0.md)** — Comprehensive production validation
-- **[CHANGELOG](docs/90_release/CHANGELOG__CHANGELOG.md.md)** — Complete version history
+- **[Production Audit Report](../91_reports/AUDIT_FINAL_PRODUCTION_v26.3.0.md)** — Comprehensive production validation
+- **[CHANGELOG](../90_release/CHANGELOG__CHANGELOG.md.md)** — Complete version history
 
 ---
 
@@ -171,7 +171,7 @@ Thank you for using TITANE∞ v26.3.0. This release represents months of develop
 
 ## 📜 License
 
-TITANE∞ is distributed under a proprietary license. See [LICENSE.md](docs/01_misc/LICENSE.md) for full terms.
+TITANE∞ is distributed under a proprietary license. See [LICENSE.md](LICENSE.md) for full terms.
 
 © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 

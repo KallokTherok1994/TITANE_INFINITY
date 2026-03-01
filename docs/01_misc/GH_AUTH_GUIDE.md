@@ -118,7 +118,7 @@ gh release create v27.0.2 \
 - **Rust Compile:** 6m47s (release optimized)
 - **Vite Build:** 3439 modules (gzip + brotli)
 
-Voir [ARTIFACTS_SHA256_v27.0.2.md](../ARTIFACTS_SHA256_v27.0.2.md) pour détails complets." \
+Voir [ARTIFACTS_SHA256_v27.0.2.md](ARTIFACTS_SHA256_v27.0.2.md) pour détails complets." \
   deployment/latest/TITANE-Infinity_27.0.2_amd64.AppImage \
   deployment/latest/TITANE-Infinity_27.0.2_amd64.deb
 ```
@@ -135,7 +135,7 @@ Si `gh` CLI pose problème:
 2. **Remplir le formulaire:**
    - **Tag:** v27.0.2 (déjà créé)
    - **Title:** `TITANE∞ v27.0.2 - Conversation Storage Hotfix`
-   - **Description:** Copier depuis [ARTIFACTS_SHA256_v27.0.2.md](docs/01_misc/ARTIFACTS_SHA256_v27.0.2.md)
+   - **Description:** Copier depuis [ARTIFACTS_SHA256_v27.0.2.md](ARTIFACTS_SHA256_v27.0.2.md)
 
 3. **Upload Artifacts:**
    - Glisser-déposer: `deployment/latest/TITANE-Infinity_27.0.2_amd64.AppImage`

@@ -326,9 +326,9 @@ TOTAL: ~98% performance improvement vs v26 baseline ✅
 
 ## 🔗 References
 
-- **Strategy Doc**: [THREE_JS_OPTIMIZATION_v36.0.0.md](docs/01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
+- **Strategy Doc**: [THREE_JS_OPTIMIZATION_v36.0.0.md](THREE_JS_OPTIMIZATION_v36.0.0.md)
 - **Commit**: de0fcb23 (perf(v36): Phase 1 - ThreeJSAvatarRenderer async init)
-- **Previous**: [PERFORMANCE_REPORT_v35.0.0.md](docs/01_misc/PERFORMANCE_REPORT_v35.0.0.md)
+- **Previous**: [PERFORMANCE_REPORT_v35.0.0.md](PERFORMANCE_REPORT_v35.0.0.md)
 - **ThreeJSLazyLoader**: [src/modules/avatar/core/ThreeJSLazyLoader.ts](./src/modules/avatar/core/ThreeJSLazyLoader.ts)
 
 ---

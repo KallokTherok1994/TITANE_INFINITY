@@ -295,8 +295,8 @@ Les logs de build peuvent contenir :
 
 ## See Also
 
-- [AUDIT_GATES_CHECKLIST.md](../AUDIT_GATES_CHECKLIST.md) : Liste complète des gates de validation
-- [AUTHORIZATION_PRODUCTION_DEPLOYMENT.md](../AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.1.md) : Processus d'autorisation PROD
+- [AUDIT_GATES_CHECKLIST.md](91_reports/AUDIT_GATES_CHECKLIST.md) : Liste complète des gates de validation
+- [AUTHORIZATION_PRODUCTION_DEPLOYMENT.md](01_misc/AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.1.md) : Processus d'autorisation PROD
 - [scripts/stopline_rebuild_proof.sh](../scripts/stopline_rebuild_proof.sh) : Script principal
 - [scripts/stopline_latest_report.sh](../scripts/stopline_latest_report.sh) : Helper pour localiser le dernier rapport
 

@@ -693,10 +693,10 @@ pnpm run test:all
 
 ### Related Documentation
 
-- [Architecture](../../ARCHITECTURE.md) — System architecture overview
-- [API Reference](../06_api/API_REFERENCE_v24.30.md) — Complete API documentation
+- [Architecture](../ARCHITECTURE.md) — System architecture overview
+- [API Reference](../API_REFERENCE_v24.30.md) — Complete API documentation
 - [Getting Started](../GETTING_STARTED.md) — Quick start guide
-- [Contributing](../../CONTRIBUTING.md) — Contribution guidelines
+- [Contributing](../00_core/CONTRIBUTING.md) — Contribution guidelines
 
 ### Key Files
 

@@ -433,8 +433,8 @@ singularity.singularity_meta_process_conversation(ChatContext {
 - [FRENCH_MASTERY.md](FRENCH_MASTERY.md) — French quality post-processing
 
 **Architecture:**
-- [OMEGA_PIPELINE_DETAILED.md](../../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) — Pipeline architecture détaillée
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Chat data flow complet
+- [OMEGA_PIPELINE_DETAILED.md](../../01_architecture/OMEGA_PIPELINE_DETAILED.md) — Pipeline architecture détaillée
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Chat data flow complet
 
 ---
 

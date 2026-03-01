@@ -354,7 +354,7 @@ tokio-console
 
 - **Roadmap Complet**: [PERFORMANCE_OPTIMIZATION_ROADMAP_v24.20.md](./PERFORMANCE_OPTIMIZATION_ROADMAP_v24.20.md)
 - **Progression Détaillée**: [PERFORMANCE_OPTIMIZATION_PROGRESS_v24.20.md](./PERFORMANCE_OPTIMIZATION_PROGRESS_v24.20.md)
-- **Architecture v∞**: [ARCHITECTURE_v∞.md](./ARCHITECTURE_v∞.md)
+- **Architecture v∞**: [ARCHITECTURE_v∞.md](../../sessions/ARCHITECTURE_v∞.md)
 
 ---
 

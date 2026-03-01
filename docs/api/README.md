@@ -708,18 +708,18 @@ pnpm run dev
 - [Guide Développeur](_media/DEVELOPER_GUIDE.md)
 
 ### Documentation Layers v8.1.x
-- [Modules #80-84](MODULES_80_84_FINAL_EVOLUTION_LAYER.md) - **Final Evolution Layer** ✨
-- [Modules #75-79](MODULES_75_79_METACOGNITIVE_LAYER.md) - Metacognitive Layer
-- [Modules #71-74](MODULES_71_74_DIRECTIONAL_IDENTITY_LAYER.md) - Directional & Identity Layer
-- [Modules #60-70](MODULES_60_70_SENTIENT_LAYER.md) - Sentient Layer
+- [Modules #80-84](../99_ARCHIVE/obsolete/MODULES_80_84_FINAL_EVOLUTION_LAYER.md) - **Final Evolution Layer** ✨
+- [Modules #75-79](../99_ARCHIVE/obsolete/MODULES_75_79_METACOGNITIVE_LAYER.md) - Metacognitive Layer
+- [Modules #71-74](../99_ARCHIVE/obsolete/MODULES_71_74_DIRECTIONAL_IDENTITY_LAYER.md) - Directional & Identity Layer
+- [Modules #60-70](../99_ARCHIVE/obsolete/MODULES_60_70_SENTIENT_LAYER.md) - Sentient Layer
 
 ### Documentation Stacks v8.0
-- [Modules #55-56-57-59](MODULES_55_56_57_59_COMPLETE.md) - Advanced Cognitive Layer
-- [Modules #52-53-54](MODULES_52_53_54_COMPLETE.md) - Strategic Direction Layer
-- [Modules #49-50-51](MODULES_49_50_51_COMPLETE.md) - Cognitive Synthesis Layer
-- [Modules #44-45-47-48](MODULES_44_45_47_48_COMPLETE.md) - Executive & Dashboard
-- [Modules #40-41-42-43](MODULES_40_41_42_43_COMPLETE.md) - Sentient Layer
-- [Cognitive Stack](COGNITIVE_STACK_COMPLETE.md) - Modules #31-35
+- [Modules #55-56-57-59](../99_ARCHIVE/obsolete/MODULES_55_56_57_59_COMPLETE.md) - Advanced Cognitive Layer
+- [Modules #52-53-54](../99_ARCHIVE/obsolete/MODULES_52_53_54_COMPLETE.md) - Strategic Direction Layer
+- [Modules #49-50-51](../99_ARCHIVE/obsolete/MODULES_49_50_51_COMPLETE.md) - Cognitive Synthesis Layer
+- [Modules #44-45-47-48](../99_ARCHIVE/obsolete/MODULES_44_45_47_48_COMPLETE.md) - Executive & Dashboard
+- [Modules #40-41-42-43](../99_ARCHIVE/obsolete/MODULES_40_41_42_43_COMPLETE.md) - Sentient Layer
+- [Cognitive Stack](../99_ARCHIVE/obsolete/COGNITIVE_STACK_COMPLETE.md) - Modules #31-35
 ### Installation
 
 ```bash
@@ -768,8 +768,8 @@ cargo test
 ## 📚 Documentation Complète
 
 ### Rapports Techniques
-- **[RAPPORT_FINAL_v11.0.0.md](RAPPORT_FINAL_v11.0.0.md)** - Documentation technique complète (24 KB)
-- **[MISSION_ACCOMPLIE.md](MISSION_ACCOMPLIE.md)** - Résumé exécutif
+- **[RAPPORT_FINAL_v11.0.0.md](../99_ARCHIVE/obsolete/RAPPORT_FINAL_v11.0.0.md)** - Documentation technique complète (24 KB)
+- **[MISSION_ACCOMPLIE.md](../99_ARCHIVE/obsolete/MISSION_ACCOMPLIE.md)** - Résumé exécutif
 - **[CHANGELOG_v11.0.0.md](#)** - Historique des changements
 
 ### Documentation Modules
@@ -781,7 +781,7 @@ cargo test
 - [Neural Mesh Stack](docs/NEURAL_MESH_STACK.md) - Modules #29-30
 - [Perception Stack](docs/PERCEPTION_STACK.md) - Modules #20-24
 - [Advanced Stack](docs/ADVANCED_STACK.md) - Modules #25-28
-- [Monitoring Stack](MODULES_17_18_19_MONITORING_STACK.md) - Modules #17-18-19
+- [Monitoring Stack](../99_ARCHIVE/obsolete/MODULES_17_18_19_MONITORING_STACK.md) - Modules #17-18-19
 
 ---
 
@@ -1197,5 +1197,5 @@ Consultez [DEVELOPER_GUIDE.md](_media/DEVELOPER_GUIDE.md) pour contribuer.
 
 **TITANE∞ v15.5.0** - *UI/UX Fusion Engine + Auto-Evolution Supervisor*
 **Status** : ✅ Frontend Production-Ready | ⚠️ Backend requires Pop!_OS 24.04
-**Documentation** : [Voir STATUS_FINAL.md](STATUS_FINAL.md) | [Voir CHANGELOG.md](_media/CHANGELOG.md)
+**Documentation** : [Voir STATUS_FINAL.md](../01_misc/STATUS_FINAL.md) | [Voir CHANGELOG.md](_media/CHANGELOG.md)
 # TITANE_INFINITY

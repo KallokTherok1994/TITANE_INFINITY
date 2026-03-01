@@ -265,7 +265,7 @@ tail -2 registry/repo-events.jsonl
 
 ### Installation
 
-See [INSTALLATION.md](INSTALLATION.md) for detailed setup instructions.
+See [INSTALLATION.md](../user/installation.md) for detailed setup instructions.
 ```
 
 ---
@@ -317,7 +317,7 @@ git revert e516f062
 - **Product Owner:** Kevin Thibault (TITANE∞ Creator)
 - **Repository:** [github.com/KallokTherok1994/TITANE_INFINITY](https://github.com/KallokTherok1994/TITANE_INFINITY)
 - **Release:** [v27.0.0-PRODUCTION](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.0-PRODUCTION)
-- **License:** Governed by [LICENSE.md](docs/01_misc/LICENSE.md)
+- **License:** Governed by [LICENSE.md](LICENSE.md)
 
 ---
 

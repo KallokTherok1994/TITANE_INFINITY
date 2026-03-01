@@ -253,10 +253,10 @@ git commit -m "feat(engines): Add neural prosody blending to voiceEngine"
 
 ## 📚 Resources
 
-- **Architecture**: [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- **Architecture**: [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 - **Code Style**: [CODE_STYLE.md](CODE_STYLE.md)
-- **Changelog**: [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)
-- **Legacy Policy**: [legacy/README.md](docs/00_core/README__legacy_README.md.md)
+- **Changelog**: [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)
+- **Legacy Policy**: [legacy/README.md](../00_core/README__legacy_README.md.md)
 
 ---
 

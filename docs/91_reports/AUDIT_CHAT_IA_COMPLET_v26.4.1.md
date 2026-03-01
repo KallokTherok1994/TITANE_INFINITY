@@ -1415,8 +1415,8 @@ pnpm lint
 
 - [Phase 4 Closure](PHASE_4_CLOSURE.md)
 - [Phase 4 Documentation Index](PHASE_4_DOCUMENTATION_INDEX.md)
-- [Release v26.4.1-alpha](RELEASE_v26.4.1-alpha.md)
-- [Smoke Test Results](SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
+- [Release v26.4.1-alpha](../01_misc/RELEASE_v26.4.1-alpha.md)
+- [Smoke Test Results](../01_misc/SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
 
 ---
 

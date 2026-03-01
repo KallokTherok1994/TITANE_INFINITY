@@ -126,7 +126,7 @@
 - OPS on-call assigned for Week 1
 - Security incident commander (if breach)
 
-**Rollback Reference:** [P8_ROLLBACK.md](../../phase8_1/P8_1_CERTIFICATION_20260217_192834/ROLLBACK.md)
+**Rollback Reference:** [P8_ROLLBACK.md](ROLLBACK.md)
 
 ---
 

@@ -466,8 +466,8 @@ cargo test singularity:: -- --nocapture
 - [UNIFIED_MEMORY.md](UNIFIED_MEMORY.md) — Memory singularity integration
 
 **Architecture:**
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md) — Singularity role
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Singularity in chat flow
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md) — Singularity role
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Singularity in chat flow
 
 ---
 

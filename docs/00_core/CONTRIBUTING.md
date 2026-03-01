@@ -257,9 +257,9 @@ Ce projet est configuré avec des **instructions personnalisées pour GitHub Cop
 
 ### Configuration
 
-- **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
-- **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
-- **[.copilot-rules-permanent.md](docs/01_misc/.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+- **[.github/copilot-instructions.md](../../.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
+- **[.github/instructions/titane.instructions.md](../../.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
+- **[.copilot-rules-permanent.md](../01_misc/.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
 
 ### Validation Automatique
 
@@ -299,16 +299,16 @@ Pour utiliser un skill avec Copilot :
 3. **Implementation** — Générez le code en respectant les instructions
 4. **Validation** — Exécutez `pnpm run copilot-xs:validate` et les tests
 
-Pour plus de détails : [COPILOT-XS README](.github/copilot-xs/README.md)
+Pour plus de détails : [COPILOT-XS README](../../README.md)
 
 ---
 
 ## 📚 Resources
 
-- **Architecture**: [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
-- **Code Style**: [CODE_STYLE.md](CODE_STYLE.md)
-- **Changelog**: [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)
-- **Legacy Policy**: [legacy/README.md](docs/00_core/README__legacy_README.md.md)
+- **Architecture**: [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- **Code Style**: [CODE_STYLE.md](../01_misc/CODE_STYLE.md)
+- **Changelog**: [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)
+- **Legacy Policy**: [legacy/README.md](README__legacy_README.md.md)
 
 ---
 

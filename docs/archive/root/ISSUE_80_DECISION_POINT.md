@@ -16,7 +16,7 @@
 
 **Phase 1 (E2E Infrastructure)**: ✅ Complete
 
-- Created comprehensive [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md) (447 lines)
+- Created comprehensive [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md) (447 lines)
 - Added npm script: `test:e2e:vitest`
 - Documented 5 E2E backend integration scenarios
 - **Finding**: E2E tests require `RUN_E2E_TESTS=1` flag (intended behavior)
@@ -219,7 +219,7 @@ Skipped Files:    2
 
 ### Phase 1: E2E Infrastructure ✅
 
-- [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md) (447 lines)
+- [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md) (447 lines)
 - npm script: `test:e2e:vitest`
 - 5 E2E scenarios documented
 - Commit: 49fdca17
@@ -268,7 +268,7 @@ Skipped Files:    2
 ## 📚 Related Documentation
 
 - [ISSUE_77_COMPLETION_REPORT.md](./ISSUE_77_COMPLETION_REPORT.md) — Quality Excellence 10/10
-- [E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md) — E2E Testing Comprehensive Guide
+- [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md) — E2E Testing Comprehensive Guide
 - [SESSION_RECAP_2026-01-03.md](./SESSION_RECAP_2026-01-03.md) — Session Progress Summary
 
 ---

@@ -138,9 +138,9 @@
 **Preservation:** Manual archive to `deployment/vX.X.X/certification/` or external backup  
 
 **Governance References:**
-- [TITANE∞ Copilot Instructions](../.github/copilot-instructions.md)
+- [TITANE∞ Copilot Instructions](../../.github/copilot-instructions.md)
 - [Architecture Documentation](../ARCHITECTURE.md)
-- [4-Ring Enforcement](../.github/instructions/tauri.instructions.md)
+- [4-Ring Enforcement](../../.github/instructions/tauri.instructions.md)
 
 ---
 

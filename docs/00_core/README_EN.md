@@ -52,14 +52,14 @@ What's your first question?"
 
 ### 👶 **Total Beginner?**
 
-→ Start with **[Installation Guide](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md)**
+→ Start with **[Installation Guide](../INSTALLATION_GUIDE_v27.0.0_EN.md)**
 
 - 30 minutes to full setup
 - All 3 operating systems covered
 
 ### 🎓 **Want to Learn?**
 
-→ Follow **[Tutorials & Examples](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)**
+→ Follow **[Tutorials & Examples](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)**
 
 - 11 practical tutorials (beginner to advanced)
 - 4 real-world use cases
@@ -68,7 +68,7 @@ What's your first question?"
 
 ### 📖 **Need Full Reference?**
 
-→ Read **[Complete User Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md)**
+→ Read **[Complete User Manual](../USER_MANUAL_COMPLETE_v27.0.0_EN.md)**
 
 - 2,500+ lines of comprehensive coverage
 - All 12 conversation modes
@@ -78,7 +78,7 @@ What's your first question?"
 
 ### 🧭 **Looking for Navigation?**
 
-→ Check **[Documentation Index](./docs/DOCUMENTATION_INDEX_v27.0.0_EN.md)**
+→ Check **[Documentation Index](../DOCUMENTATION_INDEX_v27.0.0_EN.md)**
 
 - Quick-start paths for your role
 - Structured learning progression
@@ -91,11 +91,11 @@ What's your first question?"
 
 | Role              | Start Here                                                                                                                     | Time      | Result                    |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------ | --------- | ------------------------- |
-| **👨‍💻 Developer**  | [Install](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md) + [API Docs](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands) | 1 hour    | Integrate with your tools |
-| **🎓 Learner**    | [Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md) (all 11)                                                        | 3 hours   | Master all features       |
-| **🚀 Business**   | [Use Cases](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-real-world-use-cases)                                           | 1 hour    | Practical workflow ideas  |
-| **⚡ Power User** | [Full Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md)                                                                       | 2 hours   | Everything explained      |
-| **🔬 Researcher** | [Cognitive Modules](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#cognitive-modules)                                               | 1.5 hours | Deep architecture         |
+| **👨‍💻 Developer**  | [Install](../INSTALLATION_GUIDE_v27.0.0_EN.md) + [API Docs](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands) | 1 hour    | Integrate with your tools |
+| **🎓 Learner**    | [Tutorials](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md) (all 11)                                                        | 3 hours   | Master all features       |
+| **🚀 Business**   | [Use Cases](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-real-world-use-cases)                                           | 1 hour    | Practical workflow ideas  |
+| **⚡ Power User** | [Full Manual](../USER_MANUAL_COMPLETE_v27.0.0_EN.md)                                                                       | 2 hours   | Everything explained      |
+| **🔬 Researcher** | [Cognitive Modules](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#cognitive-modules)                                               | 1.5 hours | Deep architecture         |
 
 ---
 
@@ -190,11 +190,11 @@ Earn XP → Unlock badges → Progress → Expert
 **Goal:** Comfortable with basics
 
 ```
-1. Install (20 min)           → [Guide](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md)
-2. First conversation (10 min) → [Tutorial](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-1-first-conversation-3-min)
-3. Try 5 modes (30 min)        → [Modes](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#conversation-modes)
+1. Install (20 min)           → [Guide](../INSTALLATION_GUIDE_v27.0.0_EN.md)
+2. First conversation (10 min) → [Tutorial](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-1-first-conversation-3-min)
+3. Try 5 modes (30 min)        → [Modes](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#conversation-modes)
 4. Explore (30 min)            → Your own pace
-5. Upload a file (20 min)      → [Tutorial](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-2-use-files-5-min)
+5. Upload a file (20 min)      → [Tutorial](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-2-use-files-5-min)
 ```
 
 **Result:** ✅ Ready for 90% of use cases
@@ -206,10 +206,10 @@ Earn XP → Unlock badges → Progress → Expert
 **Goal:** Ready to integrate
 
 ```
-1. Install (20 min)           → [Guide](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md)
-2. API Reference (40 min)      → [Manual→API](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands)
-3. API Tutorial (20 min)       → [Tutorial 7](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-7-tauri-api-commands-15-min)
-4. Code Mode (30 min)          → [Case 1](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#case-1-debug-real-code)
+1. Install (20 min)           → [Guide](../INSTALLATION_GUIDE_v27.0.0_EN.md)
+2. API Reference (40 min)      → [Manual→API](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands)
+3. API Tutorial (20 min)       → [Tutorial 7](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#tutorial-7-tauri-api-commands-15-min)
+4. Code Mode (30 min)          → [Case 1](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#case-1-debug-real-code)
 5. Build example (60 min)      → Create your own integration
 ```
 
@@ -237,9 +237,9 @@ Earn XP → Unlock badges → Progress → Expert
 
 ### 📖 First: Check Documentation
 
-- **Quick FAQ:** [Manual→FAQ](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#frequently-asked-questions)
-- **Problem?** [Troubleshooting](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#troubleshooting)
-- **How-to?** [Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)
+- **Quick FAQ:** [Manual→FAQ](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#frequently-asked-questions)
+- **Problem?** [Troubleshooting](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#troubleshooting)
+- **How-to?** [Tutorials](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)
 
 ### 💬 Community Support
 
@@ -311,25 +311,25 @@ Quality:
 
 ### Installation
 
-- [Install on Linux](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#linux-installation)
-- [Install on macOS](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#macos-installation)
-- [Install on Windows](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md#windows-installation)
+- [Install on Linux](../INSTALLATION_GUIDE_v27.0.0_EN.md#linux-installation)
+- [Install on macOS](../INSTALLATION_GUIDE_v27.0.0_EN.md#macos-installation)
+- [Install on Windows](../INSTALLATION_GUIDE_v27.0.0_EN.md#windows-installation)
 
 ### Learning
 
-- [Beginner Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-beginner-tutorials)
-- [All 12 Modes](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#conversation-modes)
-- [Complete API](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands)
+- [Beginner Tutorials](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md#-beginner-tutorials)
+- [All 12 Modes](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#conversation-modes)
+- [Complete API](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#api--tauri-commands)
 
 ### Support
 
-- [FAQ](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#frequently-asked-questions)
-- [Troubleshooting](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#troubleshooting)
-- [Glossary](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md#glossary)
+- [FAQ](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#frequently-asked-questions)
+- [Troubleshooting](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#troubleshooting)
+- [Glossary](../USER_MANUAL_COMPLETE_v27.0.0_EN.md#glossary)
 
 ### More
 
-- [Documentation Index](./docs/DOCUMENTATION_INDEX_v27.0.0_EN.md)
+- [Documentation Index](../DOCUMENTATION_INDEX_v27.0.0_EN.md)
 - [GitHub Repository](https://github.com/titane/titane-infinity)
 - [Discord Community](https://discord.gg/titane)
 
@@ -347,12 +347,12 @@ Quality:
 ```
 
 **Option 2: Learn First** (Safest)
-→ [Read Installation Guide](./docs/INSTALLATION_GUIDE_v27.0.0_EN.md)
+→ [Read Installation Guide](../INSTALLATION_GUIDE_v27.0.0_EN.md)
 → Then install with full understanding
 
 **Option 3: Deep Dive** (Best for serious users)
-→ [Start with Manual](./docs/USER_MANUAL_COMPLETE_v27.0.0_EN.md)
-→ [Follow Tutorials](./docs/TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)
+→ [Start with Manual](../USER_MANUAL_COMPLETE_v27.0.0_EN.md)
+→ [Follow Tutorials](../TUTORIALS_PRACTICAL_EXAMPLES_v27.0.0_EN.md)
 → Then install with expertise
 
 ---
@@ -369,7 +369,7 @@ Pick ONE:
 □ Integrate API in your project
 ```
 
-**What's your goal?** → [Let's go!](./docs/DOCUMENTATION_INDEX_v27.0.0_EN.md)
+**What's your goal?** → [Let's go!](../DOCUMENTATION_INDEX_v27.0.0_EN.md)
 
 ---
 

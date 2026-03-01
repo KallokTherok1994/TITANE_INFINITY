@@ -18,7 +18,7 @@ v27.0.6 docs-only release **successfully completed** with ZERO user impact. Prod
 |-------|-----------|---------|----------|
 | **0** | Prechecks (git state, tags, clean) | ✅ PASS | [P0_PRECHECKS.md](P0_PRECHECKS.md) |
 | **1** | Deploy mechanism discovery | ✅ PASS | [DEPLOY_DISCOVERY.md](DEPLOY_DISCOVERY.md) |
-| **2** | Deployment decision & execution | ✅ PASS | [DEPLOYMENT_DECISION.md](DEPLOYMENT_DECISION.md) |
+| **2** | Deployment decision & execution | ✅ PASS | [DEPLOYMENT_DECISION.md](../90_release/DEPLOYMENT_DECISION.md) |
 | **3** | Monitoring baseline validation | ✅ PASS | [MONITORING_LOOP.md](MONITORING_LOOP.md) |
 | **4** | Auto-rollback (if breach) | ⚪ N/A | No deployment, no rollback needed |
 | **5** | 24H verdict + next steps | ✅ PASS | [WAVE1_VERDICT.md](WAVE1_VERDICT.md) |

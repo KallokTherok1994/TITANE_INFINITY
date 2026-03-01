@@ -161,7 +161,7 @@ L'infrastructure est en place:
 ## 📚 Fichiers Référence
 
 - [`RAPPORT_TESTS_FINAL_2026-01-26.md`](RAPPORT_TESTS_FINAL_2026-01-26.md) - Analyse détaillée
-- [`AUDIT_TESTS_COMPLET_2026-01-26.md`](AUDIT_TESTS_COMPLET_2026-01-26.md) - Catégorisation échecs
+- [`AUDIT_TESTS_COMPLET_2026-01-26.md`](../91_reports/AUDIT_TESTS_COMPLET_2026-01-26.md) - Catégorisation échecs
 - [`GUIDE_STANDARDISATION_TESTS.md`](GUIDE_STANDARDISATION_TESTS.md) - Patterns validés
 - [`src/__tests__/test-utils.tsx`](src/__tests__/test-utils.tsx) - Helpers providers
 - [`src/__tests__/setup.ts`](src/__tests__/setup.ts) - Configuration globale

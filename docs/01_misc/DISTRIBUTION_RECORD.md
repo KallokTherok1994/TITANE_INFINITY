@@ -127,7 +127,7 @@ sudo dpkg -r titan-stable-beta
 ## Rollback Procedures (If Needed)
 
 **Available:** YES  
-**Document:** [ROLLBACK.md](../P8_BETA_RELEASE_20260217_223829/ROLLBACK.md)
+**Document:** [ROLLBACK.md](ROLLBACK.md)
 
 **Triggers for P0 (immediate halt):**
 - App crash on startup

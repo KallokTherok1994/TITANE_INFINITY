@@ -547,8 +547,8 @@ conversationWithHistory();
 
 ## 🔗 Related Resources
 
-- [README.md](README.md) - Vue d'ensemble du projet
-- [PERFORMANCE_TUNING.md](docs/01_misc/PERFORMANCE_TUNING.md) - Optimisation des performances
+- [README.md](../../README.md) - Vue d'ensemble du projet
+- [PERFORMANCE_TUNING.md](PERFORMANCE_TUNING.md) - Optimisation des performances
 - [docs/](docs/) - Documentation complète
 - [src/services/ai/](src/services/ai/) - Code source AI services
 

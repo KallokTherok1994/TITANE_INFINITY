@@ -249,7 +249,7 @@ import { logger } from '@/lib/logger';
 logger.error('Message', { component: 'Name', action: 'method' }, error);
 \`\`\`
 
-Voir [PATTERNS_LOGGER_NULLSAFETY.md](./PATTERNS_LOGGER_NULLSAFETY.md) pour guide complet.
+Voir [PATTERNS_LOGGER_NULLSAFETY.md](../sessions/PATTERNS_LOGGER_NULLSAFETY.md) pour guide complet.
 ```
 
 **Étape 2** : Mettre à jour CODE_STYLE.md

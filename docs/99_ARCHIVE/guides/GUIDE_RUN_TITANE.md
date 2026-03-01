@@ -416,7 +416,7 @@ titane  # Nettoyage → Vérif réseau/APIs → Check code → Auto-fix → Buil
 
 ---
 
-**Pour plus de détails techniques:** Voir [ANALYSE_RUN_TITANE_v24.7.6.md](ANALYSE_RUN_TITANE_v24.7.6.md)
+**Pour plus de détails techniques:** Voir [ANALYSE_RUN_TITANE_v24.7.6.md](../sessions/2025-12/ANALYSE_RUN_TITANE_v24.7.6.md)
 
 **Support:** GitHub Issues ou documentation complète dans `/docs`
 

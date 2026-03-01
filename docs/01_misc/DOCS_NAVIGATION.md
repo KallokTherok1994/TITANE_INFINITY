@@ -9,26 +9,26 @@
 ### Je suis...
 
 **👤 Utilisateur Final**
-→ [Guide Utilisateur](docs/USER_GUIDE_v24.30.md) _(v24.30 - à mettre à jour)_
+→ [Guide Utilisateur](../USER_GUIDE_v24.30.md) _(v24.30 - à mettre à jour)_
 
 **💻 Développeur**
-→ [Guide Développeur](docs/DEVELOPER_GUIDE.md)  
-→ [Architecture 4-Ring](docs/ARCHITECTURE_RINGS.md)  
-→ [Quick Start Performance](docs/QUICK_START_PERFORMANCE.md)
+→ [Guide Développeur](../DEVELOPER_GUIDE.md)  
+→ [Architecture 4-Ring](../ARCHITECTURE_RINGS.md)  
+→ [Quick Start Performance](../QUICK_START_PERFORMANCE.md)
 
 **🔧 Mainteneur / DevOps**
-→ [Auto-Heal Systems](docs/AUTO_HEAL_SYSTEMS.md)  
+→ [Auto-Heal Systems](../AUTO_HEAL_SYSTEMS.md)  
 → [Pre-Deployment Check](scripts/verify/pre-deployment-check.sh)  
-→ [Audit Production](AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md)
+→ [Audit Production](../91_reports/AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md)
 
 **📦 Migrateur v24 → v26**
-→ [Guide Migration Complet](docs/guides/MIGRATION_v24_to_v26.md)
+→ [Guide Migration Complet](../guides/MIGRATION_v24_to_v26.md)
 
 ---
 
 ## 📖 INDEX COMPLET
 
-**→ [INDEX_MASTER.md](docs/INDEX_MASTER.md)**
+**→ [INDEX_MASTER.md](../INDEX_MASTER.md)**
 
 Navigation exhaustive par catégorie:
 
@@ -95,14 +95,14 @@ npm run test:architecture
 
 ### Besoin: Migration API v24 → v26
 
-**1.** Lire [MIGRATION_v24_to_v26.md](docs/guides/MIGRATION_v24_to_v26.md)  
+**1.** Lire [MIGRATION_v24_to_v26.md](../guides/MIGRATION_v24_to_v26.md)  
 **2.** Breaking changes: OMEGA v2, 4-Ring, conversationId  
 **3.** Patterns migration fournis  
 **4.** Checklist 8-16h
 
 ### Besoin: Comprendre Architecture
 
-**1.** [Architecture 4-Ring](docs/ARCHITECTURE_RINGS.md)  
+**1.** [Architecture 4-Ring](../ARCHITECTURE_RINGS.md)  
 **2.** Ring 1 (Core) → Ring 2 (Engines) → Ring 3 (Services) → Ring 4 (UI)  
 **3.** Tests: `src/__tests__/architecture/`
 
@@ -152,7 +152,7 @@ P2 Items:             5 (planifiés, non-bloquants)
 - pre-deployment-check.sh (535 lignes)
 - 06-auto-fix.sh (578 lignes, 15 fixes)
 
-**Doc:** [AUTO_HEAL_SYSTEMS.md](docs/AUTO_HEAL_SYSTEMS.md)
+**Doc:** [AUTO_HEAL_SYSTEMS.md](../AUTO_HEAL_SYSTEMS.md)
 
 ---
 
@@ -160,22 +160,22 @@ P2 Items:             5 (planifiés, non-bloquants)
 
 | Catégorie         | Lien                                                                                     |
 | ----------------- | ---------------------------------------------------------------------------------------- |
-| 📖 Index Master   | [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md)                                             |
-| 🏗️ Architecture   | [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md)                                 |
-| 🔧 API v26.2      | [docs/guides/MIGRATION_v24_to_v26.md](docs/guides/MIGRATION_v24_to_v26.md)               |
-| 🏥 Auto-Heal      | [docs/AUTO_HEAL_SYSTEMS.md](docs/AUTO_HEAL_SYSTEMS.md)                                   |
-| 🔍 Audit Final    | [AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md](AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md) |
+| 📖 Index Master   | [docs/INDEX_MASTER.md](../INDEX_MASTER.md)                                             |
+| 🏗️ Architecture   | [docs/ARCHITECTURE_RINGS.md](../ARCHITECTURE_RINGS.md)                                 |
+| 🔧 API v26.2      | [docs/guides/MIGRATION_v24_to_v26.md](../guides/MIGRATION_v24_to_v26.md)               |
+| 🏥 Auto-Heal      | [docs/AUTO_HEAL_SYSTEMS.md](../AUTO_HEAL_SYSTEMS.md)                                   |
+| 🔍 Audit Final    | [AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md](../91_reports/AUDIT_DEPLOYMENT_AUTOHEAL_v26.2.0_FINAL.md) |
 | ✅ P1 Complété    | [P1_COMPLETE_FINAL_v26.2.0.md](P1_COMPLETE_FINAL_v26.2.0.md)                             |
-| 🚀 Tauri Commands | [docs/reference/TAURI_COMMANDS_v26.2.md](docs/reference/TAURI_COMMANDS_v26.2.md)         |
-| 🧪 Stratégie E2E  | [docs/STRATEGIE_TESTS_E2E.md](docs/STRATEGIE_TESTS_E2E.md)                               |
+| 🚀 Tauri Commands | [docs/reference/TAURI_COMMANDS_v26.2.md](../reference/TAURI_COMMANDS_v26.2.md)         |
+| 🧪 Stratégie E2E  | [docs/STRATEGIE_TESTS_E2E.md](../STRATEGIE_TESTS_E2E.md)                               |
 
 ---
 
 ## 📞 SUPPORT
 
-**Documentation Complète:** [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md)  
+**Documentation Complète:** [docs/INDEX_MASTER.md](../INDEX_MASTER.md)  
 **Issues GitHub:** Tag approprié (bug, feature, migration, etc.)  
-**Migration Help:** [MIGRATION_v24_to_v26.md](docs/guides/MIGRATION_v24_to_v26.md)
+**Migration Help:** [MIGRATION_v24_to_v26.md](../guides/MIGRATION_v24_to_v26.md)
 
 ---
 

@@ -17,7 +17,7 @@
 
 ### Release Notes
 
-- **[RELEASE_v26.4.1-alpha.md](RELEASE_v26.4.1-alpha.md)**
+- **[RELEASE_v26.4.1-alpha.md](../01_misc/RELEASE_v26.4.1-alpha.md)**
   - Package release complet
   - Changelog détaillé
   - Instructions installation
@@ -44,21 +44,21 @@
 | Document                                                                       | Description              | Lignes |
 | ------------------------------------------------------------------------------ | ------------------------ | ------ |
 | [PHASE_4_SPRINT_3_EXECUTIVE_SUMMARY.md](PHASE_4_SPRINT_3_EXECUTIVE_SUMMARY.md) | Vue executive Sprint 3   | 280    |
-| [MISSION_COMPLETE_PHASE_4_SPRINT_3.md](MISSION_COMPLETE_PHASE_4_SPRINT_3.md)   | Mission complete summary | 332    |
+| [MISSION_COMPLETE_PHASE_4_SPRINT_3.md](../01_misc/MISSION_COMPLETE_PHASE_4_SPRINT_3.md)   | Mission complete summary | 332    |
 
 ### 4. Release Documentation
 
 | Document                                                               | Description                | Lignes |
 | ---------------------------------------------------------------------- | -------------------------- | ------ |
-| [PR_v26.4.1-alpha_RELEASE_NOTES.md](PR_v26.4.1-alpha_RELEASE_NOTES.md) | Template PR GitHub complet | 507    |
-| [RELEASE_v26.4.1-alpha.md](RELEASE_v26.4.1-alpha.md)                   | Package release complet    | 332    |
+| [PR_v26.4.1-alpha_RELEASE_NOTES.md](../01_misc/PR_v26.4.1-alpha_RELEASE_NOTES.md) | Template PR GitHub complet | 507    |
+| [RELEASE_v26.4.1-alpha.md](../01_misc/RELEASE_v26.4.1-alpha.md)                   | Package release complet    | 332    |
 
 ### 5. Testing & Validation
 
 | Document                                                                   | Description                 | Lignes |
 | -------------------------------------------------------------------------- | --------------------------- | ------ |
-| [SMOKE_TEST_ANALYSIS_FRAMEWORK.md](SMOKE_TEST_ANALYSIS_FRAMEWORK.md)       | Méthodologie validation     | 280    |
-| [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](SMOKE_TEST_RESULTS_v26.4.1-alpha.md) | Résultats smoke test 30 min | 262    |
+| [SMOKE_TEST_ANALYSIS_FRAMEWORK.md](../01_misc/SMOKE_TEST_ANALYSIS_FRAMEWORK.md)       | Méthodologie validation     | 280    |
+| [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](../01_misc/SMOKE_TEST_RESULTS_v26.4.1-alpha.md) | Résultats smoke test 30 min | 262    |
 
 ### 6. Closure
 
@@ -79,22 +79,22 @@
 ### "Je veux les métriques de performance"
 
 1. Section "Performance" dans [PHASE_4_CLOSURE.md](PHASE_4_CLOSURE.md)
-2. Détails : [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
+2. Détails : [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](../01_misc/SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
 
 ### "Je veux installer v26.4.1-alpha"
 
-1. Lisez : [RELEASE_v26.4.1-alpha.md](RELEASE_v26.4.1-alpha.md)
+1. Lisez : [RELEASE_v26.4.1-alpha.md](../01_misc/RELEASE_v26.4.1-alpha.md)
 2. Section "Installation"
 
 ### "Je veux créer un PR sur GitHub"
 
-1. Template : [PR_v26.4.1-alpha_RELEASE_NOTES.md](PR_v26.4.1-alpha_RELEASE_NOTES.md)
+1. Template : [PR_v26.4.1-alpha_RELEASE_NOTES.md](../01_misc/PR_v26.4.1-alpha_RELEASE_NOTES.md)
 2. Tag : `v26.4.1-alpha` (déjà créé)
 
 ### "Je veux comprendre les tests"
 
-1. Méthodologie : [SMOKE_TEST_ANALYSIS_FRAMEWORK.md](SMOKE_TEST_ANALYSIS_FRAMEWORK.md)
-2. Résultats : [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
+1. Méthodologie : [SMOKE_TEST_ANALYSIS_FRAMEWORK.md](../01_misc/SMOKE_TEST_ANALYSIS_FRAMEWORK.md)
+2. Résultats : [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](../01_misc/SMOKE_TEST_RESULTS_v26.4.1-alpha.md)
 
 ---
 
@@ -213,7 +213,7 @@ TITANE_INFINITY/
 ### Pour Review Rapide (10 minutes)
 
 1. [PHASE_4_CLOSURE.md](PHASE_4_CLOSURE.md) — Sections "Executive Summary" et "Performance"
-2. [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](SMOKE_TEST_RESULTS_v26.4.1-alpha.md) — Section "Pass/Fail Summary"
+2. [SMOKE_TEST_RESULTS_v26.4.1-alpha.md](../01_misc/SMOKE_TEST_RESULTS_v26.4.1-alpha.md) — Section "Pass/Fail Summary"
 
 ### Pour Review Approfondie (30 minutes)
 
@@ -223,8 +223,8 @@ TITANE_INFINITY/
 
 ### Pour Implémentation (1 heure)
 
-1. [RELEASE_v26.4.1-alpha.md](RELEASE_v26.4.1-alpha.md) — Installation
-2. [PR_v26.4.1-alpha_RELEASE_NOTES.md](PR_v26.4.1-alpha_RELEASE_NOTES.md) — Features détaillées
+1. [RELEASE_v26.4.1-alpha.md](../01_misc/RELEASE_v26.4.1-alpha.md) — Installation
+2. [PR_v26.4.1-alpha_RELEASE_NOTES.md](../01_misc/PR_v26.4.1-alpha_RELEASE_NOTES.md) — Features détaillées
 3. Code source : `src-tauri/src/behavior_engine/` et `src-tauri/src/ipc_batcher/`
 
 ---

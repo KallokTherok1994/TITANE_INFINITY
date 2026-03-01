@@ -4,6 +4,7 @@ Arborescence canonique maintenue:
 
 - docs/00_core/
 - docs/01_architecture/
+- docs/01_misc/
 - docs/02_product/
 - docs/03_security/
 - docs/04_guides/
@@ -16,4 +17,5 @@ Arborescence canonique maintenue:
 - docs/_archive/mermaid/
 - docs/_archive/runs/
 - docs/_archive/merged/
+- docs/_archive/legacy/
 - docs/_evidence/

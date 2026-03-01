@@ -200,9 +200,9 @@
 
 ### Governance Trail
 
-1. [PRODUCTION_SEAL_v27.4.1.md](docs/90_release/PRODUCTION_SEAL_v27.4.1.md) - Production seal certificate
-2. [FULL_INTEGRATION_AUDIT_SUMMARY.md](docs/01_misc/FULL_INTEGRATION_AUDIT_SUMMARY.md) - Audit findings
-3. [ANOMALIES_REGISTER.md](docs/01_misc/ANOMALIES_REGISTER.md) - Known issues
+1. [PRODUCTION_SEAL_v27.4.1.md](../90_release/PRODUCTION_SEAL_v27.4.1.md) - Production seal certificate
+2. [FULL_INTEGRATION_AUDIT_SUMMARY.md](FULL_INTEGRATION_AUDIT_SUMMARY.md) - Audit findings
+3. [ANOMALIES_REGISTER.md](ANOMALIES_REGISTER.md) - Known issues
 
 ### Constitutional References
 

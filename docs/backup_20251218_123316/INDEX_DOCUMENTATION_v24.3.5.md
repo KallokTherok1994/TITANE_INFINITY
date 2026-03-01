@@ -231,9 +231,9 @@
 | Document                             | Description                  |
 | ------------------------------------ | ---------------------------- |
 | [README.md](./README.md)             | Guide utilisateur principal  |
-| [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) | Architecture globale système |
+| [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) | Architecture globale système |
 | [CONTRIBUTING.md](./CONTRIBUTING.md) | Guide contributeurs          |
-| [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md)       | Historique versions          |
+| [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)       | Historique versions          |
 
 ### Documentation Technique Spécifique
 
