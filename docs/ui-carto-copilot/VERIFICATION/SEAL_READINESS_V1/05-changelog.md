@@ -5,15 +5,15 @@
 - Aucun changement de code, aucun delta exécuté.
 
 ## Fichiers créés
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md)
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/01-proof-pack-index.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/01-proof-pack-index.md)
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md)
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/03-readiness-verdict.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/03-readiness-verdict.md)
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/04-seal-blocked.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/04-seal-blocked.md)
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/05-changelog.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/05-changelog.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](00-prefight.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/01-proof-pack-index.md](01-proof-pack-index.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md](02-gate-checks.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/03-readiness-verdict.md](03-readiness-verdict.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/04-seal-blocked.md](04-seal-blocked.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/05-changelog.md](05-changelog.md)
 
 ## Ajustements de wording
-- Normalisation d’un libellé de log (terme anglais → `COMPLET`) dans [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md) pour respecter la politique des termes interdits.
+- Normalisation d’un libellé de log (terme anglais → `COMPLET`) dans [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/02-gate-checks.md](02-gate-checks.md) pour respecter la politique des termes interdits.
 
 ## Commandes exécutées
 ```

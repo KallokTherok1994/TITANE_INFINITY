@@ -161,8 +161,8 @@ cargo check --manifest-path=src-tauri/Cargo.toml
 
 ## 📚 Quick Links
 
-- **Evidence Index**: [runs/super_prompt_audit_v1/INDEX.md](docs/01_misc/INDEX__runs_super_prompt_audit_v1_INDEX.md.md)
-- **Final Report**: [runs/super_prompt_audit_v1/RAPPORT_FINAL_v27.2.1.md](docs/01_misc/RAPPORT_FINAL_v27.2.1.md)
+- **Evidence Index**: [runs/super_prompt_audit_v1/INDEX.md](INDEX__runs_super_prompt_audit_v1_INDEX.md.md)
+- **Final Report**: [runs/super_prompt_audit_v1/RAPPORT_FINAL_v27.2.1.md](RAPPORT_FINAL_v27.2.1.md)
 - **E2E Script**: [scripts/diagnostic/e2e_validation_v27.2.1.sh](scripts/diagnostic/e2e_validation_v27.2.1.sh)
 - **Commit**: `fd7ccda506192f4cea6e73906393ceca866f5114`
 

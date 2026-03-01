@@ -389,7 +389,7 @@ We're excited to announce TITANE∞ v26.2.0, our most intelligent release yet!
 
 - [Full Changelog](CHANGELOG_v26.2.md)
 - [Validation Report](VALIDATION_FINALE_v26.2.md)
-- [Dependencies Audit](AUDIT_DEPENDENCIES_PRODUCTION_v26.2.md)
+- [Dependencies Audit](../../current/audits/AUDIT_DEPENDENCIES_PRODUCTION_v26.2.md)
 - [Technical Analysis](ANALYSE_APPROFONDIE_v26.2_PREDICTIVE.md)
 
 ---

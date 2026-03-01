@@ -173,7 +173,7 @@ vite v6.0.3 building for production...
 
 - ✅ [scheduler.rs](src-tauri/src/kernel/scheduler.rs): Send+Sync documenté (9 points)
 - ✅ [config/io.rs](src-tauri/src/config/io.rs): env::set_var documenté (14 points)
-- ✅ [UNSAFE_DOCUMENTATION.md](docs/01_misc/UNSAFE_DOCUMENTATION.md): Complet (5.8KB)
+- ✅ [UNSAFE_DOCUMENTATION.md](UNSAFE_DOCUMENTATION.md): Complet (5.8KB)
 
 ---
 
@@ -414,9 +414,9 @@ npm run copilot-xs:validate
 
 ### Documentation Principale
 
-- [AUDIT_FINAL_COMPLET_2026-01-03.md](AUDIT_FINAL_COMPLET_2026-01-03.md) - Audit final v26.2.0
+- [AUDIT_FINAL_COMPLET_2026-01-03.md](../91_reports/AUDIT_FINAL_COMPLET_2026-01-03.md) - Audit final v26.2.0
 - [VERIFICATION_FINALE_COMPLETE_2026-01-03.md](VERIFICATION_FINALE_COMPLETE_2026-01-03.md) - Ce document
-- [AUDIT_COMPLET_2026-01-02.md](AUDIT_COMPLET_2026-01-02.md) - Audit complet précédent
+- [AUDIT_COMPLET_2026-01-02.md](../91_reports/AUDIT_COMPLET_2026-01-02.md) - Audit complet précédent
 
 ### Issue #79 Documentation
 

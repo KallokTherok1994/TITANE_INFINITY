@@ -44,11 +44,11 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
 ## D) Gouvernance (dev-only)
 
 - Interdictions de build/bundle prod sans autorisation.
-  - Source: [.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md#L15-L30)
+  - Source: [.github/instructions/titane.instructions.md](../../.github/instructions/titane.instructions.md#L15-L30)
 
 ## E) Document canon de statut
 
-- Le document de référence v27 est [docs/STATUS_REPO_V27.md](docs/STATUS_REPO_V27.md).
+- Le document de référence v27 est [docs/STATUS_REPO_V27.md](../STATUS_REPO_V27.md).
   - Il pointe vers les preuves v27 et sert de résumé audit/état.
 
 ## F) AUTO-* reality check (validation + surfaces réelles)
@@ -68,10 +68,10 @@ Chaque point ci-dessous doit être vérifiable via (a) un fichier, ou (b) une pr
   - AutoHeal impl: [src-tauri/src/singularity_fusion/auto_heal.rs](src-tauri/src/singularity_fusion/auto_heal.rs#L33-L291)
 
 - Contrat IPC “AUTO-*” (docs) ↔ commandes (Tauri) ↔ tests `invoke()` (reality check).
-  - Source (matrix): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L306)
-  - Source (détails, payload specs): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L308-L542)
-  - Source (backend map): [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
-  - Source (SINGULARITY vΩ): [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
+  - Source (matrix): [docs/backend/IPC_CONTRACT.md](../IPC_CONTRACT.md#L270-L306)
+  - Source (détails, payload specs): [docs/backend/IPC_CONTRACT.md](../IPC_CONTRACT.md#L308-L542)
+  - Source (backend map): [docs/backend/BACKEND_MAP.md](../backend/BACKEND_MAP.md#L295-L306)
+  - Source (SINGULARITY vΩ): [docs/SINGULARITY_FUSION_vΩ.md](../SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Source (tests): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
   - Écart constaté (doc cite `src/services/healthService.ts`, absent dans le repo): [docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt](docs/_evidence/v27/B14_ipc_contract_vs_repo_healthservice_gap_2026-01-13.txt#L1-L60)

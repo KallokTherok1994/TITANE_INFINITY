@@ -490,7 +490,7 @@ pnpm run build:types
 
 ## 📄 License
 
-Part of TITANE∞ project. See [LICENSE.md](docs/01_misc/LICENSE.md)
+Part of TITANE∞ project. See [LICENSE.md](LICENSE.md)
 
 ---
 

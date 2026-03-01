@@ -66,9 +66,9 @@
 ### ✅ 4. Documentation ADR
 
 **Créés (3/3):**
-1. ✅ [ADR 001: Tauri Architecture](docs/adr/001-tauri-local-first-architecture.md) - 7.5 KB
-2. ✅ [ADR 002: OMEGA v2](docs/adr/002-omega-conversation-manager.md) - 14 KB
-3. ✅ [ADR 003: ESLint Automation](docs/adr/003-eslint-jsx-automation-strategy.md) - 12 KB
+1. ✅ [ADR 001: Tauri Architecture](../adr/001-tauri-local-first-architecture.md) - 7.5 KB
+2. ✅ [ADR 002: OMEGA v2](../adr/002-omega-conversation-manager.md) - 14 KB
+3. ✅ [ADR 003: ESLint Automation](../adr/003-eslint-jsx-automation-strategy.md) - 12 KB
 
 **Total:** 33.5 KB documentation architecture formelle
 

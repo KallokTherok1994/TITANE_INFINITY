@@ -139,7 +139,7 @@
 
 **Governance References:**
 - [TITANE∞ Copilot Instructions](../.github/copilot-instructions.md)
-- [Architecture Documentation](../ARCHITECTURE.md)
+- [Architecture Documentation](ARCHITECTURE.md)
 - [4-Ring Enforcement](../.github/instructions/tauri.instructions.md)
 
 ---

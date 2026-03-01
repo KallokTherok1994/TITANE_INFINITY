@@ -31,9 +31,9 @@ Cette archive contient les rapports de sessions, bannières de succès, et fichi
 Pour la documentation à jour, consultez :
 
 - **Architecture actuelle:** [/docs/01_architecture/ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md)
-- **Quick Start:** [/QUICK_START_v∞.3.md](../../../QUICK_START_v∞.3.md)
+- **Quick Start:** [/QUICK_START_v∞.3.md](../../current/guides/QUICK_START_v∞.3.md)
 - **README principal:** [/README.md](../../../README.md)
-- **CHANGELOG:** [/CHANGELOG.md](../../../CHANGELOG.md)
+- **CHANGELOG:** [/CHANGELOG.md](../../90_release/CHANGELOG.md)
 
 ---
 

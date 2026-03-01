@@ -496,7 +496,7 @@ rm scripts/verify/enforce-online-first.sh scripts/guards/guard-network-policy.sh
 
 **Documentation Architecture Formelle** — 3 ADR complets créés selon standard industry pour traçabilité décisions techniques majeures.
 
-- **ADR 001:** [Tauri Local-First Architecture](docs/adr/001-tauri-local-first-architecture.md)
+- **ADR 001:** [Tauri Local-First Architecture](../adr/001-tauri-local-first-architecture.md)
   - **Décision:** Tauri v2 comme framework desktop principal
   - **Justification:** Sécurité Rust + performance 10x Electron + local-first design
   - **Métriques:** Bundle 14.2MB, cold start 427ms, RAM idle 58MB
@@ -504,7 +504,7 @@ rm scripts/verify/enforce-online-first.sh scripts/guards/guard-network-policy.sh
   - **Alternatives évaluées:** Electron (6/10), NW.js (5/10), PWA (3/10) vs Tauri (9/10)
   - **Impact:** Architecture sécurisée validée pour 5+ années
 
-- **ADR 002:** [OMEGA v2 Conversation Manager Architecture](docs/adr/002-omega-conversation-manager.md)
+- **ADR 002:** [OMEGA v2 Conversation Manager Architecture](../adr/002-omega-conversation-manager.md)
   - **Décision:** Pattern Singleton + Repository pour gestion conversations
   - **Justification:** Isolation contexte vectoriel + testabilité + performance
   - **Architecture:** ConversationManager singleton + Zustand UI sync + Rust vector stores
@@ -512,7 +512,7 @@ rm scripts/verify/enforce-online-first.sh scripts/guards/guard-network-policy.sh
   - **Patterns:** Lazy loading messages, Map O(1) lookup, mock isolation avec importOriginal
   - **Évolutions futures:** Export/import (v26.4), tags/catégories (v27.0), collaboration (v28.0)
 
-- **ADR 003:** [ESLint JSX Apostrophe Automation Strategy](docs/adr/003-eslint-jsx-automation-strategy.md)
+- **ADR 003:** [ESLint JSX Apostrophe Automation Strategy](../adr/003-eslint-jsx-automation-strategy.md)
   - **Décision:** Script sed automation pour fix apostrophes JSX (38 patterns)
   - **Justification:** Productivité 60x vs manuel + automation CI/CD + scalabilité
   - **Impact:** 52 warnings → 0 en <2 minutes (vs 2h manuel)
@@ -665,10 +665,10 @@ v26.3.0: 10.00/10 (ADR + Tauri build) ✅
 
 #### 📖 Documentation
 
-- **Analyse complète:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) (22KB, 40+ pages)
-- **Guide rapide:** [docs/GUIDE_RAPIDE_RESTRUCTURATION.md](docs/GUIDE_RAPIDE_RESTRUCTURATION.md)
-- **Executive summary:** [docs/RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md](docs/RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md)
-- **Index navigation:** [docs/current/INDEX.md](docs/current/INDEX.md)
+- **Analyse complète:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](../91_reports/ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) (22KB, 40+ pages)
+- **Guide rapide:** [docs/GUIDE_RAPIDE_RESTRUCTURATION.md](../GUIDE_RAPIDE_RESTRUCTURATION.md)
+- **Executive summary:** [docs/RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md](../RESUME_EXECUTIF_RESTRUCTURATION_v26.2.md)
+- **Index navigation:** [docs/current/INDEX.md](../00_core/DOCS_INDEX.md)
 
 ---
 

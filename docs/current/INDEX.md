@@ -27,7 +27,7 @@ docs/current/
 - [Audit Final](./audits/AUDIT_FINAL_v26.2_COMPLETE.md)
 
 ### Guides
-- [Quick Start Ubuntu](../../QUICKSTART_UBUNTU_24.04.md)
+- [Quick Start Ubuntu](../01_misc/QUICKSTART_UBUNTU_24.04.md)
 - [Quick Start Chat IA v19.5.2](./guides/QUICK_START_CHAT_IA_v19.5.2.md)
 - [Multimodal Guide](./guides/MULTIMODAL_QUICK_START.md)
 - [Aura Quick Start](./guides/AURA_QUICK_START_GUIDE.md)

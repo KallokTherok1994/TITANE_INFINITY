@@ -113,7 +113,7 @@ Processing error: OMEGA pipeline failed: Pipeline not initialized
 
 **Files Modified**:
 - [README.md](../../README.md) - Architecture alignment (online-first)
-- [CONSTITUTION_LOCK_v27.md](../../CONSTITUTION_LOCK_v27.md) - Deprecation notice
+- [CONSTITUTION_LOCK_v27.md](../../01_misc/CONSTITUTION_LOCK_v27.md) - Deprecation notice
 
 **Proof Pack**: [`runs/DOCS_UPGRADE_20260223_203132/`](../DOCS_UPGRADE_20260223_203132/)
 

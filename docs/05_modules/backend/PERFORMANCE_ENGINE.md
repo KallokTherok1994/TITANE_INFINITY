@@ -798,8 +798,8 @@ if (cacheRec && cacheRec.autoApplicable) {
 
 ### Related Documentation
 
-- [ARCHITECTURE_CURRENT_v24.md](../../00_meta/ARCHITECTURE_CURRENT_v24.md) — System architecture
-- [TAURI_COMMANDS_REFERENCE.md](../../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Backend metrics commands
+- [ARCHITECTURE_CURRENT_v24.md](../../01_architecture/ARCHITECTURE_CURRENT_v24.md) — System architecture
+- [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md) — Backend metrics commands
 
 ---
 

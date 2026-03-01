@@ -331,7 +331,7 @@ The Copilot instructions are fully aligned with TITANE∞'s **4-Ring Architectur
 
 ### For Contributors
 
-1. ✅ Read [CONTRIBUTING.md](../CONTRIBUTING.md)
+1. ✅ Read [CONTRIBUTING.md](00_core/CONTRIBUTING.md)
 2. ✅ Review [.github/copilot-instructions.md](../.github/copilot-instructions.md)
 3. ✅ Run `pnpm run copilot-xs:status` to verify setup
 4. ✅ Start coding with Copilot assistance

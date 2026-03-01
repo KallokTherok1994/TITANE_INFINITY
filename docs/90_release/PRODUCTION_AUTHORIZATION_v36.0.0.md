@@ -43,8 +43,8 @@
 
 ### Documentation ✅
 
-- [x] Strategy Doc: [THREE_JS_OPTIMIZATION_v36.0.0.md](docs/01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
-- [x] Results Report: [THREE_JS_LAZY_RESULTS_v36.0.0.md](docs/01_misc/THREE_JS_LAZY_RESULTS_v36.0.0.md)
+- [x] Strategy Doc: [THREE_JS_OPTIMIZATION_v36.0.0.md](../01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
+- [x] Results Report: [THREE_JS_LAZY_RESULTS_v36.0.0.md](../01_misc/THREE_JS_LAZY_RESULTS_v36.0.0.md)
 - [x] Commit Messages: Detailed with impact metrics
 - [x] Migration Pattern: Documented for future reference
 
@@ -407,9 +407,9 @@ TOTAL: ~98% performance improvement vs v26 ✅
 
 ## 🔗 Related Documents
 
-- **Strategy**: [THREE_JS_OPTIMIZATION_v36.0.0.md](docs/01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
-- **Results**: [THREE_JS_LAZY_RESULTS_v36.0.0.md](docs/01_misc/THREE_JS_LAZY_RESULTS_v36.0.0.md)
-- **Previous**: [PRODUCTION_AUTHORIZATION_v35.0.0.md](docs/90_release/PRODUCTION_AUTHORIZATION_v35.0.0.md)
+- **Strategy**: [THREE_JS_OPTIMIZATION_v36.0.0.md](../01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
+- **Results**: [THREE_JS_LAZY_RESULTS_v36.0.0.md](../01_misc/THREE_JS_LAZY_RESULTS_v36.0.0.md)
+- **Previous**: [PRODUCTION_AUTHORIZATION_v35.0.0.md](PRODUCTION_AUTHORIZATION_v35.0.0.md)
 - **ThreeJSLazyLoader**: [src/modules/avatar/core/ThreeJSLazyLoader.ts](./src/modules/avatar/core/ThreeJSLazyLoader.ts)
 
 ---

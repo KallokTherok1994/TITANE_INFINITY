@@ -175,7 +175,7 @@ vite v6.0.3 building for production...
 
 - ✅ [scheduler.rs](src-tauri/src/kernel/scheduler.rs): Send+Sync documenté (9 points)
 - ✅ [config/io.rs](src-tauri/src/config/io.rs): env::set_var documenté (14 points)
-- ✅ [UNSAFE_DOCUMENTATION.md](docs/01_misc/UNSAFE_DOCUMENTATION.md): Complet (5.8KB)
+- ✅ [UNSAFE_DOCUMENTATION.md](../../01_misc/UNSAFE_DOCUMENTATION.md): Complet (5.8KB)
 
 ---
 

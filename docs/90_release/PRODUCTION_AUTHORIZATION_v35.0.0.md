@@ -287,10 +287,10 @@ NODE_ENV=production pnpm run build:production
 
 ## Related Documentation
 
-- [WEB_VITALS_v35.0.0.md](docs/01_misc/WEB_VITALS_v35.0.0.md) — Optimization strategy
-- [PERFORMANCE_REPORT_v35.0.0.md](docs/01_misc/PERFORMANCE_REPORT_v35.0.0.md) — Expected results
-- [OPTIMIZATION_STACK_v27-v35.md](docs/01_misc/OPTIMIZATION_STACK_v27-v35.md) — Cumulative improvements
-- [LICENSE.md](docs/01_misc/LICENSE.md) — Proprietary licensing
+- [WEB_VITALS_v35.0.0.md](../01_misc/WEB_VITALS_v35.0.0.md) — Optimization strategy
+- [PERFORMANCE_REPORT_v35.0.0.md](../01_misc/PERFORMANCE_REPORT_v35.0.0.md) — Expected results
+- [OPTIMIZATION_STACK_v27-v35.md](../01_misc/OPTIMIZATION_STACK_v27-v35.md) — Cumulative improvements
+- [LICENSE.md](../01_misc/LICENSE.md) — Proprietary licensing
 
 ---
 

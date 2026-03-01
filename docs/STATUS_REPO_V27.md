@@ -7,7 +7,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 ## 0) Dossier de preuves
 
 - Point d’entrée: `docs/_evidence/v27/` (voir aussi [docs/_evidence/v27/](docs/_evidence/v27/))
-- TRUTH MAP (canon): `docs/systems/TRUTH_MAP_v27.md` (voir aussi [docs/systems/TRUTH_MAP_v27.md](docs/systems/TRUTH_MAP_v27.md))
+- TRUTH MAP (canon): `docs/systems/TRUTH_MAP_v27.md` (voir aussi [docs/systems/TRUTH_MAP_v27.md](systems/TRUTH_MAP_v27.md))
 - État Git capturé: `docs/_evidence/v27/A1_repo.txt`
 - Versions tooling capturées: `docs/_evidence/v27/B1_pnpm_ls_vite_vitest.txt`
 - Exécution tests (échantillon) capturée (extrait): `docs/_evidence/v27/B3_omega_provider_excerpt_1880-1990.txt`
@@ -48,7 +48,7 @@ Ce document est conçu pour être **vérifiable** : chaque constat pointe vers (
 
 Le repo impose un **mode développement permanent** (interdiction de builds/bundles prod sans autorisation explicite).
 
-- Source: [.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md#L15-L30) (interdictions explicites dont `pnpm run build` / `tauri build`).
+- Source: [.github/instructions/titane.instructions.md](../.github/instructions/titane.instructions.md#L15-L30) (interdictions explicites dont `pnpm run build` / `tauri build`).
 
 ## 3) Versions & tooling (Vite/Vitest)
 
@@ -176,10 +176,10 @@ Le repo contient des systèmes AutoFix/AutoHeal documentés et intégrés côté
   - Preuve (inventaire + extraits): [docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt](docs/_evidence/v27/B12b_auto_systems_backend_map_clean_2026-01-13.txt#L1-L120)
 
 - Source (contrat IPC doc ↔ tests):
-  - Matrix: [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L270-L306)
-  - Détails (payload specs): [docs/backend/IPC_CONTRACT.md](docs/backend/IPC_CONTRACT.md#L308-L542)
-  - Backend map: [docs/backend/BACKEND_MAP.md](docs/backend/BACKEND_MAP.md#L295-L306)
-  - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](docs/SINGULARITY_FUSION_vΩ.md#L641-L657)
+  - Matrix: [docs/backend/IPC_CONTRACT.md](IPC_CONTRACT.md#L270-L306)
+  - Détails (payload specs): [docs/backend/IPC_CONTRACT.md](IPC_CONTRACT.md#L308-L542)
+  - Backend map: [docs/backend/BACKEND_MAP.md](backend/BACKEND_MAP.md#L295-L306)
+  - SINGULARITY vΩ: [docs/SINGULARITY_FUSION_vΩ.md](SINGULARITY_FUSION_vΩ.md#L641-L657)
   - Tests invoke(): [src/__tests__/singularity-fusion-integration.test.ts](src/__tests__/singularity-fusion-integration.test.ts#L225-L236)
   - Preuve consolidée: [docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt](docs/_evidence/v27/B13b_ipc_contract_auto_commands_clean_2026-01-13.txt#L1-L160)
   - Preuve (payload specs ↔ signatures/types Rust): [docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt](docs/_evidence/v27/B18_ipc_contract_payload_specs_reality_check_2026-01-14.txt#L1-L260)

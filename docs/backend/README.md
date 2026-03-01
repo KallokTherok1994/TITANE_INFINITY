@@ -71,7 +71,7 @@ src-tauri/src/
 | v17.1.x | Nov 2025 | Phases auto-évolution |
 | v13.0.0 | Oct 2025 | Multi-noyaux Helios/Nexus/Harmonia |
 
-Voir [CHANGELOG.md](../../CHANGELOG.md) pour détails.
+Voir [CHANGELOG.md](../90_release/CHANGELOG.md) pour détails.
 
 ---
 

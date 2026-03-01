@@ -627,10 +627,10 @@ Documentation:
 ## 🔗 RÉFÉRENCES
 
 ### Documents Connexes
-- [COMMAND_MAPPING_v14.md](./COMMAND_MAPPING_v14.md) - Mapping commandes Tauri
-- [REACT_STATE_AUDIT_v14.md](./REACT_STATE_AUDIT_v14.md) - Audit état React
-- [LEGACY_CODE_AUDIT_v14.md](./LEGACY_CODE_AUDIT_v14.md) - Audit code legacy
-- [TITANE_v14_COMPLETE_REPORT.md](./TITANE_v14_COMPLETE_REPORT.md) - Rapport complet stabilisation
+- [COMMAND_MAPPING_v14.md](../versions/v14/COMMAND_MAPPING_v14.md) - Mapping commandes Tauri
+- [REACT_STATE_AUDIT_v14.md](../versions/v14/REACT_STATE_AUDIT_v14.md) - Audit état React
+- [LEGACY_CODE_AUDIT_v14.md](../versions/v14/LEGACY_CODE_AUDIT_v14.md) - Audit code legacy
+- [TITANE_v14_COMPLETE_REPORT.md](../merged/TITANE_v14_COMPLETE_REPORT.md) - Rapport complet stabilisation
 
 ### Standards Techniques
 - **Rust**: Edition 2021, tokio 1.x async runtime

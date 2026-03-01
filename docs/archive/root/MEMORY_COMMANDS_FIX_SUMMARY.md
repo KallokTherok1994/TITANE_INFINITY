@@ -120,7 +120,7 @@ clear_memory ↔ memory_clear_all
 
 1. 🧪 Exécuter tests: `npm run test:all`
 2. 🔍 Valider build production: `npm run build`
-3. 📝 Mettre à jour [TAURI_COMMANDS_REFERENCE.md](docs/06_api/TAURI_COMMANDS_REFERENCE.md)
+3. 📝 Mettre à jour [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md)
 4. 🔮 Planifier implémentation commandes v∞
 
 ---

@@ -307,10 +307,10 @@ runtime/dev/logs/tauri.log (si existe)
 
 ## 📚 DOCUMENTATION ASSOCIÉE
 
-- **[AUDIT_CHAT_IA_FIX_2026-01-05.md](./AUDIT_CHAT_IA_FIX_2026-01-05.md)** — Analyse complète du problème
-- **[AUDIT_CRASH_FIX_2026-01-05.md](./AUDIT_CRASH_FIX_2026-01-05.md)** — Corrections précédentes
-- **[AUDIT_OLLAMA_INTEGRATION_2026-01-04.md](./AUDIT_OLLAMA_INTEGRATION_2026-01-04.md)** — Guide Ollama
-- **[docs/OLLAMA_GUIDE.md](./docs/OLLAMA_GUIDE.md)** — Setup Ollama complet
+- **[AUDIT_CHAT_IA_FIX_2026-01-05.md](../91_reports/AUDIT_CHAT_IA_FIX_2026-01-05.md)** — Analyse complète du problème
+- **[AUDIT_CRASH_FIX_2026-01-05.md](../91_reports/AUDIT_CRASH_FIX_2026-01-05.md)** — Corrections précédentes
+- **[AUDIT_OLLAMA_INTEGRATION_2026-01-04.md](../91_reports/AUDIT_OLLAMA_INTEGRATION_2026-01-04.md)** — Guide Ollama
+- **[docs/OLLAMA_GUIDE.md](../OLLAMA_GUIDE.md)** — Setup Ollama complet
 
 ---
 

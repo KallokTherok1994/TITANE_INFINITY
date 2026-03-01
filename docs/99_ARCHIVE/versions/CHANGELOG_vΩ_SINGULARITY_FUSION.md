@@ -282,8 +282,8 @@ dist/assets/index-C4Rt9QJl.js    1,892.47 kB
 
 ## 📚 Documentation
 
-- [Rapport Complet](./SINGULARITY_FUSION_OMEGA_REPORT.md)
-- [Architecture vΩ](./ARCHITECTURE_v∞.md)
+- [Rapport Complet](../sessions/SINGULARITY_FUSION_OMEGA_REPORT.md)
+- [Architecture vΩ](../sessions/ARCHITECTURE_v∞.md)
 - [SingularityFusionCore API](./src/core/singularity/SingularityFusionCore.ts)
 
 ---

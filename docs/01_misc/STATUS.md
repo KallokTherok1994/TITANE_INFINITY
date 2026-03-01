@@ -218,12 +218,12 @@ cline "explain complex algorithm X with detailed reasoning"
    - Règles de sécurité documentées
    - Liste des commandes bloquées/autorisées
 
-3. **[.cline/README.md](docs/00_core/README__.cline_README.md.md)**
+3. **[.cline/README.md](../00_core/README__.cline_README.md.md)**
    - Guide complet d'utilisation
    - Workflow recommandé
    - Références
 
-4. **[.cline/STATUS.md](docs/01_misc/STATUS.md)** (ce fichier)
+4. **[.cline/STATUS.md](STATUS.md)** (ce fichier)
    - État actuel de la configuration
    - Comparaison avant/après
    - Actions recommandées
@@ -308,7 +308,7 @@ Si problème, ré-appliquer la config:
 
 En cas de blocage critique:
 
-- Consulter [.cline/README.md](docs/00_core/README__.cline_README.md.md)
+- Consulter [.cline/README.md](../00_core/README__.cline_README.md.md)
 - Vérifier [deployment-safeguards.json](.cline/deployment-safeguards.json)
 - Contacter Kevin Thibault
 

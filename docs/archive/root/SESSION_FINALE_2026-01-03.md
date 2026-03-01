@@ -52,7 +52,7 @@
 **Documentation:**
 
 - [ISSUE_80_FINAL_STRATEGY.md](ISSUE_80_FINAL_STRATEGY.md)
-- [E2E_TESTING_GUIDE.md](E2E_TESTING_GUIDE.md)
+- [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)
 
 ---
 
@@ -311,7 +311,7 @@ Coverage:    99.3% (strategic target)
 | ---------------------------------------------------------------------- | ---------------------- | -------- | ------ |
 | [ISSUE_77_COMPLETION_REPORT.md](ISSUE_77_COMPLETION_REPORT.md)         | Issue #77 resolution   | 231      | ✅     |
 | [ISSUE_80_FINAL_STRATEGY.md](ISSUE_80_FINAL_STRATEGY.md)               | Test coverage strategy | 267      | ✅     |
-| [E2E_TESTING_GUIDE.md](E2E_TESTING_GUIDE.md)                           | E2E testing workflow   | 447      | ✅     |
+| [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)                           | E2E testing workflow   | 447      | ✅     |
 | [SESSION_RECAP_2026-01-03.md](SESSION_RECAP_2026-01-03.md)             | Session overview       | 297      | ✅     |
 | [VERIFICATION_FINALE_2026-01-03.md](VERIFICATION_FINALE_2026-01-03.md) | Final verification     | 92       | ✅     |
 | **[SESSION_FINALE_2026-01-03.md](SESSION_FINALE_2026-01-03.md)**       | **Complete summary**   | **~300** | ✅     |

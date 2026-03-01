@@ -276,7 +276,7 @@ officielles ou experts humains.
 
 ### Référence Audit
 
-**Source** : [AUDIT_FINAL_13.md](../../AUDIT_FINAL_13.md)  
+**Source** : [AUDIT_FINAL_13.md](../archive/sessions/AUDIT_FINAL_13.md)  
 **Verdict** : ✅ PASS (5/5 audits validés)  
 **Statut Constitution** : SCELLÉE ET ACTIVE (16 décembre 2025)
 
@@ -613,7 +613,7 @@ console.log(CONSTITUTIONAL_CONFIG);
 
 ## 📞 SUPPORT
 
-**Questions constitutionnelles** : Consulter [AUDIT_FINAL_13.md](../../AUDIT_FINAL_13.md)  
+**Questions constitutionnelles** : Consulter [AUDIT_FINAL_13.md](../archive/sessions/AUDIT_FINAL_13.md)  
 **Questions techniques** : Voir code source [`constitution.ts`](../src/core/prompts/constitution.ts)  
 **Modifications** : Requiert Refondation + Audit #13 (non négociable)
 

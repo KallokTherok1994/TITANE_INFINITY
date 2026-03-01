@@ -132,7 +132,7 @@ git push origin feature/docs-restructure-v26.2
 
 | Fichier | Description | Status |
 |---------|-------------|--------|
-| [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](../ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) | Analyse approfondie (40+ pages) | ✅ Créé |
+| [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](91_reports/ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md) | Analyse approfondie (40+ pages) | ✅ Créé |
 | [scripts/docs/migrate-v26.2.sh](../scripts/docs/migrate-v26.2.sh) | Script migration automatisée | ✅ Créé |
 | [scripts/docs/validate-structure.sh](../scripts/docs/validate-structure.sh) | Script validation structure | ✅ Créé |
 | [docs/GUIDE_RAPIDE_RESTRUCTURATION.md](GUIDE_RAPIDE_RESTRUCTURATION.md) | Guide utilisateur | ✅ Créé |
@@ -176,7 +176,7 @@ git push origin feature/docs-restructure-v26.2
 ## 📞 Contact & Support
 
 **Questions:** kevin@titane-infinity.com  
-**Documentation:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](../ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md)  
+**Documentation:** [ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md](91_reports/ANALYSE_REFLEXION_DOCUMENTATION_v26.2_OPTIMISATION.md)  
 **Scripts:** [scripts/docs/](../scripts/docs/)
 
 ---

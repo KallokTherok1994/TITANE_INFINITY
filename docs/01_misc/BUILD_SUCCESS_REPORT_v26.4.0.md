@@ -158,7 +158,7 @@ sudo dpkg -i TITANE-Infinity_26.4.0_amd64.deb
 3. **Créer GitHub Release** (optionnel):
    - Tag: `v26.4.0`
    - Title: "v26.4.0 - 6 Critical Bugs Fixed"
-   - Body: Copier depuis [DEPLOYMENT_REPORT_v26.4.0.md](DEPLOYMENT_REPORT_v26.4.0.md)
+   - Body: Copier depuis [DEPLOYMENT_REPORT_v26.4.0.md](../90_release/DEPLOYMENT_REPORT_v26.4.0.md)
    - Assets: Upload AppImage + DEB + SHA256SUMS.txt
 
 ### PROCHAIN (Semaine 1)
@@ -182,8 +182,8 @@ sudo dpkg -i TITANE-Infinity_26.4.0_amd64.deb
 
 ### Rapports Disponibles
 
-- [DEPLOYMENT_REPORT_v26.4.0.md](DEPLOYMENT_REPORT_v26.4.0.md) - Rapport détaillé
-- [DEPLOYMENT_PLAN_v26.4.0_HYBRID.md](DEPLOYMENT_PLAN_v26.4.0_HYBRID.md) - Plan 4 semaines
+- [DEPLOYMENT_REPORT_v26.4.0.md](../90_release/DEPLOYMENT_REPORT_v26.4.0.md) - Rapport détaillé
+- [DEPLOYMENT_PLAN_v26.4.0_HYBRID.md](../90_release/DEPLOYMENT_PLAN_v26.4.0_HYBRID.md) - Plan 4 semaines
 - [REFLEXION_ULTIME_PROFONDEUR_v26.4.0.md](REFLEXION_ULTIME_PROFONDEUR_v26.4.0.md) - Analyse code
 - [DECISION_FINALE_KEVIN_v26.4.0.md](DECISION_FINALE_KEVIN_v26.4.0.md) - Décision executive
 

@@ -276,7 +276,7 @@ Implémenter en priorité:
 
 Pour détails techniques complets:
 
-1. **[AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md)**  
+1. **[AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](../91_reports/AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md)**  
    → Audit complet des bugs, 400+ lignes
 
 2. **[FUSION_COMMANDS_RESOLUTION_REPORT.md](FUSION_COMMANDS_RESOLUTION_REPORT.md)**  

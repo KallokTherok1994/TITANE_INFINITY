@@ -152,7 +152,7 @@ pnpm registry:log -- --type=MANUAL_AUDIT --desc="Weekly audit: all tests passing
 
 ## 🔗 Références
 
-- [AUDIT_INDEX_ULTIME_2026-01-23.md](AUDIT_INDEX_ULTIME_2026-01-23.md) — Audit complet
+- [AUDIT_INDEX_ULTIME_2026-01-23.md](../91_reports/AUDIT_INDEX_ULTIME_2026-01-23.md) — Audit complet
 - [.github/workflows/registry-guard.yml](.github/workflows/registry-guard.yml) — Workflow CI
 - [scripts/registry/](scripts/registry/) — Scripts de gestion
 

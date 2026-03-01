@@ -180,7 +180,7 @@ Input: [________________________________________] 🎤 🎨 📎 ▶️
 
 ### Démarrer une Conversation
 
-💡 **Nouveaux utilisateurs ?** Consultez le [Tutoriel #1 : Première Conversation](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-1-première-conversation-3-min) pour un guide pas-à-pas.
+💡 **Nouveaux utilisateurs ?** Consultez le [Tutoriel #1 : Première Conversation](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-1-première-conversation-3-min) pour un guide pas-à-pas.
 
 #### Méthode 1 : Texte Simple
 
@@ -905,7 +905,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 
 #### 2. Providers IA
 
-💡 **Configuration initiale:** Consultez le [Guide : Setup Providers IA](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md#setup-providers-ia) pour configurer Ollama, Gemini ou d'autres providers.
+💡 **Configuration initiale:** Consultez le [Guide : Setup Providers IA](GUIDE_INSTALLATION_SETUP_v27.0.0.md#setup-providers-ia) pour configurer Ollama, Gemini ou d'autres providers.
 
 **Configuration:**
 
@@ -1124,7 +1124,7 @@ Ou: `Ctrl+,` (raccourci clavier)
 
 ## 🐛 DÉPANNAGE & SUPPORT
 
-💡 **Problèmes d'installation ?** Consultez la section [Troubleshooting Installation](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md#troubleshooting-installation) du guide d'installation.
+💡 **Problèmes d'installation ?** Consultez la section [Troubleshooting Installation](GUIDE_INSTALLATION_SETUP_v27.0.0.md#troubleshooting-installation) du guide d'installation.
 
 ### Problèmes Courants
 
@@ -1825,7 +1825,7 @@ git push origin feature/votre-feature
 
 ### Vue d'Ensemble
 
-💡 **Tutoriel pratique:** Apprenez à utiliser l'API avec le [Tutoriel #7 : API Tauri Commands](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-7-api-tauri-commands-15-min).
+💡 **Tutoriel pratique:** Apprenez à utiliser l'API avec le [Tutoriel #7 : API Tauri Commands](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#tuto-7-api-tauri-commands-15-min).
 
 TITANE expose **100+ commandes Tauri** pour l'interaction backend ↔ frontend. Ces commandes permettent le contrôle complet du système.
 

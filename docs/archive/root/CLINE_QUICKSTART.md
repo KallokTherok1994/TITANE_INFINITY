@@ -228,7 +228,7 @@ npm run cline:logs           # Voir les logs en temps réel
 ## Ressources
 
 - **Docs Complètes:** [CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md)
-- **Détails Hooks:** [.clinerules/hooks/README.md](docs/00_core/README__.clinerules_hooks_README.md.md)
+- **Détails Hooks:** [.clinerules/hooks/README.md](../../00_core/README__.clinerules_hooks_README.md.md)
 - **Docs Officielles:** https://docs.cline.bot/cline-cli/overview
 
 ## Support

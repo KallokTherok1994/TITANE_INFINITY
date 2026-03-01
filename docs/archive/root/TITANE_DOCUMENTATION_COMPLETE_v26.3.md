@@ -1311,7 +1311,7 @@ Script principal de maintenance:
 
 - [ARCHITECTURE.md](/docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 - [COMMANDES_TAURI_COMPLETE_v26.3.0.md](/docs/COMMANDES_TAURI_COMPLETE_v26.3.0.md)
-- [CONTRIBUTING.md](/CONTRIBUTING.md)
+- [CONTRIBUTING.md](../../00_core/CONTRIBUTING.md)
 - [LICENSE.md](/docs/01_misc/LICENSE.md)
 
 ---

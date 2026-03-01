@@ -315,8 +315,8 @@ git status
 
 ## 🔗 REFERENCES
 
-- [DEPLOYMENT_PLAN_v26.4.0_HYBRID.md](DEPLOYMENT_PLAN_v26.4.0_HYBRID.md) - Fusion backend timeline
-- [PHASE_1_COMPLETE_HYBRID_DEPLOYMENT.md](PHASE_1_COMPLETE_HYBRID_DEPLOYMENT.md) - Production deployment status
+- [DEPLOYMENT_PLAN_v26.4.0_HYBRID.md](../90_release/DEPLOYMENT_PLAN_v26.4.0_HYBRID.md) - Fusion backend timeline
+- [PHASE_1_COMPLETE_HYBRID_DEPLOYMENT.md](../91_reports/PHASE_1_COMPLETE_HYBRID_DEPLOYMENT.md) - Production deployment status
 - Rust docs: https://doc.rust-lang.org/std/
 - Tauri docs: https://tauri.app/en/develop/
 

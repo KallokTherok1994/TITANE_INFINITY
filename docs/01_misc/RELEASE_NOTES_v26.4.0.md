@@ -147,9 +147,9 @@ Cette release consolide également **toutes les corrections TypeScript** des ver
 
 ## 📚 Documentation
 
-- [📄 Rapport complet de publication](../PUBLICATION_v26.4.0_REPORT.md)
+- [📄 Rapport complet de publication](PUBLICATION_v26.4.0_REPORT.md)
 - [📖 Architecture Decision Record](../docs/adr/ADR-002-infaillibilite-110.md)
-- [🔧 Guide d'installation détaillé](../docs/installation.md)
+- [🔧 Guide d'installation détaillé](../user/installation.md)
 - [🚀 Guide de démarrage rapide](../README.md)
 
 ---

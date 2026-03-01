@@ -305,11 +305,11 @@ Use provided examples and test scripts to validate.
 
 ## 🔗 Related Documentation
 
-- 📖 [Main User Manual](../MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
-- 🛠️ [Installation Guide](../GUIDE_INSTALLATION_SETUP_v27.0.0.md)
-- 🎓 [Tutorials & Examples](../TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
-- 📋 [Tauri Commands Reference](./TAURI_COMMANDS_REFERENCE.md)
-- 🏗️ [Architecture Documentation](../../ARCHITECTURE.md)
+- 📖 [Main User Manual](../01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
+- 🛠️ [Installation Guide](../01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md)
+- 🎓 [Tutorials & Examples](../01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
+- 📋 [Tauri Commands Reference](../06_api/TAURI_COMMANDS_REFERENCE.md)
+- 🏗️ [Architecture Documentation](../ARCHITECTURE.md)
 
 ---
 

@@ -16,7 +16,7 @@
 > — Kevin Thibault, 2026-01-31
 
 **Compliance**: COPILOT-XS deployment rule respected ✅  
-**Documentation**: [PRODUCTION_AUTHORIZATION_v35.0.0.md](docs/90_release/PRODUCTION_AUTHORIZATION_v35.0.0.md)
+**Documentation**: [PRODUCTION_AUTHORIZATION_v35.0.0.md](PRODUCTION_AUTHORIZATION_v35.0.0.md)
 
 ---
 
@@ -257,10 +257,10 @@ dfd86226 v35.0.0 Phase 1: Critical path optimization
 
 ### Documentation
 
-- [WEB_VITALS_v35.0.0.md](docs/01_misc/WEB_VITALS_v35.0.0.md) — Optimization strategy
-- [PERFORMANCE_REPORT_v35.0.0.md](docs/01_misc/PERFORMANCE_REPORT_v35.0.0.md) — Expected results
-- [OPTIMIZATION_STACK_v27-v35.md](docs/01_misc/OPTIMIZATION_STACK_v27-v35.md) — Cumulative stack
-- [PRODUCTION_AUTHORIZATION_v35.0.0.md](docs/90_release/PRODUCTION_AUTHORIZATION_v35.0.0.md) — Authorization
+- [WEB_VITALS_v35.0.0.md](../01_misc/WEB_VITALS_v35.0.0.md) — Optimization strategy
+- [PERFORMANCE_REPORT_v35.0.0.md](../01_misc/PERFORMANCE_REPORT_v35.0.0.md) — Expected results
+- [OPTIMIZATION_STACK_v27-v35.md](../01_misc/OPTIMIZATION_STACK_v27-v35.md) — Cumulative stack
+- [PRODUCTION_AUTHORIZATION_v35.0.0.md](PRODUCTION_AUTHORIZATION_v35.0.0.md) — Authorization
 
 ### Validation
 

@@ -3,7 +3,7 @@
 **Date:** 2026-01-03  
 **Version:** v26.2.0  
 **Fichiers Analysés:** 1003 fichiers (903 .rs, 14 .json, 4 .toml)  
-**Rapport Complet:** [AUDIT_SRC_TAURI_COMPLET_2026-01-03.md](./AUDIT_SRC_TAURI_COMPLET_2026-01-03.md)
+**Rapport Complet:** [AUDIT_SRC_TAURI_COMPLET_2026-01-03.md](../91_reports/AUDIT_SRC_TAURI_COMPLET_2026-01-03.md)
 
 ---
 
@@ -209,7 +209,7 @@ rg "use.*frontend" src/conversation_engine/ --type rust
 
 ### Documents Générés
 
-- **Rapport complet:** [AUDIT_SRC_TAURI_COMPLET_2026-01-03.md](./AUDIT_SRC_TAURI_COMPLET_2026-01-03.md) (25KB)
+- **Rapport complet:** [AUDIT_SRC_TAURI_COMPLET_2026-01-03.md](../91_reports/AUDIT_SRC_TAURI_COMPLET_2026-01-03.md) (25KB)
 - **Résumé exécutif:** Ce document
 
 ### Commandes Audit Rapide

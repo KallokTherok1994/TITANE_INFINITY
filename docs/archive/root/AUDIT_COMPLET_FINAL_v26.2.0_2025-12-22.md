@@ -1176,12 +1176,12 @@ e2e/                  # Playwright E2E
 ### Annexe C: Références
 
 **Documentation:**
-- [README.md](README.md) — Vue d'ensemble
-- [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture frontend
-- [docs/ARCHITECTURE_RINGS.md](docs/ARCHITECTURE_RINGS.md) — Modèle 4-Ring
-- [docs/guides/OMEGA_PIPELINE_v2.md](docs/guides/OMEGA_PIPELINE_v2.md) — Pipeline OMEGA
-- [docs/guides/LAZY_LOADING_STRATEGY.md](docs/guides/LAZY_LOADING_STRATEGY.md) — Lazy-loading
-- [.copilot-rules-permanent.md](docs/01_misc/.copilot-rules-permanent.md) — Règles permanentes
+- [README.md](../../../README.md) — Vue d'ensemble
+- [ARCHITECTURE.md](../../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture frontend
+- [docs/ARCHITECTURE_RINGS.md](../../ARCHITECTURE_RINGS.md) — Modèle 4-Ring
+- [docs/guides/OMEGA_PIPELINE_v2.md](../../guides/OMEGA_PIPELINE_v2.md) — Pipeline OMEGA
+- [docs/guides/LAZY_LOADING_STRATEGY.md](../../guides/LAZY_LOADING_STRATEGY.md) — Lazy-loading
+- [.copilot-rules-permanent.md](../../01_misc/.copilot-rules-permanent.md) — Règles permanentes
 
 **Audits Précédents:**
 - [AUDIT_FINAL_PERFECTION.md](AUDIT_FINAL_PERFECTION.md) — Audit Phase 3-4 (score 92/100)

@@ -134,7 +134,7 @@ cargo test --test cycle_engine_tests
 - **[Full Documentation](../../docs/TITANE_INFINITY_CYCLE_ENGINE.md)** — Complete guide (2500+ lines)
 - **[Architecture Schema](../../docs/CYCLE_ENGINE_SCHEMA.md)** — Visual diagrams
 - **[Quick Start](../../docs/CYCLE_ENGINE_QUICKSTART.md)** — 5-minute guide
-- **[Changelog](../../CYCLE_ENGINE_CHANGELOG.md)** — Detailed changes
+- **[Changelog](../99_ARCHIVE/old_sessions/2025-12-10/CYCLE_ENGINE_CHANGELOG.md)** — Detailed changes
 
 ---
 

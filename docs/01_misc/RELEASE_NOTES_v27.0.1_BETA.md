@@ -192,7 +192,7 @@ c081ffb3 docs(fix): infinite loading resolution protocol
 5. **Errors** → Stop Ollama, graceful error (no crash)
 6. **Performance** → Boot time ~400ms, responsive UI
 
-See [BETA_DEPLOYMENT_CHECKLIST.md](docs/01_misc/BETA_DEPLOYMENT_CHECKLIST.md) for detailed guide.
+See [BETA_DEPLOYMENT_CHECKLIST.md](BETA_DEPLOYMENT_CHECKLIST.md) for detailed guide.
 
 ---
 
@@ -237,7 +237,7 @@ tail -100 ~/.local/share/TITANE-Infinity/logs/*.log
 
 ## License
 
-See [LICENSE.md](docs/01_misc/LICENSE.md)
+See [LICENSE.md](LICENSE.md)
 
 ---
 

@@ -35,7 +35,7 @@
 
 | Fichier                                                                        | Description         | Lignes | Status |
 | ------------------------------------------------------------------------------ | ------------------- | ------ | ------ |
-| [`src-tauri/src/cycle_engine/README.md`](docs/00_core/README__src-tauri_src_cycle_engine_README.md.md) | Introduction module | ~200   | ✅     |
+| [`src-tauri/src/cycle_engine/README.md`](../../../00_core/README__src-tauri_src_cycle_engine_README.md.md) | Introduction module | ~200   | ✅     |
 
 ---
 
@@ -64,17 +64,17 @@
 
 | Fichier                                                                        | Description                  | Lignes | Status |
 | ------------------------------------------------------------------------------ | ---------------------------- | ------ | ------ |
-| [`docs/TITANE_INFINITY_CYCLE_ENGINE.md`](docs/TITANE_INFINITY_CYCLE_ENGINE.md) | Documentation exhaustive     | ~2500  | ✅     |
-| [`docs/CYCLE_ENGINE_SCHEMA.md`](docs/CYCLE_ENGINE_SCHEMA.md)                   | Schémas architecturaux ASCII | ~300   | ✅     |
-| [`docs/CYCLE_ENGINE_QUICKSTART.md`](docs/CYCLE_ENGINE_QUICKSTART.md)           | Guide démarrage 5 min        | ~400   | ✅     |
+| [`docs/TITANE_INFINITY_CYCLE_ENGINE.md`](../../../TITANE_INFINITY_CYCLE_ENGINE.md) | Documentation exhaustive     | ~2500  | ✅     |
+| [`docs/CYCLE_ENGINE_SCHEMA.md`](../../../CYCLE_ENGINE_SCHEMA.md)                   | Schémas architecturaux ASCII | ~300   | ✅     |
+| [`docs/CYCLE_ENGINE_QUICKSTART.md`](../../../CYCLE_ENGINE_QUICKSTART.md)           | Guide démarrage 5 min        | ~400   | ✅     |
 
 ### Changelog & Résumés
 
 | Fichier                                                                                  | Description               | Lignes | Status |
 | ---------------------------------------------------------------------------------------- | ------------------------- | ------ | ------ |
 | [`CYCLE_ENGINE_CHANGELOG.md`](CYCLE_ENGINE_CHANGELOG.md)                                 | Changelog détaillé v2.0.0 | ~500   | ✅     |
-| [`SUPER_PROMPT_16_IMPLEMENTATION_SUMMARY.md`](SUPER_PROMPT_16_IMPLEMENTATION_SUMMARY.md) | Résumé exécutif           | ~350   | ✅     |
-| [`SP16_EXECUTIVE_SUMMARY.md`](SP16_EXECUTIVE_SUMMARY.md)                                 | Résumé ultra-compact      | ~100   | ✅     |
+| [`SUPER_PROMPT_16_IMPLEMENTATION_SUMMARY.md`](../../super-prompts/SUPER_PROMPT_16_IMPLEMENTATION_SUMMARY.md) | Résumé exécutif           | ~350   | ✅     |
+| [`SP16_EXECUTIVE_SUMMARY.md`](../../super-prompts/SP16_EXECUTIVE_SUMMARY.md)                                 | Résumé ultra-compact      | ~100   | ✅     |
 
 ### Rapports
 
@@ -119,23 +119,23 @@
 
 ### Pour Comprendre
 
-1. **Commencer par** : [`SP16_EXECUTIVE_SUMMARY.md`](SP16_EXECUTIVE_SUMMARY.md) — Vue d'ensemble en 2 minutes
-2. **Ensuite** : [`docs/CYCLE_ENGINE_QUICKSTART.md`](docs/CYCLE_ENGINE_QUICKSTART.md) — Guide 5 minutes
-3. **Approfondir** : [`docs/TITANE_INFINITY_CYCLE_ENGINE.md`](docs/TITANE_INFINITY_CYCLE_ENGINE.md) — Documentation complète
+1. **Commencer par** : [`SP16_EXECUTIVE_SUMMARY.md`](../../super-prompts/SP16_EXECUTIVE_SUMMARY.md) — Vue d'ensemble en 2 minutes
+2. **Ensuite** : [`docs/CYCLE_ENGINE_QUICKSTART.md`](../../../CYCLE_ENGINE_QUICKSTART.md) — Guide 5 minutes
+3. **Approfondir** : [`docs/TITANE_INFINITY_CYCLE_ENGINE.md`](../../../TITANE_INFINITY_CYCLE_ENGINE.md) — Documentation complète
 
 ### Pour Utiliser
 
 1. **Import** : `use titane_infinity::cycle_engine::*;`
 2. **Init** : `let engine = CycleEngine::default();`
 3. **Start** : `engine.start().await?;`
-4. **Consulter** : [`docs/CYCLE_ENGINE_QUICKSTART.md`](docs/CYCLE_ENGINE_QUICKSTART.md)
+4. **Consulter** : [`docs/CYCLE_ENGINE_QUICKSTART.md`](../../../CYCLE_ENGINE_QUICKSTART.md)
 
 ### Pour Développer
 
-1. **Architecture** : [`src-tauri/src/cycle_engine/README.md`](docs/00_core/README__src-tauri_src_cycle_engine_README.md.md)
+1. **Architecture** : [`src-tauri/src/cycle_engine/README.md`](../../../00_core/README__src-tauri_src_cycle_engine_README.md.md)
 2. **Code** : Voir modules dans `src-tauri/src/cycle_engine/`
 3. **Tests** : [`src-tauri/tests/cycle_engine_tests.rs`](src-tauri/tests/cycle_engine_tests.rs)
-4. **Schémas** : [`docs/CYCLE_ENGINE_SCHEMA.md`](docs/CYCLE_ENGINE_SCHEMA.md)
+4. **Schémas** : [`docs/CYCLE_ENGINE_SCHEMA.md`](../../../CYCLE_ENGINE_SCHEMA.md)
 
 ### Pour Intégrer
 

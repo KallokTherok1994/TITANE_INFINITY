@@ -124,7 +124,7 @@ source and a list of supported platforms.
 ## Security
 
 For information on reporting security vulnerabilities in Node.js, see
-[SECURITY.md](./SECURITY.md).
+[SECURITY.md](../SECURITY.md).
 
 ## Contributing to Node.js
 

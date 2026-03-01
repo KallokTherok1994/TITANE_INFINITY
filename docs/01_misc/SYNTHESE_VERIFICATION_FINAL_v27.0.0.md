@@ -618,7 +618,7 @@ Tous les aspects critiques ont été vérifiés :
 
 Pour tous les détails, voir:
 
-- [AUDIT_CONFORMITE_COMPLET_v27.0.0.md](AUDIT_CONFORMITE_COMPLET_v27.0.0.md) (full report)
+- [AUDIT_CONFORMITE_COMPLET_v27.0.0.md](../91_reports/AUDIT_CONFORMITE_COMPLET_v27.0.0.md) (full report)
 - [CONFORMITE_EXPRESS_v27.0.0.md](CONFORMITE_EXPRESS_v27.0.0.md) (quick summary)
 - [RAPPORT_TECHNIQUE_DETAILLE_v27.0.0.md](RAPPORT_TECHNIQUE_DETAILLE_v27.0.0.md) (technical deep dive)
 

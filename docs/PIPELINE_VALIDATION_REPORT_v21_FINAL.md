@@ -253,8 +253,8 @@ pnpm run fix-pipeline
 - [docs/frontend/SYSTEM_CENTER_IMPLEMENTATION_GUIDE.md](frontend/SYSTEM_CENTER_IMPLEMENTATION_GUIDE.md) — Guide implémentation
 - [docs/DEPLOYMENT_SYSTEM_CENTER_AUTOFIX_v21.md](DEPLOYMENT_SYSTEM_CENTER_AUTOFIX_v21.md) — Déploiement auto-fix
 - [docs/SYSTEM_CENTER_AUTOFIX_ENGINE_v21.md](SYSTEM_CENTER_AUTOFIX_ENGINE_v21.md) — Engine auto-fix
-- [CHAT_PIPELINE_SELF_REPAIR_REPORT_v21.md](../CHAT_PIPELINE_SELF_REPAIR_REPORT_v21.md) — Rapport self-repair
-- [SYSTEM_CENTER_AUTOFIX_v21_COMPLETE.md](../SYSTEM_CENTER_AUTOFIX_v21_COMPLETE.md) — Auto-fix complet
+- [CHAT_PIPELINE_SELF_REPAIR_REPORT_v21.md](99_ARCHIVE/complete-reports/CHAT_PIPELINE_SELF_REPAIR_REPORT_v21.md) — Rapport self-repair
+- [SYSTEM_CENTER_AUTOFIX_v21_COMPLETE.md](99_ARCHIVE/rapports/SYSTEM_CENTER_AUTOFIX_v21_COMPLETE.md) — Auto-fix complet
 
 **Total**: **19 fichiers** (7 nouveaux, 12 modifiés)
 

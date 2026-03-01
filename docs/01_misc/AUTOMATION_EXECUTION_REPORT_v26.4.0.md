@@ -300,7 +300,7 @@ $ git push origin v26.3.1-alpha
 1. ✅ [.github/workflows/release.yml](.github/workflows/release.yml) — Release automation
 2. ✅ [.github/workflows/ci.yml](.github/workflows/ci.yml) — PR/push testing
 3. ✅ [scripts/test/benchmark-performance.sh](scripts/test/benchmark-performance.sh) — Benchmark script
-4. ✅ [docs/guides/PERFORMANCE_TESTING.md](docs/guides/PERFORMANCE_TESTING.md) — Perf guide
+4. ✅ [docs/guides/PERFORMANCE_TESTING.md](../guides/PERFORMANCE_TESTING.md) — Perf guide
 5. ✅ [ROADMAP_v26.4.0.md](ROADMAP_v26.4.0.md) — v26.4.0 roadmap
 6. ✅ [AUTOMATION_EXECUTION_REPORT_v26.4.0.md](AUTOMATION_EXECUTION_REPORT_v26.4.0.md) — This report
 

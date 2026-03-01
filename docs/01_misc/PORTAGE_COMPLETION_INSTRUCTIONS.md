@@ -129,7 +129,7 @@ _Available in TITANE_LITE deployment/ for reference._
 
 ### Audit Trail
 
-See [PORT_FROM_LITE.md](https://github.com/KallokTherok1994/TITANE_INFINITY/blob/port/from-lite-v27.4.1/PORT_FROM_LITE.md) for:
+See [PORT_FROM_LITE.md](PORT_FROM_LITE.md) for:
 
 - Complete methodology
 - Conflict resolution

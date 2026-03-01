@@ -121,20 +121,20 @@ The **10-phase audit (P0→P9)** executed de bout en bout has revealed:
 
 ### 1. Audit Reports (3 files)
 
-**[UI_SEAL_P0_PREFLIGHT.md](docs/01_misc/UI_SEAL_P0_PREFLIGHT.md)**
+**[UI_SEAL_P0_PREFLIGHT.md](UI_SEAL_P0_PREFLIGHT.md)**
 
 - Preflight state: git clean, boot clean
 - Versions locked (Node v24, pnpm 10.28.2)
 - 15s boot logs captured (no errors)
 
-**[UI_SEAL_P1_CARTE.md](docs/01_misc/UI_SEAL_P1_CARTE.md)**
+**[UI_SEAL_P1_CARTE.md](UI_SEAL_P1_CARTE.md)**
 
 - Complete routes map (12 routes)
 - Components breakdown (30+ chat components)
 - Storage architecture (conversationStorage single source)
 - 4-Ring architecture verified
 
-**[UI_SEAL_P2-P9_CONSOLIDATED.md](docs/01_misc/UI_SEAL_P2-P9_CONSOLIDATED.md)**
+**[UI_SEAL_P2-P9_CONSOLIDATED.md](UI_SEAL_P2-P9_CONSOLIDATED.md)**
 
 - Gates by screen (P2): 12/12 routes ✓
 - Chat zero-silence (P3): multi-conv verified

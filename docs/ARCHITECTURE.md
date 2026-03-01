@@ -6,9 +6,9 @@ TITANE∞ est construit sur une architecture **modulaire, décentralisée et ada
 
 ## Diagrams
 
-- Mermaid canon: [docs/diagrams/README.md](docs/diagrams/README.md)
-- Anneaux: [architecture_4_ring](docs/diagrams/rendered/architecture_4_ring.md)
-- Flux: [data_flow_chat](docs/diagrams/rendered/data_flow_chat.md)
+- Mermaid canon: [docs/diagrams/README.md](../README.md)
+- Anneaux: [architecture_4_ring](diagrams/rendered/architecture_4_ring.md)
+- Flux: [data_flow_chat](diagrams/rendered/data_flow_chat.md)
 
 ## 🏛️ Architecture Globale
 

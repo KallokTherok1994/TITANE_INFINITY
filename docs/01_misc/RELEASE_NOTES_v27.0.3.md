@@ -44,7 +44,7 @@ pnpm run dev:tauri
 
 ## Proof & Verification
 
-Full certification details: [reports/run_R1_R6_SEALED/FINAL_SEAL_REPORT.md](reports/run_R1_R6_SEALED/FINAL_SEAL_REPORT.md)
+Full certification details: [reports/run_R1_R6_SEALED/FINAL_SEAL_REPORT.md](../sealed-releases/v27.0.3/FINAL_SEAL_REPORT.md)
 
 ```bash
 # Verify artifacts

@@ -175,7 +175,7 @@ d5cd019 feat(perf): P2-1 Complete - IPC Optimization with DashMap Migration
 
 ## Migration
 
-See [MIGRATION_GUIDE.md](MIGRATION_GUIDE.md) for detailed upgrade instructions.
+See [MIGRATION_GUIDE.md](../../sessions/MIGRATION_GUIDE.md) for detailed upgrade instructions.
 
 ---
 

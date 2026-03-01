@@ -74,7 +74,7 @@ cat docs/super-prompts/QUICK_START.md
 | Fichier | Temps de lecture | Quand l'utiliser |
 |---------|------------------|------------------|
 | [TEMPLATE_SUPER_PROMPT.md](./TEMPLATE_SUPER_PROMPT.md) | 5 min | Pour créer un nouveau prompt |
-| [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) | 5 min | Pour voir l'historique |
+| [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md) | 5 min | Pour voir l'historique |
 
 ---
 

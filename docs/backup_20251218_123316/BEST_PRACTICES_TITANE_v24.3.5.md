@@ -734,7 +734,7 @@ logger.debug('Debug details', { component: 'MyComponent', details });
 
 - [DEEP_ANALYSIS_PHASE_3_v24.3.5.md](./DEEP_ANALYSIS_PHASE_3_v24.3.5.md) — Audit null safety complet
 - [SESSION_REFLEXION_APPROFONDIE_v24.3.5_FINAL.md](./SESSION_REFLEXION_APPROFONDIE_v24.3.5_FINAL.md) — Rapport complet
-- [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture globale
+- [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) — Architecture globale
 
 ---
 

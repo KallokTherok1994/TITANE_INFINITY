@@ -19,12 +19,12 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 
 **Ordre de lecture recommandé:**
 
-1. **→** Commencez par [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
+1. **→** Commencez par [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
    - Section: **🎯 INTRODUCTION** (5 min)
    - Section: **🚀 INSTALLATION & DÉMARRAGE** (10 min)
    - Section: **🖥️ INTERFACE PRINCIPALE** (5 min)
    - Section: **💬 CHAT IA** (5 min)
-2. **→** Puis lisez [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
+2. **→** Puis lisez [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
    - Section: **🟢 TUTORIELS DÉBUTANT** (15 min)
    - 3 tutoriels courts pour maîtriser les bases
 
@@ -42,12 +42,12 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 **Ordre de lecture recommandé:**
 
 1. **→ Installation (15 min)**
-   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md)
+   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](GUIDE_INSTALLATION_SETUP_v27.0.0.md)
    - Section: **Prérequis** + **Installation [Votre OS]**
    - Section: **Configuration Initiale** (4 étapes)
 
 2. **→ Architecture & Features (45 min)**
-   - [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
+   - [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
    - Section: **INTERFACE PRINCIPALE** (overview)
    - Section: **CHAT IA** (système complet)
    - Section: **MODES DE CONVERSATION** (tous 12+ modes)
@@ -55,20 +55,20 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
    - Section: **MODULES COGNITIFS** (13 cores)
 
 3. **→ Configuration Provider IA (30 min)**
-   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md)
+   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](GUIDE_INSTALLATION_SETUP_v27.0.0.md)
    - Section: **Configuration Providers IA** (Ollama, Gemini, Local)
    - Section: **Optimisation Performance**
 
 4. **→ Workflows Avancés (45 min)**
-   - [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
+   - [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
    - Section: **🟡 TUTORIELS INTERMÉDIAIRE** (4 tutoriels)
    - Section: **🔴 TUTORIELS AVANCÉ** (3 tutoriels)
    - Section: **API & Intégrations**
 
 5. **→ Troubleshooting & Optimisation (20 min)**
-   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md)
+   - [GUIDE_INSTALLATION_SETUP_v27.0.0.md](GUIDE_INSTALLATION_SETUP_v27.0.0.md)
    - Section: **Troubleshooting Installation**
-   - [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
+   - [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md)
    - Section: **🐛 DÉPANNAGE & SUPPORT**
 
 **Checkpoint:** Vous pouvez installer, configurer, customiser et utiliser TITANE comme un expert. ✅
@@ -103,7 +103,7 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 
 **Ressources complémentaires:**
 
-- [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
+- [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md)
   - Section: **🔴 TUTORIELS AVANCÉ**
   - Section: **🎯 CAS D'USAGE RÉELS**
   - Section: **🔄 WORKFLOWS COMPLETS**
@@ -179,60 +179,60 @@ Cette documentation complète (7,500+ lignes) couvre **100% des fonctionnalités
 
 **Installation & Setup**
 
-- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Toutes les méthodes d'installation
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-installation--démarrage](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Démarrage rapide
+- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md](GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Toutes les méthodes d'installation
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-installation--démarrage](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Démarrage rapide
 
 **Chat & Conversation**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-chat-ia--système-conversationnel](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - System complet
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modes-de-conversation](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les modes (12+)
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-débutant](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Premiers pas
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-chat-ia--système-conversationnel](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - System complet
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modes-de-conversation](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les modes (12+)
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-débutant](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Premiers pas
 
 **Mémoire & Persistance**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-système-de-mémoire](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - STM/MTM/LTM expliqué
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Maîtrise mémoire
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-système-de-mémoire](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - STM/MTM/LTM expliqué
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Maîtrise mémoire
 
 **Vision & Webcam**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-vision--perception](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Vue complète
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Tutorial Vision
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-vision--perception](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Vue complète
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Tutorial Vision
 
 **Modules Cognitifs**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modules-cognitifs](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les 13 modules
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-modules-cognitifs](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Tous les 13 modules
 
 **Progression & XP**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-progression--xp](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Système complet
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Progression mastery
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-progression--xp](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Système complet
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-intermédiaire](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Progression mastery
 
 **Paramètres & Configuration**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-paramètres--configuration](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 9 sections settings
-- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-configuration-initiale](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Setup wizard
-- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-setup-providers-ia](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Providers config
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-paramètres--configuration](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 9 sections settings
+- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-configuration-initiale](GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Setup wizard
+- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-setup-providers-ia](GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Providers config
 
 **Dépannage & Support**
 
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-dépannage--support](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Problèmes généraux
-- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-faq](docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 30+ questions
-- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-troubleshooting-installation](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Problèmes installation
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-dépannage--support](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - Problèmes généraux
+- → [MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#-faq](MANUEL_UTILISATEUR_COMPLET_v27.0.0.md) - 30+ questions
+- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-troubleshooting-installation](GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Problèmes installation
 
 **API & Développement**
 
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-avancé](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - API Tauri & customs
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Exemples concrets
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tutoriels-avancé](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - API Tauri & customs
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - Exemples concrets
 
 **Workflows & Cas d'Usage**
 
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 4 cas réels
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-workflows-complets](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 2 workflows end-to-end
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-cas-dusage-réels](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 4 cas réels
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-workflows-complets](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 2 workflows end-to-end
 
 **Performance & Optimisation**
 
-- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-optimisation-performance](docs/01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Optimisation complète
-- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tips--tricks](docs/01_misc/TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 6 tips avancés
+- → [GUIDE_INSTALLATION_SETUP_v27.0.0.md#-optimisation-performance](GUIDE_INSTALLATION_SETUP_v27.0.0.md) - Optimisation complète
+- → [TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md#-tips--tricks](TUTORIELS_PRACTIQUES_EXEMPLES_v27.0.0.md) - 6 tips avancés
 
 ---
 

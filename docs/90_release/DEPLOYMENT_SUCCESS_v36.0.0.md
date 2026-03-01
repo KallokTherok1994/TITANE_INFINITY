@@ -16,7 +16,7 @@
 > — Kevin Thibault, 2026-01-30
 
 **Compliance**: COPILOT-XS deployment rule respected ✅  
-**Documentation**: [PRODUCTION_AUTHORIZATION_v36.0.0.md](docs/90_release/PRODUCTION_AUTHORIZATION_v36.0.0.md)
+**Documentation**: [PRODUCTION_AUTHORIZATION_v36.0.0.md](PRODUCTION_AUTHORIZATION_v36.0.0.md)
 
 ---
 

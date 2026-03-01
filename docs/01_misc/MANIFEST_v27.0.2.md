@@ -109,8 +109,8 @@ titane-infinity
 ## Support & Feedback
 
 - **Issue Tracker:** GitHub Issues
-- **Documentation:** [API_REFERENCE.md](../../API_REFERENCE.md)
-- **Architecture:** [ARCHITECTURE.md](../../ARCHITECTURE.md)
+- **Documentation:** [API_REFERENCE.md](API_REFERENCE.md)
+- **Architecture:** [ARCHITECTURE.md](../ARCHITECTURE.md)
 
 ---
 

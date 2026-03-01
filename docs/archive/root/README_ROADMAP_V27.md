@@ -78,25 +78,25 @@ git checkout -b feature/phase-1-quick-wins
 
 | Document                                                       | Purpose              | Time   | Priority   |
 | -------------------------------------------------------------- | -------------------- | ------ | ---------- |
-| **[Quick Start Guide](docs/QUICK_START_IMPLEMENTATION.md)**    | Day-by-day execution | 20 min | ⭐⭐⭐⭐⭐ |
-| **[Roadmap Execution Index](docs/ROADMAP_EXECUTION_INDEX.md)** | Navigation hub       | 10 min | ⭐⭐⭐⭐⭐ |
-| **[Strategic Roadmap](docs/STRATEGIC_ROADMAP_2026.md)**        | Overall strategy     | 30 min | ⭐⭐⭐⭐   |
+| **[Quick Start Guide](../../QUICK_START_IMPLEMENTATION.md)**    | Day-by-day execution | 20 min | ⭐⭐⭐⭐⭐ |
+| **[Roadmap Execution Index](../../ROADMAP_EXECUTION_INDEX.md)** | Navigation hub       | 10 min | ⭐⭐⭐⭐⭐ |
+| **[Strategic Roadmap](../../STRATEGIC_ROADMAP_2026.md)**        | Overall strategy     | 30 min | ⭐⭐⭐⭐   |
 
 ### 📖 Implementation Guides
 
 | Phase       | Document                                                                    | Lines    | Est. Time |
 | ----------- | --------------------------------------------------------------------------- | -------- | --------- |
-| **Phase 1** | [Memory Migration Guide](docs/MIGRATION_GUIDE_MEMORY_v2.md)                 | 534      | 8-12h     |
-| **Phase 2** | [Quick Start § Testing](docs/QUICK_START_IMPLEMENTATION.md#phase-2-testing) | Included | 16-20h    |
-| **Phase 3** | [Quick Start § CI/CD](docs/QUICK_START_IMPLEMENTATION.md#phase-3-cicd)      | Included | 12-16h    |
-| **Phase 4** | [AI Consolidation Guide](docs/MIGRATION_GUIDE_AI_CONSOLIDATION.md)          | 700+     | 12-16h    |
-| **Phase 5** | [Quick Start § Polish](docs/QUICK_START_IMPLEMENTATION.md#phase-5-polish)   | Included | 12-16h    |
+| **Phase 1** | [Memory Migration Guide](../../MIGRATION_GUIDE_MEMORY_v2.md)                 | 534      | 8-12h     |
+| **Phase 2** | [Quick Start § Testing](../../QUICK_START_IMPLEMENTATION.md#phase-2-testing) | Included | 16-20h    |
+| **Phase 3** | [Quick Start § CI/CD](../../QUICK_START_IMPLEMENTATION.md#phase-3-cicd)      | Included | 12-16h    |
+| **Phase 4** | [AI Consolidation Guide](../../MIGRATION_GUIDE_AI_CONSOLIDATION.md)          | 700+     | 12-16h    |
+| **Phase 5** | [Quick Start § Polish](../../QUICK_START_IMPLEMENTATION.md#phase-5-polish)   | Included | 12-16h    |
 
 ### 📊 Tracking & Management
 
 | Tool                   | Purpose               | Location                                                              |
 | ---------------------- | --------------------- | --------------------------------------------------------------------- |
-| **Progress Templates** | GitHub Projects setup | [PROGRESS_TRACKING_TEMPLATES.md](docs/PROGRESS_TRACKING_TEMPLATES.md) |
+| **Progress Templates** | GitHub Projects setup | [PROGRESS_TRACKING_TEMPLATES.md](../../PROGRESS_TRACKING_TEMPLATES.md) |
 | **Weekly Reports**     | Status tracking       | `scripts/generate-weekly-report.sh`                                   |
 | **Metrics Tracking**   | Progress metrics      | `scripts/update-metrics.sh`                                           |
 | **Milestone Checker**  | Completion %          | `scripts/check-milestone-progress.sh`                                 |
@@ -105,9 +105,9 @@ git checkout -b feature/phase-1-quick-wins
 
 | Document                                                               | Purpose            | Pages     |
 | ---------------------------------------------------------------------- | ------------------ | --------- |
-| [Architecture Analysis](docs/DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) | Codebase review    | 50+       |
-| [Deep Reflection](docs/DEEP_REFLECTION_SUMMARY_2026-01-07.md)          | Strategic insights | 45+       |
-| [GO ALL Summary](docs/GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md)       | P1.1/P1.2 features | 700 lines |
+| [Architecture Analysis](../../DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) | Codebase review    | 50+       |
+| [Deep Reflection](../../DEEP_REFLECTION_SUMMARY_2026-01-07.md)          | Strategic insights | 45+       |
+| [GO ALL Summary](../../GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md)       | P1.1/P1.2 features | 700 lines |
 
 ---
 
@@ -138,9 +138,9 @@ Week 1:
 
 #### Tools Available
 
-- ✅ [Memory Migration Guide](docs/MIGRATION_GUIDE_MEMORY_v2.md)
+- ✅ [Memory Migration Guide](../../MIGRATION_GUIDE_MEMORY_v2.md)
 - ✅ `scripts/analyze-memory-migration.sh`
-- ✅ Daily breakdown in [Quick Start](docs/QUICK_START_IMPLEMENTATION.md)
+- ✅ Daily breakdown in [Quick Start](../../QUICK_START_IMPLEMENTATION.md)
 
 #### Success Criteria
 
@@ -176,7 +176,7 @@ Week 4: Backend Tests (6-8h)
 
 #### Tools Available
 
-- ✅ Test templates in [Quick Start](docs/QUICK_START_IMPLEMENTATION.md#phase-2-testing)
+- ✅ Test templates in [Quick Start](../../QUICK_START_IMPLEMENTATION.md#phase-2-testing)
 - ✅ Coverage targets defined
 - ✅ Issue templates available
 
@@ -212,7 +212,7 @@ Week 6: Pre-commit & Releases (6-8h)
 
 #### Tools Available
 
-- ✅ Complete workflow templates in [Quick Start](docs/QUICK_START_IMPLEMENTATION.md#phase-3-cicd)
+- ✅ Complete workflow templates in [Quick Start](../../QUICK_START_IMPLEMENTATION.md#phase-3-cicd)
 - ✅ Pre-commit hook setup
 - ✅ Release automation scripts
 
@@ -254,7 +254,7 @@ Documentation: (4-6h)
 
 #### Tools Available
 
-- ✅ [AI Consolidation Guide](docs/MIGRATION_GUIDE_AI_CONSOLIDATION.md)
+- ✅ [AI Consolidation Guide](../../MIGRATION_GUIDE_AI_CONSOLIDATION.md)
 - ✅ `scripts/analyze-ai-migration.sh` (template)
 - ✅ Complete API examples
 
@@ -297,7 +297,7 @@ Week 10: Final Polish (4-6h)
 
 #### Tools Available
 
-- ✅ Optimization guidelines in [Quick Start](docs/QUICK_START_IMPLEMENTATION.md#phase-5-polish)
+- ✅ Optimization guidelines in [Quick Start](../../QUICK_START_IMPLEMENTATION.md#phase-5-polish)
 - ✅ Performance benchmarks
 - ✅ Release checklist
 
@@ -494,7 +494,7 @@ gh run view <run-id> --log
 act -l
 ```
 
-**Full troubleshooting guide:** [Quick Start § Troubleshooting](docs/QUICK_START_IMPLEMENTATION.md#troubleshooting)
+**Full troubleshooting guide:** [Quick Start § Troubleshooting](../../QUICK_START_IMPLEMENTATION.md#troubleshooting)
 
 ---
 
@@ -560,31 +560,31 @@ TITANE∞ v27.0 is world-class when:
 
 ### Strategic Documents
 
-- [Strategic Roadmap](docs/STRATEGIC_ROADMAP_2026.md) - Overall 10-week strategy
-- [Architecture Analysis](docs/DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) - Complete codebase review
-- [Deep Reflection](docs/DEEP_REFLECTION_SUMMARY_2026-01-07.md) - Strategic insights
+- [Strategic Roadmap](../../STRATEGIC_ROADMAP_2026.md) - Overall 10-week strategy
+- [Architecture Analysis](../../DEEP_ARCHITECTURE_ANALYSIS_2026-01-07.md) - Complete codebase review
+- [Deep Reflection](../../DEEP_REFLECTION_SUMMARY_2026-01-07.md) - Strategic insights
 
 ### Implementation Guides
 
-- [Quick Start Guide](docs/QUICK_START_IMPLEMENTATION.md) - Day-by-day execution ⭐
-- [Memory Migration](docs/MIGRATION_GUIDE_MEMORY_v2.md) - Phase 1 consolidation
-- [AI Consolidation](docs/MIGRATION_GUIDE_AI_CONSOLIDATION.md) - Phase 4 architecture
+- [Quick Start Guide](../../QUICK_START_IMPLEMENTATION.md) - Day-by-day execution ⭐
+- [Memory Migration](../../MIGRATION_GUIDE_MEMORY_v2.md) - Phase 1 consolidation
+- [AI Consolidation](../../MIGRATION_GUIDE_AI_CONSOLIDATION.md) - Phase 4 architecture
 
 ### Tracking & Management
 
-- [Roadmap Execution Index](docs/ROADMAP_EXECUTION_INDEX.md) - Navigation hub ⭐
-- [Progress Templates](docs/PROGRESS_TRACKING_TEMPLATES.md) - GitHub Projects setup
-- [Practical Tools Summary](docs/PRACTICAL_TOOLS_SUMMARY.md) - Tools overview
+- [Roadmap Execution Index](../../ROADMAP_EXECUTION_INDEX.md) - Navigation hub ⭐
+- [Progress Templates](../../PROGRESS_TRACKING_TEMPLATES.md) - GitHub Projects setup
+- [Practical Tools Summary](../../PRACTICAL_TOOLS_SUMMARY.md) - Tools overview
 
 ### Feature Documentation
 
-- [P1 Enhancements](docs/P1_ENHANCEMENTS_2026-01-07.md) - Performance features
-- [P1.2 Alerts](docs/P1.2_ALERTS_2026-01-07.md) - Alert system
-- [GO ALL Summary](docs/GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md) - Recent work
+- [P1 Enhancements](../../P1_ENHANCEMENTS_2026-01-07.md) - Performance features
+- [P1.2 Alerts](../../P1.2_ALERTS_2026-01-07.md) - Alert system
+- [GO ALL Summary](../../GO_ALL_CONTINUATION_SUMMARY_2026-01-07.md) - Recent work
 
 ### Session Summaries
 
-- [Practical Tools Session](docs/SESSION_SUMMARY_PRACTICAL_TOOLS_2026-01-07.md) - Latest work
+- [Practical Tools Session](../../SESSION_SUMMARY_PRACTICAL_TOOLS_2026-01-07.md) - Latest work
 
 **Total Package:** 12 documents, 10,000+ lines, 300+ pages equivalent
 
@@ -642,24 +642,24 @@ gh issue create \
 
 ### Documentation Navigation
 
-**Lost?** → Start with [Roadmap Execution Index](docs/ROADMAP_EXECUTION_INDEX.md)
+**Lost?** → Start with [Roadmap Execution Index](../../ROADMAP_EXECUTION_INDEX.md)
 
-**Need specific phase info?** → See [Quick Start Guide](docs/QUICK_START_IMPLEMENTATION.md)
+**Need specific phase info?** → See [Quick Start Guide](../../QUICK_START_IMPLEMENTATION.md)
 
-**GitHub setup questions?** → Check [Progress Templates](docs/PROGRESS_TRACKING_TEMPLATES.md)
+**GitHub setup questions?** → Check [Progress Templates](../../PROGRESS_TRACKING_TEMPLATES.md)
 
-**Strategic context?** → Read [Strategic Roadmap](docs/STRATEGIC_ROADMAP_2026.md)
+**Strategic context?** → Read [Strategic Roadmap](../../STRATEGIC_ROADMAP_2026.md)
 
 ### Common Questions
 
 **Q: Where do I start?**
-A: Read [Quick Start Guide](docs/QUICK_START_IMPLEMENTATION.md), then begin Phase 1
+A: Read [Quick Start Guide](../../QUICK_START_IMPLEMENTATION.md), then begin Phase 1
 
 **Q: How do I track progress?**
-A: Use GitHub Projects with [these templates](docs/PROGRESS_TRACKING_TEMPLATES.md)
+A: Use GitHub Projects with [these templates](../../PROGRESS_TRACKING_TEMPLATES.md)
 
 **Q: What if I get stuck?**
-A: Check troubleshooting in [Quick Start § Troubleshooting](docs/QUICK_START_IMPLEMENTATION.md#troubleshooting)
+A: Check troubleshooting in [Quick Start § Troubleshooting](../../QUICK_START_IMPLEMENTATION.md#troubleshooting)
 
 **Q: Can I skip phases?**
 A: Not recommended - each builds on previous (tests need consolidated code, CI/CD needs tests, etc.)
@@ -716,6 +716,6 @@ Before starting, ensure you have:
 **Document Created:** 2026-01-07
 **Version:** v1.0
 **Status:** ✅ **READY TO EXECUTE**
-**Next Action:** [Start Phase 1 →](docs/QUICK_START_IMPLEMENTATION.md#phase-1-quick-wins)
+**Next Action:** [Start Phase 1 →](../../QUICK_START_IMPLEMENTATION.md#phase-1-quick-wins)
 
 **Good luck building TITANE∞ into a world-class AI orchestration platform! 🎊**

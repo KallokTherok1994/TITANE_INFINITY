@@ -196,17 +196,17 @@ Total: ~592 KB (~168 KB gzip)
 ## 📚 Documentation
 
 ### Legal
-- 📄 [LICENSE.md](docs/01_misc/LICENSE.md) - Complete legal terms (FR/EN)
+- 📄 [LICENSE.md](../../01_misc/LICENSE.md) - Complete legal terms (FR/EN)
 
 ### Release
-- 📄 [VERSION_v13.0.0_PROPRIETARY.md](./VERSION_v13.0.0_PROPRIETARY.md) - Full release doc
-- 📄 [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) - Change history
-- 📄 [README.md](./README.md) - User guide with legal notice
+- 📄 [VERSION_v13.0.0_PROPRIETARY.md](../sessions/VERSION_v13.0.0_PROPRIETARY.md) - Full release doc
+- 📄 [CHANGELOG.md](../../90_release/CHANGELOG__CHANGELOG.md.md) - Change history
+- 📄 [README.md](../../../README.md) - User guide with legal notice
 
 ### Architecture
-- 📄 [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) - System overview
-- 📄 [BACKEND_ARCHITECTURE.md](./BACKEND_ARCHITECTURE.md) - Rust backend architecture
-- 📄 [MIGRATION_GUIDE_USESTATE.md](./MIGRATION_GUIDE_USESTATE.md) - Hook migration guide
+- 📄 [ARCHITECTURE.md](../../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) - System overview
+- 📄 [BACKEND_ARCHITECTURE.md](../sessions/BACKEND_ARCHITECTURE.md) - Rust backend architecture
+- 📄 [MIGRATION_GUIDE_USESTATE.md](../sessions/MIGRATION_GUIDE_USESTATE.md) - Hook migration guide
 
 ---
 
@@ -230,7 +230,7 @@ Total: ~592 KB (~168 KB gzip)
 **Governing Law**: Québec and Canada
 
 **For license inquiries**:
-- See [LICENSE.md](docs/01_misc/LICENSE.md) for complete terms (FR/EN)
+- See [LICENSE.md](../../01_misc/LICENSE.md) for complete terms (FR/EN)
 - Contact owner for special requests or permissions
 
 ---

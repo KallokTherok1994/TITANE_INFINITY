@@ -212,8 +212,8 @@ Feature branch @ 28724a19 (v27.2.0 code + version sync)
 
 ## 📄 DOCUMENTATION COMPLÈTE
 
-- **Handoff technique**: [HANDOFF_v27.2.0_DEPLOYMENT_READY.md](docs/01_misc/HANDOFF_v27.2.0_DEPLOYMENT_READY.md)
-- **Verdict sprint**: [runs/TS_STRICT_v27.2.0_20260223_144545/VERDICT.md](docs/01_misc/VERDICT__runs_TS_STRICT_v27.2.0_20260223_144545_VERDICT.md.md)
+- **Handoff technique**: [HANDOFF_v27.2.0_DEPLOYMENT_READY.md](HANDOFF_v27.2.0_DEPLOYMENT_READY.md)
+- **Verdict sprint**: [runs/TS_STRICT_v27.2.0_20260223_144545/VERDICT.md](VERDICT__runs_TS_STRICT_v27.2.0_20260223_144545_VERDICT.md.md)
 - **Proof pack**: [runs/TS_STRICT_v27.2.0_20260223_144545/](runs/TS_STRICT_v27.2.0_20260223_144545/)
 - **Registry event**: registry/ui-events.jsonl (event #87)
 

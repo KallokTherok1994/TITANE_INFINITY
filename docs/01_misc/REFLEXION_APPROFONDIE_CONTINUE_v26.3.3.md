@@ -62,8 +62,8 @@ Opt-ins supportés:
 
 Documentation associée:
 
-- [docs/VISUAL_ENGINE_README.md](docs/VISUAL_ENGINE_README.md)
-- [docs/current/audits/AUDIT_WEBSOCKETS_POLLING_v26.2.md](docs/current/audits/AUDIT_WEBSOCKETS_POLLING_v26.2.md)
+- [docs/VISUAL_ENGINE_README.md](../VISUAL_ENGINE_README.md)
+- [docs/current/audits/AUDIT_WEBSOCKETS_POLLING_v26.2.md](../current/audits/AUDIT_WEBSOCKETS_POLLING_v26.2.md)
 
 ---
 

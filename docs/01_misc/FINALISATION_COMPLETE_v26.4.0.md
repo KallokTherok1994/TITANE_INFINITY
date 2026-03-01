@@ -20,7 +20,7 @@
 
 ### ✅ PHASE 1: AUDIT & ANALYSE (100% COMPLÉTÉ)
 
-**Fichier créé**: [AUDIT_COMPLET_FINAL_2026-01-27.md](AUDIT_COMPLET_FINAL_2026-01-27.md)
+**Fichier créé**: [AUDIT_COMPLET_FINAL_2026-01-27.md](../91_reports/AUDIT_COMPLET_FINAL_2026-01-27.md)
 
 - ✅ **Audit complet 360°** (31 KB de documentation)
   - Tests: 93.0% coverage analysé
@@ -460,7 +460,7 @@ titane-infinity
 
 ## Full Changelog
 
-See [AUDIT_COMPLET_FINAL_2026-01-27.md](AUDIT_COMPLET_FINAL_2026-01-27.md) for comprehensive details.
+See [AUDIT_COMPLET_FINAL_2026-01-27.md](../91_reports/AUDIT_COMPLET_FINAL_2026-01-27.md) for comprehensive details.
 
 **Previous**: v26.2.0  
 **Current**: v26.4.0

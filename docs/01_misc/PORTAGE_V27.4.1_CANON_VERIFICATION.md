@@ -24,10 +24,10 @@
 
 | #   | Document                                                                         | Size   | Status      | Authority           |
 | --- | -------------------------------------------------------------------------------- | ------ | ----------- | ------------------- |
-| 1   | [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](docs/01_misc/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md) | 7.8 KB | ✅ VERIFIED | ⭐ CANONICAL INDEX  |
-| 2   | [PORTAGE_V27.4.1_SEAL.md](docs/01_misc/PORTAGE_V27.4.1_SEAL.md)                               | 14 KB  | ✅ VERIFIED | 🔒 OFFICIAL SEAL    |
-| 3   | [PORTAGE_V27.4.1_FINAL_OUTPUT.md](docs/01_misc/PORTAGE_V27.4.1_FINAL_OUTPUT.md)               | 13 KB  | ✅ VERIFIED | 📊 EXECUTIVE REPORT |
-| 4   | [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md)                                           | 6.2 KB | ✅ VERIFIED | 🔍 AUDIT TRAIL      |
+| 1   | [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md) | 7.8 KB | ✅ VERIFIED | ⭐ CANONICAL INDEX  |
+| 2   | [PORTAGE_V27.4.1_SEAL.md](PORTAGE_V27.4.1_SEAL.md)                               | 14 KB  | ✅ VERIFIED | 🔒 OFFICIAL SEAL    |
+| 3   | [PORTAGE_V27.4.1_FINAL_OUTPUT.md](PORTAGE_V27.4.1_FINAL_OUTPUT.md)               | 13 KB  | ✅ VERIFIED | 📊 EXECUTIVE REPORT |
+| 4   | [PORT_FROM_LITE.md](PORT_FROM_LITE.md)                                           | 6.2 KB | ✅ VERIFIED | 🔍 AUDIT TRAIL      |
 
 ### Référentiel Source — TITANE_LITE
 

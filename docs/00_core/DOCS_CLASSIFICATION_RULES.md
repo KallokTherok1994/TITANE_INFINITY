@@ -11,6 +11,7 @@ Règles déterministes appliquées:
 - `MERMAID*` -> `docs/_archive/mermaid/`
 - `LOG*`, `RUN*`, `EXECUTION*` -> `docs/_archive/runs/`
 - `ANALYSE*`, `AUDIT*` -> `docs/91_reports/`
+- `legacy*`, `old*`, archives historiques -> `docs/_archive/legacy/`
 - Autres -> `docs/01_misc/`
 
 Exceptions KEEP:
@@ -18,3 +19,7 @@ Exceptions KEEP:
 - `README.md` racine
 - `.github/**/*.md`
 - fichiers déjà sous `docs/`
+
+Règle UNKNOWN:
+
+- Toute cible non résoluble de manière déterministe est marquée `UNKNOWN` dans `INVENTORY_MD.csv` (colonne `notes`).

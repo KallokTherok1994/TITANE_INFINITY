@@ -37,7 +37,7 @@ v26.3.0: 10.00/10 → ADR + Tauri validation ✅
 
 ### ADR 001: Tauri Local-First Architecture
 
-**Location:** [docs/adr/001-tauri-local-first-architecture.md](docs/adr/001-tauri-local-first-architecture.md)
+**Location:** [docs/adr/001-tauri-local-first-architecture.md](../../adr/001-tauri-local-first-architecture.md)
 
 **Décision Clé:** Tauri v2 comme framework desktop principal
 
@@ -70,7 +70,7 @@ Validation Criteria: 100% (6/6) ✅
 
 ### ADR 002: OMEGA v2 Conversation Manager Architecture
 
-**Location:** [docs/adr/002-omega-conversation-manager.md](docs/adr/002-omega-conversation-manager.md)
+**Location:** [docs/adr/002-omega-conversation-manager.md](../../adr/002-omega-conversation-manager.md)
 
 **Décision Clé:** Pattern Singleton + Repository pour ConversationManager
 
@@ -121,7 +121,7 @@ class ConversationManager {
 
 ### ADR 003: ESLint JSX Apostrophe Automation
 
-**Location:** [docs/adr/003-eslint-jsx-automation-strategy.md](docs/adr/003-eslint-jsx-automation-strategy.md)
+**Location:** [docs/adr/003-eslint-jsx-automation-strategy.md](../../adr/003-eslint-jsx-automation-strategy.md)
 
 **Décision Clé:** Script sed automation (38 patterns) pour fix apostrophes JSX
 

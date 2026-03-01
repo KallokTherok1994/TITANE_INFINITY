@@ -409,7 +409,7 @@ pnpm run build                       ✅ PASS (à vérifier)
 ### Documentation Générée
 
 1. ✅ [ECOUTE_ACTIVE_COMPLETE_v24.4.0.md](ECOUTE_ACTIVE_COMPLETE_v24.4.0.md)
-2. ✅ [AUDIT_SECURITE_COMMANDES_v24.4.0.md](AUDIT_SECURITE_COMMANDES_v24.4.0.md)
+2. ✅ [AUDIT_SECURITE_COMMANDES_v24.4.0.md](../../archive/v24/AUDIT_SECURITE_COMMANDES_v24.4.0.md)
 3. ✅ [AUTO_ALL_REPORT_v24.4.0.md](AUTO_ALL_REPORT_v24.4.0.md) (ce document)
 
 ---

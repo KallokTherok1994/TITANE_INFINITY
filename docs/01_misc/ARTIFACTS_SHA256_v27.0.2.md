@@ -33,7 +33,7 @@ a593dd0b71f8257b686a3be892bc00852636108b7f2c2d1477a62b889f608fd2
 
 ## Build Summary
 
-**Changelog:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md#v27-4-2-hotfix)
+**Changelog:** [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md#v27-4-2-hotfix)
 
 **Critical Fixes:**
 - Conversation storage ID mismatch (src-tauri/src/conversation_engine/memory.rs)

@@ -293,7 +293,7 @@ responses
 
 ## 🔗 DOCUMENTATION ASSOCIÉE
 
-- **[AUDIT_FINAL_PRODUCTION_v26.3.0.md](./AUDIT_FINAL_PRODUCTION_v26.3.0.md)** — Audit production complet
+- **[AUDIT_FINAL_PRODUCTION_v26.3.0.md](../91_reports/AUDIT_FINAL_PRODUCTION_v26.3.0.md)** — Audit production complet
 - **[WEBKIT_FIX_VALIDATION_v26.3.0.md](./WEBKIT_FIX_VALIDATION_v26.3.0.md)** — Validation fix WebKit
 - **[VALIDATION_REPORT_FINAL.md](./VALIDATION_REPORT_FINAL.md)** — Rapport technique validation
 

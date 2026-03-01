@@ -61,7 +61,7 @@ Documents that defined OLD architecture but are now superseded:
 > This constitutional lock defined the v27.0.0-v27.4.x architecture (local-first).  
 > **Superseded by v27.5.0 constitutional migration (local-first → online-first).**  
 > Preserved for historical reference only.  
-> See: [ARCHITECTURE.md](docs/01_misc/ARCHITECTURE__ARCHITECTURE.md.md) for current architecture.
+> See: [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md) for current architecture.
 ```
 
 **Reason**: Preserve historical document but mark as superseded

@@ -127,9 +127,9 @@ All version files updated to `27.2.0`:
 
 ### Sprint Documentation
 
-- **Summary**: [`SPRINT_v27.2.0_COMPLETE.md`](docs/01_misc/SPRINT_v27.2.0_COMPLETE.md)
-- **Handoff**: [`HANDOFF_v27.2.0_DEPLOYMENT_READY.md`](docs/01_misc/HANDOFF_v27.2.0_DEPLOYMENT_READY.md)
-- **CHANGELOG**: [`CHANGELOG.md`](docs/90_release/CHANGELOG__CHANGELOG.md.md#v27-2-0-typescript-strict) (v27.2.0 section)
+- **Summary**: [`SPRINT_v27.2.0_COMPLETE.md`](../01_misc/SPRINT_v27.2.0_COMPLETE.md)
+- **Handoff**: [`HANDOFF_v27.2.0_DEPLOYMENT_READY.md`](../01_misc/HANDOFF_v27.2.0_DEPLOYMENT_READY.md)
+- **CHANGELOG**: [`CHANGELOG.md`](CHANGELOG__CHANGELOG.md.md#v27-2-0-typescript-strict) (v27.2.0 section)
 
 ### Proof Pack
 

@@ -18,7 +18,7 @@
 - ✅ Architecture 4-Ring compliance verified
 
 **Documentation:**
-- [docs/phases/PHASE_2_COMPLETE.md](docs/phases/PHASE_2_COMPLETE.md)
+- [docs/phases/PHASE_2_COMPLETE.md](../phases/PHASE_2_COMPLETE.md)
 
 **Sprints 1-11:** Systematic migration across:
 - Emotional engines
@@ -97,7 +97,7 @@ cargo check
 5. Clippy compliance (strict mode in CI)
 
 **Documentation:**
-- [docs/phases/PHASE_3_SPRINT_12_COMPLETE.md](docs/phases/PHASE_3_SPRINT_12_COMPLETE.md)
+- [docs/phases/PHASE_3_SPRINT_12_COMPLETE.md](../phases/PHASE_3_SPRINT_12_COMPLETE.md)
 
 ### 6. Frontend Fix ✅
 

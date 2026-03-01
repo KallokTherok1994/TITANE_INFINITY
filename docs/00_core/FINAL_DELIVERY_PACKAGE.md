@@ -81,8 +81,8 @@
 #### 🚀 Essential Guides (`docs/04_guides/` — 6 docs, 6,200 lines)
 
 **Main Guides:**
-- **[GETTING_STARTED.md](../04_guides/GETTING_STARTED.md)** (2,500L) — <2h to first PR
-- **[CONTRIBUTING.md](../../CONTRIBUTING.md)** (2,800L) — Complete contributor guide
+- **[GETTING_STARTED.md](../GETTING_STARTED.md)** (2,500L) — <2h to first PR
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** (2,800L) — Complete contributor guide
 
 **Advanced Guides:**
 - **[TROUBLESHOOTING.md](../04_guides/advanced/TROUBLESHOOTING.md)** (1,200L) — 10 scenarios
@@ -270,10 +270,10 @@
 9. **[STRATEGIC_VISION_POST_PHASE7.md](STRATEGIC_VISION_POST_PHASE7.md)** — Roadmap Phase 8-11
 
 ### Documentation to Validate
-10. **[GETTING_STARTED.md](../04_guides/GETTING_STARTED.md)** — Main guide
-11. **[CONTRIBUTING.md](../../CONTRIBUTING.md)** — Contributor guide
+10. **[GETTING_STARTED.md](../GETTING_STARTED.md)** — Main guide
+11. **[CONTRIBUTING.md](CONTRIBUTING.md)** — Contributor guide
 12. **[TROUBLESHOOTING.md](../04_guides/advanced/TROUBLESHOOTING.md)** — Advanced guide
-13. **[API Index](../06_api/INDEX.md)** — Complete API reference
+13. **[API Index](DOCS_INDEX.md)** — Complete API reference
 
 ---
 
@@ -378,9 +378,9 @@ This documentation evolution sets a new standard:
 
 ### Quick References
 - **Master INDEX:** [docs/INDEX.md](../INDEX.md)
-- **Getting Started:** [GETTING_STARTED.md](../04_guides/GETTING_STARTED.md)
+- **Getting Started:** [GETTING_STARTED.md](../GETTING_STARTED.md)
 - **Troubleshooting:** [TROUBLESHOOTING.md](../04_guides/advanced/TROUBLESHOOTING.md)
-- **API Reference:** [API Index](../06_api/INDEX.md)
+- **API Reference:** [API Index](DOCS_INDEX.md)
 
 ### Support Channels
 - **GitHub Issues:** Bug reports, questions

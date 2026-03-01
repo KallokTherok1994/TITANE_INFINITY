@@ -137,7 +137,7 @@ Les scripts installent automatiquement:
 ## 📚 Documentation
 
 - [INSTALL.md](./INSTALL.md) — Guide d'installation détaillé
-- [README.md](./README.md) — Vue d'ensemble des scripts
+- [README.md](../../README.md) — Vue d'ensemble des scripts
 - [ACTIVATION.md](./ACTIVATION.md) — Configuration de l'alias
 - [../../docs/OLLAMA_GUIDE.md](../../docs/OLLAMA_GUIDE.md) — Guide complet
 

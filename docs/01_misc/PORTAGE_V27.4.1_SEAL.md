@@ -378,18 +378,18 @@ git commit -m "Partial portage rollback"
 
 ### Primary References
 
-1. **Portage Methodology:** [PORT_FROM_LITE.md](docs/01_misc/PORT_FROM_LITE.md)
-2. **Documentation Index:** [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](docs/01_misc/PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
-3. **Master Index:** [docs/INDEX_MASTER.md](docs/INDEX_MASTER.md)
-4. **Registry Entry:** [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md#v27-4-1-portage)
+1. **Portage Methodology:** [PORT_FROM_LITE.md](PORT_FROM_LITE.md)
+2. **Documentation Index:** [PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md](PORTAGE_V27.4.1_DOCUMENTATION_INDEX.md)
+3. **Master Index:** [docs/INDEX_MASTER.md](../INDEX_MASTER.md)
+4. **Registry Entry:** [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md#v27-4-1-portage)
 5. **PR Audit:** [GitHub PR #132](https://github.com/KallokTherok1994/TITANE_INFINITY/pull/132)
 
 ### Supporting Documents
 
-- **Final Output (SUPER PROMPT §7):** [PORTAGE_V27.4.1_FINAL_OUTPUT.md](docs/01_misc/PORTAGE_V27.4.1_FINAL_OUTPUT.md)
-- Final Report: [PORT_TITANE_INFINITY_FINAL_REPORT.md](docs/01_misc/PORT_TITANE_INFINITY_FINAL_REPORT.md)
-- Completion Guide: [PORTAGE_COMPLETION_INSTRUCTIONS.md](docs/01_misc/PORTAGE_COMPLETION_INSTRUCTIONS.md)
-- PR Template: [PR_TEMPLATE_CREATION.md](docs/01_misc/PR_TEMPLATE_CREATION.md)
+- **Final Output (SUPER PROMPT §7):** [PORTAGE_V27.4.1_FINAL_OUTPUT.md](PORTAGE_V27.4.1_FINAL_OUTPUT.md)
+- Final Report: [PORT_TITANE_INFINITY_FINAL_REPORT.md](PORT_TITANE_INFINITY_FINAL_REPORT.md)
+- Completion Guide: [PORTAGE_COMPLETION_INSTRUCTIONS.md](PORTAGE_COMPLETION_INSTRUCTIONS.md)
+- PR Template: [PR_TEMPLATE_CREATION.md](PR_TEMPLATE_CREATION.md)
 
 ---
 

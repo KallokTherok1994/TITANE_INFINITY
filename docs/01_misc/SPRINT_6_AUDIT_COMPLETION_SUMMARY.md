@@ -208,7 +208,7 @@ Total: 6 files changed, 60 insertions, 18 deletions
 
 ## 📚 DOCUMENTATION GENERATED
 
-1. ✅ [AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md)
+1. ✅ [AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md](../91_reports/AUDIT_TAURI_COMMAND_ALIGNMENT_FINAL_v26.4.1.md)
    - 400+ lines comprehensive bug report
    - Full root cause analysis
    - Recommendations for fix
