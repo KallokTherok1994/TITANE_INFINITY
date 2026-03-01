@@ -13,7 +13,7 @@
  */
 
 export interface ParlerTTSConfig {
-  /** URL de l'API TTS locale (défaut: http://localhost:8765) */
+  /** URL API locale (défaut: localhost:8765) */
   apiUrl?: string;
   /** Description style vocal (remplace voice_id ElevenLabs) */
   styleDescription?: string;
@@ -67,9 +67,15 @@ class ParlerTTSBridge {
   private timeout: number;
 
   constructor(config?: ParlerTTSConfig) {
-    this.apiUrl = config?.apiUrl || 'http://localhost:8765';
+    this.apiUrl = config?.apiUrl || 'localhost:8765';
     this.defaultStyle = config?.styleDescription || DEFAULT_STYLE_ADINA;
     this.timeout = config?.timeout || 30000; // 30s timeout
+  }
+
+  private networkDisabledError(action: string): Error {
+    return new Error(
+      `PARLER_TTS_NETWORK_DISABLED:${action} (Tauri-only governed mode: no direct UI network)`
+    );
   }
 
   private isEnabled(): boolean {
@@ -109,53 +115,13 @@ class ParlerTTSBridge {
       };
     }
 
-    try {
-      const response = await globalThis['fetch'](
-        // @network-allowed
-        // @network-allowed
-        `${this.apiUrl}/api/v1/tts/health`,
-        {
-          method: 'GET',
-          signal: AbortSignal.timeout(5000),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Health check failed: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return {
-        status: data.status,
-        modelLoaded: data.model_loaded,
-        device: data.device,
-        gpuName: data.gpu_name,
-        vramUsedGb: data.vram_used_gb,
-        cacheSizeMb: data.cache_size_mb,
-        uptimeSeconds: data.uptime_seconds,
-      };
-    } catch (error) {
-      // ✅ v24.3.8: Silent fallback si serveur TTS non démarré (optionnel)
-      // console.error('[ParlerTTS] Health check error:', error);
-
-      // Auto-disable to prevent repeated connection-refused spam,
-      // unless explicitly enabled via env flag.
-      if (import.meta.env.VITE_PARLER_TTS_ENABLED !== '1') {
-        try {
-          window.localStorage.setItem('titane_parler_tts_enabled', '0');
-        } catch {
-          // ignore
-        }
-      }
-
-      return {
-        status: 'error',
-        modelLoaded: false,
-        device: 'unknown',
-        cacheSizeMb: 0,
-        uptimeSeconds: 0,
-      };
-    }
+    return {
+      status: 'error',
+      modelLoaded: false,
+      device: 'unknown',
+      cacheSizeMb: 0,
+      uptimeSeconds: 0,
+    };
   }
 
   /**
@@ -189,57 +155,7 @@ class ParlerTTSBridge {
         format: payload.format,
       });
 
-      // Requête HTTP POST
-      const response = await globalThis['fetch'](
-        // @network-allowed
-        // @network-allowed
-        `${this.apiUrl}/api/v1/tts/synthesize`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-          signal: AbortSignal.timeout(this.timeout),
-        }
-      );
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`TTS API error ${response.status}: ${errorText}`);
-      }
-
-      // Récupérer audio binaire
-      const audioBlob = await response.blob();
-
-      // Headers metadata
-      const generationTimeMs = parseInt(
-        response.headers.get('X-Generation-Time-Ms') || '0'
-      );
-      const cached = response.headers.get('X-Cached') === 'true';
-      const durationSeconds = parseFloat(
-        response.headers.get('X-Duration-Seconds') || '0'
-      );
-      const device = response.headers.get('X-Device') || 'unknown';
-
-      const totalTime = Date.now() - startTime;
-
-      console.log('[ParlerTTS] ✅ Audio généré:', {
-        size: `${(audioBlob.size / 1024).toFixed(1)} KB`,
-        duration: `${durationSeconds.toFixed(2)}s`,
-        generationTime: `${generationTimeMs}ms`,
-        totalTime: `${totalTime}ms`,
-        cached,
-        device,
-      });
-
-      return {
-        audioBlob,
-        generationTimeMs,
-        cached,
-        durationSeconds,
-        device,
-      };
+      throw this.networkDisabledError('synthesize');
     } catch (error) {
       console.error('[ParlerTTS] ❌ Erreur synthèse:', error);
       throw new Error(
@@ -262,34 +178,7 @@ class ParlerTTSBridge {
         throw new Error('Parler-TTS disabled in Vitest environment');
       }
 
-      const response = await globalThis['fetch'](
-        // @network-allowed
-        // @network-allowed
-        `${this.apiUrl}/api/v1/tts/update-style`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            style_description: newStyleDescription,
-            save_as_default: saveAsDefault,
-          }),
-          signal: AbortSignal.timeout(5000),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error(`Style update failed: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log('[ParlerTTS] ✅ Style vocal mis à jour:', result);
-
-      // Mettre à jour style local si sauvegardé
-      if (saveAsDefault) {
-        this.defaultStyle = newStyleDescription;
-      }
+      throw this.networkDisabledError('update-style');
     } catch (error) {
       console.error('[ParlerTTS] ❌ Erreur update style:', error);
       throw error;
