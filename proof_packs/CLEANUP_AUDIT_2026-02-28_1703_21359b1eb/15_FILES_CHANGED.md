@@ -30,3 +30,15 @@
 
 ## Note
 Le fichier massif `proof_logs/phase1_rg_scans.log` préexistait dans le proof pack et n’a pas été relu intégralement.
+
+## Addendum de scellement — 2026-03-01
+
+### Fichiers supplémentaires générés et intégrés
+- `docs/MAP_GATES.md`
+- `docs/MAP_IPC.md`
+- `docs/MAP_MERMAID_OVERVIEW.md`
+
+### État Git au moment du scellement
+- Branche: `MAIN`
+- Sync: `origin/MAIN...HEAD = 0 0`
+- Objectif: inclure les artefacts de cartographie restants et refermer un état propre.
