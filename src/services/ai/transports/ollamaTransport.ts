@@ -2,8 +2,7 @@
  * TITANE∞ v27.2Ω — Ollama Transport Layer (Dual Mode)
  *
  * Universal Ollama transport supporting:
- * - Dev mode: HTTP fetch via Vite proxy (/api/ollama → local Ollama port)
- * - Production: Tauri IPC invoke ('ollama_generate')
+ * - Mode gouverné: IPC Tauri uniquement ('ollama_generate')
  *
  * This module provides the SINGLE SOURCE OF TRUTH for all Ollama communications.
  * NO OTHER code should call Ollama directly.
@@ -28,7 +27,7 @@ function isTauriEnvironment(): boolean {
 }
 
 const IS_TAURI = isTauriEnvironment();
-const TRANSPORT_MODE = IS_TAURI ? 'IPC' : 'HTTP';
+const TRANSPORT_MODE = 'IPC';
 
 logger.info(`🚀 Ollama Transport Mode: ${TRANSPORT_MODE}`);
 
@@ -60,97 +59,15 @@ export interface OllamaGenerateResponse {
 }
 
 // ============================================================
-// HTTP TRANSPORT (DEV MODE — VITE PROXY)
+// HTTP TRANSPORT
 // ============================================================
-
-const OLLAMA_API_BASE = '/api/ollama';
-const FETCH_TIMEOUT_MS = 30000; // 30s
-
-/**
- * Construit une URL relative pour le proxy Vite
- */
-function getOllamaURL(endpoint: string): string {
-  return `${OLLAMA_API_BASE}${endpoint}`;
-}
-
-/**
- * HTTP avec timeout
- */
-async function fetchWithTimeout(
-  url: string,
-  options: RequestInit,
-  timeoutMs: number
-): Promise<Response> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const response = await globalThis['fetch'](url, {
-      // @network-allowed
-      ...options,
-      signal: controller.signal,
-    });
-    clearTimeout(timeout);
-    return response;
-  } catch (error) {
-    clearTimeout(timeout);
-    throw error;
-  }
-}
+// Désactivé en mode gouverné: toute requête réseau passe par IPC backend.
 
 /**
  * HTTP: Health check (/tags)
  */
 async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
-  try {
-    const response = await fetchWithTimeout(
-      getOllamaURL('/tags'),
-      {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-      },
-      8000 // 8s health check timeout
-    );
-
-    if (!response.ok) {
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_HTTP_ERROR',
-          message: `HTTP ${response.status}: ${response.statusText}`,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: true,
-        },
-      };
-    }
-
-    const data = await response.json();
-    return {
-      ok: true,
-      provider: 'ollama',
-      content: data,
-    };
-  } catch (error) {
-    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
-    const classification = classifyError(error);
-    const isAbort = isAbortError(error);
-
-    return {
-      ok: false,
-      provider: 'ollama',
-      error: {
-        code: isAbort
-          ? 'OLLAMA_ABORTED'
-          : classification.type === 'ipc'
-            ? 'IPC_CONTRACT_ERROR'
-            : 'OLLAMA_UNREACHABLE',
-        message: isAbort ? 'Requete annulee' : classification.message,
-        hint: classification.hint,
-        retryable: !isAbort && classification.retryable,
-      },
-    };
-  }
+  return ipcCheckHealth();
 }
 
 /**
@@ -159,85 +76,7 @@ async function httpCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
 async function httpGenerate(
   req: OllamaGenerateRequest
 ): Promise<AiResult<OllamaGenerateResponse>> {
-  try {
-    const timeoutMs = (req.timeout_secs || 30) * 1000;
-
-    const response = await fetchWithTimeout(
-      getOllamaURL('/generate'),
-      {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: req.model,
-          prompt: req.prompt,
-          system: req.system,
-          stream: false,
-          options: {
-            temperature: req.temperature,
-            num_predict: req.max_tokens,
-          },
-        }),
-      },
-      timeoutMs
-    );
-
-    if (!response.ok) {
-      // HTTP errors from Ollama are provider-specific, not IPC
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_HTTP_ERROR',
-          message: `HTTP ${response.status}`,
-          hint: 'Ollama indisponible. TITANE bascule en mode local.',
-          retryable: response.status >= 500,
-        },
-      };
-    }
-
-    const data = await response.json();
-
-    if (!data.response) {
-      return {
-        ok: false,
-        provider: 'ollama',
-        error: {
-          code: 'OLLAMA_EMPTY_RESPONSE',
-          message: 'Réponse vide reçue du modèle',
-          hint: 'Réessaie ou choisis un autre modèle.',
-          retryable: true,
-        },
-      };
-    }
-
-    return {
-      ok: true,
-      provider: 'ollama',
-      content: {
-        content: data.response.trim(),
-        model: req.model,
-      },
-    };
-  } catch (error) {
-    // ✅ IPC FIX (Ω∞.v1): Distinguish IPC errors from Ollama errors
-    const classification = classifyError(error);
-    const isAbort = isAbortError(error);
-
-    return {
-      ok: false,
-      provider: 'ollama',
-      error: {
-        code: isAbort
-          ? 'OLLAMA_ABORTED'
-          : classification.type === 'ipc'
-            ? 'IPC_CONTRACT_ERROR'
-            : 'OLLAMA_UNREACHABLE',
-        message: isAbort ? 'Requete annulee' : classification.message,
-        hint: classification.hint,
-        retryable: !isAbort && classification.retryable,
-      },
-    };
-  }
+  return ipcGenerate(req);
 }
 
 // ============================================================
@@ -385,7 +224,7 @@ async function ipcGenerate(
  */
 export async function ollamaCheckHealth(): Promise<AiResult<OllamaTagsResponse>> {
   logger.debug(`Health check via ${TRANSPORT_MODE}`);
-  return IS_TAURI ? ipcCheckHealth() : httpCheckHealth();
+  return ipcCheckHealth();
 }
 
 /**
@@ -398,7 +237,7 @@ export async function ollamaGenerate(
     model: req.model,
     promptLen: req.prompt.length,
   });
-  return IS_TAURI ? ipcGenerate(req) : httpGenerate(req);
+  return ipcGenerate(req);
 }
 
 /**

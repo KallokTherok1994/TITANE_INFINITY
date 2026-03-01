@@ -10,7 +10,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { fetch as tauriFetch } from '@tauri-apps/plugin-http';
+// Réseau direct frontend désactivé en mode gouverné.
 
 const isTauriRuntime = (): boolean => {
   if (typeof window === 'undefined') {
@@ -198,28 +198,25 @@ async function request<T = unknown>(
       setTimeout(() => reject(new Error('[HTTP] Request timeout')), timeout);
     });
 
-    // Select appropriate HTTP implementation
     const useTauriFetch = isTauriRuntime();
-    if (!useTauriFetch && !hasBrowserFetch && !isVitest) {
-      throw new Error('[HTTP] No HTTP implementation available in this environment');
-    }
-
     const shouldUseMockFetch =
       !useTauriFetch && isVitest && (!hasBrowserFetch || !isFetchMocked());
-    const fetchImpl = useTauriFetch
-      ? tauriFetch
-      : shouldUseMockFetch
-        ? mockHttpResponse
-        : globalThis['fetch'];
 
-    const fetchPromise = fetchImpl(url, {
-      method,
-      headers,
-      body: fetchBody,
-      signal,
-    } as RequestInit);
+    if (!shouldUseMockFetch) {
+      throw new Error(
+        '[HTTP] Frontend HTTP disabled by governance. Use backend IPC network gateway.'
+      );
+    }
 
-    const response = await Promise.race([fetchPromise, timeoutPromise]);
+    const response = await Promise.race([
+      mockHttpResponse(url, {
+        method,
+        headers,
+        body: fetchBody,
+        signal,
+      } as RequestInit),
+      timeoutPromise,
+    ]);
 
     console.log(`[HTTP] ${method} ${url} → ${response.status}`);
 

@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, resolve } from 'node:path';
 
 describe('Ollama proxy routing', () => {
-  it('uses /api/ollama as base and forbids direct localhost', () => {
+  it('uses IPC-only transport and forbids direct localhost', () => {
     const testDir = dirname(fileURLToPath(import.meta.url));
     const target = resolve(testDir, '../services/ai/transports/ollamaTransport.ts');
     const source = readFileSync(target, 'utf8');
@@ -17,7 +17,8 @@ describe('Ollama proxy routing', () => {
     const forbiddenPort = [':', '114', '34'].join('');
     const forbidden = ['127', '0', '0', '1'].join('.') + forbiddenPort;
     const forbiddenLocalhost = ['local', 'host', forbiddenPort].join('');
-    expect(source).toContain("const OLLAMA_API_BASE = '/api/ollama';");
+    expect(source).toContain("const TRANSPORT_MODE = 'IPC';");
+    expect(source).not.toContain("const OLLAMA_API_BASE = '/api/ollama';");
     expect(source).not.toContain(forbidden);
     expect(source).not.toContain(forbiddenLocalhost);
   });
