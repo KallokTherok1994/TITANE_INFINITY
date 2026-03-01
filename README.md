@@ -9,6 +9,8 @@
 
 **Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
 
+**Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
+
 ---
 
 ## 📦 Téléchargement
