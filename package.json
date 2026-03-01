@@ -135,7 +135,10 @@
     "verify:registry:sync": "node scripts/verify/registry-sync.js",
     "verify:registry:integrity": "node scripts/verify/registry-integrity.js",
     "verify:registry:quality": "node scripts/verify/registry-quality.js",
-    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality"
+    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality",
+    "run:x3:tests": "bash scripts/lib/run_x3_profile.sh tests",
+    "run:x3:build": "bash scripts/lib/run_x3_profile.sh build",
+    "run:x3:network": "bash scripts/lib/run_x3_profile.sh network"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.90.21",
