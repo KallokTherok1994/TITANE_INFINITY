@@ -1,0 +1,93 @@
+# STRUCTURE_FINDINGS
+
+## Redondances détectées
+- archive*: 137
+- report*: 1301
+- proof*: 108
+- run*: 2583
+- backup*: 33
+
+## Dossiers morts (échantillon)
+- .archive
+- .archive/build_logs_2026-01-26
+- deployment/v27.0.0-PRODUCTION/logs
+- deployment/latest/release
+- deployment/latest/release/p4_deploy_20260217_171400
+- deployment/latest/release/p4_deploy_20260217_171400/dist
+- deployment/latest/release/p4_deploy_20260217_171400/dist/assets
+- deployment/latest/release/prod_27.0.3_20260218_204422
+- deployment/latest/v27.0.0
+- deployment/latest/certification/master_runs
+- deployment/latest/certification/master_runs/MASTER_20260219T023451Z
+- deployment/latest/certification/master_runs/P10_8_20260219T023409Z
+- deployment/latest/certification/master_runs/MASTER_20260219T023408Z
+- deployment/latest/certification/master_runs/P10_7_20260219T023452Z
+- deployment/latest/certification/master_runs/P10_8_20260219T023452Z
+- deployment/latest/certification/master_runs/P11_20260219T023452Z
+- deployment/latest/certification/master_runs/P10_6_20260219T023452Z
+- deployment/latest/certification/master_runs/P10_6_20260219T023409Z
+- deployment/latest/certification/master_runs/P10_4_20260219T023408Z
+- deployment/latest/certification/master_runs/P10_3_2R_20260219T023408Z
+- deployment/latest/certification/master_runs/P10_5_20260219T023408Z
+- deployment/latest/certification/master_runs/P10_5_20260219T023452Z
+- deployment/latest/certification/master_runs/P10_4_20260219T023451Z
+- deployment/latest/certification/master_runs/P10_3_2R_20260219T023452Z
+- deployment/latest/certification/master_runs/P10_7_20260219T023409Z
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_attempt_1
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_attempt_3
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_attempt_5
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_attempt_2
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_run1
+- deployment/latest/certification/phase10_1/P10_1_AUTOFIX_TO_PASS_20260218_014217/artifacts/e2e_attempt_4
+- deployment/latest/certification/p3/registry
+- deployment/latest/certification/p3/seal
+- deployment/latest/certification/p3/seal/P3_7_SEAL_20260216_172121
+- deployment/latest/certification/p3/proof_packs/P3_7_SEAL_20260216_172121
+- deployment/v26.3.0
+- deployment/v27.0.2_prod_final
+- deployment/production
+- deployment/production/latest
+- deployment/production/v27.0.0
+- deployment/staging/p4_build_20260217_123158/dist
+- deployment/staging/p4_build_20260217_123158/dist/assets
+- orchestration/templates
+- .clinerules/logs
+- .deployment_backups
+- .deployment_backups/backup_20260118_105247
+- .deployment_backups/backup_20260118_105429
+- .deployment_backups/backup_20260118_124656
+- .deployment_backups/backup_20260118_124724
+- .deployment_backups/backup_20260118_124709
+- .deployment_backups/backup_20260118_151028
+- .deployment_backups/backup_20260118_150309
+- .deployment_backups/backup_20260118_105421
+- .deployment_backups/backup_20260118_105712
+- .deployment_backups/backup_20260118_105423
+- .deployment_backups/backup_20260118_150257
+- .deployment_backups/backup_20260118_150659
+- logs
+- logs/deployment
+- logs/_loop_tmp
+- _archive/2026-01-17/2026-01-17_0014
+- .claude
+- .archive_cleanup/analysis_docs
+- .archive_cleanup/history
+- .archive_cleanup/logs
+- .archive_cleanup/authorization
+- .archive_cleanup/old_reports
+- .archive_cleanup/unnecessary_docs
+- .archive_cleanup/deployment_info
+- .archive_cleanup/old_sessions
+- .archive_cleanup/config_ci_cd
+- .archive_cleanup/build_reports
+- .vite-cache
+- .vite-cache/deps
+- reports/chat-desktop-stable-chat
+- reports/chat-desktop-stable-chat/2026-02-14T15:06:56Z
+- reports/chat-desktop-stable-chat/2026-02-14T15:06:56Z/baseline
+- reports/chat-desktop-stable-chat/2026-02-14T15:06:56Z/videos
+- reports/chat-desktop-stable-chat/2026-02-14T15:06:56Z/boot
+
+## Markdown hors docs (échantillon)
+- home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/specs/OMEGA_V2_SPECS.md

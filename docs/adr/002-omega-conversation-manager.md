@@ -467,7 +467,7 @@ interface Conversation {
 
 - [Singleton Pattern Best Practices](https://refactoring.guru/design-patterns/singleton)
 - [Zustand State Management](https://github.com/pmndrs/zustand)
-- TITANE∞ [OMEGA v2 Specs](/home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/specs/OMEGA_V2_SPECS.md)
+- TITANE∞ [OMEGA v2 Specs](../06_api/OMEGA_V2_SPECS.md)
 - TITANE∞ [Vector Store Implementation](/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/src/vector_store.rs)
 
 ---
