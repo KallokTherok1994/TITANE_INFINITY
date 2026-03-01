@@ -1,27 +1,12 @@
-# MAP_GATES
+# MAP_GATES (DEPRECATED)
 
-## Gates Mapping V3
+Ce fichier est conservé uniquement pour compatibilité historique.
 
-- `G_MAP_INDEX_PRESENT`
-- `G_MAP_ARCHITECTURE_PRESENT`
-- `G_MAP_SURFACES_PRESENT`
-- `G_MAP_IPC_PRESENT`
-- `G_MAP_GATES_PRESENT`
-- `G_MERMAID_PRESENT`
-- `G_MAP_PROOF_LOG_PRESENT`
-- `G_MAP_NO_UNKNOWN_CRITICAL`
-- `G_MAP_ANTI_DRIFT_RULE_PRESENT`
+## Canonique
 
-## Entrée de mapping
+Utiliser `docs/MAP_TESTS_GATES.md`.
 
-- **Objet**: Gates mapping
-- **Ring**: Cross-ring
-- **Responsabilité**: Empêcher scellement sans preuves
-- **Interfaces**: docs, script refresh, reports
-- **I/O**: Documentation
-- **Preuve**: `bash scripts/map_refresh.sh`
-- **Statut**: STABLE
+## Statut
 
-## Règle de scellement
-
-Toute gate mapping non PASS interdit `SCELLÉ`.
+- **Statut**: DEPRECATED
+- **Remplacement**: `docs/MAP_TESTS_GATES.md`

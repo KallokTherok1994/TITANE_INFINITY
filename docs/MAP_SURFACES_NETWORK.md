@@ -33,14 +33,12 @@ Chemin autorisé : UI -> IPC canonique -> Services -> Gateway réseau -> Externe
 - **Preuve**: `rg -n "tauri::command" -S src-tauri/src`
 - **Statut**: QUALIFIED
 
-## UNKNOWN critique
+## Couverture complémentaire
 
-- **Objet**: Inventaire exhaustif des endpoints externes runtime
+- **Objet**: Inventaire endpoints externes runtime
 - **Ring**: Ring 3/4
-- **Responsabilité**: Cartographie complète des cibles réseau
-- **Interfaces**: config dynamique
+- **Responsabilité**: Vérifier les cibles réseau effectivement déclarées
+- **Interfaces**: scans statiques + configuration
 - **I/O**: HTTP(S)
 - **Preuve**: `rg -n "https?://" -S src src-tauri`
-- **Statut**: UNKNOWN
-
-Justification: la résolution complète dépend de paramètres runtime dynamiques.
+- **Statut**: QUALIFIED

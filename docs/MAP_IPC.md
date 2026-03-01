@@ -1,30 +1,12 @@
-# MAP_IPC
+# MAP_IPC (DEPRECATED)
 
-## Entrées de mapping
+Ce fichier est conservé uniquement pour compatibilité historique.
 
-### IPC1
-- **Objet**: `src-tauri/src/`
-- **Ring**: Ring 4
-- **Responsabilité**: Exposer commandes backend
-- **Interfaces**: `#[tauri::command]`
-- **I/O**: IPC
-- **Preuve**: `rg -n "tauri::command" -S src-tauri/src`
-- **Statut**: QUALIFIED
+## Canonique
 
-### IPC2
-- **Objet**: `src/` client canonique
-- **Ring**: Ring 4
-- **Responsabilité**: Encapsuler appels IPC
-- **Interfaces**: wrapper invoke canonique
-- **I/O**: IPC
-- **Preuve**: `rg -n "invoke\\(" -S src`
-- **Statut**: QUALIFIED
+Utiliser `docs/MAP_IPC_COMMANDS.md`.
 
-### IPC3
-- **Objet**: invokes directs hors canon
-- **Ring**: Ring 4
-- **Responsabilité**: Détection de dérive
-- **Interfaces**: scan statique
-- **I/O**: IPC
-- **Preuve**: `rg -n "invoke\\(" -S src src-tauri`
-- **Statut**: EXPERIMENTAL
+## Statut
+
+- **Statut**: DEPRECATED
+- **Remplacement**: `docs/MAP_IPC_COMMANDS.md`
