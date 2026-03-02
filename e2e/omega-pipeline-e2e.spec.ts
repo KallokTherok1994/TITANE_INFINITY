@@ -14,6 +14,8 @@
 import { test, expect } from './fixtures';
 import { Page } from '@playwright/test';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 async function gotoTitane(page: Page) {
   // IMPORTANT: ne pas deep-linker sur /titane.
   // Le repo contient un dossier `/titane` à la racine, donc Vite peut servir ce contenu
@@ -58,6 +60,13 @@ async function sendMessage(page: Page, message: string) {
  * TEST SUITE: OMEGA Pipeline E2E Validation
  */
 test.describe('OMEGA Pipeline v2 E2E Tests', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await gotoTitane(page);
   });

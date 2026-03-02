@@ -22,9 +22,14 @@ function startChild() {
   const viteArgs = ['exec', 'vite', 'dev', ...args];
   log(`start: ${pnpmBin} ${viteArgs.join(' ')}`);
 
+  const childEnv = { ...process.env };
+  // Some runners inject NODE_OPTIONS for Vitest-only polyfills that break Vite startup.
+  // Keep Vite webServer environment minimal and deterministic.
+  delete childEnv.NODE_OPTIONS;
+
   child = spawn(pnpmBin, viteArgs, {
     cwd: repoRoot,
-    env: process.env,
+    env: childEnv,
     stdio: 'inherit',
   });
 

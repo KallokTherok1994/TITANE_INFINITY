@@ -1,0 +1,14 @@
+- git status --porcelain
+- git rev-parse --short HEAD
+- git branch --show-current
+- git log -20 --oneline
+- ls -la
+- find . -maxdepth 3 -type d | sort
+- node package scripts inventory
+- runtime/stable AppImage run_prod_1 (timeout)
+- runtime/stable AppImage run_prod_2/3 attempts
+- grep invariant scans frontend/network
+- proof files generation ROOT_CAUSE/GATES/VERDICT
+- runTests x3 (global)
+- synthèse TESTS_X3.log
+- update gates/verdict

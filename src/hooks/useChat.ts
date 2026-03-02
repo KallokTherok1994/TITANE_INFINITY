@@ -1195,6 +1195,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           chatLogger.warn(
             '⚠️ OMEGA FAILSAFE: isLoading reset forcé après timeout backend'
           );
+          setError(
+            'IPC_TIMEOUT: Le traitement dépasse le délai autorisé. Mode local/fallback disponible, réessaie.'
+          );
           setIsLoading(false);
           setRequestInFlight(false);
           operationLockRef.current = false;

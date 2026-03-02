@@ -1,0 +1,22 @@
+# COMMANDS USED
+
+- `git status --porcelain`
+- `git rev-parse --short HEAD`
+- `git log -20 --oneline`
+- `git --no-pager diff --stat`
+- masked token checks:
+  - `GO_FOR_PROD_BUILD__TITANE_INFINITY=<present|missing>`
+  - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY=<present|missing>`
+- release-like run x3 (timeout bounded):
+  - `timeout 45s runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage`
+- invariant scans:
+  - `rg -n "fetch\(|XMLHttpRequest|WebSocket\(|EventSource\(|axios\.|superagent|node:http|node:https" src/components src/pages src/App.tsx src/main.tsx src/hooks`
+- ring integrity:
+  - `pnpm test:architecture`
+- tests x3:
+  - `pnpm test:architecture` (x3)
+  - `TITANE_E2E_TAURI=1 pnpm run test:e2e:vitest` (x3)
+- append-only check:
+  - `git --no-pager diff -- registry/ui-events.jsonl`
+- changed-scope diagnostics:
+  - `get_errors` on patch files

@@ -81,7 +81,16 @@ fn collect_runtime_config(secrets: &SecureSecretsEngine) -> RuntimeConfig {
 pub async fn get_runtime_config(
     secrets: State<'_, SecureSecretsEngine>,
 ) -> Result<RuntimeConfig, String> {
-    Ok(collect_runtime_config(&secrets))
+    log::info!("CMD:START get_runtime_config");
+    let config = collect_runtime_config(&secrets);
+    log::info!("CMD:END get_runtime_config ok");
+    Ok(config)
+}
+
+#[tauri::command]
+pub async fn boot_marker_log(marker: String) -> Result<(), String> {
+    log::info!("UI_BOOT_MARKER {}", marker);
+    Ok(())
 }
 
 #[cfg(test)]

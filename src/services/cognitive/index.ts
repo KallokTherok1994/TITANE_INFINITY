@@ -41,6 +41,7 @@ export {
 import { SemanticMemoryEngine } from './SemanticMemoryEngine';
 import { LocalEmbeddingGenerator } from './LocalEmbeddingGenerator';
 import type { SemanticMemoryConfig, VectorStore } from './semanticMemory.types';
+import { tauriClient } from '@/lib/tauriClient';
 
 /**
  * Charger dynamiquement le VectorStore approprié
@@ -206,9 +207,8 @@ export async function checkCognitiveAvailability(): Promise<{
   // Check si on est dans Tauri (SQLite via backend Rust, pas better-sqlite3)
   // better-sqlite3 est un module Node.js natif qui ne fonctionne pas dans le navigateur
   try {
-    const { invoke } = await import('@tauri-apps/api/core');
     // Tester si le backend Tauri SQLite est disponible
-    await invoke('check_sqlite_available');
+    await tauriClient.checkSqliteAvailable();
     results.sqlite = true;
   } catch (error) {
     // Mode navigateur pur ou Tauri sans SQLite

@@ -1128,5 +1128,29 @@ ${introspection.futureVision.priorityImprovements
 // SINGLETON EXPORT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const fusionEngine = new FusionEngine();
+let fusionEngineInstance: FusionEngine | null = null;
+
+export const getFusionEngine = (): FusionEngine => {
+  if (!fusionEngineInstance) {
+    fusionEngineInstance = new FusionEngine();
+  }
+  return fusionEngineInstance;
+};
+
+export const fusionEngine = new Proxy({} as FusionEngine, {
+  get(_target, prop, _receiver) {
+    const instance = getFusionEngine();
+    const value = instance[prop as keyof FusionEngine];
+    if (typeof value === 'function') {
+      return value.bind(instance);
+    }
+    return value;
+  },
+  set(_target, prop, value, _receiver) {
+    const instance = getFusionEngine();
+    (instance as unknown as Record<PropertyKey, unknown>)[prop] = value;
+    return true;
+  },
+});
+
 export default fusionEngine;

@@ -242,6 +242,13 @@ const ResearchPage = lazy(() =>
   import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
 );
 
+const emitBootMarker = (marker: string): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+  window.__TITANE_EMIT_BOOT_MARKER__?.(marker);
+};
+
 /**
  * ═══════════════════════════════════════════════════════════════
  * APP ROUTER - Composant interne avec accès au router + Living Engines
@@ -250,6 +257,12 @@ const ResearchPage = lazy(() =>
 const AppRouter: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    emitBootMarker('BOOT:AFTER_ROUTER');
+    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
+    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR_INIT');
+  }, []);
 
   // UI vΩ: Sidebar removed, TopNav navigation only
   // const sidebarCollapsed = useSingularitySidebarCollapsed();
@@ -742,6 +755,15 @@ const AppRouter: React.FC = () => {
 
   // 🌟 Initialize Living Engines v21-v24
   const livingEngines = useLivingEngines(100); // Update every 100ms
+
+  useEffect(() => {
+    if (!livingEngines.state.initialized) {
+      return;
+    }
+    emitBootMarker('BOOT:AFTER_ORCHESTRATOR');
+    emitBootMarker('BOOT:AFTER_ORCHESTRATOR_INIT');
+    emitBootMarker('BOOT:READY');
+  }, [livingEngines.state.initialized]);
 
   // Log living state (debug) - effet optimisé avec dépendances stables
   useEffect(() => {

@@ -10,6 +10,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
+import { readdir, writeFile } from 'node:fs/promises';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
@@ -55,6 +56,48 @@ function workboxPlugin(): Plugin {
       } catch (error) {
         console.error('❌ Workbox inject failed:', error);
         throw error;
+      }
+    },
+  };
+}
+
+function mainEntryMapPlugin(): Plugin {
+  let resolvedConfig: ResolvedConfig | undefined;
+
+  return {
+    name: 'main-entry-map',
+    apply: 'build',
+    configResolved: config => {
+      resolvedConfig = config;
+    },
+    closeBundle: async () => {
+      if (!resolvedConfig) {
+        return;
+      }
+
+      try {
+        const outDirAbs = resolve(resolvedConfig.root, resolvedConfig.build.outDir);
+        const assetsDir = resolve(outDirAbs, 'assets');
+        const entries = await readdir(assetsDir);
+        const mainCandidates = entries
+          .filter(name => /^main-[A-Za-z0-9_-]+\.js$/.test(name))
+          .sort();
+
+        const selectedMain = mainCandidates.at(-1) ?? null;
+        const targetFile = resolve(outDirAbs, 'main-entry.json');
+
+        await writeFile(
+          targetFile,
+          JSON.stringify(
+            {
+              main: selectedMain ? `assets/${selectedMain}` : null,
+            },
+            null,
+            2
+          )
+        );
+      } catch (error) {
+        console.warn('⚠️ main-entry-map generation failed:', error);
       }
     },
   };
@@ -163,6 +206,8 @@ export default defineConfig(({ command }) => ({
     }),
     // P2-B: Service Worker for -400ms repeat visit TTI
     workboxPlugin(),
+    // Entry map for resilient runtime bootstrap
+    mainEntryMapPlugin(),
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -206,6 +251,8 @@ export default defineConfig(({ command }) => ({
   },
 
   build: {
+    modulePreload: false,
+    manifest: true,
     // 🚀 OPTIMIZATION v24.7.6: Enable advanced compression & tree-shaking
     reportCompressedSize: true,
     cssMinify: 'lightningcss', // Faster CSS minification
@@ -226,6 +273,10 @@ export default defineConfig(({ command }) => ({
     },
 
     rollupOptions: {
+      input: {
+        app: resolve(ROOT_DIR, 'index.html'),
+        main: resolve(ROOT_DIR, 'src/main.tsx'),
+      },
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
       // Tauri v2 fournit ces modules directement, ils doivent être bundés
       // Seuls les vrais modules Node.js backend doivent être external
@@ -518,8 +569,8 @@ export default defineConfig(({ command }) => ({
 
   // ✨ v27.1 Sprint: Global esbuild transform (source code + production optimization)
   esbuild: {
-    // 🎯 Drop console and debugger in production
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    // ⚠️ DIAGNOSTIC: drop console DÉSACTIVÉ temporairement pour debug PROD crash
+    drop: [], // process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none', // Remove comments in production
     // 🎯 Production minification settings
     minifyIdentifiers: process.env.NODE_ENV === 'production',

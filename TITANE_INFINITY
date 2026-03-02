@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+PROJECT_ROOT="$SCRIPT_DIR"
+TITANE_SH="$PROJECT_ROOT/titane.sh"
+
+if [[ ! -x "$TITANE_SH" ]]; then
+  echo "❌ titane.sh introuvable ou non exécutable: $TITANE_SH" >&2
+  exit 1
+fi
+
+COMMAND="${1:-deploy}"
+
+ensure_prod_tokens() {
+  if [[ "${GO_FOR_PROD_BUILD__TITANE_INFINITY:-}" != "GO_FOR_PROD_BUILD__TITANE_INFINITY" ]]; then
+    echo "❌ Token invalide: GO_FOR_PROD_BUILD__TITANE_INFINITY" >&2
+    echo "   Valeur exacte attendue: GO_FOR_PROD_BUILD__TITANE_INFINITY" >&2
+    exit 2
+  fi
+
+  if [[ "${GO_FOR_PROD_DEPLOY__TITANE_INFINITY:-}" != "GO_FOR_PROD_DEPLOY__TITANE_INFINITY" ]]; then
+    echo "❌ Token invalide: GO_FOR_PROD_DEPLOY__TITANE_INFINITY" >&2
+    echo "   Valeur exacte attendue: GO_FOR_PROD_DEPLOY__TITANE_INFINITY" >&2
+    exit 2
+  fi
+}
+
+case "$COMMAND" in
+  deploy)
+    shift || true
+    ensure_prod_tokens
+    exec "$TITANE_SH" deploy "$@"
+    ;;
+  build)
+    shift || true
+    exec "$TITANE_SH" build "$@"
+    ;;
+  dev)
+    shift || true
+    exec "$TITANE_SH" dev "$@"
+    ;;
+  clean|repair|fix|full|health|analyze|cache|help|-h|--help)
+    shift || true
+    exec "$TITANE_SH" "$COMMAND" "$@"
+    ;;
+  *)
+    exec "$TITANE_SH" "$@"
+    ;;
+esac

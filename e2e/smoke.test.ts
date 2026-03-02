@@ -11,7 +11,7 @@
 
 import { test } from '@playwright/test';
 
-test.describe.skip('Smoke Tests (LEGACY - HTTP mode disabled)', () => {
+test.describe('Smoke Tests (LEGACY - HTTP mode disabled)', () => {
   test('app launches without errors', async () => {
     // OBSOLETE: Tauri no longer uses HTTP dev server
     // await page.goto('http://localhost:1420');

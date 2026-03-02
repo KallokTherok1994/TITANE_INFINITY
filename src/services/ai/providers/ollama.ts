@@ -20,7 +20,8 @@ import {
   type ChatResponse,
 } from '@/lib/security';
 import { autoHealEngine } from '../autoHealEngine';
-import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
+// ⚠️ FIX v27.2: Lazy import to break circular dependency
+// import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
@@ -243,6 +244,8 @@ async function buildPromptWithMemory(
   // Charger contexte mémoire
   let memoryContext: MemoryContext | null = null;
   try {
+    // ⚠️ FIX v27.2: Dynamic import to prevent circular dependency TDZ
+    const { memoryIntegration } = await import('../memoryIntegration');
     memoryContext = await memoryIntegration.loadContext({
       includeProjects: true,
       includeDecisions: true,
@@ -612,13 +615,15 @@ export const ollamaProvider: AIProvider = {
       });
 
       // ✨ v21 - Save interaction to memory (async, non-blocking)
-      memoryIntegration
-        .saveInteraction({
-          userMessage: message,
-          aiResponse: aiResponse.content,
-          mode: 'chat',
-        })
-        .catch(err => {
+      void import('../memoryIntegration')
+        .then(({ memoryIntegration }) =>
+          memoryIntegration.saveInteraction({
+            userMessage: message,
+            aiResponse: aiResponse.content,
+            mode: 'chat',
+          })
+        )
+        .catch((err: unknown) => {
           logger.warn('Failed to save interaction to memory', { error: err });
         });
 
