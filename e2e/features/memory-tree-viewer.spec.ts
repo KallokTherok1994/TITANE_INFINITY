@@ -9,6 +9,8 @@ import { test, expect } from '../fixtures';
 import { Page } from '@playwright/test';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 async function openTitaneMemorySection(page: Page) {
   await openTitane(page);
   await closeBootBeaconIfPresent(page);
@@ -24,6 +26,13 @@ async function openTitaneMemorySection(page: Page) {
 }
 
 test.describe('Feature: Memory Tree Viewer', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });

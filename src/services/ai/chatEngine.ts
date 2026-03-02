@@ -2078,15 +2078,25 @@ Que souhaites-tu explorer ?`;
 
 export const chatEngine = new ChatEngineOmega();
 
-predictivePreloader.setPreloadHandler(async (message, mode) => {
-  await chatEngine.generate(message, [], {
-    mode: mode as ChatMode,
-    performanceConfig: {
-      enableCache: true,
-      enablePredictive: false,
-      cacheHitBonus: false,
-    },
-  });
-});
+const registerPredictivePreloadHandler = () => {
+  try {
+    predictivePreloader.setPreloadHandler(async (message, mode) => {
+      await chatEngine.generate(message, [], {
+        mode: mode as ChatMode,
+        performanceConfig: {
+          enableCache: true,
+          enablePredictive: false,
+          cacheHitBonus: false,
+        },
+      });
+    });
+  } catch {}
+};
+
+if (typeof queueMicrotask === 'function') {
+  queueMicrotask(registerPredictivePreloadHandler);
+} else {
+  setTimeout(registerPredictivePreloadHandler, 0);
+}
 
 export default chatEngine;

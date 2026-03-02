@@ -6,6 +6,7 @@ Portée : dépôt complet (instructions, cartographie, preuves)
 Principe directeur : gouvernance avant vitesse
 
 Compatibility markers (required by verifier):
+
 - Local-first
 - diagnose -> plan -> apply -> verify -> report
 

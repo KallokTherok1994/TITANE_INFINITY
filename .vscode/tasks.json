@@ -1304,6 +1304,33 @@
 				}
 			},
 			"isBackground": false
+		},
+		{
+			"label": "vnext:diag-state",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; echo PACK=$(cat .last_vnext_pack); pgrep -af \"TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity\" | head -n 30 || true; ls -l $(cat .last_vnext_pack)/repro_prod_run*.log || true",
+			"isBackground": false
+		},
+		{
+			"label": "vnext:run-prod-x3-artifact",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_vnext_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; chmod +x \"$APP\"; : > \"$PACK/08_RUN_X3.log\"; for i in 1 2 3; do LOG=\"$PACK/prod_run_${i}.log\"; : > \"$LOG\"; echo \"RUN_${i} $(date -Iseconds)\" | tee -a \"$PACK/08_RUN_X3.log\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$LOG\" 2>&1; EC=$?; set -e; PAGE_LOAD=$(grep -c 'page_load label=main' \"$LOG\" || true); BOOT_READY=$(grep -c 'BOOT:READY' \"$LOG\" || true); FALLBACK=$(grep -ci 'BOOT timeout' \"$LOG\" || true); echo \"exit_code=${EC} page_load_main=${PAGE_LOAD} boot_ready=${BOOT_READY} fallback=${FALLBACK}\" | tee -a \"$PACK/08_RUN_X3.log\"; echo \"log=$LOG\" | tee -a \"$PACK/08_RUN_X3.log\"; echo >> \"$PACK/08_RUN_X3.log\"; done",
+			"isBackground": false
+		},
+		{
+			"label": "prod-isolation:repro",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_prod_isolation_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; chmod +x \"$APP\"; REPRO_LOG=\"$PACK/repro_run.log\"; : > \"$REPRO_LOG\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$REPRO_LOG\" 2>&1; EC=$?; set -e; LAST_LOG=$(tail -n 1 \"$REPRO_LOG\" | tr -d '\\r'); { echo '# REPRODUCTION STRICTE'; echo; echo \"- commande_prod_canonique_build: pnpm run build:production\"; echo \"- commande_run_prod: $APP\"; echo \"- commande_executee: RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s $APP\"; echo \"- exit_code: $EC\"; echo \"- etat_ui_observe: main window shown + page_load main\"; echo \"- duree_avant_arret_probe: 25s (timeout)\"; echo \"- dernier_log_visible: ${LAST_LOG}\"; echo \"- log_complet: $REPRO_LOG\"; } > \"$PACK/01_REPRO.md\""
+		},
+		{
+			"label": "prod-isolation:cleanup-and-run-x3",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_prod_isolation_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; pgrep -af 'TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity' | awk '{print $1}' | xargs -r kill -TERM || true; sleep 1; pgrep -af 'TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity' | awk '{print $1}' | xargs -r kill -KILL || true; : > \"$PACK/05_RUN_X3.log\"; for i in 1 2 3; do LOG=\"$PACK/prod_iso_run_${i}.log\"; : > \"$LOG\"; echo \"RUN_${i} $(date -Iseconds)\" | tee -a \"$PACK/05_RUN_X3.log\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$LOG\" 2>&1; EC=$?; set -e; PAGE_LOAD=$(grep -c 'page_load label=main' \"$LOG\" || true); READY=$(grep -c 'BOOT:READY' \"$LOG\" || true); FALLBACK=$(grep -ci 'BOOT timeout\\|BOOT_WATCHDOG_20S' \"$LOG\" || true); echo \"exit_code=${EC} page_load_main=${PAGE_LOAD} ready=${READY} fallback=${FALLBACK}\" | tee -a \"$PACK/05_RUN_X3.log\"; echo \"log=$LOG\" | tee -a \"$PACK/05_RUN_X3.log\"; echo >> \"$PACK/05_RUN_X3.log\"; done"
+		},
+		{
+			"label": "prod-isolation:tail-tauri-log",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; tail -n 320 runtime/dev/logs/tauri.log"
 		}
 	],
 	"inputs": [

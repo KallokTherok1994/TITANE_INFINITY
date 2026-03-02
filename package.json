@@ -70,7 +70,7 @@
     "e2e:desktop": "pnpm run guard:ollama-proxy && bash scripts/e2e/require-e2e-build-authorization.sh && pnpm run e2e:desktop:ensure && pnpm run e2e:desktop:run",
     "test:e2e": "playwright test e2e",
     "test:e2e:playwright": "playwright test e2e",
-    "test:e2e:vitest": "bash -lc 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts'",
+    "test:e2e:vitest": "bash -c 'if [[ \"${TITANE_E2E_TAURI:-}\" != \"1\" ]]; then echo \"SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1\"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" vitest run src/tests/e2e/titane_e2e.test.ts'",
     "test:browser": "vitest --config vitest.browser.config.ts --run",
     "test:browser:ui": "vitest --config vitest.browser.config.ts --ui",
     "test:browser:watch": "vitest --config vitest.browser.config.ts",

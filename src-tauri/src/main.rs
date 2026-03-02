@@ -18,7 +18,7 @@
 
 // Tauri core (Manager trait required for .path() and .get_webview_window())
 // Required for both app_data_dir access and DevTools auto-open
-use tauri::Manager;
+use tauri::{Listener, Manager};
 
 // TITANE∞ command modules
 use std::sync::Arc;
@@ -594,6 +594,11 @@ fn main() {
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .setup(move |app| {
+            app.listen("titane://boot-marker", move |event| {
+                let payload = event.payload().to_string();
+                log::info!("UI_BOOT_EVENT {}", payload);
+            });
+
             // 🔐 Initialize Auth OS v∞ (Unified Authentication System)
             if let Err(e) = auth::init_auth() {
                 log::error!("❌ AUTH OS initialization failed: {}", e);
@@ -901,6 +906,102 @@ fn main() {
                 window.label(),
                 payload.url()
             );
+
+                        if std::env::var("TITANE_PROBE_BOOT_MARKERS")
+                                .ok()
+                                .is_some_and(|v| v == "1")
+                                && window.label() == "main"
+                        {
+                                let script = r#"
+                                    if (!window.__TITANE_BOOT_PROBE_SCHEDULED__) {
+                                        window.__TITANE_BOOT_PROBE_SCHEDULED__ = true;
+
+                                        const probeInvoke = async (marker) => {
+                                            try {
+                                                if (window.__TAURI_INTERNALS__?.invoke) {
+                                                    await window.__TAURI_INTERNALS__.invoke('boot_marker_log', { marker });
+                                                }
+                                            } catch (_) {
+                                                // ignore probe invoke failures
+                                            }
+                                        };
+
+                                        let probeTick = 0;
+                                        const probeIntervalMs = 250;
+                                        const probeMaxTicks = 40; // 10s
+                                        const probeTimer = setInterval(async () => {
+                                            probeTick += 1;
+
+                                            const stage = document.documentElement?.dataset?.titaneBootStage || 'UNKNOWN_STAGE';
+                                            const domReady = document.documentElement?.dataset?.titaneBootReady === '1';
+                                            const splashEl = document.querySelector('.loading-splash');
+                                            const fallbackEl = document.querySelector('.page-loading-fallback');
+
+                                            const splashStyle = splashEl ? window.getComputedStyle(splashEl) : null;
+                                            const fallbackStyle = fallbackEl ? window.getComputedStyle(fallbackEl) : null;
+
+                                            const splashVisible = Boolean(
+                                                splashEl &&
+                                                splashStyle &&
+                                                splashStyle.display !== 'none' &&
+                                                splashStyle.visibility !== 'hidden' &&
+                                                splashStyle.opacity !== '0'
+                                            );
+                                            const fallbackVisible = Boolean(
+                                                fallbackEl &&
+                                                fallbackStyle &&
+                                                fallbackStyle.display !== 'none' &&
+                                                fallbackStyle.visibility !== 'hidden' &&
+                                                fallbackStyle.opacity !== '0'
+                                            );
+
+                                            const mainTsx = Boolean(window.__TITANE_BOOT__?.main_tsx);
+                                            const route = window.location?.pathname || '/';
+
+                                            const marker = [
+                                                'LOADER_PROBE',
+                                                `t=${probeTick * probeIntervalMs}`,
+                                                `stage=${stage}`,
+                                                `ready=${domReady ? 1 : 0}`,
+                                                `main_tsx=${mainTsx ? 1 : 0}`,
+                                                `splash_visible=${splashVisible ? 1 : 0}`,
+                                                `fallback_visible=${fallbackVisible ? 1 : 0}`,
+                                                `route=${route}`,
+                                            ].join('|');
+
+                                            await probeInvoke(marker);
+
+                                            if (probeTick >= probeMaxTicks) {
+                                                clearInterval(probeTimer);
+                                                await probeInvoke(
+                                                    `LOADER_PROBE_FINAL|ready=${domReady ? 1 : 0}|main_tsx=${mainTsx ? 1 : 0}|splash_visible=${splashVisible ? 1 : 0}|fallback_visible=${fallbackVisible ? 1 : 0}|route=${route}`
+                                                );
+                                            }
+                                        }, probeIntervalMs);
+
+                                        setTimeout(async () => {
+                                            try {
+                                                const stage = document.documentElement?.dataset?.titaneBootStage || 'UNKNOWN_STAGE';
+                                                const domReady = document.documentElement?.dataset?.titaneBootReady === '1';
+                                                const marker = domReady
+                                                    ? 'BOOT:READY'
+                                                    : 'BOOT:NOT_READY_22S';
+
+                                                await probeInvoke(marker);
+                                                await probeInvoke(`BOOT:STAGE:${stage}`);
+
+                                                console.info('[BOOT_PROBE]', marker);
+                                            } catch (e) {
+                                                console.error('[BOOT_PROBE_ERR]', String(e));
+                                            }
+                                        }, 22000);
+                                    }
+                                "#;
+
+                                if let Err(err) = window.eval(script) {
+                                        log::warn!("[BOOT_PROBE] eval injection failed: {}", err);
+                                }
+                        }
         })
         .invoke_handler(tauri::generate_handler![
             // Frontend OS bridge compatibility
@@ -1158,6 +1259,7 @@ fn main() {
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
             // Runtime Configuration Bridge v∞ (Frontend config without secrets)
             runtime_config::get_runtime_config,
+            runtime_config::boot_marker_log,
             // ✅ v21 Phase 1: Provider-specific AI generation
             commands::chat_generate_commands::chat_generate_gemini,
             commands::chat_generate_commands::chat_generate_openai,

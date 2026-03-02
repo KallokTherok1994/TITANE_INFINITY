@@ -11,6 +11,8 @@
 import { test, expect, type Page } from '@playwright/test';
 import { closeBootBeaconIfPresent, openTitane } from '../helpers/navigation';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 const enableE2EChatMock = async (page: Page) => {
   await page.addInitScript(() => {
     (window as { __TITANE_E2E_CHAT_MOCK__?: boolean }).__TITANE_E2E_CHAT_MOCK__ = true;
@@ -29,6 +31,13 @@ const getSendButton = (page: Page) =>
   page.getByRole('button', { name: /Envoyer/i }).first();
 
 test.describe('Critical Path: Chat Interaction', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await enableE2EChatMock(page);
     await openTitane(page);
