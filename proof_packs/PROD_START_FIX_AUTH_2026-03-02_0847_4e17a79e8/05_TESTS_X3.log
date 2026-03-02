@@ -1,0 +1,2019 @@
+[ARCH] run=1
+
+> titane-infinity@27.2.0 test:architecture /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/architecture
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/architecture/engine-isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 09:12:52
+[2m   Duration [22m 486ms[2m (transform 69ms, setup 183ms, import 7ms, tests 18ms, environment 173ms)[22m
+
+[ARCH] run=1 PASS
+
+[E2E_VITEST] run=1
+
+> titane-infinity@27.2.0 test:e2e:vitest /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash -c 'if [[ "${TITANE_E2E_TAURI:-}" != "1" ]]; then echo "SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS="--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs" vitest run src/tests/e2e/titane_e2e.test.ts'
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts
+[22m[39m[TauriProtector] ✅ Tauri confirmed available (strategies: {
+  hasTauriGlobal: [33mtrue[39m,
+  hasTauriInternals: [90mundefined[39m,
+  hasTauriInvoke: [90mundefined[39m,
+  hasTauriFlag: [33mfalse[39m
+} )
+[TauriProtector] 🛡️ Initialized - isTauriAvailable: [33mtrue[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START get_system_health 1772460774062-keedogye
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END get_system_health 1772460774062-keedogye ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_full_state 1772460774066-tpgym0ia
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_full_state 1772460774066-tpgym0ia ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START conversation_generate 1772460774067-fkms0yf2
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END conversation_generate 1772460774067-fkms0yf2 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460774067-uqay73dm
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460774067-uqay73dm ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_get_stats 1772460774068-6zrf40gs
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_get_stats 1772460774068-6zrf40gs ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START add_timeline_event 1772460774068-jw8p8b0h
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END add_timeline_event 1772460774068-jw8p8b0h ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460774069-i8wd1zyy
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460774069-i8wd1zyy ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39m[E2E Trace] New User Onboarding
+{
+  "scenario": "New User Onboarding",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Check system health",
+      "result": {
+        "status": "green",
+        "services": {
+          "memory": "ok",
+          "ai": "ok",
+          "timeline": "ok",
+          "fusion": "ok"
+        },
+        "timestamp": 1772460774065
+      },
+      "duration_ms": 3.7338580000000547,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Initialize Singularity",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460774066
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.5855050000000119,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Generate AI welcome",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.34163999999998396,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save to memory",
+      "result": {
+        "saved": true
+      },
+      "duration_ms": 0.664555000000064,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Verify memory",
+      "result": {
+        "total_entries": 0,
+        "total_interactions": 1,
+        "projects_tracked": 2
+      },
+      "duration_ms": 0.3127240000000029,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Create timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "user_onboarding",
+        "description": "New user registered",
+        "timestamp": "2026-03-02T14:12:54.068Z"
+      },
+      "duration_ms": 0.3025000000000091,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.2887540000000399,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 10.32093800000007,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START secure_list_files 1772460774070-k1xt6i5b
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END secure_list_files 1772460774070-k1xt6i5b ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START parse_document 1772460774071-f80pbzrk
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END parse_document 1772460774071-f80pbzrk ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START conversation_generate 1772460774071-xpa23fp6
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END conversation_generate 1772460774071-xpa23fp6 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START store_file 1772460774072-s6tk1v46
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END store_file 1772460774072-s6tk1v46 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START add_timeline_event 1772460774072-t9g8upsd
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END add_timeline_event 1772460774072-t9g8upsd ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START get_files_by_category 1772460774072-j6hvmpuc
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END get_files_by_category 1772460774072-j6hvmpuc ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39m[E2E Trace] Legal Designer Workflow
+{
+  "scenario": "Legal Designer Workflow",
+  "steps": [
+    {
+      "step": 1,
+      "action": "List files",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        }
+      ],
+      "duration_ms": 0.31767999999999574,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse template",
+      "result": {
+        "format": "text",
+        "sections": [
+          "CONTRAT DE PRESTATION",
+          "Article 1: Objet"
+        ],
+        "tokens": 39
+      },
+      "duration_ms": 0.5168780000000197,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI analysis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.48671699999999873,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save document",
+      "result": {
+        "stored": true
+      },
+      "duration_ms": 0.2626539999999977,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline snapshot",
+      "result": {
+        "id": "timeline-2",
+        "type": "document_edited",
+        "description": "Legal contract modified",
+        "metadata": {
+          "filename": "contrat_edit_v1.txt"
+        },
+        "timestamp": "2026-03-02T14:12:54.072Z"
+      },
+      "duration_ms": 0.19942700000001423,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify storage",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        },
+        {
+          "name": "contrat_edit_v1.txt",
+          "category": "legal",
+          "content": "CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu"
+        }
+      ],
+      "duration_ms": 0.278336999999965,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 13.211409000000003,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START conversation_generate 1772460774073-mojmd0uh
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END conversation_generate 1772460774073-mojmd0uh ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START memory_store 1772460774073-h3qrb8v6
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END memory_store 1772460774073-h3qrb8v6 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START add_timeline_event 1772460774074-8w1de1cy
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END add_timeline_event 1772460774074-8w1de1cy ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39m[E2E Trace] Advanced Web Search
+{
+  "scenario": "Advanced Web Search",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Initiate search",
+      "result": {
+        "query": "TITANE∞ cognitive architecture",
+        "results_count": 10
+      },
+      "duration_ms": 0.023165999999946507,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse results",
+      "result": [
+        {
+          "title": "Cognitive Architecture Overview",
+          "url": "https://example.com/1"
+        },
+        {
+          "title": "TITANE Systems Design",
+          "url": "https://example.com/2"
+        }
+      ],
+      "duration_ms": 0.0156729999999925,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI synthesis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.2373330000000351,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Store results",
+      "result": "mock_1772460774073",
+      "duration_ms": 0.1939159999999447,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "web_search",
+        "description": "Advanced web search completed",
+        "timestamp": "2026-03-02T14:12:54.074Z"
+      },
+      "duration_ms": 0.17444399999999405,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 14.449598000000037,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_state 1772460774074-eypmvw5z
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_state 1772460774074-eypmvw5z ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_trigger_sync 1772460774075-cgcdd875
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_trigger_sync 1772460774075-cgcdd875 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_alignment 1772460774075-6mhtmzgc
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_alignment 1772460774075-6mhtmzgc ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_report 1772460774075-z1hfnpzo
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_report 1772460774075-z1hfnpzo ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START singularity_check_coherence 1772460774075-ralux52z
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END singularity_check_coherence 1772460774075-ralux52z ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_selftest_all 1772460774076-wg0gw2k9
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_selftest_all 1772460774076-wg0gw2k9 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_monitoring_metrics 1772460774076-i3pmr5cg
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_monitoring_metrics 1772460774076-i3pmr5cg ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39m[E2E Trace] Complete Cognitive Loop
+{
+  "scenario": "Complete Cognitive Loop",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Get meta state",
+      "result": {
+        "focus": 0.82,
+        "stability": 0.9,
+        "awareness": 0.88,
+        "lastSync": null
+      },
+      "duration_ms": 0.27932400000008784,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Trigger sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:54.075Z"
+      },
+      "duration_ms": 0.19785200000001169,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Check alignment",
+      "result": {
+        "cognitive": true,
+        "symbolic": true,
+        "physical": true
+      },
+      "duration_ms": 0.19097799999997278,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Get report",
+      "result": {
+        "last_sync": "2026-03-02T14:12:54.075Z",
+        "focus": 0.83,
+        "alignment": {
+          "cognitive": true,
+          "symbolic": true,
+          "physical": true
+        },
+        "loops": 1
+      },
+      "duration_ms": 0.39246400000001813,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.1832200000000057,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Meta self-test",
+      "result": {
+        "status": "pass",
+        "tests": [
+          {
+            "name": "meta-loop-stability",
+            "passed": true
+          },
+          {
+            "name": "alignment-check",
+            "passed": true
+          }
+        ]
+      },
+      "duration_ms": 0.169016000000056,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate metrics",
+      "result": {
+        "loops": 1,
+        "avgLatency": 125,
+        "drift": 0.04
+      },
+      "duration_ms": 0.19020899999998164,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 16.556007000000022,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START conversation_generate 1772460774077-pvf7nfha
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END conversation_generate 1772460774077-pvf7nfha ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460774077-0g038d0f
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460774077-0g038d0f ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_get_active_projects 1772460774077-l5an18mp
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_get_active_projects 1772460774077-l5an18mp ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START parse_document 1772460774077-t91lpw4i
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END parse_document 1772460774077-t91lpw4i ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START write_snapshot 1772460774077-0ekor9zz
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END write_snapshot 1772460774077-0ekor9zz ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START meta_trigger_sync 1772460774078-nebty2zc
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END meta_trigger_sync 1772460774078-nebty2zc ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_full_state 1772460774078-emyzulht
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_full_state 1772460774078-emyzulht ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460774078-15p8b62i
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460774078-15p8b62i ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39m[E2E Trace] Complex Multi-Module Interaction
+{
+  "scenario": "Complex Multi-Module Interaction",
+  "steps": [
+    {
+      "step": 1,
+      "action": "AI + Memory",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.42601200000001427,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Get projects",
+      "result": [
+        {
+          "id": "proj-omega",
+          "title": "Omega Hardening",
+          "status": "active"
+        },
+        {
+          "id": "proj-avatar",
+          "title": "Avatar Upgrade",
+          "status": "active"
+        }
+      ],
+      "duration_ms": 0.19285100000001876,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Parse document",
+      "result": {
+        "format": "text",
+        "sections": [
+          "PROJECT: TITANE v19.8 QA System"
+        ],
+        "tokens": 31
+      },
+      "duration_ms": 0.15687599999989743,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Timeline snapshot",
+      "result": {
+        "snapshotId": "timeline-mm99dq65"
+      },
+      "duration_ms": 0.14388599999995222,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Deep Sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:54.078Z"
+      },
+      "duration_ms": 0.13415699999995923,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify state",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460774078
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.18995700000004945,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate coherence",
+      "result": 0.93,
+      "duration_ms": 0.1570529999999053,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 18.62863100000004,
+  "success": true
+}
+
+ [32m✓[39m [30m[45m core [49m[39m src/tests/e2e/titane_e2e.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 09:12:53
+[2m   Duration [22m 602ms[2m (transform 171ms, setup 181ms, import 140ms, tests 17ms, environment 166ms)[22m
+
+[E2E_VITEST] run=1 PASS
+
+[ARCH] run=2
+
+> titane-infinity@27.2.0 test:architecture /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/architecture
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/architecture/engine-isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 09:12:54
+[2m   Duration [22m 487ms[2m (transform 72ms, setup 183ms, import 7ms, tests 20ms, environment 179ms)[22m
+
+[ARCH] run=2 PASS
+
+[E2E_VITEST] run=2
+
+> titane-infinity@27.2.0 test:e2e:vitest /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash -c 'if [[ "${TITANE_E2E_TAURI:-}" != "1" ]]; then echo "SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS="--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs" vitest run src/tests/e2e/titane_e2e.test.ts'
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts
+[22m[39m[TauriProtector] ✅ Tauri confirmed available (strategies: {
+  hasTauriGlobal: [33mtrue[39m,
+  hasTauriInternals: [90mundefined[39m,
+  hasTauriInvoke: [90mundefined[39m,
+  hasTauriFlag: [33mfalse[39m
+} )
+[TauriProtector] 🛡️ Initialized - isTauriAvailable: [33mtrue[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START get_system_health 1772460776298-4hxqlf1a
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END get_system_health 1772460776298-4hxqlf1a ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_full_state 1772460776302-y6a23i85
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_full_state 1772460776302-y6a23i85 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START conversation_generate 1772460776303-eepjhzks
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END conversation_generate 1772460776303-eepjhzks ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460776303-8104dnck
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460776303-8104dnck ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_get_stats 1772460776304-230z4sgx
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_get_stats 1772460776304-230z4sgx ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START add_timeline_event 1772460776304-5m7lzo47
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END add_timeline_event 1772460776304-5m7lzo47 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460776304-mi4eop7z
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460776304-mi4eop7z ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39m[E2E Trace] New User Onboarding
+{
+  "scenario": "New User Onboarding",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Check system health",
+      "result": {
+        "status": "green",
+        "services": {
+          "memory": "ok",
+          "ai": "ok",
+          "timeline": "ok",
+          "fusion": "ok"
+        },
+        "timestamp": 1772460776301
+      },
+      "duration_ms": 3.567515999999955,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Initialize Singularity",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460776302
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.528505999999993,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Generate AI welcome",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.3190589999999247,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save to memory",
+      "result": {
+        "saved": true
+      },
+      "duration_ms": 0.5591379999999617,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Verify memory",
+      "result": {
+        "total_entries": 0,
+        "total_interactions": 1,
+        "projects_tracked": 2
+      },
+      "duration_ms": 0.28708799999992607,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Create timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "user_onboarding",
+        "description": "New user registered",
+        "timestamp": "2026-03-02T14:12:56.304Z"
+      },
+      "duration_ms": 0.27494500000000244,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.2993979999999965,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 9.72170200000005,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START secure_list_files 1772460776306-afgg6d8l
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END secure_list_files 1772460776306-afgg6d8l ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START parse_document 1772460776306-nftkap6e
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END parse_document 1772460776306-nftkap6e ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START conversation_generate 1772460776307-0vglkjx2
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END conversation_generate 1772460776307-0vglkjx2 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START store_file 1772460776307-hcvxsc6z
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END store_file 1772460776307-hcvxsc6z ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START add_timeline_event 1772460776308-qyd85z0m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END add_timeline_event 1772460776308-qyd85z0m ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START get_files_by_category 1772460776308-jq2pe669
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END get_files_by_category 1772460776308-jq2pe669 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39m[E2E Trace] Legal Designer Workflow
+{
+  "scenario": "Legal Designer Workflow",
+  "steps": [
+    {
+      "step": 1,
+      "action": "List files",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        }
+      ],
+      "duration_ms": 0.4076680000000579,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse template",
+      "result": {
+        "format": "text",
+        "sections": [
+          "CONTRAT DE PRESTATION",
+          "Article 1: Objet"
+        ],
+        "tokens": 39
+      },
+      "duration_ms": 0.5296850000000859,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI analysis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.3978710000000092,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save document",
+      "result": {
+        "stored": true
+      },
+      "duration_ms": 0.2200510000000122,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline snapshot",
+      "result": {
+        "id": "timeline-2",
+        "type": "document_edited",
+        "description": "Legal contract modified",
+        "metadata": {
+          "filename": "contrat_edit_v1.txt"
+        },
+        "timestamp": "2026-03-02T14:12:56.308Z"
+      },
+      "duration_ms": 0.2014960000000201,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify storage",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        },
+        {
+          "name": "contrat_edit_v1.txt",
+          "category": "legal",
+          "content": "CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu"
+        }
+      ],
+      "duration_ms": 0.22420400000009977,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 12.427609999999959,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START conversation_generate 1772460776308-qvgh9qps
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END conversation_generate 1772460776308-qvgh9qps ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START memory_store 1772460776309-6fif8bxm
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END memory_store 1772460776309-6fif8bxm ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START add_timeline_event 1772460776309-mi8xeh44
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END add_timeline_event 1772460776309-mi8xeh44 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39m[E2E Trace] Advanced Web Search
+{
+  "scenario": "Advanced Web Search",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Initiate search",
+      "result": {
+        "query": "TITANE∞ cognitive architecture",
+        "results_count": 10
+      },
+      "duration_ms": 0.013375999999993837,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse results",
+      "result": [
+        {
+          "title": "Cognitive Architecture Overview",
+          "url": "https://example.com/1"
+        },
+        {
+          "title": "TITANE Systems Design",
+          "url": "https://example.com/2"
+        }
+      ],
+      "duration_ms": 0.010814000000095803,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI synthesis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.19532700000002023,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Store results",
+      "result": "mock_1772460776309",
+      "duration_ms": 0.16194099999995615,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "web_search",
+        "description": "Advanced web search completed",
+        "timestamp": "2026-03-02T14:12:56.309Z"
+      },
+      "duration_ms": 0.1506090000000313,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 13.399084000000016,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_state 1772460776309-0widtx0w
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_state 1772460776309-0widtx0w ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_trigger_sync 1772460776310-q0wuxpsd
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_trigger_sync 1772460776310-q0wuxpsd ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_alignment 1772460776310-50s4rxko
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_alignment 1772460776310-50s4rxko ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_report 1772460776310-6k4c31lr
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_report 1772460776310-6k4c31lr ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START singularity_check_coherence 1772460776311-phv1t5ev
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END singularity_check_coherence 1772460776311-phv1t5ev ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_selftest_all 1772460776311-8504f1q3
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_selftest_all 1772460776311-8504f1q3 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_monitoring_metrics 1772460776311-jq9vtumj
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_monitoring_metrics 1772460776311-jq9vtumj ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39m[E2E Trace] Complete Cognitive Loop
+{
+  "scenario": "Complete Cognitive Loop",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Get meta state",
+      "result": {
+        "focus": 0.82,
+        "stability": 0.9,
+        "awareness": 0.88,
+        "lastSync": null
+      },
+      "duration_ms": 0.32049400000005335,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Trigger sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:56.310Z"
+      },
+      "duration_ms": 0.2534979999999223,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Check alignment",
+      "result": {
+        "cognitive": true,
+        "symbolic": true,
+        "physical": true
+      },
+      "duration_ms": 0.2197719999999208,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Get report",
+      "result": {
+        "last_sync": "2026-03-02T14:12:56.310Z",
+        "focus": 0.83,
+        "alignment": {
+          "cognitive": true,
+          "symbolic": true,
+          "physical": true
+        },
+        "loops": 1
+      },
+      "duration_ms": 0.43351000000006934,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.1979350000000295,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Meta self-test",
+      "result": {
+        "status": "pass",
+        "tests": [
+          {
+            "name": "meta-loop-stability",
+            "passed": true
+          },
+          {
+            "name": "alignment-check",
+            "passed": true
+          }
+        ]
+      },
+      "duration_ms": 0.16291200000000572,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate metrics",
+      "result": {
+        "loops": 1,
+        "avgLatency": 125,
+        "drift": 0.04
+      },
+      "duration_ms": 0.1618589999999358,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 15.61286199999995,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START conversation_generate 1772460776312-m284dh75
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END conversation_generate 1772460776312-m284dh75 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460776312-ltcqa6dy
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460776312-ltcqa6dy ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_get_active_projects 1772460776312-jgl6dozo
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_get_active_projects 1772460776312-jgl6dozo ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START parse_document 1772460776313-j0oycpip
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END parse_document 1772460776313-j0oycpip ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START write_snapshot 1772460776313-p9eonmxo
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END write_snapshot 1772460776313-p9eonmxo ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START meta_trigger_sync 1772460776313-xpopnfw5
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END meta_trigger_sync 1772460776313-xpopnfw5 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_full_state 1772460776313-rovi2vsi
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_full_state 1772460776313-rovi2vsi ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460776313-10foak73
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460776313-10foak73 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39m[E2E Trace] Complex Multi-Module Interaction
+{
+  "scenario": "Complex Multi-Module Interaction",
+  "steps": [
+    {
+      "step": 1,
+      "action": "AI + Memory",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.45813600000008137,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Get projects",
+      "result": [
+        {
+          "id": "proj-omega",
+          "title": "Omega Hardening",
+          "status": "active"
+        },
+        {
+          "id": "proj-avatar",
+          "title": "Avatar Upgrade",
+          "status": "active"
+        }
+      ],
+      "duration_ms": 0.19106199999998807,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Parse document",
+      "result": {
+        "format": "text",
+        "sections": [
+          "PROJECT: TITANE v19.8 QA System"
+        ],
+        "tokens": 31
+      },
+      "duration_ms": 0.15289100000006783,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Timeline snapshot",
+      "result": {
+        "snapshotId": "timeline-mm99drw9"
+      },
+      "duration_ms": 0.1315349999999853,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Deep Sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:56.313Z"
+      },
+      "duration_ms": 0.10658899999998539,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify state",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460776313
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.14642200000002958,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate coherence",
+      "result": 0.93,
+      "duration_ms": 0.11217299999998431,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 17.521108000000027,
+  "success": true
+}
+
+ [32m✓[39m [30m[45m core [49m[39m src/tests/e2e/titane_e2e.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 09:12:55
+[2m   Duration [22m 608ms[2m (transform 163ms, setup 176ms, import 137ms, tests 16ms, environment 180ms)[22m
+
+[E2E_VITEST] run=2 PASS
+
+[ARCH] run=3
+
+> titane-infinity@27.2.0 test:architecture /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/resizable-arraybuffer.cjs' vitest run src/__tests__/architecture
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/architecture/engine-isolation.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 09:12:56
+[2m   Duration [22m 482ms[2m (transform 68ms, setup 179ms, import 8ms, tests 20ms, environment 178ms)[22m
+
+[ARCH] run=3 PASS
+
+[E2E_VITEST] run=3
+
+> titane-infinity@27.2.0 test:e2e:vitest /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash -c 'if [[ "${TITANE_E2E_TAURI:-}" != "1" ]]; then echo "SKIP: Vitest E2E (src/tests/e2e) nécessite un contexte Tauri réel. Relance avec TITANE_E2E_TAURI=1"; exit 0; fi; cross-env RUN_E2E_TESTS=1 NODE_OPTIONS="--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs" vitest run src/tests/e2e/titane_e2e.test.ts'
+
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts
+[22m[39m[TauriProtector] ✅ Tauri confirmed available (strategies: {
+  hasTauriGlobal: [33mtrue[39m,
+  hasTauriInternals: [90mundefined[39m,
+  hasTauriInvoke: [90mundefined[39m,
+  hasTauriFlag: [33mfalse[39m
+} )
+[TauriProtector] 🛡️ Initialized - isTauriAvailable: [33mtrue[39m
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START get_system_health 1772460778553-fyd1ge8n
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END get_system_health 1772460778553-fyd1ge8n ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_full_state 1772460778557-n97jvss6
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_full_state 1772460778557-n97jvss6 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START conversation_generate 1772460778558-cbpb6qq8
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END conversation_generate 1772460778558-cbpb6qq8 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460778558-15t13spr
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460778558-15t13spr ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START memory_get_stats 1772460778559-6v6mehvi
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END memory_get_stats 1772460778559-6v6mehvi ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START add_timeline_event 1772460778559-xt3d7tgv
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END add_timeline_event 1772460778559-xt3d7tgv ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460778559-dhhwe0vk
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460778559-dhhwe0vk ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 1: New User Onboarding[2m > [22m[2mshould complete new user workflow
+[22m[39m[E2E Trace] New User Onboarding
+{
+  "scenario": "New User Onboarding",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Check system health",
+      "result": {
+        "status": "green",
+        "services": {
+          "memory": "ok",
+          "ai": "ok",
+          "timeline": "ok",
+          "fusion": "ok"
+        },
+        "timestamp": 1772460778557
+      },
+      "duration_ms": 4.302691999999979,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Initialize Singularity",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460778558
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.5066580000000158,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Generate AI welcome",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.307713999999919,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save to memory",
+      "result": {
+        "saved": true
+      },
+      "duration_ms": 0.5155809999999974,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Verify memory",
+      "result": {
+        "total_entries": 0,
+        "total_interactions": 1,
+        "projects_tracked": 2
+      },
+      "duration_ms": 0.25481200000001536,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Create timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "user_onboarding",
+        "description": "New user registered",
+        "timestamp": "2026-03-02T14:12:58.559Z"
+      },
+      "duration_ms": 0.251643999999942,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.23019599999997808,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 10.247932000000105,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START secure_list_files 1772460778560-p8l7qehu
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END secure_list_files 1772460778560-p8l7qehu ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START parse_document 1772460778561-8qzcdrkg
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END parse_document 1772460778561-8qzcdrkg ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START conversation_generate 1772460778561-5602tfe6
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END conversation_generate 1772460778561-5602tfe6 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START store_file 1772460778562-3815m7rp
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END store_file 1772460778562-3815m7rp ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START add_timeline_event 1772460778562-bkovrinv
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END add_timeline_event 1772460778562-bkovrinv ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:START get_files_by_category 1772460778562-dnhqghtd
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39mIPC:END get_files_by_category 1772460778562-dnhqghtd ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 2: Legal Designer Workflow[2m > [22m[2mshould complete legal document workflow
+[22m[39m[E2E Trace] Legal Designer Workflow
+{
+  "scenario": "Legal Designer Workflow",
+  "steps": [
+    {
+      "step": 1,
+      "action": "List files",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        }
+      ],
+      "duration_ms": 0.294954999999959,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse template",
+      "result": {
+        "format": "text",
+        "sections": [
+          "CONTRAT DE PRESTATION",
+          "Article 1: Objet"
+        ],
+        "tokens": 39
+      },
+      "duration_ms": 0.43063099999994847,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI analysis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.3778740000000198,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Save document",
+      "result": {
+        "stored": true
+      },
+      "duration_ms": 0.22733500000003914,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline snapshot",
+      "result": {
+        "id": "timeline-2",
+        "type": "document_edited",
+        "description": "Legal contract modified",
+        "metadata": {
+          "filename": "contrat_edit_v1.txt"
+        },
+        "timestamp": "2026-03-02T14:12:58.562Z"
+      },
+      "duration_ms": 0.17298700000003464,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify storage",
+      "result": [
+        {
+          "name": "template-nda.txt",
+          "category": "legal",
+          "content": "NDA template",
+          "metadata": {
+            "version": 1
+          }
+        },
+        {
+          "name": "contrat_edit_v1.txt",
+          "category": "legal",
+          "content": "CONTRAT DE PRESTATION MODIFIÉ\n\nArticle 1: Objet étendu"
+        }
+      ],
+      "duration_ms": 0.23647300000004634,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 12.416387999999984,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START conversation_generate 1772460778563-d14t8ekb
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END conversation_generate 1772460778563-d14t8ekb ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START memory_store 1772460778563-qn4evl19
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END memory_store 1772460778563-qn4evl19 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:START add_timeline_event 1772460778563-zr27yjkf
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39mIPC:END add_timeline_event 1772460778563-zr27yjkf ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 3: Advanced Web Search[2m > [22m[2mshould complete web search workflow
+[22m[39m[E2E Trace] Advanced Web Search
+{
+  "scenario": "Advanced Web Search",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Initiate search",
+      "result": {
+        "query": "TITANE∞ cognitive architecture",
+        "results_count": 10
+      },
+      "duration_ms": 0.014223000000015418,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Parse results",
+      "result": [
+        {
+          "title": "Cognitive Architecture Overview",
+          "url": "https://example.com/1"
+        },
+        {
+          "title": "TITANE Systems Design",
+          "url": "https://example.com/2"
+        }
+      ],
+      "duration_ms": 0.010658000000034917,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "AI synthesis",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.2258920000000444,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Store results",
+      "result": "mock_1772460778563",
+      "duration_ms": 0.24401399999999285,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Timeline event",
+      "result": {
+        "id": "timeline-2",
+        "type": "web_search",
+        "description": "Advanced web search completed",
+        "timestamp": "2026-03-02T14:12:58.563Z"
+      },
+      "duration_ms": 0.18013399999995272,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 13.559275999999954,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_state 1772460778564-q0a2zf1y
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_state 1772460778564-q0a2zf1y ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_trigger_sync 1772460778564-a5i4a0my
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_trigger_sync 1772460778564-a5i4a0my ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_alignment 1772460778564-8kuz8bah
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_alignment 1772460778564-8kuz8bah ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_report 1772460778565-9co1k6ee
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_report 1772460778565-9co1k6ee ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START singularity_check_coherence 1772460778565-2hm7hc71
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END singularity_check_coherence 1772460778565-2hm7hc71 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_selftest_all 1772460778565-3cqebzpe
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_selftest_all 1772460778565-3cqebzpe ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:START meta_get_monitoring_metrics 1772460778565-2oats5uw
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39mIPC:END meta_get_monitoring_metrics 1772460778565-2oats5uw ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 4: Complete Cognitive Loop[2m > [22m[2mshould complete cognitive loop workflow
+[22m[39m[E2E Trace] Complete Cognitive Loop
+{
+  "scenario": "Complete Cognitive Loop",
+  "steps": [
+    {
+      "step": 1,
+      "action": "Get meta state",
+      "result": {
+        "focus": 0.82,
+        "stability": 0.9,
+        "awareness": 0.88,
+        "lastSync": null
+      },
+      "duration_ms": 0.24432200000001103,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Trigger sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:58.564Z"
+      },
+      "duration_ms": 0.18467499999997017,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Check alignment",
+      "result": {
+        "cognitive": true,
+        "symbolic": true,
+        "physical": true
+      },
+      "duration_ms": 0.16141400000003614,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Get report",
+      "result": {
+        "last_sync": "2026-03-02T14:12:58.564Z",
+        "focus": 0.83,
+        "alignment": {
+          "cognitive": true,
+          "symbolic": true,
+          "physical": true
+        },
+        "loops": 1
+      },
+      "duration_ms": 0.3138300000000527,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Check coherence",
+      "result": 0.93,
+      "duration_ms": 0.14901800000006915,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Meta self-test",
+      "result": {
+        "status": "pass",
+        "tests": [
+          {
+            "name": "meta-loop-stability",
+            "passed": true
+          },
+          {
+            "name": "alignment-check",
+            "passed": true
+          }
+        ]
+      },
+      "duration_ms": 0.149387000000047,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate metrics",
+      "result": {
+        "loops": 1,
+        "avgLatency": 125,
+        "drift": 0.04
+      },
+      "duration_ms": 0.17183299999999235,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 15.317493000000013,
+  "success": true
+}
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START conversation_generate 1772460778566-j23v06l4
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END conversation_generate 1772460778566-j23v06l4 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_save_chat_interaction 1772460778566-zk8ln5hs
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_save_chat_interaction 1772460778566-zk8ln5hs ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START memory_get_active_projects 1772460778566-wm1tnyho
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END memory_get_active_projects 1772460778566-wm1tnyho ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START parse_document 1772460778566-iaak5ymg
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END parse_document 1772460778566-iaak5ymg ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START write_snapshot 1772460778567-bypem2h1
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END write_snapshot 1772460778567-bypem2h1 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START meta_trigger_sync 1772460778567-49hgb684
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END meta_trigger_sync 1772460778567-49hgb684 ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_full_state 1772460778567-dgmytptx
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_full_state 1772460778567-dgmytptx ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:START singularity_get_global_coherence 1772460778567-aerztyus
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39mIPC:END singularity_get_global_coherence 1772460778567-aerztyus ok
+
+[90mstdout[2m | src/tests/e2e/titane_e2e.test.ts[2m > [22m[2mE2E Scenario 5: Complex Multi-Module Interaction[2m > [22m[2mshould complete complex multi-module workflow
+[22m[39m[E2E Trace] Complex Multi-Module Interaction
+{
+  "scenario": "Complex Multi-Module Interaction",
+  "steps": [
+    {
+      "step": 1,
+      "action": "AI + Memory",
+      "result": "Réponse mock TITANE∞",
+      "duration_ms": 0.3392279999999346,
+      "status": "OK"
+    },
+    {
+      "step": 2,
+      "action": "Get projects",
+      "result": [
+        {
+          "id": "proj-omega",
+          "title": "Omega Hardening",
+          "status": "active"
+        },
+        {
+          "id": "proj-avatar",
+          "title": "Avatar Upgrade",
+          "status": "active"
+        }
+      ],
+      "duration_ms": 0.16108100000008108,
+      "status": "OK"
+    },
+    {
+      "step": 3,
+      "action": "Parse document",
+      "result": {
+        "format": "text",
+        "sections": [
+          "PROJECT: TITANE v19.8 QA System"
+        ],
+        "tokens": 31
+      },
+      "duration_ms": 0.14619700000002922,
+      "status": "OK"
+    },
+    {
+      "step": 4,
+      "action": "Timeline snapshot",
+      "result": {
+        "snapshotId": "timeline-mm99dtmv"
+      },
+      "duration_ms": 0.12834299999997256,
+      "status": "OK"
+    },
+    {
+      "step": 5,
+      "action": "Deep Sync",
+      "result": {
+        "status": "synced",
+        "timestamp": "2026-03-02T14:12:58.567Z"
+      },
+      "duration_ms": 0.10247499999991305,
+      "status": "OK"
+    },
+    {
+      "step": 6,
+      "action": "Verify state",
+      "result": {
+        "fusion_integrity": 0.92,
+        "sync_score": 0.93,
+        "pipeline_health": 0.94,
+        "total_syncs": 0,
+        "physical": {
+          "battery": 0.78,
+          "temperature": 36.8
+        },
+        "cognitive": {
+          "stability": 0.92,
+          "attention": 0.85
+        },
+        "meta": {
+          "timestamp": 1772460778567
+        },
+        "global_coherence": 0.93
+      },
+      "duration_ms": 0.16205200000001696,
+      "status": "OK"
+    },
+    {
+      "step": 7,
+      "action": "Validate coherence",
+      "result": 0.93,
+      "duration_ms": 0.13259500000003754,
+      "status": "OK"
+    }
+  ],
+  "total_duration_ms": 16.971681999999987,
+  "success": true
+}
+
+ [32m✓[39m [30m[45m core [49m[39m src/tests/e2e/titane_e2e.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m5 passed[39m[22m[90m (5)[39m
+[2m   Start at [22m 09:12:57
+[2m   Duration [22m 629ms[2m (transform 181ms, setup 182ms, import 154ms, tests 16ms, environment 180ms)[22m
+
+[E2E_VITEST] run=3 PASS
+
