@@ -1,0 +1,17 @@
+# DESKTOP X3 STRICT SUMMARY
+
+generated_at: 2026-03-02T00:31:00Z
+scope: AppImage runtime same-context (WDIO + tauri-driver)
+artifact: src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage
+
+run_A_file: 43_DESKTOP_WDIO.log
+run_A_result: Spec Files: 7 passed, 7 total (100% completed) in 00:00:43
+
+run_B_file: 49_DESKTOP_TIMEOUT_RUN_2_WDIO.log
+run_B_result: Spec Files: 7 passed, 7 total (100% completed) in 00:00:43
+
+run_C_file: 49_DESKTOP_TIMEOUT_RUN_3_WDIO.log
+run_C_result: Spec Files: 7 passed, 7 total (100% completed) in 00:00:42
+
+verdict_x3: PASS (3/3 full runs)
+note: timeout run #1 was interrupted (SIGINT) and excluded from strict x3 set.
