@@ -15,7 +15,7 @@
 
 **Déploiement?** 
 1. 🔍 [Audit Production Ready](#audit-production-readiness)
-2. ✅ [Pre-Deployment Check](scripts/verify/pre-deployment-check.sh)
+2. ✅ [Pre-Deployment Check](../scripts/verify/pre-deployment-check.sh)
 3. 🏥 [Auto-Heal Systems](#systèmes-auto-heal)
 
 **Latest Audits (2026-02-09):**
@@ -35,10 +35,10 @@
 |----------|-------------|--------|
 | [ARCHITECTURE_RINGS.md](ARCHITECTURE_RINGS.md) | Architecture 4-Ring (Core/Engines/Services/UI) | - |
 | [COPILOT_INSTRUCTIONS.md](.copilot-instructions.md) | Instructions Copilot & contraintes TITANE∞ | 24 KB |
-| [docs/architecture/](docs/architecture/) | Schémas et diagrammes détaillés | - |
+| [docs/architecture/](architecture/) | Schémas et diagrammes détaillés | - |
 
 **Tests Architecture:**
-- [Ring Compliance Tests](src/__tests__/architecture/)
+- [Ring Compliance Tests](../src/__tests__/architecture/)
 
 ---
 
@@ -67,11 +67,11 @@
 
 | Script | Fonction | Lignes |
 |--------|----------|--------|
-| [health-check-enhanced.sh](scripts/maintenance/health-check-enhanced.sh) | Check santé + auto-repair | 423 |
-| [proactive-monitor.sh](scripts/maintenance/proactive-monitor.sh) | Monitoring proactif + alertes | 458 |
-| [pre-deployment-check.sh](scripts/verify/pre-deployment-check.sh) | Quality gates pré-déploiement | 535 |
-| [06-auto-fix.sh](scripts/audit/06-auto-fix.sh) | 15 corrections automatiques | 578 |
-| [validate-auto-heal.sh](scripts/validate-auto-heal.sh) | Validation scripts | 116 |
+| [health-check-enhanced.sh](../scripts/maintenance/health-check-enhanced.sh) | Check santé + auto-repair | 423 |
+| [proactive-monitor.sh](../scripts/maintenance/proactive-monitor.sh) | Monitoring proactif + alertes | 458 |
+| [pre-deployment-check.sh](../scripts/verify/pre-deployment-check.sh) | Quality gates pré-déploiement | 535 |
+| [06-auto-fix.sh](../scripts/audit/06-auto-fix.sh) | 15 corrections automatiques | 578 |
+| [validate-auto-heal.sh](../scripts/validate-auto-heal.sh) | Validation scripts | 116 |
 
 **Utilisation:**
 ```bash
@@ -147,7 +147,7 @@ Taux Réussite:    97.93% (2173/2219)
 ```
 
 **Workflows CI:**
-- [rust-docker.yml](.github/workflows/rust-docker.yml) — Docker Rust CI
+- [rust-docker.yml](../.github/workflows/rust-docker.yml) — Docker Rust CI
 
 ---
 
@@ -161,8 +161,8 @@ Taux Réussite:    97.93% (2173/2219)
 | *(autres workflows existants)* | - | - |
 
 **Scripts Déploiement:**
-- [pre-deployment-check.sh](scripts/verify/pre-deployment-check.sh) — 6 quality gates
-- [health-check-enhanced.sh](scripts/maintenance/health-check-enhanced.sh) — Validation santé
+- [pre-deployment-check.sh](../scripts/verify/pre-deployment-check.sh) — 6 quality gates
+- [health-check-enhanced.sh](../scripts/maintenance/health-check-enhanced.sh) — Validation santé
 
 **Exit Codes:**
 - 0: Deployment APPROVED
@@ -180,8 +180,8 @@ Taux Réussite:    97.93% (2173/2219)
 - pnpm audit: 0 vulnérabilités critiques
 
 **Outils:**
-- [proactive-monitor.sh](scripts/maintenance/proactive-monitor.sh) — Scan npm/cargo vulns
-- [health-check-enhanced.sh](scripts/maintenance/health-check-enhanced.sh) — Check secrets
+- [proactive-monitor.sh](../scripts/maintenance/proactive-monitor.sh) — Scan npm/cargo vulns
+- [health-check-enhanced.sh](../scripts/maintenance/health-check-enhanced.sh) — Check secrets
 
 ---
 
