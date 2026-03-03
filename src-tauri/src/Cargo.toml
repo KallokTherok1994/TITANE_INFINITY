@@ -1,6 +1,6 @@
 [package]
 name = "titane-infinity-backend"
-version = "8.0.0"
+version = "27.2.0"
 description = "TITANE∞ Backend - Core System"
 authors = ["TITANE Team"]
 edition = "2021"
