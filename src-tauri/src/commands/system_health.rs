@@ -56,8 +56,7 @@ pub async fn get_system_health() -> Result<SystemHealth, String> {
     health.cpu_usage = if cpus.is_empty() {
         0.0
     } else {
-        let total: f64 = cpus.iter().map(|c| c.cpu_usage() as f64).sum();
-        total / cpus.len() as f64
+        cpus.iter().map(|c| c.cpu_usage()).sum::<f32>() as f64 / cpus.len() as f64
     };
 
     // Real memory usage (0–100 %)
