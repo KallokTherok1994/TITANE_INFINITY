@@ -36,5 +36,7 @@ pub async fn send_message(
         ip_address: None,
     }).await;
     
+    // FIXME: stub response — replace with real chat provider dispatch once
+    // the message routing layer is implemented (see docs/OMEGA_v2_SPEC.md)
     Ok(json!({ "ok": true, "content": "response", "error": null }))
 }
