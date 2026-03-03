@@ -30,6 +30,11 @@
 **Changement:** Ajout `"version": "27.2.0"` comme premier champ top-level
 **Rollback:** `git restore -- deployment/latest/MANIFEST.json`
 
+### Fix 6 — Registry ui-043 entry
+**Fichier:** `registry/ui-events.jsonl`
+**Changement:** Ajout entrée append-only `ui-043` pour les UI changes de cette session
+**Rollback:** `git restore -- registry/ui-events.jsonl`
+
 ---
 
 ## Rollback Global
@@ -41,7 +46,8 @@ git restore -- \
   src/components/layout/TopNav.tsx \
   src/pages/TitanePage.tsx \
   src/components/devtools/LogViewer.tsx \
-  deployment/latest/MANIFEST.json
+  deployment/latest/MANIFEST.json \
+  registry/ui-events.jsonl
 
 # Vérifier état propre
 git status --short
