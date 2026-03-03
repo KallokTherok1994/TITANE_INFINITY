@@ -7,7 +7,7 @@
 
 ## ✅ OPTIMIZATION 1: STRING ALLOCATION (Streaming Module)
 
-**File:** [chat_engine/streaming.rs](src-tauri/src/chat_engine/streaming.rs)
+**File:** [chat_engine/streaming.rs](../../src-tauri/src/chat_engine/streaming.rs)
 
 **Changes:**
 
@@ -44,7 +44,7 @@ chunks.push(StreamChunk {
 
 ## ✅ OPTIMIZATION 2: TTS MEMORY PRE-ALLOCATION
 
-**File:** [tts/mod.rs](src-tauri/src/tts/mod.rs)
+**File:** [tts/mod.rs](../../src-tauri/src/tts/mod.rs)
 
 **Changes:**
 
@@ -72,7 +72,7 @@ chunk.push_str(trimmed);
 
 ## ✅ OPTIMIZATION 3: REGEX CACHING (Email Pattern)
 
-**File:** [omega/guardrails.rs](src-tauri/src/omega/guardrails.rs)
+**File:** [omega/guardrails.rs](../../src-tauri/src/omega/guardrails.rs)
 
 **Changes:**
 
