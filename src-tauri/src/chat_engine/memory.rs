@@ -8,14 +8,14 @@ use tokio::task::JoinHandle;
 use tokio::time;
 
 use crate::memory::model::Conversation;
-use crate::memory::storage::MemoryStorage;
-use crate::memory::{MemoryEntry, MessageRole};
+use crate::memory::storage::{MemoryStorage, MemoryStoragePort};
+use crate::memory::{MemoryEntry, MemoryError, MemoryResult, MessageRole};
 
 use super::errors::ChatEngineError;
 
 /// High-level memory manager with in-memory caching and corruption guards.
 pub struct ChatMemoryManager {
-    storage: Arc<MemoryStorage>,
+    storage: Arc<dyn MemoryStoragePort + Send + Sync>,
     cached: Arc<RwLock<HashMap<String, Conversation>>>, // in-memory cache for fast access
     retention_tokens: usize,
     flush_interval: Duration,
@@ -23,7 +23,11 @@ pub struct ChatMemoryManager {
 }
 
 impl ChatMemoryManager {
-    pub fn new(storage: Arc<MemoryStorage>, retention_tokens: usize, flush_interval: Duration) -> Self {
+    pub fn new(
+        storage: Arc<dyn MemoryStoragePort + Send + Sync>,
+        retention_tokens: usize,
+        flush_interval: Duration,
+    ) -> Self {
         Self {
             storage,
             cached: Arc::new(RwLock::new(HashMap::new())),
@@ -33,7 +37,7 @@ impl ChatMemoryManager {
         }
     }
 
-    pub fn storage(&self) -> Arc<MemoryStorage> {
+    pub fn storage(&self) -> Arc<dyn MemoryStoragePort + Send + Sync> {
         self.storage.clone()
     }
 
@@ -322,6 +326,8 @@ fn estimate_tokens(content: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::Mutex as StdMutex;
     use tempfile::TempDir;
 
     // ─────────────────────────────────────────────────────────────
@@ -421,5 +427,114 @@ mod tests {
         assert_eq!(kept, vec!["middle", "newer", "newest"]);
         assert!(conversation.metadata.total_tokens <= 6);
         assert_eq!(conversation.metadata.message_count, 3);
+    }
+
+    #[derive(Default)]
+    struct FakeStorage {
+        saves: AtomicUsize,
+        conversations: StdMutex<HashMap<String, Conversation>>,
+    }
+
+    impl FakeStorage {
+        fn save_count(&self) -> usize {
+            self.saves.load(Ordering::SeqCst)
+        }
+
+        fn reset_save_count(&self) {
+            self.saves.store(0, Ordering::SeqCst);
+        }
+    }
+
+    impl MemoryStoragePort for FakeStorage {
+        fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()> {
+            self.saves.fetch_add(1, Ordering::SeqCst);
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.insert(conversation.id.clone(), conversation.clone());
+            Ok(())
+        }
+
+        fn load_conversation(&self, conversation_id: &str) -> MemoryResult<Conversation> {
+            let guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.get(conversation_id).cloned().ok_or_else(|| {
+                MemoryError::StorageError(format!("Conversation {} not found", conversation_id))
+            })
+        }
+
+        fn delete_conversation(&self, conversation_id: &str) -> MemoryResult<()> {
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.remove(conversation_id);
+            Ok(())
+        }
+
+        fn export_conversation(&self, conversation_id: &str) -> MemoryResult<String> {
+            let conversation = self.load_conversation(conversation_id)?;
+            serde_json::to_string_pretty(&conversation)
+                .map_err(|e| MemoryError::StorageError(e.to_string()))
+        }
+
+        fn clear_all(&self) -> MemoryResult<()> {
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.clear();
+            Ok(())
+        }
+
+        fn get_stats(&self) -> MemoryResult<(u64, u64)> {
+            let guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            let total_messages = guard.values().map(|c| c.entries.len() as u64).sum::<u64>();
+            Ok((guard.len() as u64, total_messages))
+        }
+    }
+
+    #[tokio::test]
+    async fn test_flush_coalescing_strict_with_manual_flush_trigger() {
+        let fake = Arc::new(FakeStorage::default());
+        let manager = ChatMemoryManager::new(fake.clone(), 200, Duration::from_millis(250));
+
+        let conversation_id = manager
+            .ensure_conversation(None)
+            .await
+            .expect("create conversation");
+        fake.reset_save_count();
+
+        manager
+            .append_user_entry(&conversation_id, "first".to_string())
+            .await
+            .expect("append first");
+        manager
+            .append_assistant_entry(&conversation_id, "second".to_string())
+            .await
+            .expect("append second");
+
+        assert!(
+            fake.save_count() <= 1,
+            "coalescing failed before flush trigger: {}",
+            fake.save_count()
+        );
+
+        manager
+            .flush_conversation_now(&conversation_id)
+            .await
+            .expect("flush now");
+
+        assert_eq!(
+            fake.save_count(),
+            1,
+            "manual flush must produce exactly one persisted save after coalescing"
+        );
     }
 }
