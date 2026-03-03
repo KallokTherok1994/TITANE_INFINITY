@@ -138,6 +138,11 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("load_memory");
     commands.insert("reset_memory");
     commands.insert("health_check");
+    commands.insert("get_chat_engine_config");
+    commands.insert("set_chat_engine_config");
+    commands.insert("get_chat_request_defaults");
+    commands.insert("set_chat_request_defaults");
+    commands.insert("set_chat_profile");
 
     // ═══════════════════════════════════════════════════════════════
     // SELF-HEAL (frontend compat)
