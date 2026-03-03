@@ -39,15 +39,20 @@ import { XPSource, XP_REWARDS } from '../types/experience';
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
 
-let _cognitiveKernelPromise: Promise<{
+type CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => unknown;
   harmonizeError: (error: unknown) => { message: string; type: string; recovery: string };
-}> | null = null;
+};
 
-const loadCognitiveKernel = async () => {
+let _cognitiveKernelPromise: Promise<CognitiveKernelTools> | null = null;
+
+const loadCognitiveKernel = async (): Promise<CognitiveKernelTools> => {
   if (!_cognitiveKernelPromise) {
     _cognitiveKernelPromise = Promise.resolve({
-      harmonizeChatMessages: cognitiveKernel.harmonizeChatMessages.bind(cognitiveKernel),
+      harmonizeChatMessages: (messages: unknown) =>
+        cognitiveKernel.harmonizeChatMessages(
+          (messages as Partial<HarmonizedMessage>[]) ?? []
+        ),
       harmonizeError: cognitiveKernel.harmonizeError.bind(cognitiveKernel),
     });
   }
@@ -79,15 +84,17 @@ const loadUserPreferencesEngine = async () => {
   return _userPreferencesEnginePromise;
 };
 
-let _experienceToolsPromise: Promise<{
+type ExperienceTools = {
   gainXP: (amount: number, source?: string, description?: string) => void;
   awardExperience: (
     domainId: string,
     amount: number,
     source: XPSource,
     metadata?: Record<string, unknown>
-  ) => Promise<void>;
-}> | null = null;
+  ) => Promise<unknown>;
+};
+
+let _experienceToolsPromise: Promise<ExperienceTools> | null = null;
 
 type ExperienceXPModule = {
   XP: {
@@ -95,7 +102,7 @@ type ExperienceXPModule = {
   };
 };
 
-const loadExperienceTools = async () => {
+const loadExperienceTools = async (): Promise<ExperienceTools> => {
   if (!_experienceToolsPromise) {
     _experienceToolsPromise = import('@/core/experience/XP_ENGINE').then(xp => {
       const XP = (xp as unknown as ExperienceXPModule).XP;
@@ -197,7 +204,7 @@ type ChatEngineResponse = AIResponse & {
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-const COGNITIVE_KERNEL_FALLBACK = {
+const COGNITIVE_KERNEL_FALLBACK: CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => messages,
   harmonizeError: (error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);

@@ -86,6 +86,7 @@ import { predictivePreloader } from '@/services/cache/predictivePreloader';
 const logger = createLogger('ChatEngine');
 
 type BackendStreamMetadata = {
+  raw?: string;
   provider?: string;
   model?: string;
   latency_ms?: number;
