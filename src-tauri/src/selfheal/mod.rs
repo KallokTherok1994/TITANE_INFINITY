@@ -82,6 +82,7 @@ pub struct RecoveryStats {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::time::Duration;
 
     #[test]
     fn test_incident_creation() {
@@ -99,6 +100,6 @@ mod tests {
 
         assert!(incident.auto_recovered);
         assert!(incident.resolved_at.is_some());
-        assert!(incident.recovery_duration.is_some());
+        assert!(incident.recovery_duration_ms.is_some());
     }
 }

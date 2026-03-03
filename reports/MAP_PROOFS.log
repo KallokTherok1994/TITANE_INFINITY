@@ -87,3 +87,29 @@
 [2026-03-03T17:15:00Z] Production Ready: CONDITIONNEL (conditions 4 and 6 of 7 now satisfied)
 
 --- END MAP_PROOFS.log ---
+
+--- CORRECTIONS APPLIED 2026-03-03 (Session 3 — Comprehensive Audit) ---
+[2026-03-03T17:30:00Z] AUDIT: Phase 0-5 executed via audit-subagent — 5 new findings
+[2026-03-03T17:30:00Z] FIX BUG-CI-L7: p4-constitution-audit.yml L7 gate now checks p0-surface-guard.yml (was p0-2-surface-guard.yml, deleted in session 2)
+[2026-03-03T17:30:00Z] FIX BUG-TEST-001: selfheal/mod.rs test — added `use std::time::Duration`, fixed `recovery_duration` → `recovery_duration_ms`
+[2026-03-03T17:30:00Z] FIX CW-002: Removed `schedule: cron '0 4 * * *'` from gitguardian.yml (was missed in session 1)
+[2026-03-03T17:30:00Z] FIX CW-001: gitguardian.yml `actions/checkout@v6` → `@v6.0.1` (supply-chain pin, consistency with other workflows)
+[2026-03-03T17:30:00Z] FIX WF-002: Removed `schedule: cron '0 2 * * *'` from p0-surface-guard.yml
+[2026-03-03T17:30:00Z] FIX WF-003: Removed `schedule: cron '0 3 * * *'` from p2-contract-guard.yml
+[2026-03-03T17:30:00Z] FIX IPC-PARAMS-001: secureSecrets.ts setOpenAIApiKey + setAnthropicApiKey now use { apiKey } (camelCase) matching Tauri v2 auto-conversion of Rust `api_key` parameter
+[2026-03-03T17:30:00Z] FIX SEC-004: auto_heal.rs mutex patterns — write: added log::warn! on poison; read: .unwrap_or_default() → .unwrap_or_else(|e| e.into_inner()).clone()
+
+--- NETWORK SURFACE PROOF (Session 3) ---
+[2026-03-03T17:30:00Z] PROOF: fetch() in src/ = 1 occurrence (src/entry.ts:107 — ./main-entry.json local asset, acceptable)
+[2026-03-03T17:30:00Z] PROOF: axios in src/ = 0 (1 test-only reference in engine-isolation.test.ts)
+[2026-03-03T17:30:00Z] PROOF: WebSocket direct = 0
+[2026-03-03T17:30:00Z] PROOF: httpClient.ts throws Error('[HTTP] Frontend HTTP disabled by governance')
+[2026-03-03T17:30:00Z] VERDICT: UI no-web rule = PASS
+
+--- 4-RING VIOLATIONS (Session 3) ---
+[2026-03-03T17:30:00Z] OPEN RV-001: selfHealingEngine.ts L706,L834 calls singularityEngine.setState() directly (Ring 2→Ring 1)
+[2026-03-03T17:30:00Z] OPEN RV-002: applyStateUpdate() validates path by prefix only, not by schema — LLM-driven mutation risk
+
+--- OPEN FINDINGS AFTER SESSION 3 ---
+[2026-03-03T17:30:00Z] OPEN IPC-004: SecureResponse.data vs content — 100+ callsites, deferred
+[2026-03-03T17:30:00Z] OPEN RV-001/RV-002: selfHealingEngine Ring 2 architectural refactor needed

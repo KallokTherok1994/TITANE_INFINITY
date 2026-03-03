@@ -16,8 +16,6 @@ on:
       - 'src/**/*.ts'
       - 'src/**/*.tsx'
       - 'src-tauri/allowlist.whitelist.stable.json'
-  schedule:
-    - cron: '0 3 * * *' # Quotidien 3h UTC
   workflow_dispatch:
 
 jobs:
