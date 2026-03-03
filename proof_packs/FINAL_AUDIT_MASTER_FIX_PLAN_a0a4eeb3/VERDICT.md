@@ -1,9 +1,9 @@
 # VERDICT FINAL — PASS (statique) / BLOCKED (E2E runtime)
 
-**Date:** 2026-03-03T20:12:50Z
-**Commit:** a0a4eeb3
+**Date:** 2026-03-03T20:30:06Z
+**Commit:** 36a5f85d (HEAD after auto-fixes)
 **Version:** 27.2.0
-**Méthode:** Analyse statique + auto-fixes minimaux appliqués
+**Méthode:** Analyse statique + auto-fixes minimaux appliqués + registry updated
 
 ---
 
@@ -16,6 +16,17 @@
 
 ---
 
+## CI Status Analysis
+
+| Branch | CI Run | Status | Cause |
+|--------|--------|--------|-------|
+| MAIN (SHA 7eb4096f) | #1791 | ❌ failure | Prettier: `src/pages/ConfigurationHub.tsx` (pre-existing, not caused by our changes) |
+| copilot/audit-repository-contents (SHA 36a5f85d) | #1790 | ⏳ action_required | PR approval pending (security gate, not a code failure) |
+
+**Prettier check on our branch:** ✅ PASS (`prettier --check "."` → exit 0, all files pass)
+
+---
+
 ## Auto-Fixes Appliqués (5 corrections minimales)
 
 | Fix | Fichier | Type | Rollback |
@@ -25,8 +36,9 @@
 | data-testid tab-{id} sur TitanePage (8 tabs) | src/pages/TitanePage.tsx | +8 attrs HTML | git restore -- src/pages/TitanePage.tsx |
 | LogViewer polling DEV/PROD guard | src/components/devtools/LogViewer.tsx | 1 line change | git restore -- src/components/devtools/LogViewer.tsx |
 | version field dans MANIFEST.json | deployment/latest/MANIFEST.json | +1 JSON field | git restore -- deployment/latest/MANIFEST.json |
+| registry ui-043 entry | registry/ui-events.jsonl | +1 JSON line | git restore -- registry/ui-events.jsonl |
 
-**Total modifications:** 5 fichiers, 13 lignes ajoutées, 0 ligne supprimée.
+**Total modifications:** 6 fichiers, ~14 lignes ajoutées, 0 ligne supprimée.
 
 ---
 
