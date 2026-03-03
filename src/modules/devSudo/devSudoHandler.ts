@@ -17,7 +17,6 @@ import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
-import { dataCollector } from '@/modules/dataCollector/DataCollectorEngine';
 import { fusionEngine } from '@/modules/fusion/FusionEngine';
 import { datasetBuilder } from '@/modules/fusion/DatasetBuilder';
 
@@ -40,6 +39,28 @@ import { getHandlerForAction, getActionDomain } from './devSudoLazyLoader';
 
 // Stub pour dataCollector
 const dataCollector = {
+  runCollectionPipeline: async () => ({
+    success: true,
+    entriesCollected: 0,
+    byCategory: {
+      conversation: 0,
+      action: 0,
+      coaching: 0,
+      analysis: 0,
+      memory: 0,
+      error: 0,
+      'super-prompt': 0,
+      interaction: 0,
+      'auto-heal': 0,
+      introspection: 0,
+      patch: 0,
+      style: 0,
+    } as Record<string, number>,
+    errors: [] as string[],
+    warnings: [] as string[],
+    duration: 0,
+    timestamp: Date.now(),
+  }),
   getStats: () => ({
     totalEntries: 0,
     sizeInMB: 0,
