@@ -189,7 +189,12 @@ impl AIRouter {
             return Ok(AIResponse {
                 content: cached.content,
                 tokens: cached.tokens as usize,
-                provider: AIProvider::Gemini, // Cached provider
+                provider: match cached.provider.as_str() {
+                    "Ollama" => AIProvider::Ollama,
+                    "Offline" => AIProvider::Offline,
+                    "UnifiedIA" => AIProvider::UnifiedIA,
+                    _ => AIProvider::Gemini,
+                },
                 timestamp: std::time::SystemTime::now()
                     .duration_since(std::time::UNIX_EPOCH)
                     .unwrap_or_else(|_| std::time::Duration::from_secs(0))
@@ -223,11 +228,7 @@ impl AIRouter {
                     let response = AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini, // Implementation: Extend AIProvider enum with OpenAI/Claude variants
-                        // - Add to enum: OpenAI, Claude, Anthropic, Cohere
-                        // - Detect from model string: if model.contains("gpt") → OpenAI
-                        // - Map unified_response.provider field to correct enum variant
-                        // - Use match on provider type for accurate tracking
+                        provider: AIProvider::UnifiedIA,
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap_or_else(|_| std::time::Duration::from_secs(0))
@@ -248,7 +249,8 @@ impl AIRouter {
 
         // 2. Try Gemini if available
         if let Some(gemini) = &self.gemini_client {
-            if self.check_internet().await {
+            let internet_available = self.cache.get_provider_status("internet").await.unwrap_or(false);
+            if internet_available {
                 info!("[AI Router v20.1] Trying Gemini API (secondary)");
                 match gemini.query(&request).await {
                     Ok(response) => {
@@ -272,7 +274,8 @@ impl AIRouter {
         }
 
         // 3. Fallback to Ollama
-        if self.ollama_client.is_available().await {
+        let ollama_available = self.cache.get_provider_status("ollama").await.unwrap_or(false);
+        if ollama_available {
             info!("[AI Router v20.1] Routing to Ollama (local fallback)");
             match self.ollama_client.query(&request).await {
                 Ok(response) => {
@@ -319,6 +322,7 @@ impl AIRouter {
             }
             AIProvider::Ollama => self.ollama_client.query(&request).await,
             AIProvider::Offline => Err(AIError::NoProviderAvailable),
+            AIProvider::UnifiedIA => self.query_with_unified_engine(request).await,
         }
     }
 
@@ -343,11 +347,7 @@ impl AIRouter {
                     Ok(AIResponse {
                         content: unified_response.content,
                         tokens: unified_response.tokens_used,
-                        provider: AIProvider::Gemini, // Implementation: Dynamic provider detection from response
-                        // - Enum extension: Add OpenAI, Claude, etc. to AIProvider
-                        // - Auto-detect: Parse unified_response.metadata.provider field
-                        // - Fallback: Use request.provider if metadata unavailable
-                        // - Example: AIProvider::from_str(&metadata.provider).unwrap_or(AIProvider::Gemini)
+                        provider: AIProvider::UnifiedIA,
                         timestamp: std::time::SystemTime::now()
                             .duration_since(std::time::UNIX_EPOCH)
                             .unwrap_or_else(|_| std::time::Duration::from_secs(0))
@@ -401,13 +401,12 @@ impl AIRouter {
     }
 
     pub async fn health_check(&self) -> serde_json::Value {
-        let has_internet = self.check_internet().await;
-        let gemini_available = self
-            .gemini_client
-            .as_ref()
-            .map(|c| async { c.is_available().await })
-            .is_some();
-        let ollama_available = self.ollama_client.is_available().await;
+        let has_internet = self.cache.get_provider_status("internet").await.unwrap_or(false);
+        let gemini_available = match &self.gemini_client {
+            Some(c) => c.is_available().await,
+            None => false,
+        };
+        let ollama_available = self.cache.get_provider_status("ollama").await.unwrap_or(false);
         let ollama_models = self.ollama_client.get_available_models();
 
         serde_json::json!({

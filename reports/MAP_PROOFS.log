@@ -113,3 +113,20 @@
 --- OPEN FINDINGS AFTER SESSION 3 ---
 [2026-03-03T17:30:00Z] OPEN IPC-004: SecureResponse.data vs content — 100+ callsites, deferred
 [2026-03-03T17:30:00Z] OPEN RV-001/RV-002: selfHealingEngine Ring 2 architectural refactor needed
+
+--- CORRECTIONS APPLIED 2026-03-03 (Session 4 — Chat IA Audit) ---
+[2026-03-03T19:30:00Z] AUDIT: Phase A-G Chat IA audit via audit-subagent — 8 findings (5+3 bonus)
+[2026-03-03T19:30:00Z] FIX SEC-005: ai/router.rs cache hit now restores actual provider (Ollama/Offline/UnifiedIA/Gemini) instead of hardcoding Gemini
+[2026-03-03T19:30:00Z] FIX PERF-001: ai/router.rs Gemini branch now reads cached internet status instead of calling check_internet() directly (saves 3s per query in cache-warm state)
+[2026-03-03T19:30:00Z] FIX BONUS-001: ai/router.rs Ollama branch now reads cached ollama availability instead of calling is_available() directly (avoids subprocess spawn)
+[2026-03-03T19:30:00Z] FIX BONUS-003: ai/router.rs health_check() Gemini availability now actually awaits c.is_available() (previously closure was never awaited — always reported true if key configured)
+[2026-03-03T19:30:00Z] FIX PERF-003: ai/mod.rs added AIProvider::UnifiedIA variant; router.rs updated both UnifiedIA attribution sites + query_with_provider match arm
+[2026-03-03T19:30:00Z] DEFERRED PERF-002: stream_response is fake chunking (providers return full response then chunk it) — requires ProviderBridge streaming refactor (>50 lines, separate sprint)
+[2026-03-03T19:30:00Z] DEFERRED IPC-CANON-001: generate_response returns ChatCompletionPayload directly (not {ok,content,error}) — governance violation only, no runtime impact
+
+--- CHAT IA SURFACE MAP (Session 4) ---
+[2026-03-03T19:30:00Z] PROOF: conversation_generate command: src-tauri/src/conversation_engine/commands.rs:99 — follows {ok,content,error} via serde_json::Value
+[2026-03-03T19:30:00Z] PROOF: ChatEngine cascade: ChatEngine → ProviderBridge → AIRouter → (UnifiedIA | Gemini | Ollama) with 45s response_timeout
+[2026-03-03T19:30:00Z] PROOF: Ollama timeout: TIMEOUT_SECONDS=60 (ollama.rs:18), Gemini timeout: TIMEOUT_SECONDS=30 (gemini.rs:12)
+[2026-03-03T19:30:00Z] PROOF: Memory retention: ChatMemoryManager enforces retention_tokens=3000, context_window=2048 tokens
+[2026-03-03T19:30:00Z] PROOF: UI no-web: 1 fetch() (entry.ts:107 local asset ./main-entry.json), 0 axios, 0 WebSocket direct
