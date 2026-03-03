@@ -4,6 +4,7 @@
 /// Phase 7 OMNIS: Auto-Heal Integration
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use sysinfo::System;
 
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -42,14 +43,33 @@ impl Default for SystemHealth {
 
 #[tauri::command]
 pub async fn get_system_health() -> Result<SystemHealth, String> {
-    // Mock implementation for now - replace with actual system health check
+    let mut sys = System::new_all();
+    // Two refresh passes required for accurate CPU percentage
+    sys.refresh_all();
+    tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+    sys.refresh_all();
+
     let mut health = SystemHealth::default();
 
-    // Simulate some basic health metrics
-    health.cpu_usage = rand::random::<f64>() * 30.0; // 0-30% CPU
-    health.memory_usage = rand::random::<f64>() * 50.0; // 0-50% Memory
+    // Real CPU usage — average across all logical CPUs (0–100 %)
+    let cpus = sys.cpus();
+    health.cpu_usage = if cpus.is_empty() {
+        0.0
+    } else {
+        let total: f64 = cpus.iter().map(|c| c.cpu_usage() as f64).sum();
+        total / cpus.len() as f64
+    };
 
-    // Determine health status based on metrics
+    // Real memory usage (0–100 %)
+    let total_mem = sys.total_memory() as f64;
+    let used_mem = sys.used_memory() as f64;
+    health.memory_usage = if total_mem > 0.0 {
+        (used_mem / total_mem) * 100.0
+    } else {
+        0.0
+    };
+
+    // Determine health status based on real metrics
     health.health = if health.cpu_usage > 80.0 || health.memory_usage > 90.0 {
         "critical".to_string()
     } else if health.cpu_usage > 60.0 || health.memory_usage > 70.0 {

@@ -8,7 +8,7 @@ use serde_json::json;
 pub async fn send_message(
     message: String,
     state: State<'_, AppState>
-) -> Result<String, String> {
+) -> Result<serde_json::Value, String> {
     // Rate limiting
     state.rate_limiter
         .check("user_default") // Implementation: Extract real user ID from authenticated session
@@ -36,5 +36,5 @@ pub async fn send_message(
         ip_address: None,
     }).await;
     
-    Ok("response".to_string())
+    Ok(json!({ "ok": true, "content": "response", "error": null }))
 }
