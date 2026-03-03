@@ -21,6 +21,8 @@ import type {
 } from './types';
 import type { AutoHealStats } from './autoHealEngine';
 import type { AggregatedMetrics } from './metricsEngine';
+import { autoHealEngine } from './autoHealEngine';
+import { metricsEngine } from './metricsEngine';
 import type { MetricsData } from '@/types/cognitiveKernel';
 import { buildSystemPrompt as buildTitanePrompt } from '@/core/prompts';
 import type { Provider as PromptProvider, PromptContext } from '@/core/prompts';
@@ -45,21 +47,18 @@ import {
 const logger = createLogger('Orchestrator');
 
 type LoadedEngines = {
-  autoHeal: typeof import('./autoHealEngine').autoHealEngine;
-  metrics: typeof import('./metricsEngine').metricsEngine;
+  autoHeal: typeof autoHealEngine;
+  metrics: typeof metricsEngine;
 };
 
 let enginesPromise: Promise<LoadedEngines> | null = null;
 
 const ensureEngines = async (): Promise<LoadedEngines> => {
   if (!enginesPromise) {
-    enginesPromise = Promise.all([
-      import('./autoHealEngine'),
-      import('./metricsEngine'),
-    ]).then(([autoHealModule, metricsModule]) => ({
-      autoHeal: autoHealModule.autoHealEngine,
-      metrics: metricsModule.metricsEngine,
-    }));
+    enginesPromise = Promise.resolve({
+      autoHeal: autoHealEngine,
+      metrics: metricsEngine,
+    });
   }
 
   return enginesPromise;

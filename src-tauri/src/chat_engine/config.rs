@@ -13,6 +13,8 @@ pub struct ChatEngineConfig {
     pub memory_retention_tokens: usize,
     /// Interval used to debounce memory flush operations to disk.
     pub memory_flush_interval: Duration,
+    /// Buffer capacity for stream channels.
+    pub stream_channel_buffer: usize,
     /// Enables the text-to-speech pipeline automatically after a response.
     pub auto_tts_enabled: bool,
 }
@@ -25,6 +27,7 @@ impl Default for ChatEngineConfig {
             memory_context_tokens: 2_048,
             memory_retention_tokens: 3_000,
             memory_flush_interval: Duration::from_millis(350),
+            stream_channel_buffer: 32,
             auto_tts_enabled: true,
         }
     }
@@ -42,6 +45,7 @@ mod tests {
         assert_eq!(config.memory_context_tokens, 2_048);
         assert_eq!(config.memory_retention_tokens, 3_000);
         assert_eq!(config.memory_flush_interval, Duration::from_millis(350));
+        assert_eq!(config.stream_channel_buffer, 32);
         assert!(config.auto_tts_enabled);
     }
 
@@ -70,6 +74,7 @@ mod tests {
             memory_context_tokens: 4096,
             memory_retention_tokens: 6000,
             memory_flush_interval: Duration::from_millis(500),
+            stream_channel_buffer: 64,
             auto_tts_enabled: false,
         };
 
@@ -107,6 +112,7 @@ mod tests {
             memory_context_tokens: 1,
             memory_retention_tokens: 1,
             memory_flush_interval: Duration::from_millis(1),
+            stream_channel_buffer: 1,
             auto_tts_enabled: false,
         };
 
@@ -122,6 +128,7 @@ mod tests {
             memory_context_tokens: 100_000,
             memory_retention_tokens: 200_000,
             memory_flush_interval: Duration::from_secs(10),
+            stream_channel_buffer: 1024,
             auto_tts_enabled: true,
         };
 

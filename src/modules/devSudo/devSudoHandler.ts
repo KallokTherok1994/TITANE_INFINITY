@@ -17,6 +17,9 @@ import { autoHealEngine } from '@/services/ai/system';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
+import { dataCollector } from '@/modules/dataCollector/DataCollectorEngine';
+import { fusionEngine } from '@/modules/fusion/FusionEngine';
+import { datasetBuilder } from '@/modules/fusion/DatasetBuilder';
 
 // YOLO OPT-5: Lazy-load handlers instead of static imports
 import { getHandlerForAction, getActionDomain } from './devSudoLazyLoader';
@@ -3553,8 +3556,6 @@ Chat suit l'utilisateur:
  */
 async function handleDatasetCollect(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-
     const report = await dataCollector.runCollectionPipeline();
 
     if (report.success) {
@@ -3613,7 +3614,6 @@ Erreurs: ${report.errors.join(', ')}`,
  */
 async function handleDatasetClean(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
     const statsBefore = dataCollector.getStats();
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
@@ -3654,7 +3654,6 @@ Supprimées: ${removed} entrées
  */
 async function handleDatasetGenerate(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
     const stats = dataCollector.getStats();
 
     return {
@@ -3851,8 +3850,6 @@ Cette commande permettra d'importer des données externes au dataset.
  */
 async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
-
     // Utiliser pipeline complet
     const report = await dataCollector.runCollectionPipeline();
     const interactionCount = report.byCategory['interaction'] || 0;
@@ -4326,8 +4323,6 @@ ${logResult.output || '(aucun log)'}
  */
 async function handleFusionCollect(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-
     const report = await fusionEngine.runFusionPipeline();
 
     return {
@@ -4418,9 +4413,6 @@ async function handleFusionSync(): Promise<DevSudoResult> {
  */
 async function handleFusionBuildDataset(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
-
     const fusedDataset = fusionEngine.getFusedDataset();
 
     if (fusedDataset.length === 0) {
@@ -4473,8 +4465,6 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
  */
 async function handleFusionCleanDataset(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-
     fusionEngine.clearFusedDataset();
 
     return {
@@ -4538,8 +4528,6 @@ async function handleFusionExport(
   params: Record<string, unknown>
 ): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-
     const filename = params.file ? String(params.file) : 'titane-fusion-dataset.jsonl';
     const jsonl = fusionEngine.exportToJSONL();
 
@@ -4642,9 +4630,6 @@ async function handleFusionMerge(
  */
 async function handleFusionPackageTraining(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
-
     const fusedDataset = fusionEngine.getFusedDataset();
 
     if (fusedDataset.length === 0) {
@@ -4742,8 +4727,6 @@ chmod +x train_titane_local.sh
  */
 async function handleFusionStats(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-
     const stats = fusionEngine.getStats();
 
     if (stats.totalEntries === 0) {
