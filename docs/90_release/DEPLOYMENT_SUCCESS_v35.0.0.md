@@ -264,7 +264,7 @@ dfd86226 v35.0.0 Phase 1: Critical path optimization
 
 ### Validation
 
-- [scripts/validate-v35.0.0.sh](./scripts/validate-v35.0.0.sh) — Validation script
+- [scripts/validate-v35.0.0.sh](../../scripts/validate-v35.0.0.sh) — Validation script
 
 ### GitHub
 
