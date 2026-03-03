@@ -376,12 +376,12 @@ Score Sécurité:   100/100 🎯
 ## 🔗 FICHIERS À MODIFIER
 
 ### Priorité 1 (CRITIQUE)
-- [src-tauri/src/commands/copilot_commands.rs](src-tauri/src/commands/copilot_commands.rs#L108)
-- [src-tauri/src/commands/copilot_commands.rs](src-tauri/src/commands/copilot_commands.rs#L315)
+- [src-tauri/src/commands/copilot_commands.rs](../../src-tauri/src/commands/copilot_commands.rs#L108)
+- [src-tauri/src/commands/copilot_commands.rs](../../src-tauri/src/commands/copilot_commands.rs#L315)
 
 ### Priorité 2 (Configuration)
-- [src-tauri/src/lib.rs](src-tauri/src/lib.rs) — Ajouter `#![warn(clippy::unwrap_used)]`
-- [.github/workflows/ci.yml](.github/workflows/ci.yml) — Intégrer vérification clippy
+- [src-tauri/src/lib.rs](../../src-tauri/src/lib.rs) — Ajouter `#![warn(clippy::unwrap_used)]`
+- [.github/workflows/ci.yml](../../.github/workflows/ci.yml) — Intégrer vérification clippy
 
 ---
 

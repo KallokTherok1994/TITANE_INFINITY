@@ -33,7 +33,7 @@
 
 ### Optimization 1: String Allocation (Streaming)
 
-**File:** [src-tauri/src/chat_engine/streaming.rs](src-tauri/src/chat_engine/streaming.rs)
+**File:** [src-tauri/src/chat_engine/streaming.rs](../../src-tauri/src/chat_engine/streaming.rs)
 
 **Change:** Cache conversation_id & message_id before loop → eliminate N allocations
 
@@ -61,7 +61,7 @@ chunks.push(StreamChunk {
 
 ### Optimization 2: TTS Memory Pre-allocation
 
-**File:** [src-tauri/src/tts/mod.rs](src-tauri/src/tts/mod.rs)
+**File:** [src-tauri/src/tts/mod.rs](../../src-tauri/src/tts/mod.rs)
 
 **Change:** Pre-allocate String capacity → reduce reallocations in loop
 
@@ -85,7 +85,7 @@ chunk.push_str(word);
 
 ### Optimization 3: Regex Caching
 
-**File:** [src-tauri/src/omega/guardrails.rs](src-tauri/src/omega/guardrails.rs)
+**File:** [src-tauri/src/omega/guardrails.rs](../../src-tauri/src/omega/guardrails.rs)
 
 **Change:** Cache email regex with Lazy static → compile once, use forever
 
