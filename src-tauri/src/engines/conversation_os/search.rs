@@ -75,7 +75,11 @@ impl SearchEngine {
     /// 
     /// # Examples
     /// ```
+    /// use titane_infinity::engines::conversation_os::search::{NormalizationOptions, RawSearchResult, SearchEngine};
+    ///
     /// let engine = SearchEngine::new();
+    /// let mut options = NormalizationOptions::default();
+    /// options.min_snippet_length = 1;
     /// let raw = vec![RawSearchResult {
     ///     title: Some("Rust Lang".to_string()),
     ///     url: Some("https://rust-lang.org".to_string()),
@@ -83,7 +87,7 @@ impl SearchEngine {
     ///     snippet: None,
     ///     source: "brave_search".to_string(),
     /// }];
-    /// let citations = engine.normalize(raw, NormalizationOptions::default());
+    /// let citations = engine.normalize(raw, options);
     /// assert_eq!(citations.len(), 1);
     /// ```
     pub fn normalize(

@@ -91,16 +91,15 @@ impl ChatMemoryManager {
         content: String,
     ) -> Result<(), ChatEngineError> {
         let mut cache = self.cached.write().await;
-        let conversation = if let Some(conv) = cache.get_mut(conversation_id) {
-            conv
-        } else {
-            drop(cache); // release lock before loading
+        if !cache.contains_key(conversation_id) {
+            drop(cache);
             self.load_into_cache(conversation_id).await?;
-            let mut cache = self.cached.write().await;
-            cache
-                .get_mut(conversation_id)
-                .expect("conversation cached after load")
-        };
+            cache = self.cached.write().await;
+        }
+
+        let conversation = cache
+            .get_mut(conversation_id)
+            .ok_or_else(|| ChatEngineError::MemoryFailure("Conversation not found".to_string()))?;
 
         let tokens = estimate_tokens(content.as_str());
         conversation.add_entry(role, content, tokens);
