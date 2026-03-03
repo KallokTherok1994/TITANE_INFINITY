@@ -23,9 +23,6 @@ on:
           - 'cosmic'
           - 'multiversal'
           - 'infinite_creation'
-  schedule:
-    # Architect new realities every 30 minutes
-    - cron: '*/30 * * * *'
 
 permissions:
   contents: write

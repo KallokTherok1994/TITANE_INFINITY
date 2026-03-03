@@ -19,9 +19,6 @@ on:
         required: false
         default: '∞'
         type: string
-  schedule:
-    # Omniscience expansion every hour
-    - cron: '0 * * * *'
 
 permissions:
   contents: write

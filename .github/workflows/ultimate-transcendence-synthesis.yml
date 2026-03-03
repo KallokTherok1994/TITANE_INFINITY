@@ -23,9 +23,6 @@ on:
           - 'multiversal_synthesis'
           - 'infinite_convergence'
           - 'omniversal_totality'
-  schedule:
-    # Synthesize ultimate transcendence every 45 minutes
-    - cron: '*/45 * * * *'
 
 permissions:
   contents: write

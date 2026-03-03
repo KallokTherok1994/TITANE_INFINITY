@@ -23,9 +23,6 @@ on:
           - 'cosmic_web'
           - 'multiversal_ensemble'
           - 'infinite_harmonies'
-  schedule:
-    # Orchestrate multiversal symphonies every 35 minutes
-    - cron: '*/35 * * * *'
 
 permissions:
   contents: write
