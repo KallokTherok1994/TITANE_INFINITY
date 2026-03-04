@@ -8,6 +8,9 @@
  */
 
 import { AutoRcaEngine, type AutoRcaCategory } from "./autoRcaEngine";
+import { singularityEngine } from "@/core/engines/SINGULARITY_ENGINE";
+
+type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
