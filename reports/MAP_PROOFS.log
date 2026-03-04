@@ -130,3 +130,18 @@
 [2026-03-03T19:30:00Z] PROOF: Ollama timeout: TIMEOUT_SECONDS=60 (ollama.rs:18), Gemini timeout: TIMEOUT_SECONDS=30 (gemini.rs:12)
 [2026-03-03T19:30:00Z] PROOF: Memory retention: ChatMemoryManager enforces retention_tokens=3000, context_window=2048 tokens
 [2026-03-03T19:30:00Z] PROOF: UI no-web: 1 fetch() (entry.ts:107 local asset ./main-entry.json), 0 axios, 0 WebSocket direct
+
+--- AUDIT360 SESSION 2026-03-04 ---
+[2026-03-04T13:28:22Z] SESSION: AUDIT360_20260304_132822 — Audit 360 + Proof Pack Bootstrap
+[2026-03-04T13:28:22Z] PROOF: Versions synchronisées v27.2.0 — package.json, Cargo.toml, tauri.conf.json, deployment/latest/MANIFEST.json
+[2026-03-04T13:28:22Z] PROOF: G_MAP_INDEX_PRESENT — docs/MAP_INDEX.md présent
+[2026-03-04T13:28:22Z] PROOF: G_MAP_ARCHITECTURE_PRESENT — docs/MAP_ARCHITECTURE_4RING.md présent (4 rings QUALIFIED)
+[2026-03-04T13:28:22Z] PROOF: G_MAP_SURFACES_PRESENT — docs/MAP_SURFACES_NETWORK.md présent (One Door QUALIFIED)
+[2026-03-04T13:28:22Z] PROOF: G_MAP_IPC_COMMANDS_PRESENT — docs/MAP_IPC_COMMANDS.md présent (IPC1-IPC3 QUALIFIED)
+[2026-03-04T13:28:22Z] PROOF: G_MAP_TESTS_GATES_PRESENT — docs/MAP_TESTS_GATES.md présent (9 gates STABLE)
+[2026-03-04T13:28:22Z] PROOF: G_MERMAID_PRESENT — docs/MAP_MERMAID_OVERVIEW.md présent (4 diagrammes valides)
+[2026-03-04T13:28:22Z] PROOF: G_MAP_PROOF_LOG_PRESENT — reports/MAP_PROOFS.log présent
+[2026-03-04T13:28:22Z] PROOF: G_MAP_NO_UNKNOWN_CRITICAL — aucun statut UNKNOWN sur entrées critiques
+[2026-03-04T13:28:22Z] PROOF: G_MAP_ANTI_DRIFT_RULE_PRESENT — procédure anti-drift dans docs/MAP_INDEX.md
+[2026-03-04T13:28:22Z] PROOF: Proof pack créé — proof_packs/AUDIT360_20260304_132822/ (10 fichiers)
+[2026-03-04T13:28:22Z] VERDICT: SEALED — 11/11 gates PASS, 0 bloquants, 5 findings différés documentés
