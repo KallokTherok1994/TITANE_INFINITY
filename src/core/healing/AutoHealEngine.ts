@@ -16,8 +16,11 @@
  * @created 2025-11-27
  */
 
-import { secureInvoke } from '@/lib/security';
-import { runSelfHealing, type SelfHealingRunResult } from '@/services/selfHealing/selfHealingIOAdapter';
+import { secureInvoke } from "@/lib/security";
+import {
+  runSelfHealing,
+  type SelfHealingRunResult,
+} from "@/services/selfHealing/selfHealingIOAdapter";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -32,16 +35,16 @@ export interface BrokenModule {
 }
 
 export type ModuleType =
-  | 'cognitive'
-  | 'adaptive'
-  | 'narrative'
-  | 'avatar'
-  | 'tts'
-  | 'lipsync'
-  | 'memory'
-  | 'appearance'
-  | 'network'
-  | 'pipeline';
+  | "cognitive"
+  | "adaptive"
+  | "narrative"
+  | "avatar"
+  | "tts"
+  | "lipsync"
+  | "memory"
+  | "appearance"
+  | "network"
+  | "pipeline";
 
 export interface HealResult {
   module_name: string;
@@ -97,15 +100,17 @@ export class AutoHealEngine {
    * Détecte les modules cassés
    */
   public async detectBrokenModules(): Promise<BrokenModule[]> {
-    console.log('[AutoHeal] 🔍 Detecting broken modules...');
+    console.log("[AutoHeal] 🔍 Detecting broken modules...");
 
     const broken: BrokenModule[] = [];
 
     try {
-      const modules = await secureInvoke<BrokenModule[]>('autoheal_detect_broken');
+      const modules = await secureInvoke<BrokenModule[]>(
+        "autoheal_detect_broken",
+      );
       broken.push(...modules);
     } catch (error) {
-      console.warn('[AutoHeal] Detection failed:', error);
+      console.warn("[AutoHeal] Detection failed:", error);
     }
 
     // Mettre à jour la map
@@ -125,7 +130,7 @@ export class AutoHealEngine {
     const results: HealResult[] = [];
 
     if (this.brokenModules.size > 0) {
-      await this.runSelfHealingCycle('autoheal.detected.modules');
+      await this.runSelfHealingCycle("autoheal.detected.modules");
     }
 
     for (const [name, module] of this.brokenModules) {
@@ -147,15 +152,15 @@ export class AutoHealEngine {
    * Lance un cycle de self-healing via TITANE Local
    */
   public async runSelfHealingCycle(
-    symptoms: string
+    symptoms: string,
   ): Promise<SelfHealingRunResult | null> {
     try {
-      console.log('[AutoHeal] 🤖 Running TITANE Local self-healing...');
+      console.log("[AutoHeal] 🤖 Running TITANE Local self-healing...");
       const result = await runSelfHealing(symptoms);
       this.lastSelfHealingResult = result;
       return result;
     } catch (error) {
-      console.error('[AutoHeal] Self-healing cycle failed:', error);
+      console.error("[AutoHeal] Self-healing cycle failed:", error);
       return null;
     }
   }
@@ -178,32 +183,32 @@ export class AutoHealEngine {
 
     try {
       switch (module.type) {
-        case 'cognitive':
+        case "cognitive":
           await this.healCognitiveModule(actionsTaken);
           break;
-        case 'adaptive':
+        case "adaptive":
           await this.healAdaptiveModule(actionsTaken);
           break;
-        case 'narrative':
+        case "narrative":
           await this.healNarrativeModule(actionsTaken);
           break;
-        case 'avatar':
+        case "avatar":
           await this.healAvatarModule(actionsTaken);
           break;
-        case 'tts':
+        case "tts":
           await this.healTTSModule(actionsTaken);
           break;
-        case 'lipsync':
+        case "lipsync":
           await this.healLipSyncModule(actionsTaken);
           break;
-        case 'memory':
+        case "memory":
           await this.healMemoryModule(actionsTaken);
           break;
-        case 'pipeline':
+        case "pipeline":
           await this.healPipeline(actionsTaken);
           break;
         default:
-          actionsTaken.push('No heal strategy available');
+          actionsTaken.push("No heal strategy available");
       }
 
       return {
@@ -228,80 +233,80 @@ export class AutoHealEngine {
   // ═══════════════════════════════════════════════════════════════════════════
 
   private async healCognitiveModule(actions: string[]): Promise<void> {
-    actions.push('Resetting cognitive state');
-    await secureInvoke('autoheal_reset_cognitive');
+    actions.push("Resetting cognitive state");
+    await secureInvoke("autoheal_reset_cognitive");
 
-    actions.push('Reinitializing cognitive engine');
-    await secureInvoke('autoheal_init_cognitive');
+    actions.push("Reinitializing cognitive engine");
+    await secureInvoke("autoheal_init_cognitive");
   }
 
   private async healAdaptiveModule(actions: string[]): Promise<void> {
-    actions.push('Resetting adaptive parameters');
-    await secureInvoke('autoheal_reset_adaptive');
+    actions.push("Resetting adaptive parameters");
+    await secureInvoke("autoheal_reset_adaptive");
   }
 
   private async healNarrativeModule(actions: string[]): Promise<void> {
-    actions.push('Clearing narrative buffer');
-    await secureInvoke('autoheal_clear_narrative');
+    actions.push("Clearing narrative buffer");
+    await secureInvoke("autoheal_clear_narrative");
 
-    actions.push('Reinitializing narrative engine');
-    await secureInvoke('autoheal_init_narrative');
+    actions.push("Reinitializing narrative engine");
+    await secureInvoke("autoheal_init_narrative");
   }
 
   private async healAvatarModule(actions: string[]): Promise<void> {
-    actions.push('Stopping avatar animations');
-    await secureInvoke('autoheal_stop_avatar');
+    actions.push("Stopping avatar animations");
+    await secureInvoke("autoheal_stop_avatar");
 
-    actions.push('Reloading avatar model');
-    await secureInvoke('autoheal_reload_avatar');
+    actions.push("Reloading avatar model");
+    await secureInvoke("autoheal_reload_avatar");
 
-    actions.push('Restarting avatar engine');
-    await secureInvoke('autoheal_start_avatar');
+    actions.push("Restarting avatar engine");
+    await secureInvoke("autoheal_start_avatar");
   }
 
   private async healTTSModule(actions: string[]): Promise<void> {
-    actions.push('Clearing TTS queue');
-    await secureInvoke('autoheal_clear_tts_queue');
+    actions.push("Clearing TTS queue");
+    await secureInvoke("autoheal_clear_tts_queue");
 
-    actions.push('Reinitializing TTS engine');
-    await secureInvoke('autoheal_init_tts');
+    actions.push("Reinitializing TTS engine");
+    await secureInvoke("autoheal_init_tts");
   }
 
   private async healLipSyncModule(actions: string[]): Promise<void> {
-    actions.push('Resynchronizing lip-sync');
-    await secureInvoke('autoheal_resync_lipsync');
+    actions.push("Resynchronizing lip-sync");
+    await secureInvoke("autoheal_resync_lipsync");
   }
 
   private async healMemoryModule(actions: string[]): Promise<void> {
-    actions.push('Rebuilding memory index');
-    await secureInvoke('autoheal_rebuild_memory_index');
+    actions.push("Rebuilding memory index");
+    await secureInvoke("autoheal_rebuild_memory_index");
 
-    actions.push('Validating memory integrity');
-    await secureInvoke('autoheal_validate_memory');
+    actions.push("Validating memory integrity");
+    await secureInvoke("autoheal_validate_memory");
   }
 
   private async healPipeline(actions: string[]): Promise<void> {
-    actions.push('Stopping pipeline');
-    await secureInvoke('autoheal_stop_pipeline');
+    actions.push("Stopping pipeline");
+    await secureInvoke("autoheal_stop_pipeline");
 
-    actions.push('Clearing pipeline buffers');
-    await secureInvoke('autoheal_clear_pipeline');
+    actions.push("Clearing pipeline buffers");
+    await secureInvoke("autoheal_clear_pipeline");
 
-    actions.push('Restarting pipeline');
-    await secureInvoke('autoheal_start_pipeline');
+    actions.push("Restarting pipeline");
+    await secureInvoke("autoheal_start_pipeline");
   }
 
   /**
    * Resynchronise l'état global
    */
   public async resyncState(): Promise<void> {
-    console.log('[AutoHeal] 🔄 Resynchronizing state...');
+    console.log("[AutoHeal] 🔄 Resynchronizing state...");
 
     try {
-      await secureInvoke('autoheal_resync_state');
-      console.log('[AutoHeal] ✅ State resynchronized');
+      await secureInvoke("autoheal_resync_state");
+      console.log("[AutoHeal] ✅ State resynchronized");
     } catch (error) {
-      console.error('[AutoHeal] State resync failed:', error);
+      console.error("[AutoHeal] State resync failed:", error);
       throw error;
     }
   }
