@@ -5,8 +5,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { runSelfHealing } from '@/engines/selfHealing';
-import type { SelfHealingRunResult } from '@/engines/selfHealing';
+import { runSelfHealing } from "./selfHealingIOAdapter";
+import type { SelfHealingRunResult } from "./selfHealingIOAdapter";
 
 export type {
   SelfHealingRunResult,
@@ -14,17 +14,17 @@ export type {
   PlaybookPlan,
   ApplyPatchResult,
   EscalationResult,
-} from '@/engines/selfHealing';
+} from "@/engines/selfHealing";
 
 /**
  * Déclenche un cycle complet d'auto-guérison.
  * @param symptoms Description synthétique des symptômes détectés.
  */
 export async function triggerSelfHealing(
-  symptoms: string
+  symptoms: string,
 ): Promise<SelfHealingRunResult> {
   if (!symptoms || symptoms.trim().length === 0) {
-    throw new Error('Symptômes requis pour lancer le self-healing.');
+    throw new Error("Symptômes requis pour lancer le self-healing.");
   }
 
   return runSelfHealing(symptoms.trim());

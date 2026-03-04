@@ -12,11 +12,11 @@
  * Voir: docs/ARCHITECTURE_RINGS.md
  */
 
-import { describe, it, expect } from 'vitest';
-import fs from 'fs';
-import path from 'path';
+import { describe, it, expect } from "vitest";
+import fs from "fs";
+import path from "path";
 
-const ENGINES_DIR = path.resolve(__dirname, '../../engines');
+const ENGINES_DIR = path.resolve(__dirname, "../../engines");
 
 /**
  * Patterns INTERDITS dans les engines
@@ -37,43 +37,45 @@ const ALLOWED_IMPORTS = [
   /from ['"]zod['"]/, // Validation (pure)
 ];
 
-describe('🏛️ Architecture: Engine Isolation', () => {
-  it('should find engines directory', () => {
+describe("🏛️ Architecture: Engine Isolation", () => {
+  it("should find engines directory", () => {
     expect(fs.existsSync(ENGINES_DIR)).toBe(true);
   });
 
-  it('engines MUST NOT import from Services layer', async () => {
+  it("engines MUST NOT import from Services layer", async () => {
     const engineFiles = findTypeScriptFiles(ENGINES_DIR);
     expect(engineFiles.length).toBeGreaterThan(0); // Au moins 1 engine
 
-    const violations: Array<{ file: string; line: number; import: string }> = [];
+    const violations: Array<{ file: string; line: number; import: string }> =
+      [];
 
     // Exceptions légitimes (dynamic imports pour ponts I/O isolés)
     // NOTE: Ces fichiers utilisent l'injection de dépendances - l'Engine est pur,
     // seule l'instanciation du singleton utilise les services
     const ALLOWED_EXCEPTIONS = [
-      'cognitiveLayoutIntegrations.ts', // Pont Helios/Nexus (migration vers CognitiveLayoutService en cours)
-      'tauriBridge.ts', // Pont MemoryOS (architecture nécessite dynamic import)
-      'AgendaEngine.ts', // v24.3.0: Singleton avec injection de callbacks (Engine pur, instanciation utilise service)
+      "tauriBridge.ts", // Pont MemoryOS (architecture nécessite dynamic import)
+      "AgendaEngine.ts", // v24.3.0: Singleton avec injection de callbacks (Engine pur, instanciation utilise service)
     ];
 
     for (const file of engineFiles) {
-      const content = fs.readFileSync(file, 'utf-8');
-      const lines = content.split('\n');
+      const content = fs.readFileSync(file, "utf-8");
+      const lines = content.split("\n");
 
       // Skip si exception autorisée
-      const isException = ALLOWED_EXCEPTIONS.some(exception => file.includes(exception));
+      const isException = ALLOWED_EXCEPTIONS.some((exception) =>
+        file.includes(exception),
+      );
       if (isException) {
         continue;
       }
 
       lines.forEach((line, index) => {
         // Ignorer commentaires
-        if (line.trim().startsWith('//') || line.trim().startsWith('*')) {
+        if (line.trim().startsWith("//") || line.trim().startsWith("*")) {
           return;
         }
 
-        FORBIDDEN_IMPORTS.forEach(pattern => {
+        FORBIDDEN_IMPORTS.forEach((pattern) => {
           if (pattern.test(line)) {
             violations.push({
               file: path.relative(process.cwd(), file),
@@ -87,20 +89,20 @@ describe('🏛️ Architecture: Engine Isolation', () => {
 
     if (violations.length > 0) {
       const report = violations
-        .map(v => `  - ${v.file}:${v.line}\n    ${v.import}`)
-        .join('\n');
+        .map((v) => `  - ${v.file}:${v.line}\n    ${v.import}`)
+        .join("\n");
 
       throw new Error(
         `⚠️ ARCHITECTURE VIOLATION: Engines importing forbidden modules\n\n${report}\n\n` +
           `Fix: Move I/O logic to Services layer (@/services), extract shared types to Core (@/types).\n` +
-          `See: docs/ARCHITECTURE_RINGS.md`
+          `See: docs/ARCHITECTURE_RINGS.md`,
       );
     }
 
     expect(violations).toHaveLength(0);
   });
 
-  it('engines MUST be pure functions (no side-effects)', () => {
+  it("engines MUST be pure functions (no side-effects)", () => {
     const engineFiles = findTypeScriptFiles(ENGINES_DIR);
     const sideEffectPatterns = [
       /localStorage\./,
@@ -117,30 +119,30 @@ describe('🏛️ Architecture: Engine Isolation', () => {
     // vers Services (Ring 3) n'est pas terminée.
     const ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS = [
       `${path.sep}uiux${path.sep}`, // UI/UX adapters/detectors (runtime)
-      `${path.sep}cognitive${path.sep}cognitiveLayoutIntegrations.ts`, // Pont Helios/Nexus
       `${path.sep}cognitive${path.sep}cognitiveLayoutEngine.ts`, // Singleton runtime (legacy)
       `${path.sep}continuum${path.sep}metaContinuumEngine.ts`, // NowPulse runtime
       `${path.sep}embodiment${path.sep}embodiedPresenceEngine.ts`, // Presence runtime
       `${path.sep}psyche${path.sep}archetypeResonanceEngine.ts`, // Archetype runtime
     ];
 
-    const violations: Array<{ file: string; line: number; pattern: string }> = [];
+    const violations: Array<{ file: string; line: number; pattern: string }> =
+      [];
 
     for (const file of engineFiles) {
-      const isAllowedSideEffect = ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS.some(fragment =>
-        file.includes(fragment)
+      const isAllowedSideEffect = ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS.some(
+        (fragment) => file.includes(fragment),
       );
       if (isAllowedSideEffect) {
         continue;
       }
 
-      const content = fs.readFileSync(file, 'utf-8');
-      const lines = content.split('\n');
+      const content = fs.readFileSync(file, "utf-8");
+      const lines = content.split("\n");
 
       lines.forEach((line, index) => {
-        if (line.trim().startsWith('//')) return;
+        if (line.trim().startsWith("//")) return;
 
-        sideEffectPatterns.forEach(pattern => {
+        sideEffectPatterns.forEach((pattern) => {
           if (pattern.test(line)) {
             violations.push({
               file: path.relative(process.cwd(), file),
@@ -154,12 +156,12 @@ describe('🏛️ Architecture: Engine Isolation', () => {
 
     if (violations.length > 0) {
       const report = violations
-        .map(v => `  - ${v.file}:${v.line} (pattern: ${v.pattern})`)
-        .join('\n');
+        .map((v) => `  - ${v.file}:${v.line} (pattern: ${v.pattern})`)
+        .join("\n");
 
       console.warn(
         `⚠️ WARNING: Potential side-effects detected in engines:\n${report}\n\n` +
-          `Engines should be pure. If I/O is needed, move to Services layer.`
+          `Engines should be pure. If I/O is needed, move to Services layer.`,
       );
     }
 

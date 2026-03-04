@@ -40,6 +40,7 @@
     "verify:online-first": "bash scripts/verify/enforce-online-first.sh",
     "verify:invariants-governed": "bash scripts/verify/enforce-invariants-governed.sh",
     "verify:network-guard": "bash scripts/guards/guard-network-policy.sh",
+    "verify:command-whitelist-sync": "bash scripts/verify/verify-command-whitelist-sync.sh",
     "verify:seal-post-certification": "bash scripts/verify/verify-seal-post-certification.sh",
     "verify:instructions": "bash scripts/verify/verify-copilot-instructions.sh",
     "render:docs:mermaid": "bash scripts/verify/mermaid-render-sync.sh",

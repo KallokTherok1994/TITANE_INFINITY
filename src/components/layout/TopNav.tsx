@@ -165,6 +165,7 @@ export const TopNav: React.FC<TopNavProps> = ({
 
   return (
     <nav
+      data-testid="nav-top-main"
       className={cn(
         'app-topnav fixed top-0 inset-x-0 z-10000 flex items-center justify-between h-16 px-6 bg-titanium-bg-elevated border-b border-titanium-border-default pointer-events-auto',
         'shadow-sm backdrop-blur-md',
@@ -221,6 +222,7 @@ export const TopNav: React.FC<TopNavProps> = ({
           <div className="relative" ref={moreMenuRef}>
             <button
               type="button"
+              data-testid="btn-nav-more"
               onClick={() => setIsMoreMenuOpen(!isMoreMenuOpen)}
               aria-label="Plus d'options"
               aria-expanded={isMoreMenuOpen}
@@ -259,6 +261,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                       <button
                         key={item.id}
                         type="button"
+                        data-testid={`nav-${item.id}`}
                         role="menuitem"
                         onClick={() => onNavigate(item.route)}
                         onKeyDown={e => handleKeyDown(e, item.route)}
