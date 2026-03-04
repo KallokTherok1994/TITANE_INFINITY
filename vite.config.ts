@@ -15,7 +15,7 @@ import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
 import { visualizer } from 'rollup-plugin-visualizer';
-import type { Plugin, ResolvedConfig } from 'vite';
+import type { Plugin, PluginOption, ResolvedConfig } from 'vite';
 
 const ROOT_DIR = fileURLToPath(new URL('.', import.meta.url));
 
@@ -83,7 +83,8 @@ function mainEntryMapPlugin(): Plugin {
           .filter(name => /^main-[A-Za-z0-9_-]+\.js$/.test(name))
           .sort();
 
-        const selectedMain = mainCandidates.at(-1) ?? null;
+        const selectedMain =
+          mainCandidates.length > 0 ? mainCandidates[mainCandidates.length - 1] : null;
         const targetFile = resolve(outDirAbs, 'main-entry.json');
 
         await writeFile(
@@ -177,7 +178,7 @@ export default defineConfig(({ command }) => ({
         plugins: [],
       },
     }),
-    tsconfigPaths(), // Auto-sync avec tsconfig.json paths
+    tsconfigPaths() as unknown as PluginOption, // Auto-sync avec tsconfig.json paths
     // 🚀 v34.0.0: Bundle analyzer for dependency visualization
     visualizer({
       open: false,
@@ -208,7 +209,7 @@ export default defineConfig(({ command }) => ({
     workboxPlugin(),
     // Entry map for resilient runtime bootstrap
     mainEntryMapPlugin(),
-  ],
+  ] as PluginOption[],
 
   // ═══════════════════════════════════════════════════════════════════════════
   // 🚀 OPTIMISATIONS CPU & WATCHERS

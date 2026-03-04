@@ -1,5 +1,5 @@
 ---
-applyTo: 'docs/**, reports/**'
+applyTo: 'docs/**, reports/**, proof_packs/**'
 ---
 
 # Docs and Registry Instructions

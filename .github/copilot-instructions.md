@@ -7,8 +7,26 @@ Principe directeur : gouvernance avant vitesse
 
 Compatibility markers (required by verifier):
 
-- Local-first
+- Local-first (marqueur de compatibilité; doctrine active = Online-first gouverné avec fallback local obligatoire)
 - diagnose -> plan -> apply -> verify -> report
+
+## 0) Format de sortie opératoire (chat Copilot)
+
+**Action**
+
+- Commencer chaque session par un en-tête explicite contenant `EXEC_MRISK`, `PLAN <= 7`, `PROOFS attendus`, `ROLLBACK`.
+
+**Interdiction**
+
+- Produire une réponse finale sans statut opérationnel initial.
+
+**Preuve attendue**
+
+- Bloc de tête présent dans le premier message de session.
+
+**Porte de contrôle**
+
+- En-tête absent = FAIL.
 
 ## 1) Préambule
 
@@ -177,6 +195,7 @@ Cette constitution est normative, exécutable et prioritaire.
 - Capturer PASS/FAIL/BLOCKED.
 - Vérifier explicitement la CI sur `MAIN` et sur la branche de travail avant verdict.
 - Si `action_required` est signalé par GitHub, classifier `BLOCKED_APPROVAL` sans tentative de contournement.
+- Exécuter `G_AH_RULE_CAPTURED_FOR_EACH_FIX` après chaque fix applicatif, test, CI, config ou tooling.
 
 **Interdiction**
 
@@ -189,6 +208,32 @@ Cette constitution est normative, exécutable et prioritaire.
 **Porte de contrôle**
 
 - Gate obligatoire non traitée = FAIL.
+
+### FIX → CAPTURE → PREVENT FOREVER (AutoFix/AutoHeal)
+
+**Action**
+
+- À chaque fix (bug, flaky test, CI break, config drift, tooling issue), ajouter une entrée append-only dans `scripts/autoheal/autoheal_rules.jsonl`.
+- L’entrée doit inclure au minimum : `id`, `date`, `scope`, `symptom`, `root_cause`, `fix`, `prevention_test`, `commands`, `files_changed`, `rollback`.
+- Exécuter `bash scripts/autoheal/detect_recurrence.sh` après le fix et avant toute déclaration DONE/SEALED.
+- Exécuter `bash scripts/verify_instructions.sh` pour valider les garde-fous documentaires applicables.
+
+**Règle constitutionnelle (obligatoire)**
+
+- "À chaque fix réalisé par Copilot, tu dois ajouter une entrée append-only dans `scripts/autoheal/autoheal_rules.jsonl` (problème -> cause racine -> correction -> test/scan anti-récurrence -> rollback). Aucun fix n’est terminé tant que l’entrée AutoHeal + garde-fou n’existe pas."
+
+**Interdiction**
+
+- Déclarer DONE/SEALED sans capture AutoFix/AutoHeal pour le fix courant.
+- Modifier/supprimer une entrée existante du registre AutoFix/AutoHeal (append-only strict).
+
+**Preuve attendue**
+
+- Diff de `scripts/autoheal/autoheal_rules.jsonl` + sorties `detect_recurrence`/`verify_instructions` + statut de gate.
+
+**Porte de contrôle**
+
+- Capture manquante ou validator en échec = FAIL (stop-the-line immédiat).
 
 ## 9) Politique PROD stricte
 
@@ -491,6 +536,7 @@ Cette constitution est normative, exécutable et prioritaire.
 - Contradiction interne non résolue.
 - Ambiguïté verdict non résolue.
 - Dérive multi-agent/multi-runner.
+- Fix sans capture `scripts/autoheal/autoheal_rules.jsonl` ou gate `G_AH_RULE_CAPTURED_FOR_EACH_FIX` non PASS.
 
 **Action**
 
@@ -519,5 +565,10 @@ Cette constitution est normative, exécutable et prioritaire.
 - `G_MAP_PROOF_LOG_PRESENT`
 - `G_MAP_NO_UNKNOWN_CRITICAL`
 - `G_MAP_ANTI_DRIFT_RULE_PRESENT`
+
+## Gates AutoFix/AutoHeal obligatoires
+
+- `G_AH_RULE_CAPTURED_FOR_EACH_FIX`
+- `G_AH_RECURRENCE_GUARD_PASS`
 
 Règle de scellement : une gate mapping non PASS interdit `SCELLÉ`.

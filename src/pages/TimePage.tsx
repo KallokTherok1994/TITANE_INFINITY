@@ -167,7 +167,10 @@ export const TimePage: React.FC = () => {
   };
 
   return (
-    <div className="time-page p-6 space-y-6 bg-gray-900 text-gray-100">
+    <div
+      className="time-page p-6 space-y-6 bg-gray-900 text-gray-100"
+      data-testid="page-time"
+    >
       {/* Header */}
       <div className="header mb-8">
         <div className="flex items-center gap-3 mb-2">
@@ -193,6 +196,7 @@ export const TimePage: React.FC = () => {
         ].map(tab => (
           <button
             key={tab.id}
+            data-testid={`tab-time-${tab.id}`}
             onClick={() => setActiveTab(tab.id as TabId)}
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
@@ -411,12 +415,14 @@ const AgendaSection: React.FC = () => {
       {/* View Selector */}
       <div className="flex gap-2">
         <button
+          data-testid="btn-time-view-week"
           onClick={() => setView('week')}
           className={`px-4 py-2 rounded ${view === 'week' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
         >
           📅 Semaine
         </button>
         <button
+          data-testid="btn-time-view-month"
           onClick={() => setView('month')}
           className={`px-4 py-2 rounded ${view === 'month' ? 'bg-blue-600 text-white' : 'bg-gray-800 text-gray-400'}`}
         >
@@ -459,14 +465,21 @@ const AgendaSection: React.FC = () => {
         <div className="space-y-3">
           <input
             type="text"
+            data-testid="input-time-planning-prompt"
             placeholder="Ex: Planifie 3 blocs de 90min pour TITANE v25 cette semaine"
             className="w-full p-3 bg-gray-900 rounded border border-gray-700 text-gray-100 placeholder-gray-500"
           />
           <div className="flex gap-2">
-            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+            <button
+              data-testid="btn-time-generate-plan"
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
+            >
               ✨ Générer avec IA
             </button>
-            <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors">
+            <button
+              data-testid="btn-time-add-manual"
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors"
+            >
               ➕ Ajouter manuellement
             </button>
           </div>
@@ -540,13 +553,22 @@ const TimelineSection: React.FC = () => {
 
       {/* Timeline Controls */}
       <div className="flex gap-4 items-center">
-        <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors">
+        <button
+          data-testid="btn-time-nav-past"
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors"
+        >
           ⏪ Passé
         </button>
-        <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors">
+        <button
+          data-testid="btn-time-nav-present"
+          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
+        >
           📍 Présent
         </button>
-        <button className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors">
+        <button
+          data-testid="btn-time-nav-future"
+          className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded text-white transition-colors"
+        >
           ⏩ Futur
         </button>
         <div className="flex-1" />
@@ -711,12 +733,32 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
     }
   };
 
+  const handleCreateSnapshot = async () => {
+    try {
+      await tauriClient.titanForceSnapshot({ reason: 'manual_time_page' });
+      await loadSnapshots();
+      success('Snapshot créé avec succès.');
+    } catch (error) {
+      errorToast(`Erreur création snapshot: ${error}`);
+    }
+  };
+
   return (
     <div className="snapshots-section space-y-6">
       <TSectionHeader
         title="⏮️ Snapshots Système"
         subtitle="Voyage temporel TITANE∞ - Restauration & navigation"
       />
+
+      <div className="flex justify-end">
+        <button
+          data-testid="btn-time-create-snapshot"
+          onClick={handleCreateSnapshot}
+          className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 rounded text-white transition-colors"
+        >
+          ➕ Créer Snapshot
+        </button>
+      </div>
 
       {/* Stats */}
       {stats && (
@@ -759,6 +801,7 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
             {snapshots.map(snapshot => (
               <div
                 key={snapshot.id}
+                data-testid={`btn-snapshot-select-${snapshot.id}`}
                 onClick={() => setSelectedSnapshot(snapshot)}
                 className={`p-4 rounded-lg border cursor-pointer transition-all ${
                   selectedSnapshot?.id === snapshot.id
@@ -849,15 +892,20 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 
           <div className="flex gap-3">
             <button
+              data-testid="btn-time-restore-snapshot"
               onClick={() => handleRestore(selectedSnapshot)}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white transition-colors"
             >
               🔄 Restaurer
             </button>
-            <button className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors">
+            <button
+              data-testid="btn-time-compare-snapshot"
+              className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white transition-colors"
+            >
               🔍 Comparer
             </button>
             <button
+              data-testid="btn-time-delete-snapshot"
               onClick={() => handleDelete(selectedSnapshot)}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded text-white transition-colors"
             >

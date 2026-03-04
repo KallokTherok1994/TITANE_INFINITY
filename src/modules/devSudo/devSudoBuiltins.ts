@@ -6,12 +6,12 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { tauriClient } from '@/lib/tauriClient';
-import { runSelfHealing } from '@/engines/selfHealing/selfHealingEngine';
-import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
-import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
-import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
-import type { DevSudoResult } from './types';
+import { tauriClient } from "@/lib/tauriClient";
+import { runSelfHealing } from "@/services/selfHealing/selfHealingIOAdapter";
+import { autoSaveConversationEngine } from "@/modules/talkToTitane/AutoSaveConversationEngine";
+import { talkToTitaneEngine } from "@/modules/talkToTitane/TalkToTitaneEngine";
+import type { LiveDebuggerMode } from "@/modules/liveDebugger/LiveDebuggerEngine";
+import type { DevSudoResult } from "./types";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // STUBS - Modules supprimés en PHASE 1 (OPTION B)
@@ -33,9 +33,9 @@ const dataCollector = {
       analysis: 0,
       memory: 0,
       error: 0,
-      'super-prompt': 0,
+      "super-prompt": 0,
       interaction: 0,
-      'auto-heal': 0,
+      "auto-heal": 0,
       introspection: 0,
       patch: 0,
       style: 0,
@@ -53,31 +53,39 @@ const vocalDevConsole = {
   start: () => {},
   stop: () => {},
   speak: (_text: string) => {},
-  listen: () => Promise.resolve(''),
-  getMode: () => 'default' as const,
+  listen: () => Promise.resolve(""),
+  getMode: () => "default" as const,
   setMode: (_mode: string) => {},
   getState: () => ({
     isActive: false,
     isListening: false,
-    lastCommand: '',
+    lastCommand: "",
     consoleVisible: false,
-    consoleLogs: [] as Array<{ timestamp: number; message: string; level: string }>,
-    config: { mode: 'default' as const, verbose: false },
+    consoleLogs: [] as Array<{
+      timestamp: number;
+      message: string;
+      level: string;
+    }>,
+    config: { mode: "default" as const, verbose: false },
   }),
   toggleVisibility: () => {},
   getHealthScore: () => 100,
   configure: (_config: Record<string, unknown>) => {},
-  getConfig: () => ({ mode: 'default' as const, verbose: false, ttsEnabled: false }),
+  getConfig: () => ({
+    mode: "default" as const,
+    verbose: false,
+    ttsEnabled: false,
+  }),
 };
 
 // Stub pour liveDebugger
-type LiveDebuggerModeStub = 'off' | 'minimal' | 'verbose' | 'full';
+type LiveDebuggerModeStub = "off" | "minimal" | "verbose" | "full";
 const liveDebugger = {
   isActive: () => false,
   start: () => {},
   stop: () => {},
   setMode: (_mode: LiveDebuggerModeStub) => {},
-  getMode: (): LiveDebuggerModeStub => 'off',
+  getMode: (): LiveDebuggerModeStub => "off",
   log: (_message: string, _level?: string) => {},
   getMetrics: () => ({ logs: 0, errors: 0, warnings: 0 }),
   getRecentDiagnostics: (_count?: number) =>
@@ -96,7 +104,7 @@ const liveDebugger = {
   reset: () => {},
   configure: (_config: Record<string, unknown>) => {},
   getConfig: () => ({
-    mode: 'off' as LiveDebuggerModeStub,
+    mode: "off" as LiveDebuggerModeStub,
     verbose: false,
     shadowModeThreshold: 0.8,
   }),
@@ -125,10 +133,10 @@ corepack pnpm add -D @types/react-window
 ✅ **Action recommandée**: Relancer TypeScript server (Ctrl+Shift+P → "TypeScript: Restart TS Server")`,
     actions: [
       {
-        type: 'deps-install',
-        description: 'Vérification dépendances (pnpm)',
-        result: 'success',
-        details: 'framer-motion et lucide-react déjà installés',
+        type: "deps-install",
+        description: "Vérification dépendances (pnpm)",
+        result: "success",
+        details: "framer-motion et lucide-react déjà installés",
       },
     ],
   };
@@ -153,10 +161,10 @@ async function handleRestartTauri(): Promise<DevSudoResult> {
 Ou utiliser la tâche VS Code: "🚀 Tauri Dev"`,
     actions: [
       {
-        type: 'check-processes',
-        description: 'Vérification processus actifs',
-        result: 'success',
-        details: 'Vite server actif, Tauri nécessite redémarrage',
+        type: "check-processes",
+        description: "Vérification processus actifs",
+        result: "success",
+        details: "Vite server actif, Tauri nécessite redémarrage",
       },
     ],
   };
@@ -191,10 +199,10 @@ async function handleTestBubble(): Promise<DevSudoResult> {
 ✅ **Implémentation**: v∞.20.0 (commit 25109d6)`,
     actions: [
       {
-        type: 'check-implementation',
-        description: 'Vérification code Chat Bubble',
-        result: 'success',
-        details: 'Chat panel intégré dans App.tsx ligne 561',
+        type: "check-implementation",
+        description: "Vérification code Chat Bubble",
+        result: "success",
+        details: "Chat panel intégré dans App.tsx ligne 561",
       },
     ],
   };
@@ -236,10 +244,10 @@ Créer \`useSingularityUnifiedStore.ts\` avec état par défaut:
 📖 **Rapport complet**: \`SUPER_PROMPT_3_ANALYSE_COMPLETE_v∞.md\``,
     actions: [
       {
-        type: 'diagnosis',
-        description: 'Analyse erreurs OPUS',
-        result: 'success',
-        details: '7 modules affectés par undefined.history',
+        type: "diagnosis",
+        description: "Analyse erreurs OPUS",
+        result: "success",
+        details: "7 modules affectés par undefined.history",
       },
     ],
   };
@@ -255,8 +263,8 @@ async function handleStatusFull(): Promise<DevSudoResult> {
     };
 
     const modulesStatus = diagnostic.modules
-      .map(m => `  ${m.status === 'healthy' ? '✅' : '⚠️'} ${m.name}`)
-      .join('\n');
+      .map((m) => `  ${m.status === "healthy" ? "✅" : "⚠️"} ${m.name}`)
+      .join("\n");
 
     return {
       handled: true,
@@ -269,7 +277,7 @@ async function handleStatusFull(): Promise<DevSudoResult> {
 ${modulesStatus}
 
 🔍 **Erreurs détectées**: ${diagnostic.errors.length}
-${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`).join('\n') : '  ✅ Aucune erreur'}
+${diagnostic.errors.length > 0 ? "\n" + diagnostic.errors.map((e) => `  ❌ ${e}`).join("\n") : "  ✅ Aucune erreur"}
 
 🚀 **Application**:
   ✅ Vite dev server: Port 5173 actif
@@ -283,9 +291,9 @@ ${diagnostic.errors.length > 0 ? '\n' + diagnostic.errors.map(e => `  ❌ ${e}`)
 📈 **Score DIAMANT**: 97.0%`,
       actions: [
         {
-          type: 'system-diagnostic',
-          description: 'Diagnostic backend complet',
-          result: 'success',
+          type: "system-diagnostic",
+          description: "Diagnostic backend complet",
+          result: "success",
           details: `${diagnostic.modules.length} modules analysés`,
         },
       ],
@@ -363,7 +371,10 @@ async function handleDiagnostic(): Promise<DevSudoResult> {
 
 async function handleIntrospect(): Promise<DevSudoResult> {
   try {
-    const state = (await tauriClient.titanStateGet()) as Record<string, unknown>;
+    const state = (await tauriClient.titanStateGet()) as Record<
+      string,
+      unknown
+    >;
 
     return {
       handled: true,
@@ -377,8 +388,8 @@ async function handleIntrospect(): Promise<DevSudoResult> {
 
 🎯 **Modules présents**:
 ${Object.keys(state)
-  .map(key => `  - ${key}`)
-  .join('\n')}
+  .map((key) => `  - ${key}`)
+  .join("\n")}
 
 💡 **Analyse détaillée**:
 Utiliser DevTools console:
@@ -389,9 +400,9 @@ await window.__TAURI__.core.tauriClient.titanStateGet()
 📖 **Documentation**: \`OPUS_MPE_2_3_REPORT.md\``,
       actions: [
         {
-          type: 'state-introspection',
-          description: 'Récupération SingularityState',
-          result: 'success',
+          type: "state-introspection",
+          description: "Récupération SingularityState",
+          result: "success",
           details: `${Object.keys(state).length} modules actifs`,
         },
       ],
@@ -483,10 +494,10 @@ cd /home/titane/Documents/TITANE_INFINITY
 - Utilisez \`ia set-default titane-local\` pour activer`,
     actions: [
       {
-        type: 'ia-installation',
-        description: 'Installation TITANE∞ Local Model',
-        result: 'pending',
-        details: 'Exécutez ./install_titane_local.sh',
+        type: "ia-installation",
+        description: "Installation TITANE∞ Local Model",
+        result: "pending",
+        details: "Exécutez ./install_titane_local.sh",
       },
     ],
   };
@@ -532,7 +543,7 @@ curl http://localhost:11434/api/tags
     const testResponse = (await tauriClient.aiGenerateLocal({
       request: {
         prompt: 'Dis "Hello from TITANE∞ Local!" en une phrase.',
-        model: 'titane-local',
+        model: "titane-local",
         stream: false,
         temperature: 0.7,
         max_tokens: 50,
@@ -550,7 +561,7 @@ curl http://localhost:11434/api/tags
 > ${testResponse.content}
 
 ✅ **Status**: Ollama fonctionne correctement
-📊 **Modèles installés**: ${status.models.join(', ')}
+📊 **Modèles installés**: ${status.models.join(", ")}
 
 💡 **Prochaines étapes**:
 - Utilisez le modèle dans le Chat IA
@@ -558,9 +569,9 @@ curl http://localhost:11434/api/tags
 - Définissez comme modèle par défaut avec \`ia set-default titane-local\``,
       actions: [
         {
-          type: 'ia-test',
-          description: 'Test du modèle local',
-          result: 'success',
+          type: "ia-test",
+          description: "Test du modèle local",
+          result: "success",
           details: `Réponse reçue du modèle ${testResponse.model}`,
         },
       ],
@@ -628,9 +639,9 @@ async function handleIASetDefault(modelName: string): Promise<DevSudoResult> {
 🎯 **Testez-le**: \`ia test\``,
       actions: [
         {
-          type: 'ia-set-default',
+          type: "ia-set-default",
           description: `Modèle par défaut: ${modelName}`,
-          result: 'success',
+          result: "success",
           details: result,
         },
       ],
@@ -690,10 +701,10 @@ async function handleIAEnableDevMode(): Promise<DevSudoResult> {
 💡 **DEV MODE actif dans le Chat IA**. Testez avec un prompt de dev!`,
     actions: [
       {
-        type: 'ia-devmode',
-        description: 'Activation DEV MODE',
-        result: 'success',
-        details: 'Mode développeur optimisé activé avec titane-local',
+        type: "ia-devmode",
+        description: "Activation DEV MODE",
+        result: "success",
+        details: "Mode développeur optimisé activé avec titane-local",
       },
     ],
   };
@@ -727,7 +738,7 @@ ollama create titane-local -f Modelfile
       };
     }
 
-    const modelsList = models.map((m, i) => `${i + 1}. 🤖 ${m}`).join('\n');
+    const modelsList = models.map((m, i) => `${i + 1}. 🤖 ${m}`).join("\n");
 
     return {
       handled: true,
@@ -745,9 +756,9 @@ ia set-default <model>
 ✅ **Ollama fonctionne** → /api/ollama`,
       actions: [
         {
-          type: 'ia-scan',
+          type: "ia-scan",
           description: `Scan des modèles locaux`,
-          result: 'success',
+          result: "success",
           details: `${models.length} modèles trouvés`,
         },
       ],
@@ -808,8 +819,8 @@ curl http://localhost:11434/api/tags
 
     const modelsList =
       status.models.length > 0
-        ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join('\n')
-        : '  ⚠️ Aucun modèle installé';
+        ? status.models.map((m, i) => `  ${i + 1}. 🤖 ${m}`).join("\n")
+        : "  ⚠️ Aucun modèle installé";
 
     return {
       handled: true,
@@ -819,7 +830,7 @@ curl http://localhost:11434/api/tags
 🟢 **ONLINE** → /api/ollama
 
 📊 **Configuration**:
-- **Version**: ${status.version || 'unknown'}
+- **Version**: ${status.version || "unknown"}
 - **Modèles**: ${status.models.length}
 - **Endpoint**: /api/ollama/generate
 - **Status**: OPERATIONAL
@@ -844,9 +855,9 @@ ${modelsList}
 - \`ia benchmark\` → Benchmark A/B`,
       actions: [
         {
-          type: 'ia-status',
-          description: 'Vérification statut Ollama',
-          result: 'success',
+          type: "ia-status",
+          description: "Vérification statut Ollama",
+          result: "success",
           details: `${status.models.length} modèles disponibles`,
         },
       ],
@@ -880,8 +891,8 @@ ${modelsList}
 async function handleIATrain(): Promise<DevSudoResult> {
   try {
     const result = (await tauriClient.executeShellCommand({
-      command: './train_titane_local.sh',
-      workingDir: '.',
+      command: "./train_titane_local.sh",
+      workingDir: ".",
     })) as string;
 
     return {
@@ -911,10 +922,10 @@ ${result}
 - \`ia benchmark\` → Comparer performances`,
       actions: [
         {
-          type: 'ia-train',
-          description: 'Entraînement titane-local',
-          result: 'success',
-          details: 'Script train_titane_local.sh exécuté',
+          type: "ia-train",
+          description: "Entraînement titane-local",
+          result: "success",
+          details: "Script train_titane_local.sh exécuté",
         },
       ],
     };
@@ -943,8 +954,8 @@ ${result}
 async function handleIADataset(): Promise<DevSudoResult> {
   try {
     const result = (await tauriClient.executeShellCommand({
-      command: 'python3 build_titane_dataset.py',
-      workingDir: '.',
+      command: "python3 build_titane_dataset.py",
+      workingDir: ".",
     })) as string;
 
     return {
@@ -973,10 +984,10 @@ ${result}
 - \`ia train\` → Entraîner avec ce dataset`,
       actions: [
         {
-          type: 'ia-dataset',
-          description: 'Génération dataset training',
-          result: 'success',
-          details: 'Dataset.jsonl créé',
+          type: "ia-dataset",
+          description: "Génération dataset training",
+          result: "success",
+          details: "Dataset.jsonl créé",
         },
       ],
     };
@@ -1006,13 +1017,13 @@ async function handleIATestModel(): Promise<DevSudoResult> {
     // Test 1: Identité
     const test1 = (await tauriClient.executeShellCommand({
       command: 'ollama run titane-local "Qui es-tu en une ligne ?"',
-      workingDir: '.',
+      workingDir: ".",
     })) as string;
 
     // Test 2: Singularity
     const test2 = (await tauriClient.executeShellCommand({
       command: 'ollama run titane-local "Liste les 6 couches Singularity"',
-      workingDir: '.',
+      workingDir: ".",
     })) as string;
 
     return {
@@ -1036,10 +1047,10 @@ ${test2.slice(0, 300)}
 - \`ia benchmark\` → Comparer avec modèle base`,
       actions: [
         {
-          type: 'ia-test-model',
-          description: 'Tests modèle entraîné',
-          result: 'success',
-          details: '2 tests exécutés',
+          type: "ia-test-model",
+          description: "Tests modèle entraîné",
+          result: "success",
+          details: "2 tests exécutés",
         },
       ],
     };
@@ -1066,13 +1077,13 @@ ${test2.slice(0, 300)}
  */
 async function handleIABenchmark(): Promise<DevSudoResult> {
   try {
-    const testPrompt = 'Explique le Singularity Engine en 2 lignes';
+    const testPrompt = "Explique le Singularity Engine en 2 lignes";
 
     // Test base model
     const startBase = Date.now();
     await tauriClient.executeShellCommand({
       command: `ollama run llama3.1 "${testPrompt}"`,
-      workingDir: '.',
+      workingDir: ".",
     });
     const timeBase = Date.now() - startBase;
 
@@ -1080,14 +1091,14 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
     const startTrained = Date.now();
     await tauriClient.executeShellCommand({
       command: `ollama run titane-local "${testPrompt}"`,
-      workingDir: '.',
+      workingDir: ".",
     });
     const timeTrained = Date.now() - startTrained;
 
     const improvement =
       timeBase > timeTrained
         ? `${Math.round(((timeBase - timeTrained) / timeBase) * 100)}% plus rapide`
-        : 'Temps similaires';
+        : "Temps similaires";
 
     return {
       handled: true,
@@ -1107,8 +1118,8 @@ async function handleIABenchmark(): Promise<DevSudoResult> {
 💡 **Analyse**:
 ${
   timeTrained < timeBase
-    ? '✅ Le modèle entraîné est plus rapide'
-    : '⚠️  Temps similaires (normal pour Modelfile tuning)'
+    ? "✅ Le modèle entraîné est plus rapide"
+    : "⚠️  Temps similaires (normal pour Modelfile tuning)"
 }
 
 🎯 **Prochaine étape**:
@@ -1116,9 +1127,9 @@ ${
 - Re-entraîner pour améliorer: \`ia train\``,
       actions: [
         {
-          type: 'ia-benchmark',
-          description: 'Benchmark A/B complété',
-          result: 'success',
+          type: "ia-benchmark",
+          description: "Benchmark A/B complété",
+          result: "success",
           details: `Base: ${timeBase}ms, Trained: ${timeTrained}ms`,
         },
       ],
@@ -1149,8 +1160,8 @@ ${
  */
 function handleChatOpen(): DevSudoResult {
   // Dispatch custom event to control global chat bubble
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-open'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-open"));
   }
 
   return {
@@ -1167,10 +1178,10 @@ function handleChatOpen(): DevSudoResult {
 - \`chat.setModel <model>\` → Changer modèle`,
     actions: [
       {
-        type: 'chat-open',
-        description: 'Ouverture AI Bubble',
-        result: 'success',
-        details: 'Chat bulle activé',
+        type: "chat-open",
+        description: "Ouverture AI Bubble",
+        result: "success",
+        details: "Chat bulle activé",
       },
     ],
   };
@@ -1181,8 +1192,8 @@ function handleChatOpen(): DevSudoResult {
  * Ferme la bulle IA chat
  */
 function handleChatClose(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-close'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-close"));
   }
 
   return {
@@ -1193,9 +1204,9 @@ function handleChatClose(): DevSudoResult {
 Chat IA fermé. Réouvrir avec \`chat.open\``,
     actions: [
       {
-        type: 'chat-close',
-        description: 'Fermeture AI Bubble',
-        result: 'success',
+        type: "chat-close",
+        description: "Fermeture AI Bubble",
+        result: "success",
       },
     ],
   };
@@ -1206,8 +1217,8 @@ Chat IA fermé. Réouvrir avec \`chat.open\``,
  * Minimise la bulle IA
  */
 function handleChatMinimize(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-minimize'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-minimize"));
   }
 
   return {
@@ -1218,9 +1229,9 @@ function handleChatMinimize(): DevSudoResult {
 Chat réduit en bulle flottante.`,
     actions: [
       {
-        type: 'chat-minimize',
-        description: 'Minimisation AI Bubble',
-        result: 'success',
+        type: "chat-minimize",
+        description: "Minimisation AI Bubble",
+        result: "success",
       },
     ],
   };
@@ -1231,8 +1242,8 @@ Chat réduit en bulle flottante.`,
  * Maximise la bulle IA
  */
 function handleChatMaximize(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-maximize'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-maximize"));
   }
 
   return {
@@ -1243,9 +1254,9 @@ function handleChatMaximize(): DevSudoResult {
 Chat ouvert en panneau complet.`,
     actions: [
       {
-        type: 'chat-maximize',
-        description: 'Maximisation AI Bubble',
-        result: 'success',
+        type: "chat-maximize",
+        description: "Maximisation AI Bubble",
+        result: "success",
       },
     ],
   };
@@ -1256,8 +1267,8 @@ Chat ouvert en panneau complet.`,
  * Efface l'historique du chat
  */
 function handleChatClear(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-clear'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-clear"));
   }
 
   return {
@@ -1268,9 +1279,9 @@ function handleChatClear(): DevSudoResult {
 Conversation réinitialisée.`,
     actions: [
       {
-        type: 'chat-clear',
-        description: 'Effacement historique chat',
-        result: 'success',
+        type: "chat-clear",
+        description: "Effacement historique chat",
+        result: "success",
       },
     ],
   };
@@ -1296,9 +1307,11 @@ Modèles disponibles:
     };
   }
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== "undefined") {
     window.dispatchEvent(
-      new CustomEvent('titane-chat-set-model', { detail: { model: modelName } })
+      new CustomEvent("titane-chat-set-model", {
+        detail: { model: modelName },
+      }),
     );
   }
 
@@ -1310,9 +1323,9 @@ Modèles disponibles:
 Nouveau modèle: **${modelName}**`,
     actions: [
       {
-        type: 'chat-set-model',
+        type: "chat-set-model",
         description: `Modèle changé: ${modelName}`,
-        result: 'success',
+        result: "success",
       },
     ],
   };
@@ -1323,8 +1336,8 @@ Nouveau modèle: **${modelName}**`,
  * Active le mode développeur du chat
  */
 function handleChatDev(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-dev-mode'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-dev-mode"));
   }
 
   return {
@@ -1339,9 +1352,9 @@ Mode développeur activé:
 - Self-healing automatique`,
     actions: [
       {
-        type: 'chat-dev',
-        description: 'Dev mode activé',
-        result: 'success',
+        type: "chat-dev",
+        description: "Dev mode activé",
+        result: "success",
       },
     ],
   };
@@ -1371,9 +1384,9 @@ function handleChatInspect(): DevSudoResult {
 ✅ UI/UX Engine`,
     actions: [
       {
-        type: 'chat-inspect',
-        description: 'Inspection AI Bubble',
-        result: 'success',
+        type: "chat-inspect",
+        description: "Inspection AI Bubble",
+        result: "success",
       },
     ],
   };
@@ -1384,8 +1397,8 @@ function handleChatInspect(): DevSudoResult {
  * Active l'auto-healing du chat
  */
 function handleChatAutoHeal(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-autoheal'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-autoheal"));
   }
 
   return {
@@ -1400,9 +1413,9 @@ Self-healing activé:
 - UI re-render protection`,
     actions: [
       {
-        type: 'chat-autoheal',
-        description: 'Auto-healing activé',
-        result: 'success',
+        type: "chat-autoheal",
+        description: "Auto-healing activé",
+        result: "success",
       },
     ],
   };
@@ -1413,8 +1426,8 @@ Self-healing activé:
  * Toggle fullscreen du chat
  */
 function handleChatFullscreen(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-fullscreen'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-fullscreen"));
   }
 
   return {
@@ -1425,9 +1438,9 @@ function handleChatFullscreen(): DevSudoResult {
 Mode plein écran toggleé.`,
     actions: [
       {
-        type: 'chat-fullscreen',
-        description: 'Fullscreen toggleé',
-        result: 'success',
+        type: "chat-fullscreen",
+        description: "Fullscreen toggleé",
+        result: "success",
       },
     ],
   };
@@ -1438,8 +1451,8 @@ Mode plein écran toggleé.`,
  * Active le mode suivi du chat
  */
 function handleChatFollow(): DevSudoResult {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('titane-chat-follow'));
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new CustomEvent("titane-chat-follow"));
   }
 
   return {
@@ -1453,9 +1466,9 @@ Chat suit l'utilisateur:
 - Navigation persistante`,
     actions: [
       {
-        type: 'chat-follow',
-        description: 'Follow mode activé',
-        result: 'success',
+        type: "chat-follow",
+        description: "Follow mode activé",
+        result: "success",
       },
     ],
   };
@@ -1471,7 +1484,8 @@ Chat suit l'utilisateur:
  */
 async function handleDatasetCollect(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    const { dataCollector } =
+      await import("@/modules/dataCollector/DataCollectorEngine");
 
     const report = await dataCollector.runCollectionPipeline();
 
@@ -1483,24 +1497,24 @@ async function handleDatasetCollect(): Promise<DevSudoResult> {
 
 📊 **Résultats**:
   - Total collecté: ${report.entriesCollected} entrées
-  - Super-prompts: ${report.byCategory['super-prompt']}
-  - Interactions IA: ${report.byCategory['interaction']}
-  - Auto-heal: ${report.byCategory['auto-heal']}
-  - Introspections: ${report.byCategory['introspection']}
-  - Patches: ${report.byCategory['patch']}
-  - Style: ${report.byCategory['style']}
+  - Super-prompts: ${report.byCategory["super-prompt"]}
+  - Interactions IA: ${report.byCategory["interaction"]}
+  - Auto-heal: ${report.byCategory["auto-heal"]}
+  - Introspections: ${report.byCategory["introspection"]}
+  - Patches: ${report.byCategory["patch"]}
+  - Style: ${report.byCategory["style"]}
 
 ⏱️ **Performance**:
   - Durée: ${(report.duration / 1000).toFixed(2)}s
 
-${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}\n${report.warnings.map(w => `  - ${w}`).join('\n')}` : ''}
+${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}\n${report.warnings.map((w) => `  - ${w}`).join("\n")}` : ""}
 
 💾 Dataset sauvegardé automatiquement.`,
         actions: [
           {
-            type: 'dataset-collect',
+            type: "dataset-collect",
             description: `Collecté ${report.entriesCollected} entrées`,
-            result: 'success',
+            result: "success",
           },
         ],
       };
@@ -1511,8 +1525,8 @@ ${report.warnings.length > 0 ? `\n⚠️ **Warnings**: ${report.warnings.length}
         success: false,
         response: `❌ **DATA COLLECTOR — Erreur**
 
-Erreurs: ${report.errors.join(', ')}`,
-        error: firstError ?? 'Unknown error',
+Erreurs: ${report.errors.join(", ")}`,
+        error: firstError ?? "Unknown error",
       };
     }
   } catch (error) {
@@ -1531,7 +1545,8 @@ Erreurs: ${report.errors.join(', ')}`,
  */
 async function handleDatasetClean(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    const { dataCollector } =
+      await import("@/modules/dataCollector/DataCollectorEngine");
     const statsBefore = dataCollector.getStats();
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
@@ -1550,9 +1565,9 @@ Supprimées: ${removed} entrées
 ✅ Dataset nettoyé.`,
       actions: [
         {
-          type: 'dataset-clean',
+          type: "dataset-clean",
           description: `Nettoyé ${removed} entrées`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -1572,7 +1587,8 @@ Supprimées: ${removed} entrées
  */
 async function handleDatasetGenerate(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    const { dataCollector } =
+      await import("@/modules/dataCollector/DataCollectorEngine");
     const stats = dataCollector.getStats();
 
     return {
@@ -1598,9 +1614,9 @@ copy(dataCollector.exportToJSONL())
 \`\`\``,
       actions: [
         {
-          type: 'dataset-generate',
+          type: "dataset-generate",
           description: `Généré ${stats.totalEntries} entrées JSONL`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -1664,9 +1680,9 @@ chmod +x train.sh
 🚀 **Fine-tuning Ollama** démarrera automatiquement.`,
       actions: [
         {
-          type: 'dataset-training-pack',
-          description: 'Pack complet généré (3 fichiers)',
-          result: 'success',
+          type: "dataset-training-pack",
+          description: "Pack complet généré (3 fichiers)",
+          result: "success",
         },
       ],
     };
@@ -1691,7 +1707,10 @@ function handleDatasetCompress(): DevSudoResult {
     dataCollector.cleanDataset();
     const statsAfter = dataCollector.getStats();
 
-    const reduction = ((1 - statsAfter.sizeInMB / statsBefore.sizeInMB) * 100).toFixed(1);
+    const reduction = (
+      (1 - statsAfter.sizeInMB / statsBefore.sizeInMB) *
+      100
+    ).toFixed(1);
 
     return {
       handled: true,
@@ -1705,9 +1724,9 @@ Réduction: ${reduction}%
 ✅ Dataset compressé.`,
       actions: [
         {
-          type: 'dataset-compress',
+          type: "dataset-compress",
           description: `Compressé ${reduction}%`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -1734,7 +1753,7 @@ function handleDatasetAdd(filepath: string): DevSudoResult {
 
 **Usage**: \`dataset.add <filepath>\`
 **Exemple**: \`dataset.add ./custom-data.jsonl\``,
-      error: 'Missing filepath parameter',
+      error: "Missing filepath parameter",
     };
   }
 
@@ -1755,9 +1774,9 @@ Cette commande permettra d'importer des données externes au dataset.
 \`\`\``,
     actions: [
       {
-        type: 'dataset-add',
+        type: "dataset-add",
         description: `Ajout ${filepath} (en dev)`,
-        result: 'pending',
+        result: "pending",
       },
     ],
   };
@@ -1769,11 +1788,12 @@ Cette commande permettra d'importer des données externes au dataset.
  */
 async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
   try {
-    const { dataCollector } = await import('@/modules/dataCollector/DataCollectorEngine');
+    const { dataCollector } =
+      await import("@/modules/dataCollector/DataCollectorEngine");
 
     // Utiliser pipeline complet
     const report = await dataCollector.runCollectionPipeline();
-    const interactionCount = report.byCategory['interaction'] || 0;
+    const interactionCount = report.byCategory["interaction"] || 0;
     const stats = dataCollector.getStats();
 
     return {
@@ -1788,9 +1808,9 @@ async function handleDatasetSyncMemory(): Promise<DevSudoResult> {
 💾 Dataset mis à jour automatiquement.`,
       actions: [
         {
-          type: 'dataset-sync-memory',
+          type: "dataset-sync-memory",
           description: `Sync ${interactionCount} entrées`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -1820,12 +1840,12 @@ function handleDatasetExport(): DevSudoResult {
 📊 **Statistiques**:
   ┌─────────────────────────────────────────────┐
   │ Total entrées:      ${String(stats.totalEntries).padStart(8)}       │
-  │ Super-prompts:      ${String(stats.byCategory['super-prompt']).padStart(8)}       │
-  │ Interactions:       ${String(stats.byCategory['interaction']).padStart(8)}       │
-  │ Auto-heal:          ${String(stats.byCategory['auto-heal']).padStart(8)}       │
-  │ Introspections:     ${String(stats.byCategory['introspection']).padStart(8)}       │
-  │ Patches:            ${String(stats.byCategory['patch']).padStart(8)}       │
-  │ Style:              ${String(stats.byCategory['style']).padStart(8)}       │
+  │ Super-prompts:      ${String(stats.byCategory["super-prompt"]).padStart(8)}       │
+  │ Interactions:       ${String(stats.byCategory["interaction"]).padStart(8)}       │
+  │ Auto-heal:          ${String(stats.byCategory["auto-heal"]).padStart(8)}       │
+  │ Introspections:     ${String(stats.byCategory["introspection"]).padStart(8)}       │
+  │ Patches:            ${String(stats.byCategory["patch"]).padStart(8)}       │
+  │ Style:              ${String(stats.byCategory["style"]).padStart(8)}       │
   ├─────────────────────────────────────────────┤
   │ Tokens estimés:     ${String(stats.totalTokens.toLocaleString()).padStart(8)}       │
   │ Taille:             ${stats.sizeInMB.toFixed(2)} MB          │
@@ -1843,9 +1863,9 @@ copy(dataCollector.exportToJSONL());
 📂 **Sauvegarder dans** \`dataset.jsonl\``,
       actions: [
         {
-          type: 'dataset-export',
+          type: "dataset-export",
           description: `Exporté ${stats.totalEntries} entrées`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -1868,7 +1888,7 @@ copy(dataCollector.exportToJSONL());
  * hybrid-open — Ouvre le Hybrid Bubble en mode console
  */
 async function handleHybridOpen(): Promise<DevSudoResult> {
-  const event = new CustomEvent('titane-hybrid-open');
+  const event = new CustomEvent("titane-hybrid-open");
   window.dispatchEvent(event);
 
   return {
@@ -1882,9 +1902,9 @@ Mode: Console
 État: Prêt pour commandes`,
     actions: [
       {
-        type: 'hybrid-open',
-        description: 'Hybrid Bubble opened',
-        result: 'success',
+        type: "hybrid-open",
+        description: "Hybrid Bubble opened",
+        result: "success",
       },
     ],
   };
@@ -1894,7 +1914,7 @@ Mode: Console
  * hybrid-close — Ferme le Hybrid Bubble
  */
 async function handleHybridClose(): Promise<DevSudoResult> {
-  const event = new CustomEvent('titane-hybrid-close');
+  const event = new CustomEvent("titane-hybrid-close");
   window.dispatchEvent(event);
 
   return {
@@ -1903,9 +1923,9 @@ async function handleHybridClose(): Promise<DevSudoResult> {
     response: `✖️ **Hybrid Bubble fermée**`,
     actions: [
       {
-        type: 'hybrid-close',
-        description: 'Hybrid Bubble closed',
-        result: 'success',
+        type: "hybrid-close",
+        description: "Hybrid Bubble closed",
+        result: "success",
       },
     ],
   };
@@ -1915,7 +1935,7 @@ async function handleHybridClose(): Promise<DevSudoResult> {
  * hybrid-console — Switch vers mode console
  */
 async function handleHybridConsole(): Promise<DevSudoResult> {
-  const event = new CustomEvent('titane-hybrid-console');
+  const event = new CustomEvent("titane-hybrid-console");
   window.dispatchEvent(event);
 
   return {
@@ -1927,9 +1947,9 @@ Terminal dev actif.
 Prêt pour commandes techniques.`,
     actions: [
       {
-        type: 'hybrid-console',
-        description: 'Switched to console mode',
-        result: 'success',
+        type: "hybrid-console",
+        description: "Switched to console mode",
+        result: "success",
       },
     ],
   };
@@ -1939,7 +1959,7 @@ Prêt pour commandes techniques.`,
  * hybrid-bubble — Switch vers mode bubble
  */
 async function handleHybridBubble(): Promise<DevSudoResult> {
-  const event = new CustomEvent('titane-hybrid-bubble');
+  const event = new CustomEvent("titane-hybrid-bubble");
   window.dispatchEvent(event);
 
   return {
@@ -1950,9 +1970,9 @@ async function handleHybridBubble(): Promise<DevSudoResult> {
 Hybrid Bubble minimisée.`,
     actions: [
       {
-        type: 'hybrid-bubble',
-        description: 'Switched to bubble mode',
-        result: 'success',
+        type: "hybrid-bubble",
+        description: "Switched to bubble mode",
+        result: "success",
       },
     ],
   };
@@ -1961,9 +1981,11 @@ Hybrid Bubble minimisée.`,
 /**
  * hybrid-heal — Auto-détection et réparation d'erreurs
  */
-async function handleHybridHeal(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridHeal(
+  params: Record<string, unknown>,
+): Promise<DevSudoResult> {
   try {
-    const target = params.target ? String(params.target) : 'all';
+    const target = params.target ? String(params.target) : "all";
 
     // Déclencher le diagnostic
     const _diagnostics = await tauriClient.hybridAnalyzeCode({ target });
@@ -1980,9 +2002,9 @@ Analyse en cours... Recherche d'erreurs et génération de patches.
 ✅ Diagnostic lancé`,
       actions: [
         {
-          type: 'hybrid-heal',
+          type: "hybrid-heal",
           description: `Auto-heal on ${target}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2000,15 +2022,16 @@ Analyse en cours... Recherche d'erreurs et génération de patches.
  * hybrid-inspect — Inspecte un module ou fichier
  */
 async function handleHybridInspect(
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): Promise<DevSudoResult> {
   try {
-    const path = params.path ? String(params.path) : '';
+    const path = params.path ? String(params.path) : "";
     if (!path) {
       return {
         handled: true,
         success: false,
-        response: '❌ Chemin requis. Usage: `sudo hybrid-inspect path=src/file.ts`',
+        response:
+          "❌ Chemin requis. Usage: `sudo hybrid-inspect path=src/file.ts`",
       };
     }
 
@@ -2034,16 +2057,16 @@ async function handleHybridInspect(
       response: `🔍 **INSPECTION: \`${path}\`**
 
 📊 **Métadonnées**:
-  • Taille: ${data.size ? (data.size / 1024).toFixed(2) : '?'} KB
-  • Lignes: ${data.lines || '?'}
+  • Taille: ${data.size ? (data.size / 1024).toFixed(2) : "?"} KB
+  • Lignes: ${data.lines || "?"}
 
 📝 **Analyse**:
 ${data.analysis || "Pas d'analyse disponible"}`,
       actions: [
         {
-          type: 'hybrid-inspect',
+          type: "hybrid-inspect",
           description: `Inspected ${path}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2060,14 +2083,16 @@ ${data.analysis || "Pas d'analyse disponible"}`,
 /**
  * hybrid-fix — Applique un patch de réparation
  */
-async function handleHybridFix(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridFix(
+  params: Record<string, unknown>,
+): Promise<DevSudoResult> {
   try {
-    const target = params.target ? String(params.target) : '';
+    const target = params.target ? String(params.target) : "";
     if (!target) {
       return {
         handled: true,
         success: false,
-        response: '❌ Cible requise. Usage: `sudo hybrid-fix target=module`',
+        response: "❌ Cible requise. Usage: `sudo hybrid-fix target=module`",
       };
     }
 
@@ -2084,9 +2109,9 @@ Cible: \`${target}\`
 ✅ Patch prêt (vérifier console)`,
       actions: [
         {
-          type: 'hybrid-fix',
+          type: "hybrid-fix",
           description: `Fix applied to ${target}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2104,13 +2129,13 @@ Cible: \`${target}\`
  * hybrid-apply — Applique un patch manuellement
  */
 async function handleHybridApply(
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): Promise<DevSudoResult> {
   try {
-    const file = params.file ? String(params.file) : '';
+    const file = params.file ? String(params.file) : "";
     const lineStart = params.lineStart ? Number(params.lineStart) : 0;
     const lineEnd = params.lineEnd ? Number(params.lineEnd) : 0;
-    const newCode = params.newCode ? String(params.newCode) : '';
+    const newCode = params.newCode ? String(params.newCode) : "";
 
     if (!file || !lineStart || !lineEnd || !newCode) {
       return {
@@ -2134,9 +2159,9 @@ Lignes: ${lineStart}-${lineEnd}
 Patch écrit avec succès.`,
       actions: [
         {
-          type: 'hybrid-apply',
+          type: "hybrid-apply",
           description: `Patch applied to ${file}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2153,19 +2178,26 @@ Patch écrit avec succès.`,
 /**
  * hybrid-run — Exécute une commande shell
  */
-async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridRun(
+  params: Record<string, unknown>,
+): Promise<DevSudoResult> {
   try {
-    const command = params.command ? String(params.command) : '';
+    const command = params.command ? String(params.command) : "";
     if (!command) {
       return {
         handled: true,
         success: false,
-        response: '❌ Commande requise. Usage: `sudo hybrid-run command="cargo check"`',
+        response:
+          '❌ Commande requise. Usage: `sudo hybrid-run command="cargo check"`',
       };
     }
 
     const result = await tauriClient.devRunCommand({ command });
-    const cmdResult = result as { output: string; exitCode: number; error?: string };
+    const cmdResult = result as {
+      output: string;
+      exitCode: number;
+      error?: string;
+    };
 
     return {
       handled: true,
@@ -2178,13 +2210,13 @@ $ ${command}
 
 **Résultat** (exit ${cmdResult.exitCode}):
 \`\`\`
-${cmdResult.output || cmdResult.error || '(pas de sortie)'}
+${cmdResult.output || cmdResult.error || "(pas de sortie)"}
 \`\`\``,
       actions: [
         {
-          type: 'hybrid-run',
+          type: "hybrid-run",
           description: `Ran: ${command}`,
-          result: cmdResult.exitCode === 0 ? 'success' : 'error',
+          result: cmdResult.exitCode === 0 ? "success" : "error",
         },
       ],
     };
@@ -2201,7 +2233,9 @@ ${cmdResult.output || cmdResult.error || '(pas de sortie)'}
 /**
  * hybrid-logs — Récupère les logs système
  */
-async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSudoResult> {
+async function handleHybridLogs(
+  params: Record<string, unknown>,
+): Promise<DevSudoResult> {
   try {
     const filter = params.filter ? String(params.filter) : undefined;
 
@@ -2213,15 +2247,15 @@ async function handleHybridLogs(params: Record<string, unknown>): Promise<DevSud
       success: true,
       response: `📋 **LOGS SYSTÈME**
 
-${filter ? `Filtre: \`${filter}\`\n\n` : ''}
+${filter ? `Filtre: \`${filter}\`\n\n` : ""}
 \`\`\`
-${logResult.output || '(aucun log)'}
+${logResult.output || "(aucun log)"}
 \`\`\``,
       actions: [
         {
-          type: 'hybrid-logs',
-          description: `Retrieved logs${filter ? ` (filter: ${filter})` : ''}`,
-          result: 'success',
+          type: "hybrid-logs",
+          description: `Retrieved logs${filter ? ` (filter: ${filter})` : ""}`,
+          result: "success",
         },
       ],
     };
@@ -2244,7 +2278,7 @@ ${logResult.output || '(aucun log)'}
  */
 async function handleFusionCollect(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
 
     const report = await fusionEngine.runFusionPipeline();
 
@@ -2263,22 +2297,22 @@ async function handleFusionCollect(): Promise<DevSudoResult> {
 📊 **Par Clusters**:
 ${Object.entries(report.byClusters)
   .map(([cluster, count]) => `  - ${cluster}: ${count}`)
-  .join('\n')}
+  .join("\n")}
 
 📦 **Par Sources**:
 ${Object.entries(report.bySources)
   .map(([source, count]) => `  - ${source}: ${count}`)
-  .join('\n')}
+  .join("\n")}
 
-${report.warnings.length > 0 ? `⚠️ **Warnings**: ${report.warnings.join(', ')}` : ''}
-${report.errors.length > 0 ? `❌ **Errors**: ${report.errors.join(', ')}` : ''}
+${report.warnings.length > 0 ? `⚠️ **Warnings**: ${report.warnings.join(", ")}` : ""}
+${report.errors.length > 0 ? `❌ **Errors**: ${report.errors.join(", ")}` : ""}
 
 💡 **Next**: \`sudo fusion.export\` pour exporter le dataset`,
       actions: [
         {
-          type: 'fusion-collect',
+          type: "fusion-collect",
           description: `Fused ${report.entriesFused} entries`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2315,9 +2349,9 @@ async function handleFusionSync(): Promise<DevSudoResult> {
 💡 **Next**: \`sudo fusion.collect\` pour fusionner`,
       actions: [
         {
-          type: 'fusion-sync',
-          description: 'Synced all sources',
-          result: 'success',
+          type: "fusion-sync",
+          description: "Synced all sources",
+          result: "success",
         },
       ],
     };
@@ -2336,8 +2370,8 @@ async function handleFusionSync(): Promise<DevSudoResult> {
  */
 async function handleFusionBuildDataset(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
+    const { datasetBuilder } = await import("@/modules/fusion/DatasetBuilder");
 
     const fusedDataset = fusionEngine.getFusedDataset();
 
@@ -2350,7 +2384,7 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
     }
 
     const jsonl = datasetBuilder.buildDataset(fusedDataset);
-    const lines = jsonl.split('\n').length;
+    const lines = jsonl.split("\n").length;
 
     return {
       handled: true,
@@ -2370,9 +2404,9 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
 💡 **Next**: \`sudo fusion.export\` pour télécharger`,
       actions: [
         {
-          type: 'fusion-build-dataset',
+          type: "fusion-build-dataset",
           description: `Built dataset with ${lines} entries`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2391,7 +2425,7 @@ async function handleFusionBuildDataset(): Promise<DevSudoResult> {
  */
 async function handleFusionCleanDataset(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
 
     fusionEngine.clearFusedDataset();
 
@@ -2405,9 +2439,9 @@ async function handleFusionCleanDataset(): Promise<DevSudoResult> {
 💡 Pour reconstruire: \`sudo fusion.collect\``,
       actions: [
         {
-          type: 'fusion-clean-dataset',
-          description: 'Cleared fused dataset',
-          result: 'success',
+          type: "fusion-clean-dataset",
+          description: "Cleared fused dataset",
+          result: "success",
         },
       ],
     };
@@ -2441,9 +2475,9 @@ async function handleFusionCompress(): Promise<DevSudoResult> {
 💡 La compression est automatique lors de \`fusion.collect\``,
     actions: [
       {
-        type: 'fusion-compress',
-        description: 'Compression enabled',
-        result: 'success',
+        type: "fusion-compress",
+        description: "Compression enabled",
+        result: "success",
       },
     ],
   };
@@ -2453,18 +2487,20 @@ async function handleFusionCompress(): Promise<DevSudoResult> {
  * fusion-export — Exporte dataset fusionné en JSONL
  */
 async function handleFusionExport(
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
 
-    const filename = params.file ? String(params.file) : 'titane-fusion-dataset.jsonl';
+    const filename = params.file
+      ? String(params.file)
+      : "titane-fusion-dataset.jsonl";
     const jsonl = fusionEngine.exportToJSONL();
 
     // Téléchargement automatique côté frontend
-    const blob = new Blob([jsonl], { type: 'application/jsonl' });
+    const blob = new Blob([jsonl], { type: "application/jsonl" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     a.click();
@@ -2487,9 +2523,9 @@ async function handleFusionExport(
 💡 Pour training pack complet: \`sudo fusion.package-training\``,
       actions: [
         {
-          type: 'fusion-export',
+          type: "fusion-export",
           description: `Exported ${filename}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2507,14 +2543,14 @@ async function handleFusionExport(
  * fusion-merge — Fusionne dataset externe
  */
 async function handleFusionMerge(
-  params: Record<string, unknown>
+  params: Record<string, unknown>,
 ): Promise<DevSudoResult> {
   try {
     const file = params.file
       ? String(params.file)
       : params.dataset
         ? String(params.dataset)
-        : '';
+        : "";
 
     if (!file) {
       return {
@@ -2539,9 +2575,9 @@ async function handleFusionMerge(
 💡 Le dataset externe a été fusionné avec le dataset principal`,
       actions: [
         {
-          type: 'fusion-merge',
+          type: "fusion-merge",
           description: `Merged ${file}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2560,8 +2596,8 @@ async function handleFusionMerge(
  */
 async function handleFusionPackageTraining(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
-    const { datasetBuilder } = await import('@/modules/fusion/DatasetBuilder');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
+    const { datasetBuilder } = await import("@/modules/fusion/DatasetBuilder");
 
     const fusedDataset = fusionEngine.getFusedDataset();
 
@@ -2576,40 +2612,46 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     const trainingPack = datasetBuilder.buildTrainingPackage(fusedDataset);
 
     // Download dataset.jsonl
-    const datasetBlob = new Blob([trainingPack.dataset], { type: 'application/jsonl' });
+    const datasetBlob = new Blob([trainingPack.dataset], {
+      type: "application/jsonl",
+    });
     const datasetUrl = URL.createObjectURL(datasetBlob);
-    const datasetLink = document.createElement('a');
+    const datasetLink = document.createElement("a");
     datasetLink.href = datasetUrl;
-    datasetLink.download = 'dataset.jsonl';
+    datasetLink.download = "dataset.jsonl";
     datasetLink.click();
     URL.revokeObjectURL(datasetUrl);
 
     // Download Modelfile
-    const modelfileBlob = new Blob([trainingPack.modelfile], { type: 'text/plain' });
+    const modelfileBlob = new Blob([trainingPack.modelfile], {
+      type: "text/plain",
+    });
     const modelfileUrl = URL.createObjectURL(modelfileBlob);
-    const modelfileLink = document.createElement('a');
+    const modelfileLink = document.createElement("a");
     modelfileLink.href = modelfileUrl;
-    modelfileLink.download = 'Modelfile';
+    modelfileLink.download = "Modelfile";
     modelfileLink.click();
     URL.revokeObjectURL(modelfileUrl);
 
     // Download training script
     const scriptBlob = new Blob([trainingPack.trainingScript], {
-      type: 'text/x-shellscript',
+      type: "text/x-shellscript",
     });
     const scriptUrl = URL.createObjectURL(scriptBlob);
-    const scriptLink = document.createElement('a');
+    const scriptLink = document.createElement("a");
     scriptLink.href = scriptUrl;
-    scriptLink.download = 'train_titane_local.sh';
+    scriptLink.download = "train_titane_local.sh";
     scriptLink.click();
     URL.revokeObjectURL(scriptUrl);
 
     // Download metadata
-    const metadataBlob = new Blob([trainingPack.metadata], { type: 'application/json' });
+    const metadataBlob = new Blob([trainingPack.metadata], {
+      type: "application/json",
+    });
     const metadataUrl = URL.createObjectURL(metadataBlob);
-    const metadataLink = document.createElement('a');
+    const metadataLink = document.createElement("a");
     metadataLink.href = metadataUrl;
-    metadataLink.download = 'metadata.json';
+    metadataLink.download = "metadata.json";
     metadataLink.click();
     URL.revokeObjectURL(metadataUrl);
 
@@ -2639,9 +2681,9 @@ chmod +x train_titane_local.sh
 💡 Cela créera le modèle \`titane-local\` dans Ollama`,
       actions: [
         {
-          type: 'fusion-package-training',
+          type: "fusion-package-training",
           description: `Created training pack (${trainingPack.stats.totalEntries} entries)`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -2660,7 +2702,7 @@ chmod +x train_titane_local.sh
  */
 async function handleFusionStats(): Promise<DevSudoResult> {
   try {
-    const { fusionEngine } = await import('@/modules/fusion/FusionEngine');
+    const { fusionEngine } = await import("@/modules/fusion/FusionEngine");
 
     const stats = fusionEngine.getStats();
 
@@ -2691,21 +2733,21 @@ ${Object.entries(stats.byClusters)
   .sort(([, a], [, b]) => b - a)
   .slice(0, 10)
   .map(([cluster, count]) => `  - ${cluster}: ${count}`)
-  .join('\n')}
+  .join("\n")}
 
 **By Sources**:
 ${Object.entries(stats.bySources)
   .map(([source, count]) => `  - ${source}: ${count}`)
-  .join('\n')}
+  .join("\n")}
 
-**Last Fusion**: ${new Date(stats.lastFusion).toLocaleString('fr-FR')}
+**Last Fusion**: ${new Date(stats.lastFusion).toLocaleString("fr-FR")}
 
 💡 **Next**: \`sudo fusion.export\` ou \`sudo fusion.package-training\``,
       actions: [
         {
-          type: 'fusion-stats',
-          description: 'Retrieved fusion stats',
-          result: 'success',
+          type: "fusion-stats",
+          description: "Retrieved fusion stats",
+          result: "success",
         },
       ],
     };
@@ -2728,7 +2770,8 @@ ${Object.entries(stats.bySources)
  */
 async function handleVocalStart(): Promise<DevSudoResult> {
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
     await vocalDevConsole.activate();
 
@@ -2741,7 +2784,7 @@ async function handleVocalStart(): Promise<DevSudoResult> {
 
 ✅ Moteur vocal démarré avec succès
 ✅ VAD configuré (threshold: ${config.vadThreshold})
-✅ TTS ${config.ttsEnabled ? 'activé' : 'désactivé'}
+✅ TTS ${config.ttsEnabled ? "activé" : "désactivé"}
 ✅ AI Provider: ${config.aiProvider}
 
 🎙️ **Prêt à recevoir commandes vocales**
@@ -2755,9 +2798,9 @@ async function handleVocalStart(): Promise<DevSudoResult> {
 💡 **Tip**: Configurez avec \`vocal.setModel [titane-local|claude|gemini]\``,
       actions: [
         {
-          type: 'vocal-start',
-          description: 'Vocal console engine activated',
-          result: 'success',
+          type: "vocal-start",
+          description: "Vocal console engine activated",
+          result: "success",
         },
       ],
     };
@@ -2776,7 +2819,8 @@ async function handleVocalStart(): Promise<DevSudoResult> {
  */
 async function handleVocalStop(): Promise<DevSudoResult> {
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
     await vocalDevConsole.deactivate();
 
@@ -2792,9 +2836,9 @@ async function handleVocalStop(): Promise<DevSudoResult> {
 💡 **Réactivez avec**: \`sudo vocal.start\``,
       actions: [
         {
-          type: 'vocal-stop',
-          description: 'Vocal console engine deactivated',
-          result: 'success',
+          type: "vocal-stop",
+          description: "Vocal console engine deactivated",
+          result: "success",
         },
       ],
     };
@@ -2821,7 +2865,7 @@ function handleVocalConsole(): DevSudoResult {
     return {
       handled: true,
       success: true,
-      response: `${willBeVisible ? '📖' : '📕'} **Console vocale ${willBeVisible ? 'ouverte' : 'fermée'}**
+      response: `${willBeVisible ? "📖" : "📕"} **Console vocale ${willBeVisible ? "ouverte" : "fermée"}**
 
 ${
   willBeVisible
@@ -2845,9 +2889,9 @@ ${
 }`,
       actions: [
         {
-          type: 'vocal-console',
-          description: `Console ${willBeVisible ? 'opened' : 'closed'}`,
-          result: 'success',
+          type: "vocal-console",
+          description: `Console ${willBeVisible ? "opened" : "closed"}`,
+          result: "success",
         },
       ],
     };
@@ -2866,9 +2910,12 @@ ${
  */
 async function handleVocalHeal(): Promise<DevSudoResult> {
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
-    const result = await vocalDevConsole.processTranscript('auto-heal le système');
+    const result = await vocalDevConsole.processTranscript(
+      "auto-heal le système",
+    );
 
     return {
       handled: true,
@@ -2884,17 +2931,17 @@ ${
   - ${result.patch.file} (lignes ${result.patch.lineStart}-${result.patch.lineEnd})
   - ${result.patch.description}
 `
-    : ''
+    : ""
 }
 
-${result.ttsResponse ? `🔊 Réponse TTS: "${result.ttsResponse}"` : ''}
+${result.ttsResponse ? `🔊 Réponse TTS: "${result.ttsResponse}"` : ""}
 
 💡 **Health Score**: ${vocalDevConsole.getHealthScore()}%`,
       actions: [
         {
-          type: 'vocal-heal',
-          description: 'Voice-triggered auto-healing executed',
-          result: result.exitCode === 0 ? 'success' : 'error',
+          type: "vocal-heal",
+          description: "Voice-triggered auto-healing executed",
+          result: result.exitCode === 0 ? "success" : "error",
           details: result.output,
         },
       ],
@@ -2929,7 +2976,8 @@ async function handleVocalRun(commandText: string): Promise<DevSudoResult> {
   }
 
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
     const result = await vocalDevConsole.processTranscript(commandText);
 
@@ -2943,12 +2991,12 @@ ${result.output}
 **Intention détectée**: ${result.intent.type}
 **Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ""}`,
       actions: [
         {
-          type: 'vocal-run',
+          type: "vocal-run",
           description: `Executed voice command: ${commandText}`,
-          result: result.exitCode === 0 ? 'success' : 'error',
+          result: result.exitCode === 0 ? "success" : "error",
         },
       ],
     };
@@ -2983,11 +3031,18 @@ La console n'a pas encore de logs.
     }
 
     const logsByLevel = {
-      info: logs.filter((l: Record<string, unknown>) => l.level === 'info').length,
-      success: logs.filter((l: Record<string, unknown>) => l.level === 'success').length,
-      warning: logs.filter((l: Record<string, unknown>) => l.level === 'warning').length,
-      error: logs.filter((l: Record<string, unknown>) => l.level === 'error').length,
-      debug: logs.filter((l: Record<string, unknown>) => l.level === 'debug').length,
+      info: logs.filter((l: Record<string, unknown>) => l.level === "info")
+        .length,
+      success: logs.filter(
+        (l: Record<string, unknown>) => l.level === "success",
+      ).length,
+      warning: logs.filter(
+        (l: Record<string, unknown>) => l.level === "warning",
+      ).length,
+      error: logs.filter((l: Record<string, unknown>) => l.level === "error")
+        .length,
+      debug: logs.filter((l: Record<string, unknown>) => l.level === "debug")
+        .length,
     };
 
     return {
@@ -3007,26 +3062,26 @@ ${logs
   .slice(-10)
   .map((log: Record<string, unknown>) => {
     const levelIcons: Record<string, string> = {
-      info: 'ℹ️',
-      success: '✅',
-      warning: '⚠️',
-      error: '❌',
-      debug: '🐛',
+      info: "ℹ️",
+      success: "✅",
+      warning: "⚠️",
+      error: "❌",
+      debug: "🐛",
     };
-    const icon = levelIcons[log.level as string] || 'ℹ️';
-    const time = new Date(log.timestamp as number).toLocaleTimeString('fr-FR');
+    const icon = levelIcons[log.level as string] || "ℹ️";
+    const time = new Date(log.timestamp as number).toLocaleTimeString("fr-FR");
     return `${icon} [${time}] ${log.message}`;
   })
-  .join('\n')}
+  .join("\n")}
 
 **Health Score**: ${vocalDevConsole.getHealthScore()}%
 
 💡 **Commandes**: \`vocal.console\` pour UI complète`,
       actions: [
         {
-          type: 'vocal-logs',
+          type: "vocal-logs",
           description: `Retrieved ${logs.length} vocal logs`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -3045,7 +3100,8 @@ ${logs
  */
 async function handleVocalPatch(): Promise<DevSudoResult> {
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
     const state = vocalDevConsole.getState();
     const executionHistory = state.executionHistory;
@@ -3070,7 +3126,7 @@ La dernière exécution vocale n'a pas généré de patch.
     return {
       handled: true,
       success: lastExecution.patch.applied,
-      response: `${lastExecution.patch.applied ? '✅' : '❌'} **VOCAL PATCH ${lastExecution.patch.applied ? 'APPLIQUÉ' : 'ÉCHOUÉ'}**
+      response: `${lastExecution.patch.applied ? "✅" : "❌"} **VOCAL PATCH ${lastExecution.patch.applied ? "APPLIQUÉ" : "ÉCHOUÉ"}**
 
 **Patch**:
   - ${lastExecution.patch.file} (lignes ${lastExecution.patch.lineStart}-${lastExecution.patch.lineEnd})
@@ -3092,9 +3148,9 @@ ${
 }`,
       actions: [
         {
-          type: 'vocal-patch',
-          description: 'Applied vocal-generated patch',
-          result: lastExecution.patch.applied ? 'success' : 'error',
+          type: "vocal-patch",
+          description: "Applied vocal-generated patch",
+          result: lastExecution.patch.applied ? "success" : "error",
         },
       ],
     };
@@ -3113,9 +3169,10 @@ ${
  */
 async function handleVocalCompile(): Promise<DevSudoResult> {
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
-    const result = await vocalDevConsole.processTranscript('compile le projet');
+    const result = await vocalDevConsole.processTranscript("compile le projet");
 
     return {
       handled: true,
@@ -3124,7 +3181,7 @@ async function handleVocalCompile(): Promise<DevSudoResult> {
 
 ${result.output}
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ""}
 
 💡 **Commandes vocales**:
   - "Compile en debug"
@@ -3132,9 +3189,9 @@ ${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}
   - "Compile optimisé"`,
       actions: [
         {
-          type: 'vocal-compile',
-          description: 'Voice-triggered compilation',
-          result: result.exitCode === 0 ? 'success' : 'error',
+          type: "vocal-compile",
+          description: "Voice-triggered compilation",
+          result: result.exitCode === 0 ? "success" : "error",
         },
       ],
     };
@@ -3168,9 +3225,12 @@ async function handleVocalInspect(target: string): Promise<DevSudoResult> {
   }
 
   try {
-    const { vocalDevConsole } = await import('@/modules/vocalDev/VocalDevConsoleEngine');
+    const { vocalDevConsole } =
+      await import("@/modules/vocalDev/VocalDevConsoleEngine");
 
-    const result = await vocalDevConsole.processTranscript(`inspecte ${target}`);
+    const result = await vocalDevConsole.processTranscript(
+      `inspecte ${target}`,
+    );
 
     return {
       handled: true,
@@ -3182,12 +3242,12 @@ ${result.output}
 **Intention**: ${result.intent.type}
 **Confidence**: ${(result.intent.confidence * 100).toFixed(0)}%
 
-${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ''}`,
+${result.ttsResponse ? `🔊 "${result.ttsResponse}"` : ""}`,
       actions: [
         {
-          type: 'vocal-inspect',
+          type: "vocal-inspect",
           description: `Inspected ${target} via voice`,
-          result: result.exitCode === 0 ? 'success' : 'error',
+          result: result.exitCode === 0 ? "success" : "error",
         },
       ],
     };
@@ -3221,24 +3281,24 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
     };
   }
 
-  const validModels = ['titane-local', 'claude', 'gemini', 'auto'];
+  const validModels = ["titane-local", "claude", "gemini", "auto"];
   if (!validModels.includes(modelName.toLowerCase())) {
     return {
       handled: true,
       success: false,
       response: `❌ Modèle invalide: "${modelName}"
 
-**Modèles valides**: ${validModels.join(', ')}`,
+**Modèles valides**: ${validModels.join(", ")}`,
     };
   }
 
   try {
     vocalDevConsole.configure({
       aiProvider: modelName.toLowerCase() as
-        | 'titane-local'
-        | 'claude'
-        | 'gemini'
-        | 'auto',
+        | "titane-local"
+        | "claude"
+        | "gemini"
+        | "auto",
     });
 
     return {
@@ -3247,20 +3307,20 @@ function handleVocalSetModel(modelName: string): DevSudoResult {
       response: `🤖 **AI Provider changé** → \`${modelName}\`
 
 ${
-  modelName === 'titane-local'
+  modelName === "titane-local"
     ? `
 ✅ **TITANE∞ Local** activé
   - Modèle: Llama 3.1 8B
   - Latence: <100ms
   - Usage: Micro-corrections rapides
 `
-    : modelName === 'claude'
+    : modelName === "claude"
       ? `
 ✅ **Claude Sonnet 4.5** activé
   - Latence: ~2s
   - Usage: Patchs complexes + raisonnement profond
 `
-      : modelName === 'gemini'
+      : modelName === "gemini"
         ? `
 ✅ **Gemini 2.0 Flash** activé
   - Latence: ~1s
@@ -3277,9 +3337,9 @@ ${
 💡 **Testez avec**: \`sudo vocal.run explique ce code\``,
       actions: [
         {
-          type: 'vocal-set-model',
+          type: "vocal-set-model",
           description: `AI provider changed to ${modelName}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -3322,9 +3382,9 @@ function handleVocalFullscreen(): DevSudoResult {
 💡 **Désactivez**: \`sudo vocal.fullscreen\` ou \`ESC\``,
       actions: [
         {
-          type: 'vocal-fullscreen',
-          description: 'Toggled fullscreen mode',
-          result: 'success',
+          type: "vocal-fullscreen",
+          description: "Toggled fullscreen mode",
+          result: "success",
         },
       ],
     };
@@ -3351,7 +3411,7 @@ function handleVocalSilence(): DevSudoResult {
     return {
       handled: true,
       success: true,
-      response: `${newTTSState ? '🔊' : '🔇'} **TTS ${newTTSState ? 'ACTIVÉ' : 'DÉSACTIVÉ'}**
+      response: `${newTTSState ? "🔊" : "🔇"} **TTS ${newTTSState ? "ACTIVÉ" : "DÉSACTIVÉ"}**
 
 ${
   newTTSState
@@ -3372,9 +3432,9 @@ Les réponses apparaîtront dans les logs sans son.
 💡 **Toggle TTS**: \`sudo vocal.silence\` ou bouton UI 🔊`,
       actions: [
         {
-          type: 'vocal-silence',
-          description: `TTS ${newTTSState ? 'enabled' : 'disabled'}`,
-          result: 'success',
+          type: "vocal-silence",
+          description: `TTS ${newTTSState ? "enabled" : "disabled"}`,
+          result: "success",
         },
       ],
     };
@@ -3396,12 +3456,15 @@ Les réponses apparaîtront dans les logs sans son.
  * live.on — Active Live Debugger en mode spécifié
  */
 async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
-  const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
+  const validModes = ["shadow", "active", "auto-heal", "explain", "draft"];
   const selectedMode =
-    mode && validModes.includes(mode.toLowerCase()) ? mode.toLowerCase() : 'shadow';
+    mode && validModes.includes(mode.toLowerCase())
+      ? mode.toLowerCase()
+      : "shadow";
 
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     await liveDebugger.activate(selectedMode as LiveDebuggerMode);
 
@@ -3427,9 +3490,9 @@ async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
 💡 **Changez mode**: \`sudo live.setMode [mode]\``,
       actions: [
         {
-          type: 'live-on',
+          type: "live-on",
           description: `Live Debugger activated in ${selectedMode} mode`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -3448,7 +3511,8 @@ async function handleLiveOn(mode?: string): Promise<DevSudoResult> {
  */
 async function handleLiveOff(): Promise<DevSudoResult> {
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     await liveDebugger.deactivate();
 
@@ -3472,9 +3536,9 @@ async function handleLiveOff(): Promise<DevSudoResult> {
 💡 **Réactivez**: \`sudo live.on [mode]\``,
       actions: [
         {
-          type: 'live-off',
-          description: 'Live Debugger deactivated',
-          result: 'success',
+          type: "live-off",
+          description: "Live Debugger deactivated",
+          result: "success",
           details: `Session: ${stats.totalDiagnostics} diagnostics, ${stats.totalPatches} patches`,
         },
       ],
@@ -3494,7 +3558,8 @@ async function handleLiveOff(): Promise<DevSudoResult> {
  */
 async function handleLiveHeal(): Promise<DevSudoResult> {
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     const state = liveDebugger.getState();
 
@@ -3514,7 +3579,7 @@ Ensuite le debugger auto-heal sera actif en continu.`,
     }
 
     // Forcer passage en mode auto-heal
-    liveDebugger.setMode('auto-heal');
+    liveDebugger.setMode("auto-heal");
     liveDebugger.configure({ autoHealEnabled: true });
 
     return {
@@ -3538,9 +3603,9 @@ Le Live Debugger corrigera automatiquement les problèmes simples détectés pen
 💡 **Désactivez auto-heal**: \`sudo live.setMode active\``,
       actions: [
         {
-          type: 'live-heal',
-          description: 'Auto-heal mode activated',
-          result: 'success',
+          type: "live-heal",
+          description: "Auto-heal mode activated",
+          result: "success",
         },
       ],
     };
@@ -3576,11 +3641,14 @@ Le Live Debugger analysera le module en temps réel.`,
   }
 
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     const recentDiagnostics = liveDebugger.getRecentDiagnostics(5);
-    const relatedDiagnostics = recentDiagnostics.filter(d =>
-      d.intent.modules.some(m => m.toLowerCase().includes(target.toLowerCase()))
+    const relatedDiagnostics = recentDiagnostics.filter((d) =>
+      d.intent.modules.some((m) =>
+        m.toLowerCase().includes(target.toLowerCase()),
+      ),
     );
 
     return {
@@ -3600,11 +3668,11 @@ ${
   - Severity: ${d.intent.severity}
   - Confidence: ${(d.intent.confidence * 100).toFixed(0)}%
   - Analysis: ${d.analysis}
-  ${d.rootCause ? `- Root Cause: ${d.rootCause}` : ''}
-  ${d.suggestedFix ? `- Fix: ${d.suggestedFix}` : ''}
-`
+  ${d.rootCause ? `- Root Cause: ${d.rootCause}` : ""}
+  ${d.suggestedFix ? `- Fix: ${d.suggestedFix}` : ""}
+`,
         )
-        .join('\n')
+        .join("\n")
     : `
 Aucun diagnostic récent pour "${target}".
 
@@ -3615,9 +3683,9 @@ Aucun diagnostic récent pour "${target}".
 **Health Score**: ${liveDebugger.getHealthScore()}%`,
       actions: [
         {
-          type: 'live-inspect',
+          type: "live-inspect",
           description: `Inspected ${target}`,
-          result: 'success',
+          result: "success",
           details: `${relatedDiagnostics.length} related diagnostics`,
         },
       ],
@@ -3637,7 +3705,8 @@ Aucun diagnostic récent pour "${target}".
  */
 async function handleLivePatch(): Promise<DevSudoResult> {
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     const recentDiagnostics = liveDebugger.getRecentDiagnostics(1);
     const firstDiagnostic = recentDiagnostics[0];
@@ -3663,7 +3732,7 @@ Le Live Debugger n'a pas généré de patch récemment.
       return {
         handled: true,
         success: false,
-        response: '⚠️ **Patch non disponible**',
+        response: "⚠️ **Patch non disponible**",
       };
     }
 
@@ -3707,9 +3776,9 @@ Le patch généré nécessite review manuelle.
 💡 **Vérifiez**: \`sudo diagnostic\` ou testez l'application`,
       actions: [
         {
-          type: 'live-patch',
+          type: "live-patch",
           description: `Applied patch to ${patch.module}`,
-          result: 'success',
+          result: "success",
           details: patch.reason,
         },
       ],
@@ -3753,19 +3822,19 @@ Le debugger analysera en temps réel.`,
     const bySeverity = {
       low: diagnostics.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'low'
+          (d.intent as Record<string, unknown>).severity === "low",
       ).length,
       medium: diagnostics.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'medium'
+          (d.intent as Record<string, unknown>).severity === "medium",
       ).length,
       high: diagnostics.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'high'
+          (d.intent as Record<string, unknown>).severity === "high",
       ).length,
       critical: diagnostics.filter(
         (d: Record<string, unknown>) =>
-          (d.intent as Record<string, unknown>).severity === 'critical'
+          (d.intent as Record<string, unknown>).severity === "critical",
       ).length,
     };
 
@@ -3796,17 +3865,17 @@ ${diagnostics
     return `
 ${i + 1}. [${(intent.severity as string).toUpperCase()}] ${intent.type} — ${((intent.confidence as number) * 100).toFixed(0)}%
    ${d.analysis}
-   ${d.rootCause ? `→ ${d.rootCause}` : ''}
+   ${d.rootCause ? `→ ${d.rootCause}` : ""}
 `;
   })
-  .join('')}
+  .join("")}
 
 💡 **Console UI complète**: \`sudo live.console\``,
       actions: [
         {
-          type: 'live-logs',
+          type: "live-logs",
           description: `Retrieved ${diagnostics.length} live diagnostics`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -3825,7 +3894,8 @@ ${i + 1}. [${(intent.severity as string).toUpperCase()}] ${intent.type} — ${((
  */
 async function handleLiveRestart(): Promise<DevSudoResult> {
   try {
-    const { liveDebugger } = await import('@/modules/liveDebugger/LiveDebuggerEngine');
+    const { liveDebugger } =
+      await import("@/modules/liveDebugger/LiveDebuggerEngine");
 
     const currentMode = liveDebugger.getState().mode;
 
@@ -3833,7 +3903,7 @@ async function handleLiveRestart(): Promise<DevSudoResult> {
     await liveDebugger.deactivate();
 
     // Wait 500ms
-    await new Promise(resolve => setTimeout(resolve, 500));
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     // Réactiver dans même mode
     await liveDebugger.activate(currentMode);
@@ -3857,9 +3927,9 @@ async function handleLiveRestart(): Promise<DevSudoResult> {
 💡 **Redémarrez listening**: \`sudo live.console\` puis START LISTENING`,
       actions: [
         {
-          type: 'live-restart',
-          description: 'Live Debugger restarted',
-          result: 'success',
+          type: "live-restart",
+          description: "Live Debugger restarted",
+          result: "success",
         },
       ],
     };
@@ -3902,9 +3972,9 @@ Le Live Debugger est prêt pour une nouvelle session.
 💡 **Continuez listening** si actif, ou redémarrez avec \`sudo live.on [mode]\``,
       actions: [
         {
-          type: 'live-reset',
-          description: 'Live Debugger session reset',
-          result: 'success',
+          type: "live-reset",
+          description: "Live Debugger session reset",
+          result: "success",
         },
       ],
     };
@@ -3948,9 +4018,9 @@ La console Live Debugger apparaîtra automatiquement dans l'interface React.
 💡 **Position**: Bottom-right, 700px width, draggable (future)`,
       actions: [
         {
-          type: 'live-console',
-          description: 'Live Debugger console UI info',
-          result: 'success',
+          type: "live-console",
+          description: "Live Debugger console UI info",
+          result: "success",
         },
       ],
     };
@@ -3987,7 +4057,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
     };
   }
 
-  const validModes = ['shadow', 'active', 'auto-heal', 'explain', 'draft'];
+  const validModes = ["shadow", "active", "auto-heal", "explain", "draft"];
   const normalizedMode = modeName.toLowerCase();
 
   if (!validModes.includes(normalizedMode)) {
@@ -3996,7 +4066,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
       success: false,
       response: `❌ Mode invalide: "${modeName}"
 
-**Modes valides**: ${validModes.join(', ')}`,
+**Modes valides**: ${validModes.join(", ")}`,
     };
   }
 
@@ -4004,9 +4074,9 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
     liveDebugger.setMode(normalizedMode as unknown as LiveDebuggerModeStub);
 
     // Auto-config selon mode
-    if (normalizedMode === 'auto-heal') {
+    if (normalizedMode === "auto-heal") {
       liveDebugger.configure({ autoHealEnabled: true });
-    } else if (normalizedMode === 'explain') {
+    } else if (normalizedMode === "explain") {
       liveDebugger.configure({ explainWhileDebugging: true, ttsEnabled: true });
     }
 
@@ -4016,7 +4086,7 @@ function handleLiveSetMode(modeName: string): DevSudoResult {
       response: `🎯 **LIVE DEBUGGER MODE CHANGED** → \`${normalizedMode}\`
 
 ${
-  normalizedMode === 'shadow'
+  normalizedMode === "shadow"
     ? `
 ✅ **Shadow Mode** activé
   - Écoute passive continue
@@ -4026,7 +4096,7 @@ ${
 
 💡 **Usage**: Mode monitoring discret
 `
-    : normalizedMode === 'active'
+    : normalizedMode === "active"
       ? `
 ✅ **Active Mode** activé
   - Analyse en temps réel
@@ -4036,7 +4106,7 @@ ${
 
 💡 **Usage**: Debug interactif avec validation manuelle
 `
-      : normalizedMode === 'auto-heal'
+      : normalizedMode === "auto-heal"
         ? `
 ✅ **Auto-Heal Mode** activé
   - Corrections automatiques activées ✅
@@ -4047,7 +4117,7 @@ ${
 ⚠️ **Attention**: Les corrections sont appliquées sans confirmation
 💡 **Usage**: Self-healing automatique continu
 `
-        : normalizedMode === 'explain'
+        : normalizedMode === "explain"
           ? `
 ✅ **Explain Mode** activé
   - Explications vocales activées ✅
@@ -4070,9 +4140,9 @@ ${
 **Mode actif**: ${normalizedMode}`,
       actions: [
         {
-          type: 'live-set-mode',
+          type: "live-set-mode",
           description: `Changed mode to ${normalizedMode}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -4097,13 +4167,13 @@ async function handleTalkOn(mode?: string): Promise<DevSudoResult> {
   try {
     await talkToTitaneEngine.activate(
       (mode ||
-        'continuous') as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
+        "continuous") as import("@/modules/talkToTitane/TalkToTitaneEngine").TalkToTitaneMode,
     );
 
     return {
       handled: true,
       success: true,
-      response: `✅ **Talk-To-TITANE activé**\n\nMode: ${mode || 'continuous'}\n\nCommandes disponibles:\n- \`sudo talk.off\` : Désactiver\n- \`sudo talk.mode [mode]\` : Changer mode`,
+      response: `✅ **Talk-To-TITANE activé**\n\nMode: ${mode || "continuous"}\n\nCommandes disponibles:\n- \`sudo talk.off\` : Désactiver\n- \`sudo talk.mode [mode]\` : Changer mode`,
     };
   } catch (error) {
     return {
@@ -4160,18 +4230,24 @@ function handleTalkMode(mode: string): DevSudoResult {
     };
   }
 
-  const validModes = ['continuous', 'whispered', 'direct', 'calibrated', 'focus'];
+  const validModes = [
+    "continuous",
+    "whispered",
+    "direct",
+    "calibrated",
+    "focus",
+  ];
   if (!validModes.includes(mode.toLowerCase())) {
     return {
       handled: true,
       success: false,
-      response: `❌ Mode invalide: "${mode}"\n\n**Modes valides**: ${validModes.join(', ')}`,
+      response: `❌ Mode invalide: "${mode}"\n\n**Modes valides**: ${validModes.join(", ")}`,
     };
   }
 
   try {
     talkToTitaneEngine.setMode(
-      mode as import('@/modules/talkToTitane/TalkToTitaneEngine').TalkToTitaneMode
+      mode as import("@/modules/talkToTitane/TalkToTitaneEngine").TalkToTitaneMode,
     );
 
     return {
@@ -4184,9 +4260,9 @@ function handleTalkMode(mode: string): DevSudoResult {
 Les prochaines réponses seront adaptées au mode ${mode}.`,
       actions: [
         {
-          type: 'talk-mode',
+          type: "talk-mode",
           description: `Mode changed to ${mode}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -4223,18 +4299,24 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
     };
   }
 
-  const validTones = ['analytical', 'calm', 'energizing', 'motivating', 'neutral'];
+  const validTones = [
+    "analytical",
+    "calm",
+    "energizing",
+    "motivating",
+    "neutral",
+  ];
   if (!validTones.includes(tone.toLowerCase())) {
     return {
       handled: true,
       success: false,
-      response: `❌ Tone invalide: "${tone}"\n\n**Tones valides**: ${validTones.join(', ')}`,
+      response: `❌ Tone invalide: "${tone}"\n\n**Tones valides**: ${validTones.join(", ")}`,
     };
   }
 
   try {
     talkToTitaneEngine.setEmotionalCalibration(
-      tone as 'neutral' | 'analytical' | 'calm' | 'energizing' | 'motivating'
+      tone as "neutral" | "analytical" | "calm" | "energizing" | "motivating",
     );
 
     return {
@@ -4247,9 +4329,9 @@ function handleTalkCalibrate(tone: string): DevSudoResult {
 Les prochaines réponses refléteront le ton ${tone}.`,
       actions: [
         {
-          type: 'talk-calibrate',
+          type: "talk-calibrate",
           description: `Emotional tone set to ${tone}`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -4294,7 +4376,7 @@ Pour démarrer: \`sudo talk.on\``,
         return `${i + 1}. ${intentBadge} (${confidence}) "${text}..."
    → ${response}...`;
       })
-      .join('\n\n');
+      .join("\n\n");
 
     return {
       handled: true,
@@ -4306,9 +4388,9 @@ ${historyText}
 💡 Pour voir toute l'historique: \`sudo conversation.timeline\``,
       actions: [
         {
-          type: 'talk-history',
+          type: "talk-history",
           description: `Displayed ${recent.length} recent interactions`,
-          result: 'success',
+          result: "success",
         },
       ],
     };
@@ -4352,9 +4434,9 @@ Le panel Talk-To-TITANE apparaîtra automatiquement dans l'interface React.
 💡 **Position**: Max-width 800px, center, draggable (future)`,
     actions: [
       {
-        type: 'talk-console',
-        description: 'Talk-To-TITANE panel UI info',
-        result: 'success',
+        type: "talk-console",
+        description: "Talk-To-TITANE panel UI info",
+        result: "success",
       },
     ],
   };
@@ -4416,9 +4498,9 @@ All conversations will be automatically saved to:
 💡 Auto-save runs on every interaction + snapshot every 5min`,
       actions: [
         {
-          type: 'autosave-on',
-          description: 'Auto-save enabled',
-          result: 'success',
+          type: "autosave-on",
+          description: "Auto-save enabled",
+          result: "success",
         },
       ],
     };
@@ -4449,9 +4531,9 @@ Conversations will NOT be saved automatically.
 💡 You can still manually save with \`sudo conversation.save\``,
       actions: [
         {
-          type: 'autosave-off',
-          description: 'Auto-save disabled',
-          result: 'success',
+          type: "autosave-off",
+          description: "Auto-save disabled",
+          result: "success",
         },
       ],
     };
@@ -4486,7 +4568,11 @@ Conversations will NOT be saved automatically.
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function handleConversationSave(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Conversation sauvegardée**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Conversation sauvegardée**`,
+  };
 }
 
 async function handleConversationHeal(): Promise<DevSudoResult> {
@@ -4498,30 +4584,44 @@ async function handleConversationHeal(): Promise<DevSudoResult> {
 }
 
 async function handleConversationTimeline(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📊 **Timeline conversations**` };
-}
-
-async function handleConversationExport(format?: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
-    response: `📤 **Export conversations** (${format || 'JSON'})`,
+    response: `📊 **Timeline conversations**`,
+  };
+}
+
+async function handleConversationExport(
+  format?: string,
+): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `📤 **Export conversations** (${format || "JSON"})`,
   };
 }
 
 async function handleTimelineBuild(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Timeline construite**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Timeline construite**`,
+  };
 }
 
 async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📅 **Timeline (${limit || 20})**` };
+  return {
+    handled: true,
+    success: true,
+    response: `📅 **Timeline (${limit || 20})**`,
+  };
 }
 
 async function handleTimelineExport(format?: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
-    response: `📤 **Export timeline** (${format || 'JSON'})`,
+    response: `📤 **Export timeline** (${format || "JSON"})`,
   };
 }
 
@@ -4530,26 +4630,44 @@ async function handleTimelineSessions(): Promise<DevSudoResult> {
 }
 
 async function handleTimelineStats(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📊 **Statistiques timeline**` };
-}
-
-async function handleAutosaveFlush(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Buffer auto-save vidé**` };
-}
-
-async function handleSelfhealScan(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `🔍 **Scan intégrité terminé**` };
-}
-
-async function handleSelfhealHeal(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Réparation auto terminée**` };
-}
-
-async function handleSelfhealRebuild(filePath?: string): Promise<DevSudoResult> {
   return {
     handled: true,
     success: true,
-    response: `✅ **Rebuild ${filePath || 'complet'}**`,
+    response: `📊 **Statistiques timeline**`,
+  };
+}
+
+async function handleAutosaveFlush(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Buffer auto-save vidé**`,
+  };
+}
+
+async function handleSelfhealScan(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `🔍 **Scan intégrité terminé**`,
+  };
+}
+
+async function handleSelfhealHeal(): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Réparation auto terminée**`,
+  };
+}
+
+async function handleSelfhealRebuild(
+  filePath?: string,
+): Promise<DevSudoResult> {
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Rebuild ${filePath || "complet"}**`,
   };
 }
 

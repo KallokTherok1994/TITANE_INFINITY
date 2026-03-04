@@ -196,7 +196,7 @@ export const TitanePage: React.FC = () => {
   // ═══ RENDER ═══
   return (
     <ErrorBoundary context="TitanePage">
-      <Container size="xl" className="titane-page">
+      <Container size="xl" className="titane-page" data-testid="page-titane">
         <Stack direction="vertical" gap={4}>
           {/* ═══ PAGE HEADER (Integrated, Not Navigation) ═══ */}
           <div className="titane-page-header">
@@ -342,6 +342,7 @@ export const TitanePage: React.FC = () => {
           {/* ═══ CONTENT AREA (A11Y Enhanced) ═══ */}
           <div
             className="titane-content"
+            data-testid="page-titane-content"
             role="tabpanel"
             id={TAB_PANEL_IDS[activeTab]}
             aria-labelledby={TAB_LABEL_IDS[activeTab]}
