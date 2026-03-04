@@ -45,6 +45,13 @@ Cette constitution est normative, exécutable et prioritaire.
 
 **SEALED** : DONE + toutes gates applicables PASS + rollback documenté.
 
+**Verdict compatibility (obligatoire)**
+
+- `PASS` : 0 `FAIL` et 0 `BLOCKED` sur les gates code/runtime applicables.
+- `FAIL` : échec code reproductible, même après auto-fix gouverné.
+- `BLOCKED` : prérequis manquant (runtime, outil, approbation) avec script/commande prête et next-action <= 30 minutes.
+- `BLOCKED_APPROVAL` : unique cas toléré quand le code est vert mais une approbation/sécurité GitHub est requise hors code.
+
 **Action**
 
 - Assigner un statut unique à chaque étape.
@@ -67,6 +74,7 @@ Cette constitution est normative, exécutable et prioritaire.
 
 - Maintenir Tauri-only en production.
 - Maintenir Online-first gouverné avec fallback local obligatoire.
+- Maintain online-first governed policy with mandatory local fallback.
 - Maintenir architecture 4-Ring stricte.
 - Maintenir stabilité capabilities/allowlists avec justification testable.
 
@@ -167,6 +175,8 @@ Cette constitution est normative, exécutable et prioritaire.
 
 - Exécuter toutes gates applicables.
 - Capturer PASS/FAIL/BLOCKED.
+- Vérifier explicitement la CI sur `MAIN` et sur la branche de travail avant verdict.
+- Si `action_required` est signalé par GitHub, classifier `BLOCKED_APPROVAL` sans tentative de contournement.
 
 **Interdiction**
 
@@ -291,10 +301,18 @@ Cette constitution est normative, exécutable et prioritaire.
 
 - Exécuter tests ciblés selon ring impacté.
 - Exécuter triplet de confiance (tests/checks/smoke) x3 quand applicable.
+- Gate E2E : marquer `PASS` uniquement avec exécution runtime Tauri réelle prouvée (logs + commandes + statut).
+- Si runtime E2E indisponible : marquer `BLOCKED_E2E_RUNTIME` avec wrapper exécutable et prérequis exacts.
 
 **Interdiction**
 
 - Déclarer DONE sans tests applicables.
+- Déclarer `PASS` E2E avec tests UI-only ou simulation sans runtime réel.
+
+**Auto-fix Prettier (obligatoire)**
+
+- En cas de fail Prettier fichier : exécuter `pnpm prettier --write <fichier>` puis re-check ciblé.
+- Toujours revalider `pnpm prettier --check "."` après correction ciblée.
 
 **Preuve attendue**
 
