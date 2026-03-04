@@ -13,12 +13,12 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState } from 'react';
-import { useSingularitySync } from '@/hooks/useSingularitySync';
-import { useMemoryEngine } from '@/hooks/useMemoryEngine';
-import { useSystemHealth } from '@/hooks/useSystemHealth';
+import React, { useEffect, useState } from "react";
+import { useSingularitySync } from "@/hooks/useSingularitySync";
+import { useMemoryEngine } from "@/hooks/useMemoryEngine";
+import { useSystemHealth } from "@/hooks/useSystemHealth";
 // ✨ v25.7.4 - Responsive Design Hook
-import { useResponsive } from '@/hooks/useResponsive';
+import { useResponsive } from "@/hooks/useResponsive";
 // ✨ v25.6.0 - Phase 12 Ultimate Optimization Integration
 import {
   gpuAcceleratorV2,
@@ -29,7 +29,7 @@ import {
   type WASMMetrics,
   type ServiceWorkerMetrics,
   type IndexedDBMetrics,
-} from '@/modules/optimization';
+} from "@/modules/optimization";
 
 export function PerfectFusionDashboard() {
   // ✨ v25.7.4 - Responsive Hook
@@ -44,7 +44,7 @@ export function PerfectFusionDashboard() {
   } = useSingularitySync({
     autoSync: true,
     syncInterval: 1000,
-    conflictResolution: 'merge',
+    conflictResolution: "merge",
   });
 
   const {
@@ -84,8 +84,8 @@ export function PerfectFusionDashboard() {
         setDbMetrics(indexedDBOptimizer.getMetrics());
       } catch (error) {
         console.error(
-          '[PerfectFusionDashboard] Failed to load optimization metrics:',
-          error
+          "[PerfectFusionDashboard] Failed to load optimization metrics:",
+          error,
         );
       }
     };
@@ -107,15 +107,18 @@ export function PerfectFusionDashboard() {
           autoCoherence: singularityState.autoCoherence,
           timestamp: singularityState.timestamp,
         }),
-        'short',
-        { source: 'singularity', timestamp: Date.now() }
+        "short",
+        { source: "singularity", timestamp: Date.now() },
       ).catch(console.error);
     }
   }, [singularityState, saveToMemory]);
 
   // ═══ RENDER ═══
   return (
-    <div className="perfect-fusion-dashboard p-responsive">
+    <div
+      className="perfect-fusion-dashboard p-responsive"
+      data-testid="page-fusion"
+    >
       <h1 className="dashboard-title">🌌 TITANE∞ Perfect Fusion Dashboard</h1>
 
       {/* ═══ GLOBAL HEALTH ═══ */}
@@ -133,14 +136,16 @@ export function PerfectFusionDashboard() {
       <section className="singularity-section">
         <h2>⚛️ Singularity Sync</h2>
         {singularityLoading && <div>Loading...</div>}
-        {singularityError && <div className="error">{singularityError.message}</div>}
+        {singularityError && (
+          <div className="error">{singularityError.message}</div>
+        )}
         {singularityState && (
           <div>
             <p>
               <strong>Consciousness:</strong> {singularityState.consciousness}
             </p>
             <p>
-              <strong>Coherence:</strong>{' '}
+              <strong>Coherence:</strong>{" "}
               {(singularityState.autoCoherence * 100).toFixed(1)}%
             </p>
             {singularityMetrics && (
@@ -180,12 +185,12 @@ export function PerfectFusionDashboard() {
               <strong>Long Term:</strong> {memoryStats.long_term}
             </p>
             <p>
-              <strong>Total Size:</strong>{' '}
+              <strong>Total Size:</strong>{" "}
               {(memoryStats.total_size_bytes / 1024).toFixed(2)} KB
             </p>
             <p>
-              <strong>Health Score:</strong> {(memoryStats.health_score * 100).toFixed(0)}
-              %
+              <strong>Health Score:</strong>{" "}
+              {(memoryStats.health_score * 100).toFixed(0)}%
             </p>
           </div>
         )}
@@ -199,21 +204,26 @@ export function PerfectFusionDashboard() {
             {/* Conversation */}
             <div className="health-card card-responsive">
               <h3>💬 Conversation</h3>
-              <div className={`status-badge status-${health.conversation.status}`}>
+              <div
+                className={`status-badge status-${health.conversation.status}`}
+              >
                 {health.conversation.status}
               </div>
               <p>
-                <strong>Active:</strong> {health.conversation.active_conversations}
+                <strong>Active:</strong>{" "}
+                {health.conversation.active_conversations}
               </p>
               <p>
-                <strong>Total Messages:</strong> {health.conversation.total_messages}
+                <strong>Total Messages:</strong>{" "}
+                {health.conversation.total_messages}
               </p>
               <p>
-                <strong>Avg Response:</strong> {health.conversation.avg_response_time_ms}
+                <strong>Avg Response:</strong>{" "}
+                {health.conversation.avg_response_time_ms}
                 ms
               </p>
               <p>
-                <strong>Error Rate:</strong>{' '}
+                <strong>Error Rate:</strong>{" "}
                 {(health.conversation.error_rate * 100).toFixed(2)}%
               </p>
             </div>
@@ -228,11 +238,11 @@ export function PerfectFusionDashboard() {
                 <strong>Entries:</strong> {health.memory.total_entries}
               </p>
               <p>
-                <strong>Size:</strong>{' '}
+                <strong>Size:</strong>{" "}
                 {(health.memory.total_size_bytes / 1024).toFixed(2)} KB
               </p>
               <p>
-                <strong>Fragmentation:</strong>{' '}
+                <strong>Fragmentation:</strong>{" "}
                 {(health.memory.fragmentation * 100).toFixed(1)}%
               </p>
             </div>
@@ -240,11 +250,14 @@ export function PerfectFusionDashboard() {
             {/* Singularity */}
             <div className="health-card card-responsive">
               <h3>⚛️ Singularity</h3>
-              <div className={`status-badge status-${health.singularity.status}`}>
+              <div
+                className={`status-badge status-${health.singularity.status}`}
+              >
                 {health.singularity.status}
               </div>
               <p>
-                <strong>Active Engines:</strong> {health.singularity.active_engines} /{' '}
+                <strong>Active Engines:</strong>{" "}
+                {health.singularity.active_engines} /{" "}
                 {health.singularity.total_engines}
               </p>
               <p>
@@ -262,14 +275,15 @@ export function PerfectFusionDashboard() {
                 {health.system.status}
               </div>
               <p>
-                <strong>Uptime:</strong>{' '}
+                <strong>Uptime:</strong>{" "}
                 {(health.system.uptime_ms / 1000 / 60).toFixed(0)}m
               </p>
               <p>
                 <strong>CPU:</strong> {health.system.cpu_usage.toFixed(1)}%
               </p>
               <p>
-                <strong>Memory:</strong> {health.system.memory_usage_mb.toFixed(0)}MB
+                <strong>Memory:</strong>{" "}
+                {health.system.memory_usage_mb.toFixed(0)}MB
               </p>
               <p>
                 <strong>Network:</strong> {health.system.network_status}
@@ -289,30 +303,31 @@ export function PerfectFusionDashboard() {
             {gpuMetrics && (
               <>
                 <p>
-                  <strong>Mode:</strong>{' '}
+                  <strong>Mode:</strong>{" "}
                   <span
-                    className={`badge ${gpuMetrics.isWebGPUActive ? 'badge-success' : gpuMetrics.fallbackMode ? 'badge-warning' : 'badge-info'}`}
+                    className={`badge ${gpuMetrics.isWebGPUActive ? "badge-success" : gpuMetrics.fallbackMode ? "badge-warning" : "badge-info"}`}
                   >
                     {gpuMetrics.isWebGPUActive
-                      ? 'WebGPU'
+                      ? "WebGPU"
                       : gpuMetrics.fallbackMode
-                        ? 'WebGL Fallback'
-                        : 'CPU'}
+                        ? "WebGL Fallback"
+                        : "CPU"}
                   </span>
                 </p>
                 <p>
                   <strong>Tasks Executed:</strong> {gpuMetrics.tasksExecuted}
                 </p>
                 <p>
-                  <strong>Avg Time:</strong> {gpuMetrics.averageExecutionTime.toFixed(2)}
+                  <strong>Avg Time:</strong>{" "}
+                  {gpuMetrics.averageExecutionTime.toFixed(2)}
                   ms
                 </p>
                 <p>
-                  <strong>GPU Utilization:</strong>{' '}
+                  <strong>GPU Utilization:</strong>{" "}
                   {(gpuMetrics.gpuUtilization * 100).toFixed(1)}%
                 </p>
                 <p>
-                  <strong>Memory:</strong>{' '}
+                  <strong>Memory:</strong>{" "}
                   {(gpuMetrics.memoryUsage / 1024 / 1024).toFixed(2)}MB
                 </p>
               </>
@@ -325,7 +340,7 @@ export function PerfectFusionDashboard() {
             {wasmMetrics && (
               <>
                 <p>
-                  <strong>Speedup:</strong>{' '}
+                  <strong>Speedup:</strong>{" "}
                   <span className="badge badge-success">
                     {wasmMetrics.averageSpeedup.toFixed(2)}x faster
                   </span>
@@ -337,11 +352,12 @@ export function PerfectFusionDashboard() {
                   <strong>JS Fallbacks:</strong> {wasmMetrics.tasksExecutedJS}
                 </p>
                 <p>
-                  <strong>Avg Execution:</strong>{' '}
+                  <strong>Avg Execution:</strong>{" "}
                   {wasmMetrics.averageExecutionTime.toFixed(2)}ms
                 </p>
                 <p>
-                  <strong>Memory:</strong> {(wasmMetrics.memoryUsage / 1024).toFixed(2)}KB
+                  <strong>Memory:</strong>{" "}
+                  {(wasmMetrics.memoryUsage / 1024).toFixed(2)}KB
                 </p>
               </>
             )}
@@ -353,15 +369,15 @@ export function PerfectFusionDashboard() {
             {swMetrics && (
               <>
                 <p>
-                  <strong>Status:</strong>{' '}
+                  <strong>Status:</strong>{" "}
                   <span
-                    className={`badge ${swMetrics.isActive ? 'badge-success' : 'badge-warning'}`}
+                    className={`badge ${swMetrics.isActive ? "badge-success" : "badge-warning"}`}
                   >
-                    {swMetrics.isActive ? 'Active' : 'Inactive'}
+                    {swMetrics.isActive ? "Active" : "Inactive"}
                   </span>
                 </p>
                 <p>
-                  <strong>Cache Size:</strong>{' '}
+                  <strong>Cache Size:</strong>{" "}
                   {(swMetrics.cacheSize / 1024 / 1024).toFixed(2)}MB
                 </p>
                 <p>
@@ -380,25 +396,26 @@ export function PerfectFusionDashboard() {
             {dbMetrics && (
               <>
                 <p>
-                  <strong>Cache Hit Rate:</strong>{' '}
+                  <strong>Cache Hit Rate:</strong>{" "}
                   <span className="badge badge-success">
-                    {(dbMetrics.queryPerformance.cacheHitRate * 100).toFixed(1)}%
+                    {(dbMetrics.queryPerformance.cacheHitRate * 100).toFixed(1)}
+                    %
                   </span>
                 </p>
                 <p>
-                  <strong>Avg Read:</strong>{' '}
+                  <strong>Avg Read:</strong>{" "}
                   {dbMetrics.queryPerformance.averageReadTime.toFixed(2)}ms
                 </p>
                 <p>
-                  <strong>Avg Write:</strong>{' '}
+                  <strong>Avg Write:</strong>{" "}
                   {dbMetrics.queryPerformance.averageWriteTime.toFixed(2)}ms
                 </p>
                 <p>
-                  <strong>Compression:</strong>{' '}
+                  <strong>Compression:</strong>{" "}
                   {(dbMetrics.compressionRatio * 100).toFixed(1)}%
                 </p>
                 <p>
-                  <strong>Fragmentation:</strong>{' '}
+                  <strong>Fragmentation:</strong>{" "}
                   {(dbMetrics.fragmentationLevel * 100).toFixed(1)}%
                 </p>
               </>
@@ -416,10 +433,10 @@ export function PerfectFusionDashboard() {
                 <span className="summary-label">GPU Speedup</span>
                 <span className="summary-value">
                   {gpuMetrics.isWebGPUActive
-                    ? '13.6x'
+                    ? "13.6x"
                     : gpuMetrics.fallbackMode
-                      ? '8.2x'
-                      : '1x'}
+                      ? "8.2x"
+                      : "1x"}
                 </span>
               </div>
             )}
@@ -444,7 +461,11 @@ export function PerfectFusionDashboard() {
                 <span className="summary-icon">💾</span>
                 <span className="summary-label">DB Speed</span>
                 <span className="summary-value">
-                  {(100 - dbMetrics.queryPerformance.averageReadTime * 5).toFixed(0)}%
+                  {(
+                    100 -
+                    dbMetrics.queryPerformance.averageReadTime * 5
+                  ).toFixed(0)}
+                  %
                 </span>
               </div>
             )}
@@ -457,7 +478,7 @@ export function PerfectFusionDashboard() {
         <section className="alerts-section">
           <h2>⚠️ Alerts</h2>
           <div className="alerts-list">
-            {health.alerts.map(alert => (
+            {health.alerts.map((alert) => (
               <div key={alert.id} className={`alert alert-${alert.severity}`}>
                 <div className="alert-header">
                   <span className="alert-component">{alert.component}</span>
@@ -465,12 +486,17 @@ export function PerfectFusionDashboard() {
                 </div>
                 <p>{alert.message}</p>
                 <div className="alert-actions">
-                  <button className="btn-touch" onClick={() => resolveAlert(alert.id)}>
+                  <button
+                    className="btn-touch"
+                    data-testid={`btn-fusion-resolve-${alert.id}`}
+                    onClick={() => resolveAlert(alert.id)}
+                  >
                     Resolve
                   </button>
                   {alert.auto_recoverable && (
                     <button
                       className="btn-touch"
+                      data-testid={`btn-fusion-autorecover-${alert.id}`}
                       onClick={() => triggerRecovery(alert.component)}
                     >
                       Auto-Recover
@@ -486,11 +512,12 @@ export function PerfectFusionDashboard() {
       {/* ═══ MONITORING STATUS ═══ */}
       <footer className="monitoring-status">
         <p>
-          <strong>Monitoring:</strong> {isMonitoring ? '🟢 Active' : '🔴 Inactive'}
+          <strong>Monitoring:</strong>{" "}
+          {isMonitoring ? "🟢 Active" : "🔴 Inactive"}
         </p>
         {health && (
           <p>
-            <strong>Last Update:</strong>{' '}
+            <strong>Last Update:</strong>{" "}
             {new Date(health.timestamp).toLocaleTimeString()}
           </p>
         )}
@@ -823,6 +850,6 @@ export function PerfectFusionDashboard() {
   );
 }
 
-PerfectFusionDashboard.displayName = 'PerfectFusionDashboard';
+PerfectFusionDashboard.displayName = "PerfectFusionDashboard";
 
 export default PerfectFusionDashboard;
