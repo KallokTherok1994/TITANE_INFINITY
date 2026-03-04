@@ -1,2 +1,0 @@
-Proofs:
-- docs/_evidence/program_autoheal_ah_20260226_220603/06_PROOF_LOGS_MASTER.txt

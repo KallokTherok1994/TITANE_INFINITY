@@ -1,4 +1,0 @@
-# 08_VERDICT.md
-
-Phase: P144
-Verdict: `PASS_QUALIFIED`

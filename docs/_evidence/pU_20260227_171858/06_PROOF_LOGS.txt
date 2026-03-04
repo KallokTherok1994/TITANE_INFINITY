@@ -1,8 +1,0 @@
-]633;E;{   echo "\\n=== EXEC_X3_U_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[U][RUN_$i] release rings + signed update policy + updater path"\x3b     test -f src-tauri/src/updates/release_policy.rs\x3b     rg -n "enum ReleaseRing|strict_for_ring|require_manifest_signature|require_migration_signature" src-tauri/src/updates/release_policy.rs > /dev/null\x3b     test -f installer_gui/titane_updater.sh\x3b     rg -n "Mise à jour|git fetch origin|git pull origin main|cargo build --release" installer_gui/titane_updater.sh > /dev/null\x3b     echo "[U][RUN_$i] PASS_WITH_RESERVE"\x3b   done\x3b   echo "=== EXEC_X3_U_END PASS_WITH_RESERVE ==="\x3b } >> "$LOGU";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_U_START 2026-02-27T17:30:44-05:00 ===
-[U][RUN_1] release rings + signed update policy + updater path
-[U][RUN_1] PASS_WITH_RESERVE
-[U][RUN_2] release rings + signed update policy + updater path
-[U][RUN_2] PASS_WITH_RESERVE
-[U][RUN_3] release rings + signed update policy + updater path
-[U][RUN_3] PASS_WITH_RESERVE
-=== EXEC_X3_U_END PASS_WITH_RESERVE ===

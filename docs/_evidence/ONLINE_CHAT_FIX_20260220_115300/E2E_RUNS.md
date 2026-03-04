@@ -1,6 +1,0 @@
-# E2E_RUNS
-
-- run_id: FULL_CHAT_CERT_20260221_141556
-- campaign_log: /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/FULL_CHAT_CERT_20260221_141556/C_CAMPAIGN.log
-- matrix: /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/FULL_CHAT_CERT_20260221_141556/C_E2E_MATRIX.md
-- no_false_offline: /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/_evidence/ONLINE_CHAT_FIX_20260220_115300/runs/FULL_CHAT_CERT_20260221_141556/C_NO_FALSE_OFFLINE_VERDICT.md

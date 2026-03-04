@@ -1,7 +1,0 @@
-DIRTY_PATHS_ALLOWLIST_VERDICT: PASS
-
-Files written during FINAL_SEAL (all in allowlist):
-- docs/_evidence/FINAL_SEAL_*/  → docs/_evidence/* (allowed)
-
-No runtime code changes during FINAL_SEAL. Seal is doc-only.
-G_FUSION_DIRTY_PATHS_ALLOWLIST = PASS

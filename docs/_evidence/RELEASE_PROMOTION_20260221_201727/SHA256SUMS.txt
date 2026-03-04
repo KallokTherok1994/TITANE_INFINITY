@@ -1,1 +1,0 @@
-BLOCKED: stopline active (dirty tree outside allowed paths).

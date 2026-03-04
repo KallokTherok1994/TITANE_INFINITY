@@ -1,4 +1,0 @@
-# 09_CI_MATRIX_PLAN.md
-
-Phase: P13
-Statut: PENDING

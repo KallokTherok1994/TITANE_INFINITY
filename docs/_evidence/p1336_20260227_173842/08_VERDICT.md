@@ -1,5 +1,0 @@
-# 08_VERDICT.md
-
-Phase: P1336
-Verdict: PASS_QUALIFIED
-Preuve: `reports/p1330_1336_execution_x3_20260227_173842Z.log`

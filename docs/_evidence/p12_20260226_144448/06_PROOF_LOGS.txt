@@ -1,6 +1,0 @@
-# 06_PROOF_LOGS.txt
-
-Phase: P12
-
-# BLOCKED SNAPSHOT
-# Cause: P6 non PASS (token build PROD absent)

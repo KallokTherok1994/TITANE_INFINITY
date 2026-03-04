@@ -2106,7 +2106,9 @@ const registerPredictivePreloadHandler = () => {
         },
       });
     });
-  } catch {}
+  } catch (error) {
+    void error;
+  }
 };
 
 if (typeof queueMicrotask === 'function') {

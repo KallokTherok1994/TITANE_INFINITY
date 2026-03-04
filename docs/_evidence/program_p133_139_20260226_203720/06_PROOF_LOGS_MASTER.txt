@@ -1,3 +1,0 @@
-P133_139 proof logs
-- reports/p133_139_bootstrap_precheck_20260226_203720Z.log
-- reports/p133_139_execution_x3_20260226_203720Z.log

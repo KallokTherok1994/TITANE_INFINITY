@@ -1,4 +1,0 @@
-# 04_GATES_STATUS.md
-
-Phase: PG
-Gates: BLOCKED

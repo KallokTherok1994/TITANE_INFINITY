@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P3584
-Statut: PASS_QUALIFIED
-Lot: P3584→P3590

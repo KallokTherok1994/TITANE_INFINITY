@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P3607
-Statut: PASS_QUALIFIED
-Lot: P3605→P3611

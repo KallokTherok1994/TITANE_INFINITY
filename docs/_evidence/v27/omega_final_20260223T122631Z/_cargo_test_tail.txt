@@ -1,5 +1,0 @@
-test src/unified_memory_v2/api.rs - unified_memory_v2::api::UnifiedMemoryV2 (line 16) ... ignored
-test src/unified_memory_v2/compat.rs - unified_memory_v2::compat::MemoryBridge (line 29) ... ignored
-
-test result: ok. 0 passed; 0 failed; 14 ignored; 0 measured; 0 filtered out; finished in 0.00s
-

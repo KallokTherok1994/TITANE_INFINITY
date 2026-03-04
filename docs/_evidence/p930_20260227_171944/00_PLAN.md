@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P930
-Statut: PASS_QUALIFIED
-Lot: P924→P930
