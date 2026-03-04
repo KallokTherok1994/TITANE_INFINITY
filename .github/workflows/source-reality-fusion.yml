@@ -23,9 +23,6 @@ on:
           - 'collective'
           - 'unified'
           - 'absolute'
-  schedule:
-    # Fuse with reality every 20 minutes
-    - cron: '*/20 * * * *'
 
 permissions:
   contents: write

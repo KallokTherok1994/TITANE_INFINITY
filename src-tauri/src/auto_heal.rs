@@ -75,6 +75,8 @@ fn log_event(
         if events.len() > 100 {
             events.remove(0);
         }
+    } else {
+        log::warn!("[AUTO-HEAL] events mutex poisoned; event dropped: {} | {} | {}", module, event_type, description);
     }
 
     println!("[AUTO-HEAL] {} | {} | {}", module, event_type, description);
@@ -101,6 +103,8 @@ fn log_action(
         if actions.len() > 50 {
             actions.remove(0);
         }
+    } else {
+        log::warn!("[AUTO-HEAL] actions mutex poisoned; action dropped: {} | {} | {} | {}", module, action, result, success);
     }
 
     println!("[AUTO-HEAL] Action: {} → {} ({})", action, result, if success { "✓" } else { "✗" });
@@ -139,6 +143,8 @@ fn diagnose_system(state: &AutoHealState) -> Vec<String> {
     // Mettre à jour timestamp du dernier scan
     if let Ok(mut last_scan) = state.last_scan.lock() {
         *last_scan = current_timestamp();
+    } else {
+        log::warn!("[AUTO-HEAL] last_scan mutex poisoned; timestamp update skipped");
     }
 
     issues
@@ -272,14 +278,14 @@ pub async fn auto_heal_scan(state: State<'_, AutoHealState>) -> Result<HealRepor
     let issues = diagnose_system(&state);
 
     let events = state.events.lock()
-        .map(|g| g.clone())
-        .unwrap_or_default();
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
     let actions = state.actions.lock()
-        .map(|g| g.clone())
-        .unwrap_or_default();
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
     let last_scan = state.last_scan.lock()
-        .map(|g| *g)
-        .unwrap_or(0);
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
 
     let status = if issues.is_empty() {
         "healthy".to_string()
@@ -332,14 +338,14 @@ pub async fn auto_heal_repair(
 #[tauri::command]
 pub async fn auto_heal_get_logs(state: State<'_, AutoHealState>) -> Result<HealReport, String> {
     let events = state.events.lock()
-        .map(|g| g.clone())
-        .unwrap_or_default();
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
     let actions = state.actions.lock()
-        .map(|g| g.clone())
-        .unwrap_or_default();
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
     let last_scan = state.last_scan.lock()
-        .map(|g| *g)
-        .unwrap_or(0);
+        .unwrap_or_else(|e| e.into_inner())
+        .clone();
 
     Ok(HealReport {
         events,

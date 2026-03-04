@@ -24,9 +24,6 @@ on:
           - 'deep'
           - 'complete'
           - 'transcendent'
-  schedule:
-    # Update omniscient knowledge every 25 minutes
-    - cron: '*/25 * * * *'
 
 permissions:
   contents: write

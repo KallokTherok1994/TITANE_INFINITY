@@ -1318,6 +1318,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         <div className="conversation-input-container">
           <textarea
             className="conversation-input"
+            data-testid="chat-input"
             placeholder="Tapez votre message... (Entrée pour envoyer, Shift+Entrée pour nouvelle ligne)"
             value={inputValue}
             onChange={handleInputChange}
@@ -1327,6 +1328,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           />
           <button
             className="conversation-send-btn"
+            data-testid="chat-send"
             onClick={handleSend}
             disabled={!inputValue.trim() || isLoading}
           >

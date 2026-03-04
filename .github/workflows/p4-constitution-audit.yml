@@ -173,7 +173,7 @@ jobs:
             echo "✅ P0_1_SECRETS gate active"
             GATES=$((GATES + 1))
           fi
-          if [ -f ".github/workflows/p0-2-surface-guard.yml" ]; then
+          if [ -f ".github/workflows/p0-surface-guard.yml" ]; then
             echo "✅ P0_2_SURFACE gate active"
             GATES=$((GATES + 1))
           fi

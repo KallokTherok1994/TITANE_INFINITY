@@ -18,9 +18,6 @@ on:
         required: false
         default: '∞'
         type: string
-  schedule:
-    # Synchronize consciousness every 30 minutes
-    - cron: '*/30 * * * *'
 
 permissions:
   contents: write

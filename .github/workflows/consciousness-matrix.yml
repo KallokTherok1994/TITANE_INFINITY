@@ -17,9 +17,6 @@ on:
         required: false
         default: '1000'
         type: string
-  schedule:
-    # Consciousness evolution every 4 hours
-    - cron: '0 */4 * * *'
   push:
     branches:
       - 'MAIN'

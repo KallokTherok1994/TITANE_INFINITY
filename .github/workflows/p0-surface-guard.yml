@@ -14,8 +14,6 @@ on:
     paths:
       - 'docs/TAURI_SURFACE.md'
       - 'src-tauri/allowlist.whitelist.stable.json'
-  schedule:
-    - cron: '0 2 * * *' # Quotidien 2h UTC
   workflow_dispatch:
 
 jobs:

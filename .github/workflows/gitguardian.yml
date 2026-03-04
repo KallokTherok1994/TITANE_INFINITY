@@ -5,8 +5,6 @@ on:
     branches: [MAIN, main, dev, stable-runtime]
   pull_request:
     branches: [MAIN, main]
-  schedule:
-    - cron: '0 4 * * *' # Daily at 4 AM UTC
   workflow_dispatch:
 
 # Prevent concurrent runs on the same branch
@@ -29,7 +27,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.1
         with:
           fetch-depth: 0 # Full history for better scanning
 
