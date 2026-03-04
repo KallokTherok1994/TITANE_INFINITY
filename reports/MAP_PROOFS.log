@@ -145,3 +145,19 @@
 [2026-03-04T13:28:22Z] PROOF: G_MAP_ANTI_DRIFT_RULE_PRESENT — procédure anti-drift dans docs/MAP_INDEX.md
 [2026-03-04T13:28:22Z] PROOF: Proof pack créé — proof_packs/AUDIT360_20260304_132822/ (10 fichiers)
 [2026-03-04T13:28:22Z] VERDICT: SEALED — 11/11 gates PASS, 0 bloquants, 5 findings différés documentés
+
+--- AUDIT360 CONTINUATION SESSION 2026-03-04 (17:34) ---
+[2026-03-04T17:34:36Z] SESSION: AUDIT360_20260304_173436 — Continuation : Surface Map + Gates + Deep Audit + Fix Plan
+[2026-03-04T17:34:36Z] PROOF: Surface Map créée — 07_SURFACE_MAP.md (7 domaines : UI, Chat IA, Mémoire, IPC, Engines, Sécurité, Tests)
+[2026-03-04T17:34:36Z] PROOF: G1 (réseau direct UI) PASS — fetch() entry.ts:107 est un asset local Tauri (./main-entry.json)
+[2026-03-04T17:34:36Z] PROOF: G2 (4-Ring) MINOR — RV-001 selfHealingEngine (safeInvoke Ring 2), RV-002 cognitiveLayoutIntegrations (tauriClient Ring 2)
+[2026-03-04T17:34:36Z] PROOF: G3 (IPC canonique) PASS — TauriBridge wraps secureInvoke (ligne 48), StateBridge via TauriBridge, entry.ts boot-marker toléré
+[2026-03-04T17:34:36Z] PROOF: G4 (boucles non bornées) PASS — 19 setInterval vérifiés, tous ont return () => clearInterval(), 0 while(true)
+[2026-03-04T17:34:36Z] PROOF: G5 (versions sync) PASS — 27.2.0 sur package.json, Cargo.toml, tauri.conf.json, MANIFEST.json
+[2026-03-04T17:34:36Z] PROOF: G6 (E2E) BLOCKED_E2E_RUNTIME — infrastructure prête, runtime Tauri non disponible en sandbox
+[2026-03-04T17:34:36Z] FINDING: SEC-001 — CSP img-src https: trop permissive (tauri.conf.json:66)
+[2026-03-04T17:34:36Z] FINDING: SEC-002 — db_service.rs Mutex unwrap x9+ (services/db_service.rs:173+)
+[2026-03-04T17:34:36Z] FINDING: IPC-CANON-001 — generate_response sans champ ok (ai_chat.rs:249)
+[2026-03-04T17:34:36Z] FINDING: CHAT-01 — textarea non désactivée pendant envoi (ConversationSection.tsx)
+[2026-03-04T17:34:36Z] PROOF: Master Fix Plan créé — 10_MASTER_FIX_PLAN.md (Sprints 1-4, 8 fixes planifiés)
+[2026-03-04T17:34:36Z] VERDICT: SEALED — Proof pack 14 artefacts, 4 PASS + 1 MINOR + 1 BLOCKED_INFRA, 0 bloquants

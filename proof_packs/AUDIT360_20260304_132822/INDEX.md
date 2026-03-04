@@ -18,8 +18,12 @@
 | `04_SCOPE_GATE.md` | Gate de périmètre | ✅ PRÉSENT |
 | `05_REFERENCE_GATE.md` | Gate de référence cartographique | ✅ PRÉSENT |
 | `06_PERFORMANCE_RULES_PRESENT.md` | Règles de performance vérifiées | ✅ PRÉSENT |
-| `VERDICT.md` | Verdict final de l'audit | ✅ PRÉSENT |
+| `VERDICT.md` | Verdict final de l'audit (mis à jour session 2) | ✅ PRÉSENT |
 | `ROLLBACK.md` | Procédure de rollback documentée | ✅ PRÉSENT |
+| `07_SURFACE_MAP.md` | Cartographie complète des surfaces (7 domaines) | ✅ PRÉSENT |
+| `08_GATES_SCAN.md` | Scan effectif des gates G1-G6 | ✅ PRÉSENT |
+| `09_DEEP_DOMAIN_AUDIT.md` | Audit approfondi par domaine avec findings | ✅ PRÉSENT |
+| `10_MASTER_FIX_PLAN.md` | Plan de remédiation priorisé (Sprints 1-4) | ✅ PRÉSENT |
 
 ---
 
