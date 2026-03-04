@@ -10,7 +10,7 @@
  * @phase 12 - Ultimate Optimization
  */
 
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from "react";
 import {
   gpuAcceleratorV2,
   webAssemblyCompute,
@@ -20,9 +20,9 @@ import {
   type WASMMetrics,
   type ServiceWorkerMetrics,
   type IndexedDBMetrics,
-} from '@/modules/optimization';
+} from "@/modules/optimization";
 
-import './UltimateOptimizationDashboard.css';
+import "./UltimateOptimizationDashboard.css";
 
 interface UltimateOptimizationDashboardProps {
   className?: string;
@@ -30,7 +30,7 @@ interface UltimateOptimizationDashboardProps {
 
 export const UltimateOptimizationDashboard: React.FC<
   UltimateOptimizationDashboardProps
-> = ({ className = '' }) => {
+> = ({ className = "" }) => {
   const [gpuMetrics, setGpuMetrics] = useState<GPUv2Metrics | null>(null);
   const [wasmMetrics, setWasmMetrics] = useState<WASMMetrics | null>(null);
   const [swMetrics, setSwMetrics] = useState<ServiceWorkerMetrics | null>(null);
@@ -46,7 +46,10 @@ export const UltimateOptimizationDashboard: React.FC<
       setSwMetrics(serviceWorkerManager.getMetrics());
       setDbMetrics(indexedDBOptimizer.getMetrics());
     } catch (error) {
-      console.error('[UltimateOptimizationDashboard] Metrics refresh failed:', error);
+      console.error(
+        "[UltimateOptimizationDashboard] Metrics refresh failed:",
+        error,
+      );
     }
   }, []);
 
@@ -61,7 +64,10 @@ export const UltimateOptimizationDashboard: React.FC<
       try {
         await gpuAcceleratorV2.initialize();
       } catch (error) {
-        console.error('[UltimateOptimizationDashboard] GPU init failed:', error);
+        console.error(
+          "[UltimateOptimizationDashboard] GPU init failed:",
+          error,
+        );
       }
 
       // WebAssembly Compute
@@ -69,7 +75,10 @@ export const UltimateOptimizationDashboard: React.FC<
       try {
         await webAssemblyCompute.initialize();
       } catch (error) {
-        console.error('[UltimateOptimizationDashboard] WASM init failed:', error);
+        console.error(
+          "[UltimateOptimizationDashboard] WASM init failed:",
+          error,
+        );
       }
 
       // Service Worker Manager (auto-register may be unsupported depending on runtime)
@@ -80,25 +89,28 @@ export const UltimateOptimizationDashboard: React.FC<
       try {
         await indexedDBOptimizer.initialize([
           {
-            name: 'cache',
-            keyPath: 'key',
+            name: "cache",
+            keyPath: "key",
             indexes: [
-              { name: 'timestamp', keyPath: 'timestamp', unique: false },
-              { name: 'provider', keyPath: 'provider', unique: false },
+              { name: "timestamp", keyPath: "timestamp", unique: false },
+              { name: "provider", keyPath: "provider", unique: false },
             ],
           },
           {
-            name: 'memory',
-            keyPath: 'id',
+            name: "memory",
+            keyPath: "id",
             autoIncrement: true,
             indexes: [
-              { name: 'type', keyPath: 'type', unique: false },
-              { name: 'timestamp', keyPath: 'timestamp', unique: false },
+              { name: "type", keyPath: "type", unique: false },
+              { name: "timestamp", keyPath: "timestamp", unique: false },
             ],
           },
         ]);
       } catch (error) {
-        console.error('[UltimateOptimizationDashboard] IndexedDB init failed:', error);
+        console.error(
+          "[UltimateOptimizationDashboard] IndexedDB init failed:",
+          error,
+        );
       }
 
       setInitializationProgress(100);
@@ -127,13 +139,13 @@ export const UltimateOptimizationDashboard: React.FC<
       const b = new Float32Array([6, 7, 8, 9, 10]);
 
       const result = await gpuAcceleratorV2.vectorAdd(a, b);
-      console.log('[GPU Test] Vector addition result:', result);
+      console.log("[GPU Test] Vector addition result:", result);
 
       alert(
-        `GPU Test Success!\nInput: [1,2,3,4,5] + [6,7,8,9,10]\nOutput: [${Array.from(result).join(', ')}]`
+        `GPU Test Success!\nInput: [1,2,3,4,5] + [6,7,8,9,10]\nOutput: [${Array.from(result).join(", ")}]`,
       );
     } catch (error) {
-      alert('GPU Test Failed: ' + (error as Error).message);
+      alert("GPU Test Failed: " + (error as Error).message);
     }
   };
 
@@ -143,42 +155,45 @@ export const UltimateOptimizationDashboard: React.FC<
       const b = new Float32Array([1, 3, 5]);
 
       const result = await webAssemblyCompute.dotProduct(a, b);
-      console.log('[WASM Test] Dot product result:', result);
+      console.log("[WASM Test] Dot product result:", result);
 
       alert(`WASM Test Success!\nDot product of [2,4,6] · [1,3,5] = ${result}`);
     } catch (error) {
-      alert('WASM Test Failed: ' + (error as Error).message);
+      alert("WASM Test Failed: " + (error as Error).message);
     }
   };
 
   const handleClearCache = async () => {
-    if (!confirm('Clear all Service Worker caches?')) return;
+    if (!confirm("Clear all Service Worker caches?")) return;
 
     try {
       await serviceWorkerManager.clearCache();
-      alert('Cache cleared successfully!');
+      alert("Cache cleared successfully!");
       refreshMetrics();
     } catch (error) {
-      alert('Failed to clear cache: ' + (error as Error).message);
+      alert("Failed to clear cache: " + (error as Error).message);
     }
   };
 
   const handleCompactDB = async () => {
-    if (!confirm('Compact IndexedDB? This may take a moment.')) return;
+    if (!confirm("Compact IndexedDB? This may take a moment.")) return;
 
     try {
       // Trigger compaction for all stores
       await indexedDBOptimizer.updateMetrics();
-      alert('Database compacted successfully!');
+      alert("Database compacted successfully!");
       refreshMetrics();
     } catch (error) {
-      alert('Failed to compact database: ' + (error as Error).message);
+      alert("Failed to compact database: " + (error as Error).message);
     }
   };
 
   if (!isInitialized) {
     return (
-      <div className={`ultimate-optimization-dashboard ${className}`}>
+      <div
+        className={`ultimate-optimization-dashboard ${className}`}
+        data-testid="page-optimization"
+      >
         <div className="dashboard-loading">
           <h2>⚡ Initializing Ultimate Optimization</h2>
           <div className="progress-bar">
@@ -194,7 +209,10 @@ export const UltimateOptimizationDashboard: React.FC<
   }
 
   return (
-    <div className={`ultimate-optimization-dashboard ${className}`}>
+    <div
+      className={`ultimate-optimization-dashboard ${className}`}
+      data-testid="page-optimization"
+    >
       <header className="dashboard-header">
         <h1>⚡ Ultimate Optimization Dashboard</h1>
         <p>Phase 12 v25.6.0 - GPU · WASM · Service Worker · IndexedDB</p>
@@ -205,13 +223,13 @@ export const UltimateOptimizationDashboard: React.FC<
         <div className="module-header">
           <h2>🎮 GPU Accelerator V2</h2>
           <span
-            className={`status-badge ${gpuMetrics?.isWebGPUActive ? 'active' : 'fallback'}`}
+            className={`status-badge ${gpuMetrics?.isWebGPUActive ? "active" : "fallback"}`}
           >
             {gpuMetrics?.isWebGPUActive
-              ? 'WebGPU Active'
+              ? "WebGPU Active"
               : gpuMetrics?.fallbackMode
-                ? 'WebGL Fallback'
-                : 'Inactive'}
+                ? "WebGL Fallback"
+                : "Inactive"}
           </span>
         </div>
 
@@ -240,7 +258,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="test-button" onClick={handleTestGPU}>
+            <button
+              className="test-button"
+              data-testid="btn-optimization-test-gpu"
+              onClick={handleTestGPU}
+            >
               🧪 Test Vector Addition
             </button>
           </div>
@@ -252,9 +274,9 @@ export const UltimateOptimizationDashboard: React.FC<
         <div className="module-header">
           <h2>⚛️ WebAssembly Compute</h2>
           <span
-            className={`status-badge ${wasmMetrics?.isWASMActive ? 'active' : 'fallback'}`}
+            className={`status-badge ${wasmMetrics?.isWASMActive ? "active" : "fallback"}`}
           >
-            {wasmMetrics?.isWASMActive ? 'WASM Active' : 'JS Fallback'}
+            {wasmMetrics?.isWASMActive ? "WASM Active" : "JS Fallback"}
           </span>
         </div>
 
@@ -263,7 +285,9 @@ export const UltimateOptimizationDashboard: React.FC<
             <div className="metrics-grid">
               <div className="metric-card">
                 <span className="metric-label">Total Tasks</span>
-                <span className="metric-value">{wasmMetrics.tasksExecuted}</span>
+                <span className="metric-value">
+                  {wasmMetrics.tasksExecuted}
+                </span>
               </div>
               <div className="metric-card">
                 <span className="metric-label">WASM Tasks</span>
@@ -300,7 +324,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="test-button" onClick={handleTestWASM}>
+            <button
+              className="test-button"
+              data-testid="btn-optimization-test-wasm"
+              onClick={handleTestWASM}
+            >
               🧪 Test Dot Product
             </button>
           </div>
@@ -311,12 +339,14 @@ export const UltimateOptimizationDashboard: React.FC<
       <section className="optimization-module">
         <div className="module-header">
           <h2>🌐 Service Worker</h2>
-          <span className={`status-badge ${swMetrics?.isActive ? 'active' : 'inactive'}`}>
+          <span
+            className={`status-badge ${swMetrics?.isActive ? "active" : "inactive"}`}
+          >
             {swMetrics?.isRegistered
               ? swMetrics.isActive
-                ? 'Active'
-                : 'Registered'
-              : 'Not Registered'}
+                ? "Active"
+                : "Registered"
+              : "Not Registered"}
           </span>
         </div>
 
@@ -331,7 +361,9 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
               <div className="metric-card">
                 <span className="metric-label">Cached Resources</span>
-                <span className="metric-value">{swMetrics.cachedResources}</span>
+                <span className="metric-value">
+                  {swMetrics.cachedResources}
+                </span>
               </div>
               <div className="metric-card">
                 <span className="metric-label">Version</span>
@@ -340,15 +372,19 @@ export const UltimateOptimizationDashboard: React.FC<
               <div className="metric-card">
                 <span className="metric-label">Update Available</span>
                 <span
-                  className={`metric-value ${swMetrics.updateAvailable ? 'warning' : 'success'}`}
+                  className={`metric-value ${swMetrics.updateAvailable ? "warning" : "success"}`}
                 >
-                  {swMetrics.updateAvailable ? 'Yes' : 'No'}
+                  {swMetrics.updateAvailable ? "Yes" : "No"}
                 </span>
               </div>
             </div>
 
             <div className="action-buttons">
-              <button className="action-button" onClick={handleClearCache}>
+              <button
+                className="action-button"
+                data-testid="btn-optimization-clear-cache"
+                onClick={handleClearCache}
+              >
                 🗑️ Clear Cache
               </button>
               <button
@@ -411,7 +447,9 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
               <div className="metric-card">
                 <span className="metric-label">Fragmentation</span>
-                <span className="metric-value">{dbMetrics.fragmentationLevel}%</span>
+                <span className="metric-value">
+                  {dbMetrics.fragmentationLevel}%
+                </span>
               </div>
               <div className="metric-card">
                 <span className="metric-label">Indexes</span>
@@ -419,7 +457,11 @@ export const UltimateOptimizationDashboard: React.FC<
               </div>
             </div>
 
-            <button className="action-button" onClick={handleCompactDB}>
+            <button
+              className="action-button"
+              data-testid="btn-optimization-compact-db"
+              onClick={handleCompactDB}
+            >
               🔧 Compact Database
             </button>
           </div>
@@ -436,10 +478,10 @@ export const UltimateOptimizationDashboard: React.FC<
               <h3>GPU Acceleration</h3>
               <p className="summary-value">
                 {gpuMetrics?.isWebGPUActive
-                  ? 'WebGPU'
+                  ? "WebGPU"
                   : gpuMetrics?.fallbackMode
-                    ? 'WebGL'
-                    : 'CPU'}
+                    ? "WebGL"
+                    : "CPU"}
               </p>
               <p className="summary-label">Active Backend</p>
             </div>

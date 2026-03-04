@@ -15,7 +15,14 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState, Suspense, lazy, useMemo, useCallback } from 'react';
+import React, {
+  useEffect,
+  useState,
+  Suspense,
+  lazy,
+  useMemo,
+  useCallback,
+} from "react";
 import {
   BrowserRouter,
   Routes,
@@ -23,57 +30,58 @@ import {
   Navigate,
   useLocation,
   useNavigate,
-} from 'react-router-dom';
-import { secureInvoke } from '@/lib/security';
-import { useLivingEngines } from './hooks';
-import { logger } from './lib/logger';
-import { ThemeProvider } from './themes/ThemeProvider';
-import { AnimationProvider } from './contexts/AnimationContext';
-import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
-import { AppShell, TopNav, createTopNavItems } from '@components/layout';
-import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
-import { Button } from './ui';
+} from "react-router-dom";
+import { secureInvoke } from "@/lib/security";
+import { useLivingEngines } from "./hooks";
+import { logger } from "./lib/logger";
+import { ThemeProvider } from "./themes/ThemeProvider";
+import { AnimationProvider } from "./contexts/AnimationContext";
+import { TitanStateProvider } from "./context/TitanStateContext"; // ✨ v∞.MPE - Persistence
+import { AppShell, TopNav, createTopNavItems } from "@components/layout";
+import { BackendDownIndicator } from "@/components/system/BackendDownIndicator"; // ✨ UI vΩ Phase F - Mode dégradé
+import { Button } from "./ui";
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
 const XPBar = lazy(() =>
-  import('./components/experience/XPBar').then(m => ({ default: m.XPBar }))
+  import("./components/experience/XPBar").then((m) => ({ default: m.XPBar })),
 );
-import { AutoHealErrorBoundary } from './components/AutoHealErrorBoundary';
-import { ErrorBoundary } from './components/ErrorBoundary'; // ✨ v19 - Security Hardening
+import { AutoHealErrorBoundary } from "./components/AutoHealErrorBoundary";
+import { ErrorBoundary } from "./components/ErrorBoundary"; // ✨ v19 - Security Hardening
 import {
   detectEnvironment,
   shouldBlockLoading as _shouldBlockLoading,
   logEnvironmentWarnings,
-} from './core/tauri/environment';
+} from "./core/tauri/environment";
+import { isTauriRuntimeAvailable } from "@/utils/tauriProtector";
 // ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)
-import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
-import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
-import { PageLoadingFallback } from './ui/components/PageLoadingFallback'; // ✨ v19.5.2 - Enhanced loading
+import { TitaneLogo } from "./components/branding/TitaneLogo"; // ✨ v∞ - Logo Reactor
+import { OnboardingFlow } from "./components/Onboarding"; // ✨ v19.5.2 - User Onboarding System
+import { PageLoadingFallback } from "./ui/components/PageLoadingFallback"; // ✨ v19.5.2 - Enhanced loading
 // ✨ OPT-10: initializeMicroInteractions lazy-loaded below (removed static import)
-import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast notifications
-import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ v29.1.0 - Optimized selectors
+import { ToastContainer } from "./ui/components/Toast"; // ✨ v19.5.2 - Toast notifications
+import { useToasts, useToastActions } from "./stores/uiStore.selectors"; // ✨ v29.1.0 - Optimized selectors
 // Sidebar state removed in UI vΩ - Navigation moved to TopNav
 // import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
-import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
+import { initializeOllama } from "./services/ai/providers/ollama"; // ✨ v21 - Local AI initialization
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
 // ✨ CONSOLE MONITOR - Auto-Heal Integration
-import { consoleMonitor } from './services/monitoring/consoleMonitor';
+import { consoleMonitor } from "./services/monitoring/consoleMonitor";
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
 const QuantumParticles = lazy(() =>
-  import('./components/aura/QuantumParticles').then(m => ({
+  import("./components/aura/QuantumParticles").then((m) => ({
     default: m.QuantumParticles,
-  }))
+  })),
 );
 const AuraControlPanel = lazy(() =>
-  import('./components/aura/AuraControlPanel').then(m => ({
+  import("./components/aura/AuraControlPanel").then((m) => ({
     default: m.AuraControlPanel,
-  }))
+  })),
 );
-import { useAura } from './hooks/useAuraOrchestrator';
-import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
-import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
-import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
+import { useAura } from "./hooks/useAuraOrchestrator";
+import { useWindowControls } from "./hooks/useWindowControls"; // ✨ v26.2.1 - Window zoom & fullscreen controls
+import { useZoomControl, loadSavedZoom } from "./hooks/useZoomControl"; // ✨ Sprint 6 Phase 3 - Zoom control
+import { ToastProvider } from "./components/providers/ToastProvider"; // ✨ M1 - Toast notifications via Sonner
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -87,7 +95,7 @@ import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 
  *   - ✅ Tous contextes: Autorisés sans restriction
  *   - Note: Aucun blocage, aucun warning - Fonctionnement total
  */
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   const env = detectEnvironment();
 
   // Log environnement (informatif uniquement, aucune restriction)
@@ -95,44 +103,48 @@ if (typeof window !== 'undefined') {
 
   // 🔓 RESTRICTIONS DÉSACTIVÉES: Aucun blocage dans aucun contexte
   // L'application fonctionne librement en Tauri, HTTP, dev ou prod
-  logger.info('TITANE∞ démarré - Mode ouvert (restrictions désactivées)', {
-    component: 'Environment',
+  logger.info("TITANE∞ démarré - Mode ouvert (restrictions désactivées)", {
+    component: "Environment",
     origin: env.origin,
-    mode: env.isDev ? 'Development' : 'Production',
+    mode: env.isDev ? "Development" : "Production",
   });
 }
 
 // ✨ v24.3.0 - Lazy loaded pages (code splitting)
 const TimePage = lazy(() =>
-  import('./pages/TimePage').then(m => ({ default: m.TimePage }))
+  import("./pages/TimePage").then((m) => ({ default: m.TimePage })),
 );
 const Experience = lazy(() =>
-  import('./pages/Experience').then(m => ({ default: m.Experience }))
+  import("./pages/Experience").then((m) => ({ default: m.Experience })),
 );
-const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
+const Stats = lazy(() =>
+  import("./pages/Stats").then((m) => ({ default: m.Stats })),
+);
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
 const SingularityMonitor = lazy(() =>
-  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
+  import("./components/SingularityMonitor").then((m) => ({
+    default: m.SingularityMonitor,
+  })),
 );
 
 // ✨ v24.3.0 - Cognitive Layout Control
 const CognitiveLayoutControl = lazy(() =>
-  import('./components/cognitive/CognitiveLayoutControl').then(m => ({
+  import("./components/cognitive/CognitiveLayoutControl").then((m) => ({
     default: m.CognitiveLayoutControl,
-  }))
+  })),
 );
 
-import './components/psyche/DeepPsychePanel.css';
-import { presenceOS } from './engines/presence/_stubs';
+import "./components/psyche/DeepPsychePanel.css";
+import { presenceOS } from "./engines/presence/_stubs";
 // ✨ P0.Ω∞ - Splash Watchdog (Anti-freeze diagnostic)
-import { SplashWatchdog } from './components/diagnostics/SplashWatchdog';
+import { SplashWatchdog } from "./components/diagnostics/SplashWatchdog";
 
 type LazyModule<T> = { default: T };
 
 const lazyWithTimeout = <T extends React.ComponentType>(
   loader: () => Promise<LazyModule<T>>,
-  options: { timeoutMs: number; label: string }
+  options: { timeoutMs: number; label: string },
 ) =>
   lazy<T>(() => {
     const timeoutPromise = new Promise<LazyModule<T>>((_, reject) => {
@@ -145,105 +157,125 @@ const lazyWithTimeout = <T extends React.ComponentType>(
 
 // ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazy(() =>
-  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
+  import("./pages/PerformanceTest").then((m) => ({
+    default: m.PerformanceTest,
+  })),
 );
-const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
-const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
-const EvolutionMonitor = lazy(() => import('./ui/pages/EvolutionMonitor'));
+const KnowledgeFusionPage = lazy(
+  () => import("./ui/pages/KnowledgeFusionPage"),
+);
+const CreationStudio = lazy(() => import("./ui/pages/CreationStudio"));
+const EvolutionMonitor = lazy(() => import("./ui/pages/EvolutionMonitor"));
 
 // ✨ v24.3.0 - Core pages
 const AdminPage = lazy(() =>
-  import('./features/admin').then(m => ({ default: m.AdminPage }))
+  import("./features/admin").then((m) => ({ default: m.AdminPage })),
 );
 const TitanePage = lazyWithTimeout(
-  () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
-  { timeoutMs: 20000, label: 'TitanePage' }
+  () => import("./pages/TitanePage").then((m) => ({ default: m.TitanePage })),
+  { timeoutMs: 20000, label: "TitanePage" },
 );
 const OrchestrationMetaCenter = lazy(() =>
-  import('./pages/OrchestrationMetaCenter').then(m => ({
+  import("./pages/OrchestrationMetaCenter").then((m) => ({
     default: m.OrchestrationMetaCenter,
-  }))
+  })),
 );
-const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
+const DevPage = lazy(() =>
+  import("./pages/DevPage").then((m) => ({ default: m.DevPage })),
+);
 const PerfectFusionDashboard = lazy(() =>
-  import('./components/fusion/PerfectFusionDashboard').then(m => ({ default: m.default }))
+  import("./components/fusion/PerfectFusionDashboard").then((m) => ({
+    default: m.default,
+  })),
 );
 const UltimateOptimizationDashboard = lazy(() =>
-  import('./components/optimization/UltimateOptimizationDashboard').then(m => ({
-    default: m.UltimateOptimizationDashboard,
-  }))
+  import("./components/optimization/UltimateOptimizationDashboard").then(
+    (m) => ({
+      default: m.UltimateOptimizationDashboard,
+    }),
+  ),
 );
 
 // ✨ v24.3.0 - Center modules
 const RealityCenter = lazy(() =>
-  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
+  import("./components/RealityCenter/RealityCenter").then((m) => ({
+    default: m.default,
+  })),
 );
 
 // ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
 const ConsoleMonitorDashboard = lazy(() =>
-  import('./components/dev/ConsoleMonitorDashboard').then(m => ({
+  import("./components/dev/ConsoleMonitorDashboard").then((m) => ({
     default: m.ConsoleMonitorDashboard,
-  }))
+  })),
 );
 
 // ✨ v26.2 PREDICTIVE DASHBOARD - ML-like error prediction & correlation
 const PredictiveDashboard = lazy(() =>
-  import('./components/dev/PredictiveDashboard').then(m => ({
+  import("./components/dev/PredictiveDashboard").then((m) => ({
     default: m.PredictiveDashboard,
-  }))
+  })),
 );
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
 const HyperCenter = lazy(() =>
-  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
+  import("./components/HyperCenter/HyperCenter").then((m) => ({
+    default: m.default,
+  })),
 );
 
 // ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)
 const QuantumCenter = lazy(() =>
-  import('./components/QuantumCenter/QuantumCenter').then(m => ({ default: m.default }))
+  import("./components/QuantumCenter/QuantumCenter").then((m) => ({
+    default: m.default,
+  })),
 );
 
 // ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
 const IdentityCenter = lazy(() =>
-  import('./components/IdentityCenter/IdentityCenter').then(m => ({ default: m.default }))
+  import("./components/IdentityCenter/IdentityCenter").then((m) => ({
+    default: m.default,
+  })),
 );
 
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
 const MemoryEvolutionCenter = lazy(() =>
-  import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({
+  import("./components/MemoryEvolution/MemoryEvolutionCenter").then((m) => ({
     default: m.default,
-  }))
+  })),
 );
 
 // ✨ CLOUD CENTER - Cloud Sync & Vault Engine v∞
 const CloudCenter = lazy(() =>
-  import('./pages/CloudCenter').then(m => ({ default: m.CloudCenter }))
+  import("./pages/CloudCenter").then((m) => ({ default: m.CloudCenter })),
 );
 
 const OrchestrationIntelligenceCenter = lazy(
-  () => import('./modules/OrchestrationIntelligenceCenter')
+  () => import("./modules/OrchestrationIntelligenceCenter"),
 );
 
 // ✨ v24.3.0 - Engine pages
 const Sentinel = lazy(() =>
-  import('./pages/Sentinel').then(m => ({ default: m.Sentinel }))
+  import("./pages/Sentinel").then((m) => ({ default: m.Sentinel })),
 );
 const Watchdog = lazy(() =>
-  import('./pages/Watchdog').then(m => ({ default: m.Watchdog }))
+  import("./pages/Watchdog").then((m) => ({ default: m.Watchdog })),
 );
 const SelfHeal = lazy(() =>
-  import('./pages/SelfHeal').then(m => ({ default: m.SelfHeal }))
+  import("./pages/SelfHeal").then((m) => ({ default: m.SelfHeal })),
 );
 const AdaptiveEngine = lazy(() =>
-  import('./pages/AdaptiveEngine').then(m => ({ default: m.AdaptiveEngine }))
+  import("./pages/AdaptiveEngine").then((m) => ({ default: m.AdaptiveEngine })),
 );
-const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memory })));
+const Memory = lazy(() =>
+  import("./pages/Memory").then((m) => ({ default: m.Memory })),
+);
 const ResearchPage = lazy(() =>
-  import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
+  import("./pages/ResearchPage").then((m) => ({ default: m.ResearchPage })),
 );
 
 const emitBootMarker = (marker: string): void => {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
   window.__TITANE_EMIT_BOOT_MARKER__?.(marker);
@@ -259,9 +291,9 @@ const AppRouter: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    emitBootMarker('BOOT:AFTER_ROUTER');
-    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
-    emitBootMarker('BOOT:BEFORE_ORCHESTRATOR_INIT');
+    emitBootMarker("BOOT:AFTER_ROUTER");
+    emitBootMarker("BOOT:BEFORE_ORCHESTRATOR");
+    emitBootMarker("BOOT:BEFORE_ORCHESTRATOR_INIT");
   }, []);
 
   // UI vΩ: Sidebar removed, TopNav navigation only
@@ -292,7 +324,9 @@ const AppRouter: React.FC = () => {
 
     // 🧪 DEV MODE: Skip onboarding check in development (E2E tests + local dev)
     if (isDev) {
-      logger.info('Dev mode detected - bypassing onboarding check', { component: 'App' });
+      logger.info("Dev mode detected - bypassing onboarding check", {
+        component: "App",
+      });
       setOnboardingComplete(true);
       return;
     }
@@ -301,14 +335,15 @@ const AppRouter: React.FC = () => {
     const checkOnboarding = async () => {
       try {
         // En mode navigateur, vérifier d'abord le localStorage
-        if (typeof localStorage !== 'undefined') {
-          const browserMode = localStorage.getItem('titane_browser_mode') === '1';
+        if (typeof localStorage !== "undefined") {
+          const browserMode =
+            localStorage.getItem("titane_browser_mode") === "1";
           if (browserMode) {
             const localComplete =
-              localStorage.getItem('titane_onboarding_complete') === '1';
-            logger.info('Onboarding status (browser mode)', {
-              component: 'Onboarding',
-              status: localComplete ? 'Complete' : 'Not started',
+              localStorage.getItem("titane_onboarding_complete") === "1";
+            logger.info("Onboarding status (browser mode)", {
+              component: "Onboarding",
+              status: localComplete ? "Complete" : "Not started",
             });
             setOnboardingComplete(localComplete || true);
             return;
@@ -316,15 +351,17 @@ const AppRouter: React.FC = () => {
         }
 
         // Mode Tauri : interroger le backend
-        const isComplete = await secureInvoke<boolean>('is_onboarding_complete');
-        logger.info('Onboarding status (Tauri mode)', {
-          component: 'Onboarding',
-          status: isComplete ? 'Complete' : 'Not started',
+        const isComplete = await secureInvoke<boolean>(
+          "is_onboarding_complete",
+        );
+        logger.info("Onboarding status (Tauri mode)", {
+          component: "Onboarding",
+          status: isComplete ? "Complete" : "Not started",
         });
         setOnboardingComplete(isComplete);
       } catch (error) {
-        logger.warn('Failed to check onboarding status, assuming complete', {
-          component: 'Onboarding',
+        logger.warn("Failed to check onboarding status, assuming complete", {
+          component: "Onboarding",
           error,
         });
         setOnboardingComplete(true);
@@ -333,13 +370,14 @@ const AppRouter: React.FC = () => {
 
     // Add timeout to prevent infinite loading
     const timeoutDuration =
-      typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
+      typeof window !== "undefined" &&
+      localStorage.getItem("titane_browser_mode") === "1"
         ? 1000
         : 5000;
 
     const timeoutId = setTimeout(() => {
-      logger.warn('Onboarding check timeout, assuming complete', {
-        component: 'Onboarding',
+      logger.warn("Onboarding check timeout, assuming complete", {
+        component: "Onboarding",
       });
       setOnboardingComplete(true);
     }, timeoutDuration);
@@ -355,11 +393,11 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     // Opt-in only: Ollama is an optional local service.
     // Avoid background localhost probes unless explicitly enabled.
-    const envEnabled = import.meta.env.VITE_OLLAMA_ENABLED === '1';
+    const envEnabled = import.meta.env.VITE_OLLAMA_ENABLED === "1";
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_ollama_enabled');
-      userEnabled = raw === '1' || raw === 'true';
+      const raw = localStorage.getItem("titane_ollama_enabled");
+      userEnabled = raw === "1" || raw === "true";
     } catch {
       userEnabled = false;
     }
@@ -368,16 +406,16 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    logger.info('Initializing local AI provider', {
-      component: 'Ollama',
-      optIn: envEnabled ? 'env' : 'user',
+    logger.info("Initializing local AI provider", {
+      component: "Ollama",
+      optIn: envEnabled ? "env" : "user",
     });
 
-    initializeOllama().catch(error => {
+    initializeOllama().catch((error) => {
       logger.error(
-        'Failed to initialize OLLAMA',
-        { component: 'App', service: 'Ollama' },
-        error as Error
+        "Failed to initialize OLLAMA",
+        { component: "App", service: "Ollama" },
+        error as Error,
       );
     });
   }, []);
@@ -386,19 +424,19 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     if (import.meta.env.DEV) {
       console.log(
-        '🔍 [CONSOLE-MONITOR] Starting console monitoring & auto-heal integration...'
+        "🔍 [CONSOLE-MONITOR] Starting console monitoring & auto-heal integration...",
       );
       try {
         consoleMonitor.start();
-        logger.info('Console monitor started', {
-          component: 'App',
-          service: 'ConsoleMonitor',
+        logger.info("Console monitor started", {
+          component: "App",
+          service: "ConsoleMonitor",
         });
       } catch (error) {
         logger.error(
-          'Failed to start console monitor',
-          { component: 'App', service: 'ConsoleMonitor' },
-          error as Error
+          "Failed to start console monitor",
+          { component: "App", service: "ConsoleMonitor" },
+          error as Error,
         );
       }
     }
@@ -415,16 +453,16 @@ const AppRouter: React.FC = () => {
     // ✨ Sprint 6 Phase 3 - Load saved zoom level
     loadSavedZoom();
 
-    import('./lib/security')
+    import("./lib/security")
       .then(({ enableLocalNetworkMode }) => {
         enableLocalNetworkMode();
-        logger.info('Local network mode enabled - reduced restrictions', {
-          component: 'Security',
+        logger.info("Local network mode enabled - reduced restrictions", {
+          component: "Security",
         });
       })
-      .catch(err => {
-        logger.warn('Failed to enable local network mode', {
-          component: 'Security',
+      .catch((err) => {
+        logger.warn("Failed to enable local network mode", {
+          component: "Security",
           error: err,
         });
       });
@@ -433,11 +471,11 @@ const AppRouter: React.FC = () => {
   // ✨ v26.2 - Initialize auto-backup service (6-hour intervals)
   useEffect(() => {
     // Silent-by-default in production/Tauri: periodic background backups must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_AUTO_BACKUP_ENABLED === '1';
+    const envEnabled = import.meta.env.VITE_AUTO_BACKUP_ENABLED === "1";
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_auto_backup_enabled');
-      userEnabled = raw === '1' || raw === 'true';
+      const raw = localStorage.getItem("titane_auto_backup_enabled");
+      userEnabled = raw === "1" || raw === "true";
     } catch {
       userEnabled = false;
     }
@@ -447,48 +485,56 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    import('./services/backup/AutoBackupService')
+    import("./services/backup/AutoBackupService")
       .then(({ autoBackupService }) => {
         autoBackupService.initialize();
-        console.log('💾 [BACKUP] Auto-backup service initialized (6h intervals)');
+        console.log(
+          "💾 [BACKUP] Auto-backup service initialized (6h intervals)",
+        );
       })
-      .catch(err => {
-        console.warn('⚠️ [BACKUP] Failed to initialize auto-backup:', err);
+      .catch((err) => {
+        console.warn("⚠️ [BACKUP] Failed to initialize auto-backup:", err);
       });
   }, []);
 
   // ✨ OPT-7 - Initialize i18n asynchronously (non-blocking, lazy-loaded)
   useEffect(() => {
-    import('./i18n')
+    import("./i18n")
       .then(({ initI18nAsync }) => {
         initI18nAsync(); // Background load, doesn&apos;t block UI
       })
-      .catch(error => {
-        logger.warn('i18n lazy initialization failed', { component: 'i18n', error });
+      .catch((error) => {
+        logger.warn("i18n lazy initialization failed", {
+          component: "i18n",
+          error,
+        });
       });
   }, []);
 
   // ✨ v21.5 Sprint 1 + OPT-12 - Lazy-load Cognitive Cache Connection
   useEffect(() => {
-    console.log('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
+    console.log("🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...");
 
     // OPT-12: Import dynamique complet (évite circular dependency + lazy-load)
-    Promise.all([import('./services/ai/singularityKernel'), import('./services/ai')])
+    Promise.all([
+      import("./services/ai/singularityKernel"),
+      import("./services/ai"),
+    ])
       .then(([{ singularityKernel }, { connectCacheToSingularity }]) => {
         try {
           connectCacheToSingularity(singularityKernel);
-          console.log('✅ [COGNITIVE-CACHE] Connected successfully');
+          console.log("✅ [COGNITIVE-CACHE] Connected successfully");
         } catch (error) {
           logger.error(
-            'Connection failed',
-            { component: 'App', service: 'CognitiveCache' },
-            error as Error
+            "Connection failed",
+            { component: "App", service: "CognitiveCache" },
+            error as Error,
           );
         }
       })
-      .catch(error => {
-        logger.warn('Failed to load cognitive cache', {
-          component: 'CognitiveCache',
+      .catch((error) => {
+        logger.warn("Failed to load cognitive cache", {
+          component: "CognitiveCache",
           error,
         });
       });
@@ -499,11 +545,11 @@ const AppRouter: React.FC = () => {
     let started = false;
 
     // Silent-by-default in production/Tauri: background audits must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_AUTO_AUDIT_ENABLED === '1';
+    const envEnabled = import.meta.env.VITE_AUTO_AUDIT_ENABLED === "1";
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_auto_audit_enabled');
-      userEnabled = raw === '1' || raw === 'true';
+      const raw = localStorage.getItem("titane_auto_audit_enabled");
+      userEnabled = raw === "1" || raw === "true";
     } catch {
       userEnabled = false;
     }
@@ -513,13 +559,13 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
-    import('./services/autoAuditEngine')
+    console.log("🔍 [AUTO-AUDIT] Loading automatic audits...");
+    import("./services/autoAuditEngine")
       .then(({ autoAuditEngine }) => {
         if (!started) {
           autoAuditEngine.start();
           started = true;
-          console.log('✅ [AUTO-AUDIT] Started');
+          console.log("✅ [AUTO-AUDIT] Started");
         }
 
         // Cleanup
@@ -527,8 +573,8 @@ const AppRouter: React.FC = () => {
           autoAuditEngine.stop();
         };
       })
-      .catch(err => {
-        console.warn('⚠️ [AUTO-AUDIT] Failed to load:', err);
+      .catch((err) => {
+        console.warn("⚠️ [AUTO-AUDIT] Failed to load:", err);
       });
   }, []);
 
@@ -565,11 +611,14 @@ const AppRouter: React.FC = () => {
     let started = false;
 
     // Silent-by-default in production/Tauri: the cognitive layout observation loop must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
+    const envEnabled =
+      import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === "1";
     let userEnabled = false;
     try {
-      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
-      userEnabled = raw === '1' || raw === 'true';
+      const raw = localStorage.getItem(
+        "titane_cognitive_layout_engine_enabled",
+      );
+      userEnabled = raw === "1" || raw === "true";
     } catch {
       userEnabled = false;
     }
@@ -579,22 +628,22 @@ const AppRouter: React.FC = () => {
       return;
     }
 
-    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
-    import('./engines/cognitive/cognitiveLayoutEngine')
+    console.log("🧠 [COGNITIVE] Loading Cognitive Layout Engine...");
+    import("./engines/cognitive/cognitiveLayoutEngine")
       .then(({ cognitiveLayoutEngine }) => {
         if (!started) {
           cognitiveLayoutEngine.start();
           started = true;
-          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
+          console.log("✅ [COGNITIVE] Cognitive Layout Engine started");
         }
 
         return () => {
           cognitiveLayoutEngine.stop();
         };
       })
-      .catch(err => {
-        logger.warn('Failed to load Cognitive Layout Engine', {
-          component: 'CognitiveLayout',
+      .catch((err) => {
+        logger.warn("Failed to load Cognitive Layout Engine", {
+          component: "CognitiveLayout",
           error: err,
         });
       });
@@ -602,26 +651,28 @@ const AppRouter: React.FC = () => {
 
   // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
   useEffect(() => {
-    logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
-    import('./ui/motion')
+    logger.info("Loading TITANE∞ micro-interactions", {
+      component: "UIPolish",
+    });
+    import("./ui/motion")
       .then(({ initializeMicroInteractions }) => {
         try {
           initializeMicroInteractions();
           logger.info(
-            'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
-            { component: 'UIPolish' }
+            "Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)",
+            { component: "UIPolish" },
           );
         } catch (error) {
           logger.error(
-            'Failed to initialize micro-interactions',
-            { component: 'App', service: 'UIPolish' },
-            error as Error
+            "Failed to initialize micro-interactions",
+            { component: "App", service: "UIPolish" },
+            error as Error,
           );
         }
       })
-      .catch(err => {
-        logger.warn('Failed to load motion module', {
-          component: 'UIPolish',
+      .catch((err) => {
+        logger.warn("Failed to load motion module", {
+          component: "UIPolish",
           error: err,
         });
       });
@@ -735,18 +786,18 @@ const AppRouter: React.FC = () => {
 
   // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
   useEffect(() => {
-    console.log('🌐 [PRESENCE] Starting Presence OS...');
-    console.log('═══════════════════════════════════════════════════');
+    console.log("🌐 [PRESENCE] Starting Presence OS...");
+    console.log("═══════════════════════════════════════════════════");
 
     presenceOS.start();
-    console.log('  ✅ Presence OS active (30Hz, 8 signature modes)');
+    console.log("  ✅ Presence OS active (30Hz, 8 signature modes)");
     console.log(
-      '  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution'
+      "  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution",
     );
-    console.log('  ✅ Unified identity orchestration across 6 engines');
+    console.log("  ✅ Unified identity orchestration across 6 engines");
 
     return () => {
-      console.log('🛑 [PRESENCE] Stopping Presence OS...');
+      console.log("🛑 [PRESENCE] Stopping Presence OS...");
       presenceOS.stop();
     };
   }, []);
@@ -760,18 +811,21 @@ const AppRouter: React.FC = () => {
     if (!livingEngines.state.initialized) {
       return;
     }
-    emitBootMarker('BOOT:AFTER_ORCHESTRATOR');
-    emitBootMarker('BOOT:AFTER_ORCHESTRATOR_INIT');
-    emitBootMarker('BOOT:READY');
+    emitBootMarker("BOOT:AFTER_ORCHESTRATOR");
+    emitBootMarker("BOOT:AFTER_ORCHESTRATOR_INIT");
+    emitBootMarker("BOOT:READY");
   }, [livingEngines.state.initialized]);
 
   // Log living state (debug) - effet optimisé avec dépendances stables
   useEffect(() => {
     if (!livingEngines.state.initialized) return;
 
-    console.log('🎭 Persona:', livingEngines.state.persona?.mood); // mood is MoodType string
-    console.log('⚡ Glow:', livingEngines.state.glow.toFixed(2));
-    console.log('🧠 Cognitive Load:', livingEngines.state.cognitiveLoad.toFixed(2));
+    console.log("🎭 Persona:", livingEngines.state.persona?.mood); // mood is MoodType string
+    console.log("⚡ Glow:", livingEngines.state.glow.toFixed(2));
+    console.log(
+      "🧠 Cognitive Load:",
+      livingEngines.state.cognitiveLoad.toFixed(2),
+    );
     // Note: Cet effet log uniquement à l'initialisation, pas à chaque update
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
@@ -781,51 +835,69 @@ const AppRouter: React.FC = () => {
     () => [
       // ═══ PRINCIPAL ═══
       {
-        id: 'titane',
-        label: 'TITANE',
-        route: '/titane',
-        description: 'Le Cœur du Système',
+        id: "titane",
+        label: "TITANE",
+        route: "/titane",
+        description: "Le Cœur du Système",
       },
-      { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
-      { id: 'stats', label: 'STATS', route: '/stats', description: 'Métriques Système' },
       {
-        id: 'admin',
-        label: 'ADMIN',
-        route: '/admin',
-        description: 'Centre Admin Unifié',
+        id: "time",
+        label: "TIME",
+        route: "/time",
+        description: "Centre Temporel",
       },
-      { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
+      {
+        id: "stats",
+        label: "STATS",
+        route: "/stats",
+        description: "Métriques Système",
+      },
+      {
+        id: "admin",
+        label: "ADMIN",
+        route: "/admin",
+        description: "Centre Admin Unifié",
+      },
+      {
+        id: "dev",
+        label: "DEV",
+        route: "/dev",
+        description: "Centre DEV Unifié",
+      },
       // Dans menu "Plus"
       {
-        id: 'fusion',
-        label: 'FUSION',
-        route: '/fusion',
-        description: 'Backend/Frontend Fusion',
+        id: "fusion",
+        label: "FUSION",
+        route: "/fusion",
+        description: "Backend/Frontend Fusion",
       },
       {
-        id: 'optimization',
-        label: 'OPTIMIZE',
-        route: '/optimization',
-        description: 'Performance Ultime',
+        id: "optimization",
+        label: "OPTIMIZE",
+        route: "/optimization",
+        description: "Performance Ultime",
       },
     ],
-    []
+    [],
   );
 
-  const topNavItems = useMemo(() => createTopNavItems(topNavSections), [topNavSections]);
+  const topNavItems = useMemo(
+    () => createTopNavItems(topNavSections),
+    [topNavSections],
+  );
 
   // ✨ UI vΩ: Navigation handler
   const handleNavigate = useCallback(
     (route: string) => {
       navigate(route);
     },
-    [navigate]
+    [navigate],
   );
 
   // ✨ v19.5.2 - Handler onboarding completion
   // ✨ v24.2.1: useCallback for stable reference
   const handleOnboardingComplete = useCallback(async () => {
-    console.log('✅ [ONBOARDING] User completed onboarding flow');
+    console.log("✅ [ONBOARDING] User completed onboarding flow");
     setOnboardingComplete(true);
   }, []);
 
@@ -834,28 +906,28 @@ const AppRouter: React.FC = () => {
     return (
       <div
         style={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: '100vh',
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-          color: '#00d4ff',
-          fontSize: '1.5rem',
-          fontWeight: '600',
-          gap: '1.5rem',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          height: "100vh",
+          background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+          color: "#00d4ff",
+          fontSize: "1.5rem",
+          fontWeight: "600",
+          gap: "1.5rem",
         }}
       >
         <div
           style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.75rem',
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
           }}
         >
           <span
             style={{
-              animation: 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              animation: "pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite",
             }}
           >
             ⚡
@@ -864,19 +936,20 @@ const AppRouter: React.FC = () => {
         </div>
         <div
           style={{
-            width: '300px',
-            height: '4px',
-            background: 'rgba(0, 212, 255, 0.2)',
-            borderRadius: '2px',
-            overflow: 'hidden',
+            width: "300px",
+            height: "4px",
+            background: "rgba(0, 212, 255, 0.2)",
+            borderRadius: "2px",
+            overflow: "hidden",
           }}
         >
           <div
             style={{
-              width: '50%',
-              height: '100%',
-              background: 'linear-gradient(90deg, transparent, #00d4ff, transparent)',
-              animation: 'shimmer 2s infinite',
+              width: "50%",
+              height: "100%",
+              background:
+                "linear-gradient(90deg, transparent, #00d4ff, transparent)",
+              animation: "shimmer 2s infinite",
             }}
           />
         </div>
@@ -913,6 +986,20 @@ const AppRouter: React.FC = () => {
     >
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
+      <div
+        data-testid="app-ready"
+        data-state={
+          !checkingOnboarding && onboardingComplete ? "ready" : "loading"
+        }
+        aria-hidden="true"
+        style={{ display: "none" }}
+      />
+      <div
+        data-testid="ipc-ready"
+        data-state={isTauriRuntimeAvailable() ? "ready" : "fallback"}
+        aria-hidden="true"
+        style={{ display: "none" }}
+      />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>
@@ -932,8 +1019,14 @@ const AppRouter: React.FC = () => {
           <Route path="/chat" element={<Navigate to="/titane" replace />} />
           <Route path="/camera" element={<Navigate to="/titane" replace />} />
           <Route path="/evo" element={<Navigate to="/titane" replace />} />
-          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
-          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+          <Route
+            path="/dashboard"
+            element={<Navigate to="/titane" replace />}
+          />
+          <Route
+            path="/evolution-center"
+            element={<Navigate to="/titane" replace />}
+          />
           <Route
             path="/cognitive-evolution"
             element={<Navigate to="/titane" replace />}
@@ -942,7 +1035,10 @@ const AppRouter: React.FC = () => {
             path="/identity-memory-evolution"
             element={<Navigate to="/titane" replace />}
           />
-          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+          <Route
+            path="/progression"
+            element={<Navigate to="/titane" replace />}
+          />
           <Route path="/xp" element={<Navigate to="/titane" replace />} />
           {/* ❌ v25.2.1: /cognitive redirigé vers /stats (Section 4: État Cognitif) */}
           <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
@@ -954,7 +1050,8 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+          <Route path="/experience" element={<Experience />} />{" "}
+          {/* ✨ v∞.D5 - Page XP */}
           {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
           <Route
             path="/time"
@@ -965,9 +1062,15 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Redirections vers TIME */}
-          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+          <Route
+            path="/temporal-center"
+            element={<Navigate to="/time" replace />}
+          />
           <Route path="/agenda" element={<Navigate to="/time" replace />} />
-          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+          <Route
+            path="/time-navigator"
+            element={<Navigate to="/time" replace />}
+          />
           {/* ✨ v25.2.2 ADMIN CENTER - Module ADMIN Unifié */}
           <Route
             path="/admin"
@@ -978,20 +1081,50 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Redirections vers ADMIN Center */}
-          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/system-center"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/diagnostics"
+            element={<Navigate to="/admin" replace />}
+          />
           <Route path="/devtools" element={<Navigate to="/admin" replace />} />
           <Route path="/cluster" element={<Navigate to="/admin" replace />} />
-          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
-          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
-          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
-          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/introspection"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/hypervision"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/configuration"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/design-center"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/design-system"
+            element={<Navigate to="/admin" replace />}
+          />
           <Route path="/settings" element={<Navigate to="/admin" replace />} />
-          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/governance-center"
+            element={<Navigate to="/admin" replace />}
+          />
+          <Route
+            path="/governance"
+            element={<Navigate to="/admin" replace />}
+          />
           <Route path="/secure" element={<Navigate to="/admin" replace />} />
-          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+          <Route
+            path="/audio-center"
+            element={<Navigate to="/admin" replace />}
+          />
           <Route path="/audio" element={<Navigate to="/admin" replace />} />
           <Route path="/voice" element={<Navigate to="/admin" replace />} />
           <Route path="/tts" element={<Navigate to="/admin" replace />} />
@@ -1000,7 +1133,9 @@ const AppRouter: React.FC = () => {
             path="/fusion"
             element={
               <ErrorBoundary context="PerfectFusionDashboard">
-                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                <Suspense
+                  fallback={<PageLoadingFallback variant="dashboard" />}
+                >
                   <PerfectFusionDashboard />
                 </Suspense>
               </ErrorBoundary>
@@ -1011,7 +1146,9 @@ const AppRouter: React.FC = () => {
             path="/optimization"
             element={
               <ErrorBoundary context="UltimateOptimizationDashboard">
-                <Suspense fallback={<PageLoadingFallback variant="dashboard" />}>
+                <Suspense
+                  fallback={<PageLoadingFallback variant="dashboard" />}
+                >
                   <UltimateOptimizationDashboard />
                 </Suspense>
               </ErrorBoundary>
@@ -1040,7 +1177,10 @@ const AppRouter: React.FC = () => {
             element={<Navigate to="/orchestration-center" replace />}
           />
           {/* Redirections vers Orchestration Meta Center pour anciennes routes */}
-          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
+          <Route
+            path="/meta"
+            element={<Navigate to="/orchestration-center" replace />}
+          />
           <Route
             path="/multi-ai-dashboard"
             element={<Navigate to="/orchestration-center" replace />}
@@ -1068,13 +1208,22 @@ const AppRouter: React.FC = () => {
           />
           {/* Redirections des anciens modules vers DEV */}
           <Route path="/one-core" element={<Navigate to="/dev" replace />} />
-          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+          <Route
+            path="/command-center"
+            element={<Navigate to="/dev" replace />}
+          />
           <Route path="/unified" element={<Navigate to="/dev" replace />} />
-          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+          <Route
+            path="/qa-monitoring"
+            element={<Navigate to="/dev" replace />}
+          />
           <Route path="/qa" element={<Navigate to="/dev" replace />} />
           <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
           <Route path="/tests" element={<Navigate to="/dev" replace />} />
-          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+          <Route
+            path="/developer-mode"
+            element={<Navigate to="/dev" replace />}
+          />
           <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
           <Route path="/devmode" element={<Navigate to="/dev" replace />} />
           <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
@@ -1096,8 +1245,14 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
-          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+          <Route
+            path="/reality"
+            element={<Navigate to="/reality-center" replace />}
+          />
+          <Route
+            path="/renderer"
+            element={<Navigate to="/reality-center" replace />}
+          />
           {/* ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20) */}
           <Route
             path="/hyper-center"
@@ -1107,8 +1262,14 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
-          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+          <Route
+            path="/hyper"
+            element={<Navigate to="/hyper-center" replace />}
+          />
+          <Route
+            path="/intelligence"
+            element={<Navigate to="/hyper-center" replace />}
+          />
           {/* ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17) */}
           <Route
             path="/quantum-center"
@@ -1118,7 +1279,10 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+          <Route
+            path="/quantum"
+            element={<Navigate to="/quantum-center" replace />}
+          />
           {/* ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15) */}
           <Route
             path="/identity-center"
@@ -1128,8 +1292,14 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
-          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+          <Route
+            path="/identity"
+            element={<Navigate to="/identity-center" replace />}
+          />
+          <Route
+            path="/persona"
+            element={<Navigate to="/identity-center" replace />}
+          />
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"
@@ -1152,7 +1322,10 @@ const AppRouter: React.FC = () => {
               </ErrorBoundary>
             }
           />
-          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+          <Route
+            path="/cloud-sync"
+            element={<Navigate to="/cloud" replace />}
+          />
           <Route path="/vault" element={<Navigate to="/cloud" replace />} />
           {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
           {/* v∞ Phases 5-10 - Knowledge, Creation, Evolution (Phase 9: lazy loaded) */}
@@ -1218,9 +1391,9 @@ const AppRouter: React.FC = () => {
 
       {/* ✨ v19.5.2 - Toast Notifications System */}
       <ToastContainer
-        toasts={toasts.map(t => ({
+        toasts={toasts.map((t) => ({
           id: t.id,
-          variant: t.type === 'error' ? 'danger' : t.type,
+          variant: t.type === "error" ? "danger" : t.type,
           message: t.message,
           duration: t.duration || 5000,
         }))}
@@ -1239,11 +1412,11 @@ const AppRouter: React.FC = () => {
  */
 const App: React.FC = () => {
   // ⭐ PHASE 2: BOOT DIAGNOSTIC MARKER
-  console.log('[BOOT] App render');
+  console.log("[BOOT] App render");
   (window as any).__TITANE_BOOT__ = (window as any).__TITANE_BOOT__ || {};
   (window as any).__TITANE_BOOT__.app_render = true;
   (window as any).__TITANE_BOOT__.app_render_timestamp = Date.now();
-  (window as any).__TITANE_BOOT__.stage = '[BOOT] App render';
+  (window as any).__TITANE_BOOT__.stage = "[BOOT] App render";
   (window as any).__TITANE_BOOT__.timestamp = Date.now();
 
   return (
@@ -1298,36 +1471,36 @@ const AuraConnectedParticles: React.FC = () => {
     colors: React.useMemo(() => {
       const themeColors = {
         default: [
-          'rgba(124, 58, 237, 0.8)',
-          'rgba(6, 182, 212, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
+          "rgba(124, 58, 237, 0.8)",
+          "rgba(6, 182, 212, 0.8)",
+          "rgba(59, 130, 246, 0.8)",
         ],
         ocean: [
-          'rgba(6, 182, 212, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(124, 58, 237, 0.8)',
+          "rgba(6, 182, 212, 0.8)",
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(124, 58, 237, 0.8)",
         ],
         sunset: [
-          'rgba(236, 72, 153, 0.8)',
-          'rgba(251, 146, 60, 0.8)',
-          'rgba(239, 68, 68, 0.8)',
+          "rgba(236, 72, 153, 0.8)",
+          "rgba(251, 146, 60, 0.8)",
+          "rgba(239, 68, 68, 0.8)",
         ],
         forest: [
-          'rgba(16, 185, 129, 0.8)',
-          'rgba(132, 204, 22, 0.8)',
-          'rgba(52, 211, 153, 0.8)',
+          "rgba(16, 185, 129, 0.8)",
+          "rgba(132, 204, 22, 0.8)",
+          "rgba(52, 211, 153, 0.8)",
         ],
         fire: [
-          'rgba(239, 68, 68, 0.8)',
-          'rgba(251, 146, 60, 0.8)',
-          'rgba(253, 224, 71, 0.8)',
+          "rgba(239, 68, 68, 0.8)",
+          "rgba(251, 146, 60, 0.8)",
+          "rgba(253, 224, 71, 0.8)",
         ],
         rainbow: [
-          'rgba(124, 58, 237, 0.8)',
-          'rgba(59, 130, 246, 0.8)',
-          'rgba(6, 182, 212, 0.8)',
-          'rgba(16, 185, 129, 0.8)',
-          'rgba(251, 146, 60, 0.8)',
+          "rgba(124, 58, 237, 0.8)",
+          "rgba(59, 130, 246, 0.8)",
+          "rgba(6, 182, 212, 0.8)",
+          "rgba(16, 185, 129, 0.8)",
+          "rgba(251, 146, 60, 0.8)",
         ],
       };
       return themeColors[aura.theme] || themeColors.default;
