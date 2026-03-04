@@ -55,6 +55,62 @@ async function clickSafely(selector) {
   }
 }
 
+async function triggerSendAction(inputSelector, sendSelector) {
+  const input = await $(inputSelector);
+  const send = await $(sendSelector);
+
+  try {
+    if ((await send.isDisplayed()) && (await send.isEnabled())) {
+      await clickSafely(sendSelector);
+      return true;
+    }
+  } catch {
+    // fallback below
+  }
+
+  try {
+    const dispatched = await browser.execute((element) => {
+      if (!element) return false;
+      const disabled =
+        element.hasAttribute("disabled") ||
+        element.getAttribute("aria-disabled") === "true";
+      if (disabled) return false;
+      const event = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      element.dispatchEvent(event);
+      return true;
+    }, send);
+    if (dispatched) return true;
+  } catch {
+    // fallback below
+  }
+
+  try {
+    await browser.execute((element) => {
+      if (!element) return;
+      element.focus();
+      const keyConfig = {
+        key: "Enter",
+        code: "Enter",
+        which: 13,
+        keyCode: 13,
+        bubbles: true,
+        cancelable: true,
+      };
+      element.dispatchEvent(new KeyboardEvent("keydown", keyConfig));
+      element.dispatchEvent(new KeyboardEvent("keypress", keyConfig));
+      element.dispatchEvent(new KeyboardEvent("keyup", keyConfig));
+    }, input);
+    await browser.keys("Enter");
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 async function setValueSafely(selector, value) {
   const el = await $(selector);
   await el.scrollIntoView();
@@ -70,9 +126,34 @@ async function setValueSafely(selector, value) {
 
   await browser.execute(
     (element, text) => {
+      const normalized = String(text ?? "");
       element.focus();
-      element.value = "";
-      element.value = String(text ?? "");
+
+      const proto =
+        element instanceof HTMLTextAreaElement
+          ? HTMLTextAreaElement.prototype
+          : HTMLInputElement.prototype;
+      const descriptor = Object.getOwnPropertyDescriptor(proto, "value");
+
+      if (descriptor?.set) {
+        descriptor.set.call(element, normalized);
+      } else {
+        element.value = normalized;
+      }
+
+      try {
+        element.dispatchEvent(
+          new InputEvent("input", {
+            bubbles: true,
+            composed: true,
+            data: normalized,
+            inputType: "insertText",
+          }),
+        );
+      } catch {
+        element.dispatchEvent(new Event("input", { bubbles: true }));
+      }
+
       element.dispatchEvent(new Event("input", { bubbles: true }));
       element.dispatchEvent(new Event("change", { bubbles: true }));
     },
@@ -205,7 +286,11 @@ export async function clickAllTabs(tabSelectors = []) {
     const el = await $(selector);
     if (!(await el.isExisting())) continue;
     if (!(await el.isDisplayed())) continue;
-    await el.click();
+
+    const selectedBefore = await el.getAttribute("aria-selected");
+    if (selectedBefore === "true") continue;
+
+    await clickSafely(selector);
     await browser.waitUntil(
       async () => {
         const selected = await el.getAttribute("aria-selected");
@@ -303,8 +388,65 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
 
   await input.waitForExist({ timeout: DEFAULT_TIMEOUT });
   await setValueSafely(testId("chat-input"), message);
+
+  await browser.waitUntil(
+    async () => {
+      const value = (await input.getValue()) || "";
+      return value.trim().length > 0;
+    },
+    {
+      timeout: 6000,
+      interval: 150,
+      timeoutMsg: "chat input did not receive message value",
+    },
+  );
+
   await send.waitForExist({ timeout: DEFAULT_TIMEOUT });
-  await clickSafely(testId("chat-send"));
+
+  await browser.waitUntil(
+    async () => {
+      const value = (await input.getValue()) || "";
+      const disabled = await send.getAttribute("disabled");
+      return value.trim().length > 0 && disabled === null;
+    },
+    {
+      timeout: 6000,
+      interval: 150,
+      timeoutMsg: "chat send button stayed disabled after input value set",
+    },
+  );
+
+  const sent = await triggerSendAction(
+    testId("chat-input"),
+    testId("chat-send"),
+  );
+  if (!sent) {
+    throw new Error("chat send action could not be triggered");
+  }
+
+  await browser.waitUntil(
+    async () => {
+      if (await isExisting(userSelector)) {
+        const userAfter = (await $$(userSelector)).length;
+        if (userAfter > userBefore) return true;
+      }
+      const inputNow = await $(testId("chat-input"));
+      if (await inputNow.isExisting()) {
+        const val = (await inputNow.getValue()) || "";
+        if (String(val).trim().length === 0) return true;
+      }
+      if (await isExisting(testId("chat-loading"))) {
+        const loading = await $(testId("chat-loading"));
+        if (await loading.isDisplayed()) return true;
+      }
+      return false;
+    },
+    {
+      timeout: 7000,
+      interval: 150,
+      timeoutMsg: "chat send was not acknowledged by UI",
+    },
+  );
 
   await browser.waitUntil(
     async () => {
