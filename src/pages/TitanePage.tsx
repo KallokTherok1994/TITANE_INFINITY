@@ -222,6 +222,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-conversation"
                 onClick={tabHandlers.conversation}
                 role="tab"
                 aria-selected={activeTab === 'conversation'}
@@ -236,6 +237,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-overview"
                 onClick={tabHandlers.overview}
                 role="tab"
                 aria-selected={activeTab === 'overview'}
@@ -250,6 +252,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-vision"
                 onClick={tabHandlers.vision}
                 role="tab"
                 aria-selected={activeTab === 'vision'}
@@ -264,6 +267,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-identity"
                 onClick={tabHandlers.identity}
                 role="tab"
                 aria-selected={activeTab === 'identity'}
@@ -278,6 +282,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-memory"
                 onClick={tabHandlers.memoryMap}
                 role="tab"
                 aria-selected={activeTab === 'memory-map'}
@@ -292,6 +297,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-memory-evolution"
                 onClick={tabHandlers.memoryEvolution}
                 role="tab"
                 aria-selected={activeTab === 'memory-evolution'}
@@ -306,6 +312,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-progression"
                 onClick={tabHandlers.progression}
                 role="tab"
                 aria-selected={activeTab === 'progression'}
@@ -320,6 +327,7 @@ export const TitanePage: React.FC = () => {
                     ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
                     : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
                 }`}
+                data-testid="tab-transformation"
                 onClick={tabHandlers.transformation}
                 role="tab"
                 aria-selected={activeTab === 'transformation'}

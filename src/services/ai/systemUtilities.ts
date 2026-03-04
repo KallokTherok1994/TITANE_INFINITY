@@ -16,6 +16,11 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { aiOrchestrator } from './orchestrator';
+import { metricsEngine } from './metricsEngine';
+import { autoHealEngine } from './autoHealEngine';
+import { aiHealthMonitor } from './healthMonitor';
+
 /**
  * 🎯 Quick Start — Initialiser le système IA complet
  * ⚠️ Imports LAZY pour éviter le TDZ lors de bundle merge
@@ -29,13 +34,6 @@ export async function initializeAISystem(options?: {
   autoHeal: unknown;
   healthMonitor: unknown;
 }> {
-  // LAZY IMPORTS: Importés APRÈS appel de fonction (pas au top-level)
-  // Cela évite le TDZ car la dépendance circulaire n'existe qu'à runtime
-  const { aiOrchestrator } = await import('./orchestrator');
-  const { metricsEngine } = await import('./metricsEngine');
-  const { autoHealEngine } = await import('./autoHealEngine');
-  const { aiHealthMonitor } = await import('./healthMonitor');
-
   const isHealthMonitoringEnabledByDefault = (): boolean => {
     if (import.meta.env.DEV) return true;
 
@@ -77,7 +75,6 @@ export async function quickHealthCheck(): Promise<{
   score: number;
   message: string;
 }> {
-  const { aiHealthMonitor } = await import('./healthMonitor');
   const report = await aiHealthMonitor.getHealthReport();
 
   let message = '';
@@ -106,7 +103,6 @@ export async function quickStats(): Promise<{
   avgLatency: number;
   providersCount: number;
 }> {
-  const { metricsEngine } = await import('./metricsEngine');
   const metrics = metricsEngine.getAggregatedMetrics();
 
   return {
@@ -126,9 +122,6 @@ export async function quickFix(): Promise<{
   message: string;
   actions: string[];
 }> {
-  const { aiOrchestrator } = await import('./orchestrator');
-  const { aiHealthMonitor } = await import('./healthMonitor');
-
   const actions: string[] = [];
 
   try {

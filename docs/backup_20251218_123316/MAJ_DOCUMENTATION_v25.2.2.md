@@ -254,10 +254,10 @@ Table comparative avant/après
    → [RAPPORT_FUSION_ADMIN_v25.2.2.md](RAPPORT_FUSION_ADMIN_v25.2.2.md)
 
 3. **Architecture Globale**
-   → [ARCHITECTURE.md](ARCHITECTURE.md)
+   → [ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
 
 4. **Historique**
-   → [CHANGELOG.md](CHANGELOG.md)
+   → [CHANGELOG.md](../90_release/CHANGELOG__CHANGELOG.md.md)
 
 ### Pour les Utilisateurs
 

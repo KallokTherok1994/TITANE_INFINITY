@@ -104,11 +104,9 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
-      console.warn(
-        '[ONLINE_CHAT_FIX] Tauri page unavailable (about:blank), skipping spec'
+      throw new Error(
+        'BLOCKER: Tauri page unavailable (about:blank) - environment setup required for ONLINE_CHAT_FIX validation'
       );
-      this.skip();
-      return;
     }
 
     await browser.waitUntil(

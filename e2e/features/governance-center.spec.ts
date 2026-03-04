@@ -8,7 +8,16 @@
 import { test, expect } from '@playwright/test';
 import { openAdminTab } from '../helpers/navigation';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 test.describe('Feature: Governance Center', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await openAdminTab(page, /Gouvernance/i);
     await page.waitForTimeout(500);

@@ -63,14 +63,14 @@ Double-cliquez sur le fichier téléchargé et suivez les instructions.
 - **[Système Mémoire](./features/memory.md)** : Comment l'IA se souvient
 - **[Mode Audio](./features/audio.md)** : Conversation vocale
 - **[FAQ](./faq.md)** : Questions fréquentes
-- **[Dépannage](./troubleshooting.md)** : Résoudre les problèmes courants
+- **[Dépannage](../01_misc/TROUBLESHOOTING.md)** : Résoudre les problèmes courants
 
 ### Pour les Développeurs
 
 - **[DevTools](./features/devtools.md)** : Outils de développement intégrés
 - **[Architecture](../ARCHITECTURE_SIMPLIFIED.md)** : Architecture technique
 - **[API Reference](../api/)** : Documentation API
-- **[Contributing](../CONTRIBUTING.md)** : Contribuer au projet
+- **[Contributing](../00_core/CONTRIBUTING.md)** : Contribuer au projet
 
 ---
 
@@ -147,7 +147,7 @@ TITANE∞ supporte les conversations en :
 ### Besoin d'Aide ?
 
 1. **[FAQ](./faq.md)** : Consultez les questions fréquentes
-2. **[Dépannage](./troubleshooting.md)** : Solutions aux problèmes courants
+2. **[Dépannage](../01_misc/TROUBLESHOOTING.md)** : Solutions aux problèmes courants
 3. **GitHub Issues** : [Signaler un bug](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
 4. **Discussions** : [Communauté](https://github.com/KallokTherok1994/TITANE_INFINITY/discussions)
 

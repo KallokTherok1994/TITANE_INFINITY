@@ -708,4 +708,4 @@ _"L'homéostasie cognitive : le sang du système vivant"_
 - [Super Prompt #18 — Temporal Intelligence v2](./TEMPORAL_ENGINE_v2.md)
 - [Super Prompt #20 — Meta-Energy Engine](./SUPER_PROMPT_20_META_ENERGY.md)
 - [Kernel OS Documentation](./KERNEL_OS.md)
-- [OMEGA Pipeline Documentation](./OMEGA_PIPELINE.md)
+- [OMEGA Pipeline Documentation](../../05_modules/backend/OMEGA_PIPELINE.md)

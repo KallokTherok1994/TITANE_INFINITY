@@ -2,8 +2,8 @@
 
 ## 📚 Documentation
 
-- **[LIVING_UI_SYSTEM_PHASE_1-4_COMPLETE.md](./LIVING_UI_SYSTEM_PHASE_1-4_COMPLETE.md)** — Architecture complète détaillée
-- **[LIVING_UI_SYSTEM_SUMMARY.md](./LIVING_UI_SYSTEM_SUMMARY.md)** — Résumé exécutif
+- **[LIVING_UI_SYSTEM_PHASE_1-4_COMPLETE.md](../99_ARCHIVE/complete-reports/LIVING_UI_SYSTEM_PHASE_1-4_COMPLETE.md)** — Architecture complète détaillée
+- **[LIVING_UI_SYSTEM_SUMMARY.md](../99_ARCHIVE/complete-reports/LIVING_UI_SYSTEM_SUMMARY.md)** — Résumé exécutif
 - **[Ce fichier]** — Quick reference & exemples
 
 ---
@@ -487,8 +487,8 @@ enum PanelType {
 
 ## 🔗 Liens Utiles
 
-- **[ARCHITECTURE.md](./ARCHITECTURE.md)** — Architecture globale TITANE∞
-- **[SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md](./SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md)** — Précédent travail UI
+- **[ARCHITECTURE.md](../01_misc/ARCHITECTURE__ARCHITECTURE.md.md)** — Architecture globale TITANE∞
+- **[SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md](../99_ARCHIVE/super-prompts/SUPER_PROMPT_4_PHASE_1-2_COMPLETE.md)** — Précédent travail UI
 - **[src/visual-engine/](./src/visual-engine/)** — Code source
 
 ---

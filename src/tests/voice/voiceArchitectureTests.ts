@@ -20,7 +20,7 @@ import { haloEngine } from '@/services/voice/haloEngine';
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe.skip('Audio State Machine Architecture — Phase 8', () => {
+describe('Audio State Machine Architecture — Phase 8', () => {
   beforeEach(() => {
     audioStateMachine.reset();
   });
@@ -164,7 +164,7 @@ describe.skip('Audio State Machine Architecture — Phase 8', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe.skip('Halo Engine Architecture — Phase 8', () => {
+describe('Halo Engine Architecture — Phase 8', () => {
   beforeEach(() => {
     haloEngine.reset();
   });
@@ -257,7 +257,7 @@ describe.skip('Halo Engine Architecture — Phase 8', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe.skip('Voice Architecture Integration — Phase 8', () => {
+describe('Voice Architecture Integration — Phase 8', () => {
   beforeEach(() => {
     audioStateMachine.reset();
     haloEngine.reset();
@@ -346,7 +346,7 @@ describe.skip('Voice Architecture Integration — Phase 8', () => {
  * ═══════════════════════════════════════════════════════════════════
  */
 
-describe.skip('Voice Components Validation — Phase 8', () => {
+describe('Voice Components Validation — Phase 8', () => {
   /**
    * ─────────────────────────────────────────────────────────────────
    * TEST 1: Audio State Machine Exists

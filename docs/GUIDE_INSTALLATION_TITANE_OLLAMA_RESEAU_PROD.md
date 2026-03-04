@@ -1534,8 +1534,8 @@ ss -tunap | grep 11434
 ### D. Ressources Complémentaires
 
 - **Documentation Ollama** : https://ollama.com/docs
-- **TITANE∞ Architecture** : [../ARCHITECTURE.md](../ARCHITECTURE.md)
-- **TITANE∞ Guide Installation** : [../GUIDE_INSTALLATION_SETUP_v27.0.0.md](../GUIDE_INSTALLATION_SETUP_v27.0.0.md)
+- **TITANE∞ Architecture** : [../ARCHITECTURE.md](ARCHITECTURE.md)
+- **TITANE∞ Guide Installation** : [../GUIDE_INSTALLATION_SETUP_v27.0.0.md](01_misc/GUIDE_INSTALLATION_SETUP_v27.0.0.md)
 - **Forum Support** : https://github.com/KallokTherok1994/TITANE_INFINITY/discussions
 - **Issues Tracker** : https://github.com/KallokTherok1994/TITANE_INFINITY/issues
 

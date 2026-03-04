@@ -198,9 +198,9 @@ Fichiers .rs:     493
 ### Rapports Phases
 - 📄 [Phase 7: Multi-Agents](PHASE_7_MULTI_AGENTS_v19.2.0_COMPLETE.md)
 - 📄 [Phase 8: IA Context](PHASE_8_IA_CONTEXT_v19.3.0_COMPLETE.md)
-- 📄 [Phase 9: Tests E2E](PHASE_9_TESTS_E2E_STRESS_v19.3.0_COMPLETE.md)
-- 📄 [Phase 10: Final Polish](PHASE_10_COMPLETE_v19.3.0.md)
-- 📄 [Release Notes v1.0.0](RELEASE_NOTES_v1.0.0.md)
+- 📄 [Phase 9: Tests E2E](../merged/PHASE_9_TESTS_E2E_STRESS_v19.3.0_COMPLETE.md)
+- 📄 [Phase 10: Final Polish](../merged/PHASE_10_COMPLETE_v19.3.0.md)
+- 📄 [Release Notes v1.0.0](../versions/RELEASE_NOTES_v1.0.0.md)
 
 ### API Documentation
 - [Multi-Agents API](docs/multi-agents-api.md)
@@ -253,7 +253,7 @@ Fichiers .rs:     493
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues! Consultez [CONTRIBUTING.md](CONTRIBUTING.md) pour:
+Les contributions sont les bienvenues! Consultez [CONTRIBUTING.md](../../00_core/CONTRIBUTING.md) pour:
 - Code style
 - Tests requis
 - Process de review

@@ -10,6 +10,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CONFIG_DIR = dirname(fileURLToPath(import.meta.url));
+const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Start local dev server by default for deterministic E2E runs.
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
 const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
@@ -85,12 +86,12 @@ export default defineConfig({
   // Keep Vite-only in CI where GUI/Tauri may be unavailable.
   webServer: useWebServer
     ? {
-        command:
-          'node scripts/e2e/vite-e2e-watch.cjs --host 127.0.0.1 --port 5173 --strictPort',
+        command: `${process.execPath} ${E2E_WATCH_SCRIPT} --host 127.0.0.1 --port 5173 --strictPort`,
+        cwd: CONFIG_DIR,
         url: process.env.TITANE_E2E_PORT
           ? `http://localhost:${process.env.TITANE_E2E_PORT}`
           : 'http://localhost:5173',
-        reuseExistingServer: false,
+        reuseExistingServer: true,
         timeout: 180000, // 3min to start (CI heavy load)
         stdout: 'pipe',
         stderr: 'pipe',

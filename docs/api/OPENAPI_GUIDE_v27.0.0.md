@@ -794,7 +794,7 @@ openapi-generator-cli validate -i docs/api/openapi.v27.0.0.yaml
 - **Issues**: [GitHub Issues](https://github.com/TITANE-INFINITY/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/TITANE-INFINITY/discussions)
 - **Email**: api-support@titane-infinity.dev
-- **Documentation**: [Full API Docs](./TAURI_COMMANDS_REFERENCE.md)
+- **Documentation**: [Full API Docs](../06_api/TAURI_COMMANDS_REFERENCE.md)
 
 ---
 

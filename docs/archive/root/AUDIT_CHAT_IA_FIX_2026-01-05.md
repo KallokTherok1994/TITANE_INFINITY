@@ -432,7 +432,7 @@ Une fois l'application redémarrée avec les corrections :
 
 - [AUDIT_CRASH_FIX_2026-01-05.md](./AUDIT_CRASH_FIX_2026-01-05.md) - Corrections précédentes
 - [AUDIT_OLLAMA_INTEGRATION_2026-01-04.md](./AUDIT_OLLAMA_INTEGRATION_2026-01-04.md) - Guide Ollama
-- [docs/OLLAMA_GUIDE.md](./docs/OLLAMA_GUIDE.md) - Setup Ollama complet
+- [docs/OLLAMA_GUIDE.md](../../OLLAMA_GUIDE.md) - Setup Ollama complet
 
 ---
 

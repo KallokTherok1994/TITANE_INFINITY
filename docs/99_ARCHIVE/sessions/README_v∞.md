@@ -336,7 +336,7 @@ Les contributions sont bienvenues ! Veuillez suivre :
 
 ## 📝 Changelog
 
-Voir [CHANGELOG.md](./CHANGELOG.md) pour l'historique complet des versions.
+Voir [CHANGELOG.md](../../90_release/CHANGELOG__CHANGELOG.md.md) pour l'historique complet des versions.
 
 ### Version actuelle : v∞
 

@@ -827,6 +827,20 @@ class TauriClient {
     );
   }
 
+  async getChatEngineConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CHAT_ENGINE_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async getChatRequestDefaults(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.GET_CHAT_REQUEST_DEFAULTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async importConfig(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.IMPORT_CONFIG,
@@ -2749,6 +2763,27 @@ class TauriClient {
   async ttsStop(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.TTS_STOP,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatEngineConfig(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_ENGINE_CONFIG,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatRequestDefaults(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_REQUEST_DEFAULTS,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async setChatProfile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.SET_CHAT_PROFILE,
       (params as Record<string, unknown>) || {}
     );
   }

@@ -1,63 +1,64 @@
 /**
- * Tests pour MemoryVisualization Component
- * Coverage: Arbre mémoire, Navigation, États STM/MTM/LTM
+ * Tests pour MemoryTreeViewer Component
+ * Coverage: rendu, controls, callback node click
  */
 
-/* eslint-disable react/jsx-no-undef */
-// Ce fichier teste un composant non encore implémenté - skip activé
-
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-// import { MemoryVisualization } from '@/features/memory/MemoryVisualization'; // Component not implemented
+import { render, screen, fireEvent } from '@testing-library/react';
+import { MemoryTreeViewer } from '@/features/memory/MemoryTreeViewer';
 
-describe.skip('MemoryVisualization Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
+vi.mock('react-d3-tree', () => ({
+  default: ({ data, renderCustomNodeElement }: any) => (
+    <div data-testid="mock-tree">
+      <span>{data?.name}</span>
+      <button
+        type="button"
+        onClick={() => renderCustomNodeElement?.({ nodeDatum: data })}
+      >
+        render-node
+      </button>
+    </div>
+  ),
+}));
+
+describe('MemoryTreeViewer Component', () => {
   const mockMemoryTree = {
-    stm: { entries: 150, size: 1024000, nodes: [] },
-    mtm: { entries: 500, size: 5120000, nodes: [] },
-    ltm: { entries: 2000, size: 20480000, nodes: [] },
+    name: 'Mémoire TITANE',
+    attributes: { type: 'root' },
+    children: [
+      { name: 'Court Terme', attributes: { type: 'short' } },
+      { name: 'Moyen Terme', attributes: { type: 'mid' } },
+      { name: 'Long Terme', attributes: { type: 'long' } },
+    ],
   };
 
   describe('Rendering', () => {
     it('should render memory tree', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} />);
+      render(<MemoryTreeViewer data={mockMemoryTree} />);
+      expect(screen.getByTestId('mock-tree')).toBeInTheDocument();
+      expect(screen.getByText('Mémoire TITANE')).toBeInTheDocument();
+    });
+
+    it('should render controls and search input', () => {
+      render(<MemoryTreeViewer data={mockMemoryTree} />);
       expect(
-        screen.getByText(/memory/i) || screen.getByText(/STM|MTM|LTM/i)
-      ).toBeTruthy();
+        screen.getByPlaceholderText(/rechercher dans la mémoire/i)
+      ).toBeInTheDocument();
+      expect(screen.getByTitle(/zoom avant/i)).toBeInTheDocument();
+      expect(screen.getByTitle(/zoom arrière/i)).toBeInTheDocument();
     });
 
-    it('should display STM tier', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} />);
-      expect(screen.getByText(/short.*term|STM/i)).toBeTruthy();
-    });
-
-    it('should display MTM tier', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} />);
-      expect(screen.getByText(/mid.*term|MTM/i)).toBeTruthy();
-    });
-
-    it('should display LTM tier', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} />);
-      expect(screen.getByText(/long.*term|LTM/i)).toBeTruthy();
-    });
-  });
-
-  describe('Stats', () => {
-    it('should show total entries', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} showStats />);
-      // Total: 150 + 500 + 2000 = 2650
-      expect(screen.getByText(/2650|150|500|2000/)).toBeTruthy();
-    });
-
-    it('should show memory sizes', () => {
-      render(<MemoryVisualization tree={mockMemoryTree} showStats />);
-      // Devrait afficher des tailles formatées
-      expect(screen.getByText(/KB|MB|GB/i)).toBeTruthy();
+    it('should react to search input changes', () => {
+      render(<MemoryTreeViewer data={mockMemoryTree} />);
+      const input = screen.getByPlaceholderText(/rechercher dans la mémoire/i);
+      fireEvent.change(input, { target: { value: 'court' } });
+      expect(input).toHaveValue('court');
     });
   });
 
   describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(<MemoryVisualization tree={mockMemoryTree} />);
+      const { container } = render(<MemoryTreeViewer data={mockMemoryTree} />);
       expect(container.firstChild).toMatchSnapshot();
     });
   });

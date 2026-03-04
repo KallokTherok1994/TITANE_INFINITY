@@ -1,226 +1,523 @@
-# TITANE_INFINITY - Copilot Instructions (Governed)
+# TITANE_INFINITY - Copilot Instructions (Governed) — v3 Constitution Finale
 
-Mode : AUTO, arrêt immédiat strict
-Objectif : Mettre à jour et sceller les instructions du dépôt avec preuves
-Portée : dépôt complet
+Mode : AUTO, autorité unique, arrêt immédiat strict
+Objectif : exécuter, vérifier et sceller toute session sans dérive
+Portée : dépôt complet (instructions, cartographie, preuves)
+Principe directeur : gouvernance avant vitesse
 
-## A) Invariants gouvernés
+Compatibility markers (required by verifier):
 
-**À FAIRE**
+- Local-first
+- diagnose -> plan -> apply -> verify -> report
 
-- Online-first gouverné. Réseau autorisé uniquement via des surfaces contrôlées. Fallback local obligatoire.
-- Online-first governed policy active: controlled network surfaces only, mandatory local fallback.
-- Local-first fallback remains mandatory when controlled network surfaces are unavailable.
-- Tauri-only. Aucun serveur web/preview et aucune API HTTP interne de type `server/`.
-- Architecture 4-Ring (Types -> Engines -> Services -> Modules/UI).
-- Les listes d’autorisation/capabilities restent stables et justifiées par des portes de contrôle et des tests.
+## 1) Préambule
 
-**À NE PAS FAIRE**
+Cette constitution est normative, exécutable et prioritaire.
 
-- Exécuter un serveur web/preview ou étendre la surface réseau sans approbation explicite et sans portes de contrôle.
-- Ajouter des capabilities sans preuve et sans chemin de rollback.
+**Action**
 
-**Éléments de preuve attendus**
+- Exécuter : diagnostiquer -> planifier -> appliquer -> vérifier -> rapporter -> sceller.
+- Limiter chaque changement à la portée demandée.
+- Produire des preuves append-only dans `reports/`.
 
-- Scripts de vérification et logs dans `reports/`.
+**Interdiction**
 
-**Porte de contrôle**
+- Déclarer terminé sans preuve.
+- Employer des formulations non mesurables.
 
-- Stop-the-line immédiat si un invariant est violé.
+**Preuve attendue**
 
-## B) Flux standard
-
-**À FAIRE**
-
-- diagnostiquer -> planifier -> appliquer -> vérifier -> rapporter.
-- diagnose -> plan -> apply -> verify -> report.
-- Garder les changements minimaux et strictement bornés à la portée demandée.
-
-**À NE PAS FAIRE**
-
-- Reporter la preuve ou la vérification à plus tard.
-
-**Éléments de preuve attendus**
-
-- Logs, diffs et marqueurs PASS dans `reports/`.
+- Journal horodaté avec statut explicite par phase.
 
 **Porte de contrôle**
 
-- Tout FAIL arrête immédiatement l’exécution.
+- Preuve manquante = FAIL.
 
-## C) Politique PROD (neutre)
+## 2) Définitions formelles (PASS / FAIL / BLOCKED / DONE / SEALED)
 
-**À FAIRE**
+**PASS** : contrôle exécuté + preuve vérifiable.
 
-- Exiger les tokens exacts avant tout build ou déploiement de production.
+**FAIL** : règle violée, preuve absente, ambiguïté ou contradiction.
 
-**Tokens**
+**BLOCKED** : exécution impossible malgré prérequis satisfaits.
+
+**DONE** : implémentation terminée + validations prévues exécutées.
+
+**SEALED** : DONE + toutes gates applicables PASS + rollback documenté.
+
+**Verdict compatibility (obligatoire)**
+
+- `PASS` : 0 `FAIL` et 0 `BLOCKED` sur les gates code/runtime applicables.
+- `FAIL` : échec code reproductible, même après auto-fix gouverné.
+- `BLOCKED` : prérequis manquant (runtime, outil, approbation) avec script/commande prête et next-action <= 30 minutes.
+- `BLOCKED_APPROVAL` : unique cas toléré quand le code est vert mais une approbation/sécurité GitHub est requise hors code.
+
+**Action**
+
+- Assigner un statut unique à chaque étape.
+
+**Interdiction**
+
+- Confondre DONE et SEALED.
+
+**Preuve attendue**
+
+- `VERDICT.md` avec statut final unique.
+
+**Porte de contrôle**
+
+- Statut final multiple ou absent = FAIL.
+
+## 3) Invariants non négociables
+
+**Action**
+
+- Maintenir Tauri-only en production.
+- Maintenir Online-first gouverné avec fallback local obligatoire.
+- Maintain online-first governed policy with mandatory local fallback.
+- Maintenir architecture 4-Ring stricte.
+- Maintenir stabilité capabilities/allowlists avec justification testable.
+
+**Interdiction**
+
+- Étendre surfaces réseau sans gate, preuve et rollback.
+
+**Preuve attendue**
+
+- Scans d’architecture/réseau/config dans `reports/`.
+
+**Porte de contrôle**
+
+- Violation d’invariant = STOP-THE-LINE.
+
+## 4) Architecture 4-Ring formalisée
+
+**Action**
+
+- Ring 1 Types : contrats uniquement, zéro I/O.
+- Ring 2 Engines : logique pure, import Ring 1 seulement.
+- Ring 3 Services : orchestration I/O gouvernée.
+- Ring 4 Modules/UI : interaction utilisateur/OS, erreurs visibles.
+
+**Interdiction**
+
+- Import inversé de ring.
+- I/O en Ring 1 ou Ring 2.
+
+**Preuve attendue**
+
+- PASS `test:architecture`.
+
+**Porte de contrôle**
+
+- Violation de ring = FAIL.
+
+## 5) Gouvernance réseau (One Door)
+
+**Action**
+
+- Chemin unique : UI -> IPC canonique -> Services -> Gateway réseau -> Externe.
+- Conserver fallback local opérationnel.
+
+**Interdiction**
+
+- UI -> Externe direct.
+
+**Preuve attendue**
+
+- Rapport scan réseau + preuve fallback local.
+
+**Porte de contrôle**
+
+- Surface non gouvernée = FAIL.
+
+## 6) Flux d’exécution obligatoire
+
+**Action**
+
+- Exécuter les phases dans l’ordre, sans saut.
+- Publier statut explicite par phase.
+
+**Interdiction**
+
+- Reporter la vérification.
+
+**Preuve attendue**
+
+- Log : commande, horodatage, résultat.
+
+**Porte de contrôle**
+
+- Phase non traçable = FAIL.
+
+## 7) Système de preuves
+
+**Action**
+
+- Écrire les preuves en append-only dans `reports/`.
+- Inclure commandes, extraits, gates, rollback, verdict.
+
+**Interdiction**
+
+- Réécriture destructive d’artefacts.
+
+**Preuve attendue**
+
+- `VERDICT.md` + `ROLLBACK.md`.
+
+**Porte de contrôle**
+
+- Artefact obligatoire absent = FAIL.
+
+## 8) Gates globales
+
+**Action**
+
+- Exécuter toutes gates applicables.
+- Capturer PASS/FAIL/BLOCKED.
+- Vérifier explicitement la CI sur `MAIN` et sur la branche de travail avant verdict.
+- Si `action_required` est signalé par GitHub, classifier `BLOCKED_APPROVAL` sans tentative de contournement.
+
+**Interdiction**
+
+- Déclarer PASS sans exécution.
+
+**Preuve attendue**
+
+- Tableau des gates avec artefact lié.
+
+**Porte de contrôle**
+
+- Gate obligatoire non traitée = FAIL.
+
+## 9) Politique PROD stricte
+
+**Action**
+
+- Exiger strictement les tokens exacts avant action PROD.
+
+**Tokens exacts**
 
 - `GO_FOR_PROD_BUILD__TITANE_INFINITY`
 - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
 
-**À NE PAS FAIRE**
+**Interdiction**
 
-- Déduire, approximer ou reformuler les tokens.
+- Alias, approximation ou reformulation.
 
-**Éléments de preuve attendus**
+**Preuve attendue**
 
-- `VERDICT.md` dans le proof pack.
+- Trace exacte + `VERDICT.md`.
 
-## C.1) Porte de synchronisation de version (obligatoire avant PROD)
+**Porte de contrôle**
 
-**À FAIRE (avant tout build/deploy PROD)**
+- Token absent/altéré = FAIL.
 
-- Synchroniser la version de release dans tous les fichiers canoniques :
+## 10) Synchronisation version
+
+**Action**
+
+- Aligner strictement :
   - `package.json`
   - `src-tauri/Cargo.toml`
   - `src-tauri/tauri.conf.json`
-- Synchroniser les métadonnées de déploiement avec la même version cible :
   - `deployment/latest/MANIFEST.json`
   - `deployment/latest/SHA256SUMS_v<version>.txt`
   - `deployment/latest/SIZES_v<version>.txt`
 
-**À NE PAS FAIRE**
+**Interdiction**
 
-- Lancer un build/déploiement PROD avec des versions incohérentes (stop-the-line).
+- Build/deploy PROD avec mismatch version.
+
+**Preuve attendue**
+
+- Rapport comparaison fichier par fichier.
 
 **Porte de contrôle**
 
-- Tout mismatch entre version app/bundle/deployment = FAIL.
+- Mismatch version = FAIL.
 
-## C.2) Gouvernance IDE (VS Code)
+## 11) Gouvernance IDE
 
-**Principe**
+**Action**
 
-- L’IDE fait partie de la surface gouvernée. La surface active doit être minimisée.
+- Maintenir un seul agent IA exécutant actif.
+- Maintenir un seul runner E2E autorité actif.
 
-**IA — autorité unique**
+**Interdiction**
 
-- EXACT : un seul agent IA **exécutant** à la fois (capable d’écrire/committer/lancer).
-- Les autres agents IA doivent être désactivés au niveau espace de travail.
-- Multi-agents exécutants simultanés = dérive = stop-the-line.
+- Multi-agent exécutant simultané.
+- Double runner E2E simultané.
 
-**E2E — autorité unique**
+**Preuve attendue**
 
-- EXACT : un seul runner E2E autorité à la fois.
-- Runner autorisé : WebdriverIO **ou** Playwright, jamais les deux actifs simultanément.
-- Tout rapport de test doit nommer explicitement le runner autorité.
+- Snapshot outillage + rapport runner.
 
-**Extensions — minimisation (socle recommandé TITANE∞)**
+**Porte de contrôle**
 
-- `rust-analyzer`
-- `CodeLLDB`
-- `Tauri`
-- `Even Better TOML`
-- `ESLint`
-- `Prettier`
-- `Tailwind CSS IntelliSense`
-- `pnpm` (et helper uniquement si utilisé)
-- `Path IntelliSense`
-- `Error Lens`
-- `YAML`
-- `DotENV`
-- Git : choisir 1–2 outils (`GitLens` ou `GitHub Pull Requests`)
+- Concurrence d’autorité = FAIL.
 
-**À éviter / supprimer si non requis pour TITANE∞**
+## 12) Anti-silence
 
-- Extensions langages hors scope (C/C++/Go/Unity/Firefox Debugger/.NET/Python) si non nécessaires au projet.
-- `TypeScript Nightly` ou variantes TS expérimentales.
-- Outils Remote/Containers si non utilisés.
-- Doublons de runner Vitest (garder un seul).
-- Extensions “open in browser” si elles poussent vers une dérive hors Tauri-only.
+**Action**
 
-**Règle opérationnelle**
+- Retour visible obligatoire : succès ou erreur.
+- Respect strict du contrat IPC `{ ok, content, error }`.
 
-- Une fonction critique = un seul outil autorité actif.
-- Toute exception doit être documentée, justifiée, datée et réversible.
+**Interdiction**
 
-## C.3) Clarification Tauri-only vs Vite dev
+- Silence UI/IPC.
+- Fallback trompeur.
 
-**À FAIRE**
+**Preuve attendue**
 
-- Le serveur Vite est acceptable uniquement comme outil de développement encapsulé dans le workflow Tauri (`tauri dev`).
-- Le serveur Vite ne doit jamais être présenté comme preview web autonome ni comme surface de production.
-- Les échanges réseau passent par les surfaces gouvernées (API Provider uniquement + garde anti-endpoints non autorisés).
+- Logs E2E/IPC avec cause racine.
 
-**À NE PAS FAIRE**
+**Porte de contrôle**
 
-- Exposer des endpoints frontend directs.
-- Faire des appels localhost hors surface gouvernée.
+- Interaction silencieuse = FAIL.
 
-## D) Anti-silence (UI/IPC/Chat)
+## 13) Discipline invoke
 
-**À FAIRE**
+**Action**
 
-- Toujours répondre avec succès ou erreur visible.
-- IPC retourne `{ ok, content, error }`.
-- Les erreurs doivent être attribuées à leur cause racine : `IPC_*` ≠ `ProviderDown`.
-- Toujours en français dans tes instructions.
+- Utiliser le client canonique TypeScript <-> Tauri.
 
-**À NE PAS FAIRE**
+**Interdiction**
 
-- Laisser l’UI ou l’IPC dans un état silencieux.
+- Nouvel `invoke` brut hors client canonique.
 
-**Éléments de preuve attendus**
+**Preuve attendue**
 
-- Logs E2E et exports.
+- Scan d’absence de dérive invoke.
 
-## E) Règles ring par ring
+**Porte de contrôle**
 
-Ring 1 (Types)
+- Invoke direct non conforme = FAIL.
 
-- À faire : schémas stricts, aucune logique runtime.
-- À ne pas faire : I/O ou effets de bord.
+## 14) Tests et validation x3
 
-Ring 2 (Engines)
+**Action**
 
-- À faire : logique pure, déterministe, sans I/O.
-- À ne pas faire : réseau, système de fichiers, aléatoire basé sur le temps.
+- Exécuter tests ciblés selon ring impacté.
+- Exécuter triplet de confiance (tests/checks/smoke) x3 quand applicable.
+- Gate E2E : marquer `PASS` uniquement avec exécution runtime Tauri réelle prouvée (logs + commandes + statut).
+- Si runtime E2E indisponible : marquer `BLOCKED_E2E_RUNTIME` avec wrapper exécutable et prérequis exacts.
 
-Ring 3 (Services)
+**Interdiction**
 
-- À faire : I/O contrôlés, timeouts, circuit breakers, logs.
-- À ne pas faire : retries non bornés.
+- Déclarer DONE sans tests applicables.
+- Déclarer `PASS` E2E avec tests UI-only ou simulation sans runtime réel.
 
-Ring 4 (Modules/UI)
+**Auto-fix Prettier (obligatoire)**
 
-- À faire : erreurs visibles, ErrorBoundary, `data-testid` stables pour E2E.
-- À ne pas faire : échecs silencieux.
+- En cas de fail Prettier fichier : exécuter `pnpm prettier --write <fichier>` puis re-check ciblé.
+- Toujours revalider `pnpm prettier --check "."` après correction ciblée.
 
-## F) Interdiction d’invoke direct
+**Preuve attendue**
 
-**À FAIRE**
+- Résumé PASS/FAIL/BLOCKED + logs.
 
-- Utiliser uniquement le client canonique TS <-> Tauri.
+**Porte de contrôle**
 
-**À NE PAS FAIRE**
+- Test obligatoire non exécuté = FAIL.
 
-- Disperser des appels `invoke` bruts dans le codebase.
+## 15) Rollback
 
-## G) Tests et portes de contrôle avant DONE
+**Action**
 
-**À FAIRE**
+- Fournir rollback explicite, reproductible, non destructif.
 
-- Exécuter les tests et portes de contrôle requis pour le ring impacté.
-- Enregistrer les preuves dans `reports/`.
+**Interdiction**
 
-**À NE PAS FAIRE**
+- Commandes destructives sans récupération.
 
-- Marquer DONE sans preuve PASS.
+**Preuve attendue**
 
-## H) Rollback
+- `ROLLBACK.md`.
 
-**À FAIRE**
+**Porte de contrôle**
 
-- Fournir des étapes de `git restore` ou `git revert`.
+- Rollback absent = FAIL.
 
-**À NE PAS FAIRE**
+## 16) Métadonnées de changement
 
-- Utiliser des commandes destructives.
+**Action**
 
-## Exigence de métadonnées de changement
+- Déclarer `Ring` impacté + statut (`STABLE`, `QUALIFIED`, `EXPERIMENTAL`, `UNKNOWN`).
+- Pour changement UI : entrée append-only `registry/ui-events.jsonl`.
 
-**À FAIRE**
+**Interdiction**
 
-- Pour toute proposition de changement, indiquer le Ring impacté et le statut : EXPERIMENTAL, QUALIFIED ou STABLE.
-- Pour tout changement UI, ajouter une entrée dans `registry/ui-events.jsonl`.
+- Changement non classifié.
+
+**Preuve attendue**
+
+- Diff métadonnées + entrée registre si UI.
+
+**Porte de contrôle**
+
+- Métadonnées incomplètes = FAIL.
+
+## 17) Système de progression mesurable
+
+**Action**
+
+- Publier bloc progression à chaque jalon.
+- Calculer : `Global Completion = (tâches terminées / tâches totales) * 100`.
+
+**Interdiction**
+
+- Progression implicite.
+
+**Preuve attendue**
+
+- Bloc progression présent dans le rapport final.
+
+**Format obligatoire**
+
+- `Current Phase`
+- `Tasks Completed`
+- `Global Completion`
+- `Gates Passed`
+- `Gates Pending`
+- `Blocking Issues`
+- `Seal Status`
+
+**Porte de contrôle**
+
+- Bloc absent/incohérent = FAIL.
+
+## 18) Cartographie & Mapping System
+
+**Action**
+
+- Maintenir cartographie canonique, régénérable, prouvable.
+- Maintenir artefacts obligatoires :
+  - `docs/MAP_INDEX.md`
+  - `docs/MAP_ARCHITECTURE_4RING.md`
+  - `docs/MAP_SURFACES_NETWORK.md`
+  - `docs/MAP_IPC_COMMANDS.md`
+  - `docs/MAP_TESTS_GATES.md`
+  - `docs/MAP_MERMAID_OVERVIEW.md`
+  - `reports/MAP_PROOFS.log`
+- Convention par entrée : **Objet**, **Ring**, **Responsabilité**, **Interfaces**, **I/O**, **Preuve**, **Statut**.
+- Toute donnée non prouvable = `UNKNOWN`.
+
+**Interdiction**
+
+- Inventer des éléments non dérivés des artefacts réels.
+
+**Preuve attendue**
+
+- `reports/MAP_PROOFS.log` horodaté.
+
+**Porte de contrôle**
+
+- Artefact mapping absent = FAIL.
+
+## 19) Mermaid obligatoires
+
+**Action**
+
+- Maintenir 4 diagrammes minimum dans `docs/MAP_MERMAID_OVERVIEW.md` :
+  1. Vue 4-Ring
+  2. One Door Network
+  3. Pipeline gouverné
+  4. Gates & Proof Pack
+
+**Interdiction**
+
+- Diagrammes décoratifs non structurels.
+
+**Preuve attendue**
+
+- 4 blocs Mermaid valides.
+
+**Porte de contrôle**
+
+- Nombre ou structure insuffisante = FAIL.
+
+## 20) Anti-drift
+
+**Action**
+
+- Toute modification surfaces/IPC/architecture impose mise à jour cartographie.
+- Rafraîchir les preuves via `scripts/map_refresh.sh`.
+
+**Interdiction**
+
+- Changer code gouverné sans update mapping.
+
+**Preuve attendue**
+
+- Diff mapping + update `reports/MAP_PROOFS.log`.
+
+**Porte de contrôle**
+
+- Dérive non corrigée = FAIL.
+
+## 21) Seal Protocol
+
+**Action**
+
+- Protocole d’auto-fix pré-scellement obligatoire :
+  1. Vérifier présence des 22 sections
+  2. Vérifier absence d’ambiguïté
+  3. Vérifier absence de contradiction
+  4. Vérifier preuve pour chaque règle
+  5. Vérifier progression mesurable
+- Corriger automatiquement toute incohérence détectée avant verdict.
+- Déclarer `SCELLÉ` uniquement si toutes gates applicables sont PASS.
+
+**Interdiction**
+
+- Sceller avec gate FAIL ou BLOCKED non résolue.
+
+**Preuve attendue**
+
+- `VERDICT.md` final unique + index preuves + rollback.
+
+**Porte de contrôle**
+
+- Condition de scellement non satisfaite = NON SCELLÉ.
+
+## 22) Stop-the-line global
+
+**Déclencheurs**
+
+- Violation invariant non négociable.
+- Gate obligatoire FAIL.
+- Contradiction interne non résolue.
+- Ambiguïté verdict non résolue.
+- Dérive multi-agent/multi-runner.
+
+**Action**
+
+- Arrêt immédiat, diagnostic cause racine, correction ou rollback.
+
+**Interdiction**
+
+- Continuer malgré FAIL.
+
+**Preuve attendue**
+
+- Journal d’arrêt + décision de reprise.
+
+**Porte de contrôle**
+
+- Reprise sans levée explicite du FAIL = FAIL.
+
+## Gates Mapping obligatoires V3
+
+- `G_MAP_INDEX_PRESENT`
+- `G_MAP_ARCHITECTURE_PRESENT`
+- `G_MAP_SURFACES_PRESENT`
+- `G_MAP_IPC_COMMANDS_PRESENT`
+- `G_MAP_TESTS_GATES_PRESENT`
+- `G_MERMAID_PRESENT`
+- `G_MAP_PROOF_LOG_PRESENT`
+- `G_MAP_NO_UNKNOWN_CRITICAL`
+- `G_MAP_ANTI_DRIFT_RULE_PRESENT`
+
+Règle de scellement : une gate mapping non PASS interdit `SCELLÉ`.

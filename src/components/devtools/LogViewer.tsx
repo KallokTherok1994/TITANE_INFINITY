@@ -64,7 +64,7 @@ export const LogViewer: React.FC<LogViewerProps> = ({
   // Poll logs every second
   useEffect(() => {
     fetchLogs();
-    const interval = setInterval(fetchLogs, 1000);
+    const interval = setInterval(fetchLogs, import.meta.env.DEV ? 1000 : 5000);
     return () => clearInterval(interval);
   }, [fetchLogs]);
 

@@ -50,8 +50,11 @@ function runOrFallback(primaryCmd, primaryArgs, fallbackCmd, fallbackArgs) {
 const hasPnpmLock = existsSync('pnpm-lock.yaml');
 
 if (hasPnpmLock) {
+  const auditScope = (process.env.COPILOT_XS_AUDIT_SCOPE ?? 'prod').toLowerCase();
+  const auditArgs = auditScope === 'full' ? ['audit'] : ['audit', '--prod'];
+
   // Prefer corepack when available; fallback to pnpm.
-  const pnpmResult = runOrFallback('corepack', ['pnpm', 'audit'], 'pnpm', ['audit']);
+  const pnpmResult = runOrFallback('corepack', ['pnpm', ...auditArgs], 'pnpm', auditArgs);
 
   if (!pnpmResult.ok) {
     console.warn(

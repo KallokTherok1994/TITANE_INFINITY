@@ -14,6 +14,15 @@ use crate::memory_compactor::{CompactorConfig, MemoryCompactor};
 use std::fs;
 use std::path::PathBuf;
 
+pub trait MemoryStoragePort: Send + Sync {
+    fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()>;
+    fn load_conversation(&self, conversation_id: &str) -> MemoryResult<Conversation>;
+    fn delete_conversation(&self, conversation_id: &str) -> MemoryResult<()>;
+    fn export_conversation(&self, conversation_id: &str) -> MemoryResult<String>;
+    fn clear_all(&self) -> MemoryResult<()>;
+    fn get_stats(&self) -> MemoryResult<(u64, u64)>;
+}
+
 pub struct MemoryStorage {
     storage_dir: PathBuf,
     encryption: MemoryEncryption,
@@ -259,6 +268,32 @@ impl MemoryStorage {
             results.len()
         );
         Ok(results)
+    }
+}
+
+impl MemoryStoragePort for MemoryStorage {
+    fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()> {
+        MemoryStorage::save_conversation(self, conversation)
+    }
+
+    fn load_conversation(&self, conversation_id: &str) -> MemoryResult<Conversation> {
+        MemoryStorage::load_conversation(self, conversation_id)
+    }
+
+    fn delete_conversation(&self, conversation_id: &str) -> MemoryResult<()> {
+        MemoryStorage::delete_conversation(self, conversation_id)
+    }
+
+    fn export_conversation(&self, conversation_id: &str) -> MemoryResult<String> {
+        MemoryStorage::export_conversation(self, conversation_id)
+    }
+
+    fn clear_all(&self) -> MemoryResult<()> {
+        MemoryStorage::clear_all(self)
+    }
+
+    fn get_stats(&self) -> MemoryResult<(u64, u64)> {
+        MemoryStorage::get_stats(self)
     }
 }
 

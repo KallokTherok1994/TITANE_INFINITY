@@ -10,15 +10,15 @@
 
 ### ✅ 1. Documentation ADR (3 fichiers)
 
-- [docs/adr/001-tauri-local-first-architecture.md](docs/adr/001-tauri-local-first-architecture.md) (7.5 KB)
+- [docs/adr/001-tauri-local-first-architecture.md](../../adr/001-tauri-local-first-architecture.md) (7.5 KB)
   - Decision: Tauri v2 vs Electron/NW.js/PWA
   - Score: 9/10 (Security, Performance, Local-First)
   - Metrics: 14.2MB bundle, 427ms cold start, 58MB RAM
-- [docs/adr/002-omega-conversation-manager.md](docs/adr/002-omega-conversation-manager.md) (14 KB)
+- [docs/adr/002-omega-conversation-manager.md](../../adr/002-omega-conversation-manager.md) (14 KB)
   - Pattern: Singleton + Repository
   - Tests: 10/10 OMEGA passing
   - Mock isolation: `async importOriginal` pattern
-- [docs/adr/003-eslint-jsx-automation-strategy.md](docs/adr/003-eslint-jsx-automation-strategy.md) (12 KB)
+- [docs/adr/003-eslint-jsx-automation-strategy.md](../../adr/003-eslint-jsx-automation-strategy.md) (12 KB)
   - Solution: Sed script (38 patterns)
   - Impact: 52 warnings → 0 in <2 min
   - Future: Custom ESLint plugin (v26.4)
@@ -35,7 +35,7 @@
 
 ### ✅ 3. Changelog v26.3.0
 
-- [CHANGELOG.md](CHANGELOG.md) updated
+- [CHANGELOG.md](../../90_release/CHANGELOG__CHANGELOG.md.md) updated
 - Comprehensive entry: All sections populated
 - Metrics: TypeScript, ESLint, Tests, Performance
 - Score progression: 8.50 → 10.00 (+1.50 points)

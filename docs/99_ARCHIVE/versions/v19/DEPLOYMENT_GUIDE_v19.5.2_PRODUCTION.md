@@ -616,7 +616,7 @@ sudo dpkg -i titane-infinity_24.1.0_amd64.deb
 ```
 
 ### Autres Plateformes
-Voir [docs/user/installation.md](docs/user/installation.md)
+Voir [docs/user/installation.md](../../../user/installation.md)
 
 ## 🙏 Contributeurs
 

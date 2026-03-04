@@ -10,10 +10,45 @@ import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import { invokeWithRetry, LONG_COMMAND_OPTIONS } from '@/lib/serviceInvoker';
 import { validateIpcPayload } from '@/lib/ipcContract';
 import { isIPCError } from '@/lib/errorClassification';
-import { monitoring } from '@/monitoring';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { getSystemPrompt } from '@/config/chatModes.config';
+
+type MonitoringBridge = {
+  trackRequest: () => void;
+  addBreadcrumb: (message: string, category?: string, data?: unknown) => void;
+  trackPipelineError: () => void;
+  trackPipelineLatency: (latency: number) => void;
+  trackError: (error: unknown, context?: unknown) => void;
+};
+
+const noopMonitoring: MonitoringBridge = {
+  trackRequest: () => {},
+  addBreadcrumb: () => {},
+  trackPipelineError: () => {},
+  trackPipelineLatency: () => {},
+  trackError: () => {},
+};
+
+let monitoringBridge: MonitoringBridge = noopMonitoring;
+
+void import('@/monitoring')
+  .then(mod => {
+    const candidate = (mod.monitoring ?? mod.default) as MonitoringBridge | undefined;
+    if (candidate) {
+      monitoringBridge = candidate;
+    }
+  })
+  .catch(() => {});
+
+const monitoring: MonitoringBridge = {
+  trackRequest: () => monitoringBridge.trackRequest(),
+  addBreadcrumb: (message, category, data) =>
+    monitoringBridge.addBreadcrumb(message, category, data),
+  trackPipelineError: () => monitoringBridge.trackPipelineError(),
+  trackPipelineLatency: latency => monitoringBridge.trackPipelineLatency(latency),
+  trackError: (error, context) => monitoringBridge.trackError(error, context),
+};
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -1327,12 +1362,29 @@ class ChatService {
     }
 
     if (typeof raw === 'string') {
+      const trimmed = raw.trim();
+      if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+        return {
+          content: raw,
+        };
+      }
+
       try {
-        const parsed = JSON.parse(raw);
+        const parsed = JSON.parse(trimmed);
         return this.normalizeCompleteEvent(parsed);
       } catch (error) {
-        console.warn('[ChatService] Unable to parse completion payload:', error);
-        return null;
+        try {
+          const sanitized = trimmed
+            .replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')
+            .replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+          const parsed = JSON.parse(sanitized);
+          return this.normalizeCompleteEvent(parsed);
+        } catch (secondError) {
+          console.warn('[ChatService] Unable to parse completion payload:', secondError);
+          return {
+            content: raw,
+          };
+        }
       }
     }
 

@@ -300,11 +300,63 @@ const createNoopLogger = (_prefix: string): Logger => {
  * Export créateur de loggers avec préfixe custom
  */
 export function createLogger(prefix: string, config?: Partial<LoggerConfig>) {
-  try {
-    return new Logger({ ...config, prefix });
-  } catch {
-    return createNoopLogger(prefix);
-  }
+  const isDev = process.env.NODE_ENV === 'development';
+  const isTest = process.env.NODE_ENV === 'test';
+  const isProduction = !isDev && !isTest;
+
+  return {
+    configure: (_next: Partial<LoggerConfig>) => {
+      void _next;
+    },
+    trace: (...args: LogArgs) => {
+      if (!isProduction) {
+        console.log(`[${prefix}][TRACE]`, ...args);
+      }
+    },
+    debug: (...args: LogArgs) => {
+      if (!isProduction) {
+        console.log(`[${prefix}][DEBUG]`, ...args);
+      }
+    },
+    info: (...args: LogArgs) => {
+      console.info(`[${prefix}][INFO]`, ...args);
+    },
+    warn: (...args: LogArgs) => {
+      console.warn(`[${prefix}][WARN]`, ...args);
+    },
+    error: (...args: LogArgs) => {
+      console.error(`[${prefix}][ERROR]`, ...args);
+    },
+    fatal: (...args: LogArgs) => {
+      console.error(`[${prefix}][FATAL]`, ...args);
+    },
+    group: (label: string, collapsed = false) => {
+      if (isProduction) return;
+      if (collapsed) {
+        console.groupCollapsed(`[${prefix}][GROUP] ${label}`);
+      } else {
+        console.group(`[${prefix}][GROUP] ${label}`);
+      }
+    },
+    groupEnd: () => {
+      if (isProduction) return;
+      console.groupEnd();
+    },
+    table: (data: TableData) => {
+      if (isProduction) return;
+      console.table(data);
+    },
+    time: (label: string) => {
+      if (!isProduction) {
+        console.time(`[${prefix}] ${label}`);
+      }
+    },
+    timeEnd: (label: string) => {
+      if (!isProduction) {
+        console.timeEnd(`[${prefix}] ${label}`);
+      }
+    },
+  } as unknown as Logger;
 }
 
 /**

@@ -912,7 +912,7 @@ npx lighthouse https://titan-infinity.app --view
 
 **Discovered:**
 
-- [docs/RESPONSIVE_OPTIMIZATION_PLAN_v25.md](./docs/RESPONSIVE_OPTIMIZATION_PLAN_v25.md) - Phase 5 roadmap (603 lines)
+- [docs/RESPONSIVE_OPTIMIZATION_PLAN_v25.md](../../RESPONSIVE_OPTIMIZATION_PLAN_v25.md) - Phase 5 roadmap (603 lines)
 
 ---
 

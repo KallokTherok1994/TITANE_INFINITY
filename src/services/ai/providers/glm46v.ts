@@ -15,6 +15,7 @@ import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
 import {
   SecureAIService,
+  secureInvoke,
   type SecureAIRequest,
   type SecureAIResponse,
   type ChatResponse,
@@ -137,32 +138,18 @@ Lorsque tu vois une image, décris-la précisément et utilise cette information
  */
 async function checkEndpointHealth(): Promise<boolean> {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
+    const providers =
+      await secureInvoke<
+        Array<{ provider: string; available: boolean; models?: string[] }>
+      >('chat_check_providers');
 
-    const response = await globalThis['fetch'](
-      // @network-allowed
-      // @network-allowed
-      `${GLM46V_CONFIG.baseUrl}/models`,
-      {
-        method: 'GET',
-        signal: controller.signal,
-        headers: { Accept: 'application/json' },
-      }
-    );
+    const glm = providers.find(item => item.provider.toLowerCase().includes('glm'));
 
-    clearTimeout(timeout);
+    if (!glm) return false;
+    if (!glm.available) return false;
+    if (!glm.models || glm.models.length === 0) return true;
 
-    if (response.ok) {
-      const data = await response.json();
-      // Check if GLM-4.6V model is available
-      return (
-        Array.isArray(data.data) &&
-        data.data.some((model: any) => model.id === GLM46V_CONFIG.model)
-      );
-    }
-
-    return false;
+    return glm.models.some(model => model.toLowerCase().includes('glm'));
   } catch (error) {
     handleGLM46VError(error, 'health_check');
     return false;
@@ -297,57 +284,46 @@ export const glm46vProvider: AIProvider = {
     try {
       const secureResult: SecureAIResponse<ChatResponse> =
         await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
-          const controller = new AbortController();
-          const timeout = setTimeout(() => controller.abort(), finalConfig.timeout);
-
           try {
-            const payload = convertToGLM46VFormat(sanitizedMessage, history);
+            const _payload = convertToGLM46VFormat(sanitizedMessage, history);
 
-            const response = await globalThis['fetch'](
-              // @network-allowed
-              // @network-allowed
-              `${GLM46V_CONFIG.baseUrl}/chat/completions`,
+            const data = await secureInvoke<{
+              success: boolean;
+              error?: string;
+              message?: { content?: string; model?: string; tokens?: number };
+              latency_ms?: number;
+            }>(
+              'conversation_generate',
               {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
+                args: {
+                  message: sanitizedMessage,
+                  conversationId: `glm46v-${Date.now()}`,
+                  mode: null,
+                  provider: 'glm46v',
                 },
-                body: JSON.stringify({
-                  model: GLM46V_CONFIG.model,
-                  messages: payload.messages,
-                  max_tokens: finalConfig.maxTokens,
-                  temperature: finalConfig.temperature,
-                  stream: false,
-                }),
-                signal: controller.signal,
-              }
+              },
+              { timeout: finalConfig.timeout }
             );
 
-            clearTimeout(timeout);
-
-            if (!response.ok) {
-              throw new Error(`GLM-4.6V API error: ${response.status}`);
+            if (!data?.success) {
+              throw new Error(data?.error || 'GLM-4.6V IPC error');
             }
 
-            const data = await response.json();
-
-            if (!data.choices?.[0]?.message?.content) {
+            if (!data?.message?.content) {
               throw new Error('GLM-4.6V: Empty response');
             }
 
             return {
-              content: data.choices[0].message.content.trim(),
+              content: data.message.content.trim(),
               role: 'assistant',
               timestamp: Date.now(),
               metadata: {
-                model: GLM46V_CONFIG.model,
-                tokens: data.usage?.total_tokens || 0,
-                finish_reason: data.choices[0].finish_reason,
+                model: data.message.model || GLM46V_CONFIG.model,
+                tokens: data.message.tokens || 0,
+                finish_reason: 'stop',
               },
             };
           } catch (error) {
-            clearTimeout(timeout);
-
             if (error instanceof Error) {
               if (error.name === 'AbortError') {
                 throw new Error('GLM-4.6V: Request timeout');

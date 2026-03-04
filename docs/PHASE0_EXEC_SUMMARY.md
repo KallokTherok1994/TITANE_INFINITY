@@ -25,7 +25,7 @@
 - Validation GATE_REGISTRY: ✅ PASS
 
 ### 4. Rapports Documentaires Créés
-- [reports/PHASE0_STABLE_READY_FINAL.md](reports/PHASE0_STABLE_READY_FINAL.md) — Rapport complet avec checklist
+- [reports/PHASE0_STABLE_READY_FINAL.md](PHASE0_STABLE_READY_FINAL.md) — Rapport complet avec checklist
 - [reports/PHASE0_STABLE_BLOCKERS_REPORT.md](reports/PHASE0_STABLE_BLOCKERS_REPORT.md) — Implémentation technique
 
 ---

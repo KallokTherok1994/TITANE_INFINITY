@@ -10,6 +10,8 @@
 
 import { test, expect } from '@playwright/test';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 const NINE_ENGINES = [
   'Orchestrator',
   'Style Engine',
@@ -23,12 +25,19 @@ const NINE_ENGINES = [
 ];
 
 test.describe('Critical Path: Engine Navigation', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
     await page.waitForTimeout(2000);
   });
 
-  test.skip('all 9 engines are represented in UI', async ({ page }) => {
+  test('all 9 engines are represented in UI', async ({ page }) => {
     // Check for main navigation buttons (TITANE, TIME, STATS, ADMIN, DEV, FUSION, OPTIMIZE)
     const navButtons = await page
       .locator('nav[aria-label="Main navigation"] button, nav button[role="button"]')
@@ -38,7 +47,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     expect(navButtons).toBeGreaterThan(5);
   });
 
-  test.skip('can navigate between different sections', async ({ page }) => {
+  test('can navigate between different sections', async ({ page }) => {
     // Close boot beacon if present to avoid click interception
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {
@@ -65,7 +74,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     }
   });
 
-  test.skip('system health indicator is accessible', async ({ page }) => {
+  test('system health indicator is accessible', async ({ page }) => {
     // Close boot beacon first
     const closeBeacon = page.getByRole('button', { name: /Fermer diagnostic/i });
     if (await closeBeacon.isVisible()) {

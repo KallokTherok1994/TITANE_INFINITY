@@ -33,11 +33,11 @@ La certification runtime du Chat Desktop après correction `{ args: ... }` est *
 |----------|--------|----------|
 | IPC wrapper implementation | ✅ MERGED | commit ce85a922 |
 | Test expectation fixes | ✅ MERGED | commit f8deb848 |
-| Gate-1 proof | ✅ ARCHIVED | [GATE_1_PASS.md](../../docs/reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/GATE_1_PASS.md) |
-| Gate-2 proof | ✅ ARCHIVED | [GATE_2_PASS.md](../../docs/reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/GATE_2_PASS.md) |
-| Gate-3 proof | ✅ ARCHIVED | [GATE_3_PASS.md](../../docs/reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/GATE_3_PASS.md) |
+| Gate-1 proof | ✅ ARCHIVED | [GATE_1_PASS.md](GATE_1_PASS.md) |
+| Gate-2 proof | ✅ ARCHIVED | [GATE_2_PASS.md](GATE_2_PASS.md) |
+| Gate-3 proof | ✅ ARCHIVED | [GATE_3_PASS.md](GATE_3_PASS.md) |
 | Full logs | ✅ ARCHIVED | [logs/](../../docs/reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/logs/) |
-| Verdict | ✅ SEALED | [VERDICT.md](../../docs/reports/chat-ipc-args-verify/2026-02-14T16:05:00Z/VERDICT.md) |
+| Verdict | ✅ SEALED | [VERDICT.md](../../../01_misc/VERDICT.md) |
 | Smoke script | ✅ ADDED | [scripts/gate3_smoke.sh](../../scripts/gate3_smoke.sh) |
 
 ---

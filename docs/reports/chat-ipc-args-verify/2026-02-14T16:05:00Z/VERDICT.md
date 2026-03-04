@@ -107,8 +107,8 @@ Le wrapping `{ args: ConversationGenerateArgs }` imposé par le contrat IPC a é
 - Surveillance métrique: taux d'erreur `conversation_generate` (baseline actuel: 0%)
 
 ### Follow-up (optionnel)
-- Documentation: ajouter exemple d'appel IPC dans [API_REFERENCE.md](../../API_REFERENCE.md)
-- Architecture: clarifier Ring 3 IPC boundaries dans [ARCHITECTURE.md](../../ARCHITECTURE.md)
+- Documentation: ajouter exemple d'appel IPC dans [API_REFERENCE.md](../../../01_misc/API_REFERENCE.md)
+- Architecture: clarifier Ring 3 IPC boundaries dans [ARCHITECTURE.md](../../../ARCHITECTURE.md)
 
 ---
 

@@ -177,10 +177,10 @@ impl ChatEngine {
 
         let provider_pref = payload.provider;
         let message_id = Uuid::new_v4().to_string();
-        let (sender, receiver) = new_stream_channel(32);
+        let config = self.config.clone();
+        let (sender, receiver) = new_stream_channel(config.stream_channel_buffer);
         let providers = self.providers.clone();
         let memory = self.memory.clone();
-        let config = self.config.clone();
         let speech = if config.auto_tts_enabled && self.speech.auto_enabled() {
             Some(self.speech.clone())
         } else {
@@ -289,6 +289,7 @@ impl ChatEngine {
     }
 
     pub async fn save_memory(&self, conversation_id: &str) -> Result<String, ChatEngineError> {
+        self.memory.flush_conversation_now(conversation_id).await?;
         self.memory.export_conversation_json(conversation_id).await
     }
 
@@ -386,6 +387,7 @@ pub async fn bootstrap_from_env(
     let memory = Arc::new(ChatMemoryManager::new(
         storage,
         config.memory_retention_tokens,
+        config.memory_flush_interval,
     ));
 
     let online_tts = Arc::new(RwLock::new(OnlineTTS::new(gemini_key.clone())));

@@ -69,6 +69,8 @@ impl PolicyEngine {
     /// 
     /// # Examples
     /// ```
+    /// use titane_infinity::engines::conversation_os::policy::{NetState, PolicyContext, PolicyEngine};
+    ///
     /// let engine = PolicyEngine::new();
     /// let context = PolicyContext {
     ///     net_state: NetState::Offline,

@@ -1,4 +1,0 @@
-# 09_TOOL_CONTRACT_V1.md
-
-Phase: P11
-Statut: PENDING

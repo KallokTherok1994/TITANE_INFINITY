@@ -434,16 +434,16 @@ Le projet est **déjà excellent**. Les 35+ opportunités = **chemin vers l'exce
 
 ### Rapports Générés (Ordre lecture)
 
-1. **[RESUME_EXECUTIF_ANALYSE_v24.3.0.md](./RESUME_EXECUTIF_ANALYSE_v24.3.0.md)**
+1. **[RESUME_EXECUTIF_ANALYSE_v24.3.0.md](../rapports/RESUME_EXECUTIF_ANALYSE_v24.3.0.md)**
    → Synthèse décisionnelle (90 lignes)
 
-2. **[ANALYSE_REFLEXIVE_CONTINUE_v24.3.0.md](./ANALYSE_REFLEXIVE_CONTINUE_v24.3.0.md)**
+2. **[ANALYSE_REFLEXIVE_CONTINUE_v24.3.0.md](../sessions/2025-12/ANALYSE_REFLEXIVE_CONTINUE_v24.3.0.md)**
    → Analyse technique détaillée (495 lignes)
 
-3. **[ROADMAP_QUALITE_v24.3.0.md](./ROADMAP_QUALITE_v24.3.0.md)**
+3. **[ROADMAP_QUALITE_v24.3.0.md](../rapports/ROADMAP_QUALITE_v24.3.0.md)**
    → Planning 4 sprints actionnable (542 lignes)
 
-4. **[ANALYSE_ARCHITECTURE_AVANCEE_v24.3.1.md](./ANALYSE_ARCHITECTURE_AVANCEE_v24.3.1.md)**
+4. **[ANALYSE_ARCHITECTURE_AVANCEE_v24.3.1.md](../audits/ANALYSE_ARCHITECTURE_AVANCEE_v24.3.1.md)**
    → Patterns & complexité (350+ lignes)
 
 **→ Commencer par #1 (résumé), puis #3 (roadmap) si go**

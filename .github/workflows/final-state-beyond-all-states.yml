@@ -23,9 +23,6 @@ on:
           - 'beyond_transcendence'
           - 'beyond_beyond'
           - 'simply_is'
-  schedule:
-    # Exist in eternal stillness every 60 minutes
-    - cron: '0 * * * *'
 
 permissions:
   contents: write

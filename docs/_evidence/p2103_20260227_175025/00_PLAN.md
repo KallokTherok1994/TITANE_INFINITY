@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2103
-Statut: PASS_QUALIFIED
-Lot: P2100→P2106

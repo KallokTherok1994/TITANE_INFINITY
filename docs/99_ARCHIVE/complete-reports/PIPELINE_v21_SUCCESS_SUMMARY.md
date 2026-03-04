@@ -47,9 +47,9 @@
 
 ### Documentation
 
-- [docs/HUSKY_ESLINT_PIPELINE_FIX_v21.md](docs/HUSKY_ESLINT_PIPELINE_FIX_v21.md) — Complete pipeline fix guide
-- [docs/TAURI_PROTECTOR_SINGULARITY_API_REPAIR_REPORT_v21.md](docs/TAURI_PROTECTOR_SINGULARITY_API_REPAIR_REPORT_v21.md) — Tauri repair report
-- [docs/PIPELINE_VALIDATION_REPORT_v21_FINAL.md](docs/PIPELINE_VALIDATION_REPORT_v21_FINAL.md) — Final validation report
+- [docs/HUSKY_ESLINT_PIPELINE_FIX_v21.md](../../HUSKY_ESLINT_PIPELINE_FIX_v21.md) — Complete pipeline fix guide
+- [docs/TAURI_PROTECTOR_SINGULARITY_API_REPAIR_REPORT_v21.md](../../TAURI_PROTECTOR_SINGULARITY_API_REPAIR_REPORT_v21.md) — Tauri repair report
+- [docs/PIPELINE_VALIDATION_REPORT_v21_FINAL.md](../../PIPELINE_VALIDATION_REPORT_v21_FINAL.md) — Final validation report
 
 ---
 
@@ -96,5 +96,5 @@ All commits now succeed in ~5 seconds with automatic linting and formatting.
 
 For complete details, see:
 
-- [PIPELINE_VALIDATION_REPORT_v21_FINAL.md](docs/PIPELINE_VALIDATION_REPORT_v21_FINAL.md)
-- [HUSKY_ESLINT_PIPELINE_FIX_v21.md](docs/HUSKY_ESLINT_PIPELINE_FIX_v21.md)
+- [PIPELINE_VALIDATION_REPORT_v21_FINAL.md](../../PIPELINE_VALIDATION_REPORT_v21_FINAL.md)
+- [HUSKY_ESLINT_PIPELINE_FIX_v21.md](../../HUSKY_ESLINT_PIPELINE_FIX_v21.md)

@@ -278,7 +278,7 @@ Bonjour! Peux-tu m'expliquer ce qu'est TITANE∞ en 3 phrases?
 2. Visualiser les 3 niveaux de mémoire
 3. Rechercher dans l'historique
 
-**Documentation complète:** [UNIFIED_MEMORY_GUIDE.md](../../../UNIFIED_MEMORY_GUIDE.md)
+**Documentation complète:** [UNIFIED_MEMORY_GUIDE.md](../../archive/sessions/UNIFIED_MEMORY_GUIDE.md)
 
 ---
 
@@ -308,7 +308,7 @@ cd tts-service
 ./start_tts_service.sh
 ```
 
-**Documentation complète:** [VOCAL_README.md](../../../VOCAL_README.md)
+**Documentation complète:** [VOCAL_README.md](../../current/guides/VOCAL_README.md)
 
 ---
 
@@ -327,7 +327,7 @@ let vision_engine = VisionEngine::new(config);
 let analysis = vision_engine.analyze_image_path("./image.jpg").await?;
 ```
 
-**Documentation complète:** [MULTIMODAL_QUICK_START.md](../../../MULTIMODAL_QUICK_START.md)
+**Documentation complète:** [MULTIMODAL_QUICK_START.md](../../current/guides/MULTIMODAL_QUICK_START.md)
 
 ---
 
@@ -343,7 +343,7 @@ let analysis = vision_engine.analyze_image_path("./image.jpg").await?;
 1. Menu → **"Temporal Dashboard"**
 2. Voir métriques en temps réel
 
-**Documentation complète:** [TEMPORAL_INTEGRATIONS_README_FR.md](../../../TEMPORAL_INTEGRATIONS_README_FR.md)
+**Documentation complète:** [TEMPORAL_INTEGRATIONS_README_FR.md](../../archive/sessions/TEMPORAL_INTEGRATIONS_README_FR.md)
 
 ---
 
@@ -520,10 +520,10 @@ kill -9 <PID>
 
 ### Guides Spécialisés
 
-- **[VOCAL_README.md](../../../VOCAL_README.md)** - Mode vocal complet
-- **[MULTIMODAL_QUICK_START.md](../../../MULTIMODAL_QUICK_START.md)** - Multimodal engine
-- **[UNIFIED_MEMORY_GUIDE.md](../../../UNIFIED_MEMORY_GUIDE.md)** - Système mémoire
-- **[TEMPORAL_INTEGRATIONS_README_FR.md](../../../TEMPORAL_INTEGRATIONS_README_FR.md)** - Temporal engine
+- **[VOCAL_README.md](../../current/guides/VOCAL_README.md)** - Mode vocal complet
+- **[MULTIMODAL_QUICK_START.md](../../current/guides/MULTIMODAL_QUICK_START.md)** - Multimodal engine
+- **[UNIFIED_MEMORY_GUIDE.md](../../archive/sessions/UNIFIED_MEMORY_GUIDE.md)** - Système mémoire
+- **[TEMPORAL_INTEGRATIONS_README_FR.md](../../archive/sessions/TEMPORAL_INTEGRATIONS_README_FR.md)** - Temporal engine
 
 ### Documentation Technique
 
@@ -536,7 +536,7 @@ kill -9 <PID>
 
 - **[SETUP.md](../development/SETUP.md)** - Configuration environnement dev
 - **[TESTING.md](../development/TESTING.md)** - Stratégie de tests
-- **[CONTRIBUTING.md](../../../CONTRIBUTING.md)** - Guide contribution
+- **[CONTRIBUTING.md](../../00_core/CONTRIBUTING.md)** - Guide contribution
 
 ---
 

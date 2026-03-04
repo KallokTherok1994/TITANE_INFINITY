@@ -379,8 +379,8 @@ pnpm run test:coverage chatEngine
 - [COGNITIVE_ORCHESTRATOR.md](COGNITIVE_ORCHESTRATOR.md) — Cognitive engines orchestration
 
 **Architecture:**
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Full chat data flow
-- [TAURI_COMMANDS_REFERENCE.md](../../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Tauri commands
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Full chat data flow
+- [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md) — Tauri commands
 
 ---
 

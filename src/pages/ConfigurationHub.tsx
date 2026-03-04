@@ -25,15 +25,36 @@ interface RuntimeConfig {
 }
 
 interface ChatEngineConfig {
-  timeout_ms: number;
-  chunk_size: number;
-  max_tokens: number;
+  response_timeout_ms: number;
+  stream_chunk_size: number;
+  memory_context_tokens: number;
+  memory_retention_tokens: number;
+  memory_flush_interval_ms: number;
+  auto_tts_enabled: boolean;
+  stream_channel_buffer: number;
+}
+
+interface ChatRequestDefaults {
   temperature: number;
+  max_output_tokens: number;
+  provider: 'auto' | 'gemini' | 'ollama' | 'local';
+  enable_streaming: boolean;
+}
+
+interface IpcEnvelope<T> {
+  ok: boolean;
+  content: T | null;
+  error: { code: string; message: string } | null;
 }
 
 interface ConfigSnapshot {
   runtime: RuntimeConfig;
-  chat_engine: ChatEngineConfig;
+  chat_engine: {
+    timeout_ms: number;
+    chunk_size: number;
+    max_tokens: number;
+    temperature: number;
+  };
   timestamp: number;
   version: string;
 }
@@ -52,6 +73,13 @@ export const ConfigurationHub: React.FC = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedRuntime, setEditedRuntime] = useState<Partial<RuntimeConfig>>({});
   const [editedChatEngine, setEditedChatEngine] = useState<Partial<ChatEngineConfig>>({});
+  const [engineConfig, setEngineConfig] = useState<ChatEngineConfig | null>(null);
+  const [editedRequestDefaults, setEditedRequestDefaults] = useState<
+    Partial<ChatRequestDefaults>
+  >({});
+  const [requestDefaults, setRequestDefaults] = useState<ChatRequestDefaults | null>(
+    null
+  );
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
@@ -68,12 +96,41 @@ export const ConfigurationHub: React.FC = () => {
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
       const snapshot = (await tauriClient.getAllConfigs()) as ConfigSnapshot;
+      const engineEnvelope =
+        (await tauriClient.getChatEngineConfig()) as IpcEnvelope<ChatEngineConfig>;
+      const defaultsEnvelope =
+        (await tauriClient.getChatRequestDefaults()) as IpcEnvelope<ChatRequestDefaults>;
+
+      if (!engineEnvelope.ok || !engineEnvelope.content) {
+        throw new Error(
+          engineEnvelope.error?.message ||
+            'Impossible de charger Chat Engine Configuration'
+        );
+      }
+
+      if (!defaultsEnvelope.ok || !defaultsEnvelope.content) {
+        throw new Error(
+          defaultsEnvelope.error?.message || 'Impossible de charger Chat Request Defaults'
+        );
+      }
+
       console.log('✅ [ConfigHub] Configuration loaded:', snapshot);
-      setConfig(snapshot);
+      setConfig({
+        ...snapshot,
+        chat_engine: {
+          timeout_ms: engineEnvelope.content.response_timeout_ms,
+          chunk_size: engineEnvelope.content.stream_chunk_size,
+          max_tokens: defaultsEnvelope.content.max_output_tokens,
+          temperature: defaultsEnvelope.content.temperature,
+        },
+      });
+      setEngineConfig(engineEnvelope.content);
+      setRequestDefaults(defaultsEnvelope.content);
       setLastRefresh(new Date());
       // Reset edit state when reloading
       setEditedRuntime({});
       setEditedChatEngine({});
+      setEditedRequestDefaults({});
       setValidationErrors({});
     } catch (err) {
       console.error('❌ [ConfigHub] Failed to load configuration:', err);
@@ -92,6 +149,7 @@ export const ConfigurationHub: React.FC = () => {
       // Cancel edit - reset changes
       setEditedRuntime({});
       setEditedChatEngine({});
+      setEditedRequestDefaults({});
       setValidationErrors({});
     }
     setEditMode(!editMode);
@@ -129,8 +187,23 @@ export const ConfigurationHub: React.FC = () => {
     });
   };
 
+  const handleRequestDefaultsFieldChange = (
+    field: keyof ChatRequestDefaults,
+    value: string | number | boolean
+  ) => {
+    setEditedRequestDefaults(prev => ({
+      ...prev,
+      [field]: value,
+    }));
+    setValidationErrors(prev => {
+      const newErrors = { ...prev };
+      delete newErrors[`request_defaults.${field}`];
+      return newErrors;
+    });
+  };
+
   const handleSave = async () => {
-    if (!config) return;
+    if (!config || !requestDefaults || !engineConfig) return;
 
     setSaving(true);
     setValidationErrors({});
@@ -153,10 +226,54 @@ export const ConfigurationHub: React.FC = () => {
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
         console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
-        await tauriClient.updateChatEngineConfig({
-          update: editedChatEngine,
-        });
+        const payload: ChatEngineConfig = {
+          response_timeout_ms:
+            editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
+          stream_chunk_size:
+            editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
+          memory_context_tokens:
+            editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
+          memory_retention_tokens:
+            editedChatEngine.memory_retention_tokens ??
+            engineConfig.memory_retention_tokens,
+          memory_flush_interval_ms:
+            editedChatEngine.memory_flush_interval_ms ??
+            engineConfig.memory_flush_interval_ms,
+          auto_tts_enabled:
+            editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
+          stream_channel_buffer:
+            editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
+        };
+
+        const envelope = (await tauriClient.setChatEngineConfig({
+          config: payload,
+        })) as IpcEnvelope<ChatEngineConfig>;
+        if (!envelope.ok) {
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Engine Configuration'
+          );
+        }
         console.log('✅ [ConfigHub] Chat engine config updated');
+      }
+
+      if (Object.keys(editedRequestDefaults).length > 0) {
+        const payload: ChatRequestDefaults = {
+          temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
+          max_output_tokens:
+            editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
+          provider: (editedRequestDefaults.provider ??
+            requestDefaults.provider) as ChatRequestDefaults['provider'],
+          enable_streaming:
+            editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
+        };
+        const envelope = (await tauriClient.setChatRequestDefaults({
+          defaults: payload,
+        })) as IpcEnvelope<ChatRequestDefaults>;
+        if (!envelope.ok) {
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Request Defaults'
+          );
+        }
       }
 
       // Reload config after successful save
@@ -177,10 +294,20 @@ export const ConfigurationHub: React.FC = () => {
         setValidationErrors({ 'chat_engine.timeout_ms': errorMsg });
       } else if (errorMsg.includes('Chunk size')) {
         setValidationErrors({ 'chat_engine.chunk_size': errorMsg });
+      } else if (errorMsg.includes('memory_context_tokens')) {
+        setValidationErrors({ 'chat_engine.memory_context_tokens': errorMsg });
+      } else if (errorMsg.includes('memory_retention_tokens')) {
+        setValidationErrors({ 'chat_engine.memory_retention_tokens': errorMsg });
+      } else if (errorMsg.includes('memory_flush_interval_ms')) {
+        setValidationErrors({ 'chat_engine.memory_flush_interval_ms': errorMsg });
+      } else if (errorMsg.includes('stream_channel_buffer')) {
+        setValidationErrors({ 'chat_engine.stream_channel_buffer': errorMsg });
       } else if (errorMsg.includes('Max tokens')) {
         setValidationErrors({ 'chat_engine.max_tokens': errorMsg });
       } else if (errorMsg.includes('Temperature')) {
-        setValidationErrors({ 'chat_engine.temperature': errorMsg });
+        setValidationErrors({ 'request_defaults.temperature': errorMsg });
+      } else if (errorMsg.includes('max_output_tokens')) {
+        setValidationErrors({ 'request_defaults.max_output_tokens': errorMsg });
       } else {
         setError(errorMsg);
       }
@@ -383,7 +510,7 @@ export const ConfigurationHub: React.FC = () => {
     );
   }
 
-  if (!config) {
+  if (!config || !engineConfig || !requestDefaults) {
     return null;
   }
 
@@ -396,14 +523,34 @@ export const ConfigurationHub: React.FC = () => {
   };
 
   const currentChatEngine = {
-    timeout_ms: editedChatEngine.timeout_ms ?? config.chat_engine.timeout_ms,
-    chunk_size: editedChatEngine.chunk_size ?? config.chat_engine.chunk_size,
-    max_tokens: editedChatEngine.max_tokens ?? config.chat_engine.max_tokens,
-    temperature: editedChatEngine.temperature ?? config.chat_engine.temperature,
+    response_timeout_ms:
+      editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
+    stream_chunk_size:
+      editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
+    memory_context_tokens:
+      editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
+    memory_retention_tokens:
+      editedChatEngine.memory_retention_tokens ?? engineConfig.memory_retention_tokens,
+    memory_flush_interval_ms:
+      editedChatEngine.memory_flush_interval_ms ?? engineConfig.memory_flush_interval_ms,
+    auto_tts_enabled: editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
+    stream_channel_buffer:
+      editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
+  };
+
+  const currentRequestDefaults = {
+    temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
+    max_output_tokens:
+      editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
+    provider: editedRequestDefaults.provider ?? requestDefaults.provider,
+    enable_streaming:
+      editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
   };
 
   const hasChanges =
-    Object.keys(editedRuntime).length > 0 || Object.keys(editedChatEngine).length > 0;
+    Object.keys(editedRuntime).length > 0 ||
+    Object.keys(editedChatEngine).length > 0 ||
+    Object.keys(editedRequestDefaults).length > 0;
 
   return (
     <div className="module-page">
@@ -631,7 +778,9 @@ export const ConfigurationHub: React.FC = () => {
           >
             <span style={{ fontSize: '0.85rem', color: '#667eea' }}>
               ✏️{' '}
-              {Object.keys(editedRuntime).length + Object.keys(editedChatEngine).length}{' '}
+              {Object.keys(editedRuntime).length +
+                Object.keys(editedChatEngine).length +
+                Object.keys(editedRequestDefaults).length}{' '}
               modification(s)
             </span>
           </div>
@@ -713,45 +862,189 @@ export const ConfigurationHub: React.FC = () => {
               description="Paramètres du moteur de chat IA"
               defaultOpen={true}
             >
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }}>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'StableProduction',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  StableProduction
+                </button>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'DeepMemoryCoaching',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  DeepMemoryCoaching
+                </button>
+                <button
+                  disabled={!editMode}
+                  onClick={async () => {
+                    try {
+                      const result = (await tauriClient.setChatProfile({
+                        name: 'UltraReactiveLowIO',
+                      })) as IpcEnvelope<unknown>;
+                      if (!result.ok) {
+                        throw new Error(result.error?.message || 'Profil invalide');
+                      }
+                      await loadConfig();
+                    } catch (err) {
+                      errorToast(`Échec application profil: ${err}`);
+                    }
+                  }}
+                  style={{ padding: '0.45rem 0.7rem', borderRadius: '6px' }}
+                >
+                  UltraReactiveLowIO
+                </button>
+              </div>
               <ConfigFieldEditable
                 label="Timeout"
-                value={currentChatEngine.timeout_ms}
+                value={currentChatEngine.response_timeout_ms}
                 description="Délai maximum d'attente pour une réponse (1000-300000ms)"
                 icon="⏱️"
                 valueType="duration"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('timeout_ms', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('response_timeout_ms', value)
+                }
                 validationError={validationErrors['chat_engine.timeout_ms']}
               />
               <ConfigFieldEditable
                 label="Chunk Size"
-                value={currentChatEngine.chunk_size}
+                value={currentChatEngine.stream_chunk_size}
                 description="Taille des chunks de streaming (100-10000)"
                 icon="📦"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('chunk_size', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_chunk_size', value)
+                }
                 validationError={validationErrors['chat_engine.chunk_size']}
               />
               <ConfigFieldEditable
-                label="Max Tokens"
-                value={currentChatEngine.max_tokens}
-                description="Nombre maximum de tokens par requête (100-100000)"
+                label="Memory Context Tokens"
+                value={currentChatEngine.memory_context_tokens}
+                description="Fenêtre de contexte mémoire injectée dans le prompt"
                 icon="🎯"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('max_tokens', value)}
-                validationError={validationErrors['chat_engine.max_tokens']}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_context_tokens', value)
+                }
+                validationError={validationErrors['chat_engine.memory_context_tokens']}
               />
               <ConfigFieldEditable
-                label="Temperature"
-                value={currentChatEngine.temperature}
-                description="Créativité du modèle (0.0 = déterministe, 2.0 = créatif)"
+                label="Memory Retention Tokens"
+                value={currentChatEngine.memory_retention_tokens}
+                description="Limite de rétention totale (conserve les messages les plus récents)"
+                icon="🧠"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_retention_tokens', value)
+                }
+                validationError={validationErrors['chat_engine.memory_retention_tokens']}
+              />
+              <ConfigFieldEditable
+                label="Memory Flush Interval"
+                value={currentChatEngine.memory_flush_interval_ms}
+                description="Intervalle debounce des écritures mémoire sur disque (ms)"
+                icon="💾"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_flush_interval_ms', value)
+                }
+                validationError={validationErrors['chat_engine.memory_flush_interval_ms']}
+              />
+              <ConfigFieldEditable
+                label="Stream Channel Buffer"
+                value={currentChatEngine.stream_channel_buffer}
+                description="Taille du buffer de canal streaming"
+                icon="📡"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_channel_buffer', value)
+                }
+                validationError={validationErrors['chat_engine.stream_channel_buffer']}
+              />
+              <ConfigFieldEditable
+                label="Auto TTS"
+                value={currentChatEngine.auto_tts_enabled}
+                description="Active la synthèse vocale automatique"
+                icon="🔊"
+                valueType="boolean"
+                editable={editMode}
+                onChange={value => handleChatEngineFieldChange('auto_tts_enabled', value)}
+                validationError={validationErrors['chat_engine.auto_tts_enabled']}
+              />
+              <ConfigFieldEditable
+                label="Request Temperature"
+                value={currentRequestDefaults.temperature}
+                description="Valeur par défaut pour les requêtes ChatRequestPayload"
                 icon="🌡️"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('temperature', value)}
-                validationError={validationErrors['chat_engine.temperature']}
+                onChange={value => handleRequestDefaultsFieldChange('temperature', value)}
+                validationError={validationErrors['request_defaults.temperature']}
+              />
+              <ConfigFieldEditable
+                label="Request Max Tokens"
+                value={currentRequestDefaults.max_output_tokens}
+                description="Nombre maximum de tokens par défaut"
+                icon="🧮"
+                valueType="number"
+                editable={editMode}
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('max_output_tokens', value)
+                }
+                validationError={validationErrors['request_defaults.max_output_tokens']}
+              />
+              <ConfigFieldEditable
+                label="Request Provider"
+                value={currentRequestDefaults.provider}
+                description="Provider par défaut (auto/gemini/ollama/local)"
+                icon="🛰️"
+                editable={editMode}
+                onChange={value => handleRequestDefaultsFieldChange('provider', value)}
+                validationError={validationErrors['request_defaults.provider']}
+              />
+              <ConfigFieldEditable
+                label="Request Streaming"
+                value={currentRequestDefaults.enable_streaming}
+                description="Streaming activé par défaut"
+                icon="🌊"
+                valueType="boolean"
+                editable={editMode}
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('enable_streaming', value)
+                }
+                validationError={validationErrors['request_defaults.enable_streaming']}
               />
             </ConfigSection>
           </>
@@ -774,7 +1067,7 @@ export const ConfigurationHub: React.FC = () => {
               />
               <ConfigFieldEditable
                 label="Streaming Enabled"
-                value={currentChatEngine.chunk_size > 0}
+                value={currentRequestDefaults.enable_streaming}
                 description="Mode streaming activé pour les réponses"
                 icon="📡"
                 valueType="boolean"
@@ -782,7 +1075,7 @@ export const ConfigurationHub: React.FC = () => {
               />
               <ConfigFieldEditable
                 label="Timeout Configuré"
-                value={currentChatEngine.timeout_ms > 0}
+                value={currentChatEngine.response_timeout_ms > 0}
                 description="Timeout défini pour éviter les blocages"
                 icon="⏰"
                 valueType="boolean"

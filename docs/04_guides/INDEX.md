@@ -219,20 +219,20 @@ Documentation guides organisée pour:
 ## 🔗 CROSS-REFERENCES
 
 ### Liens vers architecture:
-- [Architecture Current v24](../00_meta/ARCHITECTURE_CURRENT_v24.md) - Architecture système complète
-- [Data Flow Chat](../02_architecture_reality/DATA_FLOW_CHAT.md) - Flow messaging chat complet
-- [OMEGA Pipeline Detailed](../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) - Pipeline traitement 10 stages
-- [Tauri Commands Reference](../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) - API commands complète
+- [Architecture Current v24](../01_architecture/ARCHITECTURE_CURRENT_v24.md) - Architecture système complète
+- [Data Flow Chat](../01_architecture/DATA_FLOW_CHAT.md) - Flow messaging chat complet
+- [OMEGA Pipeline Detailed](../01_architecture/OMEGA_PIPELINE_DETAILED.md) - Pipeline traitement 10 stages
+- [Tauri Commands Reference](../06_api/TAURI_COMMANDS_REFERENCE.md) - API commands complète
 
 ### Liens vers guides spécialisés (root - à migrer):
-- [VOCAL_README.md](../../VOCAL_README.md) - Mode Vocal détaillé
-- [MULTIMODAL_QUICK_START.md](../../MULTIMODAL_QUICK_START.md) - Multimodal Engine quickstart
-- [UNIFIED_MEMORY_GUIDE.md](../../UNIFIED_MEMORY_GUIDE.md) - UnifiedMemory OS complet
-- [TEMPORAL_INTEGRATIONS_README_FR.md](../../TEMPORAL_INTEGRATIONS_README_FR.md) - Temporal Integrations guide
+- [VOCAL_README.md](../current/guides/VOCAL_README.md) - Mode Vocal détaillé
+- [MULTIMODAL_QUICK_START.md](../current/guides/MULTIMODAL_QUICK_START.md) - Multimodal Engine quickstart
+- [UNIFIED_MEMORY_GUIDE.md](../archive/sessions/UNIFIED_MEMORY_GUIDE.md) - UnifiedMemory OS complet
+- [TEMPORAL_INTEGRATIONS_README_FR.md](../archive/sessions/TEMPORAL_INTEGRATIONS_README_FR.md) - Temporal Integrations guide
 
 ### Liens vers meta:
-- [DOCUMENTATION_EVOLUTION_REPORT.md](../../DOCUMENTATION_EVOLUTION_REPORT.md) - Evolution documentation Phase 0-5
-- [Glossary](../00_meta/GLOSSARY.md) - Terminology TITANE∞
+- [DOCUMENTATION_EVOLUTION_REPORT.md](../archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md) - Evolution documentation Phase 0-5
+- [Glossary](../00_core/GLOSSARY.md) - Terminology TITANE∞
 
 ---
 

@@ -649,9 +649,9 @@ Success Metrics:
 ## 📚 RÉFÉRENCES
 
 ### Documents Techniques
-- [AUDIT_PRODUCTION_FINAL_v27.0.0.md](./AUDIT_PRODUCTION_FINAL_v27.0.0.md)
-- [AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md](./AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md)
-- [../deployment/DEPLOYMENT_MANIFEST_v27.0.0.md](../deployment/DEPLOYMENT_MANIFEST_v27.0.0.md)
+- [AUDIT_PRODUCTION_FINAL_v27.0.0.md](91_reports/AUDIT_PRODUCTION_FINAL_v27.0.0.md)
+- [AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md](01_misc/AUTHORIZATION_PRODUCTION_DEPLOYMENT_v27.0.0.md)
+- [../deployment/DEPLOYMENT_MANIFEST_v27.0.0.md](90_release/DEPLOYMENT_MANIFEST_v27.0.0.md)
 
 ### Scripts Déploiement
 - `deployment/test-installation.sh`: Tests automatisés

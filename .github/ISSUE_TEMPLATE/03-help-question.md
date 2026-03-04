@@ -55,4 +55,4 @@ _Any screenshots, config files (no secrets!), or other details?_
 
 ---
 
-**Tip**: Check [TROUBLESHOOTING.md](../MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#troubleshooting) first!
+**Tip**: Check [TROUBLESHOOTING.md](../../docs/01_misc/MANUEL_UTILISATEUR_COMPLET_v27.0.0.md#troubleshooting) first!

@@ -65,7 +65,7 @@ Cette session a accompli un travail considérable sur 3 fronts:
    - 🟡 Sync Memory (50-100ms blocking)
 
 3. ✅ Plan TDD complet créé
-   - [plans/P2-1-ipc-optimization-plan.md](plans/P2-1-ipc-optimization-plan.md) (513 lignes)
+   - [plans/P2-1-ipc-optimization-plan.md](../../01_misc/P2-1-ipc-optimization-plan.md) (513 lignes)
    - 4 micro-phases détaillées
    - Tests-first approach
 

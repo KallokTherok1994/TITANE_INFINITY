@@ -183,7 +183,7 @@ Total: 8 semaines (320h) = 2 mois full-time
 **Documentation Projet:**
 
 - [README.md](../../README.md) — Documentation principale
-- [LICENSE.md](../../LICENSE.md) — Proprietary License
+- [LICENSE.md](../01_misc/LICENSE.md) — Proprietary License
 - [ARCHITECTURE.md](../ARCHITECTURE.md) — Architecture générale
 
 **Outils Recommandés:**

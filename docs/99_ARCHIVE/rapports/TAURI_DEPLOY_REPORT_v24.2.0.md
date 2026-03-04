@@ -224,9 +224,9 @@ Channels de distribution:
 
 ## 📖 Documentation
 
-- [Session Report](./SESSION_COMPLETE_REPORT.md)
-- [PHASE 4 Report](./PHASE4_COMPLETE_REPORT.md)
-- [Tests Validation](./TEST_PHASE3_VALIDATION.md)
+- [Session Report](../sessions/2025-12/SESSION_COMPLETE_REPORT.md)
+- [PHASE 4 Report](../phases/PHASE4_COMPLETE_REPORT.md)
+- [Tests Validation](../tests/TEST_PHASE3_VALIDATION.md)
 - [Scripts](./scripts/)
 
 ---

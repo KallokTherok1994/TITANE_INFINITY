@@ -170,7 +170,7 @@ Le hook `PostToolUse` surveille et log :
 
 ## 🔗 Ressources
 
-- **Documentation locale:** [.clinerules/hooks/README.md](.clinerules/hooks/README.md)
+- **Documentation locale:** [.clinerules/hooks/README.md](../../00_core/README__.clinerules_hooks_README.md.md)
 - **Hooks Cline:** https://docs.cline.bot/features/hooks/index
 - **Cline CLI:** https://docs.cline.bot/cline-cli/overview
 - **Hook Reference:** https://docs.cline.bot/features/hooks/hook-reference

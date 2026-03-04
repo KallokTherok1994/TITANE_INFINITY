@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2878
-Statut: PASS_QUALIFIED
-Lot: P2877→P2883

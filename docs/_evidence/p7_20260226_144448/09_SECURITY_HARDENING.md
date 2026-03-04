@@ -1,4 +1,0 @@
-# 09_SECURITY_HARDENING.md
-
-Phase: P7
-Statut: PENDING

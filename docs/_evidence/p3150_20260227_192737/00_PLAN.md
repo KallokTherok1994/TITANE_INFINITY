@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P3150
-Statut: PASS_QUALIFIED
-Lot: P3150→P3156

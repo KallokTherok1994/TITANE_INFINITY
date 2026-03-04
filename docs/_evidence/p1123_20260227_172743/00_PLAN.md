@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P1123
-Statut: PASS_QUALIFIED
-Lot: P1120→P1126

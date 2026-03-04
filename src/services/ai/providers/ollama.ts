@@ -20,14 +20,13 @@ import {
   type ChatResponse,
 } from '@/lib/security';
 import { autoHealEngine } from '../autoHealEngine';
-import { memoryIntegration } from '../memoryIntegration'; // ✨ v21 - Memory integration
+import { memoryIntegration } from '../memoryIntegration';
 import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
 import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
 
 // ✅ v27.2Ω: Import unified transport layer (dual mode HTTP + IPC)
 import { ollamaCheckHealth, ollamaGenerate } from '../transports/ollamaTransport';
-// ✨ v27.4: Deferred import to break circular dependency with orchestrator
-// import { titaneLocalProvider } from './titaneLocal';
+import { titaneLocalProvider } from './titaneLocal';
 
 let ollamaLogger: ReturnType<typeof createLogger> | null = null;
 const getOllamaLogger = (): ReturnType<typeof createLogger> => {
@@ -369,8 +368,6 @@ async function fallbackToLocal(
   history: AIMessage[],
   reason: string
 ): Promise<AIResponse> {
-  // ✨ v27.4: Lazy import to prevent circular dependency at module load time
-  const { titaneLocalProvider } = await import('./titaneLocal');
   const localResponse = await titaneLocalProvider.generate(message, history);
   return {
     ...localResponse,
@@ -612,13 +609,13 @@ export const ollamaProvider: AIProvider = {
       });
 
       // ✨ v21 - Save interaction to memory (async, non-blocking)
-      memoryIntegration
+      void memoryIntegration
         .saveInteraction({
           userMessage: message,
           aiResponse: aiResponse.content,
           mode: 'chat',
         })
-        .catch(err => {
+        .catch((err: unknown) => {
           logger.warn('Failed to save interaction to memory', { error: err });
         });
 

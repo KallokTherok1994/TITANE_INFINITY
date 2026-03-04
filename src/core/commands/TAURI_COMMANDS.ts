@@ -16,6 +16,7 @@ export const TAURI_COMMANDS = {
   // RUNTIME CONFIGURATION (Security)
   // ═══════════════════════════════════════════════════════════════
   RUNTIME_GET_CONFIG: 'get_runtime_config',
+  BOOT_MARKER_LOG: 'boot_marker_log',
 
   // ═══════════════════════════════════════════════════════════════
   // HELIOS - System Monitoring

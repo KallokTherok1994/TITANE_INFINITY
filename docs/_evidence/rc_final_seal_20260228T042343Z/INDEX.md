@@ -1,9 +1,0 @@
-# INDEX
-
-- 00_SNAPSHOT.md
-- 01_SUMMARY_LATEST.md
-- 02_RUN1.txt
-- 03_RUN2.txt
-- 04_RUN3.txt
-- VERDICT.md
-- ROLLBACK.md

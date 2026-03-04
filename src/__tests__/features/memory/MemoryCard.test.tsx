@@ -1,76 +1,79 @@
 /**
- * Tests pour MemoryCard Component
- * Coverage: Affichage entrée mémoire, Actions, Métadonnées
+ * Tests pour MemoryPanel Component
+ * Coverage: affichage métriques, collapse, footer
  */
 
-/* eslint-disable react/jsx-no-undef */
-// Ce fichier teste un composant non encore implémenté - skip activé
-
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-// import { MemoryCard } from '@/features/memory/MemoryCard'; // Component not implemented
+import { MemoryPanel } from '@/components/panels/MemoryPanel';
 
-describe.skip('MemoryCard Component (NON IMPLÉMENTÉ - fichier inexistant)', () => {
-  const mockEntry = {
-    id: 'mem-1',
-    content: 'Test memory entry',
-    tier: 'stm',
-    timestamp: Date.now(),
-    importance: 0.8,
-  };
+vi.mock('@/hooks/useVisualState', () => ({
+  useVisualState: () => ({
+    visuals: {
+      background: '#111827',
+      accent: '#3b82f6',
+      glow: '0 0 4px #3b82f6',
+      primary: '#fff',
+    },
+    isTransitioning: false,
+  }),
+}));
 
-  const mockOnDelete = vi.fn();
-  const mockOnPromote = vi.fn();
+vi.mock('@/stores/visualStateStore', () => ({
+  useVisualStateStore: (selector: any) => selector({ engine: 'core' }),
+}));
+
+vi.mock('@/hooks/usePanelState', () => ({
+  usePanelState: () => ({
+    isCollapsed: false,
+    isVisible: true,
+    zIndex: 101,
+    toggle: vi.fn(),
+    bringToFront: vi.fn(),
+  }),
+}));
+
+vi.mock('@/stores/panelsStore', () => ({
+  usePanelsStore: (selector: any) => selector({ registerPanel: vi.fn() }),
+}));
+
+describe('MemoryPanel Component', () => {
+  let toLocaleTimeStringSpy: ReturnType<typeof vi.spyOn>;
+
+  const metrics = [
+    { label: 'STM', value: 42, max: 100, description: 'Short term' },
+    { label: 'LTM', value: 75, max: 100, description: 'Long term' },
+  ];
 
   beforeEach(() => {
     vi.clearAllMocks();
+    toLocaleTimeStringSpy = vi
+      .spyOn(Date.prototype, 'toLocaleTimeString')
+      .mockReturnValue('12:00:00 PM');
+  });
+
+  afterEach(() => {
+    toLocaleTimeStringSpy.mockRestore();
   });
 
   describe('Rendering', () => {
-    it('should render memory content', () => {
-      render(<MemoryCard entry={mockEntry} />);
-      expect(screen.getByText('Test memory entry')).toBeInTheDocument();
+    it('should render panel title and metrics', () => {
+      render(<MemoryPanel metrics={metrics} />);
+      expect(screen.getByText(/memory metrics/i)).toBeInTheDocument();
+      expect(screen.getByText('STM')).toBeInTheDocument();
+      expect(screen.getByText('LTM')).toBeInTheDocument();
+      expect(screen.getByText(/42 \/ 100/)).toBeInTheDocument();
     });
 
-    it('should show memory tier', () => {
-      render(<MemoryCard entry={mockEntry} />);
-      expect(screen.getByText(/STM|short/i)).toBeTruthy();
+    it('should toggle collapse button', () => {
+      render(<MemoryPanel metrics={metrics} />);
+      const btn = screen.getByRole('button', { name: /collapse panel/i });
+      fireEvent.click(btn);
+      expect(btn).toBeInTheDocument();
     });
 
-    it('should show importance level', () => {
-      render(<MemoryCard entry={mockEntry} showImportance />);
-      expect(screen.getByText(/0\.8|80%|high/i)).toBeTruthy();
-    });
-
-    it('should display timestamp', () => {
-      render(<MemoryCard entry={mockEntry} showTimestamp />);
-      // Timestamp devrait être formaté et visible
-      const card = screen.getByText('Test memory entry').parentElement;
-      expect(card).toBeTruthy();
-    });
-  });
-
-  describe('Actions', () => {
-    it('should handle delete action', () => {
-      render(<MemoryCard entry={mockEntry} onDelete={mockOnDelete} />);
-      const deleteBtn = screen.getByRole('button', { name: /delete/i });
-      fireEvent.click(deleteBtn);
-      expect(mockOnDelete).toHaveBeenCalledWith('mem-1');
-    });
-
-    it('should handle promote action', () => {
-      render(<MemoryCard entry={mockEntry} onPromote={mockOnPromote} />);
-      const promoteBtn = screen.getByRole('button', { name: /promote/i });
-      fireEvent.click(promoteBtn);
-      expect(mockOnPromote).toHaveBeenCalledWith('mem-1');
-    });
-  });
-
-  describe('Snapshot', () => {
     it('should match snapshot', () => {
-      const { container } = render(
-        <MemoryCard entry={mockEntry} onDelete={mockOnDelete} />
-      );
+      const { container } = render(<MemoryPanel metrics={metrics} />);
       expect(container.firstChild).toMatchSnapshot();
     });
   });

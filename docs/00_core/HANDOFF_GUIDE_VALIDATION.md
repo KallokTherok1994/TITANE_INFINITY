@@ -33,7 +33,7 @@
 - **Impact:** Any user finds relevant docs in <5 minutes
 
 **2. Contributor Guide**
-- **Location:** [CONTRIBUTING.md](../../CONTRIBUTING.md)
+- **Location:** [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Purpose:** Complete onboarding guide for new contributors
 - **Impact:** Onboarding time 10h → <2h (-80%)
 
@@ -154,11 +154,11 @@ Validate documentation effectiveness with **real users** before Phase 8+ (i18n, 
 
 **Start here:**
 1. **New to project?** → [GETTING_STARTED.md](../GETTING_STARTED.md) (role-based quick-start)
-2. **Want to contribute?** → [CONTRIBUTING.md](../../CONTRIBUTING.md)
+2. **Want to contribute?** → [CONTRIBUTING.md](CONTRIBUTING.md)
 3. **Need to troubleshoot?** → [TROUBLESHOOTING.md](../04_guides/advanced/TROUBLESHOOTING.md)
 4. **Deploy to production?** → [DEPLOYMENT.md](../04_guides/advanced/DEPLOYMENT.md)
 5. **Optimize performance?** → [PERFORMANCE_OPTIMIZATION.md](../04_guides/advanced/PERFORMANCE_OPTIMIZATION.md)
-6. **API reference?** → [docs/06_api/INDEX.md](../06_api/INDEX.md)
+6. **API reference?** → [docs/06_api/INDEX.md](DOCS_INDEX.md)
 7. **Architecture deep-dive?** → [docs/01_architecture/](../01_architecture/)
 
 **Master navigation:** [docs/INDEX.md](../INDEX.md) (version v3.0.0)
@@ -254,7 +254,7 @@ git push origin chore/docs-evolution-phase0
 - **Discussions:** Use GitHub Discussions for questions
 
 ### Code Contribution
-- **Start:** [CONTRIBUTING.md](../../CONTRIBUTING.md)
+- **Start:** [CONTRIBUTING.md](CONTRIBUTING.md)
 - **Setup:** [docs/04_guides/development/SETUP.md](../04_guides/development/SETUP.md)
 - **Testing:** [docs/04_guides/development/TESTING.md](../04_guides/development/TESTING.md)
 

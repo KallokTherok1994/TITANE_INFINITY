@@ -36,7 +36,14 @@ try {
   hasSQLiteBindings = false;
 }
 
-describe.skipIf(!hasSQLiteBindings)('UnifiedMemory Benchmarks', () => {
+describe('UnifiedMemory Benchmarks', () => {
+  if (!hasSQLiteBindings) {
+    it('requires better-sqlite3 bindings for benchmark execution', () => {
+      expect(hasSQLiteBindings).toBe(false);
+    });
+    return;
+  }
+
   let memory!: InstanceType<typeof UnifiedMemoryCtor>;
   let vectorStore!: InstanceType<typeof SQLiteVectorStoreCtor>;
   let embeddingGenerator!: InstanceType<typeof LocalEmbeddingGeneratorCtor>;

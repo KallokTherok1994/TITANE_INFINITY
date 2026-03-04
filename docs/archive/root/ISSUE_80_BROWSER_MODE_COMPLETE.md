@@ -203,7 +203,7 @@ export default defineConfig({
 
 ## 📚 Documentation Delivered
 
-1. **[E2E_TESTING_GUIDE.md](./E2E_TESTING_GUIDE.md)** — E2E testing comprehensive guide (447 lines)
+1. **[E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)** — E2E testing comprehensive guide (447 lines)
 2. **[ISSUE_80_PHASE2_COMPLETE.md](./ISSUE_80_PHASE2_COMPLETE.md)** — SQLite tests analysis (105 lines)
 3. **[ISSUE_80_PHASE3_ANALYSIS.md](./ISSUE_80_PHASE3_ANALYSIS.md)** — Three.js WebGL analysis (240 lines)
 4. **[ISSUE_80_DECISION_POINT.md](./ISSUE_80_DECISION_POINT.md)** — Decision point summary (284 lines)

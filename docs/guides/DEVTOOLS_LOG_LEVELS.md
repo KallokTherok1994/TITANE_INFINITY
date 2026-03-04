@@ -342,7 +342,7 @@ Recommended improvements:
 
 - [Logger Utilities](/src/utils/logger.ts) — Core logger implementation
 - [OMEGA Pipeline](/docs/guides/OMEGA_PIPELINE_v2.md) — Pipeline logging patterns
-- [Contributing Guide](/CONTRIBUTING.md) — Code style and logging best practices
+- [Contributing Guide](../00_core/CONTRIBUTING.md) — Code style and logging best practices
 
 ---
 

@@ -12,55 +12,45 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { createLogger } from '@/utils/logger';
 import type * as SentryTypes from '@sentry/react';
 import type { Metric } from 'web-vitals';
 
-let monitoringLogger: ReturnType<typeof createLogger> | null = null;
-const getMonitoringLogger = (): ReturnType<typeof createLogger> => {
-  if (!monitoringLogger) {
-    monitoringLogger = createLogger('Monitoring');
-  }
-  return monitoringLogger;
-};
+const noop = () => {};
 
 const logger = {
-  configure(config: Parameters<ReturnType<typeof createLogger>['configure']>[0]) {
-    getMonitoringLogger().configure(config);
+  configure: (_config: unknown) => {},
+  trace: (..._args: unknown[]) => {},
+  debug: (..._args: unknown[]) => {},
+  info: (...args: unknown[]) => console.info('[Monitoring]', ...args),
+  warn: (...args: unknown[]) => console.warn('[Monitoring]', ...args),
+  error: (...args: unknown[]) => console.error('[Monitoring]', ...args),
+  fatal: (...args: unknown[]) => console.error('[Monitoring][FATAL]', ...args),
+  group: (...args: unknown[]) => {
+    if (typeof console.group === 'function') {
+      console.group('[Monitoring]', ...args);
+    }
   },
-  trace(...args: Parameters<ReturnType<typeof createLogger>['trace']>) {
-    getMonitoringLogger().trace(...args);
+  groupEnd: () => {
+    if (typeof console.groupEnd === 'function') {
+      console.groupEnd();
+    }
   },
-  debug(...args: Parameters<ReturnType<typeof createLogger>['debug']>) {
-    getMonitoringLogger().debug(...args);
+  table: (data: unknown) => {
+    if (typeof console.table === 'function') {
+      console.table(data);
+    }
   },
-  info(...args: Parameters<ReturnType<typeof createLogger>['info']>) {
-    getMonitoringLogger().info(...args);
+  time: (label: string) => {
+    if (typeof console.time === 'function') {
+      console.time(`[Monitoring] ${label}`);
+    }
   },
-  warn(...args: Parameters<ReturnType<typeof createLogger>['warn']>) {
-    getMonitoringLogger().warn(...args);
+  timeEnd: (label: string) => {
+    if (typeof console.timeEnd === 'function') {
+      console.timeEnd(`[Monitoring] ${label}`);
+    }
   },
-  error(...args: Parameters<ReturnType<typeof createLogger>['error']>) {
-    getMonitoringLogger().error(...args);
-  },
-  fatal(...args: Parameters<ReturnType<typeof createLogger>['fatal']>) {
-    getMonitoringLogger().fatal(...args);
-  },
-  group(...args: Parameters<ReturnType<typeof createLogger>['group']>) {
-    getMonitoringLogger().group(...args);
-  },
-  groupEnd(...args: Parameters<ReturnType<typeof createLogger>['groupEnd']>) {
-    getMonitoringLogger().groupEnd(...args);
-  },
-  table(...args: Parameters<ReturnType<typeof createLogger>['table']>) {
-    getMonitoringLogger().table(...args);
-  },
-  time(...args: Parameters<ReturnType<typeof createLogger>['time']>) {
-    getMonitoringLogger().time(...args);
-  },
-  timeEnd(...args: Parameters<ReturnType<typeof createLogger>['timeEnd']>) {
-    getMonitoringLogger().timeEnd(...args);
-  },
+  noop,
 } as const;
 
 // Sentry integration (lazy-loaded)

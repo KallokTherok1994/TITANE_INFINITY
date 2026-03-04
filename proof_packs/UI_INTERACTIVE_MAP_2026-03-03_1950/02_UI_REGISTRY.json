@@ -1,0 +1,693 @@
+{
+  "version": "1.0",
+  "generated": "2026-03-03T19:50:39Z",
+  "commit": "e97177da",
+  "app_version": "27.2.0",
+  "routes": [
+    {
+      "path": "/",
+      "component": "Navigate",
+      "redirect_to": "/titane",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/titane",
+      "component": "TitanePage",
+      "reachable_from_nav": true,
+      "nav_label": "TITANE",
+      "description": "Le Cœur du Système — 8 sections fusionnées",
+      "interactive_elements": [
+        {
+          "id": "tab-conversation",
+          "type": "button",
+          "label": "💬 Chat",
+          "role": "tab",
+          "handler": "tabHandlers.conversation",
+          "action": "setActiveTab('conversation')",
+          "ipc_command": null,
+          "expected_result": "Affiche ConversationSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-overview",
+          "type": "button",
+          "label": "📊 Vue",
+          "role": "tab",
+          "handler": "tabHandlers.overview",
+          "action": "setActiveTab('overview')",
+          "ipc_command": null,
+          "expected_result": "Affiche OverviewSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-vision",
+          "type": "button",
+          "label": "📷 Vision",
+          "role": "tab",
+          "handler": "tabHandlers.vision",
+          "action": "setActiveTab('vision')",
+          "ipc_command": null,
+          "expected_result": "Affiche VisionSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-identity",
+          "type": "button",
+          "label": "🧬 Identité",
+          "role": "tab",
+          "handler": "tabHandlers.identity",
+          "action": "setActiveTab('identity')",
+          "ipc_command": null,
+          "expected_result": "Affiche IdentitySection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-memory",
+          "type": "button",
+          "label": "💾 Mémoire",
+          "role": "tab",
+          "handler": "tabHandlers.memoryMap",
+          "action": "setActiveTab('memory-map')",
+          "ipc_command": null,
+          "expected_result": "Affiche MemorySection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-memory-evolution",
+          "type": "button",
+          "label": "🔄 Évolution",
+          "role": "tab",
+          "handler": "tabHandlers.memoryEvolution",
+          "action": "setActiveTab('memory-evolution')",
+          "ipc_command": null,
+          "expected_result": "Affiche MemoryEvolutionSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-progression",
+          "type": "button",
+          "label": "⚡ XP",
+          "role": "tab",
+          "handler": "tabHandlers.progression",
+          "action": "setActiveTab('progression')",
+          "ipc_command": null,
+          "expected_result": "Affiche ProgressionSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "tab-transformation",
+          "type": "button",
+          "label": "🌱 Transform",
+          "role": "tab",
+          "handler": "tabHandlers.transformation",
+          "action": "setActiveTab('transformation')",
+          "ipc_command": null,
+          "expected_result": "Affiche TransformationSection",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-input",
+          "type": "textarea",
+          "label": "Chat text input",
+          "handler": "onChange → setInputValue",
+          "action": "Input text update",
+          "ipc_command": null,
+          "expected_result": "inputValue state updated",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-send",
+          "type": "button",
+          "label": "Envoyer",
+          "handler": "onClick → handleSendMessage",
+          "action": "useConversationEngine.sendMessage()",
+          "ipc_command": "conversation_generate",
+          "expected_result": "Message ajouté à la conversation, réponse IA reçue",
+          "data_testid": null,
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-provider-selector",
+          "type": "select",
+          "label": "Sélecteur provider IA",
+          "handler": "onChange → setSelectedProvider",
+          "action": "Change IA provider (gemini/ollama/openai/claude)",
+          "ipc_command": null,
+          "expected_result": "Provider actif changé pour prochains messages",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-mode-selector",
+          "type": "button-group",
+          "label": "Sélecteur mode conversation",
+          "handler": "onClick → setMode(mode)",
+          "action": "useConversationEngine.setMode()",
+          "ipc_command": null,
+          "expected_result": "Mode conversation actif changé",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-voice-record",
+          "type": "button-toggle",
+          "label": "Enregistrement vocal",
+          "handler": "onClick → toggleRecording",
+          "action": "useVoiceEngine.startListening() / stopListening()",
+          "ipc_command": "voice_start_listening / voice_stop_listening",
+          "expected_result": "Enregistrement micro démarré/stoppé",
+          "data_testid": null,
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-tts-toggle",
+          "type": "checkbox",
+          "label": "Audio TTS",
+          "handler": "onClick → setAudioEnabled",
+          "action": "hybridTTS activation/désactivation",
+          "ipc_command": "tts_speak / tts_stop",
+          "expected_result": "Lecture vocale des réponses on/off",
+          "data_testid": null,
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-search",
+          "type": "input",
+          "label": "Recherche dans messages",
+          "handler": "onChange → setSearchQuery",
+          "action": "Filter messages by deferredSearchQuery",
+          "ipc_command": null,
+          "expected_result": "Messages filtrés en temps réel",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-message-copy",
+          "type": "button",
+          "label": "📋 Copier (par message)",
+          "handler": "onClick → onCopy(content)",
+          "action": "copyToClipboard(message.content)",
+          "ipc_command": null,
+          "expected_result": "Contenu copié dans presse-papier",
+          "data_testid": null,
+          "ring_impact": "UI→Browser",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-message-retry",
+          "type": "button",
+          "label": "🔄 Retry (messages user)",
+          "handler": "onClick → onRetry(content)",
+          "action": "sendMessage(content) re-envoi",
+          "ipc_command": "conversation_generate",
+          "expected_result": "Message renvoyé, nouvelle réponse IA",
+          "data_testid": null,
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-message-delete",
+          "type": "button",
+          "label": "🗑️ Supprimer message",
+          "handler": "onClick → onDelete(id)",
+          "action": "deleteMessage(id)",
+          "ipc_command": null,
+          "expected_result": "Message supprimé de la liste",
+          "data_testid": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "conversation-mode-builder",
+          "type": "button",
+          "label": "Ouvrir ModeBuilder",
+          "handler": "onClick → setShowModeBuilder(true)",
+          "action": "Affiche modal ModeBuilder",
+          "ipc_command": "generate_mode_prompt",
+          "expected_result": "Modal de création mode custom ouvert",
+          "data_testid": null,
+          "ring_impact": "UI→State→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        }
+      ]
+    },
+    {
+      "path": "/stats",
+      "component": "Stats",
+      "reachable_from_nav": true,
+      "nav_label": "STATS",
+      "description": "Métriques système Nexus+Helios+Harmonia+Cognitive — display only",
+      "interactive_elements": []
+    },
+    {
+      "path": "/time",
+      "component": "TimePage",
+      "reachable_from_nav": true,
+      "nav_label": "TIME",
+      "description": "Centre temporel — Agenda + Timeline + Snapshots + Flow",
+      "interactive_elements": [
+        {
+          "id": "time-tab-now",
+          "type": "button",
+          "label": "🕐 Now",
+          "handler": "onClick → setActiveTab('now')",
+          "action": "setActiveTab('now')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "time-tab-agenda",
+          "type": "button",
+          "label": "📅 Agenda",
+          "handler": "onClick → setActiveTab('agenda')",
+          "action": "setActiveTab('agenda')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "time-tab-timeline",
+          "type": "button",
+          "label": "📜 Timeline",
+          "handler": "onClick → setActiveTab('timeline')",
+          "action": "setActiveTab('timeline')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "time-tab-snapshots",
+          "type": "button",
+          "label": "💾 Snapshots",
+          "handler": "onClick → setActiveTab('snapshots')",
+          "action": "setActiveTab('snapshots')",
+          "ipc_command": "titan_force_snapshot / titan_recover_state",
+          "ring_impact": "UI→State→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "time-tab-intelligence",
+          "type": "button",
+          "label": "🧠 Intelligence",
+          "handler": "onClick → setActiveTab('intelligence')",
+          "action": "setActiveTab('intelligence')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "time-tab-flow",
+          "type": "button",
+          "label": "🌊 Flow",
+          "handler": "onClick → setActiveTab('flow')",
+          "action": "setActiveTab('flow')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        }
+      ]
+    },
+    {
+      "path": "/admin",
+      "component": "AdminPage",
+      "reachable_from_nav": true,
+      "nav_label": "ADMIN",
+      "description": "Centre Admin Unifié — 15+ redirections entrantes",
+      "interactive_elements": [
+        {
+          "id": "admin-api-key-gemini",
+          "type": "input+button",
+          "label": "Clé API Gemini",
+          "ipc_command": "chat_set_gemini_key",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-api-key-openai",
+          "type": "input+button",
+          "label": "Clé API OpenAI",
+          "ipc_command": "chat_set_openai_key",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-api-key-anthropic",
+          "type": "input+button",
+          "label": "Clé API Claude",
+          "ipc_command": "chat_set_anthropic_key",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-api-key-copilot",
+          "type": "input+button",
+          "label": "Clé API Copilot",
+          "ipc_command": "chat_set_copilot_key",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-window-zoom-in",
+          "type": "button",
+          "label": "Zoom +",
+          "ipc_command": "window_zoom_in",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-window-zoom-out",
+          "type": "button",
+          "label": "Zoom -",
+          "ipc_command": "window_zoom_out",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "admin-fullscreen",
+          "type": "button",
+          "label": "Plein écran",
+          "ipc_command": "window_toggle_fullscreen",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        }
+      ]
+    },
+    {
+      "path": "/dev",
+      "component": "DevPage",
+      "reachable_from_nav": true,
+      "nav_label": "DEV",
+      "description": "Centre DEV — 10 sections",
+      "interactive_elements": [
+        {
+          "id": "dev-tab-overview",
+          "type": "button",
+          "label": "Vue d'ensemble",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-tab-devtools",
+          "type": "button",
+          "label": "Dev Tools",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-op-patch",
+          "type": "button",
+          "label": "🩹 Patch",
+          "handler": "onClick → setSelectedOperation('patch')",
+          "ipc_command": null,
+          "ring_impact": "UI→State",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-op-execute",
+          "type": "button",
+          "label": "Exécuter opération",
+          "handler": "onClick → executeOperation",
+          "ipc_command": "devtools_enable",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-cmd-sync-all",
+          "type": "button",
+          "label": "🔄 Sync All",
+          "handler": "onClick → onExecute('sync_all')",
+          "ipc_command": "one_core_force_sync",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-cmd-health-check",
+          "type": "button",
+          "label": "🏥 Health Check",
+          "handler": "onClick → onExecute('health_check')",
+          "ipc_command": "health_check",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-cmd-optimize",
+          "type": "button",
+          "label": "⚡ Optimize",
+          "handler": "onClick → onExecute('optimize')",
+          "ipc_command": "system_optimize",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-cmd-repair",
+          "type": "button",
+          "label": "🔧 Repair",
+          "handler": "onClick → onExecute('repair')",
+          "ipc_command": "memory_repair",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-qa-run-suite",
+          "type": "button",
+          "label": "Run Test Suite",
+          "handler": "onClick → onRunSuite(suiteId)",
+          "ipc_command": "qa_run_test_suite",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-qa-ack-alert",
+          "type": "button",
+          "label": "Acknowledge Alert",
+          "handler": "onClick → onAcknowledgeAlert(alertId)",
+          "ipc_command": "qa_acknowledge_alert",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        },
+        {
+          "id": "dev-diagnostic-online",
+          "type": "button",
+          "label": "Online Diagnostic",
+          "handler": "OnlineDiagnostic component",
+          "ipc_command": "check_online_capabilities",
+          "ring_impact": "UI→IPC",
+          "connected": true,
+          "issues": ["missing data-testid"]
+        }
+      ]
+    },
+    {
+      "path": "/fusion",
+      "component": "PerfectFusionDashboard",
+      "reachable_from_nav": true,
+      "nav_label": "FUSION (Plus menu)",
+      "interactive_elements": []
+    },
+    {
+      "path": "/optimization",
+      "component": "UltimateOptimizationDashboard",
+      "reachable_from_nav": true,
+      "nav_label": "OPTIMIZE (Plus menu)",
+      "interactive_elements": []
+    },
+    {
+      "path": "/orchestration-intelligence",
+      "component": "OrchestrationIntelligenceCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/orchestration-center",
+      "component": "OrchestrationMetaCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/reality-center",
+      "component": "RealityCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/hyper-center",
+      "component": "HyperCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/quantum-center",
+      "component": "QuantumCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/identity-center",
+      "component": "IdentityCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/memory-evolution",
+      "component": "MemoryEvolutionCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/cloud",
+      "component": "CloudCenter",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/sentinel",
+      "component": "Sentinel",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/watchdog",
+      "component": "Watchdog",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/selfheal",
+      "component": "SelfHeal",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/adaptive",
+      "component": "AdaptiveEngine",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/memory",
+      "component": "Memory",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/research",
+      "component": "ResearchPage",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/performance",
+      "component": "PerformanceTest",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    },
+    {
+      "path": "/singularity",
+      "component": "SingularityMonitor",
+      "reachable_from_nav": false,
+      "interactive_elements": []
+    }
+  ],
+  "topnav": {
+    "visible_items": [
+      {"id": "titane", "label": "TITANE", "route": "/titane", "icon": "Atom"},
+      {"id": "time", "label": "TIME", "route": "/time", "icon": "Timer"},
+      {"id": "stats", "label": "STATS", "route": "/stats", "icon": "TrendingUp"},
+      {"id": "admin", "label": "ADMIN", "route": "/admin", "icon": "Settings"},
+      {"id": "dev", "label": "DEV", "route": "/dev", "icon": "Wrench"}
+    ],
+    "more_items": [
+      {"id": "fusion", "label": "FUSION", "route": "/fusion"},
+      {"id": "optimization", "label": "OPTIMIZE", "route": "/optimization"}
+    ],
+    "max_visible_items": 5,
+    "ai_status_indicator": {
+      "type": "badge",
+      "ipc_command": "chat_check_providers",
+      "polling_interval_ms": 30000
+    }
+  },
+  "summary": {
+    "total_routes": 64,
+    "active_routes": 27,
+    "redirect_routes": 37,
+    "total_interactive_elements_mapped": 58,
+    "total_interactive_elements_estimated": 198,
+    "connected": 58,
+    "disconnected": 0,
+    "partially_scanned": 140,
+    "missing_data_testid": 58,
+    "pages_nav_reachable": 7,
+    "pages_direct_url_only": 20
+  }
+}

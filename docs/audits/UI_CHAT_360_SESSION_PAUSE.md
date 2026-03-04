@@ -150,10 +150,10 @@ reports/ui_chat_local_ai_360/2026-02-11T22:09:50Z/
 
 ## Context Links
 
-- **Detailed Status:** [reports/.../AUDIT_STATUS.md](../reports/ui_chat_local_ai_360/2026-02-11T22:09:50Z/AUDIT_STATUS.md)
+- **Detailed Status:** [reports/.../AUDIT_STATUS.md](../ui-carto-copilot/VERIFICATION/AUDIT_STATUS.md)
 - **Diagnostic Guide:** [reports/.../DIAGNOSTIC_MANUAL_REQUIRED.md](../reports/ui_chat_local_ai_360/2026-02-11T22:09:50Z/DIAGNOSTIC_MANUAL_REQUIRED.md)
-- **WebDriver Migration:** [docs/e2e/WEBDRIVER_MIGRATION_STATUS.md](../docs/e2e/WEBDRIVER_MIGRATION_STATUS.md)
-- **Previous Audit:** [reports/local_ai_runtime_full_pass/.../FINAL_VERDICT.md](../reports/local_ai_runtime_full_pass/2026-02-11T17:29:36Z/FINAL_VERDICT.md)
+- **WebDriver Migration:** [docs/e2e/WEBDRIVER_MIGRATION_STATUS.md](../e2e/WEBDRIVER_MIGRATION_STATUS.md)
+- **Previous Audit:** [reports/local_ai_runtime_full_pass/.../FINAL_VERDICT.md](../01_misc/FINAL_VERDICT.md)
 
 ---
 

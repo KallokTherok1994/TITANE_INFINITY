@@ -44,7 +44,7 @@ core/backend/system/
 | Document | Description |
 |----------|-------------|
 | [`MODULES_40_41_42_43_COMPLETE.md`](MODULES_40_41_42_43_COMPLETE.md) | Vue d'ensemble complète des 4 modules |
-| [`docs/EXECUTIVE_LAYER_TECHNICAL_GUIDE.md`](docs/EXECUTIVE_LAYER_TECHNICAL_GUIDE.md) | Guide technique détaillé avec signatures de fonctions |
+| [`docs/EXECUTIVE_LAYER_TECHNICAL_GUIDE.md`](../../EXECUTIVE_LAYER_TECHNICAL_GUIDE.md) | Guide technique détaillé avec signatures de fonctions |
 | [`EXECUTIVE_LAYER_SUMMARY_FR.md`](EXECUTIVE_LAYER_SUMMARY_FR.md) | Résumé exécutif en français |
 | [`IMPLEMENTATION_PROMPTS_40_43.txt`](IMPLEMENTATION_PROMPTS_40_43.txt) | Spécifications d'origine |
 | [`SESSION_LOG_MODULES_40_43.md`](SESSION_LOG_MODULES_40_43.md) | Log de la session d'implémentation |

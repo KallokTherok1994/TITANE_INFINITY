@@ -533,13 +533,13 @@ We're excited to announce **TITANE∞ v19.5.2** — our most stable release yet!
 
 ## 📚 Documentation
 
-- [Installation Guide](docs/user/installation.md)
-- [Quick Start](docs/user/quickstart.md)
-- [Chat IA Features](docs/user/features/chat.md)
+- [Installation Guide](../../user/installation.md)
+- [Quick Start](../../user/quickstart.md)
+- [Chat IA Features](../../user/features/chat.md)
 
 ## 🐛 Known Issues
 
-See [TESTS_ANALYSIS_34_FAILING_v19.5.2.md](TESTS_ANALYSIS_34_FAILING_v19.5.2.md) for details on 34 non-blocking edge cases.
+See [TESTS_ANALYSIS_34_FAILING_v19.5.2.md](../versions/v19/TESTS_ANALYSIS_34_FAILING_v19.5.2.md) for details on 34 non-blocking edge cases.
 
 ## 💬 Feedback
 

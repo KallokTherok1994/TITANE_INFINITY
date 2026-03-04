@@ -28,7 +28,22 @@ const COMMANDS = {
 const DEFAULTS = {
   temperature: 0.7,
   maxTokens: 1024,
+  provider: 'auto' as ProviderPreference,
+  enableStreaming: true,
 } as const;
+
+interface IpcEnvelope<T> {
+  ok: boolean;
+  content: T | null;
+  error: { code: string; message: string } | null;
+}
+
+interface ChatRequestDefaultsPayload {
+  temperature: number;
+  maxOutputTokens: number;
+  provider: ProviderPreference;
+  enableStreaming: boolean;
+}
 
 export type ProviderPreference = 'auto' | 'gemini' | 'ollama' | 'local';
 export type SpeechMode = 'auto' | 'online' | 'local';
@@ -177,6 +192,34 @@ function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
   };
 }
 
+let cachedDefaults: ChatRequestDefaultsPayload | null = null;
+
+async function resolveRequestDefaults(): Promise<ChatRequestDefaultsPayload> {
+  if (cachedDefaults) {
+    return cachedDefaults;
+  }
+
+  try {
+    const envelope = await secureInvoke<IpcEnvelope<ChatRequestDefaultsPayload>>(
+      'get_chat_request_defaults',
+      {}
+    );
+    if (envelope.ok && envelope.content) {
+      cachedDefaults = envelope.content;
+      return envelope.content;
+    }
+  } catch {
+    // Keep local fallback below.
+  }
+
+  return {
+    temperature: DEFAULTS.temperature,
+    maxOutputTokens: DEFAULTS.maxTokens,
+    provider: DEFAULTS.provider,
+    enableStreaming: DEFAULTS.enableStreaming,
+  };
+}
+
 async function invokeCommand<T>(
   command: string,
   args?: Record<string, unknown>
@@ -193,7 +236,14 @@ async function invokeCommand<T>(
 export async function generateResponse(
   args: ChatRequestArgs
 ): Promise<ChatCompletionPayload> {
-  const payload = toBackendPayload({ ...args, enableStreaming: false });
+  const defaults = await resolveRequestDefaults();
+  const payload = toBackendPayload({
+    ...args,
+    temperature: args.temperature ?? defaults.temperature,
+    maxOutputTokens: args.maxOutputTokens ?? defaults.maxOutputTokens,
+    provider: args.provider ?? defaults.provider,
+    enableStreaming: false,
+  });
   const result = await invokeCommand<BackendChatCompletionPayload>(COMMANDS.generate, {
     payload,
   });
@@ -201,7 +251,14 @@ export async function generateResponse(
 }
 
 export async function streamResponse(args: ChatRequestArgs): Promise<StreamHandle> {
-  const payload = toBackendPayload({ ...args, enableStreaming: true });
+  const defaults = await resolveRequestDefaults();
+  const payload = toBackendPayload({
+    ...args,
+    temperature: args.temperature ?? defaults.temperature,
+    maxOutputTokens: args.maxOutputTokens ?? defaults.maxOutputTokens,
+    provider: args.provider ?? defaults.provider,
+    enableStreaming: args.enableStreaming ?? defaults.enableStreaming,
+  });
   return invokeCommand<StreamHandle>(COMMANDS.stream, { payload });
 }
 
