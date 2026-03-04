@@ -35,6 +35,7 @@
 - Break du contrat OMEGA v2 ou IPC canonique.
 - E2E sans wrapper tauri-driver ou sans isolation memoire.
 - Boucle de debug non bornee.
+- Fix non capturé dans `scripts/autoheal/autoheal_rules.jsonl` ou gate `G_AH_RULE_CAPTURED_FOR_EACH_FIX` non PASS.
 
 ---
 
@@ -120,6 +121,12 @@
 - Mode 100% local possible : désactiver providers externes dans gouvernance UI.
 - Gouvernance : `pnpm run verify:online-first` obligatoire avant push (remplace `verify:local-first`).
 
+**Doctrine conflict resolution (obligatoire)**
+
+- Canon doctrinal prioritaire: `.github/copilot-instructions.md`.
+- Si contradiction entre instructions locales et canon: appliquer le canon et journaliser la contradiction dans les preuves.
+- Si contradiction non résolue et non patchable minimalement: classer `BLOCKED_DOCTRINE` avec next-action <= 30 minutes.
+
 ---
 
 ## E2E Constitution (Playwright + tauri-driver)
@@ -142,6 +149,14 @@
 - Run smoke tests before long suites.
 - Structured logs + markers for diagnostics.
 - One change = one proof = UI registry entry if UI changes.
+
+## AutoFix/AutoHeal capture obligatoire
+
+- Règle de référence: section `FIX → CAPTURE → PREVENT FOREVER` dans `.github/copilot-instructions.md`.
+- À chaque fix (code/tests/CI/config/tooling): append-only dans `scripts/autoheal/autoheal_rules.jsonl`.
+- Vérification obligatoire: `bash scripts/autoheal/detect_recurrence.sh`.
+- Garde-fou documentaire: `bash scripts/verify_instructions.sh`.
+- Verify-or-rollback: une remédiation n'est acceptée que si les vérifications passent; sinon rollback documenté immédiat.
 
 ---
 
