@@ -159,7 +159,7 @@ const AdminPageComponent: React.FC = () => {
   }, []);
 
   return (
-    <div className="admin-page">
+    <div className="admin-page" data-testid="page-admin">
       {/* Header */}
       <motion.header
         className="admin-header"
@@ -190,6 +190,7 @@ const AdminPageComponent: React.FC = () => {
         {ADMIN_TABS.map(tab => (
           <button
             key={tab.id}
+            data-testid={`tab-admin-${tab.id}`}
             className={`admin-tab ${activeTab === tab.id ? 'admin-tab--active' : ''}`}
             onClick={() => handleTabChange(tab.id)}
             title={tab.description}
@@ -204,7 +205,7 @@ const AdminPageComponent: React.FC = () => {
       </nav>
 
       {/* Tab Content */}
-      <main className="admin-content">
+      <main className="admin-content" data-testid="page-admin-content">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}

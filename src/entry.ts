@@ -11,9 +11,9 @@ const getBootWindow = (): BootWindow => window as BootWindow;
 const emitBootMarker = async (marker: string): Promise<void> => {
   try {
     const win = getBootWindow();
-    const invoke = win.__TAURI_INTERNALS__?.invoke;
-    if (typeof invoke === 'function') {
-      await invoke('boot_marker_log', { marker });
+    const tauriInvoke = win.__TAURI_INTERNALS__?.invoke;
+    if (typeof tauriInvoke === 'function') {
+      await tauriInvoke('boot_marker_log', { marker });
     }
   } catch {
     // no-op
@@ -98,27 +98,6 @@ const showFatalOverlay = (error: unknown): void => {
   host.appendChild(overlay);
 };
 
-const resolveMainModuleSpecifier = async (): Promise<string> => {
-  if (typeof import.meta !== 'undefined' && import.meta.env?.DEV) {
-    return './main.tsx';
-  }
-
-  try {
-    const response = await fetch('./main-entry.json', { cache: 'no-store' });
-    if (response.ok) {
-      const manifest = (await response.json()) as { main?: string | null };
-      const mainChunk = manifest.main;
-      if (mainChunk) {
-        return new URL(`./${mainChunk}`, window.location.href).href;
-      }
-    }
-  } catch {
-    // fallback below
-  }
-
-  return '';
-};
-
 const bootstrap = async (): Promise<void> => {
   const win = getBootWindow();
   win.__TITANE_BOOT__ = win.__TITANE_BOOT__ || {};
@@ -163,14 +142,7 @@ const bootstrap = async (): Promise<void> => {
   await emitBootMarker('BOOT:ENTRY_START');
 
   try {
-    const importMain = new Function('specifier', 'return import(specifier);') as (
-      specifier: string
-    ) => Promise<unknown>;
-    const specifier = await resolveMainModuleSpecifier();
-    if (!specifier) {
-      throw new Error('MAIN_CHUNK_UNRESOLVED');
-    }
-    await importMain(specifier);
+    await import('./main.tsx');
     await emitBootMarker('BOOT:ENTRY_MAIN_IMPORTED');
   } catch (error) {
     hideLoaderElements();

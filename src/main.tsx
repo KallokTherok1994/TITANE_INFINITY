@@ -702,15 +702,17 @@ const scheduleBootWatchdog = (): void => {
 
   window.setTimeout(() => {
     try {
-      if (window.__TITANE_BOOT_READY__) {
-        return;
-      }
+      const bootReady = Boolean(window.__TITANE_BOOT_READY__);
 
       const loadingSplashVisible = Boolean(document.querySelector('.loading-splash'));
       const pageFallbackVisible = Boolean(
         document.querySelector('.page-loading-fallback')
       );
       const loadingStuck = loadingSplashVisible || pageFallbackVisible;
+
+      if (bootReady && !loadingStuck) {
+        return;
+      }
 
       let recoveryAlreadyAttempted = false;
       try {
@@ -790,6 +792,7 @@ const scheduleBootWatchdog = (): void => {
         showDebugOverlay('Boot Watchdog (loading persistant)', {
           now: new Date().toISOString(),
           boot: w.__TITANE_BOOT__ ?? null,
+          bootReady,
           isTauri: true,
           location: typeof location !== 'undefined' ? String(location.href) : 'n/a',
           userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
