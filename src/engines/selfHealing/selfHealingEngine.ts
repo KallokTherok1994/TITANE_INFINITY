@@ -1,24 +1,13 @@
 /**
  * ═══════════════════════════════════════════════════════════════════════════
- * TITANE∞ SELF-HEALING ENGINE v1 (Local)
+ * TITANE∞ SELF-HEALING ENGINE v1 (Local) — RING 2 (PURE)
  * ═══════════════════════════════════════════════════════════════════════════
  *
- * Orchestrates the end-to-end self-healing pipeline using the local TITANE
- * model (titane-local via Ollama). This module remains 100% local, leverages
- * existing TITANE engines, and only performs minimal, reversible patches.
+ * Pure engine: types + pure logic only. No I/O (no safeInvoke, no queryOllama).
+ * I/O orchestration lives in Ring 3: src/services/selfHealing/selfHealingIOAdapter.ts
  */
 
-import { queryOllama } from '@/utils/ollama';
-import { safeInvoke } from '@/utils/invoke';
-import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
-import {
-  evaluateRemediationInstructionPermission,
-  type RemediationPermissionDecision,
-} from './remediationPermissionsEngine';
 import { AutoRcaEngine, type AutoRcaCategory } from './autoRcaEngine';
-
-type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
-type EngineSingularityPartial = Parameters<typeof singularityEngine.setState>[0];
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -148,121 +137,6 @@ const PLAYBOOK_REGISTRY: PlaybookPlan[] = [
 ];
 
 // ═══════════════════════════════════════════════════════════════════════════
-// PIPELINE ORCHESTRATION
-// ═══════════════════════════════════════════════════════════════════════════
-
-export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunResult> {
-  const logs = await collectLogs();
-  const state = await collectState();
-  const baseContext = await collectContext(symptoms);
-
-  const context: SelfHealingContext = {
-    ...baseContext,
-    logs,
-    state,
-    lastMessage: baseContext.lastMessage ?? logs[logs.length - 1]?.message,
-  };
-
-  const playbook = await selectPlaybook(symptoms);
-  const prompt = await buildPrompt(context, JSON.stringify(playbook, null, 2));
-  const rawResponse = await callTitaneLocal(prompt);
-  const parsed = await parseLocalResponse(rawResponse);
-  const patchResult = await applyMinimalPatch(parsed.patch, {
-    playbookId: playbook.id,
-  });
-  const escalation = await escalateIfNeeded(parsed);
-
-  const finalResult: SelfHealingRunResult = {
-    context,
-    playbook,
-    prompt,
-    rawResponse,
-    parsed,
-    patchResult,
-    escalation,
-  };
-
-  await storeLearning(finalResult);
-
-  return finalResult;
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// DATA COLLECTION
-// ═══════════════════════════════════════════════════════════════════════════
-
-export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
-  try {
-    const rawLogs = await safeInvoke<unknown[]>('get_logs');
-
-    if (!Array.isArray(rawLogs)) {
-      return [];
-    }
-
-    const normalized: SelfHealingLogEntry[] = [];
-
-    for (const entry of rawLogs) {
-      if (typeof entry !== 'object' || entry === null) {
-        continue;
-      }
-
-      const item = entry as Record<string, unknown>;
-      const timestamp = typeof item.timestamp === 'number' ? item.timestamp : Date.now();
-      const level = typeof item.level === 'string' ? item.level : 'INFO';
-      const message =
-        typeof item.message === 'string' ? item.message : JSON.stringify(item);
-      const target = typeof item.target === 'string' ? item.target : undefined;
-      const scope = typeof item.scope === 'string' ? item.scope : undefined;
-
-      normalized.push({ timestamp, level, message, target, scope });
-    }
-
-    return normalized;
-  } catch (error) {
-    console.error('[SelfHealing] collectLogs failed:', error);
-    return [];
-  }
-}
-
-export async function collectState(): Promise<EngineSingularityState | null> {
-  try {
-    const remoteState = await safeInvoke<EngineSingularityState>('singularity_get_state');
-
-    if (remoteState) {
-      return remoteState;
-    }
-  } catch (error) {
-    console.warn('[SelfHealing] collectState invoke fallback:', error);
-  }
-
-  try {
-    if (typeof singularityEngine.getState === 'function') {
-      return singularityEngine.getState();
-    }
-  } catch (error) {
-    console.error('[SelfHealing] collectState engine fallback failed:', error);
-  }
-
-  return null;
-}
-
-export async function collectContext(symptoms: string): Promise<SelfHealingContext> {
-  // Use lightweight probes to surface UI/UX anomalies without touching network APIs.
-  const recentInvocations = await fetchRecentInvocations();
-  const uiAnomalies = await fetchUiAnomalies();
-  const metadata = await fetchSelfHealingMetadata();
-  const lastMessage = recentInvocations[0];
-
-  return {
-    symptoms,
-    logs: [],
-    state: null,
-    recentInvocations,
-    uiAnomalies,
-    metadata,
-    lastMessage,
-  };
-}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // PLAYBOOK SELECTION & PROMPT BUILDING
@@ -382,19 +256,6 @@ Retourne TOUJOURS au format structuré :
   return prompt.trim();
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// OLLAMA INTEGRATION
-// ═══════════════════════════════════════════════════════════════════════════
-
-export async function callTitaneLocal(prompt: string): Promise<string> {
-  try {
-    const response = await queryOllama(prompt);
-    return response.trim();
-  } catch (error) {
-    console.error('[SelfHealing] callTitaneLocal failed:', error);
-    throw error;
-  }
-}
 
 export async function parseLocalResponse(
   raw: string
@@ -477,161 +338,22 @@ export async function parseLocalResponse(
   };
 }
 
-// ═══════════════════════════════════════════════════════════════════════════
-// PATCH APPLICATION
-// ═══════════════════════════════════════════════════════════════════════════
 
-export async function applyMinimalPatch(
-  patch: unknown,
-  options?: PatchExecutionOptions
-): Promise<ApplyPatchResult> {
-  const steps: string[] = [];
-  const errors: string[] = [];
 
-  const instructions = normalizePatch(patch);
-
-  for (const instruction of instructions) {
-    const permission = evaluateRemediationInstructionPermission(
-      instruction,
-      options?.playbookId
-    );
-    await emitRemediationPermissionAudit(instruction, permission, options?.playbookId);
-
-    if (!permission.allowed) {
-      errors.push(`PERMISSION_DENIED:${permission.reason}`);
-      continue;
-    }
-
-    try {
-      switch (instruction.action) {
-        case 'invoke': {
-          await safeInvoke(instruction.command, instruction.payload ?? {});
-          steps.push(`invoke:${instruction.command}`);
-          break;
-        }
-        case 'state-update': {
-          applyStateUpdate(instruction.path, instruction.value);
-          steps.push(`state-update:${instruction.path}`);
-          break;
-        }
-        case 'store-reset': {
-          await resetStore(instruction.store);
-          steps.push(`store-reset:${instruction.store}`);
-          break;
-        }
-        default: {
-          errors.push(
-            `Action inconnue: ${(instruction as MinimalPatchInstruction).action}`
-          );
-        }
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-      errors.push(message);
-    }
-  }
-
-  return {
-    applied: steps.length > 0 && errors.length === 0,
-    steps,
-    errors: errors.length > 0 ? errors : undefined,
-  };
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// ESCALATION & LEARNING
-// ═══════════════════════════════════════════════════════════════════════════
-
-export async function escalateIfNeeded(
-  result: SelfHealingStructuredResult
-): Promise<EscalationResult> {
-  const confidence = clampConfidence(result.confidence);
-
-  if (confidence >= CONFIDENCE_THRESHOLD && result.escalade === 'aucune') {
-    return {
-      triggered: false,
-      channel: 'aucune',
-      reason: 'Confiance suffisante, pas d’escalade.',
-    };
-  }
-
-  const channel: EscalationChannel =
-    result.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
-      ? 'codex'
-      : result.escalade;
-
-  console.warn('[SelfHealing] Escalation triggered:', {
-    channel,
-    confidence,
-    diagnostic: result.diagnostic,
-  });
-
-  await safeInvoke('write_log', {
-    log: {
-      kind: 'self-healing-escalation',
-      channel,
-      confidence,
-      diagnostic: result.diagnostic,
-      timestamp: Date.now(),
-    },
-  });
-
-  return {
-    triggered: true,
-    channel,
-    reason:
-      confidence < CONFIDENCE_THRESHOLD
-        ? 'Confiance insuffisante (< 0.65).'
-        : `Escalade demandée par TITANE Local (${channel}).`,
-  };
-}
-
-export async function storeLearning(result: SelfHealingRunResult): Promise<void> {
-  const data = result;
-
-  const record = {
-    kind: 'self-healing-cycle',
-    timestamp: Date.now(),
-    symptoms: data.context.symptoms,
-    playbookId: data.playbook.id,
-    diagnostic: data.parsed.diagnostic,
-    confidence: data.parsed.confidence,
-    escalation: data.escalation,
-    patchApplied: data.patchResult,
-  };
-
-  await Promise.allSettled([
-    safeInvoke('write_log', { log: record }),
-    safeInvoke('add_timeline_event', {
-      event: {
-        id: `self-healing-${record.timestamp}`,
-        timestamp: record.timestamp,
-        event_type: 'SelfHealingCycle',
-        description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
-      },
-    }),
-    syncSingularityLearning(data),
-  ]);
-}
-
-// ═══════════════════════════════════════════════════════════════════════════
-// INTERNAL HELPERS
-// ═══════════════════════════════════════════════════════════════════════════
-
-function clampConfidence(value: number): number {
+export function clampConfidence(value: number): number {
   if (Number.isNaN(value)) {
     return 0;
   }
   return Math.max(0, Math.min(1, value));
 }
 
-function isEscalationChannel(value: unknown): value is EscalationChannel {
+export function isEscalationChannel(value: unknown): value is EscalationChannel {
   return (
     value === 'aucune' || value === 'codex' || value === 'opus' || value === 'gemini'
   );
 }
 
-function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
+export function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
   if (!patch) {
     return [];
   }
@@ -692,178 +414,3 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
   );
 }
 
-function applyStateUpdate(path: string, value: unknown): void {
-  const segments = path
-    .split('.')
-    .map(segment => segment.trim())
-    .filter(Boolean);
-
-  if (segments.length === 0) {
-    throw new Error('Chemin de mise à jour vide.');
-  }
-
-  const partial = buildPartialFromPath(segments, value);
-  singularityEngine.setState(partial);
-}
-
-async function resetStore(storeName: string): Promise<void> {
-  // Focus on safe store resets only; unsupported stores are ignored.
-  const supportedStores: Record<string, () => Promise<unknown>> = {
-    ui: () => safeInvoke('system_optimize'),
-    memory: () => safeInvoke('reset_memory'),
-  };
-
-  const resetFn = supportedStores[storeName];
-
-  if (!resetFn) {
-    throw new Error(`Store inconnu ou non supported: ${storeName}`);
-  }
-
-  await resetFn();
-}
-
-async function emitRemediationPermissionAudit(
-  instruction: MinimalPatchInstruction,
-  decision: RemediationPermissionDecision,
-  playbookId?: string
-): Promise<void> {
-  const kind = decision.allowed
-    ? 'remediation_permission_granted'
-    : 'remediation_permission_denied';
-
-  const payload = {
-    kind,
-    timestamp: Date.now(),
-    playbookId: playbookId ?? 'default',
-    action: instruction.action,
-    reason: decision.reason,
-    allowed: decision.allowed,
-  };
-
-  await Promise.allSettled([
-    safeInvoke('write_log', { log: payload }),
-    safeInvoke('add_timeline_event', {
-      event: {
-        id: `remediation-perm-${payload.timestamp}`,
-        timestamp: payload.timestamp,
-        event_type: kind,
-        description: `${payload.action} ${payload.allowed ? 'granted' : 'denied'} (${payload.reason})`,
-      },
-    }),
-  ]);
-}
-
-async function fetchRecentInvocations(): Promise<string[]> {
-  try {
-    const logs = await safeInvoke<unknown[]>('read_logs', { count: 10 });
-    if (!Array.isArray(logs)) {
-      return [];
-    }
-
-    return logs
-      .map(entry => {
-        if (typeof entry !== 'object' || entry === null) {
-          return null;
-        }
-
-        const item = entry as Record<string, unknown>;
-        return typeof item.message === 'string' ? item.message : null;
-      })
-      .filter((message): message is string => Boolean(message));
-  } catch (error) {
-    console.warn('[SelfHealing] fetchRecentInvocations failed:', error);
-    return [];
-  }
-}
-
-async function fetchUiAnomalies(): Promise<string[]> {
-  try {
-    const health = await safeInvoke<Record<string, unknown>>('get_system_health');
-    if (!health) {
-      return [];
-    }
-
-    const anomalies: string[] = [];
-
-    if (typeof health.health === 'string' && health.health !== 'healthy') {
-      anomalies.push(`health-status:${health.health}`);
-    }
-
-    if (typeof health.error_count === 'number' && health.error_count > 0) {
-      anomalies.push(`errors:${health.error_count}`);
-    }
-
-    if (typeof health.modules === 'object' && health.modules !== null) {
-      const modules = health.modules as Record<string, unknown>;
-      for (const [module, status] of Object.entries(modules)) {
-        if (status === false) {
-          anomalies.push(`module:${module}:offline`);
-        }
-      }
-    }
-
-    return anomalies;
-  } catch (_error) {
-    // System health not always available in mock mode; silently ignore.
-    return [];
-  }
-}
-
-async function fetchSelfHealingMetadata(): Promise<Record<string, unknown>> {
-  try {
-    const info = await safeInvoke<Record<string, unknown>>('get_system_info');
-    return info ?? {};
-  } catch (_error) {
-    return {};
-  }
-}
-
-async function syncSingularityLearning(result: SelfHealingRunResult): Promise<void> {
-  try {
-    const current = singularityEngine.getState();
-    const interpretations = [
-      {
-        type: 'self-healing-trace',
-        confidence: result.parsed.confidence,
-        description: result.parsed.diagnostic,
-        timestamp: Date.now(),
-      },
-      ...current.overmind.interpretations,
-    ].slice(0, 16);
-
-    singularityEngine.setState({
-      overmind: {
-        ...current.overmind,
-        interpretations,
-      },
-    } as EngineSingularityPartial);
-  } catch (error) {
-    console.warn('[SelfHealing] syncSingularityLearning failed:', error);
-  }
-}
-
-function buildPartialFromPath(
-  segments: string[],
-  value: unknown
-): EngineSingularityPartial {
-  const root: Record<string, unknown> = {};
-  let cursor = root;
-
-  segments.forEach((segment, index) => {
-    if (index === segments.length - 1) {
-      cursor[segment] = value;
-      return;
-    }
-
-    const existing = cursor[segment];
-    if (typeof existing === 'object' && existing !== null) {
-      cursor = existing as Record<string, unknown>;
-    } else {
-      const nested: Record<string, unknown> = {};
-      cursor[segment] = nested;
-      cursor = nested;
-    }
-  });
-
-  return root as EngineSingularityPartial;
-}

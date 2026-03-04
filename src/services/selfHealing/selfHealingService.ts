@@ -5,8 +5,8 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { runSelfHealing } from '@/engines/selfHealing';
-import type { SelfHealingRunResult } from '@/engines/selfHealing';
+import { runSelfHealing } from './selfHealingIOAdapter';
+import type { SelfHealingRunResult } from './selfHealingIOAdapter';
 
 export type {
   SelfHealingRunResult,

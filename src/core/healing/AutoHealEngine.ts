@@ -17,7 +17,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
-import { runSelfHealing, type SelfHealingRunResult } from '@/engines/selfHealing';
+import { runSelfHealing, type SelfHealingRunResult } from '@/services/selfHealing/selfHealingIOAdapter';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
