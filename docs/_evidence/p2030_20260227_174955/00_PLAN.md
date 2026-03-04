@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2030
-Statut: PASS_QUALIFIED
-Lot: P2030→P2036

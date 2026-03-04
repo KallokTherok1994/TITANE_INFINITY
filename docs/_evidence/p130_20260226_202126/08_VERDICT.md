@@ -1,4 +1,0 @@
-# 08_VERDICT.md
-
-Phase: P130
-Verdict: `PASS_QUALIFIED`

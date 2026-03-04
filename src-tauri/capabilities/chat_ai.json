@@ -7,11 +7,11 @@
   "commands": {
     "allow": [
       "chat_generate",
-      "chat_send_message",
       "chat_stream_message",
       "chat_create_conversation",
       "chat_get_conversation",
       "chat_delete_conversation",
+      "conversation_generate",
       "chat_get_providers_status",
       "chat_set_gemini_key",
       "chat_check_providers",

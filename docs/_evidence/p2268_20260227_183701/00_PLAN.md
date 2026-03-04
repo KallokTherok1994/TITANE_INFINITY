@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2268
-Statut: PASS_QUALIFIED
-Lot: P2268→P2274

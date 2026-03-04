@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2692
-Statut: PASS_QUALIFIED
-Lot: P2688→P2694

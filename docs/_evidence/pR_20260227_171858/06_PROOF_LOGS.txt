@@ -1,8 +1,0 @@
-]633;E;{   echo "\\n=== EXEC_X3_R_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[R][RUN_$i] policy.rs exists + core symbols"\x3b     test -f src-tauri/src/engines/conversation_os/policy.rs\x3b     rg -n "pub enum NetState|pub struct PolicyContext|pub struct PolicyVerdict|hard_block" src-tauri/src/engines/conversation_os/policy.rs > /dev/null\x3b     test -f scripts/guards/guard-network-policy.sh\x3b     rg -n "No unapproved fetch|Anti-Bypass|secureInvoke" scripts/guards/guard-network-policy.sh > /dev/null\x3b     echo "[R][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_R_END PASS ==="\x3b } >> "$LOGR";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_R_START 2026-02-27T17:30:30-05:00 ===
-[R][RUN_1] policy.rs exists + core symbols
-[R][RUN_1] PASS
-[R][RUN_2] policy.rs exists + core symbols
-[R][RUN_2] PASS
-[R][RUN_3] policy.rs exists + core symbols
-[R][RUN_3] PASS
-=== EXEC_X3_R_END PASS ===

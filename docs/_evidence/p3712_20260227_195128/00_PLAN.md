@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P3712
-Statut: PASS_QUALIFIED
-Lot: P3710→P3716

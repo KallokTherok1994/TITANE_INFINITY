@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P981
-Statut: PASS_QUALIFIED
-Lot: P980→P986

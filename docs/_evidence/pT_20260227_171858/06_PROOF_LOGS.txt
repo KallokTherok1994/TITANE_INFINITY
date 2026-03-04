@@ -1,8 +1,0 @@
-]633;E;{   echo "\\n=== EXEC_X3_T_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[T][RUN_$i] anti-drift scripts"\x3b     test -f scripts/ci/check-capabilities-drift.sh\x3b     rg -n "PHASE_5 BLOC D|GATE FAIL|allowlist stable|registry" scripts/ci/check-capabilities-drift.sh > /dev/null\x3b     test -f scripts/guards/guard-prod-drift.mjs\x3b     rg -n "Drift Detector|Exit 2 = drift detected|SHA256" scripts/guards/guard-prod-drift.mjs > /dev/null\x3b     test -f scripts/verify/verify-mermaid-drift.sh\x3b     rg -n "Ring 1: Types|Ring 2: Engines|Ring 3: Services|Ring 4: Modules / UI" scripts/verify/verify-mermaid-drift.sh > /dev/null\x3b     echo "[T][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_T_END PASS ==="\x3b } >> "$LOGT";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_T_START 2026-02-27T17:30:44-05:00 ===
-[T][RUN_1] anti-drift scripts
-[T][RUN_1] PASS
-[T][RUN_2] anti-drift scripts
-[T][RUN_2] PASS
-[T][RUN_3] anti-drift scripts
-[T][RUN_3] PASS
-=== EXEC_X3_T_END PASS ===

@@ -19,13 +19,16 @@ const BYTE_SIZES = ['B', 'KB', 'MB', 'GB'] as const;
 export const MemorySection: React.FC = () => {
   const [stats, setStats] = useState<MemoryStats | null>(null);
   const [clearing, setClearing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadStats = useCallback(async () => {
     try {
       const memoryStats = (await tauriClient.getMemoryStats()) as MemoryStats;
       setStats(memoryStats);
+      setErrorMessage(null);
     } catch (error) {
       console.error('Erreur chargement stats mémoire:', error);
+      setErrorMessage('Échec du chargement des statistiques mémoire.');
     }
   }, []);
 
@@ -40,6 +43,7 @@ export const MemorySection: React.FC = () => {
       await loadStats();
     } catch (error) {
       console.error('Erreur nettoyage cache:', error);
+      setErrorMessage('Impossible de vider le cache mémoire.');
     } finally {
       setClearing(false);
     }
@@ -80,6 +84,12 @@ export const MemorySection: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {errorMessage && (
+        <div className="cp-card" role="alert" data-testid="cp-memory-error">
+          <p>{errorMessage}</p>
+        </div>
+      )}
 
       <div className="cp-grid cp-grid-3">
         <div className="cp-card cp-stat-card">

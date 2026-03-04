@@ -1,7 +1,0 @@
-# 05_TEST_RUNS_X3.md
-
-Phase: PA
-RUN1: BLOCKED
-RUN2: BLOCKED
-RUN3: BLOCKED
-Motif: exécution interdite tant que précheck non conforme.

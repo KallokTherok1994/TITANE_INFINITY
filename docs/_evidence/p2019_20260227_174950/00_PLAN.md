@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2019
-Statut: PASS_QUALIFIED
-Lot: P2016→P2022

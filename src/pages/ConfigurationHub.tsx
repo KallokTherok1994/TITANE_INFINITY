@@ -77,7 +77,9 @@ export const ConfigurationHub: React.FC = () => {
   const [editedRequestDefaults, setEditedRequestDefaults] = useState<
     Partial<ChatRequestDefaults>
   >({});
-  const [requestDefaults, setRequestDefaults] = useState<ChatRequestDefaults | null>(null);
+  const [requestDefaults, setRequestDefaults] = useState<ChatRequestDefaults | null>(
+    null
+  );
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
 
@@ -94,13 +96,15 @@ export const ConfigurationHub: React.FC = () => {
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
       const snapshot = (await tauriClient.getAllConfigs()) as ConfigSnapshot;
-      const engineEnvelope = (await tauriClient.getChatEngineConfig()) as IpcEnvelope<ChatEngineConfig>;
+      const engineEnvelope =
+        (await tauriClient.getChatEngineConfig()) as IpcEnvelope<ChatEngineConfig>;
       const defaultsEnvelope =
         (await tauriClient.getChatRequestDefaults()) as IpcEnvelope<ChatRequestDefaults>;
 
       if (!engineEnvelope.ok || !engineEnvelope.content) {
         throw new Error(
-          engineEnvelope.error?.message || 'Impossible de charger Chat Engine Configuration'
+          engineEnvelope.error?.message ||
+            'Impossible de charger Chat Engine Configuration'
         );
       }
 
@@ -230,18 +234,24 @@ export const ConfigurationHub: React.FC = () => {
           memory_context_tokens:
             editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
           memory_retention_tokens:
-            editedChatEngine.memory_retention_tokens ?? engineConfig.memory_retention_tokens,
+            editedChatEngine.memory_retention_tokens ??
+            engineConfig.memory_retention_tokens,
           memory_flush_interval_ms:
-            editedChatEngine.memory_flush_interval_ms ?? engineConfig.memory_flush_interval_ms,
+            editedChatEngine.memory_flush_interval_ms ??
+            engineConfig.memory_flush_interval_ms,
           auto_tts_enabled:
             editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
           stream_channel_buffer:
             editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
         };
 
-        const envelope = (await tauriClient.setChatEngineConfig({ config: payload })) as IpcEnvelope<ChatEngineConfig>;
+        const envelope = (await tauriClient.setChatEngineConfig({
+          config: payload,
+        })) as IpcEnvelope<ChatEngineConfig>;
         if (!envelope.ok) {
-          throw new Error(envelope.error?.message || 'Échec mise à jour Chat Engine Configuration');
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Engine Configuration'
+          );
         }
         console.log('✅ [ConfigHub] Chat engine config updated');
       }
@@ -251,14 +261,18 @@ export const ConfigurationHub: React.FC = () => {
           temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
           max_output_tokens:
             editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
-          provider: (editedRequestDefaults.provider ?? requestDefaults.provider) as ChatRequestDefaults['provider'],
+          provider: (editedRequestDefaults.provider ??
+            requestDefaults.provider) as ChatRequestDefaults['provider'],
           enable_streaming:
             editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
         };
-        const envelope =
-          (await tauriClient.setChatRequestDefaults({ defaults: payload })) as IpcEnvelope<ChatRequestDefaults>;
+        const envelope = (await tauriClient.setChatRequestDefaults({
+          defaults: payload,
+        })) as IpcEnvelope<ChatRequestDefaults>;
         if (!envelope.ok) {
-          throw new Error(envelope.error?.message || 'Échec mise à jour Chat Request Defaults');
+          throw new Error(
+            envelope.error?.message || 'Échec mise à jour Chat Request Defaults'
+          );
         }
       }
 
@@ -511,7 +525,8 @@ export const ConfigurationHub: React.FC = () => {
   const currentChatEngine = {
     response_timeout_ms:
       editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
-    stream_chunk_size: editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
+    stream_chunk_size:
+      editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
     memory_context_tokens:
       editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
     memory_retention_tokens:
@@ -913,7 +928,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="⏱️"
                 valueType="duration"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('response_timeout_ms', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('response_timeout_ms', value)
+                }
                 validationError={validationErrors['chat_engine.timeout_ms']}
               />
               <ConfigFieldEditable
@@ -923,7 +940,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="📦"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('stream_chunk_size', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_chunk_size', value)
+                }
                 validationError={validationErrors['chat_engine.chunk_size']}
               />
               <ConfigFieldEditable
@@ -933,7 +952,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🎯"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('memory_context_tokens', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_context_tokens', value)
+                }
                 validationError={validationErrors['chat_engine.memory_context_tokens']}
               />
               <ConfigFieldEditable
@@ -943,7 +964,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🧠"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('memory_retention_tokens', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_retention_tokens', value)
+                }
                 validationError={validationErrors['chat_engine.memory_retention_tokens']}
               />
               <ConfigFieldEditable
@@ -953,7 +976,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="💾"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('memory_flush_interval_ms', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('memory_flush_interval_ms', value)
+                }
                 validationError={validationErrors['chat_engine.memory_flush_interval_ms']}
               />
               <ConfigFieldEditable
@@ -963,7 +988,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="📡"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleChatEngineFieldChange('stream_channel_buffer', value)}
+                onChange={value =>
+                  handleChatEngineFieldChange('stream_channel_buffer', value)
+                }
                 validationError={validationErrors['chat_engine.stream_channel_buffer']}
               />
               <ConfigFieldEditable
@@ -993,7 +1020,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🧮"
                 valueType="number"
                 editable={editMode}
-                onChange={value => handleRequestDefaultsFieldChange('max_output_tokens', value)}
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('max_output_tokens', value)
+                }
                 validationError={validationErrors['request_defaults.max_output_tokens']}
               />
               <ConfigFieldEditable
@@ -1012,7 +1041,9 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🌊"
                 valueType="boolean"
                 editable={editMode}
-                onChange={value => handleRequestDefaultsFieldChange('enable_streaming', value)}
+                onChange={value =>
+                  handleRequestDefaultsFieldChange('enable_streaming', value)
+                }
                 validationError={validationErrors['request_defaults.enable_streaming']}
               />
             </ConfigSection>

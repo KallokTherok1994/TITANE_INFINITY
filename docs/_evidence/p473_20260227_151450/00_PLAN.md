@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P473
-Statut: PASS_QUALIFIED
-Lot: P469→P475

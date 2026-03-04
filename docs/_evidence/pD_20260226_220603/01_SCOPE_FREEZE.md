@@ -1,4 +1,0 @@
-# 01_SCOPE_FREEZE.md
-
-Phase: PD
-Scope: FROZEN_BLOCKED

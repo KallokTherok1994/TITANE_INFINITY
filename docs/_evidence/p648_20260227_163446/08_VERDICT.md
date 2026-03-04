@@ -1,5 +1,0 @@
-# 08_VERDICT.md
-
-Phase: P648
-Verdict: PASS_QUALIFIED
-Preuve: `reports/p644_650_execution_x3_20260227_163446Z.log`
