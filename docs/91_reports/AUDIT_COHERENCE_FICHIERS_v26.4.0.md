@@ -176,7 +176,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 1️⃣ index.html (CRITIQUE ⚠️)
 
-**Fichier**: [index.html](index.html)  
+**Fichier**: [index.html](../../index.html)  
 **Lignes concernées**: 3, 23-33  
 **Problème**: Version hardcodée obsolète (v24.3.0)
 
@@ -215,7 +215,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 2️⃣ src/main.tsx (MOYEN ⚠️)
 
-**Fichier**: [src/main.tsx](src/main.tsx)  
+**Fichier**: [src/main.tsx](../../src/main.tsx)  
 **Lignes concernées**: 2, 29  
 **Problème**: Headers et commentaires obsolètes (v26.2.0)
 
@@ -246,7 +246,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 3️⃣ src-tauri/src/main.rs (CRITIQUE ⚠️)
 
-**Fichier**: [src-tauri/src/main.rs](src-tauri/src/main.rs)  
+**Fichier**: [src-tauri/src/main.rs](../../src-tauri/src/main.rs)  
 **Lignes concernées**: 1, 5-7  
 **Problème**: Headers Rust obsolètes (v24.3.0)
 
@@ -280,7 +280,7 @@ TITANE_INFINITY v24.3.0 — Proprietary License
 
 ### 4️⃣ src-tauri/tauri.conf.json (CRITIQUE 🔴)
 
-**Fichier**: [src-tauri/tauri.conf.json](src-tauri/tauri.conf.json)  
+**Fichier**: [src-tauri/tauri.conf.json](../../src-tauri/tauri.conf.json)  
 **Lignes concernées**: 4, 23-24  
 **Problème**: Configuration Tauri obsolète (v26.2.0)
 

@@ -71,7 +71,7 @@
 
 ### STEP 1: STRING ALLOCATION (30 min) — STARTING NOW
 
-**Target File 1:** [chat_engine/streaming.rs](src-tauri/src/chat_engine/streaming.rs#L18-L35)
+**Target File 1:** [chat_engine/streaming.rs](../../src-tauri/src/chat_engine/streaming.rs#L18-L35)
 
 **Current Code (Line 18-35):**
 
@@ -105,7 +105,7 @@ pub fn chunk_text(
 
 ---
 
-**Target File 2:** [tts/mod.rs](src-tauri/src/tts/mod.rs#L74-L90)
+**Target File 2:** [tts/mod.rs](../../src-tauri/src/tts/mod.rs#L74-L90)
 
 **Current Code (Loop allocation):**
 

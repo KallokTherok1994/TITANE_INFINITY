@@ -19,11 +19,36 @@ pub fn chunk_text(
         return Vec::new();
     }
 
+    let chunk_size = chunk_size.max(1);
+    let chars: Vec<char> = text.chars().collect();
+
     let mut chunks = Vec::new();
     let mut ordinal: u32 = 0;
+    let mut start = 0usize;
 
-    for slice in text.as_bytes().chunks(chunk_size) {
-        let content = String::from_utf8_lossy(slice).to_string();
+    while start < chars.len() {
+        let mut end = (start + chunk_size).min(chars.len());
+
+        if end < chars.len() {
+            let min_break = start + (chunk_size / 2).max(1);
+            let mut split_at = None;
+            for idx in (min_break..end).rev() {
+                let ch = chars[idx - 1];
+                if ch.is_whitespace() || ",.;:!?)]}".contains(ch) {
+                    split_at = Some(idx);
+                    break;
+                }
+            }
+            if let Some(idx) = split_at {
+                end = idx;
+            }
+        }
+
+        let content: String = chars[start..end].iter().collect();
+        if content.is_empty() {
+            break;
+        }
+
         chunks.push(StreamChunk {
             conversation_id: conversation_id.to_string(),
             message_id: message_id.to_string(),
@@ -31,6 +56,8 @@ pub fn chunk_text(
             content,
             done: false,
         });
+
+        start = end;
         ordinal += 1;
     }
 
@@ -188,6 +215,26 @@ mod tests {
         assert_eq!(chunks.len(), 1);
         // Content should be preserved even with multi-byte chars
         assert!(chunks[0].content.contains("H"));
+    }
+
+    #[test]
+    fn test_chunk_text_no_replacement_chars_with_emojis() {
+        let text = "Bonjour 👋🏽 ça va très bien 😊";
+        let chunks = chunk_text(text, 5, "c", "m");
+        let rebuilt = chunks
+            .iter()
+            .map(|chunk| chunk.content.as_str())
+            .collect::<String>();
+
+        assert_eq!(rebuilt, text);
+        assert!(!chunks.iter().any(|chunk| chunk.content.contains('�')));
+    }
+
+    #[test]
+    fn test_chunk_text_no_empty_chunks() {
+        let text = "split this sentence nicely";
+        let chunks = chunk_text(text, 4, "c", "m");
+        assert!(chunks.iter().all(|chunk| !chunk.content.is_empty()));
     }
 
     #[test]

@@ -1,0 +1,19 @@
+# 08_DIFF_FILES
+- src-tauri/src/chat_engine/config.rs
+- src-tauri/src/chat_engine/memory.rs
+- src-tauri/src/chat_engine/mod.rs
+- src-tauri/src/chat_engine/streaming.rs
+- src-tauri/src/commands/security.rs
+- src-tauri/src/config/mod.rs
+- src-tauri/src/config/update.rs
+- src-tauri/src/main.rs
+- src/lib/security.ts
+- src/lib/tauriClient.ts
+- src/lib/tauriCommands.ts
+- src/pages/ConfigurationHub.tsx
+- src/services/ai/chatEngine.ts
+- src/services/api/chat.ts
+- src/services/tauri/chatEngine.commands.ts
+- src/services/tauriClient.ts
+- registry/ui-events.jsonl
+- titane-infinity.desktop (pré-existant dans l’arbre de travail, non modifié par ce patch)

@@ -410,7 +410,7 @@ TOTAL: ~98% performance improvement vs v26 ✅
 - **Strategy**: [THREE_JS_OPTIMIZATION_v36.0.0.md](../01_misc/THREE_JS_OPTIMIZATION_v36.0.0.md)
 - **Results**: [THREE_JS_LAZY_RESULTS_v36.0.0.md](../01_misc/THREE_JS_LAZY_RESULTS_v36.0.0.md)
 - **Previous**: [PRODUCTION_AUTHORIZATION_v35.0.0.md](PRODUCTION_AUTHORIZATION_v35.0.0.md)
-- **ThreeJSLazyLoader**: [src/modules/avatar/core/ThreeJSLazyLoader.ts](./src/modules/avatar/core/ThreeJSLazyLoader.ts)
+- **ThreeJSLazyLoader**: [src/modules/avatar/core/ThreeJSLazyLoader.ts](../../src/modules/avatar/core/ThreeJSLazyLoader.ts)
 
 ---
 

@@ -116,8 +116,13 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
             .unwrap_or(0),
     };
 
-    // Récupérer chat engine config (hardcoded defaults pour l'instant)
-    let chat_engine = ChatEngineConfig::default();
+    let bundle = update::current_chat_bundle().await;
+    let chat_engine = ChatEngineConfig {
+        timeout_ms: bundle.engine.response_timeout_ms,
+        chunk_size: bundle.engine.stream_chunk_size as usize,
+        max_tokens: bundle.request_defaults.max_output_tokens as usize,
+        temperature: bundle.request_defaults.temperature,
+    };
 
     let snapshot = ConfigSnapshot::new(runtime, chat_engine);
 

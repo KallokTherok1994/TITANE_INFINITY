@@ -34,7 +34,7 @@
 - ✅ Migration progressive planifiée (documenter les patterns à corriger)
 - ✅ Options `noUnusedLocals` et `noUnusedParameters` également désactivées (non-bloquantes)
 
-**Fichier**: [tsconfig.json](tsconfig.json#L37-L43)
+**Fichier**: [tsconfig.json](../../tsconfig.json#L37-L43)
 
 ```jsonc
 // TEMPORAIREMENT DÉSACTIVÉS - Migration progressive requise (1217 erreurs)
@@ -58,7 +58,7 @@
 - ✅ Utilisation de `useCallback` pour éviter les re-créations inutiles
 - ✅ Ajout de `handleClose` aux dépendances du `useEffect`
 
-**Fichier**: [src/components/ui/Toast.tsx](src/components/ui/Toast.tsx#L42-L48)
+**Fichier**: [src/components/ui/Toast.tsx](../../src/components/ui/Toast.tsx#L42-L48)
 
 **Avant**:
 ```tsx
@@ -443,7 +443,7 @@ describe('4-Ring Architecture Model', () => {
 - ✅ **Code splitting** (manual chunks)
 - ✅ **Tree shaking** (production builds)
 
-**Fichier**: [vite.config.ts](vite.config.ts)
+**Fichier**: [vite.config.ts](../../vite.config.ts)
 
 ### Vitest Configuration
 
@@ -453,7 +453,7 @@ describe('4-Ring Architecture Model', () => {
 - ✅ **Globals activés** (pas besoin d'importer `describe`/`it`/`expect`)
 - ✅ **Coverage v8** (native, plus rapide qu'Istanbul)
 
-**Fichier**: [vitest.config.ts](vitest.config.ts)
+**Fichier**: [vitest.config.ts](../../vitest.config.ts)
 
 ---
 
@@ -484,7 +484,7 @@ describe('4-Ring Architecture Model', () => {
 
 **Solution**: Encapsuler dans `useCallback` avec dépendances minimales.
 
-**Exemple** ([Toast.tsx](src/components/ui/Toast.tsx)):
+**Exemple** ([Toast.tsx](../../src/components/ui/Toast.tsx)):
 ```tsx
 const handleClose = useCallback(() => {
   setIsExiting(true);
@@ -563,9 +563,9 @@ npm run copilot-xs:test
 
 ### B. Fichiers Modifiés (Session 2026-01-03)
 
-1. [tsconfig.json](tsconfig.json#L37-L43) — Désactivation options strict (4 lignes modifiées)
-2. [src/components/ui/Toast.tsx](src/components/ui/Toast.tsx#L8) — Import `useCallback` (1 ligne)
-3. [src/components/ui/Toast.tsx](src/components/ui/Toast.tsx#L42-L65) — Refactor `handleClose` (24 lignes modifiées)
+1. [tsconfig.json](../../tsconfig.json#L37-L43) — Désactivation options strict (4 lignes modifiées)
+2. [src/components/ui/Toast.tsx](../../src/components/ui/Toast.tsx#L8) — Import `useCallback` (1 ligne)
+3. [src/components/ui/Toast.tsx](../../src/components/ui/Toast.tsx#L42-L65) — Refactor `handleClose` (24 lignes modifiées)
 
 **Total**: 3 fichiers, ~29 lignes modifiées
 

@@ -104,6 +104,22 @@ interface BackendStreamChunk {
   done: boolean;
 }
 
+function safeParseStreamDoneMeta(raw: string): Record<string, unknown> {
+  const trimmed = raw.trim();
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+    return { raw: trimmed };
+  }
+
+  try {
+    return JSON.parse(trimmed) as Record<string, unknown>;
+  } catch {
+    const sanitized = trimmed
+      .replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')
+      .replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    return JSON.parse(sanitized) as Record<string, unknown>;
+  }
+}
+
 // ─────────────────────────────────────────────────────────────────
 // INVOKE OPTIONS & CIRCUIT BREAKER
 // ─────────────────────────────────────────────────────────────────
@@ -330,7 +346,7 @@ class TauriClient {
     const processDoneEvent = (payload: BackendStreamChunk) => {
       let meta: Record<string, unknown> = {};
       try {
-        meta = payload.content ? JSON.parse(payload.content) : {};
+        meta = payload.content ? safeParseStreamDoneMeta(payload.content) : {};
       } catch (parseError) {
         console.warn('[TauriClient] Failed to parse stream metadata:', parseError);
       }

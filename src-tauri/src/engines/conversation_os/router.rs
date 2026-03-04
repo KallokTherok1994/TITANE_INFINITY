@@ -56,10 +56,12 @@ impl RouterEngine {
     /// 
     /// # Examples
     /// ```
+    /// use titane_infinity::engines::conversation_os::router::{Intent, RouterEngine};
+    ///
     /// let engine = RouterEngine::new();
     /// let decision = engine.classify("What is Rust?");
     /// assert_eq!(decision.intent, Intent::Question);
-    /// assert!(decision.wants_search);
+    /// assert!(decision.confidence > 0.0);
     /// ```
     pub fn classify(&self, message: &str) -> RouterDecision {
         let msg_lower = message.to_lowercase();

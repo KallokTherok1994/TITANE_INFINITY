@@ -1013,11 +1013,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // CONFIG HUB (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'get_all_configs',
+  'get_chat_engine_config',
+  'get_chat_request_defaults',
   'export_config',
   'import_config',
   'list_config_presets',
   'update_runtime_config',
   'update_chat_engine_config',
+  'set_chat_engine_config',
+  'set_chat_request_defaults',
+  'set_chat_profile',
   'save_config_preset',
   'load_config_preset',
   'delete_config_preset',

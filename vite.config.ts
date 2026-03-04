@@ -358,65 +358,22 @@ export default defineConfig(({ command }) => ({
                 !id.includes('/optimization/') &&
                 !id.includes('/branding/'))
             ) {
-              return 'ui-core';
+              return 'core-runtime';
             }
           }
 
           // ────────────────────────────────────────────────────────────────────
-          // 3️⃣ SERVICES SPLIT (P2_BUNDLE_OPTIMIZATION: boot vs lazy chunks)
-          //    - services-boot: initializeOllama, consoleMonitor only (~50KB)
-          //    - services-ai: chatEngine, orchestrator (lazy on chat) (~500KB)
-          //    - services-voice: voice services (lazy on voice toggle) (~350KB)
-          //    - services-memory: memory compactor (lazy on admin) (~120KB)
-          //    - services-telemetry: performance engine (lazy on dashboard) (~150KB)
+          // 3️⃣ SERVICES CORE CLUSTER (anti-cycles hardening)
+          //    - Unifie tous les modules src/services dans un chunk unique
+          //      pour éviter les cycles inter-chunks services-ai/services-other/services-voice.
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
             if (id.includes('/services/')) {
-              // ✅ BOOT CRITICAL: Only 2 services imported at boot (App.tsx lines 56, 61)
-              if (
-                id.includes('/services/ai/providers/ollama') ||
-                id.includes('/services/monitoring/consoleMonitor')
-              ) {
-                return 'services-boot';
-              }
-              // 🔄 LAZY: AI services (chat engine + orchestrator ONLY - NO metaKernel to avoid circular deps)
-              if (
-                id.includes('/services/ai/chatEngine') ||
-                id.includes('/services/ai/orchestrator')
-              ) {
-                return 'services-ai';
-              }
-              // 🔄 BOOTSTRAP: metaKernel, cognitiveKernel, singularityKernel → services-other (avoid circular deps)
-              if (
-                id.includes('/services/ai/metaKernel') ||
-                id.includes('/services/ai/cognitiveKernel') ||
-                id.includes('/services/ai/singularityKernel') ||
-                id.includes('/services/ai/system') ||
-                id.includes('/services/ai/systemUtilities')
-              ) {
-                return 'services-other';
-              }
-              // 🔄 LAZY: Voice services
-              if (id.includes('/services/voice/')) {
-                return 'services-voice';
-              }
-              // 🔄 LAZY: Memory management
-              if (
-                id.includes('/services/chatMemoryCompactor') ||
-                id.includes('/services/contextualMemory')
-              ) {
-                return 'services-memory';
-              }
-              // 🔄 LAZY: Performance/telemetry
-              if (id.includes('/services/performanceEngine')) {
-                return 'services-telemetry';
-              }
-              // All other services → lazy chunk
-              return 'services-other';
+              return 'core-runtime';
             }
             // DevSudo → lazy chunk
             if (id.includes('/modules/devSudo/')) {
-              return 'services-other';
+              return 'core-runtime';
             }
           }
 
@@ -527,7 +484,7 @@ export default defineConfig(({ command }) => ({
 
             // Domain-specific UI components (NOT in ui-core cluster)
             if (id.includes('/components/')) {
-              if (id.includes('/chat/')) return 'ui-chat';
+              if (id.includes('/chat/')) return 'core-runtime';
               if (id.includes('/audio/')) return 'ui-audio';
               if (id.includes('/monitoring/')) return 'ui-monitoring';
               if (id.includes('/voice/')) return 'ui-voice';

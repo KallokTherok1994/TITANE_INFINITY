@@ -19,6 +19,8 @@ import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 import { conversationStorage } from '@/services/conversation/conversationStorage';
 import type { ChatMode } from '@/services/ai/chatTypes';
 import type { AIMessage, AIProviderName, AIResponse } from '@/services/ai/types';
+import { cognitiveKernel } from '@/services/ai/cognitiveKernel';
+import { awardExperience as awardExperienceToDomain } from '@/services/experienceService';
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import type { DevSudoResult } from '@/modules/devSudo/devSudoIntegration';
 import type { CameraChatIntegrationResult } from '@/modules/camera/cameraChatIntegration';
@@ -26,54 +28,32 @@ import { hybridTTS } from '@/services/tts/hybridTTS';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
 import { createStreamingBatcher } from '@/utils/streamingDebounce';
-import type {
+import {
+  chatService,
   ChatMessage as BackendChatMessage,
   ChatResponse,
   StreamConfig,
 } from '@/services/api/chat';
 import { XPSource, XP_REWARDS } from '../types/experience';
 
-let _chatServicePromise: Promise<{
-  sendMessageLegacy: (
-    messages: BackendChatMessage[],
-    config: StreamConfig
-  ) => Promise<ChatResponse>;
-}> | null = null;
-
-const loadChatService = async () => {
-  if (!_chatServicePromise) {
-    _chatServicePromise = import('@/services/api/chat').then(m => m.chatService);
-  }
-  return _chatServicePromise;
-};
-
 import { useVisionStore } from '@/stores/useVisionStore';
 import { useRequestInFlightStore } from '@/stores/useRequestInFlightStore';
 
-let _cognitiveKernelPromise: Promise<{
+type CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => unknown;
   harmonizeError: (error: unknown) => { message: string; type: string; recovery: string };
-}> | null = null;
-
-type CognitiveKernelModule = {
-  cognitiveKernel: {
-    harmonizeChatMessages: (messages: unknown) => unknown;
-    harmonizeError: (error: unknown) => {
-      message: string;
-      type: string;
-      recovery: string;
-    };
-  };
 };
 
-const loadCognitiveKernel = async () => {
+let _cognitiveKernelPromise: Promise<CognitiveKernelTools> | null = null;
+
+const loadCognitiveKernel = async (): Promise<CognitiveKernelTools> => {
   if (!_cognitiveKernelPromise) {
-    _cognitiveKernelPromise = import('@/services/ai/cognitiveKernel').then(m => {
-      const kernel = (m as unknown as CognitiveKernelModule).cognitiveKernel;
-      return {
-        harmonizeChatMessages: kernel.harmonizeChatMessages.bind(kernel),
-        harmonizeError: kernel.harmonizeError.bind(kernel),
-      };
+    _cognitiveKernelPromise = Promise.resolve({
+      harmonizeChatMessages: (messages: unknown) =>
+        cognitiveKernel.harmonizeChatMessages(
+          (messages as Partial<HarmonizedMessage>[]) ?? []
+        ),
+      harmonizeError: cognitiveKernel.harmonizeError.bind(cognitiveKernel),
     });
   }
   return _cognitiveKernelPromise;
@@ -104,15 +84,17 @@ const loadUserPreferencesEngine = async () => {
   return _userPreferencesEnginePromise;
 };
 
-let _experienceToolsPromise: Promise<{
+type ExperienceTools = {
   gainXP: (amount: number, source?: string, description?: string) => void;
   awardExperience: (
     domainId: string,
     amount: number,
     source: XPSource,
     metadata?: Record<string, unknown>
-  ) => Promise<void>;
-}> | null = null;
+  ) => Promise<unknown>;
+};
+
+let _experienceToolsPromise: Promise<ExperienceTools> | null = null;
 
 type ExperienceXPModule = {
   XP: {
@@ -120,26 +102,13 @@ type ExperienceXPModule = {
   };
 };
 
-type ExperienceServiceModule = {
-  awardExperience: (
-    domainId: string,
-    amount: number,
-    source: XPSource,
-    metadata?: Record<string, unknown>
-  ) => Promise<void>;
-};
-
-const loadExperienceTools = async () => {
+const loadExperienceTools = async (): Promise<ExperienceTools> => {
   if (!_experienceToolsPromise) {
-    _experienceToolsPromise = Promise.all([
-      import('@/core/experience/XP_ENGINE'),
-      import('@/services/experienceService'),
-    ]).then(([xp, svc]) => {
+    _experienceToolsPromise = import('@/core/experience/XP_ENGINE').then(xp => {
       const XP = (xp as unknown as ExperienceXPModule).XP;
-      const awardExperience = (svc as unknown as ExperienceServiceModule).awardExperience;
       return {
         gainXP: XP.gain.bind(XP),
-        awardExperience,
+        awardExperience: awardExperienceToDomain,
       };
     });
   }
@@ -235,7 +204,7 @@ type ChatEngineResponse = AIResponse & {
 
 type MaybeAIMessage = Partial<AIMessage> | null | undefined;
 
-const COGNITIVE_KERNEL_FALLBACK = {
+const COGNITIVE_KERNEL_FALLBACK: CognitiveKernelTools = {
   harmonizeChatMessages: (messages: unknown) => messages,
   harmonizeError: (error: unknown) => {
     const message = error instanceof Error ? error.message : String(error);
@@ -1644,7 +1613,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               attemptedProviders.push(candidate);
 
               const response = await withTimeout(
-                (await loadChatService()).sendMessageLegacy(backendHistory, {
+                chatService.sendMessageLegacy(backendHistory, {
                   provider: candidate,
                   requestId,
                 }),

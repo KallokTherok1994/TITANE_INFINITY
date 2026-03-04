@@ -1185,8 +1185,8 @@ e2e/                  # Playwright E2E
 
 **Audits Précédents:**
 - [AUDIT_FINAL_PERFECTION.md](AUDIT_FINAL_PERFECTION.md) — Audit Phase 3-4 (score 92/100)
-- [reports/architecture-audit-20251215-214020/](reports/architecture-audit-20251215-214020/)
-- [reports/test-coverage-20251215-214034/](reports/test-coverage-20251215-214034/)
+- `reports/architecture-audit-20251215-214020/` (archive non présente dans ce workspace)
+- `reports/test-coverage-20251215-214034/` (archive non présente dans ce workspace)
 
 ---
 

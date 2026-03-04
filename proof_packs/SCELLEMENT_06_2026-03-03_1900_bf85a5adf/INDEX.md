@@ -1,0 +1,7 @@
+# INDEX
+
+- `00_BOOTSTRAP.md`
+- `04_COMMANDS_USED.md`
+- `10_GATES_REPORT.md`
+- `12_ROLLBACK.md`
+- `13_VERDICT.md`

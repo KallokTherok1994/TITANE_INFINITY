@@ -1417,6 +1417,11 @@ fn main() {
             config::get_all_configs,
             config::update::update_runtime_config,
             config::update::update_chat_engine_config,
+            config::update::get_chat_engine_config,
+            config::update::set_chat_engine_config,
+            config::update::get_chat_request_defaults,
+            config::update::set_chat_request_defaults,
+            config::update::set_chat_profile,
             config::io::export_config,
             config::io::import_config,
             // Note: export_full_state n'existe pas encore dans config::io

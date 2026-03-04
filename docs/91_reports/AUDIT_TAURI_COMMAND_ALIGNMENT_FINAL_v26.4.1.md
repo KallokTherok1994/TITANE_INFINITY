@@ -25,7 +25,7 @@
 
 ### Bug #1: Chat IA - executeTool() Method Name
 
-**Fichier**: [src/hooks/chat/useToolCalling.ts](src/hooks/chat/useToolCalling.ts)
+**Fichier**: [src/hooks/useToolCaller.ts](../../src/hooks/useToolCaller.ts)
 
 **Problem**: 
 ```typescript
@@ -44,7 +44,7 @@ await executeToolCall(tool);  // Correct
 
 ### Bug #2: Chat IA - toolName Type Mismatch
 
-**Fichier**: [src/types/tool.types.ts](src/types/tool.types.ts)
+**Fichier**: [src/services/chat/toolCaller.ts](../../src/services/chat/toolCaller.ts)
 
 **Problem**:
 ```typescript
@@ -66,7 +66,7 @@ interface Tool {
 
 ### Bug #3: 🎤 MICRO CRASH - Recording Commands
 
-**Fichier**: [src/core/vocal/VocalDevConsoleEngine.ts](src/core/vocal/VocalDevConsoleEngine.ts)
+**Fichier**: [src/modules/vocalDev/VocalDevConsoleEngine.ts](../../src/modules/vocalDev/VocalDevConsoleEngine.ts)
 
 **Problem**:
 ```typescript
@@ -90,7 +90,7 @@ const result = await secureInvoke('stop_recording', {});   // ✅ Existe!
 
 ### Bug #4: Identity System - List Voice Profiles
 
-**Fichier**: [src/components/IdentityCenter/IdentityCenter.tsx](src/components/IdentityCenter/IdentityCenter.tsx)
+**Fichier**: [src/components/IdentityCenter/IdentityCenter.tsx](../../src/components/IdentityCenter/IdentityCenter.tsx)
 
 **Problem**:
 ```typescript
@@ -111,7 +111,7 @@ const profiles = await secureInvoke('identity_list_voice_profiles', {});
 
 ### Bug #5: Identity System - Set Active Voice Profile
 
-**Fichier**: [src/components/IdentityCenter/IdentityCenter.tsx](src/components/IdentityCenter/IdentityCenter.tsx)
+**Fichier**: [src/components/IdentityCenter/IdentityCenter.tsx](../../src/components/IdentityCenter/IdentityCenter.tsx)
 
 **Problem**:
 ```typescript
@@ -132,7 +132,7 @@ await secureInvoke('identity_set_active_voice_profile', { voiceProfileId });
 
 ### Bug #6: TTS System - Speak Command
 
-**Fichier**: [src/core/pipelines/UnifiedCognitivePipeline.ts](src/core/pipelines/UnifiedCognitivePipeline.ts)
+**Fichier**: [src/core/pipelines/UnifiedCognitivePipeline.ts](../../src/core/pipelines/UnifiedCognitivePipeline.ts)
 
 **Problem**:
 ```typescript
@@ -159,7 +159,7 @@ const audio = await secureInvoke('tts_speak', {
 
 ## 🔍 DÉCOUVERTE CRITIQUE: Commandes Fusion Non Implémentées
 
-**Fichier**: [src/core/singularity/SingularityFusionEngine.ts](src/core/singularity/SingularityFusionEngine.ts)
+**Fichier**: [src/core/singularity/SingularityFusionEngine.ts](../../src/core/singularity/SingularityFusionEngine.ts)
 
 ### ⚠️ DANGER: Commandes `fusion_*` Manquantes
 
@@ -260,15 +260,15 @@ Changes:
 
 ### Fichiers Corrigés
 
-1. ✅ [VocalDevConsoleEngine.ts](src/core/vocal/VocalDevConsoleEngine.ts) - Bug #3 fixed
-2. ✅ [IdentityCenter.tsx](src/components/IdentityCenter/IdentityCenter.tsx) - Bugs #4, #5 fixed
-3. ✅ [UnifiedCognitivePipeline.ts](src/core/pipelines/UnifiedCognitivePipeline.ts) - Bug #6 fixed
-4. ✅ [tauriCommands.ts](src/tauriCommands.ts) - Deprecated constant removed
-5. ✅ [tauriClient.ts](src/tauriClient.ts) - Deprecated method commented
+1. ✅ [VocalDevConsoleEngine.ts](../../src/modules/vocalDev/VocalDevConsoleEngine.ts) - Bug #3 fixed
+2. ✅ [IdentityCenter.tsx](../../src/components/IdentityCenter/IdentityCenter.tsx) - Bugs #4, #5 fixed
+3. ✅ [UnifiedCognitivePipeline.ts](../../src/core/pipelines/UnifiedCognitivePipeline.ts) - Bug #6 fixed
+4. ✅ [tauriCommands.ts](../../src/services/tauriCommands.ts) - Deprecated constant removed
+5. ✅ [tauriClient.ts](../../src/services/tauriClient.ts) - Deprecated method commented
 
 ### Fichiers À Vérifier (Commandes Fusion Non Implémentées)
 
-⚠️ **URGENT**: [SingularityFusionEngine.ts](src/core/singularity/SingularityFusionEngine.ts)
+⚠️ **URGENT**: [SingularityFusionEngine.ts](../../src/core/singularity/SingularityFusionEngine.ts)
 - 8 commandes `fusion_*` qui n'existent pas au backend
 - Nécessite SOIT implémentation backend SOIT désactivation frontend
 

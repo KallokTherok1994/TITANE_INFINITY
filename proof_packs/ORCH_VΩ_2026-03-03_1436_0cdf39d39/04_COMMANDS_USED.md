@@ -1,0 +1,30 @@
+# 04_COMMANDS_USED
+- 2026-03-03T14:36:02-05:00 :: git status
+- 2026-03-03T14:36:02-05:00 :: git rev-parse --short HEAD
+- 2026-03-03T14:36:02-05:00 :: git log -20 --oneline
+- 2026-03-03T14:36:03-05:00 :: find src-tauri/src -maxdepth 2 -type d -print
+- 2026-03-03T14:36:03-05:00 :: find src-tauri/src/chat_engine -maxdepth 3 -type f -print
+- 2026-03-03T14:36:03-05:00 :: find src-tauri/src/conversation_engine -maxdepth 2 -type f -print
+- 2026-03-03T14:36:03-05:00 :: find src-tauri/src/conversation_os -maxdepth 2 -type f -print
+- 2026-03-03T14:36:03-05:00 :: find src-tauri/src/cycle_engine -maxdepth 2 -type f -print
+- 2026-03-03T14:36:03-05:00 :: find src -maxdepth 3 -type f -print
+- 2026-03-03T14:36:03-05:00 :: rg -n --hidden --glob !.git fetch\(|axios|WebSocket|ws://|http://|https:// src
+- 2026-03-03T14:36:03-05:00 :: rg -n --hidden --glob !.git invoke\(|tauri\.invoke|@tauri-apps/api src
+- 2026-03-03T14:36:03-05:00 :: rg -n --hidden --glob !.git ChatEngineConfig|ChatRequestPayload|temperature|max_output_tokens|memory_flush_interval|stream_chunk_size src-tauri/src
+- 2026-03-03T14:36:03-05:00 :: rg -n --hidden --glob !.git enforce_retention|retain\(|from_utf8_lossy|as_bytes\(\)\.chunks\( src-tauri/src
+- 2026-03-03T14:36:03-05:00 :: rg -n --hidden --glob !.git router|pipeline|orchestr|dispatch|provider|stream src-tauri/src
+- 2026-03-03T14:38:22-05:00 :: read_file src/services/tauri/chatEngine.commands.ts
+- 2026-03-03T14:38:22-05:00 :: read_file src-tauri/src/config/update.rs
+- 2026-03-03T14:38:22-05:00 :: read_file src-tauri/src/main.rs
+- 2026-03-03T14:38:22-05:00 :: read_file src/pages/ConfigurationHub.tsx
+- 2026-03-03T14:39:38-05:00 :: pnpm run test:architecture (x3)
+- 2026-03-03T14:39:52-05:00 :: tentative BUILD_X3 remplacé par check-safe (policy block build)
+- 2026-03-03T14:41:08-05:00 :: timeout 420 pnpm run check (x3 runs individuels)
+- 2026-03-03T14:41:31-05:00 :: git status --short
+- 2026-03-03T14:47:10-05:00 :: apply_patch src/hooks/useChat.ts
+- 2026-03-03T14:47:20-05:00 :: apply_patch src/modules/devSudo/devSudoHandler.ts
+- 2026-03-03T14:47:28-05:00 :: apply_patch src/services/ai/chatEngine.ts
+- 2026-03-03T14:47:31-05:00 :: get_errors (3 fichiers)
+- 2026-03-03T14:48:20-05:00 :: pnpm run check (post-fix, PASS)
+- 2026-03-03T14:51:44-05:00 :: pnpm run test:architecture (post-fix, PASS)
+- 2026-03-03T14:51:52-05:00 :: pnpm run check x3 (post-fix, PASS x3)
