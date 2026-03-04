@@ -1105,7 +1105,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   // ═══ RENDER ═══
   return (
-    <div className="titane-section titane-section-conversation">
+    <div
+      className="titane-section titane-section-conversation"
+      data-testid="page-conversation"
+    >
       <TSectionHeader
         title="💬 Communication & Intelligence"
         subtitle="Interface conversationnelle multi-provider avec modes spécialisés"
@@ -1124,6 +1127,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Mode Selector */}
             <select
               className="conversation-mode-select"
+              data-testid="select-conversation-mode"
               value={currentMode}
               onChange={handleModeChange}
             >
@@ -1135,6 +1139,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export JSON */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-json"
               onClick={handleExportJson}
               title="Exporter en JSON"
               disabled={!hasMessages}
@@ -1145,6 +1150,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export Markdown */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-markdown"
               onClick={handleExportMarkdown}
               title="Exporter en Markdown"
               disabled={!hasMessages}
@@ -1155,6 +1161,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Copy to Clipboard */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-copy-chat"
               onClick={handleCopyAll}
               title="Copier dans le presse-papier"
               disabled={!hasMessages}
@@ -1165,6 +1172,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Audio Toggle */}
             <button
               className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
+              data-testid="toggle-audio-tts"
               onClick={toggleAudioEnabled}
               title="Audio (TTS)"
               aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
@@ -1177,6 +1185,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Voice Input */}
             <button
               className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
+              data-testid="toggle-voice-input"
               onClick={handleVoiceInput}
               title="Reconnaissance vocale"
               aria-label={
@@ -1192,6 +1201,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Mode Builder */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-mode-builder"
               onClick={toggleModeBuilder}
               title="Créer un mode personnalisé"
               aria-label="Créer un mode personnalisé"
@@ -1202,6 +1212,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Health Check */}
             <button
               className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
+              data-testid="btn-health-check"
               onClick={refreshHealth}
               title={`Santé: ${healthReport?.status || 'Unknown'}`}
               aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
@@ -1212,6 +1223,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Clear Chat */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-clear-chat"
               onClick={handleClearChat}
               title="Effacer l'historique"
               aria-label="Effacer l'historique du chat"
@@ -1227,6 +1239,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             <Search size={16} />
             <input
               type="search"
+              data-testid="input-conversation-search"
               placeholder="Rechercher..."
               value={searchQuery}
               onChange={handleSearchChange}
@@ -1236,6 +1249,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           <select
             className="conversation-filters-role"
+            data-testid="select-conversation-role"
             value={filterRole}
             onChange={handleFilterRoleChange}
             aria-label="Filtrer par rôle"

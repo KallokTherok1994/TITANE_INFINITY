@@ -14,7 +14,7 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useMemo, useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { ModuleCard } from '../components/ModuleCard';
 import { useEngineSubscription } from '../hooks/useEngineSubscription';
@@ -78,36 +78,35 @@ export const Stats: React.FC = () => {
   const [cognitiveMetrics, setCognitiveMetrics] = useState<CognitiveMetrics | null>(null);
   const [cognitiveLoading, setCognitiveLoading] = useState(true);
 
-  useEffect(() => {
-    let mounted = true;
-
-    const fetchCognitive = async () => {
-      try {
-        const data =
-          (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
-        if (mounted) {
-          setCognitiveMetrics(data);
-          setCognitiveLoading(false);
-        }
-      } catch (error) {
-        console.error('[Stats] Error fetching cognitive state:', error);
-        if (mounted) {
-          setCognitiveLoading(false);
-        }
+  const fetchCognitive = useCallback(async (signal: AbortSignal) => {
+    try {
+      const data =
+        (await tauriClient.orchestrationGetCognitiveState()) as CognitiveMetrics | null;
+      if (signal.aborted) return;
+      setCognitiveMetrics(data);
+      setCognitiveLoading(false);
+    } catch (error) {
+      console.error('[Stats] Error fetching cognitive state:', error);
+      if (!signal.aborted) {
+        setCognitiveLoading(false);
       }
-    };
+    }
+  }, []);
 
-    // Initial fetch
-    fetchCognitive();
+  useEffect(() => {
+    const controller = new AbortController();
+    void fetchCognitive(controller.signal);
 
     // Polling every 5s
-    const intervalId = setInterval(fetchCognitive, 5000);
+    const intervalId = setInterval(() => {
+      void fetchCognitive(controller.signal);
+    }, 5000);
 
     return () => {
-      mounted = false;
+      controller.abort();
       clearInterval(intervalId);
     };
-  }, []);
+  }, [fetchCognitive]);
 
   // ═══ Extraction des données typées ═══
   const { data: nexusGraph, loading: nexusLoading } = nexusData as {
@@ -178,7 +177,7 @@ export const Stats: React.FC = () => {
   }
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-stats">
       {/* ═══ HEADER ═══ */}
       <div className="module-header">
         <div className="module-title-group">

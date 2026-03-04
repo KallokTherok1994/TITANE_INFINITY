@@ -14,6 +14,7 @@ const TAURI_DRIVER_LOG = path.join(REPORTS, 'tauri_driver.log');
 const WEBKIT_LOG = path.join(REPORTS, 'webkit_driver.log');
 const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
 const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
+const WDIO_SPEC = process.env.WDIO_SPEC || '';
 
 await fs.mkdir(REPORTS, { recursive: true });
 await fs.writeFile(DIAG_LOG, '');
@@ -94,8 +95,13 @@ const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
 
 await waitForPort(4444).catch(() => false);
 
-await appendDiag(`wdio command: pnpm exec wdio run ${WDIO_CONFIG}`);
-const wdio = spawnLogged('pnpm', ['exec', 'wdio', 'run', WDIO_CONFIG], WDIO_LOG);
+const wdioArgs = ['exec', 'wdio', 'run', WDIO_CONFIG];
+if (WDIO_SPEC) {
+  wdioArgs.push('--spec', WDIO_SPEC);
+}
+
+await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);
+const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG);
 
 const shutdown = () => {
   for (const child of [wdio, tauriDriver]) {

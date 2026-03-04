@@ -227,6 +227,7 @@ const DevToolsSection = memo(() => {
         {operations.map(op => (
           <button
             key={op.id}
+            data-testid={`btn-dev-operation-${op.id}`}
             className={`dev-operation-card ${selectedOperation === op.id ? 'dev-operation-card--active' : ''}`}
             onClick={() => setSelectedOperation(op.id)}
           >
@@ -242,7 +243,10 @@ const DevToolsSection = memo(() => {
         <p className="dev-operation-info">
           Utilisez DevModeEngine pour exécuter des opérations de développement avancées.
         </p>
-        <button className="dev-btn dev-btn--primary">
+        <button
+          className="dev-btn dev-btn--primary"
+          data-testid="btn-dev-execute-operation"
+        >
           Exécuter {operations.find(op => op.id === selectedOperation)?.name}
         </button>
       </div>
@@ -329,6 +333,7 @@ const SystemCommandsSection = memo<{
         {commands.map(cmd => (
           <button
             key={cmd.id}
+            data-testid={`btn-dev-command-${cmd.id}`}
             className={`dev-command-btn ${cmd.danger ? 'dev-command-btn--danger' : 'dev-command-btn--primary'}`}
             onClick={() => onExecute(cmd.id)}
           >
@@ -404,6 +409,7 @@ const QATestsSection = memo<{
             </div>
             <button
               className="dev-btn dev-btn--small dev-btn--primary"
+              data-testid={`btn-dev-run-suite-${suite.id}`}
               onClick={() => onRunSuite(suite.id)}
             >
               Exécuter
@@ -529,6 +535,7 @@ const SecuritySection = memo<{
               <p className="dev-alert-message">{alert.message}</p>
               <button
                 className="dev-btn dev-btn--small"
+                data-testid={`btn-dev-ack-alert-${alert.id}`}
                 onClick={() => onAcknowledge(alert.id)}
               >
                 Acquitter
@@ -765,13 +772,17 @@ function DevPageContent(): JSX.Element {
   ];
 
   return (
-    <div className="dev-page">
+    <div className="dev-page" data-testid="page-dev">
       <header className="dev-header">
         <div className="dev-header-content">
           <h1>🔧 DEV Center</h1>
           <span className="dev-version">TITANE∞ v25.4.0 • DEV Fusion</span>
         </div>
-        <button className="dev-btn dev-btn--primary" onClick={loadData}>
+        <button
+          className="dev-btn dev-btn--primary"
+          data-testid="btn-dev-refresh"
+          onClick={loadData}
+        >
           🔄 Rafraîchir
         </button>
       </header>
@@ -780,6 +791,7 @@ function DevPageContent(): JSX.Element {
         {sections.map(section => (
           <button
             key={section.id}
+            data-testid={`tab-dev-${section.id}`}
             className={`dev-tab ${activeSection === section.id ? 'dev-tab--active' : ''}`}
             onClick={() => setActiveSection(section.id)}
           >
@@ -797,7 +809,11 @@ function DevPageContent(): JSX.Element {
             orchestration={orchestration}
           />
         )}
-        {activeSection === 'diagnostic' && <OnlineDiagnostic />}
+        {activeSection === 'diagnostic' && (
+          <div data-testid="page-dev-diagnostic">
+            <OnlineDiagnostic />
+          </div>
+        )}
         {activeSection === 'devtools' && <DevToolsSection />}
         {activeSection === 'command-center' && (
           <CommandCenterSection state={oneCoreState} />

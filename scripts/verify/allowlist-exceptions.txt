@@ -1,0 +1,2 @@
+# Commands intentionally registered but not frontend-whitelisted.
+# Keep this list minimal and documented.
