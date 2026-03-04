@@ -10,13 +10,13 @@
  * FIX: RV-001 — déplace l'I/O de Ring2 vers Ring3.
  */
 
-import { queryOllama } from '@/utils/ollama';
-import { safeInvoke } from '@/utils/invoke';
-import { singularityEngine } from '@/core/engines/SINGULARITY_ENGINE';
+import { queryOllama } from "@/utils/ollama";
+import { safeInvoke } from "@/utils/invoke";
+import { singularityEngine } from "@/core/engines/SINGULARITY_ENGINE";
 import {
   evaluateRemediationInstructionPermission,
   type RemediationPermissionDecision,
-} from '@/engines/selfHealing/remediationPermissionsEngine';
+} from "@/engines/selfHealing/remediationPermissionsEngine";
 import {
   selectPlaybook,
   buildPrompt,
@@ -24,7 +24,7 @@ import {
   clampConfidence,
   isEscalationChannel,
   normalizePatch,
-} from '@/engines/selfHealing/selfHealingEngine';
+} from "@/engines/selfHealing/selfHealingEngine";
 import type {
   SelfHealingLogEntry,
   SelfHealingContext,
@@ -34,7 +34,7 @@ import type {
   EscalationResult,
   EscalationChannel,
   PlaybookPlan,
-} from '@/engines/selfHealing/selfHealingEngine';
+} from "@/engines/selfHealing/selfHealingEngine";
 
 export type {
   SelfHealingLogEntry,
@@ -52,22 +52,24 @@ export type {
 // ─────────────────────────────────────────────────────────────────
 
 type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
-type EngineSingularityPartial = Parameters<typeof singularityEngine.setState>[0];
+type EngineSingularityPartial = Parameters<
+  typeof singularityEngine.setState
+>[0];
 
 interface MinimalInvokePatch {
-  action: 'invoke';
+  action: "invoke";
   command: string;
   payload?: Record<string, unknown>;
 }
 
 interface MinimalStatePatch {
-  action: 'state-update';
+  action: "state-update";
   path: string;
   value: unknown;
 }
 
 interface MinimalStoreResetPatch {
-  action: 'store-reset';
+  action: "store-reset";
   store: string;
 }
 
@@ -88,7 +90,7 @@ const CONFIDENCE_THRESHOLD = 0.65;
 
 export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
   try {
-    const rawLogs = await safeInvoke<unknown[]>('get_logs');
+    const rawLogs = await safeInvoke<unknown[]>("get_logs");
 
     if (!Array.isArray(rawLogs)) {
       return [];
@@ -97,45 +99,48 @@ export async function collectLogs(): Promise<SelfHealingLogEntry[]> {
     const normalized: SelfHealingLogEntry[] = [];
 
     for (const entry of rawLogs) {
-      if (typeof entry !== 'object' || entry === null) {
+      if (typeof entry !== "object" || entry === null) {
         continue;
       }
 
       const item = entry as Record<string, unknown>;
-      const timestamp = typeof item.timestamp === 'number' ? item.timestamp : Date.now();
-      const level = typeof item.level === 'string' ? item.level : 'INFO';
+      const timestamp =
+        typeof item.timestamp === "number" ? item.timestamp : Date.now();
+      const level = typeof item.level === "string" ? item.level : "INFO";
       const message =
-        typeof item.message === 'string' ? item.message : JSON.stringify(item);
-      const target = typeof item.target === 'string' ? item.target : undefined;
-      const scope = typeof item.scope === 'string' ? item.scope : undefined;
+        typeof item.message === "string" ? item.message : JSON.stringify(item);
+      const target = typeof item.target === "string" ? item.target : undefined;
+      const scope = typeof item.scope === "string" ? item.scope : undefined;
 
       normalized.push({ timestamp, level, message, target, scope });
     }
 
     return normalized;
   } catch (error) {
-    console.error('[SelfHealing] collectLogs failed:', error);
+    console.error("[SelfHealing] collectLogs failed:", error);
     return [];
   }
 }
 
 export async function collectState(): Promise<EngineSingularityState | null> {
   try {
-    const remoteState = await safeInvoke<EngineSingularityState>('singularity_get_state');
+    const remoteState = await safeInvoke<EngineSingularityState>(
+      "singularity_get_state",
+    );
 
     if (remoteState) {
       return remoteState;
     }
   } catch (error) {
-    console.warn('[SelfHealing] collectState invoke fallback:', error);
+    console.warn("[SelfHealing] collectState invoke fallback:", error);
   }
 
   try {
-    if (typeof singularityEngine.getState === 'function') {
+    if (typeof singularityEngine.getState === "function") {
       return singularityEngine.getState();
     }
   } catch (error) {
-    console.error('[SelfHealing] collectState engine fallback failed:', error);
+    console.error("[SelfHealing] collectState engine fallback failed:", error);
   }
 
   return null;
@@ -143,45 +148,46 @@ export async function collectState(): Promise<EngineSingularityState | null> {
 
 async function fetchRecentInvocations(): Promise<string[]> {
   try {
-    const logs = await safeInvoke<unknown[]>('read_logs', { count: 10 });
+    const logs = await safeInvoke<unknown[]>("read_logs", { count: 10 });
     if (!Array.isArray(logs)) {
       return [];
     }
 
     return logs
-      .map(entry => {
-        if (typeof entry !== 'object' || entry === null) {
+      .map((entry) => {
+        if (typeof entry !== "object" || entry === null) {
           return null;
         }
 
         const item = entry as Record<string, unknown>;
-        return typeof item.message === 'string' ? item.message : null;
+        return typeof item.message === "string" ? item.message : null;
       })
       .filter((message): message is string => Boolean(message));
   } catch (error) {
-    console.warn('[SelfHealing] fetchRecentInvocations failed:', error);
+    console.warn("[SelfHealing] fetchRecentInvocations failed:", error);
     return [];
   }
 }
 
 async function fetchUiAnomalies(): Promise<string[]> {
   try {
-    const health = await safeInvoke<Record<string, unknown>>('get_system_health');
+    const health =
+      await safeInvoke<Record<string, unknown>>("get_system_health");
     if (!health) {
       return [];
     }
 
     const anomalies: string[] = [];
 
-    if (typeof health.health === 'string' && health.health !== 'healthy') {
+    if (typeof health.health === "string" && health.health !== "healthy") {
       anomalies.push(`health-status:${health.health}`);
     }
 
-    if (typeof health.error_count === 'number' && health.error_count > 0) {
+    if (typeof health.error_count === "number" && health.error_count > 0) {
       anomalies.push(`errors:${health.error_count}`);
     }
 
-    if (typeof health.modules === 'object' && health.modules !== null) {
+    if (typeof health.modules === "object" && health.modules !== null) {
       const modules = health.modules as Record<string, unknown>;
       for (const [module, status] of Object.entries(modules)) {
         if (status === false) {
@@ -198,14 +204,16 @@ async function fetchUiAnomalies(): Promise<string[]> {
 
 async function fetchSelfHealingMetadata(): Promise<Record<string, unknown>> {
   try {
-    const info = await safeInvoke<Record<string, unknown>>('get_system_info');
+    const info = await safeInvoke<Record<string, unknown>>("get_system_info");
     return info ?? {};
   } catch (_error) {
     return {};
   }
 }
 
-export async function collectContext(symptoms: string): Promise<SelfHealingContext> {
+export async function collectContext(
+  symptoms: string,
+): Promise<SelfHealingContext> {
   const recentInvocations = await fetchRecentInvocations();
   const uiAnomalies = await fetchUiAnomalies();
   const metadata = await fetchSelfHealingMetadata();
@@ -231,7 +239,7 @@ export async function callTitaneLocal(prompt: string): Promise<string> {
     const response = await queryOllama(prompt);
     return response.trim();
   } catch (error) {
-    console.error('[SelfHealing] callTitaneLocal failed:', error);
+    console.error("[SelfHealing] callTitaneLocal failed:", error);
     throw error;
   }
 }
@@ -243,29 +251,29 @@ export async function callTitaneLocal(prompt: string): Promise<string> {
 async function emitRemediationPermissionAudit(
   instruction: MinimalPatchInstruction,
   decision: RemediationPermissionDecision,
-  playbookId?: string
+  playbookId?: string,
 ): Promise<void> {
   const kind = decision.allowed
-    ? 'remediation_permission_granted'
-    : 'remediation_permission_denied';
+    ? "remediation_permission_granted"
+    : "remediation_permission_denied";
 
   const payload = {
     kind,
     timestamp: Date.now(),
-    playbookId: playbookId ?? 'default',
+    playbookId: playbookId ?? "default",
     action: instruction.action,
     reason: decision.reason,
     allowed: decision.allowed,
   };
 
   await Promise.allSettled([
-    safeInvoke('write_log', { log: payload }),
-    safeInvoke('add_timeline_event', {
+    safeInvoke("write_log", { log: payload }),
+    safeInvoke("add_timeline_event", {
       event: {
         id: `remediation-perm-${payload.timestamp}`,
         timestamp: payload.timestamp,
         event_type: kind,
-        description: `${payload.action} ${payload.allowed ? 'granted' : 'denied'} (${payload.reason})`,
+        description: `${payload.action} ${payload.allowed ? "granted" : "denied"} (${payload.reason})`,
       },
     }),
   ]);
@@ -273,7 +281,7 @@ async function emitRemediationPermissionAudit(
 
 function buildPartialFromPath(
   segments: string[],
-  value: unknown
+  value: unknown,
 ): EngineSingularityPartial {
   const root: Record<string, unknown> = {};
   let cursor = root;
@@ -285,7 +293,7 @@ function buildPartialFromPath(
     }
 
     const existing = cursor[segment];
-    if (typeof existing === 'object' && existing !== null) {
+    if (typeof existing === "object" && existing !== null) {
       cursor = existing as Record<string, unknown>;
     } else {
       const nested: Record<string, unknown> = {};
@@ -299,12 +307,12 @@ function buildPartialFromPath(
 
 function applyStateUpdate(path: string, value: unknown): void {
   const segments = path
-    .split('.')
-    .map(segment => segment.trim())
+    .split(".")
+    .map((segment) => segment.trim())
     .filter(Boolean);
 
   if (segments.length === 0) {
-    throw new Error('Chemin de mise à jour vide.');
+    throw new Error("Chemin de mise à jour vide.");
   }
 
   const partial = buildPartialFromPath(segments, value);
@@ -313,8 +321,8 @@ function applyStateUpdate(path: string, value: unknown): void {
 
 async function resetStore(storeName: string): Promise<void> {
   const supportedStores: Record<string, () => Promise<unknown>> = {
-    ui: () => safeInvoke('system_optimize'),
-    memory: () => safeInvoke('reset_memory'),
+    ui: () => safeInvoke("system_optimize"),
+    memory: () => safeInvoke("reset_memory"),
   };
 
   const resetFn = supportedStores[storeName];
@@ -328,7 +336,7 @@ async function resetStore(storeName: string): Promise<void> {
 
 export async function applyMinimalPatch(
   patch: unknown,
-  options?: PatchExecutionOptions
+  options?: PatchExecutionOptions,
 ): Promise<ApplyPatchResult> {
   const steps: string[] = [];
   const errors: string[] = [];
@@ -337,10 +345,16 @@ export async function applyMinimalPatch(
 
   for (const instruction of instructions) {
     const permission = evaluateRemediationInstructionPermission(
-      instruction as Parameters<typeof evaluateRemediationInstructionPermission>[0],
-      options?.playbookId
+      instruction as Parameters<
+        typeof evaluateRemediationInstructionPermission
+      >[0],
+      options?.playbookId,
     );
-    await emitRemediationPermissionAudit(instruction, permission, options?.playbookId);
+    await emitRemediationPermissionAudit(
+      instruction,
+      permission,
+      options?.playbookId,
+    );
 
     if (!permission.allowed) {
       errors.push(`PERMISSION_DENIED:${permission.reason}`);
@@ -349,24 +363,24 @@ export async function applyMinimalPatch(
 
     try {
       switch (instruction.action) {
-        case 'invoke': {
+        case "invoke": {
           await safeInvoke(instruction.command, instruction.payload ?? {});
           steps.push(`invoke:${instruction.command}`);
           break;
         }
-        case 'state-update': {
+        case "state-update": {
           applyStateUpdate(instruction.path, instruction.value);
           steps.push(`state-update:${instruction.path}`);
           break;
         }
-        case 'store-reset': {
+        case "store-reset": {
           await resetStore(instruction.store);
           steps.push(`store-reset:${instruction.store}`);
           break;
         }
         default: {
           errors.push(
-            `Action inconnue: ${(instruction as MinimalPatchInstruction).action}`
+            `Action inconnue: ${(instruction as MinimalPatchInstruction).action}`,
           );
         }
       }
@@ -388,32 +402,32 @@ export async function applyMinimalPatch(
 // ─────────────────────────────────────────────────────────────────
 
 export async function escalateIfNeeded(
-  result: SelfHealingStructuredResult
+  result: SelfHealingStructuredResult,
 ): Promise<EscalationResult> {
   const confidence = clampConfidence(result.confidence);
 
-  if (confidence >= CONFIDENCE_THRESHOLD && result.escalade === 'aucune') {
+  if (confidence >= CONFIDENCE_THRESHOLD && result.escalade === "aucune") {
     return {
       triggered: false,
-      channel: 'aucune',
+      channel: "aucune",
       reason: "Confiance suffisante, pas d'escalade.",
     };
   }
 
   const channel: EscalationChannel =
-    result.escalade === 'aucune' && confidence < CONFIDENCE_THRESHOLD
-      ? 'codex'
+    result.escalade === "aucune" && confidence < CONFIDENCE_THRESHOLD
+      ? "codex"
       : result.escalade;
 
-  console.warn('[SelfHealing] Escalation triggered:', {
+  console.warn("[SelfHealing] Escalation triggered:", {
     channel,
     confidence,
     diagnostic: result.diagnostic,
   });
 
-  await safeInvoke('write_log', {
+  await safeInvoke("write_log", {
     log: {
-      kind: 'self-healing-escalation',
+      kind: "self-healing-escalation",
       channel,
       confidence,
       diagnostic: result.diagnostic,
@@ -426,17 +440,19 @@ export async function escalateIfNeeded(
     channel,
     reason:
       confidence < CONFIDENCE_THRESHOLD
-        ? 'Confiance insuffisante (< 0.65).'
+        ? "Confiance insuffisante (< 0.65)."
         : `Escalade demandée par TITANE Local (${channel}).`,
   };
 }
 
-async function syncSingularityLearning(result: SelfHealingRunResult): Promise<void> {
+async function syncSingularityLearning(
+  result: SelfHealingRunResult,
+): Promise<void> {
   try {
     const current = singularityEngine.getState();
     const interpretations = [
       {
-        type: 'self-healing-trace',
+        type: "self-healing-trace",
         confidence: result.parsed.confidence,
         description: result.parsed.diagnostic,
         timestamp: Date.now(),
@@ -451,15 +467,17 @@ async function syncSingularityLearning(result: SelfHealingRunResult): Promise<vo
       },
     } as EngineSingularityPartial);
   } catch (error) {
-    console.warn('[SelfHealing] syncSingularityLearning failed:', error);
+    console.warn("[SelfHealing] syncSingularityLearning failed:", error);
   }
 }
 
-export async function storeLearning(result: SelfHealingRunResult): Promise<void> {
+export async function storeLearning(
+  result: SelfHealingRunResult,
+): Promise<void> {
   const data = result;
 
   const record = {
-    kind: 'self-healing-cycle',
+    kind: "self-healing-cycle",
     timestamp: Date.now(),
     symptoms: data.context.symptoms,
     playbookId: data.playbook.id,
@@ -470,12 +488,12 @@ export async function storeLearning(result: SelfHealingRunResult): Promise<void>
   };
 
   await Promise.allSettled([
-    safeInvoke('write_log', { log: record }),
-    safeInvoke('add_timeline_event', {
+    safeInvoke("write_log", { log: record }),
+    safeInvoke("add_timeline_event", {
       event: {
         id: `self-healing-${record.timestamp}`,
         timestamp: record.timestamp,
-        event_type: 'SelfHealingCycle',
+        event_type: "SelfHealingCycle",
         description: `Playbook ${data.playbook.id} appliqué (confiance ${(record.confidence * 100).toFixed(0)}%).`,
       },
     }),
@@ -492,7 +510,9 @@ export async function storeLearning(result: SelfHealingRunResult): Promise<void>
  * Collecte les données (I/O), délègue la logique pure au Ring2,
  * puis exécute les actions correctives (I/O).
  */
-export async function runSelfHealing(symptoms: string): Promise<SelfHealingRunResult> {
+export async function runSelfHealing(
+  symptoms: string,
+): Promise<SelfHealingRunResult> {
   const logs = await collectLogs();
   const state = await collectState();
   const baseContext = await collectContext(symptoms);

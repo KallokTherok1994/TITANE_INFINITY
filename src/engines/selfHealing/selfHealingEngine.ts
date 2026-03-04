@@ -7,7 +7,7 @@
  * I/O orchestration lives in Ring 3: src/services/selfHealing/selfHealingIOAdapter.ts
  */
 
-import { AutoRcaEngine, type AutoRcaCategory } from './autoRcaEngine';
+import { AutoRcaEngine, type AutoRcaCategory } from "./autoRcaEngine";
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
@@ -41,7 +41,7 @@ export interface PlaybookPlan {
   successCriteria: string;
 }
 
-export type EscalationChannel = 'aucune' | 'codex' | 'opus' | 'gemini';
+export type EscalationChannel = "aucune" | "codex" | "opus" | "gemini";
 
 export interface SelfHealingStructuredResult {
   diagnostic: string;
@@ -75,19 +75,19 @@ export interface SelfHealingRunResult {
 }
 
 interface MinimalInvokePatch {
-  action: 'invoke';
+  action: "invoke";
   command: string;
   payload?: Record<string, unknown>;
 }
 
 interface MinimalStatePatch {
-  action: 'state-update';
+  action: "state-update";
   path: string;
   value: unknown;
 }
 
 interface MinimalStoreResetPatch {
-  action: 'store-reset';
+  action: "store-reset";
   store: string;
 }
 
@@ -102,37 +102,38 @@ interface PatchExecutionOptions {
 
 const PLAYBOOK_REGISTRY: PlaybookPlan[] = [
   {
-    id: 'runtime-errors',
-    label: 'Stabilisation Runtime',
-    description: 'Diagnostiquer et neutraliser les erreurs runtime répétées.',
+    id: "runtime-errors",
+    label: "Stabilisation Runtime",
+    description: "Diagnostiquer et neutraliser les erreurs runtime répétées.",
     steps: [
-      'Analyser la pile des erreurs et repérer la commande Tauri fautive.',
-      'Vérifier la synchronisation des stores React/Tauri.',
-      'Appliquer un patch minimal (invoke ou reset ciblé) si possible.',
+      "Analyser la pile des erreurs et repérer la commande Tauri fautive.",
+      "Vérifier la synchronisation des stores React/Tauri.",
+      "Appliquer un patch minimal (invoke ou reset ciblé) si possible.",
     ],
-    successCriteria: 'Absence de nouvelle erreur sur la commande identifiée.',
+    successCriteria: "Absence de nouvelle erreur sur la commande identifiée.",
   },
   {
-    id: 'ui-desync',
-    label: 'Re-synchronisation UI',
-    description: 'Identifier les désynchronisations UI <-> backend et resynchroniser.',
+    id: "ui-desync",
+    label: "Re-synchronisation UI",
+    description:
+      "Identifier les désynchronisations UI <-> backend et resynchroniser.",
     steps: [
-      'Inspecter les logs UI/UX et les anomalies déclarées.',
-      'Valider le dernier état Singularity pour détecter les divergences.',
-      'Reset ciblé du store ou relance du pipeline concerné.',
+      "Inspecter les logs UI/UX et les anomalies déclarées.",
+      "Valider le dernier état Singularity pour détecter les divergences.",
+      "Reset ciblé du store ou relance du pipeline concerné.",
     ],
-    successCriteria: 'Interface réactive et alignée sur SingularityState.',
+    successCriteria: "Interface réactive et alignée sur SingularityState.",
   },
   {
-    id: 'performance-drift',
-    label: 'Stabilisation Performance',
-    description: 'Limiter les dérives de performance et rétablir la cohérence.',
+    id: "performance-drift",
+    label: "Stabilisation Performance",
+    description: "Limiter les dérives de performance et rétablir la cohérence.",
     steps: [
-      'Analyser les métriques de performance récentes.',
-      'Identifier le moteur responsable (pipeline, avatar, TTS...).',
-      'Appliquer un correctif léger (throttle, reset ciblé).',
+      "Analyser les métriques de performance récentes.",
+      "Identifier le moteur responsable (pipeline, avatar, TTS...).",
+      "Appliquer un correctif léger (throttle, reset ciblé).",
     ],
-    successCriteria: 'Métriques stabilisées et drift contenu.',
+    successCriteria: "Métriques stabilisées et drift contenu.",
   },
 ];
 
@@ -146,7 +147,7 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
   const normalized = symptoms.toLowerCase();
   const autoRcaEngine = new AutoRcaEngine();
   const autoRca = autoRcaEngine.classify({
-    incidentId: `auto-rca-${normalized.slice(0, 24).replace(/\s+/g, '-') || 'incident'}`,
+    incidentId: `auto-rca-${normalized.slice(0, 24).replace(/\s+/g, "-") || "incident"}`,
     symptoms: normalized,
     timeline: [],
   });
@@ -154,30 +155,30 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
   const mappedPlaybookId = mapAutoRcaCategoryToPlaybookId(autoRca.category);
   if (mappedPlaybookId) {
     const mappedPlaybook = PLAYBOOK_REGISTRY.find(
-      playbook => playbook.id === mappedPlaybookId
+      (playbook) => playbook.id === mappedPlaybookId,
     );
     if (mappedPlaybook) {
       return mappedPlaybook;
     }
   }
 
-  const match = PLAYBOOK_REGISTRY.find(playbook => {
+  const match = PLAYBOOK_REGISTRY.find((playbook) => {
     if (
-      playbook.id === 'runtime-errors' &&
+      playbook.id === "runtime-errors" &&
       /error|exception|panic|stack/i.test(normalized)
     ) {
       return true;
     }
 
     if (
-      playbook.id === 'ui-desync' &&
+      playbook.id === "ui-desync" &&
       /ui|ux|desync|state|store|render/i.test(normalized)
     ) {
       return true;
     }
 
     if (
-      playbook.id === 'performance-drift' &&
+      playbook.id === "performance-drift" &&
       /slow|lag|performance|fps|drift/i.test(normalized)
     ) {
       return true;
@@ -190,23 +191,25 @@ export async function selectPlaybook(symptoms: string): Promise<PlaybookPlan> {
     match ??
     PLAYBOOK_REGISTRY[0] ??
     ({
-      id: 'unknown',
-      label: 'Unknown Playbook',
-      description: 'Default fallback playbook',
+      id: "unknown",
+      label: "Unknown Playbook",
+      description: "Default fallback playbook",
       steps: [],
-      successCriteria: 'Default success criteria',
+      successCriteria: "Default success criteria",
     } as PlaybookPlan)
   );
 }
 
-function mapAutoRcaCategoryToPlaybookId(category: AutoRcaCategory): string | null {
+function mapAutoRcaCategoryToPlaybookId(
+  category: AutoRcaCategory,
+): string | null {
   switch (category) {
-    case 'runtime-errors':
-      return 'runtime-errors';
-    case 'ui-desync':
-      return 'ui-desync';
-    case 'performance-drift':
-      return 'performance-drift';
+    case "runtime-errors":
+      return "runtime-errors";
+    case "ui-desync":
+      return "ui-desync";
+    case "performance-drift":
+      return "performance-drift";
     default:
       return null;
   }
@@ -214,23 +217,23 @@ function mapAutoRcaCategoryToPlaybookId(category: AutoRcaCategory): string | nul
 
 export async function buildPrompt(
   context: SelfHealingContext,
-  playbook: string
+  playbook: string,
 ): Promise<string> {
   const formattedLogs = context.logs
     .map(
-      entry =>
-        `${new Date(entry.timestamp).toISOString()} [${entry.level}] ${entry.message}`
+      (entry) =>
+        `${new Date(entry.timestamp).toISOString()} [${entry.level}] ${entry.message}`,
     )
-    .join('\n');
+    .join("\n");
 
   const stateSnapshot = context.state
     ? JSON.stringify(context.state, null, 2)
-    : 'Etat indisponible';
+    : "Etat indisponible";
 
   const prompt = `
 Tu es TITANE Local (modèle titane-local).
 Voici les logs :
-${formattedLogs || 'Aucun log disponible'}
+${formattedLogs || "Aucun log disponible"}
 
 Voici le state :
 ${stateSnapshot}
@@ -256,9 +259,8 @@ Retourne TOUJOURS au format structuré :
   return prompt.trim();
 }
 
-
 export async function parseLocalResponse(
-  raw: string
+  raw: string,
 ): Promise<SelfHealingStructuredResult> {
   const sanitized = raw.trim();
 
@@ -275,31 +277,31 @@ export async function parseLocalResponse(
       .replace(/CONFIDENCE\s*:/gi, '"CONFIDENCE":')
       .replace(/ESCALADE\s*:/gi, '"ESCALADE":')
       .replace(/\[(\s*"DIAGNOSTIC")/i, '{"DIAGNOSTIC"')
-      .replace(/\]$/, '}');
+      .replace(/\]$/, "}");
 
     try {
       parsed = JSON.parse(normalized);
     } catch (secondaryError) {
-      console.error('[SelfHealing] parseLocalResponse failed:', secondaryError);
+      console.error("[SelfHealing] parseLocalResponse failed:", secondaryError);
 
       return {
         diagnostic: sanitized,
-        playbookAnalysis: 'Analyse non structurée — fallback texte brut.',
+        playbookAnalysis: "Analyse non structurée — fallback texte brut.",
         patch: null,
         confidence: 0,
-        escalade: 'codex',
+        escalade: "codex",
         raw,
       };
     }
   }
 
-  if (typeof parsed !== 'object' || parsed === null) {
+  if (typeof parsed !== "object" || parsed === null) {
     return {
       diagnostic: sanitized,
-      playbookAnalysis: 'Réponse non structurée.',
+      playbookAnalysis: "Réponse non structurée.",
       patch: null,
       confidence: 0,
-      escalade: 'codex',
+      escalade: "codex",
       raw,
     };
   }
@@ -307,26 +309,28 @@ export async function parseLocalResponse(
   const response = parsed as Record<string, unknown>;
 
   const diagnostic =
-    typeof response.DIAGNOSTIC === 'string' ? response.DIAGNOSTIC : sanitized;
+    typeof response.DIAGNOSTIC === "string" ? response.DIAGNOSTIC : sanitized;
 
   const playbookAnalysis =
-    typeof response.PLAYBOOK_ANALYSIS === 'string'
+    typeof response.PLAYBOOK_ANALYSIS === "string"
       ? response.PLAYBOOK_ANALYSIS
-      : 'Analyse non fournie.';
+      : "Analyse non fournie.";
 
   const patch =
-    typeof response.PATCH === 'object' && response.PATCH !== null
+    typeof response.PATCH === "object" && response.PATCH !== null
       ? (response.PATCH as Record<string, unknown>)
       : null;
 
   const confidence =
-    typeof response.CONFIDENCE === 'number' ? clampConfidence(response.CONFIDENCE) : 0;
+    typeof response.CONFIDENCE === "number"
+      ? clampConfidence(response.CONFIDENCE)
+      : 0;
 
   const escalade = isEscalationChannel(response.ESCALADE)
     ? response.ESCALADE
     : confidence >= CONFIDENCE_THRESHOLD
-      ? 'aucune'
-      : 'codex';
+      ? "aucune"
+      : "codex";
 
   return {
     diagnostic,
@@ -338,8 +342,6 @@ export async function parseLocalResponse(
   };
 }
 
-
-
 export function clampConfidence(value: number): number {
   if (Number.isNaN(value)) {
     return 0;
@@ -347,9 +349,14 @@ export function clampConfidence(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
-export function isEscalationChannel(value: unknown): value is EscalationChannel {
+export function isEscalationChannel(
+  value: unknown,
+): value is EscalationChannel {
   return (
-    value === 'aucune' || value === 'codex' || value === 'opus' || value === 'gemini'
+    value === "aucune" ||
+    value === "codex" ||
+    value === "opus" ||
+    value === "gemini"
   );
 }
 
@@ -360,9 +367,9 @@ export function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
 
   if (Array.isArray(patch)) {
     return patch
-      .map(instruction => normalizePatchInstruction(instruction))
+      .map((instruction) => normalizePatchInstruction(instruction))
       .filter((instruction): instruction is MinimalPatchInstruction =>
-        Boolean(instruction)
+        Boolean(instruction),
       );
   }
 
@@ -370,17 +377,19 @@ export function normalizePatch(patch: unknown): MinimalPatchInstruction[] {
   return single ? [single] : [];
 }
 
-function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | null {
-  if (typeof value !== 'object' || value === null) {
+function normalizePatchInstruction(
+  value: unknown,
+): MinimalPatchInstruction | null {
+  if (typeof value !== "object" || value === null) {
     return null;
   }
 
   const instruction = value as Record<string, unknown>;
   const action = instruction.action;
 
-  if (action === 'invoke' && typeof instruction.command === 'string') {
+  if (action === "invoke" && typeof instruction.command === "string") {
     return {
-      action: 'invoke',
+      action: "invoke",
       command: instruction.command,
       payload: isPlainObject(instruction.payload)
         ? (instruction.payload as Record<string, unknown>)
@@ -388,17 +397,17 @@ function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | nu
     };
   }
 
-  if (action === 'state-update' && typeof instruction.path === 'string') {
+  if (action === "state-update" && typeof instruction.path === "string") {
     return {
-      action: 'state-update',
+      action: "state-update",
       path: instruction.path,
       value: instruction.value,
     };
   }
 
-  if (action === 'store-reset' && typeof instruction.store === 'string') {
+  if (action === "store-reset" && typeof instruction.store === "string") {
     return {
-      action: 'store-reset',
+      action: "store-reset",
       store: instruction.store,
     };
   }
@@ -408,9 +417,8 @@ function normalizePatchInstruction(value: unknown): MinimalPatchInstruction | nu
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {
   return (
-    typeof value === 'object' &&
+    typeof value === "object" &&
     value !== null &&
     Object.getPrototypeOf(value) === Object.prototype
   );
 }
-
