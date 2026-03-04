@@ -7,7 +7,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
-import { runSelfHealing } from '@/engines/selfHealing/selfHealingEngine';
+import { runSelfHealing } from '@/services/selfHealing/selfHealingIOAdapter';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
