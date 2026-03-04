@@ -107,7 +107,7 @@ export async function getGeminiKeyStatus(): Promise<SecureResponse<GeminiKeyStat
 export async function setOpenAIApiKey(
   apiKey: string
 ): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_openai_key', { api_key: apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
     'Impossible de sécuriser la clé OpenAI (runtime indisponible).'
@@ -131,7 +131,7 @@ export async function getOpenAIKeyStatus(): Promise<SecureResponse<GeminiKeyStat
 export async function setAnthropicApiKey(
   apiKey: string
 ): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { api_key: apiKey });
+  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { apiKey });
   return normalizeSecureResponse<GeminiKeyStatus>(
     raw,
     'Impossible de sécuriser la clé Anthropic (runtime indisponible).'

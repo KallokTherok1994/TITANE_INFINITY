@@ -145,7 +145,7 @@
 
 **Master Index:** [docs/INDEX.md](../INDEX.md) — Complete navigation  
 **Getting Started:** [docs/GETTING_STARTED.md](../GETTING_STARTED.md) — Role-based quick-start  
-**Contributing:** [CONTRIBUTING.md](../../CONTRIBUTING.md) — Contributor guide  
+**Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) — Contributor guide  
 **Architecture:** [docs/01_architecture/](../01_architecture/) — Technical deep-dive  
 **Guides:** [docs/04_guides/](../04_guides/) — User & advanced guides  
 **API Reference:** [docs/06_api/](../06_api/) — 100% API coverage

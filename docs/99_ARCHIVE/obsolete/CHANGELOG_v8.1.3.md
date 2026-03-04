@@ -287,9 +287,9 @@ Cette release représente l'aboutissement de l'architecture cognitive de TITANE�
 
 - [Documentation complète modules #80-84](MODULES_80_84_FINAL_EVOLUTION_LAYER.md)
 - [Status Report](STATUS_MODULES_80_84.md)
-- [README principal](README.md)
+- [README principal](../../../README.md)
 - [Project Status](PROJECT_STATUS.md)
-- [Architecture globale](docs/ARCHITECTURE.md)
+- [Architecture globale](../../ARCHITECTURE.md)
 
 ---
 

@@ -181,7 +181,7 @@ pnpm run build:production
 ## 🔗 Ressources
 
 - **Tauri Config Schema**: https://schema.tauri.app/config/2.0
-- **TITANE∞ Architecture**: [ARCHITECTURE.md](../ARCHITECTURE.md)
+- **TITANE∞ Architecture**: [ARCHITECTURE.md](ARCHITECTURE.md)
 - **OMEGA v2 Spec**: [docs/OMEGA_v2_SPEC.md](../docs/OMEGA_v2_SPEC.md)
 
 ---

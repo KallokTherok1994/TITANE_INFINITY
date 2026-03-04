@@ -706,7 +706,7 @@ cp docs/systems/AUTO_SYSTEMS_OPTIMIZATION_PLAN_v26.3.0.md docs/AUTO_SYSTEMS_OPTI
 TITANE∞ includes 31 automated systems for self-healing, auto-fix, crash protection, and monitoring.
 
 **Documentation:**
-- [Auto-Systems Audit (v26.3.0)](docs/AUTO_HEAL_SYSTEMS.md)
+- [Auto-Systems Audit (v26.3.0)](../AUTO_HEAL_SYSTEMS.md)
 - [Optimization Plan (v26.3.0)](docs/AUTO_SYSTEMS_OPTIMIZATION_PLAN.md)
 
 **Key Systems:**

@@ -1,4 +1,0 @@
-# G_UI_NO_NETWORK — P7 frontend files
-# Date: 2026-02-24T18:58:52Z
-PASS — zero fetch()/axios in P7 frontend files
-VERDICT: PASS

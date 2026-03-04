@@ -9,7 +9,42 @@
  */
 
 import { safeInvokeTauri } from '@/utils/tauriProtector';
-import monitoring from '@/monitoring';
+
+type MonitoringBridge = {
+  trackRequest: () => void;
+  addBreadcrumb: (message: string, category?: string, data?: unknown) => void;
+  trackPipelineError: () => void;
+  trackPipelineLatency: (latency: number) => void;
+  trackError: (error: unknown, context?: unknown) => void;
+};
+
+const noopMonitoring: MonitoringBridge = {
+  trackRequest: () => {},
+  addBreadcrumb: () => {},
+  trackPipelineError: () => {},
+  trackPipelineLatency: () => {},
+  trackError: () => {},
+};
+
+let monitoringBridge: MonitoringBridge = noopMonitoring;
+
+void import('@/monitoring')
+  .then(mod => {
+    const candidate = (mod.monitoring ?? mod.default) as MonitoringBridge | undefined;
+    if (candidate) {
+      monitoringBridge = candidate;
+    }
+  })
+  .catch(() => {});
+
+const monitoring: MonitoringBridge = {
+  trackRequest: () => monitoringBridge.trackRequest(),
+  addBreadcrumb: (message, category, data) =>
+    monitoringBridge.addBreadcrumb(message, category, data),
+  trackPipelineError: () => monitoringBridge.trackPipelineError(),
+  trackPipelineLatency: latency => monitoringBridge.trackPipelineLatency(latency),
+  trackError: (error, context) => monitoringBridge.trackError(error, context),
+};
 
 // ────────────────────────────────────────────────────────────────
 // Constants
@@ -978,11 +1013,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // CONFIG HUB (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'get_all_configs',
+  'get_chat_engine_config',
+  'get_chat_request_defaults',
   'export_config',
   'import_config',
   'list_config_presets',
   'update_runtime_config',
   'update_chat_engine_config',
+  'set_chat_engine_config',
+  'set_chat_request_defaults',
+  'set_chat_profile',
   'save_config_preset',
   'load_config_preset',
   'delete_config_preset',
@@ -1717,6 +1757,13 @@ export function sanitizeResponse<T>(response: T): T {
 function normalizeInvokeError(command: string, error: unknown): Error {
   const err = error instanceof Error ? error : new Error(String(error));
   const isAbort = err.name === 'AbortError' || /aborted/i.test(err.message);
+  const isTimeout = /timeout after|Timeout after/i.test(err.message);
+
+  if (isTimeout) {
+    const timeoutError = new Error(`IPC timeout for ${command}`);
+    timeoutError.name = 'IPC_TIMEOUT';
+    return timeoutError;
+  }
 
   if (!isAbort) {
     return err;
@@ -1750,6 +1797,8 @@ export async function secureInvoke<T>(
       localNetworkMode.trustedCommands.has(command));
 
   const startedAt = Date.now();
+  const invokeId = `${startedAt}-${Math.random().toString(36).slice(2, 10)}`;
+  console.info(`IPC:START ${command} ${invokeId}`);
   try {
     monitoring.trackRequest();
     monitoring.addBreadcrumb('secureInvoke start', 'tauri', {
@@ -1915,9 +1964,14 @@ export async function secureInvoke<T>(
       // ignore monitoring errors
     }
 
+    console.info(`IPC:END ${command} ${invokeId} ok`);
     return sanitized as T;
   } catch (error) {
     const normalized = normalizeInvokeError(command, error);
+    if (normalized.name === 'IPC_TIMEOUT') {
+      console.info(`IPC:TIMEOUT ${command} ${invokeId}`);
+    }
+    console.info(`IPC:END ${command} ${invokeId} error`);
     console.error(`[Security] ✗ secureInvoke("${command}") failed:`, normalized.message);
 
     try {

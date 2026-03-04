@@ -391,7 +391,7 @@ Documentation: Complete (3 guides)
 
 - [NETWORK_TUNNEL_GUIDE.md](NETWORK_TUNNEL_GUIDE.md) - Guide utilisation tunnel
 - [NETWORK_TUNNEL_REPORT.md](NETWORK_TUNNEL_REPORT.md) - Rapport implémentation
-- [TAURI_DEPLOY_REPORT.md](TAURI_DEPLOY_REPORT.md) - Rapport build production
+- [TAURI_DEPLOY_REPORT.md](../rapports/TAURI_DEPLOY_REPORT.md) - Rapport build production
 
 ### Scripts
 

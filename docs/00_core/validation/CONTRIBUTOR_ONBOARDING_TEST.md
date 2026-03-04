@@ -30,7 +30,7 @@
 **Phase 1: Onboarding (No Support)**
 
 1. **Send participant:**
-   - Link to [CONTRIBUTING.md](../../CONTRIBUTING.md)
+   - Link to [CONTRIBUTING.md](../CONTRIBUTING.md)
    - Challenge: "Submit 1 small PR (bug fix or doc improvement) using only CONTRIBUTING.md guide"
    - No other context provided
 

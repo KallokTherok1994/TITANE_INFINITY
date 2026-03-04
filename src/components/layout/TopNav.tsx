@@ -190,6 +190,7 @@ export const TopNav: React.FC<TopNavProps> = ({
             <button
               key={item.id}
               type="button"
+              data-testid={`nav-${item.id}`}
               onClick={() => onNavigate(item.route)}
               onKeyDown={e => handleKeyDown(e, item.route)}
               aria-label={item.label}

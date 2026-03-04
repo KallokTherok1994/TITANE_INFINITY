@@ -18,13 +18,16 @@ interface ModuleStatus {
 
 export const ModulesSection: React.FC = () => {
   const [modules, setModules] = useState<ModuleStatus[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const loadModules = useCallback(async () => {
     try {
       const modulesList = (await tauriClient.getModulesStatus()) as ModuleStatus[];
       setModules(modulesList);
+      setErrorMessage(null);
     } catch (error) {
       console.error('Erreur chargement modules:', error);
+      setErrorMessage('Impossible de charger la liste des modules.');
     }
   }, []);
 
@@ -39,6 +42,7 @@ export const ModulesSection: React.FC = () => {
         await loadModules();
       } catch (error) {
         console.error('Erreur toggle module:', error);
+        setErrorMessage('La bascule du module a échoué. Réessayez.');
       }
     },
     [loadModules]
@@ -52,6 +56,12 @@ export const ModulesSection: React.FC = () => {
           🔄 Actualiser
         </button>
       </div>
+
+      {errorMessage && (
+        <div className="cp-card" role="alert" data-testid="cp-modules-error">
+          <p>{errorMessage}</p>
+        </div>
+      )}
 
       <div className="cp-card">
         <h3 className="cp-card-title">Engines disponibles</h3>

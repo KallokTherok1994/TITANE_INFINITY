@@ -389,8 +389,8 @@ pnpm run test:coverage UnifiedMemory
 - [COGNITIVE_ORCHESTRATOR.md](COGNITIVE_ORCHESTRATOR.md) — Cognitive engines
 
 **Architecture:**
-- [DATA_FLOW_CHAT.md](../../02_architecture_reality/DATA_FLOW_CHAT.md) — Memory flow in chat
-- [TAURI_COMMANDS_REFERENCE.md](../../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Tauri memory commands
+- [DATA_FLOW_CHAT.md](../../01_architecture/DATA_FLOW_CHAT.md) — Memory flow in chat
+- [TAURI_COMMANDS_REFERENCE.md](../../06_api/TAURI_COMMANDS_REFERENCE.md) — Tauri memory commands
 
 ---
 

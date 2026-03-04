@@ -3,11 +3,13 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v27.0.5  
+**Version:** v27.2.0  
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
+**Qualité (v27.2.0) :** TypeScript strict (0 erreur) + preuves ORCH_VΩ mises à jour (2026-03-03) — Production Ready ✅
+
+**Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 ---
 
@@ -52,7 +54,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Current Production (v27.x Series)
 
-- **v27.0.5-prod** (STABLE) — Production baseline
+- **v27.0.5-prod** (STABLE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
   - Tag: 02bce9c7
   - Immutable production reference
@@ -68,9 +70,15 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Risk: MINIMAL (type-only, zero runtime impact)
   - Lane: Strict Mode (P2)
 
+- **2026-03-03** (MAINTENANCE & PROOF SYNC)
+  - Status: ✅ DONE (no version bump)
+  - Commits: `25740b5d0`, `3895845c1`
+  - Change: TS blockers corrigés + pack `ORCH_VΩ_2026-03-03_1436_0cdf39d39` scellé
+  - Risk: LOW (stabilisation + documentation)
+
 ### Legacy Versions
 
-See [CHANGELOG.md](CHANGELOG.md) for v24.x-v26.x history.
+See [CHANGELOG v27.1.0](docs/90_release/CHANGELOG_v27.1.0.md) for app release history.
 
 ---
 
@@ -227,12 +235,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config s
 
 ---
 
-## 📐 Architecture v27.0.5
+## 📐 Architecture v27.2.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v27.0.5
+TITANE∞ v27.2.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
@@ -368,7 +376,7 @@ Ce dépôt est configuré avec des instructions personnalisées pour GitHub Copi
 
 - **[.github/copilot-instructions.md](.github/copilot-instructions.md)** — Protocole COPILOT-XS (règles générales)
 - **[.github/instructions/titane.instructions.md](.github/instructions/titane.instructions.md)** — Instructions détaillées du projet
-- **[.copilot-rules-permanent.md](.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
+- **[.copilot-rules-permanent.md](docs/01_misc/.copilot-rules-permanent.md)** — Règles permanentes TITANE∞
 
 **Validation automatique :**
 
@@ -424,14 +432,14 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 ## �📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
-> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
+> **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
 
 ### 🚀 Start Here (New to TITANE∞?)
 
 **Role-Based Quick Start:**
 
 - **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
-- **Want to Contribute:** [Contributing Guide](CONTRIBUTING.md) → Onboarding <2h with validation
+- **Want to Contribute:** [Contributing Guide](docs/00_core/CONTRIBUTING.md) → Onboarding <2h with validation
 - **Need API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) → 14 modules, comprehensive coverage
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
@@ -523,13 +531,13 @@ pnpm run test:all
 
 ## 🤝 Contribution
 
-> **🎯 NEW: [Complete Contributing Guide](CONTRIBUTING.md) — Validated <2h onboarding**
+> **🎯 NEW: [Complete Contributing Guide](docs/00_core/CONTRIBUTING.md) — Validated <2h onboarding**
 
 ### Quick Start for Contributors
 
 **🎯 First Contribution in 3 Steps:**
 
-1. **Read:** [CONTRIBUTING.md](CONTRIBUTING.md) (15 min)
+1. **Read:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) (15 min)
 2. **Setup:** Environment + dev runtime (30 min)
 3. **First PR:** Choose good-first-issue, code, test, submit (60 min)
 
@@ -594,7 +602,7 @@ git push origin feature/my-awesome-feature
 - **[Documentation Issue](.github/ISSUE_TEMPLATE/documentation.md)** — Fix docs
 
 **Before Submitting PR:**
-✅ Code follows [CONTRIBUTING.md](CONTRIBUTING.md) standards  
+✅ Code follows [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) standards  
 ✅ All tests pass (`pnpm run test`)  
 ✅ ESLint/Prettier clean (`pnpm run lint`)  
 ✅ Documentation updated (if needed)  
@@ -612,7 +620,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](CHANGELOG.md))**  
+> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](docs/90_release/CHANGELOG__CHANGELOG.md.md))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -741,7 +749,7 @@ git push origin feature/my-awesome-feature
 - 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
 - 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
 - **API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) — 14 modules, comprehensive coverage
-- 💬 **Contributing:** [CONTRIBUTING.md](CONTRIBUTING.md) — <2h onboarding
+- 💬 **Contributing:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues
 
@@ -797,7 +805,7 @@ git push origin feature/my-awesome-feature
 - **GitHub:** [KallokTherok1994/TITANE_INFINITY](https://github.com/KallokTherok1994/TITANE_INFINITY)
 - **Issues:** Bug reports, feature requests
 - **Discussions:** General questions, ideas
-- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](CONTRIBUTING.md))
+- **PRs:** Code contributions welcome (see [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md))
 
 ### 📧 Contact
 

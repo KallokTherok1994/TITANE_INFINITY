@@ -1,5 +1,0 @@
-# 00_PLAN.md
-
-Phase: P2906
-Statut: PASS_QUALIFIED
-Lot: P2905→P2911

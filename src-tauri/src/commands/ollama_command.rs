@@ -21,6 +21,7 @@ pub struct OllamaRequest {
 
 #[derive(Debug, Clone, Serialize)]
 pub struct OllamaResponse {
+    pub ok: bool,
     pub content: String,
     pub latency_ms: u64,
     pub model: String,
@@ -104,6 +105,7 @@ pub async fn ollama_generate(req: OllamaRequest) -> Result<OllamaResponse, Strin
                     );
 
                     Ok(OllamaResponse {
+                        ok: true,
                         content,
                         latency_ms,
                         model: req.model,

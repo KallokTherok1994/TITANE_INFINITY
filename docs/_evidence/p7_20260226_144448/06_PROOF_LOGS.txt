@@ -1,9 +1,0 @@
-# 06_PROOF_LOGS.txt
-
-Phase: P7
-
-# BLOCKED SNAPSHOT
-# Cause: P6 non PASS (token GO_FOR_PROD_BUILD__TITANE_INFINITY absent)
-# Références:
-# - docs/_evidence/p6_20260226_144448/06_PROOF_LOGS.txt
-# - docs/_evidence/program_p6_13_20260226_144448/09_FINAL_VERDICT.md

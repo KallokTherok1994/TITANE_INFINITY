@@ -1,4 +1,0 @@
-# 10_SECRET_REDACTION_RULES.md
-
-Phase: P7
-Statut: PENDING

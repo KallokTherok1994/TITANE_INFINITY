@@ -31,7 +31,7 @@ Vue d'ensemble accessible en français avec :
 - Impact sur le système
 
 ### 2. Guide technique complet
-👉 **[docs/SENTIENT_LAYER_TECHNICAL_GUIDE.md](./docs/SENTIENT_LAYER_TECHNICAL_GUIDE.md)**
+👉 **[docs/SENTIENT_LAYER_TECHNICAL_GUIDE.md](../../SENTIENT_LAYER_TECHNICAL_GUIDE.md)**
 
 Documentation technique détaillée avec :
 - Architecture complète

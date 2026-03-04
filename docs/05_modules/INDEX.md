@@ -379,10 +379,10 @@ Documentation complète des modules TITANE∞ (backend Rust + frontend TypeScrip
 ## 🔗 CROSS-REFERENCES
 
 ### Liens vers architecture:
-- [ARCHITECTURE_CURRENT_v24.md](../00_meta/ARCHITECTURE_CURRENT_v24.md) — Architecture système complète
-- [DATA_FLOW_CHAT.md](../02_architecture_reality/DATA_FLOW_CHAT.md) — Flow messaging chat complet
-- [OMEGA_PIPELINE_DETAILED.md](../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) — Pipeline OMEGA architecture détaillée
-- [TAURI_COMMANDS_REFERENCE.md](../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — API commands Tauri complète
+- [ARCHITECTURE_CURRENT_v24.md](../01_architecture/ARCHITECTURE_CURRENT_v24.md) — Architecture système complète
+- [DATA_FLOW_CHAT.md](../01_architecture/DATA_FLOW_CHAT.md) — Flow messaging chat complet
+- [OMEGA_PIPELINE_DETAILED.md](../01_architecture/OMEGA_PIPELINE_DETAILED.md) — Pipeline OMEGA architecture détaillée
+- [TAURI_COMMANDS_REFERENCE.md](../06_api/TAURI_COMMANDS_REFERENCE.md) — API commands Tauri complète
 
 ### Liens vers guides:
 - [QUICKSTART.md](../04_guides/quickstart/QUICKSTART.md) — Quick start utilisateur
@@ -496,10 +496,10 @@ pnpm run dev:tauri  # Launch Titan-Dev
 ## 📚 RELATED DOCUMENTATION
 
 **Architecture:**
-- [ARCHITECTURE_CURRENT_v24.md](../00_meta/ARCHITECTURE_CURRENT_v24.md) — System architecture
-- [DATA_FLOW_CHAT.md](../02_architecture_reality/DATA_FLOW_CHAT.md) — Data flow
-- [OMEGA_PIPELINE_DETAILED.md](../02_architecture_reality/OMEGA_PIPELINE_DETAILED.md) — OMEGA detailed
-- [TAURI_COMMANDS_REFERENCE.md](../02_architecture_reality/TAURI_COMMANDS_REFERENCE.md) — Tauri API
+- [ARCHITECTURE_CURRENT_v24.md](../01_architecture/ARCHITECTURE_CURRENT_v24.md) — System architecture
+- [DATA_FLOW_CHAT.md](../01_architecture/DATA_FLOW_CHAT.md) — Data flow
+- [OMEGA_PIPELINE_DETAILED.md](../01_architecture/OMEGA_PIPELINE_DETAILED.md) — OMEGA detailed
+- [TAURI_COMMANDS_REFERENCE.md](../06_api/TAURI_COMMANDS_REFERENCE.md) — Tauri API
 
 **Guides:**
 - [docs/04_guides/INDEX.md](../04_guides/INDEX.md) — Guides navigation

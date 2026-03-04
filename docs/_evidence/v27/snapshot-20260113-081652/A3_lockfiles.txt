@@ -1,2 +1,0 @@
-[A3] lockfiles present
-pnpm-lock.yaml

@@ -347,5 +347,5 @@ Vous savez maintenant:
 
 ---
 
-**Besoin d'aide ?** → [FAQ](./faq.md) | [Troubleshooting](./troubleshooting.md) | [Discord](https://discord.gg/titane-infinity)
+**Besoin d'aide ?** → [FAQ](./faq.md) | [Troubleshooting](../01_misc/TROUBLESHOOTING.md) | [Discord](https://discord.gg/titane-infinity)
 

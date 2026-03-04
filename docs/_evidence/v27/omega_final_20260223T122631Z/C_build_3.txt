@@ -1,1 +1,0 @@
-BLOCKED_BY_POLICY: pnpm run build is forbidden by repository constitution (non-negotiable)

@@ -417,7 +417,7 @@ conversation-engine = []
 - [ARCHITECTURE_RINGS.md](../ARCHITECTURE_RINGS.md) — Modèle 4 anneaux
 - [src-tauri/src/omega/](../../src-tauri/src/omega/) — Code OMEGA v2
 - [src/types/conversation.ts](../../src/types/conversation.ts) — Types OMEGA v2
-- [CHANGELOG.md](../../CHANGELOG.md) — Historique versions
+- [CHANGELOG.md](../90_release/CHANGELOG.md) — Historique versions
 
 ---
 

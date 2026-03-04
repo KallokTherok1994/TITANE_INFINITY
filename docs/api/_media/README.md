@@ -164,11 +164,11 @@ Stockage persistant et gestion mémoire.
 
 ## 📚 Documentation
 
-- [Architecture Complète](docs/ARCHITECTURE.md)
-- [Guide des Modules](docs/MODULES.md)
-- [Sécurité](docs/SECURITY.md)
-- [Guide Développeur](docs/DEVELOPER_GUIDE.md)
-- [Changelog](docs/CHANGELOG.md)
+- [Architecture Complète](../../ARCHITECTURE.md)
+- [Guide des Modules](../../MODULES.md)
+- [Sécurité](../../SECURITY.md)
+- [Guide Développeur](../../DEVELOPER_GUIDE.md)
+- [Changelog](../../90_release/CHANGELOG.md)
 
 ## 🛠️ Développement
 
@@ -204,7 +204,7 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config s
 
 ## 🤝 Contribution
 
-Les contributions sont les bienvenues ! Voir [DEVELOPER_GUIDE.md](docs/DEVELOPER_GUIDE.md).
+Les contributions sont les bienvenues ! Voir [DEVELOPER_GUIDE.md](../../DEVELOPER_GUIDE.md).
 
 ## 📄 License
 

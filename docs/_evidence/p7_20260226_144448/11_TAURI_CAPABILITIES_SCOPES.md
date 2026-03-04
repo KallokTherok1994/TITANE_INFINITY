@@ -1,4 +1,0 @@
-# 11_TAURI_CAPABILITIES_SCOPES.md
-
-Phase: P7
-Statut: PENDING

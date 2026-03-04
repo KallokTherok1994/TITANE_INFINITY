@@ -44,10 +44,43 @@ const isLoadingFallbackVisible = (): boolean => {
 };
 
 const isBootReady = (stage: string): boolean => {
-  if (stage !== BOOT_COMPLETE_STAGE) {
+  const fallbackVisible = isLoadingFallbackVisible();
+
+  if (typeof window !== 'undefined') {
+    const markerReady =
+      (window as Window & { __TITANE_BOOT_READY__?: boolean }).__TITANE_BOOT_READY__ ===
+      true;
+    const domReady = document.documentElement.dataset.titaneBootReady === '1';
+    if ((markerReady || domReady) && !fallbackVisible) {
+      return true;
+    }
+  }
+
+  if (stage === 'BOOT:READY') {
+    return !fallbackVisible;
+  }
+
+  if (stage === 'BOOT:AFTER_ORCHESTRATOR' || stage === 'BOOT:AFTER_ORCHESTRATOR_INIT') {
+    return !fallbackVisible;
+  }
+
+  if (stage === BOOT_COMPLETE_STAGE) {
+    return !fallbackVisible;
+  }
+
+  if (stage === 'unknown') {
     return false;
   }
-  return !isLoadingFallbackVisible();
+
+  if (stage.startsWith('[BOOT]')) {
+    return !fallbackVisible;
+  }
+
+  if (stage.startsWith('BOOT:')) {
+    return !fallbackVisible && stage.includes('READY');
+  }
+
+  return false;
 };
 
 /**

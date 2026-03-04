@@ -22,6 +22,9 @@ declare global {
       captureException: (error: unknown, options?: Record<string, unknown>) => void;
     };
     __TITANE_MONITORING__?: unknown;
+    __TITANE_BOOT_READY__?: boolean;
+    __TITANE_BOOT_FALLBACK__?: boolean;
+    __TITANE_EMIT_BOOT_MARKER__?: (marker: string) => void;
   }
 }
 
@@ -97,6 +100,7 @@ type TitaneBootDiagnostics = {
 type MemoryCoreLogLevel = 'Info' | 'Warning' | 'Error';
 
 let lastBootStageLoggedToMemoryCore: string | null = null;
+const seenBootMarkers = new Set<string>();
 
 const tryWriteMemoryCoreLog = (
   level: MemoryCoreLogLevel,
@@ -148,11 +152,66 @@ const setBootStage = (stage: string): void => {
   const w = window as typeof window & { __TITANE_BOOT__?: TitaneBootDiagnostics };
   w.__TITANE_BOOT__ = { stage, timestamp: Date.now() };
 
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.titaneBootStage = stage;
+  }
+
   if (stage !== lastBootStageLoggedToMemoryCore) {
     lastBootStageLoggedToMemoryCore = stage;
     tryWriteMemoryCoreLog('Info', 'frontend.boot', stage);
   }
 };
+
+const BOOT_RECOVERY_ONCE_KEY = 'titane_boot_recovery_once';
+
+const emitBootMarker = (marker: string): void => {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  if (seenBootMarkers.has(marker)) {
+    return;
+  }
+
+  seenBootMarkers.add(marker);
+  setBootStage(marker);
+  console.info(`[${new Date().toISOString()}] ${marker}`);
+
+  void import('@tauri-apps/api/event')
+    .then(({ emit }) =>
+      emit('titane://boot-marker', {
+        marker,
+        ts: Date.now(),
+      })
+    )
+    .catch(() => {
+      // Do not break UI boot if event bus is unavailable
+    });
+
+  void safeInvokeTauri<void>(TAURI_COMMANDS.BOOT_MARKER_LOG, { marker }, 1500).catch(
+    () => {
+      // Do not break UI boot if marker IPC fails
+    }
+  );
+
+  if (marker === 'BOOT:READY') {
+    window.__TITANE_BOOT_READY__ = true;
+    if (typeof document !== 'undefined') {
+      document.documentElement.dataset.titaneBootReady = '1';
+    }
+    try {
+      window.localStorage.removeItem(BOOT_RECOVERY_ONCE_KEY);
+    } catch {
+      // ignore
+    }
+  }
+};
+
+if (typeof window !== 'undefined') {
+  window.__TITANE_EMIT_BOOT_MARKER__ = emitBootMarker;
+  emitBootMarker('BOOT:START');
+  emitBootMarker('BOOT:AFTER_STORE');
+}
 
 const getUILogsSnapshot = (): unknown => {
   if (typeof window === 'undefined') {
@@ -458,8 +517,6 @@ import { logInfo } from './lib/UILogger';
 // import { singularityEngine } from './core/engines/SINGULARITY_ENGINE'; // DÉSACTIVÉ pour debug
 
 // 🌟 v15: Initialize SingularityBridge (Backend Rust ↔ Frontend React)
-import { SingularityBridge as _SingularityBridge } from './services/singularityBridge';
-import { SingularityConnections as _SingularityConnections } from './services/singularityConnections';
 
 // ✨ v∞.D: Initialize XP Engine
 import { XP } from './core/experience/XP_ENGINE';
@@ -645,8 +702,111 @@ const scheduleBootWatchdog = (): void => {
 
   window.setTimeout(() => {
     try {
+      if (window.__TITANE_BOOT_READY__) {
+        return;
+      }
+
+      const loadingSplashVisible = Boolean(document.querySelector('.loading-splash'));
+      const pageFallbackVisible = Boolean(
+        document.querySelector('.page-loading-fallback')
+      );
+      const loadingStuck = loadingSplashVisible || pageFallbackVisible;
+
+      let recoveryAlreadyAttempted = false;
+      try {
+        recoveryAlreadyAttempted =
+          window.localStorage.getItem(BOOT_RECOVERY_ONCE_KEY) === '1';
+      } catch {
+        recoveryAlreadyAttempted = false;
+      }
+
+      if (loadingStuck && !recoveryAlreadyAttempted) {
+        try {
+          window.localStorage.setItem(BOOT_RECOVERY_ONCE_KEY, '1');
+        } catch {
+          // ignore
+        }
+
+        if ('serviceWorker' in navigator) {
+          void navigator.serviceWorker
+            .getRegistrations()
+            .then(registrations => Promise.all(registrations.map(r => r.unregister())))
+            .catch(() => {
+              // ignore
+            });
+        }
+
+        if (typeof caches !== 'undefined') {
+          void caches
+            .keys()
+            .then(keys => Promise.all(keys.map(key => caches.delete(key))))
+            .catch(() => {
+              // ignore
+            });
+        }
+
+        window.setTimeout(() => {
+          window.location.reload();
+        }, 600);
+        return;
+      }
+
+      if (!window.__TITANE_BOOT_FALLBACK__) {
+        window.__TITANE_BOOT_FALLBACK__ = true;
+        showFatalErrorOverlay({
+          title: 'BOOT timeout (>20s)',
+          message:
+            "Initialisation incomplète. L'application passe en fallback non bloquant. Vérifie les logs BOOT/IPC puis relance.",
+          source: 'BOOT_WATCHDOG_20S',
+        });
+
+        const reloadBtn = document.createElement('button');
+        reloadBtn.id = 'titane-boot-reload-btn';
+        reloadBtn.textContent = '🔄 Relancer';
+        reloadBtn.style.position = 'fixed';
+        reloadBtn.style.right = '20px';
+        reloadBtn.style.bottom = '20px';
+        reloadBtn.style.zIndex = '2147483647';
+        reloadBtn.style.padding = '10px 14px';
+        reloadBtn.style.borderRadius = '10px';
+        reloadBtn.style.border = '1px solid rgba(255,255,255,0.2)';
+        reloadBtn.style.background = '#1f2937';
+        reloadBtn.style.color = '#f3f4f6';
+        reloadBtn.style.cursor = 'pointer';
+        reloadBtn.addEventListener('click', () => {
+          window.location.reload();
+        });
+        document.body.appendChild(reloadBtn);
+      }
+
       const root = document.getElementById('root');
       const childCount = root?.childElementCount ?? 0;
+
+      if (loadingStuck) {
+        const w = window as typeof window & {
+          __TITANE_BOOT__?: { stage: string; timestamp: number };
+        };
+
+        showDebugOverlay('Boot Watchdog (loading persistant)', {
+          now: new Date().toISOString(),
+          boot: w.__TITANE_BOOT__ ?? null,
+          isTauri: true,
+          location: typeof location !== 'undefined' ? String(location.href) : 'n/a',
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'n/a',
+          loading: {
+            loadingSplashVisible,
+            pageFallbackVisible,
+            recoveryAlreadyAttempted,
+          },
+          root: {
+            exists: Boolean(root),
+            childCount,
+          },
+          uiLogs: getUILogsSnapshot(),
+          hint: 'Un auto-reload a été tenté une fois; vérifier erreurs JS et chunks.',
+        });
+        return;
+      }
 
       if (childCount > 0) {
         return;
@@ -672,7 +832,7 @@ const scheduleBootWatchdog = (): void => {
     } catch {
       // never break boot
     }
-  }, 4500);
+  }, 20000);
 };
 
 scheduleBootWatchdog();

@@ -1,0 +1,139 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DevToolsPanel Component > Rendering > should match snapshot 1`] = `
+<div
+  class="devtools-panel smooth-transition "
+  style="position: relative; width: 100%; padding: 24px; background-color: #111827; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+>
+  <div
+    style="margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between;"
+  >
+    <div
+      style="display: flex; align-items: center; gap: 12px;"
+    >
+      <div
+        class=""
+        style="width: 8px; height: 8px; border-radius: 50%; background-color: #3b82f6; box-shadow: 0 0 4px #3b82f6;"
+      />
+      <h3
+        class="smooth-colors"
+        style="margin: 0px; font-size: 18px; font-weight: 600; color: #ffffff; transition: color 500ms cubic-bezier(0.25, 0.1, 0.25, 1);"
+      >
+        OMEGA Engines
+      </h3>
+    </div>
+    <span
+      style="font-size: 14px; color: rgba(255, 255, 255, 0.6);"
+    >
+      1
+       / 
+      2
+       Active
+    </span>
+  </div>
+  <div
+    style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px;"
+  >
+    <div
+      class="scale-in"
+      style="animation-delay: 0ms; padding: 16px; background-color: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1); cursor: pointer;"
+    >
+      <div
+        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;"
+      >
+        <h4
+          style="margin: 0px; font-size: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.9);"
+        >
+          Memory
+        </h4>
+        <div
+          class="pulse-medium"
+          style="width: 10px; height: 10px; border-radius: 50%; background-color: #34d399; box-shadow: 0 0 8px #34d399;"
+        />
+      </div>
+      <p
+        style="margin: 0px 0px 12px; font-size: 13px; color: rgba(255, 255, 255, 0.6); line-height: 1.4;"
+      >
+        Memory engine
+      </p>
+      <div
+        style="display: flex; flex-direction: column; gap: 8px;"
+      >
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;"
+        >
+          <span
+            style="color: rgba(255, 255, 255, 0.7);"
+          >
+            ops
+          </span>
+          <span
+            style="color: #34d399; font-weight: 600; font-family: monospace;"
+          >
+            12
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin-top: 12px; padding-top: 12px; border-top-width: 1px; border-top-style: solid; border-top-color: rgba(255, 255, 255, 0.05);"
+      >
+        <span
+          style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background-color: #34d39920; color: #34d399;"
+        >
+          active
+        </span>
+      </div>
+    </div>
+    <div
+      class="scale-in"
+      style="animation-delay: 75ms; padding: 16px; background-color: rgba(255, 255, 255, 0.03); border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.08); transition: all 500ms cubic-bezier(0.25, 0.1, 0.25, 1); cursor: pointer;"
+    >
+      <div
+        style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;"
+      >
+        <h4
+          style="margin: 0px; font-size: 16px; font-weight: 600; color: rgba(255, 255, 255, 0.9);"
+        >
+          Voice
+        </h4>
+        <div
+          class=""
+          style="width: 10px; height: 10px; border-radius: 50%; background-color: #9ca4ab; box-shadow: 0 0 8px #9ca4ab;"
+        />
+      </div>
+      <p
+        style="margin: 0px 0px 12px; font-size: 13px; color: rgba(255, 255, 255, 0.6); line-height: 1.4;"
+      >
+        Voice engine
+      </p>
+      <div
+        style="display: flex; flex-direction: column; gap: 8px;"
+      >
+        <div
+          style="display: flex; justify-content: space-between; align-items: center; font-size: 12px;"
+        >
+          <span
+            style="color: rgba(255, 255, 255, 0.7);"
+          >
+            latency
+          </span>
+          <span
+            style="color: #9ca4ab; font-weight: 600; font-family: monospace;"
+          >
+            24ms
+          </span>
+        </div>
+      </div>
+      <div
+        style="margin-top: 12px; padding-top: 12px; border-top-width: 1px; border-top-style: solid; border-top-color: rgba(255, 255, 255, 0.05);"
+      >
+        <span
+          style="display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; background-color: #9ca4ab20; color: #9ca4ab;"
+        >
+          idle
+        </span>
+      </div>
+    </div>
+  </div>
+</div>
+`;

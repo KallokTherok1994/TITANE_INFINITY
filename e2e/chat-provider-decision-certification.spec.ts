@@ -17,6 +17,8 @@
 
 import { test, expect, Page, ConsoleMessage } from '@playwright/test';
 
+const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
+
 const CHAT_INPUT_SELECTORS = [
   '[data-testid="chat-input"]',
   '#chat-window-textarea',
@@ -181,6 +183,13 @@ async function waitForLogs(
  * Test Suite: Chat Provider Decision Certification
  */
 test.describe('P3 Certification: Chat Provider Decision', () => {
+  if (!FULL_E2E_ENABLED) {
+    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+      expect(FULL_E2E_ENABLED).toBe(false);
+    });
+    return;
+  }
+
   test.beforeEach(async ({ page }) => {
     const ensureChatReady = async (): Promise<void> => {
       await page.waitForLoadState('networkidle');

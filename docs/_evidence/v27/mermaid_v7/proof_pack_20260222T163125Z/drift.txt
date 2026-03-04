@@ -1,3 +1,0 @@
-CHECK: Network surface sync complete
-HASH_REGISTRY_OK
-PASS: MERMAID_DRIFT_DETECTION

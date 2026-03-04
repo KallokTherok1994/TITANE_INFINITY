@@ -33,7 +33,7 @@ Liste EXHAUSTIVE de tous les fichiers .md du projet avec métadonnées :
 | Fichier | Lignes | Dernière Modif | Rôle | Criticité |
 |---------|--------|----------------|------|-----------|
 | [`README.md`](../README.md) | 260 | 2025-12-15 | Présentation + Quick Start | **CORE** ✅ |
-| [`LICENSE.md`](../LICENSE.md) | 50 | 2025-11-20 | Licence propriétaire | **CORE** ✅ |
+| [`LICENSE.md`](../01_misc/LICENSE.md) | 50 | 2025-11-20 | Licence propriétaire | **CORE** ✅ |
 | [`CHANGELOG.md`](../CHANGELOG.md) | 800 | 2025-12-14 | Historique versions | **CORE** ✅ |
 | `DEVELOPER_GUIDE.md` | 450 | 2025-12-10 | Guide développeur | **CORE** ✅ |
 | `ARCHITECTURE.md` | 600 | 2025-12-01 | Architecture globale | **CORE** 🟡 |

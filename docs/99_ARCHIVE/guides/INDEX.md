@@ -132,10 +132,10 @@ Guides obsolètes archivés suite à consolidation Phase 5:
 - 🗺️ **[docs/04_guides/INDEX.md](../../04_guides/INDEX.md)** — Navigation master guides
 
 **Guides spécialisés (racine - à migrer Phase 5):**
-- 🎤 **[VOCAL_README.md](../../../VOCAL_README.md)** — Mode Vocal complet
-- 🎨 **[MULTIMODAL_QUICK_START.md](../../../MULTIMODAL_QUICK_START.md)** — Multimodal Engine
-- 🧠 **[UNIFIED_MEMORY_GUIDE.md](../../../UNIFIED_MEMORY_GUIDE.md)** — UnifiedMemory OS
-- ⏱️ **[TEMPORAL_INTEGRATIONS_README_FR.md](../../../TEMPORAL_INTEGRATIONS_README_FR.md)** — Temporal Integrations
+- 🎤 **[VOCAL_README.md](../../current/guides/VOCAL_README.md)** — Mode Vocal complet
+- 🎨 **[MULTIMODAL_QUICK_START.md](../../current/guides/MULTIMODAL_QUICK_START.md)** — Multimodal Engine
+- 🧠 **[UNIFIED_MEMORY_GUIDE.md](../../archive/sessions/UNIFIED_MEMORY_GUIDE.md)** — UnifiedMemory OS
+- ⏱️ **[TEMPORAL_INTEGRATIONS_README_FR.md](../../archive/sessions/TEMPORAL_INTEGRATIONS_README_FR.md)** — Temporal Integrations
 
 ---
 
@@ -178,7 +178,7 @@ git log --follow docs/99_ARCHIVE/guides/QUICKSTART_UBUNTU_24.04.md
 
 **Questions archivage?** → [GitHub Issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)  
 **Besoin restaurer?** → Contacter TITANE Team avec raison justifiée  
-**Documentation Phase 5?** → Voir [DOCUMENTATION_EVOLUTION_REPORT.md](../../../DOCUMENTATION_EVOLUTION_REPORT.md)
+**Documentation Phase 5?** → Voir [DOCUMENTATION_EVOLUTION_REPORT.md](../../archive/sessions/DOCUMENTATION_EVOLUTION_REPORT.md)
 
 ---
 

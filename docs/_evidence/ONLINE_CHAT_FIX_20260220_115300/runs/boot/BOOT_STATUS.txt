@@ -1,3 +1,0 @@
-BOOT_VERDICT: FAIL (Rust compilation error)
-TDZ_COUNT: 0
-RUST_ERRORS: 0

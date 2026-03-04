@@ -103,7 +103,7 @@ const response = await chatEngine.generate(message, history, {
 ## ℹ️ Plus d'Infos
 
 - **Guide complet**: [docs/GUIDE_PERFORMANCE_CHAT.md](GUIDE_PERFORMANCE_CHAT.md)
-- **Rapport détaillé**: [CHAT_PERFORMANCE_OPTIMIZATION_v24.3.1.md](../CHAT_PERFORMANCE_OPTIMIZATION_v24.3.1.md)
+- **Rapport détaillé**: [CHAT_PERFORMANCE_OPTIMIZATION_v24.3.1.md](archive/v24/CHAT_PERFORMANCE_OPTIMIZATION_v24.3.1.md)
 
 ---
 

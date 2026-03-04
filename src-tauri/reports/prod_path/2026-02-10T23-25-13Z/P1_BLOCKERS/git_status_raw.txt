@@ -1,0 +1,123 @@
+ M .vscode/tasks.json
+ M README.md
+ M docs/00_core/DOCUMENTATION_EXECUTIVE_SUMMARY.md
+ M docs/INDEX.md
+ M e2e/desktop/smoke.wdio.test.js
+ M memory/memory_core_state.json
+ M package.json
+ M pnpm-lock.yaml
+ M registry/repo-events.jsonl
+ M registry/ui-events.jsonl
+ M scripts/e2e/run-desktop-suite.js
+ M src-tauri/allowlist.whitelist.stable.json
+ M src-tauri/src/commands/mod.rs
+ M src-tauri/src/main.rs
+ M src-tauri/tauri.conf.json
+ M src/apps/devtools/components/CoreHealthMonitor.tsx
+ M src/apps/devtools/components/EventStream.tsx
+ M src/apps/devtools/components/LogViewer.tsx
+ M src/apps/devtools/components/MetricsDisplay.tsx
+ M src/components/HyperCenter/HyperCenter.tsx
+ M src/components/IdentityCenter/IdentityCenter.tsx
+ M src/components/MemoryEvolution/MemoryEvolutionCenter.tsx
+ M src/components/MetaCenter/MetaCenter.tsx
+ M src/components/Onboarding/OnboardingFlow.tsx
+ M src/components/RealityCenter/RealityCenter.tsx
+ M src/components/SingularityMonitor.tsx
+ M src/components/chat/FileUploadButton.tsx
+ M src/components/conversation/ModeBuilder.tsx
+ M src/components/devtools/CoreHealthMonitor.tsx
+ M src/components/devtools/LogViewer.tsx
+ M src/components/devtools/MetricsDisplay.tsx
+ M src/components/diagnostics/SplashWatchdog.tsx
+ M src/components/experience/ExpPanel.tsx
+ M src/components/experience/GlobalExpBar.tsx
+ M src/components/monitoring/SingularityDashboard.tsx
+ M src/components/monitoring/SystemHealthMonitor.tsx
+ M src/config/offline-first.ts
+ M src/core/safety/CrashGuardEngine.ts
+ M src/engines/cognitive/cognitiveLayoutIntegrations.ts
+ M src/features/audio-center/services/audioService.ts
+ M src/features/design-center/hooks/useUIThemeCommands.ts
+ M src/features/design-center/providers/UIThemeProvider.tsx
+ M src/features/design-center/services/uiThemeIAService.ts
+ M src/features/developer-mode/useDeveloperMode.ts
+ M src/features/one-core/useOneCore.ts
+ M src/features/qa-monitoring/useQAMonitoring.ts
+ M src/features/system-center/hooks/useDebuggerLiveOS.ts
+ M src/features/system-center/hooks/useHyperVision.ts
+ M src/features/system-center/hooks/useIntrospection.ts
+ M src/features/system-center/hooks/useNodeCluster.ts
+ M src/features/system-center/hooks/useSystemDiagnostics.ts
+ M src/features/system-center/hooks/useSystemLogs.ts
+ M src/features/system-center/tabs/DevToolsTab.tsx
+ M src/hooks/useMemory.ts
+ M src/hooks/useMemoryCore.ts
+ M src/hooks/useMemoryEngine.ts
+ M src/hooks/usePersistentMemory.ts
+ M src/hooks/useSystemHealth.ts
+ M src/hooks/useWhisperStream.ts
+ M src/hooks/useWindowControls.ts
+ M src/lib/security.ts
+ M src/lib/tauriClient.ts
+ M src/lib/tauriCommands.ts
+ M src/main.tsx
+ M src/modules/devSudo/devSudoBuiltins.ts
+ M src/modules/devSudo/devSudoHandler.ts
+ M src/modules/hybrid/HybridEngine.ts
+ M src/modules/performance/AdvancedPerformanceMonitor.ts
+ M src/pages/CloudCenter/DevicesView.tsx
+ M src/pages/CloudCenter/SyncConfig.tsx
+ M src/pages/CloudCenter/SyncLogs.tsx
+ M src/pages/CloudCenter/VaultStatus.tsx
+ M src/pages/CloudCenter/index.tsx
+ M src/pages/ConfigurationHub.tsx
+ M src/pages/DevPage.tsx
+ M src/pages/OrchestrationMetaCenter.tsx
+ M src/pages/Stats.tsx
+ M src/pages/TimeNavigator.tsx
+ M src/pages/TimePage.tsx
+ M src/services/ai/providers/ollama.ts
+ M src/services/conversation/legacyCleanup.ts
+ M src/services/conversationEngine.ts
+ M src/services/systemCenter/SystemAPI.ts
+ M src/services/tauriAutoRepair.ts
+ M src/ui/pages/ChatIA/ModeEditor.tsx
+ M src/ui/pages/ControlPanel/ControlPanel.tsx
+ M src/ui/pages/ControlPanel/sections/AISection.tsx
+ M src/ui/pages/ControlPanel/sections/AppearanceSection.tsx
+ M src/ui/pages/ControlPanel/sections/LogsSection.tsx
+ M src/ui/pages/ControlPanel/sections/MemorySection.tsx
+ M src/ui/pages/ControlPanel/sections/ModulesSection.tsx
+ M src/ui/pages/ControlPanel/sections/SingularitySection.tsx
+ M src/ui/pages/ControlPanel/sections/SystemSection.tsx
+ M src/ui/pages/ControlPanel/sections/UpdatesSection.tsx
+ M src/ui/pages/CreationStudio.tsx
+ M src/ui/pages/EvolutionMonitor.tsx
+ M src/ui/pages/HyperEvolutionDashboard.tsx
+ M src/ui/pages/HyperVisionDashboard.tsx
+ M src/ui/pages/IntrospectionDashboard.tsx
+ M src/ui/pages/KnowledgeFusionPage.tsx
+ M src/ui/pages/NodeClusterDashboard.tsx
+ M src/ui/pages/SelfHealingDashboard.tsx
+ M src/utils/logging/structuredLogger.ts
+ M src/utils/ollamaFallback.ts
+?? docs/INDEX_REPO_STRUCTURE.md
+?? docs/__ARCHIVE_REPO_HOUSEKEEPING_VAULT__/
+?? docs/__AUDITS__/HOUSEKEEPING/
+?? docs/capabilities/TITANE_DEV_BRIDGE.md
+?? docs/contracts/dev-bridge.contract.schema.json
+?? docs/ui/INDEX_UI.md
+?? e2e/desktop/ai-verification.full.e2e.js
+?? runtime/ALLOW_E2E_TAURI_BUILD.ok
+?? runtime/dev/proofs/
+?? scripts/check-allowlist-alignment.mjs
+?? scripts/convert-debugger-liveos.py
+?? scripts/convert-ipc-features.mjs
+?? scripts/dev/dev-bridge-contract-test.mjs
+?? scripts/dev/dev-bridge.mjs
+?? scripts/e2e/require-e2e-build-authorization.sh
+?? scripts/guard/
+?? src-tauri/src/commands/ollama_command.rs
+?? src/__tests__/ollama-proxy.test.ts
+?? wdio.desktop.conf.cjs

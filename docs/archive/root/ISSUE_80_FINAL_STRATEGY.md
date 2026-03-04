@@ -223,7 +223,7 @@ npm test -- --browser src/modules/avatar/floating/floating.perf.test.ts
 
 ## References
 
-- **E2E Testing Guide:** [E2E_TESTING_GUIDE.md](E2E_TESTING_GUIDE.md)
+- **E2E Testing Guide:** [E2E_TESTING_GUIDE.md](../../01_misc/E2E_TESTING_GUIDE.md)
 - **Issue #77 Report:** [ISSUE_77_COMPLETION_REPORT.md](ISSUE_77_COMPLETION_REPORT.md)
 - **Session Recap:** [SESSION_RECAP_2026-01-03.md](SESSION_RECAP_2026-01-03.md)
 - **Verification Report:** [VERIFICATION_FINALE_2026-01-03.md](VERIFICATION_FINALE_2026-01-03.md)

@@ -1,8 +1,0 @@
-]633;E;{   echo "\\n=== EXEC_X3_Z_START $TS ==="\x3b   for i in 1 2 3\x3b do     echo "[Z][RUN_$i] citation/no-hallucination observability"\x3b     test -f e2e/chat-provider-decision-certification.spec.ts\x3b     rg -n "Objectif: Valider automatiquement|reason_code|Exécute x3" e2e/chat-provider-decision-certification.spec.ts > /dev/null\x3b     test -f src-tauri/src/engines/unified_memory/models.rs\x3b     rg -n "struct MemoryEntry|embedding|importance|tags" src-tauri/src/engines/unified_memory/models.rs > /dev/null\x3b     echo "[Z][RUN_$i] PASS"\x3b   done\x3b   echo "=== EXEC_X3_Z_END PASS ==="\x3b } >> "$LOGZ";79029698-06ab-4dc4-9d8f-87c8fdc71a65]633;C\n=== EXEC_X3_Z_START 2026-02-27T17:31:01-05:00 ===
-[Z][RUN_1] citation/no-hallucination observability
-[Z][RUN_1] PASS
-[Z][RUN_2] citation/no-hallucination observability
-[Z][RUN_2] PASS
-[Z][RUN_3] citation/no-hallucination observability
-[Z][RUN_3] PASS
-=== EXEC_X3_Z_END PASS ===

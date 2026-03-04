@@ -398,9 +398,9 @@ TITANE_INFINITY/
 
 ### Documentation Technique
 
-- [ARCHITECTURE_CURRENT_v24.md](docs/01_architecture/ARCHITECTURE_CURRENT_v24.md)
-- [OMEGA_PIPELINE_DETAILED.md](docs/01_architecture/OMEGA_PIPELINE_DETAILED.md)
-- [GLOSSARY.md](docs/00_core/GLOSSARY.md)
+- [ARCHITECTURE_CURRENT_v24.md](../01_architecture/ARCHITECTURE_CURRENT_v24.md)
+- [OMEGA_PIPELINE_DETAILED.md](../01_architecture/OMEGA_PIPELINE_DETAILED.md)
+- [GLOSSARY.md](../00_core/GLOSSARY.md)
 
 ---
 
@@ -414,7 +414,7 @@ TITANE_INFINITY/
 
 ## 📜 License
 
-Voir [LICENSE.md](LICENSE.md) pour détails.
+Voir [LICENSE.md](../01_misc/LICENSE.md) pour détails.
 
 ---
 

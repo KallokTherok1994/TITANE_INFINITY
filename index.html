@@ -31,6 +31,22 @@
         }
       };
 
+      // ⚠️ DIAGNOSTIC: Send errors to Rust backend via IPC for visibility in logs
+      var sendErrorToBackend = function (payload) {
+        try {
+          if (window.__TAURI_INTERNALS__ && window.__TAURI_INTERNALS__.invoke) {
+            var marker = 'FRONTEND_ERROR|' + JSON.stringify(payload).substring(0, 500);
+            window.__TAURI_INTERNALS__
+              .invoke('boot_marker_log', { marker: marker })
+              .catch(function () {
+                // ignore IPC failures
+              });
+          }
+        } catch {
+          // ignore
+        }
+      };
+
       // Capture errors ASAP
       window.onerror = function (msg, url, line, col, err) {
         var payload = {
@@ -46,6 +62,7 @@
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);
+        sendErrorToBackend(payload); // ⚠️ DIAGNOSTIC: Send to Rust logs
         console.error('[BOOT-ERROR]', msg);
       };
       window.addEventListener('unhandledrejection', function (evt) {
@@ -60,8 +77,68 @@
         window.__TITANE_BOOT__.errors = window.__TITANE_BOOT__.errors || [];
         window.__TITANE_BOOT__.errors.push(payload);
         pushBootError(payload);
+        sendErrorToBackend(payload); // ⚠️ DIAGNOSTIC: Send to Rust logs
         console.error('[BOOT-REJECTION]', evt.reason);
       });
+
+      // Anti-silence guard: if React entry never executes, avoid infinite loading splash.
+      (function () {
+        var BOOT_HTML_RECOVERY_ONCE_KEY = 'titane_boot_html_recovery_once';
+
+        window.setTimeout(function () {
+          try {
+            var boot = window.__TITANE_BOOT__ || {};
+            var mainTsxStarted = Boolean(boot.main_tsx);
+            var ready = Boolean(window.__TITANE_BOOT_READY__);
+            var splash = document.querySelector('.loading-splash');
+
+            if (mainTsxStarted || ready || !splash) {
+              return;
+            }
+
+            var recoveryAlreadyAttempted = false;
+            try {
+              recoveryAlreadyAttempted =
+                window.localStorage.getItem(BOOT_HTML_RECOVERY_ONCE_KEY) === '1';
+            } catch {
+              recoveryAlreadyAttempted = false;
+            }
+
+            if (!recoveryAlreadyAttempted) {
+              try {
+                window.localStorage.setItem(BOOT_HTML_RECOVERY_ONCE_KEY, '1');
+              } catch {
+                // ignore
+              }
+              console.error(
+                '[BOOT_HTML_GUARD] React entry not started after 15s. Reloading once.'
+              );
+              window.location.reload();
+              return;
+            }
+
+            splash.innerHTML =
+              "<div style='display:flex;flex-direction:column;gap:0.75rem;align-items:center;max-width:680px;text-align:center'>" +
+              "<div style='font-size:1.15rem;font-weight:700;color:#fca5a5'>Chargement bloqué (entrée React non initialisée)</div>" +
+              "<div style='font-size:0.95rem;color:#cbd5e1'>Le noyau backend est lancé, mais l'interface n'a pas terminé son bootstrap frontend.</div>" +
+              "<button id='titane-html-guard-reload' style='padding:0.5rem 0.9rem;border-radius:8px;border:1px solid rgba(255,255,255,0.22);background:rgba(255,255,255,0.08);color:#fff;cursor:pointer'>Relancer l'interface</button>" +
+              '</div>';
+
+            var btn = document.getElementById('titane-html-guard-reload');
+            if (btn) {
+              btn.addEventListener('click', function () {
+                window.location.reload();
+              });
+            }
+
+            console.error(
+              '[BOOT_HTML_GUARD] Infinite loading prevented (manual recovery mode).'
+            );
+          } catch (e) {
+            console.error('[BOOT_HTML_GUARD_ERR]', e);
+          }
+        }, 15000);
+      })();
     </script>
 
     <meta charset="UTF-8" />
@@ -203,6 +280,6 @@
         </div>
       </div>
     </div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/entry.ts"></script>
   </body>
 </html>

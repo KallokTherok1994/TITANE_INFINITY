@@ -10,6 +10,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
 import { fileURLToPath } from 'node:url';
+import { readdir, writeFile } from 'node:fs/promises';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import viteCompression from 'vite-plugin-compression';
 import { injectManifest } from 'workbox-build';
@@ -55,6 +56,48 @@ function workboxPlugin(): Plugin {
       } catch (error) {
         console.error('❌ Workbox inject failed:', error);
         throw error;
+      }
+    },
+  };
+}
+
+function mainEntryMapPlugin(): Plugin {
+  let resolvedConfig: ResolvedConfig | undefined;
+
+  return {
+    name: 'main-entry-map',
+    apply: 'build',
+    configResolved: config => {
+      resolvedConfig = config;
+    },
+    closeBundle: async () => {
+      if (!resolvedConfig) {
+        return;
+      }
+
+      try {
+        const outDirAbs = resolve(resolvedConfig.root, resolvedConfig.build.outDir);
+        const assetsDir = resolve(outDirAbs, 'assets');
+        const entries = await readdir(assetsDir);
+        const mainCandidates = entries
+          .filter(name => /^main-[A-Za-z0-9_-]+\.js$/.test(name))
+          .sort();
+
+        const selectedMain = mainCandidates.at(-1) ?? null;
+        const targetFile = resolve(outDirAbs, 'main-entry.json');
+
+        await writeFile(
+          targetFile,
+          JSON.stringify(
+            {
+              main: selectedMain ? `assets/${selectedMain}` : null,
+            },
+            null,
+            2
+          )
+        );
+      } catch (error) {
+        console.warn('⚠️ main-entry-map generation failed:', error);
       }
     },
   };
@@ -163,6 +206,8 @@ export default defineConfig(({ command }) => ({
     }),
     // P2-B: Service Worker for -400ms repeat visit TTI
     workboxPlugin(),
+    // Entry map for resilient runtime bootstrap
+    mainEntryMapPlugin(),
   ],
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -206,6 +251,8 @@ export default defineConfig(({ command }) => ({
   },
 
   build: {
+    modulePreload: false,
+    manifest: true,
     // 🚀 OPTIMIZATION v24.7.6: Enable advanced compression & tree-shaking
     reportCompressedSize: true,
     cssMinify: 'lightningcss', // Faster CSS minification
@@ -226,6 +273,10 @@ export default defineConfig(({ command }) => ({
     },
 
     rollupOptions: {
+      input: {
+        app: resolve(ROOT_DIR, 'index.html'),
+        main: resolve(ROOT_DIR, 'src/main.tsx'),
+      },
       // ✅ FIX: Ne PAS externaliser @tauri-apps/api/* en mode Tauri!
       // Tauri v2 fournit ces modules directement, ils doivent être bundés
       // Seuls les vrais modules Node.js backend doivent être external
@@ -307,65 +358,22 @@ export default defineConfig(({ command }) => ({
                 !id.includes('/optimization/') &&
                 !id.includes('/branding/'))
             ) {
-              return 'ui-core';
+              return 'core-runtime';
             }
           }
 
           // ────────────────────────────────────────────────────────────────────
-          // 3️⃣ SERVICES SPLIT (P2_BUNDLE_OPTIMIZATION: boot vs lazy chunks)
-          //    - services-boot: initializeOllama, consoleMonitor only (~50KB)
-          //    - services-ai: chatEngine, orchestrator (lazy on chat) (~500KB)
-          //    - services-voice: voice services (lazy on voice toggle) (~350KB)
-          //    - services-memory: memory compactor (lazy on admin) (~120KB)
-          //    - services-telemetry: performance engine (lazy on dashboard) (~150KB)
+          // 3️⃣ SERVICES CORE CLUSTER (anti-cycles hardening)
+          //    - Unifie tous les modules src/services dans un chunk unique
+          //      pour éviter les cycles inter-chunks services-ai/services-other/services-voice.
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
             if (id.includes('/services/')) {
-              // ✅ BOOT CRITICAL: Only 2 services imported at boot (App.tsx lines 56, 61)
-              if (
-                id.includes('/services/ai/providers/ollama') ||
-                id.includes('/services/monitoring/consoleMonitor')
-              ) {
-                return 'services-boot';
-              }
-              // 🔄 LAZY: AI services (chat engine + orchestrator ONLY - NO metaKernel to avoid circular deps)
-              if (
-                id.includes('/services/ai/chatEngine') ||
-                id.includes('/services/ai/orchestrator')
-              ) {
-                return 'services-ai';
-              }
-              // 🔄 BOOTSTRAP: metaKernel, cognitiveKernel, singularityKernel → services-other (avoid circular deps)
-              if (
-                id.includes('/services/ai/metaKernel') ||
-                id.includes('/services/ai/cognitiveKernel') ||
-                id.includes('/services/ai/singularityKernel') ||
-                id.includes('/services/ai/system') ||
-                id.includes('/services/ai/systemUtilities')
-              ) {
-                return 'services-other';
-              }
-              // 🔄 LAZY: Voice services
-              if (id.includes('/services/voice/')) {
-                return 'services-voice';
-              }
-              // 🔄 LAZY: Memory management
-              if (
-                id.includes('/services/chatMemoryCompactor') ||
-                id.includes('/services/contextualMemory')
-              ) {
-                return 'services-memory';
-              }
-              // 🔄 LAZY: Performance/telemetry
-              if (id.includes('/services/performanceEngine')) {
-                return 'services-telemetry';
-              }
-              // All other services → lazy chunk
-              return 'services-other';
+              return 'core-runtime';
             }
             // DevSudo → lazy chunk
             if (id.includes('/modules/devSudo/')) {
-              return 'services-other';
+              return 'core-runtime';
             }
           }
 
@@ -476,7 +484,7 @@ export default defineConfig(({ command }) => ({
 
             // Domain-specific UI components (NOT in ui-core cluster)
             if (id.includes('/components/')) {
-              if (id.includes('/chat/')) return 'ui-chat';
+              if (id.includes('/chat/')) return 'core-runtime';
               if (id.includes('/audio/')) return 'ui-audio';
               if (id.includes('/monitoring/')) return 'ui-monitoring';
               if (id.includes('/voice/')) return 'ui-voice';
@@ -518,8 +526,8 @@ export default defineConfig(({ command }) => ({
 
   // ✨ v27.1 Sprint: Global esbuild transform (source code + production optimization)
   esbuild: {
-    // 🎯 Drop console and debugger in production
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
+    // ⚠️ DIAGNOSTIC: drop console DÉSACTIVÉ temporairement pour debug PROD crash
+    drop: [], // process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
     legalComments: 'none', // Remove comments in production
     // 🎯 Production minification settings
     minifyIdentifiers: process.env.NODE_ENV === 'production',

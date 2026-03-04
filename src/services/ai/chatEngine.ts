@@ -63,6 +63,21 @@ interface _CorrectionInfo {
   confidence?: number;
   [key: string]: unknown;
 }
+function safeParseStreamMetadata(raw: string): BackendStreamMetadata {
+  const trimmed = raw.trim();
+  if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+    return { raw: trimmed };
+  }
+
+  try {
+    return JSON.parse(trimmed) as BackendStreamMetadata;
+  } catch {
+    const sanitized = trimmed
+      .replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')
+      .replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+    return JSON.parse(sanitized) as BackendStreamMetadata;
+  }
+}
 
 // 🚀 v24.3.1 - Performance Optimizations
 import { responseCache } from '@/services/cache/responseCache';
@@ -71,6 +86,7 @@ import { predictivePreloader } from '@/services/cache/predictivePreloader';
 const logger = createLogger('ChatEngine');
 
 type BackendStreamMetadata = {
+  raw?: string;
   provider?: string;
   model?: string;
   latency_ms?: number;
@@ -1231,7 +1247,7 @@ Que souhaites-tu explorer ?`;
         metadata = {};
         if (chunk.content) {
           try {
-            metadata = JSON.parse(chunk.content) as BackendStreamMetadata;
+            metadata = safeParseStreamMetadata(chunk.content);
           } catch (parseError) {
             const message =
               parseError instanceof Error ? parseError.message : String(parseError);
@@ -2078,15 +2094,27 @@ Que souhaites-tu explorer ?`;
 
 export const chatEngine = new ChatEngineOmega();
 
-predictivePreloader.setPreloadHandler(async (message, mode) => {
-  await chatEngine.generate(message, [], {
-    mode: mode as ChatMode,
-    performanceConfig: {
-      enableCache: true,
-      enablePredictive: false,
-      cacheHitBonus: false,
-    },
-  });
-});
+const registerPredictivePreloadHandler = () => {
+  try {
+    predictivePreloader.setPreloadHandler(async (message, mode) => {
+      await chatEngine.generate(message, [], {
+        mode: mode as ChatMode,
+        performanceConfig: {
+          enableCache: true,
+          enablePredictive: false,
+          cacheHitBonus: false,
+        },
+      });
+    });
+  } catch (error) {
+    void error;
+  }
+};
+
+if (typeof queueMicrotask === 'function') {
+  queueMicrotask(registerPredictivePreloadHandler);
+} else {
+  setTimeout(registerPredictivePreloadHandler, 0);
+}
 
 export default chatEngine;

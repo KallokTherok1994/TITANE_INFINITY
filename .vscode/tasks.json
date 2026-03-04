@@ -820,7 +820,13 @@
 		{
 			"label": "🛠️ Rebuild better-sqlite3",
 			"type": "shell",
-			"command": "pnpm rebuild better-sqlite3",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm rebuild better-sqlite3",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "build"
@@ -1144,43 +1150,16 @@
 		{
 			"label": "copilot: test:architecture",
 			"type": "shell",
-			"command": "pnpm",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm",
 			"args": [
 				"test:architecture"
 			],
-			"isBackground": false,
-			"problemMatcher": [],
-			"group": "test"
-		},
-		{
-			"label": "copilot: test:architecture (pnpm path)",
-			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
-			"args": [
-				"test:architecture"
-			],
-			"isBackground": false,
-			"problemMatcher": [],
-			"group": "test"
-		},
-		{
-			"label": "copilot: test:architecture (pnpm path)",
-			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
-			"args": [
-				"test:architecture"
-			],
-			"isBackground": false,
-			"problemMatcher": [],
-			"group": "test"
-		},
-		{
-			"label": "copilot: test:architecture (pnpm path)",
-			"type": "shell",
-			"command": "/home/titane-os/Documents/GitHub/TITANE_INFINITY/.tools/node/current/bin/pnpm",
-			"args": [
-				"test:architecture"
-			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1192,6 +1171,12 @@
 			"args": [
 				"test:architecture"
 			],
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
@@ -1235,6 +1220,117 @@
 			"isBackground": false,
 			"problemMatcher": [],
 			"group": "test"
+		},
+		{
+			"label": "UI Audit Tests x3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; : > \"$PP/09_TESTS_X3.log\"; for i in 1 2 3; do echo \"===== RUN $i START $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:architecture 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:compliance 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; echo \"===== RUN $i END $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; : > \"$PP/10_E2E_RESULTS.md\"; for i in 1 2 3; do echo \"## RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 pnpm run test:e2e:vitest >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 direct",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS='--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs' pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 direct2",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit Tests x3 post-fix",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"===== POST_FIX_RUN $i START $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:architecture 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; pnpm run test:compliance 2>&1 | tee -a \"$PP/09_TESTS_X3.log\"; echo \"===== POST_FIX_RUN $i END $(date -Iseconds) =====\" | tee -a \"$PP/09_TESTS_X3.log\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "UI Audit E2E x3 post-fix",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; export PATH=\"$PWD/.tools/node/current/bin:$PATH\"; PP=\"reports/UI_AUDIT_20260227_235804\"; for i in 1 2 3; do echo \"## POST_FIX_DIRECT_RUN $i $(date -Iseconds)\" | tee -a \"$PP/10_E2E_RESULTS.md\"; if TITANE_E2E_TAURI=1 RUN_E2E_TESTS=1 NODE_OPTIONS=\"--max-old-space-size=12288 --require ./tests/polyfills/resizable-arraybuffer.cjs\" pnpm exec vitest run src/tests/e2e/titane_e2e.test.ts >> \"$PP/10_E2E_RESULTS.md\" 2>&1; then echo \"POST_FIX_DIRECT_RUN_$i: PASS\" | tee -a \"$PP/10_E2E_RESULTS.md\"; else echo \"POST_FIX_DIRECT_RUN_$i: FAIL_OR_BLOCKED\" | tee -a \"$PP/10_E2E_RESULTS.md\"; fi; echo >> \"$PP/10_E2E_RESULTS.md\"; done"
+			],
+			"isBackground": false
+		},
+		{
+			"label": "cert:verify-run1",
+			"type": "shell",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "cert:verify-run1-abs",
+			"type": "shell",
+			"command": "${workspaceFolder}/.tools/node/current/bin/pnpm run verify > reports/E2E_TOTAL_LOCK_20260228_150100/23_VERIFY_RUN1_REFRESH.log 2>&1",
+			"options": {
+				"cwd": "${workspaceFolder}",
+				"env": {
+					"PATH": "${workspaceFolder}/.tools/node/current/bin:${env:PATH}"
+				}
+			},
+			"isBackground": false
+		},
+		{
+			"label": "vnext:diag-state",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; echo PACK=$(cat .last_vnext_pack); pgrep -af \"TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity\" | head -n 30 || true; ls -l $(cat .last_vnext_pack)/repro_prod_run*.log || true",
+			"isBackground": false
+		},
+		{
+			"label": "vnext:run-prod-x3-artifact",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_vnext_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; chmod +x \"$APP\"; : > \"$PACK/08_RUN_X3.log\"; for i in 1 2 3; do LOG=\"$PACK/prod_run_${i}.log\"; : > \"$LOG\"; echo \"RUN_${i} $(date -Iseconds)\" | tee -a \"$PACK/08_RUN_X3.log\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$LOG\" 2>&1; EC=$?; set -e; PAGE_LOAD=$(grep -c 'page_load label=main' \"$LOG\" || true); BOOT_READY=$(grep -c 'BOOT:READY' \"$LOG\" || true); FALLBACK=$(grep -ci 'BOOT timeout' \"$LOG\" || true); echo \"exit_code=${EC} page_load_main=${PAGE_LOAD} boot_ready=${BOOT_READY} fallback=${FALLBACK}\" | tee -a \"$PACK/08_RUN_X3.log\"; echo \"log=$LOG\" | tee -a \"$PACK/08_RUN_X3.log\"; echo >> \"$PACK/08_RUN_X3.log\"; done",
+			"isBackground": false
+		},
+		{
+			"label": "prod-isolation:repro",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_prod_isolation_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; chmod +x \"$APP\"; REPRO_LOG=\"$PACK/repro_run.log\"; : > \"$REPRO_LOG\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$REPRO_LOG\" 2>&1; EC=$?; set -e; LAST_LOG=$(tail -n 1 \"$REPRO_LOG\" | tr -d '\\r'); { echo '# REPRODUCTION STRICTE'; echo; echo \"- commande_prod_canonique_build: pnpm run build:production\"; echo \"- commande_run_prod: $APP\"; echo \"- commande_executee: RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s $APP\"; echo \"- exit_code: $EC\"; echo \"- etat_ui_observe: main window shown + page_load main\"; echo \"- duree_avant_arret_probe: 25s (timeout)\"; echo \"- dernier_log_visible: ${LAST_LOG}\"; echo \"- log_complet: $REPRO_LOG\"; } > \"$PACK/01_REPRO.md\""
+		},
+		{
+			"label": "prod-isolation:cleanup-and-run-x3",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; PACK=$(cat .last_prod_isolation_pack); APP='runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage'; pgrep -af 'TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity' | awk '{print $1}' | xargs -r kill -TERM || true; sleep 1; pgrep -af 'TITANE-Infinity_27.2.0_amd64.AppImage|titane-infinity' | awk '{print $1}' | xargs -r kill -KILL || true; : > \"$PACK/05_RUN_X3.log\"; for i in 1 2 3; do LOG=\"$PACK/prod_iso_run_${i}.log\"; : > \"$LOG\"; echo \"RUN_${i} $(date -Iseconds)\" | tee -a \"$PACK/05_RUN_X3.log\"; set +e; RUST_LOG=info RUST_BACKTRACE=1 TAURI_LOG_LEVEL=info timeout 25s \"$APP\" >> \"$LOG\" 2>&1; EC=$?; set -e; PAGE_LOAD=$(grep -c 'page_load label=main' \"$LOG\" || true); READY=$(grep -c 'BOOT:READY' \"$LOG\" || true); FALLBACK=$(grep -ci 'BOOT timeout\\|BOOT_WATCHDOG_20S' \"$LOG\" || true); echo \"exit_code=${EC} page_load_main=${PAGE_LOAD} ready=${READY} fallback=${FALLBACK}\" | tee -a \"$PACK/05_RUN_X3.log\"; echo \"log=$LOG\" | tee -a \"$PACK/05_RUN_X3.log\"; echo >> \"$PACK/05_RUN_X3.log\"; done"
+		},
+		{
+			"label": "prod-isolation:tail-tauri-log",
+			"type": "shell",
+			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; tail -n 320 runtime/dev/logs/tauri.log"
 		}
 	],
 	"inputs": [

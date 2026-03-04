@@ -609,7 +609,7 @@ npx lighthouse https://titane-infinity.app --view
 Unauthorized use, reproduction, modification, distribution or extraction  
 of the software, its architecture, engines or components is strictly prohibited.
 
-See [LICENSE.md](./LICENSE.md) for full legal terms (FR/EN).
+See [LICENSE.md](../01_misc/LICENSE.md) for full legal terms (FR/EN).
 
 ---
 

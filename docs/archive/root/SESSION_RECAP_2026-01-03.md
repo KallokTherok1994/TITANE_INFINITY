@@ -71,7 +71,7 @@
 - ✅ Documented E2E testing workflow
 - ✅ Comprehensive testing guide (25+ sections)
 - ✅ CI/CD pipeline templates
-- 📄 [E2E Testing Guide](E2E_TESTING_GUIDE.md)
+- 📄 [E2E Testing Guide](../../01_misc/E2E_TESTING_GUIDE.md)
 
 **Commit:** 49fdca17
 
@@ -291,7 +291,7 @@ ca14b1b9  Issue #77 Completion Report
 ### Documentation
 
 - 📄 [Issue #77 Report](ISSUE_77_COMPLETION_REPORT.md)
-- 📘 [E2E Testing Guide](E2E_TESTING_GUIDE.md)
+- 📘 [E2E Testing Guide](../../01_misc/E2E_TESTING_GUIDE.md)
 - 🔗 [Issue #80](https://github.com/KallokTherok1994/TITANE_INFINITY/issues/80)
 
 ### GitHub Issues

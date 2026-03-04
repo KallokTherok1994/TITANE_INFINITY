@@ -28,7 +28,7 @@ Standardized process for collecting, categorizing, prioritizing, and integrating
 ### Category 1: Documentation Gaps (DOC GAP)
 
 **Identifier**: Label `documentation` + `gap`  
-**Template**: [01-doc-gap.md](.github/ISSUE_TEMPLATE/01-doc-gap.md)  
+**Template**: [01-doc-gap.md](../../.github/ISSUE_TEMPLATE/01-doc-gap.md)  
 **Response Time**: 24-48 hours
 
 **Examples**:
@@ -57,7 +57,7 @@ Low:       Nice-to-have (e.g., additional examples)
 ### Category 2: API Issues (API)
 
 **Identifier**: Label `api` + `documentation`  
-**Template**: [02-api-issue.md](.github/ISSUE_TEMPLATE/02-api-issue.md)  
+**Template**: [02-api-issue.md](../../.github/ISSUE_TEMPLATE/02-api-issue.md)  
 **Response Time**: 12-24 hours
 
 **Examples**:
@@ -87,7 +87,7 @@ Low:       Minor spec improvement, better example needed
 ### Category 3: Help Questions (HELP)
 
 **Identifier**: Label `documentation` + `help`  
-**Template**: [03-help-question.md](.github/ISSUE_TEMPLATE/03-help-question.md)  
+**Template**: [03-help-question.md](../../.github/ISSUE_TEMPLATE/03-help-question.md)  
 **Response Time**: 24-72 hours
 
 **Examples**:
@@ -108,7 +108,7 @@ Low:       Minor spec improvement, better example needed
 ### Category 4: Feature Requests (ENHANCEMENT)
 
 **Identifier**: Label `documentation` + `enhancement`  
-**Template**: [04-doc-feature.md](.github/ISSUE_TEMPLATE/04-doc-feature.md)  
+**Template**: [04-doc-feature.md](../../.github/ISSUE_TEMPLATE/04-doc-feature.md)  
 **Response Time**: 48-72 hours
 
 **Examples**:

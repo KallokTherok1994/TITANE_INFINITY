@@ -488,7 +488,7 @@ Documentation is updated automatically on every push to `MAIN`.
 ## Changelog
 
 Changelog is automatically generated from conventional commits.
-See [CHANGELOG.md](./CHANGELOG.md) for full history.
+See [CHANGELOG.md](../../90_release/CHANGELOG__CHANGELOG.md.md) for full history.
 
 ### Commit Message Format
 
@@ -500,7 +500,7 @@ fix: Fix bug
 docs: Update documentation
 \`\`\`
 
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for full guidelines.
+See [CONTRIBUTING.md](../../00_core/CONTRIBUTING.md) for full guidelines.
 
 ## Performance
 

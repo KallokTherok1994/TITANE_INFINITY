@@ -30,7 +30,7 @@
 | ---------------------------------------------------------- | ------ | ---------------------------- |
 | [CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md)     | 4.9 KB | Guide d'installation complet |
 | [CLINE_QUICKSTART.md](CLINE_QUICKSTART.md)                 | 5.0 KB | Guide de démarrage rapide    |
-| [.clinerules/hooks/README.md](.clinerules/hooks/README.md) | 4.5 KB | Documentation des hooks      |
+| [.clinerules/hooks/README.md](../../00_core/README__.clinerules_hooks_README.md.md) | 4.5 KB | Documentation des hooks      |
 
 ### 4. Scripts NPM
 
@@ -165,7 +165,7 @@ Quand vous mentionnez:
 
 1. **[CLINE_QUICKSTART.md](CLINE_QUICKSTART.md)** - Pour commencer rapidement
 2. **[CLINE_CLI_INSTALLATION.md](CLINE_CLI_INSTALLATION.md)** - Guide complet
-3. **[.clinerules/hooks/README.md](.clinerules/hooks/README.md)** - Détails techniques hooks
+3. **[.clinerules/hooks/README.md](../../00_core/README__.clinerules_hooks_README.md.md)** - Détails techniques hooks
 
 ## 🔗 Liens Utiles
 

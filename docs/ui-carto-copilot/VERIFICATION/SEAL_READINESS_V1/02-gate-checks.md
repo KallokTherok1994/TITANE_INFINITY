@@ -3,10 +3,10 @@
 ## Gate G1 — Registry Completeness
 
 Preuves:
-- README: [docs/ui-carto-copilot/README.md](docs/ui-carto-copilot/README.md)
-- INDEX: [docs/ui-carto-copilot/INDEX.md](docs/ui-carto-copilot/INDEX.md)
+- README: [docs/ui-carto-copilot/README.md](../../../../README.md)
+- INDEX: [docs/ui-carto-copilot/INDEX.md](../../../00_core/DOCS_INDEX.md)
 - MANIFEST: [docs/ui-carto-copilot/09_MANIFEST.json](docs/ui-carto-copilot/09_MANIFEST.json)
-- Nonconformities: [docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md](docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md)
+- Nonconformities: [docs/ui-carto-copilot/55-nonconformities/55-nonconformities-register.md](../../55-nonconformities/55-nonconformities-register.md)
 - Proof pack récent: [docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/](docs/ui-carto-copilot/VERIFICATION/FINAL_VERIFY_V1/)
 
 Commande:
@@ -85,7 +85,7 @@ Statut G4: PASS
 ## Gate G5 — Gate F status integrity
 
 Preuve Gate F (baseline manquante):
-- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md)
-- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md)
+- [docs/ui-carto-copilot/VERIFICATION/SEAL_READINESS_V1/00-prefight.md](00-prefight.md)
+- [docs/ui-carto-copilot/VERIFICATION/MISSING_KEVIN_V5.md](../MISSING_KEVIN_V5.md)
 
 Statut G5: BLOCKED_BASELINE_MISSING

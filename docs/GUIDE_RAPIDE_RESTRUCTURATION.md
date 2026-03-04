@@ -238,10 +238,10 @@ cp docs/backup_YYYYMMDD/*.md .
 ```markdown
 ## 📚 Documentation
 
-- [Documentation Actuelle v26.2](docs/current/INDEX.md)
-- [Quick Start](QUICKSTART_UBUNTU_24.04.md)
-- [Architecture](ARCHITECTURE.md)
-- [Changelog](CHANGELOG.md)
+- [Documentation Actuelle v26.2](00_core/DOCS_INDEX.md)
+- [Quick Start](01_misc/QUICKSTART_UBUNTU_24.04.md)
+- [Architecture](01_misc/ARCHITECTURE__ARCHITECTURE.md.md)
+- [Changelog](90_release/CHANGELOG__CHANGELOG.md.md)
 ```
 
 ---

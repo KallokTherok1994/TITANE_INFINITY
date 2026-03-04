@@ -1,4 +1,0 @@
-# 09_SEARCH_V2_DESIGN.md
-
-Phase: P9
-Statut: PENDING

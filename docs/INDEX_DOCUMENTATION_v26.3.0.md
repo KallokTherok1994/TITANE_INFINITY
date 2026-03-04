@@ -483,8 +483,8 @@ Voir **CONTRIBUTING.md** pour:
 ### Documentation Principale
 
 - [README.md](../README.md) - Présentation projet
-- [ARCHITECTURE.md](ARCHITECTURE.md) - Architecture détaillée
-- [CONTRIBUTING.md](../CONTRIBUTING.md) - Guide contribution
+- [ARCHITECTURE.md](01_misc/ARCHITECTURE__ARCHITECTURE.md.md) - Architecture détaillée
+- [CONTRIBUTING.md](00_core/CONTRIBUTING.md) - Guide contribution
 - [API_REFERENCE_v24.30.md](API_REFERENCE_v24.30.md) - API 14 modules
 - [OMEGA_PIPELINE_v2.md](guides/OMEGA_PIPELINE_v2.md) - Pipeline détaillé
 

@@ -20,7 +20,7 @@
 
 ### Code Quality
 
-- [ ] Mon code suit les standards du projet ([CONTRIBUTING.md](CONTRIBUTING.md))
+- [ ] Mon code suit les standards du projet ([CONTRIBUTING.md](../docs/00_core/CONTRIBUTING.md))
 - [ ] J'ai effectué une auto-review de mon code
 - [ ] J'ai commenté les parties complexes
 - [ ] Mes changements ne génèrent pas de nouveaux warnings

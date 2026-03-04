@@ -667,15 +667,65 @@ export class LogEngine {
 // =============================================================================
 
 let logEngineInstance: LogEngine | null = null;
+let logEngineModuleReady = false;
+
+const deferredLogEngineProxy: LogEngine = new Proxy({} as LogEngine, {
+  get(_target, prop: string | symbol): unknown {
+    if (prop === Symbol.toStringTag) {
+      return 'DeferredLogEngineProxy';
+    }
+
+    if (!logEngineModuleReady) {
+      if (prop === 'getLogs' || prop === 'getEvents') {
+        return () => [];
+      }
+      if (prop === 'getFilteredLogs') {
+        return () => [];
+      }
+      if (prop === 'searchLogs') {
+        return () => ({ logs: [], total: 0, hasMore: false });
+      }
+      if (prop === 'getStats') {
+        return () => ({
+          totalLogs: 0,
+          totalEvents: 0,
+          logsBySeverity: {},
+          eventsByImpact: {},
+          oldestLog: 0,
+          newestLog: 0,
+          memoryUsageKB: 0,
+        });
+      }
+      return () => undefined;
+    }
+
+    const instance = getOrCreateLogEngineInstance();
+    const member = Reflect.get(instance as object, prop);
+    if (typeof member === 'function') {
+      return (...args: unknown[]) =>
+        Reflect.apply(member as (...params: unknown[]) => unknown, instance, args);
+    }
+    return member;
+  },
+});
+
+function getOrCreateLogEngineInstance(): LogEngine {
+  if (!logEngineInstance) {
+    logEngineInstance = new LogEngine();
+  }
+  return logEngineInstance;
+}
+
+logEngineModuleReady = true;
 
 /**
  * Récupère l'instance singleton du LogEngine
  */
 export function getLogEngine(): LogEngine {
-  if (!logEngineInstance) {
-    logEngineInstance = new LogEngine();
+  if (!logEngineModuleReady) {
+    return deferredLogEngineProxy;
   }
-  return logEngineInstance;
+  return getOrCreateLogEngineInstance();
 }
 
 /**

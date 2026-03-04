@@ -23,7 +23,7 @@
 
 ### 👥 [Contributor Onboarding Test](CONTRIBUTOR_ONBOARDING_TEST.md)
 
-**Validates:** [CONTRIBUTING.md](../../../CONTRIBUTING.md) effectiveness
+**Validates:** [CONTRIBUTING.md](../CONTRIBUTING.md) effectiveness
 
 **Who:** 3-5 new contributors (never contributed before)  
 **Duration:** 1 week  
