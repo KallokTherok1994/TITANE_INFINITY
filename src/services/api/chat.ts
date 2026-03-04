@@ -1362,12 +1362,29 @@ class ChatService {
     }
 
     if (typeof raw === 'string') {
+      const trimmed = raw.trim();
+      if (!trimmed.startsWith('{') && !trimmed.startsWith('[')) {
+        return {
+          content: raw,
+        };
+      }
+
       try {
-        const parsed = JSON.parse(raw);
+        const parsed = JSON.parse(trimmed);
         return this.normalizeCompleteEvent(parsed);
       } catch (error) {
-        console.warn('[ChatService] Unable to parse completion payload:', error);
-        return null;
+        try {
+          const sanitized = trimmed
+            .replace(/\\u(?![0-9a-fA-F]{4})/g, '\\\\u')
+            .replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+          const parsed = JSON.parse(sanitized);
+          return this.normalizeCompleteEvent(parsed);
+        } catch (secondError) {
+          console.warn('[ChatService] Unable to parse completion payload:', secondError);
+          return {
+            content: raw,
+          };
+        }
       }
     }
 

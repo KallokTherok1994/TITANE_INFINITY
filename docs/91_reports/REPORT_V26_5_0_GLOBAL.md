@@ -45,14 +45,14 @@ Total: 23/23
 ## 🔗 Key Files
 
 - Backend:
-  - [src-tauri/src/fusion_commands_week1.rs](src-tauri/src/fusion_commands_week1.rs)
-  - [src-tauri/src/fusion_commands_week2.rs](src-tauri/src/fusion_commands_week2.rs)
-  - [src-tauri/src/fusion_commands_week3.rs](src-tauri/src/fusion_commands_week3.rs)
-  - [src-tauri/src/fusion_commands_week4.rs](src-tauri/src/fusion_commands_week4.rs)
+  - [src-tauri/src/fusion_commands_week1.rs](../../src-tauri/src/fusion_commands_week1.rs)
+  - [src-tauri/src/fusion_commands_week2.rs](../../src-tauri/src/fusion_commands_week2.rs)
+  - [src-tauri/src/fusion_commands_week3.rs](../../src-tauri/src/fusion_commands_week3.rs)
+  - [src-tauri/src/fusion_commands_week4.rs](../../src-tauri/src/fusion_commands_week4.rs)
 - Engine wiring:
-  - [src/core/singularity/SingularityFusionEngine.ts](src/core/singularity/SingularityFusionEngine.ts)
+  - [src/core/singularity/SingularityFusionEngine.ts](../../src/core/singularity/SingularityFusionEngine.ts)
 - Frontend bindings:
-  - [src/lib/fusion/index.ts](src/lib/fusion/index.ts)
+  - [src/lib/fusion/index.ts](../../src/lib/fusion/index.ts)
 
 ---
 

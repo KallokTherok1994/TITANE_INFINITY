@@ -1,0 +1,15 @@
+# 04_COMMANDS_USED
+- 2026-03-03T08:08:06-05:00 bootstrap + proof pack init:
+  - `git status`
+  - `git rev-parse --short HEAD`
+  - `git log -20 --oneline`
+  - `find src-tauri/src/chat_engine -maxdepth 3 -type f`
+  - `rg ... ChatEngineConfig|memory_flush_interval|...`
+- 2026-03-03T09:05:20-05:00 tests + gates:
+  - `cargo test --lib` x3 (logged in `05_TESTS_X3.log`)
+  - `pnpm test:architecture` (task `copilot: test:architecture`) PASS
+- 2026-03-03T12:25:50-05:00 architecture gate rerun:
+  - `pnpm test:architecture` PASS
+- 2026-03-03T12:26:10-05:00 unicode error verification:
+  - source scan + targeted code patches on stream metadata parse points
+  - `get_errors` on modified TS files => no errors

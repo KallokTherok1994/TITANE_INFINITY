@@ -9,6 +9,20 @@
  * ═══════════════════════════════════════════════════════════════
  */
 use serde::{Deserialize, Serialize};
+use std::fs;
+use std::path::PathBuf;
+use std::sync::OnceLock;
+use tokio::sync::RwLock;
+
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "lowercase")]
+pub enum ProviderPreference {
+    Auto,
+    Gemini,
+    Ollama,
+    Local,
+}
 
 /**
  * RuntimeConfigUpdate
@@ -34,6 +48,206 @@ pub struct ChatEngineConfigUpdate {
     pub chunk_size: Option<usize>,
     pub max_tokens: Option<usize>,
     pub temperature: Option<f32>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IpcErrorPayload {
+    pub code: String,
+    pub message: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct IpcEnvelope<T> {
+    pub ok: bool,
+    pub content: Option<T>,
+    pub error: Option<IpcErrorPayload>,
+}
+
+impl<T> IpcEnvelope<T> {
+    fn ok(content: T) -> Self {
+        Self {
+            ok: true,
+            content: Some(content),
+            error: None,
+        }
+    }
+
+    fn err(code: &str, message: impl Into<String>) -> Self {
+        Self {
+            ok: false,
+            content: None,
+            error: Some(IpcErrorPayload {
+                code: code.to_string(),
+                message: message.into(),
+            }),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChatEngineConfigDto {
+    pub response_timeout_ms: u64,
+    pub stream_chunk_size: u64,
+    pub memory_context_tokens: u64,
+    pub memory_retention_tokens: u64,
+    pub memory_flush_interval_ms: u64,
+    pub auto_tts_enabled: bool,
+    pub stream_channel_buffer: u64,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChatRequestDefaults {
+    pub temperature: f32,
+    pub max_output_tokens: u64,
+    pub provider: ProviderPreference,
+    pub enable_streaming: bool,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ChatConfigBundle {
+    pub engine: ChatEngineConfigDto,
+    pub request_defaults: ChatRequestDefaults,
+}
+
+fn stable_profile_bundle() -> ChatConfigBundle {
+    ChatConfigBundle {
+        engine: ChatEngineConfigDto {
+            response_timeout_ms: 60_000,
+            stream_chunk_size: 640,
+            memory_context_tokens: 2_048,
+            memory_retention_tokens: 6_000,
+            memory_flush_interval_ms: 750,
+            auto_tts_enabled: true,
+            stream_channel_buffer: 32,
+        },
+        request_defaults: ChatRequestDefaults {
+            temperature: 0.7,
+            max_output_tokens: 484,
+            provider: ProviderPreference::Auto,
+            enable_streaming: true,
+        },
+    }
+}
+
+fn profile_bundle(profile_name: &str) -> Option<ChatConfigBundle> {
+    match profile_name {
+        "StableProduction" => Some(stable_profile_bundle()),
+        "DeepMemoryCoaching" => Some(ChatConfigBundle {
+            engine: ChatEngineConfigDto {
+                response_timeout_ms: 90_000,
+                stream_chunk_size: 640,
+                memory_context_tokens: 4_096,
+                memory_retention_tokens: 12_000,
+                memory_flush_interval_ms: 1_000,
+                auto_tts_enabled: true,
+                stream_channel_buffer: 32,
+            },
+            request_defaults: ChatRequestDefaults {
+                temperature: 0.6,
+                max_output_tokens: 8096,
+                provider: ProviderPreference::Auto,
+                enable_streaming: true,
+            },
+        }),
+        "UltraReactiveLowIO" => Some(ChatConfigBundle {
+            engine: ChatEngineConfigDto {
+                response_timeout_ms: 45_000,
+                stream_chunk_size: 480,
+                memory_context_tokens: 1_024,
+                memory_retention_tokens: 2_500,
+                memory_flush_interval_ms: 1_500,
+                auto_tts_enabled: false,
+                stream_channel_buffer: 16,
+            },
+            request_defaults: ChatRequestDefaults {
+                temperature: 0.5,
+                max_output_tokens: 1024,
+                provider: ProviderPreference::Auto,
+                enable_streaming: true,
+            },
+        }),
+        _ => None,
+    }
+}
+
+fn chat_config_path() -> PathBuf {
+    let base = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir);
+    base.join("titane-infinity")
+        .join("config")
+        .join("chat_engine_settings_v2.json")
+}
+
+fn load_chat_bundle_from_disk() -> Option<ChatConfigBundle> {
+    let path = chat_config_path();
+    if !path.exists() {
+        return None;
+    }
+
+    let raw = fs::read_to_string(path).ok()?;
+    serde_json::from_str::<ChatConfigBundle>(&raw).ok()
+}
+
+fn save_chat_bundle_to_disk(bundle: &ChatConfigBundle) -> Result<(), String> {
+    let path = chat_config_path();
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("Impossible de créer le dossier config chat: {e}"))?;
+    }
+
+    let raw = serde_json::to_string_pretty(bundle)
+        .map_err(|e| format!("Impossible de sérialiser la config chat: {e}"))?;
+    fs::write(path, raw).map_err(|e| format!("Impossible d'écrire la config chat: {e}"))
+}
+
+static CHAT_CONFIG_BUNDLE: OnceLock<RwLock<ChatConfigBundle>> = OnceLock::new();
+
+fn chat_bundle_store() -> &'static RwLock<ChatConfigBundle> {
+    CHAT_CONFIG_BUNDLE.get_or_init(|| {
+        let initial = load_chat_bundle_from_disk().unwrap_or_else(stable_profile_bundle);
+        RwLock::new(initial)
+    })
+}
+
+pub async fn current_chat_bundle() -> ChatConfigBundle {
+    chat_bundle_store().read().await.clone()
+}
+
+fn validate_engine_dto(dto: &ChatEngineConfigDto) -> Result<(), String> {
+    validate_timeout_ms(dto.response_timeout_ms)?;
+    validate_chunk_size(dto.stream_chunk_size as usize)?;
+
+    if dto.memory_context_tokens == 0 {
+        return Err("memory_context_tokens doit être > 0".to_string());
+    }
+
+    if dto.memory_retention_tokens < dto.memory_context_tokens {
+        return Err("memory_retention_tokens doit être >= memory_context_tokens".to_string());
+    }
+
+    if dto.memory_flush_interval_ms < 50 || dto.memory_flush_interval_ms > 60_000 {
+        return Err("memory_flush_interval_ms doit être entre 50 et 60000".to_string());
+    }
+
+    if dto.stream_channel_buffer == 0 || dto.stream_channel_buffer > 4096 {
+        return Err("stream_channel_buffer doit être entre 1 et 4096".to_string());
+    }
+
+    Ok(())
+}
+
+fn validate_request_defaults(defaults: &ChatRequestDefaults) -> Result<(), String> {
+    validate_temperature(defaults.temperature)?;
+
+    if defaults.max_output_tokens == 0 || defaults.max_output_tokens > 8096 {
+        return Err("max_output_tokens doit être entre 1 et 8096".to_string());
+    }
+
+    Ok(())
 }
 
 /**
@@ -232,21 +446,107 @@ pub async fn update_chat_engine_config(update: ChatEngineConfigUpdate) -> Result
         log::info!("✅ [CONFIG] Temperature validated: {}", temperature);
     }
 
-    // Implementation: Persist chat engine config to state management
-    // - State: Store in global ChatEngineConfig singleton wrapped in Arc<RwLock>
-    //   * Update: CHAT_CONFIG.write().await.set_model(model);
-    //   * Update: CHAT_CONFIG.write().await.set_temperature(temperature);
-    // - Persistence: Save to ~/.titane/config/chat_engine.json for recovery on restart
-    //   * Serialize: serde_json::to_string_pretty(&config)?
-    //   * Write: tokio::fs::write(config_path, json).await?
-    // - Notification: Emit Tauri event "config:updated" to notify frontend
-    // - Validation: Already done above, safe to persist validated values
-    // For now, validation only
+    let mut bundle = chat_bundle_store().write().await;
 
-    log::info!("✅ [CONFIG] Chat engine configuration validated successfully");
-    log::warn!("⚠️  [CONFIG] Chat engine config changes not persisted (state management needed)");
+    if let Some(timeout_ms) = update.timeout_ms {
+        bundle.engine.response_timeout_ms = timeout_ms;
+    }
+
+    if let Some(chunk_size) = update.chunk_size {
+        bundle.engine.stream_chunk_size = chunk_size as u64;
+    }
+
+    if let Some(max_tokens) = update.max_tokens {
+        bundle.request_defaults.max_output_tokens = max_tokens as u64;
+    }
+
+    if let Some(temperature) = update.temperature {
+        bundle.request_defaults.temperature = temperature;
+    }
+
+    validate_engine_dto(&bundle.engine)?;
+    validate_request_defaults(&bundle.request_defaults)?;
+    save_chat_bundle_to_disk(&bundle)?;
+
+    log::info!("✅ [CONFIG] Chat engine configuration persisted successfully");
 
     Ok(())
+}
+
+#[tauri::command]
+pub async fn get_chat_engine_config() -> IpcEnvelope<ChatEngineConfigDto> {
+    let bundle = chat_bundle_store().read().await;
+    IpcEnvelope::ok(bundle.engine.clone())
+}
+
+#[tauri::command]
+pub async fn set_chat_engine_config(
+    config: ChatEngineConfigDto,
+) -> IpcEnvelope<ChatEngineConfigDto> {
+    if let Err(err) = validate_engine_dto(&config) {
+        return IpcEnvelope::err("VALIDATION_ERROR", err);
+    }
+
+    let mut bundle = chat_bundle_store().write().await;
+    bundle.engine = config.clone();
+
+    if let Err(err) = save_chat_bundle_to_disk(&bundle) {
+        return IpcEnvelope::err("PERSISTENCE_ERROR", err);
+    }
+
+    IpcEnvelope::ok(config)
+}
+
+#[tauri::command]
+pub async fn get_chat_request_defaults() -> IpcEnvelope<ChatRequestDefaults> {
+    let bundle = chat_bundle_store().read().await;
+    IpcEnvelope::ok(bundle.request_defaults.clone())
+}
+
+#[tauri::command]
+pub async fn set_chat_request_defaults(
+    defaults: ChatRequestDefaults,
+) -> IpcEnvelope<ChatRequestDefaults> {
+    if let Err(err) = validate_request_defaults(&defaults) {
+        return IpcEnvelope::err("VALIDATION_ERROR", err);
+    }
+
+    let mut bundle = chat_bundle_store().write().await;
+    bundle.request_defaults = defaults.clone();
+
+    if let Err(err) = save_chat_bundle_to_disk(&bundle) {
+        return IpcEnvelope::err("PERSISTENCE_ERROR", err);
+    }
+
+    IpcEnvelope::ok(defaults)
+}
+
+#[tauri::command]
+pub async fn set_chat_profile(name: String) -> IpcEnvelope<ChatConfigBundle> {
+    let Some(bundle) = profile_bundle(name.trim()) else {
+        return IpcEnvelope::err(
+            "INVALID_PROFILE",
+            "Profil inconnu. Valeurs valides: StableProduction, DeepMemoryCoaching, UltraReactiveLowIO",
+        );
+    };
+
+    if let Err(err) = validate_engine_dto(&bundle.engine) {
+        return IpcEnvelope::err("VALIDATION_ERROR", err);
+    }
+    if let Err(err) = validate_request_defaults(&bundle.request_defaults) {
+        return IpcEnvelope::err("VALIDATION_ERROR", err);
+    }
+
+    {
+        let mut state = chat_bundle_store().write().await;
+        *state = bundle.clone();
+    }
+
+    if let Err(err) = save_chat_bundle_to_disk(&bundle) {
+        return IpcEnvelope::err("PERSISTENCE_ERROR", err);
+    }
+
+    IpcEnvelope::ok(bundle)
 }
 
 #[cfg(test)]

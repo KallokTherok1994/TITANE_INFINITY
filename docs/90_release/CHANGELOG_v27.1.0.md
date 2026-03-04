@@ -1,5 +1,30 @@
 # TITANE∞ v27.1.0 - Extended Optimization & Bugfix Session
 
+## 2026-03-03 — Maintenance Sync (Post-Strict + ORCH Proof)
+
+**Session Type:** Stabilisation TypeScript + gouvernance preuves  
+**Branch:** MAIN  
+**Commits:** `25740b5d0`, `3895845c1`, `29ece191d`
+
+### Résumé
+
+- Correction des bloqueurs TypeScript sur flux chat/devtools:
+   - `src/hooks/useChat.ts`
+   - `src/modules/devSudo/devSudoHandler.ts`
+   - `src/services/ai/chatEngine.ts`
+- Revalidation build-safe: `pnpm run check` PASS (x3).
+- Revalidation architecture: `pnpm run test:architecture` PASS.
+- Scellement du proof pack: `proof_packs/ORCH_VΩ_2026-03-03_1436_0cdf39d39`.
+- Synchronisation documentaire: `README.md`, `docs/README.md`, mini changelog ORCH.
+
+### Impact
+
+- Runtime: stable (pas d’introduction de nouvelles surfaces réseau).
+- Gouvernance: gate `G_BUILD_X3` levée dans le pack ORCH (PASS).
+- Documentation: versions/statuts alignés sur `v27.2.0`.
+
+---
+
 **Release Date:** 2026-02-01  
 **Session Type:** Comprehensive Audit + UI Optimization  
 **Branch:** MAIN  

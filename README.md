@@ -3,11 +3,11 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v27.0.5  
+**Version:** v27.2.0  
 **Status:** Production Ready ✅  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Qualité (v27.0.5) :** Build + packaging validés, artefacts publiés (`deployment/latest`) — Production Ready ✅
+**Qualité (v27.2.0) :** TypeScript strict (0 erreur) + preuves ORCH_VΩ mises à jour (2026-03-03) — Production Ready ✅
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
@@ -54,7 +54,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Current Production (v27.x Series)
 
-- **v27.0.5-prod** (STABLE) — Production baseline
+- **v27.0.5-prod** (STABLE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
   - Tag: 02bce9c7
   - Immutable production reference
@@ -70,9 +70,15 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Risk: MINIMAL (type-only, zero runtime impact)
   - Lane: Strict Mode (P2)
 
+- **2026-03-03** (MAINTENANCE & PROOF SYNC)
+  - Status: ✅ DONE (no version bump)
+  - Commits: `25740b5d0`, `3895845c1`
+  - Change: TS blockers corrigés + pack `ORCH_VΩ_2026-03-03_1436_0cdf39d39` scellé
+  - Risk: LOW (stabilisation + documentation)
+
 ### Legacy Versions
 
-See [CHANGELOG.md](docs/90_release/CHANGELOG__CHANGELOG.md.md) for v24.x-v26.x history.
+See [CHANGELOG v27.1.0](docs/90_release/CHANGELOG_v27.1.0.md) for app release history.
 
 ---
 
@@ -229,12 +235,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config s
 
 ---
 
-## 📐 Architecture v27.0.5
+## 📐 Architecture v27.2.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v27.0.5
+TITANE∞ v27.2.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat

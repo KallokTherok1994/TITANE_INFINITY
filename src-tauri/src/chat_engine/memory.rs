@@ -1,32 +1,43 @@
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::sync::Arc;
+use std::time::Duration;
 
-use tokio::sync::RwLock;
+use tokio::sync::{Mutex, RwLock};
+use tokio::task::JoinHandle;
+use tokio::time;
 
 use crate::memory::model::Conversation;
-use crate::memory::storage::MemoryStorage;
-use crate::memory::{MemoryEntry, MessageRole};
+use crate::memory::storage::{MemoryStorage, MemoryStoragePort};
+use crate::memory::{MemoryEntry, MemoryError, MemoryResult, MessageRole};
 
 use super::errors::ChatEngineError;
 
 /// High-level memory manager with in-memory caching and corruption guards.
 pub struct ChatMemoryManager {
-    storage: Arc<MemoryStorage>,
-    cached: RwLock<HashMap<String, Conversation>>, // in-memory cache for fast access
+    storage: Arc<dyn MemoryStoragePort + Send + Sync>,
+    cached: Arc<RwLock<HashMap<String, Conversation>>>, // in-memory cache for fast access
     retention_tokens: usize,
+    flush_interval: Duration,
+    flush_tasks: Mutex<HashMap<String, JoinHandle<()>>>,
 }
 
 impl ChatMemoryManager {
-    pub fn new(storage: Arc<MemoryStorage>, retention_tokens: usize) -> Self {
+    pub fn new(
+        storage: Arc<dyn MemoryStoragePort + Send + Sync>,
+        retention_tokens: usize,
+        flush_interval: Duration,
+    ) -> Self {
         Self {
             storage,
-            cached: RwLock::new(HashMap::new()),
+            cached: Arc::new(RwLock::new(HashMap::new())),
             retention_tokens,
+            flush_interval,
+            flush_tasks: Mutex::new(HashMap::new()),
         }
     }
 
-    pub fn storage(&self) -> Arc<MemoryStorage> {
+    pub fn storage(&self) -> Arc<dyn MemoryStoragePort + Send + Sync> {
         self.storage.clone()
     }
 
@@ -80,24 +91,22 @@ impl ChatMemoryManager {
         content: String,
     ) -> Result<(), ChatEngineError> {
         let mut cache = self.cached.write().await;
-        let conversation = if let Some(conv) = cache.get_mut(conversation_id) {
-            conv
-        } else {
-            drop(cache); // release lock before loading
+        if !cache.contains_key(conversation_id) {
+            drop(cache);
             self.load_into_cache(conversation_id).await?;
-            let mut cache = self.cached.write().await;
-            cache
-                .get_mut(conversation_id)
-                .expect("conversation cached after load")
-        };
+            cache = self.cached.write().await;
+        }
+
+        let conversation = cache
+            .get_mut(conversation_id)
+            .ok_or_else(|| ChatEngineError::MemoryFailure("Conversation not found".to_string()))?;
 
         let tokens = estimate_tokens(content.as_str());
         conversation.add_entry(role, content, tokens);
         self.enforce_retention(conversation);
 
-        self.storage
-            .save_conversation(conversation)
-            .map_err(ChatEngineError::from)?;
+        drop(cache);
+        self.schedule_flush(conversation_id.to_string()).await;
         Ok(())
     }
 
@@ -107,14 +116,94 @@ impl ChatMemoryManager {
         }
 
         let mut accumulated = 0usize;
-        conversation.entries.retain(|entry| {
-            accumulated += entry.tokens.max(1);
-            accumulated <= self.retention_tokens
-        });
+        let mut keep_from_index = conversation.entries.len();
+        for (idx, entry) in conversation.entries.iter().enumerate().rev() {
+            let entry_tokens = entry.tokens.max(1);
+            if accumulated + entry_tokens > self.retention_tokens {
+                break;
+            }
+            accumulated += entry_tokens;
+            keep_from_index = idx;
+        }
+
+        if keep_from_index > 0 {
+            conversation.entries.drain(0..keep_from_index);
+        }
 
         conversation.metadata.total_tokens =
             conversation.entries.iter().map(|entry| entry.tokens).sum();
         conversation.metadata.message_count = conversation.entries.len();
+    }
+
+    async fn schedule_flush(&self, conversation_id: String) {
+        let mut tasks = self.flush_tasks.lock().await;
+        if let Some(handle) = tasks.get(&conversation_id) {
+            if !handle.is_finished() {
+                log::debug!("[Memory] flush coalesced: {}", conversation_id);
+                return;
+            }
+        }
+
+        let storage = self.storage.clone();
+        let cached = self.cached.clone();
+        let delay = self.flush_interval;
+        let conversation_id_for_task = conversation_id.clone();
+        let handle = tokio::spawn(async move {
+            log::debug!("[Memory] flush scheduled: {}", conversation_id_for_task);
+            time::sleep(delay).await;
+
+            let snapshot = {
+                let guard = cached.read().await;
+                guard.get(&conversation_id_for_task).cloned()
+            };
+
+            if let Some(conversation) = snapshot {
+                if let Err(err) = storage.save_conversation(&conversation) {
+                    log::error!(
+                        "[Memory] flush persist failed for {}: {}",
+                        conversation_id_for_task,
+                        err
+                    );
+                } else {
+                    log::debug!("[Memory] flush persisted: {}", conversation_id_for_task);
+                }
+            }
+        });
+
+        tasks.insert(conversation_id, handle);
+    }
+
+    pub async fn flush_conversation_now(&self, conversation_id: &str) -> Result<(), ChatEngineError> {
+        if let Some(handle) = self.flush_tasks.lock().await.remove(conversation_id) {
+            handle.abort();
+        }
+
+        let snapshot = {
+            let guard = self.cached.read().await;
+            guard.get(conversation_id).cloned()
+        };
+
+        if let Some(conversation) = snapshot {
+            self.storage
+                .save_conversation(&conversation)
+                .map_err(ChatEngineError::from)?;
+            log::debug!("[Memory] flush persisted: {}", conversation_id);
+        }
+
+        Ok(())
+    }
+
+    pub async fn flush_all_now(&self) -> Result<(), ChatEngineError> {
+        let ids = {
+            let guard = self.cached.read().await;
+            guard.keys().cloned().collect::<Vec<_>>()
+        };
+
+        for conversation_id in ids {
+            self.flush_conversation_now(&conversation_id).await?;
+        }
+
+        Ok(())
     }
 
     async fn load_into_cache(&self, conversation_id: &str) -> Result<(), ChatEngineError> {
@@ -175,6 +264,12 @@ impl ChatMemoryManager {
     }
 
     pub async fn reset_all(&self) -> Result<(), ChatEngineError> {
+        {
+            let mut tasks = self.flush_tasks.lock().await;
+            for (_, handle) in tasks.drain() {
+                handle.abort();
+            }
+        }
         self.storage
             .clone()
             .clear_all()
@@ -230,6 +325,9 @@ fn estimate_tokens(content: &str) -> usize {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::Mutex as StdMutex;
+    use tempfile::TempDir;
 
     // ─────────────────────────────────────────────────────────────
     // estimate_tokens Tests
@@ -300,5 +398,142 @@ mod tests {
         let short_many_words = "a b c d e f g h i j"; // 10 words, ~5 ascii tokens
         let tokens = estimate_tokens(short_many_words);
         assert!(tokens >= 10); // Should be 10 (more words than ascii tokens)
+    }
+
+    #[test]
+    fn test_enforce_retention_keeps_most_recent_entries() {
+        let temp_dir = TempDir::new().expect("create temp dir");
+        let storage = Arc::new(
+            MemoryStorage::new(temp_dir.path().to_path_buf(), "test-key".to_string())
+                .expect("create storage"),
+        );
+        let manager = ChatMemoryManager::new(storage, 6, Duration::from_millis(50));
+
+        let mut conversation = Conversation::new("Retention test".to_string());
+        conversation.add_entry(MessageRole::User, "oldest".to_string(), 2);
+        conversation.add_entry(MessageRole::Assistant, "middle".to_string(), 2);
+        conversation.add_entry(MessageRole::User, "newer".to_string(), 2);
+        conversation.add_entry(MessageRole::Assistant, "newest".to_string(), 2);
+
+        manager.enforce_retention(&mut conversation);
+
+        let kept: Vec<String> = conversation
+            .entries
+            .iter()
+            .map(|entry| entry.content.clone())
+            .collect();
+
+        assert_eq!(kept, vec!["middle", "newer", "newest"]);
+        assert!(conversation.metadata.total_tokens <= 6);
+        assert_eq!(conversation.metadata.message_count, 3);
+    }
+
+    #[derive(Default)]
+    struct FakeStorage {
+        saves: AtomicUsize,
+        conversations: StdMutex<HashMap<String, Conversation>>,
+    }
+
+    impl FakeStorage {
+        fn save_count(&self) -> usize {
+            self.saves.load(Ordering::SeqCst)
+        }
+
+        fn reset_save_count(&self) {
+            self.saves.store(0, Ordering::SeqCst);
+        }
+    }
+
+    impl MemoryStoragePort for FakeStorage {
+        fn save_conversation(&self, conversation: &Conversation) -> MemoryResult<()> {
+            self.saves.fetch_add(1, Ordering::SeqCst);
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.insert(conversation.id.clone(), conversation.clone());
+            Ok(())
+        }
+
+        fn load_conversation(&self, conversation_id: &str) -> MemoryResult<Conversation> {
+            let guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.get(conversation_id).cloned().ok_or_else(|| {
+                MemoryError::StorageError(format!("Conversation {} not found", conversation_id))
+            })
+        }
+
+        fn delete_conversation(&self, conversation_id: &str) -> MemoryResult<()> {
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.remove(conversation_id);
+            Ok(())
+        }
+
+        fn export_conversation(&self, conversation_id: &str) -> MemoryResult<String> {
+            let conversation = self.load_conversation(conversation_id)?;
+            serde_json::to_string_pretty(&conversation)
+                .map_err(|e| MemoryError::StorageError(e.to_string()))
+        }
+
+        fn clear_all(&self) -> MemoryResult<()> {
+            let mut guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            guard.clear();
+            Ok(())
+        }
+
+        fn get_stats(&self) -> MemoryResult<(u64, u64)> {
+            let guard = self
+                .conversations
+                .lock()
+                .map_err(|e| MemoryError::StorageError(e.to_string()))?;
+            let total_messages = guard.values().map(|c| c.entries.len() as u64).sum::<u64>();
+            Ok((guard.len() as u64, total_messages))
+        }
+    }
+
+    #[tokio::test]
+    async fn test_flush_coalescing_strict_with_manual_flush_trigger() {
+        let fake = Arc::new(FakeStorage::default());
+        let manager = ChatMemoryManager::new(fake.clone(), 200, Duration::from_millis(250));
+
+        let conversation_id = manager
+            .ensure_conversation(None)
+            .await
+            .expect("create conversation");
+        fake.reset_save_count();
+
+        manager
+            .append_user_entry(&conversation_id, "first".to_string())
+            .await
+            .expect("append first");
+        manager
+            .append_assistant_entry(&conversation_id, "second".to_string())
+            .await
+            .expect("append second");
+
+        assert!(
+            fake.save_count() <= 1,
+            "coalescing failed before flush trigger: {}",
+            fake.save_count()
+        );
+
+        manager
+            .flush_conversation_now(&conversation_id)
+            .await
+            .expect("flush now");
+
+        assert_eq!(
+            fake.save_count(),
+            1,
+            "manual flush must produce exactly one persisted save after coalescing"
+        );
     }
 }

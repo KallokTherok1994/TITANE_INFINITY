@@ -141,7 +141,7 @@ L'application charge actuellement **AppMinimal** pour diagnostic du chargement i
 
 ### Pour revenir à l'App complet
 
-Modifier [src/main.tsx](src/main.tsx#L32):
+Modifier [src/main.tsx](../../src/main.tsx#L32):
 
 ```typescript
 // Remplacer
@@ -200,7 +200,7 @@ Content-Type: text/html; charset=utf-8
 
 - **Problème**: App.tsx avec 19 useEffect causait une boucle
 - **Solution**: AppMinimal chargé temporairement
-- **Fichiers modifiés**: [src/main.tsx](src/main.tsx), [src/AppMinimal.tsx](src/AppMinimal.tsx)
+- **Fichiers modifiés**: [src/main.tsx](../../src/main.tsx), [src/AppMinimal.tsx](../../src/AppMinimal.tsx)
 
 ### 3. Standards Mode activé
 

@@ -48,15 +48,15 @@ All artifacts available in `deployment/latest/`:
 
 | Artifact | Size | SHA256 | Location |
 |----------|------|--------|----------|
-| **AppImage** | 86M | `1972c270...` | [`TITANE-Infinity_27.2.0_amd64.AppImage`](deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage) |
-| **DEB** | 14M | `5b925c8d...` | [`TITANE-Infinity_27.2.0_amd64.deb`](deployment/latest/TITANE-Infinity_27.2.0_amd64.deb) |
-| **RPM** (bonus) | 14M | `8fa895ed...` | [`TITANE-Infinity-27.2.0-1.x86_64.rpm`](deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm) |
+| **AppImage** | 86M | `1972c270...` | [`TITANE-Infinity_27.2.0_amd64.AppImage`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage) |
+| **DEB** | 14M | `5b925c8d...` | [`TITANE-Infinity_27.2.0_amd64.deb`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.deb) |
+| **RPM** (bonus) | 14M | `8fa895ed...` | [`TITANE-Infinity-27.2.0-1.x86_64.rpm`](../../deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm) |
 
 ### Metadata Files
 
-- [`SHA256SUMS_v27.2.0.txt`](deployment/latest/SHA256SUMS_v27.2.0.txt) — Checksums for all artifacts
-- [`SIZES_v27.2.0.txt`](deployment/latest/SIZES_v27.2.0.txt) — Artifact sizes (bytes + human-readable)
-- [`MANIFEST_v27.2.0.json`](deployment/latest/MANIFEST_v27.2.0.json) — Complete metadata + governance info
+- [`SHA256SUMS_v27.2.0.txt`](../../deployment/latest/SHA256SUMS_v27.2.0.txt) — Checksums for all artifacts
+- [`SIZES_v27.2.0.txt`](../../deployment/latest/SIZES_v27.2.0.txt) — Artifact sizes (bytes + human-readable)
+- [`MANIFEST_v27.2.0.json`](../../deployment/latest/MANIFEST_v27.2.0.json) — Complete metadata + governance info
 
 ---
 
@@ -91,7 +91,7 @@ All artifacts available in `deployment/latest/`:
 
 ### Source Code
 
-**File Modified**: [`src/services/tauri/backend-v17.2.commands.ts:220`](src/services/tauri/backend-v17.2.commands.ts#L220)
+**File Modified**: [`src/services/tauri/backend-v17.2.commands.ts:220`](../../src/services/tauri/backend-v17.2.commands.ts#L220)
 
 **Change Type**: Type-only (property removal)
 
@@ -152,7 +152,7 @@ All version files updated to `27.2.0`:
 ### Registry
 
 **Event**: #87 — `RELEASE_v27.2.0_SEALED`  
-**File**: [`registry/ui-events.jsonl`](registry/ui-events.jsonl)  
+**File**: [`registry/ui-events.jsonl`](../../registry/ui-events.jsonl)  
 **Timestamp**: 2026-02-23T15:32:40Z
 
 ---
