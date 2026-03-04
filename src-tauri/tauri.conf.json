@@ -42,7 +42,7 @@
         "transparent": false,
         "center": true,
         "visible": true,
-        "devtools": true
+        "devtools": false
       },
       {
         "label": "avatar-floating",
@@ -59,15 +59,19 @@
         "visible": false,
         "skipTaskbar": true,
         "alwaysOnTop": false,
-        "devtools": true
+        "devtools": false
       }
     ],
     "security": {
-      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-eval' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc: http://127.0.0.1:1420 ws://127.0.0.1:1420; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
-      "dangerousDisableAssetCspModification": true,
+      "csp": "default-src 'self' tauri: asset:; script-src 'self' 'unsafe-inline' asset: tauri:; style-src 'self' 'unsafe-inline' asset: tauri:; img-src 'self' asset: data: blob: https:; font-src 'self' asset: data:; connect-src 'self' tauri: asset: ipc:; media-src 'self' asset: blob: mediastream:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none';",
       "assetProtocol": {
         "enable": true,
-        "scope": ["$APPDATA/**", "$RESOURCE/**", "$APPCONFIG/**", "$APPLOCALDATA/**"]
+        "scope": [
+          "$APPDATA/com.titane.infinity/**",
+          "$RESOURCE/**",
+          "$APPCONFIG/com.titane.infinity/**",
+          "$APPLOCALDATA/com.titane.infinity/**"
+        ]
       },
       "capabilities": [
         {

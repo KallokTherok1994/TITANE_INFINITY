@@ -18,9 +18,6 @@ on:
         required: false
         default: '4'
         type: string
-  schedule:
-    # Quantum evolution every 2 hours
-    - cron: '0 */2 * * *'
 
 permissions:
   contents: write
