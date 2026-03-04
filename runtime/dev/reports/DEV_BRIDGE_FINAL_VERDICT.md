@@ -5,6 +5,7 @@ Capability: TITANE_DEV_BRIDGE
 Status: QUALIFIED
 
 ## Gates
+
 - Local-first: PASS
 - Tauri-only: PASS
 - Contract schema: PASS
@@ -12,16 +13,20 @@ Status: QUALIFIED
 - Structured output: PASS
 
 ## Tests Run
+
 - pnpm run test:dev-bridge:contract
 - pnpm run guard:dev-bridge
 
 ## Proofs
+
 - runtime/dev/proofs/DEV_BRIDGE_PROOF_PACK.md
 
 ## Verdict
+
 PASS_QUALIFIED
 
 ## Rollback
+
 - Remove scripts/dev/dev-bridge.mjs
 - Remove scripts/dev/dev-bridge-contract-test.mjs
 - Remove scripts/guard/guard-dev-bridge.mjs
