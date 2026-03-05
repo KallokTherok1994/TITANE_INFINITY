@@ -20,15 +20,20 @@ if (!fs.existsSync(registryPath)) {
 const raw = fs.readFileSync(registryPath, 'utf8');
 const lines = raw
   .split(/\r?\n/)
-  .map((line) => line.trim())
-  .filter((line) => line.length > 0);
+  .map(line => line.trim())
+  .filter(line => line.length > 0);
 
 if (lines.length === 0) {
   fail('registry/autofix-autoheal-rules.jsonl is empty');
 }
 
 const getNestedValue = (object, fieldPath) =>
-  fieldPath.split('.').reduce((acc, key) => (acc === undefined || acc === null ? undefined : acc[key]), object);
+  fieldPath
+    .split('.')
+    .reduce(
+      (acc, key) => (acc === undefined || acc === null ? undefined : acc[key]),
+      object
+    );
 
 const requiredFields = [
   'id',
@@ -45,7 +50,7 @@ const requiredFields = [
   'verification.pass_markers',
   'prevention.gate_added',
   'prevention.tests_added_or_updated',
-  'rollback'
+  'rollback',
 ];
 
 const parsed = [];
@@ -92,7 +97,7 @@ for (let index = 0; index < lines.length; index += 1) {
 
 if (missingByLine.length > 0) {
   const details = missingByLine.flatMap(({ lineNumber, missingFields }) =>
-    missingFields.map((field) => `line ${lineNumber}: ${field}`)
+    missingFields.map(field => `line ${lineNumber}: ${field}`)
   );
   fail('Required fields missing in AutoFix/AutoHeal registry', details);
 }
@@ -100,40 +105,44 @@ if (missingByLine.length > 0) {
 const listChangedFiles = () => {
   const unstaged = execSync('git diff --name-only', { encoding: 'utf8' })
     .split(/\r?\n/)
-    .map((item) => item.trim())
+    .map(item => item.trim())
     .filter(Boolean);
   const staged = execSync('git diff --cached --name-only', { encoding: 'utf8' })
     .split(/\r?\n/)
-    .map((item) => item.trim())
+    .map(item => item.trim())
     .filter(Boolean);
   return Array.from(new Set([...unstaged, ...staged]));
 };
 
 const changedFiles = listChangedFiles();
 const governedFixFiles = changedFiles.filter(
-  (file) => !file.startsWith('reports/') && file !== 'registry/autofix-autoheal-rules.jsonl'
+  file => !file.startsWith('reports/') && file !== 'registry/autofix-autoheal-rules.jsonl'
 );
 
 const latestEntry = parsed[parsed.length - 1];
-const latestPaths = Array.isArray(latestEntry.signature?.paths) ? latestEntry.signature.paths : [];
+const latestPaths = Array.isArray(latestEntry.signature?.paths)
+  ? latestEntry.signature.paths
+  : [];
 
 if (latestEntry.prevention?.gate_added !== 'G_AH_RULE_CAPTURED_FOR_EACH_FIX') {
   fail('Latest AutoFix/AutoHeal entry does not enforce required gate', [
-    `prevention.gate_added=${String(latestEntry.prevention?.gate_added ?? 'undefined')}`
+    `prevention.gate_added=${String(latestEntry.prevention?.gate_added ?? 'undefined')}`,
   ]);
 }
 
 if (governedFixFiles.length > 0) {
-  const overlaps = governedFixFiles.filter((file) => latestPaths.includes(file));
+  const overlaps = governedFixFiles.filter(file => latestPaths.includes(file));
   if (overlaps.length === 0) {
     fail('Last fix has no corresponding new AutoFix/AutoHeal rule entry', [
       `changed files: ${governedFixFiles.join(', ')}`,
-      `latest signature.paths: ${latestPaths.join(', ') || '(empty)'}`
+      `latest signature.paths: ${latestPaths.join(', ') || '(empty)'}`,
     ]);
   }
   console.log(`INFO: covered files in latest entry: ${overlaps.join(', ')}`);
 } else {
-  console.log('INFO: no governed fix files detected in git diff; coverage check skipped.');
+  console.log(
+    'INFO: no governed fix files detected in git diff; coverage check skipped.'
+  );
 }
 
 console.log('PASS: JSONL_VALID');
