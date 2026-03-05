@@ -33,7 +33,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --no-optional || pnpm install --no-frozen-lockfile --no-optional
 
       - name: Mermaid change request guard
         run: bash scripts/verify/mermaid-change-request-guard.sh --ci

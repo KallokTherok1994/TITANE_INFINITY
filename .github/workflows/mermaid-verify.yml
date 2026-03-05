@@ -31,7 +31,7 @@ jobs:
           cache: pnpm
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile --no-optional || pnpm install --no-frozen-lockfile --no-optional
 
       - name: Render Mermaid docs
         run: pnpm run render:docs:mermaid
