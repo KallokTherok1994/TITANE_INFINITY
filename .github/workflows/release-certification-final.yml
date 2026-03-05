@@ -29,8 +29,8 @@ jobs:
           # Verify all phase gates exist
           PHASE_GATES=0
           [ -f ".github/workflows/p0-1-secrets-guard.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
-          [ -f ".github/workflows/p0-2-surface-guard.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
-          [ -f ".github/workflows/p3-stable-build.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
+          [ -f ".github/workflows/p0-surface-guard.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
+          [ -f ".github/workflows/p3-build-guard.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
           [ -f ".github/workflows/p4-constitution-audit.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
           [ -f ".github/workflows/p5-runtime-governance.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))
           [ -f ".github/workflows/p6-capability-qualification.yml" ] && PHASE_GATES=$((PHASE_GATES + 1))

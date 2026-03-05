@@ -125,7 +125,7 @@ jobs:
           CI_GATES=0
           [ -f ".github/workflows/p0-1-secrets-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p0-surface-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
-          [ -f ".github/workflows/p3-stable-build.yml" ] && CI_GATES=$((CI_GATES + 1))
+          [ -f ".github/workflows/p3-build-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p4-constitution-audit.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p5-runtime-governance.yml" ] && CI_GATES=$((CI_GATES + 1))
 

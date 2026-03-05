@@ -111,7 +111,7 @@ jobs:
           fi
 
           # Verify surface control gates
-          if [ -f ".github/workflows/p0-2-surface-guard.yml" ]; then
+          if [ -f ".github/workflows/p0-surface-guard.yml" ]; then
             echo "✅ Surface expansion control active"
             CONSTITUTIONAL_GATES=$((CONSTITUTIONAL_GATES + 1))
           fi
@@ -161,8 +161,8 @@ jobs:
           # Verify incident response capability (constitutional audit)
           INCIDENT_RESPONSE=0
           [ -f ".github/workflows/p0-1-secrets-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
-          [ -f ".github/workflows/p0-2-surface-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
-          [ -f ".github/workflows/p3-stable-build.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+          [ -f ".github/workflows/p0-surface-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
+          [ -f ".github/workflows/p3-build-guard.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
           [ -f ".github/workflows/p4-constitution-audit.yml" ] && INCIDENT_RESPONSE=$((INCIDENT_RESPONSE + 1))
 
           if [ "$INCIDENT_RESPONSE" -ge 4 ]; then
