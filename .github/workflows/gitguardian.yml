@@ -2,7 +2,7 @@ name: GitGuardian Secret Scanning
 
 on:
   push:
-    branches: [MAIN, main, dev, stable-runtime]
+    branches: [MAIN, main, dev, stable-runtime, 'seal/**']
   pull_request:
     branches: [MAIN, main]
   workflow_dispatch:
