@@ -144,6 +144,10 @@ mod commands {
         include!("commands/chat_generate_commands.rs");
     }
 
+    pub mod db_commands {
+        include!("commands/db_commands.rs");
+    }
+
     // EXP Fusion Engine commands (XP/EXP UI)
     pub mod exp_fusion {
         include!("commands/exp_fusion.rs");
@@ -610,6 +614,10 @@ fn main() {
             let singularity_engine = Arc::new(singularity_state::SingularityEngine::new(app.handle().clone()));
             app.manage(singularity_engine.clone());
 
+            let option1_db_state = commands::db_commands::Option1DbAppState::try_new(&app.handle())
+                .map_err(|err| format!("Option1 DB init failed: {}", err.message))?;
+            app.manage(option1_db_state);
+
             // 🎯 Initialize OMEGA Conversation Engine (v19.5.2)
             let storage_dir = app.path().app_data_dir()
                 .unwrap_or_else(|_| std::path::PathBuf::from("/tmp/titane"));
@@ -1012,6 +1020,14 @@ fn main() {
             state_bridge_commands::get_state,
             state_bridge_commands::set_state,
             state_bridge_commands::delete_state,
+            commands::db_commands::db_put_event,
+            commands::db_commands::db_get_stream,
+            commands::db_commands::db_put_snapshot,
+            commands::db_commands::db_get_snapshot,
+            commands::db_commands::db_kv_set,
+            commands::db_commands::db_kv_get,
+            commands::db_commands::db_sync_now,
+            commands::db_commands::db_sync_status,
 
             // Core messaging
             send_message,

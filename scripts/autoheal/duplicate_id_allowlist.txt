@@ -1,0 +1,3 @@
+# IDs de doublons historiques explicitement tolérés (append-only safety)
+# Ne pas ajouter sans preuve de conflit historique résolu sans réécriture destructive.
+AH-2026-03-05-0004

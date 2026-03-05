@@ -135,8 +135,8 @@ impl SystemHealthEngine {
 
     /// Met à jour les métriques
     pub async fn update_metrics(&self, health: SystemHealth) {
-        *self.health.write().await = health;
-        self.metrics.record(health.clone()).await;
+        *self.health.write().await = health.clone();
+        self.metrics.record(health).await;
     }
 
     /// Enregistre une latence moteur

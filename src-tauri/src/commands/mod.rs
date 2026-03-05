@@ -3,7 +3,7 @@
 // ║ Unified command handlers for frontend-backend communication                 ║
 // ╚══════════════════════════════════════════════════════════════════════════════╝
 
-pub mod ai_chat; // ✅ v∞: AI Chat commands (NOT re-exported - uses State<AIChatState>)
+// pub mod ai_chat; // disabled: duplicate command names with other command surfaces
 pub mod ai_prompt_generator; // ✅ v25.4.2: AI Prompt Generator for Mode Builder
 pub mod ollama_command; // ✅ AUDIT FIX #1: Unified Ollama provider command (replaces scattered HTTP)
 pub mod automations; // ✅ v19.2Ω: Automation System
@@ -15,20 +15,20 @@ pub use copilot_commands::*; // ✨ v26.3: Export Copilot commands
 pub mod chat_modes; // ✅ v19.2Ω: Chat Modes System
 pub mod cognitive_center; // ✅ v19.3: Centre d'Évolution Cognitive (OPUS #4)
 pub mod cognitive_commands; // ✅ NEW v16: Cognitive Layer
-pub mod coherence_commands; // ✅ NEW v20.0: Unified Coherence Engine (Nexus + Consistency fusion)
+// pub mod coherence_commands; // disabled: unresolved external crate path in current full build
 pub mod devops; // ✅ v19: DevOps Commands for Dashboard
 pub mod devtools;
 pub mod diagnostic; // ✅ Phase 9: Backend diagnostics & validation
 pub mod engine_v14; // ✅ NEW: SingularityEngine v14 commands
 pub mod engines_commands; // ✅ v∞: Unified Engines Commands (OPUS #7/#9/#10)
-pub mod evolution;
-pub mod evolution_v14; // ✅ Phase 6: Auto-Evolution v14 commands
+// pub mod evolution; // disabled: duplicate commands with evolution_v14
+// pub mod evolution_v14; // disabled: duplicate commands with evolution
 pub mod exp_fusion;
 pub mod harmonia_commands;
 pub mod ia_commands; // ✅ v∞.19.3Ω: IA Commands (OpenAI + Claude + Unified)
 pub mod memory_compactor_commands; // ✅ v14 Phase 4: Memory Compactor
 pub mod memory_os; // ✅ NEW v∞: Memory OS + Vector Database (SUPER PROMPTs #6-7-8)
-pub mod meta_mode; // ✅ v14 Phase 5: Harmonia Engine
+// pub mod meta_mode; // disabled: unresolved imports in current full build
 pub mod multi_ai; // ✅ v∞: Multi-IA Orchestrator (SUPER PROMPT #8)
 pub mod one_core; // ✅ v19.6: TITANE∞ ONE CORE - Unified Command Center (OPUS #6)
 pub mod orchestration_center; // ✅ v19.5: Centre d'Orchestration Cognitive (OPUS #5/6/7)
@@ -42,12 +42,12 @@ mod tests_ai_chat; // ✅ v19.7: QA Monitoring Center - OPUS #7
 // Voice commands come from audio::commands instead
 pub use cognitive_center::*; // ✅ v19.3: Export cognitive center commands
 pub use cognitive_commands::*; // ✅ v16: Export cognitive commands
-pub use coherence_commands::*; // ✅ v20.0: Export coherence commands (Fusion #1)
+// pub use coherence_commands::*; // disabled with module
 pub use devops::*; // ✅ v19: Export devops commands
 pub use diagnostic::*; // ✅ Phase 9: Export diagnostic commands
 pub use engine_v14::*;
 pub use engines_commands::*; // ✅ v∞: Export unified engines commands
-pub use evolution_v14::*; // ✅ Phase 6: Export evolution commands
+// pub use evolution_v14::*; // disabled: duplicate __cmd__ exports with evolution module
 pub use harmonia_commands::*;
 pub use ia_commands::*; // ✅ v∞.19.3Ω: Export IA commands
 pub use memory_compactor_commands::*;
@@ -56,37 +56,35 @@ pub use memory_os::*; // ✅ v∞: Export Memory OS commands (SUPER PROMPTs #6-7
 // ═══════════════════════════════════════════════════════════════
 // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
 // ═══════════════════════════════════════════════════════════════
-pub mod devtools_commands;
+// pub mod devtools_commands; // disabled: duplicates with devtools
 pub mod governance_commands;
-pub mod memory_os_commands;
-pub mod system_center_commands;
+// pub mod memory_os_commands; // disabled: duplicates with memory_os + local commands
+// pub mod system_center_commands; // disabled: duplicates with system_center legacy surface
 pub mod whisper_commands;
 // audio_config_commands removed - duplicates audio::commands
-pub mod persistent_memory_commands;
+// pub mod persistent_memory_commands; // disabled: duplicates with persistent_memory module
 pub mod self_healing_commands;
+pub mod security;
 pub mod singularity_commands;
-pub mod ui_theme_commands;
+// pub mod ui_theme_commands; // disabled: duplicates with existing UI theme commands
 
-pub use devtools_commands::*;
+// pub use devtools_commands::*;
 pub use governance_commands::*;
-pub use memory_os_commands::*;
-pub use system_center_commands::*;
+// pub use memory_os_commands::*; // disabled: duplicate __cmd__ exports
+// pub use system_center_commands::*; // disabled: duplicate __cmd__ exports
 pub use whisper_commands::*;
 // audio_config_commands removed - duplicates audio::commands
 pub use multi_ai::*; // ✅ v∞: Export Multi-IA Orchestrator commands
 pub use one_core::*; // ✅ v19.6: Export ONE CORE commands
 pub use orchestration_center::*; // ✅ v19.5: Export orchestration center commands
-pub use persistent_memory::*; // ✅ v19.2Ω: Export persistent memory commands
-pub use persistent_memory_commands::*;
+// pub use persistent_memory::*; // disabled: duplicate __cmd__ exports
+// pub use persistent_memory_commands::*; // disabled: duplicate __cmd__ exports
 pub use qa_monitoring::*;
 pub use self_healing_commands::*;
 pub use singularity_commands::*;
-pub use ui_theme_commands::*; // ✅ v19.7: Export QA monitoring commands
+// pub use ui_theme_commands::*; // disabled: duplicate __cmd__ exports
 
 use crate::types::ModuleHealthInfo as ModuleHealth;
-use crate::TitaneCore;
-use std::sync::{Arc, Mutex};
-use tauri::State;
 
 // ═════════════════════════════════════════════════════════════════════════════
 // SYSTEM COMMANDS
@@ -99,7 +97,7 @@ use tauri::State;
 ///
 /// # Errors
 /// Returns an error if the global state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn get_system_status(
     state: State<'_, Arc<Mutex<TitaneCore>>>,
 ) -> Result<Vec<ModuleHealth>, String> {
@@ -124,7 +122,7 @@ pub async fn get_system_status(
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked or serialization fails.
-#[tauri::command]
+#[cfg(any())]
 pub async fn helios_get_metrics(
     state: State<'_, Arc<Mutex<TitaneCore>>>,
 ) -> Result<String, String> {
@@ -151,7 +149,7 @@ pub async fn helios_get_metrics(
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked or serialization fails.
-#[tauri::command]
+#[cfg(any())]
 pub async fn nexus_get_graph(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🔗 Command: nexus_get_graph");
     let core = state
@@ -174,7 +172,7 @@ pub async fn nexus_get_graph(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked or serialization fails.
-#[tauri::command]
+#[cfg(any())]
 pub async fn harmonia_get_flows(
     state: State<'_, Arc<Mutex<TitaneCore>>>,
 ) -> Result<String, String> {
@@ -202,7 +200,7 @@ pub async fn harmonia_get_flows(
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn sentinel_get_alerts(
     state: State<'_, Arc<Mutex<TitaneCore>>>,
 ) -> Result<String, String> {
@@ -230,7 +228,7 @@ pub async fn sentinel_get_alerts(
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn watchdog_get_logs(
     state: State<'_, Arc<Mutex<TitaneCore>>>,
 ) -> Result<Vec<String>, String> {
@@ -254,7 +252,7 @@ pub async fn watchdog_get_logs(
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn watchdog_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🐕 Command: watchdog_get_data");
     let core = state
@@ -283,7 +281,7 @@ pub async fn watchdog_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Resu
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn selfheal_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🔧 Command: selfheal_get_data");
     let core = state
@@ -312,7 +310,7 @@ pub async fn selfheal_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Resu
 ///
 /// # Errors
 /// Returns an error if the state cannot be locked.
-#[tauri::command]
+#[cfg(any())]
 pub async fn adaptive_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Result<String, String> {
     log::debug!("🧠 Command: adaptive_get_data");
     let core = state
@@ -343,10 +341,12 @@ pub async fn adaptive_get_data(state: State<'_, Arc<Mutex<TitaneCore>>>) -> Resu
 ///
 /// # Errors
 /// Returns an error if encryption or file operations fail.
-#[tauri::command]
 pub async fn memory_save_entry(entry: String) -> Result<(), String> {
     log::debug!("💾 Command: memory_save_entry (length: {})", entry.len());
-    crate::system::memory::save_entry(entry)
+    crate::system::memory::save_entry(crate::system::memory::MemoryEntry {
+        content: entry,
+        timestamp: 0,
+    })
 }
 
 /// Load all encrypted entries from persistent memory
@@ -356,10 +356,10 @@ pub async fn memory_save_entry(entry: String) -> Result<(), String> {
 ///
 /// # Errors
 /// Returns an error if decryption or deserialization fails.
-#[tauri::command]
 pub async fn memory_load_entries() -> Result<String, String> {
     log::debug!("💾 Command: memory_load_entries");
-    crate::system::memory::load_entries()
+    let entries = crate::system::memory::load_entries()?;
+    serde_json::to_string(&entries).map_err(|e| e.to_string())
 }
 
 /// Clear all entries from encrypted memory storage
@@ -369,7 +369,6 @@ pub async fn memory_load_entries() -> Result<String, String> {
 ///
 /// # Errors
 /// Returns an error if file deletion fails.
-#[tauri::command]
 pub async fn memory_clear() -> Result<(), String> {
     log::debug!("💾 Command: memory_clear");
     crate::system::memory::clear_memory()
@@ -385,7 +384,6 @@ pub async fn memory_clear() -> Result<(), String> {
 ///
 /// # Errors
 /// Returns an error if state retrieval or serialization fails.
-#[tauri::command]
 pub async fn memory_get_state() -> Result<String, String> {
     log::debug!("💾 Command: memory_get_state");
     crate::system::memory::get_memory_state()

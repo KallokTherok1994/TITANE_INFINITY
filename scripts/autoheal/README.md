@@ -14,6 +14,7 @@ Aucun fix n'est terminé tant que l'entrée AutoHeal + garde-fou de vérificatio
 - `autoheal_rules.jsonl`: registre append-only des règles/fixes.
 - `apply_autoheal.sh`: utilitaire d'ajout d'entrée et vérification minimale.
 - `detect_recurrence.sh`: validateur du registre et garde anti-récurrence.
+- `duplicate_id_allowlist.txt`: liste explicite (exceptionnelle) des IDs dupliqués historiques tolérés sans réécriture destructive.
 
 ## Limites
 
