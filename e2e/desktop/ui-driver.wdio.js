@@ -111,6 +111,28 @@ async function triggerSendAction(inputSelector, sendSelector) {
   }
 }
 
+async function clickElementSafely(element) {
+  await element.scrollIntoView();
+
+  try {
+    await element.waitForClickable({ timeout: 3000 });
+    await element.click();
+    return;
+  } catch {
+    // fallback below
+  }
+
+  try {
+    await browser.execute((el) => {
+      if (!el) return;
+      el.click();
+    }, element);
+    return;
+  } catch {
+    await element.click();
+  }
+}
+
 async function setValueSafely(selector, value) {
   const el = await $(selector);
   await el.scrollIntoView();
@@ -317,8 +339,9 @@ export async function toggleAllVisibleCheckboxes() {
   for (const checkbox of checkboxes) {
     if (!(await checkbox.isDisplayed())) continue;
     if (!(await checkbox.isEnabled())) continue;
-    await checkbox.click();
-    await checkbox.click();
+
+    await clickElementSafely(checkbox);
+    await clickElementSafely(checkbox);
     touched += 1;
   }
   return touched;
