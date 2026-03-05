@@ -39,6 +39,7 @@ impl Default for SpeechTask {
     }
 }
 
+#[derive(Clone)]
 pub struct SpeechOrchestrator {
     online: Arc<RwLock<OnlineTTS>>,
     local: Arc<RwLock<LocalTTS>>,

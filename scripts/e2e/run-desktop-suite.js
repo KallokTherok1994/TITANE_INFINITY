@@ -1,8 +1,10 @@
 import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import { createWriteStream } from 'node:fs';
 import path from 'node:path';
 import net from 'node:net';
+import os from 'node:os';
 
 const ROOT = process.cwd();
 const REPORTS = process.env.TITANE_E2E_ARTIFACTS_DIR
@@ -62,6 +64,32 @@ function spawnLogged(cmd, args, logFile, envOverrides = {}) {
   return child;
 }
 
+const isExecutable = filePath => {
+  try {
+    fsSync.accessSync(filePath, fsSync.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const findPlaywrightWebKitDriver = () => {
+  const cacheRoot = path.join(os.homedir(), '.cache', 'ms-playwright');
+  if (!fsSync.existsSync(cacheRoot)) return '';
+
+  const candidates = [];
+  for (const entry of fsSync.readdirSync(cacheRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !entry.name.startsWith('webkit-')) continue;
+    candidates.push(path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'WebKitWebDriver'));
+    candidates.push(path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'bin', 'WebKitWebDriver'));
+  }
+
+  for (const candidate of candidates) {
+    if (isExecutable(candidate)) return candidate;
+  }
+  return '';
+};
+
 let nativeDriverPath = process.env.WEBKIT_WEBDRIVER_PATH || '';
 if (!nativeDriverPath) {
   try {
@@ -71,6 +99,9 @@ if (!nativeDriverPath) {
   } catch {
     nativeDriverPath = '';
   }
+}
+if (!nativeDriverPath) {
+  nativeDriverPath = findPlaywrightWebKitDriver();
 }
 const tauriArgs = ['--port', '4444'];
 if (nativeDriverPath) {

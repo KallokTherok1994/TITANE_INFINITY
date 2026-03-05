@@ -44,7 +44,6 @@ impl ChatState {
 /// // NEW (OMEGA v2)
 /// conversation_generate(message, conversation_id, mode, provider, system_prompt)
 /// ```
-#[tauri::command]
 #[deprecated(
     since = "24.2.0",
     note = "Use conversation_generate from OMEGA Pipeline v2 instead"

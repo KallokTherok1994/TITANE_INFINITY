@@ -56,8 +56,26 @@ impl From<AIError> for ChatEngineError {
         match value {
             AIError::NoProviderAvailable => ChatEngineError::ProvidersUnavailable,
             AIError::TimeoutError => ChatEngineError::Timeout("AI provider timeout".to_string()),
-            AIError::NetworkError(msg) | AIError::APIError(msg) | AIError::InvalidResponse(msg) => {
-                ChatEngineError::ProviderFailure(msg)
+            AIError::NetworkError(msg)
+            | AIError::APIError(msg)
+            | AIError::InvalidResponse(msg)
+            | AIError::ConfigurationError { message: msg }
+            | AIError::InvalidRequest { message: msg } => ChatEngineError::ProviderFailure(msg),
+            AIError::ProviderUnavailable { provider, reason } => {
+                ChatEngineError::ProviderFailure(format!("{} unavailable: {}", provider, reason))
+            }
+            AIError::RateLimitExceeded {
+                provider,
+                retry_after,
+            } => ChatEngineError::Timeout(format!(
+                "Rate limit exceeded for {} (retry_after={:?})",
+                provider, retry_after
+            )),
+            AIError::AuthenticationFailed { provider } => {
+                ChatEngineError::ProviderFailure(format!("Authentication failed for {}", provider))
+            }
+            AIError::AllProvidersFailed { attempts } => {
+                ChatEngineError::ProviderFailure(format!("All providers failed: {:?}", attempts))
             }
         }
     }

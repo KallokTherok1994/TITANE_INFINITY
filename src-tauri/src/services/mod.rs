@@ -4,6 +4,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 pub mod cache_service; // P3: WebResearch — SQLite meta + blob cache
+pub mod db; // Option 1: local-first libSQL/Turso-compatible DB surface
 pub mod db_service; // Conversation OS v1: Event store (append-only, SHA256)
 pub mod discovery_service; // P7: WebResearch — governed multi-URL discovery (seeded, breadth-limited)
 pub mod embeddings_service; // Conversation OS v1: Ollama embeddings via governed gateway
@@ -20,5 +21,6 @@ pub mod robots_service; // P3: WebResearch — robots.txt check
 pub mod search_gateway; // Conversation OS v1: Brave/DDG search gateway
 pub mod seed_pack_service; // P12: WebResearch — versioned JSON seed packs
 pub mod storage_service;
+pub mod sync; // Option 1: governed sync state/service
 pub mod system_service;
 pub mod vector_service; // P7: WebResearch — local TF-IDF vector reranking (EXPERIMENTAL)

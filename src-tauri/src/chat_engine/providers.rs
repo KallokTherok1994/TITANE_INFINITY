@@ -72,6 +72,7 @@ pub fn build_ai_request(prompt: String, temperature: f32, max_tokens: usize) -> 
         temperature,
         max_tokens,
         stream: false,
+        provider_preference: None,
     }
 }
 

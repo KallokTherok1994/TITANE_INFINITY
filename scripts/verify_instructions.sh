@@ -10,6 +10,16 @@ FAIL=0
 ok() { echo "PASS: $1"; PASS=$((PASS+1)); }
 ko() { echo "FAIL: $1"; FAIL=$((FAIL+1)); }
 
+has_match() {
+  local pattern="$1"
+  shift
+  if command -v rg >/dev/null 2>&1; then
+    rg -n "$pattern" "$@" >/dev/null
+  else
+    grep -RInE "$pattern" "$@" >/dev/null
+  fi
+}
+
 if [[ -f ".github/copilot-instructions.md" ]]; then ok "G_DOC_COPILOT_INSTRUCTIONS_PRESENT"; else ko "G_DOC_COPILOT_INSTRUCTIONS_PRESENT"; fi
 if [[ -f ".github/copilot-workflow.mermaid" ]]; then ok "G_DOC_WORKFLOW_PRESENT"; else ko "G_DOC_WORKFLOW_PRESENT"; fi
 if [[ -f ".github/copilot-setup-checklist.md" ]]; then ok "G_DOC_CHECKLIST_PRESENT"; else ko "G_DOC_CHECKLIST_PRESENT"; fi
@@ -67,11 +77,11 @@ else
 fi
 
 # mandatory doctrine markers
-if rg -n "verdict unique|PASS / FAIL / BLOCKED" .github/copilot-instructions.md >/dev/null; then ok "G_MARKER_VERDICT_UNIQUE"; else ko "G_MARKER_VERDICT_UNIQUE"; fi
-if rg -n "Stop-the-line|STOP-THE-LINE" .github/copilot-instructions.md .github/instructions/titane.instructions.md >/dev/null; then ok "G_MARKER_STOPLINE"; else ko "G_MARKER_STOPLINE"; fi
-if rg -n "NO_SKIPS|no-skips|skipped by design" .github/copilot-instructions.md .github/instructions/titane.instructions.md >/dev/null; then ok "G_MARKER_NO_SKIPS"; else ko "G_MARKER_NO_SKIPS"; fi
-if rg -n "proof pack|Proof Pack|proof_packs" .github/copilot-instructions.md .github/instructions/titane.instructions.md >/dev/null; then ok "G_MARKER_PROOF_PACK"; else ko "G_MARKER_PROOF_PACK"; fi
-if rg -n "scripts/autoheal/autoheal_rules.jsonl" .github/copilot-instructions.md .github/instructions/tests-e2e.instructions.md .github/instructions/titane.instructions.md >/dev/null; then ok "G_MARKER_AUTOHEAL_CANONICAL_PATH"; else ko "G_MARKER_AUTOHEAL_CANONICAL_PATH"; fi
+if has_match "verdict unique|PASS / FAIL / BLOCKED" .github/copilot-instructions.md; then ok "G_MARKER_VERDICT_UNIQUE"; else ko "G_MARKER_VERDICT_UNIQUE"; fi
+if has_match "Stop-the-line|STOP-THE-LINE" .github/copilot-instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_STOPLINE"; else ko "G_MARKER_STOPLINE"; fi
+if has_match "NO_SKIPS|no-skips|skipped by design" .github/copilot-instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_NO_SKIPS"; else ko "G_MARKER_NO_SKIPS"; fi
+if has_match "proof pack|Proof Pack|proof_packs" .github/copilot-instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_PROOF_PACK"; else ko "G_MARKER_PROOF_PACK"; fi
+if has_match "scripts/autoheal/autoheal_rules.jsonl" .github/copilot-instructions.md .github/instructions/tests-e2e.instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_AUTOHEAL_CANONICAL_PATH"; else ko "G_MARKER_AUTOHEAL_CANONICAL_PATH"; fi
 
 # detect recurrence guard
 if bash scripts/autoheal/detect_recurrence.sh >/dev/null; then ok "G_AH_RECURRENCE_GUARD_PASS"; else ko "G_AH_RECURRENCE_GUARD_PASS"; fi
