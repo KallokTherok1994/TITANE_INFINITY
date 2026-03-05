@@ -4,7 +4,9 @@ import path from 'node:path';
 
 const inputs = process.argv.slice(2);
 if (inputs.length === 0) {
-  console.error('Usage: node scripts/qa/select_failed_commands.mjs <aggregate-log-file ...>');
+  console.error(
+    'Usage: node scripts/qa/select_failed_commands.mjs <aggregate-log-file ...>'
+  );
   process.exit(1);
 }
 
@@ -23,11 +25,11 @@ for (const line of lines) {
     line
       .split('|')
       .slice(1)
-      .map((pair) => {
+      .map(pair => {
         const idx = pair.indexOf('=');
         if (idx === -1) return [pair, ''];
         return [pair.slice(0, idx), pair.slice(idx + 1)];
-      }),
+      })
   );
 
   const exitCode = Number(fields.exit ?? '0');
