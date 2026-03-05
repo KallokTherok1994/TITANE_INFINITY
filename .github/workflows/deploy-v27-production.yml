@@ -71,6 +71,11 @@ jobs:
       - name: Install pnpm
         run: npm install -g pnpm
 
+      - name: Install native dependencies (build)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
@@ -113,8 +118,7 @@ jobs:
 
       - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libpng-dev
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: 🛠️ Build Tauri bundles
         run: pnpm exec tauri build --config src-tauri/tauri.conf.json
