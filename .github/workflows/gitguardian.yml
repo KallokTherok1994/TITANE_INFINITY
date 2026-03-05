@@ -19,9 +19,10 @@ permissions:
 jobs:
   scan:
     name: 🔐 GitGuardian Secret Scan
-    if: ${{ secrets.GITGUARDIAN_API_KEY != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
 
     steps:
       - name: 📥 Checkout code
@@ -30,9 +31,10 @@ jobs:
           fetch-depth: 0 # Full history for better scanning
 
       - name: 🔐 Run GitGuardian scan
+        if: ${{ env.GITGUARDIAN_API_KEY != '' }}
         uses: GitGuardian/ggshield-action@v1.33.0
         env:
-          GITGUARDIAN_API_KEY: ${{ secrets.GITGUARDIAN_API_KEY }}
+          GITGUARDIAN_API_KEY: ${{ env.GITGUARDIAN_API_KEY }}
           GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}
           GITHUB_PUSH_BASE_SHA: ${{ github.event.base }}
           GITHUB_PULL_BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -40,8 +42,8 @@ jobs:
         with:
           args: --show-secrets
 
-      - name: 📊 Summary
-        if: always()
+      - name: 📊 Summary (Scan Executed)
+        if: ${{ always() && env.GITGUARDIAN_API_KEY != '' }}
         run: |
           echo "## 🔐 GitGuardian Secret Scan Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
@@ -51,14 +53,8 @@ jobs:
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "_GitGuardian scans for 350+ types of secrets including API keys, tokens, and credentials_" >> $GITHUB_STEP_SUMMARY
 
-  scan-skipped-no-key:
-    name: 🔐 GitGuardian Scan Skipped (Missing API Key)
-    if: ${{ secrets.GITGUARDIAN_API_KEY == '' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-
-    steps:
       - name: 📊 Summary (Missing Secret)
+        if: ${{ env.GITGUARDIAN_API_KEY == '' }}
         run: |
           echo "## 🔐 GitGuardian Secret Scan Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
