@@ -1,12 +1,27 @@
-import fs from "node:fs/promises";
-import path from "node:path";
+import fs from 'node:fs/promises';
+import path from 'node:path';
 
 const DEFAULT_TIMEOUT = 30000;
 const ARTIFACTS_DIR = process.env.TITANE_E2E_ARTIFACTS_DIR
   ? path.resolve(process.env.TITANE_E2E_ARTIFACTS_DIR)
-  : path.resolve(process.cwd(), "reports/e2e-desktop");
+  : path.resolve(process.cwd(), 'reports/e2e-desktop');
 
-const testId = (id) => `[data-testid="${id}"]`;
+const testId = id => `[data-testid="${id}"]`;
+
+function isSessionInvalidError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return message.includes('invalid session id');
+}
+
+function isTransientInteractionError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return (
+    message.includes('no such element') ||
+    message.includes('stale element reference') ||
+    message.includes('element not interactable') ||
+    message.includes('not clickable')
+  );
+}
 
 async function isExisting(selector) {
   const el = await $(selector);
@@ -30,28 +45,55 @@ async function waitForAnyDisplayed(selectors, timeout = DEFAULT_TIMEOUT) {
     {
       timeout,
       interval: 200,
-      timeoutMsg: `none of selectors became visible: ${selectors.join(", ")}`,
-    },
+      timeoutMsg: `none of selectors became visible: ${selectors.join(', ')}`,
+    }
   );
 }
 
 async function clickSafely(selector) {
   const el = await $(selector);
-  await el.scrollIntoView();
-
   try {
-    await el.waitForClickable({ timeout: 5000 });
-    await el.click();
-    return;
-  } catch {
-    // fallback below
-  }
+    if (!(await el.isExisting())) return false;
+    if (!(await el.isDisplayed())) return false;
 
-  try {
-    await browser.execute((element) => element.click(), el);
-    return;
-  } catch {
+    await browser.execute(element => {
+      if (!element) return;
+      try {
+        element.scrollIntoView({ block: 'center', inline: 'nearest' });
+      } catch {
+        // Best effort only.
+      }
+    }, el);
+
+    const domClicked = await browser.execute(element => {
+      if (!element) return false;
+      const disabled =
+        element.hasAttribute('disabled') ||
+        element.getAttribute('aria-disabled') === 'true';
+      if (disabled) return false;
+
+      const event = new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      });
+      element.dispatchEvent(event);
+      return true;
+    }, el);
+    if (domClicked) return true;
+
     await el.click();
+    return true;
+  } catch (error) {
+    if (isSessionInvalidError(error)) throw error;
+    if (isTransientInteractionError(error)) return false;
+    try {
+      await el.click();
+      return true;
+    } catch (fallbackError) {
+      if (isSessionInvalidError(fallbackError)) throw fallbackError;
+      return false;
+    }
   }
 }
 
@@ -69,13 +111,13 @@ async function triggerSendAction(inputSelector, sendSelector) {
   }
 
   try {
-    const dispatched = await browser.execute((element) => {
+    const dispatched = await browser.execute(element => {
       if (!element) return false;
       const disabled =
-        element.hasAttribute("disabled") ||
-        element.getAttribute("aria-disabled") === "true";
+        element.hasAttribute('disabled') ||
+        element.getAttribute('aria-disabled') === 'true';
       if (disabled) return false;
-      const event = new MouseEvent("click", {
+      const event = new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
         composed: true,
@@ -89,22 +131,22 @@ async function triggerSendAction(inputSelector, sendSelector) {
   }
 
   try {
-    await browser.execute((element) => {
+    await browser.execute(element => {
       if (!element) return;
       element.focus();
       const keyConfig = {
-        key: "Enter",
-        code: "Enter",
+        key: 'Enter',
+        code: 'Enter',
         which: 13,
         keyCode: 13,
         bubbles: true,
         cancelable: true,
       };
-      element.dispatchEvent(new KeyboardEvent("keydown", keyConfig));
-      element.dispatchEvent(new KeyboardEvent("keypress", keyConfig));
-      element.dispatchEvent(new KeyboardEvent("keyup", keyConfig));
+      element.dispatchEvent(new KeyboardEvent('keydown', keyConfig));
+      element.dispatchEvent(new KeyboardEvent('keypress', keyConfig));
+      element.dispatchEvent(new KeyboardEvent('keyup', keyConfig));
     }, input);
-    await browser.keys("Enter");
+    await browser.keys('Enter');
     return true;
   } catch {
     return false;
@@ -112,95 +154,105 @@ async function triggerSendAction(inputSelector, sendSelector) {
 }
 
 async function clickElementSafely(element) {
-  await element.scrollIntoView();
-
   try {
-    await element.waitForClickable({ timeout: 3000 });
-    await element.click();
-    return;
-  } catch {
-    // fallback below
-  }
+    if (!(await element.isExisting())) return false;
+    if (!(await element.isDisplayed())) return false;
+    if (!(await element.isEnabled())) return false;
 
-  try {
-    await browser.execute((el) => {
+    await browser.execute(el => {
       if (!el) return;
+      try {
+        el.scrollIntoView({ block: 'center', inline: 'nearest' });
+      } catch {
+        // Best effort only.
+      }
       el.click();
     }, element);
-    return;
-  } catch {
-    await element.click();
+    return true;
+  } catch (error) {
+    if (isSessionInvalidError(error)) throw error;
+    if (isTransientInteractionError(error)) return false;
+    try {
+      await element.click();
+      return true;
+    } catch (fallbackError) {
+      if (isSessionInvalidError(fallbackError)) throw fallbackError;
+      return false;
+    }
   }
+}
+
+async function setElementValueSafely(element, value) {
+  await browser.execute(
+    (el, text) => {
+      if (!el) return;
+      const normalized = String(text ?? '');
+      el.focus();
+
+      const proto =
+        el instanceof HTMLTextAreaElement
+          ? HTMLTextAreaElement.prototype
+          : HTMLInputElement.prototype;
+      const descriptor = Object.getOwnPropertyDescriptor(proto, 'value');
+
+      if (descriptor?.set) {
+        descriptor.set.call(el, normalized);
+      } else {
+        el.value = normalized;
+      }
+
+      try {
+        el.dispatchEvent(
+          new InputEvent('input', {
+            bubbles: true,
+            composed: true,
+            data: normalized,
+            inputType: 'insertText',
+          })
+        );
+      } catch {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+    element,
+    value
+  );
 }
 
 async function setValueSafely(selector, value) {
   const el = await $(selector);
-  await el.scrollIntoView();
-
-  try {
-    await el.waitForEnabled({ timeout: 5000 });
-    await el.click();
-    await el.setValue(value);
-    return;
-  } catch {
-    // fallback below
-  }
-
-  await browser.execute(
-    (element, text) => {
-      const normalized = String(text ?? "");
-      element.focus();
-
-      const proto =
-        element instanceof HTMLTextAreaElement
-          ? HTMLTextAreaElement.prototype
-          : HTMLInputElement.prototype;
-      const descriptor = Object.getOwnPropertyDescriptor(proto, "value");
-
-      if (descriptor?.set) {
-        descriptor.set.call(element, normalized);
-      } else {
-        element.value = normalized;
-      }
-
-      try {
-        element.dispatchEvent(
-          new InputEvent("input", {
-            bubbles: true,
-            composed: true,
-            data: normalized,
-            inputType: "insertText",
-          }),
-        );
-      } catch {
-        element.dispatchEvent(new Event("input", { bubbles: true }));
-      }
-
-      element.dispatchEvent(new Event("input", { bubbles: true }));
-      element.dispatchEvent(new Event("change", { bubbles: true }));
-    },
-    el,
-    value,
-  );
+  await el.waitForEnabled({ timeout: 5000 });
+  await setElementValueSafely(el, value);
 }
 
 export async function ensureArtifactsDir() {
   await fs.mkdir(ARTIFACTS_DIR, { recursive: true });
 }
 
-export async function captureFailureScreenshot(testName = "unknown") {
+export async function captureFailureScreenshot(testName = 'unknown') {
   await ensureArtifactsDir();
-  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const safe = String(testName)
     .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replace(/[^a-z0-9_-]+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
   const screenshotPath = path.join(
     ARTIFACTS_DIR,
-    `failure-${safe || "test"}-${stamp}.png`,
+    `failure-${safe || 'test'}-${stamp}.png`
   );
-  await browser.saveScreenshot(screenshotPath);
+  try {
+    await browser.saveScreenshot(screenshotPath);
+  } catch (error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (message.includes('invalid session id')) {
+      return null;
+    }
+    throw error;
+  }
   return screenshotPath;
 }
 
@@ -211,43 +263,43 @@ export async function waitForDisplayed(selector, timeout = DEFAULT_TIMEOUT) {
 }
 
 export async function openApp() {
-  await browser.url("tauri://localhost");
-  await waitForDisplayed("body", DEFAULT_TIMEOUT);
+  await browser.url('tauri://localhost');
+  await waitForDisplayed('body', DEFAULT_TIMEOUT);
 }
 
 export async function waitAppReady() {
-  if (await isExisting(testId("app-ready"))) {
-    await waitForDisplayed(testId("app-ready"), DEFAULT_TIMEOUT);
+  if (await isExisting(testId('app-ready'))) {
+    await waitForDisplayed(testId('app-ready'), DEFAULT_TIMEOUT);
     await browser.waitUntil(
       async () => {
-        const state = await $(testId("app-ready")).getAttribute("data-state");
-        return state === "ready";
+        const state = await $(testId('app-ready')).getAttribute('data-state');
+        return state === 'ready';
       },
       {
         timeout: DEFAULT_TIMEOUT,
         interval: 200,
-        timeoutMsg: "app-ready marker did not reach ready state",
-      },
+        timeoutMsg: 'app-ready marker did not reach ready state',
+      }
     );
   } else {
     await waitForAnyDisplayed(
-      [testId("nav-top-main"), testId("page-titane"), testId("chat-input")],
-      DEFAULT_TIMEOUT,
+      [testId('nav-top-main'), testId('page-titane'), testId('chat-input')],
+      DEFAULT_TIMEOUT
     );
   }
 
-  if (await isExisting(testId("ipc-ready"))) {
-    await waitForDisplayed(testId("ipc-ready"), DEFAULT_TIMEOUT);
+  if (await isExisting(testId('ipc-ready'))) {
+    await waitForDisplayed(testId('ipc-ready'), DEFAULT_TIMEOUT);
     await browser.waitUntil(
       async () => {
-        const state = await $(testId("ipc-ready")).getAttribute("data-state");
-        return state === "ready" || state === "fallback";
+        const state = await $(testId('ipc-ready')).getAttribute('data-state');
+        return state === 'ready' || state === 'fallback';
       },
       {
         timeout: DEFAULT_TIMEOUT,
         interval: 200,
-        timeoutMsg: "ipc-ready marker did not reach ready/fallback state",
-      },
+        timeoutMsg: 'ipc-ready marker did not reach ready/fallback state',
+      }
     );
   }
 }
@@ -255,15 +307,12 @@ export async function waitAppReady() {
 export async function gotoTopNavPage(page) {
   const currentPath = await getCurrentPathname();
   if (currentPath === page.route || currentPath.startsWith(`${page.route}/`)) {
-    if (
-      (await isDisplayed(page.root)) ||
-      (await isDisplayed(testId("nav-top-main")))
-    ) {
+    if ((await isDisplayed(page.root)) || (await isDisplayed(testId('nav-top-main')))) {
       return;
     }
   }
 
-  await waitForDisplayed(testId("nav-top-main"));
+  await waitForDisplayed(testId('nav-top-main'));
 
   const navSelector = testId(page.navTestId);
   let navigated = false;
@@ -271,7 +320,7 @@ export async function gotoTopNavPage(page) {
   try {
     const navEl = await $(navSelector);
     if (!(await navEl.isDisplayed())) {
-      const moreSelector = testId("btn-nav-more");
+      const moreSelector = testId('btn-nav-more');
       if (await isDisplayed(moreSelector)) {
         await clickSafely(moreSelector);
       }
@@ -299,37 +348,52 @@ export async function gotoTopNavPage(page) {
       timeout: DEFAULT_TIMEOUT,
       interval: 200,
       timeoutMsg: `page activation failed for ${page.id}`,
-    },
+    }
   );
 }
 
 export async function clickAllTabs(tabSelectors = []) {
   for (const selector of tabSelectors) {
-    const el = await $(selector);
-    if (!(await el.isExisting())) continue;
-    if (!(await el.isDisplayed())) continue;
+    try {
+      const initial = await $(selector);
+      if (!(await initial.isExisting())) continue;
+      if (!(await initial.isDisplayed())) continue;
 
-    const selectedBefore = await el.getAttribute("aria-selected");
-    if (selectedBefore === "true") continue;
+      const selectedBefore = await initial.getAttribute('aria-selected');
+      if (selectedBefore === 'true') continue;
 
-    await clickSafely(selector);
-    await browser.waitUntil(
-      async () => {
-        const selected = await el.getAttribute("aria-selected");
-        if (selected !== null) return selected === "true";
-        const cls = (await el.getAttribute("class")) || "";
-        return (
-          cls.includes("active") ||
-          cls.includes("--active") ||
-          cls.includes("bg-blue-600")
-        );
-      },
-      {
-        timeout: 10000,
-        interval: 150,
-        timeoutMsg: `tab did not activate: ${selector}`,
-      },
-    );
+      const clicked = await clickSafely(selector);
+      if (!clicked) continue;
+
+      await browser.waitUntil(
+        async () => {
+          try {
+            const current = await $(selector);
+            if (!(await current.isExisting())) return true;
+            const selected = await current.getAttribute('aria-selected');
+            if (selected !== null) return selected === 'true';
+            const cls = (await current.getAttribute('class')) || '';
+            return (
+              cls.includes('active') ||
+              cls.includes('--active') ||
+              cls.includes('bg-blue-600')
+            );
+          } catch (error) {
+            if (isSessionInvalidError(error)) throw error;
+            return true;
+          }
+        },
+        {
+          timeout: 2500,
+          interval: 150,
+          timeoutMsg: `tab did not activate: ${selector}`,
+        }
+      );
+    } catch (error) {
+      if (isSessionInvalidError(error)) throw error;
+      if (isTransientInteractionError(error)) continue;
+      continue;
+    }
   }
 }
 
@@ -337,17 +401,27 @@ export async function toggleAllVisibleCheckboxes() {
   const checkboxes = await $$('input[type="checkbox"]');
   let touched = 0;
   for (const checkbox of checkboxes) {
-    if (!(await checkbox.isDisplayed())) continue;
-    if (!(await checkbox.isEnabled())) continue;
+    try {
+      if (!(await checkbox.isExisting())) continue;
+      if (!(await checkbox.isDisplayed())) continue;
+      if (!(await checkbox.isEnabled())) continue;
 
-    await clickElementSafely(checkbox);
-    await clickElementSafely(checkbox);
-    touched += 1;
+      await clickElementSafely(checkbox);
+      await clickElementSafely(checkbox);
+      touched += 1;
+    } catch (error) {
+      const message = String(error?.message || '').toLowerCase();
+      if (message.includes('invalid session id')) {
+        throw error;
+      }
+      // Dynamic pages can detach controls between discovery and interaction.
+      continue;
+    }
   }
   return touched;
 }
 
-export async function fillAllVisibleInputs(sample = "e2e-sample") {
+export async function fillAllVisibleInputs(sample = 'e2e-sample') {
   const selectors = [
     'input[type="text"]',
     'input[type="search"]',
@@ -356,95 +430,99 @@ export async function fillAllVisibleInputs(sample = "e2e-sample") {
     'input[type="tel"]',
     'input[type="number"]',
     'input[type="password"]',
-    "textarea",
+    'textarea',
   ];
 
   let touched = 0;
   for (const selector of selectors) {
     const fields = await $$(selector);
     for (const field of fields) {
-      if (!(await field.isDisplayed())) continue;
-      if (!(await field.isEnabled())) continue;
-      const readonly = await field.getAttribute("readonly");
-      if (readonly !== null) continue;
-      await field.click();
-      await field.setValue(sample);
-      await field.clearValue();
-      touched += 1;
+      try {
+        if (!(await field.isExisting())) continue;
+        if (!(await field.isDisplayed())) continue;
+        if (!(await field.isEnabled())) continue;
+        const readonly = await field.getAttribute('readonly');
+        if (readonly !== null) continue;
+        await clickElementSafely(field);
+        await setElementValueSafely(field, sample);
+        await setElementValueSafely(field, '');
+        touched += 1;
+      } catch (error) {
+        const message = String(error?.message || '').toLowerCase();
+        if (message.includes('invalid session id')) {
+          throw error;
+        }
+        // Inputs in reactive panes can disappear while iterating.
+        continue;
+      }
     }
   }
   return touched;
 }
 
 export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
-  const chatReady = await $(testId("chat-ready"));
+  const chatReady = await $(testId('chat-ready'));
   if (await chatReady.isExisting()) {
     await chatReady.waitForExist({ timeout: DEFAULT_TIMEOUT });
     await browser.waitUntil(
-      async () => (await chatReady.getAttribute("data-state")) === "ready",
+      async () => (await chatReady.getAttribute('data-state')) === 'ready',
       {
         timeout: DEFAULT_TIMEOUT,
         interval: 200,
-        timeoutMsg: "chat-ready marker did not reach ready state",
-      },
+        timeoutMsg: 'chat-ready marker did not reach ready state',
+      }
     );
   } else {
-    await waitForAnyDisplayed([
-      testId("chat-input"),
-      '[data-testid="tab-conversation"]',
-    ]);
+    await waitForAnyDisplayed([testId('chat-input'), '[data-testid="tab-conversation"]']);
   }
 
-  const assistantSelector = testId("chat-message-assistant");
+  const assistantSelector = testId('chat-message-assistant');
   const assistantBefore = (await isExisting(assistantSelector))
     ? (await $$(assistantSelector)).length
     : 0;
-  const userSelector = testId("chat-message-user");
+  const userSelector = testId('chat-message-user');
   const userBefore = (await isExisting(userSelector))
     ? (await $$(userSelector)).length
     : 0;
-  const bodyBefore = (await $("body").getText()) || "";
-  const promptMarker = String(message || "").slice(0, 48);
+  const bodyBefore = (await $('body').getText()) || '';
+  const promptMarker = String(message || '').slice(0, 48);
 
-  const input = await $(testId("chat-input"));
-  const send = await $(testId("chat-send"));
+  const input = await $(testId('chat-input'));
+  const send = await $(testId('chat-send'));
 
   await input.waitForExist({ timeout: DEFAULT_TIMEOUT });
-  await setValueSafely(testId("chat-input"), message);
+  await setValueSafely(testId('chat-input'), message);
 
   await browser.waitUntil(
     async () => {
-      const value = (await input.getValue()) || "";
+      const value = (await input.getValue()) || '';
       return value.trim().length > 0;
     },
     {
       timeout: 6000,
       interval: 150,
-      timeoutMsg: "chat input did not receive message value",
-    },
+      timeoutMsg: 'chat input did not receive message value',
+    }
   );
 
   await send.waitForExist({ timeout: DEFAULT_TIMEOUT });
 
   await browser.waitUntil(
     async () => {
-      const value = (await input.getValue()) || "";
-      const disabled = await send.getAttribute("disabled");
+      const value = (await input.getValue()) || '';
+      const disabled = await send.getAttribute('disabled');
       return value.trim().length > 0 && disabled === null;
     },
     {
       timeout: 6000,
       interval: 150,
-      timeoutMsg: "chat send button stayed disabled after input value set",
-    },
+      timeoutMsg: 'chat send button stayed disabled after input value set',
+    }
   );
 
-  const sent = await triggerSendAction(
-    testId("chat-input"),
-    testId("chat-send"),
-  );
+  const sent = await triggerSendAction(testId('chat-input'), testId('chat-send'));
   if (!sent) {
-    throw new Error("chat send action could not be triggered");
+    throw new Error('chat send action could not be triggered');
   }
 
   await browser.waitUntil(
@@ -453,13 +531,13 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
         const userAfter = (await $$(userSelector)).length;
         if (userAfter > userBefore) return true;
       }
-      const inputNow = await $(testId("chat-input"));
+      const inputNow = await $(testId('chat-input'));
       if (await inputNow.isExisting()) {
-        const val = (await inputNow.getValue()) || "";
+        const val = (await inputNow.getValue()) || '';
         if (String(val).trim().length === 0) return true;
       }
-      if (await isExisting(testId("chat-loading"))) {
-        const loading = await $(testId("chat-loading"));
+      if (await isExisting(testId('chat-loading'))) {
+        const loading = await $(testId('chat-loading'));
         if (await loading.isDisplayed()) return true;
       }
       return false;
@@ -467,8 +545,8 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
     {
       timeout: 7000,
       interval: 150,
-      timeoutMsg: "chat send was not acknowledged by UI",
-    },
+      timeoutMsg: 'chat send was not acknowledged by UI',
+    }
   );
 
   await browser.waitUntil(
@@ -483,24 +561,21 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
         if (userAfter > userBefore) return true;
       }
 
-      const err = await $(testId("chat-error"));
+      const err = await $(testId('chat-error'));
       if ((await err.isExisting()) && (await err.isDisplayed())) return true;
 
       const genericAlert = await $('[role="alert"]');
-      if (
-        (await genericAlert.isExisting()) &&
-        (await genericAlert.isDisplayed())
-      ) {
+      if ((await genericAlert.isExisting()) && (await genericAlert.isDisplayed())) {
         return true;
       }
 
-      const inputNow = await $(testId("chat-input"));
+      const inputNow = await $(testId('chat-input'));
       if (await inputNow.isExisting()) {
-        const val = (await inputNow.getValue()) || "";
+        const val = (await inputNow.getValue()) || '';
         if (String(val).trim().length === 0) return true;
       }
 
-      const bodyAfter = (await $("body").getText()) || "";
+      const bodyAfter = (await $('body').getText()) || '';
       if (
         promptMarker &&
         !bodyBefore.includes(promptMarker) &&
@@ -513,12 +588,11 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
     {
       timeout: timeoutMs,
       interval: 250,
-      timeoutMsg:
-        "No-silence contract failed: no assistant message and no visible error",
-    },
+      timeoutMsg: 'No-silence contract failed: no assistant message and no visible error',
+    }
   );
 }
 
 export async function getCurrentPathname() {
-  return browser.execute(() => window.location.pathname || "");
+  return browser.execute(() => window.location.pathname || '');
 }
