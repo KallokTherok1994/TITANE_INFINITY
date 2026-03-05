@@ -1,0 +1,2 @@
+{"type":"registry_link","path":"scripts/autoheal/autoheal_rules.jsonl","note":"append-only canonical registry"}
+{"type":"registry_link","path":"registry/autofix-autoheal-rules.jsonl","note":"schema-validated gate registry used by check_autofix_autoheal_registry"}

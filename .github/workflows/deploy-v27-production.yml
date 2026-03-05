@@ -5,7 +5,7 @@ on:
     branches:
       - MAIN
     tags:
-      - 'v27.0.0-*'
+      - 'v*'
   workflow_dispatch:
     inputs:
       deploy_target:
@@ -42,11 +42,13 @@ jobs:
           echo "✅ Version: $VERSION @ $COMMIT"
 
       - name: 📦 Validate artifacts exist
+        if: ${{ startsWith(github.ref, 'refs/tags/') }}
         run: |
-          ls -lh deployment/v27.0.0-PRODUCTION/TITANE-Infinity_27.0.0_amd64.deb
-          ls -lh deployment/v27.0.0-PRODUCTION/TITANE-Infinity-27.0.0-1.x86_64.rpm
-          ls -lh deployment/v27.0.0-PRODUCTION/TITANE-Infinity_27.0.0_amd64.AppImage
-          ls -lh deployment/v27.0.0-PRODUCTION/titane-infinity
+          VERSION="${{ steps.version.outputs.version }}"
+          DEPLOY_DIR="deployment/latest"
+          ls -lh "$DEPLOY_DIR/TITANE-Infinity_${VERSION}_amd64.deb"
+          ls -lh "$DEPLOY_DIR/TITANE-Infinity-${VERSION}-1.x86_64.rpm"
+          ls -lh "$DEPLOY_DIR/TITANE-Infinity_${VERSION}_amd64.AppImage"
 
   test:
     name: 🧪 Run Final100 Tests
@@ -59,10 +61,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
+
+      - name: Install native dependencies (tests)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
 
       - name: Install pnpm
         run: npm install -g pnpm
+
+      - name: Install native dependencies (build)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -83,32 +95,62 @@ jobs:
     name: 📦 Build & Publish Artifacts
     runs-on: ubuntu-latest
     needs: [validate, test]
+    if: ${{ startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch' }}
     permissions:
       contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: 📋 Verify artifacts
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install system dependencies
         run: |
-          cd deployment/v27.0.0-PRODUCTION
-          sha256sum -c SHA256SUMS.txt
-          echo "✅ All artifacts verified"
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf libpng-dev libasound2-dev
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: 🛠️ Build Tauri bundles
+        run: pnpm exec tauri build --config src-tauri/tauri.conf.json
+
+      - name: 📋 Verify built artifacts
+        run: |
+          VERSION="${{ needs.validate.outputs.version }}"
+          ls -lh "src-tauri/target/release/bundle/deb/TITANE-Infinity_${VERSION}_amd64.deb"
+          ls -lh "src-tauri/target/release/bundle/rpm/TITANE-Infinity-${VERSION}-1.x86_64.rpm"
+          ls -lh "src-tauri/target/release/bundle/appimage/TITANE-Infinity_${VERSION}_amd64.AppImage"
+
+      - name: 📎 Upload deployment artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: TITANE-Infinity-${{ needs.validate.outputs.version }}-bundles
+          path: |
+            src-tauri/target/release/bundle/deb/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.deb
+            src-tauri/target/release/bundle/rpm/TITANE-Infinity-${{ needs.validate.outputs.version }}-1.x86_64.rpm
+            src-tauri/target/release/bundle/appimage/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.AppImage
 
       - name: 📤 Create/Update Release
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |
-            deployment/v27.0.0-PRODUCTION/TITANE-Infinity_27.0.0_amd64.deb
-            deployment/v27.0.0-PRODUCTION/TITANE-Infinity-27.0.0-1.x86_64.rpm
-            deployment/v27.0.0-PRODUCTION/TITANE-Infinity_27.0.0_amd64.AppImage
-            deployment/v27.0.0-PRODUCTION/titane-infinity
-            deployment/v27.0.0-PRODUCTION/SHA256SUMS.txt
-          body_path: RELEASE_NOTES_v27.0.0.md
+            src-tauri/target/release/bundle/deb/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.deb
+            src-tauri/target/release/bundle/rpm/TITANE-Infinity-${{ needs.validate.outputs.version }}-1.x86_64.rpm
+            src-tauri/target/release/bundle/appimage/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.AppImage
           draft: false
           prerelease: false
-          tag_name: v27.0.0-PRODUCTION
+          tag_name: ${{ github.ref_name }}
 
       - name: 📢 Post deployment status
         run: |
@@ -126,7 +168,7 @@ jobs:
         run: |
           if [ "${{ needs.validate.result }}" = "success" ] && \
              [ "${{ needs.test.result }}" = "success" ] && \
-             [ "${{ needs.build-and-publish.result }}" = "success" ]; then
+             { [ "${{ needs.build-and-publish.result }}" = "success" ] || [ "${{ needs.build-and-publish.result }}" = "skipped" ]; }; then
             echo "✅ DEPLOYMENT SUCCESSFUL"
             exit 0
           else

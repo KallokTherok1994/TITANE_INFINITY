@@ -1,6 +1,6 @@
-import assert from "node:assert/strict";
+import assert from 'node:assert/strict';
 
-import { topLevelPageOrder, uiPages } from "./page-objects/uiPages.po.js";
+import { topLevelPageOrder, uiPages } from './page-objects/uiPages.po.js';
 import {
   captureFailureScreenshot,
   ensureArtifactsDir,
@@ -11,20 +11,20 @@ import {
   toggleAllVisibleCheckboxes,
   sendChatAndAssertNoSilence,
   getCurrentPathname,
-} from "./ui-driver.wdio.js";
+} from './ui-driver.wdio.js';
 
-describe("UI Desktop Ultra Smoke (WDIO/Tauri)", () => {
+describe('UI Desktop Ultra Smoke (WDIO/Tauri)', () => {
   before(async () => {
     await ensureArtifactsDir();
   });
 
   afterEach(async function () {
-    if (this.currentTest?.state === "failed") {
+    if (this.currentTest?.state === 'failed') {
       await captureFailureScreenshot(this.currentTest.fullTitle());
     }
   });
 
-  it("launches app, validates ready protocol, runs smoke navigation and no-silence chat", async function () {
+  it('launches app, validates ready protocol, runs smoke navigation and no-silence chat', async function () {
     this.timeout(300000);
 
     await openApp();
@@ -34,16 +34,12 @@ describe("UI Desktop Ultra Smoke (WDIO/Tauri)", () => {
       await gotoTopNavPage(page);
       const root = await $(page.root);
       if (await root.isExisting()) {
-        assert.equal(
-          await root.isDisplayed(),
-          true,
-          `root not visible for ${page.id}`,
-        );
+        assert.equal(await root.isDisplayed(), true, `root not visible for ${page.id}`);
       } else {
         const pathname = await getCurrentPathname();
         assert.ok(
           pathname === page.route || pathname.startsWith(`${page.route}/`),
-          `route not active for ${page.id}: ${pathname}`,
+          `route not active for ${page.id}: ${pathname}`
         );
       }
     }
@@ -51,15 +47,12 @@ describe("UI Desktop Ultra Smoke (WDIO/Tauri)", () => {
     await gotoTopNavPage(uiPages.titane);
     await clickAllTabs(['[data-testid="tab-conversation"]']);
     await sendChatAndAssertNoSilence(
-      "[OFFLINE5] smoke: répondre même en mode dégradé local-first",
+      '[OFFLINE5] smoke: répondre même en mode dégradé local-first'
     );
 
     await gotoTopNavPage(uiPages.admin);
     await clickAllTabs(['[data-testid="tab-admin-audio"]']);
     const toggled = await toggleAllVisibleCheckboxes();
-    assert.ok(
-      toggled >= 1,
-      "expected at least one checkbox toggle in smoke flow",
-    );
+    assert.ok(toggled >= 1, 'expected at least one checkbox toggle in smoke flow');
   });
 });
