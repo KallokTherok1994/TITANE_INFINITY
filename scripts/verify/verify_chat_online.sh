@@ -2,14 +2,16 @@
 set -euo pipefail
 
 pass=true
+configured_external=0
 
-check_env() {
+check_env_optional() {
   local name="$1"
-  if [[ -z "${!name:-}" ]]; then
-    echo "[FAIL] Missing $name"
-    pass=false
+  local label="$2"
+  if [[ -n "${!name:-}" ]]; then
+    echo "[OK] $name present ($label enabled)"
+    configured_external=$((configured_external + 1))
   else
-    echo "[OK] $name present"
+    echo "[INFO] $name missing ($label disabled)"
   fi
 }
 
@@ -24,9 +26,14 @@ check_http() {
   fi
 }
 
-check_env GEMINI_API_KEY
-check_env OPENAI_API_KEY
-check_env ANTHROPIC_API_KEY
+check_env_optional GEMINI_API_KEY "Gemini"
+check_env_optional OPENAI_API_KEY "OpenAI"
+check_env_optional ANTHROPIC_API_KEY "Anthropic"
+
+if [[ "$configured_external" -eq 0 ]]; then
+  echo "[FAIL] No external provider configured (set at least one API key)"
+  pass=false
+fi
 
 if [[ -n "${GEMINI_API_KEY:-}" ]]; then
   check_http "Gemini API" "curl -fsS -m 5 -H 'x-goog-api-key: ${GEMINI_API_KEY}' https://generativelanguage.googleapis.com/v1beta/models"
