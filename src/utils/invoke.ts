@@ -19,7 +19,10 @@ export interface CanonicalIpcResult<T> {
   error: IpcErrorPayload | null;
 }
 
-function normalizeIpcResponse<T>(command: string, response: unknown): CanonicalIpcResult<T> {
+function normalizeIpcResponse<T>(
+  command: string,
+  response: unknown
+): CanonicalIpcResult<T> {
   if (response && typeof response === 'object') {
     const candidate = response as Record<string, unknown>;
     if ('ok' in candidate && 'content' in candidate && 'error' in candidate) {
@@ -44,7 +47,9 @@ function normalizeIpcResponse<T>(command: string, response: unknown): CanonicalI
           ? null
           : {
               code: 'IPC_LEGACY_RESPONSE',
-              message: String(candidate.error ?? 'Legacy IPC response without canonical contract'),
+              message: String(
+                candidate.error ?? 'Legacy IPC response without canonical contract'
+              ),
             },
       };
     }
@@ -129,7 +134,6 @@ export async function safeInvokeWithRetry<T = unknown>(
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     const result = await safeInvokeCanonical<T>(cmd, payload);
     if (result.ok) {
-
       // Succès dès la première tentative
       if (attempt > 1) {
         console.log(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
