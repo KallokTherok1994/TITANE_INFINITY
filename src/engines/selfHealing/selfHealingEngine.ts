@@ -7,7 +7,7 @@
  * I/O orchestration lives in Ring 3: src/services/selfHealing/selfHealingIOAdapter.ts
  */
 
-import { AutoRcaEngine, type AutoRcaCategory } from "./autoRcaEngine";
+import { AutoRcaEngine, type AutoRcaCategory } from './autoRcaEngine';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES & CONSTANTS
