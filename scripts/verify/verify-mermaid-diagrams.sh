@@ -6,6 +6,24 @@ cd "$ROOT_DIR"
 
 FAIL=0
 
+has_pattern() {
+  local pattern="$1"
+  local file="$2"
+  if command -v rg >/dev/null 2>&1; then
+    rg -q -- "$pattern" "$file"
+  else
+    grep -Eq -- "$pattern" "$file"
+  fi
+}
+
+scan_urls_in_sources() {
+  if command -v rg >/dev/null 2>&1; then
+    rg -n 'http://|https://' docs/diagrams/sources/*.mmd
+  else
+    grep -nE 'http://|https://' docs/diagrams/sources/*.mmd
+  fi
+}
+
 REQUIRED_FILES=(
   "docs/standards/MERMAID_STANDARDS.md"
   "docs/diagrams/CANON_INDEX.md"
@@ -100,11 +118,11 @@ done
 
 NETWORK_FILE="docs/diagrams/sources/network_surface_online_first.mmd"
 if [[ -f "$NETWORK_FILE" ]]; then
-  if ! rg -q '/api/|/api/\*' "$NETWORK_FILE"; then
+  if ! has_pattern '/api/|/api/\*' "$NETWORK_FILE"; then
     echo "FAIL: missing /api/ mention in $NETWORK_FILE"
     FAIL=1
   fi
-  if ! rg -q 'INTERNAL|EXTERNAL' "$NETWORK_FILE"; then
+  if ! has_pattern 'INTERNAL|EXTERNAL' "$NETWORK_FILE"; then
     echo "FAIL: missing INTERNAL/EXTERNAL tags in $NETWORK_FILE"
     FAIL=1
   fi
@@ -121,9 +139,9 @@ for source in docs/diagrams/sources/*.mmd; do
   fi
 done
 
-if rg -n 'http://|https://' docs/diagrams/sources/*.mmd >/dev/null 2>&1; then
+if scan_urls_in_sources >/dev/null 2>&1; then
   echo "FAIL: forbidden URL (http/https) in Mermaid source"
-  rg -n 'http://|https://' docs/diagrams/sources/*.mmd || true
+  scan_urls_in_sources || true
   FAIL=1
 fi
 
