@@ -210,18 +210,16 @@ Supported providers:
 OpenAI Example:
 
 pub async fn embed_openai(text: &str, api_key: &str) -> Result<Vec<f32>, String> {
-    use http_client;
+    use crate::services::network_gateway::NetworkGatewayService;
     use serde_json::json;
 
-    let client = HttpClient::new();
-    let response = client
-        .post("https://api.openai.com/v1/embeddings")
-        .header("Authorization", format!("Bearer {}", api_key))
-        .json(&json!({
+    let gateway = NetworkGatewayService::default_governed();
+    let response = gateway
+        .post_json("https://api.openai.com/v1/embeddings", &json!({
+            "headers": { "Authorization": format!("Bearer {}", api_key) },
             "input": text,
             "model": "text-embedding-3-small"
         }))
-        .send()
         .await
         .map_err(|e| format!("API request failed: {}", e))?;
 
