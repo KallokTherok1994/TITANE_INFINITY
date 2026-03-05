@@ -18,6 +18,8 @@ type EngineSingularityState = ReturnType<typeof singularityEngine.getState>;
 
 const CONFIDENCE_THRESHOLD = 0.65;
 
+type EngineSingularityState = unknown;
+
 export interface SelfHealingLogEntry {
   timestamp: number;
   level: string;
