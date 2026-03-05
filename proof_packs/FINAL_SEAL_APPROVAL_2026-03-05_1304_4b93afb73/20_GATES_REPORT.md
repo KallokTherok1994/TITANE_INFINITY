@@ -28,3 +28,21 @@
 - Gates Pending: PROD token authorization only
 - Blocking Issues: missing production tokens in environment
 - Seal Status: SEALED (fix scope), PROD not authorized
+
+## Continuation gates on latest HEAD (`13f4924eb`)
+
+- `G_GITGUARDIAN_HEAD`: PASS
+	- run `22730504632` (`completed/success`)
+- `G_CI_APPROVAL_HEAD`: PASS
+	- no `action_required` for this SHA
+- `G_CONSTITUTION_AUDIT_HEAD`: FAIL
+	- run `22730504624`
+	- evidence: capabilities drift + L4 surface check violation
+- `G_RELEASE_CERT_HEAD`: FAIL
+	- run `22730504626`
+	- evidence: incomplete pathway (5/6) + production evidence missing (0/4)
+- `G_MERMAID_VERIFY_HEAD`: FAIL
+	- run `22730504636`
+	- evidence: `pngquant-bin` build failure on runner (`libpng-dev` missing)
+
+Continuation status: `BLOCKED_CI_FAIL`
