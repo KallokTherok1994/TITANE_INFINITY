@@ -124,7 +124,7 @@ jobs:
           # Verify CI/CD integration (all gates active)
           CI_GATES=0
           [ -f ".github/workflows/p0-1-secrets-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
-          [ -f ".github/workflows/p0-2-surface-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
+          [ -f ".github/workflows/p0-surface-guard.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p3-stable-build.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p4-constitution-audit.yml" ] && CI_GATES=$((CI_GATES + 1))
           [ -f ".github/workflows/p5-runtime-governance.yml" ] && CI_GATES=$((CI_GATES + 1))
@@ -151,14 +151,17 @@ jobs:
 
           # Verify all previous gates evidence exists
           EVIDENCE_FILES=0
-          [ -f "docs/_evidence/P4_CONSTITUTION_AUDIT.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
-          [ -f "docs/_evidence/P5_RUNTIME_GOVERNANCE.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
-          [ -f "docs/_evidence/P6_CAPABILITY_QUALIFICATION.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "docs/MAP_INDEX.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "docs/MAP_ARCHITECTURE_4RING.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "docs/MAP_SURFACES_NETWORK.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "docs/MAP_IPC_COMMANDS.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "docs/MAP_TESTS_GATES.md" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
+          [ -f "reports/MAP_PROOFS.log" ] && EVIDENCE_FILES=$((EVIDENCE_FILES + 1))
 
-          if [ "$EVIDENCE_FILES" -ge 3 ]; then
+          if [ "$EVIDENCE_FILES" -ge 5 ]; then
             echo "✅ Evidence trail complete ($EVIDENCE_FILES documents)"
           else
-            echo "❌ P6 VIOLATION: Incomplete evidence trail ($EVIDENCE_FILES/3)"
+            echo "❌ P6 VIOLATION: Incomplete evidence trail ($EVIDENCE_FILES/5)"
             exit 1
           fi
 
