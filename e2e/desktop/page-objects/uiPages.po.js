@@ -1,8 +1,8 @@
 export const uiPages = {
   titane: {
-    id: "titane",
-    route: "/titane",
-    navTestId: "nav-titane",
+    id: 'titane',
+    route: '/titane',
+    navTestId: 'nav-titane',
     root: '[data-testid="page-titane"]',
     tabs: [
       '[data-testid="tab-conversation"]',
@@ -16,9 +16,9 @@ export const uiPages = {
     ],
   },
   time: {
-    id: "time",
-    route: "/time",
-    navTestId: "nav-time",
+    id: 'time',
+    route: '/time',
+    navTestId: 'nav-time',
     root: '[data-testid="page-time"]',
     tabs: [
       '[data-testid="tab-time-now"]',
@@ -30,16 +30,16 @@ export const uiPages = {
     ],
   },
   stats: {
-    id: "stats",
-    route: "/stats",
-    navTestId: "nav-stats",
+    id: 'stats',
+    route: '/stats',
+    navTestId: 'nav-stats',
     root: '[data-testid="page-stats"]',
     tabs: [],
   },
   admin: {
-    id: "admin",
-    route: "/admin",
-    navTestId: "nav-admin",
+    id: 'admin',
+    route: '/admin',
+    navTestId: 'nav-admin',
     root: '[data-testid="page-admin"]',
     tabs: [
       '[data-testid="tab-admin-system"]',
@@ -51,9 +51,9 @@ export const uiPages = {
     ],
   },
   dev: {
-    id: "dev",
-    route: "/dev",
-    navTestId: "nav-dev",
+    id: 'dev',
+    route: '/dev',
+    navTestId: 'nav-dev',
     root: '[data-testid="page-dev"]',
     tabs: [
       '[data-testid="tab-dev-overview"]',
@@ -69,16 +69,16 @@ export const uiPages = {
     ],
   },
   fusion: {
-    id: "fusion",
-    route: "/fusion",
-    navTestId: "nav-fusion",
+    id: 'fusion',
+    route: '/fusion',
+    navTestId: 'nav-fusion',
     root: '[data-testid="page-fusion"]',
     tabs: [],
   },
   optimization: {
-    id: "optimization",
-    route: "/optimization",
-    navTestId: "nav-optimization",
+    id: 'optimization',
+    route: '/optimization',
+    navTestId: 'nav-optimization',
     root: '[data-testid="page-optimization"]',
     tabs: [],
   },
