@@ -222,8 +222,7 @@ async fn execute_http_request(
     //       _ => return Err("Unsupported method".to_string()),
     //   }.send().await?;
     // Error handling: Retry 3x with exponential backoff (1s, 2s, 4s)
-    // For production, uncomment and configure
-    // let client = HttpClient::new();
+    // For production, route through NetworkGatewayService and configure policy.
     // let mut req = match request.method.as_str() {
     //     "GET" => client.get(url),
     //     "POST" => client.post(url),
