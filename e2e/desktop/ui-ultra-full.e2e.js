@@ -21,7 +21,7 @@ async function openModeBuilderIfPresent() {
     await trigger.click();
   } catch {
     try {
-      await browser.execute((el) => el?.click(), trigger);
+      await browser.execute(el => el?.click(), trigger);
     } catch {
       return false;
     }
@@ -34,7 +34,7 @@ async function openModeBuilderIfPresent() {
 function getTabsForFullRun(page) {
   if (page.id === 'admin') {
     // Audio tab is covered in smoke and can be unstable in full desktop runs.
-    return page.tabs.filter((tab) => tab !== '[data-testid="tab-admin-audio"]');
+    return page.tabs.filter(tab => tab !== '[data-testid="tab-admin-audio"]');
   }
   return page.tabs;
 }
@@ -44,7 +44,7 @@ function shouldRunDeepInteractions(page) {
 }
 
 const stableFullPages = topLevelPageOrder.filter(
-  (page) => page.id !== 'fusion' && page.id !== 'optimization'
+  page => page.id !== 'fusion' && page.id !== 'optimization'
 );
 
 describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
