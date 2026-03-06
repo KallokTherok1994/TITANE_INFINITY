@@ -1576,7 +1576,7 @@ fn main() {
             titane_infinity::commands::engine_commands::engine_tick,
             titane_infinity::commands::memory_commands::memory_get,
             titane_infinity::commands::memory_commands::memory_set,
-            titane_infinity::commands::memory_commands::memory_get_stats,
+            // memory_get_stats already registered above as unified_memory_commands::memory_get_stats
             titane_infinity::commands::memory_commands::memory_list_all,
             titane_infinity::commands::memory_commands::memory_clear_all,
             titane_infinity::commands::memory_commands::memory_export_conversation,
