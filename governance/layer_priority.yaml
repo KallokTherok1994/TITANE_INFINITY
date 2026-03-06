@@ -1,0 +1,37 @@
+version: 1
+layers:
+  - id: L1
+    name: constitutional-kernel
+    path_patterns:
+      - .github/copilot-instructions.md
+  - id: L2
+    name: path-specific-instructions
+    path_patterns:
+      - .github/instructions/*.instructions.md
+  - id: L3
+    name: local-agents
+    path_patterns:
+      - src/AGENTS.md
+      - src-tauri/AGENTS.md
+      - e2e/AGENTS.md
+      - docs/AGENTS.md
+      - scripts/AGENTS.md
+  - id: L4
+    name: custom-agents
+    path_patterns:
+      - .github/agents/*.agent.md
+  - id: L5
+    name: reusable-prompts
+    path_patterns:
+      - .github/prompts/*.prompt.md
+  - id: L6
+    name: mechanical-truth
+    path_patterns:
+      - scripts/verify/*.sh
+      - scripts/autoheal/*
+      - governance/*
+conflict_policy:
+  runtime_proof_overrides_narrative: true
+  validator_overrides_duplicate_prose: true
+  unresolved_conflict_status: BLOCKED_DOCTRINE
+  lower_layer_cannot_override_higher_invariant: true

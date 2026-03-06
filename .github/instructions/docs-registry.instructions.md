@@ -7,7 +7,7 @@ applyTo: 'docs/**, reports/**, proof_packs/**'
 ## Invariants rappeles
 
 - Append-only, no destructive rewrites.
-- Proofs live under reports/.
+- Proof evidence lives under `reports/` (append-only logs) and `proof_packs/` (session packs).
 
 ## DO
 
