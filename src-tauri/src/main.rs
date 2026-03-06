@@ -590,7 +590,9 @@ fn main() {
         .manage(singularity_fusion::CrashGuardState::default())
         .manage(singularity_fusion::PerformanceState::default())
         .manage(singularity_fusion::UnifiedPipelineState::default())
-        .manage(state_bridge_commands::FrontendStateStore::default());
+        .manage(state_bridge_commands::FrontendStateStore::default())
+        // ✅ AUDIT FIX (2026-03-06): Identity Engine State — required by identity_* commands
+        .manage(titane_infinity::identity::commands::IdentityEngineState::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
@@ -1494,6 +1496,67 @@ fn main() {
             // Fusion Backend Commands (Week 4)
             fusion_commands_week4::fusion_update_state,
             fusion_commands_week4::fusion_auto_optimize,
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONTROL PANEL COMMANDS (v27 FIX — AUDIT FUSION 2026-03-06)
+            // Correction P1: commandes cp_* implémentées dans lib mais non
+            // enregistrées dans le handler → IPC failures sur le Control Panel
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::control_panel_commands::cp_get_ai_config,
+            titane_infinity::control_panel_commands::cp_set_ai_config,
+            titane_infinity::control_panel_commands::cp_get_design_config,
+            titane_infinity::control_panel_commands::cp_set_design_config,
+            titane_infinity::control_panel_commands::cp_get_modules_status,
+            titane_infinity::control_panel_commands::cp_toggle_module,
+            titane_infinity::control_panel_commands::cp_check_for_updates,
+
+            // ═══════════════════════════════════════════════════════════════
+            // SELF-HEAL EXECUTOR COMMANDS (AUDIT FIX 2026-03-06 — CONTINUE)
+            // 14 commands used in selfHealingExecutor.ts + selfHealingSyncLayer.ts
+            // Implemented in commands_v21::self_healing_commands — no State deps
+            // ═══════════════════════════════════════════════════════════════
+            commands_v21::self_healing_commands::selfheal_clear_cache,
+            commands_v21::self_healing_commands::selfheal_isolate_module,
+            commands_v21::self_healing_commands::selfheal_mini_audit,
+            commands_v21::self_healing_commands::selfheal_rebuild_memory,
+            commands_v21::self_healing_commands::selfheal_regenerate_config,
+            commands_v21::self_healing_commands::selfheal_repair_json,
+            commands_v21::self_healing_commands::selfheal_reset_state,
+            commands_v21::self_healing_commands::selfheal_restart_module,
+            commands_v21::self_healing_commands::selfheal_restart_process,
+            commands_v21::self_healing_commands::selfheal_restart_worker,
+            commands_v21::self_healing_commands::selfheal_save_profile,
+            commands_v21::self_healing_commands::selfheal_switch_provider,
+            commands_v21::self_healing_commands::selfheal_sync_state,
+            commands_v21::self_healing_commands::selfheal_sync_with_singularity,
+
+            // ═══════════════════════════════════════════════════════════════
+            // IDENTITY ENGINE COMMANDS (AUDIT FIX 2026-03-06 — CONTINUE)
+            // 4 commands used in IdentityCenter.tsx + defaultIdentityMatrix.ts
+            // Requires IdentityEngineState (managed above)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::identity::commands::identity_get_matrix,
+            titane_infinity::identity::commands::identity_list_voice_profiles,
+            titane_infinity::identity::commands::identity_set_active_voice_profile,
+            titane_infinity::identity::commands::identity_set_mode,
+
+            // ═══════════════════════════════════════════════════════════════
+            // AUDIO COMMANDS — speak, start/stop/cancel_recording
+            // (AUDIT FIX 2026-03-06 — CONTINUE)
+            // Used in: tauriBridge.ts, audioSelfHeal.ts, voice.ts, voiceE2ETests.ts
+            // audio::commands already included — missing variants added here
+            // ═══════════════════════════════════════════════════════════════
+            audio::commands::speak,
+            audio::commands::start_recording,
+            audio::commands::stop_recording,
+            audio::commands::cancel_recording,
+
+            // ═══════════════════════════════════════════════════════════════
+            // SECURITY — validate_chat_message
+            // (AUDIT FIX 2026-03-06 — CONTINUE)
+            // Allowlisted in chat_ai.json but not previously registered
+            // ═══════════════════════════════════════════════════════════════
+            secure_commands::validate_chat_message,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
