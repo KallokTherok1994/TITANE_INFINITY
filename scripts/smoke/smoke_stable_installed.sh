@@ -91,7 +91,8 @@ else
 fi
 
 # Scan for ERROR markers
-ERROR_COUNT=$(grep -icE 'ERROR|panic|panicked|segfault|SIGSEGV' "$LOG" || echo "0")
+ERROR_COUNT=$(grep -icE 'ERROR|panic|panicked|segfault|SIGSEGV' "$LOG" || true)
+ERROR_COUNT=${ERROR_COUNT:-0}
 
 if [ "$ERROR_COUNT" -gt 0 ]; then
   say "${YELLOW}[WARN]${NC} Detected $ERROR_COUNT ERROR markers in logs:"
@@ -102,7 +103,8 @@ else
 fi
 
 # Scan for UI initialization markers (optional)
-UI_MARKERS=$(grep -icE 'Main window shown|page_load|label=main' "$LOG" || echo "0")
+UI_MARKERS=$(grep -icE 'Main window shown|page_load|label=main' "$LOG" || true)
+UI_MARKERS=${UI_MARKERS:-0}
 
 if [ "$UI_MARKERS" -gt 0 ]; then
   pass "UI init: Detected $UI_MARKERS UI initialization markers"
@@ -111,7 +113,8 @@ else
 fi
 
 # Check running process
-RUNNING_PIDS=$(pgrep -af '^/usr/bin/titane-infinity$' | wc -l || echo "0")
+RUNNING_PIDS=$(pgrep -af '^/usr/bin/titane-infinity$' | wc -l || true)
+RUNNING_PIDS=${RUNNING_PIDS:-0}
 
 if [ "$RUNNING_PIDS" -gt 0 ]; then
   say "${YELLOW}[INFO]${NC} Still running: $RUNNING_PIDS process(es)"

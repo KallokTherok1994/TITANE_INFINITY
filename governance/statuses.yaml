@@ -1,0 +1,18 @@
+version: 1
+statuses:
+  - PASS
+  - FAIL
+  - BLOCKED
+  - BLOCKED_APPROVAL
+  - DONE
+  - SEALED
+final_verdict_statuses:
+  - EXPERIMENTAL
+  - QUALIFIED
+  - STABLE
+  - SEALED
+  - FAIL
+  - BLOCKED
+rules:
+  unique_final_verdict: true
+  no_unknown_status_tokens: true
