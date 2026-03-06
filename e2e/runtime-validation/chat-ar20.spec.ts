@@ -70,7 +70,7 @@ async function sendChatMessage(page, message: string) {
 
 test.describe('Runtime Validation: Chat AR20 Suite', () => {
   if (!TAURI_E2E_ENABLED) {
-    test('runtime gate disabled proof', async () => {
+    test('runtime precondition proof (set TITANE_E2E_TAURI=1)', async () => {
       expect(TAURI_E2E_ENABLED).toBe(false);
     });
     return;

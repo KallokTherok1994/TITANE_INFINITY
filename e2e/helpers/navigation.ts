@@ -1,7 +1,25 @@
 import { expect, Page } from '@playwright/test';
 
+async function gotoWithRetry(page: Page, path: string, attempts = 3): Promise<void> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      await page.goto(path, { waitUntil: 'load', timeout: 30000 });
+      return;
+    } catch (error) {
+      const message = String(error);
+      const transient =
+        message.includes('ERR_CONNECTION_REFUSED') ||
+        message.includes('ERR_CONNECTION_RESET');
+      if (!transient || i === attempts - 1) {
+        throw error;
+      }
+      await page.waitForTimeout(1000 * (i + 1));
+    }
+  }
+}
+
 export async function openTitane(page: Page): Promise<void> {
-  await page.goto('/');
+  await gotoWithRetry(page, '/');
 
   const mainNav = page.getByRole('navigation', {
     name: /Navigation principale|Main navigation/i,
@@ -16,7 +34,7 @@ export async function openTitane(page: Page): Promise<void> {
 }
 
 export async function openAdminTab(page: Page, tabName: RegExp): Promise<void> {
-  await page.goto('/admin');
+  await gotoWithRetry(page, '/admin');
 
   await closeBootBeaconIfPresent(page);
 

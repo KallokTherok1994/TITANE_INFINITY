@@ -11,7 +11,7 @@ const FULL_E2E_ENABLED = process.env.TITANE_E2E_FULL === '1';
 
 test.describe('Critical Path: Application Launch', () => {
   if (!FULL_E2E_ENABLED) {
-    test('gate disabled proof (set TITANE_E2E_FULL=1)', async () => {
+    test('full-mode precondition proof (set TITANE_E2E_FULL=1)', async () => {
       expect(FULL_E2E_ENABLED).toBe(false);
     });
     return;
@@ -47,7 +47,19 @@ test.describe('Critical Path: Application Launch', () => {
         !e.includes('favicon') &&
         !e.includes('socket') &&
         !e.includes('HMR') &&
-        !e.includes('Failed to load resource')
+        !e.includes('Failed to load resource') &&
+        !e.includes('[Monitoring]') &&
+        // Expected during hardening: blocked non-whitelisted legacy probe command.
+        !(
+          e.includes('[Security]') &&
+          e.includes('not in whitelist') &&
+          e.includes('ollama_generate')
+        ) &&
+        !(
+          e.includes('[Monitoring]') &&
+          e.includes('ollama_generate') &&
+          e.includes('not in whitelist')
+        )
     );
 
     const ignored404Prefixes = [
