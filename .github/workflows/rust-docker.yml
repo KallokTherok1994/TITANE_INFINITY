@@ -22,7 +22,7 @@ permissions:
   contents: read
 
 env:
-  RUST_VERSION: '1.83'
+  RUST_VERSION: '1.85'
 
 jobs:
   test-rust-docker:
@@ -33,7 +33,7 @@ jobs:
       contents: read
 
     container:
-      image: rust:1.83-slim
+      image: rust:1.85-slim
 
     steps:
       - name: 📥 Checkout Repository
@@ -93,7 +93,7 @@ jobs:
           echo "- ✅ Tests executed in isolated Docker environment" >> test-summary.md
           echo "- ✅ Full Tauri dependencies installed" >> test-summary.md
           echo "- Rust: ${{ env.RUST_VERSION }}" >> test-summary.md
-          echo "- Container: rust:1.83-slim" >> test-summary.md
+          echo "- Container: rust:1.85-slim" >> test-summary.md
 
       - name: 📤 Upload Test Report
         if: always()
