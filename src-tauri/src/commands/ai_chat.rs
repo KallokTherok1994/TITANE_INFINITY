@@ -167,6 +167,13 @@ impl AIChatState {
     }
 }
 
+// P2-002 AUDIT FIX (2026-03-06): AIChatState::default() required for .manage()
+impl Default for AIChatState {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 #[tauri::command]
 pub async fn ai_query(
     state: State<'_, AIChatState>,
