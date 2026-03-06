@@ -143,6 +143,7 @@ All version files updated to `27.2.0`:
 - **Summary**: [`SPRINT_v27.2.0_COMPLETE.md`](../01_misc/SPRINT_v27.2.0_COMPLETE.md)
 - **Handoff**: [`HANDOFF_v27.2.0_DEPLOYMENT_READY.md`](../01_misc/HANDOFF_v27.2.0_DEPLOYMENT_READY.md)
 - **CHANGELOG**: [`CHANGELOG.md`](CHANGELOG__CHANGELOG.md.md#v27-2-0-typescript-strict) (v27.2.0 section)
+- **Post-deploy release note**: [`RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md`](./RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md)
 
 ### Proof Pack
 
