@@ -51,7 +51,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 📖 Generate TypeDoc
-        run: pnpm run docs
+        run: pnpm exec typedoc || pnpm dlx typedoc@0.28.14
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
