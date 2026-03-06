@@ -592,7 +592,10 @@ fn main() {
         .manage(singularity_fusion::UnifiedPipelineState::default())
         .manage(state_bridge_commands::FrontendStateStore::default())
         // ✅ AUDIT FIX (2026-03-06): Identity Engine State — required by identity_* commands
-        .manage(titane_infinity::identity::commands::IdentityEngineState::default());
+        .manage(titane_infinity::identity::commands::IdentityEngineState::default())
+        // ✅ P2-002 AUDIT FIX (2026-03-06): AIChatState — required by ai_query, ai_query_streaming,
+        //    get_conversation_history, and memory_* legacy commands
+        .manage(titane_infinity::commands::ai_chat::AIChatState::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
@@ -1539,6 +1542,45 @@ fn main() {
             titane_infinity::identity::commands::identity_list_voice_profiles,
             titane_infinity::identity::commands::identity_set_active_voice_profile,
             titane_infinity::identity::commands::identity_set_mode,
+
+            // ═══════════════════════════════════════════════════════════════
+            // IDENTITY STUB COMMANDS — P2-001 AUDIT FIX (2026-03-06)
+            // Implements missing identity_* stubs declared in tauriCommands.ts
+            // and allowlisted in tauri.conf.json
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::identity::commands::identity_get_current_mode,
+            titane_infinity::identity::commands::identity_get_available_modes,
+            titane_infinity::identity::commands::identity_get_current_tone,
+            titane_infinity::identity::commands::identity_get_active_rules,
+            titane_infinity::identity::commands::identity_get_coherence_score,
+            titane_infinity::identity::commands::identity_disable_rule,
+            titane_infinity::identity::commands::identity_enable_rule,
+            titane_infinity::identity::commands::identity_get_personality_snapshot,
+
+            // ═══════════════════════════════════════════════════════════════
+            // AICHAT LEGACY COMMANDS — P2-002 AUDIT FIX (2026-03-06)
+            // Requires AIChatState (managed above)
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::commands::ai_chat::ai_query,
+            titane_infinity::commands::ai_chat::ai_query_streaming,
+            titane_infinity::commands::ai_chat::create_conversation,
+            titane_infinity::commands::ai_chat::list_conversations,
+            titane_infinity::commands::ai_chat::delete_conversation,
+            titane_infinity::commands::ai_chat::clear_all_memory,
+            titane_infinity::commands::engine_commands::engine_get_nexus_state,
+            titane_infinity::commands::engine_commands::engine_get_harmonia_state,
+            titane_infinity::commands::engine_commands::engine_get_sentinel_state,
+            titane_infinity::commands::engine_commands::engine_get_cognition_state,
+            titane_infinity::commands::engine_commands::engine_get_singularity_state,
+            titane_infinity::commands::engine_commands::engine_get_evolution_state,
+            titane_infinity::commands::engine_commands::engine_tick,
+            titane_infinity::commands::memory_commands::memory_get,
+            titane_infinity::commands::memory_commands::memory_set,
+            // memory_get_stats already registered above as unified_memory_commands::memory_get_stats
+            titane_infinity::commands::memory_commands::memory_list_all,
+            titane_infinity::commands::memory_commands::memory_clear_all,
+            titane_infinity::commands::memory_commands::memory_export_conversation,
+            titane_infinity::commands::memory_commands::memory_compact,
 
             // ═══════════════════════════════════════════════════════════════
             // AUDIO COMMANDS — speak, start/stop/cancel_recording
