@@ -48,15 +48,28 @@ All artifacts available in `deployment/latest/`:
 
 | Artifact | Size | SHA256 | Location |
 |----------|------|--------|----------|
-| **AppImage** | 86M | `1972c270...` | [`TITANE-Infinity_27.2.0_amd64.AppImage`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage) |
-| **DEB** | 14M | `5b925c8d...` | [`TITANE-Infinity_27.2.0_amd64.deb`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.deb) |
-| **RPM** (bonus) | 14M | `8fa895ed...` | [`TITANE-Infinity-27.2.0-1.x86_64.rpm`](../../deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm) |
+| **AppImage** | 88M | `0e7bfe39...` | [`TITANE-Infinity_27.2.0_amd64.AppImage`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage) |
+| **DEB** | 17M | `1c1f15de...` | [`TITANE-Infinity_27.2.0_amd64.deb`](../../deployment/latest/TITANE-Infinity_27.2.0_amd64.deb) |
+| **RPM** (bonus) | 17M | `4a1601a7...` | [`TITANE-Infinity-27.2.0-1.x86_64.rpm`](../../deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm) |
 
 ### Metadata Files
 
 - [`SHA256SUMS_v27.2.0.txt`](../../deployment/latest/SHA256SUMS_v27.2.0.txt) — Checksums for all artifacts
 - [`SIZES_v27.2.0.txt`](../../deployment/latest/SIZES_v27.2.0.txt) — Artifact sizes (bytes + human-readable)
 - [`MANIFEST_v27.2.0.json`](../../deployment/latest/MANIFEST_v27.2.0.json) — Complete metadata + governance info
+
+### Post-Deploy Refresh (2026-03-06)
+
+- Runtime validation rerun: `smoke_stable_appimage.sh` PASS and `smoke_stable_installed.sh` PASS.
+- `deployment/latest` generic metadata synchronized with live artifacts:
+  - `MANIFEST.json`
+  - `SHA256SUMS.txt`
+  - `CHECKSUMS.sha256`
+  - `SIZES.txt`
+- Current live checksums:
+  - AppImage: `0e7bfe39ea96cb22445eb0dd7ca38b429de6cc8a203b946a447a6b555deb4bdc`
+  - DEB: `1c1f15dee313b97cc7d128dcb6597acd7aa43987b73393e29345605a2919eff3`
+  - RPM: `4a1601a790cadd94bc19730ae6a175b9c27338d215d5323784b4ede66a08bd79`
 
 ---
 
@@ -169,6 +182,8 @@ All version files updated to `27.2.0`:
 ### Commit Details
 
 **Deployment Commit**: `a14a111f`
+
+Historical excerpt from the initial 2026-02-23 deployment commit message:
 
 ```
 release(v27.2.0): production artifacts + changelog
