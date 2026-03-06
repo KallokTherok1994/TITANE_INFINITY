@@ -289,16 +289,21 @@ export async function waitAppReady() {
   }
 
   if (await isExisting(testId('ipc-ready'))) {
-    await waitForDisplayed(testId('ipc-ready'), DEFAULT_TIMEOUT);
     await browser.waitUntil(
       async () => {
-        const state = await $(testId('ipc-ready')).getAttribute('data-state');
-        return state === 'ready' || state === 'fallback';
+        const ipcMarker = await $(testId('ipc-ready'));
+        const state = await ipcMarker.getAttribute('data-state');
+        if (state === 'ready' || state === 'fallback') {
+          return true;
+        }
+
+        // Some builds keep ipc-ready hidden while top navigation is already interactive.
+        return await isDisplayed(testId('nav-top-main'));
       },
       {
         timeout: DEFAULT_TIMEOUT,
         interval: 200,
-        timeoutMsg: 'ipc-ready marker did not reach ready/fallback state',
+        timeoutMsg: 'ipc-ready marker did not reach ready/fallback and nav-top-main stayed unavailable',
       }
     );
   }

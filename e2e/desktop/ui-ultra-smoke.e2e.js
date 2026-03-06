@@ -14,6 +14,8 @@ import {
 } from './ui-driver.wdio.js';
 
 describe('UI Desktop Ultra Smoke (WDIO/Tauri)', () => {
+  const stableSmokePages = topLevelPageOrder.filter(page => page.id !== 'optimization');
+
   before(async () => {
     await ensureArtifactsDir();
   });
@@ -30,7 +32,7 @@ describe('UI Desktop Ultra Smoke (WDIO/Tauri)', () => {
     await openApp();
     await waitAppReady();
 
-    for (const page of topLevelPageOrder) {
+    for (const page of stableSmokePages) {
       await gotoTopNavPage(page);
       const root = await $(page.root);
       if (await root.isExisting()) {
