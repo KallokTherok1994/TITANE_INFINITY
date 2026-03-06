@@ -1,6 +1,6 @@
 # TITANE∞ — Registry Dashboard
 
-- Généré: 2026-03-06T02:56:04.298Z
+- Généré: 2026-03-06T12:05:02.798Z
 - Cycle actif: 01KFPVBPNG1KB0ZHD8KT6K5D7Y
 - Objectif: Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.
 - Action prioritaire (unique): Regenerate registry snapshot
@@ -13,6 +13,7 @@
 - Aucun
 
 ## Événements récents
+- 2026-03-06T12:05:01.251Z [01KK1GJVP2] WORKFLOW_CHANGED: Updated .github/workflows/p3-build-guard.yml to replace pnpm action setup with corepack bootstrap for CI stability
 - 2026-03-06T02:56:02.867Z [01KK0H5N9J] WORKFLOW_CHANGED: Updated .github/workflows/consciousness-matrix.yml to fix CI failures and restore registry gate compliance
 - 2026-02-09T15:28:34.050Z [01KH1G9K82] WORKFLOW_CHANGED: Workflow update in .github/workflows/performance.yml for Node 22 and libpng-dev install
 - 2026-02-09T15:26:46.262Z [01KH1G69ZP] WORKFLOW_CHANGED: Workflow updates for pnpm install in .github/workflows/ci.yml and ci-unified.yml; gitleaks token in secret-scan-gitleaks.yml
