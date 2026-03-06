@@ -53,9 +53,7 @@ describe('Architecture: offline-first legacy isolation', () => {
     }
 
     if (violations.length > 0) {
-      const report = violations
-        .map(v => `- ${v.file}:${v.line} -> ${v.text}`)
-        .join('\n');
+      const report = violations.map(v => `- ${v.file}:${v.line} -> ${v.text}`).join('\n');
 
       throw new Error(
         'offline-first.ts is legacy-only. Move callers to canonical backend config path.\n' +
