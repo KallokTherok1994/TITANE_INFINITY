@@ -1,0 +1,110 @@
+[
+  {
+    "route": "/adaptive",
+    "component": "AdaptiveEngine"
+  },
+  {
+    "route": "/admin",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/cloud",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/creation",
+    "component": "CreationStudio"
+  },
+  {
+    "route": "/dev",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/evolution",
+    "component": "EvolutionMonitor"
+  },
+  {
+    "route": "/experience",
+    "component": "Experience"
+  },
+  {
+    "route": "/fusion",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/hyper-center",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/identity-center",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/knowledge",
+    "component": "KnowledgeFusionPage"
+  },
+  {
+    "route": "/memory",
+    "component": "Memory"
+  },
+  {
+    "route": "/memory-evolution",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/optimization",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/orchestration-center",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/orchestration-intelligence",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/performance",
+    "component": "PerformanceTest"
+  },
+  {
+    "route": "/quantum-center",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/reality-center",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/research",
+    "component": "ResearchPage"
+  },
+  {
+    "route": "/selfheal",
+    "component": "SelfHeal"
+  },
+  {
+    "route": "/sentinel",
+    "component": "Sentinel"
+  },
+  {
+    "route": "/singularity",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/stats",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/time",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/titane",
+    "component": "ErrorBoundary"
+  },
+  {
+    "route": "/watchdog",
+    "component": "Watchdog"
+  }
+]

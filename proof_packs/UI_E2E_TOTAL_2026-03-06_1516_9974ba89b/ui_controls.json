@@ -1,0 +1,577 @@
+[
+  {
+    "page": "AdaptiveEngine",
+    "file": "src/pages/AdaptiveEngine.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "AgendaPage",
+    "file": "src/pages/AgendaPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 5,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "CameraPage",
+    "file": "src/pages/CameraPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 2,
+      "tabs": 0,
+      "inputs": 2,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 2,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "ChatPage",
+    "file": "src/pages/ChatPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "CognitivePage",
+    "file": "src/pages/CognitivePage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "ConfigurationHub",
+    "file": "src/pages/ConfigurationHub.tsx",
+    "testids": [
+      "page-configuration-hub",
+      "btn-config-refresh",
+      "btn-config-export",
+      "btn-config-import",
+      "btn-config-save-preset",
+      "select-config-preset",
+      "btn-config-edit",
+      "btn-config-cancel",
+      "btn-config-save",
+      "tab-config-system",
+      "tab-config-ai",
+      "tab-config-performance"
+    ],
+    "controls": {
+      "buttons": 14,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 1,
+      "checkboxes": 0,
+      "modals": 3,
+      "links": 0
+    }
+  },
+  {
+    "page": "DashboardPage",
+    "file": "src/pages/DashboardPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 1,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 1,
+      "links": 0
+    }
+  },
+  {
+    "page": "DesignSystemPage",
+    "file": "src/pages/DesignSystemPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "DesignSystemShowcase",
+    "file": "src/pages/DesignSystemShowcase.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "DevPage",
+    "file": "src/pages/DevPage.tsx",
+    "testids": [
+      "btn-dev-execute-operation",
+      "page-dev",
+      "btn-dev-refresh",
+      "page-dev-diagnostic"
+    ],
+    "controls": {
+      "buttons": 8,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "DevTools",
+    "file": "src/pages/DevTools.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 2,
+      "tabs": 0,
+      "inputs": 1,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "DevToolsLazy",
+    "file": "src/pages/DevToolsLazy.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "DevToolsTabs",
+    "file": "src/pages/DevToolsTabs.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "EvoPage",
+    "file": "src/pages/EvoPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 2,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "EvolutionCenterPage",
+    "file": "src/pages/EvolutionCenterPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 4,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Experience",
+    "file": "src/pages/Experience.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 2,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Harmonia",
+    "file": "src/pages/Harmonia.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Helios",
+    "file": "src/pages/Helios.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Memory",
+    "file": "src/pages/Memory.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 2,
+      "tabs": 0,
+      "inputs": 1,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "MonitoringDashboard",
+    "file": "src/pages/MonitoringDashboard.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 3,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Nexus",
+    "file": "src/pages/Nexus.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "OrchestrationMetaCenter",
+    "file": "src/pages/OrchestrationMetaCenter.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 6,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "PerformanceTest",
+    "file": "src/pages/PerformanceTest.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "ProgressionPage",
+    "file": "src/pages/ProgressionPage.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 6,
+      "links": 0
+    }
+  },
+  {
+    "page": "ResearchPage",
+    "file": "src/pages/ResearchPage.tsx",
+    "testids": [
+      "trace-toggle",
+      "trace-body",
+      "research-page",
+      "research-form",
+      "research-question",
+      "research-mode",
+      "research-target-url",
+      "research-seed-urls",
+      "research-sandbox",
+      "research-submit",
+      "research-reset",
+      "research-error",
+      "research-results",
+      "research-mode-badge",
+      "research-verdict",
+      "research-answer-section",
+      "research-answer",
+      "research-sources-section",
+      "research-limitations-section"
+    ],
+    "controls": {
+      "buttons": 3,
+      "tabs": 0,
+      "inputs": 2,
+      "textareas": 2,
+      "selects": 1,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 1
+    }
+  },
+  {
+    "page": "SecureSettings",
+    "file": "src/pages/SecureSettings.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "SelfHeal",
+    "file": "src/pages/SelfHeal.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Sentinel",
+    "file": "src/pages/Sentinel.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Settings",
+    "file": "src/pages/Settings.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 5,
+      "tabs": 0,
+      "inputs": 1,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Stats",
+    "file": "src/pages/Stats.tsx",
+    "testids": [
+      "page-stats"
+    ],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "TimeNavigator",
+    "file": "src/pages/TimeNavigator.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 3,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "TimePage",
+    "file": "src/pages/TimePage.tsx",
+    "testids": [
+      "page-time",
+      "btn-time-view-week",
+      "btn-time-view-month",
+      "input-time-planning-prompt",
+      "btn-time-generate-plan",
+      "btn-time-add-manual",
+      "btn-time-nav-past",
+      "btn-time-nav-present",
+      "btn-time-nav-future",
+      "btn-time-create-snapshot",
+      "btn-time-restore-snapshot",
+      "btn-time-compare-snapshot",
+      "btn-time-delete-snapshot"
+    ],
+    "controls": {
+      "buttons": 12,
+      "tabs": 0,
+      "inputs": 1,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "TitanePage",
+    "file": "src/pages/TitanePage.tsx",
+    "testids": [
+      "page-titane",
+      "tab-conversation",
+      "tab-overview",
+      "tab-vision",
+      "tab-identity",
+      "tab-memory",
+      "tab-memory-evolution",
+      "tab-progression",
+      "tab-transformation",
+      "page-titane-content"
+    ],
+    "controls": {
+      "buttons": 8,
+      "tabs": 8,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  },
+  {
+    "page": "Watchdog",
+    "file": "src/pages/Watchdog.tsx",
+    "testids": [],
+    "controls": {
+      "buttons": 0,
+      "tabs": 0,
+      "inputs": 0,
+      "textareas": 0,
+      "selects": 0,
+      "checkboxes": 0,
+      "modals": 0,
+      "links": 0
+    }
+  }
+]
