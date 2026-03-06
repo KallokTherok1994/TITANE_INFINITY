@@ -375,6 +375,20 @@ jobs:
           from datetime import datetime
           import uuid
 
+          def _json_fallback(value):
+              if isinstance(value, (np.bool_, np.integer, np.floating)):
+                  return value.item()
+              if isinstance(value, np.ndarray):
+                  return value.tolist()
+              if isinstance(value, (np.complexfloating, complex)):
+                  return {
+                      'real': float(value.real),
+                      'imag': float(value.imag),
+                  }
+              if isinstance(value, set):
+                  return list(value)
+              raise TypeError(f"Object of type {type(value).__name__} is not JSON serializable")
+
           class CollectiveIntelligenceNetwork:
               def __init__(self):
                   self.network_id = str(uuid.uuid4())
@@ -579,7 +593,7 @@ jobs:
 
           # Save network report
           with open('reports/collective/intelligence-network.json', 'w') as f:
-              json.dump(network_report, f, indent=2)
+              json.dump(network_report, f, indent=2, default=_json_fallback)
 
           metrics = network_report['collective_metrics']
 
