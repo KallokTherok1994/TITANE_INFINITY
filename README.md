@@ -81,6 +81,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Commits: `43c35be3f`, `be5ced801`
   - Change: redeploy token-gated, smoke AppImage+Installed PASS, metadata `deployment/latest` resync
   - Risk: LOW (operational validation + metadata coherence)
+  - Release note prep: [`RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md`](docs/90_release/RELEASE_NOTE_v27.2.0_POSTDEPLOY_2026-03-06.md)
 
 ### Legacy Versions
 
