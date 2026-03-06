@@ -22,7 +22,12 @@ describe('useTitaneDb', () => {
     });
 
     const { result } = renderHook(() => useTitaneDb());
-    const payload = (await result.current.putEvent('stream-a', 'created', '{}', 'device-a')) as {
+    const payload = (await result.current.putEvent(
+      'stream-a',
+      'created',
+      '{}',
+      'device-a'
+    )) as {
       id: string;
     };
 

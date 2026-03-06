@@ -34,18 +34,27 @@ export function useTitaneDb() {
   );
 
   const getStream = useCallback(async (stream: string, limit = 100) => {
-    const response = await secureInvoke<IpcResponse<{ items: unknown[] }>>('db_get_stream', {
-      request: { stream, limit },
-    });
+    const response = await secureInvoke<IpcResponse<{ items: unknown[] }>>(
+      'db_get_stream',
+      {
+        request: { stream, limit },
+      }
+    );
     return assertOk(response);
   }, []);
 
-  const putSnapshot = useCallback(async (stream: string, version: number, stateJson: string) => {
-    const response = await secureInvoke<IpcResponse<{ saved: boolean }>>('db_put_snapshot', {
-      request: { stream, version, stateJson },
-    });
-    return assertOk(response);
-  }, []);
+  const putSnapshot = useCallback(
+    async (stream: string, version: number, stateJson: string) => {
+      const response = await secureInvoke<IpcResponse<{ saved: boolean }>>(
+        'db_put_snapshot',
+        {
+          request: { stream, version, stateJson },
+        }
+      );
+      return assertOk(response);
+    },
+    []
+  );
 
   const getSnapshot = useCallback(async (stream: string) => {
     const response = await secureInvoke<IpcResponse<{ snapshot: unknown | null }>>(
@@ -63,9 +72,12 @@ export function useTitaneDb() {
   }, []);
 
   const kvGet = useCallback(async (key: string) => {
-    const response = await secureInvoke<IpcResponse<{ value_json: string | null }>>('db_kv_get', {
-      request: { key },
-    });
+    const response = await secureInvoke<IpcResponse<{ value_json: string | null }>>(
+      'db_kv_get',
+      {
+        request: { key },
+      }
+    );
     return assertOk(response);
   }, []);
 
@@ -77,7 +89,8 @@ export function useTitaneDb() {
   }, []);
 
   const syncStatus = useCallback(async () => {
-    const response = await secureInvoke<IpcResponse<{ status: unknown }>>('db_sync_status');
+    const response =
+      await secureInvoke<IpcResponse<{ status: unknown }>>('db_sync_status');
     return assertOk(response);
   }, []);
 

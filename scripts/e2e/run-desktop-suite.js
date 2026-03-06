@@ -80,8 +80,12 @@ const findPlaywrightWebKitDriver = () => {
   const candidates = [];
   for (const entry of fsSync.readdirSync(cacheRoot, { withFileTypes: true })) {
     if (!entry.isDirectory() || !entry.name.startsWith('webkit-')) continue;
-    candidates.push(path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'WebKitWebDriver'));
-    candidates.push(path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'bin', 'WebKitWebDriver'));
+    candidates.push(
+      path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'WebKitWebDriver')
+    );
+    candidates.push(
+      path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'bin', 'WebKitWebDriver')
+    );
   }
 
   for (const candidate of candidates) {
