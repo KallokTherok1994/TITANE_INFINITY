@@ -26,7 +26,7 @@ export const AI_CONFIG: AIConfig = {
 
 export const API_ENDPOINTS = {
   // ✅ AUDIT FIX #2: All Ollama calls go through Tauri command (not direct HTTP)
-  // Use invoke('ollama_generate') instead of direct HTTP
+  // Use Tauri command `ollama_generate` instead of direct HTTP
   // Keeping this for reference only — DO NOT USE directly
   // ollama: '/api/ollama',  // ❌ DEPRECATED
 
