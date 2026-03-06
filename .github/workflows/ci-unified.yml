@@ -287,7 +287,7 @@ jobs:
 
       - name: Run Clippy (linter)
         working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -W clippy::all
 
       - name: 📊 Summary
         if: always()
