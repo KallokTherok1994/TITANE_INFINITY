@@ -366,6 +366,8 @@ jobs:
           echo "Initializing collective intelligence network..."
           mkdir -p reports/collective
 
+                    pip3 install --quiet numpy
+
           python3 << 'EOF'
           import json
           import os
