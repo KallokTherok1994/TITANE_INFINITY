@@ -466,6 +466,39 @@ export async function fillAllVisibleInputs(sample = 'e2e-sample') {
 }
 
 export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
+  const ensureChatSurfaceVisible = async () => {
+    const chatSelectors = [testId('chat-input'), '[data-testid="tab-conversation"]'];
+
+    const hasSurface = async () => {
+      for (const selector of chatSelectors) {
+        if (await isDisplayed(selector)) return true;
+      }
+      return false;
+    };
+
+    if (await hasSurface()) {
+      return;
+    }
+
+    try {
+      await waitForAnyDisplayed(chatSelectors, 5000);
+      return;
+    } catch {
+      // Fallback: recover the canonical chat surface from /titane once.
+    }
+
+    await browser.url('tauri://localhost/titane');
+
+    await waitAppReady();
+
+    const tab = await $(testId('tab-conversation'));
+    if ((await tab.isExisting()) && (await tab.isDisplayed())) {
+      await clickSafely(testId('tab-conversation'));
+    }
+
+    await waitForAnyDisplayed(chatSelectors, 15000);
+  };
+
   const chatReady = await $(testId('chat-ready'));
   if (await chatReady.isExisting()) {
     await chatReady.waitForExist({ timeout: DEFAULT_TIMEOUT });
@@ -478,7 +511,7 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
       }
     );
   } else {
-    await waitForAnyDisplayed([testId('chat-input'), '[data-testid="tab-conversation"]']);
+    await ensureChatSurfaceVisible();
   }
 
   const assistantSelector = testId('chat-message-assistant');
