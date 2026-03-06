@@ -1,0 +1,17 @@
+version: 1
+rules:
+  - id: prod-build-token
+    pattern: GO_FOR_PROD_BUILD__TITANE_INFINITY
+    canonical_home: .github/copilot-instructions.md
+  - id: prod-deploy-token
+    pattern: GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+    canonical_home: .github/copilot-instructions.md
+  - id: status-vocabulary
+    pattern: PASS / FAIL / BLOCKED
+    canonical_home: .github/copilot-instructions.md
+  - id: local-first-marker
+    pattern: Local-first
+    canonical_home: .github/copilot-instructions.md
+  - id: autoheal-canonical-path
+    pattern: scripts/autoheal/autoheal_rules.jsonl
+    canonical_home: .github/copilot-instructions.md
