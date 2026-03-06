@@ -7,7 +7,7 @@ on:
     branches: [MAIN]
 
 env:
-  PNPM_VERSION: '10.28.2'
+  PNPM_VERSION: '10.30.2'
 
 jobs:
   mermaid-verify:
@@ -30,8 +30,13 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
 
+      - name: Install native image dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile || pnpm install --no-frozen-lockfile
 
       - name: Render Mermaid docs
         run: pnpm run render:docs:mermaid

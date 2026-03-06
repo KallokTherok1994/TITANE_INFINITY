@@ -112,7 +112,7 @@ pub async fn chat_generate_copilot(
     drop(api_key);
 
     // Create Copilot client
-    let client = match CopilotClient::new(key) {
+    let client: CopilotClient = match CopilotClient::new(key) {
         Ok(c) => c,
         Err(e) => {
             error!("Failed to create Copilot client: {}", e);
@@ -320,7 +320,7 @@ pub async fn test_copilot_connection(state: State<'_, CopilotState>) -> Result<T
     drop(api_key);
 
     // Create client and test
-    let client = match CopilotClient::new(key) {
+    let client: CopilotClient = match CopilotClient::new(key) {
         Ok(c) => c,
         Err(e) => {
             error!("Failed to create Copilot client for test: {}", e);

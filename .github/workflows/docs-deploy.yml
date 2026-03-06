@@ -42,11 +42,16 @@ jobs:
           node-version: '22'
           cache: 'pnpm'
 
+      - name: 🧰 Install native dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpng-dev
+
       - name: 📦 Install dependencies
         run: pnpm install --frozen-lockfile
 
       - name: 📖 Generate TypeDoc
-        run: pnpm run docs
+        run: pnpm exec typedoc || pnpm dlx --package typedoc@0.28.14 --package typedoc-plugin-markdown@4.9.0 typedoc
 
       - name: 📤 Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -71,14 +76,40 @@ jobs:
       id-token: write
 
     steps:
+      - name: 🔎 Check GitHub Pages availability
+        id: pages_check
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")
+
+          if [ "$CODE" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
+        if: steps.pages_check.outputs.enabled == 'true'
         uses: actions/deploy-pages@v4
 
-      - name: 📊 Summary
+      - name: 📊 Summary (deployed)
+        if: steps.pages_check.outputs.enabled == 'true'
         run: |
           echo "## 🚀 Documentation Deployed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "**URL:** ${{ steps.deployment.outputs.page_url }}" >> $GITHUB_STEP_SUMMARY
           echo "**Status:** ✅ Live" >> $GITHUB_STEP_SUMMARY
           echo "**Build:** #${{ github.run_number }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: 📊 Summary (skipped)
+        if: steps.pages_check.outputs.enabled != 'true'
+        run: |
+          echo "## 🚀 Documentation Deploy Skipped" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Status:** ⚠️ Skipped (GitHub Pages not enabled for this repository)" >> $GITHUB_STEP_SUMMARY
+          echo "**Action:** Enable GitHub Pages in repository settings to activate deploy" >> $GITHUB_STEP_SUMMARY

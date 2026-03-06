@@ -52,7 +52,6 @@ describe('🏛️ Architecture: Engine Isolation', () => {
     // NOTE: Ces fichiers utilisent l'injection de dépendances - l'Engine est pur,
     // seule l'instanciation du singleton utilise les services
     const ALLOWED_EXCEPTIONS = [
-      'cognitiveLayoutIntegrations.ts', // Pont Helios/Nexus (migration vers CognitiveLayoutService en cours)
       'tauriBridge.ts', // Pont MemoryOS (architecture nécessite dynamic import)
       'AgendaEngine.ts', // v24.3.0: Singleton avec injection de callbacks (Engine pur, instanciation utilise service)
     ];
@@ -117,7 +116,6 @@ describe('🏛️ Architecture: Engine Isolation', () => {
     // vers Services (Ring 3) n'est pas terminée.
     const ALLOWED_SIDE_EFFECT_PATH_FRAGMENTS = [
       `${path.sep}uiux${path.sep}`, // UI/UX adapters/detectors (runtime)
-      `${path.sep}cognitive${path.sep}cognitiveLayoutIntegrations.ts`, // Pont Helios/Nexus
       `${path.sep}cognitive${path.sep}cognitiveLayoutEngine.ts`, // Singleton runtime (legacy)
       `${path.sep}continuum${path.sep}metaContinuumEngine.ts`, // NowPulse runtime
       `${path.sep}embodiment${path.sep}embodiedPresenceEngine.ts`, // Presence runtime

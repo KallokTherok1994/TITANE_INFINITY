@@ -115,7 +115,7 @@ export function PerfectFusionDashboard() {
 
   // ═══ RENDER ═══
   return (
-    <div className="perfect-fusion-dashboard p-responsive">
+    <div className="perfect-fusion-dashboard p-responsive" data-testid="page-fusion">
       <h1 className="dashboard-title">🌌 TITANE∞ Perfect Fusion Dashboard</h1>
 
       {/* ═══ GLOBAL HEALTH ═══ */}
@@ -465,12 +465,17 @@ export function PerfectFusionDashboard() {
                 </div>
                 <p>{alert.message}</p>
                 <div className="alert-actions">
-                  <button className="btn-touch" onClick={() => resolveAlert(alert.id)}>
+                  <button
+                    className="btn-touch"
+                    data-testid={`btn-fusion-resolve-${alert.id}`}
+                    onClick={() => resolveAlert(alert.id)}
+                  >
                     Resolve
                   </button>
                   {alert.auto_recoverable && (
                     <button
                       className="btn-touch"
+                      data-testid={`btn-fusion-autorecover-${alert.id}`}
                       onClick={() => triggerRecovery(alert.component)}
                     >
                       Auto-Recover

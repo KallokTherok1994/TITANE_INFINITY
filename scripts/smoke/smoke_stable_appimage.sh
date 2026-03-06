@@ -108,7 +108,8 @@ else
 fi
 
 # Scan for ERROR markers
-ERROR_COUNT=$(grep -icE 'ERROR|panic|panicked|segfault|SIGSEGV' "$LOG" || echo "0")
+ERROR_COUNT=$(grep -icE 'ERROR|panic|panicked|segfault|SIGSEGV' "$LOG" || true)
+ERROR_COUNT=${ERROR_COUNT:-0}
 
 if [ "$ERROR_COUNT" -gt 0 ]; then
   say "${YELLOW}[WARN]${NC} Detected $ERROR_COUNT ERROR markers in logs:"
@@ -119,7 +120,8 @@ else
 fi
 
 # Scan for UI initialization markers (optional)
-UI_MARKERS=$(grep -icE 'Main window shown|page_load|label=main' "$LOG" || echo "0")
+UI_MARKERS=$(grep -icE 'Main window shown|page_load|label=main' "$LOG" || true)
+UI_MARKERS=${UI_MARKERS:-0}
 
 if [ "$UI_MARKERS" -gt 0 ]; then
   pass "UI init: Detected $UI_MARKERS UI initialization markers"

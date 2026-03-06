@@ -26,7 +26,7 @@ export default defineConfig({
       // At least one instance is required.
       instances: [{ browser: 'chromium' }],
       headless: true,
-      screenshotOnFailure: false,
+      screenshotFailures: false,
     },
 
     // Only run browser-specific tests
@@ -51,7 +51,6 @@ export default defineConfig({
     retry: 1,
 
     // Sequential execution for browser tests
-    threads: false,
-    singleThread: true,
+    isolate: false,
   },
 });

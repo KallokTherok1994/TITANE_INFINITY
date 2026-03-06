@@ -4,10 +4,14 @@
 %% License: governed by repository LICENSE.md
 
 flowchart TD
-  User[User task] --> Validate[Run copilot-xs:validate]
-  Validate -->|pass| Plan[Plan + implement]
-  Validate -->|fail| Fix[Fix violations]
-  Fix --> Validate
-  Plan --> Test[Run tests]
-  Test -->|pass| Done[Ready to commit]
-  Test -->|fail| Fix
+  User[User task] --> Bootstrap[Bootstrap]
+  Bootstrap --> Inventory[Inventory]
+  Inventory --> Contradictions[Contradictions]
+  Contradictions -->|resolved| Patch[Patch]
+  Contradictions -->|blocked| VerdictBlocked[Verdict BLOCKED]
+  Patch --> Verify[Verify]
+  Verify -->|pass| AutoHeal[AutoHeal Append]
+  Verify -->|fail| Patch
+  AutoHeal -->|guard pass| ProofPack[Proof-pack]
+  AutoHeal -->|guard fail| Patch
+  ProofPack --> Verdict[Verdict]

@@ -1,8 +1,10 @@
 import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
+import fsSync from 'node:fs';
 import { createWriteStream } from 'node:fs';
 import path from 'node:path';
 import net from 'node:net';
+import os from 'node:os';
 
 const ROOT = process.cwd();
 const REPORTS = process.env.TITANE_E2E_ARTIFACTS_DIR
@@ -14,6 +16,7 @@ const TAURI_DRIVER_LOG = path.join(REPORTS, 'tauri_driver.log');
 const WEBKIT_LOG = path.join(REPORTS, 'webkit_driver.log');
 const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
 const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
+const WDIO_SPEC = process.env.WDIO_SPEC || '';
 
 await fs.mkdir(REPORTS, { recursive: true });
 await fs.writeFile(DIAG_LOG, '');
@@ -61,6 +64,36 @@ function spawnLogged(cmd, args, logFile, envOverrides = {}) {
   return child;
 }
 
+const isExecutable = filePath => {
+  try {
+    fsSync.accessSync(filePath, fsSync.constants.X_OK);
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const findPlaywrightWebKitDriver = () => {
+  const cacheRoot = path.join(os.homedir(), '.cache', 'ms-playwright');
+  if (!fsSync.existsSync(cacheRoot)) return '';
+
+  const candidates = [];
+  for (const entry of fsSync.readdirSync(cacheRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !entry.name.startsWith('webkit-')) continue;
+    candidates.push(
+      path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'WebKitWebDriver')
+    );
+    candidates.push(
+      path.join(cacheRoot, entry.name, 'minibrowser-gtk', 'bin', 'WebKitWebDriver')
+    );
+  }
+
+  for (const candidate of candidates) {
+    if (isExecutable(candidate)) return candidate;
+  }
+  return '';
+};
+
 let nativeDriverPath = process.env.WEBKIT_WEBDRIVER_PATH || '';
 if (!nativeDriverPath) {
   try {
@@ -70,6 +103,9 @@ if (!nativeDriverPath) {
   } catch {
     nativeDriverPath = '';
   }
+}
+if (!nativeDriverPath) {
+  nativeDriverPath = findPlaywrightWebKitDriver();
 }
 const tauriArgs = ['--port', '4444'];
 if (nativeDriverPath) {
@@ -94,8 +130,13 @@ const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
 
 await waitForPort(4444).catch(() => false);
 
-await appendDiag(`wdio command: pnpm exec wdio run ${WDIO_CONFIG}`);
-const wdio = spawnLogged('pnpm', ['exec', 'wdio', 'run', WDIO_CONFIG], WDIO_LOG);
+const wdioArgs = ['exec', 'wdio', 'run', WDIO_CONFIG];
+if (WDIO_SPEC) {
+  wdioArgs.push('--spec', WDIO_SPEC);
+}
+
+await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);
+const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG);
 
 const shutdown = () => {
   for (const child of [wdio, tauriDriver]) {

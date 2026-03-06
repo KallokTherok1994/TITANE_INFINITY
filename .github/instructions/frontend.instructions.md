@@ -8,7 +8,7 @@ applyTo: 'src/**'
 
 - Ring impacte: Ring 4 (UI/Modules).
 - Zero silence: user always sees success or error.
-- Local-first, no implicit network.
+- Local-first (marqueur de compatibilité), doctrine active: online-first gouverné avec fallback local obligatoire.
 
 ## DO
 

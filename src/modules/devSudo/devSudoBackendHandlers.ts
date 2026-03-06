@@ -122,9 +122,9 @@ export async function handleBackendAnalysis(): Promise<DevSudoResult> {
 
    Frontend ↔ Backend cohérence:
 
-   invoke('memory_scan') → #[tauri::command] memory_scan()
-   invoke('secure_store_key') → #[tauri::command] secure_store_key()
-   invoke('camera_start') → #[tauri::command] camera_start()
+   tauriClient.call('memory_scan') → #[tauri::command] memory_scan()
+   tauriClient.call('secure_store_key') → #[tauri::command] secure_store_key()
+   tauriClient.call('camera_start') → #[tauri::command] camera_start()
 
    Types partagés (via serde):
    - MemoryState
@@ -295,7 +295,7 @@ export async function handleFixHandler(handlerName: string): Promise<DevSudoResu
    cargo test ${handlerName}
 
    # 3. Test depuis frontend
-   invoke('${handlerName}').then(console.log).catch(console.error)
+   tauriClient.call('${handlerName}').then(console.log).catch(console.error)
    \`\`\`
 
 6) 🔗 WHITELIST TAURI

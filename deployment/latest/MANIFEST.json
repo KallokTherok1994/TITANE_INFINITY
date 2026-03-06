@@ -1,21 +1,21 @@
 {
   "version": "27.2.0",
   "deployment": {
-    "timestamp": "2026-02-25 02:15:36 UTC",
+    "timestamp": "2026-03-06 17:03:50 UTC",
     "version": "27.2.0",
-    "commit": "2904a78cee00d6287d3444fb36e9ccf838ddfe06",
-    "branch": "hotfix/v27.0.6-hotfix.1",
+    "commit": "43c35be3fd2cf200c8067aa8bc0b67d2dceb17d5",
+    "branch": "MAIN",
     "certification": "TITANE_INFINITY_RELEASE_20260224_211317_CERTIFIED",
-    "deployment_type": "post_certification"
+    "deployment_type": "post_canonical_build"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "sha256": "c48b8ed3d2cb73a2d891b56fb6f51a579e257fa53fd07a1dd3b0b3e6cfe12ac2"
+      "sha256": "0e7bfe39ea96cb22445eb0dd7ca38b429de6cc8a203b946a447a6b555deb4bdc"
     },
     "deb": {
       "available": true,
-      "sha256": "3964b75c97210104ea6e0a6637752d9415bea19723861cb7ad8b415316ec32a5"
+      "sha256": "1c1f15dee313b97cc7d128dcb6597acd7aa43987b73393e29345605a2919eff3"
     }
   },
   "certification": {

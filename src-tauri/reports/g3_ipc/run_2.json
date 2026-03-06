@@ -28,9 +28,7 @@
   },
   "metadata": {
     "cognitiveSummary": "summary",
-    "cognitiveTags": [
-      "tag"
-    ],
+    "cognitiveTags": ["tag"],
     "emotion": "EmotionState { valence: 0.0, intensity: 0.5, energy: 0.5 }",
     "intention": "Question",
     "requestId": "req_test"

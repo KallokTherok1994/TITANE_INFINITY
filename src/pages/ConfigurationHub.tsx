@@ -553,7 +553,7 @@ export const ConfigurationHub: React.FC = () => {
     Object.keys(editedRequestDefaults).length > 0;
 
   return (
-    <div className="module-page">
+    <div className="module-page" data-testid="page-configuration-hub">
       {/* Header */}
       <div className="module-page__header">
         <div>
@@ -583,6 +583,7 @@ export const ConfigurationHub: React.FC = () => {
           {!editMode && (
             <>
               <button
+                data-testid="btn-config-refresh"
                 onClick={loadConfig}
                 disabled={loading}
                 style={{
@@ -602,6 +603,7 @@ export const ConfigurationHub: React.FC = () => {
                 {loading ? '⏳ Actualisation...' : '🔄 Actualiser'}
               </button>
               <button
+                data-testid="btn-config-export"
                 onClick={handleExport}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -617,6 +619,7 @@ export const ConfigurationHub: React.FC = () => {
                 📤 Exporter
               </button>
               <button
+                data-testid="btn-config-import"
                 onClick={handleImport}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -632,6 +635,7 @@ export const ConfigurationHub: React.FC = () => {
                 📥 Importer
               </button>
               <button
+                data-testid="btn-config-save-preset"
                 onClick={handleSavePreset}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -648,6 +652,7 @@ export const ConfigurationHub: React.FC = () => {
               </button>
               {presets.length > 0 && (
                 <select
+                  data-testid="select-config-preset"
                   onChange={e => {
                     if (e.target.value) {
                       handleLoadPreset(e.target.value);
@@ -674,6 +679,7 @@ export const ConfigurationHub: React.FC = () => {
                 </select>
               )}
               <button
+                data-testid="btn-config-edit"
                 onClick={handleEditToggle}
                 style={{
                   padding: '0.75rem 1.5rem',
@@ -693,6 +699,7 @@ export const ConfigurationHub: React.FC = () => {
           {editMode && (
             <>
               <button
+                data-testid="btn-config-cancel"
                 onClick={handleEditToggle}
                 disabled={saving}
                 style={{
@@ -710,6 +717,7 @@ export const ConfigurationHub: React.FC = () => {
                 ❌ Annuler
               </button>
               <button
+                data-testid="btn-config-save"
                 onClick={handleSave}
                 disabled={saving || !hasChanges}
                 style={{
@@ -790,15 +798,21 @@ export const ConfigurationHub: React.FC = () => {
       {/* Tabs Navigation */}
       <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem' }}>
         <button
+          data-testid="tab-config-system"
           style={tabStyle(activeTab === 'system')}
           onClick={() => setActiveTab('system')}
         >
           💻 Système
         </button>
-        <button style={tabStyle(activeTab === 'ai')} onClick={() => setActiveTab('ai')}>
+        <button
+          data-testid="tab-config-ai"
+          style={tabStyle(activeTab === 'ai')}
+          onClick={() => setActiveTab('ai')}
+        >
           🤖 Intelligence Artificielle
         </button>
         <button
+          data-testid="tab-config-performance"
           style={tabStyle(activeTab === 'performance')}
           onClick={() => setActiveTab('performance')}
         >
@@ -823,6 +837,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🌐"
                 valueType="url"
                 editable={editMode}
+                testId="input-ollama-url"
                 onChange={value => handleRuntimeFieldChange('ollama_url', value)}
                 validationError={validationErrors['runtime.ollama_url']}
               />
@@ -832,6 +847,7 @@ export const ConfigurationHub: React.FC = () => {
                 description="Modèle LLM utilisé par défaut"
                 icon="🧠"
                 editable={editMode}
+                testId="input-ollama-model"
                 onChange={value => handleRuntimeFieldChange('ollama_model', value)}
                 validationError={validationErrors['runtime.ollama_model']}
               />
@@ -1000,6 +1016,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🔊"
                 valueType="boolean"
                 editable={editMode}
+                testId="toggle-auto-tts"
                 onChange={value => handleChatEngineFieldChange('auto_tts_enabled', value)}
                 validationError={validationErrors['chat_engine.auto_tts_enabled']}
               />
@@ -1031,6 +1048,7 @@ export const ConfigurationHub: React.FC = () => {
                 description="Provider par défaut (auto/gemini/ollama/local)"
                 icon="🛰️"
                 editable={editMode}
+                testId="select-request-provider"
                 onChange={value => handleRequestDefaultsFieldChange('provider', value)}
                 validationError={validationErrors['request_defaults.provider']}
               />

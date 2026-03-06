@@ -6,7 +6,6 @@
   "permissions": ["core:default"],
   "commands": {
     "allow": [
-      "chat_generate",
       "chat_stream_message",
       "chat_create_conversation",
       "chat_get_conversation",

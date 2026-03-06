@@ -1,4 +1,4 @@
-# COPILOT-XS Agent Federation (Documentation)
+# COPILOT-XS Agent Federation (Deprecated Documentation)
 
 **IP / Attribution**
 
@@ -6,7 +6,10 @@
 - Generated/maintained with GitHub Copilot (GPT-5.2)
 - Licensing: governed by repository LICENSE.md
 
-This is a **documentation-only** agent roster used to describe roles and routing.
+This is a **documentation-only** legacy roster.
+
+Operational specialists are now maintained in `.github/agents/*.agent.md` and routed via `.github/copilot-routing.json`.
+This file must not be used as execution authority.
 
 ## Specialists
 

@@ -7,6 +7,89 @@
 
 import { secureInvoke } from '@/lib/security';
 
+export interface IpcErrorPayload {
+  code: string;
+  message: string;
+  details?: unknown;
+}
+
+export interface CanonicalIpcResult<T> {
+  ok: boolean;
+  content: T | null;
+  error: IpcErrorPayload | null;
+}
+
+function normalizeIpcResponse<T>(
+  command: string,
+  response: unknown
+): CanonicalIpcResult<T> {
+  if (response && typeof response === 'object') {
+    const candidate = response as Record<string, unknown>;
+    if ('ok' in candidate && 'content' in candidate && 'error' in candidate) {
+      return {
+        ok: candidate.ok === true,
+        content: (candidate.content as T | null) ?? null,
+        error:
+          candidate.error && typeof candidate.error === 'object'
+            ? (candidate.error as IpcErrorPayload)
+            : candidate.error
+              ? { code: 'IPC_ERROR', message: String(candidate.error) }
+              : null,
+      };
+    }
+
+    if ('success' in candidate || 'fallback' in candidate) {
+      const success = candidate.success === true;
+      return {
+        ok: success,
+        content: success ? (response as T) : null,
+        error: success
+          ? null
+          : {
+              code: 'IPC_LEGACY_RESPONSE',
+              message: String(
+                candidate.error ?? 'Legacy IPC response without canonical contract'
+              ),
+            },
+      };
+    }
+  }
+
+  if (response === null || response === undefined) {
+    return {
+      ok: false,
+      content: null,
+      error: {
+        code: 'IPC_MALFORMED_RESPONSE',
+        message: `Malformed IPC response for ${command}`,
+      },
+    };
+  }
+
+  return { ok: true, content: response as T, error: null };
+}
+
+export async function safeInvokeCanonical<T = unknown>(
+  cmd: string,
+  payload: Record<string, unknown> = {},
+  timeoutMs = 10000
+): Promise<CanonicalIpcResult<T>> {
+  try {
+    const raw = await secureInvoke<unknown>(cmd, payload, { timeout: timeoutMs });
+    return normalizeIpcResponse<T>(cmd, raw);
+  } catch (err) {
+    const error = err instanceof Error ? err : new Error(String(err));
+    return {
+      ok: false,
+      content: null,
+      error: {
+        code: error.name || 'IPC_ERROR',
+        message: error.message,
+      },
+    };
+  }
+}
+
 /**
  * Wrapper universel pour invoke() avec gestion d'erreur automatique
  * @param cmd - Nom de la commande Tauri
@@ -17,19 +100,19 @@ export async function safeInvoke<T = unknown>(
   cmd: string,
   payload: Record<string, unknown> = {}
 ): Promise<T | null> {
-  try {
-    const result = await secureInvoke<T>(cmd, payload);
-    return result;
-  } catch (err) {
-    console.error(`❌ Tauri Command Error [${cmd}]:`, err);
-
-    // Log payload si non vide pour debug
-    if (Object.keys(payload).length > 0) {
-      console.error(`   Payload:`, payload);
-    }
-
-    return null;
+  const result = await safeInvokeCanonical<T>(cmd, payload);
+  if (result.ok) {
+    return result.content;
   }
+
+  console.error(`❌ Tauri Command Error [${cmd}]:`, result.error);
+
+  // Log payload si non vide pour debug
+  if (Object.keys(payload).length > 0) {
+    console.error(`   Payload:`, payload);
+  }
+
+  return null;
 }
 
 /**
@@ -49,24 +132,23 @@ export async function safeInvokeWithRetry<T = unknown>(
   let lastError: unknown;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const result = await secureInvoke<T>(cmd, payload);
-
+    const result = await safeInvokeCanonical<T>(cmd, payload);
+    if (result.ok) {
       // Succès dès la première tentative
       if (attempt > 1) {
         console.log(`✅ Commande ${cmd} réussie après ${attempt} tentatives`);
       }
 
-      return result;
-    } catch (err) {
-      lastError = err;
+      return result.content;
+    }
 
-      if (attempt < maxRetries) {
-        console.warn(
-          `⚠️ Tentative ${attempt}/${maxRetries} échouée pour ${cmd}, retry dans ${retryDelay}ms...`
-        );
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-      }
+    lastError = result.error;
+
+    if (attempt < maxRetries) {
+      console.warn(
+        `⚠️ Tentative ${attempt}/${maxRetries} échouée pour ${cmd}, retry dans ${retryDelay}ms...`
+      );
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
     }
   }
 
@@ -86,13 +168,13 @@ export async function safeInvokeWithTimeout<T = unknown>(
   payload: Record<string, unknown> = {},
   timeoutMs = 10000
 ): Promise<T | null> {
-  try {
-    const result = await secureInvoke<T>(cmd, payload, { timeout: timeoutMs });
-    return result;
-  } catch (err) {
-    console.error(`❌ Tauri Command Timeout [${cmd}]:`, err);
-    return null;
+  const result = await safeInvokeCanonical<T>(cmd, payload, timeoutMs);
+  if (result.ok) {
+    return result.content;
   }
+
+  console.error(`❌ Tauri Command Timeout [${cmd}]:`, result.error);
+  return null;
 }
 
 /**
