@@ -15,7 +15,7 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
 - Keep retries bounded and logged.
 - Export page_classification, chat_dom_map, AR20, OFFLINE5, navigation, stability.
 - Use reports/ for all proofs.
-- For every E2E fix, append one AutoFix/AutoHeal rule entry in `scripts/autoheal/autoheal_rules.jsonl` with:
+- For every E2E fix, follow the kernel AutoFix/AutoHeal canonical capture rule with:
   - `signature`: failing test name + artifact marker (log/export/error marker)
   - `verification`: rerun E2E command + explicit pass markers
   - `prevention`: gate/test change that prevents silent recurrence
