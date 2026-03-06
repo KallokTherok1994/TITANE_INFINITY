@@ -4,7 +4,7 @@
     "timestamp": "2026-03-06 17:03:50 UTC",
     "version": "27.2.0",
     "commit": "43c35be3fd2cf200c8067aa8bc0b67d2dceb17d5",
-    "branch": "seal/vΩ5-20260303-98262da88",
+    "branch": "MAIN",
     "certification": "TITANE_INFINITY_RELEASE_20260224_211317_CERTIFIED",
     "deployment_type": "post_canonical_build"
   },
