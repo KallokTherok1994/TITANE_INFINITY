@@ -1,7 +1,5 @@
-// ═══════════════════════════════════════════════════════════════
-// 🌐 TITANE∞ v16.1 — OFFLINE FIRST CONFIG
-// Mode: Local > Cloud (APIs on-demand only)
-// ═══════════════════════════════════════════════════════════════
+// LEGACY CONFIG - DO NOT USE IN NEW RUNTIME PATHS.
+// Canonical online/offline governance lives in backend Tauri commands.
 
 export interface AIConfig {
   mode: 'local' | 'cloud' | 'hybrid';
@@ -11,31 +9,24 @@ export interface AIConfig {
 }
 
 export const AI_CONFIG: AIConfig = {
-  // Mode par défaut: LOCAL ONLY
-  mode: 'local',
+  // Keep fallback capability while avoiding forced local-only defaults.
+  mode: 'hybrid',
 
-  // Provider par défaut: Ollama (local)
-  provider: 'ollama',
+  // Prefer a cloud-capable provider by default when policy allows it.
+  provider: 'gemini',
 
   // Demander confirmation avant d'utiliser une API cloud
   requireOnlineConfirmation: true,
 
-  // Toujours essayer local en premier
-  localFirst: true,
+  // Do not force local-only as default behavior.
+  localFirst: false,
 };
 
 export const API_ENDPOINTS = {
-  // ✅ AUDIT FIX #2: All Ollama calls go through Tauri command (not direct HTTP)
-  // Use invoke('ollama_generate') instead of direct HTTP
-  // Keeping this for reference only — DO NOT USE directly
-  // ollama: '/api/ollama',  // ❌ DEPRECATED
-
-  // Local endpoints (toujours disponibles)
-  localLLM: 'http://localhost:8000',
-
-  // Cloud endpoints (utilisés seulement si activé)
-  gemini: 'https://generativelanguage.googleapis.com/v1beta',
-  openai: 'https://api.openai.com/v1',
+  // Legacy metadata only. UI must never call web endpoints directly.
+  localLLM: 'gateway://local-llm',
+  gemini: 'gateway://gemini',
+  openai: 'gateway://openai',
 };
 
 export const OFFLINE_FEATURES = {
@@ -67,20 +58,14 @@ export function isOnlineModeEnabled(): boolean {
 
 /**
  * Vérifie si une connexion Internet est disponible
- * Utilise Tauri HTTP client pour conformité sécurité
+ * No direct web call from UI code.
  */
 export async function checkInternetConnection(): Promise<boolean> {
-  try {
-    // Import dynamique pour éviter erreur si httpClient pas disponible
-    const { httpClient } = await import('../core/http/httpClient');
-
-    await httpClient.head('https://www.google.com/favicon.ico', {
-      timeout: 5000,
-    });
-    return true;
-  } catch {
+  if (typeof navigator === 'undefined') {
     return false;
   }
+
+  return navigator.onLine;
 }
 
 /**

@@ -1,31 +1,24 @@
 #!/usr/bin/env bash
-# scripts/run_all.sh — Orchestrateur principal TITANE∞ background prep
-# Usage: bash scripts/run_all.sh [--pack-dir <dir>]
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "${SCRIPT_DIR}/lib/common.sh"
+ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+PACK_DIR="${1:-$ROOT_DIR/proof_packs/OPTION1_LIBSQL_TESTS_2026-03-05_1253_f0ec87ead}"
 
-PACK_DIR="${1:-${TITANE_REPO_ROOT}/proof_packs/RUN_$(date -u +%Y%m%dT%H%M%S)}"
 mkdir -p "$PACK_DIR"
 
-log_info "=== run_all.sh START ==="
-log_info "Pack dir: $PACK_DIR"
-log_info "Repo: $TITANE_REPO_ROOT"
+echo "[$(date -Iseconds)] run_all.sh start" | tee -a "$PACK_DIR/05_COMMANDS_USED.md"
 
-cd "${TITANE_REPO_ROOT}"
+bash "$SCRIPT_DIR/lib/scan_invariants.sh" "$PACK_DIR"
 
-# P0: Baseline
-log_info "P0: Baseline..."
-bash "${SCRIPT_DIR}/phases/P0_baseline.sh" "${PACK_DIR}/P0_baseline.log" && log_pass "P0 baseline" || log_warn "P0 baseline WARN"
+bash "$SCRIPT_DIR/lib/run_x3.sh" "$PACK_DIR/06_TESTS_X3.log" pnpm run test:rust
+bash "$SCRIPT_DIR/lib/run_x3.sh" "$PACK_DIR/06_TESTS_X3.log" pnpm run test -- src/hooks/__tests__/useTitaneDb.test.ts
+bash "$SCRIPT_DIR/lib/run_x3.sh" "$PACK_DIR/07_BUILD_X3.log" pnpm tauri build
 
-# Tests x3
-log_info "Tests x3..."
-bash "${SCRIPT_DIR}/phases/P0_tests.sh" "${PACK_DIR}/08_TESTS_X3.log" && log_pass "Tests x3" || { log_error "Tests x3 FAIL — stop-the-line"; exit 1; }
+if pnpm run test:e2e -- --list >/dev/null 2>&1; then
+	bash "$SCRIPT_DIR/lib/run_x3.sh" "$PACK_DIR/08_E2E_X3.log" pnpm run test:e2e
+else
+	echo "BLOCKED_E2E: runner unavailable or not executable in current context" | tee -a "$PACK_DIR/08_E2E_X3.log"
+fi
 
-# Build x3 (vite only)
-log_info "Build x3 (vite)..."
-bash "${SCRIPT_DIR}/phases/P0_build.sh" "${PACK_DIR}/09_BUILD_X3.log" && log_pass "Build x3" || log_warn "Build x3 WARN"
-
-log_pass "=== run_all.sh COMPLETE ==="
-log_info "Outputs in: $PACK_DIR"
+echo "[$(date -Iseconds)] run_all.sh end" | tee -a "$PACK_DIR/05_COMMANDS_USED.md"

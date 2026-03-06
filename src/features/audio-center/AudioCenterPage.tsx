@@ -131,6 +131,7 @@ interface DeviceSelectorProps {
   selectedId: string;
   onSelect: (id: string) => void;
   isLoading?: boolean;
+  testId?: string;
 }
 
 const DeviceSelector: React.FC<DeviceSelectorProps> = ({
@@ -140,6 +141,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
   selectedId,
   onSelect,
   isLoading,
+  testId,
 }) => {
   // Sécurité: S'assurer que devices est toujours un tableau
   const safeDevices = Array.isArray(devices) ? devices : [];
@@ -150,6 +152,7 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         <span>{icon}</span> {label}
       </label>
       <select
+        data-testid={testId}
         value={selectedId}
         onChange={e => onSelect(e.target.value)}
         disabled={isLoading || safeDevices.length === 0}
@@ -275,7 +278,10 @@ export const AudioCenterPage: React.FC = () => {
   };
 
   return (
-    <div className="h-full overflow-auto bg-neutral-900 text-white">
+    <div
+      className="h-full overflow-auto bg-neutral-900 text-white"
+      data-testid="page-audio-center"
+    >
       {/* Header */}
       <header className="sticky top-0 z-10 bg-neutral-900/95 backdrop-blur border-b border-neutral-800 p-6">
         <div className="flex items-center justify-between">
@@ -290,6 +296,7 @@ export const AudioCenterPage: React.FC = () => {
           </div>
 
           <button
+            data-testid="btn-audio-refresh-devices"
             onClick={refreshDevices}
             disabled={isLoading}
             className="px-4 py-2 bg-neutral-800 hover:bg-neutral-700 rounded-lg transition-colors disabled:opacity-50"
@@ -308,6 +315,7 @@ export const AudioCenterPage: React.FC = () => {
           ].map(tab => (
             <button
               key={tab.id}
+              data-testid={`tab-audio-${tab.id}`}
               onClick={() => setActiveTab(tab.id as typeof activeTab)}
               className={`px-4 py-2 rounded-lg transition-colors ${
                 activeTab === tab.id
@@ -445,6 +453,7 @@ export const AudioCenterPage: React.FC = () => {
                 selectedId={config.output.deviceId}
                 onSelect={setOutputDevice}
                 isLoading={isLoading}
+                testId="select-audio-output-device"
               />
 
               <div className="mt-6 grid gap-6 md:grid-cols-2">
@@ -465,6 +474,7 @@ export const AudioCenterPage: React.FC = () => {
               </div>
 
               <button
+                data-testid="btn-audio-test-speaker"
                 onClick={() => {
                   setTestType('speaker');
                   testSpeaker('Test du haut-parleur. Un, deux, trois.');
@@ -495,6 +505,7 @@ export const AudioCenterPage: React.FC = () => {
                 selectedId={config.input.deviceId}
                 onSelect={setInputDevice}
                 isLoading={isLoading}
+                testId="select-audio-input-device"
               />
 
               <div className="mt-6">
@@ -540,6 +551,7 @@ export const AudioCenterPage: React.FC = () => {
               </div>
 
               <button
+                data-testid="btn-audio-test-microphone"
                 onClick={() => {
                   setTestType('microphone');
                   testMicrophone();
@@ -588,6 +600,7 @@ export const AudioCenterPage: React.FC = () => {
                 </label>
                 <input
                   type="password"
+                  data-testid="input-elevenlabs-api-key"
                   placeholder="sk-..."
                   className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
                            text-white placeholder-neutral-500 focus:border-cyan-500 focus:outline-none"
@@ -603,6 +616,7 @@ export const AudioCenterPage: React.FC = () => {
                   🌍 Langue par défaut
                 </label>
                 <select
+                  data-testid="select-audio-language"
                   value={config.tts.language}
                   onChange={e => updateTTSSettings({ language: e.target.value })}
                   className="w-full md:w-64 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
@@ -621,6 +635,7 @@ export const AudioCenterPage: React.FC = () => {
                 <input
                   type="checkbox"
                   id="autoFallback"
+                  data-testid="toggle-audio-auto-fallback"
                   checked={config.tts.autoFallback}
                   onChange={e => updateTTSSettings({ autoFallback: e.target.checked })}
                   className="w-4 h-4 accent-cyan-500"

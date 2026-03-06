@@ -1,5 +1,5 @@
 ---
-applyTo: 'docs/**, reports/**'
+applyTo: 'docs/**, reports/**, proof_packs/**'
 ---
 
 # Docs and Registry Instructions
@@ -7,7 +7,7 @@ applyTo: 'docs/**, reports/**'
 ## Invariants rappeles
 
 - Append-only, no destructive rewrites.
-- Proofs live under reports/.
+- Proof evidence lives under `reports/` (append-only logs) and `proof_packs/` (session packs).
 
 ## DO
 

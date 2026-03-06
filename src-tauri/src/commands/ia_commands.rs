@@ -10,9 +10,9 @@ use std::sync::Arc;
 use tauri::State;
 #[allow(dead_code)]
 use titane_infinity::ia::{IAEngine, UnifiedIAEngine, UnifiedIARequest, UnifiedMessage};
-use titane_infinity::profiling::IPCProfiler;
-use titane_infinity::security::secrets_engine::{
-    SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
+use titane_infinity::profiling::ipc_profiler::IPCProfiler;
+use crate::security::secrets_engine::{
+    SecretsError, SecureSecretsEngine, KEY_CLAUDE, KEY_GEMINI, KEY_OPENAI,
 };
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -74,12 +74,10 @@ pub async fn set_api_key(
         "gemini" => secrets
             .set_secret(KEY_GEMINI, request.key)
             .map(|_| "Clé Gemini configurée avec succès".to_string()),
-        _ => Err(
-            titane_infinity::security::secrets_engine::SecretsError::InvalidKey(format!(
-                "Service inconnu: {}",
-                request.service
-            )),
-        ),
+        _ => Err(SecretsError::InvalidKey(format!(
+            "Service inconnu: {}",
+            request.service
+        ))),
     };
 
     match result {
@@ -131,6 +129,7 @@ pub async fn list_ai_providers(
 ) -> Result<CommandResult<Vec<String>>, String> {
     match secrets.list_ai_providers() {
         Ok(providers) => {
+            let providers: Vec<String> = providers;
             info!("[IACommands] {} providers disponibles", providers.len());
             Ok(CommandResult::ok(providers))
         }
@@ -233,8 +232,11 @@ pub async fn ia_generate(
 pub async fn get_available_engines(
     unified_engine: State<'_, Arc<UnifiedIAEngine>>,
 ) -> Result<CommandResult<Vec<String>>, String> {
-    let engines = unified_engine.get_available_engines().await;
-    let names: Vec<String> = engines.iter().map(|e| e.as_str().to_string()).collect();
+    let engines: Vec<IAEngine> = unified_engine.get_available_engines().await;
+    let names: Vec<String> = engines
+        .iter()
+        .map(|e: &IAEngine| e.as_str().to_string())
+        .collect();
 
     info!("[IACommands] {} moteurs disponibles", names.len());
     Ok(CommandResult::ok(names))

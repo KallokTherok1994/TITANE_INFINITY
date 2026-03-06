@@ -7,7 +7,8 @@ applyTo: 'src-tauri/**, tauri*.json, runtime/**'
 ## Invariants rappeles
 
 - Ring impacte: Ring 4 (OS/UI).
-- Local-first, Tauri-only, allowlist/capabilities stable.
+- Local-first (marqueur de compatibilité), doctrine active: online-first gouverné avec fallback local obligatoire.
+- Tauri-only, allowlist/capabilities stable.
 - IPC: { ok, content, error } and zero silence.
 
 ## DO

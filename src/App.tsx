@@ -44,6 +44,7 @@ import {
   shouldBlockLoading as _shouldBlockLoading,
   logEnvironmentWarnings,
 } from './core/tauri/environment';
+import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 // ✨ OPT-10: autoAuditEngine lazy-loaded below (removed static import)
 import { TitaneLogo } from './components/branding/TitaneLogo'; // ✨ v∞ - Logo Reactor
 import { OnboardingFlow } from './components/Onboarding'; // ✨ v19.5.2 - User Onboarding System
@@ -113,7 +114,9 @@ const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats }
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
 const SingularityMonitor = lazy(() =>
-  import('./components/SingularityMonitor').then(m => ({ default: m.SingularityMonitor }))
+  import('./components/SingularityMonitor').then(m => ({
+    default: m.SingularityMonitor,
+  }))
 );
 
 // ✨ v24.3.0 - Cognitive Layout Control
@@ -145,7 +148,9 @@ const lazyWithTimeout = <T extends React.ComponentType>(
 
 // ✨ v24.3.0 - Lazy loaded pages
 const PerformanceTest = lazy(() =>
-  import('./pages/PerformanceTest').then(m => ({ default: m.PerformanceTest }))
+  import('./pages/PerformanceTest').then(m => ({
+    default: m.PerformanceTest,
+  }))
 );
 const KnowledgeFusionPage = lazy(() => import('./ui/pages/KnowledgeFusionPage'));
 const CreationStudio = lazy(() => import('./ui/pages/CreationStudio'));
@@ -166,7 +171,9 @@ const OrchestrationMetaCenter = lazy(() =>
 );
 const DevPage = lazy(() => import('./pages/DevPage').then(m => ({ default: m.DevPage })));
 const PerfectFusionDashboard = lazy(() =>
-  import('./components/fusion/PerfectFusionDashboard').then(m => ({ default: m.default }))
+  import('./components/fusion/PerfectFusionDashboard').then(m => ({
+    default: m.default,
+  }))
 );
 const UltimateOptimizationDashboard = lazy(() =>
   import('./components/optimization/UltimateOptimizationDashboard').then(m => ({
@@ -176,7 +183,9 @@ const UltimateOptimizationDashboard = lazy(() =>
 
 // ✨ v24.3.0 - Center modules
 const RealityCenter = lazy(() =>
-  import('./components/RealityCenter/RealityCenter').then(m => ({ default: m.default }))
+  import('./components/RealityCenter/RealityCenter').then(m => ({
+    default: m.default,
+  }))
 );
 
 // ✨ v26.1 CONSOLE MONITOR DASHBOARD - Dev-only monitoring UI
@@ -195,17 +204,23 @@ const PredictiveDashboard = lazy(() =>
 
 // ✨ HYPER CENTER - Hyper-Intelligence Engine v∞ (OPUS #20)
 const HyperCenter = lazy(() =>
-  import('./components/HyperCenter/HyperCenter').then(m => ({ default: m.default }))
+  import('./components/HyperCenter/HyperCenter').then(m => ({
+    default: m.default,
+  }))
 );
 
 // ✨ QUANTUM CENTER - Quantum Rendering Layer v∞ (OPUS #17)
 const QuantumCenter = lazy(() =>
-  import('./components/QuantumCenter/QuantumCenter').then(m => ({ default: m.default }))
+  import('./components/QuantumCenter/QuantumCenter').then(m => ({
+    default: m.default,
+  }))
 );
 
 // ✨ IDENTITY CENTER - System Identity Engine v∞ (OPUS #15)
 const IdentityCenter = lazy(() =>
-  import('./components/IdentityCenter/IdentityCenter').then(m => ({ default: m.default }))
+  import('./components/IdentityCenter/IdentityCenter').then(m => ({
+    default: m.default,
+  }))
 );
 
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
@@ -292,7 +307,9 @@ const AppRouter: React.FC = () => {
 
     // 🧪 DEV MODE: Skip onboarding check in development (E2E tests + local dev)
     if (isDev) {
-      logger.info('Dev mode detected - bypassing onboarding check', { component: 'App' });
+      logger.info('Dev mode detected - bypassing onboarding check', {
+        component: 'App',
+      });
       setOnboardingComplete(true);
       return;
     }
@@ -464,7 +481,10 @@ const AppRouter: React.FC = () => {
         initI18nAsync(); // Background load, doesn&apos;t block UI
       })
       .catch(error => {
-        logger.warn('i18n lazy initialization failed', { component: 'i18n', error });
+        logger.warn('i18n lazy initialization failed', {
+          component: 'i18n',
+          error,
+        });
       });
   }, []);
 
@@ -602,7 +622,9 @@ const AppRouter: React.FC = () => {
 
   // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
   useEffect(() => {
-    logger.info('Loading TITANE∞ micro-interactions', { component: 'UIPolish' });
+    logger.info('Loading TITANE∞ micro-interactions', {
+      component: 'UIPolish',
+    });
     import('./ui/motion')
       .then(({ initializeMicroInteractions }) => {
         try {
@@ -786,15 +808,30 @@ const AppRouter: React.FC = () => {
         route: '/titane',
         description: 'Le Cœur du Système',
       },
-      { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
-      { id: 'stats', label: 'STATS', route: '/stats', description: 'Métriques Système' },
+      {
+        id: 'time',
+        label: 'TIME',
+        route: '/time',
+        description: 'Centre Temporel',
+      },
+      {
+        id: 'stats',
+        label: 'STATS',
+        route: '/stats',
+        description: 'Métriques Système',
+      },
       {
         id: 'admin',
         label: 'ADMIN',
         route: '/admin',
         description: 'Centre Admin Unifié',
       },
-      { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
+      {
+        id: 'dev',
+        label: 'DEV',
+        route: '/dev',
+        description: 'Centre DEV Unifié',
+      },
       // Dans menu "Plus"
       {
         id: 'fusion',
@@ -913,6 +950,18 @@ const AppRouter: React.FC = () => {
     >
       {/* ✨ UI vΩ Phase F: Backend down indicator (mode dégradé local-first) */}
       <BackendDownIndicator position="top" dismissible />
+      <div
+        data-testid="app-ready"
+        data-state={!checkingOnboarding && onboardingComplete ? 'ready' : 'loading'}
+        aria-hidden="true"
+        style={{ display: 'none' }}
+      />
+      <div
+        data-testid="ipc-ready"
+        data-state={isTauriRuntimeAvailable() ? 'ready' : 'fallback'}
+        aria-hidden="true"
+        style={{ display: 'none' }}
+      />
 
       {/* Phase 9: Suspense boundary for lazy-loaded routes */}
       <Suspense fallback={<PageLoadingFallback />}>

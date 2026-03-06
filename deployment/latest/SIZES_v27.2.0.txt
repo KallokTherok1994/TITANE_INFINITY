@@ -1,12 +1,3 @@
-# Artifact Sizes - TITANE∞ v27.2.0
-# Generated: 2026-02-23T20:20:35Z
-
-## Bytes:
-89217528 bytes :: src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage
-13783930 bytes :: src-tauri/target/release/bundle/deb/TITANE-Infinity_27.2.0_amd64.deb
-13766038 bytes :: src-tauri/target/release/bundle/rpm/TITANE-Infinity-27.2.0-1.x86_64.rpm
-
-## Human-readable:
-86M	src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage
-14M	src-tauri/target/release/bundle/deb/TITANE-Infinity_27.2.0_amd64.deb
-14M	src-tauri/target/release/bundle/rpm/TITANE-Infinity-27.2.0-1.x86_64.rpm
+TITANE-Infinity_27.2.0_amd64.AppImage 91970040
+TITANE-Infinity_27.2.0_amd64.deb 16830756
+TITANE-Infinity-27.2.0-1.x86_64.rpm 16815048

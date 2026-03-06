@@ -558,7 +558,7 @@ impl VectorStore {
 use std::collections::HashMap;
 use tauri::State;
 
-type VectorStoreRegistry = Arc<RwLock<HashMap<String, Arc<VectorStore>>>>;
+type VectorStoreRegistry = Arc<RwLock<HashMap<String, VectorStoreConfig>>>;
 
 #[tauri::command]
 pub async fn vector_store_init(
@@ -566,10 +566,10 @@ pub async fn vector_store_init(
     config: VectorStoreConfig,
 ) -> Result<String, String> {
     let store_id = config.db_path.clone();
-    let store = VectorStore::new(config)?;
+    let _store = VectorStore::new(config.clone())?;
 
     let mut reg = registry.write();
-    reg.insert(store_id.clone(), Arc::new(store));
+    reg.insert(store_id.clone(), config);
 
     Ok(store_id)
 }
@@ -580,8 +580,10 @@ pub async fn vector_store_insert(
     store_id: String,
     entry: VectorEntry,
 ) -> Result<(), String> {
-    let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let reg = registry.write();
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.insert(&entry)
 }
 
@@ -593,7 +595,9 @@ pub async fn vector_search(
     options: SearchOptions,
 ) -> Result<Vec<SearchResult>, String> {
     let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.search(&embedding, options)
 }
 
@@ -604,7 +608,9 @@ pub async fn vector_store_get(
     id: String,
 ) -> Result<Option<VectorEntry>, String> {
     let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.get(&id)
 }
 
@@ -616,7 +622,9 @@ pub async fn vector_store_update(
     updates: serde_json::Value,
 ) -> Result<(), String> {
     let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.update(&id, updates)
 }
 
@@ -627,7 +635,9 @@ pub async fn vector_store_delete(
     id: String,
 ) -> Result<(), String> {
     let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.delete(&id)
 }
 
@@ -637,7 +647,9 @@ pub async fn vector_store_get_stats(
     store_id: String,
 ) -> Result<VectorStoreStats, String> {
     let reg = registry.read();
-    let store = reg.get(&store_id).ok_or("Vector store not found")?;
+    let config = reg.get(&store_id).ok_or("Vector store not found")?.clone();
+    drop(reg);
+    let store = VectorStore::new(config)?;
     store.get_stats()
 }
 

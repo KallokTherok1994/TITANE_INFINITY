@@ -5,6 +5,7 @@
 
 pub mod anomaly_detector;
 pub mod healing_executor;
+pub mod memory;
 pub mod metrics_collector;
 pub mod predictor;
 pub mod repair_actions;

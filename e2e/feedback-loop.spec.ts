@@ -25,7 +25,7 @@ import { _electron as electron } from 'playwright';
 const ELECTRON_E2E_ENABLED = process.env.TITANE_E2E_ELECTRON === '1';
 
 if (!ELECTRON_E2E_ENABLED) {
-  test('feedback-loop gate disabled proof', async () => {
+  test('feedback-loop precondition proof (set TITANE_E2E_ELECTRON=1)', async () => {
     expect(ELECTRON_E2E_ENABLED).toBe(false);
   });
 } else {

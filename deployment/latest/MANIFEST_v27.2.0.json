@@ -13,23 +13,23 @@
     "appimage": {
       "filename": "TITANE-Infinity_27.2.0_amd64.AppImage",
       "path": "deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage",
-      "size_bytes": 89217528,
-      "size_human": "86M",
-      "sha256": "1972c2709a1cad6f36444d68ff6ab098614adceea00fe2679fb338f894f1fa38"
+      "size_bytes": 91970040,
+      "size_human": "88M",
+      "sha256": "0e7bfe39ea96cb22445eb0dd7ca38b429de6cc8a203b946a447a6b555deb4bdc"
     },
     "deb": {
       "filename": "TITANE-Infinity_27.2.0_amd64.deb",
       "path": "deployment/latest/TITANE-Infinity_27.2.0_amd64.deb",
-      "size_bytes": 13783930,
-      "size_human": "14M",
-      "sha256": "5b925c8dc283cb87eb19c578481f0484368b451ced7c04016ccd5c29f61328fa"
+      "size_bytes": 16830756,
+      "size_human": "17M",
+      "sha256": "1c1f15dee313b97cc7d128dcb6597acd7aa43987b73393e29345605a2919eff3"
     },
     "rpm": {
       "filename": "TITANE-Infinity-27.2.0-1.x86_64.rpm",
       "path": "deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm",
-      "size_bytes": 13766038,
-      "size_human": "14M",
-      "sha256": "8fa895ed5ca45231a7e392ab3b7d3e3f846c24de4399728a94a838810445c416"
+      "size_bytes": 16815048,
+      "size_human": "17M",
+      "sha256": "4a1601a790cadd94bc19730ae6a175b9c27338d215d5323784b4ede66a08bd79"
     }
   },
   "documentation": {
@@ -48,5 +48,5 @@
     }
   },
   "verified": true,
-  "verified_timestamp": "2026-02-23T20:20:35Z"
+  "verified_timestamp": "2026-03-06T17:03:50Z"
 }

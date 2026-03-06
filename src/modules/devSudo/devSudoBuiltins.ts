@@ -7,7 +7,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
-import { runSelfHealing } from '@/engines/selfHealing/selfHealingEngine';
+import { runSelfHealing } from '@/services/selfHealing/selfHealingIOAdapter';
 import { autoSaveConversationEngine } from '@/modules/talkToTitane/AutoSaveConversationEngine';
 import { talkToTitaneEngine } from '@/modules/talkToTitane/TalkToTitaneEngine';
 import type { LiveDebuggerMode } from '@/modules/liveDebugger/LiveDebuggerEngine';
@@ -61,13 +61,21 @@ const vocalDevConsole = {
     isListening: false,
     lastCommand: '',
     consoleVisible: false,
-    consoleLogs: [] as Array<{ timestamp: number; message: string; level: string }>,
+    consoleLogs: [] as Array<{
+      timestamp: number;
+      message: string;
+      level: string;
+    }>,
     config: { mode: 'default' as const, verbose: false },
   }),
   toggleVisibility: () => {},
   getHealthScore: () => 100,
   configure: (_config: Record<string, unknown>) => {},
-  getConfig: () => ({ mode: 'default' as const, verbose: false, ttsEnabled: false }),
+  getConfig: () => ({
+    mode: 'default' as const,
+    verbose: false,
+    ttsEnabled: false,
+  }),
 };
 
 // Stub pour liveDebugger
@@ -1298,7 +1306,9 @@ Modèles disponibles:
 
   if (typeof window !== 'undefined') {
     window.dispatchEvent(
-      new CustomEvent('titane-chat-set-model', { detail: { model: modelName } })
+      new CustomEvent('titane-chat-set-model', {
+        detail: { model: modelName },
+      })
     );
   }
 
@@ -2165,7 +2175,11 @@ async function handleHybridRun(params: Record<string, unknown>): Promise<DevSudo
     }
 
     const result = await tauriClient.devRunCommand({ command });
-    const cmdResult = result as { output: string; exitCode: number; error?: string };
+    const cmdResult = result as {
+      output: string;
+      exitCode: number;
+      error?: string;
+    };
 
     return {
       handled: true,
@@ -2576,7 +2590,9 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     const trainingPack = datasetBuilder.buildTrainingPackage(fusedDataset);
 
     // Download dataset.jsonl
-    const datasetBlob = new Blob([trainingPack.dataset], { type: 'application/jsonl' });
+    const datasetBlob = new Blob([trainingPack.dataset], {
+      type: 'application/jsonl',
+    });
     const datasetUrl = URL.createObjectURL(datasetBlob);
     const datasetLink = document.createElement('a');
     datasetLink.href = datasetUrl;
@@ -2585,7 +2601,9 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     URL.revokeObjectURL(datasetUrl);
 
     // Download Modelfile
-    const modelfileBlob = new Blob([trainingPack.modelfile], { type: 'text/plain' });
+    const modelfileBlob = new Blob([trainingPack.modelfile], {
+      type: 'text/plain',
+    });
     const modelfileUrl = URL.createObjectURL(modelfileBlob);
     const modelfileLink = document.createElement('a');
     modelfileLink.href = modelfileUrl;
@@ -2605,7 +2623,9 @@ async function handleFusionPackageTraining(): Promise<DevSudoResult> {
     URL.revokeObjectURL(scriptUrl);
 
     // Download metadata
-    const metadataBlob = new Blob([trainingPack.metadata], { type: 'application/json' });
+    const metadataBlob = new Blob([trainingPack.metadata], {
+      type: 'application/json',
+    });
     const metadataUrl = URL.createObjectURL(metadataBlob);
     const metadataLink = document.createElement('a');
     metadataLink.href = metadataUrl;
@@ -4486,7 +4506,11 @@ Conversations will NOT be saved automatically.
 // ═══════════════════════════════════════════════════════════════════════════
 
 async function handleConversationSave(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Conversation sauvegardée**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Conversation sauvegardée**`,
+  };
 }
 
 async function handleConversationHeal(): Promise<DevSudoResult> {
@@ -4498,7 +4522,11 @@ async function handleConversationHeal(): Promise<DevSudoResult> {
 }
 
 async function handleConversationTimeline(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📊 **Timeline conversations**` };
+  return {
+    handled: true,
+    success: true,
+    response: `📊 **Timeline conversations**`,
+  };
 }
 
 async function handleConversationExport(format?: string): Promise<DevSudoResult> {
@@ -4510,11 +4538,19 @@ async function handleConversationExport(format?: string): Promise<DevSudoResult>
 }
 
 async function handleTimelineBuild(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Timeline construite**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Timeline construite**`,
+  };
 }
 
 async function handleTimelineShow(limit?: number): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📅 **Timeline (${limit || 20})**` };
+  return {
+    handled: true,
+    success: true,
+    response: `📅 **Timeline (${limit || 20})**`,
+  };
 }
 
 async function handleTimelineExport(format?: string): Promise<DevSudoResult> {
@@ -4530,19 +4566,35 @@ async function handleTimelineSessions(): Promise<DevSudoResult> {
 }
 
 async function handleTimelineStats(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `📊 **Statistiques timeline**` };
+  return {
+    handled: true,
+    success: true,
+    response: `📊 **Statistiques timeline**`,
+  };
 }
 
 async function handleAutosaveFlush(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Buffer auto-save vidé**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Buffer auto-save vidé**`,
+  };
 }
 
 async function handleSelfhealScan(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `🔍 **Scan intégrité terminé**` };
+  return {
+    handled: true,
+    success: true,
+    response: `🔍 **Scan intégrité terminé**`,
+  };
 }
 
 async function handleSelfhealHeal(): Promise<DevSudoResult> {
-  return { handled: true, success: true, response: `✅ **Réparation auto terminée**` };
+  return {
+    handled: true,
+    success: true,
+    response: `✅ **Réparation auto terminée**`,
+  };
 }
 
 async function handleSelfhealRebuild(filePath?: string): Promise<DevSudoResult> {

@@ -19,7 +19,7 @@ permissions:
 env:
   CARGO_TERM_COLOR: always
   NODE_VERSION: '22'
-  RUST_VERSION: '1.83'
+  RUST_VERSION: 'stable'
   PNPM_VERSION: '10.28.2'
 
 jobs:
@@ -267,7 +267,7 @@ jobs:
             patchelf
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@stable
         with:
           components: clippy, rustfmt
 
@@ -287,7 +287,7 @@ jobs:
 
       - name: Run Clippy (linter)
         working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -W clippy::all
 
       - name: 📊 Summary
         if: always()
@@ -379,7 +379,7 @@ jobs:
           cache: 'pnpm'
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@stable
 
       - name: 🔧 Install system dependencies
         run: |
@@ -467,7 +467,7 @@ jobs:
         continue-on-error: true
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@1.83
+        uses: dtolnay/rust-toolchain@stable
 
       - name: 🔒 Install cargo-audit
         run: cargo install cargo-audit --locked

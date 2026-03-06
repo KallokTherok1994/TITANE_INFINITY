@@ -9,6 +9,19 @@ use serde::{Deserialize, Serialize};
 use std::sync::Arc;
 use tauri::State;
 
+fn vergen_or_unknown(key: &str) -> &'static str {
+    match key {
+        "VERGEN_BUILD_TIMESTAMP" => option_env!("VERGEN_BUILD_TIMESTAMP").unwrap_or("unknown"),
+        "VERGEN_RUSTC_SEMVER" => option_env!("VERGEN_RUSTC_SEMVER").unwrap_or("unknown"),
+        "VERGEN_CARGO_TARGET_TRIPLE" => {
+            option_env!("VERGEN_CARGO_TARGET_TRIPLE").unwrap_or("unknown")
+        }
+        _ => "unknown",
+    }
+}
+
+pub fn on_unimplemented() {}
+
 /// Backend status for diagnostics
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct BackendStatus {
@@ -84,7 +97,7 @@ pub async fn backend_self_check(
     let health_str = match health {
         EngineHealth::Healthy => "Healthy".to_string(),
         EngineHealth::Degraded => "Degraded".to_string(),
-        EngineHealth::Critical => "Critical".to_string(),
+        EngineHealth::Failing => "Critical".to_string(),
         EngineHealth::Offline => "Offline".to_string(),
     };
 
@@ -105,9 +118,7 @@ pub async fn backend_self_check(
         metrics,
         tauri_only: true, // ✅ Hardcoded guarantee: NO HTTP backend
         backend_version: env!("CARGO_PKG_VERSION").to_string(),
-        build_timestamp: env!("VERGEN_BUILD_TIMESTAMP")
-            .unwrap_or("unknown")
-            .to_string(),
+        build_timestamp: vergen_or_unknown("VERGEN_BUILD_TIMESTAMP").to_string(),
         features,
     };
 
@@ -128,9 +139,9 @@ pub async fn get_backend_info() -> Result<serde_json::Value, String> {
 
     Ok(serde_json::json!({
         "version": env!("CARGO_PKG_VERSION"),
-        "build_timestamp": env!("VERGEN_BUILD_TIMESTAMP").unwrap_or("unknown"),
-        "rustc_version": env!("VERGEN_RUSTC_SEMVER").unwrap_or("unknown"),
-        "target_triple": env!("VERGEN_CARGO_TARGET_TRIPLE").unwrap_or("unknown"),
+        "build_timestamp": vergen_or_unknown("VERGEN_BUILD_TIMESTAMP"),
+        "rustc_version": vergen_or_unknown("VERGEN_RUSTC_SEMVER"),
+        "target_triple": vergen_or_unknown("VERGEN_CARGO_TARGET_TRIPLE"),
         "features": {
             "mock": cfg!(feature = "mock"),
             "full": cfg!(feature = "full"),

@@ -33,7 +33,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 **Compatibilité :**  
 ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
-📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums](./deployment/latest/SHA256SUMS_v27.0.5.txt)
+📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums v27.0.5](./deployment/latest/SHA256SUMS_v27.0.5.txt) | 🔐 [Checksums latest](./deployment/latest/SHA256SUMS.txt)
 
 ---
 
@@ -75,6 +75,12 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Commits: `25740b5d0`, `3895845c1`
   - Change: TS blockers corrigés + pack `ORCH_VΩ_2026-03-03_1436_0cdf39d39` scellé
   - Risk: LOW (stabilisation + documentation)
+
+- **2026-03-06** (PROD REDEPLOY + RUNTIME VALIDATION)
+  - Status: ✅ DONE (no version bump)
+  - Commits: `43c35be3f`, `be5ced801`
+  - Change: redeploy token-gated, smoke AppImage+Installed PASS, metadata `deployment/latest` resync
+  - Risk: LOW (operational validation + metadata coherence)
 
 ### Legacy Versions
 
@@ -200,7 +206,7 @@ Progressive rollout model (Strict & Perfection lanes only):
 3. **Wave 3 (100%)** — General availability (GA)
 
 **Current Stable**: v27.0.5-prod (99.99% uptime, 0 crashes)  
-**Latest Deployment**: v27.2.0 (TypeScript Strict Mode, 2026-02-23)
+**Latest Deployment**: v27.2.0 (TypeScript Strict Mode, runtime revalidated 2026-03-06)
 
 ---
 

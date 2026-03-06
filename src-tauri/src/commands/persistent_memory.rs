@@ -257,7 +257,7 @@ impl PersistentMemoryState {
         Self {
             base_path,
             session_cache: Mutex::new(HashMap::new()),
-            encryptor: MemoryEncryption::new("TITANE_MEMORY_KEY_v19"),
+            encryptor: MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string()),
             last_read: Mutex::new(Utc::now().timestamp_millis()),
             last_write: Mutex::new(Utc::now().timestamp_millis()),
         }
@@ -321,13 +321,14 @@ pub async fn persistent_memory_read(
 
                 if file_path.exists() {
                     let content = if *level == MemoryLevel::LongTerm {
-                        // Déchiffrer pour long_term
-                        let encrypted =
-                            fs::read(&file_path).map_err(|e| format!("Failed to read: {}", e))?;
-                        state
+                        let encrypted = fs::read_to_string(&file_path)
+                            .map_err(|e| format!("Failed to read: {}", e))?;
+                        let decrypted = state
                             .encryptor
                             .decrypt(&encrypted)
-                            .map_err(|e| format!("Decryption failed: {}", e))?
+                            .map_err(|e| format!("Decryption failed: {}", e))?;
+                        String::from_utf8(decrypted)
+                            .map_err(|e| format!("Invalid UTF-8 after decryption: {}", e))?
                     } else {
                         fs::read_to_string(&file_path)
                             .map_err(|e| format!("Failed to read: {}", e))?
@@ -465,8 +466,13 @@ pub async fn persistent_memory_get_stats(
             total_size += size;
 
             let entries: Vec<PersistentMemoryEntry> = if level == MemoryLevel::LongTerm {
-                let encrypted = fs::read(&path).unwrap_or_default();
-                let content = state.encryptor.decrypt(&encrypted).unwrap_or_default();
+                let encrypted = fs::read_to_string(&path).unwrap_or_default();
+                let content = state
+                    .encryptor
+                    .decrypt(&encrypted)
+                    .ok()
+                    .and_then(|bytes| String::from_utf8(bytes).ok())
+                    .unwrap_or_default();
                 serde_json::from_str(&content).unwrap_or_default()
             } else {
                 let content = fs::read_to_string(&path).unwrap_or_default();
@@ -796,8 +802,9 @@ pub async fn persistent_memory_archive_entry(
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
-                let data = fs::read(&path).map_err(|e| e.to_string())?;
-                state.encryptor.decrypt(&data).map_err(|e| e.to_string())?
+                let data = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+                let bytes = state.encryptor.decrypt(&data).map_err(|e| e.to_string())?;
+                String::from_utf8(bytes).map_err(|e| e.to_string())?
             } else {
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
@@ -812,8 +819,10 @@ pub async fn persistent_memory_archive_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data =
-                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data = state
+                        .encryptor
+                        .encrypt(json.as_bytes())
+                        .map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -851,8 +860,9 @@ pub async fn persistent_memory_delete_entry(
         let path = state.get_level_path(&level).join("entries.json");
         if path.exists() {
             let content = if encrypted {
-                let data = fs::read(&path).map_err(|e| e.to_string())?;
-                state.encryptor.decrypt(&data).map_err(|e| e.to_string())?
+                let data = fs::read_to_string(&path).map_err(|e| e.to_string())?;
+                let bytes = state.encryptor.decrypt(&data).map_err(|e| e.to_string())?;
+                String::from_utf8(bytes).map_err(|e| e.to_string())?
             } else {
                 fs::read_to_string(&path).map_err(|e| e.to_string())?
             };
@@ -866,8 +876,10 @@ pub async fn persistent_memory_delete_entry(
                 let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
                 if encrypted {
-                    let encrypted_data =
-                        state.encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+                    let encrypted_data = state
+                        .encryptor
+                        .encrypt(json.as_bytes())
+                        .map_err(|e| e.to_string())?;
                     fs::write(&path, encrypted_data).map_err(|e| e.to_string())?;
                 } else {
                     fs::write(&path, json).map_err(|e| e.to_string())?;
@@ -909,9 +921,19 @@ pub async fn persistent_memory_create_summary(
         min_relevance_score: None,
     };
 
-    let response = persistent_memory_read(State::from(&*state), request).await?;
-    let source_entries: Vec<&PersistentMemoryEntry> = response
-        .entries
+    let mut pool: Vec<PersistentMemoryEntry> = {
+        let cache = state.session_cache.lock().map_err(|e| e.to_string())?;
+        cache.values().cloned().collect()
+    };
+    let intermediate_path = state
+        .get_level_path(&MemoryLevel::Intermediate)
+        .join("entries.json");
+    if intermediate_path.exists() {
+        let content = fs::read_to_string(&intermediate_path).map_err(|e| e.to_string())?;
+        let entries: Vec<PersistentMemoryEntry> = serde_json::from_str(&content).unwrap_or_default();
+        pool.extend(entries);
+    }
+    let source_entries: Vec<&PersistentMemoryEntry> = pool
         .iter()
         .filter(|e| entry_ids.contains(&e.id))
         .collect();
@@ -1081,8 +1103,13 @@ pub async fn persistent_memory_export(
         .get_level_path(&MemoryLevel::LongTerm)
         .join("entries.json");
     if lt_path.exists() {
-        let encrypted = fs::read(&lt_path).unwrap_or_default();
-        let content = state.encryptor.decrypt(&encrypted).unwrap_or_default();
+        let encrypted = fs::read_to_string(&lt_path).unwrap_or_default();
+        let content = state
+            .encryptor
+            .decrypt(&encrypted)
+            .ok()
+            .and_then(|bytes| String::from_utf8(bytes).ok())
+            .unwrap_or_default();
         let entries: Vec<PersistentMemoryEntry> =
             serde_json::from_str(&content).unwrap_or_default();
         all_data.insert(
@@ -1114,8 +1141,8 @@ pub async fn persistent_memory_export(
 /// Calculer le score de pertinence (simplifié)
 fn calculate_relevance(content: &str, query: &str) -> f32 {
     let content_lower = content.to_lowercase();
-    let query_terms: Vec<&str> = query
-        .to_lowercase()
+    let query_lower = query.to_lowercase();
+    let query_terms: Vec<&str> = query_lower
         .split_whitespace()
         .filter(|w| w.len() > 2)
         .collect();
@@ -1166,9 +1193,13 @@ fn save_entry_to_file(
     // Charger les entrées existantes
     let mut entries: Vec<PersistentMemoryEntry> = if file_path.exists() {
         if encrypt {
-            let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19");
-            let encrypted = fs::read(&file_path).unwrap_or_default();
-            let content = encryptor.decrypt(&encrypted).unwrap_or_default();
+            let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string());
+            let encrypted = fs::read_to_string(&file_path).unwrap_or_default();
+            let content = encryptor
+                .decrypt(&encrypted)
+                .ok()
+                .and_then(|bytes| String::from_utf8(bytes).ok())
+                .unwrap_or_default();
             serde_json::from_str(&content).unwrap_or_default()
         } else {
             let content = fs::read_to_string(&file_path).unwrap_or_default();
@@ -1184,8 +1215,10 @@ fn save_entry_to_file(
     let json = serde_json::to_string_pretty(&entries).map_err(|e| e.to_string())?;
 
     if encrypt {
-        let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19");
-        let encrypted = encryptor.encrypt(&json).map_err(|e| e.to_string())?;
+        let encryptor = MemoryEncryption::new("TITANE_MEMORY_KEY_v19".to_string());
+        let encrypted = encryptor
+            .encrypt(json.as_bytes())
+            .map_err(|e| e.to_string())?;
         fs::write(&file_path, encrypted).map_err(|e| e.to_string())?;
     } else {
         fs::write(&file_path, json).map_err(|e| e.to_string())?;

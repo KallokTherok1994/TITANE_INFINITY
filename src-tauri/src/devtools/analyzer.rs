@@ -442,7 +442,7 @@ impl AnalyzerEngine {
 
     /// Calculate risk score from warnings
     fn calculate_risk_score(&self, warnings: &[AnalyzerWarning]) -> f32 {
-        let mut score = 0.0;
+        let mut score: f32 = 0.0;
 
         for warning in warnings {
             score += match warning.severity {
@@ -463,7 +463,7 @@ impl AnalyzerEngine {
         stats: &DebuggerStats,
         warnings: &[AnalyzerWarning],
     ) -> f32 {
-        let mut score = 1.0;
+        let mut score: f32 = 1.0;
 
         // Deduct for errors
         if stats.total_events > 0 {
@@ -487,7 +487,7 @@ impl AnalyzerEngine {
         stats: &DebuggerStats,
         system_metrics: Option<&SystemMetricsInput>,
     ) -> f32 {
-        let mut score = 1.0;
+        let mut score: f32 = 1.0;
 
         // Deduct for high latency
         if stats.avg_duration_ms > 100 {

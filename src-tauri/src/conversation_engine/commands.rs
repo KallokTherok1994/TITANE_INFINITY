@@ -349,6 +349,7 @@ pub async fn conversation_generate(
         );
 
         let blocked_response = serde_json::json!({
+            "ok": true,
             "content": "Requête bloquée par la politique gouvernée.",
             "meta": {
                 "mode": "LOCAL",
@@ -375,6 +376,7 @@ pub async fn conversation_generate(
         );
 
         let blocked_response = serde_json::json!({
+            "ok": true,
             "content": "Requête temporairement bloquée par la résilience (backoff/rate-limit/circuit-breaker).",
             "meta": {
                 "mode": "LOCAL",
@@ -419,6 +421,7 @@ pub async fn conversation_generate(
         // Return immediate response (defense-in-depth, frontend should have already blocked)
         // NO_LYING_FALLBACK: provider is local/none (network_used=false), so mode=LOCAL not REMOTE
         let blocked_response = serde_json::json!({
+            "ok": true,
             "content": "Service externe bloqué au niveau backend (defence-in-depth).",
             "meta": {
                 "mode": "LOCAL",
@@ -512,6 +515,7 @@ pub async fn conversation_generate(
     };
 
     Ok(serde_json::json!({
+        "ok": true,
         "content": assistant_content,
         "conversationId": response.conversation_id,
         "messageId": response.message_id,

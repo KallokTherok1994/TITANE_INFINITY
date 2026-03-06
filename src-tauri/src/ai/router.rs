@@ -322,7 +322,7 @@ impl AIRouter {
             }
             AIProvider::Ollama => self.ollama_client.query(&request).await,
             AIProvider::Offline => Err(AIError::NoProviderAvailable),
-            AIProvider::UnifiedIA => self.query_with_unified_engine(request).await,
+            AIProvider::UnifiedIA => self.query_with_unified_engine(request, IAEngine::Claude).await,
         }
     }
 

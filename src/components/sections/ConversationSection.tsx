@@ -67,14 +67,24 @@ const AVAILABLE_PROVIDERS = [
 ];
 
 const BUILT_IN_CONVERSATION_MODES = [
-  { id: 'default', name: 'Normal', icon: '💬', description: 'Conversation standard' },
+  {
+    id: 'default',
+    name: 'Normal',
+    icon: '💬',
+    description: 'Conversation standard',
+  },
   {
     id: 'brainstorming',
     name: 'Brainstorming',
     icon: '💡',
     description: 'Idéation créative',
   },
-  { id: 'synthesis', name: 'Synthèse', icon: '📝', description: 'Résumé et analyse' },
+  {
+    id: 'synthesis',
+    name: 'Synthèse',
+    icon: '📝',
+    description: 'Résumé et analyse',
+  },
   {
     id: 'planning',
     name: 'Planification',
@@ -96,7 +106,10 @@ const BUILT_IN_CONVERSATION_MODES = [
 ];
 
 const CONVERSATION_SUGGESTIONS = [
-  { label: '💡 Brainstorm ideas', value: 'Help me brainstorm some ideas for...' },
+  {
+    label: '💡 Brainstorm ideas',
+    value: 'Help me brainstorm some ideas for...',
+  },
   { label: '📝 Summarize', value: 'Please summarize the key points...' },
   { label: '🔍 Analyze', value: 'Analyze this for me...' },
   { label: '💬 Explain', value: 'Explain this concept...' },
@@ -531,7 +544,10 @@ const ConversationMessage = memo(
     }, [message.id, onDelete]);
 
     return (
-      <div className={`conversation-message ${message.role}`}>
+      <div
+        className={`conversation-message ${message.role}`}
+        data-testid={`chat-message-${message.role}`}
+      >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
         </div>
@@ -563,7 +579,9 @@ const ConversationMessage = memo(
               </div>
             )}
           </div>
-          <div className="conversation-message-text">{message.content}</div>
+          <div className="conversation-message-text" data-testid="chat-message-content">
+            {message.content}
+          </div>
           {message.metadata?.intention && (
             <div className="conversation-message-meta">
               <span className="meta-intention">{message.metadata.intention}</span>
@@ -1105,7 +1123,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   // ═══ RENDER ═══
   return (
-    <div className="titane-section titane-section-conversation">
+    <div
+      className="titane-section titane-section-conversation"
+      data-testid="page-conversation"
+    >
       <TSectionHeader
         title="💬 Communication & Intelligence"
         subtitle="Interface conversationnelle multi-provider avec modes spécialisés"
@@ -1124,6 +1145,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Mode Selector */}
             <select
               className="conversation-mode-select"
+              data-testid="select-conversation-mode"
               value={currentMode}
               onChange={handleModeChange}
             >
@@ -1135,6 +1157,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export JSON */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-json"
               onClick={handleExportJson}
               title="Exporter en JSON"
               disabled={!hasMessages}
@@ -1145,6 +1168,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Export Markdown */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-export-markdown"
               onClick={handleExportMarkdown}
               title="Exporter en Markdown"
               disabled={!hasMessages}
@@ -1155,6 +1179,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Copy to Clipboard */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-copy-chat"
               onClick={handleCopyAll}
               title="Copier dans le presse-papier"
               disabled={!hasMessages}
@@ -1165,6 +1190,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Audio Toggle */}
             <button
               className={`conversation-icon-btn ${audioEnabled ? 'active' : ''}`}
+              data-testid="toggle-audio-tts"
               onClick={toggleAudioEnabled}
               title="Audio (TTS)"
               aria-label={audioEnabled ? 'Désactiver audio (TTS)' : 'Activer audio (TTS)'}
@@ -1177,6 +1203,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Voice Input */}
             <button
               className={`conversation-icon-btn ${isRecording ? 'recording' : ''}`}
+              data-testid="toggle-voice-input"
               onClick={handleVoiceInput}
               title="Reconnaissance vocale"
               aria-label={
@@ -1192,6 +1219,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Mode Builder */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-mode-builder"
               onClick={toggleModeBuilder}
               title="Créer un mode personnalisé"
               aria-label="Créer un mode personnalisé"
@@ -1202,6 +1230,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Health Check */}
             <button
               className={`conversation-icon-btn ${isHealthy ? 'healthy' : ''}`}
+              data-testid="btn-health-check"
               onClick={refreshHealth}
               title={`Santé: ${healthReport?.status || 'Unknown'}`}
               aria-label={`Vérifier santé du système (Statut: ${healthReport?.status || 'Inconnu'})`}
@@ -1212,6 +1241,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {/* Clear Chat */}
             <button
               className="conversation-icon-btn"
+              data-testid="btn-clear-chat"
               onClick={handleClearChat}
               title="Effacer l'historique"
               aria-label="Effacer l'historique du chat"
@@ -1227,6 +1257,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             <Search size={16} />
             <input
               type="search"
+              data-testid="input-conversation-search"
               placeholder="Rechercher..."
               value={searchQuery}
               onChange={handleSearchChange}
@@ -1236,6 +1267,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           <select
             className="conversation-filters-role"
+            data-testid="select-conversation-role"
             value={filterRole}
             onChange={handleFilterRoleChange}
             aria-label="Filtrer par rôle"
@@ -1276,7 +1308,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           {messageItems}
 
           {isLoading && (
-            <div className="conversation-message assistant loading">
+            <div
+              className="conversation-message assistant loading"
+              data-testid="chat-loading"
+            >
               <div className="conversation-message-avatar">🧠</div>
               <div className="conversation-message-content">
                 <div className="conversation-typing">
@@ -1290,7 +1325,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           )}
 
           {error && (
-            <div className="conversation-error">
+            <div className="conversation-error" data-testid="chat-error" role="alert">
               <strong>❌ Erreur:</strong> {error}
             </div>
           )}
@@ -1316,6 +1351,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
         {/* ═══ INPUT AREA ═══ */}
         <div className="conversation-input-container">
+          <div
+            data-testid="chat-ready"
+            data-state={isLoading ? 'loading' : 'ready'}
+            aria-hidden="true"
+            style={{ display: 'none' }}
+          />
           <textarea
             className="conversation-input"
             data-testid="chat-input"

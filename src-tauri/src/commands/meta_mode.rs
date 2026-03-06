@@ -2,7 +2,8 @@
 //! Commandes Tauri exposant le Meta-Mode Engine au frontend
 
 use crate::auto_evolution_v15::{AutoEvolutionEngine, KevinMetrics};
-use crate::meta_mode_engine::{KevinState, MetaModeConfig, MetaModeEngine, MetaModeResponse};
+use crate::meta_mode_engine::{KevinState, MetaModeConfig, MetaModeEngine, MetaModeResponse, TitaneMode};
+use chrono::{DateTime, Utc};
 use tauri::State;
 use tokio::sync::RwLock;
 
@@ -53,7 +54,7 @@ impl From<MetaModeResponse> for InteractionResponse {
             next_suggested_modes: response
                 .next_suggested_modes
                 .iter()
-                .map(|mode| mode.name().to_string())
+                .map(|mode: &TitaneMode| mode.name().to_string())
                 .collect(),
             timestamp: response.timestamp.to_rfc3339(),
         }
@@ -111,7 +112,7 @@ pub async fn meta_mode_process(
     state: State<'_, MetaModeState>,
 ) -> Result<InteractionResponse, String> {
     let response = {
-        let mut engine = state.engine.write().await;
+        let mut engine: tokio::sync::RwLockWriteGuard<'_, MetaModeEngine> = state.engine.write().await;
         engine.process_interaction(&request.input, &request.context)
     };
 
@@ -122,7 +123,8 @@ pub async fn meta_mode_process(
     };
 
     {
-        let mut evolution_engine = state.evolution_engine.write().await;
+        let mut evolution_engine: tokio::sync::RwLockWriteGuard<'_, AutoEvolutionEngine> =
+            state.evolution_engine.write().await;
         let _evolution_result = evolution_engine.evolution_cycle(&kevin_metrics);
     }
 
@@ -219,7 +221,9 @@ pub async fn meta_mode_get_history(
         .iter()
         .rev()
         .take(10)
-        .map(|(mode, timestamp)| (mode.name().to_string(), timestamp.to_rfc3339()))
+        .map(|(mode, timestamp): &(TitaneMode, DateTime<Utc>)| {
+            (mode.name().to_string(), timestamp.to_rfc3339())
+        })
         .collect();
 
     Ok(history)
