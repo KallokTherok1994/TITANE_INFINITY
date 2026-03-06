@@ -1494,6 +1494,19 @@ fn main() {
             // Fusion Backend Commands (Week 4)
             fusion_commands_week4::fusion_update_state,
             fusion_commands_week4::fusion_auto_optimize,
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONTROL PANEL COMMANDS (v27 FIX — AUDIT FUSION 2026-03-06)
+            // Correction P1: commandes cp_* implémentées dans lib mais non
+            // enregistrées dans le handler → IPC failures sur le Control Panel
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::control_panel_commands::cp_get_ai_config,
+            titane_infinity::control_panel_commands::cp_set_ai_config,
+            titane_infinity::control_panel_commands::cp_get_design_config,
+            titane_infinity::control_panel_commands::cp_set_design_config,
+            titane_infinity::control_panel_commands::cp_get_modules_status,
+            titane_infinity::control_panel_commands::cp_toggle_module,
+            titane_infinity::control_panel_commands::cp_check_for_updates,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
