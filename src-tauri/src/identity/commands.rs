@@ -12,7 +12,7 @@ use super::{
     identity_matrix::{IdentityMatrix, IdentityProfiles},
     mode_system::{ModeConfig, ModeSystemEngine, ModeTransition},
     personality::{Mood, PersonalityEngine, PersonalityProfile, PersonalityState},
-    rules_engine::{RulesEngine, RulesStats},
+    rules_engine::{ExtendedRule, RulesEngine, RulesStats},
     tone_engine::{Tone, ToneEngine},
     voice_profile::{VoiceProfile, VoiceProfileManager},
     CommunicationStyle, IdentityConfig, OperationalMode, ResponseProfile, SystemIdentity,
@@ -404,4 +404,92 @@ pub async fn identity_adjust_energy(
     let mut personality = state.personality.lock().map_err(|e| e.to_string())?;
     personality.adjust_energy(delta);
     Ok(personality.get_state().cognitive_energy)
+}
+
+// ═══════════════════════════════════════════════════════════════
+// COMMANDES IDENTITÉ — STUBS P2-001 (AUDIT FIX 2026-03-06)
+// ═══════════════════════════════════════════════════════════════
+
+/// Obtient le mode opérationnel courant
+#[tauri::command]
+pub async fn identity_get_current_mode(
+    state: State<'_, IdentityEngineState>,
+) -> Result<OperationalMode, String> {
+    let mode_system = state.mode_system.lock().map_err(|e| e.to_string())?;
+    Ok(mode_system.current())
+}
+
+/// Obtient les modes disponibles
+#[tauri::command]
+pub async fn identity_get_available_modes(
+    state: State<'_, IdentityEngineState>,
+) -> Result<Vec<ModeConfig>, String> {
+    let mode_system = state.mode_system.lock().map_err(|e| e.to_string())?;
+    Ok(mode_system.list_modes().into_iter().cloned().collect())
+}
+
+/// Obtient le ton courant
+#[tauri::command]
+pub async fn identity_get_current_tone(
+    state: State<'_, IdentityEngineState>,
+) -> Result<Tone, String> {
+    let engine = state.tone_engine.lock().map_err(|e| e.to_string())?;
+    Ok(engine.current())
+}
+
+/// Obtient les règles actives
+#[tauri::command]
+pub async fn identity_get_active_rules(
+    state: State<'_, IdentityEngineState>,
+) -> Result<Vec<ExtendedRule>, String> {
+    let engine = state.rules_engine.lock().map_err(|e| e.to_string())?;
+    Ok(engine
+        .list_rules()
+        .into_iter()
+        .filter(|r| r.base.enabled)
+        .cloned()
+        .collect())
+}
+
+/// Obtient le score de cohérence de la personnalité
+#[tauri::command]
+pub async fn identity_get_coherence_score(
+    state: State<'_, IdentityEngineState>,
+) -> Result<f32, String> {
+    let personality = state.personality.lock().map_err(|e| e.to_string())?;
+    Ok(personality.coherence_score())
+}
+
+/// Désactive une règle
+#[tauri::command]
+pub async fn identity_disable_rule(
+    state: State<'_, IdentityEngineState>,
+    rule_id: String,
+) -> Result<bool, String> {
+    let mut engine = state.rules_engine.lock().map_err(|e| e.to_string())?;
+    Ok(engine.toggle_rule(&rule_id, false))
+}
+
+/// Active une règle
+#[tauri::command]
+pub async fn identity_enable_rule(
+    state: State<'_, IdentityEngineState>,
+    rule_id: String,
+) -> Result<bool, String> {
+    let mut engine = state.rules_engine.lock().map_err(|e| e.to_string())?;
+    Ok(engine.toggle_rule(&rule_id, true))
+}
+
+/// Obtient un snapshot de la personnalité (état + profil + cohérence)
+#[tauri::command]
+pub async fn identity_get_personality_snapshot(
+    state: State<'_, IdentityEngineState>,
+) -> Result<serde_json::Value, String> {
+    let personality = state.personality.lock().map_err(|e| e.to_string())?;
+    let snapshot = serde_json::json!({
+        "state": personality.get_state(),
+        "profile": personality.get_profile(),
+        "coherence_score": personality.coherence_score(),
+    });
+    Ok(snapshot)
 }
