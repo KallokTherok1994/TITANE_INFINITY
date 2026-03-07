@@ -7,6 +7,8 @@ type BootWindow = Window & {
 };
 
 const getBootWindow = (): BootWindow => window as BootWindow;
+const ENTRY_RELOAD_GUARD_KEY = 'titane_entry_reload_guard';
+const ENTRY_WATCHDOG_MS = import.meta.env.DEV ? 120000 : 8000;
 
 const emitBootMarker = async (marker: string): Promise<void> => {
   try {
@@ -98,6 +100,47 @@ const showFatalOverlay = (error: unknown): void => {
   host.appendChild(overlay);
 };
 
+const stringifyReason = (reason: unknown): string => {
+  if (reason instanceof Error) {
+    return `${reason.name}:${reason.message}`;
+  }
+  return String(reason ?? 'unknown');
+};
+
+const consumeEntryReloadGuard = (): boolean => {
+  try {
+    if (sessionStorage.getItem(ENTRY_RELOAD_GUARD_KEY) === '1') {
+      return false;
+    }
+    sessionStorage.setItem(ENTRY_RELOAD_GUARD_KEY, '1');
+    return true;
+  } catch {
+    return false;
+  }
+};
+
+const clearEntryReloadGuard = (): void => {
+  try {
+    sessionStorage.removeItem(ENTRY_RELOAD_GUARD_KEY);
+  } catch {
+    // no-op
+  }
+};
+
+const scheduleRecoveryReload = (reason: unknown): boolean => {
+  if (!consumeEntryReloadGuard()) {
+    return false;
+  }
+
+  const tag = stringifyReason(reason).slice(0, 180);
+  hideLoaderElements();
+  void emitBootMarker(`BOOT:ENTRY_RECOVERY_RELOAD|${tag}`);
+  window.setTimeout(() => {
+    window.location.reload();
+  }, 150);
+  return true;
+};
+
 const bootstrap = async (): Promise<void> => {
   const win = getBootWindow();
   win.__TITANE_BOOT__ = win.__TITANE_BOOT__ || {};
@@ -108,6 +151,11 @@ const bootstrap = async (): Promise<void> => {
     if (win.__TITANE_BOOT_READY__) {
       return;
     }
+
+    if (scheduleRecoveryReload(reason)) {
+      return;
+    }
+
     hideLoaderElements();
     showFatalOverlay(reason);
   };
@@ -134,19 +182,20 @@ const bootstrap = async (): Promise<void> => {
 
   window.setTimeout(() => {
     if (!win.__TITANE_BOOT_READY__) {
-      failSafe('BOOT_WATCHDOG_ENTRY_8S');
-      void emitBootMarker('BOOT:ENTRY_WATCHDOG_8S');
+      const watchdogReason = `BOOT_WATCHDOG_ENTRY_${ENTRY_WATCHDOG_MS}MS`;
+      failSafe(watchdogReason);
+      void emitBootMarker(`BOOT:ENTRY_WATCHDOG_${ENTRY_WATCHDOG_MS}MS`);
     }
-  }, 8000);
+  }, ENTRY_WATCHDOG_MS);
 
   await emitBootMarker('BOOT:ENTRY_START');
 
   try {
     await import('./main.tsx');
+    clearEntryReloadGuard();
     await emitBootMarker('BOOT:ENTRY_MAIN_IMPORTED');
   } catch (error) {
-    hideLoaderElements();
-    showFatalOverlay(error);
+    failSafe(error);
     const errorDetails =
       error instanceof Error
         ? `${error.name}:${error.message}|${error.stack || ''}`
