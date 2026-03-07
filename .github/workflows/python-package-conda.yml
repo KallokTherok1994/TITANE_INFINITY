@@ -1,6 +1,11 @@
 name: Python Package using Conda
 
-on: [push]
+on:
+  push:
+    paths:
+      - 'environment.yml'
+      - '**/*.py'
+      - 'requirements*.txt'
 
 jobs:
   build-linux:
