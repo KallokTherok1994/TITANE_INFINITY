@@ -134,10 +134,7 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
     );
 
     const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
-    assert.ok(
-      userAfter > 0,
-      'chat state should remain visible after page switch'
-    );
+    assert.ok(userAfter > 0, 'chat state should remain visible after page switch');
 
     // Stability scenario: 3 messages, bounded no-silence assertions
     await sendChatAndAssertNoSilence('[STABILITY] message 1');
