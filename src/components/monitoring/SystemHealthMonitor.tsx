@@ -151,7 +151,13 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-titane-accent-500 animate-pulse" />
           <span className="text-titane-text-tertiary text-xs">
-            Last update: {new Date(lastUpdate).toLocaleTimeString()}
+            Last update:{' '}
+            {new Date(lastUpdate).toLocaleTimeString('fr-FR', {
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit',
+              hour12: false,
+            })}
           </span>
         </div>
       </div>
