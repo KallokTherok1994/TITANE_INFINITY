@@ -36,7 +36,12 @@ export function EventStream({ events, maxEvents = 50 }: EventStreamProps) {
               )}
             </div>
             <span className="text-xs text-gray-500 ml-2">
-              {new Date(event.timestamp).toLocaleTimeString()}
+              {new Date(event.timestamp).toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false,
+              })}
             </span>
           </div>
         </div>

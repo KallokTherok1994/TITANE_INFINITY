@@ -303,7 +303,8 @@ export async function waitAppReady() {
       {
         timeout: DEFAULT_TIMEOUT,
         interval: 200,
-        timeoutMsg: 'ipc-ready marker did not reach ready/fallback and nav-top-main stayed unavailable',
+        timeoutMsg:
+          'ipc-ready marker did not reach ready/fallback and nav-top-main stayed unavailable',
       }
     );
   }

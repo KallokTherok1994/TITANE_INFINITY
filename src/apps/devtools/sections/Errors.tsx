@@ -258,7 +258,15 @@ export function Errors() {
                       className="text-xs"
                       style={{ color: 'var(--text-muted, rgba(255,255,255,0.60))' }}
                     >
-                      {new Date(error.timestamp).toLocaleString()}
+                      {new Date(error.timestamp).toLocaleString('fr-FR', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: false,
+                      })}
                     </p>
                   </button>
                 );
@@ -344,7 +352,15 @@ export function Errors() {
                   className="text-sm font-medium"
                   style={{ color: 'var(--text-primary, #e0e0e0)' }}
                 >
-                  {new Date(selectedError.timestamp).toLocaleString()}
+                  {new Date(selectedError.timestamp).toLocaleString('fr-FR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false,
+                  })}
                 </div>
               </div>
 
