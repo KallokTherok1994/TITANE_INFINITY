@@ -1,0 +1,88 @@
+974:          <Route path="/" element={<Navigate to="/titane" replace />} />
+977:            path="/titane"
+985:          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+986:          <Route path="/camera" element={<Navigate to="/titane" replace />} />
+987:          <Route path="/evo" element={<Navigate to="/titane" replace />} />
+988:          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+989:          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+991:            path="/cognitive-evolution"
+995:            path="/identity-memory-evolution"
+998:          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+999:          <Route path="/xp" element={<Navigate to="/titane" replace />} />
+1001:          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
+1003:            path="/stats"
+1010:          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+1013:            path="/time"
+1021:          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+1022:          <Route path="/agenda" element={<Navigate to="/time" replace />} />
+1023:          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+1026:            path="/admin"
+1034:          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+1035:          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+1036:          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
+1037:          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
+1038:          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
+1039:          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+1040:          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+1041:          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+1042:          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+1043:          <Route path="/settings" element={<Navigate to="/admin" replace />} />
+1044:          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+1045:          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+1046:          <Route path="/secure" element={<Navigate to="/admin" replace />} />
+1047:          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+1048:          <Route path="/audio" element={<Navigate to="/admin" replace />} />
+1049:          <Route path="/voice" element={<Navigate to="/admin" replace />} />
+1050:          <Route path="/tts" element={<Navigate to="/admin" replace />} />
+1053:            path="/fusion"
+1064:            path="/optimization"
+1075:            path="/orchestration-intelligence"
+1084:            path="/orchestration-center"
+1092:            path="/meta-center"
+1096:          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
+1098:            path="/multi-ai-dashboard"
+1102:            path="/nexus-engine"
+1106:            path="/harmonia-engine"
+1110:            path="/cognitive-state"
+1115:            path="/dev"
+1123:          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
+1124:          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+1125:          <Route path="/unified" element={<Navigate to="/dev" replace />} />
+1126:          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+1127:          <Route path="/qa" element={<Navigate to="/dev" replace />} />
+1128:          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
+1129:          <Route path="/tests" element={<Navigate to="/dev" replace />} />
+1130:          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+1131:          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
+1132:          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
+1133:          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
+1136:            path="/orchestration"
+1140:            path="/meta-center"
+1145:            path="/reality-center"
+1152:          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+1153:          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+1156:            path="/hyper-center"
+1163:          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+1164:          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+1167:            path="/quantum-center"
+1174:          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+1177:            path="/identity-center"
+1184:          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
+1185:          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+1188:            path="/memory-evolution"
+1196:            path="/memory-evo"
+1201:            path="/cloud"
+1208:          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+1209:          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
+1212:          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+1213:          <Route path="/creation" element={<CreationStudio />} />
+1214:          <Route path="/evolution" element={<EvolutionMonitor />} />
+1217:            path="/singularity"
+1226:          <Route path="/sentinel" element={<Sentinel />} />
+1227:          <Route path="/watchdog" element={<Watchdog />} />
+1228:          <Route path="/selfheal" element={<SelfHeal />} />
+1229:          <Route path="/adaptive" element={<AdaptiveEngine />} />
+1230:          <Route path="/memory" element={<Memory />} />
+1231:          <Route path="/research" element={<ResearchPage />} />
+1233:          <Route path="/performance" element={<PerformanceTest />} />
+1235:          <Route path="*" element={<Navigate to="/" replace />} />
