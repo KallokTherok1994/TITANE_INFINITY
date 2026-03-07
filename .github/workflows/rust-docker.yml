@@ -50,7 +50,9 @@ jobs:
             patchelf \
             libssl-dev \
             pkg-config \
-            build-essential
+            build-essential \
+            binutils \
+            lld
 
       - name: 💾 Cache Cargo Registry
         uses: actions/cache@v4.2.0
