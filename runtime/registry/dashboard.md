@@ -1,6 +1,6 @@
 # TITANE∞ — Registry Dashboard
 
-- Généré: 2026-03-06T13:16:10.211Z
+- Généré: 2026-03-07T02:00:50.430Z
 - Cycle actif: 01KFPVBPNG1KB0ZHD8KT6K5D7Y
 - Objectif: Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.
 - Action prioritaire (unique): Regenerate registry snapshot
@@ -13,6 +13,7 @@
 - Aucun
 
 ## Événements récents
+- 2026-03-07T02:00:49.972Z [01KK30D91M] WORKFLOW_CHANGED: Registry sync for workflow updates in .github/workflows/constitution-audit.yml and .github/workflows/rust-docker.yml after CI unblock fixes.
 - 2026-03-06T13:16:08.653Z [01KK1MN32D] WORKFLOW_CHANGED: Downgraded Clippy from -D warnings to -W clippy::all in ci-unified workflow to unblock CI on 1209 expect_used lints with Rust stable 1.94
 - 2026-03-06T12:17:29.330Z [01KK1H9P7H] WORKFLOW_CHANGED: Updated .github/workflows/ci-unified.yml to use Rust stable and unblock Unified CI failures
 - 2026-03-06T12:05:01.251Z [01KK1GJVP2] WORKFLOW_CHANGED: Updated .github/workflows/p3-build-guard.yml to replace pnpm action setup with corepack bootstrap for CI stability
@@ -24,7 +25,6 @@
 - 2026-01-24T01:54:36.870Z [01KFPVBPP6] CYCLE_START: Stabiliser les tests Vitest: éviter les faux rejets 'Dangerous characters' dans sanitizeMessage, et rétablir les suites streaming/UI/chat.
 - 2026-01-24T01:50:09.747Z [01KFPV3HTK] CYCLE_END: Cycle clôturé: registre v2 implémenté (scripts registry/verify + schemas), gate CI registry-guard aligné, verify:registry PASS; tests applicatifs restent en échec et sont consignés séparément.
 - 2026-01-24T01:49:58.692Z [01KFPV3714] TEST_RUN: TEST_RUN: pnpm -s test a échoué (statut terminal
-- 2026-01-24T01:45:38.867Z [01KFPTV99K] WORKFLOW_CHANGED: Mise à niveau Gate Registry: package.json scripts verify:registry + .github/workflows/registry-guard.yml + scripts/verify/* (schema v2)
 
 ---
 Source: `runtime/registry/events.jsonl` (append-only)
