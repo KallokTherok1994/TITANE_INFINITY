@@ -11,6 +11,7 @@ import {
   fillAllVisibleInputs,
   toggleAllVisibleCheckboxes,
   sendChatAndAssertNoSilence,
+  retryLatestUserMessageAndAssertNoSilence,
   getCurrentPathname,
 } from './ui-driver.wdio.js';
 
@@ -95,6 +96,20 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
       '[AR20] conversation longue: donne une synthèse structurée avec 5 points et une conclusion.'
     );
 
+    // Required control: retry/regenerate action (if present)
+    await sendChatAndAssertNoSilence('[RETRY_CHECK] trigger retry action path');
+    const retryCheck = await retryLatestUserMessageAndAssertNoSilence();
+    assert.equal(
+      retryCheck.present,
+      true,
+      'retry/regenerate control is expected when user messages are present'
+    );
+    assert.equal(
+      retryCheck.triggered,
+      true,
+      'retry/regenerate action did not produce a visible no-silence acknowledgement'
+    );
+
     // Navigation scenario: leave and come back while preserving conversation surface
     const userMessagesBefore = await $$('[data-testid="chat-message-user"]');
     const userBefore = userMessagesBefore.length;
@@ -143,9 +158,12 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
 
     // Error-path scenario: force cloud provider preference then verify visible outcome (error or fallback)
     const providerSelect = await $('[data-testid="select-chat-provider"]');
-    if (await providerSelect.isExisting()) {
-      await providerSelect.selectByAttribute('value', 'openai').catch(() => {});
-    }
+    assert.equal(
+      await providerSelect.isExisting(),
+      true,
+      'provider selector must exist for critical backend/frontend control coverage'
+    );
+    await providerSelect.selectByAttribute('value', 'openai').catch(() => {});
     await sendChatAndAssertNoSilence(
       '[ERROR_PATH] simulate provider down and ensure visible fallback/error code'
     );

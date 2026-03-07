@@ -1,0 +1,433 @@
+src/ui/__tests__/Menu.test.tsx:15:import { BrowserRouter, MemoryRouter } from 'react-router-dom';
+src/ui/__tests__/Menu.test.tsx:33:      <MemoryRouter initialEntries={[pathname]}>
+src/ui/__tests__/Menu.test.tsx:37:          currentRoute={pathname}
+src/ui/__tests__/Menu.test.tsx:40:      </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:97:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:101:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:104:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:112:        <MemoryRouter initialEntries={['/stats']}>
+src/ui/__tests__/Menu.test.tsx:116:            currentRoute="/stats"
+src/ui/__tests__/Menu.test.tsx:119:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:140:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:144:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:147:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:155:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:159:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:162:        </MemoryRouter>
+src/ui/__tests__/Menu.test.tsx:430:        <MemoryRouter initialEntries={['/titane']}>
+src/ui/__tests__/Menu.test.tsx:434:            currentRoute="/titane"
+src/ui/__tests__/Menu.test.tsx:437:        </MemoryRouter>
+src/ui/AppLayout.tsx:25:  currentRoute: string;
+src/ui/AppLayout.tsx:26:  onNavigate: (path: string) => void;
+src/ui/AppLayout.tsx:32:  currentRoute,
+src/ui/AppLayout.tsx:47:  }, [currentRoute, isMobile]);
+src/ui/AppLayout.tsx:105:            currentRoute={currentRoute}
+src/__tests__/ui/ui-navigation.test.ts:10:import { BrowserRouter } from 'react-router-dom';
+src/__tests__/ui/ui-navigation.test.ts:38:        BrowserRouter,
+src/__tests__/ui/ui-navigation.test.ts:45:              currentRoute: '/titane',
+src/__tests__/ui/ui-navigation.test.ts:115:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:130:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:146:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/ui/ui-navigation.test.ts:195:      React.createElement(BrowserRouter, null, React.createElement(TitanePage, null))
+src/__tests__/services/voice/voiceRouter.test.ts:74:describe('services/voice/voiceRouter', () => {
+src/__tests__/services/voice/voiceRouter.test.ts:92:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:95:    const result = await voiceRouter.processVoiceTurn('   ', send);
+src/__tests__/services/voice/voiceRouter.test.ts:105:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:123:    const resultPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:164:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:171:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:177:    const promise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:194:    expect(voiceRouter.getState()).toBe('error');
+src/__tests__/services/voice/voiceRouter.test.ts:196:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:201:    const { voiceRouter } = await import('../../../services/voice/voiceRouter');
+src/__tests__/services/voice/voiceRouter.test.ts:217:    const turnPromise = voiceRouter.processVoiceTurn('salut', send, {
+src/__tests__/services/voice/voiceRouter.test.ts:224:      if (voiceRouter.getState() === 'speaking') break;
+src/__tests__/services/voice/voiceRouter.test.ts:230:    expect(voiceRouter.getState()).toBe('speaking');
+src/__tests__/services/voice/voiceRouter.test.ts:233:    await voiceRouter.abort();
+src/__tests__/services/voice/voiceRouter.test.ts:238:    expect(voiceRouter.getState()).toBe('idle');
+src/__tests__/services/voice/voiceRouter.test.ts:250:    expect(voiceRouter.getState()).toBe('idle');
+src/types/devops.ts:211:  file_path: string;
+src/types/devops.ts:217:  file_path: string;
+src/types/devops.ts:299:  path: string;
+src/types/remediationPermissions.ts:11:  path: string;
+src/types/index.ts:20:  RouterDecision,
+src/types/backend.d.ts:14:  db_path: string;
+src/types/backend.d.ts:266:  path: string;
+src/types/backend.d.ts:274:  path: string;
+src/types/conversation_os.ts:65: * Router decision about conversation intent
+src/types/conversation_os.ts:67:export interface RouterDecision {
+src/types/conversation_os.ts:155:  /** Router decision */
+src/types/conversation_os.ts:156:  router: RouterDecision;
+src/ui/Menu.tsx:50:  currentRoute: string;
+src/ui/Menu.tsx:51:  onNavigate: (path: string) => void;
+src/ui/Menu.tsx:134:  currentRoute,
+src/ui/Menu.tsx:354:                className={`menu-item ${currentRoute === section.route ? 'active' : ''}`}
+src/ui/Menu.tsx:358:                aria-current={currentRoute === section.route ? 'page' : undefined}
+src/ui/pages/KnowledgeFusionPage.tsx:48:        file_path: filePath,
+src/ui/pages/KnowledgeFusionPage.tsx:64:        file_path: selectedFile,
+src/modules/hybrid/HybridEngine.ts:260:      // Route vers la bonne action
+src/modules/hybrid/HybridEngine.ts:341:      const result = (await tauriClient.devInspectFile({ path: target })) as string;
+src/features/developer-mode/DeveloperModePage.tsx:276:    file_path: '',
+src/features/developer-mode/DeveloperModePage.tsx:310:        file_path: '',
+src/features/developer-mode/DeveloperModePage.tsx:359:            onChange={e => setPatch({ ...patch, file_path: e.target.value })}
+src/ui/pages/IntrospectionDashboard.tsx:13:  file_path: string;
+src/features/developer-mode/types.ts:22:  file_path: string;
+src/features/developer-mode/types.ts:111:  file_path: string;
+src/features/developer-mode/types.ts:134:  file_path: string;
+src/features/developer-mode/types.ts:142:  file_path: string;
+src/modules/vocalDev/VocalDevConsoleEngine.ts:453:      // 2. Route to appropriate handler
+src/modules/vocalDev/VocalDevConsoleEngine.ts:632:      // Route to Tauri backend dev command
+src/modules/vocalDev/VocalDevConsoleEngine.ts:660:      // Route to AI provider based on config
+src/modules/avatar/appearance/appearanceRenderer.ts:347:      mesh: { type: 'THREE.Object3D', path: assetDef.mesh },
+src/modules/avatar/appearance/appearanceRenderer.ts:349:      texture: { type: 'THREE.Texture', path: assetDef.texture },
+src/modules/devSudo/devSudoVisionHandlers.ts:921:### **Routes**:
+src/modules/devSudo/devSudoVisionHandlers.ts:932:function AppRoutes() {
+src/modules/devSudo/devSudoVisionHandlers.ts:935:      <Routes>
+src/modules/devSudo/devSudoVisionHandlers.ts:936:        <Route path="/audio" element={<AudioCenter />} />
+src/modules/devSudo/devSudoVisionHandlers.ts:937:        <Route path="/dev" element={<Developer />} />
+src/modules/devSudo/devSudoVisionHandlers.ts:938:      </Routes>
+src/features/menu-editor/MenuEditor.tsx:201:                    placeholder="Route (ex: /ma-page)"
+src/main.tsx:1021:        console.log('   → UI Router → MetaLayer');
+src/hooks/useFileOperations.ts:54:  const list = useCallback(async (path: string, options?: ListFilesOptions) => {
+src/hooks/useFileOperations.ts:73:  const info = useCallback(async (path: string) => {
+src/hooks/useFileOperations.ts:97:  const exists = useCallback(async (path: string) => {
+src/hooks/useFileOperations.ts:108:  const remove = useCallback(async (path: string, recursive: boolean = false) => {
+src/hooks/useFileOperations.ts:165:  const createDir = useCallback(async (path: string, recursive: boolean = true) => {
+src/hooks/useFileOperations.ts:184:      path: string,
+src/hooks/useFileOperations.ts:233:    async (path: string, onProgress?: (progress: UploadProgress) => void) => {
+src/modules/devSudo/devSudoHandler.ts:3830:function handleDatasetAdd(filepath: string): DevSudoResult {
+src/modules/devSudo/devSudoBuiltins.ts:1738:function handleDatasetAdd(filepath: string): DevSudoResult {
+src/engines/selfHealing/selfHealingEngine.ts:87:  path: string;
+src/engines/selfHealing/selfHealingEngine.ts:393:      path: instruction.path,
+src/modules/devSudo/devSudoIDEHandlers.ts:672:  ✅ Routing: React Router functional
+src/features/system-center/hooks/useDebuggerLiveOS.ts:609:        path: string,
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:173:        // - Source: window.location.pathname or React Router useLocation()
+src/hooks/useVoiceEngine.ts:29:import { voiceRouter } from '@/services/voice/voiceRouter';
+src/hooks/useVoiceEngine.ts:469:   * ✅ REFACTORÉ v19.3.1 : Pipeline complet IA + TTS via VoiceRouter
+src/hooks/useVoiceEngine.ts:470:   * Le VoiceRouter orchestre : Transcription → IA → TTS → Done
+src/hooks/useVoiceEngine.ts:475:        console.log('[useVoiceEngine] 🎙️ Processing turn with VoiceRouter...');
+src/hooks/useVoiceEngine.ts:477:        // Déléguer au VoiceRouter pour orchestration complète
+src/hooks/useVoiceEngine.ts:478:        const result = await voiceRouter.processVoiceTurn(transcript, chat.sendMessage, {
+src/hooks/useVoiceEngine.ts:507:            console.error('[useVoiceEngine] ❌ VoiceRouter error:', error);
+src/hooks/useVoiceEngine.ts:627:   * ✅ REFACTORÉ v19.3.1 : Cancel avec VoiceRouter
+src/hooks/useVoiceEngine.ts:633:      // Abort VoiceRouter si tour en cours
+src/hooks/useVoiceEngine.ts:634:      await voiceRouter.abort();
+src/hooks/useVoiceEngine.ts:641:      // Stop TTS if speaking (redondant avec voiceRouter.abort, mais sécurité)
+src/features/system-center/types/debuggerLiveOS.types.ts:215:    path: string;
+src/features/system-center/types/systemCenter.types.ts:119:  file_path: string;
+src/features/system-center/types/systemCenter.types.ts:130:  project_path: string;
+src/App.tsx:14: *   React Router + AppShell + Living Engines + Code Splitting
+src/App.tsx:20:  BrowserRouter,
+src/App.tsx:21:  Routes,
+src/App.tsx:22:  Route,
+src/App.tsx:276:const AppRouter: React.FC = () => {
+src/App.tsx:949:          currentRoute={location.pathname}
+src/App.tsx:972:        <Routes>
+src/App.tsx:973:          {/* Main Routes v25.3.0 - TITANE Homepage */}
+src/App.tsx:974:          <Route path="/" element={<Navigate to="/titane" replace />} />
+src/App.tsx:976:          <Route
+src/App.tsx:985:          <Route path="/chat" element={<Navigate to="/titane" replace />} />
+src/App.tsx:986:          <Route path="/camera" element={<Navigate to="/titane" replace />} />
+src/App.tsx:987:          <Route path="/evo" element={<Navigate to="/titane" replace />} />
+src/App.tsx:988:          <Route path="/dashboard" element={<Navigate to="/titane" replace />} />
+src/App.tsx:989:          <Route path="/evolution-center" element={<Navigate to="/titane" replace />} />
+src/App.tsx:990:          <Route
+src/App.tsx:994:          <Route
+src/App.tsx:998:          <Route path="/progression" element={<Navigate to="/titane" replace />} />
+src/App.tsx:999:          <Route path="/xp" element={<Navigate to="/titane" replace />} />
+src/App.tsx:1001:          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
+src/App.tsx:1002:          <Route
+src/App.tsx:1010:          <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
+src/App.tsx:1012:          <Route
+src/App.tsx:1021:          <Route path="/temporal-center" element={<Navigate to="/time" replace />} />
+src/App.tsx:1022:          <Route path="/agenda" element={<Navigate to="/time" replace />} />
+src/App.tsx:1023:          <Route path="/time-navigator" element={<Navigate to="/time" replace />} />
+src/App.tsx:1025:          <Route
+src/App.tsx:1034:          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1035:          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1036:          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1037:          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1038:          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1039:          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1040:          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1041:          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1042:          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1043:          <Route path="/settings" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1044:          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1045:          <Route path="/governance" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1046:          <Route path="/secure" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1047:          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1048:          <Route path="/audio" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1049:          <Route path="/voice" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1050:          <Route path="/tts" element={<Navigate to="/admin" replace />} />
+src/App.tsx:1052:          <Route
+src/App.tsx:1063:          <Route
+src/App.tsx:1074:          <Route
+src/App.tsx:1083:          <Route
+src/App.tsx:1091:          <Route
+src/App.tsx:1096:          <Route path="/meta" element={<Navigate to="/orchestration-center" replace />} />
+src/App.tsx:1097:          <Route
+src/App.tsx:1101:          <Route
+src/App.tsx:1105:          <Route
+src/App.tsx:1109:          <Route
+src/App.tsx:1114:          <Route
+src/App.tsx:1123:          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1124:          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1125:          <Route path="/unified" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1126:          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1127:          <Route path="/qa" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1128:          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1129:          <Route path="/tests" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1130:          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1131:          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1132:          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1133:          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
+src/App.tsx:1135:          <Route
+src/App.tsx:1139:          <Route
+src/App.tsx:1144:          <Route
+src/App.tsx:1152:          <Route path="/reality" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1153:          <Route path="/renderer" element={<Navigate to="/reality-center" replace />} />
+src/App.tsx:1155:          <Route
+src/App.tsx:1163:          <Route path="/hyper" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1164:          <Route path="/intelligence" element={<Navigate to="/hyper-center" replace />} />
+src/App.tsx:1166:          <Route
+src/App.tsx:1174:          <Route path="/quantum" element={<Navigate to="/quantum-center" replace />} />
+src/App.tsx:1176:          <Route
+src/App.tsx:1184:          <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1185:          <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
+src/App.tsx:1187:          <Route
+src/App.tsx:1195:          <Route
+src/App.tsx:1200:          <Route
+src/App.tsx:1208:          <Route path="/cloud-sync" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1209:          <Route path="/vault" element={<Navigate to="/cloud" replace />} />
+src/App.tsx:1210:          {/* ❌ SUPPRIMÉ v24.3.7: Route /multi-ai (deprecated stub) */}
+src/App.tsx:1212:          <Route path="/knowledge" element={<KnowledgeFusionPage />} />
+src/App.tsx:1213:          <Route path="/creation" element={<CreationStudio />} />
+src/App.tsx:1214:          <Route path="/evolution" element={<EvolutionMonitor />} />
+src/App.tsx:1216:          <Route
+src/App.tsx:1224:          {/* Engine Routes */}
+src/App.tsx:1226:          <Route path="/sentinel" element={<Sentinel />} />
+src/App.tsx:1227:          <Route path="/watchdog" element={<Watchdog />} />
+src/App.tsx:1228:          <Route path="/selfheal" element={<SelfHeal />} />
+src/App.tsx:1229:          <Route path="/adaptive" element={<AdaptiveEngine />} />
+src/App.tsx:1230:          <Route path="/memory" element={<Memory />} />
+src/App.tsx:1231:          <Route path="/research" element={<ResearchPage />} />
+src/App.tsx:1232:          {/* System Routes (Phase 9: lazy loaded) */}
+src/App.tsx:1233:          <Route path="/performance" element={<PerformanceTest />} />
+src/App.tsx:1235:          <Route path="*" element={<Navigate to="/" replace />} />
+src/App.tsx:1236:        </Routes>
+src/App.tsx:1290: * ThemeProvider > AnimationProvider > TitanStateProvider > BrowserRouter > AutoHealErrorBoundary
+src/App.tsx:1327:            <BrowserRouter>
+src/App.tsx:1329:                <AppRouter />
+src/App.tsx:1331:            </BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:62: *     <BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:64: *         <AppRouter />
+src/CARTE_POINTS_CRITIQUES.ts:66: *     </BrowserRouter>
+src/CARTE_POINTS_CRITIQUES.ts:71: *   ✅ Wrappers : ThemeProvider + BrowserRouter + ErrorBoundary
+src/CARTE_POINTS_CRITIQUES.ts:72: *   ✅ AppRouter qui affiche AppShell + Routes
+src/CARTE_POINTS_CRITIQUES.ts:86: * Composant : AppRouter
+src/CARTE_POINTS_CRITIQUES.ts:89: * Routes définies :
+src/CARTE_POINTS_CRITIQUES.ts:99: *     <Routes>
+src/CARTE_POINTS_CRITIQUES.ts:100: *       <Route path="/" element={<DashboardPage />} />
+src/CARTE_POINTS_CRITIQUES.ts:102: *     </Routes>
+src/engines/uiux/detectors/OverloadDetector.ts:164:  recordNavigation(path: string): void {
+src/features/one-core/OneCorePage.tsx:254:  navigate: (path: string) => void;
+src/engines/uiux/UIUXEngine.ts:525:  recordNavigation(path: string, durationMs: number): void {
+src/ui/pages/Projects.tsx:85:    // Implementation: Router navigation with project context
+src/ui/pages/Projects.tsx:86:    // - Router: Use React Router&apos;s navigate('/chat', {state: {projectId}})
+src/utils/tauriFsAdapter.ts:50:function getStorageKey(path: string): string {
+src/utils/tauriFsAdapter.ts:54:function localStorageExists(path: string): boolean {
+src/utils/tauriFsAdapter.ts:59:function localStorageRead(path: string): string {
+src/utils/tauriFsAdapter.ts:64:function localStorageWrite(path: string, data: string): void {
+src/utils/tauriFsAdapter.ts:69:function localStorageAppend(path: string, data: string): void {
+src/utils/tauriFsAdapter.ts:75:function localStorageList(path: string): string[] {
+src/utils/tauriFsAdapter.ts:109:export function dirname(path: string): string {
+src/utils/tauriFsAdapter.ts:124:export async function existsSync(path: string): Promise<boolean> {
+src/utils/tauriFsAdapter.ts:146:export async function readFileSync(path: string, _encoding?: string): Promise<string> {
+src/utils/tauriFsAdapter.ts:168:export async function writeFileSync(path: string, data: string): Promise<void> {
+src/utils/tauriFsAdapter.ts:196:  async readFile(path: string, _encoding?: BufferEncoding): Promise<string> {
+src/utils/tauriFsAdapter.ts:203:  async writeFile(path: string, data: string, _encoding?: string): Promise<void> {
+src/utils/tauriFsAdapter.ts:212:  async appendFile(path: string, data: string, _encoding?: string): Promise<void> {
+src/utils/tauriFsAdapter.ts:231:  async mkdir(path: string, _options?: { recursive?: boolean }): Promise<void> {
+src/utils/tauriFsAdapter.ts:255:  async readdir(path: string): Promise<string[]> {
+src/utils/tauriFsAdapter.ts:276:  async exists(path: string): Promise<boolean> {
+src/services/monitoring/sentry.ts:469: * Export de React.useEffect, useLocation, etc. pour l'instrumentation React Router
+src/services/monitoring/sentry.ts:475:  createRoutesFromChildren,
+src/services/monitoring/sentry.ts:476:  matchRoutes,
+src/services/monitoring/sentry.ts:479:export { React, useLocation, useNavigationType, createRoutesFromChildren, matchRoutes };
+src/utils/autoHealClient.ts:153:    if (stack.includes('Router') || stack.includes('Route')) return 'router';
+src/services/monitoring/logger.ts:34:  /** Module/composant source (ex: 'ChatIA', 'AIRouter') */
+src/_deprecated/router.tsx:13: *   The canonical router is: src/AppRoutes.tsx (used via src/App.tsx)
+src/_deprecated/router.tsx:22:import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom';
+src/_deprecated/router.tsx:104:  const currentRoute = window.location.pathname;
+src/_deprecated/router.tsx:106:  const handleNavigate = (path: string) => {
+src/_deprecated/router.tsx:112:      currentRoute={currentRoute}
+src/_deprecated/router.tsx:125:const router = createBrowserRouter([
+src/_deprecated/router.tsx:127:    path: '/',
+src/_deprecated/router.tsx:136:    path: '/chat',
+src/_deprecated/router.tsx:145:    path: '/stats',
+src/_deprecated/router.tsx:154:    path: '/sentinel',
+src/_deprecated/router.tsx:163:    path: '/watchdog',
+src/_deprecated/router.tsx:172:    path: '/selfheal',
+src/_deprecated/router.tsx:181:    path: '/adaptive',
+src/_deprecated/router.tsx:190:    path: '/memory',
+src/_deprecated/router.tsx:199:    path: '/settings',
+src/_deprecated/router.tsx:208:    path: '/devtools',
+src/_deprecated/router.tsx:217:    path: '/cloud',
+src/_deprecated/router.tsx:226:    path: '/agenda',
+src/_deprecated/router.tsx:235:    path: '/design-system',
+src/_deprecated/router.tsx:244:    path: '*',
+src/_deprecated/router.tsx:253:export const TitaneRouter: React.FC = () => {
+src/_deprecated/router.tsx:254:  return <RouterProvider router={router} />;
+src/utils/routePreloading.ts:9: *   import { useRoutePreloading, preloadRoute } from '@utils/routePreloading';
+src/utils/routePreloading.ts:12: *   useRoutePreloading();
+src/utils/routePreloading.ts:15: *   preloadRoute('@pages/centers/QuantumCenter');
+src/utils/routePreloading.ts:47:export const preloadRoute = (
+src/utils/routePreloading.ts:84:export const preloadRoutes = (
+src/utils/routePreloading.ts:88:  return Promise.all(paths.map(path => preloadRoute(path, priority)));
+src/utils/routePreloading.ts:101: *   useRoutePreloading();
+src/utils/routePreloading.ts:103:export const useRoutePreloading = () => {
+src/utils/routePreloading.ts:107:    const currentRoute = location.pathname;
+src/utils/routePreloading.ts:108:    const nextRoutes = ROUTE_CHUNKS[currentRoute] || [];
+src/utils/routePreloading.ts:110:    if (nextRoutes.length > 0) {
+src/utils/routePreloading.ts:112:      preloadRoutes(nextRoutes, 'low')
+src/utils/routePreloading.ts:115:            `✅ Preloaded ${nextRoutes.length} chunks for route: ${currentRoute}`
+src/utils/routePreloading.ts:159: * @param currentRoute - Current route path
+src/utils/routePreloading.ts:162:export const predictNextRoute = (
+src/utils/routePreloading.ts:163:  currentRoute: string,
+src/utils/routePreloading.ts:164:  userBehavior?: { lastRoute?: string; sessionDuration?: number }
+src/utils/routePreloading.ts:166:  const nextRoutes = ROUTE_CHUNKS[currentRoute] || [];
+src/utils/routePreloading.ts:174:  return nextRoutes;
+src/utils/routePreloading.ts:193:    await preloadRoutes(criticalChunks, 'high');
+src/utils/routePreloading.ts:206: * @param navigate - React Router navigate function
+src/utils/routePreloading.ts:210:  navigate: (path: string) => void,
+src/utils/routePreloading.ts:211:  path: string
+src/utils/routePreloading.ts:214:  preloadRoute(path, 'high');
+src/utils/routePreloading.ts:217:  const nextRoutes = ROUTE_CHUNKS[path] || [];
+src/utils/routePreloading.ts:218:  if (nextRoutes.length > 0) {
+src/utils/routePreloading.ts:219:    preloadRoutes(nextRoutes, 'low');
+src/utils/routePreloading.ts:232: * @param path - Route path
+src/utils/routePreloading.ts:236:export const prefetchOnHover = (path: string): void => {
+src/utils/routePreloading.ts:237:  preloadRoute(path, 'high');
+src/utils/routePreloading.ts:248:export const registerRouteChunks = (routeMap: Record<string, string[]>): void => {
+src/utils/lazyEngineLoader.tsx:323: *   return <Router />;
+src/utils/lazyEngineLoader.tsx:327: * ## Pattern 4: Route-Based Loading
+src/utils/lazyEngineLoader.tsx:329: * function Router() {
+src/utils/lazyEngineLoader.tsx:331: *     <Routes>
+src/utils/lazyEngineLoader.tsx:332: *       <Route path="/voice" element={
+src/utils/lazyEngineLoader.tsx:337: *     </Routes>
+src/core/ARCHITECTURE_TYPES_v∞.ts:361:  path: string;
+src/core/commands/TAURI_COMMANDS.ts:92:  // - Command: #[tauri::command] pub async fn file_analyze(path: String) -> Result<FileAnalysis, String>
+src/tests/activeListeningIntegration.test.ts:214:// Mock voiceRouter
+src/tests/activeListeningIntegration.test.ts:215:vi.mock('../services/voice/voiceRouter', () => ({
+src/tests/activeListeningIntegration.test.ts:216:  voiceRouter: {
+src/tests/activeListeningIntegration.test.ts:225:vi.mock('@/services/voice/voiceRouter', () => ({
+src/tests/activeListeningIntegration.test.ts:226:  voiceRouter: {
+src/cognitive/types.ts:115:  path: string;
+src/cognitive/types.ts:404:  path: string;
+src/cognitive/knowledge/knowledgeVault.ts:66:  path: string;
+src/cognitive/knowledge/knowledgeVault.ts:225:    path: string,
+src/cognitive/knowledge/knowledgeVault.ts:420:  private getExtension(path: string): string {
+src/cognitive/knowledge/knowledgeVault.ts:425:  private detectCategory(path: string, content: string): KnowledgeCategory {
+src/cognitive/knowledge/knowledgeVault.ts:451:  private detectFormat(path: string): KnowledgeFormat {
+src/cognitive/knowledge/knowledgeVault.ts:456:  private extractTitle(path: string, content: string): string {
+src/services/unified/__tests__/UnifiedMemory.benchmark.ts:446:  // 2. Create: const vectorStore = await VectorStoreClient.create({ backend: 'sqlite', path: dbPath })
+src/services/ai/gateway/types.ts:196:interface ProviderRouter {
+src/services/ai/gateway/types.ts:413: *   router.rs           // ProviderRouter impl
+src/services/ai/gateway/types.ts:484:  ProviderRouter,
+src/services/ai/unifiedHealingFacade.ts:132:   * Routes to simple or advanced healing based on severity
+src/services/unified/UnifiedMemory.ts:295:    path: './data/unified_memory.db',
+src/services/selfHealing/selfHealingIOAdapter.ts:65:  path: string;
+src/services/selfHealing/selfHealingIOAdapter.ts:300:function applyStateUpdate(path: string, value: unknown): void {
+src/services/tts/ttsEngineService.ts:475:    const response = await secureInvoke<{ audio_path: string; duration_ms: number }>(
+src/features/meta-dashboard/index.ts:6:export { MetaDashboardRouter } from './MetaDashboardRouter';
+src/features/meta-dashboard/index.ts:7:export { default as MetaDashboard } from './MetaDashboardRouter';
+src/features/meta-dashboard/MetaDashboardRouter.tsx:2: * TITANE∞ v24.2.1 — Meta-Dashboard Router
+src/features/meta-dashboard/MetaDashboardRouter.tsx:99:export const MetaDashboardRouter: React.FC = () => {
+src/features/meta-dashboard/MetaDashboardRouter.tsx:290:export default MetaDashboardRouter;
+src/features/meta-dashboard/MetaDashboardRouter.tsx:297: * import { MetaDashboardRouter } from '@/features/meta-dashboard';
+src/features/meta-dashboard/MetaDashboardRouter.tsx:299: * <Route path="/dashboard" element={<MetaDashboardRouter />} />
+src/services/tauri/backend-v17.2.types.ts:133:  base_path: string;
+src/services/ai/metaKernel.ts:62:  path: string[];
+src/services/ai/metaKernel.ts:632:        path: [
+src/services/ai/metaKernel.ts:645:        path: ['provider-*', 'autoHeal', 'orchestrator', 'provider-fallback'],
+src/services/ai/metaKernel.ts:651:        path: [
+src/services/ai/ConversationManager.ts:99:    // 4. Route to appropriate AI backend (local LLM, OpenAI, Gemini, etc.)
+src/services/ai/ConversationManager.ts:285:   * Route request to appropriate AI backend
+src/services/tauriBridge.ts:362:  path: string;
+src/services/tauriBridge.ts:374:export async function readFile(path: string) {
+src/services/tauriBridge.ts:381:export async function writeFile(path: string, content: string) {
+src/services/tauriBridge.ts:388:export async function listFiles(path: string, options: ListFilesOptions = {}) {
+src/services/tauriBridge.ts:395:export async function deleteFile(path: string, recursive: boolean = false) {
+src/services/tauriBridge.ts:416:export async function getFileInfo(path: string) {
+src/services/tauriBridge.ts:423:export async function fileExists(path: string) {
+src/services/tauriBridge.ts:430:export async function createDirectory(path: string, recursive: boolean = true) {
+src/services/ai/types.ts:67: * Migration path: Replace AIProviderName with ProviderName in new code.
+src/services/voice/attentionEngine.ts:234:      // On passe directement en processing (sera géré par VoiceRouter)
+src/services/lazy.ts:64:  const module = await import('./voice/voiceRouter');
+src/services/voice/index.ts:14:export { voiceRouter } from './voiceRouter';
+src/services/voice/voiceRouter.ts:17: *   📝 VoiceRouter.processVoiceTurn(transcript)
+src/services/voice/voiceRouter.ts:66:  onStateChange?: (state: VoiceRouterState) => void;
+src/services/voice/voiceRouter.ts:81:  onError?: (error: VoiceRouterError) => void;
+src/services/voice/voiceRouter.ts:85: * États du VoiceRouter
+src/services/voice/voiceRouter.ts:87:export type VoiceRouterState =
+src/services/voice/voiceRouter.ts:95: * Erreurs du VoiceRouter
+src/services/voice/voiceRouter.ts:97:export interface VoiceRouterError {
+src/services/voice/voiceRouter.ts:110:  error?: VoiceRouterError;
+src/services/voice/voiceRouter.ts:119:class VoiceRouterService {
+src/services/voice/voiceRouter.ts:120:  private currentState: VoiceRouterState = 'idle';
+src/services/voice/voiceRouter.ts:126:  getState(): VoiceRouterState {
+src/services/voice/voiceRouter.ts:147:    console.log('\n🎙️ [VoiceRouter] ═══ Starting voice turn ═══');
+src/services/voice/voiceRouter.ts:157:      console.warn('[VoiceRouter] ⚠️ Empty transcript, aborting turn');
+src/services/voice/voiceRouter.ts:178:      console.log('[VoiceRouter] 🤖 Phase 1: Calling AI...');
+src/services/voice/voiceRouter.ts:187:        '[VoiceRouter] ✅ AI response received:',
+src/services/voice/voiceRouter.ts:196:        console.log('[VoiceRouter] 🎭 Phase 2: Analyzing emotion...');
+src/services/voice/voiceRouter.ts:204:          `[VoiceRouter] ✅ Emotion detected: ${analysisResult.intent.emotion} (intensity: ${analysisResult.intent.intensity.toFixed(2)})`
+src/services/voice/voiceRouter.ts:216:        console.log('[VoiceRouter] 🔊 Phase 3: Starting Emotional TTS...');
+src/services/voice/voiceRouter.ts:231:        console.log('[VoiceRouter] ✅ Emotional TTS completed');
+src/services/voice/voiceRouter.ts:240:        console.log('[VoiceRouter] 🔊 Phase 2: Starting TTS (no emotion)...');
+src/services/voice/voiceRouter.ts:253:        console.log('[VoiceRouter] ✅ TTS completed');
+src/services/voice/voiceRouter.ts:266:      console.log(`[VoiceRouter] 🎉 Voice turn completed in ${duration}ms`);
+src/services/voice/voiceRouter.ts:285:      console.error('[VoiceRouter] ❌ Voice turn failed:', error);
+src/services/voice/voiceRouter.ts:288:      const routerError: VoiceRouterError = {
+src/services/voice/voiceRouter.ts:374:    state: VoiceRouterState,
+src/services/voice/voiceRouter.ts:375:    callback?: (state: VoiceRouterState) => void
+src/services/voice/voiceRouter.ts:381:      console.log(`[VoiceRouter] 🔄 State: ${prevState} → ${state}`);
+src/services/voice/voiceRouter.ts:390:    console.log('[VoiceRouter] 🛑 Aborting current voice turn');
+src/services/voice/voiceRouter.ts:410:    console.log('[VoiceRouter] 🔄 Resetting router');
+src/services/voice/voiceRouter.ts:417:export const voiceRouter = new VoiceRouterService();
+src/services/voice/voiceRouter.ts:418:export default voiceRouter;
+src/services/voice/adaptiveThresholdEngine.ts:301:    // Fast-path: no-op if already in desired state
+src/core/devmode/DevModeEngine.ts:33:  file_path: string;
+src/core/devmode/DevModeEngine.ts:89:  target_path: string;
+src/services/cognitive/SemanticMemoryEngine.ts:42:    path: './data/semantic_memory.db',
+src/services/singularityBridgeVInfinity.ts:144:export interface AIRouterState {
+src/services/singularityBridgeVInfinity.ts:188:  ai: AIRouterState;
+src/services/cognitive/cognitiveOmegaIntegration.ts:146:            path: './data/semantic_memory.db',
+src/core/devops/LocalAgentEngine.ts:147:      file_structure: { path: projectRoot, type: 'directory', is_important: true },
+src/core/devops/LocalAgentEngine.ts:805:          file_path: '.titane/pipeline.json',
+src/core/devops/LocalAgentEngine.ts:957:  private async fileExists(_path: string): Promise<boolean> {
+src/core/devops/LocalAgentEngine.ts:969:  private async readJsonFile(path: string): Promise<any> {
+src/core/devops/VisualDevOpsEngine.ts:505:        file_path: firstError.file_path,
+src/core/devops/VisualDevOpsEngine.ts:547:      file_path: 'build_generated.sh',
+src/core/devops/VisualDevOpsEngine.ts:633:      file_path: 'optimize_generated.sh',
+src/core/devops/VisualDevOpsEngine.ts:667:      file_path: 'custom_generated.sh',
+src/services/singularityBridge.ts:417:  path: string
+src/services/cognitive/TauriVectorStore.ts:56:          db_path: this.config.dbPath,
+src/components/layout/__tests__/TopNav.test.tsx:16:  return render(<TopNav items={items} currentRoute="/" onNavigate={vi.fn()} />);
+src/components/layout/TopNav.tsx:47:  currentRoute: string;
+src/components/layout/TopNav.tsx:71:  currentRoute,
+src/components/layout/TopNav.tsx:153:  }, [currentRoute]);
+src/components/layout/TopNav.tsx:163:    return currentRoute === route || currentRoute.startsWith(route);
+src/components/layout/MobileNav.tsx:55:    const handleRouteChange = () => setIsOpen(false);
+src/components/layout/MobileNav.tsx:56:    window.addEventListener('popstate', handleRouteChange);
+src/components/layout/MobileNav.tsx:57:    return () => window.removeEventListener('popstate', handleRouteChange);
+src/services/backup/AutoBackupService.ts:275:        path: `backups/${backupId}.json`,
+src/components/chat/FileUploadButton.tsx:299:                path: result.name,
+src/components/chat/ChatFileImport.tsx:185:            path: file.name,
+src/pages/CloudCenter/SyncConfig.tsx:21:  sync_folder_path: string;
+src/pages/CloudCenter/SyncConfig.tsx:35:    sync_folder_path: '',
+src/pages/CloudCenter/SyncConfig.tsx:176:                    setConfig({ ...config, sync_folder_path: e.target.value })
+src/pages/CloudCenter/VaultStatus.tsx:13:  path: string;
+src/pages/CloudCenter/VaultStatus.tsx:24:  backup_path: string | null;
+src/pages/CloudCenter/VaultStatus.tsx:79:  const handleRestoreBackup = async (path: string) => {
