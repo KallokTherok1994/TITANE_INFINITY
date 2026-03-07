@@ -125,6 +125,40 @@ mod audio {
     }
     pub mod commands {
         include!("audio/commands.rs");
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn speak(
+            _text: String,
+            _config: Option<serde_json::Value>,
+            _use_online: Option<bool>,
+        ) -> Result<(), String> {
+            Ok(())
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn start_recording(_config: Option<serde_json::Value>) -> Result<String, String> {
+            Ok("mock-recording-id".to_string())
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn stop_recording() -> Result<serde_json::Value, String> {
+            Ok(serde_json::json!({
+                "transcript": "",
+                "confidence": 0.0,
+                "duration": 0.0,
+                "filePath": null,
+                "error": "mock-mode",
+            }))
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn cancel_recording() -> Result<(), String> {
+            Ok(())
+        }
     }
 }
 
@@ -161,6 +195,185 @@ mod commands {
     // ✅ AUDIT FIX #1: Unified Ollama provider command
     pub mod ollama_command {
         include!("commands/ollama_command.rs");
+    }
+}
+
+// Legacy AI/Engine/Memory command bridge.
+// In full backend mode we forward to the library commands.
+// In mock/not-full builds we expose lightweight stubs to keep IPC symbols resolvable.
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+mod legacy_ai_bridge {
+    pub use titane_infinity::commands::ai_chat::{
+        ai_query, ai_query_streaming, clear_all_memory, create_conversation,
+        delete_conversation, list_conversations, AIChatState,
+    };
+    pub use titane_infinity::commands::engine_commands::{
+        engine_get_cognition_state, engine_get_evolution_state, engine_get_harmonia_state,
+        engine_get_nexus_state, engine_get_sentinel_state, engine_get_singularity_state,
+        engine_tick,
+    };
+    pub use titane_infinity::commands::memory_commands::{
+        memory_clear_all, memory_compact, memory_export_conversation, memory_get, memory_list_all,
+        memory_set,
+    };
+}
+
+#[cfg(any(feature = "mock", not(feature = "full")))]
+mod legacy_ai_bridge {
+    use tauri::{Emitter, State, Window};
+
+    #[derive(Default)]
+    pub struct AIChatState;
+
+    #[tauri::command]
+    pub async fn ai_query(
+        _state: State<'_, AIChatState>,
+        prompt: String,
+        _temperature: Option<f32>,
+        _max_tokens: Option<usize>,
+    ) -> Result<String, String> {
+        Ok(serde_json::json!({
+            "content": format!("[mock] {}", prompt),
+            "provider": "mock",
+            "tokens": 0,
+        })
+        .to_string())
+    }
+
+    #[tauri::command]
+    pub async fn ai_query_streaming(
+        window: Window,
+        _state: State<'_, AIChatState>,
+        prompt: String,
+        _temperature: Option<f32>,
+        _max_tokens: Option<usize>,
+    ) -> Result<String, String> {
+        let response_id = "mock-stream";
+        let _ = window.emit(
+            "ai_response_start",
+            serde_json::json!({ "response_id": response_id, "provider": "mock" }),
+        );
+        let _ = window.emit(
+            "ai_response_chunk",
+            serde_json::json!({
+                "response_id": response_id,
+                "chunk": format!("[mock] {}", prompt),
+                "index": 0,
+                "total_chunks": 1,
+                "is_last": true,
+            }),
+        );
+        let _ = window.emit(
+            "ai_response_end",
+            serde_json::json!({
+                "response_id": response_id,
+                "content": format!("[mock] {}", prompt),
+                "provider": "mock",
+                "tokens": 0,
+            }),
+        );
+        Ok(serde_json::json!({ "response_id": response_id, "status": "streaming_complete" }).to_string())
+    }
+
+    #[tauri::command]
+    pub async fn create_conversation(
+        _state: State<'_, AIChatState>,
+        _title: String,
+    ) -> Result<String, String> {
+        Ok("mock-conversation".to_string())
+    }
+
+    #[tauri::command]
+    pub async fn list_conversations(_state: State<'_, AIChatState>) -> Result<String, String> {
+        Ok("[]".to_string())
+    }
+
+    #[tauri::command]
+    pub async fn delete_conversation(
+        _state: State<'_, AIChatState>,
+        _conversation_id: String,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    #[tauri::command]
+    pub async fn clear_all_memory(_state: State<'_, AIChatState>) -> Result<(), String> {
+        Ok(())
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_nexus_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "health": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_harmonia_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "health": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_sentinel_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "health": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_cognition_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "health": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_singularity_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "health": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_get_evolution_state(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "status": "mock" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_tick(_state: State<'_, AIChatState>) -> Result<(), String> {
+        Ok(())
+    }
+
+    #[tauri::command]
+    pub async fn memory_get(
+        _state: State<'_, AIChatState>,
+        _key: String,
+    ) -> Result<Option<String>, String> {
+        Ok(None)
+    }
+
+    #[tauri::command]
+    pub async fn memory_set(
+        _state: State<'_, AIChatState>,
+        _key: String,
+        _value: String,
+    ) -> Result<(), String> {
+        Ok(())
+    }
+
+    #[tauri::command]
+    pub async fn memory_list_all(_state: State<'_, AIChatState>) -> Result<String, String> {
+        Ok("[]".to_string())
+    }
+
+    #[tauri::command]
+    pub async fn memory_clear_all(_state: State<'_, AIChatState>) -> Result<(), String> {
+        Ok(())
+    }
+
+    #[tauri::command]
+    pub async fn memory_export_conversation(
+        _state: State<'_, AIChatState>,
+        _conversation_id: String,
+    ) -> Result<String, String> {
+        Ok("{}".to_string())
+    }
+
+    #[tauri::command]
+    pub async fn memory_compact(_state: State<'_, AIChatState>) -> Result<String, String> {
+        Ok("{}".to_string())
     }
 }
 
@@ -595,7 +808,7 @@ fn main() {
         .manage(titane_infinity::identity::commands::IdentityEngineState::default())
         // ✅ P2-002 AUDIT FIX (2026-03-06): AIChatState — required by ai_query, ai_query_streaming,
         //    get_conversation_history, and memory_* legacy commands
-        .manage(titane_infinity::commands::ai_chat::AIChatState::default());
+        .manage(legacy_ai_bridge::AIChatState::default());
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
@@ -1561,26 +1774,26 @@ fn main() {
             // AICHAT LEGACY COMMANDS — P2-002 AUDIT FIX (2026-03-06)
             // Requires AIChatState (managed above)
             // ═══════════════════════════════════════════════════════════════
-            titane_infinity::commands::ai_chat::ai_query,
-            titane_infinity::commands::ai_chat::ai_query_streaming,
-            titane_infinity::commands::ai_chat::create_conversation,
-            titane_infinity::commands::ai_chat::list_conversations,
-            titane_infinity::commands::ai_chat::delete_conversation,
-            titane_infinity::commands::ai_chat::clear_all_memory,
-            titane_infinity::commands::engine_commands::engine_get_nexus_state,
-            titane_infinity::commands::engine_commands::engine_get_harmonia_state,
-            titane_infinity::commands::engine_commands::engine_get_sentinel_state,
-            titane_infinity::commands::engine_commands::engine_get_cognition_state,
-            titane_infinity::commands::engine_commands::engine_get_singularity_state,
-            titane_infinity::commands::engine_commands::engine_get_evolution_state,
-            titane_infinity::commands::engine_commands::engine_tick,
-            titane_infinity::commands::memory_commands::memory_get,
-            titane_infinity::commands::memory_commands::memory_set,
+            legacy_ai_bridge::ai_query,
+            legacy_ai_bridge::ai_query_streaming,
+            legacy_ai_bridge::create_conversation,
+            legacy_ai_bridge::list_conversations,
+            legacy_ai_bridge::delete_conversation,
+            legacy_ai_bridge::clear_all_memory,
+            legacy_ai_bridge::engine_get_nexus_state,
+            legacy_ai_bridge::engine_get_harmonia_state,
+            legacy_ai_bridge::engine_get_sentinel_state,
+            legacy_ai_bridge::engine_get_cognition_state,
+            legacy_ai_bridge::engine_get_singularity_state,
+            legacy_ai_bridge::engine_get_evolution_state,
+            legacy_ai_bridge::engine_tick,
+            legacy_ai_bridge::memory_get,
+            legacy_ai_bridge::memory_set,
             // memory_get_stats already registered above as unified_memory_commands::memory_get_stats
-            titane_infinity::commands::memory_commands::memory_list_all,
-            titane_infinity::commands::memory_commands::memory_clear_all,
-            titane_infinity::commands::memory_commands::memory_export_conversation,
-            titane_infinity::commands::memory_commands::memory_compact,
+            legacy_ai_bridge::memory_list_all,
+            legacy_ai_bridge::memory_clear_all,
+            legacy_ai_bridge::memory_export_conversation,
+            legacy_ai_bridge::memory_compact,
 
             // ═══════════════════════════════════════════════════════════════
             // AUDIO COMMANDS — speak, start/stop/cancel_recording

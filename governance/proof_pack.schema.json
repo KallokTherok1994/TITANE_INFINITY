@@ -3,12 +3,7 @@
   "$id": "governance/proof_pack.schema.json",
   "title": "TITANE Proof Pack",
   "type": "object",
-  "required": [
-    "path",
-    "requiredFiles",
-    "gates",
-    "finalVerdict"
-  ],
+  "required": ["path", "requiredFiles", "gates", "finalVerdict"],
   "properties": {
     "path": { "type": "string", "minLength": 1 },
     "requiredFiles": {
