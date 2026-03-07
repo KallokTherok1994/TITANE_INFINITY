@@ -131,7 +131,7 @@ exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
             <td
               class="px-4 py-3 text-xs font-mono text-right"
             >
-              07:00:00
+              12:00:00
             </td>
           </tr>
           <tr
@@ -159,7 +159,7 @@ exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
             <td
               class="px-4 py-3 text-xs font-mono text-right"
             >
-              06:59:50
+              11:59:50
             </td>
           </tr>
           <tr
@@ -187,7 +187,7 @@ exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
             <td
               class="px-4 py-3 text-xs font-mono text-right"
             >
-              06:59:40
+              11:59:40
             </td>
           </tr>
           <tr
@@ -215,7 +215,7 @@ exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
             <td
               class="px-4 py-3 text-xs font-mono text-right"
             >
-              06:59:30
+              11:59:30
             </td>
           </tr>
           <tr
@@ -243,7 +243,7 @@ exports[`DevTools Metrics Section > Snapshot > should match snapshot 1`] = `
             <td
               class="px-4 py-3 text-xs font-mono text-right"
             >
-              06:59:20
+              11:59:20
             </td>
           </tr>
         </tbody>
