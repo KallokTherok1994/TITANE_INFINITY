@@ -38,6 +38,7 @@ ALLOWED_EXCEPTIONS=(
     "^docs/_evidence/.*/RUNLOGS/.*\\.log$"
     "^reports/.*\\.log$"
     "^docs/reports/.*\\.log$"
+    "^proof_packs/.*/.*\\.log$"
     "^runs/current/triage_secrets/classification\\.json$"
 )
 
@@ -116,7 +117,7 @@ REQUIRED_IGNORES=(
 )
 
 for ignore_pattern in "${REQUIRED_IGNORES[@]}"; do
-    if ! grep -qx "$ignore_pattern" .gitignore 2>/dev/null; then
+    if ! grep -Fqx "$ignore_pattern" .gitignore 2>/dev/null; then
         echo "⚠️ MANQUE dans .gitignore: '$ignore_pattern'"
     fi
 done

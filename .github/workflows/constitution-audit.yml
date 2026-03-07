@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: read
+  issues: write
 
 jobs:
   constitution-audit:
@@ -137,6 +138,7 @@ jobs:
 
       - name: '📈 Post Audit Summary (PR Comment)'
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         uses: actions/github-script@v7
         with:
           script: |
