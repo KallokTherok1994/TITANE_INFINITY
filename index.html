@@ -84,34 +84,54 @@
       // Anti-silence guard: if React entry never executes, avoid infinite loading splash.
       (function () {
         var BOOT_HTML_RECOVERY_ONCE_KEY = 'titane_boot_html_recovery_once';
+        var isDevHost =
+          window.location.protocol === 'http:' &&
+          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+        var BOOT_HTML_GUARD_TIMEOUT_MS = isDevHost ? 120000 : 15000;
+
+        var clearRecoveryGuard = function () {
+          try {
+            window.sessionStorage.removeItem(BOOT_HTML_RECOVERY_ONCE_KEY);
+          } catch {
+            // ignore
+          }
+        };
+
+        window.addEventListener('titane:boot-ready', clearRecoveryGuard, { once: true });
 
         window.setTimeout(function () {
           try {
             var boot = window.__TITANE_BOOT__ || {};
+            var entryTsStarted = Boolean(boot.entry_ts);
             var mainTsxStarted = Boolean(boot.main_tsx);
             var ready = Boolean(window.__TITANE_BOOT_READY__);
             var splash = document.querySelector('.loading-splash');
 
-            if (mainTsxStarted || ready || !splash) {
+            if (entryTsStarted || mainTsxStarted || ready || !splash) {
+              if (ready) {
+                clearRecoveryGuard();
+              }
               return;
             }
 
             var recoveryAlreadyAttempted = false;
             try {
               recoveryAlreadyAttempted =
-                window.localStorage.getItem(BOOT_HTML_RECOVERY_ONCE_KEY) === '1';
+                window.sessionStorage.getItem(BOOT_HTML_RECOVERY_ONCE_KEY) === '1';
             } catch {
               recoveryAlreadyAttempted = false;
             }
 
             if (!recoveryAlreadyAttempted) {
               try {
-                window.localStorage.setItem(BOOT_HTML_RECOVERY_ONCE_KEY, '1');
+                window.sessionStorage.setItem(BOOT_HTML_RECOVERY_ONCE_KEY, '1');
               } catch {
                 // ignore
               }
               console.error(
-                '[BOOT_HTML_GUARD] React entry not started after 15s. Reloading once.'
+                '[BOOT_HTML_GUARD] React entry not started after ' +
+                  BOOT_HTML_GUARD_TIMEOUT_MS +
+                  'ms. Reloading once.'
               );
               window.location.reload();
               return;
@@ -137,7 +157,7 @@
           } catch (e) {
             console.error('[BOOT_HTML_GUARD_ERR]', e);
           }
-        }, 15000);
+        }, BOOT_HTML_GUARD_TIMEOUT_MS);
       })();
     </script>
 
