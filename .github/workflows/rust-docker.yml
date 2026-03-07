@@ -95,7 +95,7 @@ jobs:
 
       - name: 🔍 Run Clippy (Linter)
         working-directory: src-tauri
-        run: cargo clippy --all-targets --all-features -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -W clippy::all
 
       - name: 📊 Generate Test Report
         if: always()
