@@ -254,7 +254,9 @@ async function runCertificationTest(page: Page, runId: string): Promise<void> {
   // Fatal overlay can sporadically intercept pointer events in dev/runtime noise.
   const fatalOverlay = page.locator('#titane-entry-fatal').first();
   if (await fatalOverlay.isVisible().catch(() => false)) {
-    const closeBtn = fatalOverlay.locator('button, [data-testid="close"], [aria-label*="close" i]').first();
+    const closeBtn = fatalOverlay
+      .locator('button, [data-testid="close"], [aria-label*="close" i]')
+      .first();
     if (await closeBtn.isVisible().catch(() => false)) {
       await closeBtn.click({ force: true }).catch(() => undefined);
     }
@@ -276,9 +278,13 @@ async function runCertificationTest(page: Page, runId: string): Promise<void> {
 
   // Get UI text pour vérifier consistency; fallback to body to avoid brittle container assumptions.
   const messagesContainer = page.locator(MESSAGES_CONTAINER_SELECTORS).first();
-  const uiText = await messagesContainer
-    .textContent({ timeout: 3000 })
-    .catch(async () => page.locator('body').first().textContent({ timeout: 3000 }).catch(() => ''));
+  const uiText = await messagesContainer.textContent({ timeout: 3000 }).catch(async () =>
+    page
+      .locator('body')
+      .first()
+      .textContent({ timeout: 3000 })
+      .catch(() => '')
+  );
 
   if (timedOut || !send || !recv) {
     const assistantMessages = page.locator(ASSISTANT_MESSAGE_SELECTORS).first();
