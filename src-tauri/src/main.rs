@@ -1541,6 +1541,13 @@ fn main() {
             audio::commands::vad_configure,
             audio::commands::vad_reset,
             audio::commands::vad_test,
+            // Audio Capture Commands (6) - ✅ AH-0093 FIX: audio-capture feature (default)
+            audio::commands::audio_capture_start,
+            audio::commands::audio_capture_stop,
+            audio::commands::audio_capture_status,
+            audio::commands::audio_capture_get_chunk,
+            audio::commands::audio_capture_export_wav,
+            audio::commands::audio_list_devices,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
             // Memory API Commands (Storage + Timeline)
