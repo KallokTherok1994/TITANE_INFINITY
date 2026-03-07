@@ -95,6 +95,14 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
     return `${hours}h ${minutes}m`;
   };
 
+  const formatLastUpdateTime = (value: number): string =>
+    new Date(value).toLocaleTimeString('fr-FR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+    });
+
   // Memory percentage
   const memoryPercent = metrics
     ? Math.round((metrics.memory_used_mb / metrics.memory_total_mb) * 100)
@@ -151,13 +159,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-titane-accent-500 animate-pulse" />
           <span className="text-titane-text-tertiary text-xs">
-            Last update:{' '}
-            {new Date(lastUpdate).toLocaleTimeString('fr-FR', {
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit',
-              hour12: false,
-            })}
+            Last update: {formatLastUpdateTime(lastUpdate)}
           </span>
         </div>
       </div>
