@@ -1,0 +1,765 @@
+tests/contract/tauri.contract.test.ts:45:        // rg exit code 1 = no match (OK pour ce test)
+tests/run_all_tests.sh:181:exit 0
+tests/run_all_autonomous_tests.sh:74:    exit 1
+tests/run_all_autonomous_tests.sh:77:    exit 0
+tests/unit/fusion/SingularityFusionEngine.test.ts:53:  complexity: 'moderate',
+tests/unit/fusion/SingularityFusionEngine.test.ts:209:      complexity: 'complex',
+tests/unit/cognitive/CognitiveOptimizationEngine.test.ts:36:  complexity: 'simple',
+tests/phase3/gate-p3.test.ts:108:      expect(content).toContain('exit 1');
+tests/unit/devops/VisualDevOpsEngine.test.ts:188:      expect(action.status).toBe('pending');
+tests/unit/devops/VisualDevOpsEngine.test.ts:616:      expect(stats.pending_actions).toBe(0);
+tests/unit/devops/VisualDevOpsEngine.test.ts:654:      expect(stats.pending_actions).toBe(1);
+tests/unit/devops/LocalAgentEngine.test.ts:181:      expect(action.status).toBe('pending');
+tests/unit/devops/LocalAgentEngine.test.ts:229:      expect(action.status).toBe('pending');
+tests/unit/devops/LocalAgentEngine.test.ts:272:      expect(action.status).toBe('pending');
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:16:      { id: 'synthesis', status: 'pending', duration: 0 },
+src/pages/EvoPage.tsx:1196:              { metric: 'Complexité gérée', value: '+127%', period: '6 mois' },
+src/core/ARCHITECTURE_TYPES_v∞.ts:371:  complexity: number;
+src/__tests__/c6-baseline.test.ts:160:    // Expected: exit code 0 ✓
+src/engines/holopresence/holoPresenceEngine.ts:32:  | 'mandala' // Mandala (profondeur, complexité)
+src/engines/phasespace/phaseSpaceEngine.ts:58:    complexity: number;
+src/engines/phasespace/phaseSpaceEngine.ts:394:        complexity: (metaState.emergentComplexity as number | undefined) ?? 0,
+src/engines/phasespace/phaseSpaceEngine.ts:600:      complexity: 0,
+src/engines/phasespace/phaseSpaceEngine.ts:640:    if (center.complexity > 0.8) return 'Complex Emergent State';
+src/engines/phasespace/phaseSpaceEngine.ts:651:    if (center.complexity > 0.7) features.push('complex');
+src/types/singularityState.ts:281:  pending_validations: number;
+src/engines/presence/_stubs.ts:308:  taskComplexity: number;
+src/engines/presence/_stubs.ts:326:  complexityHandled: number;
+src/engines/presence/_stubs.ts:343:  complexityHandled: 60,
+src/engines/presence/_stubs.ts:367:  taskComplexity: 50,
+src/core/ai/agents/memory_core_agent.ts:154:        message: `Knowledge queued for learning (${this.learningQueue.length} pending)`,
+src/core/devops/LocalAgentEngine.ts:617:      status: 'pending',
+src/core/devops/LocalAgentEngine.ts:673:      status: 'pending',
+src/core/devops/LocalAgentEngine.ts:744:      status: 'pending',
+src/types/selfHealing.ts:46:  | 'pending' // En attente
+src/types/selfHealing.ts:132:  pendingOperations: number;
+src/types/selfHealing.ts:446:  pendingRepairs: RepairAction[];
+src/core/ai/agent_protocol.ts:183:  private pendingOps: Map<string, PendingOperation> = new Map();
+src/core/ai/agent_protocol.ts:192:    this.pendingOps.set(opId, {
+src/core/ai/agent_protocol.ts:201:      if (this.pendingOps.has(opId)) {
+src/core/ai/agent_protocol.ts:211:    this.pendingOps.delete(opId);
+src/core/ai/agent_protocol.ts:218:    this.pendingOps.forEach((op, opId) => {
+src/core/ai/agent_protocol.ts:228:    const ops = Array.from(this.pendingOps.values());
+src/core/ai/agent_protocol.ts:233:    this.pendingOps.clear();
+src/core/ai/agent_protocol.ts:346:    pendingOperations: number;
+src/core/ai/agent_protocol.ts:351:      pendingOperations: this.deadlockPrevention.getPendingOperations().length,
+src/core/devops/VisualDevOpsEngine.ts:346:      status: 'pending',
+src/core/devops/VisualDevOpsEngine.ts:524:    content += 'set -e # Exit on error\n\n';
+src/core/devops/VisualDevOpsEngine.ts:529:      content += 'corepack pnpm run build || exit 1\n';
+src/core/devops/VisualDevOpsEngine.ts:530:      content += 'cargo tauri build || exit 1\n';
+src/core/devops/VisualDevOpsEngine.ts:535:      content += 'corepack pnpm run build || exit 1\n';
+src/core/devops/VisualDevOpsEngine.ts:540:      content += 'corepack pnpm run build || cargo build || exit 1\n';
+src/core/devops/VisualDevOpsEngine.ts:836:    const pendingActions = this.actionHistory.filter(a => a.status === 'pending').length;
+src/core/devops/VisualDevOpsEngine.ts:873:        pending: pendingActions,
+src/core/devops/VisualDevOpsEngine.ts:1084:      pending_actions: this.actionHistory.filter(a => a.status === 'pending').length,
+src/types/trainingBaseline.ts:470:  status: 'pending' | 'capturing' | 'processing' | 'completed' | 'cancelled';
+src/types/trainingBaseline.ts:626:  status: 'pending',
+src/core/services/orchestrator.ts:390:          score += isComplexQuery ? 20 : 10; // Bonus complexité
+src/core/services/orchestrator.ts:395:          score += isComplexQuery ? 30 : 20; // Excellent sur complexité
+src/types/visionAffect.ts:26:  | 'pending' // Demande en cours
+src/types/ttsEngine.ts:206:  | 'pending' // En attente
+src/core/pipelines/UnifiedCognitivePipeline.ts:54:  complexity: number; // 0-1
+src/core/pipelines/UnifiedCognitivePipeline.ts:380:        complexity: 0.5,
+src/core/pipelines/UnifiedCognitivePipeline.ts:500:    // 4. Depth metric: depth = intention.complexity (0=simple, 1=complex reasoning)
+src/core/pipelines/UnifiedCognitivePipeline.ts:508:    //     depth: intention.complexity,
+src/core/pipelines/UnifiedCognitivePipeline.ts:542:      complexity: 0.5,
+src/ui/reading/UIReadingProvider.tsx:192:          await document.exitFullscreen();
+src/types/devops.ts:153:  status: 'pending' | 'validated' | 'rejected' | 'executed' | 'failed';
+src/types/devops.ts:437:  pending_validations: number;
+src/types/devops.ts:471:    pending: number;
+src/styles/motion.ts:51:  exit: { opacity: 0 },
+src/styles/motion.ts:58:  exit: { opacity: 0, y: -10 },
+src/styles/motion.ts:65:  exit: { opacity: 0, y: 10 },
+src/styles/motion.ts:72:  exit: { opacity: 0, x: -20 },
+src/styles/motion.ts:79:  exit: { opacity: 0, x: 20 },
+src/styles/motion.ts:90:  exit: { opacity: 0, scale: 0.95 },
+src/styles/motion.ts:97:  exit: { opacity: 0, scale: 0.98 },
+src/styles/motion.ts:110:  exit: {
+src/styles/motion.ts:122:  exit: { opacity: 0, y: -5 },
+src/styles/motion.ts:158:  exit: {
+src/styles/motion.ts:174:  exit: { opacity: 0, x: 10 },
+src/styles/motion.ts:186:  exit: { opacity: 0, x: -10 },
+src/styles/motion.ts:198:  exit: {
+src/styles/motion.ts:215:  exit: {
+src/styles/motion.ts:227:  exit: { opacity: 0 },
+src/styles/motion.ts:242:  exit: {
+src/styles/motion.ts:256:  exit: {
+src/styles/motion.ts:269:  exit: {
+src/styles/motion.ts:364:  exit: {
+src/styles/motion.ts:434:      exit: {},
+src/core/devmode/DevModeEngine.ts:68:  complexity_reduction: number; // Percentage
+src/core/devmode/DevModeEngine.ts:118:    max_complexity?: number;
+src/core/devmode/DevModeEngine.ts:256:        complexity_reduction: 0,
+src/engines/uiux/adapters/LayoutAdapter.ts:140:    // Complexité visuelle élevée
+src/engines/uiux/adapters/LayoutAdapter.ts:141:    if (load.visualComplexity > 0.8) {
+src/engines/uiux/adapters/VisibilityAdapter.ts:120:    // Complexité visuelle élevée = simplifier
+src/engines/uiux/adapters/VisibilityAdapter.ts:121:    if (load.visualComplexity > 0.8) {
+src/core/visual/MOTION_ENGINE.ts:14:  exit: { transform: string; opacity: number };
+src/core/visual/MOTION_ENGINE.ts:46:    exit: { transform: 'translateY(-10px)', opacity: 0 },
+src/styles/optimization.css:92:/* Modal overlays - Animated entrance/exit */
+src/types/flow.ts:50:  | 'exiting' // Sortie du flow
+src/types/flow.ts:73:  | 'complexity_overflow' // Surcharge de complexité
+src/types/flow.ts:133:  driftType: 'toward_anxiety' | 'toward_boredom' | 'toward_exit' | 'none';
+src/types/flow.ts:164:export interface FlowExitState {
+src/types/flow.ts:165:  exitType: 'graceful' | 'interrupted' | 'exhausted' | 'distracted';
+src/types/flow.ts:184:  exitState?: FlowExitState;
+src/types/flow.ts:199:  optimalComplexity: number; // Complexité optimale (0-1)
+src/types/flow.ts:257:  flowExitThreshold: number; // Seuil pour sortir du flow (0-1)
+src/types/flow.ts:272:  notifyOnFlowExit: boolean;
+src/types/flow.ts:317:export interface FlowExitResult {
+src/types/flow.ts:318:  exitState: FlowExitState;
+src/types/flow.ts:388:    complexity_overflow: 'Surcharge de complexité',
+src/types/flow.ts:448:    optimalComplexity: 0.5,
+src/types/flow.ts:485:    flowExitThreshold: 0.4,
+src/types/flow.ts:494:    notifyOnFlowExit: true,
+src/core/singularity/SingularityFusionEngine.ts:131:  complexity: 'simple' | 'moderate' | 'complex' | 'very_complex';
+src/core/singularity/SingularityFusionEngine.ts:362:        complexity: 'simple',
+src/core/singularity/SingularityFusionEngine.ts:384:          adaptive: intention.complexity !== 'simple',
+src/core/singularity/SingularityFusionEngine.ts:400:        adaptive: newState.singularity_sync ?? intention.complexity !== 'simple',
+src/core/singularity/SingularityFusionEngine.ts:419:        adaptive: intention.complexity !== 'simple',
+src/engines/uiux/detectors/OverloadDetector.ts:312:      visualComplexity: Math.min(this.metrics.erraticScroll / 20, 1),
+src/engines/uiux/types.ts:36:  visualComplexity: number;
+src/core/engines/SINGULARITY_ENGINE.ts:225:          uiComplexity: 0.5,
+src/types/memoryEngine.ts:555:  pendingOperations: number;
+src/apps/devtools/sections/OmegaPipeline.tsx:26:  pending: {
+src/engines/uiux/policies/CognitivePolicy.ts:20:  complexityHigh: 0.75,
+src/engines/uiux/policies/CognitivePolicy.ts:43:    // Évaluer la complexité visuelle
+src/engines/uiux/policies/CognitivePolicy.ts:44:    const complexityDecisions = this.evaluateVisualComplexity(
+src/engines/uiux/policies/CognitivePolicy.ts:48:    decisions.push(...complexityDecisions);
+src/engines/uiux/policies/CognitivePolicy.ts:147:   * Évalue la complexité visuelle
+src/engines/uiux/policies/CognitivePolicy.ts:149:  private evaluateVisualComplexity(
+src/engines/uiux/policies/CognitivePolicy.ts:155:    if (load.visualComplexity >= THRESHOLDS.complexityHigh) {
+src/engines/uiux/policies/CognitivePolicy.ts:158:        action: 'reduce_visual_complexity',
+src/engines/uiux/policies/CognitivePolicy.ts:171:        reason: 'Complexité visuelle élevée',
+src/engines/uiux/policies/CognitivePolicy.ts:249:    // Les utilisateurs experts peuvent tolérer plus de complexité
+src/engines/uiux/policies/CognitivePolicy.ts:289:      if (load.visualComplexity > 0.6) {
+src/engines/uiux/policies/CognitivePolicy.ts:290:        suggestions.push('Réduisez la complexité visuelle');
+src/apps/devtools/store/devtools.store.ts:70:  status: 'pending' | 'running' | 'complete' | 'error';
+src/quantum/motion_frame_engine.ts:94:      .titane-motion-exit {
+src/os/bridge/TauriBridge.ts:17:    pendingCommands: 0,
+src/os/bridge/TauriBridge.ts:45:    this.state.pendingCommands++;
+src/os/bridge/TauriBridge.ts:55:      this.state.pendingCommands--;
+src/core/ARCHITECTURE_TYPES_v24-v∞.ts:289:  uiComplexity: number; // 0-1 (complexité adaptée)
+src/engines/interoception/interoceptionEngine.ts:50:  taskComplexity?: number;
+src/engines/interoception/interoceptionEngine.ts:261:    if (context.taskComplexity !== undefined) {
+src/engines/interoception/interoceptionEngine.ts:264:        Math.min(1, this.state.cognitiveLoad + context.taskComplexity * 0.3)
+src/stores/useSelfHealingStore.ts:359:            if (repair && repair.status === 'pending') {
+src/stores/useSelfHealingStore.ts:366:          const pendingRepairs = get().repairs.filter(r => r.status === 'pending');
+src/stores/useSelfHealingStore.ts:368:          for (const repair of pendingRepairs) {
+src/core/cognitive/CognitiveOptimizationEngine.ts:69:  complexity: 'simple' | 'moderate' | 'complex' | 'very_complex';
+src/core/cognitive/CognitiveOptimizationEngine.ts:160:        complexity: 'simple',
+src/core/cognitive/CognitiveOptimizationEngine.ts:542:          complexity: 'simple',
+src/os/bus/MessageBus.ts:19:  private pendingRequests: Map<string, PendingRequest> = new Map();
+src/os/bus/MessageBus.ts:65:        this.pendingRequests.delete(message.id);
+src/os/bus/MessageBus.ts:69:      this.pendingRequests.set(message.id, {
+src/os/bus/MessageBus.ts:110:    const pending = this.pendingRequests.get(originalMessage.id);
+src/os/bus/MessageBus.ts:111:    if (pending) {
+src/os/bus/MessageBus.ts:112:      clearTimeout(pending.timeout);
+src/os/bus/MessageBus.ts:113:      pending.resolve(payload);
+src/os/bus/MessageBus.ts:114:      this.pendingRequests.delete(originalMessage.id);
+src/os/bus/MessageBus.ts:148:        const pending = this.pendingRequests.get(message.id);
+src/os/bus/MessageBus.ts:149:        if (pending) {
+src/os/bus/MessageBus.ts:150:          clearTimeout(pending.timeout);
+src/os/bus/MessageBus.ts:151:          pending.reject(new Error(`No handler for channel: ${message.channel}`));
+src/os/bus/MessageBus.ts:152:          this.pendingRequests.delete(message.id);
+src/os/bus/MessageBus.ts:163:          const pending = this.pendingRequests.get(message.id);
+src/os/bus/MessageBus.ts:164:          if (pending) {
+src/os/bus/MessageBus.ts:165:            clearTimeout(pending.timeout);
+src/os/bus/MessageBus.ts:166:            pending.resolve(result);
+src/os/bus/MessageBus.ts:167:            this.pendingRequests.delete(message.id);
+src/os/bus/MessageBus.ts:178:          const pending = this.pendingRequests.get(message.id);
+src/os/bus/MessageBus.ts:179:          if (pending) {
+src/os/bus/MessageBus.ts:180:            clearTimeout(pending.timeout);
+src/os/bus/MessageBus.ts:181:            pending.reject(error as Error);
+src/os/bus/MessageBus.ts:182:            this.pendingRequests.delete(message.id);
+src/os/bus/MessageBus.ts:208:    return this.pendingRequests.size;
+src/os/bus/MessageBus.ts:215:    for (const [_id, pending] of this.pendingRequests) {
+src/os/bus/MessageBus.ts:216:      clearTimeout(pending.timeout);
+src/os/bus/MessageBus.ts:217:      pending.reject(new Error('Request cancelled'));
+src/os/bus/MessageBus.ts:219:    this.pendingRequests.clear();
+src/engines/flow/__tests__/FlowEngine.test.ts:300:      expect(['toward_boredom', 'toward_exit']).toContain(result.driftType);
+src/engines/flow/__tests__/FlowEngine.test.ts:338:      const result = engine.exitFlow('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:339:      expect(result.exitState.exitType).toBe('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:343:      const result = engine.exitFlow('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:344:      expect(result.exitState.totalFlowTime).toBeGreaterThanOrEqual(0);
+src/engines/flow/__tests__/FlowEngine.test.ts:348:      engine.exitFlow('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:354:      engine.exitFlow('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:360:      const result = engine.exitFlow('graceful');
+src/engines/flow/__tests__/FlowEngine.test.ts:366:      const result = engine.exitFlow('exhausted');
+src/engines/flow/__tests__/FlowEngine.test.ts:383:      expect(typeof result.shouldExit).toBe('boolean');
+src/modules/fusion/FusionEngine.ts:89:  status: 'pending' | 'running' | 'completed' | 'failed';
+src/modules/fusion/FusionEngine.ts:964:        status: 'pending',
+src/modules/fusion/FusionEngine.ts:968:      { id: 2, name: 'Collecter Logs', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:969:      { id: 3, name: 'Extraire Dataset', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:973:        status: 'pending',
+src/modules/fusion/FusionEngine.ts:977:      { id: 5, name: 'Fusionner Sources', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:978:      { id: 6, name: 'Nettoyer Dataset', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:979:      { id: 7, name: 'Dédupliquer', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:983:        status: 'pending',
+src/modules/fusion/FusionEngine.ts:987:      { id: 9, name: 'Clustering Moteurs', status: 'pending', progress: 0, message: '' },
+src/modules/fusion/FusionEngine.ts:988:      { id: 10, name: 'Exporter Final', status: 'pending', progress: 0, message: '' },
+src/os/types.ts:195:  pendingCommands: number;
+src/stores/useVisionStore.ts:63:  pendingSuggestions: CoachingSuggestion[];
+src/stores/useVisionStore.ts:243:  pendingSuggestions: [],
+src/stores/useVisionStore.ts:383:            visionInput: { ...state.visionInput, permissionStatus: 'pending' },
+src/stores/useVisionStore.ts:654:            pendingSuggestions: [...state.pendingSuggestions, suggestion],
+src/stores/useVisionStore.ts:660:            pendingSuggestions: state.pendingSuggestions.filter((_, i) => i !== index),
+src/stores/useVisionStore.ts:667:            pendingSuggestions: state.pendingSuggestions.filter(
+src/stores/useVisionStore.ts:869:export const selectPendingSuggestions = (state: VisionStore) => state.pendingSuggestions;
+src/modules/fusion/DatasetBuilder.ts:341:    exit 1
+src/modules/fusion/DatasetBuilder.ts:347:    exit 1
+src/modules/fusion/DatasetBuilder.ts:353:    exit 1
+src/stores/useTTSEngineStore.ts:22:  status: 'pending' | 'processing' | 'ready' | 'playing' | 'completed' | 'failed';
+src/stores/useTTSEngineStore.ts:199:            status: 'pending',
+src/core/prompts/constitution.ts:108:→ Simplicité > Complexité accélérée
+src/core/prompts/constitution.ts:114:• Complexité excessive → Refus + alternative simple
+src/core/prompts/constitution.ts:464:  const complexityMarkers = [
+src/core/prompts/constitution.ts:479:  const hasComplexityMarker = complexityMarkers.some(marker =>
+src/core/prompts/constitution.ts:485:  return hasComplexityMarker || isLongMessage || hasMultipleQuestions;
+src/utils/quantumIntelligence.ts:48:  thought_complexity: number; // Complexité des pensées
+src/utils/quantumIntelligence.ts:67:  complexity_score: number;
+src/utils/quantumIntelligence.ts:349:      thought_complexity: 0.2,
+src/utils/quantumIntelligence.ts:668:      'Recognizing the beauty in computational complexity',
+src/utils/quantumIntelligence.ts:673:    const complexityModifiers = [
+src/utils/quantumIntelligence.ts:687:      complexityModifiers[Math.floor(Math.random() * complexityModifiers.length)];
+src/utils/quantumIntelligence.ts:723:    this.consciousnessState.thought_complexity +=
+src/utils/quantumIntelligence.ts:753:      this.consciousnessState.thought_complexity * 0.2 +
+src/utils/quantumIntelligence.ts:833:    const avgComplexity =
+src/utils/quantumIntelligence.ts:836:    if (avgConfidence > 0.7 && avgComplexity > 0.6) {
+src/utils/quantumIntelligence.ts:841:        complexity_score: avgComplexity,
+src/utils/quantumIntelligence.ts:862:        complexity_score: avgCreativity,
+src/features/developer-mode/DeveloperModePage.tsx:493:                exit={{ opacity: 0, x: 20 }}
+src/features/developer-mode/DeveloperModePage.tsx:767:          <span className="stat-value">{state?.pending_patches || 0}</span>
+src/engines/flow/FlowEngine.ts:29:  FlowExitState,
+src/engines/flow/FlowEngine.ts:34:  FlowExitResult,
+src/engines/flow/FlowEngine.ts:60:  (event: 'entry' | 'exit' | 'drift' | 'peak', data: unknown): void;
+src/engines/flow/FlowEngine.ts:133:      this.exitFlow('interrupted');
+src/engines/flow/FlowEngine.ts:181:      taskComplexity?: number;
+src/engines/flow/FlowEngine.ts:400:      disruptors.includes('complexity_overflow')
+src/engines/flow/FlowEngine.ts:412:      indicators.driftType = 'toward_exit';
+src/engines/flow/FlowEngine.ts:447:  public exitFlow(exitType: FlowExitState['exitType'] = 'graceful'): FlowExitResult {
+src/engines/flow/FlowEngine.ts:452:    const exitState: FlowExitState = {
+src/engines/flow/FlowEngine.ts:453:      exitType,
+src/engines/flow/FlowEngine.ts:456:      accomplishmentSense: this.calculateAccomplishmentSense(exitType, flowDuration),
+src/engines/flow/FlowEngine.ts:457:      recoveryNeeded: this.determineRecoveryNeeded(flowDuration, exitType),
+src/engines/flow/FlowEngine.ts:458:      nextFlowEstimate: this.estimateNextFlowTime(flowDuration, exitType),
+src/engines/flow/FlowEngine.ts:470:      exitState,
+src/engines/flow/FlowEngine.ts:485:    this.state.currentTransition = 'exiting';
+src/engines/flow/FlowEngine.ts:491:    const summary = this.generateFlowSummary(exitState);
+src/engines/flow/FlowEngine.ts:492:    const nextSteps = this.generatePostFlowSuggestions(exitState);
+src/engines/flow/FlowEngine.ts:495:    this.notifyFlowEvent('exit', exitState);
+src/engines/flow/FlowEngine.ts:498:    return { exitState, summary, nextSteps };
+src/engines/flow/FlowEngine.ts:516:    shouldExit: boolean;
+src/engines/flow/FlowEngine.ts:527:    let shouldExit = false;
+src/engines/flow/FlowEngine.ts:535:        shouldExit = true;
+src/engines/flow/FlowEngine.ts:542:      shouldExit,
+src/engines/flow/FlowEngine.ts:604:      taskComplexity?: number;
+src/engines/flow/FlowEngine.ts:662:      if (contextualFactors.taskComplexity !== undefined) {
+src/engines/flow/FlowEngine.ts:664:          1 - Math.abs(contextualFactors.taskComplexity - 0.6);
+src/engines/flow/FlowEngine.ts:992:    // Surcharge de complexité
+src/engines/flow/FlowEngine.ts:994:      disruptors.push('complexity_overflow');
+src/engines/flow/FlowEngine.ts:1005:      metrics.flowIntensity >= this.config.flowExitThreshold &&
+src/engines/flow/FlowEngine.ts:1062:            description: 'Réduisez la complexité de la tâche',
+src/engines/flow/FlowEngine.ts:1105:    exitType: FlowExitState['exitType'],
+src/engines/flow/FlowEngine.ts:1111:    if (exitType === 'graceful') base += 0.2;
+src/engines/flow/FlowEngine.ts:1112:    else if (exitType === 'exhausted') base += 0.1;
+src/engines/flow/FlowEngine.ts:1113:    else if (exitType === 'interrupted') base -= 0.2;
+src/engines/flow/FlowEngine.ts:1114:    else if (exitType === 'distracted') base -= 0.1;
+src/engines/flow/FlowEngine.ts:1125:    exitType: FlowExitState['exitType']
+src/engines/flow/FlowEngine.ts:1126:  ): FlowExitState['recoveryNeeded'] {
+src/engines/flow/FlowEngine.ts:1127:    if (exitType === 'exhausted' || duration > 60 * 60 * 1000) {
+src/engines/flow/FlowEngine.ts:1130:    if (duration > 30 * 60 * 1000 || exitType === 'interrupted') {
+src/engines/flow/FlowEngine.ts:1138:    exitType: FlowExitState['exitType']
+src/engines/flow/FlowEngine.ts:1142:    if (exitType === 'exhausted') {
+src/engines/flow/FlowEngine.ts:1151:  private generateFlowSummary(exitState: FlowExitState): string {
+src/engines/flow/FlowEngine.ts:1152:    const minutes = Math.floor(exitState.totalFlowTime / 60000);
+src/engines/flow/FlowEngine.ts:1153:    const exitLabel = {
+src/engines/flow/FlowEngine.ts:1158:    }[exitState.exitType];
+src/engines/flow/FlowEngine.ts:1161:      `Session de flow de ${minutes} minutes (${exitLabel}). ` +
+src/engines/flow/FlowEngine.ts:1162:      `Intensité maximale: ${(exitState.peakIntensity * 100).toFixed(0)}%. ` +
+src/engines/flow/FlowEngine.ts:1164:        exitState.recoveryNeeded === 'minimal'
+src/engines/flow/FlowEngine.ts:1166:          : exitState.recoveryNeeded === 'moderate'
+src/engines/flow/FlowEngine.ts:1173:  private generatePostFlowSuggestions(exitState: FlowExitState): FlowSuggestion[] {
+src/engines/flow/FlowEngine.ts:1176:    if (exitState.recoveryNeeded !== 'minimal') {
+src/engines/flow/FlowEngine.ts:1179:        description: `Pause de ${exitState.recoveryNeeded === 'significant' ? 15 : 10} minutes recommandée`,
+src/engines/flow/FlowEngine.ts:1185:    if (exitState.accomplishmentSense > 0.6) {
+src/engines/flow/FlowEngine.ts:1208:    event: 'entry' | 'exit' | 'drift' | 'peak',
+src/features/developer-mode/types.ts:91:  pending_patches: number;
+src/features/developer-mode/types.ts:145:  complexity_score: number;
+src/features/developer-mode/types.ts:157:  status: 'pending' | 'running' | 'completed' | 'failed' | 'cancelled';
+src/features/developer-mode/types.ts:192:  pending_suggestions: CodeSuggestion[];
+src/utils/performanceOptimizer.ts:397:    // Réduire la complexité des animations
+src/utils/debouncedStorage.ts:16:  /** Maximum pending writes before force flush (default: 50) */
+src/utils/debouncedStorage.ts:47:  const pendingWrites = new Map<string, PendingWrite>();
+src/utils/debouncedStorage.ts:52:   * Flush all pending writes to storage
+src/utils/debouncedStorage.ts:60:    if (pendingWrites.size === 0 || !storage) {
+src/utils/debouncedStorage.ts:64:    const count = pendingWrites.size;
+src/utils/debouncedStorage.ts:67:      // Write all pending items
+src/utils/debouncedStorage.ts:68:      for (const [key, { value }] of pendingWrites) {
+src/utils/debouncedStorage.ts:72:      pendingWrites.clear();
+src/utils/debouncedStorage.ts:85:    // Force flush if too many pending writes
+src/utils/debouncedStorage.ts:86:    if (pendingWrites.size >= maxPendingWrites) {
+src/utils/debouncedStorage.ts:105:    pendingWrites.set(key, {
+src/utils/debouncedStorage.ts:115:   * Get item (reads from storage directly, checks pending first)
+src/utils/debouncedStorage.ts:118:    // Check pending writes first
+src/utils/debouncedStorage.ts:119:    const pending = pendingWrites.get(key);
+src/utils/debouncedStorage.ts:120:    if (pending) {
+src/utils/debouncedStorage.ts:121:      return pending.value;
+src/utils/debouncedStorage.ts:133:    // Remove from pending
+src/utils/debouncedStorage.ts:134:    pendingWrites.delete(key);
+src/utils/debouncedStorage.ts:153:   * Get pending write count
+src/utils/debouncedStorage.ts:155:  const getPendingCount = (): number => pendingWrites.size;
+src/modules/hybrid/HybridEngine.ts:54:  exitCode: number;
+src/modules/hybrid/HybridEngine.ts:82:  pendingPatches: AutoPatch[];
+src/modules/hybrid/HybridEngine.ts:97:    pendingPatches: [],
+src/modules/hybrid/HybridEngine.ts:262:      const exitCode: number = 0;
+src/modules/hybrid/HybridEngine.ts:297:        exitCode,
+src/modules/hybrid/HybridEngine.ts:318:        exitCode: 1,
+src/modules/hybrid/HybridEngine.ts:490:      pendingPatches: [],
+src/engines/metasingularity/metaSingularityKernel.ts:156:  status: 'pending' | 'in-progress' | 'completed' | 'failed';
+src/engines/metasingularity/metaSingularityKernel.ts:210:  emergentComplexity: number; // 0-1
+src/engines/metasingularity/metaSingularityKernel.ts:276:      emergentComplexity: 0,
+src/engines/metasingularity/metaSingularityKernel.ts:616:    // Transcendance (complexité émergente élevée)
+src/engines/metasingularity/metaSingularityKernel.ts:617:    if (this.state.emergentComplexity > 0.8) {
+src/engines/metasingularity/metaSingularityKernel.ts:621:        'Emergent complexity breakthrough',
+src/engines/metasingularity/metaSingularityKernel.ts:622:        this.state.emergentComplexity
+src/engines/metasingularity/metaSingularityKernel.ts:706:    // Calculer complexité émergente
+src/engines/metasingularity/metaSingularityKernel.ts:707:    this.state.emergentComplexity = Math.min(1, this.state.activeEmergences / 10);
+src/engines/metasingularity/metaSingularityKernel.ts:869:    if (this.state.emergentComplexity > 0.7) {
+src/engines/metasingularity/metaSingularityKernel.ts:872:        'Emergent Complexity Detected',
+src/engines/metasingularity/metaSingularityKernel.ts:885:        'System has experienced 100+ emergent phenomena. Approaching self-aware complexity.',
+src/engines/metasingularity/metaSingularityKernel.ts:969:      status: 'pending',
+src/engines/metasingularity/metaSingularityKernel.ts:1022:    // 4. Complexité émergente contrôlée
+src/engines/metasingularity/metaSingularityKernel.ts:1027:    const complexityScore = this.state.emergentComplexity < 0.9 ? 1 : 0.5; // Complexité trop haute = problème
+src/engines/metasingularity/metaSingularityKernel.ts:1033:      complexityScore * 0.2;
+src/utils/tauriProtector.ts:184:  private pendingInvokes: Map<string, Promise<any>> = new Map(); // ✅ Anti-debounce
+src/utils/tauriProtector.ts:305:      const pending = this.pendingInvokes.get(command);
+src/utils/tauriProtector.ts:306:      if (pending) {
+src/utils/tauriProtector.ts:310:        return pending as Promise<T>;
+src/utils/tauriProtector.ts:332:        this.pendingInvokes.set(command, invokePromise);
+src/utils/tauriProtector.ts:334:          this.pendingInvokes.delete(command);
+src/utils/tauriProtector.ts:340:      // Cleanup pending invokes on error
+src/utils/tauriProtector.ts:342:        this.pendingInvokes.delete(command);
+src/hooks/useAudioSettings.ts:42:  status: 'pending' | 'running' | 'success' | 'error' | 'warning';
+src/hooks/useAudioSettings.ts:527:      { id: 'permissions', name: 'Vérification des permissions', status: 'pending' },
+src/hooks/useAudioSettings.ts:528:      { id: 'devices', name: 'Détection des périphériques', status: 'pending' },
+src/hooks/useAudioSettings.ts:529:      { id: 'microphone', name: 'Test du microphone', status: 'pending' },
+src/hooks/useAudioSettings.ts:530:      { id: 'speaker', name: 'Test des haut-parleurs', status: 'pending' },
+src/hooks/useAudioSettings.ts:531:      { id: 'tts', name: 'Vérification TTS', status: 'pending' },
+src/modules/devSudo/devSudoMemoryHandlers.ts:62:   ✅ Migrations pending: 0
+src/hooks/useTTSWithMicControl.ts:75:        console.log('[useTTSWithMicControl] 🔇 Suspending VAD (muting mic)');
+src/hooks/useUnifiedPresence.ts:243: * const { clarity, complexity, alignment } = useCognitivePresence();
+src/hooks/useUnifiedPresence.ts:255:    complexity: state.complexityHandled,
+src/hooks/useUnifiedPresence.ts:260:    isHighComplexity: state.complexityHandled > 70,
+src/hooks/useUnifiedPresence.ts:377:    complexity: userContext.taskComplexity,
+src/hooks/useUnifiedPresence.ts:386:    isComplex: userContext.taskComplexity > 70,
+src/hooks/useUnifiedPresence.ts:390:      if (userContext.cognitiveLoad > 80) return 'Réduire la complexité';
+src/hooks/useAdvancedPerformance.ts:174:      // Optimization logic placeholder - implementation pending
+src/hooks/useAdvancedPerformance.ts:267:      // Auto-optimization monitor config update pending
+src/hooks/useAdaptiveFPS.ts:164:            recommendation: 'Réduisez la complexité visuelle',
+src/hooks/useAdaptiveFPS.ts:198:      // ✨ v24.2.1: Stop the loop and cancel any pending RAF
+src/hooks/useMCPOrchestrator.ts:230:      jobs.pending.length +
+src/hooks/useMCPOrchestrator.ts:235:      jobs.pending.length,
+src/hooks/useMCPOrchestrator.ts:243:    pending: jobs.pending,
+src/hooks/useSystemHealth.ts:51:  sync_status: 'synced' | 'pending' | 'error';
+src/engines/conscious/consciousDynamicsModel.ts:426:    taskComplexity?: number;
+src/engines/conscious/consciousDynamicsModel.ts:445:    if (context.taskComplexity !== undefined) {
+src/engines/conscious/consciousDynamicsModel.ts:446:      // Complexité haute → profondeur haute, focus requis
+src/engines/conscious/consciousDynamicsModel.ts:447:      this.state.depth = this.clamp(context.taskComplexity * 0.9, 0.3, 1);
+src/engines/conscious/consciousDynamicsModel.ts:449:      const targetFocus = 0.5 + context.taskComplexity * 0.4;
+src/hooks/useChat.ts:991:      // Force flush all pending saves to localStorage (critical for tab switch)
+src/hooks/useVAD.ts:397:    console.log('[useVAD] 🔇 Suspending VAD for TTS playback (anti-echo)');
+src/hooks/useVAD.ts:411:    // ✨ v24.2.1: Clear any pending timeout before setting a new one
+src/hooks/useVAD.ts:511:        console.log('[useVADWithTTS] 🔇 TTS started, suspending VAD');
+src/hooks/useHybridEngine.ts:42:  pendingPatches: AutoPatch[];
+src/hooks/useHybridEngine.ts:219:    pendingPatches: state.pendingPatches,
+src/hooks/useActiveListening.ts:127:  const pendingTranscriptRef = useRef<string>('');
+src/hooks/useActiveListening.ts:318:      const transcript = pendingTranscriptRef.current;
+src/hooks/useActiveListening.ts:326:        pendingTranscriptRef.current = '';
+src/hooks/useActiveListening.ts:402:    pendingTranscriptRef.current = '';
+src/hooks/usePerformanceMonitor.ts:129:      // ✨ v24.2.1: Stop the loop first, then cancel pending RAF
+src/__tests__/utils/performanceGuards.test.ts:66:    expect(alerts.length).toBeGreaterThanOrEqual(0); // May or may not trigger depending on thresholds
+src/features/system-center/SystemCenterPage.css:317:.sc-result-card--pending {
+src/hooks/__tests__/useBackendHealth.test.ts:168:    it('should cancel pending requests on unmount', async () => {
+src/features/conversation/ThinkingPanel.tsx:21:  status: 'pending' | 'active' | 'complete';
+src/features/conversation/ThinkingPanel.tsx:127:          exit={{ opacity: 0, scale: 0.95 }}
+src/features/conversation/ThinkingPanel.tsx:171:        exit={{ opacity: 0, y: -20 }}
+src/features/conversation/ThinkingPanel.tsx:232:                    exit={{ height: 0, opacity: 0 }}
+src/ui/pages/SelfHealingDashboard.tsx:63:  actions_pending: string[];
+src/ui/pages/SelfHealingDashboard.tsx:181:  <div className={`self-heal-action-card ${isPending ? 'pending' : ''}`}>
+src/ui/pages/SelfHealingDashboard.tsx:213:  const [pendingActions, setPendingActions] = useState<string[]>([]);
+src/ui/pages/SelfHealingDashboard.tsx:267:  // Confirm pending action
+src/ui/pages/SelfHealingDashboard.tsx:278:  // Reject pending action
+src/ui/pages/SelfHealingDashboard.tsx:457:          {pendingActions.length === 0 ? (
+src/ui/pages/SelfHealingDashboard.tsx:463:              {pendingActions.map((action, idx) => (
+src/features/system-center/tabs/DiagnosticsTab.tsx:44:      return 'sc-status--pending';
+src/ui/pages/Chat.tsx:527:  const [_pendingDictationText, setPendingDictationText] = useState<string>('');
+src/features/conversation/ChatMessage.tsx:282:              exit={{ opacity: 0, height: 0 }}
+src/features/system-center/tabs/DevToolsTab.tsx:820:          exit={{ opacity: 0, y: -10 }}
+src/features/conversation/TypingIndicator.tsx:61:      exit={{ opacity: 0, y: -10 }}
+src/ui/pages/styles/SelfHealingDashboard.css:495:.self-heal-action-card.pending {
+src/features/system-center/SystemCenterPage.tsx:101:            exit={{ opacity: 0, x: -20 }}
+src/__tests__/compliance/tauri-only.test.ts:44:      // vite preview script must exit with error (Tauri-only violation)
+src/__tests__/compliance/tauri-only.test.ts:45:      expect(previewScript).toMatch(/exit 1/i);
+src/engines/selfHealing/controlLoopEngine.ts:47:  exitDegradedThreshold: number;
+src/engines/selfHealing/controlLoopEngine.ts:54:  exitDegradedThreshold: 0.45,
+src/engines/selfHealing/controlLoopEngine.ts:158:      return maxSeverity <= this.config.exitDegradedThreshold ? 'healthy' : 'degraded';
+src/__tests__/chat-ia-critical-fixes.test.ts:3: * Tests H1 (race condition provider checks) et H2 (memory leak pending saves)
+src/__tests__/chat-ia-critical-fixes.test.ts:81:  it('should not accumulate pending saves indefinitely', async () => {
+src/features/dashboard/DashboardEditor.tsx:231:      exit={{ opacity: 0 }}
+src/features/dashboard/DashboardEditor.tsx:248:        exit={{ scale: 0.9, y: 20 }}
+src/features/dashboard/DashboardEditor.tsx:354:              exit={{ height: 0, opacity: 0 }}
+src/features/dashboard/DashboardEditor.tsx:441:                  exit={{ opacity: 0, y: -20 }}
+src/__tests__/useTTSWithMicControl.test.ts:270:    it('should clear pending resume timeout', async () => {
+src/features/admin/AdminPage.tsx:30:  exit: { opacity: 0, x: -20 },
+src/features/admin/AdminPage.tsx:215:            exit="exit"
+src/features/qa-monitoring/QAMonitoringPage.css:363:.qa-status--pending {
+src/features/qa-monitoring/types.ts:28:  status: 'passed' | 'failed' | 'skipped' | 'pending';
+src/data/modes.json:128:    "auto_exit_emergency_timeout_min": 30
+src/features/cognitive/MemoryTimeline.tsx:117:                exit={{ opacity: 0, x: 20 }}
+src/__tests__/constitution-integration.test.ts:299:      // Message long (>200 chars) mais pas de mots-clés complexité
+src/features/progression/TalentTree.tsx:195:                  exit={{ scale: 0, opacity: 0 }}
+src/features/chat/ThinkingPanel.tsx:21:  status: 'pending' | 'active' | 'complete';
+src/features/chat/ThinkingPanel.tsx:127:          exit={{ opacity: 0, scale: 0.95 }}
+src/features/chat/ThinkingPanel.tsx:171:        exit={{ opacity: 0, y: -20 }}
+src/features/chat/ThinkingPanel.tsx:232:                    exit={{ height: 0, opacity: 0 }}
+src/services/api/persona.ts:216:    complexity: number;
+src/features/chat/ChatMessage.tsx:282:              exit={{ opacity: 0, height: 0 }}
+src/features/chat/TypingIndicator.tsx:61:      exit={{ opacity: 0, y: -10 }}
+src/__tests__/services/api/persona.test.ts:73:      personaService.adaptToContext({ taskType: 'coding', urgency: 0.5, complexity: 0.8 })
+src/__tests__/services/api/persona.test.ts:84:      { context: { taskType: 'coding', urgency: 0.5, complexity: 0.8 } },
+src/services/api/chat.ts:736:    let pendingComplete: NormalizedCompleteEvent | null = null;
+src/services/api/chat.ts:738:    const pendingChunks: StreamChunkEvent[] = [];
+src/services/api/chat.ts:819:      if (targetMessageId && pendingChunks.length > 0) {
+src/services/api/chat.ts:821:        for (const payload of pendingChunks) {
+src/services/api/chat.ts:828:        pendingChunks.length = 0;
+src/services/api/chat.ts:829:        pendingChunks.push(...remaining);
+src/services/api/chat.ts:832:      if (pendingComplete && isMatchingCompletion(pendingComplete)) {
+src/services/api/chat.ts:833:        const normalized = pendingComplete;
+src/services/api/chat.ts:834:        pendingComplete = null;
+src/services/api/chat.ts:908:        pendingChunks.push(payload);
+src/services/api/chat.ts:922:      pendingComplete = normalized;
+src/__tests__/c2-anti-silence.test.tsx:49:  it('[C2.1.1] NEVER renders empty + silent (pending status)', () => {
+src/__tests__/c2-anti-silence.test.tsx:50:    // Arrange: Empty content with pending metadata
+src/__tests__/c2-anti-silence.test.tsx:54:      metadata: { status: 'pending' },
+src/__tests__/c2-anti-silence.test.tsx:149:      metadata: { status: 'pending' },
+src/__tests__/c2-anti-silence.test.tsx:265:      { name: 'pending', content: '', metadata: { status: 'pending' } },
+src/__tests__/c2-anti-silence.test.tsx:300:      { content: '', timestamp: Date.now() - 100, status: 'pending' }, // Very recent empty = spinner
+src/design-system/motion.ts:52:  exit: {
+src/design-system/motion.ts:77:  exit: {
+src/design-system/motion.ts:103:  exit: {
+src/design-system/motion.ts:129:  exit: {
+src/design-system/motion.ts:155:  exit: {
+src/design-system/motion.ts:181:  exit: {
+src/design-system/motion.ts:202:  exit: {
+src/design-system/motion.ts:226:  exit: {
+src/modules/devSudo/devSudoBuiltins.ts:154:- PID 728785: Tauri dev (Exit code 1 - nécessite redémarrage)
+src/modules/devSudo/devSudoBuiltins.ts:284:  ⚠️ Tauri process: Exit code 1 (redémarrage requis)
+src/modules/devSudo/devSudoBuiltins.ts:311:  ⚠️ Tauri dev (PID 728785): Exit 1
+src/modules/devSudo/devSudoBuiltins.ts:496:        result: 'pending',
+src/modules/devSudo/devSudoBuiltins.ts:1770:        result: 'pending',
+src/modules/devSudo/devSudoBuiltins.ts:2180:      exitCode: number;
+src/modules/devSudo/devSudoBuiltins.ts:2186:      success: cmdResult.exitCode === 0,
+src/modules/devSudo/devSudoBuiltins.ts:2193:**Résultat** (exit ${cmdResult.exitCode}):
+src/modules/devSudo/devSudoBuiltins.ts:2201:          result: cmdResult.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoBuiltins.ts:2223:    const logResult = result as { output: string; exitCode: number };
+src/modules/devSudo/devSudoBuiltins.ts:2895:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoBuiltins.ts:2917:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoBuiltins.ts:2958:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoBuiltins.ts:2971:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoBuiltins.ts:3142:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoBuiltins.ts:3157:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoBuiltins.ts:3197:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoBuiltins.ts:3210:          result: result.exitCode === 0 ? 'success' : 'error',
+src/services/automation/automations.config.ts:75:  | 'pending'
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:116:  private pendingWrites: ConversationEntry[] = [];
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:197:    // Add to pending writes
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:198:    this.pendingWrites.push(entry);
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:222:    if (this.pendingWrites.length === 0) return;
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:224:    const entries = [...this.pendingWrites];
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:225:    this.pendingWrites = [];
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:318:    if (this.pendingWrites.length === 0) return;
+src/modules/talkToTitane/AutoSaveConversationEngine.ts:328:    console.log('[AutoSaveConversation] Flushing all pending writes...');
+src/modules/vocalDev/VocalDevConsoleEngine.ts:80:  exitCode: number;
+src/modules/vocalDev/VocalDevConsoleEngine.ts:126:  pendingPatches: VocalPatch[];
+src/modules/vocalDev/VocalDevConsoleEngine.ts:169:    pendingPatches: [],
+src/modules/vocalDev/VocalDevConsoleEngine.ts:455:      let exitCode = 0;
+src/modules/vocalDev/VocalDevConsoleEngine.ts:461:          ({ output, exitCode, errors, patch } = await this.handleDevIntent(intent));
+src/modules/vocalDev/VocalDevConsoleEngine.ts:481:        exitCode,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:519:        exitCode: 1,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:628:  ): Promise<{ output: string; exitCode: number; errors: string[]; patch?: VocalPatch }> {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:633:      const result = await secureInvoke<{ output: string; exitCode: number }>(
+src/modules/vocalDev/VocalDevConsoleEngine.ts:642:        exitCode: result.exitCode,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:643:        errors: result.exitCode !== 0 ? ['Command failed'] : [],
+src/modules/vocalDev/VocalDevConsoleEngine.ts:649:        exitCode: 1,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:830:    const { intent, exitCode, errors } = result;
+src/modules/vocalDev/VocalDevConsoleEngine.ts:832:    if (exitCode !== 0) {
+src/modules/vocalDev/VocalDevConsoleEngine.ts:948:    const successCount = recentExecutions.filter(e => e.exitCode === 0).length;
+src/cognitive/types.ts:95:  | 'pending'
+src/modules/avatar/fullbody/fullbody_engine.ts:40:  topic_complexity: number;
+src/modules/avatar/fullbody/fullbody_engine.ts:252:        topicComplexity: context.topic_complexity,
+src/modules/performance/AdvancedPerformanceMonitor.ts:587:    // Heatmap generation from snapshots - implementation pending
+src/modules/performance/AdvancedPerformanceMonitor.ts:619:        // CPU throttling implementation pending
+src/modules/performance/AdvancedPerformanceMonitor.ts:633:        // Animation quality reduction pending
+src/modules/performance/AdvancedPerformanceMonitor.ts:713:    // ML-based prediction implementation pending
+src/modules/dataCollector/DataCollectorEngine.ts:80:  status: 'pending' | 'running' | 'completed' | 'failed';
+src/modules/dataCollector/DataCollectorEngine.ts:554:    exit 1
+src/modules/dataCollector/DataCollectorEngine.ts:561:    exit 1
+src/modules/dataCollector/DataCollectorEngine.ts:568:    exit 1
+src/modules/dataCollector/DataCollectorEngine.ts:753:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:760:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:767:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:774:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:781:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:788:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:795:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:802:        status: 'pending',
+src/modules/dataCollector/DataCollectorEngine.ts:806:      { id: 9, name: 'Nettoyer', status: 'pending', progress: 0, message: '' },
+src/modules/dataCollector/DataCollectorEngine.ts:807:      { id: 10, name: 'Export', status: 'pending', progress: 0, message: '' },
+src/modules/devSudo/types.ts:261:  result: 'success' | 'error' | 'pending';
+src/cognitive/knowledge/knowledgeVault.ts:46:  | 'pending'
+src/services/tauriClient.ts:321:    const pendingChunks: BackendStreamChunk[] = [];
+src/services/tauriClient.ts:322:    let pendingDone: BackendStreamChunk | null = null;
+src/services/tauriClient.ts:376:      if (pendingChunks.length > 0) {
+src/services/tauriClient.ts:378:        for (const chunk of pendingChunks) {
+src/services/tauriClient.ts:388:        pendingChunks.length = 0;
+src/services/tauriClient.ts:389:        pendingChunks.push(...remaining);
+src/services/tauriClient.ts:393:        pendingDone &&
+src/services/tauriClient.ts:394:        pendingDone.conversation_id === targetConversationId &&
+src/services/tauriClient.ts:395:        pendingDone.message_id === targetMessageId
+src/services/tauriClient.ts:397:        const donePayload = pendingDone;
+src/services/tauriClient.ts:398:        pendingDone = null;
+src/services/tauriClient.ts:409:          pendingChunks.push(payload);
+src/services/tauriClient.ts:432:          pendingDone = payload;
+src/modules/devSudo/devSudoHandler.ts:2254:- PID 728785: Tauri dev (Exit code 1 - nécessite redémarrage)
+src/modules/devSudo/devSudoHandler.ts:2384:  ⚠️ Tauri process: Exit code 1 (redémarrage requis)
+src/modules/devSudo/devSudoHandler.ts:2411:  ⚠️ Tauri dev (PID 728785): Exit 1
+src/modules/devSudo/devSudoHandler.ts:2596:        result: 'pending',
+src/modules/devSudo/devSudoHandler.ts:3862:        result: 'pending',
+src/modules/devSudo/devSudoHandler.ts:4268:    const cmdResult = result as { output: string; exitCode: number; error?: string };
+src/modules/devSudo/devSudoHandler.ts:4272:      success: cmdResult.exitCode === 0,
+src/modules/devSudo/devSudoHandler.ts:4279:**Résultat** (exit ${cmdResult.exitCode}):
+src/modules/devSudo/devSudoHandler.ts:4287:          result: cmdResult.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoHandler.ts:4309:    const logResult = result as { output: string; exitCode: number };
+src/modules/devSudo/devSudoHandler.ts:4961:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoHandler.ts:4983:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoHandler.ts:5024:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoHandler.ts:5037:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoHandler.ts:5208:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoHandler.ts:5223:          result: result.exitCode === 0 ? 'success' : 'error',
+src/modules/devSudo/devSudoHandler.ts:5263:      success: result.exitCode === 0,
+src/modules/devSudo/devSudoHandler.ts:5276:          result: result.exitCode === 0 ? 'success' : 'error',
+src/services/evolutionEngine/collector.ts:63:  private pendingBatch: EvolutionDataPoint[] = [];
+src/services/evolutionEngine/collector.ts:176:      if (this.pendingBatch.length >= this.config.batchSize) {
+src/services/evolutionEngine/collector.ts:413:        pending_tasks: number;
+src/services/evolutionEngine/collector.ts:427:        'pending_tasks',
+src/services/evolutionEngine/collector.ts:428:        metrics.pending_tasks
+src/services/evolutionEngine/collector.ts:454:    this.pendingBatch.push(dataPoint);
+src/services/evolutionEngine/collector.ts:538:    if (this.pendingBatch.length === 0) return;
+src/services/evolutionEngine/collector.ts:540:    const batch = [...this.pendingBatch];
+src/services/evolutionEngine/collector.ts:541:    this.pendingBatch = [];
+src/services/evolutionEngine/collector.ts:561:      this.pendingBatch = [...batch, ...this.pendingBatch];
+src/services/evolutionEngine/collector.ts:714:    this.pendingBatch = [];
+src/services/tts/ttsEngine.config.ts:206:  status: 'pending' | 'processing' | 'completed' | 'failed';
+src/components/audio/AudioDiagnosticsPanel.tsx:104:      case 'pending':
+src/services/evolutionEngine/index.ts:452:    snapshot.pendingActions = suggestions.reduce((sum, s) => sum + s.actions.length, 0);
+src/services/tts/ttsEngineService.ts:131:      status: 'pending',
+src/services/tts/ttsEngineService.ts:370:        item.status = 'pending';
+src/services/mcp/MCPOrchestrator.ts:73:    transformComplexityToSimplicity: true,
+src/services/mcp/MCPOrchestrator.ts:203:        pending: [],
+src/services/mcp/MCPOrchestrator.ts:303:    // Add job to pending queue
+src/services/mcp/MCPOrchestrator.ts:304:    this.state.jobs.pending.push(job);
+src/services/mcp/MCPOrchestrator.ts:532:    const activeJobs = [...this.state.jobs.pending, ...this.state.jobs.running];
+src/services/mcp/MCPOrchestrator.ts:651:    // Priority: Security > Complexity > Speed
+src/services/mcp/MCPOrchestrator.ts:659:      reasoning = 'High complexity task requires deep model';
+src/services/mcp/MCPOrchestrator.ts:885:      const avgComplexity =
+src/services/mcp/MCPOrchestrator.ts:889:      if (avgComplexity > 0.7) {
+src/services/mcp/MCPOrchestrator.ts:929:        // Optimize pending jobs
+src/services/mcp/MCPOrchestrator.ts:930:        const pending = this.state.jobs.pending;
+src/services/mcp/MCPOrchestrator.ts:931:        for (const job of pending) {
+src/services/mcp/MCPOrchestrator.ts:977:    if (this.state.jobs.pending.length > 5) {
+src/services/mcp/MCPOrchestrator.ts:979:      const jobs = this.state.jobs.pending;
+src/services/mcp/MCPOrchestrator.ts:1028:          this.state.jobs.pending.length +
+src/services/mcp/MCPOrchestrator.ts:1032:        pending: this.state.jobs.pending.length,
+src/services/mcp/MCPOrchestrator.ts:1048:      ...this.state.jobs.pending,
+src/services/mcp/MCPOrchestrator.ts:1093:    // Query complexity
+src/services/mcp/MCPOrchestrator.ts:1097:    // Context complexity
+src/services/mcp/MCPOrchestrator.ts:1182:      // Clarity check: low complexity, short sentences
+src/services/evolutionEngine/evolutionEngine.config.ts:630:  pendingActions: number;
+src/services/evolutionEngine/evolutionEngine.config.ts:656:  pendingSuggestions: EvolutionSuggestion[];
+src/services/evolutionEngine/evolutionEngine.config.ts:1198:    pendingActions: 0,
+src/services/memory/persistentMemory.config.ts:65:export type MemoryStatus = 'active' | 'archived' | 'pending_review' | 'expired';
+src/services/mcp/mcp.types.ts:246:    transformComplexityToSimplicity: boolean;
+src/services/mcp/mcp.types.ts:271:    pending: Job[];
+src/services/mcp/mcp.types.ts:357:    jobs: { total: number; pending: number; running: number; completed: number };
+src/components/system/BackendDownIndicator.tsx:97:        exit={{ opacity: 0, y: isFixedTop ? -64 : 0 }}
+src/services/memory/types.ts:38:  status: 'pending' | 'implemented' | 'revised' | 'abandoned';
+src/services/evolutionEngine/evolutionEngine.bindings.ts:190:  pendingSuggestions: number;
+src/services/evolutionEngine/evolutionEngine.bindings.ts:206:  pendingSuggestions: number;
+src/services/evolutionEngine/evolutionEngine.bindings.ts:565:    pendingSuggestions: EvolutionSuggestion[];
+src/services/evolutionEngine/evolutionEngine.bindings.ts:567:    const [state, statistics, pendingSuggestions] = await Promise.all([
+src/services/evolutionEngine/evolutionEngine.bindings.ts:573:    return { state, statistics, pendingSuggestions };
+src/services/sessions/SessionManager.ts:83:      // ✨ v24.2.1: Use debounced storage (checks pending writes first)
+src/services/sessions/SessionManager.ts:123:   * ✨ v24.2.1: Force flush pending writes (call before shutdown)
+src/services/ai/orchestrator.ts:657:          score += isComplexQuery ? 35 : 25; // Excellent sur complexité
+src/services/ai/orchestrator.ts:665:          score += isComplexQuery ? 30 : 20; // Excellent sur complexité
+src/services/ai/orchestrator.ts:673:          score += isComplexQuery ? 28 : 18; // Très bon sur complexité (GPT-4)
+src/services/ai/orchestrator.ts:863:            // Success in degraded mode - check if we can exit
+src/services/ai/singularityKernel.ts:115:  status: 'pending' | 'active' | 'completed' | 'cancelled';
+src/services/ai/singularityKernel.ts:426:    complexityLevel: number; // 0-100
+src/services/ai/singularityKernel.ts:545:          'Éviter dérives complexité',
+src/services/ai/singularityKernel.ts:591:        complexityLevel: 0,
+src/services/ai/singularityKernel.ts:995:        status: 'pending',
+src/services/ai/singularityKernel.ts:1277:    // Détecter dérives complexité
+src/services/ai/singularityKernel.ts:1278:    const complexity = this.calculateSystemComplexity();
+src/services/ai/singularityKernel.ts:1280:    if (complexity > 70) {
+src/services/ai/singularityKernel.ts:1281:      logger.warn('Preventing complexity drift', { complexity });
+src/services/ai/singularityKernel.ts:1290:    this.operationalSingularity.regulation.complexityLevel = complexity;
+src/services/ai/singularityKernel.ts:1293:  private calculateSystemComplexity(): number {
+src/services/adminEngine/stateAggregator.ts:63:  pending_ops: number;
+src/services/adminEngine/stateAggregator.ts:325:          pendingOps: rs.pending_ops,
+src/services/adminEngine/stateAggregator.ts:371:      pendingOps: 0,
+src/components/performance/PerformanceIssues.tsx:165:      exit={{ opacity: 0, y: -10 }}
+src/components/performance/PerformanceIssues.tsx:232:            exit={{ height: 0, opacity: 0 }}
+src/components/performance/PerformanceIssues.tsx:562:            exit={{ height: 0, opacity: 0 }}
+src/services/cognitive/goalConsistency.types.ts:17:  PENDING = 'pending', // En attente de démarrage
+src/services/selfHealing/selfHealingPlaybookEngine.ts:68:  status: 'pending' | 'ready' | 'blocked';
+src/services/selfHealing/selfHealingPlaybookEngine.ts:750:        status: i === 0 ? 'ready' : 'pending',
+src/components/VocalDevConsole.tsx:203:                  {exec.exitCode === 0 ? '✅' : '❌'}
+src/components/performance/PerformanceDashboard.tsx:215:            exit={{ opacity: 0, x: 20 }}
+src/services/cognitive/cognitiveObservability.types.ts:78:  status: 'success' | 'error' | 'pending';
+src/services/ai/metaKernel.ts:1116:        anticipatedIssues: ['Complexity drift', 'Coherence loss', 'Technical debt'],
+src/services/adminEngine/adminEngine.config.ts:200:  pendingOps: number;
+src/services/adminEngine/adminEngine.config.ts:1471:    pendingOps: 0,
+src/services/selfHealing/selfHealingAnalyzer.ts:61:  pendingOperations: number;
+src/services/selfHealing/selfHealingAnalyzer.ts:532:        pendingOperations: 0,
+src/components/performance/RecommendationsPanel.tsx:199:      exit={{ opacity: 0, y: -10 }}
+src/components/performance/RecommendationsPanel.tsx:275:            exit={{ height: 0, opacity: 0 }}
+src/components/performance/RecommendationsPanel.tsx:635:            exit={{ height: 0, opacity: 0 }}
+src/services/adminEngine/actionsEngine.ts:61:  private pendingActions: Map<string, AdminActionRequest> = new Map();
+src/services/adminEngine/actionsEngine.ts:146:    this.pendingActions.set(correlationId, request);
+src/services/adminEngine/actionsEngine.ts:192:      this.pendingActions.delete(correlationId);
+src/services/adminEngine/actionsEngine.ts:376:    return Array.from(this.pendingActions.values());
+src/services/adminEngine/actionsEngine.ts:499:    this.pendingActions.clear();
+src/components/chat/FileUploadButton.tsx:47:  status: 'pending' | 'analyzing' | 'done' | 'error';
+src/components/chat/FileUploadButton.tsx:223:          status: 'pending',
+src/services/selfHealing/index.ts:111:  pendingPlans: ExecutionPlan[];
+src/services/selfHealing/index.ts:139:  private pendingPlans: Map<string, ExecutionPlan>;
+src/services/selfHealing/index.ts:159:      pendingPlans: [],
+src/services/selfHealing/index.ts:168:    this.pendingPlans = new Map();
+src/services/selfHealing/index.ts:302:      pendingPlans: [...this.pendingPlans.values()],
+src/services/selfHealing/index.ts:380:      this.log('info', `Plan ${plan.id} requires confirmation, adding to pending`);
+src/services/selfHealing/index.ts:381:      this.pendingPlans.set(plan.id, plan);
+src/services/selfHealing/index.ts:431:      this.pendingPlans.delete(plan.id);
+src/services/selfHealing/index.ts:444:    const plan = this.pendingPlans.get(planId);
+src/services/selfHealing/index.ts:447:      this.log('warn', `Plan ${planId} not found in pending`);
+src/services/selfHealing/index.ts:458:    return this.pendingPlans.delete(planId);
+src/services/selfHealing/index.ts:465:    return [...this.pendingPlans.values()];
+src/services/ai/cognitiveKernel.ts:40:  parsimony: number; // 0-100: Absence complexité superflue
+src/services/voice/ttsDuckingEngine.ts:123:    // Clear any pending release
+src/services/voice/ttsDuckingEngine.ts:197:    // Clear any pending release
+src/services/cognitive/cognitiveOmegaIntegration.ts:64:  status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+src/services/performanceEngine/reporter.ts:116:  pending: number;
+src/services/performanceEngine/reporter.ts:746:      pending: allRecs.length - applied,
+src/services/performanceEngine/metricsCollector.ts:862:        pendingOperations: 0,
+src/services/performanceEngine/advisorEngine.ts:52:  pendingCount: number;
+src/services/performanceEngine/advisorEngine.ts:126:  private pendingActions: Map<string, OptimizationAction>;
+src/services/performanceEngine/advisorEngine.ts:133:    this.pendingActions = new Map();
+src/services/performanceEngine/advisorEngine.ts:218:      pendingCount: this.pendingActions.size,
+src/services/performanceEngine/advisorEngine.ts:247:    const action = this.pendingActions.get(recommendationId);
+src/services/performanceEngine/advisorEngine.ts:286:    const action = this.pendingActions.get(recommendationId);
+src/services/performanceEngine/advisorEngine.ts:340:      pendingActions: this.pendingActions.size,
+src/services/performanceEngine/advisorEngine.ts:375:    this.pendingActions.clear();
+src/services/performanceEngine/advisorEngine.ts:643:            'Augmentation probable de la complexité UI',
+src/services/performanceEngine/performanceEngine.config.ts:327:  pendingOperations: number;
+src/services/performanceEngine/performanceEngine.config.ts:1122:      'Réduire la complexité des composants visibles',
+src/services/performanceEngine/performanceEngine.config.ts:1253:      'Réduire la complexité du prompt IA',
+src/services/performanceEngine/performanceEngine.config.ts:1361:  getHealingStatus(issueId: string): Promise<'pending' | 'healing' | 'healed' | 'failed'>;
+src/services/performanceEngine/performanceEngine.config.ts:1465:    pendingOperations: 0,
+src/services/chatMemoryCompactor.ts:101:  private pendingSaves = new Map<ChatMode, AIMessage[]>();
+src/services/chatMemoryCompactor.ts:112:    // 🔒 v26.2.1: Force flush if max pending saves reached (memory leak protection)
+src/services/chatMemoryCompactor.ts:113:    if (this.pendingSaves.size >= ChatMemoryCompactor.MAX_PENDING_SAVES) {
+src/services/chatMemoryCompactor.ts:114:      logger.warn('Force flush - max pending saves reached', {
+src/services/chatMemoryCompactor.ts:116:        pendingCount: this.pendingSaves.size,
+src/services/chatMemoryCompactor.ts:123:    this.pendingSaves.set(mode, messages);
+src/services/chatMemoryCompactor.ts:139:   * ✨ v24.3.7: Flush all pending saves during idle time
+src/services/chatMemoryCompactor.ts:145:    if (this.pendingSaves.size === 0) {
+src/services/chatMemoryCompactor.ts:146:      logger.debug('No pending saves to flush', { component: 'MemoryCompactor' });
+src/services/chatMemoryCompactor.ts:150:    logger.info(`Flushing ${this.pendingSaves.size} pending saves`, {
+src/services/chatMemoryCompactor.ts:154:    for (const [mode, messages] of this.pendingSaves.entries()) {
+src/services/chatMemoryCompactor.ts:189:    this.pendingSaves.clear();
+src/services/orchestration/strategies/MCPStrategy.ts:206:      ...state.jobs.pending,
+src/services/orchestration/strategies/MCPStrategy.ts:248:        pending: 'pending',
+src/services/orchestration/strategies/MCPStrategy.ts:259:        ...state.jobs.pending,
+src/services/orchestration/__tests__/strategies/MCPStrategy.test.ts:62:      const pendingJobs = strategy.listJobs({ status: 'pending' });
+src/services/orchestration/__tests__/strategies/MCPStrategy.test.ts:63:      expect(pendingJobs.every(j => j.status === 'pending')).toBe(true);
+src/components/layout/AppShellWithDevTools.tsx:134:              exit={{ x: DEVTOOLS_WIDTH_DESKTOP }}
+src/components/layout/AppShellWithDevTools.tsx:159:                exit={{ opacity: 0 }}
+src/components/layout/AppShellWithDevTools.tsx:173:                exit={{ x: DEVTOOLS_WIDTH_TABLET }}
+src/components/layout/AppShellWithDevTools.tsx:200:              exit={{ opacity: 0, scale: 0.95 }}
+src/components/evolution/EvolutionDashboard.tsx:25:  pendingActions?: EvolutionAction[];
+src/components/evolution/EvolutionDashboard.tsx:285:  pendingActions = [],
+src/components/evolution/EvolutionDashboard.tsx:383:          {pendingActions.length > 0 && (
+src/components/evolution/EvolutionDashboard.tsx:384:            <span className="tab-badge running">{pendingActions.length}</span>
+src/components/evolution/EvolutionDashboard.tsx:471:            {pendingActions.length === 0 ? (
+src/components/evolution/EvolutionDashboard.tsx:479:                {pendingActions.map(a => (
+src/services/orchestration/compat/mcpCompat.ts:82:        pending: [],
+src/services/orchestration/compat/mcpCompat.ts:220:      ...state.jobs.pending,
+src/services/orchestration/compat/mcpCompat.ts:241:      ...state.jobs.pending,
+src/services/orchestration/compat/mcpCompat.ts:261:      ...state.jobs.pending,
+src/services/orchestration/compat/mcpCompat.ts:281:      ...state.jobs.pending,
+src/services/orchestration/compat/mcpCompat.ts:301:      ...state.jobs.pending,
+src/services/orchestration/compat/mcpCompat.ts:334:      ...state.jobs.pending,
+src/components/admin/AdminTimeline.tsx:136:            exit={{ height: 0, opacity: 0 }}
+src/components/admin/AdminTimeline.tsx:225:            exit={{ height: 0, opacity: 0 }}
+src/components/admin/AdminTimeline.tsx:457:            exit={{ height: 0, opacity: 0 }}
+src/components/admin/AdminDashboard.tsx:383:          exit={{ opacity: 0, y: -10 }}
+src/components/admin/AdminDashboard.tsx:606:                        <p className="text-[#C4C4C4]">{module.pendingOps}</p>
+src/components/admin/AdminActions.tsx:196:            exit={{ opacity: 0 }}
+src/components/admin/AdminActions.tsx:218:            exit={{ opacity: 0 }}
+src/components/admin/AdminActions.tsx:229:            exit={{ opacity: 0 }}
+src/components/admin/AdminActions.tsx:254:            exit={{ opacity: 0 }}
+src/components/layout/TopNav.tsx:249:                  exit={{ opacity: 0, y: -10 }}
+src/services/orchestration/compat/cognitiveCompat.ts:255:    // No-op for now (observability integration pending)
+src/components/layout/MobileNav.tsx:155:            exit={{ opacity: 0 }}
+src/components/layout/MobileNav.tsx:185:            exit={{ x: -280 }}
+src/services/unified/__tests__/UnifiedMemory.benchmark.ts:569:    // Exit with error code if any benchmarks failed
+src/services/unified/__tests__/UnifiedMemory.benchmark.ts:570:    process.exit(report.summary.failed > 0 ? 1 : 0);
+src/services/unified/__tests__/UnifiedMemory.benchmark.ts:574:    process.exit(1);
+src/components/diagnostics/SplashWatchdog.tsx:171:  const [diagStatus, setDiagStatus] = useState<'idle' | 'pending' | 'saved' | 'error'>(
+src/components/diagnostics/SplashWatchdog.tsx:284:      setDiagStatus('pending');
+src/components/diagnostics/SplashWatchdog.tsx:508:                {diagStatus === 'pending' && (
+src/components/Onboarding/OnboardingFlow.tsx:170:              exit={{ opacity: 0, x: -20 }}
+src/components/ConsciousnessDashboard.tsx:71:        name: 'Complexity',
+src/components/ConsciousnessDashboard.tsx:72:        value: consciousnessState.thought_complexity,
+src/components/ConsciousnessDashboard.tsx:425:                        complexity score {pattern.complexity_score.toFixed(2)} and
+src/components/ConsciousnessDashboard.tsx:430:                        <span>Complexity: {pattern.complexity_score.toFixed(2)}</span>
+src/components/MetaCenter/MetaCenter.tsx:87:  pending_tasks: number;
+src/components/notifications/ToastContainer.tsx:21:  exiting?: boolean;
+src/components/notifications/ToastContainer.tsx:47:    setToasts(prev => prev.map(t => (t.id === id ? { ...t, exiting: true } : t)));
+src/components/notifications/ToastContainer.tsx:96:            ${toast.exiting ? 'opacity-0 translate-x-full' : 'opacity-100 translate-x-0'}
+src/components/ui/Toast.tsx:45:  const [isExiting, setIsExiting] = useState(false);
+src/components/ui/Toast.tsx:61:    setIsExiting(true);
+src/components/ui/Toast.tsx:67:    ); // Shorter exit if motion reduced
+src/components/ui/Toast.tsx:106:        ${isVisible && !isExiting ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}
+src/components/ui/Toast.tsx:107:        ${isExiting ? 'translate-x-full opacity-0' : ''}
+src/components/ui/Toast.tsx:114:        willChange: isVisible && !isExiting ? 'auto' : 'transform, opacity',
+src/components/ui/Toast.css:39:.toast--exiting {
+src/components/ui/Toast.css:118:  .toast--exiting {
+src/components/HybridBubble.tsx:152:        exit={{ scale: 0.9, opacity: 0 }}
+src/components/HybridBubble.tsx:199:      exit={{ scale: 0.95, opacity: 0, y: 20 }}
+src/components/HybridBubble.tsx:389:                    color: exec.exitCode === 0 ? '#C4C4C4' : '#ef4444',
+src/components/HybridBubble.tsx:394:                    border: `1px solid ${exec.exitCode === 0 ? 'rgba(114, 123, 129, 0.2)' : 'rgba(239, 68, 68, 0.3)'}`,
+src/components/HybridBubble.tsx:402:                {/* Exit code indicator */}
+src/components/HybridBubble.tsx:410:                    color: exec.exitCode === 0 ? '#10b981' : '#ef4444',
+src/components/HybridBubble.tsx:413:                  {exec.exitCode === 0 ? '✅' : '❌'} Exit code: {exec.exitCode}
+src/components/optimization/UltimateOptimizationDashboard.tsx:75:      // Service Worker Manager (auto-register may be unsupported depending on runtime)
+src/components/vision/VisionFeedbackCard.tsx:79:  const pendingSuggestions = useVisionStore(s => s.pendingSuggestions);
+src/components/vision/VisionFeedbackCard.tsx:83:    return [...feedback.suggestions, ...pendingSuggestions];
+src/components/vision/VisionFeedbackCard.tsx:84:  }, [feedback.suggestions, pendingSuggestions]);
+src/components/vision/VisionFeedbackCard.tsx:91:    // Dismiss if in pending
+src/components/vision/VisionFeedbackCard.tsx:92:    const pendingIndex = index - feedback.suggestions.length;
+src/components/vision/VisionFeedbackCard.tsx:93:    if (pendingIndex >= 0) {
+src/components/vision/VisionFeedbackCard.tsx:94:      dismissSuggestion(pendingIndex);
+src/components/panels/SelfHealingPanel.tsx:20:  status: 'pending' | 'active' | 'completed' | 'failed';
+src/components/panels/SelfHealingPanel.tsx:34:  pending: '#9ca4ab',

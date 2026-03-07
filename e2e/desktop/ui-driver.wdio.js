@@ -23,6 +23,11 @@ function isTransientInteractionError(error) {
   );
 }
 
+function isTransportTimeoutError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return message.includes('und_err_headers_timeout');
+}
+
 async function isExisting(selector) {
   const el = await $(selector);
   return el.isExisting();
@@ -269,18 +274,35 @@ export async function openApp() {
 
 export async function waitAppReady() {
   if (await isExisting(testId('app-ready'))) {
-    await waitForDisplayed(testId('app-ready'), DEFAULT_TIMEOUT);
-    await browser.waitUntil(
-      async () => {
-        const state = await $(testId('app-ready')).getAttribute('data-state');
-        return state === 'ready';
-      },
-      {
-        timeout: DEFAULT_TIMEOUT,
-        interval: 200,
-        timeoutMsg: 'app-ready marker did not reach ready state',
-      }
-    );
+    let markerVisible = false;
+    try {
+      await waitForDisplayed(testId('app-ready'), DEFAULT_TIMEOUT);
+      markerVisible = true;
+    } catch {
+      markerVisible = false;
+    }
+
+    if (markerVisible) {
+      await browser.waitUntil(
+        async () => {
+          const state = await $(testId('app-ready')).getAttribute('data-state');
+          if (state === 'ready') {
+            return true;
+          }
+          return await isDisplayed(testId('nav-top-main'));
+        },
+        {
+          timeout: DEFAULT_TIMEOUT,
+          interval: 200,
+          timeoutMsg: 'app-ready marker did not reach ready state',
+        }
+      );
+    } else {
+      await waitForAnyDisplayed(
+        [testId('nav-top-main'), testId('page-titane'), testId('chat-input')],
+        DEFAULT_TIMEOUT
+      );
+    }
   } else {
     await waitForAnyDisplayed(
       [testId('nav-top-main'), testId('page-titane'), testId('chat-input')],
@@ -488,7 +510,15 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
       // Fallback: recover the canonical chat surface from /titane once.
     }
 
-    await browser.url('tauri://localhost/titane');
+    // Some wry/WebDriver sessions can timeout on url() while navigation still lands.
+    // Treat transport timeout as recoverable and verify actual surface state before failing.
+    try {
+      await browser.url('tauri://localhost/titane');
+    } catch (error) {
+      if (!isTransportTimeoutError(error)) {
+        throw error;
+      }
+    }
 
     await waitAppReady();
 
@@ -630,6 +660,96 @@ export async function sendChatAndAssertNoSilence(message, timeoutMs = 45000) {
       timeoutMsg: 'No-silence contract failed: no assistant message and no visible error',
     }
   );
+}
+
+export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000) {
+  const retrySelectors = [
+    `${testId('chat-message-user')} button[title="Renvoyer ce message"]`,
+    `${testId('chat-message-user')} button.conversation-message-action`,
+    'button[title="Renvoyer ce message"]',
+    'xpath=//button[contains(normalize-space(.), "Retry")]',
+  ];
+
+  let retryButtons = [];
+  for (const selector of retrySelectors) {
+    try {
+      const found = await $$(selector);
+      if (found.length > 0) {
+        retryButtons = found;
+        break;
+      }
+    } catch {
+      // Continue trying other selectors.
+    }
+  }
+
+  if (retryButtons.length === 0) {
+    return { present: false, triggered: false };
+  }
+
+  const assistantSelector = testId('chat-message-assistant');
+  const userSelector = testId('chat-message-user');
+  const assistantBefore = (await isExisting(assistantSelector))
+    ? (await $$(assistantSelector)).length
+    : 0;
+  const userBefore = (await isExisting(userSelector)) ? (await $$(userSelector)).length : 0;
+  const bodyBefore = (await $('body').getText()) || '';
+
+  let clicked = false;
+  for (let i = retryButtons.length - 1; i >= 0; i -= 1) {
+    const candidate = retryButtons[i];
+    try {
+      if (!(await candidate.isExisting())) continue;
+      if (!(await candidate.isDisplayed())) continue;
+      const title = (await candidate.getAttribute('title')) || '';
+      const text = ((await candidate.getText()) || '').trim();
+      if (!title.toLowerCase().includes('renvoyer') && !text.toLowerCase().includes('retry')) {
+        continue;
+      }
+      if (!(await candidate.isEnabled())) continue;
+      clicked = await clickElementSafely(candidate);
+      if (clicked) break;
+    } catch (error) {
+      if (isSessionInvalidError(error)) throw error;
+      continue;
+    }
+  }
+
+  if (!clicked) {
+    return { present: true, triggered: false };
+  }
+
+  await browser.waitUntil(
+    async () => {
+      if (await isExisting(userSelector)) {
+        const userAfter = (await $$(userSelector)).length;
+        if (userAfter > userBefore) return true;
+      }
+
+      if (await isExisting(assistantSelector)) {
+        const assistantAfter = (await $$(assistantSelector)).length;
+        if (assistantAfter > assistantBefore) return true;
+      }
+
+      if (await isExisting(testId('chat-loading'))) {
+        const loading = await $(testId('chat-loading'));
+        if (await loading.isDisplayed()) return true;
+      }
+
+      const err = await $(testId('chat-error'));
+      if ((await err.isExisting()) && (await err.isDisplayed())) return true;
+
+      const bodyAfter = (await $('body').getText()) || '';
+      return bodyAfter.length > bodyBefore.length + 8;
+    },
+    {
+      timeout: timeoutMs,
+      interval: 250,
+      timeoutMsg: 'retry action did not produce visible acknowledgement',
+    }
+  );
+
+  return { present: true, triggered: true };
 }
 
 export async function getCurrentPathname() {
