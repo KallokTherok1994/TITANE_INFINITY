@@ -96,13 +96,46 @@ describe('UI Desktop Ultra Full Coverage (WDIO/Tauri)', () => {
     );
 
     // Navigation scenario: leave and come back while preserving conversation surface
-    const userBefore = (await $$('[data-testid="chat-message-user"]')).length;
+    const userMessagesBefore = await $$('[data-testid="chat-message-user"]');
+    const userBefore = userMessagesBefore.length;
+    const lastUserMessageText =
+      userBefore > 0
+        ? ((await userMessagesBefore[userBefore - 1].getText()) || '').trim()
+        : '';
     await gotoTopNavPage(uiPages.stats);
     await gotoTopNavPage(uiPages.titane);
     await clickAllTabs(['[data-testid="tab-conversation"]']);
+
+    await browser.waitUntil(
+      async () => {
+        const input = await $('[data-testid="chat-input"]');
+        if (!(await input.isExisting()) || !(await input.isDisplayed())) {
+          return false;
+        }
+
+        if (!lastUserMessageText) {
+          return (await $$('[data-testid="chat-message-user"]')).length >= userBefore;
+        }
+
+        const messagesAfter = await $$('[data-testid="chat-message-user"]');
+        for (const msg of messagesAfter) {
+          const text = ((await msg.getText()) || '').trim();
+          if (text && text.includes(lastUserMessageText.slice(0, 48))) {
+            return true;
+          }
+        }
+        return false;
+      },
+      {
+        timeout: 15000,
+        interval: 250,
+        timeoutMsg: 'chat surface did not restore prior user context after page switch',
+      }
+    );
+
     const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
     assert.ok(
-      userAfter >= userBefore,
+      userAfter > 0,
       'chat state should remain visible after page switch'
     );
 
