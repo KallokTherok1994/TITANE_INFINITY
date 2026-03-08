@@ -692,7 +692,9 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
   const assistantBefore = (await isExisting(assistantSelector))
     ? (await $$(assistantSelector)).length
     : 0;
-  const userBefore = (await isExisting(userSelector)) ? (await $$(userSelector)).length : 0;
+  const userBefore = (await isExisting(userSelector))
+    ? (await $$(userSelector)).length
+    : 0;
   const bodyBefore = (await $('body').getText()) || '';
 
   let clicked = false;
@@ -703,7 +705,10 @@ export async function retryLatestUserMessageAndAssertNoSilence(timeoutMs = 45000
       if (!(await candidate.isDisplayed())) continue;
       const title = (await candidate.getAttribute('title')) || '';
       const text = ((await candidate.getText()) || '').trim();
-      if (!title.toLowerCase().includes('renvoyer') && !text.toLowerCase().includes('retry')) {
+      if (
+        !title.toLowerCase().includes('renvoyer') &&
+        !text.toLowerCase().includes('retry')
+      ) {
         continue;
       }
       if (!(await candidate.isEnabled())) continue;
