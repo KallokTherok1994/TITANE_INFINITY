@@ -1,0 +1,13 @@
+2026-03-07 18:29:51 - [0;34m═══════════════════════════════════════════════════════════════[0m
+2026-03-07 18:29:51 - [0;34m🚀 TITANE∞ Before Dev Command Wrapper v26.3.0[0m
+2026-03-07 18:29:51 - [0;34m═══════════════════════════════════════════════════════════════[0m
+2026-03-07 18:29:51 - Node: v24.0.0
+2026-03-07 18:29:51 - NPM: 11.3.0
+2026-03-07 18:29:51 - CWD: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+2026-03-07 18:29:51 - Port to check: 5173
+2026-03-07 18:29:51 - 
+2026-03-07 18:29:51 - Checking port 5173...
+2026-03-07 18:29:51 - [0;32m✅ Port 5173 is free[0m
+2026-03-07 18:29:51 - 
+2026-03-07 18:29:51 - [0;34mStarting Vite dev server...[0m
+./scripts/tauri/before-dev.sh: ligne 112: /home/titane-os/.local/share/pnpm/pnpm: Aucun fichier ou dossier de ce nom

@@ -1,0 +1,4 @@
+]633;E;{   echo "UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"\x3b   echo "PACK=$PACK"\x3b   echo "HEAD_SHA=$(git rev-parse HEAD)"\x3b   echo "HEAD_SHORT=$(git rev-parse --short HEAD)"\x3b } > "$PACK/raw/bootstrap_env.txt";15bd0e5f-0580-4714-a918-f39e13134f5e]633;CUTC=2026-03-07T17:49:48Z
+PACK=proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88
+HEAD_SHA=0af062e88e26d4c05cfd985b4ec5624dd44a13d4
+HEAD_SHORT=0af062e88

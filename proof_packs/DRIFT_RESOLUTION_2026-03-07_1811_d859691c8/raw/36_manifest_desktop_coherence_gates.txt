@@ -1,0 +1,7 @@
+G_MANIFEST_JSON_PARSE=PASS
+APP_EXEC=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+DEV_EXEC=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage --dev
+ICON=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png
+G_DESKTOP_APP_EXEC_EXISTS=PASS
+G_DESKTOP_DEV_EXEC_EXISTS=PASS
+G_DESKTOP_ICON_EXISTS=PASS

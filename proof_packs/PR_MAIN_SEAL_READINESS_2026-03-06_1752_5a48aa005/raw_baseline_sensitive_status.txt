@@ -1,0 +1,4 @@
+]633;E;{   echo "## Scoped status for baseline-sensitive files"\x3b   git status --short --     e2e/desktop/ui-ultra-full.e2e.js     e2e/desktop/ui-ultra-smoke.e2e.js     e2e/desktop/ui-driver.wdio.js     scripts/gates/g_frontend_no_web.sh     scripts/gates/g_network_one_door.sh     scripts/gates/g_no_test_skips.sh     scripts/autoheal/autoheal_rules.jsonl     proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005\x3b } > "$PACK/raw_baseline_sensitive_status.txt";830e6420-725f-4004-a97e-db958a2aa03c]633;C## Scoped status for baseline-sensitive files
+ M e2e/desktop/ui-ultra-full.e2e.js
+ M scripts/autoheal/autoheal_rules.jsonl
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/

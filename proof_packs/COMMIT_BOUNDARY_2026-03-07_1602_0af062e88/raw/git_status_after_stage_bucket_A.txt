@@ -1,0 +1,95 @@
+ M .titane-security-config.json
+ M deployment/latest/MANIFEST.json
+ M index.html
+ M memory/memory_core_state.json
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/00_EXEC_SUMMARY.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/01_BOOTSTRAP.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/02_SCOPE_FREEZE.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/03_DIRTY_TREE_FULL_MAP.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/04_PROOFPACK_COMPLETENESS_AUDIT.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/05_OUTLIER_WEIGHT_CONTROL_AUDIT.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/06_ACTION_ELIGIBILITY_MATRIX.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/07_PATCHSETS_APPLIED.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/08_ARCHIVE_MANIFESTS_AND_INDEXES.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/10_GLOBAL_SEAL_RECALC.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/11_COMMIT_READINESS_AND_SPLIT_PLAN.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/12_COUNTER_AUDIT.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/13_ROLLBACK.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/14_FINAL_VERDICT.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/NEXT_ACTION.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/ROLLBACK.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/ROOT_CAUSE.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/VERDICT.md
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/bootstrap_env.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/dirty_full_map.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/dirty_full_map_counts.env
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/dirty_proofpack_paths.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/du_proof_packs_sort_h.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/final_dirty_recalc.env
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/find_proof_packs_dirs_max2.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/find_proof_packs_files_max3.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_check_ignore_proof_packs.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_diff_cached_name_only.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_diff_name_only.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_log_20_oneline.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_rev_parse_short.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_status.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_status_porcelain_v1.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_status_porcelain_v1_ignored.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/git_status_short.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/proofpack_completeness.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/proofpack_incomplete.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/proofpack_outlier_topfiles.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/proofpack_outliers.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_dirty_counts.env
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_dirty_full_map.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_dirty_proofpack_paths.txt
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_completeness.final.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_completeness.postpatch.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_completeness.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_incomplete.final.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_incomplete.postpatch.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_incomplete.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_outlier_topfiles.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_outliers.postpatch.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_proofpack_outliers.tsv
+A  proof_packs/TREE_CLOSURE_2026-03-07_1321_0af062e88/raw/strict_role_counts.env
+ M registry/autofix-autoheal-rules.jsonl
+A  registry/closure-events.jsonl
+A  registry/heavy-artifacts-manifest.jsonl
+A  registry/proofpack-index.jsonl
+ M runtime/stable/manifest.json
+ M runtime/stable/tauri.conf.json
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/check_forbidden_files.sh
+ M scripts/titane-infinity.desktop
+ M src/App.tsx
+ M src/entry.ts
+ M titane-infinity.desktop
+?? proof_packs/AUTHORIZED_TRIGGER_ACTIVATION_2026-03-07_0838_757ae4d4c/
+?? proof_packs/BASELINE_MONITOR_MODE_2026-03-07_1300_757ae4d4c/
+?? proof_packs/COMMIT_BOUNDARY_2026-03-07_1602_0af062e88/
+?? proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/
+?? proof_packs/FINAL_LOCAL_PROD_STABLE_INSTALL_2026-03-07_1600_757ae4d4c9/
+?? proof_packs/FINAL_SEAL_EXECUTION_2026-03-07_1239_757ae4d4c/
+?? proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c/
+?? proof_packs/HYGIENE_RERUN_KEEP_UNTRACKED_2026-03-07_1233_757ae4d4c/
+?? proof_packs/IDLE_REENTRY_AFTER_TRIGGER_REJECTION_2026-03-07_0844_757ae4d4c/
+?? proof_packs/NEXT_CYCLE_ENTRY_GATE_2026-03-07_1254_757ae4d4c/
+?? proof_packs/OMEGA_DORMANT_MASTER_TEMPLATE_2026-03-07_0850_757ae4d4c/
+?? proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c/
+?? proof_packs/POST_SEAL_BASELINE_CANONIZATION_2026-03-07_1245_757ae4d4c/
+?? proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_2026-03-07_1407_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_RETRY_2026-03-07_1417_757ae4d4c9/
+?? proof_packs/PROD_IDLE_GUARD_2026-03-07_1554_757ae4d4c9/
+?? proof_packs/PROD_PASS_CANONIZATION_2026-03-07_1519_757ae4d4c9/
+?? proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/SEAL_READINESS_2026-03-07_1309_0af062e88/
+?? proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c/
+?? proof_packs/TERMINAL_IDLE_ARCHIVE_2026-03-07_0855_757ae4d4c/
+?? proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+?? proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c/
+?? proof_packs/WORKSPACE_HYGIENE_AND_SEAL_2026-03-07_0711_757ae4d4c/

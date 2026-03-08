@@ -1,0 +1,5 @@
+signal_source=current user request BASELINE_MONITOR_MODE__CANON_GUARD
+signal_summary=install monitoring mode for baseline guard only
+explicit_new_scope_detected=FALSE
+proven_drift_claim_detected=FALSE
+ENTRY_SIGNAL_CLASS=NO_SIGNAL
