@@ -52,11 +52,11 @@
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1772893326.978798,
+  "last_validation": 1772928039.518741,
   "certification_status": "FORBIDDEN_SCAN_PASSED",
   "p3_3_forbidden_scan": {
     "status": "PASS",
-    "last_run": 1772893326.978806,
+    "last_run": 1772928039.518748,
     "violations": 0
   }
 }
