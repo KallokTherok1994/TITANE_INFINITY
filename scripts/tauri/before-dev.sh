@@ -105,8 +105,18 @@ fi
 log ""
 log "${BLUE}Starting Vite dev server...${NC}"
 
-# Execute the actual Vite command with proper environment
-export PATH="/home/titane-os/.local/share/pnpm:/usr/local/bin:/usr/bin:$PATH"
+# Resolve pnpm command robustly across user/system/corepack installs.
+PNPM_CMD=()
+if command -v pnpm >/dev/null 2>&1; then
+    PNPM_CMD=(pnpm)
+elif [[ -x "$HOME/.local/share/pnpm/pnpm" ]]; then
+    PNPM_CMD=("$HOME/.local/share/pnpm/pnpm")
+elif command -v corepack >/dev/null 2>&1; then
+    PNPM_CMD=(corepack pnpm)
+else
+    log "${RED}ERROR: pnpm not found (nor corepack fallback)${NC}"
+    exit 1
+fi
 
-# The original command from Tauri config - CORRECTED: PNPM-only
-exec /home/titane-os/.local/share/pnpm/pnpm exec vite dev --host 127.0.0.1 --port "$PORT" --strictPort 2>&1 | tee -a "$LOG_FILE"
+log "Using PNPM command: ${PNPM_CMD[*]}"
+"${PNPM_CMD[@]}" exec vite dev --host 127.0.0.1 --port "$PORT" --strictPort 2>&1 | tee -a "$LOG_FILE"

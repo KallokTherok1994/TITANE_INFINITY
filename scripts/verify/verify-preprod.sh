@@ -24,6 +24,7 @@ P0_FAIL=0
 P1_PASS=0
 P1_FAIL=0
 TOTAL_TESTS=0
+CURRENT_LEVEL=""
 
 # Logging function
 log() {
@@ -32,9 +33,10 @@ log() {
 
 # Test function
 test_section() {
-    ((TOTAL_TESTS++))
+    ((++TOTAL_TESTS))
     local level="$1"
     local desc="$2"
+    CURRENT_LEVEL="$level"
     log "[$level] Testing: $desc"
     echo -ne "[$level] $desc ... "
 }
@@ -42,13 +44,13 @@ test_section() {
 test_pass() {
     echo -e "${GREEN}✅ PASS${NC}"
     log "PASS: $1"
-    if [[ "$level" == "P0" ]]; then ((P0_PASS++)); else ((P1_PASS++)); fi
+    if [[ "$CURRENT_LEVEL" == "P0" ]]; then ((++P0_PASS)); else ((++P1_PASS)); fi
 }
 
 test_fail() {
     echo -e "${RED}❌ FAIL${NC}"
     log "FAIL: $1"
-    if [[ "$level" == "P0" ]]; then ((P0_FAIL++)); else ((P1_FAIL++)); fi
+    if [[ "$CURRENT_LEVEL" == "P0" ]]; then ((++P0_FAIL)); else ((++P1_FAIL)); fi
 }
 
 test_warn() {
@@ -97,7 +99,7 @@ for i in {1..3}; do
         sleep 110
         if kill -0 $PID 2>/dev/null; then
             kill $PID
-            ((BOOT_SUCCESS++))
+            ((++BOOT_SUCCESS))
             log "Boot $i successful"
         else
             log "Boot $i crashed before 120s"
