@@ -86,7 +86,8 @@
         var BOOT_HTML_RECOVERY_ONCE_KEY = 'titane_boot_html_recovery_once';
         var isDevHost =
           window.location.protocol === 'http:' &&
-          (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+          (window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1');
         var BOOT_HTML_GUARD_TIMEOUT_MS = isDevHost ? 120000 : 15000;
 
         var clearRecoveryGuard = function () {
