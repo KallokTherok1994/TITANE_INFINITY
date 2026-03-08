@@ -25,9 +25,9 @@ normalize_binary_for_hash() {
   cp "$src_bin" "$out_bin"
 
   if command -v llvm-strip >/dev/null 2>&1; then
-    llvm-strip --strip-debug "$out_bin" >/dev/null 2>&1 || true
+    llvm-strip --strip-all "$out_bin" >/dev/null 2>&1 || true
   elif command -v strip >/dev/null 2>&1; then
-    strip --strip-debug "$out_bin" >/dev/null 2>&1 || true
+    strip --strip-all "$out_bin" >/dev/null 2>&1 || true
   fi
 }
 
@@ -75,6 +75,11 @@ for i in 1 2 3; do
 
   export SOURCE_DATE_EPOCH="1000000000"
   export CARGO_BUILD_JOBS=1
+  # Deterministic profile overrides for reproducibility gate.
+  export CARGO_INCREMENTAL=0
+  export CARGO_PROFILE_RELEASE_INCREMENTAL=false
+  export CARGO_PROFILE_RELEASE_CODEGEN_UNITS=1
+  export CARGO_PROFILE_RELEASE_LTO=off
   export CARGO_TARGET_DIR="$BUILD_DIR/target-run-$i"
   export PNPM_HOME="$BUILD_DIR/pnpm-cache-$i"
   mkdir -p "$PNPM_HOME" "$CARGO_TARGET_DIR"
@@ -156,6 +161,10 @@ cat >> "$BUILD_DIR/BUILD_REPRODUCIBILITY.md" << EOF
 ## Environment
 - SOURCE_DATE_EPOCH: 1000000000
 - CARGO_BUILD_JOBS: 1
+- CARGO_INCREMENTAL: 0
+- CARGO_PROFILE_RELEASE_INCREMENTAL: false
+- CARGO_PROFILE_RELEASE_CODEGEN_UNITS: 1
+- CARGO_PROFILE_RELEASE_LTO: off
 - Timestamp: Locked
 
 ## Verification
