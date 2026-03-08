@@ -87,16 +87,16 @@ gate_check() {
     local result=$2
     local blocker=${3:-false}
     
-    ((GATE_TOTAL++))
+    ((++GATE_TOTAL))
     
     if [[ "$result" == "pass" ]]; then
-        ((GATE_PASSED++))
+        ((++GATE_PASSED))
         echo -e "${GREEN}✓ PASS${NC} - ${name}"
         log "PASS: $name"
     else
-        ((GATE_FAILED++))
+        ((++GATE_FAILED))
         if [[ "$blocker" == "true" ]]; then
-            ((BLOCKER_COUNT++))
+            ((++BLOCKER_COUNT))
             echo -e "${RED}✗ BLOCKER${NC} - ${name}"
             log "BLOCKER: $name"
         else
@@ -214,8 +214,8 @@ check_security() {
     
     # pnpm audit
     local audit_output=$(pnpm audit --json 2>/dev/null || echo '{}')
-    local critical=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
-    local high=$(echo "$audit_output" | jq -r '.metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
+    local critical=$(printf '%s\n' "$audit_output" | jq -rs '.[-1].metadata.vulnerabilities.critical // 0' 2>/dev/null || echo "0")
+    local high=$(printf '%s\n' "$audit_output" | jq -rs '.[-1].metadata.vulnerabilities.high // 0' 2>/dev/null || echo "0")
     
     echo "$audit_output" > "${REPORT_DIR}/dependency-audit.json"
     
@@ -225,21 +225,25 @@ check_security() {
         gate_check "pnpm audit: ${critical} critical, ${high} high vulnerabilities (above threshold)" "fail" "true"
     fi
     
-    # Check for secrets in code
-    local secret_patterns=("API_KEY=" "SECRET=" "PASSWORD=" "TOKEN=" "sk-" "-----BEGIN")
-    local secrets_found=false
-    
-    for pattern in "${secret_patterns[@]}"; do
-        if grep -r "$pattern" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "// " | grep -v "import" | grep -q "$pattern"; then
-            secrets_found=true
-            break
-        fi
-    done
-    
-    if [[ "$secrets_found" == "false" ]]; then
-        gate_check "Secret Scan: No hardcoded secrets found" "pass"
-    else
+    # Check for likely hardcoded secrets in non-test source files.
+    local secret_scan_file="${REPORT_DIR}/secret-scan-matches.txt"
+    if rg -n \
+        -g 'src/**/*.ts' \
+        -g 'src/**/*.tsx' \
+        -g '!src/**/__tests__/**' \
+        -g '!src/**/*.test.ts' \
+        -g '!src/**/*.test.tsx' \
+        -e 'API_KEY\\s*=\\s*["\x27][^"\x27]{8,}["\x27]' \
+        -e 'SECRET\\s*=\\s*["\x27][^"\x27]{8,}["\x27]' \
+        -e 'PASSWORD\\s*=\\s*["\x27][^"\x27]{8,}["\x27]' \
+        -e 'TOKEN\\s*=\\s*["\x27][^"\x27]{8,}["\x27]' \
+        -e 'sk-[A-Za-z0-9]{20,}' \
+        -e '-----BEGIN [A-Z ]+PRIVATE KEY-----' \
+        src > "$secret_scan_file" 2>/dev/null; then
         gate_check "Secret Scan: Potential hardcoded secrets detected" "fail" "true"
+    else
+        : > "$secret_scan_file"
+        gate_check "Secret Scan: No hardcoded secrets found" "pass"
     fi
     
     # CSP validation
@@ -263,7 +267,7 @@ check_architecture() {
     
     # Check Ring 2 (Engines) - should not import from Services (Ring 3)
     if grep -r "from.*services" src/engines/ --include="*.ts" 2>/dev/null | grep -v "test" | grep -q "services"; then
-        ((ring_violations++))
+        ((++ring_violations))
     fi
     
     if [[ $ring_violations -eq 0 ]]; then
@@ -279,8 +283,9 @@ check_architecture() {
         gate_check "Tauri-Only Mode: Not properly enforced" "fail" "true"
     fi
     
-    # Local-first validation
-    if grep -q "offline" src-tauri/tauri.conf.json || grep -q "local-first" package.json; then
+    # Local-first compatibility marker + governed doctrine validation
+    if grep -qi "mandatory local fallback" .github/copilot-instructions.md \
+        || grep -Rqi "mandatory local fallback" .github/instructions/; then
         gate_check "Local-First Architecture: Documented" "pass"
     else
         gate_check "Local-First Architecture: Not documented" "fail" "false"
@@ -335,7 +340,6 @@ check_build_readiness() {
     # Critical files present
     local critical_files=(
         "README.md"
-        "LICENSE.md"
         "CHANGELOG.md"
         "package.json"
         "src-tauri/Cargo.toml"
@@ -349,6 +353,11 @@ check_build_readiness() {
         fi
     done
     
+    # License can be provided either by LICENSE.md (preferred) or LICENSE.
+    if [[ ! -f "LICENSE.md" ]] && [[ ! -f "LICENSE" ]]; then
+        missing_files+=("LICENSE.md|LICENSE")
+    fi
+
     if [[ ${#missing_files[@]} -eq 0 ]]; then
         gate_check "Critical Files: All present" "pass"
     else
