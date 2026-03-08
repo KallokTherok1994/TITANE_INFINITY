@@ -1,0 +1,21 @@
+Sur la branche repro-build-closure-20260308-1744-c96c4f9b1
+Modifications qui ne seront pas validées :
+  (utilisez "git add <fichier>..." pour mettre à jour ce qui sera validé)
+  (utilisez "git restore <fichier>..." pour annuler les modifications dans le répertoire de travail)
+	modifié :         deployment/latest/MANIFEST.json
+	modifié :         deployment/latest/SHA256SUMS_v27.2.0.txt
+	modifié :         runtime/stable/manifest.json
+	modifié :         scripts/autoheal/autoheal_rules.jsonl
+	modifié :         scripts/gates/g6-build-reproducibility.sh
+
+Fichiers non suivis:
+  (utilisez "git add <fichier>..." pour inclure dans ce qui sera validé)
+	deployment/latest/builds/
+	proof_packs/repro_build_closure_20260308_162306_c96c4f9b1/
+	proof_packs/repro_build_closure_20260308_174421_c96c4f9b1/
+	release/hashes/
+	release/manifest/
+	src-tauri/icons/16x16.png
+	src/assets/titane_512.png
+
+aucune modification n'a été ajoutée à la validation (utilisez "git add" ou "git commit -a")

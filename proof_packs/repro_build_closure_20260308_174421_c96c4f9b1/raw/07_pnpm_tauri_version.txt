@@ -1,0 +1,6 @@
+error: 'node node_modules/@tauri-apps/cli/tauri.js' requires a subcommand but one was not provided
+  [subcommands: init, dev, build, bundle, android, migrate, info, add, remove, plugin, icon, signer, completions, permission, capability, inspect, help]
+
+Usage: node node_modules/@tauri-apps/cli/tauri.js [OPTIONS] <COMMAND>
+
+For more information, try '--help'.
