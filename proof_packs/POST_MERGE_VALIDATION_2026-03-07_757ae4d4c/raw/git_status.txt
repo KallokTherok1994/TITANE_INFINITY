@@ -1,0 +1,11 @@
+Sur la branche MAIN
+Votre branche est à jour avec 'origin/MAIN'.
+
+Fichiers non suivis:
+  (utilisez "git add <fichier>..." pour inclure dans ce qui sera validé)
+	proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c/
+	proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+	proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+	proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+
+aucune modification ajoutée à la validation mais des fichiers non suivis sont présents (utilisez "git add" pour les suivre)

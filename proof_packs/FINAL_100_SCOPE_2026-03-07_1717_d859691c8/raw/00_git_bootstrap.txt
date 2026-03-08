@@ -1,0 +1,154 @@
+]633;E;{   echo "CMD: git status --short"\x3b git status --short\x3b echo\x3b   echo "CMD: git status"\x3b git status\x3b echo\x3b   echo "CMD: git rev-parse --short HEAD"\x3b git rev-parse --short HEAD\x3b echo\x3b   echo "CMD: git log -20 --oneline"\x3b git log -20 --oneline\x3b echo\x3b   echo "CMD: git status -sb"\x3b git status -sb\x3b echo\x3b   echo "CMD: git branch --show-current"\x3b git branch --show-current\x3b echo\x3b   echo "CMD: git remote -v"\x3b git remote -v\x3b echo\x3b } > "$PACK/raw/00_git_bootstrap.txt";d2507df1-eedf-4f9f-8ca9-3068ca7eea72]633;CCMD: git status --short
+?? proof_packs/ARCHIVE_POINTER_MANIFEST_2026-03-07_1651_f5819cee9.md
+?? proof_packs/AUTHORIZED_TRIGGER_ACTIVATION_2026-03-07_0838_757ae4d4c/
+?? proof_packs/BASELINE_MONITOR_MODE_2026-03-07_1300_757ae4d4c/
+?? proof_packs/COMMIT_BOUNDARY_2026-03-07_1602_0af062e88/
+?? proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/
+?? proof_packs/FINAL_100_SCOPE_2026-03-07_1717_d859691c8/
+?? proof_packs/FINAL_LOCAL_PROD_STABLE_INSTALL_2026-03-07_1600_757ae4d4c9/
+?? proof_packs/FINAL_SEAL_EXECUTION_2026-03-07_1239_757ae4d4c/
+?? proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c/
+?? proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1645_f5819cee9/
+?? proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1646_f5819cee9/
+?? proof_packs/HISTORICAL_RESIDUE_POLICY_2026-03-07_1651_f5819cee9.md
+?? proof_packs/HYGIENE_RERUN_KEEP_UNTRACKED_2026-03-07_1233_757ae4d4c/
+?? proof_packs/IDLE_REENTRY_AFTER_TRIGGER_REJECTION_2026-03-07_0844_757ae4d4c/
+?? proof_packs/NEXT_CYCLE_ENTRY_GATE_2026-03-07_1254_757ae4d4c/
+?? proof_packs/OMEGA_DORMANT_MASTER_TEMPLATE_2026-03-07_0850_757ae4d4c/
+?? proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c/
+?? proof_packs/POST_SEAL_BASELINE_CANONIZATION_2026-03-07_1245_757ae4d4c/
+?? proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_2026-03-07_1407_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_RETRY_2026-03-07_1417_757ae4d4c9/
+?? proof_packs/PROD_IDLE_GUARD_2026-03-07_1554_757ae4d4c9/
+?? proof_packs/PROD_PASS_CANONIZATION_2026-03-07_1519_757ae4d4c9/
+?? proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/PUSH_DRYCHECK_PROOF_2026-03-07_1703_d859691c8/
+?? proof_packs/SEAL_READINESS_2026-03-07_1309_0af062e88/
+?? proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c/
+?? proof_packs/TERMINAL_CLOSURE_2026-03-07_1711_d859691c8/
+?? proof_packs/TERMINAL_IDLE_ARCHIVE_2026-03-07_0855_757ae4d4c/
+?? proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+?? proof_packs/UNTRACKED_RESIDUE_CLEARANCE_2026-03-07_1630_870348944/
+?? proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c/
+?? proof_packs/WORKSPACE_HYGIENE_AND_SEAL_2026-03-07_0711_757ae4d4c/
+
+CMD: git status
+Sur la branche MAIN
+Votre branche est en avance sur 'origin/MAIN' de 4 commits.
+  (utilisez "git push" pour publier vos commits locaux)
+
+Fichiers non suivis:
+  (utilisez "git add <fichier>..." pour inclure dans ce qui sera validé)
+	proof_packs/ARCHIVE_POINTER_MANIFEST_2026-03-07_1651_f5819cee9.md
+	proof_packs/AUTHORIZED_TRIGGER_ACTIVATION_2026-03-07_0838_757ae4d4c/
+	proof_packs/BASELINE_MONITOR_MODE_2026-03-07_1300_757ae4d4c/
+	proof_packs/COMMIT_BOUNDARY_2026-03-07_1602_0af062e88/
+	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/
+	proof_packs/FINAL_100_SCOPE_2026-03-07_1717_d859691c8/
+	proof_packs/FINAL_LOCAL_PROD_STABLE_INSTALL_2026-03-07_1600_757ae4d4c9/
+	proof_packs/FINAL_SEAL_EXECUTION_2026-03-07_1239_757ae4d4c/
+	proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c/
+	proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1645_f5819cee9/
+	proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1646_f5819cee9/
+	proof_packs/HISTORICAL_RESIDUE_POLICY_2026-03-07_1651_f5819cee9.md
+	proof_packs/HYGIENE_RERUN_KEEP_UNTRACKED_2026-03-07_1233_757ae4d4c/
+	proof_packs/IDLE_REENTRY_AFTER_TRIGGER_REJECTION_2026-03-07_0844_757ae4d4c/
+	proof_packs/NEXT_CYCLE_ENTRY_GATE_2026-03-07_1254_757ae4d4c/
+	proof_packs/OMEGA_DORMANT_MASTER_TEMPLATE_2026-03-07_0850_757ae4d4c/
+	proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c/
+	proof_packs/POST_SEAL_BASELINE_CANONIZATION_2026-03-07_1245_757ae4d4c/
+	proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/
+	proof_packs/PROD_BUILD_DEPLOY_2026-03-07_1407_757ae4d4c9/
+	proof_packs/PROD_BUILD_DEPLOY_RETRY_2026-03-07_1417_757ae4d4c9/
+	proof_packs/PROD_IDLE_GUARD_2026-03-07_1554_757ae4d4c9/
+	proof_packs/PROD_PASS_CANONIZATION_2026-03-07_1519_757ae4d4c9/
+	proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+	proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+	proof_packs/PUSH_DRYCHECK_PROOF_2026-03-07_1703_d859691c8/
+	proof_packs/SEAL_READINESS_2026-03-07_1309_0af062e88/
+	proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c/
+	proof_packs/TERMINAL_CLOSURE_2026-03-07_1711_d859691c8/
+	proof_packs/TERMINAL_IDLE_ARCHIVE_2026-03-07_0855_757ae4d4c/
+	proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88/
+	proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+	proof_packs/UNTRACKED_RESIDUE_CLEARANCE_2026-03-07_1630_870348944/
+	proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c/
+	proof_packs/WORKSPACE_HYGIENE_AND_SEAL_2026-03-07_0711_757ae4d4c/
+
+aucune modification ajoutée à la validation mais des fichiers non suivis sont présents (utilisez "git add" pour les suivre)
+
+CMD: git rev-parse --short HEAD
+d859691c8
+
+CMD: git log -20 --oneline
+d859691c8 docs(governance): normalize historical residue registries
+f5819cee9 docs(residue): isolate bucket-c proofpack and autoheal append
+870348944 chore(bucket-c): commit residual tracked boundary set
+988814c21 docs(boundary): commit split bucket A (TREE_CLOSURE + closure registries)
+0af062e88 fix(e2e): close required-scope runtime gaps
+8b04d72f3 Add GitHub Actions workflow for Python package with Conda
+a1704b48e Add GitHub Actions workflow for Rust project
+757ae4d4c merge: ci unblock readiness post blocked_ci
+56fc7d124 fix(ci): install alsa dev package in unified build verification
+552318415 fix(ci): stabilize SystemHealthMonitor snapshot whitespace
+86fd1387b fix(ui): normalize timestamp formatting for deterministic snapshots (AH-0075)
+a87f0a4a3 fix(ci): stabilize vitest snapshots with UTC runtime (AH-0074)
+e4d3a6bd9 chore(ci): enforce prettier compliance for unified pipeline (AH-0073)
+5b490d07d chore(registry): sync artifacts for workflow changes (AH-0072)
+6947ffb58 fix(ci): unblock constitution comment + p0 secret scan guards
+deaff64fd fix(e2e): stabilize chat-state persistence after page switch (AH-0061)
+05f19a2a4 fix(ci): soften rust-docker clippy gate
+5fddd42e4 fix(ci): install clippy in rust-docker workflow
+60c1a566d fix(ci): restore mock-compatible tauri command registration
+47779f2df fix(ci): ensure tauri dist resource in rust-docker
+
+CMD: git status -sb
+## MAIN...origin/MAIN [devant 4]
+?? proof_packs/ARCHIVE_POINTER_MANIFEST_2026-03-07_1651_f5819cee9.md
+?? proof_packs/AUTHORIZED_TRIGGER_ACTIVATION_2026-03-07_0838_757ae4d4c/
+?? proof_packs/BASELINE_MONITOR_MODE_2026-03-07_1300_757ae4d4c/
+?? proof_packs/COMMIT_BOUNDARY_2026-03-07_1602_0af062e88/
+?? proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/
+?? proof_packs/FINAL_100_SCOPE_2026-03-07_1717_d859691c8/
+?? proof_packs/FINAL_LOCAL_PROD_STABLE_INSTALL_2026-03-07_1600_757ae4d4c9/
+?? proof_packs/FINAL_SEAL_EXECUTION_2026-03-07_1239_757ae4d4c/
+?? proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c/
+?? proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1645_f5819cee9/
+?? proof_packs/HISTORICAL_PROOFPACK_GOVERNANCE_2026-03-07_1646_f5819cee9/
+?? proof_packs/HISTORICAL_RESIDUE_POLICY_2026-03-07_1651_f5819cee9.md
+?? proof_packs/HYGIENE_RERUN_KEEP_UNTRACKED_2026-03-07_1233_757ae4d4c/
+?? proof_packs/IDLE_REENTRY_AFTER_TRIGGER_REJECTION_2026-03-07_0844_757ae4d4c/
+?? proof_packs/NEXT_CYCLE_ENTRY_GATE_2026-03-07_1254_757ae4d4c/
+?? proof_packs/OMEGA_DORMANT_MASTER_TEMPLATE_2026-03-07_0850_757ae4d4c/
+?? proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c/
+?? proof_packs/POST_SEAL_BASELINE_CANONIZATION_2026-03-07_1245_757ae4d4c/
+?? proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_2026-03-07_1407_757ae4d4c9/
+?? proof_packs/PROD_BUILD_DEPLOY_RETRY_2026-03-07_1417_757ae4d4c9/
+?? proof_packs/PROD_IDLE_GUARD_2026-03-07_1554_757ae4d4c9/
+?? proof_packs/PROD_PASS_CANONIZATION_2026-03-07_1519_757ae4d4c9/
+?? proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005/
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/PUSH_DRYCHECK_PROOF_2026-03-07_1703_d859691c8/
+?? proof_packs/SEAL_READINESS_2026-03-07_1309_0af062e88/
+?? proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c/
+?? proof_packs/TERMINAL_CLOSURE_2026-03-07_1711_d859691c8/
+?? proof_packs/TERMINAL_IDLE_ARCHIVE_2026-03-07_0855_757ae4d4c/
+?? proof_packs/TRUTH_HEAL_MAPS_2026-03-07_1249_0af062e88/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+?? proof_packs/UNTRACKED_RESIDUE_CLEARANCE_2026-03-07_1630_870348944/
+?? proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c/
+?? proof_packs/WORKSPACE_HYGIENE_AND_SEAL_2026-03-07_0711_757ae4d4c/
+
+CMD: git branch --show-current
+MAIN
+
+CMD: git remote -v
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (fetch)
+fastfs	/home/titane-os/.cache/titane_fastfs/p2_bundle/repo (push)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (fetch)
+origin	https://github.com/KallokTherok1994/TITANE_INFINITY.git (push)
+

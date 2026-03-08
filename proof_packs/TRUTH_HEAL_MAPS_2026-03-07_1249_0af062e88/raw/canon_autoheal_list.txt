@@ -1,0 +1,5 @@
+scripts/autoheal/apply_autoheal.sh
+scripts/autoheal/autoheal_rules.jsonl
+scripts/autoheal/detect_recurrence.sh
+scripts/autoheal/duplicate_id_allowlist.txt
+scripts/autoheal/README.md

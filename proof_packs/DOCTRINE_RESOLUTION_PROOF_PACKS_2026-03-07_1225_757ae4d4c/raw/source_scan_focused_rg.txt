@@ -1,0 +1,28 @@
+.github/copilot-instructions.md:86:Each governed session must produce evidence in proof_packs and reports.
+.github/instructions/docs-registry.instructions.md:2:applyTo: 'docs/**, reports/**, proof_packs/**'
+.github/instructions/docs-registry.instructions.md:10:- Proof evidence lives under `reports/` (append-only logs) and `proof_packs/` (session packs).
+.github/instructions/docs-registry.instructions.md:19:- Rewrite history or delete proof packs.
+.github/instructions/docs-registry.instructions.md:23:- VERDICT.md and ROLLBACK.md in proof packs.
+scripts/verify_instructions.sh:83:if has_match "proof pack|Proof Pack|proof_packs" .github/copilot-instructions.md .github/instructions/titane.instructions.md; then ok "G_MARKER_PROOF_PACK"; else ko "G_MARKER_PROOF_PACK"; fi
+scripts/certification/lib_cert.sh:38:  # Exclude untracked (??) as outputs/proof packs are expected untracked
+scripts/certification/lib_cert.sh:178:  (cd "$pack_dir" && find . -type f ! -name "SHA256SUMS" ! -name "LOCK.md" ! -name "VERDICT.md" ! -name "ROLLBACK.md" -exec sha256sum {} \; | sort) > "$pack_dir/SHA256SUMS"
+scripts/certification/lib_cert.sh:188:This proof pack is immutable. All decisions sealed.
+scripts/certification/lib_cert.sh:191:  # VERDICT.md (required output keys)
+scripts/certification/lib_cert.sh:192:  cat > "$pack_dir/VERDICT.md" <<EOF
+scripts/certification/lib_cert.sh:203:  # ROLLBACK.md (git restore recipe)
+scripts/certification/lib_cert.sh:204:  cat > "$pack_dir/ROLLBACK.md" <<EOF
+scripts/certification/run-p10-desktop-cert.sh:80:A) CREATE P10 WORKDIR (proof pack structure)
+scripts/certification/run-p10-desktop-cert.sh:865:        echo "See proof pack files:"
+scripts/certification/run-p10-desktop-cert.sh:873:    } > "VERDICT.md"
+scripts/certification/run-p10-desktop-cert.sh:922:        echo "# Remove proof pack (if not committed)"
+scripts/certification/run-p10-desktop-cert.sh:933:    } > "ROLLBACK.md"
+scripts/certification/run-p10-desktop-cert.sh:954:    # Add proof pack
+scripts/certification/run-p10-desktop-cert.sh:1007:Seal: SHA256SUMS.txt, LOCK.md, VERDICT.md"
+scripts/certification/run-p10-desktop-cert.sh:1045:    # Also write to proof pack
+README.md:153:- **Entries**: 87+ events (append-only, no deletions)
+README.md:218:- Registre UI obligatoire: chaque changement UI doit ajouter une entry append-only dans `registry/ui-events.jsonl`.
+README.md:534:- **Online-First** : Connectivité réseau requise, network surface minimal, audit logs append-only
+README.md:833:| Proof Pack Online-First (vΩ)       | `docs/_evidence/online_first_vΩ/VERDICT.md`  |
+README.md:834:| Proof Pack Online-Final            | `docs/_evidence/online_final/VERDICT.md`     |
+README.md:835:| Proof Pack Final Clean Seal        | `docs/_evidence/final_clean_seal/VERDICT.md` |
+README.md:837:| Registry audit trail (append-only) | `registry/ui-events.jsonl`                   |

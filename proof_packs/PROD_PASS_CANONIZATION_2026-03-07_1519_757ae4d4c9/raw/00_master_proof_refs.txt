@@ -1,0 +1,9 @@
+]633;E;{   echo "SOURCE_PACK=$SRC_PACK"\x3b   if [ -d "$SRC_PACK" ]\x3b then     echo "SOURCE_PACK_EXISTS=YES"\x3b   else     echo "SOURCE_PACK_EXISTS=NO"\x3b   fi\x3b   echo "SOURCE_VERDICT_FILE=$SRC_PACK/VERDICT.md"\x3b   echo "SOURCE_BUILD_SUMMARY=$SRC_PACK/raw/02_appimage_build.summary.txt"\x3b   echo "SOURCE_DEPLOY_LOG=$SRC_PACK/03_DEPLOY_EXECUTION.log"\x3b   echo "SOURCE_INTEGRITY_ENV=$SRC_PACK/raw/04_post_checks.env"\x3b   echo "SOURCE_SMOKE_LOG=$SRC_PACK/raw/04_smoke_appimage.log"\x3b   echo "SOURCE_MANIFEST=deployment/latest/MANIFEST.json"\x3b   echo "SOURCE_AUTOHEAL_RULE=scripts/autoheal/autoheal_rules.jsonl#AH-2026-03-07-0079"\x3b } > "$PACK/raw/00_master_proof_refs.txt";f06cac40-a4b4-46b0-b9fe-eb535830a71d]633;CSOURCE_PACK=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9
+SOURCE_PACK_EXISTS=YES
+SOURCE_VERDICT_FILE=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/VERDICT.md
+SOURCE_BUILD_SUMMARY=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/raw/02_appimage_build.summary.txt
+SOURCE_DEPLOY_LOG=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/03_DEPLOY_EXECUTION.log
+SOURCE_INTEGRITY_ENV=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/raw/04_post_checks.env
+SOURCE_SMOKE_LOG=proof_packs/PROD_ARTIFACT_ALIGNMENT_2026-03-07_1457_757ae4d4c9/raw/04_smoke_appimage.log
+SOURCE_MANIFEST=deployment/latest/MANIFEST.json
+SOURCE_AUTOHEAL_RULE=scripts/autoheal/autoheal_rules.jsonl#AH-2026-03-07-0079

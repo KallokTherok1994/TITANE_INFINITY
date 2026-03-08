@@ -1,0 +1,2 @@
+]633;E;{   echo "SCOPE_FIX_SYNTAX_EXIT_CODE=$RCN"\x3b   echo "SCOPE_GATE_EXIT_CODE=$RC"\x3b } > "$PACK_DIR/raw/02_scope_validation.summary.txt";d7a296b9-3d89-412b-9330-9e4b6ba4e104]633;CSCOPE_FIX_SYNTAX_EXIT_CODE=0
+SCOPE_GATE_EXIT_CODE=0

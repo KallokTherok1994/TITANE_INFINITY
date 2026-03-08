@@ -1,0 +1,4 @@
+template_usage=DO_NOT_EXECUTE_NOW
+purpose=single_master_template_for_future_real_signal
+current_mode=GOVERNED_IDLE_CONFIRMED
+allowed_future_triggers=EXPLICIT_NEW_SCOPE,PROVEN_DRIFT,CRITICAL_EXTERNAL_FAILURE
