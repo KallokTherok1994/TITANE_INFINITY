@@ -1,0 +1,80 @@
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/validation-C2fdxRag.js.br                        62.25kb / brotliCompress: 14.97kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/i18n-LXy9ddvN.js.br                              69.07kb / brotliCompress: 20.60kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/main-DXZnaHXx.css.br                             187.18kb / brotliCompress: 23.14kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ai-transformers-BF6GW07g.js.br                   195.34kb / brotliCompress: 46.85kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/chrono-BGJajom8.js.br                            180.63kb / brotliCompress: 46.86kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-Be8mELY3.js.br                            256.96kb / brotliCompress: 72.29kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/react-vendor-BfPM64kt.js.br                      230.99kb / brotliCompress: 64.43kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-onnx-DsUKffg4.js.br                       532.21kb / brotliCompress: 99.61kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/core-runtime-QyNW2nSG.js.br                      1359.35kb / brotliCompress: 307.52kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/stats.html.br                                           1841.58kb / brotliCompress: 125.14kb
+
+
+   Compiling titane-infinity v27.2.0 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)
+warning: unused import: `capture_commands::*`
+    --> src/audio/commands.rs:1578:9
+     |
+1578 | pub use capture_commands::*;
+     |         ^^^^^^^^^^^^^^^^^^^
+     |
+     = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `titane-infinity` (bin "titane-infinity") generated 1 warning (run `cargo fix --bin "titane-infinity" -p titane-infinity` to apply 1 suggestion)
+    Finished `release` profile [optimized] target(s) in 3m 49s
+       Built application at: /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity
+    Bundling Titan-Stable_27.2.0_amd64.AppImage (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/Titan-Stable_27.2.0_amd64.AppImage)
+    Bundling Titan-Stable_27.2.0_amd64.deb (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/deb/Titan-Stable_27.2.0_amd64.deb)
+    Finished 2 bundles at:
+        /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/Titan-Stable_27.2.0_amd64.AppImage
+        /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/deb/Titan-Stable_27.2.0_amd64.deb
+
+
+📦 Copying build artifacts to runtime/stable/...
+✅ Linux AppImage ready: runtime/stable/*.AppImage
+✅ Linux DEB ready: runtime/stable/*.deb
+
+🔄 Updating desktop entry to point to Stable artifact...
+[0;34m╔═══════════════════════════════════════════════════════════════╗[0m
+[0;34m║        TITANE∞ - Desktop Icon Auto-Update                    ║[0m
+[0;34m╚═══════════════════════════════════════════════════════════════╝[0m
+
+[1;33m[1/4][0m Mise à jour du fichier .desktop avec chemins actuels...
+      ✓ AppImage Stable trouvée
+[1;33m[2/4][0m Copie du fichier .desktop dans les applications...
+      ✓ Fichiers copiés vers:
+        - /home/titane-os/.local/share/applications/titane-infinity.desktop
+        - /home/titane-os/.local/share/applications/TITANE-Infinity.desktop
+[1;33m[3/4][0m Mise à jour du cache des icônes...
+      ✓ Cache des applications mis à jour
+      ✓ Cache des icônes GTK mis à jour
+[1;33m[4/4][0m Vérification de l'installation...
+[0;32m✓ Installation réussie![0m
+
+Détails de l'installation:
+  • Fichier .desktop: [0;32m/home/titane-os/.local/share/applications/titane-infinity.desktop[0m
+  • Binaire: [0;32m/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage[0m
+  • Icône: [0;32m/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png[0m
+
+[0;34mℹ[0m L'application TITANE∞ est maintenant disponible dans votre menu d'applications
+[0;34mℹ[0m Vous pouvez la lancer en cherchant 'TITANE' dans le lanceur d'applications
+
+[1;33mNote:[0m L'icône se mettra automatiquement à jour à chaque build.
+      Lancez ce script après chaque compilation pour synchroniser.
+
+🎉 BUILD COMPLETE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📍 Executable location: runtime/stable/
+
+🚀 Launch Titan-Stable:
+  Linux:   ./runtime/stable/*.AppImage
+  macOS:   open runtime/stable/*.app
+  Windows: runtime/stable/*.msi (install first)
+
+💡 This is your USER RUNTIME:
+  • No hot reload (stable experience)
+  • Optimized performance
+  • Full OMEGA pipeline active
+  • Use this for daily Titan interactions
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

@@ -162,7 +162,11 @@ const AdminPage = lazy(() =>
 );
 const TitanePage = lazyWithTimeout(
   () => import('./pages/TitanePage').then(m => ({ default: m.TitanePage })),
-  { timeoutMs: 20000, label: 'TitanePage' }
+  {
+    // Dev startup can be slower while Vite compiles large page chunks.
+    timeoutMs: import.meta.env.DEV ? 120000 : 20000,
+    label: 'TitanePage',
+  }
 );
 const OrchestrationMetaCenter = lazy(() =>
   import('./pages/OrchestrationMetaCenter').then(m => ({

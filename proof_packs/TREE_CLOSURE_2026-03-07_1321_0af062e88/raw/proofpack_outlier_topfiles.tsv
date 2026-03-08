@@ -1,0 +1,6 @@
+]633;E;{   echo -e 'pack_path\\tfile_size\\tfile_path'\x3b   awk -F'\\t' 'NR>1 {print $1}' "$RAW/proofpack_outliers.tsv" | while IFS= read -r d\x3b do     [ -z "$d" ] && continue\x3b     find "$d" -type f -printf '%s\\t%p\\n' | sort -nr | head -n 5 | awk -v p="$d" -F'\\t' '{print p"\\t"$1"\\t"$2}'\x3b   done\x3b } > "$RAW/proofpack_outlier_topfiles.tsv";5bfd3148-a67f-487c-bd2a-911f1c701012]633;Cpack_path	file_size	file_path
+proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/	5304496482	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/raw/source_scan_rg.txt
+proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/	35976	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/raw/source__run-p10-desktop-cert.sh
+proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/	30098	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/raw/source__README.md
+proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/	11538	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/raw/source_scan_rg_head120.txt
+proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/	8489	proof_packs/DOCTRINE_RESOLUTION_PROOF_PACKS_2026-03-07_1225_757ae4d4c/raw/source__lib_cert.sh

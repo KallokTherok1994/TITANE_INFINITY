@@ -1,0 +1,60 @@
+[2026-03-08T00:11:53.582Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-03-08T00:11:53.586Z INFO  titane_infinity::runtime_config] CMD:START get_runtime_config
+[2026-03-08T00:11:53.586Z INFO  titane_infinity::runtime_config] CMD:END get_runtime_config ok
+[2026-03-08T00:11:53.975Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ROUTER
+[2026-03-08T00:11:53.976Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:AFTER_ROUTER
+[2026-03-08T00:11:53.978Z INFO  ui] [UI] frontend.boot — BOOT:BEFORE_ORCHESTRATOR
+[2026-03-08T00:11:53.979Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:BEFORE_ORCHESTRATOR
+[2026-03-08T00:11:53.981Z INFO  ui] [UI] frontend.boot — BOOT:BEFORE_ORCHESTRATOR_INIT
+[2026-03-08T00:11:53.983Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:BEFORE_ORCHESTRATOR_INIT
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-03-08T00:11:54.027Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-03-08T00:11:54.039Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ROUTER","ts":1772928714039}
+[2026-03-08T00:11:54.039Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:BEFORE_ORCHESTRATOR","ts":1772928714039}
+[2026-03-08T00:11:54.039Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:BEFORE_ORCHESTRATOR_INIT","ts":1772928714039}
+[2026-03-08T00:11:54.071Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-03-08T00:11:54.254Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-03-08T00:11:54.825Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ORCHESTRATOR
+[2026-03-08T00:11:54.825Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:AFTER_ORCHESTRATOR
+[2026-03-08T00:11:54.825Z INFO  ui] [UI] frontend.boot — BOOT:AFTER_ORCHESTRATOR_INIT
+[2026-03-08T00:11:54.825Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:AFTER_ORCHESTRATOR_INIT
+[2026-03-08T00:11:54.826Z INFO  ui] [UI] frontend.boot — BOOT:READY
+[2026-03-08T00:11:54.826Z INFO  titane_infinity::runtime_config] UI_BOOT_MARKER BOOT:READY
+[2026-03-08T00:11:54.829Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ORCHESTRATOR","ts":1772928714829}
+[2026-03-08T00:11:54.829Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:AFTER_ORCHESTRATOR_INIT","ts":1772928714829}
+[2026-03-08T00:11:54.829Z INFO  titane_infinity] UI_BOOT_EVENT {"marker":"BOOT:READY","ts":1772928714829}
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+GStreamer element appsink not found. Please install it.
+GStreamer element appsrc not found. Please install it
+
+(WebKitWebProcess:860195): GLib-GObject-CRITICAL **: 19:12:00.230: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+
+(WebKitWebProcess:860195): GStreamer-CRITICAL **: 19:12:00.230: gst_bin_add: assertion 'GST_IS_ELEMENT (element)' failed
+
+(WebKitWebProcess:860195): GStreamer-CRITICAL **: 19:12:00.230: gst_element_get_static_pad: assertion 'GST_IS_ELEMENT (element)' failed
+
+(WebKitWebProcess:860195): GLib-GObject-CRITICAL **: 19:12:00.230: g_object_set: assertion 'G_IS_OBJECT (object)' failed
+GStreamer element autoaudiosink not found. Please install it
+
+(WebKitWebProcess:860195): GLib-GObject-CRITICAL **: 19:12:00.230: invalid (NULL) pointer instance
+
+(WebKitWebProcess:860195): GLib-GObject-CRITICAL **: 19:12:00.230: g_signal_connect_data: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+[2026-03-08T00:12:00.253Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-03-08T00:12:00.253Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-03-08T00:12:01.436Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-03-08T00:12:01.436Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 16000
+[2026-03-08T00:12:01.436Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+[2026-03-08T00:12:24.087Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-03-08T00:12:24.089Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+[2026-03-08T00:12:54.103Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-03-08T00:12:54.151Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
+[CHAT] ⚠️ Provider ollama temporairement désactivé (3 échecs)
