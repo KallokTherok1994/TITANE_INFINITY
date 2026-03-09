@@ -24,10 +24,22 @@ normalize_binary_for_hash() {
 
   cp "$src_bin" "$out_bin"
 
+  # Strip debug sections first (removes DWARF, line tables, etc.)
   if command -v llvm-strip >/dev/null 2>&1; then
-    llvm-strip --strip-debug "$out_bin" >/dev/null 2>&1 || true
+    llvm-strip --strip-debug --strip-unneeded "$out_bin" >/dev/null 2>&1 || true
   elif command -v strip >/dev/null 2>&1; then
-    strip --strip-debug "$out_bin" >/dev/null 2>&1 || true
+    strip --strip-debug --strip-unneeded "$out_bin" >/dev/null 2>&1 || true
+  fi
+
+  # Zero out build-id section (varies per build even with SOURCE_DATE_EPOCH)
+  if command -v objcopy >/dev/null 2>&1; then
+    objcopy --remove-section=.note.gnu.build-id "$out_bin" >/dev/null 2>&1 || true
+    objcopy --remove-section=.note.ABI-tag "$out_bin" >/dev/null 2>&1 || true
+  fi
+
+  # Remove build-id section via llvm-objcopy as fallback
+  if command -v llvm-objcopy >/dev/null 2>&1; then
+    llvm-objcopy --remove-section=.note.gnu.build-id "$out_bin" >/dev/null 2>&1 || true
   fi
 }
 
