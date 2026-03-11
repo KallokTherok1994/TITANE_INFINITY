@@ -504,6 +504,48 @@ function deriveResearchProviderMeta(
   };
 }
 
+function mapReasonCodeToNodeStatus(
+  reasonCode?: ReasonCode
+): 'active' | 'done' | 'error' | 'blocked' {
+  if (!reasonCode || reasonCode === 'OK' || reasonCode === 'CACHE_HIT') {
+    return 'done';
+  }
+
+  if (
+    reasonCode === 'TIMEOUT' ||
+    reasonCode === 'POLICY_BLOCKED' ||
+    reasonCode === 'ALLOWLIST_DENIED' ||
+    reasonCode === 'TOOL_DENIED' ||
+    reasonCode === 'PROVIDER_UNAVAILABLE'
+  ) {
+    return 'blocked';
+  }
+
+  return 'error';
+}
+
+function formatRuntimeThinkingSummary(meta: ProviderDecisionMeta): string {
+  const attempts = Array.isArray(meta.attempts) ? meta.attempts : [];
+  const attemptsSummary =
+    attempts.length > 0
+      ? attempts
+          .slice(0, 4)
+          .map((attempt, index) => {
+            return `${index + 1}:${attempt.provider_id}/${attempt.outcome}/${attempt.reason_code}/${attempt.latency_ms}ms`;
+          })
+          .join(' | ')
+      : 'none';
+
+  return [
+    `mode=${meta.mode}`,
+    `provider=${meta.provider_used}`,
+    `reason=${meta.reason_code}`,
+    `network=${meta.network_used ? 'on' : 'off'}`,
+    `cache=${meta.cache_hit ? 'hit' : 'miss'}`,
+    `attempts=${attemptsSummary}`,
+  ].join(' ; ');
+}
+
 // ═══════════════════════════════════════════════════════════════════════════
 // SUB-COMPONENTS
 // ═══════════════════════════════════════════════════════════════════════════
@@ -547,6 +589,14 @@ const ConversationMessage = memo(
       <div
         className={`conversation-message ${message.role}`}
         data-testid={`chat-message-${message.role}`}
+        data-provider-used={providerMeta?.provider_used || undefined}
+        data-provider-mode={providerMeta?.mode || undefined}
+        data-provider-class={providerMeta?.provider_class || undefined}
+        data-provider-reason={providerMeta?.reason_code || undefined}
+        data-provider-network-used={
+          providerMeta ? String(providerMeta.network_used) : undefined
+        }
+        data-provider-cache-hit={providerMeta ? String(cacheHit) : undefined}
       >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
@@ -559,20 +609,36 @@ const ConversationMessage = memo(
             {message.role === 'assistant' && providerMeta && (
               <div className="conversation-message-tags">
                 {providerLabel && (
-                  <span className="conversation-tag">{providerLabel}</span>
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {providerLabel}
+                  </span>
                 )}
-                {modeLabel && <span className="conversation-tag">{modeLabel}</span>}
-                {classLabel && <span className="conversation-tag">{classLabel}</span>}
-                {cacheHit && <span className="conversation-tag">CACHE</span>}
+                {modeLabel && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {modeLabel}
+                  </span>
+                )}
+                {classLabel && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {classLabel}
+                  </span>
+                )}
+                {cacheHit && (
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    CACHE
+                  </span>
+                )}
                 {reasonLabel && reasonLabel !== 'OK' && (
-                  <span className="conversation-tag">{reasonLabel}</span>
+                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+                    {reasonLabel}
+                  </span>
                 )}
               </div>
             )}
             {message.metadata?.tags && message.metadata.tags.length > 0 && (
               <div className="conversation-message-tags">
                 {message.metadata.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="conversation-tag">
+                  <span key={i} className="conversation-tag" data-testid="chat-runtime-tag">
                     {tag}
                   </span>
                 ))}
@@ -751,18 +817,83 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const hasMessages = messages.length > 0;
   const isHealthy = healthReport?.status === 'Healthy';
+
+  const latestAssistantProviderMeta = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const message = messages[i];
+      if (message.role === 'assistant' && message.metadata?.providerMeta) {
+        return message.metadata.providerMeta;
+      }
+    }
+    return null;
+  }, [messages]);
+
   const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
-    thinking.isThinking ? 'active' : hasMessages ? 'done' : 'idle';
+    thinking.isThinking
+      ? 'active'
+      : error
+        ? 'error'
+        : hasMessages
+          ? 'done'
+          : 'idle';
 
   const thinkingTopology = useMemo(
-    () => [
-      {
-        id: 'conversation-runtime',
-        label: 'conversation-runtime',
-        status: (thinking.isThinking ? 'active' : 'done') as 'active' | 'done' | 'error' | 'blocked',
-      },
-    ],
-    [thinking.isThinking]
+    () => {
+      const nodes: Array<{
+        id: string;
+        label: string;
+        status: 'active' | 'done' | 'error' | 'blocked';
+      }> = [
+        {
+          id: 'conversation-runtime',
+          label: 'conversation-runtime',
+          status: (thinking.isThinking ? 'active' : 'done') as
+            | 'active'
+            | 'done'
+            | 'error'
+            | 'blocked',
+        },
+      ];
+
+      if (!latestAssistantProviderMeta) {
+        return nodes;
+      }
+
+      const reasonStatus = mapReasonCodeToNodeStatus(
+        latestAssistantProviderMeta.reason_code
+      );
+
+      nodes.push({
+        id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
+        label: `mode:${latestAssistantProviderMeta.mode}`,
+        status: reasonStatus,
+      });
+
+      nodes.push({
+        id: `provider-${latestAssistantProviderMeta.provider_used}`,
+        label: `provider:${latestAssistantProviderMeta.provider_used}`,
+        status: reasonStatus,
+      });
+
+      if (latestAssistantProviderMeta.reason_code !== 'OK') {
+        nodes.push({
+          id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
+          label: `reason:${latestAssistantProviderMeta.reason_code}`,
+          status: reasonStatus,
+        });
+      }
+
+      latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
+        nodes.push({
+          id: `attempt-${index + 1}-${attempt.provider_id}`,
+          label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
+          status: mapReasonCodeToNodeStatus(attempt.reason_code),
+        });
+      });
+
+      return nodes;
+    },
+    [thinking.isThinking, latestAssistantProviderMeta]
   );
 
   const searchNeedle = useMemo(() => {
@@ -936,6 +1067,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       const response = await sendMessage(messageText);
 
       thinking.addStep('synthesis', 'Génération de la réponse...');
+
+      if (response?.meta) {
+        thinking.addStep('validation', formatRuntimeThinkingSummary(response.meta));
+      }
+
       thinking.stopThinking();
 
       if (audioEnabled && response?.assistant_message) {
