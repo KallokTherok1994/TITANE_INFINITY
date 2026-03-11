@@ -18,8 +18,14 @@ interface ThinkingStep {
   id: string;
   type: 'analysis' | 'reasoning' | 'synthesis' | 'validation';
   content: string;
-  status: 'pending' | 'active' | 'complete';
+  status: 'idle' | 'pending' | 'active' | 'complete' | 'done' | 'error' | 'blocked';
   timestamp: number;
+}
+
+interface ThinkingTopologyNode {
+  id: string;
+  label: string;
+  status: 'active' | 'done' | 'error' | 'blocked';
 }
 
 interface ThinkingPanelProps {
@@ -30,6 +36,8 @@ interface ThinkingPanelProps {
   inline?: boolean; // Mode inline dans le message (v2)
   provider?: string; // Provider utilisé (ex: "GPT-4o", "Claude", "Gemini", "Local") (v2.1)
   elapsedTime?: number; // Temps écoulé en secondes (v2.1)
+  state?: 'idle' | 'active' | 'done' | 'error' | 'blocked';
+  topology?: ThinkingTopologyNode[];
 }
 
 export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
@@ -40,7 +48,21 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   inline = false,
   provider,
   elapsedTime,
+  state,
+  topology = [],
 }) => {
+    const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+      state ??
+      (isThinking
+        ? 'active'
+        : steps.some(s => s.status === 'error')
+          ? 'error'
+          : steps.some(s => s.status === 'blocked')
+            ? 'blocked'
+            : steps.length > 0
+              ? 'done'
+              : 'idle');
+
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
 
@@ -76,7 +98,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   };
 
   const getStepIcon = (type: ThinkingStep['type'], status: ThinkingStep['status']) => {
-    if (status === 'complete') {
+    if (status === 'complete' || status === 'done') {
       return <Check className="thinking-step-icon complete" size={16} />;
     }
     if (status === 'active') {
@@ -112,7 +134,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     }
   };
 
-  if (!isThinking && steps.length === 0) {
+  if (!isThinking && steps.length === 0 && !state) {
     return null;
   }
 
@@ -122,6 +144,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
       <AnimatePresence>
         <motion.div
           className={`thinking-panel-compact ${inline ? 'thinking-panel-inline' : ''}`}
+          data-testid="reasoning-progress"
+          data-state={resolvedState}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
@@ -145,7 +169,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <>
                 <Brain className="thinking-compact-icon" size={14} />
                 <span className="thinking-compact-text">
-                  {steps.filter(s => s.status === 'complete').length} étapes
+                  {steps.filter(s => s.status === 'complete' || s.status === 'done').length} étapes
                 </span>
               </>
             )}
@@ -156,6 +180,21 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             )}
             <ChevronDown className="thinking-compact-chevron" size={14} />
           </div>
+          {topology.length > 0 && (
+            <div className="thinking-topology" data-testid="reasoning-topology" hidden>
+              {topology.map(node => (
+                <span
+                  key={node.id}
+                  className={`thinking-topology-node ${node.status}`}
+                  data-testid="reasoning-topology-node"
+                  data-node-id={node.id}
+                  data-node-status={node.status}
+                >
+                  {node.label}
+                </span>
+              ))}
+            </div>
+          )}
         </motion.div>
       </AnimatePresence>
     );
@@ -166,6 +205,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     <AnimatePresence>
       <motion.div
         className={`thinking-panel ${inline ? 'thinking-panel-inline' : ''}`}
+        data-testid="reasoning-progress"
+        data-state={resolvedState}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
@@ -181,6 +222,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 <span className="thinking-status">
                   <Loader2 className="spin" size={14} />
                   En cours...
+                </span>
+              )}
+              {!isThinking && (
+                <span className="thinking-status" data-testid="reasoning-status-label">
+                  {resolvedState}
                 </span>
               )}
             </h3>
@@ -210,6 +256,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             <motion.div
               key={step.id}
               className={`thinking-step ${step.status}`}
+              data-testid={`reasoning-step-${step.type}`}
+              data-step-status={step.status}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -252,11 +300,27 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           )}
         </div>
 
+        {topology.length > 0 && (
+          <div className="thinking-topology" data-testid="reasoning-topology">
+            {topology.map(node => (
+              <span
+                key={node.id}
+                className={`thinking-topology-node ${node.status}`}
+                data-testid="reasoning-topology-node"
+                data-node-id={node.id}
+                data-node-status={node.status}
+              >
+                {node.label}
+              </span>
+            ))}
+          </div>
+        )}
+
         {/* Footer with stats */}
         {steps.length > 0 && (
           <div className="thinking-footer">
             <span className="thinking-stat">
-              {steps.filter(s => s.status === 'complete').length} / {steps.length} étapes
+              {steps.filter(s => s.status === 'complete' || s.status === 'done').length} / {steps.length} étapes
             </span>
             <span className="thinking-stat">
               Durée:{' '}

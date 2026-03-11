@@ -48,7 +48,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap';
 // ✨ v25.7.4: Responsive Chat Layout wrapper
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 // ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
-import { ThinkingPanel, useThinkingSteps } from '../../features/chat/ThinkingPanel';
+import { ThinkingPanel } from '../../features/chat/ThinkingPanel';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -623,15 +623,14 @@ const ChatComponent: React.FC = () => {
   useVADWithTTS(vad); // Auto-suspend VAD during TTS playback (anti-echo)
   useBargeInHandler(); // Auto-stop TTS when user interrupts
 
-  // ✨ v26.2: OMEGA Reflection Panel v2 - Thinking steps management
-  const thinking = useThinkingSteps();
-  const [thinkingStartTime, setThinkingStartTime] = useState<number>(0);
+  // V24: Runtime-truth reasoning progress (no simulated fake steps)
+  const [thinkingStartTime, setThinkingStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
 
   // Timer for elapsed time (v2.1)
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (thinking.isThinking && thinkingStartTime > 0) {
+    if (isLoading && thinkingStartTime && thinkingStartTime > 0) {
       interval = setInterval(() => {
         setElapsedTime((Date.now() - thinkingStartTime) / 1000);
       }, 100);
@@ -639,37 +638,17 @@ const ChatComponent: React.FC = () => {
     return () => {
       if (interval) clearInterval(interval);
     };
-  }, [thinking.isThinking, thinkingStartTime]);
+  }, [isLoading, thinkingStartTime]);
 
-  // Sync thinking state with isLoading state from chat
+  // Runtime timer state only: no synthetic reasoning steps.
   useEffect(() => {
-    if (isLoading && !thinking.isThinking) {
-      thinking.startThinking();
+    if (isLoading && !thinkingStartTime) {
       setThinkingStartTime(Date.now());
       setElapsedTime(0);
-      // Simulate OMEGA pipeline steps (can be replaced with real steps from backend)
-      setTimeout(() => {
-        if (thinking.isThinking) {
-          thinking.addStep('analysis', 'Analyse du contexte et de la demande...');
-        }
-      }, 300);
-      setTimeout(() => {
-        if (thinking.isThinking) {
-          thinking.addStep('reasoning', 'Recherche dans la mémoire et raisonnement...');
-        }
-      }, 800);
-    } else if (!isLoading && thinking.isThinking) {
-      setTimeout(() => {
-        if (thinking.isThinking) {
-          thinking.addStep('synthesis', 'Synthèse de la réponse...');
-        }
-      }, 100);
-      setTimeout(() => {
-        thinking.stopThinking();
-        setThinkingStartTime(0);
-      }, 500);
+    } else if (!isLoading && thinkingStartTime) {
+      setThinkingStartTime(null);
     }
-  }, [isLoading, thinking]);
+  }, [isLoading, thinkingStartTime]);
 
   // Start/stop VAD when voice mode is toggled
   useEffect(() => {
@@ -738,6 +717,142 @@ const ChatComponent: React.FC = () => {
       attemptedProviders,
     };
   }, [debugEntries, lastProvider, error, isLoading, omnisStats?.autoHealCount]);
+
+  const runtimeThinking = useMemo(() => {
+    const lastEntry = debugEntries[0];
+    const hasConversation = (messages?.length ?? 0) > 0;
+    const attemptedProviders = lastEntry?.request?.attemptedProviders ?? [];
+    const resolvedProvider =
+      lastEntry?.selectedProvider ??
+      lastEntry?.response?.provider ??
+      lastProvider ??
+      undefined;
+    const omegaMetadata =
+      lastEntry?.response?.omegaMetadata && typeof lastEntry.response.omegaMetadata === 'object'
+        ? (lastEntry.response.omegaMetadata as Record<string, unknown>)
+        : null;
+
+    const pipelineSteps = Array.isArray(omegaMetadata?.pipelineSteps)
+      ? omegaMetadata.pipelineSteps.map(step => String(step))
+      : [];
+
+    const steps: Array<{
+      id: string;
+      type: 'analysis' | 'reasoning' | 'synthesis' | 'validation';
+      content: string;
+      status: 'idle' | 'pending' | 'active' | 'complete' | 'done' | 'error' | 'blocked';
+      timestamp: number;
+    }> = [];
+
+    const baseTs = thinkingStartTime ?? Date.now();
+
+    if (isLoading) {
+      steps.push({
+        id: 'request-in-flight',
+        type: 'analysis',
+        content: 'Requete transmise au backend Tauri',
+        status: 'active',
+        timestamp: baseTs,
+      });
+    }
+
+    if (attemptedProviders.length > 0) {
+      steps.push({
+        id: 'provider-routing',
+        type: 'reasoning',
+        content: `Providers tentes: ${attemptedProviders.join(' -> ')}`,
+        status: isLoading ? 'active' : 'done',
+        timestamp: baseTs + 10,
+      });
+    }
+
+    if (pipelineSteps.length > 0) {
+      pipelineSteps.forEach((step, index) => {
+        steps.push({
+          id: `pipeline-${index}`,
+          type: index === 0 ? 'analysis' : index === pipelineSteps.length - 1 ? 'synthesis' : 'reasoning',
+          content: step,
+          status: isLoading && index === pipelineSteps.length - 1 ? 'active' : 'done',
+          timestamp: baseTs + 20 + index,
+        });
+      });
+    }
+
+    if (lastEntry?.status === 'error') {
+      steps.push({
+        id: 'pipeline-error',
+        type: 'validation',
+        content: lastEntry.error || 'Pipeline error',
+        status: 'error',
+        timestamp: Date.now(),
+      });
+    }
+
+    // Keep a truthful post-response trace visible when provider metadata is sparse.
+    if (!isLoading && steps.length === 0 && (lastEntry || hasConversation)) {
+      steps.push({
+        id: 'response-complete',
+        type: 'validation',
+        content: lastEntry
+          ? `Reponse recue (${lastEntry.status || 'ok'})`
+          : 'Trace de raisonnement indisponible pour ce tour',
+        status: lastEntry?.status === 'error' ? 'error' : 'done',
+        timestamp: Date.now(),
+      });
+    }
+
+    const state: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+      lastEntry?.status === 'error'
+        ? 'error'
+        : isLoading
+          ? 'active'
+          : steps.length > 0
+            ? 'done'
+            : 'idle';
+
+    const topology: Array<{
+      id: string;
+      label: string;
+      status: 'active' | 'done' | 'error' | 'blocked';
+    }> = [];
+
+    if (attemptedProviders.length > 0) {
+      attemptedProviders.forEach((provider, index) => {
+        topology.push({
+          id: `provider-${provider}-${index}`,
+          label: provider,
+          status: isLoading && index === attemptedProviders.length - 1 ? 'active' : 'done',
+        });
+      });
+    } else if (resolvedProvider) {
+      topology.push({
+        id: `provider-${resolvedProvider}`,
+        label: String(resolvedProvider),
+        status: state === 'error' ? 'error' : state === 'active' ? 'active' : 'done',
+      });
+    }
+
+    if (lastEntry?.status === 'error') {
+      topology.push({
+        id: 'pipeline-status',
+        label: 'pipeline:error',
+        status: 'error',
+      });
+    } else if (topology.length === 0 && (isLoading || hasConversation)) {
+      topology.push({
+        id: 'chat-runtime',
+        label: 'chat-runtime',
+        status: state === 'active' ? 'active' : 'done',
+      });
+    }
+
+    return {
+      state,
+      steps,
+      topology,
+      provider: resolvedProvider,
+    };
+  }, [debugEntries, isLoading, lastProvider, messages, thinkingStartTime]);
 
   const handlePreferredProviderChange = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -1213,15 +1328,17 @@ const ChatComponent: React.FC = () => {
                   error={error}
                 />
 
-                {/* ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode by default */}
-                {(thinking.isThinking || thinking.steps.length > 0) && (
+                {/* V24: Runtime-truth reasoning panel */}
+                {(isLoading || runtimeThinking.steps.length > 0) && (
                   <ThinkingPanel
-                    isThinking={thinking.isThinking}
-                    steps={thinking.steps}
-                    compact={thinking.compact}
+                    isThinking={runtimeThinking.state === 'active'}
+                    state={runtimeThinking.state}
+                    steps={runtimeThinking.steps}
+                    compact={true}
                     inline={false}
-                    provider={lastProvider || undefined}
-                    elapsedTime={thinking.isThinking ? elapsedTime : undefined}
+                    provider={runtimeThinking.provider}
+                    elapsedTime={isLoading ? elapsedTime : undefined}
+                    topology={runtimeThinking.topology}
                   />
                 )}
               </>

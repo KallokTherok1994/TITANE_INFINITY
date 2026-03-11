@@ -304,12 +304,13 @@ export function useConversationEngine(
         const reasonCode = response.meta?.reason_code || 'UNKNOWN';
 
         if (mode === 'OFFLINE') {
-          const message =
-            reasonCode !== 'UNKNOWN'
-              ? `Mode hors ligne: ${reasonCode}`
-              : 'Mode hors ligne (raison inconnue)';
-          setError(message);
-          logger.warn('[useConversationEngine] OFFLINE mode', { reasonCode });
+          // A successful offline fallback remains a truthful response path.
+          // Provider tags on the assistant message already expose OFFLINE / reason_code.
+          setError(null);
+          logger.warn('[useConversationEngine] OFFLINE degraded success', {
+            reasonCode,
+            provider: response.meta?.provider_used,
+          });
         } else if (mode === 'LOCAL') {
           logger.info('[useConversationEngine] LOCAL mode', { reasonCode });
           setError(null);
