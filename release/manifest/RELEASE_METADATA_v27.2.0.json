@@ -1,0 +1,11 @@
+{
+  "version": "27.2.0",
+  "generated_at_utc": "2026-03-08T16:59:32.375Z",
+  "commit": "c96c4f9b19ea58c926c360bb2bc598745a105276",
+  "branch": "MAIN",
+  "artifacts": [
+    "TITANE-Infinity_27.2.0_amd64.AppImage",
+    "TITANE-Infinity_27.2.0_amd64.deb",
+    "TITANE-Infinity-27.2.0-1.x86_64.rpm"
+  ]
+}

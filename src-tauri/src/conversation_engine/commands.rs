@@ -615,7 +615,21 @@ fn persist_conversation_os_artifacts_with_path(
     let db_path = db_path_override.unwrap_or_else(|| {
         std::env::var("TITANE_CONVOS_DB_PATH")
             .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+            .unwrap_or_else(|_| {
+                std::env::var("XDG_DATA_HOME")
+                    .map(|path| {
+                        PathBuf::from(path)
+                            .join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
+                    })
+                    .or_else(|_| {
+                        std::env::var("HOME").map(|home| {
+                            PathBuf::from(home).join(
+                                ".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db",
+                            )
+                        })
+                    })
+                    .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+            })
     });
 
     if let Some(parent) = db_path.parent() {
@@ -797,7 +811,21 @@ fn persist_conversation_os_artifacts_with_path(
     let db_path = db_path_override.unwrap_or_else(|| {
         std::env::var("TITANE_CONVOS_DB_PATH")
             .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+            .unwrap_or_else(|_| {
+                std::env::var("XDG_DATA_HOME")
+                    .map(|path| {
+                        PathBuf::from(path)
+                            .join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
+                    })
+                    .or_else(|_| {
+                        std::env::var("HOME").map(|home| {
+                            PathBuf::from(home).join(
+                                ".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db",
+                            )
+                        })
+                    })
+                    .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
+            })
     });
 
     if let Some(parent) = db_path.parent() {
