@@ -277,7 +277,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     // which resets the WRY/Tauri WebView localStorage context.
     await browser.execute(() => {
       localStorage.setItem('titane_onboarding_complete', '1');
-      localStorage.setItem('titane_browser_mode', '0');
+      localStorage.setItem('titane_browser_mode', '1'); // browser mode = use localStorage path (not Tauri IPC) for onboarding check
       location.reload();
     });
     await browser.pause(3000);
