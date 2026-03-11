@@ -1,0 +1,10 @@
+977:            path="/titane"
+1003:            path="/stats"
+1013:            path="/time"
+1026:            path="/admin"
+1053:            path="/fusion"
+1064:            path="/optimization"
+1084:            path="/orchestration-center"
+1092:            path="/meta-center"
+1115:            path="/dev"
+1231:          <Route path="*" element={<Navigate to="/" replace />} />
