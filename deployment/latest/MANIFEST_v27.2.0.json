@@ -1,52 +1,35 @@
 {
   "version": "27.2.0",
   "tag": "v27.2.0",
-  "tag_commit": "02bce9c7ccd18247c1b8a5699d89b672ef6b7a7e",
-  "release_date": "2026-02-23",
-  "release_timestamp": "2026-02-23T20:20:35Z",
-  "scope": "TypeScript Strict Mode (0 errors)",
+  "tag_commit": "201f155dd5c8699a0e2651c5e21ccea8125d79a1",
+  "release_date": "2026-03-11",
+  "release_timestamp": "2026-03-11T12:58:11Z",
+  "scope": "Distribution artifact refresh after V16 sealed",
   "risk": "MINIMAL",
   "breaking_changes": false,
   "backward_compatible": true,
-  "deployment_strategy": "GA Immédiat",
+  "deployment_strategy": "latest canonical refresh",
   "artifacts": {
     "appimage": {
       "filename": "TITANE-Infinity_27.2.0_amd64.AppImage",
       "path": "deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage",
-      "size_bytes": 91970040,
-      "size_human": "88M",
-      "sha256": "0e7bfe39ea96cb22445eb0dd7ca38b429de6cc8a203b946a447a6b555deb4bdc"
+      "size_bytes": 92084728,
+      "size_human": "88MiB",
+      "sha256": "640c11346eb7102b6dedd6bc68496c5cc56842510407fe256dacf461c517638f"
     },
     "deb": {
       "filename": "TITANE-Infinity_27.2.0_amd64.deb",
       "path": "deployment/latest/TITANE-Infinity_27.2.0_amd64.deb",
-      "size_bytes": 16830756,
-      "size_human": "17M",
-      "sha256": "1c1f15dee313b97cc7d128dcb6597acd7aa43987b73393e29345605a2919eff3"
+      "size_bytes": 16946040,
+      "size_human": "17MiB",
+      "sha256": "105f2cf3e133b97505372c9e1541e578adb530ab53d6abc310826095de85760e"
     },
-    "rpm": {
-      "filename": "TITANE-Infinity-27.2.0-1.x86_64.rpm",
-      "path": "deployment/latest/TITANE-Infinity-27.2.0-1.x86_64.rpm",
-      "size_bytes": 16815048,
-      "size_human": "17M",
-      "sha256": "4a1601a790cadd94bc19730ae6a175b9c27338d215d5323784b4ede66a08bd79"
+    "binary": {
+      "filename": "titane-infinity",
+      "path": "deployment/latest/titane-infinity",
+      "size_bytes": 30463768,
+      "size_human": "30MiB",
+      "sha256": "99a342d67de079e8b768428c04aeda5d1fc164ed1366cf68cd8baf5d7611381c"
     }
-  },
-  "documentation": {
-    "sprint_summary": "SPRINT_v27.2.0_COMPLETE.md",
-    "handoff": "HANDOFF_v27.2.0_DEPLOYMENT_READY.md",
-    "changelog": "CHANGELOG.md#v27-2-0-typescript-strict",
-    "proof_pack": "runs/TS_STRICT_v27.2.0_20260223_144545/"
-  },
-  "governance": {
-    "registry_event": "#87 RELEASE_v27.2.0_SEALED",
-    "validation": {
-      "typescript_errors": 0,
-      "lint_errors": 0,
-      "gate_g1": "PASS",
-      "reproducibility": "3/3 passes"
-    }
-  },
-  "verified": true,
-  "verified_timestamp": "2026-03-06T17:03:50Z"
+  }
 }

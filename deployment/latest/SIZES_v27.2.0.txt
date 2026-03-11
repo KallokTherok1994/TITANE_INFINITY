@@ -1,3 +1,3 @@
-TITANE-Infinity_27.2.0_amd64.AppImage 91970040
-TITANE-Infinity_27.2.0_amd64.deb 16830756
-TITANE-Infinity-27.2.0-1.x86_64.rpm 16815048
+TITANE-Infinity_27.2.0_amd64.AppImage 92084728
+TITANE-Infinity_27.2.0_amd64.deb 16946040
+titane-infinity 30463768
