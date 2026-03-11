@@ -19,3 +19,4 @@ Evidence pointers:
 - artifacts/run2/v9-ui-runtime-run2.json
 - artifacts/run1/wdio.log
 - artifacts/run2/wdio.log
+- artifacts/visual_compare.txt (tool not available => fallback evidence path documented)
