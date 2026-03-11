@@ -70,3 +70,10 @@
   background: rgba(255, 255, 255, 0.05);
   color: var(--titanium-text-primary, rgba(255, 255, 255, 0.9));
 }
+
+/* Dedicated keyboard focus style to keep tab navigation perceptible and coherent. */
+.titane-inline-tabs button:focus-visible {
+  outline: 2px solid var(--titanium-accent-cool, #9ca3af);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(156, 163, 175, 0.22);
+}
