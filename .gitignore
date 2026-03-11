@@ -182,6 +182,8 @@ memory/memory_core_state.json
 deployment/latest/release/
 deployment/latest/certification/master_runs/
 deployment/latest/builds/target-run-*/
+deployment/latest/builds/target-p8/
+deployment/latest/builds/target-p9/
 /-
 
 # P1: WebResearch Engine sandbox — generated evidence reports (not committed)
