@@ -327,8 +327,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
               !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
               !!document.querySelector('[data-testid="chat-bubble-input"]') ||
               !!document.querySelector('#chat-window-textarea') ||
-                !!document.querySelector('#chat-input-textarea') ||
-                !!document.querySelector('[data-testid="chat-input"]');
+              !!document.querySelector('#chat-input-textarea') ||
+              !!document.querySelector('[data-testid="chat-input"]');
             return (
               Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
             );
@@ -379,7 +379,10 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     // ConversationSection may render outside the visible WRY window area.
     await browser.execute(sel => {
       const el = document.querySelector(sel);
-      if (el) { el.scrollIntoView({ block: 'center', inline: 'center' }); el.focus(); }
+      if (el) {
+        el.scrollIntoView({ block: 'center', inline: 'center' });
+        el.focus();
+      }
     }, selectors.input);
     await browser.pause(600);
 
@@ -387,24 +390,34 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     // WRY E2E: isElementClickable=false due to overlay covering textarea after
     // onboarding bypass reload. Use JS native value setter (React-compatible)
     // and dispatch events to sync React state, then submit via Enter key.
-    await browser.execute((sel, val) => {
-      const el = document.querySelector(sel);
-      if (!el) throw new Error('chat-input not found in DOM');
-      el.scrollIntoView({ block: 'center', inline: 'center' });
-      el.focus();
-      const nativeSetter = Object.getOwnPropertyDescriptor(
-        window.HTMLTextAreaElement.prototype, 'value'
-      ).set;
-      nativeSetter.call(el, val);
-      el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-      el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-    }, selectors.input, msg);
+    await browser.execute(
+      (sel, val) => {
+        const el = document.querySelector(sel);
+        if (!el) throw new Error('chat-input not found in DOM');
+        el.scrollIntoView({ block: 'center', inline: 'center' });
+        el.focus();
+        const nativeSetter = Object.getOwnPropertyDescriptor(
+          window.HTMLTextAreaElement.prototype,
+          'value'
+        ).set;
+        nativeSetter.call(el, val);
+        el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+      },
+      selectors.input,
+      msg
+    );
     await browser.pause(400);
 
     // Submit: try send button first, then Enter key
-    const hasSend = await browser.execute(sel => !!document.querySelector(sel), selectors.send);
+    const hasSend = await browser.execute(
+      sel => !!document.querySelector(sel),
+      selectors.send
+    );
     if (hasSend) {
-      await browser.execute(sel => { document.querySelector(sel)?.click(); }, selectors.send);
+      await browser.execute(sel => {
+        document.querySelector(sel)?.click();
+      }, selectors.send);
     } else {
       await browser.keys('Return');
     }
