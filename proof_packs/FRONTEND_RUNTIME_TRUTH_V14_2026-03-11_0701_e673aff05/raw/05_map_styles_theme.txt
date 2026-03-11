@@ -1,0 +1,70 @@
+src/index.css:11:@import 'tailwindcss';
+src/index.css:16:/* @font-face imports moved to local-fonts.css (build-time generated) */
+src/index.css:18:@import './styles/local-fonts.css';
+src/index.css:23:@import './styles/titanium-dark-tokens.css' layer(tokens);
+src/index.css:24:@import './styles/css-vars.css' layer(tokens);
+src/index.css:25:@import './styles/fonts.css' layer(fonts);
+src/index.css:26:@import './styles/unified-tokens.css' layer(tokens);
+src/index.css:27:@import './styles/tech-effects.css' layer(effects);
+src/index.css:28:@import './styles/animations.css' layer(animations);
+src/index.css:29:@import './styles/a11y.css' layer(a11y);
+src/index.css:41:  zoom: 75%;
+src/index.css:42:  overflow-x: auto;
+src/index.css:210:    overflow: hidden;
+src/index.css:217:    overflow: hidden;
+src/main.tsx:56:import './index.css'; // 🎨 v8.0: Tailwind CSS + Design Tokens (css-vars.css)
+src/main.tsx:59:import './design-system/responsive-tokens.css'; // 🎯 Fluid spacing, typography, layout
+src/main.tsx:60:import './design-system/responsive-utilities.css'; // 🛠️ Utility classes (grid-responsive, btn-touch, etc.)
+src/main.tsx:63:// import './design-system/titane-fusion.css'; // 🎨 Design System v17: Fusion complète (2000 lignes vs 5700)
+src/main.tsx:64:import './styles/experience.css'; // ✨ v∞.D - XP System Styles (unique)
+src/main.tsx:65:import './styles/exp-fusion.css'; // 🎯 XP Advanced Features (unique)
+src/main.tsx:66:import './pages/styles.css'; // 📄 Pages styles (minimal)
+src/main.tsx:263:      z-index: 2147483647;
+src/main.tsx:272:        overflow: auto;
+src/main.tsx:400:    ? `<details style="margin-top: 1rem;"><summary style="cursor:pointer;color:#8899aa;">Détails techniques</summary><pre style="margin-top:0.75rem;white-space:pre-wrap;background:#000;padding:1rem;border-radius:8px;max-height:45vh;overflow:auto;">${safeStack}</pre></details>`
+src/main.tsx:1106:        <pre style="background: #1a1a1a; padding: 1rem; border-radius: 8px; text-align: left; overflow: auto;">${escapeHtmlForError(document.documentElement.outerHTML)}</pre>
+src/main.tsx:1209:          <pre style="font-size: 0.75rem; color: #aaa; overflow: auto;">${escapeHtmlForError(errorStack || '')}</pre>
+src/hooks/useZoomControl.ts:2: * useZoomControl - Gère le zoom avec Ctrl+Plus/Minus/0
+src/hooks/useZoomControl.ts:14:} from './zoomScale';
+src/hooks/useZoomControl.ts:33:      // Ctrl/Cmd + 0 = Reset zoom
+src/hooks/useZoomControl.ts:50: * Ajuste le zoom actuellement appliqué
+src/hooks/useZoomControl.ts:58: * Réinitialise le zoom à 75%
+src/hooks/useZoomControl.ts:66: * Charge le zoom sauvegardé au démarrage
+src/hooks/useZoomControl.ts:71:    document.documentElement.style.zoom = formatZoomScale(savedZoom);
+src/hooks/useWindowControls.ts:8:import { applyZoomScale, mapTauriZoomLevelToScale } from './zoomScale';
+src/hooks/useWindowControls.ts:13:  zoomStep?: number;
+src/hooks/useWindowControls.ts:21:  zoomStep: 0.1,
+src/hooks/useWindowControls.ts:27: * Apply CSS zoom relative to the UI baseline.
+src/hooks/useWindowControls.ts:32:    `[WindowControls] Applied zoom: ${Math.round(appliedScale * 100)}% (backend=${level})`
+src/hooks/useWindowControls.ts:37: * Hook to enable window controls (zoom + fullscreen)
+src/hooks/useWindowControls.ts:39: * - CTRL + 0: Reset zoom to 100%
+src/hooks/useWindowControls.ts:51:      console.error('[WindowControls] Failed to zoom in:', error);
+src/hooks/useWindowControls.ts:61:      console.error('[WindowControls] Failed to zoom out:', error);
+src/hooks/useWindowControls.ts:71:      console.error('[WindowControls] Failed to reset zoom:', error);
+src/hooks/useWindowControls.ts:90:    // Listen to zoom-change events from Tauri backend
+src/hooks/useWindowControls.ts:91:    const unlisten: Promise<UnlistenFn> = listen<number>('zoom-change', event => {
+src/hooks/useWindowControls.ts:107:          // Scroll up = zoom in
+src/hooks/useWindowControls.ts:110:          // Scroll down = zoom out
+src/hooks/useWindowControls.ts:134:      // CTRL + 0: Reset zoom
+src/hooks/useWindowControls.ts:180:    zoomIn: handleZoomIn,
+src/hooks/useWindowControls.ts:181:    zoomOut: handleZoomOut,
+src/hooks/useWindowControls.ts:182:    zoomReset: handleZoomReset,
+src/hooks/useWindowControls.ts:199:  async zoomIn(): Promise<number> {
+src/hooks/useWindowControls.ts:203:  async zoomOut(): Promise<number> {
+src/hooks/useWindowControls.ts:207:  async zoomReset(): Promise<void> {
+src/themes/index.ts:20:} from './tokens';
+src/themes/index.ts:22:// export type { } from './tokens';
+src/themes/index.ts:25:export { default } from './tokens';
+src/themes/index.ts:28:export const ThemeProvider = ({ children }: { children: ReactNode }) => {
+src/themes/tokens.ts:9: * Remapping des anciens tokens colorés (rubis, saphir, emeraude, diamond)
+src/themes/tokens.ts:49:// REMAPPING: Anciens tokens → Nouveau système monochrome
+src/themes/tokens.ts:221:  // SPACING, RADIUS, SHADOWS (Design System tokens)
+src/themes/tokens.ts:319: * @deprecated Utilisez les tokens dynamiques via UIThemeProvider
+src/themes/ThemeProvider.tsx:10: * Utilisez UIThemeProvider du Design Center v16 pour les tokens dynamiques:
+src/themes/ThemeProvider.tsx:12: * import { UIThemeProvider, useUITheme } from '@/features/design-center';
+src/themes/ThemeProvider.tsx:17:interface ThemeProviderProps {
+src/themes/ThemeProvider.tsx:22: * ThemeProvider legacy pour TITANE∞
+src/themes/ThemeProvider.tsx:23: * @deprecated Utilisez UIThemeProvider de design-center
+src/themes/ThemeProvider.tsx:25:export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+src/themes/ThemeProvider.tsx:27:  // Le thème est maintenant géré par UIThemeProvider
+src/themes/ThemeProvider.tsx:31:export default ThemeProvider;

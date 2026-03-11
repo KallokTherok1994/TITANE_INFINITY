@@ -1,0 +1,24 @@
+tauri.base.json:7:  "bundle": {
+tauri.base.json:30:          "identifier": "main-capability",
+src-tauri/tauri.conf.json:3:  "productName": "TITANE-Infinity",
+src-tauri/tauri.conf.json:5:  "identifier": "com.titane.infinity",
+src-tauri/tauri.conf.json:7:    "devUrl": "http://localhost:1420",
+src-tauri/tauri.conf.json:9:    "beforeBuildCommand": "corepack pnpm exec vite build",
+src-tauri/tauri.conf.json:10:    "frontendDist": "../dist"
+src-tauri/tauri.conf.json:12:  "bundle": {
+src-tauri/tauri.conf.json:78:          "identifier": "main-capability",
+src-tauri/tauri.conf.json:289:            { "command": "persistent_memory_create_bundle" },
+src-tauri/tauri.conf.json:290:            { "command": "persistent_memory_add_to_bundle" },
+src-tauri/tauri.conf.json:1085:          "identifier": "avatar-floating-capability",
+tauri.base.json:7:  "bundle": {
+tauri.base.json:30:          "identifier": "main-capability",
+src-tauri/tauri.conf.json:3:  "productName": "TITANE-Infinity",
+src-tauri/tauri.conf.json:5:  "identifier": "com.titane.infinity",
+src-tauri/tauri.conf.json:7:    "devUrl": "http://localhost:1420",
+src-tauri/tauri.conf.json:9:    "beforeBuildCommand": "corepack pnpm exec vite build",
+src-tauri/tauri.conf.json:10:    "frontendDist": "../dist"
+src-tauri/tauri.conf.json:12:  "bundle": {
+src-tauri/tauri.conf.json:78:          "identifier": "main-capability",
+src-tauri/tauri.conf.json:289:            { "command": "persistent_memory_create_bundle" },
+src-tauri/tauri.conf.json:290:            { "command": "persistent_memory_add_to_bundle" },
+src-tauri/tauri.conf.json:1085:          "identifier": "avatar-floating-capability",
