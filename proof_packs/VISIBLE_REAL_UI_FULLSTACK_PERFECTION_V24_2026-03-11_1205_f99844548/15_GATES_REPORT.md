@@ -17,3 +17,20 @@
 - Tauri-dev exploratory run: `raw/06_run_postfix_dev_clean.log` => FAIL (`UND_ERR_HEADERS_TIMEOUT` on session create, non-blocking exploratory only)
 
 Status: PASS
+
+## V24.1 Continuation Gates (2026-03-11)
+
+Executed on authoritative worktree state after append-only proof updates:
+
+- `bash scripts/autoheal/detect_recurrence.sh` => PASS
+- `PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX`
+- `PASS: G_AH_RECURRENCE_GUARD_PASS`
+- `INFO: entries=162`
+- `bash scripts/verify_instructions.sh` => PASS
+- `SUMMARY: PASS=20 FAIL=0`
+- `pnpm run verify:registry` => PASS
+- `registry sync not required`
+- `registry-integrity: PASS`
+- `registry-quality: PASS`
+
+Continuation status: PASS
