@@ -1136,10 +1136,6 @@ const AppRouter: React.FC = () => {
             path="/orchestration"
             element={<Navigate to="/orchestration-intelligence" replace />}
           />
-          <Route
-            path="/meta-center"
-            element={<Navigate to="/orchestration-center" replace />}
-          />
           {/* ✨ REALITY CENTER - Reality Rendering Layer v∞ (OPUS #19) */}
           <Route
             path="/reality-center"
