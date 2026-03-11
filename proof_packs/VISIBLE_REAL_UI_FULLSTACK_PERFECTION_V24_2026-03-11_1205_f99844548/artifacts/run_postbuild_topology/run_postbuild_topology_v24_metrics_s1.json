@@ -1,0 +1,73 @@
+{
+  "runId": "run_postbuild_topology",
+  "modeDecision": "MODE_B_REAL_UI",
+  "rootRendered": true,
+  "whiteScreen": false,
+  "actualVisibleFrontendConfirmed": true,
+  "actualTargetVersion": "27.2.0",
+  "mainAligned": true,
+  "splash": {
+    "exists": false,
+    "visible": false
+  },
+  "boot": {
+    "entryTs": false,
+    "mainTsx": true,
+    "ready": true
+  },
+  "tabsCount": 8,
+  "selectedTabCount": 1,
+  "tabSwitchWorked": false,
+  "inputPresent": true,
+  "inputTyped": false,
+  "sendPresent": true,
+  "sendEnabledAfterTyping": false,
+  "sendClicked": false,
+  "sendActivationPath": "UNKNOWN",
+  "sendHarnessDiagnosis": "UNKNOWN",
+  "visibleUiChangeAfterSend": false,
+  "secondarySurfaceOpened": false,
+  "returnedToPrimarySurface": false,
+  "backendSyncState": "CONNECTED",
+  "orchestratorSyncState": "NOT_DETECTABLE_FROM_DOM",
+  "providerState": "NOT_DETECTABLE_FROM_DOM",
+  "memoryState": "PRESENT",
+  "aiChatState": "INPUT_VISIBLE",
+  "modulesState": "MODULES_LOADED",
+  "reasoningProgressState": "done",
+  "reasoningProgressTestIdPresent": true,
+  "reasoningProgressDataState": "done",
+  "reasoningProgressHasTopology": true,
+  "tabFocusRulePresent": true,
+  "reflowReasonable": true,
+  "potentialDoubleScroll": true,
+  "contrastRatioInput": 21,
+  "frictions": [],
+  "blockers": [],
+  "harnessRisks": [],
+  "dominantClassification": "UNKNOWN",
+  "dominantCategory": "NON_BLOCKING_FRICTION",
+  "dominantSeverity": "P3",
+  "dominantFixability": "SAFE_AUTO_FIX",
+  "issueClassifications": [],
+  "screenshots": [
+    {
+      "label": "s1_t0_post_boot",
+      "file": "run_postbuild_topology_s1_t0_post_boot.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postbuild_topology/screens/run_postbuild_topology_s1_t0_post_boot.png"
+    },
+    {
+      "label": "s1_post_nav_titane",
+      "file": "run_postbuild_topology_s1_post_nav_titane.png",
+      "path": "/tmp/titane_v15_wt_20260311_080118/proof_packs/VISIBLE_REAL_UI_FULLSTACK_PERFECTION_V24_2026-03-11_1205_f99844548/artifacts/run_postbuild_topology/screens/run_postbuild_topology_s1_post_nav_titane.png"
+    }
+  ],
+  "jsCriticalErrors": [],
+  "ipcAvailable": true,
+  "currentUrl": "tauri://localhost/titane",
+  "pageTitle": "TITANE∞ v26.3.0 - Cognitive Operating System",
+  "zoom": 2,
+  "navAudit": null,
+  "bodyText": "Aller au contenu principal\n\nTITANE∞\n\nTITANE\n\nTIME\n\nSTATS\n\nADMIN\n\nDEV\n\nPlus\nIA: 80%\n\n⚡ TITANE\nLe Cœur du Système\n💬 Chat\n📊 Vue\n📷 Vision\n🧬 Identité\n💾 Mémoire\n🔄 Évolution\n⚡ XP\n🌱 Transform\n💬 Communication & Intelligence\nInterface conversationnelle multi-provider avec modes spécialisés\n\nIA (4/4)\n\n\n\n\n🔇\n🎤\n⚙️\n⚠️\n\n\n\n0/0\n0 étapes\n🤖 Gemini\n🧠⚡∞\nTITANE∞ est prêt à converser\nMode actuel: Normal\nProvi",
+  "residualDiagnostics": null
+}

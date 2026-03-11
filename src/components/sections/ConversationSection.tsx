@@ -751,6 +751,19 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const hasMessages = messages.length > 0;
   const isHealthy = healthReport?.status === 'Healthy';
+  const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+    thinking.isThinking ? 'active' : hasMessages ? 'done' : 'idle';
+
+  const thinkingTopology = useMemo(
+    () => [
+      {
+        id: 'conversation-runtime',
+        label: 'conversation-runtime',
+        status: (thinking.isThinking ? 'active' : 'done') as 'active' | 'done' | 'error' | 'blocked',
+      },
+    ],
+    [thinking.isThinking]
+  );
 
   const searchNeedle = useMemo(() => {
     const trimmed = deferredSearchQuery.trim();
@@ -1286,8 +1299,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
         <ThinkingPanel
           steps={thinking.steps}
           isThinking={thinking.isThinking}
+          state={thinkingState}
+          topology={thinkingTopology}
           compact={thinking.compact}
           inline={false}
+          provider={selectedProviderLabel}
         />
 
         {/* ═══ MESSAGES AREA ═══ */}
