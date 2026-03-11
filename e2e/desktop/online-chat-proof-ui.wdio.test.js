@@ -272,14 +272,15 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
     }
 
-      // Seed localStorage to bypass onboarding flow (E2E isolated env has no prior state)
-      await browser.execute(() => {
-        localStorage.setItem('titane_onboarding_complete', '1');
-        localStorage.setItem('titane_browser_mode', '0');
-      });
-      // Re-navigate so App.tsx re-evaluates onboarding guard with the seeded state
-      await browser.url('tauri://localhost/#/titane');
-      await browser.pause(1500);
+    // Seed localStorage to bypass onboarding flow (E2E isolated env has no prior state).
+    // Use in-page reload (location.reload) — browser.url() sends WebDriver navigate-to
+    // which resets the WRY/Tauri WebView localStorage context.
+    await browser.execute(() => {
+      localStorage.setItem('titane_onboarding_complete', '1');
+      localStorage.setItem('titane_browser_mode', '0');
+      location.reload();
+    });
+    await browser.pause(3000);
 
     const allowedPrefixes = getAllowedHrefPrefixes();
     await browser.waitUntil(
