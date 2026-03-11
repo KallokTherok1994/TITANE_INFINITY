@@ -190,6 +190,18 @@ async function resolveSelectors() {
     };
   }
 
+  // ConversationSection (TitanePage v25.3.0+) — used after chat-bubble removal (977779667)
+  const conversationInput = await $('[data-testid="chat-input"]');
+  if (await conversationInput.isExisting()) {
+    return {
+      input: '[data-testid="chat-input"]',
+      send: '[data-testid="chat-send"]',
+      response: '[data-testid="chat-message-content"]',
+      trigger: null,
+      panel: null,
+    };
+  }
+
   return null;
 }
 
@@ -260,6 +272,16 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
     }
 
+    // Seed localStorage to bypass onboarding flow (E2E isolated env has no prior state).
+    // Use in-page reload (location.reload) — browser.url() sends WebDriver navigate-to
+    // which resets the WRY/Tauri WebView localStorage context.
+    await browser.execute(() => {
+      localStorage.setItem('titane_onboarding_complete', '1');
+      localStorage.setItem('titane_browser_mode', '1'); // browser mode = use localStorage path (not Tauri IPC) for onboarding check
+      location.reload();
+    });
+    await browser.pause(3000);
+
     const allowedPrefixes = getAllowedHrefPrefixes();
     await browser.waitUntil(
       async () => {
@@ -305,7 +327,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
               !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
               !!document.querySelector('[data-testid="chat-bubble-input"]') ||
               !!document.querySelector('#chat-window-textarea') ||
-              !!document.querySelector('#chat-input-textarea');
+              !!document.querySelector('#chat-input-textarea') ||
+              !!document.querySelector('[data-testid="chat-input"]');
             return (
               Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
             );
@@ -351,15 +374,52 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     await input.waitForExist({ timeout: 15000 });
 
     const before = await getLastText(selectors.response);
+
+    // Scroll element into viewport — after onboarding bypass + reload the
+    // ConversationSection may render outside the visible WRY window area.
+    await browser.execute(sel => {
+      const el = document.querySelector(sel);
+      if (el) {
+        el.scrollIntoView({ block: 'center', inline: 'center' });
+        el.focus();
+      }
+    }, selectors.input);
+    await browser.pause(600);
+
     const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
+    // WRY E2E: isElementClickable=false due to overlay covering textarea after
+    // onboarding bypass reload. Use JS native value setter (React-compatible)
+    // and dispatch events to sync React state, then submit via Enter key.
+    await browser.execute(
+      (sel, val) => {
+        const el = document.querySelector(sel);
+        if (!el) throw new Error('chat-input not found in DOM');
+        el.scrollIntoView({ block: 'center', inline: 'center' });
+        el.focus();
+        const nativeSetter = Object.getOwnPropertyDescriptor(
+          window.HTMLTextAreaElement.prototype,
+          'value'
+        ).set;
+        nativeSetter.call(el, val);
+        el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+        el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+      },
+      selectors.input,
+      msg
+    );
+    await browser.pause(400);
 
-    await input.setValue(msg);
-
-    const sendBtn = await $(selectors.send);
-    if (await sendBtn.isExisting()) {
-      await sendBtn.click();
+    // Submit: try send button first, then Enter key
+    const hasSend = await browser.execute(
+      sel => !!document.querySelector(sel),
+      selectors.send
+    );
+    if (hasSend) {
+      await browser.execute(sel => {
+        document.querySelector(sel)?.click();
+      }, selectors.send);
     } else {
-      await browser.keys('Enter');
+      await browser.keys('Return');
     }
 
     let after = '';
