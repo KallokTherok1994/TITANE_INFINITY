@@ -5,6 +5,8 @@ import { useEffect, useCallback } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 
+import { applyZoomScale, mapTauriZoomLevelToScale } from './zoomScale';
+
 export interface WindowControlsOptions {
   enableZoom?: boolean;
   enableFullscreen?: boolean;
@@ -22,12 +24,13 @@ const DEFAULT_OPTIONS: WindowControlsOptions = {
 };
 
 /**
- * Apply CSS zoom to document root
+ * Apply CSS zoom relative to the UI baseline.
  */
 function applyZoom(level: number): void {
-  const root = document.documentElement;
-  root.style.zoom = `${level}`;
-  console.log(`[WindowControls] Applied zoom: ${Math.round(level * 100)}%`);
+  const appliedScale = applyZoomScale(mapTauriZoomLevelToScale(level));
+  console.log(
+    `[WindowControls] Applied zoom: ${Math.round(appliedScale * 100)}% (backend=${level})`
+  );
 }
 
 /**
@@ -63,7 +66,7 @@ export function useWindowControls(options: WindowControlsOptions = {}) {
     try {
       await tauriClient.windowZoomReset();
       applyZoom(1.0);
-      console.log('[WindowControls] Zoom reset: 100%');
+      console.log('[WindowControls] Zoom reset: baseline restored');
     } catch (error) {
       console.error('[WindowControls] Failed to reset zoom:', error);
     }
