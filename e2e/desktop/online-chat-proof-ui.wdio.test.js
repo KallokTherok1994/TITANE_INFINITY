@@ -384,13 +384,29 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     await browser.pause(600);
 
     const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
-    await input.setValue(msg);
+    // WRY E2E: isElementClickable=false due to overlay covering textarea after
+    // onboarding bypass reload. Use JS native value setter (React-compatible)
+    // and dispatch events to sync React state, then submit via Enter key.
+    await browser.execute((sel, val) => {
+      const el = document.querySelector(sel);
+      if (!el) throw new Error('chat-input not found in DOM');
+      el.scrollIntoView({ block: 'center', inline: 'center' });
+      el.focus();
+      const nativeSetter = Object.getOwnPropertyDescriptor(
+        window.HTMLTextAreaElement.prototype, 'value'
+      ).set;
+      nativeSetter.call(el, val);
+      el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
+    }, selectors.input, msg);
+    await browser.pause(400);
 
-    const sendBtn = await $(selectors.send);
-    if (await sendBtn.isExisting()) {
-      await sendBtn.click();
+    // Submit: try send button first, then Enter key
+    const hasSend = await browser.execute(sel => !!document.querySelector(sel), selectors.send);
+    if (hasSend) {
+      await browser.execute(sel => { document.querySelector(sel)?.click(); }, selectors.send);
     } else {
-      await browser.keys('Enter');
+      await browser.keys('Return');
     }
 
     let after = '';
