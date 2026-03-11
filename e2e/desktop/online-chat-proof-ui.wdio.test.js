@@ -272,6 +272,15 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
     }
 
+      // Seed localStorage to bypass onboarding flow (E2E isolated env has no prior state)
+      await browser.execute(() => {
+        localStorage.setItem('titane_onboarding_complete', '1');
+        localStorage.setItem('titane_browser_mode', '0');
+      });
+      // Re-navigate so App.tsx re-evaluates onboarding guard with the seeded state
+      await browser.url('tauri://localhost/#/titane');
+      await browser.pause(1500);
+
     const allowedPrefixes = getAllowedHrefPrefixes();
     await browser.waitUntil(
       async () => {
@@ -317,7 +326,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
               !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
               !!document.querySelector('[data-testid="chat-bubble-input"]') ||
               !!document.querySelector('#chat-window-textarea') ||
-              !!document.querySelector('#chat-input-textarea');
+                !!document.querySelector('#chat-input-textarea') ||
+                !!document.querySelector('[data-testid="chat-input"]');
             return (
               Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
             );
