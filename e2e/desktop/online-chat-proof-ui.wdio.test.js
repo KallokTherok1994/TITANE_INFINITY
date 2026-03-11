@@ -190,6 +190,18 @@ async function resolveSelectors() {
     };
   }
 
+  // ConversationSection (TitanePage v25.3.0+) — used after chat-bubble removal (977779667)
+  const conversationInput = await $('[data-testid="chat-input"]');
+  if (await conversationInput.isExisting()) {
+    return {
+      input: '[data-testid="chat-input"]',
+      send: '[data-testid="chat-send"]',
+      response: '[data-testid="chat-message-content"]',
+      trigger: null,
+      panel: null,
+    };
+  }
+
   return null;
 }
 
