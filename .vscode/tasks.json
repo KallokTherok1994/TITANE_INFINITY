@@ -1331,6 +1331,16 @@
 			"label": "prod-isolation:tail-tauri-log",
 			"type": "shell",
 			"command": "set -e; cd /home/titane-os/Documents/GitHub/TITANE_INFINITY; tail -n 320 runtime/dev/logs/tauri.log"
+		},
+		{
+			"label": "h4-1 lane validator",
+			"type": "shell",
+			"command": "bash",
+			"args": [
+				"-lc",
+				"set -euo pipefail; root=/home/titane-os/Documents/GitHub/TITANE_INFINITY/.worktrees/mainline-cert-20260308-234556-c96c4f9b1; pack=$(cat \"$root/.pack_h4_1_path\"); cd \"$root\"; bash scripts/governance/validate_h4_1_autoheal_a_to_h_foundation.sh \"$root/${pack}/raw/22_h4_1_traceability_report.md\" \"$root/${pack}/03_AUTOHEAL_OBJECTIVE.md\""
+			],
+			"isBackground": false
 		}
 	],
 	"inputs": [

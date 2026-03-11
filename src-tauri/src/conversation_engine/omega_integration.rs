@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use tokio::sync::RwLock;
 
-use crate::omega::{OmegaConfig, OmegaPipeline, PipelineInput, PipelineOutput};
+use crate::omega::{OmegaConfig, OmegaError, OmegaPipeline, PipelineInput, PipelineOutput};
 use crate::singularity::singularity_state::{ChatContext, SingularityState};
 
 use super::french_mastery::{
@@ -119,14 +119,32 @@ impl OmegaConversationBridge {
             pipeline_input.request_id
         );
 
-        // Execute OMEGA pipeline
-        let pipeline_output = self
-            .omega_pipeline
-            .process(pipeline_input)
-            .await
-            .map_err(|e| {
-                ConversationEngineError::ProcessingError(format!("OMEGA pipeline failed: {}", e))
-            })?;
+        // Execute OMEGA pipeline with a single lazy-init retry.
+        // This avoids noisy "Pipeline not initialized" fallbacks during early startup races.
+        let pipeline_output = match self.omega_pipeline.process(pipeline_input.clone()).await {
+            Ok(output) => output,
+            Err(OmegaError::NotInitialized) => {
+                log::warn!(
+                    "[OMEGA-BRIDGE] ⚠️ Pipeline not initialized, performing lazy init and retry"
+                );
+                self.initialize().await?;
+                self.omega_pipeline
+                    .process(pipeline_input)
+                    .await
+                    .map_err(|e| {
+                        ConversationEngineError::ProcessingError(format!(
+                            "OMEGA pipeline failed after lazy init: {}",
+                            e
+                        ))
+                    })?
+            }
+            Err(e) => {
+                return Err(ConversationEngineError::ProcessingError(format!(
+                    "OMEGA pipeline failed: {}",
+                    e
+                )));
+            }
+        };
 
         let latency_ms = start.elapsed().as_millis() as u64;
 

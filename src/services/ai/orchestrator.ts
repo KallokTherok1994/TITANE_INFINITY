@@ -821,7 +821,7 @@ class AIOrchestrator {
     });
 
     // Ensure engines are loaded
-    const { autoHeal, metrics: _metrics } = await ensureEngines();
+    const { autoHeal, metrics } = await ensureEngines();
 
     // Increment metrics
     this.orchestratorMetrics.totalRequests++;
@@ -878,8 +878,7 @@ class AIOrchestrator {
 
       // 🧠 NOUVEAU v22Ω: Mise à jour état environnement du Cognitive Kernel
       // v22Ω: Utiliser cache TTL 1s pour éviter appels redondants
-      const { metrics: _metricsLoaded } = await ensureEngines();
-      const realtimeMetrics = this.getCachedMetrics(_metricsLoaded);
+      const realtimeMetrics = this.getCachedMetrics(metrics);
       cognitiveKernel.updateEnvironmentState({
         providerHealth: new Map(
           this.providers.map(p => {
@@ -1110,8 +1109,7 @@ class AIOrchestrator {
           rateLimiter.recordRequest(providerName, response.tokens || estimatedTokens);
 
           // 📊 METRICS: Enregistrer succès
-          const { metrics: _metricsLoaded } = await ensureEngines();
-          _metricsLoaded.recordEvent({
+          metrics.recordEvent({
             type: 'response',
             provider: providerName,
             latencyMs: providerLatency, // Use provider-specific latency
@@ -1194,8 +1192,7 @@ class AIOrchestrator {
           circuitBreaker.recordFailure(providerName, lastError);
 
           // 📊 METRICS: Enregistrer erreur with provider-specific latency
-          const { metrics: _metricsLoaded } = await ensureEngines();
-          _metricsLoaded.recordEvent({
+          metrics.recordEvent({
             type: 'error',
             provider: providerName,
             latencyMs: providerFailureLatency, // EVOLUTION v21Ω: Use provider-specific latency
@@ -1206,8 +1203,7 @@ class AIOrchestrator {
 
           // Trigger auto-heal sauf pour titane-local (déjà auto-réparé)
           if (providerName !== 'titane-local') {
-            const { autoHeal: _autoHealLoaded } = await ensureEngines();
-            _autoHealLoaded.heal(providerName, lastError, 'provider', {
+            autoHeal.heal(providerName, lastError, 'provider', {
               requestId,
               attempt: attempts,
               providerLatency: providerFailureLatency, // EVOLUTION v21Ω: Accurate latency
@@ -1301,8 +1297,7 @@ Le système s'auto-répare en continu. Que puis-je t'aider à explorer ?`,
         );
       }
 
-      const { autoHeal: _autoHealLoaded } = await ensureEngines();
-      _autoHealLoaded.heal(
+      autoHeal.heal(
         'orchestrator',
         criticalError instanceof Error ? criticalError : new Error(String(criticalError)),
         'critical',
@@ -1560,6 +1555,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
 
   async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
+    const { autoHeal } = await ensureEngines();
 
     // ═══ v22Ω: STREAM CONFIG from centralized config ═══
     const streamStartTime = Date.now();
@@ -1579,8 +1575,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
     };
 
     if (!valid) {
-      const { autoHeal: _autoHealLoaded } = await ensureEngines();
-      _autoHealLoaded.heal(
+      autoHeal.heal(
         'orchestrator',
         `Stream validation failed: ${issues.join(', ')}`,
         'validation'
@@ -1718,8 +1713,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
         logger.warn('Stream provider failed', { provider: providerName, error });
 
         // Auto-heal pour streaming failures
-        const { autoHeal: _autoHealLoaded } = await ensureEngines();
-        _autoHealLoaded.heal(
+        autoHeal.heal(
           providerName,
           error instanceof Error ? error : new Error(String(error)),
           'network'

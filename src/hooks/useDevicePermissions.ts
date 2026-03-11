@@ -525,10 +525,18 @@ export function useDevicePermissions(): DevicePermissionsResult {
   );
 
   // Vérification initiale au montage
+  // In Tauri, avoid automatic active microphone probing on boot.
+  // This probe can trigger noisy media-stack warnings on systems with partial GStreamer setup.
+  const autoCheckMicOnBoot =
+    !environment.isTauri || import.meta.env.VITE_TITANE_AUTO_MIC_CHECK === '1';
+
   useEffect(() => {
     // Vérifier uniquement le microphone au démarrage (le plus utilisé)
-    checkPermission('microphone');
-  }, [checkPermission]);
+    // Browser: enabled by default. Tauri: opt-in via VITE_TITANE_AUTO_MIC_CHECK=1.
+    if (autoCheckMicOnBoot) {
+      checkPermission('microphone');
+    }
+  }, [checkPermission, autoCheckMicOnBoot]);
 
   return {
     permissions,
