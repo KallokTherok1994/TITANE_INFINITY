@@ -374,8 +374,16 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     await input.waitForExist({ timeout: 15000 });
 
     const before = await getLastText(selectors.response);
-    const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
 
+    // Scroll element into viewport — after onboarding bypass + reload the
+    // ConversationSection may render outside the visible WRY window area.
+    await browser.execute(sel => {
+      const el = document.querySelector(sel);
+      if (el) { el.scrollIntoView({ block: 'center', inline: 'center' }); el.focus(); }
+    }, selectors.input);
+    await browser.pause(600);
+
+    const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
     await input.setValue(msg);
 
     const sendBtn = await $(selectors.send);
