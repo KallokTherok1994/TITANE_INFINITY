@@ -28,6 +28,11 @@ import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
 import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import {
+  buildChatContextEnvelope,
+  type ChatContextEnvelope,
+} from '@/services/chat/chatMemorySingleDoor';
+import { readActiveModuleContext } from '@/services/chat/moduleRouteContext';
 
 // ═══════════════════════════════════════════════════════════════════
 // CONSTANTS
@@ -52,6 +57,16 @@ export interface ConversationMessage {
     emotion?: EmotionState;
     tags?: string[];
     providerMeta?: ProviderDecisionMeta;
+    contextBinding?: {
+      route: string;
+      moduleId: string;
+      moduleName: string;
+      sequence: number;
+      changeType: 'initial' | 'same-module' | 'module-switch';
+      staleGuard: 'steady' | 'resync';
+      generatedAt: number;
+    };
+    singleDoorTags?: string[];
   };
 }
 
@@ -219,6 +234,36 @@ export function useConversationEngine(
     }
   }, []);
 
+  const buildSingleDoorEnvelope = useCallback((): ChatContextEnvelope | null => {
+    const activeModuleContext = readActiveModuleContext();
+    if (!activeModuleContext) {
+      return null;
+    }
+
+    return buildChatContextEnvelope({
+      mode: currentMode,
+      conversationId,
+      providerRequested: 'auto',
+      moduleContext: activeModuleContext,
+      inMemoryMessages: messages,
+      lastProviderMeta: lastResponse?.meta,
+    });
+  }, [conversationId, currentMode, lastResponse?.meta, messages]);
+
+  const toContextBinding = useCallback((envelope: ChatContextEnvelope | null) => {
+    if (!envelope) return undefined;
+
+    return {
+      route: envelope.routeContext.route,
+      moduleId: envelope.moduleContext.moduleId,
+      moduleName: envelope.moduleContext.moduleName,
+      sequence: envelope.continuity.sequence,
+      changeType: envelope.continuity.changeType,
+      staleGuard: envelope.continuity.staleGuard,
+      generatedAt: envelope.generatedAt,
+    };
+  }, []);
+
   // ═══ SEND MESSAGE (avec Retry Logic) ═══
   const sendMessage = useCallback(
     async (content: string, retryCount = 0): Promise<ConversationResponse | null> => {
@@ -234,12 +279,19 @@ export function useConversationEngine(
       setIsLoading(true);
       setError(null);
 
+      const contextEnvelope = buildSingleDoorEnvelope();
+      const contextBinding = toContextBinding(contextEnvelope);
+
       // Ajouter message utilisateur immédiatement
       const userMessage: ConversationMessage = {
         id: `user-${Date.now()}`,
         role: 'user',
         content,
         timestamp: Date.now(),
+        metadata: {
+          contextBinding,
+          singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
+        },
       };
 
       setMessages(prev => {
@@ -255,7 +307,7 @@ export function useConversationEngine(
           role: 'user',
           content: userMessage.content,
           timestamp: userMessage.timestamp,
-          metadata: {},
+          metadata: userMessage.metadata || {},
         };
         await saveMessage(userAIMessage);
       } catch (persistError) {
@@ -271,6 +323,7 @@ export function useConversationEngine(
           conversationId: conversationId || undefined,
           mode: currentMode,
           emotionContext: options.emotionContext,
+          contextEnvelope: contextEnvelope || undefined,
         });
 
         // Mettre à jour conversation ID
@@ -289,6 +342,8 @@ export function useConversationEngine(
             emotion: response.detected_emotion,
             tags: response.cognitive_tags,
             providerMeta: response.meta,
+            contextBinding,
+            singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
         };
 
@@ -403,6 +458,8 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           timestamp: Date.now(),
           metadata: {
             intention: 'Meta',
+            contextBinding,
+            singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
         };
 
@@ -431,7 +488,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         isProcessingRef.current = false;
       }
     },
-    [conversationId, currentMode, options, saveMessage]
+    [buildSingleDoorEnvelope, conversationId, currentMode, options, saveMessage, toContextBinding]
   );
 
   // ═══ CLEAR MESSAGES ═══
@@ -442,18 +499,31 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       metadata?: ConversationMessage['metadata']
     ) => {
       const now = Date.now();
+      const contextEnvelope = buildSingleDoorEnvelope();
+      const contextBinding = toContextBinding(contextEnvelope);
+      const mergedMetadata: ConversationMessage['metadata'] = {
+        ...(metadata || {}),
+        contextBinding: metadata?.contextBinding ?? contextBinding,
+        singleDoorTags:
+          metadata?.singleDoorTags ?? contextEnvelope?.memorySingleDoor.tags,
+      };
+
       const userMessage: ConversationMessage = {
         id: `user-local-${now}`,
         role: 'user',
         content: userContent,
         timestamp: now,
+        metadata: {
+          contextBinding,
+          singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
+        },
       };
       const assistantMessage: ConversationMessage = {
         id: `assistant-local-${now + 1}`,
         role: 'assistant',
         content: assistantContent,
         timestamp: now + 1,
-        metadata,
+        metadata: mergedMetadata,
       };
 
       setMessages(prev => {
@@ -467,7 +537,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           role: 'user',
           content: userMessage.content,
           timestamp: userMessage.timestamp,
-          metadata: {},
+          metadata: userMessage.metadata || {},
         };
         const assistantAIMessage: AIMessage = {
           role: 'assistant',
@@ -485,7 +555,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         );
       }
     },
-    [options.maxMessages, saveMessage]
+    [buildSingleDoorEnvelope, options.maxMessages, saveMessage, toContextBinding]
   );
 
   // ═══ CLEAR MESSAGES ═══

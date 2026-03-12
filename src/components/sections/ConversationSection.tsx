@@ -821,6 +821,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const latestAssistantProviderMeta = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i -= 1) {
       const message = messages[i];
+        if (!message) continue;
       if (message.role === 'assistant' && message.metadata?.providerMeta) {
         return message.metadata.providerMeta;
       }

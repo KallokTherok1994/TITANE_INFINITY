@@ -20,6 +20,10 @@ import type {
   ReasonCode,
 } from '@/types/providerMeta';
 import { FEATURE_FLAGS, envFlag } from '@/config/featureFlags';
+import {
+  formatContextEnvelopeForSystemPrompt,
+  type ChatContextEnvelope,
+} from '@/services/chat/chatMemorySingleDoor';
 
 function runtimeFlag(key: string): boolean {
   try {
@@ -306,6 +310,7 @@ export async function processMessage(
     conversationId?: string;
     mode?: ConversationMode;
     emotionContext?: EmotionState;
+    contextEnvelope?: ChatContextEnvelope;
   }
 ): Promise<ConversationResponse> {
   let conversationId = options?.conversationId;
@@ -352,6 +357,7 @@ export async function processMessage(
     message_length: userMessage.length,
     mode: options?.mode || 'default',
     conversationId,
+    moduleId: options?.contextEnvelope?.moduleContext.moduleId || 'unknown',
   });
 
   // ✨ v20.5: Ne pas bloquer ici - laisser TauriProtector gérer le fallback Ollama
@@ -379,7 +385,13 @@ export async function processMessage(
     );
   }
 
-  const systemPrompt = getSystemPrompt(options?.mode ?? 'default');
+  const baseSystemPrompt = getSystemPrompt(options?.mode ?? 'default');
+  const contextualPrompt = options?.contextEnvelope
+    ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
+    : '';
+  const systemPrompt = contextualPrompt
+    ? `${baseSystemPrompt}\n\n${contextualPrompt}`
+    : baseSystemPrompt;
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   const payload = validateIpcPayload('conversation_generate', {
@@ -390,6 +402,9 @@ export async function processMessage(
       provider,
       systemPrompt,
       requestId,
+      ...(options?.contextEnvelope
+        ? { contextEnvelope: options.contextEnvelope }
+        : {}),
     },
   });
   const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
@@ -423,6 +438,32 @@ export async function processMessage(
       ? detectedIntentionRaw
       : 'Question';
 
+  const normalizedMetadata = normalizeConversationMetadata({
+    ...metadata,
+    provider_used:
+      (typeof raw?.provider === 'string' && raw.provider.trim().length > 0
+        ? raw.provider
+        : undefined) ??
+      (typeof metadata['provider_used'] === 'string'
+        ? metadata['provider_used']
+        : undefined) ??
+      'fallback',
+    latency_ms:
+      (typeof raw?.latencyMs === 'number' ? raw.latencyMs : undefined) ??
+      (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
+  });
+
+  if (options?.contextEnvelope) {
+    normalizedMetadata.links_to_contexts = Array.from(
+      new Set([
+        ...normalizedMetadata.links_to_contexts,
+        `route:${options.contextEnvelope.routeContext.route}`,
+        `module:${options.contextEnvelope.moduleContext.moduleId}`,
+        `continuity:${options.contextEnvelope.continuity.changeType}`,
+      ])
+    );
+  }
+
   const response: ConversationResponse = {
     assistant_message: content,
     conversation_id:
@@ -444,20 +485,7 @@ export async function processMessage(
       typeof metadata['cognitiveSummary'] === 'string'
         ? (metadata['cognitiveSummary'] as string)
         : '',
-    metadata: normalizeConversationMetadata({
-      ...metadata,
-      provider_used:
-        (typeof raw?.provider === 'string' && raw.provider.trim().length > 0
-          ? raw.provider
-          : undefined) ??
-        (typeof metadata['provider_used'] === 'string'
-          ? metadata['provider_used']
-          : undefined) ??
-        'fallback',
-      latency_ms:
-        (typeof raw?.latencyMs === 'number' ? raw.latencyMs : undefined) ??
-        (typeof metadata['latency_ms'] === 'number' ? metadata['latency_ms'] : 0),
-    }),
+    metadata: normalizedMetadata,
     meta: providerMeta,
     decision,
   };
