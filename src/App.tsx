@@ -75,6 +75,7 @@ import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
 import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
+import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -282,6 +283,17 @@ const AppRouter: React.FC = () => {
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR_INIT');
   }, []);
+
+  useEffect(() => {
+    try {
+      publishActiveModuleContext(location.pathname);
+    } catch (error) {
+      logger.warn('Failed to publish module context for chat binding', {
+        component: 'AppRouter',
+        route: location.pathname,
+      });
+    }
+  }, [location.pathname]);
 
   // UI vΩ: Sidebar removed, TopNav navigation only
   // const sidebarCollapsed = useSingularitySidebarCollapsed();

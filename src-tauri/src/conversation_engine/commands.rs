@@ -15,7 +15,9 @@ use crate::engines::conversation_os::policy::{NetState, PolicyContext};
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use crate::services::search_gateway::SearchGatewayService;
 
-use super::meta_accumulator::{build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id};
+use super::meta_accumulator::{
+    build_attempt, build_decision_meta, mode_from, policy_from_env, provider_class_from_id,
+};
 use super::types::*;
 use super::ConversationEngineState;
 
@@ -28,6 +30,7 @@ pub struct ConversationGenerateArgs {
     pub provider: Option<String>,
     pub system_prompt: Option<String>,
     pub request_id: Option<String>,
+    pub context_envelope: Option<serde_json::Value>,
 }
 
 type CommandResult<T> = Result<T, String>;
@@ -53,6 +56,35 @@ fn build_memory_used_ids(
         ids.push(format!("ltm_session_{}", conversation_id));
     }
     ids
+}
+
+fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serde_json::Value {
+    let module_context = context_envelope.and_then(|value| value.get("moduleContext"));
+    let route_context = context_envelope.and_then(|value| value.get("routeContext"));
+    let continuity = context_envelope.and_then(|value| value.get("continuity"));
+
+    serde_json::json!({
+        "moduleId": module_context
+            .and_then(|value| value.get("moduleId"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "moduleName": module_context
+            .and_then(|value| value.get("moduleName"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "route": route_context
+            .and_then(|value| value.get("route"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "changeType": continuity
+            .and_then(|value| value.get("changeType"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "sequence": continuity
+            .and_then(|value| value.get("sequence"))
+            .and_then(serde_json::Value::as_u64)
+            .unwrap_or(0),
+    })
 }
 
 #[cfg(all(not(feature = "mock"), feature = "full"))]
@@ -107,6 +139,7 @@ pub async fn conversation_generate(
         provider,
         system_prompt,
         request_id,
+        context_envelope,
     } = args;
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
@@ -120,6 +153,7 @@ pub async fn conversation_generate(
     };
 
     let req_id = request_id.unwrap_or_else(|| format!("req_{}", Uuid::new_v4()));
+    let context_binding = extract_context_binding(context_envelope.as_ref());
     log::info!(
         "[Ω:CMD] 📨 Request | req_id={} | msg_len={} | conv_id={} | mode={:?}",
         req_id,
@@ -334,7 +368,9 @@ pub async fn conversation_generate(
             "CONVOS_MEMORY_SNAPSHOTS": convos_memory_snapshots_enabled,
             "CONVOS_DEBUG_PANEL": convos_debug_panel_enabled,
             "CONVOS_MEMORY_LTM": convos_memory_ltm_enabled,
-        }
+        },
+        "context_binding": context_binding.clone(),
+        "context_envelope_present": context_envelope.is_some(),
     });
 
     if policy_verdict.hard_block {
@@ -360,6 +396,10 @@ pub async fn conversation_generate(
                 "blocked_by": "policy_engine"
             },
             "trace": trace,
+            "metadata": {
+                "requestId": req_id,
+                "contextBinding": context_binding.clone(),
+            },
         });
         return Ok(blocked_response);
     }
@@ -387,6 +427,10 @@ pub async fn conversation_generate(
                 "blocked_by": "resilience_engine"
             },
             "trace": trace,
+            "metadata": {
+                "requestId": req_id,
+                "contextBinding": context_binding.clone(),
+            },
         });
         return Ok(blocked_response);
     }
@@ -432,6 +476,10 @@ pub async fn conversation_generate(
                 "blocked_by": "backend_gate"
             },
             "trace": trace,
+            "metadata": {
+                "requestId": req_id,
+                "contextBinding": context_binding.clone(),
+            },
         });
         
         return Ok(blocked_response);
@@ -529,6 +577,7 @@ pub async fn conversation_generate(
             "cognitiveTags": response.cognitive_tags,
             "cognitiveSummary": response.cognitive_summary,
             "requestId": req_id,
+            "contextBinding": context_binding,
         }
     }))
 }

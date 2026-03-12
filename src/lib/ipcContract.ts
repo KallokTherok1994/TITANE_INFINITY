@@ -18,6 +18,7 @@ const ConversationGenerateArgsSchema = z.object({
   provider: z.string().nullable().optional(),
   systemPrompt: z.string().nullable().optional(),
   requestId: z.string().nullable().optional(),
+  contextEnvelope: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 
 const ConversationGenerateSchema = z.object({
