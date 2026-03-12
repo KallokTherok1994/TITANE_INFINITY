@@ -40,7 +40,7 @@ export const AppShell = ({
   return (
     <div
       className={cn(
-        'flex flex-col h-screen w-screen overflow-hidden bg-titanium-bg-base',
+        'flex flex-col h-screen w-full min-w-0 max-w-full overflow-hidden bg-titanium-bg-base',
         className
       )}
     >
@@ -53,9 +53,14 @@ export const AppShell = ({
 
       {/* Main Content (plein écran, sans sidebar) */}
       <main
-        className={cn('flex-1 overflow-hidden relative flex flex-col', topNav && 'pt-16')}
+        className={cn(
+          'flex-1 overflow-hidden relative flex min-w-0 flex-col max-w-full',
+          topNav && 'pt-16'
+        )}
       >
-        <div className="flex-1 overflow-auto scrollbar-custom w-full">{children}</div>
+        <div className="flex-1 overflow-auto scrollbar-custom w-full min-w-0 max-w-full">
+          {children}
+        </div>
       </main>
 
       {/* Footer */}
