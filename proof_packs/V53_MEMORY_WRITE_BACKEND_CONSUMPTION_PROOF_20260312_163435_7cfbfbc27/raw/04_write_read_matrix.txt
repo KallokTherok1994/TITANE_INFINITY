@@ -1,0 +1,170 @@
+# V53 PHASE 1 PART B — WRITE/READ/PROMPT/GENERATION MATRIX
+# Complete causality trace with TRUE/FALSE verdicts
+
+## REQUEST PATH INSTRUMENTATION MATRIX
+
+```
+User Input
+    ↓ [T0ms]
+void saveInteraction() [async, no await]
+    → memoryService.saveChatInteraction() [BACKEND: ~500ms]
+    ↓ [T0ms, IMMEDIATE RETURN, WRITE PENDING]
+loadMemoryEntries() [await, blocking]
+    → tauriClient.memoryGetState() [~50ms]
+    → normalizeMemoryState([]) [synchronous]
+    → memoryCoreEntries = [] [EMPTY - write still pending]
+    ↓ [T50ms]
+buildSingleDoorEnvelope()
+    → persistedMemoryFacts = toPersistedMemoryFacts([])
+    → persistedMemoryFacts = [] [EMPTY]
+    → envelope.memorySingleDoor.persistedMemoryFacts = []
+    ↓ [T55ms]
+formatContextEnvelopeForSystemPrompt(envelope)
+    → systemPrompt += "\nMemory Facts: []"
+    → systemPrompt_has_token = false
+    ↓ [T60ms]
+conversation_generate IPC
+    send: { systemPrompt, contextEnvelope, messages }
+    ↓ [T60ms SEND]
+BACKEND RECEIVE
+    receives: systemPrompt (empty), contextEnvelope (empty)
+    ↓ [T60ms → T300ms, BACKEND]
+LLM Generation
+    input: systemPrompt (only base, no facts)
+    input: contextEnvelope (empty)
+    input: messages (user + history, but no memory facts)
+    generation: model.generate(...)
+    → response = "Based on what you've asked..."
+    → response_includes_memory_artifacts = false
+    ↓ [T300ms RESPONSE]
+FRONTEND RECEIVE
+    receives: response (no memory trace)
+    ↓ [T305ms]
+void saveInteraction() [NOW FINALLY EXECUTING IN BACKEND]
+    → INSERT { userMessage, aiResponse, mode }
+    → MEMORY PERSISTENCE COMPLETE (but too late for this request)
+    ↓ [T500ms]
+void promises settle
+```
+
+---
+
+## MATRIX: TRUE/FALSE VERDICTS
+
+| Point | Test | Current Value | Required Value | Verdict |
+|-------|------|---------------|-----------------|---------|
+| **WRITE PATH** | | | | |
+| 1a | saveInteraction awaited before send? | NO (void) | YES | ❌ FAIL |
+| 1b | saveInteraction timing vs envelope build | AFTER (T500) | BEFORE (T0-50) | ❌ FAIL |
+| 1c | Previous interaction in memory at read time? | NO | YES | ❌ FAIL |
+| **READ PATH** | | | | |
+| 2a | loadMemoryEntries awaited? | YES | YES | ✅ PASS |
+| 2b | loadMemoryEntries returns non-empty? | NO (void write pending) | YES | ❌ FAIL |
+| 2c | memoryCoreEntries passed to envelope? | YES ([]) | YES (non-[]) | ❌ FAIL |
+| **ENVELOPE BUILD** | | | | |
+| 3a | persistedMemoryFacts = []? | YES | NO | ❌ FAIL |
+| 3b | memorySingleDoor.tags populated? | NO | YES | ❌ FAIL |
+| 3c | routeContext populated? | YES | YES | ✅ PASS |
+| **PROMPT INJECTION** | | | | |
+| 4a | formatContextEnvelopeForSystemPrompt runs? | YES | YES | ✅ PASS |
+| 4b | systemPrompt contains token/facts? | NO | YES | ❌ FAIL |
+| 4c | systemPrompt_hash distinct per request? | UNKNOWN | YES | ❓ UNPROVEN |
+| **BACKEND CONSUMPTION** | | | | |
+| 5a | Backend receives systemPrompt? | YES | YES | ✅ PASS |
+| 5b | Backend receives contextEnvelope? | YES | YES | ✅ PASS |
+| 5c | Backend uses systemPrompt for generation? | ❓ UNKNOWN | YES | ❌ UNPROVEN |
+| 5d | Backend uses contextEnvelope.route for discrimination? | ❓ UNKNOWN | YES | ❌ UNPROVEN |
+| **RESPONSE GENERATION** | | | | |
+| 6a | Response text includes memory token/facts? | NO | YES | ❌ FAIL |
+| 6b | Response discriminates by route/module? | NO | YES | ❌ FAIL |
+| 6c | Response includes context envelope metadata? | NO | YES | ❌ FAIL |
+| **BEHAVIORAL TRUTH** | | | | |
+| 7a | memoryInfluencedResponse = true? | NO (V51: false) | YES | ❌ FAIL |
+| 7b | routeTruthPass = true? | NO (V51: false) | YES | ❌ FAIL |
+| 7c | tokenPresentInEnvelopeFacts = true? | NO | YES | ❌ FAIL |
+
+---
+
+## VERDICT TOTALS
+
+- ✅ PASS: 4/23 = 17%
+- ❌ FAIL: 16/23 = 70%
+- ❓ UNKNOWN: 3/23 = 13%
+
+---
+
+## CRITICAL BLOCKERS (ALL MUST BE TRUE FOR STRONG)
+
+### Blocker 1: Write Before Send
+- Current: void (non-blocking) → FAIL
+- Required: await (blocking) → PASS
+- Impact: Without this, envelope always has empty facts
+
+### Blocker 2: Backend Uses systemPrompt
+- Current: ❓ UNKNOWN (no instrumentation)
+- Required: Proven via instrumentation
+- Impact: Without this, systemPrompt (even if populated) is ignored
+
+### Blocker 3: Assistant Response Reflects Memory
+- Current: NO (V51 behavioral marker = false)
+- Required: YES (tokenPresent + responseIncludes)
+- Impact: Without this, no causal proof of influence
+
+---
+
+## INSTRUMENTATION POINTS (FOR PHASE 2)
+
+To move from UNKNOWN → PROVEN:
+
+### Frontend Instrumentation Points
+
+1. **saveInteraction call point** (ollama.ts line ~320)
+   - Add: requestId, call_timestamp
+   - Log: "void memoryIntegration.saveInteraction() [NON-BLOCKING]"
+   - Verdict: WRITE_NOT_AWAITED_CONFIRMED
+
+2. **loadMemoryEntries result** (useConversationEngine.ts line ~354)
+   - Add: memory_count, entries_returned, timestamp
+   - Log: "loadEntries returned: count={}, timestamp={}"
+   - Verdict: MEMORY_DATA_RETRIEVAL_CONFIRMED
+
+3. **formatContextEnvelopeForSystemPrompt** (conversationEngine.ts line ~399)
+   - Add: prompt_hash, facts_count, token_present
+   - Log: "Prompt injected: facts={}, route={}, hash=..."
+   - Verdict: PROMPT_INJECTION_CONFIRMED
+
+4. **conversation_generate send** (conversationEngine.ts line ~410)
+   - Add: requestId, payload_summary
+   - Log: "IPC send: systemPrompt_hash={}, contextEnvelope={}"
+   - Verdict: BACKEND_RECEIVE_CONFIRMED
+
+### Backend Instrumentation Points
+
+5. **conversation_generate handler** (src-tauri/src/.../generate.rs, location TBD)
+   - Add: received_systemPrompt, received_contextEnvelope, received_timestamp
+   - Log: "Received: systemPrompt_hash={}, envelope_has_token={}"
+   - Verdict: BACKEND_RECEIVED_CONTEXT_CONFIRMED
+
+6. **LLM call** (backend generation point, TBD)
+   - Add: prompt_used (base or systemPrompt+context), model_input
+   - Log: "Model call: using_systemPrompt={}, using_envelope={}"
+   - Verdict: BACKEND_USES_CONTEXT_CONFIRMED
+
+7. **Response generation** (backend, TBD)
+   - Add: response_includes_fact, includes_route, includes_token
+   - Log: "Response: has_memory_trace={}, has_route={}"
+   - Verdict: RESPONSE_REFLECTS_CONTEXT_CONFIRMED
+
+---
+
+## PHASE 2 GATE: INSTRUMENTATION GO/HOLD
+
+**Decision**: GO FOR INSTRUMENTATION
+
+Rationale:
+1. Root cause identified: `void saveInteraction()` breaks temporal causality
+2. Instrumentation points mapped (7 total)
+3. Scope narrow: only memory write/read/prompt/generation path
+4. Risk low: read-only markers, no behavior change
+
+Proceed to PHASE 2: Add minimal, bounded logging.

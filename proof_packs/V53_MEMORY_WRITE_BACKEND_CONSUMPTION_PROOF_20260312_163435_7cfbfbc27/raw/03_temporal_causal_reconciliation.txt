@@ -1,0 +1,218 @@
+# V53 PHASE 1 — TEMPORAL CAUSAL RECONCILIATION
+# STRICT TIMING ANALYSIS: Memory Write, Read, Envelope, Prompt, Backend
+
+## CRITICAL FINDING: void memoryIntegration.saveInteraction()
+
+Location: src/services/ai/providers/ollama.ts (line ~320)
+
+```typescript
+// ✨ v21 - Save interaction to memory (async, non-blocking)
+void memoryIntegration
+  .saveInteraction({
+    userMessage: message,
+    aiResponse: aiResponse.content,
+    mode: 'chat',
+  })
+```
+
+**VERDICT**: Memory write is NON-BLOCKING (void promise discarded).
+Consequence: Memory persisted ASYNCHRONOUSLY, likely AFTER response is sent.
+
+---
+
+## TEMPORAL SEQUENCE — WRITE BEFORE SEND?
+
+### T0: User sends message
+- Location: useConversationEngine.sendMessage() [line ~340]
+- Action: Set isProcessingRef.current = true
+- Status: Message marked as being processed
+
+### T1: Memory pre-load (before envelope)
+- Location: useConversationEngine.sendMessage() [line ~354]
+- Action: await loadMemoryEntries() (tries to load existing memory)
+- Result: Returns []  (empty, because previous interactions not yet persisted)
+- Problem: THIS HAPPENS BEFORE WRITE, not after
+
+### T2: Envelope built
+- Location: useConversationEngine.buildSingleDoorEnvelope() [line ~365]
+- Action: Calls buildChatContextEnvelope() with preloadedMemory = []
+- Result: persistedMemoryFacts = [] (empty)
+- Problem: No new token/facts injected because write hasn't happened yet
+
+### T3: User message persisted to localStorage
+- Location: useConversationEngine.sendMessage() [line ~400]
+- Action: await saveMessage(userAIMessage) [AWAITED]
+- Status: ✅ Write completed before send
+- Note: This is the CURRENT message, not persisting past interactions
+
+### T4: Send request to backend
+- Location: useConversationEngine.sendMessage() [line ~410]
+- Action: await processMessage(content, { contextEnvelope, ... })
+- Content: Empty envelope persistent facts []
+- Backend receives: systemPrompt without token, contextEnvelope without token
+
+### T5: Backend generates response
+- Location: src-tauri conversation_generate command
+- Input: envelope with empty persistedMemoryFacts
+- Output: Error or standard response (does NOT reference user's prior memory)
+
+### T6: Response returned to frontend
+- Location: useConversationEngine.sendMessage() [line ~420]
+- Status: Assistant message displayed
+- Memory token still NOT in response (because it wasn't available at envelope time)
+
+### T7: Assistant message persisted to localStorage
+- Location: useConversationEngine.sendMessage() [line ~488]
+- Action: await saveMessage(assistantAIMessage)
+- Status: ✅ Write completed
+
+### T8: ASYNC MEMORY WRITE (deferred)
+- Location: ollama.ts provider [line ~320]
+- Action: void memoryIntegration.saveInteraction()
+- Timing: NOW EXECUTING (several hundred ms later, if at all)
+- Backend: Persists { userMessage, aiResponse, mode }
+- Problem: **THIS HAPPENS AFTER SEND & RESPONSE**
+
+---
+
+## TEMPORAL CAUSALITY MATRIX
+
+| Phase | Event | Timestamp | Write Status | Read Status | Envelope Has Token |
+|-------|-------|-----------|--------------|-------------|-------------------|
+| T0 | User sends | NOW | - | - | - |
+| T1 | Pre-load memory | NOW+0ms | - | BEFORE_WRITE | ❌ Empty |
+| T2 | Build envelope | NOW+5ms | - | ❌ No new data | ❌ [] |
+| T3 | Persist user msg | NOW+10ms | ✅ awaited | - | ❌ Still [] |
+| T4 | SEND to backend | NOW+15ms | - | - | ❌ Empty prompt |
+| T5 | Backend generate | NOW+50ms | - | NO_DEPENDENCY | ❌ No memory context |
+| T6 | Return response | NOW+2000ms | - | - | ❌ No memory trace |
+| T7 | Persist assistant | NOW+2005ms | ✅ awaited | - | - |
+| T8 | Async memory write | NOW+2500ms | ❌ void (too late) | - | TOO_LATE |
+
+---
+
+## ROOT CAUSALITY BREAK
+
+**Memory Write Before Send = FALSE**
+
+Because:1. Location: ollama.ts line ~320
+ 2. Pattern: `void memoryIntegration.saveInteraction()` 
+ 3. Effect: Promise returned but not awaited
+ 4. Consequence: Write happens asynchronously AFTER send/response
+ 5. Impact: Envelope has empty persistedMemoryFacts (read happens BEFORE write completes)
+
+---
+
+## MEMORY READ TIMING
+
+Location: useConversationEngine.sendMessage() [line ~354]
+```typescript
+const memoryState = await loadMemoryEntries();
+persistedMemoryFactsOverride = toPersistedMemoryFacts(memoryState.entries);
+```
+
+Timing: T1 (BEFORE write at T8)
+Result: Returns [] (empty, because previous interaction hasn't been persisted yet)
+
+---
+
+## BACKEND CONTEXT CONSUMPTION (UNPROVEN)
+
+Backend receives:
+- systemPrompt: formatted from envelope (contains [])
+- contextEnvelope: raw envelope (contains [])
+- messages: user + assistant history
+
+Does backend ACTUALLY USE systemPrompt for generation?
+
+Current evidence:
+- ❓ UNPROVEN — no visible instrumentation in conversation_generate handler
+- ❓ UNPROVEN — responses don't reflect memory/route facts (V51 observation)
+
+---
+
+## ASSISTANT BEHAVIORAL DEPENDENCE (PROVEN FALSE)
+
+V51 WDIO real test markers:
+- memoryInfluencedResponse = false
+- routeTruthPass = false
+- tokenPresentInEnvelopeFacts = false
+- behaviorRouteInfluence = false
+
+Conclusion: Despite code paths being in place, behavioral proof missing.
+
+---
+
+##---SUMMARY---
+
+### Memory Write Before Send: ❌ FAIL
+- Write pattern: void (async, non-blocking)
+- Write timing: T8 (after send at T4)
+- Envelope read timing: T1 (before write)
+- Result: Empty persistedMemoryFacts to backend
+
+### Memory Read Truth: ❌ FAIL
+- Read happens at T1
+- Empty array returned (write hasn't happened yet)
+- No new facts injected into envelope
+
+### Envelope Has Token: ❌ FAIL
+- Envelope built at T2 with empty facts
+
+### Prompt Has Token: ❌ FAIL
+- Prompt serialized from empty envelope
+
+### Backend Context Consumption: ❌ UNPROVEN
+- No visible code consuming systemPrompt
+- No behavioral proof from V51
+
+### Assistant Behavioral Dependence: ❌ FAIL
+- V51 real WDIO: false
+- Responses don't change with memory/route
+
+---
+
+## ROOT CAUSE (BLOCKER V52→V53)
+
+**ollama.ts line ~320: void memoryIntegration.saveInteraction()**
+
+This is the TEMPORAL INVERSION that breaks the causal chain:
+1. read() called at T1
+2. write() deferred to T8 (via void promise)
+3. Envelope built at T2 with stale/empty data
+4. Backend receives empty context
+5. Response generated without memory awareness
+
+---
+
+## FIX VECTOR (V53 PHASE 4)
+
+To achieve Memory Write Before Send = TRUE:
+
+Option A: await before send
+- Change void to: await memoryIntegration.saveInteraction() [BLOCKING]
+- Risk: Adds latency to every send (200-500ms)
+- Benefit: Guarantees write at T0.5, reads at T1, has token in envelope
+
+Option B: Pre-write interactively
+- Save user message BEFORE building envelope
+- Timing: T0.5 (new user msg saves previous interaction)
+- Benefit: Low latency, memory always available
+- Risk: Off-by-one (Q1 doesn't see response from Q1 in memory, only later Qs see it)
+
+Option C: Envelope deferred read
+- Don't pre-load memory, DEFER read until after backend returns
+- Timing: Read at T7, re-build envelope async
+- Problem: Can't use memory in THIS request, only next request
+
+---
+
+## RECOMMENDATION
+
+Implement Option B: Pre-write at send-start
+- T0.5: Save previous interaction (if any) before processing new message
+- T1: Pre-load NOW-PERSISTED facts
+- T2: Build envelope with fresh facts
+- Result: Write "before send" in causal sense, though write physically happens at T0.5
+
+This keeps latency low while ensuring facts are available at envelope build time.
