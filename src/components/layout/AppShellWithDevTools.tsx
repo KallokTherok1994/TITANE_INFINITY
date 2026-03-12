@@ -85,7 +85,7 @@ export const AppShellWithDevTools = ({
   }
 
   return (
-    <div className={cn('relative h-screen w-screen overflow-hidden', className)}>
+    <div className={cn('relative h-screen w-full min-w-0 max-w-full overflow-hidden', className)}>
       {/* Toggle Button (Fixed Top-Right) */}
       <motion.button
         onClick={() => setDevToolsOpen(!devToolsOpen)}
