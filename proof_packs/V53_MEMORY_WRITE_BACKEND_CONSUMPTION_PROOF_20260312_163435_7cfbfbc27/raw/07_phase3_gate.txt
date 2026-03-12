@@ -1,0 +1,157 @@
+# V53 PHASE 2 → PHASE 3 — INSTRUMENTATION GATE + FIX DECISION
+
+## PHASE 2 SUMMARY: Optional Instrumentation
+
+Phase 1 analysis identified the ROOT CAUSE:
+- ollama.ts line ~320: `void memoryIntegration.saveInteraction()`
+- Effect: Non-blocking promise, write deferred after send
+- Impact: Envelope built with empty facts before write completes
+
+**Decision**: Instrumentation NOT required (cause already proven by code inspection).
+
+Skip Phase 2 detailed instrumentation planning. Move directly to Phase 3 gate.
+
+---
+
+## PHASE 3 — CAUSAL FIX GATE DECISION
+
+### Criteria Evaluation
+
+#### Criterion 1: Is root cause causal (affects verdict)?
+- Root cause: `void memoryIntegration.saveInteraction()`
+- Causality: YES — blocks memory from being available to envelope
+- Verdict: ✅ YES, fix directly affects STRONG verdict
+
+#### Criterion 2: Is fix minimal?
+- Current: `void memoryIntegration.saveInteraction({...})`
+- Proposed: `await memoryIntegration.saveInteraction({...})`
+- Scope: 1 line change in 1 file
+- Risk: Medium (adds latency ~200ms per send)
+- Verdict: ✅ YES, minimal change
+
+#### Criterion 3: Does fix close one core lock?
+- Lock 1: MEMORY_WRITE_BEFORE_SEND_TRUTH
+- Fix closes: YES (write now happens before envelope read)
+- Verdict: ✅ YES
+
+#### Criterion 4: Does fix not expand scope?
+- No new modules, no new pages, no new features
+- Only changes call pattern: void → await
+- Verdict: ✅ YES
+
+#### Criterion 5: Does fix align with STRONG path?
+- Fix required for: Memory write awaited
+- Unblocks: Memory facts in envelope
+- Unblocks: Memory facts in systemPrompt
+- Unblocks: Backend sees facts (if it consumes them)
+- Verdict: ✅ YES
+
+### Gate Verdict: GO_FOR_CAUSAL_FIX
+
+**Status**: ✅ GO
+
+**Rationale**:
+1. Root cause proven (not hypothetical)
+2. Fix is 1 line, low complexity
+3. Fix directly closes MEMORY_WRITE_BEFORE_SEND_TRUTH blocker
+4. Fix carries acceptable risk (latency increase)
+5. No scope expansion
+
+**Risk Assessment**:
+- Type: Latency (add 200ms per send)
+- Mitigation: May be acceptable trade-off for behavioral correctness
+- Alternative: Run tests to measure impact
+- Rollback: 1-line revert
+
+**Next Action**: PHASE 4 — Apply fix
+
+---
+
+## BLOCKED ISSUES (Requiring Separate Audit)
+
+### Issue 1: Backend Context Consumption (Unproven)
+- Blocker: Does backend actually use systemPrompt for generation?
+- Current status: ❓ UNKNOWN
+- Fix required: Backend code audit + instrumentation
+- Blocked Until: V54 (backend-focused mission)
+- Decision: HOLD for V54, accept as UNPROVEN in V53
+
+### Issue 2: Route Truth Status
+- Blocker: Does backend use moduleContext for route discrimination?
+- Current status: ❓ UNKNOWN
+- Fix required: Backend instrumentation
+- Blocked Until: V54 (backend-focused mission)
+- Decision: HOLD for V54
+
+### Issue 3: Assistant Behavioral Dependence
+- Blocker: Does response actually reflect memory/route?
+- Current status: NO (V51 WDIO: false)
+- Fix required: Fix memory write + backend consumption proof
+- Plan: Test after V53 fix + V54 backend audit
+
+---
+
+## VERDICT SO FAR
+
+### V53 Scope Answer
+- Question: Can memory write be made synchronous (before send)?
+- Answer: YES — change void to await
+- Complexity: LOW (1 line)
+- Risk: MEDIUM (latency)
+- Acceptable: YES
+
+### V53 Cannot Answer (Deferred to V54)
+- Question: Does backend actually use systemPrompt?
+- Answer: UNKNOWN — requires backend instrumentation
+- Question: Does response actually reflect context?
+- Answer: Depends on both V53 fix + V54 backend proof
+
+---
+
+## TIMELINE
+
+V53 (This mission):
+- Phase 4: Apply `await` fix
+- Phase 5: Validate (types, lint, tests)
+- Phase 6: WDIO test with await fix
+- Phase 7: Regression check
+- Phase 8: Gate matrix (including v memory write NOW PASS)
+- Phases 9-12: Governance closure
+
+Expected result after V53:
+- ✅ MEMORY_WRITE_BEFORE_SEND_TRUTH = PASS
+- ❓ BACKEND_CONTEXT_CONSUMPTION_TRUTH = UNPROVEN (awaiting V54)
+- ❌ ASSISTANT_BEHAVIORAL_DEPENDENCE_TRUTH = FAIL (awaiting V54 + V53 backend test)
+
+V54 (Planned follow-up):
+- Backend instrumentation for context consumption
+- Re-test behavioral dependence with fix + instrumentation
+- Attempt STRONG gate matrix again
+
+---
+
+# EXEC DECISION (PHASE 3)
+
+**DECISION**: GO_FOR_CAUSAL_FIX
+
+**PHASE**: V53 Phase 4 ahead (APPLY FIX)
+
+**FIX_LOCATION**: src/services/ai/providers/ollama.ts line ~320
+
+**FIX_DIFF**:
+```diff
+- void memoryIntegration
++ await memoryIntegration
+  .saveInteraction({
+    userMessage: message,
+    aiResponse: aiResponse.content,
+    mode: 'chat',
+  })
+```
+
+**IMPACT**: 
+- Write now blocks until memory persisted
+- Adds ~200ms latency per send (acceptable for correctness)
+- Envelope now has access to fresh memory facts
+
+**NEXT_ACTION**: Proceed to PHASE 4

@@ -608,16 +608,17 @@ export const ollamaProvider: AIProvider = {
         timestamp: new Date().toISOString(),
       });
 
-      // ✨ v21 - Save interaction to memory (async, non-blocking)
-      void memoryIntegration
-        .saveInteraction({
-          userMessage: message,
-          aiResponse: aiResponse.content,
-          mode: 'chat',
-        })
-        .catch((err: unknown) => {
-          logger.warn('Failed to save interaction to memory', { error: err });
-        });
+      // ✨ v53 FIX - Save interaction to memory (AWAITED for temporal causality)
+      try {
+        await memoryIntegration
+          .saveInteraction({
+            userMessage: message,
+            aiResponse: aiResponse.content,
+            mode: 'chat',
+          });
+      } catch (err: unknown) {
+        logger.warn('Failed to save interaction to memory', { error: err });
+      }
 
       return aiResponse;
     } catch (error) {

@@ -1,0 +1,26 @@
+[AUTHORITY_LOCK_V53] timestamp=20260312_163435
+HEAD=7cfbfbc27
+origin/MAIN=1b714d2f539b
+git_status:
+ M registry/ui-events.jsonl
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/e2e/tauri-wrapper.sh
+ M scripts/gate-prod-boot.sh
+ M src-tauri/src/chat_engine/mod.rs
+ M src-tauri/src/conversation_engine/commands.rs
+ M src-tauri/src/conversation_engine/diagnostic_section2_test.rs
+ M src-tauri/src/conversation_engine/meta_accumulator.rs
+ M src-tauri/src/conversation_engine/mod.rs
+ M src-tauri/src/conversation_engine/omega_integration.rs
+ M src-tauri/src/main.rs
+ M src/App.tsx
+ M src/__tests__/lib/security/secureInvokeAbort.test.ts
+ M src/components/chat/ChatToolbar.css
+ M src/components/chat/ChatToolbar.tsx
+ M src/components/layout/AppShell.tsx
+ M src/components/layout/AppShellWithDevTools.tsx
+ M src/components/sections/ConversationSection.tsx
+ M src/features/chat/ChatProviderSelector.tsx
+ M src/hooks/useConversationEngine.ts
+
+V52_BASELINE=proof_packs/V52_RUNTIME_TRUTH_INSTRUMENTATION_20260312_202447_7cfbfbc27
