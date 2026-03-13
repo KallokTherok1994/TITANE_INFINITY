@@ -111,10 +111,14 @@ fi
 export OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
 export OLLAMA_BASE_URL="http://127.0.0.1:11434"
 export OLLAMA_URL="http://127.0.0.1:11434"
-export OFFLINE_SIM="${OFFLINE_SIM:-1}"
+if [[ -n "${OFFLINE_SIM:-}" ]]; then
+  export OFFLINE_SIM
+else
+  unset OFFLINE_SIM
+fi
 log_line "[E2E_WRAPPER] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
 log_line "[E2E_WRAPPER] OLLAMA_BASE_URL=$OLLAMA_BASE_URL"
-log_line "[E2E_WRAPPER] OFFLINE_SIM=$OFFLINE_SIM"
+log_line "[E2E_WRAPPER] OFFLINE_SIM=${OFFLINE_SIM:-<unset>}"
 
 # Log activation (memory dir will be decided by Rust guard fallback: /tmp/titane-infinity/memory-e2e)
 log_line "[E2E_WRAPPER] TITANE_E2E=$TITANE_E2E"
