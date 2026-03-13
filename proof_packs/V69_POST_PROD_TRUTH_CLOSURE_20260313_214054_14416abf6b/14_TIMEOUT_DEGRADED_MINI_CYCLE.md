@@ -24,3 +24,9 @@ Bounded hypothesis:
 
 Expected closure condition:
 - No degraded fallback message and no `TIMEOUT` reason in runtime attrs, with connectivity proof preserved.
+
+Append-only update (controlled probe timeout=45s):
+- Probe executed successfully with summary in `raw/31_controlled_probe_timeout45_summary.txt`.
+- Result: `timeout-degraded` persists (`providerUsed=timeout-degraded`, `providerReason=TIMEOUT`, `V25_VERDICT=FAIL`).
+- Connectivity remained preserved (`providerNetworkUsed=true`).
+- Conclusion: raising the conversation guard to 45s alone did not remove degraded timeout behavior in this bounded run.

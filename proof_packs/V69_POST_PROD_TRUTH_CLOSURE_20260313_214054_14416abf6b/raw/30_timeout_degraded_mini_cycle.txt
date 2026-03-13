@@ -17,3 +17,12 @@ PRIMARY_FINDING=Backend/provider pipeline exceeded 20s guard and emitted determi
 RISK_CLASS=QUALITY_DEGRADATION_NON_CONNECTIVITY
 NEXT_ACTION_30MIN=Run one controlled probe with increased conversation timeout guard via env/flag to separate provider latency from hard timeout guard behavior.
 TARGET_VERIFICATION=Preserve providerNetworkUsed=true and eliminate timeout-degraded response in bounded run.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:19:41Z
+CONTROLLED_PROBE_SUMMARY=raw/31_controlled_probe_timeout45_summary.txt
+CONTROLLED_PROBE_TIMEOUT_SECS=45
+CONTROLLED_PROBE_RESULT=TIMEOUT_DEGRADED_PERSISTS
+CONTROLLED_PROBE_CONNECTIVITY=providerNetworkUsed=true (preserved)
+CONTROLLED_PROBE_QUALITY=providerUsed=timeout-degraded; providerReason=TIMEOUT; V25_VERDICT=FAIL
+INTERPRETATION=Increasing conversation timeout guard to 45s did not clear degraded timeout response in this bounded run.
+NEXT_ACTION_30MIN=Instrument provider attempt timings inside process_message_internal/omega path to localize timeout source before increasing guard further.
