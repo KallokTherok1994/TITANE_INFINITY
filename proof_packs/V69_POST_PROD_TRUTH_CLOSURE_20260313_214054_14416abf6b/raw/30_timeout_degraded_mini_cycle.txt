@@ -41,3 +41,23 @@ FRESH_RUN_TIMEOUT_DEGRADED_PRESENT=NO
 DIFF_INTERPRETATION=Timeout-degraded is reproducible on deployed artifact path but not on fresh debug binary path under the same probe scaffold; root-cause likely tied to artifact/runtime lane differences and provider routing context.
 TARGET_STATUS_NETWORK_AND_NO_TIMEOUT=NOT_CLOSED (network=true was not preserved in fresh PASS run)
 NEXT_ACTION_30MIN=Execute one fresh process probe forcing remote/network lane (providerNetworkUsed=true target) on debug binary to test if timeout-degraded remains absent.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T23:04:25Z
+TAURI_DEV_REMOTE_REPRO=raw/43_tauri_dev_node_blocker_repro.txt
+TAURI_DEV_REMOTE_STATUS=BLOCKED_ENV_NODE_VERSION
+TAURI_DEV_REMOTE_BLOCKER=Node.js 18.19.1 in beforeDevCommand; Vite 7 requires Node >=20.19
+PROBE16_SUMMARY=raw/44_probe16_remote_debug_nondev_summary.txt
+PROBE16_V25_VERDICT=PASS
+PROBE16_PROVIDER_USED=Ollama
+PROBE16_PROVIDER_REASON=OK
+PROBE16_PROVIDER_NETWORK_USED=false
+PROBE16_TIMEOUT_DEGRADED_PRESENT=NO
+PROBE17_SUMMARY=raw/45_probe17_force_gemini_summary.txt
+PROBE17_FORCED_PROVIDER=gemini
+PROBE17_V25_VERDICT=PASS
+PROBE17_PROVIDER_USED=Ollama
+PROBE17_PROVIDER_REASON=OK
+PROBE17_PROVIDER_NETWORK_USED=false
+PROBE17_TIMEOUT_DEGRADED_PRESENT=NO
+INTERPRETATION_CONTINUATION=Fresh debug lane remains stable without timeout-degraded, but remote/network usage cannot be co-proven in the same PASS run under current environment constraints.
+NEXT_ACTION_30MIN=Either provision Node>=20 for tauri-dev remote lane or capture backend provider-selection logs proving why forced-remote resolves to local despite gate intent.
