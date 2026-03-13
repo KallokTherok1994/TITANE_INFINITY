@@ -1,0 +1,17 @@
+# PHASE 4 - Docset normalization patch (append-only)
+
+*** Update File: proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/VERDICT.md
+@@
+ NEXT_ACTION_30MIN: Creer un micro-harness de preuve au point IPC reellement patchable (ou injecter un hook officiel cote preload) puis rerun unique V60 pour obtenir `REAL_UI_SEND_PROVEN + IPC_ENTRY_CAPTURE_PROVEN + LINKED_CAPTURE_PROVEN + routeContext/moduleContext=PASS`.
++
++## Append-Only Supersession Notice (2026-03-13)
++
++This document remains the historical initial V60 stopline verdict.
++
++Official closure for V60 is superseded by:
++- `proof_packs/V60_IPC_ENTRY_CAPTURE_REAL_UI_STRONG_CLOSURE_20260313_015700_8ed1ef72c64abd90/VERDICT_RERUN.md`
++
++For promotion and release governance, consume `VERDICT_RERUN.md` as authoritative.
+
+NORMALIZATION_POLICY=append-only
+DESTRUCTIVE_REWRITE=none
