@@ -26,3 +26,18 @@ CONTROLLED_PROBE_CONNECTIVITY=providerNetworkUsed=true (preserved)
 CONTROLLED_PROBE_QUALITY=providerUsed=timeout-degraded; providerReason=TIMEOUT; V25_VERDICT=FAIL
 INTERPRETATION=Increasing conversation timeout guard to 45s did not clear degraded timeout response in this bounded run.
 NEXT_ACTION_30MIN=Instrument provider attempt timings inside process_message_internal/omega path to localize timeout source before increasing guard further.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:43:10Z
+FRESH_PROCESS_VALIDATION_SUMMARY=raw/41_probe_fresh_trace_text_plain_summary.txt
+WRAPPER_ENV_PROOF=raw/online_provider_probe_artifacts_12/tauri-wrapper.log
+FRESH_WRAPPER_SELECTED_BINARY=/tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+FRESH_WRAPPER_TIMEOUT_ENV=45
+FRESH_WRAPPER_TRACE_ENV=1
+FRESH_RUN_V25_VERDICT=PASS
+FRESH_RUN_PROVIDER_USED=Ollama
+FRESH_RUN_PROVIDER_REASON=OK
+FRESH_RUN_PROVIDER_NETWORK_USED=false
+FRESH_RUN_TIMEOUT_DEGRADED_PRESENT=NO
+DIFF_INTERPRETATION=Timeout-degraded is reproducible on deployed artifact path but not on fresh debug binary path under the same probe scaffold; root-cause likely tied to artifact/runtime lane differences and provider routing context.
+TARGET_STATUS_NETWORK_AND_NO_TIMEOUT=NOT_CLOSED (network=true was not preserved in fresh PASS run)
+NEXT_ACTION_30MIN=Execute one fresh process probe forcing remote/network lane (providerNetworkUsed=true target) on debug binary to test if timeout-degraded remains absent.

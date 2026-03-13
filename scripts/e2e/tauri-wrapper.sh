@@ -4,8 +4,8 @@
 
 set -euo pipefail
 
-ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-}"
-WRAPPER_LOG=""
+ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-${RUN_ARTIFACTS:-}}"
+WRAPPER_LOG="/tmp/e2e-wrapper-last.log"
 if [[ -n "$ARTIFACTS_DIR" ]]; then
   mkdir -p "$ARTIFACTS_DIR"
   WRAPPER_LOG="$ARTIFACTS_DIR/tauri-wrapper.log"
@@ -28,6 +28,9 @@ log_line "[E2E_WRAPPER] env XDG_DATA_HOME=${XDG_DATA_HOME:-<unset>}"
 log_line "[E2E_WRAPPER] env TMPDIR=${TMPDIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_MEMORY_DIR=${TITANE_MEMORY_DIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_LOG_DIR=${TITANE_LOG_DIR:-<unset>}"
+log_line "[E2E_WRAPPER] env TAURI_BINARY_PATH(input)=${TAURI_BINARY_PATH:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_CONVERSATION_TIMEOUT_SECS=${TITANE_CONVERSATION_TIMEOUT_SECS:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_TIMEOUT_TRACE=${TITANE_TIMEOUT_TRACE:-<unset>}"
 log_line "[E2E_WRAPPER] artifacts=${ARTIFACTS_DIR:-<unset>}"
 
 # Proof witness file (to detect wrapper execution even if stderr is lost)
