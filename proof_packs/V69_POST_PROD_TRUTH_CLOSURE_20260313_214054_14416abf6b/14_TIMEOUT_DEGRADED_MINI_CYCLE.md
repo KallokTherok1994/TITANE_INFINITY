@@ -30,3 +30,10 @@ Append-only update (controlled probe timeout=45s):
 - Result: `timeout-degraded` persists (`providerUsed=timeout-degraded`, `providerReason=TIMEOUT`, `V25_VERDICT=FAIL`).
 - Connectivity remained preserved (`providerNetworkUsed=true`).
 - Conclusion: raising the conversation guard to 45s alone did not remove degraded timeout behavior in this bounded run.
+
+Append-only update (fresh process + forced debug binary):
+- Wrapper proof confirms env propagation and binary selection in `raw/online_provider_probe_artifacts_12/tauri-wrapper.log`.
+- Fresh run outcome (`raw/41_probe_fresh_trace_text_plain_summary.txt`): `V25_VERDICT=PASS`, `providerUsed=Ollama`, `providerReason=OK`, `providerNetworkUsed=false`.
+- `timeout-degraded` is absent in this fresh debug-binary lane.
+- Differential truth: timeout-degraded persists in deployed/artifact lane but not in this fresh debug lane.
+- Closure status for original target is partial: no-timeout achieved, but `providerNetworkUsed=true` was not preserved in the same successful run.

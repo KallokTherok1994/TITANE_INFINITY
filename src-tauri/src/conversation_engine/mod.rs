@@ -34,6 +34,7 @@ pub mod self_healing;
 pub mod types;
 
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::sync::RwLock;
 use tokio::time::{timeout, Duration};
 
@@ -80,6 +81,16 @@ fn conversation_timeout_secs() -> u64 {
             );
             DEFAULT_TIMEOUT_SECS
         }
+    }
+}
+
+fn timeout_trace_enabled() -> bool {
+    match std::env::var("TITANE_TIMEOUT_TRACE") {
+        Ok(raw) => {
+            let normalized = raw.to_ascii_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        }
+        Err(_) => false,
     }
 }
 
@@ -213,7 +224,8 @@ impl ConversationEngineState {
                     router_status,
                     if network_available { "DEGRADED" } else { "OFFLINE" }
                 );
-                self.create_offline_response(network_available).await
+                self.create_offline_response(network_available, timeout_secs)
+                    .await
             }
         }
     }
@@ -223,9 +235,31 @@ impl ConversationEngineState {
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
+        let trace_enabled = timeout_trace_enabled();
+        let overall_start = Instant::now();
+        let conv_id = request.conversation_id.as_deref().unwrap_or("<new>");
+
+        if trace_enabled {
+            log::info!(
+                "[CONV-TRACE] process_message_internal start | conversation_id={} | mode=omega_first",
+                conv_id
+            );
+        }
+
+        let omega_start = Instant::now();
+
         // R05 P2: OMEGA → Direct conversion (bypasses legacy pipeline duplication)
         match self.omega_bridge.process_through_omega(&request).await {
             Ok(omega_result) => {
+                if trace_enabled {
+                    log::info!(
+                        "[CONV-TRACE] omega_bridge ok | elapsed={}ms | intent={} | safety={}",
+                        omega_start.elapsed().as_millis(),
+                        omega_result.intent,
+                        omega_result.safety_score
+                    );
+                }
+
                 log::info!(
                     "[CONV-ENGINE] ✅ OMEGA pipeline succeeded | latency={}ms | intent={} | safety={}",
                     omega_result.latency_ms,
@@ -240,12 +274,23 @@ impl ConversationEngineState {
                     .clone()
                     .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
+                let convert_start = Instant::now();
+
                 match self
                     .omega_bridge
                     .convert_to_conversation_response(omega_result, &request, conversation_id)
                     .await
                 {
                     Ok(response) => {
+                        if trace_enabled {
+                            log::info!(
+                                "[CONV-TRACE] convert ok | elapsed={}ms | total={}ms | provider_used={}",
+                                convert_start.elapsed().as_millis(),
+                                overall_start.elapsed().as_millis(),
+                                response.metadata.provider_used
+                            );
+                        }
+
                         log::info!(
                             "[CONV-ENGINE] 🚀 P2 Direct conversion | bypass_legacy=true | total_latency={}ms",
                             response.metadata.latency_ms
@@ -253,34 +298,96 @@ impl ConversationEngineState {
                         Ok(response)
                     }
                     Err(e) => {
+                        if trace_enabled {
+                            log::warn!(
+                                "[CONV-TRACE] convert failed -> legacy fallback | convert_elapsed={}ms | total_before_legacy={}ms | error={}",
+                                convert_start.elapsed().as_millis(),
+                                overall_start.elapsed().as_millis(),
+                                e
+                            );
+                        }
+
                         log::warn!(
                             "[CONV-ENGINE] ⚠️ P2 Conversion failed, falling back to legacy: {}",
                             e
                         );
                         // Fallback to legacy pipeline
-                        self.pipeline.process(request).await
+                        let legacy_start = Instant::now();
+                        let legacy_result = self.pipeline.process(request).await;
+
+                        if trace_enabled {
+                            match &legacy_result {
+                                Ok(response) => log::info!(
+                                    "[CONV-TRACE] legacy ok | elapsed={}ms | total={}ms | provider_used={}",
+                                    legacy_start.elapsed().as_millis(),
+                                    overall_start.elapsed().as_millis(),
+                                    response.metadata.provider_used
+                                ),
+                                Err(err) => log::warn!(
+                                    "[CONV-TRACE] legacy failed | elapsed={}ms | total={}ms | error={}",
+                                    legacy_start.elapsed().as_millis(),
+                                    overall_start.elapsed().as_millis(),
+                                    err
+                                ),
+                            }
+                        }
+
+                        legacy_result
                     }
                 }
             }
             Err(e) => {
+                if trace_enabled {
+                    log::warn!(
+                        "[CONV-TRACE] omega_bridge failed -> legacy fallback | omega_elapsed={}ms | error={}",
+                        omega_start.elapsed().as_millis(),
+                        e
+                    );
+                }
+
                 log::warn!(
                     "[CONV-ENGINE] ⚠️ OMEGA pipeline failed, falling back to legacy: {}",
                     e
                 );
                 // Fallback to legacy pipeline
-                self.pipeline.process(request).await
+                let legacy_start = Instant::now();
+                let legacy_result = self.pipeline.process(request).await;
+
+                if trace_enabled {
+                    match &legacy_result {
+                        Ok(response) => log::info!(
+                            "[CONV-TRACE] legacy ok | elapsed={}ms | total={}ms | provider_used={}",
+                            legacy_start.elapsed().as_millis(),
+                            overall_start.elapsed().as_millis(),
+                            response.metadata.provider_used
+                        ),
+                        Err(err) => log::warn!(
+                            "[CONV-TRACE] legacy failed | elapsed={}ms | total={}ms | error={}",
+                            legacy_start.elapsed().as_millis(),
+                            overall_start.elapsed().as_millis(),
+                            err
+                        ),
+                    }
+                }
+
+                legacy_result
             }
         }
     }
 
     /// Create offline/degraded response when timeout triggered (Always Respond guarantee)
     /// v27.0.4: NO_LYING_FALLBACK — only use OFFLINE if network is truly unavailable
-    async fn create_offline_response(&self, network_available: bool) -> Result<ConversationResponse, ConversationEngineError> {
+    async fn create_offline_response(
+        &self,
+        network_available: bool,
+        timeout_secs: u64,
+    ) -> Result<ConversationResponse, ConversationEngineError> {
         let mode_label = if network_available { "DÉGRADÉ" } else { "hors ligne" };
         log::info!(
-            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={}",
+            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={} | timeout_guard={}s",
             mode_label,
-            network_available
+            network_available,
+            timeout_secs
         );
         
         let now = std::time::SystemTime::now()
@@ -288,7 +395,7 @@ impl ConversationEngineState {
             .map(|d| d.as_millis() as u64)
             .unwrap_or(0);
         
-        let (message, tags, summary) = if network_available {
+        let (mut message, mut tags, summary) = if network_available {
             (
                 "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.".to_string(),
                 vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
@@ -301,6 +408,17 @@ impl ConversationEngineState {
                 "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
             )
         };
+
+        // Trace-only runtime witness to prove which timeout guard triggered the fallback.
+        if timeout_trace_enabled() {
+            message = format!("{} TRACE_TIMEOUT_GUARD_{}S", message, timeout_secs);
+            let mut trace_tags = vec![
+                "outer-timeout-guard".to_string(),
+                format!("timeout-guard-{}s", timeout_secs),
+            ];
+            trace_tags.extend(tags);
+            tags = trace_tags;
+        }
         
         Ok(ConversationResponse {
             assistant_message: message,
@@ -317,7 +435,10 @@ impl ConversationEngineState {
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
-                provider_meta: Some(build_timeout_meta(network_available)),
+                provider_meta: Some(build_timeout_meta(
+                    network_available,
+                    timeout_secs.saturating_mul(1000),
+                )),
             },
         })
     }
