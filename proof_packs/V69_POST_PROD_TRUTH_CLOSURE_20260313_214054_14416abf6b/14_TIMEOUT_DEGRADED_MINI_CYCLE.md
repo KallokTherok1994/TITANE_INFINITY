@@ -37,3 +37,9 @@ Append-only update (fresh process + forced debug binary):
 - `timeout-degraded` is absent in this fresh debug-binary lane.
 - Differential truth: timeout-degraded persists in deployed/artifact lane but not in this fresh debug lane.
 - Closure status for original target is partial: no-timeout achieved, but `providerNetworkUsed=true` was not preserved in the same successful run.
+
+Append-only update (remote-forced continuation probes 14-17):
+- `raw/43_tauri_dev_node_blocker_repro.txt` captures why tauri-dev remote lane could not be executed in this environment (`Node.js 18.19.1`, `Vite requires Node.js 20.19+`, beforeDevCommand non-zero).
+- Run 16 (`raw/44_probe16_remote_debug_nondev_summary.txt`): fresh debug non-dev probe is `PASS` with `providerUsed=Ollama`, `providerReason=OK`, `providerNetworkUsed=false`, and no timeout/degraded markers.
+- Run 17 (`raw/45_probe17_force_gemini_summary.txt`): forcing `gemini` at probe level still resolves to `Ollama/LOCAL` (`providerNetworkUsed=false`) with `PASS` and no timeout/degraded markers.
+- Conclusion (current bounded truth): no-timeout path is reproducible on fresh debug lane, but remote/network confirmation (`providerNetworkUsed=true`) is still not co-observed in the same successful run.
