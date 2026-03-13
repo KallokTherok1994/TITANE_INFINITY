@@ -1,0 +1,19 @@
+TS_UTC=2026-03-13T22:14:26Z
+MINI_CYCLE=TIMEOUT_DEGRADED_TARGETED
+SCOPE=Quality degradation only (connectivity already proven)
+SOURCE_METRICS=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_3/run_online_probe3_v25_metrics.json
+V25_VERDICT=FAIL
+RUNTIME_PROVIDER_USED=timeout-degraded
+RUNTIME_PROVIDER_MODE=REMOTE
+RUNTIME_PROVIDER_REASON=TIMEOUT
+RUNTIME_PROVIDER_NETWORK_USED=true
+ASSISTANT_RESPONSE_TEXT=Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.
+CONNECTIVITY_REOPENED=NO
+CODE_EVIDENCE_TIMEOUT_PATH=src-tauri/src/conversation_engine/mod.rs:170
+CODE_EVIDENCE_TIMEOUT_FALLBACK=src-tauri/src/conversation_engine/mod.rs:242
+CODE_EVIDENCE_TIMEOUT_MESSAGE=src-tauri/src/conversation_engine/mod.rs:259
+CODE_EVIDENCE_PROVIDER_USED=src-tauri/src/conversation_engine/mod.rs:281
+PRIMARY_FINDING=Backend/provider pipeline exceeded 20s guard and emitted deterministic timeout-degraded response while network remained available.
+RISK_CLASS=QUALITY_DEGRADATION_NON_CONNECTIVITY
+NEXT_ACTION_30MIN=Run one controlled probe with increased conversation timeout guard via env/flag to separate provider latency from hard timeout guard behavior.
+TARGET_VERIFICATION=Preserve providerNetworkUsed=true and eliminate timeout-degraded response in bounded run.
