@@ -43,3 +43,14 @@ Append-only update (remote-forced continuation probes 14-17):
 - Run 16 (`raw/44_probe16_remote_debug_nondev_summary.txt`): fresh debug non-dev probe is `PASS` with `providerUsed=Ollama`, `providerReason=OK`, `providerNetworkUsed=false`, and no timeout/degraded markers.
 - Run 17 (`raw/45_probe17_force_gemini_summary.txt`): forcing `gemini` at probe level still resolves to `Ollama/LOCAL` (`providerNetworkUsed=false`) with `PASS` and no timeout/degraded markers.
 - Conclusion (current bounded truth): no-timeout path is reproducible on fresh debug lane, but remote/network confirmation (`providerNetworkUsed=true`) is still not co-observed in the same successful run.
+
+Append-only update (probe 18 — static architecture analysis, 2026-03-13T23:35Z):
+- ROOT CAUSE CONFIRMED via source archaeology (`raw/46_provider_routing_root_cause_analysis.txt`).
+- `AIRouter::new()` constructs `gemini_client = gemini_api_key.map(…)` → `None` — env var `"n"` (KEY_GEMINI) is not set in test environment.
+- `unified_ia` is initialized to `None` and is never set via `set_unified_ia()` in this environment.
+- Cascade: cache miss → UnifiedIA (None, skipped) → Gemini (None, skipped) → Ollama (available, used).
+- `provider_class_from_id("Ollama") = ProviderClass::Local` → `network_used = false` (formula: `matches!(provider_class, ProviderClass::Remote)`).
+- `providerNetworkUsed=true` in PASS is architecturally impossible without an external API key configured.
+- `providerNetworkUsed` does NOT gate the `classifyFinal()` verdict — PASS/FAIL only depends on visible chat cycle completion.
+- The V25 PASS with Ollama is fully valid per the test contract; `providerNetworkUsed=false` is correct and non-lying.
+- INVESTIGATION CLOSED: co-observation of `providerNetworkUsed=true` + PASS requires UNBLOCK_PATH_A (valid Gemini key in env `"n"`) or UNBLOCK_PATH_B (UnifiedIA configured at boot). Status: BLOCKED_ENV.
