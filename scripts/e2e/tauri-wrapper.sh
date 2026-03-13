@@ -4,8 +4,8 @@
 
 set -euo pipefail
 
-ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-}"
-WRAPPER_LOG=""
+ARTIFACTS_DIR="${TITANE_E2E_ARTIFACTS_DIR:-${RUN_ARTIFACTS:-}}"
+WRAPPER_LOG="/tmp/e2e-wrapper-last.log"
 if [[ -n "$ARTIFACTS_DIR" ]]; then
   mkdir -p "$ARTIFACTS_DIR"
   WRAPPER_LOG="$ARTIFACTS_DIR/tauri-wrapper.log"
@@ -28,6 +28,9 @@ log_line "[E2E_WRAPPER] env XDG_DATA_HOME=${XDG_DATA_HOME:-<unset>}"
 log_line "[E2E_WRAPPER] env TMPDIR=${TMPDIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_MEMORY_DIR=${TITANE_MEMORY_DIR:-<unset>}"
 log_line "[E2E_WRAPPER] env TITANE_LOG_DIR=${TITANE_LOG_DIR:-<unset>}"
+log_line "[E2E_WRAPPER] env TAURI_BINARY_PATH(input)=${TAURI_BINARY_PATH:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_CONVERSATION_TIMEOUT_SECS=${TITANE_CONVERSATION_TIMEOUT_SECS:-<unset>}"
+log_line "[E2E_WRAPPER] env TITANE_TIMEOUT_TRACE=${TITANE_TIMEOUT_TRACE:-<unset>}"
 log_line "[E2E_WRAPPER] artifacts=${ARTIFACTS_DIR:-<unset>}"
 
 # Proof witness file (to detect wrapper execution even if stderr is lost)
@@ -111,10 +114,14 @@ fi
 export OLLAMA_DEFAULT_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
 export OLLAMA_BASE_URL="http://127.0.0.1:11434"
 export OLLAMA_URL="http://127.0.0.1:11434"
-export OFFLINE_SIM="${OFFLINE_SIM:-1}"
+if [[ -n "${OFFLINE_SIM:-}" ]]; then
+  export OFFLINE_SIM
+else
+  unset OFFLINE_SIM
+fi
 log_line "[E2E_WRAPPER] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
 log_line "[E2E_WRAPPER] OLLAMA_BASE_URL=$OLLAMA_BASE_URL"
-log_line "[E2E_WRAPPER] OFFLINE_SIM=$OFFLINE_SIM"
+log_line "[E2E_WRAPPER] OFFLINE_SIM=${OFFLINE_SIM:-<unset>}"
 
 # Log activation (memory dir will be decided by Rust guard fallback: /tmp/titane-infinity/memory-e2e)
 log_line "[E2E_WRAPPER] TITANE_E2E=$TITANE_E2E"

@@ -34,6 +34,7 @@ pub mod self_healing;
 pub mod types;
 
 use std::sync::Arc;
+use std::time::Instant;
 use tokio::sync::RwLock;
 use tokio::time::{timeout, Duration};
 
@@ -57,6 +58,41 @@ pub use pipeline::ConversationPipeline;
 pub use realism::ConversationalRealismProcessor;
 pub use self_healing::SelfHealingConversation;
 pub use types::*;
+
+fn conversation_timeout_secs() -> u64 {
+    const DEFAULT_TIMEOUT_SECS: u64 = 20;
+    const MIN_TIMEOUT_SECS: u64 = 5;
+    const MAX_TIMEOUT_SECS: u64 = 180;
+
+    let raw = match std::env::var("TITANE_CONVERSATION_TIMEOUT_SECS") {
+        Ok(value) => value,
+        Err(_) => return DEFAULT_TIMEOUT_SECS,
+    };
+
+    match raw.parse::<u64>() {
+        Ok(value) if (MIN_TIMEOUT_SECS..=MAX_TIMEOUT_SECS).contains(&value) => value,
+        _ => {
+            log::warn!(
+                "[CONV-ENGINE] Invalid TITANE_CONVERSATION_TIMEOUT_SECS='{}' (expected {}..={}), fallback={}",
+                raw,
+                MIN_TIMEOUT_SECS,
+                MAX_TIMEOUT_SECS,
+                DEFAULT_TIMEOUT_SECS
+            );
+            DEFAULT_TIMEOUT_SECS
+        }
+    }
+}
+
+fn timeout_trace_enabled() -> bool {
+    match std::env::var("TITANE_TIMEOUT_TRACE") {
+        Ok(raw) => {
+            let normalized = raw.to_ascii_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        }
+        Err(_) => false,
+    }
+}
 
 /// État global du Conversation Engine
 pub struct ConversationEngineState {
@@ -155,7 +191,8 @@ impl ConversationEngineState {
 
     /// Traiter un message utilisateur (point d'entrée principal)
     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
-    /// v27.0.3: Added 20s timeout guarantee — Always Respond contract
+    /// v27.0.3: Added timeout guarantee — Always Respond contract
+    /// v27.0.5: Timeout can be overridden via TITANE_CONVERSATION_TIMEOUT_SECS
     /// v27.0.4: NO_LYING_FALLBACK — check network_available before deciding OFFLINE
     pub async fn process_message(
         &self,
@@ -166,8 +203,15 @@ impl ConversationEngineState {
             return self.create_offline_sim_response().await;
         }
 
-        // ✨ v27.0.3: 20s timeout wrapper — Guarantees Always Respond
-        match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
+        let timeout_secs = conversation_timeout_secs();
+
+        // ✨ Timeout wrapper — Guarantees Always Respond (configurable for controlled probes)
+        match timeout(
+            Duration::from_secs(timeout_secs),
+            self.process_message_internal(request),
+        )
+        .await
+        {
             Ok(result) => result,
             Err(_timeout_err) => {
                 // v27.0.4: Check router status before deciding OFFLINE mode
@@ -175,11 +219,13 @@ impl ConversationEngineState {
                 let router_status = self.ai_router.read().await.get_status().await;
                 let network_available = matches!(router_status, crate::ai::router::AIRouterStatus::Online | crate::ai::router::AIRouterStatus::Degraded);
                 log::error!(
-                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 20s | router_status={:?} | mode={}",
+                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded {}s | router_status={:?} | mode={}",
+                    timeout_secs,
                     router_status,
                     if network_available { "DEGRADED" } else { "OFFLINE" }
                 );
-                self.create_offline_response(network_available).await
+                self.create_offline_response(network_available, timeout_secs)
+                    .await
             }
         }
     }
@@ -189,9 +235,31 @@ impl ConversationEngineState {
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
+        let trace_enabled = timeout_trace_enabled();
+        let overall_start = Instant::now();
+        let conv_id = request.conversation_id.as_deref().unwrap_or("<new>");
+
+        if trace_enabled {
+            log::info!(
+                "[CONV-TRACE] process_message_internal start | conversation_id={} | mode=omega_first",
+                conv_id
+            );
+        }
+
+        let omega_start = Instant::now();
+
         // R05 P2: OMEGA → Direct conversion (bypasses legacy pipeline duplication)
         match self.omega_bridge.process_through_omega(&request).await {
             Ok(omega_result) => {
+                if trace_enabled {
+                    log::info!(
+                        "[CONV-TRACE] omega_bridge ok | elapsed={}ms | intent={} | safety={}",
+                        omega_start.elapsed().as_millis(),
+                        omega_result.intent,
+                        omega_result.safety_score
+                    );
+                }
+
                 log::info!(
                     "[CONV-ENGINE] ✅ OMEGA pipeline succeeded | latency={}ms | intent={} | safety={}",
                     omega_result.latency_ms,
@@ -206,12 +274,23 @@ impl ConversationEngineState {
                     .clone()
                     .unwrap_or_else(|| uuid::Uuid::new_v4().to_string());
 
+                let convert_start = Instant::now();
+
                 match self
                     .omega_bridge
                     .convert_to_conversation_response(omega_result, &request, conversation_id)
                     .await
                 {
                     Ok(response) => {
+                        if trace_enabled {
+                            log::info!(
+                                "[CONV-TRACE] convert ok | elapsed={}ms | total={}ms | provider_used={}",
+                                convert_start.elapsed().as_millis(),
+                                overall_start.elapsed().as_millis(),
+                                response.metadata.provider_used
+                            );
+                        }
+
                         log::info!(
                             "[CONV-ENGINE] 🚀 P2 Direct conversion | bypass_legacy=true | total_latency={}ms",
                             response.metadata.latency_ms
@@ -219,34 +298,96 @@ impl ConversationEngineState {
                         Ok(response)
                     }
                     Err(e) => {
+                        if trace_enabled {
+                            log::warn!(
+                                "[CONV-TRACE] convert failed -> legacy fallback | convert_elapsed={}ms | total_before_legacy={}ms | error={}",
+                                convert_start.elapsed().as_millis(),
+                                overall_start.elapsed().as_millis(),
+                                e
+                            );
+                        }
+
                         log::warn!(
                             "[CONV-ENGINE] ⚠️ P2 Conversion failed, falling back to legacy: {}",
                             e
                         );
                         // Fallback to legacy pipeline
-                        self.pipeline.process(request).await
+                        let legacy_start = Instant::now();
+                        let legacy_result = self.pipeline.process(request).await;
+
+                        if trace_enabled {
+                            match &legacy_result {
+                                Ok(response) => log::info!(
+                                    "[CONV-TRACE] legacy ok | elapsed={}ms | total={}ms | provider_used={}",
+                                    legacy_start.elapsed().as_millis(),
+                                    overall_start.elapsed().as_millis(),
+                                    response.metadata.provider_used
+                                ),
+                                Err(err) => log::warn!(
+                                    "[CONV-TRACE] legacy failed | elapsed={}ms | total={}ms | error={}",
+                                    legacy_start.elapsed().as_millis(),
+                                    overall_start.elapsed().as_millis(),
+                                    err
+                                ),
+                            }
+                        }
+
+                        legacy_result
                     }
                 }
             }
             Err(e) => {
+                if trace_enabled {
+                    log::warn!(
+                        "[CONV-TRACE] omega_bridge failed -> legacy fallback | omega_elapsed={}ms | error={}",
+                        omega_start.elapsed().as_millis(),
+                        e
+                    );
+                }
+
                 log::warn!(
                     "[CONV-ENGINE] ⚠️ OMEGA pipeline failed, falling back to legacy: {}",
                     e
                 );
                 // Fallback to legacy pipeline
-                self.pipeline.process(request).await
+                let legacy_start = Instant::now();
+                let legacy_result = self.pipeline.process(request).await;
+
+                if trace_enabled {
+                    match &legacy_result {
+                        Ok(response) => log::info!(
+                            "[CONV-TRACE] legacy ok | elapsed={}ms | total={}ms | provider_used={}",
+                            legacy_start.elapsed().as_millis(),
+                            overall_start.elapsed().as_millis(),
+                            response.metadata.provider_used
+                        ),
+                        Err(err) => log::warn!(
+                            "[CONV-TRACE] legacy failed | elapsed={}ms | total={}ms | error={}",
+                            legacy_start.elapsed().as_millis(),
+                            overall_start.elapsed().as_millis(),
+                            err
+                        ),
+                    }
+                }
+
+                legacy_result
             }
         }
     }
 
     /// Create offline/degraded response when timeout triggered (Always Respond guarantee)
     /// v27.0.4: NO_LYING_FALLBACK — only use OFFLINE if network is truly unavailable
-    async fn create_offline_response(&self, network_available: bool) -> Result<ConversationResponse, ConversationEngineError> {
+    async fn create_offline_response(
+        &self,
+        network_available: bool,
+        timeout_secs: u64,
+    ) -> Result<ConversationResponse, ConversationEngineError> {
         let mode_label = if network_available { "DÉGRADÉ" } else { "hors ligne" };
         log::info!(
-            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={}",
+            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={} | timeout_guard={}s",
             mode_label,
-            network_available
+            network_available,
+            timeout_secs
         );
         
         let now = std::time::SystemTime::now()
@@ -254,7 +395,7 @@ impl ConversationEngineState {
             .map(|d| d.as_millis() as u64)
             .unwrap_or(0);
         
-        let (message, tags, summary) = if network_available {
+        let (mut message, mut tags, summary) = if network_available {
             (
                 "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.".to_string(),
                 vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
@@ -267,6 +408,17 @@ impl ConversationEngineState {
                 "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
             )
         };
+
+        // Trace-only runtime witness to prove which timeout guard triggered the fallback.
+        if timeout_trace_enabled() {
+            message = format!("{} TRACE_TIMEOUT_GUARD_{}S", message, timeout_secs);
+            let mut trace_tags = vec![
+                "outer-timeout-guard".to_string(),
+                format!("timeout-guard-{}s", timeout_secs),
+            ];
+            trace_tags.extend(tags);
+            tags = trace_tags;
+        }
         
         Ok(ConversationResponse {
             assistant_message: message,
@@ -283,7 +435,10 @@ impl ConversationEngineState {
                 tokens_used: 0,
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
-                provider_meta: Some(build_timeout_meta(network_available)),
+                provider_meta: Some(build_timeout_meta(
+                    network_available,
+                    timeout_secs.saturating_mul(1000),
+                )),
             },
         })
     }
