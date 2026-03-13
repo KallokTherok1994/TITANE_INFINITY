@@ -1,0 +1,34 @@
+[E2E_WRAPPER] start
+[E2E_WRAPPER] env TITANE_E2E=
+[E2E_WRAPPER] env HOME=/home/titane-os
+[E2E_WRAPPER] env XDG_CACHE_HOME=<unset>
+[E2E_WRAPPER] env XDG_CONFIG_HOME=<unset>
+[E2E_WRAPPER] env XDG_DATA_HOME=<unset>
+[E2E_WRAPPER] env TMPDIR=<unset>
+[E2E_WRAPPER] env TITANE_MEMORY_DIR=<unset>
+[E2E_WRAPPER] env TITANE_LOG_DIR=<unset>
+[E2E_WRAPPER] env TAURI_BINARY_PATH(input)=<unset>
+[E2E_WRAPPER] env TITANE_CONVERSATION_TIMEOUT_SECS=45
+[E2E_WRAPPER] env TITANE_TIMEOUT_TRACE=1
+[E2E_WRAPPER] artifacts=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/online_provider_probe_artifacts_15
+[E2E_WRAPPER] active
+[E2E_WRAPPER] Using binary: /tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+[E2E_WRAPPER] binary=/tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+[E2E_WRAPPER] TAURI_BINARY_PATH=/tmp/titane_v15_wt_20260311_080118/src-tauri/target/debug/titane-infinity
+[E2E_WRAPPER] TAURI_DEV_SERVER_URL=http://127.0.0.1:4000
+[E2E_WRAPPER] mode=tauri-dev
+     Running BeforeDevCommand (`bash -lc 'set -uo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : > "$LOG"; if command -v curl >/dev/null 2>&1 && curl -fsS http://127.0.0.1:5173 >/dev/null 2>&1; then echo "[tauri.dev] Vite déjà actif sur :5173 — skip beforeDevCommand" | tee -a "$LOG"; exit 0; fi; if command -v corepack >/dev/null 2>&1; then corepack pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort 2>&1 | tee "$LOG"; ec=${PIPESTATUS[0]}; elif command -v pnpm >/dev/null 2>&1; then pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort 2>&1 | tee "$LOG"; ec=${PIPESTATUS[0]}; else echo "[tauri.dev] ERROR: pnpm introuvable" | tee -a "$LOG"; exit 1; fi; if [ "${ec:-0}" -eq 130 ] || [ "${ec:-0}" -eq 143 ]; then exit 0; fi; exit "${ec:-0}"'`)
+You are using Node.js 18.19.1. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+error when starting dev server:
+TypeError: crypto.hash is not a function
+    at getHash (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:2444:19)
+    at getLockfileHash (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:32383:9)
+    at getDepHash (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:32386:23)
+    at initDepsOptimizerMetadata (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:31845:53)
+    at createDepsOptimizer (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:34033:17)
+    at new DevEnvironment (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:34807:109)
+    at Object.defaultCreateClientDevEnvironment [as createEnvironment] (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:35219:9)
+    at file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:25390:52
+    at Array.map (<anonymous>)
+    at _createServer (file:///tmp/titane_v15_wt_20260311_080118/node_modules/.pnpm/vite@7.3.1_@types+node@25.3.0_jiti@2.6.1_lightningcss@1.31.1_terser@5.46.0_tsx@4.21.0_yaml@2.8.2/node_modules/vite/dist/node/chunks/config.js:25389:58)
+       Error The "beforeDevCommand" terminated with a non-zero status code.
