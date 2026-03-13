@@ -58,6 +58,31 @@ pub use realism::ConversationalRealismProcessor;
 pub use self_healing::SelfHealingConversation;
 pub use types::*;
 
+fn conversation_timeout_secs() -> u64 {
+    const DEFAULT_TIMEOUT_SECS: u64 = 20;
+    const MIN_TIMEOUT_SECS: u64 = 5;
+    const MAX_TIMEOUT_SECS: u64 = 180;
+
+    let raw = match std::env::var("TITANE_CONVERSATION_TIMEOUT_SECS") {
+        Ok(value) => value,
+        Err(_) => return DEFAULT_TIMEOUT_SECS,
+    };
+
+    match raw.parse::<u64>() {
+        Ok(value) if (MIN_TIMEOUT_SECS..=MAX_TIMEOUT_SECS).contains(&value) => value,
+        _ => {
+            log::warn!(
+                "[CONV-ENGINE] Invalid TITANE_CONVERSATION_TIMEOUT_SECS='{}' (expected {}..={}), fallback={}",
+                raw,
+                MIN_TIMEOUT_SECS,
+                MAX_TIMEOUT_SECS,
+                DEFAULT_TIMEOUT_SECS
+            );
+            DEFAULT_TIMEOUT_SECS
+        }
+    }
+}
+
 /// État global du Conversation Engine
 pub struct ConversationEngineState {
     /// Pipeline de traitement unifié
@@ -155,7 +180,8 @@ impl ConversationEngineState {
 
     /// Traiter un message utilisateur (point d'entrée principal)
     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
-    /// v27.0.3: Added 20s timeout guarantee — Always Respond contract
+    /// v27.0.3: Added timeout guarantee — Always Respond contract
+    /// v27.0.5: Timeout can be overridden via TITANE_CONVERSATION_TIMEOUT_SECS
     /// v27.0.4: NO_LYING_FALLBACK — check network_available before deciding OFFLINE
     pub async fn process_message(
         &self,
@@ -166,8 +192,15 @@ impl ConversationEngineState {
             return self.create_offline_sim_response().await;
         }
 
-        // ✨ v27.0.3: 20s timeout wrapper — Guarantees Always Respond
-        match timeout(Duration::from_secs(20), self.process_message_internal(request)).await {
+        let timeout_secs = conversation_timeout_secs();
+
+        // ✨ Timeout wrapper — Guarantees Always Respond (configurable for controlled probes)
+        match timeout(
+            Duration::from_secs(timeout_secs),
+            self.process_message_internal(request),
+        )
+        .await
+        {
             Ok(result) => result,
             Err(_timeout_err) => {
                 // v27.0.4: Check router status before deciding OFFLINE mode
@@ -175,7 +208,8 @@ impl ConversationEngineState {
                 let router_status = self.ai_router.read().await.get_status().await;
                 let network_available = matches!(router_status, crate::ai::router::AIRouterStatus::Online | crate::ai::router::AIRouterStatus::Degraded);
                 log::error!(
-                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded 20s | router_status={:?} | mode={}",
+                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded {}s | router_status={:?} | mode={}",
+                    timeout_secs,
                     router_status,
                     if network_available { "DEGRADED" } else { "OFFLINE" }
                 );
