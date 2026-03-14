@@ -10,8 +10,7 @@ import * as path from 'node:path';
 const RUN_ID = process.env.TITANE_V25_RUN_ID || 'run_chat_baseline';
 const SCREEN_DIR = process.env.TITANE_V25_SCREEN_DIR || '/tmp/v25_screens';
 const RUN_ARTIFACTS = process.env.RUN_ARTIFACTS || '/tmp/v25_artifacts';
-const QUESTION =
-  "Parle-moi de tes modules actifs et de l'etat de ton orchestrateur.";
+const QUESTION = "Parle-moi de tes modules actifs et de l'etat de ton orchestrateur.";
 
 fs.mkdirSync(SCREEN_DIR, { recursive: true });
 fs.mkdirSync(RUN_ARTIFACTS, { recursive: true });
@@ -89,25 +88,36 @@ async function inspect() {
     const error = document.querySelector('[data-testid="chat-error"]');
     const ready = document.querySelector('[data-testid="chat-ready"]');
     const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
-    const reasoningStatus = document.querySelector('[data-testid="reasoning-status-label"]');
+    const reasoningStatus = document.querySelector(
+      '[data-testid="reasoning-status-label"]'
+    );
     const health = document.querySelector('[data-testid="btn-health-check"]');
 
     const userMessages = Array.from(
-      document.querySelectorAll('[data-testid="chat-message-user"] [data-testid="chat-message-content"]')
+      document.querySelectorAll(
+        '[data-testid="chat-message-user"] [data-testid="chat-message-content"]'
+      )
     ).map(el => (el.textContent || '').trim());
 
     const assistantTextNodes = Array.from(
-      document.querySelectorAll('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]')
+      document.querySelectorAll(
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+      )
     );
     const assistantMessages = assistantTextNodes.map(el => (el.textContent || '').trim());
 
     const assistantContainers = Array.from(
       document.querySelectorAll('[data-testid="chat-message-assistant"]')
     );
-    const lastAssistantContainer = assistantContainers[assistantContainers.length - 1] || null;
+    const lastAssistantContainer =
+      assistantContainers[assistantContainers.length - 1] || null;
 
     const runtimeTags = lastAssistantContainer
-      ? Array.from(lastAssistantContainer.querySelectorAll('[data-testid="chat-runtime-tag"], .conversation-tag'))
+      ? Array.from(
+          lastAssistantContainer.querySelectorAll(
+            '[data-testid="chat-runtime-tag"], .conversation-tag'
+          )
+        )
           .map(el => (el.textContent || '').trim())
           .filter(Boolean)
       : [];
@@ -121,7 +131,9 @@ async function inspect() {
           providerNetworkUsed: lastAssistantContainer.getAttribute(
             'data-provider-network-used'
           ),
-          providerCacheHit: lastAssistantContainer.getAttribute('data-provider-cache-hit'),
+          providerCacheHit: lastAssistantContainer.getAttribute(
+            'data-provider-cache-hit'
+          ),
         }
       : null;
 
@@ -146,11 +158,7 @@ async function inspect() {
       inputValue: input && 'value' in input ? input.value : '',
       sendPresent: !!send,
       sendDisabled: !!(send && send.disabled),
-      loadingVisible: !!(
-        loading &&
-        loading.offsetWidth > 0 &&
-        loading.offsetHeight > 0
-      ),
+      loadingVisible: !!(loading && loading.offsetWidth > 0 && loading.offsetHeight > 0),
       chatErrorText: error ? (error.textContent || '').trim() : null,
       readyState: ready ? ready.getAttribute('data-state') : null,
       reasoningPresent: !!reasoning,
@@ -160,8 +168,12 @@ async function inspect() {
         reasoning.offsetHeight > 0
       ),
       reasoningDataState: reasoning ? reasoning.getAttribute('data-state') : null,
-      reasoningStatusLabel: reasoningStatus ? (reasoningStatus.textContent || '').trim() : null,
-      reasoningTopologyCount: document.querySelectorAll('[data-testid="reasoning-topology-node"]').length,
+      reasoningStatusLabel: reasoningStatus
+        ? (reasoningStatus.textContent || '').trim()
+        : null,
+      reasoningTopologyCount: document.querySelectorAll(
+        '[data-testid="reasoning-topology-node"]'
+      ).length,
       healthTitle: health ? health.getAttribute('title') : null,
       userMessages,
       assistantMessages,
@@ -292,21 +304,25 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
 
     let s2 = await inspect();
     if (s2.sendDisabled) {
-      const nativeApplied = await browser.execute((sel, value) => {
-        const node = document.querySelector(sel);
-        if (!node) return false;
-        const proto =
-          window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
-        const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
-        if (desc?.set) {
-          desc.set.call(node, value);
-        } else {
-          node.value = value;
-        }
-        node.dispatchEvent(new InputEvent('input', { bubbles: true }));
-        node.dispatchEvent(new Event('change', { bubbles: true }));
-        return true;
-      }, inputSelector, QUESTION);
+      const nativeApplied = await browser.execute(
+        (sel, value) => {
+          const node = document.querySelector(sel);
+          if (!node) return false;
+          const proto =
+            window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
+          const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
+          if (desc?.set) {
+            desc.set.call(node, value);
+          } else {
+            node.value = value;
+          }
+          node.dispatchEvent(new InputEvent('input', { bubbles: true }));
+          node.dispatchEvent(new Event('change', { bubbles: true }));
+          return true;
+        },
+        inputSelector,
+        QUESTION
+      );
 
       if (nativeApplied) {
         M.inputTyped = true;
@@ -352,7 +368,8 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
 
       if (snap.reasoningPresent) {
         M.reasoningVisible = M.reasoningVisible || snap.reasoningVisible;
-        M.reasoningState = snap.reasoningDataState || snap.reasoningStatusLabel || 'PRESENT';
+        M.reasoningState =
+          snap.reasoningDataState || snap.reasoningStatusLabel || 'PRESENT';
         M.reasoningTestIdPresent = true;
         M.reasoningTopologyCount = Math.max(
           M.reasoningTopologyCount,
@@ -389,7 +406,8 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
         M.debugText = snap.debugText;
 
         const normalizedTags = snap.runtimeTags.map(v => v.toUpperCase());
-        const normalizedText = `${lastAssistantText} ${snap.chatErrorText || ''}`.toUpperCase();
+        const normalizedText =
+          `${lastAssistantText} ${snap.chatErrorText || ''}`.toUpperCase();
 
         M.timeoutDetected =
           normalizedTags.some(tag => tag.includes('TIMEOUT')) ||
@@ -398,9 +416,7 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
         M.fallbackDetected =
           normalizedTags.some(
             tag =>
-              tag.includes('OFFLINE') ||
-              tag.includes('FALLBACK') ||
-              tag.includes('LOCAL')
+              tag.includes('OFFLINE') || tag.includes('FALLBACK') || tag.includes('LOCAL')
           ) || normalizedText.includes('FALLBACK');
 
         M.degradedDetected =
@@ -445,8 +461,12 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
     const s6 = await inspect();
     M.healthButtonTitle = s6.healthTitle;
     M.chatErrorText = M.chatErrorText || s6.chatErrorText;
-    M.runtimeBadgesText = M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : s6.runtimeTags;
-    M.runtimeAttrs = Object.keys(M.runtimeAttrs || {}).length > 0 ? M.runtimeAttrs : (s6.runtimeAttrs || {});
+    M.runtimeBadgesText =
+      M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : s6.runtimeTags;
+    M.runtimeAttrs =
+      Object.keys(M.runtimeAttrs || {}).length > 0
+        ? M.runtimeAttrs
+        : s6.runtimeAttrs || {};
     await ss('s6_runtime_badges');
 
     if (s6.debugVisible) {
@@ -492,7 +512,9 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
 
     const rawReason = String((M.runtimeAttrs || {}).providerReason || '').toUpperCase();
     const rawMode = String((M.runtimeAttrs || {}).providerMode || '').toUpperCase();
-    const rawNetwork = String((M.runtimeAttrs || {}).providerNetworkUsed || '').toLowerCase();
+    const rawNetwork = String(
+      (M.runtimeAttrs || {}).providerNetworkUsed || ''
+    ).toLowerCase();
 
     if (rawReason.includes('TIMEOUT')) {
       M.classifications.push('BACKEND_TIMEOUT');
@@ -519,7 +541,9 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
     saveMetrics();
 
     console.log(`[V25] verdict=${M.verdict}`);
-    console.log(`[V25] responseReceived=${M.responseReceived} processingVisible=${M.processingVisible}`);
+    console.log(
+      `[V25] responseReceived=${M.responseReceived} processingVisible=${M.processingVisible}`
+    );
     console.log(`[V25] badges=${M.runtimeBadgesText.join(', ')}`);
     console.log(`[V25] runtimeAttrs=${JSON.stringify(M.runtimeAttrs)}`);
 

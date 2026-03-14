@@ -728,7 +728,8 @@ const ChatComponent: React.FC = () => {
       lastProvider ??
       undefined;
     const omegaMetadata =
-      lastEntry?.response?.omegaMetadata && typeof lastEntry.response.omegaMetadata === 'object'
+      lastEntry?.response?.omegaMetadata &&
+      typeof lastEntry.response.omegaMetadata === 'object'
         ? (lastEntry.response.omegaMetadata as Record<string, unknown>)
         : null;
 
@@ -770,7 +771,12 @@ const ChatComponent: React.FC = () => {
       pipelineSteps.forEach((step, index) => {
         steps.push({
           id: `pipeline-${index}`,
-          type: index === 0 ? 'analysis' : index === pipelineSteps.length - 1 ? 'synthesis' : 'reasoning',
+          type:
+            index === 0
+              ? 'analysis'
+              : index === pipelineSteps.length - 1
+                ? 'synthesis'
+                : 'reasoning',
           content: step,
           status: isLoading && index === pipelineSteps.length - 1 ? 'active' : 'done',
           timestamp: baseTs + 20 + index,
@@ -821,7 +827,8 @@ const ChatComponent: React.FC = () => {
         topology.push({
           id: `provider-${provider}-${index}`,
           label: provider,
-          status: isLoading && index === attemptedProviders.length - 1 ? 'active' : 'done',
+          status:
+            isLoading && index === attemptedProviders.length - 1 ? 'active' : 'done',
         });
       });
     } else if (resolvedProvider) {

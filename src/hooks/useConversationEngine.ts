@@ -488,7 +488,14 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         isProcessingRef.current = false;
       }
     },
-    [buildSingleDoorEnvelope, conversationId, currentMode, options, saveMessage, toContextBinding]
+    [
+      buildSingleDoorEnvelope,
+      conversationId,
+      currentMode,
+      options,
+      saveMessage,
+      toContextBinding,
+    ]
   );
 
   // ═══ CLEAR MESSAGES ═══
