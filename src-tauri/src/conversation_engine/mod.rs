@@ -168,10 +168,11 @@ impl ConversationEngineState {
         let anthology_engine = Arc::new(RwLock::new(AnthologyEngine::new()));
         let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
 
-        // R05 P1: Initialize OMEGA Pipeline Bridge
+        // R05 P1: Initialize OMEGA Pipeline Bridge (with real AIRouter wired for TextGen)
         let omega_bridge = Arc::new(OmegaConversationBridge::new(
             OmegaBridgeConfig::default(),
             Arc::clone(&singularity),
+            Some(ai_router.clone()),
         ));
 
         let pipeline = Arc::new(ConversationPipeline::new(
@@ -407,7 +408,7 @@ impl ConversationEngineState {
         
         let (mut message, mut tags, summary) = if network_available {
             (
-                "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.".to_string(),
+                "Service momentanement en degrade. Le service distant a depasse le delai de reponse et je fournis une reponse de secours en attendant son retablissement.".to_string(),
                 vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
                 "Réponse en mode dégradé suite à un délai provider dépassé (réseau disponible).".to_string(),
             )

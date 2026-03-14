@@ -196,7 +196,8 @@ async function resolveSelectors() {
     return {
       input: '[data-testid="chat-input"]',
       send: '[data-testid="chat-send"]',
-      response: '[data-testid="chat-message-content"]',
+      response:
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
       trigger: null,
       panel: null,
     };
@@ -431,7 +432,44 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       { timeout: 90000, interval: 1000, timeoutMsg: 'No assistant response detected' }
     );
 
+    assert.notEqual(
+      after,
+      msg,
+      'Assistant response equals user probe text (selector mismatch or echo false positive)'
+    );
+
+    // G_NO_MOCK_PROVIDER: reject pure OMEGA mock path (no real AI call)
+    // G_NO_MOCK_PROVIDER — two-layer check:
+    // Layer 1: data-provider-used DOM attribute (when rendered)
+    const domAttrs = await browser.execute(() => {
+      const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const last = assistantMsgs[assistantMsgs.length - 1];
+      if (!last) return { providerUsed: '', allAttrs: {} };
+      const allAttrs = {};
+      for (const attr of last.attributes) { allAttrs[attr.name] = attr.value; }
+      return { providerUsed: last.getAttribute('data-provider-used') || '', allAttrs };
+    });
+    const providerAttr = domAttrs.providerUsed || '';
+    assert.notEqual(
+      providerAttr,
+      'titane-omega-v20 (OMEGA+Singularity)',
+      `[G_NO_MOCK_PROVIDER/DOM] provider_used="${providerAttr}" = OMEGA mock; AIRouter wiring failed`
+    );
+
+    // Layer 2: content-based check — response text must NOT contain the OMEGA stub phrase
+    const OMEGA_MOCK_STUB = "j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs";
+    assert.ok(
+      !after.toLowerCase().includes(OMEGA_MOCK_STUB),
+      `[G_NO_MOCK_TEXT] Response contains OMEGA stub text — AIRouter call was NOT made; after="${String(after).slice(0, 120)}"`
+    );
+    assert.ok(
+      after.length >= 5,
+      `[G_CONTENT_QUALITY] Response suspiciously short (${after.length} chars) — possible stub or empty`
+    );
+
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
+    console.log(`[PROVIDER_USED_DOM] ${providerAttr}`);
+    console.log(`[DOM_ATTRS] ${JSON.stringify(domAttrs.allAttrs)}`);
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
   });
 });
