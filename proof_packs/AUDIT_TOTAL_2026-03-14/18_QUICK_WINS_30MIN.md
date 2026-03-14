@@ -19,8 +19,9 @@ grep -n "local-first" .github/copilot-agents/guardian.agent.md
 # Edit line 7 to replace "local-first" with correct doctrine
 # sed -i 's/local-first\./online-first governed with mandatory local fallback (local-first is a compatibility marker only)./' .github/copilot-agents/guardian.agent.md
 
-# Verify:
-grep "local-first" .github/copilot-agents/guardian.agent.md  # should be 0 results
+# Verify fix applied (old phrase gone, new phrase present):
+grep "Tauri-only.*local-first\.$" .github/copilot-agents/guardian.agent.md  # should return 0 results
+grep "online-first governed" .github/copilot-agents/guardian.agent.md  # should return 1 result
 bash scripts/verify_instructions.sh  # should remain PASS=20 FAIL=0
 ```
 **Risk:** Zero — documentation only  
