@@ -41,6 +41,7 @@ export interface TauriInvokeOptions {
   timeout?: number;
   skipWhitelistCheck?: boolean;
   skipInjectionCheck?: boolean;
+  skipLoopCheck?: boolean;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -641,7 +642,12 @@ class TauriClient {
   async conversationGenerate(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.CONVERSATION_GENERATE,
-      (params as Record<string, unknown>) || {}
+      (params as Record<string, unknown>) || {},
+      {
+        skipWhitelistCheck: true,
+        skipInjectionCheck: true,
+        skipLoopCheck: true,
+      }
     );
   }
 

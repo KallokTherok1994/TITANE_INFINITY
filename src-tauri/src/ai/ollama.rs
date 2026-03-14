@@ -10,12 +10,11 @@ use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
-use std::time::{Duration, Instant};
+use std::time::Instant;
 use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
-const TIMEOUT_SECONDS: u64 = 60;
 
 // ✨ v27.2.1: Ollama status cache (anti-flapping)
 // Cache TTL: 10s to avoid repeated health checks
@@ -54,12 +53,11 @@ fn ollama_default_model() -> String {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
-    fn build_ollama_client(timeout_secs: u64) -> Result<Client, String> {
-        Client::builder()
-        .timeout(Duration::from_secs(timeout_secs))
+fn build_ollama_client() -> Result<Client, String> {
+    Client::builder()
         .build()
         .map_err(|e| format!("Client error: {}", e))
-    }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 //   TYPES & STRUCTURES
@@ -153,7 +151,7 @@ pub async fn ai_generate_local(request: LocalAIRequest) -> Result<LocalAIRespons
         return Err(format!("Rate limit exceeded: {}", e));
     }
 
-    let client = build_ollama_client(TIMEOUT_SECONDS)?;
+    let client = build_ollama_client()?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -215,7 +213,7 @@ pub async fn ai_generate_local_stream(
     window: Window,
     request: LocalAIRequest,
 ) -> Result<String, String> {
-    let client = build_ollama_client(TIMEOUT_SECONDS)?;
+    let client = build_ollama_client()?;
 
     let model = request.model.unwrap_or_else(ollama_default_model);
 
@@ -299,7 +297,7 @@ pub async fn ai_generate_local_stream(
 
 #[command]
 pub async fn ai_scan_local_models() -> Result<Vec<String>, String> {
-    let client = build_ollama_client(5)?;
+    let client = build_ollama_client()?;
 
     let response = client
         .get(format!("{}/api/tags", ollama_base_url()))
@@ -384,7 +382,7 @@ pub async fn ai_check_ollama_status() -> Result<OllamaStatus, String> {
     }
 
     // Cache miss or expired → perform actual check
-    let client = build_ollama_client(2)?;
+    let client = build_ollama_client()?;
 
     // Test de disponibilité
     let response = client
@@ -474,8 +472,7 @@ pub struct OllamaClient {
 
 impl OllamaClient {
     pub fn new(model: Option<String>) -> Self {
-        let client =
-            build_ollama_client(TIMEOUT_SECONDS).unwrap_or_else(|_| Client::new());
+        let client = build_ollama_client().unwrap_or_else(|_| Client::new());
 
         let resolved_model = model.unwrap_or_else(ollama_default_model);
         log::info!("[OllamaClient] new() | resolved_model={}", resolved_model);
@@ -502,7 +499,6 @@ impl OllamaClient {
         // Check if Ollama daemon is running
         self.client
             .get(format!("{}/api/tags", ollama_base_url()))
-            .timeout(Duration::from_secs(2))
             .send()
             .await
             .is_ok()

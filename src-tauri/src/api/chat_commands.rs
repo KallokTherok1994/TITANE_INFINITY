@@ -26,7 +26,6 @@ impl ChatState {
             history: Arc::new(Mutex::new(Vec::new())),
             api_key: Arc::new(Mutex::new(None)),
             client: Client::builder()
-                .timeout(std::time::Duration::from_secs(30))
                 .build()
                 .unwrap_or_else(|_| Client::new()),
         }

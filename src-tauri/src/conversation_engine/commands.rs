@@ -479,61 +479,6 @@ pub async fn conversation_generate(
         return Ok(blocked_response);
     }
 
-    // ✨ v27.2.1: Backend gate verification (defense-in-depth)
-    // Frontend already enforces in conversationEngine.ts:272-314
-    // But we double-check here for security (Tauri-level validation)
-    let external_providers_allowed = std::env::var("VITE_ENABLE_EXTERNAL_AI")
-        .ok()
-        .map(|value| {
-            let normalized = value.trim().to_ascii_lowercase();
-            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
-        })
-        .unwrap_or(true);
-    
-    let is_external_provider = provider.as_ref()
-        .map(|p| matches!(p.as_str(), "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
-        .unwrap_or(false);
-    
-    if is_external_provider && !external_providers_allowed {
-        log::warn!(
-            "[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider={:?} | VITE_ENABLE_EXTERNAL_AI disabled | req_id={}",
-            provider,
-            req_id
-        );
-        
-        let _ = persist_conversation_os_artifacts(
-            &conversation_id,
-            &req_id,
-            &message,
-            Some("Service externe bloqué au niveau backend (defence-in-depth)."),
-            &trace,
-            None,
-            &search_citations_json,
-        );
-
-        // Return immediate response (defense-in-depth, frontend should have already blocked)
-        // NO_LYING_FALLBACK: provider is local/none (network_used=false), so mode=LOCAL not REMOTE
-        let blocked_response = serde_json::json!({
-            "ok": true,
-            "content": "Service externe bloqué au niveau backend (defence-in-depth).",
-            "meta": {
-                "mode": "LOCAL",
-                "reason_code": "POLICY_BLOCKED",
-                "network_used": false,
-                "provider_used": "none",
-                "latency_ms_total": 5,
-                "blocked_by": "backend_gate"
-            },
-            "trace": trace,
-            "metadata": {
-                "requestId": req_id,
-                "contextBinding": context_binding.clone(),
-            },
-        });
-        
-        return Ok(blocked_response);
-    }
-
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
     let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
         log::warn!(

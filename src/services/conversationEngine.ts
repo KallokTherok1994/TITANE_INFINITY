@@ -11,7 +11,6 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
-import { validateIpcPayload } from '@/lib/ipcContract';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type {
   OnlineDecision,
@@ -19,20 +18,10 @@ import type {
   Mode,
   ReasonCode,
 } from '@/types/providerMeta';
-import { FEATURE_FLAGS, envFlag } from '@/config/featureFlags';
 import {
   formatContextEnvelopeForSystemPrompt,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
-
-function runtimeFlag(key: string): boolean {
-  try {
-    if (typeof window === 'undefined') return false;
-    return window.localStorage.getItem(key) === '1';
-  } catch {
-    return false;
-  }
-}
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -364,26 +353,8 @@ export async function processMessage(
   // Le protector tentera Tauri en premier, puis Ollama en fallback si besoin
   console.log('[conversationEngine] 🚀 Envoi du message via secureInvoke');
 
-  // ✨ OBSERVABILITY: Log external AI gate state
-  const externalAllowed = FEATURE_FLAGS.ENABLE_EXTERNAL_AI;
-  console.log('[CONV_SEND] External AI gate', {
-    buildFlagEnabled: envFlag('VITE_ENABLE_EXTERNAL_AI'),
-    runtimeToggleEnabled: import.meta.env.DEV
-      ? true
-      : runtimeFlag('titane.enable_external_ai'),
-    allowed: externalAllowed,
-    requested_provider: 'auto',
-  });
-
-  // 🔒 v27.1: ENFORCE external AI gate (ONLINE-ALL-TIME fix)
-  // If external AI is blocked, force local provider and continue via Tauri pipeline.
-  const provider = externalAllowed ? 'auto' : 'local';
-
-  if (!externalAllowed) {
-    console.warn(
-      '[CONV_SEND] ⚠️ External AI gate BLOCKED: forcing local provider (no remote calls)'
-    );
-  }
+  // Open-online default: keep provider orchestration in AUTO mode.
+  const provider = 'auto';
 
   const baseSystemPrompt = getSystemPrompt(options?.mode ?? 'default');
   const contextualPrompt = options?.contextEnvelope
@@ -394,17 +365,15 @@ export async function processMessage(
     : baseSystemPrompt;
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
-  const payload = validateIpcPayload('conversation_generate', {
-    args: {
-      message: userMessage,
-      conversationId,
-      mode: options?.mode || 'default',
-      provider,
-      systemPrompt,
-      requestId,
-      ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
-    },
-  });
+  const payload = {
+    message: userMessage,
+    conversationId,
+    mode: options?.mode || 'default',
+    provider,
+    systemPrompt,
+    requestId,
+    ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
+  };
   const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
 
   const content = typeof raw?.content === 'string' ? raw.content : '';

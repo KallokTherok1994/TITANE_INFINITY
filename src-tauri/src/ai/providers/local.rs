@@ -59,7 +59,6 @@ impl LocalProvider {
             .client
             .post(&url)
             .json(&request_body)
-            .timeout(std::time::Duration::from_secs(60))
             .send()
             .await
             .map_err(|e| AIError::ProviderUnavailable {
@@ -126,7 +125,6 @@ impl AiProvider for LocalProvider {
         let url = format!("{}/api/tags", self.ollama_url);
         self.client
             .get(&url)
-            .timeout(std::time::Duration::from_secs(2))
             .send()
             .await
             .map(|r| r.status().is_success())

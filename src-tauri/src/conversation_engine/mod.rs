@@ -36,9 +36,8 @@ pub mod types;
 use std::sync::Arc;
 use std::time::Instant;
 use tokio::sync::RwLock;
-use tokio::time::{timeout, Duration};
 
-use meta_accumulator::{build_offline_meta, build_timeout_meta};
+use meta_accumulator::build_offline_meta;
 
 use crate::ai::router::AIRouter;
 use crate::memory::storage::MemoryStorage;
@@ -58,41 +57,6 @@ pub use pipeline::ConversationPipeline;
 pub use realism::ConversationalRealismProcessor;
 pub use self_healing::SelfHealingConversation;
 pub use types::*;
-
-fn conversation_timeout_secs() -> u64 {
-    const DEFAULT_TIMEOUT_SECS: u64 = 20;
-    const MIN_TIMEOUT_SECS: u64 = 5;
-    const MAX_TIMEOUT_SECS: u64 = 180;
-
-    let raw = match std::env::var("TITANE_CONVERSATION_TIMEOUT_SECS") {
-        Ok(value) => value,
-        Err(_) => return DEFAULT_TIMEOUT_SECS,
-    };
-
-    match raw.parse::<u64>() {
-        Ok(value) if (MIN_TIMEOUT_SECS..=MAX_TIMEOUT_SECS).contains(&value) => value,
-        _ => {
-            log::warn!(
-                "[CONV-ENGINE] Invalid TITANE_CONVERSATION_TIMEOUT_SECS='{}' (expected {}..={}), fallback={}",
-                raw,
-                MIN_TIMEOUT_SECS,
-                MAX_TIMEOUT_SECS,
-                DEFAULT_TIMEOUT_SECS
-            );
-            DEFAULT_TIMEOUT_SECS
-        }
-    }
-}
-
-fn timeout_trace_enabled() -> bool {
-    match std::env::var("TITANE_TIMEOUT_TRACE") {
-        Ok(raw) => {
-            let normalized = raw.to_ascii_lowercase();
-            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
-        }
-        Err(_) => false,
-    }
-}
 
 /// État global du Conversation Engine
 pub struct ConversationEngineState {
@@ -202,9 +166,7 @@ impl ConversationEngineState {
 
     /// Traiter un message utilisateur (point d'entrée principal)
     /// R05 P1: Now routes through OMEGA pipeline first, fallback to legacy
-    /// v27.0.3: Added timeout guarantee — Always Respond contract
-    /// v27.0.5: Timeout can be overridden via TITANE_CONVERSATION_TIMEOUT_SECS
-    /// v27.0.4: NO_LYING_FALLBACK — check network_available before deciding OFFLINE
+    /// Timeout guard removed: backend now waits for provider completion.
     pub async fn process_message(
         &self,
         request: ConversationRequest,
@@ -214,39 +176,15 @@ impl ConversationEngineState {
             return self.create_offline_sim_response().await;
         }
 
-        let timeout_secs = conversation_timeout_secs();
-
-        // ✨ Timeout wrapper — Guarantees Always Respond (configurable for controlled probes)
-        match timeout(
-            Duration::from_secs(timeout_secs),
-            self.process_message_internal(request),
-        )
-        .await
-        {
-            Ok(result) => result,
-            Err(_timeout_err) => {
-                // v27.0.4: Check router status before deciding OFFLINE mode
-                // NO_LYING_FALLBACK: Only claim OFFLINE if router reports no connectivity
-                let router_status = self.ai_router.read().await.get_status().await;
-                let network_available = matches!(router_status, crate::ai::router::AIRouterStatus::Online | crate::ai::router::AIRouterStatus::Degraded);
-                log::error!(
-                    "[CONV-ENGINE] ⏰ TIMEOUT: Provider selection exceeded {}s | router_status={:?} | mode={}",
-                    timeout_secs,
-                    router_status,
-                    if network_available { "DEGRADED" } else { "OFFLINE" }
-                );
-                self.create_offline_response(network_available, timeout_secs)
-                    .await
-            }
-        }
+        self.process_message_internal(request).await
     }
 
-    /// Internal message processing (wrapped by process_message with timeout)
+    /// Internal message processing (no timeout wrapper)
     async fn process_message_internal(
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
-        let trace_enabled = timeout_trace_enabled();
+        let trace_enabled = false;
         let overall_start = Instant::now();
         let conv_id = request.conversation_id.as_deref().unwrap_or("<new>");
 
@@ -384,74 +322,6 @@ impl ConversationEngineState {
                 legacy_result
             }
         }
-    }
-
-    /// Create offline/degraded response when timeout triggered (Always Respond guarantee)
-    /// v27.0.4: NO_LYING_FALLBACK — only use OFFLINE if network is truly unavailable
-    async fn create_offline_response(
-        &self,
-        network_available: bool,
-        timeout_secs: u64,
-    ) -> Result<ConversationResponse, ConversationEngineError> {
-        let mode_label = if network_available { "DÉGRADÉ" } else { "hors ligne" };
-        log::info!(
-            "[CONV-ENGINE] 🟢 Creating {} response (guaranteed <1s) | network_available={} | timeout_guard={}s",
-            mode_label,
-            network_available,
-            timeout_secs
-        );
-        
-        let now = std::time::SystemTime::now()
-            .duration_since(std::time::UNIX_EPOCH)
-            .map(|d| d.as_millis() as u64)
-            .unwrap_or(0);
-        
-        let (mut message, mut tags, summary) = if network_available {
-            (
-                "Service momentanement en degrade. Le service distant a depasse le delai de reponse et je fournis une reponse de secours en attendant son retablissement.".to_string(),
-                vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
-                "Réponse en mode dégradé suite à un délai provider dépassé (réseau disponible).".to_string(),
-            )
-        } else {
-            (
-                "Réponse en mode hors ligne. Je suis en train de traiter votre demande avec mes capacités autonomes.".to_string(),
-                vec!["offline".to_string(), "fallback".to_string(), "timeout".to_string()],
-                "Réponse autonome générée en mode hors ligne suite à un délai d'attente dépassé.".to_string(),
-            )
-        };
-
-        // Trace-only runtime witness to prove which timeout guard triggered the fallback.
-        if timeout_trace_enabled() {
-            message = format!("{} TRACE_TIMEOUT_GUARD_{}S", message, timeout_secs);
-            let mut trace_tags = vec![
-                "outer-timeout-guard".to_string(),
-                format!("timeout-guard-{}s", timeout_secs),
-            ];
-            trace_tags.extend(tags);
-            tags = trace_tags;
-        }
-        
-        Ok(ConversationResponse {
-            assistant_message: message,
-            conversation_id: uuid::Uuid::new_v4().to_string(),
-            message_id: uuid::Uuid::new_v4().to_string(),
-            detected_intention: Intention::Question,
-            detected_emotion: EmotionState::default(),
-            cognitive_tags: tags,
-            cognitive_summary: summary,
-            metadata: ConversationMetadata {
-                timestamp: now,
-                provider_used: if network_available { "timeout-degraded" } else { "offline" }.to_string(),
-                latency_ms: 40,
-                tokens_used: 0,
-                memory_effect: MemoryEffect::New,
-                links_to_contexts: vec![],
-                provider_meta: Some(build_timeout_meta(
-                    network_available,
-                    timeout_secs.saturating_mul(1000),
-                )),
-            },
-        })
     }
 
     async fn create_offline_sim_response(
