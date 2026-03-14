@@ -640,9 +640,15 @@ class TauriClient {
   }
 
   async conversationGenerate(params?: unknown): Promise<unknown> {
+    const payload = (params as Record<string, unknown>) || {};
+    const normalizedPayload =
+      payload && typeof payload === 'object' && 'args' in payload
+        ? payload
+        : { args: payload };
+
     return await this.invoke(
       TAURI_COMMANDS.CONVERSATION_GENERATE,
-      (params as Record<string, unknown>) || {},
+      normalizedPayload,
       {
         skipWhitelistCheck: true,
         skipInjectionCheck: true,
