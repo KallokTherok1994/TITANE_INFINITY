@@ -12,7 +12,7 @@ FAIL=0
 # Check 1: Vérifier que tauriChat.ts a documentation deprecation
 echo "[Check 1] Vérifier deprecation notice dans tauriChat.ts..."
 
-DEPRECATION=$(rg -n "LEGACY.*DEPRECATED|LEGACY PROVIDER.*TEST USE ONLY" src/services/ai/providers/tauriChat.ts || true)
+DEPRECATION=$(grep -n "LEGACY.*DEPRECATED\|LEGACY PROVIDER.*TEST USE ONLY" src/services/ai/providers/tauriChat.ts 2>/dev/null || true)
 
 if [ -z "$DEPRECATION" ]; then
   echo "⚠️  WARNING: No deprecation notice found in tauriChat.ts"
@@ -26,7 +26,7 @@ echo
 # Check 2: Vérifier que modern system n'importe PAS tauriChat
 echo "[Check 2] Vérifier useConversationEngine n'utilise PAS tauriChat..."
 
-MODERN_IMPORT=$(rg "from.*tauriChat|import.*tauriChat" src/hooks/useConversationEngine.ts src/services/conversationEngine.ts || true)
+MODERN_IMPORT=$(grep -n "from.*tauriChat\|import.*tauriChat" src/hooks/useConversationEngine.ts src/services/conversationEngine.ts 2>/dev/null || true)
 
 if [ -n "$MODERN_IMPORT" ]; then
   echo "❌ FAIL: Modern system imports tauriChat (divergence possible)"
@@ -41,7 +41,7 @@ echo
 # Check 3: Vérifier que tauriChat force local (expected for test legacy)
 echo "[Check 3] Vérifier tauriChat force local (expected)..."
 
-FORCE_LOCAL=$(rg -n "provider:.*'local'" src/services/ai/providers/tauriChat.ts || true)
+FORCE_LOCAL=$(grep -n "provider:.*'local'" src/services/ai/providers/tauriChat.ts 2>/dev/null || true)
 
 if [ -z "$FORCE_LOCAL" ]; then
   echo "ℹ️  INFO: tauriChat no longer forces local (may have been patched)"
@@ -56,7 +56,7 @@ echo
 # Check 4: Vérifier que tauriChat a WARN runtime
 echo "[Check 4] Vérifier WARN runtime dans tauriChat.generate()..."
 
-RUNTIME_WARN=$(rg -n "logger\.warn.*LEGACY.*forces.*local|LEGACY.*provider.*local" src/services/ai/providers/tauriChat.ts || true)
+RUNTIME_WARN=$(grep -n "logger\.warn.*LEGACY.*forces.*local\|LEGACY.*provider.*local" src/services/ai/providers/tauriChat.ts 2>/dev/null || true)
 
 if [ -z "$RUNTIME_WARN" ]; then
   echo "⚠️  WARNING: No runtime WARN when tauriChat forces local"
@@ -72,7 +72,7 @@ echo
 # Check 5: Vérifier usage tauriChat limité aux tests
 echo "[Check 5] Vérifier tauriChat usage limité..."
 
-PROD_USAGE=$(rg "aiOrchestrator\.generate" src/ --type ts --type tsx -g '!*.test.*' -g '!__tests__' -g '!**/tests/**' || true)
+PROD_USAGE=$(grep -rn "aiOrchestrator\.generate" src/ --include="*.ts" --include="*.tsx" 2>/dev/null | grep -v "\.test\.\|__tests__\|tests/" || true)
 
 if [ -n "$PROD_USAGE" ]; then
   echo "⚠️  WARNING: aiOrchestrator.generate found in production code:"

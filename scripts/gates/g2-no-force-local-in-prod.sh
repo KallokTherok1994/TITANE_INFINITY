@@ -80,7 +80,7 @@ echo
 # Check 4: Backend Rust — vérifier log si var active
 echo "[Check 4] Vérifier backend log FORCE_LOCAL_PROVIDER..."
 
-RUST_WARN=$(rg -n "FORCE_LOCAL_PROVIDER.*WARN" src-tauri/src/ --type rust || true)
+RUST_WARN=$(grep -rn "FORCE_LOCAL_PROVIDER.*WARN\|WARN.*FORCE_LOCAL_PROVIDER" src-tauri/src/ --include="*.rs" 2>/dev/null || true)
 
 if [ -n "$RUST_WARN" ]; then
   echo "✅ PASS: Backend logs WARN if FORCE_LOCAL_PROVIDER active"
