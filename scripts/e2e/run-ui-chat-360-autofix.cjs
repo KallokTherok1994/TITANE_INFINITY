@@ -54,14 +54,17 @@ try {
   process.exit(1);
 }
 
-// Check Tauri binary
-const tauriBinary = path.join(__dirname, '../../src-tauri/target/debug/titane-infinity');
-if (!fs.existsSync(tauriBinary)) {
-  console.error('❌ Tauri binary not found:', tauriBinary);
-  console.error('Build first: cd src-tauri && cargo build');
-  process.exit(1);
+// Align with the canonical desktop suite: only force a binary when explicitly provided.
+const tauriBinary = process.env.TAURI_BINARY_PATH || '';
+if (tauriBinary) {
+  if (!fs.existsSync(tauriBinary)) {
+    console.error('❌ Tauri binary not found:', tauriBinary);
+    process.exit(1);
+  }
+  console.log(`✅ Tauri binary override found: ${tauriBinary}`);
+} else {
+  console.log('✅ Tauri binary will be resolved by scripts/e2e/tauri-wrapper.sh');
 }
-console.log('✅ Tauri binary found');
 
 console.log('');
 
@@ -71,6 +74,7 @@ console.log('🔧 Phase 0.5: Starting Vite dev server (standalone on port 5173).
 
 let viteProcess = null;
 const VITE_PORT = 5173;
+const viteDevServerUrl = `http://127.0.0.1:${VITE_PORT}`;
 
 // Check if Vite already running on port 5173
 try {
@@ -91,7 +95,7 @@ try {
         ...process.env,
         VITE_E2E: '1', // 🧪 Pass E2E mode to Vite so frontend can detect it
         OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
-        TAURI_DEV_SERVER_URL: `http://127.0.0.1:${VITE_PORT}`,
+        TAURI_DEV_SERVER_URL: viteDevServerUrl,
       },
     }
   );
@@ -197,9 +201,10 @@ const phaseStart = () => {
     env: {
       ...process.env,
       REPORT_TS,
-      TAURI_BINARY_PATH: tauriBinary, // **CRITICAL:** Pass binary path to WebDriver config
+      ...(tauriBinary ? { TAURI_BINARY_PATH: tauriBinary } : {}),
       TITANE_E2E: '1',
       VITE_E2E: '1', // 🧪 Frontend E2E mode: bypass onboarding carousel in App.tsx
+      VITE_DEV_SERVER_URL: viteDevServerUrl,
       OLLAMA_DEFAULT_MODEL: 'gemma2:2b',
       TITANE_MEMORY_DIR: e2eMemoryDir,
       TITANE_LOG_DIR: e2eLogDir,
