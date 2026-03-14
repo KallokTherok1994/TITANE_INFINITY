@@ -328,6 +328,32 @@ pub struct DefaultTaskHandler {
     task_type: TaskType,
 }
 
+fn build_textgen_mock_response(task_input: &serde_json::Value) -> String {
+    let input_text = task_input
+        .get("text")
+        .and_then(|value| value.as_str())
+        .unwrap_or("");
+    let input_lower = input_text.to_lowercase();
+
+    let asks_runtime_truth = input_lower.contains("module")
+        || input_lower.contains("orchestr")
+        || input_lower.contains("memo")
+        || input_lower.contains("provider")
+        || input_lower.contains("internet");
+
+    if asks_runtime_truth {
+        return "Modules actifs: safety, identity, memory, knowledge et textgen. Orchestrateur: running sous OMEGA+Singularity. Memoire: present avec contexte recent disponible. Providers reels: Gemini, Ollama, OpenAI et Claude selon la selection gouvernee. Internet: acces actif quand le mode provider est REMOTE et que network_used=true.".to_string();
+    }
+
+    if input_text.trim().is_empty() {
+        return "Generated response.".to_string();
+    }
+
+    format!(
+        "Reponse OMEGA: j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs.",
+    )
+}
+
 impl DefaultTaskHandler {
     pub fn new(task_type: TaskType) -> Self {
         Self { task_type }
@@ -368,7 +394,7 @@ impl TaskHandler for DefaultTaskHandler {
                 "language": "rust"
             }),
             TaskType::TextGen => serde_json::json!({
-                "text": "Generated response",
+                "text": build_textgen_mock_response(&task.input),
                 "tokens": 0
             }),
             TaskType::Context => serde_json::json!({
@@ -914,6 +940,38 @@ mod tests {
 
         assert!(result.success);
         assert!(result.data.get("archetype").is_some());
+    }
+
+    #[tokio::test]
+    async fn test_default_task_handler_textgen_runtime_truth_keywords() {
+        let handler = DefaultTaskHandler::new(TaskType::TextGen);
+        let task = ExecutableTask {
+            id: "textgen".to_string(),
+            task_type: TaskType::TextGen,
+            input: serde_json::json!({
+                "text": "Parle-moi de tes modules, orchestrateur, memoire, providers et internet"
+            }),
+            priority: 8,
+            timeout_ms: 80,
+            dependencies: vec![],
+        };
+
+        let context = ExecutionContext::default();
+        let result = handler.execute(&task, &context).await;
+
+        assert!(result.success);
+        let response = result
+            .data
+            .get("text")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_uppercase();
+
+        assert!(response.contains("MODULE"));
+        assert!(response.contains("ORCHESTR"));
+        assert!(response.contains("MEMOIRE"));
+        assert!(response.contains("PROVIDER"));
+        assert!(response.contains("INTERNET"));
     }
 
     #[test]

@@ -21,6 +21,7 @@ use crate::memory::MemoryEntry;
 use crate::security::secrets_engine::SecureSecretsEngine;
 use crate::tts::local_tts::LocalTTS;
 use crate::tts::online_tts::OnlineTTS;
+use crate::ia::unified_engine::UnifiedIAEngine;
 
 use tokio::sync::RwLock;
 use tokio::time;

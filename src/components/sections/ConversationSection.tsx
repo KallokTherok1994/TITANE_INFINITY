@@ -59,6 +59,11 @@ interface ConversationMessageItem {
   };
 }
 
+interface RuntimeSignals {
+  orchestratorState: string;
+  memoryState: string;
+}
+
 const AVAILABLE_PROVIDERS = [
   { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
   { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
@@ -114,6 +119,41 @@ const CONVERSATION_SUGGESTIONS = [
   { label: '🔍 Analyze', value: 'Analyze this for me...' },
   { label: '💬 Explain', value: 'Explain this concept...' },
 ];
+
+const LOADING_INDICATOR_GRACE_MS = 1200;
+
+function deriveRuntimeSignals(
+  providerMeta?: ProviderDecisionMeta,
+  tags: string[] = []
+): RuntimeSignals {
+  let orchestratorState = 'unknown';
+  let memoryState = 'unknown';
+
+  for (const rawTag of tags) {
+    const tag = rawTag.toLowerCase();
+
+    if (tag.startsWith('orchestrator:')) {
+      orchestratorState = rawTag.split(':').slice(1).join(':').trim() || 'unknown';
+    }
+
+    if (tag.startsWith('memory:')) {
+      memoryState = rawTag.split(':').slice(1).join(':').trim() || 'unknown';
+    }
+
+    if (memoryState === 'unknown' && tag.includes('omega:memory')) {
+      memoryState = 'present';
+    }
+  }
+
+  if (
+    orchestratorState === 'unknown' &&
+    providerMeta?.provider_used?.toLowerCase().includes('omega')
+  ) {
+    orchestratorState = 'running';
+  }
+
+  return { orchestratorState, memoryState };
+}
 
 /**
  * Sanitize input pour sécurité renforcée (XSS prevention)
@@ -565,6 +605,7 @@ const ConversationMessage = memo(
     onDelete: (id: string) => void;
   }) => {
     const providerMeta = message.metadata?.providerMeta;
+    const runtimeSignals = deriveRuntimeSignals(providerMeta, message.metadata?.tags ?? []);
     const providerLabel = providerMeta?.provider_used;
     const modeLabel = providerMeta?.mode;
     const classLabel = providerMeta?.provider_class;
@@ -589,14 +630,35 @@ const ConversationMessage = memo(
       <div
         className={`conversation-message ${message.role}`}
         data-testid={`chat-message-${message.role}`}
-        data-provider-used={providerMeta?.provider_used || undefined}
-        data-provider-mode={providerMeta?.mode || undefined}
-        data-provider-class={providerMeta?.provider_class || undefined}
-        data-provider-reason={providerMeta?.reason_code || undefined}
-        data-provider-network-used={
-          providerMeta ? String(providerMeta.network_used) : undefined
+        data-provider-used={message.role === 'assistant' ? providerLabel || undefined : undefined}
+        data-provider-mode={message.role === 'assistant' ? modeLabel || undefined : undefined}
+        data-provider-reason={
+          message.role === 'assistant' ? reasonLabel || undefined : undefined
         }
-        data-provider-cache-hit={providerMeta ? String(cacheHit) : undefined}
+        data-provider-class={
+          message.role === 'assistant' ? classLabel || undefined : undefined
+        }
+        data-network-used={
+          message.role === 'assistant' && providerMeta
+            ? String(providerMeta.network_used)
+            : undefined
+        }
+        data-orchestrator-state={
+          message.role === 'assistant' ? runtimeSignals.orchestratorState : undefined
+        }
+        data-memory-state={
+          message.role === 'assistant' ? runtimeSignals.memoryState : undefined
+        }
+        data-provider-network-used={
+          message.role === 'assistant' && providerMeta
+            ? String(providerMeta.network_used)
+            : undefined
+        }
+        data-provider-cache-hit={
+          message.role === 'assistant' && providerMeta
+            ? String(cacheHit)
+            : undefined
+        }
       >
         <div className="conversation-message-avatar">
           {message.role === 'user' ? '👤' : '🧠'}
@@ -729,6 +791,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const [searchQuery, setSearchQuery] = useState('');
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
   const [_cameraActive, setCameraActive] = useState(false);
+  const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const sendingRef = useRef(false);
   const deferredSearchQuery = useDeferredValue(searchQuery);
@@ -817,6 +880,76 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const hasMessages = messages.length > 0;
   const isHealthy = healthReport?.status === 'Healthy';
+  const showLoadingIndicator = isLoading || loadingVisibleUntil > Date.now();
+
+  const latestAssistantRuntime = useMemo(() => {
+    for (let i = messages.length - 1; i >= 0; i -= 1) {
+      const message = messages[i] as ConversationMessageItem;
+      if (message.role !== 'assistant') continue;
+
+      const providerMeta = message.metadata?.providerMeta;
+      const tags = message.metadata?.tags ?? [];
+      if (!providerMeta && tags.length === 0) continue;
+
+      const runtimeSignals = deriveRuntimeSignals(providerMeta, tags);
+
+      return {
+        providerMeta,
+        tags,
+        runtimeSignals,
+      };
+    }
+
+    return null;
+  }, [messages]);
+
+  const runtimeSummary = useMemo(() => {
+    if (!latestAssistantRuntime) return '';
+
+    const provider = latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown';
+    const mode = latestAssistantRuntime.providerMeta?.mode ?? 'unknown';
+    const reason = latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN';
+    const networkUsed =
+      latestAssistantRuntime.providerMeta?.network_used === true ? 'true' : 'false';
+
+    return `Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}`;
+  }, [latestAssistantRuntime]);
+
+  const runtimeBadges = useMemo(() => {
+    if (!latestAssistantRuntime) return [] as string[];
+
+    const providerMeta = latestAssistantRuntime.providerMeta;
+    const tags = latestAssistantRuntime.tags;
+    const values = [
+      providerMeta?.provider_used,
+      providerMeta?.mode,
+      providerMeta?.provider_class,
+      providerMeta?.reason_code,
+      ...tags,
+    ].filter((value): value is string => Boolean(value && value.trim()));
+
+    return Array.from(new Set(values)).slice(0, 8);
+  }, [latestAssistantRuntime]);
+
+  useEffect(() => {
+    if (isLoading) {
+      setLoadingVisibleUntil(Date.now() + LOADING_INDICATOR_GRACE_MS);
+      return;
+    }
+
+    if (loadingVisibleUntil <= Date.now()) {
+      return;
+    }
+
+    const remainingMs = loadingVisibleUntil - Date.now();
+    const timerId = window.setTimeout(() => {
+      setLoadingVisibleUntil(0);
+    }, remainingMs);
+
+    return () => {
+      window.clearTimeout(timerId);
+    };
+  }, [isLoading, loadingVisibleUntil]);
 
   const latestAssistantProviderMeta = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i -= 1) {
@@ -1432,6 +1565,41 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           </div>
         </div>
 
+        {latestAssistantRuntime && (
+          <div
+            className="conversation-runtime-panel"
+            data-testid="chat-runtime-state"
+            data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
+            data-provider-reason={latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'}
+            data-provider-used={latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'}
+            data-network-used={
+              latestAssistantRuntime.providerMeta
+                ? String(latestAssistantRuntime.providerMeta.network_used)
+                : 'false'
+            }
+            data-orchestrator-state={latestAssistantRuntime.runtimeSignals.orchestratorState}
+            data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
+            data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
+            data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
+            data-secrets-mode="governed"
+          >
+            <div className="conversation-runtime-summary" data-testid="chat-runtime-summary">
+              {runtimeSummary}
+            </div>
+            <div className="conversation-runtime-badges">
+              {runtimeBadges.map((badge, index) => (
+                <span
+                  key={`${badge}-${index}`}
+                  className="conversation-runtime-badge"
+                  data-testid="chat-runtime-badge"
+                >
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* ═══ THINKING PANEL ═══ */}
         <ThinkingPanel
           steps={thinking.steps}
@@ -1460,7 +1628,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
           {messageItems}
 
-          {isLoading && (
+          {showLoadingIndicator && (
             <div
               className="conversation-message assistant loading"
               data-testid="chat-loading"

@@ -1,0 +1,368 @@
+{
+  "v30Id": "V30-TRUTH-1773269667053",
+  "waitElapsedMs": 1550,
+  "previousAssistantCount": 9,
+  "newAssistantCount": 10,
+  "freshMessageDetected": true,
+  "localTruth": "FAIL",
+  "onlineTruth": "FAIL",
+  "orchestratorTruth": "BLOCKED",
+  "providerMode": "OFFLINE",
+  "providerUsed": "offline",
+  "providerReason": "FALLBACK_OFFLINE",
+  "networkUsed": false,
+  "orchestratorState": "running",
+  "pipelineState": "UNKNOWN",
+  "responseText": "🧠TITANEofflineOFFLINElocalFALLBACK_OFFLINEmemory:Neworchestrator:runningofflinesimulatedMode OFFLINE_SIM actif. Réponse hors ligne déterministe.Question📋 Copier🗑️",
+  "orchestratorProbe": {
+    "getState": {
+      "system_health": {
+        "cpu_usage": 0,
+        "error_rate": 0,
+        "critical_issues": [],
+        "network_latency_ms": 0,
+        "disk_io": 0,
+        "memory_usage": 0,
+        "warnings": [],
+        "gpu_usage": 0,
+        "overall_score": 1
+      },
+      "orchestration_mode": "Balanced",
+      "priority_queue": [],
+      "total_cycles": 0,
+      "last_cycle_ms": 0,
+      "uptime_seconds": 0,
+      "active_engines": [
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SingularityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Core",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CognitiveLayer",
+          "cpu_percent": 0,
+          "engine_type": "Cognitive",
+          "priority": 9,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "MemoryEvolution",
+          "cpu_percent": 0,
+          "engine_type": "Memory",
+          "priority": 8,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "VoiceEngine",
+          "cpu_percent": 0,
+          "engine_type": "Voice",
+          "priority": 7,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "IdentityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Identity",
+          "priority": 6,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CloudSync",
+          "cpu_percent": 0,
+          "engine_type": "Cloud",
+          "priority": 5,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SecurityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Security",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        }
+      ],
+      "awareness_level": "Standard",
+      "resource_allocation": {
+        "memory_limit_mb": 4096,
+        "gpu_enabled": true,
+        "thread_pool_size": 8,
+        "gpu_quota_percent": 50,
+        "io_priority": "Normal",
+        "network_bandwidth_kbps": 0,
+        "cpu_quota_percent": 80
+      },
+      "initialized": true
+    },
+    "invokeAvailable": true,
+    "getStateAfterInit": {
+      "system_health": {
+        "cpu_usage": 0,
+        "error_rate": 0,
+        "critical_issues": [],
+        "network_latency_ms": 0,
+        "disk_io": 0,
+        "memory_usage": 0,
+        "warnings": [],
+        "gpu_usage": 0,
+        "overall_score": 1
+      },
+      "orchestration_mode": "Balanced",
+      "priority_queue": [],
+      "total_cycles": 0,
+      "last_cycle_ms": 0,
+      "uptime_seconds": 0,
+      "active_engines": [
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SingularityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Core",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CognitiveLayer",
+          "cpu_percent": 0,
+          "engine_type": "Cognitive",
+          "priority": 9,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "MemoryEvolution",
+          "cpu_percent": 0,
+          "engine_type": "Memory",
+          "priority": 8,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "VoiceEngine",
+          "cpu_percent": 0,
+          "engine_type": "Voice",
+          "priority": 7,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "IdentityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Identity",
+          "priority": 6,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CloudSync",
+          "cpu_percent": 0,
+          "engine_type": "Cloud",
+          "priority": 5,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SecurityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Security",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        }
+      ],
+      "awareness_level": "Standard",
+      "resource_allocation": {
+        "memory_limit_mb": 4096,
+        "gpu_enabled": true,
+        "thread_pool_size": 8,
+        "gpu_quota_percent": 50,
+        "io_priority": "Normal",
+        "network_bandwidth_kbps": 0,
+        "cpu_quota_percent": 80
+      },
+      "initialized": true
+    },
+    "init": {
+      "system_health": {
+        "cpu_usage": 0,
+        "error_rate": 0,
+        "critical_issues": [],
+        "network_latency_ms": 0,
+        "disk_io": 0,
+        "memory_usage": 0,
+        "warnings": [],
+        "gpu_usage": 0,
+        "overall_score": 1
+      },
+      "orchestration_mode": "Balanced",
+      "priority_queue": [],
+      "total_cycles": 0,
+      "last_cycle_ms": 0,
+      "uptime_seconds": 0,
+      "active_engines": [
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SingularityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Core",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CognitiveLayer",
+          "cpu_percent": 0,
+          "engine_type": "Cognitive",
+          "priority": 9,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "MemoryEvolution",
+          "cpu_percent": 0,
+          "engine_type": "Memory",
+          "priority": 8,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "VoiceEngine",
+          "cpu_percent": 0,
+          "engine_type": "Voice",
+          "priority": 7,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "IdentityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Identity",
+          "priority": 6,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "CloudSync",
+          "cpu_percent": 0,
+          "engine_type": "Cloud",
+          "priority": 5,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        },
+        {
+          "status": "Running",
+          "tasks_completed": 0,
+          "error_count": 0,
+          "name": "SecurityEngine",
+          "cpu_percent": 0,
+          "engine_type": "Security",
+          "priority": 10,
+          "memory_mb": 0,
+          "last_activity_ms": 0
+        }
+      ],
+      "awareness_level": "Standard",
+      "resource_allocation": {
+        "memory_limit_mb": 4096,
+        "gpu_enabled": true,
+        "thread_pool_size": 8,
+        "gpu_quota_percent": 50,
+        "io_priority": "Normal",
+        "network_bandwidth_kbps": 0,
+        "cpu_quota_percent": 80
+      },
+      "initialized": true
+    }
+  },
+  "preRuntimeAttrs": {
+    "providerMode": "OFFLINE",
+    "providerReason": "FALLBACK_OFFLINE",
+    "providerUsed": "offline",
+    "networkUsed": "false",
+    "orchestratorState": "running",
+    "ollamaModel": "gemma2:2b"
+  },
+  "runtimeAttrs": {
+    "providerMode": "OFFLINE",
+    "providerReason": "FALLBACK_OFFLINE",
+    "providerUsed": "offline",
+    "networkUsed": "false",
+    "orchestratorState": "running",
+    "memoryState": "New",
+    "ollamaModel": "gemma2:2b"
+  },
+  "classification": "FAIL/FAIL/BLOCKED",
+  "blockers": [
+    "LOCAL_CHAT_TRUTH_FAIL",
+    "ONLINE_CHAT_TRUTH_FAIL",
+    "ORCHESTRATOR_TRUTH_BLOCKED"
+  ],
+  "verdict": "FAIL"
+}
