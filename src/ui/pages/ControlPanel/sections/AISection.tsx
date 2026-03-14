@@ -122,7 +122,7 @@ export const AISection: React.FC = () => {
       if (next) {
         window.localStorage.setItem(EXTERNAL_AI_STORAGE_KEY, '1');
       } else {
-        window.localStorage.removeItem(EXTERNAL_AI_STORAGE_KEY);
+        window.localStorage.setItem(EXTERNAL_AI_STORAGE_KEY, '0');
       }
 
       setExternalAIRuntimeEnabled(next);

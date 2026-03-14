@@ -483,7 +483,12 @@ pub async fn conversation_generate(
     // Frontend already enforces in conversationEngine.ts:272-314
     // But we double-check here for security (Tauri-level validation)
     let external_providers_allowed = std::env::var("VITE_ENABLE_EXTERNAL_AI")
-        .unwrap_or_default() == "1";
+        .ok()
+        .map(|value| {
+            let normalized = value.trim().to_ascii_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        })
+        .unwrap_or(true);
     
     let is_external_provider = provider.as_ref()
         .map(|p| matches!(p.as_str(), "gemini" | "openai" | "gpt" | "claude" | "anthropic"))
@@ -491,7 +496,7 @@ pub async fn conversation_generate(
     
     if is_external_provider && !external_providers_allowed {
         log::warn!(
-            "[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider={:?} | VITE_ENABLE_EXTERNAL_AI not set | req_id={}",
+            "[Ω:CMD] 🚫 BACKEND GATE BLOCKED | provider={:?} | VITE_ENABLE_EXTERNAL_AI disabled | req_id={}",
             provider,
             req_id
         );
