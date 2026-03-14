@@ -12,7 +12,7 @@
 **File:** `.github/copilot-agents/guardian.agent.md` line 7  
 **Before:** `"Tauri-only (no HTTP servers); local-first."`  
 **After:** `"Tauri-only (no HTTP servers); online-first governed with mandatory local fallback (local-first is a compatibility marker only)."`  
-**Verification:** `grep "local-first" .github/copilot-agents/guardian.agent.md` → should return 0 results after fix  
+**Verification:** `grep "Tauri-only.*local-first\.$" .github/copilot-agents/guardian.agent.md` → must return 0 results; `grep "online-first governed" .github/copilot-agents/guardian.agent.md` → must return 1 result
 **Risk:** Low — documentation only  
 
 ### P1-B — Document CSP unsafe-inline explicitly [RC-02] [≤15 min]
