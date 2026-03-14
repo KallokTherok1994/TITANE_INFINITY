@@ -11,11 +11,16 @@
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
+**Statut d'autorité documentaire (LOCAL, 2026-03-14) :**
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `27.2.0` (`PROVEN_BY_REPO`)
+- Dernier binaire stable publié documenté: `v27.0.5` (`PROVEN_BY_CANON_DOC`)
+- Les références `v28` de `docs/90_release/**` sont traitées comme `PARTIAL/CONTRADICTORY` tant qu'elles ne sont pas réalignées sur les artefacts et versions canoniques
+
 ---
 
 ## 📦 Téléchargement
 
-### ✨ **Version Stable : v27.0.5** — Release stable
+### ✨ **Dernier binaire stable publié : v27.0.5** — Release stable
 
 **Télécharger pour Linux (Debian/Ubuntu):**
 
@@ -85,7 +90,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Legacy Versions
 
-See [CHANGELOG v27.1.0](docs/90_release/CHANGELOG_v27.1.0.md) for app release history.
+See [CHANGELOG.md](CHANGELOG.md) and [CHANGELOG v27.2.0 entry](docs/90_release/CHANGELOG_v27.2.0_ENTRY.md) for release history.
 
 ---
 
