@@ -8,7 +8,6 @@ import path from 'node:path';
 const DIAG_FILE = process.env.TITANE_V20_DIAG_FILE || '/tmp/v20_dom_diag.json';
 
 describe('V20 DOM Diagnostic', () => {
-
   before(async () => {
     await browser.url('tauri://localhost');
     await browser.pause(2500);
@@ -16,7 +15,9 @@ describe('V20 DOM Diagnostic', () => {
 
   it('DOM introspection — shell + navigate to titane', async () => {
     // Navigate to /titane
-    await browser.execute(() => { window.location.hash = '/titane'; });
+    await browser.execute(() => {
+      window.location.hash = '/titane';
+    });
     await browser.pause(2000);
 
     const diag = await browser.execute(() => {
@@ -27,7 +28,12 @@ describe('V20 DOM Diagnostic', () => {
       // Get all unique classes
       const allClasses = new Set();
       allEls.forEach(e => {
-        e.className && typeof e.className === 'string' && e.className.split(' ').filter(Boolean).forEach(c => allClasses.add(c));
+        e.className &&
+          typeof e.className === 'string' &&
+          e.className
+            .split(' ')
+            .filter(Boolean)
+            .forEach(c => allClasses.add(c));
       });
       const classes = [...allClasses].sort().slice(0, 200);
 
@@ -35,31 +41,38 @@ describe('V20 DOM Diagnostic', () => {
       const roles = [...new Set(allEls.map(e => e.getAttribute('role')).filter(Boolean))];
 
       // Get all aria-selected elements
-      const ariaSel = allEls.filter(e => e.hasAttribute('aria-selected')).map(e => ({
-        tag: e.tagName.toLowerCase(),
-        cls: e.className?.toString()?.slice(0, 100),
-        ariaSelected: e.getAttribute('aria-selected'),
-        text: e.textContent?.slice(0, 50),
-      }));
+      const ariaSel = allEls
+        .filter(e => e.hasAttribute('aria-selected'))
+        .map(e => ({
+          tag: e.tagName.toLowerCase(),
+          cls: e.className?.toString()?.slice(0, 100),
+          ariaSelected: e.getAttribute('aria-selected'),
+          text: e.textContent?.slice(0, 50),
+        }));
 
       // Get visible inputs
-      const inputs = allEls.filter(e => ['input', 'textarea'].includes(e.tagName.toLowerCase())).map(e => ({
-        tag: e.tagName.toLowerCase(),
-        type: e.getAttribute('type'),
-        cls: e.className?.toString()?.slice(0, 100),
-        placeholder: e.getAttribute('placeholder'),
-        id: e.id,
-        visible: !!(e.offsetWidth || e.offsetHeight),
-      }));
+      const inputs = allEls
+        .filter(e => ['input', 'textarea'].includes(e.tagName.toLowerCase()))
+        .map(e => ({
+          tag: e.tagName.toLowerCase(),
+          type: e.getAttribute('type'),
+          cls: e.className?.toString()?.slice(0, 100),
+          placeholder: e.getAttribute('placeholder'),
+          id: e.id,
+          visible: !!(e.offsetWidth || e.offsetHeight),
+        }));
 
       // Get buttons
-      const buttons = allEls.filter(e => e.tagName.toLowerCase() === 'button').slice(0, 30).map(e => ({
-        cls: e.className?.toString()?.slice(0, 100),
-        type: e.getAttribute('type'),
-        ariaLabel: e.getAttribute('aria-label'),
-        text: e.textContent?.slice(0, 40),
-        ariaSelected: e.getAttribute('aria-selected'),
-      }));
+      const buttons = allEls
+        .filter(e => e.tagName.toLowerCase() === 'button')
+        .slice(0, 30)
+        .map(e => ({
+          cls: e.className?.toString()?.slice(0, 100),
+          type: e.getAttribute('type'),
+          ariaLabel: e.getAttribute('aria-label'),
+          text: e.textContent?.slice(0, 40),
+          ariaSelected: e.getAttribute('aria-selected'),
+        }));
 
       // Current URL
       const href = window.location.href;
@@ -87,12 +100,17 @@ describe('V20 DOM Diagnostic', () => {
       }));
 
       // Check #root or #app children
-      const rootEl = document.getElementById('root') || document.getElementById('app') || document.body;
-      const rootChildSummary = Array.from(rootEl?.children || []).slice(0, 10).map(e => ({
-        tag: e.tagName.toLowerCase(),
-        id: e.id,
-        cls: e.className?.toString()?.slice(0, 80),
-      }));
+      const rootEl =
+        document.getElementById('root') ||
+        document.getElementById('app') ||
+        document.body;
+      const rootChildSummary = Array.from(rootEl?.children || [])
+        .slice(0, 10)
+        .map(e => ({
+          tag: e.tagName.toLowerCase(),
+          id: e.id,
+          cls: e.className?.toString()?.slice(0, 80),
+        }));
 
       return {
         href,
@@ -121,5 +139,4 @@ describe('V20 DOM Diagnostic', () => {
     console.log('FOCUS-VISIBLE rules:', diag.allFocusVisibleRules.join(' | '));
     console.log('HAS_TITANE_FOCUS_RULE:', diag.hasFocusVisibleTabRule);
   });
-
 });

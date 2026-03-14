@@ -4,8 +4,7 @@ export const BASE_ZOOM_SCALE = 0.75;
 export const MIN_ZOOM_SCALE = 0.5;
 export const MAX_ZOOM_SCALE = 2;
 
-const roundZoomScale = (scale: number): number =>
-  Math.round(scale * 1000) / 1000;
+const roundZoomScale = (scale: number): number => Math.round(scale * 1000) / 1000;
 
 export const clampZoomScale = (scale: number): number =>
   roundZoomScale(Math.min(MAX_ZOOM_SCALE, Math.max(MIN_ZOOM_SCALE, scale)));
