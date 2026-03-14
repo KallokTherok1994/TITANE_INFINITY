@@ -2,7 +2,7 @@
 # Gate G9: RELEASE_SEAL_PROOF_PACK_COMPLETE
 # Verifies release seal is complete: all gates G1-G8 PASS, evidence complete, registry clean
 
-set -euo pipefail
+set -uo pipefail
 
 GATE_ID="g9-release-seal"
 GATE_NAME="Release Seal & Proof Pack"
