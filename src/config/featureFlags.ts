@@ -21,6 +21,25 @@ export function envFlag(key: string): boolean {
   return false;
 }
 
+function envFlagDefaultTrue(key: string): boolean {
+  const value = env[key];
+  if (typeof value === 'undefined') {
+    return true;
+  }
+  if (value === true) return true;
+  if (value === false) return false;
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (normalized === '0' || normalized === 'false' || normalized === 'no' || normalized === 'off') {
+      return false;
+    }
+    if (normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on') {
+      return true;
+    }
+  }
+  return true;
+}
+
 function runtimeFlag(key: string): boolean {
   try {
     if (typeof window === 'undefined') return false;
@@ -31,10 +50,10 @@ function runtimeFlag(key: string): boolean {
 }
 
 // Guardrails:
-// - Build-time allow: VITE_ENABLE_EXTERNAL_AI=1
+// - Build-time default: enabled (online-first)
+// - Build-time opt-out: VITE_ENABLE_EXTERNAL_AI=0
 // - Runtime toggle (no rebuild): localStorage.setItem('titane.enable_external_ai', '1')
-//   (default off in production)
-const buildAllowsExternalAI = envFlag('VITE_ENABLE_EXTERNAL_AI');
+const buildAllowsExternalAI = envFlagDefaultTrue('VITE_ENABLE_EXTERNAL_AI');
 const runtimeAllowsExternalAI = import.meta.env.DEV
   ? true
   : runtimeFlag('titane.enable_external_ai');

@@ -781,7 +781,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   });
 
   // ═══ STATE ═══
-  const [selectedProvider, setSelectedProvider] = useState('gemini');
+  const [selectedProvider, setSelectedProvider] = useState(() => {
+    if (typeof window === 'undefined') {
+      return 'ollama';
+    }
+
+    const stored = window.localStorage.getItem('omega-chat-preferred-provider');
+    return stored && stored.trim().length > 0 ? stored : 'ollama';
+  });
   const [inputValue, setInputValue] = useState('');
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -844,6 +851,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     const value = e.currentTarget.dataset.value;
     if (value) setInputValue(value);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem('omega-chat-preferred-provider', selectedProvider);
+  }, [selectedProvider]);
 
   // ═══ COMPUTED VALUES ═══
   const conversationModes = useMemo(() => {

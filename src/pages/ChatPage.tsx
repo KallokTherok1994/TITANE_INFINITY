@@ -10,15 +10,34 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChatMessage as _ChatMessage } from '@/features/chat/ChatMessage';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatErrorBoundary } from '@/components/ChatErrorBoundary';
 import { logger } from '@/lib/logger';
 
+const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
+
+const getInitialProvider = (): string => {
+  if (typeof window === 'undefined') {
+    return 'ollama';
+  }
+
+  const stored = window.localStorage.getItem(PREFERRED_PROVIDER_STORAGE_KEY);
+  return stored && stored.trim().length > 0 ? stored : 'ollama';
+};
+
 export const ChatPage: React.FC = () => {
-  const [selectedProvider, setSelectedProvider] = useState('gemini');
+  const [selectedProvider, setSelectedProvider] = useState(getInitialProvider);
   const [conversationId] = useState(() => `conv_${Date.now()}`);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    window.localStorage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, selectedProvider);
+  }, [selectedProvider]);
 
   const availableProviders = [
     { id: 'gemini', name: 'Gemini', icon: '✨', available: true },

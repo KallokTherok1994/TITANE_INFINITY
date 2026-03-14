@@ -77,6 +77,10 @@ import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ S
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
 
+const OLLAMA_ENABLED_STORAGE_KEY = 'titane_ollama_enabled';
+const EXTERNAL_AI_STORAGE_KEY = 'titane.enable_external_ai';
+const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
+
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
  *
@@ -382,6 +386,46 @@ const AppRouter: React.FC = () => {
     return () => {
       clearTimeout(timeoutId);
     };
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    try {
+      const storage = window.localStorage;
+      let updated = false;
+
+      if (!storage.getItem(OLLAMA_ENABLED_STORAGE_KEY)) {
+        storage.setItem(OLLAMA_ENABLED_STORAGE_KEY, '1');
+        updated = true;
+      }
+
+      if (!storage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)) {
+        storage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'ollama');
+        updated = true;
+      }
+
+      if (!storage.getItem(EXTERNAL_AI_STORAGE_KEY)) {
+        storage.setItem(EXTERNAL_AI_STORAGE_KEY, '1');
+        updated = true;
+      }
+
+      if (updated) {
+        logger.info('AI runtime defaults activated', {
+          component: 'App',
+          ollamaEnabled: storage.getItem(OLLAMA_ENABLED_STORAGE_KEY) ?? '0',
+          preferredProvider: storage.getItem(PREFERRED_PROVIDER_STORAGE_KEY) ?? 'auto',
+          externalAIEnabled: storage.getItem(EXTERNAL_AI_STORAGE_KEY) ?? '0',
+        });
+      }
+    } catch (error) {
+      logger.warn('Unable to seed AI runtime defaults', {
+        component: 'App',
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   }, []);
 
   // ✨ v21 - Initialiser Ollama Provider au démarrage
