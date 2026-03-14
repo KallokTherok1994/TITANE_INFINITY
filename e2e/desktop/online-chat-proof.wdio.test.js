@@ -140,11 +140,33 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     const assistantText = response.assistant_message || response.content || '';
     assert.ok(assistantText, 'assistant_message/content missing');
 
+    // ANTI_LIE: reject mock path — window.__TITANE_E2E_CHAT_MOCK__ must be false in proof runs
+    assert.ok(
+      !assistantText.startsWith('[MOCK_OK]'),
+      `FALSE_PASS: response is a mock stub ([MOCK_OK] prefix). Provider: ${String(response?.meta?.provider_used ?? response?.metadata?.provider_used ?? 'unknown')}`
+    );
+
+    // ANTI_LIE: reject generic/empty degraded stubs
+    const STUB_PATTERNS = ['[MOCK_OK]', 'e2e-mock', 'stub', 'placeholder'];
+    for (const pattern of STUB_PATTERNS) {
+      assert.ok(
+        !assistantText.toLowerCase().includes(pattern.toLowerCase()),
+        `FALSE_PASS: response contains stub marker "${pattern}"`
+      );
+    }
+
+    // Minimal usefulness: response must have meaningful length (>10 chars)
+    assert.ok(
+      assistantText.trim().length > 10,
+      `ANSWER_TOO_SHORT: assistantText has ${assistantText.trim().length} chars — likely stub or empty fallback`
+    );
+
     const decision = response.decision || response.meta || response.metadata || {};
     const online = decision.online ?? decision.network_used;
     const reason = decision.reasonCode ?? decision.reason_code;
     const provider = decision.providerSelected || decision.provider_used || 'unknown';
 
+    // Capture provider_used for observability — UNKNOWN is allowed (degraded path is honest)
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
     console.log(
       `[CHAT_DECISION] online=${String(online)} reason=${String(reason)} provider=${provider}`
