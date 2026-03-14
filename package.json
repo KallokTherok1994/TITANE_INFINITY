@@ -1,7 +1,7 @@
 {
   "name": "titane-infinity",
-  "version": "27.2.0",
-  "description": "TITANE∞ v27.2.0 - TypeScript Strict Mode (0 errors)",
+  "version": "28.0.0",
+  "description": "TITANE∞ v28.0.0 - Governance-aligned documentation authority release",
   "type": "module",
   "license": "SEE LICENSE.md",
   "packageManager": "pnpm@10.30.2+sha512.36cdc707e7b7940a988c9c1ecf88d084f8514b5c3f085f53a2e244c2921d3b2545bc20dd4ebe1fc245feec463bb298aecea7a63ed1f7680b877dc6379d8d0cb4",

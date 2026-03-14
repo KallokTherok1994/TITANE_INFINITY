@@ -1,6 +1,6 @@
-# TITANE∞ v27.2.0
+# TITANE∞ v28.0.0
 
-![Version](https://img.shields.io/badge/version-27.2.0-blue)
+![Version](https://img.shields.io/badge/version-28.0.0-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -12,12 +12,12 @@
 
 TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinity) est une plateforme cognitive de nouvelle génération avec **60+ modules intelligents** organisés en **10+ stacks hiérarchiques**, construite pour l'auto-régulation, l'adaptation intelligente et l'évolution continue.
 
-## Statut canonique de version (mode B1)
+## Statut canonique de version (mode B2)
 
-- Vérité version repo: `27.2.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- Verite version repo: `28.0.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
 - `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
-- Les documents `docs/90_release/*v28*` restent `PARTIAL/CONTRADICTORY` tant qu'une autorité version unique n'est pas scellée
-- Aucun claim de release complète v28 n'est autorisé dans ce mode
+- La ligne binaire `v27.0.5` est conservee comme historique documente (hors autorite version repo)
+- `docs/90_release/PRODUCTION_RELEASE_v28.0.0.md` est aligne sur cette separation (aucune contradiction interne)
 
 ## Navigation canonique
 
@@ -25,7 +25,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - Index documentaire global: [`INDEX.md`](INDEX.md)
 - Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
 
-## 🌟 Caractéristiques v27.2.0
+## 🌟 Caracteristiques v28.0.0
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
 - **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
@@ -39,7 +39,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - **Interface Moderne** : React 18 + TypeScript strict
 - **DevTools Intégrés** : Monitoring et dashboard en temps réel
 
-## 🏗️ Architecture v27.2.0
+## 🏗️ Architecture v28.0.0
 
 ```
 TITANE∞ - 10+ Stacks Hiérarchiques
@@ -183,7 +183,7 @@ Stockage persistant et gestion mémoire.
 - [Guide des Modules](MODULES.md)
 - [Sécurité](SECURITY.md)
 - [Guide Développeur](DEVELOPER_GUIDE.md)
-- [Changelog App](90_release/CHANGELOG_v27.1.0.md)
+- [Changelog App](../CHANGELOG.md)
 
 ### 🧬 Super Prompts (Chirurgie Frontend/Backend)
 

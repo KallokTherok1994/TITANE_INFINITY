@@ -3,24 +3,24 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v27.2.0  
-**Status:** Production Ready ✅  
+**Version:** v28.0.0 (repository authority)  
+**Status:** Production Ready ✅ (governed docs authority aligned)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Qualité (v27.2.0) :** TypeScript strict (0 erreur) + preuves ORCH_VΩ mises à jour (2026-03-03) — Production Ready ✅
+**Qualite (v28.0.0) :** Autorite documentaire et gouvernance alignees + preuves B2 en pack dedie.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
-**Statut d'autorité documentaire (LOCAL, 2026-03-14) :**
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `27.2.0` (`PROVEN_BY_REPO`)
-- Dernier binaire stable publié documenté: `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Les références `v28` de `docs/90_release/**` sont traitées comme `PARTIAL/CONTRADICTORY` tant qu'elles ne sont pas réalignées sur les artefacts et versions canoniques
+**Statut d'autorite documentaire (LOCAL, 2026-03-14) :**
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.0.0` (`PROVEN_BY_REPO`)
+- Ligne binaire historique documentee: `v27.0.5` (`PROVEN_BY_CANON_DOC`)
+- Politique de coherence: version repo canonique `28.0.0` et references binaires historiques v27 sont separees et non contradictoires
 
 ---
 
 ## 📦 Téléchargement
 
-### ✨ **Dernier binaire stable publié : v27.0.5** — Release stable
+### ✨ **Archive binaire historique : v27.0.5**
 
 **Télécharger pour Linux (Debian/Ubuntu):**
 
@@ -29,16 +29,22 @@ wget https://github.com/KallokTherok1994/TITANE_INFINITY/releases/download/v27.0
 sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 ```
 
-**Points cles v27.0.5 :**
+**Points cles (historique) v27.0.5 :**
 
 - ✅ Warnings Rust audio corrigés (build release clean)
 - 🧠 Alignement complet des versions app/frontend/backend
-- 📦 Artefacts stables actualisés (AppImage/DEB/RPM)
+- 📦 Artefacts historiques de reference (AppImage/DEB/RPM)
 
 **Compatibilité :**  
 ✅ Ubuntu 20.04+ | ✅ Debian 11+ | ✅ Linux Mint 20+ | ✅ Pop!\_OS 20.04+
 
-📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5) | 🔐 [Checksums v27.0.5](./deployment/latest/SHA256SUMS_v27.0.5.txt) | 🔐 [Checksums latest](./deployment/latest/SHA256SUMS.txt)
+📄 [Notes de release complètes](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v27.0.5)
+
+🔐 [Checksums v27.0.5][checksums-historiques-v2705]
+
+🔐 [Checksums courant](./deployment/latest/SHA256SUMS.txt)
+
+[checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
 ---
 
@@ -57,9 +63,9 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ## � Version Timeline
 
-### Current Production (v27.x Series)
+### Historique de production (v27.x)
 
-- **v27.0.5-prod** (STABLE) — Production binary baseline
+- **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
   - Tag: 02bce9c7
   - Immutable production reference
@@ -68,7 +74,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Status: Documentation updates only (no binary deployment)
   - Date: 2026-02-18
 
-- **v27.2.0** (TYPESCRIPT STRICT - LATEST)
+- **v27.2.0** (TYPESCRIPT STRICT - HISTORIQUE)
   - Status: ✅ DEPLOYED (2026-02-23)
   - Commit: a14a111f
   - Change: Zero TypeScript errors (strict mode)
@@ -211,8 +217,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Current Stable**: v27.0.5-prod (99.99% uptime, 0 crashes)  
-**Latest Deployment**: v27.2.0 (TypeScript Strict Mode, runtime revalidated 2026-03-06)
+**Repository Authority**: v28.0.0 (documentation canonique)  
+**Latest Binary Evidence Stream**: v27.0.5 (historique documente)
 
 ---
 
@@ -247,12 +253,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config s
 
 ---
 
-## 📐 Architecture v27.2.0
+## 📐 Architecture v28.0.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v27.2.0
+TITANE∞ v28.0.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
@@ -632,7 +638,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap v24-v25
 
-> **🎯 Phase actuelle : v27.0.5 — Release stable alignée et publiée (cf. [CHANGELOG](docs/90_release/CHANGELOG__CHANGELOG.md.md))**  
+> **🎯 Phase actuelle : v28.0.0 — Autorite documentaire canonique scellee (cf. [CHANGELOG](CHANGELOG.md))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -663,7 +669,7 @@ git push origin feature/my-awesome-feature
 3. **Troubleshooting** (2-3 engineers, 10 issues, ≥80% resolution)
 4. **Performance** (1-2 engineers, ≥20% improvement)
 
-**Success Criteria:** (atteints v27.0.5)
+**Success Criteria:** (atteints sur la ligne historique v27)
 
 - ≥80% pass rate across all tests
 - ≥8/10 user satisfaction
@@ -774,14 +780,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify you're on latest version (v27.0.5)
+2. ✅ Verify repository authority version (`28.0.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-- Current Phase: **v27.0.5 — Stable release alignée (build + artefacts + docs)**
+- Current Phase: **v28.0.0 — Autorite documentaire canonique (docs + versions alignees)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -859,4 +865,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v27.0.5** — _Votre système d'exploitation cognitif_
+**TITANE∞ v28.0.0** — _Votre systeme d'exploitation cognitif_
