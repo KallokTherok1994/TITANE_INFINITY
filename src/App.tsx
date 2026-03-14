@@ -403,7 +403,7 @@ const AppRouter: React.FC = () => {
       }
 
       if (!storage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)) {
-        storage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'ollama');
+        storage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
         updated = true;
       }
 

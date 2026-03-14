@@ -3,7 +3,7 @@
  * ═══════════════════════════════════════════════
  *
  * Contrôle centralisé des features optionnelles et appels externes
- * Mode par défaut: 100% LOCAL (production-ready)
+ * Mode par défaut: AUTO ONLINE (providers externes activables immédiatement)
  */
 
 type EnvValue = string | boolean | undefined;
@@ -52,10 +52,14 @@ function envFlagDefaultTrue(key: string): boolean {
 
 function runtimeFlag(key: string): boolean {
   try {
-    if (typeof window === 'undefined') return false;
-    return window.localStorage.getItem(key) === '1';
+    if (typeof window === 'undefined') return true;
+    const value = window.localStorage.getItem(key);
+    if (value === null) {
+      return true;
+    }
+    return value === '1';
   } catch {
-    return false;
+    return true;
   }
 }
 
@@ -71,7 +75,7 @@ const externalAIEnabled = buildAllowsExternalAI && runtimeAllowsExternalAI;
 
 export const FEATURE_FLAGS = {
   /**
-   * 🔒 NETWORK ACCESS (DEFAULT: DISABLED)
+  * 🔒 NETWORK ACCESS (DEFAULT: ENABLED)
    * ═══════════════════════════════════════
    * Enable external network calls (AI APIs, etc.)
    * WARNING: Requires internet connection
@@ -80,7 +84,7 @@ export const FEATURE_FLAGS = {
   ENABLE_LOCAL_LLM: true, // Ollama via proxy (optional)
 
   /**
-   * 🎯 AI PROVIDERS (DEFAULT: LOCAL ONLY)
+    * 🎯 AI PROVIDERS (DEFAULT: AUTO ONLINE)
    * ═══════════════════════════════════════
    */
   AI_PROVIDERS: {

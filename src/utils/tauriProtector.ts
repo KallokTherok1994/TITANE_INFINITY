@@ -291,12 +291,11 @@ export class TauriInvokeProtector {
   /**
    * Invoke protégé avec fallback intelligent
    * ✅ v∞: Anti-debounce pour start_recording et autres commandes critiques
-   * ✨ v27+ FIX: Default timeout 10s → 60s pour IA requests complexes
    */
   async safeInvoke<T>(
     command: string,
     args?: TauriCommandArgs,
-    timeoutMs = 60000
+    _timeoutMs?: number
   ): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
 
@@ -325,7 +324,7 @@ export class TauriInvokeProtector {
 
     try {
       // Create the invoke promise
-      const invokePromise = this.performInvoke<T>(command, args, timeoutMs, cacheKey);
+      const invokePromise = this.performInvoke<T>(command, args, cacheKey);
 
       // Track for anti-debounce
       if (command === 'start_recording' || command === 'stop_recording') {
@@ -360,7 +359,6 @@ export class TauriInvokeProtector {
   private async performInvoke<T>(
     command: string,
     args: TauriCommandArgs,
-    timeoutMs: number,
     cacheKey: string
   ): Promise<T> {
     // ✅ v20.2: Don't re-check Tauri here - use cache state instead
@@ -401,16 +399,13 @@ export class TauriInvokeProtector {
     try {
       console.log(`[TauriProtector] 🚀 Invoking: ${command} with args:`, args);
 
-      // Appel avec timeout - handle undefined args
+      // Appel direct - handle undefined args
       const invokeCall =
         args !== undefined && args !== null
           ? tauriModule.invoke<T>(command, args)
           : tauriModule.invoke<T>(command);
 
-      const result = await Promise.race([
-        invokeCall,
-        this.createTimeoutPromise<T>(timeoutMs),
-      ]);
+      const result = await invokeCall;
 
       console.log(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
 
@@ -498,15 +493,6 @@ export class TauriInvokeProtector {
       this.isTauriAvailable = false;
       return null;
     }
-  }
-
-  /**
-   * Créer une Promise avec timeout
-   */
-  private createTimeoutPromise<T>(ms: number): Promise<T> {
-    return new Promise((_, reject) =>
-      setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
-    );
   }
 
   /**
@@ -665,7 +651,7 @@ export class TauriInvokeProtector {
           mode: classification.type === 'timeout' ? 'OFFLINE' : 'ERROR',
           reason_code: classification.type === 'timeout' ? 'TIMEOUT' : 'FALLBACK_OFFLINE',
           latency_ms_total: 0,
-          timeout_ms: 30000,
+          timeout_ms: 0,
           retries: 0,
           attempts: [],
           network_used: false,

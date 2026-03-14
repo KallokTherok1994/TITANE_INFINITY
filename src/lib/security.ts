@@ -1261,6 +1261,18 @@ const INJECTION_PATTERNS = [
   /\.\.\//g,
 ];
 
+// Chat/orchestrator commands are intentionally permissive so TITANE can
+// interpret rich user prompts and let the orchestrator enforce limits.
+const CHAT_OPEN_COMMANDS = new Set<string>([
+  'conversation_generate',
+  'conversation_process_message',
+  'create_new_conversation',
+  'chat_check_providers',
+  'chat_set_gemini_key',
+  'chat_set_openai_key',
+  'chat_set_anthropic_key',
+]);
+
 function readViteEnvNumber(key: string, fallback: number): number {
   try {
     const raw = (import.meta as unknown as { env?: Record<string, string | undefined> })
@@ -1280,10 +1292,8 @@ function readViteEnvNumber(key: string, fallback: number): number {
 const MAX_PAYLOAD_SIZE =
   readViteEnvNumber('VITE_TITANE_SECURITY_MAX_PAYLOAD_MB', 50) * 1024 * 1024;
 
-/**
- * Timeout maximal par défaut (30s)
- */
-const DEFAULT_TIMEOUT_MS = 30000;
+// Legacy metric retained for compatibility with existing security stats schema.
+const DEFAULT_TIMEOUT_MS = 0;
 
 /**
  * Cache pour détecter les boucles infinies
@@ -1326,6 +1336,7 @@ let localNetworkMode: LocalNetworkSecurityConfig = {
   skipInjectionCheckForLocalCmds: true,
   trustedCommands: new Set([
     'conversation_process_message',
+    'conversation_generate',
     // [RETRAIT v27.0.5-prod] Legacy chat command removed from trusted list (use conversation_generate)
     'chat_stream_message',
     'memory_get_state',
@@ -1392,7 +1403,7 @@ const isTestEnvironment =
 // ────────────────────────────────────────────────────────────────
 
 export interface SecureInvokeOptions {
-  /** Timeout en ms (défaut: 30000) */
+  /** Conservé pour compatibilité (non utilisé) */
   timeout?: number;
   /** Désactiver validation anti-injection (défaut: false) */
   skipInjectionCheck?: boolean;
@@ -1731,7 +1742,7 @@ export function sanitizeResponse<T>(response: T): T {
  * - ✅ Injection pattern detection
  * - ✅ Payload size validation
  * - ✅ Infinite loop detection
- * - ✅ Timeout protection
+ * - ✅ Command, payload and response validation
  * - ✅ Response validation with type guards
  *
  * @example
@@ -1749,7 +1760,7 @@ export function sanitizeResponse<T>(response: T): T {
  * const report = await secureInvoke<HardeningReport>(
  *   'run_hardening_selftest',
  *   {},
- *   { timeout: 60000 },
+ *   {},
  *   isHardeningReport
  * );
  * ```
@@ -1783,18 +1794,25 @@ export async function secureInvoke<T>(
   validator?: (val: unknown) => val is T
 ): Promise<T> {
   const {
-    timeout = DEFAULT_TIMEOUT_MS,
+    timeout: _timeout,
     skipInjectionCheck = false,
     skipWhitelistCheck = false,
     skipLoopCheck = false,
     treatFallbackAsError = false,
   } = options;
 
+  const isChatOpenCommand = CHAT_OPEN_COMMANDS.has(command);
+
+  const shouldSkipWhitelistCheck = skipWhitelistCheck || isChatOpenCommand;
+
   const shouldSkipInjectionCheck =
     skipInjectionCheck ||
+    isChatOpenCommand ||
     (localNetworkMode.enabled &&
       localNetworkMode.skipInjectionCheckForLocalCmds &&
       localNetworkMode.trustedCommands.has(command));
+
+  const shouldSkipLoopCheck = skipLoopCheck || isChatOpenCommand;
 
   const startedAt = Date.now();
   const invokeId = `${startedAt}-${Math.random().toString(36).slice(2, 10)}`;
@@ -1811,7 +1829,7 @@ export async function secureInvoke<T>(
   }
 
   // [1] Validation commande whitelist
-  if (!skipWhitelistCheck) {
+  if (!shouldSkipWhitelistCheck) {
     const cmdValidation = validateCommand(command);
     if (!cmdValidation.valid) {
       const errorMsg = `Security: ${cmdValidation.errors.join('; ')}`;
@@ -1869,7 +1887,7 @@ export async function secureInvoke<T>(
   }
 
   // [4] Détection boucle infinie
-  if (!skipLoopCheck) {
+  if (!shouldSkipLoopCheck) {
     const loopCheck = detectInfiniteLoop(command);
     if (!loopCheck.valid) {
       const errorMsg = `Security: ${loopCheck.errors.join('; ')}`;
@@ -1888,7 +1906,7 @@ export async function secureInvoke<T>(
     }
   }
 
-  // [5] Invoke avec timeout
+  // [5] Invoke
   try {
     const isTestEnv =
       (typeof process !== 'undefined' && Boolean(process.env?.VITEST_WORKER_ID)) ||
@@ -1897,16 +1915,11 @@ export async function secureInvoke<T>(
 
     let response: unknown;
     if (isTestEnv) {
-      // En environnement de test, utiliser directement le module mocké pour laisser Vitest contrôler les rejets/résolutions
+      // En environnement de test, utiliser directement le module mocké.
       const tauriCore = await import('@tauri-apps/api/core');
-      response = await Promise.race([
-        tauriCore.invoke<T>(command, payload),
-        new Promise((_, reject) =>
-          setTimeout(() => reject(new Error(`Timeout after ${timeout}ms`)), timeout)
-        ),
-      ]);
+      response = await tauriCore.invoke<T>(command, payload);
     } else {
-      response = await safeInvokeTauri<T>(command, payload, timeout);
+      response = await safeInvokeTauri<T>(command, payload);
     }
 
     // [6] Validation réponse - avec support des commandes void
@@ -2000,7 +2013,7 @@ export async function runSecuritySelfTest(): Promise<HardeningReport> {
   const report = await secureInvoke<HardeningReport>(
     'run_hardening_selftest',
     {},
-    { timeout: 60000 },
+    {},
     isHardeningReport
   );
 
