@@ -7,18 +7,34 @@
 **Status:** Production Ready ✅ (governed docs authority aligned)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
+**Canal de release canonique:** v28.0.0
+
 **Qualite (v28.0.0) :** Autorite documentaire et gouvernance alignees + preuves B2 en pack dedie.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 **Statut d'autorite documentaire (LOCAL, 2026-03-14) :**
 - Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.0.0` (`PROVEN_BY_REPO`)
-- Ligne binaire historique documentee: `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Politique de coherence: version repo canonique `28.0.0` et references binaires historiques v27 sont separees et non contradictoires
+- Release canonique verifiee: `v28.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)
+- Politique de coherence: version canonique et release courante `28.0.0`; references v27 conservees uniquement en historique
 
 ---
 
 ## 📦 Téléchargement
+
+### ✅ Release canonique courante: v28.0.0
+
+Artefacts verifies (Linux):
+
+- `Titan-Stable_28.0.0_amd64.AppImage`
+- `TITANE-Infinity_28.0.0_amd64.deb`
+
+Verification recommandee:
+
+```bash
+cat docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+```
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -42,7 +58,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 🔐 [Checksums v27.0.5][checksums-historiques-v2705]
 
-🔐 [Checksums courant](./deployment/latest/SHA256SUMS.txt)
+🔐 [Checksums courants v28.0.0](./docs/90_release/PRODUCTION_RELEASE_v28.0.0.md)
 
 [checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
@@ -61,7 +77,7 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ---
 
-## � Version Timeline
+## 🗓️ Version Timeline
 
 ### Historique de production (v27.x)
 
@@ -100,12 +116,13 @@ See [CHANGELOG.md](CHANGELOG.md) and [CHANGELOG v27.2.0 entry](docs/90_release/C
 
 ---
 
-## �🚀 Quick Start
+## 🚀 Quick Start
 
 ### Prérequis
 
 - **OS:** Ubuntu 24.04 LTS (recommandé) ou compatible Linux
-- **Node.js:** v20+ (LTS)
+- **Node.js:** v24+ (recommande)
+- **pnpm:** v10.30.2 (via Corepack)
 - **Rust:** 1.75+
 - **Tauri CLI:** v2.0+
 - **Git LFS:** requis (certains binaires toolchain sont versionnés via LFS)
@@ -218,7 +235,7 @@ Progressive rollout model (Strict & Perfection lanes only):
 3. **Wave 3 (100%)** — General availability (GA)
 
 **Repository Authority**: v28.0.0 (documentation canonique)  
-**Latest Binary Evidence Stream**: v27.0.5 (historique documente)
+**Latest Canonical Release Stream**: v28.0.0 (`docs/90_release/PRODUCTION_RELEASE_v28.0.0.md`)
 
 ---
 
@@ -237,16 +254,16 @@ Progressive rollout model (Strict & Perfection lanes only):
 ### Corepack Quickstart (recommandé)
 
 ```bash
-# Activer Corepack et pnpm@9 pour cohérence outillage
+# Activer Corepack et pnpm@10.30.2 pour coherence outillage
 corepack enable
-corepack prepare pnpm@9 --activate
+corepack prepare pnpm@10.30.2 --activate
 ```
 
 ### Build Production (Titan-Stable)
 
 ```bash
 # Build production token-gated
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 
 # Ou via task VSCode: "🔵 Build Titan-Stable"
 ```
@@ -357,7 +374,7 @@ pnpm run dev              # Launch Titan-Dev (wrapper local complet)
 pnpm run dev:tauri        # Alias de dev (wrapper local complet)
 pnpm run dev:tauri:no-ollama  # Titan-Dev sans Ollama
 pnpm run build            # Build frontend
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json  # Build Titan-Stable
 pnpm run lint             # ESLint + Prettier
 pnpm run test             # Run tests
 pnpm run test:rust        # Cargo tests
@@ -415,7 +432,7 @@ Pour plus d'informations : [COPILOT-XS README](.github/copilot-xs/README.md)
 
 ---
 
-## �️ Governance Pattern Rules
+## 🏛️ Governance Pattern Rules
 
 TITANE∞ implements **constitutional governance rules** to prevent accumulation of unmanaged subsystems and ensure clean archival of bounded governance patterns.
 
@@ -447,7 +464,7 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 
 ---
 
-## �📚 Documentation
+## 📚 Documentation
 
 > **🎯 NEW: World-Class Documentation (200% Coverage - Dec 2025)**  
 > **Quick Navigation:** [Getting Started](docs/GETTING_STARTED.md) • [Contributing](docs/00_core/CONTRIBUTING.md) • [Master Index](docs/INDEX.md)
@@ -458,7 +475,7 @@ TITANE∞ implements **constitutional governance rules** to prevent accumulation
 
 - **First Time User:** [Getting Started Guide](docs/GETTING_STARTED.md) → <2h to productivity
 - **Want to Contribute:** [Contributing Guide](docs/00_core/CONTRIBUTING.md) → Onboarding <2h with validation
-- **Need API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) → 14 modules, comprehensive coverage
+- **Need API Reference:** [API Index](docs/06_api/INDEX.md) → couverture API canonique
 
 ### 📖 Complete Documentation Structure (50 Documents, ~24,300 Lines)
 
@@ -636,7 +653,7 @@ git push origin feature/my-awesome-feature
 
 ---
 
-## 📊 Roadmap v24-v25
+## 📊 Roadmap Legacy v24-v25 (Archive)
 
 > **🎯 Phase actuelle : v28.0.0 — Autorite documentaire canonique scellee (cf. [CHANGELOG](CHANGELOG.md))**  
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
@@ -766,7 +783,7 @@ git push origin feature/my-awesome-feature
 
 - 📖 **Documentation:** [Master Index](docs/INDEX.md) — Complete navigation (200% coverage)
 - 🚀 **Getting Started:** [Quick Start Guide](docs/GETTING_STARTED.md) — <2h to productivity
-- **API Reference:** [API Reference v24.30](docs/API_REFERENCE_v24.30.md) — 14 modules, comprehensive coverage
+- **API Reference:** [API Index](docs/06_api/INDEX.md) — couverture API canonique
 - 💬 **Contributing:** [CONTRIBUTING.md](docs/00_core/CONTRIBUTING.md) — <2h onboarding
 
 ### 🐛 Report Issues
@@ -859,7 +876,7 @@ TITANE∞ applique une politique **proof-driven** : aucune conclusion sans preuv
 
 ## 📜 License
 
-**Proprietary License** — © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+**Proprietary License** — © 2025-2026 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
 
 Voir `LICENSE.md` pour détails.
 
