@@ -70,7 +70,7 @@ for gate_entry in "${GATES[@]}"; do
   if [[ ! -f "$GATE_FILE" ]]; then
     fail "Gate file NOT FOUND: $GATE_FILE"
     GATE_RESULTS+=("G$GATE_NUM:MISSING")
-    ((FAILED_GATES++))
+    FAILED_GATES=$((FAILED_GATES + 1))
     continue
   fi
   
@@ -83,11 +83,11 @@ for gate_entry in "${GATES[@]}"; do
   if bash "$GATE_FILE" 2>&1 | tee "$GATE_LOG"; then
     pass "G$GATE_NUM PASS"
     GATE_RESULTS+=("G$GATE_NUM:PASS")
-    ((PASSED_GATES++))
+    PASSED_GATES=$((PASSED_GATES + 1))
   else
     fail "G$GATE_NUM FAIL"
     GATE_RESULTS+=("G$GATE_NUM:FAIL")
-    ((FAILED_GATES++))
+    FAILED_GATES=$((FAILED_GATES + 1))
   fi
   
   echo ""

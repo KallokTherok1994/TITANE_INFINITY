@@ -146,6 +146,37 @@ async function invokeConversationGenerate(message) {
   throw new Error(lastError);
 }
 
+async function installConversationGenerateTraceHook() {
+  await browser.execute(() => {
+    const w = window;
+    if (w.__TITANE_CONV_TRACE_INSTALLED__) {
+      return;
+    }
+
+    const wrapInvoke = target => {
+      if (!target || typeof target.invoke !== 'function') return;
+      if (target.__TITANE_ORIG_INVOKE__) return;
+
+      const original = target.invoke.bind(target);
+      target.__TITANE_ORIG_INVOKE__ = original;
+      target.invoke = async (command, payload) => {
+        const result = await original(command, payload);
+        if (command === 'conversation_generate') {
+          w.__TITANE_LAST_CONV_RESPONSE__ = result;
+        }
+        return result;
+      };
+    };
+
+    wrapInvoke(w.__TAURI__?.core);
+    wrapInvoke(w.__TAURI__?.tauri);
+    wrapInvoke(w.__TAURI__);
+    wrapInvoke(w.__TAURI_INTERNALS__);
+
+    w.__TITANE_CONV_TRACE_INSTALLED__ = true;
+  });
+}
+
 async function resolveSelectors() {
   const bubbleInput = await $('[data-testid="chat-bubble-input"]');
   if (await bubbleInput.isExisting()) {
@@ -370,6 +401,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     }
 
     await ensureChatOpen(selectors);
+    await installConversationGenerateTraceHook();
 
     const input = await $(selectors.input);
     await input.waitForExist({ timeout: 15000 });
@@ -472,9 +504,99 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       `[G_CONTENT_QUALITY] Response suspiciously short (${after.length} chars) — possible stub or empty`
     );
 
+    // G_UI_BACKEND_TRUTH_ALIGNED: compare backend meta captured at invoke-time vs DOM data attributes
+    const alignment = await browser.execute(() => {
+      const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const last = assistantMsgs[assistantMsgs.length - 1];
+      const response = window.__TITANE_LAST_CONV_RESPONSE__ || {};
+      const meta = response.meta || response.metadata || response.decision || {};
+
+      const domProvider = last?.getAttribute('data-provider-used') || '';
+      const domNetworkUsed = last?.getAttribute('data-network-used') || '';
+      const domReason = last?.getAttribute('data-provider-reason') || '';
+
+      const backendProvider = String(meta.provider_used ?? meta.providerSelected ?? '');
+      const backendReason = String(meta.reason_code ?? meta.reasonCode ?? '');
+
+      let backendNetworkUsed = '';
+      if (typeof meta.network_used === 'boolean') {
+        backendNetworkUsed = String(meta.network_used);
+      } else if (typeof meta.networkUsed === 'boolean') {
+        backendNetworkUsed = String(meta.networkUsed);
+      }
+
+      return {
+        domProvider,
+        domNetworkUsed,
+        domReason,
+        backendProvider,
+        backendNetworkUsed,
+        backendReason,
+      };
+    });
+
+    if (alignment.backendProvider.length > 0) {
+      assert.equal(
+        alignment.domProvider,
+        alignment.backendProvider,
+        `[G_UI_BACKEND_TRUTH_ALIGNED] provider mismatch DOM=${alignment.domProvider} backend=${alignment.backendProvider}`
+      );
+      if (alignment.backendNetworkUsed.length > 0) {
+        assert.equal(
+          alignment.domNetworkUsed,
+          alignment.backendNetworkUsed,
+          `[G_UI_BACKEND_TRUTH_ALIGNED] network_used mismatch DOM=${alignment.domNetworkUsed} backend=${alignment.backendNetworkUsed}`
+        );
+      }
+      if (alignment.backendReason.length > 0) {
+        assert.equal(
+          alignment.domReason,
+          alignment.backendReason,
+          `[G_UI_BACKEND_TRUTH_ALIGNED] reason mismatch DOM=${alignment.domReason} backend=${alignment.backendReason}`
+        );
+      }
+    } else {
+      // Fallback alignment proof: runtime panel and assistant row must stay consistent in DOM
+      const panelAlignment = await browser.execute(() => {
+        const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+        const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+        const last = assistantMsgs[assistantMsgs.length - 1];
+        return {
+          panelProvider: panel?.getAttribute('data-provider-used') || '',
+          panelNetwork: panel?.getAttribute('data-network-used') || '',
+          panelReason: panel?.getAttribute('data-provider-reason') || '',
+          domProvider: last?.getAttribute('data-provider-used') || '',
+          domNetwork: last?.getAttribute('data-network-used') || '',
+          domReason: last?.getAttribute('data-provider-reason') || '',
+        };
+      });
+
+      assert.ok(
+        panelAlignment.panelProvider.length > 0,
+        `[G_UI_BACKEND_TRUTH_ALIGNED] runtime panel provider missing: ${JSON.stringify(panelAlignment)}`
+      );
+      assert.equal(
+        panelAlignment.domProvider,
+        panelAlignment.panelProvider,
+        `[G_UI_BACKEND_TRUTH_ALIGNED] DOM/provider panel mismatch: ${JSON.stringify(panelAlignment)}`
+      );
+      assert.equal(
+        panelAlignment.domNetwork,
+        panelAlignment.panelNetwork,
+        `[G_UI_BACKEND_TRUTH_ALIGNED] DOM/network panel mismatch: ${JSON.stringify(panelAlignment)}`
+      );
+      assert.equal(
+        panelAlignment.domReason,
+        panelAlignment.panelReason,
+        `[G_UI_BACKEND_TRUTH_ALIGNED] DOM/reason panel mismatch: ${JSON.stringify(panelAlignment)}`
+      );
+      console.log(`[UI_PANEL_ALIGNMENT] ${JSON.stringify(panelAlignment)}`);
+    }
+
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
     console.log(`[PROVIDER_USED_DOM] ${providerAttr}`);
     console.log(`[DOM_ATTRS] ${JSON.stringify(domAttrs.allAttrs)}`);
+    console.log(`[UI_BACKEND_ALIGNMENT] ${JSON.stringify(alignment)}`);
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
   });
 });

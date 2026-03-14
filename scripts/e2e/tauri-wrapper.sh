@@ -19,6 +19,15 @@ log_line() {
   fi
 }
 
+WRAPPER_ENV_FILE="/tmp/titane-e2e-wrapper.env"
+if [[ -f "$WRAPPER_ENV_FILE" ]]; then
+  set -a
+  # shellcheck disable=SC1090
+  source "$WRAPPER_ENV_FILE"
+  set +a
+  log_line "[E2E_WRAPPER] loaded env overrides from $WRAPPER_ENV_FILE"
+fi
+
 log_line "[E2E_WRAPPER] start"
 log_line "[E2E_WRAPPER] env TITANE_E2E=${TITANE_E2E:-}"
 log_line "[E2E_WRAPPER] env HOME=${HOME}"

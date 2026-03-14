@@ -62,7 +62,7 @@ DANGEROUS_PERMS_FOUND=0
 # which are legitimate Tauri permission groups
 if jq -r '.app.security.capabilities[].permissions[]?' "$TAURI_CONF" 2>/dev/null | grep -qF '"*"'; then
   fail "Dangerous unrestricted wildcard found: *"
-  ((DANGEROUS_PERMS_FOUND++))
+  DANGEROUS_PERMS_FOUND=$((DANGEROUS_PERMS_FOUND + 1))
 fi
 
 if [[ $DANGEROUS_PERMS_FOUND -eq 0 ]]; then

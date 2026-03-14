@@ -1,0 +1,34 @@
+git status --short
+git status
+git rev-parse --short HEAD
+git branch --show-current
+git remote -v
+git fetch --all --prune
+git branch -r
+git rev-parse --short origin/main
+git rev-parse --short origin/MAIN
+git log --oneline --decorate -20
+git log --oneline --decorate HEAD..origin/main
+git log --oneline --decorate HEAD..origin/MAIN
+git log --oneline --decorate origin/main..HEAD
+git log --oneline --decorate origin/MAIN..HEAD
+git diff --stat HEAD..origin/main
+git diff --stat HEAD..origin/MAIN
+git diff --stat origin/main..HEAD
+git diff --stat origin/MAIN..HEAD
+git ls-files --others --exclude-standard
+ls proof_packs
+ls registry
+rg -n "AH-2026-03-14-0170|AH-2026-03-14-0171|AH-0170|AH-0171" scripts/autoheal/autoheal_rules.jsonl proof_packs docs reports registry
+rg -n "OmegaConversationBridge::new\(" src-tauri/tests/omega_p2_performance_test.rs
+git show --name-only --oneline --no-patch c1d44ba3a
+git show --name-only --oneline --no-patch 822976902
+git show origin/MAIN:src-tauri/tests/omega_p2_performance_test.rs
+git merge-base --is-ancestor c1d44ba3a HEAD
+git merge-base --is-ancestor 822976902 HEAD
+git show origin/MAIN:scripts/autoheal/autoheal_rules.jsonl
+git diff --name-status HEAD..origin/MAIN -- <AH-0170-fileset>
+npx prettier --check .
+bash scripts/verify_instructions.sh
+bash scripts/autoheal/detect_recurrence.sh
+rg -n "OmegaConversationBridge::new\(config, create_test_singularity\(\)(, None)?\)" src-tauri/tests/omega_p2_performance_test.rs

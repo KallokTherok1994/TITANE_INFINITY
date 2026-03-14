@@ -1,0 +1,31 @@
+git status --short
+git status
+git rev-parse --short HEAD
+git branch --show-current
+git remote -v
+git fetch --all --prune
+git branch -r
+git rev-parse --short origin/MAIN || true
+git rev-parse --short origin/main || true
+git log --oneline --decorate -20
+git diff --stat HEAD..origin/MAIN || true
+git diff --stat origin/MAIN..HEAD || true
+git ls-files --others --exclude-standard
+find . -iname "README.md" -o -iname "README*.md" | sort
+find docs -type f | sort
+find . -path "*/docs/*" -type f | sort
+find . -iname "*.mmd" -o -iname "*.mermaid" | sort
+grep -RIn "v27\|v28" README.md docs . --exclude-dir=node_modules --exclude-dir=dist --exclude-dir=.git
+find docs -maxdepth 4 -iname "README*.md" | sort
+rg --files docs | rg "README|INDEX|index|diagram|release|install|quick|govern|archive|ARCHIVE"
+rg -n "(?i)v27|v28|production ready|latest|stable" README.md docs/README.md docs/diagrams/README.md CHANGELOG.md package.json docs/00_core/README.md docs/00_core/README_v27.0.0.md
+node (script inline) markdown links existence check for README.md/docs/README.md/docs/diagrams/README.md
+test -f docs/README.md
+test -e docs/diagrams/sources
+test -e docs/diagrams/rendered
+test -e docs/diagrams/CANON_INDEX.md
+test -e docs/standards/MERMAID_STANDARDS.md
+test -e docs/diagrams/MERMAID_BASELINE_LOCK.json
+test -e docs/diagrams/MERMAID_STATUS.md
+bash scripts/verify_instructions.sh
+bash scripts/autoheal/detect_recurrence.sh
