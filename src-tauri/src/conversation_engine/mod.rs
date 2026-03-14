@@ -136,6 +136,16 @@ pub struct ConversationEngineState {
     pub omega_bridge: Arc<OmegaConversationBridge>,
 }
 
+fn is_offline_sim_enabled() -> bool {
+    match std::env::var("OFFLINE_SIM") {
+        Ok(raw) => {
+            let normalized = raw.trim().to_ascii_lowercase();
+            !normalized.is_empty() && !matches!(normalized.as_str(), "0" | "false" | "no" | "off")
+        }
+        Err(_) => false,
+    }
+}
+
 impl ConversationEngineState {
     pub fn new(
         storage_dir: std::path::PathBuf,
@@ -198,7 +208,7 @@ impl ConversationEngineState {
         &self,
         request: ConversationRequest,
     ) -> Result<ConversationResponse, ConversationEngineError> {
-        if std::env::var("OFFLINE_SIM").is_ok() {
+        if is_offline_sim_enabled() {
             log::warn!("[CONV-ENGINE] 🟡 OFFLINE_SIM enabled — returning deterministic offline response");
             return self.create_offline_sim_response().await;
         }
@@ -506,3 +516,65 @@ impl std::fmt::Display for ConversationEngineError {
 }
 
 impl std::error::Error for ConversationEngineError {}
+
+#[cfg(test)]
+mod tests {
+    use super::is_offline_sim_enabled;
+    use std::sync::{Mutex, OnceLock};
+
+    fn env_lock() -> &'static Mutex<()> {
+        static LOCK: OnceLock<Mutex<()>> = OnceLock::new();
+        LOCK.get_or_init(|| Mutex::new(()))
+    }
+
+    #[test]
+    fn offline_sim_disabled_for_unset_and_falsey_values() {
+        let _guard = env_lock().lock().expect("env lock poisoned");
+        let previous = std::env::var("OFFLINE_SIM").ok();
+
+        unsafe {
+            std::env::remove_var("OFFLINE_SIM");
+        }
+        assert!(!is_offline_sim_enabled());
+
+        for value in ["", "0", "false", "FALSE", "off", "NO"] {
+            unsafe {
+                std::env::set_var("OFFLINE_SIM", value);
+            }
+            assert!(!is_offline_sim_enabled(), "value '{value}' must disable OFFLINE_SIM");
+        }
+
+        if let Some(v) = previous {
+            unsafe {
+                std::env::set_var("OFFLINE_SIM", v);
+            }
+        } else {
+            unsafe {
+                std::env::remove_var("OFFLINE_SIM");
+            }
+        }
+    }
+
+    #[test]
+    fn offline_sim_enabled_for_truthy_or_non_falsey_values() {
+        let _guard = env_lock().lock().expect("env lock poisoned");
+        let previous = std::env::var("OFFLINE_SIM").ok();
+
+        for value in ["1", "true", "yes", "on", "unexpected"] {
+            unsafe {
+                std::env::set_var("OFFLINE_SIM", value);
+            }
+            assert!(is_offline_sim_enabled(), "value '{value}' must enable OFFLINE_SIM");
+        }
+
+        if let Some(v) = previous {
+            unsafe {
+                std::env::set_var("OFFLINE_SIM", v);
+            }
+        } else {
+            unsafe {
+                std::env::remove_var("OFFLINE_SIM");
+            }
+        }
+    }
+}

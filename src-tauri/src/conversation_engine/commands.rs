@@ -35,6 +35,50 @@ pub struct ConversationGenerateArgs {
 
 type CommandResult<T> = Result<T, String>;
 
+fn resolve_conversation_os_db_path_from_env(
+    db_path_override: Option<std::path::PathBuf>,
+    env_titane_convos_db_path: Option<String>,
+    env_xdg_data_home: Option<String>,
+    env_home: Option<String>,
+) -> std::path::PathBuf {
+    if let Some(path) = db_path_override {
+        return path;
+    }
+
+    if let Some(path) = env_titane_convos_db_path
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return path;
+    }
+
+    if let Some(path) = env_xdg_data_home
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return path.join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
+    }
+
+    if let Some(home) = env_home
+        .filter(|value| !value.trim().is_empty())
+        .map(std::path::PathBuf::from)
+    {
+        return home.join(".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
+    }
+
+    // Last-resort fallback must stay writable even when HOME/XDG are missing.
+    std::env::temp_dir().join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
+}
+
+fn resolve_conversation_os_db_path(db_path_override: Option<std::path::PathBuf>) -> std::path::PathBuf {
+    resolve_conversation_os_db_path_from_env(
+        db_path_override,
+        std::env::var("TITANE_CONVOS_DB_PATH").ok(),
+        std::env::var("XDG_DATA_HOME").ok(),
+        std::env::var("HOME").ok(),
+    )
+}
+
 fn read_bool_env(key: &str, default: bool) -> bool {
     std::env::var(key)
         .ok()
@@ -658,14 +702,9 @@ fn persist_conversation_os_artifacts_with_path(
         create_event, create_failure, create_provider_decision, create_snapshot, create_source,
         DbService,
     };
-    use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    let db_path = db_path_override.unwrap_or_else(|| {
-        std::env::var("TITANE_CONVOS_DB_PATH")
-            .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
-    });
+    let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent)
@@ -840,14 +879,9 @@ fn persist_conversation_os_artifacts_with_path(
     db_path_override: Option<std::path::PathBuf>,
 ) -> Result<(), String> {
     use rusqlite::Connection;
-    use std::path::PathBuf;
     use std::time::{SystemTime, UNIX_EPOCH};
 
-    let db_path = db_path_override.unwrap_or_else(|| {
-        std::env::var("TITANE_CONVOS_DB_PATH")
-            .map(PathBuf::from)
-            .unwrap_or_else(|_| PathBuf::from("runtime/memory/conversation_os_v1.db"))
-    });
+    let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if let Some(parent) = db_path.parent() {
         std::fs::create_dir_all(parent)
@@ -1244,6 +1278,26 @@ mod tests {
         assert_eq!(source_url, "https://example.com/source");
 
         let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn conversation_os_db_path_resolver_prefers_explicit_env_override() {
+        let path = resolve_conversation_os_db_path_from_env(
+            None,
+            Some("/tmp/titane-convos-test.db".to_string()),
+            Some("/tmp/xdg-data".to_string()),
+            Some("/tmp/home".to_string()),
+        );
+
+        assert_eq!(path, std::path::PathBuf::from("/tmp/titane-convos-test.db"));
+    }
+
+    #[test]
+    fn conversation_os_db_path_resolver_uses_temp_dir_when_env_missing() {
+        let path = resolve_conversation_os_db_path_from_env(None, None, None, None);
+        assert!(path.is_absolute());
+        assert!(path.starts_with(std::env::temp_dir()));
+        assert!(path.ends_with("TITANE_INFINITY/runtime/memory/conversation_os_v1.db"));
     }
 
     #[test]
