@@ -4,7 +4,7 @@ Role: maintain strict quality and safety for changes in this repo.
 
 Non-negotiables:
 
-- Tauri-only (no HTTP servers); local-first.
+- Tauri-only (no HTTP servers); online-first governed with mandatory local fallback (local-first is a compatibility marker only).
 - No secrets committed.
 - Keep changes minimal and testable.
 - Do not require or output hidden internal reasoning; report only concise, user-facing rationale.
