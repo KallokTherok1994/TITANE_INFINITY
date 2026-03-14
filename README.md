@@ -14,6 +14,7 @@
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 **Statut d'autorite documentaire (LOCAL, 2026-03-14) :**
+
 - Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.0.0` (`PROVEN_BY_REPO`)
 - Release canonique verifiee: `v28.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)

@@ -75,7 +75,7 @@ const externalAIEnabled = buildAllowsExternalAI && runtimeAllowsExternalAI;
 
 export const FEATURE_FLAGS = {
   /**
-  * 🔒 NETWORK ACCESS (DEFAULT: ENABLED)
+   * 🔒 NETWORK ACCESS (DEFAULT: ENABLED)
    * ═══════════════════════════════════════
    * Enable external network calls (AI APIs, etc.)
    * WARNING: Requires internet connection
@@ -84,7 +84,7 @@ export const FEATURE_FLAGS = {
   ENABLE_LOCAL_LLM: true, // Ollama via proxy (optional)
 
   /**
-    * 🎯 AI PROVIDERS (DEFAULT: AUTO ONLINE)
+   * 🎯 AI PROVIDERS (DEFAULT: AUTO ONLINE)
    * ═══════════════════════════════════════
    */
   AI_PROVIDERS: {

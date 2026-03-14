@@ -193,8 +193,16 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
       modeUpper === 'OFFLINE';
 
     // Provider must be explicit and non-mock for REAL_CHAT_CHAIN proofs
-    assert.notEqual(provider, 'unknown', 'PROVIDER_UNKNOWN: provider_used/providerSelected missing');
-    assert.notEqual(provider, 'e2e-mock', 'PROVIDER_MOCK: provider_used must not be e2e-mock');
+    assert.notEqual(
+      provider,
+      'unknown',
+      'PROVIDER_UNKNOWN: provider_used/providerSelected missing'
+    );
+    assert.notEqual(
+      provider,
+      'e2e-mock',
+      'PROVIDER_MOCK: provider_used must not be e2e-mock'
+    );
 
     let anchorHits = [];
     if (isDegradedPath) {
@@ -216,7 +224,11 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
         );
       }
 
-      assert.notEqual(providerLower, 'none', 'PROVIDER_NONE: real-answer path requires a concrete provider');
+      assert.notEqual(
+        providerLower,
+        'none',
+        'PROVIDER_NONE: real-answer path requires a concrete provider'
+      );
 
       anchorHits = QUESTION_ANCHORS.filter(anchor => lowerAssistantText.includes(anchor));
       assert.ok(
@@ -233,7 +245,9 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     console.log(
       `[D2_DERIVED] fallback_triggered=${String(isDegradedPath)} fallback_used=${String(providerLower.includes('timeout-degraded') || providerLower.includes('offline'))}`
     );
-    console.log(`[ANSWER_MATCH] anchors=${anchorHits.join(',') || 'none'} count=${anchorHits.length}`);
+    console.log(
+      `[ANSWER_MATCH] anchors=${anchorHits.join(',') || 'none'} count=${anchorHits.length}`
+    );
     console.log(`[ASSISTANT_TEXT] ${String(assistantText).slice(0, 200)}`);
   });
 });
