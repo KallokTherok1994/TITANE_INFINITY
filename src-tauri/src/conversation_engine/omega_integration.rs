@@ -512,7 +512,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_initialization() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let result = bridge.initialize().await;
         assert!(
             result.is_ok(),
@@ -523,7 +523,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_health_check() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let health = bridge.health_check().await;
@@ -533,7 +533,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_quick_process() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let result = bridge.quick_process("Hello OMEGA").await;
@@ -546,7 +546,7 @@ mod tests {
             enabled: false,
             ..Default::default()
         };
-        let bridge = OmegaConversationBridge::new(config, create_test_singularity());
+        let bridge = OmegaConversationBridge::new(config, create_test_singularity(), None);
 
         let health = bridge.health_check().await;
         assert!(!health.enabled, "OMEGA should be disabled");
@@ -556,7 +556,7 @@ mod tests {
     #[tokio::test]
     async fn test_omega_bridge_conversion() {
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
 
         let request = ConversationRequest {
             user_message: "Test message".to_string(),
@@ -580,7 +580,7 @@ mod tests {
     async fn test_omega_to_conversation_response_conversion() {
         // R05 P2: Test direct OMEGA → ConversationResponse conversion
         let bridge =
-            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity());
+            OmegaConversationBridge::new(OmegaBridgeConfig::default(), create_test_singularity(), None);
         let _ = bridge.initialize().await;
 
         let request = ConversationRequest {
