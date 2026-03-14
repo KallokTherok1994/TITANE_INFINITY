@@ -7,8 +7,29 @@ const ROOT = __dirname;
 const REPORTS_DIR = path.resolve(ROOT, 'reports/e2e-desktop');
 const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
 const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
+const WRAPPER_ENV_FILE = '/tmp/titane-e2e-wrapper.env';
 let tauriDriverProcess = null;
 let tauriDriverStartedByWdio = false;
+
+function shellQuote(value) {
+  return `'${String(value ?? '').replace(/'/g, `'"'"'`)}'`;
+}
+
+function writeWrapperEnvFile() {
+  const keys = [
+    'TAURI_BINARY_PATH',
+    'OFFLINE_SIM',
+    'TITANE_CONVERSATION_TIMEOUT_SECS',
+    'TITANE_TIMEOUT_TRACE',
+    'TAURI_DEV_SERVER_URL',
+    'OLLAMA_DEFAULT_MODEL',
+  ];
+
+  const lines = keys.map(key => `${key}=${shellQuote(process.env[key] ?? '')}`);
+  fs.writeFileSync(WRAPPER_ENV_FILE, `${lines.join('\n')}\n`, {
+    mode: 0o600,
+  });
+}
 
 function checkTauriDriverReady(hostname, port, timeoutMs = 1000) {
   return new Promise(resolve => {
@@ -47,12 +68,17 @@ async function waitForTauriDriver(hostname, port, maxWaitMs = 15000) {
 
 // Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
+// H6-FIX: release binary (patched, current timeout) > AppImage (may be stale/pre-patch)
+const RELEASE_BINARY_PATH = path.resolve(ROOT, 'src-tauri/target/release/titane-infinity');
+const APPIMAGE_FALLBACK_PATH = path.resolve(
+  ROOT,
+  'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
+);
 const APP_PATH = process.env.TAURI_BINARY_PATH
   ? path.resolve(process.env.TAURI_BINARY_PATH)
-  : path.resolve(
-      ROOT,
-      'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
-    );
+  : fs.existsSync(RELEASE_BINARY_PATH)
+  ? RELEASE_BINARY_PATH
+  : APPIMAGE_FALLBACK_PATH;
 
 exports.config = {
   runner: 'local',
@@ -93,9 +119,11 @@ exports.config = {
 
     try {
       fs.mkdirSync(REPORTS_DIR, { recursive: true });
+      writeWrapperEnvFile();
       fs.appendFileSync(
         WORKER_LOG,
-        `${new Date().toISOString()} PREPARE check tauri-driver ${hostname}:${port}\n`
+        `${new Date().toISOString()} PREPARE check tauri-driver ${hostname}:${port}\n` +
+          `wrapperEnvFile=${WRAPPER_ENV_FILE}\n`
       );
     } catch {
       // ignore logging failures
