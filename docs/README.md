@@ -12,6 +12,19 @@
 
 TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinity) est une plateforme cognitive de nouvelle génération avec **60+ modules intelligents** organisés en **10+ stacks hiérarchiques**, construite pour l'auto-régulation, l'adaptation intelligente et l'évolution continue.
 
+## Statut canonique de version (mode B1)
+
+- Vérité version repo: `27.2.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
+- Les documents `docs/90_release/*v28*` restent `PARTIAL/CONTRADICTORY` tant qu'une autorité version unique n'est pas scellée
+- Aucun claim de release complète v28 n'est autorisé dans ce mode
+
+## Navigation canonique
+
+- Entrée racine: [`../README.md`](../README.md)
+- Index documentaire global: [`INDEX.md`](INDEX.md)
+- Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
+
 ## 🌟 Caractéristiques v27.2.0
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques

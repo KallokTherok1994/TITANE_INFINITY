@@ -1,5 +1,9 @@
 # 📚 TITANE∞ — Documentation Master Index
 
+> ⚠️ **Statut:** `LEGACY` (index historique conservé en append-only).
+> Source canonique de navigation actuelle: [`docs/README.md`](README.md).
+> Vérité version repo: `package.json` + `CHANGELOG.md` (`PROVEN_BY_REPO`).
+
 **Version:** v24.2.0  
 **Mise à jour:** 15 décembre 2025  
 **Status:** ✅ **PHASE 7 COMPLETE — 200% COVERAGE (API + OPERATIONAL)**

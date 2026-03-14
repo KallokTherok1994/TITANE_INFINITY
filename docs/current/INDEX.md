@@ -1,5 +1,9 @@
 # Documentation Actuelle TITANE∞ v26.2
 
+> ⚠️ **Statut:** `LEGACY` (snapshot historique v26.2).
+> Source canonique de navigation actuelle: [`../README.md`](../README.md).
+> Vérité version repo: `package.json` + `CHANGELOG.md` (`PROVEN_BY_REPO`).
+
 **Version:** v26.2  
 **Status:** Active  
 **Dernière MAJ:** 18 décembre 2025

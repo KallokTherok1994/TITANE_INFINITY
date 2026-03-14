@@ -1,5 +1,12 @@
 # Mermaid Diagrams (DOC + GUARDS)
 
+## Position dans le canon docs
+
+- Hub docs canonique: `docs/README.md`
+- Index documentaire global: `docs/INDEX.md`
+- Ce README couvre uniquement l'operationnel Mermaid (sources, rendus, verifications)
+- Les claims de version produit ne sont pas autoritaires ici
+
 ## Navigation
 
 - Sources canons: `docs/diagrams/sources/*.mmd`

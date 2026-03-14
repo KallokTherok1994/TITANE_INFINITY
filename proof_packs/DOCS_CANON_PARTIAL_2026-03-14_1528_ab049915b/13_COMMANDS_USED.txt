@@ -1,0 +1,60 @@
+# 13 COMMANDS USED
+
+Mission pack:
+/home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b
+
+A1 local truth capture:
+- git status --short
+- git status
+- git rev-parse --short HEAD
+- git branch --show-current
+- git remote -v
+- git fetch --all --prune
+- git branch -r
+- git rev-parse --short origin/MAIN
+- git rev-parse --short origin/main
+- git log --oneline --decorate -20
+- git diff --stat HEAD..origin/MAIN
+- git diff --stat origin/MAIN..HEAD
+- git ls-files --others --exclude-standard
+
+A2 bounded docs surface:
+- ls -1 README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/current/INDEX.md
+- find . -type f \( -name 'README.md' -o -name 'README*.md' \) ! -path './proof_packs/*' ! -path './node_modules/*' ! -path './dist/*' ! -path './.git/*' ! -path './deployment/*' ! -path './.tools/*' | sort | head -n 200
+- find docs -maxdepth 2 -type f \( -name 'README.md' -o -name 'index.md' -o -name 'INDEX.md' \) | sort
+
+A3 version authority:
+- rg -n '"version"|"description"' package.json | head -n 30
+- sed -n '1,100p' CHANGELOG.md
+- rg -n --no-heading 'v27|v28|Version|version|Status|stable|latest' README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/current/INDEX.md | head -n 260
+
+A4 release-doc coherence:
+- rg -n --no-heading 'v28\.0\.0|27\.0\.0|27\.2\.0|AppImage|DEB|RPM|SHA256|Status' docs/90_release/PRODUCTION_RELEASE_v28.0.0.md | head -n 260
+- sed -n '1,120p' docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+
+A5 decision + scope:
+- git status --short
+- git diff --cached --name-only
+- git status --short README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/current/INDEX.md
+- git status --short src/services/conversationEngine.ts scripts/autoheal/autoheal_rules.jsonl e2e/desktop/online-chat-proof-ui.wdio.test.js
+- git status --short proof_packs/IPC_CONTRACT_CONVERSATION_GENERATE_2026-03-14_184757_ab049915b proof_packs/UI_E2E_STABILITY_CLOSURE_2026-03-14_1520_ab049915b
+
+B1 evidence:
+- git --no-pager diff -- README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/current/INDEX.md
+- markdown link existence check on touched docs files
+
+Governance gates:
+- bash scripts/autoheal/detect_recurrence.sh > proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/raw/_GATE_detect_recurrence.log 2>&1
+- bash scripts/verify_instructions.sh > proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/raw/_GATE_verify_instructions.log 2>&1
+- tail -n 5 proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/raw/_GATE_detect_recurrence.log
+- tail -n 5 proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/raw/_GATE_verify_instructions.log
+
+Docs-registry compatibility files:
+- create proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/VERDICT.md
+- create proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/ROLLBACK.md
+
+Seal:
+- sha256sum proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/0[0-9]_*.md proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/1[0-4]_*.{md,txt}
+- sha256sum proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/0[0-9]_*.md proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/1[0-3]_*.{md,txt} proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/VERDICT.md proof_packs/DOCS_CANON_PARTIAL_2026-03-14_1528_ab049915b/ROLLBACK.md
+
+No AutoHeal append command executed in this HARD.9 cycle.
