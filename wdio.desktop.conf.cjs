@@ -69,7 +69,10 @@ async function waitForTauriDriver(hostname, port, maxWaitMs = 15000) {
 // Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
 // H6-FIX: release binary (patched, current timeout) > AppImage (may be stale/pre-patch)
-const RELEASE_BINARY_PATH = path.resolve(ROOT, 'src-tauri/target/release/titane-infinity');
+const RELEASE_BINARY_PATH = path.resolve(
+  ROOT,
+  'src-tauri/target/release/titane-infinity'
+);
 const APPIMAGE_FALLBACK_PATH = path.resolve(
   ROOT,
   'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
@@ -77,8 +80,8 @@ const APPIMAGE_FALLBACK_PATH = path.resolve(
 const APP_PATH = process.env.TAURI_BINARY_PATH
   ? path.resolve(process.env.TAURI_BINARY_PATH)
   : fs.existsSync(RELEASE_BINARY_PATH)
-  ? RELEASE_BINARY_PATH
-  : APPIMAGE_FALLBACK_PATH;
+    ? RELEASE_BINARY_PATH
+    : APPIMAGE_FALLBACK_PATH;
 
 exports.config = {
   runner: 'local',

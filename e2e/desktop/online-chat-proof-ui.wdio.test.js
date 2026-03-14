@@ -506,7 +506,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
 
     // G_UI_BACKEND_TRUTH_ALIGNED: compare backend meta captured at invoke-time vs DOM data attributes
     const alignment = await browser.execute(() => {
-      const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const assistantMsgs = document.querySelectorAll(
+        '[data-testid="chat-message-assistant"]'
+      );
       const last = assistantMsgs[assistantMsgs.length - 1];
       const response = window.__TITANE_LAST_CONV_RESPONSE__ || {};
       const meta = response.meta || response.metadata || response.decision || {};
@@ -559,7 +561,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       // Fallback alignment proof: runtime panel and assistant row must stay consistent in DOM
       const panelAlignment = await browser.execute(() => {
         const panel = document.querySelector('[data-testid="chat-runtime-state"]');
-        const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+        const assistantMsgs = document.querySelectorAll(
+          '[data-testid="chat-message-assistant"]'
+        );
         const last = assistantMsgs[assistantMsgs.length - 1];
         return {
           panelProvider: panel?.getAttribute('data-provider-used') || '',

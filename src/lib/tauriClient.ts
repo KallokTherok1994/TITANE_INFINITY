@@ -646,15 +646,11 @@ class TauriClient {
         ? payload
         : { args: payload };
 
-    return await this.invoke(
-      TAURI_COMMANDS.CONVERSATION_GENERATE,
-      normalizedPayload,
-      {
-        skipWhitelistCheck: true,
-        skipInjectionCheck: true,
-        skipLoopCheck: true,
-      }
-    );
+    return await this.invoke(TAURI_COMMANDS.CONVERSATION_GENERATE, normalizedPayload, {
+      skipWhitelistCheck: true,
+      skipInjectionCheck: true,
+      skipLoopCheck: true,
+    });
   }
 
   async conversationHealthCheck(params?: unknown): Promise<unknown> {
