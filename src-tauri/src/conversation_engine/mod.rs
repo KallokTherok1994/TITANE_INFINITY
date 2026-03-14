@@ -168,10 +168,11 @@ impl ConversationEngineState {
         let anthology_engine = Arc::new(RwLock::new(AnthologyEngine::new()));
         let self_healing = Arc::new(RwLock::new(SelfHealingConversation::new()));
 
-        // R05 P1: Initialize OMEGA Pipeline Bridge
+        // R05 P1: Initialize OMEGA Pipeline Bridge (with real AIRouter wired for TextGen)
         let omega_bridge = Arc::new(OmegaConversationBridge::new(
             OmegaBridgeConfig::default(),
             Arc::clone(&singularity),
+            Some(ai_router.clone()),
         ));
 
         let pipeline = Arc::new(ConversationPipeline::new(
