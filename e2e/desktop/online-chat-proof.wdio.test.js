@@ -2,6 +2,17 @@ import assert from 'node:assert/strict';
 
 const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
+const N2_QUESTION =
+  'Explique en 3 points la naturopathie en couvrant alimentation, sommeil et gestion du stress.';
+
+const QUESTION_ANCHORS = ['naturopath', 'aliment', 'sommeil', 'stress'];
+const GENERIC_PATTERNS = [
+  "qu'est-ce que tu veux savoir",
+  'comment puis-je vous aider',
+  'que souhaitez-vous savoir',
+  'je suis titane',
+  'assistant ia personnel',
+];
 
 async function ensureTauriPageLoaded(appUrl) {
   const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
@@ -100,6 +111,8 @@ async function invokeConversationGenerate(message) {
 describe('ONLINE_CHAT_FIX proof driver', () => {
   it('collects decision evidence from IPC response', async function () {
     this.timeout(120000);
+    // Allow long-running IPC calls during controlled provider probes.
+    await browser.setTimeout({ script: 120000 });
 
     const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
     const loaded = await ensureTauriPageLoaded(appUrl);
@@ -133,7 +146,7 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
     });
     assert.equal(hasTauri, true, 'Tauri IPC must be available');
 
-    const msg = `[${scenario}/${runId}] preuve ONLINE_CHAT_FIX ${new Date().toISOString()}`;
+    const msg = `${N2_QUESTION} [scenario=${scenario} run=${runId}]`;
     const response = await invokeConversationGenerate(msg);
 
     assert.ok(response, 'conversation_generate returned null');
@@ -161,16 +174,66 @@ describe('ONLINE_CHAT_FIX proof driver', () => {
       `ANSWER_TOO_SHORT: assistantText has ${assistantText.trim().length} chars — likely stub or empty fallback`
     );
 
+    const lowerAssistantText = assistantText.toLowerCase();
+
     const decision = response.decision || response.meta || response.metadata || {};
     const online = decision.online ?? decision.network_used;
     const reason = decision.reasonCode ?? decision.reason_code;
+    const mode = decision.mode ?? 'UNKNOWN';
     const provider = decision.providerSelected || decision.provider_used || 'unknown';
 
-    // Capture provider_used for observability — UNKNOWN is allowed (degraded path is honest)
+    const reasonUpper = String(reason || 'UNKNOWN').toUpperCase();
+    const modeUpper = String(mode || 'UNKNOWN').toUpperCase();
+    const providerLower = String(provider || '').toLowerCase();
+    const isDegradedPath =
+      providerLower.includes('timeout-degraded') ||
+      providerLower.includes('offline') ||
+      reasonUpper === 'TIMEOUT' ||
+      reasonUpper === 'FALLBACK_OFFLINE' ||
+      modeUpper === 'OFFLINE';
+
+    // Provider must be explicit and non-mock for REAL_CHAT_CHAIN proofs
+    assert.notEqual(provider, 'unknown', 'PROVIDER_UNKNOWN: provider_used/providerSelected missing');
+    assert.notEqual(provider, 'e2e-mock', 'PROVIDER_MOCK: provider_used must not be e2e-mock');
+
+    let anchorHits = [];
+    if (isDegradedPath) {
+      // D2 honest degraded path: do not fake topical answer; require explicit degraded wording
+      const degradedMarkers = ['degrade', 'hors ligne', 'secours', 'delai', 'timeout'];
+      const hasDegradedMarker = degradedMarkers.some(marker =>
+        lowerAssistantText.includes(marker)
+      );
+      assert.ok(
+        hasDegradedMarker,
+        `DEGRADED_UI_LIE: degraded path lacks honest wording; reason=${reasonUpper} provider=${provider}`
+      );
+    } else {
+      // B/E real-answer path: block low-information boilerplate + require semantic overlap
+      for (const pattern of GENERIC_PATTERNS) {
+        assert.ok(
+          !lowerAssistantText.includes(pattern),
+          `FALSE_PASS: response matches generic boilerplate pattern "${pattern}"`
+        );
+      }
+
+      assert.notEqual(providerLower, 'none', 'PROVIDER_NONE: real-answer path requires a concrete provider');
+
+      anchorHits = QUESTION_ANCHORS.filter(anchor => lowerAssistantText.includes(anchor));
+      assert.ok(
+        anchorHits.length >= 2,
+        `ANSWER_MISMATCH: expected >=2 anchors from question, got ${anchorHits.length}; hits=${anchorHits.join(',') || 'none'}`
+      );
+    }
+
+    // Capture provider_used for observability (provider is asserted non-unknown above)
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
     console.log(
-      `[CHAT_DECISION] online=${String(online)} reason=${String(reason)} provider=${provider}`
+      `[CHAT_DECISION] online=${String(online)} mode=${String(mode)} reason=${String(reason)} provider=${provider}`
     );
+    console.log(
+      `[D2_DERIVED] fallback_triggered=${String(isDegradedPath)} fallback_used=${String(providerLower.includes('timeout-degraded') || providerLower.includes('offline'))}`
+    );
+    console.log(`[ANSWER_MATCH] anchors=${anchorHits.join(',') || 'none'} count=${anchorHits.length}`);
     console.log(`[ASSISTANT_TEXT] ${String(assistantText).slice(0, 200)}`);
   });
 });

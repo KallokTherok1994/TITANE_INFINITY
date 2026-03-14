@@ -44,7 +44,7 @@ PHASE_GATES=0
 for phase in p3-build-guard p4-constitution-audit p5-runtime-governance p6-capability-qualification; do
   if [[ -f ".github/workflows/${phase}.yml" ]]; then
     pass "GitHub Actions: ${phase}.yml present"
-    ((PHASE_GATES++))
+    PHASE_GATES=$((PHASE_GATES + 1))
   else
     fail "GitHub Actions: ${phase}.yml MISSING"
   fi
