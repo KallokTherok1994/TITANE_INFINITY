@@ -30,10 +30,20 @@ function envFlagDefaultTrue(key: string): boolean {
   if (value === false) return false;
   if (typeof value === 'string') {
     const normalized = value.trim().toLowerCase();
-    if (normalized === '0' || normalized === 'false' || normalized === 'no' || normalized === 'off') {
+    if (
+      normalized === '0' ||
+      normalized === 'false' ||
+      normalized === 'no' ||
+      normalized === 'off'
+    ) {
       return false;
     }
-    if (normalized === '1' || normalized === 'true' || normalized === 'yes' || normalized === 'on') {
+    if (
+      normalized === '1' ||
+      normalized === 'true' ||
+      normalized === 'yes' ||
+      normalized === 'on'
+    ) {
       return true;
     }
   }

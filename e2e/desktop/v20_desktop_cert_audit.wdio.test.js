@@ -31,7 +31,9 @@ async function capture(name) {
   try {
     const p = path.join(SCREEN_DIR, `${RUN_ID}_${name}.png`);
     await browser.saveScreenshot(p);
-  } catch (_) { /* silent */ }
+  } catch (_) {
+    /* silent */
+  }
 }
 
 /** Inspecte l'état complet du DOM à l'instant t */
@@ -64,23 +66,43 @@ async function inspectDom() {
     }
 
     const allBtns = document.querySelectorAll('button');
-    const visibleBtns = Array.from(allBtns).filter(e => e.offsetWidth > 0 || e.offsetHeight > 0);
+    const visibleBtns = Array.from(allBtns).filter(
+      e => e.offsetWidth > 0 || e.offsetHeight > 0
+    );
     const allInputs = document.querySelectorAll('input,textarea');
-    const visibleInputs = Array.from(allInputs).filter(e => e.offsetWidth > 0 || e.offsetHeight > 0);
+    const visibleInputs = Array.from(allInputs).filter(
+      e => e.offsetWidth > 0 || e.offsetHeight > 0
+    );
     const allTabs = document.querySelectorAll('[role="tab"]');
-    const visibleTabs = Array.from(allTabs).filter(e => e.offsetWidth > 0 || e.offsetHeight > 0);
+    const visibleTabs = Array.from(allTabs).filter(
+      e => e.offsetWidth > 0 || e.offsetHeight > 0
+    );
 
     const allCls = new Set();
-    document.querySelectorAll('*').forEach(el => el.classList.forEach(c => allCls.add(c)));
+    document
+      .querySelectorAll('*')
+      .forEach(el => el.classList.forEach(c => allCls.add(c)));
 
     let lsErrors = null;
     try {
-      const raw = window.localStorage.getItem('TITANE_BOOT_ERR') || window.localStorage.getItem('titane_boot_errors');
+      const raw =
+        window.localStorage.getItem('TITANE_BOOT_ERR') ||
+        window.localStorage.getItem('titane_boot_errors');
       if (raw) lsErrors = JSON.parse(raw);
-    } catch(_) { lsErrors = 'parse_error'; }
+    } catch (_) {
+      lsErrors = 'parse_error';
+    }
 
-    const rootChildren = root ? Array.from(root.children).map(c => ({ tag: c.tagName, cls: c.className.substring(0, 40), id: c.id })) : [];
-    const htmlDataset = Object.fromEntries(Object.entries(document.documentElement.dataset));
+    const rootChildren = root
+      ? Array.from(root.children).map(c => ({
+          tag: c.tagName,
+          cls: c.className.substring(0, 40),
+          id: c.id,
+        }))
+      : [];
+    const htmlDataset = Object.fromEntries(
+      Object.entries(document.documentElement.dataset)
+    );
 
     return {
       ts: Date.now(),
@@ -110,7 +132,6 @@ async function inspectDom() {
 }
 
 describe('V20 CERT — Diagnostic Progressif (v3)', () => {
-
   before(async () => {
     // PAS de browser.url() initial — l'AppImage démarre automatiquement
     // Attendre 5s d'initialisation sans interférer
@@ -172,9 +193,12 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
     console.log('lsErrors:', JSON.stringify(state.lsErrors));
 
     const splashV = state.splash?.exists && state.splash.offsetW > 0;
-    const noInteractive = state.interactive.visibleBtns === 0 && state.interactive.visibleInputs === 0;
+    const noInteractive =
+      state.interactive.visibleBtns === 0 && state.interactive.visibleInputs === 0;
     if (splashV && noInteractive) {
-      console.log('[CRITICAL] Splash still visible at +16s with no interactive elements!');
+      console.log(
+        '[CRITICAL] Splash still visible at +16s with no interactive elements!'
+      );
       metrics.frictions.push('CRITICAL_SPLASH_PERSISTENT_16s');
     }
     assert.ok(true, 'CP3 collect only');
@@ -197,7 +221,10 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
     metrics.splashFinalStyle = state.splash;
     metrics.localStorageErrors = state.lsErrors;
 
-    const hasInteractive = state.interactive.visibleBtns > 0 || state.interactive.visibleInputs > 0 || state.interactive.visibleTabs > 0;
+    const hasInteractive =
+      state.interactive.visibleBtns > 0 ||
+      state.interactive.visibleInputs > 0 ||
+      state.interactive.visibleTabs > 0;
     const splashHidden = !state.splash?.exists || state.splash.offsetW === 0;
 
     if (hasInteractive) {
@@ -238,7 +265,11 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
     }
 
     const bootFull = await browser.execute(() => {
-      try { return JSON.stringify(window.__TITANE_BOOT__ || {}); } catch(_) { return '{}'; }
+      try {
+        return JSON.stringify(window.__TITANE_BOOT__ || {});
+      } catch (_) {
+        return '{}';
+      }
     });
     console.log('__TITANE_BOOT__ full:', bootFull);
     metrics.bootFull = bootFull;
@@ -248,9 +279,10 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
       try {
         for (let i = 0; i < localStorage.length; i++) {
           const k = localStorage.key(i);
-          if (k && k.includes('boot')) result[k] = localStorage.getItem(k)?.substring(0, 200);
+          if (k && k.includes('boot'))
+            result[k] = localStorage.getItem(k)?.substring(0, 200);
         }
-      } catch(_) {}
+      } catch (_) {}
       return result;
     });
     console.log('localStorage boot keys:', JSON.stringify(lsBootKeys));
@@ -276,8 +308,12 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
 
   it('S7 — Summary + verdict friction dominant', async () => {
     const cps = metrics.checkpoints;
-    const splashEverHidden = cps.some(cp => !cp.splash?.exists || cp.splash.offsetW === 0);
-    const appEverInteractive = cps.some(cp => cp.interactive?.visibleBtns > 0 || cp.interactive?.visibleTabs > 0);
+    const splashEverHidden = cps.some(
+      cp => !cp.splash?.exists || cp.splash.offsetW === 0
+    );
+    const appEverInteractive = cps.some(
+      cp => cp.interactive?.visibleBtns > 0 || cp.interactive?.visibleTabs > 0
+    );
     const entryTsEverStarted = cps.some(cp => cp.boot?.entry_ts === true);
 
     console.log('\n=== SUMMARY ===');
@@ -303,5 +339,4 @@ describe('V20 CERT — Diagnostic Progressif (v3)', () => {
     console.log('VERDICT:', verdict);
     assert.ok(true, 'S7 summary complete');
   });
-
 });

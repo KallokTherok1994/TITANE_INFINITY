@@ -95,16 +95,23 @@ async function inspect() {
     const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
 
     const assistantTextNodes = Array.from(
-      document.querySelectorAll('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]')
+      document.querySelectorAll(
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+      )
     );
     const assistantMessages = assistantTextNodes.map(el => (el.textContent || '').trim());
     const assistantContainers = Array.from(
       document.querySelectorAll('[data-testid="chat-message-assistant"]')
     );
-    const lastAssistantContainer = assistantContainers[assistantContainers.length - 1] || null;
+    const lastAssistantContainer =
+      assistantContainers[assistantContainers.length - 1] || null;
 
     const runtimeMessageBadges = lastAssistantContainer
-      ? Array.from(lastAssistantContainer.querySelectorAll('[data-testid="chat-runtime-tag"], .conversation-tag'))
+      ? Array.from(
+          lastAssistantContainer.querySelectorAll(
+            '[data-testid="chat-runtime-tag"], .conversation-tag'
+          )
+        )
           .map(el => (el.textContent || '').trim())
           .filter(Boolean)
       : [];
@@ -116,7 +123,9 @@ async function inspect() {
           providerReason: lastAssistantContainer.getAttribute('data-provider-reason'),
           providerClass: lastAssistantContainer.getAttribute('data-provider-class'),
           networkUsed: lastAssistantContainer.getAttribute('data-network-used'),
-          orchestratorState: lastAssistantContainer.getAttribute('data-orchestrator-state'),
+          orchestratorState: lastAssistantContainer.getAttribute(
+            'data-orchestrator-state'
+          ),
           memoryState: lastAssistantContainer.getAttribute('data-memory-state'),
         }
       : null;
@@ -153,9 +162,15 @@ async function inspect() {
       loadingVisible: !!(loading && loading.offsetWidth > 0 && loading.offsetHeight > 0),
       healthTitle: health ? health.getAttribute('title') : null,
       chatErrorText: error ? (error.textContent || '').trim() : null,
-      reasoningVisible: !!(reasoning && reasoning.offsetWidth > 0 && reasoning.offsetHeight > 0),
+      reasoningVisible: !!(
+        reasoning &&
+        reasoning.offsetWidth > 0 &&
+        reasoning.offsetHeight > 0
+      ),
       reasoningState: reasoning ? reasoning.getAttribute('data-state') : null,
-      reasoningTopologyCount: document.querySelectorAll('[data-testid="reasoning-topology-node"]').length,
+      reasoningTopologyCount: document.querySelectorAll(
+        '[data-testid="reasoning-topology-node"]'
+      ).length,
       runtimePanelPresent: !!runtimePanel,
       runtimePanelVisible: !!(
         runtimePanel &&
@@ -203,14 +218,24 @@ function computeTruth() {
   const attrs = M.runtimeStateAttrs || {};
   const msgAttrs = M.runtimeMessageAttrs || {};
   const responseText = (M.responseText || '').toUpperCase();
-  const providerMode = String(attrs.providerMode || msgAttrs.providerMode || '').toUpperCase();
-  const providerReason = String(attrs.providerReason || msgAttrs.providerReason || '').toUpperCase();
-  const providerUsed = String(attrs.providerUsed || msgAttrs.providerUsed || '').toLowerCase();
-  const networkUsed = String(attrs.networkUsed || msgAttrs.networkUsed || '').toLowerCase();
+  const providerMode = String(
+    attrs.providerMode || msgAttrs.providerMode || ''
+  ).toUpperCase();
+  const providerReason = String(
+    attrs.providerReason || msgAttrs.providerReason || ''
+  ).toUpperCase();
+  const providerUsed = String(
+    attrs.providerUsed || msgAttrs.providerUsed || ''
+  ).toLowerCase();
+  const networkUsed = String(
+    attrs.networkUsed || msgAttrs.networkUsed || ''
+  ).toLowerCase();
   const orchestratorState = String(
     attrs.orchestratorState || msgAttrs.orchestratorState || ''
   ).toLowerCase();
-  const memoryState = String(attrs.memoryState || msgAttrs.memoryState || '').toLowerCase();
+  const memoryState = String(
+    attrs.memoryState || msgAttrs.memoryState || ''
+  ).toLowerCase();
 
   M.offlineDetected =
     providerMode === 'OFFLINE' ||
@@ -230,8 +255,11 @@ function computeTruth() {
 
   M.networkProved = networkUsed === 'true' && providerMode === 'REMOTE';
   M.providerTruthOnline =
-    providerMode === 'REMOTE' && providerReason !== 'FALLBACK_OFFLINE' && providerUsed !== 'offline';
-  M.orchestratorProved = orchestratorState === 'running' || orchestratorState === 'initialized';
+    providerMode === 'REMOTE' &&
+    providerReason !== 'FALLBACK_OFFLINE' &&
+    providerUsed !== 'offline';
+  M.orchestratorProved =
+    orchestratorState === 'running' || orchestratorState === 'initialized';
   M.memoryProved = memoryState !== '' && memoryState !== 'unknown';
   M.canonicalCoverage =
     /MODULE|ORCHESTRAT|MEMOIRE|PROVIDER|INTERNET/.test(responseText) &&
@@ -364,21 +392,25 @@ describe('V26 - REAL ONLINE CHAT TRUTH', () => {
 
     let s3 = await inspect();
     if (s3.sendDisabled) {
-      const nativeApplied = await browser.execute((sel, value) => {
-        const node = document.querySelector(sel);
-        if (!node) return false;
-        const proto =
-          window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
-        const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
-        if (desc?.set) {
-          desc.set.call(node, value);
-        } else {
-          node.value = value;
-        }
-        node.dispatchEvent(new InputEvent('input', { bubbles: true }));
-        node.dispatchEvent(new Event('change', { bubbles: true }));
-        return true;
-      }, inputSelector, QUESTION);
+      const nativeApplied = await browser.execute(
+        (sel, value) => {
+          const node = document.querySelector(sel);
+          if (!node) return false;
+          const proto =
+            window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
+          const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
+          if (desc?.set) {
+            desc.set.call(node, value);
+          } else {
+            node.value = value;
+          }
+          node.dispatchEvent(new InputEvent('input', { bubbles: true }));
+          node.dispatchEvent(new Event('change', { bubbles: true }));
+          return true;
+        },
+        inputSelector,
+        QUESTION
+      );
 
       if (nativeApplied) {
         M.inputTyped = true;
@@ -470,10 +502,20 @@ describe('V26 - REAL ONLINE CHAT TRUTH', () => {
     M.runtimePanelPresent = s7.runtimePanelPresent;
     M.runtimePanelVisible = s7.runtimePanelVisible;
     M.runtimePanelText = s7.runtimePanelText;
-    M.runtimeStateAttrs = Object.keys(M.runtimeStateAttrs).length > 0 ? M.runtimeStateAttrs : (s7.runtimeStateAttrs || {});
-    M.runtimeBadgesText = M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : (s7.runtimeBadgesText || []);
-    M.runtimeMessageAttrs = Object.keys(M.runtimeMessageAttrs).length > 0 ? M.runtimeMessageAttrs : (s7.runtimeMessageAttrs || {});
-    M.runtimeMessageBadges = M.runtimeMessageBadges.length > 0 ? M.runtimeMessageBadges : (s7.runtimeMessageBadges || []);
+    M.runtimeStateAttrs =
+      Object.keys(M.runtimeStateAttrs).length > 0
+        ? M.runtimeStateAttrs
+        : s7.runtimeStateAttrs || {};
+    M.runtimeBadgesText =
+      M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : s7.runtimeBadgesText || [];
+    M.runtimeMessageAttrs =
+      Object.keys(M.runtimeMessageAttrs).length > 0
+        ? M.runtimeMessageAttrs
+        : s7.runtimeMessageAttrs || {};
+    M.runtimeMessageBadges =
+      M.runtimeMessageBadges.length > 0
+        ? M.runtimeMessageBadges
+        : s7.runtimeMessageBadges || [];
     await ss('s6_runtime_panel');
 
     await browser.execute(() => {

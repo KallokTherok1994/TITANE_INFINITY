@@ -51,17 +51,17 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   state,
   topology = [],
 }) => {
-    const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
-      state ??
-      (isThinking
-        ? 'active'
-        : steps.some(s => s.status === 'error')
-          ? 'error'
-          : steps.some(s => s.status === 'blocked')
-            ? 'blocked'
-            : steps.length > 0
-              ? 'done'
-              : 'idle');
+  const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
+    state ??
+    (isThinking
+      ? 'active'
+      : steps.some(s => s.status === 'error')
+        ? 'error'
+        : steps.some(s => s.status === 'blocked')
+          ? 'blocked'
+          : steps.length > 0
+            ? 'done'
+            : 'idle');
 
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
   const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
@@ -169,7 +169,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <>
                 <Brain className="thinking-compact-icon" size={14} />
                 <span className="thinking-compact-text">
-                  {steps.filter(s => s.status === 'complete' || s.status === 'done').length} étapes
+                  {
+                    steps.filter(s => s.status === 'complete' || s.status === 'done')
+                      .length
+                  }{' '}
+                  étapes
                 </span>
               </>
             )}
@@ -320,7 +324,8 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
         {steps.length > 0 && (
           <div className="thinking-footer">
             <span className="thinking-stat">
-              {steps.filter(s => s.status === 'complete' || s.status === 'done').length} / {steps.length} étapes
+              {steps.filter(s => s.status === 'complete' || s.status === 'done').length} /{' '}
+              {steps.length} étapes
             </span>
             <span className="thinking-stat">
               Durée:{' '}
