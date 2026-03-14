@@ -407,7 +407,7 @@ impl ConversationEngineState {
         
         let (mut message, mut tags, summary) = if network_available {
             (
-                "Service momentanément en-degradé. Je traite votre demande avec mes ressources locales.".to_string(),
+                "Service momentanement en degrade. Le service distant a depasse le delai de reponse et je fournis une reponse de secours en attendant son retablissement.".to_string(),
                 vec!["degraded".to_string(), "timeout".to_string(), "online".to_string()],
                 "Réponse en mode dégradé suite à un délai provider dépassé (réseau disponible).".to_string(),
             )
