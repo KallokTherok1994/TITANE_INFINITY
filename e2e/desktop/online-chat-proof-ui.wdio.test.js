@@ -196,7 +196,8 @@ async function resolveSelectors() {
     return {
       input: '[data-testid="chat-input"]',
       send: '[data-testid="chat-send"]',
-      response: '[data-testid="chat-message-content"]',
+      response:
+        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
       trigger: null,
       panel: null,
     };
@@ -429,6 +430,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         return !!after && after !== before;
       },
       { timeout: 90000, interval: 1000, timeoutMsg: 'No assistant response detected' }
+    );
+
+    assert.notEqual(
+      after,
+      msg,
+      'Assistant response equals user probe text (selector mismatch or echo false positive)'
     );
 
     console.log(`[PROOF] scenario=${scenario} run=${runId}`);
