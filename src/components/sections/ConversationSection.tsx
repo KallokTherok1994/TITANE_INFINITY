@@ -605,7 +605,10 @@ const ConversationMessage = memo(
     onDelete: (id: string) => void;
   }) => {
     const providerMeta = message.metadata?.providerMeta;
-    const runtimeSignals = deriveRuntimeSignals(providerMeta, message.metadata?.tags ?? []);
+    const runtimeSignals = deriveRuntimeSignals(
+      providerMeta,
+      message.metadata?.tags ?? []
+    );
     const providerLabel = providerMeta?.provider_used;
     const modeLabel = providerMeta?.mode;
     const classLabel = providerMeta?.provider_class;
@@ -630,8 +633,12 @@ const ConversationMessage = memo(
       <div
         className={`conversation-message ${message.role}`}
         data-testid={`chat-message-${message.role}`}
-        data-provider-used={message.role === 'assistant' ? providerLabel || undefined : undefined}
-        data-provider-mode={message.role === 'assistant' ? modeLabel || undefined : undefined}
+        data-provider-used={
+          message.role === 'assistant' ? providerLabel || undefined : undefined
+        }
+        data-provider-mode={
+          message.role === 'assistant' ? modeLabel || undefined : undefined
+        }
         data-provider-reason={
           message.role === 'assistant' ? reasonLabel || undefined : undefined
         }
@@ -655,9 +662,7 @@ const ConversationMessage = memo(
             : undefined
         }
         data-provider-cache-hit={
-          message.role === 'assistant' && providerMeta
-            ? String(cacheHit)
-            : undefined
+          message.role === 'assistant' && providerMeta ? String(cacheHit) : undefined
         }
       >
         <div className="conversation-message-avatar">
@@ -700,7 +705,11 @@ const ConversationMessage = memo(
             {message.metadata?.tags && message.metadata.tags.length > 0 && (
               <div className="conversation-message-tags">
                 {message.metadata.tags.slice(0, 3).map((tag, i) => (
-                  <span key={i} className="conversation-tag" data-testid="chat-runtime-tag">
+                  <span
+                    key={i}
+                    className="conversation-tag"
+                    data-testid="chat-runtime-tag"
+                  >
                     {tag}
                   </span>
                 ))}
@@ -969,7 +978,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const latestAssistantProviderMeta = useMemo(() => {
     for (let i = messages.length - 1; i >= 0; i -= 1) {
       const message = messages[i];
-        if (!message) continue;
+      if (!message) continue;
       if (message.role === 'assistant' && message.metadata?.providerMeta) {
         return message.metadata.providerMeta;
       }
@@ -978,72 +987,63 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   }, [messages]);
 
   const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
-    thinking.isThinking
-      ? 'active'
-      : error
-        ? 'error'
-        : hasMessages
-          ? 'done'
-          : 'idle';
+    thinking.isThinking ? 'active' : error ? 'error' : hasMessages ? 'done' : 'idle';
 
-  const thinkingTopology = useMemo(
-    () => {
-      const nodes: Array<{
-        id: string;
-        label: string;
-        status: 'active' | 'done' | 'error' | 'blocked';
-      }> = [
-        {
-          id: 'conversation-runtime',
-          label: 'conversation-runtime',
-          status: (thinking.isThinking ? 'active' : 'done') as
-            | 'active'
-            | 'done'
-            | 'error'
-            | 'blocked',
-        },
-      ];
+  const thinkingTopology = useMemo(() => {
+    const nodes: Array<{
+      id: string;
+      label: string;
+      status: 'active' | 'done' | 'error' | 'blocked';
+    }> = [
+      {
+        id: 'conversation-runtime',
+        label: 'conversation-runtime',
+        status: (thinking.isThinking ? 'active' : 'done') as
+          | 'active'
+          | 'done'
+          | 'error'
+          | 'blocked',
+      },
+    ];
 
-      if (!latestAssistantProviderMeta) {
-        return nodes;
-      }
-
-      const reasonStatus = mapReasonCodeToNodeStatus(
-        latestAssistantProviderMeta.reason_code
-      );
-
-      nodes.push({
-        id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
-        label: `mode:${latestAssistantProviderMeta.mode}`,
-        status: reasonStatus,
-      });
-
-      nodes.push({
-        id: `provider-${latestAssistantProviderMeta.provider_used}`,
-        label: `provider:${latestAssistantProviderMeta.provider_used}`,
-        status: reasonStatus,
-      });
-
-      if (latestAssistantProviderMeta.reason_code !== 'OK') {
-        nodes.push({
-          id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
-          label: `reason:${latestAssistantProviderMeta.reason_code}`,
-          status: reasonStatus,
-        });
-      }
-
-      latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
-        nodes.push({
-          id: `attempt-${index + 1}-${attempt.provider_id}`,
-          label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
-          status: mapReasonCodeToNodeStatus(attempt.reason_code),
-        });
-      });
-
+    if (!latestAssistantProviderMeta) {
       return nodes;
-    },
-    [thinking.isThinking, latestAssistantProviderMeta]
-  );
+    }
+
+    const reasonStatus = mapReasonCodeToNodeStatus(
+      latestAssistantProviderMeta.reason_code
+    );
+
+    nodes.push({
+      id: `mode-${latestAssistantProviderMeta.mode.toLowerCase()}`,
+      label: `mode:${latestAssistantProviderMeta.mode}`,
+      status: reasonStatus,
+    });
+
+    nodes.push({
+      id: `provider-${latestAssistantProviderMeta.provider_used}`,
+      label: `provider:${latestAssistantProviderMeta.provider_used}`,
+      status: reasonStatus,
+    });
+
+    if (latestAssistantProviderMeta.reason_code !== 'OK') {
+      nodes.push({
+        id: `reason-${latestAssistantProviderMeta.reason_code.toLowerCase()}`,
+        label: `reason:${latestAssistantProviderMeta.reason_code}`,
+        status: reasonStatus,
+      });
+    }
+
+    latestAssistantProviderMeta.attempts.slice(0, 4).forEach((attempt, index) => {
+      nodes.push({
+        id: `attempt-${index + 1}-${attempt.provider_id}`,
+        label: `attempt${index + 1}:${attempt.provider_id}/${attempt.outcome}`,
+        status: mapReasonCodeToNodeStatus(attempt.reason_code),
+      });
+    });
+
+    return nodes;
+  }, [thinking.isThinking, latestAssistantProviderMeta]);
 
   const searchNeedle = useMemo(() => {
     const trimmed = deferredSearchQuery.trim();
@@ -1585,20 +1585,29 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             className="conversation-runtime-panel"
             data-testid="chat-runtime-state"
             data-provider-mode={latestAssistantRuntime.providerMeta?.mode ?? 'unknown'}
-            data-provider-reason={latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'}
-            data-provider-used={latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'}
+            data-provider-reason={
+              latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN'
+            }
+            data-provider-used={
+              latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown'
+            }
             data-network-used={
               latestAssistantRuntime.providerMeta
                 ? String(latestAssistantRuntime.providerMeta.network_used)
                 : 'false'
             }
-            data-orchestrator-state={latestAssistantRuntime.runtimeSignals.orchestratorState}
+            data-orchestrator-state={
+              latestAssistantRuntime.runtimeSignals.orchestratorState
+            }
             data-memory-state={latestAssistantRuntime.runtimeSignals.memoryState}
             data-gemini-configured={selectedProvider === 'gemini' ? 'true' : 'false'}
             data-ollama-model={selectedProvider === 'ollama' ? 'gemma2:2b' : 'unknown'}
             data-secrets-mode="governed"
           >
-            <div className="conversation-runtime-summary" data-testid="chat-runtime-summary">
+            <div
+              className="conversation-runtime-summary"
+              data-testid="chat-runtime-summary"
+            >
               {runtimeSummary}
             </div>
             <div className="conversation-runtime-badges">

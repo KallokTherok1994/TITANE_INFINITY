@@ -442,11 +442,15 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     // G_NO_MOCK_PROVIDER — two-layer check:
     // Layer 1: data-provider-used DOM attribute (when rendered)
     const domAttrs = await browser.execute(() => {
-      const assistantMsgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const assistantMsgs = document.querySelectorAll(
+        '[data-testid="chat-message-assistant"]'
+      );
       const last = assistantMsgs[assistantMsgs.length - 1];
       if (!last) return { providerUsed: '', allAttrs: {} };
       const allAttrs = {};
-      for (const attr of last.attributes) { allAttrs[attr.name] = attr.value; }
+      for (const attr of last.attributes) {
+        allAttrs[attr.name] = attr.value;
+      }
       return { providerUsed: last.getAttribute('data-provider-used') || '', allAttrs };
     });
     const providerAttr = domAttrs.providerUsed || '';
@@ -457,7 +461,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     );
 
     // Layer 2: content-based check — response text must NOT contain the OMEGA stub phrase
-    const OMEGA_MOCK_STUB = "j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs";
+    const OMEGA_MOCK_STUB =
+      "j'ai bien recu votre demande et je la traite avec les modules cognitifs actifs";
     assert.ok(
       !after.toLowerCase().includes(OMEGA_MOCK_STUB),
       `[G_NO_MOCK_TEXT] Response contains OMEGA stub text — AIRouter call was NOT made; after="${String(after).slice(0, 120)}"`

@@ -134,7 +134,9 @@ function readModeStoredMessages(mode: ConversationMode): ChatLikeMessage[] {
         content: typeof value.content === 'string' ? value.content : '',
         timestamp: typeof value.timestamp === 'number' ? value.timestamp : Date.now(),
         metadata:
-          value.metadata && typeof value.metadata === 'object' && !Array.isArray(value.metadata)
+          value.metadata &&
+          typeof value.metadata === 'object' &&
+          !Array.isArray(value.metadata)
             ? (value.metadata as Record<string, unknown>)
             : undefined,
       });
@@ -151,7 +153,11 @@ function readContextModuleId(message: ChatLikeMessage): string | undefined {
   if (!metadata) return undefined;
 
   const contextBinding = metadata['contextBinding'];
-  if (!contextBinding || typeof contextBinding !== 'object' || Array.isArray(contextBinding)) {
+  if (
+    !contextBinding ||
+    typeof contextBinding !== 'object' ||
+    Array.isArray(contextBinding)
+  ) {
     return undefined;
   }
 
@@ -181,7 +187,9 @@ export function readLastChatContextEnvelope(): ChatContextEnvelope | null {
   return readJson<ChatContextEnvelope>(LAST_ENVELOPE_KEY);
 }
 
-export function formatContextEnvelopeForSystemPrompt(envelope: ChatContextEnvelope): string {
+export function formatContextEnvelopeForSystemPrompt(
+  envelope: ChatContextEnvelope
+): string {
   const recent = envelope.memorySingleDoor.recentMessages.slice(-6);
   const recentLines = recent.map(msg => {
     const compact = msg.content.replace(/\s+/g, ' ').trim().slice(0, 220);
@@ -209,7 +217,9 @@ export function formatContextEnvelopeForSystemPrompt(envelope: ChatContextEnvelo
   ].join('\n');
 }
 
-export function buildChatContextEnvelope(input: BuildSingleDoorInput): ChatContextEnvelope | null {
+export function buildChatContextEnvelope(
+  input: BuildSingleDoorInput
+): ChatContextEnvelope | null {
   const moduleContext = input.moduleContext;
   if (!moduleContext) {
     return null;
@@ -220,19 +230,21 @@ export function buildChatContextEnvelope(input: BuildSingleDoorInput): ChatConte
     .sort((a, b) => a.timestamp - b.timestamp)
     .slice(-80);
 
-  const sameModule = merged.filter(msg => readContextModuleId(msg) === moduleContext.moduleId);
+  const sameModule = merged.filter(
+    msg => readContextModuleId(msg) === moduleContext.moduleId
+  );
 
   const useScoped = moduleContext.continuity.changeType === 'module-switch';
   const chosenBase = useScoped ? sameModule : merged;
   const fallbackWhenScopedEmpty = useScoped && chosenBase.length === 0;
-  const selected = (fallbackWhenScopedEmpty ? merged.slice(-4) : chosenBase.slice(-12)).map(
-    msg => ({
-      role: msg.role,
-      content: msg.content,
-      timestamp: msg.timestamp,
-      contextModuleId: readContextModuleId(msg),
-    })
-  );
+  const selected = (
+    fallbackWhenScopedEmpty ? merged.slice(-4) : chosenBase.slice(-12)
+  ).map(msg => ({
+    role: msg.role,
+    content: msg.content,
+    timestamp: msg.timestamp,
+    contextModuleId: readContextModuleId(msg),
+  }));
 
   const purged = Math.max(0, merged.length - selected.length);
 

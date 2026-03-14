@@ -402,9 +402,7 @@ export async function processMessage(
       provider,
       systemPrompt,
       requestId,
-      ...(options?.contextEnvelope
-        ? { contextEnvelope: options.contextEnvelope }
-        : {}),
+      ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
     },
   });
   const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
