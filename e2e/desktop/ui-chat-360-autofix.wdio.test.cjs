@@ -1660,6 +1660,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
         results,
       };
 
+      const successRate = ((results.length - failures) / results.length) * 100;
       const stabilityStatus = successRate >= 80 ? 'PASS' : 'FAIL';
 
       writeReport('stability_burst.json', stabilityPayload);
@@ -1671,7 +1672,6 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
         failed: stabilityPayload.failed,
       });
 
-      const successRate = ((results.length - failures) / results.length) * 100;
       console.log(
         `📊 Stability: ${results.length - failures}/${results.length} success (${successRate.toFixed(1)}%)`
       );
