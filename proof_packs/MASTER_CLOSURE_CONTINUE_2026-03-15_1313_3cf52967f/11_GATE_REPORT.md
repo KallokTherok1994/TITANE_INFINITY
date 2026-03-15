@@ -147,3 +147,37 @@ Observed facts still extracted:
 - Full chain: `[Ω:CMD] ✅ Success | latency=66980ms | content_len=322`
 
 ### ALL GATES: PASS
+
+## Addendum 2026-03-15 20:30Z — PROD deploy retry coherence PASS
+
+### PASS
+- PROD token gate used explicitly:
+  - `GO_FOR_PROD_BUILD__TITANE_INFINITY`
+  - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
+- Certified deployment gate rerun:
+  - command: `./scripts/deployment/certified-deploy.sh --target both --deploy-path deployment/latest --manifest-update --verbose`
+  - result: `DEPLOY_RETRY2_EXIT:0`
+  - certification proof in log: `Test Files 216 passed`, `Tests 3223 passed`
+- Published artifacts now coherent and tracked in `deployment/latest`:
+  - `TITANE-Infinity_27.2.0_amd64.AppImage`
+  - `TITANE-Infinity_27.2.0_amd64.deb`
+  - `MANIFEST.json` + `SHA256SUMS/CHECKSUMS/SIZES` synchronized
+- Final published checksums:
+  - AppImage: `2769deba45af44947347375e4f1e4692ee1ee568fbc88bc0fa78f7bef8ceda00`
+  - DEB: `a72d694c7570e69ea7ad06bc8123af325177cd86f85196e6b5f0484a46dc269b`
+  - MANIFEST: `0861cde2fd0ceda2219750d064554104bcbd0725ccbbb8ea5499c72e65111b54`
+- Governance validators after retry:
+  - `bash scripts/autoheal/detect_recurrence.sh` -> PASS
+  - `bash scripts/verify_instructions.sh` -> `SUMMARY: PASS=20 FAIL=0`
+
+### INCIDENT CAPTURE
+- First retry attempt failed with lock error:
+  - `cp: ... deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage: Fichier texte occupe`
+- Remediation performed:
+  - stop running AppImage process
+  - rerun certified deployment
+  - resync metadata files to exact deployed bytes
+
+### RELEASE PUBLICATION
+- Commit pushed to `origin/MAIN`: `023f4d2a8`
+- Scope: deployment metadata + tracked artifacts only.

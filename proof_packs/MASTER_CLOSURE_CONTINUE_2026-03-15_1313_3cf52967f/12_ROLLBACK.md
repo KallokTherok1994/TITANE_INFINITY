@@ -39,3 +39,15 @@ git restore -- src-tauri/src/ai/ollama.rs scripts/autoheal/autoheal_rules.jsonl 
   proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md
 rm -rf reports/e2e-desktop/release_online_chat_mallocfix_20260315T194957Z
 ```
+
+## Addendum rollback (2026-03-15 20:30Z)
+```bash
+git restore -- scripts/autoheal/autoheal_rules.jsonl \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/11_GATE_REPORT.md \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/12_ROLLBACK.md \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md
+
+# rollback publication commit if required
+git revert 023f4d2a8 --no-edit
+git push origin MAIN
+```
