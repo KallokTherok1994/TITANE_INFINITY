@@ -11,3 +11,12 @@
 # [workspace.lints.rust]
 # warnings = "deny"
 
+# ═══════════════════════════════════════════════════════════════
+# ANDROID TARGET GUARDS (STOPLINE #5)
+# audio-capture (cpal) est incompatible Android sans NDK Oboe setup.
+# Les builds Android doivent utiliser --features custom-protocol,mock
+# sans audio-capture. Voir scripts android:build / android:build:debug.
+# ═══════════════════════════════════════════════════════════════
+[target.aarch64-linux-android]
+# No additional flags needed — feature exclusion handled at build script level
+
