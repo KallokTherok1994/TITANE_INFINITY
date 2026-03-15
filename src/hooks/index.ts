@@ -791,3 +791,8 @@ export type {
 
 // ═══ M1 - TOAST NOTIFICATIONS ═══
 export { useToast, type ToastType, type ToastOptions } from './useToast';
+
+// ═══ NUMERIC TWIN ENGINE HOOKS ═══
+export { useTwinIdentity } from './useTwinIdentity';
+export { useTwinEvolution } from './useTwinEvolution';
+export { useTwinBehavior } from './useTwinBehavior';
