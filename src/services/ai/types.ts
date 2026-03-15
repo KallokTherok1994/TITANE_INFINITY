@@ -178,7 +178,7 @@ export const DEFAULT_AI_CONFIG: AIConfig = {
   maxTokens: 2048,
   topP: 0.95,
   topK: 40,
-  timeout: 30000,
+  timeout: 45000, // Aligned with PROVIDER_TIMEOUTS.ollama (was 30000 → cut complex Ollama at 30s)
 };
 
 // ✨ v26.3 - Unified Provider Types for consistent integration
