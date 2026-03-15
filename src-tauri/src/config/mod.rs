@@ -12,8 +12,10 @@ pub mod presets;
  */
 pub mod update;
 
+use crate::security::secrets_engine::{SecretsMode, SecureSecretsEngine};
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
+use tauri::State;
 
 /**
  * Runtime Configuration (serializable version)
@@ -81,6 +83,36 @@ impl ConfigSnapshot {
     }
 }
 
+fn build_runtime_config(
+    ollama_url: String,
+    ollama_model: String,
+    secrets: &SecureSecretsEngine,
+) -> RuntimeConfig {
+    let secrets_mode = match secrets.mode() {
+        SecretsMode::Encrypted { .. } => "encrypted".to_string(),
+        SecretsMode::Ephemeral => "ephemeral".to_string(),
+    };
+
+    let gemini_configured = match secrets.has_secret("gemini_api_key") {
+        Ok(exists) => exists,
+        Err(err) => {
+            log::warn!("[CONFIG] Failed to inspect Gemini secret status: {}", err);
+            false
+        }
+    };
+
+    RuntimeConfig {
+        ollama_url,
+        ollama_model,
+        secrets_mode,
+        gemini_configured,
+        timestamp: SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .map(|d| d.as_secs())
+            .unwrap_or(0),
+    }
+}
+
 /**
  * Récupère un snapshot complet de toutes les configurations
  *
@@ -94,27 +126,15 @@ impl ConfigSnapshot {
  * - Err(String) : Message d'erreur si échec
  */
 #[tauri::command]
-pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
+pub async fn get_all_configs(
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<ConfigSnapshot, String> {
     log::info!("🎯 [CONFIG] Loading all configurations...");
 
     let (ollama_url, ollama_model) = update::current_runtime_values();
 
-    // Récupérer runtime config (déjà implémenté)
-    let runtime = RuntimeConfig {
-        ollama_url,
-        ollama_model,
-        secrets_mode: "encrypted".to_string(), // Implementation: Get from SecureSecretsEngine.get_mode()
-        // - Query: SecureSecretsEngine::get_encryption_mode() → "encrypted"/"plaintext"/"keyring"
-        // - Fallback: "encrypted" if SecureSecretsEngine not initialized
-        gemini_configured: false, // Implementation: Check if Gemini API key exists in SecureSecretsEngine
-        // - Check: SecureSecretsEngine::has_secret("gemini_api_key").await
-        // - Validation: Optionally ping Gemini API to verify key validity
-        // - Return: true if key exists and valid, false otherwise
-        timestamp: SystemTime::now()
-            .duration_since(UNIX_EPOCH)
-            .map(|d| d.as_secs())
-            .unwrap_or(0),
-    };
+    // Runtime config must reflect live secrets/runtime state, not placeholders.
+    let runtime = build_runtime_config(ollama_url, ollama_model, &secrets);
 
     let bundle = update::current_chat_bundle().await;
     let chat_engine = ChatEngineConfig {
@@ -138,15 +158,18 @@ pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
 mod tests {
     use super::*;
 
-    #[tokio::test]
-    async fn test_get_all_configs() {
-        let result = get_all_configs().await;
-        assert!(result.is_ok());
+    #[test]
+    fn test_build_runtime_config_uses_live_secrets_state() {
+        let secrets = SecureSecretsEngine::default();
+        let runtime = build_runtime_config(
+            "http://127.0.0.1:11434".to_string(),
+            "gemma2:2b".to_string(),
+            &secrets,
+        );
 
-        let snapshot = result.expect("config snapshot retrieval should succeed");
-        assert_eq!(snapshot.version, env!("CARGO_PKG_VERSION"));
-        assert!(!snapshot.runtime.ollama_url.is_empty());
-        assert!(!snapshot.runtime.ollama_model.is_empty());
+        assert!(!runtime.ollama_url.is_empty());
+        assert!(!runtime.ollama_model.is_empty());
+        assert!(!runtime.secrets_mode.is_empty());
     }
 
     #[test]

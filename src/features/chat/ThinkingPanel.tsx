@@ -24,6 +24,9 @@ import {
   Cpu,
   BarChart3,
   Layers,
+  Zap,
+  Database,
+  Globe,
 } from 'lucide-react';
 import './ThinkingPanel.css';
 
@@ -41,6 +44,24 @@ interface ThinkingTopologyNode {
   status: 'active' | 'done' | 'error' | 'blocked';
 }
 
+/** Trace XP réelle : source = useExperience() dans Chat.tsx */
+interface OmegaXPTrace {
+  chatXP: number;
+  cognitiveXP: number;
+  totalXP: number;
+  level: number;
+  lastGainDomain?: string;
+  lastGainAmount?: number;
+  lastGainTimestamp?: number;
+}
+
+/** Trace mémoire / contexte : déduite du debug entry + sources statiques connues */
+interface OmegaMemoryTrace {
+  injected: boolean;        // systemPrompt toujours construit avec 6 sources
+  savedAfter: boolean;      // saveMessage() appelé si status === 'success'
+  systemPromptSources: string[];
+}
+
 interface ThinkingPanelProps {
   isThinking: boolean;
   steps?: ThinkingStep[];
@@ -51,6 +72,13 @@ interface ThinkingPanelProps {
   elapsedTime?: number; // Temps écoulé en secondes (v2.1)
   state?: 'idle' | 'active' | 'done' | 'error' | 'blocked';
   topology?: ThinkingTopologyNode[];
+  // ── Nouvelles dimensions OMEGA v4 ──────────────────────────────
+  xpTrace?: OmegaXPTrace | null;
+  memoryTrace?: OmegaMemoryTrace | null;
+  qualityScore?: number | null;
+  autoHealed?: boolean;
+  messageLength?: number;
+  responseLength?: number;
 }
 
 type ViewMode = 'essentiel' | 'detaille' | 'expert';
@@ -65,6 +93,12 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   elapsedTime,
   state,
   topology = [],
+  xpTrace,
+  memoryTrace,
+  qualityScore,
+  autoHealed,
+  messageLength,
+  responseLength,
 }) => {
   const resolvedState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     state ??
@@ -279,15 +313,48 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             <span className="oj-summary-label">Résultat :</span>
             <span className="oj-summary-value">
               {resolvedState === 'done'
-                ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}`
+                ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}${qualityScore !== null && qualityScore !== undefined ? ` · Qualité ${(qualityScore * 100).toFixed(0)}%` : ''}${autoHealed ? ' · ✦ Auto-guéri' : ''}`
                 : resolvedState === 'error' ? 'Échec détecté'
                 : resolvedState === 'active' ? 'En cours de traitement'
                 : 'Inactif'}
             </span>
           </div>
+          {(messageLength !== undefined || responseLength !== undefined) && (
+            <div className="oj-summary-row">
+              <Cpu size={14} className="oj-icon-blue" />
+              <span className="oj-summary-label">Volume :</span>
+              <span className="oj-summary-value">
+                {messageLength !== undefined ? `${messageLength} car. envoyés` : ''}
+                {messageLength !== undefined && responseLength !== undefined ? ' · ' : ''}
+                {responseLength !== undefined ? `${responseLength} car. reçus` : ''}
+              </span>
+            </div>
+          )}
+          {xpTrace && !isThinking && (
+            <div className="oj-summary-row">
+              <Zap size={14} className="oj-icon-yellow" />
+              <span className="oj-summary-label">XP attendu :</span>
+              <span className="oj-summary-value">
+                <span className="oj-xp-gain">+5 XP Chat</span>
+                {(responseLength ?? 0) > 200 && <span className="oj-xp-gain"> · +2 XP Cognitif</span>}
+                {' '}— Niveau {xpTrace.level} · Total {xpTrace.totalXP.toLocaleString('fr-FR')} XP
+              </span>
+            </div>
+          )}
+          {memoryTrace && !isThinking && (
+            <div className="oj-summary-row">
+              <Database size={14} className="oj-icon-blue" />
+              <span className="oj-summary-label">Mémoire :</span>
+              <span className="oj-summary-value">
+                {memoryTrace.injected ? '✓ Contexte injecté' : '—'}{' · '}
+                {memoryTrace.savedAfter ? '✓ Message sauvegardé' : resolvedState === 'error' ? '✗ Non sauvegardé' : '—'}
+              </span>
+            </div>
+          )}
           <div className="oj-summary-row oj-summary-row--caption">
+            <Globe size={11} className="oj-icon-muted" />
             <span className="oj-non-capture">
-              📎 XP, fichiers, commandes, recherches en ligne : NON CAPTURÉ dans cette version
+              Recherche en ligne : non effectuée · Fichiers système : NON CAPTURÉ · Commandes IPC : conversation_generate (toujours)
             </span>
           </div>
         </div>
@@ -416,6 +483,118 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                       {node.label}
                     </span>
                   ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── XP & Progression (Détaillé / Expert) ────────────────── */}
+        {(viewMode === 'detaille' || viewMode === 'expert') && (
+          <div className="oj-section oj-section--xp">
+            <div className="oj-section-title">
+              <Zap size={14} /> XP &amp; Progression
+            </div>
+            {xpTrace ? (
+              <div className="oj-xp-block">
+                <div className="oj-runtime-grid">
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">Gain par message</span>
+                    <span className="oj-runtime-value">
+                      <span className="oj-xp-gain">+5 XP</span> domaine Chat
+                      {(responseLength ?? 0) > 200 && (
+                        <> · <span className="oj-xp-gain">+2 XP</span> Cognitif</>
+                      )}
+                    </span>
+                  </div>
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">XP Chat cumulé</span>
+                    <span className="oj-runtime-value">{xpTrace.chatXP.toLocaleString('fr-FR')}</span>
+                  </div>
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">XP Cognitif cumulé</span>
+                    <span className="oj-runtime-value">{xpTrace.cognitiveXP.toLocaleString('fr-FR')}</span>
+                  </div>
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">XP Total</span>
+                    <span className="oj-runtime-value">{xpTrace.totalXP.toLocaleString('fr-FR')}</span>
+                  </div>
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">Niveau global</span>
+                    <span className="oj-runtime-value">{xpTrace.level}</span>
+                  </div>
+                  <div className="oj-runtime-item">
+                    <span className="oj-runtime-label">Persistance XP</span>
+                    <span className="oj-runtime-value">Tauri IPC · localStorage (fallback)</span>
+                  </div>
+                </div>
+                {viewMode === 'expert' && xpTrace.lastGainDomain && xpTrace.lastGainAmount !== undefined && (
+                  <div className="oj-xp-last">
+                    <span className="oj-runtime-label">Dernier gain enregistré :</span>
+                    <span className="oj-runtime-value">
+                      <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
+                      {' '}· domaine <em>{xpTrace.lastGainDomain}</em>
+                      {xpTrace.lastGainTimestamp
+                        ? ` · ${new Date(xpTrace.lastGainTimestamp).toLocaleTimeString('fr-FR')}`
+                        : ''}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="oj-step-placeholder oj-non-capture">
+                Données XP non disponibles pour ce tour
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Contexte & Mémoire (Détaillé / Expert) ──────────────── */}
+        {(viewMode === 'detaille' || viewMode === 'expert') && (
+          <div className="oj-section oj-section--memory">
+            <div className="oj-section-title">
+              <Database size={14} /> Contexte &amp; Mémoire
+            </div>
+            <div className="oj-runtime-grid">
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Mémoire injectée</span>
+                <span className="oj-runtime-value">
+                  {memoryTrace?.injected
+                    ? <span className="oj-icon-green">✓ Oui — 3 niveaux (session, intermédiaire, long terme)</span>
+                    : <span className="oj-non-capture">Inconnu</span>}
+                </span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Message sauvegardé</span>
+                <span className="oj-runtime-value">
+                  {memoryTrace?.savedAfter
+                    ? <span className="oj-icon-green">✓ Oui — mémoire persistante</span>
+                    : resolvedState === 'error'
+                      ? <span className="oj-icon-red">✗ Non (erreur pipeline)</span>
+                      : <span className="oj-non-capture">Inconnu</span>}
+                </span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Recherche en ligne</span>
+                <span className="oj-runtime-value oj-non-capture">Non effectuée — LLM local/IPC uniquement</span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Fichiers système</span>
+                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ dans cette version</span>
+              </div>
+            </div>
+            {viewMode === 'expert' && memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0 && (
+              <div className="oj-sources-list">
+                <span className="oj-section-subtitle">Sources assemblées dans le systemPrompt :</span>
+                {memoryTrace.systemPromptSources.map((src, i) => (
+                  <div key={i} className="oj-source-item">
+                    <span className="oj-icon-green">✓</span>
+                    <span>{src}</span>
+                  </div>
+                ))}
+                <div className="oj-source-item oj-source-item--nc">
+                  <span className="oj-non-capture">—</span>
+                  <span className="oj-non-capture">Handlers IPC : conversation_generate · persistent_memory_get_stats · persistent_memory_get_context</span>
                 </div>
               </div>
             )}
