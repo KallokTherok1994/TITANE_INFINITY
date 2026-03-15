@@ -58,6 +58,11 @@ export const PersonaEditor: React.FC<PersonaEditorProps> = ({
   );
 
   const handleSave = useCallback(() => {
+    try {
+      localStorage.setItem('titane_persona_profile', JSON.stringify(profile));
+    } catch (e) {
+      console.warn('[PersonaEditor] Failed to persist persona profile', e);
+    }
     onSave?.(profile);
     setHasChanges(false);
   }, [profile, onSave]);
