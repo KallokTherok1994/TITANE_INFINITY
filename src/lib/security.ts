@@ -323,6 +323,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'ping_gemini',
   'ping_ollama',
   'ollama_query', // ✅ v∞ Direct Ollama query
+  'ollama_generate', // ✅ Unified Ollama IPC command
   'chat_generate',
   'upload_and_process_file',
 
