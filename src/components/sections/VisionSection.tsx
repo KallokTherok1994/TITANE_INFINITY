@@ -112,8 +112,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
   const engagementLevel = useVisionStore(selectEngagementLevel);
   const confidence = useVisionStore(selectConfidence);
   const enableVision = useVisionStore(s => s.enableVision);
-  const requestCameraPermission = useVisionStore(s => s.requestCameraPermission);
-  const startCamera = useVisionStore(s => s.startCamera);
+  const permissionStatus = useVisionStore(s => s.visionInput.permissionStatus);
 
   // ═══ STATE ═══
   const [isStarting, setIsStarting] = useState(false);
@@ -124,22 +123,13 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
     setIsStarting(true);
     setError(null);
     try {
-      const permission = await requestCameraPermission();
-      if (permission !== 'granted') {
-        setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
-        return;
-      }
-
       const enabled = await enableVision();
       if (!enabled) {
-        setError('Activation Vision annulée ou impossible.');
-        return;
-      }
-
-      const started = await startCamera();
-      if (!started) {
-        setError('Impossible de démarrer la caméra.');
-        return;
+        if (permissionStatus === 'denied' || permissionStatus === 'unavailable') {
+          setError('Permission caméra refusée. Autorisez la caméra pour activer Vision.');
+        } else {
+          setError('Activation Vision annulée ou impossible.');
+        }
       }
     } catch (e) {
       const message = e instanceof Error ? e.message : String(e);
@@ -148,7 +138,7 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
     } finally {
       setIsStarting(false);
     }
-  }, [enableVision, requestCameraPermission, startCamera]);
+  }, [enableVision, permissionStatus]);
 
   // ═══ RENDER ═══
   return (

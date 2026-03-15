@@ -46,7 +46,7 @@ export const AppShell = ({
     >
       {/* TopNav (remplace header + sidebar) */}
       {topNav && (
-        <div className="relative z-[10000]" style={{ zIndex: 'var(--z-dev-tools)' }}>
+        <div className="relative z-10000" style={{ zIndex: 'var(--z-dev-tools)' }}>
           {topNav}
         </div>
       )}
