@@ -9,7 +9,12 @@
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 
-const WORKSPACE_DIR: &str = "/home/titane/Documents/TITANE_INFINITY";
+// DESKTOP-ONLY: This module is guarded with #[cfg(not(target_os = "android"))] in main.rs.
+// Override via env var TITANE_WORKSPACE_DIR for non-standard installations.
+const WORKSPACE_DIR_FALLBACK: &str = "/home/titane/Documents/TITANE_INFINITY";
+fn workspace_dir() -> String {
+    std::env::var("TITANE_WORKSPACE_DIR").unwrap_or_else(|_| WORKSPACE_DIR_FALLBACK.to_string())
+}
 
 #[derive(Debug, Clone, Copy)]
 enum AllowedCommand {
@@ -137,7 +142,7 @@ pub async fn devops_run(cmd: String) -> Result<String, String> {
     })?;
 
     let mut command = allowed.build_command();
-    command.current_dir(WORKSPACE_DIR);
+    command.current_dir(workspace_dir());
 
     let output = command.output().map_err(|e| {
         log::error!("❌ DevOps command execution error: {}", e);
@@ -214,7 +219,7 @@ pub async fn devops_stats() -> Result<DevOpsStats, String> {
         .arg("check")
         .arg("--manifest-path")
         .arg("src-tauri/Cargo.toml")
-        .current_dir(WORKSPACE_DIR)
+        .current_dir(workspace_dir())
         .output()
         .map_err(|e| format!("Cargo check error: {}", e))?;
     let cargo_status = if cargo_check.status.success() {
@@ -228,7 +233,7 @@ pub async fn devops_stats() -> Result<DevOpsStats, String> {
     let npm_check = Command::new("pnpm")
         .arg("run")
         .arg("type-check")
-        .current_dir(WORKSPACE_DIR)
+        .current_dir(workspace_dir())
         .output()
         .map_err(|e| format!("PNPM check error: {}", e))?;
     let npm_status = if npm_check.status.success() {
