@@ -106,8 +106,10 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
       </div>
 
       {/* Tabs */}
-      <div className="twin-panel__tabs">
+      <div className="twin-panel__tabs" role="tablist" aria-label="Navigation Twin">
         <button
+          role="tab"
+          aria-selected={activeTab === 'fusion'}
           className={`twin-panel__tab ${activeTab === 'fusion' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('fusion')}
           aria-label="Onglet Fusion"
@@ -116,6 +118,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           🔗 Fusion
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === 'values'}
           className={`twin-panel__tab ${activeTab === 'values' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('values')}
           aria-label="Onglet Valeurs"
@@ -124,6 +128,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           💎 Valeurs
         </button>
         <button
+          role="tab"
+          aria-selected={activeTab === 'evolution'}
           className={`twin-panel__tab ${activeTab === 'evolution' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('evolution')}
           aria-label="Onglet Évolution"
@@ -133,6 +139,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
         </button>
         {isAdmin && (
           <button
+            role="tab"
+            aria-selected={activeTab === 'admin'}
             className={`twin-panel__tab ${activeTab === 'admin' ? 'twin-panel__tab--active' : ''}`}
             onClick={() => setActiveTab('admin')}
             aria-label="Onglet Administration"
@@ -291,11 +299,15 @@ interface ValuesTabProps {
 
 const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
   const [reinforcing, setReinforcing] = useState<string | null>(null);
+  const [reinforceError, setReinforceError] = useState<string | null>(null);
 
   const handleReinforce = async (valueName: string) => {
     setReinforcing(valueName);
+    setReinforceError(null);
     try {
       await onReinforce(valueName);
+    } catch (e: unknown) {
+      setReinforceError(e instanceof Error ? e.message : 'Erreur lors du renforcement');
     } finally {
       setReinforcing(null);
     }
@@ -304,6 +316,11 @@ const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
   return (
     <div className="twin-tab twin-tab--values">
       <h3>Valeurs Fondamentales (Inviolables)</h3>
+      {reinforceError && (
+        <div style={{ background: '#4a1a1a', color: '#ff6b6b', border: '1px solid #ff4444', borderRadius: 4, padding: '6px 10px', marginBottom: 8 }}>
+          ❌ {reinforceError}
+        </div>
+      )}
       <div className="twin-values__list">
         {coreValues.map(value => (
           <div key={value.name} className="twin-value">
