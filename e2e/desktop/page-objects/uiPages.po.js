@@ -31,9 +31,9 @@ export const uiPages = {
   },
   stats: {
     id: 'stats',
-    route: '/stats',
+    route: '/dev',
     navTestId: 'nav-stats',
-    root: '[data-testid="page-stats"]',
+    root: '[data-testid="page-dev"]',
     tabs: [],
   },
   admin: {

@@ -23,8 +23,10 @@ export type ProductionHealthErrorKind =
 function classifyError(msg: string): ProductionHealthErrorKind {
   if (msg.startsWith('SOURCE_UNAVAILABLE')) return 'SOURCE_UNAVAILABLE';
   if (msg.startsWith('SOURCE_EMPTY')) return 'SOURCE_EMPTY';
-  if (msg.includes('parse') || msg.includes('CSV') || msg.includes('Invalid')) return 'PARSER_ERROR';
-  if (msg.includes('IPC') || msg.includes('invoke') || msg.includes('tauri')) return 'IPC_ERROR';
+  if (msg.includes('parse') || msg.includes('CSV') || msg.includes('Invalid'))
+    return 'PARSER_ERROR';
+  if (msg.includes('IPC') || msg.includes('invoke') || msg.includes('tauri'))
+    return 'IPC_ERROR';
   return 'UNKNOWN_ERROR';
 }
 

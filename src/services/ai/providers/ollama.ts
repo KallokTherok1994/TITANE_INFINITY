@@ -90,7 +90,7 @@ export const DEFAULT_OLLAMA_CONFIG = {
   repeat_penalty: 1.1,
   timeout_ms: 60000,
   connect_timeout_ms: 5000,
-  retry_count: 2,            // Aligned with REQUEST_BUDGETS.maxAttempts (was 3)
+  retry_count: 2, // Aligned with REQUEST_BUDGETS.maxAttempts (was 3)
   retry_delay_ms: 1000,
   auto_start: true,
   check_on_startup: true,

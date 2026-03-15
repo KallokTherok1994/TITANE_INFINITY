@@ -343,27 +343,28 @@ export async function gotoTopNavPage(page) {
   await waitForDisplayed(testId('nav-top-main'));
 
   const navSelector = testId(page.navTestId);
+  const moreSelector = testId('btn-nav-more');
   let navigated = false;
 
-  try {
-    const navEl = await $(navSelector);
-    if (!(await navEl.isDisplayed())) {
-      const moreSelector = testId('btn-nav-more');
-      if (await isDisplayed(moreSelector)) {
-        await clickSafely(moreSelector);
-      }
-    }
+  if (await isDisplayed(navSelector)) {
+    navigated = await clickSafely(navSelector);
+  }
 
-    if (await isDisplayed(navSelector)) {
-      await clickSafely(navSelector);
-      navigated = true;
-    }
-  } catch {
-    navigated = false;
+  if (!navigated && (await isDisplayed(moreSelector))) {
+    await clickSafely(moreSelector);
+    await browser.waitUntil(
+      async () => (await isDisplayed(navSelector)) || (await isExisting(navSelector)),
+      {
+        timeout: 3000,
+        interval: 150,
+        timeoutMsg: `navigation item did not appear in more menu: ${page.navTestId}`,
+      }
+    );
+    navigated = await clickSafely(navSelector);
   }
 
   if (!navigated) {
-    await browser.url(`tauri://localhost${page.route}`);
+    await browser.url(`tauri://localhost/#${page.route}`);
   }
 
   await browser.waitUntil(

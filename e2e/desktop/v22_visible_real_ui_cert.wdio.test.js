@@ -88,6 +88,35 @@ async function pause(ms) {
   await new Promise(r => setTimeout(r, ms));
 }
 
+function isSessionCrashError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return (
+    message.includes('invalid session id') ||
+    message.includes('session deleted because of page crash or hang') ||
+    message.includes('page crash or hang') ||
+    message.includes('no such window')
+  );
+}
+
+async function recoverSessionIfNeeded(step, error) {
+  const detail = String(error?.message || error).slice(0, 160);
+  M.harnessRisks.push(`${step}_SESSION_LOST:${detail}`);
+  console.warn(`[${step}] session lost: ${detail}`);
+
+  try {
+    await browser.reloadSession();
+    await browser.url('tauri://localhost/#/titane');
+    await pause(LONG_PAUSE);
+    await ss(`${step.toLowerCase()}_session_recovered`);
+    return true;
+  } catch (recoveryError) {
+    const recoveryDetail = String(recoveryError?.message || recoveryError).slice(0, 160);
+    M.harnessRisks.push(`${step}_SESSION_RECOVERY_FAILED:${recoveryDetail}`);
+    console.warn(`[${step}] session recovery failed: ${recoveryDetail}`);
+    return false;
+  }
+}
+
 function saveMetrics(suffix) {
   try {
     const f = path.join(RUN_ARTIFACTS, `${RUN_ID}_v22_metrics${suffix || ''}.json`);
@@ -505,259 +534,289 @@ describe('V22 — VISIBLE REAL UI CERTIFICATION (AppImage 27.2.0)', () => {
     console.log('[V22-S3] START');
 
     try {
-      await browser.execute(() => {
-        window.location.hash = '/titane';
-      });
-      await pause(LONG_PAUSE);
-    } catch (e) {
-      M.harnessRisks.push('S3_NAV_FAILED');
-    }
-
-    const rChat = await inspectRuntime();
-    M.inputPresent = rChat.inputPresent;
-    M.sendPresent = rChat.sendPresent;
-    await ss('s3_before_chat');
-
-    if (!rChat.inputPresent) {
-      console.log('[V22-S3] SKIP no chat input');
-      M.frictions.push('CHAT_SCENARIO_SKIPPED_NO_INPUT');
-      return;
-    }
-
-    // Find input via JS
-    const inputInfo = await browser.execute(() => {
-      const sels = [
-        'textarea[placeholder]',
-        '[data-testid="chat-input"]',
-        '[role="textbox"]',
-        'textarea:not([disabled]):not([readonly])',
-        '.chat-input textarea',
-        'textarea',
-        'input[type="text"]',
-      ];
-      for (const sel of sels) {
-        const el = document.querySelector(sel);
-        if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
-          return {
-            found: true,
-            sel,
-            placeholder: el.placeholder || '',
-            disabled: el.disabled,
-          };
-        }
-      }
-      return { found: false };
-    });
-
-    if (!inputInfo.found) {
-      M.frictions.push('CHAT_INPUT_SELECTOR_FAIL');
-      return;
-    }
-
-    // Type via JS (avoids WebDriver focus issues)
-    try {
-      const typed = await browser.execute(
-        (sel, text) => {
-          const el = document.querySelector(sel);
-          if (!el) return false;
-          el.focus();
-          el.value = text;
-          el.dispatchEvent(new Event('input', { bubbles: true }));
-          el.dispatchEvent(new Event('change', { bubbles: true }));
-          return true;
-        },
-        inputInfo.sel,
-        'Test V22 certification TITANE visible'
-      );
-
-      if (typed) {
-        M.inputTyped = true;
-        console.log('[V22-S3] typed via JS');
-        await pause(ACTION_PAUSE);
-        await ss('s3_after_typing');
-      }
-    } catch (e) {
-      console.warn('[V22-S3] type failed:', e.message);
-    }
-
-    // Check send button
-    const sendInfo = await browser.execute(() => {
-      const sels = [
-        'button[type="submit"]',
-        '[data-testid="send"]',
-        '.send-button',
-        '[aria-label*="nvoi"]',
-        'button[class*="send" i]',
-      ];
-      for (const sel of sels) {
-        const el = document.querySelector(sel);
-        if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
-          return { found: true, sel, disabled: el.disabled };
-        }
-      }
-      return { found: false };
-    });
-
-    M.sendPresent = sendInfo.found;
-    M.sendEnabledAfterTyping = sendInfo.found && !sendInfo.disabled;
-
-    if (sendInfo.found && !sendInfo.disabled) {
       try {
-        const lenBefore = await browser.execute(() => document.body.innerHTML.length);
-        await browser.execute(sel => {
-          const el = document.querySelector(sel);
-          if (el) el.click();
-        }, sendInfo.sel);
-        M.sendClicked = true;
+        await browser.execute(() => {
+          window.location.hash = '/titane';
+        });
         await pause(LONG_PAUSE);
-        await ss('s3_after_send');
-        const lenAfter = await browser.execute(() => document.body.innerHTML.length);
-        M.visibleUiChangeAfterSend = Math.abs(lenAfter - lenBefore) > 50;
-        console.log(
-          `[V22-S3] send clicked dom: ${lenBefore} => ${lenAfter} change=${M.visibleUiChangeAfterSend}`
-        );
       } catch (e) {
-        console.warn('[V22-S3] send failed:', e.message);
+        M.harnessRisks.push('S3_NAV_FAILED');
       }
-    } else {
-      M.frictions.push(
-        sendInfo.found
-          ? 'SEND_DISABLED_AFTER_TYPING'
-          : 'SEND_BUTTON_NOT_FOUND_BY_SELECTOR'
-      );
-    }
 
-    await ss('s3_final');
-    console.log(
-      `[V22-S3] DONE typed=${M.inputTyped} sendClicked=${M.sendClicked} uiChange=${M.visibleUiChangeAfterSend}`
-    );
+      const rChat = await inspectRuntime();
+      M.inputPresent = rChat.inputPresent;
+      M.sendPresent = rChat.sendPresent;
+      await ss('s3_before_chat');
+
+      if (!rChat.inputPresent) {
+        console.log('[V22-S3] SKIP no chat input');
+        M.frictions.push('CHAT_SCENARIO_SKIPPED_NO_INPUT');
+        return;
+      }
+
+      // Find input via JS
+      const inputInfo = await browser.execute(() => {
+        const sels = [
+          'textarea[placeholder]',
+          '[data-testid="chat-input"]',
+          '[role="textbox"]',
+          'textarea:not([disabled]):not([readonly])',
+          '.chat-input textarea',
+          'textarea',
+          'input[type="text"]',
+        ];
+        for (const sel of sels) {
+          const el = document.querySelector(sel);
+          if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+            return {
+              found: true,
+              sel,
+              placeholder: el.placeholder || '',
+              disabled: el.disabled,
+            };
+          }
+        }
+        return { found: false };
+      });
+
+      if (!inputInfo.found) {
+        M.frictions.push('CHAT_INPUT_SELECTOR_FAIL');
+        return;
+      }
+
+      // Type via JS (avoids WebDriver focus issues)
+      try {
+        const typed = await browser.execute(
+          (sel, text) => {
+            const el = document.querySelector(sel);
+            if (!el) return false;
+            el.focus();
+            el.value = text;
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+          },
+          inputInfo.sel,
+          'Test V22 certification TITANE visible'
+        );
+
+        if (typed) {
+          M.inputTyped = true;
+          console.log('[V22-S3] typed via JS');
+          await pause(ACTION_PAUSE);
+          await ss('s3_after_typing');
+        }
+      } catch (e) {
+        console.warn('[V22-S3] type failed:', e.message);
+      }
+
+      // Check send button
+      const sendInfo = await browser.execute(() => {
+        const sels = [
+          'button[type="submit"]',
+          '[data-testid="send"]',
+          '.send-button',
+          '[aria-label*="nvoi"]',
+          'button[class*="send" i]',
+        ];
+        for (const sel of sels) {
+          const el = document.querySelector(sel);
+          if (el && el.offsetWidth > 0 && el.offsetHeight > 0) {
+            return { found: true, sel, disabled: el.disabled };
+          }
+        }
+        return { found: false };
+      });
+
+      M.sendPresent = sendInfo.found;
+      M.sendEnabledAfterTyping = sendInfo.found && !sendInfo.disabled;
+
+      if (sendInfo.found && !sendInfo.disabled) {
+        try {
+          const lenBefore = await browser.execute(() => document.body.innerHTML.length);
+          await browser.execute(sel => {
+            const el = document.querySelector(sel);
+            if (el) el.click();
+          }, sendInfo.sel);
+          M.sendClicked = true;
+          await pause(LONG_PAUSE);
+          await ss('s3_after_send');
+          const lenAfter = await browser.execute(() => document.body.innerHTML.length);
+          M.visibleUiChangeAfterSend = Math.abs(lenAfter - lenBefore) > 50;
+          console.log(
+            `[V22-S3] send clicked dom: ${lenBefore} => ${lenAfter} change=${M.visibleUiChangeAfterSend}`
+          );
+        } catch (e) {
+          console.warn('[V22-S3] send failed:', e.message);
+        }
+      } else {
+        M.frictions.push(
+          sendInfo.found
+            ? 'SEND_DISABLED_AFTER_TYPING'
+            : 'SEND_BUTTON_NOT_FOUND_BY_SELECTOR'
+        );
+      }
+
+      await ss('s3_final');
+      console.log(
+        `[V22-S3] DONE typed=${M.inputTyped} sendClicked=${M.sendClicked} uiChange=${M.visibleUiChangeAfterSend}`
+      );
+    } catch (e) {
+      if (isSessionCrashError(e)) {
+        await recoverSessionIfNeeded('V22-S3', e);
+        return;
+      }
+      throw e;
+    }
   });
 
   it('V22-S4 — Surface secondaire + fullstack IPC probe', async () => {
     console.log('[V22-S4] START');
 
-    await ss('s4_start');
-
-    // Try secondary surfaces via hash nav
-    const routes = ['/admin', '/settings', '/dev', '/stats'];
-    let opened = false;
-    for (const route of routes) {
-      try {
-        await browser.execute(r => {
-          window.location.hash = r;
-        }, route);
-        await pause(ACTION_PAUSE);
-        const r = await inspectRuntime();
-        const url = await browser.getUrl();
-        if (r.reactMounted && !r.splashVisible && url.includes(route.replace('/', ''))) {
-          M.secondarySurfaceOpened = true;
-          opened = true;
-          console.log(`[V22-S4] opened: ${route} url=${url}`);
-          await ss('s4_secondary_opened');
-          break;
-        }
-      } catch (e) {
-        console.warn(`[V22-S4] ${route} failed: ${e.message}`);
-      }
-    }
-
-    if (!opened) {
-      M.frictions.push('SECONDARY_SURFACE_NOT_REACHABLE');
-    }
-
-    // IPC probe
     try {
-      const ipcProbe = await browser.execute(() => {
-        const inv = window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.invoke;
-        const meta = window.__TAURI_INTERNALS__?.metadata;
-        return {
-          hasInvoke: typeof inv === 'function',
-          tauriPresent: !!window.__TAURI__,
-          internalsPresent: !!window.__TAURI_INTERNALS__,
-          runtimeVersion: meta?.currentPackage?.version || null,
-        };
-      });
-      M.ipcAvailable = ipcProbe.hasInvoke;
-      if (ipcProbe.runtimeVersion) M.actualTargetVersion = ipcProbe.runtimeVersion;
-      console.log('[V22-S4] IPC probe:', JSON.stringify(ipcProbe));
-    } catch (e) {
-      M.harnessRisks.push('IPC_PROBE_FAILED: ' + e.message.slice(0, 60));
-    }
+      await ss('s4_start');
 
-    await ss('s4_done');
-    console.log(`[V22-S4] DONE secondarySurfaceOpened=${M.secondarySurfaceOpened}`);
+      // Try secondary surfaces via hash nav
+      const routes = ['/admin', '/settings', '/dev', '/stats'];
+      let opened = false;
+      for (const route of routes) {
+        try {
+          await browser.execute(r => {
+            window.location.hash = r;
+          }, route);
+          await pause(ACTION_PAUSE);
+          const r = await inspectRuntime();
+          const url = await browser.getUrl();
+          if (
+            r.reactMounted &&
+            !r.splashVisible &&
+            url.includes(route.replace('/', ''))
+          ) {
+            M.secondarySurfaceOpened = true;
+            opened = true;
+            console.log(`[V22-S4] opened: ${route} url=${url}`);
+            await ss('s4_secondary_opened');
+            break;
+          }
+        } catch (e) {
+          console.warn(`[V22-S4] ${route} failed: ${e.message}`);
+        }
+      }
+
+      if (!opened) {
+        M.frictions.push('SECONDARY_SURFACE_NOT_REACHABLE');
+      }
+
+      // IPC probe
+      try {
+        const ipcProbe = await browser.execute(() => {
+          const inv = window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.invoke;
+          const meta = window.__TAURI_INTERNALS__?.metadata;
+          return {
+            hasInvoke: typeof inv === 'function',
+            tauriPresent: !!window.__TAURI__,
+            internalsPresent: !!window.__TAURI_INTERNALS__,
+            runtimeVersion: meta?.currentPackage?.version || null,
+          };
+        });
+        M.ipcAvailable = ipcProbe.hasInvoke;
+        if (ipcProbe.runtimeVersion) M.actualTargetVersion = ipcProbe.runtimeVersion;
+        console.log('[V22-S4] IPC probe:', JSON.stringify(ipcProbe));
+      } catch (e) {
+        M.harnessRisks.push('IPC_PROBE_FAILED: ' + e.message.slice(0, 60));
+      }
+
+      await ss('s4_done');
+      console.log(`[V22-S4] DONE secondarySurfaceOpened=${M.secondarySurfaceOpened}`);
+    } catch (e) {
+      if (isSessionCrashError(e)) {
+        await recoverSessionIfNeeded('V22-S4', e);
+        return;
+      }
+      throw e;
+    }
   });
 
   it('V22-S5 — Retour principal + stabilite + metriques finales', async () => {
     console.log('[V22-S5] START');
 
     try {
-      await browser.execute(() => {
-        window.location.hash = '/titane';
+      try {
+        await browser.execute(() => {
+          window.location.hash = '/titane';
+        });
+        await pause(LONG_PAUSE);
+      } catch (e) {
+        M.harnessRisks.push('RETURN_TITANE_FAILED');
+      }
+
+      await ss('s5_returned_primary');
+
+      const rf = await inspectRuntime();
+      M.returnedToPrimarySurface = rf.reactMounted && !rf.splashVisible;
+      M.reflowReasonable = rf.scrollContainers < 8;
+      M.potentialDoubleScroll = rf.potentialDoubleScroll;
+      if (!M.returnedToPrimarySurface) M.frictions.push('RETURN_TO_PRIMARY_FAILED');
+
+      // DOM health
+      const health = await browser.execute(() => {
+        const errEls = Array.from(
+          document.querySelectorAll('[class*="error" i], [role="alert"]')
+        );
+        const blockEls = Array.from(
+          document.querySelectorAll('[class*="overlay"], [class*="modal"]')
+        );
+        return {
+          visibleErrors: errEls.filter(el => el.offsetWidth > 0).length,
+          blockingOverlays: blockEls.filter(
+            el => el.offsetWidth > 0 && el.offsetHeight > 100
+          ).length,
+          inputCount: document.querySelectorAll('textarea, input[type="text"]').length,
+          buttonCount: document.querySelectorAll('button:not([disabled])').length,
+          scriptCount: document.scripts.length,
+          stylesheetCount: document.styleSheets.length,
+        };
       });
-      await pause(LONG_PAUSE);
-    } catch (e) {
-      M.harnessRisks.push('RETURN_TITANE_FAILED');
-    }
+      console.log('[V22-S5] health:', JSON.stringify(health));
 
-    await ss('s5_returned_primary');
+      if (health.visibleErrors > 0) M.frictions.push('ERROR_ELEMENTS_IN_DOM');
+      if (health.blockingOverlays > 0) M.frictions.push('BLOCKING_OVERLAY_DETECTED');
 
-    const rf = await inspectRuntime();
-    M.returnedToPrimarySurface = rf.reactMounted && !rf.splashVisible;
-    M.reflowReasonable = rf.scrollContainers < 8;
-    M.potentialDoubleScroll = rf.potentialDoubleScroll;
-    if (!M.returnedToPrimarySurface) M.frictions.push('RETURN_TO_PRIMARY_FAILED');
+      // Final IPC check
+      try {
+        const ipc = await browser.execute(() => ({
+          hasInvoke:
+            typeof (window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.invoke) ===
+            'function',
+          tauriPresent: !!window.__TAURI__,
+        }));
+        M.ipcAvailable = ipc.hasInvoke;
+      } catch (e) {
+        M.harnessRisks.push('IPC_FINAL_FAILED');
+      }
 
-    // DOM health
-    const health = await browser.execute(() => {
-      const errEls = Array.from(
-        document.querySelectorAll('[class*="error" i], [role="alert"]')
+      await ss('s5_final');
+
+      M.dominantClassification = classify(M);
+      saveMetrics('');
+
+      console.log(
+        `[V22-S5] FINAL mode=${M.modeDecision} class=${M.dominantClassification}`
       );
-      const blockEls = Array.from(
-        document.querySelectorAll('[class*="overlay"], [class*="modal"]')
-      );
-      return {
-        visibleErrors: errEls.filter(el => el.offsetWidth > 0).length,
-        blockingOverlays: blockEls.filter(
-          el => el.offsetWidth > 0 && el.offsetHeight > 100
-        ).length,
-        inputCount: document.querySelectorAll('textarea, input[type="text"]').length,
-        buttonCount: document.querySelectorAll('button:not([disabled])').length,
-        scriptCount: document.scripts.length,
-        stylesheetCount: document.styleSheets.length,
-      };
-    });
-    console.log('[V22-S5] health:', JSON.stringify(health));
+      console.log(`[V22-S5] frictions=[${M.frictions.join(', ')}]`);
+      console.log(`[V22-S5] blockers=[${M.blockers.join(', ')}]`);
+      console.log(`[V22-S5] screens=${M.screenshots.length} ipc=${M.ipcAvailable}`);
 
-    if (health.visibleErrors > 0) M.frictions.push('ERROR_ELEMENTS_IN_DOM');
-    if (health.blockingOverlays > 0) M.frictions.push('BLOCKING_OVERLAY_DETECTED');
-
-    // Final IPC check
-    try {
-      const ipc = await browser.execute(() => ({
-        hasInvoke:
-          typeof (window.__TAURI_INTERNALS__?.invoke || window.__TAURI__?.invoke) ===
-          'function',
-        tauriPresent: !!window.__TAURI__,
-      }));
-      M.ipcAvailable = ipc.hasInvoke;
+      expect(M.dominantClassification).toBeTruthy();
+      console.log('[V22-S5] DONE');
     } catch (e) {
-      M.harnessRisks.push('IPC_FINAL_FAILED');
+      if (isSessionCrashError(e)) {
+        await recoverSessionIfNeeded('V22-S5', e);
+        M.dominantClassification = classify(M);
+        saveMetrics('_s5_session_crash');
+        return;
+      }
+      throw e;
     }
-
-    await ss('s5_final');
-
-    M.dominantClassification = classify(M);
-    saveMetrics('');
-
-    console.log(
-      `[V22-S5] FINAL mode=${M.modeDecision} class=${M.dominantClassification}`
-    );
-    console.log(`[V22-S5] frictions=[${M.frictions.join(', ')}]`);
-    console.log(`[V22-S5] blockers=[${M.blockers.join(', ')}]`);
-    console.log(`[V22-S5] screens=${M.screenshots.length} ipc=${M.ipcAvailable}`);
-
-    expect(M.dominantClassification).toBeTruthy();
-    console.log('[V22-S5] DONE');
   });
 });

@@ -179,7 +179,9 @@ wdio.child.on('close', async (code, signal) => {
 });
 
 tauriDriver.child.on('close', async (code, signal) => {
-  await appendDiag(`tauri-driver close: code=${code ?? 'null'} signal=${signal ?? 'null'}`);
+  await appendDiag(
+    `tauri-driver close: code=${code ?? 'null'} signal=${signal ?? 'null'}`
+  );
 });
 
 process.on('SIGINT', shutdown);

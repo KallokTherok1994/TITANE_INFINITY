@@ -95,7 +95,9 @@ async function getColorValue(testId) {
 async function getRootVar(name) {
   return browser.execute(varName => {
     const value = getComputedStyle(document.documentElement).getPropertyValue(varName);
-    return String(value || '').trim().toLowerCase();
+    return String(value || '')
+      .trim()
+      .toLowerCase();
   }, name);
 }
 
@@ -105,7 +107,9 @@ async function openAdminDesign() {
   await gotoTopNavPage(uiPages.admin);
 
   await clickSafe('[data-testid="tab-admin-design"]');
-  await (await $('[data-testid="page-design-center"]')).waitForDisplayed({ timeout: 30000 });
+  await (
+    await $('[data-testid="page-design-center"]')
+  ).waitForDisplayed({ timeout: 30000 });
 }
 
 async function detectDesignStatus() {
@@ -163,7 +167,10 @@ describe('ADMIN Design truth chain', () => {
     assert.equal(await appearanceTab.getAttribute('aria-selected'), 'true');
     const appearancePanel = await $('[data-testid="design-panel-appearance"]');
     assert.equal(await appearancePanel.getAttribute('role'), 'tabpanel');
-    assert.equal(await appearancePanel.getAttribute('aria-labelledby'), 'dc-tab-appearance');
+    assert.equal(
+      await appearancePanel.getAttribute('aria-labelledby'),
+      'dc-tab-appearance'
+    );
 
     await browser.execute(element => {
       if (!element) return;

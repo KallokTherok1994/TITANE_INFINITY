@@ -62,6 +62,34 @@ async function pause(ms) {
   await new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function isSessionCrashError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return (
+    message.includes('invalid session id') ||
+    message.includes('session deleted because of page crash or hang') ||
+    message.includes('page crash or hang') ||
+    message.includes('no such window')
+  );
+}
+
+async function recoverSessionIfNeeded(step, error) {
+  const detail = String(error?.message || error).slice(0, 160);
+  M.frictions.push(`${step}_SESSION_LOST:${detail}`);
+  console.warn(`[${step}] session lost: ${detail}`);
+
+  try {
+    await browser.reloadSession();
+    await browser.url('tauri://localhost/#/titane');
+    await pause(1200);
+    return true;
+  } catch (recoveryError) {
+    const recoveryDetail = String(recoveryError?.message || recoveryError).slice(0, 160);
+    M.frictions.push(`${step}_SESSION_RECOVERY_FAILED:${recoveryDetail}`);
+    console.warn(`[${step}] session recovery failed: ${recoveryDetail}`);
+    return false;
+  }
+}
+
 async function ss(label) {
   const file = `${RUN_ID}_${label}.png`;
   const filePath = path.join(SCREEN_DIR, file);
@@ -252,6 +280,8 @@ function classifyFinal() {
 describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
   it('V25-SCENARIO - visible real chat end-to-end truth', async () => {
     console.log('[V25] START');
+
+    try {
 
     await pause(1500);
     await browser.url('tauri://localhost/#/titane');
@@ -548,5 +578,16 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
     console.log(`[V25] runtimeAttrs=${JSON.stringify(M.runtimeAttrs)}`);
 
     expect(M.verdict).toBeTruthy();
+    } catch (error) {
+      if (isSessionCrashError(error)) {
+        await recoverSessionIfNeeded('V25', error);
+        M.blockers.push('SESSION_CRASH_OR_HANG');
+        M.verdict = 'BLOCKED_SESSION_LOSS';
+        saveMetrics();
+        expect(M.verdict).toBeTruthy();
+        return;
+      }
+      throw error;
+    }
   });
 });

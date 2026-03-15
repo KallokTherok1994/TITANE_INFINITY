@@ -89,7 +89,17 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     <div className="twin-panel" data-testid="twin-evolution-panel">
       {/* Error banner */}
       {hookError && (
-        <div style={{ background: '#4a1a1a', color: '#ff6b6b', border: '1px solid #ff4444', borderRadius: 6, padding: '8px 12px', margin: '8px 0', fontWeight: 500 }}>
+        <div
+          style={{
+            background: '#4a1a1a',
+            color: '#ff6b6b',
+            border: '1px solid #ff4444',
+            borderRadius: 6,
+            padding: '8px 12px',
+            margin: '8px 0',
+            fontWeight: 500,
+          }}
+        >
           ❌ {hookError}
         </div>
       )}
@@ -185,11 +195,12 @@ interface FusionTabProps {
 }
 
 const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
-  if (!fusionIndex) return (
-    <div className="twin-tab__empty" data-testid="twin-fusion-empty">
-      Données de fusion non disponibles
-    </div>
-  );
+  if (!fusionIndex)
+    return (
+      <div className="twin-tab__empty" data-testid="twin-fusion-empty">
+        Données de fusion non disponibles
+      </div>
+    );
 
   const alignments = [
     { label: 'Valeurs', value: fusionIndex.valueAlignment, icon: '💎' },
@@ -317,7 +328,16 @@ const ValuesTab: React.FC<ValuesTabProps> = ({ coreValues, onReinforce }) => {
     <div className="twin-tab twin-tab--values">
       <h3>Valeurs Fondamentales (Inviolables)</h3>
       {reinforceError && (
-        <div style={{ background: '#4a1a1a', color: '#ff6b6b', border: '1px solid #ff4444', borderRadius: 4, padding: '6px 10px', marginBottom: 8 }}>
+        <div
+          style={{
+            background: '#4a1a1a',
+            color: '#ff6b6b',
+            border: '1px solid #ff4444',
+            borderRadius: 4,
+            padding: '6px 10px',
+            marginBottom: 8,
+          }}
+        >
           ❌ {reinforceError}
         </div>
       )}
@@ -522,7 +542,16 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
 
       <div className="twin-admin__actions">
         {feedback && (
-          <div style={{ marginBottom: 8, padding: '6px 10px', borderRadius: 4, background: feedback.startsWith('❌') ? '#4a1a1a' : '#1a3a1a', color: feedback.startsWith('❌') ? '#ff6b6b' : '#6bff6b', border: `1px solid ${feedback.startsWith('❌') ? '#ff4444' : '#44ff44'}` }}>
+          <div
+            style={{
+              marginBottom: 8,
+              padding: '6px 10px',
+              borderRadius: 4,
+              background: feedback.startsWith('❌') ? '#4a1a1a' : '#1a3a1a',
+              color: feedback.startsWith('❌') ? '#ff6b6b' : '#6bff6b',
+              border: `1px solid ${feedback.startsWith('❌') ? '#ff4444' : '#44ff44'}`,
+            }}
+          >
             {feedback}
           </div>
         )}

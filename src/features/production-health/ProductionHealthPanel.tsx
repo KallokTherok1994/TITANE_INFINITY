@@ -39,32 +39,39 @@ const getStatusLabel = (status: ProductionHealthStatus): string => {
   }
 };
 
-const getNoDataMessage = (kind: ProductionHealthErrorKind | null): { title: string; detail: string } => {
+const getNoDataMessage = (
+  kind: ProductionHealthErrorKind | null
+): { title: string; detail: string } => {
   switch (kind) {
     case 'SOURCE_UNAVAILABLE':
       return {
         title: '📂 Source absente',
-        detail: 'Le fichier de télémétrie production est absent. La collecte doit être démarrée sur le système cible.',
+        detail:
+          'Le fichier de télémétrie production est absent. La collecte doit être démarrée sur le système cible.',
       };
     case 'SOURCE_EMPTY':
       return {
         title: '📋 Aucune donnée collectée',
-        detail: 'Le fichier de télémétrie existe mais ne contient aucun échantillon. En attente de la première collecte.',
+        detail:
+          'Le fichier de télémétrie existe mais ne contient aucun échantillon. En attente de la première collecte.',
       };
     case 'PARSER_ERROR':
       return {
         title: '⚠️ Erreur de parsing',
-        detail: 'Le fichier de télémétrie existe mais son format est invalide. Vérifier la structure CSV.',
+        detail:
+          'Le fichier de télémétrie existe mais son format est invalide. Vérifier la structure CSV.',
       };
     case 'IPC_ERROR':
       return {
         title: '🔌 Erreur IPC',
-        detail: 'La commande Tauri n\'a pas pu s\'exécuter. Vérifier la configuration runtime.',
+        detail:
+          "La commande Tauri n'a pas pu s'exécuter. Vérifier la configuration runtime.",
       };
     default:
       return {
         title: '❓ Source indisponible',
-        detail: 'Les données de production ne sont pas accessibles pour une raison inconnue.',
+        detail:
+          'Les données de production ne sont pas accessibles pour une raison inconnue.',
       };
   }
 };
@@ -101,7 +108,9 @@ export const ProductionHealthPanel: React.FC = () => {
         <div className="ph-state ph-error" data-testid="production-health-no-data">
           <p className="ph-error-title">{noDataMsg.title}</p>
           <p className="ph-error-message">{noDataMsg.detail}</p>
-          <p className="ph-error-kind" data-testid="production-health-error-kind">{errorKind ?? 'UNKNOWN_ERROR'}</p>
+          <p className="ph-error-kind" data-testid="production-health-error-kind">
+            {errorKind ?? 'UNKNOWN_ERROR'}
+          </p>
           <button className="ph-button ph-button-retry" onClick={refresh}>
             Réessayer
           </button>
