@@ -291,6 +291,34 @@ export interface ConversationMemoryStats {
 // ═══════════════════════════════════════════════════════════════════
 
 /**
+ * Lit le profil persona depuis localStorage et retourne un contexte
+ * texte à injecter dans le system prompt.
+ */
+function readPersonaContext(): string {
+  try {
+    const raw = localStorage.getItem('titane_persona_profile');
+    if (!raw) return '';
+    const p = JSON.parse(raw) as Record<string, unknown>;
+    const parts: string[] = [];
+    if (typeof p.tone === 'string' && p.tone !== 'balanced')
+      parts.push(`Ton de réponse: ${p.tone}`);
+    if (typeof p.verbosity === 'string' && p.verbosity !== 'balanced')
+      parts.push(`Verbosité: ${p.verbosity}`);
+    if (typeof p.emoji === 'boolean') parts.push(`Emojis: ${p.emoji ? 'oui' : 'non'}`);
+    if (typeof p.formality === 'number')
+      parts.push(`Formalité: ${p.formality}/100`);
+    if (typeof p.creativity === 'number')
+      parts.push(`Créativité: ${p.creativity}/100`);
+    if (typeof p.codeExamples === 'boolean')
+      parts.push(`Exemples de code: ${p.codeExamples ? 'oui' : 'non'}`);
+    if (parts.length === 0) return '';
+    return `Style de réponse préféré de l'utilisateur:\n${parts.join('\n')}`;
+  } catch {
+    return '';
+  }
+}
+
+/**
  * Traiter un message à travers le Conversation Engine v∞
  */
 export async function processMessage(
@@ -360,9 +388,10 @@ export async function processMessage(
   const contextualPrompt = options?.contextEnvelope
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
-  const systemPrompt = contextualPrompt
-    ? `${baseSystemPrompt}\n\n${contextualPrompt}`
-    : baseSystemPrompt;
+  const personaContext = readPersonaContext();
+  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext]
+    .filter(Boolean)
+    .join('\n\n');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   const payload = {
