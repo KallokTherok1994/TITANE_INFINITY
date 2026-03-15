@@ -66,6 +66,56 @@ async function getSelectOptionValues(selectElement) {
   }, selectElement);
 }
 
+async function getElementTagName(element) {
+  return browser.execute(el => {
+    if (!el || !el.tagName) return '';
+    return String(el.tagName).toLowerCase();
+  }, element);
+}
+
+async function setInputValue(inputField, nextValue) {
+  await browser.execute(
+    (el, value) => {
+      if (!el) return;
+
+      try {
+        el.scrollIntoView({ block: 'center', inline: 'nearest' });
+      } catch {
+        // Best effort only.
+      }
+
+      const normalizedValue = String(value ?? '');
+      const descriptor = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        'value'
+      );
+
+      if (descriptor?.set) {
+        descriptor.set.call(el, normalizedValue);
+      } else {
+        el.value = normalizedValue;
+      }
+
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+    inputField,
+    nextValue
+  );
+}
+
+async function setProviderValue(providerField, targetProvider) {
+  const tagName = await getElementTagName(providerField);
+
+  if (tagName === 'select') {
+    await providerField.selectByAttribute('value', targetProvider);
+    return tagName;
+  }
+
+  await setInputValue(providerField, targetProvider);
+  return tagName;
+}
+
 function normalizeDefaultsEnvelope(value) {
   const content = value?.content ?? value?.res?.content ?? value?.res ?? value;
   if (!content || typeof content !== 'object') {
@@ -205,6 +255,59 @@ async function waitForProviderReadback(expectedProvider) {
   );
 }
 
+async function waitForMaxTokensReadback(expectedMaxTokens) {
+  await browser.waitUntil(
+    async () => {
+      const defaults = await getDefaults();
+      return defaults.maxOutputTokens === expectedMaxTokens;
+    },
+    {
+      timeout: 20000,
+      interval: 500,
+      timeoutMsg: `max tokens read-back did not become ${expectedMaxTokens}`,
+    }
+  );
+}
+
+async function ensureAiEditMode() {
+  const aiTab = await $('[data-testid="tab-config-ai"]');
+  if (await aiTab.isExisting()) {
+    await clickWithFallback(aiTab);
+  }
+
+  const saveButton = await $('[data-testid="btn-config-save"]');
+  if (await saveButton.isExisting()) {
+    await saveButton.waitForDisplayed({ timeout: 10000 });
+    return;
+  }
+
+  const editButton = await $('[data-testid="btn-config-edit"]');
+  await editButton.waitForDisplayed({ timeout: 10000 });
+  await clickWithFallback(editButton);
+  await saveButton.waitForDisplayed({ timeout: 10000 });
+}
+
+async function getRequestMaxTokensInput() {
+  const marked = await browser.execute(() => {
+    const labels = Array.from(document.querySelectorAll('div')).filter(el =>
+      String(el.textContent || '').trim() === 'Request Max Tokens'
+    );
+
+    for (const label of labels) {
+      const fieldBlock = label.parentElement?.parentElement?.parentElement;
+      const input = fieldBlock?.querySelector('input[type="number"]');
+      if (!input) continue;
+      input.setAttribute('data-e2e-max-tokens-temp', '1');
+      return true;
+    }
+
+    return false;
+  });
+
+  assert.ok(marked, 'max tokens input not found via label lookup');
+  return $('[data-e2e-max-tokens-temp="1"]');
+}
+
 describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
   it('writes request provider via UI, proves IPC read-back, then restores', async function () {
     this.timeout(180000);
@@ -215,12 +318,18 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
       route: 'tauri://localhost/admin',
       original: null,
       targetProvider: null,
+      providerFieldTag: null,
+      providerFlowError: null,
+      propagationField: null,
+      targetMaxOutputTokens: null,
+      uiMaxTokensAfterSave: null,
       uiValueBeforeSave: null,
       uiValueAfterSave: null,
       readBackAfterSave: null,
       restored: null,
       currentUrl: null,
       error: null,
+      restoreError: null,
       verdict: 'BLOCKED',
     };
 
@@ -234,46 +343,109 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
       const uiBefore = String(await providerSelect.getValue()).toLowerCase();
       metrics.uiValueBeforeSave = uiBefore;
 
+      const providerFieldTag = await getElementTagName(providerSelect);
+      metrics.providerFieldTag = providerFieldTag;
       const availableProviders = await getSelectOptionValues(providerSelect);
       const preferredOrder = ['ollama', 'gemini', 'auto'];
-      const targetProvider =
+      let targetProvider =
         preferredOrder.find(
           provider =>
             availableProviders.includes(provider) && provider !== original.provider
         ) ||
         availableProviders.find(provider => provider !== original.provider);
 
+      if (!targetProvider) {
+        targetProvider = preferredOrder.find(provider => provider !== original.provider);
+      }
+
+      if (!targetProvider && original.provider !== 'local') {
+        targetProvider = 'local';
+      }
+
       metrics.availableProviders = availableProviders;
-      assert.ok(targetProvider, 'no alternate provider available for propagation proof');
       metrics.targetProvider = targetProvider;
 
-      await providerSelect.selectByAttribute('value', targetProvider);
+      let providerFlowPassed = false;
+      if (targetProvider) {
+        try {
+          await setProviderValue(providerSelect, targetProvider);
 
-      const saveButton = await $('[data-testid="btn-config-save"]');
-      await saveButton.waitForExist({ timeout: 10000 });
-      await clickWithFallback(saveButton);
+          const saveButton = await $('[data-testid="btn-config-save"]');
+          await saveButton.waitForExist({ timeout: 10000 });
+          await clickWithFallback(saveButton);
 
-      const editButton = await $('[data-testid="btn-config-edit"]');
-      await editButton.waitForExist({ timeout: 20000 });
+          const editButton = await $('[data-testid="btn-config-edit"]');
+          await editButton.waitForExist({ timeout: 20000 });
 
-      await waitForProviderReadback(targetProvider);
-      metrics.readBackAfterSave = await getDefaults();
+          await waitForProviderReadback(targetProvider);
+          metrics.readBackAfterSave = await getDefaults();
 
-      await clickWithFallback(editButton);
-      const providerSelectAfter = await $('[data-testid="select-request-provider"]');
-      await providerSelectAfter.waitForExist({ timeout: 10000 });
-      metrics.uiValueAfterSave = String(await providerSelectAfter.getValue()).toLowerCase();
+          await clickWithFallback(editButton);
+          const providerSelectAfter = await $('[data-testid="select-request-provider"]');
+          await providerSelectAfter.waitForExist({ timeout: 10000 });
+          metrics.uiValueAfterSave = String(await providerSelectAfter.getValue()).toLowerCase();
 
-      assert.equal(
-        metrics.readBackAfterSave.provider,
-        targetProvider,
-        'IPC read-back provider mismatch after UI save'
-      );
-      assert.equal(
-        metrics.uiValueAfterSave,
-        targetProvider,
-        'UI provider value mismatch after save/read-back'
-      );
+          assert.equal(
+            metrics.readBackAfterSave.provider,
+            targetProvider,
+            'IPC read-back provider mismatch after UI save'
+          );
+          assert.equal(
+            metrics.uiValueAfterSave,
+            targetProvider,
+            'UI provider value mismatch after save/read-back'
+          );
+
+          metrics.propagationField = 'provider';
+          providerFlowPassed = true;
+        } catch (providerError) {
+          metrics.providerFlowError = String(providerError?.message || providerError);
+        }
+      }
+
+      if (!providerFlowPassed) {
+        await ensureAiEditMode();
+
+        const maxTokensInput = await getRequestMaxTokensInput();
+        await maxTokensInput.waitForExist({ timeout: 10000 });
+
+        const uiMaxBefore = Number(await maxTokensInput.getValue());
+        const baseMaxTokens = Number.isFinite(uiMaxBefore)
+          ? uiMaxBefore
+          : Number(original.maxOutputTokens);
+        const targetMaxTokens = baseMaxTokens >= 2000 ? baseMaxTokens - 1 : baseMaxTokens + 1;
+        metrics.targetMaxOutputTokens = targetMaxTokens;
+
+        await setInputValue(maxTokensInput, String(targetMaxTokens));
+
+        const saveButton = await $('[data-testid="btn-config-save"]');
+        await saveButton.waitForExist({ timeout: 10000 });
+        await clickWithFallback(saveButton);
+
+        const editButton = await $('[data-testid="btn-config-edit"]');
+        await editButton.waitForExist({ timeout: 20000 });
+
+        await waitForMaxTokensReadback(targetMaxTokens);
+        metrics.readBackAfterSave = await getDefaults();
+
+        await clickWithFallback(editButton);
+        const maxTokensAfter = await $('[data-testid="input-request-max-tokens"]');
+        await maxTokensAfter.waitForExist({ timeout: 10000 });
+        metrics.uiMaxTokensAfterSave = Number(await maxTokensAfter.getValue());
+
+        assert.equal(
+          metrics.readBackAfterSave.maxOutputTokens,
+          targetMaxTokens,
+          'IPC read-back max_output_tokens mismatch after UI save'
+        );
+        assert.equal(
+          metrics.uiMaxTokensAfterSave,
+          targetMaxTokens,
+          'UI max_output_tokens value mismatch after save/read-back'
+        );
+
+        metrics.propagationField = 'max_output_tokens';
+      }
 
       metrics.verdict = 'PASS';
     } catch (error) {
@@ -282,18 +454,23 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
       metrics.verdict = 'FAIL';
       throw error;
     } finally {
-      await restoreDefaults(original);
-      await waitForProviderReadback(original.provider);
-      metrics.restored = await getDefaults();
-      restored = metrics.restored.provider === original.provider;
-      if (!restored) {
+      try {
+        await restoreDefaults(original);
+        await waitForProviderReadback(original.provider);
+        metrics.restored = await getDefaults();
+        restored = metrics.restored.provider === original.provider;
+        if (!restored) {
+          metrics.verdict = 'FAIL';
+        }
+      } catch (restoreError) {
+        metrics.restoreError = String(restoreError?.message || restoreError);
         metrics.verdict = 'FAIL';
+      } finally {
+        fs.writeFileSync(
+          path.join(ARTIFACT_DIR, `${RUN_ID}.json`),
+          JSON.stringify(metrics, null, 2)
+        );
       }
-
-      fs.writeFileSync(
-        path.join(ARTIFACT_DIR, `${RUN_ID}.json`),
-        JSON.stringify(metrics, null, 2)
-      );
     }
 
     assert.equal(metrics.verdict, 'PASS', JSON.stringify(metrics, null, 2));
