@@ -554,6 +554,10 @@ export class TauriInvokeProtector {
       } as T;
     }
 
+    if (safeCommand === 'create_new_conversation') {
+      return `fallback-${Date.now()}` as T;
+    }
+
     if (safeCommand.includes('conversation_generate')) {
       // ✅ IPC FIX (Ω∞.v1): Classify error before showing fallback message
       const classification = classifyError(errorMessage);
