@@ -64,11 +64,83 @@
   --spacing-2xl: var(--space-2xl, 48px);
 
   /* ═══════════════════════════════════════════════════════════════
-     TEXT COLORS ALIAS
+     GRAMMAIRE UI UNIFIÉE — TABS (v29.1 UI Maturation)
+     Source de vérité pour tous les systèmes de tabs de TITANE∞
+     Remplace les variantes per-page (violet/vert/cyan) par un
+     langage commun calme, titanium, long-session friendly
      ═══════════════════════════════════════════════════════════════ */
 
-  /* Unifié depuis titane-fusion.css */
-  --text-primary: rgba(255, 255, 255, 0.96);
+  /* Tab container */
+  --tab-bar-bg: linear-gradient(180deg, rgba(20, 24, 36, 0.94) 0%, rgba(14, 18, 28, 0.97) 100%);
+  --tab-bar-border: rgba(255, 255, 255, 0.06);
+  --tab-bar-shadow: 0 2px 12px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+
+  /* Tab item — rest */
+  --tab-item-color: rgba(180, 188, 204, 0.82);
+  --tab-item-color-hover: rgba(226, 232, 240, 0.96);
+  --tab-item-bg-hover: rgba(99, 102, 241, 0.08);
+  --tab-item-border-hover: rgba(99, 102, 241, 0.2);
+
+  /* Tab item — active (calm unified — pas de glow multi-couches) */
+  --tab-active-bg: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(59, 130, 246, 0.10) 100%);
+  --tab-active-border: rgba(99, 102, 241, 0.32);
+  --tab-active-shadow: 0 1px 8px rgba(99, 102, 241, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  --tab-active-color: rgba(238, 242, 255, 0.98);
+
+  /* ═══════════════════════════════════════════════════════════════
+     GRAMMAIRE UI UNIFIÉE — SURFACES / PANELS
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Surface primaire — contenu principal */
+  --surface-primary-bg: rgba(15, 23, 42, 0.95);
+  --surface-primary-border: rgba(255, 255, 255, 0.06);
+
+  /* Surface secondaire — panneaux de support */
+  --surface-secondary-bg: rgba(22, 28, 45, 0.85);
+  --surface-secondary-border: rgba(255, 255, 255, 0.05);
+
+  /* Surface expert — traces/diagnostics (plus dense, plus compact) */
+  --surface-expert-bg: rgba(10, 15, 26, 0.96);
+  --surface-expert-border: rgba(99, 102, 241, 0.12);
+
+  /* Card / section header */
+  --section-header-bg: rgba(30, 36, 56, 0.6);
+  --section-header-border: rgba(255, 255, 255, 0.05);
+  --section-title-color: rgba(203, 213, 225, 0.9);
+  --section-title-size: 0.8125rem;
+  --section-title-weight: 600;
+  --section-title-spacing: 0.05em;
+
+  /* ═══════════════════════════════════════════════════════════════
+     GRAMMAIRE UI UNIFIÉE — CONTRÔLES
+     ═══════════════════════════════════════════════════════════════ */
+
+  /* Badge / chip — neutral */
+  --badge-neutral-bg: rgba(71, 85, 105, 0.25);
+  --badge-neutral-border: rgba(100, 116, 139, 0.2);
+  --badge-neutral-color: rgba(148, 163, 184, 0.9);
+
+  /* Badge — success */
+  --badge-success-bg: rgba(34, 197, 94, 0.1);
+  --badge-success-border: rgba(34, 197, 94, 0.2);
+  --badge-success-color: #86efac;
+
+  /* Badge — warning */
+  --badge-warning-bg: rgba(234, 179, 8, 0.1);
+  --badge-warning-border: rgba(234, 179, 8, 0.2);
+  --badge-warning-color: #fde68a;
+
+  /* Badge — error */
+  --badge-error-bg: rgba(239, 68, 68, 0.1);
+  --badge-error-border: rgba(239, 68, 68, 0.2);
+  --badge-error-color: #fca5a5;
+
+  /* Badge — info/accent */
+  --badge-accent-bg: rgba(99, 102, 241, 0.12);
+  --badge-accent-border: rgba(99, 102, 241, 0.22);
+  --badge-accent-color: #a5b4fc;
+
+
   --text-secondary: rgba(255, 255, 255, 0.72);
   --text-tertiary: rgba(255, 255, 255, 0.48);
   --text-disabled: rgba(255, 255, 255, 0.3);
