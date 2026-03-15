@@ -34,15 +34,10 @@ import './DevPage.css';
 
 type SectionId =
   | 'overview'
-  | 'devtools'
-  | 'command-center'
-  | 'system-commands'
-  | 'qa-tests'
-  | 'orchestration'
-  | 'security'
-  | 'metrics'
-  | 'optimization'
-  | 'diagnostic';
+  | 'diagnostics'
+  | 'operations'
+  | 'validation'
+  | 'security';
 
 interface OrchestrationState {
   multiAi: {
@@ -204,7 +199,9 @@ const OverviewSection = memo<{
 OverviewSection.displayName = 'OverviewSection';
 
 // SECTION 2: Dev Tools
-const DevToolsSection = memo(() => {
+const DevToolsSection = memo<{
+  onExecute: (command: string) => void;
+}>(({ onExecute }) => {
   const _devMode = useDeveloperMode();
   const [selectedOperation, setSelectedOperation] = useState<string>('patch');
 
@@ -246,6 +243,7 @@ const DevToolsSection = memo(() => {
         <button
           className="dev-btn dev-btn--primary"
           data-testid="btn-dev-execute-operation"
+          onClick={() => onExecute(selectedOperation)}
         >
           Exécuter {operations.find(op => op.id === selectedOperation)?.name}
         </button>
@@ -477,12 +475,13 @@ const OrchestrationSection = memo<{
           <h3>🎛️ Meta</h3>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Awareness</span>
-            <span className="dev-orch-value">{state.meta.awareness_level}</span>
+            {/* v29.0: optional chaining — state.meta peut être absent si IPC partiel */}
+            <span className="dev-orch-value">{state.meta?.awareness_level ?? 'N/A'}</span>
           </div>
           <div className="dev-orch-stat">
             <span className="dev-orch-label">Health</span>
             <span className="dev-orch-value">
-              {(state.meta.system_health.overall_score * 100).toFixed(1)}%
+              {((state.meta?.system_health?.overall_score ?? 0) * 100).toFixed(1)}%
             </span>
           </div>
         </div>
@@ -760,23 +759,18 @@ function DevPageContent(): JSX.Element {
 
   const sections = [
     { id: 'overview' as const, label: "Vue d'ensemble", icon: '🎯' },
-    { id: 'diagnostic' as const, label: 'Diagnostic Online', icon: '🌐' },
-    { id: 'devtools' as const, label: 'Dev Tools', icon: '💻' },
-    { id: 'command-center' as const, label: 'Command Center', icon: '🎯' },
-    { id: 'system-commands' as const, label: 'System Commands', icon: '📊' },
-    { id: 'qa-tests' as const, label: 'QA & Tests', icon: '🧪' },
-    { id: 'orchestration' as const, label: 'Orchestration', icon: '🔥' },
+    { id: 'diagnostics' as const, label: 'Diagnostics', icon: '🌐' },
+    { id: 'operations' as const, label: 'Opérations', icon: '⚙️' },
+    { id: 'validation' as const, label: 'Validation', icon: '🧪' },
     { id: 'security' as const, label: 'Security', icon: '🛡️' },
-    { id: 'metrics' as const, label: 'Metrics', icon: '📈' },
-    { id: 'optimization' as const, label: 'Ultimate Optimization', icon: '⚡' },
   ];
 
   return (
     <div className="dev-page" data-testid="page-dev">
       <header className="dev-header">
         <div className="dev-header-content">
-          <h1>🔧 DEV Center</h1>
-          <span className="dev-version">TITANE∞ v25.4.0 • DEV Fusion</span>
+          <h1>🔧 DEV Cockpit</h1>
+          <span className="dev-version">TITANE∞ v29.0 • 5 tabs fusionnés</span>
         </div>
         <button
           className="dev-btn dev-btn--primary"
@@ -809,34 +803,33 @@ function DevPageContent(): JSX.Element {
             orchestration={orchestration}
           />
         )}
-        {activeSection === 'diagnostic' && (
-          <div data-testid="page-dev-diagnostic">
-            <OnlineDiagnostic />
+        {/* v29.0: Diagnostics = Diagnostic Online + Metrics + Orchestration */}
+        {activeSection === 'diagnostics' && (
+          <div data-testid="page-dev-diagnostics" className="dev-fusion-section">
+            <div data-testid="page-dev-diagnostic">
+              <OnlineDiagnostic />
+            </div>
+            <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
+            <OrchestrationSection state={orchestration} />
           </div>
         )}
-        {activeSection === 'devtools' && <DevToolsSection />}
-        {activeSection === 'command-center' && (
-          <CommandCenterSection state={oneCoreState} />
+        {/* v29.0: Operations = Dev Tools + Command Center + System Commands + Optimization */}
+        {activeSection === 'operations' && (
+          <div data-testid="page-dev-operations" className="dev-fusion-section">
+            <SystemCommandsSection onExecute={handleExecuteCommand} />
+            <CommandCenterSection state={oneCoreState} />
+            <DevToolsSection onExecute={handleExecuteCommand} />
+            <div className="dev-section">
+              <UltimateOptimizationDashboard />
+            </div>
+          </div>
         )}
-        {activeSection === 'system-commands' && (
-          <SystemCommandsSection onExecute={handleExecuteCommand} />
-        )}
-        {activeSection === 'qa-tests' && (
+        {/* v29.0: Validation = QA & Tests */}
+        {activeSection === 'validation' && (
           <QATestsSection state={qaState} suites={suites} onRunSuite={handleRunSuite} />
-        )}
-        {activeSection === 'orchestration' && (
-          <OrchestrationSection state={orchestration} />
         )}
         {activeSection === 'security' && (
           <SecuritySection alerts={alerts} onAcknowledge={handleAcknowledgeAlert} />
-        )}
-        {activeSection === 'metrics' && (
-          <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
-        )}
-        {activeSection === 'optimization' && (
-          <div className="dev-section">
-            <UltimateOptimizationDashboard />
-          </div>
         )}
       </main>
     </div>
