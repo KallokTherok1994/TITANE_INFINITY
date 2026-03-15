@@ -146,6 +146,31 @@ interface UIThemeProviderProps {
   children: React.ReactNode;
 }
 
+const UI_THEME_IPC_TIMEOUT_MS = 12000;
+
+function withIpcTimeout<T>(
+  operation: Promise<T>,
+  timeoutMs: number,
+  operationName: string
+): Promise<T> {
+  return new Promise<T>((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`${operationName} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    operation.then(
+      value => {
+        clearTimeout(timer);
+        resolve(value);
+      },
+      error => {
+        clearTimeout(timer);
+        reject(error);
+      }
+    );
+  });
+}
+
 export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const [state, dispatch] = useReducer(uiThemeReducer, {
     tokens: DEFAULT_UI_THEME_TOKENS,
@@ -162,7 +187,11 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const loadTokens = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = (await tauriClient.loadUiTheme()) as UIThemeTokens | null;
+      const tokens = (await withIpcTimeout(
+        tauriClient.loadUiTheme() as Promise<UIThemeTokens | null>,
+        UI_THEME_IPC_TIMEOUT_MS,
+        'load_ui_theme'
+      )) as UIThemeTokens | null;
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {
@@ -370,7 +399,11 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      await tauriClient.saveUiTheme({ tokens: state.tokens });
+      await withIpcTimeout(
+        tauriClient.saveUiTheme({ tokens: state.tokens }),
+        UI_THEME_IPC_TIMEOUT_MS,
+        'save_ui_theme'
+      );
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
       dispatch({ type: 'SET_LOADING', isLoading: false });
@@ -392,7 +425,11 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
   const resetToDefaults = useCallback(async () => {
     dispatch({ type: 'SET_LOADING', isLoading: true });
     try {
-      const tokens = (await tauriClient.resetUiTheme()) as UIThemeTokens | null;
+      const tokens = (await withIpcTimeout(
+        tauriClient.resetUiTheme() as Promise<UIThemeTokens | null>,
+        UI_THEME_IPC_TIMEOUT_MS,
+        'reset_ui_theme'
+      )) as UIThemeTokens | null;
 
       // Si le backend retourne null, utiliser les valeurs par défaut
       if (!tokens) {

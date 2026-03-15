@@ -58,7 +58,7 @@ export const ADMIN_TABS: AdminTabDefinition[] = [
   },
   {
     id: 'production-health',
-    label: 'Santé Prod (V25)',
+    label: 'Santé Prod',
     icon: '📊',
     description: 'Métriques production Week 1 - Observabilité temps réel',
     badge: 'V26',

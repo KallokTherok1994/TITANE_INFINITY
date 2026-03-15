@@ -195,18 +195,9 @@ class AudioService {
       }
     }
 
-    // Default fallback
+    // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      devices = [
-        {
-          id: 'default',
-          name: 'Default Speaker',
-          type: 'output',
-          isDefault: true,
-          isActive: true,
-          driver: 'unknown',
-        },
-      ];
+      console.warn('[AudioService] No output audio devices found');
     }
 
     // Update cache
@@ -266,18 +257,9 @@ class AudioService {
       }
     }
 
-    // Default fallback
+    // No fake fallback: return empty array so UI can show real "no devices" state
     if (devices.length === 0) {
-      devices = [
-        {
-          id: 'default',
-          name: 'Default Microphone',
-          type: 'input',
-          isDefault: true,
-          isActive: false,
-          driver: 'unknown',
-        },
-      ];
+      console.warn('[AudioService] No input audio devices found');
     }
 
     // Update cache

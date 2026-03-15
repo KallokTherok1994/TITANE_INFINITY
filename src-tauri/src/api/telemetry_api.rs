@@ -50,29 +50,10 @@ pub async fn read_production_week1_csv() -> Result<ProductionHealthSummary, Stri
     let csv_path = Path::new(CSV_PATH);
 
     if !csv_path.exists() {
-        return Ok(ProductionHealthSummary {
-            status: "UNKNOWN".to_string(),
-            window_start_iso: chrono::Utc::now().to_rfc3339(),
-            window_end_iso: chrono::Utc::now().to_rfc3339(),
-            initial_rss_mb: 0.0,
-            growth_mb: 0.0,
-            growth_percent: 0.0,
-            last_sample: ProductionHealthSample {
-                timestamp: chrono::Utc::now().to_rfc3339(),
-                rss_initial_mb: 0.0,
-                rss_current_mb: 0.0,
-                vsz_mb: None,
-                cpu_percent: None,
-                session_count: None,
-                crash_count: None,
-                failover_count: None,
-                event_loop_lag_ms: None,
-                provider_timeouts_per_hour: None,
-                error_count: None,
-            },
-            samples_collected: 0,
-            notes: Some("Waiting for observation data...".to_string()),
-        });
+        return Err(format!(
+            "SOURCE_UNAVAILABLE: {} absent — aucune collecte de télémétrie active",
+            CSV_PATH
+        ));
     }
 
     let content = fs::read_to_string(csv_path)
@@ -94,33 +75,7 @@ fn parse_and_summarize(csv: &str) -> Result<ProductionHealthSummary, String> {
         .collect();
 
     if data_lines.is_empty() {
-        return Err("CSV is empty".to_string());
-    }
-
-    if data_lines.len() < 2 {
-        return Ok(ProductionHealthSummary {
-            status: "UNKNOWN".to_string(),
-            window_start_iso: chrono::Utc::now().to_rfc3339(),
-            window_end_iso: chrono::Utc::now().to_rfc3339(),
-            initial_rss_mb: 0.0,
-            growth_mb: 0.0,
-            growth_percent: 0.0,
-            last_sample: ProductionHealthSample {
-                timestamp: chrono::Utc::now().to_rfc3339(),
-                rss_initial_mb: 0.0,
-                rss_current_mb: 0.0,
-                vsz_mb: None,
-                cpu_percent: None,
-                session_count: None,
-                crash_count: None,
-                failover_count: None,
-                event_loop_lag_ms: None,
-                provider_timeouts_per_hour: None,
-                error_count: None,
-            },
-            samples_collected: 0,
-            notes: Some("No data samples yet".to_string()),
-        });
+        return Err("SOURCE_EMPTY: CSV sans données — en attente de collecte".to_string());
     }
 
     let first_data_line = data_lines[0];
