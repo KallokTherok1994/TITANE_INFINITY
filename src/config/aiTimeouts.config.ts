@@ -1,34 +1,38 @@
 /**
- * TITANE∞ v22Ω — AI Timeouts Configuration
- * Centralized timeout values for consistency across AI services
+ * TITANE∞ v28 — AI Timeouts Configuration (OMEGA_CHAT_PERF 2026-03-15)
+ * Centralized timeout values aligned with ChatProfile FAST/BALANCED/DEEP.
+ *
+ * ROOT CAUSE FIX: PROVIDER_TIMEOUTS.ollama was 8000ms — local LLMs cannot
+ * complete complex generation in 8s, forcing 3×8s retry chains (24s wasted).
+ * providerAttemptMs is now aligned with BALANCED profile (52s total budget).
  */
 
 /**
- * Provider-specific execution timeouts (ms)
- * Ordered by expected latency (fastest to slowest)
- * ✨ vΩ.2: Reduced budgets to enforce <= 25s global latency cap
+ * Provider-specific execution timeouts (ms) — BALANCED profile defaults.
+ * Ollama/tauri-backend now have realistic budgets for local LLM generation.
  */
 export const PROVIDER_TIMEOUTS = {
-  'titane-local': 5000, // Noyau infaillible, ultra-rapide
-  'tauri-backend': 8000, // Backend Rust local
-  ollama: 8000, // Local LLM (budget borné)
-  gemini: 8000, // Cloud APIs bornées
-  openai: 8000,
-  claude: 8000,
-  default: 8000, // Fallback
+  'titane-local': 5_000,   // Local kernel — ultra-fast
+  'tauri-backend': 50_000, // Rust ChatEngine — BALANCED budget
+  ollama: 45_000,          // Local LLM — realistic generation window
+  gemini: 30_000,          // Cloud API — generous but bounded
+  openai: 30_000,
+  claude: 30_000,
+  default: 45_000,         // Unknown providers get BALANCED budget
 } as const;
 
 /**
- * Budgets globaux (ms)
- * - globalRequestMs: budget maximal par requête
- * - providerAttemptMs: budget maximal par tentative provider
- * - maxAttempts: nombre max de tentatives
- * ✨ v27+ FIX: Augmenté de 25s → 60s pour requests IA complexes
+ * Budgets globaux (ms) — BALANCED profile defaults.
+ * - globalRequestMs:    hard wall for the entire request chain
+ * - providerAttemptMs:  max budget per single provider attempt
+ *   (was 8000 → now 50000 — root cause of 3×8s retry chain fixed)
+ * - maxAttempts:        provider fallback depth (primary + 1 fallback)
+ *   (was 3 → now 2 — bounded fallback chain per Rule 7/8)
  */
 export const REQUEST_BUDGETS = {
-  globalRequestMs: 60000,
-  providerAttemptMs: 8000,
-  maxAttempts: 3,
+  globalRequestMs: 52_000,   // Aligned with BALANCED response_timeout
+  providerAttemptMs: 50_000, // Single attempt gets most of the budget
+  maxAttempts: 2,            // Primary + one fallback only
 } as const;
 
 /**
@@ -42,15 +46,14 @@ export const MEMORY_TIMEOUTS = {
 } as const;
 
 /**
- * UI-facing timeouts (ms)
- * ✨ v27+ FIX: Augmentés de 25s → 60s pour requests IA complexes
+ * UI-facing timeouts (ms) — aligned with BALANCED profile.
  */
 export const UI_TIMEOUTS = {
-  maxRequest: 60000, // Hard cap global
-  failsafe: 60000, // Failsafe reset aligned
-  localProvider: { short: 6000, long: 8000 },
-  ollamaProvider: { short: 8000, long: 12000 },
-  cloudProvider: { short: 15000, medium: 30000, long: 60000 },
+  maxRequest: 52_000,  // Aligned with BALANCED globalRequestMs
+  failsafe: 55_000,    // Failsafe slightly above globalRequestMs
+  localProvider: { short: 6_000, long: 10_000 },
+  ollamaProvider: { short: 20_000, long: 45_000 }, // FIXED: was 8/12s — too tight
+  cloudProvider: { short: 15_000, medium: 30_000, long: 52_000 },
 } as const;
 
 /**
@@ -73,14 +76,13 @@ export const CIRCUIT_BREAKER = {
 } as const;
 
 /**
- * Streaming configuration (OPT11: Chunk batching)
- * ✨ v27+ FIX: totalTimeoutMs augmenté de 25s → 60s
+ * Streaming configuration — aligned with BALANCED profile.
  */
 export const STREAM_CONFIG = {
-  chunkBatchSize: 5, // Batch N chunks before yielding (reduces UI updates)
-  chunkBatchDelayMs: 50, // Max delay before flushing batch
-  totalTimeoutMs: 60000, // 60s max for entire stream
-  perChunkTimeoutMs: 4000, // 4s max between chunks
+  chunkBatchSize: 5,         // Batch N chunks before yielding
+  chunkBatchDelayMs: 50,     // Max delay before flushing batch
+  totalTimeoutMs: 52_000,    // BALANCED total streaming budget
+  perChunkTimeoutMs: 7_000,  // BALANCED first-token window
 } as const;
 
 /**
