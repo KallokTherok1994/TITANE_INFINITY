@@ -115,6 +115,8 @@ const TimePage = lazy(() =>
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
+// v29.1: kept for rollback — route redirected to /dev
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
@@ -877,8 +879,8 @@ const AppRouter: React.FC = () => {
       {
         id: 'stats',
         label: 'STATS',
-        route: '/stats',
-        description: 'Métriques Système',
+        route: '/dev',
+        description: 'Métriques moteurs fusionnées dans DEV Cockpit > Diagnostics',
       },
       {
         id: 'admin',
@@ -1059,16 +1061,10 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/progression" element={<Navigate to="/titane" replace />} />
           <Route path="/xp" element={<Navigate to="/titane" replace />} />
-          {/* ❌ v25.2.1: /cognitive redirigé vers /stats (Section 4: État Cognitif) */}
-          <Route path="/cognitive" element={<Navigate to="/stats" replace />} />
-          <Route
-            path="/stats"
-            element={
-              <ErrorBoundary context="Stats">
-                <Stats />
-              </ErrorBoundary>
-            }
-          />
+          {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev (Stats fusionné DEV Cockpit) */}
+          <Route path="/cognitive" element={<Navigate to="/dev" replace />} />
+          {/* ✅ v29.1: /stats fusionné dans DEV Cockpit > Diagnostics */}
+          <Route path="/stats" element={<Navigate to="/dev" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
           {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
           <Route

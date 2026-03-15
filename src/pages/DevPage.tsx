@@ -27,6 +27,7 @@ import type { OneCoreState } from '@/features/one-core/types';
 // ✨ v25.6.0 - Ultimate Optimization Dashboard (Phase 12)
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
+import { StatsSystemPanels } from './Stats';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -804,13 +805,21 @@ function DevPageContent(): JSX.Element {
             orchestration={orchestration}
           />
         )}
-        {/* v29.0: Diagnostics = Diagnostic Online + Metrics + Orchestration */}
+        {/* v29.0: Diagnostics = Diagnostic Online + Metrics + Stats Moteurs + Orchestration */}
         {activeSection === 'diagnostics' && (
           <div data-testid="page-dev-diagnostics" className="dev-fusion-section">
             <div data-testid="page-dev-diagnostic">
               <OnlineDiagnostic />
             </div>
             <MetricsSection metrics={metrics} oneCoreMetrics={oneCoreState} />
+            {/* v29.1: STATS fusionné ici — Nexus · Helios · Harmonia · Cognitif */}
+            <div className="dev-section" data-testid="page-dev-stats-panels">
+              <header className="dev-section-header">
+                <h2>📊 Métriques Moteurs</h2>
+                <span className="dev-version">Nexus · Helios · Harmonia · Cognitif</span>
+              </header>
+              <StatsSystemPanels />
+            </div>
             <OrchestrationSection state={orchestration} />
           </div>
         )}

@@ -85,13 +85,13 @@ const MENU_SECTIONS: MenuSection[] = [
     description: 'Centre Temporel - Agenda, Navigation, Snapshots, Intelligence, Flow',
     route: '/time',
   },
-  // ✨ v25.2.0 STATS - Métriques système consolidées
+  // ✨ v25.2.0 → v29.1: STATS fusionné dans DEV Cockpit > Diagnostics
   {
     id: 'stats',
     icon: '📈',
     label: 'STATS',
-    description: 'Métriques moteurs : Nexus, Helios, Harmonia, État Cognitif',
-    route: '/stats',
+    description: 'Métriques moteurs fusionnées dans DEV Cockpit > Diagnostics',
+    route: '/dev',
   },
   // ✨ v25.2 ADMIN - FUSION (Système + Config + Audio + Design + Gouvernance)
   {
