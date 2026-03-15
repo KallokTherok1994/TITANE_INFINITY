@@ -60,17 +60,17 @@ function DesignCenterHeader() {
               ⚠️ {error}
             </span>
           )}
-          {!isLoading && !error && tokenSource === 'fallback-local' && (
-            <span className="dc-status-warning" data-testid="design-status-fallback">
-              ⚠ Fallback local
-            </span>
-          )}
-          {!isLoading && !error && tokenSource === 'runtime' && isDirty && (
+          {!isLoading && !error && isDirty && (
             <span className="dc-status-warning" data-testid="design-status-dirty">
               ⚠ Appliqué (non sauvegardé)
             </span>
           )}
-          {!isLoading && !error && tokenSource === 'runtime' && !isDirty && (
+          {!isLoading && !error && !isDirty && tokenSource === 'fallback-local' && (
+            <span className="dc-status-warning" data-testid="design-status-fallback">
+              ⚠ Fallback local
+            </span>
+          )}
+          {!isLoading && !error && !isDirty && tokenSource === 'runtime' && (
             <span className="dc-status-ok" data-testid="design-status-runtime-active">
               ✓ Actif (runtime)
             </span>

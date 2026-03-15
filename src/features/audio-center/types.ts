@@ -71,6 +71,7 @@ export interface AudioDevice {
   isDefault: boolean;
   isActive: boolean;
   driver: string; // 'pipewire', 'alsa', 'pulseaudio'
+  isMuted?: boolean;
 }
 
 export interface AudioOutputSettings {

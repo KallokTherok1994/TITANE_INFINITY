@@ -127,7 +127,7 @@ const Slider: React.FC<SliderProps> = ({
 interface DeviceSelectorProps {
   label: string;
   icon: string;
-  devices: Array<{ id: string; name: string; isActive: boolean }>;
+  devices: Array<{ id: string; name: string; isActive: boolean; isMuted?: boolean }>;
   selectedId: string;
   onSelect: (id: string) => void;
   isLoading?: boolean;
@@ -145,6 +145,8 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
 }) => {
   // Sécurité: S'assurer que devices est toujours un tableau
   const safeDevices = Array.isArray(devices) ? devices : [];
+  const selectedDevice = safeDevices.find(d => d.id === selectedId);
+  const selectedIsMuted = selectedDevice?.isMuted ?? false;
 
   return (
     <div className="space-y-2">
@@ -164,11 +166,18 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         ) : (
           safeDevices.map(device => (
             <option key={device.id} value={device.id}>
-              {device.name} {device.isActive ? '(Actif)' : ''}
+              {device.name}
+              {device.isActive ? ' (Actif)' : ''}
+              {device.isMuted ? ' 🔇 MUET' : ''}
             </option>
           ))
         )}
       </select>
+      {selectedIsMuted && (
+        <p className="text-xs text-amber-400 flex items-center gap-1" data-testid="audio-device-muted-warning">
+          ⚠️ Ce périphérique est muet au niveau système. Désactivez le muet via wpctl ou les paramètres son Ubuntu.
+        </p>
+      )}
     </div>
   );
 };

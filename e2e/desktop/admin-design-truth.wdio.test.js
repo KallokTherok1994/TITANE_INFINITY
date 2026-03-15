@@ -135,8 +135,18 @@ describe('ADMIN Design truth chain', () => {
     assert.equal(await appearancePanel.getAttribute('role'), 'tabpanel');
     assert.equal(await appearancePanel.getAttribute('aria-labelledby'), 'dc-tab-appearance');
 
-    await appearanceTab.click();
-    await browser.keys(['ArrowLeft']);
+    await browser.execute(element => {
+      if (!element) return;
+      element.focus();
+      element.dispatchEvent(
+        new KeyboardEvent('keydown', {
+          key: 'ArrowLeft',
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        })
+      );
+    }, appearanceTab);
     assert.equal(await designTab.getAttribute('aria-selected'), 'true');
 
     const beforeBg = await getRootVar('--color-bg-primary');
