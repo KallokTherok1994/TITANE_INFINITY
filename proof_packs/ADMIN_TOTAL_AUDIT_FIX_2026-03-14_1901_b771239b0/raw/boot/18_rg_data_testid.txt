@@ -1,0 +1,473 @@
+e2e/runtime-validation/chat-ar20.spec.ts:24:  '#chat-input-textarea, textarea.chat-input, [data-testid="chat-input"]';
+e2e/runtime-validation/chat-ar20.spec.ts:26:  'button.chat-send-btn, button.chat-send-omega, [data-testid="send-button"]';
+e2e/runtime-validation/chat-ar20.spec.ts:28:const ASSISTANT_MESSAGE_SELECTOR = `${MESSAGE_CONTAINER_SELECTOR} .message-bubble.message-assistant .message-text, [data-testid="assistant-message"]`;
+e2e/desktop/ui-driver.wdio.js:9:const testId = id => `[data-testid="${id}"]`;
+e2e/desktop/ui-driver.wdio.js:493:    const chatSelectors = [testId('chat-input'), '[data-testid="tab-conversation"]'];
+e2e/desktop/ui-ultra-smoke.e2e.js:50:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-smoke.e2e.js:56:    await clickAllTabs(['[data-testid="tab-admin-audio"]']);
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:80:    // Priority 1: data-testid contains "chat"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:81:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:82:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:150:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:155:    const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:156:      .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:159:      return buildMeta(testIdCandidates[0], 'data-testid:chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:203:    // Priority 1: data-testid contains "send"
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:204:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:205:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:247:        dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:252:    const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:253:      (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:255:    if (byTestId) return buildMeta(byTestId, 'data-testid:send');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:281:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:283:      document.querySelectorAll('[data-testid="assistant-message"]')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:310:    // Priority 1: data-testid
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:311:    const byTestId = document.querySelector('[data-testid="nav-chat"]');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:450:        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:451:          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:500:          dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:506:        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:507:          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:510:          return buildMeta(testIdCandidates[0], 'data-testid:chat');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:551:        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:552:          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:590:            dataTestId: el.getAttribute('data-testid') || null,
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:595:        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:596:          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:598:        if (byTestId) return buildSendMeta(byTestId, 'data-testid:send');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:619:        let messages = Array.from(document.querySelectorAll('[data-testid="assistant-message"]'));
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:641:        const byTestId = document.querySelector('[data-testid="nav-chat"]');
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:755:        '[data-testid="tab-conversation"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:756:        '[data-testid="nav-chat"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:757:        '[data-testid*="conversation"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:758:        '[data-testid*="chat"]',
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:776:        const testId = (el.getAttribute('data-testid') || '').toLowerCase();
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1187:    const dataTestIds = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1188:      .map(el => el.getAttribute('data-testid'))
+e2e/desktop/ui-chat-360-autofix.wdio.test.cjs:1277:      const testId = getAttr(el, 'data-testid');
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:112:        '[data-testid="splash"], .loading-screen, #loading, ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:126:        '[role="tab"], .tab-button, .nav-tab, button[data-tab], [data-testid*="tab"]'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:133:        '[data-testid="chat-input"], [role="textbox"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:137:      'button[type="submit"], button[data-testid="send"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:153:    const memoryInd = !!document.querySelector('[data-memory], [data-testid*="memory"]');
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:155:      '[data-orchestrator], [data-testid*="orchestrator"]'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:158:      '[data-testid="chat"], .chat-container, #chat'
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:162:      '[data-testid="reasoning-progress"], [class*="reasoning"], ' +
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:398:        '[data-testid*="tab"]',
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:531:        '[data-testid="chat-input"]',
+e2e/desktop/v22_visible_real_ui_cert.wdio.test.js:587:        '[data-testid="send"]',
+e2e/desktop/ai-verification.full.e2e.js:141:  const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ai-verification.full.e2e.js:147:      open: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/ai-verification.full.e2e.js:335:          const bubbleTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/ui-ultra-full.e2e.js:19:  const trigger = await $('[data-testid="btn-mode-builder"]');
+e2e/desktop/ui-ultra-full.e2e.js:38:    return page.tabs.filter(tab => tab !== '[data-testid="tab-admin-audio"]');
+e2e/desktop/ui-ultra-full.e2e.js:92:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:114:    const userMessagesBefore = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:122:    await clickAllTabs(['[data-testid="tab-conversation"]']);
+e2e/desktop/ui-ultra-full.e2e.js:126:        const input = await $('[data-testid="chat-input"]');
+e2e/desktop/ui-ultra-full.e2e.js:132:          return (await $$('[data-testid="chat-message-user"]')).length >= userBefore;
+e2e/desktop/ui-ultra-full.e2e.js:135:        const messagesAfter = await $$('[data-testid="chat-message-user"]');
+e2e/desktop/ui-ultra-full.e2e.js:151:    const userAfter = (await $$('[data-testid="chat-message-user"]')).length;
+e2e/desktop/ui-ultra-full.e2e.js:160:    const providerSelect = await $('[data-testid="select-chat-provider"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:85:    const input = document.querySelector('[data-testid="chat-input"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:86:    const send = document.querySelector('[data-testid="chat-send"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:87:    const loading = document.querySelector('[data-testid="chat-loading"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:88:    const error = document.querySelector('[data-testid="chat-error"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:89:    const ready = document.querySelector('[data-testid="chat-ready"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:90:    const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:92:      '[data-testid="reasoning-status-label"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:94:    const health = document.querySelector('[data-testid="btn-health-check"]');
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:98:        '[data-testid="chat-message-user"] [data-testid="chat-message-content"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:104:        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:110:      document.querySelectorAll('[data-testid="chat-message-assistant"]')
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:118:            '[data-testid="chat-runtime-tag"], .conversation-tag'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:141:      document.querySelector('[data-testid*="debug" i]') ||
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:175:        '[data-testid="reasoning-topology-node"]'
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:192:      document.querySelectorAll('button, [role="tab"], a, [data-testid*="chat" i]')
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:201:      const testId = (node.getAttribute('data-testid') || '').toLowerCase();
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:213:      testId: chatCandidate.getAttribute('data-testid'),
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:283:    const inputSelector = '[data-testid="chat-input"]';
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:284:    const sendSelector = '[data-testid="chat-send"]';
+e2e/desktop/v25_visible_real_chat_functional_truth.wdio.test.js:441:        const button = document.querySelector('[data-testid="btn-health-check"]');
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:42:        data-testid="tabs-component"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:45:          data-testid="tabs-list"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:48:            data-testid="tab-dashboard"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:55:            data-testid="tab-metrics"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:62:            data-testid="tab-logs"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:69:            data-testid="tab-engines"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:76:            data-testid="tab-memory"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:83:            data-testid="tab-pipeline"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:90:            data-testid="tab-errors"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:98:          data-testid="tabs-content"
+src/__tests__/apps/devtools/__snapshots__/DevToolsApp.test.tsx.snap:107:                data-testid="section-dashboard"
+e2e/desktop/page-objects/uiPages.po.js:6:    root: '[data-testid="page-titane"]',
+e2e/desktop/page-objects/uiPages.po.js:8:      '[data-testid="tab-conversation"]',
+e2e/desktop/page-objects/uiPages.po.js:9:      '[data-testid="tab-overview"]',
+e2e/desktop/page-objects/uiPages.po.js:10:      '[data-testid="tab-vision"]',
+e2e/desktop/page-objects/uiPages.po.js:11:      '[data-testid="tab-identity"]',
+e2e/desktop/page-objects/uiPages.po.js:12:      '[data-testid="tab-memory"]',
+e2e/desktop/page-objects/uiPages.po.js:13:      '[data-testid="tab-memory-evolution"]',
+e2e/desktop/page-objects/uiPages.po.js:14:      '[data-testid="tab-progression"]',
+e2e/desktop/page-objects/uiPages.po.js:15:      '[data-testid="tab-transformation"]',
+e2e/desktop/page-objects/uiPages.po.js:22:    root: '[data-testid="page-time"]',
+e2e/desktop/page-objects/uiPages.po.js:24:      '[data-testid="tab-time-now"]',
+e2e/desktop/page-objects/uiPages.po.js:25:      '[data-testid="tab-time-agenda"]',
+e2e/desktop/page-objects/uiPages.po.js:26:      '[data-testid="tab-time-timeline"]',
+e2e/desktop/page-objects/uiPages.po.js:27:      '[data-testid="tab-time-snapshots"]',
+e2e/desktop/page-objects/uiPages.po.js:28:      '[data-testid="tab-time-intelligence"]',
+e2e/desktop/page-objects/uiPages.po.js:29:      '[data-testid="tab-time-flow"]',
+e2e/desktop/page-objects/uiPages.po.js:36:    root: '[data-testid="page-stats"]',
+e2e/desktop/page-objects/uiPages.po.js:43:    root: '[data-testid="page-admin"]',
+e2e/desktop/page-objects/uiPages.po.js:45:      '[data-testid="tab-admin-system"]',
+e2e/desktop/page-objects/uiPages.po.js:46:      '[data-testid="tab-admin-config"]',
+e2e/desktop/page-objects/uiPages.po.js:47:      '[data-testid="tab-admin-audio"]',
+e2e/desktop/page-objects/uiPages.po.js:48:      '[data-testid="tab-admin-design"]',
+e2e/desktop/page-objects/uiPages.po.js:49:      '[data-testid="tab-admin-governance"]',
+e2e/desktop/page-objects/uiPages.po.js:50:      '[data-testid="tab-admin-production-health"]',
+e2e/desktop/page-objects/uiPages.po.js:57:    root: '[data-testid="page-dev"]',
+e2e/desktop/page-objects/uiPages.po.js:59:      '[data-testid="tab-dev-overview"]',
+e2e/desktop/page-objects/uiPages.po.js:60:      '[data-testid="tab-dev-diagnostic"]',
+e2e/desktop/page-objects/uiPages.po.js:61:      '[data-testid="tab-dev-devtools"]',
+e2e/desktop/page-objects/uiPages.po.js:62:      '[data-testid="tab-dev-command-center"]',
+e2e/desktop/page-objects/uiPages.po.js:63:      '[data-testid="tab-dev-system-commands"]',
+e2e/desktop/page-objects/uiPages.po.js:64:      '[data-testid="tab-dev-qa-tests"]',
+e2e/desktop/page-objects/uiPages.po.js:65:      '[data-testid="tab-dev-orchestration"]',
+e2e/desktop/page-objects/uiPages.po.js:66:      '[data-testid="tab-dev-security"]',
+e2e/desktop/page-objects/uiPages.po.js:67:      '[data-testid="tab-dev-metrics"]',
+e2e/desktop/page-objects/uiPages.po.js:68:      '[data-testid="tab-dev-optimization"]',
+e2e/desktop/page-objects/uiPages.po.js:75:    root: '[data-testid="page-fusion"]',
+e2e/desktop/page-objects/uiPages.po.js:82:    root: '[data-testid="page-optimization"]',
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:89:      const input = document.querySelector('[data-testid="chat-input"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:90:      const send = document.querySelector('[data-testid="chat-send"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:91:      const loading = document.querySelector('[data-testid="chat-loading"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:92:      const error = document.querySelector('[data-testid="chat-error"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:93:      const health = document.querySelector('[data-testid="btn-health-check"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:94:      const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:95:      const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:96:      const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:100:          '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:105:        document.querySelectorAll('[data-testid="chat-message-assistant"]')
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:113:              '[data-testid="chat-runtime-tag"], .conversation-tag'
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:149:        ? Array.from(runtimePanel.querySelectorAll('[data-testid="chat-runtime-badge"]'))
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:173:          '[data-testid="reasoning-topology-node"]'
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:244:      document.querySelectorAll('button, [role="tab"], a, [data-testid*="chat" i]')
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:250:      const testId = (node.getAttribute('data-testid') || '').toLowerCase();
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:262:      testId: chatCandidate.getAttribute('data-testid'),
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:429:    const inputSelector = '[data-testid="chat-input"]';
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:430:    const sendSelector = '[data-testid="chat-send"]';
+e2e/desktop/v26_real_online_chat_truth.wdio.test.js:572:      const button = document.querySelector('[data-testid="btn-health-check"]');
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:35:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/OmegaPipeline.test.tsx:37:      {actions && <div data-testid="header-actions">{actions}</div>}
+e2e/desktop/online-chat-proof-ui.wdio.test.js:181:  const bubbleInput = await $('[data-testid="chat-bubble-input"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:184:      input: '[data-testid="chat-bubble-input"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:185:      send: '[data-testid="chat-bubble-send"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:186:      response: '[data-testid="chat-bubble-assistant-content"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:187:      trigger: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:188:      panel: '[data-testid="chat-bubble-panel"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:192:  const bubblePanel = await $('[data-testid="chat-bubble-panel"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:195:      input: '[data-testid="chat-bubble-input"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:196:      send: '[data-testid="chat-bubble-send"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:197:      response: '[data-testid="chat-bubble-assistant-content"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:198:      trigger: '[data-testid="chat-bubble-trigger"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:199:      panel: '[data-testid="chat-bubble-panel"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:225:  const conversationInput = await $('[data-testid="chat-input"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:228:      input: '[data-testid="chat-input"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:229:      send: '[data-testid="chat-send"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:231:        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
+e2e/desktop/online-chat-proof-ui.wdio.test.js:267:    const testIds = Array.from(document.querySelectorAll('[data-testid]'))
+e2e/desktop/online-chat-proof-ui.wdio.test.js:268:      .map(node => node.getAttribute('data-testid'))
+e2e/desktop/online-chat-proof-ui.wdio.test.js:359:              !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
+e2e/desktop/online-chat-proof-ui.wdio.test.js:360:              !!document.querySelector('[data-testid="chat-bubble-input"]') ||
+e2e/desktop/online-chat-proof-ui.wdio.test.js:363:              !!document.querySelector('[data-testid="chat-input"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:376:    const trigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:385:      const openTrigger = await $('[data-testid="chat-bubble-trigger"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:478:        '[data-testid="chat-message-assistant"]'
+e2e/desktop/online-chat-proof-ui.wdio.test.js:510:        '[data-testid="chat-message-assistant"]'
+e2e/desktop/online-chat-proof-ui.wdio.test.js:563:        const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+e2e/desktop/online-chat-proof-ui.wdio.test.js:565:          '[data-testid="chat-message-assistant"]'
+src/__tests__/apps/devtools/sections/Logs.test.tsx:37:  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+src/__tests__/apps/devtools/sections/Logs.test.tsx:38:  LogLine: ({ log }: any) => <div data-testid={`log-${log.id}`}>{log.message}</div>,
+src/__tests__/apps/devtools/sections/Logs.test.tsx:40:    <div data-testid="log-filters">
+e2e/desktop/ui-connectivity-critical.wdio.test.js:27:  const direct = await $(`[data-testid="${navTestId}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:48:  const moreButton = await $('[data-testid="btn-nav-more"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:51:    const inMore = await $(`[data-testid="${navTestId}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:73:    const topNav = await $('[data-testid="nav-top-main"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:86:      const page = await $(`[data-testid="${check.page}"]`);
+e2e/desktop/ui-connectivity-critical.wdio.test.js:95:    const topNav = await $('[data-testid="nav-top-main"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:100:    const tabConversation = await $('[data-testid="tab-conversation"]');
+e2e/desktop/ui-connectivity-critical.wdio.test.js:116:      const element = await $(`[data-testid="${testId}"]`);
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:69:  SectionHeader: ({ title }: any) => <div data-testid="section-header">{title}</div>,
+src/__tests__/apps/devtools/sections/Metrics.test.tsx:71:    <div data-testid={`metric-${label.replace(/\s+/g, '-')}`}>{label}</div>
+src/__tests__/apps/devtools/sections/Errors.test.tsx:52:    <div data-testid="section-header">
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:122:        '[data-testid="splash"], .loading-screen, #loading, ' +
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:136:        '[role="tab"], .tab-button, .nav-tab, button[data-tab], [data-testid*="tab"]'
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:143:        '[data-testid="chat-input"], [role="textbox"], ' +
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:147:      'button[type="submit"], button[data-testid="send"], ' +
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:163:    const memoryInd = !!document.querySelector('[data-memory], [data-testid*="memory"]');
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:165:      '[data-orchestrator], [data-testid*="orchestrator"]'
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:168:      '[data-testid="chat"], .chat-container, #chat'
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:172:      '[data-testid="reasoning-progress"], [class*="reasoning"], ' +
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:176:      '[data-testid="reasoning-progress"]'
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:185:      '[data-testid="reasoning-topology-node"]'
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:468:        '[data-testid*="tab"]',
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:601:        '[data-testid="chat-input"]',
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:649:        '[data-testid="chat-send"]',
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:650:        '[data-testid="send"]',
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:698:              '[data-testid="chat-send"]',
+e2e/desktop/v24_visible_real_ui_fullstack_perfection.wdio.test.js:699:              '[data-testid="send"]',
+e2e/desktop/chat-ar20.wdio.test.js:273:      trigger: '[data-testid="chat-bubble-trigger"]',
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:29:        data-testid="status-pill"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:78:    data-testid="metrics-display"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:89:        data-testid="metric-card-IPC-Latency-P50"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:94:        data-testid="metric-card-CPU-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:110:        data-testid="engine-helios"
+src/__tests__/apps/devtools/sections/__snapshots__/Dashboard.test.tsx.snap:115:        data-testid="engine-nexus"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:81:      data-testid="engine-chat-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:87:        data-testid="status-chat-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:99:      data-testid="engine-memory-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:105:        data-testid="status-memory-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:117:      data-testid="engine-fusion-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Engines.test.tsx.snap:123:        data-testid="status-fusion-engine"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:13:    data-testid="log-filters"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:56:    data-testid="log-viewer"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:61:        data-testid="log-1"
+src/__tests__/apps/devtools/sections/__snapshots__/Logs.test.tsx.snap:66:        data-testid="log-2"
+src/__tests__/apps/devtools/sections/__snapshots__/Errors.test.tsx.snap:8:    data-testid="section-header"
+e2e/chat-provider-decision-certification.spec.ts:23:  '[data-testid="chat-input"]',
+e2e/chat-provider-decision-certification.spec.ts:34:  '[data-testid="send-button"]',
+e2e/chat-provider-decision-certification.spec.ts:42:  '[data-testid="assistant-message"]',
+e2e/chat-provider-decision-certification.spec.ts:48:  '[data-testid="messages-container"]',
+e2e/chat-provider-decision-certification.spec.ts:258:      .locator('button, [data-testid="close"], [aria-label*="close" i]')
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:22:        data-testid="metric-IPC-Latency-P50"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:27:        data-testid="metric-IPC-Latency-P90"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:43:        data-testid="metric-CPU-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:48:        data-testid="metric-Memory-Usage"
+src/__tests__/apps/devtools/sections/__snapshots__/Metrics.test.tsx.snap:64:        data-testid="metric-Omega-Duration"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:89:        data-testid="memory-tree"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:92:          data-testid="node-stm"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:100:          data-testid="node-mtm"
+src/__tests__/apps/devtools/sections/__snapshots__/Memory.test.tsx.snap:108:          data-testid="node-ltm"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:8:    data-testid="section-header"
+src/__tests__/apps/devtools/sections/__snapshots__/OmegaPipeline.test.tsx.snap:14:      data-testid="header-actions"
+src/__tests__/apps/devtools/sections/Engines.test.tsx:47:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Engines.test.tsx:53:    <div data-testid={`engine-${engine.id}`}>
+src/__tests__/apps/devtools/sections/Engines.test.tsx:55:      <span data-testid={`status-${engine.id}`}>{engine.status}</span>
+src/__tests__/apps/devtools/sections/Memory.test.tsx:29:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Memory.test.tsx:36:    <div data-testid="memory-tree">
+src/__tests__/apps/devtools/sections/Memory.test.tsx:41:          data-testid={`node-${node.id}`}
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:44:    <div data-testid="section-header">
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:50:    <div data-testid={`metric-card-${label.replace(/\s+/g, '-')}`}>{label}</div>
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:52:  StatusPill: ({ label }: any) => <span data-testid="status-pill">{label}</span>,
+src/__tests__/apps/devtools/sections/Dashboard.test.tsx:54:    <div data-testid={`engine-${engine.id}`}>{engine.name}</div>
+e2e/critical/engine-navigation.spec.ts:46:      .locator('button[data-testid^="nav-"], button[data-testid="btn-nav-more"]')
+e2e/critical/engine-navigation.spec.ts:156:      .locator('[data-testid*="metric"], [class*="score"], [class*="health"]')
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:17:  Dashboard: () => <div data-testid="section-dashboard">Dashboard Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:18:  Metrics: () => <div data-testid="section-metrics">Metrics Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:19:  Logs: () => <div data-testid="section-logs">Logs Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:20:  Engines: () => <div data-testid="section-engines">Engines Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:21:  Memory: () => <div data-testid="section-memory">Memory Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:22:  OmegaPipeline: () => <div data-testid="section-pipeline">Pipeline Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:23:  Errors: () => <div data-testid="section-errors">Errors Section</div>,
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:30:    <div data-testid="tabs-component">
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:31:      <div data-testid="tabs-list">
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:35:            data-testid={`tab-${tab.id}`}
+src/__tests__/apps/devtools/DevToolsApp.test.tsx:42:      <div data-testid="tabs-content">
+e2e/feedback-loop.spec.ts:333:      await page.waitForSelector('[data-testid="audio-error-modal"]', { timeout: 3000 });
+e2e/feedback-loop.spec.ts:336:      const errorModalVisible = await page.isVisible('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:340:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:344:      await page.click('[data-testid="close-error-modal"]');
+e2e/feedback-loop.spec.ts:347:      const modalClosed = await page.isHidden('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:415:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:416:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:429:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:430:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:443:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:444:      const errorType = await page.textContent('[data-testid="error-title"]');
+e2e/feedback-loop.spec.ts:457:      await page.waitForSelector('[data-testid="audio-error-modal"]');
+e2e/feedback-loop.spec.ts:460:      await page.click('[data-testid="retry-button"]');
+src/__tests__/apps/Settings/Settings.test.tsx:23:  LanguageSwitcher: () => <div data-testid="language-switcher">LanguageSwitcher</div>,
+src/__tests__/apps/Settings/__snapshots__/Settings.test.tsx.snap:25:      data-testid="language-switcher"
+src/__tests__/features/memory/__snapshots__/MemoryVisualization.test.tsx.snap:181:      data-testid="mock-tree"
+src/pages/TitanePage.tsx:199:      <Container size="xl" className="titane-page" data-testid="page-titane">
+src/pages/TitanePage.tsx:225:                data-testid="tab-conversation"
+src/pages/TitanePage.tsx:240:                data-testid="tab-overview"
+src/pages/TitanePage.tsx:255:                data-testid="tab-vision"
+src/pages/TitanePage.tsx:270:                data-testid="tab-identity"
+src/pages/TitanePage.tsx:285:                data-testid="tab-memory"
+src/pages/TitanePage.tsx:300:                data-testid="tab-memory-evolution"
+src/pages/TitanePage.tsx:315:                data-testid="tab-progression"
+src/pages/TitanePage.tsx:330:                data-testid="tab-transformation"
+src/pages/TitanePage.tsx:345:            data-testid="page-titane-content"
+src/apps/devtools/components/MetricCard.tsx:68:      data-testid={testId}
+src/__tests__/features/memory/MemoryVisualization.test.tsx:12:    <div data-testid="mock-tree">
+src/pages/ConfigurationHub.tsx:917:    <div className="module-page" data-testid="page-configuration-hub">
+src/pages/ConfigurationHub.tsx:947:                data-testid="btn-config-refresh"
+src/pages/ConfigurationHub.tsx:967:                data-testid="btn-config-export"
+src/pages/ConfigurationHub.tsx:983:                data-testid="btn-config-import"
+src/pages/ConfigurationHub.tsx:999:                data-testid="btn-config-save-preset"
+src/pages/ConfigurationHub.tsx:1016:                  data-testid="select-config-preset"
+src/pages/ConfigurationHub.tsx:1043:                data-testid="btn-config-edit"
+src/pages/ConfigurationHub.tsx:1063:                data-testid="btn-config-cancel"
+src/pages/ConfigurationHub.tsx:1081:                data-testid="btn-config-save"
+src/pages/ConfigurationHub.tsx:1162:          data-testid="tab-config-system"
+src/pages/ConfigurationHub.tsx:1169:          data-testid="tab-config-ai"
+src/pages/ConfigurationHub.tsx:1176:          data-testid="tab-config-performance"
+src/pages/DevPage.tsx:230:            data-testid={`btn-dev-operation-${op.id}`}
+src/pages/DevPage.tsx:248:          data-testid="btn-dev-execute-operation"
+src/pages/DevPage.tsx:336:            data-testid={`btn-dev-command-${cmd.id}`}
+src/pages/DevPage.tsx:412:              data-testid={`btn-dev-run-suite-${suite.id}`}
+src/pages/DevPage.tsx:538:                data-testid={`btn-dev-ack-alert-${alert.id}`}
+src/pages/DevPage.tsx:775:    <div className="dev-page" data-testid="page-dev">
+src/pages/DevPage.tsx:783:          data-testid="btn-dev-refresh"
+src/pages/DevPage.tsx:794:            data-testid={`tab-dev-${section.id}`}
+src/pages/DevPage.tsx:813:          <div data-testid="page-dev-diagnostic">
+src/pages/TimePage.tsx:172:      data-testid="page-time"
+src/pages/TimePage.tsx:199:            data-testid={`tab-time-${tab.id}`}
+src/pages/TimePage.tsx:418:          data-testid="btn-time-view-week"
+src/pages/TimePage.tsx:425:          data-testid="btn-time-view-month"
+src/pages/TimePage.tsx:468:            data-testid="input-time-planning-prompt"
+src/pages/TimePage.tsx:474:              data-testid="btn-time-generate-plan"
+src/pages/TimePage.tsx:480:              data-testid="btn-time-add-manual"
+src/pages/TimePage.tsx:557:          data-testid="btn-time-nav-past"
+src/pages/TimePage.tsx:563:          data-testid="btn-time-nav-present"
+src/pages/TimePage.tsx:569:          data-testid="btn-time-nav-future"
+src/pages/TimePage.tsx:755:          data-testid="btn-time-create-snapshot"
+src/pages/TimePage.tsx:804:                data-testid={`btn-snapshot-select-${snapshot.id}`}
+src/pages/TimePage.tsx:895:              data-testid="btn-time-restore-snapshot"
+src/pages/TimePage.tsx:902:              data-testid="btn-time-compare-snapshot"
+src/pages/TimePage.tsx:908:              data-testid="btn-time-delete-snapshot"
+src/pages/ResearchPage.tsx:147:  <div className="rp-citation" data-testid={`citation-${index}`}>
+src/pages/ResearchPage.tsx:165:        <span className="rp-locator-text" data-testid={`locator-text-${index}`}>
+src/pages/ResearchPage.tsx:191:        data-testid="trace-toggle"
+src/pages/ResearchPage.tsx:197:        <div className="rp-trace-body" data-testid="trace-body">
+src/pages/ResearchPage.tsx:368:      <div className="rp-root" data-testid="research-page">
+src/pages/ResearchPage.tsx:377:        <form className="rp-form" onSubmit={handleSubmit} data-testid="research-form">
+src/pages/ResearchPage.tsx:385:              data-testid="research-question"
+src/pages/ResearchPage.tsx:402:                data-testid="research-mode"
+src/pages/ResearchPage.tsx:421:                  data-testid="research-target-url"
+src/pages/ResearchPage.tsx:440:                data-testid="research-seed-urls"
+src/pages/ResearchPage.tsx:457:              data-testid="research-sandbox"
+src/pages/ResearchPage.tsx:468:              data-testid="research-submit"
+src/pages/ResearchPage.tsx:477:                data-testid="research-reset"
+src/pages/ResearchPage.tsx:489:          <div className="rp-error-banner" data-testid="research-error" role="alert">
+src/pages/ResearchPage.tsx:496:          <div className="rp-results" data-testid="research-results">
+src/pages/ResearchPage.tsx:498:            <div className="rp-mode-badge" data-testid="research-mode-badge">
+src/pages/ResearchPage.tsx:505:              data-testid="research-verdict"
+src/pages/ResearchPage.tsx:511:            <section className="rp-section" data-testid="research-answer-section">
+src/pages/ResearchPage.tsx:513:              <div className="rp-answer-text" data-testid="research-answer">
+src/pages/ResearchPage.tsx:524:              <section className="rp-section" data-testid="research-sources-section">
+src/pages/ResearchPage.tsx:538:              <section className="rp-section" data-testid="research-limitations-section">
+src/apps/devtools/sections/Dashboard.tsx:117:      <div data-testid="metrics-display">
+src/apps/devtools/sections/Logs.tsx:130:        data-testid="log-viewer"
+src/__tests__/c2-anti-silence.test.tsx:20:    <div data-testid="markdown-content">{content}</div>
+src/__tests__/c2-anti-silence.test.tsx:27:    <div data-testid="chat-fallback" role="alert">
+src/pages/Stats.tsx:180:    <div className="module-page" data-testid="page-stats">
+src/__tests__/components/ui/Switch.test.tsx:13:      render(<Switch data-testid="switch" />);
+src/__tests__/components/ui/Switch.test.tsx:25:      render(<Switch checked={false} data-testid="switch-unchecked" />);
+src/__tests__/components/ui/Switch.test.tsx:31:      render(<Switch checked={true} data-testid="switch-checked" />);
+src/__tests__/components/ui/Switch.test.tsx:37:      render(<Switch disabled data-testid="switch-disabled" />);
+src/__tests__/components/ui/Switch.test.tsx:43:      render(<Switch onCheckedChange={handleChange} data-testid="switch-toggle" />);
+src/__tests__/components/ui/Switch.test.tsx:50:      render(<Switch disabled onCheckedChange={handleChange} data-testid="switch" />);
+src/__tests__/components/ui/Switch.test.tsx:70:      render(<Switch checked={true} data-testid="switch" />);
+src/__tests__/components/ui/Input.test.tsx:25:      render(<Input type="text" data-testid="input-text" />);
+src/__tests__/components/ui/Input.test.tsx:30:      render(<Input type="email" data-testid="input-email" />);
+src/__tests__/components/ui/Input.test.tsx:35:      render(<Input type="password" data-testid="input-password" />);
+src/__tests__/components/ui/Input.test.tsx:40:      render(<Input type="number" data-testid="input-number" />);
+src/__tests__/components/ui/Input.test.tsx:47:      render(<Input disabled data-testid="input-disabled" />);
+src/__tests__/components/ui/Input.test.tsx:53:      render(<Input onChange={handleChange} data-testid="input-change" />);
+src/__tests__/components/ui/Input.test.tsx:61:      render(<Input onFocus={handleFocus} data-testid="input-focus" />);
+src/__tests__/components/ui/Input.test.tsx:68:      render(<Input onBlur={handleBlur} data-testid="input-blur" />);
+src/__tests__/components/ui/Input.test.tsx:81:      render(<Input aria-invalid="true" data-testid="input-invalid" />);
+src/__tests__/components/ui/Badge.test.tsx:54:          <span data-testid="icon">★</span> Featured
+src/features/production-health/ProductionHealthPanel.tsx:183:            data-testid="production-health-refresh"
+src/features/production-health/ProductionHealthPanel.tsx:201:      <div className="production-health-panel" data-testid="production-health-panel">
+src/AGENTS.md:10:- Stable `data-testid` selectors for E2E.
+src/App.tsx:1009:        data-testid="app-ready"
+src/App.tsx:1015:        data-testid="ipc-ready"
+src/ui/components/Skeleton.tsx:44:    <span className={classes} style={style} aria-hidden="true" data-testid="skeleton" />
+src/features/chat/ThinkingPanel.tsx:147:          data-testid="reasoning-progress"
+src/features/chat/ThinkingPanel.tsx:188:            <div className="thinking-topology" data-testid="reasoning-topology" hidden>
+src/features/chat/ThinkingPanel.tsx:193:                  data-testid="reasoning-topology-node"
+src/features/chat/ThinkingPanel.tsx:212:        data-testid="reasoning-progress"
+src/features/chat/ThinkingPanel.tsx:232:                <span className="thinking-status" data-testid="reasoning-status-label">
+src/features/chat/ThinkingPanel.tsx:263:              data-testid={`reasoning-step-${step.type}`}
+src/features/chat/ThinkingPanel.tsx:308:          <div className="thinking-topology" data-testid="reasoning-topology">
+src/features/chat/ThinkingPanel.tsx:313:                data-testid="reasoning-topology-node"
+src/features/chat/ChatProviderSelector.tsx:50:          data-testid="select-chat-provider"
+src/features/audio-center/AudioCenterPage.tsx:155:        data-testid={testId}
+src/features/audio-center/AudioCenterPage.tsx:283:      data-testid="page-audio-center"
+src/features/audio-center/AudioCenterPage.tsx:299:            data-testid="btn-audio-refresh-devices"
+src/features/audio-center/AudioCenterPage.tsx:318:              data-testid={`tab-audio-${tab.id}`}
+src/features/audio-center/AudioCenterPage.tsx:477:                data-testid="btn-audio-test-speaker"
+src/features/audio-center/AudioCenterPage.tsx:554:                data-testid="btn-audio-test-microphone"
+src/features/audio-center/AudioCenterPage.tsx:603:                  data-testid="input-elevenlabs-api-key"
+src/features/audio-center/AudioCenterPage.tsx:619:                  data-testid="select-audio-language"
+src/features/audio-center/AudioCenterPage.tsx:638:                  data-testid="toggle-audio-auto-fallback"
+src/ui/components/PageLoadingFallback.tsx:68:          data-testid="long-loading-warning"
+src/features/admin/AdminPage.tsx:162:    <div className="admin-page" data-testid="page-admin">
+src/features/admin/AdminPage.tsx:193:            data-testid={`tab-admin-${tab.id}`}
+src/features/admin/AdminPage.tsx:208:      <main className="admin-content" data-testid="page-admin-content">
+src/ui/Menu.tsx:402:              <span className="menu-status-text" data-testid="menu-status-ai">
+src/ui/pages/ControlPanel/ControlPanel.tsx:156:          <div className="cp-card" role="alert" data-testid="cp-system-error">
+src/ui/pages/ControlPanel/sections/MemorySection.tsx:89:        <div className="cp-card" role="alert" data-testid="cp-memory-error">
+src/ui/pages/ControlPanel/sections/ModulesSection.tsx:61:        <div className="cp-card" role="alert" data-testid="cp-modules-error">
+src/ui/pages/ControlPanel/sections/LogsSection.tsx:107:        <div className="cp-card" role="alert" data-testid="cp-logs-error">
+src/features/identity/ModeMatrix.tsx:444:              data-testid={`mode-card-${mode.id}`}
+src/features/identity/ModeMatrix.tsx:465:                <div className="lock-overlay" data-testid={`lock-overlay-${mode.id}`}>
+src/features/transformation/TransformationRoadmap.tsx:269:      <div className="roadmap-stats" data-testid="roadmap-stats">
+src/tests/chat-ia-interface.test.tsx:20:    <div data-testid="mock-vitals-panel">Mock VitalsPanel - mode {currentMode}</div>
+src/components/sections/ConversationSection.tsx:635:        data-testid={`chat-message-${message.role}`}
+src/components/sections/ConversationSection.tsx:679:                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+src/components/sections/ConversationSection.tsx:684:                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+src/components/sections/ConversationSection.tsx:689:                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+src/components/sections/ConversationSection.tsx:694:                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+src/components/sections/ConversationSection.tsx:699:                  <span className="conversation-tag" data-testid="chat-runtime-tag">
+src/components/sections/ConversationSection.tsx:711:                    data-testid="chat-runtime-tag"
+src/components/sections/ConversationSection.tsx:719:          <div className="conversation-message-text" data-testid="chat-message-content">
+src/components/sections/ConversationSection.tsx:1426:      data-testid="page-conversation"
+src/components/sections/ConversationSection.tsx:1446:              data-testid="select-conversation-mode"
+src/components/sections/ConversationSection.tsx:1458:              data-testid="btn-export-json"
+src/components/sections/ConversationSection.tsx:1469:              data-testid="btn-export-markdown"
+src/components/sections/ConversationSection.tsx:1480:              data-testid="btn-copy-chat"
+src/components/sections/ConversationSection.tsx:1491:              data-testid="toggle-audio-tts"
+src/components/sections/ConversationSection.tsx:1504:              data-testid="toggle-voice-input"
+src/components/sections/ConversationSection.tsx:1520:              data-testid="btn-mode-builder"
+src/components/sections/ConversationSection.tsx:1531:              data-testid="btn-health-check"
+src/components/sections/ConversationSection.tsx:1542:              data-testid="btn-clear-chat"
+src/components/sections/ConversationSection.tsx:1558:              data-testid="input-conversation-search"
+src/components/sections/ConversationSection.tsx:1568:            data-testid="select-conversation-role"
+src/components/sections/ConversationSection.tsx:1586:            data-testid="chat-runtime-state"
+src/components/sections/ConversationSection.tsx:1609:              data-testid="chat-runtime-summary"
+src/components/sections/ConversationSection.tsx:1618:                  data-testid="chat-runtime-badge"
+src/components/sections/ConversationSection.tsx:1658:              data-testid="chat-loading"
+src/components/sections/ConversationSection.tsx:1673:            <div className="conversation-error" data-testid="chat-error" role="alert">
+src/components/sections/ConversationSection.tsx:1700:            data-testid="chat-ready"
+src/components/sections/ConversationSection.tsx:1707:            data-testid="chat-input"
+src/components/sections/ConversationSection.tsx:1717:            data-testid="chat-send"
+src/components/layout/TopNav.tsx:168:      data-testid="nav-top-main"
+src/components/layout/TopNav.tsx:194:              data-testid={`nav-${item.id}`}
+src/components/layout/TopNav.tsx:225:              data-testid="btn-nav-more"
+src/components/layout/TopNav.tsx:264:                        data-testid={`nav-${item.id}`}
+src/components/optimization/UltimateOptimizationDashboard.tsx:183:        data-testid="page-optimization"
+src/components/optimization/UltimateOptimizationDashboard.tsx:202:      data-testid="page-optimization"
+src/components/optimization/UltimateOptimizationDashboard.tsx:251:              data-testid="btn-optimization-test-gpu"
+src/components/optimization/UltimateOptimizationDashboard.tsx:315:              data-testid="btn-optimization-test-wasm"
+src/components/optimization/UltimateOptimizationDashboard.tsx:367:                data-testid="btn-optimization-clear-cache"
+src/components/optimization/UltimateOptimizationDashboard.tsx:442:              data-testid="btn-optimization-compact-db"
+src/components/config/ConfigFieldEditable.tsx:93:          data-testid={testId}
+src/components/config/ConfigFieldEditable.tsx:121:          data-testid={testId}
+src/components/config/ConfigFieldEditable.tsx:146:        data-testid={testId}
+src/components/debug/TracePanel.tsx:14:      <div data-testid="trace-panel-empty" style={{ fontSize: '0.75rem', opacity: 0.7 }}>
+src/components/debug/TracePanel.tsx:22:      data-testid="trace-panel"
+src/components/debug/TracePanel.tsx:27:        data-testid="trace-panel-json"
+src/components/ui/switch.tsx:17:  'data-testid'?: string;
+src/components/ui/switch.tsx:40:  'data-testid': dataTestId,
+src/components/ui/switch.tsx:67:        data-testid={dataTestId}
+src/components/fusion/PerfectFusionDashboard.tsx:118:    <div className="perfect-fusion-dashboard p-responsive" data-testid="page-fusion">
+src/components/fusion/PerfectFusionDashboard.tsx:470:                    data-testid={`btn-fusion-resolve-${alert.id}`}
+src/components/fusion/PerfectFusionDashboard.tsx:478:                      data-testid={`btn-fusion-autorecover-${alert.id}`}
