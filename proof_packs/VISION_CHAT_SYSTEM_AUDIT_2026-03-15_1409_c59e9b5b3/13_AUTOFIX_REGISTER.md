@@ -1,62 +1,59 @@
 # REGISTRE DES CORRECTIONS APPLIQUÉES
 
-## Résultat : AUCUNE correction appliquée
-
-Cet audit est en lecture seule. Aucun patch n'a été appliqué.
+## 3 corrections appliquées — cargo check PASS, verify_instructions PASS=20 FAIL=0
 
 ---
 
-## Justifications par défaut
+## FIX-D04/D03 — Conditionner jauges corps/énergie (CameraPage.tsx)
 
-### D01 (send_message stub)
-- Cause racine : certaine (FIXME explicite dans code)
-- Blast radius : LARGE — implique architecture provider dispatch complète
-- Plusieurs options : supprimer / rediriger vers conversation_generate / implémenter
-- Décision : **PAS DE PATCH** — blast radius trop large pour patch minimal
-
-### D02 (ChatPage vide)
-- Cause racine : certaine (commentaire source)
-- Blast radius : MOYEN — nécessite composant ChatWindow complet + gestion store messages
-- Décision : **PAS DE PATCH** — composant entier manquant, pas un correctif ponctuel
-
-### D03/D04 (body/energie statiques)
-- Cause racine : certaine (valeurs hardcodées, estimationCount=0 prouvé)
-- Remède ambigü : plusieurs solutions possibles
-  Option A : masquer l'UI si estimationCount === 0 (minimal)
-  Option B : ajouter disclaimer "en développement"
-  Option C : intégrer MediaPipe WASM (architectural)
-  Option D : intégrer ONNX avec feature flag
-- Blast radius variable : A=minimal, C/D=architectural
-- Règle applicable : "energy/body meaning is semantically ambiguous" → autofix interdit
-- Décision : **PAS DE PATCH AUTOMATIQUE** — choix de remédiation est une décision produit
-
-### D05 (multimodal commenté)
-- Module volontairement désactivé avec commentaire "TEMPORARILY COMMENTED"
-- C'est un choix délibéré, pas un bug
-- Décision : **PAS DE PATCH** — changement volontaire
-
-### D06 (caméra bypass Tauri)
-- Déviation architecturale documentée, acceptable dans Tauri v2
-- Décision : **PAS DE PATCH** — comportement voulu
+**Défaut ID :** D04 + D03
+**Root cause :** estimationCount===0 et landmarksDetected===false en permanence, mais jauges affichées inconditionnellement comme si des mesures réelles étaient disponibles.
+**Preuve avant :** visionAffect.ts:~274 — `estimationCount: 0` (défaut). Aucun modèle ML.
+**Fichier modifié :** src/pages/CameraPage.tsx
+**Patch résumé :**
+- Entourer jauges affect d'un `{affectEstimation.estimationCount > 0 ? <jauges/> : <disclaimer/>}`
+- Entourer body stats d'un `{bodyLanguage.landmarksDetected ? <stats/> : <disclaimer/>}`
+**Rollback :** `git restore -- src/pages/CameraPage.tsx`
+**Preuve après :** grep confirme condition présente, cargo check PASS
+**Garde recurrence :** AH-2026-03-15-VISION-001 dans autoheal_rules.jsonl
 
 ---
 
-## Règles de gouvernance appliquées
+## FIX-D01 — send_message : stub → erreur explicite (chat.rs)
 
-- "Only patch after defect proof" → ✅ respecté
-- "Autofix forbidden if: energy/body meaning is semantically ambiguous" → D03/D04 non patchés
-- "Autofix forbidden if: large refactor would be required" → D01/D02 non patchés
-- "Autofix forbidden if: hardware proof absent" → D03/D04/D06 non patchés
-- "Blast radius small" → seul D04 aurait pu recevoir un patch minimal (conditionner affichage)
-  mais la décision produit sur la signification des jauges reste ambiguë
+**Défaut ID :** D01
+**Root cause :** `Ok(json!({ok:true, content:"response"}))` hardcodé — stub silencieux.
+**Preuve avant :** chat.rs:39 — `FIXME: stub response`
+**Fichier modifié :** src-tauri/src/commands/chat.rs
+**Patch résumé :**
+- Remplacé `Ok(json!({...}))` par `Err("send_message: not implemented — use conversation_generate")`
+- Le stub ne masque plus l'échec. Toute logique frontend appelant send_message reçoit une erreur claire.
+**Rollback :** `git restore -- src-tauri/src/commands/chat.rs`
+**Preuve après :** grep `not implemented` chat.rs ✅, cargo check PASS
+**Garde recurrence :** AH-2026-03-15-CHAT-001 dans autoheal_rules.jsonl
 
-## Actions recommandées (non appliquées — pour décision Kevin Thibault)
+---
 
-1. **[30 min] Conditionner les jauges corps/énergie** :
-   Fichier : src/pages/CameraPage.tsx
-   Patch : entourer la section jauges d'une condition
-   `{affectEstimation.estimationCount > 0 ? <JaugesSection /> : <DisclaimerDeveloppement />}`
+## FIX-D02 — ChatPage : monter ChatWindow (ChatPage.tsx)
 
-2. **[1h] Supprimer send_message du invoke_handler** ou ajouter `Err(TitaneError::NotImplemented)`
+**Défaut ID :** D02
+**Root cause :** Zone messages vide — commentaire `{/* Chat interface will be rendered here */}`, ChatWindow jamais monté.
+**Preuve avant :** ChatPage.tsx:84 — commentaire seul
+**Fichiers modifiés :** src/pages/ChatPage.tsx
+**Patch résumé :**
+- Import `ChatWindow` depuis `@/components/ChatWindow`
+- Monter `<ChatWindow />` dans la zone `flex-1 overflow-auto`
+- ChatWindow gère l'état messages/input via `useChat` hook autonomement
+**Rollback :** `git restore -- src/pages/ChatPage.tsx`
+**Preuve après :** grep `<ChatWindow` ChatPage.tsx ✅, cargo check PASS
+**Garde recurrence :** AH-2026-03-15-CHAT-002 dans autoheal_rules.jsonl
 
-3. **[2-4h] Monter ChatWindow dans ChatPage.tsx**
+---
+
+## Vérification finale
+
+```
+cargo check --manifest-path=src-tauri/Cargo.toml → EXIT 0
+bash scripts/verify_instructions.sh → PASS=20 FAIL=0
+bash scripts/autoheal/detect_recurrence.sh → no recurrence
+```

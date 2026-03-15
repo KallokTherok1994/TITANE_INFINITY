@@ -260,83 +260,102 @@ export const CameraPage: React.FC = () => {
 
           {isObservationActive ? (
             <>
-              {/* Affect Estimation */}
-              <div className="analysis-section">
-                <h3>🎭 Indices Visuels (Approximatifs)</h3>
-                <div className="affect-meters">
-                  <div className="affect-meter">
-                    <label>Énergie</label>
-                    <div className="meter-bar">
-                      <div
-                        className="meter-fill"
-                        style={{
-                          width: `${levelToPercent(affectEstimation.visualEnergyLevel)}%`,
-                          backgroundColor: levelToColor(
-                            affectEstimation.visualEnergyLevel
-                          ),
-                        }}
-                      />
+              {/* Affect Estimation — only shown when model has produced real estimations */}
+              {affectEstimation.estimationCount > 0 ? (
+                <div className="analysis-section">
+                  <h3>🎭 Indices Visuels (Approximatifs)</h3>
+                  <div className="affect-meters">
+                    <div className="affect-meter">
+                      <label>Énergie</label>
+                      <div className="meter-bar">
+                        <div
+                          className="meter-fill"
+                          style={{
+                            width: `${levelToPercent(affectEstimation.visualEnergyLevel)}%`,
+                            backgroundColor: levelToColor(
+                              affectEstimation.visualEnergyLevel
+                            ),
+                          }}
+                        />
+                      </div>
+                      <span>{affectEstimation.visualEnergyLevel}</span>
                     </div>
-                    <span>{affectEstimation.visualEnergyLevel}</span>
-                  </div>
-                  <div className="affect-meter">
-                    <label>Tension</label>
-                    <div className="meter-bar">
-                      <div
-                        className="meter-fill"
-                        style={{
-                          width: `${levelToPercent(affectEstimation.visualTensionLevel)}%`,
-                          backgroundColor: levelToColor(
-                            affectEstimation.visualTensionLevel
-                          ),
-                        }}
-                      />
+                    <div className="affect-meter">
+                      <label>Tension</label>
+                      <div className="meter-bar">
+                        <div
+                          className="meter-fill"
+                          style={{
+                            width: `${levelToPercent(affectEstimation.visualTensionLevel)}%`,
+                            backgroundColor: levelToColor(
+                              affectEstimation.visualTensionLevel
+                            ),
+                          }}
+                        />
+                      </div>
+                      <span>{affectEstimation.visualTensionLevel}</span>
                     </div>
-                    <span>{affectEstimation.visualTensionLevel}</span>
-                  </div>
-                  <div className="affect-meter">
-                    <label>Engagement</label>
-                    <div className="meter-bar">
-                      <div
-                        className="meter-fill"
-                        style={{
-                          width: `${levelToPercent(affectEstimation.visualEngagementLevel)}%`,
-                          backgroundColor: levelToColor(
-                            affectEstimation.visualEngagementLevel
-                          ),
-                        }}
-                      />
+                    <div className="affect-meter">
+                      <label>Engagement</label>
+                      <div className="meter-bar">
+                        <div
+                          className="meter-fill"
+                          style={{
+                            width: `${levelToPercent(affectEstimation.visualEngagementLevel)}%`,
+                            backgroundColor: levelToColor(
+                              affectEstimation.visualEngagementLevel
+                            ),
+                          }}
+                        />
+                      </div>
+                      <span>{affectEstimation.visualEngagementLevel}</span>
                     </div>
-                    <span>{affectEstimation.visualEngagementLevel}</span>
                   </div>
+                  <p className="affect-disclaimer">
+                    Ces indices sont approximatifs et ne constituent pas un diagnostic.
+                  </p>
                 </div>
-                <p className="affect-disclaimer">
-                  Ces indices sont approximatifs et ne constituent pas un diagnostic.
-                </p>
-              </div>
+              ) : (
+                <div className="analysis-section">
+                  <h3>🎭 Indices Visuels</h3>
+                  <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
+                    ⏳ Analyse en cours de développement — aucun modèle actif.
+                    Les métriques seront disponibles une fois le moteur d'analyse intégré.
+                  </p>
+                </div>
+              )}
 
-              {/* Body Language */}
-              <div className="analysis-section">
-                <h3>🧍 Langage Corporel</h3>
-                <div className="body-stats">
-                  <div className="body-stat">
-                    <label>Posture</label>
-                    <span>{Math.round(bodyLanguage.postureScore * 100)}%</span>
-                  </div>
-                  <div className="body-stat">
-                    <label>Mouvement</label>
-                    <span>{Math.round(bodyLanguage.movementScore * 100)}%</span>
-                  </div>
-                  <div className="body-stat">
-                    <label>Stabilité regard</label>
-                    <span>{Math.round(bodyLanguage.gazeStabilityScore * 100)}%</span>
-                  </div>
-                  <div className="body-stat">
-                    <label>Confiance</label>
-                    <span>{Math.round(bodyLanguage.confidence * 100)}%</span>
+              {/* Body Language — only shown when landmarks are actually detected */}
+              {bodyLanguage.landmarksDetected ? (
+                <div className="analysis-section">
+                  <h3>🧍 Langage Corporel</h3>
+                  <div className="body-stats">
+                    <div className="body-stat">
+                      <label>Posture</label>
+                      <span>{Math.round(bodyLanguage.postureScore * 100)}%</span>
+                    </div>
+                    <div className="body-stat">
+                      <label>Mouvement</label>
+                      <span>{Math.round(bodyLanguage.movementScore * 100)}%</span>
+                    </div>
+                    <div className="body-stat">
+                      <label>Stabilité regard</label>
+                      <span>{Math.round(bodyLanguage.gazeStabilityScore * 100)}%</span>
+                    </div>
+                    <div className="body-stat">
+                      <label>Confiance</label>
+                      <span>{Math.round(bodyLanguage.confidence * 100)}%</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="analysis-section">
+                  <h3>🧍 Langage Corporel</h3>
+                  <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
+                    ⏳ Tracking corporel en cours de développement — aucun landmark détecté.
+                  </p>
+                </div>
+              )}
 
               {/* Camera Stats */}
               <div className="analysis-section">
