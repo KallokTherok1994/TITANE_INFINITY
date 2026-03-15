@@ -32,12 +32,7 @@ import './DevPage.css';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type SectionId =
-  | 'overview'
-  | 'diagnostics'
-  | 'operations'
-  | 'validation'
-  | 'security';
+type SectionId = 'overview' | 'diagnostics' | 'operations' | 'validation' | 'security';
 
 interface OrchestrationState {
   multiAi: {
@@ -564,8 +559,12 @@ const MetricsSection = memo<{
       {/* v29.0: Web Vitals — DISPLAY_ONLY, monitoring IPC non câblé */}
       <div className="dev-performance-vitals">
         <h3>⚡ Core Web Vitals</h3>
-        <p className="dev-coming-soon" style={{ color: 'rgba(203,213,225,0.6)', fontSize: '0.8rem' }}>
-          Monitoring Web Vitals non disponible — nécessite intégration IPC system_metrics_live (DISPLAY_ONLY)
+        <p
+          className="dev-coming-soon"
+          style={{ color: 'rgba(203,213,225,0.6)', fontSize: '0.8rem' }}
+        >
+          Monitoring Web Vitals non disponible — nécessite intégration IPC
+          system_metrics_live (DISPLAY_ONLY)
         </p>
       </div>
 

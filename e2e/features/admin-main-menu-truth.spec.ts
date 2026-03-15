@@ -19,8 +19,16 @@ async function assertNoAdminBoundaryError(page: import('@playwright/test').Page)
     return;
   }
 
-  await page.getByText(/Détails techniques/i).first().click().catch(() => undefined);
-  const details = await page.locator('pre').first().innerText().catch(() => 'n/a');
+  await page
+    .getByText(/Détails techniques/i)
+    .first()
+    .click()
+    .catch(() => undefined);
+  const details = await page
+    .locator('pre')
+    .first()
+    .innerText()
+    .catch(() => 'n/a');
   throw new Error(`[ADMIN_RUNTIME_BOUNDARY] ${details}`);
 }
 
@@ -59,7 +67,8 @@ test.describe('Feature: Admin Main Menu Truth', () => {
       {
         tabTestId: 'tab-admin-config',
         rootSelector: '[data-testid="page-configuration-hub"]',
-        degradedSelector: 'text=/Erreur de chargement de la configuration|Configuration incomplete/i',
+        degradedSelector:
+          'text=/Erreur de chargement de la configuration|Configuration incomplete/i',
       },
       {
         tabTestId: 'tab-admin-audio',

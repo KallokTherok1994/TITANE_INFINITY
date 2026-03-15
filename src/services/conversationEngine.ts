@@ -307,10 +307,8 @@ function readPersonaContext(): string {
     if (typeof p.verbosity === 'string' && p.verbosity !== 'balanced')
       parts.push(`Verbosité: ${p.verbosity}`);
     if (typeof p.emoji === 'boolean') parts.push(`Emojis: ${p.emoji ? 'oui' : 'non'}`);
-    if (typeof p.formality === 'number')
-      parts.push(`Formalité: ${p.formality}/100`);
-    if (typeof p.creativity === 'number')
-      parts.push(`Créativité: ${p.creativity}/100`);
+    if (typeof p.formality === 'number') parts.push(`Formalité: ${p.formality}/100`);
+    if (typeof p.creativity === 'number') parts.push(`Créativité: ${p.creativity}/100`);
     if (typeof p.codeExamples === 'boolean')
       parts.push(`Exemples de code: ${p.codeExamples ? 'oui' : 'non'}`);
     if (parts.length === 0) return '';
@@ -428,7 +426,11 @@ export async function processMessage(
     try {
       const stored = localStorage.getItem('titane_cognitive_state');
       if (!stored) return '';
-      const state = JSON.parse(stored) as { flowActive?: boolean; energy?: number; mode?: string };
+      const state = JSON.parse(stored) as {
+        flowActive?: boolean;
+        energy?: number;
+        mode?: string;
+      };
       if (!state) return '';
       const parts: string[] = [];
       if (state.flowActive) parts.push('Flow actif');
@@ -442,7 +444,14 @@ export async function processMessage(
   };
   const cognitiveContext = readCognitiveContext();
 
-  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext, progressionContext, cognitiveContext]
+  const systemPrompt = [
+    baseSystemPrompt,
+    contextualPrompt,
+    personaContext,
+    persistentMemoryContext,
+    progressionContext,
+    cognitiveContext,
+  ]
     .filter(Boolean)
     .join('\n\n');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
@@ -468,18 +477,28 @@ export async function processMessage(
   });
 
   // Preflight guard — required args must be set before IPC
-  if (!payload.message || typeof payload.message !== 'string' || payload.message.trim().length === 0) {
-    throw new Error('[TITANE] message requis non fourni au payload conversation_generate');
+  if (
+    !payload.message ||
+    typeof payload.message !== 'string' ||
+    payload.message.trim().length === 0
+  ) {
+    throw new Error(
+      '[TITANE] message requis non fourni au payload conversation_generate'
+    );
   }
   if (!payload.conversationId || typeof payload.conversationId !== 'string') {
-    throw new Error('[TITANE] conversationId requis non fourni au payload conversation_generate');
+    throw new Error(
+      '[TITANE] conversationId requis non fourni au payload conversation_generate'
+    );
   }
 
   const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
 
   // Guard: CONTRACT_VIOLATION_CLAMPED — l'IPC a échoué côté Tauri (args invalides ou Tauri indisponible)
   // Plutôt que d'afficher l'erreur technique comme message assistant, on lève une vraie erreur
-  const rawMeta = (raw as Record<string, unknown>)?.meta as Record<string, unknown> | undefined;
+  const rawMeta = (raw as Record<string, unknown>)?.meta as
+    | Record<string, unknown>
+    | undefined;
   if (rawMeta?.reason_code === 'CONTRACT_VIOLATION_CLAMPED') {
     const policy = typeof rawMeta?.policy === 'string' ? rawMeta.policy : 'inconnu';
     throw new Error(

@@ -863,31 +863,35 @@ const ChatComponent: React.FC = () => {
       topology,
       provider: resolvedProvider,
       // ── OMEGA v4: nouvelles dimensions vérité ───────────────────
-      qualityScore: typeof omegaMetadata?.validationScore === 'number'
-        ? (omegaMetadata.validationScore as number)
-        : null,
+      qualityScore:
+        typeof omegaMetadata?.validationScore === 'number'
+          ? (omegaMetadata.validationScore as number)
+          : null,
       autoHealed: Boolean(omegaMetadata?.autoHealed),
-      memoryTrace: lastEntry ? {
-        injected: true,  // systemPrompt toujours construit (6 sources) quand un message est envoyé
-        savedAfter: !isLoading && lastEntry.status === 'success',
-        systemPromptSources: [
-          'Prompt de base (mode conversationnel)',
-          'Enveloppe de contexte (module actif)',
-          'Profil Persona (localStorage)',
-          'Mémoire persistante 3 niveaux (IPC Tauri)',
-          'Progression XP & Évolution',
-          'État cognitif (localStorage)',
-        ],
-      } : null,
+      memoryTrace: lastEntry
+        ? {
+            injected: true, // systemPrompt toujours construit (6 sources) quand un message est envoyé
+            savedAfter: !isLoading && lastEntry.status === 'success',
+            systemPromptSources: [
+              'Prompt de base (mode conversationnel)',
+              'Enveloppe de contexte (module actif)',
+              'Profil Persona (localStorage)',
+              'Mémoire persistante 3 niveaux (IPC Tauri)',
+              'Progression XP & Évolution',
+              'État cognitif (localStorage)',
+            ],
+          }
+        : null,
       messageLength: (() => {
         const msgs = lastEntry?.request?.messages;
         if (!msgs || msgs.length === 0) return 0;
         const last = msgs[msgs.length - 1];
         return typeof last?.content === 'string' ? last.content.length : 0;
       })(),
-      responseLength: typeof lastEntry?.response?.content === 'string'
-        ? lastEntry.response.content.length
-        : 0,
+      responseLength:
+        typeof lastEntry?.response?.content === 'string'
+          ? lastEntry.response.content.length
+          : 0,
     };
   }, [debugEntries, isLoading, lastProvider, messages, thinkingStartTime]);
 

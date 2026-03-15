@@ -400,3 +400,20 @@ pub mod agent_system; // ✅ Agent System vΩ (Multi-Agents, Roles, Capabilities
 pub use core::{EngineHealth, EngineMetrics, SingularityEngine, SingularityState};
 pub use utils::{AppError, AppResult};
 pub mod error_handling;
+
+// ═══════════════════════════════════════════════════════════════
+// ANDROID MOBILE ENTRY POINT (Phase 3 — Build Stub)
+// Required by Tauri mobile: generates `start_app` JNI symbol in cdylib.
+// On desktop, `fn main()` in main.rs is used instead.
+// LOT-B1: Full command migration from main.rs builder pending.
+// ═══════════════════════════════════════════════════════════════
+
+/// Mobile entry point — annotated so the `tauri::mobile_entry_point` macro
+/// generates the `start_app` symbol required by the Android Gradle build.
+/// On Android, this function IS the app. Full command set migration: LOT-B1.
+#[cfg_attr(mobile, tauri::mobile_entry_point)]
+pub fn run() {
+    tauri::Builder::default()
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}

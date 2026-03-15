@@ -189,7 +189,11 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
       {/* Results */}
       <div className="memory-results">
         {isMockData && (
-          <div className="memory-mock-notice" role="note" aria-label="Données illustratives">
+          <div
+            className="memory-mock-notice"
+            role="note"
+            aria-label="Données illustratives"
+          >
             <span className="mock-notice-icon">🔒</span>
             <span className="mock-notice-text">
               Données illustratives — backend Tauri inactif

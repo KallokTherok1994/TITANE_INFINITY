@@ -658,7 +658,7 @@ const MemoryMapSection: React.FC<MemoryMapSectionProps> = ({ stats }) => {
                 </div>
                 <div className="w-full bg-gray-700 rounded-full h-3">
                   <div
-                      className="h-3 rounded-full bg-linear-to-r from-cyan-500 to-blue-500"
+                    className="h-3 rounded-full bg-linear-to-r from-cyan-500 to-blue-500"
                     style={{ width: `${(stats.memoryShortTerm / 500) * 100}%` }}
                   />
                 </div>

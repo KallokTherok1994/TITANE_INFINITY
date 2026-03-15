@@ -57,8 +57,8 @@ interface OmegaXPTrace {
 
 /** Trace mémoire / contexte : déduite du debug entry + sources statiques connues */
 interface OmegaMemoryTrace {
-  injected: boolean;        // systemPrompt toujours construit avec 6 sources
-  savedAfter: boolean;      // saveMessage() appelé si status === 'success'
+  injected: boolean; // systemPrompt toujours construit avec 6 sources
+  savedAfter: boolean; // saveMessage() appelé si status === 'success'
   systemPromptSources: string[];
 }
 
@@ -147,35 +147,53 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
 
   const getStepTypeLabel = (type: ThinkingStep['type']) => {
     switch (type) {
-      case 'analysis': return 'Analyse';
-      case 'reasoning': return 'Raisonnement';
-      case 'synthesis': return 'Synthèse';
-      case 'validation': return 'Validation';
-      default: return 'Réflexion';
+      case 'analysis':
+        return 'Analyse';
+      case 'reasoning':
+        return 'Raisonnement';
+      case 'synthesis':
+        return 'Synthèse';
+      case 'validation':
+        return 'Validation';
+      default:
+        return 'Réflexion';
     }
   };
 
   const getStepStatusIcon = (status: ThinkingStep['status']) => {
     switch (status) {
-      case 'active': return <Loader2 className="oj-icon-spin oj-icon-blue" size={14} />;
-      case 'complete': case 'done': return <Check className="oj-icon-green" size={14} />;
-      case 'error': return <AlertCircle className="oj-icon-red" size={14} />;
-      case 'blocked': return <Ban className="oj-icon-orange" size={14} />;
-      default: return <div className="oj-step-dot" />;
+      case 'active':
+        return <Loader2 className="oj-icon-spin oj-icon-blue" size={14} />;
+      case 'complete':
+      case 'done':
+        return <Check className="oj-icon-green" size={14} />;
+      case 'error':
+        return <AlertCircle className="oj-icon-red" size={14} />;
+      case 'blocked':
+        return <Ban className="oj-icon-orange" size={14} />;
+      default:
+        return <div className="oj-step-dot" />;
     }
   };
 
   const getStateLabel = () => {
     switch (resolvedState) {
-      case 'active': return 'En cours';
-      case 'done': return 'Terminé';
-      case 'error': return 'Erreur';
-      case 'blocked': return 'Bloqué';
-      default: return 'Inactif';
+      case 'active':
+        return 'En cours';
+      case 'done':
+        return 'Terminé';
+      case 'error':
+        return 'Erreur';
+      case 'blocked':
+        return 'Bloqué';
+      default:
+        return 'Inactif';
     }
   };
 
-  const doneSteps = steps.filter(s => s.status === 'complete' || s.status === 'done').length;
+  const doneSteps = steps.filter(
+    s => s.status === 'complete' || s.status === 'done'
+  ).length;
   const errorSteps = steps.filter(s => s.status === 'error').length;
   const durationDisplay = elapsedTime !== undefined ? `${elapsedTime.toFixed(1)}s` : null;
 
@@ -210,7 +228,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 <Brain className="thinking-compact-icon" size={14} />
                 <span className="thinking-compact-text">
                   {doneSteps} étape{doneSteps !== 1 ? 's' : ''}
-                  {errorSteps > 0 ? ` · ${errorSteps} erreur${errorSteps !== 1 ? 's' : ''}` : ''}
+                  {errorSteps > 0
+                    ? ` · ${errorSteps} erreur${errorSteps !== 1 ? 's' : ''}`
+                    : ''}
                 </span>
               </>
             )}
@@ -219,7 +239,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                 {getProviderIcon(provider)} {provider}
               </span>
             )}
-            <span className="oj-badge oj-badge--state" data-testid="reasoning-status-label" data-state={resolvedState}>
+            <span
+              className="oj-badge oj-badge--state"
+              data-testid="reasoning-status-label"
+              data-state={resolvedState}
+            >
               {getStateLabel()}
             </span>
             <ChevronDown className="thinking-compact-chevron" size={14} />
@@ -261,16 +285,35 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           <div className="oj-header-left">
             <Brain size={18} className="oj-header-icon" />
             <span className="oj-header-title">Journal d'Exécution OMEGA</span>
-            <span className="oj-badge oj-badge--state" data-testid="reasoning-status-label" data-state={resolvedState}>
-              {isThinking ? <><Loader2 size={11} className="oj-icon-spin" style={{marginRight:3}}/>{getStateLabel()}</> : getStateLabel()}
+            <span
+              className="oj-badge oj-badge--state"
+              data-testid="reasoning-status-label"
+              data-state={resolvedState}
+            >
+              {isThinking ? (
+                <>
+                  <Loader2
+                    size={11}
+                    className="oj-icon-spin"
+                    style={{ marginRight: 3 }}
+                  />
+                  {getStateLabel()}
+                </>
+              ) : (
+                getStateLabel()
+              )}
             </span>
-            {durationDisplay && <span className="oj-badge oj-badge--neutral">⏱ {durationDisplay}</span>}
+            {durationDisplay && (
+              <span className="oj-badge oj-badge--neutral">⏱ {durationDisplay}</span>
+            )}
             {provider && (
               <span className="oj-badge oj-badge--provider">
                 {getProviderIcon(provider)} {provider}
               </span>
             )}
-            <span className="oj-badge oj-badge--neutral">{steps.length} étape{steps.length !== 1 ? 's' : ''}</span>
+            <span className="oj-badge oj-badge--neutral">
+              {steps.length} étape{steps.length !== 1 ? 's' : ''}
+            </span>
           </div>
           <div className="oj-header-right">
             {/* Mode switcher */}
@@ -280,15 +323,33 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   key={mode}
                   className={`oj-mode-btn${viewMode === mode ? ' oj-mode-btn--active' : ''}`}
                   onClick={() => setViewMode(mode)}
-                  title={mode === 'essentiel' ? 'Vue essentielle' : mode === 'detaille' ? 'Vue détaillée' : 'Vue expert'}
+                  title={
+                    mode === 'essentiel'
+                      ? 'Vue essentielle'
+                      : mode === 'detaille'
+                        ? 'Vue détaillée'
+                        : 'Vue expert'
+                  }
                 >
-                  {mode === 'essentiel' ? 'Essentiel' : mode === 'detaille' ? 'Détaillé' : 'Expert'}
+                  {mode === 'essentiel'
+                    ? 'Essentiel'
+                    : mode === 'detaille'
+                      ? 'Détaillé'
+                      : 'Expert'}
                 </button>
               ))}
             </div>
-            <button className="oj-ctrl-btn" onClick={expandAll} title="Tout développer">▼▼</button>
-            <button className="oj-ctrl-btn" onClick={collapseAll} title="Tout réduire">▲▲</button>
-            <button className="oj-ctrl-btn" onClick={() => setIsExpanded(false)} title="Réduire le journal">
+            <button className="oj-ctrl-btn" onClick={expandAll} title="Tout développer">
+              ▼▼
+            </button>
+            <button className="oj-ctrl-btn" onClick={collapseAll} title="Tout réduire">
+              ▲▲
+            </button>
+            <button
+              className="oj-ctrl-btn"
+              onClick={() => setIsExpanded(false)}
+              title="Réduire le journal"
+            >
               <ChevronUp size={15} />
             </button>
             {onClose && (
@@ -305,7 +366,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             <Sparkles size={14} className="oj-icon-blue" />
             <span className="oj-summary-label">Intention détectée :</span>
             <span className="oj-summary-value">
-              {isThinking ? 'Traitement en cours…' : steps.length > 0 ? 'Réponse à la demande utilisateur' : 'Aucune trace disponible'}
+              {isThinking
+                ? 'Traitement en cours…'
+                : steps.length > 0
+                  ? 'Réponse à la demande utilisateur'
+                  : 'Aucune trace disponible'}
             </span>
           </div>
           <div className="oj-summary-row">
@@ -314,9 +379,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             <span className="oj-summary-value">
               {resolvedState === 'done'
                 ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}${qualityScore !== null && qualityScore !== undefined ? ` · Qualité ${(qualityScore * 100).toFixed(0)}%` : ''}${autoHealed ? ' · ✦ Auto-guéri' : ''}`
-                : resolvedState === 'error' ? 'Échec détecté'
-                : resolvedState === 'active' ? 'En cours de traitement'
-                : 'Inactif'}
+                : resolvedState === 'error'
+                  ? 'Échec détecté'
+                  : resolvedState === 'active'
+                    ? 'En cours de traitement'
+                    : 'Inactif'}
             </span>
           </div>
           {(messageLength !== undefined || responseLength !== undefined) && (
@@ -336,8 +403,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <span className="oj-summary-label">XP attendu :</span>
               <span className="oj-summary-value">
                 <span className="oj-xp-gain">+5 XP Chat</span>
-                {(responseLength ?? 0) > 200 && <span className="oj-xp-gain"> · +2 XP Cognitif</span>}
-                {' '}— Niveau {xpTrace.level} · Total {xpTrace.totalXP.toLocaleString('fr-FR')} XP
+                {(responseLength ?? 0) > 200 && (
+                  <span className="oj-xp-gain"> · +2 XP Cognitif</span>
+                )}{' '}
+                — Niveau {xpTrace.level} · Total {xpTrace.totalXP.toLocaleString('fr-FR')}{' '}
+                XP
               </span>
             </div>
           )}
@@ -346,15 +416,21 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <Database size={14} className="oj-icon-blue" />
               <span className="oj-summary-label">Mémoire :</span>
               <span className="oj-summary-value">
-                {memoryTrace.injected ? '✓ Contexte injecté' : '—'}{' · '}
-                {memoryTrace.savedAfter ? '✓ Message sauvegardé' : resolvedState === 'error' ? '✗ Non sauvegardé' : '—'}
+                {memoryTrace.injected ? '✓ Contexte injecté' : '—'}
+                {' · '}
+                {memoryTrace.savedAfter
+                  ? '✓ Message sauvegardé'
+                  : resolvedState === 'error'
+                    ? '✗ Non sauvegardé'
+                    : '—'}
               </span>
             </div>
           )}
           <div className="oj-summary-row oj-summary-row--caption">
             <Globe size={11} className="oj-icon-muted" />
             <span className="oj-non-capture">
-              Recherche en ligne : non effectuée · Fichiers système : NON CAPTURÉ · Commandes IPC : conversation_generate (toujours)
+              Recherche en ligne : non effectuée · Fichiers système : NON CAPTURÉ ·
+              Commandes IPC : conversation_generate (toujours)
             </span>
           </div>
         </div>
@@ -387,18 +463,31 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.06 }}
                 >
-                  <div className="oj-step-header" onClick={() => toggleStep(step.id)} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && toggleStep(step.id)}>
+                  <div
+                    className="oj-step-header"
+                    onClick={() => toggleStep(step.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={e => e.key === 'Enter' && toggleStep(step.id)}
+                  >
                     <span className="oj-step-num">{index + 1}</span>
                     {getStepStatusIcon(step.status)}
                     <span className="oj-step-type">{getStepTypeLabel(step.type)}</span>
                     <span className="oj-step-preview">
-                      {expandedSteps.has(step.id) ? '' : step.content.slice(0, 60) + (step.content.length > 60 ? '…' : '')}
+                      {expandedSteps.has(step.id)
+                        ? ''
+                        : step.content.slice(0, 60) +
+                          (step.content.length > 60 ? '…' : '')}
                     </span>
                     {viewMode === 'expert' && (
                       <span className="oj-step-id">#{step.id.slice(-6)}</span>
                     )}
                     <span className="oj-step-chevron">
-                      {expandedSteps.has(step.id) ? <ChevronUp size={13}/> : <ChevronDown size={13}/>}
+                      {expandedSteps.has(step.id) ? (
+                        <ChevronUp size={13} />
+                      ) : (
+                        <ChevronDown size={13} />
+                      )}
                     </span>
                   </div>
                   <AnimatePresence>
@@ -437,13 +526,25 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Provider</span>
                 <span className="oj-runtime-value">
-                  {provider ? <>{getProviderIcon(provider)} {provider}</> : <span className="oj-non-capture">NON CAPTURÉ</span>}
+                  {provider ? (
+                    <>
+                      {getProviderIcon(provider)} {provider}
+                    </>
+                  ) : (
+                    <span className="oj-non-capture">NON CAPTURÉ</span>
+                  )}
                 </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Mode</span>
                 <span className="oj-runtime-value">
-                  {isThinking ? 'Online (en cours)' : resolvedState === 'done' ? 'Online' : <span className="oj-non-capture">Inconnu</span>}
+                  {isThinking ? (
+                    'Online (en cours)'
+                  ) : resolvedState === 'done' ? (
+                    'Online'
+                  ) : (
+                    <span className="oj-non-capture">Inconnu</span>
+                  )}
                 </span>
               </div>
               <div className="oj-runtime-item">
@@ -454,7 +555,10 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Étapes</span>
-                <span className="oj-runtime-value">{steps.length} ({doneSteps} ✓{errorSteps > 0 ? `, ${errorSteps} ✗` : ''})</span>
+                <span className="oj-runtime-value">
+                  {steps.length} ({doneSteps} ✓{errorSteps > 0 ? `, ${errorSteps} ✗` : ''}
+                  )
+                </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">XP gagné</span>
@@ -503,21 +607,30 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                     <span className="oj-runtime-value">
                       <span className="oj-xp-gain">+5 XP</span> domaine Chat
                       {(responseLength ?? 0) > 200 && (
-                        <> · <span className="oj-xp-gain">+2 XP</span> Cognitif</>
+                        <>
+                          {' '}
+                          · <span className="oj-xp-gain">+2 XP</span> Cognitif
+                        </>
                       )}
                     </span>
                   </div>
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">XP Chat cumulé</span>
-                    <span className="oj-runtime-value">{xpTrace.chatXP.toLocaleString('fr-FR')}</span>
+                    <span className="oj-runtime-value">
+                      {xpTrace.chatXP.toLocaleString('fr-FR')}
+                    </span>
                   </div>
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">XP Cognitif cumulé</span>
-                    <span className="oj-runtime-value">{xpTrace.cognitiveXP.toLocaleString('fr-FR')}</span>
+                    <span className="oj-runtime-value">
+                      {xpTrace.cognitiveXP.toLocaleString('fr-FR')}
+                    </span>
                   </div>
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">XP Total</span>
-                    <span className="oj-runtime-value">{xpTrace.totalXP.toLocaleString('fr-FR')}</span>
+                    <span className="oj-runtime-value">
+                      {xpTrace.totalXP.toLocaleString('fr-FR')}
+                    </span>
                   </div>
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">Niveau global</span>
@@ -525,21 +638,25 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   </div>
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">Persistance XP</span>
-                    <span className="oj-runtime-value">Tauri IPC · localStorage (fallback)</span>
-                  </div>
-                </div>
-                {viewMode === 'expert' && xpTrace.lastGainDomain && xpTrace.lastGainAmount !== undefined && (
-                  <div className="oj-xp-last">
-                    <span className="oj-runtime-label">Dernier gain enregistré :</span>
                     <span className="oj-runtime-value">
-                      <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
-                      {' '}· domaine <em>{xpTrace.lastGainDomain}</em>
-                      {xpTrace.lastGainTimestamp
-                        ? ` · ${new Date(xpTrace.lastGainTimestamp).toLocaleTimeString('fr-FR')}`
-                        : ''}
+                      Tauri IPC · localStorage (fallback)
                     </span>
                   </div>
-                )}
+                </div>
+                {viewMode === 'expert' &&
+                  xpTrace.lastGainDomain &&
+                  xpTrace.lastGainAmount !== undefined && (
+                    <div className="oj-xp-last">
+                      <span className="oj-runtime-label">Dernier gain enregistré :</span>
+                      <span className="oj-runtime-value">
+                        <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span> ·
+                        domaine <em>{xpTrace.lastGainDomain}</em>
+                        {xpTrace.lastGainTimestamp
+                          ? ` · ${new Date(xpTrace.lastGainTimestamp).toLocaleTimeString('fr-FR')}`
+                          : ''}
+                      </span>
+                    </div>
+                  )}
               </div>
             ) : (
               <div className="oj-step-placeholder oj-non-capture">
@@ -559,45 +676,62 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Mémoire injectée</span>
                 <span className="oj-runtime-value">
-                  {memoryTrace?.injected
-                    ? <span className="oj-icon-green">✓ Oui — 3 niveaux (session, intermédiaire, long terme)</span>
-                    : <span className="oj-non-capture">Inconnu</span>}
+                  {memoryTrace?.injected ? (
+                    <span className="oj-icon-green">
+                      ✓ Oui — 3 niveaux (session, intermédiaire, long terme)
+                    </span>
+                  ) : (
+                    <span className="oj-non-capture">Inconnu</span>
+                  )}
                 </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Message sauvegardé</span>
                 <span className="oj-runtime-value">
-                  {memoryTrace?.savedAfter
-                    ? <span className="oj-icon-green">✓ Oui — mémoire persistante</span>
-                    : resolvedState === 'error'
-                      ? <span className="oj-icon-red">✗ Non (erreur pipeline)</span>
-                      : <span className="oj-non-capture">Inconnu</span>}
+                  {memoryTrace?.savedAfter ? (
+                    <span className="oj-icon-green">✓ Oui — mémoire persistante</span>
+                  ) : resolvedState === 'error' ? (
+                    <span className="oj-icon-red">✗ Non (erreur pipeline)</span>
+                  ) : (
+                    <span className="oj-non-capture">Inconnu</span>
+                  )}
                 </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Recherche en ligne</span>
-                <span className="oj-runtime-value oj-non-capture">Non effectuée — LLM local/IPC uniquement</span>
+                <span className="oj-runtime-value oj-non-capture">
+                  Non effectuée — LLM local/IPC uniquement
+                </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Fichiers système</span>
-                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ dans cette version</span>
+                <span className="oj-runtime-value oj-non-capture">
+                  NON CAPTURÉ dans cette version
+                </span>
               </div>
             </div>
-            {viewMode === 'expert' && memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0 && (
-              <div className="oj-sources-list">
-                <span className="oj-section-subtitle">Sources assemblées dans le systemPrompt :</span>
-                {memoryTrace.systemPromptSources.map((src, i) => (
-                  <div key={i} className="oj-source-item">
-                    <span className="oj-icon-green">✓</span>
-                    <span>{src}</span>
+            {viewMode === 'expert' &&
+              memoryTrace?.systemPromptSources &&
+              memoryTrace.systemPromptSources.length > 0 && (
+                <div className="oj-sources-list">
+                  <span className="oj-section-subtitle">
+                    Sources assemblées dans le systemPrompt :
+                  </span>
+                  {memoryTrace.systemPromptSources.map((src, i) => (
+                    <div key={i} className="oj-source-item">
+                      <span className="oj-icon-green">✓</span>
+                      <span>{src}</span>
+                    </div>
+                  ))}
+                  <div className="oj-source-item oj-source-item--nc">
+                    <span className="oj-non-capture">—</span>
+                    <span className="oj-non-capture">
+                      Handlers IPC : conversation_generate · persistent_memory_get_stats ·
+                      persistent_memory_get_context
+                    </span>
                   </div>
-                ))}
-                <div className="oj-source-item oj-source-item--nc">
-                  <span className="oj-non-capture">—</span>
-                  <span className="oj-non-capture">Handlers IPC : conversation_generate · persistent_memory_get_stats · persistent_memory_get_context</span>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         )}
 
@@ -606,15 +740,30 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           <div className="oj-section oj-section--essentiel">
             <div className="oj-essentiel-steps">
               {steps.slice(0, 3).map(step => (
-                <div key={step.id} className={`oj-essentiel-step ${step.status}`} data-testid={`reasoning-step-${step.type}`} data-step-status={step.status}>
+                <div
+                  key={step.id}
+                  className={`oj-essentiel-step ${step.status}`}
+                  data-testid={`reasoning-step-${step.type}`}
+                  data-step-status={step.status}
+                >
                   {getStepStatusIcon(step.status)}
                   <span className="oj-essentiel-type">{getStepTypeLabel(step.type)}</span>
-                  <span className="oj-essentiel-content">{step.content.slice(0, 80)}{step.content.length > 80 ? '…' : ''}</span>
+                  <span className="oj-essentiel-content">
+                    {step.content.slice(0, 80)}
+                    {step.content.length > 80 ? '…' : ''}
+                  </span>
                 </div>
               ))}
               {steps.length > 3 && (
-                <div className="oj-essentiel-more" onClick={() => setViewMode('detaille')} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && setViewMode('detaille')}>
-                  +{steps.length - 3} autre{steps.length - 3 !== 1 ? 's' : ''} étape{steps.length - 3 !== 1 ? 's' : ''} — Voir détails
+                <div
+                  className="oj-essentiel-more"
+                  onClick={() => setViewMode('detaille')}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={e => e.key === 'Enter' && setViewMode('detaille')}
+                >
+                  +{steps.length - 3} autre{steps.length - 3 !== 1 ? 's' : ''} étape
+                  {steps.length - 3 !== 1 ? 's' : ''} — Voir détails
                 </div>
               )}
               {steps.length === 0 && (

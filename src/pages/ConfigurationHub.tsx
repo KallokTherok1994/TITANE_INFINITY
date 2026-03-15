@@ -127,10 +127,7 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
   }
 
   const ollama_url = pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl));
-  const ollama_model = pickDefined(
-    asString(raw.ollama_model),
-    asString(raw.ollamaModel)
-  );
+  const ollama_model = pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel));
 
   if (!ollama_url || !ollama_model) {
     throw new Error('Runtime config incomplete (ollama_url/ollama_model)');
@@ -247,10 +244,7 @@ const normalizeConfigSnapshot = (value: unknown): ConfigSnapshot => {
   }
 
   const runtime = normalizeRuntimeConfig(raw.runtime);
-  const rawChatEngine = pickDefined(
-    toRecord(raw.chat_engine),
-    toRecord(raw.chatEngine)
-  );
+  const rawChatEngine = pickDefined(toRecord(raw.chat_engine), toRecord(raw.chatEngine));
   if (!rawChatEngine) {
     throw new Error('Snapshot chat_engine manquant');
   }
@@ -1256,7 +1250,14 @@ export const ConfigurationHub: React.FC = () => {
             >
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                  <label
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      cursor: 'pointer',
+                    }}
+                  >
                     <input
                       type="checkbox"
                       checked={isAdaptationEnabled}
@@ -1265,19 +1266,27 @@ export const ConfigurationHub: React.FC = () => {
                     <span>Adaptation auto</span>
                   </label>
                   {cognitiveMode && (
-                    <span style={{
-                      background: 'var(--accent-primary, #0ea5e9)',
-                      color: '#fff',
-                      padding: '2px 10px',
-                      borderRadius: '6px',
-                      fontSize: '13px',
-                      fontWeight: 600,
-                    }}>
+                    <span
+                      style={{
+                        background: 'var(--accent-primary, #0ea5e9)',
+                        color: '#fff',
+                        padding: '2px 10px',
+                        borderRadius: '6px',
+                        fontSize: '13px',
+                        fontWeight: 600,
+                      }}
+                    >
                       {COGNITIVE_MODE_LABELS[cognitiveMode]}
                     </span>
                   )}
                 </div>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(3, 1fr)',
+                    gap: '0.5rem',
+                  }}
+                >
                   {(Object.keys(COGNITIVE_MODE_LABELS) as UIMode[]).map(mode => (
                     <button
                       key={mode}
@@ -1288,7 +1297,10 @@ export const ConfigurationHub: React.FC = () => {
                         fontSize: '12px',
                         fontWeight: cognitiveMode === mode ? 700 : 400,
                         border: `1px solid ${cognitiveMode === mode ? 'var(--accent-primary, #0ea5e9)' : 'rgba(255,255,255,0.1)'}`,
-                        background: cognitiveMode === mode ? 'var(--accent-primary, #0ea5e9)' : 'rgba(255,255,255,0.05)',
+                        background:
+                          cognitiveMode === mode
+                            ? 'var(--accent-primary, #0ea5e9)'
+                            : 'rgba(255,255,255,0.05)',
                         color: '#fff',
                         cursor: 'pointer',
                       }}
