@@ -456,7 +456,36 @@ export async function processMessage(
     requestId,
     ...(options?.contextEnvelope ? { contextEnvelope: options.contextEnvelope } : {}),
   };
+
+  console.log('[CONV_SEND] Provider request', {
+    mode: options?.mode || 'default',
+    provider_requested: provider,
+    conversation_id: conversationId,
+    message_length: userMessage.length,
+    module_id: options?.contextEnvelope?.moduleContext.moduleId || 'unknown',
+    has_context_envelope: Boolean(options?.contextEnvelope),
+    request_id: requestId,
+  });
+
+  // Preflight guard — required args must be set before IPC
+  if (!payload.message || typeof payload.message !== 'string' || payload.message.trim().length === 0) {
+    throw new Error('[TITANE] message requis non fourni au payload conversation_generate');
+  }
+  if (!payload.conversationId || typeof payload.conversationId !== 'string') {
+    throw new Error('[TITANE] conversationId requis non fourni au payload conversation_generate');
+  }
+
   const raw = (await tauriClient.conversationGenerate(payload)) as OmegaGenerateResponse;
+
+  // Guard: CONTRACT_VIOLATION_CLAMPED — l'IPC a échoué côté Tauri (args invalides ou Tauri indisponible)
+  // Plutôt que d'afficher l'erreur technique comme message assistant, on lève une vraie erreur
+  const rawMeta = (raw as Record<string, unknown>)?.meta as Record<string, unknown> | undefined;
+  if (rawMeta?.reason_code === 'CONTRACT_VIOLATION_CLAMPED') {
+    const policy = typeof rawMeta?.policy === 'string' ? rawMeta.policy : 'inconnu';
+    throw new Error(
+      `[IPC] Contrat conversation_generate invalide (${policy}). Vérifier que le backend Tauri est démarré.`
+    );
+  }
 
   const content = typeof raw?.content === 'string' ? raw.content : '';
   if (content.trim().length === 0) {
