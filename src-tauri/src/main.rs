@@ -907,11 +907,14 @@ fn main() {
             });
 
             // ─────────────────────────────────────────────────────────────
-            // OLLAMA BUNDLED AUTO-START (AppImage/DEB/macOS)
+            // OLLAMA BUNDLED AUTO-START (AppImage/DEB/macOS) — desktop only
             // PROD FIX v27.0.2: Enhanced startup with multiple fallback strategies
             // Attempts: 1) Check if running, 2) Bundled binary, 3) System ollama, 4) Warn user
+            // Android: no local Ollama process — use OLLAMA_BASE_URL env var to point to LAN server
             // ─────────────────────────────────────────────────────────────
+            #[cfg(not(target_os = "android"))]
             let app_handle = app.handle().clone();
+            #[cfg(not(target_os = "android"))]
             tauri::async_runtime::spawn(async move {
                 log::info!("[Ollama] ═══════════════════════════════════════════════════");
                 log::info!("[Ollama] PROD FIX v27.0.2: Enhanced Auto-Start Routine");
