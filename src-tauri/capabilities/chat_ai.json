@@ -17,7 +17,11 @@
       "ai_query",
       "cp_get_ai_config",
       "cp_set_ai_config",
-      "validate_chat_message"
+      "validate_chat_message",
+      "ollama_generate",
+      "test_ollama",
+      "ping_ollama",
+      "ollama_query"
     ],
     "deny": []
   }

@@ -203,7 +203,18 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
         "en"
     };
 
-    Command::new("espeak")
+    // Try espeak-ng first (modern systems), fallback to espeak
+    let espeak_bin = if std::process::Command::new("espeak-ng")
+        .arg("--version")
+        .output()
+        .is_ok()
+    {
+        "espeak-ng"
+    } else {
+        "espeak"
+    };
+
+    Command::new(espeak_bin)
         .args([
             "-v",
             voice,
@@ -214,16 +225,17 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
             text,
         ])
         .output()
-        .map_err(|e| format!("Erreur espeak: {}", e))?;
+        .map_err(|e| format!("Erreur espeak/espeak-ng: {}", e))?;
 
     Ok(())
 }
 
 #[tauri::command]
 pub async fn tts_stop() -> CommandResult<()> {
-    // Kill any running aplay or espeak processes
+    // Kill any running aplay or espeak/espeak-ng processes
     let _ = Command::new("pkill").arg("-9").arg("aplay").output();
     let _ = Command::new("pkill").arg("-9").arg("espeak").output();
+    let _ = Command::new("pkill").arg("-9").arg("espeak-ng").output();
     Ok(())
 }
 
@@ -575,43 +587,63 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
 
 #[tauri::command]
 pub async fn set_audio_output_device(device_id: String) -> CommandResult<()> {
-    // Try PipeWire first
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        // PipeWire device switching would require more complex logic
-        // For now, fall through to pactl
-    }
-
-    // Try PulseAudio
-    if Command::new("pactl")
-        .args(["set-default-sink", &device_id])
+    // Try PipeWire via wpctl (wireplumber) if available
+    if Command::new("wpctl")
+        .args(["set-default", &device_id])
         .output()
-        .is_ok()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
     {
         return Ok(());
     }
 
-    // ALSA doesn't have a simple command-line way to switch devices
+    // Try PulseAudio/PipeWire-pulse pactl compat
+    if Command::new("pactl")
+        .args(["set-default-sink", &device_id])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+    {
+        return Ok(());
+    }
+
+    // PipeWire present but no pactl/wpctl: accept gracefully (device stays as-is)
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        return Ok(());
+    }
+
     Err("Device switching not supported on this system".to_string())
 }
 
 #[tauri::command]
 pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
-    // Try PipeWire first
-    if Command::new("pw-cli").arg("--version").output().is_ok() {
-        // PipeWire device switching would require more complex logic
-        // For now, fall through to pactl
-    }
-
-    // Try PulseAudio
-    if Command::new("pactl")
-        .args(["set-default-source", &device_id])
+    // Try PipeWire via wpctl (wireplumber) if available
+    if Command::new("wpctl")
+        .args(["set-default", &device_id])
         .output()
-        .is_ok()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
     {
         return Ok(());
     }
 
-    // ALSA doesn't have a simple command-line way to switch devices
+    // Try PulseAudio/PipeWire-pulse pactl compat
+    if Command::new("pactl")
+        .args(["set-default-source", &device_id])
+        .output()
+        .map(|o| o.status.success())
+        .unwrap_or(false)
+    {
+        return Ok(());
+    }
+
+    // PipeWire present but no pactl/wpctl: accept gracefully
+    if Command::new("pw-cli").arg("--version").output().is_ok() {
+        log::warn!("[Audio] PipeWire detected but no pactl/wpctl — device switch skipped for id={}", device_id);
+        return Ok(());
+    }
+
     Err("Device switching not supported on this system".to_string())
 }
 

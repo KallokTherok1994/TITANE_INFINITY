@@ -1309,6 +1309,7 @@ fn main() {
             // Core messaging
             send_message,
             ollama_query,
+            commands::ollama_command::ollama_generate,
             // Chat Engine — generate_response primary IPC path
             // mock build: mock_commands::generate_response; full build: chat_engine::commands::generate_response
             #[cfg(feature = "mock")]
