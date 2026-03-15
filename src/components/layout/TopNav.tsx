@@ -171,6 +171,7 @@ export const TopNav: React.FC<TopNavProps> = ({
         'shadow-sm backdrop-blur-md',
         className
       )}
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
       role="navigation"
       aria-label="Navigation principale"
     >

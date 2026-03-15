@@ -57,8 +57,12 @@ export const AppShell = ({
           'flex-1 overflow-hidden relative flex min-w-0 flex-col max-w-full',
           topNav && 'pt-16'
         )}
+        style={topNav ? { paddingTop: 'calc(4rem + env(safe-area-inset-top, 0px))' } : undefined}
       >
-        <div className="flex-1 overflow-auto scrollbar-custom w-full min-w-0 max-w-full">
+        <div
+          className="flex-1 overflow-auto scrollbar-custom w-full min-w-0 max-w-full"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+        >
           {children}
         </div>
       </main>
