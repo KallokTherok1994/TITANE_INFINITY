@@ -907,7 +907,7 @@ pub async fn persistent_memory_create_summary(
     );
 
     // Charger les entrées source
-    let request = MemoryReadRequest {
+    let _request = MemoryReadRequest {
         levels: Some(vec![MemoryLevel::Session, MemoryLevel::Intermediate]),
         topics: None,
         content_types: None,
