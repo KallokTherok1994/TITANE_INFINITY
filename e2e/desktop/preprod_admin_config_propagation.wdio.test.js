@@ -288,23 +288,36 @@ async function ensureAiEditMode() {
 }
 
 async function getRequestMaxTokensInput() {
+  const direct = await $('[data-testid="input-request-max-tokens"]');
+  if (await direct.isExisting()) {
+    return direct;
+  }
+
   const marked = await browser.execute(() => {
-    const labels = Array.from(document.querySelectorAll('div')).filter(el =>
-      String(el.textContent || '').trim() === 'Request Max Tokens'
+    const needle = ['request max tokens', 'max tokens'];
+    const candidates = Array.from(document.querySelectorAll('div, label, span, p')).filter(
+      el => {
+        const txt = String(el.textContent || '').trim().toLowerCase();
+        return needle.some(n => txt.includes(n));
+      }
     );
 
-    for (const label of labels) {
-      const fieldBlock = label.parentElement?.parentElement?.parentElement;
-      const input = fieldBlock?.querySelector('input[type="number"]');
-      if (!input) continue;
-      input.setAttribute('data-e2e-max-tokens-temp', '1');
-      return true;
+    for (const label of candidates) {
+      let cursor = label;
+      for (let depth = 0; depth < 4 && cursor; depth += 1) {
+        const input = cursor.querySelector?.('input[type="number"], input');
+        if (input) {
+          input.setAttribute('data-e2e-max-tokens-temp', '1');
+          return true;
+        }
+        cursor = cursor.parentElement;
+      }
     }
 
     return false;
   });
 
-  assert.ok(marked, 'max tokens input not found via label lookup');
+  assert.ok(marked, 'max tokens input not found via testid or label lookup');
   return $('[data-e2e-max-tokens-temp="1"]');
 }
 
@@ -366,7 +379,8 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
       metrics.targetProvider = targetProvider;
 
       let providerFlowPassed = false;
-      if (targetProvider) {
+      // Provider flow is stable only when Request Provider is rendered as <select>.
+      if (targetProvider && providerFieldTag === 'select') {
         try {
           await setProviderValue(providerSelect, targetProvider);
 
@@ -401,6 +415,9 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
         } catch (providerError) {
           metrics.providerFlowError = String(providerError?.message || providerError);
         }
+      } else if (targetProvider && providerFieldTag !== 'select') {
+        metrics.providerFlowError =
+          'provider flow skipped: Request Provider rendered as text input in this runtime';
       }
 
       if (!providerFlowPassed) {
@@ -429,7 +446,7 @@ describe('PREPROD - ADMIN CONFIG PROPAGATION', () => {
         metrics.readBackAfterSave = await getDefaults();
 
         await clickWithFallback(editButton);
-        const maxTokensAfter = await $('[data-testid="input-request-max-tokens"]');
+        const maxTokensAfter = await getRequestMaxTokensInput();
         await maxTokensAfter.waitForExist({ timeout: 10000 });
         metrics.uiMaxTokensAfterSave = Number(await maxTokensAfter.getValue());
 
