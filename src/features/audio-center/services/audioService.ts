@@ -389,7 +389,11 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        await tauriClient.testTts({ text, settings: this.config.tts });
+        const ttsSettings = {
+          ...this.config.tts,
+          outputDeviceId: this.config.output.deviceId || undefined,
+        };
+        await tauriClient.testTts({ text, settings: ttsSettings });
       } else if (this.isWebSpeechAvailable()) {
         // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
@@ -439,7 +443,7 @@ class AudioService {
         const timeoutMs = durationMs + 5000;
         // Tauri 2.0 attend camelCase pour les paramètres de commande
         const result = (await tauriClient.testMicrophone(
-          { durationMs },
+          { durationMs, deviceId: this.config.input.deviceId || undefined },
           { timeout: timeoutMs }
         )) as MicrophoneTestResult;
         console.log('[AudioService] test_microphone result:', result);

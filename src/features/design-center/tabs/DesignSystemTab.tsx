@@ -31,6 +31,7 @@ function ColorPicker({ label, colorKey, value, onChange }: ColorPickerProps) {
             value={value}
             onChange={e => onChange(colorKey, e.target.value)}
             className="dc-color-input"
+            data-testid={`design-color-${String(colorKey)}`}
           />
           <span className="dc-color-value">{value}</span>
         </div>

@@ -491,7 +491,9 @@ export default defineConfig(({ command }) => ({
               if (id.includes('/voice/')) return 'ui-voice';
               if (id.includes('/experience/')) return 'ui-experience';
               if (id.includes('/evolution/')) return 'ui-evolution';
-              if (id.includes('/aura/')) return 'ui-aura';
+              // Tauri release repeatedly fails to preload the isolated ui-aura CSS chunk.
+              // Merge aura UI into the already-loaded runtime cluster to avoid dynamic CSS preload.
+              if (id.includes('/aura/')) return 'core-runtime';
               if (id.includes('/performance/')) return 'ui-performance';
               if (id.includes('/admin/')) return 'ui-admin';
               if (id.includes('/dev/')) return 'ui-dev';
@@ -521,7 +523,7 @@ export default defineConfig(({ command }) => ({
     chunkSizeWarningLimit: 1600,
     // Optimisations supplémentaires
     target: 'esnext',
-    cssCodeSplit: true,
+      cssCodeSplit: false,
     sourcemap: false,
   },
 

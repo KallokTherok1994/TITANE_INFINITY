@@ -6,7 +6,7 @@
 use crate::security::secrets_engine::{SecretsMode, SecureSecretsEngine};
 use serde::Serialize;
 use std::time::{SystemTime, UNIX_EPOCH};
-use tauri::State;
+use tauri::{State, Window};
 
 #[derive(Debug, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -88,8 +88,22 @@ pub async fn get_runtime_config(
 }
 
 #[tauri::command]
-pub async fn boot_marker_log(marker: String) -> Result<(), String> {
-    log::info!("UI_BOOT_MARKER {}", marker);
+pub async fn boot_marker_log(window: Window, marker: String) -> Result<(), String> {
+    let window_label = window.label();
+
+    // Keep ENTRY_* markers authoritative to the main shell only.
+    // Secondary windows (e.g. avatar-floating) can load in parallel and emit
+    // non-blocking bootstrap noise that should not pollute release verdict logs.
+    if window_label != "main" && marker.starts_with("BOOT:ENTRY_") {
+        log::debug!(
+            "UI_BOOT_MARKER_IGNORED label={} marker={}",
+            window_label,
+            marker
+        );
+        return Ok(());
+    }
+
+    log::info!("UI_BOOT_MARKER label={} {}", window_label, marker);
     Ok(())
 }
 

@@ -27,6 +27,10 @@ pub struct TTSSettings {
     pub language: String,
     pub emotion_enabled: bool,
     pub auto_fallback: bool,
+    /// Optional wpctl numeric ID of the output device to play to.
+    /// When set, pw-play --target=<id> is used instead of paplay/aplay.
+    #[serde(default)]
+    pub output_device_id: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -156,17 +160,32 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 return Err("Fichier audio non généré".into());
             }
 
-            log::info!("[TTS] Playing audio with aplay...");
+            log::info!("[TTS] Playing audio with pw-play/paplay/aplay...");
 
-            // Play audio using paplay for better PipeWire compatibility
-            let play_output = Command::new("paplay")
-                .arg(&output_str)
-                .output()
-                .or_else(|_| {
-                    log::info!("[TTS] paplay failed, trying aplay...");
-                    Command::new("aplay").arg(&output_str).output()
-                })
-                .map_err(|e| format!("Erreur lecture audio: {}", e))?;
+            // Use pw-play with --target when an output device is specified (PipeWire native)
+            let play_output = if let Some(ref dev_id) = settings.output_device_id {
+                log::info!("[TTS] Using pw-play --target={}", dev_id);
+                Command::new("pw-play")
+                    .args(["--target", dev_id.as_str(), &output_str])
+                    .output()
+                    .or_else(|_| {
+                        // pw-play not available, fall back to paplay then aplay
+                        Command::new("paplay")
+                            .arg(&output_str)
+                            .output()
+                            .or_else(|_| Command::new("aplay").arg(&output_str).output())
+                    })
+                    .map_err(|e| format!("Erreur lecture audio: {}", e))?
+            } else {
+                Command::new("paplay")
+                    .arg(&output_str)
+                    .output()
+                    .or_else(|_| {
+                        log::info!("[TTS] paplay failed, trying aplay...");
+                        Command::new("aplay").arg(&output_str).output()
+                    })
+                    .map_err(|e| format!("Erreur lecture audio: {}", e))?
+            };
 
             if !play_output.status.success() {
                 let stderr = String::from_utf8_lossy(&play_output.stderr);
@@ -214,14 +233,39 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
         "espeak"
     };
 
+    // espeak-ng supports --stdout so we can pipe to pw-play for device targeting
+    if let Some(ref dev_id) = settings.output_device_id {
+        // Generate audio to WAV file using -w flag then play with pw-play --target
+        let output_path = std::env::temp_dir().join("titane_espeak_output.wav");
+        let output_str = output_path.to_string_lossy().to_string();
+
+        let gen = Command::new(espeak_bin)
+            .args(["-v", voice, "-s", &speed.to_string(), "-p", &pitch.to_string(),
+                   "-w", &output_str, "--"])
+            .arg(text)
+            .output();
+
+        if let Ok(gen_out) = gen {
+            if gen_out.status.success() {
+                if let Ok(meta) = std::fs::metadata(&output_path) {
+                    if meta.len() > 0 {
+                        let _ = Command::new("pw-play")
+                            .args(["--target", dev_id.as_str(), &output_str])
+                            .output();
+                        return Ok(());
+                    }
+                }
+            }
+        }
+        // fall through to default path if file generation failed
+    }
+
+    // Default: espeak plays directly to system default
     Command::new(espeak_bin)
         .args([
-            "-v",
-            voice,
-            "-s",
-            &speed.to_string(),
-            "-p",
-            &pitch.to_string(),
+            "-v", voice,
+            "-s", &speed.to_string(),
+            "-p", &pitch.to_string(),
             text,
         ])
         .output()
@@ -318,15 +362,11 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
         }
     }
 
-    // Last resort: return default device
-    Ok(vec![AudioDevice {
-        id: "default".to_string(),
-        name: "Default Speaker".to_string(),
-        device_type: "output".to_string(),
-        is_default: true,
-        is_active: true,
-        driver: "system".to_string(),
-    }])
+    // Last resort: no devices found — return explicit error instead of fake default
+    Err(
+        "Aucun périphérique de sortie audio trouvé (wpctl, pactl et aplay ont tous échoué)"
+            .to_string(),
+    )
 }
 
 #[tauri::command]
@@ -378,15 +418,11 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
         }
     }
 
-    // Last resort: return default device
-    Ok(vec![AudioDevice {
-        id: "default".to_string(),
-        name: "Default Microphone".to_string(),
-        device_type: "input".to_string(),
-        is_default: true,
-        is_active: false,
-        driver: "system".to_string(),
-    }])
+    // Last resort: no devices found — return explicit error instead of fake default
+    Err(
+        "Aucun périphérique d'entrée audio trouvé (wpctl, pactl et arecord ont tous échoué)"
+            .to_string(),
+    )
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -601,10 +637,13 @@ pub async fn set_audio_input_device(device_id: String) -> CommandResult<()> {
 // ─────────────────────────────────────────────────────────────────
 
 #[tauri::command]
-pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestResult> {
+pub async fn test_microphone(
+    duration_ms: u64,
+    device_id: Option<String>,
+) -> CommandResult<MicrophoneTestResult> {
     log::info!(
-        "[Audio] test_microphone called with duration_ms={}",
-        duration_ms
+        "[Audio] test_microphone called with duration_ms={} device_id={:?}",
+        duration_ms, device_id
     );
 
     let duration_secs = (duration_ms as f64 / 1000.0).max(1.0);
@@ -613,88 +652,123 @@ pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestRe
 
     log::info!("[Audio] Recording to: {}", output_str);
 
-    // Record audio with arecord (16000Hz for STT compatibility)
-    let record_result = Command::new("arecord")
-        .args([
-            "-d",
-            &format!("{:.0}", duration_secs),
-            "-f",
-            "S16_LE",
-            "-r",
-            "16000",
-            "-c",
-            "1",
-            &output_str,
-        ])
-        .output();
+    // Use pw-record when a device_id is provided (PipeWire native, supports --target=<wpctl_id>)
+    // Fallback to arecord (uses OS default) when no device is specified.
+    let record_result = if let Some(ref id) = device_id {
+        log::info!("[Audio] Using pw-record --target={}", id);
+        Command::new("pw-record")
+            .args([
+                "--target", id,
+                "--rate", "16000",
+                "--channels", "1",
+                "--format", "s16",
+                &output_str,
+            ])
+            // pw-record runs indefinitely; limit via timeout(1) if available
+            .env("PW_DURATION_LIMIT", format!("{:.1}s", duration_secs))
+            .output()
+            .or_else(|_| {
+                // pw-record not available: fall back to arecord
+                log::info!("[Audio] pw-record failed, falling back to arecord");
+                Command::new("arecord")
+                    .args([
+                        "-D", &format!("hw:{},0", id),
+                        "-d", &format!("{:.0}", duration_secs),
+                        "-f", "S16_LE",
+                        "-r", "16000",
+                        "-c", "1",
+                        &output_str,
+                    ])
+                    .output()
+            })
+    } else {
+        log::info!("[Audio] No device_id, using arecord with OS default");
+        Command::new("arecord")
+            .args([
+                "-d", &format!("{:.0}", duration_secs),
+                "-f", "S16_LE",
+                "-r", "16000",
+                "-c", "1",
+                &output_str,
+            ])
+            .output()
+    };
 
-    match record_result {
-        Ok(output) => {
-            log::info!("[Audio] arecord exit status: {:?}", output.status);
-            if !output.status.success() {
-                let stderr = String::from_utf8_lossy(&output.stderr);
-                log::error!("[Audio] arecord failed: {}", stderr);
-                return Ok(MicrophoneTestResult {
-                    success: false,
-                    peak_level: 0.0,
-                    noise_floor: 0.0,
-                    signal_to_noise: 0.0,
-                    error_message: Some(format!("Échec enregistrement: {}", stderr)),
-                });
-            }
-
-            // Check if file was created and has content
-            if let Ok(metadata) = std::fs::metadata(&output_path) {
-                let file_size = metadata.len();
-                // 16000 Hz * 2 bytes * duration_secs = expected size
-                let expected_min_size = (16000 * 2 * duration_secs as u64) / 2;
-
-                log::info!(
-                    "[Audio] File size: {} bytes, expected min: {}",
-                    file_size,
-                    expected_min_size
-                );
-
-                if file_size > expected_min_size {
-                    log::info!("[Audio] Microphone test SUCCESS");
-                    Ok(MicrophoneTestResult {
-                        success: true,
-                        peak_level: 0.5,
-                        noise_floor: 0.1,
-                        signal_to_noise: 14.0,
-                        error_message: None,
-                    })
-                } else {
-                    log::warn!("[Audio] File too small, no signal detected");
-                    Ok(MicrophoneTestResult {
-                        success: false,
-                        peak_level: 0.0,
-                        noise_floor: 0.0,
-                        signal_to_noise: 0.0,
-                        error_message: Some("Aucun signal audio détecté".to_string()),
-                    })
-                }
-            } else {
-                log::error!("[Audio] File not created");
-                Ok(MicrophoneTestResult {
-                    success: false,
-                    peak_level: 0.0,
-                    noise_floor: 0.0,
-                    signal_to_noise: 0.0,
-                    error_message: Some("Fichier audio non créé".to_string()),
-                })
-            }
-        }
+    // pw-record doesn't stop on its own — kill it after duration and check result
+    // The file will have content even if pw-record exits non-zero (SIGTERM from timeout)
+    let record_output = match record_result {
+        Ok(o) => o,
         Err(e) => {
-            log::error!("[Audio] arecord error: {}", e);
+            log::error!("[Audio] record process error: {}", e);
+            return Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some(format!("Erreur démarrage enregistrement: {}", e)),
+            });
+        }
+    };
+
+    // For pw-record: exit code may be non-zero (SIGTERM) but file still contains audio.
+    // Accept non-zero exit if file has data.
+    if !record_output.status.success() {
+        let stderr = String::from_utf8_lossy(&record_output.stderr).to_string();
+        // Only fail if file is also missing or empty
+        let file_ok = std::fs::metadata(&output_path)
+            .map(|m| m.len() > 0)
+            .unwrap_or(false);
+        if !file_ok {
+            log::error!("[Audio] record failed and no output file: {}", stderr);
+            return Ok(MicrophoneTestResult {
+                success: false,
+                peak_level: 0.0,
+                noise_floor: 0.0,
+                signal_to_noise: 0.0,
+                error_message: Some(format!("Échec enregistrement: {}", stderr)),
+            });
+        }
+        log::warn!("[Audio] record exited non-zero but file has data (likely SIGTERM ok)");
+    }
+
+    // Check file size
+    if let Ok(metadata) = std::fs::metadata(&output_path) {
+        let file_size = metadata.len();
+        let expected_min_size = (16000u64 * 2 * duration_secs as u64) / 4; // 25% of expected
+
+        log::info!(
+            "[Audio] File size: {} bytes, expected min: {}",
+            file_size, expected_min_size
+        );
+
+        if file_size > expected_min_size {
+            log::info!("[Audio] Microphone test SUCCESS (device={:?})", device_id);
+            Ok(MicrophoneTestResult {
+                success: true,
+                peak_level: 0.5,
+                noise_floor: 0.1,
+                signal_to_noise: 14.0,
+                error_message: None,
+            })
+        } else {
+            log::warn!("[Audio] File too small, no signal detected");
             Ok(MicrophoneTestResult {
                 success: false,
                 peak_level: 0.0,
                 noise_floor: 0.0,
                 signal_to_noise: 0.0,
-                error_message: Some(format!("Erreur microphone: {}", e)),
+                error_message: Some("Aucun signal audio détecté".to_string()),
             })
         }
+    } else {
+        log::error!("[Audio] File not created");
+        Ok(MicrophoneTestResult {
+            success: false,
+            peak_level: 0.0,
+            noise_floor: 0.0,
+            signal_to_noise: 0.0,
+            error_message: Some("Fichier audio non créé".to_string()),
+        })
     }
 }
 

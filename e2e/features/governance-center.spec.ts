@@ -119,7 +119,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: superAdmin badge visible', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/admin');
+    await page.goto('/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();
@@ -140,7 +140,7 @@ test.describe('Feature: Governance Center', () => {
 
   test('Governance Center: refresh button works', async ({ page }) => {
     // Navigate to Governance Center
-    await page.goto('http://localhost:5173/admin');
+    await page.goto('/admin');
     await page.waitForTimeout(2000);
 
     const governanceTab = page.locator('button:has-text("Gouvernance")').first();

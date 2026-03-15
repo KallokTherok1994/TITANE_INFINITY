@@ -1,0 +1,22 @@
+# Rollback Plan
+
+## HEAD anchor
+- SHA: 3cf52967f
+
+## Rollback for this continuation scope
+```bash
+git restore -- e2e/features/governance-center.spec.ts e2e/critical/app-launch.spec.ts e2e/critical/engine-navigation.spec.ts e2e/onboarding.test.ts scripts/autoheal/autoheal_rules.jsonl
+```
+
+## Rollback for proof artifacts only
+```bash
+git restore -- reports/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f.md proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f
+rm -rf reports/e2e-desktop/release_online_chat_x3_2026-03-15_1706
+```
+
+## Verification after rollback
+```bash
+TITANE_E2E_FULL=1 TITANE_E2E_USE_WEBSERVER=0 TITANE_E2E_PORT=4000 ./node_modules/.bin/playwright test e2e/features/governance-center.spec.ts e2e/critical/app-launch.spec.ts e2e/critical/engine-navigation.spec.ts --project=chromium
+bash scripts/autoheal/detect_recurrence.sh
+bash scripts/verify_instructions.sh
+```

@@ -27,7 +27,11 @@ import {
 // ============================================================================
 
 type UIThemeAction =
-  | { type: 'SET_TOKENS'; tokens: UIThemeTokens }
+  | {
+      type: 'SET_TOKENS';
+      tokens: UIThemeTokens;
+      source: 'runtime' | 'fallback-local';
+    }
   | { type: 'SET_LOADING'; isLoading: boolean }
   | { type: 'SET_ERROR'; error: string | null }
   | { type: 'SET_DIRTY'; isDirty: boolean }
@@ -54,6 +58,7 @@ function uiThemeReducer(
         tokens: action.tokens || DEFAULT_UI_THEME_TOKENS,
         isLoading: false,
         error: null,
+        tokenSource: action.source,
       };
     case 'SET_LOADING':
       return { ...state, isLoading: action.isLoading };
@@ -148,6 +153,7 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     error: null,
     isDirty: false,
     previousTokens: null,
+    tokenSource: 'fallback-local' as const,
   });
 
   // ────────────────────────────────────────────────────────────
@@ -163,17 +169,26 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
         console.warn(
           '[UIThemeProvider] Aucun thème chargé, utilisation des valeurs par défaut'
         );
-        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+        dispatch({
+          type: 'SET_TOKENS',
+          tokens: DEFAULT_UI_THEME_TOKENS,
+          source: 'fallback-local',
+        });
       } else {
-        dispatch({ type: 'SET_TOKENS', tokens });
+        dispatch({ type: 'SET_TOKENS', tokens, source: 'runtime' });
       }
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
     } catch (err) {
       console.error('[UIThemeProvider] Erreur chargement tokens:', err);
-      dispatch({ type: 'SET_ERROR', error: String(err) });
       // Utiliser les valeurs par défaut
-      dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+      dispatch({
+        type: 'SET_TOKENS',
+        tokens: DEFAULT_UI_THEME_TOKENS,
+        source: 'fallback-local',
+      });
+      // Garder explicitement l'erreur visible après fallback local
+      dispatch({ type: 'SET_ERROR', error: String(err) });
     }
   }, []);
 
@@ -211,9 +226,24 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     root.style.setProperty('--color-error', tokens.colors.error);
     root.style.setProperty('--color-info', tokens.colors.info);
 
+    // Legacy aliases used by existing shell pages (admin/system/etc.).
+    root.style.setProperty('--color-bg-primary', tokens.colors.background);
+    root.style.setProperty('--color-bg-secondary', tokens.colors.surface);
+    root.style.setProperty('--color-bg-tertiary', tokens.colors.surfaceElevated);
+    root.style.setProperty('--color-bg-elevated', tokens.colors.surfaceElevated);
+    root.style.setProperty('--color-text-primary', tokens.colors.text);
+    root.style.setProperty('--color-text-secondary', tokens.colors.textMuted);
+    root.style.setProperty('--color-text-muted', tokens.colors.textMuted);
+    root.style.setProperty('--color-border-default', tokens.colors.border);
+    root.style.setProperty('--color-border-primary', tokens.colors.border);
+    root.style.setProperty('--color-border-secondary', tokens.colors.borderFocus);
+    root.style.setProperty('--color-border-subtle', tokens.colors.border);
+
     // Typography
     root.style.setProperty('--font-family', tokens.typography.fontFamily);
     root.style.setProperty('--font-family-mono', tokens.typography.fontFamilyMono);
+    root.style.setProperty('--font-sans', tokens.typography.fontFamily);
+    root.style.setProperty('--font-mono', tokens.typography.fontFamilyMono);
     root.style.setProperty('--font-scale', String(tokens.typography.fontScale));
     root.style.setProperty('--line-height', String(tokens.typography.lineHeight));
 
@@ -235,6 +265,26 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     root.style.setProperty('--duration-normal', `${tokens.animations.durationNormal}ms`);
     root.style.setProperty('--duration-slow', `${tokens.animations.durationSlow}ms`);
     root.style.setProperty('--easing', tokens.animations.easing);
+
+    // Admin shell-specific variables to keep runtime effect visible in ADMIN context.
+    root.style.setProperty('--admin-bg-start', tokens.colors.background);
+    root.style.setProperty('--admin-bg-end', tokens.colors.surface);
+    root.style.setProperty('--admin-header-bg-start', tokens.colors.surfaceElevated);
+    root.style.setProperty('--admin-header-bg-end', tokens.colors.background);
+    root.style.setProperty('--admin-cyan', tokens.colors.accent);
+    root.style.setProperty('--admin-gold-start', tokens.colors.secondary);
+    root.style.setProperty('--admin-gold-end', tokens.colors.accent);
+
+    // Unified token grammar variables used by tabs and badges across surfaces.
+    root.style.setProperty('--badge-accent-bg', `${tokens.colors.accent}22`);
+    root.style.setProperty('--badge-accent-border', `${tokens.colors.accent}55`);
+    root.style.setProperty('--badge-accent-color', tokens.colors.accent);
+    root.style.setProperty('--tab-active-border', `${tokens.colors.accent}66`);
+    root.style.setProperty('--tab-active-color', tokens.colors.text);
+    root.style.setProperty(
+      '--tab-active-bg',
+      `linear-gradient(135deg, ${tokens.colors.accent}2A 0%, ${tokens.colors.primary}1F 100%)`
+    );
 
     // Shadows
     if (tokens.shadows.enabled) {
@@ -351,9 +401,13 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
         console.warn(
           '[UIThemeProvider] Reset retourné null, utilisation des valeurs par défaut'
         );
-        dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+        dispatch({
+          type: 'SET_TOKENS',
+          tokens: DEFAULT_UI_THEME_TOKENS,
+          source: 'fallback-local',
+        });
       } else {
-        dispatch({ type: 'SET_TOKENS', tokens });
+        dispatch({ type: 'SET_TOKENS', tokens, source: 'runtime' });
       }
 
       dispatch({ type: 'SET_DIRTY', isDirty: false });
@@ -361,19 +415,27 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
       console.log('[UIThemeProvider] Tokens réinitialisés');
     } catch (err) {
       console.error('[UIThemeProvider] Erreur reset:', err);
-      dispatch({ type: 'SET_ERROR', error: String(err) });
       // En cas d'erreur, utiliser les valeurs par défaut
-      dispatch({ type: 'SET_TOKENS', tokens: DEFAULT_UI_THEME_TOKENS });
+      dispatch({
+        type: 'SET_TOKENS',
+        tokens: DEFAULT_UI_THEME_TOKENS,
+        source: 'fallback-local',
+      });
+      dispatch({ type: 'SET_ERROR', error: String(err) });
     }
   }, []);
 
   const undoChanges = useCallback(() => {
     if (state.previousTokens) {
-      dispatch({ type: 'SET_TOKENS', tokens: state.previousTokens });
+      dispatch({
+        type: 'SET_TOKENS',
+        tokens: state.previousTokens,
+        source: state.tokenSource,
+      });
       dispatch({ type: 'SET_DIRTY', isDirty: false });
       dispatch({ type: 'SET_PREVIOUS', previousTokens: null });
     }
-  }, [state.previousTokens]);
+  }, [state.previousTokens, state.tokenSource]);
 
   // ────────────────────────────────────────────────────────────
   // Valeur du contexte

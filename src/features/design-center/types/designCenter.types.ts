@@ -191,6 +191,8 @@ export interface UIThemeContextState {
   isDirty: boolean;
   /** Version précédente (pour undo) */
   previousTokens: UIThemeTokens | null;
+  /** Source de vérité des tokens actuellement chargés */
+  tokenSource: 'runtime' | 'fallback-local';
 }
 
 /**
