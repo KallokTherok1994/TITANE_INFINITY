@@ -360,6 +360,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           </div>
         </div>
 
+        {/* ── Corps scrollable ─────────────────────────────────── */}
+        <div className="oj-journal-body">
+
         {/* ── Résumé exécutif (Essentiel / Détaillé / Expert) ─────── */}
         <div className="oj-summary">
           <div className="oj-summary-row">
@@ -402,7 +405,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <Zap size={14} className="oj-icon-yellow" />
               <span className="oj-summary-label">XP attendu :</span>
               <span className="oj-summary-value">
-                <span className="oj-xp-gain">+5 XP Chat</span>
+                {xpTrace.lastGainDomain === 'chat' && xpTrace.lastGainAmount !== undefined ? (
+                  <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP Chat</span>
+                ) : (
+                  <span className="oj-xp-gain">+5 XP Chat</span>
+                )}
                 {(responseLength ?? 0) > 200 && (
                   <span className="oj-xp-gain"> · +2 XP Cognitif</span>
                 )}{' '}
@@ -429,8 +436,19 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           <div className="oj-summary-row oj-summary-row--caption">
             <Globe size={11} className="oj-icon-muted" />
             <span className="oj-non-capture">
-              Recherche en ligne : non effectuée · Fichiers système : NON CAPTURÉ ·
-              Commandes IPC : conversation_generate (toujours)
+              Recherche en ligne : non effectuée · Fichiers système :{' '}
+              <span
+                className={
+                  memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0
+                    ? ''
+                    : 'oj-non-capture'
+                }
+              >
+                {memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0
+                  ? `${memoryTrace.systemPromptSources.length} sources injectées`
+                  : 'NON INSTRUMENTÉ'}
+              </span>{' '}
+              · Commandes IPC : conversation_generate (toujours)
             </span>
           </div>
         </div>
@@ -562,11 +580,32 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">XP gagné</span>
-                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ</span>
+                <span className="oj-runtime-value">
+                  {xpTrace ? (
+                    <>
+                      {xpTrace.lastGainDomain === 'chat' && xpTrace.lastGainAmount !== undefined ? (
+                        <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
+                      ) : (
+                        <span className="oj-xp-gain">+5 XP</span>
+                      )}{' '}Chat
+                      {(responseLength ?? 0) > 200 && (
+                        <> · <span className="oj-xp-gain">+2 XP</span> Cognitif</>
+                      )}
+                    </>
+                  ) : (
+                    <span className="oj-non-capture">NON DISPONIBLE</span>
+                  )}
+                </span>
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Score qualité</span>
-                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ</span>
+                <span className="oj-runtime-value">
+                  {qualityScore !== null && qualityScore !== undefined ? (
+                    `${(qualityScore * 100).toFixed(0)}%`
+                  ) : (
+                    <span className="oj-non-capture">NON INSTRUMENTÉ</span>
+                  )}
+                </span>
               </div>
             </div>
 
@@ -605,7 +644,11 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
                   <div className="oj-runtime-item">
                     <span className="oj-runtime-label">Gain par message</span>
                     <span className="oj-runtime-value">
-                      <span className="oj-xp-gain">+5 XP</span> domaine Chat
+                      {xpTrace.lastGainDomain === 'chat' && xpTrace.lastGainAmount !== undefined ? (
+                        <span className="oj-xp-gain">+{xpTrace.lastGainAmount} XP</span>
+                      ) : (
+                        <span className="oj-xp-gain">+5 XP</span>
+                      )}{' '}domaine Chat
                       {(responseLength ?? 0) > 200 && (
                         <>
                           {' '}
@@ -705,8 +748,16 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               </div>
               <div className="oj-runtime-item">
                 <span className="oj-runtime-label">Fichiers système</span>
-                <span className="oj-runtime-value oj-non-capture">
-                  NON CAPTURÉ dans cette version
+                <span
+                  className={`oj-runtime-value${
+                    memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0
+                      ? ''
+                      : ' oj-non-capture'
+                  }`}
+                >
+                  {memoryTrace?.systemPromptSources && memoryTrace.systemPromptSources.length > 0
+                    ? `${memoryTrace.systemPromptSources.length} sources mémoire injectées`
+                    : 'NON INSTRUMENTÉ'}
                 </span>
               </div>
             </div>
@@ -790,6 +841,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             )}
           </div>
         )}
+        </div>{/* /oj-journal-body */}
       </motion.div>
     </AnimatePresence>
   );

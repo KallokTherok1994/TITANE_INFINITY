@@ -1,0 +1,23 @@
+TESTS X3 — OMEGA_JOURNAL_RECERT 2026-03-15 12:25 HEAD f38457673
+
+SUITE : src/modules/devSudo/ (devSudoHandler + devSudoExecutor + devSudoPatterns)
+
+=== RUN 1 ===
+Test Files  3 passed (3)
+Tests  89 passed (89)
+Start at  12:25:42
+Duration  2.64s
+
+=== RUN 2 ===
+Test Files  3 passed (3)
+Tests  89 passed (89)
+
+=== RUN 3 ===
+Test Files  3 passed (3)
+Tests  89 passed (89)
+
+RÉSULTAT : 3 × 89/89 PASS — STABLE
+
+=== TypeScript ===
+pnpm exec tsc --noEmit → exit 0 (0 erreurs) [avant patch résiduel]
+pnpm exec tsc --noEmit → exit 0 (0 erreurs) [après patch résiduel]
