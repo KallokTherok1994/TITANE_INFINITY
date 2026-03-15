@@ -186,96 +186,96 @@ export const EvolutionTimeline: React.FC<EvolutionTimelineProps> = ({
   );
 };
 
-// Generate mock timeline events
+// Generate curated timeline events — v29.0: mis à jour avec jalons réels 2025-2026
 function generateMockEvents(): TimelineEvent[] {
   return [
     {
       id: '1',
-      title: 'Déc 2024',
-      cardTitle: 'Phase 1: Achievements & Charts',
-      cardSubtitle: 'Consolidation majeure',
+      title: 'Mars 2026',
+      cardTitle: 'v29.0 — DEV Cockpit Fusion',
+      cardSubtitle: 'Consolidation cockpit développeur',
       cardDetailedText:
-        "Implémentation du système d'achievements avec AchievementCard, RealTimeCharts dashboard, et ThinkingPanel pour Deep Research mode.",
-      date: '15 Décembre 2024',
-      type: 'milestone',
+        'Fusion 10 tabs DEV → 5 sections par intention (Overview/Diagnostics/Operations/Validation/Security). Fix crash OrchestrationSection, heal diagnostic online, wiring DevTools execute button. Modernisation UI WAVE A+B+C (+65px conversation).',
+      date: '15 Mars 2026',
+      type: 'consolidation',
       importance: 'critical',
     },
     {
       id: '2',
-      title: 'Déc 2024',
-      cardTitle: 'Phase 2: Vision & Mémoire',
-      cardSubtitle: 'Capacités perceptuelles',
+      title: 'Mars 2026',
+      cardTitle: 'v29.0 — Pipelines Chat Wiring',
+      cardSubtitle: 'Connexion multi-modules → conversationEngine',
       cardDetailedText:
-        'Ajout de VisionMetricsChart avec 3 types de graphiques, DetectionOverlay canvas, MemoryTreeViewer D3, et MemorySearchPanel sémantique.',
-      date: '17 Décembre 2024',
-      type: 'consolidation',
-      importance: 'critical',
-    },
-    {
-      id: '3',
-      title: 'Nov 2024',
-      cardTitle: 'Optimisation Performance',
-      cardSubtitle: 'Bundle size réduit',
-      cardDetailedText:
-        'Réduction de 30% du bundle size via code splitting, lazy loading, et optimisation des chunks Vite.',
-      date: '28 Novembre 2024',
-      type: 'optimization',
-      importance: 'high',
-    },
-    {
-      id: '4',
-      title: 'Nov 2024',
-      cardTitle: 'Achievement: Code Master',
-      cardSubtitle: 'Milestone débloqué',
-      cardDetailedText:
-        'Déverrouillage de l\'achievement "Code Master" après 1000 lignes de code TypeScript strict avec 0 erreurs.',
-      date: '20 Novembre 2024',
-      type: 'achievement',
-      importance: 'medium',
-    },
-    {
-      id: '5',
-      title: 'Nov 2024',
-      cardTitle: 'Apprentissage: React 19',
-      cardSubtitle: 'Migration réussie',
-      cardDetailedText:
-        'Migration complète vers React 19 avec hooks optimisés, Server Components, et nouvelles APIs.',
-      date: '10 Novembre 2024',
-      type: 'learning',
-      importance: 'high',
-    },
-    {
-      id: '6',
-      title: 'Oct 2024',
-      cardTitle: 'Consolidation Mémoire',
-      cardSubtitle: '5000 entrées compressées',
-      cardDetailedText:
-        "Consolidation automatique de 5000 entrées court terme vers 250 entrées moyen terme avec 87% d'efficacité.",
-      date: '25 Octobre 2024',
-      type: 'consolidation',
-      importance: 'medium',
-    },
-    {
-      id: '7',
-      title: 'Oct 2024',
-      cardTitle: 'Milestone: v25.0 Release',
-      cardSubtitle: 'Version majeure',
-      cardDetailedText:
-        'Release de TITANE v25.0 avec fusion Chat + Vision + EVO, architecture complètement refactorée.',
-      date: '1 Octobre 2024',
+        "Wiring complet 6 sources dans systemPrompt : mémoire 3 niveaux, persona, XP/Evolution, CognitiveEngine. Fix loop infini usePersistentMemory (DEFAULT_LEVELS constant). Fix NaN guards XPProgressBar. IPC Rust : 12 commandes persistent_memory_v19 câblées dans main.rs.",
+      date: '10 Mars 2026',
       type: 'milestone',
       importance: 'critical',
     },
     {
-      id: '8',
-      title: 'Sep 2024',
-      cardTitle: 'Optimisation TypeScript',
-      cardSubtitle: 'Strict mode activé',
+      id: '3',
+      title: 'Fév 2026',
+      cardTitle: 'v28.1 — Time & Intelligence Fusion',
+      cardSubtitle: 'Timeline vivante + CognitiveEngine',
       cardDetailedText:
-        "Activation du TypeScript strict mode sur l'ensemble du codebase avec résolution de 2500+ erreurs.",
-      date: '15 Septembre 2024',
+        'Fusion Intelligence+Flow → onglet unique CognitiveEngine avec toggle flowActive et persistance localStorage. Filtres Passé/Présent/Futur fonctionnels sur TimePage. Stats temporelles dynamiques. Roadmap Transform mise à jour 2026.',
+      date: '20 Février 2026',
+      type: 'consolidation',
+      importance: 'high',
+    },
+    {
+      id: '4',
+      title: 'Jan 2026',
+      cardTitle: 'v27.0 — Sécurité & Commandes IPC',
+      cardSubtitle: 'has_secret + delete_secret + audit complet',
+      cardDetailedText:
+        "Ajout commandes IPC sécurisées has_secret et delete_secret dans secure_commands.rs. Audit complet des commandes orphelines. cargo check exit=0. Panneau flottant 'Cognitive Layout' supprimé et réintégré dans ADMIN.",
+      date: '15 Janvier 2026',
       type: 'optimization',
       importance: 'high',
+    },
+    {
+      id: '5',
+      title: 'Déc 2025',
+      cardTitle: 'v26.2 — Architecture 4-Ring Stable',
+      cardSubtitle: 'Gouvernance + autoheal actif',
+      cardDetailedText:
+        "Architecture 4-Ring consolidée avec scripts verify_instructions.sh et detect_recurrence.sh. Système autoheal_rules.jsonl opérationnel. Release v27.0.3 scellée. E2E WebdriverIO configuré.",
+      date: '01 Décembre 2025',
+      type: 'milestone',
+      importance: 'critical',
+    },
+    {
+      id: '6',
+      title: 'Nov 2025',
+      cardTitle: 'v26.0 — DEV Center Fusion',
+      cardSubtitle: '4 modules → 1 DEV Center unifié',
+      cardDetailedText:
+        'Fusion DevMode + ONE CORE + QA Tests + Orchestration en un seul DEV Center (8 sections). Tauri capabilities + allowlist stables. XPProgressBar + experienceService actifs. Memory architecture 3 niveaux validée.',
+      date: '15 Novembre 2025',
+      type: 'consolidation',
+      importance: 'high',
+    },
+    {
+      id: '7',
+      title: 'Oct 2025',
+      cardTitle: 'v25.4 — Persona & Mémoire Connectés',
+      cardSubtitle: 'Identité → systemPrompt',
+      cardDetailedText:
+        "PersonaEditor persiste profil dans localStorage (ton, formalité, verbosité, emojis). readPersonaContext() injecté dans processMessage(). persistentMemoryGetContext() active les 3 niveaux de mémoire dans chaque échange. Première version AI truly-contextual.",
+      date: '01 Octobre 2025',
+      type: 'learning',
+      importance: 'critical',
+    },
+    {
+      id: '8',
+      title: 'Sep 2025',
+      cardTitle: 'v25.0 — TITANE∞ Architecture Unifiée',
+      cardSubtitle: 'Chat + Vision + EVO + Memory fusionnés',
+      cardDetailedText:
+        "Release majeure TITANE v25.0 : architecture complètement refactorée, TitanePage conversation-first, AppLayout avec sidebar 280px, design system Titanium Dark. TypeScript strict mode, 0 erreurs TSC. Base stable pour toutes les évolutions suivantes.",
+      date: '01 Septembre 2025',
+      type: 'milestone',
+      importance: 'critical',
     },
   ];
 }

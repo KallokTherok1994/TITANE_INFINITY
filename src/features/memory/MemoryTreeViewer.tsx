@@ -41,7 +41,8 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedType, setSelectedType] = useState<string>('all');
 
-  // Mock data si pas de données fournies
+  // Données réelles non disponibles sans prop data → affiche un arbre illustratif
+  // v29.0: DISPLAY_ONLY — structure représentative, compteurs issus du fallback
   const baseTreeData = useMemo(() => {
     if (data) return data;
     return generateMockMemoryTree();
@@ -237,7 +238,7 @@ function getNodeIcon(node: TreeNodeData): string {
   }
 }
 
-// Generate mock memory tree
+// Generate curated memory tree — v29.0: compteurs illustratifs (DISPLAY_ONLY si aucune data prop)
 function generateMockMemoryTree(): MemoryNode {
   return {
     name: 'Mémoire TITANE',
@@ -245,11 +246,11 @@ function generateMockMemoryTree(): MemoryNode {
     children: [
       {
         name: 'Court Terme',
-        attributes: { type: 'short', count: 247 },
+        attributes: { type: 'short', count: '~session' },
         children: [
           {
             name: 'Session Active',
-            attributes: { type: 'short', entries: 42 },
+            attributes: { type: 'short', entries: 'live' },
             children: [
               { name: 'Conv. récente', attributes: { type: 'short' } },
               { name: 'Contexte actuel', attributes: { type: 'short' } },
@@ -257,17 +258,17 @@ function generateMockMemoryTree(): MemoryNode {
           },
           {
             name: 'Buffer Temporaire',
-            attributes: { type: 'short', entries: 205 },
+            attributes: { type: 'short' },
           },
         ],
       },
       {
         name: 'Moyen Terme',
-        attributes: { type: 'mid', count: 1832 },
+        attributes: { type: 'mid', count: "~intermédiaire" },
         children: [
           {
             name: 'Sessions Récentes',
-            attributes: { type: 'mid', entries: 432 },
+            attributes: { type: 'mid', entries: "~sessions" },
             children: [
               { name: 'Semaine passée', attributes: { type: 'mid' } },
               { name: 'Mois en cours', attributes: { type: 'mid' } },
@@ -275,7 +276,7 @@ function generateMockMemoryTree(): MemoryNode {
           },
           {
             name: 'Apprentissages',
-            attributes: { type: 'mid', entries: 1400 },
+            attributes: { type: 'mid', entries: "~apprentissages" },
             children: [
               { name: 'Patterns détectés', attributes: { type: 'mid' } },
               { name: 'Contextes appris', attributes: { type: 'mid' } },
@@ -285,11 +286,11 @@ function generateMockMemoryTree(): MemoryNode {
       },
       {
         name: 'Long Terme',
-        attributes: { type: 'long', count: 4521 },
+        attributes: { type: 'long', count: "~long terme" },
         children: [
           {
             name: 'Connaissances',
-            attributes: { type: 'long', entries: 3200 },
+            attributes: { type: 'long', entries: "~connaissances" },
             children: [
               { name: 'Concepts', attributes: { type: 'long' } },
               { name: 'Procédures', attributes: { type: 'long' } },
@@ -297,7 +298,7 @@ function generateMockMemoryTree(): MemoryNode {
           },
           {
             name: 'Identité',
-            attributes: { type: 'long', entries: 1321 },
+            attributes: { type: 'long', entries: "~identité" },
             children: [
               { name: 'Valeurs', attributes: { type: 'long' } },
               { name: 'Préférences', attributes: { type: 'long' } },
