@@ -4,14 +4,27 @@
  */
 
 /**
- * ThinkingPanel - Panneau de réflexion OMEGA en temps réel (v2 - Discret)
- * Affiche les étapes de réflexion pendant la génération
- * Mode compact par défaut, expansible sur demande (style ChatGPT/Claude)
+ * ThinkingPanel — Journal d'Exécution OMEGA (v3 - Premium)
+ * 3 modes : Essentiel | Détaillé | Expert
+ * Source-driven : affiche uniquement les données réellement disponibles dans les props
  */
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Brain, Sparkles, Loader2, Check, ChevronDown, ChevronUp } from 'lucide-react';
+import {
+  Brain,
+  Sparkles,
+  Loader2,
+  Check,
+  ChevronDown,
+  ChevronUp,
+  AlertCircle,
+  Ban,
+  X,
+  Cpu,
+  BarChart3,
+  Layers,
+} from 'lucide-react';
 import './ThinkingPanel.css';
 
 interface ThinkingStep {
@@ -40,11 +53,13 @@ interface ThinkingPanelProps {
   topology?: ThinkingTopologyNode[];
 }
 
+type ViewMode = 'essentiel' | 'detaille' | 'expert';
+
 export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   isThinking,
   steps = [],
   onClose,
-  compact = true, // Mode compact par défaut (v2)
+  compact = true,
   inline = false,
   provider,
   elapsedTime,
@@ -64,9 +79,9 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
             : 'idle');
 
   const [expandedSteps, setExpandedSteps] = useState<Set<string>>(new Set());
-  const [isExpanded, setIsExpanded] = useState(false); // Toggle pour afficher/masquer les détails (v2)
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>('essentiel');
 
-  // v26.2 - Auto-expand active steps for visibility
   useEffect(() => {
     const activeStep = steps.find(s => s.status === 'active');
     if (activeStep) {
@@ -74,7 +89,6 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     }
   }, [steps]);
 
-  // Helper: Get provider icon (v2.1)
   const getProviderIcon = (providerName: string): string => {
     const name = providerName.toLowerCase();
     if (name.includes('gpt') || name.includes('openai')) return '✨';
@@ -88,58 +102,51 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
   const toggleStep = (id: string) => {
     setExpandedSteps(prev => {
       const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
       return next;
     });
   };
 
-  const getStepIcon = (type: ThinkingStep['type'], status: ThinkingStep['status']) => {
-    if (status === 'complete' || status === 'done') {
-      return <Check className="thinking-step-icon complete" size={16} />;
-    }
-    if (status === 'active') {
-      return <Loader2 className="thinking-step-icon active spin" size={16} />;
-    }
+  const expandAll = () => setExpandedSteps(new Set(steps.map(s => s.id)));
+  const collapseAll = () => setExpandedSteps(new Set());
 
+  const getStepTypeLabel = (type: ThinkingStep['type']) => {
     switch (type) {
-      case 'analysis':
-        return <Brain className="thinking-step-icon" size={16} />;
-      case 'reasoning':
-        return <Sparkles className="thinking-step-icon" size={16} />;
-      case 'synthesis':
-        return <Sparkles className="thinking-step-icon" size={16} />;
-      case 'validation':
-        return <Check className="thinking-step-icon" size={16} />;
-      default:
-        return <Brain className="thinking-step-icon" size={16} />;
+      case 'analysis': return 'Analyse';
+      case 'reasoning': return 'Raisonnement';
+      case 'synthesis': return 'Synthèse';
+      case 'validation': return 'Validation';
+      default: return 'Réflexion';
     }
   };
 
-  const getStepLabel = (type: ThinkingStep['type']) => {
-    switch (type) {
-      case 'analysis':
-        return 'Analyse';
-      case 'reasoning':
-        return 'Raisonnement';
-      case 'synthesis':
-        return 'Synthèse';
-      case 'validation':
-        return 'Validation';
-      default:
-        return 'Réflexion';
+  const getStepStatusIcon = (status: ThinkingStep['status']) => {
+    switch (status) {
+      case 'active': return <Loader2 className="oj-icon-spin oj-icon-blue" size={14} />;
+      case 'complete': case 'done': return <Check className="oj-icon-green" size={14} />;
+      case 'error': return <AlertCircle className="oj-icon-red" size={14} />;
+      case 'blocked': return <Ban className="oj-icon-orange" size={14} />;
+      default: return <div className="oj-step-dot" />;
     }
   };
 
-  if (!isThinking && steps.length === 0 && !state) {
-    return null;
-  }
+  const getStateLabel = () => {
+    switch (resolvedState) {
+      case 'active': return 'En cours';
+      case 'done': return 'Terminé';
+      case 'error': return 'Erreur';
+      case 'blocked': return 'Bloqué';
+      default: return 'Inactif';
+    }
+  };
 
-  // Mode compact: Afficher seulement un indicateur discret
-  if (compact && !isExpanded) {
+  const doneSteps = steps.filter(s => s.status === 'complete' || s.status === 'done').length;
+  const errorSteps = steps.filter(s => s.status === 'error').length;
+  const durationDisplay = elapsedTime !== undefined ? `${elapsedTime.toFixed(1)}s` : null;
+
+  // ── Mode compact ─────────────────────────────────────────────────────────
+  if (!isExpanded) {
     return (
       <AnimatePresence>
         <motion.div
@@ -153,7 +160,7 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
           onClick={() => setIsExpanded(true)}
           role="button"
           tabIndex={0}
-          aria-label="Afficher les détails de réflexion OMEGA"
+          aria-label="Ouvrir le Journal d'Exécution OMEGA"
           onKeyDown={e => e.key === 'Enter' && setIsExpanded(true)}
         >
           <div className="thinking-compact-content">
@@ -161,27 +168,26 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
               <>
                 <Loader2 className="thinking-compact-icon spin" size={14} />
                 <span className="thinking-compact-text">
-                  Thinking<span className="thinking-dots"></span>
-                  {elapsedTime !== undefined && ` (${elapsedTime.toFixed(1)}s)`}
+                  OMEGA réfléchit{durationDisplay ? ` (${durationDisplay})` : '…'}
                 </span>
               </>
             ) : (
               <>
                 <Brain className="thinking-compact-icon" size={14} />
                 <span className="thinking-compact-text">
-                  {
-                    steps.filter(s => s.status === 'complete' || s.status === 'done')
-                      .length
-                  }{' '}
-                  étapes
+                  {doneSteps} étape{doneSteps !== 1 ? 's' : ''}
+                  {errorSteps > 0 ? ` · ${errorSteps} erreur${errorSteps !== 1 ? 's' : ''}` : ''}
                 </span>
               </>
             )}
             {provider && (
-              <span className="thinking-provider-badge" title={`Provider: ${provider}`}>
+              <span className="thinking-provider-badge" title={`Provider : ${provider}`}>
                 {getProviderIcon(provider)} {provider}
               </span>
             )}
+            <span className="oj-badge oj-badge--state" data-testid="reasoning-status-label" data-state={resolvedState}>
+              {getStateLabel()}
+            </span>
             <ChevronDown className="thinking-compact-chevron" size={14} />
           </div>
           {topology.length > 0 && (
@@ -204,133 +210,256 @@ export const ThinkingPanel: React.FC<ThinkingPanelProps> = ({
     );
   }
 
-  // Mode étendu: Afficher tous les détails
+  // ── Journal OMEGA étendu ─────────────────────────────────────────────────
   return (
     <AnimatePresence>
       <motion.div
-        className={`thinking-panel ${inline ? 'thinking-panel-inline' : ''}`}
+        className={`thinking-panel oj-journal ${inline ? 'thinking-panel-inline' : ''}`}
         data-testid="reasoning-progress"
         data-state={resolvedState}
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
+        exit={{ opacity: 0, y: -16 }}
+        transition={{ duration: 0.25 }}
       >
-        {/* Header */}
-        <div className="thinking-header">
-          <div className="thinking-header-content">
-            <Brain className="thinking-header-icon" size={20} />
-            <h3 className="thinking-title">
-              Réflexion OMEGA
-              {isThinking && (
-                <span className="thinking-status">
-                  <Loader2 className="spin" size={14} />
-                  En cours...
-                </span>
-              )}
-              {!isThinking && (
-                <span className="thinking-status" data-testid="reasoning-status-label">
-                  {resolvedState}
-                </span>
-              )}
-            </h3>
-          </div>
-          <div className="thinking-header-actions">
-            {compact && (
-              <button
-                className="thinking-collapse"
-                onClick={() => setIsExpanded(false)}
-                aria-label="Réduire"
-                title="Réduire la réflexion"
-              >
-                <ChevronUp size={18} />
-              </button>
-            )}
-            {onClose && (
-              <button className="thinking-close" onClick={onClose} aria-label="Fermer">
-                ×
-              </button>
-            )}
-          </div>
-        </div>
-
-        {/* Steps */}
-        <div className="thinking-steps">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.id}
-              className={`thinking-step ${step.status}`}
-              data-testid={`reasoning-step-${step.type}`}
-              data-step-status={step.status}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.1 }}
-              onClick={() => toggleStep(step.id)}
-            >
-              <div className="thinking-step-header">
-                {getStepIcon(step.type, step.status)}
-                <span className="thinking-step-label">{getStepLabel(step.type)}</span>
-                <span className="thinking-step-chevron">
-                  {expandedSteps.has(step.id) ? '▼' : '▶'}
-                </span>
-              </div>
-
-              <AnimatePresence>
-                {expandedSteps.has(step.id) && (
-                  <motion.div
-                    className="thinking-step-content"
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <p>{step.content}</p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-          ))}
-
-          {/* Placeholder when thinking */}
-          {isThinking && steps.length === 0 && (
-            <motion.div
-              className="thinking-placeholder"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <Loader2 className="spin" size={24} />
-              <p>OMEGA analyse votre demande...</p>
-            </motion.div>
-          )}
-        </div>
-
-        {topology.length > 0 && (
-          <div className="thinking-topology" data-testid="reasoning-topology">
-            {topology.map(node => (
-              <span
-                key={node.id}
-                className={`thinking-topology-node ${node.status}`}
-                data-testid="reasoning-topology-node"
-                data-node-id={node.id}
-                data-node-status={node.status}
-              >
-                {node.label}
+        {/* ── En-tête ─────────────────────────────────────────────── */}
+        <div className="oj-header">
+          <div className="oj-header-left">
+            <Brain size={18} className="oj-header-icon" />
+            <span className="oj-header-title">Journal d'Exécution OMEGA</span>
+            <span className="oj-badge oj-badge--state" data-testid="reasoning-status-label" data-state={resolvedState}>
+              {isThinking ? <><Loader2 size={11} className="oj-icon-spin" style={{marginRight:3}}/>{getStateLabel()}</> : getStateLabel()}
+            </span>
+            {durationDisplay && <span className="oj-badge oj-badge--neutral">⏱ {durationDisplay}</span>}
+            {provider && (
+              <span className="oj-badge oj-badge--provider">
+                {getProviderIcon(provider)} {provider}
               </span>
-            ))}
+            )}
+            <span className="oj-badge oj-badge--neutral">{steps.length} étape{steps.length !== 1 ? 's' : ''}</span>
+          </div>
+          <div className="oj-header-right">
+            {/* Mode switcher */}
+            <div className="oj-mode-switcher">
+              {(['essentiel', 'detaille', 'expert'] as ViewMode[]).map(mode => (
+                <button
+                  key={mode}
+                  className={`oj-mode-btn${viewMode === mode ? ' oj-mode-btn--active' : ''}`}
+                  onClick={() => setViewMode(mode)}
+                  title={mode === 'essentiel' ? 'Vue essentielle' : mode === 'detaille' ? 'Vue détaillée' : 'Vue expert'}
+                >
+                  {mode === 'essentiel' ? 'Essentiel' : mode === 'detaille' ? 'Détaillé' : 'Expert'}
+                </button>
+              ))}
+            </div>
+            <button className="oj-ctrl-btn" onClick={expandAll} title="Tout développer">▼▼</button>
+            <button className="oj-ctrl-btn" onClick={collapseAll} title="Tout réduire">▲▲</button>
+            <button className="oj-ctrl-btn" onClick={() => setIsExpanded(false)} title="Réduire le journal">
+              <ChevronUp size={15} />
+            </button>
+            {onClose && (
+              <button className="oj-ctrl-btn" onClick={onClose} title="Fermer">
+                <X size={15} />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Résumé exécutif (Essentiel / Détaillé / Expert) ─────── */}
+        <div className="oj-summary">
+          <div className="oj-summary-row">
+            <Sparkles size={14} className="oj-icon-blue" />
+            <span className="oj-summary-label">Intention détectée :</span>
+            <span className="oj-summary-value">
+              {isThinking ? 'Traitement en cours…' : steps.length > 0 ? 'Réponse à la demande utilisateur' : 'Aucune trace disponible'}
+            </span>
+          </div>
+          <div className="oj-summary-row">
+            <BarChart3 size={14} className="oj-icon-blue" />
+            <span className="oj-summary-label">Résultat :</span>
+            <span className="oj-summary-value">
+              {resolvedState === 'done'
+                ? `${doneSteps} étape${doneSteps !== 1 ? 's' : ''} complétée${doneSteps !== 1 ? 's' : ''}`
+                : resolvedState === 'error' ? 'Échec détecté'
+                : resolvedState === 'active' ? 'En cours de traitement'
+                : 'Inactif'}
+            </span>
+          </div>
+          <div className="oj-summary-row oj-summary-row--caption">
+            <span className="oj-non-capture">
+              📎 XP, fichiers, commandes, recherches en ligne : NON CAPTURÉ dans cette version
+            </span>
+          </div>
+        </div>
+
+        {/* ── Timeline des étapes (Détaillé / Expert) ─────────────── */}
+        {(viewMode === 'detaille' || viewMode === 'expert') && (
+          <div className="oj-section">
+            <div className="oj-section-title">
+              <Layers size={14} /> Timeline d'exécution
+            </div>
+            <div className="oj-steps">
+              {steps.length === 0 && isThinking && (
+                <div className="oj-step-placeholder">
+                  <Loader2 size={18} className="oj-icon-spin oj-icon-blue" />
+                  <span>OMEGA analyse votre demande…</span>
+                </div>
+              )}
+              {steps.length === 0 && !isThinking && (
+                <div className="oj-step-placeholder oj-non-capture">
+                  Aucune étape capturée pour ce tour
+                </div>
+              )}
+              {steps.map((step, index) => (
+                <motion.div
+                  key={step.id}
+                  className={`thinking-step oj-step ${step.status}`}
+                  data-testid={`reasoning-step-${step.type}`}
+                  data-step-status={step.status}
+                  initial={{ opacity: 0, x: -12 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.06 }}
+                >
+                  <div className="oj-step-header" onClick={() => toggleStep(step.id)} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && toggleStep(step.id)}>
+                    <span className="oj-step-num">{index + 1}</span>
+                    {getStepStatusIcon(step.status)}
+                    <span className="oj-step-type">{getStepTypeLabel(step.type)}</span>
+                    <span className="oj-step-preview">
+                      {expandedSteps.has(step.id) ? '' : step.content.slice(0, 60) + (step.content.length > 60 ? '…' : '')}
+                    </span>
+                    {viewMode === 'expert' && (
+                      <span className="oj-step-id">#{step.id.slice(-6)}</span>
+                    )}
+                    <span className="oj-step-chevron">
+                      {expandedSteps.has(step.id) ? <ChevronUp size={13}/> : <ChevronDown size={13}/>}
+                    </span>
+                  </div>
+                  <AnimatePresence>
+                    {expandedSteps.has(step.id) && (
+                      <motion.div
+                        className="thinking-step-content oj-step-body"
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.18 }}
+                      >
+                        <p className="oj-step-content-text">{step.content}</p>
+                        {viewMode === 'expert' && (
+                          <div className="oj-step-meta">
+                            <span>ID : {step.id}</span>
+                            <span>Statut : {step.status}</span>
+                            <span>ts : {step.timestamp}</span>
+                          </div>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </motion.div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Footer with stats */}
-        {steps.length > 0 && (
-          <div className="thinking-footer">
-            <span className="thinking-stat">
-              {steps.filter(s => s.status === 'complete' || s.status === 'done').length} /{' '}
-              {steps.length} étapes
-            </span>
-            <span className="thinking-stat">
-              Durée:{' '}
-              {Math.round((Date.now() - (steps[0]?.timestamp ?? Date.now())) / 1000)}s
-            </span>
+        {/* ── Runtime & Capacités (Détaillé / Expert) ─────────────── */}
+        {(viewMode === 'detaille' || viewMode === 'expert') && (
+          <div className="oj-section oj-section--runtime">
+            <div className="oj-section-title">
+              <Cpu size={14} /> Runtime &amp; Capacités
+            </div>
+            <div className="oj-runtime-grid">
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Provider</span>
+                <span className="oj-runtime-value">
+                  {provider ? <>{getProviderIcon(provider)} {provider}</> : <span className="oj-non-capture">NON CAPTURÉ</span>}
+                </span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Mode</span>
+                <span className="oj-runtime-value">
+                  {isThinking ? 'Online (en cours)' : resolvedState === 'done' ? 'Online' : <span className="oj-non-capture">Inconnu</span>}
+                </span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Durée</span>
+                <span className="oj-runtime-value">
+                  {durationDisplay ?? <span className="oj-non-capture">NON CAPTURÉ</span>}
+                </span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Étapes</span>
+                <span className="oj-runtime-value">{steps.length} ({doneSteps} ✓{errorSteps > 0 ? `, ${errorSteps} ✗` : ''})</span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">XP gagné</span>
+                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ</span>
+              </div>
+              <div className="oj-runtime-item">
+                <span className="oj-runtime-label">Score qualité</span>
+                <span className="oj-runtime-value oj-non-capture">NON CAPTURÉ</span>
+              </div>
+            </div>
+
+            {/* Topology (Expert uniquement) */}
+            {viewMode === 'expert' && topology.length > 0 && (
+              <div className="oj-topology-wrap">
+                <span className="oj-section-subtitle">Topologie d'exécution</span>
+                <div className="thinking-topology" data-testid="reasoning-topology">
+                  {topology.map(node => (
+                    <span
+                      key={node.id}
+                      className={`thinking-topology-node ${node.status}`}
+                      data-testid="reasoning-topology-node"
+                      data-node-id={node.id}
+                      data-node-status={node.status}
+                      title={`ID : ${node.id} | Statut : ${node.status}`}
+                    >
+                      {node.label}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── Essentiel : version condensée ───────────────────────── */}
+        {viewMode === 'essentiel' && (
+          <div className="oj-section oj-section--essentiel">
+            <div className="oj-essentiel-steps">
+              {steps.slice(0, 3).map(step => (
+                <div key={step.id} className={`oj-essentiel-step ${step.status}`} data-testid={`reasoning-step-${step.type}`} data-step-status={step.status}>
+                  {getStepStatusIcon(step.status)}
+                  <span className="oj-essentiel-type">{getStepTypeLabel(step.type)}</span>
+                  <span className="oj-essentiel-content">{step.content.slice(0, 80)}{step.content.length > 80 ? '…' : ''}</span>
+                </div>
+              ))}
+              {steps.length > 3 && (
+                <div className="oj-essentiel-more" onClick={() => setViewMode('detaille')} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && setViewMode('detaille')}>
+                  +{steps.length - 3} autre{steps.length - 3 !== 1 ? 's' : ''} étape{steps.length - 3 !== 1 ? 's' : ''} — Voir détails
+                </div>
+              )}
+              {steps.length === 0 && (
+                <div className="oj-step-placeholder oj-non-capture">
+                  {isThinking ? 'Traitement en cours…' : 'Aucune étape capturée'}
+                </div>
+              )}
+            </div>
+            {/* Hidden topology for e2e */}
+            {topology.length > 0 && (
+              <div className="thinking-topology" data-testid="reasoning-topology" hidden>
+                {topology.map(node => (
+                  <span
+                    key={node.id}
+                    className={`thinking-topology-node ${node.status}`}
+                    data-testid="reasoning-topology-node"
+                    data-node-id={node.id}
+                    data-node-status={node.status}
+                  >
+                    {node.label}
+                  </span>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </motion.div>

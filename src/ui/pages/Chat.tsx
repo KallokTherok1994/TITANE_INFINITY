@@ -800,7 +800,7 @@ const ChatComponent: React.FC = () => {
         id: 'response-complete',
         type: 'validation',
         content: lastEntry
-          ? `Reponse recue (${lastEntry.status || 'ok'})`
+          ? `Réponse reçue (${lastEntry.status || 'ok'})${lastEntry.latencyMs !== undefined ? ` — ${lastEntry.latencyMs}ms` : ''}`
           : 'Trace de raisonnement indisponible pour ce tour',
         status: lastEntry?.status === 'error' ? 'error' : 'done',
         timestamp: Date.now(),
