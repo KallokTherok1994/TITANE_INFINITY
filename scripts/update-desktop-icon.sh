@@ -23,6 +23,16 @@ ICON_DIR="$PROJECT_DIR/src-tauri/icons"
 DESKTOP_FILE="$PROJECT_DIR/titane-infinity.desktop"
 DESKTOP_INSTALL_DIR="$HOME/.local/share/applications"
 
+extract_version_from_path() {
+    local artifact_path="$1"
+    local artifact_name=""
+
+    artifact_name="$(basename "$artifact_path")"
+    if [[ "$artifact_name" =~ ([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+        printf '%s' "${BASH_REMATCH[1]}"
+    fi
+}
+
 # Créer le répertoire si nécessaire
 mkdir -p "$DESKTOP_INSTALL_DIR"
 
@@ -80,20 +90,30 @@ if [ ! -f "$ICON_PATH" ]; then
     ICON_PATH="$ICON_DIR/icon.png"
 fi
 
-# Version affichée dans le menu (utilise d'abord la version active du repo)
-APP_VERSION=""
+# Version affichée dans le menu : reflète le binaire réellement sélectionné.
+CANONICAL_VERSION=""
 if [ -f "$PROJECT_DIR/src-tauri/tauri.conf.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/src-tauri/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/src-tauri/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
 fi
-if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+if [ -z "$CANONICAL_VERSION" ] && [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
 fi
-if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
-    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+if [ -z "$CANONICAL_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
+    CANONICAL_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/package.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+
+APP_VERSION="$(extract_version_from_path "$BINARY_PATH")"
+if [ -z "$APP_VERSION" ]; then
+    APP_VERSION="$CANONICAL_VERSION"
 fi
 if [ -z "$APP_VERSION" ]; then
     APP_VERSION="unknown"
 fi
+
+if [ -n "$CANONICAL_VERSION" ] && [ -n "$APP_VERSION" ] && [ "$APP_VERSION" != "$CANONICAL_VERSION" ]; then
+    echo -e "      ${YELLOW}⚠ Launcher version aligned to selected binary: $APP_VERSION (canonical repo version: $CANONICAL_VERSION)${NC}"
+fi
+
 APP_NAME="TITANE∞ v$APP_VERSION"
 
 # Créer le fichier .desktop mis à jour
