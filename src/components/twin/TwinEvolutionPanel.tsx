@@ -86,7 +86,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   }
 
   return (
-    <div className="twin-panel">
+    <div className="twin-panel" data-testid="twin-evolution-panel">
       {/* Error banner */}
       {hookError && (
         <div style={{ background: '#4a1a1a', color: '#ff6b6b', border: '1px solid #ff4444', borderRadius: 6, padding: '8px 12px', margin: '8px 0', fontWeight: 500 }}>
@@ -102,7 +102,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
             <p className="twin-panel__signature">{identity?.signature}</p>
           </div>
         </div>
-        <div className="twin-panel__version">v{identity?.version}</div>
+        <div className="twin-panel__version">v{identity?.version ?? 'N/A'}</div>
       </div>
 
       {/* Tabs */}
@@ -110,18 +110,24 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
         <button
           className={`twin-panel__tab ${activeTab === 'fusion' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('fusion')}
+          aria-label="Onglet Fusion"
+          data-testid="twin-tab-fusion"
         >
           🔗 Fusion
         </button>
         <button
           className={`twin-panel__tab ${activeTab === 'values' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('values')}
+          aria-label="Onglet Valeurs"
+          data-testid="twin-tab-values"
         >
           💎 Valeurs
         </button>
         <button
           className={`twin-panel__tab ${activeTab === 'evolution' ? 'twin-panel__tab--active' : ''}`}
           onClick={() => setActiveTab('evolution')}
+          aria-label="Onglet Évolution"
+          data-testid="twin-tab-evolution"
         >
           📈 Évolution
         </button>
@@ -129,6 +135,8 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
           <button
             className={`twin-panel__tab ${activeTab === 'admin' ? 'twin-panel__tab--active' : ''}`}
             onClick={() => setActiveTab('admin')}
+            aria-label="Onglet Administration"
+            data-testid="twin-tab-admin"
           >
             ⚙️ Admin
           </button>
@@ -169,7 +177,11 @@ interface FusionTabProps {
 }
 
 const FusionTab: React.FC<FusionTabProps> = ({ fusionIndex, humanStyle }) => {
-  if (!fusionIndex) return null;
+  if (!fusionIndex) return (
+    <div className="twin-tab__empty" data-testid="twin-fusion-empty">
+      Données de fusion non disponibles
+    </div>
+  );
 
   const alignments = [
     { label: 'Valeurs', value: fusionIndex.valueAlignment, icon: '💎' },
