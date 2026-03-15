@@ -21,6 +21,7 @@
       "stop_recording",
       "cancel_recording",
       "is_recording",
+      "get_recording_status",
       "transcribe_audio",
       "vad_get_state",
       "vad_process_frame",
