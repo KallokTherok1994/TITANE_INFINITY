@@ -17,6 +17,8 @@
       "set_audio_output_device",
       "set_audio_input_device",
       "test_microphone",
+      "get_audio_device_config",
+      "save_audio_device_config",
       "start_recording",
       "stop_recording",
       "cancel_recording",

@@ -308,6 +308,19 @@ class AudioService {
       } catch (error) {
         console.warn('Failed to set output device:', error);
       }
+
+      // Persist to canonical audio device config
+      try {
+        const deviceLabel = await this._resolveDeviceLabel(deviceId, 'output');
+        const current = (await tauriClient.getAudioDeviceConfig()) as Record<string, unknown>;
+        await tauriClient.saveAudioDeviceConfig({
+          ...(current || {}),
+          outputDeviceId: deviceId,
+          outputDeviceLabel: deviceLabel,
+        });
+      } catch (e) {
+        console.warn('[AudioService] canonical audio config save failed:', e);
+      }
     }
   }
 
@@ -322,6 +335,31 @@ class AudioService {
       } catch (error) {
         console.warn('Failed to set input device:', error);
       }
+
+      // Persist to canonical audio device config
+      try {
+        const deviceLabel = await this._resolveDeviceLabel(deviceId, 'input');
+        const current = (await tauriClient.getAudioDeviceConfig()) as Record<string, unknown>;
+        await tauriClient.saveAudioDeviceConfig({
+          ...(current || {}),
+          inputDeviceId: deviceId,
+          inputDeviceLabel: deviceLabel,
+        });
+      } catch (e) {
+        console.warn('[AudioService] canonical audio config save failed:', e);
+      }
+    }
+  }
+
+  /** Resolves a device ID to its label using the cached device list. */
+  private async _resolveDeviceLabel(deviceId: string, type: 'input' | 'output'): Promise<string> {
+    try {
+      const devices = type === 'output'
+        ? await this.getOutputDevices()
+        : await this.getInputDevices();
+      return devices.find(d => d.id === deviceId)?.name ?? deviceId;
+    } catch {
+      return deviceId;
     }
   }
 

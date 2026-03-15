@@ -1771,6 +1771,8 @@ fn main() {
             // CONFIGURATION HUB COMMANDS (v24.3.3 FIX) - 10 commands
             // ═══════════════════════════════════════════════════════════════
             config::get_all_configs,
+            config::get_audio_device_config,
+            config::save_audio_device_config,
             config::update::update_runtime_config,
             config::update::update_chat_engine_config,
             config::update::get_chat_engine_config,

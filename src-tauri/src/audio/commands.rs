@@ -275,9 +275,10 @@ pub async fn test_tts(text: String, settings: TTSSettings) -> CommandResult<Audi
 
 #[tauri::command]
 pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
-    // Try PipeWire first (modern Linux audio)
-    if let Ok(devices) = get_pipewire_output_devices().await {
+    // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
+    if let Ok(devices) = get_wpctl_devices("output").await {
         if !devices.is_empty() {
+            log::info!("[Audio] get_audio_output_devices: {} device(s) via wpctl", devices.len());
             return Ok(devices);
         }
     }
@@ -330,9 +331,10 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
 
 #[tauri::command]
 pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
-    // Try PipeWire first (modern Linux audio)
-    if let Ok(devices) = get_pipewire_input_devices().await {
+    // Try WirePlumber/wpctl first — returns real numeric IDs usable by wpctl set-default
+    if let Ok(devices) = get_wpctl_devices("input").await {
         if !devices.is_empty() {
+            log::info!("[Audio] get_audio_input_devices: {} device(s) via wpctl", devices.len());
             return Ok(devices);
         }
     }
@@ -388,131 +390,78 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
 }
 
 // ─────────────────────────────────────────────────────────────────
-//  PipeWire Helper Functions
+//  WirePlumber/wpctl Helper (canonical PipeWire discovery)
+//  Parses `wpctl status` output — IDs returned are numeric and
+//  directly usable with `wpctl set-default <id>`.
 // ─────────────────────────────────────────────────────────────────
 
-async fn get_pipewire_output_devices() -> Result<Vec<AudioDevice>, String> {
-    let output = Command::new("pw-cli")
-        .args(["list-objects"])
+async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String> {
+    let output = Command::new("wpctl")
+        .args(["status"])
         .output()
-        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
+        .map_err(|e| format!("wpctl error: {}", e))?;
 
     let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut devices = Vec::new();
-    let mut current_device: Option<AudioDevice> = None;
-    let mut is_sink = false;
-    let mut id_counter = 0;
+    let section_header = if device_type == "output" { "Sinks:" } else { "Sources:" };
+    let end_marker = if device_type == "output" { "Sink endpoints:" } else { "Source endpoints:" };
+
+    let mut in_section = false;
+    let mut devices: Vec<AudioDevice> = Vec::new();
 
     for line in stdout.lines() {
-        let line = line.trim();
+        if line.contains(section_header) {
+            in_section = true;
+            continue;
+        }
+        if !in_section {
+            continue;
+        }
+        if line.contains(end_marker) {
+            break;
+        }
 
-        if line.contains("type = \"PipeWire:Interface:Node\"") {
-            if let Some(device) = current_device.take() {
-                if is_sink {
-                    devices.push(device);
-                }
+        // Line format: "│  *   48. Navi 31 HDMI/DP Audio...  [vol: 0.74]"
+        //          or: "│      33. Built-in Audio...  [vol: 1.00]"
+        let is_default = line.contains('*');
+
+        // Find "  <digits>." pattern
+        let trimmed = line.trim_start_matches(|c: char| !c.is_ascii_digit());
+        if trimmed.is_empty() {
+            continue;
+        }
+
+        // Extract numeric ID
+        if let Some(dot_pos) = trimmed.find('.') {
+            let id_str = &trimmed[..dot_pos];
+            if id_str.is_empty() || !id_str.chars().all(|c| c.is_ascii_digit()) {
+                continue;
             }
-            current_device = Some(AudioDevice {
-                id: format!("{}", id_counter),
-                name: String::new(),
-                device_type: "output".to_string(),
-                is_default: devices.is_empty(),
-                is_active: false,
+
+            let after_dot = &trimmed[dot_pos + 1..];
+            // Name ends before '[vol:'
+            let name = if let Some(vol_pos) = after_dot.find('[') {
+                after_dot[..vol_pos].trim().to_string()
+            } else {
+                after_dot.trim().to_string()
+            };
+
+            if name.is_empty() {
+                continue;
+            }
+
+            // Skip monitor sources
+            if device_type == "input" && (name.to_lowercase().contains("monitor") || line.contains("monitor")) {
+                continue;
+            }
+
+            devices.push(AudioDevice {
+                id: id_str.to_string(),
+                name,
+                device_type: device_type.to_string(),
+                is_default,
+                is_active: is_default,
                 driver: "pipewire".to_string(),
             });
-            is_sink = false;
-            id_counter += 1;
-        }
-
-        if line.contains("media.class = \"Audio/Sink\"") {
-            is_sink = true;
-        }
-
-        if let Some(ref mut device) = current_device {
-            if line.contains("node.description =") || line.contains("node.name =") {
-                if let Some(name_start) = line.find('\"') {
-                    if let Some(name_end) = line[name_start + 1..].find('\"') {
-                        let name = &line[name_start + 1..name_start + 1 + name_end];
-                        if device.name.is_empty() || line.contains("node.description") {
-                            device.name = name.to_string();
-                        }
-                    }
-                }
-            }
-
-            if line.contains("\"running\"") || line.contains("state = \"running\"") {
-                device.is_active = true;
-            }
-        }
-    }
-
-    if let Some(device) = current_device {
-        if is_sink {
-            devices.push(device);
-        }
-    }
-
-    Ok(devices)
-}
-
-async fn get_pipewire_input_devices() -> Result<Vec<AudioDevice>, String> {
-    let output = Command::new("pw-cli")
-        .args(["list-objects"])
-        .output()
-        .map_err(|e| format!("Erreur pw-cli: {}", e))?;
-
-    let stdout = String::from_utf8_lossy(&output.stdout);
-    let mut devices = Vec::new();
-    let mut current_device: Option<AudioDevice> = None;
-    let mut is_source = false;
-    let mut id_counter = 0;
-
-    for line in stdout.lines() {
-        let line = line.trim();
-
-        if line.contains("type = \"PipeWire:Interface:Node\"") {
-            if let Some(device) = current_device.take() {
-                if is_source {
-                    devices.push(device);
-                }
-            }
-            current_device = Some(AudioDevice {
-                id: format!("{}", id_counter),
-                name: String::new(),
-                device_type: "input".to_string(),
-                is_default: devices.is_empty(),
-                is_active: false,
-                driver: "pipewire".to_string(),
-            });
-            is_source = false;
-            id_counter += 1;
-        }
-
-        if line.contains("media.class = \"Audio/Source\"") && !line.contains("monitor") {
-            is_source = true;
-        }
-
-        if let Some(ref mut device) = current_device {
-            if line.contains("node.description =") || line.contains("node.name =") {
-                if let Some(name_start) = line.find('\"') {
-                    if let Some(name_end) = line[name_start + 1..].find('\"') {
-                        let name = &line[name_start + 1..name_start + 1 + name_end];
-                        if device.name.is_empty() || line.contains("node.description") {
-                            device.name = name.to_string();
-                        }
-                    }
-                }
-            }
-
-            if line.contains("\"running\"") || line.contains("state = \"running\"") {
-                device.is_active = true;
-            }
-        }
-    }
-
-    if let Some(device) = current_device {
-        if is_source {
-            devices.push(device);
         }
     }
 

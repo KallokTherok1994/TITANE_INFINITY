@@ -129,7 +129,7 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
   // Keep the page operational even when a partial runtime payload is returned.
   const ollama_url =
     pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ??
-    'http://localhost:11434';
+    '/api/ollama';
   const ollama_model =
     pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
     'qwen2.5:latest';
@@ -342,7 +342,7 @@ const normalizeSnapshotResponse = (value: unknown): ConfigSnapshot => {
   return envelope.content;
 };
 
-type ConfigTab = 'system' | 'ai' | 'performance';
+type ConfigTab = 'system' | 'ai' | 'performance' | 'audio';
 
 export const ConfigurationHub: React.FC = () => {
   const [config, setConfig] = useState<ConfigSnapshot | null>(null);
@@ -382,6 +382,28 @@ export const ConfigurationHub: React.FC = () => {
   );
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [saving, setSaving] = useState(false);
+
+  // Audio device config state (canonical — single source of truth)
+  const [audioConfig, setAudioConfig] = useState<{
+    inputDeviceId: string;
+    inputDeviceLabel: string;
+    outputDeviceId: string;
+    outputDeviceLabel: string;
+    volume: number;
+    noiseReduction: boolean;
+    echoCancellation: boolean;
+    autoGainControl: boolean;
+  }>({
+    inputDeviceId: '',
+    inputDeviceLabel: '',
+    outputDeviceId: '',
+    outputDeviceLabel: '',
+    volume: 1.0,
+    noiseReduction: false,
+    echoCancellation: false,
+    autoGainControl: false,
+  });
+  const [audioSaving, setAudioSaving] = useState(false);
 
   // Presets state
   const [presets, setPresets] = useState<Array<{ name: string; description: string }>>(
@@ -441,6 +463,26 @@ export const ConfigurationHub: React.FC = () => {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
+    }
+
+    // Load canonical audio device config (independent — no throw on failure)
+    try {
+      const raw = await tauriClient.getAudioDeviceConfig();
+      if (raw && typeof raw === 'object') {
+        const r = raw as Record<string, unknown>;
+        setAudioConfig({
+          inputDeviceId: (r.inputDeviceId as string) || '',
+          inputDeviceLabel: (r.inputDeviceLabel as string) || '',
+          outputDeviceId: (r.outputDeviceId as string) || '',
+          outputDeviceLabel: (r.outputDeviceLabel as string) || '',
+          volume: typeof r.volume === 'number' ? r.volume : 1.0,
+          noiseReduction: Boolean(r.noiseReduction),
+          echoCancellation: Boolean(r.echoCancellation),
+          autoGainControl: Boolean(r.autoGainControl),
+        });
+      }
+    } catch (audioErr) {
+      console.warn('[ConfigHub] Audio config load failed (non-fatal):', audioErr);
     }
   };
 
@@ -1193,6 +1235,13 @@ export const ConfigurationHub: React.FC = () => {
         >
           ⚡ Performance
         </button>
+        <button
+          data-testid="tab-config-audio"
+          style={tabStyle(activeTab === 'audio')}
+          onClick={() => setActiveTab('audio')}
+        >
+          🎤 Audio
+        </button>
       </div>
 
       {/* Tab Content */}
@@ -1546,6 +1595,155 @@ export const ConfigurationHub: React.FC = () => {
                 editable={false}
               />
             </ConfigSection>
+          </>
+        )}
+        {activeTab === 'audio' && (
+          <>
+            <ConfigSection
+              title="Périphériques Audio"
+              icon="🎤"
+              description="Configuration canonique des entrées/sorties audio. Source unique de vérité — partagée avec la page Audio Center."
+              defaultOpen={true}
+            >
+              <ConfigFieldEditable
+                label="Périphérique d'entrée (ID)"
+                value={audioConfig.inputDeviceId || '—'}
+                description="ID wpctl du microphone actif (ex: 42)"
+                icon="🎙️"
+                editable={false}
+                data-testid="audio-input-device-id"
+              />
+              <ConfigFieldEditable
+                label="Périphérique d'entrée (Nom)"
+                value={audioConfig.inputDeviceLabel || '—'}
+                description="Nom du microphone sélectionné"
+                icon="🎙️"
+                editable={false}
+                data-testid="audio-input-device-label"
+              />
+              <ConfigFieldEditable
+                label="Périphérique de sortie (ID)"
+                value={audioConfig.outputDeviceId || '—'}
+                description="ID wpctl du haut-parleur actif (ex: 48)"
+                icon="🔊"
+                editable={false}
+                data-testid="audio-output-device-id"
+              />
+              <ConfigFieldEditable
+                label="Périphérique de sortie (Nom)"
+                value={audioConfig.outputDeviceLabel || '—'}
+                description="Nom du haut-parleur sélectionné"
+                icon="🔊"
+                editable={false}
+                data-testid="audio-output-device-label"
+              />
+              <ConfigFieldEditable
+                label="Volume"
+                value={audioConfig.volume}
+                description="Volume de sortie (0.0–1.0)"
+                icon="🔉"
+                editable={false}
+                data-testid="audio-volume"
+              />
+            </ConfigSection>
+            <ConfigSection
+              title="Paramètres de Traitement"
+              icon="⚙️"
+              description="Paramètres de traitement audio (lecture seule — géré par Audio Center)"
+              defaultOpen={false}
+            >
+              <ConfigFieldEditable
+                label="Réduction de bruit"
+                value={audioConfig.noiseReduction}
+                description="Réduction active du bruit de fond"
+                icon="🔇"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-noise-reduction"
+              />
+              <ConfigFieldEditable
+                label="Annulation d'écho"
+                value={audioConfig.echoCancellation}
+                description="Annulation active de l'écho"
+                icon="📣"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-echo-cancellation"
+              />
+              <ConfigFieldEditable
+                label="Gain automatique"
+                value={audioConfig.autoGainControl}
+                description="Contrôle automatique du gain"
+                icon="📶"
+                valueType="boolean"
+                editable={false}
+                data-testid="audio-auto-gain"
+              />
+            </ConfigSection>
+            <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'flex-end' }}>
+              <button
+                data-testid="audio-config-reload"
+                onClick={async () => {
+                  try {
+                    const raw = await tauriClient.getAudioDeviceConfig();
+                    if (raw && typeof raw === 'object') {
+                      const r = raw as Record<string, unknown>;
+                      setAudioConfig({
+                        inputDeviceId: (r.inputDeviceId as string) || '',
+                        inputDeviceLabel: (r.inputDeviceLabel as string) || '',
+                        outputDeviceId: (r.outputDeviceId as string) || '',
+                        outputDeviceLabel: (r.outputDeviceLabel as string) || '',
+                        volume: typeof r.volume === 'number' ? r.volume : 1.0,
+                        noiseReduction: Boolean(r.noiseReduction),
+                        echoCancellation: Boolean(r.echoCancellation),
+                        autoGainControl: Boolean(r.autoGainControl),
+                      });
+                      success('Config audio rechargée');
+                    }
+                  } catch (e) {
+                    errorToast('Erreur rechargement audio: ' + String(e));
+                  }
+                }}
+                style={{
+                  padding: '0.5rem 1rem',
+                  background: '#1e40af',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                }}
+              >
+                🔄 Recharger
+              </button>
+              {(audioConfig.inputDeviceId || audioConfig.outputDeviceId) && (
+                <button
+                  data-testid="audio-config-save"
+                  disabled={audioSaving}
+                  onClick={async () => {
+                    setAudioSaving(true);
+                    try {
+                      await tauriClient.saveAudioDeviceConfig(audioConfig);
+                      success('Config audio sauvegardée');
+                    } catch (e) {
+                      errorToast('Erreur sauvegarde audio: ' + String(e));
+                    } finally {
+                      setAudioSaving(false);
+                    }
+                  }}
+                  style={{
+                    padding: '0.5rem 1rem',
+                    background: '#065f46',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: audioSaving ? 'not-allowed' : 'pointer',
+                    opacity: audioSaving ? 0.7 : 1,
+                  }}
+                >
+                  {audioSaving ? '⏳ Sauvegarde...' : '💾 Sauvegarder'}
+                </button>
+              )}
+            </div>
           </>
         )}
       </div>
