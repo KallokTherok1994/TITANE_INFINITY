@@ -101,23 +101,23 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
       if (event.key === 'ArrowRight') {
         event.preventDefault();
         const nextIndex = (tabIndex + 1) % tabs.length;
-        onTabChange(tabs[nextIndex]?.id ?? tabs[0].id);
+        onTabChange(tabs[nextIndex]?.id ?? tabs[0]!.id);
       }
 
       if (event.key === 'ArrowLeft') {
         event.preventDefault();
         const previousIndex = (tabIndex - 1 + tabs.length) % tabs.length;
-        onTabChange(tabs[previousIndex]?.id ?? tabs[0].id);
+        onTabChange(tabs[previousIndex]?.id ?? tabs[0]!.id);
       }
 
       if (event.key === 'Home') {
         event.preventDefault();
-        onTabChange(tabs[0].id);
+        onTabChange(tabs[0]!.id);
       }
 
       if (event.key === 'End') {
         event.preventDefault();
-        onTabChange(tabs[tabs.length - 1].id);
+        onTabChange(tabs[tabs.length - 1]!.id);
       }
     },
     [onTabChange, tabs]
