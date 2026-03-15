@@ -561,10 +561,12 @@ const MetricsSection = memo<{
         <h2>📈 Metrics & Diagnostics</h2>
       </header>
 
-      {/* ✨ v25.4.1 - Web Vitals Performance Dashboard (planned for future) */}
+      {/* v29.0: Web Vitals — DISPLAY_ONLY, monitoring IPC non câblé */}
       <div className="dev-performance-vitals">
-        <h3>⚡ Core Web Vitals (Google Standards)</h3>
-        <p className="dev-coming-soon">Performance monitoring coming soon...</p>
+        <h3>⚡ Core Web Vitals</h3>
+        <p className="dev-coming-soon" style={{ color: 'rgba(203,213,225,0.6)', fontSize: '0.8rem' }}>
+          Monitoring Web Vitals non disponible — nécessite intégration IPC system_metrics_live (DISPLAY_ONLY)
+        </p>
       </div>
 
       {metrics && (
