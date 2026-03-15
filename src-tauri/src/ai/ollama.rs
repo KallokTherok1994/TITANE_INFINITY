@@ -492,16 +492,16 @@ impl OllamaClient {
     }
 
     pub async fn is_available(&self) -> bool {
-        if !self.is_installed() {
-            return false;
-        }
-
-        // Check if Ollama daemon is running
+        // AH-FIXME: Do NOT call is_installed() here — it uses std::process::Command::output()
+        // which calls fork() synchronously in a Tokio multi-thread context, causing
+        // malloc(): unaligned tcache chunk detected (heap corruption → WebView crash).
+        // HTTP check is sufficient: if Ollama is not installed, the HTTP call will fail.
         self.client
             .get(format!("{}/api/tags", ollama_base_url()))
             .send()
             .await
-            .is_ok()
+            .map(|r| r.status().is_success())
+            .unwrap_or(false)
     }
 
     pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
@@ -573,19 +573,10 @@ impl OllamaClient {
     }
 
     pub fn get_available_models(&self) -> Vec<String> {
-        // ✅ SECURED: Use ShellGuard
-        self.shell_guard
-            .execute_verified("ollama", &["list"])
-            .ok()
-            .map(|output| {
-                output
-                    .lines()
-                    .skip(1) // Skip header
-                    .filter_map(|line| line.split_whitespace().next())
-                    .map(String::from)
-                    .collect()
-            })
-            .unwrap_or_default()
+        // AH-FIXME: Do NOT use ShellGuard / ollama list here — synchronous fork() in
+        // async Tokio causes malloc heap corruption. Return empty list for health_check
+        // reporting; actual availability is confirmed via HTTP in is_available().
+        vec![]
     }
 }
 
