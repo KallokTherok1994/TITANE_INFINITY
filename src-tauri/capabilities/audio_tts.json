@@ -32,7 +32,6 @@
       "voice_stop_listening",
       "voice_transcribe_audio",
       "voice_detect_wake_word",
-      "voice_synthesize_speech",
       "voice_play_audio",
       "voice_stop_speaking",
       "voice_get_config",

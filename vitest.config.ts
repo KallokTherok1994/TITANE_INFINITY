@@ -132,6 +132,11 @@ export const sharedTestConfig = defineConfig({
 
       // Contract test with pre-existing violations (post-IPC remediation)
       'tests/contract/tauri.contract.test.ts',
+
+      // OMEGA E2E automated validation: requires real Tauri backend + provider retries.
+      // Root cause of full-suite hang: 91 tests × up to 45s timeouts + 200-iteration loops.
+      // Run explicitly via: RUN_E2E_TESTS=1 vitest run src/__tests__/e2e-automated-validation.test.tsx
+      ...(runE2ETests ? [] : ['src/__tests__/e2e-automated-validation.test.tsx']),
     ],
     coverage: {
       provider: 'v8',
