@@ -56,9 +56,10 @@
    PAGE CONTAINER
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* v28.1.0: padding réduit pour maximiser l'espace conversation */
 .titane-page {
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem 1.5rem;
   background: linear-gradient(to bottom, rgba(59, 130, 246, 0.05), transparent);
 }
 
@@ -364,10 +365,21 @@
    RESPONSIVE v26.0 - OPTIMIZED FOR ALL DEVICES
    ═══════════════════════════════════════════════════════════════════════════ */
 
+/* Large Desktop (≥ 1440px) — v28.1.0: maximise espace conversation */
+@media (min-width: 1440px) {
+  .titane-page {
+    padding: 1rem 2rem;
+  }
+
+  .conversation-container {
+    height: calc(100vh - 200px);
+  }
+}
+
 /* Tablet (768px - 1023px) */
 @media (min-width: 768px) and (max-width: 1023px) {
   .titane-page {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .titane-header {
@@ -550,7 +562,9 @@
 .conversation-container {
   display: flex;
   flex-direction: column;
-  height: 70vh;
+  /* v28.1.0: hauteur dynamique — adapte à l'écran réel (nav 64px + chrome ~156px) */
+  height: calc(100vh - 220px);
+  min-height: 500px;
   background: var(--glass-bg);
   backdrop-filter: var(--glass-blur);
   -webkit-backdrop-filter: var(--glass-blur);
@@ -580,7 +594,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
+  /* v28.1.0: padding vertical réduit pour gagner de la hauteur conversation */
+  padding: 0.625rem 1rem;
   background: rgba(0, 0, 0, 0.3);
   border-bottom: 1px solid var(--glass-border);
   gap: 1rem;
@@ -593,7 +608,8 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.75rem 1rem;
+  /* v28.1.0: padding vertical réduit */
+  padding: 0.5rem 1rem;
   border-bottom: 1px solid var(--glass-border);
   background: rgba(0, 0, 0, 0.22);
   position: relative;
