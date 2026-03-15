@@ -331,3 +331,26 @@
     font-size: 0.875rem;
   }
 }
+
+/* Notice données illustratives (Tauri inactif) */
+.memory-mock-notice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: rgba(234, 179, 8, 0.08);
+  border: 1px solid rgba(234, 179, 8, 0.25);
+  border-radius: 6px;
+  font-size: 0.75rem;
+}
+
+.mock-notice-icon {
+  flex-shrink: 0;
+  font-size: 0.875rem;
+}
+
+.mock-notice-text {
+  color: rgba(234, 179, 8, 0.85);
+  font-style: italic;
+}

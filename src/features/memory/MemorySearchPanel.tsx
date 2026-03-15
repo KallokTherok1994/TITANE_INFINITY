@@ -35,7 +35,8 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<string>('all');
 
-  // Mock entries si pas de données
+  // Mock entries si pas de données (Tauri inactif)
+  const isMockData = entries === undefined;
   const memoryEntries = useMemo(() => {
     if (entries) return entries;
     return generateMockEntries();
@@ -187,6 +188,14 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
 
       {/* Results */}
       <div className="memory-results">
+        {isMockData && (
+          <div className="memory-mock-notice" role="note" aria-label="Données illustratives">
+            <span className="mock-notice-icon">🔒</span>
+            <span className="mock-notice-text">
+              Données illustratives — backend Tauri inactif
+            </span>
+          </div>
+        )}
         {filteredEntries.length === 0 ? (
           <div className="no-results">
             <Search size={48} className="no-results-icon" />
