@@ -187,8 +187,6 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
         tokens: DEFAULT_UI_THEME_TOKENS,
         source: 'fallback-local',
       });
-      // Garder explicitement l'erreur visible après fallback local
-      dispatch({ type: 'SET_ERROR', error: String(err) });
     }
   }, []);
 
@@ -421,7 +419,6 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
         tokens: DEFAULT_UI_THEME_TOKENS,
         source: 'fallback-local',
       });
-      dispatch({ type: 'SET_ERROR', error: String(err) });
     }
   }, []);
 
