@@ -389,7 +389,22 @@ export async function processMessage(
     ? formatContextEnvelopeForSystemPrompt(options.contextEnvelope)
     : '';
   const personaContext = readPersonaContext();
-  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext]
+
+  // Inject persistent 3-level memory context (non-blocking)
+  let persistentMemoryContext = '';
+  try {
+    const memResult = (await tauriClient.persistentMemoryGetContext({
+      modeId: options?.mode || 'default',
+      query: userMessage,
+    })) as { context: string; usedEntries: string[] } | null;
+    if (memResult?.context) {
+      persistentMemoryContext = `## PERSISTENT_MEMORY_CONTEXT\n${memResult.context}`;
+    }
+  } catch {
+    // Non-blocking: proceed without persistent memory if unavailable
+  }
+
+  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext]
     .filter(Boolean)
     .join('\n\n');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;

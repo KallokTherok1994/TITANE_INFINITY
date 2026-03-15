@@ -1,0 +1,96 @@
+src-tauri/tauri.conf.json:321:            { "command": "test_microphone" },
+src/__tests__/services/api/voice.test.ts:137:      if (command === 'test_microphone') return Promise.resolve({ success: true });
+src-tauri/src/commands/security.rs:323:    commands.insert("test_microphone");
+src-tauri/src/commands/one_core.rs:381:            "Installer le plugin GStreamer FDK AAC pour le support audio complet".to_string(),
+src-tauri/src/commands/mod.rs:42:// Voice commands come from audio::commands instead
+src-tauri/src/commands/mod.rs:64:// audio_config_commands removed - duplicates audio::commands
+src-tauri/src/commands/mod.rs:76:// audio_config_commands removed - duplicates audio::commands
+src/test/setup.ts:608:    case 'test_microphone':
+src/features/audio-center/services/audioService.ts:399:        console.log('[AudioService] Calling Tauri test_microphone...');
+src/features/audio-center/services/audioService.ts:407:        console.log('[AudioService] test_microphone result:', result);
+src-tauri/capabilities/audio_tts.json:19:      "test_microphone",
+src-tauri/src/handlers.rs:70:                    // Voice Commands - using audio::commands (stateless)
+src-tauri/src/handlers.rs:71:                    $crate::audio::commands::speak,
+src-tauri/src/handlers.rs:72:                    $crate::audio::commands::start_recording,
+src-tauri/src/handlers.rs:73:                    $crate::audio::commands::stop_recording,
+src-tauri/src/handlers.rs:74:                    $crate::audio::commands::transcribe_audio,
+src-tauri/src/handlers.rs:75:                    $crate::audio::commands::force_reset_voice,
+src-tauri/src/handlers.rs:78:                    $crate::audio::commands::calibrate_titane_voice,
+src-tauri/src/handlers.rs:79:                    $crate::audio::commands::check_is_titane_speaking,
+src-tauri/src/handlers.rs:80:                    $crate::audio::commands::get_titane_voice_status,
+src-tauri/src/handlers.rs:303:                    $crate::audio::commands::speak,
+src-tauri/src/handlers.rs:304:                    $crate::audio::commands::start_recording,
+src-tauri/src/handlers.rs:305:                    $crate::audio::commands::stop_recording,
+src-tauri/src/handlers.rs:306:                    $crate::audio::commands::transcribe_audio,
+src-tauri/src/handlers.rs:307:                    $crate::audio::commands::force_reset_voice,
+src-tauri/src/handlers.rs:310:                    $crate::audio::commands::calibrate_titane_voice,
+src-tauri/src/handlers.rs:311:                    $crate::audio::commands::check_is_titane_speaking,
+src-tauri/src/handlers.rs:312:                    $crate::audio::commands::get_titane_voice_status,
+src/modules/vocalDev/VocalDevConsoleEngine.ts:859:      await secureInvoke('test_microphone');
+src-tauri/src/audio/commands.rs:623:pub async fn test_microphone(duration_ms: u64) -> CommandResult<MicrophoneTestResult> {
+src-tauri/src/audio/commands.rs:625:        "[Audio] test_microphone called with duration_ms={}",
+src-tauri/src/audio/commands.rs:1413:        "test_microphone",
+src/hooks/useVAD.ts:256:        }>('test_microphone', { durationMs: 1000 });
+src/hooks/useVoiceEngine.ts:73:        'test_microphone',
+src-tauri/src/main.rs:55:    // audio_config_commands removed - duplicates audio::commands
+src-tauri/src/main.rs:1527:            audio::commands::tts_speak,
+src-tauri/src/main.rs:1528:            audio::commands::tts_stop,
+src-tauri/src/main.rs:1529:            audio::commands::test_tts,
+src-tauri/src/main.rs:1531:            audio::commands::test_microphone,
+src-tauri/src/main.rs:1533:            audio::commands::get_audio_output_devices,
+src-tauri/src/main.rs:1534:            audio::commands::get_audio_input_devices,
+src-tauri/src/main.rs:1536:            audio::commands::set_audio_output_device,
+src-tauri/src/main.rs:1537:            audio::commands::set_audio_input_device,
+src-tauri/src/main.rs:1539:            audio::commands::vad_get_state,
+src-tauri/src/main.rs:1540:            audio::commands::vad_process_frame,
+src-tauri/src/main.rs:1541:            audio::commands::vad_configure,
+src-tauri/src/main.rs:1542:            audio::commands::vad_reset,
+src-tauri/src/main.rs:1543:            audio::commands::vad_test,
+src-tauri/src/main.rs:1545:            audio::commands::audio_capture_start,
+src-tauri/src/main.rs:1546:            audio::commands::audio_capture_stop,
+src-tauri/src/main.rs:1547:            audio::commands::audio_capture_status,
+src-tauri/src/main.rs:1548:            audio::commands::audio_capture_get_chunk,
+src-tauri/src/main.rs:1549:            audio::commands::audio_capture_export_wav,
+src-tauri/src/main.rs:1550:            audio::commands::audio_list_devices,
+src-tauri/src/main.rs:1628:            // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
+src-tauri/src/main.rs:1809:            // audio::commands already included — missing variants added here
+src-tauri/src/main.rs:1811:            audio::commands::speak,
+src-tauri/src/main.rs:1812:            audio::commands::start_recording,
+src-tauri/src/main.rs:1813:            audio::commands::stop_recording,
+src-tauri/src/main.rs:1814:            audio::commands::cancel_recording,
+src-tauri/src/overdrive/voice_engine.rs:172:/// État global d'enregistrement pour voice_engine (indépendant de audio::commands)
+src-tauri/src/overdrive/voice_engine.rs:561:    let mic_test = test_microphone();
+src-tauri/src/overdrive/voice_engine.rs:572:fn test_microphone() -> bool {
+src/hooks/useAudioSettings.ts:227:      // ✅ En Tauri: utiliser le backend Rust (test_microphone) comme source de vérité
+src/hooks/useAudioSettings.ts:243:        console.error('[useAudioSettings] Tauri test_microphone error:', error);
+src/hooks/useDevicePermissions.ts:104:    const result = await secureInvoke<MicrophoneTestResult>('test_microphone', {
+src/lib/tauriCommands.ts:453:  TEST_MICROPHONE: 'test_microphone',
+src/lib/security.ts:376:  'test_microphone',
+src/services/tts/hybridTTS.ts:485:    // v19.3.0: Arrêt Tauri via commande tts_stop (audio::commands)
+src/services/tts/ttsEngineService.ts:155:    // Stop backend Tauri (v19.3.0: use tts_stop from audio::commands)
+src/tests/activeListeningIntegration.test.ts:119:// Prevent Tauri-only branches in tests (avoids secureInvoke('test_microphone') noise)
+src/services/audio/gstreamerCheck.ts:2: * TITANE∞ — GStreamer Availability Check
+src/services/audio/gstreamerCheck.ts:3: * Détecte si GStreamer est disponible sur le système
+src/services/audio/gstreamerCheck.ts:13: * Vérifie la disponibilité de GStreamer en Tauri
+src/services/audio/gstreamerCheck.ts:16:async function checkGStreamerAvailability(): Promise<boolean> {
+src/services/audio/gstreamerCheck.ts:23:    // En browser, GStreamer n'est pas géré par WebKit
+src/services/audio/gstreamerCheck.ts:31:      // Si backend est up mais audio échoue, c'est GStreamer
+src/services/audio/gstreamerCheck.ts:46:      console.warn('[GStreamerCheck] Failed to detect GStreamer:', error);
+src/services/audio/gstreamerCheck.ts:58:function getGStreamerStatus(): 'available' | 'unavailable' | 'unknown' {
+src/services/audio/gstreamerCheck.ts:63: * Marque GStreamer comme indisponible (appelé lors de GLib-GObject-CRITICAL)
+src/services/audio/gstreamerCheck.ts:65:function markGStreamerUnavailable(): void {
+src/services/audio/gstreamerCheck.ts:67:  console.warn('[GStreamerCheck] GStreamer marked unavailable due to runtime errors');
+src/services/audio/gstreamerCheck.ts:71:  checkGStreamerAvailability,
+src/services/audio/gstreamerCheck.ts:72:  getGStreamerStatus,
+src/services/audio/gstreamerCheck.ts:73:  markGStreamerUnavailable,
+src/services/audio/audioHealthCheck.ts:141:        logDeviceIssue('microphone', 'Erreur test_microphone Tauri', { error: errorMsg });
+src/services/audio/audioHealthCheck.ts:148:            message: 'Commande test_microphone non autorisée (ACL Tauri)',
+src/services/audio/audioHealthCheck.ts:745:          'test_microphone',
+src/services/api/voice.ts:187:      // Call backend cancel (uses the real command from audio::commands)
+src/services/api/voice.ts:331:   * Utilise voice_test_pipeline et test_microphone qui existent
+src/services/api/voice.ts:341:          'test_microphone',
+src/components/diagnostics/SplashWatchdog.tsx:179:    // Check GStreamer availability
+src/components/diagnostics/SplashWatchdog.tsx:180:    void gstreamerCheck.checkGStreamerAvailability();
+src/components/diagnostics/SplashWatchdog.tsx:245:            const gstStatus = gstreamerCheck.getGStreamerStatus();
+src/components/diagnostics/SplashWatchdog.tsx:253:            const gstStatus = gstreamerCheck.getGStreamerStatus();
+src/components/diagnostics/SplashWatchdog.tsx:488:              <span style={{ color: '#9ca3af' }}>GStreamer:</span>{' '}

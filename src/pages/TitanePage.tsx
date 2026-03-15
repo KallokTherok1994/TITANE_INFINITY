@@ -37,6 +37,8 @@ import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
+import { tauriClient } from '@/lib/tauriClient';
+import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -118,6 +120,7 @@ export const TitanePage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('conversation');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [_isEditing, _setIsEditing] = useState(false);
+  const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
   const { success: toastSuccess, error: errorToast } = useToast();
 
   // ═══ VISUAL ENGINES INITIALIZATION ═══
@@ -141,17 +144,30 @@ export const TitanePage: React.FC = () => {
     loadProgression();
   }, []);
 
+  // ═══ MEMORY STATS LOADING ═══
+  useEffect(() => {
+    const loadMemoryStats = async () => {
+      try {
+        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        setMemoryStats(stats);
+      } catch {
+        // Non-blocking: hardcoded fallback values will be used
+      }
+    };
+    loadMemoryStats();
+  }, []);
+
   // ═══ STATS CALCULATION ═══
   const stats: TitaneStats = useMemo(
     () => ({
       totalXP: progression?.totalXP || 193000,
       level: progression?.level || 19,
-      memoryShortTerm: 247,
-      memoryMidTerm: 1832,
-      memoryLongTerm: 4521,
+      memoryShortTerm: memoryStats?.countByLevel['session'] ?? 247,
+      memoryMidTerm: memoryStats?.countByLevel['intermediate'] ?? 1832,
+      memoryLongTerm: memoryStats?.countByLevel['long_term'] ?? 4521,
       evolutionScore: 92,
     }),
-    [progression]
+    [progression, memoryStats]
   );
 
   // ═══ TAB HANDLERS ═══
