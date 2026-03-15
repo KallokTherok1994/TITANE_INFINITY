@@ -1,0 +1,2 @@
+src/pages/ConfigurationHub.tsx:917:    <div className="module-page" data-testid="page-configuration-hub">
+src/features/audio-center/AudioCenterPage.tsx:283:      data-testid="page-audio-center"

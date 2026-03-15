@@ -1,0 +1,6 @@
+1077:            path="/admin"
+1085:          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
+1091:          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
+1092:          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
+1095:          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
+1098:          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />

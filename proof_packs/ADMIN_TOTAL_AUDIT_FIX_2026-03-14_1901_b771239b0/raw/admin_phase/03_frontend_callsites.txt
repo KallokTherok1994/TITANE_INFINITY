@@ -1,0 +1,60 @@
+src/lib/tauriClient.ts:2154:  async updateUiToken(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2161:  async loadUiTheme(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2168:  async resetUiTheme(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2175:  async saveUiTheme(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2196:  async scGetClusterStatus(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2203:  async scGetClusterPeers(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2210:  async scGetLogs(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2217:  async scGetLogStats(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2224:  async scHypervisionGetState(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2231:  async scHypervisionGetMetrics(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2238:  async scHypervisionGetLayers(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2245:  async scHypervisionGetAnomalies(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2252:  async scHypervisionStart(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2273:  async scHypervisionStop(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2280:  async scInitializeCluster(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2287:  async scShutdownCluster(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:2294:  async hasSecret(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:3338:  async scIntrospectionAutoFix(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:3345:  async scIntrospectionQuickScan(params?: unknown): Promise<unknown> {
+src/lib/tauriClient.ts:3352:  async scIntrospectionFullScan(params?: unknown): Promise<unknown> {
+src/features/system-center/hooks/useIntrospection.ts:47:      const result = (await tauriClient.scIntrospectionQuickScan({
+src/features/system-center/hooks/useIntrospection.ts:65:      const result = (await tauriClient.scIntrospectionFullScan({
+src/features/system-center/hooks/useIntrospection.ts:84:        const result = (await tauriClient.scIntrospectionAutoFix({
+src/features/audio-center/services/audioService.ts:111:        const res = (await tauriClient.hasSecret({
+src/features/system-center/hooks/useSystemLogs.ts:51:        tauriClient.scGetLogs({ filter }) as Promise<LogEntry[]>,
+src/features/system-center/hooks/useSystemLogs.ts:52:        tauriClient.scGetLogStats() as Promise<LogStats>,
+src/features/system-center/hooks/useNodeCluster.ts:45:      const result = (await tauriClient.scGetClusterStatus()) as ClusterStatus;
+src/features/system-center/hooks/useNodeCluster.ts:68:      const result = (await tauriClient.scGetClusterPeers()) as NodeInfo[];
+src/features/system-center/hooks/useNodeCluster.ts:83:        await tauriClient.scInitializeCluster({ nodeId, port });
+src/features/system-center/hooks/useNodeCluster.ts:99:      await tauriClient.scShutdownCluster();
+src/features/system-center/hooks/useHyperVision.ts:56:      const result = (await tauriClient.scHypervisionGetState()) as HyperVisionState;
+src/features/system-center/hooks/useHyperVision.ts:66:      const result = (await tauriClient.scHypervisionGetMetrics()) as SystemMetrics;
+src/features/system-center/hooks/useHyperVision.ts:81:      const result = (await tauriClient.scHypervisionGetLayers()) as LayerHealth[];
+src/features/system-center/hooks/useHyperVision.ts:90:      const result = (await tauriClient.scHypervisionGetAnomalies({
+src/features/system-center/hooks/useHyperVision.ts:104:      const result = (await tauriClient.scHypervisionStart()) as HyperVisionState;
+src/features/system-center/hooks/useHyperVision.ts:125:      await tauriClient.scHypervisionStop();
+src/features/governance-center/services/governanceService.ts:253:async function hasSecret(key: string): Promise<SecureResponse<boolean>> {
+src/features/governance-center/services/governanceService.ts:261:async function deleteSecret(key: string): Promise<SecureResponse<void>> {
+src/features/governance-center/services/governanceService.ts:433:  hasSecret,
+src/features/governance-center/services/governanceService.ts:434:  deleteSecret,
+src/features/governance-center/GovernanceCenterPage.tsx:77:            onDeleteSecret={governance.deleteSecret}
+src/features/governance-center/hooks/useGovernance.ts:241:  const deleteSecret = useCallback(
+src/features/governance-center/hooks/useGovernance.ts:246:      const response = await governanceService.deleteSecret(key);
+src/features/governance-center/hooks/useGovernance.ts:503:    deleteSecret,
+src/features/design-center/services/uiThemeIAService.ts:231:          await tauriClient.updateUiToken({
+src/features/design-center/services/uiThemeIAService.ts:245:          await tauriClient.resetUiTheme();
+src/features/design-center/services/uiThemeIAService.ts:253:          const tokens = (await tauriClient.loadUiTheme()) as UIThemeTokens;
+src/features/design-center/services/uiThemeIAService.ts:254:          await tauriClient.saveUiTheme({ tokens });
+src/features/design-center/services/uiThemeIAService.ts:262:          await tauriClient.loadUiTheme();
+src/features/design-center/providers/UIThemeProvider.tsx:159:      const tokens = (await tauriClient.loadUiTheme()) as UIThemeTokens | null;
+src/features/design-center/providers/UIThemeProvider.tsx:325:      await tauriClient.saveUiTheme({ tokens: state.tokens });
+src/features/design-center/providers/UIThemeProvider.tsx:347:      const tokens = (await tauriClient.resetUiTheme()) as UIThemeTokens | null;
+src/features/design-center/hooks/useUIThemeCommands.ts:52:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:75:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:98:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:121:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:144:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:167:            await tauriClient.updateUiToken({
+src/features/design-center/hooks/useUIThemeCommands.ts:182:            await tauriClient.resetUiTheme();
+src/features/design-center/hooks/useUIThemeCommands.ts:191:            await tauriClient.saveUiTheme({ tokens });

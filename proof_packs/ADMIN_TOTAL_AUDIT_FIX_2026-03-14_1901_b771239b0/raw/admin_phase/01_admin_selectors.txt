@@ -1,0 +1,2 @@
+162:    <div className="admin-page" data-testid="page-admin">
+208:      <main className="admin-content" data-testid="page-admin-content">
