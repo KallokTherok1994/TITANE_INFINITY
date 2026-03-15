@@ -95,7 +95,7 @@ function DesignCenterContent() {
   const [activeTab, setActiveTab] = useState(DESIGN_CENTER_TABS[0]?.id ?? 'templates');
 
   return (
-    <div className="dc-page">
+    <div className="dc-page" data-testid="page-design-center">
       <DesignCenterHeader />
 
       <TabNavigation

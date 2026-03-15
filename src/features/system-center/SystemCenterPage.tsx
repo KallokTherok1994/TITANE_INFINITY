@@ -59,7 +59,7 @@ export const SystemCenterPage: React.FC = () => {
   }, []);
 
   return (
-    <div className="system-center-page">
+    <div className="system-center-page" data-testid="page-system-center">
       {/* Header */}
       <motion.header
         className="sc-header"
