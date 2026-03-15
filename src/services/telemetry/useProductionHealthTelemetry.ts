@@ -13,6 +13,21 @@ export interface UseProductionHealthTelemetryOptions {
   autoRefresh?: boolean;
 }
 
+export type ProductionHealthErrorKind =
+  | 'SOURCE_UNAVAILABLE'
+  | 'SOURCE_EMPTY'
+  | 'IPC_ERROR'
+  | 'PARSER_ERROR'
+  | 'UNKNOWN_ERROR';
+
+function classifyError(msg: string): ProductionHealthErrorKind {
+  if (msg.startsWith('SOURCE_UNAVAILABLE')) return 'SOURCE_UNAVAILABLE';
+  if (msg.startsWith('SOURCE_EMPTY')) return 'SOURCE_EMPTY';
+  if (msg.includes('parse') || msg.includes('CSV') || msg.includes('Invalid')) return 'PARSER_ERROR';
+  if (msg.includes('IPC') || msg.includes('invoke') || msg.includes('tauri')) return 'IPC_ERROR';
+  return 'UNKNOWN_ERROR';
+}
+
 function isProductionHealthSummary(value: unknown): value is ProductionHealthSummary {
   if (!value || typeof value !== 'object') return false;
   const candidate = value as Record<string, unknown>;
@@ -37,11 +52,13 @@ export function useProductionHealthTelemetry(
   const [data, setData] = useState<ProductionHealthSummary | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [errorKind, setErrorKind] = useState<ProductionHealthErrorKind | null>(null);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setErrorKind(null);
     try {
       const response = await tauriClient.readProductionWeek1Csv();
       if (
@@ -71,13 +88,12 @@ export function useProductionHealthTelemetry(
     } catch (err) {
       const errorMsg = err instanceof Error ? err.message : String(err);
       setError(errorMsg);
-      if (!data) {
-        setData(null);
-      }
+      setErrorKind(classifyError(errorMsg));
+      setData(null); // Always clear stale data on error — no silent fallback
     } finally {
       setLoading(false);
     }
-  }, [data]);
+  }, []); // No dep on `data` — avoids re-creating loadData on every successful fetch
 
   useEffect(() => {
     if (!autoRefresh) return;
@@ -96,6 +112,7 @@ export function useProductionHealthTelemetry(
     data,
     loading,
     error,
+    errorKind,
     refresh: manualRefresh,
     isHealthy: data?.status === 'GREEN',
     isWarning: data?.status === 'YELLOW',

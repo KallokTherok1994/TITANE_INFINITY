@@ -129,6 +129,10 @@ export const CameraPage: React.FC = () => {
           setError(
             "Permission caméra refusée. Veuillez l'autoriser dans les paramètres système."
           );
+        } else if (permStatus === 'unavailable') {
+          setError(
+            "Aucun périphérique caméra détecté. Branchez une webcam et redémarrez l'application."
+          );
         }
       }
     } catch (err) {
