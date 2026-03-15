@@ -95,3 +95,18 @@
 - No WebKit crash. No malloc corruption. No SECURITY:SHELL calls in hot-path.
 - Online-first governed truth certified by deterministic E2E pass on release binary.
 - Boot marker chain: `ENTRY_RECOVERY_RELOAD` + `ENTRY_IMPORT_RECOVERY` (no false ENTRY_IMPORT_FAIL).
+
+## Addendum 2026-03-15 20:30Z
+
+## VERDICT: PASS (SEALED, confirmed)
+
+### New truth integrated
+- PROD retry sequence completed under explicit token gate with certified deployment checks green.
+- Initial retry failure (`Fichier texte occupe` on AppImage overwrite) was remediated by stopping the running target process and replaying certified deploy.
+- `deployment/latest` tracked artifacts and metadata are now byte-coherent (AppImage/DEB + MANIFEST + SHA256SUMS/CHECKSUMS + SIZES).
+- Publication commit `023f4d2a8` is on `origin/MAIN`.
+
+### Why verdict remains PASS/SEALED
+- No doctrine conflict remains.
+- Required validators remain PASS (`G_AH_RECURRENCE_GUARD_PASS`, `PASS=20 FAIL=0`).
+- Release publication evidence is complete and reversible with explicit rollback.
