@@ -14,6 +14,7 @@ import React, { useEffect, useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
+import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
 import './ModulePages.css';
 
 interface RuntimeConfig {
@@ -59,6 +60,274 @@ interface ConfigSnapshot {
   version: string;
 }
 
+interface ChatEngineConfigPayload {
+  responseTimeoutMs: number;
+  streamChunkSize: number;
+  memoryContextTokens: number;
+  memoryRetentionTokens: number;
+  memoryFlushIntervalMs: number;
+  autoTtsEnabled: boolean;
+  streamChannelBuffer: number;
+}
+
+interface ChatRequestDefaultsPayload {
+  temperature: number;
+  maxOutputTokens: number;
+  provider: 'auto' | 'gemini' | 'ollama' | 'local';
+  enableStreaming: boolean;
+}
+
+const toRecord = (value: unknown): Record<string, unknown> | null => {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return null;
+  }
+  return value as Record<string, unknown>;
+};
+
+const pickDefined = <T,>(...values: Array<T | null | undefined>): T | undefined => {
+  for (const value of values) {
+    if (value !== undefined && value !== null) {
+      return value;
+    }
+  }
+  return undefined;
+};
+
+const asString = (value: unknown): string | undefined =>
+  typeof value === 'string' ? value : undefined;
+
+const asNumber = (value: unknown): number | undefined => {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value;
+  }
+  if (typeof value === 'string' && value.trim().length > 0) {
+    const parsed = Number(value);
+    if (Number.isFinite(parsed)) {
+      return parsed;
+    }
+  }
+  return undefined;
+};
+
+const asBoolean = (value: unknown): boolean | undefined =>
+  typeof value === 'boolean' ? value : undefined;
+
+const normalizeProvider = (value: unknown): ChatRequestDefaults['provider'] => {
+  const raw = asString(value)?.toLowerCase();
+  if (raw === 'gemini' || raw === 'ollama' || raw === 'local') {
+    return raw;
+  }
+  return 'auto';
+};
+
+const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Runtime config invalide');
+  }
+
+  const ollama_url = pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl));
+  const ollama_model = pickDefined(
+    asString(raw.ollama_model),
+    asString(raw.ollamaModel)
+  );
+
+  if (!ollama_url || !ollama_model) {
+    throw new Error('Runtime config incomplete (ollama_url/ollama_model)');
+  }
+
+  return {
+    ollama_url,
+    ollama_model,
+    secrets_mode:
+      pickDefined(asString(raw.secrets_mode), asString(raw.secretsMode)) ?? 'encrypted',
+    gemini_configured:
+      pickDefined(asBoolean(raw.gemini_configured), asBoolean(raw.geminiConfigured)) ??
+      false,
+    timestamp:
+      pickDefined(asNumber(raw.timestamp), asNumber(raw.updatedAt)) ??
+      Math.floor(Date.now() / 1000),
+  };
+};
+
+const normalizeChatEngineConfig = (value: unknown): ChatEngineConfig => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Chat engine config invalide');
+  }
+
+  const response_timeout_ms = pickDefined(
+    asNumber(raw.response_timeout_ms),
+    asNumber(raw.responseTimeoutMs)
+  );
+  const stream_chunk_size = pickDefined(
+    asNumber(raw.stream_chunk_size),
+    asNumber(raw.streamChunkSize)
+  );
+  const memory_context_tokens = pickDefined(
+    asNumber(raw.memory_context_tokens),
+    asNumber(raw.memoryContextTokens)
+  );
+  const memory_retention_tokens = pickDefined(
+    asNumber(raw.memory_retention_tokens),
+    asNumber(raw.memoryRetentionTokens)
+  );
+  const memory_flush_interval_ms = pickDefined(
+    asNumber(raw.memory_flush_interval_ms),
+    asNumber(raw.memoryFlushIntervalMs)
+  );
+  const auto_tts_enabled = pickDefined(
+    asBoolean(raw.auto_tts_enabled),
+    asBoolean(raw.autoTtsEnabled)
+  );
+  const stream_channel_buffer = pickDefined(
+    asNumber(raw.stream_channel_buffer),
+    asNumber(raw.streamChannelBuffer)
+  );
+
+  if (
+    response_timeout_ms === undefined ||
+    stream_chunk_size === undefined ||
+    memory_context_tokens === undefined ||
+    memory_retention_tokens === undefined ||
+    memory_flush_interval_ms === undefined ||
+    auto_tts_enabled === undefined ||
+    stream_channel_buffer === undefined
+  ) {
+    throw new Error('Chat engine config incomplete');
+  }
+
+  return {
+    response_timeout_ms,
+    stream_chunk_size,
+    memory_context_tokens,
+    memory_retention_tokens,
+    memory_flush_interval_ms,
+    auto_tts_enabled,
+    stream_channel_buffer,
+  };
+};
+
+const normalizeChatRequestDefaults = (value: unknown): ChatRequestDefaults => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Chat request defaults invalides');
+  }
+
+  const temperature = asNumber(raw.temperature);
+  const max_output_tokens = pickDefined(
+    asNumber(raw.max_output_tokens),
+    asNumber(raw.maxOutputTokens)
+  );
+  const enable_streaming = pickDefined(
+    asBoolean(raw.enable_streaming),
+    asBoolean(raw.enableStreaming)
+  );
+
+  if (
+    temperature === undefined ||
+    max_output_tokens === undefined ||
+    enable_streaming === undefined
+  ) {
+    throw new Error('Chat request defaults incomplets');
+  }
+
+  return {
+    temperature,
+    max_output_tokens,
+    provider: normalizeProvider(raw.provider),
+    enable_streaming,
+  };
+};
+
+const normalizeConfigSnapshot = (value: unknown): ConfigSnapshot => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Snapshot de configuration invalide');
+  }
+
+  const runtime = normalizeRuntimeConfig(raw.runtime);
+  const rawChatEngine = pickDefined(
+    toRecord(raw.chat_engine),
+    toRecord(raw.chatEngine)
+  );
+  if (!rawChatEngine) {
+    throw new Error('Snapshot chat_engine manquant');
+  }
+
+  const timeout_ms = pickDefined(
+    asNumber(rawChatEngine.timeout_ms),
+    asNumber(rawChatEngine.timeoutMs)
+  );
+  const chunk_size = pickDefined(
+    asNumber(rawChatEngine.chunk_size),
+    asNumber(rawChatEngine.chunkSize)
+  );
+  const max_tokens = pickDefined(
+    asNumber(rawChatEngine.max_tokens),
+    asNumber(rawChatEngine.maxTokens)
+  );
+  const temperature = asNumber(rawChatEngine.temperature);
+
+  if (
+    timeout_ms === undefined ||
+    chunk_size === undefined ||
+    max_tokens === undefined ||
+    temperature === undefined
+  ) {
+    throw new Error('Snapshot chat_engine incomplet');
+  }
+
+  return {
+    runtime,
+    chat_engine: {
+      timeout_ms,
+      chunk_size,
+      max_tokens,
+      temperature,
+    },
+    timestamp: asNumber(raw.timestamp) ?? Math.floor(Date.now() / 1000),
+    version: asString(raw.version) ?? 'unknown',
+  };
+};
+
+const normalizeEnvelope = <T,>(
+  value: unknown,
+  contentParser: (content: unknown) => T
+): IpcEnvelope<T> => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Invalid IPC response');
+  }
+
+  const ok = asBoolean(raw.ok);
+  if (ok === undefined) {
+    throw new Error('IPC response missing ok field');
+  }
+
+  const errorRaw = toRecord(raw.error);
+  const error = errorRaw
+    ? {
+        code: asString(errorRaw.code) ?? 'IPC_ERROR',
+        message: asString(errorRaw.message) ?? 'Erreur IPC inconnue',
+      }
+    : null;
+
+  if (!ok) {
+    return {
+      ok: false,
+      content: null,
+      error: error ?? { code: 'IPC_ERROR', message: 'IPC response failed' },
+    };
+  }
+
+  return {
+    ok: true,
+    content: contentParser(raw.content),
+    error: null,
+  };
+};
+
 type ConfigTab = 'system' | 'ai' | 'performance';
 
 export const ConfigurationHub: React.FC = () => {
@@ -68,6 +337,23 @@ export const ConfigurationHub: React.FC = () => {
   const [activeTab, setActiveTab] = useState<ConfigTab>('system');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
   const { success, error: errorToast } = useToast();
+
+  // Cognitive Layout Engine (déplacé depuis panneau flottant)
+  const {
+    currentMode: cognitiveMode,
+    setMode: setCognitiveMode,
+    toggleAdaptation,
+    isAdaptationEnabled,
+  } = useCognitiveLayout();
+
+  const COGNITIVE_MODE_LABELS: Record<UIMode, string> = {
+    focus_deep: '🎯 Focus Profond',
+    exploration: '🔍 Exploration',
+    monitoring: '📊 Monitoring',
+    maintenance: '🔧 Maintenance',
+    coaching: '🎓 Coaching',
+    neutral: '⚖️ Neutre',
+  };
 
   // Edit mode state
   const [editMode, setEditMode] = useState(false);
@@ -95,11 +381,15 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
-      const snapshot = (await tauriClient.getAllConfigs()) as ConfigSnapshot;
-      const engineEnvelope =
-        (await tauriClient.getChatEngineConfig()) as IpcEnvelope<ChatEngineConfig>;
-      const defaultsEnvelope =
-        (await tauriClient.getChatRequestDefaults()) as IpcEnvelope<ChatRequestDefaults>;
+      const snapshot = normalizeConfigSnapshot(await tauriClient.getAllConfigs());
+      const engineEnvelope = normalizeEnvelope(
+        await tauriClient.getChatEngineConfig(),
+        normalizeChatEngineConfig
+      );
+      const defaultsEnvelope = normalizeEnvelope(
+        await tauriClient.getChatRequestDefaults(),
+        normalizeChatRequestDefaults
+      );
 
       if (!engineEnvelope.ok || !engineEnvelope.content) {
         throw new Error(
@@ -226,28 +516,31 @@ export const ConfigurationHub: React.FC = () => {
       // Save chat engine config if changed
       if (Object.keys(editedChatEngine).length > 0) {
         console.log('📤 [ConfigHub] Updating chat engine config:', editedChatEngine);
-        const payload: ChatEngineConfig = {
-          response_timeout_ms:
+        const payload: ChatEngineConfigPayload = {
+          responseTimeoutMs:
             editedChatEngine.response_timeout_ms ?? engineConfig.response_timeout_ms,
-          stream_chunk_size:
+          streamChunkSize:
             editedChatEngine.stream_chunk_size ?? engineConfig.stream_chunk_size,
-          memory_context_tokens:
+          memoryContextTokens:
             editedChatEngine.memory_context_tokens ?? engineConfig.memory_context_tokens,
-          memory_retention_tokens:
+          memoryRetentionTokens:
             editedChatEngine.memory_retention_tokens ??
             engineConfig.memory_retention_tokens,
-          memory_flush_interval_ms:
+          memoryFlushIntervalMs:
             editedChatEngine.memory_flush_interval_ms ??
             engineConfig.memory_flush_interval_ms,
-          auto_tts_enabled:
+          autoTtsEnabled:
             editedChatEngine.auto_tts_enabled ?? engineConfig.auto_tts_enabled,
-          stream_channel_buffer:
+          streamChannelBuffer:
             editedChatEngine.stream_channel_buffer ?? engineConfig.stream_channel_buffer,
         };
 
-        const envelope = (await tauriClient.setChatEngineConfig({
-          config: payload,
-        })) as IpcEnvelope<ChatEngineConfig>;
+        const envelope = normalizeEnvelope(
+          await tauriClient.setChatEngineConfig({
+            config: payload,
+          }),
+          normalizeChatEngineConfig
+        );
         if (!envelope.ok) {
           throw new Error(
             envelope.error?.message || 'Échec mise à jour Chat Engine Configuration'
@@ -257,18 +550,21 @@ export const ConfigurationHub: React.FC = () => {
       }
 
       if (Object.keys(editedRequestDefaults).length > 0) {
-        const payload: ChatRequestDefaults = {
+        const payload: ChatRequestDefaultsPayload = {
           temperature: editedRequestDefaults.temperature ?? requestDefaults.temperature,
-          max_output_tokens:
+          maxOutputTokens:
             editedRequestDefaults.max_output_tokens ?? requestDefaults.max_output_tokens,
           provider: (editedRequestDefaults.provider ??
             requestDefaults.provider) as ChatRequestDefaults['provider'],
-          enable_streaming:
+          enableStreaming:
             editedRequestDefaults.enable_streaming ?? requestDefaults.enable_streaming,
         };
-        const envelope = (await tauriClient.setChatRequestDefaults({
-          defaults: payload,
-        })) as IpcEnvelope<ChatRequestDefaults>;
+        const envelope = normalizeEnvelope(
+          await tauriClient.setChatRequestDefaults({
+            defaults: payload,
+          }),
+          normalizeChatRequestDefaults
+        );
         if (!envelope.ok) {
           throw new Error(
             envelope.error?.message || 'Échec mise à jour Chat Request Defaults'
@@ -511,7 +807,72 @@ export const ConfigurationHub: React.FC = () => {
   }
 
   if (!config || !engineConfig || !requestDefaults) {
-    return null;
+    const missingParts = [
+      !config ? 'snapshot' : null,
+      !engineConfig ? 'chat_engine' : null,
+      !requestDefaults ? 'request_defaults' : null,
+    ]
+      .filter(Boolean)
+      .join(', ');
+
+    return (
+      <div className="module-page">
+        <div className="module-page__header">
+          <h1 className="module-page__title">
+            <span className="module-page__icon">🎯</span>
+            Configuration Hub
+          </h1>
+        </div>
+        <div style={{ textAlign: 'center', padding: '3rem' }}>
+          <div
+            style={{
+              fontSize: '2rem',
+              marginBottom: '1rem',
+              color: 'var(--color-error)',
+            }}
+          >
+            ⚠️
+          </div>
+          <div style={{ color: 'var(--color-error)', marginBottom: '1rem' }}>
+            Configuration incomplete
+          </div>
+          <div
+            style={{
+              fontSize: '0.85rem',
+              color: 'var(--color-text-secondary)',
+              marginBottom: '1.5rem',
+            }}
+          >
+            Missing data: {missingParts}
+          </div>
+          {error && (
+            <div
+              style={{
+                fontSize: '0.85rem',
+                color: 'var(--color-text-secondary)',
+                marginBottom: '1.5rem',
+              }}
+            >
+              Last error: {error}
+            </div>
+          )}
+          <button
+            onClick={loadConfig}
+            style={{
+              padding: '0.75rem 1.5rem',
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              border: 'none',
+              borderRadius: '8px',
+              color: 'white',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            🔄 Reload Configuration
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Get current values (edited or original)
@@ -866,6 +1227,58 @@ export const ConfigurationHub: React.FC = () => {
                 valueType="boolean"
                 editable={false}
               />
+            </ConfigSection>
+
+            <ConfigSection
+              title="Cognitive Layout"
+              icon="🧠"
+              description="Paramètres du moteur d'adaptation cognitive de l'interface"
+              defaultOpen={false}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                    <input
+                      type="checkbox"
+                      checked={isAdaptationEnabled}
+                      onChange={e => toggleAdaptation(e.target.checked)}
+                    />
+                    <span>Adaptation auto</span>
+                  </label>
+                  {cognitiveMode && (
+                    <span style={{
+                      background: 'var(--accent-primary, #0ea5e9)',
+                      color: '#fff',
+                      padding: '2px 10px',
+                      borderRadius: '6px',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                    }}>
+                      {COGNITIVE_MODE_LABELS[cognitiveMode]}
+                    </span>
+                  )}
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem' }}>
+                  {(Object.keys(COGNITIVE_MODE_LABELS) as UIMode[]).map(mode => (
+                    <button
+                      key={mode}
+                      onClick={() => setCognitiveMode(mode)}
+                      style={{
+                        padding: '8px',
+                        borderRadius: '6px',
+                        fontSize: '12px',
+                        fontWeight: cognitiveMode === mode ? 700 : 400,
+                        border: `1px solid ${cognitiveMode === mode ? 'var(--accent-primary, #0ea5e9)' : 'rgba(255,255,255,0.1)'}`,
+                        background: cognitiveMode === mode ? 'var(--accent-primary, #0ea5e9)' : 'rgba(255,255,255,0.05)',
+                        color: '#fff',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {COGNITIVE_MODE_LABELS[mode]}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </ConfigSection>
           </>
         )}

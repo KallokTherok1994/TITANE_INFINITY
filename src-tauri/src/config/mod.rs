@@ -97,12 +97,12 @@ impl ConfigSnapshot {
 pub async fn get_all_configs() -> Result<ConfigSnapshot, String> {
     log::info!("🎯 [CONFIG] Loading all configurations...");
 
+    let (ollama_url, ollama_model) = update::current_runtime_values();
+
     // Récupérer runtime config (déjà implémenté)
     let runtime = RuntimeConfig {
-        ollama_url: std::env::var("OLLAMA_BASE_URL")
-            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
-        ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
-            .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
+        ollama_url,
+        ollama_model,
         secrets_mode: "encrypted".to_string(), // Implementation: Get from SecureSecretsEngine.get_mode()
         // - Query: SecureSecretsEngine::get_encryption_mode() → "encrypted"/"plaintext"/"keyring"
         // - Fallback: "encrypted" if SecureSecretsEngine not initialized

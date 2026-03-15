@@ -55,11 +55,10 @@ pub async fn save_config_preset(
         .map_err(|e| format!("Impossible de créer le dossier presets: {}", e))?;
 
     // Get current config
+    let (ollama_url, ollama_model) = super::update::current_runtime_values();
     let runtime = super::RuntimeConfig {
-        ollama_url: std::env::var("OLLAMA_BASE_URL")
-            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
-        ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
-            .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
+        ollama_url,
+        ollama_model,
         secrets_mode: "encrypted".to_string(),
         gemini_configured: false,
         timestamp: std::time::SystemTime::now()
@@ -68,7 +67,13 @@ pub async fn save_config_preset(
             .unwrap_or_else(|_| crate::core::utils::now_ms() / 1000),
     };
 
-    let chat_engine = super::ChatEngineConfig::default();
+    let chat_bundle = super::update::current_chat_bundle().await;
+    let chat_engine = super::ChatEngineConfig {
+        timeout_ms: chat_bundle.engine.response_timeout_ms,
+        chunk_size: chat_bundle.engine.stream_chunk_size as usize,
+        max_tokens: chat_bundle.request_defaults.max_output_tokens as usize,
+        temperature: chat_bundle.request_defaults.temperature,
+    };
     let snapshot = super::ConfigSnapshot::new(runtime, chat_engine);
 
     // Create preset
@@ -124,8 +129,11 @@ pub async fn load_config_preset(app: AppHandle, name: String) -> Result<ConfigSn
     fs::write(&file_path, updated_json).ok(); // Ignore errors for last_used update
 
     // Apply config
-    std::env::set_var("OLLAMA_BASE_URL", &preset.config.runtime.ollama_url);
-    std::env::set_var("OLLAMA_DEFAULT_MODEL", &preset.config.runtime.ollama_model);
+    super::update::persist_runtime_values(
+        &preset.config.runtime.ollama_url,
+        &preset.config.runtime.ollama_model,
+    )?;
+    super::update::apply_chat_engine_snapshot(&preset.config.chat_engine).await?;
 
     log::info!("✅ [PRESETS] Preset loaded: {}", name);
     Ok(preset.config)

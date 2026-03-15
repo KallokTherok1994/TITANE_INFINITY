@@ -1,26 +1,26 @@
 {
   "deployment": {
-    "timestamp": "2026-03-14T17:28:55Z",
+    "timestamp": "2026-03-14T21:49:22Z",
     "version": "28.0.0",
-    "commit": "1959a261d8c7e7f2912464951f1ebfab5b4533bb",
+    "commit": "b771239b04db2444ff5afa4e3e8127a383f91acb",
     "branch": "MAIN",
-    "deployment_type": "prod_build_ipc_fix_v28"
+    "deployment_type": "release_refresh_after_merge_clean"
   },
   "artifacts": {
     "appimage": {
       "available": true,
       "filename": "TITANE-Infinity_27.2.0_amd64.AppImage",
-      "sha256": "028a1a64dbcb99af5bc82373a38d3aa920389594a5e7ca4c4c470bf2100ffc47"
+      "sha256": "f6939ec07bfa3fc74b2ec282fb818cf74543c1bce6bb4f2b843099950d868bfe"
     },
     "deb": {
       "available": true,
       "filename": "TITANE-Infinity_27.2.0_amd64.deb",
-      "sha256": "6adb68c10e0eab53809792d9a5d8f8df184de4ef8f509907bb1c8cfd7c0e07cf"
+      "sha256": "62d8ab95930f513ae1f753103c318fbfb68a73091bcd8c58be93f737666235ca"
     },
     "binary": {
       "available": true,
       "filename": "titane-infinity",
-      "sha256": "9f0dc389d73d33ea6f955f8d13b0f4badd19eb983dcad1a0ccab48d01c4daa66"
+      "sha256": "7302bb28cbb2e9e40e1c93eb48664925a3a7d29c29a1b717b703928c35a3c632"
     }
   }
 }

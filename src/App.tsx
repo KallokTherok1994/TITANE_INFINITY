@@ -124,12 +124,7 @@ const SingularityMonitor = lazy(() =>
   }))
 );
 
-// ✨ v24.3.0 - Cognitive Layout Control
-const CognitiveLayoutControl = lazy(() =>
-  import('./components/cognitive/CognitiveLayoutControl').then(m => ({
-    default: m.CognitiveLayoutControl,
-  }))
-);
+// v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
 import './components/psyche/DeepPsychePanel.css';
 import { presenceOS } from './engines/presence/_stubs';
@@ -1294,10 +1289,7 @@ const AppRouter: React.FC = () => {
         <HybridBubble initialMode="bubble" />
       </Suspense> */}
 
-      {/* ✨ v∞.27.0 - Cognitive Layout Control (Super Prompt #2 - ADAPTIVE UI 🧠) */}
-      <Suspense fallback={null}>
-        <CognitiveLayoutControl />
-      </Suspense>
+      {/* v∞.27.0 - Cognitive Layout Control déplacé dans ADMIN (ConfigurationHub) */}
 
       {/* ✨ v∞.27.0 - Unified Presence Control (Super Prompt #3 - EXPERIENTIAL IDENTITY 🌌) */}
       {/* MASQUÉ - Analyse UI */}

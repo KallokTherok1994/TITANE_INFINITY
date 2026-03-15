@@ -55,11 +55,10 @@ pub async fn export_config(app: AppHandle, filename: String) -> Result<String, S
         .map_err(|e| format!("Impossible de créer le dossier d'export: {}", e))?;
 
     // Get current config
+    let (ollama_url, ollama_model) = super::update::current_runtime_values();
     let runtime = RuntimeConfig {
-        ollama_url: std::env::var("OLLAMA_BASE_URL")
-            .unwrap_or_else(|_| "http://localhost:11434".to_string()),
-        ollama_model: std::env::var("OLLAMA_DEFAULT_MODEL")
-            .unwrap_or_else(|_| "qwen2.5:latest".to_string()),
+        ollama_url,
+        ollama_model,
         secrets_mode: "encrypted".to_string(),
         gemini_configured: false,
         timestamp: std::time::SystemTime::now()
@@ -68,7 +67,13 @@ pub async fn export_config(app: AppHandle, filename: String) -> Result<String, S
             .as_secs(),
     };
 
-    let chat_engine = ChatEngineConfig::default();
+    let chat_bundle = super::update::current_chat_bundle().await;
+    let chat_engine = ChatEngineConfig {
+        timeout_ms: chat_bundle.engine.response_timeout_ms,
+        chunk_size: chat_bundle.engine.stream_chunk_size as usize,
+        max_tokens: chat_bundle.request_defaults.max_output_tokens as usize,
+        temperature: chat_bundle.request_defaults.temperature,
+    };
     let snapshot = ConfigSnapshot::new(runtime, chat_engine);
 
     // Add metadata
@@ -144,27 +149,13 @@ pub async fn import_config(file_path: String) -> Result<ConfigSnapshot, String> 
     super::update::validate_max_tokens(config.chat_engine.max_tokens)?;
     super::update::validate_temperature(config.chat_engine.temperature)?;
 
-    // SAFETY: Environment variable modification is unsafe because:
-    // 1. It affects global process state
-    // 2. Concurrent modification from multiple threads causes data races
-    //
-    // This is safe in our context because:
-    // 1. This function is called during application initialization (single-threaded)
-    // 2. Config import happens before any worker threads are spawned
-    // 3. These variables are read-only after initialization
-    // 4. Tauri's lifecycle guarantees single-threaded config loading
-    //
-    // FUTUR: Consider using thread-local storage or a configuration service
-    // to avoid global state modification in future versions.
-    unsafe {
-        std::env::set_var("OLLAMA_BASE_URL", &config.runtime.ollama_url);
-        std::env::set_var("OLLAMA_DEFAULT_MODEL", &config.runtime.ollama_model);
-    }
+    super::update::persist_runtime_values(
+        &config.runtime.ollama_url,
+        &config.runtime.ollama_model,
+    )?;
+    super::update::apply_chat_engine_snapshot(&config.chat_engine).await?;
 
     log::info!("✅ [CONFIG] Configuration imported successfully");
-    log::warn!(
-        "⚠️  [CONFIG] Chat engine config imported but not persisted (state management needed)"
-    );
 
     Ok(config)
 }
