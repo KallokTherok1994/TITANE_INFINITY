@@ -61,6 +61,20 @@ export function useGovernance() {
     setState(prev => ({ ...prev, activeTab }));
   }, []);
 
+  /** Enveloppe une action async : setLoading + setError(null) + finally setLoading(false) */
+  const withLoading = useCallback(
+    async <T>(fn: () => Promise<T>): Promise<T> => {
+      setLoading(true);
+      setError(null);
+      try {
+        return await fn();
+      } finally {
+        setLoading(false);
+      }
+    },
+    [setLoading, setError]
+  );
+
   // ═══════════════════════════════════════════════════════════════
   // SECRETS
   // ═══════════════════════════════════════════════════════════════
@@ -138,60 +152,36 @@ export function useGovernance() {
   }, []);
 
   const setGeminiKey = useCallback(
-    async (apiKey: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.setGeminiKey(apiKey);
-
-      if (response.ok && response.data) {
-        setState(prev => ({ ...prev, geminiStatus: response.data }));
-      } else {
-        setError(response.error || 'Erreur lors de la configuration de la clé Gemini');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (apiKey: string) =>
+      withLoading(async () => {
+        const r = await governanceService.setGeminiKey(apiKey);
+        if (r.ok && r.data) setState(prev => ({ ...prev, geminiStatus: r.data }));
+        else setError(r.error || 'Erreur lors de la configuration de la clé Gemini');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const setOpenAIKey = useCallback(
-    async (apiKey: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.setOpenAIKey(apiKey);
-
-      if (response.ok && response.data) {
-        setState(prev => ({ ...prev, openaiStatus: response.data }));
-      } else {
-        setError(response.error || 'Erreur lors de la configuration de la clé OpenAI');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (apiKey: string) =>
+      withLoading(async () => {
+        const r = await governanceService.setOpenAIKey(apiKey);
+        if (r.ok && r.data) setState(prev => ({ ...prev, openaiStatus: r.data }));
+        else setError(r.error || 'Erreur lors de la configuration de la clé OpenAI');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const setAnthropicKey = useCallback(
-    async (apiKey: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.setAnthropicKey(apiKey);
-
-      if (response.ok && response.data) {
-        setState(prev => ({ ...prev, anthropicStatus: response.data }));
-      } else {
-        setError(response.error || 'Erreur lors de la configuration de la clé Anthropic');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (apiKey: string) =>
+      withLoading(async () => {
+        const r = await governanceService.setAnthropicKey(apiKey);
+        if (r.ok && r.data) setState(prev => ({ ...prev, anthropicStatus: r.data }));
+        else setError(r.error || 'Erreur lors de la configuration de la clé Anthropic');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const loadCopilotStatus = useCallback(async () => {
@@ -203,56 +193,34 @@ export function useGovernance() {
   }, []);
 
   const setCopilotKey = useCallback(
-    async (apiKey: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.setCopilotKey(apiKey);
-
-      if (response.ok && response.data) {
-        setState(prev => ({ ...prev, copilotStatus: response.data }));
-      } else {
-        setError(response.error || 'Erreur lors de la configuration de la clé Copilot');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (apiKey: string) =>
+      withLoading(async () => {
+        const r = await governanceService.setCopilotKey(apiKey);
+        if (r.ok && r.data) setState(prev => ({ ...prev, copilotStatus: r.data }));
+        else setError(r.error || 'Erreur lors de la configuration de la clé Copilot');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const storeSecret = useCallback(
-    async (key: string, value: string, purgeEnv = false) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.storeSecret(key, value, purgeEnv);
-
-      if (!response.ok) {
-        setError(response.error || 'Erreur lors du stockage du secret');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (key: string, value: string, purgeEnv = false) =>
+      withLoading(async () => {
+        const r = await governanceService.storeSecret(key, value, purgeEnv);
+        if (!r.ok) setError(r.error || 'Erreur lors du stockage du secret');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const deleteSecret = useCallback(
-    async (key: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.deleteSecret(key);
-
-      if (!response.ok) {
-        setError(response.error || 'Erreur lors de la suppression du secret');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (key: string) =>
+      withLoading(async () => {
+        const r = await governanceService.deleteSecret(key);
+        if (!r.ok) setError(r.error || 'Erreur lors de la suppression du secret');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   // ═══════════════════════════════════════════════════════════════
@@ -268,69 +236,42 @@ export function useGovernance() {
   }, []);
 
   const togglePolicy = useCallback(
-    async (policyId: string, enabled: boolean) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.togglePolicy(policyId, enabled);
-
-      if (response.ok && response.data) {
-        setState(prev => ({
-          ...prev,
-          policies: prev.policies.map(p => (p.id === policyId ? { ...p, enabled } : p)),
-        }));
-      } else {
-        setError(response.error || 'Erreur lors de la modification de la politique');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (policyId: string, enabled: boolean) =>
+      withLoading(async () => {
+        const r = await governanceService.togglePolicy(policyId, enabled);
+        if (r.ok && r.data)
+          setState(prev => ({
+            ...prev,
+            policies: prev.policies.map(p => (p.id === policyId ? { ...p, enabled } : p)),
+          }));
+        else setError(r.error || 'Erreur lors de la modification de la politique');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const createPolicy = useCallback(
-    async (policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.createPolicy(policy);
-
-      if (response.ok && response.data) {
-        setState(prev => ({
-          ...prev,
-          policies: [...prev.policies, response.data ?? ({} as IAPolicy)],
-        }));
-      } else {
-        setError(response.error || 'Erreur lors de la création de la politique');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (policy: Omit<IAPolicy, 'id' | 'createdAt' | 'updatedAt'>) =>
+      withLoading(async () => {
+        const r = await governanceService.createPolicy(policy);
+        if (r.ok && r.data)
+          setState(prev => ({ ...prev, policies: [...prev.policies, r.data ?? ({} as IAPolicy)] }));
+        else setError(r.error || 'Erreur lors de la création de la politique');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   const deletePolicy = useCallback(
-    async (policyId: string) => {
-      setLoading(true);
-      setError(null);
-
-      const response = await governanceService.deletePolicy(policyId);
-
-      if (response.ok) {
-        setState(prev => ({
-          ...prev,
-          policies: prev.policies.filter(p => p.id !== policyId),
-        }));
-      } else {
-        setError(response.error || 'Erreur lors de la suppression de la politique');
-      }
-
-      setLoading(false);
-      return response;
-    },
-    [setLoading, setError]
+    (policyId: string) =>
+      withLoading(async () => {
+        const r = await governanceService.deletePolicy(policyId);
+        if (r.ok)
+          setState(prev => ({ ...prev, policies: prev.policies.filter(p => p.id !== policyId) }));
+        else setError(r.error || 'Erreur lors de la suppression de la politique');
+        return r;
+      }),
+    [withLoading, setError]
   );
 
   // ═══════════════════════════════════════════════════════════════
@@ -353,21 +294,16 @@ export function useGovernance() {
     return response;
   }, []);
 
-  const clearPermissionAudit = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    const response = await governanceService.clearPermissionAudit();
-
-    if (response.ok) {
-      setState(prev => ({ ...prev, permissionAudit: [] }));
-    } else {
-      setError(response.error || "Erreur lors de l'effacement de l'audit");
-    }
-
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+  const clearPermissionAudit = useCallback(
+    () =>
+      withLoading(async () => {
+        const r = await governanceService.clearPermissionAudit();
+        if (r.ok) setState(prev => ({ ...prev, permissionAudit: [] }));
+        else setError(r.error || "Erreur lors de l'effacement de l'audit");
+        return r;
+      }),
+    [withLoading, setError]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // JOURNAL DE SÉCURITÉ
@@ -402,78 +338,65 @@ export function useGovernance() {
   );
 
   const exportSecurityLog = useCallback(
-    async (format: 'json' | 'csv') => {
-      setLoading(true);
-      const response = await governanceService.exportSecurityLog(format);
-      setLoading(false);
-      return response;
-    },
-    [setLoading]
+    (format: 'json' | 'csv') =>
+      withLoading(() => governanceService.exportSecurityLog(format)),
+    [withLoading]
   );
 
-  const clearSecurityLog = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    const response = await governanceService.clearSecurityLog();
-
-    if (response.ok) {
-      setState(prev => ({ ...prev, securityLog: [] }));
-    } else {
-      setError(response.error || "Erreur lors de l'effacement du journal");
-    }
-
-    setLoading(false);
-    return response;
-  }, [setLoading, setError]);
+  const clearSecurityLog = useCallback(
+    () =>
+      withLoading(async () => {
+        const r = await governanceService.clearSecurityLog();
+        if (r.ok) setState(prev => ({ ...prev, securityLog: [] }));
+        else setError(r.error || "Erreur lors de l'effacement du journal");
+        return r;
+      }),
+    [withLoading, setError]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // SYSTÈME
   // ═══════════════════════════════════════════════════════════════
 
-  const checkIntegrity = useCallback(async () => {
-    setLoading(true);
-    const response = await governanceService.checkSystemIntegrity();
-    setLoading(false);
-    return response;
-  }, [setLoading]);
+  const checkIntegrity = useCallback(
+    () => withLoading(() => governanceService.checkSystemIntegrity()),
+    [withLoading]
+  );
 
   // ═══════════════════════════════════════════════════════════════
   // INITIALISATION
   // ═══════════════════════════════════════════════════════════════
 
-  const refreshAll = useCallback(async () => {
-    setLoading(true);
-    setError(null);
-
-    await Promise.all([
-      loadSecretsStatus(),
-      loadGeminiStatus(),
-      loadOpenAIStatus(),
-      loadAnthropicStatus(),
-      loadCopilotStatus(),
-      loadOllamaStatus(),
-      loadPolicies(),
-      loadPermissionMatrix(),
-      loadPermissionAudit(),
-      loadSecurityLog(),
-    ]);
-
-    setLoading(false);
-  }, [
-    loadSecretsStatus,
-    loadGeminiStatus,
-    loadOpenAIStatus,
-    loadAnthropicStatus,
-    loadCopilotStatus,
-    loadOllamaStatus,
-    loadPolicies,
-    loadPermissionMatrix,
-    loadPermissionAudit,
-    loadSecurityLog,
-    setLoading,
-    setError,
-  ]);
+  const refreshAll = useCallback(
+    () =>
+      withLoading(() =>
+        Promise.all([
+          loadSecretsStatus(),
+          loadGeminiStatus(),
+          loadOpenAIStatus(),
+          loadAnthropicStatus(),
+          loadCopilotStatus(),
+          loadOllamaStatus(),
+          loadPolicies(),
+          loadPermissionMatrix(),
+          loadPermissionAudit(),
+          loadSecurityLog(),
+        ])
+      ),
+    [
+      withLoading,
+      loadSecretsStatus,
+      loadGeminiStatus,
+      loadOpenAIStatus,
+      loadAnthropicStatus,
+      loadCopilotStatus,
+      loadOllamaStatus,
+      loadPolicies,
+      loadPermissionMatrix,
+      loadPermissionAudit,
+      loadSecurityLog,
+    ]
+  );
 
   // Charger les données au montage
   useEffect(() => {

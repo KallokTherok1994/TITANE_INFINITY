@@ -6,6 +6,7 @@
 
 import React, { useCallback } from 'react';
 import { useControlPanelSection } from '@/hooks/useControlPanelSection';
+import { TAURI_COMMANDS } from '@/lib/tauriCommands';
 import {
   ControlPanelToggleList,
   type ToggleConfig,
@@ -51,8 +52,8 @@ const SECURITY_TOGGLES: readonly ToggleConfig<keyof SecurityConfig>[] = [
 export const SecuritySection: React.FC = () => {
   const { config, setConfig, saveConfig, isSaving, saved, error, hasChanges } =
     useControlPanelSection<SecurityConfig>({
-      loadCommand: 'get_security_config',
-      saveCommand: 'set_security_config',
+      loadCommand: TAURI_COMMANDS.CP_GET_SECURITY_CONFIG,
+      saveCommand: TAURI_COMMANDS.CP_SET_SECURITY_CONFIG,
       defaultConfig: DEFAULT_SECURITY_CONFIG,
       saveParamKey: 'config',
     });

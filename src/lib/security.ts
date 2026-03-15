@@ -348,6 +348,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // Control Panel (secure)
   'cp_get_ai_config',
   'cp_set_ai_config',
+  'cp_get_design_config',
+  'cp_set_design_config',
+  'cp_get_modules_status',
+  'cp_toggle_module',
+  'cp_get_network_config',
+  'cp_set_network_config',
+  'cp_get_security_config',
+  'cp_set_security_config',
+  'cp_check_for_updates',
+  'cp_install_update',
 
   // ═══════════════════════════════════════════════════════════════
   // VOICE / TTS / ASR (v∞ PRODUCTION)

@@ -448,7 +448,10 @@ export class UnifiedCognitivePipeline {
         },
       });
 
-      return result;
+      // FIX 2026-03-15 AUDIO_VOICE_AUDIT: tts_speak returns Result<(), String> = null on success.
+      // Backend only plays audio server-side, returns no TTSAudio struct.
+      // When result is null/undefined (IPC success with void return), use empty TTSAudio.
+      return result ?? this.createEmptyTTS();
     } catch (error) {
       console.warn('[UnifiedPipeline] TTS generation failed');
       return this.createEmptyTTS();

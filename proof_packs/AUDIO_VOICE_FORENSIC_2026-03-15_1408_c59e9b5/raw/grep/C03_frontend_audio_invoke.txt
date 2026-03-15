@@ -1,0 +1,5 @@
+src/services/tauri/commands.ts:293:    return invokeVoid('speak', { text, useOnline });
+src/services/tauri/chatEngine.commands.ts:273:  return invokeCommand<void>(COMMANDS.speak, {
+src/services/tauriBridge.ts:304:  return invokeTauriCommand<void>('speak', { text, voice });
+src/services/tauriCommands.ts:376:    invokeTauriCommand('speak', { text, voice }),
+src/services/api/index.ts:144: *    `invoke('speak', { text })`

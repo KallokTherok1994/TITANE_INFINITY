@@ -126,12 +126,13 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
     throw new Error('Runtime config invalide');
   }
 
-  const ollama_url = pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl));
-  const ollama_model = pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel));
-
-  if (!ollama_url || !ollama_model) {
-    throw new Error('Runtime config incomplete (ollama_url/ollama_model)');
-  }
+  // Keep the page operational even when a partial runtime payload is returned.
+  const ollama_url =
+    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ??
+    'http://localhost:11434';
+  const ollama_model =
+    pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
+    'qwen2.5:latest';
 
   return {
     ollama_url,

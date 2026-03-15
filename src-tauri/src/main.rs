@@ -1797,7 +1797,12 @@ fn main() {
             titane_infinity::control_panel_commands::cp_set_design_config,
             titane_infinity::control_panel_commands::cp_get_modules_status,
             titane_infinity::control_panel_commands::cp_toggle_module,
+            titane_infinity::control_panel_commands::cp_get_network_config,
+            titane_infinity::control_panel_commands::cp_set_network_config,
+            titane_infinity::control_panel_commands::cp_get_security_config,
+            titane_infinity::control_panel_commands::cp_set_security_config,
             titane_infinity::control_panel_commands::cp_check_for_updates,
+            titane_infinity::control_panel_commands::cp_install_update,
 
             // ═══════════════════════════════════════════════════════════════
             // SELF-HEAL EXECUTOR COMMANDS (AUDIT FIX 2026-03-06 — CONTINUE)
@@ -1878,6 +1883,13 @@ fn main() {
             audio::commands::start_recording,
             audio::commands::stop_recording,
             audio::commands::cancel_recording,
+            // ═══════════════════════════════════════════════════════════════
+            // AUDIO FIX 2026-03-15 — AUDIO_VOICE_AUDIT — missing handlers
+            // transcribe_audio + is_recording: handler exists in audio::commands
+            // but were missing from generate_handler! (allowlisted in tauri.conf.json)
+            // ═══════════════════════════════════════════════════════════════
+            audio::commands::transcribe_audio,
+            audio::commands::is_recording,
 
             // ═══════════════════════════════════════════════════════════════
             // SECURITY — validate_chat_message
