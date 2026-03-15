@@ -161,9 +161,9 @@ describe('Design Center truth chain', () => {
       expect(document.documentElement.style.getPropertyValue('--surface').trim()).toBe(
         '#202830'
       );
-      expect(document.documentElement.style.getPropertyValue('--text-primary').trim()).toBe(
-        '#f0f2f4'
-      );
+      expect(
+        document.documentElement.style.getPropertyValue('--text-primary').trim()
+      ).toBe('#f0f2f4');
       expect(
         document.documentElement.style.getPropertyValue('--admin-bg-start').trim()
       ).toBe('#101820');
@@ -195,7 +195,9 @@ describe('Design Center truth chain', () => {
       const runtimeText = document.documentElement.style
         .getPropertyValue('--text-primary')
         .trim();
-      const runtimeBg = document.documentElement.style.getPropertyValue('--background').trim();
+      const runtimeBg = document.documentElement.style
+        .getPropertyValue('--background')
+        .trim();
 
       expect(runtimeText.toLowerCase()).not.toBe('#ffffff');
       expect(contrastRatio(runtimeText, runtimeBg)).toBeGreaterThanOrEqual(4.5);

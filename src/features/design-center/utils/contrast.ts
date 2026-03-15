@@ -70,7 +70,9 @@ function toLinear(channel: number): number {
 }
 
 function luminance(color: RGB): number {
-  return 0.2126 * toLinear(color.r) + 0.7152 * toLinear(color.g) + 0.0722 * toLinear(color.b);
+  return (
+    0.2126 * toLinear(color.r) + 0.7152 * toLinear(color.g) + 0.0722 * toLinear(color.b)
+  );
 }
 
 export function contrastRatio(foreground: string, background: string): number {
@@ -90,7 +92,9 @@ export function contrastRatio(foreground: string, background: string): number {
 export function pickReadableTextColor(background: string): string {
   const light = '#ffffff';
   const dark = '#111111';
-  return contrastRatio(light, background) >= contrastRatio(dark, background) ? light : dark;
+  return contrastRatio(light, background) >= contrastRatio(dark, background)
+    ? light
+    : dark;
 }
 
 export function ensureReadableTextColor(

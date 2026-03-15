@@ -282,310 +282,312 @@ describe('V25 - VISIBLE REAL CHAT FUNCTIONAL TRUTH', () => {
     console.log('[V25] START');
 
     try {
+      await pause(1500);
+      await browser.url('tauri://localhost/#/titane');
+      await pause(2200);
 
-    await pause(1500);
-    await browser.url('tauri://localhost/#/titane');
-    await pause(2200);
-
-    for (let attempt = 0; attempt < 4; attempt += 1) {
-      const pre = await inspect();
-      if (pre.inputPresent && pre.sendPresent) {
-        break;
+      for (let attempt = 0; attempt < 4; attempt += 1) {
+        const pre = await inspect();
+        if (pre.inputPresent && pre.sendPresent) {
+          break;
+        }
+        const nav = await tryOpenChatSurface();
+        if (!nav.clicked) {
+          await pause(700);
+          continue;
+        }
+        await pause(900);
       }
-      const nav = await tryOpenChatSurface();
-      if (!nav.clicked) {
+
+      const s1 = await inspect();
+      M.currentUrl = s1.url;
+      M.whiteScreen = s1.whiteScreen;
+      M.uiVisible = !s1.whiteScreen;
+      M.inputPresent = s1.inputPresent;
+      M.sendPresent = s1.sendPresent;
+      M.sendEnabledBeforeTyping = s1.sendPresent ? !s1.sendDisabled : null;
+      M.assistantMessagesCountBeforeSend = s1.assistantMessages.length;
+      await ss('s1_before_typing');
+
+      const inputSelector = '[data-testid="chat-input"]';
+      const sendSelector = '[data-testid="chat-send"]';
+
+      if (!s1.inputPresent || !s1.sendPresent) {
+        M.blockers.push('CHAT_INPUT_OR_SEND_MISSING');
+        M.verdict = 'FAIL';
+        saveMetrics();
+        expect(M.verdict).toBeTruthy();
+        return;
+      }
+
+      try {
+        const input = await browser.$(inputSelector);
+        await input.click();
+        await input.clearValue();
+        await input.setValue(QUESTION);
+        M.inputTyped = true;
+        M.sendActivationPath = 'WEBDRIVER_SETVALUE';
+      } catch (err) {
+        M.frictions.push('WEBDRIVER_SETVALUE_FAILED');
+      }
+
+      let s2 = await inspect();
+      if (s2.sendDisabled) {
+        const nativeApplied = await browser.execute(
+          (sel, value) => {
+            const node = document.querySelector(sel);
+            if (!node) return false;
+            const proto =
+              window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
+            const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
+            if (desc?.set) {
+              desc.set.call(node, value);
+            } else {
+              node.value = value;
+            }
+            node.dispatchEvent(new InputEvent('input', { bubbles: true }));
+            node.dispatchEvent(new Event('change', { bubbles: true }));
+            return true;
+          },
+          inputSelector,
+          QUESTION
+        );
+
+        if (nativeApplied) {
+          M.inputTyped = true;
+          M.sendActivationPath = 'NATIVE_SETTER_INPUTEVENT';
+          M.sendHarnessDiagnosis = 'HARNESS_LIMITATION_JS_VALUE_NOT_REACT';
+        }
+
         await pause(700);
-        continue;
+        s2 = await inspect();
       }
-      await pause(900);
-    }
 
-    const s1 = await inspect();
-    M.currentUrl = s1.url;
-    M.whiteScreen = s1.whiteScreen;
-    M.uiVisible = !s1.whiteScreen;
-    M.inputPresent = s1.inputPresent;
-    M.sendPresent = s1.sendPresent;
-    M.sendEnabledBeforeTyping = s1.sendPresent ? !s1.sendDisabled : null;
-    M.assistantMessagesCountBeforeSend = s1.assistantMessages.length;
-    await ss('s1_before_typing');
+      M.sendEnabledAfterTyping = !s2.sendDisabled;
+      await ss('s2_input_filled');
 
-    const inputSelector = '[data-testid="chat-input"]';
-    const sendSelector = '[data-testid="chat-send"]';
+      if (s2.sendDisabled) {
+        M.blockers.push('SEND_DISABLED_AFTER_TYPING');
+        M.verdict = 'FAIL';
+        saveMetrics();
+        expect(M.verdict).toBeTruthy();
+        return;
+      }
 
-    if (!s1.inputPresent || !s1.sendPresent) {
-      M.blockers.push('CHAT_INPUT_OR_SEND_MISSING');
-      M.verdict = 'FAIL';
-      saveMetrics();
-      expect(M.verdict).toBeTruthy();
-      return;
-    }
+      await browser.execute(sel => {
+        const button = document.querySelector(sel);
+        if (button) button.click();
+      }, sendSelector);
+      M.sendClicked = true;
+      await ss('s3_just_after_send');
 
-    try {
-      const input = await browser.$(inputSelector);
-      await input.click();
-      await input.clearValue();
-      await input.setValue(QUESTION);
-      M.inputTyped = true;
-      M.sendActivationPath = 'WEBDRIVER_SETVALUE';
-    } catch (err) {
-      M.frictions.push('WEBDRIVER_SETVALUE_FAILED');
-    }
+      const started = Date.now();
+      let processingCaptured = false;
+      let responseCaptured = false;
 
-    let s2 = await inspect();
-    if (s2.sendDisabled) {
-      const nativeApplied = await browser.execute(
-        (sel, value) => {
-          const node = document.querySelector(sel);
-          if (!node) return false;
-          const proto =
-            window.HTMLTextAreaElement?.prototype || window.HTMLInputElement?.prototype;
-          const desc = proto ? Object.getOwnPropertyDescriptor(proto, 'value') : null;
-          if (desc?.set) {
-            desc.set.call(node, value);
-          } else {
-            node.value = value;
+      while (Date.now() - started < 45000) {
+        const snap = await inspect();
+
+        if (snap.loadingVisible) {
+          M.processingVisible = true;
+          if (!M.processingSignals.includes('chat-loading')) {
+            M.processingSignals.push('chat-loading');
           }
-          node.dispatchEvent(new InputEvent('input', { bubbles: true }));
-          node.dispatchEvent(new Event('change', { bubbles: true }));
-          return true;
-        },
-        inputSelector,
-        QUESTION
+        }
+
+        if (snap.reasoningPresent) {
+          M.reasoningVisible = M.reasoningVisible || snap.reasoningVisible;
+          M.reasoningState =
+            snap.reasoningDataState || snap.reasoningStatusLabel || 'PRESENT';
+          M.reasoningTestIdPresent = true;
+          M.reasoningTopologyCount = Math.max(
+            M.reasoningTopologyCount,
+            snap.reasoningTopologyCount || 0
+          );
+          if (!M.processingSignals.includes('reasoning-progress')) {
+            M.processingSignals.push('reasoning-progress');
+          }
+        }
+
+        if (!processingCaptured && (snap.loadingVisible || snap.reasoningPresent)) {
+          await ss('s4_processing_state');
+          processingCaptured = true;
+        }
+
+        const assistantCount = snap.assistantMessages.length;
+        const lastAssistantText =
+          assistantCount > 0 ? snap.assistantMessages[assistantCount - 1] : '';
+
+        if (
+          assistantCount > M.assistantMessagesCountBeforeSend &&
+          lastAssistantText &&
+          lastAssistantText.trim().length > 0
+        ) {
+          M.assistantMessagesCountAfterSend = assistantCount;
+          M.responseReceived = true;
+          M.responseText = lastAssistantText;
+          M.userText = snap.userMessages[snap.userMessages.length - 1] || '';
+          M.runtimeBadgesText = snap.runtimeTags;
+          M.runtimeAttrs = snap.runtimeAttrs || {};
+          M.healthButtonTitle = snap.healthTitle;
+          M.chatErrorText = snap.chatErrorText;
+          M.debugVisible = snap.debugVisible;
+          M.debugText = snap.debugText;
+
+          const normalizedTags = snap.runtimeTags.map(v => v.toUpperCase());
+          const normalizedText =
+            `${lastAssistantText} ${snap.chatErrorText || ''}`.toUpperCase();
+
+          M.timeoutDetected =
+            normalizedTags.some(tag => tag.includes('TIMEOUT')) ||
+            normalizedText.includes('TIMEOUT');
+
+          M.fallbackDetected =
+            normalizedTags.some(
+              tag =>
+                tag.includes('OFFLINE') ||
+                tag.includes('FALLBACK') ||
+                tag.includes('LOCAL')
+            ) || normalizedText.includes('FALLBACK');
+
+          M.degradedDetected =
+            normalizedText.includes('DEGRADE') ||
+            normalizedText.includes('HORS LIGNE') ||
+            normalizedTags.includes('OFFLINE');
+
+          await ss('s5_final_response');
+          responseCaptured = true;
+          break;
+        }
+
+        await pause(600);
+      }
+
+      if (!processingCaptured) {
+        await ss('s4_processing_state_missing');
+      }
+
+      try {
+        const healthProbe = await browser.execute(() => {
+          const button = document.querySelector('[data-testid="btn-health-check"]');
+          if (!button) {
+            return { clicked: false, reason: 'missing' };
+          }
+          button.click();
+          return {
+            clicked: true,
+            title: button.getAttribute('title') || null,
+          };
+        });
+
+        if (!healthProbe.clicked) {
+          M.frictions.push('HEALTH_BUTTON_NOT_CLICKABLE');
+        }
+      } catch (err) {
+        M.frictions.push('HEALTH_BUTTON_CLICK_HARNESS_LIMITATION');
+      }
+
+      await pause(900);
+
+      const s6 = await inspect();
+      M.healthButtonTitle = s6.healthTitle;
+      M.chatErrorText = M.chatErrorText || s6.chatErrorText;
+      M.runtimeBadgesText =
+        M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : s6.runtimeTags;
+      M.runtimeAttrs =
+        Object.keys(M.runtimeAttrs || {}).length > 0
+          ? M.runtimeAttrs
+          : s6.runtimeAttrs || {};
+      await ss('s6_runtime_badges');
+
+      if (s6.debugVisible) {
+        M.debugVisible = true;
+        M.debugText = s6.debugText;
+        await ss('s7_debug_visible');
+      } else {
+        await ss('s7_debug_absent');
+      }
+
+      const s8 = await inspect();
+      M.currentUrl = s8.url;
+      M.uiVisible = !s8.whiteScreen;
+      M.whiteScreen = s8.whiteScreen;
+      await ss('s8_final_stable');
+
+      pushCorrespondence(
+        'send path',
+        M.sendEnabledAfterTyping ? 'send enabled after typing' : 'send stayed disabled',
+        `sendActivationPath=${M.sendActivationPath}; sendHarnessDiagnosis=${M.sendHarnessDiagnosis}`,
+        M.sendEnabledAfterTyping ? 'NON_BLOCKING' : 'PRODUCT_DEFECT'
       );
 
-      if (nativeApplied) {
-        M.inputTyped = true;
-        M.sendActivationPath = 'NATIVE_SETTER_INPUTEVENT';
-        M.sendHarnessDiagnosis = 'HARNESS_LIMITATION_JS_VALUE_NOT_REACT';
+      pushCorrespondence(
+        'runtime badges vs attrs',
+        `badges=${M.runtimeBadgesText.join(',') || 'none'}`,
+        `attrs=${JSON.stringify(M.runtimeAttrs || {})}`,
+        M.runtimeBadgesText.length > 0 || Object.keys(M.runtimeAttrs || {}).length > 0
+          ? 'MAPPED'
+          : 'NOT_EXPOSED'
+      );
+
+      pushCorrespondence(
+        'reasoning progress',
+        `reasoningState=${M.reasoningState}; topology=${M.reasoningTopologyCount}`,
+        `signals=${M.processingSignals.join(',') || 'none'}`,
+        M.reasoningTestIdPresent || M.processingVisible ? 'VISIBLE' : 'ABSENT'
+      );
+
+      if (!responseCaptured) {
+        M.blockers.push('NO_FINAL_ASSISTANT_RESPONSE');
       }
 
-      await pause(700);
-      s2 = await inspect();
-    }
+      const rawReason = String((M.runtimeAttrs || {}).providerReason || '').toUpperCase();
+      const rawMode = String((M.runtimeAttrs || {}).providerMode || '').toUpperCase();
+      const rawNetwork = String(
+        (M.runtimeAttrs || {}).providerNetworkUsed || ''
+      ).toLowerCase();
 
-    M.sendEnabledAfterTyping = !s2.sendDisabled;
-    await ss('s2_input_filled');
+      if (rawReason.includes('TIMEOUT')) {
+        M.classifications.push('BACKEND_TIMEOUT');
+      }
+      if (rawMode === 'OFFLINE' || rawReason.includes('FALLBACK')) {
+        M.classifications.push('PROVIDER_FAILURE');
+        M.classifications.push('FULLSTACK_SYNC_DEFECT');
+      }
+      if (M.sendActivationPath === 'NATIVE_SETTER_INPUTEVENT') {
+        M.classifications.push('HARNESS_LIMITATION');
+      }
+      if (M.reasoningTopologyCount > 0 && M.reasoningVisible) {
+        M.classifications.push('NON_BLOCKING');
+      }
+      if (rawNetwork === 'false' && rawMode === 'REMOTE') {
+        M.classifications.push('FULLSTACK_SYNC_DEFECT');
+        M.blockers.push('REMOTE_BADGE_WITHOUT_NETWORK');
+      }
+      if (M.chatErrorText) {
+        M.classifications.push('PRODUCT_DEFECT');
+      }
 
-    if (s2.sendDisabled) {
-      M.blockers.push('SEND_DISABLED_AFTER_TYPING');
-      M.verdict = 'FAIL';
+      M.verdict = classifyFinal();
       saveMetrics();
+
+      console.log(`[V25] verdict=${M.verdict}`);
+      console.log(
+        `[V25] responseReceived=${M.responseReceived} processingVisible=${M.processingVisible}`
+      );
+      console.log(`[V25] badges=${M.runtimeBadgesText.join(', ')}`);
+      console.log(`[V25] runtimeAttrs=${JSON.stringify(M.runtimeAttrs)}`);
+
       expect(M.verdict).toBeTruthy();
-      return;
-    }
-
-    await browser.execute(sel => {
-      const button = document.querySelector(sel);
-      if (button) button.click();
-    }, sendSelector);
-    M.sendClicked = true;
-    await ss('s3_just_after_send');
-
-    const started = Date.now();
-    let processingCaptured = false;
-    let responseCaptured = false;
-
-    while (Date.now() - started < 45000) {
-      const snap = await inspect();
-
-      if (snap.loadingVisible) {
-        M.processingVisible = true;
-        if (!M.processingSignals.includes('chat-loading')) {
-          M.processingSignals.push('chat-loading');
-        }
-      }
-
-      if (snap.reasoningPresent) {
-        M.reasoningVisible = M.reasoningVisible || snap.reasoningVisible;
-        M.reasoningState =
-          snap.reasoningDataState || snap.reasoningStatusLabel || 'PRESENT';
-        M.reasoningTestIdPresent = true;
-        M.reasoningTopologyCount = Math.max(
-          M.reasoningTopologyCount,
-          snap.reasoningTopologyCount || 0
-        );
-        if (!M.processingSignals.includes('reasoning-progress')) {
-          M.processingSignals.push('reasoning-progress');
-        }
-      }
-
-      if (!processingCaptured && (snap.loadingVisible || snap.reasoningPresent)) {
-        await ss('s4_processing_state');
-        processingCaptured = true;
-      }
-
-      const assistantCount = snap.assistantMessages.length;
-      const lastAssistantText =
-        assistantCount > 0 ? snap.assistantMessages[assistantCount - 1] : '';
-
-      if (
-        assistantCount > M.assistantMessagesCountBeforeSend &&
-        lastAssistantText &&
-        lastAssistantText.trim().length > 0
-      ) {
-        M.assistantMessagesCountAfterSend = assistantCount;
-        M.responseReceived = true;
-        M.responseText = lastAssistantText;
-        M.userText = snap.userMessages[snap.userMessages.length - 1] || '';
-        M.runtimeBadgesText = snap.runtimeTags;
-        M.runtimeAttrs = snap.runtimeAttrs || {};
-        M.healthButtonTitle = snap.healthTitle;
-        M.chatErrorText = snap.chatErrorText;
-        M.debugVisible = snap.debugVisible;
-        M.debugText = snap.debugText;
-
-        const normalizedTags = snap.runtimeTags.map(v => v.toUpperCase());
-        const normalizedText =
-          `${lastAssistantText} ${snap.chatErrorText || ''}`.toUpperCase();
-
-        M.timeoutDetected =
-          normalizedTags.some(tag => tag.includes('TIMEOUT')) ||
-          normalizedText.includes('TIMEOUT');
-
-        M.fallbackDetected =
-          normalizedTags.some(
-            tag =>
-              tag.includes('OFFLINE') || tag.includes('FALLBACK') || tag.includes('LOCAL')
-          ) || normalizedText.includes('FALLBACK');
-
-        M.degradedDetected =
-          normalizedText.includes('DEGRADE') ||
-          normalizedText.includes('HORS LIGNE') ||
-          normalizedTags.includes('OFFLINE');
-
-        await ss('s5_final_response');
-        responseCaptured = true;
-        break;
-      }
-
-      await pause(600);
-    }
-
-    if (!processingCaptured) {
-      await ss('s4_processing_state_missing');
-    }
-
-    try {
-      const healthProbe = await browser.execute(() => {
-        const button = document.querySelector('[data-testid="btn-health-check"]');
-        if (!button) {
-          return { clicked: false, reason: 'missing' };
-        }
-        button.click();
-        return {
-          clicked: true,
-          title: button.getAttribute('title') || null,
-        };
-      });
-
-      if (!healthProbe.clicked) {
-        M.frictions.push('HEALTH_BUTTON_NOT_CLICKABLE');
-      }
-    } catch (err) {
-      M.frictions.push('HEALTH_BUTTON_CLICK_HARNESS_LIMITATION');
-    }
-
-    await pause(900);
-
-    const s6 = await inspect();
-    M.healthButtonTitle = s6.healthTitle;
-    M.chatErrorText = M.chatErrorText || s6.chatErrorText;
-    M.runtimeBadgesText =
-      M.runtimeBadgesText.length > 0 ? M.runtimeBadgesText : s6.runtimeTags;
-    M.runtimeAttrs =
-      Object.keys(M.runtimeAttrs || {}).length > 0
-        ? M.runtimeAttrs
-        : s6.runtimeAttrs || {};
-    await ss('s6_runtime_badges');
-
-    if (s6.debugVisible) {
-      M.debugVisible = true;
-      M.debugText = s6.debugText;
-      await ss('s7_debug_visible');
-    } else {
-      await ss('s7_debug_absent');
-    }
-
-    const s8 = await inspect();
-    M.currentUrl = s8.url;
-    M.uiVisible = !s8.whiteScreen;
-    M.whiteScreen = s8.whiteScreen;
-    await ss('s8_final_stable');
-
-    pushCorrespondence(
-      'send path',
-      M.sendEnabledAfterTyping ? 'send enabled after typing' : 'send stayed disabled',
-      `sendActivationPath=${M.sendActivationPath}; sendHarnessDiagnosis=${M.sendHarnessDiagnosis}`,
-      M.sendEnabledAfterTyping ? 'NON_BLOCKING' : 'PRODUCT_DEFECT'
-    );
-
-    pushCorrespondence(
-      'runtime badges vs attrs',
-      `badges=${M.runtimeBadgesText.join(',') || 'none'}`,
-      `attrs=${JSON.stringify(M.runtimeAttrs || {})}`,
-      M.runtimeBadgesText.length > 0 || Object.keys(M.runtimeAttrs || {}).length > 0
-        ? 'MAPPED'
-        : 'NOT_EXPOSED'
-    );
-
-    pushCorrespondence(
-      'reasoning progress',
-      `reasoningState=${M.reasoningState}; topology=${M.reasoningTopologyCount}`,
-      `signals=${M.processingSignals.join(',') || 'none'}`,
-      M.reasoningTestIdPresent || M.processingVisible ? 'VISIBLE' : 'ABSENT'
-    );
-
-    if (!responseCaptured) {
-      M.blockers.push('NO_FINAL_ASSISTANT_RESPONSE');
-    }
-
-    const rawReason = String((M.runtimeAttrs || {}).providerReason || '').toUpperCase();
-    const rawMode = String((M.runtimeAttrs || {}).providerMode || '').toUpperCase();
-    const rawNetwork = String(
-      (M.runtimeAttrs || {}).providerNetworkUsed || ''
-    ).toLowerCase();
-
-    if (rawReason.includes('TIMEOUT')) {
-      M.classifications.push('BACKEND_TIMEOUT');
-    }
-    if (rawMode === 'OFFLINE' || rawReason.includes('FALLBACK')) {
-      M.classifications.push('PROVIDER_FAILURE');
-      M.classifications.push('FULLSTACK_SYNC_DEFECT');
-    }
-    if (M.sendActivationPath === 'NATIVE_SETTER_INPUTEVENT') {
-      M.classifications.push('HARNESS_LIMITATION');
-    }
-    if (M.reasoningTopologyCount > 0 && M.reasoningVisible) {
-      M.classifications.push('NON_BLOCKING');
-    }
-    if (rawNetwork === 'false' && rawMode === 'REMOTE') {
-      M.classifications.push('FULLSTACK_SYNC_DEFECT');
-      M.blockers.push('REMOTE_BADGE_WITHOUT_NETWORK');
-    }
-    if (M.chatErrorText) {
-      M.classifications.push('PRODUCT_DEFECT');
-    }
-
-    M.verdict = classifyFinal();
-    saveMetrics();
-
-    console.log(`[V25] verdict=${M.verdict}`);
-    console.log(
-      `[V25] responseReceived=${M.responseReceived} processingVisible=${M.processingVisible}`
-    );
-    console.log(`[V25] badges=${M.runtimeBadgesText.join(', ')}`);
-    console.log(`[V25] runtimeAttrs=${JSON.stringify(M.runtimeAttrs)}`);
-
-    expect(M.verdict).toBeTruthy();
     } catch (error) {
       if (isSessionCrashError(error)) {
         await recoverSessionIfNeeded('V25', error);
         M.blockers.push('SESSION_CRASH_OR_HANG');
         M.verdict = 'BLOCKED_SESSION_LOSS';
         saveMetrics();
-        expect(M.verdict).toBeTruthy();
-        return;
+        throw new Error(
+          `SESSION_CRASH V25: verdict=${M.verdict} — product not validated. frictions=${M.frictions.slice(-2).join('|')}`
+        );
       }
       throw error;
     }
