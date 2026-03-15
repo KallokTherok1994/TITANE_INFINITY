@@ -80,7 +80,7 @@ export const IntrospectionTab: React.FC = () => {
   } = useIntrospection();
 
   const [projectPath, setProjectPath] = useState(
-    '/home/titane/Documents/TITANE_INFINITY'
+    import.meta.env.VITE_WORKSPACE_DIR ?? '/home/titane/Documents/TITANE_INFINITY'
   );
 
   // Filtered issues
