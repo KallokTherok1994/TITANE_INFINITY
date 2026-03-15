@@ -571,6 +571,58 @@ pub async fn secure_store_secret(
     Ok(SecureResponse::success(result))
 }
 
+/// Vérifier si un secret existe
+#[tauri::command]
+pub async fn has_secret(
+    key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<SecureResponse<bool>, String> {
+    PERMISSION_GUARD
+        .require("secret_status", Role::System, "has_secret")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let normalized_key = key.trim();
+    if let Err(err) = PayloadValidator::validate_string(normalized_key, "key", true) {
+        return Ok(SecureResponse::error(format!(
+            "Invalid secret key: {}",
+            err
+        )));
+    }
+
+    let exists = secrets
+        .has_secret(normalized_key)
+        .map_err(|e| format!("Failed to read secret status: {}", e))?;
+
+    Ok(SecureResponse::success(exists))
+}
+
+/// Supprimer un secret
+#[tauri::command]
+pub async fn delete_secret(
+    key: String,
+    secrets: State<'_, SecureSecretsEngine>,
+) -> Result<SecureResponse<()>, String> {
+    PERMISSION_GUARD
+        .require("secret_write", Role::Root, "delete_secret")
+        .await
+        .map_err(|e| format!("Permission denied: {}", e))?;
+
+    let normalized_key = key.trim();
+    if let Err(err) = PayloadValidator::validate_string(normalized_key, "key", true) {
+        return Ok(SecureResponse::error(format!(
+            "Invalid secret key: {}",
+            err
+        )));
+    }
+
+    secrets
+        .clear_secret(normalized_key)
+        .map_err(|e| format!("Failed to delete secret: {}", e))?;
+
+    Ok(SecureResponse::success(()))
+}
+
 /// Import fichier sécurisé
 #[tauri::command]
 pub async fn secure_import_file(
