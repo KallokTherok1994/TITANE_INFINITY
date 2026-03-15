@@ -67,3 +67,17 @@
 - reports/e2e-desktop/release_online_chat_labelguard_20260315T181927Z/tauri_driver.log
 - reports/e2e-desktop/release_online_chat_labelguard_20260315T182148Z/wdio.log
 - reports/e2e-desktop/release_online_chat_labelguard_20260315T182148Z/tauri_driver.log
+
+## ADDENDUM 2026-03-15 18:56Z - controlled t120 attempts
+
+### INCONCLUSIVE
+- `reports/e2e-desktop/release_online_chat_t120_20260315T185259Z`
+- `reports/e2e-desktop/release_online_chat_t120bg_20260315T185418Z`
+
+Reason:
+- WDIO logs are truncated before summary lines (`Spec Files`, `PASSED`, `FAILED`), so no valid PASS/FAIL verdict can be asserted for these two attempts.
+
+Observed facts still extracted:
+- Wrapper env override is effective (`TITANE_CONVERSATION_TIMEOUT_SECS=120`, `TITANE_TIMEOUT_TRACE=1`).
+- `BOOT:ENTRY_IMPORT_FAIL` still appears on `label=main`.
+- Conversation flow is triggered (`[Ω:CMD] 📨 Request` + `[AI Router v20.1] Routing to Ollama (local fallback)`), but completion marker is absent in available artifact tails.

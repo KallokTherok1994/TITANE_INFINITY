@@ -2,6 +2,7 @@ import { spawn, execSync } from 'node:child_process';
 import fs from 'node:fs/promises';
 import fsSync from 'node:fs';
 import { createWriteStream } from 'node:fs';
+import { once } from 'node:events';
 import path from 'node:path';
 import net from 'node:net';
 import os from 'node:os';
@@ -59,9 +60,20 @@ function spawnLogged(cmd, args, logFile, envOverrides = {}) {
     env: { ...process.env, ...envOverrides },
     stdio: ['ignore', 'pipe', 'pipe'],
   });
-  child.stdout.pipe(output);
-  child.stderr.pipe(output);
-  return child;
+  child.stdout.pipe(output, { end: false });
+  child.stderr.pipe(output, { end: false });
+  child.once('close', () => {
+    output.end();
+  });
+  return { child, output };
+}
+
+async function waitForStreamFinish(stream, timeoutMs = 3000) {
+  if (stream.writableEnded || stream.destroyed) return;
+  await Promise.race([
+    once(stream, 'finish'),
+    new Promise(resolve => setTimeout(resolve, timeoutMs)),
+  ]);
 }
 
 const isExecutable = filePath => {
@@ -139,7 +151,7 @@ await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);
 const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG);
 
 const shutdown = () => {
-  for (const child of [wdio, tauriDriver]) {
+  for (const child of [wdio.child, tauriDriver.child]) {
     if (!child?.pid) continue;
     try {
       child.kill('SIGTERM');
@@ -149,7 +161,8 @@ const shutdown = () => {
   }
 };
 
-wdio.on('exit', async code => {
+wdio.child.on('close', async (code, signal) => {
+  await appendDiag(`wdio close: code=${code ?? 'null'} signal=${signal ?? 'null'}`);
   if (code && code !== 0) {
     await appendDiag('FAILURE SUMMARY');
     await appendDiag(`exit_code=${code}`);
@@ -157,8 +170,16 @@ wdio.on('exit', async code => {
     await appendDiag(`tauri_driver_log=${TAURI_DRIVER_LOG}`);
     await appendDiag(`webkit_log=${WEBKIT_LOG}`);
   }
+
+  await waitForStreamFinish(wdio.output);
   shutdown();
+  await appendDiag('shutdown sent to child processes');
+  await waitForStreamFinish(tauriDriver.output);
   process.exit(code ?? 1);
+});
+
+tauriDriver.child.on('close', async (code, signal) => {
+  await appendDiag(`tauri-driver close: code=${code ?? 'null'} signal=${signal ?? 'null'}`);
 });
 
 process.on('SIGINT', shutdown);

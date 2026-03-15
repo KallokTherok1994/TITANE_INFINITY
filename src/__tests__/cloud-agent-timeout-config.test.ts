@@ -1,6 +1,7 @@
 /**
  * TITANE∞ v26.2.1 - Cloud Agent Timeout Configuration Tests
  * Tests to verify timeout values are correctly configured
+ * ✨ OMEGA_CHAT_PERF: updated to 52s/50s/2 model, cloud providers 30s
  */
 
 import { describe, it, expect } from 'vitest';
@@ -16,17 +17,17 @@ import { API_TIMEOUTS } from '../constants/timeouts';
 describe('Cloud Agent Timeout Configuration v26.2.1', () => {
   describe('Provider Timeouts', () => {
     it('should enforce cloud provider budgets', () => {
-      // Cloud providers are capped to 8s
-      expect(PROVIDER_TIMEOUTS.openai).toBe(8000);
-      expect(PROVIDER_TIMEOUTS.claude).toBe(8000);
-      expect(PROVIDER_TIMEOUTS.gemini).toBe(8000);
+      // Cloud providers: 30s budget (OMEGA_CHAT_PERF)
+      expect(PROVIDER_TIMEOUTS.openai).toBe(30000);
+      expect(PROVIDER_TIMEOUTS.claude).toBe(30000);
+      expect(PROVIDER_TIMEOUTS.gemini).toBe(30000);
     });
 
     it('should maintain local provider timeouts', () => {
-      // Local providers should remain fast
+      // Local providers
       expect(PROVIDER_TIMEOUTS['titane-local']).toBe(5000);
-      expect(PROVIDER_TIMEOUTS['tauri-backend']).toBe(8000);
-      expect(PROVIDER_TIMEOUTS.ollama).toBe(8000);
+      expect(PROVIDER_TIMEOUTS['tauri-backend']).toBe(50000);
+      expect(PROVIDER_TIMEOUTS.ollama).toBe(45000);
     });
 
     it('should keep cloud timeouts >= titane-local', () => {
@@ -39,26 +40,24 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
     });
 
     it('getProviderTimeout should return correct values', () => {
-      expect(getProviderTimeout('openai')).toBe(8000);
-      expect(getProviderTimeout('claude')).toBe(8000);
-      expect(getProviderTimeout('gemini')).toBe(8000);
+      expect(getProviderTimeout('openai')).toBe(30000);
+      expect(getProviderTimeout('claude')).toBe(30000);
+      expect(getProviderTimeout('gemini')).toBe(30000);
       expect(getProviderTimeout('unknown')).toBe(PROVIDER_TIMEOUTS.default);
     });
   });
 
   describe('UI Timeouts', () => {
     it('should enforce UI cloud timeouts', () => {
-      // Cloud provider timeouts aligned to global budget
-      // ✨ v27+ FIX: Augmentés de 25s → 60s
+      // Cloud provider timeouts aligned to global budget (OMEGA_CHAT_PERF)
       expect(UI_TIMEOUTS.cloudProvider.short).toBe(15000);
       expect(UI_TIMEOUTS.cloudProvider.medium).toBe(30000);
-      expect(UI_TIMEOUTS.cloudProvider.long).toBe(60000);
+      expect(UI_TIMEOUTS.cloudProvider.long).toBe(52000);
     });
 
     it('should enforce max request timeout', () => {
-      // Max request should be 60s (was 25s)
-      // ✨ v27+ FIX: Augmenté de 25s → 60s
-      expect(UI_TIMEOUTS.maxRequest).toBe(60000);
+      // Max request should be 52s (OMEGA_CHAT_PERF)
+      expect(UI_TIMEOUTS.maxRequest).toBe(52000);
     });
 
     it('should ensure UI timeout >= backend timeout', () => {
@@ -91,12 +90,11 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('Streaming Timeouts', () => {
     it('should enforce streaming timeouts', () => {
-      // Total stream timeout should be 60s (was 25s)
-      // ✨ v27+ FIX: Augmenté de 25s → 60s
-      expect(STREAM_CONFIG.totalTimeoutMs).toBe(60000);
+      // Total stream timeout should be 58s (OMEGA_CHAT_PERF)
+      expect(STREAM_CONFIG.totalTimeoutMs).toBe(58000);
 
-      // Per-chunk timeout should be 4s
-      expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(4000);
+      // Per-chunk timeout should be 7s
+      expect(STREAM_CONFIG.perChunkTimeoutMs).toBe(7000);
     });
 
     it('should ensure streaming timeout > provider timeout', () => {
@@ -109,8 +107,7 @@ describe('Cloud Agent Timeout Configuration v26.2.1', () => {
 
   describe('General API Timeouts', () => {
     it('should enforce AI generation timeout', () => {
-      // AI generation should be 60s (was 25s)
-      // ✨ v27+ FIX: Augmenté de 25s → 60s
+      // AI generation should be 60s (correct, unchanged)
       expect(API_TIMEOUTS.AI_GENERATION).toBe(60000);
     });
 

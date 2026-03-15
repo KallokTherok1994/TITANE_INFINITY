@@ -107,13 +107,13 @@ describe('Menu Accessibility', () => {
       let titaneItem = screen.getByRole('menuitem', { name: /titane/i });
       expect(titaneItem).toHaveAttribute('aria-current', 'page');
 
-      // Simulate navigation to /stats (using a route that doesn&apos;t have duplicates)
+      // Simulate navigation to /dev (Stats item now routes to /dev after DEV_STATS_FUSION)
       rerender(
-        <MemoryRouter initialEntries={['/stats']}>
+        <MemoryRouter initialEntries={['/dev']}>
           <Menu
             isCollapsed={false}
             onToggle={vi.fn()}
-            currentRoute="/stats"
+            currentRoute="/dev"
             onNavigate={mockNavigate}
           />
         </MemoryRouter>
@@ -284,8 +284,8 @@ describe('Menu Accessibility', () => {
       fireEvent.keyDown(statsItem, { key: ' ' });
       fireEvent.click(statsItem); // Space triggers click on buttons
 
-      // Navigation callback should be called
-      expect(mockNavigate).toHaveBeenCalledWith('/stats');
+      // Navigation callback should be called with /dev (Stats routes to /dev after DEV_STATS_FUSION)
+      expect(mockNavigate).toHaveBeenCalledWith('/dev');
     });
   });
 
