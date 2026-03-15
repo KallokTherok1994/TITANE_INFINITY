@@ -29,31 +29,42 @@ import type {
 
 const FALLBACK_ERROR = 'Tauri backend indisponible';
 
+const KEY_PROVIDERS = ['gemini', 'openai', 'anthropic', 'copilot'] as const;
+type KeyProvider = (typeof KEY_PROVIDERS)[number];
+
+const PROVIDER_DISPLAY: Record<KeyProvider, string> = {
+  gemini: 'Gemini',
+  openai: 'OpenAI',
+  anthropic: 'Anthropic',
+  copilot: 'Copilot',
+};
+
+const PROVIDER_STATUS_CMDS: Record<KeyProvider, string> = {
+  gemini: 'get_gemini_key_status',
+  openai: 'get_openai_key_status',
+  anthropic: 'get_anthropic_key_status',
+  copilot: 'get_copilot_key_status',
+};
+
+const PROVIDER_SET_CMDS: Record<KeyProvider, string> = {
+  gemini: 'chat_set_gemini_key',
+  openai: 'chat_set_openai_key',
+  anthropic: 'chat_set_anthropic_key',
+  copilot: 'chat_set_copilot_key',
+};
+
 const keyStatusCaches = {
-  gemini: new StatusCache<SecureResponse<GeminiKeyStatus>>({
-    name: 'gemini-key-status',
-    ttlMs: 30000,
-    backoffBaseMs: 1000,
-    backoffMaxMs: 10000,
-  }),
-  openai: new StatusCache<SecureResponse<GeminiKeyStatus>>({
-    name: 'openai-key-status',
-    ttlMs: 30000,
-    backoffBaseMs: 1000,
-    backoffMaxMs: 10000,
-  }),
-  anthropic: new StatusCache<SecureResponse<GeminiKeyStatus>>({
-    name: 'anthropic-key-status',
-    ttlMs: 30000,
-    backoffBaseMs: 1000,
-    backoffMaxMs: 10000,
-  }),
-  copilot: new StatusCache<SecureResponse<GeminiKeyStatus>>({
-    name: 'copilot-key-status',
-    ttlMs: 30000,
-    backoffBaseMs: 1000,
-    backoffMaxMs: 10000,
-  }),
+  ...(Object.fromEntries(
+    KEY_PROVIDERS.map(p => [
+      p,
+      new StatusCache<SecureResponse<GeminiKeyStatus>>({
+        name: `${p}-key-status`,
+        ttlMs: 30000,
+        backoffBaseMs: 1000,
+        backoffMaxMs: 10000,
+      }),
+    ])
+  ) as Record<KeyProvider, StatusCache<SecureResponse<GeminiKeyStatus>>>),
   ollama: new StatusCache<SecureResponse<OllamaStatus>>({
     name: 'ollama-status',
     ttlMs: 10000,
@@ -128,119 +139,53 @@ function normalizeResponse<T>(
 // SECRETS
 // ═══════════════════════════════════════════════════════════════
 
-/**
- * Obtenir le statut de la clé Gemini
- */
-async function getGeminiStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  return keyStatusCaches.gemini.get(
-    async () => {
-      const raw = await safeInvoke<unknown>('get_gemini_key_status');
-      return normalizeResponse<GeminiKeyStatus>(
-        raw,
-        'Impossible de récupérer le statut Gemini'
-      );
-    },
-    () => backoffKeyStatusFallback('gemini')
-  );
+/** Fabrique : statut clé provider via cache + backoff */
+function makeGetKeyStatus(
+  provider: KeyProvider
+): () => Promise<SecureResponse<GeminiKeyStatus>> {
+  return () =>
+    keyStatusCaches[provider].get(
+      async () =>
+        normalizeResponse<GeminiKeyStatus>(
+          await safeInvoke<unknown>(PROVIDER_STATUS_CMDS[provider]),
+          `Impossible de récupérer le statut ${PROVIDER_DISPLAY[provider]}`
+        ),
+      () => backoffKeyStatusFallback(provider)
+    );
 }
 
-/**
- * Définir la clé Gemini
- */
-async function setGeminiKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_gemini_key', { apiKey });
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Gemini');
+/** Fabrique : définir clé provider */
+function makeSetKey(
+  provider: KeyProvider
+): (apiKey: string) => Promise<SecureResponse<GeminiKeyStatus>> {
+  return async (apiKey: string) =>
+    normalizeResponse<GeminiKeyStatus>(
+      await safeInvoke<unknown>(PROVIDER_SET_CMDS[provider], { apiKey }),
+      `Impossible de définir la clé ${PROVIDER_DISPLAY[provider]}`
+    );
 }
 
-/**
- * Obtenir le statut de la clé OpenAI
- */
-async function getOpenAIStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  return keyStatusCaches.openai.get(
-    async () => {
-      const raw = await safeInvoke<unknown>('get_openai_key_status');
-      return normalizeResponse<GeminiKeyStatus>(
-        raw,
-        'Impossible de récupérer le statut OpenAI'
-      );
-    },
-    () => backoffKeyStatusFallback('openai')
-  );
-}
+const getGeminiStatus = makeGetKeyStatus('gemini');
+const getOpenAIStatus = makeGetKeyStatus('openai');
+const getAnthropicStatus = makeGetKeyStatus('anthropic');
+const getCopilotStatus = makeGetKeyStatus('copilot');
 
-/**
- * Définir la clé OpenAI
- */
-async function setOpenAIKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_openai_key', { apiKey });
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé OpenAI');
-}
+const setGeminiKey = makeSetKey('gemini');
+const setOpenAIKey = makeSetKey('openai');
+const setAnthropicKey = makeSetKey('anthropic');
 
-/**
- * Obtenir le statut de la clé Anthropic
- */
-async function getAnthropicStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  return keyStatusCaches.anthropic.get(
-    async () => {
-      const raw = await safeInvoke<unknown>('get_anthropic_key_status');
-      return normalizeResponse<GeminiKeyStatus>(
-        raw,
-        'Impossible de récupérer le statut Anthropic'
-      );
-    },
-    () => backoffKeyStatusFallback('anthropic')
-  );
-}
+const setCopilotKey = makeSetKey('copilot');
 
-/**
- * Définir la clé Anthropic
- */
-async function setAnthropicKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_anthropic_key', { apiKey });
-  return normalizeResponse<GeminiKeyStatus>(
-    raw,
-    'Impossible de définir la clé Anthropic'
-  );
-}
-
-/**
- * Obtenir le statut de la clé GitHub Copilot
- */
-async function getCopilotStatus(): Promise<SecureResponse<GeminiKeyStatus>> {
-  return keyStatusCaches.copilot.get(
-    async () => {
-      const raw = await safeInvoke<unknown>('get_copilot_key_status');
-      return normalizeResponse<GeminiKeyStatus>(
-        raw,
-        'Impossible de récupérer le statut Copilot'
-      );
-    },
-    () => backoffKeyStatusFallback('copilot')
-  );
-}
-
-/**
- * Obtenir le statut d'Ollama (via Tauri)
- */
+/** Obtenir le statut d'Ollama (via Tauri) */
 async function getOllamaStatus(): Promise<SecureResponse<OllamaStatus>> {
   return keyStatusCaches.ollama.get(
-    async () => {
-      const raw = await safeInvoke<unknown>('ai_check_ollama_status');
-      return normalizeResponse<OllamaStatus>(
-        raw,
+    async () =>
+      normalizeResponse<OllamaStatus>(
+        await safeInvoke<unknown>('ai_check_ollama_status'),
         'Impossible de récupérer le statut Ollama'
-      );
-    },
+      ),
     () => backoffOllamaFallback()
   );
-}
-
-/**
- * Définir la clé GitHub Copilot
- */
-async function setCopilotKey(apiKey: string): Promise<SecureResponse<GeminiKeyStatus>> {
-  const raw = await safeInvoke<unknown>('chat_set_copilot_key', { apiKey });
-  return normalizeResponse<GeminiKeyStatus>(raw, 'Impossible de définir la clé Copilot');
 }
 
 /**

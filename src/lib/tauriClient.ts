@@ -1467,7 +1467,7 @@ class TauriClient {
 
   async installUpdate(params?: unknown): Promise<unknown> {
     return await this.invoke(
-      TAURI_COMMANDS.INSTALL_UPDATE,
+      TAURI_COMMANDS.CP_INSTALL_UPDATE,
       (params as Record<string, unknown>) || {}
     );
   }
