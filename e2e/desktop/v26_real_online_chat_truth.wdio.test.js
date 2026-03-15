@@ -93,14 +93,18 @@ async function inspect() {
       const health = document.querySelector('[data-testid="btn-health-check"]');
       const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
       const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
-      const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
+      const runtimeSummary = document.querySelector(
+        '[data-testid="chat-runtime-summary"]'
+      );
 
       const assistantTextNodes = Array.from(
         document.querySelectorAll(
           '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
         )
       );
-      const assistantMessages = assistantTextNodes.map(el => (el.textContent || '').trim());
+      const assistantMessages = assistantTextNodes.map(el =>
+        (el.textContent || '').trim()
+      );
       const assistantContainers = Array.from(
         document.querySelectorAll('[data-testid="chat-message-assistant"]')
       );
@@ -160,7 +164,11 @@ async function inspect() {
         inputValue: input && 'value' in input ? input.value : '',
         sendPresent: !!send,
         sendDisabled: !!(send && send.disabled),
-        loadingVisible: !!(loading && loading.offsetWidth > 0 && loading.offsetHeight > 0),
+        loadingVisible: !!(
+          loading &&
+          loading.offsetWidth > 0 &&
+          loading.offsetHeight > 0
+        ),
         healthTitle: health ? health.getAttribute('title') : null,
         chatErrorText: error ? (error.textContent || '').trim() : null,
         reasoningVisible: !!(

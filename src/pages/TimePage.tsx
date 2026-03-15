@@ -500,7 +500,9 @@ const AgendaSection: React.FC = () => {
 
 const TimelineSection: React.FC = () => {
   // DISPLAY_ONLY — événements curated, aucune connexion IPC live
-  const [filterPeriod, setFilterPeriod] = React.useState<'all' | 'past' | 'present' | 'future'>('all');
+  const [filterPeriod, setFilterPeriod] = React.useState<
+    'all' | 'past' | 'present' | 'future'
+  >('all');
   const [filterType, setFilterType] = React.useState<string>('all');
   const PROJECT_ORIGIN = new Date('2025-10-20');
 
@@ -579,9 +581,12 @@ const TimelineSection: React.FC = () => {
     return mockEvents
       .filter(e => {
         if (filterType !== 'all' && e.type !== filterType) return false;
-        if (filterPeriod === 'past') return e.date < now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
-        if (filterPeriod === 'present') return Math.abs(e.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
-        if (filterPeriod === 'future') return e.date > now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
+        if (filterPeriod === 'past')
+          return e.date < now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
+        if (filterPeriod === 'present')
+          return Math.abs(e.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
+        if (filterPeriod === 'future')
+          return e.date > now && Math.abs(e.date.getTime() - now.getTime()) > ONE_WEEK_MS;
         return true;
       })
       .sort((a, b) => a.date.getTime() - b.date.getTime());
@@ -590,7 +595,9 @@ const TimelineSection: React.FC = () => {
   // Dynamic stats derived from real events
   const totalEvents = mockEvents.length;
   const milestonesCount = mockEvents.filter(e => e.importance === 'critical').length;
-  const daysSinceOrigin = Math.floor((now.getTime() - PROJECT_ORIGIN.getTime()) / (1000 * 60 * 60 * 24));
+  const daysSinceOrigin = Math.floor(
+    (now.getTime() - PROJECT_ORIGIN.getTime()) / (1000 * 60 * 60 * 24)
+  );
   const futureEvents = mockEvents.filter(e => e.date > now);
 
   return (
@@ -602,18 +609,22 @@ const TimelineSection: React.FC = () => {
 
       {/* Timeline Controls */}
       <div className="flex flex-wrap gap-4 items-center">
-        {([
-          { id: 'all', label: '🕐 Tous', testId: 'btn-time-nav-all' },
-          { id: 'past', label: '⏪ Passé', testId: 'btn-time-nav-past' },
-          { id: 'present', label: '📍 Présent', testId: 'btn-time-nav-present' },
-          { id: 'future', label: '⏩ Futur', testId: 'btn-time-nav-future' },
-        ] as const).map(p => (
+        {(
+          [
+            { id: 'all', label: '🕐 Tous', testId: 'btn-time-nav-all' },
+            { id: 'past', label: '⏪ Passé', testId: 'btn-time-nav-past' },
+            { id: 'present', label: '📍 Présent', testId: 'btn-time-nav-present' },
+            { id: 'future', label: '⏩ Futur', testId: 'btn-time-nav-future' },
+          ] as const
+        ).map(p => (
           <button
             key={p.id}
             data-testid={p.testId}
             onClick={() => setFilterPeriod(p.id)}
             className={`px-4 py-2 rounded text-white transition-colors ${
-              filterPeriod === p.id ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-800 hover:bg-gray-700'
+              filterPeriod === p.id
+                ? 'bg-blue-600 hover:bg-blue-700'
+                : 'bg-gray-800 hover:bg-gray-700'
             }`}
           >
             {p.label}
@@ -621,18 +632,27 @@ const TimelineSection: React.FC = () => {
         ))}
         <div className="flex-1" />
         <div className="flex gap-2">
-          {([
-            { type: 'all', variant: 'default', label: 'Tous' },
-            { type: 'life', variant: 'error', label: 'Vie' },
-            { type: 'project', variant: 'warning', label: 'Projets' },
-            { type: 'titane', variant: 'info', label: 'TITANE' },
-          ] as const).map(t => (
+          {(
+            [
+              { type: 'all', variant: 'default', label: 'Tous' },
+              { type: 'life', variant: 'error', label: 'Vie' },
+              { type: 'project', variant: 'warning', label: 'Projets' },
+              { type: 'titane', variant: 'info', label: 'TITANE' },
+            ] as const
+          ).map(t => (
             <button
               key={t.type}
               onClick={() => setFilterType(t.type)}
-              style={{ opacity: filterType === t.type || (filterType === 'all' && t.type === 'all') ? 1 : 0.45 }}
+              style={{
+                opacity:
+                  filterType === t.type || (filterType === 'all' && t.type === 'all')
+                    ? 1
+                    : 0.45,
+              }}
             >
-              <TBadge variant={t.variant as 'error' | 'warning' | 'info' | 'success'}>{t.label}</TBadge>
+              <TBadge variant={t.variant as 'error' | 'warning' | 'info' | 'success'}>
+                {t.label}
+              </TBadge>
             </button>
           ))}
         </div>
@@ -644,32 +664,58 @@ const TimelineSection: React.FC = () => {
           <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-linear-to-b from-blue-500 via-cyan-500 to-purple-500" />
           <div className="space-y-6">
             {visibleEvents.length === 0 ? (
-              <div className="text-center py-8 text-gray-400">Aucun événement pour ce filtre.</div>
-            ) : visibleEvents.map(event => {
-                const isPast = event.date < now && Math.abs(event.date.getTime() - now.getTime()) > ONE_WEEK_MS;
-                const isPresent = Math.abs(event.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
+              <div className="text-center py-8 text-gray-400">
+                Aucun événement pour ce filtre.
+              </div>
+            ) : (
+              visibleEvents.map(event => {
+                const isPast =
+                  event.date < now &&
+                  Math.abs(event.date.getTime() - now.getTime()) > ONE_WEEK_MS;
+                const isPresent =
+                  Math.abs(event.date.getTime() - now.getTime()) <= ONE_WEEK_MS;
                 return (
                   <div key={event.id} className="relative pl-16">
                     <div
                       className={`absolute left-6 top-2 w-5 h-5 rounded-full ${
-                        event.importance === 'critical' ? 'bg-red-500'
-                          : event.importance === 'high' ? 'bg-orange-500'
-                          : 'bg-blue-500'
+                        event.importance === 'critical'
+                          ? 'bg-red-500'
+                          : event.importance === 'high'
+                            ? 'bg-orange-500'
+                            : 'bg-blue-500'
                       } ${isPresent ? 'animate-pulse ring-4 ring-cyan-500/50' : ''}`}
                     />
-                    <div className={`p-4 rounded-lg border ${
-                      isPresent ? 'bg-cyan-900/30 border-cyan-500'
-                        : isPast ? 'bg-gray-900 border-gray-700'
-                        : 'bg-purple-900/30 border-purple-700'
-                    }`}>
+                    <div
+                      className={`p-4 rounded-lg border ${
+                        isPresent
+                          ? 'bg-cyan-900/30 border-cyan-500'
+                          : isPast
+                            ? 'bg-gray-900 border-gray-700'
+                            : 'bg-purple-900/30 border-purple-700'
+                      }`}
+                    >
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <div className="text-sm text-gray-400 mb-1">
-                            {event.date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                            {event.date.toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long',
+                              year: 'numeric',
+                            })}
                           </div>
                           <div className="text-lg font-semibold">{event.title}</div>
                         </div>
-                        <TBadge variant={event.type === 'titane' ? 'info' : event.type === 'project' ? 'warning' : event.type === 'life' ? 'error' : 'success'}>
+                        <TBadge
+                          variant={
+                            event.type === 'titane'
+                              ? 'info'
+                              : event.type === 'project'
+                                ? 'warning'
+                                : event.type === 'life'
+                                  ? 'error'
+                                  : 'success'
+                          }
+                        >
                           {event.type}
                         </TBadge>
                       </div>
@@ -677,7 +723,8 @@ const TimelineSection: React.FC = () => {
                     </div>
                   </div>
                 );
-              })}
+              })
+            )}
           </div>
         </div>
       </div>
@@ -696,10 +743,17 @@ const TimelineSection: React.FC = () => {
         </h3>
         <div className="space-y-2 text-purple-100">
           {futureEvents.length === 0 ? (
-            <div className="text-gray-400 text-sm">Aucune projection future planifiée.</div>
-          ) : futureEvents.map(e => (
-            <div key={e.id}>• {e.title} ({e.date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })})</div>
-          ))}
+            <div className="text-gray-400 text-sm">
+              Aucune projection future planifiée.
+            </div>
+          ) : (
+            futureEvents.map(e => (
+              <div key={e.id}>
+                • {e.title} (
+                {e.date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' })})
+              </div>
+            ))
+          )}
           <div>• Phase consolidation entrepreneuriale (T2 2026)</div>
           <div>• Lancement écosystème créateurs (T3 2026)</div>
         </div>
@@ -971,7 +1025,11 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowSta
     try {
       localStorage.setItem(
         'titane_cognitive_state',
-        JSON.stringify({ flowActive, energy: 72, mode: flowActive ? 'deep-work' : 'normal' })
+        JSON.stringify({
+          flowActive,
+          energy: 72,
+          mode: flowActive ? 'deep-work' : 'normal',
+        })
       );
     } catch {
       // non-blocking
@@ -992,7 +1050,9 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowSta
             {flowActive ? '🌊 Session Flow active' : '⏸️ Aucune session Flow'}
           </div>
           <div className="text-sm text-gray-400">
-            {flowActive ? 'Mode deep-work engagé' : 'Démarre une session pour activer le mode cognitif'}
+            {flowActive
+              ? 'Mode deep-work engagé'
+              : 'Démarre une session pour activer le mode cognitif'}
           </div>
         </div>
         <button
@@ -1039,9 +1099,19 @@ const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowSta
         </h3>
         <div className="space-y-3">
           {[
-            { date: "Aujourd'hui 09:00", duration: 87, intensity: 92, activity: 'Architecture v25' },
+            {
+              date: "Aujourd'hui 09:00",
+              duration: 87,
+              intensity: 92,
+              activity: 'Architecture v25',
+            },
             { date: 'Hier 14:30', duration: 105, intensity: 88, activity: 'Code review' },
-            { date: 'Hier 09:15', duration: 95, intensity: 85, activity: 'Fusion modules' },
+            {
+              date: 'Hier 09:15',
+              duration: 95,
+              intensity: 85,
+              activity: 'Fusion modules',
+            },
           ].map((session, index) => (
             <div key={index} className="bg-gray-900 p-4 rounded flex items-center gap-4">
               <div className="flex-1">

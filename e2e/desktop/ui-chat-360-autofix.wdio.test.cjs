@@ -448,7 +448,9 @@ async function injectDomDiscovery() {
 
       const detectChatInput = () => {
         const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
-          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+          .filter(el =>
+            (el.getAttribute('data-testid') || '').toLowerCase().includes('chat')
+          )
           .filter(isInputCandidate);
         if (testIdCandidates.length > 0) return testIdCandidates[0];
 
@@ -504,7 +506,9 @@ async function injectDomDiscovery() {
 
       const detectChatInputMeta = () => {
         const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
-          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+          .filter(el =>
+            (el.getAttribute('data-testid') || '').toLowerCase().includes('chat')
+          )
           .filter(isInputCandidate);
         if (testIdCandidates.length > 0)
           return buildMeta(testIdCandidates[0], 'data-testid:chat');
@@ -516,7 +520,8 @@ async function injectDomDiscovery() {
           const ph = (el.getAttribute('placeholder') || '').toLowerCase();
           return ph.includes('message') || ph.includes('chat');
         });
-        if (placeholderMatch) return buildMeta(placeholderMatch, 'placeholder:message|chat');
+        if (placeholderMatch)
+          return buildMeta(placeholderMatch, 'placeholder:message|chat');
 
         const textareas = inputCandidates.filter(
           el => el.tagName && el.tagName.toLowerCase() === 'textarea'
@@ -616,10 +621,14 @@ async function injectDomDiscovery() {
       };
 
       const detectAssistantMessages = () => {
-        let messages = Array.from(document.querySelectorAll('[data-testid="assistant-message"]'));
+        let messages = Array.from(
+          document.querySelectorAll('[data-testid="assistant-message"]')
+        );
         if (messages.length > 0) return messages;
 
-        const allElements = Array.from(document.querySelectorAll('div, article, section'));
+        const allElements = Array.from(
+          document.querySelectorAll('div, article, section')
+        );
         messages = allElements.filter(el => {
           const cls = (el.className || '').toLowerCase();
           const role = (el.getAttribute('role') || '').toLowerCase();
@@ -769,7 +778,9 @@ async function ensureChatPageReady(phaseLabel) {
       }
 
       const semantic = Array.from(
-        document.querySelectorAll('a, button, [role="button"], [role="link"], [role="tab"]')
+        document.querySelectorAll(
+          'a, button, [role="button"], [role="link"], [role="tab"]'
+        )
       ).find(el => {
         const text = (el.innerText || el.textContent || '').toLowerCase();
         const aria = (el.getAttribute('aria-label') || '').toLowerCase();
@@ -1910,7 +1921,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
           break;
         } catch (err) {
           const message = (err && err.message) || String(err);
-          if (attempt === 2 || !/invalid session id|no such window|invalidated/i.test(message)) {
+          if (
+            attempt === 2 ||
+            !/invalid session id|no such window|invalidated/i.test(message)
+          ) {
             throw err;
           }
 
@@ -1926,7 +1940,9 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       const navLinksToUse = navLinks;
 
-      console.log(`📋 Found ${navLinksToUse.length} navigation links (dynamic detection)`);
+      console.log(
+        `📋 Found ${navLinksToUse.length} navigation links (dynamic detection)`
+      );
 
       if (navLinksToUse.length === 0) {
         console.warn('⚠️ No navigation links detected - app may use different routing');

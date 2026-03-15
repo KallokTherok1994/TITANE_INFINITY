@@ -85,11 +85,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
   const searchEntries: MemorySearchEntry[] = persistentEntries.map(e => ({
     id: e.id,
     content: e.content,
-    type:
-      e.level === 'session' ? 'short' : e.level === 'intermediate' ? 'mid' : 'long',
+    type: e.level === 'session' ? 'short' : e.level === 'intermediate' ? 'mid' : 'long',
     timestamp: e.metadata.createdAt,
     tags: e.tags,
-    relevance: e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
+    relevance:
+      e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
   }));
 
   const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
@@ -190,7 +190,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
         <React.Suspense fallback={null}>
-          <LazyMemorySearchPanel entries={searchEntries.length > 0 ? searchEntries : undefined} onEntryClick={handleEntryClick} />
+          <LazyMemorySearchPanel
+            entries={searchEntries.length > 0 ? searchEntries : undefined}
+            onEntryClick={handleEntryClick}
+          />
         </React.Suspense>
       </div>
     </div>

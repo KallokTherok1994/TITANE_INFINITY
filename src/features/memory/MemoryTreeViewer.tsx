@@ -264,11 +264,11 @@ function generateMockMemoryTree(): MemoryNode {
       },
       {
         name: 'Moyen Terme',
-        attributes: { type: 'mid', count: "~intermédiaire" },
+        attributes: { type: 'mid', count: '~intermédiaire' },
         children: [
           {
             name: 'Sessions Récentes',
-            attributes: { type: 'mid', entries: "~sessions" },
+            attributes: { type: 'mid', entries: '~sessions' },
             children: [
               { name: 'Semaine passée', attributes: { type: 'mid' } },
               { name: 'Mois en cours', attributes: { type: 'mid' } },
@@ -276,7 +276,7 @@ function generateMockMemoryTree(): MemoryNode {
           },
           {
             name: 'Apprentissages',
-            attributes: { type: 'mid', entries: "~apprentissages" },
+            attributes: { type: 'mid', entries: '~apprentissages' },
             children: [
               { name: 'Patterns détectés', attributes: { type: 'mid' } },
               { name: 'Contextes appris', attributes: { type: 'mid' } },
@@ -286,11 +286,11 @@ function generateMockMemoryTree(): MemoryNode {
       },
       {
         name: 'Long Terme',
-        attributes: { type: 'long', count: "~long terme" },
+        attributes: { type: 'long', count: '~long terme' },
         children: [
           {
             name: 'Connaissances',
-            attributes: { type: 'long', entries: "~connaissances" },
+            attributes: { type: 'long', entries: '~connaissances' },
             children: [
               { name: 'Concepts', attributes: { type: 'long' } },
               { name: 'Procédures', attributes: { type: 'long' } },
@@ -298,7 +298,7 @@ function generateMockMemoryTree(): MemoryNode {
           },
           {
             name: 'Identité',
-            attributes: { type: 'long', entries: "~identité" },
+            attributes: { type: 'long', entries: '~identité' },
             children: [
               { name: 'Valeurs', attributes: { type: 'long' } },
               { name: 'Préférences', attributes: { type: 'long' } },

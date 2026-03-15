@@ -24,7 +24,9 @@
 
 .chat-input-wrapper:focus-within {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.18), 0 0 12px rgba(139, 92, 246, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(139, 92, 246, 0.18),
+    0 0 12px rgba(139, 92, 246, 0.12);
 }
 
 .chat-input {

@@ -228,7 +228,7 @@ export function usePersistentMemory(
   const {
     modeId,
     refreshInterval = 0,
-    levels = DEFAULT_LEVELS,  // Référence stable au lieu d'un nouveau tableau
+    levels = DEFAULT_LEVELS, // Référence stable au lieu d'un nouveau tableau
     topics,
     projectId,
     enableCache = true,

@@ -206,7 +206,7 @@ function generateMockEvents(): TimelineEvent[] {
       cardTitle: 'v29.0 — Pipelines Chat Wiring',
       cardSubtitle: 'Connexion multi-modules → conversationEngine',
       cardDetailedText:
-        "Wiring complet 6 sources dans systemPrompt : mémoire 3 niveaux, persona, XP/Evolution, CognitiveEngine. Fix loop infini usePersistentMemory (DEFAULT_LEVELS constant). Fix NaN guards XPProgressBar. IPC Rust : 12 commandes persistent_memory_v19 câblées dans main.rs.",
+        'Wiring complet 6 sources dans systemPrompt : mémoire 3 niveaux, persona, XP/Evolution, CognitiveEngine. Fix loop infini usePersistentMemory (DEFAULT_LEVELS constant). Fix NaN guards XPProgressBar. IPC Rust : 12 commandes persistent_memory_v19 câblées dans main.rs.',
       date: '10 Mars 2026',
       type: 'milestone',
       importance: 'critical',
@@ -239,7 +239,7 @@ function generateMockEvents(): TimelineEvent[] {
       cardTitle: 'v26.2 — Architecture 4-Ring Stable',
       cardSubtitle: 'Gouvernance + autoheal actif',
       cardDetailedText:
-        "Architecture 4-Ring consolidée avec scripts verify_instructions.sh et detect_recurrence.sh. Système autoheal_rules.jsonl opérationnel. Release v27.0.3 scellée. E2E WebdriverIO configuré.",
+        'Architecture 4-Ring consolidée avec scripts verify_instructions.sh et detect_recurrence.sh. Système autoheal_rules.jsonl opérationnel. Release v27.0.3 scellée. E2E WebdriverIO configuré.',
       date: '01 Décembre 2025',
       type: 'milestone',
       importance: 'critical',
@@ -261,7 +261,7 @@ function generateMockEvents(): TimelineEvent[] {
       cardTitle: 'v25.4 — Persona & Mémoire Connectés',
       cardSubtitle: 'Identité → systemPrompt',
       cardDetailedText:
-        "PersonaEditor persiste profil dans localStorage (ton, formalité, verbosité, emojis). readPersonaContext() injecté dans processMessage(). persistentMemoryGetContext() active les 3 niveaux de mémoire dans chaque échange. Première version AI truly-contextual.",
+        'PersonaEditor persiste profil dans localStorage (ton, formalité, verbosité, emojis). readPersonaContext() injecté dans processMessage(). persistentMemoryGetContext() active les 3 niveaux de mémoire dans chaque échange. Première version AI truly-contextual.',
       date: '01 Octobre 2025',
       type: 'learning',
       importance: 'critical',
@@ -272,7 +272,7 @@ function generateMockEvents(): TimelineEvent[] {
       cardTitle: 'v25.0 — TITANE∞ Architecture Unifiée',
       cardSubtitle: 'Chat + Vision + EVO + Memory fusionnés',
       cardDetailedText:
-        "Release majeure TITANE v25.0 : architecture complètement refactorée, TitanePage conversation-first, AppLayout avec sidebar 280px, design system Titanium Dark. TypeScript strict mode, 0 erreurs TSC. Base stable pour toutes les évolutions suivantes.",
+        'Release majeure TITANE v25.0 : architecture complètement refactorée, TitanePage conversation-first, AppLayout avec sidebar 280px, design system Titanium Dark. TypeScript strict mode, 0 erreurs TSC. Base stable pour toutes les évolutions suivantes.',
       date: '01 Septembre 2025',
       type: 'milestone',
       importance: 'critical',
