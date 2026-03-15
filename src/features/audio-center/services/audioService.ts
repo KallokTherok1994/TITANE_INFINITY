@@ -294,7 +294,10 @@ class AudioService {
       // Persist to canonical audio device config
       try {
         const deviceLabel = await this._resolveDeviceLabel(deviceId, 'output');
-        const current = (await tauriClient.getAudioDeviceConfig()) as Record<string, unknown>;
+        const current = (await tauriClient.getAudioDeviceConfig()) as Record<
+          string,
+          unknown
+        >;
         await tauriClient.saveAudioDeviceConfig({
           ...(current || {}),
           outputDeviceId: deviceId,
@@ -321,7 +324,10 @@ class AudioService {
       // Persist to canonical audio device config
       try {
         const deviceLabel = await this._resolveDeviceLabel(deviceId, 'input');
-        const current = (await tauriClient.getAudioDeviceConfig()) as Record<string, unknown>;
+        const current = (await tauriClient.getAudioDeviceConfig()) as Record<
+          string,
+          unknown
+        >;
         await tauriClient.saveAudioDeviceConfig({
           ...(current || {}),
           inputDeviceId: deviceId,
@@ -334,11 +340,13 @@ class AudioService {
   }
 
   /** Resolves a device ID to its label using the cached device list. */
-  private async _resolveDeviceLabel(deviceId: string, type: 'input' | 'output'): Promise<string> {
+  private async _resolveDeviceLabel(
+    deviceId: string,
+    type: 'input' | 'output'
+  ): Promise<string> {
     try {
-      const devices = type === 'output'
-        ? await this.getOutputDevices()
-        : await this.getInputDevices();
+      const devices =
+        type === 'output' ? await this.getOutputDevices() : await this.getInputDevices();
       return devices.find(d => d.id === deviceId)?.name ?? deviceId;
     } catch {
       return deviceId;

@@ -21,6 +21,10 @@ import {
   type UIThemeContextState,
   type UIThemeTokens,
 } from '../types/designCenter.types';
+import {
+  ensureReadableTextColor,
+  ensureReadableTextColorForBackgrounds,
+} from '../utils/contrast';
 
 // ============================================================================
 // ACTIONS
@@ -236,6 +240,43 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     }
 
     const root = document.documentElement;
+    const minContrast = tokens.contrast.level === 'high' ? 7 : 4.5;
+
+    const readableText = ensureReadableTextColorForBackgrounds(
+      tokens.colors.text,
+      [tokens.colors.background, tokens.colors.surface, tokens.colors.surfaceElevated],
+      minContrast
+    );
+    const readableTextMuted = ensureReadableTextColorForBackgrounds(
+      tokens.colors.textMuted,
+      [tokens.colors.background, tokens.colors.surface, tokens.colors.surfaceElevated],
+      minContrast
+    );
+    const textOnPrimary = ensureReadableTextColor(
+      tokens.colors.text,
+      tokens.colors.primary,
+      minContrast
+    );
+    const textOnSecondary = ensureReadableTextColor(
+      tokens.colors.text,
+      tokens.colors.secondary,
+      minContrast
+    );
+    const textOnAccent = ensureReadableTextColor(
+      tokens.colors.text,
+      tokens.colors.accent,
+      minContrast
+    );
+    const textOnSurface = ensureReadableTextColor(
+      tokens.colors.text,
+      tokens.colors.surface,
+      minContrast
+    );
+    const textOnSurfaceElevated = ensureReadableTextColor(
+      tokens.colors.text,
+      tokens.colors.surfaceElevated,
+      minContrast
+    );
 
     // Colors
     root.style.setProperty('--color-primary', tokens.colors.primary);
@@ -244,8 +285,13 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     root.style.setProperty('--color-background', tokens.colors.background);
     root.style.setProperty('--color-surface', tokens.colors.surface);
     root.style.setProperty('--color-surface-elevated', tokens.colors.surfaceElevated);
-    root.style.setProperty('--color-text', tokens.colors.text);
-    root.style.setProperty('--color-text-muted', tokens.colors.textMuted);
+    root.style.setProperty('--color-text', readableText);
+    root.style.setProperty('--color-text-muted', readableTextMuted);
+    root.style.setProperty('--color-text-on-primary', textOnPrimary);
+    root.style.setProperty('--color-text-on-secondary', textOnSecondary);
+    root.style.setProperty('--color-text-on-accent', textOnAccent);
+    root.style.setProperty('--color-text-on-surface', textOnSurface);
+    root.style.setProperty('--color-text-on-surface-elevated', textOnSurfaceElevated);
     root.style.setProperty('--color-border', tokens.colors.border);
     root.style.setProperty('--color-border-focus', tokens.colors.borderFocus);
     root.style.setProperty('--color-success', tokens.colors.success);
@@ -253,14 +299,25 @@ export function UIThemeProvider({ children }: UIThemeProviderProps) {
     root.style.setProperty('--color-error', tokens.colors.error);
     root.style.setProperty('--color-info', tokens.colors.info);
 
+    // Canonical token aliases consumed across legacy and modern UI surfaces.
+    root.style.setProperty('--background', tokens.colors.background);
+    root.style.setProperty('--surface', tokens.colors.surface);
+    root.style.setProperty('--surface-elevated', tokens.colors.surfaceElevated);
+    root.style.setProperty('--text-primary', readableText);
+    root.style.setProperty('--text-muted', readableTextMuted);
+    root.style.setProperty('--border', tokens.colors.border);
+    root.style.setProperty('--border-focus', tokens.colors.borderFocus);
+    root.style.setProperty('--bg-primary', tokens.colors.background);
+    root.style.setProperty('--bg-secondary', tokens.colors.surface);
+
     // Legacy aliases used by existing shell pages (admin/system/etc.).
     root.style.setProperty('--color-bg-primary', tokens.colors.background);
     root.style.setProperty('--color-bg-secondary', tokens.colors.surface);
     root.style.setProperty('--color-bg-tertiary', tokens.colors.surfaceElevated);
     root.style.setProperty('--color-bg-elevated', tokens.colors.surfaceElevated);
-    root.style.setProperty('--color-text-primary', tokens.colors.text);
-    root.style.setProperty('--color-text-secondary', tokens.colors.textMuted);
-    root.style.setProperty('--color-text-muted', tokens.colors.textMuted);
+    root.style.setProperty('--color-text-primary', readableText);
+    root.style.setProperty('--color-text-secondary', readableTextMuted);
+    root.style.setProperty('--color-text-muted', readableTextMuted);
     root.style.setProperty('--color-border-default', tokens.colors.border);
     root.style.setProperty('--color-border-primary', tokens.colors.border);
     root.style.setProperty('--color-border-secondary', tokens.colors.borderFocus);
@@ -514,6 +571,10 @@ export function useUITheme(): UIThemeContext {
     throw new Error('useUITheme doit être utilisé dans un UIThemeProvider');
   }
   return context;
+}
+
+export function useUIThemeOptional(): UIThemeContext | null {
+  return useContext(UIThemeContextInstance);
 }
 
 // ============================================================================

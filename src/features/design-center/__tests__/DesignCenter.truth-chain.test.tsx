@@ -7,6 +7,7 @@ import {
   DEFAULT_UI_THEME_TOKENS,
   type UIThemeTokens,
 } from '@/features/design-center/types/designCenter.types';
+import { contrastRatio } from '@/features/design-center/utils/contrast';
 
 vi.mock('@/lib/tauriClient', () => ({
   tauriClient: {
@@ -151,15 +152,53 @@ describe('Design Center truth chain', () => {
       expect(
         document.documentElement.style.getPropertyValue('--color-bg-primary').trim()
       ).toBe('#101820');
+      expect(document.documentElement.style.getPropertyValue('--background').trim()).toBe(
+        '#101820'
+      );
       expect(
         document.documentElement.style.getPropertyValue('--color-bg-secondary').trim()
       ).toBe('#202830');
-      expect(document.documentElement.style.getPropertyValue('--admin-bg-start').trim()).toBe(
-        '#101820'
+      expect(document.documentElement.style.getPropertyValue('--surface').trim()).toBe(
+        '#202830'
       );
-      expect(document.documentElement.style.getPropertyValue('--badge-accent-color').trim()).toBe(
-        '#44aa88'
+      expect(document.documentElement.style.getPropertyValue('--text-primary').trim()).toBe(
+        '#f0f2f4'
       );
+      expect(
+        document.documentElement.style.getPropertyValue('--admin-bg-start').trim()
+      ).toBe('#101820');
+      expect(
+        document.documentElement.style.getPropertyValue('--badge-accent-color').trim()
+      ).toBe('#44aa88');
+    });
+  });
+
+  it('auto-corrects unreadable white-on-white combinations to maintain contrast', async () => {
+    const unreadableTokens = makeTokens({
+      colors: {
+        ...DEFAULT_UI_THEME_TOKENS.colors,
+        background: '#ffffff',
+        surface: '#ffffff',
+        surfaceElevated: '#ffffff',
+        text: '#ffffff',
+        textMuted: '#ffffff',
+      },
+    });
+
+    vi.mocked(tauriClient.loadUiTheme).mockResolvedValueOnce(unreadableTokens);
+
+    render(<DesignCenterPage />);
+
+    await screen.findByTestId('design-status-runtime-active');
+
+    await waitFor(() => {
+      const runtimeText = document.documentElement.style
+        .getPropertyValue('--text-primary')
+        .trim();
+      const runtimeBg = document.documentElement.style.getPropertyValue('--background').trim();
+
+      expect(runtimeText.toLowerCase()).not.toBe('#ffffff');
+      expect(contrastRatio(runtimeText, runtimeBg)).toBeGreaterThanOrEqual(4.5);
     });
   });
 
@@ -193,7 +232,9 @@ describe('Design Center truth chain', () => {
     render(<DesignCenterPage />);
     await screen.findByTestId('design-status-runtime-active');
 
-    const reloadedPrimaryInput = screen.getByTestId('design-color-primary') as HTMLInputElement;
+    const reloadedPrimaryInput = screen.getByTestId(
+      'design-color-primary'
+    ) as HTMLInputElement;
     expect(reloadedPrimaryInput.value.toLowerCase()).toBe('#334455');
     expect(tauriClient.loadUiTheme).toHaveBeenCalledTimes(2);
   });
