@@ -78,7 +78,9 @@ impl Default for VectorizerConfig {
     fn default() -> Self {
         Self {
             model: "nomic-embed-text".to_string(),
-            ollama_url: "http://localhost:11434".to_string(),
+            ollama_url: std::env::var("OLLAMA_BASE_URL")
+                .or_else(|_| std::env::var("OLLAMA_URL"))
+                .unwrap_or_else(|_| "http://localhost:11434".to_string()),
             dimension: 384,
             max_search_results: 10,
             min_similarity: 0.5,
