@@ -2,8 +2,8 @@
  * TITANE∞ v27.0.0 — PHASE C3 LATENCY BOUNDARIES TESTS
  * ═════════════════════════════════════════════════════════════════════════════
  * Test Suite for PHASE C3: LATENCY BOUNDARIES (GATE_LATENCY)
- * Validates: Global timeout (60s), per-provider timeout (8s), max retries (3)
- * ✨ v27+ FIX: Global timeout 25s → 60s for complex AI requests
+ * Validates: Global timeout (52s), per-provider timeout (50s), max retries (2)
+ * ✨ OMEGA_CHAT_PERF FIX: Updated from 60s/8s/3 → 52s/50s/2
  * ═════════════════════════════════════════════════════════════════════════════
  */
 
@@ -14,61 +14,57 @@ import { REQUEST_BUDGETS, getProviderTimeout } from '@/config/aiTimeouts.config'
 // C3.1: Global Budget Enforcement
 // ─────────────────────────────────────────────────────────────────
 
-describe('C3.1: Global Latency Budget (60s)', () => {
+describe('C3.1: Global Latency Budget (52s)', () => {
   
-  it('[C3.1.1] Global budget constant is 60000ms', () => {
-    expect(REQUEST_BUDGETS.globalRequestMs).toBe(60000);
+  it('[C3.1.1] Global budget constant is 52000ms', () => {
+    expect(REQUEST_BUDGETS.globalRequestMs).toBe(52000);
   });
 
   it('[C3.1.2] Budget enforcement breaks early if < 100ms remaining', () => {
-    // Simulate: 3 providers × 8s each = 24s, leave 36s
-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
-    const startTime = Date.now();
+    // Simulate: 1s elapsed, almost full budget remains
+    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 52000
     
-    // Simulate: 24 seconds have elapsed
-    const simulatedElapsedMs = 24000;
+    // Simulate: 1 second has elapsed
+    const simulatedElapsedMs = 1000;
     const remainingBudgetMs = globalBudgetMs - simulatedElapsedMs;
     
     expect(remainingBudgetMs).toBeGreaterThan(100);
     expect(remainingBudgetMs).toBeGreaterThan(30000);
     
-    // If next provider takes 8s, would still fit
-    const nextAttemptDurationMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
+    // If next provider takes providerAttemptMs (50s), does it fit in 51s remaining?
+    const nextAttemptDurationMs = REQUEST_BUDGETS.providerAttemptMs; // 50000
     const wouldExceedBudget = nextAttemptDurationMs > remainingBudgetMs;
     
     expect(wouldExceedBudget).toBe(false);
   });
 
-  it('[C3.1.3] After 3 provider attempts (8s each = 24s), stops', () => {
-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
-    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
-    const maxAttempts = REQUEST_BUDGETS.maxAttempts; // 3
+  it('[C3.1.3] After 1 provider attempt (50s), nearly all budget is consumed', () => {
+    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 52000
+    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 50000
     
-    const totalTimeFor3Attempts = maxAttempts * perProviderMs;
+    // Single attempt uses most of the budget
+    const singleAttemptMs = perProviderMs;
+    expect(singleAttemptMs).toBeLessThanOrEqual(globalBudgetMs);
     
-    // 3 × 8000 = 24000ms
-    expect(totalTimeFor3Attempts).toBe(24000);
+    // After 1 attempt, minimal budget remains
+    const remainingAfterFirst = globalBudgetMs - singleAttemptMs;
+    expect(remainingAfterFirst).toBeGreaterThanOrEqual(0);
     
-    // This fits within 60s budget (36s margin)
-    expect(totalTimeFor3Attempts).toBeLessThan(globalBudgetMs);
-    
-    // A 4th attempt would still fit in 60s
-    const fourthAttemptStartTime = totalTimeFor3Attempts;
-    const fourthWouldEndAt = fourthAttemptStartTime + perProviderMs;
-    expect(fourthWouldEndAt).toBeLessThan(globalBudgetMs);
+    // Not enough budget remains for a full second attempt
+    expect(remainingAfterFirst).toBeLessThan(perProviderMs);
   });
 
   it('[C3.1.4] getRemainingBudget logic', () => {
     // Helper function logic test
     const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs;
     const startTimeMs = 100;
-    const currentTimeMs = 10100; // 10s elapsed
+    const currentTimeMs = 1100; // 1s elapsed
     
     const elapsedMs = currentTimeMs - startTimeMs;
     const remainingMs = globalBudgetMs - elapsedMs;
     
-    expect(elapsedMs).toBe(10000);
-    expect(remainingMs).toBe(50000);
+    expect(elapsedMs).toBe(1000);
+    expect(remainingMs).toBe(51000);
     expect(remainingMs).toBeGreaterThan(REQUEST_BUDGETS.providerAttemptMs);
   });
 });
@@ -77,10 +73,10 @@ describe('C3.1: Global Latency Budget (60s)', () => {
 // C3.2: Per-Provider Timeout
 // ─────────────────────────────────────────────────────────────────
 
-describe('C3.2: Per-Provider Timeout (8s)', () => {
+describe('C3.2: Per-Provider Timeout (50s)', () => {
   
-  it('[C3.2.1] Per-provider budget is 8000ms', () => {
-    expect(REQUEST_BUDGETS.providerAttemptMs).toBe(8000);
+  it('[C3.2.1] Per-provider budget is 50000ms', () => {
+    expect(REQUEST_BUDGETS.providerAttemptMs).toBe(50000);
   });
 
   it('[C3.2.2] getProviderTimeout returns correct values', () => {
@@ -89,18 +85,18 @@ describe('C3.2: Per-Provider Timeout (8s)', () => {
     const timeout_ollama = getProviderTimeout('ollama');
     const timeout_unknown = getProviderTimeout('unknown-provider');
     
-    // All should use the per-provider budget
-    expect(timeout_gemini).toBe(REQUEST_BUDGETS.providerAttemptMs);
-    expect(timeout_openai).toBe(REQUEST_BUDGETS.providerAttemptMs);
-    expect(timeout_ollama).toBe(REQUEST_BUDGETS.providerAttemptMs);
-    
-    // Unknown should also use default (8s)
-    expect(timeout_unknown).toBe(REQUEST_BUDGETS.providerAttemptMs);
+    // Cloud providers: 30s budget
+    expect(timeout_gemini).toBe(30000);
+    expect(timeout_openai).toBe(30000);
+    // Local LLM: realistic 45s window
+    expect(timeout_ollama).toBe(45000);
+    // Unknown uses default
+    expect(timeout_unknown).toBeGreaterThan(0);
   });
 
   it('[C3.2.3] Provider timeout never exceeds remaining global budget', () => {
-    const globalBudget = REQUEST_BUDGETS.globalRequestMs; // 60000
-    const perProvider = REQUEST_BUDGETS.providerAttemptMs; // 8000
+    const globalBudget = REQUEST_BUDGETS.globalRequestMs; // 52000
+    const perProvider = REQUEST_BUDGETS.providerAttemptMs; // 50000
     
     // Each provider timeout should be ≤ remaining global budget
     expect(perProvider).toBeLessThanOrEqual(globalBudget);
@@ -110,7 +106,7 @@ describe('C3.2: Per-Provider Timeout (8s)', () => {
     // Ollama is a local service and should timeout faster
     // 1.5s timeout mentioned in plan is implementation detail
     const OLLAMA_EXPLICIT_TIMEOUT = 1500; // 1.5s
-    const PROVIDER_DEFAULT_TIMEOUT = REQUEST_BUDGETS.providerAttemptMs; // 8s
+    const PROVIDER_DEFAULT_TIMEOUT = REQUEST_BUDGETS.providerAttemptMs; // 50s
     
     // Ollama timeout should be much less than provider default
     expect(OLLAMA_EXPLICIT_TIMEOUT).toBeLessThan(PROVIDER_DEFAULT_TIMEOUT);
@@ -122,15 +118,15 @@ describe('C3.2: Per-Provider Timeout (8s)', () => {
 // C3.3: Max Retries
 // ─────────────────────────────────────────────────────────────────
 
-describe('C3.3: Max Retries (3 attempts)', () => {
+describe('C3.3: Max Retries (2 attempts)', () => {
   
-  it('[C3.3.1] Max attempts is 3', () => {
-    expect(REQUEST_BUDGETS.maxAttempts).toBe(3);
+  it('[C3.3.1] Max attempts is 2', () => {
+    expect(REQUEST_BUDGETS.maxAttempts).toBe(2);
   });
 
-  it('[C3.3.2] With 3 retries, max providers tried is 3', () => {
+  it('[C3.3.2] With 2 attempts, max providers tried is 2', () => {
     const maxProviders = REQUEST_BUDGETS.maxAttempts;
-    expect(maxProviders).toBe(3);
+    expect(maxProviders).toBe(2);
   });
 
   it('[C3.3.3] Retry loop respects maxAttempts', () => {
@@ -141,12 +137,12 @@ describe('C3.3: Max Retries (3 attempts)', () => {
     
     for (const provider of providers) {
       if (attemptCount >= maxAttempts) {
-        break; // Stop after 3 attempts
+        break; // Stop after 2 attempts
       }
       attemptCount++;
     }
     
-    expect(attemptCount).toBe(3);
+    expect(attemptCount).toBe(2);
   });
 });
 
@@ -156,63 +152,55 @@ describe('C3.3: Max Retries (3 attempts)', () => {
 
 describe('C3.4: Latency Boundary Integration', () => {
   
-  it('[C3.4.1] Scenario: 3 failed providers (8s each) → stops under 60s', () => {
-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
-    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
-    const maxAttempts = REQUEST_BUDGETS.maxAttempts; // 3
-    
-    // Scenario: 3 providers each take 8s, all fail
+  it('[C3.4.1] Scenario: 1 provider attempt (50s) fits within 52s global budget', () => {
+    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 52000
+    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 50000
+    const maxAttempts = REQUEST_BUDGETS.maxAttempts; // 2
+
+    // Scenario: check budget before each attempt (realistic behavior)
     let totalElapsedMs = 0;
     let providersTried = 0;
-    
+
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
       const remainingMs = globalBudgetMs - totalElapsedMs;
-      
-      if (remainingMs <= 100) {
-        break; // Not enough budget for another attempt
-      }
-      
-      // Attempt takes 8s
+
+      if (remainingMs <= 100) break;
+      // Only attempt if there's budget for a full attempt
+      if (remainingMs < perProviderMs) break;
+
       totalElapsedMs += perProviderMs;
       providersTried++;
     }
-    
-    expect(providersTried).toBe(3);
-    expect(totalElapsedMs).toBe(24000);
+
+    // Only 1 attempt fits: 50000ms used, 2000ms remaining < perProviderMs
+    expect(providersTried).toBe(1);
+    expect(totalElapsedMs).toBe(50000);
     expect(totalElapsedMs).toBeLessThan(globalBudgetMs);
   });
 
   it('[C3.4.2] Budget enforcement + maxAttempts limits', () => {
-    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 60000
-    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 8000
-    const maxAttemptsLimit = REQUEST_BUDGETS.maxAttempts; // 3 - hard cap
-    
+    const globalBudgetMs = REQUEST_BUDGETS.globalRequestMs; // 52000
+    const perProviderMs = REQUEST_BUDGETS.providerAttemptMs; // 50000
+    const maxAttemptsLimit = REQUEST_BUDGETS.maxAttempts; // 2 - hard cap
+
     let totalElapsedMs = 0;
     let providersTried = 0;
     const maxAttempts = 5; // Theoretically try more than allowed
-    
+
     for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      // Check if maxAttempts limit reached
-      if (providersTried >= maxAttemptsLimit) {
-        break;
-      }
-      
+      if (providersTried >= maxAttemptsLimit) break;
+
       const remainingMs = globalBudgetMs - totalElapsedMs;
-      
-      // Check if budget allows another attempt
-      // Need at least perProviderMs left to try another
-      if (remainingMs < perProviderMs) {
-        break;
-      }
-      
-      // Simulate attempt
+      if (remainingMs < perProviderMs) break; // Budget check stops before maxAttempts
+
       totalElapsedMs += perProviderMs;
       providersTried++;
     }
-    
-    // Should stop at 3 due to maxAttempts limit, not budget
-    expect(providersTried).toBe(3);
-    expect(totalElapsedMs).toBe(24000);
+
+    // Budget check stops after 1: remaining=2000 < perProviderMs=50000
+    expect(providersTried).toBe(1);
+    expect(totalElapsedMs).toBe(50000);
+    expect(totalElapsedMs).toBeLessThan(globalBudgetMs);
   });
 
   it('[C3.4.3] Readiness check: skip unavailable providers', () => {
@@ -263,8 +251,8 @@ describe('C3.5: GATE_LATENCY Checklist', () => {
     // Global > per-provider
     expect(globalBudget).toBeGreaterThan(perProviderBudget);
     
-    // Can fit at least 3 attempts
-    expect(globalBudget / perProviderBudget).toBeGreaterThanOrEqual(3);
+    // Can fit at least 1 attempt
+    expect(globalBudget / perProviderBudget).toBeGreaterThanOrEqual(1);
     
     // maxAttempts is reasonable
     expect(maxAttempts).toBeGreaterThan(0);

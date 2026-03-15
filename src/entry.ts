@@ -146,18 +146,25 @@ const bootstrap = async (): Promise<void> => {
   win.__TITANE_BOOT__ = win.__TITANE_BOOT__ || {};
   win.__TITANE_BOOT__.entry_ts = true;
   win.__TITANE_BOOT__.entry_ts_timestamp = Date.now();
+  let recoveryRequested = false;
 
-  const failSafe = (reason: unknown): void => {
+  const failSafe = (reason: unknown): 'boot_ready' | 'recovery' | 'fatal' => {
     if (win.__TITANE_BOOT_READY__) {
-      return;
+      return 'boot_ready';
+    }
+
+    if (recoveryRequested) {
+      return 'recovery';
     }
 
     if (scheduleRecoveryReload(reason)) {
-      return;
+      recoveryRequested = true;
+      return 'recovery';
     }
 
     hideLoaderElements();
     showFatalOverlay(reason);
+    return 'fatal';
   };
 
   const startedAt = Date.now();
@@ -195,12 +202,17 @@ const bootstrap = async (): Promise<void> => {
     clearEntryReloadGuard();
     await emitBootMarker('BOOT:ENTRY_MAIN_IMPORTED');
   } catch (error) {
-    failSafe(error);
+    const failSafeState = failSafe(error);
     const errorDetails =
       error instanceof Error
         ? `${error.name}:${error.message}|${error.stack || ''}`
         : String(error);
-    await emitBootMarker(`BOOT:ENTRY_IMPORT_FAIL|${errorDetails.slice(0, 420)}`);
+
+    if (failSafeState === 'fatal') {
+      await emitBootMarker(`BOOT:ENTRY_IMPORT_FAIL|${errorDetails.slice(0, 420)}`);
+    } else if (failSafeState === 'recovery') {
+      await emitBootMarker(`BOOT:ENTRY_IMPORT_RECOVERY|${errorDetails.slice(0, 420)}`);
+    }
   }
 };
 

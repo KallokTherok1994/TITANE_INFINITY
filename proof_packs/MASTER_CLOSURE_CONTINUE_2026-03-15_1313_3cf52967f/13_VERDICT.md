@@ -42,3 +42,18 @@
 - The failed reruns are not explained by missing UI action: send click and backend generation start are both evidenced.
 - Backend logs show request initiation and routing to local provider, but no completion inside the WDIO proof window in failing runs.
 - `BOOT:ENTRY_IMPORT_FAIL` still appears on `label=main` in recent reruns, so boot-path contradiction is still active.
+
+## Addendum 2026-03-15 18:56Z
+
+## VERDICT: BLOCKED (unchanged)
+
+### Controlled timeout attempts status
+- Two controlled attempts with `TITANE_CONVERSATION_TIMEOUT_SECS=120` and `TITANE_TIMEOUT_TRACE=1` were recorded:
+  - `reports/e2e-desktop/release_online_chat_t120_20260315T185259Z`
+  - `reports/e2e-desktop/release_online_chat_t120bg_20260315T185418Z`
+- Both are classified `INCONCLUSIVE` because WDIO logs are truncated before final summary markers.
+
+### Extracted truth from those attempts
+- Env override propagation is proven in wrapper logs.
+- `BOOT:ENTRY_IMPORT_FAIL` on `label=main` persists.
+- Conversation request and AI routing to Ollama are triggered, but no completion marker is available in captured tails.
