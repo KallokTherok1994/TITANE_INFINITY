@@ -20,12 +20,5 @@
       "validate_chat_message"
     ],
     "deny": []
-  },
-  "remote": {
-    "urls": [
-      "https://generativelanguage.googleapis.com/**",
-      "http://localhost:11434/**",
-      "http://127.0.0.1:11434/**"
-    ]
   }
 }
