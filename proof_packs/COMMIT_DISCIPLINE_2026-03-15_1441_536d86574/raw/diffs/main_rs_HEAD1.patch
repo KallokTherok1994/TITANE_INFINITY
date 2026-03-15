@@ -1,0 +1,83 @@
+commit 77735901eb1f1298a1f3666a71d691222e1f6e3f
+Author: Copilot Production Agent <copilot@titane-infinity.local>
+Date:   Sun Mar 15 10:32:42 2026 -0400
+
+    fix(audio): AUDIO_VOICE_FORENSIC 2026-03-15 — register + mock stubs for audio commands
+    
+    FIX-002 (D4): transcribe_audio + is_recording — mock stubs added (BUILD_RISK resolved)
+    FIX-003 (D2/D3): get_recording_status — capabilities + mock stub + register
+    
+    All 3 fixes validated:
+    - TEXTUAL_RECHECK: grep confirmed all registrations
+    - BUILD_PROVEN: cargo build --features custom-protocol,mock,audio-capture EXIT 0
+    - Gates: verify_instructions.sh PASS=20 FAIL=0, detect_recurrence.sh PASS
+    
+    AutoHeal: AH-2026-03-15-AUDIO-001, AH-2026-03-15-AUDIO-002 added (263 entries)
+    Proof pack: proof_packs/AUDIO_VOICE_FORENSIC_2026-03-15_1408_c59e9b5/
+    
+    Rollback: git revert HEAD
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+diff --git a/src-tauri/src/main.rs b/src-tauri/src/main.rs
+index 6610f6cb1..6cf1acb7f 100644
+--- a/src-tauri/src/main.rs
++++ b/src-tauri/src/main.rs
+@@ -166,6 +166,42 @@ mod audio {
+         pub async fn cancel_recording() -> Result<(), String> {
+             Ok(())
+         }
++
++        // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-001: mock stubs for stop_speaking + is_speaking
++        // Handler exists in audio/commands.rs but was missing from mock block → IPC error in mock mode
++        #[cfg(feature = "mock")]
++        #[tauri::command]
++        pub async fn stop_speaking() -> Result<(), String> {
++            Ok(())
++        }
++
++        #[cfg(feature = "mock")]
++        #[tauri::command]
++        pub async fn is_speaking() -> Result<bool, String> {
++            Ok(false)
++        }
++
++        // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-002: mock stubs for transcribe_audio + is_recording
++        // Added to generate_handler! in c59e9b5 without corresponding mock stubs → BUILD_RISK
++        #[cfg(feature = "mock")]
++        #[tauri::command]
++        pub async fn transcribe_audio(_audio_data: Vec<u8>) -> Result<String, String> {
++            Ok("(mock-transcription)".to_string())
++        }
++
++        #[cfg(feature = "mock")]
++        #[tauri::command]
++        pub async fn is_recording() -> Result<bool, String> {
++            Ok(false)
++        }
++
++        // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-003: mock stub for get_recording_status
++        // Called in audioSelfHeal.ts, handler exists, missing from capabilities + generate_handler (Q-002)
++        #[cfg(feature = "mock")]
++        #[tauri::command]
++        pub async fn get_recording_status() -> Result<serde_json::Value, String> {
++            Ok(serde_json::json!({ "isRecording": false, "durationMs": 0 }))
++        }
+     }
+ }
+ 
+@@ -1890,6 +1926,14 @@ fn main() {
+             // ═══════════════════════════════════════════════════════════════
+             audio::commands::transcribe_audio,
+             audio::commands::is_recording,
++            // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-001: register stop_speaking + is_speaking
++            // Handlers exist in audio/commands.rs, allowlisted in capabilities/audio_tts.json
++            // but were absent from generate_handler! → IPC error on any frontend invoke
++            audio::commands::stop_speaking,
++            audio::commands::is_speaking,
++            // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-003: register get_recording_status (Q-002)
++            // Called in audioSelfHeal.ts, handler exists, now allowlisted in audio_tts.json
++            audio::commands::get_recording_status,
+ 
+             // ═══════════════════════════════════════════════════════════════
+             // SECURITY — validate_chat_message
