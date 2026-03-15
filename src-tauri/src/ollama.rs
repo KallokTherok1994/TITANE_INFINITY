@@ -5,9 +5,15 @@ use std::time::Duration;
 use crate::core::http_types::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 
-const OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
+const OLLAMA_BASE_URL_FALLBACK: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
 const OLLAMA_MODEL_ENV: &str = "TITANE_OLLAMA_MODEL";
+
+fn ollama_base_url() -> String {
+    std::env::var("OLLAMA_BASE_URL")
+        .or_else(|_| std::env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| OLLAMA_BASE_URL_FALLBACK.to_string())
+}
 
 #[derive(Serialize)]
 struct OllamaRequest<'a> {
@@ -88,7 +94,7 @@ async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<Str
     };
 
     let response = client
-        .post(format!("{OLLAMA_BASE_URL}/api/generate"))
+        .post(format!("{}/api/generate", ollama_base_url()))
         .json(&request_body)
         .send()
         .await
@@ -114,7 +120,7 @@ async fn send_generate(client: &Client, model: &str, prompt: &str) -> Result<Str
 
 async fn pick_fallback_model(client: &Client) -> Result<String, String> {
     let response = client
-        .get(format!("{OLLAMA_BASE_URL}/api/tags"))
+        .get(format!("{}/api/tags", ollama_base_url()))
         .send()
         .await
         .map_err(|e| format!("Erreur requête Ollama tags: {e}"))?;
