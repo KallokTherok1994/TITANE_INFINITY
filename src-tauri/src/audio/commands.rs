@@ -43,6 +43,7 @@ pub struct AudioDevice {
     pub is_default: bool,
     pub is_active: bool,
     pub driver: String,
+    pub is_muted: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -346,6 +347,7 @@ pub async fn get_audio_output_devices() -> CommandResult<Vec<AudioDevice>> {
                     is_default: devices.is_empty(),
                     is_active: is_running,
                     driver: parts[2].to_string(),
+                    is_muted: false,
                 });
             }
         }
@@ -402,6 +404,7 @@ pub async fn get_audio_input_devices() -> CommandResult<Vec<AudioDevice>> {
                     is_default: devices.is_empty(),
                     is_active: is_running,
                     driver: parts[2].to_string(),
+                    is_muted: false,
                 });
             }
         }
@@ -474,7 +477,8 @@ async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String
             }
 
             let after_dot = &trimmed[dot_pos + 1..];
-            // Name ends before '[vol:'
+            // Name ends before '[vol:'; detect MUTED in bracket section
+            let is_muted = after_dot.contains("MUTED");
             let name = if let Some(vol_pos) = after_dot.find('[') {
                 after_dot[..vol_pos].trim().to_string()
             } else {
@@ -497,6 +501,7 @@ async fn get_wpctl_devices(device_type: &str) -> Result<Vec<AudioDevice>, String
                 is_default,
                 is_active: is_default,
                 driver: "pipewire".to_string(),
+                is_muted,
             });
         }
     }
@@ -530,6 +535,7 @@ async fn get_alsa_output_devices() -> Result<Vec<AudioDevice>, String> {
                         is_default: devices.is_empty(),
                         is_active: true,
                         driver: "alsa".to_string(),
+                        is_muted: false,
                     });
                 }
             }
@@ -561,6 +567,7 @@ async fn get_alsa_input_devices() -> Result<Vec<AudioDevice>, String> {
                         is_default: devices.is_empty(),
                         is_active: false,
                         driver: "alsa".to_string(),
+                        is_muted: false,
                     });
                 }
             }

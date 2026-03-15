@@ -1,18 +1,34 @@
 # VERDICT: QUALIFIED
 
-## Reason
-- Structural fusion: DONE
-- Route safety: DONE (/stats → /dev, /cognitive → /dev)
-- All metric families in DEV Diagnostics: DONE
-- Build (TypeScript): PASS (0 new errors)
-- No duplicate monitoring surface: DONE (Stats is dead route)
-- Runtime visible proof: UNAVAILABLE (dev server not launched)
+## Evidence Summary
+| check | result | proof |
+|---|---|---|
+| TypeScript | 0 new errors | npx tsc --noEmit |
+| Vitest regressions | 0 introduced | baseline stash comparison |
+| /stats route | redirects to /dev | Navigate replace in App.tsx |
+| /cognitive route | redirects to /dev | Navigate replace in App.tsx |
+| DEV Diagnostics | contains StatsSystemPanels | DevPage.tsx + data-testid |
+| All 4 metric families | present | StatsSystemPanels (Nexus·Helios·Harmonia·Cognitif) |
+| No fake data | confirmed | null fallback only |
+| Gates | PASS 20/0 | verify_instructions.sh |
+| AutoHeal | captured | AH-2026-03-15-DEV-STATS-FUSION-001 |
 
-## Cannot be PASS because runtime visible proof was not obtained.
-## Cannot be FAIL because no screen breaks, no metrics lost, no build failures.
+## Why QUALIFIED not PASS
+Runtime visible proof (browser screenshot) unavailable — dev server not launched.
 
-## Next action for PASS
-Start dev server: pnpm dev
-Navigate to /dev > Diagnostics tab
-Confirm StatsSystemPanels renders (data-testid="page-dev-stats-panels")
-Confirm /stats redirects to /dev
+## Why not FAIL
+- No screen breaks
+- No metrics lost  
+- No duplicate surface
+- No build regressions
+- Routes safely redirected
+
+## To reach PASS
+1. pnpm dev
+2. Navigate to /stats → confirms redirect to /dev
+3. Open DEV > Diagnostics tab
+4. Confirm data-testid="page-dev-stats-panels" renders
+5. Confirm 4 metric sections visible: Réseau Cognitif, Système Vital, Équilibre des Flux, État Cognitif
+
+## Rollback
+git revert 073644a19  OR  git restore -- src/pages/Stats.tsx src/pages/DevPage.tsx src/App.tsx src/ui/Menu.tsx
