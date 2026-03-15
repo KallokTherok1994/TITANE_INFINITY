@@ -29,20 +29,14 @@
   position: relative;
 }
 
-/* Subtle outer glow */
+/* v29.1: outer glow supprimé — long-session sustainability (LAW 3) */
 .chat-window::before {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(
-    135deg,
-    rgba(139, 92, 246, 0.15) 0%,
-    rgba(6, 182, 212, 0.1) 50%,
-    rgba(139, 92, 246, 0.15) 100%
-  );
+  background: transparent;
   z-index: -1;
-  filter: blur(2px);
 }
 
 /* ═══════════════════════════════════

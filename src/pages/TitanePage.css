@@ -199,30 +199,21 @@
 }
 
 .titane-tab:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(59, 130, 246, 0.15) 0%,
-    rgba(59, 130, 246, 0.08) 100%
-  );
-  border-color: rgba(59, 130, 246, 0.25);
-  color: rgba(241, 245, 249, 0.95);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+  background: var(--tab-item-bg-hover, rgba(99, 102, 241, 0.08));
+  border-color: var(--tab-item-border-hover, rgba(99, 102, 241, 0.2));
+  color: var(--tab-item-color-hover, rgba(226, 232, 240, 0.96));
+  /* Long-session: suppression du lift pour réduire la fatigue visuelle */
+  box-shadow: 0 1px 6px rgba(99, 102, 241, 0.1);
 }
 
 .titane-tab.active {
-  /* Metallic gradient background */
-  background: var(--titane-gradient-metallic);
-  border-color: rgba(168, 85, 247, 0.5);
-  color: white;
+  background: var(--tab-active-bg);
+  border-color: var(--tab-active-border);
+  color: var(--tab-active-color);
   font-weight: 700;
-  /* Multi-layer glow */
-  box-shadow:
-    0 0 20px rgba(139, 92, 246, 0.4),
-    0 0 40px rgba(59, 130, 246, 0.25),
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  /* Glow simplifié — calme et lisible, sans multi-couches bruyantes */
+  box-shadow: var(--tab-active-shadow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1798,7 +1789,7 @@
   z-index: -1;
 }
 
-/* Enhanced Tab Aura */
+/* Enhanced Tab Aura — v29.1: désactivé pour long-session sustainability (LAW 3 + LAW 8) */
 .titane-tab {
   position: relative;
   overflow: visible;
@@ -1808,22 +1799,17 @@
   content: '';
   position: absolute;
   inset: -8px;
-  background: radial-gradient(
-    circle at bottom,
-    rgba(59, 130, 246, 0.4) 0%,
-    transparent 60%
-  );
+  background: transparent;
   filter: blur(12px);
   opacity: 0;
-  transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: -1;
   border-radius: inherit;
 }
 
 .titane-tab.active::before {
-  opacity: 1;
-  animation: tab-pulse 2.5s ease-in-out infinite;
+  /* glow pulsant désactivé — remplacé par tab-active-shadow statique */
+  opacity: 0;
 }
 
 .titane-tab:hover::before {

@@ -165,45 +165,33 @@
 }
 
 .dev-tab:hover {
-  background: linear-gradient(
-    180deg,
-    rgba(76, 175, 80, 0.12) 0%,
-    rgba(76, 175, 80, 0.06) 100%
-  );
-  border-color: rgba(76, 175, 80, 0.2);
-  color: rgba(232, 232, 240, 0.95);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.12);
+  background: var(--tab-item-bg-hover, rgba(99, 102, 241, 0.08));
+  border-color: var(--tab-item-border-hover, rgba(99, 102, 241, 0.2));
+  color: var(--tab-item-color-hover, rgba(226, 232, 240, 0.96));
+  /* Long-session: suppression lift */
+  box-shadow: 0 1px 6px rgba(99, 102, 241, 0.1);
 }
 
 .dev-tab--active {
-  /* Metallic green-blue gradient */
-  background: linear-gradient(
-    135deg,
-    rgba(76, 175, 80, 0.85) 0%,
-    rgba(33, 150, 243, 0.85) 100%
-  );
-  border-color: rgba(102, 187, 106, 0.5);
-  color: white;
+  background: var(--tab-active-bg);
+  border-color: var(--tab-active-border);
+  color: var(--tab-active-color);
   font-weight: 700;
-  /* Multi-glow */
-  box-shadow:
-    0 0 20px rgba(76, 175, 80, 0.35),
-    0 0 40px rgba(33, 150, 243, 0.2),
-    0 4px 12px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--tab-active-shadow);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .dev-tab-icon {
   font-size: 1.125rem;
-  filter: drop-shadow(0 0 4px currentColor);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
   transition: filter 200ms ease;
+  flex-shrink: 0;
 }
 
 .dev-tab:hover .dev-tab-icon,
 .dev-tab--active .dev-tab-icon {
-  filter: drop-shadow(0 0 8px currentColor);
+  /* Glow calme — sans double drop-shadow pulsant */
+  filter: drop-shadow(0 1px 4px rgba(99, 102, 241, 0.3));
 }
 
 /* ============================================================================
@@ -298,12 +286,13 @@
 }
 
 .dev-stat-card:hover {
-  transform: translateY(-3px) scale(1.01);
-  border-color: rgba(76, 175, 80, 0.35);
+  /* v29.1: lift réduit de -3px scale(1.01) → -1px, pas de scale */
+  transform: translateY(-1px);
+  border-color: rgba(99, 102, 241, 0.25);
   box-shadow:
-    0 8px 24px rgba(0, 0, 0, 0.5),
-    0 0 30px rgba(76, 175, 80, 0.15),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    0 4px 16px rgba(0, 0, 0, 0.4),
+    0 0 16px rgba(99, 102, 241, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .dev-stat-card:hover::before {
