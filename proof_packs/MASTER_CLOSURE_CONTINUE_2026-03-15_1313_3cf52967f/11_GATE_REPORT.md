@@ -36,3 +36,34 @@
 - reports/e2e-desktop/release_online_chat_x3_2026-03-15_1706/run_1.tauri.log
 - reports/e2e-desktop/release_online_chat_x3_2026-03-15_1706/run_2.tauri.log
 - reports/e2e-desktop/release_online_chat_x3_2026-03-15_1706/run_3.tauri.log
+
+## ADDENDUM 2026-03-15 18:24Z - label-aware reruns
+
+### PASS
+- Release proof reference (css split fixed):
+  - artifacts: reports/e2e-desktop/release_online_chat_csssplitfix_20260315T175032Z
+  - result: 1 passing
+  - runtime note: conversation request completed after long latency (`[AI Router v20.1] ✓ Ollama success` at about 73.8s)
+
+### FAIL
+- Labelguard rerun set:
+  - reports/e2e-desktop/release_online_chat_labelguard_20260315T181740Z -> 0 passed, 1 failed (`No assistant response detected`)
+  - reports/e2e-desktop/release_online_chat_labelguard_20260315T181927Z -> 0 passed, 1 failed (`No assistant response detected`) + `UND_ERR_SOCKET` on teardown
+  - reports/e2e-desktop/release_online_chat_labelguard_20260315T182148Z -> 0 passed, 1 failed (`No assistant response detected`)
+
+### BLOCKED CONDITIONS (strengthened)
+- Deterministic runtime truth remains blocked: pass/fail split is driven by provider completion latency exceeding proof window in multiple reruns.
+- In failed labelguard runs, the send action was executed and backend generation started (`[Ω:CMD] Request` + `[AI Router v20.1] Query` + `Routing to Ollama`), but no completion was observed before WDIO timeout.
+- `BOOT:ENTRY_IMPORT_FAIL` persists on `label=main` in recent reruns (not only non-main noise).
+
+### Additional evidence pointers
+- reports/e2e-desktop/release_online_chat_csssplitfix_20260315T175032Z/wdio.log
+- reports/e2e-desktop/release_online_chat_csssplitfix_20260315T175032Z/tauri_driver.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181629Z/wdio.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181629Z/tauri_driver.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181740Z/wdio.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181740Z/tauri_driver.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181927Z/wdio.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T181927Z/tauri_driver.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T182148Z/wdio.log
+- reports/e2e-desktop/release_online_chat_labelguard_20260315T182148Z/tauri_driver.log

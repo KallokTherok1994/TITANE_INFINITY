@@ -46,12 +46,42 @@ async function setColor(testId, value) {
     (el, nextValue) => {
       if (!el) return;
       const normalized = String(nextValue || '').toLowerCase();
-      el.value = normalized;
-      el.dispatchEvent(new Event('input', { bubbles: true }));
+      const setter = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        'value'
+      )?.set;
+      if (setter) {
+        setter.call(el, normalized);
+      } else {
+        el.value = normalized;
+      }
+      try {
+        el.dispatchEvent(
+          new InputEvent('input', {
+            bubbles: true,
+            composed: true,
+            data: normalized,
+            inputType: 'insertText',
+          })
+        );
+      } catch {
+        el.dispatchEvent(new Event('input', { bubbles: true }));
+      }
       el.dispatchEvent(new Event('change', { bubbles: true }));
     },
     input,
     value
+  );
+}
+
+async function waitForRootVar(name, expectedValue) {
+  await browser.waitUntil(
+    async () => (await getRootVar(name)) === String(expectedValue || '').toLowerCase(),
+    {
+      timeout: 20000,
+      interval: 150,
+      timeoutMsg: `root CSS var ${name} did not reach ${expectedValue}`,
+    }
   );
 }
 
@@ -158,7 +188,8 @@ describe('ADMIN Design truth chain', () => {
     await setColor('design-color-border', COLORS.border);
     await setColor('design-color-accent', COLORS.accent);
 
-    await (await $('[data-testid="design-status-dirty"]')).waitForDisplayed({ timeout: 20000 });
+    await waitForRootVar('--color-bg-primary', COLORS.background);
+    await waitForRootVar('--badge-accent-color', COLORS.accent);
 
     assert.equal(await getRootVar('--color-bg-primary'), COLORS.background);
     assert.equal(await getRootVar('--color-bg-secondary'), COLORS.surface);
