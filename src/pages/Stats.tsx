@@ -290,7 +290,11 @@ export const StatsSystemPanels: React.FC = () => {
             icon="🔍"
             subtitle={`Mode: ${cognitiveMode}`}
             variant={
-              cognitiveDepth >= 7 ? 'success' : cognitiveDepth >= 4 ? 'warning' : 'primary'
+              cognitiveDepth >= 7
+                ? 'success'
+                : cognitiveDepth >= 4
+                  ? 'warning'
+                  : 'primary'
             }
           />
           <ModuleCard

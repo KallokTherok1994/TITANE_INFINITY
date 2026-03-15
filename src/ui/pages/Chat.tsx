@@ -880,7 +880,7 @@ const ChatComponent: React.FC = () => {
           const errorPenalty = errorCount > 0 ? 0.7 : 1.0;
           const providerBonus = resolvedProvider ? 1.0 : 0.9;
           return parseFloat(
-            (Math.min(1.0, completionRate * errorPenalty * providerBonus)).toFixed(2)
+            Math.min(1.0, completionRate * errorPenalty * providerBonus).toFixed(2)
           );
         }
         return null;

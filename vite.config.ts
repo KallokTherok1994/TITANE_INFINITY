@@ -523,7 +523,7 @@ export default defineConfig(({ command }) => ({
     chunkSizeWarningLimit: 1600,
     // Optimisations supplémentaires
     target: 'esnext',
-      cssCodeSplit: false,
+    cssCodeSplit: false,
     sourcemap: false,
   },
 

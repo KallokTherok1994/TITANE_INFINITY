@@ -128,8 +128,7 @@ const normalizeRuntimeConfig = (value: unknown): RuntimeConfig => {
 
   // Keep the page operational even when a partial runtime payload is returned.
   const ollama_url =
-    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ??
-    '/api/ollama';
+    pickDefined(asString(raw.ollama_url), asString(raw.ollamaUrl)) ?? '/api/ollama';
   const ollama_model =
     pickDefined(asString(raw.ollama_model), asString(raw.ollamaModel)) ??
     'qwen2.5:latest';

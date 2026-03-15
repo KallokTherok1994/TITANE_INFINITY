@@ -12,13 +12,13 @@
  * Ollama/tauri-backend now have realistic budgets for local LLM generation.
  */
 export const PROVIDER_TIMEOUTS = {
-  'titane-local': 5_000,   // Local kernel — ultra-fast
+  'titane-local': 5_000, // Local kernel — ultra-fast
   'tauri-backend': 50_000, // Rust ChatEngine — BALANCED budget
-  ollama: 45_000,          // Local LLM — realistic generation window
-  gemini: 30_000,          // Cloud API — generous but bounded
+  ollama: 45_000, // Local LLM — realistic generation window
+  gemini: 30_000, // Cloud API — generous but bounded
   openai: 30_000,
   claude: 30_000,
-  default: 45_000,         // Unknown providers get BALANCED budget
+  default: 45_000, // Unknown providers get BALANCED budget
 } as const;
 
 /**
@@ -30,9 +30,9 @@ export const PROVIDER_TIMEOUTS = {
  *   (was 3 → now 2 — bounded fallback chain per Rule 7/8)
  */
 export const REQUEST_BUDGETS = {
-  globalRequestMs: 52_000,   // Aligned with BALANCED response_timeout
+  globalRequestMs: 52_000, // Aligned with BALANCED response_timeout
   providerAttemptMs: 50_000, // Single attempt gets most of the budget
-  maxAttempts: 2,            // Primary + one fallback only
+  maxAttempts: 2, // Primary + one fallback only
 } as const;
 
 /**
@@ -49,8 +49,8 @@ export const MEMORY_TIMEOUTS = {
  * UI-facing timeouts (ms) — aligned with BALANCED profile.
  */
 export const UI_TIMEOUTS = {
-  maxRequest: 52_000,  // Aligned with BALANCED globalRequestMs
-  failsafe: 55_000,    // Failsafe slightly above globalRequestMs
+  maxRequest: 52_000, // Aligned with BALANCED globalRequestMs
+  failsafe: 55_000, // Failsafe slightly above globalRequestMs
   localProvider: { short: 6_000, long: 10_000 },
   ollamaProvider: { short: 20_000, long: 45_000 }, // FIXED: was 8/12s — too tight
   cloudProvider: { short: 15_000, medium: 30_000, long: 52_000 },
@@ -79,10 +79,10 @@ export const CIRCUIT_BREAKER = {
  * Streaming configuration — aligned with BALANCED profile.
  */
 export const STREAM_CONFIG = {
-  chunkBatchSize: 5,         // Batch N chunks before yielding
-  chunkBatchDelayMs: 50,     // Max delay before flushing batch
-  totalTimeoutMs: 58_000,    // BALANCED streaming budget — headroom above 52s worst-case (was 52_000)
-  perChunkTimeoutMs: 7_000,  // BALANCED first-token window
+  chunkBatchSize: 5, // Batch N chunks before yielding
+  chunkBatchDelayMs: 50, // Max delay before flushing batch
+  totalTimeoutMs: 58_000, // BALANCED streaming budget — headroom above 52s worst-case (was 52_000)
+  perChunkTimeoutMs: 7_000, // BALANCED first-token window
 } as const;
 
 /**

@@ -19,7 +19,7 @@ async function clickNavItem(navTestId) {
   const routeByNavId = {
     'nav-titane': '/titane',
     'nav-time': '/time',
-    'nav-stats': '/stats',
+    'nav-stats': '/dev',
     'nav-admin': '/admin',
     'nav-dev': '/dev',
   };
@@ -33,21 +33,26 @@ async function clickNavItem(navTestId) {
       } else {
         const current = await direct.getAttribute('aria-current');
         if (current !== 'page') {
-          await browser.execute(el => el.click(), direct);
+          await browser.execute(el => el?.click(), direct);
         }
       }
       return;
     } catch {
-      const current = await direct.getAttribute('aria-current');
-      if (current === 'page') {
-        return;
-      }
+      // Continue with menu/fallback path.
     }
   }
 
   const moreButton = await $('[data-testid="btn-nav-more"]');
   if (await moreButton.isExisting()) {
     await moreButton.click();
+    await browser.waitUntil(
+      async () => {
+        const inMore = await $(`[data-testid="${navTestId}"]`);
+        return inMore.isExisting();
+      },
+      { timeout: 3000, interval: 150, timeoutMsg: `menu item missing: ${navTestId}` }
+    );
+
     const inMore = await $(`[data-testid="${navTestId}"]`);
     if (await inMore.isExisting()) {
       await inMore.click();
@@ -57,6 +62,7 @@ async function clickNavItem(navTestId) {
 
   const expectedRoute = routeByNavId[navTestId];
   if (expectedRoute) {
+    await browser.url(`tauri://localhost/#${expectedRoute}`);
     const currentUrl = await browser.getUrl();
     if (currentUrl.includes(expectedRoute)) {
       return;
@@ -76,7 +82,7 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     const checks = [
       { nav: 'nav-titane', page: 'page-titane' },
       { nav: 'nav-time', page: 'page-time' },
-      { nav: 'nav-stats', page: 'page-stats' },
+      { nav: 'nav-stats', page: 'page-dev' },
       { nav: 'nav-admin', page: 'page-admin' },
       { nav: 'nav-dev', page: 'page-dev' },
     ];

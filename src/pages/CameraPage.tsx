@@ -323,8 +323,8 @@ export const CameraPage: React.FC = () => {
                 <div className="analysis-section">
                   <h3>🎭 Indices Visuels</h3>
                   <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
-                    ⏳ Analyse en cours de développement — aucun modèle actif.
-                    Les métriques seront disponibles une fois le moteur d'analyse intégré.
+                    ⏳ Analyse en cours de développement — aucun modèle actif. Les
+                    métriques seront disponibles une fois le moteur d'analyse intégré.
                   </p>
                 </div>
               )}
@@ -356,7 +356,8 @@ export const CameraPage: React.FC = () => {
                 <div className="analysis-section">
                   <h3>🧍 Langage Corporel</h3>
                   <p className="affect-disclaimer" style={{ opacity: 0.7 }}>
-                    ⏳ Tracking corporel en cours de développement — aucun landmark détecté.
+                    ⏳ Tracking corporel en cours de développement — aucun landmark
+                    détecté.
                   </p>
                 </div>
               )}

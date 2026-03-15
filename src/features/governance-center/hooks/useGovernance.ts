@@ -255,7 +255,10 @@ export function useGovernance() {
       withLoading(async () => {
         const r = await governanceService.createPolicy(policy);
         if (r.ok && r.data)
-          setState(prev => ({ ...prev, policies: [...prev.policies, r.data ?? ({} as IAPolicy)] }));
+          setState(prev => ({
+            ...prev,
+            policies: [...prev.policies, r.data ?? ({} as IAPolicy)],
+          }));
         else setError(r.error || 'Erreur lors de la création de la politique');
         return r;
       }),
@@ -267,7 +270,10 @@ export function useGovernance() {
       withLoading(async () => {
         const r = await governanceService.deletePolicy(policyId);
         if (r.ok)
-          setState(prev => ({ ...prev, policies: prev.policies.filter(p => p.id !== policyId) }));
+          setState(prev => ({
+            ...prev,
+            policies: prev.policies.filter(p => p.id !== policyId),
+          }));
         else setError(r.error || 'Erreur lors de la suppression de la politique');
         return r;
       }),
