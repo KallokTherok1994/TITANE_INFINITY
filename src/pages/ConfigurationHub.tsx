@@ -1469,6 +1469,7 @@ export const ConfigurationHub: React.FC = () => {
                 icon="🧮"
                 valueType="number"
                 editable={editMode}
+                testId="input-request-max-tokens"
                 onChange={value =>
                   handleRequestDefaultsFieldChange('max_output_tokens', value)
                 }
