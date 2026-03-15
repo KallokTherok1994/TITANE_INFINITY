@@ -26,3 +26,19 @@
 - Investigate the CSS preload failure in the embedded asset boot path.
 - Trace why OMEGA is not initialized at runtime and why the release proof falls back to legacy.
 - Re-run the wider phase matrix only after those two runtime contradictions are resolved.
+
+## Addendum 2026-03-15 18:24Z
+
+## VERDICT: BLOCKED (unchanged)
+
+### New proof integrated
+- `release_online_chat_csssplitfix_20260315T175032Z` confirms one valid pass with long local-provider latency.
+- `release_online_chat_labelguard_20260315T181740Z` fails with `No assistant response detected`.
+- `release_online_chat_labelguard_20260315T181927Z` fails with `No assistant response detected` and teardown socket instability (`UND_ERR_SOCKET`).
+- `release_online_chat_labelguard_20260315T182148Z` fails with `No assistant response detected`.
+- `release_online_chat_labelguard_20260315T181629Z` is inconclusive (WDIO log truncated before verdict).
+
+### Why verdict stays BLOCKED
+- The failed reruns are not explained by missing UI action: send click and backend generation start are both evidenced.
+- Backend logs show request initiation and routing to local provider, but no completion inside the WDIO proof window in failing runs.
+- `BOOT:ENTRY_IMPORT_FAIL` still appears on `label=main` in recent reruns, so boot-path contradiction is still active.

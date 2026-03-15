@@ -20,3 +20,8 @@ TITANE_E2E_FULL=1 TITANE_E2E_USE_WEBSERVER=0 TITANE_E2E_PORT=4000 ./node_modules
 bash scripts/autoheal/detect_recurrence.sh
 bash scripts/verify_instructions.sh
 ```
+
+## Addendum rollback (2026-03-15 18:24Z)
+```bash
+git restore -- proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/11_GATE_REPORT.md proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md
+```
