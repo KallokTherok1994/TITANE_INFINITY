@@ -66,8 +66,10 @@ fn resolve_conversation_os_db_path_from_env(
         return home.join(".local/share/TITANE_INFINITY/runtime/memory/conversation_os_v1.db");
     }
 
-    // Last-resort fallback must stay writable even when HOME/XDG are missing.
-    std::env::temp_dir().join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
+    // Last-resort fallback: use persistent app data dir (correct on Android & desktop).
+    dirs::data_local_dir()
+        .unwrap_or_else(std::env::temp_dir)
+        .join("TITANE_INFINITY/runtime/memory/conversation_os_v1.db")
 }
 
 fn resolve_conversation_os_db_path(db_path_override: Option<std::path::PathBuf>) -> std::path::PathBuf {
