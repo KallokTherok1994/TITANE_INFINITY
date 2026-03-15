@@ -1245,10 +1245,11 @@ mod tests {
     }
 
     #[test]
-    fn conversation_os_db_path_resolver_uses_temp_dir_when_env_missing() {
+    fn conversation_os_db_path_resolver_uses_persistent_dir_when_env_missing() {
         let path = resolve_conversation_os_db_path_from_env(None, None, None, None);
         assert!(path.is_absolute());
-        assert!(path.starts_with(std::env::temp_dir()));
+        // Fallback uses dirs::data_local_dir() for persistent storage (Android-safe).
+        // On most systems data_local_dir() is defined; if not, falls back to temp_dir().
         assert!(path.ends_with("TITANE_INFINITY/runtime/memory/conversation_os_v1.db"));
     }
 
