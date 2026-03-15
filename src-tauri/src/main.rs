@@ -70,6 +70,12 @@ mod commands_v21 {
     }
 }
 
+// ✅ AUTOFIX(memory-chat): Persistent Memory v19.2Ω — full 3-level pipeline
+// Previously orphaned; provides persistent_memory_read/get_stats/get_context/write_entry/etc.
+mod persistent_memory_v19 {
+    include!("commands/persistent_memory.rs");
+}
+
 // Orchestration Center commands (OPUS #5/6/7)
 mod orchestration_center_commands {
     include!("commands/orchestration_center.rs");
@@ -548,6 +554,7 @@ mod singularity_fusion;
 
 // System Center v∞ (Diagnostics, DevTools, Cluster)
 use titane_infinity::system_center;
+use titane_infinity::design_center;
 
 // Cognitive system (always available)
 use titane_infinity::cognitive::{
@@ -875,6 +882,11 @@ fn main() {
 
             app.manage(conversation_engine);
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
+
+            // ✅ AUTOFIX(memory-chat): PersistentMemoryState v19.2Ω — required by
+            //    persistent_memory_read/get_stats/get_context/write_entry IPC commands
+            app.manage(persistent_memory_v19::PersistentMemoryState::new(app.handle()));
+            log::info!("✅ PersistentMemoryState v19.2Ω initialized");
 
             // Initialize providers asynchronously within Tauri's async runtime
             let chat_orch_clone = chat_orchestrator.clone();
@@ -1489,6 +1501,9 @@ fn main() {
             secure_commands::chat_set_anthropic_key,
             secure_commands::get_anthropic_key_status,
             secure_commands::get_secrets_status,
+            secure_commands::secure_store_secret,
+            secure_commands::has_secret,
+            secure_commands::delete_secret,
             secure_commands::get_permission_audit, // ✅ v26.2.3: Permission audit log
             secure_commands::check_system_integrity, // ✅ v21.5: System integrity check
             // Runtime Configuration Bridge v∞ (Frontend config without secrets)
@@ -1575,15 +1590,31 @@ fn main() {
             commands_v21::governance_commands::append_security_log,
             commands_v21::governance_commands::export_security_log,
             commands_v21::governance_commands::clear_security_log,
-            // System Center Commands (6 commands)
+            // System Center Commands
             commands_v21::system_center_commands::sc_get_env,
-            commands_v21::system_center_commands::sc_clear_logs,
-            commands_v21::system_center_commands::sc_add_log,
-            commands_v21::system_center_commands::sc_initialize_cluster,
-            commands_v21::system_center_commands::sc_shutdown_cluster,
-            commands_v21::system_center_commands::sc_hypervision_stop,
-            commands_v21::system_center_commands::sc_hypervision_clear_anomalies,
-            commands_v21::system_center_commands::sc_hypervision_resolve_anomaly,
+            // Logs
+            system_center::logs::sc_get_logs,
+            system_center::logs::sc_get_log_stats,
+            system_center::logs::sc_clear_logs,
+            system_center::logs::sc_add_log,
+            // Cluster
+            system_center::cluster::sc_get_cluster_status,
+            system_center::cluster::sc_get_cluster_peers,
+            system_center::cluster::sc_initialize_cluster,
+            system_center::cluster::sc_shutdown_cluster,
+            // HyperVision
+            system_center::hypervision::sc_hypervision_start,
+            system_center::hypervision::sc_hypervision_stop,
+            system_center::hypervision::sc_hypervision_get_state,
+            system_center::hypervision::sc_hypervision_get_metrics,
+            system_center::hypervision::sc_hypervision_get_layers,
+            system_center::hypervision::sc_hypervision_get_anomalies,
+            system_center::hypervision::sc_hypervision_clear_anomalies,
+            system_center::hypervision::sc_hypervision_resolve_anomaly,
+            // Introspection
+            system_center::introspection::sc_introspection_quick_scan,
+            system_center::introspection::sc_introspection_full_scan,
+            system_center::introspection::sc_introspection_auto_fix,
             // Memory OS Commands (5 commands)
             commands_v21::memory_os_commands::memory_clear,
             commands_v21::memory_os_commands::memory_promote,
@@ -1626,14 +1657,25 @@ fn main() {
             commands_v21::whisper_commands::stop_whisper_streaming,
             commands_v21::whisper_commands::send_audio_chunk,
             // Audio Config Commands - NOTE: Already exist in audio::commands (set/get_audio_*_device)
-            // Persistent Memory Commands (4 commands)
-            commands_v21::persistent_memory_commands::persistent_memory_promote_entry,
-            commands_v21::persistent_memory_commands::persistent_memory_archive_entry,
-            commands_v21::persistent_memory_commands::persistent_memory_delete_entry,
-            commands_v21::persistent_memory_commands::persistent_memory_add_to_bundle,
-            // UI Theme Commands (2 commands)
-            commands_v21::ui_theme_commands::save_ui_theme,
-            commands_v21::ui_theme_commands::load_ui_theme,
+            // ✅ AUTOFIX(memory-chat): Persistent Memory v19.2Ω — full IPC suite
+            //    (stubs v21 remplacés; module orphelin désormais enregistré)
+            persistent_memory_v19::persistent_memory_read,
+            persistent_memory_v19::persistent_memory_get_stats,
+            persistent_memory_v19::persistent_memory_get_bundles,
+            persistent_memory_v19::persistent_memory_get_context,
+            persistent_memory_v19::persistent_memory_write_entry,
+            persistent_memory_v19::persistent_memory_create_summary,
+            persistent_memory_v19::persistent_memory_create_bundle,
+            persistent_memory_v19::persistent_memory_export,
+            persistent_memory_v19::persistent_memory_promote_entry,
+            persistent_memory_v19::persistent_memory_archive_entry,
+            persistent_memory_v19::persistent_memory_delete_entry,
+            persistent_memory_v19::persistent_memory_add_to_bundle,
+            // UI Theme Commands
+            design_center::theme_manager::save_ui_theme,
+            design_center::theme_manager::load_ui_theme,
+            design_center::theme_manager::reset_ui_theme,
+            design_center::theme_manager::update_ui_token,
             // Self-Healing Commands (4 commands)
             commands_v21::self_healing_commands::self_healing_trigger,
             commands_v21::self_healing_commands::self_healing_get_status,
