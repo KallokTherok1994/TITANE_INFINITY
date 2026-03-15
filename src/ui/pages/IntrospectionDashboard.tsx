@@ -31,7 +31,7 @@ const IntrospectionDashboard = memo(function IntrospectionDashboard() {
   const [isScanning, setIsScanning] = useState(false);
   const [isFixing, setIsFixing] = useState(false);
   const [projectPath, setProjectPath] = useState(
-    '/home/titane/Documents/TITANE_INFINITY'
+    import.meta.env.VITE_WORKSPACE_DIR ?? '/home/titane/Documents/TITANE_INFINITY'
   );
   const [selectedSeverity, setSelectedSeverity] = useState<string>('all');
 
