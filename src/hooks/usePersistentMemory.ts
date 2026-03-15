@@ -18,7 +18,7 @@
  *   - Niveau 3: LongTerm (permanent, chiffré)
  */
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import type {
   MemoryEntry,
@@ -215,6 +215,9 @@ const persistentMemoryCache: {
 
 const CACHE_TTL = 30000; // 30 secondes
 
+// Stable default pour éviter la recréation de tableau à chaque render (boucle infinie)
+const DEFAULT_LEVELS: MemoryLevel[] = ['session', 'intermediate', 'long_term'];
+
 // ─────────────────────────────────────────────────────────────────────────────
 // HOOK PRINCIPAL
 // ─────────────────────────────────────────────────────────────────────────────
@@ -225,11 +228,14 @@ export function usePersistentMemory(
   const {
     modeId,
     refreshInterval = 0,
-    levels = ['session', 'intermediate', 'long_term'],
+    levels = DEFAULT_LEVELS,  // Référence stable au lieu d'un nouveau tableau
     topics,
     projectId,
     enableCache = true,
   } = options;
+
+  // Guard anti-boucle: empêche les refreshs concurrents de se déclencher en cascade
+  const isRefreshingRef = useRef(false);
 
   const [state, setState] = useState<PersistentMemoryHookState>({
     entries: [],
@@ -246,6 +252,9 @@ export function usePersistentMemory(
   // ─────────────────────────────────────────────────────────────────────────
 
   const refresh = useCallback(async () => {
+    // Guard anti-boucle: empêche les appels concurrents en cascade
+    if (isRefreshingRef.current) return;
+    isRefreshingRef.current = true;
     // Vérifier le cache
     if (enableCache && persistentMemoryCache.lastFetch) {
       const age = Date.now() - persistentMemoryCache.lastFetch;
@@ -258,6 +267,7 @@ export function usePersistentMemory(
           bundles: Array.from(persistentMemoryCache.bundles.values()),
           lastUpdate: persistentMemoryCache.lastFetch,
         }));
+        isRefreshingRef.current = false;
         return;
       }
     }
@@ -320,6 +330,8 @@ export function usePersistentMemory(
         isLoading: false,
         error: err instanceof Error ? err.message : 'Erreur de chargement mémoire',
       }));
+    } finally {
+      isRefreshingRef.current = false;
     }
   }, [modeId, levels, topics, projectId, enableCache]);
 
