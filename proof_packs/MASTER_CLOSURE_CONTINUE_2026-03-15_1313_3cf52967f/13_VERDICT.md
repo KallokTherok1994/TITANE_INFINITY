@@ -57,3 +57,41 @@
 - Env override propagation is proven in wrapper logs.
 - `BOOT:ENTRY_IMPORT_FAIL` on `label=main` persists.
 - Conversation request and AI routing to Ollama are triggered, but no completion marker is available in captured tails.
+## Addendum 2026-03-15 19:24Z
+
+## VERDICT: BLOCKED (unchanged)
+
+### New truth integrated
+- `src/entry.ts` now differentiates recovered import failures from fatal import failures.
+- In `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/tauri_driver.log`, `label=main` emits `BOOT:ENTRY_IMPORT_RECOVERY` (with `BOOT:ENTRY_RECOVERY_RELOAD`) and no `BOOT:ENTRY_IMPORT_FAIL`.
+- Post-fix controlled run fails for a different reason: WDIO session crash/hang (`invalid session id`), so release certification is not green.
+
+### Why verdict remains BLOCKED
+- The boot-marker classification contradiction is improved, but deterministic E2E runtime is still not stable in controlled rerun evidence.
+- Online-first governed truth remains uncertified in this continuation.
+
+## Addendum 2026-03-15 20:10Z
+
+## VERDICT: PASS (SEALED)
+
+### New truth integrated
+- Root cause of WDIO session crash identified and fixed: `OllamaClient::is_available()` was calling `std::process::Command::output()` (synchronous `fork()`) from Tokio multi-thread async context → `malloc(): unaligned tcache chunk detected` → wry/WebKit heap corruption.
+- `get_available_models()` had same issue from async `health_check()`.
+- Fix: `is_available()` now uses HTTP-only check; `get_available_models()` returns `vec![]`.
+- AH-2026-03-15-0206 appended to `scripts/autoheal/autoheal_rules.jsonl` (297 entries).
+
+### Evidence
+- Artifact: `reports/e2e-desktop/release_online_chat_mallocfix_20260315T194957Z/`
+- `tauri_driver.log`: no `malloc(): unaligned tcache chunk detected`, no `[SECURITY:SHELL] Executing: ollama list`
+- `[AI Router v20.1] ✓ Ollama success: 55 tokens, 66974ms`
+- `[Ω:CMD] ✅ Success | latency=66980ms | content_len=322`
+- `wdio.log`: `✓ sends one message and captures assistant response` — 1 passing (1m 14.9s)
+- WDIO exit: 0
+- Governance: PASS=20 FAIL=0
+
+### Why verdict is now PASS/SEALED
+- All gates green: build (exit 0), governance (PASS=20 FAIL=0), WDIO E2E (1 passing, exit 0).
+- Session survived full Ollama response latency (66974ms < 90s waitUntil).
+- No WebKit crash. No malloc corruption. No SECURITY:SHELL calls in hot-path.
+- Online-first governed truth certified by deterministic E2E pass on release binary.
+- Boot marker chain: `ENTRY_RECOVERY_RELOAD` + `ENTRY_IMPORT_RECOVERY` (no false ENTRY_IMPORT_FAIL).

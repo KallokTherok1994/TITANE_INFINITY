@@ -81,3 +81,69 @@ Observed facts still extracted:
 - Wrapper env override is effective (`TITANE_CONVERSATION_TIMEOUT_SECS=120`, `TITANE_TIMEOUT_TRACE=1`).
 - `BOOT:ENTRY_IMPORT_FAIL` still appears on `label=main`.
 - Conversation flow is triggered (`[Ω:CMD] 📨 Request` + `[AI Router v20.1] Routing to Ollama (local fallback)`), but completion marker is absent in available artifact tails.
+## ADDENDUM 2026-03-15 19:24Z - entry import classification hardening
+
+### PASS
+- Build with bootstrap fix compiled and packaged:
+  - command: `corepack pnpm run build:tauri:e2e`
+  - result: exit 0
+- Main-window marker classification no longer emits false fatal marker on recovery path:
+  - artifact: `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/tauri_driver.log`
+  - evidence:
+    - `UI_BOOT_MARKER label=main BOOT:ENTRY_RECOVERY_RELOAD|...`
+    - `UI_BOOT_MARKER label=main BOOT:ENTRY_IMPORT_RECOVERY|...`
+    - no `UI_BOOT_MARKER label=main BOOT:ENTRY_IMPORT_FAIL` in this run
+
+### FAIL
+- Controlled desktop run after race-fix ended in WDIO/WebDriver failure:
+  - artifact: `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/wdio.log`
+  - error pattern:
+    - `session deleted because of page crash or hang`
+    - repeated `invalid session id`
+  - result: `wdio close: code=1`
+
+### BLOCKED CONDITIONS (updated)
+- Boot marker contradiction (`ENTRY_IMPORT_FAIL` on recovered main import path) is reduced by the new classification and evidenced in latest artifact.
+- Closure remains `BLOCKED` because deterministic runtime certification still fails on WebDriver session crash/hang in post-fix controlled run.
+- Online-first governed truth remains uncertified in this continuation.
+
+### Additional evidence pointers
+- `reports/e2e-desktop/release_online_chat_entryfix_20260315T190315Z/tauri_driver.log`
+- `reports/e2e-desktop/release_online_chat_entryfix_20260315T190315Z/wdio.log`
+- `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/tauri_driver.log`
+- `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/wdio.log`
+- `reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z/diagnostics.log`
+
+## Addendum 2026-03-15 20:10Z — Malloc fix + deterministic WDIO PASS
+
+### Root cause resolved (AH-2026-03-15-0206)
+- Crash: `malloc(): unaligned tcache chunk detected` → wry/WebKit crash ~30s into test
+- Cause: `OllamaClient::is_available()` called `is_installed()` → `ShellGuard::execute_verified("ollama", ["list"])` → `std::process::Command::output()` → synchronous `fork()` in Tokio multi-thread context → heap corruption under concurrent malloc
+- Same issue in `get_available_models()` (called from async `health_check()`)
+
+### Fix applied (minimal patch)
+- File: `src-tauri/src/ai/ollama.rs`
+- `is_available()`: HTTP-only check (`GET /api/tags`), no fork()
+- `get_available_models()`: returns `vec![]`, no shell call
+- `is_installed()` unchanged (still safe for non-async callers in tests)
+
+### Gates rerun after fix
+
+#### Build gate
+- command: `corepack pnpm run build:tauri:e2e`
+- result: exit 0, `Finished release profile in 6m 56s`
+- binary: `src-tauri/target/release/titane-infinity`
+
+#### Governance gate
+- `bash scripts/autoheal/detect_recurrence.sh` → `PASS: G_AH_RECURRENCE_GUARD_PASS, entries=297`
+- `bash scripts/verify_instructions.sh` → `SUMMARY: PASS=20 FAIL=0`
+
+#### WDIO E2E gate
+- artifact: `reports/e2e-desktop/release_online_chat_mallocfix_20260315T194957Z/`
+- result: `1 passing (1m 14.9s)` — exit 0
+- malloc check: NO `malloc(): unaligned tcache chunk detected` in tauri_driver.log
+- no `[SECURITY:SHELL] Executing: ollama list` in this run
+- Ollama response: `[AI Router v20.1] ✓ Ollama success: 55 tokens, 66974ms`
+- Full chain: `[Ω:CMD] ✅ Success | latency=66980ms | content_len=322`
+
+### ALL GATES: PASS

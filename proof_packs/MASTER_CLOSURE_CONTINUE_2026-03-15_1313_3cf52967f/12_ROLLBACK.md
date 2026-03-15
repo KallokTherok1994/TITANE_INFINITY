@@ -25,3 +25,17 @@ bash scripts/verify_instructions.sh
 ```bash
 git restore -- proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/11_GATE_REPORT.md proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md
 ```
+## Addendum rollback (2026-03-15 19:24Z)
+```bash
+git restore -- src/entry.ts scripts/autoheal/autoheal_rules.jsonl proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/11_GATE_REPORT.md proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/12_ROLLBACK.md
+rm -rf reports/e2e-desktop/release_online_chat_entryfix_20260315T190315Z reports/e2e-desktop/release_online_chat_entryfix_race_20260315T192137Z
+```
+
+## Addendum rollback (2026-03-15 20:10Z)
+```bash
+git restore -- src-tauri/src/ai/ollama.rs scripts/autoheal/autoheal_rules.jsonl \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/11_GATE_REPORT.md \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/12_ROLLBACK.md \
+  proof_packs/MASTER_CLOSURE_CONTINUE_2026-03-15_1313_3cf52967f/13_VERDICT.md
+rm -rf reports/e2e-desktop/release_online_chat_mallocfix_20260315T194957Z
+```
