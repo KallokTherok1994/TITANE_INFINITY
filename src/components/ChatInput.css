@@ -5,7 +5,7 @@
  */
 
 .chat-input-container {
-  padding: 20px;
+  padding: 14px;
   background: var(--bg-panel);
   border-top: 1px solid var(--border-subtle);
   backdrop-filter: blur(12px);
@@ -24,7 +24,7 @@
 
 .chat-input-wrapper:focus-within {
   border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--glow-accent);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.18), 0 0 12px rgba(139, 92, 246, 0.12);
 }
 
 .chat-input {
@@ -81,10 +81,9 @@
 }
 
 .chat-input__send-btn:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow:
-    0 6px 16px var(--glow-accent),
-    0 0 24px var(--glow-primary);
+  /* v29.0: hover plus subtil — premium sans excès */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px var(--glow-accent);
 }
 
 .chat-input__send-btn:active:not(:disabled) {
