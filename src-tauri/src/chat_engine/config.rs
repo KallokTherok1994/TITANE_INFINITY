@@ -1,11 +1,49 @@
 use std::time::Duration;
 
+/// Adaptive performance profile controlling all engine budgets.
+///
+/// - `Fast`:     Quick daily chat, low cognitive cost.
+/// - `Balanced`: Default profile — rich, fast, stable.
+/// - `Deep`:     Long audits/reports; only on explicit signal.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ChatProfile {
+    Fast,
+    Balanced,
+    Deep,
+}
+
+impl Default for ChatProfile {
+    fn default() -> Self {
+        Self::Balanced
+    }
+}
+
+impl ChatProfile {
+    /// Parse from a string label (case-insensitive). Unknown values fall back to `Balanced`.
+    pub fn from_str(s: &str) -> Self {
+        match s.to_lowercase().as_str() {
+            "fast" => Self::Fast,
+            "deep" => Self::Deep,
+            _ => Self::Balanced,
+        }
+    }
+}
+
 /// Configuration for the high-performance chat engine.
+///
+/// Fields are derived from a `ChatProfile`; use `ChatEngineConfig::for_profile()` to
+/// construct. The `Default` implementation corresponds to `ChatProfile::Balanced`.
 #[derive(Debug, Clone)]
 pub struct ChatEngineConfig {
-    /// Maximum time allowed for a single non-streaming generation request.
+    /// Active performance profile (informational).
+    pub profile: ChatProfile,
+    /// Hard deadline for the entire generation request (streaming or not).
     pub response_timeout: Duration,
-    /// Default chunk size (in characters) for streaming fallback segmentation.
+    /// Maximum wait before the first streaming token arrives.
+    pub first_token_timeout: Duration,
+    /// Maximum time allowed to fetch memory context entries.
+    pub memory_fetch_timeout: Duration,
+    /// Default chunk size (in characters) for streaming segmentation.
     pub stream_chunk_size: usize,
     /// Maximum number of tokens from memory to feed into the prompt context.
     pub memory_context_tokens: usize,
@@ -15,21 +53,68 @@ pub struct ChatEngineConfig {
     pub memory_flush_interval: Duration,
     /// Buffer capacity for stream channels.
     pub stream_channel_buffer: usize,
+    /// Maximum number of sequential provider retries (0 = no retry).
+    pub max_retry_chain: u8,
+    /// Maximum number of provider fallback hops (0 = no fallback).
+    pub max_fallback_chain: u8,
     /// Enables the text-to-speech pipeline automatically after a response.
     pub auto_tts_enabled: bool,
 }
 
-impl Default for ChatEngineConfig {
-    fn default() -> Self {
-        Self {
-            response_timeout: Duration::from_secs(45),
-            stream_chunk_size: 480,
-            memory_context_tokens: 2_048,
-            memory_retention_tokens: 3_000,
-            memory_flush_interval: Duration::from_millis(350),
-            stream_channel_buffer: 32,
-            auto_tts_enabled: true,
+impl ChatEngineConfig {
+    /// Construct a config tuned for the given profile.
+    pub fn for_profile(profile: ChatProfile) -> Self {
+        match profile {
+            ChatProfile::Fast => Self {
+                profile,
+                response_timeout: Duration::from_millis(30_000),
+                first_token_timeout: Duration::from_millis(5_000),
+                memory_fetch_timeout: Duration::from_millis(2_000),
+                stream_chunk_size: 640,
+                memory_context_tokens: 2_560,
+                memory_retention_tokens: 7_000,
+                memory_flush_interval: Duration::from_millis(350),
+                stream_channel_buffer: 40,
+                max_retry_chain: 1,
+                max_fallback_chain: 1,
+                auto_tts_enabled: true,
+            },
+            ChatProfile::Balanced => Self {
+                profile,
+                response_timeout: Duration::from_millis(52_000),
+                first_token_timeout: Duration::from_millis(7_000),
+                memory_fetch_timeout: Duration::from_millis(3_000),
+                stream_chunk_size: 832,
+                memory_context_tokens: 3_584,
+                memory_retention_tokens: 10_000,
+                memory_flush_interval: Duration::from_millis(350),
+                stream_channel_buffer: 56,
+                max_retry_chain: 1,
+                max_fallback_chain: 1,
+                auto_tts_enabled: true,
+            },
+            ChatProfile::Deep => Self {
+                profile,
+                response_timeout: Duration::from_millis(82_000),
+                first_token_timeout: Duration::from_millis(10_000),
+                memory_fetch_timeout: Duration::from_millis(5_000),
+                stream_chunk_size: 960,
+                memory_context_tokens: 5_120,
+                memory_retention_tokens: 14_000,
+                memory_flush_interval: Duration::from_millis(350),
+                stream_channel_buffer: 64,
+                max_retry_chain: 1,
+                max_fallback_chain: 1,
+                auto_tts_enabled: true,
+            },
         }
+    }
+}
+
+impl Default for ChatEngineConfig {
+    /// Defaults to the `Balanced` profile.
+    fn default() -> Self {
+        Self::for_profile(ChatProfile::Balanced)
     }
 }
 
