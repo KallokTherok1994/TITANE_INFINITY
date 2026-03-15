@@ -39,6 +39,8 @@ import { ErrorBoundary } from '../components/ErrorBoundary';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import { Settings, TrendingUp, Brain, Database, Zap, Sprout } from 'lucide-react';
 import type { ProgressionState } from '@/cognitive/types';
+import { tauriClient } from '@/lib/tauriClient';
+import type { MemoryStats } from '@/services/memory/persistentMemory.config';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -69,6 +71,7 @@ export const EvoPage: React.FC = () => {
   // État
   const [activeTab, setActiveTab] = useState<TabId>('overview');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
+  const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
   const [isEditing, setIsEditing] = useState(false);
 
   // Visual engines
@@ -91,17 +94,30 @@ export const EvoPage: React.FC = () => {
     loadProgression();
   }, []);
 
+  // Chargement stats mémoire
+  useEffect(() => {
+    const loadMemoryStats = async () => {
+      try {
+        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        setMemoryStats(stats);
+      } catch {
+        // Non-blocking: fallback → 0
+      }
+    };
+    loadMemoryStats();
+  }, []);
+
   // Stats calculées
   const stats: EvoStats = useMemo(
     () => ({
       totalXP: progression?.totalXP || 193000,
       level: progression?.level || 19,
-      memoryShortTerm: 247,
-      memoryMidTerm: 1832,
-      memoryLongTerm: 4521,
+      memoryShortTerm: memoryStats?.countByLevel['session'] ?? 0,
+      memoryMidTerm: memoryStats?.countByLevel['intermediate'] ?? 0,
+      memoryLongTerm: memoryStats?.countByLevel['long_term'] ?? 0,
       evolutionScore: 87,
     }),
-    [progression]
+    [progression, memoryStats]
   );
 
   return (
