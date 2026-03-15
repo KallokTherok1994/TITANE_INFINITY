@@ -1,0 +1,6 @@
+77:function normalizeResponse<T>(
+98:    if (typeof payload.ok === 'boolean') {
+111:          : 'content' in payload
+112:            ? (payload.content as T | null)
+116:        ok: payload.ok,
+123:  // Legacy/plain payload: treat as successful content and wrap in SecureResponse.
