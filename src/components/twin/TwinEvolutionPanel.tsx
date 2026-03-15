@@ -33,6 +33,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     isLoading: identityLoading,
     coreValues,
     humanStyle,
+    error: identityError,
   } = useTwinIdentity();
   const {
     fusionIndex,
@@ -44,6 +45,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
     recalculateFusion,
     transitionPhase,
     reinforceValue,
+    error: evolutionError,
   } = useTwinEvolution();
 
   const [activeTab, setActiveTab] = useState<'fusion' | 'values' | 'evolution' | 'admin'>(
@@ -51,6 +53,7 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
   );
 
   const isLoading = identityLoading || evolutionLoading;
+  const hookError = identityError ?? evolutionError ?? null;
 
   if (isLoading) {
     return (
@@ -84,6 +87,12 @@ export const TwinEvolutionPanel: React.FC<TwinEvolutionPanelProps> = ({
 
   return (
     <div className="twin-panel">
+      {/* Error banner */}
+      {hookError && (
+        <div style={{ background: '#4a1a1a', color: '#ff6b6b', border: '1px solid #ff4444', borderRadius: 6, padding: '8px 12px', margin: '8px 0', fontWeight: 500 }}>
+          ❌ {hookError}
+        </div>
+      )}
       {/* Header */}
       <div className="twin-panel__header">
         <div className="twin-panel__title">
@@ -443,12 +452,20 @@ interface AdminTabProps {
 
 const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
   const [isWorking, setIsWorking] = useState(false);
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  const showFeedback = (msg: string) => {
+    setFeedback(msg);
+    setTimeout(() => setFeedback(null), 4000);
+  };
 
   const handleRecalculate = async () => {
     setIsWorking(true);
     try {
       const score = await onRecalculate();
-      console.log('[Admin] New fusion score:', score);
+      showFeedback(`✅ FusionIndex recalculé: ${score.toFixed(2)}`);
+    } catch (e: unknown) {
+      showFeedback(`❌ Erreur: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsWorking(false);
     }
@@ -458,6 +475,9 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
     setIsWorking(true);
     try {
       await onTransition(true);
+      showFeedback('✅ Transition de phase effectuée');
+    } catch (e: unknown) {
+      showFeedback(`❌ Erreur: ${e instanceof Error ? e.message : String(e)}`);
     } finally {
       setIsWorking(false);
     }
@@ -472,6 +492,11 @@ const AdminTab: React.FC<AdminTabProps> = ({ onRecalculate, onTransition }) => {
       </p>
 
       <div className="twin-admin__actions">
+        {feedback && (
+          <div style={{ marginBottom: 8, padding: '6px 10px', borderRadius: 4, background: feedback.startsWith('❌') ? '#4a1a1a' : '#1a3a1a', color: feedback.startsWith('❌') ? '#ff6b6b' : '#6bff6b', border: `1px solid ${feedback.startsWith('❌') ? '#ff4444' : '#44ff44'}` }}>
+            {feedback}
+          </div>
+        )}
         <button
           className="twin-admin__action"
           onClick={handleRecalculate}
