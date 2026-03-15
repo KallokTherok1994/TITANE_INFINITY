@@ -814,7 +814,9 @@ describe('V22 — VISIBLE REAL UI CERTIFICATION (AppImage 27.2.0)', () => {
         await recoverSessionIfNeeded('V22-S5', e);
         M.dominantClassification = classify(M);
         saveMetrics('_s5_session_crash');
-        return;
+        throw new Error(
+          `SESSION_CRASH V22-S5: harness lost — product verdict unproven. harnessRisks=${M.harnessRisks.slice(-2).join('|')}`
+        );
       }
       throw e;
     }

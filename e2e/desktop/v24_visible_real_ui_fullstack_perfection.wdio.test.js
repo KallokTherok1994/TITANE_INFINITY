@@ -1006,7 +1006,9 @@ describe('V24 — VISIBLE REAL UI CERTIFICATION (AppImage 27.2.0)', () => {
           M.dominantFixability = first.fixability;
         }
         saveMetrics('_s5_session_crash');
-        return;
+        throw new Error(
+          `SESSION_CRASH V24-S5: harness lost — product verdict unproven. harnessRisks=${M.harnessRisks.slice(-2).join('|')}`
+        );
       }
       throw e;
     }
