@@ -29,7 +29,7 @@ use tokio::time;
 use serde_json::json;
 use uuid::Uuid;
 
-pub use config::ChatEngineConfig;
+pub use config::{ChatEngineConfig, ChatProfile};
 pub use errors::ChatEngineError;
 pub use speech::SpeechMode;
 pub use types::{
@@ -71,6 +71,15 @@ impl ChatEngine {
     ) -> Result<ChatCompletionPayload, ChatEngineError> {
         payload.validate().map_err(ChatEngineError::InvalidInput)?;
 
+        // Resolve per-request profile (payload overrides engine default).
+        let profile = payload
+            .profile
+            .as_deref()
+            .map(ChatProfile::from_str)
+            .unwrap_or(self.config.profile);
+        let cfg = ChatEngineConfig::for_profile(profile);
+        let profile_label = format!("{:?}", profile).to_lowercase();
+
         let conversation_id = self
             .memory
             .ensure_conversation(payload.conversation_id.take())
@@ -80,10 +89,13 @@ impl ChatEngine {
             .append_user_entry(&conversation_id, payload.user_message.clone())
             .await?;
 
-        let context_entries = self
-            .memory
-            .context_window(&conversation_id, self.config.memory_context_tokens)
-            .await?;
+        // Stage 1: bounded memory fetch.
+        let context_entries = time::timeout(
+            cfg.memory_fetch_timeout,
+            self.memory.context_window(&conversation_id, cfg.memory_context_tokens),
+        )
+        .await
+        .map_err(|_| ChatEngineError::Timeout("Memory fetch timed out".to_string()))??;
 
         let compiled_prompt = compile_prompt(
             payload.system_prompt.as_ref(),
@@ -100,12 +112,29 @@ impl ChatEngine {
         let provider_pref = payload.provider;
         let start = Instant::now();
 
-        let response = time::timeout(
-            self.config.response_timeout,
+        // Stage 2: bounded generation with profile total timeout.
+        let dispatch_result = time::timeout(
+            cfg.response_timeout,
             self.providers.dispatch(ai_request, provider_pref),
         )
-        .await
-        .map_err(|_| ChatEngineError::Timeout("Generation timed out".to_string()))??;
+        .await;
+
+        let (response, stop_reason) = match dispatch_result {
+            Ok(Ok(r)) => (r, "complete".to_string()),
+            Ok(Err(e)) => return Err(e.into()),
+            Err(_) => {
+                log::warn!(
+                    "[ChatEngine] Generation timed out after {}ms (profile={:?})",
+                    cfg.response_timeout.as_millis(),
+                    profile
+                );
+                return Err(ChatEngineError::Timeout(format!(
+                    "Generation timed out after {}ms (profile={})",
+                    cfg.response_timeout.as_millis(),
+                    profile_label
+                )));
+            }
+        };
 
         let assistant_content = response.content.clone();
         self.memory
@@ -115,7 +144,7 @@ impl ChatEngine {
         let latency_ms = start.elapsed().as_millis();
         let message_id = Uuid::new_v4().to_string();
 
-        if self.config.auto_tts_enabled && self.speech.auto_enabled() {
+        if cfg.auto_tts_enabled && self.speech.auto_enabled() {
             let speech = self.speech.clone();
             let text = assistant_content.clone();
             tokio::spawn(async move {
@@ -141,6 +170,8 @@ impl ChatEngine {
             token_count: response.tokens,
             latency_ms,
             timestamp: response.timestamp,
+            stop_reason,
+            profile: profile_label,
         })
     }
 
@@ -149,6 +180,15 @@ impl ChatEngine {
         mut payload: ChatRequestPayload,
     ) -> Result<StreamHandle, ChatEngineError> {
         payload.validate().map_err(ChatEngineError::InvalidInput)?;
+
+        // Resolve per-request profile.
+        let profile = payload
+            .profile
+            .as_deref()
+            .map(ChatProfile::from_str)
+            .unwrap_or(self.config.profile);
+        let cfg = ChatEngineConfig::for_profile(profile);
+        let profile_label = format!("{:?}", profile).to_lowercase();
 
         let conversation_id = self
             .memory
@@ -159,10 +199,13 @@ impl ChatEngine {
             .append_user_entry(&conversation_id, payload.user_message.clone())
             .await?;
 
-        let context_entries = self
-            .memory
-            .context_window(&conversation_id, self.config.memory_context_tokens)
-            .await?;
+        // Stage 1: bounded memory fetch.
+        let context_entries = time::timeout(
+            cfg.memory_fetch_timeout,
+            self.memory.context_window(&conversation_id, cfg.memory_context_tokens),
+        )
+        .await
+        .map_err(|_| ChatEngineError::Timeout("Memory fetch timed out".to_string()))??;
 
         let compiled_prompt = compile_prompt(
             payload.system_prompt.as_ref(),
@@ -178,11 +221,10 @@ impl ChatEngine {
 
         let provider_pref = payload.provider;
         let message_id = Uuid::new_v4().to_string();
-        let config = self.config.clone();
-        let (sender, receiver) = new_stream_channel(config.stream_channel_buffer);
+        let (sender, receiver) = new_stream_channel(cfg.stream_channel_buffer);
         let providers = self.providers.clone();
         let memory = self.memory.clone();
-        let speech = if config.auto_tts_enabled && self.speech.auto_enabled() {
+        let speech = if cfg.auto_tts_enabled && self.speech.auto_enabled() {
             Some(self.speech.clone())
         } else {
             None
@@ -193,12 +235,13 @@ impl ChatEngine {
         tokio::spawn(async move {
             let start = Instant::now();
             let dispatch = providers.dispatch(ai_request, provider_pref);
-            let response = time::timeout(config.response_timeout, dispatch).await;
+            // Stage 2: bounded generation with profile total timeout.
+            let response = time::timeout(cfg.response_timeout, dispatch).await;
             match response {
                 Ok(Ok(result)) => {
                     let chunks = chunk_text(
                         &result.content,
-                        config.stream_chunk_size,
+                        cfg.stream_chunk_size,
                         &conversation_ref,
                         &message_ref,
                     );
@@ -242,6 +285,8 @@ impl ChatEngine {
                             "latency_ms": latency_ms,
                             "timestamp": result.timestamp,
                             "tokens": result.tokens,
+                            "stop_reason": "complete",
+                            "profile": profile_label,
                         })
                         .to_string(),
                         done: true,
@@ -253,11 +298,20 @@ impl ChatEngine {
                         .await;
                 }
                 Err(_) => {
+                    log::warn!(
+                        "[ChatEngine] Stream timed out after {}ms (profile={})",
+                        cfg.response_timeout.as_millis(),
+                        profile_label
+                    );
                     emit_error_chunk(
                         sender,
                         &conversation_ref,
                         &message_ref,
-                        "Generation timed out".to_string(),
+                        format!(
+                            "Generation timed out after {}ms (profile={})",
+                            cfg.response_timeout.as_millis(),
+                            profile_label
+                        ),
                     )
                     .await;
                 }
