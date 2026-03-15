@@ -30,6 +30,10 @@ use crate::commands::exp_fusion::ExpFusionState;
 #[cfg(all(not(feature = "mock"), feature = "full"))]
 use titane_infinity::chat_engine;
 
+// mock_commands — generate_response mock stub (feature = "mock")
+#[cfg(feature = "mock")]
+use titane_infinity::mock_commands;
+
 // OMEGA Conversation Engine v19.5.2
 use titane_infinity::conversation_engine;
 
@@ -856,6 +860,8 @@ fn main() {
 
     // EXP FUSION ENGINE (XP/EXP UI)
     let builder = builder.manage(ExpFusionState::new());
+    // NUMERIC TWIN ENGINE — TWINS_AUDIT 2026-03-15 (RC-002 fix)
+    let builder = builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -1303,6 +1309,12 @@ fn main() {
             // Core messaging
             send_message,
             ollama_query,
+            // Chat Engine — generate_response primary IPC path
+            // mock build: mock_commands::generate_response; full build: chat_engine::commands::generate_response
+            #[cfg(feature = "mock")]
+            mock_commands::generate_response,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            chat_engine::commands::generate_response,
             // OMEGA Conversation Engine Commands (v19.5.2)
             conversation_engine::commands::create_new_conversation,
             conversation_engine::commands::conversation_generate,
@@ -1934,6 +1946,19 @@ fn main() {
             // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-003: register get_recording_status (Q-002)
             // Called in audioSelfHeal.ts, handler exists, now allowlisted in audio_tts.json
             audio::commands::get_recording_status,
+
+            // ═══════════════════════════════════════════════════════════════
+            // NUMERIC TWIN COMMANDS — TWINS_AUDIT 2026-03-15 (RC-001 fix)
+            // twin_* IPC suite — requires NumericTwinState managed above
+            // ═══════════════════════════════════════════════════════════════
+            titane_infinity::numeric_twin::twin_commands::twin_get_state,
+            titane_infinity::numeric_twin::twin_commands::twin_get_fusion_index,
+            titane_infinity::numeric_twin::twin_commands::twin_submit_observation,
+            titane_infinity::numeric_twin::twin_commands::twin_apply_evolution,
+            titane_infinity::numeric_twin::twin_commands::twin_validate_sync,
+            titane_infinity::numeric_twin::twin_commands::twin_get_evolution_profile,
+            titane_infinity::numeric_twin::twin_commands::twin_get_identity,
+            titane_infinity::numeric_twin::twin_commands::twin_recalculate_fusion,
 
             // ═══════════════════════════════════════════════════════════════
             // SECURITY — validate_chat_message
