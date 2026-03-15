@@ -31,7 +31,8 @@ export const XPProgressBar = ({
   showDetails = true,
 }: XPProgressBarProps): JSX.Element => {
   const { animationConfig } = useAnimation();
-  const progress = Math.min((currentXP / requiredXP) * 100, 100);
+  // NaN guard: if requiredXP is 0 or negative, treat as 100% complete
+  const progress = requiredXP > 0 ? Math.min((currentXP / requiredXP) * 100, 100) : 0;
 
   return (
     <div style={{ width: '100%' }}>
