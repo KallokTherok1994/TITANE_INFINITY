@@ -162,9 +162,9 @@ export const TitanePage: React.FC = () => {
     () => ({
       totalXP: progression?.totalXP || 193000,
       level: progression?.level || 19,
-      memoryShortTerm: memoryStats?.countByLevel['session'] ?? 0,
-      memoryMidTerm: memoryStats?.countByLevel['intermediate'] ?? 0,
-      memoryLongTerm: memoryStats?.countByLevel['long_term'] ?? 0,
+      memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
+      memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
+      memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
       evolutionScore: 92,
     }),
     [progression, memoryStats]
