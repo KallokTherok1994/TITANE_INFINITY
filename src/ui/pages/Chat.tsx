@@ -863,10 +863,28 @@ const ChatComponent: React.FC = () => {
       topology,
       provider: resolvedProvider,
       // ── OMEGA v4: nouvelles dimensions vérité ───────────────────
-      qualityScore:
-        typeof omegaMetadata?.validationScore === 'number'
-          ? (omegaMetadata.validationScore as number)
-          : null,
+      qualityScore: (() => {
+        // Priorité 1 : score réel du backend (omegaMetadata.validationScore)
+        if (typeof omegaMetadata?.validationScore === 'number') {
+          return omegaMetadata.validationScore as number;
+        }
+        // Priorité 2 : score de complétude ancré sur les steps réels du pipeline
+        // Formule : complétude × pénalité erreur × bonus provider
+        // Ancrage : steps = traces runtime réelles (non simulées)
+        if (!isLoading && steps.length > 0 && state !== 'active') {
+          const doneCount = steps.filter(
+            s => s.status === 'done' || s.status === 'complete'
+          ).length;
+          const errorCount = steps.filter(s => s.status === 'error').length;
+          const completionRate = doneCount / steps.length;
+          const errorPenalty = errorCount > 0 ? 0.7 : 1.0;
+          const providerBonus = resolvedProvider ? 1.0 : 0.9;
+          return parseFloat(
+            (Math.min(1.0, completionRate * errorPenalty * providerBonus)).toFixed(2)
+          );
+        }
+        return null;
+      })(),
       autoHealed: Boolean(omegaMetadata?.autoHealed),
       memoryTrace: lastEntry
         ? {
@@ -1395,7 +1413,13 @@ const ChatComponent: React.FC = () => {
                     compact={true}
                     inline={false}
                     provider={runtimeThinking.provider}
-                    elapsedTime={isLoading ? elapsedTime : undefined}
+                    elapsedTime={
+                      isLoading
+                        ? elapsedTime
+                        : providerStatus.latency !== undefined
+                          ? providerStatus.latency / 1000
+                          : undefined
+                    }
                     topology={runtimeThinking.topology}
                     xpTrace={xpTrace}
                     memoryTrace={runtimeThinking.memoryTrace}

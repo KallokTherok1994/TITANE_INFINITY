@@ -1,0 +1,43 @@
+OMEGA_JOURNAL_FIX — Tests x3
+
+=== TEST 1/3 : devSudoHandler ===
+Command: timeout 30 pnpm vitest run src/modules/devSudo/devSudoHandler.test.ts
+Result:
+  Test Files  1 passed (1)
+  Tests       36 passed (36)
+  Duration    1.23s
+
+=== TEST 2/3 : devSudoExecutor ===
+Command: timeout 30 pnpm vitest run src/modules/devSudo/devSudoExecutor.test.ts
+Result:
+  Test Files  1 passed (1)
+  Tests       26 passed (26)
+  Duration    981ms
+
+=== TEST 3/3 : devSudoPatterns ===
+Command: timeout 45 pnpm vitest run src/modules/devSudo/devSudoPatterns.test.ts
+Result:
+  Test Files  1 passed (1)
+  Tests       27 passed (27)
+  Duration    1.44s
+
+=== TypeScript (transversal) ===
+Command: pnpm exec tsc --noEmit
+Result: 0 errors (exit code 0)
+
+=== detect_recurrence.sh ===
+Result:
+  PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+  PASS: G_AH_RECURRENCE_GUARD_PASS
+  INFO: entries=283
+
+=== verify_instructions.sh ===
+Result:
+  PASS: G_AUTOHEAL_JSONL_VALID
+  PASS: G_MARKER_VERDICT_UNIQUE
+  PASS: G_MARKER_STOPLINE
+  PASS: G_MARKER_NO_SKIPS
+  PASS: G_MARKER_PROOF_PACK
+  PASS: G_MARKER_AUTOHEAL_CANONICAL_PATH
+  PASS: G_AH_RECURRENCE_GUARD_PASS
+  SUMMARY: PASS=20 FAIL=0

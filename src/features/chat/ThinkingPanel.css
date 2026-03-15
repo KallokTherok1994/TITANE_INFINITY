@@ -485,6 +485,13 @@
   border-color: rgba(59, 130, 246, 0.3);
 }
 
+/* Corps scrollable du journal OMEGA */
+.oj-journal-body {
+  max-height: 480px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
 /* Résumé exécutif */
 .oj-summary {
   padding: 0.625rem 0.875rem;
