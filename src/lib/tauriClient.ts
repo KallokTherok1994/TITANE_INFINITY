@@ -835,6 +835,14 @@ class TauriClient {
     );
   }
 
+  async getAudioDeviceConfig(): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.GET_AUDIO_DEVICE_CONFIG, {});
+  }
+
+  async saveAudioDeviceConfig(config: unknown): Promise<unknown> {
+    return await this.invoke(TAURI_COMMANDS.SAVE_AUDIO_DEVICE_CONFIG, { config });
+  }
+
   async getChatEngineConfig(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.GET_CHAT_ENGINE_CONFIG,

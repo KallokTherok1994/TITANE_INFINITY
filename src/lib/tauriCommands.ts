@@ -253,6 +253,8 @@ export const TAURI_COMMANDS = {
   GET_LOGS: 'get_logs',
   STATE_GET: 'state_get',
   GET_ALL_CONFIGS: 'get_all_configs',
+  GET_AUDIO_DEVICE_CONFIG: 'get_audio_device_config',
+  SAVE_AUDIO_DEVICE_CONFIG: 'save_audio_device_config',
   GET_CHAT_ENGINE_CONFIG: 'get_chat_engine_config',
   GET_CHAT_REQUEST_DEFAULTS: 'get_chat_request_defaults',
   LIST_CONFIG_PRESETS: 'list_config_presets',

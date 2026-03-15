@@ -15,7 +15,7 @@ pub mod update;
 use crate::security::secrets_engine::{SecretsMode, SecureSecretsEngine};
 use serde::{Deserialize, Serialize};
 use std::time::{SystemTime, UNIX_EPOCH};
-use tauri::State;
+use tauri::{AppHandle, Manager, State};
 
 /**
  * Runtime Configuration (serializable version)
@@ -28,6 +28,40 @@ pub struct RuntimeConfig {
     pub secrets_mode: String,
     pub gemini_configured: bool,
     pub timestamp: u64,
+}
+
+/**
+ * Audio Device Configuration
+ *
+ * Canonical audio device settings — single source of truth.
+ * Both Admin Audio page and ConfigurationHub read/write here.
+ */
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AudioDeviceConfig {
+    pub input_device_id: String,
+    pub input_device_label: String,
+    pub output_device_id: String,
+    pub output_device_label: String,
+    pub volume: f32,
+    pub noise_reduction: bool,
+    pub echo_cancellation: bool,
+    pub auto_gain_control: bool,
+}
+
+impl Default for AudioDeviceConfig {
+    fn default() -> Self {
+        Self {
+            input_device_id: String::new(),
+            input_device_label: String::new(),
+            output_device_id: String::new(),
+            output_device_label: String::new(),
+            volume: 1.0,
+            noise_reduction: false,
+            echo_cancellation: false,
+            auto_gain_control: false,
+        }
+    }
 }
 
 /**
@@ -152,6 +186,61 @@ pub async fn get_all_configs(
     );
 
     Ok(snapshot)
+}
+
+/**
+ * Returns the persisted audio device configuration.
+ * File: <app_data_dir>/audio_device_config.json
+ * Returns default values if file does not exist.
+ */
+#[tauri::command]
+pub async fn get_audio_device_config(app: AppHandle) -> Result<AudioDeviceConfig, String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("app_data_dir error: {}", e))?;
+
+    let config_path = data_dir.join("audio_device_config.json");
+
+    if config_path.exists() {
+        let content = std::fs::read_to_string(&config_path)
+            .map_err(|e| format!("Read error: {}", e))?;
+        serde_json::from_str::<AudioDeviceConfig>(&content)
+            .map_err(|e| format!("Parse error: {}", e))
+    } else {
+        Ok(AudioDeviceConfig::default())
+    }
+}
+
+/**
+ * Persists the audio device configuration to disk.
+ * File: <app_data_dir>/audio_device_config.json
+ */
+#[tauri::command]
+pub async fn save_audio_device_config(
+    app: AppHandle,
+    config: AudioDeviceConfig,
+) -> Result<(), String> {
+    let data_dir = app
+        .path()
+        .app_data_dir()
+        .map_err(|e| format!("app_data_dir error: {}", e))?;
+
+    std::fs::create_dir_all(&data_dir)
+        .map_err(|e| format!("mkdir error: {}", e))?;
+
+    let config_path = data_dir.join("audio_device_config.json");
+    let content = serde_json::to_string_pretty(&config)
+        .map_err(|e| format!("Serialize error: {}", e))?;
+
+    std::fs::write(&config_path, content)
+        .map_err(|e| format!("Write error: {}", e))?;
+
+    log::info!(
+        "[CONFIG] audio_device_config saved: input={} output={}",
+        config.input_device_id, config.output_device_id
+    );
+    Ok(())
 }
 
 #[cfg(test)]

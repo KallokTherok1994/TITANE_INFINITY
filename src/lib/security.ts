@@ -1025,6 +1025,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // CONFIG HUB (v24.4+)
   // ═══════════════════════════════════════════════════════════════
   'get_all_configs',
+  'get_audio_device_config',
+  'save_audio_device_config',
   'get_chat_engine_config',
   'get_chat_request_defaults',
   'export_config',
