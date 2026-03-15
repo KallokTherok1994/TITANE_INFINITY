@@ -26,6 +26,10 @@ pub struct ChatRequestPayload {
     pub max_output_tokens: usize,
     pub provider: ProviderPreference,
     pub enable_streaming: bool,
+    /// Optional profile override: "fast" | "balanced" | "deep".
+    /// Absent or unknown values default to Balanced.
+    #[serde(default)]
+    pub profile: Option<String>,
 }
 
 impl ChatRequestPayload {
@@ -60,6 +64,10 @@ pub struct ChatCompletionPayload {
     pub token_count: usize,
     pub latency_ms: u128,
     pub timestamp: i64,
+    /// Why generation stopped: "complete" | "timeout" | "budget" | "error".
+    pub stop_reason: String,
+    /// Profile that was active for this request.
+    pub profile: String,
 }
 
 /// Streaming chunk descriptor sent to the frontend.

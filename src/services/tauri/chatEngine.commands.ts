@@ -27,9 +27,10 @@ const COMMANDS = {
 
 const DEFAULTS = {
   temperature: 0.7,
-  maxTokens: 1024,
+  maxTokens: 1200, // BALANCED profile default (1000-1400 range)
   provider: 'auto' as ProviderPreference,
   enableStreaming: true,
+  profile: 'balanced' as ChatPerformanceProfile,
 } as const;
 
 interface IpcEnvelope<T> {
@@ -47,6 +48,8 @@ interface ChatRequestDefaultsPayload {
 
 export type ProviderPreference = 'auto' | 'gemini' | 'ollama' | 'local';
 export type SpeechMode = 'auto' | 'online' | 'local';
+/** Adaptive performance profile forwarded to the Rust engine. */
+export type ChatPerformanceProfile = 'fast' | 'balanced' | 'deep';
 
 // OMEGA Pipeline Types
 export interface OmegaGenerateArgs {
@@ -56,6 +59,8 @@ export interface OmegaGenerateArgs {
   provider?: string;
   systemPrompt?: string; // ✨ Ajout: system prompt personnalisé depuis InstructionMode
   requestId?: string;
+  /** Performance profile: "fast" | "balanced" | "deep". Default: "balanced". */
+  profile?: ChatPerformanceProfile;
 }
 
 export interface OmegaResponse {
@@ -81,6 +86,8 @@ export interface ChatRequestArgs {
   maxOutputTokens?: number;
   provider?: ProviderPreference;
   enableStreaming?: boolean;
+  /** Performance profile override. Default: "balanced". */
+  profile?: ChatPerformanceProfile;
 }
 
 interface BackendChatCompletionPayload {
@@ -91,6 +98,8 @@ interface BackendChatCompletionPayload {
   token_count: number;
   latency_ms: number;
   timestamp: number;
+  stop_reason?: string;
+  profile?: string;
 }
 
 export interface ChatCompletionPayload {
@@ -101,6 +110,10 @@ export interface ChatCompletionPayload {
   tokenCount: number;
   latencyMs: number;
   timestamp: number;
+  /** Why generation stopped: "complete" | "timeout" | "budget" | "error". */
+  stopReason: string;
+  /** Active performance profile for this response. */
+  profile: string;
 }
 
 interface BackendEngineHealthReport {
@@ -155,6 +168,8 @@ function normalizeCompletion(
     tokenCount: payload.token_count,
     latencyMs: payload.latency_ms,
     timestamp: payload.timestamp,
+    stopReason: payload.stop_reason ?? 'complete',
+    profile: payload.profile ?? DEFAULTS.profile,
   };
 }
 
@@ -189,6 +204,7 @@ function toBackendPayload(args: ChatRequestArgs): Record<string, unknown> {
     max_output_tokens: args.maxOutputTokens ?? DEFAULTS.maxTokens,
     provider: (args.provider ?? 'auto').toLowerCase(),
     enable_streaming: args.enableStreaming ?? false,
+    profile: args.profile ?? DEFAULTS.profile,
   };
 }
 
