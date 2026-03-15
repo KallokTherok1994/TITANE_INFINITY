@@ -174,8 +174,12 @@ const DeviceSelector: React.FC<DeviceSelectorProps> = ({
         )}
       </select>
       {selectedIsMuted && (
-        <p className="text-xs text-amber-400 flex items-center gap-1" data-testid="audio-device-muted-warning">
-          ⚠️ Ce périphérique est muet au niveau système. Désactivez le muet via wpctl ou les paramètres son Ubuntu.
+        <p
+          className="text-xs text-amber-400 flex items-center gap-1"
+          data-testid="audio-device-muted-warning"
+        >
+          ⚠️ Ce périphérique est muet au niveau système. Désactivez le muet via wpctl ou
+          les paramètres son Ubuntu.
         </p>
       )}
     </div>

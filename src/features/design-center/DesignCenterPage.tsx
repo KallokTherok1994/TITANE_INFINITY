@@ -7,7 +7,11 @@
  */
 
 import React, { useCallback, useState } from 'react';
-import { UIThemeProvider, useUITheme } from './providers/UIThemeProvider';
+import {
+  UIThemeProvider,
+  useUITheme,
+  useUIThemeOptional,
+} from './providers/UIThemeProvider';
 import { DesignSystemTab } from './tabs/DesignSystemTab';
 import { AppearanceTab } from './tabs/AppearanceTab';
 import { DESIGN_CENTER_TABS, type DesignCenterTab } from './types/designCenter.types';
@@ -152,7 +156,9 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
 // ============================================================================
 
 function DesignCenterContent() {
-  const [activeTab, setActiveTab] = useState(DESIGN_CENTER_TABS[0]?.id ?? 'design-system');
+  const [activeTab, setActiveTab] = useState(
+    DESIGN_CENTER_TABS[0]?.id ?? 'design-system'
+  );
   const activeTabIndex = DESIGN_CENTER_TABS.findIndex(tab => tab.id === activeTab);
 
   return (
@@ -387,6 +393,12 @@ function DesignCenterContent() {
 // ============================================================================
 
 export function DesignCenterPage() {
+  const existingThemeContext = useUIThemeOptional();
+
+  if (existingThemeContext) {
+    return <DesignCenterContent />;
+  }
+
   return (
     <UIThemeProvider>
       <DesignCenterContent />

@@ -660,26 +660,31 @@ pub async fn test_microphone(
     log::info!("[Audio] Recording to: {}", output_str);
 
     // Use pw-record when a device_id is provided (PipeWire native, supports --target=<wpctl_id>)
+    // CRITICAL: pw-record never exits on its own — wrap with `timeout` to bound duration.
     // Fallback to arecord (uses OS default) when no device is specified.
     let record_result = if let Some(ref id) = device_id {
-        log::info!("[Audio] Using pw-record --target={}", id);
-        Command::new("pw-record")
+        // timeout exits with 124 on expiry (SIGTERM to child), non-zero is acceptable —
+        // the output file will have real audio data captured up to that point.
+        let duration_arg = format!("{:.0}", duration_secs + 1.0);
+        log::info!("[Audio] Using timeout+pw-record --target={}", id);
+        Command::new("timeout")
             .args([
-                "--target", id,
+                duration_arg.as_str(),
+                "pw-record",
+                "--target", id.as_str(),
                 "--rate", "16000",
                 "--channels", "1",
                 "--format", "s16",
-                &output_str,
+                output_str.as_str(),
             ])
-            // pw-record runs indefinitely; limit via timeout(1) if available
-            .env("PW_DURATION_LIMIT", format!("{:.1}s", duration_secs))
             .output()
             .or_else(|_| {
-                // pw-record not available: fall back to arecord
-                log::info!("[Audio] pw-record failed, falling back to arecord");
+                // timeout or pw-record not available: fall back to arecord using OS default.
+                // set_audio_input_device (wpctl set-default) was already called so routing
+                // is correct even without -D.
+                log::info!("[Audio] timeout+pw-record unavailable, falling back to arecord (OS default)");
                 Command::new("arecord")
                     .args([
-                        "-D", &format!("hw:{},0", id),
                         "-d", &format!("{:.0}", duration_secs),
                         "-f", "S16_LE",
                         "-r", "16000",
