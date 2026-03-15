@@ -294,7 +294,10 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
   );
 };
 
-// Generate mock milestones
+/**
+ * DISPLAY_ONLY — Roadmap curée manuellement, aucune connexion IPC live.
+ * Les statuts reflètent l'état réel du code vérifié au 2026-03-15.
+ */
 function generateMockMilestones(): Milestone[] {
   return [
     {
@@ -320,15 +323,15 @@ function generateMockMilestones(): Milestone[] {
       name: 'Vision & Mémoire Advanced',
       description:
         'Amélioration des capacités perceptuelles et mémorielles avec visualisations.',
-      status: 'in-progress',
-      progress: 75,
+      status: 'completed',
+      progress: 100,
       features: [
         'VisionMetricsChart (3 types)',
         'DetectionOverlay Canvas',
         'MemoryTreeViewer D3',
-        'MemorySearchPanel sémantique',
+        'MemorySearchPanel sémantique + IPC',
       ],
-      quarter: 'Q1 2025',
+      quarter: 'Q3 2025',
       importance: 'critical',
     },
     {
@@ -336,16 +339,16 @@ function generateMockMilestones(): Milestone[] {
       version: 'v27.0',
       name: 'Identité & Transformation',
       description:
-        'Mode Matrix 6x6, Persona Editor, et Evolution Timeline pour personnalisation avancée.',
-      status: 'in-progress',
-      progress: 45,
+        'PersonaEditor câblé, Evolution XP, pipeline mémoire→chat, et roadmap visuelle.',
+      status: 'completed',
+      progress: 85,
       features: [
-        'ModeMatrix 36 modes',
-        'PersonaEditor avec sliders',
-        'EvolutionTimeline react-chrono',
+        'PersonaEditor → localStorage → systemPrompt',
+        'Mémoire persistante 3 niveaux → chat',
+        'EvolutionTimeline + XP NaN guards',
         'TransformationRoadmap visual',
       ],
-      quarter: 'Q1 2025',
+      quarter: 'Q4 2025',
       importance: 'high',
     },
     {
@@ -353,15 +356,15 @@ function generateMockMilestones(): Milestone[] {
       version: 'v28.0',
       name: 'AI Multi-Provider Enhanced',
       description: 'Support avancé de multiples providers IA avec fallback intelligent.',
-      status: 'planned',
-      progress: 0,
+      status: 'in-progress',
+      progress: 20,
       features: [
-        'Support GPT-5, Claude Opus 4, Gemini Ultra',
-        'Fallback automatique',
-        'Cost optimization',
+        'Support modèles additionnels (Claude, Gemini)',
+        'Fallback automatique intelligent',
+        'Cost optimization layer',
         'Provider comparison dashboard',
       ],
-      quarter: 'Q2 2025',
+      quarter: 'Q2 2026',
       importance: 'high',
     },
     {
@@ -377,7 +380,7 @@ function generateMockMilestones(): Milestone[] {
         'Voice cloning',
         'Audio analytics',
       ],
-      quarter: 'Q3 2025',
+      quarter: 'Q3 2026',
       importance: 'medium',
     },
     {
@@ -394,7 +397,7 @@ function generateMockMilestones(): Milestone[] {
         'Quantum memory architecture',
         'Meta-learning system',
       ],
-      quarter: 'Q4 2025',
+      quarter: 'Q1 2027',
       importance: 'critical',
     },
   ];

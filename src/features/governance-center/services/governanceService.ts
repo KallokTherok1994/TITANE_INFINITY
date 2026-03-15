@@ -78,25 +78,50 @@ function normalizeResponse<T>(
   raw: unknown,
   defaultError = FALLBACK_ERROR
 ): SecureResponse<T> {
-  if (!raw || typeof raw !== 'object') {
+  if (raw === null || raw === undefined) {
     return { ok: false, data: null, error: defaultError };
   }
 
-  const payload = raw as SecureResponse<T> & { fallback?: boolean; message?: string };
+  if (typeof raw === 'object') {
+    const payload = raw as Record<string, unknown>;
 
-  if (payload.fallback) {
-    return {
-      ok: false,
-      data: null,
-      error: payload.error ?? payload.message ?? defaultError,
-    };
+    if (payload.fallback === true) {
+      const fallbackError =
+        typeof payload.error === 'string'
+          ? payload.error
+          : typeof payload.message === 'string'
+            ? payload.message
+            : defaultError;
+      return { ok: false, data: null, error: fallbackError };
+    }
+
+    if (typeof payload.ok === 'boolean') {
+      const payloadError =
+        payload.error === null || payload.error === undefined
+          ? null
+          : typeof payload.error === 'string'
+            ? payload.error
+            : typeof payload.error === 'object' && payload.error !== null
+              ? String((payload.error as { message?: unknown }).message ?? defaultError)
+              : String(payload.error);
+
+      const data =
+        'data' in payload
+          ? (payload.data as T | null)
+          : 'content' in payload
+            ? (payload.content as T | null)
+            : null;
+
+      return {
+        ok: payload.ok,
+        data: data ?? null,
+        error: payloadError,
+      };
+    }
   }
 
-  if (typeof payload.ok === 'boolean') {
-    return payload;
-  }
-
-  return { ok: false, data: null, error: defaultError };
+  // Legacy/plain payload: treat as successful content and wrap in SecureResponse.
+  return { ok: true, data: raw as T, error: null };
 }
 
 // ═══════════════════════════════════════════════════════════════
