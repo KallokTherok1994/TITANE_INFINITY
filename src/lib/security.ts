@@ -546,7 +546,6 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'voice_stop_listening',
   'voice_transcribe_audio',
   'voice_detect_wake_word',
-  'voice_synthesize_speech',
   'voice_play_audio',
   'voice_stop_speaking',
   'voice_get_config',
@@ -1354,7 +1353,6 @@ let localNetworkMode: LocalNetworkSecurityConfig = {
     'get_system_health',
     'singularity_get_state',
     'tts_speak',
-    'voice_synthesize_speech',
   ]),
 };
 
