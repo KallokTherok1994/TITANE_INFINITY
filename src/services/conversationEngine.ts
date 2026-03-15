@@ -423,7 +423,26 @@ export async function processMessage(
     // Non-blocking: proceed without progression context if unavailable
   }
 
-  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext, progressionContext]
+  // Inject cognitive state from localStorage (set by CognitiveEngineSection)
+  const readCognitiveContext = (): string => {
+    try {
+      const stored = localStorage.getItem('titane_cognitive_state');
+      if (!stored) return '';
+      const state = JSON.parse(stored) as { flowActive?: boolean; energy?: number; mode?: string };
+      if (!state) return '';
+      const parts: string[] = [];
+      if (state.flowActive) parts.push('Flow actif');
+      if (typeof state.energy === 'number') parts.push(`Énergie: ${state.energy}%`);
+      if (state.mode) parts.push(`Mode cognitif: ${state.mode}`);
+      if (parts.length === 0) return '';
+      return `\n[ÉTAT COGNITIF: ${parts.join(' | ')}]`;
+    } catch {
+      return '';
+    }
+  };
+  const cognitiveContext = readCognitiveContext();
+
+  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext, progressionContext, cognitiveContext]
     .filter(Boolean)
     .join('\n\n');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;

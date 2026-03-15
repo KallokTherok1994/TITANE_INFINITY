@@ -23,7 +23,7 @@ import './TimePage.css';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════
 
-type TabId = 'now' | 'agenda' | 'timeline' | 'snapshots' | 'intelligence' | 'flow';
+type TabId = 'now' | 'agenda' | 'timeline' | 'snapshots' | 'cognitive';
 
 interface TimeBlock {
   id: string;
@@ -191,8 +191,7 @@ export const TimePage: React.FC = () => {
           { id: 'agenda', label: '📅 Agenda', desc: 'Planning' },
           { id: 'timeline', label: '🧭 Timeline', desc: 'Navigation' },
           { id: 'snapshots', label: '⏮️ Snapshots', desc: 'Voyage' },
-          { id: 'intelligence', label: '🧠 Intelligence', desc: 'Analytics' },
-          { id: 'flow', label: '🎯 Flow', desc: 'État flux' },
+          { id: 'cognitive', label: '🧠 Cognitive Engine', desc: 'Flow & Intelligence' },
         ].map(tab => (
           <button
             key={tab.id}
@@ -231,8 +230,7 @@ export const TimePage: React.FC = () => {
             loadSnapshots={loadSnapshots}
           />
         )}
-        {activeTab === 'intelligence' && <IntelligenceSection />}
-        {activeTab === 'flow' && <FlowSection flowState={flowState} />}
+        {activeTab === 'cognitive' && <CognitiveEngineSection flowState={flowState} />}
       </div>
     </div>
   );
@@ -958,18 +956,140 @@ const SnapshotsSection: React.FC<SnapshotsSectionProps> = ({
 };
 
 // ═══════════════════════════════════════════════════════════════════
-// SECTION 5: INTELLIGENCE (Analytics temporels)
+// SECTION 5+6: COGNITIVE ENGINE (Flow + Intelligence fusionnés)
 // ═══════════════════════════════════════════════════════════════════
 
-const IntelligenceSection: React.FC = () => {
+interface CognitiveEngineSectionProps {
+  flowState: FlowState;
+}
+
+const CognitiveEngineSection: React.FC<CognitiveEngineSectionProps> = ({ flowState }) => {
+  const [flowActive, setFlowActive] = React.useState(false);
+
+  // Persist cognitive state to localStorage for chat pipeline
+  React.useEffect(() => {
+    try {
+      localStorage.setItem(
+        'titane_cognitive_state',
+        JSON.stringify({ flowActive, energy: 72, mode: flowActive ? 'deep-work' : 'normal' })
+      );
+    } catch {
+      // non-blocking
+    }
+  }, [flowActive]);
+
   return (
-    <div className="intelligence-section space-y-6">
+    <div className="cognitive-engine-section space-y-6">
       <TSectionHeader
-        title="🧠 Intelligence Temporelle"
-        subtitle="Analyses, recommandations, optimisation temps & énergie"
+        title="🧠 Cognitive Engine"
+        subtitle="Flow, Intelligence & Optimisation"
       />
 
-      {/* Analyses */}
+      {/* ── SESSION FLOW TOGGLE ── */}
+      <div className="bg-gray-800 rounded-lg p-4 border border-gray-700 flex items-center justify-between">
+        <div>
+          <div className="font-semibold text-white">
+            {flowActive ? '🌊 Session Flow active' : '⏸️ Aucune session Flow'}
+          </div>
+          <div className="text-sm text-gray-400">
+            {flowActive ? 'Mode deep-work engagé' : 'Démarre une session pour activer le mode cognitif'}
+          </div>
+        </div>
+        <button
+          onClick={() => setFlowActive(v => !v)}
+          className={`px-4 py-2 rounded-lg font-medium transition-all ${flowActive ? 'bg-red-700 hover:bg-red-600 text-white' : 'bg-green-700 hover:bg-green-600 text-white'}`}
+        >
+          {flowActive ? '⏹ Arrêter Session' : '▶ Démarrer Session Flow'}
+        </button>
+      </div>
+
+      {/* ── FLOW STATE ── */}
+      <div
+        className={`rounded-lg p-6 border ${flowState.isInFlow ? 'bg-gradient-to-r from-green-900 to-emerald-900 border-green-600' : 'bg-gray-800 border-gray-700'}`}
+      >
+        <h3 className="text-xl font-semibold mb-4 text-green-300">
+          {flowState.isInFlow ? '🌊 EN FLOW ACTUELLEMENT' : '⏸️ Pas en Flow'}
+        </h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="bg-black/20 p-4 rounded">
+            <div className="text-sm text-gray-400 mb-1">Intensité</div>
+            <div className="text-2xl font-bold">{flowState.flowIntensity}%</div>
+            <div className="h-2 bg-gray-700 rounded-full mt-2 overflow-hidden">
+              <div
+                className="h-full bg-green-500"
+                style={{ width: `${flowState.flowIntensity}%` }}
+              />
+            </div>
+          </div>
+          <div className="bg-black/20 p-4 rounded">
+            <div className="text-sm text-gray-400 mb-1">Durée Session</div>
+            <div className="text-2xl font-bold">{flowState.flowDuration} min</div>
+          </div>
+          <div className="bg-black/20 p-4 rounded">
+            <div className="text-sm text-gray-400 mb-1">Flow Aujourd&apos;hui</div>
+            <div className="text-2xl font-bold">{flowState.totalFlowToday} min</div>
+          </div>
+        </div>
+      </div>
+
+      {/* ── SESSIONS DEEP WORK ── */}
+      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <h3 className="text-xl font-semibold mb-4 text-blue-400">
+          📊 Sessions Deep Work Récentes
+        </h3>
+        <div className="space-y-3">
+          {[
+            { date: "Aujourd'hui 09:00", duration: 87, intensity: 92, activity: 'Architecture v25' },
+            { date: 'Hier 14:30', duration: 105, intensity: 88, activity: 'Code review' },
+            { date: 'Hier 09:15', duration: 95, intensity: 85, activity: 'Fusion modules' },
+          ].map((session, index) => (
+            <div key={index} className="bg-gray-900 p-4 rounded flex items-center gap-4">
+              <div className="flex-1">
+                <div className="font-medium mb-1">{session.activity}</div>
+                <div className="text-sm text-gray-400">{session.date}</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-gray-400">Durée</div>
+                <div className="font-semibold">{session.duration} min</div>
+              </div>
+              <div className="text-right">
+                <div className="text-sm text-gray-400">Intensité</div>
+                <div className="font-semibold text-green-400">{session.intensity}%</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── OPTIMISATION FLOW ── */}
+      <div className="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-lg p-6 border border-indigo-700">
+        <h3 className="text-xl font-semibold mb-4 text-indigo-300">
+          ✨ Optimisation Flow
+        </h3>
+        <div className="space-y-2 text-indigo-100">
+          <div>🎯 Créneau optimal détecté: 9h-11h (92% intensité moyenne)</div>
+          <div>⚡ Prochaine session recommandée: Demain 09:00 (90min)</div>
+          <div>🔋 Recovery needed: 15min avant prochaine session</div>
+          <div>📈 Objectif hebdomadaire: 12h de flow (actuellement: 8.5h)</div>
+        </div>
+      </div>
+
+      {/* ── KPIs FLOW ── */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <TMetric label="Sessions Cette Semaine" value="12" icon="🎯" />
+        <TMetric label="Intensité Moyenne" value="87%" icon="⚡" />
+        <TMetric label="Durée Moyenne" value="92 min" icon="⏱️" />
+        <TMetric label="Meilleur Créneau" value="9h-11h" icon="🌅" />
+      </div>
+
+      {/* ── SÉPARATEUR ── */}
+      <div className="border-t border-gray-700 pt-2">
+        <div className="text-xs text-gray-500 uppercase tracking-wider">
+          ─── Intelligence Temporelle ───
+        </div>
+      </div>
+
+      {/* ── ANALYSES DE PATTERNS ── */}
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">
           📊 Analyses de Patterns
@@ -1010,7 +1130,7 @@ const IntelligenceSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Recommandations */}
+      {/* ── RECOMMANDATIONS TITANE ── */}
       <div className="bg-gradient-to-r from-cyan-900 to-blue-900 rounded-lg p-6 border border-cyan-700">
         <h3 className="text-xl font-semibold mb-4 text-cyan-300">
           💡 Recommandations TITANE
@@ -1048,7 +1168,7 @@ const IntelligenceSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Rituels */}
+      {/* ── RITUELS TEMPORELS ── */}
       <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
         <h3 className="text-xl font-semibold mb-4 text-blue-400">🔄 Rituels Temporels</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1074,120 +1194,12 @@ const IntelligenceSection: React.FC = () => {
         </div>
       </div>
 
-      {/* Métriques */}
+      {/* ── KPIs INTELLIGENCE ── */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <TMetric label="Score Optimisation" value="78%" icon="📈" />
         <TMetric label="Respect Rituels" value="82%" icon="✅" />
         <TMetric label="Surcharges Évitées" value="12" icon="🛡️" />
         <TMetric label="Énergie Moyenne" value="71%" icon="⚡" />
-      </div>
-    </div>
-  );
-};
-
-// ═══════════════════════════════════════════════════════════════════
-// SECTION 6: FLOW (État de flux)
-// ═══════════════════════════════════════════════════════════════════
-
-interface FlowSectionProps {
-  flowState: FlowState;
-}
-
-const FlowSection: React.FC<FlowSectionProps> = ({ flowState }) => {
-  return (
-    <div className="flow-section space-y-6">
-      <TSectionHeader
-        title="🎯 État de Flow"
-        subtitle="Détection et optimisation de l'état de flux"
-      />
-
-      {/* État actuel */}
-      <div
-        className={`rounded-lg p-6 border ${flowState.isInFlow ? 'bg-gradient-to-r from-green-900 to-emerald-900 border-green-600' : 'bg-gray-800 border-gray-700'}`}
-      >
-        <h3 className="text-xl font-semibold mb-4 text-green-300">
-          {flowState.isInFlow ? '🌊 EN FLOW ACTUELLEMENT' : '⏸️ Pas en Flow'}
-        </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="bg-black/20 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Intensité</div>
-            <div className="text-2xl font-bold">{flowState.flowIntensity}%</div>
-            <div className="h-2 bg-gray-700 rounded-full mt-2 overflow-hidden">
-              <div
-                className="h-full bg-green-500"
-                style={{ width: `${flowState.flowIntensity}%` }}
-              />
-            </div>
-          </div>
-          <div className="bg-black/20 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Durée Session</div>
-            <div className="text-2xl font-bold">{flowState.flowDuration} min</div>
-          </div>
-          <div className="bg-black/20 p-4 rounded">
-            <div className="text-sm text-gray-400 mb-1">Flow Aujourd&apos;hui</div>
-            <div className="text-2xl font-bold">{flowState.totalFlowToday} min</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Sessions récentes */}
-      <div className="bg-gray-800 rounded-lg p-6 border border-gray-700">
-        <h3 className="text-xl font-semibold mb-4 text-blue-400">
-          📊 Sessions Deep Work Récentes
-        </h3>
-        <div className="space-y-3">
-          {[
-            {
-              date: "Aujourd'hui 09:00",
-              duration: 87,
-              intensity: 92,
-              activity: 'Architecture v25',
-            },
-            { date: 'Hier 14:30', duration: 105, intensity: 88, activity: 'Code review' },
-            {
-              date: 'Hier 09:15',
-              duration: 95,
-              intensity: 85,
-              activity: 'Fusion modules',
-            },
-          ].map((session, index) => (
-            <div key={index} className="bg-gray-900 p-4 rounded flex items-center gap-4">
-              <div className="flex-1">
-                <div className="font-medium mb-1">{session.activity}</div>
-                <div className="text-sm text-gray-400">{session.date}</div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-gray-400">Durée</div>
-                <div className="font-semibold">{session.duration} min</div>
-              </div>
-              <div className="text-right">
-                <div className="text-sm text-gray-400">Intensité</div>
-                <div className="font-semibold text-green-400">{session.intensity}%</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Recommandations Flow */}
-      <div className="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-lg p-6 border border-indigo-700">
-        <h3 className="text-xl font-semibold mb-4 text-indigo-300">
-          ✨ Optimisation Flow
-        </h3>
-        <div className="space-y-2 text-indigo-100">
-          <div>🎯 Créneau optimal détecté: 9h-11h (92% intensité moyenne)</div>
-          <div>⚡ Prochaine session recommandée: Demain 09:00 (90min)</div>
-          <div>🔋 Recovery needed: 15min avant prochaine session</div>
-          <div>📈 Objectif hebdomadaire: 12h de flow (actuellement: 8.5h)</div>
-        </div>
-      </div>
-
-      {/* Métriques */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <TMetric label="Sessions Cette Semaine" value="12" icon="🎯" />
-        <TMetric label="Intensité Moyenne" value="87%" icon="⚡" />
-        <TMetric label="Durée Moyenne" value="92 min" icon="⏱️" />
-        <TMetric label="Meilleur Créneau" value="9h-11h" icon="🌅" />
       </div>
     </div>
   );
