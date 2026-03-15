@@ -19,7 +19,7 @@ test.describe('Critical Path: Application Launch', () => {
 
   test.beforeEach(async ({ page }) => {
     // Navigate to Vite dev server (Tauri webview context)
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
   });
 
   test('app loads without console errors', async ({ page }) => {
