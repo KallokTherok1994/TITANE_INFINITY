@@ -8,6 +8,7 @@ pub mod appearance_state; // v24.5 — Appearance State
 pub mod appearance_taxonomy_engine; // v24.9 — Taxonomy Engine
 pub mod avatar_commands;
 pub mod avatar_display_state; // v24.12 — Display State (Floating Window)
+#[cfg(not(target_os = "android"))]
 pub mod avatar_floating_commands;
 pub mod avatar_selftest;
 pub mod fullbody; // v24 — Full-Body Avatar Engine

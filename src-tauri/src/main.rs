@@ -1334,25 +1334,44 @@ fn main() {
             avatar::appearance_commands::avatar_list_styles,
             avatar::appearance_commands::avatar_add_archetype,
 
-            // Avatar floating window / display state
+            // Avatar floating window / display state (desktop-only — window APIs not available on Android)
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_get_display_state,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_display_state,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_update_display_state,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_reset_display_state,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_mode_floating,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_mode_embed,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_mode_hidden,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_position,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_size,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_scale,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_opacity,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_always_on_top,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_locked,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_mirror_mode,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_click_through,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_anchor,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_set_anchor_by_name,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_list_screens,
+            #[cfg(not(target_os = "android"))]
             avatar::avatar_floating_commands::avatar_move_to_screen,
 
             // FullBody engine
