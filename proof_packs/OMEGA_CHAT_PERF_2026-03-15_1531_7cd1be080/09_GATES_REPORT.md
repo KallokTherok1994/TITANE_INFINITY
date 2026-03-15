@@ -14,3 +14,12 @@
 | G_UI_META_TRUTH | PASS | stop_reason + profile in ChatCompletionPayload (Rust types + TS interface) |
 | G_DESKTOP_X3 | BLOCKED | No live desktop runtime available in this CI environment. Required for PASS → QUALIFIED verdict. |
 | G_NO_FALSE_PASS | PASS | Verdict declared QUALIFIED, not PASS, due to missing G_DESKTOP_X3 |
+
+---
+## ADDENDUM — commit 4ede39ac8
+
+| Gate | Status | Evidence |
+|------|--------|---------|
+| G_STAGE_TIMEOUTS_PRESENT (TS) | PASS | providerAttemptMs=50000, ollama=45000 |
+| G_NO_UNBOUNDED_RETRY (TS) | PASS | maxAttempts=2 |
+| G_NO_UNBOUNDED_FALLBACK (TS) | PASS | maxAttempts=2 = primary+1 fallback |
