@@ -344,7 +344,12 @@ export const useVisionStore = create<VisionStore>()(
           });
 
           // Démarrer la caméra automatiquement
-          await get().startCamera();
+          const started = await get().startCamera();
+          if (!started) {
+            // Rollback: observation ne peut pas démarrer sans caméra
+            get().disableVision();
+            return false;
+          }
 
           return true;
         },
