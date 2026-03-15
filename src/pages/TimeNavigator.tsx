@@ -3,8 +3,11 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════
- *   TIME NAVIGATOR — Super-Prompt N6
- *   Interface de navigation temporelle + restore
+ *   TIME NAVIGATOR — DEPRECATED
+ *   @deprecated Route /time-navigator → redirect → /time (App.tsx:1074)
+ *   La logique Snapshots est intégrée dans TimePage.tsx (SnapshotsSection).
+ *   Ce fichier est conservé pour compatibilité ascendante uniquement.
+ *   Ne pas dupliquer la logique IPC snapshots ici.
  * ═══════════════════════════════════════════════════════════════
  */
 
