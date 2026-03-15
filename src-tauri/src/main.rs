@@ -106,7 +106,8 @@ mod system_health_commands {
     include!("commands/system_health_commands.rs");
 }
 
-// DevOps commands (module local)
+// DevOps commands (module local) — desktop-only (hardcoded workspace path)
+#[cfg(not(target_os = "android"))]
 mod devops_commands {
     include!("commands/devops.rs");
 }
