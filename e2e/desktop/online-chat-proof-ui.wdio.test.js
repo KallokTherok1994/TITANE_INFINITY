@@ -407,6 +407,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     await input.waitForExist({ timeout: 15000 });
 
     const before = await getLastText(selectors.response);
+    const beforeAssistantCount = await browser.execute(() => {
+      return document.querySelectorAll('[data-testid="chat-message-assistant"]').length;
+    });
 
     // Scroll element into viewport — after onboarding bypass + reload the
     // ConversationSection may render outside the visible WRY window area.
@@ -456,12 +459,22 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     }
 
     let after = '';
+    let afterAssistantCount = beforeAssistantCount;
     await browser.waitUntil(
       async () => {
         after = await getLastText(selectors.response);
-        return !!after && after !== before;
+        afterAssistantCount = await browser.execute(() => {
+          return document.querySelectorAll('[data-testid="chat-message-assistant"]')
+            .length;
+        });
+        return (
+          (!!after && after !== before) || afterAssistantCount > beforeAssistantCount
+        );
       },
       { timeout: 90000, interval: 1000, timeoutMsg: 'No assistant response detected' }
+    );
+    console.log(
+      `[ASSISTANT_SNAPSHOT] beforeCount=${beforeAssistantCount} afterCount=${afterAssistantCount}`
     );
 
     assert.notEqual(

@@ -15,12 +15,15 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('normalizes missing metadata with safe defaults', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce('c1').mockResolvedValueOnce({
-      content: 'Hello',
-      conversationId: 'c1',
-      messageId: 'm1',
-      metadata: undefined,
-    });
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce('c1') // createNewConversation
+      .mockResolvedValueOnce(null) // persistentMemoryGetContext
+      .mockResolvedValueOnce({
+        content: 'Hello',
+        conversationId: 'c1',
+        messageId: 'm1',
+        metadata: undefined,
+      }); // conversationGenerate
 
     const response = await processMessage('Hi');
 
@@ -34,7 +37,8 @@ describe('conversationEngine.processMessage', () => {
 
   it('preserves provided metadata values when valid', async () => {
     vi.mocked(secureInvoke)
-      .mockResolvedValueOnce('c2')
+      .mockResolvedValueOnce('c2') // createNewConversation
+      .mockResolvedValueOnce(null) // persistentMemoryGetContext
       .mockResolvedValueOnce({
         content: 'Ok',
         conversationId: 'c2',
@@ -60,12 +64,14 @@ describe('conversationEngine.processMessage', () => {
   });
 
   it('wraps conversation_generate payload under args', async () => {
-    vi.mocked(secureInvoke).mockResolvedValueOnce({
-      content: 'Ok',
-      conversationId: 'c3',
-      messageId: 'm3',
-      metadata: {},
-    });
+    vi.mocked(secureInvoke)
+      .mockResolvedValueOnce(null) // persistentMemoryGetContext
+      .mockResolvedValueOnce({
+        content: 'Ok',
+        conversationId: 'c3',
+        messageId: 'm3',
+        metadata: {},
+      }); // conversationGenerate
 
     await processMessage('Hi', { conversationId: 'c3' });
 

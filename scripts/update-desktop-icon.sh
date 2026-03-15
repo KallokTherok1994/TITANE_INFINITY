@@ -28,17 +28,19 @@ mkdir -p "$DESKTOP_INSTALL_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
-# Détecter l'exécutable à utiliser (priorité: AppImage stable → cargo release → cargo debug)
+# Détecter l'exécutable à utiliser (priorité: AppImage la plus récente parmi bundle+stable → cargo release → cargo debug)
 BINARY_PATH=""
 
 shopt -s nullglob
 STABLE_APPIMAGES=("$PROJECT_DIR"/runtime/stable/*.AppImage)
+BUNDLE_APPIMAGES=("$PROJECT_DIR"/src-tauri/target/release/bundle/appimage/*.AppImage)
+ALL_APPIMAGES=("${BUNDLE_APPIMAGES[@]}" "${STABLE_APPIMAGES[@]}")
 shopt -u nullglob
 
-if [ ${#STABLE_APPIMAGES[@]} -gt 0 ]; then
+if [ ${#ALL_APPIMAGES[@]} -gt 0 ]; then
     # Prendre la plus récente
-    BINARY_PATH="$(ls -t "${STABLE_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
-    echo -e "      ✓ AppImage Stable trouvée"
+    BINARY_PATH="$(ls -t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
+    echo -e "      ✓ AppImage la plus récente trouvée"
 elif [ -f "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
     echo -e "      ✓ Binaire Release trouvé"
@@ -78,9 +80,12 @@ if [ ! -f "$ICON_PATH" ]; then
     ICON_PATH="$ICON_DIR/icon.png"
 fi
 
-# Version affichée dans le menu (évite la confusion quand plusieurs runtimes cohabitent)
+# Version affichée dans le menu (utilise d'abord la version active du repo)
 APP_VERSION=""
-if [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
+if [ -f "$PROJECT_DIR/src-tauri/tauri.conf.json" ]; then
+    APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/src-tauri/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
+fi
+if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/runtime/stable/tauri.conf.json" ]; then
     APP_VERSION="$(grep -m1 '"version"' "$PROJECT_DIR/runtime/stable/tauri.conf.json" | sed -E 's/.*"version"[[:space:]]*:[[:space:]]*"([^"]+)".*/\1/')"
 fi
 if [ -z "$APP_VERSION" ] && [ -f "$PROJECT_DIR/package.json" ]; then
