@@ -1,5 +1,5 @@
 # v27.2.0 Artifact Sizes
-# Generated: 2026-03-14T15:16:51Z
-TITANE-Infinity_27.2.0_amd64.AppImage: 92162552 bytes (88M)
-TITANE-Infinity_27.2.0_amd64.deb: 17052748 bytes (17M)
-titane-infinity: 30524712 bytes (30M)
+# Generated: 2026-03-15T20:25:22Z
+TITANE-Infinity_27.2.0_amd64.AppImage: 88103416 bytes (85M)
+TITANE-Infinity_27.2.0_amd64.deb: 15052478 bytes (15M)
+titane-infinity: 30486840 bytes (30M)

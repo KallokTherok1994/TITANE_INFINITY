@@ -1,26 +1,26 @@
 {
   "deployment": {
-    "timestamp": "2026-03-14T21:49:22Z",
+    "timestamp": "2026-03-15 20:25:22 UTC",
     "version": "28.0.0",
-    "commit": "b771239b04db2444ff5afa4e3e8127a383f91acb",
+    "commit": "10bee2e17019533c3193778769ca16f1ff453a99",
     "branch": "MAIN",
-    "deployment_type": "release_refresh_after_merge_clean"
+    "certification": "TITANE_INFINITY_RELEASE_20260315_162322_CERTIFIED",
+    "deployment_type": "post_certification"
   },
   "artifacts": {
     "appimage": {
       "available": true,
-      "filename": "TITANE-Infinity_27.2.0_amd64.AppImage",
-      "sha256": "f6939ec07bfa3fc74b2ec282fb818cf74543c1bce6bb4f2b843099950d868bfe"
+      "sha256": "2769deba45af44947347375e4f1e4692ee1ee568fbc88bc0fa78f7bef8ceda00"
     },
     "deb": {
       "available": true,
-      "filename": "TITANE-Infinity_27.2.0_amd64.deb",
-      "sha256": "62d8ab95930f513ae1f753103c318fbfb68a73091bcd8c58be93f737666235ca"
-    },
-    "binary": {
-      "available": true,
-      "filename": "titane-infinity",
-      "sha256": "7302bb28cbb2e9e40e1c93eb48664925a3a7d29c29a1b717b703928c35a3c632"
+      "sha256": "a72d694c7570e69ea7ad06bc8123af325177cd86f85196e6b5f0484a46dc269b"
     }
+  },
+  "certification": {
+    "release_gate_status": "PASSED",
+    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
+    "security_posture": "MAXIMUM_HARDENED",
+    "production_readiness": "CERTIFIED_READY"
   }
 }
