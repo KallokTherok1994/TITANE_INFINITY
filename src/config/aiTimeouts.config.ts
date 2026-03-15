@@ -81,7 +81,7 @@ export const CIRCUIT_BREAKER = {
 export const STREAM_CONFIG = {
   chunkBatchSize: 5,         // Batch N chunks before yielding
   chunkBatchDelayMs: 50,     // Max delay before flushing batch
-  totalTimeoutMs: 52_000,    // BALANCED total streaming budget
+  totalTimeoutMs: 58_000,    // BALANCED streaming budget — headroom above 52s worst-case (was 52_000)
   perChunkTimeoutMs: 7_000,  // BALANCED first-token window
 } as const;
 
