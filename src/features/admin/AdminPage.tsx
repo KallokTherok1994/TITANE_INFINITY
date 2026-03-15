@@ -39,9 +39,13 @@ const headerVariants: Variants = {
 // LAZY IMPORTS - Performance Optimization
 // ══════════════════════════════════════════════════════════════════
 
-const SystemCenterPage = lazy(() =>
-  import('../system-center').then(m => ({ default: m.SystemCenterPage }))
-);
+const SystemCenterPage = lazy(async () => {
+  const m = await import('../system-center/SystemCenterPage');
+  if (!m.SystemCenterPage) {
+    throw new Error('[ADMIN_IMPORT] Export SystemCenterPage manquant');
+  }
+  return { default: m.SystemCenterPage };
+});
 
 const ConfigurationHub = lazy(() =>
   import('../../pages/ConfigurationHub').then(m => ({ default: m.ConfigurationHub }))

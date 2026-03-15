@@ -328,6 +328,25 @@ const normalizeEnvelope = <T,>(
   };
 };
 
+const normalizeSnapshotResponse = (value: unknown): ConfigSnapshot => {
+  const raw = toRecord(value);
+  if (!raw) {
+    throw new Error('Snapshot de configuration invalide');
+  }
+
+  const hasEnvelopeShape = typeof raw.ok === 'boolean';
+  if (!hasEnvelopeShape) {
+    return normalizeConfigSnapshot(raw);
+  }
+
+  const envelope = normalizeEnvelope(raw, normalizeConfigSnapshot);
+  if (!envelope.ok || !envelope.content) {
+    throw new Error(envelope.error?.message || 'Snapshot de configuration indisponible');
+  }
+
+  return envelope.content;
+};
+
 type ConfigTab = 'system' | 'ai' | 'performance';
 
 export const ConfigurationHub: React.FC = () => {
@@ -381,7 +400,7 @@ export const ConfigurationHub: React.FC = () => {
 
     try {
       console.log('🎯 [ConfigHub] Loading configuration snapshot...');
-      const snapshot = normalizeConfigSnapshot(await tauriClient.getAllConfigs());
+      const snapshot = normalizeSnapshotResponse(await tauriClient.getAllConfigs());
       const engineEnvelope = normalizeEnvelope(
         await tauriClient.getChatEngineConfig(),
         normalizeChatEngineConfig
