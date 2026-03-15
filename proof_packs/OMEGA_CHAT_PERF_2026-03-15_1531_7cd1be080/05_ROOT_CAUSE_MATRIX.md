@@ -17,3 +17,12 @@
 | H13 UI masque état backend lent | UNKNOWN | No desktop runtime | R4 | MEDIUM | Profile meta now in response | opaque UX | OPEN |
 | H14 OMEGA sans budget par mode | CONFIRMED | No FAST/BALANCED/DEEP existed | R2 | CRITICAL | Profile system added | unbounded cost | FIXED |
 | H15 problème dominant autre | UNKNOWN | No live metrics | — | — | — | — | UNKNOWN |
+
+---
+## ADDENDUM 2026-03-15 — H4+H5 TS PATH (commit 4ede39ac8)
+
+| Hypothesis | Status | Proof | Layer | Criticité | Patch | Verdict |
+|------------|--------|-------|-------|-----------|-------|---------|
+| H4 stage timeouts TS | CONFIRMED | providerAttemptMs=8000 applied in orchestrator AND useChatCore | R3 | CRITICAL | providerAttemptMs: 8000→50000 | FIXED |
+| H5 retry chain unbounded | CONFIRMED | maxAttempts=3 × providerAttemptMs=8000 = 24s frozen | R3 | CRITICAL | maxAttempts: 3→2 | FIXED |
+| H5 PROVIDER_TIMEOUTS.ollama | CONFIRMED | 8000ms too tight for local LLM inference (typical: 15-45s) | R3 | CRITICAL | ollama: 8000→45000 | FIXED |
