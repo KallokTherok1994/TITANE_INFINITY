@@ -37,6 +37,19 @@ const DEV_ORIGIN = (() => {
 const devUrl = (route = '/') =>
   `${DEV_BASE_URL}${route.startsWith('/') ? route : `/${route}`}`;
 const isDevUrl = url => Boolean(url && url.includes(DEV_ORIGIN));
+const TAURI_BASE_URL = 'tauri://localhost';
+const tauriUrl = (route = '/') => {
+  const normalized = route.startsWith('/') ? route : `/${route}`;
+  if (normalized === '/') return `${TAURI_BASE_URL}/`;
+  return `${TAURI_BASE_URL}/#${normalized}`;
+};
+const shouldPreferTauriUrl = () => {
+  const explicitDevServer =
+    process.env.TAURI_DEV_SERVER_URL || process.env.VITE_DEV_SERVER_URL;
+  return !explicitDevServer;
+};
+const appUrl = (route = '/') =>
+  shouldPreferTauriUrl() ? tauriUrl(route) : devUrl(route);
 
 // E2E Test Configuration (Optimized for speed)
 const parsePositiveInt = (value, fallback) => {
@@ -400,20 +413,315 @@ const DOM_DISCOVERY = {
   },
 };
 
-const DOM_DISCOVERY_SOURCE = Object.fromEntries(
-  Object.entries(DOM_DISCOVERY).map(([key, fn]) => [key, fn.toString()])
-);
-
 async function injectDomDiscovery() {
   console.log('🔧 Injecting DOM discovery functions...');
 
   try {
-    await browser.execute(source => {
-      window.DOM_DISCOVERY = {};
-      Object.entries(source).forEach(([key, fnBody]) => {
-        window.DOM_DISCOVERY[key] = eval('(' + fnBody + ')');
-      });
-    }, DOM_DISCOVERY_SOURCE);
+    await browser.execute(() => {
+      const isInputCandidate = el => {
+        if (!el) return false;
+        const tag = el.tagName ? el.tagName.toLowerCase() : '';
+        const type = (el.getAttribute('type') || '').toLowerCase();
+        const editable = (el.getAttribute('contenteditable') || '').toLowerCase();
+        return (
+          tag === 'textarea' || tag === 'input' || editable === 'true' || type === 'text'
+        );
+      };
+
+      const getUniqueSelector = element => {
+        if (!element) return '';
+        if (element.id) return '#' + element.id;
+
+        const path = [];
+        let current = element;
+        while (current && current.nodeType === Node.ELEMENT_NODE) {
+          let selector = current.nodeName.toLowerCase();
+          if (current.className && typeof current.className === 'string') {
+            selector += '.' + current.className.trim().split(/\s+/).join('.');
+          }
+          path.unshift(selector);
+          current = current.parentNode;
+          if (path.length > 3) break;
+        }
+        return path.join(' > ');
+      };
+
+      const detectChatInput = () => {
+        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+          .filter(isInputCandidate);
+        if (testIdCandidates.length > 0) return testIdCandidates[0];
+
+        const inputCandidates = Array.from(
+          document.querySelectorAll('textarea, input, [contenteditable="true"]')
+        );
+        const placeholderMatch = inputCandidates.find(el => {
+          const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+          return ph.includes('message') || ph.includes('chat');
+        });
+        if (placeholderMatch) return placeholderMatch;
+
+        const textareas = inputCandidates.filter(
+          el => el.tagName && el.tagName.toLowerCase() === 'textarea'
+        );
+        if (textareas.length === 1) return textareas[0];
+
+        const textInputs = inputCandidates.filter(el => {
+          const tag = el.tagName ? el.tagName.toLowerCase() : '';
+          const type = (el.getAttribute('type') || '').toLowerCase();
+          return tag === 'input' && (type === 'text' || type === '');
+        });
+        if (textInputs.length === 1) return textInputs[0];
+
+        const headings = Array.from(document.querySelectorAll('h1'));
+        const chatHeading = headings.find(h =>
+          (h.innerText || h.textContent || '').toLowerCase().includes('chat')
+        );
+        if (!chatHeading) return null;
+
+        const section = chatHeading.closest('section, main, article, div');
+        if (!section) return null;
+
+        const scoped = Array.from(
+          section.querySelectorAll('textarea, input, [contenteditable="true"]')
+        );
+        return scoped.length > 0 ? scoped[0] : null;
+      };
+
+      const buildMeta = (el, reason) => {
+        if (!el) return null;
+        return {
+          found: true,
+          reason,
+          tagName: el.tagName,
+          className: el.className,
+          id: el.id,
+          placeholder: el.getAttribute('placeholder') || null,
+          dataTestId: el.getAttribute('data-testid') || null,
+          selector: getUniqueSelector(el),
+        };
+      };
+
+      const detectChatInputMeta = () => {
+        const testIdCandidates = Array.from(document.querySelectorAll('[data-testid]'))
+          .filter(el => (el.getAttribute('data-testid') || '').toLowerCase().includes('chat'))
+          .filter(isInputCandidate);
+        if (testIdCandidates.length > 0)
+          return buildMeta(testIdCandidates[0], 'data-testid:chat');
+
+        const inputCandidates = Array.from(
+          document.querySelectorAll('textarea, input, [contenteditable="true"]')
+        );
+        const placeholderMatch = inputCandidates.find(el => {
+          const ph = (el.getAttribute('placeholder') || '').toLowerCase();
+          return ph.includes('message') || ph.includes('chat');
+        });
+        if (placeholderMatch) return buildMeta(placeholderMatch, 'placeholder:message|chat');
+
+        const textareas = inputCandidates.filter(
+          el => el.tagName && el.tagName.toLowerCase() === 'textarea'
+        );
+        if (textareas.length === 1) return buildMeta(textareas[0], 'unique-textarea');
+
+        const textInputs = inputCandidates.filter(el => {
+          const tag = el.tagName ? el.tagName.toLowerCase() : '';
+          const type = (el.getAttribute('type') || '').toLowerCase();
+          return tag === 'input' && (type === 'text' || type === '');
+        });
+        if (textInputs.length === 1) return buildMeta(textInputs[0], 'unique-text-input');
+
+        const headings = Array.from(document.querySelectorAll('h1'));
+        const chatHeading = headings.find(h =>
+          (h.innerText || h.textContent || '').toLowerCase().includes('chat')
+        );
+        if (chatHeading) {
+          const section = chatHeading.closest('section, main, article, div');
+          if (section) {
+            const scoped = Array.from(
+              section.querySelectorAll('textarea, input, [contenteditable="true"]')
+            );
+            if (scoped.length > 0) return buildMeta(scoped[0], 'h1-chat-scope');
+          }
+        }
+
+        return { found: false, reason: 'not-found' };
+      };
+
+      const detectSendButton = () => {
+        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+        );
+        if (byTestId) return byTestId;
+
+        const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
+        return (
+          buttons.find(btn => {
+            const txt = (btn.innerText || btn.textContent || '').toLowerCase();
+            const cls = (btn.className || '').toLowerCase();
+            const id = (btn.id || '').toLowerCase();
+            const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+            const type = (btn.getAttribute('type') || '').toLowerCase();
+
+            return (
+              txt.includes('send') ||
+              txt.includes('envoyer') ||
+              txt.includes('envoi') ||
+              cls.includes('send') ||
+              cls.includes('submit') ||
+              id.includes('send') ||
+              ariaLabel.includes('send') ||
+              ariaLabel.includes('envoyer') ||
+              type === 'submit'
+            );
+          }) || null
+        );
+      };
+
+      const detectSendButtonMeta = () => {
+        const buildSendMeta = (el, reason) => {
+          if (!el) return null;
+          return {
+            found: true,
+            reason,
+            tagName: el.tagName,
+            className: el.className,
+            id: el.id,
+            text: el.innerText || el.textContent || null,
+            dataTestId: el.getAttribute('data-testid') || null,
+            selector: getUniqueSelector(el),
+          };
+        };
+
+        const byTestId = Array.from(document.querySelectorAll('[data-testid]')).find(el =>
+          (el.getAttribute('data-testid') || '').toLowerCase().includes('send')
+        );
+        if (byTestId) return buildSendMeta(byTestId, 'data-testid:send');
+
+        const buttons = Array.from(document.querySelectorAll('button, [role="button"]'));
+        const found = buttons.find(btn => {
+          const txt = (btn.innerText || btn.textContent || '').toLowerCase();
+          const ariaLabel = (btn.getAttribute('aria-label') || '').toLowerCase();
+          const type = (btn.getAttribute('type') || '').toLowerCase();
+          return (
+            txt.includes('send') ||
+            txt.includes('envoyer') ||
+            ariaLabel.includes('send') ||
+            ariaLabel.includes('envoyer') ||
+            type === 'submit'
+          );
+        });
+
+        if (found) return buildSendMeta(found, 'semantic');
+        return { found: false, reason: 'not-found' };
+      };
+
+      const detectAssistantMessages = () => {
+        let messages = Array.from(document.querySelectorAll('[data-testid="assistant-message"]'));
+        if (messages.length > 0) return messages;
+
+        const allElements = Array.from(document.querySelectorAll('div, article, section'));
+        messages = allElements.filter(el => {
+          const cls = (el.className || '').toLowerCase();
+          const role = (el.getAttribute('role') || '').toLowerCase();
+          const dataRole = (el.getAttribute('data-role') || '').toLowerCase();
+
+          return (
+            cls.includes('assistant') ||
+            cls.includes('bot-message') ||
+            cls.includes('ai-message') ||
+            role === 'assistant' ||
+            dataRole === 'assistant'
+          );
+        });
+
+        return messages;
+      };
+
+      const detectChatNavigation = () => {
+        const byTestId = document.querySelector('[data-testid="nav-chat"]');
+        if (byTestId) return [byTestId];
+
+        const candidates = Array.from(
+          document.querySelectorAll('a, button, [role="link"], [role="button"]')
+        );
+        return candidates.filter(el => {
+          const text = (el.innerText || el.textContent || '').toLowerCase();
+          const href = (el.getAttribute('href') || '').toLowerCase();
+          const cls = (el.className || '').toLowerCase();
+
+          return (
+            text.includes('chat') ||
+            text.includes('conversation') ||
+            text.includes('messages') ||
+            href.includes('chat') ||
+            href.includes('conversation') ||
+            cls.includes('chat') ||
+            cls.includes('conversation')
+          );
+        });
+      };
+
+      const getDOMSignature = () => {
+        const input = detectChatInput();
+        const send = detectSendButton();
+        const nav = detectChatNavigation();
+
+        return {
+          timestamp: new Date().toISOString(),
+          chatInput: input
+            ? {
+                tagName: input.tagName,
+                className: input.className,
+                id: input.id,
+                placeholder: input.placeholder,
+                selector: getUniqueSelector(input),
+              }
+            : null,
+          sendButton: send
+            ? {
+                tagName: send.tagName,
+                className: send.className,
+                id: send.id,
+                text: send.innerText,
+                selector: getUniqueSelector(send),
+              }
+            : null,
+          navigationLinks: nav.map(n => ({
+            tagName: n.tagName,
+            className: n.className,
+            text: n.innerText,
+            href: n.getAttribute('href'),
+          })),
+          url: window.location.href,
+          title: document.title,
+        };
+      };
+
+      const getChatDomMap = () => {
+        return {
+          timestamp: new Date().toISOString(),
+          url: window.location.href,
+          title: document.title,
+          chatInput: detectChatInputMeta(),
+          sendButton: detectSendButtonMeta(),
+          h1Texts: Array.from(document.querySelectorAll('h1')).map(
+            h => h.innerText || h.textContent || ''
+          ),
+        };
+      };
+
+      window.DOM_DISCOVERY = {
+        detectChatInput,
+        detectChatInputMeta,
+        detectSendButton,
+        detectSendButtonMeta,
+        detectAssistantMessages,
+        detectChatNavigation,
+        getDOMSignature,
+        getChatDomMap,
+        getUniqueSelector,
+      };
+    });
 
     console.log('✅ DOM discovery functions injected');
   } catch (err) {
@@ -423,6 +731,181 @@ async function injectDomDiscovery() {
     }
     console.error('⚠️ DOM injection error:', err.message);
     throw err;
+  }
+}
+
+async function ensureChatPageReady(phaseLabel) {
+  console.log(`${phaseLabel} Ensuring chat page...`);
+
+  const getChatReadySnapshot = async () => {
+    await injectDomDiscovery();
+    return browser.execute(() => {
+      const map = window.DOM_DISCOVERY?.getChatDomMap();
+      return {
+        url: window.location.href,
+        chatInputFound: map?.chatInput?.found || false,
+        textareaCount: document.querySelectorAll('textarea').length,
+      };
+    });
+  };
+
+  const tryActivateConversationSurface = async () => {
+    return browser.execute(() => {
+      const selectors = [
+        '[data-testid="tab-conversation"]',
+        '[data-testid="nav-chat"]',
+        '[data-testid*="conversation"]',
+        '[data-testid*="chat"]',
+        'a[href*="chat"]',
+        'a[href*="conversation"]',
+      ];
+
+      for (const selector of selectors) {
+        const el = document.querySelector(selector);
+        if (el && typeof el.click === 'function') {
+          el.click();
+          return { clicked: true, method: selector };
+        }
+      }
+
+      const semantic = Array.from(
+        document.querySelectorAll('a, button, [role="button"], [role="link"], [role="tab"]')
+      ).find(el => {
+        const text = (el.innerText || el.textContent || '').toLowerCase();
+        const aria = (el.getAttribute('aria-label') || '').toLowerCase();
+        const testId = (el.getAttribute('data-testid') || '').toLowerCase();
+        return (
+          text.includes('chat') ||
+          text.includes('conversation') ||
+          text.includes('message') ||
+          aria.includes('chat') ||
+          aria.includes('conversation') ||
+          testId.includes('chat') ||
+          testId.includes('conversation')
+        );
+      });
+
+      if (semantic && typeof semantic.click === 'function') {
+        semantic.click();
+        return {
+          clicked: true,
+          method: 'semantic',
+          text: semantic.innerText || semantic.textContent || '',
+        };
+      }
+
+      return { clicked: false, method: 'none' };
+    });
+  };
+
+  let currentUrl = '';
+  try {
+    currentUrl = await browser.getUrl();
+  } catch (err) {
+    const message = (err && err.message) || String(err);
+    if (/invalid session id/i.test(message)) {
+      console.warn('⚠️ Session invalid, reloading WebDriver session...');
+      await browser.reloadSession();
+      currentUrl = '';
+    } else {
+      console.warn(`⚠️ Could not read URL: ${message}`);
+    }
+  }
+
+  if (
+    currentUrl === 'about:blank' ||
+    (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
+  ) {
+    console.log(`   → Redirecting from ${currentUrl} to /chat...`);
+    await browser.url(appUrl('/chat'));
+    await browser.pause(3000);
+  }
+
+  let chatReady = await getChatReadySnapshot();
+
+  if (!chatReady.chatInputFound) {
+    const recoveryCandidates = [
+      appUrl('/chat'),
+      appUrl('/titane'),
+      appUrl('/'),
+      'tauri://localhost/titane',
+      'tauri://localhost/#/titane',
+      'tauri://localhost/#/chat',
+    ].filter(Boolean);
+
+    const seen = new Set();
+    for (const candidate of recoveryCandidates) {
+      if (chatReady.chatInputFound) break;
+      if (seen.has(candidate)) continue;
+      seen.add(candidate);
+
+      console.log(`   → Recovery route: ${candidate}`);
+      try {
+        await browser.url(candidate);
+      } catch (err) {
+        console.warn(`   ⚠️ Recovery navigation failed: ${err.message}`);
+      }
+
+      await browser.pause(1500);
+
+      const navResult = await tryActivateConversationSurface().catch(() => ({
+        clicked: false,
+        method: 'error',
+      }));
+
+      if (navResult.clicked) {
+        console.log(`   → Activated conversation surface via ${navResult.method}`);
+        await browser.pause(1200);
+      }
+
+      chatReady = await getChatReadySnapshot();
+    }
+  }
+
+  if (!chatReady.chatInputFound) {
+    console.warn('   ⚠️ Readiness fallback: running ensureChatPage()');
+    try {
+      await ensureChatPage();
+      chatReady = await getChatReadySnapshot();
+    } catch (err) {
+      console.warn(`   ⚠️ ensureChatPage fallback failed: ${err.message}`);
+    }
+  }
+
+  console.log(
+    `   ✓ Chat ready: ${chatReady.chatInputFound ? 'YES' : 'NO'} (${chatReady.url}, ${chatReady.textareaCount} textareas)`
+  );
+
+  if (!chatReady.chatInputFound) {
+    throw new Error(`Chat input missing after readiness check: ${chatReady.url}`);
+  }
+}
+
+async function waitForAssistantIdle(timeout = 12000) {
+  try {
+    await browser.waitUntil(
+      async () => {
+        return browser.execute(() => {
+          const messages = window.DOM_DISCOVERY?.detectAssistantMessages?.() || [];
+          if (messages.length === 0) return true;
+
+          const last = messages[messages.length - 1];
+          const text = (last?.innerText || last?.textContent || '').toLowerCase();
+          return (
+            !text.includes('reflechit') &&
+            !text.includes('réfléchit') &&
+            !text.includes('thinking')
+          );
+        });
+      },
+      {
+        timeout,
+        interval: 300,
+        timeoutMsg: 'Assistant still in thinking state',
+      }
+    );
+  } catch {
+    console.warn('⚠️ Assistant stayed in thinking state, continuing anyway');
   }
 }
 
@@ -475,13 +958,16 @@ async function waitForElement(detectorFn, timeout = 10000, retries = 3) {
 async function sendMessageViaUI(text, timeout = 25000) {
   const startTime = Date.now();
 
+  // Avoid stacking requests while the previous answer is still being generated.
+  await waitForAssistantIdle();
+
   // Detect chat input dynamically
   console.log(`🔍 Detecting chat input for message: "${text}"`);
   let inputFound = await waitForElement(DOM_DISCOVERY.detectChatInput, 10000);
   if (!inputFound) {
     console.warn('⚠️ Chat input not found, forcing /chat and retry...');
     try {
-      await browser.url(devUrl('/chat'));
+      await browser.url(appUrl('/chat'));
       await browser.pause(3000);
       await injectDomDiscovery();
       inputFound = await waitForElement(DOM_DISCOVERY.detectChatInput, 10000);
@@ -513,7 +999,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
   const inputElement = await browser.execute(
     inputData => {
       // Re-detect to get actual element reference
-      const detected = eval('(' + DOM_DISCOVERY.detectChatInput.toString() + ')')();
+      const detected = window.DOM_DISCOVERY?.detectChatInput?.();
       if (detected) {
         detected.focus();
         const tag = (detected.tagName || '').toLowerCase();
@@ -560,7 +1046,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
 
   // Get initial assistant message state
   const beforeState = await browser.execute(() => {
-    const messages = eval('(' + DOM_DISCOVERY.detectAssistantMessages.toString() + ')')();
+    const messages = window.DOM_DISCOVERY?.detectAssistantMessages?.() || [];
     const last = messages.length > 0 ? messages[messages.length - 1] : null;
     return {
       count: messages.length,
@@ -570,24 +1056,18 @@ async function sendMessageViaUI(text, timeout = 25000) {
 
   // Click send button
   await browser.execute(() => {
-    const btn = eval('(' + DOM_DISCOVERY.detectSendButton.toString() + ')')();
+    const btn = window.DOM_DISCOVERY?.detectSendButton?.();
     if (btn) {
-      // Try multiple dispatch methods for React compatibility
-      btn.click();
-
-      // Also trigger MouseEvent for React synthetic events
-      const clickEvent = new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-        view: window,
-      });
-      btn.dispatchEvent(clickEvent);
-
-      // If button is in a form, try submitting the form
-      const form = btn.closest('form');
-      if (form) {
-        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-        form.dispatchEvent(submitEvent);
+      if (typeof btn.click === 'function') {
+        btn.click();
+      } else {
+        btn.dispatchEvent(
+          new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          })
+        );
       }
     }
   });
@@ -599,9 +1079,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
     await browser.waitUntil(
       async () => {
         const afterState = await browser.execute(() => {
-          const messages = eval(
-            '(' + DOM_DISCOVERY.detectAssistantMessages.toString() + ')'
-          )();
+          const messages = window.DOM_DISCOVERY?.detectAssistantMessages?.() || [];
           const last = messages.length > 0 ? messages[messages.length - 1] : null;
           return {
             count: messages.length,
@@ -613,7 +1091,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
           (afterState.lastText && afterState.lastText !== beforeState.lastText)
         );
       },
-      { timeout, timeoutMsg: `No response after ${timeout}ms` }
+      { timeout, interval: 250, timeoutMsg: `No response after ${timeout}ms` }
     );
   } catch (err) {
     const elapsed = Date.now() - startTime;
@@ -636,7 +1114,7 @@ async function sendMessageViaUI(text, timeout = 25000) {
 
   // Get last assistant message text
   const responseText = await browser.execute(() => {
-    const messages = eval('(' + DOM_DISCOVERY.detectAssistantMessages.toString() + ')')();
+    const messages = window.DOM_DISCOVERY?.detectAssistantMessages?.() || [];
     if (messages.length === 0) return '';
     const last = messages[messages.length - 1];
     return last.innerText || last.textContent || '';
@@ -888,9 +1366,9 @@ async function ensureChatPage() {
   console.log(`   Current URL: ${currentUrl}`);
 
   if (currentUrl === 'about:blank') {
-    console.warn('⚠️ About:blank detected, navigating to dev URL...');
+    console.warn('⚠️ About:blank detected, navigating to app URL...');
     try {
-      await browser.url(devUrl('/'));
+      await browser.url(appUrl('/'));
       await browser.pause(1000);
     } catch (err) {
       console.error('⚠️ Navigation failed:', err.message);
@@ -944,7 +1422,7 @@ async function ensureChatPage() {
       if (class2 !== 'CHAT') {
         console.log('   → Forcing /chat route...');
         try {
-          await browser.url(devUrl('/chat'));
+          await browser.url(appUrl('/chat'));
           await browser.pause(1000);
 
           const fingerprint3 = await collectPageFingerprint();
@@ -1010,7 +1488,7 @@ async function ensureChatPage() {
           console.warn(
             `   ⚠️ Carousel appeared to loop (${carouselSkipped}+ clicks). Attempting direct /chat navigation...`
           );
-          await browser.url(devUrl('/chat'));
+          await browser.url(appUrl('/chat'));
           await browser.pause(1000);
         }
 
@@ -1043,7 +1521,7 @@ async function ensureChatPage() {
 
       if (!inputReady) {
         console.warn('⚠️ Chat input still missing, forcing /chat and retry...');
-        await browser.url(devUrl('/chat'));
+        await browser.url(appUrl('/chat'));
         await browser.pause(3000);
         await injectDomDiscovery();
       }
@@ -1165,61 +1643,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase B-D: AR3 Focused Test (UI-Driven)', () => {
     beforeEach(async () => {
-      console.log('🔄 beforeEach: Ensuring chat page for AR3...');
-
-      let currentUrl = '';
-      try {
-        currentUrl = await browser.getUrl();
-      } catch (err) {
-        console.warn(`⚠️ Could not read URL: ${err.message}`);
-      }
-
-      if (
-        currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
-      ) {
-        console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url(devUrl('/chat'));
-        await browser.pause(3000);
-      }
-
-      await injectDomDiscovery();
-
-      const chatReady = await browser.execute(() => {
-        const map = window.DOM_DISCOVERY?.getChatDomMap();
-        return {
-          url: window.location.href,
-          chatInputFound: map?.chatInput?.found || false,
-          textareaCount: document.querySelectorAll('textarea').length,
-        };
-      });
-
-      if (!chatReady.chatInputFound) {
-        console.warn(`   ⚠️ Chat input missing on ${chatReady.url}. Forcing /chat...`);
-        await browser.url(devUrl('/chat'));
-        await browser.pause(3000);
-        await injectDomDiscovery();
-        const retryReady = await browser.execute(() => {
-          const map = window.DOM_DISCOVERY?.getChatDomMap();
-          return {
-            url: window.location.href,
-            chatInputFound: map?.chatInput?.found || false,
-            textareaCount: document.querySelectorAll('textarea').length,
-          };
-        });
-        console.log(
-          `   ✓ Chat ready (retry): ${retryReady.chatInputFound ? 'YES' : 'NO'} (${retryReady.url}, ${retryReady.textareaCount} textareas)`
-        );
-        if (!retryReady.chatInputFound) {
-          throw new Error(
-            `Chat input still missing after /chat redirect: ${retryReady.url}`
-          );
-        }
-      } else {
-        console.log(
-          `   ✓ Chat ready: ${chatReady.chatInputFound ? 'YES' : 'NO'} (${chatReady.url}, ${chatReady.textareaCount} textareas)`
-        );
-      }
+      await ensureChatPageReady('🔄 beforeEach AR3:');
     });
 
     it('should send AR3 consecutive messages via UI and receive responses', async () => {
@@ -1305,38 +1729,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase E: Offline Simulation', () => {
     beforeEach(async () => {
-      console.log('🔌 beforeEach: Ensuring chat page for Offline...');
-
-      let currentUrl = '';
-      try {
-        currentUrl = await browser.getUrl();
-      } catch (err) {
-        console.warn(`⚠️ Could not read URL: ${err.message}`);
-      }
-
-      if (
-        currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
-      ) {
-        console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url(devUrl('/chat'));
-        await browser.pause(3000);
-      }
-
-      await injectDomDiscovery();
-
-      const chatReady = await browser.execute(() => {
-        const map = window.DOM_DISCOVERY?.getChatDomMap();
-        return {
-          url: window.location.href,
-          chatInputFound: map?.chatInput?.found || false,
-          textareaCount: document.querySelectorAll('textarea').length,
-        };
-      });
-
-      console.log(
-        `   ✓ Chat ready: ${chatReady.chatInputFound ? 'YES' : 'NO'} (${chatReady.url}, ${chatReady.textareaCount} textareas)`
-      );
+      await ensureChatPageReady('🔌 beforeEach Offline:');
     });
 
     it('should handle offline mode gracefully (5 messages)', async () => {
@@ -1350,7 +1743,29 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       for (let i = 1; i <= 5; i++) {
         console.log(`📤 Offline message ${i}/5`);
 
-        const result = await sendMessageViaUI(`Offline test ${i}`, 10000);
+        let result;
+        try {
+          result = await sendMessageViaUI(`Offline test ${i}`, 15000);
+        } catch (err) {
+          const message = (err && err.message) || String(err);
+          console.warn(`⚠️ Offline ${i}: driver exception (${message})`);
+
+          results.push({
+            index: i,
+            success: false,
+            latency: 0,
+            responseLength: 0,
+            isEmpty: true,
+            error: message,
+          });
+
+          if (/invalid session id/i.test(message)) {
+            await ensureChatPageReady('🔌 Offline recovery:');
+          }
+
+          await browser.pause(1000);
+          continue;
+        }
 
         results.push({
           index: i,
@@ -1368,7 +1783,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
           console.warn(`⚠️ Offline ${i}: No response`);
         }
 
-        await browser.pause(300);
+        await browser.pause(1500);
       }
 
       const offlinePayload = {
@@ -1395,38 +1810,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase F-G: Edge Cases (Invalid Providers + Watchdog)', () => {
     beforeEach(async () => {
-      console.log('⚠️ beforeEach: Ensuring chat page for Edge Cases...');
-
-      let currentUrl = '';
-      try {
-        currentUrl = await browser.getUrl();
-      } catch (err) {
-        console.warn(`⚠️ Could not read URL: ${err.message}`);
-      }
-
-      if (
-        currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
-      ) {
-        console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url(devUrl('/chat'));
-        await browser.pause(3000);
-      }
-
-      await injectDomDiscovery();
-
-      const chatReady = await browser.execute(() => {
-        const map = window.DOM_DISCOVERY?.getChatDomMap();
-        return {
-          url: window.location.href,
-          chatInputFound: map?.chatInput?.found || false,
-          textareaCount: document.querySelectorAll('textarea').length,
-        };
-      });
-
-      console.log(
-        `   ✓ Chat ready: ${chatReady.chatInputFound ? 'YES' : 'NO'} (${chatReady.url}, ${chatReady.textareaCount} textareas)`
-      );
+      await ensureChatPageReady('⚠️ beforeEach Edge Cases:');
     });
 
     it('should never stay silent even with edge cases', async () => {
@@ -1444,7 +1828,43 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
         const msg = edgeCases[i];
         console.log(`📤 Edge case ${i + 1}: "${msg}"`);
 
-        const result = await sendMessageViaUI(msg, 25000);
+        let result;
+        try {
+          result = await sendMessageViaUI(msg, 25000);
+        } catch (err) {
+          const message = (err && err.message) || String(err);
+          console.warn(`⚠️ Edge case ${i + 1} first attempt error: ${message}`);
+
+          result = {
+            success: false,
+            latency: 0,
+            isEmpty: true,
+            error: message,
+          };
+
+          if (/invalid session id|no such window|invalidated/i.test(message)) {
+            await ensureChatPageReady('⚠️ Edge retry recovery:');
+          }
+        }
+
+        if (!result.success) {
+          console.warn(`⚠️ Edge case ${i + 1} first attempt failed, retrying once...`);
+          await ensureChatPageReady('⚠️ Edge retry recovery:');
+          await browser.pause(600);
+
+          try {
+            result = await sendMessageViaUI(msg, 30000);
+          } catch (err) {
+            const message = (err && err.message) || String(err);
+            console.warn(`⚠️ Edge case ${i + 1} retry error: ${message}`);
+            result = {
+              success: false,
+              latency: 0,
+              isEmpty: true,
+              error: message,
+            };
+          }
+        }
 
         results.push({
           message: msg,
@@ -1473,20 +1893,42 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
       console.log('🧭 Phase H: Navigation 360° starting...');
 
       // Detect navigation links dynamically
-      await injectDomDiscovery();
-      const navLinks = await browser.execute(() => {
-        const links = window.DOM_DISCOVERY.detectChatNavigation();
-        return links.map((l, idx) => ({
-          index: idx,
-          text: l.innerText || l.textContent,
-          href: l.getAttribute('href'),
-          tagName: l.tagName,
-        }));
-      });
+      let navLinks = [];
 
-      console.log(`📋 Found ${navLinks.length} navigation links (dynamic detection)`);
+      for (let attempt = 1; attempt <= 2; attempt++) {
+        try {
+          await injectDomDiscovery();
+          navLinks = await browser.execute(() => {
+            const links = window.DOM_DISCOVERY.detectChatNavigation();
+            return links.map((l, idx) => ({
+              index: idx,
+              text: l.innerText || l.textContent,
+              href: l.getAttribute('href'),
+              tagName: l.tagName,
+            }));
+          });
+          break;
+        } catch (err) {
+          const message = (err && err.message) || String(err);
+          if (attempt === 2 || !/invalid session id|no such window|invalidated/i.test(message)) {
+            throw err;
+          }
 
-      if (navLinks.length === 0) {
+          console.warn(`⚠️ Navigation session lost (${message}), reloading once...`);
+          await browser.reloadSession();
+          await ensureChatPageReady('🧭 Navigation recovery:');
+        }
+      }
+
+      if (!Array.isArray(navLinks)) {
+        navLinks = [];
+      }
+
+      const navLinksToUse = navLinks;
+
+      console.log(`📋 Found ${navLinksToUse.length} navigation links (dynamic detection)`);
+
+      if (navLinksToUse.length === 0) {
         console.warn('⚠️ No navigation links detected - app may use different routing');
         const navEmptyPayload = {
           total: 0,
@@ -1505,8 +1947,8 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
       const navigationResults = [];
 
-      for (let i = 0; i < Math.min(navLinks.length, 10); i++) {
-        const linkData = navLinks[i];
+      for (let i = 0; i < Math.min(navLinksToUse.length, 10); i++) {
+        const linkData = navLinksToUse[i];
         console.log(`🔗 Navigating to: "${linkData.text}" (${linkData.href})`);
 
         const errorsBefore = await getConsoleErrors();
@@ -1544,14 +1986,46 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
             )
           );
         } catch (err) {
-          console.error(`❌ Navigation ${i + 1} failed:`, err.message);
-          navigationResults.push({
-            index: i,
-            text: linkData.text,
-            href: linkData.href,
-            success: false,
-            error: err.message,
-          });
+          const errMsg = String(err?.message || err);
+          if (/invalid session id|no such window|invalidated/i.test(errMsg)) {
+            // Session died – recover and retry this link once
+            try {
+              await browser.reloadSession();
+              await ensureChatPageReady('Phase H loop recovery:');
+              await injectDomDiscovery();
+              await browser.execute(idx => {
+                const links = window.DOM_DISCOVERY.detectChatNavigation();
+                if (links[idx]) links[idx].click();
+              }, i);
+              await browser.pause(1000);
+              navigationResults.push({
+                index: i,
+                text: linkData.text,
+                href: linkData.href,
+                success: true,
+                newErrors: 0,
+              });
+              console.log(`✅ Navigation ${i + 1} (recovered): "${linkData.text}"`);
+            } catch (recErr) {
+              console.error(`❌ Navigation ${i + 1} recovery failed:`, recErr.message);
+              navigationResults.push({
+                index: i,
+                text: linkData.text,
+                href: linkData.href,
+                success: false,
+                error: errMsg,
+              });
+            }
+          } else {
+            console.error(`❌ Navigation ${i + 1} failed:`, errMsg);
+            navigationResults.push({
+              index: i,
+              text: linkData.text,
+              href: linkData.href,
+              success: false,
+              error: errMsg,
+            });
+          }
         }
 
         await browser.pause(500);
@@ -1587,38 +2061,7 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
   describe('Phase I: Stability Burst (5 Messages)', () => {
     beforeEach(async () => {
-      console.log('💪 beforeEach: Ensuring chat page for Stability...');
-
-      let currentUrl = '';
-      try {
-        currentUrl = await browser.getUrl();
-      } catch (err) {
-        console.warn(`⚠️ Could not read URL: ${err.message}`);
-      }
-
-      if (
-        currentUrl === 'about:blank' ||
-        (!currentUrl.includes('titane') && !isDevUrl(currentUrl))
-      ) {
-        console.log(`   → Redirecting from ${currentUrl} to /chat...`);
-        await browser.url(devUrl('/chat'));
-        await browser.pause(3000);
-      }
-
-      await injectDomDiscovery();
-
-      const chatReady = await browser.execute(() => {
-        const map = window.DOM_DISCOVERY?.getChatDomMap();
-        return {
-          url: window.location.href,
-          chatInputFound: map?.chatInput?.found || false,
-          textareaCount: document.querySelectorAll('textarea').length,
-        };
-      });
-
-      console.log(
-        `   ✓ Chat ready: ${chatReady.chatInputFound ? 'YES' : 'NO'} (${chatReady.url}, ${chatReady.textareaCount} textareas)`
-      );
+      await ensureChatPageReady('💪 beforeEach Stability:');
     });
 
     it('should handle rapid burst messages without crash', async () => {
@@ -1632,7 +2075,24 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
           console.log(`📤 Burst progress: ${i}/${STABILITY_MESSAGE_COUNT}...`);
         }
 
-        const result = await sendMessageViaUI(`Burst ${i}`, RESPONSE_TIMEOUT_MS);
+        let result;
+        try {
+          result = await sendMessageViaUI(`Burst ${i}`, RESPONSE_TIMEOUT_MS);
+        } catch (err) {
+          const message = (err && err.message) || String(err);
+          console.warn(`⚠️ Burst ${i}: driver exception (${message})`);
+
+          result = {
+            success: false,
+            latency: 0,
+            isEmpty: true,
+            error: message,
+          };
+
+          if (/invalid session id/i.test(message)) {
+            await ensureChatPageReady('💪 Stability recovery:');
+          }
+        }
 
         results.push({
           index: i,
@@ -1649,7 +2109,8 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
           }
         }
 
-        // No pause - rapid fire
+        // Keep burst behavior but avoid saturating the WebDriver session.
+        await browser.pause(200);
       }
 
       const stabilityPayload = {

@@ -49,35 +49,75 @@ async function invokeTauriCommand(command, args = {}) {
   let lastError = 'invokeTauriCommand failed';
 
   for (let attempt = 1; attempt <= 5; attempt++) {
-    const result = await browser.executeAsync(
-      (cmd, payload, done) => {
-        const run = async () => {
-          if (window.__TAURI_INTERNALS__?.invoke) {
-            return await window.__TAURI_INTERNALS__.invoke(cmd, payload);
-          }
+    let result;
+    try {
+      result = await browser.executeAsync(
+        (cmd, payload, done) => {
+          const toSerializable = value => {
+            if (value === null || value === undefined) return value;
+            if (typeof value === 'string') return value;
+            if (typeof value === 'number' || typeof value === 'boolean') return value;
+            if (Array.isArray(value)) return value.slice(0, 20).map(toSerializable);
+            if (typeof value === 'object') {
+              const out = {};
+              Object.keys(value)
+                .slice(0, 40)
+                .forEach(key => {
+                  out[key] = toSerializable(value[key]);
+                });
+              return out;
+            }
+            return String(value);
+          };
 
-          if (window.__TAURI__?.tauri?.invoke) {
-            return await window.__TAURI__.tauri.invoke(cmd, payload);
-          }
+          const run = async () => {
+            if (window.__TAURI_INTERNALS__?.invoke) {
+              return await window.__TAURI_INTERNALS__.invoke(cmd, payload);
+            }
 
-          if (window.__TAURI__?.core?.invoke) {
-            return await window.__TAURI__.core.invoke(cmd, payload);
-          }
+            if (window.__TAURI__?.tauri?.invoke) {
+              return await window.__TAURI__.tauri.invoke(cmd, payload);
+            }
 
-          if (window.__TAURI__?.invoke) {
-            return await window.__TAURI__.invoke(cmd, payload);
-          }
+            if (window.__TAURI__?.core?.invoke) {
+              return await window.__TAURI__.core.invoke(cmd, payload);
+            }
 
-          throw new Error('Tauri IPC not available (no invoke API found)');
-        };
+            if (window.__TAURI__?.invoke) {
+              return await window.__TAURI__.invoke(cmd, payload);
+            }
 
-        run()
-          .then(res => done({ ok: true, res }))
-          .catch(err => done({ ok: false, err: String(err?.message || err) }));
-      },
-      command,
-      args
-    );
+            throw new Error('Tauri IPC not available (no invoke API found)');
+          };
+
+          run()
+            .then(res => {
+              const normalized = toSerializable(res);
+              done({ ok: true, res: normalized });
+            })
+            .catch(err => done({ ok: false, err: String(err?.message || err) }));
+        },
+        command,
+        args
+      );
+    } catch (error) {
+      lastError = String(error?.message || error);
+      if (
+        (lastError.includes('Could not parse script result') ||
+          lastError.includes('invalid session id') ||
+          lastError.includes('session deleted because of page crash or hang')) &&
+        attempt < 5
+      ) {
+        try {
+          await recoverFromWindowLoss();
+        } catch {
+          // keep original error if recovery fails
+        }
+        await browser.pause(300);
+        continue;
+      }
+      break;
+    }
 
     if (result?.ok) {
       return result.res;
@@ -97,26 +137,56 @@ async function invokeTauriCommand(command, args = {}) {
 }
 
 async function recoverFromWindowLoss() {
-  const targetUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
-  await browser.url(targetUrl);
-  await browser.waitUntil(
-    async () => {
-      const readyState = await browser.execute(() => document.readyState);
-      const href = await browser.execute(() => window.location.href || '');
-      return (
-        (readyState === 'interactive' || readyState === 'complete') &&
-        href.startsWith('tauri://localhost')
+  // Session may be completely dead; recreate it first
+  try {
+    await browser.reloadSession();
+    await browser.pause(600);
+  } catch {
+    // ignore – session was already dead, new session will be created
+  }
+
+  const candidates = [
+    process.env.TITANE_E2E_URL,
+    'tauri://localhost/titane',
+    'tauri://localhost/#/titane',
+    'tauri://localhost/#/chat',
+    'tauri://localhost',
+  ].filter(Boolean);
+
+  let lastError = 'AR20 recovery page not ready';
+
+  for (const targetUrl of candidates) {
+    try {
+      await browser.url(targetUrl);
+      await browser.waitUntil(
+        async () => {
+          const readyState = await browser.execute(() => document.readyState);
+          const href = await browser.execute(() => window.location.href || '');
+          return (
+            (readyState === 'interactive' || readyState === 'complete') &&
+            href.startsWith('tauri://localhost')
+          );
+        },
+        {
+          timeout: 10000,
+          interval: 250,
+          timeoutMsg: `AR20 recovery page not ready (${targetUrl})`,
+        }
       );
-    },
-    { timeout: 10000, interval: 250, timeoutMsg: 'AR20 recovery page not ready' }
-  );
+      return;
+    } catch (error) {
+      lastError = String(error?.message || error);
+    }
+  }
+
+  throw new Error(lastError);
 }
 
 // Helper: Send chat message via IPC (bypasses UI)
 async function sendChatViaIPC(message) {
   let lastError = 'IPC send failed';
 
-  for (let attempt = 1; attempt <= 2; attempt++) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const conversationId = `e2e-ar20-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
       const response = await invokeTauriCommand('conversation_generate', {
@@ -130,9 +200,15 @@ async function sendChatViaIPC(message) {
     } catch (error) {
       lastError = error.message;
 
-      if (String(lastError).includes('no such window') && attempt < 2) {
+      if (
+        /no such window|invalid session id|session deleted because of page crash or hang|invalidated/i.test(
+          String(lastError)
+        ) &&
+        attempt < 3
+      ) {
         try {
           await recoverFromWindowLoss();
+          await browser.pause(400);
           continue;
         } catch (recoveryError) {
           lastError = `${lastError} | recovery_failed: ${recoveryError.message}`;

@@ -84,108 +84,158 @@ function saveMetrics() {
 }
 
 async function inspect() {
-  return await browser.execute(() => {
-    const input = document.querySelector('[data-testid="chat-input"]');
-    const send = document.querySelector('[data-testid="chat-send"]');
-    const loading = document.querySelector('[data-testid="chat-loading"]');
-    const error = document.querySelector('[data-testid="chat-error"]');
-    const health = document.querySelector('[data-testid="btn-health-check"]');
-    const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
-    const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
-    const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
+  const runInspect = async () => {
+    return browser.execute(() => {
+      const input = document.querySelector('[data-testid="chat-input"]');
+      const send = document.querySelector('[data-testid="chat-send"]');
+      const loading = document.querySelector('[data-testid="chat-loading"]');
+      const error = document.querySelector('[data-testid="chat-error"]');
+      const health = document.querySelector('[data-testid="btn-health-check"]');
+      const reasoning = document.querySelector('[data-testid="reasoning-progress"]');
+      const runtimePanel = document.querySelector('[data-testid="chat-runtime-state"]');
+      const runtimeSummary = document.querySelector('[data-testid="chat-runtime-summary"]');
 
-    const assistantTextNodes = Array.from(
-      document.querySelectorAll(
-        '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
-      )
-    );
-    const assistantMessages = assistantTextNodes.map(el => (el.textContent || '').trim());
-    const assistantContainers = Array.from(
-      document.querySelectorAll('[data-testid="chat-message-assistant"]')
-    );
-    const lastAssistantContainer =
-      assistantContainers[assistantContainers.length - 1] || null;
-
-    const runtimeMessageBadges = lastAssistantContainer
-      ? Array.from(
-          lastAssistantContainer.querySelectorAll(
-            '[data-testid="chat-runtime-tag"], .conversation-tag'
-          )
+      const assistantTextNodes = Array.from(
+        document.querySelectorAll(
+          '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
         )
-          .map(el => (el.textContent || '').trim())
-          .filter(Boolean)
-      : [];
+      );
+      const assistantMessages = assistantTextNodes.map(el => (el.textContent || '').trim());
+      const assistantContainers = Array.from(
+        document.querySelectorAll('[data-testid="chat-message-assistant"]')
+      );
+      const lastAssistantContainer =
+        assistantContainers[assistantContainers.length - 1] || null;
 
-    const runtimeMessageAttrs = lastAssistantContainer
-      ? {
-          providerUsed: lastAssistantContainer.getAttribute('data-provider-used'),
-          providerMode: lastAssistantContainer.getAttribute('data-provider-mode'),
-          providerReason: lastAssistantContainer.getAttribute('data-provider-reason'),
-          providerClass: lastAssistantContainer.getAttribute('data-provider-class'),
-          networkUsed: lastAssistantContainer.getAttribute('data-network-used'),
-          orchestratorState: lastAssistantContainer.getAttribute(
-            'data-orchestrator-state'
-          ),
-          memoryState: lastAssistantContainer.getAttribute('data-memory-state'),
-        }
-      : null;
+      const runtimeMessageBadges = lastAssistantContainer
+        ? Array.from(
+            lastAssistantContainer.querySelectorAll(
+              '[data-testid="chat-runtime-tag"], .conversation-tag'
+            )
+          )
+            .map(el => (el.textContent || '').trim())
+            .filter(Boolean)
+        : [];
 
-    const runtimeStateAttrs = runtimePanel
-      ? {
-          providerMode: runtimePanel.getAttribute('data-provider-mode'),
-          providerReason: runtimePanel.getAttribute('data-provider-reason'),
-          providerUsed: runtimePanel.getAttribute('data-provider-used'),
-          networkUsed: runtimePanel.getAttribute('data-network-used'),
-          orchestratorState: runtimePanel.getAttribute('data-orchestrator-state'),
-          memoryState: runtimePanel.getAttribute('data-memory-state'),
-          geminiConfigured: runtimePanel.getAttribute('data-gemini-configured'),
-          ollamaModel: runtimePanel.getAttribute('data-ollama-model'),
-          secretsMode: runtimePanel.getAttribute('data-secrets-mode'),
-        }
-      : null;
+      const runtimeMessageAttrs = lastAssistantContainer
+        ? {
+            providerUsed: lastAssistantContainer.getAttribute('data-provider-used'),
+            providerMode: lastAssistantContainer.getAttribute('data-provider-mode'),
+            providerReason: lastAssistantContainer.getAttribute('data-provider-reason'),
+            providerClass: lastAssistantContainer.getAttribute('data-provider-class'),
+            networkUsed: lastAssistantContainer.getAttribute('data-network-used'),
+            orchestratorState: lastAssistantContainer.getAttribute(
+              'data-orchestrator-state'
+            ),
+            memoryState: lastAssistantContainer.getAttribute('data-memory-state'),
+          }
+        : null;
 
-    const runtimeBadgesText = runtimePanel
-      ? Array.from(runtimePanel.querySelectorAll('[data-testid="chat-runtime-badge"]'))
-          .map(el => (el.textContent || '').trim())
-          .filter(Boolean)
-      : [];
+      const runtimeStateAttrs = runtimePanel
+        ? {
+            providerMode: runtimePanel.getAttribute('data-provider-mode'),
+            providerReason: runtimePanel.getAttribute('data-provider-reason'),
+            providerUsed: runtimePanel.getAttribute('data-provider-used'),
+            networkUsed: runtimePanel.getAttribute('data-network-used'),
+            orchestratorState: runtimePanel.getAttribute('data-orchestrator-state'),
+            memoryState: runtimePanel.getAttribute('data-memory-state'),
+            geminiConfigured: runtimePanel.getAttribute('data-gemini-configured'),
+            ollamaModel: runtimePanel.getAttribute('data-ollama-model'),
+            secretsMode: runtimePanel.getAttribute('data-secrets-mode'),
+          }
+        : null;
 
-    const visibleText = (document.body.textContent || '').trim();
+      const runtimeBadgesText = runtimePanel
+        ? Array.from(runtimePanel.querySelectorAll('[data-testid="chat-runtime-badge"]'))
+            .map(el => (el.textContent || '').trim())
+            .filter(Boolean)
+        : [];
 
-    return {
-      url: window.location.href,
-      whiteScreen: visibleText.length < 10,
-      inputPresent: !!input,
-      inputValue: input && 'value' in input ? input.value : '',
-      sendPresent: !!send,
-      sendDisabled: !!(send && send.disabled),
-      loadingVisible: !!(loading && loading.offsetWidth > 0 && loading.offsetHeight > 0),
-      healthTitle: health ? health.getAttribute('title') : null,
-      chatErrorText: error ? (error.textContent || '').trim() : null,
-      reasoningVisible: !!(
-        reasoning &&
-        reasoning.offsetWidth > 0 &&
-        reasoning.offsetHeight > 0
-      ),
-      reasoningState: reasoning ? reasoning.getAttribute('data-state') : null,
-      reasoningTopologyCount: document.querySelectorAll(
-        '[data-testid="reasoning-topology-node"]'
-      ).length,
-      runtimePanelPresent: !!runtimePanel,
-      runtimePanelVisible: !!(
-        runtimePanel &&
-        runtimePanel.offsetWidth > 0 &&
-        runtimePanel.offsetHeight > 0
-      ),
-      runtimePanelText: runtimeSummary ? (runtimeSummary.textContent || '').trim() : '',
-      runtimeStateAttrs,
-      runtimeBadgesText,
-      assistantMessages,
-      runtimeMessageAttrs,
-      runtimeMessageBadges,
-      textPreview: visibleText.slice(0, 600),
-    };
-  });
+      const visibleText = (document.body.textContent || '').trim();
+
+      return {
+        url: window.location.href,
+        whiteScreen: visibleText.length < 10,
+        inputPresent: !!input,
+        inputValue: input && 'value' in input ? input.value : '',
+        sendPresent: !!send,
+        sendDisabled: !!(send && send.disabled),
+        loadingVisible: !!(loading && loading.offsetWidth > 0 && loading.offsetHeight > 0),
+        healthTitle: health ? health.getAttribute('title') : null,
+        chatErrorText: error ? (error.textContent || '').trim() : null,
+        reasoningVisible: !!(
+          reasoning &&
+          reasoning.offsetWidth > 0 &&
+          reasoning.offsetHeight > 0
+        ),
+        reasoningState: reasoning ? reasoning.getAttribute('data-state') : null,
+        reasoningTopologyCount: document.querySelectorAll(
+          '[data-testid="reasoning-topology-node"]'
+        ).length,
+        runtimePanelPresent: !!runtimePanel,
+        runtimePanelVisible: !!(
+          runtimePanel &&
+          runtimePanel.offsetWidth > 0 &&
+          runtimePanel.offsetHeight > 0
+        ),
+        runtimePanelText: runtimeSummary ? (runtimeSummary.textContent || '').trim() : '',
+        runtimeStateAttrs,
+        runtimeBadgesText,
+        assistantMessages,
+        runtimeMessageAttrs,
+        runtimeMessageBadges,
+        textPreview: visibleText.slice(0, 600),
+      };
+    });
+  };
+
+  try {
+    return await runInspect();
+  } catch (error) {
+    const message = (error && error.message) || String(error);
+    if (!/invalid session id|no such window|invalidated/i.test(message)) {
+      throw error;
+    }
+
+    M.frictions.push(`INSPECT_SESSION_RECOVERY:${message}`);
+    console.warn(`[V26] inspect session recovery: ${message}`);
+
+    try {
+      await browser.reloadSession();
+      await pause(1200);
+      await browser.url('tauri://localhost/#/titane');
+      await pause(1800);
+      return await runInspect();
+    } catch (retryError) {
+      const retryMessage = (retryError && retryError.message) || String(retryError);
+      M.frictions.push(`INSPECT_SESSION_RECOVERY_FAILED:${retryMessage}`);
+      console.warn(`[V26] inspect recovery failed: ${retryMessage}`);
+
+      return {
+        url: 'session://lost',
+        whiteScreen: true,
+        inputPresent: false,
+        inputValue: '',
+        sendPresent: false,
+        sendDisabled: true,
+        loadingVisible: false,
+        healthTitle: null,
+        chatErrorText: `session_lost:${retryMessage}`,
+        reasoningVisible: false,
+        reasoningState: null,
+        reasoningTopologyCount: 0,
+        runtimePanelPresent: false,
+        runtimePanelVisible: false,
+        runtimePanelText: '',
+        runtimeStateAttrs: {},
+        runtimeBadgesText: [],
+        assistantMessages: [],
+        runtimeMessageAttrs: {},
+        runtimeMessageBadges: [],
+        textPreview: '',
+      };
+    }
+  }
 }
 
 async function tryOpenChatSurface() {

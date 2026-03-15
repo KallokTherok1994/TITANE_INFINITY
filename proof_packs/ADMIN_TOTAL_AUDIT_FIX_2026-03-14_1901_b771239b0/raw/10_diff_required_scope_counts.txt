@@ -1,0 +1,8 @@
+]633;E;{   echo "src $(wc -l < $PACK_DIR/raw/02_diff_src.txt)"\x3b   echo "src-tauri $(wc -l < $PACK_DIR/raw/03_diff_src_tauri.txt)"\x3b   echo "e2e $(wc -l < $PACK_DIR/raw/04_diff_e2e.txt)"\x3b   echo "tests $(wc -l < $PACK_DIR/raw/05_diff_tests.txt)"\x3b   echo ".github/workflows $(wc -l < $PACK_DIR/raw/06_diff_workflows.txt)"\x3b   echo "registry $(wc -l < $PACK_DIR/raw/07_diff_registry.txt)"\x3b   echo "proof_packs $(wc -l < $PACK_DIR/raw/08_diff_proof_packs.txt)"\x3b   echo "docs $(wc -l < $PACK_DIR/raw/09_diff_docs.txt)"\x3b } > "$PACK_DIR/raw/10_diff_required_scope_counts.txt";22be8be5-edec-407d-97ea-780a84db8aa3]633;Csrc 88
+src-tauri 83
+e2e 24
+tests 1
+.github/workflows 33
+registry 6
+proof_packs 3528
+docs 26443

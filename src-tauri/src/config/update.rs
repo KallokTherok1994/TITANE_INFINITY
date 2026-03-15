@@ -14,7 +14,6 @@ use std::path::PathBuf;
 use std::sync::OnceLock;
 use tokio::sync::RwLock;
 
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ProviderPreference {
@@ -182,6 +181,99 @@ fn chat_config_path() -> PathBuf {
         .join("chat_engine_settings_v2.json")
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+struct RuntimeConfigDisk {
+    pub ollama_url: String,
+    pub ollama_model: String,
+    pub updated_at: u64,
+}
+
+fn runtime_config_path() -> PathBuf {
+    let base = dirs::data_local_dir().unwrap_or_else(std::env::temp_dir);
+    base.join("titane-infinity")
+        .join("config")
+        .join("runtime_settings_v1.json")
+}
+
+fn now_unix_ts_secs() -> u64 {
+    std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_secs())
+        .unwrap_or(0)
+}
+
+fn default_ollama_url() -> String {
+    "http://localhost:11434".to_string()
+}
+
+fn default_ollama_model() -> String {
+    "qwen2.5:latest".to_string()
+}
+
+fn load_runtime_config_from_disk() -> Option<RuntimeConfigDisk> {
+    let path = runtime_config_path();
+    if !path.exists() {
+        return None;
+    }
+
+    let raw = fs::read_to_string(path).ok()?;
+    serde_json::from_str::<RuntimeConfigDisk>(&raw).ok()
+}
+
+fn save_runtime_config_to_disk(config: &RuntimeConfigDisk) -> Result<(), String> {
+    let path = runtime_config_path();
+    if let Some(parent) = path.parent() {
+        fs::create_dir_all(parent)
+            .map_err(|e| format!("Impossible de créer le dossier runtime config: {e}"))?;
+    }
+
+    let raw = serde_json::to_string_pretty(config)
+        .map_err(|e| format!("Impossible de sérialiser la runtime config: {e}"))?;
+    fs::write(path, raw).map_err(|e| format!("Impossible d'écrire la runtime config: {e}"))
+}
+
+fn apply_runtime_values_to_process(ollama_url: &str, ollama_model: &str) {
+    env::set_var("OLLAMA_BASE_URL", ollama_url);
+    env::set_var("OLLAMA_DEFAULT_MODEL", ollama_model);
+    env::set_var("OLLAMA_URL", ollama_url);
+    env::set_var("OLLAMA_MODEL", ollama_model);
+}
+
+pub fn current_runtime_values() -> (String, String) {
+    if let Some(runtime) = load_runtime_config_from_disk() {
+        return (runtime.ollama_url, runtime.ollama_model);
+    }
+
+    let url = env::var("OLLAMA_BASE_URL")
+        .or_else(|_| env::var("OLLAMA_URL"))
+        .unwrap_or_else(|_| default_ollama_url());
+
+    let model = env::var("OLLAMA_DEFAULT_MODEL")
+        .or_else(|_| env::var("OLLAMA_MODEL"))
+        .unwrap_or_else(|_| default_ollama_model());
+
+    (url, model)
+}
+
+pub fn persist_runtime_values(ollama_url: &str, ollama_model: &str) -> Result<(), String> {
+    let sanitized_url = ollama_url.trim();
+    let sanitized_model = ollama_model.trim();
+
+    validate_ollama_url(sanitized_url)?;
+    validate_ollama_model(sanitized_model)?;
+
+    let runtime = RuntimeConfigDisk {
+        ollama_url: sanitized_url.to_string(),
+        ollama_model: sanitized_model.to_string(),
+        updated_at: now_unix_ts_secs(),
+    };
+
+    save_runtime_config_to_disk(&runtime)?;
+    apply_runtime_values_to_process(sanitized_url, sanitized_model);
+    Ok(())
+}
+
 fn load_chat_bundle_from_disk() -> Option<ChatConfigBundle> {
     let path = chat_config_path();
     if !path.exists() {
@@ -215,6 +307,32 @@ fn chat_bundle_store() -> &'static RwLock<ChatConfigBundle> {
 
 pub async fn current_chat_bundle() -> ChatConfigBundle {
     chat_bundle_store().read().await.clone()
+}
+
+pub async fn apply_chat_engine_snapshot(
+    snapshot: &super::ChatEngineConfig,
+) -> Result<ChatConfigBundle, String> {
+    validate_timeout_ms(snapshot.timeout_ms)?;
+    validate_chunk_size(snapshot.chunk_size)?;
+    validate_max_tokens(snapshot.max_tokens)?;
+    validate_temperature(snapshot.temperature)?;
+
+    let chunk_size =
+        u64::try_from(snapshot.chunk_size).map_err(|_| "chunk_size hors limite".to_string())?;
+    let max_output_tokens =
+        u64::try_from(snapshot.max_tokens).map_err(|_| "max_tokens hors limite".to_string())?;
+
+    let mut bundle = chat_bundle_store().write().await;
+    bundle.engine.response_timeout_ms = snapshot.timeout_ms;
+    bundle.engine.stream_chunk_size = chunk_size;
+    bundle.request_defaults.max_output_tokens = max_output_tokens;
+    bundle.request_defaults.temperature = snapshot.temperature;
+
+    validate_engine_dto(&bundle.engine)?;
+    validate_request_defaults(&bundle.request_defaults)?;
+    save_chat_bundle_to_disk(&bundle)?;
+
+    Ok(bundle.clone())
 }
 
 fn validate_engine_dto(dto: &ChatEngineConfigDto) -> Result<(), String> {
@@ -380,27 +498,22 @@ use std::env;
 pub async fn update_runtime_config(update: RuntimeConfigUpdate) -> Result<(), String> {
     log::info!("🎯 [CONFIG] Updating runtime configuration...");
 
+    let (mut ollama_url, mut ollama_model) = current_runtime_values();
+
     // Valider les champs fournis
     if let Some(ref url) = update.ollama_url {
         validate_ollama_url(url)?;
         log::info!("✅ [CONFIG] Ollama URL validated: {}", url);
+        ollama_url = url.trim().to_string();
     }
 
     if let Some(ref model) = update.ollama_model {
         validate_ollama_model(model)?;
         log::info!("✅ [CONFIG] Ollama model validated: {}", model);
+        ollama_model = model.trim().to_string();
     }
 
-    // Appliquer les changements aux variables d'environnement
-    if let Some(url) = update.ollama_url {
-        env::set_var("OLLAMA_BASE_URL", url.trim());
-        log::info!("✅ [CONFIG] Updated OLLAMA_BASE_URL");
-    }
-
-    if let Some(model) = update.ollama_model {
-        env::set_var("OLLAMA_DEFAULT_MODEL", model.trim());
-        log::info!("✅ [CONFIG] Updated OLLAMA_DEFAULT_MODEL");
-    }
+    persist_runtime_values(&ollama_url, &ollama_model)?;
 
     log::info!("✅ [CONFIG] Runtime configuration updated successfully");
 
