@@ -8,6 +8,10 @@ repository   = "https://github.com/KallokTherok1994/TITANE_INFINITY"
 edition      = "2021"
 rust-version = "1.70"
 
+# Required for Tauri mobile (Android/iOS) — generates both .so (cdylib) and static lib
+[lib]
+crate-type = ["staticlib", "cdylib", "rlib"]
+
 [profile.dev]
 opt-level = 1         # Basic optimizations in dev mode (faster builds)
 debug = true          # Keep debug symbols
