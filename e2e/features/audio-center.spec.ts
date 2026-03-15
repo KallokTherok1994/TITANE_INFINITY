@@ -91,7 +91,10 @@ test.describe('Feature: Audio Center', () => {
 
     if (await testSpeakerButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await testSpeakerButton.click({ force: true });
-      await expect(page.getByText(/Test.*haut-parleur/i)).toBeVisible({ timeout: 15000 });
+      const speakerResult = page
+        .getByText(/Test haut-parleur réussi !|Échec du test|Erreur/i)
+        .first();
+      await expect(speakerResult).toBeVisible({ timeout: 15000 });
     } else {
       console.log('⚠️ Speaker test button not found');
     }
@@ -111,7 +114,10 @@ test.describe('Feature: Audio Center', () => {
 
     if (await micTestButton.isVisible({ timeout: 5000 }).catch(() => false)) {
       await micTestButton.click({ force: true });
-      await expect(page.getByText(/microphone/i)).toBeVisible({ timeout: 15000 });
+      const micResult = page
+        .getByText(/Test microphone réussi !|Échec du test|Erreur/i)
+        .first();
+      await expect(micResult).toBeVisible({ timeout: 15000 });
     } else {
       console.log('⚠️ Microphone test button not found');
     }

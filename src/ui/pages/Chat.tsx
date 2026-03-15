@@ -49,6 +49,7 @@ import { useFocusTrap } from '../../hooks/useFocusTrap';
 import { ResponsiveChatLayout } from '../../layouts/ResponsiveChatLayout';
 // ✨ v26.2: OMEGA Reflection Panel v2 - Compact mode
 import { ThinkingPanel } from '../../features/chat/ThinkingPanel';
+import { useExperience } from '../../hooks/useExperience';
 import './styles/Chat.css';
 
 const isDev = process.env.NODE_ENV === 'development';
@@ -627,6 +628,9 @@ const ChatComponent: React.FC = () => {
   const [thinkingStartTime, setThinkingStartTime] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState<number>(0);
 
+  // OMEGA v4: XP & Progression — source réelle via useExperience()
+  const experience = useExperience();
+
   // Timer for elapsed time (v2.1)
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -858,6 +862,32 @@ const ChatComponent: React.FC = () => {
       steps,
       topology,
       provider: resolvedProvider,
+      // ── OMEGA v4: nouvelles dimensions vérité ───────────────────
+      qualityScore: typeof omegaMetadata?.validationScore === 'number'
+        ? (omegaMetadata.validationScore as number)
+        : null,
+      autoHealed: Boolean(omegaMetadata?.autoHealed),
+      memoryTrace: lastEntry ? {
+        injected: true,  // systemPrompt toujours construit (6 sources) quand un message est envoyé
+        savedAfter: !isLoading && lastEntry.status === 'success',
+        systemPromptSources: [
+          'Prompt de base (mode conversationnel)',
+          'Enveloppe de contexte (module actif)',
+          'Profil Persona (localStorage)',
+          'Mémoire persistante 3 niveaux (IPC Tauri)',
+          'Progression XP & Évolution',
+          'État cognitif (localStorage)',
+        ],
+      } : null,
+      messageLength: (() => {
+        const msgs = lastEntry?.request?.messages;
+        if (!msgs || msgs.length === 0) return 0;
+        const last = msgs[msgs.length - 1];
+        return typeof last?.content === 'string' ? last.content.length : 0;
+      })(),
+      responseLength: typeof lastEntry?.response?.content === 'string'
+        ? lastEntry.response.content.length
+        : 0,
     };
   }, [debugEntries, isLoading, lastProvider, messages, thinkingStartTime]);
 
@@ -867,6 +897,23 @@ const ChatComponent: React.FC = () => {
     },
     [setPreferredProvider]
   );
+
+  // OMEGA v4: XP trace — source réactive depuis useExperience()
+  const xpTrace = useMemo(() => {
+    const s = experience.state;
+    const chatDomain = s.domains['chat'];
+    const cognitiveDomain = s.domains['cognitive'];
+    const lastGain = s.history[0];
+    return {
+      chatXP: chatDomain?.xp ?? 0,
+      cognitiveXP: cognitiveDomain?.xp ?? 0,
+      totalXP: s.totalXp,
+      level: s.level,
+      lastGainDomain: lastGain?.domainId,
+      lastGainAmount: lastGain?.amount,
+      lastGainTimestamp: lastGain?.timestamp,
+    };
+  }, [experience.state]);
 
   useEffect(() => {
     if (!debugPanelVisible && debugEntries[0]?.status === 'error') {
@@ -1346,6 +1393,12 @@ const ChatComponent: React.FC = () => {
                     provider={runtimeThinking.provider}
                     elapsedTime={isLoading ? elapsedTime : undefined}
                     topology={runtimeThinking.topology}
+                    xpTrace={xpTrace}
+                    memoryTrace={runtimeThinking.memoryTrace}
+                    qualityScore={runtimeThinking.qualityScore}
+                    autoHealed={runtimeThinking.autoHealed}
+                    messageLength={runtimeThinking.messageLength}
+                    responseLength={runtimeThinking.responseLength}
                   />
                 )}
               </>

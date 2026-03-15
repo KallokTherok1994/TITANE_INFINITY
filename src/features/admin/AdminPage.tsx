@@ -55,15 +55,21 @@ const DesignCenterPage = lazy(() =>
   import('../design-center').then(m => ({ default: m.DesignCenterPage }))
 );
 
-const GovernanceCenterPage = lazy(() =>
-  import('../governance-center').then(m => ({ default: m.GovernanceCenterPage }))
-);
+const GovernanceCenterPage = lazy(async () => {
+  const m = await import('../governance-center/GovernanceCenterPage');
+  if (!m.GovernanceCenterPage) {
+    throw new Error('[ADMIN_IMPORT] Export GovernanceCenterPage manquant');
+  }
+  return { default: m.GovernanceCenterPage };
+});
 
-const ProductionHealthPanel = lazy(() =>
-  import('../production-health/ProductionHealthPanel').then(m => ({
-    default: m.ProductionHealthPanel,
-  }))
-);
+const ProductionHealthPanel = lazy(async () => {
+  const m = await import('../production-health/ProductionHealthPanel');
+  if (!m.ProductionHealthPanel) {
+    throw new Error('[ADMIN_IMPORT] Export ProductionHealthPanel manquant');
+  }
+  return { default: m.ProductionHealthPanel };
+});
 
 // ══════════════════════════════════════════════════════════════════
 // LOADING SPINNER
