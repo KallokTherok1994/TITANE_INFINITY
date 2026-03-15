@@ -187,7 +187,8 @@ export const getProgressToNextLevel = (): number => {
   const nextLevelXp = getXpForNextLevel();
   const xpInCurrentLevel = experienceState.totalXp - currentLevelXp;
   const xpNeededForNextLevel = nextLevelXp - currentLevelXp;
-  return xpInCurrentLevel / xpNeededForNextLevel;
+  // NaN guard: avoid division by zero if level thresholds are equal
+  return xpNeededForNextLevel > 0 ? xpInCurrentLevel / xpNeededForNextLevel : 0;
 };
 
 // ─────────────────────────────────────────────────────────────────

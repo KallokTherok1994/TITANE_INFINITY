@@ -22,6 +22,8 @@ import {
   formatContextEnvelopeForSystemPrompt,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
+import { xpEngine } from '@/cognitive/progression/xpEngine';
+import { useEvolutionStore } from '@/stores/evolutionStore';
 
 const E2E_CHAT_MOCK_FLAG = '__TITANE_E2E_CHAT_MOCK__';
 const E2E_CHAT_CONV_SEQ = '__TITANE_E2E_CHAT_CONV_SEQ__';
@@ -404,7 +406,24 @@ export async function processMessage(
     // Non-blocking: proceed without persistent memory if unavailable
   }
 
-  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext]
+  // Inject XP + Evolution context (non-blocking, best-effort)
+  let progressionContext = '';
+  try {
+    const xpState = xpEngine.getState();
+    const evolutionState = useEvolutionStore.getState();
+    const evolutionScore = evolutionState.state?.last_evolution?.health_score ?? null;
+    const parts: string[] = [
+      `Niveau XP: ${xpState.level} | Total XP: ${xpState.totalXP}`,
+    ];
+    if (evolutionScore !== null) {
+      parts.push(`Score Evolution: ${Math.round(evolutionScore)}`);
+    }
+    progressionContext = `## XP_EVOLUTION_CONTEXT\n${parts.join(' | ')}`;
+  } catch {
+    // Non-blocking: proceed without progression context if unavailable
+  }
+
+  const systemPrompt = [baseSystemPrompt, contextualPrompt, personaContext, persistentMemoryContext, progressionContext]
     .filter(Boolean)
     .join('\n\n');
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
