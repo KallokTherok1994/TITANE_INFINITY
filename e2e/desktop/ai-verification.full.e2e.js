@@ -243,8 +243,7 @@ async function resolveSelectors() {
     return {
       input: '[data-testid="chat-input"]',
       send: '[data-testid="chat-send"]',
-      user:
-        '[data-testid="chat-message-user"] [data-testid="chat-message-content"], [data-testid="chat-message-user"]',
+      user: '[data-testid="chat-message-user"] [data-testid="chat-message-content"], [data-testid="chat-message-user"]',
       response:
         '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]',
       open: '[data-testid="tab-conversation"]',
@@ -586,7 +585,9 @@ describe('ai-verification (desktop/full)', () => {
     if (warmup) {
       const warmed = await warmupChat(selectors, 1);
       if (!warmed) {
-        throw new Error('CHAT_PREFLIGHT_FAILED: no response to warmup prompt after recovery');
+        throw new Error(
+          'CHAT_PREFLIGHT_FAILED: no response to warmup prompt after recovery'
+        );
       }
     }
   };

@@ -33,7 +33,10 @@ const parsePositiveInt = (value, fallback) => {
 const IPC_CALL_TIMEOUT_MS = parsePositiveInt(process.env.AR20_IPC_TIMEOUT_MS, 120000);
 const IPC_TEST_TIMEOUT_MS = parsePositiveInt(process.env.AR20_TEST_TIMEOUT_MS, 240000);
 const IPC_LATENCY_BUDGET_MS = parsePositiveInt(process.env.AR20_MAX_LATENCY_MS, 90000);
-const IPC_LATENCY_HARD_MAX_MS = parsePositiveInt(process.env.AR20_MAX_HARD_LATENCY_MS, 180000);
+const IPC_LATENCY_HARD_MAX_MS = parsePositiveInt(
+  process.env.AR20_MAX_HARD_LATENCY_MS,
+  180000
+);
 const IPC_LATENCY_OUTLIER_MAX = parsePositiveInt(process.env.AR20_MAX_OUTLIERS, 2);
 const AR20_UI_STRICT = process.env.AR20_UI_STRICT === '1';
 

@@ -222,13 +222,11 @@ impl OmegaConversationBridge {
         PipelineInput {
             request_id,
             text: request.user_message.clone(),
-            context: vec![], // Implementation: Load conversation context from UnifiedMemory
-            // - Query: UNIFIED_MEMORY.read().await.search(&request.conversation_id)
-            // - Recent messages: Retrieve last 10 messages from STM for immediate context
-            // - Long-term context: Semantic search in LTM for relevant past conversations
-            // - Format: Vec<String> with "[User]: {msg}" and "[Assistant]: {reply}" pairs
-            // - Token limit: Truncate to ~2000 tokens to fit in LLM context window
-            // - Summarization: If conversation too long, use summarizer.rs to compress
+            // TRUTH LABEL [PATCH-008]: context is EMPTY — conversation history NOT injected.
+            // Memory plan (STM/LTM) is computed in commands.rs but not executed here.
+            // Each OMEGA request is stateless from the AI perspective until this is wired.
+            // TODO: load from load_conversation_history() + UnifiedMemory for multi-turn memory.
+            context: vec![],
             preferences,
             timestamp: chrono::Utc::now().timestamp_millis(),
             priority: 5, // Normal priority
