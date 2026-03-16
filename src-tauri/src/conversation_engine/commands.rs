@@ -149,6 +149,10 @@ async fn run_governed_search(query: &str, max_results: usize) -> Result<Vec<crat
         .collect())
 }
 
+// TRUTH LABEL [PATCH-009]: Web search is DISABLED in default builds.
+// Default features = ["custom-protocol","mock","audio-capture"] → mock=true, full=false
+// → this stub is ALWAYS active in default/dev builds regardless of BRAVE_API_KEY.
+// To enable real Brave search: build with --features full --no-default-features (or remove mock).
 #[cfg(not(all(not(feature = "mock"), feature = "full")))]
 async fn run_governed_search(_query: &str, _max_results: usize) -> Result<Vec<crate::engines::conversation_os::search::RawSearchResult>, String> {
     Err("CREDENTIALS_MISSING: SearchGatewayService unavailable without full backend features".to_string())
