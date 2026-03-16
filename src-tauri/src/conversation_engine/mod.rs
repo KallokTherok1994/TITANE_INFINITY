@@ -240,6 +240,26 @@ impl ConversationEngineState {
                             );
                         }
 
+                        // IMPROVE-005: Wire MultiLayerMemoryManager in-memory STM.
+                        // add_to_immediate() is fast (in-memory, no I/O) and populates
+                        // the immediate context layer for the current session.
+                        // Every 10 turns: run consolidate_session() to extract concepts
+                        // and build episodic/semantic/procedural memory from the exchange.
+                        {
+                            let mut mlm = self.multilayer_memory.write().await;
+                            let turn_count = mlm.add_to_immediate(
+                                request.user_message.clone(),
+                                response.assistant_message.clone(),
+                            );
+                            if turn_count % 10 == 0 {
+                                mlm.consolidate_session();
+                                log::info!(
+                                    "[CONV-ENGINE] 🧠 MultiLayer consolidation triggered at turn {}",
+                                    turn_count
+                                );
+                            }
+                        }
+
                         log::info!(
                             "[CONV-ENGINE] 🚀 P2 Direct conversion | bypass_legacy=true | total_latency={}ms",
                             response.metadata.latency_ms

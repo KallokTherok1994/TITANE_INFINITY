@@ -150,8 +150,10 @@ impl MultiLayerMemoryManager {
     // IMMEDIATE MEMORY OPERATIONS
     // ───────────────────────────────────────────────────────────────
 
-    pub fn add_to_immediate(&mut self, user_msg: String, assistant_msg: String) {
+    /// Add a turn to immediate memory. Returns total turn count in immediate layer.
+    pub fn add_to_immediate(&mut self, user_msg: String, assistant_msg: String) -> usize {
         self.immediate.add(user_msg, assistant_msg);
+        self.immediate.len()
     }
 
     pub fn get_immediate_context(&self) -> Vec<(String, String)> {
@@ -352,6 +354,10 @@ impl ImmediateMemory {
 
     fn get_recent(&self, count: usize) -> Vec<(String, String)> {
         self.messages.iter().rev().take(count).cloned().collect()
+    }
+
+    fn len(&self) -> usize {
+        self.messages.len()
     }
 }
 
