@@ -506,6 +506,7 @@ pub async fn conversation_generate(
         provider
     };
 
+<<<<<<< Updated upstream
     // PATCH-012 + IMPROVE-003: Load conversation history from SQLite for LTM context injection.
     // Budget: last 20 messages, content capped at 300 chars each to avoid token overflow.
     // Always load (not gated by LTM flag) so the AI has basic multi-turn awareness.
@@ -540,6 +541,37 @@ pub async fn conversation_generate(
             log::warn!("[Ω:CMD] LTM history load failed (non-fatal): {}", e);
             None
         }
+=======
+    // PATCH-012: Load conversation history from SQLite for LTM/STM context injection
+    // Max 20 messages (10 turns) to fit context window without blowing token budget.
+    let conversation_context = if convos_memory_ltm_enabled || convos_memory_snapshots_enabled {
+        match load_conversation_history(conversation_id.clone()).await {
+            Ok(rows) => {
+                let formatted: Vec<String> = rows.iter()
+                    .take(20)
+                    .filter_map(|row| {
+                        let role = row.get("role")?.as_str()?;
+                        let content = row.get("content")?.as_str()?;
+                        let prefix = if role == "user" { "[User]" } else { "[Assistant]" };
+                        Some(format!("{}: {}", prefix, content))
+                    })
+                    .collect();
+                if !formatted.is_empty() {
+                    log::info!(
+                        "[Ω:CMD] ✅ LTM context loaded: {} messages for conversation_id={}",
+                        formatted.len(), conversation_id
+                    );
+                }
+                if formatted.is_empty() { None } else { Some(formatted) }
+            }
+            Err(e) => {
+                log::warn!("[Ω:CMD] LTM context load failed (non-fatal): {}", e);
+                None
+            }
+        }
+    } else {
+        None
+>>>>>>> Stashed changes
     };
 
     // Créer la requête OMEGA

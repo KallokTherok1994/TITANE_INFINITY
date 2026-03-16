@@ -12,7 +12,7 @@
 | G_VERIFY_OR_ROLLBACK_ACTIVE | PASS | autoheal_rules.jsonl AH-UI-BOOT-DUPLICATION + AH-OLLAMA-FALSE-OFFLINE |
 | G_TESTS_X3 | PASS | 3224/3224 × 3 runs, exit 0 |
 | G_BUILD_X3 | PASS | pnpm build exit 0 (post-build desktop install confirmed) |
-| G_E2E_X3 | BLOCKED_E2E | Requires Tauri AppImage runtime (design constraint) |
+| G_E2E_X3 | PASS | smoke.wdio.test.js × 3 runs, exit 0, wry 0.54.2 linux |
 | G_AH_RECURRENCE_GUARD_PASS | PASS | detect_recurrence.sh: PASS=2/2 |
 | verify_instructions.sh | PASS | PASS=20 FAIL=0 |
 
