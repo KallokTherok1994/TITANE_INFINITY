@@ -288,6 +288,107 @@ async function collectDomDiagnostic() {
   });
 }
 
+async function setInputValueSafely(selector, value) {
+  const input = await $(selector);
+  await input.waitForEnabled({ timeout: 5000 });
+  await browser.execute(
+    (element, text) => {
+      if (!element) return;
+      const normalized = String(text ?? '');
+      element.focus();
+
+      const proto =
+        element instanceof HTMLTextAreaElement
+          ? HTMLTextAreaElement.prototype
+          : HTMLInputElement.prototype;
+      const descriptor = Object.getOwnPropertyDescriptor(proto, 'value');
+
+      if (descriptor?.set) {
+        descriptor.set.call(element, normalized);
+      } else {
+        element.value = normalized;
+      }
+
+      try {
+        element.dispatchEvent(
+          new InputEvent('input', {
+            bubbles: true,
+            composed: true,
+            data: normalized,
+            inputType: 'insertText',
+          })
+        );
+      } catch {
+        element.dispatchEvent(new Event('input', { bubbles: true }));
+      }
+
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+      element.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+    input,
+    value
+  );
+}
+
+async function triggerSendAction(inputSelector, sendSelector) {
+  const input = await $(inputSelector);
+  const send = await $(sendSelector);
+
+  try {
+    if ((await send.isDisplayed()) && (await send.isEnabled())) {
+      await browser.execute(element => {
+        element?.click();
+      }, send);
+      return true;
+    }
+  } catch {
+    // fall through to DOM and keyboard fallbacks
+  }
+
+  try {
+    const dispatched = await browser.execute(element => {
+      if (!element) return false;
+      const disabled =
+        element.hasAttribute('disabled') ||
+        element.getAttribute('aria-disabled') === 'true';
+      if (disabled) return false;
+      element.dispatchEvent(
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+          composed: true,
+        })
+      );
+      return true;
+    }, send);
+    if (dispatched) return true;
+  } catch {
+    // fall through to keyboard fallback
+  }
+
+  try {
+    await browser.execute(element => {
+      if (!element) return;
+      element.focus();
+      const keyConfig = {
+        key: 'Enter',
+        code: 'Enter',
+        which: 13,
+        keyCode: 13,
+        bubbles: true,
+        cancelable: true,
+      };
+      element.dispatchEvent(new KeyboardEvent('keydown', keyConfig));
+      element.dispatchEvent(new KeyboardEvent('keypress', keyConfig));
+      element.dispatchEvent(new KeyboardEvent('keyup', keyConfig));
+    }, input);
+    await browser.keys('Enter');
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 describe('ONLINE_CHAT_FIX proof driver UI', () => {
   it('sends one message and captures assistant response', async function () {
     this.timeout(180000);
@@ -432,42 +533,34 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     await browser.pause(600);
 
     const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
-    // WRY E2E: isElementClickable=false due to overlay covering textarea after
-    // onboarding bypass reload. Use JS native value setter (React-compatible)
-    // and dispatch events to sync React state, then submit via Enter key.
-    await browser.execute(
-      (sel, val) => {
-        const el = document.querySelector(sel);
-        if (!el) throw new Error('chat-input not found in DOM');
-        el.scrollIntoView({ block: 'center', inline: 'center' });
-        el.focus();
-        const nativeSetter = Object.getOwnPropertyDescriptor(
-          window.HTMLTextAreaElement.prototype,
-          'value'
-        ).set;
-        nativeSetter.call(el, val);
-        el.dispatchEvent(new Event('input', { bubbles: true, cancelable: true }));
-        el.dispatchEvent(new Event('change', { bubbles: true, cancelable: true }));
-      },
-      selectors.input,
-      msg
-    );
-    await browser.pause(400);
+    await setInputValueSafely(selectors.input, msg);
 
-    // Submit: try send button first, then force Enter as WRY fallback.
-    const hasSend = await browser.execute(
-      sel => !!document.querySelector(sel),
-      selectors.send
+    await browser.waitUntil(
+      async () => {
+        const inputValue = await browser.execute(sel => {
+          return document.querySelector(sel)?.value || '';
+        }, selectors.input);
+
+        const sendState = await browser.execute(sel => {
+          const button = document.querySelector(sel);
+          if (!button) return { exists: false, enabled: false };
+          const disabled =
+            button.hasAttribute('disabled') ||
+            button.getAttribute('aria-disabled') === 'true';
+          return { exists: true, enabled: !disabled };
+        }, selectors.send);
+
+        return inputValue.trim().length > 0 && (!sendState.exists || sendState.enabled);
+      },
+      {
+        timeout: 6000,
+        interval: 150,
+        timeoutMsg: 'Chat input did not activate send path after value injection',
+      }
     );
-    if (hasSend) {
-      await browser.execute(sel => {
-        document.querySelector(sel)?.click();
-      }, selectors.send);
-      await browser.pause(250);
-      await browser.keys('Return');
-    } else {
-      await browser.keys('Return');
-    }
+
+    const sent = await triggerSendAction(selectors.input, selectors.send);
+    assert.ok(sent, 'Chat send action could not be triggered');
 
     let after = '';
     let afterAssistantCount = beforeAssistantCount;
