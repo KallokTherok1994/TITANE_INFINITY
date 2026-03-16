@@ -147,7 +147,10 @@ describe('Diagnostic: Tauri API Availability', () => {
               }
 
               if (window.__TAURI__?.core?.invoke) {
-                return await window.__TAURI__.core.invoke('conversation_generate', payload);
+                return await window.__TAURI__.core.invoke(
+                  'conversation_generate',
+                  payload
+                );
               }
 
               throw new Error('No Tauri API found');

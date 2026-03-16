@@ -1787,7 +1787,10 @@ describe('Ω∞.UI.CHAT.360.AUTOFIX', () => {
 
         let result;
         try {
-          result = await sendMessageViaUI(`Offline test ${i}`, OFFLINE_RESPONSE_TIMEOUT_MS);
+          result = await sendMessageViaUI(
+            `Offline test ${i}`,
+            OFFLINE_RESPONSE_TIMEOUT_MS
+          );
         } catch (err) {
           const message = (err && err.message) || String(err);
           console.warn(`⚠️ Offline ${i}: driver exception (${message})`);

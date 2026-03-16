@@ -52,7 +52,12 @@ function toSerializable(value) {
 }
 
 async function ensureTauriPageLoaded(appUrl) {
-  const candidates = [appUrl, 'tauri://localhost/titane', 'tauri://localhost/#/chat', 'tauri://localhost'];
+  const candidates = [
+    appUrl,
+    'tauri://localhost/titane',
+    'tauri://localhost/#/chat',
+    'tauri://localhost',
+  ];
 
   for (const url of candidates) {
     await browser.url(url);
@@ -153,7 +158,10 @@ async function invokeConversationGenerate(message) {
           const withTimeout = Promise.race([
             run(),
             new Promise((_, reject) => {
-              setTimeout(() => reject(new Error('ONLINE_PROOF_INVOKE_TIMEOUT')), invokeTimeoutMs);
+              setTimeout(
+                () => reject(new Error('ONLINE_PROOF_INVOKE_TIMEOUT')),
+                invokeTimeoutMs
+              );
             }),
           ]);
 
