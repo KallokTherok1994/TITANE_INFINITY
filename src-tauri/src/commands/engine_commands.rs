@@ -219,13 +219,16 @@ pub async fn engine_tick(
 }
 
 /// Get Evolution Engine state (stub for now, full implementation in Phase 5.2)
+/// ⚠️ TRUTH LABEL: Returns placeholder data only — AutoEvolutionEngine NOT yet integrated.
+/// Any UI displaying this data must label it as "non disponible (Phase 5.2)".
 #[tauri::command]
 pub async fn engine_get_evolution_state() -> Result<EvolutionStateResponse, String> {
-    // For now, return a stub - will be implemented with AutoEvolutionEngine integration
+    // STUB: AutoEvolutionEngine not yet implemented (Phase 5.2 target)
+    // status="stub" signals to callers that this is not real runtime data
     Ok(EvolutionStateResponse {
         is_running: false,
         evolution_count: 0,
         last_evolution_ms: 0,
-        status: "Ready".to_string(),
+        status: "stub".to_string(),
     })
 }

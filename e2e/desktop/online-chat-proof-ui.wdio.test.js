@@ -577,6 +577,23 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       },
       { timeout: 90000, interval: 1000, timeoutMsg: 'No assistant response detected' }
     );
+
+    // In Wry/WebKit, the assistant row can mount one tick before text content.
+    // If detection was count-based, wait for hydrated non-empty text deterministically.
+    if (!after && afterAssistantCount > beforeAssistantCount) {
+      await browser.waitUntil(
+        async () => {
+          after = await getLastText(selectors.response);
+          return after.length > 0;
+        },
+        {
+          timeout: 15000,
+          interval: 250,
+          timeoutMsg: 'Assistant message mounted but content stayed empty',
+        }
+      );
+    }
+
     console.log(
       `[ASSISTANT_SNAPSHOT] beforeCount=${beforeAssistantCount} afterCount=${afterAssistantCount}`
     );
