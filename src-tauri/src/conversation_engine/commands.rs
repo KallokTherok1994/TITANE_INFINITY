@@ -486,10 +486,21 @@ pub async fn conversation_generate(
     }
 
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
+    // PATCH-010: Apply policy_verdict.allow_external_ai — if external AI blocked by policy,
+    // override provider to "local" to enforce One Door network governance.
     let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
         log::warn!(
             "[Ω:CMD] ⚠️ FORCE_LOCAL_PROVIDER env active | cloud providers DISABLED | reason=test_mode"
         );
+        Some("local".to_string())
+    } else if !policy_verdict.allow_external_ai {
+        // Policy gate: external AI not allowed (offline/blocked/no-credentials)
+        if provider.as_deref().map(|p| matches!(p, "gemini" | "openai" | "gpt" | "claude" | "anthropic")).unwrap_or(false) {
+            log::warn!(
+                "[Ω:CMD] ⚠️ Policy gate: external AI blocked (allow_external_ai=false) | reason={:?} | forcing local",
+                policy_verdict.block_reason
+            );
+        }
         Some("local".to_string())
     } else {
         provider
