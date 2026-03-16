@@ -30,6 +30,12 @@ pub struct ConversationRequest {
     /// System prompt personnalisé (depuis InstructionMode frontend)
     #[serde(default)]
     pub custom_system_prompt: Option<String>,
+
+    /// Historique de conversation injecté (STM/LTM context — max 20 messages)
+    /// Format: ["[User]: message", "[Assistant]: reply", ...]
+    /// Populated by conversation_generate from load_conversation_history() SQLite.
+    #[serde(default)]
+    pub history: Option<Vec<String>>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -1202,6 +1208,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
         assert_eq!(request.user_message, "Hello");
         assert!(request.conversation_id.is_none());
@@ -1216,6 +1223,7 @@ mod tests {
             ai_config: Some(AIConfig::default()),
             emotion_context: Some(EmotionState::default()),
             custom_system_prompt: None,
+            history: None,
         };
         assert!(request.conversation_id.is_some());
         assert!(request.ai_config.is_some());

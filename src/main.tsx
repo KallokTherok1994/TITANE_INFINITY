@@ -1078,6 +1078,39 @@ window.addEventListener('unhandledrejection', event => {
 console.log('✅ TITANE∞ frontend loaded successfully');
 console.log('>>> MOUNTING REACT ROOT NOW...\n');
 
+// ⚡ FIX: NON-MAIN WINDOW GUARD
+// Root cause: avatar-floating pre-created in tauri.conf.json (no dedicated URL)
+// loads full React bundle → duplicate App.tsx useEffects + Ollama probes + WebKit crash
+// Evidence: tauri.conf.json:47-63, App.tsx:456, main.rs:952+976, ollama.ts:156-165
+const _titaneCurrentWindowLabel: string = (() => {
+  try {
+    const internals = (window as any).__TAURI_INTERNALS__;
+    const label = internals?.metadata?.currentWindow?.label;
+    return typeof label === 'string' && label.length > 0 ? label : 'main';
+  } catch {
+    return 'main';
+  }
+})();
+
+if (_titaneCurrentWindowLabel !== 'main') {
+  // Non-main window (e.g. avatar-floating): mount minimal stub only.
+  // Prevents: duplicate Ollama probes, duplicate boot useEffects, WebKit crash.
+  const _nonMainRoot = document.getElementById('root');
+  if (_nonMainRoot) {
+    ReactDOM.createRoot(_nonMainRoot).render(
+      <React.StrictMode>
+        <div
+          id="titane-secondary-window-stub"
+          data-window-label={_titaneCurrentWindowLabel}
+          data-boot-status="minimal-non-main"
+          aria-hidden="true"
+          style={{ display: 'none' }}
+        />
+      </React.StrictMode>
+    );
+  }
+  console.log(`[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`);
+} else {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🎯 REACT ROOT MOUNT - Point critique d'affichage
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -1229,3 +1262,4 @@ try {
   `;
   throw error;
 }
+} // end non-main window guard (FIX: UI_BOOT_DUPLICATION + OLLAMA_PROBE_STORM)

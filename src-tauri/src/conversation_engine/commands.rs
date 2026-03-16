@@ -506,6 +506,37 @@ pub async fn conversation_generate(
         provider
     };
 
+    // PATCH-012: Load conversation history from SQLite for LTM/STM context injection
+    // Max 20 messages (10 turns) to fit context window without blowing token budget.
+    let conversation_context = if convos_memory_ltm_enabled || convos_memory_snapshots_enabled {
+        match load_conversation_history(conversation_id.clone()).await {
+            Ok(rows) => {
+                let formatted: Vec<String> = rows.iter()
+                    .take(20)
+                    .filter_map(|row| {
+                        let role = row.get("role")?.as_str()?;
+                        let content = row.get("content")?.as_str()?;
+                        let prefix = if role == "user" { "[User]" } else { "[Assistant]" };
+                        Some(format!("{}: {}", prefix, content))
+                    })
+                    .collect();
+                if !formatted.is_empty() {
+                    log::info!(
+                        "[Ω:CMD] ✅ LTM context loaded: {} messages for conversation_id={}",
+                        formatted.len(), conversation_id
+                    );
+                }
+                if formatted.is_empty() { None } else { Some(formatted) }
+            }
+            Err(e) => {
+                log::warn!("[Ω:CMD] LTM context load failed (non-fatal): {}", e);
+                None
+            }
+        }
+    } else {
+        None
+    };
+
     // Créer la requête OMEGA
     let request = ConversationRequest {
         user_message: message.clone(),
@@ -528,6 +559,7 @@ pub async fn conversation_generate(
         }),
         emotion_context: None,
         custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé
+        history: conversation_context,
     };
 
     // Traiter via le pipeline OMEGA complet
@@ -1466,6 +1498,7 @@ pub async fn conversation_process_message(
         ai_config: None,
         emotion_context: None,
         custom_system_prompt: None,
+        history: None,
     };
 
     log::info!(

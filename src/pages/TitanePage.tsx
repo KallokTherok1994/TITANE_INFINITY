@@ -123,6 +123,16 @@ export const TitanePage: React.FC = () => {
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
   const { success: toastSuccess, error: errorToast } = useToast();
 
+  // PATCH-014: Persist conversationId for cross-session LTM (same key as ChatPage)
+  const [conversationId] = useState<string>(() => {
+    if (typeof window === 'undefined') return `conv_${Date.now()}`;
+    const stored = window.localStorage.getItem('omega-chat-conversation-id');
+    if (stored && stored.trim().length > 0) return stored;
+    const newId = `conv_${Date.now()}`;
+    window.localStorage.setItem('omega-chat-conversation-id', newId);
+    return newId;
+  });
+
   // ═══ VISUAL ENGINES INITIALIZATION ═══
   useVisualEngines({
     engines: { stable: true, helios: true, nexus: true },
@@ -197,7 +207,7 @@ export const TitanePage: React.FC = () => {
       case 'identity':
         return <IdentitySection />;
       case 'memory-map':
-        return <MemorySection stats={stats} />;
+        return <MemorySection stats={stats} conversationId={conversationId} />;
       case 'memory-evolution':
         return <MemoryEvolutionSection />;
       case 'progression':
