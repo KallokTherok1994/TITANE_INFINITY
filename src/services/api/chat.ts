@@ -326,7 +326,6 @@ class ChatService {
     }
   }
 
-
   /**
    * Restaure l'historique d'une conversation depuis le backend SQLite (conversation_os_v1.db).
    * Retourne [] si aucune donnée n'existe pour ce conversation_id.
@@ -335,7 +334,9 @@ class ChatService {
    */
   async loadConversationHistory(conversationId: string): Promise<AIMessage[]> {
     if (!conversationId || conversationId.trim() === '') {
-      console.warn('[ChatService] loadConversationHistory: empty conversationId — returning []');
+      console.warn(
+        '[ChatService] loadConversationHistory: empty conversationId — returning []'
+      );
       return [];
     }
     if (isE2EChatMockEnabled()) {
@@ -343,7 +344,9 @@ class ChatService {
       return [];
     }
     try {
-      const rows = await invokeWithRetry<Array<{ role: string; content: string; timestamp: number }>>(
+      const rows = await invokeWithRetry<
+        Array<{ role: string; content: string; timestamp: number }>
+      >(
         'load_conversation_history',
         { conversationId },
         { ...LONG_COMMAND_OPTIONS, context: 'LoadConversationHistory' }
@@ -382,14 +385,17 @@ class ChatService {
    * Retourne [] si aucune donnée ou db absent (jamais d'erreur silencieuse).
    * Permet la redécouverte si conversation_id perdu côté localStorage.
    */
-  async listRestorableConversations(limit?: number): Promise<Array<{conversationId: string; messageCount: number; lastTs: number}>> {
+  async listRestorableConversations(
+    limit?: number
+  ): Promise<Array<{ conversationId: string; messageCount: number; lastTs: number }>> {
     if (!isTauriRuntimeAvailable()) return [];
     try {
-      const rows = await invokeWithRetry<Array<{conversationId: string; messageCount: number; lastTs: number}>>(
-        'list_restorable_conversations',
-        limit !== undefined ? { limit } : {},
-        { ...LONG_COMMAND_OPTIONS, context: 'ListRestorableConversations' }
-      );
+      const rows = await invokeWithRetry<
+        Array<{ conversationId: string; messageCount: number; lastTs: number }>
+      >('list_restorable_conversations', limit !== undefined ? { limit } : {}, {
+        ...LONG_COMMAND_OPTIONS,
+        context: 'ListRestorableConversations',
+      });
       return rows ?? [];
     } catch (err) {
       console.warn('[ChatService.listRestorableConversations] failed (non-fatal):', err);
