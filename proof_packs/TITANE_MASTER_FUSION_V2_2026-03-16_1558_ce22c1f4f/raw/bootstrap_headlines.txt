@@ -1,0 +1,15 @@
+]633;E;{   echo "## bootstrap headlines"\x3b   rg -n "^DATE=|^PWD=|^## git status|^## git rev-parse|^## node -v|^## pnpm -v|^## cargo -V|^## rustc -V|^## pnpm -s run|^## ls src$|^## ls src-tauri$|^## ls e2e$|^## ls tests$|^## ls scripts$" "$pp/raw/bootstrap_capture.clean.txt"\x3b } > "$pp/raw/bootstrap_headlines.txt";61024d0a-11ee-4977-a3f6-8d2b0ec7dc16]633;C## bootstrap headlines
+2:DATE=2026-03-16T15:58:53-04:00
+3:PWD=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+5:## git status --short --branch
+9:## git rev-parse --short HEAD
+34:## node -v
+37:## pnpm -v
+40:## cargo -V
+43:## rustc -V
+46:## pnpm -s run
+329:## ls src
+387:## ls src-tauri
+411:## ls e2e
+428:## ls tests
+454:## ls scripts

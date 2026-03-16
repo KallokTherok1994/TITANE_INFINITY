@@ -1,0 +1,1 @@
+rm -rf "proof_packs/TITANE_MASTER_FUSION_V2_2026-03-16_1558_ce22c1f4f"
