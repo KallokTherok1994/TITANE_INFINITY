@@ -1664,12 +1664,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
         if (backendHistory.length > 0) {
           const firstCandidate = providerCandidates[0];
-          // ✅ FIX AUDIT: Utiliser conversationId persistant depuis state
-          // NOTE: Ne pas passer conversationId au chemin legacy : le backend peut se bloquer
-          // avec "Duplicate conversation detected" et ne jamais répondre (2e message vide).
+          // IMPROVE-007: Pass _conversationId so ChatWindow history accumulates in SQLite.
+          // The SelfHealing duplicate-window (2s) only blocks rapid double-submits, not
+          // normal sequential messages. Passing the ID enables cross-turn LTM for ChatWindow.
           const requestConfig: StreamConfig = {
             provider: firstCandidate ?? 'auto',
             requestId,
+            conversationId: _conversationId || undefined,
           };
           for (const candidate of providerCandidates) {
             try {
@@ -1680,6 +1681,7 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
                 chatService.sendMessageLegacy(backendHistory, {
                   provider: candidate,
                   requestId,
+                  conversationId: _conversationId || undefined,
                 }),
                 `legacy:${candidate}`
               );
