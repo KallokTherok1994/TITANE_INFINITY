@@ -44,6 +44,7 @@ pub async fn memory_get(
                     return Ok(Some(serde_json::to_string(&conv).unwrap_or_default()));
                 }
             }
+            log::warn!("[memory_get] key='{}' not found in conversations", key);
             Ok(None)
         }
         Err(e) => Err(format!("Failed to access memory: {}", e)),

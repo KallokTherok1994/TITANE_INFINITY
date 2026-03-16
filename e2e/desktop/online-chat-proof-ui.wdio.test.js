@@ -304,10 +304,19 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
     }
 
-    // Seed localStorage to bypass onboarding flow (E2E isolated env has no prior state).
+    // Seed localStorage to bypass onboarding flow and clear residual chat history.
     // Use in-page reload (location.reload) — browser.url() sends WebDriver navigate-to
     // which resets the WRY/Tauri WebView localStorage context.
     await browser.execute(() => {
+      for (const key of Object.keys(localStorage)) {
+        if (
+          key.startsWith('titane_chat_mode_') ||
+          key === 'titane_chat_history' ||
+          key === 'titane_chat_runtime_state'
+        ) {
+          localStorage.removeItem(key);
+        }
+      }
       localStorage.setItem('titane_onboarding_complete', '1');
       localStorage.setItem('titane_browser_mode', '1'); // browser mode = use localStorage path (not Tauri IPC) for onboarding check
       location.reload();
@@ -445,7 +454,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     );
     await browser.pause(400);
 
-    // Submit: try send button first, then Enter key
+    // Submit: try send button first, then force Enter as WRY fallback.
     const hasSend = await browser.execute(
       sel => !!document.querySelector(sel),
       selectors.send
@@ -454,6 +463,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       await browser.execute(sel => {
         document.querySelector(sel)?.click();
       }, selectors.send);
+      await browser.pause(250);
+      await browser.keys('Return');
     } else {
       await browser.keys('Return');
     }

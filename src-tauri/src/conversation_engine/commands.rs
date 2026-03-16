@@ -1785,6 +1785,87 @@ pub async fn anthology_get_top_lexical_fields(
     Ok(anthology_engine.get_top_lexical_fields(n))
 }
 
+/// Charger l'historique d'une conversation depuis le SQLite conversation_os
+/// Commande IPC pour restaurer le transcript UI depuis la source backend réelle.
+/// Retourne un Vec vide (jamais d'erreur silencieuse) si aucune donnée n'existe.
+/// Chaque élément: { role: "user"|"assistant", content: String, timestamp: i64 }
+#[tauri::command]
+pub async fn load_conversation_history(
+    conversation_id: String,
+) -> CommandResult<Vec<serde_json::Value>> {
+    use rusqlite::Connection;
+
+    if conversation_id.trim().is_empty() {
+        log::warn!("[load_conversation_history] conversation_id is empty — returning []");
+        return Ok(vec![]);
+    }
+
+    let db_path = resolve_conversation_os_db_path(None);
+
+    if !db_path.exists() {
+        log::warn!(
+            "[load_conversation_history] db not found at {:?} — returning []",
+            db_path
+        );
+        return Ok(vec![]);
+    }
+
+    let conn = match Connection::open(&db_path) {
+        Ok(c) => c,
+        Err(e) => {
+            log::warn!("[load_conversation_history] open db failed: {} — returning []", e);
+            return Ok(vec![]);
+        }
+    };
+
+    // Read events ordered by timestamp — only user and assistant messages
+    let mut stmt = conn
+        .prepare(
+            "SELECT kind, payload, ts FROM events \
+             WHERE conversation_id = ?1 \
+             AND kind IN ('user_message', 'assistant_message') \
+             ORDER BY ts ASC",
+        )
+        .map_err(|e| format!("[load_conversation_history] prepare failed: {}", e))?;
+
+    let rows: Vec<serde_json::Value> = stmt
+        .query_map([&conversation_id], |row| {
+            let kind: String = row.get(0)?;
+            let payload_str: String = row.get(1)?;
+            let ts: i64 = row.get(2)?;
+            Ok((kind, payload_str, ts))
+        })
+        .map_err(|e| format!("[load_conversation_history] query failed: {}", e))?
+        .filter_map(|r| r.ok())
+        .filter_map(|(kind, payload_str, ts)| {
+            let role = if kind == "user_message" { "user" } else { "assistant" };
+            let payload: serde_json::Value = serde_json::from_str(&payload_str).ok()?;
+            let content = payload.get("message")?.as_str()?;
+            Some(serde_json::json!({
+                "role": role,
+                "content": content,
+                "timestamp": ts,
+            }))
+        })
+        .collect();
+
+    if rows.is_empty() {
+        log::info!(
+            "[load_conversation_history] conversation_id='{}' — no events found in db ({})",
+            conversation_id,
+            db_path.display()
+        );
+    } else {
+        log::info!(
+            "[load_conversation_history] conversation_id='{}' — restored {} message(s)",
+            conversation_id,
+            rows.len()
+        );
+    }
+
+    Ok(rows)
+}
+
 /// Obtenir les statistiques de l'anthologie
 #[tauri::command]
 pub async fn anthology_get_statistics(
