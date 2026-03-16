@@ -45,15 +45,18 @@
   ],
   "success_criteria": {
     "exit_code": 0,
-    "artifacts_created": ["*.AppImage", "*.deb"],
+    "artifacts_created": [
+      "*.AppImage",
+      "*.deb"
+    ],
     "size_limit_mb": 100,
     "no_forbidden_content": true
   },
-  "last_validation": 1773616720.837715,
+  "last_validation": 1773626724.843656,
   "certification_status": "FORBIDDEN_SCAN_PASSED",
   "p3_3_forbidden_scan": {
     "status": "PASS",
-    "last_run": 1773616720.837721,
+    "last_run": 1773626724.843664,
     "violations": 0
   }
 }
