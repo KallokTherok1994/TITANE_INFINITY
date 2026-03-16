@@ -1139,6 +1139,7 @@ fn main() {
                         }),
                         emotion_context: None,
                         custom_system_prompt: Some("Réponds uniquement: SMOKE_OK".to_string()),
+                        history: None,
                     };
 
                     // Call conversation engine (same logic as conversation_generate command)

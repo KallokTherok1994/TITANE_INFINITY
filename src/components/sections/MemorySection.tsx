@@ -14,6 +14,7 @@ import { TMetric, TSectionHeader } from '@/design-system';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { createLogger } from '@/utils/logger';
 import { usePersistentMemory } from '@/hooks/usePersistentMemory';
+import { useLTMContext } from '@/hooks/useLTMContext';
 
 const pageLogger = createLogger('MemorySection');
 
@@ -32,6 +33,7 @@ export interface TitaneStats {
 
 interface MemorySectionProps {
   stats: TitaneStats;
+  conversationId?: string;
 }
 
 type MemoryTreeNodeData = {
@@ -72,8 +74,11 @@ const LazyMemorySearchPanel = React.lazy(() =>
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
+export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats, conversationId }) => {
   const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
+
+  // PATCH-014: Live LTM conversation history count from SQLite
+  const { historyCount: ltmConvCount } = useLTMContext(conversationId ?? null);
 
   // Load real memory entries for search panel
   const { entries: persistentEntries } = usePersistentMemory({
@@ -148,7 +153,22 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats }) => {
 
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
-          <TMetric label="Entrées" value={stats.memoryLongTerm.toString()} color="info" />
+          <TMetric
+            label="Entrées"
+            value={(stats.memoryLongTerm + ltmConvCount).toString()}
+            color="info"
+          />
+          {ltmConvCount > 0 && (
+            <p
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginTop: spacing[2],
+              }}
+            >
+              🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} en mémoire de session
+            </p>
+          )}
           <p
             style={{
               fontSize: fontSizes.sm,

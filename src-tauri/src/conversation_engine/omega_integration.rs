@@ -222,11 +222,9 @@ impl OmegaConversationBridge {
         PipelineInput {
             request_id,
             text: request.user_message.clone(),
-            // TRUTH LABEL [PATCH-008]: context is EMPTY — conversation history NOT injected.
-            // Memory plan (STM/LTM) is computed in commands.rs but not executed here.
-            // Each OMEGA request is stateless from the AI perspective until this is wired.
-            // TODO: load from load_conversation_history() + UnifiedMemory for multi-turn memory.
-            context: vec![],
+            // PATCH-011: inject conversation history from request.history (loaded by commands.rs)
+            // This wires STM/LTM context into the OMEGA pipeline for multi-turn memory.
+            context: request.history.clone().unwrap_or_default(),
             preferences,
             timestamp: chrono::Utc::now().timestamp_millis(),
             priority: 5, // Normal priority
@@ -563,6 +561,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
 
         let omega_input = bridge.convert_to_omega_input(&request);
@@ -588,6 +587,7 @@ mod tests {
             ai_config: None,
             emotion_context: None,
             custom_system_prompt: None,
+            history: None,
         };
 
         // Simulate OMEGA result

@@ -16,12 +16,20 @@
 import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
 import { useMemoryCore } from '../hooks';
+import { useLTMContext } from '@/hooks/useLTMContext';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Memory = () => {
   const { entries, loading, loadEntries, saveEntry, clearMemory } = useMemoryCore();
   const [newEntry, setNewEntry] = useState('');
+
+  // PATCH-014: LTM conversation history in Memory page
+  const conversationId =
+    typeof window !== 'undefined'
+      ? (window.localStorage.getItem('omega-chat-conversation-id') ?? null)
+      : null;
+  const { history: ltmHistory, historyCount: ltmCount } = useLTMContext(conversationId);
 
   useEffect(() => {
     loadEntries();
@@ -74,6 +82,15 @@ export const Memory = () => {
           }
           subtitle="Niveau de protection"
           variant={encryptedCount === totalEntries ? 'success' : 'warning'}
+        />
+
+        {/* PATCH-014: LTM conversation history card */}
+        <ModuleCard
+          title="LTM Conversation"
+          icon="🗂"
+          value={ltmCount}
+          subtitle="Messages en mémoire longue durée"
+          variant={ltmCount > 0 ? 'success' : 'primary'}
         />
       </div>
 
@@ -195,6 +212,53 @@ export const Memory = () => {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* PATCH-014: LTM Conversation Timeline */}
+      {ltmCount > 0 && (
+        <div style={{ marginTop: '2rem' }}>
+          <h3 style={{ color: 'white', marginBottom: '1rem' }}>
+            🗂 Historique de Conversation LTM ({ltmCount} messages)
+          </h3>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.5rem',
+              maxHeight: '350px',
+              overflowY: 'auto',
+            }}
+          >
+            {ltmHistory.slice(-10).map((msg, i) => (
+              <div
+                key={i}
+                style={{
+                  padding: '0.75rem 1rem',
+                  background:
+                    msg.role === 'user'
+                      ? 'rgba(99,102,241,0.12)'
+                      : 'rgba(16,185,129,0.08)',
+                  borderRadius: '8px',
+                  border: `1px solid ${msg.role === 'user' ? 'rgba(99,102,241,0.3)' : 'rgba(16,185,129,0.2)'}`,
+                  fontSize: '0.85rem',
+                  color: 'rgba(255,255,255,0.85)',
+                }}
+              >
+                <span
+                  style={{
+                    fontWeight: 600,
+                    color: msg.role === 'user' ? '#818cf8' : '#34d399',
+                    marginRight: '0.5rem',
+                  }}
+                >
+                  {msg.role === 'user' ? '👤 Vous' : '🤖 TITANE'}
+                </span>
+                {msg.content.slice(0, 200)}
+                {msg.content.length > 200 ? '…' : ''}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

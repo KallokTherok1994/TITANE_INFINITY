@@ -1,0 +1,3 @@
+311874f284ab6144171dacb71f6ea8dcc6f0bdb61c6fdd2772d8cdd5909e9365  src/main.tsx
+f666ced43b7007ca418aa460d3d7805dd91d39f8d1e701316c66a7121ac82ef9  src/services/ai/providers/ollama.ts
+668fa4b110aadd3811f1a823ed3d304fcdcfb3941cb41583c039c8225f652a3f  scripts/autoheal/autoheal_rules.jsonl

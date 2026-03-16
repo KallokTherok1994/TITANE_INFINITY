@@ -39,6 +39,7 @@ import { createLogger } from '@/utils/logger';
 import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
+import { useLTMContext } from '@/hooks/useLTMContext';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -783,11 +784,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     deleteMessage,
     healthReport,
     refreshHealth,
+    conversationId,
   } = useConversationEngine({
     mode: 'default',
     autoHealthCheck: false,
     maxMessages: 500,
   });
+
+  // PATCH-014: LTM wired to ConversationSection — refreshes after each message
+  const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
 
   // ═══ STATE ═══
   const [selectedProvider, setSelectedProvider] = useState(() => {
@@ -849,11 +854,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       thinking.startThinking();
       try {
         await sendMessage(content);
+        void refreshLTM(); // PATCH-014: refresh LTM count after message
       } finally {
         thinking.stopThinking();
       }
     },
-    [isLoading, sendMessage, thinking]
+    [isLoading, sendMessage, thinking, refreshLTM]
   );
 
   const handleSuggestionClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
@@ -1427,7 +1433,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     >
       <TSectionHeader
         title="💬 Communication & Intelligence"
-        subtitle="Interface conversationnelle multi-provider avec modes spécialisés"
+        subtitle={`Interface conversationnelle multi-provider avec modes spécialisés${ltmCount > 0 ? ` · 🗂 ${ltmCount} msg en mémoire LTM` : ''}`}
       />
 
       <div className="conversation-container">

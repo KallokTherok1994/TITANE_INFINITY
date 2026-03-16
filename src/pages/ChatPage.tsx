@@ -18,6 +18,7 @@ import { ChatWindow } from '@/components/ChatWindow';
 import { logger } from '@/lib/logger';
 
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
+const CONVERSATION_ID_STORAGE_KEY = 'omega-chat-conversation-id';
 
 const getInitialProvider = (): string => {
   if (typeof window === 'undefined') {
@@ -28,9 +29,21 @@ const getInitialProvider = (): string => {
   return stored && stored.trim().length > 0 ? stored : 'ollama';
 };
 
+// PATCH-014: Persist conversationId across sessions for cross-session LTM recall
+const getInitialConversationId = (): string => {
+  if (typeof window === 'undefined') {
+    return `conv_${Date.now()}`;
+  }
+  const stored = window.localStorage.getItem(CONVERSATION_ID_STORAGE_KEY);
+  if (stored && stored.trim().length > 0) return stored;
+  const newId = `conv_${Date.now()}`;
+  window.localStorage.setItem(CONVERSATION_ID_STORAGE_KEY, newId);
+  return newId;
+};
+
 export const ChatPage: React.FC = () => {
   const [selectedProvider, setSelectedProvider] = useState(getInitialProvider);
-  const [conversationId] = useState(() => `conv_${Date.now()}`);
+  const [conversationId] = useState(getInitialConversationId);
 
   useEffect(() => {
     if (typeof window === 'undefined') {
