@@ -18,6 +18,7 @@ const WEBKIT_LOG = path.join(REPORTS, 'webkit_driver.log');
 const WDIO_CONFIG = path.resolve(ROOT, 'wdio.desktop.conf.cjs');
 const TAURI_BINARY_PATH = process.env.TAURI_BINARY_PATH || '';
 const WDIO_SPEC = process.env.WDIO_SPEC || '';
+const E2E_FORCE_LOCAL_PROVIDER = process.env.E2E_FORCE_LOCAL_PROVIDER !== '0';
 
 await fs.mkdir(REPORTS, { recursive: true });
 await fs.writeFile(DIAG_LOG, '');
@@ -134,6 +135,9 @@ if (nativeDriverPath) {
 await appendDiag(`Artifacts dir: ${REPORTS}`);
 await appendDiag(`WDIO config: ${WDIO_CONFIG}`);
 await appendDiag(`TAURI_BINARY_PATH: ${TAURI_BINARY_PATH || '<unset>'}`);
+await appendDiag(
+  `FORCE_LOCAL_PROVIDER for desktop E2E: ${E2E_FORCE_LOCAL_PROVIDER ? 'enabled' : 'disabled'}`
+);
 await appendDiag(`tauri-driver args: ${['tauri-driver', ...tauriArgs].join(' ')}`);
 
 const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
@@ -148,7 +152,9 @@ if (WDIO_SPEC) {
 }
 
 await appendDiag(`wdio command: pnpm ${wdioArgs.join(' ')}`);
-const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG);
+const wdio = spawnLogged('pnpm', wdioArgs, WDIO_LOG, {
+  ...(E2E_FORCE_LOCAL_PROVIDER ? { FORCE_LOCAL_PROVIDER: '1' } : {}),
+});
 
 const shutdown = () => {
   for (const child of [wdio.child, tauriDriver.child]) {
