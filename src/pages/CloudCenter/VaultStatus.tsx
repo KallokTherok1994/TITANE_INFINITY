@@ -34,6 +34,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
   const [isHealing, setIsHealing] = useState(false);
   const [healReport, setHealReport] = useState<HealReport | null>(null);
   const [isCreatingBackup, setIsCreatingBackup] = useState(false);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     loadBackups();
@@ -45,6 +46,9 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
       setBackups(list);
     } catch (e) {
       console.error('[VaultStatus] Failed to load backups:', e);
+      setActionError(
+        e instanceof Error ? e.message : 'Impossible de charger les sauvegardes'
+      );
     }
   };
 
@@ -59,6 +63,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
       onRefresh();
     } catch (e) {
       console.error('[VaultStatus] Auto-heal failed:', e);
+      setActionError(e instanceof Error ? e.message : 'Auto-heal échoué');
     } finally {
       setIsHealing(false);
     }
@@ -71,6 +76,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
       await loadBackups();
     } catch (e) {
       console.error('[VaultStatus] Backup failed:', e);
+      setActionError(e instanceof Error ? e.message : 'Échec création de la sauvegarde');
     } finally {
       setIsCreatingBackup(false);
     }
@@ -84,6 +90,7 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
       onRefresh();
     } catch (e) {
       console.error('[VaultStatus] Restore failed:', e);
+      setActionError(e instanceof Error ? e.message : 'Restauration échouée');
     }
   };
 
@@ -132,6 +139,39 @@ const VaultStatus: React.FC<VaultStatusProps> = ({ status, onRefresh }) => {
 
   return (
     <div className="vault-status">
+      {actionError && (
+        <div
+          className="vault-action-error"
+          role="alert"
+          style={{
+            padding: '8px 12px',
+            marginBottom: '12px',
+            background: 'rgba(220,38,38,0.12)',
+            border: '1px solid rgba(220,38,38,0.4)',
+            borderRadius: '6px',
+            color: '#ef4444',
+            fontSize: '0.85rem',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span>❌ {actionError}</span>
+          <button
+            onClick={() => setActionError(null)}
+            style={{
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'inherit',
+              fontSize: '1rem',
+            }}
+            aria-label="Fermer"
+          >
+            ✕
+          </button>
+        </div>
+      )}
       <div className="status-grid">
         {/* Carte principale du vault */}
         <div className="status-card vault-main">
