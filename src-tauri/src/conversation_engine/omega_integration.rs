@@ -262,11 +262,42 @@ impl OmegaConversationBridge {
         // ✅ REAL AI CALL: Replace OMEGA mock TextGen with actual provider response
         // The OMEGA DefaultTaskHandler::execute() is a stub — wire real AIRouter here.
         let (real_response_text, real_provider_name) = if let Some(router_lock) = &self.ai_router {
-            let prompt = match request.custom_system_prompt.as_deref() {
-                Some(sys) if !sys.is_empty() => {
-                    format!("{sys}\n\nUser: {}", request.user_message)
+            // Build prompt: system_prompt already contains LTM history injected by frontend.
+            // If no custom_system_prompt, inject backend request.history directly (canonical fallback).
+            // Token budget: truncate history entries to max 200 chars each to prevent overflow.
+            let prompt = {
+                let base = request.custom_system_prompt.as_deref().unwrap_or("").trim();
+                let history_block = if !base.contains("## CONVERSATION_HISTORY") {
+                    // Backend history not yet in prompt — inject it (canonical backend path)
+                    if let Some(hist) = &request.history {
+                        if !hist.is_empty() {
+                            let truncated: Vec<String> = hist.iter()
+                                .map(|line| {
+                                    if line.len() > 200 {
+                                        format!("{}…", &line[..200])
+                                    } else {
+                                        line.clone()
+                                    }
+                                })
+                                .collect();
+                            format!("\n\n## CONVERSATION_HISTORY\n{}", truncated.join("\n"))
+                        } else {
+                            String::new()
+                        }
+                    } else {
+                        String::new()
+                    }
+                } else {
+                    String::new() // already present via frontend injection
+                };
+
+                if base.is_empty() && history_block.is_empty() {
+                    format!("User: {}", request.user_message)
+                } else if base.is_empty() {
+                    format!("{}\n\nUser: {}", history_block.trim(), request.user_message)
+                } else {
+                    format!("{}{}\n\nUser: {}", base, history_block, request.user_message)
                 }
-                _ => request.user_message.clone(),
             };
             let provider_pref = request.ai_config.as_ref().and_then(|c| match c.provider_preference {
                 ProviderPreference::Local | ProviderPreference::Ollama => Some("local".to_string()),
