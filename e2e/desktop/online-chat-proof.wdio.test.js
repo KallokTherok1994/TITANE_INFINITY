@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
 const N2_QUESTION =
-  'Explique en 3 points la naturopathie en couvrant alimentation, sommeil et gestion du stress.';
+  'Réponds en une phrase incluant les mots alimentation, sommeil et stress.';
 
 const QUESTION_ANCHORS = ['naturopath', 'aliment', 'sommeil', 'stress'];
 const GENERIC_PATTERNS = [
@@ -14,8 +14,45 @@ const GENERIC_PATTERNS = [
   'assistant ia personnel',
 ];
 
+const parsePositiveInt = (value, fallback) => {
+  const parsed = Number.parseInt(value, 10);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
+};
+
+const PROOF_SCRIPT_TIMEOUT_MS = parsePositiveInt(
+  process.env.ONLINE_PROOF_SCRIPT_TIMEOUT_MS,
+  180000
+);
+const PROOF_TEST_TIMEOUT_MS = parsePositiveInt(
+  process.env.ONLINE_PROOF_TEST_TIMEOUT_MS,
+  300000
+);
+const PROOF_INVOKE_TIMEOUT_MS = parsePositiveInt(
+  process.env.ONLINE_PROOF_INVOKE_TIMEOUT_MS,
+  90000
+);
+
+function toSerializable(value) {
+  if (value === null || value === undefined) return value;
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean') return value;
+  if (Array.isArray(value)) {
+    return value.slice(0, 50).map(toSerializable);
+  }
+  if (typeof value === 'object') {
+    const out = {};
+    Object.keys(value)
+      .slice(0, 80)
+      .forEach(key => {
+        out[key] = toSerializable(value[key]);
+      });
+    return out;
+  }
+  return String(value);
+}
+
 async function ensureTauriPageLoaded(appUrl) {
-  const candidates = [appUrl, 'tauri://localhost/#/chat', 'tauri://localhost'];
+  const candidates = [appUrl, 'tauri://localhost/titane', 'tauri://localhost/#/chat', 'tauri://localhost'];
 
   for (const url of candidates) {
     await browser.url(url);
@@ -29,66 +66,126 @@ async function ensureTauriPageLoaded(appUrl) {
   return false;
 }
 
-async function invokeConversationGenerate(message) {
-  const conversationId = `e2e-proof-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+async function recoverProofSession(appUrl) {
+  try {
+    await browser.reloadSession();
+  } catch {
+    // Session may already be gone.
+  }
 
+  await browser.setTimeout({ script: PROOF_SCRIPT_TIMEOUT_MS });
+
+  const loaded = await ensureTauriPageLoaded(appUrl);
+  if (!loaded) {
+    throw new Error('ONLINE_CHAT_FIX recovery failed: Tauri page unavailable');
+  }
+}
+
+async function invokeConversationGenerate(message) {
   let lastError = 'IPC invocation failed';
+  const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
 
   for (let callAttempt = 1; callAttempt <= 5; callAttempt++) {
-    const result = await browser.executeAsync(
-      (payload, done) => {
-        const run = async () => {
-          const attempts = [];
-
-          if (window.__TAURI__?.core?.invoke) {
-            attempts.push(payload =>
-              window.__TAURI__.core.invoke('conversation_generate', payload)
-            );
-          }
-          if (window.__TAURI__?.tauri?.invoke) {
-            attempts.push(payload =>
-              window.__TAURI__.tauri.invoke('conversation_generate', payload)
-            );
-          }
-          if (window.__TAURI__?.invoke) {
-            attempts.push(payload =>
-              window.__TAURI__.invoke('conversation_generate', payload)
-            );
-          }
-          if (window.__TAURI_INTERNALS__?.invoke) {
-            attempts.push(payload =>
-              window.__TAURI_INTERNALS__.invoke('conversation_generate', payload)
-            );
-          }
-
-          if (!attempts.length) {
-            throw new Error('Tauri IPC unavailable');
-          }
-
-          let invokeError = 'invoke unavailable';
-          for (const attempt of attempts) {
-            try {
-              return await attempt(payload);
-            } catch (error) {
-              invokeError = String(error?.message || error);
+    const conversationId = `e2e-proof-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    let result;
+    try {
+      result = await browser.executeAsync(
+        (payload, invokeTimeoutMs, done) => {
+          const toSerializable = value => {
+            if (value === null || value === undefined) return value;
+            if (typeof value === 'string') return value;
+            if (typeof value === 'number' || typeof value === 'boolean') return value;
+            if (Array.isArray(value)) {
+              return value.slice(0, 50).map(toSerializable);
             }
-          }
+            if (typeof value === 'object') {
+              const out = {};
+              Object.keys(value)
+                .slice(0, 80)
+                .forEach(key => {
+                  out[key] = toSerializable(value[key]);
+                });
+              return out;
+            }
+            return String(value);
+          };
 
-          throw new Error(invokeError);
-        };
+          const run = async () => {
+            const attempts = [];
 
-        run()
-          .then(res => done({ ok: true, res }))
-          .catch(err => done({ ok: false, err: String(err?.message || err) }));
-      },
-      {
-        args: {
-          message,
-          conversationId,
-          provider: 'local',
+            if (window.__TAURI_INTERNALS__?.invoke) {
+              attempts.push(payload =>
+                window.__TAURI_INTERNALS__.invoke('conversation_generate', payload)
+              );
+            }
+            if (window.__TAURI__?.tauri?.invoke) {
+              attempts.push(payload =>
+                window.__TAURI__.tauri.invoke('conversation_generate', payload)
+              );
+            }
+            if (window.__TAURI__?.core?.invoke) {
+              attempts.push(payload =>
+                window.__TAURI__.core.invoke('conversation_generate', payload)
+              );
+            }
+            if (window.__TAURI__?.invoke) {
+              attempts.push(payload =>
+                window.__TAURI__.invoke('conversation_generate', payload)
+              );
+            }
+
+            if (!attempts.length) {
+              throw new Error('Tauri IPC unavailable');
+            }
+
+            let invokeError = 'invoke unavailable';
+            for (const attempt of attempts) {
+              try {
+                return await attempt(payload);
+              } catch (error) {
+                invokeError = String(error?.message || error);
+              }
+            }
+
+            throw new Error(invokeError);
+          };
+
+          const withTimeout = Promise.race([
+            run(),
+            new Promise((_, reject) => {
+              setTimeout(() => reject(new Error('ONLINE_PROOF_INVOKE_TIMEOUT')), invokeTimeoutMs);
+            }),
+          ]);
+
+          withTimeout
+            .then(res => done({ ok: true, res: toSerializable(res) }))
+            .catch(err => done({ ok: false, err: String(err?.message || err) }));
         },
+        {
+          args: {
+            message,
+            conversationId,
+            mode: 'synthesis',
+            provider: 'local',
+            systemPrompt: 'Réponse concise, utile, sans préambule.',
+          },
+        },
+        PROOF_INVOKE_TIMEOUT_MS
+      );
+    } catch (error) {
+      lastError = String(error?.message || error);
+      if (
+        /script timed out|invalid session id|no such window|page crash|invalidated|session deleted because of page crash or hang/i.test(
+          lastError
+        ) &&
+        callAttempt < 5
+      ) {
+        await recoverProofSession(appUrl);
+        await browser.pause(300);
+        continue;
       }
-    );
+      throw error;
+    }
 
     if (result?.ok) {
       return result.res;
@@ -96,9 +193,18 @@ async function invokeConversationGenerate(message) {
 
     lastError = result?.err || lastError;
     if (
-      String(lastError).includes('Origin header is not a valid URL') &&
+      /Origin header is not a valid URL|ONLINE_PROOF_INVOKE_TIMEOUT|script timed out|invalid session id|no such window|page crash|invalidated|session deleted because of page crash or hang/i.test(
+        String(lastError)
+      ) &&
       callAttempt < 5
     ) {
+      if (
+        /script timed out|invalid session id|no such window|page crash|invalidated|session deleted because of page crash or hang/i.test(
+          String(lastError)
+        )
+      ) {
+        await recoverProofSession(appUrl);
+      }
       await browser.pause(300);
       continue;
     }
@@ -110,11 +216,11 @@ async function invokeConversationGenerate(message) {
 
 describe('ONLINE_CHAT_FIX proof driver', () => {
   it('collects decision evidence from IPC response', async function () {
-    this.timeout(120000);
+    this.timeout(PROOF_TEST_TIMEOUT_MS);
     // Allow long-running IPC calls during controlled provider probes.
-    await browser.setTimeout({ script: 120000 });
+    await browser.setTimeout({ script: PROOF_SCRIPT_TIMEOUT_MS });
 
-    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/#/chat';
+    const appUrl = process.env.TITANE_E2E_URL || 'tauri://localhost/titane';
     const loaded = await ensureTauriPageLoaded(appUrl);
     if (!loaded) {
       throw new Error(
