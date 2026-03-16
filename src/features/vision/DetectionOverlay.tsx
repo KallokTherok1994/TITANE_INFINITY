@@ -10,6 +10,7 @@
 
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Eye, EyeOff, Maximize2, Minimize2 } from 'lucide-react';
+import { selectIsObservationActive, useVisionStore } from '@/stores/useVisionStore';
 import './DetectionOverlay.css';
 
 interface Detection {
@@ -46,11 +47,10 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [overlayEnabled, setOverlayEnabled] = useState(true);
 
-    // Pour l'instant, utilise des données mock
-    // FUTURE: Activate when detections and isActive exist in store
-    // const { detections, isActive } = useVisionStore();
-    const isActive = false; // Mock
-    const detections: Detection[] = useMemo(() => [], []); // Mock - vide pour l'instant
+    const isActive = useVisionStore(selectIsObservationActive);
+    // Detection stream is not connected in this component yet.
+    // Keep value truthful instead of rendering decorative mock detections.
+    const detections: Detection[] = useMemo(() => [], []);
 
     // Draw detections on canvas
     useEffect(() => {
@@ -89,51 +89,6 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(
       showConfidence,
       streamRef,
     ]);
-
-    // Mock detections for demo (when no real detections)
-    useEffect(() => {
-      if (!detections?.length && isActive && overlayEnabled) {
-        // Draw mock detections for demonstration
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) return;
-
-        const mockBoxes: Array<Omit<DetectionBox, 'id'>> = [
-          {
-            x: 0.2,
-            y: 0.15,
-            width: 0.3,
-            height: 0.4,
-            label: 'Person',
-            confidence: 0.92,
-            color: '#10b981',
-          },
-          {
-            x: 0.6,
-            y: 0.3,
-            width: 0.25,
-            height: 0.35,
-            label: 'Hand',
-            confidence: 0.78,
-            color: '#3b82f6',
-          },
-        ];
-
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        mockBoxes.forEach(box => {
-          const absBox = {
-            ...box,
-            x: box.x * canvas.width,
-            y: box.y * canvas.height,
-            width: box.width * canvas.width,
-            height: box.height * canvas.height,
-          };
-          drawBox(ctx, absBox as DetectionBox, showLabels, showConfidence);
-        });
-      }
-    }, [detections, isActive, overlayEnabled, showLabels, showConfidence]);
 
     const toggleFullscreen = useCallback(() => {
       setIsFullscreen(prev => !prev);
@@ -181,12 +136,18 @@ export const DetectionOverlay: React.FC<DetectionOverlayProps> = memo(
           <div className="detection-stats">
             <div className="stat-item">
               <span className="stat-label">Détections:</span>
-              <span className="stat-value">{detections?.length || 2}</span>
+              <span className="stat-value">{detections.length}</span>
             </div>
             <div className="stat-item">
               <span className="stat-label">Confiance min:</span>
               <span className="stat-value">{Math.round(minConfidence * 100)}%</span>
             </div>
+            {detections.length === 0 && (
+              <div className="stat-item">
+                <span className="stat-label">État:</span>
+                <span className="stat-value">Aucune détection disponible</span>
+              </div>
+            )}
           </div>
         )}
       </div>
