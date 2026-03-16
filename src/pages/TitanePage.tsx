@@ -123,6 +123,7 @@ export const TitanePage: React.FC = () => {
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
   const { success: toastSuccess, error: errorToast } = useToast();
 
+<<<<<<< Updated upstream
   // IMPROVE-006: Use titane_active_conversation_id — the canonical key used by
   // conversationStorage (useChat + useConversationEngine). This aligns LTM display
   // with the actual conversation being used by ConversationSection/ChatWindow.
@@ -134,6 +135,16 @@ export const TitanePage: React.FC = () => {
     // Fallback: omega-chat-conversation-id (ChatPage)
     const fallback = window.localStorage.getItem('omega-chat-conversation-id');
     return fallback ?? '';
+=======
+  // PATCH-014: Persist conversationId for cross-session LTM (same key as ChatPage)
+  const [conversationId] = useState<string>(() => {
+    if (typeof window === 'undefined') return `conv_${Date.now()}`;
+    const stored = window.localStorage.getItem('omega-chat-conversation-id');
+    if (stored && stored.trim().length > 0) return stored;
+    const newId = `conv_${Date.now()}`;
+    window.localStorage.setItem('omega-chat-conversation-id', newId);
+    return newId;
+>>>>>>> Stashed changes
   });
 
   // ═══ VISUAL ENGINES INITIALIZATION ═══

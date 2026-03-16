@@ -11,6 +11,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
+import { chatService } from '@/services/api/chat';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import type {
   OnlineDecision,
@@ -444,10 +445,34 @@ export async function processMessage(
   };
   const cognitiveContext = readCognitiveContext();
 
+<<<<<<< Updated upstream
   // IMPROVE-002: LTM history is now loaded and injected by the backend (commands.rs → omega_integration.rs).
   // Frontend no longer loads history per-message to avoid double SQLite queries.
   // Use useLTMContext() in UI components for display purposes only.
   // The backend dedup guard in convert_to_conversation_response() ensures no duplication.
+=======
+  // PATCH-013: LTM context injection — load last 10 turns from SQLite and inject into system prompt
+  // Gives the AI full awareness of the current conversation session.
+  let ltmHistoryContext = '';
+  try {
+    if (conversationId && !isE2EChatMockEnabled()) {
+      const history = await chatService.loadConversationHistory(conversationId);
+      if (history && history.length > 0) {
+        const formatted = history
+          .slice(-20) // last 20 messages (10 turns)
+          .map((m: { role: string; content: string }) => {
+            const prefix = m.role === 'user' ? '[User]' : '[Assistant]';
+            return `${prefix}: ${m.content}`;
+          })
+          .join('\n');
+        ltmHistoryContext = `## CONVERSATION_HISTORY\n${formatted}`;
+        console.log(`[conversationEngine] ✅ LTM context: ${history.length} messages injected`);
+      }
+    }
+  } catch {
+    // Non-blocking: proceed without history if unavailable
+  }
+>>>>>>> Stashed changes
 
   const systemPrompt = [
     baseSystemPrompt,
@@ -456,6 +481,7 @@ export async function processMessage(
     persistentMemoryContext,
     progressionContext,
     cognitiveContext,
+    ltmHistoryContext,
   ]
     .filter(Boolean)
     .join('\n\n');
