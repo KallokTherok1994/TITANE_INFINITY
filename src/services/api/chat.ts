@@ -13,6 +13,7 @@ import { isIPCError } from '@/lib/errorClassification';
 import { isTauriRuntimeAvailable } from '@/utils/tauriProtector';
 import { chatEngine } from '@/services/ai/chatEngine';
 import { getSystemPrompt } from '@/config/chatModes.config';
+import type { AIMessage } from '@/services/ai/types';
 
 type MonitoringBridge = {
   trackRequest: () => void;
@@ -322,6 +323,57 @@ class ChatService {
         error
       );
       throw new Error('Impossible de démarrer une nouvelle conversation.');
+    }
+  }
+
+
+  /**
+   * Restaure l'historique d'une conversation depuis le backend SQLite (conversation_os_v1.db).
+   * Retourne [] si aucune donnée n'existe pour ce conversation_id.
+   * Ne lance jamais d'exception — les échecs sont loggués et retournent [].
+   * P0 PATCH: ferme le bloqueur localStorage<->SQLite disconnect.
+   */
+  async loadConversationHistory(conversationId: string): Promise<AIMessage[]> {
+    if (!conversationId || conversationId.trim() === '') {
+      console.warn('[ChatService] loadConversationHistory: empty conversationId — returning []');
+      return [];
+    }
+    if (isE2EChatMockEnabled()) {
+      console.info('[ChatService] loadConversationHistory: E2E mock mode — returning []');
+      return [];
+    }
+    try {
+      const rows = await invokeWithRetry<Array<{ role: string; content: string; timestamp: number }>>(
+        'load_conversation_history',
+        { conversationId },
+        { ...LONG_COMMAND_OPTIONS, context: 'LoadConversationHistory' }
+      );
+      if (!Array.isArray(rows) || rows.length === 0) {
+        console.info(
+          '[ChatService] loadConversationHistory: no backend history for conversation_id=',
+          conversationId
+        );
+        return [];
+      }
+      const messages: AIMessage[] = rows
+        .filter(r => r.role === 'user' || r.role === 'assistant' || r.role === 'system')
+        .map(r => ({
+          role: r.role as 'user' | 'assistant' | 'system',
+          content: r.content,
+          timestamp: r.timestamp,
+          metadata: { source: 'backend-restore', conversationId },
+        }));
+      console.info(
+        `[ChatService] loadConversationHistory: restored ${messages.length} messages for conversation_id=`,
+        conversationId
+      );
+      return messages;
+    } catch (error) {
+      console.warn(
+        '[ChatService] loadConversationHistory failed (non-fatal, returning []):',
+        error
+      );
+      return [];
     }
   }
 

@@ -591,6 +591,35 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     };
   }, []);
 
+  // P0 PATCH — Backend restore: if messages empty after mount and conversationId known,
+  // attempt to reload history from backend SQLite (conversation_os_v1.db).
+  // This closes the localStorage↔SQLite disconnect for the case where localStorage
+  // messages were lost but the conversation_id is still known.
+  // Safe: chatService.loadConversationHistory never throws, returns [] on any failure.
+  useEffect(() => {
+    if (messages.length > 0) return; // Already have messages — no restore needed
+    const conversationId = _conversationId;
+    if (!conversationId || conversationId.trim() === '') return;
+
+    let cancelled = false;
+    chatService.loadConversationHistory(conversationId).then(restored => {
+      if (cancelled) return;
+      if (restored.length === 0) {
+        chatLogger.info(
+          '[useChat] Backend restore: no history found for conversation_id=' + conversationId
+        );
+        return;
+      }
+      chatLogger.info(
+        `[useChat] Backend restore: ${restored.length} message(s) restored for conversation_id=` + conversationId
+      );
+      setMessages(restored);
+      messagesRef.current = restored;
+    });
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [_conversationId]); // intentionally omit messages/setMessages to run once per conversationId
+
   // ✨ v24.3.7 - Optimized provider availability with Promise.allSettled + individual timeouts
   // 🔒 v26.2.1 - CRITICAL FIX H1: Race condition protection with guard
   useEffect(() => {
