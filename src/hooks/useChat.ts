@@ -607,7 +607,9 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         : null;
 
     if (!loadConversationHistory) {
-      chatLogger.info('[useChat] Backend restore unavailable on current chatService instance');
+      chatLogger.info(
+        '[useChat] Backend restore unavailable on current chatService instance'
+      );
       return;
     }
 
@@ -617,7 +619,8 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         if (cancelled) return;
         if (restored.length === 0) {
           chatLogger.info(
-            '[useChat] Backend restore: no history found for conversation_id=' + conversationId
+            '[useChat] Backend restore: no history found for conversation_id=' +
+              conversationId
           );
           return;
         }
@@ -630,11 +633,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           m => !existingKeys.has(`${m.role}:${m.timestamp}:${m.content.slice(0, 40)}`)
         );
         if (deduped.length === 0) {
-          chatLogger.info('[useChat] Backend restore: all messages already present, skipping');
+          chatLogger.info(
+            '[useChat] Backend restore: all messages already present, skipping'
+          );
           return;
         }
         chatLogger.info(
-          `[useChat] Backend restore: ${deduped.length} message(s) restored for conversation_id=` + conversationId
+          `[useChat] Backend restore: ${deduped.length} message(s) restored for conversation_id=` +
+            conversationId
         );
         setMessages(deduped);
         messagesRef.current = deduped;
