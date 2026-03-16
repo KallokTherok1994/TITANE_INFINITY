@@ -35,3 +35,33 @@ git revert 680cd1c27 9f11e9447 2ec385115 d7af25f08 38374cb29
 # or per-file: git restore -- src-tauri/src/main.rs src-tauri/src/runtime_config.rs
 # src-tauri/src/memory_os/embeddings.rs src-tauri/src/conversation_engine/omega_integration.rs
 # .env.example scripts/autoheal/autoheal_rules.jsonl
+
+## GATE MATRIX (full run 2026-03-16 21:25 UTC):
+| Gate | Result |
+|------|--------|
+| verify_instructions | PASS=20 FAIL=0 |
+| detect_recurrence | PASS (327 entries) |
+| cargo check | exit 0 |
+| verify_instruction_layers | PASS (FAIL=0) |
+| verify_no_doctrine_duplication | PASS (FAIL=0) |
+| validate-tauri-configs | ✅ valid |
+| verify-stable-surface-allowlist | ✅ 81 commands |
+| G_COMMAND_WHITELIST_SYNC | PASS |
+| verify_memory_integrity | ALL CHECKS PASSED |
+| verify_typescript_strict | 0 errors |
+| validate-architecture | Engines/Core pure |
+| verify_global_system | ALL CHECKS PASSED |
+
+## Tauri capabilities audit:
+- 6 capability files: audio-tts, chat-ai, developer-mode, persistence, self-heal, singularity
+- All: windows=["main"], permissions=core:default (+ fs:allow-app-* for persistence)
+- No shell, no http, no fs-all, no dangerous permissions
+- Tauri allowlist = {} (Tauri v2 uses capabilities instead — correct)
+
+## Ring 2 final:
+- webResearchService.ts → tauri('web_research') IPC → NOT direct fetch ✅
+- Wikipedia/Wikidata URLs = seeds passed through IPC, not frontend fetch ✅
+- memory_os/embeddings.rs → gated PATCH-007 ✅
+- All other HTTP = localhost/Ollama only ✅
+
+## VERDICT FINAL SCELLÉ: STABLE
