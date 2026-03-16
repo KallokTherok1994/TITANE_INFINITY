@@ -620,6 +620,7 @@ function DevPageContent(): JSX.Element {
   const [suites, setSuites] = useState<TestSuite[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [orchestration, setOrchestration] = useState<OrchestrationState | null>(null);
+  const [orchestrationDegraded, setOrchestrationDegraded] = useState(false);
 
   // Load data
   const loadData = useCallback(async () => {
@@ -646,8 +647,10 @@ function DevPageContent(): JSX.Element {
         const orchState =
           (await tauriClient.orchestrationGetUnifiedState()) as OrchestrationState;
         setOrchestration(orchState);
+        setOrchestrationDegraded(false);
       } catch {
-        // Fallback mock data
+        // Fallback: données statiques — affichage dégradé signalé dans l'UI
+        setOrchestrationDegraded(true);
         setOrchestration({
           multiAi: {
             bestProvider: 'claude',
@@ -820,6 +823,22 @@ function DevPageContent(): JSX.Element {
               </header>
               <StatsSystemPanels />
             </div>
+            {orchestrationDegraded && (
+              <div
+                role="alert"
+                style={{
+                  padding: '6px 10px',
+                  marginBottom: '8px',
+                  background: 'rgba(245,158,11,0.12)',
+                  border: '1px solid rgba(245,158,11,0.4)',
+                  borderRadius: '6px',
+                  color: '#f59e0b',
+                  fontSize: '0.8rem',
+                }}
+              >
+                ⚠️ Orchestration — données statiques (IPC indisponible)
+              </div>
+            )}
             <OrchestrationSection state={orchestration} />
           </div>
         )}
