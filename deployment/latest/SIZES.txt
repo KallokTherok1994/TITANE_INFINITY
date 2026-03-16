@@ -1,5 +1,6 @@
 # Artifact Sizes
-# Generated: 2026-03-16T02:16:51Z
+# Generated: 2026-03-16T19:21:38Z
 Titan-Stable_28.0.0_amd64.AppImage: 88123896 bytes (85M)
 Titan-Stable_28.0.0_amd64.deb: 15074916 bytes (15M)
+TITANE-Infinity_28.0.0_amd64.deb: 18828316 bytes (18M)
 titane-infinity: 30486840 bytes (30M)
