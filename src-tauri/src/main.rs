@@ -771,8 +771,21 @@ fn main() {
     let security_manager = Arc::new(SecurityManager::new(log_dir.join("audit.log")));
 
     // Initialize Secure Secrets Engine (AES-256-GCM encrypted storage)
-    let secrets_passphrase = std::env::var("TITANE_SECRETS_PASSPHRASE")
-        .ok()
+    let secrets_passphrase_raw = std::env::var("TITANE_SECRETS_PASSPHRASE").ok();
+    if secrets_passphrase_raw.is_none() {
+        // ⚠️ P0 SECURITY WARNING: TITANE_SECRETS_PASSPHRASE not set.
+        // Falling back to dev passphrase — secrets are NOT safely encrypted in this mode.
+        // Set TITANE_SECRETS_PASSPHRASE to a strong random value before production deployment.
+        log::warn!(
+            "⚠️ [SecretsEngine] TITANE_SECRETS_PASSPHRASE not set — using insecure dev passphrase. \
+             Set this env var before production deployment."
+        );
+        eprintln!(
+            "⚠️  TITANE∞ WARNING: TITANE_SECRETS_PASSPHRASE not set. \
+             Secrets are NOT safely protected. See docs/SECURITY.md."
+        );
+    }
+    let secrets_passphrase = secrets_passphrase_raw
         .or_else(|| Some("default-dev-passphrase-change-in-production".to_string()));
 
     let secrets_engine =
