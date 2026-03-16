@@ -1866,6 +1866,75 @@ pub async fn load_conversation_history(
     Ok(rows)
 }
 
+/// Lister les conversations restituables depuis SQLite conversation_os.
+/// Retourne Vec<{conversationId, messageCount, lastTs}> triées par lastTs DESC.
+/// Retourne [] si db absent ou 0 conversations — jamais d'erreur silencieuse.
+#[tauri::command]
+pub async fn list_restorable_conversations(
+    limit: Option<u32>,
+) -> CommandResult<Vec<serde_json::Value>> {
+    use rusqlite::Connection;
+
+    let db_path = resolve_conversation_os_db_path(None);
+    if !db_path.exists() {
+        log::warn!(
+            "[list_restorable_conversations] db not found at {:?} — returning []",
+            db_path
+        );
+        return Ok(vec![]);
+    }
+
+    let conn = match Connection::open(&db_path) {
+        Ok(c) => c,
+        Err(e) => {
+            log::warn!(
+                "[list_restorable_conversations] open db failed: {} — returning []",
+                e
+            );
+            return Ok(vec![]);
+        }
+    };
+
+    let limit_val = limit.unwrap_or(50).min(200) as i64;
+
+    let mut stmt = conn
+        .prepare(
+            "SELECT conversation_id, COUNT(*) as msg_count, MAX(ts) as last_ts \
+             FROM events \
+             WHERE kind IN ('user_message', 'assistant_message') \
+             GROUP BY conversation_id \
+             ORDER BY last_ts DESC \
+             LIMIT ?1",
+        )
+        .map_err(|e| format!("[list_restorable_conversations] prepare failed: {}", e))?;
+
+    let rows: Vec<serde_json::Value> = stmt
+        .query_map([limit_val], |row| {
+            let conversation_id: String = row.get(0)?;
+            let msg_count: i64 = row.get(1)?;
+            let last_ts: i64 = row.get(2)?;
+            Ok((conversation_id, msg_count, last_ts))
+        })
+        .map_err(|e| format!("[list_restorable_conversations] query failed: {}", e))?
+        .filter_map(|r| r.ok())
+        .map(|(conversation_id, msg_count, last_ts)| {
+            serde_json::json!({
+                "conversationId": conversation_id,
+                "messageCount": msg_count,
+                "lastTs": last_ts,
+            })
+        })
+        .collect();
+
+    log::info!(
+        "[list_restorable_conversations] found {} conversation(s) in db ({})",
+        rows.len(),
+        db_path.display()
+    );
+
+    Ok(rows)
+}
+
 /// Obtenir les statistiques de l'anthologie
 #[tauri::command]
 pub async fn anthology_get_statistics(

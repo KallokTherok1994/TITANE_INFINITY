@@ -378,6 +378,26 @@ class ChatService {
   }
 
   /**
+   * Liste les conversations restituables depuis le backend SQLite.
+   * Retourne [] si aucune donnée ou db absent (jamais d'erreur silencieuse).
+   * Permet la redécouverte si conversation_id perdu côté localStorage.
+   */
+  async listRestorableConversations(limit?: number): Promise<Array<{conversationId: string; messageCount: number; lastTs: number}>> {
+    if (!isTauriRuntimeAvailable()) return [];
+    try {
+      const rows = await invokeWithRetry<Array<{conversationId: string; messageCount: number; lastTs: number}>>(
+        'list_restorable_conversations',
+        limit !== undefined ? { limit } : {},
+        { ...LONG_COMMAND_OPTIONS, context: 'ListRestorableConversations' }
+      );
+      return rows ?? [];
+    } catch (err) {
+      console.warn('[ChatService.listRestorableConversations] failed (non-fatal):', err);
+      return [];
+    }
+  }
+
+  /**
    * Envoi d'un message au Conversation Engine OMEGA.
    * Utilise l'ID de conversation pour maintenir le contexte.
    */

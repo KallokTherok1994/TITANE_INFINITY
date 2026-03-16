@@ -601,22 +601,51 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
     const conversationId = _conversationId;
     if (!conversationId || conversationId.trim() === '') return;
 
+    const loadConversationHistory =
+      typeof chatService.loadConversationHistory === 'function'
+        ? chatService.loadConversationHistory.bind(chatService)
+        : null;
+
+    if (!loadConversationHistory) {
+      chatLogger.info('[useChat] Backend restore unavailable on current chatService instance');
+      return;
+    }
+
     let cancelled = false;
-    chatService.loadConversationHistory(conversationId).then(restored => {
-      if (cancelled) return;
-      if (restored.length === 0) {
-        chatLogger.info(
-          '[useChat] Backend restore: no history found for conversation_id=' + conversationId
+    loadConversationHistory(conversationId)
+      .then(restored => {
+        if (cancelled) return;
+        if (restored.length === 0) {
+          chatLogger.info(
+            '[useChat] Backend restore: no history found for conversation_id=' + conversationId
+          );
+          return;
+        }
+        // P1 PATCH — Deduplication guard: filter restored messages against any already present
+        // to prevent doubles if useEffect re-fires with same conversationId
+        const existingKeys = new Set(
+          messages.map(m => `${m.role}:${m.timestamp}:${m.content.slice(0, 40)}`)
         );
-        return;
-      }
-      chatLogger.info(
-        `[useChat] Backend restore: ${restored.length} message(s) restored for conversation_id=` + conversationId
-      );
-      setMessages(restored);
-      messagesRef.current = restored;
-    });
-    return () => { cancelled = true; };
+        const deduped = restored.filter(
+          m => !existingKeys.has(`${m.role}:${m.timestamp}:${m.content.slice(0, 40)}`)
+        );
+        if (deduped.length === 0) {
+          chatLogger.info('[useChat] Backend restore: all messages already present, skipping');
+          return;
+        }
+        chatLogger.info(
+          `[useChat] Backend restore: ${deduped.length} message(s) restored for conversation_id=` + conversationId
+        );
+        setMessages(deduped);
+        messagesRef.current = deduped;
+      })
+      .catch(error => {
+        if (cancelled) return;
+        chatLogger.warn('[useChat] Backend restore failed non-fatally', error);
+      });
+    return () => {
+      cancelled = true;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [_conversationId]); // intentionally omit messages/setMessages to run once per conversationId
 
