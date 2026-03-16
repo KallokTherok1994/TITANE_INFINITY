@@ -1325,6 +1325,7 @@ fn main() {
             conversation_engine::commands::conversation_health_check,
             conversation_engine::commands::conversation_memory_stats,
             conversation_engine::commands::load_conversation_history,
+            conversation_engine::commands::list_restorable_conversations,
             // Chat Orchestrator Commands (CHAT PIPELINE v21 + R04 Memory Integration)
             // [RETRAIT v27.0.5-prod] chat_send_message removed (legacy, use conversation_generate)
             overdrive::chat_orchestrator::chat_stream_message,

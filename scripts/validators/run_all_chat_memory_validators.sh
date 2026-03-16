@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ═══════════════════════════════════════════════════════════════
-# RUNNER: Lance les 5 validators chat/memory et produit un rapport
+# RUNNER: Lance les 6 validators chat/memory et produit un rapport
 # Exit 0 = tous PASS | Exit 1 = au moins un FAIL ou BLOCKED
 # ═══════════════════════════════════════════════════════════════
 set -euo pipefail
@@ -21,6 +21,7 @@ VALIDATORS=(
   "validate_no_send_message_stub.sh:V3 send_message stub contradictoire"
   "validate_ipc_no_silent_mock.sh:V4 IPC mocks silencieux (memory_get/set/list)"
   "validate_conversation_id_stable.sh:V5 conversation_id stable (pas de regen mount)"
+  "validate_restore_no_duplication.sh:V6 Restore no-duplication guard (list_restorable + dedup)"
 )
 
 PASS_COUNT=0
