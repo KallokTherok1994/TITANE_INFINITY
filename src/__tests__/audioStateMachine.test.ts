@@ -387,7 +387,15 @@ describe('AudioStateMachine', () => {
     it('should return false for invalid transitions', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
       expect(machine.canTransition('VAD_SPEECH_END')).toBe(false); // idle rejects
-      expect(machine.canTransition('TTS_START')).toBe(false);
+      // TTS_START is valid from idle (direct chat TTS path, no VAD pipeline required)
+      expect(machine.canTransition('TTS_START')).toBe(true);
+    });
+
+    it('should transition from idle to ai_speaking on TTS_START (direct TTS path)', () => {
+      const machine = createAudioStateMachine({ enableLogging: false });
+      const result = machine.transition('TTS_START');
+      expect(result).toBe(true);
+      expect(machine.getState()).toBe('ai_speaking');
     });
 
     it('should return correct value after state changes', () => {
@@ -550,8 +558,8 @@ describe('AudioStateMachine', () => {
         onStateChange: listener,
       });
 
-      // Attempt invalid transition that keeps state unchanged
-      machine.transition('TTS_START'); // Invalid from idle
+      // Attempt truly invalid transition that keeps state unchanged
+      machine.transition('TTS_END'); // Invalid from idle (TTS_START is now valid)
 
       expect(machine.getState()).toBe('idle');
       expect(listener).not.toHaveBeenCalled();
@@ -560,9 +568,9 @@ describe('AudioStateMachine', () => {
     it('should maintain state consistency after multiple invalid transitions', () => {
       const machine = createAudioStateMachine({ enableLogging: false });
 
-      machine.transition('TTS_START'); // Invalid
-      machine.transition('TTS_END'); // Invalid
-      machine.transition('BARGE_IN'); // Invalid
+      machine.transition('TTS_END'); // Invalid from idle
+      machine.transition('BARGE_IN'); // Invalid from idle
+      machine.transition('STT_COMPLETE'); // Invalid from idle
 
       expect(machine.getState()).toBe('idle'); // Still idle
     });
