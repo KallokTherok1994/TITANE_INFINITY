@@ -28,6 +28,7 @@ const METRICS = {
   assistantMessageDetected: false,
   ttsControlsVisible: false,
   ttsStatusAfterRead: null,
+  ttsStatusFinal: null,
   pauseResumePath: 'not-observed',
   stopActionObserved: false,
   replayButtonObserved: false,
@@ -289,6 +290,7 @@ describe('Audio/TTS runtime controls (desktop)', () => {
     const replayOrRead = await lastAssistant.$('[data-testid="message-tts-read"]');
     const replayLabel = await replayOrRead.getText();
     METRICS.replayButtonObserved = /Relire|Lire à haute voix/i.test(replayLabel);
+    METRICS.ttsStatusFinal = await readSpeechStatusText(lastAssistant);
     assert.equal(
       METRICS.replayButtonObserved,
       true,

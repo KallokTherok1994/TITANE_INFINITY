@@ -111,3 +111,19 @@
 2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
 3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
 4. VERDICT_UNIQUE_CONFIRMED: VOICE_IDENTITY_NOT_PROVEN
+
+## Addendum 2026-03-17T19:02Z
+
+- Head courant de cloture: 79be7620f
+- Derniere ambiguite auto-resoluble fermee: la preuve desktop V8 capture maintenant a la fois le statut post-click precoce et le statut final post-playback
+- Observation finale: `Préparation de la lecture...` puis `Lecture terminée.`; aucune contradiction restante entre metric et verdict technique
+- Unexpected diff Rust re-verifie clean sur `src-tauri/src/main.rs` et `src-tauri/src/lib.rs`
+- TITANE_VOICE_SPEC_V8 et benchmark V8 presents
+- Blockers irreductibles restants: benchmark perceptif humain non note; sample cible utilisateur absent
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+4. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED

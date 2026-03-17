@@ -92,3 +92,18 @@
 - Unexpected diff final truth: `src-tauri/src/main.rs` -> `tracked + unstaged`
 - Classification finale: `UNEXPECTED_DIFF_OUT_OF_SCOPE_NON_BLOCKING`
 - No causal blocker demonstrated for current voice/TTS desktop proof lane
+
+## Addendum 2026-03-17T19:02Z
+
+- Head revalide: 79be7620f
+- Revalidation desktop cible isolee: `env TITANE_E2E=1 TITANE_E2E_ARTIFACTS_DIR=/tmp/titane-voice-v8-proof WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm -s e2e:desktop:run` -> PASS
+- Metric truth V8: `ttsStatusAfterRead=Préparation de la lecture...`, `ttsStatusFinal=Lecture terminée.`, `pauseResumePath=completed-too-fast`, `replayButtonObserved=true`, `verdict=PASS`
+- Classification du dernier doute runtime: `PREPARATION_DOMINANT_THEN_CLEAN_COMPLETION`, non bloquant pour la chaine technique
+- Patch causal minimal complementaire: `waitForUiFrame()` avant `tauriClient.ttsSpeak()` dans `src/features/audio-center/services/audioService.ts`
+- Patch preuve minimal complementaire: capture `ttsStatusFinal` dans `e2e/desktop/audio-tts-runtime-controls.wdio.test.js`
+- Diff inattendu Rust V8: `src-tauri/src/main.rs` et `src-tauri/src/lib.rs` reverifies clean, aucun diff actif sur la lane voix
+- Artifacts modeling: `reports/audio/TITANE_VOICE_SPEC_V8.json` + `reports/audio/TITANE_VOICE_BENCHMARK_V8_2026-03-17.json`
+
+## Addendum 2026-03-17T19:03Z
+
+- Vitest TTS cible: `pnpm vitest run src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts src/__tests__/services/tts/messageSpeechController.runtimeState.test.ts src/__tests__/services/tts/messageSpeechController.test.ts` -> PASS (9/9)
