@@ -7,7 +7,6 @@ use once_cell::sync::Lazy;
 #[allow(dead_code)]
 use serde::{Deserialize, Serialize};
 use std::process::Command;
-#[cfg(not(feature = "mock"))]
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Mutex as StdMutex,
@@ -15,25 +14,20 @@ use std::sync::{
 
 type CommandResult<T> = Result<T, String>;
 
-#[cfg(not(feature = "mock"))]
 static ACTIVE_TTS_PID: Lazy<StdMutex<Option<u32>>> = Lazy::new(|| StdMutex::new(None));
 
-#[cfg(not(feature = "mock"))]
 static IS_TTS_PAUSED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
-#[cfg(not(feature = "mock"))]
 fn set_active_tts_pid(pid: Option<u32>) {
     if let Ok(mut guard) = ACTIVE_TTS_PID.lock() {
         *guard = pid;
     }
 }
 
-#[cfg(not(feature = "mock"))]
 fn get_active_tts_pid() -> Option<u32> {
     ACTIVE_TTS_PID.lock().ok().and_then(|guard| *guard)
 }
 
-#[cfg(not(feature = "mock"))]
 fn signal_active_tts(signal: &str) -> CommandResult<()> {
     let pid = get_active_tts_pid()
         .ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
@@ -52,7 +46,6 @@ fn signal_active_tts(signal: &str) -> CommandResult<()> {
     }
 }
 
-#[cfg(not(feature = "mock"))]
 fn command_exists(binary: &str) -> bool {
     Command::new("which")
         .arg(binary)
@@ -61,9 +54,8 @@ fn command_exists(binary: &str) -> bool {
         .unwrap_or(false)
 }
 
-#[cfg(not(feature = "mock"))]
 fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()> {
-    let mut child = command
+    let child = command
         .spawn()
         .map_err(|e| format!("Erreur lancement {}: {}", context, e))?;
 
@@ -92,7 +84,6 @@ fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()>
     ))
 }
 
-#[cfg(not(feature = "mock"))]
 fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> CommandResult<()> {
     if let Some(device_id) = output_device_id {
         if command_exists("pw-play") {
@@ -1034,7 +1025,6 @@ except Exception as e:
 #[cfg(not(feature = "mock"))]
 use super::recording_engine::{RecordingConfig, RECORDING_ENGINE};
 
-#[cfg(not(feature = "mock"))]
 static IS_SPEAKING: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
 
 /// Start recording with configuration
@@ -1238,6 +1228,7 @@ pub async fn speak(
                 .and_then(|v| v.as_bool())
                 .unwrap_or(false),
             auto_fallback: true,
+            output_device_id: None,
         }
     } else {
         TTSSettings {
@@ -1253,6 +1244,7 @@ pub async fn speak(
             language: "fr-FR".to_string(),
             emotion_enabled: false,
             auto_fallback: true,
+            output_device_id: None,
         }
     };
 
