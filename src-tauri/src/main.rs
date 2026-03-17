@@ -790,6 +790,7 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 
 // Use persistence module from lib.rs (includes all commands)
 use titane_infinity::persistence;
+use titane_infinity::time_commands; // FIX-011
 
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
@@ -2048,6 +2049,9 @@ fn main() {
             persistence::commands::titan_import_data,
             persistence::commands::titan_get_memory_health,
             persistence::commands::titan_run_self_healing,
+            // Time-travel commands [FIX-011] — get_travel_stats + delete_snapshot were unregistered
+            time_commands::get_travel_stats,
+            time_commands::delete_snapshot,
             persistence::commands::titan_reset_module,
             persistence::commands::titan_dump_raw_state,
             persistence::commands::titan_run_full_integrity_check,
