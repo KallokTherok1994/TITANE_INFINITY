@@ -1976,6 +1976,8 @@ fn main() {
             audio::commands::vad_configure,
             audio::commands::vad_reset,
             audio::commands::vad_test,
+            // E2E Audio Truth System
+            audio::commands::tts_generate_test_buffer,
             // Audio Capture Commands (6) - ✅ AH-0093 FIX: audio-capture feature (default)
             audio::commands::audio_capture_start,
             audio::commands::audio_capture_stop,

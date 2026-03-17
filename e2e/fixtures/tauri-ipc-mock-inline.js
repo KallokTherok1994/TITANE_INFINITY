@@ -180,6 +180,40 @@
       return mockAudioConfig();
     }
 
+    // E2E Audio Truth System — deterministic synthetic buffer
+    if (command === 'tts_generate_test_buffer') {
+      const voice = (args && args.voice) ? args.voice : 'alpha';
+      const durationMs = (args && args.duration_ms) ? Math.min(args.duration_ms, 5000) : 200;
+      const sampleRate = 22050;
+      const numSamples = Math.floor(sampleRate * durationMs / 1000);
+      // Voice → unique base frequency mapping (must match Rust side)
+      const freqMap = { alpha: 220, beta: 440, gamma: 660, delta: 880 };
+      let baseFreq = freqMap[voice];
+      if (!baseFreq) {
+        // Deterministic hash matching Rust djb2 variant, mapped to [200, 900]
+        let hash = 5381;
+        for (let i = 0; i < voice.length; i++) {
+          hash = ((hash * 33) + voice.charCodeAt(i)) >>> 0;
+        }
+        baseFreq = 200 + (hash % 700);
+      }
+      const twoPi = Math.PI * 2;
+      const buffer = new Array(numSamples);
+      const durationSec = durationMs / 1000;
+      for (let i = 0; i < numSamples; i++) {
+        const t = i / sampleRate;
+        const fundamental = Math.sin(twoPi * baseFreq * t);
+        const harmonic    = 0.4 * Math.sin(twoPi * baseFreq * 2 * t);
+        let envelope = 1.0;
+        if (t < 0.01)                       envelope = t / 0.01;
+        else if (t > durationSec - 0.02)    envelope = (durationSec - t) / 0.02;
+        buffer[i] = (fundamental + harmonic) * 0.5 * envelope;
+      }
+      const peak = buffer.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+      const engine = 'mock';
+      return { buffer, length: numSamples, engine, voice, sampleRate, peak };
+    }
+
     // Governance commands
     if (command === 'get_ia_policies' || command === 'governance::get_ia_policies') {
       return {
