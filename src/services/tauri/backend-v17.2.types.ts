@@ -238,6 +238,41 @@ export interface SystemState {
 // API RESPONSES
 // ─────────────────────────────────────────────────────────────────
 
+// ─────────────────────────────────────────────────────────────────
+// ENGINE MODULE STATES — Aligned with actual Rust backend responses
+// Source: src-tauri/src/commands/engine_commands.rs
+// [FIX-003] These types replace NexusState/HarmoniaState/SentinelState
+// for engine_get_* IPC calls. Legacy types preserved for Snapshot/SystemState.
+// ─────────────────────────────────────────────────────────────────
+
+/** Aligned with engine_commands.rs NexusStateResponse */
+export interface NexusEngineState {
+  health: string;
+  coordination_count: number;
+  active_connections: number;
+  last_coordination_ms: number;
+  initialized: boolean;
+}
+
+/** Aligned with engine_commands.rs HarmoniaStateResponse */
+export interface HarmoniaEngineState {
+  health: string;
+  harmony_index: number;
+  balance_score: number;
+  last_check_ms: number;
+  initialized: boolean;
+}
+
+/** Aligned with engine_commands.rs SentinelStateResponse */
+export interface SentinelEngineState {
+  health: string;
+  alert_count: number;
+  active_monitors: number;
+  protection_level: number;
+  last_check_ms: number;
+  initialized: boolean;
+}
+
 export type ApiResult<T> = { ok: true; data: T } | { ok: false; error: string };
 
 export interface CommandError {

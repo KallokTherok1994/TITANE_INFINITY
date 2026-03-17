@@ -20,6 +20,9 @@ import type {
   NexusState,
   HarmoniaState,
   SentinelState,
+  NexusEngineState,
+  HarmoniaEngineState,
+  SentinelEngineState,
   MemoryState,
   MemoryDirectoryReport,
   Snapshot,
@@ -163,25 +166,28 @@ export const system = {
   /**
    * Récupérer l'état du module Nexus (cohérence)
    */
-  async getNexusState(): Promise<NexusState> {
+  async getNexusState(): Promise<NexusEngineState> {
     // @fix CHAIN_BROKEN: 'get_nexus_state' not registered; maps to 'engine_get_nexus_state' (legacy_ai_bridge, main.rs:2077)
-    return safeInvoke<NexusState>('engine_get_nexus_state');
+    // @fix FIX-003: return type NexusState → NexusEngineState (LYING_UI resolved)
+    return safeInvoke<NexusEngineState>('engine_get_nexus_state');
   },
 
   /**
    * Récupérer l'état du module Harmonia (équilibrage)
    */
-  async getHarmoniaState(): Promise<HarmoniaState> {
+  async getHarmoniaState(): Promise<HarmoniaEngineState> {
     // @fix CHAIN_BROKEN: 'get_harmonia_state' not registered; maps to 'engine_get_harmonia_state' (legacy_ai_bridge, main.rs:2078)
-    return safeInvoke<HarmoniaState>('engine_get_harmonia_state');
+    // @fix FIX-003: return type HarmoniaState → HarmoniaEngineState (LYING_UI resolved)
+    return safeInvoke<HarmoniaEngineState>('engine_get_harmonia_state');
   },
 
   /**
    * Récupérer l'état du module Sentinel (anomalies)
    */
-  async getSentinelState(): Promise<SentinelState> {
+  async getSentinelState(): Promise<SentinelEngineState> {
     // @fix CHAIN_BROKEN: 'get_sentinel_state' not registered; maps to 'engine_get_sentinel_state' (legacy_ai_bridge, main.rs:2079)
-    return safeInvoke<SentinelState>('engine_get_sentinel_state');
+    // @fix FIX-003: return type SentinelState → SentinelEngineState (LYING_UI resolved)
+    return safeInvoke<SentinelEngineState>('engine_get_sentinel_state');
   },
 };
 
