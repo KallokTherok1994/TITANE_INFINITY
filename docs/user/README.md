@@ -1,3 +1,6 @@
+> ⚠️ **LEGACY** — Ce document est obsolète (version 19.4.3). La description "100% local" est inexacte pour la version courante.
+> **Documents canoniques actuels :** [docs/user/fr/README.md](./fr/README.md) (FR) | [docs/user/en/README.md](./en/README.md) (EN)
+
 # 🌟 TITANE∞ — Intelligence Artificielle Locale
 
 **Version :** 19.4.3 (Production-Ready)  
