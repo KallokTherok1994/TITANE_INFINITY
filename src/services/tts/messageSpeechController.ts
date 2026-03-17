@@ -35,6 +35,9 @@ interface ControllerState {
   records: Record<string, MessageSpeechRecord>;
 }
 
+const URL_PATTERN = /https?:\/\/[^\s)]+/gi;
+const END_PUNCTUATION_PATTERN = /[.!?…]$/;
+
 const listeners = new Set<() => void>();
 
 let controllerState: ControllerState = {
@@ -69,11 +72,33 @@ export const extractSpeakableText = (content: string): string => {
     .replace(/^#{1,6}\s*/gm, '')
     .replace(/^\s*[-*+]\s+/gm, '')
     .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/[*_~]+/g, '')
     .replace(/\|/g, ' ')
     .replace(/\n{3,}/g, '\n\n')
     .trim();
 
   return normalized || content.trim();
+};
+
+export const prepareSpeechProsody = (text: string): string => {
+  const normalized = text
+    .replace(URL_PATTERN, 'lien web')
+    .replace(/\n{2,}/g, '. ')
+    .replace(/\n+/g, ', ')
+    .replace(/\s+([,;:.!?])/g, '$1')
+    .replace(/([,;:.!?])(?!\s|$)/g, '$1 ')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  if (!normalized) {
+    return '';
+  }
+
+  if (END_PUNCTUATION_PATTERN.test(normalized)) {
+    return normalized;
+  }
+
+  return `${normalized}.`;
 };
 
 class MessageSpeechController {
@@ -91,7 +116,7 @@ class MessageSpeechController {
   }
 
   getMessageState(messageId: string, content: string): MessageSpeechState {
-    const speakableText = extractSpeakableText(content);
+    const speakableText = prepareSpeechProsody(extractSpeakableText(content));
     const record = controllerState.records[messageId] ?? buildDefaultRecord(speakableText);
 
     return {
@@ -171,7 +196,7 @@ class MessageSpeechController {
   }
 
   async playMessage(messageId: string, content: string): Promise<void> {
-    const speakableText = extractSpeakableText(content);
+    const speakableText = prepareSpeechProsody(extractSpeakableText(content));
     if (!speakableText) {
       this.updateMessage(messageId, {
         status: 'error',
