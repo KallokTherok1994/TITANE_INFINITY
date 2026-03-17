@@ -369,6 +369,16 @@ impl ConversationPipeline {
             Intention::Meta => "L'utilisateur réfléchit sur la conversation elle-même. Sois méta.",
         };
 
+        // [FIX-004] Inject LTM history from SQLite if available (request.history loaded by commands.rs)
+        // Previously: request.history was loaded, formatted, set in ConversationRequest — then silently dropped here.
+        // Now: injected as ## HISTORIQUE_RÉCENT block before user message.
+        let history_block = match &request.history {
+            Some(msgs) if !msgs.is_empty() => {
+                format!("\n\n## HISTORIQUE_RÉCENT\n{}", msgs.join("\n"))
+            }
+            _ => String::new(),
+        };
+
         format!(
             "# IDENTITÉ SYSTÈME\n\
             {}\n\n\
@@ -376,7 +386,7 @@ impl ConversationPipeline {
             {:?}\n\
             Instruction: {}\n\n\
             # CONTEXTE CONVERSATION\n\
-            {}\n\n\
+            {}{}\n\n\
             # ANALYSE COGNITIVE\n\
             Intention détectée: {}\n\
             État émotionnel: valence={:.2}, intensité={:.2}, énergie={:.2}\n\n\
@@ -384,13 +394,14 @@ impl ConversationPipeline {
             # MESSAGE UTILISATEUR\n\
             {}",
             system_identity,
-            request.mode, // 🎯 Correction: utiliser request.mode
+            request.mode,
             mode_instruction,
             if memory_context.is_empty() {
                 "Nouvelle conversation"
             } else {
                 memory_context
             },
+            history_block,
             intention_context,
             emotion.valence,
             emotion.intensity,
