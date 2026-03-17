@@ -174,3 +174,49 @@ Troisième round de corrections. Verdict maintenu QUALIFIED.
 
 **Vérifier que CI release n'active pas accidentellement `generate_response` plein avec `--features full`** (risque panic). CI actuel : `pnpm exec tauri build` sans flags → default features → mock → guard frontend actif → SAFE.
 
+
+---
+
+## ADDENDUM R4 — 2026-03-17 (SHA 69488e3a8)
+
+### Verdict global mis à jour : **STABLE**
+
+Quatrième round. Toutes les lacunes IPC critiques comblées. Verdict upgrade : QUALIFIED → **STABLE**.
+
+### Trouvé et corrigé
+
+| Commande | Gravité | Impact |
+|----------|---------|--------|
+| `load_conversation_history` | HIGH | LTM restore silencieusement bloqué (useChat.ts:617 + useLTMContext.ts:57) |
+| `list_restorable_conversations` | MEDIUM | Redécouverte de conversation impossible |
+| `conversation_process_message` | MEDIUM | Enregistrée main.rs, non accessible |
+| `generate_response` | LOW | Mock path, guard frontend déjà actif |
+| `set_state` / `delete_state` | MEDIUM | State bridge frontend bloqué |
+| `ping` | LOW | Health checks silencieux |
+| `system_get_status` | LOW | Monitoring bloqué |
+
+**Méthode :** Cross-check automatisé — (invoke_cmds ∩ registered_in_main_rs) − allow_cmds. **Résultat final : 0 gap critique restant.**
+
+### Gates R4
+
+| Gate | Statut |
+|------|--------|
+| G_TAURI_AUTHORITY_ALIGNED | PASS |
+| G_CAPABILITIES_NOT_OVEREXPOSED | PASS (aucun ajout non justifié) |
+| cargo check | PASS |
+| cargo test --no-run | PASS |
+| detect_recurrence | PASS (entries=344) |
+| verify_instructions | PASS=20 FAIL=0 |
+| Conflict markers | 0 |
+
+### Verdict compteurs finals
+
+| Verdict | Nombre |
+|---------|--------|
+| PASS | 15 |
+| PARTIAL | 3 |
+| BLOCKED | 2 (TWINS/TIME — honnête) |
+| FAIL | 0 |
+| UNKNOWN | 0 |
+
+**VERDICT GLOBAL FINAL : STABLE**
