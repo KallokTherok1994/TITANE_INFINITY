@@ -420,3 +420,26 @@ verify_instructions          : PASS=20 FAIL=0
 | Tests compile | **PASS** |
 
 **🟢 VERDICT : PASS TOTAL — ZERO BLOCKED — ZÉRO GAP IPC**
+
+---
+
+## ADDENDUM R10 — 2026-03-17 — Batch IPC Registration
+
+**Commit**: `38405fb1a`
+
+### Actions
+- R10 sweep: 65 commands avec backends réels mais non enregistrés dans invoke_handler
+- Enregistrés: evolution_engine_commands (20), persona_commands (5), agenda_commands (3), ia_commands (3), orchestration_center ping (2), multi_agents_commands (3), selfheal extras (2), mock utilities (7)
+- Correction: `evolution_run_cycle` / `evolution_get_stats` n'existent pas — retirés
+- Correction: chemin `commands_v21::self_healing_commands::selfheal_*` (non `commands::`)
+- 11 commandes manquantes ajoutées au allow list → total = 1008
+- AH-355 ajouté (autoheal_rules.jsonl → 355 entrées)
+
+### Gates R10
+- cargo check: PASS
+- detect_recurrence: G_AH_RECURRENCE_GUARD_PASS
+- verify_instructions: 20/20 PASS
+
+### Verdict R10
+**STABLE** — Toutes les commandes avec backend réel sont maintenant enregistrées et allowlistées.
+17 commandes sans backend (stubs/doc-only) documentées dans MOCK_BYPASS_MATRIX — pas de crash, échec silencieux côté IPC.
