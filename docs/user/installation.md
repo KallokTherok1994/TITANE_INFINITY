@@ -1,3 +1,5 @@
+> ⚠️ **LEGACY** — Ce guide est obsolète (version 19.4.3). Voir le guide canonique : [docs/user/fr/installation.md](./fr/installation.md) (FR) | [docs/user/en/installation.md](./en/installation.md) (EN)
+
 # 📦 Guide d'Installation — TITANE∞ v19.4.3
 
 Ce guide vous accompagne étape par étape pour installer TITANE∞ sur votre machine.
