@@ -727,9 +727,9 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       // Load Cognitive orchestration states (with fallbacks)
       const multiAiState = (await tauriClient.multiAiGetState().catch(() => ({
         providers: [],
-        bestProvider: 'claude',
+        bestProvider: 'unknown', // IPC unavailable — not a real value
         autoMode: true,
-        globalScore: 85,
+        globalScore: 0, // IPC unavailable — not a real value
         lastUpdate: Date.now(),
       }))) as MultiAIState;
 
@@ -739,10 +739,11 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         .then((raw) => {
           const r = raw as { health?: string; coordination_count?: number; active_connections?: number; last_coordination_ms?: number };
           const h = r.health ?? '';
-          const coherenceScore = h === 'Ready' ? (r.active_connections ?? 0) > 0 ? 92 : 75 : h === 'Degraded' ? 55 : 20;
+          // Derived heuristic from health string — not a measured value
+          const coherenceScore = h === 'Ready' ? (r.active_connections ?? 0) > 0 ? 75 : 50 : h === 'Degraded' ? 25 : 0;
           return {
             activeNodes: r.active_connections ?? 0,
-            totalNodes: 15,
+            totalNodes: r.active_connections ?? 0, // total = active until backend exposes full count
             linkCount: Math.min(r.coordination_count ?? 0, 999),
             coherenceScore,
             nodes: [],
@@ -751,10 +752,10 @@ const OrchestrationMetaCenterContent: React.FC = () => {
           };
         })
         .catch(() => ({
-          activeNodes: 12,
-          totalNodes: 15,
-          linkCount: 45,
-          coherenceScore: 88,
+          activeNodes: 0,
+          totalNodes: 0, // IPC unavailable — not a real value
+          linkCount: 0,
+          coherenceScore: 0, // IPC unavailable — not a real value
           nodes: [],
           anomalies: [],
           lastUpdate: Date.now(),
@@ -778,22 +779,22 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         })
         .catch(() => ({
           activeFlows: [],
-          cpuUsage: 35,
-          ramUsage: 45,
-          ioBalance: 78,
-          harmonyScore: 82,
-          mode: 'balanced',
+          cpuUsage: 0,
+          ramUsage: 0,
+          ioBalance: 0,
+          harmonyScore: 0, // IPC unavailable — not a real value
+          mode: 'unknown',
           lastUpdate: Date.now(),
         }));
 
       const cognitiveState = (await tauriClient.cognitiveGetState().catch(() => ({
-        provider: 'claude',
-        mode: 'deep',
-        depth: 7,
-        stability: 92,
-        cognitiveScore: 87,
-        mentalLoad: 42,
-        reasoningQuality: 91,
+        provider: 'unknown', // IPC unavailable — not a real value
+        mode: 'unknown',
+        depth: 0,
+        stability: 0, // IPC unavailable — not a real value
+        cognitiveScore: 0, // IPC unavailable — not a real value
+        mentalLoad: 0, // IPC unavailable — not a real value
+        reasoningQuality: 0,
         activeProcesses: [],
         lastUpdate: Date.now(),
       }))) as CognitiveState;

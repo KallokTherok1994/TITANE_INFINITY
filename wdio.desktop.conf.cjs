@@ -17,7 +17,6 @@ function shellQuote(value) {
 
 function writeWrapperEnvFile() {
   const keys = [
-    'TAURI_BINARY_PATH',
     'OFFLINE_SIM',
     'TITANE_CONVERSATION_TIMEOUT_SECS',
     'TITANE_TIMEOUT_TRACE',
@@ -26,6 +25,8 @@ function writeWrapperEnvFile() {
   ];
 
   const lines = keys.map(key => `${key}=${shellQuote(process.env[key] ?? '')}`);
+  // H7-FIX: always propagate APP_PATH so wrapper uses the patched binary (not stale AppImage)
+  lines.unshift(`TAURI_BINARY_PATH=${shellQuote(process.env.TAURI_BINARY_PATH || APP_PATH)}`);
   fs.writeFileSync(WRAPPER_ENV_FILE, `${lines.join('\n')}\n`, {
     mode: 0o600,
   });

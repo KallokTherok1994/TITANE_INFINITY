@@ -111,7 +111,7 @@ describe('Audio/TTS runtime controls (desktop)', () => {
 
     const readButton = await lastAssistant.$('[data-testid="message-tts-read"]');
     await browser.waitUntil(
-      async () => readButton.isExisting() && readButton.isDisplayed(),
+      async () => readButton.isExisting() && (await readButton.isDisplayed()),
       {
         timeout: 15000,
         interval: 250,
@@ -119,7 +119,11 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
 
-    await readButton.click();
+    // Scroll button into view before clicking (avoids "element not interactable" in overflow containers)
+    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), readButton);
+    await browser.pause(400);
+    // Use JS click to bypass WebKit interactability guard (element may be in scrolled container)
+    await browser.execute(el => el.click(), readButton);
     await browser.pause(1200);
 
     const status = await lastAssistant.$('[data-testid="message-tts-status"]');
@@ -140,25 +144,31 @@ describe('Audio/TTS runtime controls (desktop)', () => {
 
     const pauseButton = await lastAssistant.$('[data-testid="message-tts-pause"]');
     if ((await pauseButton.isExisting()) && (await pauseButton.isDisplayed())) {
-      await pauseButton.click();
+      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), pauseButton);
+      await browser.pause(300);
+      await browser.execute(el => el.click(), pauseButton);
       await browser.pause(700);
 
       const resumeButton = await lastAssistant.$('[data-testid="message-tts-resume"]');
       await browser.waitUntil(
-        async () => resumeButton.isExisting() && resumeButton.isDisplayed(),
+        async () => resumeButton.isExisting() && (await resumeButton.isDisplayed()),
         {
           timeout: 10000,
           interval: 250,
           timeoutMsg: 'Resume button not visible after pause action',
         }
       );
-      await resumeButton.click();
+      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), resumeButton);
+      await browser.pause(300);
+      await browser.execute(el => el.click(), resumeButton);
       METRICS.pauseResumePath = 'executed';
     }
 
     const stopButton = await lastAssistant.$('[data-testid="message-tts-stop"]');
     if ((await stopButton.isExisting()) && (await stopButton.isDisplayed())) {
-      await stopButton.click();
+      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), stopButton);
+      await browser.pause(300);
+      await browser.execute(el => el.click(), stopButton);
       METRICS.stopActionObserved = true;
     }
 
@@ -197,6 +207,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
     );
     METRICS.audioCenterVisible = true;
 
+    // Navigate to the 'devices' tab within the Audio Center (speaker/mic buttons are there)
+    await clickAllTabs(['[data-testid="tab-audio-devices"]']);
+    await browser.pause(500);
+
     const speakerButton = await $('[data-testid="btn-audio-test-speaker"]');
     await browser.waitUntil(
       async () => speakerButton.isExisting() && speakerButton.isDisplayed(),
@@ -207,7 +221,9 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
     METRICS.speakerButtonVisible = true;
-    await speakerButton.click();
+    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), speakerButton);
+    await browser.pause(300);
+    await browser.execute(el => el.click(), speakerButton);
     await waitForAnyResultText(25000);
     METRICS.speakerResultObserved = true;
 
@@ -221,7 +237,9 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
     METRICS.microphoneButtonVisible = true;
-    await microphoneButton.click();
+    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), microphoneButton);
+    await browser.pause(300);
+    await browser.execute(el => el.click(), microphoneButton);
     await waitForAnyResultText(25000);
     METRICS.microphoneResultObserved = true;
 

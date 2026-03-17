@@ -8,8 +8,11 @@ import { createLogger } from '@/utils/logger';
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
- *   PHASE 6Ω: Moteur d'auto-guérison permanent • Détection • Classification • Réparation
- *   Pipeline: detectError() → classify() → repair() → reset() → fallback() → log() → restore()
+ *   PHASE 6Ω: Error detection, classification, health tracking + simulated recovery actions.
+ *   Pipeline: detectError() → classify() → simulate-action() → update-health-label() → log()
+ *   NOTE: restart/purge/reset/reconnect/restore actions are simulations (setTimeout + label update).
+ *         Actual provider fallback is governed by the orchestrator's provider chain (titane-local last).
+ *         This module provides health visibility and error classification, NOT true provider repair.
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -489,7 +492,7 @@ class AutoHealEngine {
     try {
       logger.debug(`Restarting provider: ${source}`);
 
-      // Simulation restart (implémentation dépend du provider)
+      // STUB: actual provider restart is not implemented — updates health label only
       await new Promise(resolve => setTimeout(resolve, 500));
 
       // Marquer comme redémarré
@@ -518,7 +521,7 @@ class AutoHealEngine {
     try {
       logger.debug(`Purging cache for: ${source}`);
 
-      // Simulation purge cache
+      // STUB: simulates cache purge (sleep only) — no real cache cleared
       await new Promise(resolve => setTimeout(resolve, 200));
 
       return true;
@@ -532,7 +535,7 @@ class AutoHealEngine {
     try {
       logger.debug(`Resetting connection: ${source}`);
 
-      // Simulation reset connection
+      // STUB: simulates connection reset (sleep only) — updates health label
       await new Promise(resolve => setTimeout(resolve, 300));
 
       this.updateProviderHealth(source, 'reset');
@@ -562,7 +565,7 @@ class AutoHealEngine {
     try {
       logger.debug(`Reconnecting provider: ${source}`);
 
-      // Simulation reconnection
+      // STUB: simulates reconnect (sleep only) — updates health label
       await new Promise(resolve => setTimeout(resolve, 800));
 
       this.updateProviderHealth(source, 'reconnect');
@@ -578,7 +581,7 @@ class AutoHealEngine {
     try {
       logger.debug(`Restoring from backup: ${source}`);
 
-      // Simulation restoration
+      // STUB: simulates restore (sleep only) — no real backup system exists
       await new Promise(resolve => setTimeout(resolve, 1000));
 
       this.updateProviderHealth(source, 'restore');
