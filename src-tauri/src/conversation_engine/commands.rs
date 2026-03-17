@@ -563,6 +563,37 @@ pub async fn conversation_generate(
     };
 
     // Créer la requête OMEGA
+    // Inject TIME + TWINS context into system_prompt when available
+    let cognitive_flow = context_binding.get("cognitiveFlowActive").and_then(|v| v.as_bool()).unwrap_or(false);
+    let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
+    let twins_score = context_binding.get("twinsFusionScore").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    let twins_trend = context_binding.get("twinsTrend").and_then(|v| v.as_str()).unwrap_or("unknown");
+
+    let has_time_context = cognitive_flow || cognitive_mode != "normal";
+    let has_twins_context = twins_score > 0.0 && twins_trend != "unknown";
+
+    let system_prompt = if has_time_context || has_twins_context {
+        let mut ctx_lines: Vec<String> = Vec::new();
+        if has_time_context {
+            ctx_lines.push(format!(
+                "TIME_CONTEXT: flow_active={cognitive_flow}, mode={cognitive_mode}"
+            ));
+        }
+        if has_twins_context {
+            ctx_lines.push(format!(
+                "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}",
+                twins_score
+            ));
+        }
+        let ctx_block = ctx_lines.join(" | ");
+        match system_prompt {
+            Some(ref s) if !s.is_empty() => Some(format!("{}\n\n[{ctx_block}]", s)),
+            _ => Some(format!("[{ctx_block}]")),
+        }
+    } else {
+        system_prompt
+    };
+
     let request = ConversationRequest {
         user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
@@ -583,7 +614,7 @@ pub async fn conversation_generate(
             }
         }),
         emotion_context: None,
-        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé
+        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé (+ TIME/TWINS context)
         history: conversation_context,
     };
 
