@@ -27,6 +27,7 @@ import { audioStateMachine } from '@/services/audio/audioStateMachine';
 import { parlerTTSBridge, playAudioBlob, type ParlerTTSConfig } from './parlerTTSBridge';
 import { antiEchoShield } from '@/services/voice/antiEchoShield';
 import audioService from '@/features/audio-center/services/audioService';
+import { useUIStore } from '@/stores/uiStore';
 
 export interface TTSConfig {
   rate?: number; // 0.5 - 2.0
@@ -48,8 +49,8 @@ export interface TTSStatus {
 /**
  * [P0.4 ANTI-ECHO] Événements TTS pour synchronisation VAD
  */
-export type TTSEventType = 'start' | 'end' | 'error';
-export type TTSEventListener = (event: TTSEventType) => void;
+export type TTSEventType = 'start' | 'end' | 'error' | 'fallback';
+export type TTSEventListener = (event: TTSEventType, detail?: string) => void;
 
 /**
  * [P1.3] Élément de la file d'attente TTS
@@ -124,15 +125,28 @@ class HybridTTSService {
   /**
    * [P0.4 ANTI-ECHO] Émettre un événement TTS
    */
-  private emitEvent(event: TTSEventType): void {
-    console.log(`[HybridTTS] 📢 Event: ${event}`);
+  private emitEvent(event: TTSEventType, detail?: string): void {
+    console.log(`[HybridTTS] 📢 Event: ${event}${detail ? ` — ${detail}` : ''}`);
     this.eventListeners.forEach(listener => {
       try {
-        listener(event);
+        listener(event, detail);
       } catch (e) {
         console.error('[HybridTTS] Listener error:', e);
       }
     });
+
+    // Surface fallback warnings as UI toasts
+    if (event === 'fallback' && detail) {
+      try {
+        useUIStore.getState().addToast({
+          type: 'warning',
+          message: `⚠️ Voix: ${detail}`,
+          duration: 5000,
+        });
+      } catch {
+        // Non-blocking: store may not be initialized
+      }
+    }
   }
 
   /**
@@ -483,6 +497,7 @@ class HybridTTSService {
           return;
         } catch (error) {
           console.warn('⚠️ TTS: Parler-TTS failed, falling back to Tauri backend');
+          this.emitEvent('fallback', 'Parler-TTS indisponible — passage au moteur Tauri');
         }
       }
 
@@ -498,6 +513,7 @@ class HybridTTSService {
           return;
         } catch (error) {
           console.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
+          this.emitEvent('fallback', 'Moteur Tauri indisponible — passage au Web Speech API (voix navigateur)');
         }
       }
 
@@ -520,6 +536,7 @@ class HybridTTSService {
       console.warn(
         `[TTS:FALLBACK] ⛔ CRITICAL: All providers failed. voice="${enrichedConfig.voice ?? 'none'}" — audio output is SILENT`
       );
+      this.emitEvent('fallback', 'Tous les moteurs TTS ont échoué — mode silence activé');
       console.log('🔇 TTS: No provider available, silent mode');
       // [P0.4 ANTI-ECHO] Notifier fin même en mode silence
       this.emitEvent('end');

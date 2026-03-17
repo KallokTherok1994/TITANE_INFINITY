@@ -116,9 +116,6 @@ const TimePage = lazy(() =>
 const Experience = lazy(() =>
   import('./pages/Experience').then(m => ({ default: m.Experience }))
 );
-// v29.1: kept for rollback — route redirected to /dev
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const Stats = lazy(() => import('./pages/Stats').then(m => ({ default: m.Stats })));
 
 // ✨ v24 - Performance: Lazy load SingularityMonitor
 const SingularityMonitor = lazy(() =>
@@ -884,12 +881,6 @@ const AppRouter: React.FC = () => {
         label: 'TIME',
         route: '/time',
         description: 'Centre Temporel',
-      },
-      {
-        id: 'stats',
-        label: 'STATS',
-        route: '/dev',
-        description: 'Métriques moteurs fusionnées dans DEV Cockpit > Diagnostics',
       },
       {
         id: 'admin',

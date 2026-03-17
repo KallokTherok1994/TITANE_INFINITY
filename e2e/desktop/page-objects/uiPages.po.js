@@ -87,7 +87,6 @@ export const uiPages = {
 export const topLevelPageOrder = [
   uiPages.titane,
   uiPages.time,
-  uiPages.stats,
   uiPages.admin,
   uiPages.dev,
   uiPages.fusion,
