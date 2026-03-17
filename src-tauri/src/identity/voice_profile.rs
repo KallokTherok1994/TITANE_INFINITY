@@ -205,9 +205,24 @@ impl Default for VoiceProfileManager {
             profiles.insert(profile.id.clone(), profile);
         }
 
+        let official_id = "titane-calm-fr".to_string();
+
+        if let Some(profile) = profiles.get_mut(&id) {
+            profile.active = false;
+        }
+        if let Some(profile) = profiles.get_mut(&official_id) {
+            profile.active = true;
+        }
+
+        let active_profile_id = if profiles.contains_key(&official_id) {
+            Some(official_id)
+        } else {
+            Some(id)
+        };
+
         Self {
             profiles,
-            active_profile_id: Some(id),
+            active_profile_id,
         }
     }
 }
@@ -608,7 +623,7 @@ mod tests {
             active
                 .expect("VoiceProfileManager should have an active profile")
                 .name,
-            "TITANE Natural"
+            "TITANE Calm"
         );
     }
 

@@ -1109,6 +1109,11 @@ if (_titaneCurrentWindowLabel !== 'main') {
       </React.StrictMode>
     );
   }
+  // Signal a completed minimal boot for secondary windows to avoid watchdog reload loops.
+  window.__TITANE_BOOT_READY__ = true;
+  if (typeof document !== 'undefined') {
+    document.documentElement.dataset.titaneBootReady = '1';
+  }
   console.log(`[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`);
 } else {
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

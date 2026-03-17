@@ -2,6 +2,11 @@ type BootWindow = Window & {
   __TITANE_BOOT__?: Record<string, unknown>;
   __TITANE_BOOT_READY__?: boolean;
   __TAURI_INTERNALS__?: {
+    metadata?: {
+      currentWindow?: {
+        label?: string;
+      };
+    };
     invoke?: (command: string, payload?: Record<string, unknown>) => Promise<unknown>;
   };
 };
@@ -9,6 +14,15 @@ type BootWindow = Window & {
 const getBootWindow = (): BootWindow => window as BootWindow;
 const ENTRY_RELOAD_GUARD_KEY = 'titane_entry_reload_guard';
 const ENTRY_WATCHDOG_MS = import.meta.env.DEV ? 120000 : 8000;
+
+const getCurrentWindowLabel = (win: BootWindow): string => {
+  try {
+    const label = win.__TAURI_INTERNALS__?.metadata?.currentWindow?.label;
+    return typeof label === 'string' && label.length > 0 ? label : 'main';
+  } catch {
+    return 'main';
+  }
+};
 
 const emitBootMarker = async (marker: string): Promise<void> => {
   try {
@@ -143,9 +157,35 @@ const scheduleRecoveryReload = (reason: unknown): boolean => {
 
 const bootstrap = async (): Promise<void> => {
   const win = getBootWindow();
+  const currentWindowLabel = getCurrentWindowLabel(win);
   win.__TITANE_BOOT__ = win.__TITANE_BOOT__ || {};
   win.__TITANE_BOOT__.entry_ts = true;
   win.__TITANE_BOOT__.entry_ts_timestamp = Date.now();
+  win.__TITANE_BOOT__.entry_window_label = currentWindowLabel;
+
+  if (currentWindowLabel !== 'main') {
+    hideLoaderElements();
+
+    const root = document.getElementById('root');
+    if (root && !root.querySelector('#titane-secondary-window-stub')) {
+      const stub = document.createElement('div');
+      stub.id = 'titane-secondary-window-stub';
+      stub.setAttribute('data-window-label', currentWindowLabel);
+      stub.setAttribute('data-boot-status', 'minimal-non-main-entry');
+      stub.setAttribute('aria-hidden', 'true');
+      stub.style.display = 'none';
+      root.appendChild(stub);
+    }
+
+    win.__TITANE_BOOT_READY__ = true;
+    if (typeof document !== 'undefined') {
+      document.documentElement.dataset.titaneBootReady = '1';
+    }
+    clearEntryReloadGuard();
+    await emitBootMarker(`BOOT:ENTRY_NON_MAIN_READY|${currentWindowLabel}`);
+    return;
+  }
+
   let recoveryRequested = false;
 
   const failSafe = (reason: unknown): 'boot_ready' | 'recovery' | 'fatal' => {
