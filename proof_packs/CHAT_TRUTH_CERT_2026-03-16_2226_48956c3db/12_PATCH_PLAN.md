@@ -59,3 +59,34 @@
 **Taille du patch** : 4 lignes ajoutées.
 
 **Risque** : Nul — `history: Option<Vec<String>>` accepte None.
+
+---
+
+## PATCH-R3: Mock backend response guard (2026-03-16 — continuation)
+
+**Fichier:** `src/services/ai/chatEngine.ts`
+
+**Problème confirmé:**
+- `Cargo.toml` default features include `mock`
+- `generate_response` IPC commande → `mock_commands::generate_response` dans tous les builds par défaut
+- `tryBackendPipeline()` ne vérifiait pas si la réponse est mock
+- Résultat: UI affiche `(MOCK) Réponse instantanée pour: ...` dans Tauri desktop
+
+**Fix minimal appliqué:**
+Guard dans `tryBackendPipeline()` après `chatEngineCommands.generateResponse()`:
+```typescript
+if (completion.provider === 'mock' || completion.content?.startsWith('(MOCK)')) {
+  logger.warn('[chatEngine] Mock backend response detected — falling through to orchestrator');
+  return null;
+}
+```
+→ Fall-through vers `aiOrchestrator.generate()` qui utilise les vrais providers.
+
+**Risque résiduel:**
+`Cargo.toml` default features incluent toujours `mock`. Un fix complet nécessite:
+- Changer `default = ["custom-protocol", "full", "audio-capture"]`
+- Ajouter `Arc<ChatEngine>` au state Tauri (requis par `chat_engine::commands::generate_response`)
+- Réévaluer les mock stubs audio (speak, start_recording, etc.)
+→ Classifié DEFERRED — trop d'impact transverse pour ce scope minimal.
+
+**Statut:** PATCH MINIMAL APPLIQUÉ — guard actif

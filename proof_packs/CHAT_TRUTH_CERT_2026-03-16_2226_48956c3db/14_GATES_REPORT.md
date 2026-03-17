@@ -31,3 +31,16 @@
 | QUALIFIED | 1 |
 | FAIL | 0 |
 | UNKNOWN | 0 |
+
+---
+
+## Gates R3 (2026-03-16 continuation)
+
+| Gate | Statut | Preuve |
+|------|--------|--------|
+| G_NO_CRITICAL_LEGACY_BYPASS | QUALIFIED→PARTIAL | Mock guard actif dans tryBackendPipeline; Cargo.toml default=mock reste (risque résiduel documenté) |
+| G_AUTOHEAL_NON_LYING | PASS | AH entry AH-MOCK-BACKEND-RESPONSE-2026-03-16 ajouté; detect_recurrence entries=342 |
+| detect_recurrence | PASS | PASS=18 |
+| verify_instructions | PASS | PASS=20 FAIL=0 |
+
+**Verdict gates R3:** QUALIFIED (mock guard actif; défaut Cargo.toml non modifié — risque résiduel documenté)
