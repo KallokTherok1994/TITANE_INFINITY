@@ -3106,6 +3106,12 @@
             },
             {
               "command": "web_research"
+            },
+            {
+              "command": "run_evolution"
+            },
+            {
+              "command": "quick_health_check"
             }
           ]
         },
