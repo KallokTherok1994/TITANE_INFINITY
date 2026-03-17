@@ -346,3 +346,39 @@ Ces risques sont **hors scope de la certification chat** mais documentés pour u
 | FAIL | 0 |
 
 **VERDICT GLOBAL FINAL : PASS (chat chain 19/19) — OPEN_RISK (app-wide IPC audit recommandé)**
+
+---
+
+## ADDENDUM R8 — IPC capabilities complètes (2026-03-17)
+
+### Problèmes résolus
+
+| Surface | Commandes | Fix | Statut |
+|---|---|---|---|
+| `meta_mode` (7 cmd) | `meta_mode_process`, `meta_mode_get_current_mode`, etc. | Module dual-cfg, state `.manage()`, invoke_handler + allow list | PASS |
+| 200 cmd enregistrées | auth_*, audio_*, autoheal_*, autofix_*, sc_*, agent_*, etc. | Batch-ajout allow list (total=995) | PASS |
+
+### Risque documenté (BLOCKED — hors scope minimal)
+
+| Surface | Raison | Action |
+|---|---|---|
+| `engine_api` (`run_evolution`, `quick_health_check`) | NexusCore/HarmoniaCore/SentinelCore/AutoEvolutionEngine non managés | BLOCKED — app-wide IPC audit |
+
+### Résultat final
+
+**Parité invoke_handler ↔ allow list : COMPLÈTE** (0 commandes manquantes)
+
+### Commits R8
+- `d11bb5695` — fix(meta-mode): 7 commandes + allow list
+- `c935cda73` — fix(capabilities): batch-add 200 registered commands
+
+### Verdict global R8
+
+| Verdict | Valeur |
+|---------|--------|
+| invoke_handler ↔ allow list parité | **COMPLÈTE** |
+| Chat chain | **PASS 19/19** |
+| Blocked (engine_api) | 1 surface |
+| FAIL | 0 |
+
+**VERDICT GLOBAL FINAL : PASS — parité IPC complète établie**
