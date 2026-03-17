@@ -3145,6 +3145,15 @@
             },
             {
               "command": "store_file"
+            },
+            {
+              "command": "chat_get_memory_stats"
+            },
+            {
+              "command": "read_production_week1_csv"
+            },
+            {
+              "command": "send_message"
             }
           ]
         },
