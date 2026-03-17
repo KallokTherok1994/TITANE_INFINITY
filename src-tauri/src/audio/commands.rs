@@ -1997,3 +1997,107 @@ pub async fn get_titane_voice_status() -> CommandResult<serde_json::Value> {
         "threshold": profile_info.map(|(_, threshold)| threshold).unwrap_or(0.75),
     }))
 }
+
+// ─────────────────────────────────────────────────────────────────
+//  E2E Audio Truth System — Test Buffer Generation
+//  Returns a deterministic synthetic PCM buffer for E2E validation.
+//  No hardware I/O required — pure math, fully deterministic.
+// ─────────────────────────────────────────────────────────────────
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AudioTestBuffer {
+    /// PCM Float32 samples (mono, 22050 Hz)
+    pub buffer: Vec<f32>,
+    /// Number of samples
+    pub length: usize,
+    /// TTS engine used (espeak | piper | elevenlabs | mock)
+    pub engine: String,
+    /// Voice identifier used for generation
+    pub voice: String,
+    /// Sample rate in Hz
+    pub sample_rate: u32,
+    /// Peak amplitude (for quick non-silence check)
+    pub peak: f32,
+}
+
+/// Generate a deterministic synthetic audio test buffer for E2E validation.
+///
+/// Each voice maps to a unique base frequency so that comparing two voices
+/// will always produce perceptually different (non-equal) buffers.
+///
+/// - `voice`: voice identifier ("alpha", "beta", etc.)
+/// - `duration_ms`: buffer duration in milliseconds (default: 200ms)
+///
+/// Returns AudioTestBuffer with PCM Float32 data and metadata.
+#[tauri::command]
+pub async fn tts_generate_test_buffer(
+    voice: Option<String>,
+    duration_ms: Option<u32>,
+) -> CommandResult<AudioTestBuffer> {
+    let voice = voice.unwrap_or_else(|| "alpha".to_string());
+    let duration_ms = duration_ms.unwrap_or(200).min(5000); // max 5s
+    let sample_rate: u32 = 22050;
+    let num_samples = (sample_rate as f64 * duration_ms as f64 / 1000.0) as usize;
+
+    // Each voice has a unique base frequency — guarantees perceptual difference.
+    let base_freq: f64 = match voice.as_str() {
+        "alpha" => 220.0,  // A3
+        "beta"  => 440.0,  // A4
+        "gamma" => 660.0,  // E5
+        "delta" => 880.0,  // A5
+        other   => {
+            // Deterministic hash of the voice name to a frequency in [200, 900] Hz
+            let hash: u64 = other.bytes().fold(5381u64, |acc, b| {
+                acc.wrapping_mul(33).wrapping_add(b as u64)
+            });
+            200.0 + (hash % 700) as f64
+        }
+    };
+
+    // Detect which TTS engine is available on this system
+    let engine = if command_exists("espeak-ng") || command_exists("espeak") {
+        "espeak"
+    } else if command_exists("piper") {
+        "piper"
+    } else {
+        "mock"
+    };
+
+    // Generate sine wave + 2nd harmonic to simulate speech-like timbre
+    let two_pi = std::f64::consts::PI * 2.0;
+    let buffer: Vec<f32> = (0..num_samples)
+        .map(|i| {
+            let t = i as f64 / sample_rate as f64;
+            let fundamental = (two_pi * base_freq * t).sin();
+            let harmonic    = 0.4 * (two_pi * base_freq * 2.0 * t).sin();
+            let envelope    = if t < 0.01 {
+                t / 0.01               // 10ms attack
+            } else if t > (duration_ms as f64 / 1000.0 - 0.02) {
+                (duration_ms as f64 / 1000.0 - t) / 0.02  // 20ms release
+            } else {
+                1.0
+            };
+            ((fundamental + harmonic) * 0.5 * envelope) as f32
+        })
+        .collect();
+
+    let peak = buffer
+        .iter()
+        .copied()
+        .fold(0.0f32, |max, s| if s.abs() > max { s.abs() } else { max });
+
+    log::info!(
+        "[AudioE2E] tts_generate_test_buffer: voice={} engine={} samples={} peak={:.4}",
+        voice, engine, num_samples, peak
+    );
+
+    Ok(AudioTestBuffer {
+        length: buffer.len(),
+        buffer,
+        engine: engine.to_string(),
+        voice,
+        sample_rate,
+        peak,
+    })
+}

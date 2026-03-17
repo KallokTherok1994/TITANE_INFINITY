@@ -102,6 +102,37 @@ function handleTauriCommand(
     return Promise.resolve(mockAudioConfig());
   }
 
+  // E2E Audio Truth System — deterministic synthetic buffer
+  if (command === 'tts_generate_test_buffer') {
+    const voice: string = (args as any)?.voice ?? 'alpha';
+    const durationMs: number = Math.min((args as any)?.duration_ms ?? 200, 5000);
+    const sampleRate = 22050;
+    const numSamples = Math.floor(sampleRate * durationMs / 1000);
+    const freqMap: Record<string, number> = { alpha: 220, beta: 440, gamma: 660, delta: 880 };
+    let baseFreq = freqMap[voice];
+    if (!baseFreq) {
+      let hash = 5381;
+      for (let i = 0; i < voice.length; i++) {
+        hash = ((hash * 33) + voice.charCodeAt(i)) >>> 0;
+      }
+      baseFreq = 200 + (hash % 700);
+    }
+    const twoPi = Math.PI * 2;
+    const durationSec = durationMs / 1000;
+    const buffer: number[] = [];
+    for (let i = 0; i < numSamples; i++) {
+      const t = i / sampleRate;
+      const fundamental = Math.sin(twoPi * baseFreq * t);
+      const harmonic    = 0.4 * Math.sin(twoPi * baseFreq * 2 * t);
+      let envelope = 1.0;
+      if (t < 0.01)                       envelope = t / 0.01;
+      else if (t > durationSec - 0.02)    envelope = (durationSec - t) / 0.02;
+      buffer.push((fundamental + harmonic) * 0.5 * envelope);
+    }
+    const peak = buffer.reduce((m, v) => Math.max(m, Math.abs(v)), 0);
+    return Promise.resolve({ buffer, length: numSamples, engine: 'mock', voice, sampleRate, peak });
+  }
+
   // Governance commands
   if (command === 'get_ia_policies' || command === 'governance::get_ia_policies') {
     return Promise.resolve(mockIAPolicies());

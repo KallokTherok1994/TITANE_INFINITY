@@ -67,7 +67,20 @@ impl LocalTTS {
     }
 
     pub fn speak(&self, request: &TTSRequest) -> TTSResult<()> {
-        match self.engine {
+        // Dynamic engine override based on voice ID format:
+        // Piper voice IDs use underscore notation (e.g. fr_FR-siwis-medium, en_US-amy-medium)
+        let effective_engine = match &request.voice {
+            Some(v) if v.contains('_') => &TTSEngine::Piper,
+            _ => &self.engine,
+        };
+
+        log::info!(
+            "[LocalTTS] speak engine={:?} voice={:?}",
+            effective_engine,
+            request.voice
+        );
+
+        match effective_engine {
             TTSEngine::Espeak => self.speak_espeak(request),
             TTSEngine::Festival => self.speak_festival(request),
             TTSEngine::Piper => self.speak_piper(request),
@@ -116,7 +129,20 @@ impl LocalTTS {
         // Get piper binary and model paths from user's local share
         let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
         let piper_path = format!("{}/.local/bin/piper", home);
-        let model_path = format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home);
+        // STEP 3 — Use request.voice as model name if provided, otherwise default
+        let model_name = request.voice.as_deref().unwrap_or("fr_FR-siwis-medium");
+        let model_path = format!("{}/.local/share/piper/voices/{}.onnx", home, model_name);
+        // Fall back to default if requested model file is absent
+        let model_path = if std::path::Path::new(&model_path).exists() {
+            model_path
+        } else {
+            log::warn!(
+                "[LocalTTS] ⚠️ Piper model not found: {} — falling back to fr_FR-siwis-medium",
+                model_path
+            );
+            format!("{}/.local/share/piper/voices/fr_FR-siwis-medium.onnx", home)
+        };
+        log::info!("[LocalTTS] speak_piper model: {}", model_path);
 
         // ✅ SECURED: Use stdin pipe instead of echo to avoid shell injection
         let mut child = std::process::Command::new(&piper_path)
