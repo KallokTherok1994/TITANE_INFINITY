@@ -84,6 +84,11 @@ mod memory_system_commands {
     include!("commands/memory_system_commands.rs");
 }
 
+// Auto-Evolution Engine API — run_evolution, get_evolution_state, quick_health_check
+mod engine_evolution_commands {
+    include!("commands/engine_evolution_commands.rs");
+}
+
 // Orchestration Center commands (OPUS #5/6/7)
 mod orchestration_center_commands {
     include!("commands/orchestration_center.rs");
@@ -919,6 +924,8 @@ fn main() {
     let builder = builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
     // META-MODE ENGINE — R7 fix: register state so meta_mode_* commands can resolve
     let builder = builder.manage(meta_mode_commands::MetaModeState::new());
+    // AUTO-EVOLUTION ENGINE — R8 unlock: needed by run_evolution/quick_health_check
+    let builder = builder.manage(titane_infinity::engine::AutoEvolutionEngine::new());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -1720,6 +1727,10 @@ fn main() {
             api::memory_api::memory_get_active_rituals,
             api::memory_api::memory_debug_scan,
             memory_system_commands::memory_save_entry,
+            // Auto-Evolution Engine — R8 unlock
+            engine_evolution_commands::run_evolution,
+            engine_evolution_commands::get_evolution_state,
+            engine_evolution_commands::quick_health_check,
             // ═══════════════════════════════════════════════════════════════
             // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
             // ═══════════════════════════════════════════════════════════════
