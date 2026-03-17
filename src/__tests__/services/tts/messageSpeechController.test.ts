@@ -35,4 +35,20 @@ describe('messageSpeechController', () => {
       'Message sans ponctuation.'
     );
   });
+
+  it('segmente les phrases trop longues pour une lecture plus stable', () => {
+    const longText =
+      'Cette explication est volontairement longue pour verifier la segmentation prosodique et assurer une diction stable sur des messages tres etendus avec plusieurs idees consecutives sans pause nette immediate';
+
+    const output = prepareSpeechProsody(longText);
+    const words = output.replace(/[.!?]/g, '').split(/\s+/).filter(Boolean);
+
+    expect(words.length).toBeGreaterThan(20);
+    expect(output).toContain('.');
+  });
+
+  it('preserve les pauses fortes au lieu de sur-fusionner', () => {
+    const output = prepareSpeechProsody('Bonjour. Oui. Continuons avec une explication claire.');
+    expect(output).toContain('Bonjour. Oui.');
+  });
 });
