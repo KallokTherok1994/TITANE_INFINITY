@@ -561,6 +561,42 @@ mod ai_prompt_generator {
     include!("commands/ai_prompt_generator.rs");
 }
 
+// Meta-Mode Engine + Auto-Evolution v15 commands
+// In full backend mode we load the real engine.
+// In mock/not-full builds we provide stubs so IPC symbols resolve.
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+mod meta_mode_commands {
+    include!("commands/meta_mode.rs");
+}
+
+#[cfg(any(feature = "mock", not(feature = "full")))]
+mod meta_mode_commands {
+    use tauri::State;
+
+    #[derive(Default)]
+    pub struct MetaModeState;
+    impl MetaModeState {
+        pub fn new() -> Self { Self }
+    }
+
+    #[tauri::command]
+    pub async fn meta_mode_process(_request: serde_json::Value) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({"active_mode":"STANDARD","content":"[mock]","mode_justification":"mock","adapted_tone":"neutral","adapted_depth":"normal","adapted_speed":"normal"}))
+    }
+    #[tauri::command]
+    pub async fn meta_mode_get_current_mode() -> Result<String, String> { Ok("STANDARD".into()) }
+    #[tauri::command]
+    pub async fn meta_mode_list_modes() -> Result<Vec<String>, String> { Ok(vec!["STANDARD".into()]) }
+    #[tauri::command]
+    pub async fn meta_mode_get_history() -> Result<Vec<String>, String> { Ok(vec![]) }
+    #[tauri::command]
+    pub async fn meta_mode_get_stats(_state: State<'_, MetaModeState>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    #[tauri::command]
+    pub async fn meta_mode_reset(_state: State<'_, MetaModeState>) -> Result<String, String> { Ok("ok".into()) }
+    #[tauri::command]
+    pub async fn meta_mode_get_kevin_state(_state: State<'_, MetaModeState>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+}
+
 // Multi-Agents Commands v19.5.2 - Agent permissions management
 mod multi_agents_commands {
     include!("commands/multi_agents_commands.rs");
@@ -881,6 +917,8 @@ fn main() {
     let builder = builder.manage(ExpFusionState::new());
     // NUMERIC TWIN ENGINE — TWINS_AUDIT 2026-03-15 (RC-002 fix)
     let builder = builder.manage(titane_infinity::numeric_twin::twin_commands::NumericTwinState::default());
+    // META-MODE ENGINE — R7 fix: register state so meta_mode_* commands can resolve
+    let builder = builder.manage(meta_mode_commands::MetaModeState::new());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -1615,6 +1653,14 @@ fn main() {
             commands::copilot_commands::test_copilot_connection,
             // AI Prompt Generator v25.4.2 (Mode Builder)
             ai_prompt_generator::generate_mode_prompt,
+            // Meta-Mode Engine v15 commands — R7 fix: was present in backend, missing from handler
+            meta_mode_commands::meta_mode_process,
+            meta_mode_commands::meta_mode_get_current_mode,
+            meta_mode_commands::meta_mode_list_modes,
+            meta_mode_commands::meta_mode_get_history,
+            meta_mode_commands::meta_mode_get_stats,
+            meta_mode_commands::meta_mode_reset,
+            meta_mode_commands::meta_mode_get_kevin_state,
             // Ollama AI Provider Status Check
             titane_infinity::ai::ollama::ai_check_ollama_status,
             // Auth OS Commands v∞ (Unified Authentication System)
