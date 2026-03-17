@@ -1,3 +1,5 @@
+> ⚠️ **LEGACY** — This guide is outdated (v24.2.0). See canonical guides: [docs/dev/en/environment-setup.md](./dev/en/environment-setup.md) (EN) | [docs/dev/fr/setup-environnement.md](./dev/fr/setup-environnement.md) (FR)
+
 # 🚀 Getting Started with TITANE∞ Documentation
 
 **Your Complete Guide to TITANE∞ Documentation Ecosystem**
