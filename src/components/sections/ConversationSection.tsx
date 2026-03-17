@@ -40,6 +40,11 @@ import type { ProviderDecisionMeta, ReasonCode } from '@/types/providerMeta';
 import { webResearch } from '@/services/webResearchService';
 import type { ResearchOptions, ResearchReport } from '@/types/research';
 import { useLTMContext } from '@/hooks/useLTMContext';
+import {
+  messageSpeechController,
+  useMessageSpeechState,
+  type MessageSpeechStatus,
+} from '@/services/tts/messageSpeechController';
 
 const pageLogger = createLogger('ConversationSection');
 
@@ -122,6 +127,25 @@ const CONVERSATION_SUGGESTIONS = [
 ];
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
+
+function getSpeechStatusLabel(status: MessageSpeechStatus, error: string | null): string {
+  switch (status) {
+    case 'loading':
+      return 'Préparation de la lecture...';
+    case 'speaking':
+      return 'Lecture en cours...';
+    case 'paused':
+      return 'Lecture en pause.';
+    case 'completed':
+      return 'Lecture terminée.';
+    case 'stopped':
+      return 'Lecture arrêtée.';
+    case 'error':
+      return error ? `Erreur audio: ${error}` : 'Erreur audio.';
+    default:
+      return 'Prêt pour la lecture audio.';
+  }
+}
 
 function deriveRuntimeSignals(
   providerMeta?: ProviderDecisionMeta,
@@ -605,6 +629,11 @@ const ConversationMessage = memo(
     onRetry: (content: string) => void;
     onDelete: (id: string) => void;
   }) => {
+    const speechMessageId = message.id ?? `${message.role}-${message.content.slice(0, 64)}`;
+    const speechState = useMessageSpeechState(
+      speechMessageId,
+      message.role === 'assistant' ? message.content : ''
+    );
     const providerMeta = message.metadata?.providerMeta;
     const runtimeSignals = deriveRuntimeSignals(
       providerMeta,
@@ -725,6 +754,99 @@ const ConversationMessage = memo(
               <span className="meta-intention">{message.metadata.intention}</span>
             </div>
           )}
+
+          {message.role === 'assistant' &&
+            message.content &&
+            message.content.trim().length > 0 &&
+            speechState.canPlay && (
+              <div
+                className="conversation-message-audio"
+                data-testid="message-tts-controls"
+                data-message-id={speechMessageId}
+              >
+                <div
+                  className={`conversation-message-audio-status conversation-message-audio-status-${speechState.status}`}
+                  data-testid="message-tts-status"
+                >
+                  {getSpeechStatusLabel(speechState.status, speechState.error)}
+                </div>
+
+                <div className="conversation-message-audio-actions">
+                  {(speechState.status === 'idle' ||
+                    speechState.status === 'completed' ||
+                    speechState.status === 'stopped' ||
+                    speechState.status === 'error') && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.playMessage(
+                          speechMessageId,
+                          message.content
+                        );
+                      }}
+                      data-testid="message-tts-read"
+                    >
+                      {speechState.status === 'completed' || speechState.status === 'stopped'
+                        ? 'Relire'
+                        : 'Lire à haute voix'}
+                    </button>
+                  )}
+
+                  {speechState.status === 'loading' && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      disabled
+                      data-testid="message-tts-loading"
+                    >
+                      Préparation...
+                    </button>
+                  )}
+
+                  {speechState.status === 'speaking' && speechState.supportsPause && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.pause();
+                      }}
+                      data-testid="message-tts-pause"
+                    >
+                      Pause
+                    </button>
+                  )}
+
+                  {speechState.status === 'paused' && (
+                    <button
+                      type="button"
+                      className="conversation-message-action"
+                      onClick={() => {
+                        void messageSpeechController.resume();
+                      }}
+                      data-testid="message-tts-resume"
+                    >
+                      Reprendre
+                    </button>
+                  )}
+
+                  {(speechState.status === 'loading' ||
+                    speechState.status === 'speaking' ||
+                    speechState.status === 'paused') && (
+                    <button
+                      type="button"
+                      className="conversation-message-action danger"
+                      onClick={() => {
+                        void messageSpeechController.stop();
+                      }}
+                      data-testid="message-tts-stop"
+                    >
+                      Stop
+                    </button>
+                  )}
+                </div>
+              </div>
+            )}
 
           <div className="conversation-message-actions">
             <button
