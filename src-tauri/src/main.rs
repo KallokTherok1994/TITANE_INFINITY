@@ -471,6 +471,43 @@ mod legacy_ai_bridge {
         Ok(serde_json::json!([]))
     }
 
+    // [FIX-010] engines_monitoring_get_metrics / engines_monitoring_get_dashboard unregistered.
+    // Real handlers in commands/engines_commands.rs use crate::engines which can't be included
+    // from main.rs context. Stubs return honest DEGRADED data until engines module is wired.
+    #[tauri::command]
+    pub async fn engines_monitoring_get_metrics(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({
+            "cpu_usage": 0.0,
+            "ram_usage": 0.0,
+            "disk_usage": 0.0,
+            "network_in": 0.0,
+            "network_out": 0.0,
+            "active_engines": 0u32,
+            "status": "degraded"
+        }))
+    }
+
+    #[tauri::command]
+    pub async fn engines_monitoring_get_dashboard(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({
+            "status": "degraded",
+            "engines": [],
+            "metrics": { "cpu_usage": 0.0, "ram_usage": 0.0 },
+            "alerts": []
+        }))
+    }
+
+    // [FIX-010] state_get / system_recovery — no registered handler exists anywhere.
+    #[tauri::command]
+    pub async fn state_get(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "status": "degraded" }))
+    }
+
+    #[tauri::command]
+    pub async fn system_recovery(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "success": false, "reason": "system_recovery_not_wired" }))
+    }
+
     #[tauri::command]
     pub async fn memory_get(
         _state: State<'_, AIChatState>,
@@ -2123,6 +2160,10 @@ fn main() {
             legacy_ai_bridge::engine_metrics,  // FIX-009
             legacy_ai_bridge::engine_health,   // FIX-009
             legacy_ai_bridge::engine_modules,  // FIX-009
+            legacy_ai_bridge::engines_monitoring_get_metrics,  // FIX-010
+            legacy_ai_bridge::engines_monitoring_get_dashboard, // FIX-010
+            legacy_ai_bridge::state_get,       // FIX-010
+            legacy_ai_bridge::system_recovery, // FIX-010
             legacy_ai_bridge::memory_get,
             legacy_ai_bridge::memory_set,
             // memory_get_stats already registered above as unified_memory_commands::memory_get_stats
