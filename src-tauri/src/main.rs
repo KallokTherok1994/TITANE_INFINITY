@@ -326,6 +326,31 @@ mod legacy_ai_bridge {
         memory_clear_all, memory_compact, memory_export_conversation, memory_get, memory_list_all,
         memory_set,
     };
+    // [FIX-016] Real engines/vector_store handlers (full mode)
+    pub use titane_infinity::commands::engines_commands::{
+        engines_build_cancel, engines_build_clean, engines_build_get_result,
+        engines_build_get_status, engines_build_start, engines_devmode_analyze_file,
+        engines_devmode_apply_patch, engines_devmode_changelog, engines_devmode_create_backup,
+        engines_devmode_disable, engines_devmode_enable, engines_devmode_get_history,
+        engines_devmode_get_state, engines_devmode_preview, engines_devmode_restore_backup,
+        engines_devmode_rollback, engines_devmode_validate_patch, engines_monitoring_get_health,
+    };
+    pub use titane_infinity::api::vector_store_api::{
+        check_sqlite_available, vector_store_delete, vector_store_insert, vector_store_update,
+    };
+    // [FIX-016] Real runtime state commands (always-available real implementations)
+    pub use titane_infinity::ai::ollama::{
+        ai_generate_local, ai_scan_local_models, ai_set_local_model,
+    };
+    pub use titane_infinity::runtime_real::{
+        ai_status, chat_mode_change, chat_mode_sync, clear_event_stream, clear_memory_cache,
+        clear_system_logs, conversation_reset, get_engine_health, get_engines_status,
+        get_event_stream, get_persistence_status, get_system_logs, log_entries,
+        memory_delete_entry, memory_get_all_keys, memory_get_entry, memory_scan, multi_ai_get_state,
+        restart_cores, run_system_diagnostic, selfheal_force_evaluation, selfheal_get_health,
+        selfheal_get_prediction, selfheal_get_state, test_ai_local, titan_state_get,
+        toggle_safe_mode, toggle_singularity, xp_get_state, xp_sync_state,
+    };
 }
 
 #[cfg(any(feature = "mock", not(feature = "full")))]
@@ -560,10 +585,8 @@ mod legacy_ai_bridge {
     }
     stub_cmd!(agenda_save_event);
     stub_cmd!(agenda_sync);
-    stub_cmd!(ai_generate_local);
-    stub_cmd!(ai_scan_local_models);
-    stub_cmd!(ai_set_local_model);
-    stub_cmd!(ai_status);
+    // ai_generate_local/scan/set → REAL: re-exported below from ai::ollama
+    // ai_status → REAL: re-exported below from runtime_real
     stub_cmd!(analyze_bundle_size);
     stub_cmd!(automation_execute_action);
     stub_cmd!(autonomy_clean_memory);
@@ -572,17 +595,15 @@ mod legacy_ai_bridge {
     stub_cmd!(autonomy_ping);
     stub_cmd!(autonomy_resync_singularity_state);
     stub_cmd!(camera_start);
-    stub_cmd!(chat_mode_change);
-    stub_cmd!(chat_mode_sync);
-    stub_cmd!(clear_event_stream);
-    stub_cmd!(clear_memory_cache);
-    stub_cmd!(clear_system_logs);
+    // chat_mode_change/sync/conversation_reset/get_engine_health/etc → REAL below
     stub_cmd!(cognitive_get_state);
     stub_cmd!(confirm_self_healing_action);
-    stub_cmd!(conversation_reset);
+    // conversation_reset → REAL below
     // dev_apply_patch/dev_get_logs/dev_inspect_file/dev_run_command/hybrid_analyze_code
     // defined in commands/hybrid.rs (hybrid_commands module) — skip stub to avoid redefinition
     stub_cmd!(engine_singularity_reset);
+    // engines_build_* / engines_devmode_* / engines_monitoring_get_health
+    // → REAL in full mode (commands::engines_commands), stub in mock (no engines module in mock)
     stub_cmd!(engines_build_cancel);
     stub_cmd!(engines_build_clean);
     stub_cmd!(engines_build_get_result);
@@ -605,47 +626,29 @@ mod legacy_ai_bridge {
     stub_cmd!(evolution_save_state);
     stub_cmd!(execute_shell_command);
     stub_cmd!(get_cpu_metrics);
-    stub_cmd!(get_engine_health);
-    stub_cmd!(get_engines_status);
-    stub_cmd!(get_event_stream);
-    stub_cmd!(get_persistence_status);
-    stub_cmd!(get_system_logs);
+    // get_engine_health / get_engines_status / get_event_stream / get_persistence_status
+    // get_system_logs / log_entries / memory_* / multi_ai_get_state / restart_cores
+    // run_system_diagnostic / selfheal_* / titan_state_get / toggle_* / xp_* → REAL below
     // hybrid_analyze_code defined in commands/hybrid.rs — skip stub
     stub_cmd!(identity_set_matrix);
     stub_cmd!(knowledge_ingest);
     stub_cmd!(knowledge_save_state);
-    stub_cmd!(log_entries);
-    stub_cmd!(memory_delete_entry);
-    stub_cmd!(memory_get_all_keys);
-    stub_cmd!(memory_get_entry);
-    stub_cmd!(memory_scan);
-    stub_cmd!(multi_ai_get_state);
     stub_cmd!(progression_save_state);
     stub_cmd!(realtime_network_task);
     stub_cmd!(reject_self_healing_action);
-    stub_cmd!(restart_cores);
-    stub_cmd!(run_system_diagnostic);
     stub_cmd!(sc_introspection_generate);
     stub_cmd!(sc_introspection_preview);
     stub_cmd!(secure_store_key);
-    stub_cmd!(selfheal_force_evaluation);
-    stub_cmd!(selfheal_get_health);
-    stub_cmd!(selfheal_get_prediction);
-    stub_cmd!(selfheal_get_state);
     stub_cmd!(singularity_autonomy_heal);
     stub_cmd!(stt_transcribe);
     stub_cmd!(submit_evolution_data);
-    stub_cmd!(test_ai_local);
-    stub_cmd!(titan_state_get);
-    stub_cmd!(toggle_safe_mode);
-    stub_cmd!(toggle_singularity);
-    stub_cmd!(xp_get_state);
-    stub_cmd!(xp_sync_state);
     // Remaining frontend-invoked commands with no always-available handler [FIX-015]
+    // load_conversation/get_cognitive_state/engine_init/engine_stop → stub in mock
     stub_cmd!(load_conversation);
     stub_cmd!(get_cognitive_state);
     stub_cmd!(engine_init);
     stub_cmd!(engine_stop);
+    // check_sqlite_available/vector_store_* → REAL in full mode, stub in mock
     stub_cmd!(check_sqlite_available);
     stub_cmd!(vector_store_delete);
     stub_cmd!(vector_store_insert);
@@ -1170,6 +1173,14 @@ fn main() {
     let builder = builder.manage(titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal::new());
     let builder = builder.manage(titane_infinity::overdrive::memory_engine::init());
     let builder = builder.manage(titane_infinity::fusion::FusionEngineState::default());
+
+    // [FIX-016] Runtime real state — memory KV, flags, logs, XP, selfheal, events
+    let builder = builder.manage(titane_infinity::runtime_real::MemoryKvState::default());
+    let builder = builder.manage(titane_infinity::runtime_real::SystemFlagsState::default());
+    let builder = builder.manage(titane_infinity::runtime_real::LogBufferState::default());
+    let builder = builder.manage(titane_infinity::runtime_real::XpStateManaged::default());
+    let builder = builder.manage(titane_infinity::runtime_real::SelfhealManaged::default());
+    let builder = builder.manage(titane_infinity::runtime_real::EventStreamState::default());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -2713,10 +2724,12 @@ fn main() {
             // [FIX-014] NO_HANDLER stubs (legacy_ai_bridge)
             legacy_ai_bridge::agenda_save_event,
             legacy_ai_bridge::agenda_sync,
-            legacy_ai_bridge::ai_generate_local,
-            legacy_ai_bridge::ai_scan_local_models,
-            legacy_ai_bridge::ai_set_local_model,
-            legacy_ai_bridge::ai_status,
+            // [FIX-016] ai::ollama — REAL in all modes
+            titane_infinity::ai::ollama::ai_generate_local,
+            titane_infinity::ai::ollama::ai_scan_local_models,
+            titane_infinity::ai::ollama::ai_set_local_model,
+            // [FIX-016] runtime_real — REAL in all modes
+            titane_infinity::runtime_real::ai_status,
             legacy_ai_bridge::analyze_bundle_size,
             legacy_ai_bridge::automation_execute_action,
             legacy_ai_bridge::autonomy_clean_memory,
@@ -2725,14 +2738,14 @@ fn main() {
             legacy_ai_bridge::autonomy_ping,
             legacy_ai_bridge::autonomy_resync_singularity_state,
             legacy_ai_bridge::camera_start,
-            legacy_ai_bridge::chat_mode_change,
-            legacy_ai_bridge::chat_mode_sync,
-            legacy_ai_bridge::clear_event_stream,
-            legacy_ai_bridge::clear_memory_cache,
-            legacy_ai_bridge::clear_system_logs,
+            titane_infinity::runtime_real::chat_mode_change,
+            titane_infinity::runtime_real::chat_mode_sync,
+            titane_infinity::runtime_real::clear_event_stream,
+            titane_infinity::runtime_real::clear_memory_cache,
+            titane_infinity::runtime_real::clear_system_logs,
             legacy_ai_bridge::cognitive_get_state,
             legacy_ai_bridge::confirm_self_healing_action,
-            legacy_ai_bridge::conversation_reset,
+            titane_infinity::runtime_real::conversation_reset,
             // dev_* and hybrid_analyze_code routed via hybrid_commands
             hybrid_commands::dev_apply_patch,
             hybrid_commands::dev_get_logs,
@@ -2762,42 +2775,42 @@ fn main() {
             legacy_ai_bridge::evolution_save_state,
             legacy_ai_bridge::execute_shell_command,
             legacy_ai_bridge::get_cpu_metrics,
-            legacy_ai_bridge::get_engine_health,
-            legacy_ai_bridge::get_engines_status,
-            legacy_ai_bridge::get_event_stream,
-            legacy_ai_bridge::get_persistence_status,
-            legacy_ai_bridge::get_system_logs,
+            titane_infinity::runtime_real::get_engine_health,
+            titane_infinity::runtime_real::get_engines_status,
+            titane_infinity::runtime_real::get_event_stream,
+            titane_infinity::runtime_real::get_persistence_status,
+            titane_infinity::runtime_real::get_system_logs,
             // hybrid_analyze_code registered via hybrid_commands above
             legacy_ai_bridge::identity_set_matrix,
             legacy_ai_bridge::knowledge_ingest,
             legacy_ai_bridge::knowledge_save_state,
-            legacy_ai_bridge::log_entries,
-            legacy_ai_bridge::memory_delete_entry,
-            legacy_ai_bridge::memory_get_all_keys,
-            legacy_ai_bridge::memory_get_entry,
-            legacy_ai_bridge::memory_scan,
-            legacy_ai_bridge::multi_ai_get_state,
+            titane_infinity::runtime_real::log_entries,
+            titane_infinity::runtime_real::memory_delete_entry,
+            titane_infinity::runtime_real::memory_get_all_keys,
+            titane_infinity::runtime_real::memory_get_entry,
+            titane_infinity::runtime_real::memory_scan,
+            titane_infinity::runtime_real::multi_ai_get_state,
             legacy_ai_bridge::progression_save_state,
             legacy_ai_bridge::realtime_network_task,
             legacy_ai_bridge::reject_self_healing_action,
-            legacy_ai_bridge::restart_cores,
-            legacy_ai_bridge::run_system_diagnostic,
+            titane_infinity::runtime_real::restart_cores,
+            titane_infinity::runtime_real::run_system_diagnostic,
             legacy_ai_bridge::sc_introspection_generate,
             legacy_ai_bridge::sc_introspection_preview,
             legacy_ai_bridge::secure_store_key,
-            legacy_ai_bridge::selfheal_force_evaluation,
-            legacy_ai_bridge::selfheal_get_health,
-            legacy_ai_bridge::selfheal_get_prediction,
-            legacy_ai_bridge::selfheal_get_state,
+            titane_infinity::runtime_real::selfheal_force_evaluation,
+            titane_infinity::runtime_real::selfheal_get_health,
+            titane_infinity::runtime_real::selfheal_get_prediction,
+            titane_infinity::runtime_real::selfheal_get_state,
             legacy_ai_bridge::singularity_autonomy_heal,
             legacy_ai_bridge::stt_transcribe,
             legacy_ai_bridge::submit_evolution_data,
-            legacy_ai_bridge::test_ai_local,
-            legacy_ai_bridge::titan_state_get,
-            legacy_ai_bridge::toggle_safe_mode,
-            legacy_ai_bridge::toggle_singularity,
-            legacy_ai_bridge::xp_get_state,
-            legacy_ai_bridge::xp_sync_state,
+            titane_infinity::runtime_real::test_ai_local,
+            titane_infinity::runtime_real::titan_state_get,
+            titane_infinity::runtime_real::toggle_safe_mode,
+            titane_infinity::runtime_real::toggle_singularity,
+            titane_infinity::runtime_real::xp_get_state,
+            titane_infinity::runtime_real::xp_sync_state,
 
             // [FIX-014] mock_commands with real handlers (already exist, cfg-gated)
             #[cfg(feature = "mock")]
