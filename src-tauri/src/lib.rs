@@ -57,6 +57,7 @@ pub mod shared; // ✅ Shared types and utilities
 pub mod singularity; // ✅ SingularityState v∞ v20 (NEW)
 pub mod singularity_cortex; // ✅ Singularity Cortex OS v∞ — SUPER PROMPT #7 (NEW)
 pub mod singularity_fusion;
+pub mod fusion; // ✅ FIX-014: Fusion Engine (fusion_merge/fusion_sync)
 pub mod streaming; // ✅ v21.1Ω - Streaming IPC for real-time responses (NEW)
 pub mod types; // ✅ Type definitions
 pub mod utils; // ✅ Utilities (AppResult, AppError)
