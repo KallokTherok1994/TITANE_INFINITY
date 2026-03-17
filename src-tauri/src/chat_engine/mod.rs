@@ -150,7 +150,8 @@ impl ChatEngine {
             tokio::spawn(async move {
                 let task = SpeechTask {
                     text,
-                    voice: None,
+                    // Use default piper FR voice to avoid robotic espeak when auto-TTS fires
+                    voice: Some("fr_FR-siwis-medium".to_string()),
                     speed: 1.0,
                     pitch: 1.0,
                     mode: SpeechMode::Auto,
@@ -264,7 +265,8 @@ impl ChatEngine {
                         tokio::spawn(async move {
                             let task = SpeechTask {
                                 text,
-                                voice: None,
+                                // Use default piper FR voice to avoid robotic espeak when auto-TTS fires
+                                voice: Some("fr_FR-siwis-medium".to_string()),
                                 speed: 1.0,
                                 pitch: 1.0,
                                 mode: SpeechMode::Auto,

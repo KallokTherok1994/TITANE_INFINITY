@@ -41,7 +41,7 @@ test.describe('Critical Path: Engine Navigation', () => {
     const topNav = page.getByTestId('nav-top-main');
     await expect(topNav).toBeVisible({ timeout: 15000 });
 
-    // Current UI guarantees at least TITANE/TIME/STATS/ADMIN/DEV (+ optional more menu).
+    // Current UI guarantees at least TITANE/TIME/ADMIN/DEV (+ optional more menu). STATS fusionné DEV v29.1.
     const navButtons = await topNav
       .locator('button[data-testid^="nav-"], button[data-testid="btn-nav-more"]')
       .count();
@@ -60,12 +60,13 @@ test.describe('Critical Path: Engine Navigation', () => {
     const topNav = page.getByTestId('nav-top-main');
     await expect(topNav).toBeVisible({ timeout: 15000 });
 
-    const statsButton = topNav.getByTestId('nav-stats');
+    // ✅ v29.1+: STATS fusionné dans DEV Cockpit — nav canonique = nav-dev
+    const devButton = topNav.getByTestId('nav-dev');
     const titaneButton = topNav.getByTestId('nav-titane');
 
-    await expect(statsButton).toBeVisible({ timeout: 15000 });
-    await statsButton.click({ force: true });
-    await expect(page).toHaveURL(/\/stats(\?|$)/, { timeout: 15000 });
+    await expect(devButton).toBeVisible({ timeout: 15000 });
+    await devButton.click({ force: true });
+    await expect(page).toHaveURL(/\/dev(\?|$)/, { timeout: 15000 });
 
     await expect(titaneButton).toBeVisible({ timeout: 15000 });
     await titaneButton.click({ force: true });
@@ -131,7 +132,8 @@ test.describe('Critical Path: Engine Navigation', () => {
       await chatInput.fill('State test');
 
       // Try navigating to another tab within the app (instead of a link)
-      const navButton = page.getByTestId('nav-stats');
+      // ✅ v29.1+: nav-stats removed; nav-dev is canonical
+      const navButton = page.getByTestId('nav-dev');
       if ((await navButton.count()) > 0) {
         await navButton.click({ force: true });
         await page.waitForTimeout(500);
