@@ -267,3 +267,42 @@ Upgrade de STABLE → **PASS**. Les deux blocages honnêtes TWINS et TIME sont d
 | UNKNOWN | 0 |
 
 **VERDICT GLOBAL FINAL : PASS**
+
+---
+
+## ADDENDUM R6 — STM injection + MTM backend sync (2026-03-17)
+
+### STM → Injection dans le prompt OMEGA
+
+- **Problème** : `get_immediate_context()` jamais appelé pré-tour ; `add_to_immediate()` uniquement post-tour
+- **Fix** : Lecture de `engine.multilayer_memory.read().await.get_immediate_context()` avant la construction du `ConversationRequest` ; injection en bloc `## STM_RECENT_TURNS` dans `custom_system_prompt`
+- **Fichier** : `src-tauri/src/conversation_engine/commands.rs`
+
+### MTM → Backend sync réparé
+
+- **Problème** : `memory_save_chat_interaction`, `memory_get_timeline`, `memory_get_active_rituals`, `memory_debug_scan`, `memory_save_entry` dans l'allow list `tauri.conf.json` mais ABSENTS du `invoke_handler()` → silently blocked — chaque sauvegarde MTM post-tour échouait côté backend
+- **Fix** : Enregistrement de tous les 5 commands dans `main.rs invoke_handler` ; création de `memory_system_commands.rs` avec `memory_save_entry` mock-safe
+- **Fichiers** : `src-tauri/src/main.rs`, `src-tauri/src/commands/memory_system_commands.rs`
+
+### Gates R6
+| Gate | Statut |
+|------|--------|
+| G_STM_REAL | **PASS** (pré-tour injection active) |
+| G_MTM_REAL_OR_PARTIAL | **PASS** (invoke_handler corrigé) |
+| cargo check | PASS |
+| detect_recurrence | PASS (entries=348) |
+| verify_instructions | PASS=20 FAIL=0 |
+
+### Verdict final compteurs
+
+| Verdict | Nombre |
+|---------|--------|
+| PASS | 19 |
+| PARTIAL | 0 |
+| BLOCKED | 0 |
+| FAIL | 0 |
+| UNKNOWN | 0 |
+
+**VERDICT GLOBAL FINAL : PASS (19/19)**
+
+Commit: `59e5c80b7` — fix(mtm+stm): register missing memory backend commands + wire STM into OMEGA prompt
