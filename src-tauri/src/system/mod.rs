@@ -12,6 +12,7 @@ pub mod repair_actions;
 pub mod security_engine;
 pub mod self_heal;
 pub mod system_health;
+pub mod persona_engine; // R9: expose for IPC registration
 
 pub use anomaly_detector::{AnomalyDetector, AnomalyLevel};
 pub use healing_executor::{HealingExecutor, HealingState, SafeModeConfig};
