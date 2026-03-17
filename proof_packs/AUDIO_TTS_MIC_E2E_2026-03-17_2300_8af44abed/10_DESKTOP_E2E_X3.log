@@ -1,0 +1,30 @@
+=== DESKTOP E2E X3 — audio-tts-runtime-controls.wdio.test.js ===
+Binary: src-tauri/target/release/titane-infinity (built 2026-03-17 19:23:11)
+Driver: tauri-driver --port 4444 + WebKitWebDriver /usr/bin/WebKitWebDriver
+
+--- RUN 1 (2026-03-17T23:23:49) ---
+wdio close: code=0 signal=null
+PASSED in wry - file:///e2e/desktop/audio-tts-runtime-controls.wdio.test.js
+{
+  "chatPrompt": "Réponds en 8 phrases simples, calmes et claires sur respiration, alimentation et sommeil pour garder la lecture audio active assez longtemps et activer tous les contrôles TTS.",
+  "assistantMessageDetected": true,
+  "ttsControlsVisible": true,
+  "ttsStatusAfterRead": "Lecture en cours...",
+  "ttsStatusFinal": "Lecture arrêtée.",
+  "pauseResumePath": "executed",
+  "stopActionObserved": true,
+  "replayButtonObserved": true,
+  "audioCenterVisible": true,
+  "speakerButtonVisible": true,
+  "microphoneButtonVisible": true,
+  "speakerResultObserved": true,
+  "microphoneResultObserved": true,
+  "verdict": "PASS"
+}
+--- RUN 2 (2026-03-17T23:24:36) ---
+verdict: PASS | ttsStatus: Lecture en cours... | pause: executed | stop: True | mic: True | speaker: True
+
+--- RUN 3 (2026-03-17T23:25:17) ---
+verdict: PASS | ttsStatus: Lecture en cours... | pause: executed | stop: True | mic: True | speaker: True
+
+=== FINAL X3 RESULT: PASS / PASS / PASS ===
