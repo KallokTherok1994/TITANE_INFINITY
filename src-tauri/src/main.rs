@@ -792,6 +792,16 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 use titane_infinity::persistence;
 use titane_infinity::time_commands; // FIX-011
 use titane_infinity::reality_renderer; // FIX-012
+// [FIX-013] Bulk handler registrations
+use titane_infinity::memory_evolution;
+use titane_infinity::cloud;
+use titane_infinity::cluster;
+use titane_infinity::hyper_intelligence;
+use titane_infinity::meta_orchestrator;
+use titane_infinity::evolution;
+use titane_infinity::creation;
+use titane_infinity::introspection;
+use titane_infinity::knowledge;
 
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
@@ -2342,6 +2352,199 @@ fn main() {
             // mock get_timeline (safe in both builds since mock_commands always present)
             #[cfg(feature = "mock")]
             mock_commands::get_timeline,
+
+            // ═══════════════════════════════════════════════════════════════
+            // [FIX-013] Bulk handler registrations — ~100 commands with real
+            // Rust handlers but missing from generate_handler!
+            // ═══════════════════════════════════════════════════════════════
+
+            // memory_evolution — MemoryEvolutionCenter
+            memory_evolution::commands::memory_evolution_status,
+            memory_evolution::commands::memory_add_item,
+            memory_evolution::commands::memory_parse,
+            memory_evolution::commands::memory_synthesize,
+            memory_evolution::commands::memory_cluster,
+            memory_evolution::commands::memory_compress,
+            memory_evolution::commands::memory_extract_patterns,
+            memory_evolution::commands::memory_check_stability,
+            memory_evolution::commands::memory_check_and_repair,
+            memory_evolution::commands::memory_grow,
+            memory_evolution::commands::memory_hierarchy_health,
+            memory_evolution::commands::memory_evolve_full,
+            memory_evolution::commands::memory_update_config,
+            memory_evolution::commands::memory_get_clusters,
+            memory_evolution::commands::memory_get_items_by_level,
+            memory_evolution::commands::memory_create_backup,
+            memory_evolution::commands::memory_list_backups,
+
+            // cloud — CloudCenter
+            cloud::commands::cloud_init,
+            cloud::commands::cloud_load_vault,
+            cloud::commands::cloud_create_vault,
+            cloud::commands::cloud_get_status,
+            cloud::commands::cloud_sync_push,
+            cloud::commands::cloud_sync_pull,
+            cloud::commands::cloud_update_config,
+            cloud::commands::cloud_get_devices,
+            cloud::commands::cloud_remove_device,
+            cloud::commands::cloud_get_sync_history,
+            cloud::commands::cloud_update_vault_data,
+            cloud::commands::cloud_verify_integrity,
+            cloud::commands::cloud_backup_vault,
+            cloud::commands::cloud_restore_vault,
+            cloud::commands::cloud_auto_heal,
+            cloud::commands::cloud_list_backups,
+
+            // hyper_intelligence — HyperIntelligencePage
+            hyper_intelligence::commands::hyper_init,
+            hyper_intelligence::commands::hyper_get_state,
+            hyper_intelligence::commands::hyper_get_metrics,
+            hyper_intelligence::commands::hyper_set_mode,
+            hyper_intelligence::commands::hyper_think,
+            hyper_intelligence::commands::hyper_generate_insight,
+            hyper_intelligence::commands::hyper_reason,
+            hyper_intelligence::commands::hyper_imagine,
+            hyper_intelligence::commands::hyper_get_thoughts,
+            hyper_intelligence::commands::hyper_get_insights,
+            hyper_intelligence::commands::hyper_get_report,
+
+            // devtools — DevTools OS (full non-mock builds only)
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_debug_last,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_debug_stats,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_debug_toggle,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_stats,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_export,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_stm,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_ltm,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_search,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_knn,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_memory_health,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_analyze,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_metrics,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::devtools::api::devtools_status,
+
+            // meta_orchestrator — MetaOrchestratorPage
+            meta_orchestrator::commands::orchestrator_init,
+            meta_orchestrator::commands::orchestrator_get_state,
+            meta_orchestrator::commands::orchestrator_run_cycle,
+            meta_orchestrator::commands::orchestrator_set_mode,
+            meta_orchestrator::commands::orchestrator_get_metrics,
+            meta_orchestrator::commands::orchestrator_enqueue_task,
+            meta_orchestrator::commands::orchestrator_get_queue,
+            meta_orchestrator::commands::orchestrator_get_engines,
+            meta_orchestrator::commands::orchestrator_get_health,
+            meta_orchestrator::commands::orchestrator_get_report,
+
+            // cluster — mesh layer
+            cluster::mesh_layer::mesh_initialize,
+            cluster::mesh_layer::mesh_get_stats,
+
+            // evolution
+            evolution::evolution_loop::evolution_run_cycle,
+            evolution::evolution_loop::evolution_get_stats,
+
+            // creation
+            creation::generator::create_module,
+
+            // introspection
+            introspection::scanner::introspection_scan,
+            introspection::scanner::introspection_auto_fix,
+
+            // knowledge
+            knowledge::parser::parse_document,
+            knowledge::parser::detect_file_format,
+
+            // security::hardening
+            titane_infinity::security::hardening::run_hardening_selftest,
+
+            // commands sub-modules (full non-mock builds only)
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::one_core::one_core_get_engine_status,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::one_core::one_core_set_mode,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::one_core::one_core_verify_integrity,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_correlated_logs,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::search_logs,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::export_logs,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::list_all_metrics,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_core_metrics,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_dashboard_metrics,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::discover_cores,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_core_info,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::update_cognitive_mode,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_three_centers_coherence,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::get_system_recommendations,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::check_needs_intervention,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::update_mental_charge,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::update_heart_alignment,
+            #[cfg(all(not(feature = "mock"), feature = "full"))]
+            titane_infinity::commands::devtools::update_body_energy,
+
+            // mock_commands bulk (feature = "mock" only)
+            #[cfg(feature = "mock")]
+            mock_commands::get_knowledge,
+            #[cfg(feature = "mock")]
+            mock_commands::memory_get_knowledge,
+            #[cfg(feature = "mock")]
+            mock_commands::stream_response,
+            #[cfg(feature = "mock")]
+            mock_commands::speak_text,
+            #[cfg(feature = "mock")]
+            mock_commands::save_memory,
+            #[cfg(feature = "mock")]
+            mock_commands::load_memory,
+            #[cfg(feature = "mock")]
+            mock_commands::validate_nexus,
+            #[cfg(feature = "mock")]
+            mock_commands::get_nexus_graph,
+            #[cfg(feature = "mock")]
+            mock_commands::memory_ingest_file,
+            #[cfg(feature = "mock")]
+            mock_commands::import_file,
+            #[cfg(feature = "mock")]
+            mock_commands::upload_and_process_file,
+            #[cfg(feature = "mock")]
+            mock_commands::get_all_files,
+            #[cfg(feature = "mock")]
+            mock_commands::get_files_by_category,
+            #[cfg(feature = "mock")]
+            mock_commands::cognitive_analyze,
+            #[cfg(feature = "mock")]
+            mock_commands::cognitive_check_coherence,
+            #[cfg(feature = "mock")]
+            mock_commands::cognitive_integrate,
+            #[cfg(feature = "mock")]
+            mock_commands::cognitive_get_status,
+            #[cfg(feature = "mock")]
+            mock_commands::cognitive_optimize,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
