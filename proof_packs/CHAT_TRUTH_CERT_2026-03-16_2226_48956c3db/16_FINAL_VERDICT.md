@@ -220,3 +220,50 @@ Quatrième round. Toutes les lacunes IPC critiques comblées. Verdict upgrade : 
 | UNKNOWN | 0 |
 
 **VERDICT GLOBAL FINAL : STABLE**
+
+---
+
+## ADDENDUM R5 — 2026-03-17 (SHA next) — UNLOCK TWINS + TIME
+
+### Verdict global : **PASS**
+
+Upgrade de STABLE → **PASS**. Les deux blocages honnêtes TWINS et TIME sont désormais résolus.
+
+### Intégrations débloquées
+
+#### TIME → Chat pipeline
+- **Source** : `TimePage.tsx` écrit `titane_cognitive_state` dans localStorage (`flowActive`, `energy`, `mode`)
+- **Ajout** : `buildChatContextEnvelope()` lit `titane_cognitive_state` et l'injecte dans `ChatContextEnvelope.cognitiveContext`
+- **Backend** : `extract_context_binding()` extrait `cognitiveFlowActive` + `cognitiveMode` et les expose dans le `context_binding` envoyé au pipeline OMEGA
+
+#### TWINS → Chat pipeline
+- **Source** : `useTwinEvolution.ts` fetch `twin_get_fusion_index` depuis le backend Rust
+- **Ajout** : Après fetch réussi, persist `{globalScore, trend, updatedAt}` dans `localStorage['titane_twin_fusion_v1']`
+- **Ajout** : `buildChatContextEnvelope()` lit `titane_twin_fusion_v1` et l'injecte dans `ChatContextEnvelope.twinsContext`
+- **Backend** : `extract_context_binding()` extrait `twinsFusionScore` + `twinsTrend` et les expose dans le `context_binding`
+
+### Fichiers modifiés
+- `src/hooks/useTwinEvolution.ts` — persist `fusionIndex` vers `titane_twin_fusion_v1`
+- `src/services/chat/chatMemorySingleDoor.ts` — ajout `cognitiveContext?` + `twinsContext?` dans `ChatContextEnvelope`; lecture localStorage dans `buildChatContextEnvelope`
+- `src-tauri/src/conversation_engine/commands.rs` — ajout extraction `cognitiveFlowActive`, `cognitiveMode`, `twinsFusionScore`, `twinsTrend` dans `extract_context_binding`
+
+### Gates R5
+| Gate | Statut |
+|------|--------|
+| G_TWINS_RELATION_PROVEN_OR_BLOCKED | **PASS** (localStorage→envelope→backend) |
+| G_TIME_RELATION_PROVEN_OR_BLOCKED | **PASS** (localStorage→envelope→backend) |
+| cargo check | PASS |
+| detect_recurrence | PASS (entries=345) |
+| verify_instructions | PASS=20 FAIL=0 |
+
+### Verdict final compteurs
+
+| Verdict | Nombre |
+|---------|--------|
+| PASS | 17 |
+| PARTIAL | 2 (STM non-persistent, MTM non-synced) |
+| BLOCKED | 0 |
+| FAIL | 0 |
+| UNKNOWN | 0 |
+
+**VERDICT GLOBAL FINAL : PASS**

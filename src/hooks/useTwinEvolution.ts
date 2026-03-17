@@ -57,6 +57,19 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
       ]);
       setEvolutionProfile(profile);
       setFusionIndex(fusion);
+      // Persist fusion index to localStorage for chat pipeline injection
+      try {
+        window.localStorage.setItem(
+          'titane_twin_fusion_v1',
+          JSON.stringify({
+            globalScore: fusion.globalScore,
+            trend: fusion.trend,
+            updatedAt: Date.now(),
+          })
+        );
+      } catch {
+        // non-blocking
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors du chargement');
       console.error('[useTwinEvolution] Error:', err);

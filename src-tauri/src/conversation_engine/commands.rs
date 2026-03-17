@@ -108,6 +108,8 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
     let module_context = context_envelope.and_then(|value| value.get("moduleContext"));
     let route_context = context_envelope.and_then(|value| value.get("routeContext"));
     let continuity = context_envelope.and_then(|value| value.get("continuity"));
+    let cognitive = context_envelope.and_then(|value| value.get("cognitiveContext"));
+    let twins = context_envelope.and_then(|value| value.get("twinsContext"));
 
     serde_json::json!({
         "moduleId": module_context
@@ -130,6 +132,24 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
             .and_then(|value| value.get("sequence"))
             .and_then(serde_json::Value::as_u64)
             .unwrap_or(0),
+        // TIME: cognitive flow state
+        "cognitiveFlowActive": cognitive
+            .and_then(|value| value.get("flowActive"))
+            .and_then(serde_json::Value::as_bool)
+            .unwrap_or(false),
+        "cognitiveMode": cognitive
+            .and_then(|value| value.get("mode"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("normal"),
+        // TWINS: numeric fusion alignment
+        "twinsFusionScore": twins
+            .and_then(|value| value.get("globalScore"))
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(0.0),
+        "twinsTrend": twins
+            .and_then(|value| value.get("trend"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
     })
 }
 
