@@ -2464,6 +2464,18 @@
             },
             {
               "command": "generate_response"
+            },
+            {
+              "command": "delete_state"
+            },
+            {
+              "command": "ping"
+            },
+            {
+              "command": "set_state"
+            },
+            {
+              "command": "system_get_status"
             }
           ]
         },
