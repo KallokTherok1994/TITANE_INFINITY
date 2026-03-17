@@ -16,13 +16,11 @@ import { useAudio } from './hooks/useAudio';
 import { AudioDiagnosticsPanel } from '@/components/audio';
 import type { TTSEngine, VoiceProfile } from './types';
 import { tauriClient } from '@/lib/tauriClient';
-
-interface TitaneVoiceProfileOption {
-  id: string;
-  name: string;
-  description: string;
-  language: string;
-}
+import {
+  buildTtsSettingsFromTitaneProfile,
+  normalizeTitaneVoiceProfiles,
+  type TitaneVoiceProfileOption,
+} from './titaneVoiceProfiles';
 
 // ─────────────────────────────────────────────────────────────────
 //  Voice Card Component
@@ -270,19 +268,11 @@ export const AudioCenterPage: React.FC = () => {
     const loadTitaneVoiceProfiles = async () => {
       try {
         const rawProfiles = (await tauriClient.identityListVoiceProfiles()) as unknown;
-        if (!Array.isArray(rawProfiles) || cancelled) {
+        if (cancelled) {
           return;
         }
 
-        const normalizedProfiles = rawProfiles
-          .filter((profile): profile is Record<string, unknown> => typeof profile === 'object' && profile !== null)
-          .map(profile => ({
-            id: String(profile.id ?? ''),
-            name: String(profile.name ?? 'Profil vocal TITANE'),
-            description: String(profile.description ?? 'Profil vocal synchronisé avec l\'identité TITANE.'),
-            language: String(profile.language ?? 'fr-FR'),
-          }))
-          .filter(profile => profile.id.length > 0);
+        const normalizedProfiles = normalizeTitaneVoiceProfiles(rawProfiles);
 
         if (!cancelled) {
           setTitaneVoiceProfiles(normalizedProfiles);
@@ -730,11 +720,21 @@ export const AudioCenterPage: React.FC = () => {
                 <select
                   data-testid="select-audio-voice-profile"
                   value={config.tts.voiceProfileId ?? ''}
-                  onChange={e =>
-                    updateTTSSettings({
-                      voiceProfileId: e.target.value || undefined,
-                    })
-                  }
+                  onChange={e => {
+                    const selectedProfileId = e.target.value;
+                    const selectedProfile = titaneVoiceProfiles.find(
+                      profile => profile.id === selectedProfileId
+                    );
+
+                    if (!selectedProfile) {
+                      void updateTTSSettings({ voiceProfileId: undefined });
+                      return;
+                    }
+
+                    void updateTTSSettings(
+                      buildTtsSettingsFromTitaneProfile(selectedProfile, config.tts)
+                    );
+                  }}
                   className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
                            text-white focus:border-cyan-500 focus:outline-none"
                 >
