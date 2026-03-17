@@ -1,3 +1,5 @@
+> ⚠️ **LEGACY** — Ce guide est obsolète. Voir le guide canonique : [docs/user/fr/demarrage-rapide.md](./fr/demarrage-rapide.md) (FR) | [docs/user/en/quick-start.md](./en/quick-start.md) (EN)
+
 # 🚀 Guide de Démarrage Rapide — TITANE∞
 
 Apprenez à utiliser TITANE∞ en 5 minutes.
