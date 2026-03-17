@@ -157,10 +157,18 @@ export const engine = {
 export const system = {
   /**
    * Récupérer l'état complet du système (tous modules)
+   * [FIX-006] Parallel engine calls — get_system_state only returns HeliosState.
    */
   async getFullState(): Promise<SystemState> {
-    // @fix CHAIN_BROKEN: 'get_full_system_state' not registered; maps to 'get_system_state' (state_bridge_commands, main.rs:1409)
-    return safeInvoke<SystemState>('get_system_state');
+    const [helios, nexus, harmonia, sentinel, memory, evolution] = await Promise.all([
+      safeInvoke<HeliosState>('get_system_state'),
+      safeInvoke<NexusEngineState>('engine_get_nexus_state'),
+      safeInvoke<HarmoniaEngineState>('engine_get_harmonia_state'),
+      safeInvoke<SentinelEngineState>('engine_get_sentinel_state'),
+      safeInvoke<MemoryState>('memory_get_state').catch(() => null as unknown as MemoryState),
+      safeInvoke<EvolutionState>('get_evolution_state').catch(() => null as unknown as EvolutionState),
+    ]);
+    return { helios, nexus, harmonia, sentinel, memory, evolution, timestamp: Date.now() };
   },
 
   /**
@@ -198,35 +206,49 @@ export const system = {
 export const composite = {
   /**
    * Récupérer un dashboard complet (optimisé, 1 seul appel)
+   * [FIX-006] get_system_state only returns HeliosState; parallel engine calls assembled.
    */
   async getDashboard(): Promise<{
     system: SystemState;
     health: HealthStatus;
     evolution: EvolutionState;
   }> {
-    // Paralléliser les appels indépendants
-    const [system, health, evolution] = await Promise.all([
-      safeInvoke<SystemState>('get_system_state'), // @fix CHAIN_BROKEN: was 'get_full_system_state'
+    const [helios, nexus, harmonia, sentinel, health, evolution] = await Promise.all([
+      safeInvoke<HeliosState>('get_system_state'),
+      safeInvoke<NexusEngineState>('engine_get_nexus_state'),
+      safeInvoke<HarmoniaEngineState>('engine_get_harmonia_state'),
+      safeInvoke<SentinelEngineState>('engine_get_sentinel_state'),
       safeInvoke<HealthStatus>('get_system_health'),
       safeInvoke<EvolutionState>('get_evolution_state'),
     ]);
-
+    const system: SystemState = {
+      helios, nexus, harmonia, sentinel,
+      memory: null as unknown as MemoryState,
+      evolution,
+      timestamp: Date.now(),
+    };
     return { system, health, evolution };
   },
 
   /**
    * Créer un snapshot avec événement timeline (transaction atomique)
+   * [FIX-006] Assemble real engine states instead of casting HeliosState as SystemState.
    */
   async captureSnapshot(description: string): Promise<Snapshot> {
-    const state = await safeInvoke<SystemState>('get_system_state'); // @fix CHAIN_BROKEN: was 'get_full_system_state'
+    const [helios, nexus, harmonia, sentinel] = await Promise.all([
+      safeInvoke<HeliosState>('get_system_state'),
+      safeInvoke<NexusEngineState>('engine_get_nexus_state'),
+      safeInvoke<HarmoniaEngineState>('engine_get_harmonia_state'),
+      safeInvoke<SentinelEngineState>('engine_get_sentinel_state'),
+    ]);
 
     const snapshot: Snapshot = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      helios: state.helios,
-      nexus: state.nexus,
-      harmonia: state.harmonia,
-      sentinel: state.sentinel,
+      helios,
+      nexus,
+      harmonia,
+      sentinel,
     };
 
     await safeInvoke<void>('write_snapshot', { snapshot });

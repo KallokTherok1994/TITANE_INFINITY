@@ -140,9 +140,9 @@ export interface Snapshot {
   id: string;
   timestamp: number;
   helios: HeliosState;
-  nexus: NexusState;
-  harmonia: HarmoniaState;
-  sentinel: SentinelState;
+  nexus: NexusEngineState;     // [FIX-006] was NexusState
+  harmonia: HarmoniaEngineState; // [FIX-006] was HarmoniaState
+  sentinel: SentinelEngineState; // [FIX-006] was SentinelState
 }
 
 export interface LogEntry {
@@ -226,9 +226,9 @@ export interface EvolutionHistory {
 
 export interface SystemState {
   helios: HeliosState;
-  nexus: NexusState;
-  harmonia: HarmoniaState;
-  sentinel: SentinelState;
+  nexus: NexusEngineState;     // [FIX-006] was NexusState — aligned with engine_get_nexus_state
+  harmonia: HarmoniaEngineState; // [FIX-006] was HarmoniaState — aligned with engine_get_harmonia_state
+  sentinel: SentinelEngineState; // [FIX-006] was SentinelState — aligned with engine_get_sentinel_state
   memory: MemoryState;
   evolution: EvolutionState;
   timestamp: number;
