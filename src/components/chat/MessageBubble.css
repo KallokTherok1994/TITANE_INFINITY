@@ -671,6 +671,16 @@
   color: rgba(203, 213, 225, 0.82);
 }
 
+.message-bubble-audio-status-loading {
+  color: rgba(148, 163, 184, 0.85);
+  animation: tts-loading-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes tts-loading-pulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
+}
+
 .message-bubble-audio-status-speaking {
   color: rgba(103, 232, 249, 0.95);
 }
