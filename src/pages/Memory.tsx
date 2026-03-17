@@ -24,7 +24,6 @@ export const Memory = () => {
   const { entries, loading, loadEntries, saveEntry, clearMemory } = useMemoryCore();
   const [newEntry, setNewEntry] = useState('');
 
-<<<<<<< Updated upstream
   // IMPROVE-006: Use titane_active_conversation_id (canonical, from conversationStorage)
   // with fallback to omega-chat-conversation-id (ChatPage key).
   const conversationId =
@@ -32,12 +31,6 @@ export const Memory = () => {
       ? (window.localStorage.getItem('titane_active_conversation_id') ??
          window.localStorage.getItem('omega-chat-conversation-id') ??
          null)
-=======
-  // PATCH-014: LTM conversation history in Memory page
-  const conversationId =
-    typeof window !== 'undefined'
-      ? (window.localStorage.getItem('omega-chat-conversation-id') ?? null)
->>>>>>> Stashed changes
       : null;
   const { history: ltmHistory, historyCount: ltmCount } = useLTMContext(conversationId);
 
