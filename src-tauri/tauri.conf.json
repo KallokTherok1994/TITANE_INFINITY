@@ -2482,6 +2482,12 @@
             },
             {
               "command": "memory_debug_scan"
+            },
+            {
+              "command": "singularity_get_state"
+            },
+            {
+              "command": "get_evolution_state"
             }
           ]
         },
