@@ -563,6 +563,22 @@ pub async fn conversation_generate(
     };
 
     // Créer la requête OMEGA
+    // Inject STM (immediate context) from MultiLayerMemoryManager
+    let stm_context_block: String = {
+        let mlm = engine.multilayer_memory.read().await;
+        let recent = mlm.get_immediate_context();
+        if recent.is_empty() {
+            String::new()
+        } else {
+            let lines: Vec<String> = recent.iter().rev().map(|(u, a)| {
+                let u_trunc = if u.len() > 120 { format!("{}…", &u[..120]) } else { u.clone() };
+                let a_trunc = if a.len() > 120 { format!("{}…", &a[..120]) } else { a.clone() };
+                format!("[User]: {u_trunc}\n[TITANE]: {a_trunc}")
+            }).collect();
+            format!("\n\n## STM_RECENT_TURNS\n{}", lines.join("\n"))
+        }
+    };
+
     // Inject TIME + TWINS context into system_prompt when available
     let cognitive_flow = context_binding.get("cognitiveFlowActive").and_then(|v| v.as_bool()).unwrap_or(false);
     let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
@@ -572,26 +588,27 @@ pub async fn conversation_generate(
     let has_time_context = cognitive_flow || cognitive_mode != "normal";
     let has_twins_context = twins_score > 0.0 && twins_trend != "unknown";
 
-    let system_prompt = if has_time_context || has_twins_context {
-        let mut ctx_lines: Vec<String> = Vec::new();
-        if has_time_context {
-            ctx_lines.push(format!(
-                "TIME_CONTEXT: flow_active={cognitive_flow}, mode={cognitive_mode}"
-            ));
+    let system_prompt = {
+        let base = system_prompt.unwrap_or_default();
+        let mut parts: Vec<String> = Vec::new();
+        if !base.is_empty() { parts.push(base); }
+        if !stm_context_block.is_empty() { parts.push(stm_context_block); }
+        if has_time_context || has_twins_context {
+            let mut ctx_lines: Vec<String> = Vec::new();
+            if has_time_context {
+                ctx_lines.push(format!(
+                    "TIME_CONTEXT: flow_active={cognitive_flow}, mode={cognitive_mode}"
+                ));
+            }
+            if has_twins_context {
+                ctx_lines.push(format!(
+                    "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}",
+                    twins_score
+                ));
+            }
+            parts.push(format!("[{}]", ctx_lines.join(" | ")));
         }
-        if has_twins_context {
-            ctx_lines.push(format!(
-                "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}",
-                twins_score
-            ));
-        }
-        let ctx_block = ctx_lines.join(" | ");
-        match system_prompt {
-            Some(ref s) if !s.is_empty() => Some(format!("{}\n\n[{ctx_block}]", s)),
-            _ => Some(format!("[{ctx_block}]")),
-        }
-    } else {
-        system_prompt
+        if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
     };
 
     let request = ConversationRequest {

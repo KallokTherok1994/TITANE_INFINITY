@@ -80,6 +80,10 @@ mod persistent_memory_v19 {
     include!("commands/persistent_memory.rs");
 }
 
+mod memory_system_commands {
+    include!("commands/memory_system_commands.rs");
+}
+
 // Orchestration Center commands (OPUS #5/6/7)
 mod orchestration_center_commands {
     include!("commands/orchestration_center.rs");
@@ -1665,6 +1669,11 @@ fn main() {
             api::memory_api::add_timeline_event,
             api::memory_api::memory_get_active_projects,
             api::memory_api::memory_get_recent_decisions,
+            api::memory_api::memory_save_chat_interaction,
+            api::memory_api::memory_get_timeline,
+            api::memory_api::memory_get_active_rituals,
+            api::memory_api::memory_debug_scan,
+            memory_system_commands::memory_save_entry,
             // ═══════════════════════════════════════════════════════════════
             // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
             // ═══════════════════════════════════════════════════════════════
