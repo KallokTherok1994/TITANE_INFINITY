@@ -14,7 +14,7 @@ import {
 import { uiPages } from './page-objects/uiPages.po.js';
 
 const CHAT_PROMPT =
-  'Réponds en 3 phrases simples sur respiration, alimentation et sommeil pour activer les contrôles audio.';
+  'Réponds en 8 phrases simples, calmes et claires sur respiration, alimentation et sommeil pour garder la lecture audio active assez longtemps et activer tous les contrôles TTS.';
 
 const ARTIFACTS_DIR = process.env.TITANE_E2E_ARTIFACTS_DIR
   ? path.resolve(process.env.TITANE_E2E_ARTIFACTS_DIR)
@@ -85,6 +85,24 @@ async function waitForAnyResultText(timeoutMs = 20000) {
       timeoutMsg: 'No audio test result text detected within timeout',
     }
   );
+}
+
+async function waitForPauseButton(lastAssistant, timeoutMs = 8000) {
+  const pauseButton = await lastAssistant.$('[data-testid="message-tts-pause"]');
+
+  try {
+    await browser.waitUntil(
+      async () => pauseButton.isExisting() && (await pauseButton.isDisplayed()),
+      {
+        timeout: timeoutMs,
+        interval: 250,
+        timeoutMsg: 'Pause button not visible within bounded wait window',
+      }
+    );
+    return pauseButton;
+  } catch {
+    return null;
+  }
 }
 
 describe('Audio/TTS runtime controls (desktop)', () => {
@@ -170,8 +188,8 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       'TTS status text should be populated after read action'
     );
 
-    const pauseButton = await lastAssistant.$('[data-testid="message-tts-pause"]');
-    if ((await pauseButton.isExisting()) && (await pauseButton.isDisplayed())) {
+    const pauseButton = await waitForPauseButton(lastAssistant, 8000);
+    if (pauseButton) {
       await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), pauseButton);
       await browser.pause(300);
       await browser.execute(el => el.click(), pauseButton);
@@ -190,6 +208,8 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       await browser.pause(300);
       await browser.execute(el => el.click(), resumeButton);
       METRICS.pauseResumePath = 'executed';
+    } else {
+      METRICS.pauseResumePath = 'completed-too-fast';
     }
 
     const stopButton = await lastAssistant.$('[data-testid="message-tts-stop"]');
