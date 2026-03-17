@@ -156,28 +156,32 @@ export const system = {
    * Récupérer l'état complet du système (tous modules)
    */
   async getFullState(): Promise<SystemState> {
-    return safeInvoke<SystemState>('get_full_system_state');
+    // @fix CHAIN_BROKEN: 'get_full_system_state' not registered; maps to 'get_system_state' (state_bridge_commands, main.rs:1409)
+    return safeInvoke<SystemState>('get_system_state');
   },
 
   /**
    * Récupérer l'état du module Nexus (cohérence)
    */
   async getNexusState(): Promise<NexusState> {
-    return safeInvoke<NexusState>('get_nexus_state');
+    // @fix CHAIN_BROKEN: 'get_nexus_state' not registered; maps to 'engine_get_nexus_state' (legacy_ai_bridge, main.rs:2077)
+    return safeInvoke<NexusState>('engine_get_nexus_state');
   },
 
   /**
    * Récupérer l'état du module Harmonia (équilibrage)
    */
   async getHarmoniaState(): Promise<HarmoniaState> {
-    return safeInvoke<HarmoniaState>('get_harmonia_state');
+    // @fix CHAIN_BROKEN: 'get_harmonia_state' not registered; maps to 'engine_get_harmonia_state' (legacy_ai_bridge, main.rs:2078)
+    return safeInvoke<HarmoniaState>('engine_get_harmonia_state');
   },
 
   /**
    * Récupérer l'état du module Sentinel (anomalies)
    */
   async getSentinelState(): Promise<SentinelState> {
-    return safeInvoke<SentinelState>('get_sentinel_state');
+    // @fix CHAIN_BROKEN: 'get_sentinel_state' not registered; maps to 'engine_get_sentinel_state' (legacy_ai_bridge, main.rs:2079)
+    return safeInvoke<SentinelState>('engine_get_sentinel_state');
   },
 };
 
@@ -196,7 +200,7 @@ export const composite = {
   }> {
     // Paralléliser les appels indépendants
     const [system, health, evolution] = await Promise.all([
-      safeInvoke<SystemState>('get_full_system_state'),
+      safeInvoke<SystemState>('get_system_state'), // @fix CHAIN_BROKEN: was 'get_full_system_state'
       safeInvoke<HealthStatus>('get_system_health'),
       safeInvoke<EvolutionState>('get_evolution_state'),
     ]);
@@ -208,7 +212,7 @@ export const composite = {
    * Créer un snapshot avec événement timeline (transaction atomique)
    */
   async captureSnapshot(description: string): Promise<Snapshot> {
-    const state = await safeInvoke<SystemState>('get_full_system_state');
+    const state = await safeInvoke<SystemState>('get_system_state'); // @fix CHAIN_BROKEN: was 'get_full_system_state'
 
     const snapshot: Snapshot = {
       id: crypto.randomUUID(),

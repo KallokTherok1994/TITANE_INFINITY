@@ -415,5 +415,9 @@ pub mod error_handling;
 pub fn run() {
     tauri::Builder::default()
         .run(tauri::generate_context!())
-        .expect("error while running tauri application");
+        .unwrap_or_else(|e| {
+            // I10: explicit error — no .expect() in production
+            eprintln!("❌ TITANE∞ run error: {e:?}");
+            std::process::exit(1);
+        });
 }
