@@ -2,87 +2,53 @@
  * ═══════════════════════════════════════════════════════════════
  * TITANE∞ Kernel Visuel — SentinelAlerts
  * Visualisation des alertes et anomalies
+ * [FIX-005] Adapted to SentinelEngineState (engine_get_sentinel_state)
+ * Fields: health, alert_count, active_monitors, protection_level, last_check_ms, initialized
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import {
   useSentinelSnapshot,
   useFetchSentinel,
 } from '../../stores/systemStore.selectors';
 import { Card } from '../../ui/Card';
 import { Badge } from '../../ui/Badge';
-import type { Severity, AlertCategory } from '../../services/tauri/backend-v17.2.types';
 
 export function SentinelAlerts() {
   const { sentinel, loading, error } = useSentinelSnapshot();
   const fetchSentinel = useFetchSentinel();
-  const [filter, setFilter] = useState<Severity | 'all'>('all');
 
   useEffect(() => {
     fetchSentinel();
-
-    const interval = setInterval(() => {
-      fetchSentinel();
-    }, 3000); // Update every 3s
-
+    const interval = setInterval(() => { fetchSentinel(); }, 3000);
     return () => clearInterval(interval);
   }, [fetchSentinel]);
 
   if (loading && !sentinel) {
     return <Card className="p-8 text-center">Chargement...</Card>;
   }
-
   if (error) {
     return <Card className="p-8 text-center text-red-500">Erreur: {error}</Card>;
   }
-
   if (!sentinel) {
     return null;
   }
 
-  const getSeverityColor = (severity: Severity): string => {
-    switch (severity) {
-      case 'Low':
-        return 'blue';
-      case 'Medium':
-        return 'yellow';
-      case 'High':
-        return 'orange';
-      case 'Critical':
-        return 'red';
-      default:
-        return 'gray';
-    }
-  };
+  // [FIX-005] protection_level is u8 (0-255) — scale to 0-100%
+  const protectionPct = Math.round((sentinel.protection_level / 255) * 100);
 
-  const getCategoryIcon = (category: AlertCategory): string => {
-    switch (category) {
-      case 'Performance':
-        return '⚡';
-      case 'Security':
-        return '🛡️';
-      case 'Stability':
-        return '⚖️';
-      case 'Resource':
-        return '💾';
-      default:
-        return '❓';
-    }
-  };
-
-  const getIntegrityColor = (score: number): string => {
-    if (score >= 90) return 'green';
-    if (score >= 70) return 'yellow';
+  const getProtectionColor = (pct: number): string => {
+    if (pct >= 90) return 'green';
+    if (pct >= 70) return 'yellow';
     return 'red';
   };
 
-  const filteredAlerts =
-    filter === 'all'
-      ? sentinel.alerts
-      : sentinel.alerts.filter(alert => alert.severity === filter);
-
-  const unresolvedCount = sentinel.alerts.filter(a => !a.resolved).length;
+  const getHealthColor = (health: string): string => {
+    if (health === 'Ready') return 'green';
+    if (health === 'Degraded') return 'yellow';
+    return 'red';
+  };
 
   return (
     <div className="space-y-4">
@@ -90,140 +56,69 @@ export function SentinelAlerts() {
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Sentinel — Détection d&apos;Anomalies</h2>
         <div className="flex items-center gap-3">
-          <Badge color={unresolvedCount > 0 ? 'red' : 'green'} size="lg">
-            {unresolvedCount} non résolues
+          <Badge color={sentinel.alert_count > 0 ? 'red' : 'green'} size="lg">
+            {sentinel.alert_count} alerte{sentinel.alert_count !== 1 ? 's' : ''}
           </Badge>
-          <Badge color={getIntegrityColor(sentinel.integrity_score)} size="lg">
-            Intégrité: {sentinel.integrity_score.toFixed(0)}%
+          <Badge color={getProtectionColor(protectionPct)} size="lg">
+            Protection: {protectionPct}%
           </Badge>
         </div>
       </div>
 
-      {/* Integrity Score */}
+      {/* Protection Score */}
       <Card className="p-6">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-gray-400">Score d&apos;Intégrité</span>
-          <span className="text-lg font-semibold">
-            {sentinel.integrity_score.toFixed(1)}%
-          </span>
+          <span className="text-sm text-gray-400">Niveau de Protection</span>
+          <span className="text-lg font-semibold">{protectionPct}%</span>
         </div>
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
-              sentinel.integrity_score >= 90
-                ? 'bg-green-500'
-                : sentinel.integrity_score >= 70
-                  ? 'bg-yellow-500'
-                  : 'bg-red-500'
+              protectionPct >= 90 ? 'bg-green-500' : protectionPct >= 70 ? 'bg-yellow-500' : 'bg-red-500'
             }`}
-            style={{ width: `${sentinel.integrity_score}%` }}
+            style={{ width: `${protectionPct}%` }}
           />
         </div>
       </Card>
 
-      {/* Severity Filter */}
-      <div className="flex gap-2 flex-wrap">
-        {(['all', 'Low', 'Medium', 'High', 'Critical'] as const).map(sev => (
-          <button
-            key={sev}
-            onClick={() => setFilter(sev)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-              filter === sev
-                ? 'bg-blue-600 text-white'
-                : 'bg-gray-800 text-gray-300 hover:bg-gray-700'
-            }`}
-          >
-            {sev === 'all' ? 'Toutes' : sev}
-            {sev !== 'all' && (
-              <span className="ml-2 text-xs opacity-70">
-                ({sentinel.alerts.filter(a => a.severity === sev).length})
-              </span>
-            )}
-          </button>
-        ))}
-      </div>
-
-      {/* Alerts List */}
-      <div className="space-y-3">
-        {filteredAlerts.length === 0 ? (
-          <Card className="p-8 text-center text-gray-400">
-            Aucune alerte {filter !== 'all' ? `de niveau ${filter}` : ''}
-          </Card>
-        ) : (
-          filteredAlerts.map(alert => (
-            <Card
-              key={alert.id}
-              className={`p-4 ${alert.resolved ? 'opacity-50' : ''} hover:bg-gray-800 transition-colors`}
-            >
-              <div className="flex items-start gap-4">
-                <div className="text-2xl">{getCategoryIcon(alert.category)}</div>
-
-                <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-2">
-                    <Badge color={getSeverityColor(alert.severity)} size="sm">
-                      {alert.severity}
-                    </Badge>
-                    <span className="text-xs text-gray-500">{alert.category}</span>
-                    {alert.resolved && (
-                      <Badge color="green" size="sm">
-                        Résolu
-                      </Badge>
-                    )}
-                  </div>
-
-                  <p className="text-sm text-gray-300">{alert.message}</p>
-
-                  <div className="text-xs text-gray-500 mt-2">
-                    {new Date(alert.timestamp).toLocaleString()}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          ))
-        )}
-      </div>
-
-      {/* Stats */}
+      {/* Engine Status */}
       <Card className="p-6">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <div className="flex items-center justify-between mb-4">
+          <span className="font-semibold">État moteur Sentinel</span>
+          <Badge color={getHealthColor(sentinel.health)} size="sm">
+            {sentinel.health}
+          </Badge>
+        </div>
+        <div className="grid grid-cols-2 gap-4 text-center">
           <div>
-            <div className="text-2xl font-bold text-blue-500">
-              {sentinel.alerts.filter(a => a.severity === 'Low').length}
-            </div>
-            <div className="text-xs text-gray-400">Low</div>
+            <div className="text-2xl font-bold text-red-500">{sentinel.alert_count}</div>
+            <div className="text-xs text-gray-400">Alertes détectées</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-yellow-500">
-              {sentinel.alerts.filter(a => a.severity === 'Medium').length}
-            </div>
-            <div className="text-xs text-gray-400">Medium</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-orange-500">
-              {sentinel.alerts.filter(a => a.severity === 'High').length}
-            </div>
-            <div className="text-xs text-gray-400">High</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-red-500">
-              {sentinel.alerts.filter(a => a.severity === 'Critical').length}
-            </div>
-            <div className="text-xs text-gray-400">Critical</div>
+            <div className="text-2xl font-bold text-blue-500">{sentinel.active_monitors}</div>
+            <div className="text-xs text-gray-400">Moniteurs actifs</div>
           </div>
         </div>
       </Card>
 
-      {/* Scans Info */}
+      {/* Status */}
       <Card className="p-4 bg-gray-800">
         <div className="flex items-center justify-between text-sm">
-          <span className="text-gray-400">Scans effectués:</span>
-          <span className="font-semibold">{sentinel.scans_performed}</span>
+          <span className="text-gray-400">Moniteurs actifs:</span>
+          <span className="font-semibold">{sentinel.active_monitors}</span>
+        </div>
+        <div className="flex items-center justify-between text-sm mt-2">
+          <span className="text-gray-400">Initialisé:</span>
+          <span className="font-semibold">{sentinel.initialized ? '✅ Oui' : '⏳ Non'}</span>
         </div>
       </Card>
 
       {/* Last Update */}
       <div className="text-xs text-gray-500 text-center">
-        Dernière mise à jour: {new Date(sentinel.timestamp).toLocaleTimeString()}
+        Dernière vérification:{' '}
+        {sentinel.last_check_ms > 0
+          ? new Date(sentinel.last_check_ms).toLocaleTimeString()
+          : 'Non encore effectuée'}
       </div>
     </div>
   );

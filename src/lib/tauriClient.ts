@@ -2783,6 +2783,34 @@ class TauriClient {
     );
   }
 
+  async stopSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.STOP_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async isSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IS_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async pauseSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.PAUSE_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
+  async resumeSpeaking(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.RESUME_SPEAKING,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async setChatEngineConfig(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.SET_CHAT_ENGINE_CONFIG,

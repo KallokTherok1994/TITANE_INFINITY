@@ -231,6 +231,18 @@ mod audio {
             Ok(false)
         }
 
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn pause_speaking() -> Result<(), String> {
+            Ok(())
+        }
+
+        #[cfg(feature = "mock")]
+        #[tauri::command]
+        pub async fn resume_speaking() -> Result<(), String> {
+            Ok(())
+        }
+
         // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-002: mock stubs for transcribe_audio + is_recording
         // Added to generate_handler! in c59e9b5 without corresponding mock stubs → BUILD_RISK
         #[cfg(feature = "mock")]
@@ -1740,6 +1752,8 @@ fn main() {
             audio::commands::tts_speak,
             audio::commands::tts_stop,
             audio::commands::test_tts,
+            audio::commands::pause_speaking,
+            audio::commands::resume_speaking,
             // Microphone Commands (1)
             audio::commands::test_microphone,
             // Device Detection (2)
@@ -2111,6 +2125,8 @@ fn main() {
             // but were absent from generate_handler! → IPC error on any frontend invoke
             audio::commands::stop_speaking,
             audio::commands::is_speaking,
+            audio::commands::pause_speaking,
+            audio::commands::resume_speaking,
             // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-003: register get_recording_status (Q-002)
             // Called in audioSelfHeal.ts, handler exists, now allowlisted in audio_tts.json
             audio::commands::get_recording_status,

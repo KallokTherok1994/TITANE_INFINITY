@@ -309,6 +309,8 @@ pub fn get_allowed_commands() -> HashSet<&'static str> {
     commands.insert("speak");
     commands.insert("stop_speaking");
     commands.insert("is_speaking");
+    commands.insert("pause_speaking");
+    commands.insert("resume_speaking");
     commands.insert("start_recording");
     commands.insert("stop_recording");
     commands.insert("transcribe_audio");

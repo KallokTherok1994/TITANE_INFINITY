@@ -516,6 +516,12 @@
               "command": "stop_speaking"
             },
             {
+              "command": "pause_speaking"
+            },
+            {
+              "command": "resume_speaking"
+            },
+            {
               "command": "restore_snapshot"
             },
             {
@@ -694,6 +700,12 @@
             },
             {
               "command": "is_speaking"
+            },
+            {
+              "command": "pause_speaking"
+            },
+            {
+              "command": "resume_speaking"
             },
             {
               "command": "get_audio_output_devices"
