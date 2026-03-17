@@ -3,6 +3,9 @@
  * ═══════════════════════════════════
  *
  * Commandes Tauri pour monitoring CPU et throttling
+ * STATUS: PARTIAL — commands defined but NOT registered in main.rs generate_handler[].
+ * To activate: add get_harmonia_status, should_throttle, get_recommended_watch_delay,
+ * get_harmonia_metrics to the generate_handler![] list in main.rs.
  */
 use crate::harmonia_engine::{
     get_cpu_status, get_watch_delay, should_throttle_watchers, CpuStatus,
