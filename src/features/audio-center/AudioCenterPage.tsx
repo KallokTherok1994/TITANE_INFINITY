@@ -11,10 +11,18 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAudio } from './hooks/useAudio';
 import { AudioDiagnosticsPanel } from '@/components/audio';
 import type { TTSEngine, VoiceProfile } from './types';
+import { tauriClient } from '@/lib/tauriClient';
+
+interface TitaneVoiceProfileOption {
+  id: string;
+  name: string;
+  description: string;
+  language: string;
+}
 
 // ─────────────────────────────────────────────────────────────────
 //  Voice Card Component
@@ -252,6 +260,47 @@ export const AudioCenterPage: React.FC = () => {
     type: 'success' | 'error';
     text: string;
   } | null>(null);
+  const [titaneVoiceProfiles, setTitaneVoiceProfiles] = useState<
+    TitaneVoiceProfileOption[]
+  >([]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTitaneVoiceProfiles = async () => {
+      try {
+        const rawProfiles = (await tauriClient.identityListVoiceProfiles()) as unknown;
+        if (!Array.isArray(rawProfiles) || cancelled) {
+          return;
+        }
+
+        const normalizedProfiles = rawProfiles
+          .filter((profile): profile is Record<string, unknown> => typeof profile === 'object' && profile !== null)
+          .map(profile => ({
+            id: String(profile.id ?? ''),
+            name: String(profile.name ?? 'Profil vocal TITANE'),
+            description: String(profile.description ?? 'Profil vocal synchronisé avec l\'identité TITANE.'),
+            language: String(profile.language ?? 'fr-FR'),
+          }))
+          .filter(profile => profile.id.length > 0);
+
+        if (!cancelled) {
+          setTitaneVoiceProfiles(normalizedProfiles);
+        }
+      } catch (error) {
+        console.warn('[AudioCenterPage] Impossible de charger les profils vocaux TITANE:', error);
+        if (!cancelled) {
+          setTitaneVoiceProfiles([]);
+        }
+      }
+    };
+
+    void loadTitaneVoiceProfiles();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const handleVoiceSelect = async (voice: VoiceProfile) => {
     setVoiceMessage(null);
@@ -656,6 +705,52 @@ export const AudioCenterPage: React.FC = () => {
                 <label htmlFor="autoFallback" className="text-sm text-neutral-300">
                   Fallback automatique (utiliser eSpeak si Piper échoue)
                 </label>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="autoReadAssistant"
+                  data-testid="toggle-audio-auto-read-assistant"
+                  checked={config.tts.autoReadAssistant ?? true}
+                  onChange={e =>
+                    updateTTSSettings({ autoReadAssistant: e.target.checked })
+                  }
+                  className="w-4 h-4 accent-cyan-500"
+                />
+                <label htmlFor="autoReadAssistant" className="text-sm text-neutral-300">
+                  Lecture automatique des réponses assistant quand le mode voix est actif
+                </label>
+              </div>
+
+              <div>
+                <label className="block text-sm text-neutral-300 mb-2">
+                  🎭 Profil vocal TITANE
+                </label>
+                <select
+                  data-testid="select-audio-voice-profile"
+                  value={config.tts.voiceProfileId ?? ''}
+                  onChange={e =>
+                    updateTTSSettings({
+                      voiceProfileId: e.target.value || undefined,
+                    })
+                  }
+                  className="w-full md:w-96 px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg
+                           text-white focus:border-cyan-500 focus:outline-none"
+                >
+                  <option value="">Aucun profil vocal TITANE forcé</option>
+                  {titaneVoiceProfiles.map(profile => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.name} • {profile.language}
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-neutral-500 mt-1">
+                  Le profil vocal TITANE est synchronisé avant chaque lecture desktop.
+                  {titaneVoiceProfiles.length === 0
+                    ? ' Aucun profil n\'a été exposé par le backend dans cette session.'
+                    : ' Choisissez un profil pour aligner la voix active avec l\'identité TITANE.'}
+                </p>
               </div>
 
               {/* Engine Info */}

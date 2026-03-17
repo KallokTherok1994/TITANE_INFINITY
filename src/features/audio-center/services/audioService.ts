@@ -28,6 +28,21 @@ import {
 const STORAGE_KEY = 'titane_audio_config';
 const DEVICE_CACHE_TTL = 30000; // 30 secondes
 
+export type AudioPlaybackProvider = 'tauri' | 'webspeech' | null;
+
+export interface AudioSpeakLifecycle {
+  onStart?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+  onFallback?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+  onComplete?: (provider: Exclude<AudioPlaybackProvider, null>) => void;
+}
+
+export interface AudioPlaybackRuntimeState {
+  speaking: boolean;
+  paused: boolean;
+  provider: AudioPlaybackProvider;
+  supportsPause: boolean;
+}
+
 interface DeviceCache {
   output: AudioDevice[];
   input: AudioDevice[];
@@ -39,6 +54,9 @@ class AudioService {
   private isTauri: boolean = false;
   private deviceCache: DeviceCache | null = null;
   private isSpeaking: boolean = false;
+  private isPaused: boolean = false;
+  private activeProvider: AudioPlaybackProvider = null;
+  private currentUtterance: SpeechSynthesisUtterance | null = null;
 
   constructor() {
     this.config = this.loadConfig();
@@ -100,8 +118,37 @@ class AudioService {
   async updateTTSSettings(settings: Partial<TTSSettings>): Promise<void> {
     this.config.tts = { ...this.config.tts, ...settings };
     this.saveConfig();
+    if (settings.voiceProfileId !== undefined) {
+      await this.syncVoiceIdentityProfile(settings.voiceProfileId);
+    }
     // Note: Settings are stored locally and passed to tts_speak on each call
     // No backend sync needed - Piper/espeak use settings per-call
+  }
+
+  private buildRuntimeTTSSettings(): TTSSettings & { outputDeviceId?: string } {
+    return {
+      engine: this.config.tts.engine,
+      voiceId: this.config.tts.voiceId,
+      rate: this.config.tts.rate,
+      pitch: this.config.tts.pitch,
+      volume: this.config.tts.volume,
+      language: this.config.tts.language,
+      emotionEnabled: this.config.tts.emotionEnabled,
+      autoFallback: this.config.tts.autoFallback,
+      outputDeviceId: this.config.output.deviceId || undefined,
+    };
+  }
+
+  private async syncVoiceIdentityProfile(voiceProfileId?: string): Promise<void> {
+    if (!this.isTauri || !voiceProfileId) {
+      return;
+    }
+
+    try {
+      await tauriClient.identitySetActiveVoiceProfile({ voiceProfileId });
+    } catch (error) {
+      console.warn('[AudioService] Failed to sync TITANE voice profile:', error);
+    }
   }
 
   private async isElevenLabsConfigured(): Promise<boolean> {
@@ -379,11 +426,8 @@ class AudioService {
 
     try {
       if (this.isTauri) {
-        const ttsSettings = {
-          ...this.config.tts,
-          outputDeviceId: this.config.output.deviceId || undefined,
-        };
-        await tauriClient.testTts({ text, settings: ttsSettings });
+        await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
+        await tauriClient.testTts({ text, settings: this.buildRuntimeTTSSettings() });
       } else if (this.isWebSpeechAvailable()) {
         // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
@@ -523,7 +567,7 @@ class AudioService {
   //  TTS Quick Speak
   // ─────────────────────────────────────────────────────────────────
 
-  async speak(text: string): Promise<void> {
+  async speak(text: string, lifecycle?: AudioSpeakLifecycle): Promise<void> {
     if (!text || text.trim().length === 0) {
       console.warn('[AudioService] speak() called with empty text');
       return;
@@ -532,11 +576,13 @@ class AudioService {
     // Prevent overlapping speech
     if (this.isSpeaking) {
       console.log('[AudioService] Already speaking, stopping previous speech');
-      this.stop();
+      await this.stop();
       await new Promise(resolve => setTimeout(resolve, 100));
     }
 
     this.isSpeaking = true;
+    this.isPaused = false;
+    this.activeProvider = null;
     console.log(
       '[AudioService] speak() called. Tauri mode:',
       this.isTauri,
@@ -547,18 +593,23 @@ class AudioService {
     try {
       if (this.isTauri) {
         try {
+          await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
+          this.activeProvider = 'tauri';
+          lifecycle?.onStart?.('tauri');
           console.log('[AudioService] Invoking tts_speak via Tauri...');
           await tauriClient.ttsSpeak({
             text,
-            settings: this.config.tts,
+            settings: this.buildRuntimeTTSSettings(),
           });
           console.log('[AudioService] tts_speak completed successfully');
+          lifecycle?.onComplete?.('tauri');
         } catch (error) {
           console.error('[AudioService] tts_speak error:', error);
           // Only fallback to Web Speech if it's available
-          if (this.isWebSpeechAvailable()) {
+          if (this.config.tts.autoFallback && this.isWebSpeechAvailable()) {
             console.log('[AudioService] Falling back to Web Speech API...');
-            await this.speakWithWebSpeech(text);
+            lifecycle?.onFallback?.('webspeech');
+            await this.speakWithWebSpeech(text, lifecycle);
           } else {
             console.warn(
               '[AudioService] No TTS available (Tauri failed, Web Speech not supported)'
@@ -568,13 +619,16 @@ class AudioService {
         }
       } else {
         if (this.isWebSpeechAvailable()) {
-          await this.speakWithWebSpeech(text);
+          await this.speakWithWebSpeech(text, lifecycle);
         } else {
-          console.warn('[AudioService] Web Speech API not available');
+          throw new Error('Web Speech API non disponible');
         }
       }
     } finally {
       this.isSpeaking = false;
+      this.isPaused = false;
+      this.activeProvider = null;
+      this.currentUtterance = null;
     }
   }
 
@@ -589,21 +643,31 @@ class AudioService {
     );
   }
 
-  private speakWithWebSpeech(text: string): Promise<void> {
+  private speakWithWebSpeech(
+    text: string,
+    lifecycle?: AudioSpeakLifecycle
+  ): Promise<void> {
     if (!this.isWebSpeechAvailable()) {
       return Promise.reject(new Error('Web Speech API not available'));
     }
 
     console.log('[AudioService] Using Web Speech API');
     const utterance = new SpeechSynthesisUtterance(text);
+    this.currentUtterance = utterance;
     utterance.lang = this.config.tts.language;
     utterance.rate = this.config.tts.rate;
     utterance.pitch = this.config.tts.pitch;
     utterance.volume = this.config.tts.volume * this.config.output.volume;
 
     return new Promise((resolve, reject) => {
+      utterance.onstart = () => {
+        this.activeProvider = 'webspeech';
+        this.isPaused = false;
+        lifecycle?.onStart?.('webspeech');
+      };
       utterance.onend = () => {
         console.log('[AudioService] Web Speech finished');
+        lifecycle?.onComplete?.('webspeech');
         resolve();
       };
       utterance.onerror = e => {
@@ -614,9 +678,12 @@ class AudioService {
     });
   }
 
-  stop(): void {
+  async stop(): Promise<void> {
     console.log('[AudioService] stop() called');
     this.isSpeaking = false;
+    this.isPaused = false;
+    this.currentUtterance = null;
+    this.activeProvider = null;
 
     // Stop Web Speech
     if (typeof window !== 'undefined' && window.speechSynthesis) {
@@ -625,14 +692,93 @@ class AudioService {
 
     // Stop Tauri TTS
     if (this.isTauri) {
-      tauriClient.ttsStop().catch(err => {
-        console.error('[AudioService] tts_stop error:', err);
-      });
+      try {
+        await tauriClient.stopSpeaking();
+      } catch (err) {
+        console.error('[AudioService] stop_speaking error:', err);
+        await tauriClient.ttsStop().catch(fallbackErr => {
+          console.error('[AudioService] tts_stop error:', fallbackErr);
+        });
+      }
     }
   }
 
   isCurrentlySpeaking(): boolean {
     return this.isSpeaking;
+  }
+
+  async pause(): Promise<void> {
+    if (!this.isSpeaking) {
+      throw new Error('Aucune lecture audio en cours');
+    }
+
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+      window.speechSynthesis.pause();
+      this.isPaused = true;
+      return;
+    }
+
+    if (this.activeProvider === 'tauri') {
+      await tauriClient.pauseSpeaking();
+      this.isPaused = true;
+      return;
+    }
+
+    throw new Error('Pause audio indisponible pour ce provider');
+  }
+
+  async resume(): Promise<void> {
+    if (!this.isSpeaking) {
+      throw new Error('Aucune lecture audio en cours');
+    }
+
+    if (this.activeProvider === 'webspeech' && typeof window !== 'undefined') {
+      window.speechSynthesis.resume();
+      this.isPaused = false;
+      return;
+    }
+
+    if (this.activeProvider === 'tauri') {
+      await tauriClient.resumeSpeaking();
+      this.isPaused = false;
+      return;
+    }
+
+    throw new Error('Reprise audio indisponible pour ce provider');
+  }
+
+  async getPlaybackRuntimeState(): Promise<AudioPlaybackRuntimeState> {
+    if (this.activeProvider === 'tauri' && this.isTauri) {
+      try {
+        const speaking = Boolean(await tauriClient.isSpeaking());
+        return {
+          speaking,
+          paused: speaking ? this.isPaused : false,
+          provider: speaking || this.isPaused ? 'tauri' : null,
+          supportsPause: true,
+        };
+      } catch (error) {
+        console.warn('[AudioService] Failed to query Tauri speaking state:', error);
+      }
+    }
+
+    if (this.isWebSpeechAvailable()) {
+      const speaking = window.speechSynthesis.speaking;
+      const paused = window.speechSynthesis.paused;
+      return {
+        speaking,
+        paused,
+        provider: speaking || paused ? 'webspeech' : null,
+        supportsPause: true,
+      };
+    }
+
+    return {
+      speaking: this.isSpeaking && !this.isPaused,
+      paused: this.isPaused,
+      provider: this.activeProvider,
+      supportsPause: this.isTauri,
+    };
   }
 
   // ─────────────────────────────────────────────────────────────────

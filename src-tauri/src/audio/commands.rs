@@ -8,9 +8,114 @@ use once_cell::sync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::process::Command;
 #[cfg(not(feature = "mock"))]
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{
+    atomic::{AtomicBool, Ordering},
+    Mutex as StdMutex,
+};
 
 type CommandResult<T> = Result<T, String>;
+
+#[cfg(not(feature = "mock"))]
+static ACTIVE_TTS_PID: Lazy<StdMutex<Option<u32>>> = Lazy::new(|| StdMutex::new(None));
+
+#[cfg(not(feature = "mock"))]
+static IS_TTS_PAUSED: Lazy<AtomicBool> = Lazy::new(|| AtomicBool::new(false));
+
+#[cfg(not(feature = "mock"))]
+fn set_active_tts_pid(pid: Option<u32>) {
+    if let Ok(mut guard) = ACTIVE_TTS_PID.lock() {
+        *guard = pid;
+    }
+}
+
+#[cfg(not(feature = "mock"))]
+fn get_active_tts_pid() -> Option<u32> {
+    ACTIVE_TTS_PID.lock().ok().and_then(|guard| *guard)
+}
+
+#[cfg(not(feature = "mock"))]
+fn signal_active_tts(signal: &str) -> CommandResult<()> {
+    let pid = get_active_tts_pid()
+        .ok_or_else(|| "Aucune lecture TTS active à contrôler".to_string())?;
+    let status = Command::new("kill")
+        .args([signal, &pid.to_string()])
+        .status()
+        .map_err(|e| format!("Impossible d'envoyer {} au processus TTS: {}", signal, e))?;
+
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!(
+            "Le signal {} a échoué pour le processus TTS {}",
+            signal, pid
+        ))
+    }
+}
+
+#[cfg(not(feature = "mock"))]
+fn command_exists(binary: &str) -> bool {
+    Command::new("which")
+        .arg(binary)
+        .output()
+        .map(|output| output.status.success())
+        .unwrap_or(false)
+}
+
+#[cfg(not(feature = "mock"))]
+fn run_tracked_command(mut command: Command, context: &str) -> CommandResult<()> {
+    let mut child = command
+        .spawn()
+        .map_err(|e| format!("Erreur lancement {}: {}", context, e))?;
+
+    set_active_tts_pid(Some(child.id()));
+    let output = child
+        .wait_with_output()
+        .map_err(|e| format!("Erreur attente {}: {}", context, e));
+    set_active_tts_pid(None);
+
+    let output = output?;
+    if output.status.success() {
+        return Ok(());
+    }
+
+    let stderr = String::from_utf8_lossy(&output.stderr).trim().to_string();
+    let stdout = String::from_utf8_lossy(&output.stdout).trim().to_string();
+    Err(format!(
+        "{} a échoué: {}{}",
+        context,
+        if stderr.is_empty() { stdout.as_str() } else { stderr.as_str() },
+        if stderr.is_empty() || stdout.is_empty() {
+            "".to_string()
+        } else {
+            format!(" | {}", stdout)
+        }
+    ))
+}
+
+#[cfg(not(feature = "mock"))]
+fn play_audio_file(output_path: &str, output_device_id: Option<&str>) -> CommandResult<()> {
+    if let Some(device_id) = output_device_id {
+        if command_exists("pw-play") {
+            let mut command = Command::new("pw-play");
+            command.args(["--target", device_id, output_path]);
+            return run_tracked_command(command, "lecture audio pw-play");
+        }
+    }
+
+    if command_exists("paplay") {
+        let mut command = Command::new("paplay");
+        command.arg(output_path);
+        return run_tracked_command(command, "lecture audio paplay");
+    }
+
+    if command_exists("aplay") {
+        let mut command = Command::new("aplay");
+        command.arg(output_path);
+        return run_tracked_command(command, "lecture audio aplay");
+    }
+
+    Err("Aucun lecteur audio système disponible (pw-play, paplay, aplay)".to_string())
+}
 
 // ─────────────────────────────────────────────────────────────────
 //  Types
@@ -79,7 +184,10 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
     let home = std::env::var("HOME").unwrap_or_else(|_| "/home".to_string());
 
-    match settings.engine.as_str() {
+    IS_SPEAKING.store(true, Ordering::Relaxed);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+
+    let result = match settings.engine.as_str() {
         "piper" => {
             let piper_bin = format!("{}/.local/bin/piper", home);
             let model_path = format!(
@@ -163,41 +271,7 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
 
             log::info!("[TTS] Playing audio with pw-play/paplay/aplay...");
 
-            // Use pw-play with --target when an output device is specified (PipeWire native)
-            let play_output = if let Some(ref dev_id) = settings.output_device_id {
-                log::info!("[TTS] Using pw-play --target={}", dev_id);
-                Command::new("pw-play")
-                    .args(["--target", dev_id.as_str(), &output_str])
-                    .output()
-                    .or_else(|_| {
-                        // pw-play not available, fall back to paplay then aplay
-                        Command::new("paplay")
-                            .arg(&output_str)
-                            .output()
-                            .or_else(|_| Command::new("aplay").arg(&output_str).output())
-                    })
-                    .map_err(|e| format!("Erreur lecture audio: {}", e))?
-            } else {
-                Command::new("paplay")
-                    .arg(&output_str)
-                    .output()
-                    .or_else(|_| {
-                        log::info!("[TTS] paplay failed, trying aplay...");
-                        Command::new("aplay").arg(&output_str).output()
-                    })
-                    .map_err(|e| format!("Erreur lecture audio: {}", e))?
-            };
-
-            if !play_output.status.success() {
-                let stderr = String::from_utf8_lossy(&play_output.stderr);
-                let stdout = String::from_utf8_lossy(&play_output.stdout);
-                log::error!(
-                    "[TTS] Audio playback failed - stderr: {}, stdout: {}",
-                    stderr,
-                    stdout
-                );
-                return Err(format!("Erreur lecture: {}", stderr));
-            }
+            play_audio_file(&output_str, settings.output_device_id.as_deref())?;
 
             log::info!("[TTS] Audio playback completed successfully!");
 
@@ -211,7 +285,12 @@ pub async fn tts_speak(text: String, settings: TTSSettings) -> CommandResult<()>
                 Err(format!("Moteur TTS non supporté: {}", settings.engine))
             }
         }
-    }
+    };
+
+    set_active_tts_pid(None);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    IS_SPEAKING.store(false, Ordering::Relaxed);
+    result
 }
 
 async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<()> {
@@ -250,9 +329,7 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
             if gen_out.status.success() {
                 if let Ok(meta) = std::fs::metadata(&output_path) {
                     if meta.len() > 0 {
-                        let _ = Command::new("pw-play")
-                            .args(["--target", dev_id.as_str(), &output_str])
-                            .output();
+                        play_audio_file(&output_str, Some(dev_id.as_str()))?;
                         return Ok(());
                     }
                 }
@@ -262,23 +339,31 @@ async fn tts_speak_espeak(text: &str, settings: &TTSSettings) -> CommandResult<(
     }
 
     // Default: espeak plays directly to system default
-    Command::new(espeak_bin)
-        .args([
-            "-v", voice,
-            "-s", &speed.to_string(),
-            "-p", &pitch.to_string(),
-            text,
-        ])
-        .output()
-        .map_err(|e| format!("Erreur espeak/espeak-ng: {}", e))?;
+    let mut command = Command::new(espeak_bin);
+    command.args([
+        "-v",
+        voice,
+        "-s",
+        &speed.to_string(),
+        "-p",
+        &pitch.to_string(),
+        text,
+    ]);
+    run_tracked_command(command, "lecture espeak/espeak-ng")?;
 
     Ok(())
 }
 
 #[tauri::command]
 pub async fn tts_stop() -> CommandResult<()> {
+    let _ = signal_active_tts("-KILL");
+    set_active_tts_pid(None);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    IS_SPEAKING.store(false, Ordering::Relaxed);
     // Kill any running aplay or espeak/espeak-ng processes
     let _ = Command::new("pkill").arg("-9").arg("aplay").output();
+    let _ = Command::new("pkill").arg("-9").arg("paplay").output();
+    let _ = Command::new("pkill").arg("-9").arg("pw-play").output();
     let _ = Command::new("pkill").arg("-9").arg("espeak").output();
     let _ = Command::new("pkill").arg("-9").arg("espeak-ng").output();
     Ok(())
@@ -1171,11 +1256,7 @@ pub async fn speak(
         }
     };
 
-    IS_SPEAKING.store(true, Ordering::Relaxed);
-    let result = tts_speak(text, settings).await;
-    IS_SPEAKING.store(false, Ordering::Relaxed);
-
-    result
+    tts_speak(text, settings).await
 }
 
 #[cfg(not(feature = "mock"))]
@@ -1183,6 +1264,7 @@ pub async fn speak(
 pub async fn stop_speaking() -> CommandResult<()> {
     log::info!("[Audio] stop_speaking() called");
     IS_SPEAKING.store(false, Ordering::Relaxed);
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
     tts_stop().await
 }
 
@@ -1192,12 +1274,38 @@ pub async fn is_speaking() -> CommandResult<bool> {
     Ok(IS_SPEAKING.load(Ordering::Relaxed))
 }
 
+#[cfg(not(feature = "mock"))]
+#[tauri::command]
+pub async fn pause_speaking() -> CommandResult<()> {
+    log::info!("[Audio] pause_speaking() called");
+
+    if !IS_SPEAKING.load(Ordering::Relaxed) {
+        return Err("Aucune lecture TTS en cours".to_string());
+    }
+
+    signal_active_tts("-STOP")?;
+    IS_TTS_PAUSED.store(true, Ordering::Relaxed);
+    Ok(())
+}
+
+#[cfg(not(feature = "mock"))]
+#[tauri::command]
+pub async fn resume_speaking() -> CommandResult<()> {
+    log::info!("[Audio] resume_speaking() called");
+
+    if !IS_SPEAKING.load(Ordering::Relaxed) {
+        return Err("Aucune lecture TTS en cours".to_string());
+    }
+
+    signal_active_tts("-CONT")?;
+    IS_TTS_PAUSED.store(false, Ordering::Relaxed);
+    Ok(())
+}
+
 // ─────────────────────────────────────────────────────────────────
 //  Voice Activity Detection (VAD) Commands v∞
 //  Inline VAD to avoid module conflicts with mock mode
 // ─────────────────────────────────────────────────────────────────
-
-use std::sync::Mutex as StdMutex;
 
 // ═══════════════════════════════════════════════════════════════
 // Inline VAD Implementation (avoids module dependency issues)
@@ -1484,6 +1592,8 @@ pub fn get_audio_commands() -> Vec<&'static str> {
         "speak",
         "stop_speaking",
         "is_speaking",
+        "pause_speaking",
+        "resume_speaking",
         // VAD commands
         "vad_get_state",
         "vad_process_frame",

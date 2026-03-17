@@ -24,7 +24,8 @@ import { awardExperience as awardExperienceToDomain } from '@/services/experienc
 import type { HarmonizedMessage } from '@/types/cognitiveKernel';
 import type { DevSudoResult } from '@/modules/devSudo/devSudoIntegration';
 import type { CameraChatIntegrationResult } from '@/modules/camera/cameraChatIntegration';
-import { hybridTTS } from '@/services/tts/hybridTTS';
+import { audioService } from '@/features/audio-center/services/audioService';
+import { messageSpeechController } from '@/services/tts/messageSpeechController';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 // ✨ v24.2.1 - Streaming Debounce for Performance
 import { createStreamingBatcher } from '@/utils/streamingDebounce';
@@ -2012,9 +2013,16 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         }
 
         // ✨ v24.2.1: Use ref for stable dependency
-        if (voiceEnabledRef.current && assistantMessage.content) {
+        if (
+          voiceEnabledRef.current &&
+          assistantMessage.content &&
+          audioService.getTTSSettings().autoReadAssistant
+        ) {
           try {
-            hybridTTS.speak(assistantMessage.content);
+            void messageSpeechController.playMessage(
+              `assistant-${assistantMessage.timestamp}`,
+              assistantMessage.content
+            );
           } catch (voiceError) {
             console.warn('[Chat] Voice warning:', voiceError);
           }

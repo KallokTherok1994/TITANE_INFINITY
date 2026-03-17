@@ -12,6 +12,8 @@
       "speak",
       "stop_speaking",
       "is_speaking",
+      "pause_speaking",
+      "resume_speaking",
       "get_audio_output_devices",
       "get_audio_input_devices",
       "set_audio_output_device",
