@@ -791,6 +791,7 @@ use titane_infinity::ai::orchestrator_multi::OrchestratorState;
 // Use persistence module from lib.rs (includes all commands)
 use titane_infinity::persistence;
 use titane_infinity::time_commands; // FIX-011
+use titane_infinity::reality_renderer; // FIX-012
 
 /// Cognitive System State (v16)
 pub struct CognitiveSystemState {
@@ -1737,6 +1738,20 @@ fn main() {
             qa_monitoring_commands::qa_list_alerts,
             qa_monitoring_commands::qa_run_test_suite,
             qa_monitoring_commands::qa_acknowledge_alert,
+            // [FIX-012] qa_monitoring commands called by useQAMonitoring with no try/catch
+            qa_monitoring_commands::qa_get_test_result,
+            qa_monitoring_commands::qa_list_monitors,
+            qa_monitoring_commands::qa_create_monitor,
+            qa_monitoring_commands::qa_toggle_monitor,
+            qa_monitoring_commands::qa_delete_monitor,
+            qa_monitoring_commands::qa_resolve_alert,
+            qa_monitoring_commands::qa_get_hardening_config,
+            qa_monitoring_commands::qa_update_hardening_config,
+            qa_monitoring_commands::qa_run_security_audit,
+            qa_monitoring_commands::qa_get_performance_report,
+            qa_monitoring_commands::qa_get_logs,
+            qa_monitoring_commands::qa_export_metrics_prometheus,
+            qa_monitoring_commands::qa_health_check,
 
             // ONE CORE (Dev)
             one_core_commands::one_core_get_state,
@@ -2052,6 +2067,10 @@ fn main() {
             // Time-travel commands [FIX-011] — get_travel_stats + delete_snapshot were unregistered
             time_commands::get_travel_stats,
             time_commands::delete_snapshot,
+            // Reality renderer commands [FIX-012] — realitySetRenderConfig called without catch
+            reality_renderer::commands::reality_set_render_config,
+            reality_renderer::commands::reality_get_state,
+            reality_renderer::commands::reality_init,
             persistence::commands::titan_reset_module,
             persistence::commands::titan_dump_raw_state,
             persistence::commands::titan_run_full_integrity_check,

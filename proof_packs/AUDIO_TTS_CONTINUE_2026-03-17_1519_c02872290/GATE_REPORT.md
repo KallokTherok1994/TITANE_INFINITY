@@ -19,15 +19,19 @@
 4. WDIO_SPEC=./e2e/desktop/ui-ultra-smoke.e2e.js pnpm run e2e:desktop
 5. bash scripts/autoheal/detect_recurrence.sh
 6. bash scripts/verify_instructions.sh
+7. pnpm run build:tauri:e2e
+8. WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm run e2e:desktop
+9. bash scripts/autoheal/detect_recurrence.sh
+10. bash scripts/verify_instructions.sh
 
 ## Evidence Artifacts
 
 - reports/e2e-desktop/diagnostics.log
 - reports/e2e-desktop/wdio.log
 - reports/e2e-desktop/tauri_driver.log
-- scripts/autoheal/autoheal_rules.jsonl (entry AH-2026-03-17-FIX-009-TITANE-VOICE-RUNTIME-CONTRACT)
+- reports/e2e-desktop/audio_tts_runtime_controls_metrics.json
+- scripts/autoheal/autoheal_rules.jsonl (entries FIX-009, FIX-010, FIX-011, FIX-012, FIX-013)
 
 ## Residual Risk
 
-- Desktop E2E coverage is runtime-valid but does not yet assert chat TTS button lifecycle (play/pause/resume/stop/replay) end-to-end.
-- Natural voice quality criteria remain human-evaluation dependent and are not machine-proven in this run.
+- Natural voice quality criteria remain human-evaluation dependent and are not fully machine-proven.
