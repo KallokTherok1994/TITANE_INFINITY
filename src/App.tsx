@@ -615,6 +615,14 @@ const AppRouter: React.FC = () => {
       });
   }, []);
 
+  // Lazy-load telemetry + self-healing singletons after app ready
+  // titaneSelfHealing and titanaTelemetry auto-start on module load (constructor-based)
+  useEffect(() => {
+    import('./utils/telemetryEngine').catch(err => {
+      console.warn('⚠️ [TELEMETRY] Failed to load:', err);
+    });
+  }, []);
+
   // ✨ v∞ Phase 4 - Initialiser Multi-Agent System
   // REMOVED: core/ai/multi_agent_engine supprimé en PHASE 1 (OPTION B)
   /*

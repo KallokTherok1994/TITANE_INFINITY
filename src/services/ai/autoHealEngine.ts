@@ -4,15 +4,15 @@
  */
 
 import { createLogger } from '@/utils/logger';
+import { circuitBreaker } from './circuitBreaker';
 
 /**
  * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AUTO-HEAL ENGINE (NOUVEAU MODULE)
- *   PHASE 6Ω: Error detection, classification, health tracking + simulated recovery actions.
- *   Pipeline: detectError() → classify() → simulate-action() → update-health-label() → log()
- *   NOTE: restart/purge/reset/reconnect/restore actions are simulations (setTimeout + label update).
- *         Actual provider fallback is governed by the orchestrator's provider chain (titane-local last).
- *         This module provides health visibility and error classification, NOT true provider repair.
+ *   PHASE 6Ω: Error detection, classification, health tracking + circuit-breaker-backed recovery.
+ *   Pipeline: detectError() → classify() → action() → circuitBreaker.reset/recordFailure() → update-health-label() → log()
+ *   Recovery actions (restart/purge/reset/reconnect/isolate) are wired to circuitBreaker.
+ *   restoreFromBackup = circuitBreaker reset (no snapshot system exists).
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -491,13 +491,9 @@ class AutoHealEngine {
   private async restartProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Restarting provider: ${source}`);
-
-      // STUB: actual provider restart is not implemented — updates health label only
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      // Marquer comme redémarré
+      // Reset circuit breaker so the provider is allowed to execute on next call
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'restart');
-
       return true;
     } catch (error) {
       logger.error('Restart failed', { source, error });
@@ -508,8 +504,9 @@ class AutoHealEngine {
   private async activateFallback(source: string): Promise<boolean> {
     try {
       logger.debug(`Activating fallback for: ${source}`);
-
-      // Toujours réussir car titane-local est toujours disponible
+      // Open the failing provider's circuit so orchestrator routes to next in chain
+      // titane-local is always the last-resort fallback in the orchestrator chain
+      circuitBreaker.recordFailure(source);
       return true;
     } catch (error) {
       logger.error('Fallback activation failed', { error });
@@ -520,10 +517,8 @@ class AutoHealEngine {
   private async purgeCache(source: string): Promise<boolean> {
     try {
       logger.debug(`Purging cache for: ${source}`);
-
-      // STUB: simulates cache purge (sleep only) — no real cache cleared
-      await new Promise(resolve => setTimeout(resolve, 200));
-
+      // Reset circuit state forces a fresh availability probe on next call
+      circuitBreaker.reset(source);
       return true;
     } catch (error) {
       logger.error('Cache purge failed', { source, error });
@@ -534,12 +529,9 @@ class AutoHealEngine {
   private async resetConnection(source: string): Promise<boolean> {
     try {
       logger.debug(`Resetting connection: ${source}`);
-
-      // STUB: simulates connection reset (sleep only) — updates health label
-      await new Promise(resolve => setTimeout(resolve, 300));
-
+      // Hard-reset circuit breaker to CLOSED state
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'reset');
-
       return true;
     } catch (error) {
       logger.error('Connection reset failed', { source, error });
@@ -550,10 +542,9 @@ class AutoHealEngine {
   private async isolateProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Isolating provider: ${source}`);
-
-      // Marquer comme isolé
+      // Force circuit OPEN by recording failures past threshold
+      for (let i = 0; i < 6; i++) circuitBreaker.recordFailure(source);
       this.updateProviderHealth(source, 'isolate');
-
       return true;
     } catch (error) {
       logger.error('Provider isolation failed', { source, error });
@@ -564,12 +555,9 @@ class AutoHealEngine {
   private async reconnectProvider(source: string): Promise<boolean> {
     try {
       logger.debug(`Reconnecting provider: ${source}`);
-
-      // STUB: simulates reconnect (sleep only) — updates health label
-      await new Promise(resolve => setTimeout(resolve, 800));
-
+      // Reset circuit to CLOSED — allows probe on next call
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'reconnect');
-
       return true;
     } catch (error) {
       logger.error('Reconnection failed', { source, error });
@@ -580,12 +568,9 @@ class AutoHealEngine {
   private async restoreFromBackup(source: string): Promise<boolean> {
     try {
       logger.debug(`Restoring from backup: ${source}`);
-
-      // STUB: simulates restore (sleep only) — no real backup system exists
-      await new Promise(resolve => setTimeout(resolve, 1000));
-
+      // No snapshot/backup system exists — reset circuit as best-effort recovery
+      circuitBreaker.reset(source);
       this.updateProviderHealth(source, 'restore');
-
       return true;
     } catch (error) {
       logger.error('Backup restoration failed', { source, error });
