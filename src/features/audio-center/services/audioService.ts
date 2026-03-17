@@ -13,6 +13,10 @@
 import { detectEnvironment } from '@/core/tauri/environment';
 import { tauriClient } from '@/lib/tauriClient';
 import {
+  buildTtsSettingsFromTitaneProfile,
+  normalizeTitaneVoiceProfiles,
+} from '../titaneVoiceProfiles';
+import {
   type TTSSettings,
   type VoiceProfile,
   type AudioDevice,
@@ -70,6 +74,8 @@ class AudioService {
   private isPaused: boolean = false;
   private activeProvider: AudioPlaybackProvider = null;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
+  private runtimeVoiceProfileHydrationAttempted: boolean = false;
+  private runtimeVoiceProfileHydrationPromise: Promise<void> | null = null;
 
   constructor() {
     this.config = this.loadConfig();
@@ -138,6 +144,68 @@ class AudioService {
 
   getTTSSettings(): TTSSettings {
     return { ...this.config.tts };
+  }
+
+  private shouldHydrateVoiceProfileFromRuntime(): boolean {
+    const { tts } = this.config;
+
+    return (
+      !tts.voiceProfileId &&
+      tts.engine === DEFAULT_AUDIO_CONFIG.tts.engine &&
+      tts.voiceId === DEFAULT_AUDIO_CONFIG.tts.voiceId &&
+      tts.language === DEFAULT_AUDIO_CONFIG.tts.language &&
+      tts.rate === DEFAULT_AUDIO_CONFIG.tts.rate &&
+      tts.pitch === DEFAULT_AUDIO_CONFIG.tts.pitch &&
+      tts.volume === DEFAULT_AUDIO_CONFIG.tts.volume
+    );
+  }
+
+  private async ensureRuntimeVoiceProfileHydrated(): Promise<void> {
+    if (!this.isTauri || this.runtimeVoiceProfileHydrationAttempted) {
+      return;
+    }
+
+    if (!this.shouldHydrateVoiceProfileFromRuntime()) {
+      this.runtimeVoiceProfileHydrationAttempted = true;
+      return;
+    }
+
+    if (this.runtimeVoiceProfileHydrationPromise) {
+      return this.runtimeVoiceProfileHydrationPromise;
+    }
+
+    this.runtimeVoiceProfileHydrationAttempted = true;
+    this.runtimeVoiceProfileHydrationPromise = this.hydrateActiveVoiceProfileFromRuntime().finally(
+      () => {
+        this.runtimeVoiceProfileHydrationPromise = null;
+      }
+    );
+
+    return this.runtimeVoiceProfileHydrationPromise;
+  }
+
+  private async hydrateActiveVoiceProfileFromRuntime(): Promise<void> {
+    try {
+      const rawActiveProfile = await tauriClient.identityGetActiveVoiceProfile();
+      const activeProfile = normalizeTitaneVoiceProfiles(
+        rawActiveProfile == null ? [] : [rawActiveProfile]
+      )[0];
+
+      if (!activeProfile || !this.shouldHydrateVoiceProfileFromRuntime()) {
+        return;
+      }
+
+      this.config = {
+        ...this.config,
+        tts: this.normalizeRuntimeCompatibleTTS({
+          ...this.config.tts,
+          ...buildTtsSettingsFromTitaneProfile(activeProfile, this.config.tts),
+        }),
+      };
+      this.saveConfig();
+    } catch (error) {
+      console.warn('[AudioService] Failed to hydrate TITANE active voice profile:', error);
+    }
   }
 
   private normalizeRuntimeCompatibleTTS(settings: TTSSettings): TTSSettings {
@@ -222,6 +290,7 @@ class AudioService {
   }
 
   async getAvailableVoices(): Promise<VoiceProfile[]> {
+    await this.ensureRuntimeVoiceProfileHydrated();
     const elevenLabsReady = await this.isElevenLabsConfigured();
     return AVAILABLE_VOICES.filter(voice => {
       if (voice.engine === 'elevenlabs') {
@@ -471,6 +540,7 @@ class AudioService {
 
     try {
       if (this.isTauri) {
+        await this.ensureRuntimeVoiceProfileHydrated();
         await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
         await tauriClient.testTts({ text, settings: this.buildRuntimeTTSSettings() });
       } else if (this.isWebSpeechAvailable()) {
@@ -638,6 +708,7 @@ class AudioService {
     try {
       if (this.isTauri) {
         try {
+          await this.ensureRuntimeVoiceProfileHydrated();
           await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
           this.activeProvider = 'tauri';
           lifecycle?.onStart?.('tauri');

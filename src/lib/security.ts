@@ -1000,6 +1000,9 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   // IDENTITY CENTER (v24.4+)
   // ═══════════════════════════════════════════════════════════════
+  'identity_list_voice_profiles',
+  'identity_get_active_voice_profile',
+  'identity_set_active_voice_profile',
   'identity_set_mode',
   'identity_set_voice_profile',
   'identity_enable_rule',

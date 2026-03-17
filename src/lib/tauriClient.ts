@@ -1403,6 +1403,13 @@ class TauriClient {
     );
   }
 
+  async identityGetActiveVoiceProfile(params?: unknown): Promise<unknown> {
+    return await this.invoke(
+      TAURI_COMMANDS.IDENTITY_GET_ACTIVE_VOICE_PROFILE,
+      (params as Record<string, unknown>) || {}
+    );
+  }
+
   async identityGetCurrentTone(params?: unknown): Promise<unknown> {
     return await this.invoke(
       TAURI_COMMANDS.IDENTITY_GET_CURRENT_TONE,

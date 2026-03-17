@@ -471,6 +471,9 @@
               "command": "identity_list_voice_profiles"
             },
             {
+              "command": "identity_get_active_voice_profile"
+            },
+            {
               "command": "identity_set_active_voice_profile"
             },
             {
