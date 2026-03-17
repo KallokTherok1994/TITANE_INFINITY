@@ -5,7 +5,7 @@
  * Targeted tests for the PARSER_ERROR → SOURCE_UNAVAILABLE misclassification fix.
  */
 
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook, act, waitFor } from '@testing-library/react';
 
 // Mock tauriClient
@@ -38,11 +38,6 @@ const VALID_SUMMARY = {
 describe('useProductionHealthTelemetry', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    vi.useFakeTimers();
-  });
-
-  afterEach(() => {
-    vi.useRealTimers();
   });
 
   // ────────────────────────────────────────────────────────────
