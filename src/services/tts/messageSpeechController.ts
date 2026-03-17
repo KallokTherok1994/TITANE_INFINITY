@@ -37,6 +37,8 @@ interface ControllerState {
 
 const URL_PATTERN = /https?:\/\/[^\s)]+/gi;
 const END_PUNCTUATION_PATTERN = /[.!?…]$/;
+const MAX_WORDS_PER_SEGMENT = 18;
+const MIN_WORDS_PER_SEGMENT = 3;
 
 const listeners = new Set<() => void>();
 
@@ -85,6 +87,7 @@ export const prepareSpeechProsody = (text: string): string => {
     .replace(URL_PATTERN, 'lien web')
     .replace(/\n{2,}/g, '. ')
     .replace(/\n+/g, ', ')
+    .replace(/\s*[-–—]\s*/g, ', ')
     .replace(/\s+([,;:.!?])/g, '$1')
     .replace(/([,;:.!?])(?!\s|$)/g, '$1 ')
     .replace(/\s{2,}/g, ' ')
@@ -94,11 +97,55 @@ export const prepareSpeechProsody = (text: string): string => {
     return '';
   }
 
-  if (END_PUNCTUATION_PATTERN.test(normalized)) {
-    return normalized;
+  const sentenceLikeSegments = normalized
+    .split(/(?<=[.!?;:])\s+/)
+    .map(segment => segment.trim())
+    .filter(segment => segment.length > 0);
+
+  const splitLongSegments = sentenceLikeSegments.flatMap(segment => {
+    const words = segment.split(/\s+/).filter(Boolean);
+    if (words.length <= MAX_WORDS_PER_SEGMENT) {
+      return [segment];
+    }
+
+    const chunks: string[] = [];
+    for (let index = 0; index < words.length; index += MAX_WORDS_PER_SEGMENT) {
+      chunks.push(words.slice(index, index + MAX_WORDS_PER_SEGMENT).join(' '));
+    }
+    return chunks;
+  });
+
+  const mergedSegments = splitLongSegments.reduce<string[]>((acc, segment) => {
+    const current = segment.trim();
+    if (!current) {
+      return acc;
+    }
+
+    const wordCount = current.split(/\s+/).filter(Boolean).length;
+    const previous = acc[acc.length - 1] ?? '';
+    const previousHasStrongPause = /[.!?…:]$/.test(previous.trim());
+
+    if (acc.length > 0 && wordCount < MIN_WORDS_PER_SEGMENT && !previousHasStrongPause) {
+      const previous = acc[acc.length - 1] ?? '';
+      acc[acc.length - 1] = `${previous.replace(/[.!?…;:]+$/g, '')}, ${current.replace(/^[,;:.!?\s]+/g, '')}`;
+      return acc;
+    }
+
+    acc.push(current);
+    return acc;
+  }, []);
+
+  const rebuilt = mergedSegments
+    .join(' ')
+    .replace(/\s+([,;:.!?])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  if (END_PUNCTUATION_PATTERN.test(rebuilt)) {
+    return rebuilt;
   }
 
-  return `${normalized}.`;
+  return `${rebuilt}.`;
 };
 
 class MessageSpeechController {

@@ -64,3 +64,13 @@
 - Head courant constaté en fin de session: e5515d71f
 - Contradiction de head interne: addendum précédent (9b13edcd1) supersédé par ce marqueur final
 - Verdict technique inchangé: chaîne runtime desktop PASS, qualité perceptive humaine non certifiée
+
+## Addendum 2026-03-17T17:50Z
+
+- Head revalidé: 32391d3ab
+- Patch prosodie V6: segmentation bornée + fusion conditionnelle des fragments courts dans `prepareSpeechProsody`
+- Test unitaire ciblé: `pnpm vitest run src/__tests__/services/tts/messageSpeechController.test.ts` -> PASS (6/6)
+- Build desktop: `pnpm run build:tauri:e2e` -> PASS
+- Runtime desktop ciblé: `audio-tts-runtime-controls.wdio.test.js` -> PASS (run simple) puis PASS (run x3)
+- Metric desktop runtime: `reports/e2e-desktop/audio_tts_runtime_controls_metrics.json` verdict PASS
+- Artifacts modeling: `reports/audio/TITANE_VOICE_SPEC_V6.json` + `reports/audio/TITANE_VOICE_BENCHMARK_V6_2026-03-17.json`

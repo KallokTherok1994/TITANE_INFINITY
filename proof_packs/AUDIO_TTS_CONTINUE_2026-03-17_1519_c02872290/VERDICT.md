@@ -74,3 +74,19 @@
 - Head courant de clôture: e5515d71f
 - Le marqueur de head de l'addendum 17:20 est obsolète et remplacé par ce marqueur final
 - VERDICT_UNIQUE maintenu: VOICE_IDENTITY_NOT_PROVEN
+
+## Addendum 2026-03-17T17:50Z
+
+- Head courant de cloture: 32391d3ab
+- Defaut dominant traite localement: PROSODY_FAILURE_CONFIRMED (segmentation/preparation insuffisante avant patch)
+- Revalidation technique post-patch: unit tests PASS, build desktop PASS, runtime desktop PASS x3
+- TITANE_VOICE_SPEC_V6: present
+- QUALITY BENCHMARK V6: cree mais non note humainement
+- SAMPLE STYLE PROXIMITY: non mesurable (sample cible utilisateur non fourni)
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+4. VERDICT_UNIQUE_CONFIRMED: VOICE_IDENTITY_NOT_PROVEN
