@@ -446,6 +446,31 @@ mod legacy_ai_bridge {
         Ok(())
     }
 
+    // [FIX-009] engine_metrics/engine_health/engine_modules not registered — stub stubs
+    // SingularityMonitor polls these every 1s; without them every tick logs an error.
+    // Stubs return honest DEGRADED/empty values (not mocked as healthy).
+    #[tauri::command]
+    pub async fn engine_metrics(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({
+            "ticks": 0u64,
+            "stability": 0.5f32,
+            "latency_ms": 0u64,
+            "last_update_ms": 0u64,
+            "error_count": 0u32,
+            "success_rate": 1.0f32
+        }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_health(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!({ "status": "Degraded" }))
+    }
+
+    #[tauri::command]
+    pub async fn engine_modules(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+        Ok(serde_json::json!([]))
+    }
+
     #[tauri::command]
     pub async fn memory_get(
         _state: State<'_, AIChatState>,
@@ -2095,6 +2120,9 @@ fn main() {
             legacy_ai_bridge::engine_get_singularity_state,
             legacy_ai_bridge::engine_get_evolution_state,
             legacy_ai_bridge::engine_tick,
+            legacy_ai_bridge::engine_metrics,  // FIX-009
+            legacy_ai_bridge::engine_health,   // FIX-009
+            legacy_ai_bridge::engine_modules,  // FIX-009
             legacy_ai_bridge::memory_get,
             legacy_ai_bridge::memory_set,
             // memory_get_stats already registered above as unified_memory_commands::memory_get_stats
