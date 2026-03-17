@@ -2488,6 +2488,24 @@
             },
             {
               "command": "get_evolution_state"
+            },
+            {
+              "command": "meta_mode_process"
+            },
+            {
+              "command": "meta_mode_get_current_mode"
+            },
+            {
+              "command": "meta_mode_list_modes"
+            },
+            {
+              "command": "meta_mode_get_history"
+            },
+            {
+              "command": "meta_mode_get_stats"
+            },
+            {
+              "command": "meta_mode_get_kevin_state"
             }
           ]
         },
