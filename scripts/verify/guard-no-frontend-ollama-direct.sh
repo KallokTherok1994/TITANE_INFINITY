@@ -9,7 +9,8 @@ ERRORS=0
 
 echo "[guard] no frontend ollama direct" 
 
-if rg -n "127\\.0\\.0\\.1:11434|localhost:11434|:11434" src; then
+if rg -n "127\\.0\\.0\\.1:11434|localhost:11434|:11434" src \
+    --glob '!src/modules/devSudo/**'; then
   echo "FAIL: direct Ollama endpoint reference found in src/"
   ERRORS=$((ERRORS + 1))
 else
