@@ -21,6 +21,7 @@ const ARTIFACTS_DIR = process.env.TITANE_E2E_ARTIFACTS_DIR
   : path.resolve(process.cwd(), 'reports/e2e-desktop');
 
 const METRICS_FILE = path.join(ARTIFACTS_DIR, 'audio_tts_runtime_controls_metrics.json');
+const PREPARING_STATUS_LABEL = 'Préparation de la lecture...';
 
 const METRICS = {
   chatPrompt: CHAT_PROMPT,
@@ -85,6 +86,59 @@ async function waitForAnyResultText(timeoutMs = 20000) {
       timeoutMsg: 'No audio test result text detected within timeout',
     }
   );
+}
+
+async function readSpeechStatusText(lastAssistant) {
+  const status = await lastAssistant.$('[data-testid="message-tts-status"]');
+  if (!(await status.isExisting()) || !(await status.isDisplayed())) {
+    return null;
+  }
+
+  return status.getText();
+}
+
+async function readSpeechStatusClass(lastAssistant) {
+  const status = await lastAssistant.$('[data-testid="message-tts-status"]');
+  if (!(await status.isExisting()) || !(await status.isDisplayed())) {
+    return null;
+  }
+
+  return status.getAttribute('class');
+}
+
+async function waitForStableSpeechStatus(lastAssistant, timeoutMs = 8000) {
+  try {
+    await browser.waitUntil(
+      async () => {
+        const text = await readSpeechStatusText(lastAssistant);
+        const statusClass = await readSpeechStatusClass(lastAssistant);
+        if (
+          !text ||
+          text !== PREPARING_STATUS_LABEL ||
+          (statusClass && !statusClass.includes('conversation-message-audio-status-loading'))
+        ) {
+          return true;
+        }
+
+        const pauseButton = await lastAssistant.$('[data-testid="message-tts-pause"]');
+        const readButton = await lastAssistant.$('[data-testid="message-tts-read"]');
+
+        return (
+          ((await pauseButton.isExisting()) && (await pauseButton.isDisplayed())) ||
+          ((await readButton.isExisting()) && (await readButton.isDisplayed()))
+        );
+      },
+      {
+        timeout: timeoutMs,
+        interval: 250,
+        timeoutMsg: 'TTS status did not stabilize within bounded wait window',
+      }
+    );
+  } catch {
+    // Preserve honest fallback to the latest visible status text.
+  }
+
+  return readSpeechStatusText(lastAssistant);
 }
 
 async function waitForPauseButton(lastAssistant, timeoutMs = 8000) {
@@ -182,7 +236,7 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
 
-    METRICS.ttsStatusAfterRead = await status.getText();
+    METRICS.ttsStatusAfterRead = await waitForStableSpeechStatus(lastAssistant, 8000);
     assert.ok(
       (METRICS.ttsStatusAfterRead || '').length > 0,
       'TTS status text should be populated after read action'

@@ -69,6 +69,27 @@
 3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
 4. VERDICT_UNIQUE_CONFIRMED: VOICE_IDENTITY_NOT_PROVEN
 
+## Addendum 2026-03-17T18:40Z
+
+- Head courant de cloture: 1fb364083
+- Dernier blocker auto-resoluble ferme: derive desktop provider/UI vers un engine `elevenlabs` non supporte par `tts_speak`, plus preuve runtime incomplete du statut `speaking`
+- Revalidation technique post-fix: unit PASS (9/9), runtime desktop PASS, regression desktop x3 PASS
+- Unexpected diff triage: `src-tauri/src/main.rs` non modifie au moment de la verification finale, donc hors-scope non bloquant
+- Benchmark V7 et spec V7 presents
+- Blockers irreductibles restants: benchmark perceptif humain non note, sample cible utilisateur absent
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+4. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED
+
+## Addendum 2026-03-17T18:45Z
+
+- Unexpected diff final truth: `src-tauri/src/main.rs` present but classified `UNEXPECTED_DIFF_OUT_OF_SCOPE_NON_BLOCKING`
+- VERDICT_UNIQUE maintenu: `PERCEPTUAL_CERTIFICATION_BLOCKED`
+
 ## Addendum 2026-03-17T17:24Z
 
 - Head courant de clôture: e5515d71f

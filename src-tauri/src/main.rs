@@ -641,6 +641,15 @@ mod legacy_ai_bridge {
     stub_cmd!(toggle_singularity);
     stub_cmd!(xp_get_state);
     stub_cmd!(xp_sync_state);
+    // Remaining frontend-invoked commands with no always-available handler [FIX-015]
+    stub_cmd!(load_conversation);
+    stub_cmd!(get_cognitive_state);
+    stub_cmd!(engine_init);
+    stub_cmd!(engine_stop);
+    stub_cmd!(check_sqlite_available);
+    stub_cmd!(vector_store_delete);
+    stub_cmd!(vector_store_insert);
+    stub_cmd!(vector_store_update);
 }
 
 // Auth OS v∞ - Unified Authentication System
@@ -2800,6 +2809,16 @@ fn main() {
             mock_commands::get_singularity_state,
             #[cfg(feature = "mock")]
             mock_commands::save_chat_interaction,
+
+            // [FIX-015] Remaining frontend-invoked stubs (full-only handlers not available in mock)
+            legacy_ai_bridge::load_conversation,
+            legacy_ai_bridge::get_cognitive_state,
+            legacy_ai_bridge::engine_init,
+            legacy_ai_bridge::engine_stop,
+            legacy_ai_bridge::check_sqlite_available,
+            legacy_ai_bridge::vector_store_delete,
+            legacy_ai_bridge::vector_store_insert,
+            legacy_ai_bridge::vector_store_update,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

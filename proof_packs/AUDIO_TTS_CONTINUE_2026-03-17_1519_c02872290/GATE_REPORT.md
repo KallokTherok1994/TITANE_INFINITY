@@ -74,3 +74,21 @@
 - Runtime desktop ciblé: `audio-tts-runtime-controls.wdio.test.js` -> PASS (run simple) puis PASS (run x3)
 - Metric desktop runtime: `reports/e2e-desktop/audio_tts_runtime_controls_metrics.json` verdict PASS
 - Artifacts modeling: `reports/audio/TITANE_VOICE_SPEC_V6.json` + `reports/audio/TITANE_VOICE_BENCHMARK_V6_2026-03-17.json`
+
+## Addendum 2026-03-17T18:40Z
+
+- Head revalide: 1fb364083
+- Diff inattendu triage: `src-tauri/src/main.rs` re-verifie propre, classe `UNEXPECTED_DIFF_OUT_OF_SCOPE_NON_BLOCKING`
+- Patch runtime/provider: guard desktop anti-derive elevenlabs dans `src/features/audio-center/services/audioService.ts`
+- Patch runtime state: `messageSpeechController` passe en `speaking` des `onStart` Tauri pour exposer les controles reels le plus tot possible
+- Patch preuve E2E: prompt rallonge + attente bornee du bouton pause dans `e2e/desktop/audio-tts-runtime-controls.wdio.test.js`
+- Tests unitaires cibles: `pnpm vitest run src/__tests__/services/tts/messageSpeechController.runtimeState.test.ts src/__tests__/services/tts/messageSpeechController.test.ts src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts` -> PASS (9/9)
+- Runtime desktop cible: `audio-tts-runtime-controls.wdio.test.js` -> PASS (run simple) puis PASS (run x3)
+- Metric desktop runtime final: `pauseResumePath=completed-too-fast`, `stopActionObserved=true`, `replayButtonObserved=true`, `verdict=PASS`
+- Artifacts modeling: `reports/audio/TITANE_VOICE_SPEC_V7.json` + `reports/audio/TITANE_VOICE_BENCHMARK_V7_2026-03-17.json`
+
+## Addendum 2026-03-17T18:45Z
+
+- Unexpected diff final truth: `src-tauri/src/main.rs` -> `tracked + unstaged`
+- Classification finale: `UNEXPECTED_DIFF_OUT_OF_SCOPE_NON_BLOCKING`
+- No causal blocker demonstrated for current voice/TTS desktop proof lane

@@ -46,6 +46,16 @@ export interface AudioPlaybackRuntimeState {
   supportsPause: boolean;
 }
 
+const waitForUiFrame = (): Promise<void> =>
+  new Promise(resolve => {
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+      window.requestAnimationFrame(() => resolve());
+      return;
+    }
+
+    setTimeout(resolve, 0);
+  });
+
 interface DeviceCache {
   output: AudioDevice[];
   input: AudioDevice[];
@@ -631,6 +641,7 @@ class AudioService {
           await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
           this.activeProvider = 'tauri';
           lifecycle?.onStart?.('tauri');
+          await waitForUiFrame();
           console.log('[AudioService] Invoking tts_speak via Tauri...');
           await tauriClient.ttsSpeak({
             text,

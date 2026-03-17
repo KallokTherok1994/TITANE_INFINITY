@@ -273,7 +273,7 @@ class MessageSpeechController {
       await audioService.speak(speakableText, {
         onStart: provider => {
           this.updateMessage(messageId, {
-            status: provider === 'webspeech' ? 'speaking' : 'loading',
+            status: 'speaking',
             provider,
             error: null,
             supportsPause: true,
