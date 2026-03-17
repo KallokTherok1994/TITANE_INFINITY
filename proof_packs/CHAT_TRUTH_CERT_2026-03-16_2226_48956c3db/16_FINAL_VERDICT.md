@@ -382,3 +382,41 @@ Ces risques sont **hors scope de la certification chat** mais documentés pour u
 | FAIL | 0 |
 
 **VERDICT GLOBAL FINAL : PASS — parité IPC complète établie**
+
+---
+
+## ADDENDUM R9 — engine_api DÉBLOQUÉ + parité IPC finale (2026-03-17)
+
+### Surface BLOCKED résolue
+
+| Surface | Problème | Solution | Statut |
+|---|---|---|---|
+| `run_evolution` | `engine_api.rs` dépendait de 5 états non managés | `engine_evolution_commands.rs` : appel direct `AutoEvolutionEngine` + `*State::default()` | **PASS** |
+| `quick_health_check` | Idem | Idem | **PASS** |
+| `get_evolution_state` | Enregistré mais chemin wrong | Re-enregistré via `engine_evolution_commands` | **PASS** |
+
+### Vérifications finales
+
+```
+Registered in invoke_handler : 506
+Allow list size              : 997
+Registered BUT NOT in allow  : 0  ✓ ZERO GAPS
+cargo test --no-run          : PASS (toutes suites compilent)
+detect_recurrence            : PASS (entries=354)
+verify_instructions          : PASS=20 FAIL=0
+```
+
+### Commit R9
+- `dab8393e0` — fix(engine-api): unlock run_evolution + quick_health_check
+
+### VERDICT GLOBAL FINAL DÉFINITIF
+
+| Indicateur | Valeur |
+|---|---|
+| Chat chain | **PASS 19/19** |
+| invoke_handler ↔ allow list | **COMPLÈTE (997 entries, 0 gaps)** |
+| BLOCKED | **0** |
+| FAIL | **0** |
+| Tests compile | **PASS** |
+
+**🟢 VERDICT : PASS TOTAL — ZERO BLOCKED — ZÉRO GAP IPC**
