@@ -128,3 +128,49 @@ git restore -- \
 
 **VERDICT GLOBAL : QUALIFIED**  
 **Pack de preuves** : `proof_packs/CHAT_TRUTH_CERT_2026-03-16_2226_48956c3db/`
+
+---
+
+## ADDENDUM R3 — 2026-03-17 (SHA 97c2bcf09)
+
+### Verdict global mis à jour : **QUALIFIED**
+
+Troisième round de corrections. Verdict maintenu QUALIFIED.
+
+### Trouvé et corrigé
+
+| Problème | Gravité | Fix appliqué | SHA |
+|----------|---------|--------------|-----|
+| `generate_response` IPC résolvait vers `mock_commands` dans tous les builds par défaut (Cargo.toml default features include `mock`) | MEDIUM | Guard dans `tryBackendPipeline()` : si `provider==='mock'` ou content commence par `(MOCK)` → `return null` → fall-through vers `aiOrchestrator.generate()` | 97c2bcf09 |
+
+### Analyse feature flag
+
+- `Cargo.toml` : `default = ["custom-protocol", "mock", "audio-capture"]`
+- `chat_engine::commands::generate_response` (full build) requiert `Arc<ChatEngine>` dans le state Tauri — **jamais enregistré dans main.rs**
+- Conclusion : changer `default` de `mock` → `full` provoquerait une panique au runtime (`Arc<ChatEngine>` non géré)
+- Action minimale correcte : **garde frontend uniquement** (appliquée) + documenter risque résiduel
+- Fix complet (enregistrement `Arc<ChatEngine>`) classifié **DEFERRED** — hors scope certification
+
+### Chaîne active confirmée (inchangée)
+
+`useChat.ts` → `useChatCore` → `chatEngine.generate()` → **`tryBackendPipeline()`** (guard mock actif) → si mock: fall-through → `aiOrchestrator.generate()` → providers réels (Ollama/tauriChat/titaneLocal)
+
+### Gates R3
+
+| Gate | Statut |
+|------|--------|
+| G_NO_CRITICAL_LEGACY_BYPASS | QUALIFIED (guard actif, risque résiduel documenté) |
+| G_AUTOHEAL_NON_LYING | PASS |
+| detect_recurrence | PASS (entries=342) |
+| verify_instructions | PASS=20 FAIL=0 |
+
+### Risque résiduel documenté
+
+1. `Cargo.toml` default features include `mock` — mock_commands présents dans tous les builds par défaut
+2. `Arc<ChatEngine>` jamais enregistré dans Tauri state → full build de `generate_response` non opérationnel
+3. Frontend typecheck bloqué par Node.js v18 < v20 (contrainte environnement)
+
+### Prochaine action minimale unique
+
+**Vérifier que CI release n'active pas accidentellement `generate_response` plein avec `--features full`** (risque panic). CI actuel : `pnpm exec tauri build` sans flags → default features → mock → guard frontend actif → SAFE.
+
