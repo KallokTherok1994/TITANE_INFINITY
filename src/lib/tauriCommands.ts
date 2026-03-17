@@ -283,6 +283,7 @@ export const TAURI_COMMANDS = {
   IDENTITY_GET_MATRIX: 'identity_get_matrix',
   IDENTITY_GET_PERSONALITY_SNAPSHOT: 'identity_get_personality_snapshot',
   IDENTITY_LIST_VOICE_PROFILES: 'identity_list_voice_profiles',
+  IDENTITY_GET_ACTIVE_VOICE_PROFILE: 'identity_get_active_voice_profile',
   IDENTITY_GET_CURRENT_TONE: 'identity_get_current_tone',
   IDENTITY_GET_CURRENT_MODE: 'identity_get_current_mode',
   IDENTITY_GET_AVAILABLE_MODES: 'identity_get_available_modes',

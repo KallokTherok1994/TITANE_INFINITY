@@ -2264,6 +2264,7 @@ fn main() {
             // ═══════════════════════════════════════════════════════════════
             titane_infinity::identity::commands::identity_get_matrix,
             titane_infinity::identity::commands::identity_list_voice_profiles,
+            titane_infinity::identity::commands::identity_get_active_voice_profile,
             titane_infinity::identity::commands::identity_set_active_voice_profile,
             titane_infinity::identity::commands::identity_set_mode,
 
