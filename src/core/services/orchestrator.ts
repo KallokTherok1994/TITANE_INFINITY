@@ -5,6 +5,12 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
+ * @deprecated This module is NOT on the active chat path.
+ * Canonical orchestrator: src/services/ai/orchestrator.ts (v24)
+ * All active imports (chatEngine, healthMonitor, systemUtilities, core/services/index.ts)
+ * route through src/services/ai/orchestrator.ts.
+ * This file is preserved for reference only. Do not add features here.
+ * ═══════════════════════════════════════════════════════════════════
  *   TITANE∞ v19.2Ω — AI ORCHESTRATOR OMEGA (NEURAL ORDER v∞.Ω)
  *   PHASE 3Ω: Orchestrator neural • Isolation absolue • Auto-heal intégré
  *   Architecture: Local-first → Sandbox providers → Fallback garanti → Never throw

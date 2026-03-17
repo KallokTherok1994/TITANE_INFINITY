@@ -4,6 +4,7 @@
  *
  * ═══════════════════════════════════════════════════════════════════
  * AGENT PERSONA — Expressive / Behavior / Interactions
+ * STATUS: STUB_ONLY — not dispatched at runtime (multi_agent_engine disabled, App.tsx PHASE 1 OPTION B).
  * Maintient cohérence comportementale, applique direction ROOT
  * ═══════════════════════════════════════════════════════════════════
  */

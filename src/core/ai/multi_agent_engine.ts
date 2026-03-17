@@ -1,6 +1,11 @@
 /**
  * TITANE∞ PHASE 1 (OPTION B) - Stub pour multi_agent_engine
  *
+ * STATUS: STUB_ONLY — dispatch loop is commented out in App.tsx (PHASE 1 OPTION B decision).
+ * HarmoniaAgent, PersonaAgent, HeliosAgent, MemoryCoreAgent, WatchdogAgent are NOT dispatched
+ * at runtime. This file provides type compatibility only.
+ * To activate: uncomment the useEffect in App.tsx and promote stub dispatcher to real implementation.
+ *
  * Ce fichier fournit des types et stubs pour maintenir la compatibilité
  * avec les agents qui importent depuis ce module.
  */

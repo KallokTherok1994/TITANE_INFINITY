@@ -2,7 +2,7 @@
 
 - Session: AUDIO_TTS_CONTINUE_2026-03-17_1519_c02872290
 - Date: 2026-03-17
-- Head: c02872290
+- Head: d818b0e5b
 
 ## Mandatory Gates
 
@@ -23,6 +23,9 @@
 8. WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm run e2e:desktop
 9. bash scripts/autoheal/detect_recurrence.sh
 10. bash scripts/verify_instructions.sh
+11. for i in 1 2 3; do WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm run e2e:desktop; done
+12. bash scripts/autoheal/detect_recurrence.sh
+13. bash scripts/verify_instructions.sh
 
 ## Evidence Artifacts
 
@@ -30,8 +33,17 @@
 - reports/e2e-desktop/wdio.log
 - reports/e2e-desktop/tauri_driver.log
 - reports/e2e-desktop/audio_tts_runtime_controls_metrics.json
-- scripts/autoheal/autoheal_rules.jsonl (entries FIX-009, FIX-010, FIX-011, FIX-012, FIX-013)
+- scripts/autoheal/autoheal_rules.jsonl (entries FIX-009, FIX-010, FIX-011, FIX-012, FIX-013; recurrence entries=375)
 
 ## Residual Risk
 
 - Natural voice quality criteria remain human-evaluation dependent and are not fully machine-proven.
+- `pauseResumePath` remains non-déterministe sur ce run (observé `not-observed`) malgré stop/replay + speaker/microphone validés.
+
+## Addendum 2026-03-17T16:31Z
+
+- Head revalidé: d818b0e5b
+- Build: `pnpm run build:tauri:e2e` -> PASS (code 0)
+- Runtime desktop ciblé: `audio-tts-runtime-controls.wdio.test.js` run x3 -> PASS
+- Gates: `detect_recurrence.sh` PASS, `verify_instructions.sh` PASS=20 FAIL=0
+- AutoHeal entries: 378

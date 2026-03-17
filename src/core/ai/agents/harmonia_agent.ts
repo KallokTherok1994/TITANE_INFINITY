@@ -4,6 +4,7 @@
  *
  * ═══════════════════════════════════════════════════════════════════
  * AGENT HARMONIA — Emotional / Relational / Tonality
+ * STATUS: STUB_ONLY — not dispatched at runtime (multi_agent_engine disabled, App.tsx PHASE 1 OPTION B).
  * Calibre ton, style, cohérence expressive, fluidité conversationnelle
  * ═══════════════════════════════════════════════════════════════════
  */
