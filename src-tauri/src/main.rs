@@ -625,7 +625,7 @@ mod legacy_ai_bridge {
     stub_cmd!(engines_monitoring_get_health);
     stub_cmd!(evolution_save_state);
     stub_cmd!(execute_shell_command);
-    stub_cmd!(get_cpu_metrics);
+    // get_cpu_metrics → REAL via titane_infinity::runtime_real (sysinfo)
     // get_engine_health / get_engines_status / get_event_stream / get_persistence_status
     // get_system_logs / log_entries / memory_* / multi_ai_get_state / restart_cores
     // run_system_diagnostic / selfheal_* / titan_state_get / toggle_* / xp_* → REAL below
@@ -638,7 +638,7 @@ mod legacy_ai_bridge {
     stub_cmd!(reject_self_healing_action);
     stub_cmd!(sc_introspection_generate);
     stub_cmd!(sc_introspection_preview);
-    stub_cmd!(secure_store_key);
+    // secure_store_key → REAL via titane_infinity::runtime_real
     stub_cmd!(singularity_autonomy_heal);
     stub_cmd!(stt_transcribe);
     stub_cmd!(submit_evolution_data);
@@ -1181,6 +1181,7 @@ fn main() {
     let builder = builder.manage(titane_infinity::runtime_real::XpStateManaged::default());
     let builder = builder.manage(titane_infinity::runtime_real::SelfhealManaged::default());
     let builder = builder.manage(titane_infinity::runtime_real::EventStreamState::default());
+    let builder = builder.manage(titane_infinity::runtime_real::SecureKvState::default());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -2774,7 +2775,8 @@ fn main() {
             legacy_ai_bridge::engines_monitoring_get_health,
             legacy_ai_bridge::evolution_save_state,
             legacy_ai_bridge::execute_shell_command,
-            legacy_ai_bridge::get_cpu_metrics,
+            // get_cpu_metrics → REAL: runtime_real (sysinfo)
+            titane_infinity::runtime_real::get_cpu_metrics,
             titane_infinity::runtime_real::get_engine_health,
             titane_infinity::runtime_real::get_engines_status,
             titane_infinity::runtime_real::get_event_stream,
@@ -2797,7 +2799,8 @@ fn main() {
             titane_infinity::runtime_real::run_system_diagnostic,
             legacy_ai_bridge::sc_introspection_generate,
             legacy_ai_bridge::sc_introspection_preview,
-            legacy_ai_bridge::secure_store_key,
+            // secure_store_key → REAL: runtime_real (in-memory KV)
+            titane_infinity::runtime_real::secure_store_key,
             titane_infinity::runtime_real::selfheal_force_evaluation,
             titane_infinity::runtime_real::selfheal_get_health,
             titane_infinity::runtime_real::selfheal_get_prediction,

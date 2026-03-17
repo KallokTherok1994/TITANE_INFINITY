@@ -398,3 +398,44 @@ pub async fn multi_ai_get_state() -> Result<Value, String> {
         }]
     }))
 }
+
+// ─── CPU METRICS (real — sysinfo crate) ──────────────────────────────────────
+
+#[tauri::command]
+pub async fn get_cpu_metrics() -> Result<Value, String> {
+    use sysinfo::System;
+    let mut sys = System::new();
+    sys.refresh_cpu_usage();
+    // Brief sleep to get non-zero delta
+    std::thread::sleep(std::time::Duration::from_millis(200));
+    sys.refresh_cpu_usage();
+    let cpus = sys.cpus();
+    let usage: f32 = if cpus.is_empty() {
+        0.0
+    } else {
+        cpus.iter().map(|c| c.cpu_usage()).sum::<f32>() / cpus.len() as f32
+    };
+    Ok(serde_json::json!({
+        "cpu_usage_percent": usage,
+        "core_count": cpus.len(),
+        "status": "real"
+    }))
+}
+
+// ─── SECURE STORE ─────────────────────────────────────────────────────────────
+
+/// Secure key store (in-memory for runtime; use secure_commands for persistent secrets).
+#[derive(Default)]
+pub struct SecureKvState(pub Mutex<HashMap<String, String>>);
+
+#[tauri::command]
+pub async fn secure_store_key(
+    state: State<'_, SecureKvState>,
+    key: String,
+    value: String,
+) -> Result<Value, String> {
+    let mut map = state.0.lock().map_err(|e| e.to_string())?;
+    map.insert(key.clone(), value);
+    Ok(serde_json::json!({ "ok": true, "stored_key": key }))
+}
+
