@@ -346,8 +346,10 @@ export const TAURI_COMMANDS = {
   ORCHESTRATION_GET_UNIFIED_STATE: 'orchestration_get_unified_state',
   ORCHESTRATION_GET_COGNITIVE_STATE: 'orchestration_get_cognitive_state',
   MULTI_AI_GET_STATE: 'multi_ai_get_state',
-  NEXUS_GET_STATE: 'nexus_get_state',
-  HARMONIA_GET_STATE: 'harmonia_get_state',
+  // @fix FIX-007: 'nexus_get_state'/'harmonia_get_state' not registered in generate_handler[];
+  // map to the registered engine_get_* aliases (legacy_ai_bridge, main.rs:2077-2078)
+  NEXUS_GET_STATE: 'engine_get_nexus_state',
+  HARMONIA_GET_STATE: 'engine_get_harmonia_state',
   DETECT_FILE_FORMAT: 'detect_file_format',
   PARSE_DOCUMENT: 'parse_document',
   PERFORMANCE_COMPRESS_MEMORY: 'performance_compress_memory',

@@ -733,25 +733,58 @@ const OrchestrationMetaCenterContent: React.FC = () => {
         lastUpdate: Date.now(),
       }))) as MultiAIState;
 
-      const nexusState = (await tauriClient.nexusGetState().catch(() => ({
-        activeNodes: 12,
-        totalNodes: 15,
-        linkCount: 45,
-        coherenceScore: 88,
-        nodes: [],
-        anomalies: [],
-        lastUpdate: Date.now(),
-      }))) as NexusState;
+      // [FIX-007] engine_get_nexus_state returns NexusEngineState — map to local NexusState shape
+      const nexusState: NexusState = await tauriClient
+        .nexusGetState()
+        .then((raw) => {
+          const r = raw as { health?: string; coordination_count?: number; active_connections?: number; last_coordination_ms?: number };
+          const h = r.health ?? '';
+          const coherenceScore = h === 'Ready' ? (r.active_connections ?? 0) > 0 ? 92 : 75 : h === 'Degraded' ? 55 : 20;
+          return {
+            activeNodes: r.active_connections ?? 0,
+            totalNodes: 15,
+            linkCount: Math.min(r.coordination_count ?? 0, 999),
+            coherenceScore,
+            nodes: [],
+            anomalies: [],
+            lastUpdate: r.last_coordination_ms ?? Date.now(),
+          };
+        })
+        .catch(() => ({
+          activeNodes: 12,
+          totalNodes: 15,
+          linkCount: 45,
+          coherenceScore: 88,
+          nodes: [],
+          anomalies: [],
+          lastUpdate: Date.now(),
+        }));
 
-      const harmoniaState = (await tauriClient.harmoniaGetState().catch(() => ({
-        activeFlows: [],
-        cpuUsage: 35,
-        ramUsage: 45,
-        ioBalance: 78,
-        harmonyScore: 82,
-        mode: 'balanced',
-        lastUpdate: Date.now(),
-      }))) as HarmoniaState;
+      // [FIX-007] engine_get_harmonia_state returns HarmoniaEngineState — map to local HarmoniaState shape
+      const harmoniaState: HarmoniaState = await tauriClient
+        .harmoniaGetState()
+        .then((raw) => {
+          const r = raw as { health?: string; harmony_index?: number; balance_score?: number; last_check_ms?: number };
+          const h = r.health ?? '';
+          return {
+            activeFlows: [],
+            cpuUsage: 0,
+            ramUsage: 0,
+            ioBalance: Math.round((r.balance_score ?? 0) * 100),
+            harmonyScore: Math.round((r.harmony_index ?? 0) * 100),
+            mode: h === 'Ready' ? 'balanced' : h === 'Degraded' ? 'degraded' : 'unknown',
+            lastUpdate: r.last_check_ms ?? Date.now(),
+          };
+        })
+        .catch(() => ({
+          activeFlows: [],
+          cpuUsage: 35,
+          ramUsage: 45,
+          ioBalance: 78,
+          harmonyScore: 82,
+          mode: 'balanced',
+          lastUpdate: Date.now(),
+        }));
 
       const cognitiveState = (await tauriClient.cognitiveGetState().catch(() => ({
         provider: 'claude',
