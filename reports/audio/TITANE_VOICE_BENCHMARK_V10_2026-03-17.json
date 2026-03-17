@@ -1,0 +1,104 @@
+{
+  "date": "2026-03-17",
+  "benchmark_id": "TITANE_VOICE_BENCHMARK_V10",
+  "runtime": "desktop_tauri_wdio",
+  "provider_runtime_truth": {
+    "primary": "piper",
+    "fallback": "espeak",
+    "base_voice_id": "fr_FR-siwis-medium",
+    "active_profile_source": "backend_identity_active_profile",
+    "expected_backend_default_profile_id": "titane-natural-fr",
+    "frontend_boot_hydration": "PASS",
+    "desktop_runtime_recert_this_session": "PASS"
+  },
+  "sample_truth": {
+    "user_target_sample_provided": false,
+    "local_audio_candidate": {
+      "path": "test.wav",
+      "duration_seconds": 2.0,
+      "sample_rate_hz": 16000,
+      "channels": 1,
+      "codec": "pcm_s16le"
+    },
+    "sample_proximity_measurable": false,
+    "classification": "BLOCKED"
+  },
+  "automation_completed": {
+    "active_profile_getter_surface": "PASS",
+    "frontend_boot_hydration": "PASS",
+    "manual_tuning_preservation": "PASS",
+    "rust_voice_profile_unit_test": "PASS",
+    "ts_tts_runtime_policy_tests": "PASS",
+    "build_tauri_e2e": "PASS",
+    "desktop_runtime_truth_this_session": "PASS",
+    "desktop_regression_online": "PASS",
+    "desktop_regression_offline_sim": "PASS",
+    "tts_controls_executed": "PASS",
+    "pause_resume_path": "executed",
+    "stop_action_observed": "PASS",
+    "replay_button_observed": "PASS",
+    "audio_center_visible": "PASS",
+    "speaker_mic_controls_visible": "PASS",
+    "assistant_message_detected_online": "PASS"
+  },
+  "corpus": [
+    {
+      "id": "BENCH_1_SHORT_WARM",
+      "text": "Bonjour, je suis TITANE. Je reste presente avec douceur, clarte et stabilite pour t'accompagner aujourd'hui."
+    },
+    {
+      "id": "BENCH_2_LONG_EXPLANATION",
+      "text": "Pour progresser durablement, il faut aligner respiration, alimentation et sommeil. La respiration calme le systeme nerveux, l'alimentation stabilise l'energie, et le sommeil consolide les apprentissages et la recuperation."
+    },
+    {
+      "id": "BENCH_3_MOTIVATING_GUIDANCE",
+      "text": "Tu n'as pas besoin d'etre parfait maintenant. Choisis une action simple, execute-la avec calme, puis ajoute une seconde action utile."
+    },
+    {
+      "id": "BENCH_4_CHAT_COMPANION_STYLE",
+      "text": "Je suis la pour t'aider sans pression ni surjeu. On avance ensemble, a ton rythme, avec une energie stable et bienveillante."
+    },
+    {
+      "id": "BENCH_5_TECHNICAL_CLARITY",
+      "text": "Le flux vocal suit trois etapes: preparation du texte, synthese audio, puis lecture continue. Chaque etape doit rester coherente pour eviter un rendu hache ou agressif."
+    },
+    {
+      "id": "BENCH_6_SLOW_CALM_REASSURANCE",
+      "text": "Respire lentement, relache les epaules, et reviens a l'essentiel. Nous pouvons traiter chaque point un par un, dans le calme."
+    },
+    {
+      "id": "BENCH_7_INTIMATE_SUPPORT",
+      "text": "Je t'ecoute avec attention. Tu peux avancer en securite, sans te brusquer, en gardant confiance dans tes ressources."
+    },
+    {
+      "id": "BENCH_8_GENTLE_ACTIVATION",
+      "text": "Quand tu es pret, commence par une petite action concrete, puis confirme ton elan avec une seconde action douce et reguliere."
+    }
+  ],
+  "scoring_scale": "0_to_5",
+  "required_thresholds": {
+    "naturality": 4,
+    "fluidity": 4,
+    "clarity": 4,
+    "humanness": 4,
+    "listening_comfort": 4,
+    "sample_proximity": 4,
+    "critical_dimension_min": 3
+  },
+  "results": {
+    "naturality": null,
+    "fluidity": null,
+    "clarity": null,
+    "warmth": null,
+    "softness": null,
+    "timbre_stability": null,
+    "perceived_humanness": null,
+    "perceived_inspiration": null,
+    "listening_comfort": null,
+    "no_robotic_artifacts": null,
+    "no_choppy_playback": null,
+    "sample_style_proximity": null
+  },
+  "execution_status": "BLOCKED",
+  "notes": "V10 ferme le gap desktop runtime recertification (online + offline PASS, pauseResumePath=executed). La campagne perceptive reste BLOQUEE : protocole d'ecoute humaine note et sample cible certifie toujours requis pour clore la chaine complete."
+}
