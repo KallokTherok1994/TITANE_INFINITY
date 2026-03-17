@@ -306,3 +306,43 @@ Upgrade de STABLE → **PASS**. Les deux blocages honnêtes TWINS et TIME sont d
 **VERDICT GLOBAL FINAL : PASS (19/19)**
 
 Commit: `59e5c80b7` — fix(mtm+stm): register missing memory backend commands + wire STM into OMEGA prompt
+
+---
+
+## ADDENDUM R7 — Audit étendu IPC capabilities (2026-03-17)
+
+### Problèmes résolus
+
+| Commande | Statut avant | Fix | Statut après |
+|---|---|---|---|
+| `get_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
+| `memory_debug_scan` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
+| `singularity_get_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
+| `get_evolution_state` | allow list manquant | Ajouté à `tauri.conf.json` | PASS |
+
+### Risques ouverts (hors scope chat cert)
+
+Un scan large du codebase TS révèle ~215 chaînes d'invocation potentielles dont ~15-20 ont des callers actifs mais des backends non-enregistrés ou non-exposés :
+
+| Surface | Commandes | Problème | Priorité |
+|---|---|---|---|
+| `meta_mode` | `meta_mode_process`, `meta_mode_get_current_mode`, etc. (5 cmd) | Backend `meta_mode.rs` existe + callers actifs, mais **non enregistrés** dans `invoke_handler` NI dans allow list | MEDIUM |
+| `engine_api` | `run_evolution`, `quick_health_check` | `engine_api.rs` orphelin (non exporté depuis `api/mod.rs`), non enregistré | LOW |
+| Divers | ~190 autres | Mix doc/JSDoc examples, dead code, legacy stubs | LOW/NONE |
+
+Ces risques sont **hors scope de la certification chat** mais documentés pour un audit IPC app-wide à planifier séparément.
+
+### Commits R7
+- `536c80335` — fix(capabilities): get_state + memory_debug_scan
+- `2f8083815` — fix(capabilities): singularity_get_state + get_evolution_state
+
+### Verdict final R7
+
+| Verdict | Nombre |
+|---------|--------|
+| PASS (chat chain) | 19 |
+| OPEN_RISK (non-chat IPC) | 2 surfaces (meta_mode, engine_api) |
+| BLOCKED | 0 |
+| FAIL | 0 |
+
+**VERDICT GLOBAL FINAL : PASS (chat chain 19/19) — OPEN_RISK (app-wide IPC audit recommandé)**
