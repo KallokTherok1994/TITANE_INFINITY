@@ -3154,6 +3154,36 @@
             },
             {
               "command": "send_message"
+            },
+            {
+              "command": "fs_exists"
+            },
+            {
+              "command": "read_json_file"
+            },
+            {
+              "command": "log_to_file"
+            },
+            {
+              "command": "save_settings"
+            },
+            {
+              "command": "get_memories"
+            },
+            {
+              "command": "store_memory"
+            },
+            {
+              "command": "delete_memory"
+            },
+            {
+              "command": "report_chat_error"
+            },
+            {
+              "command": "sync_evolution_state"
+            },
+            {
+              "command": "get_performance_metrics"
             }
           ]
         },
