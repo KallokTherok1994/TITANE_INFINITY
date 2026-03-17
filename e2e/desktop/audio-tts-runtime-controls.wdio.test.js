@@ -38,6 +38,34 @@ const METRICS = {
   verdict: 'BLOCKED',
 };
 
+async function ensureAudioCenterVisible(maxAttempts = 3) {
+  const audioCenterSelector = '[data-testid="page-audio-center"]';
+
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    await gotoTopNavPage(uiPages.admin);
+    await clickAllTabs(['[data-testid="tab-admin-audio"]']);
+
+    const audioCenterRoot = await $(audioCenterSelector);
+    try {
+      await browser.waitUntil(
+        async () => audioCenterRoot.isExisting() && audioCenterRoot.isDisplayed(),
+        {
+          timeout: 10000,
+          interval: 300,
+          timeoutMsg: 'Audio Center root not visible',
+        }
+      );
+      return true;
+    } catch (error) {
+      if (attempt === maxAttempts) {
+        throw error;
+      }
+    }
+  }
+
+  return false;
+}
+
 async function writeMetrics() {
   fs.mkdirSync(ARTIFACTS_DIR, { recursive: true });
   fs.writeFileSync(METRICS_FILE, JSON.stringify(METRICS, null, 2));
@@ -193,19 +221,7 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       'Replay/read button label should be available after TTS run'
     );
 
-    await gotoTopNavPage(uiPages.admin);
-    await clickAllTabs(['[data-testid="tab-admin-audio"]']);
-
-    const audioCenterRoot = await $('[data-testid="page-audio-center"]');
-    await browser.waitUntil(
-      async () => audioCenterRoot.isExisting() && audioCenterRoot.isDisplayed(),
-      {
-        timeout: 30000,
-        interval: 300,
-        timeoutMsg: 'Audio Center page is not visible',
-      }
-    );
-    METRICS.audioCenterVisible = true;
+    METRICS.audioCenterVisible = await ensureAudioCenterVisible(3);
 
     // Navigate to the 'devices' tab within the Audio Center (speaker/mic buttons are there)
     await clickAllTabs(['[data-testid="tab-audio-devices"]']);

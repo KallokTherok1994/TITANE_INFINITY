@@ -47,3 +47,20 @@
 - Runtime desktop ciblé: `audio-tts-runtime-controls.wdio.test.js` run x3 -> PASS
 - Gates: `detect_recurrence.sh` PASS, `verify_instructions.sh` PASS=20 FAIL=0
 - AutoHeal entries: 378
+
+## Addendum 2026-03-17T17:20Z
+
+- Head revalidé: 9b13edcd1
+- Patch causal voix: `extractSpeakableText -> prepareSpeechProsody -> speak` (URL simplification, normalisation ponctuation/pause)
+- Test unitaire ciblé: `pnpm vitest run src/__tests__/services/tts/messageSpeechController.test.ts` -> PASS (4/4)
+- Build desktop: `pnpm run build:tauri:e2e` -> PASS
+- Runtime desktop ciblé: `audio-tts-runtime-controls.wdio.test.js` -> PASS (run simple) puis PASS (run x3)
+- Stabilisation preuve E2E: retry borné `ensureAudioCenterVisible(maxAttempts=3)` pour éliminer faux négatif intermittent
+- Gates gouvernance: `detect_recurrence.sh` PASS, `verify_instructions.sh` PASS=20 FAIL=0
+- AutoHeal entries ajoutées: AH-2026-03-17-VOICE-001-PROSODY-PREP-CHAIN, AH-2026-03-17-VOICE-002-E2E-AUDIOCENTER-RETRY
+
+## Addendum 2026-03-17T17:24Z
+
+- Head courant constaté en fin de session: e5515d71f
+- Contradiction de head interne: addendum précédent (9b13edcd1) supersédé par ce marqueur final
+- Verdict technique inchangé: chaîne runtime desktop PASS, qualité perceptive humaine non certifiée

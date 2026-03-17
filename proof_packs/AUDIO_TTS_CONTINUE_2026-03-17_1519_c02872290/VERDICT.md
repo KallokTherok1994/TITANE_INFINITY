@@ -51,3 +51,26 @@
 - `pnpm run build:tauri:e2e`: PASS
 - `audio-tts-runtime-controls.wdio.test.js` (run x3): PASS
 - Gates gouvernance: PASS (entries=378)
+
+## Addendum 2026-03-17T17:20Z
+
+- Head revalidé: 9b13edcd1
+- Chaîne technique post-patch: PASS (unit + build + runtime desktop x3)
+- Défaut dominant traité localement: TEXT_PREP_BAD / PROSODY_BAD (préparation vocale insuffisante)
+- Correctif causal minimal: `prepareSpeechProsody` inséré avant `audioService.speak`
+- Stabilité E2E desktop: FAIL intermittent éliminé par reprise bornée de navigation Audio Center
+- Benchmark perceptif humain (6 corpus, scoring 0..5) toujours non exécuté
+- Sample vocal cible utilisateur: non fourni dans la session courante, proximité stylistique non mesurable
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+4. VERDICT_UNIQUE_CONFIRMED: VOICE_IDENTITY_NOT_PROVEN
+
+## Addendum 2026-03-17T17:24Z
+
+- Head courant de clôture: e5515d71f
+- Le marqueur de head de l'addendum 17:20 est obsolète et remplacé par ce marqueur final
+- VERDICT_UNIQUE maintenu: VOICE_IDENTITY_NOT_PROVEN
