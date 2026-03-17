@@ -89,6 +89,43 @@ mod engine_evolution_commands {
     include!("commands/engine_evolution_commands.rs");
 }
 
+// Evolution Engine v∞ commands (evolution_get_state, evolution_start/stop, etc.)
+mod evolution_engine_commands {
+    include!("evolution/evolution_commands.rs");
+}
+
+// Persona Engine commands (persona_get_state, persona_react, etc.)
+// full: real PersonaEngine; mock/default: lightweight stubs
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+mod persona_commands {
+    pub use titane_infinity::system::persona_engine::commands::*;
+}
+
+#[cfg(any(feature = "mock", not(feature = "full")))]
+mod persona_commands {
+    use tauri::State;
+    use std::sync::Mutex;
+    #[derive(Default)]
+    pub struct PersonaEngine;
+    pub type PersonaMutex = Mutex<PersonaEngine>;
+    #[tauri::command]
+    pub async fn persona_get_state(_engine: State<'_, PersonaMutex>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    #[tauri::command]
+    pub async fn persona_get_multipliers(_engine: State<'_, PersonaMutex>) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    #[tauri::command]
+    pub async fn persona_react(_engine: State<'_, PersonaMutex>, _event: String) -> Result<serde_json::Value, String> { Ok(serde_json::json!({})) }
+    #[tauri::command]
+    pub async fn persona_update(_engine: State<'_, PersonaMutex>, _data: serde_json::Value) -> Result<(), String> { Ok(()) }
+    #[tauri::command]
+    pub async fn persona_reset(_engine: State<'_, PersonaMutex>) -> Result<(), String> { Ok(()) }
+}
+
+// Agenda commands (agenda_load_events, agenda_save_events, agenda_delete_event)
+// Available in all builds (no feature gating on agenda module)
+mod agenda_commands {
+    pub use titane_infinity::agenda::commands::*;
+}
+
 // Orchestration Center commands (OPUS #5/6/7)
 mod orchestration_center_commands {
     include!("commands/orchestration_center.rs");
@@ -926,6 +963,13 @@ fn main() {
     let builder = builder.manage(meta_mode_commands::MetaModeState::new());
     // AUTO-EVOLUTION ENGINE — R8 unlock: needed by run_evolution/quick_health_check
     let builder = builder.manage(titane_infinity::engine::AutoEvolutionEngine::new());
+    // EVOLUTION ENGINE COMMANDS — R9: EvolutionState for evolution_start/stop etc.
+    let builder = builder.manage(std::sync::Mutex::new(titane_infinity::evolution::evolution_commands::EvolutionEngineStore::new()));
+    // PERSONA ENGINE — R9: PersonaEngine state for persona_* commands
+    #[cfg(any(feature = "mock", not(feature = "full")))]
+    let builder = builder.manage(std::sync::Mutex::new(persona_commands::PersonaEngine::default()));
+    #[cfg(all(not(feature = "mock"), feature = "full"))]
+    let builder = builder.manage(std::sync::Mutex::new(titane_infinity::system::persona_engine::PersonaEngine::default()));
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -1731,6 +1775,37 @@ fn main() {
             engine_evolution_commands::run_evolution,
             engine_evolution_commands::get_evolution_state,
             engine_evolution_commands::quick_health_check,
+            // Evolution Engine v∞ commands — R9 unlock
+            evolution_engine_commands::evolution_get_state,
+            evolution_engine_commands::evolution_start,
+            evolution_engine_commands::evolution_stop,
+            evolution_engine_commands::evolution_run_full_cycle,
+            evolution_engine_commands::evolution_get_history,
+            evolution_engine_commands::evolution_get_suggestions,
+            evolution_engine_commands::evolution_approve_suggestion,
+            evolution_engine_commands::evolution_reject_suggestion,
+            evolution_engine_commands::evolution_create_action,
+            evolution_engine_commands::evolution_execute_action,
+            evolution_engine_commands::evolution_rollback_action,
+            evolution_engine_commands::evolution_get_data_points,
+            evolution_engine_commands::evolution_add_data_point,
+            evolution_engine_commands::evolution_update_score,
+            evolution_engine_commands::evolution_get_scores,
+            evolution_engine_commands::evolution_get_insights,
+            evolution_engine_commands::evolution_get_patterns,
+            evolution_engine_commands::evolution_get_statistics,
+            evolution_engine_commands::evolution_generate_report,
+            evolution_engine_commands::evolution_clear_old_history,
+            // Persona Engine commands — R9 unlock
+            persona_commands::persona_get_state,
+            persona_commands::persona_get_multipliers,
+            persona_commands::persona_react,
+            persona_commands::persona_update,
+            persona_commands::persona_reset,
+            // Agenda commands — R9 unlock
+            agenda_commands::agenda_load_events,
+            agenda_commands::agenda_save_events,
+            agenda_commands::agenda_delete_event,
             // ═══════════════════════════════════════════════════════════════
             // NEW COMMANDS v21.5.3 - BACKEND REBUILD (SUPER PROMPT #2)
             // ═══════════════════════════════════════════════════════════════
@@ -2053,6 +2128,52 @@ fn main() {
             // Allowlisted in chat_ai.json but not previously registered
             // ═══════════════════════════════════════════════════════════════
             secure_commands::validate_chat_message,
+
+            // ═══════════════════════════════════════════════════════════════
+            // IA COMMANDS — R10 unlock
+            // ia_commands module (include! at mod ia_commands block)
+            // ═══════════════════════════════════════════════════════════════
+            ia_commands::list_ai_providers,
+            ia_commands::set_api_key,
+            ia_commands::test_api_key,
+
+            // ═══════════════════════════════════════════════════════════════
+            // ORCHESTRATION CENTER — ping commands — R10 unlock
+            // ═══════════════════════════════════════════════════════════════
+            orchestration_center_commands::ping_gemini,
+            orchestration_center_commands::ping_ollama,
+
+            // ═══════════════════════════════════════════════════════════════
+            // MULTI-AGENTS COMMANDS — R10 unlock
+            // ═══════════════════════════════════════════════════════════════
+            multi_agents_commands::create_agent,
+            multi_agents_commands::get_agent,
+            multi_agents_commands::list_agents,
+
+            // ═══════════════════════════════════════════════════════════════
+            // SELF HEALING (commands::) — get_vitals / load_profile — R10 unlock
+            // (distinct from commands_v21::self_healing_commands::*)
+            // ═══════════════════════════════════════════════════════════════
+            commands_v21::self_healing_commands::selfheal_get_vitals,
+            commands_v21::self_healing_commands::selfheal_load_profile,
+
+            // ═══════════════════════════════════════════════════════════════
+            // MOCK COMMANDS — remaining mock-only commands — R10 unlock
+            // ═══════════════════════════════════════════════════════════════
+            #[cfg(feature = "mock")]
+            mock_commands::experience_get_state,
+            #[cfg(feature = "mock")]
+            mock_commands::experience_update_state,
+            #[cfg(feature = "mock")]
+            mock_commands::get_system_info,
+            #[cfg(feature = "mock")]
+            mock_commands::store_file,
+            #[cfg(feature = "mock")]
+            mock_commands::reset_memory,
+            #[cfg(feature = "mock")]
+            mock_commands::get_helios_metrics,
+            #[cfg(feature = "mock")]
+            mock_commands::get_logs,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
