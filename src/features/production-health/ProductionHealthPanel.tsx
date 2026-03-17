@@ -55,11 +55,17 @@ const getNoDataMessage = (
         detail:
           'Le fichier de télémétrie existe mais ne contient aucun échantillon. En attente de la première collecte.',
       };
+    case 'SCHEMA_DRIFT':
+      return {
+        title: '⚠️ Structure CSV incompatible',
+        detail:
+          'Le fichier CSV existe mais sa structure ne correspond pas au schéma attendu. Vérifier les en-têtes et le délimiteur.',
+      };
     case 'PARSER_ERROR':
       return {
-        title: '⚠️ Erreur de parsing',
+        title: '⚠️ Erreur de lecture CSV',
         detail:
-          'Le fichier de télémétrie existe mais son format est invalide. Vérifier la structure CSV.',
+          'Le fichier de télémétrie existe mais contient des lignes malformées ou un encodage inattendu. Vérifier la structure CSV.',
       };
     case 'IPC_ERROR':
       return {

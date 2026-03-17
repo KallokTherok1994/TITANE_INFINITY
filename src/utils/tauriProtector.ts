@@ -688,6 +688,22 @@ export class TauriInvokeProtector {
 
     // [RETRAIT v27.0.5-prod] Fallback legacy chat command removed from protector
 
+    // ✅ FIX-ADMIN-HEALTH-CSV: Return canonical {ok:false} envelope so the
+    // useProductionHealthTelemetry hook's envelope check fires correctly and
+    // classifies the error as SOURCE_UNAVAILABLE instead of PARSER_ERROR.
+    if (safeCommand === 'read_production_week1_csv') {
+      return {
+        ok: false,
+        content: null,
+        error: {
+          message: errorMessage.startsWith('SOURCE_')
+            ? errorMessage
+            : `SOURCE_UNAVAILABLE: Tauri runtime non disponible — ${errorMessage}`,
+        },
+        fallback: true,
+      } as T;
+    }
+
     if (
       command &&
       (command.includes('status') ||

@@ -18,16 +18,35 @@ export type ProductionHealthErrorKind =
   | 'SOURCE_EMPTY'
   | 'IPC_ERROR'
   | 'PARSER_ERROR'
+  | 'SCHEMA_DRIFT'
   | 'UNKNOWN_ERROR';
 
 function classifyError(msg: string): ProductionHealthErrorKind {
   if (msg.startsWith('SOURCE_UNAVAILABLE')) return 'SOURCE_UNAVAILABLE';
   if (msg.startsWith('SOURCE_EMPTY')) return 'SOURCE_EMPTY';
-  if (msg.includes('parse') || msg.includes('CSV') || msg.includes('Invalid'))
+  // Distinguish schema/parse failures from generic "invalid" IPC shape issues
+  if (msg.startsWith('SCHEMA_DRIFT') || msg.includes('schéma') || msg.includes('schema'))
+    return 'SCHEMA_DRIFT';
+  if (msg.startsWith('PARSER_ERROR') || msg.includes('parse') || msg.includes('CSV'))
     return 'PARSER_ERROR';
   if (msg.includes('IPC') || msg.includes('invoke') || msg.includes('tauri'))
     return 'IPC_ERROR';
+  // "Invalid" alone (without CSV/parse context) is an IPC shape issue, not a parser error
+  if (msg.includes('Invalid telemetry payload') || msg.includes('Invalid CSV'))
+    return 'PARSER_ERROR';
   return 'UNKNOWN_ERROR';
+}
+
+/**
+ * Extract error message safely from Error instances OR plain TauriError objects.
+ */
+function extractErrorMessage(err: unknown): string {
+  if (err instanceof Error) return err.message;
+  if (err && typeof err === 'object') {
+    const obj = err as Record<string, unknown>;
+    if (typeof obj.message === 'string' && obj.message) return obj.message;
+  }
+  return String(err);
 }
 
 function isProductionHealthSummary(value: unknown): value is ProductionHealthSummary {
@@ -88,7 +107,7 @@ export function useProductionHealthTelemetry(
       const summary = response;
       setData(summary);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : String(err);
+      const errorMsg = extractErrorMessage(err);
       setError(errorMsg);
       setErrorKind(classifyError(errorMsg));
       setData(null); // Always clear stale data on error — no silent fallback
