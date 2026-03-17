@@ -1035,6 +1035,11 @@ Que souhaites-tu explorer ?`;
 
       const completion: ChatCompletionPayload =
         await chatEngineCommands.generateResponse(payload);
+      // Guard: if backend is in mock mode, fall through to real orchestrator
+      if (completion.provider === 'mock' || completion.content?.startsWith('(MOCK)')) {
+        logger.warn('[chatEngine] Mock backend response detected — falling through to orchestrator');
+        return null;
+      }
       this.setConversationId(finalConfig.mode, completion.conversationId);
       pipelineSteps.push('backend-response');
 
