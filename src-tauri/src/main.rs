@@ -285,6 +285,11 @@ mod commands {
         include!("commands/copilot_commands.rs");
     }
 
+    // ✅ R11: Stub commands — fill IPC gaps for frontend-called commands with no real backend
+    pub mod stub_commands {
+        include!("commands/stub_commands.rs");
+    }
+
     // ✅ AUDIT FIX #1: Unified Ollama provider command
     pub mod ollama_command {
         include!("commands/ollama_command.rs");
@@ -948,6 +953,7 @@ fn main() {
         .manage(singularity_fusion::CrashGuardState::default())
         .manage(singularity_fusion::PerformanceState::default())
         .manage(singularity_fusion::UnifiedPipelineState::default())
+        .manage(singularity_fusion::FusionEngineState::default())
         .manage(state_bridge_commands::FrontendStateStore::default())
         // ✅ AUDIT FIX (2026-03-06): Identity Engine State — required by identity_* commands
         .manage(titane_infinity::identity::commands::IdentityEngineState::default())
@@ -2174,6 +2180,60 @@ fn main() {
             mock_commands::get_helios_metrics,
             #[cfg(feature = "mock")]
             mock_commands::get_logs,
+
+            // ═══════════════════════════════════════════════════════════════
+            // R11: STUB COMMANDS — IPC gap elimination
+            // Commands called from frontend with no real backend.
+            // All return safe stubs — no silent IPC timeout.
+            // ═══════════════════════════════════════════════════════════════
+            commands::stub_commands::fs_exists,
+            commands::stub_commands::read_json_file,
+            commands::stub_commands::log_to_file,
+            commands::stub_commands::save_settings,
+            commands::stub_commands::get_memories,
+            commands::stub_commands::store_memory,
+            commands::stub_commands::delete_memory,
+            commands::stub_commands::report_chat_error,
+            commands::stub_commands::sync_evolution_state,
+            commands::stub_commands::get_performance_metrics,
+
+            // ═══════════════════════════════════════════════════════════════
+            // R11: REAL BACKENDS now registered (existed but unregistered)
+            // ═══════════════════════════════════════════════════════════════
+
+            // singularity_fusion::fusion_engine commands
+            singularity_fusion::fusion_engine::singularity_get_fusion_state,
+            singularity_fusion::fusion_engine::singularity_perform_sync,
+            singularity_fusion::fusion_engine::singularity_check_integrity,
+            singularity_fusion::fusion_engine::singularity_create_snapshot,
+            singularity_fusion::fusion_engine::singularity_restore_snapshot,
+            singularity_fusion::fusion_engine::singularity_get_metrics,
+            singularity_fusion::fusion_engine::singularity_get_diagnostics,
+            singularity_fusion::fusion_engine::singularity_reset,
+
+            // singularity::coherence
+            titane_infinity::singularity::coherence::singularity_check_coherence,
+
+            // meta::commands
+            titane_infinity::meta::commands::meta_get_report,
+            titane_infinity::meta::commands::meta_trigger_sync,
+            titane_infinity::meta::commands::meta_get_alignment,
+            titane_infinity::meta::commands::meta_get_state,
+            titane_infinity::meta::commands::meta_selftest_all,
+            titane_infinity::meta::commands::meta_get_monitoring_metrics,
+
+            // knowledge::parser
+            titane_infinity::knowledge::parser::parse_document,
+
+            // cognitive_learning::semantic_map
+            titane_infinity::cognitive_learning::semantic_map::cognitive_get_map,
+
+            // secure_commands — secure_list_files
+            secure_commands::secure_list_files,
+
+            // mock get_timeline (safe in both builds since mock_commands always present)
+            #[cfg(feature = "mock")]
+            mock_commands::get_timeline,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
