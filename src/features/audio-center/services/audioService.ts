@@ -27,6 +27,9 @@ import {
 
 const STORAGE_KEY = 'titane_audio_config';
 const DEVICE_CACHE_TTL = 30000; // 30 secondes
+const ELEVENLABS_VOICE_IDS = new Set(
+  AVAILABLE_VOICES.filter(voice => voice.engine === 'elevenlabs').map(voice => voice.id)
+);
 
 export type AudioPlaybackProvider = 'tauri' | 'webspeech' | null;
 
@@ -63,6 +66,18 @@ class AudioService {
     // Détection synchrone (detectEnvironment est sync malgré son nom)
     const env = detectEnvironment();
     this.isTauri = env.isTauri;
+    const normalizedTTS = this.normalizeRuntimeCompatibleTTS(this.config.tts);
+    if (
+      normalizedTTS.engine !== this.config.tts.engine ||
+      normalizedTTS.voiceId !== this.config.tts.voiceId ||
+      normalizedTTS.language !== this.config.tts.language
+    ) {
+      this.config = {
+        ...this.config,
+        tts: normalizedTTS,
+      };
+      this.saveConfig();
+    }
     console.log('[AudioService] Initialized. Tauri mode:', this.isTauri);
   }
 
@@ -115,8 +130,27 @@ class AudioService {
     return { ...this.config.tts };
   }
 
+  private normalizeRuntimeCompatibleTTS(settings: TTSSettings): TTSSettings {
+    if (!this.isTauri || settings.engine !== 'elevenlabs') {
+      return settings;
+    }
+
+    const shouldResetVoiceId =
+      !settings.voiceId || ELEVENLABS_VOICE_IDS.has(settings.voiceId);
+
+    return {
+      ...settings,
+      engine: 'piper',
+      voiceId: shouldResetVoiceId ? DEFAULT_AUDIO_CONFIG.tts.voiceId : settings.voiceId,
+      language: settings.language || DEFAULT_AUDIO_CONFIG.tts.language,
+    };
+  }
+
   async updateTTSSettings(settings: Partial<TTSSettings>): Promise<void> {
-    this.config.tts = { ...this.config.tts, ...settings };
+    this.config.tts = this.normalizeRuntimeCompatibleTTS({
+      ...this.config.tts,
+      ...settings,
+    });
     this.saveConfig();
     if (settings.voiceProfileId !== undefined) {
       await this.syncVoiceIdentityProfile(settings.voiceProfileId);
@@ -126,15 +160,16 @@ class AudioService {
   }
 
   private buildRuntimeTTSSettings(): TTSSettings & { outputDeviceId?: string } {
+    const runtimeTTS = this.normalizeRuntimeCompatibleTTS(this.config.tts);
     return {
-      engine: this.config.tts.engine,
-      voiceId: this.config.tts.voiceId,
-      rate: this.config.tts.rate,
-      pitch: this.config.tts.pitch,
-      volume: this.config.tts.volume,
-      language: this.config.tts.language,
-      emotionEnabled: this.config.tts.emotionEnabled,
-      autoFallback: this.config.tts.autoFallback,
+      engine: runtimeTTS.engine,
+      voiceId: runtimeTTS.voiceId,
+      rate: runtimeTTS.rate,
+      pitch: runtimeTTS.pitch,
+      volume: runtimeTTS.volume,
+      language: runtimeTTS.language,
+      emotionEnabled: runtimeTTS.emotionEnabled,
+      autoFallback: runtimeTTS.autoFallback,
       outputDeviceId: this.config.output.deviceId || undefined,
     };
   }
@@ -180,7 +215,7 @@ class AudioService {
     const elevenLabsReady = await this.isElevenLabsConfigured();
     return AVAILABLE_VOICES.filter(voice => {
       if (voice.engine === 'elevenlabs') {
-        return elevenLabsReady;
+        return elevenLabsReady && !this.isTauri;
       }
       return true;
     });
