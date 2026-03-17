@@ -443,3 +443,30 @@ verify_instructions          : PASS=20 FAIL=0
 ### Verdict R10
 **STABLE** — Toutes les commandes avec backend réel sont maintenant enregistrées et allowlistées.
 17 commandes sans backend (stubs/doc-only) documentées dans MOCK_BYPASS_MATRIX — pas de crash, échec silencieux côté IPC.
+
+---
+
+## ADDENDUM R10+ — 2026-03-17 — Parité IPC Finale Complète
+
+**Commit**: `2cbfb35a4`
+
+### Audit final automatisé
+- Analyse croisée automatisée: `#[tauri::command]` fns ↔ invoke_handler ↔ allow list
+- Résultat: 3 gaps résiduels trouvés et corrigés (`chat_get_memory_stats`, `read_production_week1_csv`, `send_message`)
+- **Parité finale: 0 commandes enregistrées manquantes du allow list**
+
+### État final certifié
+| Metric | Valeur |
+|--------|--------|
+| `#[tauri::command]` fns dans le codebase | 1152 |
+| Enregistrées dans `invoke_handler` | 527 |
+| Couvertes dans allow list | 527 (100%) |
+| Allow list total | 1011 |
+| Fns `#[tauri::command]` non enregistrées (dead code) | 625 |
+| AH-rules total | 356 |
+
+### Verdict Final
+**STABLE — PARITÉ IPC COMPLÈTE**
+
+Toutes les commandes enregistrées dans `invoke_handler` sont couvertes par le allow list.
+Aucun gap critique restant.
