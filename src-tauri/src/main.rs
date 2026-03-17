@@ -547,6 +547,100 @@ mod legacy_ai_bridge {
     pub async fn memory_compact(_state: State<'_, AIChatState>) -> Result<String, String> {
         Ok("{}".to_string())
     }
+
+    // [FIX-014] NO_HANDLER stubs — frontend-invoked commands with no Rust handler.
+    // All return honest DEGRADED/empty values. Zero silent failure.
+    macro_rules! stub_cmd {
+        ($name:ident) => {
+            #[tauri::command]
+            pub async fn $name(_state: State<'_, AIChatState>) -> Result<serde_json::Value, String> {
+                Ok(serde_json::json!({ "status": "degraded", "reason": stringify!($name) }))
+            }
+        };
+    }
+    stub_cmd!(agenda_save_event);
+    stub_cmd!(agenda_sync);
+    stub_cmd!(ai_generate_local);
+    stub_cmd!(ai_scan_local_models);
+    stub_cmd!(ai_set_local_model);
+    stub_cmd!(ai_status);
+    stub_cmd!(analyze_bundle_size);
+    stub_cmd!(automation_execute_action);
+    stub_cmd!(autonomy_clean_memory);
+    stub_cmd!(autonomy_fix_tts_sync);
+    stub_cmd!(autonomy_log_report);
+    stub_cmd!(autonomy_ping);
+    stub_cmd!(autonomy_resync_singularity_state);
+    stub_cmd!(camera_start);
+    stub_cmd!(chat_mode_change);
+    stub_cmd!(chat_mode_sync);
+    stub_cmd!(clear_event_stream);
+    stub_cmd!(clear_memory_cache);
+    stub_cmd!(clear_system_logs);
+    stub_cmd!(cognitive_get_state);
+    stub_cmd!(confirm_self_healing_action);
+    stub_cmd!(conversation_reset);
+    // dev_apply_patch/dev_get_logs/dev_inspect_file/dev_run_command/hybrid_analyze_code
+    // defined in commands/hybrid.rs (hybrid_commands module) — skip stub to avoid redefinition
+    stub_cmd!(engine_singularity_reset);
+    stub_cmd!(engines_build_cancel);
+    stub_cmd!(engines_build_clean);
+    stub_cmd!(engines_build_get_result);
+    stub_cmd!(engines_build_get_status);
+    stub_cmd!(engines_build_start);
+    stub_cmd!(engines_devmode_analyze_file);
+    stub_cmd!(engines_devmode_apply_patch);
+    stub_cmd!(engines_devmode_changelog);
+    stub_cmd!(engines_devmode_create_backup);
+    stub_cmd!(engines_devmode_disable);
+    stub_cmd!(engines_devmode_enable);
+    stub_cmd!(engines_devmode_get_history);
+    stub_cmd!(engines_devmode_get_state);
+    stub_cmd!(engines_devmode_get_suggestions);
+    stub_cmd!(engines_devmode_preview);
+    stub_cmd!(engines_devmode_restore_backup);
+    stub_cmd!(engines_devmode_rollback);
+    stub_cmd!(engines_devmode_validate_patch);
+    stub_cmd!(engines_monitoring_get_health);
+    stub_cmd!(evolution_save_state);
+    stub_cmd!(execute_shell_command);
+    stub_cmd!(get_cpu_metrics);
+    stub_cmd!(get_engine_health);
+    stub_cmd!(get_engines_status);
+    stub_cmd!(get_event_stream);
+    stub_cmd!(get_persistence_status);
+    stub_cmd!(get_system_logs);
+    // hybrid_analyze_code defined in commands/hybrid.rs — skip stub
+    stub_cmd!(identity_set_matrix);
+    stub_cmd!(knowledge_ingest);
+    stub_cmd!(knowledge_save_state);
+    stub_cmd!(log_entries);
+    stub_cmd!(memory_delete_entry);
+    stub_cmd!(memory_get_all_keys);
+    stub_cmd!(memory_get_entry);
+    stub_cmd!(memory_scan);
+    stub_cmd!(multi_ai_get_state);
+    stub_cmd!(progression_save_state);
+    stub_cmd!(realtime_network_task);
+    stub_cmd!(reject_self_healing_action);
+    stub_cmd!(restart_cores);
+    stub_cmd!(run_system_diagnostic);
+    stub_cmd!(sc_introspection_generate);
+    stub_cmd!(sc_introspection_preview);
+    stub_cmd!(secure_store_key);
+    stub_cmd!(selfheal_force_evaluation);
+    stub_cmd!(selfheal_get_health);
+    stub_cmd!(selfheal_get_prediction);
+    stub_cmd!(selfheal_get_state);
+    stub_cmd!(singularity_autonomy_heal);
+    stub_cmd!(stt_transcribe);
+    stub_cmd!(submit_evolution_data);
+    stub_cmd!(test_ai_local);
+    stub_cmd!(titan_state_get);
+    stub_cmd!(toggle_safe_mode);
+    stub_cmd!(toggle_singularity);
+    stub_cmd!(xp_get_state);
+    stub_cmd!(xp_sync_state);
 }
 
 // Auth OS v∞ - Unified Authentication System
@@ -1062,6 +1156,11 @@ fn main() {
     let builder = builder.manage(std::sync::Mutex::new(persona_commands::PersonaEngine::default()));
     #[cfg(all(not(feature = "mock"), feature = "full"))]
     let builder = builder.manage(std::sync::Mutex::new(titane_infinity::system::persona_engine::PersonaEngine::default()));
+    // [FIX-014] States required by newly-registered commands
+    let builder = builder.manage(titane_infinity::singularity::singularity_commands::SingularityStateGlobal::default());
+    let builder = builder.manage(titane_infinity::adaptive::adaptive_commands::AdaptiveEngineGlobal::new());
+    let builder = builder.manage(titane_infinity::overdrive::memory_engine::init());
+    let builder = builder.manage(titane_infinity::fusion::FusionEngineState::default());
 
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
@@ -2545,6 +2644,162 @@ fn main() {
             mock_commands::cognitive_get_status,
             #[cfg(feature = "mock")]
             mock_commands::cognitive_optimize,
+
+            // ═══════════════════════════════════════════════════════════════
+            // [FIX-014] Frontend-invoked commands with real handlers —
+            // 135 TAURI_COMMANDS enum values resolving to unregistered cmds
+            // ═══════════════════════════════════════════════════════════════
+
+            // adaptive — AdaptiveEngineGlobal state now managed
+            titane_infinity::adaptive::adaptive_commands::adaptive_capture_sample,
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_history,
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_profile,
+            titane_infinity::adaptive::adaptive_commands::adaptive_get_summary,
+            titane_infinity::adaptive::adaptive_commands::adaptive_learn,
+            titane_infinity::adaptive::adaptive_commands::adaptive_run_optimization,
+            titane_infinity::adaptive::adaptive_commands::adaptive_set_mode,
+
+            // singularity — SingularityStateGlobal state now managed
+            titane_infinity::singularity::singularity_commands::singularity_diff,
+            titane_infinity::singularity::singularity_commands::singularity_export_json,
+            titane_infinity::singularity::singularity_commands::singularity_get,
+            titane_infinity::singularity::singularity_commands::singularity_hash,
+            titane_infinity::singularity::singularity_commands::singularity_integrity,
+            titane_infinity::singularity::singularity_commands::singularity_meta,
+            titane_infinity::singularity::singularity_commands::singularity_repair,
+            titane_infinity::singularity::singularity_commands::singularity_set,
+            titane_infinity::singularity::singularity_commands::singularity_snapshot,
+            titane_infinity::singularity::singularity_commands::singularity_sync,
+
+            // reality_renderer extras — module already imported
+            reality_renderer::commands::reality_add_entity,
+            reality_renderer::commands::reality_render_frame,
+            reality_renderer::commands::reality_toggle_physics,
+
+            // time_commands extras — module already imported
+            time_commands::list_snapshots,
+            time_commands::restore_snapshot,
+
+            // audio — calibrate_titane_voice
+            titane_infinity::audio::commands::calibrate_titane_voice,
+
+            // fusion — FusionEngineState now managed
+            titane_infinity::fusion::fusion_sync,
+            titane_infinity::fusion::fusion_merge,
+
+            // hypervision — no State param
+            titane_infinity::hypervision::monitor::get_system_metrics,
+
+            // overdrive::memory_engine — MemoryEngineState now managed
+            titane_infinity::overdrive::memory_engine::memory_search,
+
+            // onboarding — OnboardingState already managed
+            onboarding::reset_onboarding,
+
+            // hyper_evolution
+            titane_infinity::hyper_evolution::accelerator::hyper_accelerate,
+            titane_infinity::hyper_evolution::predictor::hyper_predict_issues,
+
+            // [FIX-014] NO_HANDLER stubs (legacy_ai_bridge)
+            legacy_ai_bridge::agenda_save_event,
+            legacy_ai_bridge::agenda_sync,
+            legacy_ai_bridge::ai_generate_local,
+            legacy_ai_bridge::ai_scan_local_models,
+            legacy_ai_bridge::ai_set_local_model,
+            legacy_ai_bridge::ai_status,
+            legacy_ai_bridge::analyze_bundle_size,
+            legacy_ai_bridge::automation_execute_action,
+            legacy_ai_bridge::autonomy_clean_memory,
+            legacy_ai_bridge::autonomy_fix_tts_sync,
+            legacy_ai_bridge::autonomy_log_report,
+            legacy_ai_bridge::autonomy_ping,
+            legacy_ai_bridge::autonomy_resync_singularity_state,
+            legacy_ai_bridge::camera_start,
+            legacy_ai_bridge::chat_mode_change,
+            legacy_ai_bridge::chat_mode_sync,
+            legacy_ai_bridge::clear_event_stream,
+            legacy_ai_bridge::clear_memory_cache,
+            legacy_ai_bridge::clear_system_logs,
+            legacy_ai_bridge::cognitive_get_state,
+            legacy_ai_bridge::confirm_self_healing_action,
+            legacy_ai_bridge::conversation_reset,
+            // dev_* and hybrid_analyze_code routed via hybrid_commands
+            hybrid_commands::dev_apply_patch,
+            hybrid_commands::dev_get_logs,
+            hybrid_commands::dev_inspect_file,
+            hybrid_commands::dev_run_command,
+            hybrid_commands::hybrid_analyze_code,
+            legacy_ai_bridge::engine_singularity_reset,
+            legacy_ai_bridge::engines_build_cancel,
+            legacy_ai_bridge::engines_build_clean,
+            legacy_ai_bridge::engines_build_get_result,
+            legacy_ai_bridge::engines_build_get_status,
+            legacy_ai_bridge::engines_build_start,
+            legacy_ai_bridge::engines_devmode_analyze_file,
+            legacy_ai_bridge::engines_devmode_apply_patch,
+            legacy_ai_bridge::engines_devmode_changelog,
+            legacy_ai_bridge::engines_devmode_create_backup,
+            legacy_ai_bridge::engines_devmode_disable,
+            legacy_ai_bridge::engines_devmode_enable,
+            legacy_ai_bridge::engines_devmode_get_history,
+            legacy_ai_bridge::engines_devmode_get_state,
+            legacy_ai_bridge::engines_devmode_get_suggestions,
+            legacy_ai_bridge::engines_devmode_preview,
+            legacy_ai_bridge::engines_devmode_restore_backup,
+            legacy_ai_bridge::engines_devmode_rollback,
+            legacy_ai_bridge::engines_devmode_validate_patch,
+            legacy_ai_bridge::engines_monitoring_get_health,
+            legacy_ai_bridge::evolution_save_state,
+            legacy_ai_bridge::execute_shell_command,
+            legacy_ai_bridge::get_cpu_metrics,
+            legacy_ai_bridge::get_engine_health,
+            legacy_ai_bridge::get_engines_status,
+            legacy_ai_bridge::get_event_stream,
+            legacy_ai_bridge::get_persistence_status,
+            legacy_ai_bridge::get_system_logs,
+            // hybrid_analyze_code registered via hybrid_commands above
+            legacy_ai_bridge::identity_set_matrix,
+            legacy_ai_bridge::knowledge_ingest,
+            legacy_ai_bridge::knowledge_save_state,
+            legacy_ai_bridge::log_entries,
+            legacy_ai_bridge::memory_delete_entry,
+            legacy_ai_bridge::memory_get_all_keys,
+            legacy_ai_bridge::memory_get_entry,
+            legacy_ai_bridge::memory_scan,
+            legacy_ai_bridge::multi_ai_get_state,
+            legacy_ai_bridge::progression_save_state,
+            legacy_ai_bridge::realtime_network_task,
+            legacy_ai_bridge::reject_self_healing_action,
+            legacy_ai_bridge::restart_cores,
+            legacy_ai_bridge::run_system_diagnostic,
+            legacy_ai_bridge::sc_introspection_generate,
+            legacy_ai_bridge::sc_introspection_preview,
+            legacy_ai_bridge::secure_store_key,
+            legacy_ai_bridge::selfheal_force_evaluation,
+            legacy_ai_bridge::selfheal_get_health,
+            legacy_ai_bridge::selfheal_get_prediction,
+            legacy_ai_bridge::selfheal_get_state,
+            legacy_ai_bridge::singularity_autonomy_heal,
+            legacy_ai_bridge::stt_transcribe,
+            legacy_ai_bridge::submit_evolution_data,
+            legacy_ai_bridge::test_ai_local,
+            legacy_ai_bridge::titan_state_get,
+            legacy_ai_bridge::toggle_safe_mode,
+            legacy_ai_bridge::toggle_singularity,
+            legacy_ai_bridge::xp_get_state,
+            legacy_ai_bridge::xp_sync_state,
+
+            // [FIX-014] mock_commands with real handlers (already exist, cfg-gated)
+            #[cfg(feature = "mock")]
+            mock_commands::chat_generate,
+            #[cfg(feature = "mock")]
+            mock_commands::clear_logs,
+            #[cfg(feature = "mock")]
+            mock_commands::get_active_projects,
+            #[cfg(feature = "mock")]
+            mock_commands::get_singularity_state,
+            #[cfg(feature = "mock")]
+            mock_commands::save_chat_interaction,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
