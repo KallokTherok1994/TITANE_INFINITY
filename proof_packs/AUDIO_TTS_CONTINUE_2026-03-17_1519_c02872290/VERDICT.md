@@ -142,3 +142,19 @@
 3. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
 4. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
 5. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED
+
+## Addendum 2026-03-18T15:40Z
+
+- Head courant de cloture: `4715e1526`
+- Campagne desktop ciblee x3 re-verifiee sur artefacts complets: PASS x3 / 3
+- Observation stable sur les 3 runs: `Lecture en cours...` puis `Lecture arrêtée.` avec `pauseResumePath=executed`
+- Aucun echec intermittent observe sur stop, replay, speaker test ou microphone test
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. DESKTOP_RUNTIME_CONTROLS_CERTIFICATION: PASS
+3. DESKTOP_RUNTIME_STABILITY_X3_CERTIFICATION: PASS
+4. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+5. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+6. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED
