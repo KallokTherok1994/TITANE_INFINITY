@@ -101,6 +101,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
       minute: '2-digit',
       second: '2-digit',
       hour12: false,
+      timeZone: 'UTC',
     });
 
   // Memory percentage

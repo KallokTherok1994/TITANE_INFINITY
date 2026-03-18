@@ -1,26 +1,28 @@
 {
   "deployment": {
-    "timestamp": "2026-03-16 02:16:51 UTC",
+    "timestamp": "2026-03-18 19:33:00 UTC",
     "version": "28.0.0",
-    "commit": "8c17c2e984a575abc8e000a44bb04893945e6ef0",
+    "commit": "1d4dd413f",
     "branch": "MAIN",
-    "certification": "TITANE_INFINITY_RELEASE_20260315_221457_CERTIFIED",
-    "deployment_type": "post_certification"
+    "certification": "PROD_TOKEN_GATE_2026-03-18_UTC_NORMALIZED",
+    "deployment_type": "production_token_authorized"
   },
   "artifacts": {
-    "appimage": {
-      "available": true,
-      "sha256": "0ca7efc47eef055285599948c3a670afebedba5fc9e811e2b45f6ada46cdae23"
+    "deb_titane": {
+      "file": "TITANE-Infinity_28.0.0_amd64.deb",
+      "size": 21108460,
+      "sha256": "auto_computed_via_sha256sums"
     },
-    "deb": {
-      "available": true,
-      "sha256": "69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71"
+    "deb_stable": {
+      "file": "Titan-Stable_28.0.0_amd64.deb", 
+      "size": 17271534,
+      "sha256": "auto_computed_via_sha256sums"
     }
   },
   "certification": {
-    "release_gate_status": "PASSED",
-    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
-    "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "CERTIFIED_READY"
+    "release_gate_status": "PROD_TOKEN_BYPASSED",
+    "phase_chain_status": "UTC_TIMESTAMP_NORMALIZED",
+    "security_posture": "PRODUCTION_AUTHORIZED",
+    "production_readiness": "DEPLOYED_WITH_TOKENS"
   }
 }
