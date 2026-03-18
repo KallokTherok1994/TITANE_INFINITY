@@ -77,6 +77,27 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
 
   return (
     <div className="transformation-roadmap-container">
+      {/* Disclosure banner — données statiques curées, aucune connexion IPC live */}
+      <div
+        className="roadmap-disclosure-banner"
+        role="note"
+        aria-label="Source des données : roadmap statique curéee, mise à jour manuelle"
+        style={{
+          fontSize: '0.75rem',
+          color: '#94a3b8',
+          background: 'rgba(100,116,139,0.12)',
+          border: '1px solid rgba(100,116,139,0.25)',
+          borderRadius: '6px',
+          padding: '6px 12px',
+          marginBottom: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+        }}
+      >
+        📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique curée manuellement. Aucune connexion IPC live. Dernière mise à jour : 2026-03-18.
+      </div>
+
       {/* Header */}
       <div className="roadmap-header">
         <div className="header-info">
@@ -296,7 +317,7 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
 
 /**
  * DISPLAY_ONLY — Roadmap curée manuellement, aucune connexion IPC live.
- * Les statuts reflètent l'état réel du code vérifié au 2026-03-15.
+ * Les statuts reflètent l'état réel du code vérifié au 2026-03-18.
  */
 function generateMockMilestones(): Milestone[] {
   return [
@@ -339,13 +360,13 @@ function generateMockMilestones(): Milestone[] {
       version: 'v27.0',
       name: 'Identité & Transformation',
       description:
-        'PersonaEditor câblé, Evolution XP, pipeline mémoire→chat, et roadmap visuelle.',
+        'PersonaEditor câblé, Evolution XP certifié E2E, pipeline mémoire→chat, et roadmap visuelle.',
       status: 'completed',
-      progress: 85,
+      progress: 100,
       features: [
         'PersonaEditor → localStorage → systemPrompt',
         'Mémoire persistante 3 niveaux → chat',
-        'EvolutionTimeline + XP NaN guards',
+        'EvolutionTimeline + XP NaN guards certifiés',
         'TransformationRoadmap visual',
       ],
       quarter: 'Q4 2025',
