@@ -1948,12 +1948,45 @@ Que souhaites-tu explorer ?`;
         contextPayload
       );
 
-      // Inject semantic context if available
-      if (semanticContext && semanticContext.trim().length > 0) {
-        return `${basePrompt}\n\n${semanticContext}`;
+      // Inject user persona profile from localStorage (PersonaEditor bridge)
+      let personaInjection = '';
+      try {
+        const raw = typeof localStorage !== 'undefined'
+          ? localStorage.getItem('titane_persona_profile')
+          : null;
+        if (raw) {
+          const p = JSON.parse(raw) as {
+            name?: string; tone?: string; verbosity?: string;
+            formality?: number; creativity?: number; empathy?: number;
+            technicality?: number; emoji?: boolean; codeExamples?: boolean;
+            explanations?: string;
+          };
+          personaInjection = [
+            `\n\n🎭 Persona utilisateur (${p.name || 'TITANE personnalisé'}) :`,
+            `  • Ton : ${p.tone || 'balanced'}`,
+            `  • Verbosité : ${p.verbosity || 'balanced'}`,
+            `  • Formalité : ${p.formality ?? 50}/100`,
+            `  • Créativité : ${p.creativity ?? 70}/100`,
+            `  • Empathie : ${p.empathy ?? 60}/100`,
+            `  • Technicité : ${p.technicality ?? 80}/100`,
+            `  • Emoji : ${p.emoji ? 'oui' : 'non'}`,
+            `  • Exemples de code : ${p.codeExamples ? 'oui' : 'non'}`,
+            `  • Niveau d'explications : ${p.explanations || 'moderate'}`,
+            `Adapte ton style de communication à ces paramètres pour cette session.`,
+          ].join('\n');
+        }
+      } catch {
+        // localStorage unavailable — silently ignore
       }
 
-      return basePrompt;
+      const finalPrompt = personaInjection ? `${basePrompt}${personaInjection}` : basePrompt;
+
+      // Inject semantic context if available
+      if (semanticContext && semanticContext.trim().length > 0) {
+        return `${finalPrompt}\n\n${semanticContext}`;
+      }
+
+      return finalPrompt;
     } catch (error) {
       logger.warn('buildSystemPrompt failed', { error });
       return `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency Mode)`;

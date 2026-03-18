@@ -17,15 +17,16 @@ const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
 
 export default defineConfig({
   // Test directories
-  // Chemin absolu pour éviter les soucis de cwd (ex: exécutions via wrappers/tasks)
+  // Primary browser lane: canonical e2e folder.
   testDir: resolve(CONFIG_DIR, 'e2e'),
-  testMatch: '**/*.spec.ts',
+  testMatch: '**/*.{spec,test}.ts',
 
   // Parallel execution
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   workers: 1,
+  outputDir: resolve(CONFIG_DIR, 'reports/playwright/test-results'),
 
   // Timeouts
   timeout: 60000, // 60s per test (relaxed for CI env)
@@ -53,6 +54,16 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      use: {
+        ...devices['Desktop Chrome'],
+        viewport: { width: 1280, height: 720 },
+      },
+    },
+    {
+      name: 'chromium-tests-e2e',
+      testDir: resolve(CONFIG_DIR, 'tests/e2e'),
+      testMatch: '**/*.{spec,test}.ts',
+      testIgnore: ['**/control_panel.spec.ts', '**/accessibility.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },

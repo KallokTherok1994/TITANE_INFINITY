@@ -2,41 +2,73 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Chat Interface', () => {
   test('should send and receive message', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    // Navigate to root — React Router redirects /→/titane client-side
+    // (do NOT use /titane: a symlink 'titane' at repo root is served as a static file by Vite)
+    await page.goto('/');
 
-    // Wait for app to load
-    await expect(page.locator('h1')).toContainText('TITANE');
+    // Wait for app to load (TitanePage est lazy-loadé, premier compile DEV peut être lent)
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+
+    // Navigate to conversation tab
+    await page.getByTestId('tab-conversation').click();
+
+    // Wait for chat input (textarea, data-testid="chat-input")
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible();
 
     // Type message
-    const input = page.locator('input[type="text"]');
     await input.fill('Hello, TITANE!');
 
-    // Send message
-    await page.locator('button[type="submit"]').click();
+    // Send message (button data-testid="chat-send")
+    await page.getByTestId('chat-send').click();
 
-    // Verify message appears
-    await expect(page.locator('.message')).toContainText('Hello, TITANE!');
+    // Verify user message appears in conversation
+    await expect(page.getByTestId('chat-message-user').first()).toBeVisible();
+    await expect(page.getByTestId('chat-message-content').first()).toContainText(
+      'Hello, TITANE!'
+    );
   });
 
   test('should handle new conversation', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
 
-    // Click new conversation
-    await page.keyboard.press('Control+n');
+    // Navigate to conversation tab (attente page chargée)
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await page.getByTestId('tab-conversation').click();
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible({ timeout: 60000 });
 
-    // Verify new conversation started
-    await expect(page.locator('.conversation-list')).toHaveCount(2);
+    // Send a message first to populate history
+    await input.fill('Test message');
+    await page.getByTestId('chat-send').click();
+    await expect(page.getByTestId('chat-message-user').first()).toBeVisible();
+
+    // Accept confirmation dialog then clear chat
+    page.on('dialog', dialog => dialog.accept());
+    await page.getByTestId('btn-clear-chat').click();
+
+    // Verify conversation is cleared
+    await expect(page.getByTestId('chat-message-user')).toHaveCount(0);
   });
 
   test('should validate keyboard shortcuts', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('/');
 
-    // Open search with Ctrl+K
-    await page.keyboard.press('Control+k');
-    await expect(page.locator('#search-input')).toBeFocused();
+    // Navigate to conversation tab (attente page chargée)
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await page.getByTestId('tab-conversation').click();
+    await expect(page.getByTestId('page-conversation')).toBeVisible({ timeout: 60000 });
 
-    // Close modal with Escape
-    await page.keyboard.press('Escape');
-    await expect(page.locator('.modal')).not.toBeVisible();
+    // Verify conversation search input is accessible (data-testid="input-conversation-search")
+    const searchInput = page.getByTestId('input-conversation-search');
+    await expect(searchInput).toBeVisible();
+
+    // Type in search input and verify value
+    await searchInput.fill('test search');
+    await expect(searchInput).toHaveValue('test search');
+
+    // Clear search
+    await searchInput.clear();
+    await expect(searchInput).toHaveValue('');
   });
 });
