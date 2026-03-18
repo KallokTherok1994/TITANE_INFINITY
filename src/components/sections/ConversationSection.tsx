@@ -30,6 +30,7 @@ import { hybridTTS } from '@/services/tts/hybridTTS';
 import { ChatProviderSelector } from '@/features/chat/ChatProviderSelector';
 import { ChatToolbar } from '@/components/chat/ChatToolbar';
 import { ModeBuilder, type CustomMode } from '@/components/conversation/ModeBuilder';
+import { registerCustomMode } from '@/config/chatModes.config';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import { TSectionHeader } from '@/design-system';
 import { Download, FileText, Copy, Trash2, Search } from 'lucide-react';
@@ -1236,7 +1237,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     try {
       const stored = localStorage.getItem('titane_custom_modes');
       if (stored) {
-        setCustomModes(JSON.parse(stored));
+        const modes: CustomMode[] = JSON.parse(stored);
+        setCustomModes(modes);
+        // Register each custom mode so getSystemPrompt() can resolve it at runtime
+        modes.forEach(m => registerCustomMode(m.id, m.systemPrompt));
       }
     } catch (error) {
       pageLogger.error('Erreur chargement modes custom', error);
@@ -1250,6 +1254,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   // ═══ MORE HANDLERS ═══
   const handleSaveCustomMode = useCallback((mode: CustomMode) => {
     setCustomModes(prev => [...prev, mode]);
+    // Register in runtime registry so getSystemPrompt() resolves this mode immediately
+    registerCustomMode(mode.id, mode.systemPrompt);
     pageLogger.debug('Mode personnalisé sauvegardé', mode);
   }, []);
 
