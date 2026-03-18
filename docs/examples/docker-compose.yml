@@ -1,5 +1,5 @@
 # TITANE∞ Docker Compose Configuration Example
-# Version: 27.0.0
+# Version: 28.0.0
 # Description: Déploiement simple de TITANE avec Ollama
 
 version: '3.8'
@@ -7,7 +7,7 @@ version: '3.8'
 services:
   # TITANE Application
   titane:
-    image: titane/infinity:27.0.0
+    image: titane/infinity:28.0.0
     container_name: titane-infinity
     restart: unless-stopped
     ports:
