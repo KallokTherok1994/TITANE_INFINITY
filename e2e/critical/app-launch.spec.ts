@@ -59,7 +59,10 @@ test.describe('Critical Path: Application Launch', () => {
           e.includes('[Monitoring]') &&
           e.includes('ollama_generate') &&
           e.includes('not in whitelist')
-        )
+        ) &&
+        // Expected in browser (non-Tauri) context: Tauri-only command not in allowlist.
+        !(e.includes('not in whitelist') && e.includes('load_ui_theme')) &&
+        !(e.includes('TAURI_ERROR') && e.includes('load_ui_theme'))
     );
 
     const ignored404Prefixes = [
@@ -188,12 +191,13 @@ test.describe('Critical Path: Application Launch', () => {
     });
     await expect(mainNav).toBeVisible({ timeout: 15000 });
 
-    const statsButton = mainNav.getByRole('button', { name: /^STATS$/i }).first();
+    // STATS merged into DEV (v25.2.0→v29.1) — use TIME which is a visible TopNav item
+    const statsButton = mainNav.getByRole('button', { name: /^TIME$/i }).first();
     const titaneButton = mainNav.getByRole('button', { name: /^TITANE$/i }).first();
 
     await expect(statsButton).toBeVisible({ timeout: 15000 });
     await statsButton.click({ force: true });
-    await expect(page).toHaveURL(/\/stats(\?|$)/, { timeout: 15000 });
+    await expect(page).toHaveURL(/\/time(\?|$)/, { timeout: 15000 });
 
     await expect(titaneButton).toBeVisible({ timeout: 15000 });
     await titaneButton.click({ force: true });

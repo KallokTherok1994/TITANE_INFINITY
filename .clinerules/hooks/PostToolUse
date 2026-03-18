@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # PostToolUse hook for TITANE∞
 # Surveille les performances et apprend des opérations
+# ENHANCED: Constitutional status classification + AutoHeal integration
 
 input=$(cat)
 
@@ -9,14 +10,30 @@ tool_name=$(echo "$input" | jq -r '.postToolUse.toolName')
 success=$(echo "$input" | jq -r '.postToolUse.success')
 
 context=""
+status="UNKNOWN"
 
-# Surveiller les opérations lentes
+# CONSTITUTIONAL STATUS CLASSIFICATION (per .clinerules/20-proof-gates-verdicts.md)
+if [[ "$success" == "true" ]]; then
+  if (( execution_time > 10000 )); then
+    status="BLOCKED"
+    context+="STATUS: BLOCKED - Operation took ${execution_time}ms (>10s). Consider optimization."
+  else
+    status="PASS"
+    context+="STATUS: PASS - Operation completed successfully in ${execution_time}ms."
+  fi
+else
+  status="FAIL"
+  context+="STATUS: FAIL - Operation failed. Stop-the-line triggered."
+fi
+
+# Surveiller les opérations lentes (enhanced)
 if (( execution_time > 5000 )); then
-  context="PERFORMANCE: Slow operation detected - $tool_name took ${execution_time}ms. "
+  if [[ -n "$context" ]]; then context+="\n"; fi
+  context+="PERFORMANCE: Slow operation detected - $tool_name took ${execution_time}ms. "
   context+="Consider optimizing or showing progress to user."
 fi
 
-# Apprendre des échecs de compilation
+# Apprendre des échecs de compilation (enhanced with status classification)
 if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
   result=$(echo "$input" | jq -r '.postToolUse.result // ""')
   
@@ -24,21 +41,70 @@ if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
     if [[ -n "$context" ]]; then context+="\n"; fi
     context+="TYPESCRIPT_ERROR: TypeScript compilation failed. "
     context+="Verify types match existing patterns in the codebase."
+    status="FAIL"
   fi
   
   if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
     if [[ -n "$context" ]]; then context+="\n"; fi
     context+="TEST_FAILURE: Tests failed. "
     context+="Review test expectations and ensure changes don't break existing functionality."
+    status="FAIL"
   fi
 fi
 
-# Logger les opérations critiques
+# AUTOHEAL INTEGRATION (per .clinerules/40-autoheal-rollback.md)
+if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]] && [[ "$success" == "true" ]]; then
+  
+  # Extract operation context for AutoHeal detection
+  operation_desc=$(echo "$input" | jq -r '.postToolUse.description // ""')
+  
+  # Check if operation qualifies as explicit fix (strict patterns)
+  if [[ "$operation_desc" =~ (^fix:|fix\s|\sfix\s|resolve\s+bug|correct\s+error|patch\s|heal\s+defect|bugfix) ]] && 
+       [[ ! "$operation_desc" =~ (align|address|configuration|style|format) ]]; then
+    
+    # Generate AutoHeal entry (explicit fix detected)
+    timestamp=$(date +%Y-%m-%d_%H%M)
+    autoheal_id="AH-$(date +%Y-%m-%d-%H%M)-CLINE-EXPLICIT-$(date +%S)"
+    
+    # Create AutoHeal entry with explicit fix context
+    cat >> scripts/autoheal/autoheal_rules.jsonl << EOF
+{
+  "id": "${autoheal_id}",
+  "date": "$(date +%Y-%m-%d)",
+  "scope": "cline-explicit-fix",
+  "symptom": "explicit_fix_operation_detected",
+  "root_cause": "posttooluse_pattern_match",
+  "fix": "${operation_desc}",
+  "prevention_test": "explicit_fix_pattern_validation",
+  "commands": ["${tool_name}"],
+  "files_changed": [],
+  "rollback": "git_restore_available"
+}
+EOF
+    
+    if [[ -n "$context" ]]; then context+="\n"; fi
+    context+="AUTOHEAL: Fix operation detected, entry ${autoheal_id} captured."
+    
+    # Run required validation (non-blocking for now)
+    if command -v bash >/dev/null 2>&1; then
+      bash scripts/autoheal/detect_recurrence.sh >/dev/null 2>&1 || true
+    fi
+  fi
+fi
+
+# Logger les opérations critiques (enhanced with status)
 if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
   log_dir=".clinerules/logs"
   mkdir -p "$log_dir"
   timestamp=$(echo "$input" | jq -r '.timestamp')
-  echo "$timestamp: $tool_name (${execution_time}ms) - success=$success" >> "$log_dir/operations.log"
+  echo "$timestamp: $tool_name (${execution_time}ms) - success=$success - status=$status" >> "$log_dir/operations.log"
+fi
+
+# Add constitutional status to context
+if [[ -n "$context" ]]; then
+  context+="\nCONSTITUTIONAL_STATUS: $status (per .clinerules/00-kernel.md)"
+else
+  context="CONSTITUTIONAL_STATUS: $status (per .clinerules/00-kernel.md)"
 fi
 
 if [[ -n "$context" ]]; then
