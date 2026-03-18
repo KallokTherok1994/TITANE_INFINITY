@@ -30,7 +30,7 @@ interface EvolutionResult {
   stability_score: number;
   growth_achieved: boolean;
   duration_ms: number;
-  errors: string[];
+  errors?: string[];
 }
 
 interface MemoryEvolutionStatus {
@@ -424,11 +424,11 @@ const EvolutionResultPanel: React.FC<{ result: EvolutionResult | null }> = ({
         {result.growth_achieved && <span className="growth-badge">🌱 Croissance</span>}
       </div>
 
-      {result.errors.length > 0 && (
+      {(result.errors?.length ?? 0) > 0 && (
         <div className="result-errors">
           <h4>⚠️ Erreurs</h4>
           <ul>
-            {result.errors.map((err, i) => (
+            {(result.errors ?? []).map((err, i) => (
               <li key={i}>{err}</li>
             ))}
           </ul>

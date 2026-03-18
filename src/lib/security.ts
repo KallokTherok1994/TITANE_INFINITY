@@ -302,6 +302,8 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'context_clear',
 
   // Persistent Memory (frontend hooks)
+  'persistent_memory_read',
+  'persistent_memory_get_bundles',
   'persistent_memory_get_context',
   'persistent_memory_get_stats',
   'persistent_memory_write_entry',

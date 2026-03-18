@@ -10,40 +10,49 @@
  * Intègre le système XP global + les domaines de compétence
  */
 
-import { useState, useEffect, useMemo } from 'react';
-import { XP } from '../core/experience/XP_ENGINE';
+import { useState, useMemo } from 'react';
 import { useExperience } from '../hooks/useExperience';
 import { motion } from 'framer-motion';
 
 export const Experience = (): JSX.Element => {
-  const [state, setState] = useState(XP.state);
   const [filter, setFilter] = useState<string>('all');
 
-  // Hook pour les domaines d'expérience
-  const { domains, isLoading: domainsLoading } = useExperience();
+  // Canonical XP source: experienceService (Tauri → localStorage fallback)
+  const {
+    state,
+    domains,
+    isLoading: domainsLoading,
+    totalXp,
+    level,
+    xpForNextLevel,
+    progress,
+  } = useExperience();
 
-  // Mettre à jour l'état toutes les secondes
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setState({ ...XP.state });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // XP within current level (quadratic formula: level^2 * 100 is the floor)
+  const xpInLevel = totalXp - level * level * 100;
+  const xpPerLevel = xpForNextLevel - level * level * 100;
+  const xpToNext = xpForNextLevel - totalXp;
+  // progress is 0-1; convert to percent
+  const progressPct = Math.min(progress * 100, 100);
+
+  // Compute stats by source from canonical history
+  const stats = useMemo(() => {
+    const result: Record<string, { count: number; total: number }> = {};
+    for (const event of state.history) {
+      if (!result[event.source]) result[event.source] = { count: 0, total: 0 };
+      result[event.source]!.count++;
+      result[event.source]!.total += event.amount;
+    }
+    return result;
+  }, [state.history]);
+
+  const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
 
   // Filtrer l'historique
   const filteredHistory = useMemo(() => {
     if (filter === 'all') return state.history;
     return state.history.filter(e => e.source === filter);
   }, [state.history, filter]);
-
-  // Statistiques par source (getStatsBySource utilise state interne)
-  const stats = XP.getStatsBySource();
-  const sources = useMemo(() => Object.keys(stats).sort(), [stats]);
-
-  // Progression vers le prochain niveau
-  const progress = XP.getProgressToNextLevel();
-  const xpToNext = XP.getXPToNextLevel();
-  const xpInLevel = state.total % 500;
 
   return (
     <div className="experience-page">
@@ -55,6 +64,9 @@ export const Experience = (): JSX.Element => {
       >
         <h1>⚡ PROGRESSION TITANE∞</h1>
         <p>Évolution intelligente et persistante</p>
+        <p className="exp-source-label" style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}>
+          Source: données locales (backend mock — progression non persistée côté serveur)
+        </p>
       </motion.div>
 
       {/* Stats globales */}
@@ -66,18 +78,18 @@ export const Experience = (): JSX.Element => {
       >
         <div className="exp-stat-card">
           <div className="exp-stat-label">Niveau</div>
-          <div className="exp-stat-value">{state.level}</div>
+          <div className="exp-stat-value">{level}</div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">XP Total</div>
-          <div className="exp-stat-value">{state.total.toLocaleString()}</div>
+          <div className="exp-stat-value">{totalXp.toLocaleString()}</div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">XP dans ce niveau</div>
-          <div className="exp-stat-value">{xpInLevel} / 500</div>
+          <div className="exp-stat-value">{xpInLevel} / {xpPerLevel}</div>
         </div>
         <div className="exp-stat-card">
-          <div className="exp-stat-label">Vers niveau {state.level + 1}</div>
+          <div className="exp-stat-label">Vers niveau {level + 1}</div>
           <div className="exp-stat-value">{xpToNext} XP</div>
         </div>
       </motion.div>
@@ -90,9 +102,9 @@ export const Experience = (): JSX.Element => {
         transition={{ delay: 0.2 }}
       >
         <div className="exp-progress-bar-large">
-          <div className="exp-progress-fill" style={{ width: `${progress}%` }} />
+          <div className="exp-progress-fill" style={{ width: `${progressPct}%` }} />
         </div>
-        <div className="exp-progress-text">{progress.toFixed(1)}%</div>
+        <div className="exp-progress-text">{progressPct.toFixed(1)}%</div>
       </motion.div>
 
       {/* Section Domaines de Compétence */}
@@ -215,8 +227,8 @@ export const Experience = (): JSX.Element => {
                 </span>
                 <span className="exp-event-amount">+{event.amount} XP</span>
                 <span className="exp-event-source">{formatSource(event.source)}</span>
-                {event.description && (
-                  <span className="exp-event-desc">{event.description}</span>
+                {event.domainId && (
+                  <span className="exp-event-desc">{event.domainId}</span>
                 )}
               </motion.div>
             ))}
