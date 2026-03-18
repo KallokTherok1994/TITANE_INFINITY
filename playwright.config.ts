@@ -77,7 +77,9 @@ export default defineConfig({
       testMatch: '**/*.{spec,test}.ts',
       // Default lane runs only governed/stable suites.
       // Use TITANE_E2E_INCLUDE_EXPERIMENTAL=1 to include legacy suites explicitly.
-      testIgnore: includeExperimentalTests ? ['**/control_panel.spec.ts'] : testsE2ELegacyIgnore,
+      testIgnore: includeExperimentalTests
+        ? ['**/control_panel.spec.ts']
+        : testsE2ELegacyIgnore,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
