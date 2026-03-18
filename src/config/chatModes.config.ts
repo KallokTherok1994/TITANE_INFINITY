@@ -445,10 +445,30 @@ export const isToolAllowed = (
   return mode.tools_allowed[toolId] ?? false;
 };
 
+// ═══════════════════════════════════════════════════════════════════════════
+// CUSTOM MODE RUNTIME REGISTRY
+// Allows user-created modes to be resolved by getSystemPrompt at runtime.
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Runtime registry: custom mode id → system prompt. Populated at app startup and on save. */
+const _customModeRegistry: Record<string, string> = {};
+
+/**
+ * Register a user-created custom mode so that getSystemPrompt can resolve it.
+ * Must be called when custom modes are loaded from persistence or freshly saved.
+ */
+export const registerCustomMode = (modeId: string, systemPrompt: string): void => {
+  _customModeRegistry[modeId] = systemPrompt;
+};
+
 /**
  * Obtenir le prompt système pour un mode
  */
 export const getSystemPrompt = (modeId: string): string => {
+  // Check runtime-registered custom modes first (user-created, not in CHAT_MODES)
+  if (_customModeRegistry[modeId]) {
+    return _customModeRegistry[modeId];
+  }
   const mode = CHAT_MODES[modeId];
   return mode?.system_prompt ?? SYSTEM_PROMPTS.default;
 };
