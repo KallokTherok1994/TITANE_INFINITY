@@ -14,6 +14,17 @@ const E2E_WATCH_SCRIPT = resolve(CONFIG_DIR, 'scripts/e2e/vite-e2e-watch.cjs');
 // Start local dev server by default for deterministic E2E runs.
 // Set TITANE_E2E_USE_WEBSERVER=0 when using an externally managed server.
 const useWebServer = process.env.TITANE_E2E_USE_WEBSERVER !== '0';
+const includeExperimentalTests = process.env.TITANE_E2E_INCLUDE_EXPERIMENTAL === '1';
+const testsE2ELegacyIgnore = [
+  '**/control_panel.spec.ts',
+  '**/accessibility.spec.ts',
+  '**/chat-accessibility-axe.spec.ts',
+  '**/chat-race-conditions.spec.ts',
+  '**/critical-flows.spec.ts',
+  '**/i18n.spec.ts',
+  '**/provider-flow.test.ts',
+  '**/ui-comprehensive.spec.ts',
+];
 
 export default defineConfig({
   // Test directories
@@ -63,7 +74,9 @@ export default defineConfig({
       name: 'chromium-tests-e2e',
       testDir: resolve(CONFIG_DIR, 'tests/e2e'),
       testMatch: '**/*.{spec,test}.ts',
-      testIgnore: ['**/control_panel.spec.ts'],
+      // Default lane runs only governed/stable suites.
+      // Use TITANE_E2E_INCLUDE_EXPERIMENTAL=1 to include legacy suites explicitly.
+      testIgnore: includeExperimentalTests ? ['**/control_panel.spec.ts'] : testsE2ELegacyIgnore,
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },

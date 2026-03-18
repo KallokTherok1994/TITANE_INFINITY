@@ -1770,9 +1770,30 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               ? chatServiceResponse.content
               : '';
 
+          const metadataReason = String(
+            (chatServiceResponse.metadata as Record<string, unknown> | undefined)?.reason_code ??
+              (chatServiceResponse.metadata as Record<string, unknown> | undefined)?.reason ??
+              ''
+          ).toLowerCase();
+
+          const backendNoProviderError =
+            /no ai provider available/i.test(legacyContent) ||
+            /ai error:/i.test(legacyContent) ||
+            metadataReason.includes('fallback_offline') ||
+            metadataReason.includes('policy_blocked');
+
           // ✅ v26.2.3 CRITICAL FIX: Détecter réponse vide du backend
-          if (legacyContent.trim().length === 0) {
+          if (legacyContent.trim().length === 0 || backendNoProviderError) {
             chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
+            if (backendNoProviderError) {
+              chatLogger.warn('⚠️ Backend provider error payload detected - switching to local recovery', {
+                provider: chatServiceResponse.provider,
+                metadataReason,
+              });
+              if (preferredProviderState !== 'auto') {
+                updatePreferredProvider('auto');
+              }
+            }
             // Ne pas créer finalResponse, laisser le fallback s'activer
             finalResponse = null;
             aggregatedContent = '';
@@ -1816,6 +1837,14 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
         // ✅ v26.2.3 - CRITICAL FIX: Fallback robuste si aucun provider disponible
         if (!finalResponse) {
           chatLogger.warn('⚠️ No finalResponse - creating fallback response');
+
+          // If a pinned provider is unavailable, recover to AUTO for the next turns.
+          if (preferredProviderState !== 'auto') {
+            chatLogger.warn('🔄 Switching preferred provider to auto after no-provider fallback', {
+              previousProvider: preferredProviderState,
+            });
+            updatePreferredProvider('auto');
+          }
 
           // Déterminer le message approprié selon la cause
           const fallbackContent = (() => {

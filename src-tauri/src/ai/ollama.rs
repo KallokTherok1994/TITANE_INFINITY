@@ -470,6 +470,36 @@ pub struct OllamaClient {
     shell_guard: ShellGuard,
 }
 
+fn truncate_for_log(input: &str, max_len: usize) -> String {
+    if input.len() <= max_len {
+        input.to_string()
+    } else {
+        format!("{}...", &input[..max_len])
+    }
+}
+
+fn select_fallback_model(requested_model: &str, available_models: &[String]) -> Option<String> {
+    if available_models.is_empty() {
+        return None;
+    }
+
+    if available_models.iter().any(|m| m == requested_model) {
+        return Some(requested_model.to_string());
+    }
+
+    let requested_family = requested_model.split(':').next().unwrap_or_default();
+    if !requested_family.is_empty() {
+        if let Some(candidate) = available_models
+            .iter()
+            .find(|m| m.split(':').next().unwrap_or_default() == requested_family)
+        {
+            return Some(candidate.clone());
+        }
+    }
+
+    available_models.first().cloned()
+}
+
 impl OllamaClient {
     pub fn new(model: Option<String>) -> Self {
         let client = build_ollama_client().unwrap_or_else(|_| Client::new());
@@ -504,15 +534,32 @@ impl OllamaClient {
             .unwrap_or(false)
     }
 
-    pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
-        if !self.is_available().await {
-            return Err(AIError::NetworkError(
-                "Ollama daemon not running".to_string(),
-            ));
+    async fn list_models(&self) -> AIResult<Vec<String>> {
+        let response = self
+            .client
+            .get(format!("{}/api/tags", ollama_base_url()))
+            .send()
+            .await
+            .map_err(|e| AIError::NetworkError(e.to_string()))?;
+
+        if !response.status().is_success() {
+            return Err(AIError::APIError(format!(
+                "Ollama tags API error: {}",
+                response.status()
+            )));
         }
 
+        let models_response: OllamaModelsResponse = response
+            .json()
+            .await
+            .map_err(|e| AIError::InvalidResponse(e.to_string()))?;
+
+        Ok(models_response.models.into_iter().map(|m| m.name).collect())
+    }
+
+    async fn query_with_model(&self, request: &AIRequest, model: &str) -> AIResult<AIResponse> {
         let ollama_request = OllamaRequest {
-            model: self.model.clone(),
+            model: model.to_string(),
             prompt: request.prompt.clone(),
             stream: false,
             options: OllamaOptions {
@@ -525,7 +572,7 @@ impl OllamaClient {
         log::debug!(
             "[OllamaClient] POST {} | model={} | prompt_len={}",
             url,
-            self.model,
+            model,
             request.prompt.len()
         );
 
@@ -538,9 +585,24 @@ impl OllamaClient {
             .map_err(|e| AIError::NetworkError(e.to_string()))?;
 
         if !response.status().is_success() {
+            let status = response.status();
+            let body = response
+                .text()
+                .await
+                .unwrap_or_else(|_| String::from("<unreadable_body>"));
+            let body_trimmed = truncate_for_log(body.trim(), 220);
+            let body_lower = body_trimmed.to_lowercase();
+
+            if status.as_u16() == 404 && body_lower.contains("model") && body_lower.contains("not found") {
+                return Err(AIError::APIError(format!(
+                    "OLLAMA_MODEL_NOT_FOUND:model={} body={}",
+                    model, body_trimmed
+                )));
+            }
+
             return Err(AIError::APIError(format!(
-                "Ollama API error: {}",
-                response.status()
+                "Ollama API error: status={} body={}",
+                status, body_trimmed
             )));
         }
 
@@ -557,6 +619,39 @@ impl OllamaClient {
             timestamp: chrono::Utc::now().timestamp(),
             tokens,
         })
+    }
+
+    pub async fn query(&self, request: &AIRequest) -> AIResult<AIResponse> {
+        if !self.is_available().await {
+            return Err(AIError::NetworkError(
+                "Ollama daemon not running".to_string(),
+            ));
+        }
+
+        match self.query_with_model(request, &self.model).await {
+            Ok(response) => Ok(response),
+            Err(AIError::APIError(msg)) if msg.starts_with("OLLAMA_MODEL_NOT_FOUND:") => {
+                let available_models = self.list_models().await?;
+                let fallback_model = select_fallback_model(&self.model, &available_models)
+                    .filter(|candidate| candidate != &self.model);
+
+                if let Some(model) = fallback_model {
+                    log::warn!(
+                        "[OllamaClient] configured model unavailable ({}). Retry with fallback model={} | available={:?}",
+                        self.model,
+                        model,
+                        available_models
+                    );
+                    self.query_with_model(request, &model).await
+                } else {
+                    Err(AIError::APIError(format!(
+                        "{} | available_models={:?}",
+                        msg, available_models
+                    )))
+                }
+            }
+            Err(e) => Err(e),
+        }
     }
 
     pub async fn query_stream(&self, request: &AIRequest) -> AIResult<AIResponse> {
@@ -595,5 +690,19 @@ mod tests {
     async fn test_ollama_availability() {
         let client = OllamaClient::new(None);
         let _ = client.is_available().await;
+    }
+
+    #[test]
+    fn test_select_fallback_model_prefers_family_then_first() {
+        let models = vec![
+            "llama3.1:latest".to_string(),
+            "mistral:latest".to_string(),
+        ];
+
+        let selected = select_fallback_model("llama3:latest", &models);
+        assert_eq!(selected.as_deref(), Some("llama3.1:latest"));
+
+        let selected_unknown = select_fallback_model("unknown:latest", &models);
+        assert_eq!(selected_unknown.as_deref(), Some("llama3.1:latest"));
     }
 }

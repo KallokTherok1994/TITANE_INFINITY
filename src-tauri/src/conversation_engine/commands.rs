@@ -269,7 +269,7 @@ pub async fn conversation_generate(
             ]
         });
 
-    let net_state = if std::env::var("OFFLINE_SIM").is_ok() {
+    let net_state = if read_bool_env("OFFLINE_SIM", false) {
         NetState::Offline
     } else {
         NetState::Online
@@ -508,7 +508,7 @@ pub async fn conversation_generate(
     // ✨ v27.0.2: Force local provider in tests (bypass cloud timeouts in AR20)
     // PATCH-010: Apply policy_verdict.allow_external_ai — if external AI blocked by policy,
     // override provider to "local" to enforce One Door network governance.
-    let effective_provider = if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+    let effective_provider = if read_bool_env("FORCE_LOCAL_PROVIDER", false) {
         log::warn!(
             "[Ω:CMD] ⚠️ FORCE_LOCAL_PROVIDER env active | cloud providers DISABLED | reason=test_mode"
         );

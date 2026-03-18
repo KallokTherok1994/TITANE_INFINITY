@@ -40,22 +40,26 @@ interface ProgressionSectionProps {
 // ═══════════════════════════════════════════════════════════════════════════
 
 export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
-  ({ progression: _progression, stats }) => {
-    // Current stats for achievement progress
+  ({ progression, stats }) => {
+    // Real chatMessageCount from xpEngine state (canonical source — incremented per chat_message XP event)
+    const chatMessageCount = progression?.chatMessageCount ?? 0;
+
+    // Current stats for achievement progress — chatMessageCount now from real xpEngine
     const currentStats = useMemo(
       () => ({
         level: stats.level,
         totalXP: stats.totalXP,
-        messageCount: 0, // [DISPLAY_ONLY] pas de source d'événements réels connectée — valeur non prouvée
-        modesUsed: 0,   // [DISPLAY_ONLY] pas de compteur de modes connecté
+        messageCount: chatMessageCount,
+        modesUsed: 0, // [DISPLAY_ONLY] pas de compteur de modes connecté
+        chatMessageCount,
       }),
-      [stats]
+      [stats, chatMessageCount]
     );
 
-    // Resolve achievements from real stats (level/XP computed; messages/modes still unproven)
+    // Resolve achievements from real stats (level/XP/messages computed from xpEngine)
     const resolvedAchievements = useMemo(
-      () => resolveAchievements(ACHIEVEMENTS, { level: stats.level, totalXP: stats.totalXP }),
-      [stats.level, stats.totalXP]
+      () => resolveAchievements(ACHIEVEMENTS, { level: stats.level, totalXP: stats.totalXP, chatMessageCount }),
+      [stats.level, stats.totalXP, chatMessageCount]
     );
 
     // Resolve talents from real level threshold

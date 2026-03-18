@@ -155,7 +155,7 @@ export const ACHIEVEMENTS: Achievement[] = [
  */
 export function resolveAchievements(
   achievements: Achievement[],
-  stats: { level: number; totalXP: number }
+  stats: { level: number; totalXP: number; chatMessageCount?: number }
 ): Achievement[] {
   return achievements.map(a => {
     const req = a.requirements;
@@ -165,8 +165,12 @@ export function resolveAchievements(
       computedUnlocked = stats.level >= req.value;
     } else if (req.type === 'xp') {
       computedUnlocked = stats.totalXP >= req.value;
+    } else if (req.type === 'messages') {
+      // Use canonical chatMessageCount from xpEngine when available
+      const count = stats.chatMessageCount ?? 0;
+      computedUnlocked = count >= req.value;
     }
-    // 'messages' and 'modes': no canonical event source — keep static value
+    // 'modes' and 'custom': no canonical event source — keep static value
     return { ...a, unlocked: computedUnlocked };
   });
 }
@@ -196,8 +200,9 @@ export function calculateAchievementProgress(
   currentStats: {
     level: number;
     totalXP: number;
-    messageCount: number;
+    messageCount: number; // legacy param kept for compat — use chatMessageCount when available
     modesUsed: number;
+    chatMessageCount?: number;
   }
 ): number {
   if (achievement.unlocked) return 100;
@@ -210,8 +215,10 @@ export function calculateAchievementProgress(
       return Math.min(100, (currentStats.level / req.value) * 100);
     case 'xp':
       return Math.min(100, (currentStats.totalXP / req.value) * 100);
-    case 'messages':
-      return Math.min(100, (currentStats.messageCount / req.value) * 100);
+    case 'messages': {
+      const count = currentStats.chatMessageCount ?? currentStats.messageCount;
+      return Math.min(100, (count / req.value) * 100);
+    }
     case 'modes':
       return Math.min(100, (currentStats.modesUsed / req.value) * 100);
     default:

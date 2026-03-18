@@ -2,10 +2,20 @@ use super::types::{Mode, ProviderAttemptMeta, ProviderClass, ProviderDecisionMet
 
 const DEFAULT_TIMEOUT_MS: u64 = 20_000;
 
+fn env_flag_enabled(key: &str) -> bool {
+    match std::env::var(key) {
+        Ok(raw) => {
+            let normalized = raw.trim().to_ascii_lowercase();
+            matches!(normalized.as_str(), "1" | "true" | "yes" | "on")
+        }
+        Err(_) => false,
+    }
+}
+
 pub fn policy_from_env() -> String {
-    if std::env::var("OFFLINE_SIM").is_ok() {
+    if env_flag_enabled("OFFLINE_SIM") {
         "OFFLINE_SIM".to_string()
-    } else if std::env::var("FORCE_LOCAL_PROVIDER").is_ok() {
+    } else if env_flag_enabled("FORCE_LOCAL_PROVIDER") {
         "FORCE_LOCAL_PROVIDER".to_string()
     } else {
         "DEFAULT".to_string()
