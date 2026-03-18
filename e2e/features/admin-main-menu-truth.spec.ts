@@ -146,8 +146,9 @@ test.describe('Feature: Admin Main Menu Truth', () => {
 
     // Design
     await page.getByTestId('tab-admin-design').click({ force: true });
-    await expect(page.getByRole('button', { name: /Design System/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Apparence/i })).toBeVisible();
+    // DesignCenterPage renders <button role="tab"> — use getByRole('tab') not 'button'
+    await expect(page.getByRole('tab', { name: /Design System/i })).toBeVisible();
+    await expect(page.getByRole('tab', { name: /Apparence/i })).toBeVisible();
 
     // Gouvernance
     await page.getByTestId('tab-admin-governance').click({ force: true });
