@@ -470,6 +470,13 @@ export const getSystemPrompt = (modeId: string): string => {
     return _customModeRegistry[modeId];
   }
   const mode = CHAT_MODES[modeId];
+  if (!mode) {
+    // G_FALLBACK_HONESTY: explicit warn when unknown modeId falls back to default
+    console.warn(
+      `[getSystemPrompt] Unknown modeId "${modeId}" — falling back to default system prompt. ` +
+        'If this is a custom mode, ensure registerCustomMode() was called before chat send.'
+    );
+  }
   return mode?.system_prompt ?? SYSTEM_PROMPTS.default;
 };
 
