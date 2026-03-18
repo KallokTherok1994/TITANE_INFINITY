@@ -1,0 +1,557 @@
+/**
+ * TITANE∞ v24.4.0 — Proprietary License
+ * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
+ *
+ * ═══════════════════════════════════════════════════════════════════
+ *   CANONICAL CHAT RESPONSE POLICY — Source de vérité unique
+ *   Autorité : chatEngine.ts → orchestrator.ts → providers
+ *   Profiles : DIRECT | BALANCED | DEEP | ARCHITECT
+ *   Constitution : Rule 1 (Minimal patch), Rule 3 (Truth-first)
+ * ═══════════════════════════════════════════════════════════════════
+ *
+ * Ce fichier est l'unique source de vérité pour :
+ * - La profondeur de réponse
+ * - La longueur cible
+ * - Le seuil d'inférence implicite
+ * - La politique mémoire par profil
+ * - La politique provider par profil
+ * - Les étiquettes de vérité
+ *
+ * I14 : Un meilleur libellé n'est pas une preuve d'intelligence supérieure.
+ * I15 : "Plus long" ne signifie pas répétitif, flou ou moins utile.
+ */
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TYPES FONDAMENTAUX
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Les 4 profils de réponse canoniques */
+export type ResponseProfileId = 'DIRECT' | 'BALANCED' | 'DEEP' | 'ARCHITECT';
+
+/** État d'inférence implicite */
+export type InferenceState =
+  | 'SAFE_TO_INFER'      // Intention claire, répondre directement
+  | 'INFER_WITH_DISCLOSURE' // Intention probable, annoncer l'hypothèse
+  | 'CLARIFY_REQUIRED'   // Ambiguïté trop haute pour agir utilement
+  | 'BLOCKED_BY_MISSING_FACT'; // Fait critique manquant, éliciter seulement
+
+/** Étiquette de vérité du mode actif */
+export type TruthStatus =
+  | 'PROVEN_RUNTIME'      // Prouvé par test E2E ou runtime
+  | 'STABLE_PARTIAL'      // Stable mais non prouvé de bout en bout
+  | 'WIRED_BUT_UNPROVEN'  // Câblé dans le code, non prouvé en runtime
+  | 'PARTIAL'             // Partiellement fonctionnel
+  | 'STUB_ONLY'           // Stub uniquement, non fonctionnel
+  | 'DEFAULT_FAKE'        // Label trompeur : ne pas afficher comme actif
+  | 'LYING_UI';           // L'UI prétend une capacité inexistante
+
+/** Politique mémoire pour un profil */
+export interface MemoryPolicy {
+  /** Injecter la mémoire STM (session courante) */
+  injectSTM: boolean;
+  /** Injecter la mémoire LTM (long terme pertinente) */
+  injectLTM: boolean;
+  /** Injecter uniquement par retrieval ciblé */
+  targetedRetrievalOnly: boolean;
+  /** Nombre maximum de sources mémoire injectées */
+  maxSources: number;
+  /** Séparer mémoire et instructions dans le prompt */
+  isolateMemorySection: boolean;
+}
+
+/** Politique streaming/retry pour un profil */
+export interface StreamPolicy {
+  /** Activer le streaming si disponible */
+  enableStreaming: boolean;
+  /** Budget timeout (ms) */
+  timeoutMs: number;
+  /** Nombre de retries max */
+  maxRetries: number;
+  /** Stratégie retry : 'linear' | 'exponential' */
+  retryStrategy: 'linear' | 'exponential';
+}
+
+/** Définition complète d'un profil de réponse */
+export interface ResponseProfile {
+  id: ResponseProfileId;
+  label: string;
+  description: string;
+
+  // Paramètres IA
+  /** Tokens max pour la réponse */
+  maxTokens: number;
+  /** Température de génération */
+  temperature: number;
+  /** Effort de raisonnement (pour providers compatibles : openai o1/o3) */
+  reasoningEffort: 'low' | 'medium' | 'high';
+
+  // Politique de réponse
+  /** Niveau de structure (0=prose, 1=léger, 2=structuré, 3=haute structure) */
+  structureLevel: 0 | 1 | 2 | 3;
+  /** Seuil de clarification : 0.0 = demander souvent, 1.0 = ne jamais demander */
+  clarificationThreshold: number;
+  /** Agressivité d'inférence implicite (0.0-1.0) */
+  inferenceAggression: number;
+
+  // Politiques associées
+  memory: MemoryPolicy;
+  stream: StreamPolicy;
+
+  /** Providers préférés dans l'ordre */
+  preferredProviders: string[];
+
+  // Vérité
+  truthStatus: TruthStatus;
+  /** Profil disponible en production ? */
+  runtimeProven: boolean;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// LES 4 PROFILS CANONIQUES
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
+  /**
+   * DIRECT — Réponse immédiate, overhead minimal, faible latence
+   * Cas : "fais court", "réponds vite", "l'essentiel"
+   */
+  DIRECT: {
+    id: 'DIRECT',
+    label: 'Direct',
+    description: 'Réponse rapide, claire, minimale. Faible latence.',
+    maxTokens: 512,
+    temperature: 0.5,
+    reasoningEffort: 'low',
+    structureLevel: 0,
+    clarificationThreshold: 0.85, // rarement demander
+    inferenceAggression: 0.8,     // inférer fortement
+    memory: {
+      injectSTM: false,
+      injectLTM: false,
+      targetedRetrievalOnly: false,
+      maxSources: 0,
+      isolateMemorySection: false,
+    },
+    stream: {
+      enableStreaming: true,
+      timeoutMs: 10000,
+      maxRetries: 1,
+      retryStrategy: 'linear',
+    },
+    preferredProviders: ['ollama', 'titane-local'],
+    truthStatus: 'STABLE_PARTIAL',
+    runtimeProven: false,
+  },
+
+  /**
+   * BALANCED — Mode quotidien par défaut, structure modérée, profondeur utile
+   * Cas : usage général sans signal explicite
+   */
+  BALANCED: {
+    id: 'BALANCED',
+    label: 'Équilibré',
+    description: 'Mode par défaut. Structure modérée, profondeur utile sans sur-ingénierie.',
+    maxTokens: 2048,
+    temperature: 0.7,
+    reasoningEffort: 'medium',
+    structureLevel: 1,
+    clarificationThreshold: 0.6,
+    inferenceAggression: 0.6,
+    memory: {
+      injectSTM: true,
+      injectLTM: false,
+      targetedRetrievalOnly: false,
+      maxSources: 3,
+      isolateMemorySection: true,
+    },
+    stream: {
+      enableStreaming: true,
+      timeoutMs: 30000,
+      maxRetries: 2,
+      retryStrategy: 'linear',
+    },
+    preferredProviders: ['ollama', 'gemini', 'openai', 'titane-local'],
+    truthStatus: 'STABLE_PARTIAL',
+    runtimeProven: false,
+  },
+
+  /**
+   * DEEP — Raisonnement plus riche, structure forte, synthèse dense
+   * Cas : "analyse en profondeur", "explique en détail", complexité élevée
+   */
+  DEEP: {
+    id: 'DEEP',
+    label: 'Profond',
+    description: 'Raisonnement riche, structure forte, synthèse dense. Latence accrue acceptée.',
+    maxTokens: 4000,
+    temperature: 0.65,
+    reasoningEffort: 'high',
+    structureLevel: 2,
+    clarificationThreshold: 0.4,
+    inferenceAggression: 0.5,
+    memory: {
+      injectSTM: true,
+      injectLTM: true,
+      targetedRetrievalOnly: false,
+      maxSources: 6,
+      isolateMemorySection: true,
+    },
+    stream: {
+      enableStreaming: true,
+      timeoutMs: 60000,
+      maxRetries: 2,
+      retryStrategy: 'exponential',
+    },
+    preferredProviders: ['gemini', 'openai', 'claude', 'ollama', 'titane-local'],
+    truthStatus: 'WIRED_BUT_UNPROVEN',
+    runtimeProven: false,
+  },
+
+  /**
+   * ARCHITECT — Clarté stratégique maximale, exposition des axes/priorités/incohérences
+   * Cas : "structure-moi cela", architecture, décision complexe, audit
+   * Format interne préféré : AXIS → PRIORITY → INCOHERENCE → SIMPLE ACTION
+   */
+  ARCHITECT: {
+    id: 'ARCHITECT',
+    label: 'Architecte',
+    description: 'Clarté stratégique maximale. Expose axes, priorités, incohérences, action simple.',
+    maxTokens: 6000,
+    temperature: 0.55,
+    reasoningEffort: 'high',
+    structureLevel: 3,
+    clarificationThreshold: 0.3,
+    inferenceAggression: 0.4,
+    memory: {
+      injectSTM: true,
+      injectLTM: true,
+      targetedRetrievalOnly: true,
+      maxSources: 8,
+      isolateMemorySection: true,
+    },
+    stream: {
+      enableStreaming: true,
+      timeoutMs: 90000,
+      maxRetries: 3,
+      retryStrategy: 'exponential',
+    },
+    preferredProviders: ['gemini', 'claude', 'openai', 'ollama', 'titane-local'],
+    truthStatus: 'WIRED_BUT_UNPROVEN',
+    runtimeProven: false,
+  },
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MAPPING MODE → PROFIL PAR DÉFAUT
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Profil par défaut selon le mode de chat actif */
+const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
+  default: 'BALANCED',
+  standard: 'BALANCED',
+  quick: 'DIRECT',
+  reflection: 'DEEP',
+  creation: 'BALANCED',
+  strategy: 'ARCHITECT',
+  emergency: 'DIRECT',
+  omega: 'DEEP',
+  brainstorming: 'DEEP',
+  synthesis: 'ARCHITECT',
+  planning: 'ARCHITECT',
+  journal: 'BALANCED',
+  debug_cognitive: 'DEEP',
+  coach: 'BALANCED',
+  dev: 'DEEP',
+  admin: 'ARCHITECT',
+  audit: 'ARCHITECT',
+};
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DÉTECTEUR D'INTENTION (lexique minimal, déterministe)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const DIRECT_SIGNALS = [
+  'fais court', 'réponds vite', 'vite', 'rapide', 'en bref', 'résume',
+  'l\'essentiel', 'donne-moi juste', 'simplement', 'en une phrase',
+  'quick', 'brief', 'short answer', 'tldr', 'tl;dr',
+];
+
+const DEEP_SIGNALS = [
+  'analyse en profondeur', 'en détail', 'explique bien', 'approfondi',
+  'développe', 'détaille', 'complet', 'exhaustif', 'examine', 'creuse',
+  'deep dive', 'comprehensive', 'thorough', 'elaborate',
+];
+
+const ARCHITECT_SIGNALS = [
+  'structure', 'organise', 'crée un plan', 'architecture', 'stratégie',
+  'priorités', 'axes', 'incoherence', 'incohérence', 'décision', 'audit',
+  'structure-moi', 'synthèse stratégique', 'plan d\'action', 'cartographie',
+  'framework', 'roadmap', 'blueprint',
+];
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SÉLECTION DYNAMIQUE DU PROFIL
+// ─────────────────────────────────────────────────────────────────────────────
+
+export interface ProfileSelectionInput {
+  /** Message utilisateur */
+  message: string;
+  /** Mode de chat actif */
+  mode: string;
+  /** Complexité estimée du message (0.0-1.0) */
+  complexity?: number;
+  /** Longueur du message */
+  messageLength?: number;
+  /** Override explicite utilisateur */
+  explicitProfileOverride?: ResponseProfileId;
+}
+
+export interface ProfileSelectionResult {
+  profileId: ResponseProfileId;
+  profile: ResponseProfile;
+  reason: string;
+  inferenceState: InferenceState;
+  confidence: number; // 0.0-1.0
+}
+
+/**
+ * Sélectionner le profil de réponse dynamiquement.
+ * Règle absolue : l'override explicite utilisateur prend la priorité.
+ */
+export function selectResponseProfile(
+  input: ProfileSelectionInput
+): ProfileSelectionResult {
+  const msg = input.message.toLowerCase();
+  const msgLen = input.messageLength ?? input.message.length;
+  const complexity = input.complexity ?? estimateComplexity(input.message);
+
+  // Règle 1 : Override explicite utilisateur (priorité absolue)
+  if (input.explicitProfileOverride) {
+    return {
+      profileId: input.explicitProfileOverride,
+      profile: RESPONSE_PROFILES[input.explicitProfileOverride],
+      reason: 'explicit_user_override',
+      inferenceState: 'SAFE_TO_INFER',
+      confidence: 1.0,
+    };
+  }
+
+  // Règle 2 : Signaux lexicaux directs (DIRECT)
+  if (DIRECT_SIGNALS.some(s => msg.includes(s))) {
+    return {
+      profileId: 'DIRECT',
+      profile: RESPONSE_PROFILES.DIRECT,
+      reason: 'direct_lexical_signal',
+      inferenceState: 'SAFE_TO_INFER',
+      confidence: 0.9,
+    };
+  }
+
+  // Règle 3 : Signaux lexicaux ARCHITECT
+  if (ARCHITECT_SIGNALS.some(s => msg.includes(s))) {
+    return {
+      profileId: 'ARCHITECT',
+      profile: RESPONSE_PROFILES.ARCHITECT,
+      reason: 'architect_lexical_signal',
+      inferenceState: 'SAFE_TO_INFER',
+      confidence: 0.85,
+    };
+  }
+
+  // Règle 4 : Signaux lexicaux DEEP
+  if (DEEP_SIGNALS.some(s => msg.includes(s))) {
+    return {
+      profileId: 'DEEP',
+      profile: RESPONSE_PROFILES.DEEP,
+      reason: 'deep_lexical_signal',
+      inferenceState: 'SAFE_TO_INFER',
+      confidence: 0.85,
+    };
+  }
+
+  // Règle 5 : Mode actif → profil par défaut du mode
+  const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'BALANCED';
+
+  // Règle 6 : Complexité élevée → forcer DEEP si mode est BALANCED
+  if (complexity > 0.75 && modeDefault === 'BALANCED') {
+    return {
+      profileId: 'DEEP',
+      profile: RESPONSE_PROFILES.DEEP,
+      reason: 'high_complexity_escalation',
+      inferenceState: 'INFER_WITH_DISCLOSURE',
+      confidence: 0.7,
+    };
+  }
+
+  // Règle 7 : Message très court + mode BALANCED → DIRECT
+  if (msgLen < 30 && modeDefault === 'BALANCED') {
+    return {
+      profileId: 'DIRECT',
+      profile: RESPONSE_PROFILES.DIRECT,
+      reason: 'short_message_direct',
+      inferenceState: 'SAFE_TO_INFER',
+      confidence: 0.75,
+    };
+  }
+
+  // Règle 8 : Fallback = profil du mode
+  return {
+    profileId: modeDefault,
+    profile: RESPONSE_PROFILES[modeDefault],
+    reason: `mode_default:${input.mode}`,
+    inferenceState: complexity > 0.5 ? 'INFER_WITH_DISCLOSURE' : 'SAFE_TO_INFER',
+    confidence: 0.6,
+  };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ÉVALUATION DE L'ÉTAT D'INFÉRENCE
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Évaluer si le système peut inférer l'intention ou doit clarifier.
+ * Ne jamais poser de question si l'inférence est sûre.
+ */
+export function evaluateInferenceState(
+  message: string,
+  profile: ResponseProfile,
+  hasContext: boolean
+): InferenceState {
+  const msgLen = message.length;
+  const wordCount = message.split(/\s+/).filter(Boolean).length;
+  const complexity = estimateComplexity(message);
+
+  // Texte ultra-court sans contexte → toujours clarifier
+  if (msgLen < 4 && !hasContext) {
+    return 'CLARIFY_REQUIRED';
+  }
+
+  // Très court et très complexe sans contexte → clarification requise
+  if (wordCount < 3 && complexity > 0.5 && !hasContext) {
+    return 'CLARIFY_REQUIRED';
+  }
+
+  // Message complet, inférence possible selon le seuil du profil
+  if (complexity <= (1.0 - profile.clarificationThreshold)) {
+    return 'SAFE_TO_INFER';
+  }
+
+  // Message ambigu mais assez long pour inférer avec avertissement
+  if (msgLen >= 20 && complexity < 0.8) {
+    return 'INFER_WITH_DISCLOSURE';
+  }
+
+  // Cas extrêmement ambigu
+  if (complexity >= 0.9 && !hasContext) {
+    return 'BLOCKED_BY_MISSING_FACT';
+  }
+
+  return 'INFER_WITH_DISCLOSURE';
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// UTILITAIRES
+// ─────────────────────────────────────────────────────────────────────────────
+
+/**
+ * Estimation de complexité lexicale/structurelle d'un message.
+ * Borné : 0.0 (trivial) → 1.0 (très complexe).
+ * Pure fonction, pas d'I/O, pas de réseau.
+ */
+export function estimateComplexity(message: string): number {
+  const words = message.split(/\s+/).filter(Boolean);
+  const wordCount = words.length;
+  const questionCount = (message.match(/\?/g) || []).length;
+  const conjunctionCount = (message.match(/\b(et|ou|mais|donc|car|or|ni|parce|because|however|although|whereas)\b/gi) || []).length;
+  const longWordRatio = words.filter(w => w.length > 8).length / Math.max(wordCount, 1);
+
+  // Score normalisé entre 0 et 1
+  const lengthScore = Math.min(wordCount / 100, 1.0) * 0.3;
+  const questionScore = Math.min(questionCount / 3, 1.0) * 0.2;
+  const conjunctionScore = Math.min(conjunctionCount / 4, 1.0) * 0.25;
+  const lexicalScore = longWordRatio * 0.25;
+
+  return Math.min(1.0, lengthScore + questionScore + conjunctionScore + lexicalScore);
+}
+
+/**
+ * Obtenir le profil effectif pour un mode et un message donnés.
+ * Fonction principale à appeler depuis chatEngine.ts.
+ */
+export function getEffectiveProfile(
+  mode: string,
+  message: string,
+  modeMaxTokens?: number,
+  modeTemperature?: number,
+  explicitOverride?: ResponseProfileId
+): { profile: ResponseProfile; selectionResult: ProfileSelectionResult } {
+  const selectionResult = selectResponseProfile({
+    message,
+    mode,
+    explicitProfileOverride: explicitOverride,
+  });
+
+  const base = selectionResult.profile;
+
+  // Si le mode a des paramètres spécifiques plus élevés, les respecter
+  const effectiveMaxTokens = modeMaxTokens && modeMaxTokens > base.maxTokens
+    ? modeMaxTokens
+    : base.maxTokens;
+
+  const effectiveTemperature = modeTemperature !== undefined
+    ? modeTemperature
+    : base.temperature;
+
+  const profile: ResponseProfile = {
+    ...base,
+    maxTokens: effectiveMaxTokens,
+    temperature: effectiveTemperature,
+  };
+
+  return { profile, selectionResult };
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COMPATIBILITÉ PROVIDER
+// ─────────────────────────────────────────────────────────────────────────────
+
+/** Paramètres incompatibles par provider (ne jamais envoyer ces params) */
+export const PROVIDER_UNSUPPORTED_PARAMS: Record<string, string[]> = {
+  ollama: ['reasoning_effort', 'logprobs', 'n', 'presence_penalty'],
+  'titane-local': ['reasoning_effort', 'logprobs', 'n', 'tools'],
+  gemini: ['reasoning_effort', 'logit_bias', 'presence_penalty'],
+  claude: ['reasoning_effort', 'logit_bias', 'n'],
+  openai: [],  // OpenAI supporte tous les paramètres standards
+  copilot: ['reasoning_effort', 'n', 'logit_bias'],
+};
+
+/** Mapper le reasoningEffort vers le param natif provider si supporté */
+export function mapReasoningEffort(
+  provider: string,
+  effort: ResponseProfile['reasoningEffort']
+): Record<string, unknown> {
+  // Seul openai (o-series) supporte reasoning_effort nativement
+  if (provider === 'openai') {
+    return { reasoning_effort: effort };
+  }
+  // Ignorer pour les autres providers
+  return {};
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// EXPORT: POLITIQUE CANONIQUE — INTERFACE PRINCIPALE
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const RESPONSE_POLICY_VERSION = '1.0.0';
+export const RESPONSE_POLICY_DATE = '2026-03-17';
+
+export default {
+  profiles: RESPONSE_PROFILES,
+  selectProfile: selectResponseProfile,
+  evaluateInference: evaluateInferenceState,
+  estimateComplexity,
+  getEffectiveProfile,
+  mapReasoningEffort,
+  PROVIDER_UNSUPPORTED_PARAMS,
+  VERSION: RESPONSE_POLICY_VERSION,
+};

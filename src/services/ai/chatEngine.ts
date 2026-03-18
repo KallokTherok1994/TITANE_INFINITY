@@ -40,6 +40,7 @@ import type {
 } from '@/services/memory/types';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
+import { getEffectiveProfile } from './responsePolicy'; // v24.4.0: Canonical response policy
 import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
@@ -530,6 +531,15 @@ class ChatEngineOmega {
 
       const modeConfig = (chatModes[finalConfig.mode] ??
         chatModes.default) as ChatModeConfig;
+
+      // v24.4.0: Canonical response policy — compute effective profile from mode + message
+      const { profile: effectiveResponseProfile } = getEffectiveProfile(
+        finalConfig.mode,
+        validatedMessage,
+        modeConfig.maxTokens,
+        modeConfig.temperature
+      );
+
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
@@ -570,6 +580,8 @@ Format: [Audit complet] + [Réponse utilisateur]
         pipelineSteps,
         pipelineStartTime,
         initialAutoHealed: autoHealed,
+        modeMaxTokens: effectiveResponseProfile.maxTokens,
+        modeTemperature: effectiveResponseProfile.temperature,
       });
 
       if (backendResponse) {
@@ -1002,6 +1014,10 @@ Que souhaites-tu explorer ?`;
     pipelineSteps: string[];
     pipelineStartTime: number;
     initialAutoHealed: boolean;
+    /** v24.4.0: Effective token budget from canonical response policy */
+    modeMaxTokens?: number;
+    /** v24.4.0: Effective temperature from canonical response policy */
+    modeTemperature?: number;
   }): Promise<ChatEngineResponse | null> {
     const {
       finalConfig,
@@ -1012,6 +1028,8 @@ Que souhaites-tu explorer ?`;
       pipelineSteps,
       pipelineStartTime,
       initialAutoHealed,
+      modeMaxTokens,
+      modeTemperature,
     } = params;
 
     if (!this.isBackendAvailable()) {
@@ -1025,10 +1043,11 @@ Que souhaites-tu explorer ?`;
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
         systemPrompt,
+        // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
         temperature:
-          finalConfig.aiConfig?.temperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
+          finalConfig.aiConfig?.temperature ?? modeTemperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
         maxOutputTokens:
-          finalConfig.aiConfig?.maxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 1024,
+          finalConfig.aiConfig?.maxTokens ?? modeMaxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 2048,
         provider: this.providerPreference,
         enableStreaming: false,
       };
@@ -1164,6 +1183,8 @@ Que souhaites-tu explorer ?`;
     pipelineSteps: string[];
     pipelineStartTime: number;
     initialAutoHealed: boolean;
+    modeMaxTokens?: number;
+    modeTemperature?: number;
   }): AsyncGenerator<string, ChatEngineResponse> | null {
     if (!this.isBackendAvailable()) {
       return null;
@@ -1181,6 +1202,8 @@ Que souhaites-tu explorer ?`;
     pipelineSteps: string[];
     pipelineStartTime: number;
     initialAutoHealed: boolean;
+    modeMaxTokens?: number;
+    modeTemperature?: number;
   }): AsyncGenerator<string, ChatEngineResponse> {
     const {
       finalConfig,
@@ -1191,6 +1214,8 @@ Que souhaites-tu explorer ?`;
       pipelineSteps,
       pipelineStartTime,
       initialAutoHealed,
+      modeMaxTokens,
+      modeTemperature,
     } = params;
 
     let autoHealed = initialAutoHealed;
@@ -1217,10 +1242,11 @@ Que souhaites-tu explorer ?`;
       conversationId: conversationId ?? undefined,
       userMessage: validatedMessage,
       systemPrompt,
+      // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
       temperature:
-        finalConfig.aiConfig?.temperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
+        finalConfig.aiConfig?.temperature ?? modeTemperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
       maxOutputTokens:
-        finalConfig.aiConfig?.maxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 1024,
+        finalConfig.aiConfig?.maxTokens ?? modeMaxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 2048,
       provider: this.providerPreference,
       enableStreaming: true,
     };
@@ -1598,6 +1624,13 @@ Que souhaites-tu explorer ?`;
       pipelineSteps.push('stream-prompt');
       const modeConfig = (chatModes[finalConfig.mode] ??
         chatModes.default) as ChatModeConfig;
+      // v24.4.0: Canonical response policy for streaming
+      const { profile: streamResponseProfile } = getEffectiveProfile(
+        finalConfig.mode,
+        validatedMessage,
+        modeConfig.maxTokens,
+        modeConfig.temperature
+      );
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
@@ -1615,6 +1648,8 @@ Que souhaites-tu explorer ?`;
         pipelineSteps,
         pipelineStartTime: startTime,
         initialAutoHealed: autoHealed,
+        modeMaxTokens: streamResponseProfile.maxTokens,
+        modeTemperature: streamResponseProfile.temperature,
       });
 
       if (backendStream) {
