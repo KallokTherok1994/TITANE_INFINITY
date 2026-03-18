@@ -12,7 +12,7 @@ import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { XPProgressBar } from '@features/progression';
 import { AchievementCard } from '@/features/progression/AchievementCard';
-import { ACHIEVEMENTS } from '@/features/progression/achievements';
+import { ACHIEVEMENTS, resolveAchievements, resolveTalents } from '@/features/progression/achievements';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { spacing, fontSizes } from '@themes/tokens';
 import type { ProgressionState } from '@/cognitive/types';
@@ -52,15 +52,24 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
       [stats]
     );
 
+    // Resolve achievements from real stats (level/XP computed; messages/modes still unproven)
+    const resolvedAchievements = useMemo(
+      () => resolveAchievements(ACHIEVEMENTS, { level: stats.level, totalXP: stats.totalXP }),
+      [stats.level, stats.totalXP]
+    );
+
+    // Resolve talents from real level threshold
+    const talents = useMemo(() => resolveTalents(stats.level), [stats.level]);
+
     // Filter achievements by category
     const categories = useMemo(
       () => ({
-        conversation: ACHIEVEMENTS.filter(a => a.category === 'conversation'),
-        progression: ACHIEVEMENTS.filter(a => a.category === 'progression'),
-        exploration: ACHIEVEMENTS.filter(a => a.category === 'exploration'),
-        mastery: ACHIEVEMENTS.filter(a => a.category === 'mastery'),
+        conversation: resolvedAchievements.filter(a => a.category === 'conversation'),
+        progression: resolvedAchievements.filter(a => a.category === 'progression'),
+        exploration: resolvedAchievements.filter(a => a.category === 'exploration'),
+        mastery: resolvedAchievements.filter(a => a.category === 'mastery'),
       }),
-      []
+      [resolvedAchievements]
     );
 
     return (
@@ -104,10 +113,15 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>Talents Débloqués</h3>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: spacing[2] }}>
-              <TBadge variant="success">Architecte</TBadge>
-              <TBadge variant="info">Optimiseur</TBadge>
-              <TBadge variant="info">Évolutionniste</TBadge>
-              <TBadge variant="success">Pédagogue</TBadge>
+              {talents.map(t => (
+                <TBadge
+                  key={t.label}
+                  variant={t.unlocked ? t.variant : 'default'}
+                  title={t.unlocked ? `Débloqué (niveau ≥ ${t.requiredLevel})` : `Verrouillé — niveau ${t.requiredLevel} requis`}
+                >
+                  {t.unlocked ? t.label : `🔒 ${t.label}`}
+                </TBadge>
+              ))}
             </div>
           </Card>
         </Grid>

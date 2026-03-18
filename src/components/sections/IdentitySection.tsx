@@ -7,12 +7,13 @@
  * Handles: Mode matrix, persona editor, founding pact, identity center
  */
 
-import React, { memo } from 'react';
+import React, { memo, useCallback } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { useChatModeStore, useCurrentChatModeId } from '@/stores/useChatModeStore';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -43,6 +44,17 @@ const LazyIdentityCenter = React.lazy(
 
 export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
   const env = detectEnvironment();
+  const currentModeId = useCurrentChatModeId();
+  const changeMode = useChatModeStore(state => state.changeMode);
+
+  const handleModeSelect = useCallback(
+    (mode: { id: string }) => {
+      changeMode(mode.id).catch(err =>
+        console.warn('[IdentitySection] changeMode failed:', err)
+      );
+    },
+    [changeMode]
+  );
 
   return (
     <div className="titane-section titane-section-identity">
@@ -55,7 +67,10 @@ export const IdentitySection: React.FC<IdentitySectionProps> = memo(() => {
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Matrice de Modes</h3>
           <React.Suspense fallback={null}>
-            <LazyModeMatrix />
+            <LazyModeMatrix
+              currentMode={currentModeId ?? undefined}
+              onModeSelect={handleModeSelect}
+            />
           </React.Suspense>
         </Card>
 
