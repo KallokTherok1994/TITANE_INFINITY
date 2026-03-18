@@ -127,3 +127,18 @@
 2. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
 3. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
 4. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED
+
+## Addendum 2026-03-18T15:34Z
+
+- Head courant de cloture partielle: `5efff0570`
+- Revalidation desktop ciblee apres changements backend/frontend du 18 mars: PASS
+- Observation runtime la plus forte a date sur la lane audio/TTS: `Lecture en cours...` puis `Lecture arrêtée.` avec `pauseResumePath=executed`
+- Aucun recul detecte sur les controles per-message ni sur les boutons runtime Audio Center
+
+### Reclassification stricte
+
+1. TECHNICAL_CERTIFICATION_FULL_CHAIN: PASS
+2. DESKTOP_RUNTIME_CONTROLS_CERTIFICATION: PASS
+3. QUALITY_BENCHMARK_CERTIFICATION: BLOCKED
+4. SAMPLE_STYLE_PROXIMITY_CERTIFICATION: BLOCKED
+5. VERDICT_UNIQUE_CONFIRMED: PERCEPTUAL_CERTIFICATION_BLOCKED
