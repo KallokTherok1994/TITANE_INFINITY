@@ -156,8 +156,8 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     temperature: 0.7,
     reasoningEffort: 'medium',
     structureLevel: 1,
-    clarificationThreshold: 0.6,
-    inferenceAggression: 0.6,
+    clarificationThreshold: 0.72, // raised: ask less often, infer more
+    inferenceAggression: 0.72, // raised: stronger intent deduction by default
     memory: {
       injectSTM: true,
       injectLTM: false,
@@ -423,8 +423,10 @@ export function selectResponseProfile(
     };
   }
 
-  // Règle 7 : Message très court + mode BALANCED → DIRECT
-  if (msgLen < 30 && modeDefault === 'BALANCED') {
+  // Règle 7 : Message très court (≤ 8 chars) + mode BALANCED → DIRECT
+  // Seuls les messages ultra-minimaux (ex: "ok", "oui") déclenchent DIRECT.
+  // Les messages plus longs reçoivent BALANCED même sans signal explicite.
+  if (msgLen <= 8 && modeDefault === 'BALANCED') {
     return {
       profileId: 'DIRECT',
       profile: RESPONSE_PROFILES.DIRECT,

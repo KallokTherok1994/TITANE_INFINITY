@@ -39,7 +39,9 @@ export const APISupport = {
   async hasMicrophone(): Promise<boolean> {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      return devices.some(d => d.kind === 'audioinput' && d.label !== '');
+      // Labels are empty before permission is granted (browser security policy).
+      // Presence check: kind match is sufficient to detect hardware availability.
+      return devices.some(d => d.kind === 'audioinput');
     } catch {
       return false;
     }
@@ -51,7 +53,8 @@ export const APISupport = {
   async hasCamera(): Promise<boolean> {
     try {
       const devices = await navigator.mediaDevices.enumerateDevices();
-      return devices.some(d => d.kind === 'videoinput' && d.label !== '');
+      // Labels are empty before permission is granted; check kind only.
+      return devices.some(d => d.kind === 'videoinput');
     } catch {
       return false;
     }
