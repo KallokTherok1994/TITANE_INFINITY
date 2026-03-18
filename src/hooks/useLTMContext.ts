@@ -29,7 +29,9 @@ export interface LTMContextResult {
 // Prevents N component instances from all fetching the same history.
 const _ltmCache = new Map<string, AIMessage[]>();
 
-export function useLTMContext(conversationId: string | null | undefined): LTMContextResult {
+export function useLTMContext(
+  conversationId: string | null | undefined
+): LTMContextResult {
   const [history, setHistory] = useState<AIMessage[]>(() => {
     if (conversationId) return _ltmCache.get(conversationId) ?? [];
     return [];
@@ -77,7 +79,7 @@ export function useLTMContext(conversationId: string | null | undefined): LTMCon
       ? `## CONVERSATION_HISTORY\n` +
         history
           .slice(-20)
-          .map((m) => {
+          .map(m => {
             const prefix = m.role === 'user' ? '[User]' : '[Assistant]';
             return `${prefix}: ${m.content.slice(0, 200)}${m.content.length > 200 ? '…' : ''}`;
           })

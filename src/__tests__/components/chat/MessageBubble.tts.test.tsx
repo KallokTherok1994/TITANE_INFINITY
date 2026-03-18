@@ -47,11 +47,7 @@ describe('MessageBubble TTS controls', () => {
     });
 
     render(
-      <MessageBubble
-        role="assistant"
-        content="Bonjour depuis TITANE"
-        timestamp={1}
-      />
+      <MessageBubble role="assistant" content="Bonjour depuis TITANE" timestamp={1} />
     );
 
     const button = screen.getByRole('button', { name: 'Lire à haute voix' });
@@ -74,13 +70,7 @@ describe('MessageBubble TTS controls', () => {
       canPlay: true,
     });
 
-    render(
-      <MessageBubble
-        role="assistant"
-        content="Lecture en cours"
-        timestamp={2}
-      />
-    );
+    render(<MessageBubble role="assistant" content="Lecture en cours" timestamp={2} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Pause' }));
     fireEvent.click(screen.getByRole('button', { name: 'Stop' }));
@@ -99,13 +89,7 @@ describe('MessageBubble TTS controls', () => {
       canPlay: true,
     });
 
-    render(
-      <MessageBubble
-        role="assistant"
-        content="Lecture suspendue"
-        timestamp={3}
-      />
-    );
+    render(<MessageBubble role="assistant" content="Lecture suspendue" timestamp={3} />);
 
     fireEvent.click(screen.getByRole('button', { name: 'Reprendre' }));
     expect(messageSpeechController.resume).toHaveBeenCalledTimes(1);

@@ -127,7 +127,8 @@ export const prepareSpeechProsody = (text: string): string => {
 
     if (acc.length > 0 && wordCount < MIN_WORDS_PER_SEGMENT && !previousHasStrongPause) {
       const previous = acc[acc.length - 1] ?? '';
-      acc[acc.length - 1] = `${previous.replace(/[.!?…;:]+$/g, '')}, ${current.replace(/^[,;:.!?\s]+/g, '')}`;
+      acc[acc.length - 1] =
+        `${previous.replace(/[.!?…;:]+$/g, '')}, ${current.replace(/^[,;:.!?\s]+/g, '')}`;
       return acc;
     }
 
@@ -164,7 +165,8 @@ class MessageSpeechController {
 
   getMessageState(messageId: string, content: string): MessageSpeechState {
     const speakableText = prepareSpeechProsody(extractSpeakableText(content));
-    const record = controllerState.records[messageId] ?? buildDefaultRecord(speakableText);
+    const record =
+      controllerState.records[messageId] ?? buildDefaultRecord(speakableText);
 
     return {
       messageId,
@@ -255,7 +257,10 @@ class MessageSpeechController {
       return;
     }
 
-    if (controllerState.activeMessageId && controllerState.activeMessageId !== messageId) {
+    if (
+      controllerState.activeMessageId &&
+      controllerState.activeMessageId !== messageId
+    ) {
       await this.stop();
     }
 

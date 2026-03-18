@@ -278,7 +278,10 @@ export const AudioCenterPage: React.FC = () => {
           setTitaneVoiceProfiles(normalizedProfiles);
         }
       } catch (error) {
-        console.warn('[AudioCenterPage] Impossible de charger les profils vocaux TITANE:', error);
+        console.warn(
+          '[AudioCenterPage] Impossible de charger les profils vocaux TITANE:',
+          error
+        );
         if (!cancelled) {
           setTitaneVoiceProfiles([]);
         }
@@ -748,8 +751,8 @@ export const AudioCenterPage: React.FC = () => {
                 <p className="text-xs text-neutral-500 mt-1">
                   Le profil vocal TITANE est synchronisé avant chaque lecture desktop.
                   {titaneVoiceProfiles.length === 0
-                    ? ' Aucun profil n\'a été exposé par le backend dans cette session.'
-                    : ' Choisissez un profil pour aligner la voix active avec l\'identité TITANE.'}
+                    ? " Aucun profil n'a été exposé par le backend dans cette session."
+                    : " Choisissez un profil pour aligner la voix active avec l'identité TITANE."}
                 </p>
               </div>
 

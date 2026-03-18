@@ -185,7 +185,7 @@ describe('ResponsePolicy — Sélection dynamique du profil', () => {
 // SUITE 3 — ÉTAT D'INFÉRENCE
 // ─────────────────────────────────────────────────────────────────────────────
 
-describe('ResponsePolicy — Évaluation de l\'état d\'inférence', () => {
+describe("ResponsePolicy — Évaluation de l'état d'inférence", () => {
   it('message très court + complexité élevée + sans contexte → CLARIFY_REQUIRED', () => {
     const state = evaluateInferenceState('?', RESPONSE_PROFILES.BALANCED, false);
     expect(state).toBe('CLARIFY_REQUIRED');
@@ -209,7 +209,7 @@ describe('ResponsePolicy — Évaluation de l\'état d\'inférence', () => {
     expect(['SAFE_TO_INFER', 'INFER_WITH_DISCLOSURE']).toContain(state);
   });
 
-  it('les 4 états d\'inférence sont possibles', () => {
+  it("les 4 états d'inférence sont possibles", () => {
     const validStates = [
       'SAFE_TO_INFER',
       'INFER_WITH_DISCLOSURE',
@@ -329,7 +329,14 @@ describe('ResponsePolicy — Compatibilité provider', () => {
   });
 
   it('tous les providers référencés ont des entrées dans PROVIDER_UNSUPPORTED_PARAMS', () => {
-    const expectedProviders = ['ollama', 'titane-local', 'gemini', 'claude', 'openai', 'copilot'];
+    const expectedProviders = [
+      'ollama',
+      'titane-local',
+      'gemini',
+      'claude',
+      'openai',
+      'copilot',
+    ];
     for (const p of expectedProviders) {
       expect(PROVIDER_UNSUPPORTED_PARAMS[p]).toBeDefined();
     }
@@ -365,9 +372,8 @@ describe('ResponsePolicy — Invariants de vérité', () => {
   });
 
   it('RESPONSE_POLICY_VERSION est défini et non vide', async () => {
-    const { RESPONSE_POLICY_VERSION, RESPONSE_POLICY_DATE } = await import(
-      '@/services/ai/responsePolicy'
-    );
+    const { RESPONSE_POLICY_VERSION, RESPONSE_POLICY_DATE } =
+      await import('@/services/ai/responsePolicy');
     expect(RESPONSE_POLICY_VERSION).toBeTruthy();
     expect(RESPONSE_POLICY_DATE).toBe('2026-03-17');
   });

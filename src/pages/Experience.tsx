@@ -64,7 +64,10 @@ export const Experience = (): JSX.Element => {
       >
         <h1>⚡ PROGRESSION TITANE∞</h1>
         <p>Évolution intelligente et persistante</p>
-        <p className="exp-source-label" style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}>
+        <p
+          className="exp-source-label"
+          style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: 4 }}
+        >
           Source: données locales (backend mock — progression non persistée côté serveur)
         </p>
       </motion.div>
@@ -86,7 +89,9 @@ export const Experience = (): JSX.Element => {
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">XP dans ce niveau</div>
-          <div className="exp-stat-value">{xpInLevel} / {xpPerLevel}</div>
+          <div className="exp-stat-value">
+            {xpInLevel} / {xpPerLevel}
+          </div>
         </div>
         <div className="exp-stat-card">
           <div className="exp-stat-label">Vers niveau {level + 1}</div>

@@ -161,7 +161,10 @@ export function MemoryGraph() {
               <div className="text-xs text-gray-400">Cohérence</div>
               <div className="font-semibold">
                 {/* [FIX-005b] coherence_score not in NexusEngineState — guard undefined */}
-                {(state.last_snapshot.nexus as { coherence_score?: number }).coherence_score?.toFixed(0) ?? 'N/A'}%
+                {(
+                  state.last_snapshot.nexus as { coherence_score?: number }
+                ).coherence_score?.toFixed(0) ?? 'N/A'}
+                %
               </div>
             </div>
             <div>

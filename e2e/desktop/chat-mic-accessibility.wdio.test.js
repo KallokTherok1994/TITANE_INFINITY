@@ -44,17 +44,24 @@ async function writeMetrics() {
 }
 
 async function tauriInvoke(command, payload = {}) {
-  return browser.executeAsync((cmd, args, done) => {
-    const invoke =
-      window.__TAURI_INTERNALS__?.invoke ||
-      window.__TAURI__?.core?.invoke ||
-      window.__TAURI__?.tauri?.invoke ||
-      window.__TAURI__?.invoke;
-    if (!invoke) { done({ error: 'NO_TAURI_IPC' }); return; }
-    invoke(cmd, args)
-      .then(result => done({ ok: true, result }))
-      .catch(err => done({ error: String(err) }));
-  }, command, payload);
+  return browser.executeAsync(
+    (cmd, args, done) => {
+      const invoke =
+        window.__TAURI_INTERNALS__?.invoke ||
+        window.__TAURI__?.core?.invoke ||
+        window.__TAURI__?.tauri?.invoke ||
+        window.__TAURI__?.invoke;
+      if (!invoke) {
+        done({ error: 'NO_TAURI_IPC' });
+        return;
+      }
+      invoke(cmd, args)
+        .then(result => done({ ok: true, result }))
+        .catch(err => done({ error: String(err) }));
+    },
+    command,
+    payload
+  );
 }
 
 describe('Chat Mic Accessibility', () => {
@@ -125,7 +132,8 @@ describe('Chat Mic Accessibility', () => {
 
     // Probe via IPC first — confirms mic hardware
     const probeResult = await tauriInvoke('test_microphone', { durationMs: 200 });
-    const micHardwareOk = probeResult?.result?.success === true || probeResult?.ok === true;
+    const micHardwareOk =
+      probeResult?.result?.success === true || probeResult?.ok === true;
     METRICS.micAvailableAttribute = micHardwareOk ? 'true' : 'probe-inconclusive';
 
     // Click toggle-voice-input to start recording
@@ -137,7 +145,10 @@ describe('Chat Mic Accessibility', () => {
       return;
     }
 
-    await browser.execute(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); el.click(); }, btn);
+    await browser.execute(el => {
+      el.scrollIntoView({ block: 'center', behavior: 'instant' });
+      el.click();
+    }, btn);
     await browser.pause(1500);
 
     METRICS.recordingStarted = true;
@@ -169,12 +180,17 @@ describe('Chat Mic Accessibility', () => {
     }
 
     if (!METRICS.recordingStarted) {
-      throw new assert.AssertionError({ message: 'Cannot stop: recording was not started' });
+      throw new assert.AssertionError({
+        message: 'Cannot stop: recording was not started',
+      });
     }
 
     // Click again to stop
     const btn = await $('[data-testid="toggle-voice-input"]');
-    await browser.execute(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); el.click(); }, btn);
+    await browser.execute(el => {
+      el.scrollIntoView({ block: 'center', behavior: 'instant' });
+      el.click();
+    }, btn);
     await browser.pause(2500);
 
     METRICS.recordingStopped = true;

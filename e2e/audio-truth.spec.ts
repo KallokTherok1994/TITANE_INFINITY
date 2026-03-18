@@ -47,7 +47,11 @@ async function hashBuffer(page: any, buffer: number[]): Promise<string> {
 }
 
 /** Invoke Tauri command via __TAURI__.core.invoke (works in mock + real) */
-async function invokeAudio(page: any, voice: string, durationMs = 200): Promise<{
+async function invokeAudio(
+  page: any,
+  voice: string,
+  durationMs = 200
+): Promise<{
   buffer: number[];
   length: number;
   engine: string;
@@ -80,7 +84,9 @@ test.describe('Audio E2E Truth System', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     // Wait for Tauri mock / real bridge to be ready
-    await page.waitForFunction(() => !!(window as any).__TAURI__?.core?.invoke, { timeout: 10_000 });
+    await page.waitForFunction(() => !!(window as any).__TAURI__?.core?.invoke, {
+      timeout: 10_000,
+    });
   });
 
   // STEP 3 — Assert audio exists and is non-empty
@@ -89,9 +95,17 @@ test.describe('Audio E2E Truth System', () => {
 
     expect(result, 'IPC response must not be null').toBeTruthy();
     expect(result.buffer, 'buffer must be an array').toBeInstanceOf(Array);
-    expect(result.length, `length must be >= ${MIN_BUFFER_LENGTH}`).toBeGreaterThanOrEqual(MIN_BUFFER_LENGTH);
-    expect(result.buffer.length, 'buffer.length matches length field').toBe(result.length);
-    expect(result.peak, `peak must be >= ${MIN_PEAK} (not silence)`).toBeGreaterThanOrEqual(MIN_PEAK);
+    expect(
+      result.length,
+      `length must be >= ${MIN_BUFFER_LENGTH}`
+    ).toBeGreaterThanOrEqual(MIN_BUFFER_LENGTH);
+    expect(result.buffer.length, 'buffer.length matches length field').toBe(
+      result.length
+    );
+    expect(
+      result.peak,
+      `peak must be >= ${MIN_PEAK} (not silence)`
+    ).toBeGreaterThanOrEqual(MIN_PEAK);
     expect(result.sampleRate, 'sampleRate must be > 0').toBeGreaterThan(0);
   });
 
@@ -110,7 +124,7 @@ test.describe('Audio E2E Truth System', () => {
   test('STEP 5 — multi-voice hashes differ (perceptually unique)', async ({ page }) => {
     const [v1, v2] = await Promise.all([
       invokeAudio(page, 'alpha', 200),
-      invokeAudio(page, 'beta',  200),
+      invokeAudio(page, 'beta', 200),
     ]);
 
     const [h1, h2] = await Promise.all([
@@ -127,7 +141,7 @@ test.describe('Audio E2E Truth System', () => {
   test('STEP 6 — FAIL_FALLBACK detection (voices must diverge)', async ({ page }) => {
     const [v1, v2] = await Promise.all([
       invokeAudio(page, 'alpha', 200),
-      invokeAudio(page, 'beta',  200),
+      invokeAudio(page, 'beta', 200),
     ]);
 
     const [h1, h2] = await Promise.all([
@@ -138,7 +152,7 @@ test.describe('Audio E2E Truth System', () => {
     if (h1 === h2) {
       throw new Error(
         'FAIL_FALLBACK — voices alpha and beta produced identical audio. ' +
-        'TTS engine is likely falling back to a single silent/default buffer.'
+          'TTS engine is likely falling back to a single silent/default buffer.'
       );
     }
 
@@ -173,7 +187,7 @@ test.describe('Audio E2E Truth System', () => {
       expect(
         currentHash,
         `Audio snapshot mismatch! Expected hash "${baseline.hash}" but got "${currentHash}". ` +
-        'Audio generation changed — update the snapshot if intentional.'
+          'Audio generation changed — update the snapshot if intentional.'
       ).toBe(baseline.hash);
     }
   });
@@ -182,7 +196,7 @@ test.describe('Audio E2E Truth System', () => {
   test('STEP 8 — FINAL VERDICT (audio + engine + perceptual diff)', async ({ page }) => {
     const [v1, v2] = await Promise.all([
       invokeAudio(page, 'alpha', 200),
-      invokeAudio(page, 'beta',  200),
+      invokeAudio(page, 'beta', 200),
     ]);
 
     // Criterion 1: audio generated (non-empty, non-silent)
@@ -201,6 +215,8 @@ test.describe('Audio E2E Truth System', () => {
 
     // All criteria met → PASS
     console.log('[AudioE2E] FINAL VERDICT: PASS');
-    console.log(`  engine=${v1.engine}  voice_alpha_peak=${v1.peak.toFixed(4)}  hashes_differ=${h1 !== h2}`);
+    console.log(
+      `  engine=${v1.engine}  voice_alpha_peak=${v1.peak.toFixed(4)}  hashes_differ=${h1 !== h2}`
+    );
   });
 });

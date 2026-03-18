@@ -26,7 +26,10 @@ interface EvolutionResult {
  * Reproduces the EvolutionResultPanel errors rendering logic exactly.
  * Returns true if errors block would be shown, array of displayed errors otherwise.
  */
-function computeErrorsBlock(result: EvolutionResult): { shown: boolean; items: string[] } {
+function computeErrorsBlock(result: EvolutionResult): {
+  shown: boolean;
+  items: string[];
+} {
   const items = result.errors ?? [];
   const shown = (result.errors?.length ?? 0) > 0;
   return { shown, items };

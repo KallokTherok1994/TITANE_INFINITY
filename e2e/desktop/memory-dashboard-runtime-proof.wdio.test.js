@@ -51,7 +51,9 @@ async function navigateToMemoryPage() {
   await browser.pause(1500);
 
   // Fallback: click Memory nav item if visible
-  const memLinks = await browser.$$('a[href*="memory"], button[data-route*="memory"], [data-testid*="memory"]');
+  const memLinks = await browser.$$(
+    'a[href*="memory"], button[data-route*="memory"], [data-testid*="memory"]'
+  );
   for (const link of memLinks.slice(0, 3)) {
     const text = await link.getText().catch(() => '');
     if (/memory|mémoire/i.test(text)) {
@@ -69,16 +71,19 @@ async function checkMemoryDashboardError() {
   if (!bannerExists) return { hasError: false, errorText: null };
 
   const errorText = await errorBanner.getText().catch(() => '');
-  const hasMemoryError = /erreur de chargement m.moire|chargement m.moire/i.test(errorText);
+  const hasMemoryError = /erreur de chargement m.moire|chargement m.moire/i.test(
+    errorText
+  );
   return { hasError: hasMemoryError, errorText };
 }
 
 async function invokePersistentMemoryRead() {
-  const result = await browser.executeAsync((done) => {
-    const invoke = window.__TAURI__?.core?.invoke
-      || window.__TAURI__?.tauri?.invoke
-      || window.__TAURI__?.invoke
-      || window.__TAURI_INTERNALS__?.invoke;
+  const result = await browser.executeAsync(done => {
+    const invoke =
+      window.__TAURI__?.core?.invoke ||
+      window.__TAURI__?.tauri?.invoke ||
+      window.__TAURI__?.invoke ||
+      window.__TAURI_INTERNALS__?.invoke;
 
     if (!invoke) {
       done({ ok: false, err: 'Tauri IPC unavailable' });
@@ -110,7 +115,11 @@ describe('G_RUNTIME_MEMORY_PROOF + G_X3_RERUN — Memory Dashboard (AH-2026-03-1
     }
     await browser.waitUntil(
       async () => (await browser.execute(() => document.readyState)) === 'complete',
-      { timeout: 15000, interval: 300, timeoutMsg: 'Page did not reach readyState complete' }
+      {
+        timeout: 15000,
+        interval: 300,
+        timeoutMsg: 'Page did not reach readyState complete',
+      }
     );
   });
 
@@ -128,9 +137,11 @@ describe('G_RUNTIME_MEMORY_PROOF + G_X3_RERUN — Memory Dashboard (AH-2026-03-1
     // The command must NOT be rejected by whitelist
     // Accept: success OR backend-not-ready (e.g. no persistent memory data yet)
     // Reject: security whitelist error
-    const isWhitelistError = ipcResult.err && /whitelist|not in whitelist|Security:/i.test(ipcResult.err);
+    const isWhitelistError =
+      ipcResult.err && /whitelist|not in whitelist|Security:/i.test(ipcResult.err);
 
-    assert.ok(!isWhitelistError,
+    assert.ok(
+      !isWhitelistError,
       `FAIL: persistent_memory_read still blocked by whitelist: ${ipcResult.err}`
     );
 
@@ -148,7 +159,8 @@ describe('G_RUNTIME_MEMORY_PROOF + G_X3_RERUN — Memory Dashboard (AH-2026-03-1
     const { hasError, errorText } = await checkMemoryDashboardError();
     const latencyMs = Date.now() - startTime;
 
-    assert.ok(!hasError,
+    assert.ok(
+      !hasError,
       `FAIL: Dashboard still shows "Erreur de chargement mémoire": "${errorText}"`
     );
 
@@ -165,19 +177,29 @@ describe('G_RUNTIME_MEMORY_PROOF + G_X3_RERUN — Memory Dashboard (AH-2026-03-1
     const ipcResult = await invokePersistentMemoryRead();
     const latencyMs = Date.now() - startTime;
 
-    const isWhitelistError = ipcResult.err && /whitelist|not in whitelist|Security:/i.test(ipcResult.err);
+    const isWhitelistError =
+      ipcResult.err && /whitelist|not in whitelist|Security:/i.test(ipcResult.err);
     const isSuccess = ipcResult.ok;
     const isBackendInactive = !isSuccess && !isWhitelistError;
 
-    assert.ok(!isWhitelistError,
+    assert.ok(
+      !isWhitelistError,
       `FAIL: persistent_memory_read blocked by whitelist on run 3: ${ipcResult.err}`
     );
 
     const status = isSuccess ? 'PROVEN_RUNTIME' : 'BACKEND_INACTIVE_EXPLICIT';
-    results.runs.push({ run: 3, latencyMs, ipcResult, status: 'PASS', dataStatus: status });
+    results.runs.push({
+      run: 3,
+      latencyMs,
+      ipcResult,
+      status: 'PASS',
+      dataStatus: status,
+    });
     console.log(`✅ RUN-3 PASS (${latencyMs}ms) — dataStatus: ${status}`);
     if (isBackendInactive) {
-      console.log(`ℹ️  Backend returned error (not whitelist): ${ipcResult.err} — classified BACKEND_INACTIVE_EXPLICIT`);
+      console.log(
+        `ℹ️  Backend returned error (not whitelist): ${ipcResult.err} — classified BACKEND_INACTIVE_EXPLICIT`
+      );
     }
   });
 });

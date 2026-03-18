@@ -30,20 +30,20 @@ export type ResponseProfileId = 'DIRECT' | 'BALANCED' | 'DEEP' | 'ARCHITECT';
 
 /** État d'inférence implicite */
 export type InferenceState =
-  | 'SAFE_TO_INFER'      // Intention claire, répondre directement
+  | 'SAFE_TO_INFER' // Intention claire, répondre directement
   | 'INFER_WITH_DISCLOSURE' // Intention probable, annoncer l'hypothèse
-  | 'CLARIFY_REQUIRED'   // Ambiguïté trop haute pour agir utilement
+  | 'CLARIFY_REQUIRED' // Ambiguïté trop haute pour agir utilement
   | 'BLOCKED_BY_MISSING_FACT'; // Fait critique manquant, éliciter seulement
 
 /** Étiquette de vérité du mode actif */
 export type TruthStatus =
-  | 'PROVEN_RUNTIME'      // Prouvé par test E2E ou runtime
-  | 'STABLE_PARTIAL'      // Stable mais non prouvé de bout en bout
-  | 'WIRED_BUT_UNPROVEN'  // Câblé dans le code, non prouvé en runtime
-  | 'PARTIAL'             // Partiellement fonctionnel
-  | 'STUB_ONLY'           // Stub uniquement, non fonctionnel
-  | 'DEFAULT_FAKE'        // Label trompeur : ne pas afficher comme actif
-  | 'LYING_UI';           // L'UI prétend une capacité inexistante
+  | 'PROVEN_RUNTIME' // Prouvé par test E2E ou runtime
+  | 'STABLE_PARTIAL' // Stable mais non prouvé de bout en bout
+  | 'WIRED_BUT_UNPROVEN' // Câblé dans le code, non prouvé en runtime
+  | 'PARTIAL' // Partiellement fonctionnel
+  | 'STUB_ONLY' // Stub uniquement, non fonctionnel
+  | 'DEFAULT_FAKE' // Label trompeur : ne pas afficher comme actif
+  | 'LYING_UI'; // L'UI prétend une capacité inexistante
 
 /** Politique mémoire pour un profil */
 export interface MemoryPolicy {
@@ -124,7 +124,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     reasoningEffort: 'low',
     structureLevel: 0,
     clarificationThreshold: 0.85, // rarement demander
-    inferenceAggression: 0.8,     // inférer fortement
+    inferenceAggression: 0.8, // inférer fortement
     memory: {
       injectSTM: false,
       injectLTM: false,
@@ -150,7 +150,8 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
   BALANCED: {
     id: 'BALANCED',
     label: 'Équilibré',
-    description: 'Mode par défaut. Structure modérée, profondeur utile sans sur-ingénierie.',
+    description:
+      'Mode par défaut. Structure modérée, profondeur utile sans sur-ingénierie.',
     maxTokens: 2048,
     temperature: 0.7,
     reasoningEffort: 'medium',
@@ -182,7 +183,8 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
   DEEP: {
     id: 'DEEP',
     label: 'Profond',
-    description: 'Raisonnement riche, structure forte, synthèse dense. Latence accrue acceptée.',
+    description:
+      'Raisonnement riche, structure forte, synthèse dense. Latence accrue acceptée.',
     maxTokens: 4000,
     temperature: 0.65,
     reasoningEffort: 'high',
@@ -215,7 +217,8 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
   ARCHITECT: {
     id: 'ARCHITECT',
     label: 'Architecte',
-    description: 'Clarté stratégique maximale. Expose axes, priorités, incohérences, action simple.',
+    description:
+      'Clarté stratégique maximale. Expose axes, priorités, incohérences, action simple.',
     maxTokens: 6000,
     temperature: 0.55,
     reasoningEffort: 'high',
@@ -271,22 +274,59 @@ const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const DIRECT_SIGNALS = [
-  'fais court', 'réponds vite', 'vite', 'rapide', 'en bref', 'résume',
-  'l\'essentiel', 'donne-moi juste', 'simplement', 'en une phrase',
-  'quick', 'brief', 'short answer', 'tldr', 'tl;dr',
+  'fais court',
+  'réponds vite',
+  'vite',
+  'rapide',
+  'en bref',
+  'résume',
+  "l'essentiel",
+  'donne-moi juste',
+  'simplement',
+  'en une phrase',
+  'quick',
+  'brief',
+  'short answer',
+  'tldr',
+  'tl;dr',
 ];
 
 const DEEP_SIGNALS = [
-  'analyse en profondeur', 'en détail', 'explique bien', 'approfondi',
-  'développe', 'détaille', 'complet', 'exhaustif', 'examine', 'creuse',
-  'deep dive', 'comprehensive', 'thorough', 'elaborate',
+  'analyse en profondeur',
+  'en détail',
+  'explique bien',
+  'approfondi',
+  'développe',
+  'détaille',
+  'complet',
+  'exhaustif',
+  'examine',
+  'creuse',
+  'deep dive',
+  'comprehensive',
+  'thorough',
+  'elaborate',
 ];
 
 const ARCHITECT_SIGNALS = [
-  'structure', 'organise', 'crée un plan', 'architecture', 'stratégie',
-  'priorités', 'axes', 'incoherence', 'incohérence', 'décision', 'audit',
-  'structure-moi', 'synthèse stratégique', 'plan d\'action', 'cartographie',
-  'framework', 'roadmap', 'blueprint',
+  'structure',
+  'organise',
+  'crée un plan',
+  'architecture',
+  'stratégie',
+  'priorités',
+  'axes',
+  'incoherence',
+  'incohérence',
+  'décision',
+  'audit',
+  'structure-moi',
+  'synthèse stratégique',
+  "plan d'action",
+  'cartographie',
+  'framework',
+  'roadmap',
+  'blueprint',
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -432,7 +472,7 @@ export function evaluateInferenceState(
   }
 
   // Message complet, inférence possible selon le seuil du profil
-  if (complexity <= (1.0 - profile.clarificationThreshold)) {
+  if (complexity <= 1.0 - profile.clarificationThreshold) {
     return 'SAFE_TO_INFER';
   }
 
@@ -462,7 +502,11 @@ export function estimateComplexity(message: string): number {
   const words = message.split(/\s+/).filter(Boolean);
   const wordCount = words.length;
   const questionCount = (message.match(/\?/g) || []).length;
-  const conjunctionCount = (message.match(/\b(et|ou|mais|donc|car|or|ni|parce|because|however|although|whereas)\b/gi) || []).length;
+  const conjunctionCount = (
+    message.match(
+      /\b(et|ou|mais|donc|car|or|ni|parce|because|however|although|whereas)\b/gi
+    ) || []
+  ).length;
   const longWordRatio = words.filter(w => w.length > 8).length / Math.max(wordCount, 1);
 
   // Score normalisé entre 0 et 1
@@ -494,13 +538,11 @@ export function getEffectiveProfile(
   const base = selectionResult.profile;
 
   // Si le mode a des paramètres spécifiques plus élevés, les respecter
-  const effectiveMaxTokens = modeMaxTokens && modeMaxTokens > base.maxTokens
-    ? modeMaxTokens
-    : base.maxTokens;
+  const effectiveMaxTokens =
+    modeMaxTokens && modeMaxTokens > base.maxTokens ? modeMaxTokens : base.maxTokens;
 
-  const effectiveTemperature = modeTemperature !== undefined
-    ? modeTemperature
-    : base.temperature;
+  const effectiveTemperature =
+    modeTemperature !== undefined ? modeTemperature : base.temperature;
 
   const profile: ResponseProfile = {
     ...base,
@@ -521,7 +563,7 @@ export const PROVIDER_UNSUPPORTED_PARAMS: Record<string, string[]> = {
   'titane-local': ['reasoning_effort', 'logprobs', 'n', 'tools'],
   gemini: ['reasoning_effort', 'logit_bias', 'presence_penalty'],
   claude: ['reasoning_effort', 'logit_bias', 'n'],
-  openai: [],  // OpenAI supporte tous les paramètres standards
+  openai: [], // OpenAI supporte tous les paramètres standards
   copilot: ['reasoning_effort', 'n', 'logit_bias'],
 };
 

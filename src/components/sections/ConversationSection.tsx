@@ -629,7 +629,8 @@ const ConversationMessage = memo(
     onRetry: (content: string) => void;
     onDelete: (id: string) => void;
   }) => {
-    const speechMessageId = message.id ?? `${message.role}-${message.content.slice(0, 64)}`;
+    const speechMessageId =
+      message.id ?? `${message.role}-${message.content.slice(0, 64)}`;
     const speechState = useMessageSpeechState(
       speechMessageId,
       message.role === 'assistant' ? message.content : ''
@@ -787,7 +788,8 @@ const ConversationMessage = memo(
                       }}
                       data-testid="message-tts-read"
                     >
-                      {speechState.status === 'completed' || speechState.status === 'stopped'
+                      {speechState.status === 'completed' ||
+                      speechState.status === 'stopped'
                         ? 'Relire'
                         : 'Lire à haute voix'}
                     </button>

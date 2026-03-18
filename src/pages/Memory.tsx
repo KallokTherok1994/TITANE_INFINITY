@@ -29,8 +29,8 @@ export const Memory = () => {
   const conversationId =
     typeof window !== 'undefined'
       ? (window.localStorage.getItem('titane_active_conversation_id') ??
-         window.localStorage.getItem('omega-chat-conversation-id') ??
-         null)
+        window.localStorage.getItem('omega-chat-conversation-id') ??
+        null)
       : null;
   const { history: ltmHistory, historyCount: ltmCount } = useLTMContext(conversationId);
 

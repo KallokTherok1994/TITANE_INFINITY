@@ -26,7 +26,9 @@ function writeWrapperEnvFile() {
 
   const lines = keys.map(key => `${key}=${shellQuote(process.env[key] ?? '')}`);
   // H7-FIX: always propagate APP_PATH so wrapper uses the patched binary (not stale AppImage)
-  lines.unshift(`TAURI_BINARY_PATH=${shellQuote(process.env.TAURI_BINARY_PATH || APP_PATH)}`);
+  lines.unshift(
+    `TAURI_BINARY_PATH=${shellQuote(process.env.TAURI_BINARY_PATH || APP_PATH)}`
+  );
   fs.writeFileSync(WRAPPER_ENV_FILE, `${lines.join('\n')}\n`, {
     mode: 0o600,
   });

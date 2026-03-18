@@ -302,8 +302,11 @@ export function buildChatContextEnvelope(
       lastReasonCode: input.lastProviderMeta?.reason_code,
       networkUsed: input.lastProviderMeta?.network_used,
     },
-    cognitiveContext: readJson<ChatContextEnvelope['cognitiveContext']>('titane_cognitive_state') ?? undefined,
-    twinsContext: readJson<ChatContextEnvelope['twinsContext']>('titane_twin_fusion_v1') ?? undefined,
+    cognitiveContext:
+      readJson<ChatContextEnvelope['cognitiveContext']>('titane_cognitive_state') ??
+      undefined,
+    twinsContext:
+      readJson<ChatContextEnvelope['twinsContext']>('titane_twin_fusion_v1') ?? undefined,
     generatedAt: Date.now(),
   };
 

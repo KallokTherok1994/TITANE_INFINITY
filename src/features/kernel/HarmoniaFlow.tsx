@@ -21,7 +21,9 @@ export function HarmoniaFlow() {
 
   useEffect(() => {
     fetchHarmonia();
-    const interval = setInterval(() => { fetchHarmonia(); }, 2500);
+    const interval = setInterval(() => {
+      fetchHarmonia();
+    }, 2500);
     return () => clearInterval(interval);
   }, [fetchHarmonia]);
 
@@ -74,7 +76,11 @@ export function HarmoniaFlow() {
         <div className="w-full bg-gray-700 rounded-full h-4 mb-2">
           <div
             className={`h-4 rounded-full transition-all duration-500 ${
-              balancePct >= 85 ? 'bg-green-500' : balancePct >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+              balancePct >= 85
+                ? 'bg-green-500'
+                : balancePct >= 60
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${balancePct}%` }}
           />
@@ -89,7 +95,9 @@ export function HarmoniaFlow() {
 
       {/* Stabilization Level */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className={`p-6 ${stabilizationLevel === 'Stable' ? 'ring-2 ring-green-500' : ''}`}>
+        <Card
+          className={`p-6 ${stabilizationLevel === 'Stable' ? 'ring-2 ring-green-500' : ''}`}
+        >
           <div className="text-center">
             <div className="text-4xl mb-2">🟢</div>
             <div className="font-semibold">Stable</div>
@@ -97,7 +105,9 @@ export function HarmoniaFlow() {
           </div>
         </Card>
 
-        <Card className={`p-6 ${stabilizationLevel === 'Adjusting' ? 'ring-2 ring-yellow-500' : ''}`}>
+        <Card
+          className={`p-6 ${stabilizationLevel === 'Adjusting' ? 'ring-2 ring-yellow-500' : ''}`}
+        >
           <div className="text-center">
             <div className="text-4xl mb-2">🟡</div>
             <div className="font-semibold">Ajustement</div>
@@ -105,7 +115,9 @@ export function HarmoniaFlow() {
           </div>
         </Card>
 
-        <Card className={`p-6 ${stabilizationLevel === 'Critical' ? 'ring-2 ring-red-500' : ''}`}>
+        <Card
+          className={`p-6 ${stabilizationLevel === 'Critical' ? 'ring-2 ring-red-500' : ''}`}
+        >
           <div className="text-center">
             <div className="text-4xl mb-2">🔴</div>
             <div className="font-semibold">Critique</div>
@@ -120,7 +132,9 @@ export function HarmoniaFlow() {
           <span className="text-sm text-gray-400">Indice d&apos;Harmonie</span>
           <div className="flex items-center gap-2">
             <span className="text-2xl font-bold">{harmonyPct}%</span>
-            <Badge color="blue" size="sm">harmony_index</Badge>
+            <Badge color="blue" size="sm">
+              harmony_index
+            </Badge>
           </div>
         </div>
 
@@ -143,10 +157,14 @@ export function HarmoniaFlow() {
         <h3 className="font-semibold mb-3">État du Système</h3>
         <div className="space-y-2 text-sm text-gray-300">
           {stabilizationLevel === 'Stable' && (
-            <p>✅ Le système fonctionne de manière optimale. Tous les flux sont équilibrés.</p>
+            <p>
+              ✅ Le système fonctionne de manière optimale. Tous les flux sont équilibrés.
+            </p>
           )}
           {stabilizationLevel === 'Adjusting' && (
-            <p>⚠️ Harmonia effectue des corrections pour rétablir l&apos;équilibre système.</p>
+            <p>
+              ⚠️ Harmonia effectue des corrections pour rétablir l&apos;équilibre système.
+            </p>
           )}
           {stabilizationLevel === 'Critical' && (
             <p>🚨 Déséquilibre critique détecté. Intervention immédiate recommandée.</p>

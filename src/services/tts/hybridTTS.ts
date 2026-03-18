@@ -76,8 +76,8 @@ const VOICE_MAP: Record<string, string> = {
   'fr_FR-siwis-medium': 'piper_fr_female',
   'fr_FR-upmc-medium': 'piper_fr_female_upmc',
   'en_US-amy-medium': 'piper_en_female',
-  'FvmvwvObRqIHojkEGh5N': 'cloud_fr_elevenlabs',
-  'fr': 'espeak_fr',
+  FvmvwvObRqIHojkEGh5N: 'cloud_fr_elevenlabs',
+  fr: 'espeak_fr',
 };
 
 interface AvailabilityCache {
@@ -513,7 +513,10 @@ class HybridTTSService {
           return;
         } catch (error) {
           console.warn('⚠️ TTS: Tauri failed, falling back to Web Speech API');
-          this.emitEvent('fallback', 'Moteur Tauri indisponible — passage au Web Speech API (voix navigateur)');
+          this.emitEvent(
+            'fallback',
+            'Moteur Tauri indisponible — passage au Web Speech API (voix navigateur)'
+          );
         }
       }
 

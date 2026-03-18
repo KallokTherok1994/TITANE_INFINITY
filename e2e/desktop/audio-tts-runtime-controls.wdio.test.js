@@ -116,7 +116,8 @@ async function waitForStableSpeechStatus(lastAssistant, timeoutMs = 8000) {
         if (
           !text ||
           text !== PREPARING_STATUS_LABEL ||
-          (statusClass && !statusClass.includes('conversation-message-audio-status-loading'))
+          (statusClass &&
+            !statusClass.includes('conversation-message-audio-status-loading'))
         ) {
           return true;
         }
@@ -200,14 +201,11 @@ describe('Audio/TTS runtime controls (desktop)', () => {
     METRICS.assistantMessageDetected = true;
 
     const controls = await lastAssistant.$('[data-testid="message-tts-controls"]');
-    await browser.waitUntil(
-      async () => controls.isExisting() && controls.isDisplayed(),
-      {
-        timeout: 30000,
-        interval: 300,
-        timeoutMsg: 'Per-message TTS controls are not visible on latest assistant message',
-      }
-    );
+    await browser.waitUntil(async () => controls.isExisting() && controls.isDisplayed(), {
+      timeout: 30000,
+      interval: 300,
+      timeoutMsg: 'Per-message TTS controls are not visible on latest assistant message',
+    });
     METRICS.ttsControlsVisible = true;
 
     const readButton = await lastAssistant.$('[data-testid="message-tts-read"]');
@@ -221,21 +219,21 @@ describe('Audio/TTS runtime controls (desktop)', () => {
     );
 
     // Scroll button into view before clicking (avoids "element not interactable" in overflow containers)
-    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), readButton);
+    await browser.execute(
+      el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+      readButton
+    );
     await browser.pause(400);
     // Use JS click to bypass WebKit interactability guard (element may be in scrolled container)
     await browser.execute(el => el.click(), readButton);
     await browser.pause(1200);
 
     const status = await lastAssistant.$('[data-testid="message-tts-status"]');
-    await browser.waitUntil(
-      async () => status.isExisting() && status.isDisplayed(),
-      {
-        timeout: 10000,
-        interval: 250,
-        timeoutMsg: 'TTS status element not visible after read action',
-      }
-    );
+    await browser.waitUntil(async () => status.isExisting() && status.isDisplayed(), {
+      timeout: 10000,
+      interval: 250,
+      timeoutMsg: 'TTS status element not visible after read action',
+    });
 
     METRICS.ttsStatusAfterRead = await waitForStableSpeechStatus(lastAssistant, 8000);
     assert.ok(
@@ -245,7 +243,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
 
     const pauseButton = await waitForPauseButton(lastAssistant, 8000);
     if (pauseButton) {
-      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), pauseButton);
+      await browser.execute(
+        el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+        pauseButton
+      );
       await browser.pause(300);
       await browser.execute(el => el.click(), pauseButton);
       await browser.pause(700);
@@ -259,7 +260,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
           timeoutMsg: 'Resume button not visible after pause action',
         }
       );
-      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), resumeButton);
+      await browser.execute(
+        el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+        resumeButton
+      );
       await browser.pause(300);
       await browser.execute(el => el.click(), resumeButton);
       METRICS.pauseResumePath = 'executed';
@@ -269,7 +273,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
 
     const stopButton = await lastAssistant.$('[data-testid="message-tts-stop"]');
     if ((await stopButton.isExisting()) && (await stopButton.isDisplayed())) {
-      await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), stopButton);
+      await browser.execute(
+        el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+        stopButton
+      );
       await browser.pause(300);
       await browser.execute(el => el.click(), stopButton);
       METRICS.stopActionObserved = true;
@@ -313,7 +320,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
     METRICS.speakerButtonVisible = true;
-    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), speakerButton);
+    await browser.execute(
+      el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+      speakerButton
+    );
     await browser.pause(300);
     await browser.execute(el => el.click(), speakerButton);
     await waitForAnyResultText(25000);
@@ -329,7 +339,10 @@ describe('Audio/TTS runtime controls (desktop)', () => {
       }
     );
     METRICS.microphoneButtonVisible = true;
-    await browser.execute(el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }), microphoneButton);
+    await browser.execute(
+      el => el.scrollIntoView({ behavior: 'instant', block: 'nearest' }),
+      microphoneButton
+    );
     await browser.pause(300);
     await browser.execute(el => el.click(), microphoneButton);
     await waitForAnyResultText(25000);

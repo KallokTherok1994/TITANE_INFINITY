@@ -74,150 +74,153 @@ const LazyMemorySearchPanel = React.lazy(() =>
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const MemorySection: React.FC<MemorySectionProps> = memo(({ stats, conversationId }) => {
-  const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
+export const MemorySection: React.FC<MemorySectionProps> = memo(
+  ({ stats, conversationId }) => {
+    const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
 
-  // PATCH-014: Live LTM conversation history count from SQLite
-  const { historyCount: ltmConvCount } = useLTMContext(conversationId ?? null);
+    // PATCH-014: Live LTM conversation history count from SQLite
+    const { historyCount: ltmConvCount } = useLTMContext(conversationId ?? null);
 
-  // Load real memory entries for search panel
-  const { entries: persistentEntries } = usePersistentMemory({
-    modeId: 'default',
-    enableCache: true,
-  });
+    // Load real memory entries for search panel
+    const { entries: persistentEntries } = usePersistentMemory({
+      modeId: 'default',
+      enableCache: true,
+    });
 
-  // Map persistent entries to local MemorySearchEntry format
-  const searchEntries: MemorySearchEntry[] = persistentEntries.map(e => ({
-    id: e.id,
-    content: e.content,
-    type: e.level === 'session' ? 'short' : e.level === 'intermediate' ? 'mid' : 'long',
-    timestamp: e.metadata.createdAt,
-    tags: e.tags,
-    relevance:
-      e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
-  }));
+    // Map persistent entries to local MemorySearchEntry format
+    const searchEntries: MemorySearchEntry[] = persistentEntries.map(e => ({
+      id: e.id,
+      content: e.content,
+      type: e.level === 'session' ? 'short' : e.level === 'intermediate' ? 'mid' : 'long',
+      timestamp: e.metadata.createdAt,
+      tags: e.tags,
+      relevance:
+        e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
+    }));
 
-  const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
-    setSelectedNode(node);
-    pageLogger.debug('Node clicked', node);
-  }, []);
+    const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
+      setSelectedNode(node);
+      pageLogger.debug('Node clicked', node);
+    }, []);
 
-  const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
-    pageLogger.debug('Memory entry clicked', entry);
-  }, []);
+    const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
+      pageLogger.debug('Memory entry clicked', entry);
+    }, []);
 
-  return (
-    <div className="titane-section titane-section-memory">
-      <TSectionHeader
-        title="💾 Mémoire Triple"
-        subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
-      />
+    return (
+      <div className="titane-section titane-section-memory">
+        <TSectionHeader
+          title="💾 Mémoire Triple"
+          subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
+        />
 
-      {/* Stats Cards */}
-      <Grid columns={3} gap={4}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
-          <TMetric
-            label="Entrées"
-            value={stats.memoryShortTerm.toString()}
-            color="primary"
-          />
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Contexte immédiat et conversation active
-          </p>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Moyen Terme</h3>
-          <TMetric
-            label="Entrées"
-            value={stats.memoryMidTerm.toString()}
-            color="success"
-          />
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Sessions récentes et apprentissages temporaires
-          </p>
-        </Card>
-
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
-          <TMetric
-            label="Entrées"
-            value={(stats.memoryLongTerm + ltmConvCount).toString()}
-            color="info"
-          />
-          {ltmConvCount > 0 && (
+        {/* Stats Cards */}
+        <Grid columns={3} gap={4}>
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
+            <TMetric
+              label="Entrées"
+              value={stats.memoryShortTerm.toString()}
+              color="primary"
+            />
             <p
               style={{
                 fontSize: fontSizes.sm,
-                color: colors.neutral[400],
-                marginTop: spacing[2],
+                color: colors.neutral[500],
+                marginTop: spacing[4],
               }}
             >
-              🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} en mémoire de session
+              Contexte immédiat et conversation active
             </p>
-          )}
-          <p
-            style={{
-              fontSize: fontSizes.sm,
-              color: colors.neutral[500],
-              marginTop: spacing[4],
-            }}
-          >
-            Connaissances permanentes et identité
-          </p>
-        </Card>
-      </Grid>
-
-      <div style={{ marginTop: spacing[6] }}>
-        <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
-          <React.Suspense fallback={null}>
-            <LazyMemoryDashboard modeId="default" compact={true} />
-          </React.Suspense>
-        </Card>
-      </div>
-
-      {/* Memory Tree Visualization */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
-        <React.Suspense fallback={null}>
-          <LazyMemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
-        </React.Suspense>
-        {selectedNode && (
-          <Card style={{ marginTop: spacing[4] }}>
-            <h4>Nœud sélectionné</h4>
-            <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
-              {JSON.stringify(selectedNode, null, 2)}
-            </pre>
           </Card>
-        )}
-      </div>
 
-      {/* Memory Search */}
-      <div style={{ marginTop: spacing[6] }}>
-        <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
-        <React.Suspense fallback={null}>
-          <LazyMemorySearchPanel
-            entries={searchEntries.length > 0 ? searchEntries : undefined}
-            onEntryClick={handleEntryClick}
-          />
-        </React.Suspense>
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>Moyen Terme</h3>
+            <TMetric
+              label="Entrées"
+              value={stats.memoryMidTerm.toString()}
+              color="success"
+            />
+            <p
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[500],
+                marginTop: spacing[4],
+              }}
+            >
+              Sessions récentes et apprentissages temporaires
+            </p>
+          </Card>
+
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
+            <TMetric
+              label="Entrées"
+              value={(stats.memoryLongTerm + ltmConvCount).toString()}
+              color="info"
+            />
+            {ltmConvCount > 0 && (
+              <p
+                style={{
+                  fontSize: fontSizes.sm,
+                  color: colors.neutral[400],
+                  marginTop: spacing[2],
+                }}
+              >
+                🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} en mémoire de
+                session
+              </p>
+            )}
+            <p
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[500],
+                marginTop: spacing[4],
+              }}
+            >
+              Connaissances permanentes et identité
+            </p>
+          </Card>
+        </Grid>
+
+        <div style={{ marginTop: spacing[6] }}>
+          <Card>
+            <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
+            <React.Suspense fallback={null}>
+              <LazyMemoryDashboard modeId="default" compact={true} />
+            </React.Suspense>
+          </Card>
+        </div>
+
+        {/* Memory Tree Visualization */}
+        <div style={{ marginTop: spacing[6] }}>
+          <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
+          <React.Suspense fallback={null}>
+            <LazyMemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
+          </React.Suspense>
+          {selectedNode && (
+            <Card style={{ marginTop: spacing[4] }}>
+              <h4>Nœud sélectionné</h4>
+              <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+                {JSON.stringify(selectedNode, null, 2)}
+              </pre>
+            </Card>
+          )}
+        </div>
+
+        {/* Memory Search */}
+        <div style={{ marginTop: spacing[6] }}>
+          <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
+          <React.Suspense fallback={null}>
+            <LazyMemorySearchPanel
+              entries={searchEntries.length > 0 ? searchEntries : undefined}
+              onEntryClick={handleEntryClick}
+            />
+          </React.Suspense>
+        </div>
       </div>
-    </div>
-  );
-});
+    );
+  }
+);
 
 MemorySection.displayName = 'MemorySection';

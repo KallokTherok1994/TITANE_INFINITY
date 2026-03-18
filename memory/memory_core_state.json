@@ -2,6 +2,55 @@
   "snapshots": [],
   "logs": [
     {
+      "id": "ui-1773835395689-3bxjulzp",
+      "timestamp": 1773835395689,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773835018629-cedkpidv",
+      "timestamp": 1773835018629,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:AFTER_STORE"
+    },
+    {
+      "id": "ui-1773834613683-cd85t6tj",
+      "timestamp": 1773834613683,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834573907-xt50n24y",
+      "timestamp": 1773834573907,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834484784-8cnwnp08",
+      "timestamp": 1773834484784,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834449916-lpbmj19d",
+      "timestamp": 1773834449916,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
+      "id": "ui-1773834363809-mc9m70t0",
+      "timestamp": 1773834363809,
+      "level": "Info",
+      "module": "frontend.boot",
+      "message": "BOOT:START"
+    },
+    {
       "id": "ui-1773786718382-9d0rj9k3",
       "timestamp": 1773786718382,
       "level": "Info",
@@ -150,7 +199,7 @@
   "knowledge": [],
   "rituals": [],
   "metadata": {
-    "last_validation_ts": 1773786718396,
+    "last_validation_ts": 1773835395695,
     "last_compaction_ts": null
   }
 }

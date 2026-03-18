@@ -18,7 +18,9 @@ export function NexusMesh() {
 
   useEffect(() => {
     fetchNexus();
-    const interval = setInterval(() => { fetchNexus(); }, 3000);
+    const interval = setInterval(() => {
+      fetchNexus();
+    }, 3000);
     return () => clearInterval(interval);
   }, [fetchNexus]);
 
@@ -66,7 +68,11 @@ export function NexusMesh() {
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
-              coherenceScore >= 90 ? 'bg-green-500' : coherenceScore >= 70 ? 'bg-yellow-500' : 'bg-red-500'
+              coherenceScore >= 90
+                ? 'bg-green-500'
+                : coherenceScore >= 70
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${coherenceScore}%` }}
           />
@@ -76,11 +82,15 @@ export function NexusMesh() {
       {/* Engine Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card className="p-6 text-center">
-          <div className="text-3xl font-bold text-blue-400">{nexus.coordination_count}</div>
+          <div className="text-3xl font-bold text-blue-400">
+            {nexus.coordination_count}
+          </div>
           <div className="text-sm text-gray-400 mt-1">Coordinations</div>
         </Card>
         <Card className="p-6 text-center">
-          <div className="text-3xl font-bold text-green-400">{nexus.active_connections}</div>
+          <div className="text-3xl font-bold text-green-400">
+            {nexus.active_connections}
+          </div>
           <div className="text-sm text-gray-400 mt-1">Connexions actives</div>
         </Card>
         <Card className="p-6 text-center">

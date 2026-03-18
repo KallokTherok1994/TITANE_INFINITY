@@ -21,7 +21,9 @@ export function SentinelAlerts() {
 
   useEffect(() => {
     fetchSentinel();
-    const interval = setInterval(() => { fetchSentinel(); }, 3000);
+    const interval = setInterval(() => {
+      fetchSentinel();
+    }, 3000);
     return () => clearInterval(interval);
   }, [fetchSentinel]);
 
@@ -74,7 +76,11 @@ export function SentinelAlerts() {
         <div className="w-full bg-gray-700 rounded-full h-3">
           <div
             className={`h-3 rounded-full transition-all duration-500 ${
-              protectionPct >= 90 ? 'bg-green-500' : protectionPct >= 70 ? 'bg-yellow-500' : 'bg-red-500'
+              protectionPct >= 90
+                ? 'bg-green-500'
+                : protectionPct >= 70
+                  ? 'bg-yellow-500'
+                  : 'bg-red-500'
             }`}
             style={{ width: `${protectionPct}%` }}
           />
@@ -95,7 +101,9 @@ export function SentinelAlerts() {
             <div className="text-xs text-gray-400">Alertes détectées</div>
           </div>
           <div>
-            <div className="text-2xl font-bold text-blue-500">{sentinel.active_monitors}</div>
+            <div className="text-2xl font-bold text-blue-500">
+              {sentinel.active_monitors}
+            </div>
             <div className="text-xs text-gray-400">Moniteurs actifs</div>
           </div>
         </div>
@@ -109,7 +117,9 @@ export function SentinelAlerts() {
         </div>
         <div className="flex items-center justify-between text-sm mt-2">
           <span className="text-gray-400">Initialisé:</span>
-          <span className="font-semibold">{sentinel.initialized ? '✅ Oui' : '⏳ Non'}</span>
+          <span className="font-semibold">
+            {sentinel.initialized ? '✅ Oui' : '⏳ Non'}
+          </span>
         </div>
       </Card>
 

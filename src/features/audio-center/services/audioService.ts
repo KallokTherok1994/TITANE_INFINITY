@@ -52,7 +52,10 @@ export interface AudioPlaybackRuntimeState {
 
 const waitForUiFrame = (): Promise<void> =>
   new Promise(resolve => {
-    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+    if (
+      typeof window !== 'undefined' &&
+      typeof window.requestAnimationFrame === 'function'
+    ) {
       window.requestAnimationFrame(() => resolve());
       return;
     }
@@ -175,11 +178,10 @@ class AudioService {
     }
 
     this.runtimeVoiceProfileHydrationAttempted = true;
-    this.runtimeVoiceProfileHydrationPromise = this.hydrateActiveVoiceProfileFromRuntime().finally(
-      () => {
+    this.runtimeVoiceProfileHydrationPromise =
+      this.hydrateActiveVoiceProfileFromRuntime().finally(() => {
         this.runtimeVoiceProfileHydrationPromise = null;
-      }
-    );
+      });
 
     return this.runtimeVoiceProfileHydrationPromise;
   }
@@ -204,7 +206,10 @@ class AudioService {
       };
       this.saveConfig();
     } catch (error) {
-      console.warn('[AudioService] Failed to hydrate TITANE active voice profile:', error);
+      console.warn(
+        '[AudioService] Failed to hydrate TITANE active voice profile:',
+        error
+      );
     }
   }
 
