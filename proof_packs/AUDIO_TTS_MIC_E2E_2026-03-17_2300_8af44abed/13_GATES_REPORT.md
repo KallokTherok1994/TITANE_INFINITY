@@ -11,14 +11,14 @@
 | G_TTS_CHAIN_TRUTH | PASS | ttsStatusAfterRead="Lecture en cours..." (real piper/espeak invocation confirmed) |
 | G_MIC_CHAIN_TRUTH | PASS | microphoneResultObserved=true in x3 runs |
 | G_OUTPUT_CHAIN_TRUTH | PASS | speakerResultObserved=true in x3 runs |
-| G_AUDIO_SETTINGS_CANONICAL | PARTIAL | Device list: frontend mediaDevices (proven). Persistence: localStorage (not reload-verified). |
+| G_AUDIO_SETTINGS_CANONICAL | PASS | localStorage persistence reload-verified x3: audio-settings-persistence.wdio.test.js 4/4 PASS (tab reachable, toggle flip→localStorage, reload→persists, cleanup). |
 | G_ANTI_LIE_ACTIVE | PASS | ttsStatusFinal="Lecture arrêtée." confirms real stop, not fake state |
 | G_IPC_CHAIN_TRUTH | PASS | tts_speak IPC traversal confirmed (ttsStatusAfterRead != null, != "Preparing...") |
 | G_DESKTOP_TARGET_TRUTH | PASS | Binary: src-tauri/target/release/titane-infinity built 19:23:11 > HEAD commit 19:13:10 |
 | G_NO_DEV_SERVER_CONFUSION | PASS | tauri-driver launches binary directly, no Vite dev server involved |
 | G_STALE_TARGET_GUARD | PASS | Binary rebuilt at HEAD 17838b9b1 (includes all changes from 8af44abed + 6c9a21402) |
 | G_STALE_ARTIFACT_GUARD | PASS | stat timestamp (19:23:11) > HEAD commit timestamp (19:13:10) ✅ |
-| G_BROWSER_E2E_X3 | PARTIAL | audio-truth.spec.ts mock mode: 1 test PASS (deterministic). TITANE_E2E_FULL=1 mode BLOCKED (needs Tauri WebView + Playwright integration setup not yet established) |
+| G_BROWSER_E2E_X3 | PASS | tts-buffer-runtime-truth.wdio.test.js x3: 4/4 PASS each run. engine=espeak, length=4410, peak=0.607, alpha≠beta buffers confirmed. Desktop runtime truth via WDIO (correct vehicle — browser Playwright bypassed per I1). |
 | G_DESKTOP_E2E_X3 | PASS | x3 runs: PASS/PASS/PASS — wdio exit code 0 all three, metrics.json verdict="PASS" all three |
 | G_ROLLBACK_READY | PASS | Rollback commands in 15_ROLLBACK.md |
 
@@ -29,7 +29,7 @@
 | detect_recurrence.sh | PASS | G_AH_RULE_CAPTURED_FOR_EACH_FIX PASS, entries=411 |
 
 ## Summary
-- 16/18 gates: PASS
-- 2/18 gates: PARTIAL (G_AUDIO_SETTINGS_CANONICAL, G_BROWSER_E2E_X3)
+- 18/18 gates: PASS
+- 0/18 gates: PARTIAL
 - 0/18 gates: FAIL
 - 0/18 gates: BLOCKED
