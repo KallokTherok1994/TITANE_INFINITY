@@ -167,9 +167,9 @@ const MAX_ENDPOINT_ERRORS = 5;
 // ⚡ FIX-3: Warming-up grace period
 // If Ollama fails first probe (just starting), retry sooner than 45s.
 // Distinguishes: warming_up (failed <30s ago) vs truly offline.
-const WARMUP_GRACE_PERIOD_MS = 30000;  // 30s after first failure = "warming_up"
+const WARMUP_GRACE_PERIOD_MS = 30000; // 30s after first failure = "warming_up"
 const WARMUP_RETRY_INTERVAL_MS = 5000; // 5s retry during warmup
-let _initFailedAt = 0;                 // timestamp of first health failure (0 = never)
+let _initFailedAt = 0; // timestamp of first health failure (0 = never)
 
 const CIRCUIT_FAILURE_WINDOW_MS = 60000;
 const CIRCUIT_FAILURE_THRESHOLD = 3;
@@ -462,10 +462,10 @@ export const ollamaProvider: AIProvider = {
     // OMEGA: Use cached health status if recent (unless test forces re-check)
     // ⚡ FIX-3: Use shorter interval during warmup grace period
     const inWarmupPeriod =
-      _initFailedAt > 0 && (now - _initFailedAt) < WARMUP_GRACE_PERIOD_MS;
+      _initFailedAt > 0 && now - _initFailedAt < WARMUP_GRACE_PERIOD_MS;
     const effectiveCacheInterval = inWarmupPeriod
-      ? WARMUP_RETRY_INTERVAL_MS  // 5s during warmup (warming_up state)
-      : HEALTH_CHECK_INTERVAL;    // 45s stable state
+      ? WARMUP_RETRY_INTERVAL_MS // 5s during warmup (warming_up state)
+      : HEALTH_CHECK_INTERVAL; // 45s stable state
     if (
       !bypassCache &&
       endpointHealthy !== null &&
@@ -692,7 +692,7 @@ export const ollamaProvider: AIProvider = {
     errorCount = 0;
     endpointHealthy = null;
     lastHealthCheck = 0;
-    _initFailedAt = 0;         // ⚡ FIX-3: Reset warmup tracking
+    _initFailedAt = 0; // ⚡ FIX-3: Reset warmup tracking
     _initOllamaPromise = null; // ⚡ FIX-2: Allow re-init after explicit reset
     _initOllamaSettled = false;
     logger.debug('🔄 Errors and health state reset');

@@ -165,10 +165,22 @@ export const system = {
       safeInvoke<NexusEngineState>('engine_get_nexus_state'),
       safeInvoke<HarmoniaEngineState>('engine_get_harmonia_state'),
       safeInvoke<SentinelEngineState>('engine_get_sentinel_state'),
-      safeInvoke<MemoryState>('memory_get_state').catch(() => null as unknown as MemoryState),
-      safeInvoke<EvolutionState>('get_evolution_state').catch(() => null as unknown as EvolutionState),
+      safeInvoke<MemoryState>('memory_get_state').catch(
+        () => null as unknown as MemoryState
+      ),
+      safeInvoke<EvolutionState>('get_evolution_state').catch(
+        () => null as unknown as EvolutionState
+      ),
     ]);
-    return { helios, nexus, harmonia, sentinel, memory, evolution, timestamp: Date.now() };
+    return {
+      helios,
+      nexus,
+      harmonia,
+      sentinel,
+      memory,
+      evolution,
+      timestamp: Date.now(),
+    };
   },
 
   /**
@@ -222,7 +234,10 @@ export const composite = {
       safeInvoke<EvolutionState>('get_evolution_state'),
     ]);
     const system: SystemState = {
-      helios, nexus, harmonia, sentinel,
+      helios,
+      nexus,
+      harmonia,
+      sentinel,
       memory: null as unknown as MemoryState,
       evolution,
       timestamp: Date.now(),

@@ -95,7 +95,8 @@ export const TransformationRoadmap: React.FC<TransformationRoadmapProps> = ({
           gap: '6px',
         }}
       >
-        📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique curée manuellement. Aucune connexion IPC live. Dernière mise à jour : 2026-03-18.
+        📋 <strong>DISPLAY_ONLY</strong> — Roadmap statique curée manuellement. Aucune
+        connexion IPC live. Dernière mise à jour : 2026-03-18.
       </div>
 
       {/* Header */}

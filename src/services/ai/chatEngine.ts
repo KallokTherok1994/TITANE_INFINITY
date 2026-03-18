@@ -1045,9 +1045,15 @@ Que souhaites-tu explorer ?`;
         systemPrompt,
         // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
         temperature:
-          finalConfig.aiConfig?.temperature ?? modeTemperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
+          finalConfig.aiConfig?.temperature ??
+          modeTemperature ??
+          DEFAULT_AI_CONFIG.temperature ??
+          0.7,
         maxOutputTokens:
-          finalConfig.aiConfig?.maxTokens ?? modeMaxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 2048,
+          finalConfig.aiConfig?.maxTokens ??
+          modeMaxTokens ??
+          DEFAULT_AI_CONFIG.maxTokens ??
+          2048,
         provider: this.providerPreference,
         enableStreaming: false,
       };
@@ -1056,7 +1062,9 @@ Que souhaites-tu explorer ?`;
         await chatEngineCommands.generateResponse(payload);
       // Guard: if backend is in mock mode, fall through to real orchestrator
       if (completion.provider === 'mock' || completion.content?.startsWith('(MOCK)')) {
-        logger.warn('[chatEngine] Mock backend response detected — falling through to orchestrator');
+        logger.warn(
+          '[chatEngine] Mock backend response detected — falling through to orchestrator'
+        );
         return null;
       }
       this.setConversationId(finalConfig.mode, completion.conversationId);
@@ -1244,9 +1252,15 @@ Que souhaites-tu explorer ?`;
       systemPrompt,
       // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
       temperature:
-        finalConfig.aiConfig?.temperature ?? modeTemperature ?? DEFAULT_AI_CONFIG.temperature ?? 0.7,
+        finalConfig.aiConfig?.temperature ??
+        modeTemperature ??
+        DEFAULT_AI_CONFIG.temperature ??
+        0.7,
       maxOutputTokens:
-        finalConfig.aiConfig?.maxTokens ?? modeMaxTokens ?? DEFAULT_AI_CONFIG.maxTokens ?? 2048,
+        finalConfig.aiConfig?.maxTokens ??
+        modeMaxTokens ??
+        DEFAULT_AI_CONFIG.maxTokens ??
+        2048,
       provider: this.providerPreference,
       enableStreaming: true,
     };

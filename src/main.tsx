@@ -1114,19 +1114,21 @@ if (_titaneCurrentWindowLabel !== 'main') {
   if (typeof document !== 'undefined') {
     document.documentElement.dataset.titaneBootReady = '1';
   }
-  console.log(`[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`);
+  console.log(
+    `[TITANE] Non-main window "${_titaneCurrentWindowLabel}" — minimal mode active (boot dedup)`
+  );
 } else {
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// 🎯 REACT ROOT MOUNT - Point critique d'affichage
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const rootElement = document.getElementById('root');
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  // 🎯 REACT ROOT MOUNT - Point critique d'affichage
+  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const rootElement = document.getElementById('root');
 
-if (!rootElement) {
-  const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
-  logger.error(errorMsg, { component: 'RootElement' });
+  if (!rootElement) {
+    const errorMsg = '❌ CRITICAL: #root element not found in DOM!';
+    logger.error(errorMsg, { component: 'RootElement' });
 
-  // Fallback visuel si #root manque
-  document.body.innerHTML = `
+    // Fallback visuel si #root manque
+    document.body.innerHTML = `
     <div style="
       display: flex;
       align-items: center;
@@ -1145,89 +1147,92 @@ if (!rootElement) {
       </div>
     </div>
   `;
-  throw new Error(errorMsg);
-}
-
-console.log('✅ Root element found:', rootElement);
-console.log('🎨 Starting React 18 render...');
-
-try {
-  console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
-
-  // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
-  // Décommenter la ligne ci-dessous pour tester React minimal
-  // import('./AppMinimalTest').then(({ default: AppMinimal }) => {
-  //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
-  // });
-
-  ReactDOM.createRoot(rootElement).render(
-    <React.StrictMode>
-      <ErrorBoundary
-        context="App"
-        onError={(error, errorInfo) => {
-          logger.error(
-            'Production Error Boundary caught',
-            {
-              component: 'ErrorBoundary',
-              componentStack: errorInfo.componentStack,
-            },
-            error
-          );
-
-          // Hook for Sentry/LogRocket integration
-          if (window.Sentry) {
-            window.Sentry.captureException(error, {
-              contexts: { react: { componentStack: errorInfo.componentStack } },
-            });
-          }
-        }}
-      >
-        <App />
-      </ErrorBoundary>
-    </React.StrictMode>
-  );
-
-  console.log('\n╔════════════════════════════════════════════════════════════════╗');
-  console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
-  console.log('╚════════════════════════════════════════════════════════════════╝\n');
-
-  // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
-  // In Tauri, service workers can create persistent caching issues across builds.
-  if (!isTauriRuntime() && 'serviceWorker' in navigator && import.meta.env.PROD) {
-    navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
-      .then(registration => {
-        console.log('✅ Service Worker registered:', registration.scope);
-
-        // Update on page reload
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                console.log('🔄 New Service Worker available. Refresh to update.');
-                // Optional: Show update notification to user
-              }
-            });
-          }
-        });
-      })
-      .catch(error => {
-        console.warn('⚠️ Service Worker registration failed:', error);
-      });
+    throw new Error(errorMsg);
   }
-} catch (error) {
-  logger.error(
-    'CRITICAL: React mount failed',
-    { component: 'ReactMount' },
-    error as Error
-  );
 
-  // Fallback visuel en cas d'erreur React
-  const errorMsg = error instanceof Error ? error.message : String(error);
-  const errorStack = error instanceof Error ? error.stack : '';
+  console.log('✅ Root element found:', rootElement);
+  console.log('🎨 Starting React 18 render...');
 
-  document.body.innerHTML = `
+  try {
+    console.log('🚀 [v16.2.3] Rendering App complet (après validation AppMinimal)');
+
+    // 🔬 DIAGNOSTIC: Test minimal pour isoler problème écran noir
+    // Décommenter la ligne ci-dessous pour tester React minimal
+    // import('./AppMinimalTest').then(({ default: AppMinimal }) => {
+    //   ReactDOM.createRoot(rootElement).render(<AppMinimal />);
+    // });
+
+    ReactDOM.createRoot(rootElement).render(
+      <React.StrictMode>
+        <ErrorBoundary
+          context="App"
+          onError={(error, errorInfo) => {
+            logger.error(
+              'Production Error Boundary caught',
+              {
+                component: 'ErrorBoundary',
+                componentStack: errorInfo.componentStack,
+              },
+              error
+            );
+
+            // Hook for Sentry/LogRocket integration
+            if (window.Sentry) {
+              window.Sentry.captureException(error, {
+                contexts: { react: { componentStack: errorInfo.componentStack } },
+              });
+            }
+          }}
+        >
+          <App />
+        </ErrorBoundary>
+      </React.StrictMode>
+    );
+
+    console.log('\n╔════════════════════════════════════════════════════════════════╗');
+    console.log('║  ✅ TITANE∞ REACT ROOT MOUNTED (App Complet Actif)           ║');
+    console.log('╚════════════════════════════════════════════════════════════════╝\n');
+
+    // ✨ P2-B: Register Service Worker for offline caching (-400ms repeat visit)
+    // In Tauri, service workers can create persistent caching issues across builds.
+    if (!isTauriRuntime() && 'serviceWorker' in navigator && import.meta.env.PROD) {
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then(registration => {
+          console.log('✅ Service Worker registered:', registration.scope);
+
+          // Update on page reload
+          registration.addEventListener('updatefound', () => {
+            const newWorker = registration.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', () => {
+                if (
+                  newWorker.state === 'installed' &&
+                  navigator.serviceWorker.controller
+                ) {
+                  console.log('🔄 New Service Worker available. Refresh to update.');
+                  // Optional: Show update notification to user
+                }
+              });
+            }
+          });
+        })
+        .catch(error => {
+          console.warn('⚠️ Service Worker registration failed:', error);
+        });
+    }
+  } catch (error) {
+    logger.error(
+      'CRITICAL: React mount failed',
+      { component: 'ReactMount' },
+      error as Error
+    );
+
+    // Fallback visuel en cas d'erreur React
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : '';
+
+    document.body.innerHTML = `
     <div style="
       display: flex;
       align-items: center;
@@ -1265,6 +1270,6 @@ try {
       </div>
     </div>
   `;
-  throw error;
-}
+    throw error;
+  }
 } // end non-main window guard (FIX: UI_BOOT_DUPLICATION + OLLAMA_PROBE_STORM)

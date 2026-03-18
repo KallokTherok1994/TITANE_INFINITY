@@ -736,11 +736,23 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       // [FIX-007] engine_get_nexus_state returns NexusEngineState — map to local NexusState shape
       const nexusState: NexusState = await tauriClient
         .nexusGetState()
-        .then((raw) => {
-          const r = raw as { health?: string; coordination_count?: number; active_connections?: number; last_coordination_ms?: number };
+        .then(raw => {
+          const r = raw as {
+            health?: string;
+            coordination_count?: number;
+            active_connections?: number;
+            last_coordination_ms?: number;
+          };
           const h = r.health ?? '';
           // Derived heuristic from health string — not a measured value
-          const coherenceScore = h === 'Ready' ? (r.active_connections ?? 0) > 0 ? 75 : 50 : h === 'Degraded' ? 25 : 0;
+          const coherenceScore =
+            h === 'Ready'
+              ? (r.active_connections ?? 0) > 0
+                ? 75
+                : 50
+              : h === 'Degraded'
+                ? 25
+                : 0;
           return {
             activeNodes: r.active_connections ?? 0,
             totalNodes: r.active_connections ?? 0, // total = active until backend exposes full count
@@ -764,8 +776,13 @@ const OrchestrationMetaCenterContent: React.FC = () => {
       // [FIX-007] engine_get_harmonia_state returns HarmoniaEngineState — map to local HarmoniaState shape
       const harmoniaState: HarmoniaState = await tauriClient
         .harmoniaGetState()
-        .then((raw) => {
-          const r = raw as { health?: string; harmony_index?: number; balance_score?: number; last_check_ms?: number };
+        .then(raw => {
+          const r = raw as {
+            health?: string;
+            harmony_index?: number;
+            balance_score?: number;
+            last_check_ms?: number;
+          };
           const h = r.health ?? '';
           return {
             activeFlows: [],

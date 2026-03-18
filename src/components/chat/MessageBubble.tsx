@@ -224,95 +224,99 @@ export const MessageBubble = memo(function MessageBubble({
 
         <div className="message-bubble-text">{messageContent}</div>
 
-        {role === 'assistant' && content && content.trim().length > 0 && speechState.canPlay && (
-          <div
-            className="message-bubble-audio"
-            data-testid={`message-tts-controls-${timestamp}`}
-          >
+        {role === 'assistant' &&
+          content &&
+          content.trim().length > 0 &&
+          speechState.canPlay && (
             <div
-              className={`message-bubble-audio-status message-bubble-audio-status-${speechState.status}`}
-              data-testid={`message-tts-status-${timestamp}`}
+              className="message-bubble-audio"
+              data-testid={`message-tts-controls-${timestamp}`}
             >
-              {getSpeechStatusLabel(
-                speechState.status,
-                speechState.provider,
-                speechState.error
-              )}
+              <div
+                className={`message-bubble-audio-status message-bubble-audio-status-${speechState.status}`}
+                data-testid={`message-tts-status-${timestamp}`}
+              >
+                {getSpeechStatusLabel(
+                  speechState.status,
+                  speechState.provider,
+                  speechState.error
+                )}
+              </div>
+
+              <div className="message-bubble-audio-actions">
+                {(speechState.status === 'idle' ||
+                  speechState.status === 'completed' ||
+                  speechState.status === 'stopped' ||
+                  speechState.status === 'error') && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button message-bubble-audio-button-primary"
+                    onClick={() => {
+                      void messageSpeechController.playMessage(messageId, content);
+                    }}
+                    data-testid={`message-tts-read-${timestamp}`}
+                  >
+                    {speechState.status === 'completed' ||
+                    speechState.status === 'stopped'
+                      ? 'Relire'
+                      : 'Lire à haute voix'}
+                  </button>
+                )}
+
+                {speechState.status === 'loading' && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    disabled
+                    data-testid={`message-tts-loading-${timestamp}`}
+                  >
+                    Préparation audio...
+                  </button>
+                )}
+
+                {speechState.status === 'speaking' && speechState.supportsPause && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    onClick={() => {
+                      void messageSpeechController.pause();
+                    }}
+                    data-testid={`message-tts-pause-${timestamp}`}
+                  >
+                    Pause
+                  </button>
+                )}
+
+                {speechState.status === 'paused' && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button"
+                    onClick={() => {
+                      void messageSpeechController.resume();
+                    }}
+                    data-testid={`message-tts-resume-${timestamp}`}
+                  >
+                    Reprendre
+                  </button>
+                )}
+
+                {(speechState.status === 'loading' ||
+                  speechState.status === 'speaking' ||
+                  speechState.status === 'paused') && (
+                  <button
+                    type="button"
+                    className="message-bubble-audio-button message-bubble-audio-button-secondary"
+                    onClick={() => {
+                      void messageSpeechController.stop();
+                    }}
+                    data-testid={`message-tts-stop-${timestamp}`}
+                  >
+                    Stop
+                  </button>
+                )}
+              </div>
             </div>
-
-            <div className="message-bubble-audio-actions">
-              {(speechState.status === 'idle' ||
-                speechState.status === 'completed' ||
-                speechState.status === 'stopped' ||
-                speechState.status === 'error') && (
-                <button
-                  type="button"
-                  className="message-bubble-audio-button message-bubble-audio-button-primary"
-                  onClick={() => {
-                    void messageSpeechController.playMessage(messageId, content);
-                  }}
-                  data-testid={`message-tts-read-${timestamp}`}
-                >
-                  {speechState.status === 'completed' || speechState.status === 'stopped'
-                    ? 'Relire'
-                    : 'Lire à haute voix'}
-                </button>
-              )}
-
-              {speechState.status === 'loading' && (
-                <button
-                  type="button"
-                  className="message-bubble-audio-button"
-                  disabled
-                  data-testid={`message-tts-loading-${timestamp}`}
-                >
-                  Préparation audio...
-                </button>
-              )}
-
-              {speechState.status === 'speaking' && speechState.supportsPause && (
-                <button
-                  type="button"
-                  className="message-bubble-audio-button"
-                  onClick={() => {
-                    void messageSpeechController.pause();
-                  }}
-                  data-testid={`message-tts-pause-${timestamp}`}
-                >
-                  Pause
-                </button>
-              )}
-
-              {speechState.status === 'paused' && (
-                <button
-                  type="button"
-                  className="message-bubble-audio-button"
-                  onClick={() => {
-                    void messageSpeechController.resume();
-                  }}
-                  data-testid={`message-tts-resume-${timestamp}`}
-                >
-                  Reprendre
-                </button>
-              )}
-
-              {(speechState.status === 'loading' ||
-                speechState.status === 'speaking' ||
-                speechState.status === 'paused') && (
-                <button
-                  type="button"
-                  className="message-bubble-audio-button message-bubble-audio-button-secondary"
-                  onClick={() => {
-                    void messageSpeechController.stop();
-                  }}
-                  data-testid={`message-tts-stop-${timestamp}`}
-                >
-                  Stop
-                </button>
-              )}
-            </div>
-          </div>
-        )}
+          )}
 
         {/* Sprint 6 Phase 3: Message Reactions */}
         {role === 'assistant' && content && content.trim().length > 0 && (

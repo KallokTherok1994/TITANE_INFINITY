@@ -48,7 +48,9 @@ describe('messageSpeechController', () => {
   });
 
   it('preserve les pauses fortes au lieu de sur-fusionner', () => {
-    const output = prepareSpeechProsody('Bonjour. Oui. Continuons avec une explication claire.');
+    const output = prepareSpeechProsody(
+      'Bonjour. Oui. Continuons avec une explication claire.'
+    );
     expect(output).toContain('Bonjour. Oui.');
   });
 });

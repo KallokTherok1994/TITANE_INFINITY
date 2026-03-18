@@ -78,17 +78,25 @@ async function openAudioCenterAdvanced(maxAttempts = 3) {
           if (!exists) return false;
           return audioCenterRoot.isDisplayed();
         },
-        { timeout: 15000, interval: 500, timeoutMsg: `Audio Center not visible (attempt ${attempt})` }
+        {
+          timeout: 15000,
+          interval: 500,
+          timeoutMsg: `Audio Center not visible (attempt ${attempt})`,
+        }
       );
     } catch {
-      if (attempt === maxAttempts) throw new Error('Audio Center failed to load after retries');
+      if (attempt === maxAttempts)
+        throw new Error('Audio Center failed to load after retries');
       continue;
     }
 
     // Navigate to Advanced sub-tab (use JS click to bypass interactability guard)
     const advancedTab = await $('[data-testid="tab-audio-advanced"]');
     if ((await advancedTab.isExisting()) && (await advancedTab.isDisplayed())) {
-      await browser.execute(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); el.click(); }, advancedTab);
+      await browser.execute(el => {
+        el.scrollIntoView({ block: 'center', behavior: 'instant' });
+        el.click();
+      }, advancedTab);
       await browser.pause(600);
     }
 
@@ -101,11 +109,16 @@ async function openAudioCenterAdvanced(maxAttempts = 3) {
           if (!exists) return false;
           return toggle.isDisplayed();
         },
-        { timeout: 8000, interval: 300, timeoutMsg: 'toggle-audio-auto-read-assistant not visible' }
+        {
+          timeout: 8000,
+          interval: 300,
+          timeoutMsg: 'toggle-audio-auto-read-assistant not visible',
+        }
       );
       return toggle;
     } catch {
-      if (attempt === maxAttempts) throw new Error('toggle-audio-auto-read-assistant not visible after retries');
+      if (attempt === maxAttempts)
+        throw new Error('toggle-audio-auto-read-assistant not visible after retries');
     }
   }
   throw new Error('openAudioCenterAdvanced: exhausted attempts');
@@ -134,7 +147,10 @@ describe('Audio Settings Canonical Persistence', () => {
     METRICS.initialToggleState = initialChecked;
 
     // Flip the toggle (JS click to bypass interactability guard)
-    await browser.execute(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); el.click(); }, toggle);
+    await browser.execute(el => {
+      el.scrollIntoView({ block: 'center', behavior: 'instant' });
+      el.click();
+    }, toggle);
     await browser.pause(600); // React state flush + audioService.updateTTSSettings + localStorage write
 
     METRICS.toggleFlipped = true;
@@ -191,7 +207,10 @@ describe('Audio Settings Canonical Persistence', () => {
       const toggle = await openAudioCenterAdvanced();
       const currentState = await toggle.isSelected();
       if (currentState !== METRICS.initialToggleState) {
-        await browser.execute(el => { el.scrollIntoView({ block: 'center', behavior: 'instant' }); el.click(); }, toggle);
+        await browser.execute(el => {
+          el.scrollIntoView({ block: 'center', behavior: 'instant' });
+          el.click();
+        }, toggle);
         await browser.pause(400);
       }
       const finalState = await toggle.isSelected();
@@ -202,4 +221,3 @@ describe('Audio Settings Canonical Persistence', () => {
     METRICS.verdict = METRICS.persistenceProven ? 'PASS' : 'FAIL';
   });
 });
-

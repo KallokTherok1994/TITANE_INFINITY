@@ -19,7 +19,7 @@ import { backendV17 } from '../services/tauri/backend-v17.2.commands';
 interface SystemStore {
   // State
   helios: HeliosState | null;
-  nexus: NexusEngineState | null;     // [FIX-003] was NexusState — LYING_UI resolved
+  nexus: NexusEngineState | null; // [FIX-003] was NexusState — LYING_UI resolved
   harmonia: HarmoniaEngineState | null; // [FIX-003] was HarmoniaState — LYING_UI resolved
   sentinel: SentinelEngineState | null; // [FIX-003] was SentinelState — LYING_UI resolved
   health: HealthStatus | null;

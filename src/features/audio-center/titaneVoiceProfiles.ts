@@ -71,7 +71,7 @@ export const normalizeTitaneVoiceProfiles = (
         description:
           typeof record.description === 'string' && record.description.trim().length > 0
             ? record.description
-            : 'Profil vocal synchronisé avec l\'identité TITANE.',
+            : "Profil vocal synchronisé avec l'identité TITANE.",
         language:
           typeof record.language === 'string' && record.language.trim().length > 0
             ? record.language
@@ -88,7 +88,9 @@ export const normalizeTitaneVoiceProfiles = (
         preferredPitch:
           typeof characteristics?.pitch === 'number' ? characteristics.pitch : undefined,
         preferredVolume:
-          typeof characteristics?.volume === 'number' ? characteristics.volume : undefined,
+          typeof characteristics?.volume === 'number'
+            ? characteristics.volume
+            : undefined,
       };
     })
     .filter((profile): profile is TitaneVoiceProfileOption => profile !== null);

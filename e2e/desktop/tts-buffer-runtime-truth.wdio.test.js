@@ -71,7 +71,9 @@ async function tauriInvoke(command, payload = {}) {
         }
         throw new Error('No Tauri IPC available');
       };
-      run().then(done).catch(err => done({ __error: String(err) }));
+      run()
+        .then(done)
+        .catch(err => done({ __error: String(err) }));
     },
     command,
     payload
@@ -97,13 +99,19 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
       );
     });
     METRICS.tauriIPCAvailable = available;
-    assert.ok(available, 'ANTI-LIE: Tauri IPC not available — this is not a real Tauri WebView');
+    assert.ok(
+      available,
+      'ANTI-LIE: Tauri IPC not available — this is not a real Tauri WebView'
+    );
   });
 
   it('tts_generate_test_buffer returns valid buffer for voice alpha', async () => {
     let result;
     try {
-      result = await tauriInvoke('tts_generate_test_buffer', { voice: 'alpha', duration_ms: 200 });
+      result = await tauriInvoke('tts_generate_test_buffer', {
+        voice: 'alpha',
+        duration_ms: 200,
+      });
     } catch (err) {
       await captureFailureScreenshot('tts_buffer_alpha_error');
       throw new Error(`tts_generate_test_buffer (alpha) failed: ${err}`);
@@ -126,10 +134,7 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
       result.peak > MIN_PEAK,
       `ANTI-LIE: buffer is silent (peak=${result.peak}) — fake audio`
     );
-    assert.ok(
-      EXPECTED_ENGINES.has(result.engine),
-      `unknown engine: "${result.engine}"`
-    );
+    assert.ok(EXPECTED_ENGINES.has(result.engine), `unknown engine: "${result.engine}"`);
     assert.strictEqual(result.voice, 'alpha', `voice mismatch: "${result.voice}"`);
 
     METRICS.alphaBuffer = { length: result.length, peak: result.peak };
@@ -141,7 +146,10 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
   it('tts_generate_test_buffer returns valid buffer for voice beta', async () => {
     let result;
     try {
-      result = await tauriInvoke('tts_generate_test_buffer', { voice: 'beta', duration_ms: 200 });
+      result = await tauriInvoke('tts_generate_test_buffer', {
+        voice: 'beta',
+        duration_ms: 200,
+      });
     } catch (err) {
       await captureFailureScreenshot('tts_buffer_beta_error');
       throw new Error(`tts_generate_test_buffer (beta) failed: ${err}`);
@@ -152,8 +160,14 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
     }
 
     assert.ok(Array.isArray(result.buffer), 'beta buffer must be array');
-    assert.ok(result.buffer.length >= MIN_BUFFER_LENGTH, `beta buffer too short: ${result.buffer.length}`);
-    assert.ok(result.peak > MIN_PEAK, `ANTI-LIE: beta buffer is silent (peak=${result.peak})`);
+    assert.ok(
+      result.buffer.length >= MIN_BUFFER_LENGTH,
+      `beta buffer too short: ${result.buffer.length}`
+    );
+    assert.ok(
+      result.peak > MIN_PEAK,
+      `ANTI-LIE: beta buffer is silent (peak=${result.peak})`
+    );
 
     METRICS.betaBuffer = { length: result.length, peak: result.peak };
     METRICS.betaEngine = result.engine;
@@ -163,8 +177,14 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
 
   it('alpha and beta voices produce different buffers (technical identity proof)', async () => {
     // Re-fetch both buffers for direct comparison
-    const alpha = await tauriInvoke('tts_generate_test_buffer', { voice: 'alpha', duration_ms: 200 });
-    const beta = await tauriInvoke('tts_generate_test_buffer', { voice: 'beta', duration_ms: 200 });
+    const alpha = await tauriInvoke('tts_generate_test_buffer', {
+      voice: 'alpha',
+      duration_ms: 200,
+    });
+    const beta = await tauriInvoke('tts_generate_test_buffer', {
+      voice: 'beta',
+      duration_ms: 200,
+    });
 
     if (alpha?.__error || beta?.__error) {
       throw new Error(`Tauri command error: ${alpha?.__error || beta?.__error}`);
@@ -184,7 +204,11 @@ describe('TTS Generate Test Buffer — Runtime Truth', () => {
     );
 
     // Both engines must match (same binary, same system)
-    assert.strictEqual(alpha.engine, beta.engine, `Engine inconsistency: alpha=${alpha.engine}, beta=${beta.engine}`);
+    assert.strictEqual(
+      alpha.engine,
+      beta.engine,
+      `Engine inconsistency: alpha=${alpha.engine}, beta=${beta.engine}`
+    );
     METRICS.verdict = 'PASS';
   });
 });

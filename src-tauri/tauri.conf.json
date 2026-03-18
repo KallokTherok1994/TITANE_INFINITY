@@ -21,9 +21,7 @@
       "icons/icon.icns",
       "icons/icon.ico"
     ],
-    "resources": [
-      "../dist"
-    ],
+    "resources": ["../dist"],
     "copyright": "Copyright \u00a9 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE\u221e - Stable Release",
@@ -79,9 +77,7 @@
         {
           "identifier": "main-capability",
           "description": "Capability for the main window",
-          "windows": [
-            "main"
-          ],
+          "windows": ["main"],
           "permissions": [
             "core:default",
             "core:event:default",
@@ -3205,9 +3201,7 @@
         {
           "identifier": "avatar-floating-capability",
           "description": "Capability for the floating avatar window",
-          "windows": [
-            "avatar-floating"
-          ],
+          "windows": ["avatar-floating"],
           "permissions": [
             "core:default",
             "core:event:default",
