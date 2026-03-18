@@ -1060,7 +1060,7 @@ const AppRouter: React.FC = () => {
             element={<Navigate to="/titane" replace />}
           />
           <Route path="/progression" element={<Navigate to="/titane" replace />} />
-          <Route path="/xp" element={<Navigate to="/titane" replace />} />
+          <Route path="/xp" element={<Navigate to="/experience" replace />} />
           {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev (Stats fusionné DEV Cockpit) */}
           <Route path="/cognitive" element={<Navigate to="/dev" replace />} />
           {/* ✅ v29.1: /stats fusionné dans DEV Cockpit > Diagnostics */}

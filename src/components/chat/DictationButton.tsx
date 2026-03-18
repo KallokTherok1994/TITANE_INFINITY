@@ -78,6 +78,9 @@ export const DictationButton: FC<DictationButtonProps> = ({
   return (
     <button
       type="button"
+      data-testid="chat-dictation-button"
+      data-recording={isRecording ? 'true' : 'false'}
+      data-mic-available={isDisabled ? 'false' : 'true'}
       className={`dictation-button ${isRecording ? 'recording' : ''} ${hasError ? 'error' : ''} ${className}`}
       onClick={handleClick}
       disabled={isDisabled}

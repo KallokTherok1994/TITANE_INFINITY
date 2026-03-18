@@ -20,7 +20,6 @@ import {
   DEFAULT_SESSION_TTL,
   DEFAULT_INTERMEDIATE_TTL,
 } from '../../services/memory/persistentMemory.config';
-import { XP } from '../../core/experience/XP_ENGINE';
 import { awardExperience } from '../../services/experienceService';
 import { XPSource, XP_REWARDS } from '../../types/experience';
 import './MemoryViewer.css';
@@ -404,11 +403,6 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
 
       // ═══ AWARD XP FOR MEMORY PROMOTION ═══
       try {
-        XP.gain(
-          XP_REWARDS.MEMORY_INGESTION,
-          'memory_promote',
-          `Mémoire promue: ${entry.id}`
-        );
         await awardExperience(
           'memory',
           XP_REWARDS.MEMORY_INGESTION,
@@ -446,7 +440,6 @@ export const MemoryViewer: React.FC<MemoryViewerProps> = ({
 
       // ═══ AWARD XP FOR MEMORY ARCHIVAL ═══
       try {
-        XP.gain(20, 'memory_archive', `Mémoire archivée: ${entry.id}`);
         await awardExperience('memory', 20, XPSource.MemoryIngestion, {
           entryId: entry.id,
           action: 'archive',

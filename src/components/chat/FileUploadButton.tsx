@@ -14,7 +14,6 @@
 
 import React, { useRef, useState, useCallback, memo } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
-import { XP } from '../../core/experience/XP_ENGINE';
 import { awardExperience } from '../../services/experienceService';
 import { XPSource, XP_REWARDS } from '../../types/experience';
 import './FileUploadButton.css';
@@ -315,12 +314,7 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
                   memoryResult
                 );
 
-              // +20 XP global + domaine memory pour chaque fichier importé avec succès
-              XP.gain(
-                XP_REWARDS.FILE_IMPORT,
-                'file_import',
-                `Fichier importé: ${result.name}`
-              );
+              // +20 XP domaine memory pour chaque fichier importé avec succès
               await awardExperience(
                 'memory',
                 XP_REWARDS.FILE_IMPORT,
@@ -346,11 +340,6 @@ export const FileUploadButton: React.FC<FileUploadButtonProps> = memo(
 
               // On donne quand même +10 XP pour l'analyse locale
               try {
-                XP.gain(
-                  10,
-                  'file_analysis',
-                  `Fichier analysé localement: ${result.name}`
-                );
                 await awardExperience('cognitive', 10, XPSource.CognitiveAnalysis, {
                   filename: result.name,
                   category: result.category,
