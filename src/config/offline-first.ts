@@ -53,7 +53,8 @@ export function isOnlineModeEnabled(): boolean {
     const config = JSON.parse(userConfig);
     return config.mode === 'cloud' || config.mode === 'hybrid';
   }
-  return false;
+  // Default policy: online-first governed with local fallback.
+  return AI_CONFIG.mode === 'cloud' || AI_CONFIG.mode === 'hybrid';
 }
 
 /**

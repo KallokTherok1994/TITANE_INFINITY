@@ -143,7 +143,7 @@ export const TitanePage: React.FC = () => {
     mode: 'stable',
   });
 
-  // ═══ PROGRESSION LOADING ═══
+  // ═══ PROGRESSION LOADING + LIVE SUBSCRIPTION ═══
   useEffect(() => {
     const loadProgression = async () => {
       try {
@@ -151,10 +151,12 @@ export const TitanePage: React.FC = () => {
         setProgression(state);
       } catch (error) {
         pageLogger.error('Erreur chargement progression', error);
-        // Graceful fallback: use default progression state
       }
     };
     loadProgression();
+    // Live subscription — updates whenever XP is earned (e.g. per chat message)
+    const unsubscribe = xpEngine.subscribe(state => setProgression({ ...state }));
+    return () => unsubscribe();
   }, []);
 
   // ═══ MEMORY STATS LOADING ═══

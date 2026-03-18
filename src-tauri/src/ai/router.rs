@@ -270,23 +270,27 @@ impl AIRouter {
         }
 
         // 3. Fallback to Ollama
-        let ollama_available = self.cache.get_provider_status("ollama").await.unwrap_or(false);
-        if ollama_available {
-            info!("[AI Router v20.1] Routing to Ollama (local fallback)");
-            match self.ollama_client.query(&request).await {
-                Ok(response) => {
-                    log::info!(
-                        "[AI Router v20.1] ✓ Ollama success: {} tokens, {}ms",
-                        response.tokens,
-                        query_start.elapsed().as_millis()
-                    );
-                    // Cache the response
-                    self.cache_response(&request, &response).await;
-                    return Ok(response);
-                }
-                Err(e) => {
-                    warn!("[AI Router v15] ✗ Ollama failed: {}", e);
-                }
+        let ollama_available_cached = self.cache.get_provider_status("ollama").await.unwrap_or(false);
+        if !ollama_available_cached {
+            warn!(
+                "[AI Router v20.1] Ollama cache says unavailable - forcing direct final attempt"
+            );
+        }
+
+        info!("[AI Router v20.1] Routing to Ollama (final local fallback)");
+        match self.ollama_client.query(&request).await {
+            Ok(response) => {
+                log::info!(
+                    "[AI Router v20.1] ✓ Ollama success: {} tokens, {}ms",
+                    response.tokens,
+                    query_start.elapsed().as_millis()
+                );
+                // Cache the response
+                self.cache_response(&request, &response).await;
+                return Ok(response);
+            }
+            Err(e) => {
+                warn!("[AI Router v15] ✗ Ollama failed: {}", e);
             }
         }
 
@@ -373,8 +377,9 @@ impl AIRouter {
         let query_start = Instant::now();
 
         if !self.ollama_client.is_available().await {
-            log::error!("[AI Router v21] 🏠 LOCAL MODE: Ollama NOT available");
-            return Err(AIError::NoProviderAvailable);
+            log::warn!(
+                "[AI Router v21] 🏠 LOCAL MODE: availability probe failed, forcing one direct query"
+            );
         }
 
         info!("[AI Router v21] 🏠 LOCAL MODE: Routing to Ollama");

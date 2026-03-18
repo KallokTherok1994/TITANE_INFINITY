@@ -331,11 +331,47 @@ export function useConversationEngine(
           setConversationId(response.conversation_id);
         }
 
+        const noProviderPayload =
+          /no ai provider available/i.test(response.assistant_message) ||
+          response.meta?.reason_code === 'FALLBACK_OFFLINE' ||
+          response.meta?.reason_code === 'PROVIDER_UNAVAILABLE';
+
+        const assistantContent = noProviderPayload
+          ? `🤖 TITANE∞ est en mode récupération provider.
+
+Je n'ai pas pu joindre un provider IA actif pour cette requête. Le mode provider a été remis en AUTO avec online-first.
+
+Actions immédiates:
+- Vérifie la connexion réseau
+- Vérifie les clés API cloud (Gemini/OpenAI/Claude)
+- Ou démarre Ollama local si tu veux un mode local`
+          : response.assistant_message;
+
+        if (noProviderPayload) {
+          try {
+            localStorage.setItem('omega-chat-preferred-provider', 'auto');
+            const current = localStorage.getItem('titane_ai_config');
+            if (!current) {
+              localStorage.setItem(
+                'titane_ai_config',
+                JSON.stringify({
+                  mode: 'hybrid',
+                  provider: 'gemini',
+                  requireOnlineConfirmation: false,
+                  localFirst: false,
+                })
+              );
+            }
+          } catch {
+            // Non-blocking: localStorage may be unavailable in strict sandbox contexts.
+          }
+        }
+
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
           id: response.message_id,
           role: 'assistant',
-          content: response.assistant_message,
+          content: assistantContent,
           timestamp: Date.now(),
           metadata: {
             intention: response.detected_intention,

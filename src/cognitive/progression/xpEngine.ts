@@ -54,6 +54,7 @@ export interface ProgressionState {
   totalXP: number;
   xpInCurrentLevel: number;
   xpToNextLevel: number;
+  chatMessageCount: number; // incremented on every 'chat_message' XP event
   milestones: ProgressionMilestone[];
   unlockedMilestones: string[];
   lastXPGain: XPEvent | null;
@@ -196,6 +197,7 @@ const createDefaultState = (): ProgressionState => ({
   totalXP: 0,
   xpInCurrentLevel: 0,
   xpToNextLevel: XP_PER_LEVEL,
+  chatMessageCount: 0,
   milestones: DEFAULT_MILESTONES,
   unlockedMilestones: [],
   lastXPGain: null,
@@ -293,6 +295,11 @@ class XPEngine {
     this.state.totalXP += actualAmount;
     this.state.lastXPGain = event;
     this.state.updatedAt = Date.now();
+
+    // Track canonical message count for achievement computation
+    if (source === 'chat_message') {
+      this.state.chatMessageCount = (this.state.chatMessageCount ?? 0) + 1;
+    }
 
     // Calculer le nouveau niveau
     this.updateLevel();
