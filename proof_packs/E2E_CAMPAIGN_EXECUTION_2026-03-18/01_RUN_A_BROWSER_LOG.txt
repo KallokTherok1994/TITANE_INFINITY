@@ -2,3 +2,207 @@
 Start: mer. 18 mars 2026 09:57:49 EDT
 Command: pnpm test:e2e
 
+      321 |     const providerSelect = page.locator('[data-testid="provider-select"]');
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/provider-flow.test.ts:318:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/provider-flow-Provider-Flow-v21-0-Test-5-Performance-Latency-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────────────────────────────────
+    reports/playwright/test-results/provider-flow-Provider-Flow-v21-0-Test-5-Performance-Latency-chromium-tests-e2e/video.webm
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  56) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:22:3 › TITANE∞ UI Comprehensive Test Suite › 1.1 Dashboard Page - Load & Verify 
+
+    Error: page.goto: net::ERR_ABORTED at tauri://localhost
+    Call log:
+    [2m  - navigating to "tauri://localhost", waiting until "networkidle"[22m
+
+
+      21 |   // ============================================
+      22 |   test('1.1 Dashboard Page - Load & Verify', async () => {
+    > 23 |     await page.goto('tauri://localhost', { waitUntil: 'networkidle' });
+         |                ^
+      24 |     await page.waitForTimeout(2000);
+      25 |
+      26 |     // Verify main dashboard elements
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:23:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-8ad86-ashboard-Page---Load-Verify-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  57) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:34:3 › TITANE∞ UI Comprehensive Test Suite › 1.2 Navigation Menu - All Links Accessible 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      36 |     const count = await navItems.count();
+      37 |
+    > 38 |     expect(count).toBeGreaterThan(0);
+         |                   ^
+      39 |
+      40 |     // Verify each nav item is clickable
+      41 |     for (let i = 0; i < Math.min(count, 5); i++) {
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:38:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-e0e03-Menu---All-Links-Accessible-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  58) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:67:3 › TITANE∞ UI Comprehensive Test Suite › 2.1 Primary Buttons - Clickable & Responsive 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      69 |     const count = await buttons.count();
+      70 |
+    > 71 |     expect(count).toBeGreaterThan(0);
+         |                   ^
+      72 |
+      73 |     for (let i = 0; i < Math.min(count, 5); i++) {
+      74 |       const btn = buttons.nth(i);
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:71:19
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-91c1d-tons---Clickable-Responsive-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  59) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:208:3 › TITANE∞ UI Comprehensive Test Suite › 6.1 Page Load Time - Acceptable 
+
+    Error: page.goto: net::ERR_ABORTED at tauri://localhost
+    Call log:
+    [2m  - navigating to "tauri://localhost", waiting until "networkidle"[22m
+
+
+      208 |   test('6.1 Page Load Time - Acceptable', async () => {
+      209 |     const startTime = Date.now();
+    > 210 |     await page.goto('tauri://localhost', { waitUntil: 'networkidle' });
+          |                ^
+      211 |     const loadTime = Date.now() - startTime;
+      212 |
+      213 |     expect(loadTime).toBeLessThan(5000); // < 5s
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:210:16
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-b5d51-Page-Load-Time---Acceptable-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  60) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:263:3 › TITANE∞ UI Comprehensive Test Suite › 7.2 Keyboard Navigation - Tab Order 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoBeGreaterThan[2m([22m[32mexpected[39m[2m)[22m
+
+    Expected: > [32m0[39m
+    Received:   [31m0[39m
+
+      264 |     await page.keyboard.press('Tab');
+      265 |     const focused1 = await page.locator(':focus');
+    > 266 |     expect(await focused1.count()).toBeGreaterThan(0);
+          |                                    ^
+      267 |
+      268 |     await page.keyboard.press('Tab');
+      269 |     const focused2 = await page.locator(':focus');
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:266:36
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-02b30-oard-Navigation---Tab-Order-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  61) [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:392:3 › TITANE∞ UI Comprehensive Test Suite › Z.0 Final Verification - All Systems OK 
+
+    Error: [2mexpect([22m[31mreceived[39m[2m).[22mtoContain[2m([22m[32mexpected[39m[2m) // indexOf[22m
+
+    Expected substring: [32m"<!DOCTYPE html>"[39m
+    Received string:    [31m"<html><head></head><body></body></html>"[39m
+
+      393 |     const pageContent = await page.content();
+      394 |
+    > 395 |     expect(pageContent).toContain('<!DOCTYPE html>');
+          |                         ^
+      396 |     expect(pageContent.length).toBeGreaterThan(1000);
+      397 |
+      398 |     const title = await page.title();
+        at /home/titane-os/Documents/GitHub/TITANE_INFINITY/tests/e2e/ui-comprehensive.spec.ts:395:25
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    reports/playwright/test-results/ui-comprehensive-TITANE∞-U-3a379-rification---All-Systems-OK-chromium-tests-e2e/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  61 failed
+    [chromium] › e2e/onboarding.test.ts:24:3 › Onboarding Flow › should display onboarding on first launch 
+    [chromium] › e2e/onboarding.test.ts:38:3 › Onboarding Flow › should complete full onboarding flow with all steps 
+    [chromium] › e2e/onboarding.test.ts:114:3 › Onboarding Flow › should navigate back through onboarding steps 
+    [chromium] › e2e/onboarding.test.ts:140:3 › Onboarding Flow › should save preferences correctly 
+    [chromium] › e2e/onboarding.test.ts:186:3 › Onboarding Flow › should display progress bar correctly 
+    [chromium] › e2e/onboarding.test.ts:215:3 › Onboarding Flow › should display step dots indicator 
+    [chromium] › e2e/onboarding.test.ts:256:3 › Onboarding Flow › should handle responsive layout on mobile 
+    [chromium] › e2e/onboarding.test.ts:274:3 › Onboarding Flow › should display animations correctly 
+    [chromium] › e2e/onboarding.test.ts:293:3 › Onboarding Theme Selection › should select light theme 
+    [chromium] › e2e/onboarding.test.ts:319:3 › Onboarding Theme Selection › should select auto theme 
+    [chromium] › e2e/onboarding.test.ts:347:3 › Onboarding Accessibility › should be keyboard navigable 
+    [chromium] › e2e/onboarding.test.ts:362:3 › Onboarding Accessibility › should have proper ARIA labels 
+    [chromium-tests-e2e] › tests/e2e/accessibility.spec.ts:5:3 › Accessibility › should pass axe checks 
+    [chromium-tests-e2e] › tests/e2e/accessibility.spec.ts:27:3 › Accessibility › should have proper ARIA labels 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:24:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Bulle flottante accessible 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:44:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Panel chat accessible 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:75:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Contraste couleurs (texte) 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:95:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Keyboard navigation complète 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:121:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: ARIA labels et roles 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:160:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Live regions (messages streaming) 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:177:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Focus indicators visibles 
+    [chromium-tests-e2e] › tests/e2e/chat-accessibility-axe.spec.ts:209:3 › Chat IA - Accessibility WCAG 2.1 AA › WCAG 2.1 AA: Rapport complet axe-core 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:29:3 › Chat IA - Race Conditions & Streaming › RACE CONDITION: Messages multiples rapides (10 msg/2s) 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:65:3 › Chat IA - Race Conditions & Streaming › STREAMING: Messages assistant progressifs 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:91:3 › Chat IA - Race Conditions & Streaming › ERROR BOUNDARY: Message invalide ne crashe pas l'UI 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:122:3 › Chat IA - Race Conditions & Streaming › VALIDATION: Messages vides sont filtrés 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:153:3 › Chat IA - Race Conditions & Streaming › PERFORMANCE: useMemo - Pas de re-render excessif 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:176:3 › Chat IA - Race Conditions & Streaming › FAILSAFE: Erreur d'envoi restaure l'input 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:207:3 › Chat IA - Race Conditions & Streaming › ACCESSIBILITY: ARIA labels et keyboard navigation 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:234:3 › Chat IA - Race Conditions & Streaming › EDGE CASE: Message très long (> 5000 chars) 
+    [chromium-tests-e2e] › tests/e2e/chat-race-conditions.spec.ts:256:3 › Chat IA - Race Conditions & Streaming › EDGE CASE: Caractères spéciaux et emojis 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:25:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should handle network errors gracefully 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:48:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should recover from provider failures 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:64:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should handle rapid successive interactions 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:84:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should maintain performance under load 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:124:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should sanitize malicious input 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:149:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should prevent session hijacking 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:178:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should be fully keyboard navigable 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:204:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should support screen readers 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:225:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should recover from memory overflow 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:248:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should handle storage quota exceeded 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:279:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should maintain 60fps during animations 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:308:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should handle long-running operations without UI freeze 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:333:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should maintain data consistency across operations 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:358:3 › 🔥 Flux Critiques — Garantie Infaillibilité › should prevent race conditions in concurrent operations 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:386:3 › 📸 Régression Visuelle › should match visual snapshot 
+    [chromium-tests-e2e] › tests/e2e/critical-flows.spec.ts:396:3 › 📸 Régression Visuelle › should match chat interface snapshot 
+    [chromium-tests-e2e] › tests/e2e/i18n.spec.ts:4:3 › Internationalization › should switch to English 
+    [chromium-tests-e2e] › tests/e2e/i18n.spec.ts:14:3 › Internationalization › should default to French 
+    [chromium-tests-e2e] › tests/e2e/i18n.spec.ts:21:3 › Internationalization › should persist language choice 
+    [chromium-tests-e2e] › tests/e2e/provider-flow.test.ts:34:3 › Provider Flow v21.0 › Test 1: Local Mode force Ollama direct 
+    [chromium-tests-e2e] › tests/e2e/provider-flow.test.ts:111:3 › Provider Flow v21.0 › Test 2: Memory Multi-Turn Integration 
+    [chromium-tests-e2e] › tests/e2e/provider-flow.test.ts:188:3 › Provider Flow v21.0 › Test 3: Auth Tracking userId 
+    [chromium-tests-e2e] › tests/e2e/provider-flow.test.ts:255:3 › Provider Flow v21.0 › Test 4: Error Handling Ollama Down 
+    [chromium-tests-e2e] › tests/e2e/provider-flow.test.ts:317:3 › Provider Flow v21.0 › Test 5: Performance Latency 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:22:3 › TITANE∞ UI Comprehensive Test Suite › 1.1 Dashboard Page - Load & Verify 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:34:3 › TITANE∞ UI Comprehensive Test Suite › 1.2 Navigation Menu - All Links Accessible 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:67:3 › TITANE∞ UI Comprehensive Test Suite › 2.1 Primary Buttons - Clickable & Responsive 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:208:3 › TITANE∞ UI Comprehensive Test Suite › 6.1 Page Load Time - Acceptable 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:263:3 › TITANE∞ UI Comprehensive Test Suite › 7.2 Keyboard Navigation - Tab Order 
+    [chromium-tests-e2e] › tests/e2e/ui-comprehensive.spec.ts:392:3 › TITANE∞ UI Comprehensive Test Suite › Z.0 Final Verification - All Systems OK 
+  50 passed (12.3m)
+
+To open last HTML report run:
+[36m[39m
+[36m  pnpm exec playwright show-report[39m
+[36m[39m
+ ELIFECYCLE  Command failed with exit code 1.
+
+Exit Code: 0
+End: mer. 18 mars 2026 10:10:10 EDT
+RUN_A_EXIT=0
