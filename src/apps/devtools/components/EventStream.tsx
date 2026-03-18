@@ -271,7 +271,12 @@ export const EventStream: React.FC = () => {
             >
               <div className="event-header">
                 <span className="event-time">
-                  {new Date(event.timestamp).toLocaleTimeString()}
+                  {new Date(event.timestamp).toLocaleTimeString('fr-FR', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: 'UTC',
+                  })}
                 </span>
                 <span className="event-type-icon">{getTypeIcon(event.event_type)}</span>
                 <span className="event-type">{event.event_type}</span>

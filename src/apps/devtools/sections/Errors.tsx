@@ -266,6 +266,7 @@ export function Errors() {
                         minute: '2-digit',
                         second: '2-digit',
                         hour12: false,
+                        timeZone: 'UTC',
                       })}
                     </p>
                   </button>
@@ -356,6 +357,7 @@ export function Errors() {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
+                    timeZone: 'UTC',
                     hour: '2-digit',
                     minute: '2-digit',
                     second: '2-digit',

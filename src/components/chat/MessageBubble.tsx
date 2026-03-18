@@ -35,13 +35,14 @@ interface MessageBubbleProps {
 }
 
 /**
- * Formate un timestamp en heure locale
+ * Formate un timestamp en heure UTC
  */
 const formatTime = (ts: number): string => {
   const date = new Date(ts);
   return date.toLocaleTimeString('fr-FR', {
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'UTC',
   });
 };
 
