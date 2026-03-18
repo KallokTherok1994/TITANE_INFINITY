@@ -165,9 +165,10 @@ const formatTimestamp = (ts: number): string => {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
+      timeZone: 'UTC',
     }) +
     '.' +
-    String(date.getMilliseconds()).padStart(3, '0')
+    String(date.getUTCMilliseconds()).padStart(3, '0')
   );
 };
 
