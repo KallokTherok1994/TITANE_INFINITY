@@ -195,6 +195,7 @@ pub struct MemoryHealth {
 
 /// Requête de lecture
 #[derive(Debug, Clone, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct MemoryReadRequest {
     pub levels: Option<Vec<MemoryLevel>>,
     pub topics: Option<Vec<MemoryTopic>>,
