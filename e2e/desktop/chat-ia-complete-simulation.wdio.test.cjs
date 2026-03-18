@@ -41,7 +41,8 @@ const DEV_BASE_URL = (
 ).replace(/\/+$/, '');
 
 const TAURI_BASE_URL = 'tauri://localhost';
-const shouldPreferTauri = !process.env.TAURI_DEV_SERVER_URL && !process.env.VITE_DEV_SERVER_URL;
+const shouldPreferTauri =
+  !process.env.TAURI_DEV_SERVER_URL && !process.env.VITE_DEV_SERVER_URL;
 const appUrl = (route = '/') =>
   shouldPreferTauri
     ? route === '/'
@@ -115,14 +116,22 @@ async function invokeTauriCommand(command, args = {}, retries = 3) {
             if (v == null || typeof v !== 'object') return v;
             if (Array.isArray(v)) return v.slice(0, 30).map(serialize);
             const o = {};
-            Object.keys(v).slice(0, 50).forEach(k => { o[k] = serialize(v[k]); });
+            Object.keys(v)
+              .slice(0, 50)
+              .forEach(k => {
+                o[k] = serialize(v[k]);
+              });
             return o;
           };
           const run = async () => {
-            if (window.__TAURI_INTERNALS__?.invoke) return await window.__TAURI_INTERNALS__.invoke(cmd, payload);
-            if (window.__TAURI__?.core?.invoke) return await window.__TAURI__.core.invoke(cmd, payload);
-            if (window.__TAURI__?.tauri?.invoke) return await window.__TAURI__.tauri.invoke(cmd, payload);
-            if (window.__TAURI__?.invoke) return await window.__TAURI__.invoke(cmd, payload);
+            if (window.__TAURI_INTERNALS__?.invoke)
+              return await window.__TAURI_INTERNALS__.invoke(cmd, payload);
+            if (window.__TAURI__?.core?.invoke)
+              return await window.__TAURI__.core.invoke(cmd, payload);
+            if (window.__TAURI__?.tauri?.invoke)
+              return await window.__TAURI__.tauri.invoke(cmd, payload);
+            if (window.__TAURI__?.invoke)
+              return await window.__TAURI__.invoke(cmd, payload);
             throw new Error('Tauri IPC unavailable — no bridge found');
           };
           run()
@@ -155,7 +164,9 @@ async function recoverSession() {
   try {
     await browser.reloadSession();
     await pause(800);
-  } catch { /* ignore */ }
+  } catch {
+    /* ignore */
+  }
   await ensurePageReady('recovery');
 }
 
@@ -195,16 +206,38 @@ async function ensurePageReady(context = '') {
 async function detectChatInput() {
   return browser.execute(() => {
     const byTestId = document.querySelector('[data-testid="chat-input"]');
-    if (byTestId) return { found: true, selector: '[data-testid="chat-input"]', tag: byTestId.tagName };
+    if (byTestId)
+      return {
+        found: true,
+        selector: '[data-testid="chat-input"]',
+        tag: byTestId.tagName,
+      };
 
-    const inputs = Array.from(document.querySelectorAll('textarea, input[type="text"], [contenteditable="true"]'));
+    const inputs = Array.from(
+      document.querySelectorAll('textarea, input[type="text"], [contenteditable="true"]')
+    );
     const byPlaceholder = inputs.find(el => {
       const ph = (el.getAttribute('placeholder') || '').toLowerCase();
-      return ph.includes('message') || ph.includes('chat') || ph.includes('écri') || ph.includes('posez');
+      return (
+        ph.includes('message') ||
+        ph.includes('chat') ||
+        ph.includes('écri') ||
+        ph.includes('posez')
+      );
     });
-    if (byPlaceholder) return { found: true, selector: `${byPlaceholder.tagName.toLowerCase()}[placeholder*="${byPlaceholder.getAttribute('placeholder')?.slice(0, 20)}"]`, tag: byPlaceholder.tagName };
+    if (byPlaceholder)
+      return {
+        found: true,
+        selector: `${byPlaceholder.tagName.toLowerCase()}[placeholder*="${byPlaceholder.getAttribute('placeholder')?.slice(0, 20)}"]`,
+        tag: byPlaceholder.tagName,
+      };
 
-    if (inputs.length === 1) return { found: true, selector: inputs[0].tagName.toLowerCase(), tag: inputs[0].tagName };
+    if (inputs.length === 1)
+      return {
+        found: true,
+        selector: inputs[0].tagName.toLowerCase(),
+        tag: inputs[0].tagName,
+      };
 
     return { found: false, inputCount: inputs.length };
   });
@@ -223,9 +256,19 @@ async function detectSendButton() {
       const t = (b.textContent || '').trim().toLowerCase();
       const title = (b.title || '').toLowerCase();
       const aria = (b.getAttribute('aria-label') || '').toLowerCase();
-      return t.includes('send') || t.includes('envoyer') || title.includes('send') || aria.includes('send') || aria.includes('envoyer');
+      return (
+        t.includes('send') ||
+        t.includes('envoyer') ||
+        title.includes('send') ||
+        aria.includes('send') ||
+        aria.includes('envoyer')
+      );
     });
-    if (sendBtn) return { found: true, selector: 'button[aria-label*="send"], button[aria-label*="envoyer"]' };
+    if (sendBtn)
+      return {
+        found: true,
+        selector: 'button[aria-label*="send"], button[aria-label*="envoyer"]',
+      };
 
     return { found: false, buttonCount: buttons.length };
   });
@@ -239,7 +282,9 @@ async function countAssistantMessages() {
     const msgs = document.querySelectorAll('[data-testid="chat-message-assistant"]');
     if (msgs.length > 0) return msgs.length;
     // Fallback: look for assistant role containers
-    const roleContainers = document.querySelectorAll('[data-role="assistant"], .message-assistant, .ai-message');
+    const roleContainers = document.querySelectorAll(
+      '[data-role="assistant"], .message-assistant, .ai-message'
+    );
     return roleContainers.length;
   });
 }
@@ -282,12 +327,17 @@ async function sendMessageViaUI(message, timeoutMs = RESPONSE_TIMEOUT_MS) {
         try {
           const text = await btn.getText();
           const aria = await btn.getAttribute('aria-label');
-          if (/send|envoyer/i.test(text + aria)) { sendElem = btn; break; }
-        } catch { /* skip */ }
+          if (/send|envoyer/i.test(text + aria)) {
+            sendElem = btn;
+            break;
+          }
+        } catch {
+          /* skip */
+        }
       }
     }
 
-    if (sendElem && await sendElem.isEnabled()) {
+    if (sendElem && (await sendElem.isEnabled())) {
       await sendElem.click();
     } else {
       // Fallback: press Enter
@@ -303,12 +353,18 @@ async function sendMessageViaUI(message, timeoutMs = RESPONSE_TIMEOUT_MS) {
 
         // Check loading ended (no spinner)
         const loading = await browser.execute(() => {
-          const spinner = document.querySelector('[data-testid="chat-loading"], .chat-loading, .typing-indicator');
+          const spinner = document.querySelector(
+            '[data-testid="chat-loading"], .chat-loading, .typing-indicator'
+          );
           return spinner ? 'loading' : 'idle';
         });
         return loading === 'idle' && countAfter > countBefore;
       },
-      { timeout: timeoutMs, interval: 800, timeoutMsg: `No response after ${timeoutMs}ms for: "${message.slice(0, 50)}"` }
+      {
+        timeout: timeoutMs,
+        interval: 800,
+        timeoutMsg: `No response after ${timeoutMs}ms for: "${message.slice(0, 50)}"`,
+      }
     );
 
     // Extra wait for response to fully render
@@ -316,12 +372,18 @@ async function sendMessageViaUI(message, timeoutMs = RESPONSE_TIMEOUT_MS) {
 
     // Get response text
     const responseText = await browser.execute(() => {
-      const msgs = Array.from(document.querySelectorAll('[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'));
+      const msgs = Array.from(
+        document.querySelectorAll(
+          '[data-testid="chat-message-assistant"] [data-testid="chat-message-content"]'
+        )
+      );
       if (msgs.length > 0) return msgs[msgs.length - 1].textContent?.trim() || '';
       // Fallback
-      const containers = Array.from(document.querySelectorAll('[data-testid="chat-message-assistant"]'));
+      const containers = Array.from(
+        document.querySelectorAll('[data-testid="chat-message-assistant"]')
+      );
       const last = containers[containers.length - 1];
-      return last ? (last.textContent?.trim() || '') : '';
+      return last ? last.textContent?.trim() || '' : '';
     });
 
     const latency = Date.now() - start;
@@ -389,7 +451,10 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       const title = await browser.getTitle();
       await ss('A1_app_loaded');
 
-      const loaded = href.startsWith('tauri://') || href.startsWith('http://127.0.0.1') || href.startsWith('http://localhost');
+      const loaded =
+        href.startsWith('tauri://') ||
+        href.startsWith('http://127.0.0.1') ||
+        href.startsWith('http://localhost');
       recordTest('A', 'A1: App loads', loaded, { href, title });
       expect(loaded, `Expected Tauri/Dev URL, got: ${href}`).to.be.true;
     });
@@ -405,7 +470,10 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       });
 
       recordTest('A', 'A2: Chat input present', inputInfo.found, { inputInfo });
-      expect(inputInfo.found, `Chat input not found. Details: ${JSON.stringify(inputInfo)}`).to.be.true;
+      expect(
+        inputInfo.found,
+        `Chat input not found. Details: ${JSON.stringify(inputInfo)}`
+      ).to.be.true;
     });
 
     it('A3: Send button is present', async () => {
@@ -413,7 +481,9 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       recordTest('A', 'A3: Send button present', sendInfo.found, { sendInfo });
       // Soft assert — send can be Enter key
       if (!sendInfo.found) {
-        console.warn('[A3] Send button not found via DOM, Enter key fallback will be used');
+        console.warn(
+          '[A3] Send button not found via DOM, Enter key fallback will be used'
+        );
       }
     });
 
@@ -428,7 +498,8 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
         };
       });
 
-      const ipcAvailable = ipcInfo.hasInternals || ipcInfo.hasCore || ipcInfo.hasTauri || ipcInfo.hasDirect;
+      const ipcAvailable =
+        ipcInfo.hasInternals || ipcInfo.hasCore || ipcInfo.hasTauri || ipcInfo.hasDirect;
 
       writeReport('page_classification.json', {
         timestamp: new Date().toISOString(),
@@ -441,7 +512,9 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       recordTest('A', 'A4: Tauri IPC available', ipcAvailable, { ipcInfo });
       if (!ipcAvailable) {
-        M.blockers.push('Tauri IPC unavailable — IPC-based tests will degrade to UI-only');
+        M.blockers.push(
+          'Tauri IPC unavailable — IPC-based tests will degrade to UI-only'
+        );
         console.warn('[A4] IPC unavailable. UI-only mode for subsequent tests.');
       }
     });
@@ -498,7 +571,7 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
         id: 'strategy',
         label: 'Stratégie',
         messages: [
-          'Mode stratégie. Planifie le développement d\'un assistant IA personnel en 6 mois.',
+          "Mode stratégie. Planifie le développement d'un assistant IA personnel en 6 mois.",
           'Quelles sont les étapes critiques et les risques principaux ?',
           'Comment mesurer le succès à 30, 60 et 90 jours ?',
         ],
@@ -507,7 +580,7 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
         id: 'omega',
         label: 'Omega',
         messages: [
-          'Mode Omega. Qu\'est-ce que la conscience artificielle selon toi ?',
+          "Mode Omega. Qu'est-ce que la conscience artificielle selon toi ?",
           'Comment TITANE∞ perçoit-il sa propre existence ?',
           'Quelle est la relation entre mémoire, identité et continuité du soi pour une IA ?',
         ],
@@ -524,7 +597,9 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
             console.log(`[B] Mode set to ${modeConfig.id} via IPC`);
           } catch {
             // Mode may be set via UI — not critical here
-            console.log(`[B] IPC set_chat_mode not available for ${modeConfig.id}, using UI flow`);
+            console.log(
+              `[B] IPC set_chat_mode not available for ${modeConfig.id}, using UI flow`
+            );
           }
           await ss(`B_mode_${modeConfig.id}_start`);
         });
@@ -575,8 +650,14 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
             allResponded,
           });
 
-          recordTest('B', `B-${modeConfig.id}: ${modeConfig.label} conversation`, allResponded, { results });
-          expect(allResponded, `Mode ${modeConfig.id}: not all turns responded`).to.be.true;
+          recordTest(
+            'B',
+            `B-${modeConfig.id}: ${modeConfig.label} conversation`,
+            allResponded,
+            { results }
+          );
+          expect(allResponded, `Mode ${modeConfig.id}: not all turns responded`).to.be
+            .true;
         });
       });
     }
@@ -591,25 +672,25 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       await ss('C1_ar20_start');
 
       const CONVERSATION = [
-        'Quel est ton rôle principal dans l\'écosystème TITANE∞ ?',
+        "Quel est ton rôle principal dans l'écosystème TITANE∞ ?",
         'Comment fonctionnent tes moteurs cognitifs ?',
         'Décris le pipeline OMEGA en détail.',
-        'Qu\'est-ce que la mémoire STM dans ton architecture ?',
+        "Qu'est-ce que la mémoire STM dans ton architecture ?",
         'Comment la mémoire MTM diffère-t-elle de la STM ?',
-        'Qu\'est-ce que la LTM et comment y accèdes-tu ?',
+        "Qu'est-ce que la LTM et comment y accèdes-tu ?",
         'Quel est ton provider IA actif en ce moment ?',
         'Comment gères-tu le fallback si Ollama est indisponible ?',
-        'Décris le flow de traitement d\'un message entrant.',
-        'Qu\'est-ce que le mode Brainstorming et quand l\'utiliser ?',
+        "Décris le flow de traitement d'un message entrant.",
+        "Qu'est-ce que le mode Brainstorming et quand l'utiliser ?",
         'Comment le mode Stratégie diffère-t-il du mode Standard ?',
-        'Explique le concept d\'auto-évolution dans TITANE∞.',
-        'Qu\'est-ce que l\'architecture 4-Ring ?',
+        "Explique le concept d'auto-évolution dans TITANE∞.",
+        "Qu'est-ce que l'architecture 4-Ring ?",
         'Comment est implémenté le principe One Door ?',
         'Décris tes capacités de génération de code.',
         'Comment gères-tu les conversations multi-tours ?',
-        'Qu\'est-ce que cognitiveOmega dans ton architecture ?',
+        "Qu'est-ce que cognitiveOmega dans ton architecture ?",
         'Comment détectes-tu la saturation cognitive ?',
-        'Qu\'est-ce que le mode Protection et quand s\'active-t-il ?',
+        "Qu'est-ce que le mode Protection et quand s'active-t-il ?",
         'Donne un résumé de toutes tes capacités en une réponse synthétique.',
       ];
 
@@ -667,7 +748,10 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       const successCount = results.filter(r => r.success && r.hasContent).length;
       const successRate = results.length > 0 ? (successCount / results.length) * 100 : 0;
-      const avgLatency = latencies.length > 0 ? latencies.reduce((a, b) => a + b, 0) / latencies.length : 0;
+      const avgLatency =
+        latencies.length > 0
+          ? latencies.reduce((a, b) => a + b, 0) / latencies.length
+          : 0;
 
       const ar20Report = {
         timestamp: new Date().toISOString(),
@@ -682,10 +766,15 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       writeReport('AR20_results.json', ar20Report);
       writeReport('simulation_results.json', ar20Report);
 
-      console.log(`[C1] AR20 result: ${successCount}/${results.length} (${successRate.toFixed(1)}%) avg=${Math.round(avgLatency)}ms`);
+      console.log(
+        `[C1] AR20 result: ${successCount}/${results.length} (${successRate.toFixed(1)}%) avg=${Math.round(avgLatency)}ms`
+      );
 
       recordTest('C', 'C1: AR20 simulation', successRate >= 80, ar20Report);
-      expect(successRate).to.be.at.least(80, `AR20: at least 80% messages must be answered (got ${successRate.toFixed(1)}%)`);
+      expect(successRate).to.be.at.least(
+        80,
+        `AR20: at least 80% messages must be answered (got ${successRate.toFixed(1)}%)`
+      );
     });
   });
 
@@ -699,14 +788,16 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       try {
         const result = await invokeTauriCommand('get_available_providers', {});
-        providers = Array.isArray(result) ? result : (result?.providers || []);
+        providers = Array.isArray(result) ? result : result?.providers || [];
         providersOk = providers.length > 0;
         console.log(`[D1] Providers: ${JSON.stringify(providers).slice(0, 200)}`);
       } catch (e) {
         console.warn(`[D1] get_available_providers not available: ${e.message}`);
         // Fallback: check UI for provider info
         const uiProviders = await browser.execute(() => {
-          const el = document.querySelector('[data-testid="chat-runtime-state"], [data-testid="provider-selector"]');
+          const el = document.querySelector(
+            '[data-testid="chat-runtime-state"], [data-testid="provider-selector"]'
+          );
           return el ? el.textContent?.trim() : null;
         });
         providersOk = !!uiProviders;
@@ -724,17 +815,20 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       );
 
       const ok = result.success && !!(result.content || '').trim();
-      console.log(`[D2] Ollama gemma2:2b: ${ok} (${result.latency}ms) — ${(result.content || '').slice(0, 80)}`);
+      console.log(
+        `[D2] Ollama gemma2:2b: ${ok} (${result.latency}ms) — ${(result.content || '').slice(0, 80)}`
+      );
       writeReport('D_ollama_gemma2_2b.json', result);
       recordTest('D', 'D2: Ollama gemma2:2b', ok, result);
       expect(ok, `Ollama gemma2:2b failed: ${result.error}`).to.be.true;
     });
 
     it('D3: Ollama provider test (llama3.2:1b)', async () => {
-      const result = await sendMessageViaIPC(
-        'Test: réponds "llama OK" en une ligne.',
-        { mode: 'default', provider: 'ollama', model: 'llama3.2:1b' }
-      );
+      const result = await sendMessageViaIPC('Test: réponds "llama OK" en une ligne.', {
+        mode: 'default',
+        provider: 'ollama',
+        model: 'llama3.2:1b',
+      });
 
       const ok = result.success && !!(result.content || '').trim();
       console.log(`[D3] Ollama llama3.2:1b: ${ok} (${result.latency}ms)`);
@@ -744,10 +838,11 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
     });
 
     it('D4: Ollama provider test (phi3.5)', async () => {
-      const result = await sendMessageViaIPC(
-        'Test phi3.5: dis "phi OK" en une phrase.',
-        { mode: 'default', provider: 'ollama', model: 'phi3.5:latest' }
-      );
+      const result = await sendMessageViaIPC('Test phi3.5: dis "phi OK" en une phrase.', {
+        mode: 'default',
+        provider: 'ollama',
+        model: 'phi3.5:latest',
+      });
 
       const ok = result.success && !!(result.content || '').trim();
       console.log(`[D4] Ollama phi3.5: ${ok} (${result.latency}ms)`);
@@ -758,10 +853,10 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
     });
 
     it('D5: Fallback mode (OFFLINE_SIM)', async () => {
-      const result = await sendMessageViaIPC(
-        'Test fallback: réponds en mode local.',
-        { mode: 'default', offline_sim: true }
-      );
+      const result = await sendMessageViaIPC('Test fallback: réponds en mode local.', {
+        mode: 'default',
+        offline_sim: true,
+      });
 
       const respondedSomething = result.success && !!(result.content || '').trim();
       console.log(`[D5] Fallback test: responded=${respondedSomething}`);
@@ -774,9 +869,16 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
     it('D6: All 10 local models report', async () => {
       const models = [
-        'llama3:latest', 'gemma2:2b', 'qwen2.5:latest', 'codellama:latest',
-        'deepseek-coder-v2:latest', 'gemma2:latest', 'llama3.2:1b',
-        'llama3.2:latest', 'llama3.1:latest', 'phi3.5:latest',
+        'llama3:latest',
+        'gemma2:2b',
+        'qwen2.5:latest',
+        'codellama:latest',
+        'deepseek-coder-v2:latest',
+        'gemma2:latest',
+        'llama3.2:1b',
+        'llama3.2:latest',
+        'llama3.1:latest',
+        'phi3.5:latest',
       ];
 
       const report = { models: [], totalAvailable: 0 };
@@ -801,7 +903,10 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       writeReport('D_all_models.json', report);
       console.log(`[D6] Models available: ${report.totalAvailable}/${models.length}`);
-      recordTest('D', 'D6: Model availability report', true, { note: 'informational', report });
+      recordTest('D', 'D6: Model availability report', true, {
+        note: 'informational',
+        report,
+      });
     });
   });
 
@@ -817,14 +922,20 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       try {
         const result = await invokeTauriCommand('list_conversations', {});
-        convList = Array.isArray(result) ? result : (result?.conversations || result?.items || []);
+        convList = Array.isArray(result)
+          ? result
+          : result?.conversations || result?.items || [];
         ok = true;
         console.log(`[E1] Conversations: ${convList.length} found`);
       } catch (e) {
         console.warn(`[E1] list_conversations failed: ${e.message}`);
       }
 
-      writeReport('E_list_conversations.json', { ok, count: convList.length, convList: convList.slice(0, 5) });
+      writeReport('E_list_conversations.json', {
+        ok,
+        count: convList.length,
+        convList: convList.slice(0, 5),
+      });
       recordTest('E', 'E1: List conversations', ok, { count: convList.length });
     });
 
@@ -836,7 +947,9 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
         createdConvId = result?.id || result?.conversation_id || result;
         console.log(`[E2] Created conversation: ${createdConvId}`);
         writeReport('E_created_conversation.json', { id: createdConvId, raw: result });
-        recordTest('E', 'E2: Create conversation', !!createdConvId, { id: createdConvId });
+        recordTest('E', 'E2: Create conversation', !!createdConvId, {
+          id: createdConvId,
+        });
         expect(createdConvId, 'No conversation ID returned').to.exist;
       } catch (e) {
         console.warn(`[E2] create_conversation failed: ${e.message}`);
@@ -864,12 +977,19 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
           mode: 'default',
           conversation_id: createdConvId,
         });
-        results.push({ msg: msg.slice(0, 50), success: result.success, hasContent: !!(result.content || '').trim() });
+        results.push({
+          msg: msg.slice(0, 50),
+          success: result.success,
+          hasContent: !!(result.content || '').trim(),
+        });
         await pause(200);
       }
 
       const allOk = results.every(r => r.success && r.hasContent);
-      writeReport('E_conversation_messages.json', { conversationId: createdConvId, results });
+      writeReport('E_conversation_messages.json', {
+        conversationId: createdConvId,
+        results,
+      });
       recordTest('E', 'E3: Messages in conversation', allOk, { results });
       expect(allOk, `Not all messages in conversation got responses`).to.be.true;
     });
@@ -881,12 +1001,14 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       }
 
       try {
-        const loaded = await invokeTauriCommand('load_conversation', { id: createdConvId });
-        const hasMessages = loaded && (
-          loaded.messages?.length > 0 ||
-          loaded.history?.length > 0 ||
-          loaded.turns?.length > 0
-        );
+        const loaded = await invokeTauriCommand('load_conversation', {
+          id: createdConvId,
+        });
+        const hasMessages =
+          loaded &&
+          (loaded.messages?.length > 0 ||
+            loaded.history?.length > 0 ||
+            loaded.turns?.length > 0);
         console.log(`[E4] Loaded conversation: ${JSON.stringify(loaded).slice(0, 200)}`);
         writeReport('E_loaded_conversation.json', loaded);
         recordTest('E', 'E4: Load conversation persistence', true, { hasMessages });
@@ -921,24 +1043,28 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       await ss('F1_modules_introspection');
       const rich = result.success && (result.content || '').length > 50;
       writeReport('F_modules_introspection.json', result);
-      recordTest('F', 'F1: Modules introspection', rich, { contentLength: (result.content || '').length });
+      recordTest('F', 'F1: Modules introspection', rich, {
+        contentLength: (result.content || '').length,
+      });
     });
 
     it('F2: Omega mode — question philosophique', async () => {
       const result = await sendMessageViaIPC(
-        'En mode Omega: qu\'est-ce que la conscience artificielle et comment TITANE∞ la vit-il ?',
+        "En mode Omega: qu'est-ce que la conscience artificielle et comment TITANE∞ la vit-il ?",
         { mode: 'omega' }
       );
 
       await ss('F2_omega_response');
       const rich = result.success && (result.content || '').length > 50;
       writeReport('F_omega_response.json', result);
-      recordTest('F', 'F2: Omega philosophical response', rich, { contentPreview: (result.content || '').slice(0, 150) });
+      recordTest('F', 'F2: Omega philosophical response', rich, {
+        contentPreview: (result.content || '').slice(0, 150),
+      });
     });
 
     it('F3: Debug cognitive mode', async () => {
       const result = await sendMessageViaIPC(
-        'Debug cognitif: affiche l\'état de tous tes moteurs cognitifs.',
+        "Debug cognitif: affiche l'état de tous tes moteurs cognitifs.",
         { mode: 'debug_cognitive' }
       );
 
@@ -949,15 +1075,23 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
     it('F4: Memory STM/MTM/LTM test', async () => {
       // First inject a specific fact
-      await sendMessageViaIPC('Retiens ce fait: le projet TITANE∞ a commencé en 2024.', { mode: 'default' });
+      await sendMessageViaIPC('Retiens ce fait: le projet TITANE∞ a commencé en 2024.', {
+        mode: 'default',
+      });
       await pause(500);
 
       // Then query it back
-      const recall = await sendMessageViaIPC('Quand le projet TITANE∞ a-t-il commencé selon ce que je t\'ai dit ?', { mode: 'default' });
+      const recall = await sendMessageViaIPC(
+        "Quand le projet TITANE∞ a-t-il commencé selon ce que je t'ai dit ?",
+        { mode: 'default' }
+      );
       const hasRecall = recall.success && /2024/i.test(recall.content || '');
 
       writeReport('F_memory_stm_test.json', { recall, hasRecall });
-      recordTest('F', 'F4: STM memory recall', hasRecall, { hasRecall, preview: (recall.content || '').slice(0, 100) });
+      recordTest('F', 'F4: STM memory recall', hasRecall, {
+        hasRecall,
+        preview: (recall.content || '').slice(0, 100),
+      });
     });
 
     it('F5: All engines status via IPC', async () => {
@@ -996,20 +1130,23 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
     it('F7: Dev mode — code generation', async () => {
       const result = await sendMessageViaIPC(
-        'Mode dev: écris une fonction TypeScript qui calcule la somme d\'un tableau de nombres.',
+        "Mode dev: écris une fonction TypeScript qui calcule la somme d'un tableau de nombres.",
         { mode: 'dev' }
       );
 
       await ss('F7_dev_code_gen');
-      const hasCode = result.success && (
-        (result.content || '').includes('function') ||
-        (result.content || '').includes('=>') ||
-        (result.content || '').includes('const') ||
-        (result.content || '').includes('reduce')
-      );
+      const hasCode =
+        result.success &&
+        ((result.content || '').includes('function') ||
+          (result.content || '').includes('=>') ||
+          (result.content || '').includes('const') ||
+          (result.content || '').includes('reduce'));
 
       writeReport('F_dev_code_gen.json', result);
-      recordTest('F', 'F7: Dev mode code generation', hasCode, { hasCode, preview: (result.content || '').slice(0, 150) });
+      recordTest('F', 'F7: Dev mode code generation', hasCode, {
+        hasCode,
+        preview: (result.content || '').slice(0, 150),
+      });
     });
   });
 
@@ -1028,12 +1165,20 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
     });
 
     it('G2: Very long message (1000 chars)', async () => {
-      const longMsg = 'A'.repeat(200) + ' Résume ce texte en une phrase. ' + 'B'.repeat(200) + ' Que retiens-tu ? ' + 'C'.repeat(200);
+      const longMsg =
+        'A'.repeat(200) +
+        ' Résume ce texte en une phrase. ' +
+        'B'.repeat(200) +
+        ' Que retiens-tu ? ' +
+        'C'.repeat(200);
       const result = await sendMessageViaIPC(longMsg, { mode: 'default' });
 
       const ok = result.success && !!(result.content || '').trim();
       writeReport('G_long_message.json', { ...result, messageLength: longMsg.length });
-      recordTest('G', 'G2: Long message handling', ok, { messageLength: longMsg.length, ok });
+      recordTest('G', 'G2: Long message handling', ok, {
+        messageLength: longMsg.length,
+        ok,
+      });
     });
 
     it('G3: Session recovery after reload', async () => {
@@ -1053,15 +1198,18 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
     });
 
     it('G4: Invalid provider graceful handling', async () => {
-      const result = await sendMessageViaIPC(
-        'Test provider invalide.',
-        { mode: 'default', provider: 'nonexistent_provider_xyz' }
-      );
+      const result = await sendMessageViaIPC('Test provider invalide.', {
+        mode: 'default',
+        provider: 'nonexistent_provider_xyz',
+      });
 
       // Should either use fallback or return error (NOT hang indefinitely)
       const noHang = result.latency < 30000;
       writeReport('G_invalid_provider.json', result);
-      recordTest('G', 'G4: Invalid provider graceful', noHang, { noHang, latency: result.latency });
+      recordTest('G', 'G4: Invalid provider graceful', noHang, {
+        noHang,
+        latency: result.latency,
+      });
     });
 
     it('G5: Rapid burst (5 quick messages)', async () => {
@@ -1076,15 +1224,25 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       const results = [];
       for (const msg of messages) {
         const r = await sendMessageViaIPC(msg, { mode: 'default' });
-        results.push({ msg: msg.slice(0, 30), success: r.success, hasContent: !!(r.content || '').trim() });
+        results.push({
+          msg: msg.slice(0, 30),
+          success: r.success,
+          hasContent: !!(r.content || '').trim(),
+        });
         await pause(100);
       }
 
-      const successRate = results.filter(r => r.success && r.hasContent).length / results.length * 100;
+      const successRate =
+        (results.filter(r => r.success && r.hasContent).length / results.length) * 100;
       await ss('G5_burst_end');
       writeReport('G_burst.json', { results, successRate });
-      recordTest('G', 'G5: Rapid burst 5 messages', successRate >= 80, { successRate: successRate.toFixed(1) });
-      expect(successRate).to.be.at.least(80, `Burst success rate too low: ${successRate.toFixed(1)}%`);
+      recordTest('G', 'G5: Rapid burst 5 messages', successRate >= 80, {
+        successRate: successRate.toFixed(1),
+      });
+      expect(successRate).to.be.at.least(
+        80,
+        `Burst success rate too low: ${successRate.toFixed(1)}%`
+      );
     });
   });
 
@@ -1097,11 +1255,18 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       await ss('H1_navigation_start');
 
       const navLinks = await browser.execute(() => {
-        const links = Array.from(document.querySelectorAll('nav a, [role="navigation"] a, .sidebar a, .menu a, [data-testid*="nav"] a'));
-        return links.slice(0, 15).map(l => ({
-          text: (l.textContent || '').trim().slice(0, 40),
-          href: l.getAttribute('href') || '',
-        })).filter(l => l.text || l.href);
+        const links = Array.from(
+          document.querySelectorAll(
+            'nav a, [role="navigation"] a, .sidebar a, .menu a, [data-testid*="nav"] a'
+          )
+        );
+        return links
+          .slice(0, 15)
+          .map(l => ({
+            text: (l.textContent || '').trim().slice(0, 40),
+            href: l.getAttribute('href') || '',
+          }))
+          .filter(l => l.text || l.href);
       });
 
       console.log(`[H1] Found ${navLinks.length} navigation links`);
@@ -1110,24 +1275,35 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       for (let i = 0; i < Math.min(navLinks.length, 8); i++) {
         const link = navLinks[i];
         try {
-          await browser.execute((idx) => {
-            const links = Array.from(document.querySelectorAll('nav a, [role="navigation"] a, .sidebar a, .menu a, [data-testid*="nav"] a'));
+          await browser.execute(idx => {
+            const links = Array.from(
+              document.querySelectorAll(
+                'nav a, [role="navigation"] a, .sidebar a, .menu a, [data-testid*="nav"] a'
+              )
+            );
             if (links[idx]) links[idx].click();
           }, i);
           await pause(800);
 
           const href = await browser.execute(() => window.location.href);
           navResults.push({ text: link.text, success: true, href: href.slice(0, 60) });
-          await ss(`H1_nav_${i + 1}_${(link.text || 'page').replace(/\W+/g, '_').slice(0, 20)}`);
+          await ss(
+            `H1_nav_${i + 1}_${(link.text || 'page').replace(/\W+/g, '_').slice(0, 20)}`
+          );
         } catch (e) {
-          navResults.push({ text: link.text, success: false, error: e.message.slice(0, 50) });
+          navResults.push({
+            text: link.text,
+            success: false,
+            error: e.message.slice(0, 50),
+          });
         }
         await pause(300);
       }
 
-      const successRate = navResults.length > 0
-        ? navResults.filter(r => r.success).length / navResults.length * 100
-        : 100; // No links = OK
+      const successRate =
+        navResults.length > 0
+          ? (navResults.filter(r => r.success).length / navResults.length) * 100
+          : 100; // No links = OK
 
       writeReport('H_navigation_results.json', { navLinks, navResults, successRate });
 
@@ -1135,8 +1311,14 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       await ensurePageReady('H1 return to chat');
       await ss('H1_navigation_end');
 
-      recordTest('H', 'H1: Navigation 360°', successRate >= 70, { navLinks: navLinks.length, successRate: successRate.toFixed(1) });
-      expect(successRate).to.be.at.least(70, `Navigation success rate: ${successRate.toFixed(1)}%`);
+      recordTest('H', 'H1: Navigation 360°', successRate >= 70, {
+        navLinks: navLinks.length,
+        successRate: successRate.toFixed(1),
+      });
+      expect(successRate).to.be.at.least(
+        70,
+        `Navigation success rate: ${successRate.toFixed(1)}%`
+      );
     });
   });
 
@@ -1171,10 +1353,13 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
 
       await ss('I1_stability_end');
 
-      const successRate = results.filter(r => r.success && r.hasContent).length / results.length * 100;
+      const successRate =
+        (results.filter(r => r.success && r.hasContent).length / results.length) * 100;
       writeReport('I_stability.json', { results, successRate });
 
-      recordTest('I', 'I1: Final stability burst', successRate >= 80, { successRate: successRate.toFixed(1) });
+      recordTest('I', 'I1: Final stability burst', successRate >= 80, {
+        successRate: successRate.toFixed(1),
+      });
       expect(successRate).to.be.at.least(80, `Stability: ${successRate.toFixed(1)}%`);
     });
   });
@@ -1187,7 +1372,12 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
     console.log('  TITANE∞ Chat IA Complete Simulation — Final Report');
     console.log('════════════════════════════════════════════════════════\n');
 
-    M.verdict = M.failedTests === 0 ? 'PASS' : M.passedTests / M.totalTests >= 0.75 ? 'PASS_WITH_WARNINGS' : 'FAIL';
+    M.verdict =
+      M.failedTests === 0
+        ? 'PASS'
+        : M.passedTests / M.totalTests >= 0.75
+          ? 'PASS_WITH_WARNINGS'
+          : 'FAIL';
 
     const summary = {
       timestamp: new Date().toISOString(),
@@ -1196,14 +1386,17 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       totalTests: M.totalTests,
       passedTests: M.passedTests,
       failedTests: M.failedTests,
-      successRate: M.totalTests > 0 ? ((M.passedTests / M.totalTests) * 100).toFixed(1) : '0',
+      successRate:
+        M.totalTests > 0 ? ((M.passedTests / M.totalTests) * 100).toFixed(1) : '0',
       phases: M.phases,
       blockers: M.blockers,
       screenshots: M.screenshots.length,
     };
 
     console.log(`Verdict: ${M.verdict}`);
-    console.log(`Tests: ${M.passedTests}/${M.totalTests} passed (${summary.successRate}%)`);
+    console.log(
+      `Tests: ${M.passedTests}/${M.totalTests} passed (${summary.successRate}%)`
+    );
     console.log(`Phases: ${Object.keys(M.phases).length}`);
     console.log(`Screenshots: ${M.screenshots.length}`);
 
@@ -1220,8 +1413,8 @@ describe('TITANE∞ Chat IA — Complete E2E Simulation', function () {
       ``,
       `| Phase | Tests | Passé | Échoué |`,
       `|-------|-------|-------|--------|`,
-      ...Object.entries(M.phases).map(([ph, d]) =>
-        `| ${ph} | ${d.passed + d.failed} | ${d.passed} | ${d.failed} |`
+      ...Object.entries(M.phases).map(
+        ([ph, d]) => `| ${ph} | ${d.passed + d.failed} | ${d.passed} | ${d.failed} |`
       ),
       `| **TOTAL** | **${M.totalTests}** | **${M.passedTests}** | **${M.failedTests}** |`,
       ``,
