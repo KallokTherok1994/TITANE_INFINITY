@@ -65,6 +65,7 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testIgnore: includeExperimentalTests ? [] : ['**/onboarding.test.ts'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },

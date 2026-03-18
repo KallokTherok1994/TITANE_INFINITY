@@ -107,3 +107,12 @@
 ## Addendum 2026-03-17T19:03Z
 
 - Vitest TTS cible: `pnpm vitest run src/__tests__/features/audio/audioService.runtimeTtsPolicy.test.ts src/__tests__/services/tts/messageSpeechController.runtimeState.test.ts src/__tests__/services/tts/messageSpeechController.test.ts` -> PASS (9/9)
+
+## Addendum 2026-03-18T15:34Z
+
+- Head revalide: `5efff0570`
+- Runtime desktop cible: `WDIO_SPEC=./e2e/desktop/audio-tts-runtime-controls.wdio.test.js pnpm run e2e:desktop` -> PASS (code 0)
+- Metrices runtime observees: `ttsStatusAfterRead=Lecture en cours...`, `ttsStatusFinal=Lecture arrêtée.`, `pauseResumePath=executed`, `stopActionObserved=true`, `replayButtonObserved=true`, `speakerResultObserved=true`, `microphoneResultObserved=true`, `verdict=PASS`
+- Delta par rapport au dernier etat archive: le chemin `pause/resume` est maintenant observe et execute, sans regression sur le stop/replay ni les boutons Audio Center
+- Gates prerequises de lane desktop: `guard:ollama-proxy` PASS, authorization gate PASS, WebKitWebDriver ensure PASS
+- Evidence runtime confirmee dans `reports/e2e-desktop/audio_tts_runtime_controls_metrics.json` et `reports/e2e-desktop/diagnostics.log`
