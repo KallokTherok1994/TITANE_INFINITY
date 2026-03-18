@@ -46,8 +46,8 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
       () => ({
         level: stats.level,
         totalXP: stats.totalXP,
-        messageCount: 1247,
-        modesUsed: 4,
+        messageCount: 0, // [DISPLAY_ONLY] pas de source d'événements réels connectée — valeur non prouvée
+        modesUsed: 0,   // [DISPLAY_ONLY] pas de compteur de modes connecté
       }),
       [stats]
     );

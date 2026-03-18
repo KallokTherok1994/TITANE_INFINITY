@@ -173,12 +173,12 @@ export const TitanePage: React.FC = () => {
   // ═══ STATS CALCULATION ═══
   const stats: TitaneStats = useMemo(
     () => ({
-      totalXP: progression?.totalXP || 193000,
-      level: progression?.level || 19,
+      totalXP: progression?.totalXP ?? 0,
+      level: progression?.level ?? 1,
       memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
       memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
       memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
-      evolutionScore: 92,
+      evolutionScore: progression?.totalXP ? Math.min(100, Math.round((progression.totalXP / 250000) * 100)) : 0,
     }),
     [progression, memoryStats]
   );

@@ -365,7 +365,7 @@ function generateMockMilestones(): Milestone[] {
       status: 'completed',
       progress: 100,
       features: [
-        'PersonaEditor → localStorage → systemPrompt',
+        'PersonaEditor → localStorage → systemPrompt [câblé v28.1]',
         'Mémoire persistante 3 niveaux → chat',
         'EvolutionTimeline + XP NaN guards certifiés',
         'TransformationRoadmap visual',

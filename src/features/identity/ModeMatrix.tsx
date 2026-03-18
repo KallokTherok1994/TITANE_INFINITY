@@ -35,7 +35,7 @@ interface ModeMatrixProps {
 }
 
 export const ModeMatrix: React.FC<ModeMatrixProps> = ({
-  currentMode = 'architect',
+  currentMode,
   onModeSelect,
   showLocked = true,
 }) => {
