@@ -63,7 +63,7 @@ export default defineConfig({
       name: 'chromium-tests-e2e',
       testDir: resolve(CONFIG_DIR, 'tests/e2e'),
       testMatch: '**/*.{spec,test}.ts',
-      testIgnore: ['**/control_panel.spec.ts', '**/accessibility.spec.ts'],
+      testIgnore: ['**/control_panel.spec.ts'],
       use: {
         ...devices['Desktop Chrome'],
         viewport: { width: 1280, height: 720 },
