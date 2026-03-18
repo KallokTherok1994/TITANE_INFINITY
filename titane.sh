@@ -1,8 +1,8 @@
 #!/bin/bash
 # ═══════════════════════════════════════════════════════════════════════════════
-# TITANE∞ — Unified Deployment Command v26.2.3
-# Commande unifiée pour clean, repair, fix, build & deploy
-# ✨ v26.2.3: Security parameters disabled/minimized for deployment
+# TITANE∞ — Unified Deployment Command v28.1.0
+# Commande unifiée pour clean, repair, fix, build, deploy & icons
+# ✨ v28.1.0: icons update, autoheal gate, TITANE_SECRETS_PASSPHRASE injection
 # ═══════════════════════════════════════════════════════════════════════════════
 #
 # USAGE:
@@ -12,6 +12,9 @@
 #   ./titane.sh build [dev|stable] → Build complet (dev par défaut)
 #   ./titane.sh deploy             → Build + Deploy production
 #   ./titane.sh dev [--no-ollama]  → Environnement développement (avec Ollama)
+#   ./titane.sh icons              → Regénère les icônes (nouveau logo v28)
+#   ./titane.sh autoheal           → Lance detect_recurrence.sh
+#   ./titane.sh gates              → Lance verify_instructions.sh (20/20 PASS)
 #   ./titane.sh cache --stats      → Gestion du cache système
 #   ./titane.sh analyze            → Analyse des scripts projet
 #   ./titane.sh full               → Clean + Repair + Fix + Build + Deploy (FULL)
@@ -75,6 +78,11 @@ if [ -d "$NODE_TOOLS_BIN" ]; then
     export PATH="$NODE_TOOLS_BIN:$PATH"
 fi
 
+# ── Inject TITANE_SECRETS_PASSPHRASE si non définie
+_SECRETS_CONF="$HOME/.config/environment.d/titane-secrets.conf"
+if [ -z "${TITANE_SECRETS_PASSPHRASE:-}" ] && [ -f "$_SECRETS_CONF" ]; then
+    set -a; . "$_SECRETS_CONF"; set +a
+fi
 # ──────────────────────────────────────────────────────────────────────────────
 # HELPER FUNCTIONS
 # ──────────────────────────────────────────────────────────────────────────────
@@ -387,6 +395,13 @@ fix() {
         warning "TypeScript errors found - review logs"
         info "Run 'pnpm run check' to see details"
     fi
+
+    print_section "Running autoheal recurrence guard..."
+    if bash "$PROJECT_ROOT/scripts/autoheal/detect_recurrence.sh" 2>/dev/null; then
+        success "Autoheal: no recurrence detected"
+    else
+        warning "Autoheal: recurrence detected — check autoheal_rules.jsonl"
+    fi
     
     log ""
     success "Fix completed!"
@@ -464,6 +479,8 @@ build() {
     else
         info "Using dev runtime configuration..."
         pm_exec tauri build --config runtime/dev/tauri.conf.json
+        # Régénère les icônes dans les thèmes locaux après tout build
+        _regen_icons_local
         success "Dev runtime built"
     fi
     
@@ -552,6 +569,7 @@ full() {
     fix
     build stable
     deploy
+    icons
     
     print_header "FULL DEPLOYMENT COMPLETED"
     success "All operations completed successfully!"
@@ -706,6 +724,125 @@ analyze() {
 }
 
 # ──────────────────────────────────────────────────────────────────────────────
+# _REGEN_ICONS_LOCAL — copie icônes vers ~/.local/share/icons/hicolor
+# ──────────────────────────────────────────────────────────────────────────────
+_regen_icons_local() {
+    local src="$PROJECT_ROOT/src-tauri/icons"
+    local dst="$HOME/.local/share/icons/hicolor"
+    for sz in 32 128 256 512; do
+        mkdir -p "$dst/${sz}x${sz}/apps/"
+        cp -f "$src/${sz}x${sz}.png" "$dst/${sz}x${sz}/apps/titane-infinity.png" 2>/dev/null || true
+    done
+    mkdir -p "$dst/256x256@2/apps/"
+    cp -f "$src/128x128@2x.png" "$dst/256x256@2/apps/titane-infinity.png" 2>/dev/null || true
+    update-desktop-database "$HOME/.local/share/applications/" 2>/dev/null || true
+    gtk-update-icon-cache -f -t "$dst" 2>/dev/null || true
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# ICONS FUNCTION — Régénère toutes les icônes depuis generate_logo_v28.py
+# ──────────────────────────────────────────────────────────────────────────────
+icons() {
+    print_header "ICONS (Logo v28.0.0)"
+
+    cd "$PROJECT_ROOT"
+
+    local py_gen="src-tauri/icons/generate_logo_v28.py"
+    local venv_py=".venv/bin/python"
+
+    # Trouver Python
+    local py_cmd=""
+    if [ -x "$PROJECT_ROOT/$venv_py" ]; then
+        py_cmd="$PROJECT_ROOT/$venv_py"
+    elif command -v python3 &>/dev/null; then
+        py_cmd="python3"
+    else
+        error "Python 3 introuvable — impossible de régénérer les icônes"
+    fi
+
+    if [ ! -f "$py_gen" ]; then
+        error "Script de génération introuvable: $py_gen"
+    fi
+
+    print_section "Génération des icônes PNG/ICO/ICNS..."
+    "$py_cmd" "$py_gen"
+
+    print_section "Installation dans ~/.local/share/icons/hicolor/..."
+    _regen_icons_local
+    success "Icônes locales mises à jour"
+
+    print_section "Vérification des fichiers générés..."
+    for sz in 32 128 256 512; do
+        if [ -f "src-tauri/icons/${sz}x${sz}.png" ]; then
+            success "${sz}x${sz}.png ✓"
+        else
+            warning "${sz}x${sz}.png MANQUANT"
+        fi
+    done
+    if [ -f "src-tauri/icons/icon.ico" ]; then success "icon.ico ✓"; fi
+    if [ -f "src-tauri/icons/icon.icns" ]; then success "icon.icns ✓"; fi
+
+    log ""
+    success "Icônes TITANE∞ v28.0.0 mises à jour !"
+    info "Pour prendre effet dans le shell courant: reconnecte-toi ou lance 'killall plasmashell' (KDE) / redémarre GNOME-shell (Alt+F2 > r)"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# AUTOHEAL FUNCTION — Lance detect_recurrence.sh
+# ──────────────────────────────────────────────────────────────────────────────
+autoheal_cmd() {
+    print_header "AUTOHEAL"
+    cd "$PROJECT_ROOT"
+
+    local script="scripts/autoheal/detect_recurrence.sh"
+    if [ ! -f "$script" ]; then
+        error "Script autoheal introuvable: $script"
+    fi
+
+    print_section "Running detect_recurrence.sh..."
+    if bash "$script"; then
+        success "Autoheal: aucune récurrence détectée"
+    else
+        warning "Autoheal: récurrences détectées — voir autoheal_rules.jsonl"
+    fi
+
+    log ""
+    success "Autoheal terminé"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
+# GATES FUNCTION — Lance verify_instructions.sh
+# ──────────────────────────────────────────────────────────────────────────────
+gates_cmd() {
+    print_header "GOVERNANCE GATES"
+    cd "$PROJECT_ROOT"
+
+    local script="scripts/verify_instructions.sh"
+    if [ ! -f "$script" ]; then
+        error "Script gates introuvable: $script"
+    fi
+
+    print_section "Running verify_instructions.sh..."
+    local result
+    result=$(bash "$script" 2>&1)
+    echo "$result"
+
+    local pass_count fail_count
+    pass_count=$(echo "$result" | grep -c '^PASS:' || true)
+    fail_count=$(echo "$result" | grep -c '^FAIL:' || true)
+
+    if [ "$fail_count" -eq 0 ]; then
+        success "Gates: PASS=$pass_count FAIL=0 — GOUVERNANCE OK"
+    else
+        warning "Gates: PASS=$pass_count FAIL=$fail_count — STOP-THE-LINE"
+        exit 1
+    fi
+
+    log ""
+    success "Gates vérifiés"
+}
+
+# ──────────────────────────────────────────────────────────────────────────────
 # MAIN COMMAND DISPATCHER
 # ──────────────────────────────────────────────────────────────────────────────
 main() {
@@ -742,6 +879,15 @@ main() {
         analyze)
             analyze "$@"
             ;;
+        icons)
+            icons
+            ;;
+        autoheal)
+            autoheal_cmd
+            ;;
+        gates)
+            gates_cmd
+            ;;
         help|--help|-h)
             print_header "HELP"
             log "Usage: ./titane.sh <command> [options]"
@@ -755,7 +901,10 @@ main() {
             log "  ${GREEN}dev${NC} [--no-ollama]   ${ARROW} Start development environment (with Ollama)"
             log "  ${GREEN}cache${NC} [--stats]     ${ARROW} Cache management operations"
             log "  ${GREEN}analyze${NC}             ${ARROW} Script analysis and optimization"
-            log "  ${GREEN}full${NC}               ${ARROW} Complete cycle (clean+repair+fix+build+deploy)"
+            log "  ${GREEN}icons${NC}              ${ARROW} Régénère les icônes (nouveau logo v28)"
+            log "  ${GREEN}autoheal${NC}           ${ARROW} Lance detect_recurrence.sh"
+            log "  ${GREEN}gates${NC}              ${ARROW} Lance verify_instructions.sh"
+            log "  ${GREEN}full${NC}               ${ARROW} Complete cycle (clean+repair+fix+build+deploy+icons)"
             log "  ${GREEN}health${NC}             ${ARROW} System health check"
             log "  ${GREEN}help${NC}               ${ARROW} Show this help"
             log ""
