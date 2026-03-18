@@ -116,3 +116,12 @@
 - Delta par rapport au dernier etat archive: le chemin `pause/resume` est maintenant observe et execute, sans regression sur le stop/replay ni les boutons Audio Center
 - Gates prerequises de lane desktop: `guard:ollama-proxy` PASS, authorization gate PASS, WebKitWebDriver ensure PASS
 - Evidence runtime confirmee dans `reports/e2e-desktop/audio_tts_runtime_controls_metrics.json` et `reports/e2e-desktop/diagnostics.log`
+
+## Addendum 2026-03-18T15:40Z
+
+- Head revalide: `4715e1526`
+- Runtime desktop cible: campagne x3 `audio-tts-runtime-controls.wdio.test.js` -> PASS x3 / 3
+- Evidence artefacts completes: `proof_packs/AUDIO_TTS_CONTINUE_2026-03-17_1519_c02872290/artifacts_x3_20260318/run1`, `run2`, `run3`, `summary.log`
+- Truth finale du resume x3: `PASS_COUNT=3/3`
+- Metrices homogenes sur les 3 runs: `ttsStatusAfterRead=Lecture en cours...`, `ttsStatusFinal=Lecture arrêtée.`, `pauseResumePath=executed`, `stopActionObserved=true`, `replayButtonObserved=true`, `speakerResultObserved=true`, `microphoneResultObserved=true`, `verdict=PASS`
+- Risque technique restant sur cette lane: aucun nouveau blocage runtime reproduit; seul le benchmark perceptif humain reste hors preuve automatique
