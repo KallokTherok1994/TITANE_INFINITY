@@ -92,15 +92,17 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
         <Card>
           <h3 style={{ marginBottom: spacing[4] }}>Paliers Franchis</h3>
+          <p style={{ fontSize: fontSizes.sm, color: colors.neutral[500], marginBottom: spacing[3] }}>
+            Source: roadmap curée — DISPLAY_ONLY, aucune connexion IPC live.
+          </p>
           <Stack direction="vertical" gap={3}>
             <TMetric label="v25.0" value="Fusion EVO" color="success" />
             <TMetric label="v25.1" value="Fusion TIME" color="success" />
             <TMetric label="v25.2" value="Fusion STATS + ADMIN" color="success" />
-            <TMetric
-              label="v25.3"
-              value="Fusion TITANE"
-              color={colors.saphir.primary[500]}
-            />
+            <TMetric label="v25.3" value="Fusion TITANE" color="success" />
+            <TMetric label="v26.0" value="Vision & Mémoire Advanced" color="success" />
+            <TMetric label="v27.0" value="Identité & Transformation (85%)" color="success" />
+            <TMetric label="v28.0" value="AI Multi-Provider (en cours)" color={colors.saphir.primary[500]} />
           </Stack>
         </Card>
       </Grid>
