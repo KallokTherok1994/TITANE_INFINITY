@@ -18,6 +18,30 @@ if [[ -d "$ROOT_DIR/.tools/node/current/bin" ]]; then
   export PATH="$ROOT_DIR/.tools/node/current/bin:$PATH"
 fi
 
+# Validation préliminaire de l'environnement
+echo "🔧 TITANE∞ Dev Environment Check"
+echo "================================="
+
+# Vérifier les outils essentiels
+if ! command -v node >/dev/null 2>&1; then
+  echo "❌ Node.js non trouvé dans PATH"
+  exit 1
+fi
+
+if ! command -v pnpm >/dev/null 2>&1 && [[ ! -x "$ROOT_DIR/.tools/node/current/bin/pnpm" ]]; then
+  echo "❌ pnpm non trouvé. Installez-le avec: corepack enable"
+  exit 1
+fi
+
+# Vérifier que le workspace est propre (pas de conflits de processus)
+if pgrep -f "vite.*dev.*5173" >/dev/null 2>&1; then
+  echo "⚠️  Processus Vite détecté sur port 5173. Utilisez 'pnpm run dev:cleanup' d'abord."
+fi
+
+echo "✅ Node.js: $(node --version)"
+echo "✅ pnpm: $(pnpm --version 2>/dev/null || echo 'bundle-local')"
+echo ""
+
 BASE_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
 MODEL_NAME="gemma2:2b"
 PULL_MODEL=false

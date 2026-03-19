@@ -35,7 +35,7 @@ describe('CHAT_DEFAULT_INSTRUCTIONS_SEAL — canonical default policy', () => {
       expect(def).toContain('PIPELINE OMEGA');
     });
     it('B2: declares validation entrée as step 1', () => {
-      expect(def).toContain('Validation d\'entrée');
+      expect(def).toContain("Validation d'entrée");
     });
     it('B3: declares auto-heal check as final step', () => {
       expect(def).toContain('Auto-heal check');

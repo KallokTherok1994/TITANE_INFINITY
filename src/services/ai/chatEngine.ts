@@ -1951,14 +1951,21 @@ Que souhaites-tu explorer ?`;
       // Inject user persona profile from localStorage (PersonaEditor bridge)
       let personaInjection = '';
       try {
-        const raw = typeof localStorage !== 'undefined'
-          ? localStorage.getItem('titane_persona_profile')
-          : null;
+        const raw =
+          typeof localStorage !== 'undefined'
+            ? localStorage.getItem('titane_persona_profile')
+            : null;
         if (raw) {
           const p = JSON.parse(raw) as {
-            name?: string; tone?: string; verbosity?: string;
-            formality?: number; creativity?: number; empathy?: number;
-            technicality?: number; emoji?: boolean; codeExamples?: boolean;
+            name?: string;
+            tone?: string;
+            verbosity?: string;
+            formality?: number;
+            creativity?: number;
+            empathy?: number;
+            technicality?: number;
+            emoji?: boolean;
+            codeExamples?: boolean;
             explanations?: string;
           };
           personaInjection = [
@@ -1979,7 +1986,9 @@ Que souhaites-tu explorer ?`;
         // localStorage unavailable — silently ignore
       }
 
-      const finalPrompt = personaInjection ? `${basePrompt}${personaInjection}` : basePrompt;
+      const finalPrompt = personaInjection
+        ? `${basePrompt}${personaInjection}`
+        : basePrompt;
 
       // Inject semantic context if available
       if (semanticContext && semanticContext.trim().length > 0) {

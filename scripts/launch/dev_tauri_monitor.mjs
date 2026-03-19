@@ -10,9 +10,38 @@ const LOG_FILE = path.join(LOG_DIR, 'tauri-dev-monitor.log');
 const STATUS_FILE = path.join(LOG_DIR, 'tauri-dev-monitor-status.json');
 const SUMMARY_FILE = path.join(LOG_DIR, 'tauri-dev-monitor-summary.json');
 
+// Fonction d'aide
+function showHelp() {
+  console.log(`
+🚀 TITANE∞ Dev Tauri Monitor
+`);
+  console.log('Usage: node dev_tauri_monitor.mjs [OPTIONS] [-- COMMAND_ARGS]\n');
+  console.log('OPTIONS:');
+  console.log('  --help, -h        Affiche cette aide');
+  console.log('  --smoke SECONDS   Mode test rapide (arrêt auto après X secondes)');
+  console.log('  --polling         Active le polling de fichiers (pour Docker/VM)');
+  console.log('  --no-ollama       Démarre sans Ollama');
+  console.log('\nEXEMPLES:');
+  console.log('  pnpm run dev:tauri');
+  console.log('  pnpm run dev:tauri --smoke 10');
+  console.log('  pnpm run dev:tauri --no-ollama');
+  console.log('\n📋 LOGS:');
+  console.log(`  Monitor: ${LOG_FILE}`);
+  console.log(`  Status:  ${STATUS_FILE}`);
+  console.log('');
+}
+
+// Traiter les arguments
+const passthroughArgs = process.argv.slice(2);
+
+// Vérifier si l'aide est demandée
+if (passthroughArgs.includes('--help') || passthroughArgs.includes('-h')) {
+  showHelp();
+  process.exit(0);
+}
+
 mkdirSync(LOG_DIR, { recursive: true });
 
-const passthroughArgs = process.argv.slice(2);
 const isSmokeRun = passthroughArgs.includes('--smoke');
 const scriptPath = path.join('scripts', 'launch', 'deploy_full_local_dev.sh');
 
@@ -64,11 +93,15 @@ function writeStatus(extra = {}) {
 function inspectLine(line) {
   const lower = line.toLowerCase();
 
+  // Détection améliorée du boot
   if (
     lower.includes('tauri app started') ||
     lower.includes('running dev command') ||
     lower.includes('vite v') ||
-    lower.includes('app render')
+    lower.includes('app render') ||
+    lower.includes('local:') ||
+    lower.includes('ready in') ||
+    lower.includes('ui_boot_marker')
   ) {
     bootSeen = true;
   }
@@ -95,8 +128,9 @@ function inspectLine(line) {
 function printMonitorLine() {
   const uptime = Math.floor((Date.now() - startedAt) / 1000);
   const state = bootSeen ? 'UP' : 'BOOTING';
+  const memoryMB = process.memoryUsage().rss / 1024 / 1024;
   process.stdout.write(
-    `\n[TAURI_MONITOR] state=${state} uptime=${uptime}s pid=${child.pid} lines=${lineCount} warn=${warnCount} error=${errorCount} timeout=${timeoutCount} unknown=${unknownCount}\n`
+    `\n[TAURI_MONITOR] state=${state} uptime=${uptime}s pid=${child.pid} lines=${lineCount} warn=${warnCount} error=${errorCount} memory=${memoryMB.toFixed(1)}MB\n`
   );
 }
 

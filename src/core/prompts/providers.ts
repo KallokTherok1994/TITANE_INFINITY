@@ -7,8 +7,7 @@ import type { Provider, ProviderOverride } from './types';
 
 export const providerOverrides: Record<Provider, ProviderOverride> = {
   'titane-local': {
-    instructions:
-      'Réponses développées. Utilise le style TITANE∞ même hors connexion.',
+    instructions: 'Réponses développées. Utilise le style TITANE∞ même hors connexion.',
     maxTokens: 800,
     temperature: 0.4,
   },

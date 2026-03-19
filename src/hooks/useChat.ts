@@ -325,7 +325,7 @@ const normalizeMessages = (
  */
 function deduplicateMessages(messages: AIMessage[]): AIMessage[] {
   // ✨ v24.3.6: Skip dedup for small arrays (common case)
-  if (messages.length < 5) return messages;
+  if (messages.length < 3) return messages;
 
   const seen = new Set<string>();
   return messages.filter(msg => {
@@ -1771,8 +1771,10 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               : '';
 
           const metadataReason = String(
-            (chatServiceResponse.metadata as Record<string, unknown> | undefined)?.reason_code ??
-              (chatServiceResponse.metadata as Record<string, unknown> | undefined)?.reason ??
+            (chatServiceResponse.metadata as Record<string, unknown> | undefined)
+              ?.reason_code ??
+              (chatServiceResponse.metadata as Record<string, unknown> | undefined)
+                ?.reason ??
               ''
           ).toLowerCase();
 
@@ -1786,10 +1788,13 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
           if (legacyContent.trim().length === 0 || backendNoProviderError) {
             chatLogger.warn('⚠️ Backend returned empty content - triggering fallback');
             if (backendNoProviderError) {
-              chatLogger.warn('⚠️ Backend provider error payload detected - switching to local recovery', {
-                provider: chatServiceResponse.provider,
-                metadataReason,
-              });
+              chatLogger.warn(
+                '⚠️ Backend provider error payload detected - switching to local recovery',
+                {
+                  provider: chatServiceResponse.provider,
+                  metadataReason,
+                }
+              );
               if (preferredProviderState !== 'auto') {
                 updatePreferredProvider('auto');
               }
@@ -1840,9 +1845,12 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
 
           // If a pinned provider is unavailable, recover to AUTO for the next turns.
           if (preferredProviderState !== 'auto') {
-            chatLogger.warn('🔄 Switching preferred provider to auto after no-provider fallback', {
-              previousProvider: preferredProviderState,
-            });
+            chatLogger.warn(
+              '🔄 Switching preferred provider to auto after no-provider fallback',
+              {
+                previousProvider: preferredProviderState,
+              }
+            );
             updatePreferredProvider('auto');
           }
 
