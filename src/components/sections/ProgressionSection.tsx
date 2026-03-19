@@ -12,7 +12,11 @@ import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { XPProgressBar } from '@features/progression';
 import { AchievementCard } from '@/features/progression/AchievementCard';
-import { ACHIEVEMENTS, resolveAchievements, resolveTalents } from '@/features/progression/achievements';
+import {
+  ACHIEVEMENTS,
+  resolveAchievements,
+  resolveTalents,
+} from '@/features/progression/achievements';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { spacing, fontSizes } from '@themes/tokens';
 import type { ProgressionState } from '@/cognitive/types';
@@ -58,7 +62,12 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
 
     // Resolve achievements from real stats (level/XP/messages computed from xpEngine)
     const resolvedAchievements = useMemo(
-      () => resolveAchievements(ACHIEVEMENTS, { level: stats.level, totalXP: stats.totalXP, chatMessageCount }),
+      () =>
+        resolveAchievements(ACHIEVEMENTS, {
+          level: stats.level,
+          totalXP: stats.totalXP,
+          chatMessageCount,
+        }),
       [stats.level, stats.totalXP, chatMessageCount]
     );
 
@@ -121,7 +130,11 @@ export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
                 <TBadge
                   key={t.label}
                   variant={t.unlocked ? t.variant : 'default'}
-                  title={t.unlocked ? `Débloqué (niveau ≥ ${t.requiredLevel})` : `Verrouillé — niveau ${t.requiredLevel} requis`}
+                  title={
+                    t.unlocked
+                      ? `Débloqué (niveau ≥ ${t.requiredLevel})`
+                      : `Verrouillé — niveau ${t.requiredLevel} requis`
+                  }
                 >
                   {t.unlocked ? t.label : `🔒 ${t.label}`}
                 </TBadge>

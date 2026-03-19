@@ -13,7 +13,11 @@ import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
-import { useChatModeStore, useCurrentChatModeId, useAvailableChatModes } from '@/stores/useChatModeStore';
+import {
+  useChatModeStore,
+  useCurrentChatModeId,
+  useAvailableChatModes,
+} from '@/stores/useChatModeStore';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES

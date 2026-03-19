@@ -292,7 +292,7 @@ export const composite = {
     const entry: LogEntry = {
       id: crypto.randomUUID(),
       timestamp: Date.now(),
-      level: 'Error',
+      level: 'error',
       module,
       message: context ? `${message} | Context: ${JSON.stringify(context)}` : message,
     };

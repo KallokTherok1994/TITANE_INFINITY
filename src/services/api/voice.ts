@@ -129,20 +129,23 @@ class VoiceService {
     } catch (error) {
       console.error('[VoiceService] ❌ Erreur démarrage ASR:', error);
       this.recordingId = null; // Reset state on error
-      
+
       // Améliorer les messages d'erreur
       let errorMessage = 'Enregistrement échoué';
       if (error instanceof Error) {
-        if (error.message.includes('Permission denied') || 
-            error.message.includes('not allowed')) {
-          errorMessage = 'Permission microphone requise. Vérifiez les paramètres système.';
+        if (
+          error.message.includes('Permission denied') ||
+          error.message.includes('not allowed')
+        ) {
+          errorMessage =
+            'Permission microphone requise. Vérifiez les paramètres système.';
         } else if (error.message.includes('No audio device')) {
           errorMessage = 'Aucun microphone détecté. Vérifiez la connexion.';
         } else {
           errorMessage = `Enregistrement échoué: ${error.message}`;
         }
       }
-      
+
       throw new Error(errorMessage);
     }
   }

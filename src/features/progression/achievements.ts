@@ -190,7 +190,12 @@ export function resolveTalents(level: number): TalentStatus[] {
   return [
     { label: 'Architecte', variant: 'success', unlocked: level >= 1, requiredLevel: 1 },
     { label: 'Optimiseur', variant: 'info', unlocked: level >= 5, requiredLevel: 5 },
-    { label: 'Évolutionniste', variant: 'info', unlocked: level >= 10, requiredLevel: 10 },
+    {
+      label: 'Évolutionniste',
+      variant: 'info',
+      unlocked: level >= 10,
+      requiredLevel: 10,
+    },
     { label: 'Pédagogue', variant: 'success', unlocked: level >= 15, requiredLevel: 15 },
   ];
 }
