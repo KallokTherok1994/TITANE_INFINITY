@@ -385,9 +385,10 @@ export const ModeMatrix: React.FC<ModeMatrixProps> = ({
   ];
 
   // When availableModeIds is provided by canonical chat store, override static unlocked flags
-  const resolvedModes: Mode[] = availableModeIds && availableModeIds.length > 0
-    ? modes.map(m => ({ ...m, unlocked: availableModeIds.includes(m.id) }))
-    : modes;
+  const resolvedModes: Mode[] =
+    availableModeIds && availableModeIds.length > 0
+      ? modes.map(m => ({ ...m, unlocked: availableModeIds.includes(m.id) }))
+      : modes;
 
   // Filter modes
   const filteredModes = resolvedModes.filter(mode => {

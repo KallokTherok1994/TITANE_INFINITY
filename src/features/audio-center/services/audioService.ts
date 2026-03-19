@@ -5,13 +5,18 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v28.0.0 — AUDIO SERVICE  
+ *   TITANE∞ v28.0.0 — AUDIO SERVICE
  *   Service audio avec gestion TTS, devices et tests
  *   🎤 Audio Permission Fix Applied v28.0.0
  * ═══════════════════════════════════════════════════════════════════
  */
 
-// Simple Tauri client replacement for this service
+import { tauriClient } from '@/lib/tauriClient';
+
+// Tauri client adapter for this service.
+// Audio I/O device methods use __TAURI__ directly to avoid getUserMedia()
+// permission issues in WebKitGTK (v28.0.0 audio permission fix).
+// All other IPC calls delegate to tauriClient so they can be properly mocked.
 const simpleTauriClient = {
   async getAudioInputDevices() {
     if (typeof window !== 'undefined' && (window as any).__TAURI__) {
@@ -25,32 +30,69 @@ const simpleTauriClient = {
     }
     throw new Error('Tauri not available');
   },
-  async testMicrophone(params: any, options?: any) {
+  async testMicrophone(params: any, _options?: any) {
     if (typeof window !== 'undefined' && (window as any).__TAURI__) {
       return (window as any).__TAURI__.core.invoke('test_microphone', params);
     }
     throw new Error('Tauri not available');
   },
-  // Stub methods for other functionality (to be implemented with proper tauriClient later)
-  async identityGetActiveVoiceProfile() { return null; },
-  async identitySetActiveVoiceProfile(params: any) { return null; },
-  async hasSecret(params: any) { return false; },
-  async setAudioOutputDevice(params: any) { return null; },
-  async getAudioDeviceConfig() { return {}; },
-  async saveAudioDeviceConfig(params: any) { return null; },
-  async setAudioInputDevice(params: any) { return null; },
-  async testTts(params: any) { throw new Error('TTS test not implemented in simplified client'); },
-  async ttsSpeak(params: any) { throw new Error('TTS speak not implemented in simplified client'); },
-  async stopSpeaking() { throw new Error('Stop speaking not implemented in simplified client'); },
-  async ttsStop() { throw new Error('TTS stop not implemented in simplified client'); },
-  async pauseSpeaking() { throw new Error('Pause speaking not implemented in simplified client'); },
-  async resumeSpeaking() { throw new Error('Resume speaking not implemented in simplified client'); },
-  async isSpeaking() { return false; },
-  async vadGetState() { return { state: 'idle', isSpeaking: false }; },
-  async vadProcessFrame(params: any) { return { state: 'idle', isSpeaking: false }; },
-  async vadConfigure(params: any) { return 'configured'; },
-  async vadReset() { return 'reset'; },
-  async vadTest() { return { success: true }; }
+  async identityGetActiveVoiceProfile() {
+    return tauriClient.identityGetActiveVoiceProfile();
+  },
+  async identitySetActiveVoiceProfile(params: any) {
+    return tauriClient.identitySetActiveVoiceProfile(params);
+  },
+  async hasSecret(params: any) {
+    return tauriClient.hasSecret(params);
+  },
+  async setAudioOutputDevice(params: any) {
+    return tauriClient.setAudioOutputDevice(params);
+  },
+  async getAudioDeviceConfig() {
+    return tauriClient.getAudioDeviceConfig();
+  },
+  async saveAudioDeviceConfig(params: any) {
+    return tauriClient.saveAudioDeviceConfig(params);
+  },
+  async setAudioInputDevice(params: any) {
+    return tauriClient.setAudioInputDevice(params);
+  },
+  async testTts(params: any) {
+    return tauriClient.testTts(params);
+  },
+  async ttsSpeak(params: any) {
+    return tauriClient.ttsSpeak(params);
+  },
+  async stopSpeaking() {
+    return tauriClient.stopSpeaking();
+  },
+  async ttsStop() {
+    return tauriClient.ttsStop();
+  },
+  async pauseSpeaking() {
+    return tauriClient.pauseSpeaking();
+  },
+  async resumeSpeaking() {
+    return tauriClient.resumeSpeaking();
+  },
+  async isSpeaking() {
+    return tauriClient.isSpeaking();
+  },
+  async vadGetState() {
+    return tauriClient.vadGetState();
+  },
+  async vadProcessFrame(params: any) {
+    return tauriClient.vadProcessFrame(params);
+  },
+  async vadConfigure(params: any) {
+    return tauriClient.vadConfigure(params);
+  },
+  async vadReset() {
+    return tauriClient.vadReset();
+  },
+  async vadTest() {
+    return tauriClient.vadTest();
+  },
 };
 
 // Simple environment detection
@@ -590,7 +632,10 @@ class AudioService {
       if (this.isTauri) {
         await this.ensureRuntimeVoiceProfileHydrated();
         await this.syncVoiceIdentityProfile(this.config.tts.voiceProfileId);
-        await simpleTauriClient.testTts({ text, settings: this.buildRuntimeTTSSettings() });
+        await simpleTauriClient.testTts({
+          text,
+          settings: this.buildRuntimeTTSSettings(),
+        });
       } else if (this.isWebSpeechAvailable()) {
         // Web Speech fallback only if available
         await new Promise<void>((resolve, reject) => {
@@ -649,7 +694,7 @@ class AudioService {
 
       // Web Audio fallback - seulement en mode Web pur (pas Tauri)
       console.log('[AudioService] Using Web Audio API fallback...');
-      
+
       // IMPORTANT: En mode Tauri, éviter getUserMedia car WebKitGTK peut causer des problèmes
       if (this.isTauri) {
         console.warn('[AudioService] Tauri fallback attempted - avoiding Web APIs');
@@ -658,10 +703,10 @@ class AudioService {
           peakLevel: 0,
           noiseFloor: 0,
           signalToNoise: 0,
-          errorMessage: 'Microphone test failed in Tauri mode. Check system permissions.'
+          errorMessage: 'Microphone test failed in Tauri mode. Check system permissions.',
         };
       }
-      
+
       // Vérifier si les APIs sont disponibles
       if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         return {
@@ -669,7 +714,7 @@ class AudioService {
           peakLevel: 0,
           noiseFloor: 0,
           signalToNoise: 0,
-          errorMessage: 'Web Audio API not supported'
+          errorMessage: 'Web Audio API not supported',
         };
       }
 
@@ -740,18 +785,27 @@ class AudioService {
       });
     } catch (error) {
       console.error('[AudioService] testMicrophone error:', error);
-      
+
       // Amélioration des messages d'erreur
       let errorMessage = 'Unknown error';
       if (error instanceof Error) {
         errorMessage = error.message;
         // Traduire les erreurs communes
-        if (errorMessage.includes('Permission denied') || errorMessage.includes('NotAllowedError')) {
-          errorMessage = 'Permission microphone refusée. Vérifiez les paramètres du navigateur.';
-        } else if (errorMessage.includes('NotFoundError') || errorMessage.includes('DevicesNotFoundError')) {
-          errorMessage = 'Aucun microphone détecté. Vérifiez la connexion du périphérique.';
+        if (
+          errorMessage.includes('Permission denied') ||
+          errorMessage.includes('NotAllowedError')
+        ) {
+          errorMessage =
+            'Permission microphone refusée. Vérifiez les paramètres du navigateur.';
+        } else if (
+          errorMessage.includes('NotFoundError') ||
+          errorMessage.includes('DevicesNotFoundError')
+        ) {
+          errorMessage =
+            'Aucun microphone détecté. Vérifiez la connexion du périphérique.';
         } else if (errorMessage.includes('not allowed by the user agent')) {
-          errorMessage = 'Accès microphone bloqué par le navigateur. En mode Tauri, utilisez les paramètres système.';
+          errorMessage =
+            'Accès microphone bloqué par le navigateur. En mode Tauri, utilisez les paramètres système.';
         }
       }
 

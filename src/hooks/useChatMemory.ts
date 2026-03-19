@@ -96,8 +96,8 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
 
   /**
    * Save message
-   * FIX v15.1: Ne plus mettre à jour messagesForMode ici (évite re-render cascade)
-   * La sauvegarde en localStorage est suffisante, l'UI gère son propre state
+   * FIX v15.1: MAINTENANT on met à jour messagesForMode pour synchronisation immédiate
+   * La sauvegarde en localStorage + mise à jour UI garantissent la persistance
    */
   const saveMessage = useCallback(
     (message: AIMessage) => {
@@ -109,9 +109,10 @@ export function useChatMemory(options: UseChatMemoryOptions): UseChatMemoryRetur
       );
       chatMemoryCompactor.flushPendingSaves();
 
-      // FIX v15.1: Ne plus faire setMessagesForMode ici!
-      // Cela déclenchait un re-render de useChat qui écrasait l'UI
-      // L'historique sera rechargé uniquement au changement de mode
+      // ✅ FIX v15.1: MAINTENANT on met à jour messagesForMode
+      // Cela synchronise immédiatement l'UI avec le backend
+      // L'historique sera aussi rechargé au changement de mode (doublon sécurisé)
+      setMessagesForMode(updatedMessages);
 
       // Update stats seulement
       const stats = chatMemoryCompactor.getStats(options.mode);

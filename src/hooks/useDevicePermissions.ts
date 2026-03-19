@@ -109,12 +109,16 @@ async function checkMicrophoneTauri(): Promise<DevicePermission> {
 
       return {
         type: 'microphone',
-        status: result && typeof result === 'object' && 'success' in result && result.success 
-          ? 'granted' : 'denied',
+        status:
+          result && typeof result === 'object' && 'success' in result && result.success
+            ? 'granted'
+            : 'denied',
         lastCheck: Date.now(),
         details: result || {},
-        error: result && typeof result === 'object' && 'success' in result && !result.success 
-          ? 'Microphone test failed' : undefined,
+        error:
+          result && typeof result === 'object' && 'success' in result && !result.success
+            ? 'Microphone test failed'
+            : undefined,
       };
     } else {
       // Fallback si pas en mode Tauri
@@ -166,17 +170,19 @@ async function checkMicrophoneBrowser(): Promise<DevicePermission> {
     // IMPORTANT: En mode Tauri, eviter getUserMedia si possible
     // car WebKitGTK peut ne pas supporter correctement les permissions
     const isTauri = typeof window !== 'undefined' && '__TAURI__' in window;
-    
+
     if (isTauri) {
-      console.warn('[useDevicePermissions] Tauri mode detected - avoiding getUserMedia for permission check');
+      console.warn(
+        '[useDevicePermissions] Tauri mode detected - avoiding getUserMedia for permission check'
+      );
       // En mode Tauri, on fait confiance au backend Rust pour les tests
       return {
         type: 'microphone',
         status: 'granted', // Assume granted, let Tauri backend handle actual tests
         lastCheck: Date.now(),
-        details: { 
-          note: 'Permission handled by Tauri backend' 
-        }
+        details: {
+          note: 'Permission handled by Tauri backend',
+        },
       };
     }
 
