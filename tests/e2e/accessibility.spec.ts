@@ -5,7 +5,7 @@ test.describe('Accessibility', () => {
   test('should pass axe checks', async ({ page }) => {
     await page.goto('http://localhost:5173');
     await page.waitForLoadState('networkidle');
-    
+
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toHaveLength(0);
   });

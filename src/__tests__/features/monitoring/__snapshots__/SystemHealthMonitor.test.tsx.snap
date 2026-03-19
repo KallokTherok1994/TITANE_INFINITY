@@ -22,7 +22,7 @@ exports[`SystemHealthMonitor Component > Snapshot > should match snapshot 1`] = 
         class="text-titane-text-tertiary text-xs"
       >
         Last update: 
-        19:00:00
+        00:00:00
       </span>
     </div>
   </div>

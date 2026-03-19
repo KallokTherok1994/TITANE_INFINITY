@@ -42,9 +42,7 @@ describe('APISupport — hasMicrophone', () => {
 
   it('returns true when audioinput device is present with EMPTY label (pre-permission) — regression guard', async () => {
     // This was the bug: label === '' triggered false return before fix
-    mockEnumerateDevices([
-      { kind: 'audioinput', label: '', deviceId: '' },
-    ]);
+    mockEnumerateDevices([{ kind: 'audioinput', label: '', deviceId: '' }]);
     expect(await APISupport.hasMicrophone()).toBe(true);
   });
 
@@ -84,16 +82,12 @@ describe('APISupport — hasCamera', () => {
   });
 
   it('returns true when videoinput device is present with empty label — regression guard', async () => {
-    mockEnumerateDevices([
-      { kind: 'videoinput', label: '', deviceId: '' },
-    ]);
+    mockEnumerateDevices([{ kind: 'videoinput', label: '', deviceId: '' }]);
     expect(await APISupport.hasCamera()).toBe(true);
   });
 
   it('returns false when no videoinput device exists', async () => {
-    mockEnumerateDevices([
-      { kind: 'audioinput', label: 'Mic', deviceId: 'mic1' },
-    ]);
+    mockEnumerateDevices([{ kind: 'audioinput', label: 'Mic', deviceId: 'mic1' }]);
     expect(await APISupport.hasCamera()).toBe(false);
   });
 

@@ -180,7 +180,9 @@ export const TitanePage: React.FC = () => {
       memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
       memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
       memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
-      evolutionScore: progression?.totalXP ? Math.min(100, Math.round((progression.totalXP / 250000) * 100)) : 0,
+      evolutionScore: progression?.totalXP
+        ? Math.min(100, Math.round((progression.totalXP / 250000) * 100))
+        : 0,
     }),
     [progression, memoryStats]
   );
