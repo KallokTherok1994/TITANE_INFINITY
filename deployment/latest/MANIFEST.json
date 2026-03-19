@@ -8,15 +8,15 @@
     "deployment_type": "production_token_authorized"
   },
   "artifacts": {
-    "deb_titane": {
-      "file": "TITANE-Infinity_28.0.0_amd64.deb",
-      "size": 21108460,
-      "sha256": "auto_computed_via_sha256sums"
+    "AppImage": {
+      "file": "TITANE-Infinity_28.0.0_amd64.AppImage",
+      "sha256": "02d862994a848524ddc193304073a4dbfd5bdc5834ffbe771ac09bcea3fe6306",
+      "size_mb": 90
     },
-    "deb_stable": {
-      "file": "Titan-Stable_28.0.0_amd64.deb", 
-      "size": 17271534,
-      "sha256": "auto_computed_via_sha256sums"
+    "deb": {
+      "file": "TITANE-Infinity_28.0.0_amd64.deb",
+      "sha256": "834d944cd65a553f719e044c366e32a3208dc3becc1a8512413d24f26211acce",
+      "size_mb": 21
     }
   },
   "certification": {
@@ -24,5 +24,9 @@
     "phase_chain_status": "UTC_TIMESTAMP_NORMALIZED",
     "security_posture": "PRODUCTION_AUTHORIZED",
     "production_readiness": "DEPLOYED_WITH_TOKENS"
-  }
+  },
+  "version": "28.0.0",
+  "build_date": "2026-03-19",
+  "commit": "3feac5f0e",
+  "changes": "fix(providers): TS2308 SystemStatus + audioService tauriClient wiring"
 }
