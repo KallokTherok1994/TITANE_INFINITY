@@ -8,15 +8,15 @@
     "deployment_type": "production_token_authorized"
   },
   "artifacts": {
-    "AppImage": {
+    "appimage": {
       "file": "TITANE-Infinity_28.0.0_amd64.AppImage",
-      "sha256": "02d862994a848524ddc193304073a4dbfd5bdc5834ffbe771ac09bcea3fe6306",
-      "size_mb": 90
+      "size_mb": 90,
+      "sha256": "600f0e09c6e397ec88adac1d059e9b7f3b79805ae5a93fec86848ca4e325199f"
     },
     "deb": {
       "file": "TITANE-Infinity_28.0.0_amd64.deb",
-      "sha256": "834d944cd65a553f719e044c366e32a3208dc3becc1a8512413d24f26211acce",
-      "size_mb": 21
+      "size_mb": 21,
+      "sha256": "75a3a6826bae988bda7c647afdfc248b3daf84c126dbd599c9051b57733067a3"
     }
   },
   "certification": {
@@ -27,6 +27,7 @@
   },
   "version": "28.0.0",
   "build_date": "2026-03-19",
-  "commit": "3feac5f0e",
-  "changes": "fix(providers): TS2308 SystemStatus + audioService tauriClient wiring"
+  "commit": "8cc47a2e7",
+  "changes": "fix(providers): TS2308 SystemStatus + audioService tauriClient wiring",
+  "build_note": "feat(icons): OMEGA T+infinity design \u2014 nuit/cyan/or/violet"
 }
