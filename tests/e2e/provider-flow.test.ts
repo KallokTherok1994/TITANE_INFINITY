@@ -12,6 +12,49 @@
 
 import { test, expect, type Locator, type Page } from '@playwright/test';
 
+type MemoryProofVerdict =
+  | 'PASS_MEMORY_REAL'
+  | 'HONEST_OFFLINE_DEGRADED'
+  | 'HARNESS_BLOCKED'
+  | 'MEMORY_CHAIN_BROKEN'
+  | 'TARGET_MISMATCH'
+  | 'FALLBACK_ONLY'
+  | 'NO_FALSE_MEMORY_BUT_UNPROVEN';
+
+type RuntimeSnapshot = {
+  url: string;
+  providerUsed: string;
+  providerMode: string;
+  providerReason: string;
+  networkUsed: string;
+  memoryState: string;
+  runtimeSummary: string;
+  assistantText: string;
+};
+
+type SendOutcome = {
+  kind: 'assistant' | 'degraded' | 'timeout';
+  latencyMs: number;
+  responseText: string;
+  runtime: RuntimeSnapshot;
+};
+
+function isRuntimeDegraded(snapshot: RuntimeSnapshot): boolean {
+  const reason = snapshot.providerReason;
+  const mode = snapshot.providerMode;
+  const provider = snapshot.providerUsed;
+  return (
+    provider === 'FALLBACK' ||
+    mode === 'ERROR' ||
+    mode === 'OFFLINE' ||
+    reason === 'FALLBACK_OFFLINE' ||
+    reason === 'TIMEOUT' ||
+    reason === 'NETWORK_ERROR' ||
+    reason === 'PROVIDER_UNAVAILABLE' ||
+    reason === 'POLICY_BLOCKED'
+  );
+}
+
 function getChatLocators(page: Page): {
   messageInput: Locator;
   sendButton: Locator;
@@ -71,7 +114,7 @@ async function sendMessageAndWaitAssistant(
   assistantMessages: Locator,
   text: string,
   timeoutMs = Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '90000')
-): Promise<{ latencyMs: number; responseText: string }> {
+): Promise<SendOutcome> {
   await expect(messageInput).toBeVisible({ timeout: 20000 });
   await expect(sendButton).toBeVisible({ timeout: 20000 });
 
@@ -95,21 +138,89 @@ async function sendMessageAndWaitAssistant(
     await messageInput.press('Enter');
   }
 
-  await expect
-    .poll(
-      async () => {
-        const count = await assistantMessages.count();
-        const currentText =
-          count > 0 ? ((await assistantMessages.last().textContent()) ?? '').trim() : '';
-        return count > beforeCount || (currentText.length > 0 && currentText !== beforeText);
-      },
-      { timeout: timeoutMs, interval: 1000 }
-    )
-    .toBeTruthy();
+  const readRuntimeSnapshot = async (): Promise<RuntimeSnapshot> => {
+    return await page.evaluate(() => {
+      const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+      const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
+      const assistants = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const lastAssistant =
+        assistants.length > 0 ? assistants[assistants.length - 1] : undefined;
+      const contentNode = lastAssistant?.querySelector('[data-testid="chat-message-content"]');
+      return {
+        url: window.location.href,
+        providerUsed:
+          (panel?.getAttribute('data-provider-used') ||
+            lastAssistant?.getAttribute('data-provider-used') ||
+            '')
+            .trim()
+            .toUpperCase(),
+        providerMode:
+          (panel?.getAttribute('data-provider-mode') ||
+            lastAssistant?.getAttribute('data-provider-mode') ||
+            '')
+            .trim()
+            .toUpperCase(),
+        providerReason:
+          (panel?.getAttribute('data-provider-reason') ||
+            lastAssistant?.getAttribute('data-provider-reason') ||
+            '')
+            .trim()
+            .toUpperCase(),
+        networkUsed:
+          (panel?.getAttribute('data-network-used') ||
+            lastAssistant?.getAttribute('data-network-used') ||
+            '')
+            .trim()
+            .toLowerCase(),
+        memoryState:
+          (panel?.getAttribute('data-memory-state') ||
+            lastAssistant?.getAttribute('data-memory-state') ||
+            '')
+            .trim()
+            .toUpperCase(),
+        runtimeSummary: (summary?.textContent || '').trim(),
+        assistantText: (contentNode?.textContent || lastAssistant?.textContent || '').trim(),
+      };
+    });
+  };
 
-  await page.waitForTimeout(500);
-  const responseText = ((await assistantMessages.last().textContent()) ?? '').trim();
-  return { latencyMs: Date.now() - startTime, responseText };
+  let runtime = await readRuntimeSnapshot();
+  while (Date.now() - startTime < timeoutMs) {
+    const count = await assistantMessages.count();
+    const currentText =
+      count > 0 ? ((await assistantMessages.last().textContent()) ?? '').trim() : '';
+    runtime = await readRuntimeSnapshot();
+
+    if (count > beforeCount || (currentText.length > 0 && currentText !== beforeText)) {
+      await page.waitForTimeout(250);
+      runtime = await readRuntimeSnapshot();
+      return {
+        kind: 'assistant',
+        latencyMs: Date.now() - startTime,
+        responseText: ((await assistantMessages.last().textContent()) ?? '').trim(),
+        runtime,
+      };
+    }
+
+    if (isRuntimeDegraded(runtime)) {
+      return {
+        kind: 'degraded',
+        latencyMs: Date.now() - startTime,
+        responseText: runtime.assistantText,
+        runtime,
+      };
+    }
+
+    await page.waitForTimeout(800);
+  }
+
+  runtime = await readRuntimeSnapshot();
+  return {
+    kind: 'timeout',
+    latencyMs: Date.now() - startTime,
+    responseText: runtime.assistantText,
+    runtime,
+  };
 }
 
 /**
@@ -148,13 +259,14 @@ test.describe('Provider Flow v21.0', () => {
     const { messageInput, sendButton, assistantMessages } = getChatLocators(page);
 
     // Step 3: Envoyer message test
-    const { latencyMs: latency } = await sendMessageAndWaitAssistant(
+    const firstOutcome = await sendMessageAndWaitAssistant(
       page,
       messageInput,
       sendButton,
       assistantMessages,
       'Test local mode provider flow v21'
     );
+    const latency = firstOutcome.latencyMs;
 
     // Step 5: Vérifications
 
@@ -164,7 +276,7 @@ test.describe('Provider Flow v21.0', () => {
     console.log(`✅ Latency: ${latency}ms`);
 
     // 5.2: Réponse affichée
-    const responseText = await assistantMessages.last().textContent();
+    const responseText = firstOutcome.responseText;
     expect(responseText).toBeTruthy();
     expect(responseText!.length).toBeGreaterThan(10);
     console.log(`✅ Response: ${responseText!.slice(0, 50)}...`);
@@ -216,42 +328,149 @@ test.describe('Provider Flow v21.0', () => {
     await expect(messageInput).toBeVisible({ timeout: 20000 });
     await expect(sendButton).toBeVisible({ timeout: 20000 });
 
+    const classifyMultiTurnVerdict = (
+      outcomes: SendOutcome[],
+      finalResponseText: string,
+      storageCount: number,
+      storageRawSize: number
+    ): MemoryProofVerdict => {
+      const targetOk = outcomes.every(o => /\/(chat|titane)/.test(o.runtime.url));
+      if (!targetOk) return 'TARGET_MISMATCH';
+
+      const hasTimeout = outcomes.some(o => o.kind === 'timeout');
+      if (hasTimeout) return 'HARNESS_BLOCKED';
+
+      const hasDegraded = outcomes.some(o => o.kind === 'degraded' || isRuntimeDegraded(o.runtime));
+      const finalUpper = finalResponseText.toUpperCase();
+      const hasHonestDegradedMessage =
+        /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
+          finalResponseText
+        ) || /FALLBACK_OFFLINE|PROVIDER_UNAVAILABLE|TIMEOUT/.test(finalUpper);
+
+      if (hasDegraded) {
+        return hasHonestDegradedMessage ? 'HONEST_OFFLINE_DEGRADED' : 'FALLBACK_ONLY';
+      }
+
+      const hasRecallEvidence =
+        finalUpper.includes('ORION-482-LICHEN') &&
+        finalUpper.includes('ALICE') &&
+        /BLEU|AZUR/i.test(finalResponseText);
+
+      const hasPersistenceEvidence = storageCount >= 4 && storageRawSize > 0;
+      const hasInjectionSignal = outcomes.some(o => {
+        const memoryState = o.runtime.memoryState;
+        return memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState);
+      });
+
+      if (hasRecallEvidence && hasPersistenceEvidence && hasInjectionSignal) {
+        return 'PASS_MEMORY_REAL';
+      }
+
+      const noFalseMemory =
+        /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(finalResponseText) ||
+        !/TON CODE .*ORION-482-LICHEN/i.test(finalResponseText);
+
+      if (noFalseMemory) {
+        return 'NO_FALSE_MEMORY_BUT_UNPROVEN';
+      }
+
+      return 'MEMORY_CHAIN_BROKEN';
+    };
+
+    const outcomes: SendOutcome[] = [];
+
     // Message 1
-    await sendMessageAndWaitAssistant(
-      page,
-      messageInput,
-      sendButton,
-      assistantMessages,
-      'Mon nom est Alice'
+    outcomes.push(
+      await sendMessageAndWaitAssistant(
+        page,
+        messageInput,
+        sendButton,
+        assistantMessages,
+        'Mon code de rappel est ORION-482-LICHEN.'
+      )
     );
 
     // Message 2
-    await sendMessageAndWaitAssistant(
-      page,
-      messageInput,
-      sendButton,
-      assistantMessages,
-      'Quelle est ma couleur préférée? Bleu.'
+    outcomes.push(
+      await sendMessageAndWaitAssistant(
+        page,
+        messageInput,
+        sendButton,
+        assistantMessages,
+        'Mon nom est Alice et ma couleur préférée est bleu azur.'
+      )
     );
 
-    // Message 3 - Test recall
-    await sendMessageAndWaitAssistant(
-      page,
-      messageInput,
-      sendButton,
-      assistantMessages,
-      'Rappelle-moi mon nom et ma couleur'
+    // Message 3 (non adjacent)
+    outcomes.push(
+      await sendMessageAndWaitAssistant(
+        page,
+        messageInput,
+        sendButton,
+        assistantMessages,
+        'Question sans rapport: quelle est la capitale du Portugal ?'
+      )
     );
 
-    const responseText = await assistantMessages.last().textContent();
+    // Message 4 - test recall non adjacent
+    outcomes.push(
+      await sendMessageAndWaitAssistant(
+        page,
+        messageInput,
+        sendButton,
+        assistantMessages,
+        'Rappelle mon code de rappel, mon nom et ma couleur préférée.'
+      )
+    );
+
+    const responseText = (outcomes.at(-1)?.responseText ?? '').trim();
+
+    const storageEvidence = await page.evaluate(() => {
+      const raw = localStorage.getItem('titane_chat_mode_default') || '';
+      try {
+        const parsed = raw ? JSON.parse(raw) : [];
+        const count = Array.isArray(parsed)
+          ? parsed.length
+          : Array.isArray((parsed as { messages?: unknown[] }).messages)
+            ? ((parsed as { messages: unknown[] }).messages.length ?? 0)
+            : Array.isArray((parsed as { data?: unknown[] }).data)
+              ? ((parsed as { data: unknown[] }).data.length ?? 0)
+              : 0;
+        return {
+          count,
+          rawSize: raw.length,
+        };
+      } catch {
+        return { count: 0, rawSize: raw.length };
+      }
+    });
+
+    const memoryVerdict = classifyMultiTurnVerdict(
+      outcomes,
+      responseText,
+      storageEvidence.count,
+      storageEvidence.rawSize
+    );
+
+    console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
+    console.log(
+      `[MEMORY_PROOF_EVIDENCE] storageCount=${storageEvidence.count} storageRawSize=${storageEvidence.rawSize}`
+    );
+    console.log(`[MEMORY_PROOF_RESPONSE] ${responseText.slice(0, 240)}`);
+
+    expect(memoryVerdict).not.toBe('HARNESS_BLOCKED');
+    expect(memoryVerdict).not.toBe('TARGET_MISMATCH');
+    expect(memoryVerdict).not.toBe('FALLBACK_ONLY');
+    expect(memoryVerdict).not.toBe('MEMORY_CHAIN_BROKEN');
+
+    const hasContext =
+      memoryVerdict === 'PASS_MEMORY_REAL' || memoryVerdict === 'HONEST_OFFLINE_DEGRADED';
 
     // Vérification: Réponse contient context
-    const hasContext = responseText?.includes('Alice') || responseText?.includes('bleu');
-
     if (hasContext) {
-      console.log('✅ Memory context utilisé (Alice/bleu détecté)');
+      console.log('✅ Memory proof path classified without ambiguity');
     } else {
-      console.warn('⚠️ Memory context non utilisé dans réponse');
+      console.warn('⚠️ Memory proof remains unproven');
       console.log(`Response: ${responseText}`);
     }
 
@@ -462,6 +681,48 @@ test.describe('Provider Flow v21.0', () => {
     expect(average).toBeLessThan(maxAverageMs);
     expect(max).toBeLessThan(maxLatencyMs);
     console.log('✅ Performance acceptable');
+  });
+
+  test('Test 6: False Recall Guard', async ({ page }) => {
+    await page.goto('/chat');
+    await page.waitForLoadState('networkidle');
+
+    await maybeSelectLocalProvider(page);
+    const { messageInput, sendButton, assistantMessages } = getChatLocators(page);
+
+    const outcome = await sendMessageAndWaitAssistant(
+      page,
+      messageInput,
+      sendButton,
+      assistantMessages,
+      "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU."
+    );
+
+    const responseText = outcome.responseText;
+    const explicitUnknown = /INCONNU|JE NE SAIS PAS|PAS D'INFORMATION|NON RENSEIGN/i.test(
+      responseText
+    );
+    const fabricatedRecall =
+      /CODE FANT[ÔO]ME EST/i.test(responseText.toUpperCase()) && !explicitUnknown;
+    const degradedRuntime = isRuntimeDegraded(outcome.runtime);
+
+    let verdict: MemoryProofVerdict = 'NO_FALSE_MEMORY_BUT_UNPROVEN';
+    if (outcome.kind === 'timeout') {
+      verdict = 'HARNESS_BLOCKED';
+    } else if (outcome.kind === 'degraded' || degradedRuntime) {
+      verdict = 'HONEST_OFFLINE_DEGRADED';
+    } else if (fabricatedRecall) {
+      verdict = 'MEMORY_CHAIN_BROKEN';
+    }
+
+    console.log(`[FALSE_RECALL_VERDICT] ${verdict}`);
+    console.log(`[FALSE_RECALL_RESPONSE] ${responseText.slice(0, 240)}`);
+
+    expect(verdict).not.toBe('HARNESS_BLOCKED');
+    expect(verdict).not.toBe('MEMORY_CHAIN_BROKEN');
+    if (outcome.kind === 'assistant' && !degradedRuntime) {
+      expect(explicitUnknown).toBeTruthy();
+    }
   });
 });
 
