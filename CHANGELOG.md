@@ -2,6 +2,34 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.0.0] - 2026-03-20 (Final Seal Completion)
+
+### Release Finalization
+
+- Finalized canonical release seal for `v28.0.0` with updated tag alignment and GitHub Release notes.
+- Added missing release asset `Titan-Stable_28.0.0_amd64.AppImage` to the published release.
+- Archived final smoke proofs in `proof_packs/patch-010/`:
+  - `smoke_60s_prod_binary.txt`
+  - `smoke_180s_prod_binary.txt`
+- Archived governance proof and E2E specs for PATCH-010:
+  - `proof_packs/governance/PATCH-010_validation_20260320_181019.md`
+  - `e2e/PATCH-010-e2e-final.spec.ts`
+  - `e2e/PATCH-010-policy-gate.spec.ts`
+
+### Governance
+
+- `verify-prod-deployment.sh`: PASS 8/8
+- `verify_instructions.sh`: PASS 20/20
+- `detect_recurrence.sh`: PASS (entries=477)
+- AutoHeal release-governance capture: `AH-2026-03-20-0115`
+
+### Desktop Runtime
+
+- Updated desktop launcher target to stable runtime path in `titane-infinity.desktop`:
+  - `runtime/stable/Titan-Stable_28.0.0_amd64.AppImage`
+
+---
+
 ## [28.0.0] - 2026-03-20 (Post-Deploy Certification)
 
 ### Certification & Smoke Tests
