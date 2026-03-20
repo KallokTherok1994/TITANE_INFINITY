@@ -27,9 +27,12 @@ export function cleanupLegacyConversationKeys(): void {
     const legacy = localStorage.getItem(LEGACY_CHAT_PAGE_KEY);
     if (!canonical && legacy && legacy.trim().length > 0) {
       localStorage.setItem(CANONICAL_CONVERSATION_ID_KEY, legacy);
-      logger.info('🔄 Migrated omega-chat-conversation-id → titane_active_conversation_id', {
-        id: legacy,
-      });
+      logger.info(
+        '🔄 Migrated omega-chat-conversation-id → titane_active_conversation_id',
+        {
+          id: legacy,
+        }
+      );
     }
 
     // Find all legacy keys to remove

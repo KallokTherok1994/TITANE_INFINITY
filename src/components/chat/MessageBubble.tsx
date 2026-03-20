@@ -245,7 +245,8 @@ export const MessageBubble = memo(function MessageBubble({
                     title={`Demandé: ${metadata.requestedProvider}, fallback: ${metadata.providerUsed as string}`}
                     aria-label={`Avertissement: demandé ${metadata.requestedProvider}, utilisé ${metadata.providerUsed as string}`}
                   >
-                    {' '}⚠
+                    {' '}
+                    ⚠
                   </span>
                 )}
             </span>

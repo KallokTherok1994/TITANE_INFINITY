@@ -173,8 +173,24 @@ const OverviewSection = memo<{
         <StatCard
           label="Santé Backend"
           value={backendHealth ?? '…'}
-          icon={backendHealth === 'Healthy' ? '✅' : backendHealth === 'Warning' ? '⚠️' : backendHealth === 'Critical' ? '🔴' : '⏳'}
-          variant={backendHealth === 'Healthy' ? 'success' : backendHealth === 'Warning' ? 'warning' : backendHealth === 'Critical' ? 'error' : 'info'}
+          icon={
+            backendHealth === 'Healthy'
+              ? '✅'
+              : backendHealth === 'Warning'
+                ? '⚠️'
+                : backendHealth === 'Critical'
+                  ? '🔴'
+                  : '⏳'
+          }
+          variant={
+            backendHealth === 'Healthy'
+              ? 'success'
+              : backendHealth === 'Warning'
+                ? 'warning'
+                : backendHealth === 'Critical'
+                  ? 'error'
+                  : 'info'
+          }
           data-testid="system-health-backend"
         />
       </div>

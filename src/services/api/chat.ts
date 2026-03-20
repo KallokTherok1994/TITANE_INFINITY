@@ -575,7 +575,8 @@ class ChatService {
         const metaObj = backendResponse.meta as Record<string, unknown> | undefined;
         const actualProvider: string =
           (typeof metaObj?.provider_used === 'string' && metaObj.provider_used) ||
-          (typeof backendResponse.metadata?.provider === 'string' && backendResponse.metadata.provider) ||
+          (typeof backendResponse.metadata?.provider === 'string' &&
+            backendResponse.metadata.provider) ||
           'tauri-backend';
 
         return {

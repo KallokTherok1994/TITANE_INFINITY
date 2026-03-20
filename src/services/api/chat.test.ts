@@ -88,8 +88,12 @@ describe('LOCK1 — Provider truth chain: backend meta → ChatResponse', () => 
     expect((response.metadata as Record<string, unknown>).provider_used).toBe('gemini');
     // provider_meta must be preserved for richer downstream consumers
     expect(
-      ((response.metadata as Record<string, unknown>).provider_meta as Record<string, unknown>)
-        ?.provider_used
+      (
+        (response.metadata as Record<string, unknown>).provider_meta as Record<
+          string,
+          unknown
+        >
+      )?.provider_used
     ).toBe('gemini');
   });
 
@@ -143,7 +147,9 @@ describe('LOCK1 — Provider truth chain: backend meta → ChatResponse', () => 
     const response = await chatService.sendMessage('test', 'conv-rp3');
 
     expect(response.provider).toBe('tauri-backend');
-    expect((response.metadata as Record<string, unknown>).provider_used).toBe('tauri-backend');
+    expect((response.metadata as Record<string, unknown>).provider_used).toBe(
+      'tauri-backend'
+    );
     // Must NOT claim a real provider
     expect(response.provider).not.toBe('gemini');
     expect(response.provider).not.toBe('ollama');
@@ -163,7 +169,7 @@ describe('LOCK1 — Provider truth chain: backend meta → ChatResponse', () => 
       messageId: 'msg-rp4',
       latencyMs: 200,
       meta: {
-        provider_used: 'gemini',   // actual truth
+        provider_used: 'gemini', // actual truth
         mode: 'REMOTE',
         network_used: true,
         reason_code: 'FALLBACK_OFFLINE',
@@ -189,4 +195,3 @@ describe('LOCK1 — Provider truth chain: backend meta → ChatResponse', () => 
     expect(response.provider).not.toBe('ollama');
   });
 });
-

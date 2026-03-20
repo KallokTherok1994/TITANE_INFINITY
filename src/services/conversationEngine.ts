@@ -410,8 +410,7 @@ export async function processMessage(
     console.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
   }
 
-  const persistentMemoryStatusContext =
-    `## PERSISTENT_MEMORY_STATUS\nstatus=${persistentMemoryStatus}`;
+  const persistentMemoryStatusContext = `## PERSISTENT_MEMORY_STATUS\nstatus=${persistentMemoryStatus}`;
 
   // Inject XP + Evolution context (non-blocking, best-effort)
   let progressionContext = '';

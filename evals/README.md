@@ -1,4 +1,5 @@
 # TITANE∞ — Eval Infrastructure
+
 ## Version: v1.0 | Date: 2026-03-20 | Champion: 7973fbdec (v28.0.0)
 
 ---
@@ -48,14 +49,14 @@ evals/
 
 ## Eval Lanes
 
-| Lane | Name | Goal |
-|------|------|------|
-| A | Golden Task Evals | Prove core TITANE tasks do not regress |
-| B | Critical Chain Evals | Prove each runtime chain still works |
-| C | Regression Evals | Compare challenger vs champion on same dataset |
-| D | Safety/Honesty Evals | Fail if TITANE becomes more misleading |
-| E | Stability X3 | Prove repeatability (3 reruns) |
-| F | Shadow Observation | Allow bounded experimentation without promotion |
+| Lane | Name                 | Goal                                            |
+| ---- | -------------------- | ----------------------------------------------- |
+| A    | Golden Task Evals    | Prove core TITANE tasks do not regress          |
+| B    | Critical Chain Evals | Prove each runtime chain still works            |
+| C    | Regression Evals     | Compare challenger vs champion on same dataset  |
+| D    | Safety/Honesty Evals | Fail if TITANE becomes more misleading          |
+| E    | Stability X3         | Prove repeatability (3 reruns)                  |
+| F    | Shadow Observation   | Allow bounded experimentation without promotion |
 
 ---
 

@@ -5,7 +5,9 @@ const runId = process.env.TITANE_PROOF_RUN || 'run1';
 const expectedSource = process.env.TITANE_E2E_EXPECT_SOURCE || '';
 const enforceSource = process.env.TITANE_E2E_ENFORCE_SOURCE === '1';
 const devServerUrl = process.env.TAURI_DEV_SERVER_URL || '';
-const assistantTimeoutMs = Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000');
+const assistantTimeoutMs = Number(
+  process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000'
+);
 const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
 
 function getAllowedHrefPrefixes() {
@@ -435,10 +437,14 @@ async function readRuntimeSnapshot(selectors) {
     const panel = document.querySelector('[data-testid="chat-runtime-state"]');
     const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
     const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
-    const assistantRows = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+    const assistantRows = document.querySelectorAll(
+      '[data-testid="chat-message-assistant"]'
+    );
     const lastAssistant =
       assistantRows.length > 0 ? assistantRows[assistantRows.length - 1] : null;
-    const assistantContent = lastAssistant?.querySelector('[data-testid="chat-message-content"]');
+    const assistantContent = lastAssistant?.querySelector(
+      '[data-testid="chat-message-content"]'
+    );
     const responseNodes = responseSelector
       ? document.querySelectorAll(responseSelector)
       : [];
@@ -595,7 +601,9 @@ async function prepareChatSurface() {
 
   console.log(`[APP_SOURCE] ${JSON.stringify(sourceInfo)}`);
   if (expectedSource && sourceInfo.sourceMode !== expectedSource && enforceSource) {
-    assert.fail(`Source mismatch: expected=${expectedSource} actual=${sourceInfo.sourceMode}`);
+    assert.fail(
+      `Source mismatch: expected=${expectedSource} actual=${sourceInfo.sourceMode}`
+    );
   }
 
   try {
@@ -649,7 +657,11 @@ async function prepareChatSurface() {
   return { appUrl, selectors, sourceInfo };
 }
 
-async function sendMessageAndWaitOutcome(selectors, message, timeoutMs = assistantTimeoutMs) {
+async function sendMessageAndWaitOutcome(
+  selectors,
+  message,
+  timeoutMs = assistantTimeoutMs
+) {
   const input = await $(selectors.input);
   await input.waitForExist({ timeout: 15000 });
 
@@ -677,7 +689,8 @@ async function sendMessageAndWaitOutcome(selectors, message, timeoutMs = assista
         const button = document.querySelector(sel);
         if (!button) return { exists: false, enabled: false };
         const disabled =
-          button.hasAttribute('disabled') || button.getAttribute('aria-disabled') === 'true';
+          button.hasAttribute('disabled') ||
+          button.getAttribute('aria-disabled') === 'true';
         return { exists: true, enabled: !disabled };
       }, selectors.send);
 
@@ -790,15 +803,23 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
     /BLEU|AZUR/i.test(finalResponseText);
   const providerStable = outcomes.every(
     outcome =>
-      outcome.runtime.providerUsed !== 'FALLBACK' && outcome.runtime.providerReason === 'OK'
+      outcome.runtime.providerUsed !== 'FALLBACK' &&
+      outcome.runtime.providerReason === 'OK'
   );
-  const hasPersistenceEvidence = storageEvidence.count >= 4 && storageEvidence.rawSize > 0;
+  const hasPersistenceEvidence =
+    storageEvidence.count >= 4 && storageEvidence.rawSize > 0;
   const hasInjectionSignal = outcomes.some(outcome => {
     const memoryState = outcome.runtime.memoryState;
-    return memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState);
+    return (
+      memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState)
+    );
   });
 
-  if (hasRecallEvidence && hasPersistenceEvidence && (hasInjectionSignal || providerStable)) {
+  if (
+    hasRecallEvidence &&
+    hasPersistenceEvidence &&
+    (hasInjectionSignal || providerStable)
+  ) {
     return 'PASS_MEMORY_REAL';
   }
 
@@ -1008,48 +1029,53 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
   });
 
-  memoryProofTest('classifies real multi-turn memory on desktop Tauri lane', async function () {
-    this.timeout(Math.max(300000, assistantTimeoutMs * 4 + 90000));
+  memoryProofTest(
+    'classifies real multi-turn memory on desktop Tauri lane',
+    async function () {
+      this.timeout(Math.max(300000, assistantTimeoutMs * 4 + 90000));
 
-    const { selectors } = await prepareChatSurface();
-    assert.ok(selectors, 'Memory proof requires visible chat UI selectors');
+      const { selectors } = await prepareChatSurface();
+      assert.ok(selectors, 'Memory proof requires visible chat UI selectors');
 
-    const prompts = [
-      'Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.',
-      'Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.',
-      'Question sans rapport: capitale du Portugal ? Reponds un seul mot.',
-      'Rappelle uniquement sous forme compacte: code=..., nom=..., couleur=... .',
-    ];
+      const prompts = [
+        'Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.',
+        'Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.',
+        'Question sans rapport: capitale du Portugal ? Reponds un seul mot.',
+        'Rappelle uniquement sous forme compacte: code=..., nom=..., couleur=... .',
+      ];
 
-    const outcomes = [];
-    for (const [index, prompt] of prompts.entries()) {
-      const outcome = await sendMessageAndWaitOutcome(selectors, prompt);
-      outcomes.push(outcome);
-      console.log(
-        `[MEMORY_TURN_${index + 1}] kind=${outcome.kind} latencyMs=${outcome.latencyMs} runtime=${JSON.stringify(outcome.runtime)}`
+      const outcomes = [];
+      for (const [index, prompt] of prompts.entries()) {
+        const outcome = await sendMessageAndWaitOutcome(selectors, prompt);
+        outcomes.push(outcome);
+        console.log(
+          `[MEMORY_TURN_${index + 1}] kind=${outcome.kind} latencyMs=${outcome.latencyMs} runtime=${JSON.stringify(outcome.runtime)}`
+        );
+        console.log(
+          `[MEMORY_TURN_${index + 1}_RESPONSE] ${String(outcome.responseText).slice(0, 240)}`
+        );
+      }
+
+      const finalOutcome = outcomes[outcomes.length - 1];
+      const storageEvidence = await collectStorageEvidence();
+      const memoryVerdict = classifyMultiTurnVerdict(
+        outcomes,
+        finalOutcome?.responseText || '',
+        storageEvidence
       );
+
+      console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
       console.log(
-        `[MEMORY_TURN_${index + 1}_RESPONSE] ${String(outcome.responseText).slice(0, 240)}`
+        `[MEMORY_PROOF_RESPONSE] ${String(finalOutcome?.responseText || '').slice(0, 240)}`
       );
+      console.log(`[MEMORY_PROOF_EVIDENCE] ${JSON.stringify(storageEvidence)}`);
+
+      assert.notEqual(memoryVerdict, 'HARNESS_BLOCKED');
+      assert.notEqual(memoryVerdict, 'FALLBACK_ONLY');
+      assert.notEqual(memoryVerdict, 'MEMORY_CHAIN_BROKEN');
+      assert.notEqual(memoryVerdict, 'TARGET_MISMATCH');
     }
-
-    const finalOutcome = outcomes[outcomes.length - 1];
-    const storageEvidence = await collectStorageEvidence();
-    const memoryVerdict = classifyMultiTurnVerdict(
-      outcomes,
-      finalOutcome?.responseText || '',
-      storageEvidence
-    );
-
-    console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
-    console.log(`[MEMORY_PROOF_RESPONSE] ${String(finalOutcome?.responseText || '').slice(0, 240)}`);
-    console.log(`[MEMORY_PROOF_EVIDENCE] ${JSON.stringify(storageEvidence)}`);
-
-    assert.notEqual(memoryVerdict, 'HARNESS_BLOCKED');
-    assert.notEqual(memoryVerdict, 'FALLBACK_ONLY');
-    assert.notEqual(memoryVerdict, 'MEMORY_CHAIN_BROKEN');
-    assert.notEqual(memoryVerdict, 'TARGET_MISMATCH');
-  });
+  );
 
   memoryProofTest('guards against false recall on desktop Tauri lane', async function () {
     this.timeout(Math.max(180000, assistantTimeoutMs + 90000));
@@ -1074,7 +1100,10 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     assert.notEqual(verdict, 'MEMORY_CHAIN_BROKEN');
     assert.notEqual(verdict, 'TARGET_MISMATCH');
     if (outcome.kind === 'assistant' && !degradedRuntime && !targetMismatch) {
-      assert.ok(explicitUnknown, 'False recall guard expected an explicit unknown answer');
+      assert.ok(
+        explicitUnknown,
+        'False recall guard expected an explicit unknown answer'
+      );
     }
   });
 });
