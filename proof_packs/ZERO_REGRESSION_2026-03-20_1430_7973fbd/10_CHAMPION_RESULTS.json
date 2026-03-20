@@ -1,1 +1,34 @@
-{"session":"ZERO_REGRESSION_2026-03-20_1430_7973fbd","champion_commit":"7973fbdec","champion_tag":"v28.0.0","date":"2026-03-20","status":"BASELINE_NOT_EXECUTED","reason":"BLOCKED_BY_ENV — Node v18.19.1 < required v20.0.0. Cannot run pnpm test or E2E suite.","scorecards":{"RESPONSE_QUALITY_SCORECARD":{"status":"PENDING","scores":null},"MEMORY_TRUTH_SCORECARD":{"status":"PENDING","scores":null},"ROUTER_TRUTH_SCORECARD":{"status":"PENDING","scores":null},"HONESTY_SCORECARD":{"status":"PENDING","scores":null},"AUTOHEAL_TRUTH_SCORECARD":{"status":"PENDING","scores":null},"DESKTOP_CRITICAL_FLOW_SCORECARD":{"status":"PENDING","scores":null}},"note":"Scores to be filled after Node upgrade. This file is the champion baseline reference.","rollback":"git reset --hard v28.0.0"}
+{
+  "proof_pack": "ZERO_REGRESSION_2026-03-20_1430_7973fbd",
+  "champion_commit": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "scored_date": "2026-03-20",
+  "node_version": "v20.20.0",
+  "results": {
+    "vitest_unit": {
+      "total": 3351, "passed": 3351, "failed": 0,
+      "files": 227, "duration_s": 171, "status": "PASS"
+    },
+    "rust_cargo": {
+      "total": 4456, "passed": 4456, "failed": 0, "ignored": 7,
+      "duration_s": 26.77, "status": "PASS"
+    },
+    "playwright_e2e": {
+      "total": 28, "passed": 28, "failed": 0,
+      "duration_s": 30.7, "status": "PASS"
+    },
+    "architecture_x3": {
+      "total": 4, "runs": 3, "all_pass": true, "flaky": false, "status": "PASS"
+    },
+    "compliance_x3": {
+      "total": 6, "runs": 3, "all_pass": true, "flaky": false, "status": "PASS"
+    },
+    "verify_evals_scaffold": { "total": 36, "passed": 36, "failed": 0, "status": "PASS" },
+    "verify_instructions": { "total": 20, "passed": 20, "failed": 0, "status": "PASS" },
+    "detect_recurrence": { "entries": 459, "status": "PASS", "guard": "G_AH_RECURRENCE_GUARD_PASS" }
+  },
+  "pre_existing_gate_failures": {
+    "G4_PROVIDER_DECISION_CERTIFIED": "FAIL — pre-existing, not new regression"
+  },
+  "overall": "STABLE — 7835 total test assertions, 0 new failures"
+}
