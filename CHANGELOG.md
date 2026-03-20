@@ -2,6 +2,34 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.0.0] - 2026-03-20 (Post-Deploy Certification)
+
+### Certification & Smoke Tests
+
+- **AppImage smoke (180s + 90s)**: BOOT:READY, zero error markers — PASS ×2
+- **Installed smoke (/usr/bin/titane-infinity, 180s ×2)**: BOOT:READY, zero error markers — PASS ×2
+- **Governance gates**: verify_instructions.sh PASS=20/20, detect_recurrence.sh PASS (472 entries)
+- **Secrets engine**: Diagnosed `aead::Error` (passphrase mismatch) → store reset, re-validated error-free
+
+### Artifacts (Final Certified — commit 9f97d77da)
+
+| Package | Size | SHA256 |
+| ----------------------------------- | ---- | ---------------------------------------------------------------- |
+| Titan-Stable_28.0.0_amd64.AppImage | 86M  | 90442771be7cb2e40972790fa0a1c1eb7ef7ed08d61ad697a0934a1ea5bf1c1b |
+| Titan-Stable_28.0.0_amd64.deb      | 15M  | 69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71 |
+| titane-infinity (binary)           | 40M  | fc57a8f1d0316f587c952cb01c6530fd126bfa019543dcb1416853e452f350a9 |
+
+### Feature Work (post-tag v28.0.0)
+
+- **Provider truth (LOCK1-5)**: Display real provider in UI, unify conversation ID key, backend health polling from truth, backend/chat-mode persistence sync, LOCK1-REPAIR chain wiring
+- **Twins (Session 4)**: unlock desktop proof, G7 prompt-trace tests, admin tab re-enabled (recalculateFusion + transitionPhase), chat context injection (currentPhase + syncScore), stale-value guard
+- **ZERO_REGRESSION governance**: bootstrap infrastructure, scorecards, CI challenger eval gate (PROMOTION_BLOCKED enforcement), G4 evidence pack, all gates PASS
+- **Audio**: corrected Tauri v2 detection in `audioService` (`__TAURI_INTERNALS__`)
+- **Build**: resolved vendor chunk cycle (Vite), sealed v28.0.0 proof
+- **Tests**: stabilized EventStream snapshot (timezone/format baseline), twins context chain coverage
+
+---
+
 ## [28.0.0] - 2026-03-20 (Rebuild PROD)
 
 ### Build & Deployment
