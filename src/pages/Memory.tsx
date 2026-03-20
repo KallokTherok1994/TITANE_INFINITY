@@ -24,13 +24,10 @@ export const Memory = () => {
   const { entries, loading, loadEntries, saveEntry, clearMemory } = useMemoryCore();
   const [newEntry, setNewEntry] = useState('');
 
-  // IMPROVE-006: Use titane_active_conversation_id (canonical, from conversationStorage)
-  // with fallback to omega-chat-conversation-id (ChatPage key).
+  // LOCK2: titane_active_conversation_id is now canonical; legacy key is migrated on boot.
   const conversationId =
     typeof window !== 'undefined'
-      ? (window.localStorage.getItem('titane_active_conversation_id') ??
-        window.localStorage.getItem('omega-chat-conversation-id') ??
-        null)
+      ? window.localStorage.getItem('titane_active_conversation_id') ?? null
       : null;
   const { history: ltmHistory, historyCount: ltmCount } = useLTMContext(conversationId);
 

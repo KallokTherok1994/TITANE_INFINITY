@@ -18,7 +18,9 @@ import { ChatWindow } from '@/components/ChatWindow';
 import { logger } from '@/lib/logger';
 
 const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
-const CONVERSATION_ID_STORAGE_KEY = 'omega-chat-conversation-id';
+// LOCK2: canonical key — legacy 'omega-chat-conversation-id' is migrated on boot via legacyCleanup
+const CONVERSATION_ID_STORAGE_KEY = 'titane_active_conversation_id';
+const CONVERSATION_ID_LEGACY_KEY = 'omega-chat-conversation-id';
 
 const getInitialProvider = (): string => {
   if (typeof window === 'undefined') {
@@ -29,13 +31,20 @@ const getInitialProvider = (): string => {
   return stored && stored.trim().length > 0 ? stored : 'ollama';
 };
 
-// PATCH-014: Persist conversationId across sessions for cross-session LTM recall
+// PATCH-014 + LOCK2: Persist conversationId across sessions for cross-session LTM recall.
+// Read canonical key first, fall back to legacy key for existing installs not yet migrated.
 const getInitialConversationId = (): string => {
   if (typeof window === 'undefined') {
     return `conv_${Date.now()}`;
   }
-  const stored = window.localStorage.getItem(CONVERSATION_ID_STORAGE_KEY);
-  if (stored && stored.trim().length > 0) return stored;
+  const stored =
+    window.localStorage.getItem(CONVERSATION_ID_STORAGE_KEY) ??
+    window.localStorage.getItem(CONVERSATION_ID_LEGACY_KEY);
+  if (stored && stored.trim().length > 0) {
+    // Always persist under canonical key
+    window.localStorage.setItem(CONVERSATION_ID_STORAGE_KEY, stored);
+    return stored;
+  }
   const newId = `conv_${Date.now()}`;
   window.localStorage.setItem(CONVERSATION_ID_STORAGE_KEY, newId);
   return newId;
