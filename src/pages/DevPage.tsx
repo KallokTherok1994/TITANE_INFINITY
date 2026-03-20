@@ -28,6 +28,9 @@ import type { OneCoreState } from '@/features/one-core/types';
 import { UltimateOptimizationDashboard } from '@/components/optimization/UltimateOptimizationDashboard';
 import './DevPage.css';
 import { StatsSystemPanels } from './Stats';
+// LOCK3 — SYSTEM_HEALTH_POLLING: backend-sourced health truth on DevPage mount
+import { startSystemHealthPolling } from '@/services/systemHealthPoller';
+import { useSystemHealth } from '@/stores/systemStore.selectors';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -103,7 +106,9 @@ const OverviewSection = memo<{
   oneCoreState: OneCoreState | null;
   qaState: QASystemState | null;
   orchestration: OrchestrationState | null;
-}>(({ oneCoreState, qaState, orchestration }) => {
+  // LOCK3: backend-sourced health truth (null = not yet fetched)
+  backendHealth: import('../services/tauri/backend-v17.2.types').HealthStatus | null;
+}>(({ oneCoreState, qaState, orchestration, backendHealth }) => {
   const globalHealth = oneCoreState
     ? Math.round(
         (oneCoreState.global_health * 100 +
@@ -163,6 +168,14 @@ const OverviewSection = memo<{
           value={qaState?.active_alerts || 0}
           icon="🔔"
           variant={qaState && qaState.active_alerts > 0 ? 'warning' : 'success'}
+        />
+        {/* LOCK3: backend-sourced health truth badge */}
+        <StatCard
+          label="Santé Backend"
+          value={backendHealth ?? '…'}
+          icon={backendHealth === 'Healthy' ? '✅' : backendHealth === 'Warning' ? '⚠️' : backendHealth === 'Critical' ? '🔴' : '⏳'}
+          variant={backendHealth === 'Healthy' ? 'success' : backendHealth === 'Warning' ? 'warning' : backendHealth === 'Critical' ? 'error' : 'info'}
+          data-testid="system-health-backend"
         />
       </div>
 
@@ -612,6 +625,13 @@ function DevPageContent(): JSX.Element {
   // Hooks
   const oneCore = useOneCore();
   const qa = useQAMonitoring();
+  // LOCK3 — SYSTEM_HEALTH_POLLING: backend health truth (replaces static guesses)
+  const backendHealth = useSystemHealth();
+
+  useEffect(() => {
+    const poller = startSystemHealthPolling(10_000);
+    return () => poller.stop();
+  }, []);
 
   // States
   const [oneCoreState, setOneCoreState] = useState<OneCoreState | null>(null);
@@ -806,6 +826,7 @@ function DevPageContent(): JSX.Element {
             oneCoreState={oneCoreState}
             qaState={qaState}
             orchestration={orchestration}
+            backendHealth={backendHealth}
           />
         )}
         {/* v29.0: Diagnostics = Diagnostic Online + Metrics + Stats Moteurs + Orchestration */}
