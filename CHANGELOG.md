@@ -2,7 +2,33 @@
 
 All notable changes to this project are documented in this file.
 
-## [28.0.0] - 2026-03-14
+## [28.0.0] - 2026-03-20 (Rebuild PROD)
+
+### Build & Deployment
+
+- **PROD BUILD**: Complete rebuild with fresh artifacts (AppImage 90M + DEB 21M, new SHA256)
+- **Tokens Verified**: GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+- **Pipeline**: lint + format:check + ollama:bundle + vite build + tauri build + post-build
+- **Pre-build Gates**: verify_instructions.sh PASS=20 FAIL=0
+- **AutoHeal Integration**: Entry AH-2026-03-20-PROD-BUILD-28.0.0 appended (detect_recurrence PASS, entries=444)
+
+### Governance
+
+- **CLINE Recertification**: Surface audit PASS, PostToolUse JSONL defect removed, kernel STABLE verified
+- **Proof Pack**: PROD_BUILD_v28.0.0_2026-03-20_9771870e0 created and archived
+- **Desktop Integration**: titane-infinity.desktop with XDG hicolor icons registered
+- **GitHub Release**: Tag v28.0.0 updated, assets refreshed, release notes with fresh SHA256
+
+### Artifacts
+
+| Package | Size | SHA256 |
+|---|---|---|
+| TITANE-Infinity_28.0.0_amd64.AppImage | 90M | f55de6796810bb1e818d005a1263a8aed50645286cbd808677765b5035ebca23 |
+| TITANE-Infinity_28.0.0_amd64.deb | 21M | 902e8bf278bb9dff66a815b3427be034aeb1a1ad258b0150d78750950ea016b7 |
+
+---
+
+## [28.0.0] - 2026-03-14 (Initial Production Release)
 
 ### Governance
 
