@@ -6,6 +6,7 @@ const expectedSource = process.env.TITANE_E2E_EXPECT_SOURCE || '';
 const enforceSource = process.env.TITANE_E2E_ENFORCE_SOURCE === '1';
 const devServerUrl = process.env.TAURI_DEV_SERVER_URL || '';
 const assistantTimeoutMs = Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000');
+const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
 
 function getAllowedHrefPrefixes() {
   const prefixes = ['tauri://localhost'];
@@ -13,6 +14,15 @@ function getAllowedHrefPrefixes() {
     prefixes.push(devServerUrl);
   }
   return prefixes;
+}
+
+function getDefaultAppUrl() {
+  return (
+    process.env.TITANE_E2E_URL ||
+    (expectedSource === 'dev-server' && devServerUrl
+      ? `${devServerUrl}/#/chat`
+      : 'tauri://localhost/#/chat')
+  );
 }
 
 async function detectAppSourceMode() {
@@ -390,116 +400,450 @@ async function triggerSendAction(inputSelector, sendSelector) {
   }
 }
 
-describe('ONLINE_CHAT_FIX proof driver UI', () => {
-  it('sends one message and captures assistant response', async function () {
-    this.timeout(180000);
+function isRuntimeDegraded(snapshot) {
+  const reason = snapshot.providerReason;
+  const mode = snapshot.providerMode;
+  const provider = snapshot.providerUsed;
+  return (
+    provider === 'FALLBACK' ||
+    mode === 'ERROR' ||
+    mode === 'OFFLINE' ||
+    reason === 'FALLBACK_OFFLINE' ||
+    reason === 'TIMEOUT' ||
+    reason === 'NETWORK_ERROR' ||
+    reason === 'PROVIDER_UNAVAILABLE' ||
+    reason === 'POLICY_BLOCKED'
+  );
+}
 
-    const appUrl =
-      process.env.TITANE_E2E_URL ||
-      (expectedSource === 'dev-server' && devServerUrl
-        ? `${devServerUrl}/#/chat`
-        : 'tauri://localhost/#/chat');
-    const loaded = await ensureTauriPageLoaded(appUrl);
-    if (!loaded) {
-      throw new Error(
-        'BLOCKER: Tauri page unavailable (about:blank) - environment setup required for ONLINE_CHAT_FIX_UI validation'
-      );
-    }
+function isStructuralTargetMismatch(snapshot) {
+  return (
+    snapshot.browserMode &&
+    snapshot.ipcReadyState === 'FALLBACK' &&
+    (snapshot.providerReason === 'FALLBACK_OFFLINE' ||
+      snapshot.providerReason === 'PROVIDER_UNAVAILABLE' ||
+      snapshot.providerUsed === 'FALLBACK')
+  );
+}
 
-    // Seed localStorage to bypass onboarding flow and clear residual chat history.
-    // Use in-page reload (location.reload) — browser.url() sends WebDriver navigate-to
-    // which resets the WRY/Tauri WebView localStorage context.
-    await browser.execute(() => {
-      for (const key of Object.keys(localStorage)) {
-        if (
-          key.startsWith('titane_chat_mode_') ||
-          key === 'titane_chat_history' ||
-          key === 'titane_chat_runtime_state'
-        ) {
-          localStorage.removeItem(key);
-        }
+async function countMatches(selector) {
+  return await browser.execute(sel => document.querySelectorAll(sel).length, selector);
+}
+
+async function readRuntimeSnapshot(selectors) {
+  return await browser.execute(responseSelector => {
+    const panel = document.querySelector('[data-testid="chat-runtime-state"]');
+    const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
+    const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
+    const assistantRows = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+    const lastAssistant =
+      assistantRows.length > 0 ? assistantRows[assistantRows.length - 1] : null;
+    const assistantContent = lastAssistant?.querySelector('[data-testid="chat-message-content"]');
+    const responseNodes = responseSelector
+      ? document.querySelectorAll(responseSelector)
+      : [];
+    const lastResponseNode =
+      responseNodes.length > 0 ? responseNodes[responseNodes.length - 1] : null;
+
+    return {
+      url: window.location.href || '',
+      ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
+      browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
+      providerUsed: (
+        panel?.getAttribute('data-provider-used') ||
+        lastAssistant?.getAttribute('data-provider-used') ||
+        lastResponseNode?.getAttribute?.('data-provider-used') ||
+        ''
+      )
+        .trim()
+        .toUpperCase(),
+      providerMode: (
+        panel?.getAttribute('data-provider-mode') ||
+        lastAssistant?.getAttribute('data-provider-mode') ||
+        lastResponseNode?.getAttribute?.('data-provider-mode') ||
+        ''
+      )
+        .trim()
+        .toUpperCase(),
+      providerReason: (
+        panel?.getAttribute('data-provider-reason') ||
+        lastAssistant?.getAttribute('data-provider-reason') ||
+        lastResponseNode?.getAttribute?.('data-provider-reason') ||
+        ''
+      )
+        .trim()
+        .toUpperCase(),
+      networkUsed: (
+        panel?.getAttribute('data-network-used') ||
+        lastAssistant?.getAttribute('data-network-used') ||
+        lastResponseNode?.getAttribute?.('data-network-used') ||
+        ''
+      )
+        .trim()
+        .toLowerCase(),
+      memoryState: (
+        panel?.getAttribute('data-memory-state') ||
+        lastAssistant?.getAttribute('data-memory-state') ||
+        lastResponseNode?.getAttribute?.('data-memory-state') ||
+        ''
+      )
+        .trim()
+        .toUpperCase(),
+      runtimeSummary: (summary?.textContent || '').trim(),
+      assistantText: (
+        assistantContent?.textContent ||
+        lastResponseNode?.textContent ||
+        lastAssistant?.textContent ||
+        ''
+      ).trim(),
+    };
+  }, selectors?.response || '');
+}
+
+async function collectStorageEvidence() {
+  return await browser.execute(() => {
+    const keys = [
+      'titane_chat_mode_default',
+      'titane_chat_history',
+      'titane_chat_runtime_state',
+    ];
+
+    const parseCount = raw => {
+      if (!raw) return 0;
+      try {
+        const parsed = JSON.parse(raw);
+        if (Array.isArray(parsed)) return parsed.length;
+        if (Array.isArray(parsed?.messages)) return parsed.messages.length;
+        if (Array.isArray(parsed?.data)) return parsed.data.length;
+        if (Array.isArray(parsed?.history)) return parsed.history.length;
+        return 0;
+      } catch {
+        return 0;
       }
-      localStorage.setItem('titane_onboarding_complete', '1');
-      localStorage.setItem('titane_browser_mode', '1'); // browser mode = use localStorage path (not Tauri IPC) for onboarding check
-      location.reload();
-    });
-    await browser.pause(3000);
+    };
 
-    const allowedPrefixes = getAllowedHrefPrefixes();
+    const entries = keys.map(key => {
+      const raw = localStorage.getItem(key) || '';
+      return {
+        key,
+        count: parseCount(raw),
+        rawSize: raw.length,
+      };
+    });
+
+    return {
+      count: entries.reduce((maxCount, entry) => Math.max(maxCount, entry.count), 0),
+      rawSize: entries.reduce((total, entry) => total + entry.rawSize, 0),
+      keys: entries,
+    };
+  });
+}
+
+async function prepareChatSurface() {
+  const appUrl = getDefaultAppUrl();
+  const loaded = await ensureTauriPageLoaded(appUrl);
+  if (!loaded) {
+    throw new Error(
+      'BLOCKER: Tauri page unavailable (about:blank) - environment setup required for ONLINE_CHAT_FIX_UI validation'
+    );
+  }
+
+  await browser.execute(() => {
+    for (const key of Object.keys(localStorage)) {
+      if (
+        key.startsWith('titane_chat_mode_') ||
+        key === 'titane_chat_history' ||
+        key === 'titane_chat_runtime_state'
+      ) {
+        localStorage.removeItem(key);
+      }
+    }
+    localStorage.setItem('titane_onboarding_complete', '1');
+    localStorage.setItem('titane_browser_mode', '1');
+    location.reload();
+  });
+  await browser.pause(3000);
+
+  const allowedPrefixes = getAllowedHrefPrefixes();
+  await browser.waitUntil(
+    async () => {
+      const readyState = await browser.execute(() => document.readyState);
+      const href = await browser.execute(() => window.location.href || '');
+      return (
+        (readyState === 'interactive' || readyState === 'complete') &&
+        allowedPrefixes.some(prefix => href.startsWith(prefix))
+      );
+    },
+    { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
+  );
+
+  let sourceInfo = await detectAppSourceMode();
+  if (expectedSource && enforceSource && sourceInfo.scriptCount === 0) {
     await browser.waitUntil(
       async () => {
-        const readyState = await browser.execute(() => document.readyState);
-        const href = await browser.execute(() => window.location.href || '');
-        return (
-          (readyState === 'interactive' || readyState === 'complete') &&
-          allowedPrefixes.some(prefix => href.startsWith(prefix))
-        );
+        const current = await detectAppSourceMode();
+        sourceInfo = current;
+        return current.scriptCount > 0;
       },
-      { timeout: 30000, interval: 500, timeoutMsg: 'Document not ready' }
-    );
-
-    let sourceInfo = await detectAppSourceMode();
-    if (expectedSource && enforceSource && sourceInfo.scriptCount === 0) {
-      await browser.waitUntil(
-        async () => {
-          const current = await detectAppSourceMode();
-          sourceInfo = current;
-          return current.scriptCount > 0;
-        },
-        {
-          timeout: 15000,
-          interval: 500,
-          timeoutMsg: 'No script[src] detected for source classification',
-        }
-      );
-    }
-    console.log(`[APP_SOURCE] ${JSON.stringify(sourceInfo)}`);
-    if (expectedSource && sourceInfo.sourceMode !== expectedSource && enforceSource) {
-      assert.fail(
-        `Source mismatch: expected=${expectedSource} actual=${sourceInfo.sourceMode}`
-      );
-    }
-
-    try {
-      await browser.waitUntil(
-        async () => {
-          return await browser.execute(() => {
-            const root = document.getElementById('root');
-            const boot = window.__TITANE_BOOT__ || {};
-            const hasChatUI =
-              !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
-              !!document.querySelector('[data-testid="chat-bubble-input"]') ||
-              !!document.querySelector('#chat-window-textarea') ||
-              !!document.querySelector('#chat-input-textarea') ||
-              !!document.querySelector('[data-testid="chat-input"]');
-            return (
-              Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
-            );
-          });
-        },
-        { timeout: 45000, interval: 1000, timeoutMsg: 'React root not mounted' }
-      );
-    } catch (_error) {
-      const diagnostic = await collectDomDiagnostic();
-      console.log(`[DOM_DIAG] ${JSON.stringify(diagnostic)}`);
-    }
-
-    const trigger = await $('[data-testid="chat-bubble-trigger"]');
-    if (await trigger.isExisting()) {
-      await trigger.waitForDisplayed({ timeout: 25000 });
-    }
-
-    let selectors = await resolveSelectors();
-    if (!selectors) {
-      const diagnostic = await collectDomDiagnostic();
-      console.log(`[DOM_DIAG] ${JSON.stringify(diagnostic)}`);
-      const openTrigger = await $('[data-testid="chat-bubble-trigger"]');
-      if (await openTrigger.isExisting()) {
-        await openTrigger.click();
-        await browser.pause(1200);
+      {
+        timeout: 15000,
+        interval: 500,
+        timeoutMsg: 'No script[src] detected for source classification',
       }
-      selectors = await resolveSelectors();
+    );
+  }
+
+  console.log(`[APP_SOURCE] ${JSON.stringify(sourceInfo)}`);
+  if (expectedSource && sourceInfo.sourceMode !== expectedSource && enforceSource) {
+    assert.fail(`Source mismatch: expected=${expectedSource} actual=${sourceInfo.sourceMode}`);
+  }
+
+  try {
+    await browser.waitUntil(
+      async () => {
+        return await browser.execute(() => {
+          const root = document.getElementById('root');
+          const boot = window.__TITANE_BOOT__ || {};
+          const hasChatUI =
+            !!document.querySelector('[data-testid="chat-bubble-trigger"]') ||
+            !!document.querySelector('[data-testid="chat-bubble-input"]') ||
+            !!document.querySelector('#chat-window-textarea') ||
+            !!document.querySelector('#chat-input-textarea') ||
+            !!document.querySelector('[data-testid="chat-input"]');
+          return (
+            Boolean(boot.app_render) || (root?.childElementCount ?? 0) > 0 || hasChatUI
+          );
+        });
+      },
+      { timeout: 45000, interval: 1000, timeoutMsg: 'React root not mounted' }
+    );
+  } catch (_error) {
+    const diagnostic = await collectDomDiagnostic();
+    console.log(`[DOM_DIAG] ${JSON.stringify(diagnostic)}`);
+  }
+
+  const trigger = await $('[data-testid="chat-bubble-trigger"]');
+  if (await trigger.isExisting()) {
+    await trigger.waitForDisplayed({ timeout: 25000 });
+  }
+
+  let selectors = await resolveSelectors();
+  if (!selectors) {
+    const diagnostic = await collectDomDiagnostic();
+    console.log(`[DOM_DIAG] ${JSON.stringify(diagnostic)}`);
+    const openTrigger = await $('[data-testid="chat-bubble-trigger"]');
+    if (await openTrigger.isExisting()) {
+      await openTrigger.click();
+      await browser.pause(1200);
     }
+    selectors = await resolveSelectors();
+  }
+
+  if (selectors) {
+    await ensureChatOpen(selectors);
+    await installConversationGenerateTraceHook();
+    const input = await $(selectors.input);
+    await input.waitForExist({ timeout: 15000 });
+  }
+
+  return { appUrl, selectors, sourceInfo };
+}
+
+async function sendMessageAndWaitOutcome(selectors, message, timeoutMs = assistantTimeoutMs) {
+  const input = await $(selectors.input);
+  await input.waitForExist({ timeout: 15000 });
+
+  const beforeText = await getLastText(selectors.response);
+  const beforeAssistantCount = await countMatches(selectors.response);
+
+  await browser.execute(sel => {
+    const el = document.querySelector(sel);
+    if (el) {
+      el.scrollIntoView({ block: 'center', inline: 'center' });
+      el.focus();
+    }
+  }, selectors.input);
+  await browser.pause(600);
+
+  await setInputValueSafely(selectors.input, message);
+
+  await browser.waitUntil(
+    async () => {
+      const inputValue = await browser.execute(sel => {
+        return document.querySelector(sel)?.value || '';
+      }, selectors.input);
+
+      const sendState = await browser.execute(sel => {
+        const button = document.querySelector(sel);
+        if (!button) return { exists: false, enabled: false };
+        const disabled =
+          button.hasAttribute('disabled') || button.getAttribute('aria-disabled') === 'true';
+        return { exists: true, enabled: !disabled };
+      }, selectors.send);
+
+      return inputValue.trim().length > 0 && (!sendState.exists || sendState.enabled);
+    },
+    {
+      timeout: 6000,
+      interval: 150,
+      timeoutMsg: 'Chat input did not activate send path after value injection',
+    }
+  );
+
+  const sent = await triggerSendAction(selectors.input, selectors.send);
+  assert.ok(sent, 'Chat send action could not be triggered');
+
+  const startTime = Date.now();
+  let responseText = '';
+  let afterAssistantCount = beforeAssistantCount;
+  let runtime = await readRuntimeSnapshot(selectors);
+
+  while (Date.now() - startTime < timeoutMs) {
+    responseText = await getLastText(selectors.response);
+    afterAssistantCount = await countMatches(selectors.response);
+    runtime = await readRuntimeSnapshot(selectors);
+
+    if (
+      (responseText.length > 0 && responseText !== beforeText) ||
+      afterAssistantCount > beforeAssistantCount
+    ) {
+      if (!responseText && afterAssistantCount > beforeAssistantCount) {
+        await browser.waitUntil(
+          async () => {
+            responseText = await getLastText(selectors.response);
+            return responseText.length > 0;
+          },
+          {
+            timeout: 15000,
+            interval: 250,
+            timeoutMsg: 'Assistant message mounted but content stayed empty',
+          }
+        );
+      }
+
+      runtime = await readRuntimeSnapshot(selectors);
+      return {
+        kind: 'assistant',
+        latencyMs: Date.now() - startTime,
+        responseText: responseText || runtime.assistantText,
+        runtime,
+        beforeAssistantCount,
+        afterAssistantCount,
+      };
+    }
+
+    if (isRuntimeDegraded(runtime)) {
+      return {
+        kind: 'degraded',
+        latencyMs: Date.now() - startTime,
+        responseText: runtime.assistantText,
+        runtime,
+        beforeAssistantCount,
+        afterAssistantCount,
+      };
+    }
+
+    await browser.pause(1000);
+  }
+
+  runtime = await readRuntimeSnapshot(selectors);
+  return {
+    kind: 'timeout',
+    latencyMs: Date.now() - startTime,
+    responseText: responseText || runtime.assistantText,
+    runtime,
+    beforeAssistantCount,
+    afterAssistantCount,
+  };
+}
+
+function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) {
+  const allowedPrefixes = getAllowedHrefPrefixes();
+  const targetOk = outcomes.every(outcome =>
+    allowedPrefixes.some(prefix => outcome.runtime.url.startsWith(prefix))
+  );
+  if (!targetOk) return 'TARGET_MISMATCH';
+
+  if (outcomes.some(outcome => isStructuralTargetMismatch(outcome.runtime))) {
+    return 'TARGET_MISMATCH';
+  }
+
+  if (outcomes.some(outcome => outcome.kind === 'timeout')) {
+    return 'HARNESS_BLOCKED';
+  }
+
+  const hasDegraded = outcomes.some(
+    outcome => outcome.kind === 'degraded' || isRuntimeDegraded(outcome.runtime)
+  );
+  const finalUpper = finalResponseText.toUpperCase();
+  const hasHonestDegradedMessage =
+    /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
+      finalResponseText
+    ) || /FALLBACK_OFFLINE|PROVIDER_UNAVAILABLE|TIMEOUT/.test(finalUpper);
+  if (hasDegraded) {
+    return hasHonestDegradedMessage ? 'HONEST_OFFLINE_DEGRADED' : 'FALLBACK_ONLY';
+  }
+
+  const hasRecallEvidence =
+    finalUpper.includes('ORION-482-LICHEN') &&
+    finalUpper.includes('ALICE') &&
+    /BLEU|AZUR/i.test(finalResponseText);
+  const providerStable = outcomes.every(
+    outcome =>
+      outcome.runtime.providerUsed !== 'FALLBACK' && outcome.runtime.providerReason === 'OK'
+  );
+  const hasPersistenceEvidence = storageEvidence.count >= 4 && storageEvidence.rawSize > 0;
+  const hasInjectionSignal = outcomes.some(outcome => {
+    const memoryState = outcome.runtime.memoryState;
+    return memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState);
+  });
+
+  if (hasRecallEvidence && hasPersistenceEvidence && (hasInjectionSignal || providerStable)) {
+    return 'PASS_MEMORY_REAL';
+  }
+
+  const noFalseMemory =
+    /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(finalResponseText) ||
+    !/ORION-482-LICHEN|ALICE|BLEU|AZUR/i.test(finalResponseText);
+
+  if (noFalseMemory) {
+    return 'NO_FALSE_MEMORY_BUT_UNPROVEN';
+  }
+
+  return 'MEMORY_CHAIN_BROKEN';
+}
+
+function classifyFalseRecallVerdict(outcome, responseText) {
+  const explicitUnknown = /INCONNU|JE NE SAIS PAS|PAS D'INFORMATION|NON RENSEIGN/i.test(
+    responseText
+  );
+  const fabricatedRecall =
+    /CODE FANT[ÔO]ME EST/i.test(responseText.toUpperCase()) && !explicitUnknown;
+  const degradedRuntime = isRuntimeDegraded(outcome.runtime);
+  const targetMismatch = isStructuralTargetMismatch(outcome.runtime);
+
+  let verdict = 'NO_FALSE_MEMORY_BUT_UNPROVEN';
+  if (outcome.kind === 'timeout') {
+    verdict = 'HARNESS_BLOCKED';
+  } else if (targetMismatch) {
+    verdict = 'TARGET_MISMATCH';
+  } else if (outcome.kind === 'degraded' || degradedRuntime) {
+    verdict = 'HONEST_OFFLINE_DEGRADED';
+  } else if (fabricatedRecall) {
+    verdict = 'MEMORY_CHAIN_BROKEN';
+  }
+
+  return { verdict, explicitUnknown, degradedRuntime, targetMismatch };
+}
+
+describe('ONLINE_CHAT_FIX proof driver UI', () => {
+  const singleTurnTest = runMemoryProof ? it.skip : it;
+  const memoryProofTest = runMemoryProof ? it : it.skip;
+
+  singleTurnTest('sends one message and captures assistant response', async function () {
+    this.timeout(180000);
+
+    const { selectors } = await prepareChatSurface();
 
     if (!selectors) {
       const msg = `[${scenario}/${runId}] preuve UI-fallback IPC ${new Date().toISOString()}`;
@@ -511,96 +855,17 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       return;
     }
 
-    await ensureChatOpen(selectors);
-    await installConversationGenerateTraceHook();
-
-    const input = await $(selectors.input);
-    await input.waitForExist({ timeout: 15000 });
-
-    const before = await getLastText(selectors.response);
-    const beforeAssistantCount = await browser.execute(() => {
-      return document.querySelectorAll('[data-testid="chat-message-assistant"]').length;
-    });
-
-    // Scroll element into viewport — after onboarding bypass + reload the
-    // ConversationSection may render outside the visible WRY window area.
-    await browser.execute(sel => {
-      const el = document.querySelector(sel);
-      if (el) {
-        el.scrollIntoView({ block: 'center', inline: 'center' });
-        el.focus();
-      }
-    }, selectors.input);
-    await browser.pause(600);
-
     const msg = `[${scenario}/${runId}] preuve UI ${new Date().toISOString()}`;
-    await setInputValueSafely(selectors.input, msg);
-
-    await browser.waitUntil(
-      async () => {
-        const inputValue = await browser.execute(sel => {
-          return document.querySelector(sel)?.value || '';
-        }, selectors.input);
-
-        const sendState = await browser.execute(sel => {
-          const button = document.querySelector(sel);
-          if (!button) return { exists: false, enabled: false };
-          const disabled =
-            button.hasAttribute('disabled') ||
-            button.getAttribute('aria-disabled') === 'true';
-          return { exists: true, enabled: !disabled };
-        }, selectors.send);
-
-        return inputValue.trim().length > 0 && (!sendState.exists || sendState.enabled);
-      },
-      {
-        timeout: 6000,
-        interval: 150,
-        timeoutMsg: 'Chat input did not activate send path after value injection',
-      }
+    const outcome = await sendMessageAndWaitOutcome(selectors, msg);
+    assert.equal(
+      outcome.kind,
+      'assistant',
+      `[G_RESPONSE_KIND] expected assistant, got ${outcome.kind}: ${JSON.stringify(outcome.runtime)}`
     );
-
-    const sent = await triggerSendAction(selectors.input, selectors.send);
-    assert.ok(sent, 'Chat send action could not be triggered');
-
-    let after = '';
-    let afterAssistantCount = beforeAssistantCount;
-    await browser.waitUntil(
-      async () => {
-        after = await getLastText(selectors.response);
-        afterAssistantCount = await browser.execute(() => {
-          return document.querySelectorAll('[data-testid="chat-message-assistant"]')
-            .length;
-        });
-        return (
-          (!!after && after !== before) || afterAssistantCount > beforeAssistantCount
-        );
-      },
-      {
-        timeout: assistantTimeoutMs,
-        interval: 1000,
-        timeoutMsg: `No assistant response detected (timeout=${assistantTimeoutMs}ms)`,
-      }
-    );
-
-    // In Wry/WebKit, the assistant row can mount one tick before text content.
-    // If detection was count-based, wait for hydrated non-empty text deterministically.
-    if (!after && afterAssistantCount > beforeAssistantCount) {
-      await browser.waitUntil(
-        async () => {
-          after = await getLastText(selectors.response);
-          return after.length > 0;
-        },
-        {
-          timeout: 15000,
-          interval: 250,
-          timeoutMsg: 'Assistant message mounted but content stayed empty',
-        }
-      );
-    }
+    const after = outcome.responseText;
 
     console.log(
-      `[ASSISTANT_SNAPSHOT] beforeCount=${beforeAssistantCount} afterCount=${afterAssistantCount}`
+      `[ASSISTANT_SNAPSHOT] beforeCount=${outcome.beforeAssistantCount} afterCount=${outcome.afterAssistantCount}`
     );
 
     assert.notEqual(
@@ -741,5 +1006,75 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     console.log(`[DOM_ATTRS] ${JSON.stringify(domAttrs.allAttrs)}`);
     console.log(`[UI_BACKEND_ALIGNMENT] ${JSON.stringify(alignment)}`);
     console.log(`[ASSISTANT_TEXT] ${String(after).slice(0, 220)}`);
+  });
+
+  memoryProofTest('classifies real multi-turn memory on desktop Tauri lane', async function () {
+    this.timeout(Math.max(300000, assistantTimeoutMs * 4 + 90000));
+
+    const { selectors } = await prepareChatSurface();
+    assert.ok(selectors, 'Memory proof requires visible chat UI selectors');
+
+    const prompts = [
+      'Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.',
+      'Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.',
+      'Question sans rapport: capitale du Portugal ? Reponds un seul mot.',
+      'Rappelle uniquement sous forme compacte: code=..., nom=..., couleur=... .',
+    ];
+
+    const outcomes = [];
+    for (const [index, prompt] of prompts.entries()) {
+      const outcome = await sendMessageAndWaitOutcome(selectors, prompt);
+      outcomes.push(outcome);
+      console.log(
+        `[MEMORY_TURN_${index + 1}] kind=${outcome.kind} latencyMs=${outcome.latencyMs} runtime=${JSON.stringify(outcome.runtime)}`
+      );
+      console.log(
+        `[MEMORY_TURN_${index + 1}_RESPONSE] ${String(outcome.responseText).slice(0, 240)}`
+      );
+    }
+
+    const finalOutcome = outcomes[outcomes.length - 1];
+    const storageEvidence = await collectStorageEvidence();
+    const memoryVerdict = classifyMultiTurnVerdict(
+      outcomes,
+      finalOutcome?.responseText || '',
+      storageEvidence
+    );
+
+    console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
+    console.log(`[MEMORY_PROOF_RESPONSE] ${String(finalOutcome?.responseText || '').slice(0, 240)}`);
+    console.log(`[MEMORY_PROOF_EVIDENCE] ${JSON.stringify(storageEvidence)}`);
+
+    assert.notEqual(memoryVerdict, 'HARNESS_BLOCKED');
+    assert.notEqual(memoryVerdict, 'FALLBACK_ONLY');
+    assert.notEqual(memoryVerdict, 'MEMORY_CHAIN_BROKEN');
+    assert.notEqual(memoryVerdict, 'TARGET_MISMATCH');
+  });
+
+  memoryProofTest('guards against false recall on desktop Tauri lane', async function () {
+    this.timeout(Math.max(180000, assistantTimeoutMs + 90000));
+
+    const { selectors } = await prepareChatSurface();
+    assert.ok(selectors, 'False recall guard requires visible chat UI selectors');
+
+    const outcome = await sendMessageAndWaitOutcome(
+      selectors,
+      "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU."
+    );
+
+    const responseText = outcome.responseText;
+    const { verdict, explicitUnknown, degradedRuntime, targetMismatch } =
+      classifyFalseRecallVerdict(outcome, responseText);
+
+    console.log(`[FALSE_RECALL_VERDICT] ${verdict}`);
+    console.log(`[FALSE_RECALL_RESPONSE] ${responseText.slice(0, 240)}`);
+    console.log(`[FALSE_RECALL_RUNTIME] ${JSON.stringify(outcome.runtime)}`);
+
+    assert.notEqual(verdict, 'HARNESS_BLOCKED');
+    assert.notEqual(verdict, 'MEMORY_CHAIN_BROKEN');
+    assert.notEqual(verdict, 'TARGET_MISMATCH');
+    if (outcome.kind === 'assistant' && !degradedRuntime && !targetMismatch) {
+      assert.ok(explicitUnknown, 'False recall guard expected an explicit unknown answer');
+    }
   });
 });
