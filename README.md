@@ -4,7 +4,7 @@
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
 **Version:** v28.0.0 (repository authority)  
-**Status:** Production Ready ✅ (governed docs authority aligned, rebuild 2026-03-20)  
+**Status:** Production Ready ✅ (release v28.0.0 SEALED, 2026-03-20)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
 **Canal de release canonique:** v28.0.0
@@ -24,11 +24,13 @@
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.0.0
+### ✅ Release canonique courante: v28.0.0 (SEALED)
 
 Artefacts verifies (Linux):
 
 - `Titan-Stable_28.0.0_amd64.AppImage`
+- `Titan-Stable_28.0.0_amd64.deb`
+- `TITANE-Infinity_28.0.0_amd64.AppImage`
 - `TITANE-Infinity_28.0.0_amd64.deb`
 
 Verification recommandee:
@@ -36,6 +38,14 @@ Verification recommandee:
 ```bash
 cat docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
 ```
+
+Release GitHub (notes + assets):
+
+- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.0.0
+
+Scellement final de session:
+
+- `RELEASE_v28.0.0_SEALED.txt`
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -80,7 +90,14 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ## 🗓️ Version Timeline
 
-### Historique de production (v27.x)
+### Historique de production (v28.x + v27.x)
+
+- **v28.0.0** (PATCH-010 SEALED)
+  - Status: ✅ SEALED (2026-03-20)
+  - Tag: `v28.0.0` -> commit `2d4ef327a`
+  - HEAD session completion: `ef4225028`
+  - Gates: verify-prod-deployment 8/8 PASS, verify_instructions 20/20 PASS, detect_recurrence PASS
+  - Proof: `RELEASE_v28.0.0_SEALED.txt`
 
 - **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
