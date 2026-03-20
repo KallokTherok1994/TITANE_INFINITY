@@ -1,0 +1,63 @@
+{
+  "scorecard_id": "MEMORY_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "description": "Measures truth and integrity of memory save, recall, and injection operations",
+  "metrics": [
+    {
+      "name": "memory_save_confirmed_before_state_update",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Backend confirms save before frontend state update (LOCK4 regression guard)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "recall_no_hallucinated_items",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Recalled memory items were actually saved, no invented items returned",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "injection_ui_indicator_matches_trace",
+      "target": 1.0,
+      "blocking": true,
+      "description": "UI memory indicator shows 'active' ONLY when injection actually occurred in prompt trace (G1 regression guard)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "memory_round_trip_complete",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Save → DB → Recall → Inject round trip completes without silent failure",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "no_stale_memory_injection",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Only relevant, non-expired memory items are injected",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    }
+  ],
+  "blocking_regression_definition": "Any memory truth violation: false claim, missing save, stale injection, UI/trace mismatch",
+  "promotion_decision": "PENDING",
+  "note": "Scores null — BLOCKED_BY_ENV: Node v18. Fill after Node >=20 + eval run."
+}

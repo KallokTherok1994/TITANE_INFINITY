@@ -1,0 +1,83 @@
+{
+  "scorecard_id": "AUTOHEAL_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "description": "Verifies that auto-heal operations are truthful and do not mask failures",
+  "metrics": [
+    {
+      "name": "failure_reproduced_before_heal",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No heal applied without first reproducing the failure",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "heal_bounded_not_broad",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Heal fix is minimal and scoped, not a broad refactor",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "autoheal_entry_appended",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Every heal produces an entry in autoheal_rules.jsonl",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "detect_recurrence_passes",
+      "target": 1.0,
+      "blocking": true,
+      "description": "detect_recurrence.sh passes after each heal entry",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "no_expected_output_rewrite",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No eval expected outputs rewritten to make tests pass (forbidden auto-heal)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "no_threshold_lowering_without_proof",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No scorecard threshold lowered without documented justification",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "no_masking_runtime_as_ui_success",
+      "target": 1.0,
+      "blocking": true,
+      "description": "No runtime failure converted into UI-only success display",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    }
+  ],
+  "blocking_regression_definition": "Any forbidden auto-heal action detected = AUTOHEAL_MASKING_RISK",
+  "promotion_decision": "PENDING",
+  "note": "Scores null — BLOCKED_BY_ENV: Node v18. detect_recurrence.sh can run independently."
+}

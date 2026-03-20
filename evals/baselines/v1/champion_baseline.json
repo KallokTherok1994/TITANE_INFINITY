@@ -1,0 +1,74 @@
+{
+  "baseline_id": "champion_baseline_v1",
+  "version": "v1",
+  "champion_commit": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "champion_date": "2026-03-20",
+  "description": "Champion baseline for TITANE∞ anti-regression eval system. Established at ZERO_REGRESSION session.",
+  "status": "ESTABLISHED — scores PENDING (BLOCKED_BY_ENV: Node v18 < 20)",
+  "approved_proof_packs": [
+    "SESSION_COMPLETE at 7973fbdec",
+    "XP_RUNTIME_TRUTH_HEAL_2026-03-18_0021_0ea87b257",
+    "WEBKIT_BOOT_OLLAMA_AUTOHEAL_2026-03-16_2131_ea50a6493"
+  ],
+  "known_fixes_at_champion": {
+    "LOCK1": "Provider badge wired to backendResponse.meta.provider_used",
+    "LOCK2": "Conversation ID unified to canonical key titane_active_conversation_id",
+    "LOCK3": "System health polling from backend_selftest truth, not frontend assumption",
+    "LOCK4": "Memory backend sync confirmed before frontend state update",
+    "LOCK5": "Chat mode persistence across app reloads"
+  },
+  "scorecard_baselines": {
+    "RESPONSE_QUALITY_SCORECARD": {
+      "factual_accuracy": null,
+      "response_completeness": null,
+      "no_hallucinated_capabilities": null,
+      "language_match": null,
+      "ambiguity_acknowledged": null,
+      "note": "PENDING — fill after eval run with Node >=20"
+    },
+    "MEMORY_TRUTH_SCORECARD": {
+      "memory_save_confirmed_before_state_update": null,
+      "recall_no_hallucinated_items": null,
+      "injection_ui_indicator_matches_trace": null,
+      "memory_round_trip_complete": null,
+      "no_stale_memory_injection": null,
+      "note": "PENDING"
+    },
+    "ROUTER_TRUTH_SCORECARD": {
+      "meta_provider_used_present": null,
+      "ui_provider_badge_matches_meta": null,
+      "fallback_provider_honestly_labeled": null,
+      "one_door_network_enforced": null,
+      "routing_deterministic_for_same_input": null,
+      "note": "PENDING"
+    },
+    "HONESTY_SCORECARD": {
+      "AV-01": null, "AV-02": null, "AV-03": null, "AV-04": null,
+      "AV-05": null, "AV-06": null, "AV-07": null, "AV-08": null,
+      "note": "PENDING"
+    },
+    "AUTOHEAL_TRUTH_SCORECARD": {
+      "failure_reproduced_before_heal": null,
+      "heal_bounded_not_broad": null,
+      "autoheal_entry_appended": null,
+      "detect_recurrence_passes": null,
+      "no_expected_output_rewrite": null,
+      "no_threshold_lowering_without_proof": null,
+      "no_masking_runtime_as_ui_success": null,
+      "note": "PENDING"
+    },
+    "DESKTOP_CRITICAL_FLOW_SCORECARD": {
+      "app_launches_without_crash": null,
+      "backend_selftest_completes": null,
+      "health_state_from_backend_truth": null,
+      "chat_message_roundtrip": null,
+      "tauri_ipc_contract_respected": null,
+      "ollama_connectivity_check": null,
+      "x3_launch_stability": null,
+      "note": "PENDING — BLOCKED_BY_ENV"
+    }
+  },
+  "rollback_command": "git reset --hard v28.0.0",
+  "next_action": "Install Node >=20 (nvm install 20 && nvm use 20), then run: pnpm test && pnpm run test:e2e to fill scores"
+}

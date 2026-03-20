@@ -1,0 +1,63 @@
+{
+  "scorecard_id": "RESPONSE_QUALITY_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "description": "Measures the quality of TITANE chat responses across golden task types",
+  "metrics": [
+    {
+      "name": "factual_accuracy",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Response contains no fabricated facts",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING — no eval run yet (BLOCKED_BY_ENV: Node v18)"
+    },
+    {
+      "name": "response_completeness",
+      "target": 0.85,
+      "blocking": false,
+      "description": "Response addresses all parts of the question",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "no_hallucinated_capabilities",
+      "target": 1.0,
+      "blocking": true,
+      "description": "TITANE does not claim capabilities it does not have",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "language_match",
+      "target": 1.0,
+      "blocking": false,
+      "description": "Response language matches input language",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "ambiguity_acknowledged",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Ambiguous questions are acknowledged, not falsely answered definitively",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    }
+  ],
+  "blocking_regression_definition": "Any metric with blocking=true scores below target",
+  "promotion_decision": "PENDING",
+  "note": "Scores are null because evals cannot run (Node v18 < required v20). Fill after Node upgrade and eval execution."
+}
