@@ -1,0 +1,315 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90m/home/titane-os/Documents/GitHub/TITANE_INFINITY[39m
+
+[90mstderr[2m | src/__tests__/provider-decision-invariants.test.ts[2m > [22m[2mTruth Contract — Invariant 1: REMOTE implies network_used=true[2m > [22m[2m[INV1.3] clamp corrects REMOTE+network_used=false to LOCAL
+[22m[39m[NO_LYING_VIOLATION_BACKEND] NO_LYING_VIOLATION: mode=REMOTE requires network_used=true (provider=gemini)
+
+[90mstderr[2m | src/__tests__/provider-decision-invariants.test.ts[2m > [22m[2mTruth Contract — Invariant 3: local_only provider cannot be REMOTE[2m > [22m[2m[INV3.3] clamp corrects local_only+REMOTE to LOCAL (network_used=true case)
+[22m[39m[NO_LYING_VIOLATION_BACKEND] NO_LYING_VIOLATION: provider_used=local_only cannot have mode=REMOTE
+
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 1: REMOTE implies network_used=true[2m > [22m[INV1.1] valid REMOTE meta with network_used=true passes validation[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 1: REMOTE implies network_used=true[2m > [22m[INV1.2] REMOTE with network_used=false is a violation[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 1: REMOTE implies network_used=true[2m > [22m[INV1.3] clamp corrects REMOTE+network_used=false to LOCAL[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 2: network_used=false implies mode!=REMOTE[2m > [22m[INV2.1] valid LOCAL meta with network_used=false passes validation[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 2: network_used=false implies mode!=REMOTE[2m > [22m[INV2.2] network_used=false with mode=REMOTE is a violation[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 2: network_used=false implies mode!=REMOTE[2m > [22m[INV2.3] network_used=false with mode=LOCAL is valid[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 2: network_used=false implies mode!=REMOTE[2m > [22m[INV2.4] network_used=false with mode=OFFLINE is valid[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 3: local_only provider cannot be REMOTE[2m > [22m[INV3.1] local_only with mode=LOCAL passes[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 3: local_only provider cannot be REMOTE[2m > [22m[INV3.2] local_only with mode=REMOTE is a violation (even when network_used=true)[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 3: local_only provider cannot be REMOTE[2m > [22m[INV3.3] clamp corrects local_only+REMOTE to LOCAL (network_used=true case)[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 4: fallback has explicit reason_code[2m > [22m[INV4.1] policy-blocked fallback has POLICY_BLOCKED reason_code[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mTruth Contract — Invariant 4: fallback has explicit reason_code[2m > [22m[INV4.2] REMOTE+OK passes (legitimate remote call)[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mclampProviderDecisionMeta — no-op on valid meta[2m > [22m[CLAMP1] valid REMOTE meta is returned unchanged[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mclampProviderDecisionMeta — no-op on valid meta[2m > [22m[CLAMP2] valid LOCAL meta is returned unchanged[32m 0[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/__tests__/provider-decision-invariants.test.ts[2m > [22mclampProviderDecisionMeta — no-op on valid meta[2m > [22m[CLAMP3] clamping logs NO_LYING_VIOLATION_BACKEND to console.error[32m 1[2mms[22m[39m
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mnormalizes missing metadata with safe defaults
+[22m[39m[conversationEngine] 📤 Sending to backend: {
+  message_length: [33m2[39m,
+  mode: [32m'default'[39m,
+  conversationId: [32m'c1'[39m,
+  moduleId: [32m'unknown'[39m
+}
+[conversationEngine] 🚀 Envoi du message via secureInvoke
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mnormalizes missing metadata with safe defaults
+[22m[39m[CONV_SEND] Provider request {
+  mode: [32m'default'[39m,
+  provider_requested: [32m'auto'[39m,
+  conversation_id: [32m'c1'[39m,
+  message_length: [33m2[39m,
+  module_id: [32m'unknown'[39m,
+  has_context_envelope: [33mfalse[39m,
+  request_id: [32m'req_1774021867235_h6ujgx'[39m
+}
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mnormalizes missing metadata with safe defaults
+[22m[39m[conversationEngine] 📥 Backend response: {
+  message_id: [32m'm1'[39m,
+  assistant_message_length: [33m5[39m,
+  assistant_message_preview: [32m'Hello'[39m,
+  provider: [32m'fallback'[39m
+}
+[CONV_RECV] Provider decision {
+  mode: [32m'ERROR'[39m,
+  reason_code: [32m'UNKNOWN'[39m,
+  provider_used: [32m'fallback'[39m,
+  network_used: [33mfalse[39m,
+  attempts_count: [33m0[39m,
+  latency_ms: [33m0[39m
+}
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mpreserves provided metadata values when valid
+[22m[39m[conversationEngine] 📤 Sending to backend: {
+  message_length: [33m2[39m,
+  mode: [32m'default'[39m,
+  conversationId: [32m'c2'[39m,
+  moduleId: [32m'unknown'[39m
+}
+[conversationEngine] 🚀 Envoi du message via secureInvoke
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mpreserves provided metadata values when valid
+[22m[39m[CONV_SEND] Provider request {
+  mode: [32m'default'[39m,
+  provider_requested: [32m'auto'[39m,
+  conversation_id: [32m'c2'[39m,
+  message_length: [33m2[39m,
+  module_id: [32m'unknown'[39m,
+  has_context_envelope: [33mfalse[39m,
+  request_id: [32m'req_1774021867237_c445l6'[39m
+}
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mpreserves provided metadata values when valid
+[22m[39m[conversationEngine] 📥 Backend response: {
+  message_id: [32m'm2'[39m,
+  assistant_message_length: [33m2[39m,
+  assistant_message_preview: [32m'Ok'[39m,
+  provider: [32m'local'[39m
+}
+[CONV_RECV] Provider decision {
+  mode: [32m'ERROR'[39m,
+  reason_code: [32m'UNKNOWN'[39m,
+  provider_used: [32m'local'[39m,
+  network_used: [33mfalse[39m,
+  attempts_count: [33m0[39m,
+  latency_ms: [33m42[39m
+}
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mwraps conversation_generate payload under args
+[22m[39m[conversationEngine] 📤 Sending to backend: {
+  message_length: [33m2[39m,
+  mode: [32m'default'[39m,
+  conversationId: [32m'c3'[39m,
+  moduleId: [32m'unknown'[39m
+}
+[conversationEngine] 🚀 Envoi du message via secureInvoke
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mwraps conversation_generate payload under args
+[22m[39m[CONV_SEND] Provider request {
+  mode: [32m'default'[39m,
+  provider_requested: [32m'auto'[39m,
+  conversation_id: [32m'c3'[39m,
+  message_length: [33m2[39m,
+  module_id: [32m'unknown'[39m,
+  has_context_envelope: [33mfalse[39m,
+  request_id: [32m'req_1774021867239_sfv5sj'[39m
+}
+
+[90mstdout[2m | src/services/conversationEngine.test.ts[2m > [22m[2mconversationEngine.processMessage[2m > [22m[2mwraps conversation_generate payload under args
+[22m[39m[conversationEngine] 📥 Backend response: {
+  message_id: [32m'm3'[39m,
+  assistant_message_length: [33m2[39m,
+  assistant_message_preview: [32m'Ok'[39m,
+  provider: [32m'fallback'[39m
+}
+[CONV_RECV] Provider decision {
+  mode: [32m'ERROR'[39m,
+  reason_code: [32m'UNKNOWN'[39m,
+  provider_used: [32m'fallback'[39m,
+  network_used: [33mfalse[39m,
+  attempts_count: [33m0[39m,
+  latency_ms: [33m0[39m
+}
+
+ [32m✓[39m [30m[45m core [49m[39m src/services/conversationEngine.test.ts[2m > [22mconversationEngine.processMessage[2m > [22mnormalizes missing metadata with safe defaults[32m 5[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/conversationEngine.test.ts[2m > [22mconversationEngine.processMessage[2m > [22mpreserves provided metadata values when valid[32m 2[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/conversationEngine.test.ts[2m > [22mconversationEngine.processMessage[2m > [22mwraps conversation_generate payload under args[32m 2[2mms[22m[39m
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[CircuitBreaker][INFO] Circuit Breaker initialized
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[OllamaTransport][INFO] 🚀 Ollama Transport Mode: IPC
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[CognitiveKernel][DEBUG] Initializing cognitive field...
+[CognitiveKernel][DEBUG] Cognitive map established {
+  providers: [
+    [32m'titane-local'[39m,
+    [32m'tauri-chat'[39m,
+    [32m'openai'[39m,
+    [32m'claude'[39m,
+    [32m'gemini'[39m,
+    [32m'ollama'[39m
+  ],
+  orchestrator: [32m'neural-selection'[39m,
+  chatUI: [32m'message-display'[39m,
+  iaService: [32m'api-validation'[39m,
+  governance: [32m'secrets-management'[39m,
+  relationships: {
+    [32m'providers -> orchestrator'[39m: [32m'selection'[39m,
+    [32m'orchestrator -> chatUI'[39m: [32m'response-delivery'[39m,
+    [32m'iaService -> governance'[39m: [32m'config-sync'[39m,
+    [32m'governance -> providers'[39m: [32m'credentials'[39m
+  }
+}
+[CognitiveKernel][INFO] Cognitive field initialized
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[RateLimiter][INFO] Rate Limiter initialized
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[CognitiveOmegaOrchestrator] 2026-03-20T15:51:08.188Z CognitiveOmegaOrchestrator created (lazy init) 
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m[ConversationLifecycleEngine][INFO] ConversationLifecycleEngine initialized
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m2026-03-20T15:51:08.217Z [DEBUG] [Core] 🔍 Auto-cleanup started {"component":"ResponseCache","action":"startAutoCleanup","intervalMs":300000}
+
+[90mstdout[2m | src/services/api/chat.test.ts
+[22m[39m2026-03-20T15:51:08.218Z [DEBUG] [Core] 🔍 Cache loaded from persistence {"component":"ResponseCache","action":"loadFromPersistence","entries":0}
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mChatService normalizeResponse[2m > [22m[2mfalls back provider/latency when backend omits them (OMEGA)
+[22m[39m[ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: [32m'conv-1'[39m, message: [32m'hi...'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mChatService normalizeResponse[2m > [22m[2mfalls back provider/latency when backend omits them (OMEGA)
+[22m[39m[ChatService-OMEGA] 📥 Réponse brute reçue: {
+  hasContent: [33mfalse[39m,
+  hasSuccess: [33mtrue[39m,
+  hasMessage: [33mtrue[39m,
+  hasError: [33mfalse[39m,
+  keys: [ [32m'success'[39m, [32m'message'[39m, [32m'latency_ms'[39m, [32m'omega_metadata'[39m ]
+}
+[ChatService-OMEGA] ℹ️ Format Legacy détecté: { success: [33mtrue[39m, provider: [32m'auto'[39m, contentLength: [33m5[39m, latencyMs: [33m0[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP1: uses meta.provider_used as truth when it differs from legacy provider field
+[22m[39m[ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: [32m'conv-rp1'[39m, message: [32m'test...'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP1: uses meta.provider_used as truth when it differs from legacy provider field
+[22m[39m[ChatService-OMEGA] 📥 Réponse brute reçue: {
+  hasContent: [33mtrue[39m,
+  hasSuccess: [33mfalse[39m,
+  hasMessage: [33mfalse[39m,
+  hasError: [33mfalse[39m,
+  keys: [
+    [32m'ok'[39m,
+    [32m'content'[39m,
+    [32m'conversationId'[39m,
+    [32m'messageId'[39m,
+    [32m'latencyMs'[39m,
+    [32m'meta'[39m,
+    [32m'metadata'[39m
+  ]
+}
+[ChatService-OMEGA] ✅ Format OMEGA direct détecté: {
+  contentLength: [33m8[39m,
+  conversationId: [32m'conv-rp1'[39m,
+  messageId: [32m'msg-rp1'[39m,
+  latencyMs: [33m120[39m,
+  provider: [32m'ollama'[39m
+}
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP2: propagates ollama as actual provider when meta.provider_used=ollama
+[22m[39m[ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: [32m'conv-rp2'[39m, message: [32m'test...'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP2: propagates ollama as actual provider when meta.provider_used=ollama
+[22m[39m[ChatService-OMEGA] 📥 Réponse brute reçue: {
+  hasContent: [33mtrue[39m,
+  hasSuccess: [33mfalse[39m,
+  hasMessage: [33mfalse[39m,
+  hasError: [33mfalse[39m,
+  keys: [
+    [32m'ok'[39m,
+    [32m'content'[39m,
+    [32m'conversationId'[39m,
+    [32m'messageId'[39m,
+    [32m'latencyMs'[39m,
+    [32m'meta'[39m,
+    [32m'metadata'[39m
+  ]
+}
+[ChatService-OMEGA] ✅ Format OMEGA direct détecté: {
+  contentLength: [33m15[39m,
+  conversationId: [32m'conv-rp2'[39m,
+  messageId: [32m'msg-rp2'[39m,
+  latencyMs: [33m45[39m,
+  provider: [90mundefined[39m
+}
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP3: falls back to tauri-backend when meta is absent (no invention)
+[22m[39m[ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: [32m'conv-rp3'[39m, message: [32m'test...'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP3: falls back to tauri-backend when meta is absent (no invention)
+[22m[39m[ChatService-OMEGA] 📥 Réponse brute reçue: {
+  hasContent: [33mtrue[39m,
+  hasSuccess: [33mfalse[39m,
+  hasMessage: [33mfalse[39m,
+  hasError: [33mfalse[39m,
+  keys: [
+    [32m'ok'[39m,
+    [32m'content'[39m,
+    [32m'conversationId'[39m,
+    [32m'messageId'[39m,
+    [32m'latencyMs'[39m,
+    [32m'metadata'[39m
+  ]
+}
+[ChatService-OMEGA] ✅ Format OMEGA direct détecté: {
+  contentLength: [33m17[39m,
+  conversationId: [32m'conv-rp3'[39m,
+  messageId: [32m'msg-rp3'[39m,
+  latencyMs: [33m500[39m,
+  provider: [90mundefined[39m
+}
+
+[90mstderr[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP3: falls back to tauri-backend when meta is absent (no invention)
+[22m[39m[Monitoring] OMEGA Pipeline latency above target { latency: [32m'500.00ms'[39m, target: [32m'200ms'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP4: CRITICAL — preferred=ollama but backend used gemini → metadata.provider_used=gemini
+[22m[39m[ChatService-OMEGA] 📤 Envoi message via OMEGA: { conversationId: [32m'conv-rp4'[39m, message: [32m'test...'[39m }
+
+[90mstdout[2m | src/services/api/chat.test.ts[2m > [22m[2mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22m[2mRP4: CRITICAL — preferred=ollama but backend used gemini → metadata.provider_used=gemini
+[22m[39m[ChatService-OMEGA] 📥 Réponse brute reçue: {
+  hasContent: [33mtrue[39m,
+  hasSuccess: [33mfalse[39m,
+  hasMessage: [33mfalse[39m,
+  hasError: [33mfalse[39m,
+  keys: [
+    [32m'ok'[39m,
+    [32m'content'[39m,
+    [32m'conversationId'[39m,
+    [32m'messageId'[39m,
+    [32m'latencyMs'[39m,
+    [32m'meta'[39m,
+    [32m'metadata'[39m
+  ]
+}
+[ChatService-OMEGA] ✅ Format OMEGA direct détecté: {
+  contentLength: [33m20[39m,
+  conversationId: [32m'conv-rp4'[39m,
+  messageId: [32m'msg-rp4'[39m,
+  latencyMs: [33m200[39m,
+  provider: [90mundefined[39m
+}
+
+ [32m✓[39m [30m[45m core [49m[39m src/services/api/chat.test.ts[2m > [22mChatService normalizeResponse[2m > [22mfalls back provider/latency when backend omits them (OMEGA)[32m 3[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/api/chat.test.ts[2m > [22mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22mRP1: uses meta.provider_used as truth when it differs from legacy provider field[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/api/chat.test.ts[2m > [22mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22mRP2: propagates ollama as actual provider when meta.provider_used=ollama[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/api/chat.test.ts[2m > [22mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22mRP3: falls back to tauri-backend when meta is absent (no invention)[32m 1[2mms[22m[39m
+ [32m✓[39m [30m[45m core [49m[39m src/services/api/chat.test.ts[2m > [22mLOCK1 — Provider truth chain: backend meta → ChatResponse[2m > [22mRP4: CRITICAL — preferred=ollama but backend used gemini → metadata.provider_used=gemini[32m 1[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m      Tests [22m [1m[32m23 passed[39m[22m[90m (23)[39m
+[2m   Start at [22m 11:51:06
+[2m   Duration [22m 2.13s[2m (transform 654ms, setup 530ms, import 720ms, tests 26ms, environment 563ms)[22m
+
+      Tests  23 passed (23)
