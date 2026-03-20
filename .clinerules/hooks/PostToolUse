@@ -52,45 +52,8 @@ if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
   fi
 fi
 
-# AUTOHEAL INTEGRATION (per .clinerules/40-autoheal-rollback.md)
-if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]] && [[ "$success" == "true" ]]; then
-  
-  # Extract operation context for AutoHeal detection
-  operation_desc=$(echo "$input" | jq -r '.postToolUse.description // ""')
-  
-  # Check if operation qualifies as explicit fix (strict patterns)
-  if [[ "$operation_desc" =~ (^fix:|fix\s|\sfix\s|resolve\s+bug|correct\s+error|patch\s|heal\s+defect|bugfix) ]] && 
-       [[ ! "$operation_desc" =~ (align|address|configuration|style|format) ]]; then
-    
-    # Generate AutoHeal entry (explicit fix detected)
-    timestamp=$(date +%Y-%m-%d_%H%M)
-    autoheal_id="AH-$(date +%Y-%m-%d-%H%M)-CLINE-EXPLICIT-$(date +%S)"
-    
-    # Create AutoHeal entry with explicit fix context
-    cat >> scripts/autoheal/autoheal_rules.jsonl << EOF
-{
-  "id": "${autoheal_id}",
-  "date": "$(date +%Y-%m-%d)",
-  "scope": "cline-explicit-fix",
-  "symptom": "explicit_fix_operation_detected",
-  "root_cause": "posttooluse_pattern_match",
-  "fix": "${operation_desc}",
-  "prevention_test": "explicit_fix_pattern_validation",
-  "commands": ["${tool_name}"],
-  "files_changed": [],
-  "rollback": "git_restore_available"
-}
-EOF
-    
-    if [[ -n "$context" ]]; then context+="\n"; fi
-    context+="AUTOHEAL: Fix operation detected, entry ${autoheal_id} captured."
-    
-    # Run required validation (non-blocking for now)
-    if command -v bash >/dev/null 2>&1; then
-      bash scripts/autoheal/detect_recurrence.sh >/dev/null 2>&1 || true
-    fi
-  fi
-fi
+# AutoHeal entries are written manually per Rule 10 — not auto-captured.
+# (auto-capture removed: generated multi-line JSON in JSONL file — format defect)
 
 # Logger les opérations critiques (enhanced with status)
 if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
