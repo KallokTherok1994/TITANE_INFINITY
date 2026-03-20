@@ -1,24 +1,26 @@
 {
-  "version": "28.0.0",
-  "build_date": "2026-03-20",
-  "build_head": "7ad4c05a4",
-  "build_type": "PROD",
-  "tokens": [
-    "GO_FOR_PROD_BUILD__TITANE_INFINITY",
-    "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
-  ],
-  "artifacts": [
-    {
-      "name": "TITANE-Infinity_28.0.0_amd64.AppImage",
-      "size": "90M",
-      "sha256": "63ae6d3c53650d6e987cf5711906c052342b00e83e424069f6e4a30dffe9f6cf"
+  "deployment": {
+    "timestamp": "2026-03-20 19:17:40 UTC",
+    "version": "28.0.0",
+    "commit": "5c504878950698112ecd1235a51b8248c3e795f5",
+    "branch": "MAIN",
+    "certification": "TITANE_INFINITY_RELEASE_20260320_151535_CERTIFIED",
+    "deployment_type": "post_certification"
+  },
+  "artifacts": {
+    "appimage": {
+      "available": true,
+      "sha256": "90442771be7cb2e40972790fa0a1c1eb7ef7ed08d61ad697a0934a1ea5bf1c1b"
     },
-    {
-      "name": "TITANE-Infinity_28.0.0_amd64.deb",
-      "size": "21M",
-      "sha256": "4c8dff75bd537954aa70bce7d73eec626395d1cb2649c153a0e4f3c5a58992d4"
+    "deb": {
+      "available": true,
+      "sha256": "69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71"
     }
-  ],
-  "pipeline": "lint + format:check + ollama:bundle + vite build + tauri build + post-build",
-  "pre_build_gates": "check + lint + format:check + test:100 + verify_instructions + detect_recurrence"
+  },
+  "certification": {
+    "release_gate_status": "PASSED",
+    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
+    "security_posture": "MAXIMUM_HARDENED",
+    "production_readiness": "CERTIFIED_READY"
+  }
 }
