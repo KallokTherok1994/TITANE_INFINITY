@@ -37,8 +37,8 @@ echo "✅ Frontend dist directory found"
 echo "[2/8] Computing checksums..."
 RUST_SHA=$(sha256sum src-tauri/target/release/titane-infinity | awk '{print $1}')
 TAR_FILE="dist-$VERSION.tar.gz"
-tar -czf "$TARFILE" dist/
-DIST_SHA=$(sha256sum "$TARFILE" | awk '{print $1}')
+tar -czf "$TAR_FILE" dist/
+DIST_SHA=$(sha256sum "$TAR_FILE" | awk '{print $1}')
 
 echo "Rust binary SHA256: $RUST_SHA"
 echo "Frontend dist SHA256: $DIST_SHA"
@@ -61,7 +61,7 @@ echo "✅ Rollback plan found"
 
 # Step 5: Verify governance rules
 echo "[5/8] Verifying governance rules..."
-cargo test --lib kernel::governance -- --test-threads=1 >/dev/null 2>&1 || {
+(cd src-tauri && cargo test --lib kernel::governance -- --test-threads=1 >/dev/null 2>&1) || {
   echo "❌ FAIL: Governance tests failed"
   exit 1
 }
