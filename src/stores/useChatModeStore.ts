@@ -86,7 +86,10 @@ export const useChatModeStore = create<ChatModeStore>()(
           } catch (error) {
             const message = error instanceof Error ? error.message : 'Erreur inconnue';
             set({ error: `Impossible de changer de mode: ${message}`, isLoading: false });
-            console.error(`[useChatModeStore] Failed to change mode to ${modeId}:`, error);
+            console.error(
+              `[useChatModeStore] Failed to change mode to ${modeId}:`,
+              error
+            );
           }
         },
       }),

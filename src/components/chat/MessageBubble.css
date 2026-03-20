@@ -926,7 +926,9 @@
   border: 1px solid rgba(99, 102, 241, 0.2);
   vertical-align: middle;
   user-select: none;
-  transition: background 180ms ease, color 180ms ease;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
   white-space: nowrap;
 }
 

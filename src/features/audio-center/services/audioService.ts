@@ -12,6 +12,7 @@
  */
 
 import { tauriClient } from '@/lib/tauriClient';
+import { detectEnvironment } from '@/core/tauri/environment';
 
 // Tauri client adapter for this service.
 // Audio I/O device methods use __TAURI__ directly to avoid getUserMedia()
@@ -95,8 +96,8 @@ const simpleTauriClient = {
   },
 };
 
-// Simple environment detection — use __TAURI_INTERNALS__ (Tauri v2 canonical key)
-const isTauriEnvironment = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
+// Use canonical detectEnvironment() — mockable in tests, robust multi-criteria detection
+const isTauriEnvironment = detectEnvironment().isTauri;
 
 import {
   buildTtsSettingsFromTitaneProfile,
@@ -894,8 +895,10 @@ class AudioService {
    * Check if Web Speech API is available
    */
   private isWebSpeechAvailable(): boolean {
+    // Re-evaluate at call time — tests may alter window state
     return (
       typeof window !== 'undefined' &&
+      !detectEnvironment().isTauri &&
       'speechSynthesis' in window &&
       typeof SpeechSynthesisUtterance !== 'undefined'
     );

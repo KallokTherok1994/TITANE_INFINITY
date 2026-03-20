@@ -20,7 +20,10 @@
       "injection_ui_indicator_matches_trace": null,
       "memory_round_trip_complete": null,
       "no_stale_memory_injection": null,
-      "_blocking": ["memory_save_confirmed_before_state_update", "no_stale_memory_injection"]
+      "_blocking": [
+        "memory_save_confirmed_before_state_update",
+        "no_stale_memory_injection"
+      ]
     },
     "ROUTER_TRUTH_SCORECARD": {
       "meta_provider_used_present": null,
@@ -28,7 +31,11 @@
       "fallback_provider_honestly_labeled": null,
       "one_door_network_enforced": null,
       "routing_deterministic_for_same_input": null,
-      "_blocking": ["meta_provider_used_present", "ui_provider_badge_matches_meta", "one_door_network_enforced"]
+      "_blocking": [
+        "meta_provider_used_present",
+        "ui_provider_badge_matches_meta",
+        "one_door_network_enforced"
+      ]
     },
     "HONESTY_SCORECARD": {
       "AV-01": null,
@@ -39,7 +46,7 @@
       "AV-06": null,
       "AV-07": null,
       "AV-08": null,
-      "_blocking": ["AV-01","AV-02","AV-03","AV-04","AV-05","AV-06","AV-07"]
+      "_blocking": ["AV-01", "AV-02", "AV-03", "AV-04", "AV-05", "AV-06", "AV-07"]
     },
     "AUTOHEAL_TRUTH_SCORECARD": {
       "failure_reproduced_before_heal": null,
@@ -49,7 +56,11 @@
       "no_expected_output_rewrite": null,
       "no_threshold_lowering_without_proof": null,
       "no_masking_runtime_as_ui_success": null,
-      "_blocking": ["detect_recurrence_passes", "no_expected_output_rewrite", "no_masking_runtime_as_ui_success"]
+      "_blocking": [
+        "detect_recurrence_passes",
+        "no_expected_output_rewrite",
+        "no_masking_runtime_as_ui_success"
+      ]
     },
     "DESKTOP_CRITICAL_FLOW_SCORECARD": {
       "app_launches_without_crash": null,

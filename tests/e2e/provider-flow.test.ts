@@ -155,46 +155,59 @@ async function sendMessageAndWaitAssistant(
       const panel = document.querySelector('[data-testid="chat-runtime-state"]');
       const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
       const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
-      const assistants = document.querySelectorAll('[data-testid="chat-message-assistant"]');
+      const assistants = document.querySelectorAll(
+        '[data-testid="chat-message-assistant"]'
+      );
       const lastAssistant =
         assistants.length > 0 ? assistants[assistants.length - 1] : undefined;
-      const contentNode = lastAssistant?.querySelector('[data-testid="chat-message-content"]');
+      const contentNode = lastAssistant?.querySelector(
+        '[data-testid="chat-message-content"]'
+      );
       return {
         url: window.location.href,
         ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
         browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
-        providerUsed:
-          (panel?.getAttribute('data-provider-used') ||
-            lastAssistant?.getAttribute('data-provider-used') ||
-            '')
-            .trim()
-            .toUpperCase(),
-        providerMode:
-          (panel?.getAttribute('data-provider-mode') ||
-            lastAssistant?.getAttribute('data-provider-mode') ||
-            '')
-            .trim()
-            .toUpperCase(),
-        providerReason:
-          (panel?.getAttribute('data-provider-reason') ||
-            lastAssistant?.getAttribute('data-provider-reason') ||
-            '')
-            .trim()
-            .toUpperCase(),
-        networkUsed:
-          (panel?.getAttribute('data-network-used') ||
-            lastAssistant?.getAttribute('data-network-used') ||
-            '')
-            .trim()
-            .toLowerCase(),
-        memoryState:
-          (panel?.getAttribute('data-memory-state') ||
-            lastAssistant?.getAttribute('data-memory-state') ||
-            '')
-            .trim()
-            .toUpperCase(),
+        providerUsed: (
+          panel?.getAttribute('data-provider-used') ||
+          lastAssistant?.getAttribute('data-provider-used') ||
+          ''
+        )
+          .trim()
+          .toUpperCase(),
+        providerMode: (
+          panel?.getAttribute('data-provider-mode') ||
+          lastAssistant?.getAttribute('data-provider-mode') ||
+          ''
+        )
+          .trim()
+          .toUpperCase(),
+        providerReason: (
+          panel?.getAttribute('data-provider-reason') ||
+          lastAssistant?.getAttribute('data-provider-reason') ||
+          ''
+        )
+          .trim()
+          .toUpperCase(),
+        networkUsed: (
+          panel?.getAttribute('data-network-used') ||
+          lastAssistant?.getAttribute('data-network-used') ||
+          ''
+        )
+          .trim()
+          .toLowerCase(),
+        memoryState: (
+          panel?.getAttribute('data-memory-state') ||
+          lastAssistant?.getAttribute('data-memory-state') ||
+          ''
+        )
+          .trim()
+          .toUpperCase(),
         runtimeSummary: (summary?.textContent || '').trim(),
-        assistantText: (contentNode?.textContent || lastAssistant?.textContent || '').trim(),
+        assistantText: (
+          contentNode?.textContent ||
+          lastAssistant?.textContent ||
+          ''
+        ).trim(),
       };
     });
   };
@@ -352,13 +365,17 @@ test.describe('Provider Flow v21.0', () => {
       const targetOk = outcomes.every(o => /\/(chat|titane)/.test(o.runtime.url));
       if (!targetOk) return 'TARGET_MISMATCH';
 
-      const structuralMismatch = outcomes.some(o => isStructuralTargetMismatch(o.runtime));
+      const structuralMismatch = outcomes.some(o =>
+        isStructuralTargetMismatch(o.runtime)
+      );
       if (structuralMismatch) return 'TARGET_MISMATCH';
 
       const hasTimeout = outcomes.some(o => o.kind === 'timeout');
       if (hasTimeout) return 'HARNESS_BLOCKED';
 
-      const hasDegraded = outcomes.some(o => o.kind === 'degraded' || isRuntimeDegraded(o.runtime));
+      const hasDegraded = outcomes.some(
+        o => o.kind === 'degraded' || isRuntimeDegraded(o.runtime)
+      );
       const finalUpper = finalResponseText.toUpperCase();
       const hasHonestDegradedMessage =
         /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
@@ -377,7 +394,9 @@ test.describe('Provider Flow v21.0', () => {
       const hasPersistenceEvidence = storageCount >= 4 && storageRawSize > 0;
       const hasInjectionSignal = outcomes.some(o => {
         const memoryState = o.runtime.memoryState;
-        return memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState);
+        return (
+          memoryState.length > 0 && !['UNKNOWN', 'NONE', 'MISSING'].includes(memoryState)
+        );
       });
 
       if (hasRecallEvidence && hasPersistenceEvidence && hasInjectionSignal) {
@@ -385,8 +404,9 @@ test.describe('Provider Flow v21.0', () => {
       }
 
       const noFalseMemory =
-        /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(finalResponseText) ||
-        !/TON CODE .*ORION-482-LICHEN/i.test(finalResponseText);
+        /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(
+          finalResponseText
+        ) || !/TON CODE .*ORION-482-LICHEN/i.test(finalResponseText);
 
       if (noFalseMemory) {
         return 'NO_FALSE_MEMORY_BUT_UNPROVEN';
@@ -487,7 +507,9 @@ test.describe('Provider Flow v21.0', () => {
     if (hasContext) {
       console.log('✅ Memory proof path classified without ambiguity');
     } else if (memoryVerdict === 'TARGET_MISMATCH') {
-      console.log('⚠️ Browser lane cannot prove real memory: IPC unavailable on active target');
+      console.log(
+        '⚠️ Browser lane cannot prove real memory: IPC unavailable on active target'
+      );
     } else {
       console.warn('⚠️ Memory proof remains unproven');
       console.log(`Response: ${responseText}`);
@@ -616,7 +638,10 @@ test.describe('Provider Flow v21.0', () => {
           if ((await assistantMessages.count()) > beforeCount) return 'assistant';
           return '';
         },
-        { timeout: Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '45000'), interval: 1000 }
+        {
+          timeout: Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '45000'),
+          interval: 1000,
+        }
       )
       .toMatch(/error|assistant/);
 

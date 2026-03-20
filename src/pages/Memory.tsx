@@ -32,7 +32,7 @@ export const Memory = () => {
   // LOCK2: titane_active_conversation_id is now canonical; legacy key is migrated on boot.
   const conversationId =
     typeof window !== 'undefined'
-      ? window.localStorage.getItem('titane_active_conversation_id') ?? null
+      ? (window.localStorage.getItem('titane_active_conversation_id') ?? null)
       : null;
   const { history: ltmHistory, historyCount: ltmCount } = useLTMContext(conversationId);
 
