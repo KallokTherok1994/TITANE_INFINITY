@@ -1,0 +1,398 @@
+
+> titane-infinity@28.0.0 build:production /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> pnpm run lint && pnpm run format:check && pnpm run ollama:bundle && vite build && tauri build && bash scripts/post-build.sh
+
+
+> titane-infinity@28.0.0 lint /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> eslint "src/**/*.{ts,tsx,js,jsx}"
+
+
+> titane-infinity@28.0.0 format:check /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> prettier --check .
+
+Checking formatting...
+All matched files use Prettier code style!
+
+> titane-infinity@28.0.0 ollama:bundle /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/prepare-ollama-bundle.sh
+
+✓ Bundled Ollama SHA256: af6b471cdf775a1c4f3b8867fa11ebb26827e7a8ab245550dcef422bfc0e6680
+✓ Ollama bundled at: /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/resources/ollama/ollama
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 3482 modules transformed.
+Circular chunk: vendor -> react-vendor -> vendor. Please adjust the manual chunk logic for these chunks.
+rendering chunks...
+computing gzip size...
+dist/index.html                                             11.48 kB │ gzip:   4.03 kB
+dist/assets/titane-reactor-awen-CDlleqco.svg                13.92 kB │ gzip:   2.51 kB
+dist/assets/titane-arc-emerald-DnTwtDxb.svg                 18.50 kB │ gzip:   3.32 kB
+dist/.vite/manifest.json                                    29.97 kB │ gzip:   2.98 kB
+dist/assets/style-BYYMWi_h.css                             528.75 kB │ gzip:  84.39 kB
+dist/assets/TwinsPage-gyAXJuT0.js                            0.45 kB │ gzip:   0.32 kB
+dist/assets/index-B7Q1DVVa.js                                1.31 kB │ gzip:   0.67 kB
+dist/assets/Watchdog-Pnf0YgUG.js                             1.47 kB │ gzip:   0.68 kB
+dist/assets/SelfHeal-7gq25cf-.js                             1.50 kB │ gzip:   0.69 kB
+dist/assets/AdaptiveEngine-Dlagh-e5.js                       1.51 kB │ gzip:   0.68 kB
+dist/assets/Sentinel-b-5Dhrlr.js                             1.56 kB │ gzip:   0.72 kB
+dist/assets/ui-branding-CAqIhOuX.js                          1.64 kB │ gzip:   0.96 kB
+dist/assets/en-Daorm0d3.js                                   2.19 kB │ gzip:   1.05 kB
+dist/assets/fr-COzM94Yb.js                                   2.44 kB │ gzip:   1.23 kB
+dist/assets/ui-experience-DkuOa0Ok.js                        2.91 kB │ gzip:   1.37 kB
+dist/assets/DetectionOverlay-0DB9qtfw.js                     3.20 kB │ gzip:   1.40 kB
+dist/assets/cameraChatIntegration-DAp8-7zf.js                3.49 kB │ gzip:   1.37 kB
+dist/assets/index-dtUuq2aR.js                                3.51 kB │ gzip:   1.40 kB
+dist/assets/RealTimeCharts-C1E_mRYO.js                       3.56 kB │ gzip:   0.90 kB
+dist/assets/logLevelConfig-HbKwf0KJ.js                       4.16 kB │ gzip:   1.39 kB
+dist/assets/app-DccqzU05.js                                  4.55 kB │ gzip:   2.00 kB
+dist/assets/MemoryTreeViewer-BeMhJbUq.js                     4.57 kB │ gzip:   1.64 kB
+dist/assets/MemorySearchPanel-DzUAW0hk.js                    4.69 kB │ gzip:   1.88 kB
+dist/assets/index-BFu_GoKt.js                                5.19 kB │ gzip:   1.75 kB
+dist/assets/web-vitals-D8cA-W4R.js                           5.85 kB │ gzip:   2.38 kB
+dist/assets/Experience-D8vjcYuU.js                           5.99 kB │ gzip:   2.06 kB
+dist/assets/VisionMetricsChart-BS7ZgQvB.js                   6.30 kB │ gzip:   1.50 kB
+dist/assets/ProductionHealthPanel-ClM2xf22.js                6.65 kB │ gzip:   2.21 kB
+dist/assets/EvolutionTimeline-5_6vXyDK.js                    6.83 kB │ gzip:   2.87 kB
+dist/assets/TitanePage-D8mWPrWY.js                           7.08 kB │ gzip:   1.96 kB
+dist/assets/TransformationRoadmap-jH_I2ytR.js                8.21 kB │ gzip:   2.82 kB
+dist/assets/ModeMatrix-Biq8jmxS.js                           8.67 kB │ gzip:   2.64 kB
+dist/assets/Memory-B5vy4VeX.js                               8.96 kB │ gzip:   3.43 kB
+dist/assets/PersonaEditor-tuTYYB-X.js                        9.24 kB │ gzip:   2.33 kB
+dist/assets/ui-reality-DiGhZPKE.js                           9.26 kB │ gzip:   2.82 kB
+dist/assets/ResearchPage-0A6IUQlP.js                         9.68 kB │ gzip:   3.20 kB
+dist/assets/VocalDevConsoleEngine-CJgQx-aZ.js               10.50 kB │ gzip:   3.53 kB
+dist/assets/PerformanceTest-XtArszZ1.js                     10.94 kB │ gzip:   2.41 kB
+dist/assets/ui-dev-FtofyYIV.js                              11.30 kB │ gzip:   3.22 kB
+dist/assets/LiveDebuggerEngine-CjgQ71nL.js                  11.38 kB │ gzip:   3.89 kB
+dist/assets/ui-memory-evolution-Dm6a9EqP.js                 11.64 kB │ gzip:   3.20 kB
+dist/assets/OrchestrationIntelligenceCenter-D26plWuw.js     13.58 kB │ gzip:   3.35 kB
+dist/assets/d3-tree-CVBljE3_.js                             14.52 kB │ gzip:   4.32 kB
+dist/assets/ui-hyper-q7phxDV4.js                            15.48 kB │ gzip:   4.99 kB
+dist/assets/ui-quantum-DUnlt1bj.js                          17.50 kB │ gzip:   3.61 kB
+dist/assets/OrchestrationMetaCenter-D7f4DufY.js             17.87 kB │ gzip:   4.40 kB
+dist/assets/index-D-RmMsAo.js                               18.12 kB │ gzip:   5.36 kB
+dist/assets/ui-audio-UrpBTHpH.js                            18.66 kB │ gzip:   5.18 kB
+dist/assets/ui-fusion-CXd5ir2N.js                           19.39 kB │ gzip:   4.20 kB
+dist/assets/ui-identity-Df6uxM_0.js                         20.37 kB │ gzip:   5.29 kB
+dist/assets/page-chat-BrQKH97W.js                           21.42 kB │ gzip:   5.55 kB
+dist/assets/DevPage-CubizMdF.js                             28.68 kB │ gzip:   7.78 kB
+dist/assets/ConfigurationHub-5aMIZYy0.js                    29.13 kB │ gzip:   7.35 kB
+dist/assets/TimePage-CeOp_3vU.js                            29.69 kB │ gzip:   7.59 kB
+dist/assets/index-DLo2BKHj.js                               30.53 kB │ gzip:   7.35 kB
+dist/assets/motion-DtWckjBu.js                              31.35 kB │ gzip:  10.96 kB
+dist/assets/tauri-vendor-DVum-dwu.js                        31.48 kB │ gzip:   7.10 kB
+dist/assets/index-Be5R_koN.js                               36.70 kB │ gzip:   7.99 kB
+dist/assets/ui-optimization-CRxN7aI0.js                     38.45 kB │ gzip:   9.94 kB
+dist/assets/GovernanceCenterPage-CR1Wb7NJ.js                41.07 kB │ gzip:   9.62 kB
+dist/assets/SystemCenterPage-CbStmJph.js                    42.70 kB │ gzip:   9.56 kB
+dist/assets/telemetryEngine-DrCyK1ki.js                     56.67 kB │ gzip:  16.54 kB
+dist/assets/main-C4XK8GI7.js                                64.30 kB │ gzip:  18.43 kB
+dist/assets/validation-CVRdpplF.js                          66.25 kB │ gzip:  17.85 kB
+dist/assets/i18n-DRuBY6dr.js                                70.73 kB │ gzip:  23.67 kB
+dist/assets/chrono-BasK2-07.js                             184.97 kB │ gzip:  55.85 kB
+dist/assets/ai-transformers-DcDBlO-Q.js                    200.03 kB │ gzip:  56.12 kB
+dist/assets/react-vendor-lXR9ny6e.js                       236.96 kB │ gzip:  76.36 kB
+dist/assets/vendor-Bmz2ET0S.js                             274.27 kB │ gzip:  88.87 kB
+dist/assets/vendor-onnx-DznQ7Abb.js                        544.99 kB │ gzip: 130.30 kB
+dist/assets/core-runtime-AUn-Ecbi.js                     1,459.39 kB │ gzip: 414.04 kB
+✓ built in 13.43s
+✅ Workbox: 68 files precached (4314.29 KB)
+
+✨ [vite-plugin-compression]:algorithm=gzip - compressed file successfully: 
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ConfigurationHub-5aMIZYy0.js.gz                  28.44kb / gzip: 7.16kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/DevPage-CubizMdF.js.gz                           28.01kb / gzip: 7.57kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/LiveDebuggerEngine-CjgQ71nL.js.gz                11.11kb / gzip: 3.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/.vite/manifest.json.gz                                  29.27kb / gzip: 2.90kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationIntelligenceCenter-D26plWuw.js.gz   13.26kb / gzip: 3.26kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationMetaCenter-D7f4DufY.js.gz           17.45kb / gzip: 4.28kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/GovernanceCenterPage-CR1Wb7NJ.js.gz              40.11kb / gzip: 9.36kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/PerformanceTest-XtArszZ1.js.gz                   10.68kb / gzip: 2.34kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/VocalDevConsoleEngine-CJgQx-aZ.js.gz             10.25kb / gzip: 3.44kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/TimePage-CeOp_3vU.js.gz                          29.00kb / gzip: 7.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/SystemCenterPage-CbStmJph.js.gz                  41.70kb / gzip: 9.29kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/d3-tree-CVBljE3_.js.gz                           14.18kb / gzip: 4.21kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-Be5R_koN.js.gz                             35.84kb / gzip: 7.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-D-RmMsAo.js.gz                             17.69kb / gzip: 5.22kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-DLo2BKHj.js.gz                             29.82kb / gzip: 7.14kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/page-chat-BrQKH97W.js.gz                         20.92kb / gzip: 5.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/motion-DtWckjBu.js.gz                            30.62kb / gzip: 10.68kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/tauri-vendor-DVum-dwu.js.gz                      30.74kb / gzip: 6.92kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-audio-UrpBTHpH.js.gz                          18.22kb / gzip: 5.05kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-dev-FtofyYIV.js.gz                            11.04kb / gzip: 3.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-fusion-CXd5ir2N.js.gz                         18.93kb / gzip: 4.09kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-hyper-q7phxDV4.js.gz                          15.12kb / gzip: 4.86kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-identity-Df6uxM_0.js.gz                       19.89kb / gzip: 5.14kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-memory-evolution-Dm6a9EqP.js.gz               11.37kb / gzip: 3.13kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-quantum-DUnlt1bj.js.gz                        17.09kb / gzip: 3.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-optimization-CRxN7aI0.js.gz                   37.55kb / gzip: 9.70kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/index.html.gz                                           11.21kb / gzip: 3.93kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/sw.js.gz                                                15.48kb / gzip: 3.60kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/i18n-DRuBY6dr.js.gz                              69.07kb / gzip: 23.10kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/main-C4XK8GI7.js.gz                              62.79kb / gzip: 17.96kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/telemetryEngine-DrCyK1ki.js.gz                   55.34kb / gzip: 16.13kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/validation-CVRdpplF.js.gz                        64.69kb / gzip: 17.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/chrono-BasK2-07.js.gz                            180.63kb / gzip: 54.42kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ai-transformers-DcDBlO-Q.js.gz                   195.34kb / gzip: 54.71kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/react-vendor-lXR9ny6e.js.gz                      231.41kb / gzip: 74.45kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-Bmz2ET0S.js.gz                            267.85kb / gzip: 86.56kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/style-BYYMWi_h.css.gz                            516.36kb / gzip: 81.71kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-onnx-DznQ7Abb.js.gz                       532.21kb / gzip: 126.77kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/stats.html.gz                                           1852.39kb / gzip: 183.73kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/core-runtime-AUn-Ecbi.js.gz                      1425.18kb / gzip: 403.65kb
+
+
+
+✨ [vite-plugin-compression]:algorithm=brotliCompress - compressed file successfully: 
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/.vite/manifest.json.br                                  29.27kb / brotliCompress: 2.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/DevPage-CubizMdF.js.br                           28.01kb / brotliCompress: 6.68kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/LiveDebuggerEngine-CjgQ71nL.js.br                11.11kb / brotliCompress: 3.39kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/GovernanceCenterPage-CR1Wb7NJ.js.br              40.11kb / brotliCompress: 8.32kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationIntelligenceCenter-D26plWuw.js.br   13.26kb / brotliCompress: 2.89kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ConfigurationHub-5aMIZYy0.js.br                  28.44kb / brotliCompress: 6.36kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/PerformanceTest-XtArszZ1.js.br                   10.68kb / brotliCompress: 2.02kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationMetaCenter-D7f4DufY.js.br           17.45kb / brotliCompress: 3.81kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/VocalDevConsoleEngine-CJgQx-aZ.js.br             10.25kb / brotliCompress: 3.12kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/TimePage-CeOp_3vU.js.br                          29.00kb / brotliCompress: 6.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/d3-tree-CVBljE3_.js.br                           14.18kb / brotliCompress: 3.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/SystemCenterPage-CbStmJph.js.br                  41.70kb / brotliCompress: 8.14kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-Be5R_koN.js.br                             35.84kb / brotliCompress: 6.96kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-D-RmMsAo.js.br                             17.69kb / brotliCompress: 4.64kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-DLo2BKHj.js.br                             29.82kb / brotliCompress: 6.32kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/motion-DtWckjBu.js.br                            30.62kb / brotliCompress: 9.67kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/main-C4XK8GI7.js.br                              62.79kb / brotliCompress: 15.76kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/page-chat-BrQKH97W.js.br                         20.92kb / brotliCompress: 4.80kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/tauri-vendor-DVum-dwu.js.br                      30.74kb / brotliCompress: 6.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-audio-UrpBTHpH.js.br                          18.22kb / brotliCompress: 4.52kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-dev-FtofyYIV.js.br                            11.04kb / brotliCompress: 2.73kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/telemetryEngine-DrCyK1ki.js.br                   55.34kb / brotliCompress: 14.08kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-fusion-CXd5ir2N.js.br                         18.93kb / brotliCompress: 3.53kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-hyper-q7phxDV4.js.br                          15.12kb / brotliCompress: 4.30kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-memory-evolution-Dm6a9EqP.js.br               11.37kb / brotliCompress: 2.77kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-identity-Df6uxM_0.js.br                       19.89kb / brotliCompress: 4.57kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-quantum-DUnlt1bj.js.br                        17.09kb / brotliCompress: 3.09kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-optimization-CRxN7aI0.js.br                   37.55kb / brotliCompress: 8.62kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/index.html.br                                           11.21kb / brotliCompress: 3.17kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/sw.js.br                                                15.48kb / brotliCompress: 3.04kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/validation-CVRdpplF.js.br                        64.69kb / brotliCompress: 15.47kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/i18n-DRuBY6dr.js.br                              69.07kb / brotliCompress: 20.58kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ai-transformers-DcDBlO-Q.js.br                   195.34kb / brotliCompress: 46.88kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/chrono-BasK2-07.js.br                            180.63kb / brotliCompress: 46.88kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-Bmz2ET0S.js.br                            267.85kb / brotliCompress: 75.85kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/react-vendor-lXR9ny6e.js.br                      231.41kb / brotliCompress: 64.60kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/style-BYYMWi_h.css.br                            516.36kb / brotliCompress: 63.02kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-onnx-DznQ7Abb.js.br                       532.21kb / brotliCompress: 99.42kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/core-runtime-AUn-Ecbi.js.br                      1425.18kb / brotliCompress: 323.77kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/stats.html.br                                           1852.39kb / brotliCompress: 126.23kb
+
+
+        Info Looking up installed tauri packages to check mismatched versions...
+     Running beforeBuildCommand `corepack pnpm exec vite build`
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 3482 modules transformed.
+Circular chunk: vendor -> react-vendor -> vendor. Please adjust the manual chunk logic for these chunks.
+rendering chunks...
+computing gzip size...
+dist/index.html                                             11.48 kB │ gzip:   4.03 kB
+dist/assets/titane-reactor-awen-CDlleqco.svg                13.92 kB │ gzip:   2.51 kB
+dist/assets/titane-arc-emerald-DnTwtDxb.svg                 18.50 kB │ gzip:   3.32 kB
+dist/.vite/manifest.json                                    29.97 kB │ gzip:   2.98 kB
+dist/assets/style-BYYMWi_h.css                             528.75 kB │ gzip:  84.39 kB
+dist/assets/TwinsPage-4oWR8_zW.js                            0.45 kB │ gzip:   0.32 kB
+dist/assets/index-DoYbQVUd.js                                1.31 kB │ gzip:   0.67 kB
+dist/assets/Watchdog-BUvEAisF.js                             1.47 kB │ gzip:   0.68 kB
+dist/assets/SelfHeal-ILWARvGx.js                             1.50 kB │ gzip:   0.69 kB
+dist/assets/AdaptiveEngine-BJfandEP.js                       1.51 kB │ gzip:   0.68 kB
+dist/assets/Sentinel-M3UiTnMN.js                             1.56 kB │ gzip:   0.72 kB
+dist/assets/ui-branding-CAqIhOuX.js                          1.64 kB │ gzip:   0.96 kB
+dist/assets/en-Daorm0d3.js                                   2.19 kB │ gzip:   1.05 kB
+dist/assets/fr-COzM94Yb.js                                   2.44 kB │ gzip:   1.23 kB
+dist/assets/ui-experience-DkuOa0Ok.js                        2.91 kB │ gzip:   1.37 kB
+dist/assets/DetectionOverlay-B2LTsDNC.js                     3.20 kB │ gzip:   1.40 kB
+dist/assets/cameraChatIntegration-DAp8-7zf.js                3.49 kB │ gzip:   1.37 kB
+dist/assets/index-KVu3okaI.js                                3.51 kB │ gzip:   1.40 kB
+dist/assets/RealTimeCharts-C1E_mRYO.js                       3.56 kB │ gzip:   0.90 kB
+dist/assets/logLevelConfig-B3HvHSI2.js                       4.16 kB │ gzip:   1.39 kB
+dist/assets/app-zESc4pme.js                                  4.55 kB │ gzip:   2.00 kB
+dist/assets/MemoryTreeViewer-BeMhJbUq.js                     4.57 kB │ gzip:   1.64 kB
+dist/assets/MemorySearchPanel-DzUAW0hk.js                    4.69 kB │ gzip:   1.88 kB
+dist/assets/index-B6jcJa7J.js                                5.19 kB │ gzip:   1.75 kB
+dist/assets/web-vitals-D8cA-W4R.js                           5.85 kB │ gzip:   2.38 kB
+dist/assets/Experience-D2wRgC8p.js                           5.99 kB │ gzip:   2.06 kB
+dist/assets/VisionMetricsChart-BLQhna1e.js                   6.30 kB │ gzip:   1.50 kB
+dist/assets/ProductionHealthPanel-LwvmpWE8.js                6.65 kB │ gzip:   2.21 kB
+dist/assets/EvolutionTimeline-5_6vXyDK.js                    6.83 kB │ gzip:   2.87 kB
+dist/assets/TitanePage-CZSrucs_.js                           7.08 kB │ gzip:   1.96 kB
+dist/assets/TransformationRoadmap-jH_I2ytR.js                8.21 kB │ gzip:   2.82 kB
+dist/assets/ModeMatrix-Biq8jmxS.js                           8.67 kB │ gzip:   2.64 kB
+dist/assets/Memory-DVFbc-mB.js                               8.96 kB │ gzip:   3.43 kB
+dist/assets/PersonaEditor-tuTYYB-X.js                        9.24 kB │ gzip:   2.33 kB
+dist/assets/ui-reality-BLPHKBwv.js                           9.26 kB │ gzip:   2.82 kB
+dist/assets/ResearchPage-BB9nl-LS.js                         9.68 kB │ gzip:   3.20 kB
+dist/assets/VocalDevConsoleEngine-C1DMx4W1.js               10.50 kB │ gzip:   3.53 kB
+dist/assets/PerformanceTest-BS1aWOLb.js                     10.94 kB │ gzip:   2.41 kB
+dist/assets/ui-dev-D3JSTTpd.js                              11.30 kB │ gzip:   3.23 kB
+dist/assets/LiveDebuggerEngine-B_bgxcIb.js                  11.38 kB │ gzip:   3.89 kB
+dist/assets/ui-memory-evolution-DEISsJpk.js                 11.64 kB │ gzip:   3.21 kB
+dist/assets/OrchestrationIntelligenceCenter-7McqLP5F.js     13.58 kB │ gzip:   3.35 kB
+dist/assets/d3-tree-CVBljE3_.js                             14.52 kB │ gzip:   4.32 kB
+dist/assets/ui-hyper-BDV0JqSo.js                            15.48 kB │ gzip:   4.99 kB
+dist/assets/ui-quantum-DY4qxJUZ.js                          17.50 kB │ gzip:   3.61 kB
+dist/assets/OrchestrationMetaCenter-C64jD_d6.js             17.87 kB │ gzip:   4.40 kB
+dist/assets/index-CH7K2Dgr.js                               18.12 kB │ gzip:   5.36 kB
+dist/assets/ui-audio-ZMa9-Eje.js                            18.66 kB │ gzip:   5.18 kB
+dist/assets/ui-fusion-CgzRUTKQ.js                           19.39 kB │ gzip:   4.20 kB
+dist/assets/ui-identity-Dk4IfZNp.js                         20.37 kB │ gzip:   5.29 kB
+dist/assets/page-chat-BrQKH97W.js                           21.42 kB │ gzip:   5.55 kB
+dist/assets/DevPage-hY4wibSm.js                             28.68 kB │ gzip:   7.78 kB
+dist/assets/ConfigurationHub-Dk30yCp1.js                    29.13 kB │ gzip:   7.35 kB
+dist/assets/TimePage-kWsB_KS8.js                            29.69 kB │ gzip:   7.59 kB
+dist/assets/index-CHYM1Vpw.js                               30.53 kB │ gzip:   7.35 kB
+dist/assets/motion-DtWckjBu.js                              31.35 kB │ gzip:  10.96 kB
+dist/assets/tauri-vendor-DVum-dwu.js                        31.48 kB │ gzip:   7.10 kB
+dist/assets/index-BYvIRtrP.js                               36.70 kB │ gzip:   7.99 kB
+dist/assets/ui-optimization-CRxN7aI0.js                     38.45 kB │ gzip:   9.94 kB
+dist/assets/GovernanceCenterPage-DVfx_gRs.js                41.07 kB │ gzip:   9.62 kB
+dist/assets/SystemCenterPage-PTYllIpA.js                    42.70 kB │ gzip:   9.56 kB
+dist/assets/telemetryEngine-uUQZ-sHW.js                     56.67 kB │ gzip:  16.54 kB
+dist/assets/main-Da9i91kq.js                                64.30 kB │ gzip:  18.45 kB
+dist/assets/validation-CVRdpplF.js                          66.25 kB │ gzip:  17.85 kB
+dist/assets/i18n-DRuBY6dr.js                                70.73 kB │ gzip:  23.67 kB
+dist/assets/chrono-BasK2-07.js                             184.97 kB │ gzip:  55.85 kB
+dist/assets/ai-transformers-DcDBlO-Q.js                    200.03 kB │ gzip:  56.12 kB
+dist/assets/react-vendor-lXR9ny6e.js                       236.96 kB │ gzip:  76.36 kB
+dist/assets/vendor-Bmz2ET0S.js                             274.27 kB │ gzip:  88.87 kB
+dist/assets/vendor-onnx-DznQ7Abb.js                        544.99 kB │ gzip: 130.30 kB
+dist/assets/core-runtime-DWb1xSaK.js                     1,459.75 kB │ gzip: 414.27 kB
+✓ built in 13.42s
+✅ Workbox: 68 files precached (4314.65 KB)
+
+✨ [vite-plugin-compression]:algorithm=gzip - compressed file successfully: 
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ConfigurationHub-Dk30yCp1.js.gz                  28.44kb / gzip: 7.16kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/.vite/manifest.json.gz                                  29.27kb / gzip: 2.90kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/DevPage-hY4wibSm.js.gz                           28.01kb / gzip: 7.57kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/LiveDebuggerEngine-B_bgxcIb.js.gz                11.11kb / gzip: 3.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationIntelligenceCenter-7McqLP5F.js.gz   13.26kb / gzip: 3.26kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/PerformanceTest-BS1aWOLb.js.gz                   10.68kb / gzip: 2.34kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationMetaCenter-C64jD_d6.js.gz           17.45kb / gzip: 4.28kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/GovernanceCenterPage-DVfx_gRs.js.gz              40.11kb / gzip: 9.36kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/VocalDevConsoleEngine-C1DMx4W1.js.gz             10.25kb / gzip: 3.44kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/TimePage-kWsB_KS8.js.gz                          29.00kb / gzip: 7.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/SystemCenterPage-PTYllIpA.js.gz                  41.70kb / gzip: 9.29kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/d3-tree-CVBljE3_.js.gz                           14.18kb / gzip: 4.21kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-BYvIRtrP.js.gz                             35.84kb / gzip: 7.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-CH7K2Dgr.js.gz                             17.69kb / gzip: 5.23kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-CHYM1Vpw.js.gz                             29.82kb / gzip: 7.14kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/page-chat-BrQKH97W.js.gz                         20.92kb / gzip: 5.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/motion-DtWckjBu.js.gz                            30.62kb / gzip: 10.68kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/tauri-vendor-DVum-dwu.js.gz                      30.74kb / gzip: 6.92kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-audio-ZMa9-Eje.js.gz                          18.22kb / gzip: 5.05kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-dev-D3JSTTpd.js.gz                            11.04kb / gzip: 3.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-fusion-CgzRUTKQ.js.gz                         18.93kb / gzip: 4.09kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-hyper-BDV0JqSo.js.gz                          15.12kb / gzip: 4.86kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-memory-evolution-DEISsJpk.js.gz               11.37kb / gzip: 3.13kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-identity-Dk4IfZNp.js.gz                       19.89kb / gzip: 5.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-quantum-DY4qxJUZ.js.gz                        17.09kb / gzip: 3.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-optimization-CRxN7aI0.js.gz                   37.55kb / gzip: 9.70kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/index.html.gz                                           11.21kb / gzip: 3.93kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/sw.js.gz                                                15.48kb / gzip: 3.60kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/i18n-DRuBY6dr.js.gz                              69.07kb / gzip: 23.10kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/main-Da9i91kq.js.gz                              62.79kb / gzip: 17.98kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/telemetryEngine-uUQZ-sHW.js.gz                   55.34kb / gzip: 16.13kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/validation-CVRdpplF.js.gz                        64.69kb / gzip: 17.40kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/chrono-BasK2-07.js.gz                            180.63kb / gzip: 54.42kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ai-transformers-DcDBlO-Q.js.gz                   195.34kb / gzip: 54.71kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/react-vendor-lXR9ny6e.js.gz                      231.41kb / gzip: 74.45kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-Bmz2ET0S.js.gz                            267.85kb / gzip: 86.56kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/style-BYYMWi_h.css.gz                            516.36kb / gzip: 81.71kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-onnx-DznQ7Abb.js.gz                       532.21kb / gzip: 126.77kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/stats.html.gz                                           1852.39kb / gzip: 183.75kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/core-runtime-DWb1xSaK.js.gz                      1425.54kb / gzip: 403.87kb
+
+
+
+✨ [vite-plugin-compression]:algorithm=brotliCompress - compressed file successfully: 
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/.vite/manifest.json.br                                  29.27kb / brotliCompress: 2.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ConfigurationHub-Dk30yCp1.js.br                  28.44kb / brotliCompress: 6.37kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/DevPage-hY4wibSm.js.br                           28.01kb / brotliCompress: 6.67kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/LiveDebuggerEngine-B_bgxcIb.js.br                11.11kb / brotliCompress: 3.39kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationIntelligenceCenter-7McqLP5F.js.br   13.26kb / brotliCompress: 2.89kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/PerformanceTest-BS1aWOLb.js.br                   10.68kb / brotliCompress: 2.02kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/OrchestrationMetaCenter-C64jD_d6.js.br           17.45kb / brotliCompress: 3.82kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/GovernanceCenterPage-DVfx_gRs.js.br              40.11kb / brotliCompress: 8.32kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/VocalDevConsoleEngine-C1DMx4W1.js.br             10.25kb / brotliCompress: 3.12kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/TimePage-kWsB_KS8.js.br                          29.00kb / brotliCompress: 6.50kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/SystemCenterPage-PTYllIpA.js.br                  41.70kb / brotliCompress: 8.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/d3-tree-CVBljE3_.js.br                           14.18kb / brotliCompress: 3.79kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-CH7K2Dgr.js.br                             17.69kb / brotliCompress: 4.64kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-BYvIRtrP.js.br                             35.84kb / brotliCompress: 6.96kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/motion-DtWckjBu.js.br                            30.62kb / brotliCompress: 9.67kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/index-CHYM1Vpw.js.br                             29.82kb / brotliCompress: 6.32kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/page-chat-BrQKH97W.js.br                         20.92kb / brotliCompress: 4.80kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/tauri-vendor-DVum-dwu.js.br                      30.74kb / brotliCompress: 6.15kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/main-Da9i91kq.js.br                              62.79kb / brotliCompress: 15.84kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-audio-ZMa9-Eje.js.br                          18.22kb / brotliCompress: 4.52kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-dev-D3JSTTpd.js.br                            11.04kb / brotliCompress: 2.74kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/telemetryEngine-uUQZ-sHW.js.br                   55.34kb / brotliCompress: 14.08kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-fusion-CgzRUTKQ.js.br                         18.93kb / brotliCompress: 3.53kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-hyper-BDV0JqSo.js.br                          15.12kb / brotliCompress: 4.31kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-identity-Dk4IfZNp.js.br                       19.89kb / brotliCompress: 4.57kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-memory-evolution-DEISsJpk.js.br               11.37kb / brotliCompress: 2.77kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-quantum-DY4qxJUZ.js.br                        17.09kb / brotliCompress: 3.09kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ui-optimization-CRxN7aI0.js.br                   37.55kb / brotliCompress: 8.62kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/index.html.br                                           11.21kb / brotliCompress: 3.17kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/sw.js.br                                                15.48kb / brotliCompress: 3.04kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/validation-CVRdpplF.js.br                        64.69kb / brotliCompress: 15.47kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/i18n-DRuBY6dr.js.br                              69.07kb / brotliCompress: 20.58kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/chrono-BasK2-07.js.br                            180.63kb / brotliCompress: 46.88kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/ai-transformers-DcDBlO-Q.js.br                   195.34kb / brotliCompress: 46.88kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/react-vendor-lXR9ny6e.js.br                      231.41kb / brotliCompress: 64.60kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-Bmz2ET0S.js.br                            267.85kb / brotliCompress: 75.85kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/style-BYYMWi_h.css.br                            516.36kb / brotliCompress: 63.02kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/vendor-onnx-DznQ7Abb.js.br                       532.21kb / brotliCompress: 99.42kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/assets/core-runtime-DWb1xSaK.js.br                      1425.54kb / brotliCompress: 324.12kb
+dist//home/titane-os/Documents/GitHub/TITANE_INFINITY/stats.html.br                                           1852.39kb / brotliCompress: 126.33kb
+
+
+   Compiling titane-infinity v28.0.0 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)
+    Finished `release` profile [optimized] target(s) in 8m 56s
+       Built application at: /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/titane-infinity
+    Bundling TITANE-Infinity_28.0.0_amd64.deb (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/deb/TITANE-Infinity_28.0.0_amd64.deb)
+    Bundling TITANE-Infinity-28.0.0-1.x86_64.rpm (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/rpm/TITANE-Infinity-28.0.0-1.x86_64.rpm)
+    Bundling TITANE-Infinity_28.0.0_amd64.AppImage (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.0.0_amd64.AppImage)
+    Finished 3 bundles at:
+        /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/deb/TITANE-Infinity_28.0.0_amd64.deb
+        /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/rpm/TITANE-Infinity-28.0.0-1.x86_64.rpm
+        /home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.0.0_amd64.AppImage
+
+
+🔄 Post-Build: Mise à jour automatique de l'icône desktop...
+
+[0;34m╔═══════════════════════════════════════════════════════════════╗[0m
+[0;34m║        TITANE∞ - Desktop Icon Auto-Update                    ║[0m
+[0;34m╚═══════════════════════════════════════════════════════════════╝[0m
+
+[1;33m[1/4][0m Mise à jour du fichier .desktop avec chemins actuels...
+      ✓ AppImage la plus récente trouvée
+[1;33m[2/4][0m Copie du fichier .desktop dans les applications...
+      ✓ Fichiers copiés vers:
+        - /home/titane-os/.local/share/applications/titane-infinity.desktop
+        - /home/titane-os/.local/share/applications/TITANE-Infinity.desktop
+[1;33m[3/4][0m Mise à jour du cache des icônes...
+      ✓ Cache des applications mis à jour
+      ✓ Cache des icônes GTK mis à jour
+[1;33m[4/4][0m Vérification de l'installation...
+[0;32m✓ Installation réussie![0m
+
+Détails de l'installation:
+  • Fichier .desktop: [0;32m/home/titane-os/.local/share/applications/titane-infinity.desktop[0m
+  • Binaire: [0;32m/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.0.0_amd64.AppImage[0m
+  • Icône: [0;32m/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png[0m
+
+[0;34mℹ[0m L'application TITANE∞ est maintenant disponible dans votre menu d'applications
+[0;34mℹ[0m Vous pouvez la lancer en cherchant 'TITANE' dans le lanceur d'applications
+
+[1;33mNote:[0m L'icône se mettra automatiquement à jour à chaque build.
+      Lancez ce script après chaque compilation pour synchroniser.
+
+✅ Post-Build terminé

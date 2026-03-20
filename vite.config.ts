@@ -382,15 +382,15 @@ export default defineConfig(({ command }) => ({
           // 4️⃣ VENDOR CHUNKS (non-circular, order matters)
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('node_modules')) {
-            // 🔧 P1_BUILD_CHUNKS_FIX: React cluster BEFORE generic vendor
-            // Check React FIRST to prevent falling into 'vendor' generic bucket
+            // Keep React runtime in the generic vendor bucket to avoid
+            // a vendor <-> react-vendor cycle in production Tauri bundles.
             if (
               id.includes('/react/') ||
               id.includes('/react-dom/') ||
               id.includes('/react-router') ||
               id.includes('/scheduler/')
             ) {
-              return 'react-vendor';
+              return 'vendor';
             }
             if (id.includes('@tauri-apps')) {
               return 'tauri-vendor';
@@ -411,7 +411,7 @@ export default defineConfig(({ command }) => ({
               return 'validation';
             }
             if (id.includes('zustand')) {
-              return 'react-vendor';
+              return 'vendor';
             }
             if (id.includes('recharts')) {
               return 'charts';
