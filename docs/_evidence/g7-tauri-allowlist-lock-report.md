@@ -2,7 +2,7 @@
 
 ## Summary
 - **Status**: PASS
-- **Timestamp**: 2026-03-14T16:36:49Z
+- **Timestamp**: 2026-03-20T14:54:07Z
 
 ## Checks
 
@@ -459,6 +459,12 @@
         "command": "stop_speaking"
       },
       {
+        "command": "pause_speaking"
+      },
+      {
+        "command": "resume_speaking"
+      },
+      {
         "command": "restore_snapshot"
       },
       {
@@ -639,6 +645,12 @@
         "command": "is_speaking"
       },
       {
+        "command": "pause_speaking"
+      },
+      {
+        "command": "resume_speaking"
+      },
+      {
         "command": "get_audio_output_devices"
       },
       {
@@ -682,6 +694,9 @@
       },
       {
         "command": "vad_test"
+      },
+      {
+        "command": "tts_generate_test_buffer"
       },
       {
         "_comment": "═══════════════════════════════════════════════════════════════"
@@ -2371,6 +2386,762 @@
       },
       {
         "command": "crashguard_get_stats"
+      },
+      {
+        "command": "twin_get_state"
+      },
+      {
+        "command": "twin_get_fusion_index"
+      },
+      {
+        "command": "twin_submit_observation"
+      },
+      {
+        "command": "twin_apply_evolution"
+      },
+      {
+        "command": "twin_validate_sync"
+      },
+      {
+        "command": "twin_get_evolution_profile"
+      },
+      {
+        "command": "twin_get_identity"
+      },
+      {
+        "command": "twin_recalculate_fusion"
+      },
+      {
+        "command": "load_conversation_history"
+      },
+      {
+        "command": "list_restorable_conversations"
+      },
+      {
+        "command": "conversation_process_message"
+      },
+      {
+        "command": "generate_response"
+      },
+      {
+        "command": "delete_state"
+      },
+      {
+        "command": "ping"
+      },
+      {
+        "command": "set_state"
+      },
+      {
+        "command": "system_get_status"
+      },
+      {
+        "command": "get_state"
+      },
+      {
+        "command": "memory_debug_scan"
+      },
+      {
+        "command": "singularity_get_state"
+      },
+      {
+        "command": "get_evolution_state"
+      },
+      {
+        "command": "meta_mode_process"
+      },
+      {
+        "command": "meta_mode_get_current_mode"
+      },
+      {
+        "command": "meta_mode_list_modes"
+      },
+      {
+        "command": "meta_mode_get_history"
+      },
+      {
+        "command": "meta_mode_get_stats"
+      },
+      {
+        "command": "meta_mode_get_kevin_state"
+      },
+      {
+        "command": "ai_check_ollama_status"
+      },
+      {
+        "command": "append_security_log"
+      },
+      {
+        "command": "audio_capture_export_wav"
+      },
+      {
+        "command": "audio_capture_get_chunk"
+      },
+      {
+        "command": "audio_capture_start"
+      },
+      {
+        "command": "audio_capture_status"
+      },
+      {
+        "command": "audio_capture_stop"
+      },
+      {
+        "command": "audio_list_devices"
+      },
+      {
+        "command": "auth_delete_api_key"
+      },
+      {
+        "command": "auth_generate_dev_token"
+      },
+      {
+        "command": "auth_get_api_keys"
+      },
+      {
+        "command": "auth_get_status"
+      },
+      {
+        "command": "auth_grant_role"
+      },
+      {
+        "command": "auth_revoke_dev_token"
+      },
+      {
+        "command": "auth_revoke_role"
+      },
+      {
+        "command": "auth_save_api_keys"
+      },
+      {
+        "command": "auth_validate_dev_token"
+      },
+      {
+        "command": "autofix_add_mutex"
+      },
+      {
+        "command": "autofix_reset_state"
+      },
+      {
+        "command": "autofix_restart_pipeline"
+      },
+      {
+        "command": "autofix_restart_tauri_command"
+      },
+      {
+        "command": "autofix_resync_lipsync"
+      },
+      {
+        "command": "autofix_rust_warning"
+      },
+      {
+        "command": "autofix_typescript_error"
+      },
+      {
+        "command": "autoheal_clear_narrative"
+      },
+      {
+        "command": "autoheal_clear_pipeline"
+      },
+      {
+        "command": "autoheal_clear_tts_queue"
+      },
+      {
+        "command": "autoheal_detect_broken"
+      },
+      {
+        "command": "autoheal_init_cognitive"
+      },
+      {
+        "command": "autoheal_init_narrative"
+      },
+      {
+        "command": "autoheal_init_tts"
+      },
+      {
+        "command": "autoheal_rebuild_memory_index"
+      },
+      {
+        "command": "autoheal_reload_avatar"
+      },
+      {
+        "command": "autoheal_reset_adaptive"
+      },
+      {
+        "command": "autoheal_reset_cognitive"
+      },
+      {
+        "command": "autoheal_resync_lipsync"
+      },
+      {
+        "command": "autoheal_start_avatar"
+      },
+      {
+        "command": "autoheal_start_pipeline"
+      },
+      {
+        "command": "autoheal_stop_avatar"
+      },
+      {
+        "command": "autoheal_stop_pipeline"
+      },
+      {
+        "command": "autoheal_validate_memory"
+      },
+      {
+        "command": "avatar_prepare_animation"
+      },
+      {
+        "command": "chat_generate_claude"
+      },
+      {
+        "command": "chat_generate_copilot"
+      },
+      {
+        "command": "chat_generate_gemini"
+      },
+      {
+        "command": "chat_generate_openai"
+      },
+      {
+        "command": "chat_set_anthropic_key"
+      },
+      {
+        "command": "chat_set_copilot_key"
+      },
+      {
+        "command": "chat_set_gemini_key"
+      },
+      {
+        "command": "chat_set_openai_key"
+      },
+      {
+        "command": "check_online_capabilities"
+      },
+      {
+        "command": "clear_permission_audit"
+      },
+      {
+        "command": "clear_security_log"
+      },
+      {
+        "command": "coherence_check_system"
+      },
+      {
+        "command": "coherence_get_score"
+      },
+      {
+        "command": "coherence_get_state"
+      },
+      {
+        "command": "coherence_initialize"
+      },
+      {
+        "command": "coherence_validate_connections"
+      },
+      {
+        "command": "cp_set_design_config"
+      },
+      {
+        "command": "create_ia_policy"
+      },
+      {
+        "command": "db_get_snapshot"
+      },
+      {
+        "command": "db_get_stream"
+      },
+      {
+        "command": "db_kv_get"
+      },
+      {
+        "command": "db_kv_set"
+      },
+      {
+        "command": "db_put_event"
+      },
+      {
+        "command": "db_put_snapshot"
+      },
+      {
+        "command": "db_sync_now"
+      },
+      {
+        "command": "db_sync_status"
+      },
+      {
+        "command": "delete_config_preset"
+      },
+      {
+        "command": "delete_ia_policy"
+      },
+      {
+        "command": "delete_secret"
+      },
+      {
+        "command": "devtools_debug_clear"
+      },
+      {
+        "command": "devtools_disable"
+      },
+      {
+        "command": "devtools_enable"
+      },
+      {
+        "command": "exp_add_knowledge"
+      },
+      {
+        "command": "exp_get_categories"
+      },
+      {
+        "command": "exp_get_global_state"
+      },
+      {
+        "command": "exp_get_project_stats"
+      },
+      {
+        "command": "exp_get_projects"
+      },
+      {
+        "command": "exp_get_talents"
+      },
+      {
+        "command": "exp_get_timeline"
+      },
+      {
+        "command": "exp_get_timeline_stats"
+      },
+      {
+        "command": "export_config"
+      },
+      {
+        "command": "export_security_log"
+      },
+      {
+        "command": "fusion_activate_modules"
+      },
+      {
+        "command": "fusion_adjust_styles"
+      },
+      {
+        "command": "fusion_animate_avatar"
+      },
+      {
+        "command": "fusion_auto_optimize"
+      },
+      {
+        "command": "fusion_generate_ia_response"
+      },
+      {
+        "command": "fusion_prepare_tts"
+      },
+      {
+        "command": "fusion_process_lipsync"
+      },
+      {
+        "command": "fusion_update_state"
+      },
+      {
+        "command": "generate_mode_prompt"
+      },
+      {
+        "command": "get_all_configs"
+      },
+      {
+        "command": "get_anthropic_key_status"
+      },
+      {
+        "command": "get_audio_device_config"
+      },
+      {
+        "command": "get_chat_engine_config"
+      },
+      {
+        "command": "get_chat_request_defaults"
+      },
+      {
+        "command": "get_copilot_key_status"
+      },
+      {
+        "command": "get_gemini_key_status"
+      },
+      {
+        "command": "get_ia_policies"
+      },
+      {
+        "command": "get_module_health"
+      },
+      {
+        "command": "get_openai_key_status"
+      },
+      {
+        "command": "get_permission_matrix"
+      },
+      {
+        "command": "get_recording_status"
+      },
+      {
+        "command": "get_secrets_status"
+      },
+      {
+        "command": "get_security_log"
+      },
+      {
+        "command": "get_system_state"
+      },
+      {
+        "command": "health_check"
+      },
+      {
+        "command": "health_check_system"
+      },
+      {
+        "command": "health_get_metrics"
+      },
+      {
+        "command": "health_get_report"
+      },
+      {
+        "command": "health_get_state"
+      },
+      {
+        "command": "health_initialize"
+      },
+      {
+        "command": "health_set_auto_heal"
+      },
+      {
+        "command": "import_config"
+      },
+      {
+        "command": "list_config_presets"
+      },
+      {
+        "command": "load_config_preset"
+      },
+      {
+        "command": "load_ui_theme"
+      },
+      {
+        "command": "memory_clear"
+      },
+      {
+        "command": "memory_delete"
+      },
+      {
+        "command": "memory_demote"
+      },
+      {
+        "command": "memory_initialize"
+      },
+      {
+        "command": "memory_promote"
+      },
+      {
+        "command": "memory_prune"
+      },
+      {
+        "command": "memory_recall"
+      },
+      {
+        "command": "memory_tick"
+      },
+      {
+        "command": "ollama_generate"
+      },
+      {
+        "command": "persistent_memory_get_bundles"
+      },
+      {
+        "command": "persistent_memory_get_context"
+      },
+      {
+        "command": "persistent_memory_get_stats"
+      },
+      {
+        "command": "persistent_memory_read"
+      },
+      {
+        "command": "reset_ui_theme"
+      },
+      {
+        "command": "save_audio_device_config"
+      },
+      {
+        "command": "save_config_preset"
+      },
+      {
+        "command": "save_ia_policies"
+      },
+      {
+        "command": "save_ui_theme"
+      },
+      {
+        "command": "sc_add_log"
+      },
+      {
+        "command": "sc_clear_logs"
+      },
+      {
+        "command": "sc_get_env"
+      },
+      {
+        "command": "sc_hypervision_clear_anomalies"
+      },
+      {
+        "command": "sc_hypervision_resolve_anomaly"
+      },
+      {
+        "command": "sc_hypervision_stop"
+      },
+      {
+        "command": "sc_introspection_auto_fix"
+      },
+      {
+        "command": "sc_introspection_full_scan"
+      },
+      {
+        "command": "sc_introspection_quick_scan"
+      },
+      {
+        "command": "self_healing_disable"
+      },
+      {
+        "command": "self_healing_enable"
+      },
+      {
+        "command": "self_healing_get_status"
+      },
+      {
+        "command": "self_healing_trigger"
+      },
+      {
+        "command": "selfheal_clear_cache"
+      },
+      {
+        "command": "selfheal_isolate_module"
+      },
+      {
+        "command": "selfheal_mini_audit"
+      },
+      {
+        "command": "selfheal_rebuild_memory"
+      },
+      {
+        "command": "selfheal_regenerate_config"
+      },
+      {
+        "command": "selfheal_repair_json"
+      },
+      {
+        "command": "selfheal_reset_state"
+      },
+      {
+        "command": "selfheal_restart_module"
+      },
+      {
+        "command": "selfheal_restart_process"
+      },
+      {
+        "command": "selfheal_restart_worker"
+      },
+      {
+        "command": "selfheal_save_profile"
+      },
+      {
+        "command": "selfheal_switch_provider"
+      },
+      {
+        "command": "selfheal_sync_state"
+      },
+      {
+        "command": "selfheal_sync_with_singularity"
+      },
+      {
+        "command": "send_audio_chunk"
+      },
+      {
+        "command": "set_chat_engine_config"
+      },
+      {
+        "command": "set_chat_profile"
+      },
+      {
+        "command": "set_chat_request_defaults"
+      },
+      {
+        "command": "singularity_self_check"
+      },
+      {
+        "command": "singularity_update_adaptive"
+      },
+      {
+        "command": "singularity_update_cognitive"
+      },
+      {
+        "command": "singularity_update_meta"
+      },
+      {
+        "command": "singularity_update_physical"
+      },
+      {
+        "command": "singularity_update_symbolic"
+      },
+      {
+        "command": "start_whisper_streaming"
+      },
+      {
+        "command": "stop_whisper_streaming"
+      },
+      {
+        "command": "test_copilot_connection"
+      },
+      {
+        "command": "titan_check_integrity"
+      },
+      {
+        "command": "titan_compact_journal"
+      },
+      {
+        "command": "titan_dump_raw_state"
+      },
+      {
+        "command": "titan_export_data"
+      },
+      {
+        "command": "titan_get_memory_health"
+      },
+      {
+        "command": "titan_get_schema_version"
+      },
+      {
+        "command": "titan_import_data"
+      },
+      {
+        "command": "titan_memory_doctor_compact"
+      },
+      {
+        "command": "titan_memory_doctor_diagnose"
+      },
+      {
+        "command": "titan_memory_doctor_export"
+      },
+      {
+        "command": "titan_memory_doctor_heal"
+      },
+      {
+        "command": "titan_memory_doctor_summary"
+      },
+      {
+        "command": "titan_migrate_state"
+      },
+      {
+        "command": "titan_persistence_shutdown"
+      },
+      {
+        "command": "titan_reset_module"
+      },
+      {
+        "command": "titan_run_full_integrity_check"
+      },
+      {
+        "command": "titan_run_self_healing"
+      },
+      {
+        "command": "titan_validate_archive"
+      },
+      {
+        "command": "toggle_ia_policy"
+      },
+      {
+        "command": "update_chat_engine_config"
+      },
+      {
+        "command": "update_runtime_config"
+      },
+      {
+        "command": "update_ui_token"
+      },
+      {
+        "command": "web_research"
+      },
+      {
+        "command": "run_evolution"
+      },
+      {
+        "command": "quick_health_check"
+      },
+      {
+        "command": "list_ai_providers"
+      },
+      {
+        "command": "set_api_key"
+      },
+      {
+        "command": "test_api_key"
+      },
+      {
+        "command": "ping_gemini"
+      },
+      {
+        "command": "ping_ollama"
+      },
+      {
+        "command": "create_agent"
+      },
+      {
+        "command": "get_agent"
+      },
+      {
+        "command": "list_agents"
+      },
+      {
+        "command": "selfheal_get_vitals"
+      },
+      {
+        "command": "selfheal_load_profile"
+      },
+      {
+        "command": "store_file"
+      },
+      {
+        "command": "chat_get_memory_stats"
+      },
+      {
+        "command": "read_production_week1_csv"
+      },
+      {
+        "command": "send_message"
+      },
+      {
+        "command": "fs_exists"
+      },
+      {
+        "command": "read_json_file"
+      },
+      {
+        "command": "log_to_file"
+      },
+      {
+        "command": "save_settings"
+      },
+      {
+        "command": "get_memories"
+      },
+      {
+        "command": "store_memory"
+      },
+      {
+        "command": "delete_memory"
+      },
+      {
+        "command": "report_chat_error"
+      },
+      {
+        "command": "sync_evolution_state"
+      },
+      {
+        "command": "get_performance_metrics"
       }
     ]
   },
