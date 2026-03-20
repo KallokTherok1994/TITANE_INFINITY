@@ -4,16 +4,16 @@
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
 **Version:** v28.0.0 (repository authority)  
-**Status:** Production Ready ✅ (governed docs authority aligned)  
+**Status:** Production Ready ✅ (governed docs authority aligned, rebuild 2026-03-20)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
 **Canal de release canonique:** v28.0.0
 
-**Qualite (v28.0.0) :** Autorite documentaire et gouvernance alignees + preuves B2 en pack dedie.
+**Qualite (v28.0.0) :** Autorite documentaire et gouvernance alignees + preuves B2 en pack dedie + PROD rebuild 2026-03-20.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
-**Statut d'autorite documentaire (LOCAL, 2026-03-14) :**
+**Statut d'autorite documentaire (LOCAL, 2026-03-20) :**
 
 - Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.0.0` (`PROVEN_BY_REPO`)
 - Release canonique verifiee: `v28.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
