@@ -17,6 +17,8 @@ import type {
   ConversationContext,
   CompressionResult,
 } from '@/types/memoryEngine';
+import { memory as memoryCommands } from '@/services/tauri/commands';
+import type { MemoryStats as BackendMemoryStats } from '@/services/tauri/types';
 
 // ============================================================================
 // STATE INTERFACE
@@ -39,8 +41,12 @@ interface MemoryEngineState {
   isLoading: boolean;
   error: string | null;
 
-  // Statistics
+  // Statistics (local)
   stats: MemoryStats;
+
+  // Backend-synced stats (LOCK4: truth from backend)
+  backendStats: BackendMemoryStats | null;
+  backendStatsLastSync: number | null;
 
   // Compression
   compressionHistory: CompressionResult[];
@@ -79,6 +85,9 @@ interface MemoryEngineActions {
   // Maintenance
   cleanup: () => Promise<void>;
   updateStats: () => void;
+
+  // LOCK4: Backend stats sync
+  syncFromBackend: () => Promise<void>;
 
   // Error handling
   setError: (error: string | null) => void;
@@ -120,6 +129,8 @@ const initialState: MemoryEngineState = {
   isLoading: false,
   error: null,
   stats: initialStats,
+  backendStats: null,
+  backendStatsLastSync: null,
   compressionHistory: [],
   isCompressing: false,
   searchResults: [],
@@ -421,6 +432,19 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
         },
 
         // ========== Error Handling ==========
+        // LOCK4: Sync real memory counts from backend IPC
+        syncFromBackend: async () => {
+          try {
+            const stats = await memoryCommands.getStats();
+            set(state => {
+              state.backendStats = stats;
+              state.backendStatsLastSync = Date.now();
+            });
+          } catch {
+            // Non-blocking: degraded gracefully, backendStats remains stale
+          }
+        },
+
         setError: error => {
           set(state => {
             state.error = error;
@@ -445,6 +469,7 @@ export const useMemoryEngineStore = create<MemoryEngineStore>()(
 export const selectMemories = (state: MemoryEngineStore) => state.memories;
 export const selectContext = (state: MemoryEngineStore) => state.context;
 export const selectStats = (state: MemoryEngineStore) => state.stats;
+export const selectBackendStats = (state: MemoryEngineStore) => state.backendStats;
 export const selectIsInitialized = (state: MemoryEngineStore) => state.isInitialized;
 export const selectIsLoading = (state: MemoryEngineStore) => state.isLoading;
 export const selectError = (state: MemoryEngineStore) => state.error;

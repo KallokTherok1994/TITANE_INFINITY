@@ -17,12 +17,17 @@ import { useEffect, useState } from 'react';
 import { ModuleCard } from '../components/ModuleCard';
 import { useMemoryCore } from '../hooks';
 import { useLTMContext } from '@/hooks/useLTMContext';
+import useMemoryEngineStore, { selectBackendStats } from '@/stores/useMemoryEngineStore';
 import type { MemoryEntry } from '../core/ARCHITECTURE_TYPES_v∞';
 import './ModulePages.css';
 
 export const Memory = () => {
   const { entries, loading, loadEntries, saveEntry, clearMemory } = useMemoryCore();
   const [newEntry, setNewEntry] = useState('');
+
+  // LOCK4: Backend memory stats (truth)
+  const backendStats = useMemoryEngineStore(selectBackendStats);
+  const syncFromBackend = useMemoryEngineStore(s => s.syncFromBackend);
 
   // LOCK2: titane_active_conversation_id is now canonical; legacy key is migrated on boot.
   const conversationId =
@@ -33,7 +38,9 @@ export const Memory = () => {
 
   useEffect(() => {
     loadEntries();
-  }, [loadEntries]);
+    // LOCK4: sync real counts from backend on mount
+    void syncFromBackend();
+  }, [loadEntries, syncFromBackend]);
 
   const handleSave = async () => {
     if (newEntry.trim()) {
@@ -91,6 +98,20 @@ export const Memory = () => {
           value={ltmCount}
           subtitle="Messages en mémoire longue durée"
           variant={ltmCount > 0 ? 'success' : 'primary'}
+        />
+
+        {/* LOCK4: Backend-truth memory stats */}
+        <ModuleCard
+          title="Entrées Backend (réel)"
+          icon="🧠"
+          value={backendStats?.total_entries ?? '—'}
+          subtitle={
+            backendStats
+              ? `${backendStats.conversations_stored} conv · ${backendStats.facts_stored} facts`
+              : 'Sync en cours…'
+          }
+          variant={backendStats ? 'success' : 'primary'}
+          data-testid="memory-backend-stats-card"
         />
       </div>
 
