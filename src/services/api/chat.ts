@@ -569,11 +569,20 @@ class ChatService {
           provider: backendResponse.metadata?.provider,
         });
 
+        // LOCK1-REPAIR: provider truth source = backendResponse.meta.provider_used
+        // backendResponse.metadata contains cognitive fields (intention/emotion/etc)
+        // backendResponse.meta contains the real ProviderDecisionMeta from the backend
+        const metaObj = backendResponse.meta as Record<string, unknown> | undefined;
+        const actualProvider: string =
+          (typeof metaObj?.provider_used === 'string' && metaObj.provider_used) ||
+          (typeof backendResponse.metadata?.provider === 'string' && backendResponse.metadata.provider) ||
+          'tauri-backend';
+
         return {
           content: backendResponse.content,
           finishReason: 'stop',
           model: config?.model || 'omega-pipeline',
-          provider: backendResponse.metadata?.provider || 'tauri-backend',
+          provider: actualProvider,
           latencyMs,
           frenchMasteryApplied: backendResponse.frenchMasteryApplied ?? true,
           metadata: {
@@ -583,6 +592,9 @@ class ChatService {
             timestamp: Date.now(),
             success: true,
             ...(backendResponse.metadata || {}),
+            // LOCK1-REPAIR: explicit canonical fields so downstream consumers have truth
+            provider_used: actualProvider,
+            provider_meta: backendResponse.meta,
           },
           omegaMetadata: backendResponse.metadata,
         };
