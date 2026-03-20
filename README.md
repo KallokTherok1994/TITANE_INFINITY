@@ -3,49 +3,49 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v28.0.0 (repository authority)  
-**Status:** Production Ready ✅ (release v28.0.0 SEALED, 2026-03-20)  
+**Version:** v28.5.0 (repository authority)  
+**Status:** Production Ready ✅ (release preparation v28.5.0)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Canal de release canonique:** v28.0.0
+**Canal de release canonique:** v28.5.0
 
-**Qualite (v28.0.0) :** Autorite documentaire et gouvernance alignees + preuves B2 en pack dedie + PROD rebuild 2026-03-20.
+**Qualite (v28.5.0) :** Autorite documentaire et gouvernance alignees, preparation de release et publication des artefacts.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 **Statut d'autorite documentaire (LOCAL, 2026-03-20) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.0.0` (`PROVEN_BY_REPO`)
-- Release canonique verifiee: `v28.0.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.5.0` (`PROVEN_BY_REPO`)
+- Release canonique verifiee: `v28.5.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Politique de coherence: version canonique et release courante `28.0.0`; references v27 conservees uniquement en historique
+- Politique de coherence: version canonique et release courante `28.5.0`; references v27/v28.0.0 conservees en historique
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.0.0 (SEALED)
+### ✅ Release canonique courante: v28.5.0
 
 Artefacts verifies (Linux):
 
-- `Titan-Stable_28.0.0_amd64.AppImage`
-- `Titan-Stable_28.0.0_amd64.deb`
-- `TITANE-Infinity_28.0.0_amd64.AppImage`
-- `TITANE-Infinity_28.0.0_amd64.deb`
+- `Titan-Stable_28.5.0_amd64.AppImage`
+- `Titan-Stable_28.5.0_amd64.deb`
+- `TITANE-Infinity_28.5.0_amd64.AppImage`
+- `TITANE-Infinity_28.5.0_amd64.deb`
 
 Verification recommandee:
 
 ```bash
-cat docs/90_release/PRODUCTION_RELEASE_v28.0.0.md
+cat docs/90_release/PRODUCTION_RELEASE_v28.5.0.md
 ```
 
 Release GitHub (notes + assets):
 
-- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.0.0
+- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.5.0
 
 Scellement final de session:
 
-- `RELEASE_v28.0.0_SEALED.txt`
+- `RELEASE_v28.5.0_SEALED.txt`
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -69,7 +69,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 🔐 [Checksums v27.0.5][checksums-historiques-v2705]
 
-🔐 [Checksums courants v28.0.0](./docs/90_release/PRODUCTION_RELEASE_v28.0.0.md)
+🔐 [Checksums courants v28.5.0](./docs/90_release/PRODUCTION_RELEASE_v28.5.0.md)
 
 [checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
@@ -92,12 +92,11 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Historique de production (v28.x + v27.x)
 
-- **v28.0.0** (PATCH-010 SEALED)
-  - Status: ✅ SEALED (2026-03-20)
-  - Tag: `v28.0.0` -> commit `2d4ef327a`
-  - HEAD session completion: `ef4225028`
-  - Gates: verify-prod-deployment 8/8 PASS, verify_instructions 20/20 PASS, detect_recurrence PASS
-  - Proof: `RELEASE_v28.0.0_SEALED.txt`
+- **v28.5.0** (Current Release Target)
+  - Status: 🚀 RELEASE IN PROGRESS
+  - Tag target: `v28.5.0`
+  - Gates: verify-prod-deployment, verify_instructions, detect_recurrence
+  - Proof target: `RELEASE_v28.5.0_SEALED.txt`
 
 - **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
@@ -252,8 +251,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v28.0.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v28.0.0 (`docs/90_release/PRODUCTION_RELEASE_v28.0.0.md`)
+**Repository Authority**: v28.5.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v28.5.0 (`docs/90_release/PRODUCTION_RELEASE_v28.5.0.md`)
 
 ---
 
@@ -288,12 +287,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack p
 
 ---
 
-## 📐 Architecture v28.0.0
+## 📐 Architecture v28.5.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v28.0.0
+TITANE∞ v28.5.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
@@ -673,7 +672,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap Legacy v24-v25 (Archive)
 
-> **🎯 Phase actuelle : v28.0.0 — Autorite documentaire canonique scellee (cf. [CHANGELOG](CHANGELOG.md))**  
+> **🎯 Phase actuelle : v28.5.0 — Release target gouverne (cf. [CHANGELOG](CHANGELOG.md))**
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -815,14 +814,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify repository authority version (`28.0.0`)
+2. ✅ Verify repository authority version (`28.5.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-- Current Phase: **v28.0.0 — Autorite documentaire canonique (docs + versions alignees)**
+- Current Phase: **v28.5.0 — Autorite documentaire canonique (docs + versions alignees)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -900,4 +899,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v28.0.0** — _Votre systeme d'exploitation cognitif_
+**TITANE∞ v28.5.0** — _Votre systeme d'exploitation cognitif_

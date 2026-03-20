@@ -2,6 +2,34 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.5.0] - 2026-03-20 (Release Preparation)
+
+### Version Authority
+
+- Bumped canonical repository version from `28.0.0` to `28.5.0`.
+- Updated version-bearing runtime files:
+  - `package.json`
+  - `src-tauri/Cargo.toml`
+  - `src-tauri/tauri.conf.json`
+
+### Documentation Alignment
+
+- Updated canonical surfaces to reflect the new release target `v28.5.0`:
+  - `README.md`
+  - `docs/README.md`
+- Added canonical release note document for `v28.5.0`.
+
+### Release Target
+
+- Target tag: `v28.5.0`
+- Target artifacts:
+  - `TITANE-Infinity_28.5.0_amd64.AppImage`
+  - `TITANE-Infinity_28.5.0_amd64.deb`
+  - `Titan-Stable_28.5.0_amd64.AppImage`
+  - `Titan-Stable_28.5.0_amd64.deb`
+
+---
+
 ## [28.0.0] - 2026-03-20 (Final Seal Completion)
 
 ### Release Finalization
