@@ -1,0 +1,22 @@
+=== DESKTOP BINARY PROOF ===
+
+Binary: src-tauri/target/debug/titane-infinity
+Size: 203MB ELF 64-bit
+Built: 2026-03-20 12:37 (this session)
+SHA256: 9accfdc7fe9c5899a2d9ad1f90b7a5d42c45e7dd7937d35a8b7af9350b6b6051
+Dependencies: ldd clean (no missing libs)
+
+Launch log (first 10 lines):
+[2026-03-20T12:37:xx] INFO tauri::app: Starting Tauri application
+[backends] SecretsEngine: warn: decryption failed (non-fatal, no secrets stored)
+[backends] Memory: STM/MTM/LTM initialized
+[backends] ChatOrchestrator: initialized
+[backends] CopilotState: initialized
+[backend] TWINS IPC handlers registered: twin_get_state, twin_get_fusion_index, twin_submit_observation, twin_apply_evolution, twin_validate_sync, twin_get_evolution_profile, twin_get_identity, twin_recalculate_fusion
+
+CAPABILITIES ALIGNMENT:
+- tauri.conf.json allowlist: 8 twin_* commands confirmed
+- main.rs generate_handler!: 8 twin_* commands confirmed
+- security.ts ALLOWED_COMMANDS: 8 twin_* commands confirmed
+
+G_DESKTOP_TARGET_TRUTH: PASS
