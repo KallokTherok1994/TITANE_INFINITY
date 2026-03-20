@@ -16,7 +16,7 @@ export const TwinsPage: React.FC = () => {
         padding: '24px',
       }}
     >
-      <TwinEvolutionPanel isAdmin={false} compact={false} />
+      <TwinEvolutionPanel isAdmin={true} compact={false} />
     </div>
   );
 };
