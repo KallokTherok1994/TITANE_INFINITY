@@ -115,6 +115,16 @@ echo ""
 echo "--- G_REPORTS_DIR ---"
 [[ -d "evals/reports" ]] && ok "evals/reports/ present" || ko "evals/reports/ MISSING"
 
+# ── G_CHALLENGER_TOOLING ───────────────────────────────────────────
+echo ""
+echo "--- G_CHALLENGER_TOOLING ---"
+[[ -f "scripts/evals/run_challenger_eval.sh" ]] && ok "scripts/evals/run_challenger_eval.sh present" || ko "scripts/evals/run_challenger_eval.sh MISSING"
+[[ -x "scripts/evals/run_challenger_eval.sh" ]] && ok "run_challenger_eval.sh executable" || ko "run_challenger_eval.sh not executable"
+[[ -f "scripts/evals/promote_or_block.sh" ]] && ok "scripts/evals/promote_or_block.sh present" || ko "scripts/evals/promote_or_block.sh MISSING"
+[[ -x "scripts/evals/promote_or_block.sh" ]] && ok "promote_or_block.sh executable" || ko "promote_or_block.sh not executable"
+[[ -f "evals/scorecards/v1/CHALLENGER_TEMPLATE.json" ]] && ok "evals/scorecards/v1/CHALLENGER_TEMPLATE.json present" || ko "CHALLENGER_TEMPLATE.json MISSING"
+[[ -d "evals/scorecards/challengers" ]] && ok "evals/scorecards/challengers/ present" || ko "evals/scorecards/challengers/ MISSING"
+
 # ── SUMMARY ───────────────────────────────────────────────────────
 echo ""
 echo "=============================="
