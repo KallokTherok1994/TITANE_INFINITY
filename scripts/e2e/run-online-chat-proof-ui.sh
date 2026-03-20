@@ -23,10 +23,17 @@ else
 fi
 export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
 
+# E2E stability profile: prefer a lightweight local model and cap backend turn timeout
+# to avoid long-running UI hangs that can invalidate the WRY WebDriver session.
+export OLLAMA_DEFAULT_MODEL="${TITANE_E2E_OLLAMA_MODEL:-gemma2:2b}"
+export TITANE_CONVERSATION_TIMEOUT_SECS="${TITANE_CONVERSATION_TIMEOUT_SECS:-30}"
+
 echo "[E2E_CHAT_PROOF] OUT_DIR=$OUT_DIR"
 echo "[E2E_CHAT_PROOF] EXPECT_SOURCE=$TITANE_E2E_EXPECT_SOURCE"
 echo "[E2E_CHAT_PROOF] ENFORCE_SOURCE=$TITANE_E2E_ENFORCE_SOURCE"
 echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
+echo "[E2E_CHAT_PROOF] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
+echo "[E2E_CHAT_PROOF] TITANE_CONVERSATION_TIMEOUT_SECS=$TITANE_CONVERSATION_TIMEOUT_SECS"
 
 pkill -f 'tauri-driver|WebKitWebDriver' >/dev/null 2>&1 || true
 sleep 1

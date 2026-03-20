@@ -117,39 +117,86 @@ test.describe('Provider Flow v21.0', () => {
     await page.goto('/chat');
     await page.waitForLoadState('networkidle');
 
-    // Sélectionner Local
-    const providerSelect = page.locator('[data-testid="provider-select"]');
-    await providerSelect.click();
-    await page.locator('[data-value="local"]').click();
+    // Sélection provider: optional in newer chat UIs
+    const providerSelect = page
+      .locator('[data-testid="provider-select"], [data-testid="chat-provider-select"]')
+      .first();
+    if (await providerSelect.isVisible({ timeout: 2000 }).catch(() => false)) {
+      await providerSelect.click();
+      const localOption = page
+        .locator('[data-value="local"], [data-provider="local"]')
+        .first();
+      if (await localOption.isVisible({ timeout: 2000 }).catch(() => false)) {
+        await localOption.click();
+      }
+    }
 
-    const messageInput = page.locator('[data-testid="chat-input"]');
-    const sendButton = page.locator('[data-testid="send-button"]');
+    const messageInput = page
+      .locator(
+        '[data-testid="chat-input"], [data-testid="chat-bubble-input"], #chat-input-textarea, #chat-window-textarea, textarea[placeholder*="Tapez votre message"]'
+      )
+      .first();
+    const sendButton = page
+      .locator(
+        '[data-testid="chat-send"], [data-testid="send-button"], [data-testid="chat-bubble-send"], .chat-send-btn.chat-send-omega, .send-button, button:has-text("Envoyer")'
+      )
+      .first();
+    const assistantMessages = page.locator(
+      '[data-testid="chat-message-assistant"], [data-testid="assistant-message"], .message-bubble-assistant .message-bubble-text'
+    );
+
+    await expect(messageInput).toBeVisible({ timeout: 20000 });
+    await expect(sendButton).toBeVisible({ timeout: 20000 });
+
+    const waitForAssistantIncrement = async () => {
+      const beforeCount = await assistantMessages.count();
+      const beforeText =
+        beforeCount > 0 ? ((await assistantMessages.last().textContent()) ?? '').trim() : '';
+      await expect
+        .poll(
+          async () => {
+            const count = await assistantMessages.count();
+            const text =
+              count > 0 ? ((await assistantMessages.last().textContent()) ?? '').trim() : '';
+            return count > beforeCount || (text.length > 0 && text !== beforeText);
+          },
+          { timeout: 45000, interval: 1000 }
+        )
+        .toBeTruthy();
+      await page.waitForTimeout(500);
+    };
+
+    const sendChatMessage = async (text: string) => {
+      await messageInput.fill(text);
+
+      await expect
+        .poll(async () => ((await messageInput.inputValue()) ?? '').trim().length > 0, {
+          timeout: 10000,
+          interval: 200,
+        })
+        .toBeTruthy();
+
+      const sendEnabled = await sendButton.isEnabled().catch(() => false);
+      if (sendEnabled) {
+        await sendButton.click();
+      } else {
+        await messageInput.press('Enter');
+      }
+    };
 
     // Message 1
-    await messageInput.fill('Mon nom est Alice');
-    await sendButton.click();
-    await page.waitForSelector('[data-testid="assistant-message"]', { timeout: 5000 });
-    await page.waitForTimeout(500); // Attendre save async
+    await sendChatMessage('Mon nom est Alice');
+    await waitForAssistantIncrement(); // Attendre save async
 
     // Message 2
-    await messageInput.fill('Quelle est ma couleur préférée? Bleu.');
-    await sendButton.click();
-    await page.waitForSelector('[data-testid="assistant-message"]:nth-of-type(2)', {
-      timeout: 5000,
-    });
-    await page.waitForTimeout(500);
+    await sendChatMessage('Quelle est ma couleur préférée? Bleu.');
+    await waitForAssistantIncrement();
 
     // Message 3 - Test recall
-    await messageInput.fill('Rappelle-moi mon nom et ma couleur');
-    await sendButton.click();
-    await page.waitForSelector('[data-testid="assistant-message"]:nth-of-type(3)', {
-      timeout: 5000,
-    });
+    await sendChatMessage('Rappelle-moi mon nom et ma couleur');
+    await waitForAssistantIncrement();
 
-    const responseText = await page
-      .locator('[data-testid="assistant-message"]')
-      .last()
-      .textContent();
+    const responseText = await assistantMessages.last().textContent();
 
     // Vérification: Réponse contient context
     const hasContext = responseText?.includes('Alice') || responseText?.includes('bleu');
