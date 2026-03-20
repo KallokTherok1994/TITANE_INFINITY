@@ -78,6 +78,8 @@ export interface ChatContextEnvelope {
   twinsContext?: {
     globalScore: number;
     trend: string;
+    currentPhase?: string | null;
+    syncScore?: number;
     updatedAt: number;
   };
   generatedAt: number;
@@ -118,9 +120,13 @@ const TWINS_FUSION_MAX_AGE_MS = 1_800_000;
  * Prevents stale session data from polluting the TWINS_CONTEXT block in chat.
  */
 function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
-  const raw = readJson<{ globalScore: number; trend: string; updatedAt?: number }>(
-    'titane_twin_fusion_v1'
-  );
+  const raw = readJson<{
+    globalScore: number;
+    trend: string;
+    currentPhase?: string | null;
+    syncScore?: number;
+    updatedAt?: number;
+  }>('titane_twin_fusion_v1');
   if (!raw) return null;
   if (typeof raw.updatedAt !== 'number') {
     console.warn(
@@ -135,7 +141,13 @@ function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
     );
     return null;
   }
-  return { globalScore: raw.globalScore, trend: raw.trend, updatedAt: raw.updatedAt };
+  return {
+    globalScore: raw.globalScore,
+    trend: raw.trend,
+    currentPhase: raw.currentPhase ?? null,
+    syncScore: raw.syncScore ?? 0,
+    updatedAt: raw.updatedAt,
+  };
 }
 
 function writeJson(key: string, value: unknown): void {

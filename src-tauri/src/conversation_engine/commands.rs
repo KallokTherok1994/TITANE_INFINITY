@@ -150,6 +150,14 @@ fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serd
             .and_then(|value| value.get("trend"))
             .and_then(serde_json::Value::as_str)
             .unwrap_or("unknown"),
+        "twinsPhase": twins
+            .and_then(|value| value.get("currentPhase"))
+            .and_then(serde_json::Value::as_str)
+            .unwrap_or("unknown"),
+        "twinsSyncScore": twins
+            .and_then(|value| value.get("syncScore"))
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(0.0),
     })
 }
 
@@ -620,6 +628,7 @@ pub async fn conversation_generate(
     let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
     let twins_score = context_binding.get("twinsFusionScore").and_then(|v| v.as_f64()).unwrap_or(0.0);
     let twins_trend = context_binding.get("twinsTrend").and_then(|v| v.as_str()).unwrap_or("unknown");
+    let twins_phase = context_binding.get("twinsPhase").and_then(|v| v.as_str()).unwrap_or("unknown");
 
     let has_time_context = cognitive_flow || cognitive_mode != "normal";
     let has_twins_context = twins_score > 0.0 && twins_trend != "unknown";
@@ -637,8 +646,13 @@ pub async fn conversation_generate(
                 ));
             }
             if has_twins_context {
+                let phase_part = if twins_phase != "unknown" {
+                    format!(", phase={twins_phase}")
+                } else {
+                    String::new()
+                };
                 ctx_lines.push(format!(
-                    "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}",
+                    "TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}{phase_part}",
                     twins_score
                 ));
             }

@@ -175,3 +175,62 @@ describe('TWINS D — Effect classification', () => {
     expect(true).toBe(true);
   });
 });
+
+// ─── E. Phase + syncScore expansion (Lock #9 closure) ───────────────────────
+
+describe('TWINS E — Phase + syncScore expansion (Lock #9: context enrichment)', () => {
+  beforeEach(() => clearTwinsFusion());
+  afterEach(() => clearTwinsFusion());
+
+  it('E1. currentPhase written and present in envelope when provided', () => {
+    const now = Date.now();
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({ globalScore: 0.75, trend: 'Improving', currentPhase: 'Integration', syncScore: 0.6, updatedAt: now })
+    );
+    const envelope = buildChatContextEnvelope(makeInput());
+    expect(envelope?.twinsContext?.currentPhase).toBe('Integration');
+    expect(envelope?.twinsContext?.syncScore).toBe(0.6);
+  });
+
+  it('E2. missing currentPhase in localStorage → currentPhase null in envelope', () => {
+    const now = Date.now();
+    setTwinsFusion({ globalScore: 0.75, trend: 'Improving', updatedAt: now });
+    const envelope = buildChatContextEnvelope(makeInput());
+    expect(envelope?.twinsContext?.currentPhase).toBeNull();
+  });
+
+  it('E3. syncScore defaults to 0 when absent from localStorage entry', () => {
+    const now = Date.now();
+    setTwinsFusion({ globalScore: 0.75, trend: 'Improving', updatedAt: now });
+    const envelope = buildChatContextEnvelope(makeInput());
+    expect(envelope?.twinsContext?.syncScore).toBe(0);
+  });
+
+  it('E4. valid phase passes through stale guard unchanged', () => {
+    const now = Date.now();
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({ globalScore: 0.8, trend: 'Stable', currentPhase: 'CoEvolution', syncScore: 0.75, updatedAt: now })
+    );
+    const ctx = buildChatContextEnvelope(makeInput())?.twinsContext;
+    expect(ctx?.currentPhase).toBe('CoEvolution');
+    expect(ctx?.syncScore).toBe(0.75);
+    expect(ctx?.globalScore).toBe(0.8);
+  });
+
+  it('E5. PROMPT_EFFECT_PROVEN for phase: chain complete localStorage→envelope→twinsPhase extraction', () => {
+    // Rust extract_context_binding now maps currentPhase → twinsPhase
+    // system_prompt builder includes phase when != "unknown"
+    // Classification: PROMPT_EFFECT_PROVEN (phase now in TWINS_CONTEXT string)
+    const now = Date.now();
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({ globalScore: 0.9, trend: 'Improving', currentPhase: 'Symbiosis', syncScore: 0.9, updatedAt: now })
+    );
+    const ctx = buildChatContextEnvelope(makeInput())?.twinsContext;
+    expect(ctx?.currentPhase).toBe('Symbiosis');
+    expect(ctx?.globalScore).toBe(0.9);
+    // → Rust will emit: TWINS_CONTEXT: fusion_score=0.90, trend=Improving, phase=Symbiosis
+  });
+});

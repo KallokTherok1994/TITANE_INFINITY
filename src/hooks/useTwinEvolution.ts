@@ -64,6 +64,8 @@ export function useTwinEvolution(): UseTwinEvolutionReturn {
           JSON.stringify({
             globalScore: fusion.globalScore,
             trend: fusion.trend,
+            currentPhase: profile?.currentPhase ?? null,
+            syncScore: profile?.syncScore ?? 0,
             updatedAt: Date.now(),
           })
         );
