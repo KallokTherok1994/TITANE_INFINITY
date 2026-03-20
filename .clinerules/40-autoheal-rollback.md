@@ -17,15 +17,18 @@ Then run:
 - `bash scripts/autoheal/detect_recurrence.sh`
 - `bash scripts/verify_instructions.sh`
 
-### Qualifying Fix Detection (Cline Implementation)
+### Statut réel de l'auto-capture (2026-03-20)
 
-PostToolUse hook must detect operations that qualify as "fixes":
+> **HONNÊTETÉ REQUISE**: L'auto-capture dans PostToolUse est **désactivée**.  
+> Les entrées AutoHeal sont écrites **manuellement** par l'opérateur après chaque fix.  
+> Le pseudo-code ci-dessous est une **spécification future**, pas une implémentation active.  
+> Ne pas interpréter ces blocs de code comme des fonctions opérationnelles.
 
-- **File modifications** that resolve identified problems
-- **Configuration changes** that address reported issues
-- **Dependencies updates** that resolve conflicts
-- **Architecture corrections** that restore compliance
-- **Error handling additions** that prevent failures
+Qualifying fixes détectés manuellement :
+
+- Modifications de fichiers qui résolvent des problèmes identifiés
+- Changements de configuration qui corrigent des issues reportées
+- Corrections d'architecture qui restaurent la conformité
 
 ---
 

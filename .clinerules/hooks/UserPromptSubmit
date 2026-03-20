@@ -9,26 +9,11 @@ context=""
 
 # Détection de demandes de déploiement
 if echo "$prompt" | grep -qiE 'deploy|build.*production|create.*appimage|create.*deb|install.*system'; then
-  context="DEPLOYMENT_WARNING: Production deployment requires explicit authorization.\n"
-  context+="Required:\n"
-  context+="1. 100/100 CLI tests passed\n"
-  context+="2. Written approval from Kevin Thibault\n"
-  context+="3. 'GO FOR PRODUCTION DEPLOY' confirmation\n"
-  context+="Use '🟢 Launch Titan-Dev' for development only."
-fi
-
-# Standards de codage React/Component
-if echo "$prompt" | grep -qiE 'component|react|tsx'; then
-  if [[ -n "$context" ]]; then context+="\n"; fi
-  context+="CODING_STANDARDS: Follow React functional component patterns with proper TypeScript types. "
-  context+="Match existing component structure in src/ directory."
-fi
-
-# Standards API/Backend
-if echo "$prompt" | grep -qiE 'api|endpoint|backend|tauri.*command'; then
-  if [[ -n "$context" ]]; then context+="\n"; fi
-  context+="CODING_STANDARDS: Use consistent Tauri command patterns. "
-  context+="All commands in src-tauri/src/ should have proper error handling and type safety."
+  context="DEPLOYMENT_WARNING: Déploiement production nécessite autorisation explicite (Rule 11).\n"
+  context+="Tokens exacts requis:\n"
+  context+="  GO_FOR_PROD_BUILD__TITANE_INFINITY\n"
+  context+="  GO_FOR_PROD_DEPLOY__TITANE_INFINITY\n"
+  context+="En développement: utiliser '🟢 Launch Titan-Dev' uniquement."
 fi
 
 # Tests
