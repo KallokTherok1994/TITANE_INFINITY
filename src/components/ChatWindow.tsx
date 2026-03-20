@@ -261,6 +261,7 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
               role={message.role}
               content={message.content}
               timestamp={message.timestamp}
+              metadata={(message as { metadata?: Record<string, unknown> }).metadata}
             />
           ))}
 

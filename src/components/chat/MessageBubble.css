@@ -905,3 +905,39 @@
     transform: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOCK1 — PROVIDER_DISPLAY_TRUTH
+   Provider badge: shows actual provider used by backend per message
+   ═══════════════════════════════════════════════════════════════════ */
+
+.message-provider-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: 8px;
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  background: rgba(99, 102, 241, 0.12);
+  color: rgba(165, 180, 252, 0.85);
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  vertical-align: middle;
+  user-select: none;
+  transition: background 180ms ease, color 180ms ease;
+  white-space: nowrap;
+}
+
+.message-provider-badge-mismatch {
+  background: rgba(245, 158, 11, 0.12);
+  color: rgba(252, 211, 77, 0.9);
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.message-provider-mismatch-indicator {
+  font-size: 9px;
+  opacity: 0.8;
+  margin-left: 2px;
+}
