@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# PostToolUse hook for TITANE∞
-# Surveille les performances et apprend des opérations
-# ENHANCED: Constitutional status classification + AutoHeal integration
+# PostToolUse hook for TITANE∞ — v3 (sobered)
+# op_status=SUCCESS/FAIL uniquement. Pas de verdict PASS gouverné depuis un succès outil.
+# PASS gouverné requiert une preuve explicite (Rule 2 canon).
 
 input=$(cat)
 
@@ -10,64 +10,35 @@ tool_name=$(echo "$input" | jq -r '.postToolUse.toolName')
 success=$(echo "$input" | jq -r '.postToolUse.success')
 
 context=""
-status="UNKNOWN"
 
-# CONSTITUTIONAL STATUS CLASSIFICATION (per .clinerules/20-proof-gates-verdicts.md)
-if [[ "$success" == "true" ]]; then
-  if (( execution_time > 10000 )); then
-    status="BLOCKED"
-    context+="STATUS: BLOCKED - Operation took ${execution_time}ms (>10s). Consider optimization."
-  else
-    status="PASS"
-    context+="STATUS: PASS - Operation completed successfully in ${execution_time}ms."
-  fi
-else
-  status="FAIL"
-  context+="STATUS: FAIL - Operation failed. Stop-the-line triggered."
-fi
+# OPERATION STATUS — pas un verdict gouverné.
+# success=true = l'outil s'est exécuté. Ce n'est PAS un PASS constitutionnel.
+# PASS gouverné nécessite une preuve explicite (.clinerules/00-kernel.md Rule 2).
+if [[ "$success" == "false" ]]; then
+  context="op_status=FAIL tool=$tool_name — Rule 8 stop-the-line. Diagnostiquer avant de continuer."
 
-# Surveiller les opérations lentes (enhanced)
-if (( execution_time > 5000 )); then
-  if [[ -n "$context" ]]; then context+="\n"; fi
-  context+="PERFORMANCE: Slow operation detected - $tool_name took ${execution_time}ms. "
-  context+="Consider optimizing or showing progress to user."
-fi
-
-# Apprendre des échecs de compilation (enhanced with status classification)
-if [[ "$tool_name" == "execute_command" ]] && [[ "$success" == "false" ]]; then
-  result=$(echo "$input" | jq -r '.postToolUse.result // ""')
-  
-  if echo "$result" | grep -qiE 'error.*TS[0-9]+|TypeScript error'; then
-    if [[ -n "$context" ]]; then context+="\n"; fi
-    context+="TYPESCRIPT_ERROR: TypeScript compilation failed. "
-    context+="Verify types match existing patterns in the codebase."
-    status="FAIL"
-  fi
-  
-  if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
-    if [[ -n "$context" ]]; then context+="\n"; fi
-    context+="TEST_FAILURE: Tests failed. "
-    context+="Review test expectations and ensure changes don't break existing functionality."
-    status="FAIL"
+  # Détection contextuelle d'échec
+  if [[ "$tool_name" == "execute_command" ]]; then
+    result=$(echo "$input" | jq -r '.postToolUse.result // ""')
+    if echo "$result" | grep -qiE 'error.*TS[0-9]+|TypeScript error'; then
+      context+="\nTS_ERROR: Compilation TypeScript échouée — vérifier les types."
+    fi
+    if echo "$result" | grep -qiE 'test.*failed|FAIL'; then
+      context+="\nTEST_FAIL: Tests échoués — vérifier les assertions."
+    fi
   fi
 fi
 
-# AutoHeal entries are written manually per Rule 10 — not auto-captured.
-# (auto-capture removed: generated multi-line JSON in JSONL file — format defect)
+# AutoHeal: entrées écrites manuellement par Rule 10 — non auto-capturées
+# (auto-capture désactivée: générait du JSON multi-lignes dans JSONL — défaut de format)
 
-# Logger les opérations critiques (enhanced with status)
+# Log sobre des opérations critiques (sans inflation de statut)
 if [[ "$tool_name" =~ ^(write_to_file|execute_command)$ ]]; then
   log_dir=".clinerules/logs"
   mkdir -p "$log_dir"
-  timestamp=$(echo "$input" | jq -r '.timestamp')
-  echo "$timestamp: $tool_name (${execution_time}ms) - success=$success - status=$status" >> "$log_dir/operations.log"
-fi
-
-# Add constitutional status to context
-if [[ -n "$context" ]]; then
-  context+="\nCONSTITUTIONAL_STATUS: $status (per .clinerules/00-kernel.md)"
-else
-  context="CONSTITUTIONAL_STATUS: $status (per .clinerules/00-kernel.md)"
+  timestamp=$(echo "$input" | jq -r '.timestamp // empty')
+  [[ -z "$timestamp" ]] && timestamp=$(date -Iseconds)
+  echo "$timestamp: $tool_name (${execution_time}ms) success=$success" >> "$log_dir/operations.log"
 fi
 
 if [[ -n "$context" ]]; then
