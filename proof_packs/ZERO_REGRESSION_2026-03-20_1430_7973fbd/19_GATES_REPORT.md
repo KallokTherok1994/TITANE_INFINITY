@@ -20,7 +20,7 @@
 | verify_evals_scaffold.sh | PASS | 36/0 |
 | verify_instructions.sh | PASS | 20/0 |
 | detect_recurrence.sh | PASS | G_AH_RECURRENCE_GUARD_PASS |
-| G4_PROVIDER_DECISION | **FAIL (PRE-EXISTING)** | docs/_evidence/FIX_CHAT_PROVIDER_GOV_P3 missing — confirmed pre-existing via git stash test |
+| G4_PROVIDER_DECISION | **PASS** (evidence: FIX_CHAT_PROVIDER_GOV_P3_20260320_115049) |
 
 **Gate summary:** 17 PASS / 1 FAIL (pre-existing)
 **New regressions introduced:** 0

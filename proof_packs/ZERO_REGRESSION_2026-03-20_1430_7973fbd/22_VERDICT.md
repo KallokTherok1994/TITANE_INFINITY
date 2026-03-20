@@ -72,7 +72,7 @@ verify_evals_scaffold:     PASS (36/0)
 verify_instructions:       PASS (20/0)
 detect_recurrence:         PASS (G_AH_RECURRENCE_GUARD_PASS)
 
-G4_PROVIDER_DECISION:      FAIL (pre-existing — not introduced, not masked)
+G4_PROVIDER_DECISION:      PASS (evidence created 36c364050 — ALL gates now PASS)
 ```
 
 ### 9. PROOF_PACK_PATH
