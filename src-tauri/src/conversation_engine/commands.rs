@@ -387,7 +387,11 @@ pub async fn conversation_generate(
         router_decision.wants_memory
     );
 
-    let trace = serde_json::json!({
+    let mut history_load_status = "not_attempted".to_string();
+    let mut history_message_count: usize = 0;
+    let mut history_load_error: Option<String> = None;
+
+    let mut trace = serde_json::json!({
         "phase": "conversation_generate",
         "trace_id": req_id,
         "session_id": conversation_id,
@@ -422,6 +426,9 @@ pub async fn conversation_generate(
             "reasoning": memory_plan.reasoning,
             "memory_used": memory_used_ids,
             "snapshot_summary_fr": snapshot_summary_fr,
+            "history_load_status": history_load_status,
+            "history_message_count": history_message_count,
+            "history_load_error": history_load_error,
             "snapshot_state": {
                 "conversation_id": conversation_id,
                 "request_id": req_id,
@@ -469,6 +476,9 @@ pub async fn conversation_generate(
             "metadata": {
                 "requestId": req_id,
                 "contextBinding": context_binding.clone(),
+                "historyLoadStatus": history_load_status.clone(),
+                "historyMessageCount": history_message_count,
+                "historyLoadError": history_load_error.clone(),
             },
         });
         return Ok(blocked_response);
@@ -500,6 +510,9 @@ pub async fn conversation_generate(
             "metadata": {
                 "requestId": req_id,
                 "contextBinding": context_binding.clone(),
+                "historyLoadStatus": history_load_status.clone(),
+                "historyMessageCount": history_message_count,
+                "historyLoadError": history_load_error.clone(),
             },
         });
         return Ok(blocked_response);
@@ -548,19 +561,42 @@ pub async fn conversation_generate(
                     Some(format!("{}: {}", prefix, truncated))
                 })
                 .collect();
+            history_message_count = formatted.len();
             if !formatted.is_empty() {
+                history_load_status = "loaded".to_string();
                 log::info!(
                     "[Ω:CMD] ✅ LTM context: {} msgs loaded for conv_id={}",
                     formatted.len(), &conversation_id[..conversation_id.len().min(16)]
                 );
+            } else {
+                history_load_status = "empty".to_string();
             }
             if formatted.is_empty() { None } else { Some(formatted) }
         }
         Err(e) => {
+            history_load_status = "error".to_string();
+            history_load_error = Some(e.clone());
             log::warn!("[Ω:CMD] LTM history load failed (non-fatal): {}", e);
             None
         }
     };
+
+    trace["memory"]["history_load_status"] = serde_json::json!(history_load_status.clone());
+    trace["memory"]["history_message_count"] = serde_json::json!(history_message_count);
+    trace["memory"]["history_load_error"] = serde_json::json!(history_load_error.clone());
+
+    if let Some(err) = history_load_error.as_ref() {
+        if let Some(failures) = trace["failures"].as_array_mut() {
+            failures.push(serde_json::json!({
+                "class": "MEMORY_HISTORY_LOAD_FAILED",
+                "detail": {
+                    "component": "conversation_generate",
+                    "reason": err,
+                    "conversation_id": conversation_id,
+                }
+            }));
+        }
+    }
 
     // Créer la requête OMEGA
     // Inject STM (immediate context) from MultiLayerMemoryManager
@@ -692,6 +728,9 @@ pub async fn conversation_generate(
             "emotion": format!("{:?}", response.detected_emotion),
             "cognitiveTags": response.cognitive_tags,
             "cognitiveSummary": response.cognitive_summary,
+            "historyLoadStatus": history_load_status,
+            "historyMessageCount": history_message_count,
+            "historyLoadError": history_load_error,
             "requestId": req_id,
             "contextBinding": context_binding,
         }

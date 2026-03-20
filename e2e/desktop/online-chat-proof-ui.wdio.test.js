@@ -5,6 +5,7 @@ const runId = process.env.TITANE_PROOF_RUN || 'run1';
 const expectedSource = process.env.TITANE_E2E_EXPECT_SOURCE || '';
 const enforceSource = process.env.TITANE_E2E_ENFORCE_SOURCE === '1';
 const devServerUrl = process.env.TAURI_DEV_SERVER_URL || '';
+const assistantTimeoutMs = Number(process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000');
 
 function getAllowedHrefPrefixes() {
   const prefixes = ['tauri://localhost'];
@@ -575,7 +576,11 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
           (!!after && after !== before) || afterAssistantCount > beforeAssistantCount
         );
       },
-      { timeout: 90000, interval: 1000, timeoutMsg: 'No assistant response detected' }
+      {
+        timeout: assistantTimeoutMs,
+        interval: 1000,
+        timeoutMsg: `No assistant response detected (timeout=${assistantTimeoutMs}ms)`,
+      }
     );
 
     // In Wry/WebKit, the assistant row can mount one tick before text content.

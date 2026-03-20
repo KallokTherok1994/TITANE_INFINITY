@@ -392,6 +392,7 @@ export async function processMessage(
 
   // Inject persistent 3-level memory context (non-blocking)
   let persistentMemoryContext = '';
+  let persistentMemoryStatus: 'loaded' | 'empty' | 'unavailable' = 'unavailable';
   try {
     const memResult = (await tauriClient.persistentMemoryGetContext({
       modeId: options?.mode || 'default',
@@ -399,10 +400,18 @@ export async function processMessage(
     })) as { context: string; usedEntries: string[] } | null;
     if (memResult?.context) {
       persistentMemoryContext = `## PERSISTENT_MEMORY_CONTEXT\n${memResult.context}`;
+      persistentMemoryStatus = 'loaded';
+    } else {
+      persistentMemoryStatus = 'empty';
     }
-  } catch {
-    // Non-blocking: proceed without persistent memory if unavailable
+  } catch (error) {
+    // No silent fallback: keep processing but surface explicit status.
+    persistentMemoryStatus = 'unavailable';
+    console.warn('[conversationEngine] persistentMemoryGetContext unavailable', error);
   }
+
+  const persistentMemoryStatusContext =
+    `## PERSISTENT_MEMORY_STATUS\nstatus=${persistentMemoryStatus}`;
 
   // Inject XP + Evolution context (non-blocking, best-effort)
   let progressionContext = '';
@@ -454,6 +463,7 @@ export async function processMessage(
     contextualPrompt,
     personaContext,
     persistentMemoryContext,
+    persistentMemoryStatusContext,
     progressionContext,
     cognitiveContext,
   ]
