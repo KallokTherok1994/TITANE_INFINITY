@@ -1,0 +1,63 @@
+{
+  "scorecard_id": "ROUTER_TRUTH_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "description": "Measures correctness and honesty of provider/router selection",
+  "metrics": [
+    {
+      "name": "meta_provider_used_present",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Every IPC chat response includes meta.provider_used (LOCK1 regression guard)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "ui_provider_badge_matches_meta",
+      "target": 1.0,
+      "blocking": true,
+      "description": "UI provider badge equals meta.provider_used from backend (LOCK1 regression guard)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "fallback_provider_honestly_labeled",
+      "target": 1.0,
+      "blocking": true,
+      "description": "When fallback activates, UI reflects fallback provider, not the failed primary",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "one_door_network_enforced",
+      "target": 1.0,
+      "blocking": true,
+      "description": "All external network calls go through network_gateway.rs (One Door principle)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "routing_deterministic_for_same_input",
+      "target": 0.95,
+      "blocking": false,
+      "description": "Same input routes to same provider type (accounting for load balancing)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    }
+  ],
+  "blocking_regression_definition": "Any provider lie: wrong label, missing meta, fallback masking, One Door bypass",
+  "promotion_decision": "PENDING",
+  "note": "Scores null — BLOCKED_BY_ENV: Node v18. Fill after Node >=20 + eval run."
+}

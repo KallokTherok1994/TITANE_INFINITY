@@ -1,0 +1,84 @@
+{
+  "scorecard_id": "DESKTOP_CRITICAL_FLOW_SCORECARD",
+  "version": "v1",
+  "champion": "7973fbdec",
+  "champion_tag": "v28.0.0",
+  "date": "2026-03-20",
+  "description": "Verifies desktop app critical flows: launch, health bootstrap, chat, memory, provider",
+  "metrics": [
+    {
+      "name": "app_launches_without_crash",
+      "target": 1.0,
+      "blocking": true,
+      "description": "TITANE desktop app launches successfully (AppImage/DEB)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "backend_selftest_completes",
+      "target": 1.0,
+      "blocking": true,
+      "description": "backend_selftest.rs completes on startup without hang",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "health_state_from_backend_truth",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Health indicator reflects actual backend state, not frontend assumption (LOCK3)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "chat_message_roundtrip",
+      "target": 1.0,
+      "blocking": true,
+      "description": "Complete chat message sent, response received with provider metadata",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "tauri_ipc_contract_respected",
+      "target": 1.0,
+      "blocking": true,
+      "description": "All IPC calls follow { ok, content, error } contract",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "ollama_connectivity_check",
+      "target": 1.0,
+      "blocking": false,
+      "description": "Ollama connectivity status correctly detected and reported",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    },
+    {
+      "name": "x3_launch_stability",
+      "target": 1.0,
+      "blocking": true,
+      "description": "App launches successfully 3 consecutive times (stability requirement)",
+      "champion_score": null,
+      "challenger_score": null,
+      "delta": null,
+      "verdict": "PENDING"
+    }
+  ],
+  "blocking_regression_definition": "Any crash, IPC contract violation, false health claim, or single x3 failure",
+  "execution_environment": "BLOCKED_BY_ENV: Node v18.19.1 < required v20.0.0. Cannot run WebdriverIO E2E.",
+  "promotion_decision": "PENDING",
+  "note": "Scores null — BLOCKED_BY_ENV. Install Node >=20, then: pnpm run test:e2e"
+}
