@@ -10,7 +10,8 @@ import { EventStream } from '@/components/devtools/EventStream';
 import type { SystemEvent } from '@/types';
 
 describe('EventStream Component', () => {
-  const fixedTs = 1700000000000;
+  // Keep rendered HH:MM:SS stable across CI timezones.
+  const fixedTs = new Date(2000, 0, 1, 22, 13, 20).getTime();
   const mockEvents: SystemEvent[] = [
     { id: '1', type: 'system', message: 'System started', timestamp: fixedTs },
     { id: '2', type: 'user', message: 'User action', timestamp: fixedTs },
