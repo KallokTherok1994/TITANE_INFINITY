@@ -108,6 +108,36 @@ function readJson<T>(key: string): T | null {
   }
 }
 
+/** Maximum age (ms) for titane_twin_fusion_v1 — 30 minutes.
+ *  Values older than this are stale and excluded from context injection. */
+const TWINS_FUSION_MAX_AGE_MS = 1_800_000;
+
+/**
+ * Read titane_twin_fusion_v1 with a freshness guard.
+ * Returns null if absent, malformed, missing updatedAt, or older than 30 minutes.
+ * Prevents stale session data from polluting the TWINS_CONTEXT block in chat.
+ */
+function readFreshTwinsFusion(): ChatContextEnvelope['twinsContext'] | null {
+  const raw = readJson<{ globalScore: number; trend: string; updatedAt?: number }>(
+    'titane_twin_fusion_v1'
+  );
+  if (!raw) return null;
+  if (typeof raw.updatedAt !== 'number') {
+    console.warn(
+      '[chatMemorySingleDoor] titane_twin_fusion_v1: missing updatedAt — treating as stale'
+    );
+    return null;
+  }
+  const ageMs = Date.now() - raw.updatedAt;
+  if (ageMs > TWINS_FUSION_MAX_AGE_MS) {
+    console.warn(
+      `[chatMemorySingleDoor] titane_twin_fusion_v1: stale (age=${Math.round(ageMs / 60_000)}min > 30min) — excluded from context`
+    );
+    return null;
+  }
+  return { globalScore: raw.globalScore, trend: raw.trend, updatedAt: raw.updatedAt };
+}
+
 function writeJson(key: string, value: unknown): void {
   if (!isBrowser()) return;
 
@@ -305,8 +335,7 @@ export function buildChatContextEnvelope(
     cognitiveContext:
       readJson<ChatContextEnvelope['cognitiveContext']>('titane_cognitive_state') ??
       undefined,
-    twinsContext:
-      readJson<ChatContextEnvelope['twinsContext']>('titane_twin_fusion_v1') ?? undefined,
+    twinsContext: readFreshTwinsFusion() ?? undefined,
     generatedAt: Date.now(),
   };
 
