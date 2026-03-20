@@ -80,8 +80,13 @@ echo "[7/8] Creating deployment package..."
 mkdir -p deployment/prod-builds
 cp src-tauri/target/release/titane-infinity deployment/prod-builds/titane-infinity-$VERSION
 cp -r dist deployment/prod-builds/frontend-$VERSION
+cp "$TAR_FILE" deployment/prod-builds/frontend-$VERSION.tar.gz
 echo "$RUST_SHA  titane-infinity-$VERSION" > deployment/prod-builds/CHECKSUMS.txt
 echo "$DIST_SHA  frontend-$VERSION.tar.gz" >> deployment/prod-builds/CHECKSUMS.txt
+(cd deployment/prod-builds && sha256sum -c CHECKSUMS.txt >/dev/null 2>&1) || {
+  echo "❌ FAIL: Deployment package checksum self-verification failed"
+  exit 1
+}
 echo "✅ Deployment package created"
 
 # Step 8: Final verdict
