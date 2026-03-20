@@ -95,8 +95,8 @@ const simpleTauriClient = {
   },
 };
 
-// Simple environment detection
-const isTauriEnvironment = typeof window !== 'undefined' && '__TAURI__' in window;
+// Simple environment detection — use __TAURI_INTERNALS__ (Tauri v2 canonical key)
+const isTauriEnvironment = typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window;
 
 import {
   buildTtsSettingsFromTitaneProfile,
