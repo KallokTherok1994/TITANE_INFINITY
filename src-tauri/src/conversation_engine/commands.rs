@@ -8,6 +8,7 @@ use std::sync::Arc;
 use tauri::State;
 use uuid::Uuid;
 
+use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
 use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
@@ -208,6 +209,7 @@ pub async fn create_new_conversation(
 #[tauri::command]
 pub async fn conversation_generate(
     engine: State<'_, Arc<ConversationEngineState>>,
+    orchestrator: State<'_, ChatOrchestratorState>,
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
     let ConversationGenerateArgs {
@@ -283,12 +285,16 @@ pub async fn conversation_generate(
         NetState::Online
     };
 
+    // ✅ PATCH: Read API keys from ChatOrchestratorState instead of environment
+    // This ensures that keys set via Governance are immediately available to chat
+    let has_gemini_key = orchestrator.gemini_api_key.read().await.is_some();
+    let has_openai_key = orchestrator.openai_api_key.read().await.is_some();
+    let has_anthropic_key = orchestrator.anthropic_api_key.read().await.is_some();
+
     let policy_context = PolicyContext {
         net_state,
         has_ollama_credentials: true,
-        has_gemini_credentials: std::env::var("GEMINI_API_KEY")
-            .map(|value| !value.trim().is_empty())
-            .unwrap_or(false),
+        has_gemini_credentials: has_gemini_key,
         has_brave_credentials: std::env::var("BRAVE_API_KEY")
             .map(|value| !value.trim().is_empty())
             .unwrap_or(false),
