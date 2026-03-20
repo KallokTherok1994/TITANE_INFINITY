@@ -26,11 +26,11 @@
 - No overinflated context, no fabricated verdicts in hook outputs
 
 ## G_AUTOHEAL_DISCIPLINE
-**Status: PARTIAL**
+**Status: PASS** *(updated after Patch 2 — 2026-03-20)*
 - Real JSONL entries (Mar 2026): all high-quality, full schema, human-authored ✅
-- PostToolUse auto-capture: dormant (0 CLINE-EXPLICIT entries fired) but has `files_changed: []` defect when it would fire ⚠️
-- Not patched this cycle (dormant, out of one-lock scope)
-- One future lock identified
+- PostToolUse auto-capture block REMOVED (commit d08dfd942) — heredoc multi-line JSONL defect eliminated ✅
+- AutoHeal entries remain manual per Rule 10 — no auto-capture path exists ✅
+- AH-2026-03-20-POSTTOOLUSE-JSONL-DEFECT appended, detect_recurrence PASS
 
 ## G_VALIDATOR_RELEVANCE
 **Status: PASS**
@@ -70,7 +70,7 @@ Reversible in < 30 seconds.
 | G_ACTIVE_SURFACE_PURITY | FAIL | PASS |
 | G_AUTHORITY_UNIQUENESS | PASS | PASS |
 | G_HOOK_SOBRIETY | PASS | PASS |
-| G_AUTOHEAL_DISCIPLINE | PARTIAL | PARTIAL |
+| G_AUTOHEAL_DISCIPLINE | PARTIAL | PASS (Patch 2) |
 | G_VALIDATOR_RELEVANCE | PASS | PASS |
 | G_SYNTHETIC_VS_NATURAL_SEPARATION | FAIL | PASS |
 | G_VERDICT_INTEGRITY | FAIL | PASS |

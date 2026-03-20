@@ -31,8 +31,8 @@
    Mar 2026 `autoheal_rules.jsonl` entries: NATURAL (operational fixes with full schema)  
    `verify_instructions.sh` 20/20: STRUCTURAL (not a substitute for runtime)
 
-7. **Single real lock still open?**
-   PostToolUse dormant AutoHeal defect (`files_changed: []` always empty). Deferred to next cycle. Not patched here as it has 0 production impact.
+7. **Single real lock — FERMÉ (Patch 2)**
+   PostToolUse heredoc auto-capture supprimé (commit d08dfd942). Défaut JSONL multi-lignes éliminé. AH-2026-03-20-POSTTOOLUSE-JSONL-DEFECT capturée.
 
 8. **Fix applied?**
    YES — 3 historical files moved from `.clinerules/` → `proof_packs/.../archived_from_clinerules/`
@@ -60,7 +60,7 @@
 | G_ACTIVE_SURFACE_PURITY | PASS |
 | G_AUTHORITY_UNIQUENESS | PASS |
 | G_HOOK_SOBRIETY | PASS |
-| G_AUTOHEAL_DISCIPLINE | PARTIAL |
+| G_AUTOHEAL_DISCIPLINE | PASS (Patch 2) |
 | G_VALIDATOR_RELEVANCE | PASS |
 | G_SYNTHETIC_VS_NATURAL_SEPARATION | PASS |
 | G_VERDICT_INTEGRITY | PASS |
@@ -77,13 +77,9 @@
 
 ---
 
-## ⚠️ NEXT LOCK (deferred)
+## ✅ NEXT LOCK — FERMÉ (Patch 2, commit d08dfd942)
 
-PostToolUse auto-capture block should be cleaned:
-- Either remove the auto-generation block entirely
-- Or populate `files_changed` from `write_to_file` path when fireable
-
-This is a future one-lock fix, not blocking current verdict.
+Bloc auto-capture PostToolUse supprimé. Aucun verrou ouvert restant.
 
 ---
 
@@ -92,11 +88,13 @@ This is a future one-lock fix, not blocking current verdict.
 **STABLE**
 
 Justification:
-- `SEALED` FORBIDDEN: only synthetic scenario proof existed for hooks system
-- `QUALIFIED` would be acceptable but `STABLE` is more accurate: system is coherent, operational, surface is now pure, authority is unique, but natural proof of hooks in live CLINE sessions has not been documented
-- Active surface now clean, gates 8/9 PASS, 1 PARTIAL
+- `SEALED` FORBIDDEN: only synthetic scenario proof existed for hooks system (Jan 2026 harnesses, now archived)
+- System is coherent, operational, all gates PASS
+- Active surface clean (10 files, all ACTIVE)
 - Authority single and correct
 - No false SEALED in active surface
+- All 3 historical artifacts archived, PostToolUse JSONL defect eliminated
+- Patches: 901fdfbc2 (surface purity) + d08dfd942 (hook defect)
 
 **Certified by**: GitHub Copilot Constitutional Recertification
 **Session SHA**: d9c3dceb9
