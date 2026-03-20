@@ -75,7 +75,11 @@ describe('TWINS B — Context transfer: localStorage → envelope', () => {
   });
 
   it('B3. stale guard: entry older than 30 min is excluded', () => {
-    setTwinsFusion({ globalScore: 0.9, trend: 'Stable', updatedAt: Date.now() - 1_900_000 });
+    setTwinsFusion({
+      globalScore: 0.9,
+      trend: 'Stable',
+      updatedAt: Date.now() - 1_900_000,
+    });
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     const envelope = buildChatContextEnvelope(makeInput());
     spy.mockRestore();
@@ -83,7 +87,11 @@ describe('TWINS B — Context transfer: localStorage → envelope', () => {
   });
 
   it('B4. stale guard logs a warning when value is stale', () => {
-    setTwinsFusion({ globalScore: 0.8, trend: 'Improving', updatedAt: Date.now() - 2_000_000 });
+    setTwinsFusion({
+      globalScore: 0.8,
+      trend: 'Improving',
+      updatedAt: Date.now() - 2_000_000,
+    });
     const spy = vi.spyOn(console, 'warn').mockImplementation(() => {});
     buildChatContextEnvelope(makeInput());
     expect(spy).toHaveBeenCalledWith(expect.stringContaining('stale'));
@@ -91,7 +99,11 @@ describe('TWINS B — Context transfer: localStorage → envelope', () => {
   });
 
   it('B5. fresh entry (15 min old) passes stale guard', () => {
-    setTwinsFusion({ globalScore: 0.65, trend: 'Declining', updatedAt: Date.now() - 900_000 });
+    setTwinsFusion({
+      globalScore: 0.65,
+      trend: 'Declining',
+      updatedAt: Date.now() - 900_000,
+    });
     const envelope = buildChatContextEnvelope(makeInput());
     expect(envelope?.twinsContext?.globalScore).toBe(0.65);
     expect(envelope?.twinsContext?.trend).toBe('Declining');
@@ -186,7 +198,13 @@ describe('TWINS E — Phase + syncScore expansion (Lock #9: context enrichment)'
     const now = Date.now();
     window.localStorage.setItem(
       'titane_twin_fusion_v1',
-      JSON.stringify({ globalScore: 0.75, trend: 'Improving', currentPhase: 'Integration', syncScore: 0.6, updatedAt: now })
+      JSON.stringify({
+        globalScore: 0.75,
+        trend: 'Improving',
+        currentPhase: 'Integration',
+        syncScore: 0.6,
+        updatedAt: now,
+      })
     );
     const envelope = buildChatContextEnvelope(makeInput());
     expect(envelope?.twinsContext?.currentPhase).toBe('Integration');
@@ -211,7 +229,13 @@ describe('TWINS E — Phase + syncScore expansion (Lock #9: context enrichment)'
     const now = Date.now();
     window.localStorage.setItem(
       'titane_twin_fusion_v1',
-      JSON.stringify({ globalScore: 0.8, trend: 'Stable', currentPhase: 'CoEvolution', syncScore: 0.75, updatedAt: now })
+      JSON.stringify({
+        globalScore: 0.8,
+        trend: 'Stable',
+        currentPhase: 'CoEvolution',
+        syncScore: 0.75,
+        updatedAt: now,
+      })
     );
     const ctx = buildChatContextEnvelope(makeInput())?.twinsContext;
     expect(ctx?.currentPhase).toBe('CoEvolution');
@@ -226,7 +250,13 @@ describe('TWINS E — Phase + syncScore expansion (Lock #9: context enrichment)'
     const now = Date.now();
     window.localStorage.setItem(
       'titane_twin_fusion_v1',
-      JSON.stringify({ globalScore: 0.9, trend: 'Improving', currentPhase: 'Symbiosis', syncScore: 0.9, updatedAt: now })
+      JSON.stringify({
+        globalScore: 0.9,
+        trend: 'Improving',
+        currentPhase: 'Symbiosis',
+        syncScore: 0.9,
+        updatedAt: now,
+      })
     );
     const ctx = buildChatContextEnvelope(makeInput())?.twinsContext;
     expect(ctx?.currentPhase).toBe('Symbiosis');
@@ -258,7 +288,13 @@ describe('TWINS F — Admin tab reachability + post-action context refresh contr
     const freshTimestamp = Date.now(); // simulates post-action refresh
     window.localStorage.setItem(
       'titane_twin_fusion_v1',
-      JSON.stringify({ globalScore: 0.91, trend: 'Improving', currentPhase: 'Symbiosis', syncScore: 0.88, updatedAt: freshTimestamp })
+      JSON.stringify({
+        globalScore: 0.91,
+        trend: 'Improving',
+        currentPhase: 'Symbiosis',
+        syncScore: 0.88,
+        updatedAt: freshTimestamp,
+      })
     );
     const envelope = buildChatContextEnvelope(makeInput());
     expect(envelope?.twinsContext?.globalScore).toBe(0.91);
@@ -281,7 +317,13 @@ describe('TWINS F — Admin tab reachability + post-action context refresh contr
     const freshTs = Date.now();
     window.localStorage.setItem(
       'titane_twin_fusion_v1',
-      JSON.stringify({ globalScore: 0.88, trend: 'Improving', currentPhase: 'Integration', syncScore: 0.7, updatedAt: freshTs })
+      JSON.stringify({
+        globalScore: 0.88,
+        trend: 'Improving',
+        currentPhase: 'Integration',
+        syncScore: 0.7,
+        updatedAt: freshTs,
+      })
     );
     envelope = buildChatContextEnvelope(makeInput());
     expect(envelope?.twinsContext?.globalScore).toBe(0.88); // fresh data now injected
@@ -309,7 +351,9 @@ describe('TWINS G — Deterministic prompt-trace: TWINS_CONTEXT string changes (
    *     phase_part = if twins_phase != "unknown" { ", phase={twins_phase}" } else { "" }
    *     TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}{phase_part}
    */
-  function simulateTwinsContextString(envelope: ReturnType<typeof buildChatContextEnvelope>): string | null {
+  function simulateTwinsContextString(
+    envelope: ReturnType<typeof buildChatContextEnvelope>
+  ): string | null {
     const score = envelope?.twinsContext?.globalScore ?? 0.0;
     const trend = envelope?.twinsContext?.trend ?? 'unknown';
     const phase = envelope?.twinsContext?.currentPhase ?? 'unknown';
@@ -338,16 +382,25 @@ describe('TWINS G — Deterministic prompt-trace: TWINS_CONTEXT string changes (
   });
 
   it('G3. SCENARIO with phase: TWINS_CONTEXT contains phase when known', () => {
-    window.localStorage.setItem('titane_twin_fusion_v1', JSON.stringify({
-      globalScore: 0.82, trend: 'Stable', currentPhase: 'Integration', syncScore: 0.7, updatedAt: Date.now()
-    }));
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.82,
+        trend: 'Stable',
+        currentPhase: 'Integration',
+        syncScore: 0.7,
+        updatedAt: Date.now(),
+      })
+    );
     const envelope = buildChatContextEnvelope(makeInput());
     const prompt = simulateTwinsContextString(envelope);
-    expect(prompt).toBe('TWINS_CONTEXT: fusion_score=0.82, trend=Stable, phase=Integration');
+    expect(prompt).toBe(
+      'TWINS_CONTEXT: fusion_score=0.82, trend=Stable, phase=Integration'
+    );
   });
 
   it('G4. CHANGE: different score produces different TWINS_CONTEXT string (proves effect)', () => {
-    setTwinsFusion({ globalScore: 0.30, trend: 'Declining', updatedAt: Date.now() });
+    setTwinsFusion({ globalScore: 0.3, trend: 'Declining', updatedAt: Date.now() });
     const promptLow = simulateTwinsContextString(buildChatContextEnvelope(makeInput()));
 
     clearTwinsFusion();
@@ -362,15 +415,29 @@ describe('TWINS G — Deterministic prompt-trace: TWINS_CONTEXT string changes (
   });
 
   it('G5. CHANGE: different phase produces different TWINS_CONTEXT string', () => {
-    window.localStorage.setItem('titane_twin_fusion_v1', JSON.stringify({
-      globalScore: 0.80, trend: 'Stable', currentPhase: 'Observation', syncScore: 0.4, updatedAt: Date.now()
-    }));
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.8,
+        trend: 'Stable',
+        currentPhase: 'Observation',
+        syncScore: 0.4,
+        updatedAt: Date.now(),
+      })
+    );
     const promptEarly = simulateTwinsContextString(buildChatContextEnvelope(makeInput()));
 
     clearTwinsFusion();
-    window.localStorage.setItem('titane_twin_fusion_v1', JSON.stringify({
-      globalScore: 0.80, trend: 'Stable', currentPhase: 'Symbiosis', syncScore: 0.95, updatedAt: Date.now()
-    }));
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.8,
+        trend: 'Stable',
+        currentPhase: 'Symbiosis',
+        syncScore: 0.95,
+        updatedAt: Date.now(),
+      })
+    );
     const promptLate = simulateTwinsContextString(buildChatContextEnvelope(makeInput()));
 
     expect(promptEarly).not.toBe(promptLate);
@@ -380,11 +447,20 @@ describe('TWINS G — Deterministic prompt-trace: TWINS_CONTEXT string changes (
 
   it('G6. FORMAT PROOF: exact TWINS_CONTEXT string matches Rust format! spec', () => {
     // Rust: format!("TWINS_CONTEXT: fusion_score={:.2}, trend={twins_trend}, phase={twins_phase}")
-    window.localStorage.setItem('titane_twin_fusion_v1', JSON.stringify({
-      globalScore: 0.9, trend: 'Improving', currentPhase: 'CoEvolution', syncScore: 0.85, updatedAt: Date.now()
-    }));
+    window.localStorage.setItem(
+      'titane_twin_fusion_v1',
+      JSON.stringify({
+        globalScore: 0.9,
+        trend: 'Improving',
+        currentPhase: 'CoEvolution',
+        syncScore: 0.85,
+        updatedAt: Date.now(),
+      })
+    );
     const prompt = simulateTwinsContextString(buildChatContextEnvelope(makeInput()));
-    expect(prompt).toBe('TWINS_CONTEXT: fusion_score=0.90, trend=Improving, phase=CoEvolution');
+    expect(prompt).toBe(
+      'TWINS_CONTEXT: fusion_score=0.90, trend=Improving, phase=CoEvolution'
+    );
   });
 
   it('G7. CLASSIFICATION: PROMPT_EFFECT_PROVEN, RESPONSE_EFFECT_UNPROVEN (documented)', () => {
