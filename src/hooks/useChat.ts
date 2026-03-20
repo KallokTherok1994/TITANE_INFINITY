@@ -1930,6 +1930,14 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
         }
 
         const provider = finalResponse.provider || 'tauri-backend';
+
+        // LOCK1 — PROVIDER_DISPLAY_TRUTH: extract actual provider from backend metadata.
+        // Source of truth is finalResponse.metadata.provider_used (set by backend).
+        const backendMeta = finalResponse.metadata as Record<string, unknown> | undefined;
+        const actualProviderUsed: string =
+          (typeof backendMeta?.provider_used === 'string' && backendMeta.provider_used) ||
+          provider;
+
         const metadataPatch: Record<string, unknown> = {
           status: streamingError ? 'fallback' : 'success',
           duration: Date.now() - startTime,
@@ -1938,6 +1946,9 @@ Tu peux réessayer dans quelques instants ou configurer un provider IA.`;
           mode: currentModeState,
           streamChunks: chunkCount,
           provider,
+          // LOCK1: actual vs requested provider for UI badge (truth, not preference)
+          providerUsed: actualProviderUsed,
+          requestedProvider: preferredProviderState,
         };
 
         const responseContent =

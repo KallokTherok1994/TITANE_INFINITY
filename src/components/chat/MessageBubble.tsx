@@ -221,6 +221,35 @@ export const MessageBubble = memo(function MessageBubble({
         <div className="message-bubble-header">
           <span className="message-bubble-author">{AUTHOR_NAMES[role]}</span>
           <span className="message-bubble-time">{formattedTime}</span>
+          {/* LOCK1 — PROVIDER_DISPLAY_TRUTH: actual provider from backend, not localStorage */}
+          {role === 'assistant' && typeof metadata?.providerUsed === 'string' && (
+            <span
+              className={`message-provider-badge${
+                typeof metadata.requestedProvider === 'string' &&
+                metadata.requestedProvider !== 'auto' &&
+                metadata.providerUsed !== metadata.requestedProvider
+                  ? ' message-provider-badge-mismatch'
+                  : ''
+              }`}
+              data-testid={`message-provider-badge-${timestamp}`}
+              title={`Fournisseur réel: ${metadata.providerUsed}`}
+              aria-label={`Fournisseur utilisé: ${metadata.providerUsed as string}`}
+            >
+              {metadata.providerUsed as string}
+              {typeof metadata.requestedProvider === 'string' &&
+                metadata.requestedProvider !== 'auto' &&
+                metadata.providerUsed !== metadata.requestedProvider && (
+                  <span
+                    className="message-provider-mismatch-indicator"
+                    data-testid={`message-provider-mismatch-${timestamp}`}
+                    title={`Demandé: ${metadata.requestedProvider}, fallback: ${metadata.providerUsed as string}`}
+                    aria-label={`Avertissement: demandé ${metadata.requestedProvider}, utilisé ${metadata.providerUsed as string}`}
+                  >
+                    {' '}⚠
+                  </span>
+                )}
+            </span>
+          )}
         </div>
 
         <div className="message-bubble-text">{messageContent}</div>
