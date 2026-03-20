@@ -10,9 +10,9 @@ OUT_DIR="${TITANE_E2E_ARTIFACTS_DIR:-reports/ui_research_e2e/$STAMP}"
 mkdir -p "$OUT_DIR"
 export TITANE_E2E_ARTIFACTS_DIR="$OUT_DIR"
 
-SPEC_PATH="e2e/desktop/online-chat-proof-ui.wdio.test.js"
+SPEC_PATH="${TITANE_E2E_SPEC_PATH:-e2e/desktop/online-chat-proof-ui.wdio.test.js}"
 DRIVER_LOG="$OUT_DIR/tauri-driver.log"
-WDIO_LOG="$OUT_DIR/wdio-online-chat-proof-ui.log"
+WDIO_LOG="$OUT_DIR/${TITANE_E2E_WDIO_LOG_BASENAME:-wdio-online-chat-proof-ui.log}"
 
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
   export TITANE_E2E_EXPECT_SOURCE="${TITANE_E2E_EXPECT_SOURCE:-dev-server}"
