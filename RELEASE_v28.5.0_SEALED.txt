@@ -41,3 +41,17 @@ COMMITS (session):
   b85e7422f — chore(release): deploy artifacts + metadata v28.5.0 [PROD]
 
 VERDICT: SEALED ✓
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PROD REDEPLOY — provider-recovery-triple-fix
+Token: GO_FOR_PROD_BUILD__TITANE_INFINITY
+Token: GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+Date: 2026-03-21T12:14:51Z
+Commit: 114057d56
+Build commit: 664728743
+Fixes: AH-2026-03-21-PROVIDER-RECOVERY-TRIPLE (entry 505)
+Gates: verify_instructions PASS=20 FAIL=0 | detect_recurrence G_AH_RECURRENCE_GUARD_PASS
+Chat: Vitest 229 files/3384 tests PASS | Playwright 36/36 PASS | Ollama live PASS
+Assets on GitHub release v28.5.0: 8 files (AppImage+deb+rpm fresh)
+VERDICT: PASS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
