@@ -1,0 +1,6 @@
+EXEC_MODE: DESKTOP_E2E_CERTIFICATION_RUN2
+SCOPE_RING: Ring4 WDIO desktop native Tauri
+RISK: MEDIUM - state-split fix verified, remaining failures classified
+PLAN: fix TypeId mismatch → rebuild → rerun WDIO x2 → classify remaining → seal
+PROOFS: wdio.log(reports/e2e-desktop/), cargo check x1, wdio_worker.log
+ROLLBACK: git restore -- src-tauri/src/main.rs && pnpm exec tauri build

@@ -1,0 +1,9 @@
+a3c551001 release(prod): PROD_BUILD_APPROVED PROD_DEPLOY_APPROVED v28.5.0 [c24045b2c]
+c24045b2c fix(e2e): total-dev-smoke hydration wait + timeout bumps
+42d33e38a fix(e2e): live-provider-test waitUntil load + role=main guard
+07f35d236 test(e2e): fix E2E stack — routing/selectors/version PARTIAL 39/44 browser PASS
+bd45feb87 release(prod): PROD_BUILD_APPROVED PROD_DEPLOY_APPROVED v28.5.0
+ M scripts/autoheal/autoheal_rules.jsonl
+ M src-tauri/data/ui_theme.json
+ M src-tauri/src/main.rs
+?? proof_packs/DESKTOP_E2E_CERT_2026-03-21_0729_a3c551001/

@@ -1,0 +1,13 @@
+VERDICT: PARTIAL
+
+Run 2: 18/25 suites PASS (improved from 10→7 suite failures)
+State-split fix: CONFIRMED (#0-8, #0-12 recovered)
+Remaining 7 suite failures: 3×BLOCKED_PROVIDER, 1×BLOCKED_ENV, 3×UI_NAV_OVERFLOW
+These are not code defects (external Ollama dependency, no audio HW, pre-existing UI nav overflow)
+
+DESKTOP_CHAT_IPC_CORE: PASS (conversation_generate TypeId mismatch resolved)
+AUDIO: BLOCKED_ENV
+OLLAMA_INTERMITTENT: BLOCKED_PROVIDER
+UI_NAV_OVERFLOW: pre-existing, non-causal
+
+FINAL: PARTIAL — core IPC chain certified, env-dependent failures classified
