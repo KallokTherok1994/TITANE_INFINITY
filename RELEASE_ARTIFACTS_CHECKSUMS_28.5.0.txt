@@ -1,10 +1,10 @@
 # TITANE∞ v28.5.0 — Release Artifact Checksums
-# Build: provider-recovery-triple-fix
-# Commit: 664728743
-# Date: 2026-03-21T12:02:31Z
+# Build: deps-patch-minor-update
+# Commit: 9b50cc67e
+# Date: 2026-03-21T12:42:56Z
 # Node: v20.20.0  Rust: rustc 1.94.0 (4a4ef493e 2026-03-02)
-# Gates: verify_instructions.sh PASS=20 FAIL=0 | cargo check exit=0
+# Gates: verify_instructions.sh PASS=20 FAIL=0 | vitest 3384 PASS | tsc PASS
 
-e79bc52f2890c9f045784f975df80e6a95ee69a385f9d43be85987a9f1fd73a1  TITANE-Infinity_28.5.0_amd64.AppImage
-f5e25eeec8450e2a63fbcba1cc6429492cff3cc6d8bc38e3c26c4c6afd8fc63c  TITANE-Infinity_28.5.0_amd64.deb
-5e5282759e021f299c51c7adade495d31a4412e4a6f787842269b76027c7e426  TITANE-Infinity-28.5.0-1.x86_64.rpm
+8d9c79bd4eafaa78132fcf62f47af6439030c938a1f62fa3bb6d2d4370b7f91b  TITANE-Infinity_28.5.0_amd64.AppImage
+c5c89a407303053bdb728d6f33589fe2d03b0d8d105aa61d2e1295247611e309  TITANE-Infinity_28.5.0_amd64.deb
+d98f872913315ccd85f85eba9f990d3dc9711dd86f6dc63ad7c8f66e6609c89f  TITANE-Infinity-28.5.0-1.x86_64.rpm
