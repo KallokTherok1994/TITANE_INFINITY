@@ -1188,6 +1188,15 @@ fn main() {
     let builder = builder.manage(titane_infinity::runtime_real::EventStreamState::default());
     let builder = builder.manage(titane_infinity::runtime_real::SecureKvState::default());
 
+    // [FIX-STATE-SPLIT] conversation_generate (lib command) expects
+    // titane_infinity::overdrive::chat_orchestrator::ChatOrchestratorState via State<>.
+    // The inline mod overdrive in main.rs creates a shadow type with a different TypeId,
+    // so the .manage(chat_orchestrator.clone()) above registers the wrong type.
+    // Register a lib-typed instance so conversation_generate can resolve its orchestrator.
+    // API keys are not bootstrapped into this instance (cloud providers unavailable);
+    // local/Ollama provider works through ConversationEngineState's ai_router.
+    let builder = builder.manage(titane_infinity::overdrive::chat_orchestrator::init());
+
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .plugin(tauri_plugin_fs::init())
