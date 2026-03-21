@@ -1,0 +1,16 @@
+TITANE∞ v28.15.0 — SEALED
+==========================
+Seal date : 2026-03-21T19:52:57Z
+Git SHA   : 893596c9d
+Branch    : MAIN
+Tokens    : GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+Verdict   : SEALED
+
+Changes since v28.14.0:
+- docs(90_release): PRODUCTION_RELEASE_v28.15.0.md (same-cycle)
+- BUMP: 28.14.0 → 28.15.0
+
+Artifacts:
+  TITANE-Infinity_28.15.0_amd64.AppImage  88M
+  TITANE-Infinity_28.15.0_amd64.deb
+  TITANE-Infinity-28.15.0-1.x86_64.rpm
