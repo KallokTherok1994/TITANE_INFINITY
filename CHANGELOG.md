@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.14.0] - 2026-03-21 (Governance)
+
+### Fixed
+- docs(90_release): create `PRODUCTION_RELEASE_v28.14.0.md` (same-cycle)
+
+### Changed
+- chore(version): bump 28.13.0 → 28.14.0
+
 ## [28.13.0] - 2026-03-21 (Governance — pattern break: zero residual docs debt)
 
 ### Fixed
