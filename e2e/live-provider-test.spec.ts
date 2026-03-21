@@ -3,16 +3,17 @@ import { test, expect } from '@playwright/test';
 test('PATCH-010: Live Provider Routing Test', async ({ page }) => {
   console.log('[TEST] Starting live provider routing validation...');
 
-  // Step 1: Navigate to app
+  // Step 1: Navigate to app — use 'load' so React mounts before we start interacting
   console.log('[TEST] [Step 1] Navigating to http://127.0.0.1:5173/');
   await page.goto('http://127.0.0.1:5173/', {
-    waitUntil: 'domcontentloaded',
+    waitUntil: 'load',
     timeout: 30000,
   });
 
-  // Step 2: Wait for boot ready
-  console.log('[TEST] [Step 2] Waiting for BOOT:READY signal...');
-  await page.waitForTimeout(3000);
+  // Step 2: Wait for React hydration (lazy chunks load after 'load' event)
+  console.log('[TEST] [Step 2] Waiting for app shell to render...');
+  await page.waitForSelector('[role="main"]', { timeout: 15000 });
+  await page.waitForTimeout(1500);
 
   // Step 3: Get title and verify
   const pageTitle = await page.title();
