@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.8.0] - 2026-03-21 (Governance — Post-Seal Next-Cycle Debt v28.7.0)
+
+### Fixed
+- docs(90_release): create `PRODUCTION_RELEASE_v28.7.0.md` canonical release doc
+- chore(deployment): sync `deployment/latest/` with v28.7.0 AppImage (local deploy step)
+
+### Changed
+- chore(version): bump 28.7.0 → 28.8.0
+
 ## [28.7.0] - 2026-03-21 (Governance + Stability — Post-Seal Next-Cycle Debt)
 
 ### Fixed
