@@ -400,23 +400,29 @@ impl UnifiedMemory {
             }
         }
 
-        // Search LTM (index only - full load on demand)
+        // Search LTM — load full content from disk for matching entries.
+        // ✅ FIX: LTM_FULL_CONTENT_NOT_LOADED — previously returned "[LTM:N]" placeholder.
+        // Now: reads metadata.file_path, deserializes MemoryItem, returns real content.
+        // Safe degradation: missing or corrupt files are skipped (no crash, no fake content).
         for (id, metadata) in &self.ltm.index {
             if Self::matches_query_metadata(metadata, query) {
-                // For now, return metadata as lightweight item
-                // In production, would load full content from disk
-                // v20.1: Use SmallVec for tags
-                let tags_smallvec: MemoryTags = metadata.tags.iter().cloned().collect();
-                let item = MemoryItem {
-                    id: id.clone(),
-                    content: format!("[LTM:{}]", metadata.memory_type as u8),
-                    memory_type: metadata.memory_type,
-                    importance: metadata.importance,
-                    tags: tags_smallvec,
-                    created_at: metadata.created_at,
-                    accessed_count: 0,
-                    last_accessed: now,
-                    tier: MemoryTier::LongTerm,
+                // Attempt full content load from disk
+                let full_item: Option<MemoryItem> = std::fs::read(&metadata.file_path)
+                    .ok()
+                    .and_then(|bytes| serde_json::from_slice::<MemoryItem>(&bytes).ok());
+
+                let item = if let Some(mut disk_item) = full_item {
+                    // Real content loaded — update access metadata
+                    disk_item.accessed_count += 1;
+                    disk_item.last_accessed = now;
+                    disk_item
+                } else {
+                    // File missing or corrupt — skip this entry (no fake content)
+                    eprintln!(
+                        "[MEMORY] ⚠️ LTM full content unavailable for {}: skipping recall hit",
+                        id
+                    );
+                    continue;
                 };
                 results.push(item);
             }
