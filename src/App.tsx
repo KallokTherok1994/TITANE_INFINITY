@@ -227,11 +227,6 @@ const IdentityCenter = lazy(() =>
   }))
 );
 
-// ✨ TWINS — Numeric Twin Engine (symbiose Kevin ↔ TITANE)
-const TwinsPage = lazy(() =>
-  import('./pages/TwinsPage').then(m => ({ default: m.TwinsPage }))
-);
-
 // ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14)
 const MemoryEvolutionCenter = lazy(() =>
   import('./components/MemoryEvolution/MemoryEvolutionCenter').then(m => ({
@@ -913,12 +908,6 @@ const AppRouter: React.FC = () => {
         description: 'Performance Ultime',
       },
       {
-        id: 'twins',
-        label: 'TWIN',
-        route: '/twins',
-        description: 'Numeric Twin Engine — Symbiose Kevin ↔ TITANE',
-      },
-      {
         id: 'total-dev',
         label: 'TOTAL DEV',
         route: '/total-dev',
@@ -1257,16 +1246,9 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/identity" element={<Navigate to="/identity-center" replace />} />
           <Route path="/persona" element={<Navigate to="/identity-center" replace />} />
-          {/* ✨ TWINS — Numeric Twin Engine (symbiose Kevin ↔ TITANE) */}
-          <Route
-            path="/twins"
-            element={
-              <ErrorBoundary context="TwinsPage">
-                <TwinsPage />
-              </ErrorBoundary>
-            }
-          />
-          <Route path="/twin" element={<Navigate to="/twins" replace />} />
+          {/* ✨ TWINS — redirected to TITANE > Symbiose section (menu fusion v29.2) */}
+          <Route path="/twins" element={<Navigate to="/titane" replace />} />
+          <Route path="/twin" element={<Navigate to="/titane" replace />} />
           {/* ✨ MEMORY EVOLUTION - Memory Evolution Engine++ v∞ (OPUS #14) */}
           <Route
             path="/memory-evolution"

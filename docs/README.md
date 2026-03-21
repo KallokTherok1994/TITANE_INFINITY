@@ -132,8 +132,15 @@ pnpm run dev:tauri
 
 ### Build Production
 ```bash
-GO_FOR_PROD_BUILD__TITANE_INFINITY=YES corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
+GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack pnpm exec tauri build --config src-tauri/tauri.conf.json
 ```
+
+### Native Desktop Freshness Gate (preprod/prod)
+```bash
+bash scripts/verify/verify-native-binary-freshness.sh
+```
+
+This gate must pass before native desktop certification and before any production build/deploy authorization.
 
 ### Nettoyage
 ```bash
