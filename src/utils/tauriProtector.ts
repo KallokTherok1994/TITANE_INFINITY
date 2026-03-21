@@ -459,8 +459,7 @@ export class TauriInvokeProtector {
           // Quick sanity check: invoke should have a name
           if (
             invoke.name &&
-            (invoke.name === 'invoke' ||
-              invoke.toString().includes('tauri'))
+            (invoke.name === 'invoke' || invoke.toString().includes('tauri'))
           ) {
             this.isTauriAvailable = true;
             this.tauriModuleCache = { invoke };

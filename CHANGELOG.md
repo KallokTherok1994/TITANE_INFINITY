@@ -2,105 +2,140 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.19.0] - 2026-03-21 (Governance)
+
+### Fixed
+
+- docs(90_release): create `PRODUCTION_RELEASE_v28.19.0.md` (same-cycle)
+- chore(autoheal): Rolldown post-build freshness pattern now encoded in pipeline
+
+### Changed
+
+- chore(version): bump 28.18.0 → 28.19.0
+
 ## [28.18.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.18.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.17.0 → 28.18.0
 
 ## [28.17.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.17.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.16.0 → 28.17.0
 
 ## [28.16.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.16.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.15.0 → 28.16.0
 
 ## [28.15.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.15.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.14.0 → 28.15.0
 
 ## [28.14.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.14.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.13.0 → 28.14.0
 
 ## [28.13.0] - 2026-03-21 (Governance — pattern break: zero residual docs debt)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.12.0.md` (catch-up)
 - docs(90_release): create `PRODUCTION_RELEASE_v28.13.0.md` (same-cycle — breaks recurring debt pattern)
 
 ### Changed
+
 - chore(version): bump 28.12.0 → 28.13.0
 
 ## [28.12.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.11.0.md` canonical release doc
 
 ### Changed
+
 - chore(version): bump 28.11.0 → 28.12.0
 
 ## [28.11.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.10.0.md` canonical release doc
 
 ### Changed
+
 - chore(version): bump 28.10.0 → 28.11.0
 
 ## [28.10.0] - 2026-03-21 (Governance + DesignCenter flake root fix)
 
 ### Fixed
+
 - test(setup): add global `afterEach` DOM cleanup in `src/test-utils/setup.ts` to clear `document.documentElement` style/class after every test file — eliminates DesignCenter CSS bleed flake
 - docs(90_release): create `PRODUCTION_RELEASE_v28.9.0.md` canonical release doc
 
 ### Changed
+
 - chore(version): bump 28.9.0 → 28.10.0
 
 ## [28.9.0] - 2026-03-21 (Governance — Post-Seal Next-Cycle Debt v28.8.0)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.8.0.md` canonical release doc
 
 ### Changed
+
 - chore(version): bump 28.8.0 → 28.9.0
 
 ## [28.8.0] - 2026-03-21 (Governance — Post-Seal Next-Cycle Debt v28.7.0)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.7.0.md` canonical release doc
 - chore(deployment): sync `deployment/latest/` with v28.7.0 AppImage (local deploy step)
 
 ### Changed
+
 - chore(version): bump 28.7.0 → 28.8.0
 
 ## [28.7.0] - 2026-03-21 (Governance + Stability — Post-Seal Next-Cycle Debt)
 
 ### Fixed
+
 - test(design-center): add `afterEach` DOM cleanup to prevent CSS property bleed in parallel suite runs
 - chore(deployment): copy v28.6.0 AppImage to `deployment/latest/` (staging area sync)
 - docs(90_release): create `PRODUCTION_RELEASE_v28.6.0.md` canonical release doc
 
 ### Changed
+
 - chore(version): bump 28.6.0 → 28.7.0
 
 ## [28.6.0] - 2026-03-21 (Vite 8 + Rolldown + Deps Recert + Governance Timeout)
@@ -131,8 +166,6 @@ All notable changes to this project are documented in this file.
 - Artifacts: `TITANE-Infinity_28.6.0_amd64.AppImage`, `.deb`, `.rpm`
 - Sealed: `RELEASE_v28.6.0_SEALED.txt`
 - Gates at seal: tsc PASS, lint PASS, vitest 3399 PASS, build PASS, verify_instructions PASS=20/0
-
-
 
 ### Navigation (v29.2 — TWINS Menu Fusion)
 

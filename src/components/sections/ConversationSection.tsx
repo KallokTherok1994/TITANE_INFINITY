@@ -1293,7 +1293,11 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       const manifest = buildProfessionalDocumentManifest(messageText, route.contract);
       setActiveArtifactManifest(manifest);
 
-      const antiLie = validateNoFakeArtifactResponse(messageText, route.contract, manifest);
+      const antiLie = validateNoFakeArtifactResponse(
+        messageText,
+        route.contract,
+        manifest
+      );
       if (!antiLie.ok) {
         await appendLocalExchange(
           messageText,

@@ -182,7 +182,7 @@ export default defineConfig(({ command }) => ({
     // Vite's native path resolution with explicit aliases is faster
     // tsconfigPaths() disabled to improve plugin timing performance
     // Use explicit aliases in resolve.alias instead
-    
+
     // 🚀 v34.0.0: Bundle analyzer for dependency visualization
     visualizer({
       open: false,
@@ -321,7 +321,7 @@ export default defineConfig(({ command }) => ({
         // 🚀 Enable Rolldown code splitting for better chunk distribution (v38.0.0)
         // https://rolldown.rs/reference/OutputOptions.codeSplitting
         codeSplitting: true,
-        
+
         manualChunks: id => {
           // ═════════════════════════════════════════════════════════════════════
           // 🔧 P1_BUILD_CHUNKS_FIX: Deterministic non-overlapping chunk rules

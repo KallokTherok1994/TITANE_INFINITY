@@ -124,8 +124,12 @@ describe('TOTAL_DEV Debug Navigation & Rendering', () => {
     await browser.execute(element => {
       if (!element) return;
       element.focus();
-      element.dispatchEvent(new MouseEvent('mousedown', { bubbles: true, cancelable: true }));
-      element.dispatchEvent(new MouseEvent('mouseup', { bubbles: true, cancelable: true }));
+      element.dispatchEvent(
+        new MouseEvent('mousedown', { bubbles: true, cancelable: true })
+      );
+      element.dispatchEvent(
+        new MouseEvent('mouseup', { bubbles: true, cancelable: true })
+      );
       element.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true }));
     }, moreBtn);
     await browser.pause(1500);

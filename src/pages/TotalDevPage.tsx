@@ -177,10 +177,7 @@ const LockBadge = memo<{ lockState: LockState; expiresAt: number }>(
       remaining !== null ? ` (${Math.floor(remaining / 60)}m${remaining % 60}s)` : '';
 
     return (
-      <span
-        className={`total-dev-badge ${colors[lockState]}`}
-        data-testid="lock-badge"
-      >
+      <span className={`total-dev-badge ${colors[lockState]}`} data-testid="lock-badge">
         {labels[lockState]}
         {remainingLabel}
       </span>

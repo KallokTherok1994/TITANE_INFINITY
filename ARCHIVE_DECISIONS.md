@@ -21,32 +21,32 @@ Archive conservatively but decisively.
 
 ### 1. deployment/latest/MANIFEST.json
 
-| Field | Before | After |
-|---|---|---|
-| Previous role | Active "latest" deployment pointer | Same role, updated to 28.5.0 |
-| Why not current | Contained `"version": "28.0.0"` while repo canon is 28.5.0 | Resolved |
-| Action | Updated `version` to `28.5.0`; noted artifacts pending | UPDATED |
-| Historical data | Preserved as `MANIFEST_v28.0.0.json` | Not touched |
-| Rollback | `git restore -- deployment/latest/MANIFEST.json` | |
+| Field           | Before                                                     | After                        |
+| --------------- | ---------------------------------------------------------- | ---------------------------- |
+| Previous role   | Active "latest" deployment pointer                         | Same role, updated to 28.5.0 |
+| Why not current | Contained `"version": "28.0.0"` while repo canon is 28.5.0 | Resolved                     |
+| Action          | Updated `version` to `28.5.0`; noted artifacts pending     | UPDATED                      |
+| Historical data | Preserved as `MANIFEST_v28.0.0.json`                       | Not touched                  |
+| Rollback        | `git restore -- deployment/latest/MANIFEST.json`           |                              |
 
 ### 2. deployment/latest/SHA256SUMS.txt
 
-| Field | Before | After |
-|---|---|---|
-| Previous role | Active "latest" checksum pointer | Updated to reflect 28.5.0 pending status |
-| Why not current | Listed `Titan-Stable_28.0.0_*` artifacts | Resolved |
-| Action | Updated header; v28.5.0 artifacts noted as pending; v28.0.0 entries preserved as historical reference | UPDATED |
-| Historical data | Preserved as `SHA256SUMS_v28.0.0.txt` | Not touched |
-| Rollback | `git restore -- deployment/latest/SHA256SUMS.txt` | |
+| Field           | Before                                                                                                | After                                    |
+| --------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Previous role   | Active "latest" checksum pointer                                                                      | Updated to reflect 28.5.0 pending status |
+| Why not current | Listed `Titan-Stable_28.0.0_*` artifacts                                                              | Resolved                                 |
+| Action          | Updated header; v28.5.0 artifacts noted as pending; v28.0.0 entries preserved as historical reference | UPDATED                                  |
+| Historical data | Preserved as `SHA256SUMS_v28.0.0.txt`                                                                 | Not touched                              |
+| Rollback        | `git restore -- deployment/latest/SHA256SUMS.txt`                                                     |                                          |
 
 ### 3. deployment/latest/CHECKSUMS.sha256
 
-| Field | Before | After |
-|---|---|---|
-| Previous role | Active "latest" checksum pointer (duplicate of SHA256SUMS.txt) | Updated to reflect 28.5.0 pending status |
-| Why not current | Listed `Titan-Stable_28.0.0_*` artifacts | Resolved |
-| Action | Updated header; v28.5.0 artifacts noted as pending; v28.0.0 entries preserved as historical reference | UPDATED |
-| Rollback | `git restore -- deployment/latest/CHECKSUMS.sha256` | |
+| Field           | Before                                                                                                | After                                    |
+| --------------- | ----------------------------------------------------------------------------------------------------- | ---------------------------------------- |
+| Previous role   | Active "latest" checksum pointer (duplicate of SHA256SUMS.txt)                                        | Updated to reflect 28.5.0 pending status |
+| Why not current | Listed `Titan-Stable_28.0.0_*` artifacts                                                              | Resolved                                 |
+| Action          | Updated header; v28.5.0 artifacts noted as pending; v28.0.0 entries preserved as historical reference | UPDATED                                  |
+| Rollback        | `git restore -- deployment/latest/CHECKSUMS.sha256`                                                   |                                          |
 
 ---
 
@@ -87,6 +87,7 @@ git restore -- \
 ```
 
 Or by single commit revert:
+
 ```bash
 git revert HEAD
 ```
