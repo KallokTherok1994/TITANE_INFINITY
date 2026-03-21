@@ -177,7 +177,10 @@ const LockBadge = memo<{ lockState: LockState; expiresAt: number }>(
       remaining !== null ? ` (${Math.floor(remaining / 60)}m${remaining % 60}s)` : '';
 
     return (
-      <span className={`total-dev-badge ${colors[lockState]}`}>
+      <span
+        className={`total-dev-badge ${colors[lockState]}`}
+        data-testid="lock-badge"
+      >
         {labels[lockState]}
         {remainingLabel}
       </span>
@@ -250,6 +253,7 @@ const UnlockPanel = memo<{
           onClick={handleUnlock}
           disabled={loading || !inputValue.trim()}
           className="total-dev-unlock-btn"
+          data-testid="total-dev-unlock-btn"
         >
           {loading ? '...' : 'UNLOCK'}
         </button>
@@ -888,6 +892,7 @@ const DevActionsPanel = memo<{ lockState: LockState }>(({ lockState }) => {
             disabled={loading || lockState !== 'UNLOCKED'}
             className="total-dev-action-btn"
             title={action.cmd}
+            data-testid="dev-action-btn"
           >
             {action.label}
           </button>
@@ -943,7 +948,7 @@ export const TotalDevPage: React.FC = () => {
   return (
     <div className="total-dev-page">
       {/* HEADER ─────────────────────────────────────────── */}
-      <header className="total-dev-header">
+      <header className="total-dev-header" data-testid="total-dev-header">
         <div className="total-dev-header-left">
           <h1 className="total-dev-title">
             ⚛ <span className="total-dev-title-main">TOTAL_DEV</span>
@@ -997,6 +1002,7 @@ export const TotalDevPage: React.FC = () => {
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
                 className={`total-dev-tab ${activeTab === tab.id ? 'total-dev-tab--active' : ''}`}
+                data-testid={`total-dev-tab-${tab.id}`}
               >
                 {tab.label}
               </button>
