@@ -27,11 +27,10 @@ fn env_flag_true(name: &str) -> bool {
 }
 
 fn is_ollama_auto_enabled() -> bool {
-    // Dev builds: keep local-first ergonomics.
-    // Release builds: default to silent-by-default (no localhost probes) unless opt-in.
-    cfg!(debug_assertions)
-        || env_flag_true("TITANE_OLLAMA_AUTO_ENABLED")
-        || env_flag_true("TITANE_LOCALHOST_PROBES_ENABLED")
+    // Enable Ollama probing by default in all builds (dev and release).
+    // Can be explicitly disabled via env var TITANE_OLLAMA_AUTO_DISABLED=1 in
+    // environments that prohibit localhost probes (e.g. sandboxed CI).
+    !env_flag_true("TITANE_OLLAMA_AUTO_DISABLED")
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -387,6 +386,13 @@ async fn is_provider_available(
     {
         let mut last_check = state.provider_last_check.write().await;
         last_check.insert(provider.to_string(), now);
+    }
+
+    // If heartbeat succeeded, reset failure counter so the circuit breaker reopens.
+    // Without this, a count >= MAX_FAILURES persists across cache cycles → deadlock.
+    if is_available {
+        let mut failures = state.provider_failure_count.write().await;
+        failures.insert(provider.to_string(), 0);
     }
 
     is_available

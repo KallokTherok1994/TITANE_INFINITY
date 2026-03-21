@@ -40,6 +40,11 @@ const IPC_ERROR_PATTERNS = [
   /tauri error/i,
   /invoke error/i,
   /ipc error/i,
+
+  // State management errors (TypeId mismatch / state not registered)
+  /state not managed/i,
+  /state not found/i,
+  /type.*not.*managed/i,
 ] as const;
 
 /**
