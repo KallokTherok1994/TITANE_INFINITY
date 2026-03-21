@@ -68,7 +68,9 @@ async function saveTextExport(
 
       const selectedPath = await save({
         defaultPath: options.defaultName,
-        filters: [{ name: options.extension.toUpperCase(), extensions: [options.extension] }],
+        filters: [
+          { name: options.extension.toUpperCase(), extensions: [options.extension] },
+        ],
       });
 
       if (!selectedPath) {

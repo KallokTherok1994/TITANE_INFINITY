@@ -86,9 +86,9 @@ function pickByPreference(candidates, mode) {
     return release || debug || appimage || null;
   }
 
-  return candidates
-    .slice()
-    .sort((left, right) => right.mtimeMs - left.mtimeMs)[0] || null;
+  return (
+    candidates.slice().sort((left, right) => right.mtimeMs - left.mtimeMs)[0] || null
+  );
 }
 
 function classifyFreshness({ selectedKind, isFresh, explicitOverride, workspaceAhead }) {
@@ -124,24 +124,39 @@ function resolveNativeBinaryPolicy(options = {}) {
   const releasePath = path.resolve(rootDir, 'src-tauri/target/release/titane-infinity');
   const appImagePaths = [
     // newest first: policy selects the first executable found
-    path.resolve(rootDir, 'src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.6.0_amd64.AppImage'),
+    path.resolve(
+      rootDir,
+      'src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.6.0_amd64.AppImage'
+    ),
     path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.5.0_amd64.AppImage'),
     path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage'),
     path.resolve(rootDir, 'runtime/stable/Titan-Stable_27.2.0_amd64.AppImage'),
-    path.resolve(rootDir, 'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'),
+    path.resolve(
+      rootDir,
+      'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
+    ),
   ];
 
-  const existingAppImage = appImagePaths.find(filePath => existsExecutable(filePath)) || '';
+  const existingAppImage =
+    appImagePaths.find(filePath => existsExecutable(filePath)) || '';
   const candidates = [
     { kind: 'debug', filePath: debugPath, mtimeMs: statMtimeMs(debugPath) },
     { kind: 'release', filePath: releasePath, mtimeMs: statMtimeMs(releasePath) },
-    { kind: 'appimage', filePath: existingAppImage, mtimeMs: statMtimeMs(existingAppImage) },
+    {
+      kind: 'appimage',
+      filePath: existingAppImage,
+      mtimeMs: statMtimeMs(existingAppImage),
+    },
   ].filter(item => item.filePath && item.mtimeMs >= 0);
 
   const explicitExists = existsExecutable(explicitBinaryPath);
   const selected = explicitExists
     ? {
-        kind: explicitBinaryPath.includes('/debug/') ? 'debug' : explicitBinaryPath.includes('/release/') ? 'release' : 'appimage',
+        kind: explicitBinaryPath.includes('/debug/')
+          ? 'debug'
+          : explicitBinaryPath.includes('/release/')
+            ? 'release'
+            : 'appimage',
         filePath: path.resolve(explicitBinaryPath),
         mtimeMs: statMtimeMs(explicitBinaryPath),
       }

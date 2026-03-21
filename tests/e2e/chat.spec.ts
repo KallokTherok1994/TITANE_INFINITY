@@ -72,7 +72,9 @@ test.describe('Chat Interface', () => {
     await expect(searchInput).toHaveValue('');
   });
 
-  test('should open ModeBuilder for generate-and-open document intent', async ({ page }) => {
+  test('should open ModeBuilder for generate-and-open document intent', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
@@ -85,10 +87,14 @@ test.describe('Chat Interface', () => {
     await page.getByTestId('chat-send').click();
 
     await expect(page.locator('.mode-builder-overlay')).toBeVisible({ timeout: 10000 });
-    await expect(page.getByTestId('chat-artifact-manifest')).toContainText('Artifact Manifest: artifact-');
+    await expect(page.getByTestId('chat-artifact-manifest')).toContainText(
+      'Artifact Manifest: artifact-'
+    );
   });
 
-  test('should keep code-intent editor route blocked and not open ModeBuilder', async ({ page }) => {
+  test('should keep code-intent editor route blocked and not open ModeBuilder', async ({
+    page,
+  }) => {
     await page.goto('/');
 
     await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });

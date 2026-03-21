@@ -75,7 +75,8 @@ function inferFormat(request: string): ArtifactActionContract['target_format'] {
 
 function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
   const text = request.toLowerCase();
-  if (text.includes('code') || text.includes('config') || text.includes('yaml')) return 'code';
+  if (text.includes('code') || text.includes('config') || text.includes('yaml'))
+    return 'code';
   if (text.includes('rapport') || text.includes('report')) return 'report';
   if (
     text.includes('lettre') ||
@@ -90,9 +91,8 @@ function inferKind(request: string): ArtifactActionContract['artifact_kind'] {
 
 export function classifyArtifactIntent(request: string): ArtifactIntent {
   const text = request.toLowerCase();
-  const asksFile = /(g[eé]n[ée]re|cr[eé]e|create|produce).*(fichier|file|document|rapport)/.test(
-    text
-  );
+  const asksFile =
+    /(g[eé]n[ée]re|cr[eé]e|create|produce).*(fichier|file|document|rapport)/.test(text);
   const asksOpen = /(ouvre|open).*(editeur|editor|canvas|artifact)/.test(text);
   const asksSave = /(sauve|enregistre|save)/.test(text);
   const asksExport = /(exporte|export)/.test(text);
@@ -114,7 +114,8 @@ export function buildArtifactActionContract(request: string): ArtifactActionCont
     open_editor: intent === 'OPEN_EDITOR' || intent === 'GENERATE_AND_OPEN',
     auto_save: intent === 'GENERATE_AND_SAVE',
     professional_grade: inferProfessionalGrade(request),
-    reason: intent === 'ANSWER_ONLY' ? 'No file intent detected' : 'Artifact intent detected',
+    reason:
+      intent === 'ANSWER_ONLY' ? 'No file intent detected' : 'Artifact intent detected',
   };
 }
 
@@ -174,7 +175,9 @@ export function buildProfessionalDocumentManifest(
       version: '1.0',
       editable: true,
     },
-    target_formats: [contract.target_format === 'unknown' ? 'markdown' : contract.target_format],
+    target_formats: [
+      contract.target_format === 'unknown' ? 'markdown' : contract.target_format,
+    ],
   };
 }
 
