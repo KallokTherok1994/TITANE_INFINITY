@@ -1,0 +1,4 @@
+TITANE_INFINITY v28.23.0 — Artifact Checksums
+c8cdb67d82254e9c8c9c10d88641fdc78fb16aceee7f8c44261328fba54b4766  TITANE-Infinity_28.23.0_amd64.AppImage
+7a7a358b905ad6e5d231e8c96f6a329756267636a07950e9c4d7d753ebbeb586  TITANE-Infinity_28.23.0_amd64.deb
+2810138c78b75af44ac1fbff2a0ecf0d59af425cefce1ebafa3bf3ab61fb6c09  TITANE-Infinity-28.23.0-1.x86_64.rpm
