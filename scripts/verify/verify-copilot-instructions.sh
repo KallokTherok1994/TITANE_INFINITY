@@ -6,6 +6,25 @@ cd "$ROOT_DIR"
 
 FAIL=0
 
+# Portable search: prefer rg (ripgrep) if available, fall back to grep
+_search_qi() {
+  local pattern="$1"; shift
+  if command -v rg >/dev/null 2>&1; then
+    rg -qi "$pattern" "$@"
+  else
+    grep -RiqE "$pattern" "$@"
+  fi
+}
+
+_search_ni() {
+  local pattern="$1"; shift
+  if command -v rg >/dev/null 2>&1; then
+    rg -n -i "$pattern" "$@"
+  else
+    grep -RInE "$pattern" "$@"
+  fi
+}
+
 REQUIRED_FILES=(
   .github/copilot-instructions.md
   .github/instructions/tauri.instructions.md
@@ -68,14 +87,14 @@ if [[ -d .github/instructions ]]; then
 fi
 
 for pattern in "${REQUIRED_PATTERNS[@]}"; do
-  if ! rg -qi "$pattern" .github/copilot-instructions.md; then
+  if ! _search_qi "$pattern" .github/copilot-instructions.md; then
     echo "FAIL: missing pattern in copilot-instructions: $pattern"
     FAIL=1
   fi
 done
 
 for pattern in "${FORBIDDEN_PATTERNS[@]}"; do
-  if rg -n -i "$pattern" "${INSTRUCTION_FILES[@]}"; then
+  if _search_ni "$pattern" "${INSTRUCTION_FILES[@]}"; then
     echo "FAIL: forbidden pattern detected: $pattern"
     FAIL=1
   fi
@@ -83,7 +102,7 @@ done
 
 for file in "${INSTRUCTION_FILES[@]:1}"; do
   for pattern in "${SECTION_PATTERNS[@]}"; do
-    if ! rg -qi "$pattern" "$file"; then
+    if ! _search_qi "$pattern" "$file"; then
       echo "FAIL: missing section '$pattern' in $file"
       FAIL=1
     fi
