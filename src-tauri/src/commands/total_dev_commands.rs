@@ -16,8 +16,9 @@ use std::process::Command as ProcessCommand;
 use std::sync::atomic::{AtomicU64, Ordering};
 
 // ─────────────────────────────────────────────────────────────────
-// SHA-256 of "Kanele1994" — stored ONLY in Rust, never in frontend
-// Never decode or print this constant.
+// SHA-256 hash of the super-admin unlock token.
+// Stored in Rust code only (never in frontend, logs, or config).
+// Never decode, print, or share this constant value.
 // ─────────────────────────────────────────────────────────────────
 const TOTAL_DEV_UNLOCK_HASH: &str =
     "895d3d67cc9d3b3698b59e35818c7ac9f06c3fe710c48e69a80908ca5ad999a8";
