@@ -8,6 +8,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import { safeInvokeTauri } from '@/utils/tauriProtector';
 
 type MonitoringBridge = {
@@ -1937,9 +1938,8 @@ export async function secureInvoke<T>(
 
     let response: unknown;
     if (isTestEnv) {
-      // En environnement de test, utiliser directement le module mocké.
-      const tauriCore = await import('@tauri-apps/api/core');
-      response = await tauriCore.invoke<T>(command, payload);
+      // En environnement de test, utiliser directement le module statique.
+      response = await invoke<T>(command, payload);
     } else {
       response = await safeInvokeTauri<T>(command, payload);
     }

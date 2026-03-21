@@ -6,6 +6,7 @@
  * Correction des erreurs "Cannot read properties of undefined (reading 'invoke')"
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import type {
   AdaptiveLayer,
   CognitiveLayer,
@@ -434,9 +435,10 @@ export class TauriInvokeProtector {
   /**
    * Import sécurisé du module Tauri
    * ✅ v20.3: Cache le module importé pour éviter re-imports
+   * ✅ v38.0.0: Use static import at top-level for Rolldown optimization
    */
   private async safeTauriImport(): Promise<{
-    invoke: typeof import('@tauri-apps/api/core').invoke;
+    invoke: typeof invoke;
   } | null> {
     try {
       // ✅ If we've already imported and cached, return immediately
@@ -450,32 +452,31 @@ export class TauriInvokeProtector {
         return null;
       }
 
-      const module = await import('@tauri-apps/api/core');
-      if (module && typeof module.invoke === 'function') {
+      if (typeof invoke === 'function') {
         // Verify invoke is actually bound to the Tauri runtime
         // In browser mode, invoke exists but may not be callable
         try {
           // Quick sanity check: invoke should have a name
           if (
-            module.invoke.name &&
-            (module.invoke.name === 'invoke' ||
-              module.invoke.toString().includes('tauri'))
+            invoke.name &&
+            (invoke.name === 'invoke' ||
+              invoke.toString().includes('tauri'))
           ) {
             this.isTauriAvailable = true;
-            this.tauriModuleCache = { invoke: module.invoke };
+            this.tauriModuleCache = { invoke };
             console.log(
               '[TauriProtector] ✅ Successfully imported Tauri core module (verified)'
             );
-            return { invoke: module.invoke };
+            return { invoke };
           } else {
             console.warn(
               '[TauriProtector] Tauri invoke imported but signature suspicious:',
-              module.invoke.name
+              invoke.name
             );
             // Still cache it in case it's the real thing
             this.isTauriAvailable = true;
-            this.tauriModuleCache = { invoke: module.invoke };
-            return { invoke: module.invoke };
+            this.tauriModuleCache = { invoke };
+            return { invoke };
           }
         } catch (e) {
           // If we can even check the invoke function, that's a problem

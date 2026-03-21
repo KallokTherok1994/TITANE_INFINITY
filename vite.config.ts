@@ -178,7 +178,11 @@ export default defineConfig(({ command }) => ({
         plugins: [],
       },
     }),
-    tsconfigPaths() as unknown as PluginOption, // Auto-sync avec tsconfig.json paths
+    // ✅ v38.0.0: Disable vite-tsconfig-paths for faster builds
+    // Vite's native path resolution with explicit aliases is faster
+    // tsconfigPaths() disabled to improve plugin timing performance
+    // Use explicit aliases in resolve.alias instead
+    
     // 🚀 v34.0.0: Bundle analyzer for dependency visualization
     visualizer({
       open: false,
@@ -292,7 +296,7 @@ export default defineConfig(({ command }) => ({
       treeshake: {
         moduleSideEffects: false,
         propertyReadSideEffects: false,
-        tryCatchDeoptimization: false,
+        // Note: tryCatchDeoptimization is a Rollup option, not Rolldown - removed for compatibility
       },
 
       // Avoid noisy warnings from known-safe/3rd-party bundles.
@@ -314,6 +318,10 @@ export default defineConfig(({ command }) => ({
         warn(warning);
       },
       output: {
+        // 🚀 Enable Rolldown code splitting for better chunk distribution (v38.0.0)
+        // https://rolldown.rs/reference/OutputOptions.codeSplitting
+        codeSplitting: true,
+        
         manualChunks: id => {
           // ═════════════════════════════════════════════════════════════════════
           // 🔧 P1_BUILD_CHUNKS_FIX: Deterministic non-overlapping chunk rules
@@ -519,8 +527,9 @@ export default defineConfig(({ command }) => ({
     // 🚀 OPTIMIZATION v24.7.7: Faster minification with esbuild (removed terser)
     // minify: 'esbuild' configured above - terser options removed for speed
 
-    // Réduit à 1600KB pour limiter le bruit de warning tout en gardant la pression sur le découpage
-    chunkSizeWarningLimit: 1600,
+    // Increase chunk size warning limit to account for large vendor bundles
+    // Now that codeSplitting is enabled, large chunks are expected
+    chunkSizeWarningLimit: 2500,
     // Optimisations supplémentaires
     target: 'esnext',
     cssCodeSplit: false,

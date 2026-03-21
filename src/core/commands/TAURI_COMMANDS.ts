@@ -11,6 +11,8 @@
  * ═══════════════════════════════════════════════════════════════════
  */
 
+import { invoke } from '@tauri-apps/api/core';
+
 export const TAURI_COMMANDS = {
   // ═══════════════════════════════════════════════════════════════
   // RUNTIME CONFIGURATION (Security)
@@ -240,15 +242,11 @@ export async function invokeTauri<T>(
   }
 
   try {
-    // Dynamic import pour éviter erreurs SSR
-    const tauriCore = await import('@tauri-apps/api/core');
-
-    // Protection contre undefined
-    if (!tauriCore || typeof tauriCore.invoke !== 'function') {
+    // Protection contre undefined - invoke est importé au niveau global
+    if (typeof invoke !== 'function') {
       throw new Error('Tauri invoke function not available');
     }
 
-    const { invoke } = tauriCore;
     return await invoke<T>(command, args);
   } catch (error) {
     // Fallback en cas d'erreur Tauri (mode web ou erreur backend)
