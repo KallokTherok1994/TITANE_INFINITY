@@ -6,44 +6,44 @@ import { test, expect } from '@playwright/test';
 test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
   test.beforeEach(async ({ page }) => {
     // Load the app
-    await page.goto('http://localhost:5173');
-    // Wait for router initialization
-    await page.waitForLoadState('networkidle');
+    await page.goto('/');
+    // Wait for initial load ('networkidle' breaks: app polls Ollama continuously)
+    await page.waitForLoadState('load');
   });
 
   test('Route /total-dev RENDERS and NAV shows TOTAL_DEV item', async ({ page }) => {
     // Navigate to /total-dev
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Verify page title or unique marker
     const heading = page.locator('[data-testid="total-dev-header"]');
     await expect(heading).toBeVisible({ timeout: 5000 });
     
     // Verify TOTAL_DEV nav item exists
-    const navItem = page.locator('text=TOTAL_DEV');
+    const navItem = page.locator('text=TOTAL_DEV').first();
     await expect(navItem).toBeVisible({ timeout: 5000 });
   });
 
   test('LockBadge renders with LOCKED state initially', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Check lock badge visibility
     const lockBadge = page.locator('[data-testid="lock-badge"]');
     await expect(lockBadge).toBeVisible();
     
     // Check lock status text
-    const lockStatus = page.locator('text=LOCKED');
+    const lockStatus = page.locator('text=LOCKED').first();
     await expect(lockStatus).toBeVisible();
   });
 
   test('UnlockPanel displays and accepts input', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Find password input
-    const passwordInput = page.locator('input[placeholder*="code"]').first();
+    const passwordInput = page.locator('input[placeholder*="unlock"]').first();
     await expect(passwordInput).toBeVisible();
 
     // Try entering incorrect password (should not unlock)
@@ -53,13 +53,13 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
 
     // Lock badge should still show LOCKED (after 2s)
     await page.waitForTimeout(1000);
-    const lockStatus = page.locator('text=LOCKED');
+    const lockStatus = page.locator('text=LOCKED').first();
     await expect(lockStatus).toBeVisible();
   });
 
   test('Tabs (Chat, Console, Git, Files, Actions) render correctly', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Check tab buttons exist
     const tabChat = page.locator('button:has-text("Discuss Compute")').first();
@@ -76,8 +76,8 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
   });
 
   test('ChatDevPanel loads with QWEN-Coder context', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Switch to Chat tab
     const chatTab = page.locator('button:has-text("Discuss Compute")').first();
@@ -94,8 +94,8 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
   });
 
   test('ConsoleDevPanel structure correct', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Switch to Console tab
     const consoleTab = page.locator('button:has-text("Console")').first();
@@ -112,8 +112,8 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
   });
 
   test('DevActionsPanel shows 12 action buttons', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Switch to Actions tab
     const actionsTab = page.locator('button:has-text("Actions")').first();
@@ -137,8 +137,8 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
       }
     });
 
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
     await page.waitForTimeout(2000);
 
     // Filter out expected CORS or external errors
@@ -152,16 +152,16 @@ test.describe('TOTAL_DEV GOD DEV Sovereign Space', () => {
   });
 
   test('Route persists on navigation away and back', async ({ page }) => {
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // Navigate to home
-    await page.goto('http://localhost:5173');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/');
+    await page.waitForLoadState('load');
 
     // Navigate back to /total-dev
-    await page.goto('http://localhost:5173/#/total-dev');
-    await page.waitForLoadState('networkidle');
+    await page.goto('/total-dev');
+    await page.waitForLoadState('load');
 
     // TOTAL_DEV should still be visible
     const heading = page.locator('[data-testid="total-dev-header"]');
