@@ -69,8 +69,8 @@ All notable changes to this project are documented in this file.
 
 ### Artifacts (Final Certified — commit 9f97d77da)
 
-| Package | Size | SHA256 |
-| ----------------------------------- | ---- | ---------------------------------------------------------------- |
+| Package                            | Size | SHA256                                                           |
+| ---------------------------------- | ---- | ---------------------------------------------------------------- |
 | Titan-Stable_28.0.0_amd64.AppImage | 86M  | 90442771be7cb2e40972790fa0a1c1eb7ef7ed08d61ad697a0934a1ea5bf1c1b |
 | Titan-Stable_28.0.0_amd64.deb      | 15M  | 69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71 |
 | titane-infinity (binary)           | 40M  | fc57a8f1d0316f587c952cb01c6530fd126bfa019543dcb1416853e452f350a9 |

@@ -5,50 +5,57 @@ test('PATCH-010: E2E Policy Gate - External Provider Routing', async ({ page }) 
   const TEST_START = new Date().toISOString();
   console.log(`\n[E2E TEST] Starting at ${TEST_START}`);
   console.log('[E2E TEST] Objective: Send conversation with external provider selection');
-  console.log('[E2E TEST] Expected: Policy gate evaluates keys → allows external routing\n');
+  console.log(
+    '[E2E TEST] Expected: Policy gate evaluates keys → allows external routing\n'
+  );
 
   // 1. Accéder à l'appli
   console.log('[E2E] Step 1: Navigating to TITANE...');
   await page.goto('http://127.0.0.1:5173/', { waitUntil: 'networkidle', timeout: 15000 });
-  
+
   // 2. Attendre le boot complet
   console.log('[E2E] Step 2: Waiting for BOOT:READY...');
   await page.waitForTimeout(3000);
-  
+
   // 3. Évaluer l'état UI
   console.log('[E2E] Step 3: Checking UI state...');
   const pageTitle = await page.title();
   console.log(`[E2E] Page title: ${pageTitle}`);
-  
+
   // 4. Chercher et remplir la zone de conversation
   console.log('[E2E] Step 4: Locating conversation input...');
-  
+
   // Attendre le chargement du chat input
-  const chatInputSelector = 'textarea, input[placeholder*="message"], [contenteditable="true"]';
+  const chatInputSelector =
+    'textarea, input[placeholder*="message"], [contenteditable="true"]';
   const chatInput = await page.$(chatInputSelector);
-  
+
   if (chatInput) {
     console.log('[E2E] ✅ Chat input found');
-    
+
     // 5. Envoyer un message test
     console.log('[E2E] Step 5: Sending test conversation...');
     await chatInput.fill('Test message for policy gate validation');
-    
+
     // Chercher et cliquer le bouton d'envoi
-    const sendButton = await page.$('button[aria-label*="send"], button:has-text("Send"), button:has-text("Envoyer")');
+    const sendButton = await page.$(
+      'button[aria-label*="send"], button:has-text("Send"), button:has-text("Envoyer")'
+    );
     if (sendButton) {
       console.log('[E2E] ✅ Send button found, clicking...');
       await sendButton.click();
-      
+
       // 6. Attendre la réponse
       console.log('[E2E] Step 6: Waiting for response...');
       await page.waitForTimeout(5000);
-      
+
       // 7. Capturer les logs de réponse
       console.log('[E2E] Step 7: Capturing response...');
-      const conversationText = await page.textContent('[role="main"], .chat-container, .conversation');
+      const conversationText = await page.textContent(
+        '[role="main"], .chat-container, .conversation'
+      );
       console.log('[E2E] Conversation captured');
-      
+
       // 8. Valider que la réponse n'est pas vide
       if (conversationText && conversationText.length > 0) {
         console.log('[E2E] ✅ Response received');
@@ -60,7 +67,7 @@ test('PATCH-010: E2E Policy Gate - External Provider Routing', async ({ page }) 
   } else {
     console.log('[E2E] ⚠️ Chat input not found - UI may differ');
   }
-  
+
   // 9. Afficher le rapport
   const TEST_END = new Date().toISOString();
   console.log(`\n[E2E TEST] PATCH-010 E2E Execution Complete`);
