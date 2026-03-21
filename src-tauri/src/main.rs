@@ -740,7 +740,7 @@ mod core {
         include!("core/legacy.rs");
     }
     // Re-export from library for overdrive modules compatibility
-    pub use titane_infinity::core::{MemoryType, UnifiedMemory};
+    pub use titane_infinity::core::{MemoryItem, MemoryType, UnifiedMemory};
     // Re-export legacy for API modules
     pub use legacy::{HeliosCore, MemoryCore};
 }
@@ -1660,6 +1660,8 @@ fn main() {
             overdrive::chat_orchestrator::chat_delete_conversation,
             overdrive::chat_orchestrator::chat_generate_suggestions,
             overdrive::chat_orchestrator::chat_get_memory_stats, // R04 FIX
+            overdrive::chat_orchestrator::chat_memory_backup,    // LTM backup coverage
+            overdrive::chat_orchestrator::chat_memory_restore,   // LTM restore coverage
             
             // Diagnostic Commands v27 (Online capabilities check)
             diagnostic_commands::check_online_capabilities,

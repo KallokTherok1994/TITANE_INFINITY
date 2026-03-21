@@ -217,6 +217,18 @@ impl UnifiedMemory {
         &self.ltm.index
     }
 
+    /// Get canonical LTM storage path (for backup/restore)
+    pub fn ltm_storage_path(&self) -> PathBuf {
+        self.ltm.storage_path.clone()
+    }
+
+    /// Reload LTM index from disk without full re-init.
+    /// Safe to call after restore — clears stale index and scans *.mem files.
+    pub fn reload_ltm_from_disk(&mut self) {
+        self.ltm.index.clear();
+        self.restore_ltm_from_disk();
+    }
+
     // === CORE METHODS ===
 
     pub fn new() -> Self {
