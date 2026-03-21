@@ -26,14 +26,18 @@ export TITANE_E2E_ENFORCE_SOURCE="${TITANE_E2E_ENFORCE_SOURCE:-0}"
 # E2E stability profile: prefer a lightweight local model and cap backend turn timeout
 # to avoid long-running UI hangs that can invalidate the WRY WebDriver session.
 export OLLAMA_DEFAULT_MODEL="${TITANE_E2E_OLLAMA_MODEL:-gemma2:2b}"
-export TITANE_CONVERSATION_TIMEOUT_SECS="${TITANE_CONVERSATION_TIMEOUT_SECS:-30}"
+# OLLAMA_REQUEST_TIMEOUT_SECS: governs the Rust HTTP client timeout in ollama.rs.
+# Default 60s; harness may raise to 90s for cold-model scenarios.
+export OLLAMA_REQUEST_TIMEOUT_SECS="${OLLAMA_REQUEST_TIMEOUT_SECS:-60}"
+# TITANE_CONVERSATION_TIMEOUT_SECS: [DEAD — no Rust runtime honors this env var.
+# Kept as a labelled stub only; remove if confusing.]
 
 echo "[E2E_CHAT_PROOF] OUT_DIR=$OUT_DIR"
 echo "[E2E_CHAT_PROOF] EXPECT_SOURCE=$TITANE_E2E_EXPECT_SOURCE"
 echo "[E2E_CHAT_PROOF] ENFORCE_SOURCE=$TITANE_E2E_ENFORCE_SOURCE"
 echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
 echo "[E2E_CHAT_PROOF] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
-echo "[E2E_CHAT_PROOF] TITANE_CONVERSATION_TIMEOUT_SECS=$TITANE_CONVERSATION_TIMEOUT_SECS"
+echo "[E2E_CHAT_PROOF] OLLAMA_REQUEST_TIMEOUT_SECS=$OLLAMA_REQUEST_TIMEOUT_SECS [effective Rust HTTP client cap]"
 
 # ── Ollama Pre-warm Preflight ─────────────────────────────────────────────────
 # Purpose: load the target model into memory BEFORE starting Tauri/WDIO to avoid
