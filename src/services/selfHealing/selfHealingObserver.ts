@@ -19,6 +19,7 @@
  * @created 2025-01-07
  */
 
+import { invoke } from '@tauri-apps/api/core';
 import { listen, type UnlistenFn } from '@tauri-apps/api/event';
 import {
   type HealingEvent,
@@ -756,7 +757,7 @@ export async function observedInvoke<T>(
   command: string,
   payload?: Record<string, unknown>
 ): Promise<T> {
-  const { invoke } = await import('@tauri-apps/api/core');
+  // invoke is now imported statically at the top
 
   try {
     return await invoke<T>(command, payload);
