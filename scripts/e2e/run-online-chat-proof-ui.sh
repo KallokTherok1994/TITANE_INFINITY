@@ -35,6 +35,36 @@ echo "[E2E_CHAT_PROOF] USE_TAURI_DEV=$TITANE_E2E_USE_TAURI_DEV"
 echo "[E2E_CHAT_PROOF] OLLAMA_DEFAULT_MODEL=$OLLAMA_DEFAULT_MODEL"
 echo "[E2E_CHAT_PROOF] TITANE_CONVERSATION_TIMEOUT_SECS=$TITANE_CONVERSATION_TIMEOUT_SECS"
 
+# ── Ollama Pre-warm Preflight ─────────────────────────────────────────────────
+# Purpose: load the target model into memory BEFORE starting Tauri/WDIO to avoid
+# cold-start HTTP timeout (Rust Ollama client has a hard 60s cap in the binary).
+# This is INFRASTRUCTURE preparation only — NOT a product chat proof step.
+# Logs are clearly prefixed [E2E_PREWARM] and never counted as product success.
+OLLAMA_PREWARM_URL="${OLLAMA_BASE_URL:-http://127.0.0.1:11434}"
+PREWARM_MODEL="${OLLAMA_DEFAULT_MODEL:-gemma2:2b}"
+PREWARM_TIMEOUT_SECS="${TITANE_E2E_PREWARM_TIMEOUT_SECS:-120}"
+
+echo "[E2E_PREWARM] Starting model pre-warm | model=$PREWARM_MODEL | timeout=${PREWARM_TIMEOUT_SECS}s | url=$OLLAMA_PREWARM_URL"
+if ! curl -sf --max-time 5 "${OLLAMA_PREWARM_URL}/api/tags" > /dev/null 2>&1; then
+  echo "[E2E_PREWARM] WARN: Ollama not reachable — skipping pre-warm (test will run anyway)"
+else
+  PREWARM_START=$(date +%s)
+  PREWARM_RESPONSE=$(curl -sf --max-time "$PREWARM_TIMEOUT_SECS" \
+    -X POST "${OLLAMA_PREWARM_URL}/api/generate" \
+    -H "Content-Type: application/json" \
+    -d "{\"model\":\"${PREWARM_MODEL}\",\"prompt\":\"ping\",\"stream\":false}" \
+    2>/dev/null || echo "PREWARM_FAILED")
+  PREWARM_ELAPSED=$(( $(date +%s) - PREWARM_START ))
+  if echo "$PREWARM_RESPONSE" | grep -q '"response"'; then
+    echo "[E2E_PREWARM] PASS: model loaded and warm | elapsed=${PREWARM_ELAPSED}s"
+    echo "[E2E_PREWARM] INFRA_READY: cold-start window cleared before WDIO launch"
+  else
+    echo "[E2E_PREWARM] WARN: pre-warm response unclear after ${PREWARM_ELAPSED}s — test will run anyway"
+  fi
+fi
+echo "[E2E_PREWARM] END"
+# ── End Pre-warm ─────────────────────────────────────────────────────────────
+
 pkill -f 'tauri-driver|WebKitWebDriver' >/dev/null 2>&1 || true
 sleep 1
 
