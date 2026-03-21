@@ -1,7 +1,10 @@
 # TITANE∞ v28.5.0 — Release Artifact Checksums
-# Build: 2026-03-21T07:xx (state-split fix + WDIO cert run 2)
-# Commit: main.rs TypeId fix (titane_infinity::overdrive::chat_orchestrator::init())
+# Build: provider-recovery-triple-fix
+# Commit: 664728743
+# Date: 2026-03-21T12:02:31Z
+# Node: v20.20.0  Rust: rustc 1.94.0 (4a4ef493e 2026-03-02)
+# Gates: verify_instructions.sh PASS=20 FAIL=0 | cargo check exit=0
 
-be8332b183af482d7e19695cf400626498f74126698ba9645fb64e9260bfc60c  TITANE-Infinity_28.5.0_amd64.AppImage
-f072f0f631e987a93342691a239160558ca1f3938113be0833afa2eae6e4ef86  TITANE-Infinity_28.5.0_amd64.deb
-d638315a42699ca6d76c32b2de65a9eca80614a7a58a3e5c08910f45d66376bc  TITANE-Infinity-28.5.0-1.x86_64.rpm
+e79bc52f2890c9f045784f975df80e6a95ee69a385f9d43be85987a9f1fd73a1  TITANE-Infinity_28.5.0_amd64.AppImage
+f5e25eeec8450e2a63fbcba1cc6429492cff3cc6d8bc38e3c26c4c6afd8fc63c  TITANE-Infinity_28.5.0_amd64.deb
+5e5282759e021f299c51c7adade495d31a4412e4a6f787842269b76027c7e426  TITANE-Infinity-28.5.0-1.x86_64.rpm
