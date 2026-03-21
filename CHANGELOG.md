@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.5.0] - 2026-03-21 (Navigation Fusion + Provider + Memory Reliability)
+
+### Navigation (v29.2 — TWINS Menu Fusion)
+
+- **TWINS menu fusion**: Removed `TWIN` from TopNav overflow (`Plus` menu); added canonical
+  `🔀 Symbiose` tab (9th section) under `TITANE` page, hosting `TwinEvolutionPanel` directly.
+  Routes `/twins` and `/twin` now redirect to `/titane`. `TwinsPage.tsx` preserved.
+  Backend IPC chain and chat context pipeline unchanged. (commit `51efc2536`)
+
 ## [28.5.0] - 2026-03-21 (Provider + Memory Reliability Fixes)
 
 ### Provider Reliability
