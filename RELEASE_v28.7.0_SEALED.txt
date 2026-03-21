@@ -1,0 +1,35 @@
+TITANE∞ v28.7.0 — PRODUCTION SEAL
+===================================
+Date: 2026-03-21T16:46:00Z
+Session: V28_7_0_GOVERNANCE_STABILITY_2026-03-21
+GitSHA: ac0b7ffc3
+Tokens: GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+
+CHANGES SINCE v28.6.0:
+- test(design-center): add afterEach DOM cleanup for parallel-suite isolation
+- chore(deployment): sync deployment/latest/ with v28.6.0 AppImage
+- docs(90_release): create PRODUCTION_RELEASE_v28.6.0.md
+- chore(version): bump 28.6.0 → 28.7.0
+
+GATES (verify at time of seal):
+- tsc --noEmit: PASS
+- eslint: PASS
+- vitest: PASS (3399/3399)
+- pnpm build (rolldown): PASS (prior — Vite 8 unchanged)
+- cargo test --lib: PASS (4463/4463)
+- G_NATIVE_BINARY_FRESHNESS: PASS (FRESH_RELEASE_BINARY)
+- verify_instructions: PASS=20 FAIL=0
+- detect_recurrence: G_AH_RECURRENCE_GUARD_PASS (515 entries)
+
+BLOCKED MAJORS:
+- ESLint 10: PEER_BLOCKED (eslint-plugin-react caps at ^9.7)
+
+ARTIFACTS:
+- TITANE-Infinity_28.7.0_amd64.AppImage (950c8beb7c4bb170e369c4fa1f26e5566ca88bf6438c86f5317ff6bc66655b45)
+- TITANE-Infinity_28.7.0_amd64.deb (52695b634b54caf2a72419d8a250c85595d29a032260b923a261f62442ea79af)
+- TITANE-Infinity-28.7.0-1.x86_64.rpm (72377fb5684690df9071f0cf5279a3e7537cd28eaa816954b75a9cf73f90bbe6)
+
+ROLLBACK:
+git revert HEAD
+
+VERDICT: SEALED

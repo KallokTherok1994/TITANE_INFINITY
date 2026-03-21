@@ -1,5 +1,5 @@
 import React from 'react';
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, afterEach, beforeEach, vi } from 'vitest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { DesignCenterPage } from '@/features/design-center/DesignCenterPage';
 import { tauriClient } from '@/lib/tauriClient';
@@ -61,6 +61,12 @@ describe('Design Center truth chain', () => {
     vi.mocked(tauriClient.resetUiTheme).mockResolvedValue(makeTokens());
     document.documentElement.removeAttribute('class');
     document.documentElement.removeAttribute('style');
+  });
+
+  afterEach(() => {
+    document.documentElement.removeAttribute('class');
+    document.documentElement.removeAttribute('style');
+    vi.clearAllMocks();
   });
 
   it('shows truthful runtime status and transitions to dirty state on token edit', async () => {
