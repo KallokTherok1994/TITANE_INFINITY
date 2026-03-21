@@ -306,6 +306,11 @@ mod commands {
     pub mod ollama_command {
         include!("commands/ollama_command.rs");
     }
+
+    // ✨ TOTAL_DEV v28.1.0 — GOD DEV secure space (unlock, git, console, file)
+    pub mod total_dev_commands {
+        include!("commands/total_dev_commands.rs");
+    }
 }
 
 // Legacy AI/Engine/Memory command bridge.
@@ -2838,6 +2843,14 @@ fn main() {
             legacy_ai_bridge::vector_store_delete,
             legacy_ai_bridge::vector_store_insert,
             legacy_ai_bridge::vector_store_update,
+
+            // ✨ TOTAL_DEV v28.1.0 — 6 handlers GOD DEV
+            commands::total_dev_commands::total_dev_unlock,
+            commands::total_dev_commands::total_dev_session_status,
+            commands::total_dev_commands::total_dev_revoke,
+            commands::total_dev_commands::total_dev_git_op,
+            commands::total_dev_commands::total_dev_run_command,
+            commands::total_dev_commands::total_dev_read_file,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {
