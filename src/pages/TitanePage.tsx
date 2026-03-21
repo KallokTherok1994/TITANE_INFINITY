@@ -56,6 +56,7 @@ import type { TitaneStats } from '@/components/sections';
 // UI Components
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { TitaneLogo } from '@/components/branding/TitaneLogo';
+import { TwinEvolutionPanel } from '@/components/twin/TwinEvolutionPanel';
 
 import './TitanePage.css';
 import './TitanePage-local.css';
@@ -74,7 +75,8 @@ type TabId =
   | 'memory-map'
   | 'memory-evolution'
   | 'progression'
-  | 'transformation';
+  | 'transformation'
+  | 'symbiose';
 
 const TAB_PANEL_IDS: Record<TabId, string> = {
   conversation: 'titane-panel-conversation',
@@ -85,6 +87,7 @@ const TAB_PANEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-panel-evolution',
   progression: 'titane-panel-progression',
   transformation: 'titane-panel-transformation',
+  symbiose: 'titane-panel-symbiose',
 };
 
 const TAB_LABEL_IDS: Record<TabId, string> = {
@@ -96,6 +99,7 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
   'memory-evolution': 'titane-tab-evolution',
   progression: 'titane-tab-progression',
   transformation: 'titane-tab-transformation',
+  symbiose: 'titane-tab-symbiose',
 };
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -191,6 +195,7 @@ export const TitanePage: React.FC = () => {
       memoryEvolution: () => setActiveTab('memory-evolution'),
       progression: () => setActiveTab('progression'),
       transformation: () => setActiveTab('transformation'),
+      symbiose: () => setActiveTab('symbiose'),
     }),
     []
   );
@@ -214,6 +219,8 @@ export const TitanePage: React.FC = () => {
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
         return <TransformationSection />;
+      case 'symbiose':
+        return <TwinEvolutionPanel isAdmin={true} compact={false} />;
       default:
         return <ConversationSection />;
     }
@@ -361,6 +368,21 @@ export const TitanePage: React.FC = () => {
                 id={TAB_LABEL_IDS.transformation}
               >
                 🌱 Transform
+              </button>
+              <button
+                className={`px-4 py-2 text-sm font-medium rounded transition-all ${
+                  activeTab === 'symbiose'
+                    ? 'bg-titanium-bg-interactive text-titanium-accent-cool'
+                    : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-overlay'
+                }`}
+                data-testid="tab-symbiose"
+                onClick={tabHandlers.symbiose}
+                role="tab"
+                aria-selected={activeTab === 'symbiose'}
+                aria-controls={TAB_PANEL_IDS.symbiose}
+                id={TAB_LABEL_IDS.symbiose}
+              >
+                🔀 Symbiose
               </button>
             </div>
           </div>

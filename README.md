@@ -190,6 +190,16 @@ TITANE∞ utilise un modèle de gouvernance strict avec **9 Gates constitutionne
 
 **Stop-the-Line**: Any gate failure blocks deployment until resolved.
 
+### Native Desktop Freshness Pre-Gate
+
+Before native desktop certification and before PROD token usage, run:
+
+```bash
+bash scripts/verify/verify-native-binary-freshness.sh
+```
+
+Expected: `VERDICT=PASS` with a fresh binary class (`FRESH_RELEASE_BINARY`, `FRESH_DEBUG_BINARY`, or `FRESH_CERTIFIED_BINARY`).
+
 ### Append-Only Registry
 
 TITANE∞ maintains an **immutable audit trail** of all UI changes, releases, and governance decisions:
