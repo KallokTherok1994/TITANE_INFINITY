@@ -1,0 +1,5 @@
+TITANE∞ v28.17.0 — SEALED
+==========================
+Seal date : 2026-03-21T20:38:15Z / 689fa5b04 / MAIN
+Tokens    : GO_FOR_PROD_BUILD__TITANE_INFINITY + GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+Verdict   : SEALED
