@@ -22,7 +22,9 @@ function shellQuote(value) {
 function writeWrapperEnvFile() {
   const keys = [
     'OFFLINE_SIM',
-    'TITANE_CONVERSATION_TIMEOUT_SECS',
+    // TITANE_CONVERSATION_TIMEOUT_SECS removed — dead code, no Rust runtime honors it.
+    // Use OLLAMA_REQUEST_TIMEOUT_SECS to govern the effective Rust HTTP client timeout.
+    'OLLAMA_REQUEST_TIMEOUT_SECS',
     'TITANE_TIMEOUT_TRACE',
     'TAURI_DEV_SERVER_URL',
     'OLLAMA_DEFAULT_MODEL',
