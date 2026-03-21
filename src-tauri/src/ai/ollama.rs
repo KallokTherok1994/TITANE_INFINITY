@@ -10,11 +10,14 @@ use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use std::sync::Mutex;
-use std::time::Instant;
+use std::time::{Duration, Instant};
 use tauri::{command, Emitter, Window};
 
 const DEFAULT_OLLAMA_BASE_URL: &str = "http://127.0.0.1:11434";
 const DEFAULT_OLLAMA_MODEL: &str = "gemma2:2b";
+/// Env var governing the Ollama HTTP client request timeout (seconds, bounded 10..300).
+const OLLAMA_REQUEST_TIMEOUT_SECS_ENV: &str = "OLLAMA_REQUEST_TIMEOUT_SECS";
+const OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT: u64 = 120;
 
 // ✨ v27.2.1: Ollama status cache (anti-flapping)
 // Cache TTL: 10s to avoid repeated health checks
@@ -53,8 +56,21 @@ fn ollama_default_model() -> String {
         .unwrap_or_else(|| DEFAULT_OLLAMA_MODEL.to_string())
 }
 
+/// Returns the effective Ollama HTTP request timeout.
+/// Governed by env var OLLAMA_REQUEST_TIMEOUT_SECS (bounded 10..300).
+/// Defaults to 120s if unset or out of bounds.
+fn ollama_request_timeout() -> Duration {
+    std::env::var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV)
+        .ok()
+        .and_then(|v| v.trim().parse::<u64>().ok())
+        .filter(|&s| s >= 10 && s <= 300)
+        .map(Duration::from_secs)
+        .unwrap_or(Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT))
+}
+
 fn build_ollama_client() -> Result<Client, String> {
     Client::builder()
+        .timeout(ollama_request_timeout())
         .build()
         .map_err(|e| format!("Client error: {}", e))
 }
@@ -678,6 +694,10 @@ impl OllamaClient {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::sync::Mutex;
+
+    // Serialize env-var tests to prevent parallel mutation races.
+    static ENV_TEST_LOCK: Mutex<()> = Mutex::new(());
 
     #[test]
     fn test_ollama_installed() {
@@ -704,5 +724,71 @@ mod tests {
 
         let selected_unknown = select_fallback_model("unknown:latest", &models);
         assert_eq!(selected_unknown.as_deref(), Some("llama3.1:latest"));
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ollama_request_timeout governance tests (OLLAMA_REQUEST_TIMEOUT_SECS env)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    #[test]
+    fn test_ollama_request_timeout_default() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        let t = ollama_request_timeout();
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_valid() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "90");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(90));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_below_min_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "5");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_above_max_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "999");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_invalid_falls_back() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "notanumber");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(OLLAMA_REQUEST_TIMEOUT_SECS_DEFAULT));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_boundary_min() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "10");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(10));
+    }
+
+    #[test]
+    fn test_ollama_request_timeout_env_boundary_max() {
+        let _g = ENV_TEST_LOCK.lock().unwrap();
+        std::env::set_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV, "300");
+        let t = ollama_request_timeout();
+        std::env::remove_var(OLLAMA_REQUEST_TIMEOUT_SECS_ENV);
+        assert_eq!(t, Duration::from_secs(300));
     }
 }
