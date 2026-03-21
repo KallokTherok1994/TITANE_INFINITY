@@ -1,6 +1,6 @@
-# TITANE∞ v28.19.0
+# TITANE∞ v28.20.0
 
-![Version](https://img.shields.io/badge/version-28.19.0-blue)
+![Version](https://img.shields.io/badge/version-28.20.0-blue)
 ![Rust](https://img.shields.io/badge/rust-2021-orange)
 ![React](https://img.shields.io/badge/react-18-61dafb)
 ![TypeScript](https://img.shields.io/badge/typescript-5.5-3178c6)
@@ -14,10 +14,10 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 
 ## Statut canonique de version (mode B2)
 
-- Verite version repo: `28.19.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
+- Verite version repo: `28.20.0` via `package.json` et `CHANGELOG.md` (`PROVEN_BY_REPO`)
 - `README.md` et ce fichier sont les surfaces canoniques de navigation (`PROVEN_BY_CANON_DOC`)
 - La ligne binaire `v27.0.5` est conservee comme historique documente (hors autorite version repo)
-- `RELEASE_v28.19.0_SEALED.txt` est la reference de release canonique courante
+- `RELEASE_v28.20.0_SEALED.txt` est la reference de release canonique courante
 
 ## Navigation canonique
 
@@ -25,7 +25,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - Index documentaire global: [`INDEX.md`](INDEX.md)
 - Diagrammes Mermaid: [`diagrams/README.md`](diagrams/README.md)
 
-## 🌟 Caracteristiques v28.19.0
+## 🌟 Caracteristiques v28.20.0
 
 - **60+ Modules Intelligents** : Architecture modulaire complète avec stacks hiérarchiques
 - **Auto-Régulation** : Governor et Autonomic Evolution pour homéostasie cognitive
@@ -39,7 +39,7 @@ TITANE∞ (Transformative Intelligence Through Adaptive Neural Engines - Infinit
 - **Interface Moderne** : React 18 + TypeScript strict
 - **DevTools Intégrés** : Monitoring et dashboard en temps réel
 
-## 🏗️ Architecture v28.19.0
+## 🏗️ Architecture v28.20.0
 
 ```
 TITANE∞ - 10+ Stacks Hiérarchiques
