@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.13.0] - 2026-03-21 (Governance — pattern break: zero residual docs debt)
+
+### Fixed
+- docs(90_release): create `PRODUCTION_RELEASE_v28.12.0.md` (catch-up)
+- docs(90_release): create `PRODUCTION_RELEASE_v28.13.0.md` (same-cycle — breaks recurring debt pattern)
+
+### Changed
+- chore(version): bump 28.12.0 → 28.13.0
+
 ## [28.12.0] - 2026-03-21 (Governance)
 
 ### Fixed
