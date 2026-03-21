@@ -272,6 +272,12 @@ impl UnifiedMemory {
             })?;
         }
 
+        // ✅ FIX: LTM_NOT_RETRIEVABLE — restore LTM index from disk on startup.
+        // Previously the index was always empty at boot; persisted .mem files were
+        // never loaded back. Now: scan storage_path for *.mem files, deserialize
+        // each MemoryItem, and rebuild metadata index for cross-session recall.
+        self.restore_ltm_from_disk();
+
         self.health = EngineHealth::Healthy;
         self.initialized = true;
         self.last_update_ms = Self::current_timestamp();
@@ -536,7 +542,7 @@ impl UnifiedMemory {
                 encrypted: true,
             };
 
-            self.ltm.index.insert(item.id.clone(), metadata);
+            self.ltm.index.insert(item.id.clone(), metadata.clone());
 
             // v20.1: Use bounded timeline
             self.add_timeline_event(TimelineEvent {
@@ -545,14 +551,24 @@ impl UnifiedMemory {
                 timestamp: now,
             });
 
-            // Implementation: Encrypted disk persistence for LTM entries
-            // - Encryption: Use ChaCha20-Poly1305 (chacha20poly1305 crate) for fast encryption
-            // - Key derivation: PBKDF2 from user passphrase or device-specific key
-            // - Storage: Write to ~/.titane/memory/ltm/{entry_id}.enc with 16-byte nonce
-            // - Format: [nonce(16) | encrypted_data | tag(16)]
-            // - Serialization: Use bincode for compact binary serialization before encryption
-            // - Batch writes: Flush to disk every 100 promotions or 60s interval
-            // - Recovery: Load and decrypt on app restart, rebuild in-memory LTM
+            // ✅ FIX: STM_NOT_PERSISTED / LTM_NOT_RETRIEVABLE — actual disk write.
+            // Previously this was a comment-only placeholder; no data was ever written.
+            // Now: serialize item as JSON and write to LTM storage path.
+            // No encryption in this minimal fix (key management is a separate concern).
+            // File: <storage_path>/<item_id>.mem — JSON for cross-session survival.
+            if let Ok(json) = serde_json::to_string(&item) {
+                if let Err(e) = std::fs::write(&metadata.file_path, json.as_bytes()) {
+                    eprintln!(
+                        "[MEMORY] ⚠️ LTM disk write failed for {}: {}",
+                        item.id, e
+                    );
+                    // Remove from index if write failed to avoid stale ghost entries
+                    self.ltm.index.remove(&item.id);
+                }
+            } else {
+                eprintln!("[MEMORY] ⚠️ LTM serialization failed for {}", item.id);
+                self.ltm.index.remove(&item.id);
+            }
         }
 
         // v20.1: Rebuild MTM index after removals
@@ -669,6 +685,55 @@ impl UnifiedMemory {
             *byte = (i * 7 + 13) as u8; // Simple deterministic pattern for now
         }
         key
+    }
+
+    /// ✅ FIX: Restore LTM index from persisted .mem files on startup.
+    /// Scans LTM storage_path for *.mem files, deserializes each MemoryItem,
+    /// and rebuilds the in-memory LTM metadata index. Silent corruption: skipped
+    /// with eprintln; healthy entries are still loaded.
+    fn restore_ltm_from_disk(&mut self) {
+        let dir = match std::fs::read_dir(&self.ltm.storage_path) {
+            Ok(d) => d,
+            Err(_) => return, // Directory may not exist yet — not an error
+        };
+
+        let mut restored = 0usize;
+        for entry in dir.flatten() {
+            let path = entry.path();
+            if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+                continue;
+            }
+            let bytes = match std::fs::read(&path) {
+                Ok(b) => b,
+                Err(e) => {
+                    eprintln!("[MEMORY] ⚠️ LTM restore: cannot read {:?}: {}", path, e);
+                    continue;
+                }
+            };
+            let item: MemoryItem = match serde_json::from_slice(&bytes) {
+                Ok(i) => i,
+                Err(e) => {
+                    eprintln!("[MEMORY] ⚠️ LTM restore: corrupt entry {:?}: {}", path, e);
+                    continue;
+                }
+            };
+            let tags_vec: Vec<String> = item.tags.to_vec();
+            let metadata = MemoryMetadata {
+                id: item.id.clone(),
+                memory_type: item.memory_type,
+                importance: item.importance,
+                tags: tags_vec,
+                created_at: item.created_at,
+                file_path: path,
+                compressed: false,
+                encrypted: false,
+            };
+            self.ltm.index.insert(item.id, metadata);
+            restored += 1;
+        }
+        if restored > 0 {
+            println!("[MEMORY] 🔄 LTM restored {} entries from disk", restored);
+        }
     }
 
     fn current_timestamp() -> u64 {
