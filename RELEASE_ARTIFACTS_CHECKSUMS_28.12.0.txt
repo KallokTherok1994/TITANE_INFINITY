@@ -1,0 +1,6 @@
+# TITANE∞ v28.12.0 — Artifact checksums
+# Sealed: 2026-03-21T18:47:04Z / c310f619b
+
+22b5d36c51591b99ffc78eb16365e063b680c3d77e071e19ece615416c4a86f1  TITANE-Infinity_28.12.0_amd64.AppImage
+2f253736bbf5ae27ccd562decc85cad45de393ab858f7beff0ed76d75e8e7d67  TITANE-Infinity_28.12.0_amd64.deb
+519d4034aea4d12f007b76aa4bd6b569de980864416c90e795ef5e3823317d71  TITANE-Infinity-28.12.0-1.x86_64.rpm
