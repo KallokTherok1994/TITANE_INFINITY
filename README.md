@@ -3,49 +3,48 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v28.5.0 (repository authority)  
-**Status:** Production Ready ✅ (release preparation v28.5.0)  
+**Version:** v28.6.0 (repository authority)  
+**Status:** Production Ready ✅ (sealed v28.6.0)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Canal de release canonique:** v28.5.0
+**Canal de release canonique:** v28.6.0
 
-**Qualite (v28.5.0) :** Autorite documentaire et gouvernance alignees, preparation de release et publication des artefacts.
+**Qualite (v28.6.0) :** Vite 8 + rolldown migration, deps recert, prod deploy sealed.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
-**Statut d'autorite documentaire (LOCAL, 2026-03-20) :**
+**Statut d'autorite documentaire (LOCAL, 2026-03-21) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.5.0` (`PROVEN_BY_REPO`)
-- Release canonique verifiee: `v28.5.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.6.0` (`PROVEN_BY_REPO`)
+- Release canonique verifiee: `v28.6.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Politique de coherence: version canonique et release courante `28.5.0`; references v27/v28.0.0 conservees en historique
+- Politique de coherence: version canonique et release courante `28.6.0`; references v27/v28.0.0-v28.5.0 conservees en historique
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.5.0
+### ✅ Release canonique courante: v28.6.0
 
 Artefacts verifies (Linux):
 
-- `Titan-Stable_28.5.0_amd64.AppImage`
-- `Titan-Stable_28.5.0_amd64.deb`
-- `TITANE-Infinity_28.5.0_amd64.AppImage`
-- `TITANE-Infinity_28.5.0_amd64.deb`
+- `TITANE-Infinity_28.6.0_amd64.AppImage`
+- `TITANE-Infinity_28.6.0_amd64.deb`
+- `TITANE-Infinity-28.6.0-1.x86_64.rpm`
 
 Verification recommandee:
 
 ```bash
-cat docs/90_release/PRODUCTION_RELEASE_v28.5.0.md
+cat RELEASE_v28.6.0_SEALED.txt
 ```
 
 Release GitHub (notes + assets):
 
-- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.5.0
+- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.6.0
 
 Scellement final de session:
 
-- `RELEASE_v28.5.0_SEALED.txt`
+- `RELEASE_v28.6.0_SEALED.txt`
 
 ### ✨ **Archive binaire historique : v27.0.5**
 

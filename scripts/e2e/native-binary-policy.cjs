@@ -123,6 +123,9 @@ function resolveNativeBinaryPolicy(options = {}) {
   const debugPath = path.resolve(rootDir, 'src-tauri/target/debug/titane-infinity');
   const releasePath = path.resolve(rootDir, 'src-tauri/target/release/titane-infinity');
   const appImagePaths = [
+    // newest first: policy selects the first executable found
+    path.resolve(rootDir, 'src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.6.0_amd64.AppImage'),
+    path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.5.0_amd64.AppImage'),
     path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage'),
     path.resolve(rootDir, 'runtime/stable/Titan-Stable_27.2.0_amd64.AppImage'),
     path.resolve(rootDir, 'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'),
@@ -144,15 +147,11 @@ function resolveNativeBinaryPolicy(options = {}) {
       }
     : pickByPreference(candidates, mode);
 
-  const distIndexPath = path.resolve(rootDir, 'dist/index.html');
-  const distAssetsPath = path.resolve(rootDir, 'dist/assets');
+  // Build inputs: source configuration files only.
+  // dist/ is intentionally excluded — it is a build OUTPUT (produced by vite),
+  // not a source file. Including it as an input causes false STALE verdicts when
+  // vite is invoked after cargo (e.g. post-build processing or re-bundling passes).
   const buildInputs = [
-    { key: 'dist_index', filePath: distIndexPath, mtimeMs: statMtimeMs(distIndexPath) },
-    {
-      key: 'dist_assets_newest',
-      filePath: distAssetsPath,
-      mtimeMs: newestAssetMtimeMs(distAssetsPath),
-    },
     {
       key: 'tauri_conf',
       filePath: path.resolve(rootDir, 'src-tauri/tauri.conf.json'),

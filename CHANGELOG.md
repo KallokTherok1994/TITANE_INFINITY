@@ -2,7 +2,36 @@
 
 All notable changes to this project are documented in this file.
 
-## [28.5.0] - 2026-03-21 (Navigation Fusion + Provider + Memory Reliability)
+## [28.6.0] - 2026-03-21 (Vite 8 + Rolldown + Deps Recert + Governance Timeout)
+
+### Build System
+
+- **Vite 8.0.1 + rolldown bundler**: Migrated from Vite 5 to Vite 8 with rolldown backend. Zero config changes required. Build time reduced, bundle output maintained. (commit `b93675c91`)
+- **@vitejs/plugin-react 5.2.0**: Updated to match Vite 8 peer requirements.
+
+### Dependencies Recertification
+
+- **vitest 4.1**: Upgraded from 3.x — vitest workspace API unchanged, 3399 tests PASS.
+- **storybook 10.3**: Upgraded — story fixtures unchanged.
+- **jsdom 29**: Upgraded — test harness unchanged.
+- **eslint 9.39.4**: Patched ESLint 9 toolchain. ESLint 10 blocked (`PEER_BLOCKED`: `eslint-plugin-react` caps at `^9.7`).
+
+### Governance / Timeout
+
+- **OLLAMA_REQUEST_TIMEOUT_SECS**: Canonical timeout env var exposed in `src-tauri/src/ai/ollama.rs`. Range 10..300s, default 120s. Dead env `TITANE_CONVERSATION_TIMEOUT_SECS` labelled `[DEAD]` in harness scripts. (commit `0f348f8e2`)
+
+### Provider Reliability
+
+- **Circuit-breaker Rust**: `reset_provider_failures()` called on probe success in `chat_orchestrator.rs`. (commit `34b2097d7`)
+- **Circuit-breaker TS**: `circuitBreaker.ts` resets `failures=0` on CLOSED-state success.
+
+### Release
+
+- Artifacts: `TITANE-Infinity_28.6.0_amd64.AppImage`, `.deb`, `.rpm`
+- Sealed: `RELEASE_v28.6.0_SEALED.txt`
+- Gates at seal: tsc PASS, lint PASS, vitest 3399 PASS, build PASS, verify_instructions PASS=20/0
+
+
 
 ### Navigation (v29.2 — TWINS Menu Fusion)
 
