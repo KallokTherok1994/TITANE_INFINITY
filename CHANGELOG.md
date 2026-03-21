@@ -2,6 +2,15 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.10.0] - 2026-03-21 (Governance + DesignCenter flake root fix)
+
+### Fixed
+- test(setup): add global `afterEach` DOM cleanup in `src/test-utils/setup.ts` to clear `document.documentElement` style/class after every test file — eliminates DesignCenter CSS bleed flake
+- docs(90_release): create `PRODUCTION_RELEASE_v28.9.0.md` canonical release doc
+
+### Changed
+- chore(version): bump 28.9.0 → 28.10.0
+
 ## [28.9.0] - 2026-03-21 (Governance — Post-Seal Next-Cycle Debt v28.8.0)
 
 ### Fixed
