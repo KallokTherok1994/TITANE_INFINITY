@@ -1,136 +1,208 @@
-/**
- * TOTAL_DEV Native E2E Test (WebdriverIO/Tauri)
- * 
- * Validates TOTAL_DEV page accessibility and core UX in native environment.
- * Targets real desktop window (not web server).
- * 
- * SCOPE: Navigation, Lock Badge, Unlock Panel visibility (no unlock call required)
- * CRITICAL PATH: launch → nav click → verify header → verify lock → verify unlock input
- */
-
 import assert from 'node:assert/strict';
 
-describe('TOTAL_DEV Native Desktop (WDIO/Tauri)', () => {
-  const TOTAL_DEV_HEADER = '[data-testid="total-dev-header"]';
-  const LOCK_BADGE = '[data-testid="lock-badge"]';
-  const UNLOCK_PANEL = '.total-dev-unlock-panel';
-  const PASSWORD_INPUT = 'input[placeholder*="code"], input[placeholder*="password"]';
-  const NAV_TOTAL_DEV = 'text=TOTAL DEV';
-  const NAV_MORE = '[data-testid="btn-nav-more"]';
+import {
+  captureFailureScreenshot,
+  ensureArtifactsDir,
+  getCurrentPathname,
+  gotoTopNavPage,
+  openApp,
+  waitAppReady,
+} from './ui-driver.wdio.js';
 
-  before(async () => {
-    // Launch native app
-    await browser.url('tauri://localhost');
-    await browser.pause(4000);
-    
-    // Wait for app to initialize
-    const bodyExists = await $('body').isExisting();
-    assert.equal(bodyExists, true, 'App root element not found');
-  });
+const TOTAL_DEV_PAGE = {
+  id: 'total-dev',
+  route: '/total-dev',
+  navTestId: 'nav-total-dev',
+  root: '[data-testid="total-dev-header"]',
+};
 
-  it('1. navigates to TOTAL_DEV via top nav click', async function () {
-    this.timeout(30000);
-    
-    // Wait for nav to be ready
-    await browser.waitUntil(
-      async () => {
-        const nav = await $('[data-testid="nav-top-main"]');
-        return nav.isExisting();
-      },
-      { timeout: 10000 }
-    );
-    
-    // Try to find TOTAL_DEV nav item directly, or open "More" menu
-    let totalDevNav = await $(NAV_TOTAL_DEV);
-    if (!(await totalDevNav.isExisting())) {
-      // Try clicking the "More" menu first
-      const moreBtn = await $(NAV_MORE);
-      if (await moreBtn.isExisting()) {
-        await moreBtn.click();
-        await browser.pause(500);
-      }
+const TOTAL_DEV_HEADER = '[data-testid="total-dev-header"]';
+const LOCK_BADGE = '[data-testid="lock-badge"]';
+const UNLOCK_PANEL = '.total-dev-unlock-panel';
+const PASSWORD_INPUT = 'input[placeholder="Token unlock..."]';
+const UNLOCK_BUTTON = '[data-testid="total-dev-unlock-btn"]';
+const UNLOCK_ERROR = '.total-dev-unlock-error';
+
+async function waitForTotalDevSurface(timeout = 30000) {
+  await browser.waitUntil(
+    async () => {
+      const header = await $(TOTAL_DEV_HEADER);
+      const badge = await $(LOCK_BADGE);
+      const panel = await $(UNLOCK_PANEL);
+      return (
+        (await header.isExisting()) &&
+        (await badge.isExisting()) &&
+        (await panel.isExisting())
+      );
+    },
+    {
+      timeout,
+      interval: 200,
+      timeoutMsg: 'TOTAL_DEV surface did not become available',
     }
-    
-    // Now find and click TOTAL_DEV
-    totalDevNav = await $(NAV_TOTAL_DEV);
-    const exists = await totalDevNav.isExisting();
-    assert.equal(exists, true, 'TOTAL_DEV nav item not found');
-    
-    await totalDevNav.click();
-    await browser.pause(2000);
-    
-    // Verify route changed
-    const url = await browser.execute(() => window.location.href || '');
+  );
+}
+
+async function setInputValueWithEvents(selector, value) {
+  const element = await $(selector);
+  await element.waitForExist({ timeout: 10000 });
+  await browser.execute(
+    (input, nextValue) => {
+      if (!input) return;
+      input.focus();
+
+      const descriptor = Object.getOwnPropertyDescriptor(
+        HTMLInputElement.prototype,
+        'value'
+      );
+
+      if (descriptor?.set) {
+        descriptor.set.call(input, String(nextValue ?? ''));
+      } else {
+        input.value = String(nextValue ?? '');
+      }
+
+      input.dispatchEvent(new Event('input', { bubbles: true }));
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    },
+    element,
+    value
+  );
+}
+
+async function clickWithDomFallback(selector) {
+  const element = await $(selector);
+  await element.waitForExist({ timeout: 10000 });
+
+  try {
+    await element.scrollIntoView();
+  } catch {
+    // Best effort only.
+  }
+
+  try {
+    if (await element.isClickable()) {
+      await element.click();
+      return true;
+    }
+  } catch {
+    // Fallback below.
+  }
+
+  return await browser.execute(button => {
+    if (!button) return false;
+    const disabled =
+      button.hasAttribute('disabled') || button.getAttribute('aria-disabled') === 'true';
+    if (disabled) return false;
+    button.focus();
+    button.dispatchEvent(
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+        composed: true,
+      })
+    );
+    return true;
+  }, element);
+}
+
+describe('TOTAL_DEV Native Desktop (WDIO/Tauri)', () => {
+  before(async () => {
+    await ensureArtifactsDir();
+    await openApp();
+    await waitAppReady();
+  });
+
+  afterEach(async function () {
+    if (this.currentTest?.state === 'failed') {
+      await captureFailureScreenshot(this.currentTest.fullTitle());
+    }
+  });
+
+  it('1. reaches TOTAL_DEV through the native top navigation', async function () {
+    this.timeout(60000);
+
+    await gotoTopNavPage(TOTAL_DEV_PAGE);
+    await waitForTotalDevSurface();
+
+    const pathname = await getCurrentPathname();
+    assert.equal(pathname, TOTAL_DEV_PAGE.route, `unexpected pathname: ${pathname}`);
+  });
+
+  it('2. shows the TOTAL_DEV header on the native surface', async function () {
+    this.timeout(30000);
+
+    await waitForTotalDevSurface();
+
+    const header = await $(TOTAL_DEV_HEADER);
+    assert.equal(await header.isDisplayed(), true, 'TOTAL_DEV header not visible');
+
+    const text = await header.getText();
+    assert.ok(text.includes('TOTAL_DEV'), `unexpected header text: ${text}`);
+  });
+
+  it('3. shows the lock badge while remaining in locked mode', async function () {
+    this.timeout(30000);
+
+    await waitForTotalDevSurface();
+
+    const badge = await $(LOCK_BADGE);
+    assert.equal(await badge.isDisplayed(), true, 'lock badge not visible');
+
+    const text = await badge.getText();
     assert.ok(
-      url.includes('/total-dev') || url.includes('total-dev'),
-      `URL didn't change to /total-dev. Current: ${url}`
+      /LOCKED|VERROUILL/i.test(text),
+      `lock badge does not reflect a locked state: ${text}`
     );
   });
 
-  it('2. TOTAL_DEV header is visible', async function () {
+  it('4. shows the unlock panel and password field', async function () {
     this.timeout(30000);
-    
-    // Wait for header to appear
+
+    await waitForTotalDevSurface();
+
+    const panel = await $(UNLOCK_PANEL);
+    const input = await $(PASSWORD_INPUT);
+
+    assert.equal(await panel.isDisplayed(), true, 'unlock panel not visible');
+    assert.equal(await input.isDisplayed(), true, 'unlock input not visible');
+    assert.equal(await input.isEnabled(), true, 'unlock input not enabled');
+  });
+
+  it('5. keeps TOTAL_DEV locked after a wrong unlock attempt', async function () {
+    this.timeout(45000);
+
+    await waitForTotalDevSurface();
+    await setInputValueWithEvents(PASSWORD_INPUT, 'wrong-password-test');
+
+    const clicked = await clickWithDomFallback(UNLOCK_BUTTON);
+    assert.equal(clicked, true, 'unlock button could not be activated');
+
     await browser.waitUntil(
       async () => {
-        const header = await $(TOTAL_DEV_HEADER);
-        return header.isExisting();
+        const badge = await $(LOCK_BADGE);
+        const error = await $(UNLOCK_ERROR);
+
+        if ((await error.isExisting()) && (await error.isDisplayed())) {
+          return true;
+        }
+
+        if (!(await badge.isExisting())) return false;
+        const text = await badge.getText();
+        return /LOCKED|VERROUILL/i.test(text);
       },
       {
-        timeout: 10000,
-        timeoutMsg: 'TOTAL_DEV header element did not appear'
+        timeout: 15000,
+        interval: 250,
+        timeoutMsg: 'wrong unlock attempt did not yield a visible blocked outcome',
       }
     );
-    
-    const header = await $(TOTAL_DEV_HEADER);
-    const displayedCheck = await header.isDisplayed();
-    assert.equal(displayedCheck, true, 'TOTAL_DEV header not visible');
-    
-    const text = await header.getText();
-    assert.ok(text.includes('TOTAL_DEV'), 'Header text does not contain TOTAL_DEV');
-  });
 
-  it('3. Lock Badge renders', async function () {
-    this.timeout(30000);
-    
-    const lockBadge = await $(LOCK_BADGE);
-    const exists = await lockBadge.isExisting();
-    assert.equal(exists, true, 'Lock badge not found');
-  });
-
-  it('4. Unlock Panel is present', async function () {
-    this.timeout(30000);
-    
-    const unlockPanel = await $(UNLOCK_PANEL);
-    const exists = await unlockPanel.isExisting();
-    assert.equal(exists, true, 'Unlock panel not found');
-  });
-
-  it('5. Password input field is accessible', async function () {
-    this.timeout(30000);
-    
-    const passwordInput = await $(PASSWORD_INPUT);
-    const exists = await passwordInput.isExisting();
-    assert.equal(exists, true, 'Password input not found');
-    
-    const enabled = await passwordInput.isEnabled();
-    assert.equal(enabled, true, 'Password input is not enabled');
-  });
-
-  it('6. Page layout is complete', async function () {
-    this.timeout(30000);
-    
-    // Verify all critical elements are present
-    const header = await $(TOTAL_DEV_HEADER);
     const badge = await $(LOCK_BADGE);
-    const panel = await $(UNLOCK_PANEL);
-    
-    assert.equal(await header.isExisting(), true, 'Header missing');
-    assert.equal(await badge.isExisting(), true, 'Badge missing');
-    assert.equal(await panel.isExisting(), true, 'Panel missing');
-  });
-
-  after(async () => {
-    // Native session cleanup handled by wdio
+    const badgeText = await badge.getText();
+    assert.ok(
+      /LOCKED|VERROUILL/i.test(badgeText),
+      `TOTAL_DEV left locked mode after wrong unlock attempt: ${badgeText}`
+    );
   });
 });

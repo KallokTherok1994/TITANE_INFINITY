@@ -612,7 +612,51 @@ pub async fn conversation_generate(
         }
     }
 
-    // Créer la requête OMEGA
+    // ✅ FIX: MEMORY_INJECTION_UNPROVEN — call UnifiedMemory.recall() before prompt build.
+    // Retrieves real memory items (STM/MTM/LTM) relevant to the current user message.
+    // Max 5 items, importance-ranked; LTM items now carry full disk content (see recall fix).
+    // Bounded token budget: each item content capped at 200 chars to limit prompt growth.
+    // Gated by router_decision.wants_memory so factual/code/other queries skip this.
+    const MEMORY_RECALL_MAX: usize = 5;
+    const MEMORY_ITEM_CHAR_CAP: usize = 200;
+    let (memory_recall_block, memory_recall_ids): (String, Vec<String>) = {
+        if router_decision.wants_memory {
+            let recalled = {
+                let mut mem = orchestrator.unified_memory.write().await;
+                mem.recall(&message, MEMORY_RECALL_MAX)
+            };
+            if recalled.is_empty() {
+                (String::new(), Vec::new())
+            } else {
+                let ids: Vec<String> = recalled.iter().map(|i| i.id.clone()).collect();
+                let lines: Vec<String> = recalled.iter().map(|item| {
+                let tier_label = match item.tier {
+                        crate::core::MemoryTier::ShortTerm => "STM",
+                        crate::core::MemoryTier::MediumTerm => "MTM",
+                        crate::core::MemoryTier::LongTerm => "LTM",
+                    };
+                    let content_trunc = if item.content.len() > MEMORY_ITEM_CHAR_CAP {
+                        format!("{}…", &item.content[..MEMORY_ITEM_CHAR_CAP])
+                    } else {
+                        item.content.clone()
+                    };
+                    format!("[{tier_label}|{:.2}] {content_trunc}", item.importance)
+                }).collect();
+                let block = format!(
+                    "\n\n## MEMORY_CONTEXT\n{}\n## END_MEMORY_CONTEXT",
+                    lines.join("\n")
+                );
+                log::info!(
+                    "[Ω:CMD] 🧠 Memory recall: {} items injected | ids={:?}",
+                    ids.len(), ids
+                );
+                (block, ids)
+            }
+        } else {
+            (String::new(), Vec::new())
+        }
+    };
+
     // Inject STM (immediate context) from MultiLayerMemoryManager
     let stm_context_block: String = {
         let mlm = engine.multilayer_memory.read().await;
@@ -644,6 +688,8 @@ pub async fn conversation_generate(
         let mut parts: Vec<String> = Vec::new();
         if !base.is_empty() { parts.push(base); }
         if !stm_context_block.is_empty() { parts.push(stm_context_block); }
+        // ✅ FIX: inject UnifiedMemory recall results into prompt
+        if !memory_recall_block.is_empty() { parts.push(memory_recall_block.clone()); }
         if has_time_context || has_twins_context {
             let mut ctx_lines: Vec<String> = Vec::new();
             if has_time_context {
@@ -753,6 +799,8 @@ pub async fn conversation_generate(
             "historyLoadError": history_load_error,
             "requestId": req_id,
             "contextBinding": context_binding,
+            "memoryRecallIds": memory_recall_ids,
+            "memoryRecallCount": memory_recall_ids.len(),
         }
     }))
 }
