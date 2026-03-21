@@ -27,8 +27,7 @@
     "copyright": "Copyright © 2025 TITANE",
     "category": "DeveloperTool",
     "shortDescription": "TITANE∞ - Stable Release",
-    "longDescription": "TITANE Infinity - Cognitive Operating System, stable production release",
-    "createUpdaterArtifacts": true
+    "longDescription": "TITANE Infinity - Cognitive Operating System, stable production release"
   },
   "app": {
     "windows": [
