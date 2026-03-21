@@ -1,0 +1,885 @@
+/**
+ * TITANE∞ v28.1.0 — TOTAL_DEV PAGE STYLES
+ * GOD DEV Titanium Dark — WCAG 2.2 AA compliant
+ */
+
+/* ─────────────────────────────────────────────────────────────────
+   ROOT / LAYOUT
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0a0c0f;
+  color: #e0e6f0;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   HEADER
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background: linear-gradient(90deg, #0d1117 0%, #101620 100%);
+  border-bottom: 1px solid #1e2a3a;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.total-dev-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.total-dev-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  letter-spacing: 0.02em;
+}
+
+.total-dev-title-main {
+  color: #58a6ff;
+}
+
+.total-dev-title-sub {
+  font-size: 10px;
+  color: #6e7f96;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.total-dev-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.total-dev-meta-item {
+  font-size: 11px;
+  color: #7d8fa8;
+  padding: 2px 8px;
+  background: #161c27;
+  border: 1px solid #1e2a3a;
+  border-radius: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   BADGES
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  border: 1px solid transparent;
+}
+
+.total-dev-badge--locked {
+  background: #2d1a1a;
+  border-color: #5a2020;
+  color: #f85149;
+}
+
+.total-dev-badge--unlocked {
+  background: #122813;
+  border-color: #1a4d1a;
+  color: #3fb950;
+}
+
+.total-dev-badge--expired {
+  background: #2d2200;
+  border-color: #4d3800;
+  color: #d29922;
+}
+
+.total-dev-badge--checking {
+  background: #161c27;
+  border-color: #1e2a3a;
+  color: #7d8fa8;
+}
+
+.total-dev-provider-badge {
+  font-size: 10px;
+  padding: 2px 8px;
+  background: #1a1f35;
+  border: 1px solid #2a3560;
+  border-radius: 4px;
+  color: #79c0ff;
+  letter-spacing: 0.05em;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   BUTTONS
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: background 0.12s ease;
+  outline-offset: 2px;
+}
+
+.total-dev-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.total-dev-btn--primary {
+  background: #1f4080;
+  border-color: #2d5fa8;
+  color: #cbe3ff;
+}
+
+.total-dev-btn--primary:hover:not(:disabled) {
+  background: #2a5aa0;
+}
+
+.total-dev-btn--ghost {
+  background: transparent;
+  border-color: #2a3a50;
+  color: #6e7f96;
+}
+
+.total-dev-btn--ghost:hover:not(:disabled) {
+  border-color: #3a5070;
+  color: #a0b4c8;
+}
+
+.total-dev-btn--git {
+  background: #0d2217;
+  border-color: #1a4d2a;
+  color: #3fb950;
+  font-size: 11px;
+}
+
+.total-dev-btn--git:hover:not(:disabled) {
+  background: #122813;
+}
+
+.total-dev-btn--git-write {
+  background: #1f3a1f;
+  border-color: #2d5a2d;
+  color: #56d364;
+}
+
+.total-dev-btn--git-write:hover:not(:disabled) {
+  background: #254025;
+}
+
+.total-dev-btn--git-danger {
+  background: #2d1919;
+  border-color: #5a2020;
+  color: #f85149;
+}
+
+.total-dev-btn--git-danger:hover:not(:disabled) {
+  background: #3d2020;
+}
+
+.total-dev-btn--console {
+  background: #0f1e2e;
+  border-color: #1a3a5a;
+  color: #79c0ff;
+}
+
+.total-dev-btn--console:hover:not(:disabled) {
+  background: #162840;
+}
+
+.total-dev-btn--revoke {
+  background: #2d1919;
+  border-color: #5a2020;
+  color: #f85149;
+  font-size: 10px;
+  padding: 3px 8px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   MAIN AREA
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-main-area {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  padding: 0;
+}
+
+.total-dev-main-area--locked {
+  padding: 20px;
+  gap: 20px;
+  overflow-y: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   TABS
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-tabs {
+  display: flex;
+  gap: 2px;
+  padding: 8px 12px 0;
+  border-bottom: 1px solid #1e2a3a;
+  background: #0d1117;
+  flex-shrink: 0;
+}
+
+.total-dev-tab {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  cursor: pointer;
+  color: #6e7f96;
+  background: transparent;
+  letter-spacing: 0.05em;
+  transition:
+    color 0.1s ease,
+    background 0.1s ease;
+}
+
+.total-dev-tab:hover {
+  color: #a0b4c8;
+  background: #101620;
+}
+
+.total-dev-tab--active {
+  color: #58a6ff;
+  background: #0a0c0f;
+  border-color: #1e2a3a;
+  border-bottom: 1px solid #0a0c0f;
+  margin-bottom: -1px;
+}
+
+.total-dev-tab-content {
+  flex: 1;
+  overflow: hidden;
+  padding: 12px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   PANELS
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #0d1117;
+  border: 1px solid #1e2a3a;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.total-dev-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #101620;
+  border-bottom: 1px solid #1e2a3a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #8ba3c0;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   UNLOCK PANEL
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-unlock-panel {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 32px;
+  background: #0d1117;
+  border: 1px solid #1e2a3a;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.total-dev-unlock-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.total-dev-unlock-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #58a6ff;
+  margin: 0 0 10px;
+  letter-spacing: 0.03em;
+}
+
+.total-dev-unlock-desc {
+  font-size: 12px;
+  color: #6e7f96;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.total-dev-unlock-form {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.total-dev-unlock-input {
+  flex: 1;
+  max-width: 260px;
+  padding: 8px 12px;
+  background: #161c27;
+  border: 1px solid #2a3a50;
+  border-radius: 4px;
+  color: #e0e6f0;
+  font-family: inherit;
+  font-size: 13px;
+  outline-offset: 2px;
+}
+
+.total-dev-unlock-input:focus {
+  border-color: #3a6090;
+  outline: 2px solid #1a4080;
+}
+
+.total-dev-unlock-btn {
+  padding: 8px 20px;
+  background: #1f4080;
+  border: 1px solid #2d5fa8;
+  border-radius: 4px;
+  color: #cbe3ff;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.1em;
+}
+
+.total-dev-unlock-btn:hover:not(:disabled) {
+  background: #2a5aa0;
+}
+
+.total-dev-unlock-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.total-dev-unlock-error {
+  color: #f85149;
+  font-size: 12px;
+  margin: 8px 0 0;
+}
+
+.total-dev-unlock-hint {
+  font-size: 11px;
+  color: #4a5568;
+  margin-top: 12px;
+}
+
+.total-dev-locked-chat {
+  flex: 1;
+  min-height: 300px;
+}
+
+.total-dev-checking {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 20px;
+  color: #6e7f96;
+  font-size: 13px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CHAT
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.total-dev-chat-msg {
+  padding: 10px 14px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+}
+
+.total-dev-chat-msg--user {
+  background: #0f1e2e;
+  border-color: #1a3a5a;
+  align-self: flex-end;
+  max-width: 85%;
+}
+
+.total-dev-chat-msg--assistant {
+  background: #0d1a1f;
+  border-color: #1a3a2a;
+  align-self: flex-start;
+  max-width: 95%;
+}
+
+.total-dev-chat-msg-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.total-dev-chat-role {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #6e7f96;
+}
+
+.total-dev-chat-model {
+  font-size: 10px;
+  color: #2d5fa8;
+  padding: 1px 6px;
+  background: #0d1a2e;
+  border-radius: 3px;
+}
+
+.total-dev-chat-content {
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+  color: #c9d1d9;
+}
+
+.total-dev-chat-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6e7f96;
+}
+
+.total-dev-chat-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #1e2a3a;
+  flex-shrink: 0;
+}
+
+.total-dev-chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  background: #161c27;
+  border: 1px solid #2a3a50;
+  border-radius: 4px;
+  color: #e0e6f0;
+  font-family: inherit;
+  font-size: 12px;
+  resize: none;
+  outline-offset: 2px;
+  line-height: 1.5;
+}
+
+.total-dev-chat-input:focus {
+  border-color: #3a6090;
+  outline: 2px solid #1a4080;
+}
+
+.total-dev-chat-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   CONSOLE
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-console-output {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+  background: #060810;
+  font-size: 12px;
+}
+
+.total-dev-console-hint {
+  color: #3a5070;
+  padding: 10px 0;
+}
+
+.total-dev-console-entry {
+  margin-bottom: 12px;
+}
+
+.total-dev-console-cmd {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: #79c0ff;
+  margin-bottom: 4px;
+}
+
+.total-dev-console-prompt {
+  color: #3fb950;
+  font-weight: 700;
+}
+
+.total-dev-console-result {
+  padding-left: 16px;
+}
+
+.total-dev-console-stdout {
+  font-family: inherit;
+  font-size: 11px;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0 0 4px;
+}
+
+.total-dev-console-stderr {
+  font-family: inherit;
+  font-size: 11px;
+  color: #f0921a;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0 0 4px;
+}
+
+.total-dev-console-meta {
+  display: flex;
+  gap: 12px;
+  font-size: 10px;
+  color: #4a5568;
+}
+
+.total-dev-console-running {
+  padding-left: 16px;
+  color: #6e7f96;
+  font-size: 11px;
+}
+
+.total-dev-exit-ok {
+  color: #3fb950;
+  font-size: 10px;
+}
+
+.total-dev-exit-err {
+  color: #f85149;
+  font-size: 10px;
+}
+
+.total-dev-console-duration {
+  color: #4a5568;
+}
+
+.total-dev-console-id {
+  color: #2a3a50;
+}
+
+.total-dev-console-input-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-top: 1px solid #1e2a3a;
+  background: #080a10;
+  flex-shrink: 0;
+}
+
+.total-dev-console-input {
+  flex: 1;
+  padding: 6px 10px;
+  background: #0a0c14;
+  border: 1px solid #1e2a3a;
+  border-radius: 4px;
+  color: #79c0ff;
+  font-family: inherit;
+  font-size: 12px;
+  outline-offset: 2px;
+}
+
+.total-dev-console-input:focus {
+  border-color: #2a4a6a;
+  outline: 2px solid #0f2a40;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   GIT PANEL
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-git-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #1e2a3a;
+}
+
+.total-dev-git-ops-row {
+  display: flex;
+  gap: 8px;
+  padding: 8px 14px;
+  align-items: center;
+  border-bottom: 1px solid #1a2230;
+}
+
+.total-dev-git-input {
+  flex: 1;
+  padding: 6px 10px;
+  background: #161c27;
+  border: 1px solid #2a3a50;
+  border-radius: 4px;
+  color: #e0e6f0;
+  font-family: inherit;
+  font-size: 12px;
+  outline-offset: 2px;
+}
+
+.total-dev-git-input:focus {
+  border-color: #2a5a3a;
+  outline: 2px solid #0f2a1a;
+}
+
+.total-dev-git-output {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 12px 14px;
+  background: #060810;
+  font-family: inherit;
+  font-size: 11px;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   FILE INSPECTOR
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-file-input-row {
+  display: flex;
+  gap: 8px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #1e2a3a;
+  flex-shrink: 0;
+}
+
+.total-dev-file-input {
+  flex: 1;
+  padding: 6px 10px;
+  background: #161c27;
+  border: 1px solid #2a3a50;
+  border-radius: 4px;
+  color: #e0e6f0;
+  font-family: inherit;
+  font-size: 12px;
+  outline-offset: 2px;
+}
+
+.total-dev-file-input:focus {
+  border-color: #3a6090;
+  outline: 2px solid #1a4080;
+}
+
+.total-dev-file-result {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 14px;
+}
+
+.total-dev-file-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 11px;
+  color: #6e7f96;
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #1e2a3a;
+}
+
+.total-dev-file-error {
+  color: #f85149;
+  font-size: 12px;
+  margin: 8px 0;
+}
+
+.total-dev-file-content {
+  font-family: inherit;
+  font-size: 11px;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.6;
+  background: #060810;
+  padding: 12px;
+  border-radius: 4px;
+  border: 1px solid #1a2a3a;
+  overflow-x: auto;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   DEV ACTIONS
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 8px;
+  padding: 14px;
+  border-bottom: 1px solid #1e2a3a;
+}
+
+.total-dev-action-btn {
+  padding: 8px 10px;
+  background: #101620;
+  border: 1px solid #1e2a3a;
+  border-radius: 4px;
+  color: #8ba3c0;
+  font-family: inherit;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: left;
+  transition:
+    background 0.1s ease,
+    border-color 0.1s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.total-dev-action-btn:hover:not(:disabled) {
+  background: #161e2e;
+  border-color: #2a3a5a;
+  color: #c0d0e8;
+}
+
+.total-dev-action-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.total-dev-actions-output {
+  flex: 1;
+  overflow-y: auto;
+  margin: 0;
+  padding: 12px 14px;
+  background: #060810;
+  font-family: inherit;
+  font-size: 11px;
+  color: #c9d1d9;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   FOOTER
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 16px;
+  background: #080a10;
+  border-top: 1px solid #1e2a3a;
+  font-size: 10px;
+  color: #3a5070;
+  flex-shrink: 0;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SPINNER
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-spinner {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 2px solid #2a3a50;
+  border-top-color: #58a6ff;
+  border-radius: 50%;
+  animation: total-dev-spin 0.7s linear infinite;
+}
+
+@keyframes total-dev-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   SCROLLBARS
+───────────────────────────────────────────────────────────────── */
+
+.total-dev-chat-messages::-webkit-scrollbar,
+.total-dev-console-output::-webkit-scrollbar,
+.total-dev-git-output::-webkit-scrollbar,
+.total-dev-file-result::-webkit-scrollbar,
+.total-dev-actions-output::-webkit-scrollbar {
+  width: 5px;
+}
+
+.total-dev-chat-messages::-webkit-scrollbar-thumb,
+.total-dev-console-output::-webkit-scrollbar-thumb,
+.total-dev-git-output::-webkit-scrollbar-thumb,
+.total-dev-file-result::-webkit-scrollbar-thumb,
+.total-dev-actions-output::-webkit-scrollbar-thumb {
+  background: #2a3a50;
+  border-radius: 3px;
+}
+
+/* ─────────────────────────────────────────────────────────────────
+   RESPONSIVE
+───────────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .total-dev-tabs {
+    overflow-x: auto;
+    padding-bottom: 0;
+  }
+
+  .total-dev-actions-grid {
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  }
+}

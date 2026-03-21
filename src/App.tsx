@@ -266,6 +266,11 @@ const ResearchPage = lazy(() =>
   import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
 );
 
+// ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space (unlock-gated)
+const TotalDevPage = lazy(() =>
+  import('./pages/TotalDevPage').then(m => ({ default: m.TotalDevPage }))
+);
+
 const emitBootMarker = (marker: string): void => {
   if (typeof window === 'undefined') {
     return;
@@ -913,6 +918,12 @@ const AppRouter: React.FC = () => {
         route: '/twins',
         description: 'Numeric Twin Engine — Symbiose Kevin ↔ TITANE',
       },
+      {
+        id: 'total-dev',
+        label: 'TOTAL DEV',
+        route: '/total-dev',
+        description: 'Espace DEV souverain TITANE∞ — accès restreint',
+      },
     ],
     []
   );
@@ -1174,6 +1185,15 @@ const AppRouter: React.FC = () => {
             element={
               <ErrorBoundary context="DevCenter">
                 <DevPage />
+              </ErrorBoundary>
+            }
+          />
+          {/* ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space */}
+          <Route
+            path="/total-dev"
+            element={
+              <ErrorBoundary context="TotalDev">
+                <TotalDevPage />
               </ErrorBoundary>
             }
           />

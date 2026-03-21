@@ -203,6 +203,16 @@ export const TAURI_COMMANDS = {
   FULLBODY_GET_POSTURE: 'fullbody_get_posture',
   FULLBODY_GET_STATS: 'fullbody_get_stats',
   FULLBODY_RUN_SELFTEST: 'fullbody_run_selftest',
+
+  // ═══════════════════════════════════════════════════════════════
+  // TOTAL_DEV v28.1.0 — GOD DEV secure space
+  // ═══════════════════════════════════════════════════════════════
+  TOTAL_DEV_UNLOCK: 'total_dev_unlock',
+  TOTAL_DEV_SESSION_STATUS: 'total_dev_session_status',
+  TOTAL_DEV_REVOKE: 'total_dev_revoke',
+  TOTAL_DEV_GIT_OP: 'total_dev_git_op',
+  TOTAL_DEV_RUN_COMMAND: 'total_dev_run_command',
+  TOTAL_DEV_READ_FILE: 'total_dev_read_file',
 } as const;
 
 // ═══════════════════════════════════════════════════════════════
