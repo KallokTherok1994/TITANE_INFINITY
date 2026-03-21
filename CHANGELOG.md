@@ -2,6 +2,16 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.7.0] - 2026-03-21 (Governance + Stability — Post-Seal Next-Cycle Debt)
+
+### Fixed
+- test(design-center): add `afterEach` DOM cleanup to prevent CSS property bleed in parallel suite runs
+- chore(deployment): copy v28.6.0 AppImage to `deployment/latest/` (staging area sync)
+- docs(90_release): create `PRODUCTION_RELEASE_v28.6.0.md` canonical release doc
+
+### Changed
+- chore(version): bump 28.6.0 → 28.7.0
+
 ## [28.6.0] - 2026-03-21 (Vite 8 + Rolldown + Deps Recert + Governance Timeout)
 
 ### Build System
