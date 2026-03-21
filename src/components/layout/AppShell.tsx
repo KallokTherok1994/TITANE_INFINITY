@@ -53,6 +53,7 @@ export const AppShell = ({
 
       {/* Main Content (plein écran, sans sidebar) */}
       <main
+        role="main"
         className={cn(
           'flex-1 overflow-hidden relative flex min-w-0 flex-col max-w-full',
           topNav && 'pt-16'
