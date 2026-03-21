@@ -11,6 +11,25 @@ const WRAPPER_ENV_FILE = '/tmp/titane-e2e-wrapper.env';
 let tauriDriverProcess = null;
 let tauriDriverStartedByWdio = false;
 
+function getMtimeMs(filePath) {
+  try {
+    return fs.statSync(filePath).mtimeMs;
+  } catch {
+    return -1;
+  }
+}
+
+function pickNewestBinary(...candidates) {
+  const available = candidates.filter(candidate => candidate && fs.existsSync(candidate));
+  if (available.length === 0) {
+    return '';
+  }
+
+  return available
+    .map(candidate => ({ candidate, mtimeMs: getMtimeMs(candidate) }))
+    .sort((left, right) => right.mtimeMs - left.mtimeMs)[0].candidate;
+}
+
 function shellQuote(value) {
   return `'${String(value ?? '').replace(/'/g, `'"'"'`)}'`;
 }
@@ -71,7 +90,8 @@ async function waitForTauriDriver(hostname, port, maxWaitMs = 15000) {
 
 // Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
-// H6-FIX: release binary (patched, current timeout) > AppImage (may be stale/pre-patch)
+// H8-FIX: prefer the freshest local binary so desktop E2E reflects the current workspace build.
+const DEBUG_BINARY_PATH = path.resolve(ROOT, 'src-tauri/target/debug/titane-infinity');
 const RELEASE_BINARY_PATH = path.resolve(
   ROOT,
   'src-tauri/target/release/titane-infinity'
@@ -82,9 +102,8 @@ const APPIMAGE_FALLBACK_PATH = path.resolve(
 );
 const APP_PATH = process.env.TAURI_BINARY_PATH
   ? path.resolve(process.env.TAURI_BINARY_PATH)
-  : fs.existsSync(RELEASE_BINARY_PATH)
-    ? RELEASE_BINARY_PATH
-    : APPIMAGE_FALLBACK_PATH;
+  : pickNewestBinary(DEBUG_BINARY_PATH, RELEASE_BINARY_PATH, APPIMAGE_FALLBACK_PATH) ||
+    APPIMAGE_FALLBACK_PATH;
 
 exports.config = {
   runner: 'local',

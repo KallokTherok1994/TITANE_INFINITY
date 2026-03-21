@@ -7,7 +7,7 @@
 // PLAN v25.x: Migrer vers conversation_engine::conversation_generate (OMEGA v2)
 
 use crate::core::tapi_error::TAPIError;
-use crate::core::{MemoryType, UnifiedMemory};
+use crate::core::{MemoryItem, MemoryType, UnifiedMemory};
 use futures_util::StreamExt;
 use crate::core::http_types::Client;
 use serde::{Deserialize, Serialize};
@@ -1335,6 +1335,169 @@ pub async fn chat_get_memory_stats(
         "compression_ratio": stats.compression_ratio,
         "avg_importance": stats.avg_importance,
         "initialized": memory.is_initialized(),
+    }))
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MEMORY BACKUP / RESTORE — Rust LTM coverage
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// Backup all Rust LTM .mem files to a destination directory.
+/// Returns a manifest: { backed_up: N, dest_dir: String, files: [...] }
+/// Safe: if src dir does not exist or is empty, returns ok with backed_up=0.
+#[tauri::command]
+pub async fn chat_memory_backup(
+    dest_dir: String,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    let memory = state.unified_memory.read().await;
+    let ltm_src = memory.ltm_storage_path();
+    drop(memory);
+
+    let dest = std::path::PathBuf::from(&dest_dir);
+    if let Err(e) = std::fs::create_dir_all(&dest) {
+        return Err(format!("[MEMORY BACKUP] Failed to create dest dir: {}", e));
+    }
+
+    let entries = match std::fs::read_dir(&ltm_src) {
+        Ok(d) => d,
+        Err(_) => {
+            // LTM dir does not exist yet — nothing to back up
+            return Ok(serde_json::json!({
+                "ok": true,
+                "backed_up": 0,
+                "dest_dir": dest_dir,
+                "files": [],
+                "ltm_src": ltm_src.to_string_lossy()
+            }));
+        }
+    };
+
+    let mut backed_up = 0usize;
+    let mut files_copied: Vec<String> = Vec::new();
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+            continue;
+        }
+        let filename = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n.to_string(),
+            None => continue,
+        };
+        let dest_file = dest.join(&filename);
+        match std::fs::copy(&path, &dest_file) {
+            Ok(_) => {
+                backed_up += 1;
+                files_copied.push(filename);
+            }
+            Err(e) => {
+                eprintln!("[MEMORY BACKUP] ⚠️ Failed to copy {:?}: {}", path, e);
+            }
+        }
+    }
+
+    println!(
+        "[MEMORY BACKUP] ✅ Backed up {} LTM files to {}",
+        backed_up, dest_dir
+    );
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "backed_up": backed_up,
+        "dest_dir": dest_dir,
+        "files": files_copied,
+        "ltm_src": ltm_src.to_string_lossy()
+    }))
+}
+
+/// Restore Rust LTM .mem files from a backup directory.
+/// Copies files back to the canonical LTM storage path, then
+/// triggers restore_ltm_from_disk() to rebuild the in-memory index.
+/// Safe: missing/corrupt files are skipped. No crash on partial restore.
+#[tauri::command]
+pub async fn chat_memory_restore(
+    src_dir: String,
+    state: State<'_, ChatOrchestratorState>,
+) -> Result<serde_json::Value, String> {
+    let ltm_dest = {
+        let memory = state.unified_memory.read().await;
+        memory.ltm_storage_path()
+    };
+
+    if let Err(e) = std::fs::create_dir_all(&ltm_dest) {
+        return Err(format!("[MEMORY RESTORE] Failed to create LTM dir: {}", e));
+    }
+
+    let src = std::path::PathBuf::from(&src_dir);
+    let entries = match std::fs::read_dir(&src) {
+        Ok(d) => d,
+        Err(e) => {
+            return Err(format!(
+                "[MEMORY RESTORE] Cannot read backup dir {}: {}",
+                src_dir, e
+            ));
+        }
+    };
+
+    let mut restored = 0usize;
+    let mut files_restored: Vec<String> = Vec::new();
+    let mut skipped = 0usize;
+
+    for entry in entries.flatten() {
+        let path = entry.path();
+        if path.extension().and_then(|e| e.to_str()) != Some("mem") {
+            continue;
+        }
+        let filename = match path.file_name().and_then(|n| n.to_str()) {
+            Some(n) => n.to_string(),
+            None => continue,
+        };
+        // Validate: ensure file parses as MemoryItem before restoring
+        let bytes = match std::fs::read(&path) {
+            Ok(b) => b,
+            Err(e) => {
+                eprintln!("[MEMORY RESTORE] ⚠️ Cannot read backup file {:?}: {}", path, e);
+                skipped += 1;
+                continue;
+            }
+        };
+        if serde_json::from_slice::<MemoryItem>(&bytes).is_err() {
+            eprintln!("[MEMORY RESTORE] ⚠️ Corrupt backup file {:?}: skipping", path);
+            skipped += 1;
+            continue;
+        }
+        let dest_file = ltm_dest.join(&filename);
+        match std::fs::write(&dest_file, &bytes) {
+            Ok(_) => {
+                restored += 1;
+                files_restored.push(filename);
+            }
+            Err(e) => {
+                eprintln!("[MEMORY RESTORE] ⚠️ Failed to write {:?}: {}", dest_file, e);
+                skipped += 1;
+            }
+        }
+    }
+
+    // Rebuild in-memory LTM index from restored files (no restart needed)
+    {
+        let mut memory = state.unified_memory.write().await;
+        memory.reload_ltm_from_disk();
+    }
+
+    println!(
+        "[MEMORY RESTORE] ✅ Restored {} LTM files ({} skipped) from {}",
+        restored, skipped, src_dir
+    );
+
+    Ok(serde_json::json!({
+        "ok": true,
+        "restored": restored,
+        "skipped": skipped,
+        "src_dir": src_dir,
+        "ltm_dest": ltm_dest.to_string_lossy(),
+        "files": files_restored
     }))
 }
 
