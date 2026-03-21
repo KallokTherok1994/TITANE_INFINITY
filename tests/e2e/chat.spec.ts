@@ -71,4 +71,38 @@ test.describe('Chat Interface', () => {
     await searchInput.clear();
     await expect(searchInput).toHaveValue('');
   });
+
+  test('should open ModeBuilder for generate-and-open document intent', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await page.getByTestId('tab-conversation').click();
+
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible({ timeout: 60000 });
+
+    await input.fill('Genere un fichier et ouvre l editeur pour que je le modifie');
+    await page.getByTestId('chat-send').click();
+
+    await expect(page.locator('.mode-builder-overlay')).toBeVisible({ timeout: 10000 });
+    await expect(page.getByTestId('chat-artifact-manifest')).toContainText('Artifact Manifest: artifact-');
+  });
+
+  test('should keep code-intent editor route blocked and not open ModeBuilder', async ({ page }) => {
+    await page.goto('/');
+
+    await expect(page.getByTestId('page-titane')).toBeVisible({ timeout: 60000 });
+    await page.getByTestId('tab-conversation').click();
+
+    const input = page.getByTestId('chat-input');
+    await expect(input).toBeVisible({ timeout: 60000 });
+
+    await input.fill('Genere un fichier de code et ouvre l editeur');
+    await page.getByTestId('chat-send').click();
+
+    await expect(page.locator('.mode-builder-overlay')).toHaveCount(0);
+    await expect(
+      page.getByTestId('chat-runtime-state').getByText('OPEN_FROM_CHAT_UNPROVEN')
+    ).toBeVisible({ timeout: 10000 });
+  });
 });
