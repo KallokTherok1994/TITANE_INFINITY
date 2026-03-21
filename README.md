@@ -68,7 +68,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 🔐 [Checksums v27.0.5][checksums-historiques-v2705]
 
-🔐 [Checksums courants v28.5.0](./docs/90_release/PRODUCTION_RELEASE_v28.5.0.md)
+🔐 [Checksums courants v28.6.0](./docs/90_release/PRODUCTION_RELEASE_v28.6.0.md)
 
 [checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
@@ -91,11 +91,16 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Historique de production (v28.x + v27.x)
 
-- **v28.5.0** (Current Release Target)
-  - Status: 🚀 RELEASE IN PROGRESS
-  - Tag target: `v28.5.0`
-  - Gates: verify-prod-deployment, verify_instructions, detect_recurrence
-  - Proof target: `RELEASE_v28.5.0_SEALED.txt`
+- **v28.6.0** (Current Release — SEALED ✅)
+  - Status: ✅ SEALED (2026-03-21)
+  - Tag: `v28.6.0`
+  - Gates: tsc, eslint, vitest 3399/3399, pnpm build, cargo check, verify_instructions PASS=20
+  - Proof: `RELEASE_v28.6.0_SEALED.txt`
+
+- **v28.5.0** (HISTORIQUE)
+  - Status: ✅ RELEASED
+  - Tag: `v28.5.0`
+  - Proof: `RELEASE_v28.5.0_SEALED.txt`
 
 - **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
@@ -260,8 +265,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v28.5.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v28.5.0 (`docs/90_release/PRODUCTION_RELEASE_v28.5.0.md`)
+**Repository Authority**: v28.6.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v28.6.0 (`docs/90_release/PRODUCTION_RELEASE_v28.6.0.md`)
 
 ---
 
@@ -296,12 +301,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack p
 
 ---
 
-## 📐 Architecture v28.5.0
+## 📐 Architecture v28.6.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v28.5.0
+TITANE∞ v28.6.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
