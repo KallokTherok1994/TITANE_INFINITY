@@ -21,7 +21,10 @@
       "ollama_generate",
       "test_ollama",
       "ping_ollama",
-      "ollama_query"
+      "ollama_query",
+      "chat_get_memory_stats",
+      "chat_memory_backup",
+      "chat_memory_restore"
     ],
     "deny": []
   }

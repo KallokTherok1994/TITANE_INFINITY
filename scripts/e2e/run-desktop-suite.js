@@ -6,6 +6,13 @@ import { once } from 'node:events';
 import path from 'node:path';
 import net from 'node:net';
 import os from 'node:os';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const {
+  resolveNativeBinaryPolicy,
+  formatPolicySummary,
+} = require('./native-binary-policy.cjs');
 
 const ROOT = process.cwd();
 const REPORTS = process.env.TITANE_E2E_ARTIFACTS_DIR
@@ -139,6 +146,29 @@ await appendDiag(
   `FORCE_LOCAL_PROVIDER for desktop E2E: ${E2E_FORCE_LOCAL_PROVIDER ? 'enabled' : 'disabled'}`
 );
 await appendDiag(`tauri-driver args: ${['tauri-driver', ...tauriArgs].join(' ')}`);
+
+const nativePolicy = resolveNativeBinaryPolicy({
+  rootDir: ROOT,
+  explicitBinaryPath: TAURI_BINARY_PATH,
+  tauriDevServerUrl: process.env.TAURI_DEV_SERVER_URL || '',
+  mode: process.env.TITANE_NATIVE_BINARY_MODE || '',
+});
+
+await appendDiag(`[NATIVE_BINARY_POLICY] ${formatPolicySummary(nativePolicy)}`);
+await appendDiag(
+  `[NATIVE_BINARY_POLICY] precedence=${nativePolicy.precedence.join('>')} candidates=${JSON.stringify(nativePolicy.candidates)}`
+);
+
+const enforceFreshness = process.env.TITANE_ENFORCE_BINARY_FRESHNESS !== '0';
+if (enforceFreshness && nativePolicy.shouldBlock) {
+  await appendDiag(
+    `[NATIVE_BINARY_POLICY] BLOCKER class=${nativePolicy.freshnessClass} buildRequired=${nativePolicy.buildRequired}`
+  );
+  await appendDiag(
+    `[NATIVE_BINARY_POLICY] workspaceAheadPaths=${JSON.stringify(nativePolicy.workspaceAheadPaths)}`
+  );
+  process.exit(32);
+}
 
 const tauriDriver = spawnLogged('tauri-driver', tauriArgs, TAURI_DRIVER_LOG, {
   RUST_LOG: process.env.RUST_LOG || 'debug',
