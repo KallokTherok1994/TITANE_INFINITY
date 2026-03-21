@@ -1,26 +1,42 @@
 {
   "deployment": {
-    "timestamp": "2026-03-20 19:17:40 UTC",
-    "version": "28.0.0",
-    "commit": "5c504878950698112ecd1235a51b8248c3e795f5",
+    "timestamp": "2026-03-21 00:21:15 UTC",
+    "version": "28.5.0",
+    "canonical_release": "v28.5.0",
+    "artifact_status": "PENDING_BUILD",
+    "note": "Canonical repo version is 28.5.0. Binary artifacts for v28.5.0 are pending build and gate completion. Historical v28.0.0 artifacts documented in MANIFEST_v28.0.0.json.",
     "branch": "MAIN",
-    "certification": "TITANE_INFINITY_RELEASE_20260320_151535_CERTIFIED",
-    "deployment_type": "post_certification"
+    "deployment_type": "release_preparation"
   },
   "artifacts": {
     "appimage": {
-      "available": true,
-      "sha256": "90442771be7cb2e40972790fa0a1c1eb7ef7ed08d61ad697a0934a1ea5bf1c1b"
+      "available": false,
+      "target_name": "Titan-Stable_28.5.0_amd64.AppImage",
+      "sha256": "PENDING"
     },
     "deb": {
-      "available": true,
-      "sha256": "69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71"
+      "available": false,
+      "target_name": "Titan-Stable_28.5.0_amd64.deb",
+      "sha256": "PENDING"
+    },
+    "appimage_alt": {
+      "available": false,
+      "target_name": "TITANE-Infinity_28.5.0_amd64.AppImage",
+      "sha256": "PENDING"
+    },
+    "deb_alt": {
+      "available": false,
+      "target_name": "TITANE-Infinity_28.5.0_amd64.deb",
+      "sha256": "PENDING"
     }
   },
+  "historical_reference": {
+    "v28.0.0": "See MANIFEST_v28.0.0.json and SHA256SUMS_v28.0.0.txt for verified v28.0.0 artifact checksums."
+  },
   "certification": {
-    "release_gate_status": "PASSED",
-    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
+    "release_gate_status": "PENDING",
+    "phase_chain_status": "RELEASE_PREPARATION",
     "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "CERTIFIED_READY"
+    "production_readiness": "PENDING_BINARY_PROOF"
   }
 }
