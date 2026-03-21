@@ -1191,6 +1191,7 @@ fn main() {
     builder
         .manage(std::sync::Mutex::new(onboarding::OnboardingState::default()))
         .plugin(tauri_plugin_fs::init())
+        .plugin(tauri_plugin_dialog::init())
         .setup(move |app| {
             app.listen("titane://boot-marker", move |event| {
                 let payload = event.payload().to_string();

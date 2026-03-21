@@ -7,6 +7,8 @@
  * Chat Export/Import - Export et import de conversations
  */
 
+import { isTauriAvailable } from '@/api/tauriClient';
+
 interface ChatMessage {
   id: string;
   role: 'user' | 'assistant';
@@ -30,6 +32,91 @@ interface ExportedConversation {
       tags?: string[];
     };
   };
+}
+
+export type ExportSaveStatus =
+  | 'SAVED_TAURI'
+  | 'SAVED_BROWSER_DOWNLOAD'
+  | 'SAVE_CANCELLED_HONEST'
+  | 'SAVE_DIALOG_BLOCKED'
+  | 'WRITE_FAILED';
+
+export interface ExportSaveResult {
+  ok: boolean;
+  status: ExportSaveStatus;
+  path?: string;
+  error?: string;
+}
+
+interface SaveOptions {
+  defaultName: string;
+  extension: string;
+  mime: string;
+}
+
+async function saveTextExport(
+  content: string,
+  options: SaveOptions
+): Promise<ExportSaveResult> {
+  if (isTauriAvailable()) {
+    try {
+      const [{ save }, { writeTextFile }] = await Promise.all([
+        import('@tauri-apps/plugin-dialog'),
+        import('@tauri-apps/plugin-fs'),
+      ]);
+
+      const selectedPath = await save({
+        defaultPath: options.defaultName,
+        filters: [{ name: options.extension.toUpperCase(), extensions: [options.extension] }],
+      });
+
+      if (!selectedPath) {
+        return {
+          ok: false,
+          status: 'SAVE_CANCELLED_HONEST',
+        };
+      }
+
+      await writeTextFile(selectedPath, content);
+      return {
+        ok: true,
+        status: 'SAVED_TAURI',
+        path: selectedPath,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : String(error);
+      return {
+        ok: false,
+        status: 'WRITE_FAILED',
+        error: message,
+      };
+    }
+  }
+
+  try {
+    const blob = new Blob([content], { type: options.mime });
+    const url = URL.createObjectURL(blob);
+
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = options.defaultName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    return {
+      ok: true,
+      status: 'SAVED_BROWSER_DOWNLOAD',
+    };
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    return {
+      ok: false,
+      status: 'SAVE_DIALOG_BLOCKED',
+      error: message,
+    };
+  }
 }
 
 /**
@@ -70,18 +157,13 @@ export function downloadConversation(
   conversationId: string,
   title: string,
   messages: ChatMessage[]
-): void {
+): Promise<ExportSaveResult> {
   const json = exportConversation(conversationId, title, messages);
-  const blob = new Blob([json], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `titane_conversation_${conversationId}_${Date.now()}.json`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  return saveTextExport(json, {
+    defaultName: `titane_conversation_${conversationId}_${Date.now()}.json`,
+    extension: 'json',
+    mime: 'application/json',
+  });
 }
 
 /**
@@ -132,18 +214,16 @@ export function exportToMarkdown(title: string, messages: ChatMessage[]): string
 /**
  * Download conversation as Markdown file
  */
-export function downloadMarkdown(title: string, messages: ChatMessage[]): void {
+export function downloadMarkdown(
+  title: string,
+  messages: ChatMessage[]
+): Promise<ExportSaveResult> {
   const md = exportToMarkdown(title, messages);
-  const blob = new Blob([md], { type: 'text/markdown' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = `titane_conversation_${Date.now()}.md`;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  return saveTextExport(md, {
+    defaultName: `titane_conversation_${Date.now()}.md`,
+    extension: 'md',
+    mime: 'text/markdown',
+  });
 }
 
 /**

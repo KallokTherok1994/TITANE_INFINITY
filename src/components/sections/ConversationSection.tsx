@@ -1404,13 +1404,43 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     }
   }, [clearMessages]);
 
-  const handleExportJson = useCallback(() => {
-    downloadConversation('current', 'Conversation TITANE', messages);
-  }, [messages]);
+  const handleExportJson = useCallback(async () => {
+    const result = await downloadConversation('current', 'Conversation TITANE', messages);
+    if (result.ok) {
+      toastSuccess(
+        result.status === 'SAVED_TAURI'
+          ? `Conversation enregistrée (${result.path ?? 'chemin sélectionné'})`
+          : 'Conversation téléchargée via le navigateur.'
+      );
+      return;
+    }
 
-  const handleExportMarkdown = useCallback(() => {
-    downloadMarkdown('Conversation TITANE', messages);
-  }, [messages]);
+    if (result.status === 'SAVE_CANCELLED_HONEST') {
+      errorToast('Enregistrement annulé (aucun fichier écrit).');
+      return;
+    }
+
+    errorToast(`Échec export JSON: ${result.error ?? result.status}`);
+  }, [messages, toastSuccess, errorToast]);
+
+  const handleExportMarkdown = useCallback(async () => {
+    const result = await downloadMarkdown('Conversation TITANE', messages);
+    if (result.ok) {
+      toastSuccess(
+        result.status === 'SAVED_TAURI'
+          ? `Markdown enregistré (${result.path ?? 'chemin sélectionné'})`
+          : 'Markdown téléchargé via le navigateur.'
+      );
+      return;
+    }
+
+    if (result.status === 'SAVE_CANCELLED_HONEST') {
+      errorToast('Enregistrement annulé (aucun fichier écrit).');
+      return;
+    }
+
+    errorToast(`Échec export Markdown: ${result.error ?? result.status}`);
+  }, [messages, toastSuccess, errorToast]);
 
   const handleCopyAll = useCallback(async () => {
     const copySuccess = await copyToClipboard('Conversation TITANE', messages);

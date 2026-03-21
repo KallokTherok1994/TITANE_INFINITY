@@ -1,0 +1,13 @@
+{
+  "$schema": "https://schema.tauri.app/config/2.0/capability.json",
+  "identifier": "export-import",
+  "description": "Capability for conversation export/import — Tauri file save dialog + write access to document directory",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "dialog:allow-save",
+    "fs:allow-write-text-file",
+    "fs:scope-document-recursive"
+  ]
+}
