@@ -2,6 +2,10 @@ const path = require('node:path');
 const fs = require('node:fs');
 const http = require('node:http');
 const { spawn } = require('node:child_process');
+const {
+  resolveNativeBinaryPolicy,
+  formatPolicySummary,
+} = require('./scripts/e2e/native-binary-policy.cjs');
 
 const ROOT = __dirname;
 const REPORTS_DIR = path.resolve(ROOT, 'reports/e2e-desktop');
@@ -10,25 +14,6 @@ const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
 const WRAPPER_ENV_FILE = '/tmp/titane-e2e-wrapper.env';
 let tauriDriverProcess = null;
 let tauriDriverStartedByWdio = false;
-
-function getMtimeMs(filePath) {
-  try {
-    return fs.statSync(filePath).mtimeMs;
-  } catch {
-    return -1;
-  }
-}
-
-function pickNewestBinary(...candidates) {
-  const available = candidates.filter(candidate => candidate && fs.existsSync(candidate));
-  if (available.length === 0) {
-    return '';
-  }
-
-  return available
-    .map(candidate => ({ candidate, mtimeMs: getMtimeMs(candidate) }))
-    .sort((left, right) => right.mtimeMs - left.mtimeMs)[0].candidate;
-}
 
 function shellQuote(value) {
   return `'${String(value ?? '').replace(/'/g, `'"'"'`)}'`;
@@ -90,20 +75,13 @@ async function waitForTauriDriver(hostname, port, maxWaitMs = 15000) {
 
 // Use E2E wrapper to inject TITANE_E2E env vars (memory/log isolation)
 const WRAPPER_PATH = path.resolve(ROOT, 'scripts/e2e/tauri-wrapper.sh');
-// H8-FIX: prefer the freshest local binary so desktop E2E reflects the current workspace build.
-const DEBUG_BINARY_PATH = path.resolve(ROOT, 'src-tauri/target/debug/titane-infinity');
-const RELEASE_BINARY_PATH = path.resolve(
-  ROOT,
-  'src-tauri/target/release/titane-infinity'
-);
-const APPIMAGE_FALLBACK_PATH = path.resolve(
-  ROOT,
-  'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
-);
-const APP_PATH = process.env.TAURI_BINARY_PATH
-  ? path.resolve(process.env.TAURI_BINARY_PATH)
-  : pickNewestBinary(DEBUG_BINARY_PATH, RELEASE_BINARY_PATH, APPIMAGE_FALLBACK_PATH) ||
-    APPIMAGE_FALLBACK_PATH;
+const NATIVE_BINARY_POLICY = resolveNativeBinaryPolicy({
+  rootDir: ROOT,
+  explicitBinaryPath: process.env.TAURI_BINARY_PATH || '',
+  tauriDevServerUrl: process.env.TAURI_DEV_SERVER_URL || '',
+  mode: process.env.TITANE_NATIVE_BINARY_MODE || '',
+});
+const APP_PATH = NATIVE_BINARY_POLICY.selectedBinaryPath || '';
 
 exports.config = {
   runner: 'local',
@@ -148,10 +126,17 @@ exports.config = {
       fs.appendFileSync(
         WORKER_LOG,
         `${new Date().toISOString()} PREPARE check tauri-driver ${hostname}:${port}\n` +
-          `wrapperEnvFile=${WRAPPER_ENV_FILE}\n`
+          `wrapperEnvFile=${WRAPPER_ENV_FILE}\n` +
+          `binaryPolicy=${formatPolicySummary(NATIVE_BINARY_POLICY)}\n`
       );
     } catch {
       // ignore logging failures
+    }
+
+    if (!APP_PATH || !fs.existsSync(APP_PATH)) {
+      throw new Error(
+        `BLOCKER: NO_VALID_BINARY | selected=${APP_PATH || '<none>'} | ${formatPolicySummary(NATIVE_BINARY_POLICY)}`
+      );
     }
 
     const alreadyRunning = await checkTauriDriverReady(hostname, port, 1000);

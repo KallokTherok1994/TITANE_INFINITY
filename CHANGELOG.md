@@ -2,6 +2,57 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.5.0] - 2026-03-21 (Provider + Memory Reliability Fixes)
+
+### Provider Reliability
+
+- **Circuit-breaker Rust**: `reset_provider_failures()` now called on probe success in
+  `chat_orchestrator.rs` — failure count no longer stays at 3 after recovery (commit `34b2097d7`)
+- **Circuit-breaker TS**: `circuitBreaker.ts` resets `failures=0` on CLOSED-state success and
+  HALF_OPEN→CLOSED transition (commit `34b2097d7`)
+
+### UI Provider Truth
+
+- **Audit (no code change)**: provider label event-driven chain confirmed live via
+  `chatServiceResponse.provider` — no stale polling state (commit `ce2cbecac`)
+
+### LTM Disk Persistence
+
+- **UnifiedMemory**: `promote_mtm_to_ltm()` now writes real JSON to `<ltm_path>/<id>.mem`
+  via `std::fs::write()`; `init()` calls `restore_ltm_from_disk()` to rebuild LTM index
+  from persisted files on every startup (commit `69c1c948f`)
+- **recall()**: now reads full disk content for LTM items via `std::fs::read()` + `serde_json::from_slice()`
+  — missing or corrupt files are skipped (no crash, no fake content) (commit `61df44d0b`)
+
+### Memory Injection into Live Chat
+
+- **conversation_generate**: calls `recall()` pre-generation; injects `## MEMORY_CONTEXT` block
+  into system_prompt; bounded to 5 items × 200 chars; gated by `router_decision.wants_memory`
+  (commit `61df44d0b`)
+- **Response metadata**: `memoryRecallIds` + `memoryRecallCount` added to every
+  `conversation_generate` response (commit `61df44d0b`)
+
+### Memory Backup / Restore
+
+- **chat_memory_backup**: new Tauri IPC command — copies all `*.mem` files from canonical
+  LTM storage path to caller-supplied `dest_dir`; returns manifest `{backed_up, dest_dir, files}`
+  (commit `a3212d6fb`)
+- **chat_memory_restore**: new Tauri IPC command — validates + copies backup files back to LTM
+  storage, calls `reload_ltm_from_disk()` for immediate in-memory index rehydration (no restart
+  required) (commit `a3212d6fb`)
+- **UnifiedMemory API**: new public methods `ltm_storage_path()` + `reload_ltm_from_disk()`
+  (commit `a3212d6fb`)
+- **Capabilities**: `chat_memory_backup`, `chat_memory_restore`, `chat_get_memory_stats` added
+  to `src-tauri/capabilities/chat_ai.json` allow list (commit `b_caps_fix`)
+
+### AutoHeal
+
+- AutoHeal entries: `AH-2026-03-21-0119` (provider reset), `AH-2026-03-20-2214` (LTM persistence),
+  `AH-2026-03-20-2229` (memory injection), `AH-2026-03-20-2247` (backup/restore),
+  `AH-2026-03-21-CAPS` (capability gap prevention)
+
+---
+
 ## [28.5.0] - 2026-03-20 (Release Preparation)
 
 ### Version Authority
