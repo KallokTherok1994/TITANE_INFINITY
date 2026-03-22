@@ -7,17 +7,17 @@ Execution mode: PATH_HEAVY
 ## 1. Requested document mapping
 
 - [x] Main AI prompt equivalent located:
-  [docs/plans/execution_prep_kits_20260309/VSCODE_PROMPTS_V2.md](docs/plans/execution_prep_kits_20260309/VSCODE_PROMPTS_V2.md)
+      [docs/plans/execution_prep_kits_20260309/VSCODE_PROMPTS_V2.md](docs/plans/execution_prep_kits_20260309/VSCODE_PROMPTS_V2.md)
 - [x] Structured execution task kit located:
-  [docs/plans/execution_prep_kits_20260309/H1_EXEC_KIT.md](docs/plans/execution_prep_kits_20260309/H1_EXEC_KIT.md)
+      [docs/plans/execution_prep_kits_20260309/H1_EXEC_KIT.md](docs/plans/execution_prep_kits_20260309/H1_EXEC_KIT.md)
 - [x] Source-of-truth roadmap and audit state located:
-  [docs/plans/phase_preparation_20260309/ROADMAP_CANONICAL.md](docs/plans/phase_preparation_20260309/ROADMAP_CANONICAL.md)
+      [docs/plans/phase_preparation_20260309/ROADMAP_CANONICAL.md](docs/plans/phase_preparation_20260309/ROADMAP_CANONICAL.md)
 - [x] Bootstrap truth located:
-  [docs/plans/phase_preparation_20260309/00_BOOTSTRAP_TRUTH.md](docs/plans/phase_preparation_20260309/00_BOOTSTRAP_TRUTH.md)
+      [docs/plans/phase_preparation_20260309/00_BOOTSTRAP_TRUTH.md](docs/plans/phase_preparation_20260309/00_BOOTSTRAP_TRUTH.md)
 - [x] Binary go/no-go matrix located:
-  [docs/plans/execution_prep_kits_20260309/VERDICT_MATRIX.md](docs/plans/execution_prep_kits_20260309/VERDICT_MATRIX.md)
+      [docs/plans/execution_prep_kits_20260309/VERDICT_MATRIX.md](docs/plans/execution_prep_kits_20260309/VERDICT_MATRIX.md)
 - [x] Legacy prompt pack also located:
-  [docs/plans/phase_preparation_20260309/03_VSCODE_PROMPTS.md](docs/plans/phase_preparation_20260309/03_VSCODE_PROMPTS.md)
+      [docs/plans/phase_preparation_20260309/03_VSCODE_PROMPTS.md](docs/plans/phase_preparation_20260309/03_VSCODE_PROMPTS.md)
 
 ## 2. Important discrepancy
 
@@ -34,12 +34,14 @@ Execution mode: PATH_HEAVY
 - [x] Phase B bootstrap executed
 
 Phase B results:
+
 - Branch: MAIN
 - HEAD: fadcbebba
 - verify_instructions.sh: SUMMARY: PASS=20 FAIL=0
 - Dirty-tree classification: active version-bump drift already present before governed execution
 
 Current drift detected before any governed execution:
+
 - Version bump edits already present in README, docs/README, package.json, src-tauri/Cargo.toml, src-tauri/Cargo.lock, src-tauri/tauri.conf.json.
 
 ## 4. Stop conditions
@@ -84,10 +86,10 @@ Current drift detected before any governed execution:
   - prettier
   - validators
 - [ ] Phase F - H3 certification freeze
-  - requires GO_FOR_PROD_BUILD__TITANE_INFINITY
+  - requires GO_FOR_PROD_BUILD\_\_TITANE_INFINITY
 - [ ] Phase G - H4 release and production deploy
-  - requires GO_FOR_PROD_BUILD__TITANE_INFINITY
-  - requires GO_FOR_PROD_DEPLOY__TITANE_INFINITY
+  - requires GO_FOR_PROD_BUILD\_\_TITANE_INFINITY
+  - requires GO_FOR_PROD_DEPLOY\_\_TITANE_INFINITY
 
 ## 6. Immediate next actions
 
@@ -103,6 +105,7 @@ Current drift detected before any governed execution:
 - [ ] STOP before build #3
 
 H1 pre-flight results:
+
 - BRANCH=MAIN
 - CLEAN_COUNT=2
 - G6_STRIP=2
@@ -110,16 +113,19 @@ H1 pre-flight results:
 - verify_instructions.sh: SUMMARY: PASS=20 FAIL=0
 
 Interpretation:
+
 - H1 pre-flight is PASS for branch, G6 hardening, and validator baseline.
 - CLEAN_COUNT remains non-zero because this governed session includes in-scope planning/proof updates and pre-existing version drift treated as accepted scope.
 
 External lock observation:
+
 - A concurrent `cargo build --release --locked --manifest-path src-tauri/Cargo.toml` existed first, then completed.
 - A concurrent `cargo-tauri tauri build` and its child `cargo build --bins --features tauri/custom-protocol --release` remain active after two wait windows.
 - Both remaining processes stayed in sleep state with 0% CPU during observation.
 - `src-tauri/target/release/titane-infinity` now exists, but H1 governed build #2 cannot be resumed safely while the external lock owner remains active.
 
 P9 build #2 result:
+
 - BUILD2 exit: 0
 - HASH_2_RAW: `edbd4a90865c578586a2f9ca068ecfca47b8777937caab885bc2f98504914aa3`
 - HASH_2_NORM: `8e5bd02e8a26ffd19694223285e5e889546111f2bcda904c7a85acb7766b0ab8`
@@ -127,6 +133,7 @@ P9 build #2 result:
 - Gate: `P9_BUILD2_MATCH=FAIL`
 
 Stop-the-line classification:
+
 - Build #3 must not run.
 - PASS artifact must not be written.
 - Likely contradiction: the accepted in-scope version drift changed the compiled binary, while the comparison target remains a historical normalized hash from an earlier session/version.

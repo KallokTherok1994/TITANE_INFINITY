@@ -21,22 +21,28 @@ export interface VitalsPanelProps {
 }
 
 const CONNECTION_STATE_COLOR: Record<ConnectionState, string> = {
-  CHECKING:   '#94a3b8',
-  ONLINE:     '#22c55e',
-  PARTIAL:    '#eab308',
+  CHECKING: '#94a3b8',
+  ONLINE: '#22c55e',
+  PARTIAL: '#eab308',
   LOCAL_ONLY: '#f97316',
-  OFFLINE:    '#ef4444',
+  OFFLINE: '#ef4444',
 };
 
 const UNAVAILABLE_REASON_SHORT: Record<BackendUnavailableReason, string> = {
   'tauri-backend-down': 'Tauri down',
-  'ollama-offline':     'Ollama offline',
-  'network-error':      'Network error',
-  'unknown-error':      'Unknown error',
+  'ollama-offline': 'Ollama offline',
+  'network-error': 'Network error',
+  'unknown-error': 'Unknown error',
 };
 
 export const VitalsPanel: React.FC<VitalsPanelProps> = React.memo(
-  ({ currentMode, messagesCount, connectionState, unavailableReason, metricsAvailable }) => {
+  ({
+    currentMode,
+    messagesCount,
+    connectionState,
+    unavailableReason,
+    metricsAvailable,
+  }) => {
     const isDegraded = connectionState
       ? connectionState !== 'ONLINE' && connectionState !== 'CHECKING'
       : false;

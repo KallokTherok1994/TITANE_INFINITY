@@ -16,11 +16,11 @@ import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { logger } from '@/lib/logger';
 
 export type ConnectionState =
-  | 'CHECKING'     // active probe in progress
-  | 'ONLINE'       // at least one non-local provider reachable
-  | 'PARTIAL'      // some non-local providers unreachable, others OK
-  | 'LOCAL_ONLY'   // no non-local providers reachable; local fallback active
-  | 'OFFLINE';     // no providers available at all
+  | 'CHECKING' // active probe in progress
+  | 'ONLINE' // at least one non-local provider reachable
+  | 'PARTIAL' // some non-local providers unreachable, others OK
+  | 'LOCAL_ONLY' // no non-local providers reachable; local fallback active
+  | 'OFFLINE'; // no providers available at all
 
 export interface ConnectionStatus {
   online: boolean;

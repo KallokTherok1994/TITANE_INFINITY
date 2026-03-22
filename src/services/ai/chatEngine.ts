@@ -159,7 +159,13 @@ export interface ChatEngineResponse extends AIResponse {
 // ─────────────────────────────────────────────────────────────────
 
 /** Modes for which response caching is disabled (creative/generative variability required) */
-const CACHE_DISABLED_MODES = new Set(['creative', 'journal', 'brainstorming', 'reflection', 'hybrid']);
+const CACHE_DISABLED_MODES = new Set([
+  'creative',
+  'journal',
+  'brainstorming',
+  'reflection',
+  'hybrid',
+]);
 
 class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
@@ -877,7 +883,10 @@ Format: [Audit complet] + [Réponse utilisateur]
       };
 
       // 🚀 v24.3.1 - PHASE 1.9: CACHE INTELLIGENT (Sauvegarder pour réponses ultra-rapides)
-      if (finalConfig.performanceConfig?.enableCache !== false && !CACHE_DISABLED_MODES.has(finalConfig.mode)) {
+      if (
+        finalConfig.performanceConfig?.enableCache !== false &&
+        !CACHE_DISABLED_MODES.has(finalConfig.mode)
+      ) {
         pipelineSteps.push('cache-save');
         responseCache.set(
           {
