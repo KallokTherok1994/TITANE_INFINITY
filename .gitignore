@@ -200,7 +200,7 @@ TITANE_INFINITY-main.zip
 
 # Binaires Tauri compilés (runtime local et releases)
 deployment/latest/titane-infinity
-deployment/v*/titane-infinity
+deployment/*/titane-infinity
 deployment/latest/builds/*.normalized
 runtime/stable/titane-infinity-v*
 
