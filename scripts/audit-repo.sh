@@ -15,7 +15,7 @@ if [[ "${1:-}" == "--full" ]]; then
   FULL=true
 fi
 
-REPORT_DATE=$(date +%Y-%m-%dT%H:%M:%SZ)
+REPORT_DATE=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 DIVIDER="━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 echo ""
@@ -77,7 +77,7 @@ BINARIES=$(git ls-files | grep -E '\.(AppImage|deb|rpm|exe|dmg|tar|xz|gz|bz2|zip
 if [[ -n "$BINARIES" ]]; then
   echo "$BINARIES" | while read -r f; do
     SIZE=$(du -sk "$f" 2>/dev/null | cut -f1)
-    printf "  %8.1f Mo  %s\n" "$(echo "scale=1; $SIZE/1024" | bc)" "$f"
+    printf "  %8.1f Mo  %s\n" "$(awk "BEGIN{printf \"%.1f\", $SIZE/1024}")" "$f"
   done
 else
   echo "  (aucun artefact binaire/archive détecté)"
