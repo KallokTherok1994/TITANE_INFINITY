@@ -264,3 +264,9 @@ export class ContextDetector {
 }
 
 export default ContextDetector;
+
+// Test-only stubs exported to satisfy esbuild static analysis when test files
+// are in the tsconfig scope. In vitest, vi.mock() replaces these with real
+// test implementations. In production builds, rollup tree-shakes them away.
+export const __setContext = (_ctx: Partial<import('../types').UIContext>): void => {};
+export const __getListenerCount = (): number => 0;
