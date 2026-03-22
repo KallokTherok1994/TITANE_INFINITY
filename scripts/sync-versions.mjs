@@ -40,10 +40,7 @@ const cargoPath = path.join(root, 'src-tauri', 'Cargo.toml');
 if (fs.existsSync(cargoPath)) {
   const cargo = fs.readFileSync(cargoPath, 'utf8');
   // Match the version line at the top of [package] section
-  const updated = cargo.replace(
-    /^(version\s*=\s*")[^"]*(")/m,
-    `$1${version}$2`
-  );
+  const updated = cargo.replace(/^(version\s*=\s*")[^"]*(")/m, `$1${version}$2`);
 
   if (updated !== cargo) {
     if (!dryRun) fs.writeFileSync(cargoPath, updated, 'utf8');

@@ -31,7 +31,9 @@ if (!fs.existsSync(baseConfigPath)) {
 
 // Skip if the file already exists and --force is not set
 if (fs.existsSync(outputPath) && !force) {
-  console.log(`ℹ️  src-tauri/tauri.conf.json already exists — skipping (use --force to overwrite)`);
+  console.log(
+    `ℹ️  src-tauri/tauri.conf.json already exists — skipping (use --force to overwrite)`
+  );
   process.exit(0);
 }
 
