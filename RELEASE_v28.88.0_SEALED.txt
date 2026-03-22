@@ -1,7 +1,7 @@
 TITANE∞ RELEASE v28.88.0 — SEALED
 Date: 2026-03-22
 Verdict: PASS
-tsc: PASS | vitest: 3285/3399 | cargo: 4463/4463 | build: exit 0
-freshness: PASS | instructions: PASS=20 FAIL=0 | recurrence: GUARD_PASS entries=565
-note: 114 pre-existing env-specific test failures (no Tauri runtime) = 28.87.0 baseline; snapshot updated
+tsc: PASS | vitest: 3399/3399 | cargo: 4463/4463 | build: exit 0
+freshness: PASS | instructions: PASS=23 FAIL=0 | recurrence: GUARD_PASS entries=576
+note: All 3399 tests pass after fix — vi.clearAllTimers() before vi.useRealTimers() in 11 test files (vitest 4.x fake-timer timeout regression)
 SEALED
