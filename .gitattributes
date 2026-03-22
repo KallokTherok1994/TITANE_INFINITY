@@ -62,5 +62,27 @@
 *.sh text eol=lf
 *.py text eol=lf
 # ═══════════════════════════════════════════════════════════════════
+# GitHub Linguist — exclusions des stats de langage
+# Empêche les vendeurs/artefacts de fausser la répartition des langages
+# ═══════════════════════════════════════════════════════════════════
+
+# Node.js vendorisé — contient des milliers de headers C/C++
+.tools/** linguist-vendored=true
+
+# Binaires de release et certification (pas du code source)
+deployment/** linguist-vendored=true
+
+# Preuves et rapports générés automatiquement
+proof_packs/** linguist-generated=true
+reports/** linguist-generated=true
+runs/** linguist-generated=true
+docs/_evidence/** linguist-generated=true
+docs/99_ARCHIVE/** linguist-generated=true
+docs/__AUDITS__/** linguist-generated=true
+
+# Runtime local (binaires Tauri compilés)
+runtime/stable/** linguist-vendored=true
+
+# ═══════════════════════════════════════════════════════════════════
 # END TITANE∞ .gitattributes
 # ═══════════════════════════════════════════════════════════════════
