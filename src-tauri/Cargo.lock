@@ -6394,7 +6394,7 @@ dependencies = [
 
 [[package]]
 name = "titane-infinity"
-version = "28.54.0"
+version = "28.55.0"
 dependencies = [
  "aes-gcm",
  "argon2",
