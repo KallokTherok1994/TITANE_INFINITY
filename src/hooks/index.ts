@@ -129,7 +129,7 @@ export type {
 
 // Connection & Providers
 export { useConnection } from './useConnection';
-export type { ConnectionStatus } from './useConnection';
+export type { ConnectionStatus, ConnectionState } from './useConnection';
 
 // System Vitals
 export { useVitals } from './useVitals';
