@@ -1259,8 +1259,20 @@ fn main() {
                 })
             );
 
-            app.manage(conversation_engine);
+            app.manage(conversation_engine.clone());
             log::info!("✅ OMEGA Conversation Engine v19.5.2 initialized");
+
+            // ✅ FIX(omega-init): Initialize OMEGA bridge async — required before first
+            //    process_through_omega() call. PipelineState::initialized defaults to false
+            //    so every message would fail with "Pipeline not initialized" and fall back
+            //    to the legacy 3646-char prompt path (slow). This spawn completes in <1ms.
+            tauri::async_runtime::spawn(async move {
+                if let Err(e) = conversation_engine.omega_bridge.initialize().await {
+                    log::warn!("[OMEGA] Bridge initialization failed: {}", e);
+                } else {
+                    log::info!("[OMEGA] ✅ OMEGA pipeline bridge initialized — fast path active");
+                }
+            });
 
             // ✅ AUTOFIX(memory-chat): PersistentMemoryState v19.2Ω — required by
             //    persistent_memory_read/get_stats/get_context/write_entry IPC commands
