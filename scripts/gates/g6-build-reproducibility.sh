@@ -23,7 +23,11 @@ GATE_ID="g6-build-reproducibility"
 GATE_NAME="Build Reproducibility (×3)"
 EXIT_CODE=0
 BUILD_HASHES=()
-BUILD_DIR="deployment/latest/builds"
+REPORT_DIR="deployment/latest/builds"
+RUN_ID="$(date -u +%Y%m%dT%H%M%SZ)-$$"
+G6_WORK_ROOT="${G6_WORK_ROOT:-/tmp/g6-build-reproducibility}"
+WORK_DIR="${G6_WORK_ROOT}/${RUN_ID}"
+BUILD_DIR="$WORK_DIR"
 G6_STEP_TIMEOUT_SEC="${G6_STEP_TIMEOUT_SEC:-2400}"
 
 # ── Environment pre-check ──────────────────────────────────────────────────
@@ -41,14 +45,14 @@ if [[ "${G6_SKIP_ENV_CHECK:-0}" != "1" ]]; then
     _g6_env_ok=0
   fi
   if [[ "$_g6_env_ok" == "0" ]]; then
-    mkdir -p "$BUILD_DIR"
+    mkdir -p "$REPORT_DIR"
     echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] [g6-build-reproducibility] ════════════════════════════════════════" >&2
     echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] [g6-build-reproducibility] ⚠️  GATE G6 BLOCKED_ENV: build environment not provisioned" >&2
     echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] [g6-build-reproducibility] ⚠️  To provision: sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev libasound2-dev" >&2
     echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] [g6-build-reproducibility] ⚠️  Tauri setup guide: https://tauri.app/start/prerequisites/" >&2
     echo "[$(date -u +'%Y-%m-%dT%H:%M:%SZ')] [g6-build-reproducibility] ════════════════════════════════════════" >&2
     # Write a blocked report so g9 can record state
-    cat > "$BUILD_DIR/BUILD_REPRODUCIBILITY.md" << BLOCKED_EOF
+    cat > "$REPORT_DIR/BUILD_REPRODUCIBILITY.md" << BLOCKED_EOF
 # G6: Build Reproducibility — BLOCKED_ENV
 
 **Status:** BLOCKED_ENV  
@@ -133,25 +137,36 @@ log "═════════════════════════
 log "GATE G6: ${GATE_NAME}"
 log "════════════════════════════════════════"
 
-mkdir -p "$BUILD_DIR"
+mkdir -p "$REPORT_DIR" "$WORK_DIR"
 
-log "Executing 3 independent builds with SOURCE_DATE_EPOCH lock..."
+# Run frontend/auth steps once to freeze UI assets for the 3 Rust reproducibility runs.
+PREBUILD_LOG="$WORK_DIR/prebuild.log"
+: > "$PREBUILD_LOG"
+export PNPM_HOME="$WORK_DIR/pnpm-home"
+mkdir -p "$PNPM_HOME"
+if run_step "0" "guard:ollama-proxy" "$PREBUILD_LOG" pnpm run guard:ollama-proxy && \
+   run_step "0" "require-e2e-build-authorization" "$PREBUILD_LOG" bash scripts/e2e/require-e2e-build-authorization.sh && \
+   run_step "0" "vite build" "$PREBUILD_LOG" pnpm -s exec vite build; then
+  pass "Prebuild completed (shared assets frozen for runs 1..3)"
+else
+  fail "Prebuild FAILED"
+  EXIT_CODE=1
+fi
+
+log "Executing 3 independent Rust builds with SOURCE_DATE_EPOCH lock..."
 for i in 1 2 3; do
   log "BUILD RUN $i/3..."
 
   export SOURCE_DATE_EPOCH="1000000000"
   export CARGO_BUILD_JOBS=1
-  export CARGO_TARGET_DIR="$BUILD_DIR/target-run-$i"
-  export PNPM_HOME="$BUILD_DIR/pnpm-cache-$i"
-  mkdir -p "$PNPM_HOME" "$CARGO_TARGET_DIR"
+  export CARGO_INCREMENTAL=0
+  export CARGO_TARGET_DIR="$WORK_DIR/target-run-$i"
+  mkdir -p "$CARGO_TARGET_DIR"
 
-  RUN_LOG="$BUILD_DIR/build_run_$i.log"
+  RUN_LOG="$WORK_DIR/build_run_$i.log"
   : > "$RUN_LOG"
 
-  if run_step "$i" "guard:ollama-proxy" "$RUN_LOG" pnpm run guard:ollama-proxy && \
-     run_step "$i" "require-e2e-build-authorization" "$RUN_LOG" bash scripts/e2e/require-e2e-build-authorization.sh && \
-     run_step "$i" "vite build" "$RUN_LOG" pnpm -s exec vite build && \
-     run_step "$i" "cargo build --release --locked" "$RUN_LOG" cargo build --manifest-path src-tauri/Cargo.toml --release --locked; then
+  if [[ $EXIT_CODE -eq 0 ]] && run_step "$i" "cargo build --release --locked" "$RUN_LOG" cargo build --manifest-path src-tauri/Cargo.toml --release --locked; then
     pass "Build run $i completed successfully"
   else
     fail "Build run $i FAILED"
@@ -163,13 +178,13 @@ for i in 1 2 3; do
     BINARY="$ARTIFACT_DIR/titane-infinity"
     if [[ -f "$BINARY" ]]; then
       RAW_HASH=$(sha256sum "$BINARY" | awk '{print $1}')
-      NORM_BINARY="$BUILD_DIR/titane-infinity.run${i}.normalized"
+      NORM_BINARY="$WORK_DIR/titane-infinity.run${i}.normalized"
       normalize_binary_for_hash "$BINARY" "$NORM_BINARY"
       HASH=$(sha256sum "$NORM_BINARY" | awk '{print $1}')
       BUILD_HASHES+=("run_$i:$HASH")
       pass "Build $i raw hash: $RAW_HASH"
       pass "Build $i normalized hash: $HASH"
-      echo "$HASH" > "$BUILD_DIR/hash_run_$i.txt"
+      echo "$HASH" > "$WORK_DIR/hash_run_$i.txt"
     else
       fail "Build $i binary not found: $BINARY"
     fi
@@ -178,8 +193,10 @@ for i in 1 2 3; do
   fi
 
   unset CARGO_TARGET_DIR
-  export PNPM_HOME=""
+  unset CARGO_INCREMENTAL
 done
+
+unset PNPM_HOME
 
 log "Comparing hashes across 3 runs..."
 if [[ ${#BUILD_HASHES[@]} -ge 3 ]]; then
@@ -199,25 +216,27 @@ else
   fail "Insufficient successful builds to compare ($((${#BUILD_HASHES[@]})) < 3)"
 fi
 
-cat > "$BUILD_DIR/BUILD_REPRODUCIBILITY.md" << EOF
+cat > "$REPORT_DIR/BUILD_REPRODUCIBILITY.md" << EOF
 # Build Reproducibility Report
 
 ## Summary
 - **Gate**: G6 (Build Reproducibility ×3)
 - **Status**: $([ $EXIT_CODE -eq 0 ] && echo "PASS" || echo "FAIL")
 - **Timestamp**: $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+- **WorkDir**: 
+  - $WORK_DIR
 
 ## Build Runs
 EOF
 
 for i in 1 2 3; do
-  if [[ -f "$BUILD_DIR/hash_run_$i.txt" ]]; then
-    HASH=$(cat "$BUILD_DIR/hash_run_$i.txt")
-    echo "- **Run $i**: \`$HASH\`" >> "$BUILD_DIR/BUILD_REPRODUCIBILITY.md"
+  if [[ -f "$WORK_DIR/hash_run_$i.txt" ]]; then
+    HASH=$(cat "$WORK_DIR/hash_run_$i.txt")
+    echo "- **Run $i**: \`$HASH\`" >> "$REPORT_DIR/BUILD_REPRODUCIBILITY.md"
   fi
 done
 
-cat >> "$BUILD_DIR/BUILD_REPRODUCIBILITY.md" << EOF
+cat >> "$REPORT_DIR/BUILD_REPRODUCIBILITY.md" << EOF
 
 ## Environment
 - SOURCE_DATE_EPOCH: 1000000000
@@ -228,7 +247,10 @@ cat >> "$BUILD_DIR/BUILD_REPRODUCIBILITY.md" << EOF
 Builds are reproducible if all 3 hashes match.
 EOF
 
-pass "Build report generated: $BUILD_DIR/BUILD_REPRODUCIBILITY.md"
+pass "Build report generated: $REPORT_DIR/BUILD_REPRODUCIBILITY.md"
+
+# Keep temporary per-run artifacts out of git-tracked directories.
+rm -rf "$WORK_DIR/pnpm-home" "$WORK_DIR/target-run-1" "$WORK_DIR/target-run-2" "$WORK_DIR/target-run-3" || true
 
 log "════════════════════════════════════════"
 if [[ $EXIT_CODE -eq 0 ]]; then

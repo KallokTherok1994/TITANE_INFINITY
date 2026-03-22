@@ -31,6 +31,8 @@ done
 # Prompts that drive a specialist agent must declare it explicitly with the
 # canonical marker: > **Agent**: invoke <agent-name> for this session.
 # Add entries here when a new agent-driven prompt is identified and fixed.
+# Scaling note: marker + validator array sufficient while agent-driven prompts <= 4 and no multi-agent collisions.
+# At 5+ entries or any multi-agent collision, add a human-visible mapping table to .github/prompts/OWNERSHIP.md.
 declare -A AGENT_DRIVEN_PROMPTS=(
   [".github/prompts/release-readiness.prompt.md"]="release-proof"
 )

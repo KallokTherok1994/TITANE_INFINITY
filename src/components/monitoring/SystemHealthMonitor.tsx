@@ -50,13 +50,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
       setLastUpdate(Date.now());
       setError(null);
     } catch (err) {
-      // Fallback si la commande n'existe pas encore
-      setMetrics({
-        cpu_usage_percent: 0,
-        memory_used_mb: 0,
-        memory_total_mb: 0,
-        uptime_seconds: 0,
-      });
+      setMetrics(null);
       setError(err instanceof Error ? err.message : 'Unknown error');
     }
   }, []);
@@ -104,10 +98,10 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
       timeZone: 'UTC',
     });
 
-  // Memory percentage
-  const memoryPercent = metrics
+  // Memory percentage — null when metrics unavailable (not fake zero)
+  const memoryPercent: number | null = metrics
     ? Math.round((metrics.memory_used_mb / metrics.memory_total_mb) * 100)
-    : 0;
+    : null;
 
   // Status color
   const getStatusColor = (status: string): string => {
@@ -138,14 +132,14 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="flex items-center gap-2">
           <span className="text-titane-text-tertiary text-xs">RAM</span>
           <span className="text-titane-text-primary text-sm font-medium">
-            {memoryPercent}%
+            {memoryPercent !== null ? `${memoryPercent}%` : '—'}
           </span>
         </div>
         <div className="w-px h-4 bg-titane-border-subtle" />
         <div className="flex items-center gap-2">
           <span className="text-titane-text-tertiary text-xs">Uptime</span>
           <span className="text-titane-text-primary text-sm font-medium">
-            {formatUptime(metrics?.uptime_seconds ?? 0)}
+            {metrics ? formatUptime(metrics.uptime_seconds) : '—'}
           </span>
         </div>
       </div>
@@ -191,11 +185,11 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="bg-titane-bg-card rounded-lg p-4">
           <div className="text-titane-text-tertiary text-xs mb-1">Memory</div>
           <div className="text-titane-text-primary text-2xl font-bold">
-            {memoryPercent}%
+            {memoryPercent !== null ? `${memoryPercent}%` : '—'}
           </div>
           <div className="text-titane-text-tertiary text-xs mt-1">
-            {metrics?.memory_used_mb?.toFixed(0) ?? 0} /{' '}
-            {metrics?.memory_total_mb?.toFixed(0) ?? 0} MB
+            {metrics?.memory_used_mb?.toFixed(0) ?? '—'} /{' '}
+            {metrics?.memory_total_mb?.toFixed(0) ?? '—'} MB
           </div>
         </div>
 
@@ -203,7 +197,7 @@ export const SystemHealthMonitor = memo(function SystemHealthMonitor({
         <div className="bg-titane-bg-card rounded-lg p-4">
           <div className="text-titane-text-tertiary text-xs mb-1">Uptime</div>
           <div className="text-titane-text-primary text-2xl font-bold">
-            {formatUptime(metrics?.uptime_seconds ?? 0)}
+            {metrics ? formatUptime(metrics.uptime_seconds) : '—'}
           </div>
         </div>
 

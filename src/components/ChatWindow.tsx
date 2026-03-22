@@ -13,6 +13,7 @@ import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { logger } from '@/lib/logger';
 import { useChat } from '../hooks/useChat';
 import { useConnection } from '../hooks/useConnection';
+import { useBackendHealth } from '../hooks/useBackendHealth';
 import { MessageBubble } from './chat/MessageBubble';
 import { StatusIndicator } from './StatusIndicator';
 import { VitalsPanel } from './VitalsPanel';
@@ -41,7 +42,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
       uiIntegrity,
       restoreFromVault,
     } = useChat({ voiceEnabled: voiceModeActive });
-    const { status: connectionStatus } = useConnection();
+    const { status: connectionStatus, connectionState } = useConnection();
+    const { unavailableReason, anyBackendAvailable } = useBackendHealth();
     const { setAIStatus, setAIError } = useAIActions();
     // CPU load removed - not in SingularityFrontendState (use useVitals for system metrics)
 
@@ -186,6 +188,8 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
               online={connectionStatus.online}
               provider={connectionStatus.provider as 'Gemini' | 'Ollama' | 'Offline'}
               health={connectionStatus.online ? 1 : 0.3}
+              connectionState={connectionState}
+              unavailableReason={unavailableReason}
             />
             <button
               type="button"
@@ -218,8 +222,14 @@ export const ChatWindow: React.FC<ChatWindowProps> = React.memo(
           </div>
         </div>
 
-        {/* VitalsPanel - System Status */}
-        <VitalsPanel currentMode={currentMode} messagesCount={messages.length} />
+        {/* VitalsPanel - Unified DEV cockpit: mode, messages, connection truth, metrics */}
+        <VitalsPanel
+          currentMode={currentMode}
+          messagesCount={messages.length}
+          connectionState={connectionState}
+          unavailableReason={unavailableReason}
+          metricsAvailable={anyBackendAvailable}
+        />
 
         <div
           className="chat-messages"

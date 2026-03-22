@@ -29,6 +29,7 @@ interface ProviderStatus {
 // ─────────────────────────────────────────────────────────────────
 
 export const ProviderStatusPanel = (): JSX.Element => {
+  const [pollingActive, setPollingActive] = useState<boolean>(false);
   const [providers, setProviders] = useState<ProviderStatus[]>([
     {
       name: 'Gemini',
@@ -97,6 +98,7 @@ export const ProviderStatusPanel = (): JSX.Element => {
     }
 
     const enabled = import.meta.env.DEV || envEnabled || userEnabled;
+    setPollingActive(enabled);
     if (!enabled) {
       return;
     }
@@ -137,16 +139,46 @@ export const ProviderStatusPanel = (): JSX.Element => {
         boxShadow: shadows.lg,
       }}
     >
-      <h3
+      <div
         style={{
-          fontSize: fontSizes.lg,
-          fontWeight: 600,
-          color: colors.neutral[100],
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           marginBottom: spacing[4],
         }}
       >
-        📊 État des Providers IA
-      </h3>
+        <h3
+          style={{
+            fontSize: fontSizes.lg,
+            fontWeight: 600,
+            color: colors.neutral[100],
+            margin: 0,
+          }}
+        >
+          📊 État des Providers IA
+        </h3>
+        {/* Polling truth badge — visible, low-noise, no behavior change */}
+        <span
+          title={
+            pollingActive
+              ? 'Données actualisées en temps réel'
+              : 'Données statiques — polling désactivé (DEV=0, VITE_PROVIDER_STATUS_PANEL_STATS_POLLING_ENABLED≠1, localStorage flag absent)'
+          }
+          style={{
+            fontSize: fontSizes.xs,
+            padding: '2px 8px',
+            borderRadius: radius.full ?? '9999px',
+            backgroundColor: pollingActive
+              ? `${colors.emeraude.primary[500]}20`
+              : `${colors.neutral[600]}20`,
+            color: pollingActive ? colors.emeraude.primary[400] : colors.neutral[400],
+            border: `1px solid ${pollingActive ? colors.emeraude.primary[500] : colors.neutral[600]}40`,
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {pollingActive ? '🟢 Live' : '⏸ Snapshot'}
+        </span>
+      </div>
 
       <div
         style={{
