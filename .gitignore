@@ -208,3 +208,14 @@ runtime/stable/titane-infinity-v*
 .tools/node/_tmp/SHASUMS256.txt
 .tools/node/_tmp/SHASUMS*.txt
 .tools/node/current/
+
+# Runtime state files — never commit (hygiene audit 2026-03-22)
+.server.pid
+.tunnel-access.txt
+.seal_bootstrap_capture.md
+.seal_bootstrap_ids
+.seal_proof_dir
+.current_chat_artifact_pack
+.v27_pack_path
+titane-infinity@*
+titane.sh.new
