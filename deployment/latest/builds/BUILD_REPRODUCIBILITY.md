@@ -3,10 +3,10 @@
 ## Summary
 - **Gate**: G6 (Build Reproducibility ×3)
 - **Status**: FAIL
-- **Timestamp**: 2026-03-14T17:11:15Z
+- **Timestamp**: 2026-03-22T06:00:12Z
 
 ## Build Runs
-- **Run 1**: `9165642826e0c65780a7b91a16fbf40e24bf26575efaa48a195ccc292a7e8bd6`
+- **Run 1**: `07e2d656b1d4ae3b97dd67a8e3ea245b04e57396a0e1f1cd289a87d235451776`
 
 ## Environment
 - SOURCE_DATE_EPOCH: 1000000000
