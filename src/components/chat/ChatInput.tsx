@@ -45,9 +45,9 @@ interface ChatInputState {
 // Configuration OMEGA
 const OMEGA_INPUT_CONFIG = {
   maxLength: 10000, // Max caractères par message
-  minInterval: 1500, // Min millisecondes entre messages
-  maxSpam: 5, // Max messages spam avant block
-  spamResetTime: 30000, // Reset compteur spam après 30s
+  minInterval: 600, // Min millisecondes entre messages
+  maxSpam: 15, // Max messages spam avant block
+  spamResetTime: 15000, // Reset compteur spam après 15s
   dangerousPatterns: [
     // Patterns potentiellement dangereux
     /<script/i,
