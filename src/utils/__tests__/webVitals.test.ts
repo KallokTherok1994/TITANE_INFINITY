@@ -26,6 +26,7 @@ describe('WebVitalsMonitor', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 
@@ -366,6 +367,7 @@ describe('useWebVitals hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 
