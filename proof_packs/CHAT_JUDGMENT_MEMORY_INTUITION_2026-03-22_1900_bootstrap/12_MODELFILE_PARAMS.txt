@@ -1,0 +1,8 @@
+# Ollama Modelfile Parameters (TITANE∞ Local Engine)
+
+EXTRACTED PARAMETERS:
+PARAMETER temperature 0.75
+PARAMETER top_p 0.92
+PARAMETER top_k 50
+PARAMETER num_ctx 32768
+PARAMETER num_predict 8192
