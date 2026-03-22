@@ -19,14 +19,14 @@ export interface StatusIndicatorProps {
 
 const UNAVAILABLE_REASON_TEXT: Record<BackendUnavailableReason, string> = {
   'tauri-backend-down': 'Tauri backend unreachable',
-  'ollama-offline':     'Ollama service offline',
-  'network-error':      'Network error',
-  'unknown-error':      'Unknown backend error',
+  'ollama-offline': 'Ollama service offline',
+  'network-error': 'Network error',
+  'unknown-error': 'Unknown backend error',
 };
 
 const CONNECTION_STATE_LABEL: Record<ConnectionState, string> = {
   CHECKING: '…',
-  ONLINE: '',     // provider name used when online
+  ONLINE: '', // provider name used when online
   PARTIAL: '⚠ Partial',
   LOCAL_ONLY: 'Local',
   OFFLINE: 'Offline',
@@ -34,30 +34,41 @@ const CONNECTION_STATE_LABEL: Record<ConnectionState, string> = {
 
 const CONNECTION_STATE_COLOR: Record<ConnectionState, string> = {
   CHECKING: '#94a3b8',
-  ONLINE:   '#22c55e',
-  PARTIAL:  '#eab308',
+  ONLINE: '#22c55e',
+  PARTIAL: '#eab308',
   LOCAL_ONLY: '#f97316',
-  OFFLINE:  '#ef4444',
+  OFFLINE: '#ef4444',
 };
 
 export const StatusIndicator: React.FC<StatusIndicatorProps> = React.memo(
   ({ online, provider, health, connectionState, unavailableReason }) => {
     const statusColor = connectionState
       ? CONNECTION_STATE_COLOR[connectionState]
-      : online ? (health > 0.7 ? '#22c55e' : '#eab308') : '#ef4444';
+      : online
+        ? health > 0.7
+          ? '#22c55e'
+          : '#eab308'
+        : '#ef4444';
 
-    const stateLabel = connectionState ? CONNECTION_STATE_LABEL[connectionState] : undefined;
+    const stateLabel = connectionState
+      ? CONNECTION_STATE_LABEL[connectionState]
+      : undefined;
     const statusText = connectionState
-      ? (connectionState === 'ONLINE' ? provider : stateLabel ?? provider)
-      : (online ? provider : 'Offline');
+      ? connectionState === 'ONLINE'
+        ? provider
+        : (stateLabel ?? provider)
+      : online
+        ? provider
+        : 'Offline';
 
     // Show cause tooltip only when degraded — zero noise on healthy state
     const isDegraded = connectionState
       ? connectionState !== 'ONLINE' && connectionState !== 'CHECKING'
       : !online;
-    const tooltipText = isDegraded && unavailableReason
-      ? `${statusText} — ${UNAVAILABLE_REASON_TEXT[unavailableReason]}`
-      : `Status: ${statusText}`;
+    const tooltipText =
+      isDegraded && unavailableReason
+        ? `${statusText} — ${UNAVAILABLE_REASON_TEXT[unavailableReason]}`
+        : `Status: ${statusText}`;
 
     return (
       <div

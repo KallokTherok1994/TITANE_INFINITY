@@ -23,6 +23,7 @@
 ```
 
 This is the governed DEV_SAFE launcher. It:
+
 - validates Node version (≥20) with an actionable error if wrong
 - blocks launch on `stable-runtime` branch
 - runs pre-launch cleanup
@@ -31,13 +32,13 @@ This is the governed DEV_SAFE launcher. It:
 
 ## Alternate paths (secondary — for specific scenarios)
 
-| Command | When to use |
-|---|---|
-| `pnpm run dev:tauri` | Quick launch via monitor script (no branch/Node guard) |
-| `pnpm run dev:tauri:clean` | Launch after cleanup if run-dev.sh cleanup seems stale |
-| `pnpm run dev:tauri:raw` | Raw deploy script — advanced / manual override |
-| `pnpm run dev:tauri:no-ollama` | Raw launch without Ollama service |
-| `pnpm run titane:dev` | Dev-bridge direct — for bridge-layer debugging only |
+| Command                        | When to use                                            |
+| ------------------------------ | ------------------------------------------------------ |
+| `pnpm run dev:tauri`           | Quick launch via monitor script (no branch/Node guard) |
+| `pnpm run dev:tauri:clean`     | Launch after cleanup if run-dev.sh cleanup seems stale |
+| `pnpm run dev:tauri:raw`       | Raw deploy script — advanced / manual override         |
+| `pnpm run dev:tauri:no-ollama` | Raw launch without Ollama service                      |
+| `pnpm run titane:dev`          | Dev-bridge direct — for bridge-layer debugging only    |
 
 Do not use `pnpm start` — it is intentionally blocked (Tauri-only mode).
 
