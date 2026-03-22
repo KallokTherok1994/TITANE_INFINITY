@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.28.0] - 2026-03-21 (Governance)
+
+### Fixed
+- docs(90_release): create `PRODUCTION_RELEASE_v28.28.0.md` (same-cycle)
+
+### Changed
+- chore(version): bump 28.27.0 → 28.28.0
+
 ## [28.27.0] - 2026-03-21 (Governance)
 
 ### Fixed
