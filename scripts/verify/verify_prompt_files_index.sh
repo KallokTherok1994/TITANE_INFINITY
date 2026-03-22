@@ -27,6 +27,21 @@ for f in "${required[@]}"; do
   fi
 done
 
+# Prompt-agent delegation marker guard.
+# Prompts that drive a specialist agent must declare it explicitly with the
+# canonical marker: > **Agent**: invoke <agent-name> for this session.
+# Add entries here when a new agent-driven prompt is identified and fixed.
+declare -A AGENT_DRIVEN_PROMPTS=(
+  [".github/prompts/release-readiness.prompt.md"]="release-proof"
+)
+for f in "${!AGENT_DRIVEN_PROMPTS[@]}"; do
+  if grep -q '> \*\*Agent\*\*:' "$f" 2>/dev/null; then
+    pass "PROMPT_AGENT_MARKER_PRESENT ${f##*/}"
+  else
+    fail "PROMPT_AGENT_MARKER_MISSING ${f##*/} (must declare agent: ${AGENT_DRIVEN_PROMPTS[$f]})"
+  fi
+done
+
 echo "SUMMARY: FAIL=$FAIL"
 if [[ "$FAIL" -ne 0 ]]; then
   exit 1
