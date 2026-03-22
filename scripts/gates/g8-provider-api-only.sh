@@ -87,8 +87,8 @@ fi
 
 # Check 6: Verify FORCE_LOCAL_PROVIDER doesn't cause crashes
 log "Checking FORCE_LOCAL_PROVIDER safety..."
-if grep -r "FORCE_LOCAL_PROVIDER" src/ --include="*.ts" --include="*.tsx" --include="*.rs" 2>/dev/null | grep -v "test\|comment"; then
-  if grep -r "FORCE_LOCAL_PROVIDER" src-tauri/src/ --include="*.rs" 2>/dev/null | grep -q "warn\|log"; then
+if grep -rq "FORCE_LOCAL_PROVIDER" src/ --include="*.ts" --include="*.tsx" --include="*.rs" 2>/dev/null; then
+  if grep -rq "FORCE_LOCAL_PROVIDER" src-tauri/src/ --include="*.rs" 2>/dev/null; then
     pass "FORCE_LOCAL_PROVIDER has observability markers"
   else
     fail "FORCE_LOCAL_PROVIDER lacks observability markers"

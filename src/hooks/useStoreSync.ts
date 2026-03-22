@@ -33,15 +33,22 @@ interface StoreSyncOptions {
  *   return <Routes />;
  * };
  * ```
+ *
+ * **Note:** Options are captured at mount time and are intentionally not reactive.
+ * This prevents re-triggering the sync on every render cycle when callbacks are
+ * defined inline. Pass stable references (useCallback / useMemo) if you need
+ * the callbacks to reflect updated state.
  */
 export const useStoreSync = (options: StoreSyncOptions = {}): void => {
-  const { timeoutMs = 10_000, onSuccess, onError } = options;
+  // Capture options at mount — intentional snapshot (not reactive)
+  const optionsRef = useRef(options);
   const syncedRef = useRef(false);
 
   useEffect(() => {
     if (syncedRef.current) return;
     syncedRef.current = true;
 
+    const { timeoutMs = 10_000, onSuccess, onError } = optionsRef.current;
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
 

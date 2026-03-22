@@ -102,7 +102,7 @@ fi
 log "Verifying deployment metadata..."
 DEPLOYMENT_MANIFEST="deployment/latest/MANIFEST.json"
 if [[ -f "$DEPLOYMENT_MANIFEST" ]]; then
-  MANIFEST_VERSION=$(jq -r '.version' "$DEPLOYMENT_MANIFEST" 2>/dev/null || true)
+  MANIFEST_VERSION=$(jq -r '.deployment.version // .version' "$DEPLOYMENT_MANIFEST" 2>/dev/null || true)
   if [[ "$MANIFEST_VERSION" == "$PKG_VERSION" ]]; then
     pass "Deployment metadata version synchronized: $MANIFEST_VERSION"
   else
