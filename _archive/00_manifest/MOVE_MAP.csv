@@ -150,3 +150,41 @@ RELEASE_ARTIFACTS_CHECKSUMS_28.78.0.txt,_archive/01_root_reports/releases/RELEAS
 RELEASE_ARTIFACTS_CHECKSUMS_28.79.0.txt,_archive/01_root_reports/releases/RELEASE_ARTIFACTS_CHECKSUMS_28.79.0.txt,git mv,Archivage bruit racine checksums v28.79.0,2026-03-22
 RELEASE_ARTIFACTS_CHECKSUMS_28.80.0.txt,_archive/01_root_reports/releases/RELEASE_ARTIFACTS_CHECKSUMS_28.80.0.txt,git mv,Archivage bruit racine checksums v28.80.0,2026-03-22
 nohup.out,DELETED,git rm,Résidu transient vite (114 bytes) non référencé,2026-03-22
+PHASE2,build_log.txt,_archive/04_transient_snapshots/build_log.txt,G
+PHASE2,dev_tauri_clean_log.txt,_archive/04_transient_snapshots/dev_tauri_clean_log.txt,G
+PHASE2,dev_tauri_fixed_log.txt,_archive/04_transient_snapshots/dev_tauri_fixed_log.txt,G
+PHASE2,dev_tauri_log.txt,_archive/04_transient_snapshots/dev_tauri_log.txt,G
+PHASE2,dev_tauri_npm_log.txt,_archive/04_transient_snapshots/dev_tauri_npm_log.txt,G
+PHASE2,final_test_log.txt,_archive/04_transient_snapshots/final_test_log.txt,G
+PHASE2,final_verification_log.txt,_archive/04_transient_snapshots/final_verification_log.txt,G
+PHASE2,install_log.txt,_archive/04_transient_snapshots/install_log.txt,G
+PHASE2,minimal_config_test_log.txt,_archive/04_transient_snapshots/minimal_config_test_log.txt,G
+PHASE2,tauri_test_clean_config.txt,_archive/04_transient_snapshots/tauri_test_clean_config.txt,G
+PHASE2,vite_clean_test.txt,_archive/04_transient_snapshots/vite_clean_test.txt,G
+PHASE2,vite_direct_log.txt,_archive/04_transient_snapshots/vite_direct_log.txt,G
+PHASE2,vite_minimal_test.txt,_archive/04_transient_snapshots/vite_minimal_test.txt,G
+PHASE2,vite_no_tsconfig_test.txt,_archive/04_transient_snapshots/vite_no_tsconfig_test.txt,G
+PHASE2,vite_standalone_test.txt,_archive/04_transient_snapshots/vite_standalone_test.txt,G
+PHASE2,vite_standalone_test2.txt,_archive/04_transient_snapshots/vite_standalone_test2.txt,G
+PHASE2,CAMPAIGN_COMPLETE_v27.0.2.txt,_archive/01_root_reports/CAMPAIGN_COMPLETE_v27.0.2.txt,E
+PHASE2,MISSION_COMPLETE.txt,_archive/01_root_reports/MISSION_COMPLETE.txt,E
+PHASE2,SESSION_COMPLETE.txt,_archive/01_root_reports/SESSION_COMPLETE.txt,E
+PHASE2,PHASE2_COMPLETED.txt,_archive/01_root_reports/PHASE2_COMPLETED.txt,E
+PHASE2,SINGULARITYBRIDGE_DISABLED.txt,_archive/01_root_reports/SINGULARITYBRIDGE_DISABLED.txt,E
+PHASE2,STANDARDS_MODE_VERIFICATION.txt,_archive/01_root_reports/STANDARDS_MODE_VERIFICATION.txt,E
+PHASE2,CONSOLE_ERRORS_FIXED.txt,_archive/01_root_reports/CONSOLE_ERRORS_FIXED.txt,E
+PHASE2,FINAL_STATUS_SNAPSHOT.txt,_archive/01_root_reports/FINAL_STATUS_SNAPSHOT.txt,E
+PHASE2,DEPLOYMENT_READINESS_v27.0.3.txt,_archive/01_root_reports/DEPLOYMENT_READINESS_v27.0.3.txt,E
+PHASE2,DEPLOYMENT_READY_v27.0.2.txt,_archive/01_root_reports/DEPLOYMENT_READY_v27.0.2.txt,E
+PHASE2,FINAL_DEPLOYMENT_STATUS_v27.0.2.txt,_archive/01_root_reports/FINAL_DEPLOYMENT_STATUS_v27.0.2.txt,E
+PHASE2,P1_BUILD_PROOF.txt,_archive/01_root_reports/P1_BUILD_PROOF.txt,B
+PHASE2,DEEP_ANALYSIS_EXECUTIVE_SUMMARY_v37.0.0.txt,_archive/01_root_reports/DEEP_ANALYSIS_EXECUTIVE_SUMMARY_v37.0.0.txt,E
+PHASE2,PROJECT_SNAPSHOT_v37.0.0.txt,_archive/01_root_reports/PROJECT_SNAPSHOT_v37.0.0.txt,E
+PHASE2,TEST_REPORT_2026-01-28_11-05-08.txt,_archive/01_root_reports/TEST_REPORT_2026-01-28_11-05-08.txt,E
+PHASE2,V24_QUICK_WINS_FINAL_VERDICT.txt,_archive/01_root_reports/V24_QUICK_WINS_FINAL_VERDICT.txt,E
+PHASE2,V26_COMMIT_MANIFEST.txt,_archive/01_root_reports/V26_COMMIT_MANIFEST.txt,E
+PHASE2,SESSION_COMPLETE_SUPERPROMPT_vMAX_2026-03-04.md,_archive/01_root_reports/SESSION_COMPLETE_SUPERPROMPT_vMAX_2026-03-04.md,E
+PHASE2,DEPLOYMENT_DISTRIBUTION_v27.2.0.sh,_archive/05_migration_notes/DEPLOYMENT_DISTRIBUTION_v27.2.0.sh,H
+PHASE2,V26_INFRASTRUCTURE_READY.sh,_archive/05_migration_notes/V26_INFRASTRUCTURE_READY.sh,H
+PHASE2,DAY1_GONO_SUMMARY.sh,_archive/05_migration_notes/DAY1_GONO_SUMMARY.sh,H
+PHASE2,transformation-start.sh,_archive/05_migration_notes/transformation-start.sh,H
