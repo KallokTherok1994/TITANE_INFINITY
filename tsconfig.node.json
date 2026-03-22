@@ -8,5 +8,11 @@
     "strict": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vitest.config.ts", "vitest.*.config.ts", "scripts/**/*.ts", "scripts/**/*.mjs"]
+  "include": [
+    "vite.config.ts",
+    "vitest.config.ts",
+    "vitest.*.config.ts",
+    "scripts/**/*.ts",
+    "scripts/**/*.mjs"
+  ]
 }

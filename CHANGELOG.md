@@ -5,153 +5,187 @@ All notable changes to this project are documented in this file.
 ## [28.44.0] - 2026-03-22 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.43.0 → 28.44.0
 
 ## [28.43.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.42.0 → 28.43.0
 
 ## [28.42.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.41.0 → 28.42.0
 
 ## [28.41.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.40.0 → 28.41.0
 
 ## [28.40.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.39.0 → 28.40.0
 
 ## [28.39.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.38.0 → 28.39.0
 
 ## [28.38.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.37.0 → 28.38.0
 
 ## [28.37.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.36.0 → 28.37.0
 
 ## [28.36.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.35.0 → 28.36.0
 
 ## [28.35.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.34.0 → 28.35.0
 
 ## [28.34.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.33.0 → 28.34.0
 
 ## [28.33.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.32.0 → 28.33.0
 
 ## [28.32.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.31.0 → 28.32.0
 
 ## [28.31.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.30.0 → 28.31.0
 
 ## [28.30.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.29.0 → 28.30.0
 
 ## [28.29.0] - 2026-03-21 (Governance)
 
 ### Changed
+
 - chore(version): bump 28.28.0 → 28.29.0
 
 ## [28.28.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.28.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.27.0 → 28.28.0
 
 ## [28.27.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.27.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.26.0 → 28.27.0
 
 ## [28.26.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.26.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.25.0 → 28.26.0
 
 ## [28.25.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.25.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.24.0 → 28.25.0
 
 ## [28.24.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.24.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.23.0 → 28.24.0
 
 ## [28.23.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.23.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.22.0 → 28.23.0
 
 ## [28.22.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.22.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.21.0 → 28.22.0
 
 ## [28.21.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.21.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.20.0 → 28.21.0
 
 ## [28.20.0] - 2026-03-21 (Governance)
 
 ### Fixed
+
 - docs(90_release): create `PRODUCTION_RELEASE_v28.20.0.md` (same-cycle)
 
 ### Changed
+
 - chore(version): bump 28.19.0 → 28.20.0
 
 ## [28.19.0] - 2026-03-21 (Governance)
