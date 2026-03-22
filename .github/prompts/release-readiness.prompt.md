@@ -1,5 +1,7 @@
 # Prompt: Release Readiness
 
+> **Agent**: invoke `release-proof` specialist agent for this session.
+
 ## Scope
 
 Assess release readiness without performing unauthorized PROD actions.
