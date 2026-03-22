@@ -92,6 +92,9 @@ function writeStatus(extra = {}) {
 
 function inspectLine(line) {
   const lower = line.toLowerCase();
+  const isBeforeDevCommandLine = lower.includes('running beforedevcommand (`bash -lc');
+  const isExpectedFrontendWaitLine =
+    lower.includes('warn waiting for your frontend dev server to start on http://127.0.0.1:5173');
 
   // Détection améliorée du boot
   if (
@@ -112,6 +115,10 @@ function inspectLine(line) {
 
   if (lower.includes('unknown')) {
     unknownCount += 1;
+  }
+
+  if (isBeforeDevCommandLine || isExpectedFrontendWaitLine) {
+    return;
   }
 
   if (lower.includes('error') || lower.includes('panic') || lower.includes('failed')) {

@@ -17,20 +17,45 @@ export interface PageLoadingFallbackProps {
 }
 
 const LONG_LOADING_TIMEOUT_MS = 12000;
+const AUTO_RECOVERY_TIMEOUT_MS = 22000;
+const AUTO_RECOVERY_KEY = 'titane_suspense_recovery_once';
+const AUTO_RECOVERY_WINDOW_MS = 5 * 60 * 1000;
 
 export const PageLoadingFallback = ({
   variant = 'default',
   className = '',
 }: PageLoadingFallbackProps) => {
   const [isLongLoading, setIsLongLoading] = useState(false);
+  const [autoRecoveryBlocked, setAutoRecoveryBlocked] = useState(false);
 
   useEffect(() => {
     const timer = window.setTimeout(() => {
       setIsLongLoading(true);
     }, LONG_LOADING_TIMEOUT_MS);
 
+    const autoRecoveryTimer = window.setTimeout(() => {
+      try {
+        const raw = window.localStorage.getItem(AUTO_RECOVERY_KEY);
+        const previousAttempt = raw ? Number(raw) : NaN;
+        const hasRecentAttempt =
+          Number.isFinite(previousAttempt) &&
+          Date.now() - previousAttempt < AUTO_RECOVERY_WINDOW_MS;
+
+        if (!hasRecentAttempt) {
+          window.localStorage.setItem(AUTO_RECOVERY_KEY, String(Date.now()));
+          window.location.reload();
+          return;
+        }
+
+        setAutoRecoveryBlocked(true);
+      } catch {
+        window.location.reload();
+      }
+    }, AUTO_RECOVERY_TIMEOUT_MS);
+
     return () => {
       window.clearTimeout(timer);
+      window.clearTimeout(autoRecoveryTimer);
     };
   }, []);
 
@@ -70,6 +95,11 @@ export const PageLoadingFallback = ({
           <div style={{ marginBottom: '0.5rem' }}>
             Chargement plus long que prévu. Vérification en cours…
           </div>
+          {autoRecoveryBlocked && (
+            <div style={{ marginBottom: '0.5rem' }}>
+              Récupération automatique déjà tentée. Relance manuelle recommandée.
+            </div>
+          )}
           <button
             type="button"
             onClick={handleReload}

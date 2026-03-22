@@ -163,6 +163,7 @@ const setBootStage = (stage: string): void => {
 };
 
 const BOOT_RECOVERY_ONCE_KEY = 'titane_boot_recovery_once';
+const SUSPENSE_RECOVERY_ONCE_KEY = 'titane_suspense_recovery_once';
 
 const emitBootMarker = (marker: string): void => {
   if (typeof window === 'undefined') {
@@ -201,6 +202,7 @@ const emitBootMarker = (marker: string): void => {
     }
     try {
       window.localStorage.removeItem(BOOT_RECOVERY_ONCE_KEY);
+      window.localStorage.removeItem(SUSPENSE_RECOVERY_ONCE_KEY);
     } catch {
       // ignore
     }
