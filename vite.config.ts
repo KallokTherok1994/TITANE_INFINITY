@@ -223,12 +223,48 @@ export default defineConfig(({ command }) => ({
   cacheDir: '.vite-cache',
 
   optimizeDeps: {
-    // En mode dev browser, on peut inclure @tauri-apps/api
-    // En mode Tauri, il sera automatiquement géré
-    include: ['react', 'react-dom', 'react/jsx-runtime'],
+    // Limiter le scan aux entry points réels. Les patterns négatifs excluent
+    // explicitement les fichiers test/spec pour éviter que esbuild les scanne
+    // et échoue sur les exports vitest-only (ex: __setContext, __getListenerCount).
+    entries: [
+      'index.html',
+      '!**/__tests__/**',
+      '!**/*.test.{ts,tsx}',
+      '!**/*.spec.{ts,tsx}',
+      '!**/tests/**',
+    ],
+    // Pre-bundle toutes les dépendances connues pour éviter la boucle de
+    // re-optimisation Vite au premier démarrage (3 vagues → reloads WebView).
+    include: [
+      'react',
+      'react-dom',
+      'react-dom/client',
+      'react/jsx-runtime',
+      'react-router-dom',
+      'zustand',
+      'zustand/middleware',
+      'zustand/react/shallow',
+      'framer-motion',
+      'lucide-react',
+      'zod',
+      'clsx',
+      'sonner',
+      'eventemitter3',
+      'uuid',
+      'i18next',
+      'react-i18next',
+      'i18next-browser-languagedetector',
+      '@sentry/react',
+      'web-vitals',
+      '@tauri-apps/api/core',
+      '@tauri-apps/api/event',
+      '@tauri-apps/api/path',
+      '@tauri-apps/api/webviewWindow',
+      '@tauri-apps/plugin-dialog',
+      '@tauri-apps/plugin-fs',
+    ],
     // Exclure modules Node.js purs incompatibles browser
-    exclude: ['better-sqlite3', 'sqlite3', 'bindings'],
-    // 🚀 OPTIMIZATION v24.7.7: Don't force re-optimize if cache is valid
+    exclude: ['better-sqlite3', 'sqlite3', 'bindings', '@xenova/transformers'],
     force: false,
   },
 
