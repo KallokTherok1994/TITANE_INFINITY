@@ -14,6 +14,7 @@ describe('useDebounce Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 

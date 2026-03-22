@@ -19,6 +19,7 @@ describe('useSystemHealth Hook', () => {
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
   });
 
