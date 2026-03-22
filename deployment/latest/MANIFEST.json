@@ -1,10 +1,10 @@
 {
   "deployment": {
     "timestamp": "2026-03-21 00:21:15 UTC",
-    "version": "28.5.0",
-    "canonical_release": "v28.5.0",
+    "version": "28.44.0",
+    "canonical_release": "v28.44.0",
     "artifact_status": "PENDING_BUILD",
-    "note": "Canonical repo version is 28.5.0. Binary artifacts for v28.5.0 are pending build and gate completion. Historical v28.0.0 artifacts documented in MANIFEST_v28.0.0.json.",
+    "note": "Canonical repo version is 28.44.0. Binary artifacts for v28.44.0 are pending build and gate completion. Historical v28.0.0 artifacts documented in MANIFEST_v28.0.0.json.",
     "branch": "MAIN",
     "deployment_type": "release_preparation"
   },
@@ -38,8 +38,8 @@
     "phase_chain_status": "RELEASE_PREPARATION",
     "security_posture": "MAXIMUM_HARDENED",
     "production_readiness": "PENDING_BINARY_PROOF"
-  }
-  "version": "28.5.0",
+  },
+  "version": "28.44.0",
   "build_date": "2026-03-20",
   "build_head": "8904d1089",
   "build_type": "PROD",
