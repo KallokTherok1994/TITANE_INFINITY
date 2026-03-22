@@ -1,17 +1,19 @@
-# G6: Build Reproducibility — BLOCKED_ENV
+# Build Reproducibility Report
 
-**Status:** BLOCKED_ENV  
-**Reason:** Tauri build system dependencies not available in this environment.  
-**Required packages:** libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev libssl-dev libasound2-dev
+## Summary
+- **Gate**: G6 (Build Reproducibility ×3)
+- **Status**: FAIL
+- **Timestamp**: 2026-03-22T17:35:46Z
 
-**To provision (Debian/Ubuntu):**
-```bash
-sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev \
-  libayatana-appindicator3-dev librsvg2-dev libssl-dev libasound2-dev
-```
+## Build Runs
+- **Run 1**: `1abfc4c2a139824b422f114a1e3bba815a49a12524b41869203762846fdaec22`
+- **Run 2**: `bfe7aaca4eea4ef5de9c52c2dc78eb5c3292a9d0c7321161001237c664a47393`
+- **Run 3**: `afa6490d2db2666837c44349c1ba4f22b595dd4f74d9658c428b7aeacac7342c`
 
-**Reference:** https://tauri.app/start/prerequisites/
+## Environment
+- SOURCE_DATE_EPOCH: 1000000000
+- CARGO_BUILD_JOBS: 1
+- Timestamp: Locked
 
-**Unblock:** After installing deps, re-run `G6_SKIP_ENV_CHECK=1 bash scripts/gates/g6-build-reproducibility.sh` or in a fully provisioned CI environment.
-
-G6 does not register as a blocking FAIL in environments where build deps are intentionally absent.
+## Verification
+Builds are reproducible if all 3 hashes match.

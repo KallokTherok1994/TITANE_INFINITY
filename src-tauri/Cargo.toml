@@ -1,6 +1,6 @@
 [package]
 name         = "titane-infinity"
-version      = "28.86.0"
+version      = "28.87.0"
 description  = "TITANE∞ v28.6.0 - Prod build (vite 8 + rolldown + deps recert)"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"
@@ -19,11 +19,11 @@ incremental = true    # Enable incremental compilation
 
 [profile.release]
 opt-level = 3         # Maximum optimizations
-lto = "thin"          # Thin LTO for faster linking (20-30% faster than "fat")
-codegen-units = 16    # Parallel compilation (4x faster than 1, minimal perf impact)
+lto = "thin"          # Thin LTO for faster linking
+codegen-units = 1     # REPRODUCIBILITY: single codegen unit required for deterministic output
 strip = "debuginfo"   # TAURI SAFE: removes DWARF only; __TAURI_BUNDLE_TYPE stays in symbol table (verified 2026-03-20)
 panic = "abort"       # Abort on panic (no unwinding overhead)
-incremental = true    # Enable incremental compilation for faster rebuilds
+incremental = false   # REPRODUCIBILITY: disable incremental compilation for deterministic builds
 
 [build-dependencies]
 tauri-build = { version = "2.0", features = [] }
