@@ -175,9 +175,9 @@ export interface AIConfig {
 
 export const DEFAULT_AI_CONFIG: AIConfig = {
   temperature: 0.7,
-  maxTokens: 2048,
+  maxTokens: 4096,
   topP: 0.95,
-  topK: 40,
+  topK: 50,
   timeout: 45000, // Aligned with PROVIDER_TIMEOUTS.ollama (was 30000 → cut complex Ollama at 30s)
 };
 

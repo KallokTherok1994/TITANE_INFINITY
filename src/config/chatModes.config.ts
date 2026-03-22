@@ -299,7 +299,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
       'security_review',
       'automation',
     ],
-    xp_required: 500,
+    xp_required: 0, // unlocked: full potential
   },
 
   admin: {
@@ -325,7 +325,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
       'memory_management',
       'ai_training',
     ],
-    xp_required: 1000,
+    xp_required: 0, // unlocked: full potential
   },
 
   strategist: {
@@ -354,7 +354,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
       'risk_assessment',
       'decision_support',
     ],
-    xp_required: 200,
+    xp_required: 0, // unlocked: full potential
   },
 
   auditor: {
@@ -374,7 +374,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     display_priority: 5,
     enabled: true,
     capabilities: ['code_audit', 'security_scan', 'quality_report', 'compliance_check'],
-    xp_required: 300,
+    xp_required: 0, // unlocked: full potential
   },
 
   creative: {
@@ -417,7 +417,7 @@ export const CHAT_MODES: Record<string, ChatMode> = {
     display_priority: 99,
     enabled: true,
     capabilities: ['all'],
-    xp_required: 2000,
+    xp_required: 0, // unlocked: full potential
   },
 };
 

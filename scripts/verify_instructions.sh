@@ -24,6 +24,11 @@ if [[ -f ".github/copilot-instructions.md" ]]; then ok "G_DOC_COPILOT_INSTRUCTIO
 if [[ -f ".github/copilot-workflow.mermaid" ]]; then ok "G_DOC_WORKFLOW_PRESENT"; else ko "G_DOC_WORKFLOW_PRESENT"; fi
 if [[ -f ".github/copilot-setup-checklist.md" ]]; then ok "G_DOC_CHECKLIST_PRESENT"; else ko "G_DOC_CHECKLIST_PRESENT"; fi
 
+# DEV_SAFE drift guard: canonical launcher + checklist alignment
+if [[ -f "runtime/dev/run-dev.sh" ]]; then ok "G_DEVSAFE_CANONICAL_LAUNCHER_EXISTS"; else ko "G_DEVSAFE_CANONICAL_LAUNCHER_EXISTS"; fi
+if grep -q "run-dev.sh" ".github/copilot-setup-checklist.md" 2>/dev/null; then ok "G_DEVSAFE_CHECKLIST_REFERENCES_LAUNCHER"; else ko "G_DEVSAFE_CHECKLIST_REFERENCES_LAUNCHER"; fi
+if grep -qE "Node.*[≥>=]+.*2[0-9]|Node.*20" ".github/copilot-setup-checklist.md" 2>/dev/null; then ok "G_DEVSAFE_CHECKLIST_NODE_REQUIREMENT_VISIBLE"; else ko "G_DEVSAFE_CHECKLIST_NODE_REQUIREMENT_VISIBLE"; fi
+
 # frontmatter minimal validation
 for f in .github/instructions/*.instructions.md; do
   if [[ ! -f "$f" ]]; then
