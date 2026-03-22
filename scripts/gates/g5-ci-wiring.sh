@@ -98,7 +98,7 @@ TOKEN_MARKERS=(
   "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
 )
 for token_marker in "${TOKEN_MARKERS[@]}"; do
-  if grep -r "$token_marker" scripts/ docs/ 2>/dev/null | grep -q .; then
+  if grep -rq "$token_marker" scripts/ docs/ 2>/dev/null; then
     pass "Token requirement documented: $token_marker"
   else
     fail "Token requirement missing: $token_marker"
