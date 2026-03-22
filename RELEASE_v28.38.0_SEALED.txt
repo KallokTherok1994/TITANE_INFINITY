@@ -1,0 +1,11 @@
+TITANE∞ RELEASE v28.38.0 — SEALED
+Date: 2026-03-21
+Verdict: PASS
+tsc: PASS
+vitest: 3399/3399 exit 0
+cargo test: 4463/4463 exit 0
+cargo tauri build: exit 0 (3 bundles)
+verify-native-binary-freshness: VERDICT=PASS
+verify_instructions: PASS=20 FAIL=0
+detect_recurrence: G_AH_RECURRENCE_GUARD_PASS entries=527
+SEALED
