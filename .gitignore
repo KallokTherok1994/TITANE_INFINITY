@@ -194,3 +194,17 @@ data/research/evidence/*.json
 .last_prod_isolation_pack
 .last_vnext_pack
 deployment/prod-builds/
+
+# Artefacts d'audit — archive du dépôt lui-même (jamais committer)
+TITANE_INFINITY-main.zip
+
+# Binaires Tauri compilés (runtime local et releases)
+deployment/latest/titane-infinity
+deployment/v*/titane-infinity
+deployment/latest/builds/*.normalized
+runtime/stable/titane-infinity-v*
+
+# Node.js vendorisé — fichiers résiduels non couverts par les règles précédentes
+.tools/node/_tmp/SHASUMS256.txt
+.tools/node/_tmp/SHASUMS*.txt
+.tools/node/current/
