@@ -425,10 +425,15 @@ impl ConversationPipeline {
             super::types::ProviderPreference::Auto => None,
         };
 
+        let default_max_tokens = match config.provider_preference {
+            super::types::ProviderPreference::Local | super::types::ProviderPreference::Ollama => 512,
+            _ => 2000,
+        };
+
         let ai_request = AIRequest {
             prompt,
             temperature: config.temperature,
-            max_tokens: config.max_tokens.unwrap_or(2000),
+            max_tokens: config.max_tokens.unwrap_or(default_max_tokens),
             stream: false,
             provider_preference: provider_pref,
         };
