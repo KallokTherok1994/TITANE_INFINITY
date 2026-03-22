@@ -19,8 +19,7 @@ applyTo: 'e2e/**, scripts/e2e/**, wdio*.conf*'
   - `signature`: failing test name + artifact marker (log/export/error marker)
   - `verification`: rerun E2E command + explicit pass markers
   - `prevention`: gate/test change that prevents silent recurrence
-- Run `bash scripts/autoheal/detect_recurrence.sh` before DONE/SEALED.
-- Run `bash scripts/verify_instructions.sh` before DONE/SEALED.
+- Kernel-mandated session gates apply (Rule 10 — `detect_recurrence.sh` + `verify_instructions.sh`).
 
 ## DONT
 

@@ -10,10 +10,17 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { tauriClient, type ProviderStatus } from '../services/tauriClient';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
 import { logger } from '@/lib/logger';
+
+export type ConnectionState =
+  | 'CHECKING'     // active probe in progress
+  | 'ONLINE'       // at least one non-local provider reachable
+  | 'PARTIAL'      // some non-local providers unreachable, others OK
+  | 'LOCAL_ONLY'   // no non-local providers reachable; local fallback active
+  | 'OFFLINE';     // no providers available at all
 
 export interface ConnectionStatus {
   online: boolean;
@@ -26,6 +33,8 @@ export interface ConnectionStatus {
 export interface UseConnectionReturn {
   status: ConnectionStatus;
   isChecking: boolean;
+  /** Granular connection state — replaces reasoning over `online: boolean` */
+  connectionState: ConnectionState;
   checkConnection: () => Promise<boolean>;
   getProvidersStatus: () => Promise<ProviderStatus[]>;
 }
@@ -137,9 +146,23 @@ export function useConnection(): UseConnectionReturn {
     return () => clearInterval(interval);
   }, [checkConnection]);
 
+  // Granular connection state — derived from existing state, zero new network calls.
+  // Replaces reasoning over `online: boolean` with explicit, observable states.
+  const connectionState = useMemo<ConnectionState>(() => {
+    if (isChecking) return 'CHECKING';
+    const nonLocal = status.availableProviders.filter(p => p.provider !== 'local');
+    const nonLocalUp = nonLocal.filter(p => p.available);
+    if (nonLocalUp.length > 0) {
+      return nonLocalUp.length === nonLocal.length ? 'ONLINE' : 'PARTIAL';
+    }
+    if (status.availableProviders.some(p => p.available)) return 'LOCAL_ONLY';
+    return 'OFFLINE';
+  }, [isChecking, status.availableProviders]);
+
   return {
     status,
     isChecking,
+    connectionState,
     checkConnection,
     getProvidersStatus,
   };

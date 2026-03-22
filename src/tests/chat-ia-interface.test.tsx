@@ -23,7 +23,7 @@ vi.mock('../components/VitalsPanel', () => ({
 
 // Mock des composants enfants
 vi.mock('../hooks/useConnection', () => ({
-  useConnection: () => ({ status: { online: true, provider: 'Gemini' } }),
+  useConnection: () => ({ status: { online: true, provider: 'Gemini' }, connectionState: 'ONLINE' }),
 }));
 
 const mockSingularityStore = {
