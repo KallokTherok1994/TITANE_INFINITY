@@ -106,3 +106,121 @@ export type {
   EffectsStoreActions,
   EffectsStore,
 } from './effectsStore';
+
+// ═══════════════════════════════════════════════════════════════
+// UTILITY STORES
+// ═══════════════════════════════════════════════════════════════
+
+// Request In-Flight Throttle Store
+export { useRequestInFlightStore } from './useRequestInFlightStore';
+
+// Vision & Affect Engine Store (Super Prompt #9)
+export {
+  useVisionStore,
+  selectIsObservationActive,
+  selectIsCameraActive,
+  selectHasCameraPermission,
+  selectEnergyLevel,
+  selectTensionLevel,
+  selectEngagementLevel,
+  selectConfidence,
+  selectAvailableCameras,
+  selectPendingSuggestions,
+} from './useVisionStore';
+
+// ═══════════════════════════════════════════════════════════════
+// STORE SELECTORS (optimized shallow-equality hooks)
+// ═══════════════════════════════════════════════════════════════
+
+// Evolution Store Selectors
+export {
+  useEvolutionState,
+  useEvolutionLastReport,
+  useEvolutionHealth,
+  useEvolutionRunning,
+  useEvolutionLoading,
+  useEvolutionSnapshot,
+  useEvolutionActions,
+} from './evolutionStore.selectors';
+
+// Memory Store Selectors
+export {
+  useMemoryState,
+  useSnapshots,
+  useLogs,
+  useTimeline,
+  useTelemetry,
+  useMemoryLoading,
+  useMemoryError,
+  useMemoryLoadingState,
+  useSnapshotsState,
+  useLogsState,
+  useTimelineState,
+  useMemoryActions,
+  useSnapshotActions,
+  useLogActions,
+  useTimelineActions,
+  useHasSnapshots,
+  useSnapshotCount,
+  useHasLogs,
+  useLogCount,
+  useHasTimelineEvents,
+  useTimelineEventCount,
+  useIsMemoryLoaded,
+  useHasMemoryError,
+  useLatestSnapshot,
+  useLatestLog,
+  useLatestTimelineEvent,
+} from './memoryStore.selectors';
+
+// System Store Selectors
+export {
+  useHeliosState,
+  useNexusState,
+  useHarmoniaState,
+  useSentinelState,
+  useSystemHealth,
+  useSystemLoading,
+  useSystemError,
+  useSystemLastUpdate,
+  useHeliosSnapshot,
+  useNexusSnapshot,
+  useHarmoniaSnapshot,
+  useSentinelSnapshot,
+  useFetchHelios,
+  useFetchNexus,
+  useFetchHarmonia,
+  useFetchSentinel,
+  useFetchHealth,
+  useFetchAllSystem,
+  useResetSystem,
+} from './systemStore.selectors';
+
+// UI Store Selectors
+export {
+  useSidebarCollapsed,
+  useSidebarWidth,
+  useExpPanelOpen,
+  useModalOpen,
+  useModalContent,
+  useToasts,
+  useLoading,
+  useSidebarState,
+  useModalState,
+  useLoadingState,
+  useSidebarActions,
+  useModalActions,
+  useToastActions,
+  useExpPanelActions,
+  useHasToasts,
+  useToastCount,
+  useSidebarExpanded,
+  useHasOverlay,
+} from './uiStore.selectors';
+
+// Vision Store Selectors
+export {
+  useVisionObservationActive,
+  useEnableVision,
+  useDisableVision,
+} from './useVisionStore.selectors';
