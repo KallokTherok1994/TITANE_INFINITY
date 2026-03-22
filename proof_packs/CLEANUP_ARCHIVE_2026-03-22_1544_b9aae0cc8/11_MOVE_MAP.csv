@@ -1,0 +1,6 @@
+source,destination,operation,count,date
+RELEASE_v28.{6..80}.0_SEALED.txt,_archive/01_root_reports/releases/,git mv,75,2026-03-22
+RELEASE_ARTIFACTS_CHECKSUMS_28.{6..80}.0.txt,_archive/01_root_reports/releases/,git mv,75,2026-03-22
+nohup.out,DELETED,git rm,1,2026-03-22
+TOTAL_MOVES,,git mv,150,2026-03-22
+TOTAL_DELETES,,git rm,1,2026-03-22
