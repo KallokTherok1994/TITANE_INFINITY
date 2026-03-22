@@ -303,10 +303,15 @@ impl OmegaConversationBridge {
                 ProviderPreference::Local | ProviderPreference::Ollama => Some("local".to_string()),
                 _ => None,
             });
+            let default_max_tokens = match request.ai_config.as_ref().map(|c| &c.provider_preference) {
+                Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
+                _ => 2000,
+            };
+
             let ai_request = AIRequest {
                 prompt,
                 temperature: request.ai_config.as_ref().map(|c| c.temperature).unwrap_or(0.7),
-                max_tokens: request.ai_config.as_ref().and_then(|c| c.max_tokens).unwrap_or(2000),
+                max_tokens: request.ai_config.as_ref().and_then(|c| c.max_tokens).unwrap_or(default_max_tokens),
                 stream: false,
                 provider_preference: provider_pref,
             };
