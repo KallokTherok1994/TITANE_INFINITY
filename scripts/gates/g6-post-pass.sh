@@ -6,6 +6,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$REPO_ROOT"
 
+BUILD_DIR="deployment/latest/builds"
 BUILD_REPRODUCIBILITY_MD="deployment/latest/builds/BUILD_REPRODUCIBILITY.md"
 AUTOHEAL_JSONL="scripts/autoheal/autoheal_rules.jsonl"
 
@@ -55,7 +56,12 @@ echo "--- verify_instructions.sh ---"
 bash scripts/verify_instructions.sh | tail -3
 echo "✅ verify_instructions.sh done"
 
-# 6. Commit G6 PASS artifacts + AutoHeal
+# 6. Clean temporary G6 artifacts from tracked workspace paths
+echo "--- cleanup G6 temp artifacts ---"
+rm -rf "$BUILD_DIR"/target-run-* "$BUILD_DIR"/pnpm-cache-* "$BUILD_DIR"/titane-infinity.run*.normalized "$BUILD_DIR"/hash_run_*.txt
+echo "✅ cleanup done"
+
+# 7. Commit G6 PASS artifacts + AutoHeal
 git add "$BUILD_REPRODUCIBILITY_MD" "$AUTOHEAL_JSONL"
 git diff --cached --name-only
 
@@ -72,7 +78,7 @@ GATE G6: PASS"
 
 echo "✅ Committed G6 PASS artifacts."
 
-# 7. Push MAIN
+# 8. Push MAIN
 git push origin MAIN
 echo "✅ Pushed MAIN to origin."
 

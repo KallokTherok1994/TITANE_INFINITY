@@ -1427,7 +1427,11 @@ export function useChat(options: UseChatOptions = {}): UseChatReturn {
               }
             }
           } catch (monitoringError) {
-            // Silent monitoring failure
+            chatLogger.debug('⚠️ monitoring.trackEvent failed (non-critical, chat unaffected)', {
+              error: monitoringError instanceof Error ? monitoringError.message : String(monitoringError),
+              targetUiId,
+              context,
+            });
           }
 
           const fallbackMessage: AIMessage = mutate({

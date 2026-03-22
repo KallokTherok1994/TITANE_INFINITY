@@ -63,16 +63,15 @@ exports[`SystemHealthMonitor Component > Snapshot > should match snapshot 1`] = 
       <div
         class="text-titane-text-primary text-2xl font-bold"
       >
-        0
-        %
+        —
       </div>
       <div
         class="text-titane-text-tertiary text-xs mt-1"
       >
-        0
+        —
          /
          
-        0
+        —
          MB
       </div>
     </div>
@@ -87,7 +86,7 @@ exports[`SystemHealthMonitor Component > Snapshot > should match snapshot 1`] = 
       <div
         class="text-titane-text-primary text-2xl font-bold"
       >
-        0h 0m
+        —
       </div>
     </div>
     <div
