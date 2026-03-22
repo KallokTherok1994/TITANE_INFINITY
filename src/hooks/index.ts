@@ -796,3 +796,6 @@ export { useToast, type ToastType, type ToastOptions } from './useToast';
 export { useTwinIdentity } from './useTwinIdentity';
 export { useTwinEvolution } from './useTwinEvolution';
 export { useTwinBehavior } from './useTwinBehavior';
+
+// ═══ PHASE 2.3.3 — STORE SYNCHRONIZATION ═══
+export { useStoreSync } from './useStoreSync';
