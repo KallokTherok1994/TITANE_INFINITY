@@ -158,6 +158,9 @@ export interface ChatEngineResponse extends AIResponse {
 // CHAT ENGINE OMEGA v19.2Ω - FlowEngine Reconstruction
 // ─────────────────────────────────────────────────────────────────
 
+/** Modes for which response caching is disabled (creative/generative variability required) */
+const CACHE_DISABLED_MODES = new Set(['creative', 'journal', 'brainstorming', 'reflection', 'hybrid']);
+
 class ChatEngineOmega {
   private config: ChatEngineConfig = { mode: 'default' };
   private lastMode: ChatMode = 'default';
@@ -293,7 +296,10 @@ class ChatEngineOmega {
       const finalConfig = { ...this.config, ...config };
 
       // 🚀 v24.3.1 - PHASE 0: CACHE CHECK (Ultra-Fast Response)
-      const enableCache = finalConfig.performanceConfig?.enableCache !== false; // Défaut: true
+      // Cache disabled for creative/generative modes to avoid stale/identical responses
+      const enableCache =
+        finalConfig.performanceConfig?.enableCache !== false &&
+        !CACHE_DISABLED_MODES.has(finalConfig.mode);
       if (enableCache) {
         pipelineSteps.push('cache-check');
         const cached = responseCache.get({
@@ -871,7 +877,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       };
 
       // 🚀 v24.3.1 - PHASE 1.9: CACHE INTELLIGENT (Sauvegarder pour réponses ultra-rapides)
-      if (finalConfig.performanceConfig?.enableCache !== false) {
+      if (finalConfig.performanceConfig?.enableCache !== false && !CACHE_DISABLED_MODES.has(finalConfig.mode)) {
         pipelineSteps.push('cache-save');
         responseCache.set(
           {
@@ -1549,7 +1555,9 @@ Que souhaites-tu explorer ?`;
       const finalConfig = { ...this.config, ...config };
 
       // 🚀 v24.3.1 - PHASE 0: CACHE CHECK (Instant Streaming)
-      const enableCache = finalConfig.performanceConfig?.enableCache !== false;
+      const enableCache =
+        finalConfig.performanceConfig?.enableCache !== false &&
+        !CACHE_DISABLED_MODES.has(finalConfig.mode);
       if (enableCache) {
         pipelineSteps.push('cache-check');
         const cached = responseCache.get({

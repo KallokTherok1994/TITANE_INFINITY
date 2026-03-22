@@ -18,7 +18,7 @@ import { createLogger } from '@/utils/logger';
 const logger = createLogger('InputValidator');
 
 export class InputValidator {
-  private readonly MAX_LENGTH = 10000;
+  private readonly MAX_LENGTH = 32000;
   private readonly MIN_LENGTH = 1;
 
   /**

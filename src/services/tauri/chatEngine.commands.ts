@@ -27,7 +27,7 @@ const COMMANDS = {
 
 const DEFAULTS = {
   temperature: 0.7,
-  maxTokens: 1200, // BALANCED profile default (1000-1400 range)
+  maxTokens: 2048, // BALANCED profile default — aligned with responsePolicy BALANCED
   provider: 'auto' as ProviderPreference,
   enableStreaming: true,
   profile: 'balanced' as ChatPerformanceProfile,

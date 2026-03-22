@@ -26,7 +26,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 /** Les 4 profils de réponse canoniques */
-export type ResponseProfileId = 'DIRECT' | 'BALANCED' | 'DEEP' | 'ARCHITECT';
+export type ResponseProfileId = 'DIRECT' | 'BALANCED' | 'DEEP' | 'ARCHITECT' | 'OMEGA';
 
 /** État d'inférence implicite */
 export type InferenceState =
@@ -119,22 +119,22 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     id: 'DIRECT',
     label: 'Direct',
     description: 'Réponse rapide, claire, minimale. Faible latence.',
-    maxTokens: 512,
+    maxTokens: 1024,
     temperature: 0.5,
     reasoningEffort: 'low',
     structureLevel: 0,
     clarificationThreshold: 0.85, // rarement demander
     inferenceAggression: 0.8, // inférer fortement
     memory: {
-      injectSTM: false,
+      injectSTM: true,
       injectLTM: false,
       targetedRetrievalOnly: false,
-      maxSources: 0,
+      maxSources: 2,
       isolateMemorySection: false,
     },
     stream: {
       enableStreaming: true,
-      timeoutMs: 10000,
+      timeoutMs: 20000,
       maxRetries: 1,
       retryStrategy: 'linear',
     },
@@ -152,7 +152,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Équilibré',
     description:
       'Mode par défaut. Structure modérée, profondeur utile sans sur-ingénierie.',
-    maxTokens: 2048,
+    maxTokens: 4096,
     temperature: 0.7,
     reasoningEffort: 'medium',
     structureLevel: 1,
@@ -160,14 +160,14 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     inferenceAggression: 0.72, // raised: stronger intent deduction by default
     memory: {
       injectSTM: true,
-      injectLTM: false,
+      injectLTM: true,
       targetedRetrievalOnly: false,
-      maxSources: 3,
+      maxSources: 5,
       isolateMemorySection: true,
     },
     stream: {
       enableStreaming: true,
-      timeoutMs: 30000,
+      timeoutMs: 45000,
       maxRetries: 2,
       retryStrategy: 'linear',
     },
@@ -185,7 +185,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Profond',
     description:
       'Raisonnement riche, structure forte, synthèse dense. Latence accrue acceptée.',
-    maxTokens: 4000,
+    maxTokens: 8192,
     temperature: 0.65,
     reasoningEffort: 'high',
     structureLevel: 2,
@@ -195,12 +195,12 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       injectSTM: true,
       injectLTM: true,
       targetedRetrievalOnly: false,
-      maxSources: 6,
+      maxSources: 10,
       isolateMemorySection: true,
     },
     stream: {
       enableStreaming: true,
-      timeoutMs: 60000,
+      timeoutMs: 120000,
       maxRetries: 2,
       retryStrategy: 'exponential',
     },
@@ -219,7 +219,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
     label: 'Architecte',
     description:
       'Clarté stratégique maximale. Expose axes, priorités, incohérences, action simple.',
-    maxTokens: 6000,
+    maxTokens: 12000,
     temperature: 0.55,
     reasoningEffort: 'high',
     structureLevel: 3,
@@ -229,12 +229,45 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       injectSTM: true,
       injectLTM: true,
       targetedRetrievalOnly: true,
-      maxSources: 8,
+      maxSources: 12,
       isolateMemorySection: true,
     },
     stream: {
       enableStreaming: true,
-      timeoutMs: 90000,
+      timeoutMs: 180000,
+      maxRetries: 3,
+      retryStrategy: 'exponential',
+    },
+    preferredProviders: ['gemini', 'claude', 'openai', 'ollama', 'titane-local'],
+    truthStatus: 'WIRED_BUT_UNPROVEN',
+    runtimeProven: false,
+  },
+
+  /**
+   * OMEGA — Potentiel maximal absolu. Contexte total, mémoire complète, génération illimitée.
+   * Cas : "godmod", "plein potentiel", tâches complexes multi-étapes, sessions hybrides admin
+   */
+  OMEGA: {
+    id: 'OMEGA',
+    label: 'Oméga ∞',
+    description:
+      'Puissance maximale. Mémoire totale, génération longue, raisonnement approfondi. Aucune limitation artificielle.',
+    maxTokens: 16000,
+    temperature: 0.72,
+    reasoningEffort: 'high',
+    structureLevel: 3,
+    clarificationThreshold: 0.2,
+    inferenceAggression: 0.9,
+    memory: {
+      injectSTM: true,
+      injectLTM: true,
+      targetedRetrievalOnly: false,
+      maxSources: 20,
+      isolateMemorySection: true,
+    },
+    stream: {
+      enableStreaming: true,
+      timeoutMs: 240000,
       maxRetries: 3,
       retryStrategy: 'exponential',
     },
@@ -257,15 +290,16 @@ const MODE_PROFILE_MAP: Record<string, ResponseProfileId> = {
   creation: 'BALANCED',
   strategy: 'ARCHITECT',
   emergency: 'DIRECT',
-  omega: 'DEEP',
+  omega: 'OMEGA',
   brainstorming: 'DEEP',
   synthesis: 'ARCHITECT',
   planning: 'ARCHITECT',
+  hybrid: 'OMEGA',
   journal: 'BALANCED',
   debug_cognitive: 'DEEP',
   coach: 'BALANCED',
   dev: 'DEEP',
-  admin: 'ARCHITECT',
+  admin: 'OMEGA',
   audit: 'ARCHITECT',
 };
 
