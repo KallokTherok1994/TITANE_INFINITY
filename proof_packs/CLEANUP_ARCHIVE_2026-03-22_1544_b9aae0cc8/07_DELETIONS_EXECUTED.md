@@ -25,3 +25,9 @@ git rm nohup.out
 | dev_tauri_*.txt | Listé dans `docs/__AUDITS__/HOUSEKEEPING/INVENTORY_RAW_2026-02-09T17:42:42Z.txt` |
 | CAMPAIGN_COMPLETE_v27.0.2.txt | Preuve historique v27, non prouvé comme résidu pur |
 | *.sh root scripts | Référencés dans docs/90_release/ |
+
+---
+## PHASE 2 — No new deletions
+
+Phase 2 had zero deletions. All residue was moved (git mv) to preserve history.
+Files left untouched in root: RELEASE_ARTIFACTS_CHECKSUMS.txt (UNKNOWN class — v27.0.1 checksums, not proven non-canonical), TITANE_ARTIFACTS_SHA256_v27.0.2_HOTFIX.txt (UNKNOWN — hotfix artifact), TUNNEL_ISSUES.txt (UNKNOWN — may be referenced).
