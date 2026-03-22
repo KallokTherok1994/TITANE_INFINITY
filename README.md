@@ -3,48 +3,48 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v28.50.0 (repository authority)  
-**Status:** Production Ready ✅ (sealed v28.50.0)  
+**Version:** v28.51.0 (repository authority)  
+**Status:** Production Ready ✅ (sealed v28.51.0)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Canal de release canonique:** v28.50.0
+**Canal de release canonique:** v28.51.0
 
-**Qualite (v28.50.0) :** Vite 8 + rolldown migration, deps recert, prod deploy sealed.
+**Qualite (v28.51.0) :** Vite 8 + rolldown migration, deps recert, prod deploy sealed.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 **Statut d'autorite documentaire (LOCAL, 2026-03-21) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.50.0` (`PROVEN_BY_REPO`)
-- Release canonique verifiee: `v28.50.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.51.0` (`PROVEN_BY_REPO`)
+- Release canonique verifiee: `v28.51.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
 - Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Politique de coherence: version canonique et release courante `28.50.0`; references v27/v28.0.0-v28.5.0 conservees en historique
+- Politique de coherence: version canonique et release courante `28.51.0`; references v27/v28.0.0-v28.5.0 conservees en historique
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.50.0
+### ✅ Release canonique courante: v28.51.0
 
 Artefacts verifies (Linux):
 
-- `TITANE-Infinity_28.50.0_amd64.AppImage`
-- `TITANE-Infinity_28.50.0_amd64.deb`
-- `TITANE-Infinity-28.50.0-1.x86_64.rpm`
+- `TITANE-Infinity_28.51.0_amd64.AppImage`
+- `TITANE-Infinity_28.51.0_amd64.deb`
+- `TITANE-Infinity-28.51.0-1.x86_64.rpm`
 
 Verification recommandee:
 
 ```bash
-cat RELEASE_v28.50.0_SEALED.txt
+cat RELEASE_v28.51.0_SEALED.txt
 ```
 
 Release GitHub (notes + assets):
 
-- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.50.0
+- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.51.0
 
 Scellement final de session:
 
-- `RELEASE_v28.50.0_SEALED.txt`
+- `RELEASE_v28.51.0_SEALED.txt`
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -68,7 +68,7 @@ sudo dpkg -i TITANE-Infinity_27.0.5_amd64.deb
 
 🔐 [Checksums v27.0.5][checksums-historiques-v2705]
 
-🔐 [Checksums courants v28.50.0](./docs/90_release/PRODUCTION_RELEASE_v28.50.0.md)
+🔐 [Checksums courants v28.51.0](./docs/90_release/PRODUCTION_RELEASE_v28.51.0.md)
 
 [checksums-historiques-v2705]: ./deployment/latest/SHA256SUMS_v27.0.5.txt
 
@@ -91,11 +91,11 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
 
 ### Historique de production (v28.x + v27.x)
 
-- **v28.50.0** (Current Release — SEALED ✅)
+- **v28.51.0** (Current Release — SEALED ✅)
   - Status: ✅ SEALED (2026-03-21)
-  - Tag: `v28.50.0`
+  - Tag: `v28.51.0`
   - Gates: tsc, eslint, vitest 3399/3399, pnpm build, cargo check, verify_instructions PASS=20
-  - Proof: `RELEASE_v28.50.0_SEALED.txt`
+  - Proof: `RELEASE_v28.51.0_SEALED.txt`
 
 - **v28.5.0** (HISTORIQUE)
   - Status: ✅ RELEASED
@@ -265,8 +265,8 @@ Progressive rollout model (Strict & Perfection lanes only):
 2. **Wave 2 (25%)** — Early adopters, expanded monitoring (48h soak)
 3. **Wave 3 (100%)** — General availability (GA)
 
-**Repository Authority**: v28.50.0 (documentation canonique)  
-**Latest Canonical Release Stream**: v28.50.0 (`docs/90_release/PRODUCTION_RELEASE_v28.50.0.md`)
+**Repository Authority**: v28.51.0 (documentation canonique)  
+**Latest Canonical Release Stream**: v28.51.0 (`docs/90_release/PRODUCTION_RELEASE_v28.51.0.md`)
 
 ---
 
@@ -301,12 +301,12 @@ GO_FOR_PROD_BUILD__TITANE_INFINITY=GO_FOR_PROD_BUILD__TITANE_INFINITY corepack p
 
 ---
 
-## 📐 Architecture v28.50.0
+## 📐 Architecture v28.51.0
 
 ### 🗺️ Navigation (13 Centres Unifiés)
 
 ```
-TITANE∞ v28.50.0
+TITANE∞ v28.51.0
 
 📂 PRINCIPAL
 ├─ 💬 Chat IA → /chat
