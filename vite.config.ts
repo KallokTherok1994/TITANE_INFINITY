@@ -354,10 +354,6 @@ export default defineConfig(({ command }) => ({
         warn(warning);
       },
       output: {
-        // 🚀 Enable Rolldown code splitting for better chunk distribution (v38.0.0)
-        // https://rolldown.rs/reference/OutputOptions.codeSplitting
-        codeSplitting: true,
-
         manualChunks: id => {
           // ═════════════════════════════════════════════════════════════════════
           // 🔧 P1_BUILD_CHUNKS_FIX: Deterministic non-overlapping chunk rules
@@ -496,6 +492,16 @@ export default defineConfig(({ command }) => ({
           // 5️⃣ APPLICATION CODE (non-service, non-ui-core)
           // ────────────────────────────────────────────────────────────────────
           if (id.includes('/src/')) {
+            // TitanePage imports ConversationSection synchronously, so splitting
+            // the chat surface into a dedicated page chunk creates an artificial
+            // page-chat <-> core-runtime cycle with no real lazy-load benefit.
+            if (
+              id.includes('/components/chat/') ||
+              id.includes('/components/sections/ConversationSection')
+            ) {
+              return 'core-runtime';
+            }
+
             // DevTools tabs (already checked devSudo above in services-core)
             if (id.includes('/pages/tabs/DevTools/SystemTab')) return 'devtools-system';
             if (id.includes('/pages/tabs/DevTools/LogsTab')) return 'devtools-logs';
@@ -506,7 +512,7 @@ export default defineConfig(({ command }) => ({
 
             // Pages principales
             if (id.includes('/pages/Chat') || id.includes('/features/chat')) {
-              return 'page-chat';
+              return 'core-runtime';
             }
             if (id.includes('/pages/Agenda') || id.includes('/features/agenda')) {
               return 'page-agenda';
@@ -529,7 +535,6 @@ export default defineConfig(({ command }) => ({
 
             // Domain-specific UI components (NOT in ui-core cluster)
             if (id.includes('/components/')) {
-              if (id.includes('/chat/')) return 'core-runtime';
               if (id.includes('/audio/')) return 'ui-audio';
               if (id.includes('/monitoring/')) return 'ui-monitoring';
               if (id.includes('/voice/')) return 'ui-voice';
