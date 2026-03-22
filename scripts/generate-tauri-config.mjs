@@ -48,7 +48,9 @@ const finalConfig = {
   },
 };
 
-// Remove null values from build config (clean output)
+// Remove null values from build config.
+// Tauri does not accept null values in tauri.conf.json — it expects
+// keys to be absent rather than set to null.
 for (const key of Object.keys(finalConfig.build)) {
   if (finalConfig.build[key] === null) {
     delete finalConfig.build[key];
