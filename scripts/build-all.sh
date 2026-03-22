@@ -18,8 +18,13 @@ echo ""
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$ROOT"
 
-# Step 1: Generate Tauri config for the correct environment
-echo "▶ Step 1/5: Generate Tauri configuration..."
+# Step 1: Sync versions across package.json / Cargo.toml / tauri.conf.json
+echo "▶ Step 1/6: Sync versions..."
+node scripts/sync-versions.mjs
+echo ""
+
+# Step 2: Generate Tauri config for the correct environment
+echo "▶ Step 2/6: Generate Tauri configuration..."
 if [[ "$PROD_MODE" == true ]]; then
   TITANE_ENV=production node scripts/generate-tauri-config.mjs
 else
@@ -27,15 +32,15 @@ else
 fi
 echo "✅ Tauri config generated"
 
-# Step 2: Frontend build (Vite)
+# Step 3: Frontend build (Vite)
 echo ""
-echo "▶ Step 2/5: Frontend build (Vite)..."
+echo "▶ Step 3/6: Frontend build (Vite)..."
 pnpm run build
 echo "✅ Frontend compiled → dist/"
 
-# Step 3: Rust / Tauri backend build
+# Step 4: Rust / Tauri backend build
 echo ""
-echo "▶ Step 3/5: Rust backend build..."
+echo "▶ Step 4/6: Rust backend build..."
 cd src-tauri
 if [[ "$PROD_MODE" == true ]]; then
   cargo build --release
@@ -45,21 +50,21 @@ fi
 cd "$ROOT"
 echo "✅ Rust backend compiled"
 
-# Step 4: Tauri bundle (only in production mode)
+# Step 5: Tauri bundle (only in production mode)
 if [[ "$PROD_MODE" == true ]]; then
   echo ""
-  echo "▶ Step 4/5: Tauri bundle..."
+  echo "▶ Step 5/6: Tauri bundle..."
   pnpm tauri build
   echo "✅ Tauri bundle created"
 else
   echo ""
-  echo "▶ Step 4/5: Skipping Tauri bundle (dev mode)"
+  echo "▶ Step 5/6: Skipping Tauri bundle (dev mode)"
 fi
 
-# Step 5: Consolidate release artifacts (production only)
+# Step 6: Consolidate release artifacts (production only)
 if [[ "$PROD_MODE" == true ]]; then
   echo ""
-  echo "▶ Step 5/5: Consolidating release artifacts..."
+  echo "▶ Step 6/6: Consolidating release artifacts..."
   mkdir -p release
 
   copied=0
@@ -87,7 +92,7 @@ if [[ "$PROD_MODE" == true ]]; then
     echo "ℹ️  No bundle artifacts found (expected in full Tauri build)"
   fi
 else
-  echo "▶ Step 5/5: Skipping artifact consolidation (dev mode)"
+  echo "▶ Step 6/6: Skipping artifact consolidation (dev mode)"
 fi
 
 echo ""

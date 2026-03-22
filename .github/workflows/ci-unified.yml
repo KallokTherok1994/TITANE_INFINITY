@@ -18,7 +18,7 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
-  NODE_VERSION: '22'
+  NODE_VERSION: '24'
   RUST_VERSION: 'stable'
   PNPM_VERSION: '10.28.2'
 
