@@ -51,10 +51,10 @@ check_global() {
     # Node.js version
     if command -v node &> /dev/null; then
         NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
-        if [ "$NODE_VERSION" -ge 18 ]; then
-            check_pass "Node.js v$NODE_VERSION (>= 18)"
+        if [ "$NODE_VERSION" -ge 20 ]; then
+            check_pass "Node.js v$NODE_VERSION (>= 20)"
         else
-            check_fail "Node.js v$NODE_VERSION (< 18 required)"
+            check_fail "Node.js v$NODE_VERSION (< 20 required — engines.node: >=20.0.0)"
         fi
     else
         check_fail "Node.js not found"

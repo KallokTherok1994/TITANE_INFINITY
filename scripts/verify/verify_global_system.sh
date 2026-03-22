@@ -12,6 +12,9 @@ ERRORS=0
 if command -v node &> /dev/null; then
     NODE_VERSION=$(node --version | cut -d'v' -f2 | cut -d'.' -f1)
     if [ "$NODE_VERSION" -ge 20 ]; then
+        echo "✅ Node.js v$(node --version) (>= 20)"
+    else
+        echo "❌ Node.js version too old: $(node --version) — requires >= 20 (.nvmrc: 24, engines.node: >=20.0.0)"
         echo "✅ Node.js v$(node --version) (>= 20, aligned with engines.node)"
     else
         echo "❌ Node.js version too old: $(node --version) — repo requires >=20 (.nvmrc: 24, engines.node: '>=20.0.0')"
