@@ -8,7 +8,7 @@
  *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM
  *   Architecture STM / MTM / LTM minimale et stable
  *
- *   STM (Short-Term Memory)  : 20 derniers messages, expire 5min
+ *   STM (Short-Term Memory)  : 50 derniers messages, expire 5min
  *   MTM (Medium-Term Memory) : Contexte session, expire 24h
  *   LTM (Long-Term Memory)   : Connaissances durables, permanent
  * ═══════════════════════════════════════════════════════════════════
@@ -90,7 +90,7 @@ export interface ChatEngineRecallOptions {
 
 class UnifiedMemorySystem {
   // Configuration
-  private readonly STM_MAX = 20;
+  private readonly STM_MAX = 50;
   private readonly STM_TTL = 5 * 60 * 1000; // 5 minutes
   private readonly MTM_MAX = 100;
   private readonly MTM_TTL = 24 * 60 * 60 * 1000; // 24 heures
@@ -106,7 +106,7 @@ class UnifiedMemorySystem {
   private stats: MemoryStats = {
     stm: {
       totalEntries: 0,
-      maxEntries: 20,
+      maxEntries: 50,
       ttl: '5min',
       oldestTimestamp: 0,
       newestTimestamp: 0,
