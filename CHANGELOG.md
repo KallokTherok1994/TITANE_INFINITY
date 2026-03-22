@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.42.0] - 2026-03-21 (Governance)
+
+### Changed
+- chore(version): bump 28.41.0 → 28.42.0
+
 ## [28.41.0] - 2026-03-21 (Governance)
 
 ### Changed
