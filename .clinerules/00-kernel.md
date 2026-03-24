@@ -4,6 +4,12 @@
 **CLINE ROLE**: Operationalize Copilot kernel for Cline execution environment  
 **PRINCIPLE**: Mirror, never redefine. Preserve all constitutional invariants.
 
+**SURFACE STATUS**:
+- Constitutional rules (Rules 1-12): `RUNTIME_ACTIVE` — enforced by Cline + hooks
+- Cline Enforcement notes: `SPEC_PARTIAL` — some are implemented, some are aspirational (see notes)
+- Hook Integration Requirements: `SPEC_ONLY` — describes target behavior, not all currently implemented
+- Authority Hierarchy layers 4-5: `SPEC_ONLY` — AGENTS.md, .github/instructions/, .github/agents/ do not exist
+
 ---
 
 ## EXECUTIVE DIRECTIVE — MODE AUTO
@@ -20,7 +26,9 @@ Compatibility markers (required by verifier):
 ## CONSTITUTIONAL PRIORITY
 
 - **Canonical priority**: `.github/copilot-instructions.md` is the constitutional kernel
-- **Layer order**: Copilot kernel → nearest AGENTS.md → path-specific instructions → selected custom agent → selected prompt file → task context → runtime proof/validator truth
+- **Layer order** (platform precedence): Copilot kernel → nearest AGENTS.md → path-specific instructions → selected custom agent → selected prompt file → task context → runtime proof/validator truth
+- **Layer order** (TITANE actual): `.github/copilot-instructions.md` → `.clinerules/00-kernel.md` → `.clinerules/*.md` → hooks → task context → runtime proof/validator truth
+- **Note**: AGENTS.md, `.github/instructions/`, `.github/agents/` do not exist in this repo. Layers 4-5 are platform spec only.
 - **Lower layers must never redefine higher-layer invariants**
 - **Cline operationalizes but does not override constitutional authority**
 
@@ -44,21 +52,21 @@ Use one status vocabulary only:
 Apply the smallest safe change set that solves the task.
 No gratuitous refactor.
 
-**Cline Enforcement**: Hooks monitor file changes, block broad refactors
+**Cline Enforcement**: `SPEC_ONLY` — hooks react to individual Cline events; no file monitoring or refactoring detection implemented
 
 ### Rule 2 — PROOF BEFORE VERDICT
 
 No PASS without executable proof.
 No DONE/SEALED without relevant checks.
 
-**Cline Enforcement**: PostToolUse must verify proof artifacts before PASS classification
+**Cline Enforcement**: `SPEC_ONLY` — PostToolUse logs operations; proof verification is manual by operator
 
 ### Rule 3 — 4-RING ARCHITECTURE
 
 Preserve strict 4-Ring boundaries.
 No inverse imports. No Ring1/Ring2 I/O.
 
-**Cline Enforcement**: PreToolUse validates architecture boundaries before file operations
+**Cline Enforcement**: `PARTIAL` — PreToolUse blocks prod build commands and checks for secrets; does not validate 4-Ring boundaries
 
 ### Rule 4 — TAURI-ONLY PRODUCTION RUNTIME
 
@@ -72,35 +80,35 @@ Any change to capabilities/allowlist requires explicit tests and rollback.
 Allowed path: UI → canonical IPC → Services → Network Gateway → External.
 No uncontrolled UI direct network access.
 
-**Cline Enforcement**: PreToolUse validates network access patterns
+**Cline Enforcement**: `SPEC_ONLY` — network governance is architectural, not enforced by hooks
 
 ### Rule 6 — IPC CANONICAL CONTRACT
 
 IPC payload contract is mandatory: `{ ok, content, error }`.
 Zero silent failure and no lying fallback.
 
-**Cline Enforcement**: Validate IPC implementations in src-tauri operations
+**Cline Enforcement**: `SPEC_ONLY` — IPC contract is architectural guidance; no automated validation
 
 ### Rule 7 — ONLINE-FIRST GOVERNED WITH MANDATORY LOCAL FALLBACK
 
 Online-first governed policy is active.
 Local fallback is mandatory and operational.
 
-**Cline Enforcement**: Validate fallback implementations exist
+**Cline Enforcement**: `SPEC_ONLY` — fallback validation is manual/test-based
 
 ### Rule 8 — STOP-THE-LINE
 
 Stop-the-line on invariant violation, mandatory gate FAIL, unresolved contradiction, or missing proof.
 Classify explicitly as FAIL or BLOCKED.
 
-**Cline Enforcement**: Hooks implement immediate FAIL classification and operation blocking
+**Cline Enforcement**: `PARTIAL` — PreToolUse blocks prod builds (FAIL); PostToolUse logs failures; no automatic stop-the-line orchestration
 
 ### Rule 9 — NO_SKIPS POLICY
 
 NO_SKIPS: required checks cannot be skipped by narrative.
 If a check cannot run, classify BLOCKED with a next action <= 30 minutes.
 
-**Cline Enforcement**: All hooks enforce checks, no narrative bypass allowed
+**Cline Enforcement**: `PARTIAL` — hooks inject reminders for deploy/test/package; no-skips is enforced by operator discipline, not automated gate
 
 ### Rule 10 — AUTOHEAL CAPTURE IS MANDATORY PER FIX
 
@@ -111,7 +119,7 @@ Then run:
 - `bash scripts/autoheal/detect_recurrence.sh`
 - `bash scripts/verify_instructions.sh`
 
-**Cline Enforcement**: PostToolUse automatically captures qualifying fixes
+**Cline Enforcement**: `MANUAL` — AutoHeal capture is disabled in PostToolUse; entries are written manually by operator after each fix
 
 ### Rule 11 — PROD TOKEN GATE
 
@@ -120,14 +128,14 @@ No PROD action without exact tokens:
 - `GO_FOR_PROD_BUILD__TITANE_INFINITY`
 - `GO_FOR_PROD_DEPLOY__TITANE_INFINITY`
 
-**Cline Enforcement**: Maintain existing deployment safeguards, enhance with token checking
+**Cline Enforcement**: `RUNTIME_ACTIVE` — PreToolUse blocks `tauri build`/`Build Titan-Stable`/`build:production` without exact tokens
 
 ### Rule 12 — PROOF PACK AND ROLLBACK REQUIRED
 
 Each governed session must produce evidence in proof_packs and reports.
 Mandatory: gate report, rollback plan, and final unique verdict.
 
-**Cline Enforcement**: Session tracking in hooks, automatic proof pack generation
+**Cline Enforcement**: `MANUAL` — PostToolUse logs to operations.log; proof packs are created manually by operator per session
 
 ---
 
@@ -149,22 +157,24 @@ Only one active execution authority and one active E2E authority at a time.
 
 ## CLINE-SPECIFIC OPERATIONALIZATION
 
-### Hook Integration Requirements
+> **STATUS: `SPEC_ONLY`** — This section describes target/intended hook behavior. Actual hook implementations are in `.clinerules/hooks/`. See `reports/cline_rules_hooks_truth_report.md` for runtime truth.
+
+### Hook Integration Requirements (Target Behavior)
 
 - **TaskStart**: Inject constitutional context, not competing rules
-- **PostToolUse**: Classify all operations with status vocabulary
-- **PreToolUse**: Validate constitutional boundaries before operations
-- **UserPromptSubmit**: Pre-check constitutional gates
+- **PostToolUse**: Log operations; classify failures only (no fake-PASS)
+- **PreToolUse**: Block prod builds without tokens; check for secrets in src/**
+- **UserPromptSubmit**: Remind deploy/test/package gates when relevant
 
 ### File Path Integration
 
-- Monitor `.clinerules/` for constitutional rule files
-- Reference `.github/copilot-routing.json` for agent authority
-- Integrate with `scripts/autoheal/` and `scripts/verify_instructions.sh`
+- Hooks reference `.github/copilot-routing.json` for agent authority context
+- AutoHeal entries written manually to `scripts/autoheal/autoheal_rules.jsonl` after each fix
+- `scripts/verify_instructions.sh` run manually after AutoHeal entries
 
 ### Validator Integration
 
-Required validation commands:
+Required validation commands (run manually by operator):
 
 - `bash scripts/verify_instructions.sh`
 - `bash scripts/autoheal/detect_recurrence.sh`
@@ -176,8 +186,8 @@ Required validation commands:
 1. **Constitutional Kernel**: `.github/copilot-instructions.md` (canonical)
 2. **Cline Mirror**: `.clinerules/00-kernel.md` (this file - operationalizes only)
 3. **Agent Routing**: `.github/copilot-routing.json`
-4. **Path Instructions**: `.github/instructions/*.instructions.md`
-5. **Specialized Agents**: `.github/agents/*.agent.md`
+4. **Path Instructions**: `.github/instructions/*.instructions.md` ⚠️ `DOES NOT EXIST` in this repo
+5. **Specialized Agents**: `.github/agents/*.agent.md` ⚠️ `DOES NOT EXIST` in this repo
 6. **Cline Rules**: `.clinerules/*.md` (supporting only, never contradicting)
 7. **Task Context**: User requests within constitutional bounds
 
@@ -188,6 +198,6 @@ Required validation commands:
 ## STATUS: CONSTITUTIONAL_MIRROR_ACTIVE
 
 **Authority**: Mirrors `.github/copilot-instructions.md` (ver. 9fd454545)
-**Date**: 2026-03-18
+**Date**: 2026-03-24
 **Enforcement**: Cline hooks operationalize this kernel  
 **Validation**: scripts/verify_instructions.sh
