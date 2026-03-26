@@ -33,7 +33,6 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
-import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
@@ -124,9 +123,7 @@ export const TitanePage: React.FC = () => {
   // ═══ STATE ═══
   const [activeTab, setActiveTab] = useState<TabId>('conversation');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
-  const [_isEditing, _setIsEditing] = useState(false);
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
-  const { success: toastSuccess, error: errorToast } = useToast();
 
   // LOCK2: titane_active_conversation_id is canonical; legacy key migrated on boot.
   const [conversationId] = useState<string>(() => {
