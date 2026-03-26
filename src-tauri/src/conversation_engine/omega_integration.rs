@@ -618,6 +618,7 @@ mod tests {
             emotion_context: None,
             custom_system_prompt: None,
             history: None,
+            omega_meta: None,
         };
 
         let omega_input = bridge.convert_to_omega_input(&request);
@@ -644,6 +645,7 @@ mod tests {
             emotion_context: None,
             custom_system_prompt: None,
             history: None,
+            omega_meta: None,
         };
 
         // Simulate OMEGA result
