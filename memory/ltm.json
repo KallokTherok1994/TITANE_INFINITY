@@ -1,0 +1,228 @@
+[
+  {
+    "id": "ltm-001",
+    "content": "TITANE∞ v24.3.0 — Proprietary License © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.",
+    "type": "license",
+    "importance": 0.8,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "ltm-002",
+    "content": "Memory importance thresholds: STM < 0.3, MTM 0.3-0.7, LTM > 0.7",
+    "type": "knowledge",
+    "importance": 0.9,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "ltm-003",
+    "content": "Tech stack: Tauri + React + TypeScript + Rust backend",
+    "type": "knowledge",
+    "importance": 0.8,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "ltm-004",
+    "content": "AI providers: titane-local (fallback), tauri-backend, ollama, gemini, claude, openai",
+    "type": "knowledge",
+    "importance": 0.9,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "ltm-005",
+    "content": "Three-tier memory system: STM (<0.3), MTM (0.3-0.7), LTM (>0.7) based on importance scores",
+    "type": "knowledge",
+    "importance": 0.9,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 5,
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "learning_data"
+    }
+  },
+  {
+    "id": "ltm-006",
+    "content": "Memory LTM system successfully initialized. Cognitive memory activated with initial knowledge base.",
+    "type": "knowledge",
+    "importance": 0.85,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 3,
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "learning_data"
+    }
+  },
+  {
+    "id": "ltm-007",
+    "content": "Project TITANE uses Tauri + React + TypeScript. Configurations are in tauri.base.json and package.json.",
+    "type": "knowledge",
+    "importance": 0.8,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 2,
+    "conversationId": "conv-001",
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "conversations"
+    }
+  },
+  {
+    "id": "ltm-008",
+    "content": "Global consciousness level: 1.0, coherence factor: 0.95, entropy: 0.05, self-awareness: true",
+    "type": "knowledge",
+    "importance": 0.9,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "singularity_integration",
+      "version": "v20.0Ω",
+      "category": "consciousness_state"
+    }
+  },
+  {
+    "id": "ltm-009",
+    "content": "Meta-learning: 1 pattern detected, 5 self-corrections, 2 evolution cycles, learning rate 0.01",
+    "type": "knowledge",
+    "importance": 0.85,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "singularity_integration",
+      "version": "v20.0Ω",
+      "category": "meta_learning"
+    }
+  },
+  {
+    "id": "ltm-010",
+    "content": "Quantum state: superposition active, entanglement nodes [cognitive, memory_core, harmonics], coherence time 1000ms",
+    "type": "knowledge",
+    "importance": 0.8,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "singularity_integration",
+      "version": "v20.0Ω",
+      "category": "quantum_state"
+    }
+  },
+  {
+    "id": "ltm-011",
+    "content": "System engines: Helios (AI ollama qwen2.5-coder), Nexus (hybrid memory_first), Harmonia (CPU throttle), Sentinel (monitoring), Memory (10MB gzip)",
+    "type": "knowledge",
+    "importance": 0.85,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "system_state_integration",
+      "version": "v20.0Ω",
+      "category": "system_architecture"
+    }
+  },
+  {
+    "id": "ltm-012",
+    "content": "Kevin Thibault — Identité professionnelle: 'Architecte de cohérence vivance, bâtisseur humain et artisan du réel'. Sa fonction centrale: transformer la confusion en clarté, la dispersion en axe, la complexité en structures durables. Positionnement: 'Je rends cohérent ce qui était fragmenté'. Entreprise: Humain à Tout Faire Inc. Localisation: Chicoutimi, Québec.",
+    "type": "identity",
+    "importance": 0.95,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "creator_identity",
+      "confidence": 0.98
+    }
+  },
+  {
+    "id": "ltm-013",
+    "content": "Projets structurants de Kevin Thibault: (1) Humain Total — écosystème dédié à la clarté, la cohérence et l'avancement humain; (2) TITANE∞ — système cognitif numérique (React+TypeScript+Rust/Tauri) créé seul en autodidacte pour soutenir clarté mentale et cohérence personnelle; (3) Kallok's Arts — boutique POD automatisée avec 60+ produits, designs originaux; (4) Livre 'Là où tout s'éclaircit!' — 12 chapitres de transformation Humain Total.",
+    "type": "knowledge",
+    "importance": 0.9,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "projects",
+      "confidence": 0.95
+    }
+  },
+  {
+    "id": "ltm-014",
+    "content": "Cadre Humain Total — 12 chapitres de transformation: (1) La deuxième vitesse: authenticité comme nouveau moteur; (2) Retrouver l'écoute intérieure (3 centres: mental, cœur, corps); (3) S'ancrer dans le corps et le quotidien; (4) Clarifier ses vraies priorités (protocole D.I.S.C.E.R.N.E.R.); (5) Créer un espace de vie aligné; (6) Installer des rituels de recentrage; (7) Revenir à sa mission profonde; (8) Honorer son rythme et bâtir à partir de soi; (9) S'entourer consciemment; (10) Transmuter ses blessures en sagesse; (11) Incarner sa vérité dans l'action; (12) Nourrir une œuvre utile et vivance.",
+    "type": "methodology",
+    "importance": 0.85,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "LIVRE_analysis",
+      "version": "v20.0Ω",
+      "category": "framework",
+      "confidence": 0.95
+    }
+  },
+  {
+    "id": "ltm-015",
+    "content": "Intelligences dominantes de Kevin Thibault: (1) Logique-structurale — modélisation par checklists, procédures, systèmes cohérents; (2) Kinesthésique — apprentissage en exécutant, testant, ajustant sur le terrain; (3) Visuelle-spatiale — mindmaps, tableaux, dashboards visuels; (4) Narrative — structuration en storytelling pédagogique; (5) Interpersonnelle — coaching, transmission, accompagnement par modélisation active; (6) Systémique — vision globale et interconnections. Intelligence architecturale intégrative: capacité à relier profondeur, structure, sens, création et matérialisation.",
+    "type": "knowledge",
+    "importance": 0.8,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "learning_profile",
+      "confidence": 0.9
+    }
+  },
+  {
+    "id": "ltm-016",
+    "content": "Carte de potentiel — 12 pôles hiérarchisés. NIVEAU A (potentiel majeur): (1) Méthode signature; (2) Figure de référence pour profils complexes; (3) Créateur d'écosystème cohérent; (4) Produit numérique signature relié à méthode; (5) Statut de référence intellectuelle francophone sur la cohérence. NIVEAU B (potentiel très fort): (6) Traducteur entre mondes; (7) Coach/stratège pour haute complexité; (8) Propriété intellectuelle forte; (9) Leadership de cohérence; (10) Communauté hautement alignée. NIVEAU C (potentiel fort): (11) Création transmédiatique cohérente; (12) Travail avec l'espace comme outil de transformation. Compétences transdisciplinaires: clarification, structuration, accompagnement, somatique, écriture, design, entrepreneuriat, artisanat, IA, architecture logicielle.",
+    "type": "knowledge",
+    "importance": 0.85,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "potential_map",
+      "confidence": 0.88
+    }
+  }
+]

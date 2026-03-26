@@ -1,0 +1,122 @@
+{
+  "stm": {
+    "byId": [
+      [
+        "stm-001",
+        {
+          "id": "stm-001",
+          "content": "User prefers detailed technical explanations with code examples",
+          "type": "preference",
+          "importance": 0.2,
+          "timestamp": 1711141215000,
+          "lastAccessed": 1711141215000,
+          "accessCount": 1,
+          "ttl": 300000
+        }
+      ],
+      [
+        "stm-002",
+        {
+          "id": "stm-002",
+          "content": "Current conversation about memory system audit and correction",
+          "type": "conversation",
+          "importance": 0.1,
+          "timestamp": 1711142000000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 0,
+          "conversationId": "conv-current"
+        }
+      ]
+    ],
+    "byType": {
+      "preference": ["stm-001"],
+      "conversation": ["stm-002"]
+    }
+  },
+  "mtm": {
+    "byId": [
+      [
+        "mtm-001",
+        {
+          "id": "mtm-001",
+          "content": "TITANE project uses Tauri + React + TypeScript stack",
+          "type": "knowledge",
+          "importance": 0.5,
+          "timestamp": 1711141215000,
+          "lastAccessed": 1711141215000,
+          "accessCount": 3
+        }
+      ],
+      [
+        "mtm-002",
+        {
+          "id": "mtm-002",
+          "content": "Three-tier memory system: STM (<0.3), MTM (0.3-0.7), LTM (>0.7)",
+          "type": "knowledge",
+          "importance": 0.6,
+          "timestamp": 1711141300000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 5
+        }
+      ]
+    ],
+    "byType": {
+      "knowledge": ["mtm-001", "mtm-002"]
+    }
+  },
+  "ltm": {
+    "byId": [
+      [
+        "ltm-001",
+        {
+          "id": "ltm-001",
+          "content": "TITANE∞ is a cognitive AI system with three-tier memory architecture (STM/MTM/LTM)",
+          "type": "knowledge",
+          "importance": 0.9,
+          "timestamp": 1711141000000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 15
+        }
+      ],
+      [
+        "ltm-002",
+        {
+          "id": "ltm-002",
+          "content": "Memory importance thresholds: STM (<0.3), MTM (0.3-0.7), LTM (>0.7)",
+          "type": "knowledge",
+          "importance": 0.85,
+          "timestamp": 1711141100000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 12
+        }
+      ],
+      [
+        "ltm-003",
+        {
+          "id": "ltm-003",
+          "content": "Project architecture: Tauri (Rust backend) + React (TypeScript frontend) + Vite build system",
+          "type": "knowledge",
+          "importance": 0.8,
+          "timestamp": 1711141200000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 8
+        }
+      ],
+      [
+        "ltm-004",
+        {
+          "id": "ltm-004",
+          "content": "AI Provider: Ollama with qwen2.5-coder:latest model, context window 8192 tokens",
+          "type": "knowledge",
+          "importance": 0.75,
+          "timestamp": 1711141300000,
+          "lastAccessed": 1711142000000,
+          "accessCount": 6
+        }
+      ]
+    ],
+    "byType": {
+      "knowledge": ["ltm-001", "ltm-002", "ltm-003", "ltm-004"]
+    }
+  }
+}

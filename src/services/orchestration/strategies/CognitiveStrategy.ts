@@ -21,6 +21,12 @@ import type {
 // Import existing Cognitive Omega Orchestrator
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import type { ChatMode } from '@/services/ai/chatEngine';
+import { memoryIntegration } from '@/services/ai/memoryIntegration';
+import type { StructuredMemoryEntry } from '@/core/prompts/memoryTemplates';
+import { tauriClient } from '@/lib/tauriClient';
+import { normalizePersistentMemoryReadResponse } from '@/services/memory/persistentMemory.normalize';
+import { rankByRelevance } from '@/services/memory/memoryUtils';
+import type { MemoryEntry, MemoryLevel } from '@/services/memory/persistentMemory.config';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // COGNITIVE STRATEGY
@@ -148,6 +154,10 @@ export class CognitiveStrategy
   // ───────────────────────────────────────────────────────────────────────
 
   async storeMemory(content: string, importance?: number): Promise<string> {
+    await memoryIntegration.saveStructuredEntry(
+      this.buildPersistentMemoryEntry(content, importance)
+    );
+
     const storedId = await this.cognitiveOrchestrator.storeTextMemory(
       'unified-orchestrator',
       content,
@@ -173,7 +183,43 @@ export class CognitiveStrategy
     query: string,
     limit = 5
   ): Promise<Array<{ content: string; score: number }>> {
-    // Use semantic memory engine to retrieve
+    try {
+      const response = normalizePersistentMemoryReadResponse(
+        await tauriClient.persistentMemoryRead({
+          request: {
+            levels: ['session', 'intermediate', 'long_term'] satisfies MemoryLevel[],
+            currentMode: 'default',
+            query,
+            limit: Math.max(limit * 2, limit),
+            includeSummaries: false,
+          },
+        })
+      );
+
+      const memories = rankByRelevance(response.entries, query)
+        .slice(0, limit)
+        .map(({ entry, score }) => ({
+          content: this.formatPersistentMemoryPreview(entry),
+          score,
+        }));
+
+      this.recordMetric({
+        name: 'cognitive.memory.retrieved',
+        type: 'counter',
+        value: 1,
+        timestamp: Date.now(),
+        tags: { count: memories.length.toString(), source: 'persistent' },
+      });
+
+      return memories;
+    } catch (error) {
+      this.log(
+        'Persistent memory retrieval failed, falling back to cognitive index',
+        error
+      );
+    }
+
+    // Fallback only when persistent memory read fails.
     const enrichment = await this.cognitiveOrchestrator.enrichContext(
       query,
       'unified-orchestrator',
@@ -185,11 +231,13 @@ export class CognitiveStrategy
       type: 'counter',
       value: 1,
       timestamp: Date.now(),
-      tags: { count: enrichment.metadata?.memoryCount.toString() },
+      tags: {
+        count: enrichment.metadata?.memoryCount.toString(),
+        source: 'cognitive-fallback',
+      },
     });
 
-    // Parse memories from enrichment (simplified)
-    const memories = enrichment.memories
+    return enrichment.memories
       .split('\n')
       .filter(line => line.match(/^\d+\./))
       .map(line => ({
@@ -200,8 +248,6 @@ export class CognitiveStrategy
         score: parseFloat(line.match(/pertinence:\s*(\d+)%/)?.[1] || '0') / 100,
       }))
       .slice(0, limit);
-
-    return memories;
   }
 
   async processConversation(messages: unknown[]): Promise<void> {
@@ -211,6 +257,11 @@ export class CognitiveStrategy
     const lastAssistant = [...arr].reverse().find(m => m?.role === 'assistant')?.content;
 
     if (typeof lastUser === 'string' && typeof lastAssistant === 'string') {
+      await memoryIntegration.saveInteraction({
+        userMessage: lastUser,
+        aiResponse: lastAssistant,
+        mode: 'default',
+      });
       await this.cognitiveOrchestrator.saveInteraction(
         'unified-orchestrator',
         lastUser,
@@ -407,5 +458,41 @@ export class CognitiveStrategy
 
   private logError(message: string, error?: unknown): void {
     console.error(`[CognitiveStrategy ERROR] ${message}`, error);
+  }
+
+  private formatPersistentMemoryPreview(entry: MemoryEntry): string {
+    if ('title' in entry && typeof entry.title === 'string' && entry.title.length > 0) {
+      return entry.title;
+    }
+
+    const firstLine = entry.content
+      .split('\n')
+      .map(line => line.trim())
+      .find(line => line.length > 0);
+
+    return (firstLine || entry.content).slice(0, 200);
+  }
+
+  private buildPersistentMemoryEntry(
+    content: string,
+    importance?: number
+  ): StructuredMemoryEntry {
+    const normalized = content.replace(/\s+/g, ' ').trim();
+    const title = normalized.slice(0, 120) || 'cognitive-memory';
+    const target = (importance ?? 0.5) >= 0.8 ? 'long' : 'medium';
+
+    return {
+      templateId: 'listening_entry',
+      target,
+      data: {
+        title,
+        note: content,
+        raw: content,
+        importance: importance ?? 0.5,
+        sourceContext: 'CognitiveStrategy.storeMemory',
+      },
+      tags: ['orchestration', 'cognitive'],
+      source: 'cognitive-strategy',
+    };
   }
 }

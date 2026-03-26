@@ -89,7 +89,7 @@ describe('useBackendHealth Hook', () => {
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
         expect(result.current.allBackendsDown).toBe(true);
-        expect(result.current.unavailableReason).toBeDefined();
+        expect(result.current.unavailableReason).toBe('all-backends-down');
       });
     });
 
@@ -146,7 +146,12 @@ describe('useBackendHealth Hook', () => {
     });
 
     it('should contain valid reason types', async () => {
-      const validReasons = ['ollama-offline', 'tauri-backend-down', 'unknown-error'];
+      const validReasons = [
+        'all-backends-down',
+        'ollama-offline',
+        'tauri-backend-down',
+        'unknown-error',
+      ];
       const { result } = renderHook(() => useBackendHealth());
       await waitFor(() => {
         if (result.current.unavailableReason) {

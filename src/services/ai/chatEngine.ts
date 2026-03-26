@@ -30,8 +30,6 @@ import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
 
 // PHASE 2: Unified Memory System Integration
-import { unifiedMemory } from '@/core/services/unifiedMemory';
-
 import type {
   ProjectSummary,
   DecisionSummary,
@@ -85,6 +83,7 @@ import { responseCache } from '@/services/cache/responseCache';
 import { predictivePreloader } from '@/services/cache/predictivePreloader';
 
 const logger = createLogger('ChatEngine');
+const DEBUG_CHAT_ENGINE_TRACES = import.meta.env.DEV;
 
 type BackendStreamMetadata = {
   raw?: string;
@@ -291,8 +290,7 @@ class ChatEngineOmega {
       correlationId
     );
 
-    // 🚨 DEBUG CRITICAL: Log direct console pour tracer le flux
-    console.log('[chatEngine] 📤 generate() APPELÉ', {
+    this.debugFlowTrace('[chatEngine] generate() called', {
       message: message.substring(0, 100),
       historyLength: history.length,
       timestamp: new Date().toISOString(),
@@ -328,8 +326,7 @@ class ChatEngineOmega {
             correlationId
           );
 
-          // 🚨 DEBUG: Log cache hit avec contenu
-          console.log('[chatEngine] ⚡ CACHE HIT', {
+          this.debugFlowTrace('[chatEngine] cache hit', {
             provider: cached.provider,
             contentLength: cached.content?.length,
             hasContent: !!cached.content && cached.content.trim().length > 0,
@@ -442,19 +439,14 @@ class ChatEngineOmega {
         `conv_${finalConfig.mode}_${Date.now()}`;
       this.setConversationId(finalConfig.mode, conversation_id);
 
-      // Start observability trace
+      // Start observability trace in background so it overlaps with context loading.
       const turnNumber = history.filter(m => m.role === 'user').length + 1;
+      const tracePromise = this.startTraceDeferred(
+        conversation_id,
+        turnNumber,
+        validatedMessage
+      );
       let traceId: string | undefined;
-      try {
-        traceId = await cognitiveOmega.startTrace(
-          conversation_id,
-          turnNumber,
-          validatedMessage
-        );
-        logger.debug('Trace started', { traceId });
-      } catch (error) {
-        logger.warn('Failed to start trace (non-blocking)');
-      }
 
       // ═══ PHASE 1.2: PARALLEL CONTEXT LOADING (v22Ω Optimized) ═══
       // Memory context + Cognitive enrichment run in parallel for better latency
@@ -508,6 +500,7 @@ class ChatEngineOmega {
       if (cognitiveEnrichResult.status === 'fulfilled') {
         const enrichment = cognitiveEnrichResult.value;
         cognitiveContext = enrichment.combined;
+        traceId = await tracePromise;
 
         if (traceId) {
           await cognitiveOmega.logPhase(traceId, 'context_built', {
@@ -528,6 +521,7 @@ class ChatEngineOmega {
           'Cognitive context enrichment failed, continuing without',
           cognitiveEnrichResult.reason
         );
+        traceId = await tracePromise;
         autoHealed = true;
       }
 
@@ -613,8 +607,7 @@ Format: [Audit complet] + [Réponse utilisateur]
       pipelineSteps.push('orchestrator-call');
       logger.debug('Step 1.4: Calling orchestrator...');
 
-      // 🚨 DEBUG CRITICAL: Log avant appel orchestrator
-      console.log('[chatEngine] → Appel aiOrchestrator.generate()', {
+      this.debugFlowTrace('[chatEngine] calling aiOrchestrator.generate()', {
         message: validatedMessage.substring(0, 100),
         historyLength: enrichedHistory.length,
         mode: finalConfig.mode,
@@ -639,8 +632,7 @@ Format: [Audit complet] + [Réponse utilisateur]
         `Orchestrator timeout (${timeoutMs}ms)`
       );
 
-      // 🚨 DEBUG CRITICAL: Log après réception réponse
-      console.log('[chatEngine] ← Réponse orchestrator reçue', {
+      this.debugFlowTrace('[chatEngine] orchestrator response received', {
         provider: response?.provider,
         contentLength: response?.content?.length,
         timestamp: new Date().toISOString(),
@@ -793,54 +785,32 @@ Format: [Audit complet] + [Réponse utilisateur]
       const processedResponse = this.postProcess(response, finalConfig);
       logger.debug('Response processed');
 
-      // ═══ PHASE 1.7: PARALLEL MEMORY SAVING (v22Ω Optimization) ═══
-      pipelineSteps.push('memory-saving-parallel');
-      logger.debug('Step 1.7: Saving to memory engines (parallel)...');
+      // ═══ PHASE 1.7: ORDERED MEMORY SAVING ═══
+      pipelineSteps.push('memory-saving-ordered');
+      logger.debug('Step 1.7: Saving to memory engines (ordered)...');
 
-      const importance = this.calculateImportance(finalConfig.mode, validatedMessage);
       const memorySaveStart = Date.now();
 
-      // v22Ω: Parallel memory saves for better performance
-      const [unifiedResult, cognitiveResult] = await Promise.allSettled([
-        // Unified Memory save
-        unifiedMemory.store(
-          `${validatedMessage}\n\n${processedResponse.content}`,
-          'assistant',
-          importance,
-          finalConfig.conversationId,
-          [finalConfig.mode, 'conversation']
-        ),
-        // Cognitive Memory save with timeout
-        this.withTimeout(
-          cognitiveOmega.saveInteraction(
-            conversation_id,
-            validatedMessage,
-            processedResponse.content,
-            finalConfig.mode,
-            {
-              provider: processedResponse.provider,
-              model: processedResponse.model,
-              processingTime: Date.now() - pipelineStartTime,
-            }
-          ),
-          MEMORY_TIMEOUTS.memorySave,
-          'Cognitive memory save timeout'
-        ),
-      ]);
+      const {
+        persistentStatus,
+        cognitiveStatus,
+        autoHealed: memoryAutoHealed,
+      } = await this.saveMemoryArtifacts({
+        conversationId: conversation_id,
+        userMessage: validatedMessage,
+        assistantResponse: processedResponse.content,
+        mode: finalConfig.mode,
+        emotionState: finalConfig.emotionState,
+        memoryContext,
+        provider: processedResponse.provider,
+        model: processedResponse.model,
+        pipelineStartTime,
+        traceId,
+      });
 
-      // Handle results
-      if (unifiedResult.status === 'rejected') {
-        logger.warn('Unified memory save failed (non-blocking)', unifiedResult.reason);
-        autoHealed = true;
-      }
+      autoHealed ||= memoryAutoHealed;
 
-      if (cognitiveResult.status === 'rejected') {
-        logger.warn(
-          'Cognitive memory save failed (non-blocking)',
-          cognitiveResult.reason
-        );
-        autoHealed = true;
-      } else if (traceId) {
+      if (cognitiveStatus === 'fulfilled' && traceId) {
         await cognitiveOmega.logPhase(traceId, 'memory_saved', {
           conversation_id,
           mode: finalConfig.mode,
@@ -848,10 +818,10 @@ Format: [Audit complet] + [Réponse utilisateur]
       }
 
       logger.debug('Memory saves completed', {
-        parallel: true,
+        ordered: true,
         durationMs: Date.now() - memorySaveStart,
-        unified: unifiedResult.status,
-        cognitive: cognitiveResult.status,
+        persistent: persistentStatus,
+        cognitive: cognitiveStatus,
       });
 
       // End observability trace
@@ -2061,6 +2031,105 @@ Que souhaites-tu explorer ?`;
       // Fallback post-process sécurisé
       logger.warn('postProcess failed', { error });
       return response;
+    }
+  }
+
+  private startTraceDeferred(
+    conversationId: string,
+    turnNumber: number,
+    userMessage: string
+  ): Promise<string | undefined> {
+    return cognitiveOmega
+      .startTrace(conversationId, turnNumber, userMessage)
+      .then(traceId => {
+        logger.debug('Trace started', { traceId });
+        return traceId;
+      })
+      .catch(() => {
+        logger.warn('Failed to start trace (non-blocking)');
+        return undefined;
+      });
+  }
+
+  private debugFlowTrace(message: string, payload: Record<string, unknown>): void {
+    if (!DEBUG_CHAT_ENGINE_TRACES) {
+      return;
+    }
+
+    console.log(message, payload);
+  }
+
+  private async saveMemoryArtifacts(params: {
+    conversationId: string;
+    userMessage: string;
+    assistantResponse: string;
+    mode: ChatMode;
+    emotionState?: ChatEngineConfig['emotionState'];
+    memoryContext: MemoryContext;
+    provider?: string;
+    model?: string;
+    pipelineStartTime: number;
+    traceId?: string;
+  }): Promise<{
+    persistentStatus: 'fulfilled' | 'rejected';
+    cognitiveStatus: 'fulfilled' | 'rejected' | 'skipped';
+    autoHealed: boolean;
+  }> {
+    let autoHealed = false;
+
+    try {
+      await this.withTimeout(
+        memoryIntegration.saveInteraction({
+          mode: params.mode,
+          userMessage: params.userMessage,
+          aiResponse: params.assistantResponse,
+          emotionState: this.convertEmotionState(params.emotionState),
+          context: params.memoryContext,
+        }),
+        MEMORY_TIMEOUTS.memorySave,
+        'Persistent memory save timeout'
+      );
+    } catch (error) {
+      logger.warn('Persistent memory save failed (non-blocking)', error);
+      logger.warn('Cognitive memory save skipped because persistent memory write failed');
+      autoHealed = true;
+      return {
+        persistentStatus: 'rejected',
+        cognitiveStatus: 'skipped',
+        autoHealed,
+      };
+    }
+
+    try {
+      await this.withTimeout(
+        cognitiveOmega.saveInteraction(
+          params.conversationId,
+          params.userMessage,
+          params.assistantResponse,
+          params.mode,
+          {
+            provider: params.provider,
+            model: params.model,
+            processingTime: Date.now() - params.pipelineStartTime,
+          }
+        ),
+        MEMORY_TIMEOUTS.memorySave,
+        'Cognitive memory save timeout'
+      );
+
+      return {
+        persistentStatus: 'fulfilled',
+        cognitiveStatus: 'fulfilled',
+        autoHealed,
+      };
+    } catch (error) {
+      logger.warn('Cognitive memory save failed (non-blocking)', error);
+      autoHealed = true;
+      return {
+        persistentStatus: 'fulfilled',
+        cognitiveStatus: 'rejected',
+        autoHealed,
+      };
     }
   }
 

@@ -1,8 +1,10 @@
 /**
  * TITANE∞ — useStoreSync
  *
- * Synchronises the core Zustand stores (Memory, Evolution, System)
+ * Synchronises the core Zustand stores mounted by legacy/system dashboards
  * with the Tauri backend on application load.
+ * The memory store synced here is the system snapshots/logs/timeline store,
+ * not the persistent LTM used by chat and /memory.
  *
  * Phase 2.3.3 — Store persistence wiring
  * Aligned to actual store API: fetchState() / fetchLogs()

@@ -78,6 +78,31 @@
   accent-color: var(--accent-core);
 }
 
+.evolution-truth-banner {
+  margin-bottom: 1rem;
+  padding: 1rem 1.25rem;
+  background: rgba(245, 158, 11, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 10px;
+  color: #fde68a;
+}
+
+.evolution-truth-banner p {
+  margin: 0.4rem 0 0;
+  color: #f8fafc;
+}
+
+.truth-banner-meta {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.controls-disabled-hint {
+  margin: 0 0 1rem;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
 /* Error Banner */
 .error-banner {
   display: flex;

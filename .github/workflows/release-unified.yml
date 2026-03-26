@@ -22,7 +22,7 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
-  NODE_VERSION: '22'
+  NODE_VERSION: '24'
   RUST_VERSION: 'stable'
 
 jobs:
@@ -53,6 +53,7 @@ jobs:
             file \
             libssl-dev \
             libayatana-appindicator3-dev \
+            libasound2-dev \
             librsvg2-dev \
             patchelf
 
@@ -84,6 +85,16 @@ jobs:
           pnpm run lint
           pnpm run check
 
+      - name: 🧪 Run frontend tests
+        run: pnpm run test
+
+      - name: 📁 Ensure dist directory exists
+        run: mkdir -p dist
+
+      - name: 🦀 Run Rust backend tests
+        working-directory: src-tauri
+        run: cargo test --verbose
+
       - name: 🏗️ Build frontend
         run: pnpm run build
 
@@ -96,8 +107,8 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/release/bundle
-          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt || true
-          cat SHA256SUMS.txt || echo "No checksums generated"
+          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt
+          cat SHA256SUMS.txt
 
       - name: 📤 Upload Linux artifacts
         uses: actions/upload-artifact@v6
@@ -169,7 +180,6 @@ jobs:
           Get-FileHash *.msi -Algorithm SHA256 | Format-List | Out-File SHA256SUMS.txt
           cat SHA256SUMS.txt
         shell: pwsh
-        continue-on-error: true
 
       - name: 📤 Upload Windows artifacts
         uses: actions/upload-artifact@v6
@@ -250,8 +260,8 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/${{ matrix.target }}/release/bundle/dmg
-          shasum -a 256 *.dmg > SHA256SUMS.txt || true
-          cat SHA256SUMS.txt || echo "No checksums generated"
+          shasum -a 256 *.dmg > SHA256SUMS.txt
+          cat SHA256SUMS.txt
 
       - name: 📤 Upload macOS artifacts
         uses: actions/upload-artifact@v6

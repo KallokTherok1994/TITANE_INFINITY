@@ -450,7 +450,7 @@ const AppRouter: React.FC = () => {
       optIn: envEnabled ? 'env' : 'user',
     });
 
-    initializeOllama().catch(error => {
+    initializeOllama().catch((error: unknown) => {
       logger.error(
         'Failed to initialize OLLAMA',
         { component: 'App', service: 'Ollama' },

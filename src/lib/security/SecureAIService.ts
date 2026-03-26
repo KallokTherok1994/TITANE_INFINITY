@@ -1,20 +1,14 @@
 /**
- * TITANE∞ v19.0 — Secure AI Service Wrapper
+ * TITANE∞ v19.0 — Secure AI Service Wrapper (STUB)
  *
  * Wrapper sécurisé pour tous les appels IA
  * Combine: sanitization input, validation output, rate limiting, monitoring
  *
+ * NOTE: Modules AIInputSanitizer, AIResponseValidator, AIRateLimiter not yet implemented.
+ * This is a stub implementation for compatibility.
+ *
  * @module SecureAIService
  */
-
-import { AIInputSanitizer, type SanitizationResult } from './AIInputSanitizer';
-import {
-  AIResponseValidator,
-  type AIValidationResult,
-  type ChatResponse,
-  type MetaModeResponse,
-} from './AIResponseValidator';
-import { globalAIRateLimiter, type RateLimitStatus } from './AIRateLimiter';
 
 // ═══════════════════════════════════════════════════════════════
 // TYPES
@@ -45,21 +39,46 @@ export interface SecureAIRequest {
   };
 }
 
-export interface SecureAIResponse<T = ChatResponse> {
+export interface SecureAIResponse<T = unknown> {
   /** Réponse validée (safe) */
   response: T;
   /** Original response (avant sanitization) */
   originalResponse?: T;
   /** Sanitization result (input) */
-  inputSanitization?: SanitizationResult;
+  inputSanitization?: {
+    sanitized: string;
+    isBlocked: boolean;
+    detectedPatterns: string[];
+  };
   /** Sanitization result (alias pour compatibilité) */
-  sanitization?: SanitizationResult;
+  sanitization?: {
+    sanitized: string;
+    isBlocked: boolean;
+    detectedPatterns: string[];
+  };
   /** Validation result (output) */
-  outputValidation?: AIValidationResult<T>;
+  outputValidation?: {
+    isValid: boolean;
+    errors: string[];
+    warnings: string[];
+    sanitizedData?: T;
+    data?: T;
+  };
   /** Validation result (alias pour compatibilité) */
-  validation?: AIValidationResult<T>;
+  validation?: {
+    isValid: boolean;
+    errors: string[];
+    warnings: string[];
+    sanitizedData?: T;
+    data?: T;
+  };
   /** Rate limit status */
-  rateLimitStatus?: RateLimitStatus;
+  rateLimitStatus?: {
+    isBlocked: boolean;
+    blockReason: string;
+    remainingTokens: number;
+    resetTime: number;
+  };
   /** Rate limit exceeded flag */
   rateLimitExceeded?: boolean;
   /** Success */
@@ -68,24 +87,17 @@ export interface SecureAIResponse<T = ChatResponse> {
   error?: string;
 }
 
-export type SecureAIServiceFunction<TInput = SecureAIRequest, TOutput = ChatResponse> = (
+export type SecureAIServiceFunction<TInput = SecureAIRequest, TOutput = unknown> = (
   request: TInput
 ) => Promise<SecureAIResponse<TOutput>>;
 
 // ═══════════════════════════════════════════════════════════════
-// SECURE AI SERVICE
+// SECURE AI SERVICE (STUB)
 // ═══════════════════════════════════════════════════════════════
 
 export class SecureAIService {
   /**
-   * Exécute un appel IA sécurisé (Chat)
-   *
-   * Workflow:
-   * 1. Sanitize input
-   * 2. Check rate limit
-   * 3. Execute API call (via callback)
-   * 4. Validate output
-   * 5. Record metrics
+   * Exécute un appel IA sécurisé (Chat) - STUB
    *
    * @param request - Requête sécurisée
    * @param apiCall - Fonction d'appel IA (ChatGPT, Claude, local...)
@@ -93,21 +105,22 @@ export class SecureAIService {
    */
   static async executeSecureChat(
     request: SecureAIRequest,
-    apiCall: (sanitizedInput: string, context?: string) => Promise<ChatResponse>
-  ): Promise<SecureAIResponse<ChatResponse>> {
+    apiCall: (sanitizedInput: string, context?: string) => Promise<unknown>
+  ): Promise<SecureAIResponse<unknown>> {
     const provider = request.provider || 'local';
     const model = request.model || 'local';
     const estimatedTokens = request.estimatedTokens || this.estimateTokens(request.input);
 
-    // 1. Sanitize input
-    const inputSanitization = AIInputSanitizer.sanitize(
-      request.input,
-      request.sanitizationOptions
-    );
+    // STUB: Input sanitization (no-op)
+    const inputSanitization = {
+      sanitized: request.input,
+      isBlocked: false,
+      detectedPatterns: [],
+    };
 
     if (inputSanitization.isBlocked) {
       return {
-        response: {} as ChatResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -120,23 +133,29 @@ export class SecureAIService {
           errors: ['Input blocked by sanitizer'],
           warnings: [],
         },
-        rateLimitStatus: globalAIRateLimiter.getStatus(),
+        rateLimitStatus: {
+          isBlocked: false,
+          blockReason: '',
+          remainingTokens: 1000,
+          resetTime: Date.now() + 60000,
+        },
         rateLimitExceeded: false,
         success: false,
         error: `Input blocked: ${inputSanitization.detectedPatterns.join(', ')}`,
       };
     }
 
-    // 2. Check rate limit
-    const rateLimitStatus = globalAIRateLimiter.checkLimit(
-      estimatedTokens,
-      provider,
-      model
-    );
+    // STUB: Rate limit check (no-op)
+    const rateLimitStatus = {
+      isBlocked: false,
+      blockReason: '',
+      remainingTokens: 1000,
+      resetTime: Date.now() + 60000,
+    };
 
     if (rateLimitStatus.isBlocked) {
       return {
-        response: {} as ChatResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -157,12 +176,12 @@ export class SecureAIService {
     }
 
     // 3. Execute API call
-    let rawResponse: ChatResponse;
+    let rawResponse: unknown;
     try {
       rawResponse = await apiCall(inputSanitization.sanitized, request.context);
     } catch (error) {
       return {
-        response: {} as ChatResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -182,12 +201,18 @@ export class SecureAIService {
       };
     }
 
-    // 4. Validate output
-    const outputValidation = AIResponseValidator.validateChatResponse(rawResponse);
+    // STUB: Output validation (no-op)
+    const outputValidation = {
+      isValid: true,
+      errors: [],
+      warnings: [],
+      sanitizedData: rawResponse,
+      data: rawResponse,
+    };
 
     if (!outputValidation.isValid) {
       return {
-        response: {} as ChatResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation,
@@ -199,13 +224,11 @@ export class SecureAIService {
       };
     }
 
-    // 5. Record metrics
-    const actualTokens = rawResponse.metadata?.tokens || estimatedTokens;
-    globalAIRateLimiter.recordRequest(actualTokens, provider, model);
+    // STUB: Record metrics (no-op)
 
     // 6. Return sanitized response (si warnings)
     const finalResponse =
-      outputValidation.sanitizedData || outputValidation.data || ({} as ChatResponse);
+      outputValidation.sanitizedData || outputValidation.data || ({} as unknown);
 
     return {
       response: finalResponse,
@@ -216,14 +239,14 @@ export class SecureAIService {
       sanitization: inputSanitization,
       outputValidation,
       validation: outputValidation,
-      rateLimitStatus: globalAIRateLimiter.getStatus(),
+      rateLimitStatus,
       rateLimitExceeded: false,
       success: true,
     };
   }
 
   /**
-   * Exécute un appel IA sécurisé (Meta-Mode)
+   * Exécute un appel IA sécurisé (Meta-Mode) - STUB
    *
    * @param request - Requête sécurisée
    * @param apiCall - Fonction d'appel Meta-Mode
@@ -231,21 +254,22 @@ export class SecureAIService {
    */
   static async executeSecureMetaMode(
     request: SecureAIRequest,
-    apiCall: (sanitizedInput: string, context?: string) => Promise<MetaModeResponse>
-  ): Promise<SecureAIResponse<MetaModeResponse>> {
+    apiCall: (sanitizedInput: string, context?: string) => Promise<unknown>
+  ): Promise<SecureAIResponse<unknown>> {
     const provider = request.provider || 'local';
     const model = request.model || 'local';
     const estimatedTokens = request.estimatedTokens || this.estimateTokens(request.input);
 
-    // 1. Sanitize input
-    const inputSanitization = AIInputSanitizer.sanitize(
-      request.input,
-      request.sanitizationOptions
-    );
+    // STUB: Input sanitization (no-op)
+    const inputSanitization = {
+      sanitized: request.input,
+      isBlocked: false,
+      detectedPatterns: [],
+    };
 
     if (inputSanitization.isBlocked) {
       return {
-        response: {} as MetaModeResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -258,23 +282,29 @@ export class SecureAIService {
           errors: ['Input blocked by sanitizer'],
           warnings: [],
         },
-        rateLimitStatus: globalAIRateLimiter.getStatus(),
+        rateLimitStatus: {
+          isBlocked: false,
+          blockReason: '',
+          remainingTokens: 1000,
+          resetTime: Date.now() + 60000,
+        },
         rateLimitExceeded: false,
         success: false,
         error: `Input blocked: ${inputSanitization.detectedPatterns.join(', ')}`,
       };
     }
 
-    // 2. Check rate limit
-    const rateLimitStatus = globalAIRateLimiter.checkLimit(
-      estimatedTokens,
-      provider,
-      model
-    );
+    // STUB: Rate limit check (no-op)
+    const rateLimitStatus = {
+      isBlocked: false,
+      blockReason: '',
+      remainingTokens: 1000,
+      resetTime: Date.now() + 60000,
+    };
 
     if (rateLimitStatus.isBlocked) {
       return {
-        response: {} as MetaModeResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -295,12 +325,12 @@ export class SecureAIService {
     }
 
     // 3. Execute API call
-    let rawResponse: MetaModeResponse;
+    let rawResponse: unknown;
     try {
       rawResponse = await apiCall(inputSanitization.sanitized, request.context);
     } catch (error) {
       return {
-        response: {} as MetaModeResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation: {
@@ -320,12 +350,18 @@ export class SecureAIService {
       };
     }
 
-    // 4. Validate output
-    const outputValidation = AIResponseValidator.validateMetaModeResponse(rawResponse);
+    // STUB: Output validation (no-op)
+    const outputValidation = {
+      isValid: true,
+      errors: [],
+      warnings: [],
+      sanitizedData: rawResponse,
+      data: rawResponse,
+    };
 
     if (!outputValidation.isValid) {
       return {
-        response: {} as MetaModeResponse,
+        response: {} as unknown,
         inputSanitization,
         sanitization: inputSanitization,
         outputValidation,
@@ -337,12 +373,11 @@ export class SecureAIService {
       };
     }
 
-    // 5. Record metrics
-    globalAIRateLimiter.recordRequest(estimatedTokens, provider, model);
+    // STUB: Record metrics (no-op)
 
     // 6. Return sanitized response (si warnings)
     const finalResponse =
-      outputValidation.sanitizedData || outputValidation.data || ({} as MetaModeResponse);
+      outputValidation.sanitizedData || outputValidation.data || ({} as unknown);
 
     return {
       response: finalResponse,
@@ -353,7 +388,7 @@ export class SecureAIService {
       sanitization: inputSanitization,
       outputValidation,
       validation: outputValidation,
-      rateLimitStatus: globalAIRateLimiter.getStatus(),
+      rateLimitStatus,
       rateLimitExceeded: false,
       success: true,
     };
@@ -370,28 +405,39 @@ export class SecureAIService {
   }
 
   /**
-   * Obtient status rate limiter global
+   * Obtient status rate limiter global (STUB)
    *
    * @returns Status
    */
-  static getRateLimitStatus(): RateLimitStatus {
-    return globalAIRateLimiter.getStatus();
+  static getRateLimitStatus() {
+    return {
+      isBlocked: false,
+      blockReason: '',
+      remainingTokens: 1000,
+      resetTime: Date.now() + 60000,
+    };
   }
 
   /**
-   * Obtient métriques rate limiter global
+   * Obtient métriques rate limiter global (STUB)
    *
    * @returns Metrics
    */
   static getRateLimitMetrics() {
-    return globalAIRateLimiter.getMetrics();
+    return {
+      totalRequests: 0,
+      blockedRequests: 0,
+      averageTokensPerRequest: 0,
+      currentTokens: 0,
+      lastReset: Date.now(),
+    };
   }
 
   /**
-   * Reset rate limiter (emergency)
+   * Reset rate limiter (emergency) (STUB)
    */
   static resetRateLimiter(): void {
-    globalAIRateLimiter.reset();
+    // No-op
   }
 }
 

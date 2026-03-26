@@ -25,7 +25,7 @@ export type ConnectionState =
 export interface ConnectionStatus {
   online: boolean;
   lastCheck: number;
-  provider: string; // gemini | ollama | local
+  provider: string; // gemini | ollama | local | none
   availableProviders: ProviderStatus[];
   latency: number;
 }
@@ -37,6 +37,20 @@ export interface UseConnectionReturn {
   connectionState: ConnectionState;
   checkConnection: () => Promise<boolean>;
   getProvidersStatus: () => Promise<ProviderStatus[]>;
+}
+
+export function deriveConnectionState(
+  isChecking: boolean,
+  providers: ProviderStatus[]
+): ConnectionState {
+  if (isChecking) return 'CHECKING';
+  const nonLocal = providers.filter(p => p.provider !== 'local');
+  const nonLocalUp = nonLocal.filter(p => p.available);
+  if (nonLocalUp.length > 0) {
+    return nonLocalUp.length === nonLocal.length ? 'ONLINE' : 'PARTIAL';
+  }
+  if (providers.some(p => p.available)) return 'LOCAL_ONLY';
+  return 'OFFLINE';
 }
 
 export function useConnection(): UseConnectionReturn {
@@ -75,7 +89,7 @@ export function useConnection(): UseConnectionReturn {
       setStatus({
         online,
         lastCheck: Date.now(),
-        provider: availableProvider?.provider ?? 'local',
+        provider: availableProvider?.provider ?? 'none',
         availableProviders: providers,
         latency,
       });
@@ -88,20 +102,12 @@ export function useConnection(): UseConnectionReturn {
     } catch (err) {
       logger.error('Connection check error', { component: 'Connection' }, err as Error);
 
-      // Fallback: mode local uniquement
+      // Honest failure state: do not invent a healthy local provider when backend truth is unavailable.
       setStatus({
         online: false,
         lastCheck: Date.now(),
-        provider: 'local',
-        availableProviders: [
-          {
-            provider: 'local',
-            available: true,
-            latency_ms: 0,
-            models: ['echo'],
-            error: undefined,
-          },
-        ],
+        provider: 'none',
+        availableProviders: [],
         latency: 0,
       });
 
@@ -149,14 +155,7 @@ export function useConnection(): UseConnectionReturn {
   // Granular connection state — derived from existing state, zero new network calls.
   // Replaces reasoning over `online: boolean` with explicit, observable states.
   const connectionState = useMemo<ConnectionState>(() => {
-    if (isChecking) return 'CHECKING';
-    const nonLocal = status.availableProviders.filter(p => p.provider !== 'local');
-    const nonLocalUp = nonLocal.filter(p => p.available);
-    if (nonLocalUp.length > 0) {
-      return nonLocalUp.length === nonLocal.length ? 'ONLINE' : 'PARTIAL';
-    }
-    if (status.availableProviders.some(p => p.available)) return 'LOCAL_ONLY';
-    return 'OFFLINE';
+    return deriveConnectionState(isChecking, status.availableProviders);
   }, [isChecking, status.availableProviders]);
 
   return {

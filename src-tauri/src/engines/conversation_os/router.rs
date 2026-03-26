@@ -75,6 +75,7 @@ impl RouterEngine {
             "search", "find", "look up", "google",
             "code", "write", "function", "implement",
             "remember", "recall", "history",
+            "memorise", "mémorise", "rappelle", "souviens",
             "save", "store", "write to",
         ] {
             if msg_lower.contains(keyword) {
@@ -131,6 +132,10 @@ impl RouterEngine {
         } else if msg_lower.contains("remember")
             || msg_lower.contains("recall")
             || msg_lower.contains("history")
+            || msg_lower.contains("memorise")
+            || msg_lower.contains("mémorise")
+            || msg_lower.contains("rappelle")
+            || msg_lower.contains("souviens")
         {
             (
                 Intent::Clarification,
@@ -166,6 +171,10 @@ impl RouterEngine {
             Intent::Clarification | Intent::Question
         ) || msg_lower.contains("remember")
             || msg_lower.contains("recall")
+            || msg_lower.contains("memorise")
+            || msg_lower.contains("mémorise")
+            || msg_lower.contains("rappelle")
+            || msg_lower.contains("souviens")
             || msg_lower.contains("we discussed")
             || msg_lower.contains("you said");
 
@@ -252,6 +261,15 @@ mod tests {
         let decision = engine.classify("What is the latest news on AI?");
         assert_eq!(decision.intent, Intent::Question);
         assert!(decision.wants_search); // "latest" triggers search
+    }
+
+    #[test]
+    fn test_french_memory_flag() {
+        let engine = RouterEngine::new();
+        let decision = engine.classify("Rappelle exactement le code, le nom et la couleur.");
+        assert_eq!(decision.intent, Intent::Clarification);
+        assert!(decision.wants_memory);
+        assert!(decision.keywords.iter().any(|keyword| keyword == "rappelle"));
     }
 
     #[test]

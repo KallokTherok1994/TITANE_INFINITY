@@ -299,10 +299,10 @@ impl OmegaConversationBridge {
                     format!("{}{}\n\nUser: {}", base, history_block, request.user_message)
                 }
             };
-            let provider_pref = request.ai_config.as_ref().and_then(|c| match c.provider_preference {
-                ProviderPreference::Local | ProviderPreference::Ollama => Some("local".to_string()),
-                _ => None,
-            });
+            let provider_pref = request
+                .ai_config
+                .as_ref()
+                .and_then(|c| map_provider_preference_for_ai_request(&c.provider_preference));
             let default_max_tokens = match request.ai_config.as_ref().map(|c| &c.provider_preference) {
                 Some(ProviderPreference::Local | ProviderPreference::Ollama) => 512,
                 _ => 2000,
@@ -367,8 +367,11 @@ impl OmegaConversationBridge {
                 processed.finalized_response
             }
             Err(e) => {
-                log::warn!("[OMEGA-BRIDGE] ⚠️ FrenchMastery failed: {}, using raw", e);
-                omega_result.processed_text.clone()
+                log::warn!(
+                    "[OMEGA-BRIDGE] ⚠️ FrenchMastery failed: {}, preserving raw provider text",
+                    e
+                );
+                french_mastery_raw_fallback(&real_response_text)
             }
         };
 
@@ -474,6 +477,8 @@ impl OmegaConversationBridge {
             memory_effect: MemoryEffect::New, // OMEGA provides new information
             links_to_contexts: omega_result.sources.clone(),
             provider_meta: Some(build_success_meta(&provider_used, total_latency as u128)),
+            profile_used: String::new(),
+            memory_sources_injected: 0,
         };
 
         log::info!(
@@ -492,7 +497,18 @@ impl OmegaConversationBridge {
             cognitive_tags: enriched_tags,
             cognitive_summary,
             metadata,
+            trace_meta: None,
         })
+    }
+}
+
+fn map_provider_preference_for_ai_request(
+    preference: &ProviderPreference,
+) -> Option<String> {
+    match preference {
+        ProviderPreference::Local => Some("local".to_string()),
+        ProviderPreference::Ollama => Some("ollama".to_string()),
+        _ => None,
     }
 }
 
@@ -530,6 +546,10 @@ pub struct OmegaHealthReport {
     pub latency_avg_ms: u64,
     /// Requests processed
     pub requests_processed: u64,
+}
+
+fn french_mastery_raw_fallback(real_response_text: &str) -> String {
+    real_response_text.to_string()
 }
 
 #[cfg(test)]
@@ -693,5 +713,32 @@ mod tests {
             "[TEST] ✅ P2 Direct conversion validated | latency={}ms",
             response.metadata.latency_ms
         );
+    }
+
+    #[test]
+    fn test_map_provider_preference_for_ai_request_preserves_ollama() {
+        assert_eq!(
+            map_provider_preference_for_ai_request(&ProviderPreference::Ollama),
+            Some("ollama".to_string())
+        );
+        assert_eq!(
+            map_provider_preference_for_ai_request(&ProviderPreference::Local),
+            Some("local".to_string())
+        );
+        assert_eq!(
+            map_provider_preference_for_ai_request(&ProviderPreference::Auto),
+            None
+        );
+    }
+
+    #[test]
+    fn test_french_mastery_raw_fallback_preserves_provider_text() {
+        let provider_text = "Réponse réelle du provider";
+        let omega_intermediate_text = "Réponse OMEGA intermédiaire";
+
+        let fallback = french_mastery_raw_fallback(provider_text);
+
+        assert_eq!(fallback, provider_text);
+        assert_ne!(fallback, omega_intermediate_text);
     }
 }

@@ -66,6 +66,12 @@ pub mod whisper_commands;
 pub mod self_healing_commands;
 pub mod security;
 pub mod singularity_commands;
+pub mod http_commands;
+pub mod avatar_asset_commands;
+pub mod voice_dsp_commands;
+pub mod temporal_commands;
+pub mod dashboard_metrics_commands;
+pub mod identity_commands;
 // pub mod ui_theme_commands; // disabled: duplicates with existing UI theme commands
 
 // pub use devtools_commands::*;

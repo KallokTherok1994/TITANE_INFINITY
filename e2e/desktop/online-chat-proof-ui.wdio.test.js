@@ -10,6 +10,22 @@ const assistantTimeoutMs = Number(
 );
 const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
 
+function buildMemoryProofFacts() {
+  const token = `${scenario}-${runId}`
+    .replace(/[^a-z0-9]+/gi, '')
+    .toUpperCase()
+    .slice(-8)
+    .padEnd(8, 'X');
+
+  return {
+    code: `ORION${token}`,
+    name: `ALICE${token}`,
+    color: `AZUR${token}`,
+  };
+}
+
+const memoryProofFacts = buildMemoryProofFacts();
+
 function getAllowedHrefPrefixes() {
   const prefixes = ['tauri://localhost'];
   if (devServerUrl) {
@@ -187,6 +203,34 @@ async function installConversationGenerateTraceHook() {
     wrapInvoke(w.__TAURI_INTERNALS__);
 
     w.__TITANE_CONV_TRACE_INSTALLED__ = true;
+  });
+}
+
+async function resetConversationGenerateTrace() {
+  await browser.execute(() => {
+    window.__TITANE_LAST_CONV_RESPONSE__ = null;
+  });
+}
+
+async function readConversationGenerateTrace() {
+  return await browser.execute(() => {
+    const response = window.__TITANE_LAST_CONV_RESPONSE__;
+    const meta = response?.meta || response?.metadata || response?.decision || {};
+    const content = response?.assistant_message || response?.content || '';
+
+    return {
+      hasResponse: Boolean(response),
+      content: String(content || ''),
+      providerUsed: String(meta.provider_used ?? meta.providerSelected ?? ''),
+      providerMode: String(meta.mode ?? ''),
+      providerReason: String(meta.reason_code ?? meta.reasonCode ?? ''),
+      networkUsed:
+        typeof meta.network_used === 'boolean'
+          ? String(meta.network_used)
+          : typeof meta.networkUsed === 'boolean'
+            ? String(meta.networkUsed)
+            : '',
+    };
   });
 }
 
@@ -437,6 +481,7 @@ async function readRuntimeSnapshot(selectors) {
     const panel = document.querySelector('[data-testid="chat-runtime-state"]');
     const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
     const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
+    const sendTrace = document.querySelector('[data-testid="chat-send-trace"]');
     const assistantRows = document.querySelectorAll(
       '[data-testid="chat-message-assistant"]'
     );
@@ -454,6 +499,8 @@ async function readRuntimeSnapshot(selectors) {
     return {
       url: window.location.href || '',
       ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
+      sendTraceState: (sendTrace?.getAttribute('data-state') || '').trim().toUpperCase(),
+      sendTraceMeta: (sendTrace?.getAttribute('data-meta') || '').trim(),
       browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
       providerUsed: (
         panel?.getAttribute('data-provider-used') ||
@@ -545,6 +592,163 @@ async function collectStorageEvidence() {
   });
 }
 
+async function navigateToMemoryRoute() {
+  const isMemorySurfaceVisible = async expectedPathname =>
+    await browser.execute(pathname => {
+      const bodyText = document.body?.innerText || '';
+      const memoryRoot = document.querySelector('[data-testid="memory-section-root"]');
+      const memoryTab = document.querySelector('[data-testid="tab-memory"]');
+      const tabSelected = memoryTab?.getAttribute('aria-selected') === 'true';
+
+      return {
+        pathname: window.location.pathname || '',
+        hasMemoryRoot: Boolean(memoryRoot),
+        hasMemoryMarkers:
+          /M[ée]moire Triple|Dashboard M[ée]moire|Recherche S[ée]mantique/i.test(
+            bodyText
+          ),
+        tabSelected,
+        matchesExpectedPath:
+          typeof pathname === 'string' && pathname.length > 0
+            ? window.location.pathname === pathname
+            : true,
+      };
+    }, expectedPathname);
+
+  const waitForMemorySurface = async (expectedPathname, timeout, timeoutMsg) => {
+    await browser.waitUntil(
+      async () => {
+        const state = await isMemorySurfaceVisible(expectedPathname);
+        return (
+          state.matchesExpectedPath &&
+          state.hasMemoryMarkers &&
+          (expectedPathname === '/memory' || state.tabSelected)
+        );
+      },
+      {
+        timeout,
+        interval: 300,
+        timeoutMsg,
+      }
+    );
+  };
+
+  try {
+    await browser.execute(() => {
+      if (window.location.pathname !== '/memory') {
+        window.history.pushState({}, '', '/memory');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+    });
+
+    await waitForMemorySurface(
+      '/memory',
+      8000,
+      'Memory route did not become visible in desktop runtime'
+    );
+
+    return {
+      surface: 'memory-route',
+      ...(await isMemorySurfaceVisible('/memory')),
+    };
+  } catch (routeError) {
+    await browser.execute(() => {
+      if (window.location.pathname !== '/titane') {
+        window.history.pushState({}, '', '/titane');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+      }
+    });
+
+    await browser.waitUntil(
+      async () =>
+        await browser.execute(() =>
+          Boolean(document.querySelector('[data-testid="tab-memory"]'))
+        ),
+      {
+        timeout: 20000,
+        interval: 300,
+        timeoutMsg: 'TITANE memory tab did not become available in desktop runtime',
+      }
+    );
+
+    const memoryTab = await browser.$('[data-testid="tab-memory"]');
+    await browser.execute(element => {
+      element?.scrollIntoView({ block: 'center', inline: 'center' });
+      element?.click();
+    }, memoryTab);
+
+    await waitForMemorySurface(
+      '',
+      20000,
+      'Memory tab did not become visible in TITANE desktop runtime'
+    );
+
+    return {
+      surface: 'titane-memory-tab',
+      routeError:
+        routeError instanceof Error ? routeError.message : String(routeError || ''),
+      ...(await isMemorySurfaceVisible('')),
+    };
+  }
+}
+
+async function collectMemoryPageEvidence(expectedFacts) {
+  return await browser.execute(facts => {
+    const bodyText = document.body?.innerText || '';
+    const bodyUpper = bodyText.toUpperCase();
+    const expectedCode = String(facts?.code || '').toUpperCase();
+    const expectedName = String(facts?.name || '').toUpperCase();
+    const expectedColor = String(facts?.color || '').toUpperCase();
+    const memoryRoot = document.querySelector('[data-testid="memory-section-root"]');
+    const memoryTab = document.querySelector('[data-testid="tab-memory"]');
+
+    return {
+      href: window.location.href || '',
+      pathname: window.location.pathname || '',
+      hasMemoryRoot: Boolean(memoryRoot),
+      memorySurfaceState:
+        memoryRoot?.getAttribute('data-memory-surface-state')?.trim() || 'unknown',
+      tabMemorySelected: memoryTab?.getAttribute('aria-selected') === 'true',
+      hasMemorySection:
+        /M[ée]moire Triple|Dashboard M[ée]moire|Recherche S[ée]mantique/i.test(bodyText),
+      dashboardEntryCount: document.querySelectorAll(
+        '[data-testid^="memory-entry-card-"]'
+      ).length,
+      searchEntryCount: document.querySelectorAll('[data-testid^="memory-search-entry-"]')
+        .length,
+      treeSelectionState:
+        document
+          .querySelector('[data-testid="memory-tree-selection-state"]')
+          ?.textContent?.trim() || '',
+      bodyHasCode: expectedCode.length > 0 && bodyUpper.includes(expectedCode),
+      bodyHasName: expectedName.length > 0 && bodyUpper.includes(expectedName),
+      bodyHasColor: expectedColor.length > 0 && bodyUpper.includes(expectedColor),
+      bodyTextHead: bodyText.slice(0, 1200),
+    };
+  }, expectedFacts);
+}
+
+async function waitForMemoryPageEvidence(expectedFacts) {
+  await browser.waitUntil(
+    async () => {
+      const evidence = await collectMemoryPageEvidence(expectedFacts);
+      return (
+        evidence.memorySurfaceState !== 'loading' &&
+        ((evidence.bodyHasCode && evidence.bodyHasName && evidence.bodyHasColor) ||
+          evidence.dashboardEntryCount > 0 ||
+          evidence.searchEntryCount > 0)
+      );
+    },
+    {
+      timeout: 20000,
+      interval: 400,
+      timeoutMsg: 'Memory route did not expose persisted entries after bootstrap',
+    }
+  );
+
+  return await collectMemoryPageEvidence(expectedFacts);
+}
+
 async function prepareChatSurface() {
   const appUrl = getDefaultAppUrl();
   const loaded = await ensureTauriPageLoaded(appUrl);
@@ -559,13 +763,15 @@ async function prepareChatSurface() {
       if (
         key.startsWith('titane_chat_mode_') ||
         key === 'titane_chat_history' ||
-        key === 'titane_chat_runtime_state'
+        key === 'titane_chat_runtime_state' ||
+        key === 'omega-chat-preferred-provider'
       ) {
         localStorage.removeItem(key);
       }
     }
     localStorage.setItem('titane_onboarding_complete', '1');
     localStorage.setItem('titane_browser_mode', '1');
+    localStorage.setItem('omega-chat-preferred-provider', 'ollama');
     location.reload();
   });
   await browser.pause(3000);
@@ -703,6 +909,7 @@ async function sendMessageAndWaitOutcome(
     }
   );
 
+  await resetConversationGenerateTrace();
   const sent = await triggerSendAction(selectors.input, selectors.send);
   assert.ok(sent, 'Chat send action could not be triggered');
 
@@ -710,21 +917,26 @@ async function sendMessageAndWaitOutcome(
   let responseText = '';
   let afterAssistantCount = beforeAssistantCount;
   let runtime = await readRuntimeSnapshot(selectors);
+  let trace = await readConversationGenerateTrace();
 
   while (Date.now() - startTime < timeoutMs) {
     responseText = await getLastText(selectors.response);
     afterAssistantCount = await countMatches(selectors.response);
     runtime = await readRuntimeSnapshot(selectors);
+    trace = await readConversationGenerateTrace();
 
-    if (
+    const hasDomAssistant =
       (responseText.length > 0 && responseText !== beforeText) ||
-      afterAssistantCount > beforeAssistantCount
-    ) {
+      (runtime.assistantText.length > 0 && runtime.assistantText !== beforeText) ||
+      afterAssistantCount > beforeAssistantCount;
+
+    if (hasDomAssistant) {
       if (!responseText && afterAssistantCount > beforeAssistantCount) {
         await browser.waitUntil(
           async () => {
             responseText = await getLastText(selectors.response);
-            return responseText.length > 0;
+            runtime = await readRuntimeSnapshot(selectors);
+            return responseText.length > 0 || runtime.assistantText.length > 0;
           },
           {
             timeout: 15000,
@@ -738,7 +950,7 @@ async function sendMessageAndWaitOutcome(
       return {
         kind: 'assistant',
         latencyMs: Date.now() - startTime,
-        responseText: responseText || runtime.assistantText,
+        responseText: responseText || runtime.assistantText || trace.content,
         runtime,
         beforeAssistantCount,
         afterAssistantCount,
@@ -756,21 +968,26 @@ async function sendMessageAndWaitOutcome(
       };
     }
 
-    await browser.pause(1000);
+    await browser.pause(500);
   }
 
   runtime = await readRuntimeSnapshot(selectors);
   return {
     kind: 'timeout',
     latencyMs: Date.now() - startTime,
-    responseText: responseText || runtime.assistantText,
+    responseText: responseText || runtime.assistantText || trace.content,
     runtime,
     beforeAssistantCount,
     afterAssistantCount,
   };
 }
 
-function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) {
+function classifyMultiTurnVerdict(
+  outcomes,
+  finalResponseText,
+  storageEvidence,
+  expectedFacts = memoryProofFacts
+) {
   const allowedPrefixes = getAllowedHrefPrefixes();
   const targetOk = outcomes.every(outcome =>
     allowedPrefixes.some(prefix => outcome.runtime.url.startsWith(prefix))
@@ -789,6 +1006,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
     outcome => outcome.kind === 'degraded' || isRuntimeDegraded(outcome.runtime)
   );
   const finalUpper = finalResponseText.toUpperCase();
+  const expectedCode = String(expectedFacts.code || '').toUpperCase();
+  const expectedName = String(expectedFacts.name || '').toUpperCase();
+  const expectedColor = String(expectedFacts.color || '').toUpperCase();
   const hasHonestDegradedMessage =
     /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
       finalResponseText
@@ -798,9 +1018,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
   }
 
   const hasRecallEvidence =
-    finalUpper.includes('ORION-482-LICHEN') &&
-    finalUpper.includes('ALICE') &&
-    /BLEU|AZUR/i.test(finalResponseText);
+    finalUpper.includes(expectedCode) &&
+    finalUpper.includes(expectedName) &&
+    finalUpper.includes(expectedColor);
   const providerStable = outcomes.every(
     outcome =>
       outcome.runtime.providerUsed !== 'FALLBACK' &&
@@ -825,7 +1045,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
 
   const noFalseMemory =
     /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(finalResponseText) ||
-    !/ORION-482-LICHEN|ALICE|BLEU|AZUR/i.test(finalResponseText);
+    (!finalUpper.includes(expectedCode) &&
+      !finalUpper.includes(expectedName) &&
+      !finalUpper.includes(expectedColor));
 
   if (noFalseMemory) {
     return 'NO_FALSE_MEMORY_BUT_UNPROVEN';
@@ -1038,8 +1260,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       assert.ok(selectors, 'Memory proof requires visible chat UI selectors');
 
       const prompts = [
-        'Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.',
-        'Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.',
+        `Memorise sans developper: code=${memoryProofFacts.code}. Reponds OK.`,
+        `Memorise sans developper: nom=${memoryProofFacts.name}; couleur=${memoryProofFacts.color}. Reponds OK.`,
         'Question sans rapport: capitale du Portugal ? Reponds un seul mot.',
         'Rappelle uniquement sous forme compacte: code=..., nom=..., couleur=... .',
       ];
@@ -1061,7 +1283,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       const memoryVerdict = classifyMultiTurnVerdict(
         outcomes,
         finalOutcome?.responseText || '',
-        storageEvidence
+        storageEvidence,
+        memoryProofFacts
       );
 
       console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
@@ -1069,11 +1292,34 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         `[MEMORY_PROOF_RESPONSE] ${String(finalOutcome?.responseText || '').slice(0, 240)}`
       );
       console.log(`[MEMORY_PROOF_EVIDENCE] ${JSON.stringify(storageEvidence)}`);
+      console.log(`[MEMORY_PROOF_FACTS] ${JSON.stringify(memoryProofFacts)}`);
 
       assert.notEqual(memoryVerdict, 'HARNESS_BLOCKED');
       assert.notEqual(memoryVerdict, 'FALLBACK_ONLY');
       assert.notEqual(memoryVerdict, 'MEMORY_CHAIN_BROKEN');
       assert.notEqual(memoryVerdict, 'TARGET_MISMATCH');
+
+      const memorySurfaceEvidence = await navigateToMemoryRoute();
+      console.log(`[MEMORY_SURFACE_EVIDENCE] ${JSON.stringify(memorySurfaceEvidence)}`);
+      const memoryPageEvidence = await waitForMemoryPageEvidence(memoryProofFacts);
+
+      console.log(`[MEMORY_PAGE_EVIDENCE] ${JSON.stringify(memoryPageEvidence)}`);
+
+      assert.ok(
+        memoryPageEvidence.hasMemorySection,
+        `[MEMORY_PAGE_SYNC] memory route missing section markers: ${JSON.stringify(memoryPageEvidence)}`
+      );
+      assert.ok(
+        memoryPageEvidence.bodyHasCode &&
+          memoryPageEvidence.bodyHasName &&
+          memoryPageEvidence.bodyHasColor,
+        `[MEMORY_PAGE_SYNC] persisted facts not visible on /memory: ${JSON.stringify(memoryPageEvidence)}`
+      );
+      assert.ok(
+        memoryPageEvidence.dashboardEntryCount > 0 ||
+          memoryPageEvidence.searchEntryCount > 0,
+        `[MEMORY_PAGE_SYNC] no memory entries visible on /memory: ${JSON.stringify(memoryPageEvidence)}`
+      );
     }
   );
 
@@ -1083,10 +1329,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     const { selectors } = await prepareChatSurface();
     assert.ok(selectors, 'False recall guard requires visible chat UI selectors');
 
-    const outcome = await sendMessageAndWaitOutcome(
-      selectors,
-      "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU."
-    );
+    const falseRecallPrompt =
+      "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU.";
+    const outcome = await sendMessageAndWaitOutcome(selectors, falseRecallPrompt);
 
     const responseText = outcome.responseText;
     const { verdict, explicitUnknown, degradedRuntime, targetMismatch } =

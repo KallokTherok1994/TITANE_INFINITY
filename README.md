@@ -686,7 +686,7 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap Legacy v24-v25 (Archive)
 
-> **🎯 Phase actuelle : v28.5.0 — Release target gouverne (cf. [CHANGELOG](CHANGELOG.md))**
+> **🎯 Phase actuelle : v28.88.0 — Release canonique gouvernee (cf. [CHANGELOG](CHANGELOG.md))**
 > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
@@ -835,7 +835,7 @@ git push origin feature/my-awesome-feature
 
 **Roadmap & Planning:**
 
-- Current Phase: **v28.5.0 — Autorite documentaire canonique (docs + versions alignees)**
+- Current Phase: **v28.88.0 — Autorite documentaire canonique (docs + versions alignees)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -913,4 +913,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-**TITANE∞ v28.5.0** — _Votre systeme d'exploitation cognitif_
+**TITANE∞ v28.88.0** — _Votre systeme d'exploitation cognitif_

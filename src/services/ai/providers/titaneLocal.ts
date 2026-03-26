@@ -8,11 +8,14 @@
  *   TITANE∞ v19.2Ω — TITANE LOCAL AI PROVIDER (NOYAU AUTONOME)
  *   Provider infaillible - Dernier rempart - Toujours opérationnel
  *   PHASE 4Ω: Isolation totale + Jamais indisponible + Jamais erreur
+ *   v28.87.0: Intégration LTM complète avec MemoryContext unifié
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIProvider, AIMessage, AIResponse } from '../types';
 import { createLogger } from '@/utils/logger';
+import { memoryIntegration } from '../memoryIntegration';
+import type { MemoryContext } from '../memoryIntegration';
 
 const logger = createLogger('TitaneLocal');
 const isDev = import.meta.env.DEV;
@@ -235,9 +238,36 @@ function extractMemoryInsight(history: AIMessage[]): string | null {
   return null;
 }
 
+function extractInjectedMemoryBlock(history: AIMessage[]): string | null {
+  const systemMessage = [...history]
+    .reverse()
+    .find(
+      msg =>
+        msg.role === 'system' &&
+        typeof msg.content === 'string' &&
+        msg.content.includes('Contexte Mémoire LTM')
+    );
+
+  if (!systemMessage) {
+    return null;
+  }
+
+  const bulletLines = systemMessage.content
+    .split('\n')
+    .map(line => line.trim())
+    .filter(line => line.startsWith('•'));
+
+  if (bulletLines.length === 0) {
+    return null;
+  }
+
+  return `\n\n📋 **Contexte Mémoire LTM** :\n${bulletLines.join('\n')}`;
+}
+
 /**
  * ═══════════════════════════════════════════════════════════════════
  *  PHASE 4Ω: GÉNÉRATION RESPONSE OMEGA + CONTEXTE INTELLIGENT
+ *  v28.87.0: Intégration LTM avec injection contexte mémoire unifié
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -255,11 +285,18 @@ interface LocalResponseMetadata {
   local_only: boolean;
   autonomous: boolean;
   version: string;
+  // v28.87.0: LTM integration metadata
+  memory_projects?: number;
+  memory_decisions?: number;
+  memory_knowledge?: number;
+  memory_context_source?: 'provider-load' | 'system-history' | 'none';
 }
 
 function generateResponse(
   message: string,
-  history: AIMessage[]
+  history: AIMessage[],
+  memoryContext: MemoryContext | null,
+  injectedMemoryBlock?: string | null
 ): {
   content: string;
   metadata: LocalResponseMetadata;
@@ -321,6 +358,33 @@ Que souhaites-tu explorer ?`;
     }
   }
 
+  // ═══ INJECTION CONTEXTE LTM (NOUVEAU v28.87.0) ═══
+  let memoryLTMInjection = '';
+  if (injectedMemoryBlock) {
+    memoryLTMInjection = injectedMemoryBlock;
+  } else if (memoryContext) {
+    const memoryParts: string[] = [];
+
+    if (memoryContext.activeProjects?.length > 0) {
+      const projectNames = memoryContext.activeProjects.map(p => p.title).join(', ');
+      memoryParts.push(`Projets actifs: ${projectNames}`);
+    }
+
+    if (memoryContext.recentDecisions?.length > 0) {
+      const decisionTitles = memoryContext.recentDecisions.map(d => d.title).join('; ');
+      memoryParts.push(`Décisions récentes: ${decisionTitles}`);
+    }
+
+    if (memoryContext.relevantKnowledge?.length > 0) {
+      const knowledgeCount = memoryContext.relevantKnowledge.length;
+      memoryParts.push(`${knowledgeCount} entrées de connaissances disponibles`);
+    }
+
+    if (memoryParts.length > 0) {
+      memoryLTMInjection = `\n\n📋 **Contexte Mémoire LTM** :\n${memoryParts.map(p => `• ${p}`).join('\n')}`;
+    }
+  }
+
   // ═══ NOTES SPÉCIALISÉES SELON MODE ═══
   let specialNote = '';
 
@@ -349,6 +413,7 @@ Que souhaites-tu explorer ?`;
     baseResponse +
     questionEcho +
     contextEnrichment +
+    memoryLTMInjection +
     specialNote +
     memoryNote +
     identitySignature;
@@ -365,6 +430,17 @@ Que souhaites-tu explorer ?`;
       local_only: true,
       autonomous: true,
       version: 'v19.2Ω',
+      memory_context_source: injectedMemoryBlock
+        ? 'system-history'
+        : memoryContext
+          ? 'provider-load'
+          : 'none',
+      // v28.87.0: LTM integration metadata (optionnelles)
+      ...(memoryContext && {
+        memory_projects: memoryContext.activeProjects.length,
+        memory_decisions: memoryContext.recentDecisions.length,
+        memory_knowledge: memoryContext.relevantKnowledge.length,
+      }),
     },
   };
 }
@@ -406,6 +482,34 @@ export const titaneLocalProvider: AIProvider = {
         };
       }
 
+      // ═══ CHARGEMENT CONTEXTE MÉMOIRE (LTM/MTM/STM) ═══
+      // v28.87.0: Intégration LTM - Charger le contexte mémoire unifié
+      const injectedMemoryBlock = extractInjectedMemoryBlock(history);
+      let memoryContext: MemoryContext | null = null;
+      if (!injectedMemoryBlock) {
+        try {
+          memoryContext = await memoryIntegration.loadContext({
+            includeProjects: true,
+            includeDecisions: true,
+            includeKnowledge: true,
+            includeRituals: true,
+            maxProjects: 5,
+            maxDecisions: 10,
+            maxKnowledge: 20,
+          });
+          if (isDev && memoryContext) {
+            logger.debug('Memory context loaded', {
+              projects: memoryContext.activeProjects.length,
+              decisions: memoryContext.recentDecisions.length,
+              knowledge: memoryContext.relevantKnowledge.length,
+            });
+          }
+        } catch (error) {
+          logger.warn('Failed to load memory context (non-blocking)', error);
+          // Continue sans contexte mémoire - le provider reste infaillible
+        }
+      }
+
       // ═══ SIMULATION DÉLAI COGNITIF RÉALISTE ═══
       if (isDev && !isTestEnv) {
         logger.debug('Generating autonomous response...');
@@ -415,8 +519,13 @@ export const titaneLocalProvider: AIProvider = {
       const cognitiveDelay = cognitiveDelayBase + cognitiveDelayJitter;
       await new Promise(resolve => setTimeout(resolve, cognitiveDelay));
 
-      // ═══ GÉNÉRATION RESPONSE OMEGA ═══
-      const { content, metadata } = generateResponse(cleanMessage, history);
+      // ═══ GÉNÉRATION RESPONSE OMEGA AVEC CONTEXTE MÉMOIRE ═══
+      const { content, metadata } = generateResponse(
+        cleanMessage,
+        history,
+        memoryContext,
+        injectedMemoryBlock
+      );
 
       const totalResponseTime = Date.now() - generateStartTime;
 

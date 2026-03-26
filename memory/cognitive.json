@@ -1,15 +1,142 @@
 {
   "cognitive_memory": {
     "version": "v14.0.0",
-    "last_compaction": null,
-    "total_entries": 0,
+    "last_compaction": "2026-03-26T09:27:00Z",
+    "total_entries": 30,
     "max_entries": 10000
   },
-  "conversations": [],
-  "learning_data": [],
+  "conversations": [
+    {
+      "id": "init-001",
+      "timestamp": "2026-03-22T21:48:56Z",
+      "participants": ["user", "titane"],
+      "messages": [
+        {
+          "id": "msg-001",
+          "timestamp": "2026-03-22T21:48:56Z",
+          "author": "user",
+          "content": "Initial system boot and memory initialization",
+          "type": "system"
+        },
+        {
+          "id": "msg-002",
+          "timestamp": "2026-03-22T21:48:56Z",
+          "author": "titane",
+          "content": "Memory LTM system activated. Cognitive memory initialized with initial knowledge base.",
+          "type": "system"
+        }
+      ],
+      "status": "completed",
+      "metadata": {
+        "system_state": "initialized",
+        "memory_status": "active",
+        "consciousness_level": 1.0
+      }
+    },
+    {
+      "id": "conv-001",
+      "timestamp": "2026-03-22T22:00:00Z",
+      "participants": ["user", "titane"],
+      "messages": [
+        {
+          "id": "msg-003",
+          "timestamp": "2026-03-22T22:00:00Z",
+          "author": "user",
+          "content": "Peux-tu m'aider à configurer le projet TITANE?",
+          "type": "user"
+        },
+        {
+          "id": "msg-004",
+          "timestamp": "2026-03-22T22:00:15Z",
+          "author": "titane",
+          "content": "Bien sûr. Le projet TITANE utilise Tauri + React + TypeScript. Les configurations principales sont dans les fichiers tauri.base.json et package.json.",
+          "type": "assistant"
+        }
+      ],
+      "status": "active",
+      "metadata": {
+        "topic": "configuration",
+        "importance": 0.6
+      }
+    },
+    {
+      "id": "conv-002",
+      "timestamp": "2026-03-22T22:05:00Z",
+      "participants": ["user", "titane"],
+      "messages": [
+        {
+          "id": "msg-005",
+          "timestamp": "2026-03-22T22:05:00Z",
+          "author": "user",
+          "content": "Comment fonctionne le système de mémoire à trois niveaux?",
+          "type": "user"
+        },
+        {
+          "id": "msg-006",
+          "timestamp": "2026-03-22T22:05:30Z",
+          "author": "titane",
+          "content": "Le système utilise STM (Short-Term) pour les conversations actives, MTM (Medium-Term) pour les projets en cours, et LTM (Long-Term) pour les connaissances permanentes. L'importance détermine le niveau: <0.3=STM, 0.3-0.7=MTM, >0.7=LTM.",
+          "type": "assistant"
+        }
+      ],
+      "status": "active",
+      "metadata": {
+        "topic": "architecture",
+        "importance": 0.8
+      }
+    }
+  ],
+  "learning_data": [
+    {
+      "id": "learn-001",
+      "timestamp": "2026-03-22T21:48:56Z",
+      "type": "system_initialization",
+      "content": "Memory LTM system successfully initialized. Cognitive memory activated with initial knowledge base.",
+      "confidence": 0.95,
+      "source": "system"
+    },
+    {
+      "id": "learn-002",
+      "timestamp": "2026-03-22T22:00:15Z",
+      "type": "user_preference",
+      "content": "User prefers detailed technical explanations with code examples",
+      "confidence": 0.85,
+      "source": "conversation"
+    },
+    {
+      "id": "learn-003",
+      "timestamp": "2026-03-22T22:05:30Z",
+      "type": "knowledge_retention",
+      "content": "Three-tier memory system: STM (<0.3), MTM (0.3-0.7), LTM (>0.7) based on importance scores",
+      "confidence": 0.9,
+      "source": "system"
+    },
+    {
+      "id": "learn-004",
+      "timestamp": "2026-03-26T09:25:00Z",
+      "type": "knowledge_integration",
+      "content": "Kevin Thibault identity and projects integrated: 'Architecte de cohérence vivance', Humain Total (12-chapter framework), TITANE∞, Kallok's Arts. Intelligence architecturale intégrative. 12-pole potential map. 5 financial gisements.",
+      "confidence": 0.92,
+      "source": "file_analysis_PROFIL-ALL",
+      "files_analyzed": ["PROFIL-ALL.md", "LIVRE-Là où tout s'éclaircit.docx"]
+    },
+    {
+      "id": "learn-005",
+      "timestamp": "2026-03-26T09:25:00Z",
+      "type": "knowledge_integration",
+      "content": "Humain Total 12-chapter framework: (1) Deuxième vitesse, (2) Écoute intérieure, (3) Ancrage, (4) Clarification, (5) Espace de vie, (6) Rituels, (7) Mission, (8) Rythme, (9) Entourage, (10) Blessures, (11) Incarnation, (12) Œuvre vivance. Protocole D.I.S.C.E.R.N.E.R. et méthode RAIN.",
+      "confidence": 0.9,
+      "source": "file_analysis_LIVRE",
+      "files_analyzed": ["LIVRE-Là où tout s'éclaircit.docx"]
+    }
+  ],
   "user_preferences": {
     "theme": "metal",
     "language": "fr",
-    "auto_save": true
+    "auto_save": true,
+    "memory_compaction": true,
+    "consciousness_level": 1.0,
+    "response_style": "technical",
+    "include_examples": true
   }
 }

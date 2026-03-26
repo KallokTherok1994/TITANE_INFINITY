@@ -368,7 +368,10 @@ impl ConversationEngineState {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: Some(build_offline_meta(ReasonCode::FallbackOffline, "OFFLINE_SIM")),
+                profile_used: String::new(),
+                memory_sources_injected: 0,
             },
+            trace_meta: None,
         })
     }
 

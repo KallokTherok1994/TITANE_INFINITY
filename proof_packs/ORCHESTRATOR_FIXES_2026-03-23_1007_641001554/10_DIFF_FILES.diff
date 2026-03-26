@@ -1,0 +1,42 @@
+diff --git a/src/services/ai/orchestrator.ts b/src/services/ai/orchestrator.ts
+index ac1324f28..ecf41a6d1 100644
+--- a/src/services/ai/orchestrator.ts
++++ b/src/services/ai/orchestrator.ts
+@@ -269,6 +269,10 @@ class AIOrchestrator {
+     this.metricsCache = { data: null, timestamp: 0 };
+     this.criticalErrorHistory = [];
+     this.isDegradedMode = false;
++    if (this.quickFailCleanupInterval) {
++      clearInterval(this.quickFailCleanupInterval);
++      this.quickFailCleanupInterval = null;
++    }
+     logger.info('Orchestrator destroyed and resources cleaned up');
+   }
+ 
+@@ -634,13 +638,13 @@ class AIOrchestrator {
+       const timeSinceLastUsed = Date.now() - stats.lastUsed;
+       const timeSinceLastFailure = Date.now() - stats.lastFailure;
+ 
+-      // If provider hasn't been used in 60s and hasn't failed in 30s, give recovery boost
++      // If provider hasn't been used in 10s and hasn't failed in 10s, give recovery boost
+       if (
+-        timeSinceLastUsed > 60000 &&
+-        timeSinceLastFailure > 30000 &&
++        timeSinceLastUsed > 10000 &&
++        timeSinceLastFailure > 10000 &&
+         stats.reliability < 80
+       ) {
+-        const recoveryBoost = Math.min(15, (timeSinceLastUsed - 60000) / 10000); // +1 per 10s idle, max +15
++        const recoveryBoost = Math.min(20, (timeSinceLastUsed - 10000) / 10000); // +1 per 10s idle, max +20
+         score += recoveryBoost;
+         logger.debug(
+           `   🔄 Recovery boost for ${provider.name}: +${recoveryBoost.toFixed(1)}`
+@@ -1699,7 +1703,7 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
+             provider,
+             sanitized,
+             history,
+-            15000,
++            30000,
+             `stream_${Date.now()}`
+           );
+ 

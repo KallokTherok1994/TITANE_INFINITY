@@ -2068,28 +2068,5 @@ export function getSecurityStats() {
 // ═══════════════════════════════════════════════════════════════
 // v19.0 PHASE 2: AI SECURITY MODULES
 // ═══════════════════════════════════════════════════════════════
-
-export { AIInputSanitizer, type SanitizationResult } from './security/AIInputSanitizer';
-export {
-  AIResponseValidator,
-  type AIValidationResult,
-  ChatResponseSchema,
-  StreamingChunkSchema,
-  MetaModeResponseSchema,
-  type ChatResponse,
-  type StreamingChunk,
-  type MetaModeResponse,
-} from './security/AIResponseValidator';
-export {
-  AIRateLimiter,
-  globalAIRateLimiter,
-  type RateLimitConfig,
-  type RateLimitStatus,
-  type RequestMetrics,
-} from './security/AIRateLimiter';
-export {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type SecureAIServiceFunction,
-} from './security/SecureAIService';
+// NOTE: AI security modules (AIInputSanitizer, AIResponseValidator, AIRateLimiter)
+// are not yet implemented. Remove these exports when modules are created.

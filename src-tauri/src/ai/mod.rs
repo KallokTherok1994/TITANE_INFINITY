@@ -110,7 +110,7 @@ pub struct AIResponse {
 }
 
 /// AI Provider enum v15 (legacy)
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum AIProvider {
     Gemini,    // Google Gemini API
     Ollama,    // Local Ollama (localhost:11434)

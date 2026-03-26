@@ -1,3 +1,6 @@
+test('sanity: Playwright détecte ce test', async () => {
+  expect(1).toBe(1);
+});
 /**
  * TITANE∞ — E2E Test: Profile Runtime Verification
  * Lock #1: DEEP_ARCHITECT_OMEGA_RUNTIME_UNPROVEN
@@ -28,7 +31,8 @@ le contexte, et la prise de décision. Sois aussi exhaustif que possible.`;
 const enableChatMeasurementMode = async (page: Page) => {
   // Enable measurement mode to capture full response metadata
   await page.addInitScript(() => {
-    (window as { __TITANE_MEASUREMENT_MODE__?: boolean }).__TITANE_MEASUREMENT_MODE__ = true;
+    (window as { __TITANE_MEASUREMENT_MODE__?: boolean }).__TITANE_MEASUREMENT_MODE__ =
+      true;
   });
 };
 
@@ -42,16 +46,22 @@ const getSendButton = (page: Page) =>
 /**
  * Extract response metadata from network traffic or page state
  */
-async function captureResponseMetadata(page: Page, profile: string): Promise<ChatResponseMetadata> {
+async function captureResponseMetadata(
+  page: Page,
+  profile: string
+): Promise<ChatResponseMetadata> {
   const timestamp = new Date().toISOString();
-  
+
   // Capture network response if available
   const requests: ChatResponseMetadata[] = [];
-  
+
   let capturedResponse: any = null;
-  
-  page.on('response', async (response) => {
-    if (response.url().includes('/conversation_generate') || response.url().includes('/chat')) {
+
+  page.on('response', async response => {
+    if (
+      response.url().includes('/conversation_generate') ||
+      response.url().includes('/chat')
+    ) {
       try {
         const json = await response.json().catch(() => null);
         if (json && json.metadata) {
@@ -74,19 +84,15 @@ async function captureResponseMetadata(page: Page, profile: string): Promise<Cha
   };
 }
 
-test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
-  if (!MEASUREMENT_MODE) {
-    test('⏭️  SKIPPED: Set TITANE_PROFILE_MEASUREMENT=1 to enable', async () => {
-      expect(MEASUREMENT_MODE).toBe(true);
-    });
-    return;
-  }
-
+test.describe('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
   test.setTimeout(180000); // 3 min per test
 
-  async function testProfileResponse(page: Page, profile: 'DIRECT' | 'DEEP' | 'ARCHITECT'): Promise<ChatResponseMetadata> {
+  async function testProfileResponse(
+    page: Page,
+    profile: 'DIRECT' | 'DEEP' | 'ARCHITECT'
+  ): Promise<ChatResponseMetadata> {
     const chatInput = getChatInput(page);
-    
+
     // Set profile mode via UI if available, or via context
     // TODO: Add profile selector to chat UI
     // For now, use system prompt injection or mode selection
@@ -94,23 +100,24 @@ test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     await expect(chatInput).toBeVisible({ timeout: 15000 });
 
     // Inject profile selection via eval
-    await page.evaluate(
-      (prof) => {
-        (window as any).__TITANE_PROFILE_OVERRIDE__ = prof;
-      },
-      profile
-    );
+    await page.evaluate(prof => {
+      (window as any).__TITANE_PROFILE_OVERRIDE__ = prof;
+    }, profile);
 
     const startTime = Date.now();
     await chatInput.fill(TEST_QUERY);
     await getSendButton(page).click({ force: true });
 
     // Wait for response
-    await expect(page.locator('[data-testid="chat-response"]')).toBeVisible({ timeout: 60000 });
+    await expect(page.locator('[data-testid="chat-response"]')).toBeVisible({
+      timeout: 60000,
+    });
     const latency = Date.now() - startTime;
 
     // Capture response content
-    const responseText = await page.locator('[data-testid="chat-response"]:last-child').textContent();
+    const responseText = await page
+      .locator('[data-testid="chat-response"]:last-child')
+      .textContent();
     const responseLength = responseText?.split(' ').length ?? 0;
     const charCount = responseText?.length ?? 0;
 
@@ -129,7 +136,7 @@ test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     // Fast baseline: should be concise, <50 words ideally
     // Direct example response: "IA moderne utilise: Entrée → Modèle → Sortie. Contexte stocké en mémoire."
     const result = await testProfileResponse(page, 'DIRECT');
-    
+
     console.log('🔵 DIRECT RESULT:', result);
     expect(result.latency_ms).toBeLessThan(30000); // Should be fairly fast
     expect(result.response_length).toBeGreaterThan(10); // At least some response
@@ -139,7 +146,7 @@ test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     // Should produce longer, more detailed response
     // Expect 2-3x more tokens than DIRECT
     const result = await testProfileResponse(page, 'DEEP');
-    
+
     console.log('🔵 DEEP RESULT:', result);
     expect(result.latency_ms).toBeLessThan(60000); // Can be slower
     expect(result.response_length).toBeGreaterThan(50); // Notably longer than DIRECT
@@ -149,7 +156,7 @@ test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     // Should expose axes/priorities/structure
     // Expect highly structured output
     const result = await testProfileResponse(page, 'ARCHITECT');
-    
+
     console.log('🔵 ARCHITECT RESULT:', result);
     expect(result.latency_ms).toBeLessThan(90000); // Can be slowest
     expect(result.response_length).toBeGreaterThan(50);
@@ -176,14 +183,22 @@ test.describe.skip('Profile Comparison: DIRECT vs DEEP vs ARCHITECT', () => {
     console.log('┌─────────────┬───────────────┬───────────────┐');
     console.log('│ Profile     │ Response Length│ Latency (ms)  │');
     console.log('├─────────────┼───────────────┼───────────────┤');
-    console.log(`│ DIRECT      │ ${directLength.toString().padStart(12)} │ ${results['DIRECT'].latency_ms.toString().padStart(12)} │`);
-    console.log(`│ DEEP        │ ${deepLength.toString().padStart(12)} │ ${results['DEEP'].latency_ms.toString().padStart(12)} │`);
-    console.log(`│ ARCHITECT   │ ${architectLength.toString().padStart(12)} │ ${results['ARCHITECT'].latency_ms.toString().padStart(12)} │`);
+    console.log(
+      `│ DIRECT      │ ${directLength.toString().padStart(12)} │ ${results['DIRECT'].latency_ms.toString().padStart(12)} │`
+    );
+    console.log(
+      `│ DEEP        │ ${deepLength.toString().padStart(12)} │ ${results['DEEP'].latency_ms.toString().padStart(12)} │`
+    );
+    console.log(
+      `│ ARCHITECT   │ ${architectLength.toString().padStart(12)} │ ${results['ARCHITECT'].latency_ms.toString().padStart(12)} │`
+    );
     console.log('└─────────────┴───────────────┴───────────────┘');
 
     // Verify DEEP > DIRECT
     expect(deepLength).toBeGreaterThan(directLength * 0.8); // At least 80% as long as DIRECT reasonable baseline
 
-    console.log(`✅ PROFILE COMPARISON: DEEP (${deepLength} words) vs DIRECT (${directLength} words)`);
+    console.log(
+      `✅ PROFILE COMPARISON: DEEP (${deepLength} words) vs DIRECT (${directLength} words)`
+    );
   });
 });

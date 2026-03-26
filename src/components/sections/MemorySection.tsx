@@ -7,7 +7,7 @@
  * Handles: Memory architecture, tree visualization, semantic search
  */
 
-import React, { useState, useCallback, memo } from 'react';
+import React, { useState, useCallback, memo, useMemo } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TSectionHeader } from '@/design-system';
@@ -15,8 +15,15 @@ import { colors, spacing, fontSizes } from '@themes/tokens';
 import { createLogger } from '@/utils/logger';
 import { usePersistentMemory } from '@/hooks/usePersistentMemory';
 import { useLTMContext } from '@/hooks/useLTMContext';
+import {
+  buildPersistentMemoryTree,
+  findMemoryTreeNodeByEntryId,
+  type MemoryTreeNodeData,
+} from '@/features/memory/memoryTreeData';
+import type { MemoryEntry } from '@/services/memory/persistentMemory.config';
 
 const pageLogger = createLogger('MemorySection');
+const MEMORY_SECTION_MODE = 'admin' as const;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -35,12 +42,6 @@ interface MemorySectionProps {
   stats: TitaneStats;
   conversationId?: string;
 }
-
-type MemoryTreeNodeData = {
-  name: string;
-  attributes?: Record<string, string | number | boolean>;
-  children?: MemoryTreeNodeData[];
-};
 
 type MemorySearchEntry = {
   id: string;
@@ -77,15 +78,36 @@ const LazyMemorySearchPanel = React.lazy(() =>
 export const MemorySection: React.FC<MemorySectionProps> = memo(
   ({ stats, conversationId }) => {
     const [selectedNode, setSelectedNode] = useState<MemoryTreeNodeData | null>(null);
+    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
 
     // PATCH-014: Live LTM conversation history count from SQLite
     const { historyCount: ltmConvCount } = useLTMContext(conversationId ?? null);
 
     // Load real memory entries for search panel
-    const { entries: persistentEntries } = usePersistentMemory({
-      modeId: 'default',
+    const {
+      entries: persistentEntries,
+      stats: persistentStats,
+      isLoading: persistentMemoryLoading,
+      lastUpdate: persistentMemoryLastUpdate,
+    } = usePersistentMemory({
+      modeId: MEMORY_SECTION_MODE,
       enableCache: true,
     });
+
+    const isBootstrappingPersistentMemory =
+      persistentMemoryLoading &&
+      persistentMemoryLastUpdate === null &&
+      persistentStats === null &&
+      persistentEntries.length === 0;
+
+    const resolvedStats = useMemo(
+      () => ({
+        memoryShortTerm: persistentStats?.countByLevel?.session ?? stats.memoryShortTerm,
+        memoryMidTerm: persistentStats?.countByLevel?.intermediate ?? stats.memoryMidTerm,
+        memoryLongTerm: persistentStats?.countByLevel?.long_term ?? stats.memoryLongTerm,
+      }),
+      [persistentStats, stats]
+    );
 
     // Map persistent entries to local MemorySearchEntry format
     const searchEntries: MemorySearchEntry[] = persistentEntries.map(e => ({
@@ -98,17 +120,93 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         e.metadata.accessCount > 0 ? Math.min(e.metadata.accessCount / 10, 1) : undefined,
     }));
 
+    const memoryTreeData = useMemo(
+      () =>
+        isBootstrappingPersistentMemory
+          ? null
+          : buildPersistentMemoryTree(persistentEntries, persistentStats),
+      [isBootstrappingPersistentMemory, persistentEntries, persistentStats]
+    );
+
+    const hasPersistentMemory = useMemo(
+      () =>
+        persistentEntries.length > 0 ||
+        resolvedStats.memoryShortTerm > 0 ||
+        resolvedStats.memoryMidTerm > 0 ||
+        resolvedStats.memoryLongTerm > 0,
+      [persistentEntries.length, resolvedStats]
+    );
+
+    const memorySurfaceState = isBootstrappingPersistentMemory
+      ? 'loading'
+      : hasPersistentMemory
+        ? 'ready'
+        : 'empty';
+
     const handleNodeClick = useCallback((node: MemoryTreeNodeData) => {
       setSelectedNode(node);
+      setSelectedEntryId(String(node.attributes?.entryId ?? ''));
       pageLogger.debug('Node clicked', node);
     }, []);
 
-    const handleEntryClick = useCallback((entry: MemorySearchEntry) => {
-      pageLogger.debug('Memory entry clicked', entry);
-    }, []);
+    const selectPersistentEntry = useCallback(
+      (entry: MemoryEntry | MemorySearchEntry) => {
+        setSelectedEntryId(entry.id);
+        const matchedNode = memoryTreeData
+          ? findMemoryTreeNodeByEntryId(memoryTreeData, entry.id)
+          : null;
+        if (matchedNode) {
+          setSelectedNode(matchedNode);
+        } else {
+          const inferredType =
+            'level' in entry
+              ? entry.level === 'session'
+                ? 'short'
+                : entry.level === 'intermediate'
+                  ? 'mid'
+                  : 'long'
+              : entry.type;
+          const inferredCreatedAt =
+            'metadata' in entry ? entry.metadata.createdAt : entry.timestamp;
+          setSelectedNode({
+            name:
+              entry.content.length > 48
+                ? `${entry.content.slice(0, 48).trim()}...`
+                : entry.content,
+            attributes: {
+              entryId: entry.id,
+              type: inferredType,
+              createdAt: inferredCreatedAt,
+            },
+          });
+        }
+        pageLogger.debug('Memory entry selected', entry);
+      },
+      [memoryTreeData]
+    );
+
+    const handleEntryClick = useCallback(
+      (entry: MemorySearchEntry) => {
+        selectPersistentEntry(entry);
+      },
+      [selectPersistentEntry]
+    );
+
+    const selectedEntry = useMemo(
+      () =>
+        selectedEntryId
+          ? (persistentEntries.find(entry => entry.id === selectedEntryId) ?? null)
+          : null,
+      [persistentEntries, selectedEntryId]
+    );
 
     return (
-      <div className="titane-section titane-section-memory">
+      <div
+        className="titane-section titane-section-memory"
+        data-testid="memory-section-root"
+        data-memory-section-mode={MEMORY_SECTION_MODE}
+        data-memory-surface-state={memorySurfaceState}
+      >
         <TSectionHeader
           title="💾 Mémoire Triple"
           subtitle="Architecture court/moyen/long terme avec visualisation hiérarchique"
@@ -120,7 +218,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <h3 style={{ marginBottom: spacing[4] }}>Court Terme</h3>
             <TMetric
               label="Entrées"
-              value={stats.memoryShortTerm.toString()}
+              value={
+                isBootstrappingPersistentMemory
+                  ? '…'
+                  : resolvedStats.memoryShortTerm.toString()
+              }
               color="primary"
             />
             <p
@@ -138,7 +240,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <h3 style={{ marginBottom: spacing[4] }}>Moyen Terme</h3>
             <TMetric
               label="Entrées"
-              value={stats.memoryMidTerm.toString()}
+              value={
+                isBootstrappingPersistentMemory
+                  ? '…'
+                  : resolvedStats.memoryMidTerm.toString()
+              }
               color="success"
             />
             <p
@@ -156,7 +262,11 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
             <h3 style={{ marginBottom: spacing[4] }}>Long Terme</h3>
             <TMetric
               label="Entrées"
-              value={(stats.memoryLongTerm + ltmConvCount).toString()}
+              value={
+                isBootstrappingPersistentMemory
+                  ? '…'
+                  : resolvedStats.memoryLongTerm.toString()
+              }
               color="info"
             />
             {ltmConvCount > 0 && (
@@ -167,8 +277,8 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
                   marginTop: spacing[2],
                 }}
               >
-                🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} en mémoire de
-                session
+                🗂 {ltmConvCount} message{ltmConvCount > 1 ? 's' : ''} dans
+                l&apos;historique conversationnel, distinct de la LTM
               </p>
             )}
             <p
@@ -183,11 +293,62 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           </Card>
         </Grid>
 
+        {isBootstrappingPersistentMemory && (
+          <Card
+            style={{
+              marginTop: spacing[6],
+              border: `1px solid ${colors.neutral[500]}`,
+            }}
+          >
+            <h3 style={{ marginBottom: spacing[2] }}>
+              Chargement de la mémoire persistante
+            </h3>
+            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              TITANE synchronise actuellement les entrées locales et persistantes avant
+              d&apos;afficher le dashboard, l&apos;arbre et la recherche.
+            </p>
+          </Card>
+        )}
+
+        {!isBootstrappingPersistentMemory && !hasPersistentMemory && (
+          <Card
+            style={{
+              marginTop: spacing[6],
+              border: `1px solid ${colors.neutral[500]}`,
+            }}
+          >
+            <h3 style={{ marginBottom: spacing[2] }}>
+              Aucune mémoire persistante consolidée
+            </h3>
+            <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+              La LTM persistante n&apos;a pas encore reçu d&apos;entrée réelle pour ce
+              contexte. Les cartes, l&apos;arbre et la recherche restent donc
+              volontairement vides.
+            </p>
+            <p
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[500],
+                marginTop: spacing[2],
+              }}
+            >
+              Pour amorcer la mémoire, utilisez une interaction chat de type
+              &quot;mémorise&quot; ou laissez TITANE consolider un souvenir depuis une
+              conversation réelle.
+            </p>
+          </Card>
+        )}
+
         <div style={{ marginTop: spacing[6] }}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
             <React.Suspense fallback={null}>
-              <LazyMemoryDashboard modeId="default" compact={true} />
+              <LazyMemoryDashboard
+                modeId={MEMORY_SECTION_MODE}
+                compact={true}
+                onEntrySelect={selectPersistentEntry}
+                selectedEntryId={selectedEntryId}
+              />
             </React.Suspense>
           </Card>
         </div>
@@ -196,14 +357,41 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         <div style={{ marginTop: spacing[6] }}>
           <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
           <React.Suspense fallback={null}>
-            <LazyMemoryTreeViewer onNodeClick={handleNodeClick} showAttributes={true} />
+            <LazyMemoryTreeViewer
+              data={memoryTreeData ?? undefined}
+              onNodeClick={handleNodeClick}
+              showAttributes={true}
+              selectedEntryId={selectedEntryId}
+              isLoading={isBootstrappingPersistentMemory}
+            />
           </React.Suspense>
           {selectedNode && (
             <Card style={{ marginTop: spacing[4] }}>
-              <h4>Nœud sélectionné</h4>
-              <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
-                {JSON.stringify(selectedNode, null, 2)}
-              </pre>
+              <h4 style={{ marginBottom: spacing[2] }}>
+                {selectedEntry ? 'Entrée mémoire sélectionnée' : 'Nœud sélectionné'}
+              </h4>
+              {selectedEntry ? (
+                <>
+                  <p style={{ fontSize: fontSizes.sm, color: colors.neutral[400] }}>
+                    {selectedEntry.content}
+                  </p>
+                  <p
+                    style={{
+                      fontSize: fontSizes.xs,
+                      color: colors.neutral[500],
+                      marginTop: spacing[2],
+                    }}
+                  >
+                    Niveau: {selectedEntry.level} | Sujet: {selectedEntry.topic} |
+                    Importance: {selectedEntry.importance} | Accès:{' '}
+                    {selectedEntry.metadata.accessCount}
+                  </p>
+                </>
+              ) : (
+                <pre style={{ fontSize: fontSizes.xs, color: colors.neutral[400] }}>
+                  {JSON.stringify(selectedNode, null, 2)}
+                </pre>
+              )}
             </Card>
           )}
         </div>
@@ -213,8 +401,10 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
           <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
           <React.Suspense fallback={null}>
             <LazyMemorySearchPanel
-              entries={searchEntries.length > 0 ? searchEntries : undefined}
+              entries={searchEntries}
               onEntryClick={handleEntryClick}
+              selectedEntryId={selectedEntryId}
+              isLoading={isBootstrappingPersistentMemory}
             />
           </React.Suspense>
         </div>

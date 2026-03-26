@@ -155,8 +155,11 @@ export interface CognitiveSnapshot {
   intensity: number;
   active_kernels: string[];
   memory_state: {
-    usage_percent: number;
-    active_connections: number;
+    source: 'legacy_memory_core';
+    snapshots_count: number;
+    log_entries_count: number;
+    timeline_events: number;
+    storage_size_mb: number;
   };
   singularity: {
     physical: Record<string, unknown>;

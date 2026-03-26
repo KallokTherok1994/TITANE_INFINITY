@@ -5,6 +5,7 @@
 **PRINCIPLE**: Mirror, never redefine. Preserve all constitutional invariants.
 
 **SURFACE STATUS**:
+
 - Constitutional rules (Rules 1-12): `RUNTIME_ACTIVE` — enforced by Cline + hooks
 - Cline Enforcement notes: `SPEC_PARTIAL` — some are implemented, some are aspirational (see notes)
 - Hook Integration Requirements: `SPEC_ONLY` — describes target behavior, not all currently implemented
@@ -163,7 +164,7 @@ Only one active execution authority and one active E2E authority at a time.
 
 - **TaskStart**: Inject constitutional context, not competing rules
 - **PostToolUse**: Log operations; classify failures only (no fake-PASS)
-- **PreToolUse**: Block prod builds without tokens; check for secrets in src/**
+- **PreToolUse**: Block prod builds without tokens; check for secrets in src/\*\*
 - **UserPromptSubmit**: Remind deploy/test/package gates when relevant
 
 ### File Path Integration

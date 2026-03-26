@@ -311,6 +311,10 @@ mod commands {
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
     }
+
+    pub mod http_commands {
+        include!("commands/http_commands.rs");
+    }
 }
 
 // Legacy AI/Engine/Memory command bridge.
@@ -1472,6 +1476,7 @@ fn main() {
                         emotion_context: None,
                         custom_system_prompt: Some("Réponds uniquement: SMOKE_OK".to_string()),
                         history: None,
+                        omega_meta: None,
                     };
 
                     // Call conversation engine (same logic as conversation_generate command)
@@ -2875,6 +2880,9 @@ fn main() {
             commands::total_dev_commands::total_dev_git_op,
             commands::total_dev_commands::total_dev_run_command,
             commands::total_dev_commands::total_dev_read_file,
+
+            // Governed network gateway — frontend httpClient now routes via IPC
+            commands::http_commands::http_request,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

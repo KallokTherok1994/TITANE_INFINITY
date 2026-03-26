@@ -124,6 +124,7 @@ export class MemoryIntegration {
         emotionState: data.emotionState,
         timestamp: new Date().toISOString(),
       });
+      this.clearCache();
     } catch (error) {
       logger.error('Failed to save interaction', error);
     }
@@ -139,6 +140,7 @@ export class MemoryIntegration {
 
     try {
       await memoryService.saveStructuredEntry(normalized);
+      this.clearCache();
     } catch (error) {
       logger.error('Failed to save structured entry', error);
     }

@@ -17,6 +17,15 @@ import { TAURI_COMMANDS } from '@/core/commands/TAURI_COMMANDS';
 import { logger } from '@/lib/logger';
 import './TotalDevPage.css';
 
+// Fonction utilitaire pour calculer le hash SHA-256
+const sha256 = async (input: string): Promise<string> => {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(input);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+};
+
 // ─────────────────────────────────────────────────────────────────
 // TYPES
 // ─────────────────────────────────────────────────────────────────
@@ -201,10 +210,12 @@ const UnlockPanel = memo<{
     setLoading(true);
     setError('');
     try {
-      // Le token brut est envoyé via IPC → comparaison SHA-256 côté Rust
-      // Jamais stocké ni loggé côté frontend
+      // Calculer le hash SHA-256 du mot de passe avant envoi
+      const tokenHash = await sha256(inputValue);
+
+      // Envoyer le hash au backend pour comparaison
       const result = await secureInvoke<UnlockResult>(TAURI_COMMANDS.TOTAL_DEV_UNLOCK, {
-        token: inputValue,
+        token: tokenHash,
       });
       if (result.ok && result.expires_at_unix) {
         logger.info('TOTAL_DEV unlocked', { component: 'TotalDevPage' });

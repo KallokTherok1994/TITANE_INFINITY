@@ -241,10 +241,18 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     moduleName: 'Memory Evolution',
     moduleType: 'memory',
     pageTitle: 'Memory Evolution',
-    capabilities: ['hierarchy-health', 'clustering', 'repair', 'backup'],
+    capabilities: [
+      'hierarchy-health',
+      'cluster-observability',
+      'persistent-bridge-visibility',
+    ],
     dataTruthClass: 'LIVE_TAURI',
-    actions: ['memory_parse', 'memory_synthesize', 'memory_check_repair'],
-    limits: ['operation-latency-variable'],
+    actions: ['memory_get_clusters', 'memory_get_status', 'persistent_memory_get_stats'],
+    limits: [
+      'legacy-memory-evolution-isolated-from-persistent-ltm',
+      'write-actions-blocked-until-persistent-bridge-exists',
+      'operation-latency-variable',
+    ],
     memoryKeys: ['memory_evolution_pipeline_state'],
   },
   '/memory': {
@@ -252,10 +260,18 @@ const MODULE_REGISTRY: Record<string, ModuleRouteDefinition> = {
     moduleName: 'Memory Page',
     moduleType: 'memory',
     pageTitle: 'Memory',
-    capabilities: ['memory-list', 'memory-save', 'memory-clear'],
+    capabilities: ['memory-list', 'memory-search', 'memory-tree', 'memory-stats'],
     dataTruthClass: 'LIVE_TAURI_SERVICE_BRIDGE',
-    actions: ['memory_get_state', 'save_chat_interaction', 'memory_clear'],
-    limits: ['legacy-memory-endpoints-coexist'],
+    actions: [
+      'persistent_memory_read',
+      'persistent_memory_get_stats',
+      'persistent_memory_write_entry',
+      'persistent_memory_delete_entry',
+    ],
+    limits: [
+      'persistent-bootstrap-latency-visible',
+      'search-disabled-when-no-persistent-entries',
+    ],
     memoryKeys: ['memory_entries_ui_state'],
   },
   '/research': {

@@ -255,13 +255,39 @@ export class AutoFixEngine {
   }
 
   private async detectReactHookViolations(): Promise<DetectedIssue[]> {
-    // Mock pour l'instant
-    return [];
+    try {
+      const violations = await secureInvoke<string[]>(
+        'autofix_detect_react_hook_violations'
+      );
+      return violations.map((violation, idx) => ({
+        id: `react-${idx}-${Date.now()}`,
+        type: 'react_hook_violation' as IssueType,
+        severity: 'high' as const,
+        description: violation,
+        affected_component: 'frontend',
+        auto_fixable: true,
+        detected_at: Date.now(),
+      }));
+    } catch {
+      return [];
+    }
   }
 
   private async detectInvalidStates(): Promise<DetectedIssue[]> {
-    // Mock pour l'instant
-    return [];
+    try {
+      const states = await secureInvoke<string[]>('autofix_detect_invalid_states');
+      return states.map((state, idx) => ({
+        id: `state-${idx}-${Date.now()}`,
+        type: 'invalid_state' as IssueType,
+        severity: 'medium' as const,
+        description: state,
+        affected_component: 'frontend',
+        auto_fixable: true,
+        detected_at: Date.now(),
+      }));
+    } catch {
+      return [];
+    }
   }
 
   // ═══════════════════════════════════════════════════════════════════════════

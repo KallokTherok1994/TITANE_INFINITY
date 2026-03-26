@@ -5,12 +5,17 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM
+ *   TITANE∞ v1.0 — UNIFIED MEMORY SYSTEM (LEGACY LOCAL HELPER)
  *   Architecture STM / MTM / LTM minimale et stable
  *
  *   STM (Short-Term Memory)  : 50 derniers messages, expire 5min
  *   MTM (Medium-Term Memory) : Contexte session, expire 24h
  *   LTM (Long-Term Memory)   : Connaissances durables, permanent
+ *
+ *   NOTE 2026-03:
+ *   Cette memoire unifiee locale n'est plus la source de verite de la LTM
+ *   conversationnelle active. Le chat runtime et la page /memory utilisent
+ *   maintenant la memoire persistante Tauri (`persistent_memory_*`).
  * ═══════════════════════════════════════════════════════════════════
  */
 

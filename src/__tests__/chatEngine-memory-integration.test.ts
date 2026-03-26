@@ -6,15 +6,19 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v22Ω — CHAT ENGINE + UNIFIED MEMORY INTEGRATION
- *   Tests d'intégration pour auto-storage basé sur importance
+ *   TITANE∞ v22Ω — LEGACY UNIFIED MEMORY HELPER
+ *   Tests de comportement pour le helper local base sur importance
+ *
+ *   NOTE 2026-03:
+ *   Ces tests ne certifient plus la lane memoire active du chat runtime.
+ *   La source de verite active est la memoire persistante Tauri.
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import { describe, test, expect, beforeEach, afterEach, vi } from 'vitest';
 import { unifiedMemory } from '../core/services/unifiedMemory';
 
-describe('ChatEngine + Unified Memory Integration', () => {
+describe('Legacy UnifiedMemory helper behavior', () => {
   beforeEach(() => {
     // Clear memory before each test
     unifiedMemory.cleanup();

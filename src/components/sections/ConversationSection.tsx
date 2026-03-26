@@ -18,7 +18,10 @@ import React, {
 } from 'react';
 import { useToast } from '@/hooks/useToast';
 import { useConversationEngine } from '@hooks/useConversationEngine';
-import type { ConversationMode } from '@/services/conversationEngine';
+import type {
+  ConversationMode,
+  ConversationProviderPreference,
+} from '@/services/conversationEngine';
 import type { AnalyzedFile } from '@/components/chat/FileUploadButton';
 import { ThinkingPanel, useThinkingSteps } from '@/features/chat/ThinkingPanel';
 import {
@@ -78,7 +81,18 @@ interface RuntimeSignals {
   memoryState: string;
 }
 
-const AVAILABLE_PROVIDERS = [
+interface LatestAssistantRuntimeSnapshot {
+  providerMeta?: ProviderDecisionMeta;
+  tags: string[];
+  runtimeSignals: RuntimeSignals;
+}
+
+const AVAILABLE_PROVIDERS: Array<{
+  id: ConversationProviderPreference;
+  name: string;
+  icon: string;
+  available: boolean;
+}> = [
   { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
   { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
   { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
@@ -135,6 +149,83 @@ const CONVERSATION_SUGGESTIONS = [
 ];
 
 const LOADING_INDICATOR_GRACE_MS = 1200;
+
+export function resolveConversationDisplayProvider(
+  selectedProvider: ConversationProviderPreference,
+  latestProviderUsed?: string | null
+): string {
+  if (latestProviderUsed && latestProviderUsed.trim()) {
+    return latestProviderUsed;
+  }
+
+  return (
+    AVAILABLE_PROVIDERS.find(provider => provider.id === selectedProvider)?.name ??
+    selectedProvider
+  );
+}
+
+export function buildConversationRuntimeSummary(
+  requestedProviderLabel: string,
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string {
+  if (!latestAssistantRuntime) return '';
+
+  const provider = latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown';
+  const mode = latestAssistantRuntime.providerMeta?.mode ?? 'unknown';
+  const reason = latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN';
+  const networkUsed =
+    latestAssistantRuntime.providerMeta?.network_used === true ? 'true' : 'false';
+
+  const requestedPrefix =
+    requestedProviderLabel &&
+    requestedProviderLabel.trim() &&
+    requestedProviderLabel !== provider
+      ? `Requested: ${requestedProviderLabel} | `
+      : '';
+
+  return `${requestedPrefix}Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}`;
+}
+
+export function buildConversationLoadingLabel(
+  requestedProviderLabel: string,
+  currentModeLabel: string
+): string {
+  const providerLabel =
+    requestedProviderLabel && requestedProviderLabel.trim()
+      ? requestedProviderLabel
+      : 'Auto';
+  const modeLabel = currentModeLabel && currentModeLabel.trim() ? currentModeLabel : '—';
+
+  return `Route demandee: ${providerLabel} | Mode: ${modeLabel}`;
+}
+
+export function buildConversationRuntimeBadges(
+  requestedProviderLabel: string,
+  latestAssistantRuntime: LatestAssistantRuntimeSnapshot | null
+): string[] {
+  if (!latestAssistantRuntime) return [];
+
+  const providerMeta = latestAssistantRuntime.providerMeta;
+  const tags = latestAssistantRuntime.tags;
+
+  const values = [
+    requestedProviderLabel &&
+    providerMeta?.provider_used &&
+    requestedProviderLabel !== providerMeta.provider_used
+      ? `requested:${requestedProviderLabel}`
+      : null,
+    providerMeta?.provider_used,
+    providerMeta?.mode,
+    providerMeta?.provider_class,
+    providerMeta?.reason_code,
+    providerMeta?.policy && providerMeta.policy !== 'default'
+      ? `policy:${providerMeta.policy}`
+      : null,
+    ...tags,
+  ].filter((value): value is string => Boolean(value && value.trim()));
+
+  return Array.from(new Set(values)).slice(0, 8);
+}
 
 function getSpeechStatusLabel(status: MessageSpeechStatus, error: string | null): string {
   switch (status) {
@@ -901,9 +992,31 @@ ConversationMessage.displayName = 'ConversationMessage';
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
+const isConversationProviderPreference = (
+  value: string
+): value is ConversationProviderPreference =>
+  value === 'auto' ||
+  value === 'gemini' ||
+  value === 'ollama' ||
+  value === 'openai' ||
+  value === 'claude' ||
+  value === 'local';
+
+const getInitialSelectedProvider = (): ConversationProviderPreference => {
+  if (typeof window === 'undefined') {
+    return 'ollama';
+  }
+
+  const stored = window.localStorage.getItem('omega-chat-preferred-provider');
+  const normalizedStored = stored?.trim() ?? '';
+  return isConversationProviderPreference(normalizedStored) ? normalizedStored : 'ollama';
+};
+
 export const ConversationSection: React.FC<ConversationSectionProps> = memo(() => {
   // ═══ HOOKS ═══
   const { success: toastSuccess, error: errorToast } = useToast();
+  const [selectedProvider, setSelectedProvider] =
+    useState<ConversationProviderPreference>(getInitialSelectedProvider);
   const {
     messages,
     isLoading,
@@ -919,6 +1032,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     conversationId,
   } = useConversationEngine({
     mode: 'default',
+    providerPreference: selectedProvider,
     autoHealthCheck: false,
     maxMessages: 500,
   });
@@ -927,14 +1041,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const { historyCount: ltmCount, refresh: refreshLTM } = useLTMContext(conversationId);
 
   // ═══ STATE ═══
-  const [selectedProvider, setSelectedProvider] = useState(() => {
-    if (typeof window === 'undefined') {
-      return 'ollama';
-    }
-
-    const stored = window.localStorage.getItem('omega-chat-preferred-provider');
-    return stored && stored.trim().length > 0 ? stored : 'ollama';
-  });
   const [inputValue, setInputValue] = useState('');
   const [showModeBuilder, setShowModeBuilder] = useState(false);
   const [audioEnabled, setAudioEnabled] = useState(false);
@@ -945,6 +1051,10 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const [filterRole, setFilterRole] = useState<'all' | 'user' | 'assistant'>('all');
   const [_cameraActive, setCameraActive] = useState(false);
   const [loadingVisibleUntil, setLoadingVisibleUntil] = useState(0);
+  const [sendTraceState, setSendTraceState] = useState<
+    'idle' | 'dispatching' | 'responded' | 'errored'
+  >('idle');
+  const [sendTraceMeta, setSendTraceMeta] = useState('');
   const [activeArtifactManifest, setActiveArtifactManifest] =
     useState<ProfessionalDocumentManifest | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -1001,6 +1111,12 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     if (value) setInputValue(value);
   }, []);
 
+  const handleProviderChange = useCallback((provider: string) => {
+    if (isConversationProviderPreference(provider)) {
+      setSelectedProvider(provider);
+    }
+  }, []);
+
   useEffect(() => {
     if (typeof window === 'undefined') {
       return;
@@ -1024,12 +1140,6 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const currentModeLabel = useMemo(
     () => conversationModes.find(m => m.id === currentMode)?.name ?? '—',
     [conversationModes, currentMode]
-  );
-
-  const selectedProviderLabel = useMemo(
-    () =>
-      AVAILABLE_PROVIDERS.find(p => p.id === selectedProvider)?.name ?? selectedProvider,
-    [selectedProvider]
   );
 
   const conversationModeOptions = useMemo(
@@ -1067,33 +1177,25 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     return null;
   }, [messages]);
 
-  const runtimeSummary = useMemo(() => {
-    if (!latestAssistantRuntime) return '';
+  const selectedProviderLabel = useMemo(
+    () => resolveConversationDisplayProvider(selectedProvider, null),
+    [selectedProvider]
+  );
 
-    const provider = latestAssistantRuntime.providerMeta?.provider_used ?? 'unknown';
-    const mode = latestAssistantRuntime.providerMeta?.mode ?? 'unknown';
-    const reason = latestAssistantRuntime.providerMeta?.reason_code ?? 'UNKNOWN';
-    const networkUsed =
-      latestAssistantRuntime.providerMeta?.network_used === true ? 'true' : 'false';
+  const runtimeSummary = useMemo(
+    () => buildConversationRuntimeSummary(selectedProviderLabel, latestAssistantRuntime),
+    [latestAssistantRuntime, selectedProviderLabel]
+  );
 
-    return `Provider: ${provider} | Mode: ${mode} | Reason: ${reason} | Network: ${networkUsed}`;
-  }, [latestAssistantRuntime]);
+  const loadingSummary = useMemo(
+    () => buildConversationLoadingLabel(selectedProviderLabel, currentModeLabel),
+    [currentModeLabel, selectedProviderLabel]
+  );
 
-  const runtimeBadges = useMemo(() => {
-    if (!latestAssistantRuntime) return [] as string[];
-
-    const providerMeta = latestAssistantRuntime.providerMeta;
-    const tags = latestAssistantRuntime.tags;
-    const values = [
-      providerMeta?.provider_used,
-      providerMeta?.mode,
-      providerMeta?.provider_class,
-      providerMeta?.reason_code,
-      ...tags,
-    ].filter((value): value is string => Boolean(value && value.trim()));
-
-    return Array.from(new Set(values)).slice(0, 8);
-  }, [latestAssistantRuntime]);
+  const runtimeBadges = useMemo(
+    () => buildConversationRuntimeBadges(selectedProviderLabel, latestAssistantRuntime),
+    [latestAssistantRuntime, selectedProviderLabel]
+  );
 
   useEffect(() => {
     if (isLoading) {
@@ -1128,6 +1230,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
   const thinkingState: 'idle' | 'active' | 'done' | 'error' | 'blocked' =
     thinking.isThinking ? 'active' : error ? 'error' : hasMessages ? 'done' : 'idle';
+
+  const runtimeProviderLabel = useMemo(
+    () =>
+      resolveConversationDisplayProvider(
+        selectedProvider,
+        latestAssistantProviderMeta?.provider_used ?? null
+      ),
+    [latestAssistantProviderMeta?.provider_used, selectedProvider]
+  );
 
   const thinkingTopology = useMemo(() => {
     const nodes: Array<{
@@ -1447,10 +1558,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
     thinking.startThinking();
     thinking.addStep('analysis', 'Analyse de votre message...');
+    setSendTraceState('dispatching');
+    setSendTraceMeta(`provider=${selectedProvider};len=${messageText.length}`);
 
     try {
       thinking.addStep('reasoning', 'Traitement par le pipeline OMEGA...');
       const response = await sendMessage(messageText);
+      setSendTraceState('responded');
+      setSendTraceMeta(
+        `provider=${response?.meta?.provider_used ?? 'unknown'};reason=${response?.meta?.reason_code ?? 'UNKNOWN'}`
+      );
 
       thinking.addStep('synthesis', 'Génération de la réponse...');
 
@@ -1474,6 +1591,8 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
       }
     } catch (err) {
       pageLogger.error('Send message error', err);
+      setSendTraceState('errored');
+      setSendTraceMeta(err instanceof Error ? err.message : String(err));
       thinking.stopThinking();
     } finally {
       sendingRef.current = false;
@@ -1703,7 +1822,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           <div className="conversation-toolbar-left">
             <ChatProviderSelector
               selectedProvider={selectedProvider}
-              onChange={setSelectedProvider}
+              onChange={handleProviderChange}
               providers={AVAILABLE_PROVIDERS}
             />
 
@@ -1905,7 +2024,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
           topology={thinkingTopology}
           compact={thinking.compact}
           inline={false}
-          provider={selectedProviderLabel}
+          provider={runtimeProviderLabel}
         />
 
         {/* ═══ MESSAGES AREA ═══ */}
@@ -1937,7 +2056,15 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
                   <span></span>
                   <span></span>
                 </div>
-                <small style={{ color: colors.neutral[400] }}>TITANE réfléchit...</small>
+                <small style={{ color: colors.neutral[400] }}>
+                  TITANE traite votre message...
+                </small>
+                <small
+                  style={{ color: colors.neutral[500], display: 'block', marginTop: 4 }}
+                  data-testid="chat-loading-summary"
+                >
+                  {loadingSummary}
+                </small>
               </div>
             </div>
           )}
@@ -1969,6 +2096,13 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
         {/* ═══ INPUT AREA ═══ */}
         <div className="conversation-input-container">
+          <div
+            data-testid="chat-send-trace"
+            data-state={sendTraceState}
+            data-meta={sendTraceMeta}
+            aria-hidden="true"
+            style={{ display: 'none' }}
+          />
           <div
             data-testid="chat-ready"
             data-state={isLoading ? 'loading' : 'ready'}

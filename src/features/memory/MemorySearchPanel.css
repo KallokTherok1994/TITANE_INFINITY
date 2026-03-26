@@ -47,6 +47,17 @@
   color: #64748b;
 }
 
+.search-input:disabled,
+.filter-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.search-input:disabled {
+  background: rgba(15, 23, 42, 0.35);
+  box-shadow: none;
+}
+
 .search-clear {
   position: absolute;
   right: 1rem;
@@ -106,6 +117,15 @@
   color: #60a5fa;
   font-size: 0.875rem;
   margin-left: auto;
+}
+
+.memory-search-disabled-note {
+  padding: 0.875rem 1rem;
+  background: rgba(15, 23, 42, 0.45);
+  border: 1px dashed rgba(100, 116, 139, 0.35);
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  font-size: 0.875rem;
 }
 
 /* Tags */
@@ -218,6 +238,16 @@
   border-color: rgba(59, 130, 246, 0.4);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.memory-entry.selected {
+  border-color: rgba(34, 211, 238, 0.55);
+  background: linear-gradient(
+    135deg,
+    rgba(8, 47, 73, 0.58) 0%,
+    rgba(30, 41, 59, 0.78) 100%
+  );
+  box-shadow: 0 0 0 1px rgba(34, 211, 238, 0.18);
 }
 
 .entry-header {

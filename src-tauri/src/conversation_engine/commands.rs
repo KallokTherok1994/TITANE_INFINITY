@@ -1,11 +1,13 @@
-use std::sync::Arc;
+use std::collections::{BTreeMap, HashSet};
+use std::sync::{Arc, Mutex, OnceLock};
+use chrono::Utc;
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION ENGINE COMMANDS
  * Commandes Tauri pour le Conversation Engine
  * ═══════════════════════════════════════════════════════════════════
  */
-use tauri::State;
+use tauri::{Manager, State};
 use uuid::Uuid;
 
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
@@ -32,9 +34,106 @@ pub struct ConversationGenerateArgs {
     pub system_prompt: Option<String>,
     pub request_id: Option<String>,
     pub context_envelope: Option<serde_json::Value>,
+    /// OMEGA classifier metadata from frontend (Lock #2)
+    pub classifier_meta: Option<ClassifierMetaArgs>,
+    /// AI config overrides from frontend classifier profile
+    pub ai_config: Option<AiConfigArgs>,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClassifierMetaArgs {
+    pub canonical_mode: Option<String>,
+    pub profile_id: Option<String>,
+    pub effort_level: Option<String>,
+    pub model_class: Option<String>,
+    pub confidence: Option<f32>,
+    pub reason_code: Option<String>,
+}
+
+#[derive(Debug, Clone, serde::Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct AiConfigArgs {
+    pub temperature: Option<f32>,
+    pub max_tokens: Option<usize>,
+    pub provider_preference: Option<String>,
 }
 
 type CommandResult<T> = Result<T, String>;
+
+fn conversation_os_schema_cache() -> &'static Mutex<HashSet<std::path::PathBuf>> {
+    static CACHE: OnceLock<Mutex<HashSet<std::path::PathBuf>>> = OnceLock::new();
+    CACHE.get_or_init(|| Mutex::new(HashSet::new()))
+}
+
+fn ensure_conversation_os_schema(
+    conn: &rusqlite::Connection,
+    db_path: &std::path::Path,
+) -> Result<(), String> {
+    let normalized_path = db_path.to_path_buf();
+
+    if conversation_os_schema_cache()
+        .lock()
+        .map_err(|_| "schema cache poisoned".to_string())?
+        .contains(&normalized_path)
+    {
+        return Ok(());
+    }
+
+    conn.execute_batch(
+        "
+        CREATE TABLE IF NOT EXISTS events (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            kind TEXT NOT NULL,
+            payload TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS provider_decisions (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            payload TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS sources (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            provider TEXT NOT NULL,
+            url TEXT NOT NULL,
+            title TEXT NOT NULL,
+            snippet TEXT NOT NULL,
+            source_ts INTEGER NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS snapshots (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            summary_fr TEXT NOT NULL,
+            state_json TEXT NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS failures (
+            id TEXT PRIMARY KEY,
+            ts INTEGER NOT NULL,
+            conversation_id TEXT NOT NULL,
+            class TEXT NOT NULL,
+            detail_json TEXT NOT NULL
+        );
+        ",
+    )
+    .map_err(|err| format!("create schema failed: {}", err))?;
+
+    conversation_os_schema_cache()
+        .lock()
+        .map_err(|_| "schema cache poisoned".to_string())?
+        .insert(normalized_path);
+
+    Ok(())
+}
 
 fn resolve_conversation_os_db_path_from_env(
     db_path_override: Option<std::path::PathBuf>,
@@ -103,6 +202,254 @@ fn build_memory_used_ids(
         ids.push(format!("ltm_session_{}", conversation_id));
     }
     ids
+}
+
+fn is_memory_recall_query(message: &str) -> bool {
+    let normalized = message.to_lowercase();
+    let personal_fact_patterns = [
+        "quel est mon",
+        "quelle est ma",
+        "quels sont mes",
+        "quelles sont mes",
+        "je t'ai donné mon",
+        "je t’ai donné mon",
+        "je ne t'ai jamais donné mon",
+        "je ne t’ai jamais donné mon",
+        "tu connais mon",
+        "tu connais ma",
+        "mon code fantôme",
+        "mon code fantome",
+    ];
+
+    normalized.contains("remember")
+        || normalized.contains("recall")
+        || normalized.contains("history")
+        || normalized.contains("memorise")
+        || normalized.contains("mémorise")
+        || normalized.contains("rappelle")
+        || normalized.contains("souviens")
+        || normalized.contains("memoire")
+        || normalized.contains("mémoire")
+        || personal_fact_patterns
+            .iter()
+            .any(|pattern| normalized.contains(pattern))
+}
+
+fn extract_canonical_memory_facts(history: &[String]) -> Vec<(String, String)> {
+    let mut facts = BTreeMap::<String, String>::new();
+
+    for line in history {
+        if !line.starts_with("[User]:") {
+            continue;
+        }
+
+        let content = line.trim_start_matches("[User]:").trim();
+
+        for segment in content.split(';') {
+            let Some((left, right)) = segment.split_once('=') else {
+                continue;
+            };
+
+            let raw_key = left
+                .rsplit(':')
+                .next()
+                .unwrap_or(left)
+                .trim()
+                .trim_matches(|c: char| c == '"' || c == '\'' || c.is_whitespace());
+
+            let key = raw_key
+                .chars()
+                .filter(|c| c.is_alphanumeric() || *c == '_' || *c == '-')
+                .collect::<String>()
+                .to_lowercase();
+
+            if key.is_empty() {
+                continue;
+            }
+
+            let raw_value = right
+                .split(['.', ';', '\n'])
+                .next()
+                .unwrap_or(right)
+                .trim()
+                .trim_matches(|c: char| c == '"' || c == '\'' || c.is_whitespace());
+
+            if raw_value.is_empty() {
+                continue;
+            }
+
+            facts.insert(key, raw_value.to_string());
+        }
+    }
+
+    facts.into_iter().collect()
+}
+
+fn build_canonical_memory_fact_block(
+    history: Option<&Vec<String>>,
+    message: &str,
+) -> Option<String> {
+    let history = history?;
+
+    if history.is_empty() || !is_memory_recall_query(message) {
+        return None;
+    }
+
+    let facts = extract_canonical_memory_facts(history);
+    if facts.is_empty() {
+        return None;
+    }
+
+    let rendered_facts = facts
+        .into_iter()
+        .map(|(key, value)| format!("{key}={value}"))
+        .collect::<Vec<String>>()
+        .join("\n");
+
+    Some(format!(
+        "## CANONICAL_MEMORY_FACTS\n{}\n## MEMORY_RECALL_RULE\nQuand l'utilisateur demande un rappel de memoire, utilise uniquement ces faits canoniques.\nIgnore les tours hors sujet et n'ajoute aucun element absent de cette liste.\nSi un champ demande est absent, reponds INCONNU pour ce champ.\nSi l'utilisateur demande un rappel compact, reponds uniquement avec des lignes `cle=valeur` ou `INCONNU`.\nN'ajoute aucun titre, aucune section Markdown, aucune explication et aucun commentaire.",
+        rendered_facts
+    ))
+}
+
+fn is_explicit_memory_write_query(message: &str) -> bool {
+    let normalized = message.to_lowercase();
+    normalized.contains("memorise") || normalized.contains("mémorise")
+}
+
+fn extract_explicit_memory_write_facts(message: &str) -> Vec<(String, String)> {
+    if !is_explicit_memory_write_query(message) {
+        return Vec::new();
+    }
+
+    extract_canonical_memory_facts(&[format!("[User]: {}", message)])
+}
+
+fn topic_for_explicit_memory_key(key: &str) -> &'static str {
+    match key {
+        "nom" | "name" | "couleur" | "color" | "appel" | "appelle" | "code" => "personal",
+        _ => "general",
+    }
+}
+
+fn resolve_persistent_memory_base_path(app_handle: &tauri::AppHandle) -> std::path::PathBuf {
+    let app_data_dir = app_handle.path().app_data_dir().unwrap_or_else(|e| {
+        eprintln!(
+            "Warning: Failed to get app data dir ({}), using current directory",
+            e
+        );
+        std::path::PathBuf::from(".").join("titane-data")
+    });
+
+    app_data_dir.join("persistent_memory")
+}
+
+fn persistent_memory_hash_content(content: &str) -> String {
+    use std::collections::hash_map::DefaultHasher;
+    use std::hash::{Hash, Hasher};
+
+    let mut hasher = DefaultHasher::new();
+    content.hash(&mut hasher);
+    format!("{:x}", hasher.finish())
+}
+
+fn contains_sensitive_data(content: &str) -> bool {
+    const PATTERNS: [&str; 8] = [
+        "mot de passe",
+        "api_key",
+        "secret_key",
+        "private_key",
+        "ssh_key",
+        "bearer ",
+        "-----BEGIN",
+        "token ",
+    ];
+    let lower = content.to_lowercase();
+    PATTERNS.iter().any(|pattern| lower.contains(pattern))
+}
+
+fn persist_explicit_memory_write_facts(
+    base_path: &std::path::Path,
+    conversation_id: &str,
+    mode_id: &str,
+    message: &str,
+) -> Result<Vec<String>, String> {
+    let facts = extract_explicit_memory_write_facts(message);
+    if facts.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    std::fs::create_dir_all(base_path.join("intermediate"))
+        .map_err(|err| format!("create intermediate memory dir failed: {}", err))?;
+
+    let now = Utc::now().timestamp_millis();
+    let mut persisted_ids = Vec::new();
+
+    for (key, value) in facts {
+        let content = format!("{key}={value}");
+        if contains_sensitive_data(&content) {
+            continue;
+        }
+
+        let entry_id = Uuid::new_v4().to_string();
+        let entry = serde_json::json!({
+            "id": entry_id,
+            "level": "intermediate",
+            "content_type": "preference",
+            "title": format!("Memoire explicite: {}", key),
+            "summary": null,
+            "content": content,
+            "topic": topic_for_explicit_memory_key(&key),
+            "importance": 4,
+            "tags": ["explicit_memory", "chat_memory", key],
+            "status": "active",
+            "metadata": {
+                "created_at": now,
+                "updated_at": now,
+                "last_accessed_at": null,
+                "access_count": 0,
+                "source": "chat_user",
+                "mode_id": mode_id,
+                "evolution_phase": null,
+                "project_id": null,
+                "conversation_id": conversation_id,
+                "content_hash": persistent_memory_hash_content(&content),
+                "schema_version": "1.0.0"
+            },
+            "ttl": null,
+            "promotable": true,
+            "source_entry_ids": [],
+            "relevance_score": 1.0,
+            "expires_at": now + 90 * 24 * 60 * 60 * 1000,
+            "confidence_score": null,
+            "user_verified": null,
+            "version": null,
+            "version_history": []
+        });
+
+        let entries_path = base_path.join("intermediate").join("entries.json");
+        let mut entries: Vec<serde_json::Value> = if entries_path.exists() {
+            serde_json::from_str(&std::fs::read_to_string(&entries_path).unwrap_or_default())
+                .unwrap_or_default()
+        } else {
+            Vec::new()
+        };
+        let persisted_id = entry
+            .get("id")
+            .and_then(|value| value.as_str())
+            .unwrap_or_default()
+            .to_string();
+        entries.push(entry);
+        std::fs::write(
+            &entries_path,
+            serde_json::to_string_pretty(&entries)
+                .map_err(|err| format!("serialize memory entries failed: {}", err))?,
+        )
+        .map_err(|err| format!("write memory entries failed: {}", err))?;
+        persisted_ids.push(persisted_id);
+    }
+
+    Ok(persisted_ids)
 }
 
 fn extract_context_binding(context_envelope: Option<&serde_json::Value>) -> serde_json::Value {
@@ -210,6 +557,7 @@ pub async fn create_new_conversation(
 pub async fn conversation_generate(
     engine: State<'_, Arc<ConversationEngineState>>,
     orchestrator: State<'_, ChatOrchestratorState>,
+    app_handle: tauri::AppHandle,
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
     let ConversationGenerateArgs {
@@ -220,7 +568,19 @@ pub async fn conversation_generate(
         system_prompt,
         request_id,
         context_envelope,
+        classifier_meta,
+        ai_config,
     } = args;
+
+    // OMEGA: extract classifier metadata for omega_meta + AIConfig adjustment
+    let omega_meta = classifier_meta.as_ref().map(|cm| OmegaRequestMeta {
+        canonical_mode: cm.canonical_mode.clone().unwrap_or_default(),
+        profile_id: cm.profile_id.clone().unwrap_or_default(),
+        effort_level: cm.effort_level.clone().unwrap_or_default(),
+        model_class: cm.model_class.clone().unwrap_or_default(),
+        confidence: cm.confidence.unwrap_or(0.0),
+        reason_code: cm.reason_code.clone().unwrap_or_default(),
+    });
     // Convertir le mode string en ConversationMode
     let conversation_mode = match mode.as_deref() {
         Some("coach") => ConversationMode::Default, // Coach = Default avec personnalité
@@ -556,12 +916,15 @@ pub async fn conversation_generate(
     // PATCH-012 + IMPROVE-003: Load conversation history from SQLite for LTM context injection.
     // Budget: last 20 messages, content capped at 300 chars each to avoid token overflow.
     // Always load (not gated by LTM flag) so the AI has basic multi-turn awareness.
-    let conversation_context = match load_conversation_history(conversation_id.clone()).await {
+    const MAX_MESSAGES: usize = 20;
+    let conversation_context = match load_conversation_history_with_limit(
+        None,
+        &conversation_id,
+        Some(MAX_MESSAGES),
+    ) {
         Ok(rows) => {
-            const MAX_MESSAGES: usize = 20;
             const MAX_CONTENT_CHARS: usize = 300;
             let formatted: Vec<String> = rows.iter()
-                .take(MAX_MESSAGES)
                 .filter_map(|row| {
                     let role = row.get("role")?.as_str()?;
                     let content = row.get("content")?.as_str()?;
@@ -673,6 +1036,9 @@ pub async fn conversation_generate(
         }
     };
 
+    let canonical_memory_fact_block =
+        build_canonical_memory_fact_block(conversation_context.as_ref(), &message);
+
     // Inject TIME + TWINS context into system_prompt when available
     let cognitive_flow = context_binding.get("cognitiveFlowActive").and_then(|v| v.as_bool()).unwrap_or(false);
     let cognitive_mode = context_binding.get("cognitiveMode").and_then(|v| v.as_str()).unwrap_or("normal");
@@ -688,8 +1054,10 @@ pub async fn conversation_generate(
         let mut parts: Vec<String> = Vec::new();
         if !base.is_empty() { parts.push(base); }
         if !stm_context_block.is_empty() { parts.push(stm_context_block); }
-        // ✅ FIX: inject UnifiedMemory recall results into prompt
         if !memory_recall_block.is_empty() { parts.push(memory_recall_block.clone()); }
+        if let Some(block) = canonical_memory_fact_block.clone() {
+            parts.push(block);
+        }
         if has_time_context || has_twins_context {
             let mut ctx_lines: Vec<String> = Vec::new();
             if has_time_context {
@@ -713,6 +1081,15 @@ pub async fn conversation_generate(
         if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
     };
 
+    // OMEGA: use classifier profile temperature + maxTokens if available
+    let classifier_temperature = ai_config
+        .as_ref()
+        .and_then(|ac| ac.temperature)
+        .unwrap_or(0.7);
+    let classifier_max_tokens = ai_config
+        .as_ref()
+        .and_then(|ac| ac.max_tokens);
+
     let request = ConversationRequest {
         user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
@@ -727,14 +1104,15 @@ pub async fn conversation_generate(
                 _ => super::types::ProviderPreference::Auto,
             };
             AIConfig {
-                temperature: 0.7,
-                max_tokens: None,
+                temperature: classifier_temperature,
+                max_tokens: classifier_max_tokens,
                 provider_preference: provider_pref,
             }
         }),
         emotion_context: None,
-        custom_system_prompt: system_prompt, // ✨ Ajout du system prompt personnalisé (+ TIME/TWINS context)
+        custom_system_prompt: system_prompt,
         history: conversation_context,
+        omega_meta,
     };
 
     // Traiter via le pipeline OMEGA complet
@@ -760,6 +1138,21 @@ pub async fn conversation_generate(
     );
 
     let meta = ensure_provider_meta(&response.metadata, latency_ms as u128);
+    let persisted_memory_write_ids = persist_explicit_memory_write_facts(
+        &resolve_persistent_memory_base_path(&app_handle),
+        &conversation_id,
+        mode
+            .as_deref()
+            .filter(|value| !value.trim().is_empty())
+            .unwrap_or("default"),
+        &message,
+    )
+    .map_err(|err| format!("explicit memory persistence failed: {}", err))?;
+
+    trace["memory"]["persistent_write_count"] =
+        serde_json::json!(persisted_memory_write_ids.len());
+    trace["memory"]["persistent_write_ids"] =
+        serde_json::json!(persisted_memory_write_ids.clone());
 
     if let Err(err) = persist_conversation_os_artifacts(
         &conversation_id,
@@ -801,6 +1194,10 @@ pub async fn conversation_generate(
             "contextBinding": context_binding,
             "memoryRecallIds": memory_recall_ids,
             "memoryRecallCount": memory_recall_ids.len(),
+            "persistentWriteIds": persisted_memory_write_ids,
+            "persistentWriteCount": trace["memory"]["persistent_write_count"],
+            "profileUsed": response.metadata.profile_used,
+            "memorySourcesInjected": response.metadata.memory_sources_injected,
         }
     }))
 }
@@ -1067,54 +1464,9 @@ fn persist_conversation_os_artifacts_with_path(
             .map_err(|err| format!("create db dir failed: {}", err))?;
     }
 
-    let conn = Connection::open(db_path).map_err(|err| format!("open db failed: {}", err))?;
+    let conn = Connection::open(&db_path).map_err(|err| format!("open db failed: {}", err))?;
 
-    conn.execute_batch(
-        "
-        CREATE TABLE IF NOT EXISTS events (
-            id TEXT PRIMARY KEY,
-            ts INTEGER NOT NULL,
-            conversation_id TEXT NOT NULL,
-            kind TEXT NOT NULL,
-            payload TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS provider_decisions (
-            id TEXT PRIMARY KEY,
-            ts INTEGER NOT NULL,
-            conversation_id TEXT NOT NULL,
-            payload TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS sources (
-            id TEXT PRIMARY KEY,
-            ts INTEGER NOT NULL,
-            conversation_id TEXT NOT NULL,
-            provider TEXT NOT NULL,
-            url TEXT NOT NULL,
-            title TEXT NOT NULL,
-            snippet TEXT NOT NULL,
-            source_ts INTEGER NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS snapshots (
-            id TEXT PRIMARY KEY,
-            ts INTEGER NOT NULL,
-            conversation_id TEXT NOT NULL,
-            summary_fr TEXT NOT NULL,
-            state_json TEXT NOT NULL
-        );
-
-        CREATE TABLE IF NOT EXISTS failures (
-            id TEXT PRIMARY KEY,
-            ts INTEGER NOT NULL,
-            conversation_id TEXT NOT NULL,
-            class TEXT NOT NULL,
-            detail_json TEXT NOT NULL
-        );
-        ",
-    )
-    .map_err(|err| format!("create schema failed: {}", err))?;
+    ensure_conversation_os_schema(&conn, &db_path)?;
 
     let ts = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1292,6 +1644,14 @@ mod tests {
     use rusqlite::Connection;
     use std::fs;
     use std::path::PathBuf;
+    use tempfile::tempdir;
+
+    fn conversation_os_schema_cache_len() -> usize {
+        conversation_os_schema_cache()
+            .lock()
+            .expect("schema cache lock")
+            .len()
+    }
 
     fn sample_response(provider_used: &str, provider_meta: ProviderDecisionMeta) -> ConversationResponse {
         ConversationResponse {
@@ -1310,7 +1670,10 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: Some(provider_meta),
+                profile_used: String::new(),
+                memory_sources_injected: 0,
             },
+            trace_meta: None,
         }
     }
 
@@ -1363,6 +1726,155 @@ mod tests {
         assert!(meta.get("latency_ms_total").is_some());
 
         write_output(&json);
+    }
+
+    #[test]
+    fn canonical_memory_fact_block_extracts_structured_facts_from_history() {
+        let history = vec![
+            "[User]: Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.".to_string(),
+            "[Assistant]: OK".to_string(),
+            "[User]: Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.".to_string(),
+        ];
+
+        let block = build_canonical_memory_fact_block(
+            Some(&history),
+            "Rappelle exactement le code, le nom et la couleur.",
+        )
+        .expect("canonical fact block should be built");
+
+        assert!(block.contains("## CANONICAL_MEMORY_FACTS"));
+        assert!(block.contains("code=ORION-482-LICHEN"));
+        assert!(block.contains("nom=Alice"));
+        assert!(block.contains("couleur=bleu azur"));
+        assert!(!block.contains("Assistant"));
+    }
+
+    #[test]
+    fn canonical_memory_fact_block_is_skipped_for_non_recall_queries() {
+        let history = vec![
+            "[User]: Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.".to_string(),
+        ];
+
+        let block = build_canonical_memory_fact_block(
+            Some(&history),
+            "Parle-moi de la pluie et du beau temps.",
+        );
+
+        assert!(block.is_none());
+    }
+
+    #[test]
+    fn canonical_memory_fact_block_supports_personal_fact_recall_without_memory_keyword() {
+        let history = vec![
+            "[User]: Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.".to_string(),
+            "[User]: Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.".to_string(),
+            "[User]: Question sans rapport: capitale du Portugal ? Reponds un seul mot.".to_string(),
+        ];
+
+        let block = build_canonical_memory_fact_block(
+            Some(&history),
+            "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU.",
+        )
+        .expect("canonical fact block should be built for personal fact recall");
+
+        assert!(block.contains("## CANONICAL_MEMORY_FACTS"));
+        assert!(block.contains("code=ORION-482-LICHEN"));
+        assert!(block.contains("nom=Alice"));
+        assert!(block.contains("couleur=bleu azur"));
+        assert!(block.contains("reponds INCONNU"));
+    }
+
+    #[test]
+    fn persist_explicit_memory_write_facts_writes_intermediate_entries() {
+        let temp_dir = tempdir().expect("should create temp dir");
+        let base_path = temp_dir.path().join("persistent_memory");
+
+        let persisted_ids = persist_explicit_memory_write_facts(
+            &base_path,
+            "conv-memory-proof",
+            "default",
+            "Memorise sans developper: code=ORION-482-LICHEN; nom=Alice; couleur=bleu azur. Reponds OK.",
+        )
+        .expect("explicit memory write should succeed");
+
+        assert_eq!(persisted_ids.len(), 3);
+
+        let entries_path = base_path.join("intermediate").join("entries.json");
+        let raw = std::fs::read_to_string(entries_path).expect("entries file should exist");
+        let entries: Vec<serde_json::Value> =
+            serde_json::from_str(&raw).expect("entries should parse");
+
+        assert_eq!(entries.len(), 3);
+        assert!(entries
+            .iter()
+            .all(|entry| entry["level"].as_str() == Some("intermediate")));
+        assert!(entries.iter().all(|entry| {
+            entry["metadata"]["mode_id"].as_str() == Some("default")
+        }));
+        assert!(entries.iter().all(|entry| {
+            entry["metadata"]["conversation_id"].as_str() == Some("conv-memory-proof")
+        }));
+        assert!(entries
+            .iter()
+            .any(|entry| entry["content"].as_str() == Some("code=ORION-482-LICHEN")));
+        assert!(entries
+            .iter()
+            .any(|entry| entry["content"].as_str() == Some("nom=Alice")));
+        assert!(entries
+            .iter()
+            .any(|entry| entry["content"].as_str() == Some("couleur=bleu azur")));
+    }
+
+    #[test]
+    fn load_conversation_history_with_limit_keeps_latest_messages_in_ascending_order() {
+        let temp_dir = tempdir().expect("should create temp dir");
+        let db_path = temp_dir.path().join("conversation_os_limit.db");
+        let conn = Connection::open(&db_path).expect("db should open");
+
+        conn.execute(
+            "CREATE TABLE events (
+                conversation_id TEXT NOT NULL,
+                kind TEXT NOT NULL,
+                payload TEXT NOT NULL,
+                ts INTEGER NOT NULL
+            )",
+            [],
+        )
+        .expect("create events table");
+
+        for i in 0..30 {
+            let kind = if i % 2 == 0 {
+                "user_message"
+            } else {
+                "assistant_message"
+            };
+            let payload = serde_json::json!({ "message": format!("message-{i}") }).to_string();
+            conn.execute(
+                "INSERT INTO events (conversation_id, kind, payload, ts) VALUES (?1, ?2, ?3, ?4)",
+                rusqlite::params!["conv-limit", kind, payload, i as i64],
+            )
+            .expect("insert event");
+        }
+
+        let rows = load_conversation_history_with_limit(
+            Some(db_path),
+            "conv-limit",
+            Some(20),
+        )
+        .expect("history should load");
+
+        assert_eq!(rows.len(), 20);
+        let first = rows[0]
+            .get("content")
+            .and_then(serde_json::Value::as_str)
+            .expect("first content");
+        let last = rows[19]
+            .get("content")
+            .and_then(serde_json::Value::as_str)
+            .expect("last content");
+
+        assert_eq!(first, "message-10");
+        assert_eq!(last, "message-29");
     }
 
     #[test]
@@ -1457,6 +1969,47 @@ mod tests {
         assert_eq!(source_url, "https://example.com/source");
 
         let _ = std::fs::remove_file(db_path);
+    }
+
+    #[test]
+    fn conversation_os_schema_is_initialized_once_per_db_path() {
+        let temp_dir = tempdir().expect("temp dir");
+        let db_path = temp_dir.path().join("schema-cache.db");
+        let before = conversation_os_schema_cache_len();
+
+        let trace = serde_json::json!({ "phase": "test" });
+        let provider_meta = build_success_meta("local", 1);
+
+        persist_conversation_os_artifacts_with_path(
+            "conv-cache",
+            "req-one",
+            "Message 1",
+            Some("Réponse 1"),
+            &trace,
+            Some(&provider_meta),
+            &[],
+            Some(db_path.clone()),
+        )
+        .expect("first persistence should succeed");
+
+        let after_first = conversation_os_schema_cache_len();
+
+        persist_conversation_os_artifacts_with_path(
+            "conv-cache",
+            "req-two",
+            "Message 2",
+            Some("Réponse 2"),
+            &trace,
+            Some(&provider_meta),
+            &[],
+            Some(db_path),
+        )
+        .expect("second persistence should succeed");
+
+        let after_second = conversation_os_schema_cache_len();
+
+        assert_eq!(after_first, before + 1);
+        assert_eq!(after_second, after_first);
     }
 
     #[test]
@@ -1679,6 +2232,7 @@ pub async fn conversation_process_message(
         emotion_context: None,
         custom_system_prompt: None,
         history: None,
+        omega_meta: None,
     };
 
     log::info!(
@@ -2021,6 +2575,14 @@ pub async fn anthology_get_top_lexical_fields(
 pub async fn load_conversation_history(
     conversation_id: String,
 ) -> CommandResult<Vec<serde_json::Value>> {
+    load_conversation_history_with_limit(None, &conversation_id, None)
+}
+
+fn load_conversation_history_with_limit(
+    db_path_override: Option<std::path::PathBuf>,
+    conversation_id: &str,
+    limit: Option<usize>,
+) -> CommandResult<Vec<serde_json::Value>> {
     use rusqlite::Connection;
 
     if conversation_id.trim().is_empty() {
@@ -2028,7 +2590,7 @@ pub async fn load_conversation_history(
         return Ok(vec![]);
     }
 
-    let db_path = resolve_conversation_os_db_path(None);
+    let db_path = resolve_conversation_os_db_path(db_path_override);
 
     if !db_path.exists() {
         log::warn!(
@@ -2046,17 +2608,29 @@ pub async fn load_conversation_history(
         }
     };
 
-    // Read events ordered by timestamp — only user and assistant messages
-    let mut stmt = conn
-        .prepare(
+    // Read only the most recent events needed for generation, then restore ascending order.
+    let query = if let Some(limit_value) = limit {
+        format!(
             "SELECT kind, payload, ts FROM events \
              WHERE conversation_id = ?1 \
              AND kind IN ('user_message', 'assistant_message') \
-             ORDER BY ts ASC",
+             ORDER BY ts DESC \
+             LIMIT {}",
+            limit_value
         )
+    } else {
+        "SELECT kind, payload, ts FROM events \
+         WHERE conversation_id = ?1 \
+         AND kind IN ('user_message', 'assistant_message') \
+         ORDER BY ts ASC"
+            .to_string()
+    };
+
+    let mut stmt = conn
+        .prepare(&query)
         .map_err(|e| format!("[load_conversation_history] prepare failed: {}", e))?;
 
-    let rows: Vec<serde_json::Value> = stmt
+    let mut rows: Vec<serde_json::Value> = stmt
         .query_map([&conversation_id], |row| {
             let kind: String = row.get(0)?;
             let payload_str: String = row.get(1)?;
@@ -2076,6 +2650,10 @@ pub async fn load_conversation_history(
             }))
         })
         .collect();
+
+    if limit.is_some() && rows.len() > 1 {
+        rows.reverse();
+    }
 
     if rows.is_empty() {
         log::info!(

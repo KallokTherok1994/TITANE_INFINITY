@@ -39,6 +39,7 @@ import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -160,7 +161,9 @@ export const TitanePage: React.FC = () => {
   useEffect(() => {
     const loadMemoryStats = async () => {
       try {
-        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
         setMemoryStats(stats);
       } catch {
         // Non-blocking: hardcoded fallback values will be used

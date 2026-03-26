@@ -12,6 +12,7 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import { normalizePersistentMemoryReadResponse } from '@/services/memory/persistentMemory.normalize';
 import type {
   MemoryState,
   MemoryEntry,
@@ -19,6 +20,11 @@ import type {
   MemoryStats,
   RecallResult,
 } from '../types';
+import type {
+  MemoryEntry as PersistentMemoryEntry,
+  MemoryLevel as PersistentMemoryLevel,
+  MemoryContentType as PersistentMemoryContentType,
+} from '@/services/memory/persistentMemory.config';
 
 // ─────────────────────────────────────────────────────────────────
 // Constants
@@ -29,6 +35,110 @@ const MAX_MEMORIES = 10000;
 const DECAY_RATE = 0.01; // Taux de décroissance par jour
 const CONSOLIDATION_THRESHOLD = 0.7; // Seuil pour la consolidation
 const RECALL_BOOST = 0.15; // Bonus de force au rappel
+const DEFAULT_PERSISTENT_MODE = 'default';
+const ALL_PERSISTENT_LEVELS: PersistentMemoryLevel[] = [
+  'session',
+  'intermediate',
+  'long_term',
+];
+
+function clamp(value: number, min: number, max: number): number {
+  return Math.max(min, Math.min(max, value));
+}
+
+function mapPersistentEntryToLegacy(entry: PersistentMemoryEntry): MemoryEntry {
+  const confidenceScore =
+    'confidenceScore' in entry && typeof entry.confidenceScore === 'number'
+      ? entry.confidenceScore
+      : undefined;
+  const title = 'title' in entry && typeof entry.title === 'string' ? entry.title : '';
+  const sourceEntryIds =
+    'sourceEntryIds' in entry && Array.isArray(entry.sourceEntryIds)
+      ? entry.sourceEntryIds
+      : [];
+
+  const derivedType: MemoryType =
+    entry.level === 'long_term'
+      ? 'long-term'
+      : entry.contentType === 'code_snippet' || entry.contentType === 'automation_result'
+        ? 'procedural'
+        : entry.contentType === 'knowledge' ||
+            entry.contentType === 'reference' ||
+            entry.contentType === 'identity' ||
+            entry.contentType === 'decision' ||
+            entry.contentType === 'preference'
+          ? 'semantic'
+          : entry.contentType === 'summary' || entry.contentType === 'message'
+            ? 'episodic'
+            : 'short-term';
+
+  const confidenceStrength =
+    typeof confidenceScore === 'number' ? confidenceScore / 100 : entry.importance / 5;
+
+  return {
+    id: entry.id,
+    content: entry.content,
+    type: derivedType,
+    context:
+      entry.metadata?.projectId || entry.metadata?.modeId || title || entry.topic || '',
+    tags: Array.isArray(entry.tags) ? entry.tags : [],
+    importance: clamp(entry.importance ?? 3, 0, 1_000),
+    strength: clamp(confidenceStrength, 0.05, 1),
+    createdAt: entry.metadata?.createdAt ?? Date.now(),
+    lastAccess:
+      entry.metadata?.lastAccessedAt ||
+      entry.metadata?.updatedAt ||
+      entry.metadata?.createdAt ||
+      Date.now(),
+    accessCount: entry.metadata?.accessCount ?? 0,
+    consolidated: entry.level !== 'session',
+    associations: sourceEntryIds,
+  };
+}
+
+function mapLegacyTypeFilters(type?: MemoryType | string): {
+  levels?: PersistentMemoryLevel[];
+  contentTypes?: PersistentMemoryContentType[];
+} {
+  switch (type) {
+    case 'short-term':
+      return { levels: ['session'] };
+    case 'long-term':
+      return { levels: ['long_term'] };
+    case 'episodic':
+    case 'interaction':
+      return { contentTypes: ['message', 'summary'] };
+    case 'semantic':
+      return {
+        contentTypes: ['knowledge', 'reference', 'identity', 'decision', 'preference'],
+      };
+    case 'procedural':
+      return { contentTypes: ['project_context', 'code_snippet', 'automation_result'] };
+    case 'code':
+      return { contentTypes: ['code_snippet', 'project_context', 'reference'] };
+    default:
+      return {};
+  }
+}
+
+function mapLegacyTypeToPersistentWrite(type: MemoryType): {
+  level: PersistentMemoryLevel;
+  contentType: PersistentMemoryContentType;
+} {
+  switch (type) {
+    case 'long-term':
+      return { level: 'long_term', contentType: 'knowledge' };
+    case 'procedural':
+      return { level: 'intermediate', contentType: 'code_snippet' };
+    case 'semantic':
+      return { level: 'intermediate', contentType: 'reference' };
+    case 'episodic':
+      return { level: 'session', contentType: 'summary' };
+    case 'short-term':
+    default:
+      return { level: 'session', contentType: 'message' };
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────
 // Memory Engine Class
@@ -71,24 +181,12 @@ class MemoryEngineClass {
     if (this.initialized) return;
 
     try {
-      // Charger depuis le backend
-      const savedState = await secureInvoke<string | null>('memory_get_entry', {
-        key: MEMORY_STORAGE_KEY,
-      });
-
-      if (savedState) {
-        const parsed = JSON.parse(savedState);
-        this.state = { ...this.getDefaultState(), ...parsed };
-      }
-
-      // Appliquer le decay depuis la dernière session
-      if (this.state.decayEnabled) {
-        this.applyDecay();
-      }
-
+      await this.refreshFromPersistentMemory(MAX_MEMORIES);
+      this.state.lastConsolidation = Date.now();
       this.initialized = true;
+
       console.log(
-        '[MemoryEngine] Initialized with',
+        '[MemoryEngine] Initialized from persistent memory with',
         this.state.stats.totalMemories,
         'memories'
       );
@@ -97,6 +195,21 @@ class MemoryEngineClass {
       this.state = this.getDefaultState();
       this.initialized = true;
     }
+  }
+
+  private async refreshFromPersistentMemory(limit = MAX_MEMORIES): Promise<void> {
+    const response = normalizePersistentMemoryReadResponse(
+      await secureInvoke('persistent_memory_read', {
+        levels: ALL_PERSISTENT_LEVELS,
+        currentMode: DEFAULT_PERSISTENT_MODE,
+        limit,
+        includeSummaries: false,
+      })
+    );
+
+    this.state.memories = response.entries.map(mapPersistentEntryToLegacy);
+    this.state.decayEnabled = false;
+    this.updateStats();
   }
 
   // ─────────────────────────────────────────────────────────────────
@@ -116,36 +229,44 @@ class MemoryEngineClass {
     await this.ensureInitialized();
 
     const now = Date.now();
-    const memory: MemoryEntry = {
-      id: `mem_${now}_${Math.random().toString(36).substr(2, 9)}`,
+    const { level, contentType } = mapLegacyTypeToPersistentWrite(type);
+    const entryId = await secureInvoke<string>('persistent_memory_write_entry', {
+      level,
+      contentType,
       content,
-      type,
-      context: context || '',
+      topic:
+        typeof context === 'string' && context.toLowerCase().includes('project')
+          ? 'project'
+          : 'general',
+      importance: clamp(Math.round((importance ?? 0.5) * 5), 1, 5),
+      source: 'manual_save',
       tags: tags || [],
-      importance: importance ?? 0.5,
-      strength: 1.0, // Force initiale maximale
-      createdAt: now,
-      lastAccess: now,
-      accessCount: 0,
-      consolidated: false,
-      associations: [],
-    };
+      title: content.slice(0, 80),
+      modeId: DEFAULT_PERSISTENT_MODE,
+    });
 
-    // Ajouter à la mémoire
-    this.state.memories.push(memory);
+    await this.refreshFromPersistentMemory(MAX_MEMORIES);
 
-    // Limiter le nombre de souvenirs
-    if (this.state.memories.length > MAX_MEMORIES) {
-      this.pruneWeakMemories();
-    }
+    const memory =
+      this.state.memories.find(candidate => candidate.id === entryId) ||
+      ({
+        id: typeof entryId === 'string' && entryId.length > 0 ? entryId : `mem_${now}`,
+        content,
+        type,
+        context: context || '',
+        tags: tags || [],
+        importance: importance ?? 0.5,
+        strength: 1.0,
+        createdAt: now,
+        lastAccess: now,
+        accessCount: 0,
+        consolidated: level !== 'session',
+        associations: [],
+      } as MemoryEntry);
 
-    // Mettre à jour les stats
-    this.updateStats();
-
-    // Persister
-    await this.persist();
-
-    console.log(`[MemoryEngine] Stored memory: ${memory.id} (${type})`);
+    console.log(
+      `[MemoryEngine] Stored memory in persistent layer: ${memory.id} (${type})`
+    );
     return memory;
   }
 
@@ -164,67 +285,38 @@ class MemoryEngineClass {
     await this.ensureInitialized();
 
     const { type, minStrength = 0.1, limit = 10, tags } = options || {};
-    const queryLower = query.toLowerCase();
-    const queryTerms = queryLower.split(/\s+/).filter(t => t.length > 2);
-
-    // Filtrer et scorer les souvenirs
-    const results: RecallResult[] = this.state.memories
-      .filter(memory => {
-        // Filtre par type
-        if (type && memory.type !== type) return false;
-        // Filtre par force
-        if (memory.strength < minStrength) return false;
-        // Filtre par tags
-        if (tags && tags.length > 0) {
-          if (!tags.some(tag => memory.tags.includes(tag))) return false;
-        }
-        return true;
+    const { levels, contentTypes } = mapLegacyTypeFilters(type);
+    const response = normalizePersistentMemoryReadResponse(
+      await secureInvoke('persistent_memory_read', {
+        levels: levels ?? ALL_PERSISTENT_LEVELS,
+        contentTypes,
+        currentMode: DEFAULT_PERSISTENT_MODE,
+        query: query.trim().length > 0 ? query : undefined,
+        tags,
+        limit,
+        includeSummaries: false,
       })
-      .map(memory => {
-        // Calculer la pertinence
-        const contentLower = memory.content.toLowerCase();
-        const contextLower = memory.context.toLowerCase();
+    );
 
-        let relevance = 0;
-
-        // Correspondance exacte
-        if (contentLower.includes(queryLower)) {
-          relevance += 0.5;
-        }
-
-        // Correspondance par termes
-        for (const term of queryTerms) {
-          if (contentLower.includes(term)) relevance += 0.15;
-          if (contextLower.includes(term)) relevance += 0.05;
-          if (memory.tags.some(t => t.toLowerCase().includes(term))) relevance += 0.1;
-        }
-
-        // Bonus pour l'importance et la force
-        relevance += memory.importance * 0.2;
-        relevance += memory.strength * 0.1;
-
-        // Normaliser
-        relevance = Math.min(relevance, 1.0);
+    const results = response.entries
+      .map(entry => {
+        const memory = mapPersistentEntryToLegacy(entry);
+        const relevance = clamp(
+          response.relevanceScores?.[entry.id] ?? memory.importance / 5,
+          0,
+          1
+        );
 
         return {
           memory,
           relevance,
-          confidence: memory.strength * relevance,
+          confidence: clamp(memory.strength * relevance, 0, 1),
         };
       })
-      .filter(r => r.relevance > 0)
-      .sort((a, b) => b.confidence - a.confidence)
+      .filter(result => result.memory.strength >= minStrength)
       .slice(0, limit);
 
-    // Mettre à jour les accès
-    for (const result of results) {
-      await this.accessMemory(result.memory.id);
-    }
-
-    // Mettre à jour les stats
     this.state.stats.totalRecalls++;
-    await this.persist();
-
     return results;
   }
 
@@ -276,20 +368,11 @@ class MemoryEngineClass {
    */
   async forget(memoryId: string): Promise<boolean> {
     await this.ensureInitialized();
-
     const index = this.state.memories.findIndex(m => m.id === memoryId);
     if (index === -1) return false;
 
-    this.state.memories.splice(index, 1);
-
-    // Nettoyer les associations
-    for (const memory of this.state.memories) {
-      memory.associations = memory.associations.filter(id => id !== memoryId);
-    }
-
-    this.updateStats();
-    await this.persist();
-
+    await secureInvoke('persistent_memory_delete_entry', { entryId: memoryId });
+    await this.refreshFromPersistentMemory(MAX_MEMORIES);
     return true;
   }
 

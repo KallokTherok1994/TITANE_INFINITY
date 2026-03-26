@@ -51,9 +51,9 @@ export interface TopNavProps {
 }
 
 interface ProviderStatus {
-  name: string;
+  provider: string;
   available: boolean;
-  reason?: string;
+  error?: string;
 }
 
 // ─────────────────────────────────────────────────────────────────
@@ -61,6 +61,24 @@ interface ProviderStatus {
 // ─────────────────────────────────────────────────────────────────
 
 const DEFAULT_MAX_VISIBLE = 5;
+
+export function deriveAiStatus(providers: ProviderStatus[]): {
+  percent: number | null;
+  available: number;
+  total: number;
+} {
+  const cloudProviders = providers.filter(provider => provider.provider !== 'local');
+
+  if (cloudProviders.length === 0) {
+    return { percent: null, available: 0, total: 0 };
+  }
+
+  const available = cloudProviders.filter(provider => provider.available).length;
+  const total = cloudProviders.length;
+  const percent = Math.round((available / total) * 100);
+
+  return { percent, available, total };
+}
 
 // ─────────────────────────────────────────────────────────────────
 // COMPONENT
@@ -108,12 +126,9 @@ export const TopNav: React.FC<TopNavProps> = ({
         if (!active) return;
 
         if (Array.isArray(providers) && providers.length > 0) {
-          const available = providers.filter(p => p.available).length;
-          const total = providers.length;
-          const percent = Math.round((available / total) * 100);
-          setAiStatus({ percent, available, total });
+          setAiStatus(deriveAiStatus(providers));
         } else {
-          setAiStatus({ percent: 0, available: 0, total: 0 });
+          setAiStatus({ percent: null, available: 0, total: 0 });
         }
       } catch {
         if (active) {
@@ -308,7 +323,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   ? 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/20'
                   : 'bg-red-500/10 text-red-500 border border-red-500/20'
             )}
-            title={`${aiStatus.available}/${aiStatus.total} providers disponibles`}
+            title={`${aiStatus.available}/${aiStatus.total} providers cloud disponibles`}
           >
             {aiStatus.percent === 100 ? (
               <Zap size={14} className="animate-pulse" />

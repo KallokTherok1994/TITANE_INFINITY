@@ -299,6 +299,7 @@ export class TauriInvokeProtector {
     _timeoutMs?: number
   ): Promise<T> {
     const cacheKey = `${command}:${JSON.stringify(args)}`;
+    const shouldUseResultCache = this.shouldUseResultCache(command);
 
     // ✅ ANTI-DEBOUNCE: For recording commands, prevent duplicate calls
     if (command === 'start_recording' || command === 'stop_recording') {
@@ -312,11 +313,7 @@ export class TauriInvokeProtector {
     }
 
     // Check cache first pour éviter appels répétés (skip for recording commands)
-    if (
-      command !== 'start_recording' &&
-      command !== 'stop_recording' &&
-      command !== 'cancel_recording'
-    ) {
+    if (shouldUseResultCache) {
       const cached = this.checkCache[cacheKey];
       if (cached && Date.now() - cached.timestamp < this.CACHE_DURATION) {
         return cached.result as T;
@@ -411,11 +408,7 @@ export class TauriInvokeProtector {
       console.log(`[TauriProtector] ✅ Invoke succeeded: ${command}`);
 
       // Cache du résultat positif (skip for recording commands)
-      if (
-        command !== 'start_recording' &&
-        command !== 'stop_recording' &&
-        command !== 'cancel_recording'
-      ) {
+      if (this.shouldUseResultCache(command)) {
         this.checkCache[cacheKey] = {
           result,
           timestamp: Date.now(),
@@ -753,6 +746,23 @@ export class TauriInvokeProtector {
     this.isTauriAvailable = null;
     this.checkCache = {};
     console.log('[TauriProtector] Cache reset');
+  }
+
+  private shouldUseResultCache(command: string): boolean {
+    if (
+      command === 'start_recording' ||
+      command === 'stop_recording' ||
+      command === 'cancel_recording'
+    ) {
+      return false;
+    }
+
+    // Memory persistence reads must reflect writes immediately.
+    if (command.startsWith('persistent_memory_')) {
+      return false;
+    }
+
+    return true;
   }
 }
 
