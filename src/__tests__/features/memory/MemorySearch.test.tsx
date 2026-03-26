@@ -4,7 +4,7 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import { MemorySearchPanel } from '@/features/memory/MemorySearchPanel';
 
 describe('MemorySearchPanel Component', () => {
@@ -96,11 +96,18 @@ describe('MemorySearchPanel Component', () => {
 
   describe('Interactions', () => {
     it('should handle search input', () => {
-      render(<MemorySearchPanel entries={entries} />);
-      const input = screen.getByPlaceholderText(/recherche sémantique/i);
-      fireEvent.change(input, { target: { value: 'architecture' } });
-      expect(screen.getByText('Architecture TITANE')).toBeInTheDocument();
-      expect(screen.queryByText('Session active')).not.toBeInTheDocument();
+      vi.useFakeTimers();
+      try {
+        render(<MemorySearchPanel entries={entries} />);
+        const input = screen.getByPlaceholderText(/recherche sémantique/i);
+        fireEvent.change(input, { target: { value: 'architecture' } });
+        // Advance past the 300ms useDebounce delay (added in debounce optimization)
+        act(() => { vi.advanceTimersByTime(350); });
+        expect(screen.getByText('Architecture TITANE')).toBeInTheDocument();
+        expect(screen.queryByText('Session active')).not.toBeInTheDocument();
+      } finally {
+        vi.useRealTimers();
+      }
     });
 
     it('should trigger onEntryClick callback', () => {
