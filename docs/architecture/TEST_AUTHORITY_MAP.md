@@ -128,8 +128,8 @@ SEALED    = STABLE + Desktop E2E PASS + build PASS + gates pertinentes PASS
 
 | Point | Nature | Résolution |
 |-------|--------|-----------|
-| `vitest.workspace.ts` | Config workspace vitest — usage réel ? | Vérifier si utilisé par pnpm run test |
-| Tests storybook/chromatic | Présents en devDependencies — sont-ils dans CI ? | Audit CI workflows |
+| `vitest.workspace.ts` | Config workspace vitest — usage réel ? | **RESOLVED** — workspace unit+integration configs confirmés. `defineWorkspace(['vitest.unit.config.ts', 'vitest.integration.config.ts'])` |
+| Tests storybook/chromatic | Présents en devDependencies — sont-ils dans CI ? | **RESOLVED** — LABS_OPS, non intégré CI principal. Non prioritaire. |
 | Desktop E2E latence modèle | Harness sensible — quel profil modèle forcé ? | Voir `scripts/e2e/run-online-chat-proof-ui.sh` |
 
 ---

@@ -18,7 +18,7 @@ Classification: `KEEP_CORE` | `ALIAS_COMPAT` | `LABS` | `HIDE_DEV` | `DELETE_CAN
 | Surface | Rôle réel | Statut actuel | Décision | Preuve | Risque | Rollback |
 |---------|-----------|---------------|----------|--------|--------|----------|
 | `src/features/chat/` | Chat UI principal (composants, hooks, export) | Actif | **KEEP_CORE** | Importé dans ChatPage.tsx | P0 | Aucun move |
-| `src/features/conversation/` | Doublon partiel de features/chat (ChatMessage, ChatContextPanel, ChatProviderSelector, TypingIndicator) | Actif | **ALIAS_COMPAT** | Contient des composants identiques aux noms de features/chat | P1 | Ne pas supprimer avant audit import complet |
+| `src/features/conversation/` | Couche de compatibilité sur features/chat (ChatMessage, ChatContextPanel, ChatProviderSelector, TypingIndicator) | Actif | **ALIAS_COMPAT** | ProviderStatusPanel.tsx re-exporte depuis features/chat. Migration P2 différée — nécessite mise à jour imports entrants (ChatPage, ConversationSection, Chat) + tsc + vitest gate. | P1 | Ne pas supprimer avant migration P2 complète |
 | `src/pages/ChatPage.tsx` | Page route /chat (route canonique) | Actif | **KEEP_CORE** | Exportée dans pages/index.ts, route principale | P0 | Aucun move |
 | `src/pages/TitanePage.tsx` | Page principale /titane (hub) | Actif | **KEEP_CORE** | Route par défaut selon App.tsx | P0 | Aucun move |
 | `src/components/ChatWindow.tsx` | Composant chat legacy ? | Actif (à vérifier usage) | **ALIAS_COMPAT** | Présent à la racine components/ — peut être absorbé dans features/chat | P1 | Ne pas supprimer avant grep imports |

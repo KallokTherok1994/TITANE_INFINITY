@@ -49,7 +49,7 @@ Classes: `KEEP_CORE` | `KEEP_LAZY` | `LABS_ONLY` | `DELETE_CANDIDATE`
 
 | Package | Décision | Note |
 |---------|----------|------|
-| `storybook` + chromatic | **KEEP** (Ops) | Dev-only, ne ship pas en prod |
+| `storybook` + chromatic | **LABS_OPS** | `.storybook/` présent, non intégré CI principal. Non prioritaire. |
 | `vitest` | **KEEP** (Ops) | Test infrastructure critique |
 | `playwright` | **KEEP** (Ops) | E2E tests |
 | `webdriverio` | **KEEP** (Ops) | E2E desktop |
