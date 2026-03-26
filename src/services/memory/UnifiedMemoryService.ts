@@ -4,6 +4,15 @@
  */
 
 /**
+ * @legacy FILE-BASED MEMORY SERVICE
+ * ATTENTION: Utilise `fs/promises` (Node.js natif) — non compatible WebView Tauri en production.
+ * Usage prouvé: tests/dev uniquement.
+ * CANONICAL: Utiliser `services/unified/UnifiedMemory.ts` pour le frontend,
+ *             `src-tauri/src/unified_memory_v2/` pour le backend.
+ * Voir: docs/architecture/MEMORY_AUTHORITY_MAP.md
+ */
+
+/**
  * ═══════════════════════════════════════════════════════════════
  *   TITANE∞ v20.0Ω — Unified Memory Service
  *   Service unifié pour gérer la mémoire à trois niveaux (STM/MTM/LTM)

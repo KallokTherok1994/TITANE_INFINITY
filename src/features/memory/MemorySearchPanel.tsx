@@ -10,6 +10,7 @@
 
 import React, { useState, useMemo, useCallback } from 'react';
 import { Search, Filter, Clock, Tag } from 'lucide-react';
+import { useDebounce } from '@/hooks/useDebounce';
 import './MemorySearchPanel.css';
 
 interface MemoryEntry {
@@ -37,6 +38,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
   isLoading = false,
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
   const [selectedType, setSelectedType] = useState<string>('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [dateRange, setDateRange] = useState<string>('all');
@@ -52,7 +54,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
   }, [entries, isMockData]);
 
   const hasActiveFilters =
-    searchQuery.trim().length > 0 ||
+    debouncedSearchQuery.trim().length > 0 ||
     selectedType !== 'all' ||
     selectedTags.length > 0 ||
     dateRange !== 'all';
@@ -68,8 +70,8 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
     let filtered = memoryEntries;
 
     // Filtre par recherche
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase();
+    if (debouncedSearchQuery) {
+      const query = debouncedSearchQuery.toLowerCase();
       filtered = filtered.filter(
         entry =>
           entry.content.toLowerCase().includes(query) ||
@@ -105,7 +107,7 @@ export const MemorySearchPanel: React.FC<MemorySearchPanelProps> = ({
     }
 
     return filtered.sort((a, b) => (b.relevance || 0) - (a.relevance || 0));
-  }, [memoryEntries, searchQuery, selectedType, selectedTags, dateRange]);
+  }, [memoryEntries, debouncedSearchQuery, selectedType, selectedTags, dateRange]);
 
   // All available tags
   const availableTags = useMemo(() => {

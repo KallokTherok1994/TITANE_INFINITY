@@ -12,6 +12,7 @@ import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react'
 import Tree from 'react-d3-tree';
 import { Search, ZoomIn, ZoomOut, Maximize2 } from 'lucide-react';
 import { filterMemoryTree, type MemoryTreeNodeData } from './memoryTreeData';
+import { useDebounce } from '@/hooks/useDebounce';
 import './MemoryTreeViewer.css';
 
 interface MemoryTreeViewerProps {
@@ -35,6 +36,7 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
   const [zoom, setZoom] = useState(0.8);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
   const [searchTerm, setSearchTerm] = useState('');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
   const [selectedType, setSelectedType] = useState<string>('all');
 
   selectedHierarchyPointRef.current = null;
@@ -44,17 +46,17 @@ export const MemoryTreeViewer: React.FC<MemoryTreeViewerProps> = ({
       return null;
     }
 
-    return filterMemoryTree(data, searchTerm.trim(), selectedType);
-  }, [data, searchTerm, selectedType]);
+    return filterMemoryTree(data, debouncedSearchTerm.trim(), selectedType);
+  }, [data, debouncedSearchTerm, selectedType]);
   const isBootstrappingMemory = isLoading && !data;
   const hasPersistentTree = Boolean(data);
   const hasFilteredTree = Boolean(treeData);
 
   // Store searchTerm in ref to check match without re-creating callback
-  const searchTermRef = React.useRef(searchTerm);
+  const searchTermRef = React.useRef(debouncedSearchTerm);
   React.useEffect(() => {
-    searchTermRef.current = searchTerm;
-  }, [searchTerm]);
+    searchTermRef.current = debouncedSearchTerm;
+  }, [debouncedSearchTerm]);
 
   useEffect(() => {
     const updateDimensions = () => {
