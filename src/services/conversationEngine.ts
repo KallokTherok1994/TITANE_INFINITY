@@ -13,10 +13,7 @@
 import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
-import {
-  classifyMode,
-  resolveMode,
-} from '@/services/ai/omegaModeClassifier';
+import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
 import { RESPONSE_PROFILES } from '@/services/ai/responsePolicy';
 import type {
   OnlineDecision,
@@ -514,7 +511,10 @@ export async function processMessage(
     message: userMessage,
     userExplicitMode: options?.mode ?? 'default',
   });
-  const resolvedConversationMode = resolveMode(modeClassification, options?.mode ?? 'default');
+  const resolvedConversationMode = resolveMode(
+    modeClassification,
+    options?.mode ?? 'default'
+  );
 
   const conversationMode = resolvedConversationMode;
   const staticPromptContext = getStaticPromptContext(conversationMode);

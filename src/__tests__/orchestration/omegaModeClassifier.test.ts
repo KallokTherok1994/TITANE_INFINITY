@@ -74,16 +74,14 @@ describe('Lane A — Mode Classification', () => {
    */
   it('A3: architecture/dependency query → ARCHITECT or DEEP_REASONING', () => {
     const result = classifyMode({
-      message:
-        'Analyse les dépendances cycliques dans notre architecture de modules',
+      message: 'Analyse les dépendances cycliques dans notre architecture de modules',
     });
 
     const isDeepOrArchitect =
-      result.canonicalMode === 'ARCHITECT' ||
-      result.canonicalMode === 'DEEP_REASONING';
+      result.canonicalMode === 'ARCHITECT' || result.canonicalMode === 'DEEP_REASONING';
 
     expect(isDeepOrArchitect).toBe(true);
-    expect(result.confidence).toBeGreaterThanOrEqual(0.70);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.7);
     // Deep/Architect must not use low effort
     expect(result.effortLevel).not.toBe('low');
     // Anti-lie: effort must be coherent
@@ -96,8 +94,7 @@ describe('Lane A — Mode Classification', () => {
    */
   it('A4: system memory architecture → ARCHITECT', () => {
     const result = classifyMode({
-      message:
-        'Comment structurer notre système de mémoire pour le long terme?',
+      message: 'Comment structurer notre système de mémoire pour le long terme?',
     });
 
     expect(result.canonicalMode).toBe('ARCHITECT');
@@ -105,7 +102,7 @@ describe('Lane A — Mode Classification', () => {
     expect(result.backendMode).toBe('planning');
     expect(result.effortLevel).toBe('high');
     expect(result.modelClass).toBe('OPUS');
-    expect(result.confidence).toBeGreaterThanOrEqual(0.70);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.7);
     assertEffortCoherent(result);
   });
 
@@ -115,8 +112,7 @@ describe('Lane A — Mode Classification', () => {
    */
   it('A5: TypeError error message → REPAIR', () => {
     const result = classifyMode({
-      message:
-        "TypeError: Cannot read properties of null reading 'map' at line 42",
+      message: "TypeError: Cannot read properties of null reading 'map' at line 42",
     });
 
     expect(result.canonicalMode).toBe('REPAIR');
@@ -134,8 +130,7 @@ describe('Lane A — Mode Classification', () => {
    */
   it('A6: runtime verification request → CERTIFY', () => {
     const result = classifyMode({
-      message:
-        'Vérifie que le pipeline OMEGA fonctionne vraiment en runtime',
+      message: 'Vérifie que le pipeline OMEGA fonctionne vraiment en runtime',
     });
 
     expect(result.canonicalMode).toBe('CERTIFY');
@@ -143,7 +138,7 @@ describe('Lane A — Mode Classification', () => {
     expect(result.backendMode).toBe('debug_cognitive');
     expect(result.effortLevel).toBe('max');
     expect(result.modelClass).toBe('OPUS');
-    expect(result.confidence).toBeGreaterThanOrEqual(0.70);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.7);
     assertEffortCoherent(result);
   });
 
@@ -153,15 +148,14 @@ describe('Lane A — Mode Classification', () => {
    */
   it('A7: ideation/new directions → EXPLORATION', () => {
     const result = classifyMode({
-      message:
-        "Quelles nouvelles directions pourrions-nous explorer pour l'identité?",
+      message: "Quelles nouvelles directions pourrions-nous explorer pour l'identité?",
     });
 
     expect(result.canonicalMode).toBe('EXPLORATION');
     expect(result.profileId).toBe('BALANCED');
     expect(result.backendMode).toBe('brainstorming');
     expect(result.effortLevel).toBe('medium');
-    expect(result.confidence).toBeGreaterThanOrEqual(0.60);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.6);
   });
 });
 
@@ -174,13 +168,13 @@ describe('Lane A — Edge Cases', () => {
     const result = classifyMode({ message: 'ok' });
     expect(result.canonicalMode).toBe('DIRECT');
     expect(result.effortLevel).toBe('low');
-    expect(result.confidence).toBeGreaterThanOrEqual(0.70);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.7);
   });
 
   it('explicit brevity signal → DIRECT with high confidence', () => {
     const result = classifyMode({ message: 'réponds vite: quelle heure est-il?' });
     expect(result.canonicalMode).toBe('DIRECT');
-    expect(result.confidence).toBeGreaterThanOrEqual(0.80);
+    expect(result.confidence).toBeGreaterThanOrEqual(0.8);
   });
 
   it('multiple code error signals → REPAIR with very high confidence', () => {
@@ -196,7 +190,7 @@ describe('Lane A — Edge Cases', () => {
   it('multiple architect signals → ARCHITECT with high confidence', () => {
     const result = classifyMode({
       message:
-        "Structure notre architecture en modules avec une stratégie claire pour le long terme",
+        'Structure notre architecture en modules avec une stratégie claire pour le long terme',
     });
     expect(result.canonicalMode).toBe('ARCHITECT');
     expect(result.confidence).toBeGreaterThanOrEqual(0.85);
@@ -227,19 +221,14 @@ describe('Lane F — Stability x3', () => {
     },
     {
       label: 'architecture query',
-      message:
-        'Comment structurer notre système de mémoire pour le long terme?',
+      message: 'Comment structurer notre système de mémoire pour le long terme?',
     },
   ];
 
   testCases.forEach(({ label, message }) => {
     it(`F: ${label} — 3 runs produce identical output`, () => {
       const input = { message };
-      const results = [
-        classifyMode(input),
-        classifyMode(input),
-        classifyMode(input),
-      ];
+      const results = [classifyMode(input), classifyMode(input), classifyMode(input)];
 
       // All three must be identical
       expect(results[0].canonicalMode).toBe(results[1].canonicalMode);
@@ -296,7 +285,7 @@ describe('Lane B — Model Class Selection', () => {
 
   it('B5: EXPLORATION → SONNET', () => {
     const result = classifyMode({
-      message: "Quelles nouvelles directions pourrions-nous explorer?",
+      message: 'Quelles nouvelles directions pourrions-nous explorer?',
     });
     expect(result.canonicalMode).toBe('EXPLORATION');
     expect(result.modelClass).toBe('SONNET');
@@ -374,7 +363,7 @@ describe('Lane C — Memory Policy Coherence', () => {
 
   it('C5: EXPLORATION uses BALANCED profile (moderate memory)', () => {
     const result = classifyMode({
-      message: "Quelles nouvelles directions pourrions-nous explorer?",
+      message: 'Quelles nouvelles directions pourrions-nous explorer?',
     });
     expect(result.canonicalMode).toBe('EXPLORATION');
     expect(result.profileId).toBe('BALANCED');
@@ -407,7 +396,7 @@ describe('Lane D — Fallback Honesty', () => {
 
   it('D2: high confidence on default user → uses classified mode', () => {
     const repairResult = classifyMode({
-      message: "TypeError: Cannot read properties of null",
+      message: 'TypeError: Cannot read properties of null',
     });
     expect(repairResult.confidence).toBeGreaterThanOrEqual(0.7);
     const resolved = resolveMode(repairResult, 'default');
@@ -416,15 +405,15 @@ describe('Lane D — Fallback Honesty', () => {
 
   it('D3: REPAIR always overrides non-default user mode (safety)', () => {
     const repairResult = classifyMode({
-      message: "TypeError: undefined is not a function at line 20",
+      message: 'TypeError: undefined is not a function at line 20',
     });
     expect(repairResult.canonicalMode).toBe('REPAIR');
     expect(repairResult.confidence).toBeGreaterThanOrEqual(0.7);
 
-    const modes: Array<import('../../services/ai/omegaModeClassifier').BackendConversationMode> = [
-      'brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive',
-    ];
-    modes.forEach((userMode) => {
+    const modes: Array<
+      import('../../services/ai/omegaModeClassifier').BackendConversationMode
+    > = ['brainstorming', 'synthesis', 'planning', 'journal', 'debug_cognitive'];
+    modes.forEach(userMode => {
       const resolved = resolveMode(repairResult, userMode);
       expect(resolved).toBe('debug_cognitive');
     });
@@ -443,9 +432,12 @@ describe('Lane D — Fallback Honesty', () => {
   it('D5: non-safety mode does NOT override non-default user mode', () => {
     // EXPLORATION should NOT override a user who explicitly chose 'planning'
     const explorationResult = classifyMode({
-      message: "Quelles nouvelles directions pourrions-nous explorer?",
+      message: 'Quelles nouvelles directions pourrions-nous explorer?',
     });
-    if (explorationResult.canonicalMode === 'EXPLORATION' && explorationResult.confidence >= 0.7) {
+    if (
+      explorationResult.canonicalMode === 'EXPLORATION' &&
+      explorationResult.confidence >= 0.7
+    ) {
       const resolved = resolveMode(explorationResult, 'planning');
       expect(resolved).toBe('planning'); // user choice preserved
     }
@@ -466,7 +458,7 @@ describe('Lane D — Fallback Honesty', () => {
 
   it('D7: anti-lie — assertClassificationHonest does not throw for valid combinations', () => {
     const repairResult = classifyMode({
-      message: "TypeError: undefined is not a function",
+      message: 'TypeError: undefined is not a function',
     });
     const resolved = resolveMode(repairResult, 'default');
 
@@ -475,7 +467,6 @@ describe('Lane D — Fallback Honesty', () => {
   });
 
   it('D8: anti-lie — assertEffortCoherent passes for all canonical modes', () => {
-
     const testCases = [
       { message: 'fais court', mode: 'DIRECT' },
       { message: 'TypeError: undefined is not a function', mode: 'REPAIR' },
@@ -508,7 +499,7 @@ describe('Anti-lie assertions', () => {
 
   it('resolveMode uses auto mode when user is on default + confidence >= 0.7', () => {
     const repairResult = classifyMode({
-      message: "TypeError: Cannot read properties of null",
+      message: 'TypeError: Cannot read properties of null',
     });
     expect(repairResult.confidence).toBeGreaterThanOrEqual(0.7);
     const resolved = resolveMode(repairResult, 'default');
@@ -517,7 +508,7 @@ describe('Anti-lie assertions', () => {
 
   it('REPAIR overrides non-default user mode (safety signal)', () => {
     const repairResult = classifyMode({
-      message: "TypeError: undefined is not a function at line 20",
+      message: 'TypeError: undefined is not a function at line 20',
     });
     expect(repairResult.canonicalMode).toBe('REPAIR');
     // Even if user is on 'brainstorming', REPAIR overrides

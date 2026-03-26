@@ -5,27 +5,55 @@
   "description": "Champion/Challenger registry — OMEGA Lock #2. Tracks current champion providers per canonical mode and registered challengers for A/B comparison.",
   "updated": "2026-03-26",
   "champions": {
-    "DIRECT": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.80 },
-    "CLARIFY_LIGHT": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.68 },
-    "DEEP_REASONING": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.85 },
+    "DIRECT": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.8 },
+    "CLARIFY_LIGHT": {
+      "provider": "ollama",
+      "model": "sonnet",
+      "confidence_threshold": 0.68
+    },
+    "DEEP_REASONING": {
+      "provider": "gemini",
+      "model": "opus",
+      "confidence_threshold": 0.85
+    },
     "ARCHITECT": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.87 },
-    "REPAIR": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.80 },
+    "REPAIR": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.8 },
     "CERTIFY": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.88 },
-    "EXPLORATION": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.67 },
-    "SHADOW_LEARNING": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 1.0 }
+    "EXPLORATION": {
+      "provider": "ollama",
+      "model": "sonnet",
+      "confidence_threshold": 0.67
+    },
+    "SHADOW_LEARNING": {
+      "provider": "ollama",
+      "model": "sonnet",
+      "confidence_threshold": 1.0
+    }
   },
   "challengers": {
     "DIRECT": [
-      { "provider": "gemini", "model": "haiku", "rationale": "Lower latency for simple queries" }
+      {
+        "provider": "gemini",
+        "model": "haiku",
+        "rationale": "Lower latency for simple queries"
+      }
     ],
     "DEEP_REASONING": [
       { "provider": "claude", "model": "opus", "rationale": "Stronger chain-of-thought" }
     ],
     "ARCHITECT": [
-      { "provider": "claude", "model": "opus", "rationale": "Better system design synthesis" }
+      {
+        "provider": "claude",
+        "model": "opus",
+        "rationale": "Better system design synthesis"
+      }
     ],
     "CERTIFY": [
-      { "provider": "openai", "model": "opus", "rationale": "Native reasoning_effort=max support" }
+      {
+        "provider": "openai",
+        "model": "opus",
+        "rationale": "Native reasoning_effort=max support"
+      }
     ]
   },
   "comparison": {

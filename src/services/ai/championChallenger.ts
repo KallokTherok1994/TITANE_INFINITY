@@ -90,11 +90,11 @@ export function loadRegistry(): ChampionChallengerRegistry {
     version: '1.0.0',
     lock: '#2',
     champions: {
-      DIRECT: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.80 },
+      DIRECT: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.8 },
       CLARIFY_LIGHT: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.68 },
       DEEP_REASONING: { provider: 'gemini', model: 'opus', confidence_threshold: 0.85 },
       ARCHITECT: { provider: 'gemini', model: 'opus', confidence_threshold: 0.87 },
-      REPAIR: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.80 },
+      REPAIR: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.8 },
       CERTIFY: { provider: 'gemini', model: 'opus', confidence_threshold: 0.88 },
       EXPLORATION: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.67 },
       SHADOW_LEARNING: { provider: 'ollama', model: 'sonnet', confidence_threshold: 1.0 },
@@ -103,7 +103,9 @@ export function loadRegistry(): ChampionChallengerRegistry {
       DIRECT: [{ provider: 'gemini', model: 'haiku', rationale: 'Lower latency' }],
       DEEP_REASONING: [{ provider: 'claude', model: 'opus', rationale: 'Stronger CoT' }],
       ARCHITECT: [{ provider: 'claude', model: 'opus', rationale: 'Better synthesis' }],
-      CERTIFY: [{ provider: 'openai', model: 'opus', rationale: 'Native reasoning_effort' }],
+      CERTIFY: [
+        { provider: 'openai', model: 'opus', rationale: 'Native reasoning_effort' },
+      ],
     },
     comparison: {
       enabled: false,

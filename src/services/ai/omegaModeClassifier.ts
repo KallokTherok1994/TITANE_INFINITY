@@ -27,13 +27,13 @@ import { RESPONSE_PROFILES, estimateComplexity } from './responsePolicy';
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type CanonicalMode =
-  | 'DIRECT'         // simple factual/practical, low ambiguity, fast
-  | 'CLARIFY_LIGHT'  // ambiguity exists but answerable, one clarifier if needed
+  | 'DIRECT' // simple factual/practical, low ambiguity, fast
+  | 'CLARIFY_LIGHT' // ambiguity exists but answerable, one clarifier if needed
   | 'DEEP_REASONING' // complex reasoning, synthesis, long chains
-  | 'ARCHITECT'      // system design, long-term coherence, module interactions
-  | 'REPAIR'         // isolate blocker, reproduce, patch minimally
-  | 'CERTIFY'        // validate runtime truth, run tests/evals/gates
-  | 'EXPLORATION'    // ideation, options, possible paths
+  | 'ARCHITECT' // system design, long-term coherence, module interactions
+  | 'REPAIR' // isolate blocker, reproduce, patch minimally
+  | 'CERTIFY' // validate runtime truth, run tests/evals/gates
+  | 'EXPLORATION' // ideation, options, possible paths
   | 'SHADOW_LEARNING'; // observe only, never promoted (set programmatically)
 
 // Backend ConversationMode values (must match Rust enum exactly)
@@ -158,69 +158,194 @@ const CANONICAL_MODE_SPECS: Record<CanonicalMode, ModeSpec> = {
 /** REPAIR: code errors, exceptions, broken behavior */
 const REPAIR_SIGNALS = [
   // Error type markers
-  'typeerror', 'syntaxerror', 'referenceerror', 'rangeerror', 'uncaught',
-  'cannot read', 'undefined is not', 'null is not', 'is not a function',
-  'is not defined', 'unexpected token', 'module not found',
+  'typeerror',
+  'syntaxerror',
+  'referenceerror',
+  'rangeerror',
+  'uncaught',
+  'cannot read',
+  'undefined is not',
+  'null is not',
+  'is not a function',
+  'is not defined',
+  'unexpected token',
+  'module not found',
   // Error reporting patterns
-  'stack trace', 'at line', 'at column', 'error:', 'exception:',
+  'stack trace',
+  'at line',
+  'at column',
+  'error:',
+  'exception:',
   // Action verbs for repair
-  'répare', 'corrige', 'fix', 'debug', 'résous', 'solve', 'broken',
-  'ne fonctionne pas', 'ça bug', 'ça plante', 'cassé', 'crash',
-  'ne marche pas', 'ne compile pas', 'build failed', 'compile error',
-  'regression', 'régressio',
+  'répare',
+  'corrige',
+  'fix',
+  'debug',
+  'résous',
+  'solve',
+  'broken',
+  'ne fonctionne pas',
+  'ça bug',
+  'ça plante',
+  'cassé',
+  'crash',
+  'ne marche pas',
+  'ne compile pas',
+  'build failed',
+  'compile error',
+  'regression',
+  'régressio',
 ];
 
 /** CERTIFY: validation, proof, gate checks, runtime verification */
 const CERTIFY_SIGNALS = [
-  'vérifie', 'verifi', 'prouve', 'certifie', 'valide', 'validate',
-  'certify', 'confirm', 'gate', 'gates', 'proof', 'preuve',
-  'est-ce que ça marche', 'fonctionne vraiment', 'réellement',
-  'runtime proof', 'test de vérité', 'est-ce prouvé', 'est prouvé',
-  'vérification', 'en runtime', 'en prod', 'en production',
-  'audit', 'contrôle', 'assertion', 'invariant',
+  'vérifie',
+  'verifi',
+  'prouve',
+  'certifie',
+  'valide',
+  'validate',
+  'certify',
+  'confirm',
+  'gate',
+  'gates',
+  'proof',
+  'preuve',
+  'est-ce que ça marche',
+  'fonctionne vraiment',
+  'réellement',
+  'runtime proof',
+  'test de vérité',
+  'est-ce prouvé',
+  'est prouvé',
+  'vérification',
+  'en runtime',
+  'en prod',
+  'en production',
+  'audit',
+  'contrôle',
+  'assertion',
+  'invariant',
 ];
 
 /** CLARIFY_LIGHT: vague/ambiguous requests without enough context */
 const AMBIGUITY_SIGNALS = [
-  'quelque chose', 'un truc', 'un machin', 'une chose', 'ça',
-  'fais-le', 'occupe-toi', 'gère ça', 'règle ça', 'traite ça',
-  'improve it', 'make it better', 'fix it', 'do something',
-  'je ne sais pas', 'sais pas trop', 'pas sûr', 'peut-être',
+  'quelque chose',
+  'un truc',
+  'un machin',
+  'une chose',
+  'ça',
+  'fais-le',
+  'occupe-toi',
+  'gère ça',
+  'règle ça',
+  'traite ça',
+  'improve it',
+  'make it better',
+  'fix it',
+  'do something',
+  'je ne sais pas',
+  'sais pas trop',
+  'pas sûr',
+  'peut-être',
 ];
 
 /** EXPLORATION: ideation, possibilities, directions */
 const EXPLORATION_SIGNALS = [
-  'idées', 'ideas', 'options', 'possibilités', 'possibilities',
-  'nouvelles directions', 'new directions', 'explorer', 'explore',
-  'quelles pistes', 'what if', 'et si', 'imaginons', 'imagine',
-  'brainstorm', 'réfléchissons', "qu'est-ce qu'on pourrait",
-  'propose-moi', 'suggère', 'suggest', 'inspire', 'créatif', 'creative',
+  'idées',
+  'ideas',
+  'options',
+  'possibilités',
+  'possibilities',
+  'nouvelles directions',
+  'new directions',
+  'explorer',
+  'explore',
+  'quelles pistes',
+  'what if',
+  'et si',
+  'imaginons',
+  'imagine',
+  'brainstorm',
+  'réfléchissons',
+  "qu'est-ce qu'on pourrait",
+  'propose-moi',
+  'suggère',
+  'suggest',
+  'inspire',
+  'créatif',
+  'creative',
 ];
 
 /** DEEP_REASONING: complex analysis, synthesis, long reasoning chains */
 const DEEP_REASONING_SIGNALS = [
-  'analyse en profondeur', 'en détail', 'explique bien',
-  'approfondi', 'développe', 'détaille', 'complet', 'exhaustif',
-  'examine', 'creuse', 'deep dive', 'comprehensive', 'thorough',
-  'elaborate', 'pourquoi', 'comment fonctionne', 'mécanisme',
-  'dépendances', 'interactions', 'complexe', 'implications',
+  'analyse en profondeur',
+  'en détail',
+  'explique bien',
+  'approfondi',
+  'développe',
+  'détaille',
+  'complet',
+  'exhaustif',
+  'examine',
+  'creuse',
+  'deep dive',
+  'comprehensive',
+  'thorough',
+  'elaborate',
+  'pourquoi',
+  'comment fonctionne',
+  'mécanisme',
+  'dépendances',
+  'interactions',
+  'complexe',
+  'implications',
 ];
 
 /** ARCHITECT: system design, structure, long-term coherence */
 const ARCHITECT_SIGNALS = [
-  'structure', 'organise', 'architecture', 'stratégie', 'priorités',
-  'axes', 'incohérence', 'incoherence', 'décision',
-  'structure-moi', 'synthèse stratégique', "plan d'action",
-  'cartographie', 'framework', 'roadmap', 'blueprint',
-  'long terme', 'long-term', 'conception', 'design système',
-  'module', 'dépendances cycliques', 'couplage', 'cohésion',
+  'structure',
+  'organise',
+  'architecture',
+  'stratégie',
+  'priorités',
+  'axes',
+  'incohérence',
+  'incoherence',
+  'décision',
+  'structure-moi',
+  'synthèse stratégique',
+  "plan d'action",
+  'cartographie',
+  'framework',
+  'roadmap',
+  'blueprint',
+  'long terme',
+  'long-term',
+  'conception',
+  'design système',
+  'module',
+  'dépendances cycliques',
+  'couplage',
+  'cohésion',
 ];
 
 /** DIRECT: short, simple factual, explicit speed signals */
 const DIRECT_SIGNALS = [
-  'fais court', 'réponds vite', 'vite', 'rapide', 'en bref',
-  "l'essentiel", 'donne-moi juste', 'simplement', 'en une phrase',
-  'quick', 'brief', 'short answer', 'tldr', 'tl;dr',
+  'fais court',
+  'réponds vite',
+  'vite',
+  'rapide',
+  'en bref',
+  "l'essentiel",
+  'donne-moi juste',
+  'simplement',
+  'en une phrase',
+  'quick',
+  'brief',
+  'short answer',
+  'tldr',
+  'tl;dr',
 ];
 
 /** FACTUAL_QUESTION: simple who/what/when/where questions → DIRECT */
@@ -233,25 +358,57 @@ const FACTUAL_QUESTION_PATTERNS = [
 
 /** CODE_REVIEW: review, audit, refactor signals → ARCHITECT or DEEP */
 const CODE_REVIEW_SIGNALS = [
-  'review', 'code review', 'revue de code', 'audit',
-  'refactor', 'réusine', 'nettoie', 'clean up',
-  'qualité', 'quality', 'smell', 'dette technique',
-  'technical debt', 'couplage', 'coupling', 'cohésion',
+  'review',
+  'code review',
+  'revue de code',
+  'audit',
+  'refactor',
+  'réusine',
+  'nettoie',
+  'clean up',
+  'qualité',
+  'quality',
+  'smell',
+  'dette technique',
+  'technical debt',
+  'couplage',
+  'coupling',
+  'cohésion',
 ];
 
 /** TEST_REQUEST: test writing, test running signals → CERTIFY */
 const TEST_SIGNALS = [
-  'test', 'tests', 'écris un test', 'write a test',
-  'lance les tests', 'run tests', 'couverture', 'coverage',
-  'jest', 'vitest', 'playwright', 'e2e', 'unit test',
-  'integration test', 'test de charge', 'load test',
+  'test',
+  'tests',
+  'écris un test',
+  'write a test',
+  'lance les tests',
+  'run tests',
+  'couverture',
+  'coverage',
+  'jest',
+  'vitest',
+  'playwright',
+  'e2e',
+  'unit test',
+  'integration test',
+  'test de charge',
+  'load test',
 ];
 
 /** CONFIG_CHANGE: configuration, setup, env signals → ARCHITECT */
 const CONFIG_SIGNALS = [
-  'config', 'configuration', 'env', 'environment',
-  'variable d\'environnement', 'env var', 'settings',
-  'paramètre', 'option', 'flag', 'feature flag',
+  'config',
+  'configuration',
+  'env',
+  'environment',
+  "variable d'environnement",
+  'env var',
+  'settings',
+  'paramètre',
+  'option',
+  'flag',
+  'feature flag',
 ];
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -315,10 +472,15 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   const repairHits = detectSignals(msgLower, REPAIR_SIGNALS);
   if (repairHits.length >= 2) {
     // Multiple error signals = high confidence repair
-    return buildResult('REPAIR', 0.92, 'CODE_ERROR_SIGNAL_STRONG', repairHits.slice(0, 3));
+    return buildResult(
+      'REPAIR',
+      0.92,
+      'CODE_ERROR_SIGNAL_STRONG',
+      repairHits.slice(0, 3)
+    );
   }
   if (repairHits.length === 1) {
-    return buildResult('REPAIR', 0.80, 'CODE_ERROR_SIGNAL', repairHits);
+    return buildResult('REPAIR', 0.8, 'CODE_ERROR_SIGNAL', repairHits);
   }
   // Backtick presence + repair-adjacent context
   const hasBackticks = (msg.match(/`[^`]+`/g) ?? []).length >= 2;
@@ -339,7 +501,12 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // ── RULE 3: ARCHITECT ──
   const architectHits = detectSignals(msgLower, ARCHITECT_SIGNALS);
   if (architectHits.length >= 2) {
-    return buildResult('ARCHITECT', 0.87, 'ARCHITECT_SIGNAL_STRONG', architectHits.slice(0, 3));
+    return buildResult(
+      'ARCHITECT',
+      0.87,
+      'ARCHITECT_SIGNAL_STRONG',
+      architectHits.slice(0, 3)
+    );
   }
   if (architectHits.length === 1) {
     return buildResult('ARCHITECT', 0.73, 'ARCHITECT_SIGNAL', architectHits);
@@ -355,7 +522,12 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // ── RULE 5: EXPLORATION ──
   const explorationHits = detectSignals(msgLower, EXPLORATION_SIGNALS);
   if (explorationHits.length >= 2) {
-    return buildResult('EXPLORATION', 0.83, 'EXPLORATION_SIGNAL_STRONG', explorationHits.slice(0, 3));
+    return buildResult(
+      'EXPLORATION',
+      0.83,
+      'EXPLORATION_SIGNAL_STRONG',
+      explorationHits.slice(0, 3)
+    );
   }
   if (explorationHits.length === 1) {
     return buildResult('EXPLORATION', 0.67, 'EXPLORATION_SIGNAL', explorationHits);
@@ -364,7 +536,12 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // ── RULE 6: DEEP_REASONING ──
   const deepHits = detectSignals(msgLower, DEEP_REASONING_SIGNALS);
   if (deepHits.length >= 2) {
-    return buildResult('DEEP_REASONING', 0.85, 'DEEP_SIGNAL_STRONG', deepHits.slice(0, 3));
+    return buildResult(
+      'DEEP_REASONING',
+      0.85,
+      'DEEP_SIGNAL_STRONG',
+      deepHits.slice(0, 3)
+    );
   }
   if (deepHits.length === 1) {
     return buildResult('DEEP_REASONING', 0.75, 'DEEP_SIGNAL', deepHits);
@@ -373,7 +550,12 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // ── RULE 5b: CODE_REVIEW signals → ARCHITECT or DEEP ──
   const codeReviewHits = detectSignals(msgLower, CODE_REVIEW_SIGNALS);
   if (codeReviewHits.length >= 2) {
-    return buildResult('ARCHITECT', 0.82, 'CODE_REVIEW_STRONG', codeReviewHits.slice(0, 3));
+    return buildResult(
+      'ARCHITECT',
+      0.82,
+      'CODE_REVIEW_STRONG',
+      codeReviewHits.slice(0, 3)
+    );
   }
   if (codeReviewHits.length === 1) {
     return buildResult('DEEP_REASONING', 0.72, 'CODE_REVIEW_SIGNAL', codeReviewHits);
@@ -391,7 +573,7 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // ── RULE 5d: CONFIG signals → ARCHITECT ──
   const configHits = detectSignals(msgLower, CONFIG_SIGNALS);
   if (configHits.length >= 2) {
-    return buildResult('ARCHITECT', 0.80, 'CONFIG_SIGNAL_STRONG', configHits.slice(0, 3));
+    return buildResult('ARCHITECT', 0.8, 'CONFIG_SIGNAL_STRONG', configHits.slice(0, 3));
   }
 
   // ── RULE 7: DIRECT (explicit brevity signals) ──
@@ -404,7 +586,9 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   // Captures "Qui est X?", "Quelle est la date?", "C'est quoi X?"
   const isFactualQuestion = FACTUAL_QUESTION_PATTERNS.some(p => p.test(msg));
   if (isFactualQuestion && msgLen <= 120) {
-    return buildResult('DIRECT', 0.75, 'FACTUAL_QUESTION_PATTERN', ['question_type_match']);
+    return buildResult('DIRECT', 0.75, 'FACTUAL_QUESTION_PATTERN', [
+      'question_type_match',
+    ]);
   }
 
   // Ultra-short message (≤ 8 chars) → DIRECT
@@ -417,14 +601,19 @@ export function classifyMode(input: ClassifierInput): ModeClassification {
   if (isSimpleQuestion) {
     const complexity = estimateComplexity(msg);
     if (complexity < 0.5) {
-      return buildResult('DIRECT', 0.72, 'SHORT_SIMPLE_QUESTION', ['ends_with_question_mark', `len:${msgLen}`]);
+      return buildResult('DIRECT', 0.72, 'SHORT_SIMPLE_QUESTION', [
+        'ends_with_question_mark',
+        `len:${msgLen}`,
+      ]);
     }
   }
 
   // ── RULE 8: Complexity-based fallback ──
   const complexity = estimateComplexity(msg);
   if (complexity > 0.72) {
-    return buildResult('DEEP_REASONING', 0.65, 'HIGH_COMPLEXITY_FALLBACK', [`complexity:${complexity.toFixed(2)}`]);
+    return buildResult('DEEP_REASONING', 0.65, 'HIGH_COMPLEXITY_FALLBACK', [
+      `complexity:${complexity.toFixed(2)}`,
+    ]);
   }
 
   // Safe default: DIRECT at low confidence (caller may override with user mode)
@@ -456,7 +645,10 @@ export function resolveMode(
   // User is on non-default mode: respect their choice
   if (userExplicitMode !== 'default') {
     // Exception: REPAIR and CERTIFY are safety signals that always override
-    if (classification.canonicalMode === 'REPAIR' || classification.canonicalMode === 'CERTIFY') {
+    if (
+      classification.canonicalMode === 'REPAIR' ||
+      classification.canonicalMode === 'CERTIFY'
+    ) {
       return classification.backendMode;
     }
     return userExplicitMode;
@@ -475,7 +667,9 @@ export function resolveMode(
  * This is set programmatically (never auto-classified from user input).
  */
 export function shadowLearningMode(): ModeClassification {
-  return buildResult('SHADOW_LEARNING', 1.0, 'PROGRAMMATIC_SHADOW', ['shadow_learning_mode']);
+  return buildResult('SHADOW_LEARNING', 1.0, 'PROGRAMMATIC_SHADOW', [
+    'shadow_learning_mode',
+  ]);
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -491,16 +685,22 @@ export function assertClassificationHonest(
   resolvedBackendMode: BackendConversationMode
 ): void {
   // If high confidence, resolved mode must match classification
-  if (classification.confidence >= 0.7 && resolvedBackendMode === classification.backendMode) {
+  if (
+    classification.confidence >= 0.7 &&
+    resolvedBackendMode === classification.backendMode
+  ) {
     // Consistent — pass
     return;
   }
   // If low confidence, resolved mode should be user mode (not classification)
-  if (classification.confidence < 0.7 && resolvedBackendMode === classification.backendMode) {
+  if (
+    classification.confidence < 0.7 &&
+    resolvedBackendMode === classification.backendMode
+  ) {
     throw new Error(
       `[OmegaClassifier] Anti-lie: classification confidence ${classification.confidence} < 0.7 ` +
-      `but resolved to classification.backendMode='${classification.backendMode}'. ` +
-      `User mode should have been preserved.`
+        `but resolved to classification.backendMode='${classification.backendMode}'. ` +
+        `User mode should have been preserved.`
     );
   }
 }
@@ -510,10 +710,13 @@ export function assertClassificationHonest(
  */
 export function assertEffortCoherent(classification: ModeClassification): void {
   const highEffortModes: CanonicalMode[] = ['ARCHITECT', 'CERTIFY', 'DEEP_REASONING'];
-  if (highEffortModes.includes(classification.canonicalMode) && classification.effortLevel === 'low') {
+  if (
+    highEffortModes.includes(classification.canonicalMode) &&
+    classification.effortLevel === 'low'
+  ) {
     throw new Error(
       `[OmegaClassifier] Anti-lie: mode ${classification.canonicalMode} has effort 'low'. ` +
-      `Expected: high or max.`
+        `Expected: high or max.`
     );
   }
 }
