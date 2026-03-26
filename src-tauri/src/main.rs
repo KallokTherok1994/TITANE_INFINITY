@@ -2012,12 +2012,18 @@ fn main() {
             audio::commands::vad_test,
             // E2E Audio Truth System
             audio::commands::tts_generate_test_buffer,
-            // Audio Capture Commands (6) - ✅ AH-0093 FIX: audio-capture feature (default)
+            // Audio Capture Commands (6) - opt-in feature (requires libasound2-dev)
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_start,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_stop,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_status,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_get_chunk,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_export_wav,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_list_devices,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
