@@ -171,8 +171,7 @@ mod web_research_commands {
     include!("commands/web_research.rs");
 }
 mod audio {
-    // Re-export types from lib for inline modules
-    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+    // Audio types are used directly in audio/*.rs modules via titane_infinity::audio
     
     pub mod capture {
         include!("audio/capture.rs");
