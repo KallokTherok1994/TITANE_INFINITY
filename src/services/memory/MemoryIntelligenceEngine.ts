@@ -12,6 +12,9 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
+// TODO(MEMORY-P2): migrate to canonical services/unified/UnifiedMemory.ts
+// Blocked by interface incompatibility: MemoryEntry vs UnifiedMemoryEntry (different fields)
+// Scope: ~20 usages across 1082 lines — requires dedicated migration session
 import { getUnifiedMemory, MemoryEntry } from './UnifiedMemoryService';
 import { awardExperience } from '../experienceService';
 import { XPSource, XP_REWARDS } from '../../types/experience';
