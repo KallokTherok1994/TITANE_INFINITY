@@ -23,7 +23,7 @@ Classes: `KEEP_CORE` | `KEEP_LAZY` | `LABS_ONLY` | `DELETE_CANDIDATE`
 | `framer-motion` | 12.34.3 | UI animations | 58 fichiers src/ | **KEEP_LAZY** | P2 | Tree-shakeable via Vite. Conserver — animations UI répandues |
 | `three` (three.js) | 0.183.2 | 3D engine | `src/modules/avatar/` uniquement (4 fichiers) | **LABS_ONLY** | P1 | Isolation dans avatar module — ThreeJSLazyLoader déjà présent. Lazy-loaded correctement. |
 | `react-d3-tree` | 3.6.6 | Tree viz | `src/features/memory/MemoryTreeViewer.tsx` | **KEEP_LAZY** | P2 | Import direct — mémoire UI. Acceptable. |
-| `recharts` | 3.8.0 | Charts | **0 imports dans src/** | **DELETE_CANDIDATE** | P2 | `grep` → 0 résultats dans src/**/*.{ts,tsx}. Peut être dans stories/storybook uniquement. Auditer avant suppression. |
+| `recharts` | 3.8.0 | Charts | `src/components/performance/MetricsGraph.tsx` (lazy imports réels), mention dans MemorySearchPanel/VisionMetricsChart/RealTimeCharts (commentaires/strings) | **KEEP_LAZY** | P2 | 4 fichiers grep positifs. MetricsGraph.tsx = lazy-loaded (import dynamique). DELETE_CANDIDATE infirmé. |
 
 ---
 
@@ -70,12 +70,7 @@ Classes: `KEEP_CORE` | `KEEP_LAZY` | `LABS_ONLY` | `DELETE_CANDIDATE`
    - Impact: `pnpm run dev` sans audio ne serait pas affecté si cpal est opt-in
    - Note: `audio-capture = ["cpal"]` est dans default → changer `default = ["custom-protocol", "mock"]` et laisser audio opt-in
 
-3. **`recharts` (0 usages dans src/)**: vérifier si présent dans storybook/stories/ uniquement.
-   ```bash
-   grep -r "recharts" src/stories/ --include="*.ts" --include="*.tsx" -l
-   grep -r "recharts" e2e/ tests/ -l
-   ```
-   Si 0 usages: DELETE_CANDIDATE confirmé → `pnpm remove recharts`
+3. **`recharts` (KEEP_LAZY — reclassé)**: 4 fichiers confirment l'usage. `MetricsGraph.tsx` utilise recharts via lazy imports dynamiques (`import('recharts').then(...)`). Les autres fichiers ont des commentaires ou references string. Pas de suppression. ~~DELETE_CANDIDATE~~ → **KEEP_LAZY**.
 
 ### P2 — À traiter dans les prochaines sessions
 
@@ -93,7 +88,7 @@ Classes: `KEEP_CORE` | `KEEP_LAZY` | `LABS_ONLY` | `DELETE_CANDIDATE`
 | KEEP_CORE | 8 | hnsw_rs, tantivy, rusqlite, reqwest, framer-motion, @xenova/transformers, plugin-http (Rust), lru/dashmap/smallvec |
 | KEEP_LAZY | 2 | react-d3-tree, framer-motion |
 | LABS_ONLY | 3 | three, ort, ndarray/rustfft/image |
-| DELETE_CANDIDATE | 1 | recharts (0 usages src/ — à confirmer) |
+| DELETE_CANDIDATE | 0 | — (recharts reclassé KEEP_LAZY après grep exhaustif) |
 | RISK FLAG P1 | 2 | better-sqlite3 (Node.js vs Tauri WebView), cpal (default feature) |
 
 ---

@@ -50,7 +50,7 @@ Ces actions déplacent des fichiers et cassent des imports. Attendent:
 | Déplacer `features/vision/` → `src-labs/vision/` | `src/features/vision/` | `src-labs/vision/` | Imports à mettre à jour | P3, longue durée |
 | Déplacer `modules/avatar/` → `src-labs/avatar/` | `src/modules/avatar/` | `src-labs/avatar/` | Imports 3D lourds | P3 |
 | Isoler `services/memory/UnifiedMemoryService.ts` | — | `src-labs/memory-legacy/` | MemoryIntelligenceEngine à réviser | P2, après commit MIE |
-| Supprimer `recharts` | — | — | Confirmer 0 usage dans stories/storybook | P2 |
+| ~~Supprimer `recharts`~~ | — | — | **ANNULÉ** — 4 fichiers confirment usage réel (MetricsGraph.tsx lazy-load) | — |
 | Retirer `cpal` de default Cargo features | `Cargo.toml` | — | Test build sans ALSA | P1, session dédiée |
 
 ---
