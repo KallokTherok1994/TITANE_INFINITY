@@ -15,14 +15,13 @@
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState, Suspense, lazy, useMemo, useCallback } from 'react';
+import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
 import {
   BrowserRouter,
   Routes,
   Route,
   Navigate,
   useLocation,
-  useNavigate,
 } from 'react-router-dom';
 import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
@@ -31,7 +30,7 @@ import { ThemeProvider } from './themes/ThemeProvider';
 import { UIThemeProvider } from './features/design-center';
 import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
-import { AppShell, TopNav, createTopNavItems } from '@components/layout';
+import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
@@ -56,6 +55,7 @@ import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ 
 // Sidebar state removed in UI vΩ - Navigation moved to TopNav
 // import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
 import { useAppInitialization } from './hooks/useAppInitialization';
+import { useTopNavigation } from './hooks/useTopNavigation';
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
@@ -275,8 +275,6 @@ const emitBootMarker = (marker: string): void => {
  */
 const AppRouter: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
   useEffect(() => {
     emitBootMarker('BOOT:AFTER_ROUTER');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
@@ -411,66 +409,8 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // ✨ UI vΩ: TopNav items - Navigation horizontale (max 5 visibles)
-  const topNavSections = useMemo(
-    () => [
-      // ═══ PRINCIPAL ═══
-      {
-        id: 'titane',
-        label: 'TITANE',
-        route: '/titane',
-        description: 'Le Cœur du Système',
-      },
-      {
-        id: 'time',
-        label: 'TIME',
-        route: '/time',
-        description: 'Centre Temporel',
-      },
-      {
-        id: 'admin',
-        label: 'ADMIN',
-        route: '/admin',
-        description: 'Centre Admin Unifié',
-      },
-      {
-        id: 'dev',
-        label: 'DEV',
-        route: '/dev',
-        description: 'Centre DEV Unifié',
-      },
-      // Dans menu "Plus"
-      {
-        id: 'fusion',
-        label: 'FUSION',
-        route: '/fusion',
-        description: 'Backend/Frontend Fusion',
-      },
-      {
-        id: 'optimization',
-        label: 'OPTIMIZE',
-        route: '/optimization',
-        description: 'Performance Ultime',
-      },
-      {
-        id: 'total-dev',
-        label: 'TOTAL DEV',
-        route: '/total-dev',
-        description: 'Espace DEV souverain TITANE∞ — accès restreint',
-      },
-    ],
-    []
-  );
-
-  const topNavItems = useMemo(() => createTopNavItems(topNavSections), [topNavSections]);
-
-  // ✨ UI vΩ: Navigation handler
-  const handleNavigate = useCallback(
-    (route: string) => {
-      navigate(route);
-    },
-    [navigate]
-  );
+  // ✨ UI vΩ: TopNav items + navigation (extracted to useTopNavigation hook)
+  const { topNavSections, topNavItems, handleNavigate } = useTopNavigation();
 
   // ✨ v19.5.2 - Handler onboarding completion
   // ✨ v24.2.1: useCallback for stable reference
