@@ -65,7 +65,37 @@ export const XP = {
       console.log(`🎉 [XP] Level UP! ${previousLevel} → ${XP.state.level}`);
     }
 
+    // Synchroniser avec experienceService (Tauri backend)
+    try {
+      import('../../services/experienceService').then(({ awardExperience }) => {
+        const domain = XP.mapSourceToDomain(source);
+        void awardExperience(domain, amount, source, { description });
+      }).catch(() => {
+        // Fallback silencieux si experienceService non disponible
+      });
+    } catch {
+      // Ignorer les erreurs de synchronisation
+    }
+
     XP.persist();
+  },
+
+  /**
+   * Mapper la source XP vers un domaine experienceService
+   */
+  mapSourceToDomain(source: string): string {
+    const map: Record<string, string> = {
+      message_user: 'chat',
+      chat_message: 'chat',
+      response_ai: 'cognitive',
+      file_import: 'memory',
+      file_analysis: 'memory',
+      memory_promote: 'memory',
+      memory_archive: 'memory',
+      system_update: 'system',
+      engine_load: 'system',
+    };
+    return map[source] || 'system';
   },
 
   /**
