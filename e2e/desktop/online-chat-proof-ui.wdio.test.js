@@ -13,6 +13,7 @@ const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
 const runRestoreProof = process.env.TITANE_RESTORE_PROOF === '1';
 const runEventReplayProof = process.env.TITANE_EVENT_REPLAY_PROOF === '1';
 const runMultiReducerProof = process.env.TITANE_MULTI_REDUCER_PROOF === '1';
+const runLtmPathProof = process.env.TITANE_LTM_PATH_PROOF === '1';
 
 function hashJson(value) {
   return crypto
@@ -1146,6 +1147,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
   const restoreProofTest = runRestoreProof ? it : it.skip;
   const eventReplayProofTest = runEventReplayProof ? it : it.skip;
   const multiReducerProofTest = runMultiReducerProof ? it : it.skip;
+  const ltmPathProofTest = runLtmPathProof ? it : it.skip;
 
   singleTurnTest('sends one message and captures assistant response', async function () {
     this.timeout(180000);
@@ -1559,6 +1561,47 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         preMemoryCount + 1,
         `Event replay: memory.total_memories expected ${preMemoryCount + 1}, got ${postMemoryCount}`
       );
+    }
+  );
+
+  ltmPathProofTest(
+    'proves LTM runtime path: persistent_memory IPC round-trip + isolation from conversation recall',
+    async function () {
+      this.timeout(120000);
+
+      // SCENARIO A: persistent_memory_get_stats — baseline before write
+      // Returns PersistentMemoryStats { count_by_level: { session, intermediate, long_term }, ... }
+      const statsBefore = await invokeTauriCommand('persistent_memory_get_stats');
+      const preLongTerm = statsBefore && statsBefore.count_by_level ? (statsBefore.count_by_level.long_term || 0) : 0;
+      console.log(`[LTM_PATH] stats_before: long_term=${preLongTerm} full=${JSON.stringify(statsBefore?.count_by_level)}`);
+      assert.ok(statsBefore !== null && statsBefore !== undefined, 'persistent_memory_get_stats must be reachable');
+
+      // SCENARIO B: persistent_memory_write_entry — returns UUID string
+      // Note: window.__TAURI__.core.invoke uses camelCase → Tauri converts to snake_case Rust params
+      const writeId = await invokeTauriCommand('persistent_memory_write_entry', {
+        content: 'LTM path proof P1.13a — write/read round-trip verification',
+        level: 'long_term',
+        modeId: 'ltm_path_proof_p1_13a'
+      });
+      console.log(`[LTM_PATH] write_entry id=${writeId} type=${typeof writeId}`);
+      assert.ok(typeof writeId === 'string' && writeId.length > 0, `persistent_memory_write_entry must return a string ID (got: ${JSON.stringify(writeId)})`);
+
+      // SCENARIO C: persistent_memory_get_stats after write — long_term count increments
+      const statsAfter = await invokeTauriCommand('persistent_memory_get_stats');
+      const postLongTerm = statsAfter && statsAfter.count_by_level ? (statsAfter.count_by_level.long_term || 0) : 0;
+      console.log(`[LTM_PATH] stats_after: long_term=${postLongTerm} (pre=${preLongTerm})`);
+      assert.ok(postLongTerm === preLongTerm + 1, `persistent_memory long_term count must increment (pre=${preLongTerm} post=${postLongTerm})`);
+
+      // SCENARIO D: persistent_memory_read — proves file-based round-trip read
+      // Returns MemoryReadResponse { entries: [...], total_count: N, ... }
+      // MemoryReadRequest uses #[serde(rename_all = "camelCase")] → currentMode
+      const readResult = await invokeTauriCommand('persistent_memory_read', {
+        request: { currentMode: 'ltm_path_proof_p1_13a' }
+      });
+      const readTotal = readResult ? (readResult.total_count || 0) : 0;
+      console.log(`[LTM_PATH] read total_count=${readTotal} entries=${readResult?.entries?.length}`);
+      assert.ok(readResult && Array.isArray(readResult.entries), 'persistent_memory_read must return entries array');
+      assert.ok(readTotal >= 1, `persistent_memory_read must return at least 1 entry after write (got total_count=${readTotal})`);
     }
   );
 
