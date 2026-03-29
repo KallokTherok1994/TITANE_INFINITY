@@ -754,6 +754,112 @@ impl UnifiedMemory {
         }
     }
 
+    /// Load entries from persistent_memory intermediate entries.json into STM.
+    /// Bridges the persistent_memory v19 file store into UnifiedMemory so that
+    /// conversation_generate's unified_memory.recall() can find them.
+    /// Safe to call multiple times: deduplicates by entry id.
+    pub fn load_persistent_entries(&mut self, base_path: &std::path::Path) {
+        let entries_path = base_path.join("intermediate").join("entries.json");
+        if !entries_path.exists() {
+            return;
+        }
+
+        let content = match std::fs::read_to_string(&entries_path) {
+            Ok(c) => c,
+            Err(e) => {
+                eprintln!("[MEMORY] ⚠️ Cannot read persistent entries: {}", e);
+                return;
+            }
+        };
+
+        let entries: Vec<serde_json::Value> = match serde_json::from_str(&content) {
+            Ok(v) => v,
+            Err(e) => {
+                eprintln!("[MEMORY] ⚠️ Cannot parse persistent entries: {}", e);
+                return;
+            }
+        };
+
+        let mut loaded = 0usize;
+        let now = Self::current_timestamp();
+
+        // Collect existing STM + MTM ids to skip duplicates
+        let existing_ids: std::collections::HashSet<String> = self.stm.items.iter()
+            .map(|i| i.id.clone())
+            .chain(self.mtm.items.iter().map(|i| i.id.clone()))
+            .chain(self.ltm.index.keys().cloned())
+            .collect();
+
+        for entry in entries {
+            let id = match entry.get("id").and_then(|v| v.as_str()) {
+                Some(id) => id.to_string(),
+                None => continue,
+            };
+
+            if existing_ids.contains(&id) {
+                continue;
+            }
+
+            let content_str = entry.get("content")
+                .and_then(|v| v.as_str())
+                .unwrap_or("")
+                .to_string();
+
+            if content_str.is_empty() {
+                continue;
+            }
+
+            let importance_raw = entry.get("importance")
+                .and_then(|v| v.as_u64())
+                .unwrap_or(3) as f32;
+            let importance = (importance_raw / 5.0).clamp(0.0, 1.0);
+
+            let tags: MemoryTags = entry.get("tags")
+                .and_then(|v| v.as_array())
+                .map(|arr| arr.iter()
+                    .filter_map(|t| t.as_str().map(|s| s.to_string()))
+                    .collect())
+                .unwrap_or_default();
+
+            let created_at = entry.get("metadata")
+                .and_then(|m| m.get("created_at"))
+                .and_then(|v| v.as_u64())
+                .unwrap_or(now);
+
+            let memory_type = match entry.get("content_type")
+                .and_then(|v| v.as_str())
+            {
+                Some("knowledge") => MemoryType::Knowledge,
+                Some("decision") => MemoryType::Decision,
+                Some("project_context") => MemoryType::Project,
+                Some("preference") => MemoryType::System,
+                _ => MemoryType::Conversation,
+            };
+
+            let item = MemoryItem {
+                id: id.clone(),
+                content: content_str,
+                memory_type,
+                importance,
+                tags,
+                created_at,
+                accessed_count: 0,
+                last_accessed: now,
+                tier: MemoryTier::ShortTerm,
+            };
+
+            let stm_position = self.stm.items.len();
+            self.stm.items.push_back(item);
+            self.stm_index.insert(id, stm_position);
+            self.total_memories += 1;
+            loaded += 1;
+        }
+
+        if loaded > 0 {
+            println!("[MEMORY] 🔄 Loaded {} persistent memory entries into UnifiedMemory STM", loaded);
+        }
+    }
+
     fn current_timestamp() -> u64 {
         Utc::now().timestamp_millis() as u64
     }

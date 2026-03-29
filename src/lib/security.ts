@@ -97,6 +97,7 @@ export const VOID_COMMANDS = new Set<string>([
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_persistence_init',
   'titan_persistence_shutdown',
   // Logging commands that return ()
@@ -575,6 +576,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_load_state',
   'titan_get_events_since',
   'titan_list_snapshots',

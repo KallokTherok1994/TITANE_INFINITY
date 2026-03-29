@@ -2219,6 +2219,7 @@ fn main() {
             persistence::commands::titan_persistence_init,
             persistence::commands::titan_persist_event,
             persistence::commands::titan_force_snapshot,
+            persistence::commands::titan_force_snapshot_current,
             persistence::commands::titan_get_persistence_status,
             persistence::commands::titan_check_integrity,
             persistence::commands::titan_compact_journal,

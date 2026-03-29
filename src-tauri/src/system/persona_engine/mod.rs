@@ -158,11 +158,11 @@ impl PersonaEngine {
     }
 
     pub fn get_state(&self) -> PersonaState {
-        self.lock_or_recover!(state).clone()
+        lock_or_recover!(self.state).clone()
     }
 
     pub fn update(&self, system_state: &str, metrics: SystemMetrics) {
-        let mut state = self.lock_or_recover!(state);
+        let mut state = lock_or_recover!(self.state);
 
         // Update mood based on system state
         state.mood.current = match system_state {
@@ -228,7 +228,7 @@ impl PersonaEngine {
     }
 
     pub fn react(&self, reaction_type: &str) {
-        let mut state = self.lock_or_recover!(state);
+        let mut state = lock_or_recover!(self.state);
 
         match reaction_type {
             "error" => {
@@ -262,7 +262,7 @@ impl PersonaEngine {
     }
 
     pub fn reset(&self) {
-        let mut state = self.lock_or_recover!(state);
+        let mut state = lock_or_recover!(self.state);
         state.mood = MoodState {
             current: Mood::Neutre,
             intensity: 0.6,

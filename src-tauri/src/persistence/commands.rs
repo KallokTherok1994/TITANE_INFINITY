@@ -6,6 +6,10 @@
 use crate::core::SingularityState;
 use crate::persistence::{IntegrityReport, PersistenceStatus, TitanEvent, PERSISTENCE_ENGINE};
 use serde::{Deserialize, Serialize};
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use crate::commands::ai_chat::AIChatState;
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+use tauri::State;
 
 /// DTO pour événement frontend
 ///
@@ -101,6 +105,40 @@ pub async fn titan_force_snapshot(state_json: String) -> Result<(), String> {
     let mut engine = PERSISTENCE_ENGINE.write().await;
     engine
         .force_snapshot(&state)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+/// Forcer un snapshot depuis l'état courant du moteur v14
+#[cfg(all(not(feature = "mock"), feature = "full"))]
+#[tauri::command]
+pub async fn titan_force_snapshot_current(
+    ai_chat: State<'_, AIChatState>,
+) -> Result<(), String> {
+    let engine = ai_chat.core_collection.engine();
+    let snapshot_state = {
+        let engine = engine
+            .lock()
+            .map_err(|e| format!("Engine lock failed: {}", e))?;
+        engine.snapshot().clone()
+    };
+
+    let mut engine = PERSISTENCE_ENGINE.write().await;
+    engine
+        .force_snapshot(&snapshot_state)
+        .await
+        .map_err(|e| e.to_string())
+}
+
+#[cfg(any(feature = "mock", not(feature = "full")))]
+#[tauri::command]
+pub async fn titan_force_snapshot_current() -> Result<(), String> {
+    // Mock path: emit a default-state snapshot so restore/no-loss harness can prove the path.
+    // Full-backend path above captures live engine state; this captures Default::default().
+    let snapshot_state = crate::core::SingularityState::default();
+    let mut engine = PERSISTENCE_ENGINE.write().await;
+    engine
+        .force_snapshot(&snapshot_state)
         .await
         .map_err(|e| e.to_string())
 }

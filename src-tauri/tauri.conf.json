@@ -1160,6 +1160,9 @@
               "command": "titan_force_snapshot"
             },
             {
+              "command": "titan_force_snapshot_current"
+            },
+            {
               "command": "titan_load_state"
             },
             {

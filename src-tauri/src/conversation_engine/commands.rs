@@ -1,6 +1,10 @@
 use std::collections::{BTreeMap, HashSet};
 use std::sync::{Arc, Mutex, OnceLock};
+use std::sync::atomic::{AtomicBool, Ordering};
 use chrono::Utc;
+
+/// Guard: persistent memory entries loaded into UnifiedMemory at most once per process.
+static PERSISTENT_MEMORY_LOADED: AtomicBool = AtomicBool::new(false);
 /**
  * ═══════════════════════════════════════════════════════════════════
  * TITANE∞ v∞ — CONVERSATION ENGINE COMMANDS
@@ -973,6 +977,16 @@ pub async fn conversation_generate(
                 }
             }));
         }
+    }
+
+    // ✅ FIX: P1.13b — Load persistent memory entries into UnifiedMemory before recall.
+    // Bridges persistent_memory v19 intermediate/entries.json into UnifiedMemory STM
+    // so that conversation_generate's unified_memory.recall() can find them.
+    // One-time load per process: AtomicBool guard prevents repeated file reads.
+    if !PERSISTENT_MEMORY_LOADED.swap(true, Ordering::SeqCst) {
+        let pm_base_path = resolve_persistent_memory_base_path(&app_handle);
+        let mut mem = orchestrator.unified_memory.write().await;
+        mem.load_persistent_entries(&pm_base_path);
     }
 
     // ✅ FIX: MEMORY_INJECTION_UNPROVEN — call UnifiedMemory.recall() before prompt build.
