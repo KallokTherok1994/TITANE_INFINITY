@@ -22,6 +22,10 @@ import type {
   ReasonCode,
 } from '@/types/providerMeta';
 import {
+  validateProviderDecisionMeta,
+  type ValidatedProviderDecisionMeta,
+} from '@/schemas/ipcTruthContracts';
+import {
   formatContextEnvelopeForSystemPrompt,
   type ChatContextEnvelope,
 } from '@/services/chat/chatMemorySingleDoor';
@@ -834,6 +838,20 @@ export async function processMessage(
     normalizeProviderMeta(metadata['providerMeta']) ||
     normalizeProviderMeta(metadata['meta']) ||
     deriveFallbackProviderMeta(metadata, decision);
+
+  // P2.1: Anti-lie monotonicity gate — validate provider meta at IPC boundary
+  if (providerMeta) {
+    const metaValidation = validateProviderDecisionMeta(providerMeta);
+    if (!metaValidation.ok) {
+      console.error(
+        '[conversationEngine] ❌ IPC TRUTH CONTRACT VIOLATION — ProviderDecisionMeta invalid:',
+        metaValidation.errors,
+      );
+      // Do not throw: log and continue with validated meta to avoid breaking the user experience.
+      // The error is surfaced to observability for fixing upstream.
+    }
+  }
+
   const cognitiveTagsRaw = metadata['cognitiveTags'];
   const cognitiveTags = Array.isArray(cognitiveTagsRaw)
     ? cognitiveTagsRaw.filter((v): v is string => typeof v === 'string')
