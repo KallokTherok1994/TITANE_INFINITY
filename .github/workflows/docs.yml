@@ -1,0 +1,71 @@
+# ═══════════════════════════════════════════════════════════════
+# TITANE∞ v∞ — Documentation CI/CD Pipeline
+# Build et déploiement automatique de la documentation
+# Super-Prompt K — Docusaurus GitHub Pages
+# ═══════════════════════════════════════════════════════════════
+
+name: Documentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'documentation/**'
+      - 'scripts/sync-docs.sh'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'docs/**'
+      - 'documentation/**'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: documentation/package-lock.json
+
+      - name: Sync documentation
+        run: bash scripts/sync-docs.sh
+
+      - name: Install dependencies
+        working-directory: documentation
+        run: npm ci
+
+      - name: Build documentation
+        working-directory: documentation
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: documentation/build
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

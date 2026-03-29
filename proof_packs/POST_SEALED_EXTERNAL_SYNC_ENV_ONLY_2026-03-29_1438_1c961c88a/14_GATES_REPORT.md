@@ -1,0 +1,29 @@
+# P1.15 — GATES REPORT
+
+| Gate | Status | Evidence |
+|------|--------|----------|
+| G_BOOTSTRAP_TRUTH | **PASS** | HEAD=1c961c88a, MAIN, v28.88.0 |
+| G_SENTINEL_STATE_STILL_VALID | **PASS** | 0 new commits |
+| G_NO_PRODUCT_TRIGGER_X3 | **PASS** | No mutations, x3 confirmed |
+| G_LOCAL_LTM_SEAL_BASELINE_REMAINS_PROVEN | **PASS** | P1.13d sealed |
+| G_EXTERNAL_SYNC_ENV_CLASSIFIED | **PASS** | TURSO_DATABASE_URL absent |
+| G_EXTERNAL_SYNC_AUTH_CLASSIFIED | **PASS** | TURSO_AUTH_TOKEN absent |
+| G_EXTERNAL_SYNC_TOGGLE_CLASSIFIED | **PASS** | OPTION1_SYNC_ENABLED absent |
+| G_EXTERNAL_SYNC_PATH_CLASSIFIED | **PASS** | 3-gate block stable |
+| G_EXTERNAL_WRITE_PROVEN_OR_HONESTLY_BLOCKED | **BLOCKED_ENV** | gates absent |
+| G_EXTERNAL_READBACK_PROVEN_OR_HONESTLY_BLOCKED | **BLOCKED_ENV** | gates absent |
+| G_EXTERNAL_SYNC_COHERENCE_PROVEN_OR_HONESTLY_BLOCKED | **BLOCKED_ENV** | gates absent |
+| G_BLOCKED_ENV_BOUNDARY_EXPLICIT | **PASS** | 3-blocker contract explicit |
+| G_AUTOHEAL_UPDATE_HONEST | **PASS** | NO_AUTOHEAL_UPDATE_NEEDED |
+| G_MERMAID_UPDATED | **PASS** | chain + 3-gate diagrams |
+| G_MAPPING_UPDATED | **PASS** | maps reference P1.14d (no new info) |
+| G_REGISTRY_APPEND_DONE_OR_EXPLICITLY_SKIPPED | **PASS** | P1.15 appended |
+| G_COMMIT_SCOPE_CLEAN | **N/A** | no commit |
+| G_MAIN_BRANCH_CONFIRMED | **PASS** | MAIN |
+| G_COMMIT_ALLOWED_BY_VERDICT | **FAIL** | BLOCKED_ENV not commit-eligible |
+| G_FIX_SCOPE_SAFE | **PASS** | no patch |
+| G_NO_BROAD_RUNTIME_REOPEN | **PASS** | local LTM not reopened |
+| G_PROOF_PACK_COMPLETE_X3 | **PASS** | 18 files, x3 checks done |
+| G_ROLLBACK_TRUTH_UPDATED | **PASS** | NO_PATCH_NEEDED |
+
+**18 PASS / 3 BLOCKED_ENV / 1 FAIL (commit, expected) / 1 N/A**
