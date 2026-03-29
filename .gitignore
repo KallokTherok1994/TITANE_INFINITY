@@ -219,3 +219,9 @@ runtime/stable/titane-infinity-v*
 .v27_pack_path
 titane-infinity@*
 titane.sh.new
+
+# Claude Code local config (machine-specific, never commit)
+.claude/
+
+# Local planning documents (developer-local, not product deliverables)
+PLANS/
