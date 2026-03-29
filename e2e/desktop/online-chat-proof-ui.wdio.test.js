@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import crypto from 'node:crypto';
 
 const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
@@ -9,6 +10,16 @@ const assistantTimeoutMs = Number(
   process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000'
 );
 const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
+const runRestoreProof = process.env.TITANE_RESTORE_PROOF === '1';
+const runEventReplayProof = process.env.TITANE_EVENT_REPLAY_PROOF === '1';
+const runMultiReducerProof = process.env.TITANE_MULTI_REDUCER_PROOF === '1';
+
+function hashJson(value) {
+  return crypto
+    .createHash('sha256')
+    .update(JSON.stringify(value ?? null))
+    .digest('hex');
+}
 
 function buildMemoryProofFacts() {
   const token = `${scenario}-${runId}`
@@ -173,6 +184,56 @@ async function invokeConversationGenerate(message) {
   }
 
   throw new Error(lastError);
+}
+
+async function invokeTauriCommand(command, payload) {
+  const invoked = await browser.executeAsync(
+    (command, payload, done) => {
+      const run = async () => {
+        const attempts = [];
+
+        if (window.__TAURI__?.core?.invoke) {
+          attempts.push(payload => window.__TAURI__.core.invoke(command, payload));
+        }
+        if (window.__TAURI__?.tauri?.invoke) {
+          attempts.push(payload => window.__TAURI__.tauri.invoke(command, payload));
+        }
+        if (window.__TAURI__?.invoke) {
+          attempts.push(payload => window.__TAURI__.invoke(command, payload));
+        }
+        if (window.__TAURI_INTERNALS__?.invoke) {
+          attempts.push(payload => window.__TAURI_INTERNALS__.invoke(command, payload));
+        }
+
+        if (!attempts.length) {
+          throw new Error('Tauri IPC unavailable');
+        }
+
+        let invokeError = 'invoke unavailable';
+        for (const tryInvoke of attempts) {
+          try {
+            return await tryInvoke(payload);
+          } catch (error) {
+            invokeError = String(error?.message || error);
+          }
+        }
+
+        throw new Error(invokeError);
+      };
+
+      run()
+        .then(res => done({ ok: true, res }))
+        .catch(err => done({ ok: false, err: String(err?.message || err) }));
+    },
+    command,
+    payload ?? {}
+  );
+
+  if (!invoked?.ok) {
+    throw new Error(`IPC ${command} failed: ${invoked?.err || 'unknown error'}`);
+  }
+
+  return invoked.res;
 }
 
 async function installConversationGenerateTraceHook() {
@@ -1082,6 +1143,9 @@ function classifyFalseRecallVerdict(outcome, responseText) {
 describe('ONLINE_CHAT_FIX proof driver UI', () => {
   const singleTurnTest = runMemoryProof ? it.skip : it;
   const memoryProofTest = runMemoryProof ? it : it.skip;
+  const restoreProofTest = runRestoreProof ? it : it.skip;
+  const eventReplayProofTest = runEventReplayProof ? it : it.skip;
+  const multiReducerProofTest = runMultiReducerProof ? it : it.skip;
 
   singleTurnTest('sends one message and captures assistant response', async function () {
     this.timeout(180000);
@@ -1319,6 +1383,304 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         memoryPageEvidence.dashboardEntryCount > 0 ||
           memoryPageEvidence.searchEntryCount > 0,
         `[MEMORY_PAGE_SYNC] no memory entries visible on /memory: ${JSON.stringify(memoryPageEvidence)}`
+      );
+    }
+  );
+
+  restoreProofTest(
+    'executes restore/no-loss harness via Tauri persistence commands',
+    async function () {
+      this.timeout(240000);
+
+      const { selectors } = await prepareChatSurface();
+      assert.ok(selectors, 'Restore proof requires visible chat UI selectors');
+
+      await invokeTauriCommand('titan_persistence_init');
+      const preStatus = await invokeTauriCommand('titan_get_persistence_status');
+      const preSnapshots = await invokeTauriCommand('titan_list_snapshots');
+      assert.ok(Array.isArray(preSnapshots), 'titan_list_snapshots returned non-array');
+
+      let baselineSource = 'titan_load_state';
+      let baselineState = await invokeTauriCommand('titan_load_state');
+      if (!baselineState) {
+        baselineSource = 'titan_recover_state';
+        baselineState = await invokeTauriCommand('titan_recover_state');
+      }
+      if (!baselineState && preSnapshots.length === 0) {
+        console.log('[RESTORE_HARNESS] no snapshots detected; attempting snapshot emission');
+        await invokeTauriCommand('titan_force_snapshot_current');
+        const emittedSnapshots = await invokeTauriCommand('titan_list_snapshots');
+        console.log(
+          `[RESTORE_HARNESS] emittedSnapshots=${Array.isArray(emittedSnapshots) ? emittedSnapshots.length : 'n/a'}`
+        );
+
+        baselineSource = 'titan_load_state_after_emit';
+        baselineState = await invokeTauriCommand('titan_load_state');
+        if (!baselineState) {
+          baselineSource = 'titan_recover_state_after_emit';
+          baselineState = await invokeTauriCommand('titan_recover_state');
+        }
+      }
+      if (!baselineState) {
+        console.log(
+          `[RESTORE_HARNESS] baselineSource=none snapshots=${preSnapshots.length} status=${JSON.stringify(
+            preStatus
+          )}`
+        );
+        assert.ok(
+          false,
+          'titan_load_state returned empty state; snapshot emission unavailable or restore path blocked'
+        );
+      }
+
+      const baselineJson = JSON.stringify(baselineState);
+      const baselineHash = hashJson(baselineState);
+
+      console.log(`[RESTORE_HARNESS] baselineSource=${baselineSource}`);
+
+      await invokeTauriCommand('titan_force_snapshot', { stateJson: baselineJson });
+
+      const postSnapshots = await invokeTauriCommand('titan_list_snapshots');
+      assert.ok(Array.isArray(postSnapshots), 'titan_list_snapshots (post) returned non-array');
+
+      const recoveredState = await invokeTauriCommand('titan_recover_state');
+      assert.ok(
+        recoveredState,
+        'titan_recover_state returned empty state; restore proof blocked'
+      );
+      const recoveredHash = hashJson(recoveredState);
+
+      const postStatus = await invokeTauriCommand('titan_get_persistence_status');
+
+      console.log(
+        `[RESTORE_HARNESS] preSnapshots=${preSnapshots.length} postSnapshots=${postSnapshots.length}`
+      );
+      console.log(
+        `[RESTORE_HARNESS] baselineHash=${baselineHash} recoveredHash=${recoveredHash}`
+      );
+      console.log(
+        `[RESTORE_HARNESS] preStatus=${JSON.stringify(preStatus)} postStatus=${JSON.stringify(postStatus)}`
+      );
+
+      assert.ok(
+        postSnapshots.length >= preSnapshots.length + 1,
+        'Snapshot count did not increase after titan_force_snapshot'
+      );
+      assert.equal(
+        recoveredHash,
+        baselineHash,
+        'Recovered state hash mismatch versus baseline snapshot'
+      );
+      assert.ok(
+        postStatus.snapshots_created >= preStatus.snapshots_created + 1,
+        'Persistence snapshot counter did not increment after snapshot'
+      );
+      assert.ok(
+        postStatus.events_persisted >= preStatus.events_persisted,
+        'Events persisted regressed after restore'
+      );
+    }
+  );
+
+  eventReplayProofTest(
+    'proves append-only event emission and replay via Tauri IPC',
+    async function () {
+      this.timeout(120000);
+
+      const { selectors } = await prepareChatSurface();
+      assert.ok(selectors, 'Event replay proof requires visible chat UI selectors');
+
+      await invokeTauriCommand('titan_persistence_init');
+
+      // Step 1: read pre-event state and baseline event count from file
+      const preStatus = await invokeTauriCommand('titan_get_persistence_status');
+      const preEventsFromFile = await invokeTauriCommand('titan_get_events_since', { timestamp: 0 });
+      const preEventsCount = Array.isArray(preEventsFromFile) ? preEventsFromFile.length : -1;
+
+      let preEventState = await invokeTauriCommand('titan_load_state');
+      if (!preEventState) {
+        // cold start: no snapshot yet — emit one first
+        await invokeTauriCommand('titan_force_snapshot_current');
+        preEventState = await invokeTauriCommand('titan_load_state');
+      }
+      assert.ok(preEventState, 'Pre-event state must be loadable before event emit');
+
+      const preMemoryCount = preEventState.memory
+        ? preEventState.memory.total_memories
+        : null;
+      console.log(
+        `[EVENT_REPLAY_HARNESS] preMemoryCount=${preMemoryCount} preEventsInFile=${preEventsCount} preStatus.events_persisted=${preStatus.events_persisted}`
+      );
+
+      // Step 2: emit one canonical "memory" event
+      await invokeTauriCommand('titan_persist_event', {
+        event: {
+          module: 'memory',
+          event_type: 'add',
+          payload: { source: 'event_replay_proof_p1_11' },
+        },
+      });
+
+      // Step 3: verify event was written to DB file
+      const postEventsFromFile = await invokeTauriCommand('titan_get_events_since', { timestamp: 0 });
+      const postEventsCount = Array.isArray(postEventsFromFile) ? postEventsFromFile.length : -1;
+      const postStatus = await invokeTauriCommand('titan_get_persistence_status');
+
+      console.log(
+        `[EVENT_REPLAY_HARNESS] postEventsInFile=${postEventsCount} postStatus.events_persisted=${postStatus.events_persisted}`
+      );
+
+      // Step 4: load state via snapshot+replay path
+      const postEventState = await invokeTauriCommand('titan_load_state');
+      assert.ok(postEventState, 'Post-event state must be loadable after event emission');
+
+      const postMemoryCount = postEventState.memory
+        ? postEventState.memory.total_memories
+        : null;
+      console.log(
+        `[EVENT_REPLAY_HARNESS] postMemoryCount=${postMemoryCount}`
+      );
+
+      // Assertions
+      assert.ok(
+        postEventsCount >= preEventsCount + 1,
+        `Event DB count should increase: was ${preEventsCount}, now ${postEventsCount}`
+      );
+      assert.ok(
+        postStatus.events_persisted >= preStatus.events_persisted + 1,
+        `events_persisted counter should increment: was ${preStatus.events_persisted}, now ${postStatus.events_persisted}`
+      );
+      assert.ok(
+        preMemoryCount !== null && postMemoryCount !== null,
+        'memory.total_memories must be accessible in state before and after event'
+      );
+      assert.equal(
+        postMemoryCount,
+        preMemoryCount + 1,
+        `Event replay: memory.total_memories expected ${preMemoryCount + 1}, got ${postMemoryCount}`
+      );
+    }
+  );
+
+  multiReducerProofTest(
+    'proves multi-reducer event replay coverage: xp / progress / knowledge / settings',
+    async function () {
+      this.timeout(120000);
+
+      const { selectors } = await prepareChatSurface();
+      assert.ok(selectors, 'Multi-reducer proof requires visible chat UI selectors');
+
+      await invokeTauriCommand('titan_persistence_init');
+
+      // Pre-state: snapshot+replay of all prior events
+      const preStatus = await invokeTauriCommand('titan_get_persistence_status');
+      let preState = await invokeTauriCommand('titan_load_state');
+      if (!preState) {
+        await invokeTauriCommand('titan_force_snapshot_current');
+        preState = await invokeTauriCommand('titan_load_state');
+      }
+      assert.ok(preState, 'Pre-state must be loadable before multi-reducer emit');
+
+      const preTicks = preState.metrics ? preState.metrics.ticks : null;
+      const preDepth = preState.cognition ? preState.cognition.depth : null;
+      const preMemories = preState.memory ? preState.memory.total_memories : null;
+      const preActiveThoughts = preState.cognition ? preState.cognition.active_thoughts : null;
+      const preMetricsLastUpdate = preState.metrics ? preState.metrics.last_update_ms : null;
+
+      console.log(
+        `[MULTI_REDUCER] pre: ticks=${preTicks} depth=${preDepth} memories=${preMemories} active_thoughts=${preActiveThoughts} metrics_last_update=${preMetricsLastUpdate}`
+      );
+
+      // Emit 4 canonical reducer events (xp → progress → knowledge → settings)
+      await invokeTauriCommand('titan_persist_event', {
+        event: { module: 'xp', event_type: 'add', payload: { amount: 100 } },
+      });
+      await invokeTauriCommand('titan_persist_event', {
+        event: { module: 'progress', event_type: 'update', payload: { level: 7 } },
+      });
+      await invokeTauriCommand('titan_persist_event', {
+        event: { module: 'knowledge', event_type: 'add', payload: {} },
+      });
+      // Settings last: ensures metrics.last_update_ms === last_sync_ms in post-state
+      await invokeTauriCommand('titan_persist_event', {
+        event: { module: 'settings', event_type: 'update', payload: {} },
+      });
+
+      const postStatus = await invokeTauriCommand('titan_get_persistence_status');
+
+      // Post-state via snapshot+replay — must reflect all 4 new events
+      const postState = await invokeTauriCommand('titan_load_state');
+      assert.ok(postState, 'Post-state must be loadable after multi-reducer events');
+
+      const postTicks = postState.metrics ? postState.metrics.ticks : null;
+      const postDepth = postState.cognition ? postState.cognition.depth : null;
+      const postMemories = postState.memory ? postState.memory.total_memories : null;
+      const postActiveThoughts = postState.cognition ? postState.cognition.active_thoughts : null;
+      const postMetricsLastUpdate = postState.metrics ? postState.metrics.last_update_ms : null;
+      const postLastSyncMs = postState.last_sync_ms;
+
+      console.log(
+        `[MULTI_REDUCER] post: ticks=${postTicks} depth=${postDepth} memories=${postMemories} active_thoughts=${postActiveThoughts} metrics_last_update=${postMetricsLastUpdate} last_sync_ms=${postLastSyncMs}`
+      );
+      console.log(
+        `[MULTI_REDUCER] preStatus.events_persisted=${preStatus.events_persisted} postStatus.events_persisted=${postStatus.events_persisted}`
+      );
+
+      // XP reducer: metrics.ticks += 100
+      assert.ok(preTicks !== null && postTicks !== null, 'metrics.ticks must be accessible');
+      assert.equal(
+        postTicks,
+        preTicks + 100,
+        `XP reducer: metrics.ticks expected ${preTicks + 100}, got ${postTicks}`
+      );
+
+      // PROGRESS reducer: cognition.depth = level.min(10) = 7 (absolute set)
+      assert.ok(preDepth !== null && postDepth !== null, 'cognition.depth must be accessible');
+      assert.equal(
+        postDepth,
+        7,
+        `PROGRESS reducer: cognition.depth expected 7 (level=7, min(10)), got ${postDepth}`
+      );
+
+      // KNOWLEDGE reducer: memory.total_memories += 1, cognition.active_thoughts += 1
+      assert.ok(
+        preMemories !== null && postMemories !== null,
+        'memory.total_memories must be accessible'
+      );
+      assert.equal(
+        postMemories,
+        preMemories + 1,
+        `KNOWLEDGE reducer: memory.total_memories expected ${preMemories + 1}, got ${postMemories}`
+      );
+      assert.ok(
+        preActiveThoughts !== null && postActiveThoughts !== null,
+        'cognition.active_thoughts must be accessible'
+      );
+      assert.equal(
+        postActiveThoughts,
+        preActiveThoughts + 1,
+        `KNOWLEDGE reducer: cognition.active_thoughts expected ${preActiveThoughts + 1}, got ${postActiveThoughts}`
+      );
+
+      // SETTINGS reducer: metrics.last_update_ms = event.timestamp (settings is last → === last_sync_ms)
+      assert.ok(
+        postMetricsLastUpdate !== null && postLastSyncMs !== null,
+        'metrics.last_update_ms and last_sync_ms must be accessible'
+      );
+      assert.ok(
+        postMetricsLastUpdate > preMetricsLastUpdate,
+        `SETTINGS reducer: metrics.last_update_ms must be newer: was ${preMetricsLastUpdate}, now ${postMetricsLastUpdate}`
+      );
+      assert.equal(
+        postMetricsLastUpdate,
+        postLastSyncMs,
+        `SETTINGS reducer: metrics.last_update_ms (${postMetricsLastUpdate}) must equal last_sync_ms (${postLastSyncMs}) — settings was last event`
+      );
+
+      // Counter: 4 events emitted this run
+      assert.ok(
+        postStatus.events_persisted >= preStatus.events_persisted + 4,
+        `events_persisted should increase by ≥4: was ${preStatus.events_persisted}, now ${postStatus.events_persisted}`
       );
     }
   );
