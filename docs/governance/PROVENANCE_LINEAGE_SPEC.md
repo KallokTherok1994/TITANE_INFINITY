@@ -147,3 +147,38 @@ For G3.5 (Supply-Chain Trust Verdict / Family Seal):
 ## 8. VERDICT
 
 **SBOM_PROVENANCE_PROVEN** — G3.3 provenance source discovery complete. All 5 hops inventoried and classified. 4/5 PROVEN locally, 1/5 PARTIAL (release CI runtime requires hosted GitHub Actions).
+---
+
+## 9. G3.4 ALIGNMENT RESULTS
+
+| Check | Status |
+|-------|--------|
+| SBOM component count | PASS (103 components, CycloneDX 1.5) |
+| SBOM SHA256 integrity | PASS |
+| SBOM GPG signature | PASS (RSA 4096) |
+| Signing key fingerprint | PASS (E97BC3F1... matches spec) |
+| Version alignment | PASS (package.json = Cargo.toml = Release seal = 28.88.0) |
+| Release artifacts present | PASS (RELEASE_v28.88.0_SEALED.txt + RELEASE_ARTIFACTS_CHECKSUMS.txt) |
+| No contradictions | PASS |
+
+---
+
+## 10. G3.5 SUPPLY-CHAIN TRUST VERDICT
+
+**Classification**: PARTIAL_RUNTIME
+
+**G3 Family cannot be SEALED while:**
+- E0 remains HOLD_EXTERNAL (TURSO gates absent)
+- G1.5 remains HOLD_EXTERNAL (CI runtime unproven)
+
+**Next condition for G3_SEALED:**
+1. External sync chain proven (E0)
+2. CI runtime proven (G1.5)
+3. SLSA/in-toto attestation added
+4. Production signing key rotated
+
+---
+
+## 11. VERDICT
+
+**SBOM_PROVENANCE_PROVEN** — G3 family advance complete. G3.1→G3.5 all locally proven. G3 classified PARTIAL_RUNTIME pending E0 and G1.5 resolution.
