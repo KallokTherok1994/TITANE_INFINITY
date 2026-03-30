@@ -412,12 +412,30 @@ jobs:
       - name: 🏗️ Build Tauri (Debug for speed)
         run: pnpm exec tauri build --debug
 
+      - name: 🔐 Generate SHA256 checksums
+        run: |
+          cd src-tauri/target/debug/bundle
+          if [ -d "deb" ] && ls deb/*.deb 1>/dev/null 2>&1; then
+            sha256sum deb/*.deb > SHA256SUMS.txt
+          fi
+          if [ -d "appimage" ] && ls appimage/*.AppImage 1>/dev/null 2>&1; then
+            sha256sum appimage/*.AppImage >> SHA256SUMS.txt 2>/dev/null || sha256sum appimage/*.AppImage > SHA256SUMS.txt
+          fi
+          if [ -f "SHA256SUMS.txt" ]; then
+            echo "=== SHA256 Checksums ==="
+            cat SHA256SUMS.txt
+          else
+            echo "⚠️ No artifacts found for checksum generation"
+          fi
+
       - name: 📤 Upload build artifacts
         if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         uses: actions/upload-artifact@v6
         with:
           name: titane-build-ubuntu-${{ github.run_id }}
-          path: src-tauri/target/debug/bundle/
+          path: |
+            src-tauri/target/debug/bundle/
+            src-tauri/target/debug/bundle/SHA256SUMS.txt
           retention-days: 7
           if-no-files-found: ignore
 
