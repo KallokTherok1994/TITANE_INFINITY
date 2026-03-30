@@ -110,14 +110,43 @@ jobs:
           sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
+      - name: 🔏 GPG sign artifacts
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        if: env.GPG_PRIVATE_KEY != ''
+        run: |
+          # Import GPG key from CI secret
+          export GNUPGHOME=$(mktemp -d)
+          echo "$GPG_PRIVATE_KEY" | gpg --batch --import 2>/dev/null
+          KEY_ID=$(gpg --list-keys --with-colons 2>/dev/null | grep '^fpr:' | head -1 | cut -d: -f10)
+
+          cd src-tauri/target/release/bundle
+
+          # Sign each artifact
+          for f in deb/*.deb appimage/*.AppImage; do
+            [ -f "$f" ] && gpg --batch --yes --detach-sign --armor --local-user "$KEY_ID" --output "${f}.sig" "$f"
+          done
+
+          # Sign SHA256SUMS.txt
+          if [ -f SHA256SUMS.txt ]; then
+            gpg --batch --yes --detach-sign --armor --local-user "$KEY_ID" --output SHA256SUMS.sig SHA256SUMS.txt
+          fi
+
+          echo "=== GPG Signatures ==="
+          find . -name "*.sig" -o -name "*.asc" | sort
+          rm -rf "$GNUPGHOME"
+
       - name: 📤 Upload Linux artifacts
         uses: actions/upload-artifact@v6
         with:
           name: linux-x86_64-${{ github.ref_name }}
           path: |
             src-tauri/target/release/bundle/deb/*.deb
+            src-tauri/target/release/bundle/deb/*.deb.sig
             src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/appimage/*.AppImage.sig
             src-tauri/target/release/bundle/SHA256SUMS.txt
+            src-tauri/target/release/bundle/SHA256SUMS.sig
           if-no-files-found: warn
           retention-days: 30
 
@@ -338,6 +367,7 @@ jobs:
             artifacts/**/*.msi
             artifacts/**/*.dmg
             artifacts/**/SHA256SUMS.txt
+            artifacts/**/*.sig
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -439,7 +439,14 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
-      - name: 📊 Summary
+      - name: 🔏 Verify signing scripts syntax
+        run: |
+          bash -n scripts/signing/generate-signing-keys.sh
+          bash -n scripts/signing/sign-artifacts.sh
+          bash -n scripts/signing/verify-signatures.sh
+          echo "✅ All signing scripts have valid syntax"
+
+      - name:  Summary
         if: always()
         run: |
           echo "## 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY
@@ -447,6 +454,7 @@ jobs:
           echo "- Frontend build: ✅" >> $GITHUB_STEP_SUMMARY
           echo "- Tauri build: ✅ (Debug mode for CI speed)" >> $GITHUB_STEP_SUMMARY
           echo "- Platform: Ubuntu (Linux)" >> $GITHUB_STEP_SUMMARY
+          echo "- Signing scripts syntax: ✅" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "_Multi-platform builds run on releases only_" >> $GITHUB_STEP_SUMMARY
 
