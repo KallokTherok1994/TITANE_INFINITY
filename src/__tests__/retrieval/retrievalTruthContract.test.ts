@@ -105,11 +105,7 @@ describe('SC3: memory recall result has canonical structure', () => {
   });
 
   it('importance is bounded [0,1]', () => {
-    const items = [
-      { importance: 0.0 },
-      { importance: 0.5 },
-      { importance: 1.0 },
-    ];
+    const items = [{ importance: 0.0 }, { importance: 0.5 }, { importance: 1.0 }];
     for (const item of items) {
       expect(item.importance).toBeGreaterThanOrEqual(0);
       expect(item.importance).toBeLessThanOrEqual(1);

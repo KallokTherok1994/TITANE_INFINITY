@@ -845,7 +845,7 @@ export async function processMessage(
     if (!metaValidation.ok) {
       console.error(
         '[conversationEngine] ❌ IPC TRUTH CONTRACT VIOLATION — ProviderDecisionMeta invalid:',
-        metaValidation.errors,
+        metaValidation.errors
       );
       // Do not throw: log and continue with validated meta to avoid breaking the user experience.
       // The error is surfaced to observability for fixing upstream.

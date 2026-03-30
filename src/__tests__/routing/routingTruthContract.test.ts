@@ -22,11 +22,25 @@ import { join } from 'path';
 
 type Mode = 'LOCAL' | 'REMOTE' | 'OFFLINE' | 'CACHED' | 'ERROR';
 type ReasonCode =
-  | 'OK' | 'POLICY_LOCAL_ONLY' | 'POLICY_REMOTE_ALLOWED' | 'POLICY_BLOCKED'
-  | 'ALLOWLIST_DENIED' | 'PROVIDER_DOWN' | 'TIMEOUT' | 'RATE_LIMIT'
-  | 'INVALID_CONFIG' | 'NETWORK_ERROR' | 'FALLBACK_OFFLINE' | 'CACHE_HIT'
-  | 'CACHE_MISS' | 'SERIALIZATION_DROPPED' | 'PROVIDER_UNAVAILABLE'
-  | 'TOOL_REQUIRED' | 'TOOL_DENIED' | 'CONTRACT_VIOLATION_CLAMPED' | 'UNKNOWN';
+  | 'OK'
+  | 'POLICY_LOCAL_ONLY'
+  | 'POLICY_REMOTE_ALLOWED'
+  | 'POLICY_BLOCKED'
+  | 'ALLOWLIST_DENIED'
+  | 'PROVIDER_DOWN'
+  | 'TIMEOUT'
+  | 'RATE_LIMIT'
+  | 'INVALID_CONFIG'
+  | 'NETWORK_ERROR'
+  | 'FALLBACK_OFFLINE'
+  | 'CACHE_HIT'
+  | 'CACHE_MISS'
+  | 'SERIALIZATION_DROPPED'
+  | 'PROVIDER_UNAVAILABLE'
+  | 'TOOL_REQUIRED'
+  | 'TOOL_DENIED'
+  | 'CONTRACT_VIOLATION_CLAMPED'
+  | 'UNKNOWN';
 
 interface ProviderDecisionMeta {
   provider_used: string;
@@ -122,10 +136,18 @@ describe('SC3: clamp function fixes violations', () => {
   // Inline clamp logic matching providerDecisionMeta.ts
   function clampProviderDecisionMeta(meta: ProviderDecisionMeta): ProviderDecisionMeta {
     if (meta.mode === 'REMOTE' && !meta.network_used) {
-      return { ...meta, mode: 'LOCAL' as const, reason_code: 'CONTRACT_VIOLATION_CLAMPED' };
+      return {
+        ...meta,
+        mode: 'LOCAL' as const,
+        reason_code: 'CONTRACT_VIOLATION_CLAMPED',
+      };
     }
     if (meta.provider_used === 'local_only' && meta.mode === 'REMOTE') {
-      return { ...meta, mode: 'LOCAL' as const, reason_code: 'CONTRACT_VIOLATION_CLAMPED' };
+      return {
+        ...meta,
+        mode: 'LOCAL' as const,
+        reason_code: 'CONTRACT_VIOLATION_CLAMPED',
+      };
     }
     return meta;
   }
@@ -162,11 +184,25 @@ describe('SC3: clamp function fixes violations', () => {
 
 describe('SC4: all canonical reason_codes accepted', () => {
   const validReasonCodes = [
-    'OK', 'POLICY_LOCAL_ONLY', 'POLICY_REMOTE_ALLOWED', 'POLICY_BLOCKED',
-    'ALLOWLIST_DENIED', 'PROVIDER_DOWN', 'TIMEOUT', 'RATE_LIMIT',
-    'INVALID_CONFIG', 'NETWORK_ERROR', 'FALLBACK_OFFLINE', 'CACHE_HIT',
-    'CACHE_MISS', 'SERIALIZATION_DROPPED', 'PROVIDER_UNAVAILABLE',
-    'TOOL_REQUIRED', 'TOOL_DENIED', 'CONTRACT_VIOLATION_CLAMPED', 'UNKNOWN',
+    'OK',
+    'POLICY_LOCAL_ONLY',
+    'POLICY_REMOTE_ALLOWED',
+    'POLICY_BLOCKED',
+    'ALLOWLIST_DENIED',
+    'PROVIDER_DOWN',
+    'TIMEOUT',
+    'RATE_LIMIT',
+    'INVALID_CONFIG',
+    'NETWORK_ERROR',
+    'FALLBACK_OFFLINE',
+    'CACHE_HIT',
+    'CACHE_MISS',
+    'SERIALIZATION_DROPPED',
+    'PROVIDER_UNAVAILABLE',
+    'TOOL_REQUIRED',
+    'TOOL_DENIED',
+    'CONTRACT_VIOLATION_CLAMPED',
+    'UNKNOWN',
   ];
 
   it('has at least 15 canonical reason_codes', () => {

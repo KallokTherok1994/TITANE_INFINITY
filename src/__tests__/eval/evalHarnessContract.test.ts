@@ -24,9 +24,7 @@ const DATASETS_DIR = join(process.cwd(), 'evals/datasets/v1');
 // ═══════════════════════════════════════════════════════════════════
 
 describe('SC1: all scorecard JSON files are parseable', () => {
-  const scorecardFiles = readdirSync(SCORECARDS_DIR).filter(
-    (f) => f.endsWith('.json'),
-  );
+  const scorecardFiles = readdirSync(SCORECARDS_DIR).filter(f => f.endsWith('.json'));
 
   it('finds at least 6 scorecards', () => {
     expect(scorecardFiles.length).toBeGreaterThanOrEqual(6);
@@ -48,13 +46,10 @@ describe('SC1: all scorecard JSON files are parseable', () => {
 
 describe('SC2: each scorecard has required top-level fields', () => {
   const scorecardFiles = readdirSync(SCORECARDS_DIR).filter(
-    (f) => f.endsWith('.json') && f !== 'CHALLENGER_TEMPLATE.json',
+    f => f.endsWith('.json') && f !== 'CHALLENGER_TEMPLATE.json'
   );
 
-  const requiredTopFields = [
-    'scorecard_id',
-    'version',
-  ];
+  const requiredTopFields = ['scorecard_id', 'version'];
 
   for (const file of scorecardFiles) {
     describe(file, () => {
@@ -69,7 +64,11 @@ describe('SC2: each scorecard has required top-level fields', () => {
       }
 
       // HONESTY_SCORECARD uses 'anti_lie_violations' instead of 'metrics' — both are valid
-      const scoringField = parsed.metrics ? 'metrics' : Array.isArray(parsed.anti_lie_violations) ? 'anti_lie_violations' : null;
+      const scoringField = parsed.metrics
+        ? 'metrics'
+        : Array.isArray(parsed.anti_lie_violations)
+          ? 'anti_lie_violations'
+          : null;
       it('has metrics or anti_lie_violations array', () => {
         expect(scoringField).not.toBeNull();
         expect(Array.isArray(parsed[scoringField!])).toBe(true);
@@ -88,7 +87,7 @@ describe('SC2: each scorecard has required top-level fields', () => {
 
 describe('SC3: each scorecard metric has required fields', () => {
   const scorecardFiles = readdirSync(SCORECARDS_DIR).filter(
-    (f) => f.endsWith('.json') && f !== 'CHALLENGER_TEMPLATE.json',
+    f => f.endsWith('.json') && f !== 'CHALLENGER_TEMPLATE.json'
   );
 
   const requiredMetricFields = ['name', 'target', 'blocking'];
@@ -130,9 +129,7 @@ describe('SC3: each scorecard metric has required fields', () => {
 // ═══════════════════════════════════════════════════════════════════
 
 describe('SC4: dataset JSONL files are parseable', () => {
-  const datasetFiles = readdirSync(DATASETS_DIR).filter((f) =>
-    f.endsWith('.jsonl'),
-  );
+  const datasetFiles = readdirSync(DATASETS_DIR).filter(f => f.endsWith('.jsonl'));
 
   it('finds at least 6 dataset lanes', () => {
     expect(datasetFiles.length).toBeGreaterThanOrEqual(6);
@@ -144,7 +141,7 @@ describe('SC4: dataset JSONL files are parseable', () => {
       const lines = raw
         .trim()
         .split('\n')
-        .filter((l) => l.trim().length > 0);
+        .filter(l => l.trim().length > 0);
 
       it('has at least 1 item', () => {
         expect(lines.length).toBeGreaterThanOrEqual(1);

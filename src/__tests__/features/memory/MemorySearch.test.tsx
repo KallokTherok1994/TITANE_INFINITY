@@ -102,7 +102,9 @@ describe('MemorySearchPanel Component', () => {
         const input = screen.getByPlaceholderText(/recherche sémantique/i);
         fireEvent.change(input, { target: { value: 'architecture' } });
         // Advance past the 300ms useDebounce delay (added in debounce optimization)
-        act(() => { vi.advanceTimersByTime(350); });
+        act(() => {
+          vi.advanceTimersByTime(350);
+        });
         expect(screen.getByText('Architecture TITANE')).toBeInTheDocument();
         expect(screen.queryByText('Session active')).not.toBeInTheDocument();
       } finally {

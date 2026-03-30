@@ -262,11 +262,25 @@ describe('SC7: mode/reason_code truth invariant', () => {
 
   it('all canonical reason_codes are accepted', () => {
     const validReasonCodes = [
-      'OK', 'POLICY_LOCAL_ONLY', 'POLICY_REMOTE_ALLOWED', 'POLICY_BLOCKED',
-      'ALLOWLIST_DENIED', 'PROVIDER_DOWN', 'TIMEOUT', 'RATE_LIMIT',
-      'INVALID_CONFIG', 'NETWORK_ERROR', 'FALLBACK_OFFLINE', 'CACHE_HIT',
-      'CACHE_MISS', 'SERIALIZATION_DROPPED', 'PROVIDER_UNAVAILABLE',
-      'TOOL_REQUIRED', 'TOOL_DENIED', 'CONTRACT_VIOLATION_CLAMPED', 'UNKNOWN',
+      'OK',
+      'POLICY_LOCAL_ONLY',
+      'POLICY_REMOTE_ALLOWED',
+      'POLICY_BLOCKED',
+      'ALLOWLIST_DENIED',
+      'PROVIDER_DOWN',
+      'TIMEOUT',
+      'RATE_LIMIT',
+      'INVALID_CONFIG',
+      'NETWORK_ERROR',
+      'FALLBACK_OFFLINE',
+      'CACHE_HIT',
+      'CACHE_MISS',
+      'SERIALIZATION_DROPPED',
+      'PROVIDER_UNAVAILABLE',
+      'TOOL_REQUIRED',
+      'TOOL_DENIED',
+      'CONTRACT_VIOLATION_CLAMPED',
+      'UNKNOWN',
     ];
     for (const code of validReasonCodes) {
       const meta = { ...validProviderMeta, reason_code: code };

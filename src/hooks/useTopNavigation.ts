@@ -9,8 +9,18 @@ const TOP_NAV_SECTIONS = [
   { id: 'admin', label: 'ADMIN', route: '/admin', description: 'Centre Admin Unifié' },
   { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
   // Dans menu "Plus"
-  { id: 'fusion', label: 'FUSION', route: '/fusion', description: 'Backend/Frontend Fusion' },
-  { id: 'optimization', label: 'OPTIMIZE', route: '/optimization', description: 'Performance Ultime' },
+  {
+    id: 'fusion',
+    label: 'FUSION',
+    route: '/fusion',
+    description: 'Backend/Frontend Fusion',
+  },
+  {
+    id: 'optimization',
+    label: 'OPTIMIZE',
+    route: '/optimization',
+    description: 'Performance Ultime',
+  },
   {
     id: 'total-dev',
     label: 'TOTAL DEV',

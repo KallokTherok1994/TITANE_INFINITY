@@ -67,12 +67,14 @@ export const XP = {
 
     // Synchroniser avec experienceService (Tauri backend)
     try {
-      import('../../services/experienceService').then(({ awardExperience }) => {
-        const domain = XP.mapSourceToDomain(source);
-        void awardExperience(domain, amount, source, { description });
-      }).catch(() => {
-        // Fallback silencieux si experienceService non disponible
-      });
+      import('../../services/experienceService')
+        .then(({ awardExperience }) => {
+          const domain = XP.mapSourceToDomain(source);
+          void awardExperience(domain, amount, source, { description });
+        })
+        .catch(() => {
+          // Fallback silencieux si experienceService non disponible
+        });
     } catch {
       // Ignorer les erreurs de synchronisation
     }

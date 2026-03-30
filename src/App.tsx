@@ -16,13 +16,7 @@
  */
 
 import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
 import { logger } from './lib/logger';
@@ -76,7 +70,6 @@ import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - 
 import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
-
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -382,7 +375,6 @@ const AppRouter: React.FC = () => {
   }, []);
 
   useAppInitialization();
-
 
   // ✨ v25.4.1 - A11Y & Performance: Keyboard shortcuts and Web Vitals planned
 

@@ -25,7 +25,7 @@ describe('SC1: capabilities JSON files are parseable', () => {
   let capFiles: string[] = [];
 
   try {
-    capFiles = readdirSync(capsDir).filter((f) => f.endsWith('.json'));
+    capFiles = readdirSync(capsDir).filter(f => f.endsWith('.json'));
   } catch {
     capFiles = [];
   }
@@ -53,7 +53,7 @@ describe('SC2: each capability has required fields', () => {
   let capFiles: string[] = [];
 
   try {
-    capFiles = readdirSync(capsDir).filter((f) => f.endsWith('.json'));
+    capFiles = readdirSync(capsDir).filter(f => f.endsWith('.json'));
   } catch {
     capFiles = [];
   }
@@ -119,10 +119,7 @@ describe('SC3: IPC contract defines One Door governance', () => {
 // ═══════════════════════════════════════════════════════════════════
 
 describe('SC4: security commands module exists', () => {
-  const secureCommandsPath = join(
-    process.cwd(),
-    'src-tauri/src/secure_commands.rs',
-  );
+  const secureCommandsPath = join(process.cwd(), 'src-tauri/src/secure_commands.rs');
 
   it('secure_commands.rs exists', () => {
     expect(existsSync(secureCommandsPath)).toBe(true);
@@ -165,7 +162,7 @@ describe('SC5: Tauri command surface is documented', () => {
     const capsDir = join(process.cwd(), 'src-tauri/capabilities');
     let count = 0;
     try {
-      count = readdirSync(capsDir).filter((f) => f.endsWith('.json')).length;
+      count = readdirSync(capsDir).filter(f => f.endsWith('.json')).length;
     } catch {
       count = 0;
     }

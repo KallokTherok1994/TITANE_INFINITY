@@ -39,26 +39,11 @@ export const ReasonCodeSchema = z.enum([
   'UNKNOWN',
 ]);
 
-export const ModeSchema = z.enum([
-  'LOCAL',
-  'REMOTE',
-  'OFFLINE',
-  'CACHED',
-  'ERROR',
-]);
+export const ModeSchema = z.enum(['LOCAL', 'REMOTE', 'OFFLINE', 'CACHED', 'ERROR']);
 
-export const ProviderClassSchema = z.enum([
-  'local',
-  'remote',
-  'hybrid',
-]);
+export const ProviderClassSchema = z.enum(['local', 'remote', 'hybrid']);
 
-export const MemoryEffectSchema = z.enum([
-  'New',
-  'Recall',
-  'Connect',
-  'Evolve',
-]);
+export const MemoryEffectSchema = z.enum(['New', 'Recall', 'Connect', 'Evolve']);
 
 export const IntentionSchema = z.enum([
   'Question',
@@ -143,14 +128,16 @@ export const ConversationResponseEnvelopeSchema = z.object({
   cognitive_summary: z.string(),
   metadata: ConversationMetadataSchema,
   meta: ProviderDecisionMetaSchema.optional(),
-  decision: z.object({
-    online: z.boolean(),
-    reasonCode: z.string().min(1),
-    providerSelected: z.string().min(1),
-    attempts: z.array(ProviderAttemptMetaSchema),
-    networkUsed: z.boolean(),
-    mode: ModeSchema,
-  }).optional(),
+  decision: z
+    .object({
+      online: z.boolean(),
+      reasonCode: z.string().min(1),
+      providerSelected: z.string().min(1),
+      attempts: z.array(ProviderAttemptMetaSchema),
+      networkUsed: z.boolean(),
+      mode: ModeSchema,
+    })
+    .optional(),
   omega_trace_meta: OmegaTraceMetaSchema.optional(),
 });
 
@@ -168,16 +155,14 @@ export type ValidationResult =
  * This is the anti-lie monotonicity gate: catches schema drift
  * before UI consumption.
  */
-export function validateConversationResponse(
-  raw: unknown,
-): ValidationResult {
+export function validateConversationResponse(raw: unknown): ValidationResult {
   const result = ConversationResponseEnvelopeSchema.safeParse(raw);
   if (result.success) {
     return { ok: true, data: result.data };
   }
 
   const errors = result.error.issues.map(
-    (issue) => `${issue.path.join('.')}: ${issue.message}`,
+    issue => `${issue.path.join('.')}: ${issue.message}`
   );
   return { ok: false, errors };
 }
@@ -187,15 +172,17 @@ export function validateConversationResponse(
  * Used when meta is extracted from metadata fallback path.
  */
 export function validateProviderDecisionMeta(
-  raw: unknown,
-): { ok: true; data: z.infer<typeof ProviderDecisionMetaSchema> } | { ok: false; errors: string[] } {
+  raw: unknown
+):
+  | { ok: true; data: z.infer<typeof ProviderDecisionMetaSchema> }
+  | { ok: false; errors: string[] } {
   const result = ProviderDecisionMetaSchema.safeParse(raw);
   if (result.success) {
     return { ok: true, data: result.data };
   }
 
   const errors = result.error.issues.map(
-    (issue) => `${issue.path.join('.')}: ${issue.message}`,
+    issue => `${issue.path.join('.')}: ${issue.message}`
   );
   return { ok: false, errors };
 }
@@ -204,15 +191,17 @@ export function validateProviderDecisionMeta(
  * Validate OmegaTraceMeta in isolation.
  */
 export function validateOmegaTraceMeta(
-  raw: unknown,
-): { ok: true; data: z.infer<typeof OmegaTraceMetaSchema> } | { ok: false; errors: string[] } {
+  raw: unknown
+):
+  | { ok: true; data: z.infer<typeof OmegaTraceMetaSchema> }
+  | { ok: false; errors: string[] } {
   const result = OmegaTraceMetaSchema.safeParse(raw);
   if (result.success) {
     return { ok: true, data: result.data };
   }
 
   const errors = result.error.issues.map(
-    (issue) => `${issue.path.join('.')}: ${issue.message}`,
+    issue => `${issue.path.join('.')}: ${issue.message}`
   );
   return { ok: false, errors };
 }
@@ -223,7 +212,9 @@ export function validateOmegaTraceMeta(
 
 export type ValidatedProviderDecisionMeta = z.infer<typeof ProviderDecisionMetaSchema>;
 export type ValidatedOmegaTraceMeta = z.infer<typeof OmegaTraceMetaSchema>;
-export type ValidatedConversationResponse = z.infer<typeof ConversationResponseEnvelopeSchema>;
+export type ValidatedConversationResponse = z.infer<
+  typeof ConversationResponseEnvelopeSchema
+>;
 export type ValidatedReasonCode = z.infer<typeof ReasonCodeSchema>;
 export type ValidatedMode = z.infer<typeof ModeSchema>;
 export type ValidatedProviderClass = z.infer<typeof ProviderClassSchema>;

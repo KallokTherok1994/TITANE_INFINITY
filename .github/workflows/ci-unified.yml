@@ -446,7 +446,7 @@ jobs:
           bash -n scripts/signing/verify-signatures.sh
           echo "✅ All signing scripts have valid syntax"
 
-      - name:  Summary
+      - name: Summary
         if: always()
         run: |
           echo "## 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY

@@ -12,6 +12,7 @@ Module avatar non dans le flux chat/OMEGA principal.
 ## Promotion
 
 Conditions pour passer en Core:
+
 1. Proof runtime: avatar activé et utilisé dans la chaîne principale
 2. Bundle: three.js tree-shaken < 5MB dans le chemin critique
 3. Tests: scénario avatar E2E validé en build prod

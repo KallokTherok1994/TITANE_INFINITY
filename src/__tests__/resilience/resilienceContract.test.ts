@@ -44,10 +44,7 @@ describe('SC1: fallback always has explicit reason_code', () => {
   });
 
   it('CONTRACT_VIOLATION_CLAMPED is a valid fallback code', () => {
-    const allCodes = [
-      ...fallbackReasonCodes,
-      'CONTRACT_VIOLATION_CLAMPED',
-    ];
+    const allCodes = [...fallbackReasonCodes, 'CONTRACT_VIOLATION_CLAMPED'];
     expect(allCodes).toContain('CONTRACT_VIOLATION_CLAMPED');
   });
 });
@@ -74,7 +71,7 @@ describe('SC2: titane-local is ultimate fallback', () => {
   it('local provider is always in provider list', () => {
     const providers = ['gemini', 'ollama', 'openai', 'claude', 'local'];
     const hasLocal = providers.some(
-      (p) => p === 'local' || p === 'ollama' || p === 'titane-local',
+      p => p === 'local' || p === 'ollama' || p === 'titane-local'
     );
     expect(hasLocal).toBe(true);
   });
@@ -112,14 +109,8 @@ describe('SC3: backoff retry exists and is bounded', () => {
 
 describe('SC4: rollback document exists', () => {
   it('rollback spec exists in governance', () => {
-    const rollbackPath = join(
-      process.cwd(),
-      'docs/governance/en/rollback.md',
-    );
-    const altPath = join(
-      process.cwd(),
-      'docs/governance/rollback.md',
-    );
+    const rollbackPath = join(process.cwd(), 'docs/governance/en/rollback.md');
+    const altPath = join(process.cwd(), 'docs/governance/rollback.md');
     const exists = existsSync(rollbackPath) || existsSync(altPath);
     expect(exists).toBe(true);
   });
@@ -131,10 +122,7 @@ describe('SC4: rollback document exists', () => {
 
 describe('SC5: self-healing commands module exists', () => {
   it('self_healing_commands.rs exists', () => {
-    const path = join(
-      process.cwd(),
-      'src-tauri/src/commands/self_healing_commands.rs',
-    );
+    const path = join(process.cwd(), 'src-tauri/src/commands/self_healing_commands.rs');
     expect(existsSync(path)).toBe(true);
   });
 
@@ -144,10 +132,7 @@ describe('SC5: self-healing commands module exists', () => {
   });
 
   it('auto_fix module exists in singularity_fusion', () => {
-    const path = join(
-      process.cwd(),
-      'src-tauri/src/singularity_fusion/auto_fix.rs',
-    );
+    const path = join(process.cwd(), 'src-tauri/src/singularity_fusion/auto_fix.rs');
     expect(existsSync(path)).toBe(true);
   });
 });

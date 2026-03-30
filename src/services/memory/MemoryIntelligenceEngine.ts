@@ -1,14 +1,14 @@
 /**
  * TITANE∞ v20.0Ω — Memory Intelligence Engine
  * ═══════════════════════════════════════════════════════════════
- * 
+ *
  * Moteur d'intelligence mémoire qui:
  * 1. Capture TOUTES les données importantes automatiquement
  * 2. Catégorise intelligemment par projet/domaine/thème
  * 3. Filtre, fusionne, résume et trie les données
  * 4. S'adapte aux préférences utilisateur
  * 5. Ne perd AUCUNE information pertinente
- * 
+ *
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -38,7 +38,14 @@ export interface EnhancedMemoryEntry extends MemoryEntry {
   /** Catégorisation intelligente */
   categories: MemoryCategory[];
   /** Source de l'information */
-  source: 'conversation' | 'file_analysis' | 'web_search' | 'reflection' | 'decision' | 'preference' | 'project';
+  source:
+    | 'conversation'
+    | 'file_analysis'
+    | 'web_search'
+    | 'reflection'
+    | 'decision'
+    | 'preference'
+    | 'project';
   /** Métadonnées enrichies */
   enrichedMetadata: {
     /** Projet associé */
@@ -70,7 +77,13 @@ export interface EnhancedMemoryEntry extends MemoryEntry {
 
 export interface CaptureContext {
   /** Type de source */
-  sourceType: 'chat_message' | 'file_analysis' | 'web_search' | 'reflection' | 'decision' | 'preference';
+  sourceType:
+    | 'chat_message'
+    | 'file_analysis'
+    | 'web_search'
+    | 'reflection'
+    | 'decision'
+    | 'preference';
   /** ID de conversation */
   conversationId?: string;
   /** Métadonnées de contexte */
@@ -141,7 +154,7 @@ const DEFAULT_TAXONOMY: CategoryTaxonomy = {
     },
     {
       id: 'livre',
-      name: 'Là où tout s\'éclaircit',
+      name: "Là où tout s'éclaircit",
       aliases: ['livre', 'book', 'éclaircit', '12 chapitres'],
       domain: 'creative',
     },
@@ -150,27 +163,72 @@ const DEFAULT_TAXONOMY: CategoryTaxonomy = {
     {
       id: 'technical',
       name: 'Technique',
-      keywords: ['code', 'développement', 'architecture', 'système', 'configuration', 'bug', 'fix', 'api', 'rust', 'typescript', 'react', 'tauri'],
+      keywords: [
+        'code',
+        'développement',
+        'architecture',
+        'système',
+        'configuration',
+        'bug',
+        'fix',
+        'api',
+        'rust',
+        'typescript',
+        'react',
+        'tauri',
+      ],
     },
     {
       id: 'creative',
       name: 'Créatif',
-      keywords: ['design', 'art', 'création', 'écriture', 'poésie', 'esthétique', 'style', 'couleur'],
+      keywords: [
+        'design',
+        'art',
+        'création',
+        'écriture',
+        'poésie',
+        'esthétique',
+        'style',
+        'couleur',
+      ],
     },
     {
       id: 'personal',
       name: 'Personnel',
-      keywords: ['préférence', 'goût', 'habitude', 'routine', 'bien-être', 'santé', 'émotion'],
+      keywords: [
+        'préférence',
+        'goût',
+        'habitude',
+        'routine',
+        'bien-être',
+        'santé',
+        'émotion',
+      ],
     },
     {
       id: 'business',
       name: 'Business',
-      keywords: ['stratégie', 'positionnement', 'offre', 'client', 'revenu', 'marketing', 'vente'],
+      keywords: [
+        'stratégie',
+        'positionnement',
+        'offre',
+        'client',
+        'revenu',
+        'marketing',
+        'vente',
+      ],
     },
     {
       id: 'learning',
       name: 'Apprentissage',
-      keywords: ['apprendre', 'comprendre', 'découvrir', 'expérimenter', 'méthode', 'technique'],
+      keywords: [
+        'apprendre',
+        'comprendre',
+        'découvrir',
+        'expérimenter',
+        'méthode',
+        'technique',
+      ],
     },
   ],
   themes: [
@@ -178,7 +236,15 @@ const DEFAULT_TAXONOMY: CategoryTaxonomy = {
       id: 'architecture',
       name: 'Architecture',
       domain: 'technical',
-      keywords: ['architecture', 'structure', 'modulaire', 'ring', 'boundary', 'ipc', 'gateway'],
+      keywords: [
+        'architecture',
+        'structure',
+        'modulaire',
+        'ring',
+        'boundary',
+        'ipc',
+        'gateway',
+      ],
     },
     {
       id: 'memory',
@@ -196,7 +262,13 @@ const DEFAULT_TAXONOMY: CategoryTaxonomy = {
       id: 'coaching',
       name: 'Coaching',
       domain: 'personal',
-      keywords: ['coaching', 'accompagnement', 'guidance', 'développement', 'transformation'],
+      keywords: [
+        'coaching',
+        'accompagnement',
+        'guidance',
+        'développement',
+        'transformation',
+      ],
     },
     {
       id: 'strategy',
@@ -253,7 +325,8 @@ export class MemoryIntelligenceEngine {
     }
 
     // Calculer l'importance si non fournie
-    const calculatedImportance = importance !== undefined ? importance : this.calculateImportance(content, context);
+    const calculatedImportance =
+      importance !== undefined ? importance : this.calculateImportance(content, context);
 
     // Ne pas capturer si trop peu important (sauf si forcé)
     if (calculatedImportance < 0.15 && !context.forceCapture) {
@@ -414,14 +487,11 @@ export class MemoryIntelligenceEngine {
     analysisResult: string,
     conversationId?: string
   ): Promise<EnhancedMemoryEntry | null> {
-    return this.capture(
-      `Analyse de ${filePath}: ${analysisResult}`,
-      {
-        sourceType: 'file_analysis',
-        conversationId,
-        context: { filePath, analysisType: 'file' },
-      }
-    );
+    return this.capture(`Analyse de ${filePath}: ${analysisResult}`, {
+      sourceType: 'file_analysis',
+      conversationId,
+      context: { filePath, analysisType: 'file' },
+    });
   }
 
   /**
@@ -435,27 +505,21 @@ export class MemoryIntelligenceEngine {
     const captured: EnhancedMemoryEntry[] = [];
 
     // Capturer la requête
-    const queryEntry = await this.capture(
-      `Recherche web: ${query}`,
-      {
-        sourceType: 'web_search',
-        conversationId,
-        context: { query, resultCount: results.length },
-      }
-    );
+    const queryEntry = await this.capture(`Recherche web: ${query}`, {
+      sourceType: 'web_search',
+      conversationId,
+      context: { query, resultCount: results.length },
+    });
     if (queryEntry) captured.push(queryEntry);
 
     // Capturer les résultats importants
     for (const result of results.slice(0, 3)) {
       if (result.snippet && result.snippet.length > 50) {
-        const resultEntry = await this.capture(
-          `${result.title}: ${result.snippet}`,
-          {
-            sourceType: 'web_search',
-            conversationId,
-            context: { url: result.url, title: result.title },
-          }
-        );
+        const resultEntry = await this.capture(`${result.title}: ${result.snippet}`, {
+          sourceType: 'web_search',
+          conversationId,
+          context: { url: result.url, title: result.title },
+        });
         if (resultEntry) captured.push(resultEntry);
       }
     }
@@ -490,9 +554,18 @@ export class MemoryIntelligenceEngine {
 
     // Mots-clés importants
     const importantPatterns = [
-      /important/i, /crucial/i, /essentiel/i, /décision/i,
-      /préférence/i, /projet/i, /configuration/i, /architecture/i,
-      /bug/i, /fix/i, /solution/i, /méthode/i,
+      /important/i,
+      /crucial/i,
+      /essentiel/i,
+      /décision/i,
+      /préférence/i,
+      /projet/i,
+      /configuration/i,
+      /architecture/i,
+      /bug/i,
+      /fix/i,
+      /solution/i,
+      /méthode/i,
     ];
     for (const pattern of importantPatterns) {
       if (pattern.test(content)) {
@@ -523,7 +596,9 @@ export class MemoryIntelligenceEngine {
     // Détecter les projets
     for (const project of this.taxonomy.projects) {
       if (!project || !project.aliases) continue;
-      const matches = project.aliases.some(alias => lowerContent.includes(alias.toLowerCase()));
+      const matches = project.aliases.some(alias =>
+        lowerContent.includes(alias.toLowerCase())
+      );
       if (matches) {
         categories.push({
           main: 'project',
@@ -580,22 +655,109 @@ export class MemoryIntelligenceEngine {
    */
   private extractKeywords(content: string): string[] {
     if (!content) return [];
-    
+
     const stopwords = new Set([
-      'le', 'la', 'les', 'un', 'une', 'des', 'et', 'ou', 'mais', 'donc',
-      'car', 'ni', 'que', 'qui', 'quoi', 'quel', 'quelle', 'quels', 'quelles',
-      'est', 'sont', 'être', 'avoir', 'faire', 'dit', 'avec', 'dans', 'sur',
-      'pour', 'par', 'en', 'au', 'aux', 'ce', 'ces', 'cette', 'mon', 'ma',
-      'mes', 'ton', 'ta', 'tes', 'son', 'sa', 'ses', 'notre', 'nos', 'votre',
-      'vos', 'leur', 'leurs', 'je', 'tu', 'il', 'elle', 'on', 'nous', 'vous',
-      'ils', 'elles', 'me', 'te', 'se', 'lui', 'leur', 'y', 'ne', 'pas',
-      'plus', 'très', 'tout', 'tous', 'toute', 'toutes', 'autre', 'autres',
-      'même', 'mêmes', 'si', 'alors', 'aussi', 'bien', 'peut', 'peu',
-      'après', 'avant', 'depuis', 'pendant', 'entre', 'sous', 'vers',
-      'chez', 'c\'est', 'il\'est', 'elle\'est', 'nous\'sommes', 'vous\'êtes',
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'et',
+      'ou',
+      'mais',
+      'donc',
+      'car',
+      'ni',
+      'que',
+      'qui',
+      'quoi',
+      'quel',
+      'quelle',
+      'quels',
+      'quelles',
+      'est',
+      'sont',
+      'être',
+      'avoir',
+      'faire',
+      'dit',
+      'avec',
+      'dans',
+      'sur',
+      'pour',
+      'par',
+      'en',
+      'au',
+      'aux',
+      'ce',
+      'ces',
+      'cette',
+      'mon',
+      'ma',
+      'mes',
+      'ton',
+      'ta',
+      'tes',
+      'son',
+      'sa',
+      'ses',
+      'notre',
+      'nos',
+      'votre',
+      'vos',
+      'leur',
+      'leurs',
+      'je',
+      'tu',
+      'il',
+      'elle',
+      'on',
+      'nous',
+      'vous',
+      'ils',
+      'elles',
+      'me',
+      'te',
+      'se',
+      'lui',
+      'leur',
+      'y',
+      'ne',
+      'pas',
+      'plus',
+      'très',
+      'tout',
+      'tous',
+      'toute',
+      'toutes',
+      'autre',
+      'autres',
+      'même',
+      'mêmes',
+      'si',
+      'alors',
+      'aussi',
+      'bien',
+      'peut',
+      'peu',
+      'après',
+      'avant',
+      'depuis',
+      'pendant',
+      'entre',
+      'sous',
+      'vers',
+      'chez',
+      "c'est",
+      "il'est",
+      "elle'est",
+      "nous'sommes",
+      "vous'êtes",
     ]);
 
-    const words = content.toLowerCase()
+    const words = content
+      .toLowerCase()
       .replace(/[^\w\sàâäéèêëïîôùûüÿçœæ]/g, ' ')
       .split(/\s+/)
       .filter(w => w.length > 3 && !stopwords.has(w));
@@ -618,8 +780,29 @@ export class MemoryIntelligenceEngine {
    */
   private detectSentiment(content: string): 'positive' | 'neutral' | 'negative' {
     const lower = content.toLowerCase();
-    const positiveWords = ['bon', 'bien', 'excellent', 'parfait', 'super', 'génial', 'merci', 'content', 'heureux', 'réussi'];
-    const negativeWords = ['mauvais', 'mal', 'problème', 'bug', 'erreur', 'échec', 'difficile', 'impossible', 'frustrant'];
+    const positiveWords = [
+      'bon',
+      'bien',
+      'excellent',
+      'parfait',
+      'super',
+      'génial',
+      'merci',
+      'content',
+      'heureux',
+      'réussi',
+    ];
+    const negativeWords = [
+      'mauvais',
+      'mal',
+      'problème',
+      'bug',
+      'erreur',
+      'échec',
+      'difficile',
+      'impossible',
+      'frustrant',
+    ];
 
     const positiveCount = positiveWords.filter(w => lower.includes(w)).length;
     const negativeCount = negativeWords.filter(w => lower.includes(w)).length;
@@ -632,12 +815,25 @@ export class MemoryIntelligenceEngine {
   /**
    * Détecte le niveau d'urgence
    */
-  private detectUrgency(content: string, context: CaptureContext): 'low' | 'medium' | 'high' | 'critical' {
+  private detectUrgency(
+    content: string,
+    context: CaptureContext
+  ): 'low' | 'medium' | 'high' | 'critical' {
     const lower = content.toLowerCase();
 
     if (context.sourceType === 'decision') return 'high';
-    if (lower.includes('urgent') || lower.includes('immédiat') || lower.includes('critique')) return 'critical';
-    if (lower.includes('important') || lower.includes('nécessaire') || lower.includes('bientôt')) return 'high';
+    if (
+      lower.includes('urgent') ||
+      lower.includes('immédiat') ||
+      lower.includes('critique')
+    )
+      return 'critical';
+    if (
+      lower.includes('important') ||
+      lower.includes('nécessaire') ||
+      lower.includes('bientôt')
+    )
+      return 'high';
     if (lower.includes('préférence') || lower.includes('suggestion')) return 'medium';
     return 'low';
   }
@@ -650,7 +846,7 @@ export class MemoryIntelligenceEngine {
     let hash = 0;
     for (let i = 0; i < content.length; i++) {
       const char = content.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash;
     }
     return Math.abs(hash).toString(36);
@@ -659,7 +855,10 @@ export class MemoryIntelligenceEngine {
   /**
    * Vérifie si un contenu est un doublon
    */
-  private async isDuplicate(contentHash: string, conversationId?: string): Promise<boolean> {
+  private async isDuplicate(
+    contentHash: string,
+    conversationId?: string
+  ): Promise<boolean> {
     try {
       const existing = await this.unifiedMemory.recall({
         keywords: [contentHash],
@@ -688,7 +887,10 @@ export class MemoryIntelligenceEngine {
   /**
    * Trouve les entrées liées
    */
-  private async findRelatedEntries(keywords: string[], categories: MemoryCategory[]): Promise<string[]> {
+  private async findRelatedEntries(
+    keywords: string[],
+    categories: MemoryCategory[]
+  ): Promise<string[]> {
     if (keywords.length === 0) return [];
 
     try {
@@ -743,7 +945,9 @@ export class MemoryIntelligenceEngine {
   /**
    * Extrait les préférences utilisateur d'un message
    */
-  private extractPreferences(message: string): Array<{ content: string; importance: number }> {
+  private extractPreferences(
+    message: string
+  ): Array<{ content: string; importance: number }> {
     const preferences: Array<{ content: string; importance: number }> = [];
 
     const patterns = [
@@ -775,9 +979,15 @@ export class MemoryIntelligenceEngine {
     const facts: Array<{ content: string; importance: number }> = [];
 
     const patterns = [
-      { pattern: /\b(il est important de noter que|à noter que)\s*:?\s*(.+?)[.!]/gi, importance: 0.8 },
+      {
+        pattern: /\b(il est important de noter que|à noter que)\s*:?\s*(.+?)[.!]/gi,
+        importance: 0.8,
+      },
       { pattern: /\b(en résumé|pour résumer)[,:\s]+(.+?)[.!]/gi, importance: 0.6 },
-      { pattern: /\b(le point clé est que|l'essentiel est que)\s*(.+?)[.!]/gi, importance: 0.7 },
+      {
+        pattern: /\b(le point clé est que|l'essentiel est que)\s*(.+?)[.!]/gi,
+        importance: 0.7,
+      },
     ];
 
     for (const { pattern, importance } of patterns) {
@@ -868,8 +1078,11 @@ export class MemoryIntelligenceEngine {
 
       if (existing) {
         // Fusionner avec l'entrée existante
-        existing.accessCount += (entry.accessCount ?? 0);
-        existing.lastAccessed = Math.max(existing.lastAccessed ?? 0, entry.lastAccessed ?? 0);
+        existing.accessCount += entry.accessCount ?? 0;
+        existing.lastAccessed = Math.max(
+          existing.lastAccessed ?? 0,
+          entry.lastAccessed ?? 0
+        );
         if ((entry.importance ?? 0) > (existing.importance ?? 0)) {
           existing.importance = entry.importance;
         }
@@ -895,10 +1108,13 @@ export class MemoryIntelligenceEngine {
       if (processed.has(entry.id)) continue;
 
       // Chercher les entrées liées
-      const related = entries.filter(e =>
-        e && e.id && e.id !== entry.id &&
-        !processed.has(e.id) &&
-        this.areRelated(entry, e)
+      const related = entries.filter(
+        e =>
+          e &&
+          e.id &&
+          e.id !== entry.id &&
+          !processed.has(e.id) &&
+          this.areRelated(entry, e)
       );
 
       if (related.length > 0) {
@@ -921,9 +1137,12 @@ export class MemoryIntelligenceEngine {
   /**
    * Vérifie si deux entrées sont liées
    */
-  private areRelated(a: MemoryEntry | undefined | null, b: MemoryEntry | undefined | null): boolean {
+  private areRelated(
+    a: MemoryEntry | undefined | null,
+    b: MemoryEntry | undefined | null
+  ): boolean {
     if (!a || !b) return false;
-    
+
     // Même conversation
     if (a.conversationId && b.conversationId && a.conversationId === b.conversationId) {
       return true;
@@ -932,14 +1151,14 @@ export class MemoryIntelligenceEngine {
     // Mots-clés similaires
     const aKeywords = a.content ? this.extractKeywords(a.content) : [];
     const bKeywords = b.content ? this.extractKeywords(b.content) : [];
-    
+
     if (!aKeywords || !bKeywords || aKeywords.length === 0 || bKeywords.length === 0) {
       return false;
     }
-    
+
     const aWords = new Set(aKeywords);
     const bWords = new Set(bKeywords);
-    
+
     const intersection = new Set([...aWords].filter(x => bWords.has(x)));
     const similarity = intersection.size / Math.max(aWords.size, bWords.size);
 
@@ -966,9 +1185,10 @@ export class MemoryIntelligenceEngine {
 
     return {
       ...primary,
-      content: combinedContent.length > 500
-        ? combinedContent.slice(0, 500) + '...'
-        : combinedContent,
+      content:
+        combinedContent.length > 500
+          ? combinedContent.slice(0, 500) + '...'
+          : combinedContent,
       importance: maxImportance,
       timestamp: maxTimestamp,
       lastAccessed: Date.now(),
@@ -981,14 +1201,22 @@ export class MemoryIntelligenceEngine {
    */
   private sortByRelevance(entries: MemoryEntry[]): MemoryEntry[] {
     const now = Date.now();
-    return entries.filter(e => e != null).sort((a, b) => {
-      if (!a || !b) return 0;
-      const aRecency = Math.max(0, 1 - (now - (a.lastAccessed ?? 0)) / (7 * 24 * 60 * 60 * 1000));
-      const bRecency = Math.max(0, 1 - (now - (b.lastAccessed ?? 0)) / (7 * 24 * 60 * 60 * 1000));
-      const aScore = (a.importance ?? 0) * 0.7 + aRecency * 0.3;
-      const bScore = (b.importance ?? 0) * 0.7 + bRecency * 0.3;
-      return bScore - aScore;
-    });
+    return entries
+      .filter(e => e != null)
+      .sort((a, b) => {
+        if (!a || !b) return 0;
+        const aRecency = Math.max(
+          0,
+          1 - (now - (a.lastAccessed ?? 0)) / (7 * 24 * 60 * 60 * 1000)
+        );
+        const bRecency = Math.max(
+          0,
+          1 - (now - (b.lastAccessed ?? 0)) / (7 * 24 * 60 * 60 * 1000)
+        );
+        const aScore = (a.importance ?? 0) * 0.7 + aRecency * 0.3;
+        const bScore = (b.importance ?? 0) * 0.7 + bRecency * 0.3;
+        return bScore - aScore;
+      });
   }
 
   /**
@@ -1029,7 +1257,7 @@ export class MemoryIntelligenceEngine {
     const parts: string[] = [];
     for (const [type, typeEntries] of byType) {
       if (!typeEntries || typeEntries.length === 0) continue;
-      
+
       const sortedEntries = [...typeEntries]
         .filter(e => e && e.content)
         .sort((a, b) => {
@@ -1042,9 +1270,10 @@ export class MemoryIntelligenceEngine {
       parts.push(`**${type}** (${typeEntries.length} entrées):`);
       for (const entry of top3) {
         if (!entry || !entry.content) continue;
-        const truncated = entry.content.length > 100
-          ? entry.content.slice(0, 100) + '...'
-          : entry.content;
+        const truncated =
+          entry.content.length > 100
+            ? entry.content.slice(0, 100) + '...'
+            : entry.content;
         parts.push(`  - ${truncated}`);
       }
     }

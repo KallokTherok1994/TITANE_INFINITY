@@ -1409,7 +1409,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         baselineState = await invokeTauriCommand('titan_recover_state');
       }
       if (!baselineState && preSnapshots.length === 0) {
-        console.log('[RESTORE_HARNESS] no snapshots detected; attempting snapshot emission');
+        console.log(
+          '[RESTORE_HARNESS] no snapshots detected; attempting snapshot emission'
+        );
         await invokeTauriCommand('titan_force_snapshot_current');
         const emittedSnapshots = await invokeTauriCommand('titan_list_snapshots');
         console.log(
@@ -1443,7 +1445,10 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       await invokeTauriCommand('titan_force_snapshot', { stateJson: baselineJson });
 
       const postSnapshots = await invokeTauriCommand('titan_list_snapshots');
-      assert.ok(Array.isArray(postSnapshots), 'titan_list_snapshots (post) returned non-array');
+      assert.ok(
+        Array.isArray(postSnapshots),
+        'titan_list_snapshots (post) returned non-array'
+      );
 
       const recoveredState = await invokeTauriCommand('titan_recover_state');
       assert.ok(
@@ -1496,8 +1501,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
 
       // Step 1: read pre-event state and baseline event count from file
       const preStatus = await invokeTauriCommand('titan_get_persistence_status');
-      const preEventsFromFile = await invokeTauriCommand('titan_get_events_since', { timestamp: 0 });
-      const preEventsCount = Array.isArray(preEventsFromFile) ? preEventsFromFile.length : -1;
+      const preEventsFromFile = await invokeTauriCommand('titan_get_events_since', {
+        timestamp: 0,
+      });
+      const preEventsCount = Array.isArray(preEventsFromFile)
+        ? preEventsFromFile.length
+        : -1;
 
       let preEventState = await invokeTauriCommand('titan_load_state');
       if (!preEventState) {
@@ -1524,8 +1533,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       });
 
       // Step 3: verify event was written to DB file
-      const postEventsFromFile = await invokeTauriCommand('titan_get_events_since', { timestamp: 0 });
-      const postEventsCount = Array.isArray(postEventsFromFile) ? postEventsFromFile.length : -1;
+      const postEventsFromFile = await invokeTauriCommand('titan_get_events_since', {
+        timestamp: 0,
+      });
+      const postEventsCount = Array.isArray(postEventsFromFile)
+        ? postEventsFromFile.length
+        : -1;
       const postStatus = await invokeTauriCommand('titan_get_persistence_status');
 
       console.log(
@@ -1539,9 +1552,7 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       const postMemoryCount = postEventState.memory
         ? postEventState.memory.total_memories
         : null;
-      console.log(
-        `[EVENT_REPLAY_HARNESS] postMemoryCount=${postMemoryCount}`
-      );
+      console.log(`[EVENT_REPLAY_HARNESS] postMemoryCount=${postMemoryCount}`);
 
       // Assertions
       assert.ok(
@@ -1572,36 +1583,63 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       // SCENARIO A: persistent_memory_get_stats — baseline before write
       // Returns PersistentMemoryStats { count_by_level: { session, intermediate, long_term }, ... }
       const statsBefore = await invokeTauriCommand('persistent_memory_get_stats');
-      const preLongTerm = statsBefore && statsBefore.count_by_level ? (statsBefore.count_by_level.long_term || 0) : 0;
-      console.log(`[LTM_PATH] stats_before: long_term=${preLongTerm} full=${JSON.stringify(statsBefore?.count_by_level)}`);
-      assert.ok(statsBefore !== null && statsBefore !== undefined, 'persistent_memory_get_stats must be reachable');
+      const preLongTerm =
+        statsBefore && statsBefore.count_by_level
+          ? statsBefore.count_by_level.long_term || 0
+          : 0;
+      console.log(
+        `[LTM_PATH] stats_before: long_term=${preLongTerm} full=${JSON.stringify(statsBefore?.count_by_level)}`
+      );
+      assert.ok(
+        statsBefore !== null && statsBefore !== undefined,
+        'persistent_memory_get_stats must be reachable'
+      );
 
       // SCENARIO B: persistent_memory_write_entry — returns UUID string
       // Note: window.__TAURI__.core.invoke uses camelCase → Tauri converts to snake_case Rust params
       const writeId = await invokeTauriCommand('persistent_memory_write_entry', {
         content: 'LTM path proof P1.13a — write/read round-trip verification',
         level: 'long_term',
-        modeId: 'ltm_path_proof_p1_13a'
+        modeId: 'ltm_path_proof_p1_13a',
       });
       console.log(`[LTM_PATH] write_entry id=${writeId} type=${typeof writeId}`);
-      assert.ok(typeof writeId === 'string' && writeId.length > 0, `persistent_memory_write_entry must return a string ID (got: ${JSON.stringify(writeId)})`);
+      assert.ok(
+        typeof writeId === 'string' && writeId.length > 0,
+        `persistent_memory_write_entry must return a string ID (got: ${JSON.stringify(writeId)})`
+      );
 
       // SCENARIO C: persistent_memory_get_stats after write — long_term count increments
       const statsAfter = await invokeTauriCommand('persistent_memory_get_stats');
-      const postLongTerm = statsAfter && statsAfter.count_by_level ? (statsAfter.count_by_level.long_term || 0) : 0;
-      console.log(`[LTM_PATH] stats_after: long_term=${postLongTerm} (pre=${preLongTerm})`);
-      assert.ok(postLongTerm === preLongTerm + 1, `persistent_memory long_term count must increment (pre=${preLongTerm} post=${postLongTerm})`);
+      const postLongTerm =
+        statsAfter && statsAfter.count_by_level
+          ? statsAfter.count_by_level.long_term || 0
+          : 0;
+      console.log(
+        `[LTM_PATH] stats_after: long_term=${postLongTerm} (pre=${preLongTerm})`
+      );
+      assert.ok(
+        postLongTerm === preLongTerm + 1,
+        `persistent_memory long_term count must increment (pre=${preLongTerm} post=${postLongTerm})`
+      );
 
       // SCENARIO D: persistent_memory_read — proves file-based round-trip read
       // Returns MemoryReadResponse { entries: [...], total_count: N, ... }
       // MemoryReadRequest uses #[serde(rename_all = "camelCase")] → currentMode
       const readResult = await invokeTauriCommand('persistent_memory_read', {
-        request: { currentMode: 'ltm_path_proof_p1_13a' }
+        request: { currentMode: 'ltm_path_proof_p1_13a' },
       });
-      const readTotal = readResult ? (readResult.total_count || 0) : 0;
-      console.log(`[LTM_PATH] read total_count=${readTotal} entries=${readResult?.entries?.length}`);
-      assert.ok(readResult && Array.isArray(readResult.entries), 'persistent_memory_read must return entries array');
-      assert.ok(readTotal >= 1, `persistent_memory_read must return at least 1 entry after write (got total_count=${readTotal})`);
+      const readTotal = readResult ? readResult.total_count || 0 : 0;
+      console.log(
+        `[LTM_PATH] read total_count=${readTotal} entries=${readResult?.entries?.length}`
+      );
+      assert.ok(
+        readResult && Array.isArray(readResult.entries),
+        'persistent_memory_read must return entries array'
+      );
+      assert.ok(
+        readTotal >= 1,
+        `persistent_memory_read must return at least 1 entry after write (got total_count=${readTotal})`
+      );
     }
   );
 
@@ -1627,8 +1665,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       const preTicks = preState.metrics ? preState.metrics.ticks : null;
       const preDepth = preState.cognition ? preState.cognition.depth : null;
       const preMemories = preState.memory ? preState.memory.total_memories : null;
-      const preActiveThoughts = preState.cognition ? preState.cognition.active_thoughts : null;
-      const preMetricsLastUpdate = preState.metrics ? preState.metrics.last_update_ms : null;
+      const preActiveThoughts = preState.cognition
+        ? preState.cognition.active_thoughts
+        : null;
+      const preMetricsLastUpdate = preState.metrics
+        ? preState.metrics.last_update_ms
+        : null;
 
       console.log(
         `[MULTI_REDUCER] pre: ticks=${preTicks} depth=${preDepth} memories=${preMemories} active_thoughts=${preActiveThoughts} metrics_last_update=${preMetricsLastUpdate}`
@@ -1658,8 +1700,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       const postTicks = postState.metrics ? postState.metrics.ticks : null;
       const postDepth = postState.cognition ? postState.cognition.depth : null;
       const postMemories = postState.memory ? postState.memory.total_memories : null;
-      const postActiveThoughts = postState.cognition ? postState.cognition.active_thoughts : null;
-      const postMetricsLastUpdate = postState.metrics ? postState.metrics.last_update_ms : null;
+      const postActiveThoughts = postState.cognition
+        ? postState.cognition.active_thoughts
+        : null;
+      const postMetricsLastUpdate = postState.metrics
+        ? postState.metrics.last_update_ms
+        : null;
       const postLastSyncMs = postState.last_sync_ms;
 
       console.log(
@@ -1670,7 +1716,10 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
 
       // XP reducer: metrics.ticks += 100
-      assert.ok(preTicks !== null && postTicks !== null, 'metrics.ticks must be accessible');
+      assert.ok(
+        preTicks !== null && postTicks !== null,
+        'metrics.ticks must be accessible'
+      );
       assert.equal(
         postTicks,
         preTicks + 100,
@@ -1678,7 +1727,10 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       );
 
       // PROGRESS reducer: cognition.depth = level.min(10) = 7 (absolute set)
-      assert.ok(preDepth !== null && postDepth !== null, 'cognition.depth must be accessible');
+      assert.ok(
+        preDepth !== null && postDepth !== null,
+        'cognition.depth must be accessible'
+      );
       assert.equal(
         postDepth,
         7,
