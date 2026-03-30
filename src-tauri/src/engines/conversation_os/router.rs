@@ -94,6 +94,19 @@ impl RouterEngine {
                 0.9,
                 "Explicit search keywords detected".to_string(),
             )
+        } else if msg_lower.contains("remember")
+            || msg_lower.contains("recall")
+            || msg_lower.contains("history")
+            || msg_lower.contains("memorise")
+            || msg_lower.contains("mémorise")
+            || msg_lower.contains("rappelle")
+            || msg_lower.contains("souviens")
+        {
+            (
+                Intent::Clarification,
+                0.85,
+                "Memory/history reference detected".to_string(),
+            )
         } else if msg_lower.contains("code")
             || msg_lower.contains("write")
             || msg_lower.contains("function")
