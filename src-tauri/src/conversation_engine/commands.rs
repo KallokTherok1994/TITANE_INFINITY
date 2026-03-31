@@ -28,6 +28,45 @@ use super::meta_accumulator::{
 use super::types::*;
 use super::ConversationEngineState;
 
+/// Prompt budget configuration — prevents PROMPT_ASSEMBLY_EXPLOSION
+const MAX_USER_MESSAGE_CHARS: usize = 50_000;
+const MAX_SYSTEM_PROMPT_CHARS: usize = 30_000;
+const MAX_TOTAL_PAYLOAD_CHARS: usize = 80_000;
+
+/// Validate and enforce prompt budget at IPC boundary.
+/// Returns Ok(validation_info) or Err(honest_error) if hard limit exceeded.
+fn validate_and_enforce_prompt_budget(args: &ConversationGenerateArgs) -> Result<(), String> {
+    let user_msg_len = args.message.len();
+    let system_prompt_len = args.system_prompt.as_deref().map(|s| s.len()).unwrap_or(0);
+    let total_len = user_msg_len + system_prompt_len;
+
+    // Hard limit: reject if user message alone exceeds budget
+    if user_msg_len > MAX_USER_MESSAGE_CHARS {
+        return Err(format!(
+            "[PROMPT_BUDGET] User message exceeds hard limit: {} > {} chars. Please shorten your message.",
+            user_msg_len, MAX_USER_MESSAGE_CHARS
+        ));
+    }
+
+    // Hard limit: reject if total payload exceeds budget
+    if total_len > MAX_TOTAL_PAYLOAD_CHARS {
+        return Err(format!(
+            "[PROMPT_BUDGET] Total payload exceeds hard limit: {} > {} chars (msg={} + prompt={}). Please shorten.",
+            total_len, MAX_TOTAL_PAYLOAD_CHARS, user_msg_len, system_prompt_len
+        ));
+    }
+
+    // Soft warning for system prompt (logged but not blocking)
+    if system_prompt_len > MAX_SYSTEM_PROMPT_CHARS {
+        log::warn!(
+            "[PROMPT_BUDGET] ⚠️ System prompt exceeds soft budget: {} > {} chars (truncated upstream)",
+            system_prompt_len, MAX_SYSTEM_PROMPT_CHARS
+        );
+    }
+
+    Ok(())
+}
+
 #[derive(Debug, Clone, serde::Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct ConversationGenerateArgs {
@@ -564,6 +603,15 @@ pub async fn conversation_generate(
     app_handle: tauri::AppHandle,
     args: ConversationGenerateArgs,
 ) -> CommandResult<serde_json::Value> {
+    // ═══════════════════════════════════════════════════════════════════
+    // PROMPT BUDGET ENFORCEMENT — anti-explosion guard (Crash Lock #1)
+    // Blocks oversized payloads BEFORE destructuring (avoids partial move).
+    // ═══════════════════════════════════════════════════════════════════
+    if let Err(budget_error) = validate_and_enforce_prompt_budget(&args) {
+        log::error!("[Ω:CMD] ❌ {}", budget_error);
+        return Err(budget_error);
+    }
+
     let ConversationGenerateArgs {
         message,
         conversation_id,

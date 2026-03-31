@@ -207,6 +207,120 @@ export function validateOmegaTraceMeta(
 }
 
 // ═══════════════════════════════════════════════════════════════════
+// PROMPT BUDGET — anti-explosion guard at IPC boundary
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Prompt budget configuration — prevents PROMPT_ASSEMBLY_EXPLOSION
+ * by enforcing explicit size limits at IPC boundary.
+ * 
+ * Authority: implementation_plan.md — Crash Lock #1
+ */
+export interface PromptBudgetConfig {
+  /** Maximum user message length in characters (~12K tokens) */
+  maxUserMessageChars: number;
+  /** Maximum total system prompt length in characters (~7.5K tokens) */
+  maxSystemPromptChars: number;
+  /** Maximum history messages to include */
+  maxHistoryMessages: number;
+  /** Maximum characters per history message */
+  maxHistoryMessageChars: number;
+  /** Maximum memory context block size in characters (~1.2K tokens) */
+  maxMemoryContextChars: number;
+}
+
+/** Default prompt budgets — safe for local+remote providers */
+export const DEFAULT_PROMPT_BUDGET: PromptBudgetConfig = {
+  maxUserMessageChars: 50_000,
+  maxSystemPromptChars: 30_000,
+  maxHistoryMessages: 20,
+  maxHistoryMessageChars: 300,
+  maxMemoryContextChars: 5_000,
+};
+
+/** Validation result for prompt budget */
+export interface PromptBudgetValidation {
+  ok: boolean;
+  violations: string[];
+  truncatedFields: string[];
+  originalSizes: {
+    userMessageChars: number;
+    systemPromptChars: number;
+    totalPayloadChars: number;
+  };
+}
+
+/**
+ * Truncate text to maxChars with ellipsis marker.
+ * Returns original text + wasTruncated flag.
+ */
+export function truncateWithBudget(
+  text: string,
+  maxChars: number,
+  label: string
+): { text: string; wasTruncated: boolean } {
+  if (text.length <= maxChars) {
+    return { text, wasTruncated: false };
+  }
+  const truncated = text.slice(0, maxChars) + `\n\n[...TRUNCATED:${label}:${text.length}→${maxChars} chars...]`;
+  console.warn(
+    `[PROMPT_BUDGET] ⚠️ Truncated ${label}: ${text.length} → ${maxChars} chars`
+  );
+  return { text: truncated, wasTruncated: true };
+}
+
+/**
+ * Validate prompt payload against budget limits.
+ * Detects oversized user messages and system prompts BEFORE IPC call.
+ * This is the PROMPT_ASSEMBLY_EXPLOSION guard.
+ */
+export function validatePromptBudget(payload: {
+  message: string;
+  systemPrompt?: string;
+  budget?: Partial<PromptBudgetConfig>;
+}): PromptBudgetValidation {
+  const budget = { ...DEFAULT_PROMPT_BUDGET, ...payload.budget };
+  const violations: string[] = [];
+  const truncatedFields: string[] = [];
+
+  const userMessageChars = payload.message.length;
+  const systemPromptChars = payload.systemPrompt?.length ?? 0;
+  const totalPayloadChars = userMessageChars + systemPromptChars;
+
+  if (userMessageChars > budget.maxUserMessageChars) {
+    violations.push(
+      `user_message exceeds budget: ${userMessageChars} > ${budget.maxUserMessageChars} chars`
+    );
+    truncatedFields.push('user_message');
+  }
+
+  if (systemPromptChars > budget.maxSystemPromptChars) {
+    violations.push(
+      `system_prompt exceeds budget: ${systemPromptChars} > ${budget.maxSystemPromptChars} chars`
+    );
+    truncatedFields.push('system_prompt');
+  }
+
+  if (violations.length > 0) {
+    console.warn(
+      `[PROMPT_BUDGET] ⚠️ Budget violations detected:`,
+      violations
+    );
+  }
+
+  return {
+    ok: violations.length === 0,
+    violations,
+    truncatedFields,
+    originalSizes: {
+      userMessageChars,
+      systemPromptChars,
+      totalPayloadChars,
+    },
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════
 // TYPE EXPORTS — infer from schemas (canonical source of truth)
 // ═══════════════════════════════════════════════════════════════════
 

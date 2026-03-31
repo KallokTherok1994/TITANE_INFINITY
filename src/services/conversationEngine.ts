@@ -23,7 +23,11 @@ import type {
 } from '@/types/providerMeta';
 import {
   validateProviderDecisionMeta,
+  validatePromptBudget,
+  truncateWithBudget,
+  DEFAULT_PROMPT_BUDGET,
   type ValidatedProviderDecisionMeta,
+  type PromptBudgetConfig,
 } from '@/schemas/ipcTruthContracts';
 import {
   formatContextEnvelopeForSystemPrompt,
@@ -589,6 +593,36 @@ export async function processMessage(
   ]
     .filter(Boolean)
     .join('\n\n');
+  // ═══════════════════════════════════════════════════════════════════
+  // PROMPT BUDGET VALIDATION — anti-explosion guard (Crash Lock #1)
+  // Validates user message + system prompt sizes BEFORE IPC call.
+  // ═══════════════════════════════════════════════════════════════════
+  const budgetValidation = validatePromptBudget({
+    message: userMessage,
+    systemPrompt,
+  });
+
+  // Truncate user message if it exceeds budget (soft limit — warn but continue)
+  const userMessageBudget = truncateWithBudget(
+    userMessage,
+    DEFAULT_PROMPT_BUDGET.maxUserMessageChars,
+    'user_message'
+  );
+
+  // Truncate system prompt if it exceeds budget (soft limit — warn but continue)
+  const systemPromptBudget = truncateWithBudget(
+    systemPrompt,
+    DEFAULT_PROMPT_BUDGET.maxSystemPromptChars,
+    'system_prompt'
+  );
+
+  if (!budgetValidation.ok) {
+    console.warn(
+      '[PROMPT_BUDGET] ⚠️ Budget violations detected, applying truncation:',
+      budgetValidation.violations
+    );
+  }
+
   const requestId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
 
   // OMEGA: wire classifier profile → ai_config temperature + maxTokens
@@ -597,11 +631,11 @@ export async function processMessage(
   const classifierMaxTokens = classifierProfile?.maxTokens;
 
   const payload = {
-    message: userMessage,
+    message: userMessageBudget.text,
     conversationId,
     mode: resolvedConversationMode,
     provider,
-    systemPrompt,
+    systemPrompt: systemPromptBudget.text,
     requestId,
     classifierMeta: {
       canonical_mode: modeClassification.canonicalMode,
@@ -623,10 +657,14 @@ export async function processMessage(
     mode: options?.mode || 'default',
     provider_requested: provider,
     conversation_id: conversationId,
-    message_length: userMessage.length,
+    message_length: userMessageBudget.text.length,
     module_id: options?.contextEnvelope?.moduleContext.moduleId || 'unknown',
     has_context_envelope: Boolean(options?.contextEnvelope),
     request_id: requestId,
+    budget_ok: budgetValidation.ok,
+    budget_violations: budgetValidation.violations.length,
+    user_message_truncated: userMessageBudget.wasTruncated,
+    system_prompt_truncated: systemPromptBudget.wasTruncated,
   });
 
   // Preflight guard — required args must be set before IPC
