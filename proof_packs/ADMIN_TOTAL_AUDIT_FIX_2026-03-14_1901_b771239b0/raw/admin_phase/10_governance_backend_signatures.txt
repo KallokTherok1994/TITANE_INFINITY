@@ -1,0 +1,11 @@
+81:pub async fn get_ia_policies() -> Result<Vec<IAPolicy>, TitaneError> {
+94:pub async fn save_ia_policies(policies: Vec<IAPolicy>) -> Result<(), TitaneError> {
+111:pub async fn toggle_ia_policy(policy_id: String, enabled: bool) -> Result<(), TitaneError> {
+144:pub async fn create_ia_policy(policy: IAPolicy) -> Result<String, String> {
+159:pub async fn delete_ia_policy(policy_id: String) -> Result<(), String> {
+177:pub async fn get_permission_matrix() -> Result<PermissionMatrix, String> {
+200:pub async fn clear_permission_audit() -> Result<(), String> {
+219:pub async fn get_security_log(
+239:pub async fn append_security_log(entry: SecurityLogEntry) -> Result<(), String> {
+261:pub async fn export_security_log(format: String) -> Result<String, String> {
+293:pub async fn clear_security_log() -> Result<(), String> {

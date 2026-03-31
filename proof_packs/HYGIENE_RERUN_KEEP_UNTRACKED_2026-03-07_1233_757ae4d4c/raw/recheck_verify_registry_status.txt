@@ -1,0 +1,2 @@
+pnpm_verify_registry_rerun=SKIPPED
+reason=no registry/runtime change in this run

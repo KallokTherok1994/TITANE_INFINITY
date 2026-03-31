@@ -1,0 +1,9 @@
+test:browser	PASS	0
+test:coverage	PASS	0
+test:coverage:unit	FAIL	1
+test:coverage:integration	PASS	0
+audit:master	FAIL	124
+audit:security	PASS	0
+audit:coverage	PASS	0
+audit:quality-gates	PASS	0
+copilot-xs:security-scan	FAIL	1

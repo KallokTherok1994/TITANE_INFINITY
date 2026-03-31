@@ -1,0 +1,2 @@
+6179:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:10:32.0416936Z error: failed to run custom build command for `titane-infinity v27.2.0 (/__w/TITANE_INFINITY/TITANE_INFINITY/src-tauri)`
+6198:🦀 Rust Backend Tests (Docker)	✔️ Run Cargo Check	2026-03-07T00:10:34.6309676Z ##[error]Process completed with exit code 101.

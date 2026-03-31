@@ -1,0 +1,19 @@
+728:pub async fn transcribe_audio(audio_data: Vec<u8>) -> CommandResult<String> {
+956:    if !RECORDING_ENGINE.is_recording() {
+978:                    Ok(audio_data) => match transcribe_audio(audio_data).await {
+1033:pub async fn is_recording() -> CommandResult<bool> {
+1034:    let state = RECORDING_ENGINE.is_recording();
+1035:    log::debug!("[Audio::is_recording] State: {}", state);
+1042:pub async fn get_recording_status() -> CommandResult<serde_json::Value> {
+1116:pub async fn stop_speaking() -> CommandResult<()> {
+1117:    log::info!("[Audio] stop_speaking() called");
+1124:pub async fn is_speaking() -> CommandResult<bool> {
+1231:    pub fn is_speaking(&self) -> bool {
+1270:    pub is_speaking: bool,
+1285:        is_speaking: vad.is_speaking(),
+1302:        is_speaking: state == VADState::Speech,
+1371:    let in_speech = vad.is_speaking();
+1377:    let back_to_silence = !vad.is_speaking();
+1414:        "transcribe_audio",
+1418:        "stop_speaking",
+1419:        "is_speaking",

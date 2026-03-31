@@ -1,0 +1,11 @@
+# ADMIN CLASSIFICATION MATRIX
+
+| ID | SURFACE | FILE_UI | CATEGORY | REAL_USER_INTENT | CANONICAL_SOURCE | EDITABLE? | PROPAGATES? | STATUS | SHOULD_SURVIVE? | FUSION_TARGET |
+|---|---|---|---|---|---|---|---|---|---|---|
+| ADM-01 | Tab Systeme | src/features/system-center/SystemCenterPage.tsx | SYSTEM_RUNTIME,SYSTEM_DIAGNOSTIC,ACTION | Diagnostic runtime | IPC `sc_*` via tauriClient | Oui | SYSTEM_RUNTIME | PASS | Oui | - |
+| ADM-01a | Diagnostics | src/features/system-center/tabs/DiagnosticsTab.tsx | SYSTEM_DIAGNOSTIC,ACTION | Lancer checks | `sc_run_quick/full_diagnostics` | Oui | SYSTEM_RUNTIME | PASS (crash gueri) | Oui | - |
+| ADM-02 | Tab Configuration | src/pages/ConfigurationHub.tsx | CONFIG_CANONICAL,CHAT_CONFIG,ACTION | Lire/modifier config runtime/chat | `get_all_configs`, `get_chat_*`, `set_chat_*` | Oui (selon mode) | CHAT_RUNTIME,SYSTEM_RUNTIME | QUALIFIED (degrade web sans Tauri) | Oui | - |
+| ADM-03 | Tab Audio & Voix | src/features/audio-center/AudioCenterPage.tsx | AUDIO,TTS,ACTION,AUDIO_PROPAGATION | Devices/voice/tests | audioService + tauriClient audio cmds | Oui | AUDIO_RUNTIME,TTS_ENGINE,DEVICE_LAYER | PASS (runtime-gated partiel) | Oui | - |
+| ADM-04 | Tab Design | src/features/design-center/DesignCenterPage.tsx | DESIGN_SYSTEM,DESIGN_PROPAGATION,ACTION | Tokens/theme/apparence | UIThemeProvider + load/save/reset ui theme | Oui | UI_THEME | QUALIFIED (pas de preuve runtime Tauri complete ici) | Oui | - |
+| ADM-05 | Tab Gouvernance | src/features/governance-center/GovernanceCenterPage.tsx | GOVERNANCE,ACTION | Secrets/policies/permissions/log | governanceService + safeInvoke | Oui | GOVERNANCE_POLICY | PASS (import OK) | Oui | - |
+| ADM-06 | Tab Sante Prod | src/features/production-health/ProductionHealthPanel.tsx | PRODUCTION_HEALTH,READ_ONLY,ACTION | Observabilite prod + refresh | useProductionHealthTelemetry -> `read_production_week1_csv` | Lecture + refresh | HEALTH_MONITORING | PASS (import OK) | Oui | - |

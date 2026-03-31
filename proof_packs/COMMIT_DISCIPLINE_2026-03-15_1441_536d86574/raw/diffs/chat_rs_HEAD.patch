@@ -1,0 +1,38 @@
+commit 536d865741176b507b00f140e75f10b210044812
+Author: Copilot Production Agent <copilot@titane-infinity.local>
+Date:   Sun Mar 15 10:36:31 2026 -0400
+
+    fix(vision+chat): VISION_CHAT_AUDIT 2026-03-15 — affect disclaimer + ChatWindow + send_message guard
+    
+    FIX-VISION-001: CameraPage — affect estimation UI gated by estimationCount > 0
+      (prevents false confidence display before model produces real results)
+    
+    FIX-CHAT-001: ChatPage — wire ChatWindow component (was placeholder comment)
+    
+    FIX-CHAT-002: commands/chat.rs — send_message returns explicit Err instead of
+      silent stub Ok — prevents UI false success (D6 UI_FALSE_SUCCESS)
+    
+    AutoHeal: AH-2026-03-15-VISION-001, AH-2026-03-15-CHAT-001, AH-2026-03-15-CHAT-002 (266 entries)
+    cargo check: EXIT=0 | verify_instructions: PASS=20 FAIL=0
+    Proof pack: proof_packs/VISION_CHAT_SYSTEM_AUDIT_2026-03-15_1409_c59e9b5b3/
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+diff --git a/src-tauri/src/commands/chat.rs b/src-tauri/src/commands/chat.rs
+index 9052197ef..9ee34854d 100644
+--- a/src-tauri/src/commands/chat.rs
++++ b/src-tauri/src/commands/chat.rs
+@@ -36,7 +36,9 @@ pub async fn send_message(
+         ip_address: None,
+     }).await;
+     
+-    // FIXME: stub response — replace with real chat provider dispatch once
+-    // the message routing layer is implemented (see docs/OMEGA_v2_SPEC.md)
+-    Ok(json!({ "ok": true, "content": "response", "error": null }))
++    // NOT IMPLEMENTED: send_message is a stub. Use conversation_generate instead.
++    // This command is kept registered to avoid IPC breakage but must not silently succeed.
++    Err(format!(
++        "send_message: not implemented — use conversation_generate for AI chat dispatch"
++    ))
+ }
+\ No newline at end of file

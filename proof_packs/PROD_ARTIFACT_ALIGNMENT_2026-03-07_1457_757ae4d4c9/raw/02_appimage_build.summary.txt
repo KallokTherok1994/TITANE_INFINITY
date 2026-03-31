@@ -1,0 +1,3 @@
+]633;E;{   echo "APPIMAGE_BUILD_EXIT_CODE=$RC"\x3b   echo "STABLE_CONFIG_VERSION_AFTER=$(jq -r '.version' runtime/stable/tauri.conf.json)"\x3b   echo "BUILD_END_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"\x3b } > "$PACK_DIR/raw/02_appimage_build.summary.txt";a3c3e139-01d1-4918-bf26-acb26cee1642]633;CAPPIMAGE_BUILD_EXIT_CODE=0
+STABLE_CONFIG_VERSION_AFTER=27.2.0
+BUILD_END_UTC=2026-03-07T15:06:09Z

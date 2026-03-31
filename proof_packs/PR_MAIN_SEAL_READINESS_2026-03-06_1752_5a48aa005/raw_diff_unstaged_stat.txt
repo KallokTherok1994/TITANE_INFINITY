@@ -1,0 +1,4 @@
+ e2e/desktop/ui-ultra-full.e2e.js      | 37 +++++++++++++++++++++++++++++++++--
+ scripts/autoheal/autoheal_rules.jsonl |  1 +
+ titane-infinity.desktop               |  4 ++--
+ 3 files changed, 38 insertions(+), 4 deletions(-)

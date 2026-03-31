@@ -1,0 +1,8 @@
+[X3] START UTC=2026-02-26T20:21:26Z
+[X3] RUN1 CMD=pnpm -s verify:invariants-governed
+[X3] RUN1 EXIT=0
+[X3] RUN2 CMD=pnpm -s verify:invariants-governed
+[X3] RUN2 EXIT=0
+[X3] RUN3 CMD=pnpm -s verify:invariants-governed
+[X3] RUN3 EXIT=0
+[X3] PASS: governed invariants clean

@@ -1,0 +1,214 @@
+nohup: les entrées sont ignorées
+
+> titane-infinity@27.0.1 dev:tauri /home/titane-os/Documents/GitHub/TITANE_INFINITY
+> bash scripts/dev/full_local_tauri_ollama.sh -- tauri dev --config runtime/dev/tauri.conf.json --no-watch
+
+🚀 Lancement: pnpm exec -- tauri dev --config runtime/dev/tauri.conf.json --no-watch
+     Running BeforeDevCommand (`bash -lc 'set -uo pipefail; ROOT=$(git rev-parse --show-toplevel 2>/dev/null || pwd); cd "$ROOT"; export PATH="$ROOT/.tools/node/current/bin:$PATH"; mkdir -p runtime/dev/logs; LOG=runtime/dev/logs/vite.log; : > "$LOG"; if command -v curl >/dev/null 2>&1 && curl -fsS http://127.0.0.1:5173 >/dev/null 2>&1; then echo "[tauri.dev] Vite déjà actif sur :5173 — skip beforeDevCommand" | tee -a "$LOG"; exit 0; fi; if command -v corepack >/dev/null 2>&1; then corepack pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort 2>&1 | tee "$LOG"; ec=${PIPESTATUS[0]}; elif command -v pnpm >/dev/null 2>&1; then pnpm exec vite dev --host 127.0.0.1 --port 5173 --strictPort 2>&1 | tee "$LOG"; ec=${PIPESTATUS[0]}; else echo "[tauri.dev] ERROR: pnpm introuvable" | tee -a "$LOG"; exit 1; fi; if [ "${ec:-0}" -eq 130 ] || [ "${ec:-0}" -eq 143 ]; then exit 0; fi; exit "${ec:-0}"'`)
+
+  VITE v7.3.1  ready in 388 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+     Running DevCommand (`cargo  run --no-default-features --features mock --color always --`)
+[1m[92m   Compiling[0m titane-infinity v27.0.1 (/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri)
+[1m[96m    Building[0m [=======================> ] 713/715: titane-infinity             [1m[96m    Building[0m [=======================> ] 714/715: titane-infinity(bin)        [K[1m[92m    Finished[0m ]8;;https://doc.rust-lang.org/cargo/reference/profiles.html#default-profiles\`dev` profile [unoptimized + debuginfo]]8;;\ target(s) in 14.69s
+[1m[92m     Running[0m `target/debug/titane-infinity`
+[2026-02-11T21:39:32.346Z INFO  titane_infinity::security::secrets_engine] [SecretsEngine] Secure secrets engine initialised (encrypted)
+[CHAT] ✅ UnifiedMemory initialized (STM/MTM/LTM ready)
+[2026-02-11T21:39:32.346Z INFO  titane_infinity] ✅ Copilot state initialized (key configured: false)
+[2026-02-11T21:39:32.348Z INFO  titane_infinity] ✅ HeliosCore and MemoryCore initialized successfully
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisation...
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth] ✓ Keystore chargé: 1 secrets configurés
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth::roles] ✓ Role Owner déjà présent pour Kevin Thibault
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth] ✓ Owner role vérifié: Kevin Thibault
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth] ✓ Dev Token présent
+[2026-02-11T21:39:32.517Z INFO  titane_infinity::auth] 🔐 AUTH OS — Initialisé avec succès
+[2026-02-11T21:39:32.517Z INFO  titane_infinity] ✅ AUTH OS v∞ initialized successfully
+[2026-02-11T21:39:32.561Z INFO  titane_infinity] [AI Router] Initialized with default Ollama model: llama3.1
+[2026-02-11T21:39:32.561Z INFO  titane_infinity] ✅ OMEGA Conversation Engine v19.5.2 initialized
+[2026-02-11T21:39:32.562Z INFO  titane_infinity] 📱 Main window found in app context
+[2026-02-11T21:39:32.564Z INFO  titane_infinity] 🛠️ DevTools opened automatically (dev mode)
+[2026-02-11T21:39:32.565Z INFO  titane_infinity] ✅ Main window shown successfully
+[2026-02-11T21:39:32.602Z INFO  titane_infinity] [Ollama] Endpoint already available
+[2026-02-11T21:39:33.301Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-02-11T21:39:33.307Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-02-11T21:39:36.149Z INFO  ui] page_load label=dev-monitor url=http://127.0.0.1:5173/
+[2026-02-11T21:39:36.483Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+16:39:36 [vite] (client) hmr update /src/index.css
+[2026-02-11T21:39:36.869Z INFO  titane_infinity::persistence] [PersistenceEngine] 🚀 Initialisation...
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::database] [PersistenceDB] 📂 Opening DB: "/home/titane-os/.local/share/TITANE_INFINITY/persistence/titan_events.db"
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::database] [PersistenceDB] ✅ Schéma vérifié/créé
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] 🔄 Démarrage de la récupération...
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 événements récupérés
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ 0 snapshots trouvés
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence::recovery] [RecoveryEngine] ✅ Récupération terminée en 0ms
+[2026-02-11T21:39:36.870Z INFO  titane_infinity::persistence] [PersistenceEngine] ✅ Initialisé avec succès
+[2026-02-11T21:39:36.890Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:39:37.134Z INFO  ui] page_load label=main url=http://127.0.0.1:5173/
+[2026-02-11T21:39:37.512Z INFO  ui] [UI] frontend.boot — main.tsx: boot handlers registered
+[2026-02-11T21:39:37.570Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:39:37.592Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-11T21:39:37.592Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-11T21:39:37.602Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-11T21:39:37.636Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-11T21:39:37.636Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-11T21:39:37.637Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+🔵 Proxying: GET /api/tags → /api/tags
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:39:38.201Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:39:38.536Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-11T21:39:38.537Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-11T21:39:38.919Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:39:38.942Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-11T21:39:38.942Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-11T21:39:38.945Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-11T21:39:38.987Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 IA policies
+[2026-02-11T21:39:38.987Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned permission matrix with 3 roles
+[2026-02-11T21:39:38.989Z INFO  titane_infinity::commands_v21::governance_commands] [GOVERNANCE] Returned 0 security log entries
+[2026-02-11T21:39:39.692Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-11T21:39:39.692Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 16000
+[2026-02-11T21:39:39.692Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+[2026-02-11T21:39:40.306Z INFO  titane_infinity::audio::commands] [Audio] test_microphone called with duration_ms=1000
+[2026-02-11T21:39:40.306Z INFO  titane_infinity::audio::commands] [Audio] Recording to: /tmp/titane_mic_test.wav
+[2026-02-11T21:39:41.317Z INFO  titane_infinity::audio::commands] [Audio] arecord exit status: ExitStatus(unix_wait_status(0))
+[2026-02-11T21:39:41.317Z INFO  titane_infinity::audio::commands] [Audio] File size: 32044 bytes, expected min: 16000
+[2026-02-11T21:39:41.317Z INFO  titane_infinity::audio::commands] [Audio] Microphone test SUCCESS
+[2026-02-11T21:40:06.891Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:40:06.905Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:40:08.216Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:40:08.220Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:40:36.891Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:40:36.904Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:40:38.215Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:40:38.220Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:41:06.892Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:41:06.904Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:41:08.215Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:41:08.220Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:41:36.892Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:41:36.910Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:41:38.238Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:41:38.312Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:42:06.893Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:42:06.911Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:42:08.236Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:42:08.260Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:42:36.903Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:42:36.913Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:42:38.237Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:42:38.306Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:43:07.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:43:07.595Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:43:08.237Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:43:08.273Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:43:38.236Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:43:38.257Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:43:38.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:43:38.590Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:44:08.233Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:44:08.256Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:44:09.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:44:09.588Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:44:38.245Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:44:38.261Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:44:40.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:44:40.590Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:45:08.254Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:45:08.261Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:45:11.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:45:11.589Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:45:38.255Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:45:38.261Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:45:42.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:45:42.608Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:46:08.255Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:46:08.260Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:46:13.589Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:46:13.656Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:46:38.255Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:46:38.261Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:46:44.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:46:44.590Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:47:08.285Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:47:08.355Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:47:15.581Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:47:15.604Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:47:38.286Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:47:38.295Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:47:46.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:47:46.588Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:48:08.286Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:48:08.292Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:48:17.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:48:17.592Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:48:38.287Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:48:38.294Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:48:48.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:48:48.593Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:49:08.287Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:49:08.293Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:49:19.578Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:49:19.588Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:49:38.287Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:49:38.293Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:49:50.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:49:50.589Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:50:08.287Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:50:08.293Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:50:21.578Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:50:21.587Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:50:38.288Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:50:38.294Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:50:52.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:50:52.590Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:51:08.289Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:51:08.294Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:51:23.579Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:51:23.588Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:51:38.289Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:51:38.298Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:51:54.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:51:54.590Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:52:08.290Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:52:08.295Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:52:25.578Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:52:25.587Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:52:38.290Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:52:38.318Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:52:56.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:52:56.589Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:53:08.291Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:53:08.318Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+[2026-02-11T21:53:27.580Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:53:27.594Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0
+🔵 Proxying: GET /api/tags → /api/tags
+[2026-02-11T21:53:38.304Z INFO  titane_infinity::secure_commands] [Security] check_system_integrity (mock) → OK
+[2026-02-11T21:53:38.342Z INFO  memory] get_memory_state disk_mode=ReadWrite synthetic=false issues=0

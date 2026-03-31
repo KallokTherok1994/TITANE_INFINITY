@@ -1,0 +1,893 @@
+Note: The tool simplified the command to ` pnpm run verify`, and this is the output of running that command instead:
+titane-os@TITANE-OS:~/Documents/GitHub/TITANE_INFINITY$ 
+... ok                                                                          test avatar::immersive_avatar_engine::tests::test_expression_model_serialization
+ ... ok                                                                         test avatar::immersive_avatar_engine::tests::test_expression_model_speaking_arch
+itecte ... ok                                                                   test avatar::immersive_avatar_engine::tests::test_expression_model_speaking_obse
+rvateur ... ok                                                                  test avatar::immersive_avatar_engine::tests::test_expression_model_speaking_tiss
+eur ... ok                                                                      test avatar::immersive_avatar_engine::tests::test_expression_model_update_high_s
+tability ... ok                                                                 test avatar::immersive_avatar_engine::tests::test_expression_model_update_low_st
+ability ... ok                                                                  test avatar::immersive_avatar_engine::tests::test_expression_model_update_xp_mil
+estone ... ok                                                                   test avatar::immersive_avatar_engine::tests::test_facial_expression_clone ... ok
+test avatar::immersive_avatar_engine::tests::test_facial_expression_equality ...
+ ok                                                                             test avatar::immersive_avatar_engine::tests::test_facial_expression_serializatio
+n ... ok                                                                        test avatar::immersive_avatar_engine::tests::test_french_phoneme_all_variants ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_french_phoneme_clone ... ok
+test avatar::immersive_avatar_engine::tests::test_french_phoneme_debug ... ok
+test avatar::immersive_avatar_engine::tests::test_french_phoneme_serialization .
+.. ok                                                                           test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_clone 
+... ok                                                                          test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_defaul
+t ... ok                                                                        test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_enable
+_immersion ... ok                                                               test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_new ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_finish
+_speech ... ok                                                                  test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_on_wak
+e_word ... ok                                                                   test avatar::fullbody::fullbody_engine::tests::test_fullbody_engine_with_profile
+ ... ok                                                                         test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_prepar
+e_for_speech ... ok                                                             test avatar::immersive_avatar_engine::tests::test_immersive_avatar_engine_serial
+ization ... ok                                                                  test avatar::immersive_avatar_engine::tests::test_lip_sync_model_generate_from_t
+ext ... ok                                                                      test avatar::immersive_avatar_engine::tests::test_lip_sync_model_get_current_mor
+ph ... ok                                                                       test avatar::immersive_avatar_engine::tests::test_lip_sync_model_reset ... ok
+test avatar::immersive_avatar_engine::tests::test_lip_sync_model_serialization .
+.. ok                                                                           test avatar::immersive_avatar_engine::tests::test_morph_target_clone ... ok
+test avatar::immersive_avatar_engine::tests::test_morph_target_from_phoneme_a ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_morph_target_from_phoneme_i ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_morph_target_from_phoneme_o ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_morph_target_from_phoneme_m ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_morph_target_from_phoneme_sile
+nce ... ok                                                                      test avatar::immersive_avatar_engine::tests::test_prosody_control_clone ... ok
+test avatar::immersive_avatar_engine::tests::test_morph_target_serialization ...
+ ok                                                                             test avatar::immersive_avatar_engine::tests::test_prosody_control_default ... ok
+test avatar::immersive_avatar_engine::tests::test_prosody_prepare_text_comma ...
+ ok                                                                             test avatar::immersive_avatar_engine::tests::test_prosody_control_serialization 
+... ok                                                                          test avatar::immersive_avatar_engine::tests::test_prosody_prepare_text_double_r 
+... ok                                                                          test avatar::immersive_avatar_engine::tests::test_prosody_prepare_text_period ..
+. ok                                                                            test avatar::immersive_avatar_engine::tests::test_prosody_segment_text_short ...
+ ok                                                                             test avatar::immersive_avatar_engine::tests::test_prosody_segment_text_long ... 
+ok                                                                              test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_architect
+e ... ok                                                                        test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_flux ... 
+ok                                                                              test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_mood_calm
+ ... ok                                                                         test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_mood_ener
+gized ... ok                                                                    test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_mood_soft
+_guide ... ok                                                                   test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_observate
+ur ... ok                                                                       test avatar::immersive_avatar_engine::tests::test_voice_profile_adjust_tisseur .
+.. ok                                                                           test avatar::immersive_avatar_engine::tests::test_voice_profile_clone ... ok
+test avatar::immersive_avatar_engine::tests::test_voice_profile_cognitive_load_h
+igh_cpu ... ok                                                                  test avatar::immersive_avatar_engine::tests::test_voice_profile_cognitive_load_l
+ow_stability ... ok                                                             test avatar::immersive_avatar_engine::tests::test_voice_profile_default ... ok
+test avatar::immersive_avatar_engine::tests::test_voice_profile_debug ... ok
+test commands::copilot_commands::tests::test_copilot_key_status ... ok
+test avatar::immersive_avatar_engine::tests::test_voice_profile_serialization ..
+. ok                                                                            test commands::copilot_commands::tests::test_copilot_request_serialization ... o
+k                                                                               test config::io::tests::test_filename_validation ... ok
+test config::tests::test_config_snapshot_creation ... ok
+test commands::ollama_command::tests::test_ollama_request_structure ... ok
+test config::tests::test_get_all_configs ... ok
+test config::update::tests::test_validate_chunk_size ... ok
+test config::update::tests::test_validate_ollama_model ... ok
+test config::update::tests::test_validate_max_tokens ... ok
+test config::update::tests::test_validate_temperature ... ok
+test config::update::tests::test_validate_ollama_url ... ok
+test config::update::tests::test_validate_timeout_ms ... ok
+test core::tapi_error::tests::test_tapi_error_creation ... ok
+test core::tapi_error::tests::test_tapi_error_with_context ... ok
+test avatar::immersive_avatar_engine::tests::test_lip_sync_model_advance_frame .
+.. ok                                                                           test avatar::immersive_avatar_engine::tests::test_lip_sync_model_default ... ok
+test core::tapi_error::tests::test_tapi_error_display ... ok
+test fusion::tests::test_compute_semantic_hash ... ok
+test fusion::tests::test_estimate_tokens ... ok
+test fusion::tests::test_validate_jsonl ... ok
+test fusion_commands_week1::tests::test_fusion_activate_modules_basic ... ok
+test fusion_commands_week1::tests::test_fusion_adjust_styles_invalid_color ... o
+k                                                                               test fusion_commands_week1::tests::test_fusion_adjust_styles_valid_colors ... ok
+test fusion_commands_week1::tests::test_hex_color_validation ... ok
+test fusion_commands_week2::tests::test_ia_cache_functionality ... ok
+test fusion_commands_week2::tests::test_ia_response_basic ... ok
+test fusion_commands_week2::tests::test_ia_response_invalid_prompt ... ok
+test fusion_commands_week2::tests::test_ia_response_invalid_temperature ... ok
+test fusion_commands_week2::tests::test_tts_prepare_basic ... ok
+test fusion_commands_week2::tests::test_tts_prepare_invalid_format ... ok
+test fusion_commands_week2::tests::test_tts_prepare_invalid_speed ... ok
+test fusion_commands_week2::tests::test_tts_prepare_streaming ... ok
+test fusion_commands_week2::tests::test_voice_library ... ok
+test fusion_commands_week3::tests::test_avatar_animation_basic ... ok
+test fusion_commands_week3::tests::test_avatar_animation_empty ... ok
+test fusion_commands_week3::tests::test_avatar_animation_invalid_fps ... ok
+test fusion_commands_week3::tests::test_avatar_animation_mismatched_arrays ... o
+k                                                                               test fusion_commands_week3::tests::test_lipsync_basic ... ok
+test fusion_commands_week3::tests::test_lipsync_invalid_intensity ... ok
+test fusion_commands_week3::tests::test_lipsync_invalid_text ... ok
+test fusion_commands_week4::tests::test_auto_optimize_basic ... ok
+test fusion_commands_week4::tests::test_update_state_basic ... ok
+test fusion_commands_week4::tests::test_update_state_invalid_current ... ok
+test hybrid_commands::tests::test_dev_inspect_file_not_found ... ok
+test hybrid_commands::tests::test_dev_run_command ... ok
+test ia_context_commands::tests::test_record_request_logic ... ok
+test ia_context_commands::tests::test_set_active_engine_logic ... ok
+test memory::encryption::tests::test_different_password_fails ... ok
+test memory::encryption::tests::test_encryption_decryption ... ok
+test memory::model::tests::test_add_entry ... ok
+test memory::model::tests::test_add_entry_roles ... ok
+test memory::model::tests::test_add_entry_updates_tokens ... ok
+test memory::model::tests::test_conversation_clear ... ok
+test memory::model::tests::test_conversation_clone ... ok
+test memory::model::tests::test_conversation_creation ... ok
+test memory::model::tests::test_conversation_debug ... ok
+test memory::model::tests::test_conversation_metadata_clone ... ok
+test memory::model::tests::test_conversation_metadata_debug ... ok
+test memory::model::tests::test_conversation_metadata_default ... ok
+test memory::model::tests::test_conversation_metadata_serialization ... ok
+test memory::model::tests::test_conversation_new_with_title ... ok
+test memory::model::tests::test_conversation_serialization ... ok
+test memory::model::tests::test_conversation_summary_archived ... ok
+test memory::model::tests::test_conversation_summary_clone ... ok
+test memory::model::tests::test_conversation_summary_creation ... ok
+test memory::model::tests::test_conversation_summary_debug ... ok
+test memory::model::tests::test_conversation_summary_from_conversation ... ok
+test memory::model::tests::test_conversation_summary_serialization ... ok
+test memory::model::tests::test_conversation_unique_ids ... ok
+test memory::model::tests::test_conversation_workflow ... ok
+test memory::model::tests::test_get_context ... ok
+test memory::model::tests::test_get_context_all_fit ... ok
+test memory::model::tests::test_get_context_empty ... ok
+test memory::model::tests::test_get_context_order_preserved ... ok
+test memory::model::tests::test_get_context_zero_budget ... ok
+test memory::model::tests::test_memory_index_clone ... ok
+test memory::model::tests::test_memory_index_creation ... ok
+test memory::model::tests::test_memory_index_debug ... ok
+test memory::model::tests::test_memory_index_serialization ... ok
+test memory::model::tests::test_memory_index_with_data ... ok
+test memory::model::tests::test_multiple_conversations_index ... ok
+test memory::pool::tests::test_buffer_pool_metrics ... ok
+test memory::pool::tests::test_buffer_pool_oversized ... ok
+test core::utils::tests::test_now_ms ... ok
+test memory::pool::tests::test_buffer_pool_return ... ok
+test memory::pool::tests::test_buffer_pool_sizes ... ok
+test memory::pool::tests::test_embedding_pool_dimension ... ok
+test memory::pool::tests::test_embedding_pool_metrics ... ok
+test memory::pool::tests::test_embedding_pool_operations ... ok
+test memory::pool::tests::test_memory_pool_metrics_debug ... ok
+test memory::pool::tests::test_memory_pool_metrics_clone ... ok
+test memory::pool::tests::test_pool_config_clone ... ok
+test memory::pool::tests::test_pool_config_custom ... ok
+test memory::pool::tests::test_pool_config_debug ... ok
+test memory::pool::tests::test_pool_config_default ... ok
+test memory::pool::tests::test_memory_pool_metrics_serialization ... ok
+test memory::pool::tests::test_pool_manager ... ok
+test memory::pool::tests::test_pool_manager_acquire_buffer ... ok
+test memory::pool::tests::test_pool_manager_acquire_embedding ... ok
+test memory::pool::tests::test_pool_manager_acquire_string ... ok
+test memory::pool::tests::test_pool_manager_with_config ... ok
+test memory::pool::tests::test_pool_metrics_debug ... ok
+test memory::pool::tests::test_pool_metrics_default ... ok
+test memory::pool::tests::test_pool_metrics_hit_rate_all_hits ... ok
+test memory::pool::tests::test_pool_manager_default ... ok
+test memory::pool::tests::test_pool_metrics_hit_rate_empty ... ok
+test memory::pool::tests::test_pool_metrics_hit_rate_mixed ... ok
+test memory::pool::tests::test_pool_metrics_new ... ok
+test memory::pool::tests::test_pool_metrics_record_allocation ... ok
+test memory::pool::tests::test_pool_metrics_record_deallocation ... ok
+test memory::pool::tests::test_pool_metrics_record_hit ... ok
+test memory::pool::tests::test_pool_metrics_record_miss ... ok
+test memory::pool::tests::test_pool_metrics_snapshot ... ok
+test memory::pool::tests::test_pool_metrics_snapshot_clone ... ok
+test memory::pool::tests::test_pool_metrics_snapshot_debug ... ok
+test memory::pool::tests::test_pool_metrics_snapshot_serialization ... ok
+test memory::pool::tests::test_pool_metrics_update_size ... ok
+test memory::pool::tests::test_pooled_buffer_as_mut_slice ... ok
+test memory::pool::tests::test_pooled_buffer_as_slice ... ok
+test memory::pool::tests::test_pool_metrics_update_size_peak ... ok
+test memory::pool::tests::test_pooled_buffer_deref_mut ... ok
+test memory::pool::tests::test_pooled_buffer_deref ... ok
+test memory::pool::tests::test_pooled_buffer_into_vec ... ok
+test memory::pool::tests::test_pooled_buffer_is_empty ... ok
+test memory::pool::tests::test_pooled_buffer_len ... ok
+test memory::pool::tests::test_pooled_embedding_as_mut_slice ... ok
+test memory::pool::tests::test_pooled_buffer_size_class ... ok
+test memory::pool::tests::test_pooled_embedding_as_slice ... ok
+test memory::pool::tests::test_pooled_embedding_cosine_similarity_orthogonal ...
+ ok                                                                             test memory::pool::tests::test_pooled_embedding_cosine_similarity_same ... ok
+test memory::pool::tests::test_pooled_embedding_cosine_similarity_zero_vector ..
+. ok                                                                            test memory::pool::tests::test_pooled_embedding_deref ... ok
+test memory::pool::tests::test_pooled_embedding_dimension ... ok
+test memory::pool::tests::test_pooled_embedding_dot_product ... ok
+test memory::pool::tests::test_pooled_embedding_into_vec ... ok
+test memory::pool::tests::test_pooled_embedding_set ... ok
+test memory::pool::tests::test_pooled_embedding_set_partial ... ok
+test memory::pool::tests::test_pooled_string_as_mut_string ... ok
+test memory::pool::tests::test_pooled_string_as_str ... ok
+test memory::pool::tests::test_pooled_string_deref ... ok
+test memory::pool::tests::test_pooled_string_into_string ... ok
+test memory::pool::tests::test_pooled_string_is_empty ... ok
+test memory::pool::tests::test_pooled_string_len ... ok
+test memory::pool::tests::test_string_pool_acquire_release ... ok
+test memory::pool::tests::test_string_pool_metrics ... ok
+test memory::pool::tests::test_pooled_string_push_str ... ok
+test memory::security::tests::test_compute_sha256 ... ok
+test memory::security::tests::test_memory_validate_integrity ... ok
+test memory::pool::tests::test_string_pool_warm ... ok
+test memory::security::tests::test_sanitize_string ... ok
+test memory::security::tests::test_validate_json_structure ... ok
+test memory::storage::tests::test_storage_creation ... ok
+test memory::telemetry::tests::test_detect_disk_mode_disabled ... ok
+test memory::storage::tests::test_save_and_load_conversation ... ok
+test memory::telemetry::tests::test_detect_disk_mode_readwrite ... ok
+test memory::telemetry::tests::test_detect_disk_mode_readonly ... ok
+test memory::telemetry::tests::test_extract_version_non_json ... ok
+test memory::telemetry::tests::test_memory_directory_report_with_files ... ok
+test memory::telemetry::tests::test_memory_directory_report_creation ... ok
+test memory::telemetry::tests::test_memory_file_report_creation ... ok
+test memory::telemetry::tests::test_memory_file_report_no_version ... ok
+test memory::telemetry::tests::test_resolve_memory_dir_custom ... ok
+test memory::telemetry::tests::test_resolve_memory_dir_default ... ok
+test memory::telemetry::tests::test_resolve_memory_dir_e2e_blocks_default_dir ..
+. ok                                                                            test memory::telemetry::tests::test_resolve_memory_dir_e2e_custom_override ... o
+k                                                                               test memory::telemetry::tests::test_resolve_memory_dir_e2e_default ... ok
+test memory::telemetry::tests::test_resolve_memory_dir_empty_env ... ok
+test memory::telemetry::tests::test_scan_memory_directory_missing ... ok
+test memory::telemetry::tests::test_scan_version_nested ... ok
+test memory::telemetry::tests::test_scan_version_non_string ... ok
+test memory::telemetry::tests::test_scan_version_with_version ... ok
+test memory::telemetry::tests::test_scan_version_without_version ... ok
+test memory::telemetry::tests::test_system_time_to_millis ... ok
+test memory::telemetry::tests::test_system_time_to_millis_epoch ... ok
+test memory::tests_storage::tests::test_clear_all_recreates_directory ... ok
+test memory::tests_storage::tests::test_clear_all ... ok
+test memory::tests_storage::tests::test_conversation_encryption ... ok
+test memory::tests_storage::tests::test_delete_conversation ... ok
+test memory::tests_storage::tests::test_delete_nonexistent_conversation ... ok
+test memory::tests_storage::tests::test_export_conversation ... ok
+test memory::tests_storage::tests::test_export_nonexistent_conversation ... ok
+test memory::tests_storage::tests::test_full_lifecycle ... ok
+test memory::tests_storage::tests::test_concurrent_saves ... ok
+test memory::tests_storage::tests::test_index_updates_after_modification ... ok
+test memory::tests_storage::tests::test_list_conversations_after_save ... ok
+test memory::tests_storage::tests::test_list_conversations_empty ... ok
+test memory::tests_storage::tests::test_list_multiple_conversations ... ok
+test memory::tests_storage::tests::test_load_nonexistent_conversation ... ok
+test memory::tests_storage::tests::test_memory_stability ... ignored
+test memory::tests_storage::tests::test_memory_storage_creates_directory ... ok
+test memory::tests_storage::tests::test_memory_storage_creation ... ok
+test memory::tests_storage::tests::test_memory_storage_with_different_passwords 
+... ok                                                                          test memory::tests_storage::tests::test_performance_100_conversations ... ignore
+d                                                                               test memory::tests_storage::tests::test_save_and_load_conversation ... ok
+test memory::tests_storage::tests::test_save_overwrites_existing ... ok
+test memory::tests_storage::tests::test_large_conversation ... ok
+test memory::tests_storage::tests::test_special_characters_in_conversation ... o
+k                                                                               test multi_agents_commands::tests::test_parse_agent_role ... ok
+test memory_compactor::tests::test_deduplication ... ok
+test multi_agents_commands::tests::test_parse_ia_permission ... ok
+test ollama::tests::test_format_error_empty_payload ... ok
+test ollama::tests::test_format_error_various_status_codes ... ok
+test ollama::tests::test_format_error_with_json_error_field ... ok
+test ollama::tests::test_format_error_with_json_message_field ... ok
+test ollama::tests::test_format_error_with_raw_payload ... ok
+test ollama::tests::test_query_ollama_empty_prompt ... ok
+test overdrive::chat_orchestrator::smoke_tests::ollama_smoke_generate_ok ... ign
+ored                                                                            test runtime_config::tests::test_collect_runtime_config_defaults ... ok
+test ollama::tests::test_query_ollama_whitespace_prompt ... ok
+test secure_commands::tests::test_mask_secret_for_display ... ok
+test secure_commands::tests::test_sanitize_html ... ok
+test security::permission_guard::tests::test_permission_guard ... ok
+test security::permission_guard::tests::test_audit_export ... ok
+test security::permissions::tests::test_permissions ... ok
+test security::permissions::tests::test_require_permission ... ok
+test security::permissions::tests::test_role_hierarchy ... ok
+test security::rate_limit::tests::test_get_stats ... ok
+test security::rate_limit::tests::test_rate_limit_basic ... ok
+test security::rate_limit::tests::test_rate_limit_multiple_users ... ok
+test security::sandbox::tests::test_file_too_large ... ok
+test security::sandbox::tests::test_import_file ... ok
+test security::sandbox::tests::test_validate_extension ... ok
+test security::shell_guard::tests::test_sanitize_text ... ok
+test security::shell_guard::tests::test_validate_args_command_substitution ... o
+k                                                                               test security::shell_guard::tests::test_validate_args_path_traversal ... ok
+test security::shell_guard::tests::test_validate_args_pipe_injection ... ok
+test security::shell_guard::tests::test_validate_args_safe ... ok
+test security::shell_guard::tests::test_validate_command_whitelist ... ok
+test security::validation::tests::test_sanitize_filename ... ok
+test security::validation::tests::test_sanitize_filename_advanced ... ok
+test security::validation::tests::test_sanitize_html ... ok
+test security::validation::tests::test_validate_empty_message ... ok
+test security::validation::tests::test_validate_file_extension ... ok
+test security::validation::tests::test_validate_json ... ok
+test audio::commands::voice_fingerprint_local::tests::test_yin_pitch_detection_s
+ine_wave ... ok                                                                 test security::validation::tests::test_validate_path ... ok
+test security::validation::tests::test_validate_string ... ok
+test audio::commands::voice_fingerprint_local::tests::test_yin_pitch_detection_m
+ale_voice ... ok                                                                test singularity_state::commands::tests::test_get_all_commands_all_start_with_si
+ngularity ... ok                                                                test singularity_state::commands::tests::test_get_all_commands_contains_mutation
+_commands ... ok                                                                test singularity_state::commands::tests::test_get_all_commands_contains_persiste
+nce_commands ... ok                                                             test singularity_state::commands::tests::test_get_all_commands_contains_query_co
+mmands ... ok                                                                   test singularity_state::commands::tests::test_get_all_commands_count ... ok
+test singularity_state::commands::tests::test_get_all_commands_no_duplicates ...
+ ok                                                                             test singularity_state::commands::tests::test_get_all_commands_not_empty ... ok
+test singularity_state::commands::tests::test_singularity_update_ack_clone ... o
+k                                                                               test singularity_state::commands::tests::test_singularity_update_ack_debug ... o
+k                                                                               test singularity_state::commands::tests::test_singularity_update_ack_new ... ok
+test singularity_state::commands::tests::test_singularity_update_ack_serialize .
+.. ok                                                                           test audio::commands::voice_fingerprint_local::tests::test_extract_features ... 
+ok                                                                              test singularity_state::layers::tests::test_adaptive_layer_default ... ok
+test singularity_state::layers::tests::test_adaptive_layer_serialization ... ok
+test singularity_state::layers::tests::test_all_layers_clone ... ok
+test singularity_state::layers::tests::test_all_layers_debug ... ok
+test singularity_state::layers::tests::test_archetype_state_default ... ok
+test singularity_state::layers::tests::test_archetype_state_transition ... ok
+test singularity_state::layers::tests::test_auto_heal_state_active ... ok
+test singularity_state::layers::tests::test_auto_heal_state_default ... ok
+test singularity_state::layers::tests::test_cognitive_layer_default ... ok
+test singularity_state::layers::tests::test_cognitive_layer_serialization ... ok
+test singularity_state::layers::tests::test_conversation_state_active ... ok
+test singularity_state::layers::tests::test_conversation_state_default ... ok
+test singularity_state::layers::tests::test_evolution_state_default ... ok
+test singularity_state::layers::tests::test_evolution_state_evolved ... ok
+test singularity_state::layers::tests::test_helios_state_default ... ok
+test singularity_state::layers::tests::test_helios_state_serialization ... ok
+test singularity_state::layers::tests::test_helios_state_with_battery ... ok
+test singularity_state::layers::tests::test_knowledge_state_default ... ok
+test singularity_state::layers::tests::test_memory_state_default ... ok
+test singularity_state::layers::tests::test_memory_state_with_data ... ok
+test singularity_state::layers::tests::test_meta_layer_default ... ok
+test singularity_state::layers::tests::test_meta_layer_serialization ... ok
+test singularity_state::commands::tests::test_singularity_update_ack_timestamp_i
+ncreases ... ok                                                                 test singularity_state::layers::tests::test_performance_metrics_default ... ok
+test singularity_state::layers::tests::test_performance_metrics_serialization ..
+. ok                                                                            test singularity_state::layers::tests::test_persona_state_custom ... ok
+test singularity_state::layers::tests::test_persona_state_default ... ok
+test singularity_state::layers::tests::test_physical_layer_default ... ok
+test singularity_state::layers::tests::test_physical_layer_health_score ... ok
+test singularity_state::layers::tests::test_physical_layer_is_critical_high_cpu 
+... ok                                                                          test singularity_state::layers::tests::test_physical_layer_is_critical_low_healt
+h ... ok                                                                        test singularity_state::layers::tests::test_physical_layer_not_critical ... ok
+test singularity_state::layers::tests::test_runtime_state_default ... ok
+test singularity_state::layers::tests::test_runtime_state_production ... ok
+test singularity_state::layers::tests::test_symbolic_layer_default ... ok
+test singularity_state::layers::tests::test_system_health_default ... ok
+test singularity_state::layers::tests::test_symbolic_layer_serialization ... ok
+test singularity_state::layers::tests::test_system_health_serialization ... ok
+test singularity_state::layers::tests::test_ui_state_active ... ok
+test singularity_state::layers::tests::test_ui_state_default ... ok
+test singularity_state::layers::tests::test_visual_state_default ... ok
+test singularity_state::layers::tests::test_visual_state_light_theme ... ok
+test singularity_state::persistence::tests::test_persistence_clear ... ok
+test singularity_state::tests::test_meta_augmented_coherence ... ok
+test singularity_state::persistence::tests::test_persistence_save_load ... ok
+test core::utils::tests::test_elapsed_ms ... ok
+test singularity_state::tests::test_singularity_state_creation ... ok
+test singularity_state::tests::test_state_coherence ... ok
+test types::evolution::tests::test_evolution_history_clone ... ok
+test singularity_state::tests::test_singularity_deep_sync ... ok
+test types::evolution::tests::test_evolution_history_creation ... ok
+test types::evolution::tests::test_evolution_history_debug ... ok
+test singularity_state::tests::test_state_updates ... ok
+test types::evolution::tests::test_evolution_history_serialization ... ok
+test types::evolution::tests::test_evolution_report_clone ... ok
+test types::evolution::tests::test_evolution_report_creation ... ok
+test types::evolution::tests::test_evolution_report_debug ... ok
+test types::evolution::tests::test_evolution_state_clone ... ok
+test types::evolution::tests::test_evolution_report_serialization ... ok
+test types::evolution::tests::test_evolution_state_debug ... ok
+test types::evolution::tests::test_evolution_state_default ... ok
+test types::evolution::tests::test_evolution_state_with_data ... ok
+test types::evolution::tests::test_evolution_state_serialization ... ok
+test types::evolution::tests::test_evolution_state_with_history ... ok
+test types::evolution::tests::test_has_critical_issues_empty ... ok
+test types::evolution::tests::test_has_critical_issues_none ... ok
+test types::evolution::tests::test_has_critical_issues_with_critical ... ok
+test types::evolution::tests::test_issue_category_clone ... ok
+test types::evolution::tests::test_issue_category_debug ... ok
+test types::evolution::tests::test_issue_category_serialization ... ok
+test types::evolution::tests::test_issue_category_variants ... ok
+test types::evolution::tests::test_issue_clone ... ok
+test types::evolution::tests::test_issue_creation ... ok
+test types::evolution::tests::test_issue_debug ... ok
+test types::evolution::tests::test_issue_serialization ... ok
+test types::evolution::tests::test_issue_severity_copy ... ok
+test types::evolution::tests::test_issue_severity_debug ... ok
+test types::evolution::tests::test_issue_severity_equality ... ok
+test types::evolution::tests::test_issue_severity_ordering ... ok
+test types::evolution::tests::test_issue_severity_serialization ... ok
+test types::evolution::tests::test_issue_severity_variants ... ok
+test types::evolution::tests::test_prioritized_recommendations_does_not_modify_o
+riginal ... ok                                                                  test types::evolution::tests::test_prioritized_recommendations_empty ... ok
+test types::evolution::tests::test_prioritized_recommendations_same_priority ...
+ ok                                                                             test types::evolution::tests::test_prioritized_recommendations_sorted ... ok
+test types::evolution::tests::test_recommendation_clone ... ok
+test types::evolution::tests::test_recommendation_creation ... ok
+test types::evolution::tests::test_recommendation_debug ... ok
+test types::evolution::tests::test_repair_action_adjust_threshold ... ok
+test types::evolution::tests::test_recommendation_serialization ... ok
+test types::evolution::tests::test_repair_action_clone ... ok
+test types::evolution::tests::test_repair_action_debug ... ok
+test types::evolution::tests::test_repair_action_restart_module ... ok
+test types::evolution::tests::test_repair_action_serialization ... ok
+test types::evolution::tests::test_repair_action_variants ... ok
+test types::evolution::tests::test_repair_result_clone ... ok
+test types::evolution::tests::test_repair_result_creation ... ok
+test types::evolution::tests::test_repair_result_debug ... ok
+test types::evolution::tests::test_repair_result_failure ... ok
+test types::evolution::tests::test_repair_result_serialization ... ok
+test types::harmonia::tests::test_action_type_clone ... ok
+test types::harmonia::tests::test_action_type_debug ... ok
+test types::harmonia::tests::test_action_type_serialization ... ok
+test types::harmonia::tests::test_action_type_variants ... ok
+test types::harmonia::tests::test_balance_action_clone ... ok
+test types::harmonia::tests::test_balance_action_creation ... ok
+test types::harmonia::tests::test_balance_action_debug ... ok
+test types::harmonia::tests::test_balance_action_serialization ... ok
+test types::harmonia::tests::test_harmonia_state_clone ... ok
+test types::harmonia::tests::test_harmonia_state_debug ... ok
+test types::harmonia::tests::test_harmonia_state_all_stabilization_levels ... ok
+test types::harmonia::tests::test_harmonia_state_default ... ok
+test types::harmonia::tests::test_harmonia_state_serialization ... ok
+test types::harmonia::tests::test_harmonia_state_with_data ... ok
+test types::harmonia::tests::test_stabilization_level_copy ... ok
+test types::harmonia::tests::test_stabilization_level_debug ... ok
+test types::harmonia::tests::test_stabilization_level_equality ... ok
+test types::harmonia::tests::test_stabilization_level_serialization ... ok
+test types::harmonia::tests::test_stabilization_level_variants ... ok
+test types::helios::tests::test_health_status_both_critical ... ok
+test types::helios::tests::test_health_status_critical_cpu ... ok
+test types::helios::tests::test_health_status_critical_ram ... ok
+test types::helios::tests::test_health_status_degraded_cpu ... ok
+test types::helios::tests::test_health_status_degraded_ram ... ok
+test types::helios::tests::test_health_status_healthy ... ok
+test types::helios::tests::test_helios_state_clone ... ok
+test types::helios::tests::test_helios_state_debug ... ok
+test types::helios::tests::test_helios_state_default ... ok
+test types::harmonia::tests::test_stabilization_level_clone ... ok
+test types::helios::tests::test_helios_state_with_data ... ok
+test types::helios::tests::test_helios_state_serialization ... ok
+test types::helios::tests::test_load_average_creation ... ok
+test types::helios::tests::test_load_average_debug ... ok
+test types::helios::tests::test_load_average_default ... ok
+test types::helios::tests::test_load_average_clone ... ok
+test types::helios::tests::test_load_average_serialization ... ok
+test types::memory::tests::test_disk_mode_clone ... ok
+test types::memory::tests::test_disk_mode_copy ... ok
+test types::memory::tests::test_disk_mode_debug ... ok
+test types::memory::tests::test_disk_mode_equality ... ok
+test types::memory::tests::test_disk_mode_rename_all ... ok
+test types::memory::tests::test_disk_mode_serialization ... ok
+test types::memory::tests::test_disk_mode_variants ... ok
+test types::memory::tests::test_event_type_clone ... ok
+test types::memory::tests::test_event_type_debug ... ok
+test types::memory::tests::test_event_type_serialization ... ok
+test types::memory::tests::test_event_type_variants ... ok
+test types::memory::tests::test_log_entry_clone ... ok
+test types::memory::tests::test_log_entry_creation ... ok
+test types::memory::tests::test_log_entry_debug ... ok
+test types::memory::tests::test_log_level_clone ... ok
+test types::memory::tests::test_log_entry_serialization ... ok
+test types::memory::tests::test_log_level_debug ... ok
+test types::memory::tests::test_log_level_serialization ... ok
+test types::memory::tests::test_log_level_variants ... ok
+test types::memory::tests::test_memory_directory_report_clone ... ok
+test types::memory::tests::test_memory_directory_report_creation ... ok
+test types::memory::tests::test_memory_directory_report_debug ... ok
+test types::memory::tests::test_memory_directory_report_serialization ... ok
+test types::memory::tests::test_memory_directory_report_with_files ... ok
+test types::memory::tests::test_memory_file_report_clone ... ok
+test types::memory::tests::test_memory_file_report_creation ... ok
+test types::memory::tests::test_memory_file_report_debug ... ok
+test types::memory::tests::test_memory_file_report_serialization ... ok
+test types::memory::tests::test_memory_state_clone ... ok
+test types::memory::tests::test_memory_state_debug ... ok
+test types::memory::tests::test_memory_state_default ... ok
+test types::memory::tests::test_memory_state_with_data ... ok
+test types::memory::tests::test_memory_state_serialization ... ok
+test types::memory::tests::test_snapshot_clone ... ok
+test types::memory::tests::test_snapshot_creation ... ok
+test types::memory::tests::test_snapshot_debug ... ok
+test types::memory::tests::test_snapshot_serialization ... ok
+test types::memory::tests::test_snapshot_with_metadata ... ok
+test types::memory::tests::test_timeline_event_clone ... ok
+test types::memory::tests::test_timeline_event_creation ... ok
+test types::memory::tests::test_timeline_event_debug ... ok
+test types::memory::tests::test_timeline_event_serialization ... ok
+test types::memory::tests::test_timeline_event_with_data ... ok
+test types::memory_chat::tests::test_chat_interaction_clone ... ok
+test types::memory_chat::tests::test_chat_interaction_creation ... ok
+test types::memory_chat::tests::test_chat_interaction_debug ... ok
+test types::memory_chat::tests::test_chat_interaction_serialization_no_emotion .
+.. ok                                                                           test types::memory_chat::tests::test_chat_interaction_serialization ... ok
+test types::memory_chat::tests::test_chat_interaction_with_emotion ... ok
+test types::memory_chat::tests::test_decision_summary_clone ... ok
+test types::memory_chat::tests::test_decision_summary_creation ... ok
+test types::memory_chat::tests::test_decision_summary_debug ... ok
+test types::memory_chat::tests::test_emotion_state_clone ... ok
+test types::memory_chat::tests::test_decision_summary_serialization ... ok
+test types::memory_chat::tests::test_emotion_state_creation ... ok
+test types::memory_chat::tests::test_emotion_state_debug ... ok
+test types::memory_chat::tests::test_emotion_state_negative_valence ... ok
+test types::memory_chat::tests::test_emotion_state_serialization ... ok
+test types::memory_chat::tests::test_impact_level_clone ... ok
+test types::memory_chat::tests::test_impact_level_debug ... ok
+test types::memory_chat::tests::test_impact_level_serialization_lowercase ... ok
+test types::memory_chat::tests::test_impact_level_variants ... ok
+test types::memory_chat::tests::test_knowledge_entry_clone ... ok
+test types::memory_chat::tests::test_knowledge_entry_creation ... ok
+test types::memory_chat::tests::test_knowledge_entry_debug ... ok
+test types::memory_chat::tests::test_project_status_clone ... ok
+test types::memory_chat::tests::test_knowledge_entry_serialization ... ok
+test types::memory_chat::tests::test_project_status_debug ... ok
+test types::memory_chat::tests::test_project_status_deserialization ... ok
+test types::memory_chat::tests::test_project_status_serialization_lowercase ... 
+ok                                                                              test types::memory_chat::tests::test_project_status_variants ... ok
+test types::memory_chat::tests::test_project_summary_clone ... ok
+test types::memory_chat::tests::test_project_summary_creation ... ok
+test types::memory_chat::tests::test_project_summary_debug ... ok
+test types::memory_chat::tests::test_ritual_info_clone ... ok
+test types::memory_chat::tests::test_project_summary_serialization ... ok
+test types::memory_chat::tests::test_ritual_info_creation ... ok
+test types::memory_chat::tests::test_ritual_info_debug ... ok
+test types::memory_chat::tests::test_ritual_info_no_schedule ... ok
+test types::memory_chat::tests::test_ritual_info_serialization ... ok
+test types::memory_chat::tests::test_timeline_entry_clone ... ok
+test types::memory_chat::tests::test_timeline_entry_creation ... ok
+test types::memory_chat::tests::test_timeline_entry_debug ... ok
+test types::memory_chat::tests::test_timeline_entry_type_clone ... ok
+test types::memory_chat::tests::test_timeline_entry_serialization ... ok
+test types::memory_chat::tests::test_timeline_entry_type_debug ... ok
+test types::memory_chat::tests::test_timeline_entry_type_serialization_lowercase
+ ... ok                                                                         test types::memory_chat::tests::test_timeline_entry_type_variants ... ok
+test types::memory_chat::tests::test_timeline_entry_with_metadata ... ok
+test types::nexus::tests::test_calculate_health_all_healthy ... ok
+test types::nexus::tests::test_calculate_health_empty ... ok
+test types::nexus::tests::test_calculate_health_failing_overrides_degraded ... o
+k                                                                               test types::nexus::tests::test_calculate_health_multiple_degraded ... ok
+test types::nexus::tests::test_calculate_health_one_degraded ... ok
+test types::nexus::tests::test_calculate_health_one_failing ... ok
+test types::nexus::tests::test_calculate_health_one_offline ... ok
+test types::nexus::tests::test_module_health_clone ... ok
+test types::nexus::tests::test_module_health_copy ... ok
+test types::nexus::tests::test_module_health_debug ... ok
+test types::nexus::tests::test_module_health_equality ... ok
+test types::nexus::tests::test_module_health_serialization ... ok
+test types::nexus::tests::test_module_health_variants ... ok
+test types::nexus::tests::test_module_status_clone ... ok
+test types::nexus::tests::test_module_status_creation ... ok
+test types::nexus::tests::test_module_status_debug ... ok
+test types::nexus::tests::test_module_status_serialization ... ok
+test types::nexus::tests::test_nexus_state_debug ... ok
+test types::nexus::tests::test_nexus_state_clone ... ok
+test types::nexus::tests::test_nexus_state_default ... ok
+test types::nexus::tests::test_nexus_state_serialization ... ok
+test types::nexus::tests::test_nexus_state_with_modules ... ok
+test types::sentinel::tests::test_add_alert_limit_100 ... ok
+test types::sentinel::tests::test_add_alert_multiple ... ok
+test types::sentinel::tests::test_add_alert_single ... ok
+test types::sentinel::tests::test_add_alert_preserves_order ... ok
+test types::sentinel::tests::test_alert_category_clone ... ok
+test types::sentinel::tests::test_alert_category_debug ... ok
+test types::sentinel::tests::test_alert_category_variants ... ok
+test types::sentinel::tests::test_alert_category_serialization ... ok
+test types::sentinel::tests::test_alert_clone ... ok
+test types::sentinel::tests::test_alert_creation ... ok
+test types::sentinel::tests::test_alert_debug ... ok
+test types::sentinel::tests::test_alert_serialization ... ok
+test types::sentinel::tests::test_sentinel_state_clone ... ok
+test types::sentinel::tests::test_sentinel_state_debug ... ok
+test types::sentinel::tests::test_sentinel_state_default ... ok
+test types::sentinel::tests::test_sentinel_state_with_data ... ok
+test types::sentinel::tests::test_sentinel_state_serialization ... ok
+test types::sentinel::tests::test_severity_clone ... ok
+test types::sentinel::tests::test_severity_debug ... ok
+test types::sentinel::tests::test_severity_serialization ... ok
+test types::sentinel::tests::test_severity_copy ... ok
+test types::sentinel::tests::test_severity_equality ... ok
+test types::sentinel::tests::test_severity_variants ... ok
+test types::shared::tests::test_health_status_needs_attention ... ok
+test types::shared::tests::test_health_status_score_conversion ... ok
+test types::shared::tests::test_module_health_info ... ok
+test utils::error::tests::test_error_creation ... ok
+test utils::error::tests::test_io_error_conversion ... ok
+test security::validation::tests::test_validate_message ... ok
+test security::validation::tests::test_validate_xss_attack ... ok
+test audio::commands::voice_fingerprint_local::tests::test_similarity_different_
+signals ... ok                                                                  test audio::commands::voice_fingerprint_local::tests::test_calibrate_titane ... 
+ok                                                                              test core::utils::tests::test_has_elapsed ... ok
+test audio::commands::voice_fingerprint_local::tests::test_similarity_identical_
+signals ... ok                                                                  test utils::logging::tests::test_logging ... ok
+test audio::commands::voice_fingerprint_local::tests::test_calibration_and_detec
+tion_workflow ... ok                                                            test audio::commands::voice_fingerprint_local::tests::test_accuracy_target_90_pe
+rcent ... ok                                                                    test security::rate_limit::tests::test_cleanup ... ok
+
+test result: ok. 726 passed; 0 failed; 3 ignored; 0 measured; 0 filtered out; fi
+nished in 2.06s                                                                 
+     Running tests/integration/agent_ia_workflow_test.rs (target/debug/deps/agen
+t_ia_workflow_test-36cedcc7f72acf3e)                                            
+running 2 tests
+test test_complete_agent_ia_workflow ... ok
+test test_multi_agent_concurrent_requests ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/commands_v21_smoke_tests.rs (target/debug/deps/commands_v21_s
+moke_tests-ba2dd42f0333f90f)                                                    
+running 0 tests
+
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/stress/concurrent_access_test.rs (target/debug/deps/concurren
+t_access_test-bf0e2db20ffc6c93)                                                 
+running 2 tests
+test test_high_contention_scenario ... ok
+test test_concurrent_ia_requests ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.12s                                                                   
+     Running tests/cycle_engine_tests.rs (target/debug/deps/cycle_engine_tests-6
+5e044f0f842182b)                                                                
+running 23 tests
+test cycle_engine_tests::test_cognitive_mode_mapping ... ok
+test cycle_engine_tests::test_continuity_engine_preferences ... ok
+test cycle_engine_tests::test_continuity_engine_record_event ... ok
+test cycle_engine_tests::test_cognitive_rhythm_params ... ok
+test cycle_engine_tests::test_daily_phase_from_hour ... ok
+test cycle_engine_tests::test_cycle_engine_initialization ... ok
+test cycle_engine_tests::test_cycle_engine_current_state ... ok
+test cycle_engine_tests::test_cycle_engine_predictions ... ok
+test cycle_engine_tests::test_cycle_state_current ... ok
+test cycle_engine_tests::test_cycle_engine_diagnostics ... ok
+test cycle_engine_tests::test_cycle_engine_current_rhythm ... ok
+test cycle_engine_tests::test_load_regulator_high_cpu ... ok
+test cycle_engine_tests::test_kernel_integration ... ok
+test cycle_engine_tests::test_load_regulator_high_memory ... ok
+test cycle_engine_tests::test_predictive_suggest_optimal_time ... ok
+test cycle_engine_tests::test_load_regulator_normal_load ... ok
+test cycle_engine_tests::test_omega_engine_weights ... ok
+test cycle_engine_tests::test_predictive_next_phase ... ok
+test cycle_engine_tests::test_memory_integration ... ok
+test cycle_engine_tests::test_omega_integration ... ok
+test cycle_engine_tests::test_cycle_engine_start_stop ... ok
+test cycle_engine_tests::test_cycle_engine_diagnostics_running ... ok
+test cycle_engine_tests::test_cycle_engine_stability ... ok
+
+test result: ok. 23 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
+ished in 5.01s                                                                  
+     Running tests/dashmap_performance_test.rs (target/debug/deps/dashmap_perfor
+mance_test-4090b27aebff7e12)                                                    
+running 6 tests
+test test_dashmap_api_compatibility ... ok
+test test_dashmap_concurrent_writes_performance ... ok
+test test_ai_query_simulation_under_100ms ... ok
+test test_dashmap_concurrent_reads_performance ... ok
+test test_dashmap_no_contention ... ok
+test test_dashmap_memory_safety ... ok
+
+test result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/integration/fallback_chain_test.rs (target/debug/deps/fallbac
+k_chain_test-cd3510e918f965d6)                                                  
+running 3 tests
+test test_no_fallback_when_disabled ... ok
+test test_fallback_with_disabled_engines ... ok
+test test_full_fallback_chain ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/intelligent_cache_test.rs (target/debug/deps/intelligent_cach
+e_test-517be656d5856b22)                                                        
+running 8 tests
+test test_cache_set_get ... ok
+test test_cache_hit_rate ... ok
+test test_invalidate_pattern ... ok
+test test_cache_clear ... ok
+test test_cache_persistence ... ok
+test test_concurrent_cache_access ... ok
+test test_lru_eviction ... ok
+test test_cache_expiration ... ok
+
+test result: ok. 8 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.15s                                                                   
+     Running tests/ipc_cache_test.rs (target/debug/deps/ipc_cache_test-47a72accd
+e5d3c01)                                                                        
+running 11 tests
+test test_cache_complex_types ... ok
+test test_cache_basic_operations ... ok
+test test_cache_invalidate_matching ... ok
+test test_cache_invalidate_single ... ok
+test test_cache_stats_hit_rate ... ok
+test test_cache_stats_tracking ... ok
+test test_cache_concurrent_access ... ok
+test test_cache_async_operations ... ok
+test test_cache_concurrent_same_key ... ok
+test test_cache_cleanup_expired ... ok
+test test_cache_expiration ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
+ished in 2.00s                                                                  
+     Running tests/kernel_integration_tests.rs (target/debug/deps/kernel_integra
+tion_tests-76e6ed7afb18a2c6)                                                    
+running 11 tests
+test integration_tests::test_memory_health_update ... ok
+test integration_tests::test_omega_multiple_modes ... ok
+test integration_tests::test_omega_priority_scheduling ... ok
+test integration_tests::test_memory_store_operation ... ok
+test integration_tests::test_memory_recall_operation ... ok
+test integration_tests::test_memory_forget_operation ... ok
+test integration_tests::test_memory_consolidation ... ok
+test integration_tests::test_omega_basic_integration ... ok
+test integration_tests::test_omega_with_memory_pipeline ... ok
+test integration_tests::test_concurrent_omega_memory_operations ... ok
+test integration_tests::test_high_load_integration ... ok
+
+test result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
+ished in 2.41s                                                                  
+     Running tests/stress/metrics_stress_test.rs (target/debug/deps/metrics_stre
+ss_test-3b96521edc08505f)                                                       
+running 2 tests
+test test_1000_requests_metrics_accuracy ... ok
+test test_mixed_success_failure_requests ... ok
+
+test result: ok. 2 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/multimodal_integration_test.rs (target/debug/deps/multimodal_
+integration_test-c3d8bb989ba5768a)                                              
+running 1 test
+test multimodal_tests_placeholder ... ok
+
+test result: ok. 1 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/omega_p2_performance_test.rs (target/debug/deps/omega_p2_perf
+ormance_test-0d6e41cdee716619)                                                  
+running 3 tests
+test test_omega_p2_latency_improvement ... ok
+test test_omega_p2_french_mastery_integration ... ok
+test test_omega_p2_vs_legacy_comparison ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/security/permission_enforcement_test.rs (target/debug/deps/pe
+rmission_enforcement_test-f221399b82c2261b)                                     
+running 4 tests
+test test_permission_matrix_complete ... ok
+test test_all_permission_types ... ok
+test test_permission_update ... ok
+test test_security_agent_cannot_use_external ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/secure_engine_tests.rs (target/debug/deps/secure_engine_tests
+-a4f9aa81bbe34d84)                                                              
+running 3 tests
+test test_purge_env_key_removes_line ... ok
+test test_key_derivation_produces_stable_length ... ok
+test test_encrypt_decrypt_roundtrip ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.65s                                                                   
+     Running tests/security_tests.rs (target/debug/deps/security_tests-267f3bf71
+1c017c6)                                                                        
+running 10 tests
+test test_argument_validation ... ok
+test test_filename_sanitization ... ok
+test test_shell_injection_blocked ... ok
+test test_path_traversal_blocked ... ok
+test test_unauthorized_command_blocked ... ok
+test test_null_byte_injection_blocked ... ok
+test test_text_sanitization ... ok
+test test_sandbox_enforcement ... ok
+test test_safe_operations_workflow ... ok
+test test_whitelisted_command_allowed ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
+ished in 0.00s                                                                  
+     Running tests/integration/singularity_integration_test.rs (target/debug/dep
+s/singularity_integration_test-8e1f9faf0cdb5523)                                
+running 3 tests
+test test_ia_context_clone ... ok
+test test_singularity_merge_with_ia_context ... ok
+test test_singularity_state_with_ia_context ... ok
+
+test result: ok. 3 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fini
+shed in 0.00s                                                                   
+     Running tests/unified_memory_tests.rs (target/debug/deps/unified_memory_tes
+ts-e58c2065655bebe0)                                                            
+running 10 tests
+test unified_memory_tests::test_embedding_generation ... ok
+test unified_memory_tests::test_memory_stats ... ok
+test unified_memory_tests::test_semantic_search ... ok
+test unified_memory_tests::test_memory_lifecycle ... ok
+test unified_memory_tests::test_full_pipeline_store_recall ... ok
+test unified_memory_tests::test_concurrent_access ... ok
+test unified_memory_tests::test_stm_to_mtm_promotion ... ok
+test unified_memory_tests::test_tick_maintenance ... ok
+test unified_memory_tests::test_summarization ... ok
+test unified_memory_tests::test_high_load_scenario ... ok
+
+test result: ok. 10 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; fin
+ished in 0.08s                                                                  
+   Doc-tests titane_infinity
+
+running 14 tests
+test src/cache/middleware.rs - cache::middleware::cache_or_execute (line 215) ..
+. ignored                                                                       test src/cache/middleware.rs - cache::middleware::cached_invoke (line 65) ... ig
+nored                                                                           test src/engines/unified_memory/api.rs - engines::unified_memory::api::register_
+commands (line 169) ... ignored                                                 test src/kernel/runtime.rs - kernel::runtime::KernelRuntime::submit (line 89) ..
+. ignored                                                                       test src/profiling/ipc_profiler.rs - profiling::ipc_profiler::profile_command (l
+ine 288) ... ignored                                                            test src/shared/macros.rs - shared::macros::check (line 28) ... ignored
+test src/shared/macros.rs - shared::macros::clamp01 (line 85) ... ignored
+test src/shared/macros.rs - shared::macros::lerp (line 121) ... ignored
+test src/shared/macros.rs - shared::macros::nudge (line 7) ... ignored
+test src/shared/macros.rs - shared::macros::safe_div (line 100) ... ignored
+test src/shared/macros.rs - shared::macros::soften (line 47) ... ignored
+test src/shared/macros.rs - shared::macros::stabilize (line 64) ... ignored
+test src/unified_memory_v2/api.rs - unified_memory_v2::api::UnifiedMemoryV2 (lin
+e 16) ... ignored                                                               test src/unified_memory_v2/compat.rs - unified_memory_v2::compat::MemoryBridge (
+line 29) ... ignored                                                            
+test result: ok. 0 passed; 0 failed; 14 ignored; 0 measured; 0 filtered out; fin
+ished in 0.00s                                                                  
+
+> titane-infinity@27.0.1 test:architecture /home/titane-os/Documents/GitHub/TITA
+NE_INFINITY                                                                     > cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/
+resizable-arraybuffer.cjs' vitest run src/__tests__/architecture                
+
+ RUN  v4.0.18 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+ ✓  core  src/__tests__/architecture/engine-isolation.test.ts (3 tests) 18ms
+   ✓ 🏛️ Architecture: Engine Isolation (3)
+     ✓ should find engines directory 1ms
+     ✓ engines MUST NOT import from Services layer 9ms
+     ✓ engines MUST be pure functions (no side-effects) 7ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  19:54:39
+   Duration  516ms (transform 71ms, setup 188ms, import 9ms, tests 18ms, environ
+ment 204ms)                                                                     
+
+> titane-infinity@27.0.1 test:compliance /home/titane-os/Documents/GitHub/TITANE
+_INFINITY                                                                       > cross-env NODE_OPTIONS='--max-old-space-size=8192 --require ./tests/polyfills/
+resizable-arraybuffer.cjs' vitest run src/__tests__/compliance                  
+
+ RUN  v4.0.18 /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+ ✓  core  src/__tests__/compliance/tauri-only.test.ts (5 tests) 278ms
+ ✓  core  src/__tests__/compliance/no-legacy-chat-send.test.ts (1 test) 75ms
+
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  19:54:40
+   Duration  1.24s (transform 72ms, setup 308ms, import 13ms, tests 352ms, envir
+onment 366ms)                                                                   
+
+> titane-infinity@27.0.1 verify:tauri-only /home/titane-os/Documents/GitHub/TITA
+NE_INFINITY                                                                     > bash scripts/verify/enforce-tauri-only.sh
+
+🔍 Vérification Tauri-Only...
+📡 Check: Pas de serveurs HTTP...
+🚫 Check: Pas de vite preview...
+📜 Check: Scripts de lancement conformes...
+🌐 Check: Pas de framework standalone web...
+⚙️ Check: dev script utilise tauri dev...
+✅ Tauri-only enforced: 0 erreurs
+
+> titane-infinity@27.0.1 verify:local-first /home/titane-os/Documents/GitHub/TIT
+ANE_INFINITY                                                                    > bash scripts/verify/enforce-local-first.sh
+
+🔍 Vérification Local-First...
+🔤 Check: Fonts locales...
+📦 Check: Pas de CDN JavaScript...
+🌐 Check: Appels réseau annotés...
+⚠️ 1 appels réseau non annotés trouvés
+Ajouter // @network-allowed pour appels intentionnels (API OpenAI, Gemini)
+📄 Check: index.html sans CDN...
+📚 Check: Dépendances locales...
+
+✅ Local-first enforced: 0 erreurs, 1 warnings (non-bloquants)
+
+> titane-infinity@27.0.1 verify:instructions /home/titane-os/Documents/GitHub/TI
+TANE_INFINITY                                                                   > bash scripts/verify/verify-copilot-instructions.sh
+
+PASS: verify-copilot-instructions
+
+> titane-infinity@27.0.1 verify:tauri-configs /home/titane-os/Documents/GitHub/T
+ITANE_INFINITY                                                                  > bash scripts/verify/validate-tauri-configs.sh
+
+🔍 Validation des configurations Tauri...
+📦 Versions détectées:
+   Base: 26.2.0
+   Dev: 26.2.0-dev
+   Stable: 27.0.0
+
+✅ Configurations Tauri valides

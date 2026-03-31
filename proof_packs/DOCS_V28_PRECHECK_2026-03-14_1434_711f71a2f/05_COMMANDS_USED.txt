@@ -1,0 +1,22 @@
+git status --short
+git status
+git rev-parse --short HEAD
+git branch --show-current
+git remote -v
+git fetch --all --prune
+git branch -r
+git rev-parse --short origin/MAIN || true
+git rev-parse --short origin/main || true
+git log --oneline --decorate -20
+git diff --stat HEAD..origin/MAIN || true
+git diff --stat origin/MAIN..HEAD || true
+git ls-files --others --exclude-standard
+find . -type d \( -name .git -o -name node_modules -o -name dist -o -name proof_packs -o -name deployment -o -name .tools \) -prune -o -type f \( -iname 'README.md' -o -iname 'README*.md' \) -print | sort
+rg -n '(?i)v27|v28|stable|latest|production ready' README.md docs/README.md docs/diagrams/README.md docs/INDEX.md docs/INDEX_REPO_STRUCTURE.md docs/ui/INDEX_UI.md
+rg -n '"version"|"description"' package.json
+sed -n '1,40p' CHANGELOG.md
+rg -n '(?i)^#|version|stable|latest|production ready|v27|v28' README.md
+rg -n '(?i)^#|version|stable|latest|production ready|v27|v28' docs/README.md
+sed -n '1,80p' docs/diagrams/README.md
+sed -n '1,80p' docs/90_release/CHANGELOG_v27.2.0_ENTRY.md
+sed -n '1,80p' docs/90_release/PRODUCTION_RELEASE_v28.0.0.md

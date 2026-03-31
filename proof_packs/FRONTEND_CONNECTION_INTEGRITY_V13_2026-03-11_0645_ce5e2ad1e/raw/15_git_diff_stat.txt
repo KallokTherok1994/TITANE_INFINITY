@@ -1,0 +1,4 @@
+ registry/ui-events.jsonl              | 1 +
+ scripts/autoheal/autoheal_rules.jsonl | 1 +
+ src/App.tsx                           | 4 ----
+ 3 files changed, 2 insertions(+), 4 deletions(-)

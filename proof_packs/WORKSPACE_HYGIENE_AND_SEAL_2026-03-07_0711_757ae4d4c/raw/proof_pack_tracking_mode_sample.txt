@@ -1,0 +1,7 @@
+# Proof-pack tracking mode sample
+2026-03-07T12:15:48Z
+proof_packs/FINAL_SEAL_2026-03-06_1800_0c913f4 => tracked-dir-entry
+proof_packs/PR_CI_UNBLOCK_2026-03-06_1847_5a48aa005 => untracked
+proof_packs/UI_E2E_TOTAL_2026-03-06_1516_9974ba89b => tracked-dir-entry
+proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005 => untracked
+proof_packs/POST_MERGE_VALIDATION_2026-03-07_757ae4d4c => untracked

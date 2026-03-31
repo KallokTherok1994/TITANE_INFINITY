@@ -1,0 +1,1 @@
+src-tauri/target/release/bundle/appimage/Titan-Stable_27.2.0_amd64.AppImage

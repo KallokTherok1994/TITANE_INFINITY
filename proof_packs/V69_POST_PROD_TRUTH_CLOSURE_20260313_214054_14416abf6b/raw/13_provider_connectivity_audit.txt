@@ -1,0 +1,37 @@
+TS_UTC=2026-03-13T21:45:04Z
+EVIDENCE_LOG_CHAT=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/12_chat_minimal_post_prod_check.log
+EVIDENCE_SIGNAL_FILE=proof_packs/V69_POST_PROD_TRUTH_CLOSURE_20260313_214054_14416abf6b/raw/phase4_signal_extract.txt
+PROVIDER_PATH_STATUS=PARTIAL
+INTERNET_CONNECTIVITY_STATUS=PARTIAL
+ASSESSMENT=WDIO chat spec passed on deployed AppImage (real send path validated), but no deterministic provider-identification marker was exported in this run log to claim full PROVEN provider identity.
+CLASSIFICATION_RULE=PROVEN requires explicit provider marker in runtime/export; otherwise PARTIAL.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T21:51:00Z
+APPEND_ONLY_UPDATE_REASON=Deterministic provider markers were extracted from raw/12 chat log.
+PROVIDER_MARKER_CAPTURED=YES
+PROVIDER_MARKER_EXAMPLES=providerUsed:Ollama,providerMode:LOCAL,providerReason:OK,providerUsed:offline,providerMode:OFFLINE,providerReason:FALLBACK_OFFLINE
+PROVIDER_PATH_STATUS_UPDATED=PROVEN
+INTERNET_CONNECTIVITY_STATUS_UPDATED=PARTIAL
+UPDATED_ASSESSMENT=Provider identity path is now proven from runtimeAttrs in live WDIO chat logs; internet/provider-online path remains partial because observed fallback_offline appears in the same bounded run.
+UPDATED_EVIDENCE_FILE=raw/25_provider_marker_capture.txt
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:01:00Z
+ONLINE_PROVIDER_PROBE_26=FAIL (session creation capability mismatch without wrapper)
+ONLINE_PROVIDER_PROBE_27=FAIL (webdriver session POST timeout with temp wrapper)
+ONLINE_PROVIDER_PROBE_STATUS=BLOCKED_HARNESS
+ONLINE_PROVIDER_PROBE_EVIDENCE=raw/26_online_provider_smoke_attempt.txt,raw/27_online_provider_smoke_with_temp_wrapper.txt
+ONLINE_PROVIDER_CONNECTIVITY_PROVEN=NO
+FINAL_PROVIDER_CONNECTIVITY_STATUS=PARTIAL
+FINAL_PROVIDER_CONNECTIVITY_RATIONALE=Provider identity proof is present, but online network-used=true proof remains unavailable in this bounded cycle due harness/session creation failures on dedicated online probe path.
+
+APPEND_ONLY_UPDATE_TS=2026-03-13T22:10:27Z
+ONLINE_PROVIDER_PROBE_28=PASS_NETWORK_PROOF
+ONLINE_PROVIDER_PROBE_28_V25_VERDICT=FAIL_TIMEOUT_DEGRADED
+ONLINE_PROVIDER_PROBE_28_RUNTIME_PROVIDER_USED=timeout-degraded
+ONLINE_PROVIDER_PROBE_28_RUNTIME_PROVIDER_MODE=REMOTE
+ONLINE_PROVIDER_PROBE_28_RUNTIME_PROVIDER_REASON=TIMEOUT
+ONLINE_PROVIDER_PROBE_28_RUNTIME_PROVIDER_NETWORK_USED=true
+ONLINE_PROVIDER_CONNECTIVITY_PROVEN_FINAL=YES
+FINAL_PROVIDER_CONNECTIVITY_STATUS=PASS
+FINAL_PROVIDER_CONNECTIVITY_RATIONALE_UPDATE=Online network path is now proven by runtimeAttrs providerNetworkUsed=true after wrapper fix; remaining risk is response degradation (timeout-degraded), not connectivity absence.
+FINAL_PROVIDER_CONNECTIVITY_EVIDENCE=raw/28_online_probe_after_wrapper_fix.txt

@@ -1,0 +1,5 @@
+ M registry/closure-events.jsonl
+ M registry/proofpack-index.jsonl
+ M runtime/stable/manifest.json
+ M titane-infinity.desktop
+?? proof_packs/FINAL_RESUME_POST_DRIFT_2026-03-07_1826_d859691c8/

@@ -1,0 +1,5 @@
+ M registry/ui-events.jsonl
+ M scripts/autoheal/autoheal_rules.jsonl
+ M src/pages/TitanePage-local.css
+?? .v18_ui_excellence_web_audit.mjs
+?? proof_packs/UI_EXCELLENCE_V18_2026-03-11_0934_5573d5646/

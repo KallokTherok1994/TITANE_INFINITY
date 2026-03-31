@@ -1,0 +1,18 @@
+PHASE=2_OFFICIAL_VERDICT_RECONCILIATION
+DATE_UTC=2026-03-13T11:43:30Z
+
+PROBLEM=V60 contains VERDICT.md (historical PARTIAL) and VERDICT_RERUN.md (strong closure pass), which can be read as two concurrent final truths.
+
+DECISION=APPEND_ONLY_ALIGNMENT
+
+RULE_APPLIED=
+- Keep historical evidence intact.
+- Add explicit supersession notice in V60 VERDICT.md that the official closure is VERDICT_RERUN.md.
+- Publish a single official verdict for this cycle in V61/VERDICT.md referencing the rerun evidence.
+
+OFFICIAL_READ_ORDER=
+1) V61/VERDICT.md (official cycle verdict)
+2) V60/VERDICT_RERUN.md (authoritative technical closure)
+3) V60/VERDICT.md (historical stopline, superseded)
+
+EXPECTED_OUTCOME=Single readable official truth, no destructive rewrite, append-only compliant.

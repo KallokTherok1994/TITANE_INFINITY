@@ -1,0 +1,10 @@
+# Checksums — Step 12
+
+## RELEASE_ARTIFACTS_CHECKSUMS_28.6.0.txt content
+
+27692dd09bc0024982eb86c6dd2588cd01390a5e0870ac64a401ecdaa0b619c2  src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.6.0_amd64.AppImage
+8a6723ee1910f295841a3c6a1c0069c350e857a98c002bf6e478fc94015b539c  src-tauri/target/release/bundle/deb/TITANE-Infinity_28.6.0_amd64.deb
+24a15654ed8403055d5c01b4adc03f7ce4405ee280732561aa4c4e8352daf01c  src-tauri/target/release/bundle/rpm/TITANE-Infinity-28.6.0-1.x86_64.rpm
+BUILD_DATE=2026-03-21T14:35:33Z
+GIT_SHA=0f348f8e2
+VITE_VERSION=8.0.1

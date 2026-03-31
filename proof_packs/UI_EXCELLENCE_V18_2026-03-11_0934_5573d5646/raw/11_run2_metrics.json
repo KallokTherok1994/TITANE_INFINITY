@@ -1,0 +1,61 @@
+{
+  "runId": "run2",
+  "timestamp": "2026-03-11T13:46:58.054Z",
+  "titane": {
+    "q1": {
+      "headingCount": 5,
+      "hierarchySpreadPx": 12,
+      "primaryTitlePresent": true
+    },
+    "q2": {
+      "inputContrast": 21,
+      "selectedTabReadable": true
+    },
+    "q3": {
+      "shellHeaderPresent": true,
+      "tabsUniformRadius": true,
+      "activeVsInactiveDistinct": true
+    },
+    "q4": {
+      "headerPadding": "24px",
+      "pagePadding": "16px",
+      "contentReflowReasonable": true
+    },
+    "q5": {
+      "inputPresent": true,
+      "sendPresent": true,
+      "sendDisabledAtIdle": true,
+      "tabFocusRulePresent": true
+    },
+    "q6": {
+      "tablistPresent": true,
+      "tabsCount": 8,
+      "selectedTabCount": 1,
+      "tabpanelBound": true
+    },
+    "q7": {
+      "visibleActionButtons": 49,
+      "noWhiteScreen": true
+    },
+    "q8": {
+      "noCriticalOverlay": true,
+      "chatMessagesVisible": false,
+      "zoomComputed": "0.75"
+    },
+    "meta": {
+      "url": "http://127.0.0.1:4173/titane",
+      "viewport": {
+        "w": 1400,
+        "h": 900
+      }
+    },
+    "frictions": []
+  },
+  "admin": {
+    "titleText": "⚡ TITANE",
+    "buttonCount": 54,
+    "hasSettingsKeyword": true,
+    "status": "PASS",
+    "error": null
+  }
+}

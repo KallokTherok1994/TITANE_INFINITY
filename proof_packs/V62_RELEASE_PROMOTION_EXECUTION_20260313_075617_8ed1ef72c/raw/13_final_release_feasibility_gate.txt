@@ -1,0 +1,19 @@
+PHASE=7_FINAL_RELEASE_FEASIBILITY_GATE
+UTC_TIMESTAMP=2026-03-13T12:02:09Z
+
+FACT_branch=HEAD
+FACT_ahead_behind_vs_origin_MAIN=3  1
+FACT_modified_count=5
+FACT_untracked_count=22
+FACT_build_script_present=yes
+FACT_deploy_script_DEPLOYMENT_DISTRIBUTION_v27.2.0.sh=executable
+FACT_deploy_script_mega-deploy.sh=executable
+FACT_prod_token_gate=closed
+
+FEASIBILITY_clean_promotion_window=FAIL
+FEASIBILITY_main_sync=FAIL
+FEASIBILITY_prod_tokens=FAIL
+FEASIBILITY_build_deploy_primitives=PASS
+
+FINAL_FEASIBILITY=HOLD
+WHY=Operational promotion gates remain blocked by mixed dirty state, detached/divergent main status, and missing PROD authorization tokens.

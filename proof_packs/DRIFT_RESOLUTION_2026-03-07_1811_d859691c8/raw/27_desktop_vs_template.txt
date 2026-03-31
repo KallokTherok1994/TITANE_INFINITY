@@ -1,0 +1,20 @@
+--- titane-infinity.desktop ---
+4:Name=TITANE∞ v27.2.0
+6:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+7:Icon=/home/titane-os/Documents/GitHub/TITANE_INFINITY/src-tauri/icons/128x128.png
+16:Name=🔧 Developer Mode
+17:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage --dev
+20:Name=📋 View Logs
+21:Exec=gnome-terminal -- tail -f /home/titane-os/.titane/logs/titane.log
+24:Name=⚙️ Configuration
+25:Exec=xdg-open /home/titane-os/.titane/
+--- scripts/titane-infinity.desktop ---
+4:Name=TITANE∞ v24.3.0
+6:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/src-tauri/target/release/titane-infinity
+7:Icon=titane-infinity
+16:Name=🔧 Developer Mode
+17:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/src-tauri/target/release/titane-infinity --dev
+20:Name=📋 View Logs
+21:Exec=gnome-terminal -- tail -f /home/titane-os/.titane/logs/titane.log
+24:Name=⚙️ Configuration
+25:Exec=xdg-open /home/titane-os/.titane/

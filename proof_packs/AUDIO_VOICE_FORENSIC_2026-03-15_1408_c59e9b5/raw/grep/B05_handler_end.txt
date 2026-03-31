@@ -1,0 +1,36 @@
+
+            // ═══════════════════════════════════════════════════════════════
+            // AUDIO COMMANDS — speak, start/stop/cancel_recording
+            // (AUDIT FIX 2026-03-06 — CONTINUE)
+            // Used in: tauriBridge.ts, audioSelfHeal.ts, voice.ts, voiceE2ETests.ts
+            // audio::commands already included — missing variants added here
+            // ═══════════════════════════════════════════════════════════════
+            audio::commands::speak,
+            audio::commands::start_recording,
+            audio::commands::stop_recording,
+            audio::commands::cancel_recording,
+            // ═══════════════════════════════════════════════════════════════
+            // AUDIO FIX 2026-03-15 — AUDIO_VOICE_AUDIT — missing handlers
+            // transcribe_audio + is_recording: handler exists in audio::commands
+            // but were missing from generate_handler! (allowlisted in tauri.conf.json)
+            // ═══════════════════════════════════════════════════════════════
+            audio::commands::transcribe_audio,
+            audio::commands::is_recording,
+
+            // ═══════════════════════════════════════════════════════════════
+            // SECURITY — validate_chat_message
+            // (AUDIT FIX 2026-03-06 — CONTINUE)
+            // Allowlisted in chat_ai.json but not previously registered
+            // ═══════════════════════════════════════════════════════════════
+            secure_commands::validate_chat_message,
+        ])
+        .run(tauri::generate_context!())
+        .unwrap_or_else(|e| {
+            eprintln!("❌ TITANE∞ FATAL: Tauri application failed to start");
+            eprintln!("   Error: {:?}", e);
+            eprintln!("   → Please check logs and system requirements.");
+            std::process::exit(1);
+        });
+
+    log::info!("TITANE∞ v19.5.2 shutdown - Security System offline");
+}

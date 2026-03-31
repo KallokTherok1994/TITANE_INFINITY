@@ -1,0 +1,19 @@
+git status
+git rev-parse --abbrev-ref HEAD
+git rev-parse --short HEAD
+git log -5 --oneline
+git fetch origin --prune
+git status
+git rev-list --left-right --count origin/MAIN...MAIN
+git ls-remote --heads origin MAIN
+git branch -r --contains df479d5a8
+git branch -r --contains bfc83341c
+git log --oneline -5 origin/MAIN
+rg -n "build:production|tauri build|release|bundle|publish|deploy" ...
+ls -lh deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage deployment/latest/TITANE-Infinity_28.0.0_amd64.deb deployment/latest/titane-infinity
+sha256sum deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage deployment/latest/TITANE-Infinity_28.0.0_amd64.deb deployment/latest/titane-infinity
+du -sh dist src-tauri/target/release src-tauri/target/release/bundle deployment/latest
+file deployment/latest/titane-infinity
+dpkg-deb -c deployment/latest/TITANE-Infinity_28.0.0_amd64.deb | head -n 60
+deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage --appimage-extract
+du -ah squashfs-root | sort -rh | head -n 40

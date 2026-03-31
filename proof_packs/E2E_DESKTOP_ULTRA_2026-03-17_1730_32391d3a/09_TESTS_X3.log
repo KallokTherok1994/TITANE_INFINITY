@@ -1,0 +1,37 @@
+# 09_TESTS_X3.log
+
+## Unit/Integration Tests — NOT RUN THIS SESSION
+
+Unit/integration tests (pnpm run test) were NOT executed in this session.
+Rationale: This is a Desktop E2E certification session, not a unit/integration run.
+Previous session (AUDIO_TTS_CONTINUE) ran unit tests: PASS.
+
+Classification: BLOCKED_BY_SCOPE (not BLOCKED_BY_ENV)
+Required for full L1 certification: run `pnpm run test && pnpm run test:rust`
+
+## IPC Contract Test — NOT RUN THIS SESSION
+
+`pnpm run guard:ipc-contract` (tests/contract/tauri-ipc-contract.test.ts) not run.
+Rationale: Scope limited to desktop E2E certification.
+
+## Governance Gate Tests — PASS
+
+```
+2026-03-17T17:30Z
+bash scripts/autoheal/detect_recurrence.sh
+→ PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+→ PASS: G_AH_RECURRENCE_GUARD_PASS
+→ INFO: entries=392
+
+bash scripts/verify_instructions.sh  
+→ SUMMARY: PASS=20 FAIL=0
+
+2026-03-17T~17:50Z (post-autoheal entry)
+bash scripts/autoheal/detect_recurrence.sh
+→ PASS: G_AH_RULE_CAPTURED_FOR_EACH_FIX
+→ PASS: G_AH_RECURRENCE_GUARD_PASS
+→ INFO: entries=391
+
+bash scripts/verify_instructions.sh
+→ SUMMARY: PASS=20 FAIL=0
+```

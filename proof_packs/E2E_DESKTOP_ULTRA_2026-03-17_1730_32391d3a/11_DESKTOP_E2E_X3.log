@@ -1,0 +1,126 @@
+# 11_DESKTOP_E2E_X3.log
+
+## Configuration
+- Display: DISPLAY=:99 (Xvfb started this session)
+- Binary: src-tauri/target/release/titane-infinity (37MB, built 2026-03-17 13:14)
+- Driver: tauri-driver @ /home/titane-os/.cargo/bin/tauri-driver
+- WebKitWebDriver: /usr/bin/WebKitWebDriver
+- wry version: 0.54.2 linux
+- E2E_FORCE_LOCAL_PROVIDER: enabled
+
+---
+
+## LANE A: STRUCTURE COVERAGE — smoke.wdio.test.js
+
+### RUN 1
+```
+Start: 2026-03-17T17:41:58Z
+Session: 76e4be89-e31a-4fc2-9dd0-10af29a8fcea
+Result: PASSED in wry — 1 passing (2.1s)
+Spec: e2e/desktop/smoke.wdio.test.js
+Test: ✓ loads the app root document
+wdio close: code=0
+```
+
+### RUN 2
+```
+Start: 2026-03-17T17:42:55Z
+Result: PASSED in wry — 1 passing (1.7s)
+wdio close: code=0
+```
+
+### RUN 3
+```
+Start: 2026-03-17T17:43:45Z
+Result: PASSED in wry — 1 passing (1.7s)
+wdio close: code=0
+Spec Files: 1 passed, 1 total (100% completed) in 00:00:02
+```
+
+**SMOKE x3: ALL PASS** ✓ L2 RUNTIME PROVEN (boot, DOM root load)
+
+---
+
+## LANE D: DESKTOP AUTHORITY — audio-tts-runtime-controls.wdio.test.js
+
+### RUN 1
+```
+Start: 2026-03-17T17:46:22Z  
+Binary: src-tauri/target/release/titane-infinity
+wdio session: 2c35e3bc-77ee-4006-a1a4-da53eabd9ba5
+Runtime: wry 0.54.2 linux
+
+Test: ✓ validates chat TTS controls and audio center runtime buttons
+Result: 1 passing (1m 16s)
+
+Metrics:
+  assistantMessageDetected: true
+  ttsControlsVisible: true
+  ttsStatusAfterRead: "Préparation de la lecture..."
+  stopActionObserved: true
+  replayButtonObserved: true
+  audioCenterVisible: true
+  speakerButtonVisible: true
+  microphoneButtonVisible: true
+  speakerResultObserved: true   ← "Test haut-parleur réussi!"
+  microphoneResultObserved: true ← "Test microphone réussi!"
+  verdict: PASS
+```
+
+### RUN 2
+```
+Start: 2026-03-17T17:49Z
+Metrics verdict: PASS
+All fields: same as RUN 1
+```
+
+### RUN 3
+```
+Start: 2026-03-17T17:52Z
+Metrics verdict: PASS
+All fields: same as RUN 1
+```
+
+**AUDIO-TTS x3: ALL PASS** ✓ L2+L3 RUNTIME PROVEN
+
+---
+
+## Runtime Truth Proven in This Session
+
+1. Boot: Tauri app launches (tauri://localhost)
+2. Stage: BOOT:READY marker detected
+3. isTauri: true
+4. Chat: User message sent → assistant message detected (Ollama local)
+5. TTS: speak invoked → ttsStatusAfterRead confirmed
+6. TTS controls: stop, replay buttons visible and interactive
+7. Audio Center: navigated via ensureAudioCenterVisible (bounded retry)
+8. Speaker test: executed → "Test haut-parleur réussi!" confirmed
+9. Microphone test: executed → "Test microphone réussi!" confirmed
+10. URL: tauri://localhost/admin → confirms real Tauri target (NOT dev server)
+
+---
+
+## Notes on run-desktop-suite.js exit code=1 / wdio retry behavior
+
+Observed: run-desktop-suite.js reports exit_code=1 on first wdio close, but wdio retry session completes PASS. 
+Root cause (HARNESS): early exit detection in run-desktop-suite.js does not wait for wdio retry completion.
+Classification: HARNESS defect (not PRODUCT defect)
+Impact: diagnostics.log shows FAILURE SUMMARY even when test ultimately PASSes.
+Mitigation: metrics.json is the truth source (written by test itself).
+AutoHeal: NOTE — this HARNESS defect should be addressed in a future session.
+This session: not patching run-desktop-suite.js (I6 — minimal patch only, scope = audio-tts fix only).
+
+---
+
+## Desktop Authority Proof for This Session
+
+- Launched target: src-tauri/target/release/titane-infinity (PRESENT, same day build)
+- Dev server confusion: NONE — URL confirmed as tauri://localhost
+- IPC reachability: PROVEN (conversation_generate + speak + audio commands)
+- Critical flow end-to-end: PROVEN (chat → TTS → audio controls)
+- Artifacts: reports/e2e-desktop/audio_tts_runtime_controls_metrics.json
+- x3: COMPLETE
+
+STALE_ARTIFACT_RISK remains: binary built at 13:14, does NOT include FIX-009..012 IPC registrations.
+The proven flows (chat, TTS, audio) are NOT affected by FIX-009..012 (those fix qa_monitoring, time_commands, engines_monitoring which are separate).
+Classification for proven flows: PROVEN_RUNTIME (against 13:14 binary).

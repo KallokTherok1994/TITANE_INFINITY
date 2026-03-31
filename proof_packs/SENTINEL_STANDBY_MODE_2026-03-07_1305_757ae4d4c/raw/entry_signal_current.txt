@@ -1,0 +1,5 @@
+signal_source=current user request SENTINEL_STANDBY_MODE__WAKE_ON_SCOPE_OR_DRIFT
+signal_summary=install passive sentinel standby; no new cycle requested
+EXPLICIT_NEW_SCOPE=FALSE
+PROVEN_DRIFT_SIGNAL=FALSE
+CRITICAL_EXTERNAL_FAILURE_SIGNAL=FALSE

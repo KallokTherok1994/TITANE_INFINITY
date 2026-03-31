@@ -1,0 +1,5 @@
+d859691c8 docs(governance): normalize historical residue registries
+f5819cee9 docs(residue): isolate bucket-c proofpack and autoheal append
+870348944 chore(bucket-c): commit residual tracked boundary set
+988814c21 docs(boundary): commit split bucket A (TREE_CLOSURE + closure registries)
+0af062e88 fix(e2e): close required-scope runtime gaps

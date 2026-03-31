@@ -1,0 +1,4 @@
+total_runs=23
+success_runs=23
+non_success_runs=0
+CI_STATUS=GREEN_BASELINE

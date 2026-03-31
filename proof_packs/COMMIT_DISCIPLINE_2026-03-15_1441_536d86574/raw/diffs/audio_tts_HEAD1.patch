@@ -1,0 +1,33 @@
+commit 77735901eb1f1298a1f3666a71d691222e1f6e3f
+Author: Copilot Production Agent <copilot@titane-infinity.local>
+Date:   Sun Mar 15 10:32:42 2026 -0400
+
+    fix(audio): AUDIO_VOICE_FORENSIC 2026-03-15 — register + mock stubs for audio commands
+    
+    FIX-002 (D4): transcribe_audio + is_recording — mock stubs added (BUILD_RISK resolved)
+    FIX-003 (D2/D3): get_recording_status — capabilities + mock stub + register
+    
+    All 3 fixes validated:
+    - TEXTUAL_RECHECK: grep confirmed all registrations
+    - BUILD_PROVEN: cargo build --features custom-protocol,mock,audio-capture EXIT 0
+    - Gates: verify_instructions.sh PASS=20 FAIL=0, detect_recurrence.sh PASS
+    
+    AutoHeal: AH-2026-03-15-AUDIO-001, AH-2026-03-15-AUDIO-002 added (263 entries)
+    Proof pack: proof_packs/AUDIO_VOICE_FORENSIC_2026-03-15_1408_c59e9b5/
+    
+    Rollback: git revert HEAD
+    
+    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
+
+diff --git a/src-tauri/capabilities/audio_tts.json b/src-tauri/capabilities/audio_tts.json
+index abb9d1b52..6d0ee8cd8 100644
+--- a/src-tauri/capabilities/audio_tts.json
++++ b/src-tauri/capabilities/audio_tts.json
+@@ -21,6 +21,7 @@
+       "stop_recording",
+       "cancel_recording",
+       "is_recording",
++      "get_recording_status",
+       "transcribe_audio",
+       "vad_get_state",
+       "vad_process_frame",

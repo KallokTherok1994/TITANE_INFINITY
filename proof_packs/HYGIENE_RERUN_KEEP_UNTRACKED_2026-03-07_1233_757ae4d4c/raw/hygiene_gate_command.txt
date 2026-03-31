@@ -1,0 +1,10 @@
+CANON_RULE=KEEP_UNTRACKED
+Checks executed:
+1) git diff --name-only
+2) git diff --cached --name-only
+3) git ls-files --others --exclude-standard
+4) enforce untracked_nonproof == 0 while allowing proof_packs/**
+Gate PASS condition:
+- tracked_unstaged == 0
+- tracked_staged == 0
+- untracked_nonproof == 0

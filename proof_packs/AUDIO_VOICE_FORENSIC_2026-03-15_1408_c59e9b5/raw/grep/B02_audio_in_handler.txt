@@ -1,0 +1,36 @@
+130:    pub mod recording_engine {
+131:        include!("audio/recording_engine.rs");
+138:        pub async fn speak(
+148:        pub async fn start_recording(_config: Option<serde_json::Value>) -> Result<String, String> {
+149:            Ok("mock-recording-id".to_string())
+154:        pub async fn stop_recording() -> Result<serde_json::Value, String> {
+166:        pub async fn cancel_recording() -> Result<(), String> {
+1296:            overdrive::voice_engine::voice_cancel_recording,
+1297:            overdrive::voice_engine::voice_is_recording,
+1298:            overdrive::voice_engine::voice_transcribe_audio,
+1304:            overdrive::voice_engine::voice_stop_speaking,
+1566:            audio::commands::tts_speak,
+1567:            audio::commands::tts_stop,
+1568:            audio::commands::test_tts,
+1570:            audio::commands::test_microphone,
+1572:            audio::commands::get_audio_output_devices,
+1573:            audio::commands::get_audio_input_devices,
+1575:            audio::commands::set_audio_output_device,
+1576:            audio::commands::set_audio_input_device,
+1578:            audio::commands::vad_get_state,
+1579:            audio::commands::vad_process_frame,
+1580:            audio::commands::vad_configure,
+1581:            audio::commands::vad_reset,
+1582:            audio::commands::vad_test,
+1584:            audio::commands::audio_capture_start,
+1585:            audio::commands::audio_capture_stop,
+1586:            audio::commands::audio_capture_status,
+1587:            audio::commands::audio_capture_get_chunk,
+1588:            audio::commands::audio_capture_export_wav,
+1589:            audio::commands::audio_list_devices,
+1882:            audio::commands::speak,
+1883:            audio::commands::start_recording,
+1884:            audio::commands::stop_recording,
+1885:            audio::commands::cancel_recording,
+1891:            audio::commands::transcribe_audio,
+1892:            audio::commands::is_recording,

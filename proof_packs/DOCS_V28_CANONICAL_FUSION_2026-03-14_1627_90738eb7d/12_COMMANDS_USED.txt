@@ -1,0 +1,10 @@
+git status --porcelain=v1
+git rev-parse --short=9 HEAD
+date '+%Y-%m-%d %H:%M:%S %z'
+ls -1dt /home/titane-os/Documents/GitHub/TITANE_INFINITY/proof_packs/* | head -n 20
+node -p "require('/home/titane-os/Documents/GitHub/TITANE_INFINITY/package.json').version"
+rg -n "^## \[|^## " /home/titane-os/Documents/GitHub/TITANE_INFINITY/CHANGELOG.md -m 20
+rg -n "28\.0\.0|27\.[0-9]+\.[0-9]+|latest|stable|current|courant|Canal binaire|Latest Binary" /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/90_release/PRODUCTION_RELEASE_v28.0.0.md -S
+awk 'BEGIN{bad=0} /27\.[0-9]+\.[0-9]+/ && tolower($0) ~ /(current|latest|stable|courant|canonique)/ && tolower($0) !~ /historique/ {bad=1} END{print bad?"FAIL":"PASS"}' /home/titane-os/Documents/GitHub/TITANE_INFINITY/README.md /home/titane-os/Documents/GitHub/TITANE_INFINITY/docs/README.md
+bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/verify_instructions.sh
+bash /home/titane-os/Documents/GitHub/TITANE_INFINITY/scripts/autoheal/detect_recurrence.sh

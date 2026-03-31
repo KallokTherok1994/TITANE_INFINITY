@@ -1,0 +1,35 @@
+{
+  "q4_quality": {
+    "contrastAcceptable": true,
+    "reflowReasonable": true,
+    "contrastRatioInput": 21,
+    "loadingOrErrorVisible": false,
+    "potentialDoubleScroll": false
+  },
+  "meta": {
+    "url": "tauri://localhost/titane",
+    "viewport": {
+      "w": 1400,
+      "h": 900
+    }
+  },
+  "q3_visual": {
+    "whiteScreen": false,
+    "clippingCritical": false,
+    "overlayBlocksInput": false,
+    "zoomConsistent": true,
+    "zoomComputed": "0.75"
+  },
+  "q1_visibility": {
+    "shellVisible": true,
+    "rootRendered": true,
+    "criticalVisible": true,
+    "noOnboardingBlock": true
+  },
+  "q2_interactability": {
+    "inputEnabled": true,
+    "responseVisible": true,
+    "focusOnInput": false,
+    "sendVisible": true
+  }
+}

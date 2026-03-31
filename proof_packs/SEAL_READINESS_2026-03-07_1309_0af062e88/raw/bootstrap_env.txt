@@ -1,0 +1,4 @@
+]633;E;{   echo "UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"\x3b   echo "PACK=$PACK"\x3b   echo "HEAD_SHORT=$(git rev-parse --short HEAD)"\x3b   echo "HEAD_SHA=$(git rev-parse HEAD)"\x3b } > "$PACK/raw/bootstrap_env.txt";5bfd3148-a67f-487c-bd2a-911f1c701012]633;CUTC=2026-03-07T18:09:41Z
+PACK=proof_packs/SEAL_READINESS_2026-03-07_1309_0af062e88
+HEAD_SHORT=0af062e88
+HEAD_SHA=0af062e88e26d4c05cfd985b4ec5624dd44a13d4

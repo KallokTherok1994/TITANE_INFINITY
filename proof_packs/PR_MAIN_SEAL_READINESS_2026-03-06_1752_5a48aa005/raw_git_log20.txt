@@ -1,0 +1,20 @@
+5a48aa005 test(e2e): stabilize desktop runs and seal proof pack
+9974ba89b Merge pull request #173 from KallokTherok1994/copilot/update-repo-audit-and-verdict
+9543d44dc fix(autoheal): restore original JSON formatting for historical entries, remove merge duplicates
+338aeaccd Merge branch 'MAIN' into copilot/update-repo-audit-and-verdict
+1758baf82 FINAL-SEAL: FIX-003 duplicate memory_get_stats + AH-0058 + FINAL_SEAL proof pack
+0c913f452 OMEGA-AUTOHEAL: P2-001 identity stubs + P2-002 AIChatState Default + legacy cmds + proof pack
+8b4a233f7 chore(maintenance): add optimize command and autoheal capture
+402c2ae56 MASTER_RECALC: fix AutoHeal duplicate IDs + create proof pack OMEGA-RECALC v2
+a03cd61d7 docs(release): add v27.2.0 post-deploy tag prep note
+128460fa5 Initial plan
+146914db9 Merge pull request #172 from KallokTherok1994/copilot/audit-frontend-backend
+0118dcccf docs(deploy): resync release metadata and live references
+4838e70a3 fix(test): remove duplicate const report declaration, fix AH-0044 prevention_test no-op, dedup AutoHeal IDs after MAIN merge
+be5ced801 chore(deploy): resync latest v27.2.0 metadata
+07f970d13 Merge branch 'MAIN' into copilot/audit-frontend-backend
+43c35be3f fix(smoke): harden installed runtime counters
+79ff75016 fix(smoke): stabilize integer counters in appimage analyzer
+6f533af01 docs(proof-pack): instructions maintenance 2026-03-06 1042
+dc079d856 docs(proof-pack): add required bootstrap and validator logs
+3142a471f docs(proof-pack): instructions complete update 2026-03-06 1104

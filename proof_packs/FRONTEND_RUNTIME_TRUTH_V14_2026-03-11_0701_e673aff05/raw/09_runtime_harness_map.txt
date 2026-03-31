@@ -1,0 +1,8 @@
+wdio.desktop.conf.cjs:8:const CAPS_LOG = path.join(REPORTS_DIR, 'wdio_caps.json');
+wdio.desktop.conf.cjs:9:const WORKER_LOG = path.join(REPORTS_DIR, 'wdio_worker.log');
+wdio.desktop.conf.cjs:63:  specs: ['./e2e/desktop/**/*.e2e.js', './e2e/desktop/**/*.wdio.test.js'],
+wdio.desktop.conf.cjs:70:      'wdio:maxInstances': 1,
+wdio.desktop.conf.cjs:71:      'wdio:enforceWebDriverClassic': true,
+wdio.desktop.conf.cjs:98:        `${new Date().toISOString()} PREPARE check tauri-driver ${hostname}:${port}\n`
+wdio.desktop.conf.cjs:109:    tauriDriverProcess = spawn('tauri-driver', ['--port', String(port)], {
+wdio.desktop.conf.cjs:118:        `BLOCKER: tauri-driver failed to start on ${hostname}:${port} within timeout`

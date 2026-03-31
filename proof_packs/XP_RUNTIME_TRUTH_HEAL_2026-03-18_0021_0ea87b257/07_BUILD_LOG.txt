@@ -1,0 +1,10 @@
+# Build log summary
+
+## pnpm exec tsc --noEmit
+Exit code: 0
+No errors (confirmed on Node v20.20.0)
+
+## pnpm build
+Exit code: 0
+Output: standard Vite build + post-build desktop icon update
+Binary: src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.0.0_amd64.AppImage (from prior build)

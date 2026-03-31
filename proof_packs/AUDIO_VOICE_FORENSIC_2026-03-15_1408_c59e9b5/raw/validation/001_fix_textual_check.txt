@@ -1,0 +1,15 @@
+170:        // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-001: mock stubs for stop_speaking + is_speaking
+174:        pub async fn stop_speaking() -> Result<(), String> {
+180:        pub async fn is_speaking() -> Result<bool, String> {
+184:        // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-002: mock stubs for transcribe_audio + is_recording
+188:        pub async fn transcribe_audio(_audio_data: Vec<u8>) -> Result<String, String> {
+194:        pub async fn is_recording() -> Result<bool, String> {
+1325:            overdrive::voice_engine::voice_is_recording,
+1326:            overdrive::voice_engine::voice_transcribe_audio,
+1332:            overdrive::voice_engine::voice_stop_speaking,
+1916:            // transcribe_audio + is_recording: handler exists in audio::commands
+1919:            audio::commands::transcribe_audio,
+1920:            audio::commands::is_recording,
+1921:            // AUDIO_VOICE_FORENSIC 2026-03-15 — FIX-001: register stop_speaking + is_speaking
+1924:            audio::commands::stop_speaking,
+1925:            audio::commands::is_speaking,

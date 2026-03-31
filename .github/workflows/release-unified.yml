@@ -22,7 +22,11 @@ permissions:
 
 env:
   CARGO_TERM_COLOR: always
+<<<<<<< HEAD
   NODE_VERSION: '24'
+=======
+  NODE_VERSION: '22'
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   RUST_VERSION: 'stable'
 
 jobs:
@@ -53,7 +57,10 @@ jobs:
             file \
             libssl-dev \
             libayatana-appindicator3-dev \
+<<<<<<< HEAD
             libasound2-dev \
+=======
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
             librsvg2-dev \
             patchelf
 
@@ -85,6 +92,7 @@ jobs:
           pnpm run lint
           pnpm run check
 
+<<<<<<< HEAD
       - name: 🧪 Run frontend tests
         run: pnpm run test
 
@@ -95,6 +103,8 @@ jobs:
         working-directory: src-tauri
         run: cargo test --verbose
 
+=======
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       - name: 🏗️ Build frontend
         run: pnpm run build
 
@@ -107,6 +117,7 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/release/bundle
+<<<<<<< HEAD
           sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt
           cat SHA256SUMS.txt
 
@@ -135,6 +146,10 @@ jobs:
           echo "=== GPG Signatures ==="
           find . -name "*.sig" -o -name "*.asc" | sort
           rm -rf "$GNUPGHOME"
+=======
+          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
       - name: 📤 Upload Linux artifacts
         uses: actions/upload-artifact@v6
@@ -142,11 +157,16 @@ jobs:
           name: linux-x86_64-${{ github.ref_name }}
           path: |
             src-tauri/target/release/bundle/deb/*.deb
+<<<<<<< HEAD
             src-tauri/target/release/bundle/deb/*.deb.sig
             src-tauri/target/release/bundle/appimage/*.AppImage
             src-tauri/target/release/bundle/appimage/*.AppImage.sig
             src-tauri/target/release/bundle/SHA256SUMS.txt
             src-tauri/target/release/bundle/SHA256SUMS.sig
+=======
+            src-tauri/target/release/bundle/appimage/*.AppImage
+            src-tauri/target/release/bundle/SHA256SUMS.txt
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
           if-no-files-found: warn
           retention-days: 30
 
@@ -209,6 +229,10 @@ jobs:
           Get-FileHash *.msi -Algorithm SHA256 | Format-List | Out-File SHA256SUMS.txt
           cat SHA256SUMS.txt
         shell: pwsh
+<<<<<<< HEAD
+=======
+        continue-on-error: true
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
       - name: 📤 Upload Windows artifacts
         uses: actions/upload-artifact@v6
@@ -289,8 +313,13 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/${{ matrix.target }}/release/bundle/dmg
+<<<<<<< HEAD
           shasum -a 256 *.dmg > SHA256SUMS.txt
           cat SHA256SUMS.txt
+=======
+          shasum -a 256 *.dmg > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
       - name: 📤 Upload macOS artifacts
         uses: actions/upload-artifact@v6
@@ -367,7 +396,10 @@ jobs:
             artifacts/**/*.msi
             artifacts/**/*.dmg
             artifacts/**/SHA256SUMS.txt
+<<<<<<< HEAD
             artifacts/**/*.sig
+=======
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

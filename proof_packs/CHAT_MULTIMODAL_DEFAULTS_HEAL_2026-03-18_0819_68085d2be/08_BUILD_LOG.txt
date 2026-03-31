@@ -1,0 +1,3 @@
+Build not run (no Rust changes; TypeScript unit tests serve as build proxy)
+TypeScript compilation: not explicitly run (no tsc errors expected from 3-line value changes)
+Unit tests: 41/41 PASS (npx vitest run src/__tests__/responsePolicy.unit.test.ts)

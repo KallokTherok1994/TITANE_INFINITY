@@ -1,0 +1,14 @@
+]633;E;{   echo "## git status --short --branch"\x3b   git status --short --branch\x3b   echo\x3b   echo "## git status --porcelain"\x3b   git status --porcelain\x3b } > "$PACK/raw_git_status.txt";830e6420-725f-4004-a97e-db958a2aa03c]633;C## git status --short --branch
+## MAIN...origin/MAIN [devant 1]
+ M e2e/desktop/ui-ultra-full.e2e.js
+ M scripts/autoheal/autoheal_rules.jsonl
+ M titane-infinity.desktop
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
+
+## git status --porcelain
+ M e2e/desktop/ui-ultra-full.e2e.js
+ M scripts/autoheal/autoheal_rules.jsonl
+ M titane-infinity.desktop
+?? proof_packs/PR_MAIN_SEAL_READINESS_2026-03-06_1752_5a48aa005/
+?? proof_packs/UI_E2E_TOTAL_2026-03-06_1646_5a48aa005/
