@@ -64,7 +64,6 @@
 # 🧰 Toolchain binaries (vendored)
 <<<<<<< HEAD
 =======
-.tools/node/_extract/**/bin/node filter=lfs diff=lfs merge=lfs -text
 >>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 *.html text eol=lf
 *.rs text eol=lf
