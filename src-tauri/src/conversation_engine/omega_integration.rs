@@ -474,6 +474,8 @@ impl OmegaConversationBridge {
             memory_effect: MemoryEffect::New, // OMEGA provides new information
             links_to_contexts: omega_result.sources.clone(),
             provider_meta: Some(build_success_meta(&provider_used, total_latency as u128)),
+            profile_used: "omega".to_string(),
+            memory_sources_injected: omega_result.sources.len(),
         };
 
         log::info!(

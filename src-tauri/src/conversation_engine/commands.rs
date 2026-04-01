@@ -1310,6 +1310,8 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: Some(provider_meta),
+                profile_used: "test".to_string(),
+                memory_sources_injected: 0,
             },
         }
     }

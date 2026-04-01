@@ -248,6 +248,7 @@ impl ConversationPipeline {
         };
 
         let final_latency = start.elapsed().as_millis() as u64;
+        let memory_sources_injected = cognitive_summary.links.len();
 
         // 🔍 LOG SORTIE PIPELINE OMEGA
         log::info!(
@@ -275,6 +276,8 @@ impl ConversationPipeline {
                 memory_effect: cognitive_summary.memory_effect,
                 links_to_contexts: cognitive_summary.links,
                 provider_meta: Some(build_success_meta(&provider_used, final_latency as u128)),
+                profile_used: "default".to_string(),
+                memory_sources_injected,
             },
         })
     }
