@@ -22,6 +22,10 @@ on:
   schedule:
     - cron: '0 2 * * 1' # Lundi 2h UTC (audit hebdomadaire)
 
+
+permissions:
+  contents: read
+
 jobs:
   capability-drift-check:
     name: Capability Drift Check

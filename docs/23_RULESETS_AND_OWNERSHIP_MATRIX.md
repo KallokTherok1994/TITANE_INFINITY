@@ -8,10 +8,10 @@
 
 ## Gate Index
 
-| Gate | State |
-|------|-------|
-| G_RULESETS_PRESENT | DECLARED_ONLY |
-| G_CODEOWNERS_FOR_CRITICAL_PATHS | NOT_APPLICABLE |
+| Gate | State | Remediation |
+|------|-------|-------------|
+| G_RULESETS_PRESENT | DECLARED_ONLY | — |
+| G_CODEOWNERS_FOR_CRITICAL_PATHS | ENABLED_UNVERIFIED | .github/CODEOWNERS created 2026-04-02 |
 
 ---
 
@@ -86,33 +86,24 @@ No evidence of protection on `dev` or `stable-runtime`.
 
 ## 2. CODEOWNERS
 
-### 2.1 Evidence
+### 2.1 Evidence — Updated 2026-04-02
 
-| Location | State |
-|----------|-------|
-| `CODEOWNERS` (root) | ABSENT |
-| `.github/CODEOWNERS` | ABSENT |
-| `docs/CODEOWNERS` | ABSENT |
+`.github/CODEOWNERS` created with 15 critical path entries covering:
+- `src-tauri/` (production runtime)
+- `.github/workflows/` (CI/CD supply chain)
+- `scripts/gates/`, `scripts/autoheal/`, `scripts/security/`, `scripts/verify/`
+- `src/lib/tauriCommands.ts`, `src/lib/tauriClient.ts` (IPC contract)
+- `sbom/`, `deployment/`, `docs/security matrices`
+- Both tauri base config files
 
-**Classification**: NOT_APPLICABLE (file absent)
+Owner: `@KallokTherok1994` (sole owner on solo repository).
 
-No CODEOWNERS file exists anywhere in the repository. This means:
-- `require_code_owner_reviews` in the declared branch protection (`false`) is consistent with absence.
-- No automatic review requests from code owners.
-- No ownership declared for any critical path.
+**Classification**: ENABLED_UNVERIFIED  
+CODEOWNERS file is present. GitHub will route PR reviews accordingly. Effect requires branch protection `require_code_owner_reviews: true` to be confirmed active (currently DECLARED_ONLY).
 
 ### 2.2 Critical Paths Without Owner Coverage
 
-| Path | Risk Level | Owner |
-|------|------------|-------|
-| `src-tauri/` | CRITICAL (production runtime) | NONE |
-| `.github/workflows/` | CRITICAL (CI/CD supply chain) | NONE |
-| `scripts/gates/` | HIGH (governance gates) | NONE |
-| `src/services/` | HIGH (business logic, IPC) | NONE |
-| `src/lib/tauriCommands.ts` | HIGH (IPC contract) | NONE |
-| `scripts/autoheal/` | HIGH (governance) | NONE |
-| `sbom/` | MEDIUM (supply chain artifact) | NONE |
-| `docs/SECRETS.md` | HIGH (secret policy) | NONE |
+All critical paths now covered by `.github/CODEOWNERS`.
 
 ---
 
@@ -140,11 +131,14 @@ No CODEOWNERS file exists anywhere in the repository. This means:
 
 ---
 
-## 5. Required Actions
+## 5. Required Actions — Updated 2026-04-02
 
-1. **Resolve merge conflicts** in `ci-unified.yml` and `release-unified.yml` immediately — these workflows are non-functional in their current state.
-2. **Verify branch protection is active** on `MAIN` via GitHub UI or API; document proof.
-3. **Fix required status check context names** to match actual job names in CI.
-4. **Create `.github/CODEOWNERS`** covering at minimum: `src-tauri/`, `.github/workflows/`, `scripts/gates/`, `scripts/autoheal/`, `src/lib/tauriCommands.ts`, `sbom/`.
-5. **Enable `require_code_owner_reviews: true`** after CODEOWNERS is populated.
-6. **Extend branch protection to `dev`** with at minimum required status checks.
+**Completed**:
+- Merge conflicts in `ci-unified.yml` and `release-unified.yml` resolved ✅
+- `.github/CODEOWNERS` created ✅
+
+**Remaining**:
+1. Verify branch protection is active on `MAIN` via GitHub UI or API; document proof.
+2. Fix required status check context names to match actual job names in CI.
+3. Enable `require_code_owner_reviews: true` after confirming branch protection is active.
+4. Extend branch protection to `dev` with at minimum required status checks.

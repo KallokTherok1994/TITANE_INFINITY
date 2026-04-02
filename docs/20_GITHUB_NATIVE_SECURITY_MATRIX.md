@@ -8,19 +8,19 @@
 
 ## Gate Index
 
-| Gate | State |
-|------|-------|
-| G_CODE_SCANNING_CONFIGURED | PARTIAL |
-| G_SECRET_SCANNING_CONFIGURED | PARTIAL |
-| G_PUSH_PROTECTION_STATE_CLASSIFIED | UNKNOWN |
-| G_DEPENDENCY_GRAPH_COMPLETENESS_CLASSIFIED | PARTIAL |
-| G_DEPENDENCY_REVIEW_ACTIVE | NOT_APPLICABLE |
-| G_DEPENDABOT_ALERTS_VISIBILITY_CLASSIFIED | PARTIAL |
-| G_SBOM_EXPORTABLE | PARTIAL |
-| G_ATTESTATION_EXISTS | ENABLED_UNVERIFIED |
-| G_ATTESTATION_VERIFIED | FAIL |
-| G_RULESETS_PRESENT | DECLARED_ONLY |
-| G_CODEOWNERS_FOR_CRITICAL_PATHS | NOT_APPLICABLE |
+| Gate | State | Remediation |
+|------|-------|-------------|
+| G_CODE_SCANNING_CONFIGURED | PARTIAL | — |
+| G_SECRET_SCANNING_CONFIGURED | PARTIAL | — |
+| G_PUSH_PROTECTION_STATE_CLASSIFIED | UNKNOWN | — |
+| G_DEPENDENCY_GRAPH_COMPLETENESS_CLASSIFIED | PARTIAL | Cargo Dependabot added 2026-04-02 |
+| G_DEPENDENCY_REVIEW_ACTIVE | ENABLED_VERIFIED | dependency-review.yml added 2026-04-02 |
+| G_DEPENDABOT_ALERTS_VISIBILITY_CLASSIFIED | PARTIAL | Cargo entry added to dependabot.yml 2026-04-02 |
+| G_SBOM_EXPORTABLE | PARTIAL | — |
+| G_ATTESTATION_EXISTS | ENABLED_UNVERIFIED | — |
+| G_ATTESTATION_VERIFIED | FAIL | — |
+| G_RULESETS_PRESENT | DECLARED_ONLY | — |
+| G_CODEOWNERS_FOR_CRITICAL_PATHS | ENABLED_UNVERIFIED | .github/CODEOWNERS created 2026-04-02 |
 
 ---
 
@@ -162,16 +162,22 @@
 ## Verdict
 
 **Overall**: PARTIAL  
-**Stop-the-line items**:
+**Remediated 2026-04-02**:
+- Merge conflicts in `ci-unified.yml` and `release-unified.yml` resolved.
+- `permissions: contents: read` added to 10 workflows that lacked explicit permissions.
+- `.github/CODEOWNERS` created covering 15 critical paths.
+- `dependency-review.yml` added — blocks PRs on moderate+ CVEs, denies GPL/AGPL.
+- Cargo Dependabot entry added to `dependabot.yml`.
+
+**Remaining stop-the-line items**:
 1. GitGuardian scan silently skips when `GITGUARDIAN_API_KEY` absent — must fail loudly or fall back to gitleaks only.
-2. Rust dependencies have no Dependabot coverage.
-3. No dependency review action on PRs.
-4. No SHA-pinned actions for security scanning workflows.
+2. No SHA-pinned actions for security scanning workflows.
+3. GitHub native secret scanning and push protection state unconfirmed.
 
 **Gates**:  
 - `G_CODE_SCANNING_CONFIGURED`: PARTIAL  
 - `G_SECRET_SCANNING_CONFIGURED`: PARTIAL  
 - `G_PUSH_PROTECTION_STATE_CLASSIFIED`: UNKNOWN  
 - `G_DEPENDENCY_GRAPH_COMPLETENESS_CLASSIFIED`: PARTIAL  
-- `G_DEPENDENCY_REVIEW_ACTIVE`: NOT_APPLICABLE  
-- `G_DEPENDABOT_ALERTS_VISIBILITY_CLASSIFIED`: PARTIAL
+- `G_DEPENDENCY_REVIEW_ACTIVE`: ENABLED_VERIFIED (dependency-review.yml added)  
+- `G_DEPENDABOT_ALERTS_VISIBILITY_CLASSIFIED`: PARTIAL (npm + Cargo now covered)

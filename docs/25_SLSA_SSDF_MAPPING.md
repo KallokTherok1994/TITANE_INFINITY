@@ -157,28 +157,28 @@ Reference: NIST SP 800-218 Secure Software Development Framework (SSDF) v1.1
 
 ---
 
-## 5. Priority Upgrade Path
+## 5. Priority Upgrade Path — Updated 2026-04-02
 
 ### To reach SLSA Source L2
 1. Confirm and document branch protection on MAIN.
 2. Enable commit signing enforcement (or signed tag requirement for releases).
 3. Fix required status check context names to match actual CI jobs.
-4. Resolve merge conflicts in `ci-unified.yml` and `release-unified.yml`.
+4. ~~Resolve merge conflicts in `ci-unified.yml` and `release-unified.yml`~~ ✅ Done 2026-04-02.
 
 ### To reach SLSA Build L2
 1. Add `actions/attest-build-provenance` to `release-unified.yml` (generates sigstore-backed provenance).
 2. SHA-pin all third-party actions.
 3. Enforce `cargo build --locked` in CI.
-4. Resolve merge conflicts so the build pipeline is functional.
+4. ~~Resolve merge conflicts so the build pipeline is functional~~ ✅ Done 2026-04-02.
 
 ### To reach SLSA Build L3 (future)
 1. Use `slsa-github-generator` for hermetic, non-falsifiable provenance.
 2. Audit `actions/checkout@v6.0.1` — replace with SHA-pinned verified version.
-3. Implement dependency review action on PRs.
+3. Implement dependency review action on PRs. ✅ Done 2026-04-02.
 
 ### SSDF Gap Closures
-1. Create CODEOWNERS (PO.2, PS.1).
+1. ~~Create CODEOWNERS~~ ✅ Done 2026-04-02 (PO.2, PS.1).
 2. Add `cargo audit` to CI (PW.4, RV.1).
-3. Add Cargo Dependabot (RV.1).
+3. ~~Add Cargo Dependabot~~ ✅ Done 2026-04-02 (RV.1).
 4. Automate SBOM generation in CI and add SPDX format (PW.9).
 5. Confirm GitHub native secret scanning and push protection state (PS.2).

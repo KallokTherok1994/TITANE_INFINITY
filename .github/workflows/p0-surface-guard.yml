@@ -16,6 +16,10 @@ on:
       - 'src-tauri/allowlist.whitelist.stable.json'
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+
 jobs:
   surface-guard:
     name: 'P0-2 Surface Guard Validation'

@@ -7,6 +7,10 @@ on:
       - '**/*.py'
       - 'requirements*.txt'
 
+
+permissions:
+  contents: read
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest

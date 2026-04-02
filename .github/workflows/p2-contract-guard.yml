@@ -18,6 +18,10 @@ on:
       - 'src-tauri/allowlist.whitelist.stable.json'
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+
 jobs:
   contract-guard:
     name: 'P2 Contract Guard Validation'

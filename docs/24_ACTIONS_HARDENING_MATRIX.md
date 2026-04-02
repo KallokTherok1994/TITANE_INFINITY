@@ -206,13 +206,15 @@ These files are syntactically broken YAML. GitHub Actions will fail to parse the
 
 ---
 
-## 8. Required Actions
+## 8. Required Actions — Updated 2026-04-02
 
-1. **Resolve merge conflicts** in `ci-unified.yml` and `release-unified.yml`.
-2. **Add `permissions: contents: read`** to all P0–P6 gate workflows and other workflows lacking explicit permissions.
-3. **Narrow `ai-system-optimization.yml` and `changelog.yml`** from top-level write permissions to job-level.
-4. **SHA-pin all third-party actions** (minimum: `gitleaks`, `ggshield`, `stefanzweifel/git-auto-commit-action`, `softprops/action-gh-release`).
-5. **Audit `actions/checkout@v6.0.1`** — confirm this tag exists and resolves to the expected commit.
-6. **Replace `actions-rs/toolchain@v1`** with `dtolnay/rust-toolchain@stable` (or SHA-pin).
-7. **Pin `dtolnay/rust-toolchain`** to a specific SHA instead of `@stable`.
-8. **Create `.github/CODEOWNERS`** with workflow file ownership (see file 23).
+**Completed**:
+- Merge conflicts in `ci-unified.yml` and `release-unified.yml` resolved ✅
+- `permissions: contents: read` added to 10 workflows (all P0-P3 gate workflows, `rust.yml`, `mermaid.yml`, `mermaid-verify.yml`, `capability-qualification.yml`, `python-package-conda.yml`, `deploy-v27-production.yml`) ✅
+
+**Remaining**:
+1. **SHA-pin all third-party actions** (minimum: `gitleaks`, `ggshield`, `stefanzweifel/git-auto-commit-action`, `softprops/action-gh-release`).
+2. **Audit `actions/checkout@v6.0.1`** — confirm this tag exists and resolves to the expected commit.
+3. **Replace `actions-rs/toolchain@v1`** with `dtolnay/rust-toolchain@stable` (or SHA-pin).
+4. **Pin `dtolnay/rust-toolchain`** to a specific SHA instead of `@stable`.
+5. **Create `.github/CODEOWNERS`** ✅ (done)

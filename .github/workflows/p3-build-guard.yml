@@ -26,6 +26,10 @@ on:
         default: 'false'
         type: boolean
 
+
+permissions:
+  contents: read
+
 jobs:
   build-validation:
     name: 'P3 Build Config Validation'

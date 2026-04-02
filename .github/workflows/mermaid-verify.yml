@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [MAIN]
 
+
+permissions:
+  contents: read
+
 env:
   PNPM_VERSION: '10.30.2'
 

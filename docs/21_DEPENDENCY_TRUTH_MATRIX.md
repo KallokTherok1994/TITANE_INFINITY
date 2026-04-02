@@ -119,11 +119,10 @@ No step in active workflows runs `cargo audit` or `cargo deny`. The Rust advisor
 - Both lockfiles are present and committed — meets the minimum floor.
 - npm lockfile is CI-enforced frozen; Cargo lockfile is not enforced with `--locked`.
 - No dependency submission to GitHub's dependency graph.
-- No dependency review action on PRs.
-- Rust ecosystem entirely absent from Dependabot and vulnerability scanning.
+- Dependency review action on PRs added 2026-04-02 (`dependency-review.yml`).
+- Rust ecosystem added to Dependabot 2026-04-02 (`dependabot.yml` cargo entry).
 
-**Stop-the-line items**:
+**Stop-the-line items (remaining)**:
 1. Add `cargo audit` (or `cargo deny`) step to `ci-unified.yml` and `release-unified.yml`.
-2. Add `package-ecosystem: cargo` to `dependabot.yml`.
-3. Add `actions/dependency-review-action` to PR workflow.
-4. Add `--locked` flag to `cargo build` in CI to enforce lockfile integrity.
+2. Add `--locked` flag to `cargo build` in CI to enforce lockfile integrity.
+3. Add dependency submission workflow to push resolved graph to GitHub's API.
