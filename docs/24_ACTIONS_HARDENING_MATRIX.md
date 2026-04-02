@@ -206,15 +206,19 @@ These files are syntactically broken YAML. GitHub Actions will fail to parse the
 
 ---
 
-## 8. Required Actions — Updated 2026-04-02
+## 8. Required Actions — Updated 2026-04-02 (Batch 2)
 
 **Completed**:
 - Merge conflicts in `ci-unified.yml` and `release-unified.yml` resolved ✅
-- `permissions: contents: read` added to 10 workflows (all P0-P3 gate workflows, `rust.yml`, `mermaid.yml`, `mermaid-verify.yml`, `capability-qualification.yml`, `python-package-conda.yml`, `deploy-v27-production.yml`) ✅
+- `permissions: contents: read` added to 10 workflows ✅
+- All third-party actions SHA-pinned across 35 active workflow files (156 pins) ✅
+- `dtolnay/rust-toolchain@stable` pinned to `e97e2d8c` with explicit `toolchain: stable` input (12 files) ✅
+- Deprecated `actions-rs/toolchain@v1` replaced with `dtolnay/rust-toolchain` SHA-pinned ✅
+- `.github/CODEOWNERS` created ✅
 
 **Remaining**:
-1. **SHA-pin all third-party actions** (minimum: `gitleaks`, `ggshield`, `stefanzweifel/git-auto-commit-action`, `softprops/action-gh-release`).
-2. **Audit `actions/checkout@v6.0.1`** — confirm this tag exists and resolves to the expected commit.
-3. **Replace `actions-rs/toolchain@v1`** with `dtolnay/rust-toolchain@stable` (or SHA-pin).
-4. **Pin `dtolnay/rust-toolchain`** to a specific SHA instead of `@stable`.
-5. **Create `.github/CODEOWNERS`** ✅ (done)
+1. SHA-pin `actions/` and `github/codeql-action` namespace actions (first-party, lower risk; now documented in index).
+2. Verify branch protection is actually active on `MAIN` via GitHub UI or API.
+3. Fix required status check context names to match actual CI job names.
+4. Enable `require_code_owner_reviews: true` after confirming branch protection.
+5. Extend branch protection to `dev`.

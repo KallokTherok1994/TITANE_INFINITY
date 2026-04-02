@@ -25,13 +25,12 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v6.0.1
-
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js 20
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -83,7 +82,7 @@ jobs:
 
       - name: 📤 Upload build size report
         if: always()
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
         with:
           name: build-size-analysis
           path: dist/

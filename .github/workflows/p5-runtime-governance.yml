@@ -20,8 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Verify Runtime Separation
         run: |
           echo "🔍 P5.1 RUNTIME_ISOLATION: Auditing separation..."
@@ -60,8 +59,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Verify Deployment Rules
         run: |
           echo "🔍 P5.2 DEPLOYMENT_GOVERNANCE: Auditing rules..."
@@ -97,8 +95,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Verify Change Controls
         run: |
           echo "🔍 P5.3 CHANGE_MANAGEMENT: Auditing controls..."
@@ -136,8 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Verify Operational Readiness
         run: |
           echo "🔍 P5.4 OPERATIONAL_PROCEDURES: Auditing readiness..."
