@@ -269,7 +269,8 @@ export function PerfectFusionDashboard() {
                 <strong>CPU:</strong> {health.system.cpu_usage.toFixed(1)}%
               </p>
               <p>
-                <strong>Memory:</strong> {health.system.memory_usage_mb.toFixed(0)}MB
+                <strong>Memory:</strong>{' '}
+                {(health?.system?.memory_usage_mb ?? 0).toFixed(0)}MB
               </p>
               <p>
                 <strong>Network:</strong> {health.system.network_status}

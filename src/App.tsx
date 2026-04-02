@@ -248,6 +248,9 @@ const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memor
 const ResearchPage = lazy(() =>
   import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
 );
+const SkillManager = lazy(() =>
+  import('./ui/pages/Skills/SkillManager').then(m => ({ default: m.default }))
+);
 
 // ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space (unlock-gated)
 const TotalDevPage = lazy(() =>
@@ -772,6 +775,8 @@ const AppRouter: React.FC = () => {
           <Route path="/adaptive" element={<AdaptiveEngine />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/research" element={<ResearchPage />} />
+          {/* ✨ Skill OS — Import/manage external skills */}
+          <Route path="/skills" element={<SkillManager />} />
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
           {/* Catch-all - Redirection vers Dashboard */}

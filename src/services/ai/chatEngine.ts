@@ -28,6 +28,9 @@ import { aiOrchestrator } from './orchestrator';
 import { memoryIntegration } from './memoryIntegration';
 import type { MemoryContext } from './memoryIntegration';
 import { logger as structuredLogger, generateCorrelationId } from '../monitoring/logger';
+import { extractPreferences, shapeResponse } from './preferenceEngine';
+// v26.0.0: Intent classification and depth computation are now inside CanonicalDiscernmentKernel
+// No longer called independently from chatEngine — kernel is the single source of truth
 
 // PHASE 2: Unified Memory System Integration
 import type {
@@ -38,7 +41,7 @@ import type {
 } from '@/services/memory/types';
 import { inputValidator } from './inputValidator';
 import { chatModes, type ChatModeConfig } from './chatModes';
-import { getEffectiveProfile } from './responsePolicy'; // v24.4.0: Canonical response policy
+import { getEffectiveProfile, type InferenceState } from './responsePolicy'; // v24.4.0: Canonical response policy + inference gating
 import { chatValidator } from '../chatValidator';
 import type { ChatMode } from './chatTypes';
 // Re-export for convenience
@@ -49,12 +52,22 @@ import {
   type ChatRequestArgs,
   type ChatCompletionPayload,
 } from '@/services/tauri/chatEngine.commands';
+// 🧠 Phase 1: Canonical Discernment Kernel — single decision point
+import {
+  canonicalDiscernmentKernel,
+  type CanonicalDecision,
+} from './canonicalDiscernmentKernel';
 import { MEMORY_TIMEOUTS, REQUEST_BUDGETS } from '@/config/aiTimeouts.config'; // v22Ω: Centralized timeouts
 import { cognitiveOmega } from '@/services/cognitive/cognitiveOmegaIntegration';
 import { createLogger } from '@/utils/logger';
 
 // 🆕 P1: Multi-conversations integration
 import { conversationLifecycle } from '@/engines/conversation/conversationLifecycleEngine';
+import {
+  getActiveSkill,
+  getSystemPromptForSkill,
+  getActiveSkillId,
+} from '@/services/skills/activation/skillActivator';
 
 // Type-safe correction interface
 interface _CorrectionInfo {
@@ -150,6 +163,12 @@ export interface ChatEngineResponse extends AIResponse {
     cacheHit?: boolean;
     cacheAge?: number;
     streamSimulated?: boolean;
+    // v24.4.0: Inference gating
+    inferenceState?: InferenceState;
+    // v26.0.0: Reasoning summary
+    reasoningSummary?: string;
+    // v26.0.0: Canonical discernment decision (single decision point)
+    canonicalDecision?: CanonicalDecision;
   };
 }
 
@@ -385,6 +404,26 @@ class ChatEngineOmega {
 
       logger.debug('Validated', { length: validatedMessage.length });
 
+      // ═══ PHASE 1.1.2: PREFERENCE EXTRACTION + NOISE DETECTION ═══
+      // v24.5.0: Extract durable preferences from user message, detect noise
+      pipelineSteps.push('preference-extraction');
+      const prefResult = extractPreferences(validatedMessage);
+      if (prefResult.preferences.length > 0) {
+        logger.debug('Preferences detected in message', {
+          count: prefResult.preferences.length,
+          categories: [...new Set(prefResult.preferences.map(p => p.category))],
+        });
+      }
+      if (prefResult.isNoise) {
+        logger.debug('Noise detected — will not store as preference', {
+          reason: prefResult.noiseReason,
+        });
+      }
+
+      // v26.0.0: Intent classification and depth computation are now inside the kernel
+      // No independent calls — kernel.discern() handles both
+      const userDepthPref = memoryIntegration.getDepthPreference();
+
       // ═══ PHASE 1.1.5: CONSTITUTIONAL CHECKS (TITANE∞ v1.0) ═══
       pipelineSteps.push('constitutional-checks');
 
@@ -531,30 +570,96 @@ class ChatEngineOmega {
         cognitive: cognitiveEnrichResult.status,
       });
 
+      // ═══ PHASE 1.2.4: CANONICAL DISCERNMENT KERNEL ═══
+      // v26.0.0: Single decision point — all 8 decisions in one pass
+      pipelineSteps.push('canonical-discernment');
+      // Phase 2-3: Collect runtime state from orchestrator + cognitive kernel
+      let providerHealthForKernel: Record<string, number> | undefined;
+      try {
+        const status = await aiOrchestrator.getProvidersStatus();
+        providerHealthForKernel = Object.fromEntries(
+          status.providers.map(p => [p.name, p.reliability / 100])
+        );
+      } catch {
+        logger.debug('Could not fetch orchestrator status for kernel');
+      }
+
+      // Collect available skills for the kernel
+      const availableSkills = finalConfig.mode !== 'default' ? [] : undefined;
+
+      const canonicalDecision = canonicalDiscernmentKernel.discern({
+        message: validatedMessage,
+        mode: finalConfig.mode,
+        memoryContext,
+        preferences: memoryIntegration.loadPreferences(),
+        userDepthPreference: userDepthPref,
+        providerPreference: this.providerPreference,
+        runtimeState: providerHealthForKernel
+          ? { providerHealth: providerHealthForKernel }
+          : undefined,
+        availableSkills,
+      });
+
+      logger.info('🧠 CanonicalDiscernmentKernel decision', {
+        profile: canonicalDecision.profileId,
+        inference: canonicalDecision.inferenceState,
+        memory: canonicalDecision.memoryInjection.use,
+        provider: canonicalDecision.provider.name,
+        skill: canonicalDecision.skillId ?? 'none',
+        truth: canonicalDecision.truthStatus,
+        confidence: canonicalDecision.confidence.toFixed(2),
+        timeMs: canonicalDecision.processingTimeMs,
+      });
+
       // ═══ PHASE 1.3: CONSTRUCTION PROMPT SELON MODE ═══
+      // v26.0.0: Kernel is the single source of truth — behavioralRouter runs inside kernel
       pipelineSteps.push('prompt-building');
       logger.debug(`Step 1.3: Building prompt for mode "${finalConfig.mode}"...`);
 
       const modeConfig = (chatModes[finalConfig.mode] ??
         chatModes.default) as ChatModeConfig;
 
-      // v24.4.0: Canonical response policy — compute effective profile from mode + message
-      const { profile: effectiveResponseProfile } = getEffectiveProfile(
-        finalConfig.mode,
-        validatedMessage,
-        modeConfig.maxTokens,
-        modeConfig.temperature
+      // v26.0.0: Use KERNEL's decision as the authoritative profile selection
+      // The CanonicalDiscernmentKernel is the single source of truth for profile
+      const { profile: effectiveResponseProfile, selectionResult: profileSelection } =
+        getEffectiveProfile(
+          finalConfig.mode,
+          validatedMessage,
+          modeConfig.maxTokens,
+          modeConfig.temperature,
+          canonicalDecision.profileId // Kernel is primary, not router
+        );
+
+      // v26.0.0: Use kernel's profileId for depth instructions (single source of truth)
+      const depthInstructions = this.buildDepthInstructions(
+        canonicalDecision.profileId,
+        effectiveResponseProfile
       );
+
+      // v26.0.0: Use kernel's memoryInjection decision to control memory injection
+      const shouldInjectMemory =
+        canonicalDecision.memoryInjection.use && context.sources.length > 0;
 
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
         emotionState: finalConfig.emotionState || this.config.emotionState,
-        memory: context.sources.length > 0 ? context : undefined,
+        memory: shouldInjectMemory ? context : undefined,
       };
 
       // Build system prompt with cognitive context
-      let systemPrompt = this.buildSystemPrompt(modeConfig, context, promptContext, '');
+      // v26.0.0: Only inject memory block if kernel decided to use it
+      let systemPrompt = this.buildSystemPrompt(
+        modeConfig,
+        shouldInjectMemory ? context : { sources: [], data: {} },
+        promptContext,
+        ''
+      );
+
+      // Inject depth instructions into system prompt
+      if (depthInstructions) {
+        systemPrompt = `${systemPrompt}\n\n${depthInstructions}`;
+      }
 
       // CONSTITUTION LAW #2: Inject Clarity Audit if needed
       if (needsClarityAudit) {
@@ -594,6 +699,104 @@ Format: [Audit complet] + [Réponse utilisateur]
         return backendResponse;
       }
 
+      // ═══ PHASE 1.33: MEMORY-FIRST ANSWER CHECK ═══
+      // v26.0.0: Only check memory if kernel decided memory should be used
+      // This prevents bypassing the kernel's memory authority
+      pipelineSteps.push('memory-first-check');
+      const memoryAnswer = canonicalDecision.memoryInjection.use
+        ? this.checkMemoryForAnswer(validatedMessage, memoryContext, finalConfig.mode)
+        : null;
+
+      if (memoryAnswer) {
+        logger.info('Memory-first: answer found in memory — skipping LLM call');
+        pipelineSteps.push('memory-answer-returned');
+        const processingTime = Date.now() - pipelineStartTime;
+        return {
+          content: memoryAnswer.content,
+          provider: 'titane-memory' as AIProviderName,
+          model: 'memory-first-v1.0',
+          timestamp: Date.now(),
+          mode: finalConfig.mode,
+          contextUsed: ['memory-first'],
+          suggestions: this.generateSuggestions(finalConfig.mode),
+          omegaMetadata: {
+            pipelineSteps,
+            validationScore: 1.0,
+            autoHealed: false,
+            failureHandled: false,
+            processingTime,
+          },
+        };
+      }
+
+      // ═══ PHASE 1.35: INFERENCE STATE GATING ═══
+      // v26.0.0: Use kernel's inferenceState as single source of truth
+      pipelineSteps.push('inference-gating');
+      const hasMemoryContext = context.sources.length > 0;
+      const inferenceState = canonicalDecision.inferenceState;
+
+      logger.debug('Inference state from kernel', {
+        state: inferenceState,
+        profileId: effectiveResponseProfile.id,
+        hasMemoryContext,
+      });
+
+      if (inferenceState === 'CLARIFY_REQUIRED') {
+        logger.info('Clarification required — skipping LLM call');
+        pipelineSteps.push('clarification-returned');
+        const processingTime = Date.now() - pipelineStartTime;
+        return {
+          content: this.buildClarificationResponse(validatedMessage, finalConfig.mode),
+          provider: 'titane-local' as AIProviderName,
+          model: 'inference-gate-v1.0',
+          timestamp: Date.now(),
+          mode: finalConfig.mode,
+          contextUsed: context.sources,
+          suggestions: [
+            'Reformuler avec plus de contexte',
+            'Préciser ce que tu veux',
+            'Donner un exemple concret',
+          ],
+          omegaMetadata: {
+            pipelineSteps,
+            validationScore: 1.0,
+            autoHealed: false,
+            failureHandled: false,
+            processingTime,
+            inferenceState,
+            canonicalDecision,
+          },
+        };
+      }
+
+      if (inferenceState === 'BLOCKED_BY_MISSING_FACT') {
+        logger.info('Blocked by missing fact — requesting specific information');
+        pipelineSteps.push('missing-fact-requested');
+        const processingTime = Date.now() - pipelineStartTime;
+        return {
+          content: this.buildMissingFactResponse(validatedMessage, finalConfig.mode),
+          provider: 'titane-local' as AIProviderName,
+          model: 'inference-gate-v1.0',
+          timestamp: Date.now(),
+          mode: finalConfig.mode,
+          contextUsed: context.sources,
+          suggestions: [
+            'Fournir le fait manquant',
+            'Clarifier le contexte',
+            'Reformuler la question',
+          ],
+          omegaMetadata: {
+            pipelineSteps,
+            validationScore: 1.0,
+            autoHealed: false,
+            failureHandled: false,
+            processingTime,
+            inferenceState,
+            canonicalDecision,
+          },
+        };
+      }
+
       const enrichedHistory = this.buildEnrichedHistory(
         history,
         context,
@@ -622,12 +825,40 @@ Format: [Audit complet] + [Réponse utilisateur]
           : finalConfig.mode === 'synthesis'
             ? baseTimeout * 1.3
             : baseTimeout;
+      // v26.0.0: Use kernel's provider preference
+      const kernelProvider =
+        canonicalDecision.provider.name !== 'auto'
+          ? (canonicalDecision.provider.name as ProviderPreference)
+          : this.providerPreference;
+
+      // Apply kernel's provider preference to chatEngine
+      if (kernelProvider !== this.providerPreference) {
+        this.providerPreference = kernelProvider;
+      }
+
+      // v26.0.0: Pass kernel's provider and fallback chain to orchestrator
+      const orchestratorConfig: Record<string, unknown> = {
+        ...(finalConfig.aiConfig || {}),
+        promptProfileId: modeConfig.profileId,
+        promptContext,
+      };
+
+      // Use kernel's provider preference if not 'auto'
+      if (canonicalDecision.provider.name !== 'auto') {
+        orchestratorConfig.provider = canonicalDecision.provider.name;
+      }
+
+      // Use kernel's fallback chain
+      if (canonicalDecision.fallbackChain.length > 0) {
+        orchestratorConfig.fallbackProviders = canonicalDecision.fallbackChain;
+      }
+
+      // Use kernel's temperature and maxTokens
+      orchestratorConfig.temperature = canonicalDecision.provider.temperature;
+      orchestratorConfig.maxTokens = canonicalDecision.provider.maxTokens;
+
       const response = await this.withTimeout(
-        aiOrchestrator.generate(validatedMessage, enrichedHistory, {
-          ...(finalConfig.aiConfig || {}),
-          promptProfileId: modeConfig.profileId,
-          promptContext,
-        }),
+        aiOrchestrator.generate(validatedMessage, enrichedHistory, orchestratorConfig),
         timeoutMs,
         `Orchestrator timeout (${timeoutMs}ms)`
       );
@@ -824,6 +1055,16 @@ Format: [Audit complet] + [Réponse utilisateur]
         cognitive: cognitiveStatus,
       });
 
+      // ═══ PHASE 1.7.2: PREFERENCE STORAGE ═══
+      // v24.5.0: Save extracted preferences (noise already filtered)
+      if (prefResult.preferences.length > 0 && !prefResult.isNoise) {
+        pipelineSteps.push('preference-saving');
+        memoryIntegration.savePreferences(prefResult.preferences);
+        logger.debug('Preferences saved', {
+          count: prefResult.preferences.length,
+        });
+      }
+
       // End observability trace
       if (traceId) {
         try {
@@ -834,13 +1075,90 @@ Format: [Audit complet] + [Réponse utilisateur]
         }
       }
 
+      // ═══ PHASE 1.7.5: PREFERENCE-AWARE RESPONSE SHAPING ═══
+      // v24.5.0: Apply stored preferences to shape the response
+      const activePreferences = memoryIntegration.loadPreferences();
+      if (activePreferences.length > 0) {
+        pipelineSteps.push('preference-shaping');
+        const shapedContent = shapeResponse(processedResponse.content, activePreferences);
+        if (shapedContent !== processedResponse.content) {
+          processedResponse.content = shapedContent;
+          logger.debug('Response shaped by preferences', {
+            preferenceCount: activePreferences.length,
+          });
+        }
+      }
+
+      // ═══ PHASE 1.7.8: KERNEL TRUTH STATUS VERIFICATION ═══
+      // v26.0.0: Use kernel's truthStatus to verify response quality
+      pipelineSteps.push('kernel-truth-verification');
+
+      // Verify the kernel's truth status against actual response
+      const kernelTruthStatus = canonicalDecision.truthStatus;
+      const kernelConfidence = canonicalDecision.confidence;
+
+      // If kernel predicted low truth and response is poor, flag it
+      if (kernelTruthStatus === 'STUB_ONLY' || kernelTruthStatus === 'PARTIAL') {
+        logger.warn(`Kernel predicted low truth status: ${kernelTruthStatus}`);
+        // Add warning to response if confidence is low
+        if (kernelConfidence < 0.5) {
+          logger.warn(
+            `Low kernel confidence (${kernelConfidence.toFixed(2)}) with truth status ${kernelTruthStatus}`
+          );
+        }
+      }
+
+      // If kernel predicted PROVEN_RUNTIME but response is poor, that's a contradiction
+      if (kernelTruthStatus === 'PROVEN_RUNTIME' && validation.score < 0.5) {
+        logger.error(
+          `CONTRADICTION: Kernel predicted PROVEN_RUNTIME but validation score is ${validation.score}`
+        );
+        autoHealed = true;
+      }
+
       // ═══ PHASE 1.8: CONSTRUCTION RÉPONSE FINALE OMEGA ═══
       pipelineSteps.push('response-building');
       const processingTime = Date.now() - pipelineStartTime;
 
+      // v26.0.0: Generate visible reasoning summary (DEVELOPED+ only)
+      // Uses kernel's canonicalDecision as single source of truth
+      const kernelProfileId = canonicalDecision.profileId;
+      const showReasoningSummary =
+        kernelProfileId === 'DEVELOPED' ||
+        kernelProfileId === 'DEEP' ||
+        kernelProfileId === 'ARCHITECT' ||
+        kernelProfileId === 'OMEGA';
+
+      // Extract intent from kernel's signals for reasoning summary
+      const kernelIntentSignal = canonicalDecision.signals.find(
+        s => s.source === 'intent' && s.type === 'intent_classification'
+      );
+      const intentForSummary = {
+        intent: (kernelIntentSignal?.value as string) ?? 'information_request',
+        confidence: kernelIntentSignal?.confidence ?? canonicalDecision.confidence,
+        signals: [],
+      };
+
+      const reasoningSummary = showReasoningSummary
+        ? this.buildReasoningSummary(
+            intentForSummary,
+            kernelProfileId,
+            effectiveResponseProfile,
+            hasMemoryContext,
+            inferenceState
+          )
+        : '';
+
+      // Prepend reasoning summary to response content
+      const finalContent = reasoningSummary
+        ? `${reasoningSummary}\n\n${processedResponse.content}`
+        : processedResponse.content;
+
+      // v26.0.0: Use kernel's resolved mode as authoritative
       const finalResponse: ChatEngineResponse = {
         ...processedResponse,
-        mode: finalConfig.mode,
+        content: finalContent,
+        mode: canonicalDecision.mode,
         contextUsed: context.sources,
         suggestions: this.generateSuggestions(finalConfig.mode),
         omegaMetadata: {
@@ -849,6 +1167,8 @@ Format: [Audit complet] + [Réponse utilisateur]
           autoHealed,
           failureHandled,
           processingTime,
+          reasoningSummary: reasoningSummary || undefined,
+          canonicalDecision,
         },
       };
 
@@ -1471,6 +1791,429 @@ Que souhaites-tu explorer ?`;
   }
 
   /**
+   * v24.4.0: Check if answer is already in memory before calling LLM
+   * Returns memory-based answer if confidence > 0.7, null otherwise
+   * v6.0.0: Improved with semantic keyword matching and relevance scoring
+   */
+  private checkMemoryForAnswer(
+    message: string,
+    memoryContext: MemoryContext,
+    mode: ChatMode
+  ): { content: string } | null {
+    const msgLower = message.toLowerCase();
+    const msgWords = msgLower.split(/\s+/).filter(w => w.length > 2);
+
+    // Extract key concepts from message for semantic matching
+    const concepts = this.extractKeyConcepts(msgLower);
+
+    // Score each memory entry by relevance
+    let bestMatch: { content: string; score: number } | null = null;
+
+    // Check recent decisions with semantic scoring
+    for (const decision of memoryContext.recentDecisions) {
+      const score = this.computeRelevanceScore(
+        msgLower,
+        msgWords,
+        concepts,
+        decision.title.toLowerCase(),
+        decision.rationale?.toLowerCase() || ''
+      );
+
+      if (score > 0.5) {
+        const statusLabel =
+          decision.status === 'implemented'
+            ? '✅ Implémentée'
+            : decision.status === 'pending'
+              ? '⏳ En attente'
+              : decision.status === 'revised'
+                ? '🔄 Révisée'
+                : '❌ Abandonnée';
+
+        const match = {
+          content: `**${decision.title}**\n\n${statusLabel} — ${decision.impact === 'high' ? 'Impact élevé' : decision.impact === 'medium' ? 'Impact moyen' : 'Impact faible'}\n\n${decision.rationale || 'Décision enregistrée en mémoire.'}`,
+          score,
+        };
+
+        if (!bestMatch || score > bestMatch.score) {
+          bestMatch = match;
+        }
+      }
+    }
+
+    // Check active projects with semantic scoring
+    for (const project of memoryContext.activeProjects) {
+      const score = this.computeRelevanceScore(
+        msgLower,
+        msgWords,
+        concepts,
+        project.title.toLowerCase(),
+        project.description?.toLowerCase() || ''
+      );
+
+      if (score > 0.5) {
+        const statusLabel =
+          project.status === 'active'
+            ? '🟢 Actif'
+            : project.status === 'paused'
+              ? '⏸️ En pause'
+              : project.status === 'completed'
+                ? '✅ Terminé'
+                : '📦 Archivé';
+
+        const match = {
+          content: `**${project.title}**\n\n${statusLabel} — Progression : ${project.progress}% — Priorité : ${project.priority}\n\n${project.description || 'Projet en mémoire.'}`,
+          score,
+        };
+
+        if (!bestMatch || score > bestMatch.score) {
+          bestMatch = match;
+        }
+      }
+    }
+
+    // Check knowledge entries with semantic scoring
+    for (const entry of memoryContext.relevantKnowledge) {
+      const score = this.computeRelevanceScore(
+        msgLower,
+        msgWords,
+        concepts,
+        entry.title.toLowerCase(),
+        entry.content.toLowerCase()
+      );
+
+      if (score > 0.5) {
+        const match = {
+          content: `**${entry.title}** (${entry.category})\n\n${entry.content.substring(0, 500)}${entry.content.length > 500 ? '...' : ''}`,
+          score,
+        };
+
+        if (!bestMatch || score > bestMatch.score) {
+          bestMatch = match;
+        }
+      }
+    }
+
+    // Return best match if confidence is high enough
+    if (bestMatch && bestMatch.score >= 0.6) {
+      return { content: bestMatch.content };
+    }
+
+    return null;
+  }
+
+  /**
+   * v6.0.0: Extract key concepts from a message for semantic matching
+   */
+  private extractKeyConcepts(message: string): string[] {
+    const concepts: string[] = [];
+
+    // Remove common stop words
+    const stopWords = new Set([
+      'le',
+      'la',
+      'les',
+      'un',
+      'une',
+      'des',
+      'et',
+      'ou',
+      'de',
+      'du',
+      'au',
+      'aux',
+      'ce',
+      'ces',
+      'son',
+      'sa',
+      'ses',
+      'mon',
+      'ma',
+      'mes',
+      'ton',
+      'ta',
+      'tes',
+      'notre',
+      'nos',
+      'votre',
+      'vos',
+      'leur',
+      'leurs',
+      'je',
+      'tu',
+      'il',
+      'elle',
+      'nous',
+      'vous',
+      'ils',
+      'elles',
+      'que',
+      'qui',
+      'quoi',
+      'dont',
+      'où',
+      'comment',
+      'pourquoi',
+      'quand',
+      'est',
+      'sont',
+      'être',
+      'avoir',
+      'faire',
+      'aller',
+      'venir',
+      'voir',
+      'dire',
+      'prendre',
+      'mettre',
+      'donner',
+      'trouver',
+      'passer',
+      'pouvoir',
+      'vouloir',
+      'devoir',
+      'savoir',
+      'falloir',
+      'the',
+      'is',
+      'are',
+      'was',
+      'were',
+      'be',
+      'been',
+      'have',
+      'has',
+      'had',
+      'do',
+      'does',
+      'did',
+      'will',
+      'would',
+      'could',
+      'should',
+      'may',
+      'might',
+      'can',
+      'shall',
+      'this',
+      'that',
+      'these',
+      'those',
+      'with',
+      'from',
+      'for',
+      'into',
+    ]);
+
+    const words = message.split(/\s+/).filter(w => w.length > 2);
+    for (const word of words) {
+      if (!stopWords.has(word)) {
+        concepts.push(word);
+      }
+    }
+
+    return concepts;
+  }
+
+  /**
+   * v6.0.0: Compute relevance score between message and memory entry
+   */
+  private computeRelevanceScore(
+    msgLower: string,
+    msgWords: string[],
+    concepts: string[],
+    titleLower: string,
+    contentLower: string
+  ): number {
+    let score = 0;
+
+    // Direct title containment (highest weight)
+    if (msgLower.includes(titleLower) || titleLower.includes(msgLower)) {
+      score += 0.8;
+    }
+
+    // Title word overlap
+    const titleWords = titleLower.split(/\s+/).filter(w => w.length > 2);
+    const titleOverlap = msgWords.filter(w =>
+      titleWords.some(tw => tw.includes(w) || w.includes(tw))
+    );
+    if (titleWords.length > 0) {
+      score += (titleOverlap.length / titleWords.length) * 0.4;
+    }
+
+    // Concept matching in title and content
+    for (const concept of concepts) {
+      if (titleLower.includes(concept)) {
+        score += 0.15;
+      }
+      if (contentLower.includes(concept)) {
+        score += 0.05;
+      }
+    }
+
+    // Fuzzy title match
+    if (this.fuzzyMatch(msgLower, titleLower)) {
+      score += 0.3;
+    }
+
+    return Math.min(1.0, score);
+  }
+
+  /**
+   * Simple fuzzy match: checks if a query is close enough to a target
+   */
+  private fuzzyMatch(query: string, target: string): boolean {
+    // Direct containment
+    if (target.includes(query) || query.includes(target)) return true;
+
+    // Word overlap check
+    const queryWords = query.split(/\s+/).filter(w => w.length > 3);
+    const targetWords = target.split(/\s+/).filter(w => w.length > 3);
+
+    if (queryWords.length === 0 || targetWords.length === 0) return false;
+
+    const overlap = queryWords.filter(w =>
+      targetWords.some(tw => tw.includes(w) || w.includes(tw))
+    );
+    return overlap.length / Math.min(queryWords.length, targetWords.length) >= 0.5;
+  }
+
+  /**
+   * v24.4.0: Build clarification response when inference state is CLARIFY_REQUIRED
+   * v6.0.0: More surgical — infers likely intent and asks only what's truly needed
+   * Avoids calling LLM for ambiguous requests
+   */
+  private buildClarificationResponse(message: string, mode: ChatMode): string {
+    const msgLower = message.toLowerCase();
+    const wordCount = message.split(/\s+/).filter(Boolean).length;
+
+    // Ultra-short messages: ask for minimal context
+    if (wordCount < 3) {
+      return `Je perçois ta demande mais elle est très courte. Que veux-tu que je fasse exactement ?`;
+    }
+
+    // Acknowledgment messages: confirm understanding
+    if (msgLower.match(/^(ok|oui|non|peut-être|sure|maybe|yes|no)$/)) {
+      return `Message reçu. Quel est le sujet ou l'action souhaitée ?`;
+    }
+
+    // Try to infer likely domain from partial message
+    const likelyDomain = this.inferLikelyDomain(msgLower);
+
+    if (likelyDomain) {
+      return `Je pense que tu parles de **${likelyDomain}**. Est-ce correct ? Si oui, précise ce que tu veux que je fasse.`;
+    }
+
+    // Generic but concise clarification
+    return `Pour que je puisse répondre utilement, précise : Quoi (sujet) ? Comment (format) ? Pourquoi (objectif) ?`;
+  }
+
+  /**
+   * v6.0.0: Infer likely domain from partial message
+   */
+  private inferLikelyDomain(message: string): string | null {
+    const domainPatterns: Record<string, RegExp[]> = {
+      'TITANE / architecture': [/\btitane\b/i, /\barchitecture\b/i, /\btauri\b/i],
+      'développement / code': [
+        /\bcode\b/i,
+        /\bbug\b/i,
+        /\bdebug\b/i,
+        /\btypescript\b/i,
+        /\breact\b/i,
+        /\brust\b/i,
+      ],
+      déploiement: [/\bdéploiement\b/i, /\bdeploy\b/i, /\bproduction\b/i],
+      'mémoire / historique': [
+        /\bmémoire\b/i,
+        /\bmemory\b/i,
+        /\bsouviens\b/i,
+        /\bremember\b/i,
+      ],
+      'diagnostic / performance': [
+        /\bdiagnostic\b/i,
+        /\bperformance\b/i,
+        /\bslow\b/i,
+        /\blent\b/i,
+      ],
+    };
+
+    for (const [domain, patterns] of Object.entries(domainPatterns)) {
+      if (patterns.some(p => p.test(message))) {
+        return domain;
+      }
+    }
+
+    return null;
+  }
+
+  /**
+   * v24.4.0: Build response when inference state is BLOCKED_BY_MISSING_FACT
+   * Requests specific missing information without calling LLM
+   */
+  private buildMissingFactResponse(message: string, mode: ChatMode): string {
+    return `Pour répondre à ta demande, il me manque un élément d'information clé.
+
+**Ta demande** : "${message.substring(0, 120)}${message.length > 120 ? '...' : ''}"
+
+Pour que je puisse avancer, pourrais-tu me fournir :
+• Le contexte manquant (ex: projet, date, référence technique)
+• Le résultat attendu (ex: analyse, code, recommandation)
+• Toute contrainte spécifique
+
+Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
+  }
+
+  /**
+   * v26.0.0: Build visible reasoning summary for Kevin
+   * Shows WHY TITANE chose this depth and approach
+   * Visible in the response, helps Kevin understand TITANE's reasoning
+   */
+  private buildReasoningSummary(
+    intentResult: { intent: string; confidence: number; signals: string[] },
+    effectiveDepth: string,
+    profile: { id: string; label: string; maxTokens: number },
+    hasMemoryContext: boolean,
+    inferenceState: string
+  ): string {
+    const intentLabels: Record<string, string> = {
+      information_request: "Demande d'information",
+      action_request: "Demande d'action",
+      memory_recall: 'Rappel mémoire',
+      current_info: 'Info courante',
+      preference_signal: 'Signal de préférence',
+      creative: 'Demande créative',
+      diagnostic: 'Diagnostic',
+      conversational: 'Conversationnel',
+    };
+
+    const depthLabels: Record<string, string> = {
+      DIRECT: 'DIRECT — réponse courte',
+      BALANCED: 'ÉQUILIBRÉ — réponse structurée',
+      DEVELOPED: 'DÉVELOPPÉ — réflexion approfondie',
+      DEEP: 'PROFOND — analyse complète',
+      ARCHITECT: 'ARCHITECTE — clarté stratégique',
+      OMEGA: 'OMEGA — puissance maximale',
+    };
+
+    const memoryStatus = hasMemoryContext
+      ? 'Mémoire contextuelle active'
+      : 'Pas de mémoire contextuelle';
+    const actionLabel =
+      inferenceState === 'SAFE_TO_INFER'
+        ? 'Réponse directe'
+        : inferenceState === 'CLARIFY_REQUIRED'
+          ? 'Clarification chirurgicale'
+          : inferenceState === 'BLOCKED_BY_MISSING_FACT'
+            ? 'Demande de fait manquant'
+            : 'Inférence avec hypothèse';
+
+    return [
+      `🎯 **Analyse**: ${intentLabels[intentResult.intent] || intentResult.intent} → Profil ${depthLabels[effectiveDepth] || effectiveDepth}`,
+      `📋 **Basé sur**: ${memoryStatus} | Confiance: ${(intentResult.confidence * 100).toFixed(0)}%`,
+      `⚡ **Action**: ${actionLabel} | Budget: ${profile.maxTokens} tokens`,
+    ].join('\n');
+  }
+
+  /**
    * ═══════════════════════════════════════════════════════════════════
    * PHASE 1Ω: Emergency Response Generator
    * ═══════════════════════════════════════════════════════════════════
@@ -1621,16 +2364,31 @@ Que souhaites-tu explorer ?`;
         autoHealed = true;
       }
 
-      // Prompt selon mode
+      // v26.0.0: Run kernel for streaming too — single source of truth
+      pipelineSteps.push('canonical-discernment');
+      const userDepthPref = memoryIntegration.getDepthPreference();
+      const streamCanonicalDecision = canonicalDiscernmentKernel.discern({
+        message: validatedMessage,
+        mode: finalConfig.mode,
+        memoryContext,
+        preferences: memoryIntegration.loadPreferences(),
+        userDepthPreference: userDepthPref,
+        providerPreference: this.providerPreference,
+        runtimeState: undefined,
+        availableSkills: undefined,
+      });
+
+      // Prompt selon kernel decision
       pipelineSteps.push('stream-prompt');
-      const modeConfig = (chatModes[finalConfig.mode] ??
+      const modeConfig = (chatModes[streamCanonicalDecision.mode] ??
         chatModes.default) as ChatModeConfig;
-      // v24.4.0: Canonical response policy for streaming
+      // v26.0.0: Use kernel's profileId for streaming profile resolution
       const { profile: streamResponseProfile } = getEffectiveProfile(
-        finalConfig.mode,
+        streamCanonicalDecision.mode,
         validatedMessage,
         modeConfig.maxTokens,
-        modeConfig.temperature
+        modeConfig.temperature,
+        streamCanonicalDecision.profileId
       );
       const promptContext: PromptContext = {
         modeName: modeConfig.name,
@@ -1671,6 +2429,14 @@ Que souhaites-tu explorer ?`;
         promptContext,
         systemPrompt
       );
+
+      // v26.0.0: Apply kernel's provider decision before streaming
+      // Previously: stream() ignored kernel's provider preference (silent fallback)
+      // The orchestrator.stream() doesn't accept config, so we apply to chatEngine state
+      if (streamCanonicalDecision.provider.name !== 'auto') {
+        this.providerPreference = streamCanonicalDecision.provider
+          .name as ProviderPreference;
+      }
 
       // Stream orchestrateur
       pipelineSteps.push('stream-orchestrator');
@@ -1913,7 +2679,15 @@ Que souhaites-tu explorer ?`;
   }
 
   /**
-   * Construit le prompt système selon mode OMEGA
+   * v26.0.0: Build system prompt with STABLE PREFIX + VOLATILE SUFFIX separation
+   *
+   * STABLE PREFIX (cacheable): doctrine, persona, depth policy, IDENTITY_CONSTANTS
+   * VOLATILE SUFFIX (per-request): memory, context, depth instructions, user message
+   *
+   * This separation enables:
+   * 1. Reduced prompt size on repeated requests (stable prefix cached)
+   * 2. Lower latency on large requests (less tokens to re-process)
+   * 3. Better first-answer quality (stable instructions always present)
    */
   private buildSystemPrompt(
     modeConfig: ChatModeConfig,
@@ -1922,6 +2696,7 @@ Que souhaites-tu explorer ?`;
     semanticContext?: string
   ): string {
     try {
+      // ═══ STABLE PREFIX (cacheable, rarely changes) ═══
       const contextPayload: PromptContext = promptContext || {
         modeName: modeConfig.name,
         modeIcon: modeConfig.icon,
@@ -1935,7 +2710,7 @@ Que souhaites-tu explorer ?`;
         contextPayload
       );
 
-      // Inject user persona profile from localStorage (PersonaEditor bridge)
+      // Persona injection (stable per session)
       let personaInjection = '';
       try {
         const raw =
@@ -1973,20 +2748,131 @@ Que souhaites-tu explorer ?`;
         // localStorage unavailable — silently ignore
       }
 
-      const finalPrompt = personaInjection
-        ? `${basePrompt}${personaInjection}`
-        : basePrompt;
-
-      // Inject semantic context if available
-      if (semanticContext && semanticContext.trim().length > 0) {
-        return `${finalPrompt}\n\n${semanticContext}`;
+      // ═══ SKILL OS: Inject active skill system prompt ═══
+      let skillInjection = '';
+      const activeSkillId = getActiveSkillId();
+      if (activeSkillId) {
+        const skillPrompt = getSystemPromptForSkill(activeSkillId);
+        if (skillPrompt) {
+          const activeSkill = getActiveSkill();
+          const skillName = activeSkill?.manifest.name || 'Imported Skill';
+          skillInjection = `\n\n═══ ACTIVE SKILL: ${skillName} ═══\n${skillPrompt}\n═══ END SKILL ═══`;
+          logger.info('Skill OS: Active skill system prompt injected', {
+            skillId: activeSkillId,
+            skillName,
+            promptLength: skillPrompt.length,
+          });
+        }
       }
 
-      return finalPrompt;
+      const stablePrefix = skillInjection
+        ? `${skillInjection}\n\n${personaInjection ? `${basePrompt}${personaInjection}` : basePrompt}`
+        : personaInjection
+          ? `${basePrompt}${personaInjection}`
+          : basePrompt;
+
+      // ═══ VOLATILE SUFFIX (per-request, changes every turn) ═══
+      let volatileSuffix = '';
+
+      // Semantic context (if available)
+      if (semanticContext && semanticContext.trim().length > 0) {
+        volatileSuffix += `\n\n${semanticContext}`;
+      }
+
+      // Memory context (if available)
+      if (context.sources.length > 0) {
+        const memoryBlock = this.formatMemoryBlock(context);
+        volatileSuffix += `\n\n${memoryBlock}`;
+      }
+
+      // Return stable + volatile
+      return volatileSuffix.length > 0
+        ? `${stablePrefix}${volatileSuffix}`
+        : stablePrefix;
     } catch (error) {
       logger.warn('buildSystemPrompt failed', { error });
       return `TITANE∞ v19.2Ω - Mode ${modeConfig.name} (Emergency Mode)`;
     }
+  }
+
+  /**
+   * v26.0.0: Format memory context into a structured block for prompt injection
+   */
+  private formatMemoryBlock(context: {
+    sources: string[];
+    data: Record<string, unknown>;
+  }): string {
+    const parts: string[] = [];
+
+    if (context.data.projects) {
+      parts.push(`📋 Projets: ${context.data.projects}`);
+    }
+    if (context.data.decisions) {
+      parts.push(`📝 Décisions: ${context.data.decisions}`);
+    }
+    if (context.data.knowledge) {
+      parts.push(`📚 Connaissances: ${context.data.knowledge}`);
+    }
+    if (context.data.rituals) {
+      parts.push(`🔄 Rituels: ${context.data.rituals}`);
+    }
+
+    return parts.length > 0 ? `═══ CONTEXTE MÉMOIRE ═══\n${parts.join('\n')}` : '';
+  }
+
+  /**
+   * v25.0.0: Build depth instructions for system prompt injection
+   * Tells the LLM what depth/structure to produce based on the selected profile
+   */
+  private buildDepthInstructions(
+    effectiveDepth: string,
+    profile: { id: string; label: string; structureLevel: number; maxTokens: number }
+  ): string {
+    const depthInstructionsMap: Record<string, string> = {
+      DIRECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: DIRECT — Réponse courte, essentiel uniquement.
+- Maximum 2-3 paragraphes
+- Réponse directe sans développement excessif
+- Pas de préambule ni de conclusion superflue
+- Aller droit au but`,
+
+      BALANCED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: ÉQUILIBRÉ — Réponse utile avec contexte modéré.
+- Réponse structurée mais concise
+- Inclure le contexte nécessaire pour comprendre
+- Proposer des actions concrètes quand pertinent`,
+
+      DEVELOPED: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: DÉVELOPPÉ — Réflexion approfondie, réponse decision-ready.
+- Réponse développée avec raisonnement structuré
+- Inclure : réponse directe → contexte/framing → raisonnement → implication pratique → prochain move
+- Prioriser l'utilité et l'actionabilité
+- Éviter le remplissage : chaque paragraphe doit apporter de la valeur
+- Utiliser des sections, listes ou structures quand ça améliore la clarté`,
+
+      DEEP: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: PROFOND — Analyse complète, synthèse dense.
+- Réponse exhaustive avec analyse multi-facettes
+- Inclure : contexte étendu → analyse détaillée → implications → recommandations → incertitudes bornées
+- Explorer les nuances et les trade-offs
+- Utiliser des structures (titres, listes numérotées, tableaux) pour organiser`,
+
+      ARCHITECT: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: ARCHITECTE — Clarté stratégique maximale.
+- Format préféré : Register Dominant → Axe Protégé → Priorité Réelle → Tension/Racine → Raisonnement → Move Recommandé → Incertitude Bornée
+- Exposer les axes, priorités, incohérences
+- Proposer une action simple et claire à la fin`,
+
+      OMEGA: `═══ INSTRUCTIONS DE PROFONDEUR ═══
+Profil: OMEGA — Puissance maximale, aucun compromis.
+- Réponse la plus complète possible
+- Explorer toutes les dimensions du sujet
+- Inclure analyses, implications, alternatives, recommandations détaillées`,
+    };
+
+    return (
+      depthInstructionsMap[effectiveDepth] || depthInstructionsMap['DEVELOPED'] || ''
+    );
   }
 
   /**

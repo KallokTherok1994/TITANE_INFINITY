@@ -1,71 +1,135 @@
-# Implementation Plan — P4.9 External Reentry / Final Seal Trigger Router
+# Implementation Plan: BehavioralRouter — Phase 1 "TITANE Vivant"
 
-## [Overview]
+[Overview]
+Create a unified BehavioralController that connects TITANE's disconnected systems (memory, preferences, intent, observability) into a single decision-making component. This is the "nervous system" that will make TITANE's existing pieces work together coherently, enabling the first step toward a "living" system.
 
-Single sentence: Execute P4.9 cycle to audit prior locks, detect reentry triggers, classify actionability, and produce honest hold verdict with proof pack.
+Currently, TITANE's memory, preferences, intent classification, and observability all operate in isolation. Memory is injected into the prompt but doesn't influence skill selection. Preferences shape the response post-LLM but don't influence depth selection. Observability collects traces but never feeds back into behavior. The BehavioralRouter will be the central component that takes signals from all these systems and produces a unified behavioral decision.
 
-This cycle is the P4.9 external reentry / final seal trigger router. Based on P4.8 TERMINAL_HOLD_CLASSIFIED verdict at HEAD 9488cc15d, this cycle must verify that all previously claimed locks remain stable, detect whether any real reentry trigger appeared since P4.8, classify actionability for E0/G1.5/G2/G3/F, route to exactly one lane (HOLD_PRESERVATION if no trigger), execute only one real lock or preserve hold honestly, and emit one exact verdict.
+[Types]
+Single sentence describing the type system changes.
 
-Current state: HEAD 9488cc15d, MAIN branch, v28.88.0, worktree clean (only untracked proof_packs and implementation_plan.md). External sync chain suspended (TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, OPTION1_SYNC_ENABLED all absent). No reentry triggers detected. Expected lane: A (HOLD_PRESERVATION).
+New types for behavioral routing decisions and signals:
 
-## [Types]
+```typescript
+// Signal from any subsystem to the behavioral router
+export interface BehavioralSignal {
+  source: 'memory' | 'preference' | 'intent' | 'observability' | 'identity';
+  type: string; // e.g., 'depth_hint', 'skill_hint', 'initiative_hint'
+  value: unknown;
+  confidence: number; // 0.0-1.0
+  timestamp: number;
+}
 
-No type system changes required. This is a governance/audit cycle, not a product mutation.
+// Unified behavioral decision produced by the router
+export interface BehavioralDecision {
+  profileId: ResponseProfileId;
+  skillId?: string; // skill to activate (if any)
+  initiativeAction?: InitiativeAction; // proactive action (if any)
+  reasoning: string; // why this decision was made
+  signals: BehavioralSignal[]; // signals that influenced this decision
+  confidence: number; // 0.0-1.0
+}
 
-## [Files]
+// Initiative action TITANE can propose
+export interface InitiativeAction {
+  type: 'suggest' | 'remind' | 'propose' | 'warn';
+  message: string;
+  trigger: string; // what triggered this initiative
+  priority: 'low' | 'medium' | 'high';
+}
 
-Detailed breakdown:
+// Configuration for the behavioral router
+export interface BehavioralRouterConfig {
+  enableMemoryInfluence: boolean; // default: true
+  enablePreferenceInfluence: boolean; // default: true
+  enableObservabilityInfluence: boolean; // default: false (Phase 3)
+  enableInitiative: boolean; // default: false (Phase 2)
+  maxSignalsPerDecision: number; // default: 10
+  minConfidenceThreshold: number; // default: 0.4
+}
+```
 
-### New files to create
+[Files]
+Single sentence describing file modifications.
 
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/00_EXEC_SUMMARY.md` — Executive summary
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/01_BOOTSTRAP.md` — Bootstrap truth
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/02_WORKTREE_BASELINE_MAP.md` — Worktree + baseline
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/03_PRIOR_LOCK_COMPLETION_MAP.md` — Lock audit
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/04_REENTRY_TRIGGER_MAP.md` — Trigger detection
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/05_ACTIONABILITY_MATRIX.md` — Family classification
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/06_ACTIVE_ROUTER_MAP.md` — Lane selection
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/07_ACTIVE_PHASE_SPEC.md` — H0 spec
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/08_PROOF_SCENARIOS.md` — Proof scenarios
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/09_ALIGNMENT_OR_FIXES.md` — Fixes
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/10_X3_RUNS.md` — Baseline x3
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/11_MERMAID.md` — Mermaid
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/12_REGISTRY_APPEND.md` — Registry
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/13_AUTOHEAL_UPDATE.md` — AutoHeal
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/14_GATES_REPORT.md` — Gates
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/15_DIFF_FILES.md` — Diff
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/16_ROLLBACK.md` — Rollback
-- `proof_packs/POST_P4_9_HOLD_PRESERVATION_2026-03-30_HHMM_9488cc15d/17_VERDICT.md` — Verdict
+New files to create:
 
-### Files to NOT modify
+- `src/services/ai/behavioralRouter.ts` — Main BehavioralRouter class with signal collection, decision making, and integration with existing systems
 
-- No source code, config, or workflow changes
+Existing files to modify:
 
-## [Functions]
+- `src/services/ai/chatEngine.ts` — Integrate BehavioralRouter into the generate() pipeline, replacing the current disconnected calls to classifyIntent(), getEffectiveProfile(), checkMemoryForAnswer() with a unified BehavioralRouter.decide() call
+- `src/services/ai/responsePolicy.ts` — Add BehavioralDecision type exports and integrate with existing profile selection
 
-No function modifications.
+No files to delete or move.
 
-## [Classes]
+No configuration file updates needed.
 
-No class modifications.
+[Functions]
+Single sentence describing function modifications.
 
-## [Dependencies]
+New functions in `src/services/ai/behavioralRouter.ts`:
 
-No dependency changes.
+- `BehavioralRouter.collectSignals(message, memoryContext, preferences, intentResult)` — Collects all behavioral signals from memory, preferences, intent, and observability
+- `BehavioralRouter.decide(signals, config)` — Takes collected signals and produces a unified BehavioralDecision
+- `BehavioralRouter.resolveConflicts(signals)` — Resolves conflicting signals (e.g., memory says DEEP but preference says DIRECT)
+- `BehavioralRouter.shouldActivateSkill(decision, availableSkills)` — Determines if a skill should be auto-activated based on the decision
 
-## [Testing]
+Modified functions in `src/services/ai/chatEngine.ts`:
 
-Baseline commands: cargo test --lib, verify_instructions.sh, pnpm run check, cargo check --lib (x3 each)
+- `generate()` — Replace the current sequence of classifyIntent() → getEffectiveProfile() → checkMemoryForAnswer() with a single BehavioralRouter.decide() call that produces a unified decision
+- No other functions need modification
 
-## [Implementation Order]
+[Classes]
+Single sentence describing class modifications.
 
-1. Bootstrap verification
-2. Prior lock completion audit
-3. Reentry trigger detection
-4. Actionability filter
-5. Lane selection (A=HOLD_PRESERVATION)
-6. Baseline commands x3
-7. Hold state validation
-8. Gates evaluation
-9. Proof pack generation
-10. Final verdict
+New class in `src/services/ai/behavioralRouter.ts`:
+
+- `BehavioralRouter` — Singleton class with methods: collectSignals(), decide(), resolveConflicts(), shouldActivateSkill()
+- Constructor takes config: BehavioralRouterConfig
+- Integrates with existing: memoryIntegration, preferenceEngine, classifyIntent, RESPONSE_PROFILES
+
+Modified classes:
+
+- `ChatEngineOmega` in `src/services/ai/chatEngine.ts` — Add behavioralRouter property, replace disconnected signal collection with unified BehavioralRouter.decide() call
+
+[Dependencies]
+Single sentence describing dependency modifications.
+
+No new external dependencies. The BehavioralRouter will use existing internal modules:
+
+- `src/services/ai/memoryIntegration.ts` (memory context)
+- `src/services/ai/preferenceEngine.ts` (preferences)
+- `src/services/ai/responsePolicy.ts` (intent classification, profiles)
+- `src/services/cognitive/CognitiveObservabilityEngine.ts` (observability traces)
+
+[Testing]
+Single sentence describing testing approach.
+
+Test file: `src/__tests__/services/ai/behavioralRouter.test.ts`
+
+Test scenarios:
+
+1. **Low ambiguity action request** — Router selects DEVELOPED profile, no clarification
+2. **User prefers short answers** — Router respects preference, selects DIRECT
+3. **Memory suggests a skill** — Router evaluates skill activation
+4. **Conflicting signals** — Router resolves conflicts (memory says DEEP, preference says DIRECT)
+5. **No signals** — Router falls back to mode default
+
+Each test verifies:
+
+- The decision profile matches expected
+- The reasoning is coherent
+- The signals are properly collected
+- The confidence is above threshold
+
+[Implementation Order]
+Single sentence describing the implementation sequence.
+
+1. Create `src/services/ai/behavioralRouter.ts` with types and empty class
+2. Implement `collectSignals()` — gather signals from memory, preferences, intent
+3. Implement `resolveConflicts()` — handle conflicting signals
+4. Implement `decide()` — produce unified BehavioralDecision
+5. Integrate into `chatEngine.ts` generate() pipeline
+6. Create test file with 5 scenarios
+7. Run tests and verify TypeScript compilation

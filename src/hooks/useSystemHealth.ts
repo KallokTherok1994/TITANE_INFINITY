@@ -186,12 +186,12 @@ function generateAlerts(health: UnifiedHealth): HealthAlert[] {
     });
   }
 
-  if (health.system.memory_usage_mb > 1024) {
+  if ((health?.system?.memory_usage_mb ?? 0) > 1024) {
     alerts.push({
-      id: `sys_mem_${Date.now()}`,
-      severity: health.system.memory_usage_mb > 2048 ? 'critical' : 'warning',
+      id: `high-memory-${Date.now()}`,
       component: 'system',
-      message: `High memory usage: ${health.system.memory_usage_mb.toFixed(0)}MB`,
+      severity: (health?.system?.memory_usage_mb ?? 0) > 2048 ? 'critical' : 'warning',
+      message: `High memory usage: ${(health?.system?.memory_usage_mb ?? 0).toFixed(0)}MB`,
       timestamp: Date.now(),
       auto_recoverable: true,
     });

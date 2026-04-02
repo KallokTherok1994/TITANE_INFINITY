@@ -38,7 +38,7 @@ const OLLAMA_CONFIG = {
   maxRetries: 3,
   maxErrors: 5,
   temperature: 0.7,
-  numCtx: 4096,
+  numCtx: 8192, // v25.1.0: Increased to support DEVELOPED responses (6144 tokens output + system prompt)
 };
 
 // ═══════════════════════════════════════════════════════════════
@@ -319,6 +319,17 @@ export const ollamaProvider: AIProvider = {
 
         const content = data.content;
         const latency = Date.now() - startTime;
+        const actualModel = data.model || OLLAMA_CONFIG.model;
+        const fallbackUsed = actualModel !== OLLAMA_CONFIG.model;
+
+        // Log model mismatch (fallback detection)
+        if (fallbackUsed) {
+          logger.info(
+            `Model fallback detected: requested=${OLLAMA_CONFIG.model}, used=${actualModel}`
+          );
+        } else {
+          logger.debug(`Model verified: ${actualModel}`);
+        }
 
         // Reset error count on success
         errorCount = 0;
@@ -328,7 +339,7 @@ export const ollamaProvider: AIProvider = {
           content,
           provider: 'ollama',
           timestamp: Date.now(),
-          model: data.model || OLLAMA_CONFIG.model,
+          model: actualModel,
           tokens: undefined,
           metadata: {
             latencyMs: data.latency_ms ?? latency,
@@ -348,6 +359,17 @@ export const ollamaProvider: AIProvider = {
                 (memoryContext.relevantKnowledge?.length || 0)
               : 0,
             attempt,
+            modelUsed: actualModel,
+            modelRequested: OLLAMA_CONFIG.model,
+            fallbackUsed,
+            // Real Ollama runtime metrics (nanoseconds from Ollama API)
+            ollamaTotalDuration: data.total_duration ?? null,
+            ollamaLoadDuration: data.load_duration ?? null,
+            ollamaPromptEvalCount: data.prompt_eval_count ?? null,
+            ollamaPromptEvalDuration: data.prompt_eval_duration ?? null,
+            ollamaEvalCount: data.eval_count ?? null,
+            ollamaEvalDuration: data.eval_duration ?? null,
+            ollamaDoneReason: data.done_reason ?? null,
           },
         };
       } catch (error) {

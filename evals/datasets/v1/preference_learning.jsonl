@@ -1,0 +1,15 @@
+{"id":"PL-001","lane":"A","input":"je préfère les réponses structurées avec des listes","expected":{"preferenceExtracted":true,"category":"structure","value":"lists","isNoise":false},"tags":["preference-signal","structure","explicit"]}
+{"id":"PL-002","lane":"A","input":"fais court","expected":{"preferenceExtracted":true,"category":"depth","value":"short","isNoise":false},"tags":["preference-signal","depth","implicit"]}
+{"id":"PL-003","lane":"A","input":"sois direct","expected":{"preferenceExtracted":true,"category":"tone","value":"direct","isNoise":false},"tags":["preference-signal","tone","explicit"]}
+{"id":"PL-004","lane":"A","input":"je préfère les réponses détaillées","expected":{"preferenceExtracted":true,"category":"depth","value":"deep","isNoise":false},"tags":["preference-signal","depth","explicit"]}
+{"id":"PL-005","lane":"A","input":"ne demande jamais de confirmation","expected":{"preferenceExtracted":true,"category":"action_bias","value":"no-confirmation","isNoise":false},"tags":["preference-signal","action-bias","explicit"]}
+{"id":"PL-006","lane":"B","input":"[MOCK] response received from server","expected":{"preferenceExtracted":false,"isNoise":true,"noiseReason":"pattern-match"},"tags":["noise-rejection","dev-test","mock"]}
+{"id":"PL-007","lane":"B","input":"debug output: test completed successfully","expected":{"preferenceExtracted":false,"isNoise":true,"noiseReason":"pattern-match"},"tags":["noise-rejection","dev-test","debug"]}
+{"id":"PL-008","lane":"B","input":"console.log('hello world')","expected":{"preferenceExtracted":false,"isNoise":true,"noiseReason":"pattern-match"},"tags":["noise-rejection","dev-test","console"]}
+{"id":"PL-009","lane":"B","input":"TODO: fix this later","expected":{"preferenceExtracted":false,"isNoise":true,"noiseReason":"pattern-match"},"tags":["noise-rejection","dev-test","todo"]}
+{"id":"PL-010","lane":"B","input":"error: TypeError at line 42 (file.js:42:15)","expected":{"preferenceExtracted":false,"isNoise":true,"noiseReason":"error-trace-suspected"},"tags":["noise-rejection","dev-test","error-trace"]}
+{"id":"PL-011","lane":"C","input":"salut","expected":{"preferenceExtracted":false,"isNoise":false},"tags":["no-preference","conversational"]}
+{"id":"PL-012","lane":"C","input":"comment ça va","expected":{"preferenceExtracted":false,"isNoise":false},"tags":["no-preference","conversational"]}
+{"id":"PL-013","lane":"C","input":"explique-moi React hooks","expected":{"preferenceExtracted":false,"isNoise":false},"tags":["no-preference","information-request"]}
+{"id":"PL-014","lane":"D","input":"je préfère les réponses avec des exemples de code","expected":{"preferenceExtracted":true,"category":"format","value":"code-blocks","isNoise":false},"tags":["preference-signal","format","explicit"]}
+{"id":"PL-015","lane":"D","input":"fais-moi des listes à puces","expected":{"preferenceExtracted":true,"category":"structure","value":"lists","isNoise":false},"tags":["preference-signal","structure","explicit"]}

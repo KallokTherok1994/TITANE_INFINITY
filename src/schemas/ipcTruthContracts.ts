@@ -213,7 +213,7 @@ export function validateOmegaTraceMeta(
 /**
  * Prompt budget configuration — prevents PROMPT_ASSEMBLY_EXPLOSION
  * by enforcing explicit size limits at IPC boundary.
- * 
+ *
  * Authority: implementation_plan.md — Crash Lock #1
  */
 export interface PromptBudgetConfig {
@@ -262,7 +262,9 @@ export function truncateWithBudget(
   if (text.length <= maxChars) {
     return { text, wasTruncated: false };
   }
-  const truncated = text.slice(0, maxChars) + `\n\n[...TRUNCATED:${label}:${text.length}→${maxChars} chars...]`;
+  const truncated =
+    text.slice(0, maxChars) +
+    `\n\n[...TRUNCATED:${label}:${text.length}→${maxChars} chars...]`;
   console.warn(
     `[PROMPT_BUDGET] ⚠️ Truncated ${label}: ${text.length} → ${maxChars} chars`
   );
@@ -302,10 +304,7 @@ export function validatePromptBudget(payload: {
   }
 
   if (violations.length > 0) {
-    console.warn(
-      `[PROMPT_BUDGET] ⚠️ Budget violations detected:`,
-      violations
-    );
+    console.warn(`[PROMPT_BUDGET] ⚠️ Budget violations detected:`, violations);
   }
 
   return {

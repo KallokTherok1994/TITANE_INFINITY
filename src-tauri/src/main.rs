@@ -943,8 +943,12 @@ impl CognitiveSystemState {
 }
 
 #[tauri::command]
-async fn ollama_query(prompt: String) -> Result<String, String> {
-    ollama::query_ollama(prompt).await
+async fn ollama_query(prompt: String) -> Result<serde_json::Value, String> {
+    let result = ollama::query_ollama(prompt).await?;
+    Ok(serde_json::json!({
+        "response": result.response,
+        "model": result.model
+    }))
 }
 
 // mod security; // DISABLED: Using library instead

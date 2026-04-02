@@ -62,6 +62,14 @@ export interface OllamaGenerateResponse {
   content: string;
   model: string;
   latency_ms?: number;
+  // Real Ollama runtime metrics (nanoseconds from Ollama API)
+  total_duration?: number;
+  load_duration?: number;
+  prompt_eval_count?: number;
+  prompt_eval_duration?: number;
+  eval_count?: number;
+  eval_duration?: number;
+  done_reason?: string;
 }
 
 // ============================================================
@@ -173,12 +181,20 @@ async function ipcGenerate(
       latency_ms: number;
       model: string;
       error?: string;
+      total_duration?: number;
+      load_duration?: number;
+      prompt_eval_count?: number;
+      prompt_eval_duration?: number;
+      eval_count?: number;
+      eval_duration?: number;
+      done_reason?: string;
     }>('ollama_generate', {
       req: {
         model: req.model,
         prompt: req.prompt,
         system_prompt: req.system,
         temperature: req.temperature,
+        max_tokens: req.max_tokens,
         timeout_secs: req.timeout_secs ?? defaultTimeoutSecs,
       },
     });
@@ -205,6 +221,13 @@ async function ipcGenerate(
         content: result.content,
         model: result.model,
         latency_ms: result.latency_ms,
+        total_duration: result.total_duration,
+        load_duration: result.load_duration,
+        prompt_eval_count: result.prompt_eval_count,
+        prompt_eval_duration: result.prompt_eval_duration,
+        eval_count: result.eval_count,
+        eval_duration: result.eval_duration,
+        done_reason: result.done_reason,
       },
     };
   } catch (error) {

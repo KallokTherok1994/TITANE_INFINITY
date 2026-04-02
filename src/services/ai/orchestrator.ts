@@ -960,10 +960,12 @@ class AIOrchestrator {
       // Si un provider est explicitement demandé (UI/tests), il doit rester déterministe.
       // La décision cognitive ne doit pas l'écraser (sinon impossible de forcer un scénario d'erreur).
       // En Vitest, on force aussi un comportement déterministe pour les tests de cascade.
+      // v26.0.0: If kernel explicitly chose a provider, always use it.
+      // The cognitiveKernel provides signals, not decisions — the kernel is the authority.
       const finalProvider = IS_VITEST
         ? selection.selectedProvider
         : preferredProvider && preferredProvider !== 'auto'
-          ? selection.selectedProvider
+          ? preferredProvider
           : cognitiveDecision.confidence > 70
             ? cognitiveDecision.provider
             : selection.selectedProvider;
