@@ -36,54 +36,6 @@ pub struct ConversationRequest {
     /// Populated by conversation_generate from load_conversation_history() SQLite.
     #[serde(default)]
     pub history: Option<Vec<String>>,
-
-    /// Omega classifier metadata — forwarded from frontend (Lock #2)
-    /// Enables backend to populate TraceMeta honestly and adjust AIConfig.
-    #[serde(default)]
-    pub omega_meta: Option<OmegaRequestMeta>,
-}
-
-/// Omega classifier metadata forwarded from frontend (Lock #2)
-/// Carries the auto-classification result so backend can populate TraceMeta honestly
-/// and adjust AIConfig (temperature, max_tokens) based on effort level.
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct OmegaRequestMeta {
-    /// Canonical mode from frontend classifier (e.g. "REPAIR", "ARCHITECT")
-    pub canonical_mode: String,
-    /// Response profile ID (e.g. "DEEP", "ARCHITECT")
-    pub profile_id: String,
-    /// Effort level: low | medium | high | max
-    pub effort_level: String,
-    /// Model class recommendation: HAIKU | SONNET | OPUS
-    pub model_class: String,
-    /// Classifier confidence 0.0-1.0
-    pub confidence: f32,
-    /// Classifier reason code
-    pub reason_code: String,
-}
-
-/// Trace metadata for OMEGA_AUTO_ORCHESTRATION_CHAIN (Lock #1)
-/// Emitted per response to expose selection decisions honestly.
-#[derive(Debug, Clone, Serialize, Deserialize, Default)]
-pub struct TraceMeta {
-    /// Canonical mode that was used (e.g. "REPAIR", "ARCHITECT")
-    pub mode_used: String,
-    /// Response profile ID (e.g. "DEEP", "ARCHITECT")
-    pub profile_id: String,
-    /// Effort level (low / medium / high / max)
-    pub effort_level: String,
-    /// Provider that generated the response
-    pub provider_used: String,
-    /// Model class recommendation (HAIKU / SONNET / OPUS)
-    pub model_class: String,
-    /// True if primary provider failed and fallback was used
-    pub fallback_used: bool,
-    /// Classifier reason code
-    pub reason_code: String,
-    /// Classifier confidence 0.0-1.0
-    pub confidence: f32,
-    /// Memory tiers injected into this turn
-    pub memory_classes_used: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -111,11 +63,6 @@ pub struct ConversationResponse {
 
     /// Métadonnées
     pub metadata: ConversationMetadata,
-
-    /// Trace meta — OMEGA_AUTO_ORCHESTRATION_CHAIN (Lock #1)
-    /// Absent if pipeline ran before Lock #1 was applied.
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub trace_meta: Option<TraceMeta>,
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -1193,8 +1140,8 @@ mod tests {
             memory_effect: MemoryEffect::New,
             links_to_contexts: vec!["ctx1".to_string()],
             provider_meta: None,
-            profile_used: String::new(),
-            memory_sources_injected: 0,
+            profile_used: "test".to_string(),
+            memory_sources_injected: 1,
         };
         assert_eq!(metadata.timestamp, 1234567890);
         assert_eq!(metadata.tokens_used, 500);
@@ -1269,7 +1216,6 @@ mod tests {
             emotion_context: None,
             custom_system_prompt: None,
             history: None,
-            omega_meta: None,
         };
         assert_eq!(request.user_message, "Hello");
         assert!(request.conversation_id.is_none());
@@ -1285,7 +1231,6 @@ mod tests {
             emotion_context: Some(EmotionState::default()),
             custom_system_prompt: None,
             history: None,
-            omega_meta: None,
         };
         assert!(request.conversation_id.is_some());
         assert!(request.ai_config.is_some());
@@ -1309,10 +1254,9 @@ mod tests {
                 memory_effect: MemoryEffect::New,
                 links_to_contexts: vec![],
                 provider_meta: None,
-                profile_used: String::new(),
+                profile_used: "test".to_string(),
                 memory_sources_injected: 0,
             },
-            trace_meta: None,
         };
         assert_eq!(response.assistant_message, "Reply");
         assert_eq!(response.message_id, "msg-1");

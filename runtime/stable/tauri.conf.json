@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0",
-  "productName": "TITANE-Infinity",
+  "productName": "Titan-Stable",
   "version": "28.88.0",
   "identifier": "com.titane.infinity.stable",
   "build": {
@@ -28,7 +28,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "TITANE Infinity - Stable Cognitive OS",
+        "title": "Titan-Stable — TITANE∞ Cognitive OS",
         "width": 1400,
         "height": 900,
         "minWidth": 1200,
@@ -38,7 +38,7 @@
         "decorations": true,
         "transparent": false,
         "center": true,
-        "devtools": false
+        "devtools": true
       }
     ],
     "security": {
@@ -76,7 +76,6 @@
           ],
           "allow": [
             { "command": "get_runtime_config" },
-            { "command": "http_request" },
             { "command": "is_onboarding_complete" },
             { "command": "complete_onboarding" },
             { "command": "get_onboarding_preferences" },

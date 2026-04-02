@@ -121,25 +121,11 @@ impl ConversationPipeline {
             &emotion,
             &memory_context,
         );
-        // Instrumentation: log final prompt metrics
-        let final_prompt_len = enriched_prompt.len();
-        let final_prompt_pref_marker_present = enriched_prompt.contains("Préférences utilisateur") || enriched_prompt.contains("préférences utilisateur");
-        let final_prompt_pref_hash = if final_prompt_pref_marker_present {
-            use base64::{engine::general_purpose, Engine as _};
-            general_purpose::STANDARD.encode(&enriched_prompt.as_bytes())[0..16].to_string()
-        } else { String::from("0") };
-        log::info!("[INSTRUMENT] [RUST] finalPromptLen: {} | finalPromptPrefMarkerPresent: {} | finalPromptPrefHash: {}", final_prompt_len, final_prompt_pref_marker_present, final_prompt_pref_hash);
 
         // ÉTAPE 6: Génération IA
         let ai_response = self
-            .generate_ai_response(enriched_prompt.clone(), request.ai_config.unwrap_or_default())
+            .generate_ai_response(enriched_prompt, request.ai_config.unwrap_or_default())
             .await?;
-        // Instrumentation: log response metrics
-        let response_char_count = ai_response.content.len();
-        let response_shape = if response_char_count > 400 { "developed" } else if response_char_count > 200 { "standard" } else { "concise" };
-        let clarification_triggered = ai_response.content.contains("Peux-tu préciser") || ai_response.content.contains("Pourriez-vous préciser");
-        let degraded_mode = matches!(ai_response.provider, crate::ai::AIProvider::Offline);
-        log::info!("[INSTRUMENT] [RUST] responseCharCount: {} | responseShape: {} | clarificationTriggered: {} | degradedMode: {} | provider: {:?}", response_char_count, response_shape, clarification_triggered, degraded_mode, ai_response.provider);
 
         // 🇫🇷 ÉTAPE 6.5: POST-TRAITEMENT FRENCH MASTERY (CRITIQUE)
         log::info!(
@@ -262,6 +248,7 @@ impl ConversationPipeline {
         };
 
         let final_latency = start.elapsed().as_millis() as u64;
+        let memory_sources_injected = cognitive_summary.links.len();
 
         // 🔍 LOG SORTIE PIPELINE OMEGA
         log::info!(
@@ -273,26 +260,6 @@ impl ConversationPipeline {
 
         // Construction réponse ENRICHIE par Singularity
         let provider_used = neutralized_response.provider.clone();
-
-        // OMEGA_AUTO_ORCHESTRATION_CHAIN: Populate TraceMeta (Lock #1)
-        // mode_used reflects the ConversationMode that actually ran in this pipeline.
-        // Frontend classifier result is not echoed here — this is the backend truth.
-        let trace_meta = TraceMeta {
-            mode_used: format!("{:?}", request.mode),
-            profile_id: String::new(), // populated by frontend classifier
-            effort_level: String::new(), // populated by frontend classifier
-            provider_used: provider_used.clone(),
-            model_class: String::new(), // populated by frontend classifier
-            fallback_used: false, // legacy pipeline = primary path, no fallback
-            reason_code: String::from("PIPELINE_LEGACY"),
-            confidence: 0.0, // classifier confidence not available in backend
-            memory_classes_used: if !memory_context.is_empty() {
-                vec![String::from("STM")]
-            } else {
-                vec![]
-            },
-        };
-
         Ok(ConversationResponse {
             assistant_message: final_message,
             conversation_id,
@@ -309,10 +276,9 @@ impl ConversationPipeline {
                 memory_effect: cognitive_summary.memory_effect,
                 links_to_contexts: cognitive_summary.links,
                 provider_meta: Some(build_success_meta(&provider_used, final_latency as u128)),
-                profile_used: String::new(),
-                memory_sources_injected: 0,
+                profile_used: "default".to_string(),
+                memory_sources_injected,
             },
-            trace_meta: Some(trace_meta),
         })
     }
 
