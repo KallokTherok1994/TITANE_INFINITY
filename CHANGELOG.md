@@ -617,7 +617,7 @@ All notable changes to this project are documented in this file.
 - Sealed: `RELEASE_v28.6.0_SEALED.txt`
 - Gates at seal: tsc PASS, lint PASS, vitest 3399 PASS, build PASS, verify_instructions PASS=20/0
 
-### Navigation (v29.2 — TWINS Menu Fusion)
+### Navigation (TWINS Menu Fusion)
 
 - **TWINS menu fusion**: Removed `TWIN` from TopNav overflow (`Plus` menu); added canonical
   `🔀 Symbiose` tab (9th section) under `TITANE` page, hosting `TwinEvolutionPanel` directly.
