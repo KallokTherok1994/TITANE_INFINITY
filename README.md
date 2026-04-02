@@ -686,12 +686,9 @@ git push origin feature/my-awesome-feature
 
 ## 📊 Roadmap Legacy v24-v25 (Archive)
 
-<<<<<<< HEAD
-> **🎯 Phase actuelle : v28.88.0 — Release canonique gouvernee (cf. [CHANGELOG](CHANGELOG.md))**
-=======
-> **🎯 Phase actuelle : v28.5.0 — Release target gouverne (cf. [CHANGELOG](CHANGELOG.md))**
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
-> **Statut :** Couverture documentation 200% ✅ — zéro dette technique
+> # **🎯 Phase actuelle : v28.88.0 — Release canonique gouvernee (cf. [CHANGELOG](CHANGELOG.md))**
+>
+> > > > > > > **Statut :** Couverture documentation 200% ✅ — zéro dette technique
 
 ### ✅ Phase 0-7 Complete (Dec 2025)
 
@@ -832,18 +829,14 @@ git push origin feature/my-awesome-feature
 **Before Reporting:**
 
 1. ✅ Search [existing issues](https://github.com/KallokTherok1994/TITANE_INFINITY/issues)
-2. ✅ Verify repository authority version (`28.5.0`)
+2. ✅ Verify repository authority version (`28.88.0`)
 3. ✅ Provide reproduction steps + environment details
 
 ### 💡 Feature Requests
 
 **Roadmap & Planning:**
 
-<<<<<<< HEAD
-- Current Phase: **v28.88.0 — Autorite documentaire canonique (docs + versions alignees)**
-=======
-- Current Phase: **v28.5.0 — Autorite documentaire canonique (docs + versions alignees)**
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
+- # Current Phase: **v28.88.0 — Autorite documentaire canonique (docs + versions alignees)**
 - Next Phases: i18n → Interactive docs → Auto-sync → Advanced features
 
 **How to Propose:**
@@ -921,8 +914,4 @@ Voir `LICENSE.md` pour détails.
 
 ---
 
-<<<<<<< HEAD
 **TITANE∞ v28.88.0** — _Votre systeme d'exploitation cognitif_
-=======
-**TITANE∞ v28.5.0** — _Votre systeme d'exploitation cognitif_
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
