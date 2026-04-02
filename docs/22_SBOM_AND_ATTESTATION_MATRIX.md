@@ -1,18 +1,110 @@
 # 22 — SBOM AND ATTESTATION MATRIX
 
-**Audit date**: 2026-04-02  
-**Repository**: KallokTherok1994/TITANE_INFINITY  
+**Audit date**: 2026-04-02 (updated vΩ.FINAL)
+**Repository**: KallokTherok1994/TITANE_INFINITY
 **Auditor**: TITANE∞ Copilot Kernel (governed session)
 
 ---
 
-## Gate Index
+## Gate Index (post vΩ.FINAL)
 
-| Gate | State |
-|------|-------|
-| G_SBOM_EXPORTABLE | PARTIAL |
-| G_ATTESTATION_EXISTS | ENABLED_UNVERIFIED |
-| G_ATTESTATION_VERIFIED | FAIL |
+| Gate | State | Notes |
+|------|-------|-------|
+| G_SBOM_EXPORTABLE | PARTIAL | CycloneDX + SPDX 2.3 générés localement; CI génère lors de la release |
+| G_SBOM_SPDX_AUTOMATED | ENABLED_UNVERIFIED | Ajouté à release-unified.yml; jamais exécuté en CI |
+| G_ATTESTATION_EXISTS | ENABLED_UNVERIFIED | `actions/attest-build-provenance@e8998f94` présent depuis session SHA-pinning |
+| G_ATTESTATION_VERIFIED | FAIL | Jamais exécuté — aucune release tag déclenchée |
+
+---
+
+## Attestation Rule (applied)
+
+> Attestation presence is not a security proof.
+> Verification evidence is required.
+> If attestation exists but no verification evidence is found:
+> state = ENABLED_UNVERIFIED, gate = FAIL.
+> Never PASS.
+
+---
+
+## 1. SBOM State (post vΩ.FINAL)
+
+### 1.1 Format and Location
+
+| Property | Value |
+|----------|-------|
+| CycloneDX Format | 1.5 |
+| SPDX Format | **2.3 JSON** ✅ (ajouté vΩ.FINAL) |
+| Location | `sbom/sbom-cyclonedx.json`, `sbom/sbom-spdx.json` |
+| Component count | 103 |
+| Metadata timestamp | 2026-04-02 |
+| Version | **29.0.0** ✅ (synchronisé) |
+| Generator | `scripts/sbom/generate-sbom.sh` |
+
+### 1.2 SPDX Exportability
+
+**Classification**: ENABLED_UNVERIFIED (généré localement; pas encore distribué via release)
+
+### 1.3 CycloneDX SBOM Assessment
+
+| Item | State | Notes |
+|------|-------|-------|
+| Version matches package.json | ✅ | 29.0.0 synchronisé |
+| Automated generation in CI | ENABLED_UNVERIFIED | Step dans release-unified.yml (jamais exécuté) |
+| SHA256 checksum | ✅ | sbom-cyclonedx.json.sha256 |
+| Committed to repo | ✅ | `sbom/` directory |
+| SPDX format present | ✅ | sbom-spdx.json (SPDX-2.3) |
+
+### 1.4 SBOM Coverage
+
+- 103 composants (npm top-level + cargo direct)
+- Transitive coverage: PARTIAL (npm `ls --all` = top-level; cargo `--no-deps` = direct deps)
+
+---
+
+## 2. Attestation State (post vΩ.FINAL)
+
+### 2.1 Actions/Attest Provenance
+
+**CORRECTION**: L'attestation `actions/attest-build-provenance@e8998f94` a été **ajoutée lors de la session SHA-pinning** (2026-04-02 matin). La version précédente de cette matrice était incorrecte.
+
+| Control | State | Details |
+|---------|-------|---------|
+| `actions/attest-build-provenance` | ENABLED_UNVERIFIED | Présent dans release-unified.yml ligne 358 |
+| `id-token: write` permission | ✅ | Ligne 324 |
+| `attestations: write` permission | ✅ | Ligne 324 |
+| Attestation verification | FAIL | Jamais exécuté — pas de release déclenchée |
+| PGP signature on SBOM | ENABLED_UNVERIFIED | sbom-cyclonedx.json.sig présent |
+
+### 2.2 Attestation Verdict
+
+Per attestation rule:
+- Attestation step present: YES
+- Attestation ever executed: NO
+- Attestation verified: NO
+- **State: ENABLED_UNVERIFIED** (upgrade depuis NOT_FOUND dans la version précédente)
+
+---
+
+## 3. Table de Synthèse
+
+| Surface | État |
+|---------|------|
+| SBOM CycloneDX 1.5 | ENABLED_UNVERIFIED |
+| SBOM SPDX 2.3 | ENABLED_UNVERIFIED |
+| SBOM version synchronisée | ✅ 29.0.0 |
+| SBOM en SHA256 checksum | ENABLED_UNVERIFIED |
+| CI SBOM generation | ENABLED_UNVERIFIED |
+| GitHub Artifact Attestation | ENABLED_UNVERIFIED |
+| Attestation vérification | FAIL |
+
+---
+
+## 4. Actions prioritaires (owner)
+
+1. **Déclencher une release tag v29.0.0** pour valider la chaîne attestation + SBOM dans CI
+2. **Publier la clé PGP** ou migrer vers cosign/sigstore pour SBOM signing
+3. **Ajouter `actions/attest-build-provenance` sur SBOM** (`sbom/sbom-spdx.json`) en plus des artifacts binaires
 
 ---
 

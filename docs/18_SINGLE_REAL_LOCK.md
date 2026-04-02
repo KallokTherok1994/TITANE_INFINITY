@@ -1,6 +1,6 @@
 # 18 — SINGLE_REAL_LOCK — TITANE_INFINITY
 
-> Generated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL
+> Updated: 2026-04-02 | Mode: AUDIT_PLUS_SENTINEL (vΩ.FINAL)
 
 ---
 
@@ -8,46 +8,47 @@
 
 ---
 
-## CURRENT_REAL_LOCK
+## LOCK RÉSOLU — Session précédente
 
 ```
 LOCK_ID    : MANIFEST_VERSION_SYNC
-LOCK_CLASS : LOCAL
-SCOPE      : deployment/latest/MANIFEST.json
-ROOT_CAUSE : Deployment metadata version 28.88.0 ne correspond pas à package.json 29.0.0
-TRIGGER    : PROUVÉ (G9 log: "Deployment metadata version mismatch: 28.88.0 vs 29.0.0")
-FAMILIES   : RELEASE_TRUTH, GATES_MONOTONICITY
-PATCH      : Mettre à jour .deployment.version et .version → "29.0.0" dans MANIFEST.json
-ROLLBACK   : git restore -- deployment/latest/MANIFEST.json
-MAX_ITER   : 1 (patch minimal, vérification G9)
+STATUS     : RÉSOLU ✅
+PATCH      : deployment/latest/MANIFEST.json → 29.0.0
+G9         : PASS
 ```
 
 ---
 
-## Pourquoi ce lock et pas un autre
+## CURRENT_REAL_LOCK — Session vΩ.FINAL
 
-| Candidat lock | Raison d'exclusion |
-|---------------|-------------------|
-| SECRET_SCANNING | EXTERNAL — nécessite owner GitHub UI |
-| PUSH_PROTECTION | EXTERNAL — nécessite owner GitHub UI |
-| ATTESTATION_VERIFICATION | ENV — nécessite release réelle déclenchée |
-| SBOM_EXPORT | LOCAL mais hors scope session actuelle (complexité workflow) |
-| RULESETS | EXTERNAL — nécessite owner confirmation |
-| VITEST re-run | Non justifié — aucune régression détectée |
+```
+LOCK_ID    : SBOM_EXPORT
+LOCK_CLASS : LOCAL
+SCOPE      : sbom/, scripts/sbom/generate-sbom.sh, .github/workflows/release-unified.yml
+ROOT_CAUSE : SBOM stale (28.88.0 vs 29.0.0) + pas de format SPDX + pas d'automation CI
+TRIGGER    : PROUVÉ (sbom-header.json: version 28.88.0; package.json: 29.0.0; SPDX absent)
+FAMILIES   : SBOM_EXPORT, ARTIFACT_ATTESTATIONS (matrix 22 stale post-attestation ajout)
+PATCH      :
+  1. generate-sbom.sh — ajout SPDX 2.3 JSON via jq
+  2. SBOM régénéré localement (103 composants, version 29.0.0)
+  3. release-unified.yml — step SBOM generation + artifacts upload
+ROLLBACK   : git restore -- scripts/sbom/generate-sbom.sh sbom/ .github/workflows/release-unified.yml
+STATUS     : RÉSOLU ✅
+```
 
 ---
 
-## Séquence après résolution du lock courant
+## Séquence des locks (mise à jour)
 
-1. ✅ **MANIFEST_VERSION_SYNC** (session actuelle — si justifié)
-2. ⏳ SBOM_EXPORT (prochaine session — ajouter step SPDX)
+1. ✅ **MANIFEST_VERSION_SYNC** (session 2026-04-02 matin)
+2. ✅ **SBOM_EXPORT** (session 2026-04-02 vΩ.FINAL)
 3. ⏳ RULESETS_CONFIRMATION (owner action requise)
 4. ⏳ ATTESTATION_VERIFICATION (première release tag v*)
+5. ⏳ SECRET_SCANNING / PUSH_PROTECTION (owner GitHub Settings)
 
 ---
 
-## Note importante
+## Prochain lock
 
-La décision d'ouvrir le patch MANIFEST appartient au gestionnaire du repo.
-Ce document identifie le lock, pas l'autorisation.
-Le kernel interdit d'ouvrir plusieurs locks simultanément.
+**NEXT_LOCK** : RULESETS_CONFIRMATION (EXTERNAL) ou ATTESTATION_VERIFICATION (ENV)
+Aucun lock local restant identifié.

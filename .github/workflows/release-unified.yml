@@ -354,6 +354,12 @@ jobs:
           fi
           cat release_notes.md
 
+      - name: 📦 Generate and include SBOM
+        run: |
+          bash scripts/sbom/generate-sbom.sh sbom || true
+          echo "SBOM files generated:"
+          ls -la sbom/*.json 2>/dev/null || echo "  (no sbom files)"
+
       - name: 🔏 Attest build provenance
         uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be  # v2
         with:
@@ -378,6 +384,9 @@ jobs:
             artifacts/**/*.dmg
             artifacts/**/SHA256SUMS.txt
             artifacts/**/*.sig
+            sbom/sbom-cyclonedx.json
+            sbom/sbom-spdx.json
+            sbom/sbom-cyclonedx.json.sha256
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
