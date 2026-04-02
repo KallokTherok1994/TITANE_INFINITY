@@ -1,5 +1,5 @@
 /**
- * TITANE_INFINITY v26.3.0 — Proprietary License
+ * TITANE_INFINITY v28.88.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  * Unauthorized use, reproduction, modification, distribution or extraction
  * of the software, its architecture, engines or components is strictly prohibited.
@@ -8,22 +8,15 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v26.3.0 — APP COMPONENT - PRODUCTION READY
+ *   TITANE∞ v28.88.0 — APP COMPONENT - PRODUCTION READY
  *   v22Ω AI Performance Optimizations: 12 optimizations (-40% latency)
  *   Build 11.5s, Tests 1964 passed, Boot ~2s, 20 Engines Unified
  *   React Router + AppShell + Living Engines + Code Splitting
  * ═══════════════════════════════════════════════════════════════
  */
 
-import React, { useEffect, useState, Suspense, lazy, useMemo, useCallback } from 'react';
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-  useNavigate,
-} from 'react-router-dom';
+import React, { useEffect, useState, Suspense, lazy, useCallback } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { secureInvoke } from '@/lib/security';
 import { useLivingEngines } from './hooks';
 import { logger } from './lib/logger';
@@ -31,7 +24,7 @@ import { ThemeProvider } from './themes/ThemeProvider';
 import { UIThemeProvider } from './features/design-center';
 import { AnimationProvider } from './contexts/AnimationContext';
 import { TitanStateProvider } from './context/TitanStateContext'; // ✨ v∞.MPE - Persistence
-import { AppShell, TopNav, createTopNavItems } from '@components/layout';
+import { AppShell, TopNav } from '@components/layout';
 import { BackendDownIndicator } from '@/components/system/BackendDownIndicator'; // ✨ UI vΩ Phase F - Mode dégradé
 import { Button } from './ui';
 // ✨ P3: Lazy-load XP bar for smaller initial bundle
@@ -55,12 +48,12 @@ import { ToastContainer } from './ui/components/Toast'; // ✨ v19.5.2 - Toast n
 import { useToasts, useToastActions } from './stores/uiStore.selectors'; // ✨ v29.1.0 - Optimized selectors
 // Sidebar state removed in UI vΩ - Navigation moved to TopNav
 // import { useSingularitySidebarCollapsed, useContextActions } from './core/state/SingularityState.selectors';
-import { initializeOllama } from './services/ai/providers/ollama'; // ✨ v21 - Local AI initialization
+import { useAppInitialization } from './hooks/useAppInitialization';
+import { useTopNavigation } from './hooks/useTopNavigation';
 // ✨ OPT-12: connectCacheToSingularity lazy-loaded below (removed static import)
 // ✨ OPT-7: i18n is now lazy-loaded in useEffect below (removed static import)
 // ✨ v25.4.1 - A11Y & Performance monitoring (utilities planned for future implementation)
-// ✨ CONSOLE MONITOR - Auto-Heal Integration
-import { consoleMonitor } from './services/monitoring/consoleMonitor';
+// consoleMonitor init moved to useAppInitialization hook
 // ✨ v25.3.1 + P3: Lazy-load Aura components (heavy graphics)
 const QuantumParticles = lazy(() =>
   import('./components/aura/QuantumParticles').then(m => ({
@@ -74,13 +67,9 @@ const AuraControlPanel = lazy(() =>
 );
 import { useAura } from './hooks/useAuraOrchestrator';
 import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - Window zoom & fullscreen controls
-import { useZoomControl, loadSavedZoom } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
+import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
-
-const OLLAMA_ENABLED_STORAGE_KEY = 'titane_ollama_enabled';
-const EXTERNAL_AI_STORAGE_KEY = 'titane.enable_external_ai';
-const PREFERRED_PROVIDER_STORAGE_KEY = 'omega-chat-preferred-provider';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -127,7 +116,6 @@ const SingularityMonitor = lazy(() =>
 // v24.3.0 - CognitiveLayoutControl déplacé dans ADMIN (ConfigurationHub)
 
 import './components/psyche/DeepPsychePanel.css';
-import { presenceOS } from './engines/presence/_stubs';
 // ✨ P0.Ω∞ - Splash Watchdog (Anti-freeze diagnostic)
 import { SplashWatchdog } from './components/diagnostics/SplashWatchdog';
 
@@ -260,6 +248,9 @@ const Memory = lazy(() => import('./pages/Memory').then(m => ({ default: m.Memor
 const ResearchPage = lazy(() =>
   import('./pages/ResearchPage').then(m => ({ default: m.ResearchPage }))
 );
+const SkillManager = lazy(() =>
+  import('./ui/pages/Skills/SkillManager').then(m => ({ default: m.default }))
+);
 
 // ✨ TOTAL_DEV v28.1.0 — GOD DEV sovereign space (unlock-gated)
 const TotalDevPage = lazy(() =>
@@ -280,8 +271,6 @@ const emitBootMarker = (marker: string): void => {
  */
 const AppRouter: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
-
   useEffect(() => {
     emitBootMarker('BOOT:AFTER_ROUTER');
     emitBootMarker('BOOT:BEFORE_ORCHESTRATOR');
@@ -388,458 +377,7 @@ const AppRouter: React.FC = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    try {
-      const storage = window.localStorage;
-      let updated = false;
-
-      if (!storage.getItem(OLLAMA_ENABLED_STORAGE_KEY)) {
-        storage.setItem(OLLAMA_ENABLED_STORAGE_KEY, '1');
-        updated = true;
-      }
-
-      if (!storage.getItem(PREFERRED_PROVIDER_STORAGE_KEY)) {
-        storage.setItem(PREFERRED_PROVIDER_STORAGE_KEY, 'auto');
-        updated = true;
-      }
-
-      if (!storage.getItem(EXTERNAL_AI_STORAGE_KEY)) {
-        storage.setItem(EXTERNAL_AI_STORAGE_KEY, '1');
-        updated = true;
-      }
-
-      if (updated) {
-        logger.info('AI runtime defaults activated', {
-          component: 'App',
-          ollamaEnabled: storage.getItem(OLLAMA_ENABLED_STORAGE_KEY) ?? '0',
-          preferredProvider: storage.getItem(PREFERRED_PROVIDER_STORAGE_KEY) ?? 'auto',
-          externalAIEnabled: storage.getItem(EXTERNAL_AI_STORAGE_KEY) ?? '0',
-        });
-      }
-    } catch (error) {
-      logger.warn('Unable to seed AI runtime defaults', {
-        component: 'App',
-        error: error instanceof Error ? error.message : String(error),
-      });
-    }
-  }, []);
-
-  // ✨ v21 - Initialiser Ollama Provider au démarrage
-  useEffect(() => {
-    // Opt-in only: Ollama is an optional local service.
-    // Avoid background localhost probes unless explicitly enabled.
-    const envEnabled = import.meta.env.VITE_OLLAMA_ENABLED === '1';
-    let userEnabled = false;
-    try {
-      const raw = localStorage.getItem('titane_ollama_enabled');
-      userEnabled = raw === '1' || raw === 'true';
-    } catch {
-      userEnabled = false;
-    }
-
-    if (!envEnabled && !userEnabled) {
-      return;
-    }
-
-    logger.info('Initializing local AI provider', {
-      component: 'Ollama',
-      optIn: envEnabled ? 'env' : 'user',
-    });
-
-    initializeOllama().catch(error => {
-      logger.error(
-        'Failed to initialize OLLAMA',
-        { component: 'App', service: 'Ollama' },
-        error as Error
-      );
-    });
-  }, []);
-
-  // ✨ CONSOLE MONITOR - Start monitoring in development mode
-  useEffect(() => {
-    if (import.meta.env.DEV) {
-      console.log(
-        '🔍 [CONSOLE-MONITOR] Starting console monitoring & auto-heal integration...'
-      );
-      try {
-        consoleMonitor.start();
-        logger.info('Console monitor started', {
-          component: 'App',
-          service: 'ConsoleMonitor',
-        });
-      } catch (error) {
-        logger.error(
-          'Failed to start console monitor',
-          { component: 'App', service: 'ConsoleMonitor' },
-          error as Error
-        );
-      }
-    }
-
-    return () => {
-      if (import.meta.env.DEV) {
-        consoleMonitor.stop();
-      }
-    };
-  }, []);
-
-  // ✨ v26.2 - Enable local network security mode for private home network
-  useEffect(() => {
-    // ✨ Sprint 6 Phase 3 - Load saved zoom level
-    loadSavedZoom();
-
-    import('./lib/security')
-      .then(({ enableLocalNetworkMode }) => {
-        enableLocalNetworkMode();
-        logger.info('Local network mode enabled - reduced restrictions', {
-          component: 'Security',
-        });
-      })
-      .catch(err => {
-        logger.warn('Failed to enable local network mode', {
-          component: 'Security',
-          error: err,
-        });
-      });
-  }, []);
-
-  // ✨ v26.2 - Initialize auto-backup service (6-hour intervals)
-  useEffect(() => {
-    // Silent-by-default in production/Tauri: periodic background backups must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_AUTO_BACKUP_ENABLED === '1';
-    let userEnabled = false;
-    try {
-      const raw = localStorage.getItem('titane_auto_backup_enabled');
-      userEnabled = raw === '1' || raw === 'true';
-    } catch {
-      userEnabled = false;
-    }
-
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (!enabled) {
-      return;
-    }
-
-    import('./services/backup/AutoBackupService')
-      .then(({ autoBackupService }) => {
-        autoBackupService.initialize();
-        console.log('💾 [BACKUP] Auto-backup service initialized (6h intervals)');
-      })
-      .catch(err => {
-        console.warn('⚠️ [BACKUP] Failed to initialize auto-backup:', err);
-      });
-  }, []);
-
-  // ✨ OPT-7 - Initialize i18n asynchronously (non-blocking, lazy-loaded)
-  useEffect(() => {
-    import('./i18n')
-      .then(({ initI18nAsync }) => {
-        initI18nAsync(); // Background load, doesn&apos;t block UI
-      })
-      .catch(error => {
-        logger.warn('i18n lazy initialization failed', {
-          component: 'i18n',
-          error,
-        });
-      });
-  }, []);
-
-  // ✨ v21.5 Sprint 1 + OPT-12 - Lazy-load Cognitive Cache Connection
-  useEffect(() => {
-    console.log('🧠 [COGNITIVE-CACHE] Connecting to SingularityKernel...');
-
-    // OPT-12: Import dynamique complet (évite circular dependency + lazy-load)
-    Promise.all([import('./services/ai/singularityKernel'), import('./services/ai')])
-      .then(([{ singularityKernel }, { connectCacheToSingularity }]) => {
-        try {
-          connectCacheToSingularity(singularityKernel);
-          console.log('✅ [COGNITIVE-CACHE] Connected successfully');
-        } catch (error) {
-          logger.error(
-            'Connection failed',
-            { component: 'App', service: 'CognitiveCache' },
-            error as Error
-          );
-        }
-      })
-      .catch(error => {
-        logger.warn('Failed to load cognitive cache', {
-          component: 'CognitiveCache',
-          error,
-        });
-      });
-  }, []);
-
-  // ✨ OPT-10 - Lazy-load Auto-Audit Engine
-  useEffect(() => {
-    let started = false;
-
-    // Silent-by-default in production/Tauri: background audits must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_AUTO_AUDIT_ENABLED === '1';
-    let userEnabled = false;
-    try {
-      const raw = localStorage.getItem('titane_auto_audit_enabled');
-      userEnabled = raw === '1' || raw === 'true';
-    } catch {
-      userEnabled = false;
-    }
-
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (!enabled) {
-      return;
-    }
-
-    console.log('🔍 [AUTO-AUDIT] Loading automatic audits...');
-    import('./services/autoAuditEngine')
-      .then(({ autoAuditEngine }) => {
-        if (!started) {
-          autoAuditEngine.start();
-          started = true;
-          console.log('✅ [AUTO-AUDIT] Started');
-        }
-
-        // Cleanup
-        return () => {
-          autoAuditEngine.stop();
-        };
-      })
-      .catch(err => {
-        console.warn('⚠️ [AUTO-AUDIT] Failed to load:', err);
-      });
-  }, []);
-
-  // Lazy-load telemetry + self-healing singletons after app ready
-  // titaneSelfHealing and titanaTelemetry auto-start on module load (constructor-based)
-  useEffect(() => {
-    import('./utils/telemetryEngine').catch(err => {
-      console.warn('⚠️ [TELEMETRY] Failed to load:', err);
-    });
-  }, []);
-
-  // ✨ v∞ Phase 4 - Initialiser Multi-Agent System
-  // REMOVED: core/ai/multi_agent_engine supprimé en PHASE 1 (OPTION B)
-  /*
-  useEffect(() => {
-    const initAgents = async () => {
-      console.log('🌌 [MULTI-AGENT] Initializing 5-agent system...');
-
-      // Register all 5 agents
-      multiAgentEngine.registerAgent(new HeliosAgent());
-      multiAgentEngine.registerAgent(new HarmoniaAgent());
-      multiAgentEngine.registerAgent(new PersonaAgent());
-      multiAgentEngine.registerAgent(new MemoryCoreAgent());
-      multiAgentEngine.registerAgent(new WatchdogAgent());
-
-      // Start orchestration
-      await multiAgentEngine.initialize();
-      console.log('✅ [MULTI-AGENT] System ready');
-    };
-
-    initAgents();
-
-    return () => {
-      console.log('🛑 [MULTI-AGENT] Shutting down...');
-      multiAgentEngine.shutdown();
-    };
-  }, []);
-  */
-
-  // ✨ OPT-11 - Lazy-load Cognitive Layout Engine
-  useEffect(() => {
-    let started = false;
-
-    // Silent-by-default in production/Tauri: the cognitive layout observation loop must be explicitly enabled.
-    const envEnabled = import.meta.env.VITE_COGNITIVE_LAYOUT_ENGINE_ENABLED === '1';
-    let userEnabled = false;
-    try {
-      const raw = localStorage.getItem('titane_cognitive_layout_engine_enabled');
-      userEnabled = raw === '1' || raw === 'true';
-    } catch {
-      userEnabled = false;
-    }
-
-    const enabled = import.meta.env.DEV || envEnabled || userEnabled;
-    if (!enabled) {
-      return;
-    }
-
-    console.log('🧠 [COGNITIVE] Loading Cognitive Layout Engine...');
-    import('./engines/cognitive/cognitiveLayoutEngine')
-      .then(({ cognitiveLayoutEngine }) => {
-        if (!started) {
-          cognitiveLayoutEngine.start();
-          started = true;
-          console.log('✅ [COGNITIVE] Cognitive Layout Engine started');
-        }
-
-        return () => {
-          cognitiveLayoutEngine.stop();
-        };
-      })
-      .catch(err => {
-        logger.warn('Failed to load Cognitive Layout Engine', {
-          component: 'CognitiveLayout',
-          error: err,
-        });
-      });
-  }, []);
-
-  // ✨ OPT-10 - Lazy-load TITANE∞ Micro-Interactions
-  useEffect(() => {
-    logger.info('Loading TITANE∞ micro-interactions', {
-      component: 'UIPolish',
-    });
-    import('./ui/motion')
-      .then(({ initializeMicroInteractions }) => {
-        try {
-          initializeMicroInteractions();
-          logger.info(
-            'Micro-interactions initialized (Ripple, Magnetism, Focus Glow, Tooltips)',
-            { component: 'UIPolish' }
-          );
-        } catch (error) {
-          logger.error(
-            'Failed to initialize micro-interactions',
-            { component: 'App', service: 'UIPolish' },
-            error as Error
-          );
-        }
-      })
-      .catch(err => {
-        logger.warn('Failed to load motion module', {
-          component: 'UIPolish',
-          error: err,
-        });
-      });
-  }, []);
-
-  // ✨ v∞.27.0 - Initialiser Unified Presence Engine (Super Prompt #3)
-  // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-  /*
-  useEffect(() => {
-    console.log('🌌 [PRESENCE] Starting Unified Presence Engine...');
-
-    // Démarrer le moteur de présence
-    unifiedPresenceEngine.start();
-
-    // Démarrer l'arc narratif
-    const sessionId = `session_${Date.now()}`;
-    narrativeProtocol.startNewArc(sessionId);
-
-    // Démarrer toutes les intégrations
-    presenceIntegrations.startAll();
-
-    console.log('✅ [PRESENCE] Unified Presence System active');
-
-    return () => {
-      console.log('🛑 [PRESENCE] Stopping Unified Presence Engine...');
-      presenceIntegrations.stopAll();
-      unifiedPresenceEngine.stop();
-    };
-  }, []);
-  */
-
-  // ✨ v∞.28.0 - Initialiser Multimodal Presence Engine (Super Prompt XXVIII)
-  // REMOVED: engines/presence supprimé en PHASE 1 (OPTION B)
-  /*
-  useEffect(() => {
-    console.log('🎭 [MULTIMODAL] Starting Multimodal Presence Engine...');
-
-    // Démarrer la boucle multimodale (30Hz)
-    multimodalPresenceEngine.start();
-
-    console.log('✅ [MULTIMODAL] Multimodal Presence System active (30Hz)');
-
-    return () => {
-      console.log('🛑 [MULTIMODAL] Stopping Multimodal Presence Engine...');
-      multimodalPresenceEngine.stop();
-    };
-  }, []);
-  */
-
-  // ✨ v∞.29-32 - Initialiser Deep Psyche Engines (Super Prompts XXIX, XXX, XXXII, X)
-  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
-  /*
-  useEffect(() => {
-    console.log('🧠 [DEEP-PSYCHE] Starting Deep Psyche Engines...');
-
-    // 1. Archetype Resonance Engine (XXIX) - 10Hz
-    archetypeResonanceEngine.start();
-    console.log('  ✅ Archetype Resonance Engine active (10Hz)');
-
-    // 2. Meta-Continuum Engine (XXX) - 60Hz NowPulse
-    metaContinuumEngine.start();
-    console.log('  ✅ Meta-Continuum Engine active (60Hz)');
-
-    // 3. Embodied Presence Engine (XXXII) - 30Hz
-    embodiedPresenceEngine.start();
-    console.log('  ✅ Embodied Presence Engine active (30Hz)');
-
-    // 4. Neural Voice Blending Engine (X) - Event-based (pas de loop)
-    console.log('  ✅ Neural Voice Blending Engine ready');
-
-    console.log('✅ [DEEP-PSYCHE] All engines synchronized and active');
-
-    return () => {
-      console.log('🛑 [DEEP-PSYCHE] Stopping Deep Psyche Engines...');
-      archetypeResonanceEngine.stop();
-      metaContinuumEngine.stop();
-      embodiedPresenceEngine.stop();
-    };
-  }, []);
-  */
-
-  // ✨ v∞.31-33 - Expression Engines (Synesthetic Emotion + Unified Output + Aura)
-  // ✨ PHASE 4.2 - Désactivé temporairement (engines stubés pour lazy loading)
-  /*
-  useEffect(() => {
-    console.log('🎭 [EXPRESSION] Starting Expression Engines...');
-    console.log('═══════════════════════════════════════════════════');
-
-    // 1. Synesthetic Emotion Engine (XXXI) - 30Hz emotional state analysis
-    synestheticEmotionEngine.start();
-    console.log('  ✅ Synesthetic Emotion Engine active (30Hz, 12 emotional states)');
-
-    // 2. Aura Engine Ultra (v∞.Σ) - 60Hz visual halo with audio reactivity
-    auraEngine.start();
-    console.log('  ✅ Aura Engine active (60Hz, 8 visual modes)');
-
-    // 3. Unified Multimodal Output Engine (XXXIII) - 30Hz orchestration layer
-    unifiedMultimodalOutputEngine.start();
-    console.log('  ✅ Unified Output Engine active (30Hz, 5 modalities)');
-
-    console.log('✅ [EXPRESSION] All expression engines synchronized and active');
-
-    return () => {
-      console.log('🛑 [EXPRESSION] Stopping Expression Engines...');
-      synestheticEmotionEngine.stop();
-      auraEngine.stop();
-      unifiedMultimodalOutputEngine.stop();
-    };
-  }, []);
-  */
-
-  // ✨ v∞.12 - Presence OS (Unified Multimodal Identity System)
-  useEffect(() => {
-    console.log('🌐 [PRESENCE] Starting Presence OS...');
-    console.log('═══════════════════════════════════════════════════');
-
-    presenceOS.start();
-    console.log('  ✅ Presence OS active (30Hz, 8 signature modes)');
-    console.log(
-      '  ✅ 7 layers: Cognitive, Affective, Expression, Aura, Spatial, Autonomic, Evolution'
-    );
-    console.log('  ✅ Unified identity orchestration across 6 engines');
-
-    return () => {
-      console.log('🛑 [PRESENCE] Stopping Presence OS...');
-      presenceOS.stop();
-    };
-  }, []);
+  useAppInitialization();
 
   // ✨ v25.4.1 - A11Y & Performance: Keyboard shortcuts and Web Vitals planned
 
@@ -866,66 +404,8 @@ const AppRouter: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [livingEngines.state.initialized]);
 
-  // ✨ UI vΩ: TopNav items - Navigation horizontale (max 5 visibles)
-  const topNavSections = useMemo(
-    () => [
-      // ═══ PRINCIPAL ═══
-      {
-        id: 'titane',
-        label: 'TITANE',
-        route: '/titane',
-        description: 'Le Cœur du Système',
-      },
-      {
-        id: 'time',
-        label: 'TIME',
-        route: '/time',
-        description: 'Centre Temporel',
-      },
-      {
-        id: 'admin',
-        label: 'ADMIN',
-        route: '/admin',
-        description: 'Centre Admin Unifié',
-      },
-      {
-        id: 'dev',
-        label: 'DEV',
-        route: '/dev',
-        description: 'Centre DEV Unifié',
-      },
-      // Dans menu "Plus"
-      {
-        id: 'fusion',
-        label: 'FUSION',
-        route: '/fusion',
-        description: 'Backend/Frontend Fusion',
-      },
-      {
-        id: 'optimization',
-        label: 'OPTIMIZE',
-        route: '/optimization',
-        description: 'Performance Ultime',
-      },
-      {
-        id: 'total-dev',
-        label: 'TOTAL DEV',
-        route: '/total-dev',
-        description: 'Espace DEV souverain TITANE∞ — accès restreint',
-      },
-    ],
-    []
-  );
-
-  const topNavItems = useMemo(() => createTopNavItems(topNavSections), [topNavSections]);
-
-  // ✨ UI vΩ: Navigation handler
-  const handleNavigate = useCallback(
-    (route: string) => {
-      navigate(route);
-    },
-    [navigate]
-  );
+  // ✨ UI vΩ: TopNav items + navigation (extracted to useTopNavigation hook)
+  const { topNavSections, topNavItems, handleNavigate } = useTopNavigation();
 
   // ✨ v19.5.2 - Handler onboarding completion
   // ✨ v24.2.1: useCallback for stable reference
@@ -1295,6 +775,8 @@ const AppRouter: React.FC = () => {
           <Route path="/adaptive" element={<AdaptiveEngine />} />
           <Route path="/memory" element={<Memory />} />
           <Route path="/research" element={<ResearchPage />} />
+          {/* ✨ Skill OS — Import/manage external skills */}
+          <Route path="/skills" element={<SkillManager />} />
           {/* System Routes (Phase 9: lazy loaded) */}
           <Route path="/performance" element={<PerformanceTest />} />
           {/* Catch-all - Redirection vers Dashboard */}

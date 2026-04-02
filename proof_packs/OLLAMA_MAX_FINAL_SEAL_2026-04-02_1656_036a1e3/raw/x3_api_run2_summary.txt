@@ -1,0 +1,9 @@
+ok=true
+model=gemma2:2b
+total_duration=48434128694
+load_duration=164372486
+prompt_eval_count=46
+prompt_eval_duration=565342472
+eval_count=449
+eval_duration=46723410595
+done_reason=stop

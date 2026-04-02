@@ -1,0 +1,5 @@
+field	value
+command	git push --dry-run
+exit_code	0
+transport_proof_status	PROVEN_DRYCHECK_OK
+push_readiness_final	PUSH_READY_CONFIRMED

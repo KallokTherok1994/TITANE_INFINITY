@@ -1,0 +1,439 @@
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch less than a minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  * 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  ✓ 🔧 Install System Dependencies (Tauri/GTK)
+  * 💾 Cache Cargo Registry
+  * 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 💾 Cache Cargo Registry
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  ✓ 🔧 Install System Dependencies (Tauri/GTK)
+  ✓ 💾 Cache Cargo Registry
+  ✓ 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 💾 Cache Cargo Build
+  * Post 💾 Cache Cargo Registry
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  ✓ 🔧 Install System Dependencies (Tauri/GTK)
+  ✓ 💾 Cache Cargo Registry
+  ✓ 💾 Cache Cargo Build
+  * ✔️ Run Cargo Check
+  * 🧪 Run Rust Tests
+  * 🔍 Run Clippy (Linter)
+  * 📊 Generate Test Report
+  * 📤 Upload Test Report
+  * Post 💾 Cache Cargo Build
+  * Post 💾 Cache Cargo Registry
+  * Post 📥 Checkout Repository
+  * Stop containers
+Refreshing run status every 3 seconds. Press Ctrl+C to quit.
+
+* copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+* 🦀 Rust Backend Tests (Docker) (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  ✓ 🔧 Install System Dependencies (Tauri/GTK)
+  ✓ 💾 Cache Cargo Registry
+  ✓ 💾 Cache Cargo Build
+  X ✔️ Run Cargo Check
+  - 🧪 Run Rust Tests
+  - 🔍 Run Clippy (Linter)
+  ✓ 📊 Generate Test Report
+  ✓ 📤 Upload Test Report
+  - Post 💾 Cache Cargo Build
+  - Post 💾 Cache Cargo Registry
+  ✓ Post 📥 Checkout Repository
+  * Stop containers
+X copilot/pr-ci-unblock-20260306-1847 Rust Tests (Docker) KallokTherok1994/TITANE_INFINITY#174 · 22786897347
+Triggered via workflow_dispatch about 1 minute ago
+
+JOBS
+X 🦀 Rust Backend Tests (Docker) in 1m45s (ID 66105466847)
+  ✓ Set up job
+  ✓ Initialize containers
+  ✓ 📥 Checkout Repository
+  ✓ 🔧 Install System Dependencies (Tauri/GTK)
+  ✓ 💾 Cache Cargo Registry
+  ✓ 💾 Cache Cargo Build
+  X ✔️ Run Cargo Check
+  - 🧪 Run Rust Tests
+  - 🔍 Run Clippy (Linter)
+  ✓ 📊 Generate Test Report
+  ✓ 📤 Upload Test Report
+  - Post 💾 Cache Cargo Build
+  - Post 💾 Cache Cargo Registry
+  ✓ Post 📥 Checkout Repository
+  ✓ Stop containers
+  ✓ Complete job
+
+ANNOTATIONS
+X Process completed with exit code 101.
+🦀 Rust Backend Tests (Docker): .github#573
+
+! Cache not found for keys: Linux-cargo-build-docker-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-build-docker-
+🦀 Rust Backend Tests (Docker): .github#15
+
+! Cache not found for keys: Linux-cargo-registry-74465fe217190f7ec645f655aa910bd309b2e18d70e7032bd2a088e0a9541bfd, Linux-cargo-registry-
+🦀 Rust Backend Tests (Docker): .github#17
+

@@ -1,0 +1,17 @@
+]633;E;echo "timestamp=$(date -Iseconds)";56687f5f-0c18-4fa5-be49-c64fd4b632cf]633;Ctimestamp=2026-04-02T17:34:29-04:00
+local_head=66462608e
+remote_head=66462608e
+push_synced=true
+
+git_status_short_branch:
+## MAIN...origin/MAIN
+ M implementation_plan.md
+ M src-tauri/src/commands/ollama_command.rs
+ M src-tauri/src/main.rs
+ M src-tauri/src/ollama.rs
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/transports/ollamaTransport.ts
+?? src-tauri/src/commands/browser_operator.rs
+?? src-tauri/src/commands/capability_commands.rs
+?? src/__tests__/services/operator/
+?? src/services/operator/

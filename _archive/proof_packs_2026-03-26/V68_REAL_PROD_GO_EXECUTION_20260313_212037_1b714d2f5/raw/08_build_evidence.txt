@@ -1,0 +1,5 @@
+PROD_BUILD_STATUS: DONE
+LINT_EXIT: 0
+BUILD_VITE_EXIT: 0
+DIST_STATE: PRESENT (index.html + assets)
+BUILD_NOTE: Only autoheal_rules.jsonl modified (data file, not compiled source) — existing dist/ valid, vite build ran clean

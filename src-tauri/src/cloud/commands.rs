@@ -228,7 +228,12 @@ pub async fn cloud_update_config(
 
     let mode = match mode.as_str() {
         "manual" => SyncMode::Manual,
-        "auto" => SyncMode::Auto,
+        "auto" => {
+            return Err(
+                "La synchronisation automatique n'est pas encore prouvee en runtime; utilisez le mode manuel."
+                    .to_string(),
+            )
+        }
         "disabled" => SyncMode::Disabled,
         _ => SyncMode::Manual,
     };

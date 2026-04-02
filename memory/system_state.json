@@ -1,40 +1,52 @@
 {
   "system_state": {
-    "version": "v14.0.0",
-    "last_update": "2025-11-25T00:00:00Z",
-    "harmonia_mode": "normal",
+    "version": "v20.0Ω",
+    "last_update": "2026-03-26T11:13:00Z",
+    "harmonia_mode": "active",
     "memory_compaction_enabled": true,
-    "auto_verify_enabled": true
+    "auto_verify_enabled": true,
+    "memory_persistence_enabled": true
   },
   "engines": {
     "helios": {
       "status": "active",
       "ai_provider": "ollama",
-      "model": "qwen2.5-coder:latest"
+      "model": "qwen2.5-coder:latest",
+      "model_version": "v1.2.0",
+      "context_window": 8192
     },
     "nexus": {
       "status": "active",
-      "mode": "hybrid"
+      "mode": "hybrid",
+      "hybrid_mode": "memory_first"
     },
     "harmonia": {
       "status": "active",
       "cpu_threshold": 80,
-      "watch_delay_ms": 100
+      "watch_delay_ms": 100,
+      "throttle_active": false,
+      "auto_adjust": true
     },
     "sentinel": {
       "status": "active",
-      "monitoring": true
+      "monitoring": true,
+      "alert_threshold": 90,
+      "log_level": "info"
     },
     "memory": {
       "status": "active",
       "max_size_mb": 10,
-      "deduplication": true
+      "deduplication": true,
+      "compression": "gzip",
+      "snapshot_interval": 300
     }
   },
   "metrics": {
-    "uptime_seconds": 0,
-    "total_requests": 0,
-    "memory_usage_mb": 0,
-    "cpu_usage_percent": 0
+    "uptime_seconds": 120,
+    "total_requests": 25,
+    "memory_usage_mb": 2.3,
+    "cpu_usage_percent": 12,
+    "response_time_avg_ms": 180,
+    "memory_entries": 28
   }
 }

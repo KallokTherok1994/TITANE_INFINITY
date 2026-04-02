@@ -45,12 +45,16 @@ fn diagnostics_gateway() -> NetworkGatewayService {
         max_requests: 16,
         max_bytes_total: 32 * 1024,
         domain_allowlist: vec![
+            // Internet connectivity checks
             "www.google.com".to_string(),
             "www.cloudflare.com".to_string(),
             "www.github.com".to_string(),
+            // AI Provider endpoints
             "api.openai.com".to_string(),
+            "generativelanguage.googleapis.com".to_string(),
             "ai.google.dev".to_string(),
             "api.anthropic.com".to_string(),
+            // Local endpoints
             "localhost".to_string(),
             "127.0.0.1".to_string(),
         ],
@@ -227,7 +231,7 @@ async fn check_openai_connectivity() -> ProviderOnlineStatus {
 }
 
 async fn check_gemini_connectivity() -> ProviderOnlineStatus {
-    check_provider_connectivity("Gemini", "https://ai.google.dev").await
+    check_provider_connectivity("Gemini", "https://generativelanguage.googleapis.com").await
 }
 
 async fn check_anthropic_connectivity() -> ProviderOnlineStatus {

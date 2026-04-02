@@ -24,6 +24,8 @@ import type {
   TimelineEntry,
 } from '../memory/types';
 import { createLogger } from '@/utils/logger';
+import type { DurablePreference } from './preferenceEngine';
+import { filterPreferences, mergePreferences } from './preferenceEngine';
 
 const logger = createLogger('Memory');
 
@@ -124,6 +126,7 @@ export class MemoryIntegration {
         emotionState: data.emotionState,
         timestamp: new Date().toISOString(),
       });
+      this.clearCache();
     } catch (error) {
       logger.error('Failed to save interaction', error);
     }
@@ -139,6 +142,7 @@ export class MemoryIntegration {
 
     try {
       await memoryService.saveStructuredEntry(normalized);
+      this.clearCache();
     } catch (error) {
       logger.error('Failed to save structured entry', error);
     }
@@ -261,6 +265,107 @@ export class MemoryIntegration {
       activeRituals: [],
       timeline: [],
     };
+  }
+
+  // ─────────────────────────────────────────────────────────
+  // PREFERENCE STORAGE — In-memory preference persistence
+  // ─────────────────────────────────────────────────────────
+
+  private preferences: DurablePreference[] = [];
+  private readonly PREFERENCES_KEY = 'titane_user_preferences';
+
+  /**
+   * Load preferences from localStorage + merge with in-memory cache
+   */
+  loadPreferences(): DurablePreference[] {
+    if (this.preferences.length > 0) {
+      return filterPreferences(this.preferences);
+    }
+
+    try {
+      if (typeof localStorage !== 'undefined') {
+        const raw = localStorage.getItem(this.PREFERENCES_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw) as DurablePreference[];
+          this.preferences = filterPreferences(parsed);
+          logger.debug('Preferences loaded from localStorage', {
+            count: this.preferences.length,
+          });
+        }
+      }
+    } catch (error) {
+      logger.warn('Failed to load preferences from localStorage', { error });
+      this.preferences = [];
+    }
+
+    return filterPreferences(this.preferences);
+  }
+
+  /**
+   * Save a batch of preferences (merges with existing)
+   */
+  savePreferences(incoming: DurablePreference[]): void {
+    if (incoming.length === 0) return;
+
+    const current = this.loadPreferences();
+    const merged = mergePreferences(current, incoming);
+    const filtered = filterPreferences(merged);
+
+    // Cap at 100 preferences
+    this.preferences = filtered.slice(0, 100);
+
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.PREFERENCES_KEY, JSON.stringify(this.preferences));
+        logger.debug('Preferences saved to localStorage', {
+          total: this.preferences.length,
+          newIncoming: incoming.length,
+        });
+      }
+    } catch (error) {
+      logger.warn('Failed to save preferences to localStorage', { error });
+    }
+  }
+
+  /**
+   * Get preferences relevant to a specific category
+   */
+  getPreferencesByCategory(category: string): DurablePreference[] {
+    return this.loadPreferences().filter(
+      p => p.category === category && p.durability >= 0.4
+    );
+  }
+
+  /**
+   * Get the strongest depth preference (if any)
+   */
+  getDepthPreference(): string | null {
+    const depthPrefs = this.getPreferencesByCategory('depth');
+    return depthPrefs[0]?.value ?? null;
+  }
+
+  /**
+   * Get the strongest structure preference (if any)
+   */
+  getStructurePreference(): string | null {
+    const structPrefs = this.getPreferencesByCategory('structure');
+    return structPrefs[0]?.value ?? null;
+  }
+
+  /**
+   * Get the strongest tone preference (if any)
+   */
+  getTonePreference(): string | null {
+    const tonePrefs = this.getPreferencesByCategory('tone');
+    return tonePrefs[0]?.value ?? null;
+  }
+
+  /**
+   * Get action_bias preference (if any)
+   */
+  getActionBiasPreference(): string | null {
+    const actionPrefs = this.getPreferencesByCategory('action_bias');
+    return actionPrefs[0]?.value ?? null;
   }
 
   /**

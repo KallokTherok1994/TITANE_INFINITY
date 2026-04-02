@@ -1,0 +1,5 @@
+runtime/stable/manifest.json:3:  "version": "27.0.0",
+deployment/latest/MANIFEST.json:4:    "version": "27.2.0",
+titane-infinity.desktop:4:Name=TITANE∞ v27.2.0
+titane-infinity.desktop:6:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage
+titane-infinity.desktop:17:Exec=/home/titane-os/Documents/GitHub/TITANE_INFINITY/runtime/stable/Titan-Stable_27.2.0_amd64.AppImage --dev

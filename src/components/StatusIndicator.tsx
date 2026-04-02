@@ -18,6 +18,7 @@ export interface StatusIndicatorProps {
 }
 
 const UNAVAILABLE_REASON_TEXT: Record<BackendUnavailableReason, string> = {
+  'all-backends-down': 'Tauri backend and Ollama are both unavailable',
   'tauri-backend-down': 'Tauri backend unreachable',
   'ollama-offline': 'Ollama service offline',
   'network-error': 'Network error',

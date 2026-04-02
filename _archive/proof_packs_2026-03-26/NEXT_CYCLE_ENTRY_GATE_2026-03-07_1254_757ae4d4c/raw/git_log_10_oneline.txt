@@ -1,0 +1,10 @@
+757ae4d4c merge: ci unblock readiness post blocked_ci
+56fc7d124 fix(ci): install alsa dev package in unified build verification
+552318415 fix(ci): stabilize SystemHealthMonitor snapshot whitespace
+86fd1387b fix(ui): normalize timestamp formatting for deterministic snapshots (AH-0075)
+a87f0a4a3 fix(ci): stabilize vitest snapshots with UTC runtime (AH-0074)
+e4d3a6bd9 chore(ci): enforce prettier compliance for unified pipeline (AH-0073)
+5b490d07d chore(registry): sync artifacts for workflow changes (AH-0072)
+6947ffb58 fix(ci): unblock constitution comment + p0 secret scan guards
+deaff64fd fix(e2e): stabilize chat-state persistence after page switch (AH-0061)
+05f19a2a4 fix(ci): soften rust-docker clippy gate

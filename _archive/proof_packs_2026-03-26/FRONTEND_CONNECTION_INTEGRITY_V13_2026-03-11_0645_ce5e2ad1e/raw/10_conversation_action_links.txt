@@ -1,0 +1,14 @@
+706:        await sendMessage(content);
+833:  const handleSend = useCallback(async () => {
+923:      const response = await sendMessage(messageText);
+961:        handleSend();
+964:    [handleSend]
+1026:      sendMessage(
+1038:      sendMessage(`📎 Fichiers: ${fileNames}\n\nAnalyse ces fichiers.`);
+1046:      sendMessage('📸 [Capture ecran]\n\nAnalyse cette capture.');
+1054:      sendMessage(`👁️ [Image]\n\n${prompt || 'Analyse cette image.'}`);
+1066:      sendMessage(`🎤 [Audio - ${sizeMB} MB]\n\nTranscris ce message.`);
+1073:      sendMessage(`📝 Transcription:\n\n"${text}"\n\nAnalyse ce contenu.`);
+1362:            data-testid="chat-input"
+1372:            data-testid="chat-send"
+1373:            onClick={handleSend}

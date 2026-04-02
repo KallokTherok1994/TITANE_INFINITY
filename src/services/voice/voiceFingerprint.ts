@@ -141,7 +141,9 @@ class VoiceFingerprintEngine {
   extractFeatures(audioBuffer: Float32Array, sampleRate: number = 16000): VoiceAnalysis {
     console.log('[VoiceFingerprint] 🔬 Extracting features from audio buffer');
 
-    // 1. MFCC Extraction (simplified placeholder)
+    // BLOCKED:REQUIRES_BACKEND_COMMAND — MFCC extraction requires audio DSP backend
+    // Required: `voice_extract_mfcc({ audioBuffer, sampleRate }) => Float32Array`
+    // Placeholder uses random coefficients; real implementation needs Tauri audio command
     const mfcc = this.extractMFCC(audioBuffer, sampleRate);
 
     // 2. Pitch estimation (fundamental frequency)

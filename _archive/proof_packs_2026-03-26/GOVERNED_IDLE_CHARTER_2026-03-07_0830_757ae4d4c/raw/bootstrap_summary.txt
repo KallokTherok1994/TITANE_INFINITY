@@ -1,0 +1,7 @@
+pack=proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c
+short_sha=757ae4d4c
+active_baseline=WAKE_PROTOCOL_READY
+standby_compatible=STANDBY_CONFIRMED
+canonical_baseline=757ae4d4c
+wake_pack_reference=proof_packs/WAKE_PROTOCOL_READY_STATE_2026-03-07_0815_757ae4d4c
+sentinel_pack_reference=proof_packs/SENTINEL_STANDBY_MODE_2026-03-07_1305_757ae4d4c

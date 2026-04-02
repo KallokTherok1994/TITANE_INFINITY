@@ -1,0 +1,8 @@
+captured_at_utc=2026-03-07T13:38:49Z
+TRIGGER_SOURCE=governed_idle_current_signals
+TRIGGER_SIGNAL_RAW=no_authorized_trigger_observed
+TRIGGER_SURFACE=governance_state_and_workspace_drift_signal
+signal_file=proof_packs/GOVERNED_IDLE_CHARTER_2026-03-07_0830_757ae4d4c/raw/current_idle_signals.txt
+EXPLICIT_NEW_SCOPE=FALSE
+PROVEN_DRIFT=FALSE
+CRITICAL_EXTERNAL_FAILURE=FALSE

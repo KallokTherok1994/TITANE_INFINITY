@@ -171,8 +171,7 @@ mod web_research_commands {
     include!("commands/web_research.rs");
 }
 mod audio {
-    // Re-export types from lib for inline modules
-    pub use titane_infinity::audio::{AudioConfig, AudioError, AudioResult};
+    // Audio types are used directly in audio/*.rs modules via titane_infinity::audio
     
     pub mod capture {
         include!("audio/capture.rs");
@@ -310,6 +309,10 @@ mod commands {
     // ✨ TOTAL_DEV v28.1.0 — GOD DEV secure space (unlock, git, console, file)
     pub mod total_dev_commands {
         include!("commands/total_dev_commands.rs");
+    }
+
+    pub mod http_commands {
+        include!("commands/http_commands.rs");
     }
 }
 
@@ -940,8 +943,12 @@ impl CognitiveSystemState {
 }
 
 #[tauri::command]
-async fn ollama_query(prompt: String) -> Result<String, String> {
-    ollama::query_ollama(prompt).await
+async fn ollama_query(prompt: String) -> Result<serde_json::Value, String> {
+    let result = ollama::query_ollama(prompt).await?;
+    Ok(serde_json::json!({
+        "response": result.response,
+        "model": result.model
+    }))
 }
 
 // mod security; // DISABLED: Using library instead
@@ -1472,6 +1479,7 @@ fn main() {
                         emotion_context: None,
                         custom_system_prompt: Some("Réponds uniquement: SMOKE_OK".to_string()),
                         history: None,
+                        omega_meta: None,
                     };
 
                     // Call conversation engine (same logic as conversation_generate command)
@@ -2007,12 +2015,18 @@ fn main() {
             audio::commands::vad_test,
             // E2E Audio Truth System
             audio::commands::tts_generate_test_buffer,
-            // Audio Capture Commands (6) - ✅ AH-0093 FIX: audio-capture feature (default)
+            // Audio Capture Commands (6) - opt-in feature (requires libasound2-dev)
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_start,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_stop,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_status,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_get_chunk,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_capture_export_wav,
+            #[cfg(feature = "audio-capture")]
             audio::commands::audio_list_devices,
             // Helios API Commands (System Monitoring) - ONLY get_helios_state
             api::helios_api::get_helios_state,
@@ -2209,6 +2223,7 @@ fn main() {
             persistence::commands::titan_persistence_init,
             persistence::commands::titan_persist_event,
             persistence::commands::titan_force_snapshot,
+            persistence::commands::titan_force_snapshot_current,
             persistence::commands::titan_get_persistence_status,
             persistence::commands::titan_check_integrity,
             persistence::commands::titan_compact_journal,
@@ -2875,6 +2890,9 @@ fn main() {
             commands::total_dev_commands::total_dev_git_op,
             commands::total_dev_commands::total_dev_run_command,
             commands::total_dev_commands::total_dev_read_file,
+
+            // Governed network gateway — frontend httpClient now routes via IPC
+            commands::http_commands::http_request,
         ])
         .run(tauri::generate_context!())
         .unwrap_or_else(|e| {

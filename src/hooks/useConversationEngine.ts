@@ -18,6 +18,8 @@ import type {
   ConversationResponse,
   EmotionState,
   ConversationHealthReport,
+  ConversationProviderPreference,
+  OmegaTraceMeta,
 } from '@/services/conversationEngine';
 import {
   processMessage,
@@ -27,7 +29,12 @@ import {
 import { useChatMemory } from './useChatMemory';
 import type { AIMessage } from '@/types';
 import { chatMemoryCompactor } from '@/services/chatMemoryCompactor';
-import type { ProviderDecisionMeta } from '@/types/providerMeta';
+import type {
+  Mode,
+  ProviderClass,
+  ProviderDecisionMeta,
+  ReasonCode,
+} from '@/types/providerMeta';
 import {
   buildChatContextEnvelope,
   type ChatContextEnvelope,
@@ -42,6 +49,76 @@ const MAX_RETRIES = 3;
 const RETRY_DELAY_BASE_MS = 1000;
 const DEFAULT_MAX_MESSAGES = 500;
 const DEFAULT_HEALTH_CHECK_INTERVAL_MS = 30000;
+
+function persistMessagesInBackground(
+  saveMessage: (message: AIMessage) => unknown,
+  messages: AIMessage[],
+  failureLabel: string
+): void {
+  void (async () => {
+    try {
+      await Promise.all(messages.map(message => Promise.resolve(saveMessage(message))));
+      chatMemoryCompactor.flushPendingSaves();
+    } catch (persistError) {
+      console.warn(failureLabel, persistError);
+    }
+  })();
+}
+
+function mapRequestedProviderClass(
+  providerPreference: ConversationProviderPreference | undefined
+): ProviderClass {
+  switch (providerPreference) {
+    case 'gemini':
+    case 'openai':
+    case 'claude':
+      return 'remote';
+    case 'ollama':
+      return 'local';
+    default:
+      return 'hybrid';
+  }
+}
+
+export function buildConversationFallbackMeta(
+  errorMessage: string,
+  providerPreference: ConversationProviderPreference | undefined
+): ProviderDecisionMeta {
+  const normalized = errorMessage.toLowerCase();
+
+  let reasonCode: ReasonCode = 'UNKNOWN';
+  let mode: Mode = 'ERROR';
+
+  if (normalized.includes('timeout')) {
+    reasonCode = 'TIMEOUT';
+    mode = 'OFFLINE';
+  } else if (normalized.includes('network')) {
+    reasonCode = 'NETWORK_ERROR';
+    mode = 'OFFLINE';
+  } else if (
+    normalized.includes('provider') ||
+    normalized.includes('ollama') ||
+    normalized.includes('backend') ||
+    normalized.includes('unreachable')
+  ) {
+    reasonCode = 'PROVIDER_UNAVAILABLE';
+    mode = 'ERROR';
+  }
+
+  return {
+    provider_used: providerPreference ?? 'fallback',
+    provider_class: mapRequestedProviderClass(providerPreference),
+    mode,
+    reason_code: reasonCode,
+    latency_ms_total: 0,
+    timeout_ms: 30000,
+    retries: 0,
+    attempts: [],
+    network_used: reasonCode === 'NETWORK_ERROR',
+    cache_hit: false,
+    policy: 'conversation_hook_fallback',
+  };
+}
 
 // ═══════════════════════════════════════════════════════════════════
 // TYPES
@@ -72,6 +149,7 @@ export interface ConversationMessage {
 
 export interface UseConversationEngineOptions {
   mode?: ConversationMode;
+  providerPreference?: ConversationProviderPreference;
   emotionContext?: EmotionState;
   onResponse?: (response: ConversationResponse) => void;
   onError?: (error: Error) => void;
@@ -107,6 +185,8 @@ export interface UseConversationEngineReturn {
   // Métadonnées
   lastResponse: ConversationResponse | null;
   totalMessages: number;
+  /** OMEGA_AUTO_ORCHESTRATION_CHAIN trace meta from last message (Lock #1) */
+  lastOmegaTraceMeta: OmegaTraceMeta | undefined;
 }
 
 // ═══════════════════════════════════════════════════════════════════
@@ -301,21 +381,18 @@ export function useConversationEngine(
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
       });
 
-      // ✅ PERSIST USER MESSAGE IMMEDIATELY
-      try {
-        const userAIMessage: AIMessage = {
-          role: 'user',
-          content: userMessage.content,
-          timestamp: userMessage.timestamp,
-          metadata: userMessage.metadata || {},
-        };
-        await saveMessage(userAIMessage);
-      } catch (persistError) {
-        console.warn(
-          '[useConversationEngine] ⚠️ Failed to persist user message',
-          persistError
-        );
-      }
+      // Keep persistence truthful but out of the request critical path.
+      const userAIMessage: AIMessage = {
+        role: 'user',
+        content: userMessage.content,
+        timestamp: userMessage.timestamp,
+        metadata: userMessage.metadata || {},
+      };
+      persistMessagesInBackground(
+        saveMessage,
+        [userAIMessage],
+        '[useConversationEngine] ⚠️ Failed to persist user message'
+      );
 
       try {
         // Traiter le message via Conversation Engine
@@ -323,6 +400,7 @@ export function useConversationEngine(
           conversationId: conversationId || undefined,
           mode: currentMode,
           emotionContext: options.emotionContext,
+          providerPreference: options.providerPreference,
           contextEnvelope: contextEnvelope || undefined,
         });
 
@@ -336,36 +414,20 @@ export function useConversationEngine(
           response.meta?.reason_code === 'FALLBACK_OFFLINE' ||
           response.meta?.reason_code === 'PROVIDER_UNAVAILABLE';
 
+        const requestedProvider = options.providerPreference ?? 'auto';
         const assistantContent = noProviderPayload
           ? `🤖 TITANE∞ est en mode récupération provider.
 
-Je n'ai pas pu joindre un provider IA actif pour cette requête. Le mode provider a été remis en AUTO avec online-first.
+Provider demandé: ${requestedProvider}
+Cause runtime: ${response.meta?.reason_code ?? 'UNKNOWN'}
+
+Je n'ai pas pu joindre le provider demandé pour cette requête. La sélection UI est conservée telle quelle pour éviter un fallback silencieux.
 
 Actions immédiates:
 - Vérifie la connexion réseau
 - Vérifie les clés API cloud (Gemini/OpenAI/Claude)
 - Ou démarre Ollama local si tu veux un mode local`
           : response.assistant_message;
-
-        if (noProviderPayload) {
-          try {
-            localStorage.setItem('omega-chat-preferred-provider', 'auto');
-            const current = localStorage.getItem('titane_ai_config');
-            if (!current) {
-              localStorage.setItem(
-                'titane_ai_config',
-                JSON.stringify({
-                  mode: 'hybrid',
-                  provider: 'gemini',
-                  requireOnlineConfirmation: false,
-                  localFirst: false,
-                })
-              );
-            }
-          } catch {
-            // Non-blocking: localStorage may be unavailable in strict sandbox contexts.
-          }
-        }
 
         // Ajouter réponse assistant
         const assistantMessage: ConversationMessage = {
@@ -428,23 +490,17 @@ Actions immédiates:
           logger.warn('[useConversationEngine] ERROR mode', { meta: response.meta });
         }
 
-        // ✅ PERSIST MESSAGES TO LOCALSTORAGE
-        try {
-          const assistantAIMessage: AIMessage = {
-            role: 'assistant',
-            content: assistantMessage.content,
-            timestamp: assistantMessage.timestamp,
-            metadata: assistantMessage.metadata || {},
-          };
-          await saveMessage(assistantAIMessage);
-          // Ensure flush to localStorage
-          chatMemoryCompactor.flushPendingSaves();
-        } catch (persistError) {
-          console.warn(
-            '[useConversationEngine] ⚠️ Failed to persist messages',
-            persistError
-          );
-        }
+        const assistantAIMessage: AIMessage = {
+          role: 'assistant',
+          content: assistantMessage.content,
+          timestamp: assistantMessage.timestamp,
+          metadata: assistantMessage.metadata || {},
+        };
+        persistMessagesInBackground(
+          saveMessage,
+          [assistantAIMessage],
+          '[useConversationEngine] ⚠️ Failed to persist messages'
+        );
 
         setLastResponse(response);
 
@@ -494,6 +550,10 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
           timestamp: Date.now(),
           metadata: {
             intention: 'Meta',
+            providerMeta: buildConversationFallbackMeta(
+              errorMessage,
+              options.providerPreference
+            ),
             contextBinding,
             singleDoorTags: contextEnvelope?.memorySingleDoor.tags,
           },
@@ -501,21 +561,17 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
 
         setMessages(prev => [...prev, fallbackMessage]);
 
-        try {
-          const assistantAIMessage: AIMessage = {
-            role: 'assistant',
-            content: fallbackMessage.content,
-            timestamp: fallbackMessage.timestamp,
-            metadata: fallbackMessage.metadata || {},
-          };
-          await saveMessage(assistantAIMessage);
-          chatMemoryCompactor.flushPendingSaves();
-        } catch (persistError) {
-          console.warn(
-            '[useConversationEngine] ⚠️ Failed to persist fallback message',
-            persistError
-          );
-        }
+        const assistantAIMessage: AIMessage = {
+          role: 'assistant',
+          content: fallbackMessage.content,
+          timestamp: fallbackMessage.timestamp,
+          metadata: fallbackMessage.metadata || {},
+        };
+        persistMessagesInBackground(
+          saveMessage,
+          [assistantAIMessage],
+          '[useConversationEngine] ⚠️ Failed to persist fallback message'
+        );
 
         console.error('[ConversationEngine] Erreur finale:', err);
         return null;
@@ -528,7 +584,11 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
       buildSingleDoorEnvelope,
       conversationId,
       currentMode,
-      options,
+      options.emotionContext,
+      options.maxMessages,
+      options.onError,
+      options.onResponse,
+      options.providerPreference,
       saveMessage,
       toContextBinding,
     ]
@@ -575,28 +635,23 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
         return updated.length > maxMessages ? updated.slice(-maxMessages) : updated;
       });
 
-      try {
-        const userAIMessage: AIMessage = {
-          role: 'user',
-          content: userMessage.content,
-          timestamp: userMessage.timestamp,
-          metadata: userMessage.metadata || {},
-        };
-        const assistantAIMessage: AIMessage = {
-          role: 'assistant',
-          content: assistantMessage.content,
-          timestamp: assistantMessage.timestamp,
-          metadata: assistantMessage.metadata || {},
-        };
-        await saveMessage(userAIMessage);
-        await saveMessage(assistantAIMessage);
-        chatMemoryCompactor.flushPendingSaves();
-      } catch (persistError) {
-        console.warn(
-          '[useConversationEngine] ⚠️ Failed to persist local exchange',
-          persistError
-        );
-      }
+      const userAIMessage: AIMessage = {
+        role: 'user',
+        content: userMessage.content,
+        timestamp: userMessage.timestamp,
+        metadata: userMessage.metadata || {},
+      };
+      const assistantAIMessage: AIMessage = {
+        role: 'assistant',
+        content: assistantMessage.content,
+        timestamp: assistantMessage.timestamp,
+        metadata: assistantMessage.metadata || {},
+      };
+      persistMessagesInBackground(
+        saveMessage,
+        [userAIMessage, assistantAIMessage],
+        '[useConversationEngine] ⚠️ Failed to persist local exchange'
+      );
     },
     [buildSingleDoorEnvelope, options.maxMessages, saveMessage, toContextBinding]
   );
@@ -639,6 +694,7 @@ Réessaie dans quelques instants ou vérifie la disponibilité du backend.`;
     refreshHealth,
     lastResponse,
     totalMessages,
+    lastOmegaTraceMeta: lastResponse?.omega_trace_meta,
   };
 }
 

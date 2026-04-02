@@ -1,0 +1,14 @@
+.github/instructions/docs-registry.instructions.md:2:applyTo: 'docs/**, reports/**, proof_packs/**'
+.github/instructions/docs-registry.instructions.md:10:- Proof evidence lives under `reports/` (append-only logs) and `proof_packs/` (session packs).
+.github/instructions/docs-registry.instructions.md:19:- Rewrite history or delete proof packs.
+.github/instructions/docs-registry.instructions.md:23:- VERDICT.md and ROLLBACK.md in proof packs.
+.github/copilot-instructions.md:84:## Rule 12 - Proof pack and rollback required
+.github/copilot-instructions.md:86:Each governed session must produce evidence in proof_packs and reports.
+scripts/certification/lib_cert.sh:38:  # Exclude untracked (??) as outputs/proof packs are expected untracked
+scripts/certification/lib_cert.sh:188:This proof pack is immutable. All decisions sealed.
+scripts/certification/run-p10-desktop-cert.sh:80:A) CREATE P10 WORKDIR (proof pack structure)
+scripts/certification/run-p10-desktop-cert.sh:865:        echo "See proof pack files:"
+scripts/certification/run-p10-desktop-cert.sh:922:        echo "# Remove proof pack (if not committed)"
+scripts/certification/run-p10-desktop-cert.sh:954:    # Add proof pack
+scripts/certification/run-p10-desktop-cert.sh:1006:Proof pack: ${P10_PACK_DIR}
+scripts/certification/run-p10-desktop-cert.sh:1045:    # Also write to proof pack

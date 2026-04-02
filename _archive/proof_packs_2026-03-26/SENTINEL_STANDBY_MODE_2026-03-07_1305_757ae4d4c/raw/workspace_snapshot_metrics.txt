@@ -1,0 +1,5 @@
+tracked_unstaged=0
+tracked_staged=0
+untracked_nonproof=0
+untracked_proof=466
+workspace_drift_signal=FALSE

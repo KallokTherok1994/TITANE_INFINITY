@@ -1,0 +1,633 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.5",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-03-30T04:14:32Z",
+    "component": {
+      "name": "titane-infinity",
+      "version": "28.88.0",
+      "type": "application"
+    }
+  },
+  "components": [
+    {
+      "name": "@axe-core/playwright",
+      "version": "4.11.1",
+      "type": "library",
+      "purl": "pkg:npm/@axe-core/playwright@4.11.1"
+    },
+    {
+      "name": "@axe-core/react",
+      "version": "4.11.1",
+      "type": "library",
+      "purl": "pkg:npm/@axe-core/react@4.11.1"
+    },
+    {
+      "name": "@chromatic-com/storybook",
+      "version": "5.0.2",
+      "type": "library",
+      "purl": "pkg:npm/@chromatic-com/storybook@5.0.2"
+    },
+    {
+      "name": "@eslint/eslintrc",
+      "version": "3.3.5",
+      "type": "library",
+      "purl": "pkg:npm/@eslint/eslintrc@3.3.5"
+    },
+    {
+      "name": "@eslint/js",
+      "version": "9.39.4",
+      "type": "library",
+      "purl": "pkg:npm/@eslint/js@9.39.4"
+    },
+    {
+      "name": "@playwright/test",
+      "version": "1.58.2",
+      "type": "library",
+      "purl": "pkg:npm/@playwright/test@1.58.2"
+    },
+    {
+      "name": "@sentry/react",
+      "version": "10.45.0",
+      "type": "library",
+      "purl": "pkg:npm/@sentry/react@10.45.0"
+    },
+    {
+      "name": "@storybook/addon-a11y",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-a11y@10.3.3"
+    },
+    {
+      "name": "@storybook/addon-docs",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-docs@10.3.3"
+    },
+    {
+      "name": "@storybook/addon-onboarding",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-onboarding@10.3.3"
+    },
+    {
+      "name": "@storybook/addon-vitest",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-vitest@10.3.3"
+    },
+    {
+      "name": "@storybook/react-vite",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/react-vite@10.3.3"
+    },
+    {
+      "name": "@tailwindcss/postcss",
+      "version": "4.2.2",
+      "type": "library",
+      "purl": "pkg:npm/@tailwindcss/postcss@4.2.2"
+    },
+    {
+      "name": "@tanstack/react-query",
+      "version": "5.95.2",
+      "type": "library",
+      "purl": "pkg:npm/@tanstack/react-query@5.95.2"
+    },
+    {
+      "name": "@tauri-apps/api",
+      "version": "2.10.1",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/api@2.10.1"
+    },
+    {
+      "name": "@tauri-apps/cli",
+      "version": "2.10.1",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/cli@2.10.1"
+    },
+    {
+      "name": "@tauri-apps/plugin-dialog",
+      "version": "2.6.0",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-dialog@2.6.0"
+    },
+    {
+      "name": "@tauri-apps/plugin-fs",
+      "version": "2.4.5",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-fs@2.4.5"
+    },
+    {
+      "name": "@tauri-apps/plugin-http",
+      "version": "2.5.7",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-http@2.5.7"
+    },
+    {
+      "name": "@tauri-apps/plugin-shell",
+      "version": "2.3.5",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-shell@2.3.5"
+    },
+    {
+      "name": "@testing-library/dom",
+      "version": "10.4.1",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/dom@10.4.1"
+    },
+    {
+      "name": "@testing-library/jest-dom",
+      "version": "6.9.1",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/jest-dom@6.9.1"
+    },
+    {
+      "name": "@testing-library/react",
+      "version": "16.3.2",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/react@16.3.2"
+    },
+    {
+      "name": "@testing-library/user-event",
+      "version": "14.6.1",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/user-event@14.6.1"
+    },
+    {
+      "name": "@types/better-sqlite3",
+      "version": "7.6.13",
+      "type": "library",
+      "purl": "pkg:npm/@types/better-sqlite3@7.6.13"
+    },
+    {
+      "name": "@types/node",
+      "version": "25.5.0",
+      "type": "library",
+      "purl": "pkg:npm/@types/node@25.5.0"
+    },
+    {
+      "name": "@types/react",
+      "version": "19.2.14",
+      "type": "library",
+      "purl": "pkg:npm/@types/react@19.2.14"
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "19.2.3",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-dom@19.2.3"
+    },
+    {
+      "name": "@types/react-router-dom",
+      "version": "5.3.3",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-router-dom@5.3.3"
+    },
+    {
+      "name": "@types/react-window",
+      "version": "1.8.8",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-window@1.8.8"
+    },
+    {
+      "name": "@types/three",
+      "version": "0.182.0",
+      "type": "library",
+      "purl": "pkg:npm/@types/three@0.182.0"
+    },
+    {
+      "name": "@types/uuid",
+      "version": "10.0.0",
+      "type": "library",
+      "purl": "pkg:npm/@types/uuid@10.0.0"
+    },
+    {
+      "name": "@typescript-eslint/eslint-plugin",
+      "version": "8.57.2",
+      "type": "library",
+      "purl": "pkg:npm/@typescript-eslint/eslint-plugin@8.57.2"
+    },
+    {
+      "name": "@typescript-eslint/parser",
+      "version": "8.57.2",
+      "type": "library",
+      "purl": "pkg:npm/@typescript-eslint/parser@8.57.2"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "5.2.0",
+      "type": "library",
+      "purl": "pkg:npm/@vitejs/plugin-react@5.2.0"
+    },
+    {
+      "name": "@vitest/browser",
+      "version": "4.1.1",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/browser@4.1.1"
+    },
+    {
+      "name": "@vitest/browser-playwright",
+      "version": "4.1.1",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/browser-playwright@4.1.1"
+    },
+    {
+      "name": "@vitest/coverage-v8",
+      "version": "4.1.1",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/coverage-v8@4.1.1"
+    },
+    {
+      "name": "@vitest/ui",
+      "version": "4.1.1",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/ui@4.1.1"
+    },
+    {
+      "name": "@wdio/cli",
+      "version": "9.27.0",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/cli@9.27.0"
+    },
+    {
+      "name": "@wdio/local-runner",
+      "version": "9.27.0",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/local-runner@9.27.0"
+    },
+    {
+      "name": "@wdio/mocha-framework",
+      "version": "9.27.0",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/mocha-framework@9.27.0"
+    },
+    {
+      "name": "@wdio/spec-reporter",
+      "version": "9.27.0",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/spec-reporter@9.27.0"
+    },
+    {
+      "name": "@xenova/transformers",
+      "version": "2.17.2",
+      "type": "library",
+      "purl": "pkg:npm/@xenova/transformers@2.17.2"
+    },
+    {
+      "name": "autoprefixer",
+      "version": "10.4.27",
+      "type": "library",
+      "purl": "pkg:npm/autoprefixer@10.4.27"
+    },
+    {
+      "name": "axe-core",
+      "version": "4.11.1",
+      "type": "library",
+      "purl": "pkg:npm/axe-core@4.11.1"
+    },
+    {
+      "name": "baseline-browser-mapping",
+      "version": "2.10.10",
+      "type": "library",
+      "purl": "pkg:npm/baseline-browser-mapping@2.10.10"
+    },
+    {
+      "name": "better-sqlite3",
+      "version": "12.8.0",
+      "type": "library",
+      "purl": "pkg:npm/better-sqlite3@12.8.0"
+    },
+    {
+      "name": "clsx",
+      "version": "2.1.1",
+      "type": "library",
+      "purl": "pkg:npm/clsx@2.1.1"
+    },
+    {
+      "name": "cross-env",
+      "version": "10.1.0",
+      "type": "library",
+      "purl": "pkg:npm/cross-env@10.1.0"
+    },
+    {
+      "name": "date-fns",
+      "version": "4.1.0",
+      "type": "library",
+      "purl": "pkg:npm/date-fns@4.1.0"
+    },
+    {
+      "name": "dompurify",
+      "version": "3.3.3",
+      "type": "library",
+      "purl": "pkg:npm/dompurify@3.3.3"
+    },
+    {
+      "name": "eslint",
+      "version": "9.39.4",
+      "type": "library",
+      "purl": "pkg:npm/eslint@9.39.4"
+    },
+    {
+      "name": "eslint-config-prettier",
+      "version": "10.1.8",
+      "type": "library",
+      "purl": "pkg:npm/eslint-config-prettier@10.1.8"
+    },
+    {
+      "name": "eslint-plugin-react",
+      "version": "7.37.5",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react@7.37.5"
+    },
+    {
+      "name": "eslint-plugin-react-hooks",
+      "version": "7.0.1",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react-hooks@7.0.1"
+    },
+    {
+      "name": "eslint-plugin-react-refresh",
+      "version": "0.5.2",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react-refresh@0.5.2"
+    },
+    {
+      "name": "eslint-plugin-storybook",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-storybook@10.3.3"
+    },
+    {
+      "name": "eventemitter3",
+      "version": "5.0.4",
+      "type": "library",
+      "purl": "pkg:npm/eventemitter3@5.0.4"
+    },
+    {
+      "name": "framer-motion",
+      "version": "12.38.0",
+      "type": "library",
+      "purl": "pkg:npm/framer-motion@12.38.0"
+    },
+    {
+      "name": "happy-dom",
+      "version": "20.8.4",
+      "type": "library",
+      "purl": "pkg:npm/happy-dom@20.8.4"
+    },
+    {
+      "name": "husky",
+      "version": "9.1.7",
+      "type": "library",
+      "purl": "pkg:npm/husky@9.1.7"
+    },
+    {
+      "name": "i18next",
+      "version": "25.10.5",
+      "type": "library",
+      "purl": "pkg:npm/i18next@25.10.5"
+    },
+    {
+      "name": "i18next-browser-languagedetector",
+      "version": "8.2.1",
+      "type": "library",
+      "purl": "pkg:npm/i18next-browser-languagedetector@8.2.1"
+    },
+    {
+      "name": "identity-obj-proxy",
+      "version": "3.0.0",
+      "type": "library",
+      "purl": "pkg:npm/identity-obj-proxy@3.0.0"
+    },
+    {
+      "name": "jsdom",
+      "version": "29.0.1",
+      "type": "library",
+      "purl": "pkg:npm/jsdom@29.0.1"
+    },
+    {
+      "name": "lightningcss",
+      "version": "1.32.0",
+      "type": "library",
+      "purl": "pkg:npm/lightningcss@1.32.0"
+    },
+    {
+      "name": "lint-staged",
+      "version": "16.4.0",
+      "type": "library",
+      "purl": "pkg:npm/lint-staged@16.4.0"
+    },
+    {
+      "name": "lucide-react",
+      "version": "0.577.0",
+      "type": "library",
+      "purl": "pkg:npm/lucide-react@0.577.0"
+    },
+    {
+      "name": "mocha",
+      "version": "11.7.5",
+      "type": "library",
+      "purl": "pkg:npm/mocha@11.7.5"
+    },
+    {
+      "name": "playwright",
+      "version": "1.58.2",
+      "type": "library",
+      "purl": "pkg:npm/playwright@1.58.2"
+    },
+    {
+      "name": "postcss",
+      "version": "8.5.8",
+      "type": "library",
+      "purl": "pkg:npm/postcss@8.5.8"
+    },
+    {
+      "name": "prettier",
+      "version": "3.8.1",
+      "type": "library",
+      "purl": "pkg:npm/prettier@3.8.1"
+    },
+    {
+      "name": "react",
+      "version": "19.2.4",
+      "type": "library",
+      "purl": "pkg:npm/react@19.2.4"
+    },
+    {
+      "name": "react-chrono",
+      "version": "3.3.3",
+      "type": "library",
+      "purl": "pkg:npm/react-chrono@3.3.3"
+    },
+    {
+      "name": "react-d3-tree",
+      "version": "3.6.6",
+      "type": "library",
+      "purl": "pkg:npm/react-d3-tree@3.6.6"
+    },
+    {
+      "name": "react-dom",
+      "version": "19.2.4",
+      "type": "library",
+      "purl": "pkg:npm/react-dom@19.2.4"
+    },
+    {
+      "name": "react-i18next",
+      "version": "16.6.2",
+      "type": "library",
+      "purl": "pkg:npm/react-i18next@16.6.2"
+    },
+    {
+      "name": "react-is",
+      "version": "19.2.4",
+      "type": "library",
+      "purl": "pkg:npm/react-is@19.2.4"
+    },
+    {
+      "name": "react-markdown",
+      "version": "10.1.0",
+      "type": "library",
+      "purl": "pkg:npm/react-markdown@10.1.0"
+    },
+    {
+      "name": "react-router",
+      "version": "7.13.2",
+      "type": "library",
+      "purl": "pkg:npm/react-router@7.13.2"
+    },
+    {
+      "name": "react-router-dom",
+      "version": "7.13.2",
+      "type": "library",
+      "purl": "pkg:npm/react-router-dom@7.13.2"
+    },
+    {
+      "name": "react-window",
+      "version": "2.2.7",
+      "type": "library",
+      "purl": "pkg:npm/react-window@2.2.7"
+    },
+    {
+      "name": "recharts",
+      "version": "3.8.0",
+      "type": "library",
+      "purl": "pkg:npm/recharts@3.8.0"
+    },
+    {
+      "name": "remark-gfm",
+      "version": "4.0.1",
+      "type": "library",
+      "purl": "pkg:npm/remark-gfm@4.0.1"
+    },
+    {
+      "name": "rollup-plugin-visualizer",
+      "version": "6.0.11",
+      "type": "library",
+      "purl": "pkg:npm/rollup-plugin-visualizer@6.0.11"
+    },
+    {
+      "name": "sonner",
+      "version": "2.0.7",
+      "type": "library",
+      "purl": "pkg:npm/sonner@2.0.7"
+    },
+    {
+      "name": "storybook",
+      "version": "10.3.3",
+      "type": "library",
+      "purl": "pkg:npm/storybook@10.3.3"
+    },
+    {
+      "name": "tailwindcss",
+      "version": "4.2.2",
+      "type": "library",
+      "purl": "pkg:npm/tailwindcss@4.2.2"
+    },
+    {
+      "name": "tauri",
+      "version": "0.15.0",
+      "type": "library",
+      "purl": "pkg:npm/tauri@0.15.0"
+    },
+    {
+      "name": "three",
+      "version": "0.183.2",
+      "type": "library",
+      "purl": "pkg:npm/three@0.183.2"
+    },
+    {
+      "name": "titane-infinity",
+      "version": "28.88.0",
+      "type": "library",
+      "purl": "pkg:cargo/titane-infinity@28.88.0"
+    },
+    {
+      "name": "typescript",
+      "version": "5.9.3",
+      "type": "library",
+      "purl": "pkg:npm/typescript@5.9.3"
+    },
+    {
+      "name": "uuid",
+      "version": "13.0.0",
+      "type": "library",
+      "purl": "pkg:npm/uuid@13.0.0"
+    },
+    {
+      "name": "vite",
+      "version": "7.3.1",
+      "type": "library",
+      "purl": "pkg:npm/vite@7.3.1"
+    },
+    {
+      "name": "vite-plugin-compression",
+      "version": "0.5.1",
+      "type": "library",
+      "purl": "pkg:npm/vite-plugin-compression@0.5.1"
+    },
+    {
+      "name": "vite-tsconfig-paths",
+      "version": "6.1.1",
+      "type": "library",
+      "purl": "pkg:npm/vite-tsconfig-paths@6.1.1"
+    },
+    {
+      "name": "vitest",
+      "version": "4.1.1",
+      "type": "library",
+      "purl": "pkg:npm/vitest@4.1.1"
+    },
+    {
+      "name": "web-vitals",
+      "version": "5.1.0",
+      "type": "library",
+      "purl": "pkg:npm/web-vitals@5.1.0"
+    },
+    {
+      "name": "webdriverio",
+      "version": "9.27.0",
+      "type": "library",
+      "purl": "pkg:npm/webdriverio@9.27.0"
+    },
+    {
+      "name": "workbox-build",
+      "version": "7.4.0",
+      "type": "library",
+      "purl": "pkg:npm/workbox-build@7.4.0"
+    },
+    {
+      "name": "zod",
+      "version": "4.3.6",
+      "type": "library",
+      "purl": "pkg:npm/zod@4.3.6"
+    },
+    {
+      "name": "zustand",
+      "version": "5.0.12",
+      "type": "library",
+      "purl": "pkg:npm/zustand@5.0.12"
+    }
+  ]
+}

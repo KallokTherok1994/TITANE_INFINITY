@@ -26,6 +26,9 @@ interface DocumentMetadata {
   keywords: string[];
 }
 
+const MANUAL_PATH_ENTRY_NOTE =
+  "PARTIAL: saisie manuelle du chemin uniquement. Aucun selecteur de fichier Tauri n'est relie dans cette build.";
+
 const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
   const [selectedFile, setSelectedFile] = useState<string>('');
   const [detectedFormat, setDetectedFormat] = useState<string | null>(null);
@@ -36,8 +39,7 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
 
   const handleFileSelect = useCallback(async () => {
     try {
-      // In real implementation, use Tauri file picker
-      const filePath = prompt('Chemin du fichier :');
+      const filePath = prompt('Entrez un chemin de document :');
       if (!filePath) return;
 
       setSelectedFile(filePath);
@@ -132,12 +134,16 @@ const KnowledgeFusionPage = memo(function KnowledgeFusionPage() {
                 onClick={handleFileSelect}
                 className="w-full bg-linear-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white font-semibold py-3 rounded-lg transition-all"
               >
-                📁 Sélectionner un Document
+                📁 Entrer un chemin de document
               </button>
+
+              <div className="text-xs text-amber-300" role="note">
+                {MANUAL_PATH_ENTRY_NOTE}
+              </div>
 
               {selectedFile && (
                 <div className="bg-gray-700/30 rounded-xl p-4 border border-gray-600/50">
-                  <div className="text-gray-400 text-sm mb-1">Fichier sélectionné</div>
+                  <div className="text-gray-400 text-sm mb-1">Chemin saisi</div>
                   <div className="text-white font-mono text-sm break-all">
                     {selectedFile}
                   </div>

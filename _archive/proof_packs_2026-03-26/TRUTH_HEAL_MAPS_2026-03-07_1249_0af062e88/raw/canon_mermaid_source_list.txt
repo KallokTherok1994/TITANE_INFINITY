@@ -1,0 +1,7 @@
+./docs/diagrams/sources/architecture_4_ring.mmd
+./docs/diagrams/sources/certification_gates.mmd
+./docs/diagrams/sources/data_flow_chat.mmd
+./docs/diagrams/sources/network_surface_online_first.mmd
+./docs/diagrams/sources/omega_pipeline_v2.mmd
+./docs/ui/IA_FLOW.mmd
+./.github/copilot-workflow.mermaid

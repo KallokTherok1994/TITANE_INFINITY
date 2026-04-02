@@ -164,6 +164,7 @@ impl PersistenceEngine {
             db.save_snapshot(&snapshot).await?;
 
             self.snapshot_manager.record_snapshot(&snapshot);
+            self.status.snapshots_created += 1;
             self.status.last_snapshot = Some(chrono::Utc::now().timestamp_millis() as u64);
             self.status.dirty = false;
 

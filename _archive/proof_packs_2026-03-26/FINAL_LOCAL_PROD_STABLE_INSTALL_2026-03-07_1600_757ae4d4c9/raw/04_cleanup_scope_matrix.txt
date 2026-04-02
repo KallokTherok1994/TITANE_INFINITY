@@ -1,0 +1,12 @@
+REMOVE_SAFE:
+- stale launcher pointers to runtime/stable/Titan-Stable_27.0.5_amd64.AppImage (to be rewritten to 27.2.0)
+
+KEEP_FOR_ROLLBACK:
+- runtime/stable/Titan-Stable_27.0.5_amd64.AppImage
+- runtime/stable/Titan-Stable_27.0.5_amd64.deb
+- ~/.local/bin/titane-infinity.pre27.2.0 (created if previous local binary exists)
+- pre-change copies of user desktop entries in rollback_assets
+
+AMBIGUOUS_DO_NOT_TOUCH:
+- deployment/latest historical artifacts (26.x / 27.0.5 / 27.2.0 sets)
+- non-TITANE desktop entries and unrelated local files

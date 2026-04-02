@@ -1,0 +1,24 @@
+{
+	"pack": "UI_E2E_TOTAL_2026-03-06_1646_5a48aa005",
+	"source": [
+		"e2e/desktop/ui-driver.wdio.js",
+		"src/App.tsx"
+	],
+	"ipc_links": [
+		{
+			"uiSignal": "[data-testid=\"ipc-ready\"]",
+			"contract": "UI waits for IPC readiness state ready|fallback before critical interactions",
+			"type": "readiness-marker"
+		},
+		{
+			"uiSignal": "[data-testid=\"chat-ready\"]",
+			"contract": "Chat interactions are gated on chat-ready state before no-silence assertions",
+			"type": "feature-readiness-marker"
+		},
+		{
+			"uiSignal": "sendChatAndAssertNoSilence()",
+			"contract": "No silent failure policy: user action must yield assistant output or visible error",
+			"type": "ui-to-backend-observability"
+		}
+	]
+}

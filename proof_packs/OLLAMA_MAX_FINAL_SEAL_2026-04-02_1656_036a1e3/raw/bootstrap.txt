@@ -1,0 +1,54 @@
+]633;E;echo '### git status --short --branch';aaee1527-c214-46a8-aaeb-ea3ea3c6f442]633;C### git status --short --branch
+## MAIN...origin/MAIN
+ M src-tauri/src/commands/ollama_command.rs
+ M src-tauri/src/main.rs
+ M src-tauri/src/ollama.rs
+ M src/services/ai/providers/ollama.ts
+ M src/services/ai/transports/ollamaTransport.ts
+?? src-tauri/src/commands/capability_commands.rs
+?? src/__tests__/services/operator/
+?? src/services/operator/
+
+### git rev-parse --short HEAD
+036a1e30c
+
+### git branch --show-current
+MAIN
+
+### git log -20 --oneline
+036a1e30c merge: sync local MAIN with origin/MAIN
+37729c443 chore: commit all local changes
+80b345ef3 Merge pull request #197 from KallokTherok1994/safe/conflict-cleanup-origin-2026-04-02
+d7b1136f7 governance: clear textual conflicts in kernel changelog and readme
+ec8bbe14a governance: clear textual conflicts in kernel changelog and readme
+884a1cf62 fix(seal): post-merge final certification — Rust metadata drift + version authority alignment
+0ff58c9c6 P4.35: restore PreToolUse hook, commit IN_SCOPE core files for G1.5 push
+02a91e485 fix: resolve .gitattributes merge conflicts, preserve LFS removal
+1d2d2c4ed chore: untrack node binary from LFS
+017cf4790 merge: resolve conflicts favoring local MAIN branch
+4a6864db9 chore: commit P4.29 proof pack + pending changes
+a25cefb0a docs: P4.28 post-unblock push + hosted CI proof pack — HOLD_CONTINUATION_CLASSIFIED
+868ccce9a chore: untrack LFS objects
+1195b8fe5 chore: remove LFS tracking to unblock CI push
+f0d5b6669 fix(ci): apply prettier formatting to unblock lint-and-typecheck
+fbcc2d047 chore(provenance): add G3.4 alignment and G3.5 trust verdict
+10e6e6f34 chore(provenance): map and harden artifact lineage truth
+7df7e9ef6 chore(sbom): integrate and prove formal SBOM generation
+d62bc8dd9 chore(sbom): generate CycloneDX 1.5 SBOM with GPG signing for G3 provenance proof
+34e8f9287 chore(signing): integrate GPG signing into release pipeline and CI
+
+### node -v
+v24.0.0
+
+### pnpm -v
+10.30.2
+
+### cargo -V
+cargo 1.94.0 (85eff7c80 2026-01-15)
+
+### rustc -V
+rustc 1.94.0 (4a4ef493e 2026-03-02)
+
+### ollama --version || true
+ollama version is 0.18.0
+Warning: client version is 0.18.2

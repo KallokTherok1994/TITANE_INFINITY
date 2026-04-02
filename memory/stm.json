@@ -1,0 +1,47 @@
+[
+  {
+    "id": "stm-001",
+    "content": "User prefers detailed technical explanations with code examples",
+    "type": "preference",
+    "importance": 0.2,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "ttl": 300000,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "stm-002",
+    "content": "Current conversation about memory system audit and correction",
+    "type": "conversation",
+    "importance": 0.1,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 0,
+    "ttl": 300000,
+    "conversationId": "conv-current",
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "stm-003",
+    "content": "Memory system audit initiated - correcting version inconsistencies and data structure",
+    "type": "context",
+    "importance": 0.25,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "ttl": 3600000,
+    "conversationId": "conv-audit-2026-03-24",
+    "metadata": {
+      "source": "audit_process",
+      "version": "v20.0Ω",
+      "action": "memory_correction"
+    }
+  }
+]

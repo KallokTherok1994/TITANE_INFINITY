@@ -33,12 +33,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
-import { useToast } from '@/hooks/useToast';
 import { useVisualEngines } from '@hooks/useVisualEngines';
 import { xpEngine } from '@/cognitive/progression/xpEngine';
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // Section Components (Phase 3C Extracted)
 import {
@@ -123,9 +123,7 @@ export const TitanePage: React.FC = () => {
   // ═══ STATE ═══
   const [activeTab, setActiveTab] = useState<TabId>('conversation');
   const [progression, setProgression] = useState<ProgressionState | null>(null);
-  const [_isEditing, _setIsEditing] = useState(false);
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
-  const { success: toastSuccess, error: errorToast } = useToast();
 
   // LOCK2: titane_active_conversation_id is canonical; legacy key migrated on boot.
   const [conversationId] = useState<string>(() => {
@@ -160,7 +158,9 @@ export const TitanePage: React.FC = () => {
   useEffect(() => {
     const loadMemoryStats = async () => {
       try {
-        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
         setMemoryStats(stats);
       } catch {
         // Non-blocking: hardcoded fallback values will be used

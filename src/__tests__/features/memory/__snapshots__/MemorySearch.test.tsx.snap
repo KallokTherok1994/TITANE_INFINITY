@@ -30,6 +30,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
       />
     </svg>
     <input
+      aria-disabled="false"
       class="search-input"
       placeholder="Recherche sémantique dans la mémoire..."
       type="text"
@@ -40,6 +41,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
     class="memory-filters"
   >
     <select
+      aria-disabled="false"
       class="filter-select"
     >
       <option
@@ -64,6 +66,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
       </option>
     </select>
     <select
+      aria-disabled="false"
       class="filter-select"
     >
       <option
@@ -108,8 +111,7 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
         />
       </svg>
       <span>
-        2
-         résultats
+        2 résultats
       </span>
     </div>
   </div>
@@ -177,7 +179,9 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
     class="memory-results"
   >
     <div
-      class="memory-entry"
+      class="memory-entry "
+      data-selected="false"
+      data-testid="memory-search-entry-1"
     >
       <div
         class="entry-header"
@@ -239,7 +243,9 @@ exports[`MemorySearchPanel Component > Snapshot > should match snapshot 1`] = `
       </div>
     </div>
     <div
-      class="memory-entry"
+      class="memory-entry "
+      data-selected="false"
+      data-testid="memory-search-entry-2"
     >
       <div
         class="entry-header"

@@ -1,0 +1,8 @@
+ M registry/closure-events.jsonl
+ M registry/proofpack-index.jsonl
+ M scripts/autoheal/autoheal_rules.jsonl
+ M scripts/tauri/before-dev.sh
+ M scripts/verify/pre-deployment-check.sh
+?? CHANGELOG.md
+?? LICENSE.md
+?? proof_packs/FINAL_RESUME_POST_DRIFT_FIX_2026-03-07_1842_d859691c8/

@@ -105,16 +105,16 @@ fn hash_token(input: &str) -> String {
 
 /// Vérifie le token unlock → compare SHA-256 côté serveur uniquement.
 /// Le token brut n'est jamais logué ni stocké.
+/// Le frontend envoie déjà le hash SHA-256 du mot de passe.
 #[tauri::command]
 pub async fn total_dev_unlock(token: String) -> Result<TotalDevUnlockResult, String> {
-    let computed = hash_token(&token);
-
-    if computed == TOTAL_DEV_UNLOCK_HASH {
+    // Le frontend envoie déjà le hash SHA-256, donc on compare directement
+    if token == TOTAL_DEV_UNLOCK_HASH {
         let expires_at = now_unix() + 3600; // 1h session
         SESSION_EXPIRY.store(expires_at, Ordering::SeqCst);
 
         // Session pseudo-token derivé du hash (jamais le secret brut)
-        let session_token = format!("tdsk_{}", &computed[..16]);
+        let session_token = format!("tdsk_{}", &token[..16]);
 
         log::info!("TOTAL_DEV unlock granted — session until {}", expires_at);
 

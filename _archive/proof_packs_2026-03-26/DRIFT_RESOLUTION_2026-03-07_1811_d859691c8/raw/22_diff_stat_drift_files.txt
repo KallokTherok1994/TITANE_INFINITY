@@ -1,0 +1,3 @@
+ runtime/stable/manifest.json | 4 ++--
+ titane-infinity.desktop      | 8 ++++----
+ 2 files changed, 6 insertions(+), 6 deletions(-)

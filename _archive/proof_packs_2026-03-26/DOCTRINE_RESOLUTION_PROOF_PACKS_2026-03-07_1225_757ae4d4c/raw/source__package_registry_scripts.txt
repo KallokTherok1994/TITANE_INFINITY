@@ -1,0 +1,4 @@
+137:    "verify:registry:sync": "node scripts/verify/registry-sync.js",
+138:    "verify:registry:integrity": "node scripts/verify/registry-integrity.js",
+139:    "verify:registry:quality": "node scripts/verify/registry-quality.js",
+140:    "verify:registry": "pnpm -s verify:registry:sync && pnpm -s verify:registry:integrity && pnpm -s verify:registry:quality",

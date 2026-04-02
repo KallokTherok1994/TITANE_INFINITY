@@ -1,0 +1,112 @@
+{
+  "runId": "run2",
+  "timestamp": "2026-03-11T14:25:13.613Z",
+  "appReadyWaitMs": 20001,
+  "appReadyReached": false,
+  "rootRendered": true,
+  "whiteScreen": true,
+  "currentUrl": "tauri://localhost#/titane",
+  "appSourceMode": "embedded",
+  "hasTauriGlobal": true,
+  "appVersion": "",
+  "activeTabCount": 0,
+  "selectedTabCount": 0,
+  "inputPresent": false,
+  "sendPresent": false,
+  "responseZonePresent": false,
+  "tabFocusRulePresent": false,
+  "zoomComputed": "1",
+  "reflowReasonable": true,
+  "potentialDoubleScroll": false,
+  "shellVisible": true,
+  "navVisible": false,
+  "titanePageVisible": false,
+  "titaneHeaderVisible": false,
+  "titaneTabsVisible": false,
+  "chatInputVisible": false,
+  "sendBtnVisible": false,
+  "adminPageVisible": false,
+  "settingsPageVisible": false,
+  "frictions": [
+    {
+      "id": "FAIL_SHELL_RENDER",
+      "severity": "critical",
+      "msg": "App not interactive after 20000ms"
+    },
+    {
+      "id": "FAIL_PAGE_RENDER",
+      "severity": "important",
+      "msg": "No visible heading/header on TITANE page"
+    },
+    {
+      "id": "FAIL_TAB_NAVIGATION",
+      "severity": "important",
+      "msg": "No tabs found. totalBtns=0"
+    },
+    {
+      "id": "FAIL_FOCUS_PERCEPTIBILITY",
+      "severity": "important",
+      "msg": ".titane-inline-tabs :focus-visible rule absent — V18 fix not in AppImage"
+    },
+    {
+      "id": "FAIL_CHAT_VISIBILITY",
+      "severity": "important",
+      "msg": "Chat input not found"
+    },
+    {
+      "id": "FAIL_CHAT_VISIBILITY",
+      "severity": "important",
+      "msg": "Send button not found (totalBtns=0)"
+    }
+  ],
+  "screenshots": [
+    {
+      "name": "s1_shell_initial",
+      "file": "run2_s1_shell_initial.png"
+    },
+    {
+      "name": "s1_shell_structure",
+      "file": "run2_s1_shell_structure.png"
+    },
+    {
+      "name": "s2_titane_navigated",
+      "file": "run2_s2_titane_navigated.png"
+    },
+    {
+      "name": "s2_titane_header",
+      "file": "run2_s2_titane_header.png"
+    },
+    {
+      "name": "s2_titane_tabs",
+      "file": "run2_s2_titane_tabs.png"
+    },
+    {
+      "name": "s3_chat_input",
+      "file": "run2_s3_chat_input.png"
+    },
+    {
+      "name": "s3_chat_send",
+      "file": "run2_s3_chat_send.png"
+    },
+    {
+      "name": "s3_response_zone",
+      "file": "run2_s3_response_zone.png"
+    },
+    {
+      "name": "s4_admin",
+      "file": "run2_s4_admin.png"
+    },
+    {
+      "name": "s4_settings",
+      "file": "run2_s4_settings.png"
+    },
+    {
+      "name": "s4_back_to_titane",
+      "file": "run2_s4_back_to_titane.png"
+    },
+    {
+      "name": "s5_layout_final",
+      "file": "run2_s5_layout_final.png"
+    }
+  ]
+}

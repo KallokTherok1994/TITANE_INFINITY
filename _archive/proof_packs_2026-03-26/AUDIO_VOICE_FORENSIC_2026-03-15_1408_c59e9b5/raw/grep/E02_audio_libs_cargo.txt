@@ -1,0 +1,3 @@
+cpal  = { version = "0.15", optional = true }
+hound = "3.5"                                 # WAV file reading/writing
+    "cpal",

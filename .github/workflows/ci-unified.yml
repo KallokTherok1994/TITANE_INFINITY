@@ -412,16 +412,52 @@ jobs:
       - name: 🏗️ Build Tauri (Debug for speed)
         run: pnpm exec tauri build --debug
 
+<<<<<<< HEAD
+      - name: 🔐 Generate SHA256 checksums
+        run: |
+          cd src-tauri/target/debug/bundle
+          if [ -d "deb" ] && ls deb/*.deb 1>/dev/null 2>&1; then
+            sha256sum deb/*.deb > SHA256SUMS.txt
+          fi
+          if [ -d "appimage" ] && ls appimage/*.AppImage 1>/dev/null 2>&1; then
+            sha256sum appimage/*.AppImage >> SHA256SUMS.txt 2>/dev/null || sha256sum appimage/*.AppImage > SHA256SUMS.txt
+          fi
+          if [ -f "SHA256SUMS.txt" ]; then
+            echo "=== SHA256 Checksums ==="
+            cat SHA256SUMS.txt
+          else
+            echo "⚠️ No artifacts found for checksum generation"
+          fi
+
+=======
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       - name: 📤 Upload build artifacts
         if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
         uses: actions/upload-artifact@v6
         with:
           name: titane-build-ubuntu-${{ github.run_id }}
+<<<<<<< HEAD
+          path: |
+            src-tauri/target/debug/bundle/
+            src-tauri/target/debug/bundle/SHA256SUMS.txt
+          retention-days: 7
+          if-no-files-found: ignore
+
+      - name: 🔏 Verify signing scripts syntax
+        run: |
+          bash -n scripts/signing/generate-signing-keys.sh
+          bash -n scripts/signing/sign-artifacts.sh
+          bash -n scripts/signing/verify-signatures.sh
+          echo "✅ All signing scripts have valid syntax"
+
+      - name: Summary
+=======
           path: src-tauri/target/debug/bundle/
           retention-days: 7
           if-no-files-found: ignore
 
       - name: 📊 Summary
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
         if: always()
         run: |
           echo "## 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY
@@ -429,6 +465,10 @@ jobs:
           echo "- Frontend build: ✅" >> $GITHUB_STEP_SUMMARY
           echo "- Tauri build: ✅ (Debug mode for CI speed)" >> $GITHUB_STEP_SUMMARY
           echo "- Platform: Ubuntu (Linux)" >> $GITHUB_STEP_SUMMARY
+<<<<<<< HEAD
+          echo "- Signing scripts syntax: ✅" >> $GITHUB_STEP_SUMMARY
+=======
+>>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "_Multi-platform builds run on releases only_" >> $GITHUB_STEP_SUMMARY
 

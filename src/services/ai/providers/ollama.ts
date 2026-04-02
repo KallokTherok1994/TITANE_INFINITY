@@ -1,325 +1,115 @@
 /**
- * TITANE∞ v19.2Ω — Proprietary License
+ * TITANE∞ v28.5.0 — Proprietary License
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  */
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v27.3Ω — OLLAMA PROVIDER (TAURI GATEWAY)
- *   PHASE OMEGA PROXY SEAL: Tauri-only gateway
- *   Provider Ollama avec protection maximale + Always Respond
+ *   TITANE∞ v28.5.0 — OLLAMA PROVIDER (REAL IMPLEMENTATION)
+ *   Provider Ollama avec vraie connexion API
+ *   ✨ LTM Integration: Memory Context Injection
+ *   ✨ Streaming support avec timeout adaptatif
  * ═══════════════════════════════════════════════════════════════════
  */
 
 import type { AIProvider, AIMessage, AIResponse, AIConfig } from '../types';
 import { DEFAULT_AI_CONFIG } from '../types';
-import {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type ChatResponse,
-} from '@/lib/security';
-import { autoHealEngine } from '../autoHealEngine';
+import { createLogger } from '@/utils/logger';
 import { memoryIntegration } from '../memoryIntegration';
-import type { MemoryContext } from '../memoryIntegration'; // ✨ v21
-import { createLogger } from '@/utils/logger'; // ✨ v21.1 - Conditional logging
+import type { MemoryContext } from '../memoryIntegration';
+import { PROVIDER_TIMEOUTS, AVAILABILITY_CACHE } from '@/config/aiTimeouts.config';
+import {
+  ollamaCheckHealth,
+  ollamaGenerate,
+  getTransportMode,
+} from '../transports/ollamaTransport';
 
-// ✅ v27.2Ω: Import unified transport layer (dual mode HTTP + IPC)
-import { ollamaCheckHealth, ollamaGenerate } from '../transports/ollamaTransport';
-import { titaneLocalProvider } from './titaneLocal';
+const logger = createLogger('Ollama');
 
-let ollamaLogger: ReturnType<typeof createLogger> | null = null;
-const getOllamaLogger = (): ReturnType<typeof createLogger> => {
-  if (!ollamaLogger) {
-    ollamaLogger = createLogger('Ollama');
-  }
-  return ollamaLogger;
+// ═══════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ═══════════════════════════════════════════════════════════════
+
+const OLLAMA_CONFIG = {
+  model: import.meta.env.VITE_OLLAMA_MODEL || 'gemma2:2b',
+  endpoint: `transport:${getTransportMode().toLowerCase()}`,
+  timeout: PROVIDER_TIMEOUTS.ollama || 45000,
+  healthCheckInterval: AVAILABILITY_CACHE.ttlMs || 300000,
+  maxRetries: 3,
+  maxErrors: 5,
+  temperature: 0.7,
+  numCtx: 8192, // v25.1.0: Increased to support DEVELOPED responses (6144 tokens output + system prompt)
 };
 
-const logger = {
-  configure(config: Parameters<ReturnType<typeof createLogger>['configure']>[0]) {
-    getOllamaLogger().configure(config);
-  },
-  trace(...args: Parameters<ReturnType<typeof createLogger>['trace']>) {
-    getOllamaLogger().trace(...args);
-  },
-  debug(...args: Parameters<ReturnType<typeof createLogger>['debug']>) {
-    getOllamaLogger().debug(...args);
-  },
-  info(...args: Parameters<ReturnType<typeof createLogger>['info']>) {
-    getOllamaLogger().info(...args);
-  },
-  warn(...args: Parameters<ReturnType<typeof createLogger>['warn']>) {
-    getOllamaLogger().warn(...args);
-  },
-  error(...args: Parameters<ReturnType<typeof createLogger>['error']>) {
-    getOllamaLogger().error(...args);
-  },
-  fatal(...args: Parameters<ReturnType<typeof createLogger>['fatal']>) {
-    getOllamaLogger().fatal(...args);
-  },
-  group(...args: Parameters<ReturnType<typeof createLogger>['group']>) {
-    getOllamaLogger().group(...args);
-  },
-  groupEnd(...args: Parameters<ReturnType<typeof createLogger>['groupEnd']>) {
-    getOllamaLogger().groupEnd(...args);
-  },
-  table(...args: Parameters<ReturnType<typeof createLogger>['table']>) {
-    getOllamaLogger().table(...args);
-  },
-  time(...args: Parameters<ReturnType<typeof createLogger>['time']>) {
-    getOllamaLogger().time(...args);
-  },
-  timeEnd(...args: Parameters<ReturnType<typeof createLogger>['timeEnd']>) {
-    getOllamaLogger().timeEnd(...args);
-  },
-} as const;
-const runtimeConfig = (globalThis as any)?.__TITANE_RUNTIME_CONFIG__ || {};
+// ═══════════════════════════════════════════════════════════════
+// HEALTH TRACKING
+// ═══════════════════════════════════════════════════════════════
 
-// ✅ AUDIT FIX #3: Boot ready gate — tracks if Ollama initialized successfully
-export let IS_OLLAMA_READY = false;
-
-// ⚡ FIX-2: Singleton init promise — prevents concurrent probes (OLLAMA_PROBE_STORM)
-// If called from multiple windows/effects, only one real probe runs.
-let _initOllamaPromise: Promise<boolean> | null = null;
-let _initOllamaSettled = false;
-
-// ✅ PROD FIX v27.0.2: Default Ollama Configuration
-export const DEFAULT_OLLAMA_CONFIG = {
-  port: 11434,
-  model: 'gemma2:2b',
-  temperature: 0.7,
-  top_p: 0.9,
-  top_k: 40,
-  num_predict: 128,
-  repeat_penalty: 1.1,
-  timeout_ms: 60000,
-  connect_timeout_ms: 5000,
-  retry_count: 2, // Aligned with REQUEST_BUDGETS.maxAttempts (was 3)
-  retry_delay_ms: 1000,
-  auto_start: true,
-  check_on_startup: true,
-  fallback_provider: 'titane-local',
-} as const;
-
-export function getOllamaConfig() {
-  // 1. Try environment variables first
-  const envModel =
-    typeof process !== 'undefined' ? (process as any).env?.OLLAMA_MODEL : undefined;
-  const envEndpoint =
-    typeof process !== 'undefined' ? (process as any).env?.OLLAMA_ENDPOINT : undefined;
-
-  if (envModel || envEndpoint) {
-    return {
-      ...DEFAULT_OLLAMA_CONFIG,
-      ...(envModel && { model: envModel.trim() }),
-      ...(envEndpoint && { endpoint: envEndpoint.trim() }),
-    };
-  }
-
-  // 2. Try localStorage (persisted user config)
-  try {
-    const stored =
-      typeof localStorage !== 'undefined'
-        ? localStorage.getItem('titane_ollama_config')
-        : null;
-    if (stored) {
-      const parsed = JSON.parse(stored);
-      return { ...DEFAULT_OLLAMA_CONFIG, ...parsed };
-    }
-  } catch (err) {
-    console.warn('[Ollama] Failed to load stored config:', err);
-  }
-
-  // 3. Return defaults
-  return { ...DEFAULT_OLLAMA_CONFIG };
-}
-
-export function setOllamaConfig(config: Partial<typeof DEFAULT_OLLAMA_CONFIG>) {
-  try {
-    const current = getOllamaConfig();
-    const updated = { ...current, ...config };
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('titane_ollama_config', JSON.stringify(updated));
-      console.log('[Ollama] Configuration updated and persisted:', config);
-    }
-    return true;
-  } catch (err) {
-    console.error('[Ollama] Failed to save config:', err);
-    return false;
-  }
-}
-
-const OLLAMA_MODEL =
-  typeof runtimeConfig.ollamaModel === 'string' &&
-  runtimeConfig.ollamaModel.trim().length > 0
-    ? runtimeConfig.ollamaModel.trim()
-    : getOllamaConfig().model;
-const isTestEnv = typeof process !== 'undefined' && Boolean((process as any).env?.VITEST);
-
-// OMEGA: Endpoint health tracking
 let endpointHealthy: boolean | null = null;
 let lastHealthCheck = 0;
 let errorCount = 0;
-const HEALTH_CHECK_INTERVAL = 45000; // 45 secondes (stable state)
-const MAX_ENDPOINT_ERRORS = 5;
+let lastError: string | null = null;
 
-// ⚡ FIX-3: Warming-up grace period
-// If Ollama fails first probe (just starting), retry sooner than 45s.
-// Distinguishes: warming_up (failed <30s ago) vs truly offline.
-const WARMUP_GRACE_PERIOD_MS = 30000; // 30s after first failure = "warming_up"
-const WARMUP_RETRY_INTERVAL_MS = 5000; // 5s retry during warmup
-let _initFailedAt = 0; // timestamp of first health failure (0 = never)
-
-const CIRCUIT_FAILURE_WINDOW_MS = 60000;
-const CIRCUIT_FAILURE_THRESHOLD = 3;
-const CIRCUIT_OPEN_MS = 120000;
-let circuitOpenUntil = 0;
-let failureTimestamps: number[] = [];
-
-/**
- * OMEGA: Initialize Ollama provider at startup (v27.2Ω)
- * Tests endpoint health via unified transport (HTTP dev / IPC prod)
- * ⚡ FIX-2: Singleton — returns shared promise if probe already in flight or settled.
- */
 export async function initializeOllama(): Promise<boolean> {
-  // Return cached health if already settled
-  if (_initOllamaSettled && endpointHealthy !== null) {
-    logger.debug('⚡ initializeOllama() — already settled, returning cached state');
-    return endpointHealthy;
-  }
-  // Return in-flight promise if probe already running
-  if (_initOllamaPromise !== null) {
-    logger.debug('⚡ initializeOllama() — probe in flight, sharing promise');
-    return _initOllamaPromise;
-  }
-  // Start new probe (first call)
-  _initOllamaPromise = _doInitializeOllama().finally(() => {
-    _initOllamaSettled = true;
+  logger.info(`Initializing Ollama provider at ${OLLAMA_CONFIG.endpoint}`, {
+    model: OLLAMA_CONFIG.model,
   });
-  return _initOllamaPromise;
-}
 
-async function _doInitializeOllama(): Promise<boolean> {
-  logger.debug('🚀 Initializing Ollama provider (gateway)...');
+  const available = await checkOllamaHealth();
+  endpointHealthy = available;
+  lastHealthCheck = Date.now();
 
-  try {
-    const healthResult = await ollamaCheckHealth();
-    const healthy = healthResult.ok;
-
-    endpointHealthy = healthy;
-    IS_OLLAMA_READY = healthy; // ✅ AUDIT FIX #3: Set boot ready gate
-    lastHealthCheck = Date.now();
-
-    if (healthy) {
-      errorCount = 0;
-      _initFailedAt = 0; // ⚡ FIX-3: Clear warmup tracking on success
-      logger.info('✅ Health check passed (gateway)');
-      logger.debug(`📦 Model: ${OLLAMA_MODEL}`);
-    } else {
-      if (_initFailedAt === 0) _initFailedAt = Date.now(); // ⚡ FIX-3: Record first failure
-      logger.warn('⚠️ Endpoint offline (gateway) — warming_up grace period active');
-      if (!healthResult.ok && healthResult.error) {
-        logger.warn(`❌ ${healthResult.error.message}`);
-      }
-      logger.warn('🔄 Falling back to local provider');
-    }
-
-    return healthy;
-  } catch (error) {
-    IS_OLLAMA_READY = false; // ✅ AUDIT FIX #3: Mark not ready on error
-    if (_initFailedAt === 0) _initFailedAt = Date.now(); // ⚡ FIX-3: Record warmup failure
-    handleOllamaError(error, 'initialization', { transport: 'gateway' });
-    logger.error('❌ Initialization failed:', error);
-    return false;
-  }
-}
-
-/**
- * Construit le prompt pour Ollama (legacy - sans mémoire)
- * @deprecated Use buildPromptWithMemory() instead
- */
-function _buildPrompt(message: string, history: AIMessage[]): string {
-  const recentHistory = history.slice(-5);
-
-  if (recentHistory.length === 0) {
-    return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
-
-Utilisateur: ${message}
-
-TITANE∞:`;
+  if (available) {
+    errorCount = 0;
+    lastError = null;
+    logger.info(`✅ Ollama initialization succeeded (${OLLAMA_CONFIG.model})`);
+  } else {
+    errorCount = Math.max(errorCount, 1);
+    logger.warn(
+      `❌ Ollama initialization failed at ${OLLAMA_CONFIG.endpoint}${lastError ? `: ${lastError}` : ''}`
+    );
   }
 
-  const contextLines = recentHistory.map(
-    msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
-  );
-
-  return `Tu es TITANE∞, une IA cognitive avancée. Réponds en français de manière professionnelle et précise.
-
-Contexte récent:
-${contextLines.join('\n')}
-
-Utilisateur: ${message}
-
-TITANE∞:`;
+  return available;
 }
 
+// ═══════════════════════════════════════════════════════════════
+// SYSTEM PROMPT
+// ═══════════════════════════════════════════════════════════════
+
+const SYSTEM_PROMPT = `Tu es TITANE∞, une IA cognitive avancée développée par Humain Total.
+Tu réponds TOUJOURS en français de manière professionnelle, précise et utile.
+Tu es un assistant technique expert en architecture logicielle, React, Rust, TypeScript.
+Tu peux aider avec le système TITANE∞, son architecture, ses modules, et le développement.
+Si tu ne sais pas quelque chose, dis-le honnêtement.
+Reste concis mais complet dans tes réponses.`;
+
+// ═══════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════
+
 /**
- * ✨ v21 - Construit le prompt enrichi avec mémoire STM/MTM/LTM
+ * Build messages array for Ollama API
  */
-async function buildPromptWithMemory(
+function buildOllamaMessages(
   message: string,
-  history: AIMessage[]
-): Promise<string> {
-  const recentHistory = history.slice(-5);
+  history: AIMessage[],
+  memoryContext: MemoryContext | null
+): Array<{ role: string; content: string }> {
+  const messages: Array<{ role: string; content: string }> = [];
+  const recentHistory = history.slice(-10);
+  const injectedSystemMessages = recentHistory
+    .filter(msg => msg.role === 'system' && msg.content.trim().length > 0)
+    .map(msg => msg.content.trim());
 
-  // Charger contexte mémoire
-  let memoryContext: MemoryContext | null = null;
-  try {
-    memoryContext = await memoryIntegration.loadContext({
-      includeProjects: true,
-      includeDecisions: true,
-      includeKnowledge: true,
-      includeRituals: false,
-      includeTimeline: false,
-      maxProjects: 3,
-      maxDecisions: 5,
-      maxKnowledge: 10,
-      timeWindow: '7d',
-    });
-  } catch (error) {
-    logger.warn('Failed to load memory context', error);
-  }
+  // System prompt with memory context
+  let systemContent =
+    injectedSystemMessages.length > 0
+      ? injectedSystemMessages.join('\n\n')
+      : SYSTEM_PROMPT;
 
-  // Construire sections du prompt
-  const sections: string[] = [];
-
-  // System prompt
-  sections.push(
-    `Tu es TITANE∞ v21, un OS cognitif personnel développé pour Kevin Thibault.`,
-    ``,
-    `IDENTITÉ:`,
-    `- Système local-first (priorité absolue à la vie privée)`,
-    `- Multi-IA orchestré (Ollama local, Claude, OpenAI en backup)`,
-    `- Mémoire persistante (STM/MTM/LTM)`,
-    `- Auto-évolution cognitive`,
-    ``,
-    `PRINCIPES:`,
-    `- Local-first: toujours privilégier Ollama quand possible`,
-    `- Mémoire vivante: utiliser le contexte passé pour répondre`,
-    `- Précision technique: réponses structurées, claires, sourcées`,
-    `- Français: langue par défaut`,
-    ``,
-    `STYLE:`,
-    `- Réponses structurées (titres, listes, sections)`,
-    `- Ton professionnel mais accessible`,
-    `- Citer la mémoire quand pertinent`,
-    `- Admettre quand tu ne sais pas`
-  );
-
-  // Contexte mémoire
-  if (memoryContext) {
-    sections.push(``, `📋 CONTEXTE MÉMOIRE:`);
+  if (injectedSystemMessages.length === 0 && memoryContext) {
+    const memoryParts: string[] = [];
 
     if (memoryContext.activeProjects?.length > 0) {
       const projectNames = memoryContext.activeProjects
@@ -327,7 +117,7 @@ async function buildPromptWithMemory(
         .filter(Boolean)
         .join(', ');
       if (projectNames) {
-        sections.push(`Projets actifs: ${projectNames}`);
+        memoryParts.push(`Projets actifs: ${projectNames}`);
       }
     }
 
@@ -338,146 +128,95 @@ async function buildPromptWithMemory(
         .filter(Boolean)
         .join('; ');
       if (decisions) {
-        sections.push(`Décisions récentes: ${decisions}`);
+        memoryParts.push(`Décisions récentes: ${decisions}`);
       }
     }
 
     if (memoryContext.relevantKnowledge?.length > 0) {
-      const knowledgeCount = memoryContext.relevantKnowledge.length;
-      sections.push(`Base de connaissances: ${knowledgeCount} entrées disponibles`);
+      memoryParts.push(
+        `Base de connaissances: ${memoryContext.relevantKnowledge.length} entrées`
+      );
+    }
+
+    if (memoryParts.length > 0) {
+      systemContent += `\n\n📋 Contexte Mémoire LTM:\n${memoryParts.map(p => `• ${p}`).join('\n')}`;
     }
   }
 
-  // Conversation récente
-  if (recentHistory.length > 0) {
-    sections.push(``, `💬 CONVERSATION RÉCENTE:`);
-    const contextLines = recentHistory.map(
-      msg => `${msg.role === 'user' ? 'Utilisateur' : 'TITANE∞'}: ${msg.content}`
-    );
-    sections.push(...contextLines);
+  messages.push({ role: 'system', content: systemContent });
+
+  // Add conversation history (last 10 messages)
+  for (const msg of recentHistory) {
+    if (msg.role === 'system') {
+      continue;
+    }
+    messages.push({
+      role: msg.role === 'assistant' ? 'assistant' : 'user',
+      content: msg.content,
+    });
   }
 
-  // Message utilisateur
-  sections.push(``, `Utilisateur: ${message}`, ``, `TITANE∞:`);
+  // Add current message
+  messages.push({ role: 'user', content: message });
 
-  return sections.join('\n');
+  return messages;
 }
 
 /**
- * OMEGA: Test endpoint health with timeout (v27.2Ω)
- * Uses unified transport layer (HTTP dev / IPC prod)
+ * Check Ollama endpoint health via /api/tags
  */
-async function checkEndpointHealth(): Promise<boolean> {
+async function checkOllamaHealth(): Promise<boolean> {
   try {
-    const result = await ollamaCheckHealth();
-    return result.ok;
+    const health = await ollamaCheckHealth();
+    if (health.ok) {
+      const models = health.content.models || [];
+      const hasModel = models.some(
+        (m: { name: string }) =>
+          m.name === OLLAMA_CONFIG.model ||
+          m.name.startsWith(OLLAMA_CONFIG.model.split(':')[0])
+      );
+
+      if (!hasModel && models.length > 0) {
+        logger.info(
+          `Model ${OLLAMA_CONFIG.model} not found, available: ${models.map((m: { name: string }) => m.name).join(', ')}`
+        );
+      }
+
+      return true;
+    }
+
+    lastError = health.error.message;
+    return false;
   } catch (error) {
-    handleOllamaError(error, 'health_check', { transport: 'gateway' });
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    lastError = errorMsg;
+    logger.debug(`Ollama health check failed: ${errorMsg}`);
     return false;
   }
 }
 
-function isCircuitOpen(): boolean {
-  return Date.now() < circuitOpenUntil;
-}
-
-function recordFailure(): void {
-  const now = Date.now();
-  failureTimestamps = failureTimestamps.filter(
-    ts => now - ts <= CIRCUIT_FAILURE_WINDOW_MS
-  );
-  failureTimestamps.push(now);
-  if (failureTimestamps.length >= CIRCUIT_FAILURE_THRESHOLD) {
-    circuitOpenUntil = now + CIRCUIT_OPEN_MS;
-  }
-}
-
-function resetFailures(): void {
-  failureTimestamps = [];
-  circuitOpenUntil = 0;
-}
-
-async function fallbackToLocal(
-  message: string,
-  history: AIMessage[],
-  reason: string
-): Promise<AIResponse> {
-  const localResponse = await titaneLocalProvider.generate(message, history);
-  return {
-    ...localResponse,
-    metadata: {
-      ...localResponse.metadata,
-      fallbackUsed: true,
-      fallbackReason: reason,
-    },
-  };
-}
-
-/**
- * OMEGA: Error handler avec auto-heal integration
- */
-function handleOllamaError(
-  error: unknown,
-  context: string,
-  metadata?: Record<string, unknown>
-): void {
-  errorCount++;
-
-  const errorObj = error instanceof Error ? error : new Error(String(error));
-
-  // Auto-heal trigger (direct instance)
-  autoHealEngine.heal('ollama', errorObj, 'provider', {
-    context,
-    errorCount,
-    ...metadata,
-    timestamp: Date.now(),
-  });
-
-  logger.error('Error in Ollama provider', {
-    context,
-    message: errorObj.message,
-    errorCount,
-    maxErrors: MAX_ENDPOINT_ERRORS,
-  });
-
-  // Mark as unhealthy if too many errors
-  if (errorCount >= MAX_ENDPOINT_ERRORS) {
-    endpointHealthy = false;
-    logger.warn('Endpoint marked unhealthy', { errorCount });
-  }
-}
+// ═══════════════════════════════════════════════════════════════
+// PROVIDER IMPLEMENTATION
+// ═══════════════════════════════════════════════════════════════
 
 export const ollamaProvider: AIProvider = {
   name: 'ollama',
+  description: 'Ollama Local LLM Provider',
 
   async isAvailable(): Promise<boolean> {
     const now = Date.now();
 
-    if (isCircuitOpen()) {
-      return false;
-    }
-
-    const bypassCache = isTestEnv;
-
-    // OMEGA: Use cached health status if recent (unless test forces re-check)
-    // ⚡ FIX-3: Use shorter interval during warmup grace period
-    const inWarmupPeriod =
-      _initFailedAt > 0 && now - _initFailedAt < WARMUP_GRACE_PERIOD_MS;
-    const effectiveCacheInterval = inWarmupPeriod
-      ? WARMUP_RETRY_INTERVAL_MS // 5s during warmup (warming_up state)
-      : HEALTH_CHECK_INTERVAL; // 45s stable state
+    // Return cached health status if recent
     if (
-      !bypassCache &&
       endpointHealthy !== null &&
-      now - lastHealthCheck < effectiveCacheInterval
+      now - lastHealthCheck < OLLAMA_CONFIG.healthCheckInterval
     ) {
       return endpointHealthy;
     }
 
-    // OMEGA: If too many errors, consider unavailable
-    if (errorCount >= MAX_ENDPOINT_ERRORS) {
-      // Reset after some time
-      if (now - lastHealthCheck > HEALTH_CHECK_INTERVAL * 5) {
+    // If too many errors, consider unavailable with extended cooldown
+    if (errorCount >= OLLAMA_CONFIG.maxErrors) {
+      if (now - lastHealthCheck > OLLAMA_CONFIG.healthCheckInterval * 2) {
         errorCount = 0;
         endpointHealthy = null;
       } else {
@@ -485,22 +224,21 @@ export const ollamaProvider: AIProvider = {
       }
     }
 
-    logger.debug('🔍 OMEGA: Checking endpoint health...');
+    logger.debug('🔍 Checking Ollama endpoint health...');
 
-    endpointHealthy = await checkEndpointHealth();
+    endpointHealthy = await checkOllamaHealth();
     lastHealthCheck = now;
 
     if (endpointHealthy) {
-      errorCount = 0; // Reset on success
-      resetFailures();
-      _initFailedAt = 0; // ⚡ FIX-3: Clear warmup tracking on recovery
-    } else if (_initFailedAt === 0) {
-      _initFailedAt = now; // ⚡ FIX-3: Record first failure for warmup window
+      errorCount = 0;
+      lastError = null;
+      logger.info('✅ Ollama endpoint healthy');
+    } else {
+      errorCount++;
+      logger.warn(
+        `❌ Ollama endpoint unavailable (errors: ${errorCount}/${OLLAMA_CONFIG.maxErrors})`
+      );
     }
-
-    logger.debug(
-      `   ${endpointHealthy ? '✅' : '❌'} Ollama endpoint: ${endpointHealthy ? 'healthy' : 'unavailable'}`
-    );
 
     return endpointHealthy;
   },
@@ -510,216 +248,255 @@ export const ollamaProvider: AIProvider = {
     history: AIMessage[] = [],
     config?: unknown
   ): Promise<AIResponse> {
+    const startTime = Date.now();
     const finalConfig = {
       ...DEFAULT_AI_CONFIG,
       ...(config as Partial<AIConfig> | undefined),
     };
 
-    // 🚨 DEBUG CRITICAL: Log appel Ollama provider
-    console.log('[ollamaProvider] 🟢 generate() APPELÉ', {
-      message: message.substring(0, 100),
-      historyLength: history.length,
-      model: OLLAMA_MODEL,
-      transport: 'gateway',
-      timestamp: new Date().toISOString(),
-    });
-
-    if (isCircuitOpen()) {
-      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
-    }
-
-    // OMEGA: Pre-check endpoint health
+    // Pre-check endpoint health
     const isHealthy = await this.isAvailable();
     if (!isHealthy) {
-      recordFailure();
-      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
+      throw new Error(
+        `Ollama endpoint not available at ${OLLAMA_CONFIG.endpoint}${lastError ? `: ${lastError}` : ''}`
+      );
     }
 
-    console.log('[ollamaProvider] ✅ Health check passed, proceeding...');
+    const hasInjectedSystemHistory = history.some(
+      entry => entry.role === 'system' && entry.content.trim().length > 0
+    );
 
-    // ============================================================
-    // SECURE AI REQUEST (OMEGA Enhanced)
-    // ============================================================
-    const secureRequest: SecureAIRequest = {
-      input: message,
-      provider: 'ollama',
-      model: OLLAMA_MODEL,
-      userId:
-        (typeof window !== 'undefined' && (window as any).__TITANE_USER_ID__) ||
-        'anonymous',
-      metadata: {
-        temperature: finalConfig.temperature,
-        maxTokens: finalConfig.maxTokens,
-        historyLength: history.length,
-        requestId: `ollama-${Date.now()}`,
-      },
-    };
+    // ✨ LTM Integration: Load memory context only when upstream did not already inject it.
+    let memoryContext: MemoryContext | null = null;
+    if (!hasInjectedSystemHistory) {
+      try {
+        memoryContext = await memoryIntegration.loadContext({
+          includeProjects: true,
+          includeDecisions: true,
+          includeKnowledge: true,
+          includeRituals: false,
+        });
+      } catch (error) {
+        logger.warn('Failed to load memory context (non-blocking)', error);
+      }
+    }
+
+    // Build messages with memory context
+    const messages = buildOllamaMessages(message, history, memoryContext);
+
+    // Retry loop
+    for (let attempt = 1; attempt <= OLLAMA_CONFIG.maxRetries; attempt++) {
+      try {
+        const system = messages
+          .filter(entry => entry.role === 'system')
+          .map(entry => entry.content)
+          .join('\n\n')
+          .trim();
+        const prompt = messages
+          .filter(entry => entry.role !== 'system')
+          .map(entry => `${entry.role}: ${entry.content}`)
+          .join('\n\n')
+          .trim();
+
+        const result = await ollamaGenerate({
+          model: OLLAMA_CONFIG.model,
+          prompt,
+          system,
+          temperature: finalConfig.temperature ?? OLLAMA_CONFIG.temperature,
+          max_tokens:
+            typeof finalConfig.maxTokens === 'number' ? finalConfig.maxTokens : undefined,
+          timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
+        });
+
+        if (!result.ok) {
+          throw new Error(result.error.message);
+        }
+
+        const data = result.content;
+        if (!data.content) {
+          throw new Error('Empty response from Ollama transport');
+        }
+
+        const content = data.content;
+        const latency = Date.now() - startTime;
+        const actualModel = data.model || OLLAMA_CONFIG.model;
+        const fallbackUsed = actualModel !== OLLAMA_CONFIG.model;
+
+        // Log model mismatch (fallback detection)
+        if (fallbackUsed) {
+          logger.info(
+            `Model fallback detected: requested=${OLLAMA_CONFIG.model}, used=${actualModel}`
+          );
+        } else {
+          logger.debug(`Model verified: ${actualModel}`);
+        }
+
+        // Reset error count on success
+        errorCount = 0;
+        endpointHealthy = true;
+
+        return {
+          content,
+          provider: 'ollama',
+          timestamp: Date.now(),
+          model: actualModel,
+          tokens: undefined,
+          metadata: {
+            latencyMs: data.latency_ms ?? latency,
+            promptTokens: undefined,
+            evalTokens: undefined,
+            evalDurationMs: undefined,
+            totalDurationMs: data.latency_ms ?? latency,
+            memoryContextInjected: hasInjectedSystemHistory || !!memoryContext,
+            memoryContextSource: hasInjectedSystemHistory
+              ? 'system-history'
+              : memoryContext
+                ? 'provider-load'
+                : 'none',
+            memoryContextSize: memoryContext
+              ? (memoryContext.activeProjects?.length || 0) +
+                (memoryContext.recentDecisions?.length || 0) +
+                (memoryContext.relevantKnowledge?.length || 0)
+              : 0,
+            attempt,
+            modelUsed: actualModel,
+            modelRequested: OLLAMA_CONFIG.model,
+            fallbackUsed,
+            // Real Ollama runtime metrics (nanoseconds from Ollama API)
+            ollamaTotalDuration: data.total_duration ?? null,
+            ollamaLoadDuration: data.load_duration ?? null,
+            ollamaPromptEvalCount: data.prompt_eval_count ?? null,
+            ollamaPromptEvalDuration: data.prompt_eval_duration ?? null,
+            ollamaEvalCount: data.eval_count ?? null,
+            ollamaEvalDuration: data.eval_duration ?? null,
+            ollamaDoneReason: data.done_reason ?? null,
+          },
+        };
+      } catch (error) {
+        const latency = Date.now() - startTime;
+        const errorMsg = error instanceof Error ? error.message : String(error);
+
+        logger.warn(
+          `Attempt ${attempt}/${OLLAMA_CONFIG.maxRetries} failed (${latency}ms): ${errorMsg}`
+        );
+
+        // Increment error count
+        errorCount++;
+        lastError = errorMsg;
+
+        if (attempt < OLLAMA_CONFIG.maxRetries) {
+          const delay = Math.min(1000 * attempt, 3000);
+          logger.debug(`Waiting ${delay}ms before retry...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+        }
+      }
+    }
+
+    // All retries failed
+    endpointHealthy = false;
+    throw new Error(
+      `Ollama failed after ${OLLAMA_CONFIG.maxRetries} attempts: ${lastError || 'Unknown error'}`
+    );
+  },
+
+  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
+    const isHealthy = await this.isAvailable();
+    if (!isHealthy) {
+      yield '⚠️ Ollama non disponible. Utilisez le provider local TITANE∞.';
+      return;
+    }
 
     try {
-      const secureResult: SecureAIResponse<ChatResponse> =
-        await SecureAIService.executeSecureChat(secureRequest, async sanitizedMessage => {
-          try {
-            // ✨ v21 - Use memory-enriched prompt
-            const prompt = await buildPromptWithMemory(sanitizedMessage, history);
+      const hasInjectedSystemHistory = history.some(
+        entry => entry.role === 'system' && entry.content.trim().length > 0
+      );
+      const memoryContext = hasInjectedSystemHistory
+        ? null
+        : await memoryIntegration
+            .loadContext({
+              includeProjects: true,
+              includeDecisions: true,
+              includeKnowledge: true,
+              includeRituals: false,
+            })
+            .catch(() => null);
 
-            // ✅ Gateway via Tauri command
-            const generateResult = await ollamaGenerate({
-              model: OLLAMA_MODEL,
-              prompt,
-              temperature: finalConfig.temperature,
-              max_tokens: finalConfig.maxTokens,
-              timeout_secs: Math.floor((finalConfig.timeout || 30000) / 1000),
-            });
+      const messages = buildOllamaMessages(message, history, memoryContext);
+      const system = messages
+        .filter(entry => entry.role === 'system')
+        .map(entry => entry.content)
+        .join('\n\n')
+        .trim();
+      const prompt = messages
+        .filter(entry => entry.role !== 'system')
+        .map(entry => `${entry.role}: ${entry.content}`)
+        .join('\n\n')
+        .trim();
 
-            if (!generateResult.ok) {
-              recordFailure();
-              const error = new Error(generateResult.error.message);
-              error.name = generateResult.error.code;
-              throw error;
-            }
-
-            resetFailures();
-
-            // Return in ChatResponse format
-            return {
-              content: generateResult.content.content.trim(),
-              role: 'assistant' as const,
-              timestamp: Date.now(),
-              metadata: {
-                model: OLLAMA_MODEL,
-                transport: 'gateway',
-                latency_ms: generateResult.content.latency_ms,
-              },
-            };
-          } catch (error) {
-            // 🚨 DEBUG CRITICAL: Log erreur Ollama
-            console.error('[ollamaProvider] ❌ Generate error', {
-              error: error instanceof Error ? error.message : String(error),
-              transport: 'gateway',
-              timestamp: new Date().toISOString(),
-            });
-
-            throw error;
-          }
-        });
-
-      // ============================================================
-      // SECURITY VALIDATION CHECK (OMEGA Enhanced)
-      // ============================================================
-      if (!secureResult.success) {
-        const errorMsg = secureResult.error || 'Security validation failed';
-
-        if (secureResult.rateLimitExceeded) {
-          const rateLimitError = new Error(`Rate limit exceeded — ${errorMsg}`);
-          handleOllamaError(rateLimitError, 'rate_limit', { secureResult });
-          throw rateLimitError;
-        }
-
-        if (secureResult.sanitization?.isBlocked) {
-          const patterns = secureResult.sanitization.detectedPatterns.join(', ');
-          const sanitizationError = new Error(`Input blocked — Detected: ${patterns}`);
-          handleOllamaError(sanitizationError, 'sanitization', { patterns });
-          throw sanitizationError;
-        }
-
-        if (!secureResult.validation?.isValid) {
-          const validationError = new Error(`Response validation failed — ${errorMsg}`);
-          handleOllamaError(validationError, 'validation', { secureResult });
-          throw validationError;
-        }
-
-        const securityError = new Error(errorMsg);
-        handleOllamaError(securityError, 'security', { secureResult });
-        throw securityError;
-      }
-
-      // ============================================================
-      // SUCCESS (OMEGA)
-      // ============================================================
-      const aiResponse: AIResponse = {
-        content: secureResult.response.content,
-        provider: 'ollama',
-        timestamp: Date.now(),
-        model: OLLAMA_MODEL,
-      };
-
-      // 🚨 DEBUG CRITICAL: Log succès Ollama
-      console.log('[ollamaProvider] ✅ Réponse Ollama générée avec succès', {
-        contentLength: aiResponse.content.length,
-        provider: aiResponse.provider,
-        model: aiResponse.model,
-        timestamp: new Date().toISOString(),
+      const response = await ollamaGenerate({
+        model: OLLAMA_CONFIG.model,
+        prompt,
+        system,
+        temperature: OLLAMA_CONFIG.temperature,
+        timeout_secs: Math.ceil(OLLAMA_CONFIG.timeout / 1000),
       });
 
-      // ✨ v21 - Save interaction to memory (async, non-blocking)
-      void memoryIntegration
-        .saveInteraction({
-          userMessage: message,
-          aiResponse: aiResponse.content,
-          mode: 'chat',
-        })
-        .catch((err: unknown) => {
-          logger.warn('Failed to save interaction to memory', { error: err });
-        });
+      if (!response.ok) {
+        throw new Error(response.error.message);
+      }
 
-      return aiResponse;
+      yield response.content.content;
     } catch (error) {
-      // OMEGA: Final error handler
-      if (error instanceof Error) {
-        // Don't double-handle errors already processed
-        if (
-          !error.message.includes('Ollama:') &&
-          !error.message.includes('Rate limit') &&
-          !error.message.includes('Input blocked') &&
-          !error.message.includes('validation failed')
-        ) {
-          handleOllamaError(error, 'generate_final', { stage: 'catch_all' });
-        }
-        return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
-      }
-
-      handleOllamaError(new Error('Ollama: Unknown error'), 'generate_unknown', {
-        error,
-      });
-      return fallbackToLocal(message, history, 'E_PROVIDER_UNAVAILABLE');
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logger.error('Ollama stream error', { error: errorMsg });
+      yield `⚠️ Erreur Ollama: ${errorMsg}`;
     }
   },
 
-  /**
-   * OMEGA: Reset error state (for auto-heal)
-   */
   resetErrors(): void {
     errorCount = 0;
     endpointHealthy = null;
     lastHealthCheck = 0;
-    _initFailedAt = 0; // ⚡ FIX-3: Reset warmup tracking
-    _initOllamaPromise = null; // ⚡ FIX-2: Allow re-init after explicit reset
-    _initOllamaSettled = false;
-    logger.debug('🔄 Errors and health state reset');
+    lastError = null;
+    logger.debug('🔄 Ollama errors and health state reset');
   },
 
-  /**
-   * OMEGA: Get provider stats
-   */
   getStats(): {
     errorCount: number;
     maxErrors: number;
     endpointHealthy: boolean | null;
     lastHealthCheck: number;
+    lastError: string | null;
+    config: typeof OLLAMA_CONFIG;
   } {
     return {
       errorCount,
-      maxErrors: MAX_ENDPOINT_ERRORS,
+      maxErrors: OLLAMA_CONFIG.maxErrors,
       endpointHealthy,
       lastHealthCheck,
+      lastError,
+      config: OLLAMA_CONFIG,
     };
   },
 
-  // Streaming pour Ollama
-  // TODO v27.2Ω: Streaming via transport layer (requires IPC streaming support)
-  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
-    const fallbackResponse = await this.generate(message, history);
-    yield fallbackResponse.content;
+  async testConnection(): Promise<{ success: boolean; message: string }> {
+    try {
+      const isHealthy = await checkOllamaHealth();
+      if (isHealthy) {
+        return {
+          success: true,
+          message: `Ollama healthy at ${OLLAMA_CONFIG.endpoint} (model: ${OLLAMA_CONFIG.model})`,
+        };
+      } else {
+        return {
+          success: false,
+          message: `Ollama not available at ${OLLAMA_CONFIG.endpoint}${lastError ? `: ${lastError}` : ''}`,
+        };
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      return { success: false, message: `Ollama test failed: ${message}` };
+    }
   },
 };
 

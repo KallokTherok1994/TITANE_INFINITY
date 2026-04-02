@@ -1,0 +1,12 @@
+{
+  "failedCommands": [
+    {
+      "id": "required:test",
+      "run": "1",
+      "exit": 127,
+      "cmd": "pnpm test",
+      "log": "proof_packs/TESTS_ZERO_OMISSION_2026-03-04_1300_4a3ab09a5/logs/required_test_run1.log",
+      "ts": "2026-03-04T18:05:11Z"
+    }
+  ]
+}

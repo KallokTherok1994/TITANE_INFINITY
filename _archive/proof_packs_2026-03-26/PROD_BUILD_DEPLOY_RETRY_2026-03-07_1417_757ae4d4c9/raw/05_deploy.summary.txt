@@ -1,0 +1,2 @@
+]633;E;{   echo "DEPLOY_EXIT_CODE=$DEPLOY_RC"\x3b   echo "DEPLOY_END_UTC=$(date -u +%Y-%m-%dT%H:%M:%SZ)"\x3b } > "$PACK_DIR/raw/05_deploy.summary.txt";865b6b49-63d0-4cb1-821b-880e5c61b6ca]633;CDEPLOY_EXIT_CODE=0
+DEPLOY_END_UTC=2026-03-07T14:44:37Z

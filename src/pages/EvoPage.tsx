@@ -41,6 +41,7 @@ import { Settings, TrendingUp, Brain, Database, Zap, Sprout } from 'lucide-react
 import type { ProgressionState } from '@/cognitive/types';
 import { tauriClient } from '@/lib/tauriClient';
 import type { MemoryStats } from '@/services/memory/persistentMemory.config';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -98,7 +99,9 @@ export const EvoPage: React.FC = () => {
   useEffect(() => {
     const loadMemoryStats = async () => {
       try {
-        const stats = (await tauriClient.persistentMemoryGetStats()) as MemoryStats;
+        const stats = normalizePersistentMemoryStats(
+          await tauriClient.persistentMemoryGetStats()
+        ) as MemoryStats;
         setMemoryStats(stats);
       } catch {
         // Non-blocking: fallback → 0

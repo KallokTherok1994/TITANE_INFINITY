@@ -29,6 +29,7 @@ const CONNECTION_STATE_COLOR: Record<ConnectionState, string> = {
 };
 
 const UNAVAILABLE_REASON_SHORT: Record<BackendUnavailableReason, string> = {
+  'all-backends-down': 'All backends down',
   'tauri-backend-down': 'Tauri down',
   'ollama-offline': 'Ollama offline',
   'network-error': 'Network error',

@@ -750,8 +750,8 @@ const IdentityCenterContent: React.FC = () => {
               <div className="param">
                 <span className="param-label">Pitch</span>
                 <span className="param-value">
-                  {profile.parameters.pitch > 0 ? '+' : ''}
-                  {profile.parameters.pitch}
+                  {(profile?.parameters?.pitch ?? 0) > 0 ? '+' : ''}
+                  {profile?.parameters?.pitch ?? 0}
                 </span>
               </div>
               <div className="param">

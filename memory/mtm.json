@@ -1,0 +1,127 @@
+[
+  {
+    "id": "mtm-001",
+    "content": "Memory importance thresholds: STM < 0.3, MTM 0.3-0.7, LTM > 0.7",
+    "type": "knowledge",
+    "importance": 0.5,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742777400000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "initialization",
+      "version": "v20.0Ω"
+    }
+  },
+  {
+    "id": "mtm-002",
+    "content": "User prefers French language for technical discussions",
+    "type": "preference",
+    "importance": 0.5,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 3,
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "user_preferences"
+    }
+  },
+  {
+    "id": "mtm-003",
+    "content": "User prefers metal theme for UI",
+    "type": "preference",
+    "importance": 0.4,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 2,
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "user_preferences"
+    }
+  },
+  {
+    "id": "mtm-004",
+    "content": "Memory compaction enabled by default for performance optimization",
+    "type": "preference",
+    "importance": 0.6,
+    "timestamp": 1742777400000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 2,
+    "metadata": {
+      "source": "cognitive_json_migration",
+      "version": "v20.0Ω",
+      "migrated_from": "user_preferences"
+    }
+  },
+  {
+    "id": "mtm-005",
+    "content": "System metrics: 25 total requests, 2.3 MB memory usage, 12% CPU usage, 180ms avg response time",
+    "type": "context",
+    "importance": 0.5,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "system_state_integration",
+      "version": "v20.0Ω",
+      "category": "performance_metrics"
+    }
+  },
+  {
+    "id": "mtm-006",
+    "content": "Performance metrics: avg response 150ms, peak CPU 7, memory efficiency 0.95",
+    "type": "context",
+    "importance": 0.6,
+    "timestamp": 1742843000000,
+    "lastAccessed": 1742843000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "harmonics_integration",
+      "version": "v20.0Ω",
+      "category": "performance"
+    }
+  },
+  {
+    "id": "mtm-007",
+    "content": "Diagnostic financier Kevin Thibault — 5 gisements: (1) Clarté/cohérence/structuration — offre premium, méthodologie propriétaire; (2) Accompagnement de transformation incarnée — 1:1 ou petit groupe; (3) Structuration de positionnement/message/écosystème — pour créateurs/entrepreneurs; (4) IA et systèmes cognitifs — architecture cognitive, workflow; (5) Transformation d'espace/matière — rénovation, artisanat, harmonisation. Gisement principal: clarté, cohérence, structuration. Le plus rentable: offre premium centrée.",
+    "type": "strategy",
+    "importance": 0.65,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "financial_strategy"
+    }
+  },
+  {
+    "id": "mtm-008",
+    "content": "Positionnement optimal Kevin Thibault: 'Architecte de cohérence vivance pour humains, projets et systèmes en surcharge, en transition ou en réalignement.' Mots-clés: Clarté, Cohérence, Structuration. Promesse centrale: 'Je reconstruis la cohérence quand tout devient flou, dispersé ou trop lourd.' Offre signature: Séance Clarté & Reconfiguration Vivance.",
+    "type": "strategy",
+    "importance": 0.6,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "positioning"
+    }
+  },
+  {
+    "id": "mtm-009",
+    "content": "Diagnostic stratégique: Kevin Thibault est un profil rare d'intégrateur-bâtisseur (intelligence architecturale intégrative). Combine profondeur+structure, humain+stratégie, symbolique+concret, création+architecture, autonomie+complexité, matière+technologie. Capacité de faire converger: sens, structure, corps, émotion, stratégie, esthétique, matière, technologie, autonomie. Potentiel latent le plus fort: méthode signature, figure de référence pour profils complexes, créateur d'écosystème cohérent. Fragilité: sur-richesse → risque de dispersion et de lisibilité réduite.",
+    "type": "strategy",
+    "importance": 0.6,
+    "timestamp": 1743000000000,
+    "lastAccessed": 1743000000000,
+    "accessCount": 1,
+    "metadata": {
+      "source": "PROFIL-ALL_analysis",
+      "version": "v20.0Ω",
+      "category": "strategic_diagnosis"
+    }
+  }
+]

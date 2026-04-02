@@ -1,0 +1,108 @@
+=== pre-deployment-check prior quick log tail ===
+
+[0;35m╔════════════════════════════════════════════════════════════════════╗[0m
+[0;35m║[0m     [0;36m🚀 TITANE∞ PRE-DEPLOYMENT COMPREHENSIVE CHECK 🚀[0m          [0;35m║[0m
+[0;35m╚════════════════════════════════════════════════════════════════════╝[0m
+
+[0;34m📅 Timestamp:[0m sam. 07 mars 2026 17:24:09 EST
+[0;34m📁 Project:[0m   /home/titane-os/Documents/GitHub/TITANE_INFINITY
+[0;34m📊 Report:[0m    /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/pre-deployment-20260307-172409
+[1;33m⚡ Quick Mode Enabled[0m
+
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 1: Code Quality & Linting[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;36mRunning: ESLint...[0m
+[0;32m✓ PASS[0m - ESLint: 0 errors
+[0;36mRunning: TypeScript...[0m
+[0;32m✓ PASS[0m - TypeScript: 0 compilation errors
+[0;36mRunning: Prettier...[0m
+[1;33m⚠ FAIL[0m - Prettier: Formatting issues
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 2: Test Suite Execution[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[1;33mSkipping tests in quick mode[0m
+[0;32m✓ PASS[0m - Tests: Skipped (quick mode)
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 3: Security Audit[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;32m✓ PASS[0m - pnpm audit: 0 critical, 0 high vulnerabilities
+[0;31m✗ BLOCKER[0m - Secret Scan: Potential hardcoded secrets detected
+[0;32m✓ PASS[0m - CSP Configuration: Properly configured
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 4: Architecture Compliance[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;32m✓ PASS[0m - 4-Ring Model: No critical violations detected
+[0;32m✓ PASS[0m - Tauri-Only Mode: Enforced
+[1;33m⚠ FAIL[0m - Local-First Architecture: Not documented
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 5: Build & Deployment Readiness[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;32m✓ PASS[0m - Version Consistency: All configs match (v27.2.0)
+[0;32m✓ PASS[0m - Dependencies: Installed and locked
+[0;32m✓ PASS[0m - Build Test: Skipped (dist exists)
+[1;33m⚠ FAIL[0m - Critical Files: Missing 2 files
+
+[0;36m═══════════════════════════════════════════════════════════════[0m
+[0;36m   Gate 6: Documentation Quality[0m
+[0;36m═══════════════════════════════════════════════════════════════[0m
+
+[0;32m✓ PASS[0m - README.md: Comprehensive (30098 bytes)
+[1;33m⚠ FAIL[0m - CHANGELOG.md: Missing
+[0;32m✓ PASS[0m - API Documentation: Configuration present
+
+╔════════════════════════════════════════════════════════════════════╗
+║           TITANE∞ PRE-DEPLOYMENT CHECK SUMMARY                     ║
+╚════════════════════════════════════════════════════════════════════╝
+
+Timestamp: sam. 07 mars 2026 17:24:56 EST
+Project:   /home/titane-os/Documents/GitHub/TITANE_INFINITY
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+RESULTS:
+  Total Gates:    17
+  ✓ Passed:       12
+  ✗ Failed:       5
+  🚫 Blockers:    1
+  
+  Pass Rate:      70%
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+DEPLOYMENT RECOMMENDATION:
+  ❌ NOT APPROVED FOR DEPLOYMENT
+
+  1 blocking issue(s) detected.
+  These MUST be resolved before deployment.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Full report: /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/pre-deployment-20260307-172409
+Log file:    /home/titane-os/Documents/GitHub/TITANE_INFINITY/reports/pre-deployment-20260307-172409/pre-deployment-check.log
+
+
+=== verify-preprod prior failure tail ===
+2026-03-07 17:24:57 - [0;34m═══════════════════════════════════════════════════════════════[0m
+2026-03-07 17:24:57 - [0;34m🚀 TITANE∞ Before Dev Command Wrapper v26.3.0[0m
+2026-03-07 17:24:57 - [0;34m═══════════════════════════════════════════════════════════════[0m
+2026-03-07 17:24:57 - Node: v24.0.0
+2026-03-07 17:24:57 - NPM: 11.3.0
+2026-03-07 17:24:57 - CWD: /home/titane-os/Documents/GitHub/TITANE_INFINITY
+2026-03-07 17:24:57 - Port to check: 5173
+2026-03-07 17:24:57 - 
+2026-03-07 17:24:57 - Checking port 5173...
+2026-03-07 17:24:57 - [0;32m✅ Port 5173 is free[0m
+2026-03-07 17:24:57 - 
+2026-03-07 17:24:57 - [0;34mStarting Vite dev server...[0m
+./scripts/tauri/before-dev.sh: ligne 112: /home/titane-os/.local/share/pnpm/pnpm: Aucun fichier ou dossier de ce nom

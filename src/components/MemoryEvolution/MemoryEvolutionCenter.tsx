@@ -9,6 +9,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
 import { logger } from '@/lib/logger';
+import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemory.normalize';
 import './MemoryEvolutionCenter.css';
 
 // Types
@@ -63,6 +64,8 @@ interface MemoryCluster {
   item_count: number;
   coherence: number;
 }
+
+const PERSISTENT_BRIDGE_AVAILABLE = false;
 
 // Composant Pyramide Mémoire
 const MemoryPyramid: React.FC<{ levels: Record<string, number> }> = ({ levels }) => {
@@ -264,6 +267,7 @@ const EvolutionControls: React.FC<{
   onBackup: () => void;
   isLoading: boolean;
   kevinAuthorized: boolean;
+  controlsEnabled: boolean;
 }> = props => {
   const {
     onParse,
@@ -277,65 +281,66 @@ const EvolutionControls: React.FC<{
     onBackup,
     isLoading,
     kevinAuthorized,
+    controlsEnabled,
   } = props;
+
+  const disabled = isLoading || !controlsEnabled;
 
   return (
     <div className="evolution-controls">
       <h3>⚙️ Contrôles d&apos;Évolution</h3>
+      {!controlsEnabled && (
+        <p className="controls-disabled-hint">
+          Contrôles désactivés: ce moteur n&apos;opère pas sur la mémoire persistante
+          active.
+        </p>
+      )}
 
       <div className="controls-grid">
-        <button onClick={onParse} disabled={isLoading} className="control-btn parse">
+        <button onClick={onParse} disabled={disabled} className="control-btn parse">
           <span className="btn-icon">📊</span>
           <span>Analyser</span>
         </button>
 
         <button
           onClick={onSynthesize}
-          disabled={isLoading}
+          disabled={disabled}
           className="control-btn synthesize"
         >
           <span className="btn-icon">🔮</span>
           <span>Synthétiser</span>
         </button>
 
-        <button onClick={onCluster} disabled={isLoading} className="control-btn cluster">
+        <button onClick={onCluster} disabled={disabled} className="control-btn cluster">
           <span className="btn-icon">🎯</span>
           <span>Clusteriser</span>
         </button>
 
-        <button
-          onClick={onCompress}
-          disabled={isLoading}
-          className="control-btn compress"
-        >
+        <button onClick={onCompress} disabled={disabled} className="control-btn compress">
           <span className="btn-icon">📦</span>
           <span>Compresser</span>
         </button>
 
-        <button
-          onClick={onPatterns}
-          disabled={isLoading}
-          className="control-btn patterns"
-        >
+        <button onClick={onPatterns} disabled={disabled} className="control-btn patterns">
           <span className="btn-icon">🔄</span>
           <span>Patterns</span>
         </button>
 
         <button
           onClick={onStability}
-          disabled={isLoading}
+          disabled={disabled}
           className="control-btn stability"
         >
           <span className="btn-icon">🛡️</span>
           <span>Stabilité</span>
         </button>
 
-        <button onClick={onGrow} disabled={isLoading} className="control-btn grow">
+        <button onClick={onGrow} disabled={disabled} className="control-btn grow">
           <span className="btn-icon">🌱</span>
           <span>Croissance</span>
         </button>
 
-        <button onClick={onBackup} disabled={isLoading} className="control-btn backup">
+        <button onClick={onBackup} disabled={disabled} className="control-btn backup">
           <span className="btn-icon">💾</span>
           <span>Backup</span>
         </button>
@@ -344,7 +349,7 @@ const EvolutionControls: React.FC<{
       <div className="full-evolution">
         <button
           onClick={onFullEvolution}
-          disabled={isLoading || !kevinAuthorized}
+          disabled={disabled || !kevinAuthorized}
           className="control-btn full-evolution-btn"
         >
           <span className="btn-icon">🚀</span>
@@ -443,6 +448,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
   const [status, setStatus] = useState<MemoryEvolutionStatus | null>(null);
   const [health, setHealth] = useState<HierarchyHealth | null>(null);
   const [clusters, setClusters] = useState<MemoryCluster[]>([]);
+  const [persistentEntryCount, setPersistentEntryCount] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [kevinAuthorized, setKevinAuthorized] = useState(false);
   const [lastResult, setLastResult] = useState<EvolutionResult | null>(null);
@@ -502,22 +508,50 @@ export const MemoryEvolutionCenter: React.FC = () => {
     }
   }, []);
 
+  const fetchPersistentStats = useCallback(async () => {
+    try {
+      const payload = await tauriClient.persistentMemoryGetStats();
+      const stats = normalizePersistentMemoryStats(payload);
+      const total =
+        (stats.countByLevel.session ?? 0) +
+        (stats.countByLevel.intermediate ?? 0) +
+        (stats.countByLevel.long_term ?? 0);
+      setPersistentEntryCount(total);
+    } catch (err) {
+      logger.warn('Failed to fetch persistent memory stats for evolution center', {
+        component: 'MemoryEvolutionCenter',
+        action: 'fetchPersistentStats',
+        error: err instanceof Error ? err.message : String(err),
+      });
+      setPersistentEntryCount(null);
+    }
+  }, []);
+
   useEffect(() => {
     fetchStatus();
     fetchHealth();
     fetchClusters();
+    fetchPersistentStats();
 
     // Auto-refresh every 30s
     const interval = setInterval(() => {
       fetchStatus();
       fetchHealth();
+      fetchPersistentStats();
     }, 30000);
 
     return () => clearInterval(interval);
-  }, [fetchStatus, fetchHealth, fetchClusters]);
+  }, [fetchStatus, fetchHealth, fetchClusters, fetchPersistentStats]);
 
   // Action handlers
   const handleAction = async (action: string) => {
+    if (!PERSISTENT_BRIDGE_AVAILABLE) {
+      setError(
+        'Ce centre pilote un moteur d’évolution isolé. Il ne maintient pas la mémoire persistante active de TITANE.'
+      );
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -594,6 +628,24 @@ export const MemoryEvolutionCenter: React.FC = () => {
         </div>
       </header>
 
+      <section
+        className="evolution-truth-banner"
+        data-testid="memory-evolution-truth-banner"
+        data-state={PERSISTENT_BRIDGE_AVAILABLE ? 'connected' : 'isolated'}
+      >
+        <strong>Moteur parallèle isolé</strong>
+        <p>
+          Cette surface visualise un moteur d&apos;évolution expérimental distinct de la
+          mémoire persistante active du chat et de la page mémoire.
+        </p>
+        <p className="truth-banner-meta">
+          Entrées persistantes détectées:{' '}
+          <span data-testid="persistent-entry-count">
+            {persistentEntryCount === null ? 'unknown' : persistentEntryCount}
+          </span>
+        </p>
+      </section>
+
       {error && (
         <div className="error-banner">
           <span>⚠️ {error}</span>
@@ -635,6 +687,7 @@ export const MemoryEvolutionCenter: React.FC = () => {
             onBackup={() => handleAction('backup')}
             isLoading={isLoading}
             kevinAuthorized={kevinAuthorized}
+            controlsEnabled={PERSISTENT_BRIDGE_AVAILABLE}
           />
         </div>
 

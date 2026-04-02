@@ -8,6 +8,7 @@
  *   TITANE∞ v21 — GEMINI PROVIDER (✅ RÉACTIVÉ Phase 1)
  *   Provider Google Gemini via backend Rust API
  *   Phase 1 Standardisation API — Audit v21
+ *   ✨ LTM Integration: Memory Context Injection
  * ═══════════════════════════════════════════════════════════════════
  */
 
@@ -17,6 +18,8 @@ import { autoHealEngine } from '../autoHealEngine';
 import { logger } from '../../../utils/logger';
 import { withRetry, getRetryConfig } from '../retryStrategy';
 import { withCache, CACHE_TTL } from '../apiCache';
+import { memoryIntegration } from '../memoryIntegration';
+import type { MemoryContext } from '../memoryIntegration';
 
 /**
  * Modèles Gemini disponibles
@@ -45,6 +48,7 @@ const DEFAULT_CONFIG: GeminiConfig = {
 /**
  * Provider Gemini réactivé (v21 Phase 1)
  * Utilise backend Rust via chat_generate_gemini command
+ * Intégration LTM: Charge le contexte mémoire et l'injecte dans les prompts
  */
 export const geminiProvider: AIProvider = {
   name: 'gemini',
@@ -82,6 +86,26 @@ export const geminiProvider: AIProvider = {
       ...(config as Partial<GeminiConfig> | undefined),
     };
 
+    const hasInjectedSystemHistory = history.some(
+      entry => entry.role === 'system' && entry.content.trim().length > 0
+    );
+
+    // ✨ LTM Integration: Charger le contexte mémoire seulement si l'orchestrateur
+    // n'a pas déjà injecté un system prompt enrichi.
+    let memoryContext: MemoryContext | null = null;
+    if (!hasInjectedSystemHistory) {
+      try {
+        memoryContext = await memoryIntegration.loadContext({
+          includeProjects: true,
+          includeDecisions: true,
+          includeKnowledge: true,
+          includeRituals: true,
+        });
+      } catch (error) {
+        logger.warn('Failed to load memory context (non-blocking)', error);
+      }
+    }
+
     // ✨ v21 Phase 3: Cache intelligent pour réduire coûts API
     return withCache(
       'gemini',
@@ -100,6 +124,44 @@ export const geminiProvider: AIProvider = {
             content: msg.content,
           }));
 
+          // ✨ LTM: Construire le system prompt avec contexte mémoire
+          let memoryLTMInjection = '';
+          if (memoryContext) {
+            const memoryParts: string[] = [];
+
+            if (memoryContext.activeProjects?.length > 0) {
+              const projectNames = memoryContext.activeProjects
+                .map(p => p.title)
+                .filter(Boolean)
+                .join(', ');
+              if (projectNames) {
+                memoryParts.push(`Projets actifs: ${projectNames}`);
+              }
+            }
+
+            if (memoryContext.recentDecisions?.length > 0) {
+              const decisions = memoryContext.recentDecisions
+                .slice(0, 3)
+                .map(d => d.title)
+                .filter(Boolean)
+                .join('; ');
+              if (decisions) {
+                memoryParts.push(`Décisions récentes: ${decisions}`);
+              }
+            }
+
+            if (memoryContext.relevantKnowledge?.length > 0) {
+              const knowledgeCount = memoryContext.relevantKnowledge.length;
+              memoryParts.push(
+                `Base de connaissances: ${knowledgeCount} entrées disponibles`
+              );
+            }
+
+            if (memoryParts.length > 0) {
+              memoryLTMInjection = `\n\n📋 Contexte Mémoire LTM:\n${memoryParts.map(p => `• ${p}`).join('\n')}`;
+            }
+          }
+
           // ✨ v21 Phase 2: Retry unifié avec backoff exponentiel
           const retryConfig = getRetryConfig('gemini');
 
@@ -117,7 +179,7 @@ export const geminiProvider: AIProvider = {
                 error: string | null;
               }>('chat_generate_gemini', {
                 request: {
-                  message: message.trim(),
+                  message: message.trim() + memoryLTMInjection,
                   history: formattedHistory,
                   config: {
                     model: finalConfig.model,
@@ -163,7 +225,7 @@ export const geminiProvider: AIProvider = {
             throw new Error(`Erreur Gemini (${latency}ms): ${errorMsg}`);
           }
 
-          // Succès: retourner réponse normalisée
+          // Succès: retourner réponse normalisée avec métadonnées LTM
           return {
             content: response.data.content,
             provider: 'gemini',
@@ -174,6 +236,17 @@ export const geminiProvider: AIProvider = {
               latencyMs: latency,
               finishReason: response.data.finish_reason,
               config: finalConfig,
+              memoryContextInjected: hasInjectedSystemHistory || !!memoryContext,
+              memoryContextSource: hasInjectedSystemHistory
+                ? 'system-history'
+                : memoryContext
+                  ? 'provider-load'
+                  : 'none',
+              memoryContextSize: memoryContext
+                ? (memoryContext.activeProjects?.length || 0) +
+                  (memoryContext.recentDecisions?.length || 0) +
+                  (memoryContext.relevantKnowledge?.length || 0)
+                : 0,
             },
           };
         } catch (error) {
@@ -234,6 +307,7 @@ export const geminiProvider: AIProvider = {
       provider: 'gemini',
       models: GEMINI_MODELS,
       defaultModel: DEFAULT_CONFIG.model,
+      memoryIntegration: true,
     };
   },
 };

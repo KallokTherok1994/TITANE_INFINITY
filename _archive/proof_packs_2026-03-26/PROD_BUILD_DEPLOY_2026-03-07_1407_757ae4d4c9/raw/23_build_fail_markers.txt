@@ -1,0 +1,12 @@
+]633;E;{   rg -n "P3_2_BUILD_HARDEN|FORBIDDEN FILES|CRITICAL|P3_FORBIDDEN_SCAN|SOLUTION" "$PACK_DIR/raw/12_build_attempt3.log" || true\x3b } > "$PACK_DIR/raw/23_build_fail_markers.txt";d7a296b9-3d89-412b-9330-9e4b6ba4e104]633;C20:🛡️ P3_2_BUILD_HARDEN: Running forbidden files scan...
+21:🔍 [P3_FORBIDDEN_SCAN] TITANE∞ Stable Build Forbidden Files Scanner
+40:❌ FORBIDDEN FILES found matching '*.env':
+44:❌ FORBIDDEN FILES found matching '*.key':
+47:❌ FORBIDDEN FILES found matching '*.pem':
+52:❌ FORBIDDEN FILES found matching '*secret*.txt':
+57:❌ FORBIDDEN FILES found matching '*.backup':
+66:❌ FORBIDDEN FILES found matching '*.tmp':
+73:❌ CRITICAL: .env files found in build context:
+76:❌ CRITICAL: Private keys found:
+82:❌ P3_FORBIDDEN_SCAN: FAIL - 8 violations detected
+83:🔧 SOLUTION: Remove or ignore forbidden files before stable build

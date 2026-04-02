@@ -97,6 +97,7 @@ export const VOID_COMMANDS = new Set<string>([
   // Persistence commands that return ()
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_persistence_init',
   'titan_persistence_shutdown',
   // Logging commands that return ()
@@ -585,6 +586,7 @@ export const ALLOWED_COMMANDS = new Set<string>([
   // ═══════════════════════════════════════════════════════════════
   'titan_persist_event',
   'titan_force_snapshot',
+  'titan_force_snapshot_current',
   'titan_load_state',
   'titan_get_events_since',
   'titan_list_snapshots',
@@ -2078,28 +2080,5 @@ export function getSecurityStats() {
 // ═══════════════════════════════════════════════════════════════
 // v19.0 PHASE 2: AI SECURITY MODULES
 // ═══════════════════════════════════════════════════════════════
-
-export { AIInputSanitizer, type SanitizationResult } from './security/AIInputSanitizer';
-export {
-  AIResponseValidator,
-  type AIValidationResult,
-  ChatResponseSchema,
-  StreamingChunkSchema,
-  MetaModeResponseSchema,
-  type ChatResponse,
-  type StreamingChunk,
-  type MetaModeResponse,
-} from './security/AIResponseValidator';
-export {
-  AIRateLimiter,
-  globalAIRateLimiter,
-  type RateLimitConfig,
-  type RateLimitStatus,
-  type RequestMetrics,
-} from './security/AIRateLimiter';
-export {
-  SecureAIService,
-  type SecureAIRequest,
-  type SecureAIResponse,
-  type SecureAIServiceFunction,
-} from './security/SecureAIService';
+// NOTE: AI security modules (AIInputSanitizer, AIResponseValidator, AIRateLimiter)
+// are not yet implemented. Remove these exports when modules are created.

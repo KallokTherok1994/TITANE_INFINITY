@@ -178,16 +178,138 @@ exports[`MemoryTreeViewer Component > Snapshot > should match snapshot 1`] = `
     class="memory-tree-canvas"
   >
     <div
+      data-dimensions="800x600"
       data-testid="mock-tree"
+      data-translate-x="400"
+      data-translate-y="200"
     >
       <span>
         Mémoire TITANE
       </span>
-      <button
-        type="button"
+      <svg
+        data-testid="mock-tree-rendered"
       >
-        render-node
-      </button>
+        <g>
+          <g>
+            <circle
+              fill="#10b981"
+              r="20"
+              stroke="#3b82f6"
+              stroke-width="2"
+              style="cursor: pointer;"
+            />
+            <text
+              dy=".3em"
+              fill="#ffffff"
+              font-size="16"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              ⚡
+            </text>
+            <text
+              dy="35"
+              fill="#e2e8f0"
+              font-size="12"
+              font-weight="normal"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              Court Terme
+            </text>
+            <text
+              dy="50"
+              fill="#94a3b8"
+              font-size="10"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              2
+               attr.
+            </text>
+          </g>
+        </g>
+        <g>
+          <g>
+            <circle
+              fill="#3b82f6"
+              r="20"
+              stroke="#3b82f6"
+              stroke-width="2"
+              style="cursor: pointer;"
+            />
+            <text
+              dy=".3em"
+              fill="#ffffff"
+              font-size="16"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              🧠
+            </text>
+            <text
+              dy="35"
+              fill="#e2e8f0"
+              font-size="12"
+              font-weight="normal"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              Moyen Terme
+            </text>
+            <text
+              dy="50"
+              fill="#94a3b8"
+              font-size="10"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              1
+               attr.
+            </text>
+          </g>
+        </g>
+        <g>
+          <g>
+            <circle
+              fill="#8b5cf6"
+              r="20"
+              stroke="#3b82f6"
+              stroke-width="2"
+              style="cursor: pointer;"
+            />
+            <text
+              dy=".3em"
+              fill="#ffffff"
+              font-size="16"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              💎
+            </text>
+            <text
+              dy="35"
+              fill="#e2e8f0"
+              font-size="12"
+              font-weight="normal"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              Long Terme
+            </text>
+            <text
+              dy="50"
+              fill="#94a3b8"
+              font-size="10"
+              style="pointer-events: none;"
+              text-anchor="middle"
+            >
+              1
+               attr.
+            </text>
+          </g>
+        </g>
+      </svg>
     </div>
   </div>
   <div
