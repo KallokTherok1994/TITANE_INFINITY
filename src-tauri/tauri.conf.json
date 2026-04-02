@@ -3195,6 +3195,24 @@
             },
             {
               "command": "get_performance_metrics"
+            },
+            {
+              "command": "total_dev_unlock"
+            },
+            {
+              "command": "total_dev_session_status"
+            },
+            {
+              "command": "total_dev_revoke"
+            },
+            {
+              "command": "total_dev_git_op"
+            },
+            {
+              "command": "total_dev_run_command"
+            },
+            {
+              "command": "total_dev_read_file"
             }
           ]
         },
