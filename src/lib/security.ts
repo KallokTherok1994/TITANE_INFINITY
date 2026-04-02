@@ -499,6 +499,16 @@ export const ALLOWED_COMMANDS = new Set<string>([
   'devops_stats',
 
   // ═══════════════════════════════════════════════════════════════
+  // TOTAL_DEV — GOD DEV Governed Space (v28.1.0)
+  // ═══════════════════════════════════════════════════════════════
+  'total_dev_unlock',
+  'total_dev_session_status',
+  'total_dev_revoke',
+  'total_dev_git_op',
+  'total_dev_run_command',
+  'total_dev_read_file',
+
+  // ═══════════════════════════════════════════════════════════════
   // SECURE COMMANDS (v∞)
   // ═══════════════════════════════════════════════════════════════
   'secure_import_file',
