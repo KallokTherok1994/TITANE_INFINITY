@@ -1,0 +1,11 @@
+parse_error=false
+http_code=200
+ok=true
+model=gemma2:2b
+total_duration=1045602393
+load_duration=139661570
+prompt_eval_count=13
+prompt_eval_duration=191262549
+eval_count=8
+eval_duration=697316335
+done_reason=length
