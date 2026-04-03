@@ -11,6 +11,13 @@
  */
 
 import { secureInvoke } from '@/lib/security';
+import {
+  calculateLevel as canonicalCalculateLevel,
+  xpInCurrentLevel as canonicalXpInCurrentLevel,
+  xpToNextLevel as canonicalXpToNextLevel,
+  calculateProgress as canonicalCalculateProgress,
+  MAX_LEVEL as CANONICAL_MAX_LEVEL,
+} from '@/services/xp/xpCanonical';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES (Inline pour éviter les problèmes d'import circulaire)
@@ -339,19 +346,16 @@ class XPEngine {
   // ─────────────────────────────────────────────────────────────────
 
   private updateLevel(): void {
-    const newLevel = Math.min(
-      Math.floor(1 + this.state.totalXP / XP_PER_LEVEL),
-      MAX_LEVEL
-    );
+    const newLevel = canonicalCalculateLevel(this.state.totalXP);
 
     if (newLevel !== this.state.level) {
       console.log(`[XPEngine] 🎉 Level Up! ${this.state.level} → ${newLevel}`);
       this.state.level = newLevel;
     }
 
-    // Calculer XP dans le niveau actuel
-    this.state.xpInCurrentLevel = this.state.totalXP % XP_PER_LEVEL;
-    this.state.xpToNextLevel = XP_PER_LEVEL - this.state.xpInCurrentLevel;
+    // Calculer XP dans le niveau actuel (formule canonique)
+    this.state.xpInCurrentLevel = canonicalXpInCurrentLevel(this.state.totalXP, newLevel);
+    this.state.xpToNextLevel = canonicalXpToNextLevel(this.state.totalXP, newLevel);
   }
 
   /**
@@ -548,17 +552,19 @@ export default xpEngine;
 // ─────────────────────────────────────────────────────────────────────────────
 
 export function calculateLevel(totalXP: number): number {
-  return Math.min(Math.floor(1 + totalXP / XP_PER_LEVEL), MAX_LEVEL);
+  return canonicalCalculateLevel(totalXP);
 }
 
 export function xpForLevel(level: number): number {
-  return (level - 1) * XP_PER_LEVEL;
+  return level * level * 100;
 }
 
 export function xpToNextLevel(totalXP: number): number {
-  return XP_PER_LEVEL - (totalXP % XP_PER_LEVEL);
+  const level = canonicalCalculateLevel(totalXP);
+  return canonicalXpToNextLevel(totalXP, level);
 }
 
 export function levelProgress(totalXP: number): number {
-  return ((totalXP % XP_PER_LEVEL) / XP_PER_LEVEL) * 100;
+  const level = canonicalCalculateLevel(totalXP);
+  return canonicalCalculateProgress(totalXP, level) * 100;
 }

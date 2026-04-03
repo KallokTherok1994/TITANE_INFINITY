@@ -24,6 +24,7 @@ import {
 import { secureInvoke } from '@/lib/security';
 import { listen } from '@tauri-apps/api/event';
 import { logger } from '@/lib/logger';
+import { calculateLevel, xpInCurrentLevel, xpToNextLevel, xpForLevel } from '@/services/xp/xpCanonical';
 
 // ═══════════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -191,17 +192,14 @@ export type TitanAction =
 // REDUCER
 // ═══════════════════════════════════════════════════════════════════════════════
 
-const XP_PER_LEVEL = 500;
-
 function titanReducer(state: TitanState, action: TitanAction): TitanState {
   let newState = state;
 
   switch (action.type) {
-    // XP Actions
+    // XP Actions (canonical formula)
     case 'xp/add': {
       const newTotalXP = state.xp.totalXP + action.payload.amount;
-      const newLevel = Math.floor(newTotalXP / XP_PER_LEVEL) + 1;
-      const xpInCurrentLevel = newTotalXP % XP_PER_LEVEL;
+      const newLevel = calculateLevel(newTotalXP);
 
       newState = {
         ...state,
@@ -209,8 +207,8 @@ function titanReducer(state: TitanState, action: TitanAction): TitanState {
           ...state.xp,
           totalXP: newTotalXP,
           level: newLevel,
-          xpInCurrentLevel,
-          xpToNextLevel: XP_PER_LEVEL - xpInCurrentLevel,
+          xpInCurrentLevel: xpInCurrentLevel(newTotalXP, newLevel),
+          xpToNextLevel: xpToNextLevel(newTotalXP, newLevel),
         },
         dirty: true,
       };
@@ -352,7 +350,7 @@ const initialState: TitanState = {
     level: 1,
     totalXP: 0,
     xpInCurrentLevel: 0,
-    xpToNextLevel: XP_PER_LEVEL,
+    xpToNextLevel: xpForLevel(2),
     streakDays: 0,
     lastActiveDate:
       new Date().toISOString().split('T')[0] ?? new Date().toLocaleDateString(),

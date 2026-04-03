@@ -514,7 +514,7 @@ export const INITIAL_USER_XP_STATE: UserXPState = {
   total_xp: 0,
   level: 'novice',
   level_progress: 0,
-  xp_to_next_level: 500,
+  xp_to_next_level: 400, // canonical: xpForLevel(2) = 100 * 2^2
   current_streak: 0,
   longest_streak: 0,
   last_activity: Date.now(),
@@ -549,43 +549,49 @@ export const INITIAL_REWARDS_STATE: RewardsState = {
 // G. FONCTIONS UTILITAIRES
 // ═══════════════════════════════════════════════════════════════════════════
 
+import {
+  calculateLevel as canonicalCalculateLevel,
+  xpInCurrentLevel as canonicalXpInCurrentLevel,
+  xpToNextLevel as canonicalXpToNextLevel,
+  calculateProgress as canonicalCalculateProgress,
+} from '@/services/xp/xpCanonical';
+
 /**
- * Calculer le niveau à partir de l'XP
+ * Mapping niveau canonique (numérique) → UserLevel (nommé)
+ * Formule canonique: level = floor(sqrt(xp / 100))
  */
-export function getLevelFromXP(xp: number): UserLevel {
-  for (const [level, config] of Object.entries(LEVEL_CONFIGS)) {
-    if (xp >= config.min_xp && xp < config.max_xp) {
-      return level as UserLevel;
-    }
-  }
+function numericLevelToUserLevel(numericLevel: number): UserLevel {
+  if (numericLevel <= 2) return 'novice';
+  if (numericLevel <= 5) return 'apprentice';
+  if (numericLevel <= 8) return 'intermediate';
+  if (numericLevel <= 15) return 'advanced';
+  if (numericLevel <= 25) return 'expert';
+  if (numericLevel <= 50) return 'master';
   return 'singularity';
 }
 
 /**
- * Calculer la progression dans le niveau actuel
+ * Calculer le niveau à partir de l'XP (formule canonique)
  */
-export function getLevelProgress(xp: number): number {
-  const level = getLevelFromXP(xp);
-  const config = LEVEL_CONFIGS[level];
-
-  if (config.max_xp === Infinity) return 100;
-
-  const xpInLevel = xp - config.min_xp;
-  const xpForLevel = config.max_xp - config.min_xp;
-
-  return Math.min(100, Math.round((xpInLevel / xpForLevel) * 100));
+export function getLevelFromXP(xp: number): UserLevel {
+  const numericLevel = canonicalCalculateLevel(xp);
+  return numericLevelToUserLevel(numericLevel);
 }
 
 /**
- * Calculer l'XP restant pour le prochain niveau
+ * Calculer la progression dans le niveau actuel (formule canonique)
+ */
+export function getLevelProgress(xp: number): number {
+  const numericLevel = canonicalCalculateLevel(xp);
+  return canonicalCalculateProgress(xp, numericLevel);
+}
+
+/**
+ * Calculer l'XP restant pour le prochain niveau (formule canonique)
  */
 export function getXPToNextLevel(xp: number): number {
-  const level = getLevelFromXP(xp);
-  const config = LEVEL_CONFIGS[level];
-
-  if (config.max_xp === Infinity) return 0;
-
-  return config.max_xp - xp;
+  const numericLevel = canonicalCalculateLevel(xp);
+  return canonicalXpToNextLevel(xp, numericLevel);
 }
 
 /**
