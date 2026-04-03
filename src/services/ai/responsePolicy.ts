@@ -145,7 +145,7 @@ export const RESPONSE_PROFILES: Record<ResponseProfileId, ResponseProfile> = {
       retryStrategy: 'linear',
     },
     preferredProviders: ['ollama', 'titane-local'],
-    // v26.0.0: truthStatus removed — kernel.evaluateTruthStatus() is the authority
+    truthStatus: 'STABLE_PARTIAL',
     runtimeProven: false,
   },
 
@@ -484,7 +484,7 @@ export function selectResponseProfile(
   }
 
   // Règle 5 : Mode actif → profil par défaut du mode
-  const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'DEVELOPED';
+  const modeDefault = MODE_PROFILE_MAP[input.mode] ?? 'BALANCED';
 
   // Règle 6 : Complexité élevée → forcer DEEP si mode est DEVELOPED
   if (complexity > 0.75 && modeDefault === 'DEVELOPED') {

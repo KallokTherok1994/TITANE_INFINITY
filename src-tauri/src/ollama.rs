@@ -114,6 +114,7 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
         return Ok(OllamaResult {
             response: text,
             model: used_model,
+            context_window_used: Some(8192),
             total_duration: td,
             load_duration: ld,
             prompt_eval_count: pec,
@@ -139,6 +140,7 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String> {
                     return Ok(OllamaResult {
                         response: text,
                         model: used_model,
+                        context_window_used: Some(8192),
                         total_duration: td,
                         load_duration: ld,
                         prompt_eval_count: pec,

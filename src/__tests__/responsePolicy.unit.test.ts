@@ -268,7 +268,13 @@ describe('ResponsePolicy — Estimation de complexité', () => {
 describe('ResponsePolicy — getEffectiveProfile', () => {
   it('modeMaxTokens supérieur au profil → retourne modeMaxTokens', () => {
     // OMEGA mode est actuellement configuré à 16000 tokens.
-    const { profile } = getEffectiveProfile('omega', 'test', 4000, 0.6);
+    // Message suffisamment long pour ne pas déclencher Rule 7 (short_message_direct)
+    const { profile } = getEffectiveProfile(
+      'omega',
+      'donne-moi toutes les options disponibles',
+      4000,
+      0.6
+    );
     expect(profile.maxTokens).toBe(16000);
   });
 
@@ -377,6 +383,6 @@ describe('ResponsePolicy — Invariants de vérité', () => {
     const { RESPONSE_POLICY_VERSION, RESPONSE_POLICY_DATE } =
       await import('@/services/ai/responsePolicy');
     expect(RESPONSE_POLICY_VERSION).toBeTruthy();
-    expect(RESPONSE_POLICY_DATE).toBe('2026-03-17');
+    expect(RESPONSE_POLICY_DATE).toBe('2026-03-31');
   });
 });

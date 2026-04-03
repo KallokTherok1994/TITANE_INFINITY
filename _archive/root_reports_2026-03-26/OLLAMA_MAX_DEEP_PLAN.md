@@ -1,4 +1,5 @@
 # OLLAMA_MAX DEEP PLAN — TITANE_INFINITY
+
 **Date**: 2026-04-02
 **Lock**: REQUESTED_USED_SHOWN_UNPROVEN
 **Phase**: ACT — One Lock Implementation
@@ -26,12 +27,12 @@ The chain `REQUESTED → USED → SHOWN` is broken at the backend level. The `ol
 
 ## FILES LIKELY TOUCHED
 
-| File | Change | Risk |
-|------|--------|------|
-| `src-tauri/src/ollama.rs` | Add `model` field to response struct, return actual model used | LOW |
-| `src/services/ai/transports/ollamaTransport.ts` | Propagate `model` from IPC result | LOW |
-| `src/services/ai/providers/ollama.ts` | Verify model matches request, log mismatch | LOW |
-| `src/ui/pages/Chat.tsx` | Display `model_used` in response metadata | LOW |
+| File                                            | Change                                                         | Risk |
+| ----------------------------------------------- | -------------------------------------------------------------- | ---- |
+| `src-tauri/src/ollama.rs`                       | Add `model` field to response struct, return actual model used | LOW  |
+| `src/services/ai/transports/ollamaTransport.ts` | Propagate `model` from IPC result                              | LOW  |
+| `src/services/ai/providers/ollama.ts`           | Verify model matches request, log mismatch                     | LOW  |
+| `src/ui/pages/Chat.tsx`                         | Display `model_used` in response metadata                      | LOW  |
 
 ---
 
@@ -40,11 +41,13 @@ The chain `REQUESTED → USED → SHOWN` is broken at the backend level. The `ol
 ### Step 1: Backend (ollama.rs)
 
 Current signature:
+
 ```rust
 pub async fn query_ollama(prompt: String) -> Result<String, String>
 ```
 
 Change to return model info:
+
 ```rust
 pub struct OllamaResult {
     pub response: String,
@@ -55,8 +58,9 @@ pub async fn query_ollama(prompt: String) -> Result<OllamaResult, String>
 ```
 
 Update `send_generate()` to return model:
+
 ```rust
-async fn send_generate(client: &Client, model: &str, prompt: &str) 
+async fn send_generate(client: &Client, model: &str, prompt: &str)
     -> Result<(String, String), (StatusCode, String)> {
     // ... existing code ...
     Ok((parsed.response, model.to_string()))
@@ -64,6 +68,7 @@ async fn send_generate(client: &Client, model: &str, prompt: &str)
 ```
 
 Update `query_ollama()` to return struct:
+
 ```rust
 let (response, used_model) = send_generate(...).await?;
 Ok(OllamaResult { response, model: used_model })
@@ -72,10 +77,11 @@ Ok(OllamaResult { response, model: used_model })
 ### Step 2: Transport (ollamaTransport.ts)
 
 Current:
+
 ```typescript
 return {
   content: result.content,
-  model: result.model,  // May be undefined
+  model: result.model, // May be undefined
   latency_ms: result.latency_ms,
 };
 ```
@@ -85,11 +91,13 @@ Change: Ensure IPC result includes model field from backend.
 ### Step 3: Provider (ollama.ts)
 
 Current:
+
 ```typescript
 model: data.model || OLLAMA_CONFIG.model,
 ```
 
 Change: Add mismatch detection:
+
 ```typescript
 const actualModel = data.model || OLLAMA_CONFIG.model;
 if (actualModel !== OLLAMA_CONFIG.model) {
@@ -100,6 +108,7 @@ if (actualModel !== OLLAMA_CONFIG.model) {
 ### Step 4: UI (Chat.tsx)
 
 Add model display in response metadata:
+
 ```typescript
 metadata: {
   provider: response.provider,

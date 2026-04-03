@@ -5,7 +5,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- *   TITANE∞ v24.3.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
+ *   TITANE∞ v29.0.0 — CHAT PAGE OMEGA (UI ANTI-CRASH)
  *   v22Ω AI Performance Optimizations: -40% latency, stream batching
  *   Protection render • État stable • Récupération auto
  *   Keyboard shortcuts, Focus trap, Code splitting
@@ -1290,7 +1290,7 @@ const ChatComponent: React.FC = () => {
       <ResponsiveChatLayout>
         <div
           className="chat-page"
-          data-omega-version="v19.2Ω"
+          data-omega-version="v29.0.0"
           data-state-version={pageState.stateVersion}
         >
           {/* Enhanced Header with Status Bar + OMEGA Protection */}
@@ -1706,7 +1706,7 @@ const ChatComponent: React.FC = () => {
               >
                 <div className="chat-settings-header">
                   <h2 id="settings-title" className="chat-settings-title">
-                    Paramètres OMEGA v19.2Ω
+                    Paramètres OMEGA v29.0.0
                   </h2>
                   <button
                     className="chat-settings-close"
@@ -1812,7 +1812,7 @@ const ChatComponent: React.FC = () => {
                     <div className="chat-setting-item">
                       <label className="chat-setting-label">Version OMEGA</label>
                       <div className="chat-setting-value">
-                        v19.2Ω (État: v{pageState.stateVersion})
+                        v29.0.0 (État: v{pageState.stateVersion})
                       </div>
                     </div>
                     <div className="chat-setting-item">

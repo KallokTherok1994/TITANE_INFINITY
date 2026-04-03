@@ -378,7 +378,6 @@ const CODE_REVIEW_SIGNALS = [
 
 /** TEST_REQUEST: test writing, test running signals → CERTIFY */
 const TEST_SIGNALS = [
-  'test',
   'tests',
   'écris un test',
   'write a test',

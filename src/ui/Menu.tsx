@@ -8,7 +8,7 @@
 
 /**
  * ═══════════════════════════════════════════════════════════════
- *   TITANE∞ v25.4.2 — MENU NAVIGATION (DESIGN FINAL)
+ *   TITANE∞ v29.0.0 — MENU NAVIGATION
  *   Module TITANE - LE CŒUR DU SYSTÈME (fusion Chat IA + Vision + EVO)
  *   7 sections: TITANE, TIME, STATS, ADMIN, DEV, FUSION, OPTIMIZE
  *   Icons: Lucide React (Atom, Timer, TrendingUp, Settings, Wrench, Sparkles, Zap)
@@ -138,7 +138,7 @@ export const Menu: React.FC<MenuProps> = ({
   const [isEditing, setIsEditing] = useState(false);
   const [menuSections, setMenuSections] = useState(() => {
     // v25.4.2: Migration one-time only (not every mount) - FUSION + OPTIMIZE ajoutés
-    const MENU_VERSION = 'v25.4.2-fusion-optimize';
+    const MENU_VERSION = 'v29.0.0';
     const storedVersion = localStorage.getItem('titane_menu_version');
 
     // Only clear localStorage on version upgrade (not every mount)
@@ -292,7 +292,7 @@ export const Menu: React.FC<MenuProps> = ({
               />
               <div className="menu-brand-info">
                 <span className="menu-brand-text">TITANE∞</span>
-                <span className="menu-brand-version">v25.4.2</span>
+                <span className="menu-brand-version">v29.0.0</span>
               </div>
             </div>
           ) : (
