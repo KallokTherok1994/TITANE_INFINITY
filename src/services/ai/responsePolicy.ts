@@ -3,19 +3,21 @@
  * © 2025 Humain Total / Kevin Thibault / TITANE Team. All rights reserved.
  *
  * ═══════════════════════════════════════════════════════════════════
- *   CANONICAL CHAT RESPONSE POLICY — Source de vérité unique
- *   Autorité : chatEngine.ts → orchestrator.ts → providers
- *   Profiles : DIRECT | BALANCED | DEEP | ARCHITECT
+ *   RESPONSE POLICY PROFILES — Utility library for profile definitions
+ *   Runtime authority: canonicalDiscernmentKernel.ts (single decision point)
+ *   This file provides profile parameters consumed by the kernel.
  *   Constitution : Rule 1 (Minimal patch), Rule 3 (Truth-first)
  * ═══════════════════════════════════════════════════════════════════
  *
- * Ce fichier est l'unique source de vérité pour :
- * - La profondeur de réponse
- * - La longueur cible
- * - Le seuil d'inférence implicite
- * - La politique mémoire par profil
- * - La politique provider par profil
- * - Les étiquettes de vérité
+ * Ce fichier fournit :
+ * - Définitions de profils (DIRECT, BALANCED, DEVELOPED, DEEP, ARCHITECT, OMEGA)
+ * - Sélection lexicale de profil (signaux directs)
+ * - Classification d'intention sémantique
+ * - Évaluation d'état d'inférence
+ * - Estimation de complexité
+ *
+ * L'autorité runtime de décision est le CanonicalDiscernmentKernel.
+ * Le kernel décide : profil, provider, mémoire, inférence, vérité.
  *
  * I14 : Un meilleur libellé n'est pas une preuve d'intelligence supérieure.
  * I15 : "Plus long" ne signifie pas répétitif, flou ou moins utile.
