@@ -1,6 +1,6 @@
 [package]
 name         = "titane-infinity"
-version      = "28.89.0"
+version      = "28.90.0"
 description  = "TITANE∞ v28.88.0 - V28.88"
 authors      = ["Kevin Thibault / Humain Total / TITANE Team"]
 license      = "SEE LICENSE.md"

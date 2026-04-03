@@ -2,6 +2,32 @@
 
 All notable changes to this project are documented in this file.
 
+## [28.90.0] - 2026-04-03 (Config HUB + DEB Certification)
+
+### Added
+
+- feat(config-hub): Config HUB defaults propagation to live chat payloads without restart
+- test(e2e): DEB CONFIG RUNTIME TRUTH certification - proves max tokens change applies immediately
+- test(unit): chatEngine.commands cache invalidation tests
+- Audio runtime topology certification: 10 Tauri audio commands verified present
+
+### Changed
+
+- conversation_engine now reads temperature/max_output_tokens from current_chat_bundle()
+- chatEngine.ts resolves defaults dynamically instead of hardcoded fallbacks
+- ConfigurationHub calls invalidateRequestDefaultsCache() after config/profile changes
+
+### Fixed
+
+- Config changes in Configuration HUB now immediately affect next chat message
+- Request defaults cache properly invalidated on config updates
+
+## [28.89.0] - 2026-03-30 (Release Build)
+
+### Changed
+
+- Build v28.89.0 with stable runtime certification
+
 ## [28.88.0] - 2026-03-22 (Production Seal)
 
 ### Changed
