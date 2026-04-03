@@ -35,16 +35,16 @@ Artefacts verifies (Linux):
 Verification recommandee:
 
 ```bash
-cat RELEASE_v28.88.0_SEALED.txt
+cat _archive/releases/RELEASE_v28.88.0_SEALED.txt
 ```
 
 Release GitHub (notes + assets):
 
 - https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0
 
-Scellement final de session:
+Scellement final de session (archive):
 
-- `RELEASE_v28.88.0_SEALED.txt`
+- `_archive/releases/RELEASE_v28.88.0_SEALED.txt`
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
@@ -95,12 +95,12 @@ TITANE∞ est un **OS cognitif online-first** : votre double numérique évoluti
   - Status: ✅ SEALED (2026-03-21)
   - Tag: `v28.88.0`
   - Gates: tsc, eslint, vitest 3399/3399, pnpm build, cargo check, verify_instructions PASS=20
-  - Proof: `RELEASE_v28.88.0_SEALED.txt`
+  - Proof: `_archive/releases/RELEASE_v28.88.0_SEALED.txt`
 
 - **v28.5.0** (HISTORIQUE)
   - Status: ✅ RELEASED
   - Tag: `v28.5.0`
-  - Proof: `RELEASE_v28.5.0_SEALED.txt`
+  - Proof: `_archive/releases/RELEASE_v28.5.0_SEALED.txt`
 
 - **v27.0.5-prod** (HISTORIQUE) — Production binary baseline
   - Status: ✅ LIVE (99.99% uptime, 0 crashes)
