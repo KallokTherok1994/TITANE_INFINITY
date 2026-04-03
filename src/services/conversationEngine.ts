@@ -14,7 +14,11 @@ import { tauriClient } from '@/lib/tauriClient';
 import { getSystemPrompt } from '@/config/chatModes.config';
 import { userPreferencesEngine } from '@/services/userPreferencesEngine';
 import { classifyMode, resolveMode } from '@/services/ai/omegaModeClassifier';
-import { RESPONSE_PROFILES } from '@/services/ai/responsePolicy';
+import { RESPONSE_PROFILES, type ResponseProfileId, type InferenceState } from '@/services/ai/responsePolicy';
+import {
+  buildDiscernmentDecision,
+  type DiscernmentDecision,
+} from '@/services/ai/discernmentContract';
 import type {
   OnlineDecision,
   ProviderDecisionMeta,
@@ -138,6 +142,7 @@ export interface ConversationResponse {
   metadata: ConversationMetadata;
   meta?: ProviderDecisionMeta;
   decision?: OnlineDecision;
+  discernment?: DiscernmentDecision;
   /** OMEGA_AUTO_ORCHESTRATION_CHAIN trace meta — present when auto-classification ran */
   omega_trace_meta?: OmegaTraceMeta;
 }
@@ -931,6 +936,29 @@ export async function processMessage(
     );
   }
 
+  // Minimal discernment decision (frontend stub, not authoritative)
+  const inferenceState: InferenceState =
+    detectedIntention === 'Clarification' ? 'CLARIFY_REQUIRED' : 'SAFE_TO_INFER';
+  const taskType: 'question' | 'instruction' | 'multi-step' | 'code' | 'data' =
+    detectedIntention === 'Action' ? 'instruction' : 'question';
+  const memoryAvailable = persistentMemoryStatus === 'loaded';
+  const webAvailable = typeof navigator !== 'undefined' ? navigator.onLine === true : false;
+  const toolAvailable = false; // frontend has no direct tool lane
+  const providerAvailable =
+    typeof normalizedMetadata.provider_used === 'string' &&
+    normalizedMetadata.provider_used !== 'fallback';
+
+  const discernmentDecision = buildDiscernmentDecision({
+    profileId: modeClassification.profileId as ResponseProfileId,
+    inferenceState,
+    taskType,
+    memoryAvailable,
+    webAvailable,
+    toolAvailable,
+    providerAvailable,
+    safetyMode: 'normal',
+  });
+
   const response: ConversationResponse = {
     assistant_message: content,
     conversation_id:
@@ -955,6 +983,7 @@ export async function processMessage(
     metadata: normalizedMetadata,
     meta: providerMeta,
     decision,
+    discernment: discernmentDecision,
     omega_trace_meta: {
       canonical_mode: modeClassification.canonicalMode,
       profile_id: modeClassification.profileId,

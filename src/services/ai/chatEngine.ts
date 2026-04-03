@@ -2430,19 +2430,20 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         systemPrompt
       );
 
-      // v26.0.0: Apply kernel's provider decision before streaming
-      // Previously: stream() ignored kernel's provider preference (silent fallback)
-      // The orchestrator.stream() doesn't accept config, so we apply to chatEngine state
-      if (streamCanonicalDecision.provider.name !== 'auto') {
-        this.providerPreference = streamCanonicalDecision.provider
-          .name as ProviderPreference;
-      }
+      // ═══ PROVIDER TRUTH CHAIN: Pass canonical kernel's provider preference to orchestrator stream ═══
+      // vPROVIDER_TRUTH: orchestrator.stream() now accepts preferredProvider parameter
+      // The kernel's provider decision flows through the stream path, not just generate()
+      const streamProviderPreference =
+        streamCanonicalDecision.provider.name !== 'auto'
+          ? (streamCanonicalDecision.provider.name as ProviderPreference)
+          : this.providerPreference;
 
-      // Stream orchestrateur
+      // Stream orchestrateur — pass kernel's provider preference
       pipelineSteps.push('stream-orchestrator');
       for await (const chunk of aiOrchestrator.stream(
         validatedMessage,
-        enrichedHistory
+        enrichedHistory,
+        streamProviderPreference
       )) {
         fullContent += chunk;
         yield chunk;

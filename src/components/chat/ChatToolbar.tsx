@@ -39,7 +39,6 @@ import {
   useEnableVision,
   useVisionObservationActive,
 } from '@/stores/useVisionStore.selectors';
-import { useAudioChat } from '@/hooks/useAudioChat';
 import { useVoiceEngine } from '@/hooks/useVoiceEngine';
 import {
   useAutoTimeout,
@@ -171,15 +170,6 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
     const isCameraActive = useVisionObservationActive();
     const enableVision = useEnableVision();
     const disableVision = useDisableVision();
-
-    const {
-      isListening: _isListening,
-      transcript: _transcript,
-      startListening,
-      stopListening,
-      speak: _speak,
-      resetTranscript: _resetTranscript,
-    } = useAudioChat({ enabled: true, autoListen: false });
 
     const voiceEngine = useVoiceEngine({
       onTranscript: text => {
@@ -545,9 +535,9 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
         setAudioConversationPreferred(newState); // ✅ NOUVEAU - Sauvegarder la préférence
 
         if (newState) {
-          startListening();
+          voiceEngine.startTurn();
         } else {
-          stopListening();
+          voiceEngine.cancelTurn();
         }
 
         onToggleAudioConversation?.(newState);
@@ -560,8 +550,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       }
     }, [
       isAudioConversationActive,
-      startListening,
-      stopListening,
+      voiceEngine,
       setAudioConversationPreferred,
       onToggleAudioConversation,
     ]);
@@ -574,7 +563,7 @@ export const ChatToolbar: React.FC<ChatToolbarProps> = memo(
       onTimeout: () => {
         console.warn('[ChatToolbar] Audio conversation auto-stopped after 10 minutes');
         setIsAudioConversationActive(false);
-        stopListening();
+        voiceEngine.cancelTurn();
         onToggleAudioConversation?.(false);
       },
       isDev,

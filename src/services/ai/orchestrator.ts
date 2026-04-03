@@ -956,12 +956,11 @@ class AIOrchestrator {
         preferredProvider
       );
 
-      // 🧠 Fusionner décision cognitive et sélection neurale
-      // Si un provider est explicitement demandé (UI/tests), il doit rester déterministe.
-      // La décision cognitive ne doit pas l'écraser (sinon impossible de forcer un scénario d'erreur).
-      // En Vitest, on force aussi un comportement déterministe pour les tests de cascade.
-      // v26.0.0: If kernel explicitly chose a provider, always use it.
-      // The cognitiveKernel provides signals, not decisions — the kernel is the authority.
+      // ═══ PROVIDER TRUTH CHAIN: Single Canonical Authority ═══
+      // vPROVIDER_TRUTH: canonicalDiscernmentKernel is the SOLE authority for provider selection.
+      // When preferredProvider is explicitly set (not 'auto'), the canonical kernel chose it.
+      // The cognitiveKernel provides health/latency SIGNALS only — never override authority.
+      // In Vitest, force deterministic behavior for test stability.
       const finalProvider = IS_VITEST
         ? selection.selectedProvider
         : preferredProvider && preferredProvider !== 'auto'
@@ -1627,7 +1626,11 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
    * ═══════════════════════════════════════════════════════════════════
    */
 
-  async *stream(message: string, history: AIMessage[] = []): AsyncGenerator<string> {
+  async *stream(
+    message: string,
+    history: AIMessage[] = [],
+    preferredProvider?: ProviderChoice
+  ): AsyncGenerator<string> {
     const { sanitized, valid, issues } = this.sanitizeMessage(message);
 
     // ═══ v22Ω: STREAM CONFIG from centralized config ═══
@@ -1658,7 +1661,13 @@ Je reste pleinement fonctionnel pour continuer notre conversation. Veux-tu rées
       return;
     }
 
-    const selection = await this.selectOptimalProvider(sanitized, history);
+    // ═══ PROVIDER TRUTH CHAIN: Honor canonical kernel's provider preference in streaming ═══
+    // vPROVIDER_TRUTH: Pass preferredProvider through to selectOptimalProvider
+    const selection = await this.selectOptimalProvider(
+      sanitized,
+      history,
+      preferredProvider
+    );
     const providersToTry = [selection.selectedProvider, 'titane-local']; // Minimal pour streaming
 
     let hasStreamed = false;
