@@ -851,7 +851,7 @@ mod ollama;
 mod onboarding;
 
 // Configuration Management System v19.5.2 (Phase 2 - Configuration Hub)
-mod config;
+pub mod config;
 
 // ═══════════════════════════════════════════════════════════════
 // SUPPORT MODULES (v21.5 AUTO-FIX) - Types, Memory, Utils

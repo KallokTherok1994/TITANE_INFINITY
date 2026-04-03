@@ -9,7 +9,6 @@ use tauri::State;
 use uuid::Uuid;
 
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
-use crate::config::update::current_chat_bundle;
 use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
@@ -714,14 +713,12 @@ pub async fn conversation_generate(
         if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
     };
 
-    let request_defaults = current_chat_bundle().await.request_defaults;
-
-    let configured_provider = match request_defaults.provider.to_ascii_lowercase().as_str() {
-        "gemini" => ProviderPreference::Gemini,
-        "ollama" => ProviderPreference::Ollama,
-        "local" => ProviderPreference::Local,
-        "openai" => ProviderPreference::OpenAI,
-        "claude" | "anthropic" => ProviderPreference::Claude,
+    let configured_provider = match effective_provider.as_deref() {
+        Some("gemini") => ProviderPreference::Gemini,
+        Some("ollama") => ProviderPreference::Ollama,
+        Some("local") => ProviderPreference::Local,
+        Some("openai") => ProviderPreference::OpenAI,
+        Some("claude" | "anthropic") => ProviderPreference::Claude,
         _ => ProviderPreference::Auto,
     };
 
@@ -743,8 +740,8 @@ pub async fn conversation_generate(
                 .unwrap_or(configured_provider);
 
             AIConfig {
-                temperature: request_defaults.temperature,
-                max_tokens: Some(request_defaults.max_output_tokens as usize),
+                temperature: 0.7,
+                max_tokens: None,
                 provider_preference: provider_pref,
             }
         }),
