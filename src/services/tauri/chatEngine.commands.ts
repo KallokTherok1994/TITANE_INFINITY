@@ -51,6 +51,10 @@ export type SpeechMode = 'auto' | 'online' | 'local';
 /** Adaptive performance profile forwarded to the Rust engine. */
 export type ChatPerformanceProfile = 'fast' | 'balanced' | 'deep';
 
+export function invalidateRequestDefaultsCache(): void {
+  cachedDefaults = null;
+}
+
 // OMEGA Pipeline Types
 export interface OmegaGenerateArgs {
   message: string;
@@ -358,6 +362,7 @@ export async function generate(args: OmegaGenerateArgs): Promise<OmegaResponse> 
 export const chatEngineCommands = {
   generateResponse,
   streamResponse,
+  invalidateRequestDefaultsCache,
   speakText,
   saveMemory,
   loadMemory,

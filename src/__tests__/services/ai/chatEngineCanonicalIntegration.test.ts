@@ -200,13 +200,17 @@ vi.mock('@/services/memory/types', () => ({
 
 // ── IMPORTS (after mocks) ────────────────────────────────────────
 import { chatEngine } from '../../../services/ai/chatEngine';
+import { chatEngineCommands } from '../../../services/tauri/chatEngine.commands';
 
 // ── TESTS ────────────────────────────────────────────────────────
 
 describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
+  const mockedChatEngineCommands = vi.mocked(chatEngineCommands);
+
   beforeEach(() => {
     vi.clearAllMocks();
     chatEngine.setMode('default');
+    chatEngine.setProvider('auto');
   });
 
   it('should include canonicalDecision in omegaMetadata after generate()', async () => {
@@ -353,5 +357,34 @@ describe('ChatEngine ↔ CanonicalDiscernmentKernel Integration', () => {
     // The pipeline should have called the orchestrator
     expect(response.omegaMetadata?.pipelineSteps).toContain('orchestrator-call');
     expect(response.omegaMetadata?.pipelineSteps).not.toContain('clarification-returned');
+  });
+
+  it('should let persisted backend defaults apply when no explicit override is set', async () => {
+    Object.defineProperty(window, '__TAURI_INTERNALS__', {
+      value: {},
+      configurable: true,
+    });
+
+    const response = await chatEngine.generate('Bonjour', [], { mode: 'default' });
+
+    expect(mockedChatEngineCommands.generateResponse).toHaveBeenCalled();
+    const payload = mockedChatEngineCommands.generateResponse.mock.calls[0][0];
+    const canonicalProvider = response.omegaMetadata?.canonicalDecision?.provider?.name;
+    expect(payload.provider).toBe(canonicalProvider === 'auto' ? undefined : canonicalProvider);
+    expect(payload.temperature).toBeUndefined();
+    expect(payload.maxOutputTokens).toBeUndefined();
+    expect(payload.profile).toBe('fast');
+
+    delete (window as typeof window & { __TAURI_INTERNALS__?: unknown }).__TAURI_INTERNALS__;
+  });
+
+  it('should keep clarification prompts to a single short question', () => {
+    const response = (chatEngine as unknown as {
+      buildClarificationResponse: (message: string, mode: string) => string;
+    }).buildClarificationResponse('architecture titane', 'default');
+
+    expect((response.match(/\?/g) || []).length).toBeLessThanOrEqual(1);
+    expect(response).not.toContain('Comment');
+    expect(response).not.toContain('Pourquoi');
   });
 });

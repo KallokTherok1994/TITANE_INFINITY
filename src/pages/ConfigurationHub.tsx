@@ -12,6 +12,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { tauriClient } from '@/lib/tauriClient';
+import { invalidateRequestDefaultsCache } from '@/services/tauri/chatEngine.commands';
 import { useToast } from '@/hooks/useToast';
 import { ConfigSection, ConfigFieldEditable } from '../components/config';
 import { useCognitiveLayout, type UIMode } from '@/hooks/useCognitiveLayout';
@@ -625,6 +626,7 @@ export const ConfigurationHub: React.FC = () => {
             envelope.error?.message || 'Échec mise à jour Chat Request Defaults'
           );
         }
+        invalidateRequestDefaultsCache();
       }
 
       // Reload config after successful save
@@ -1382,6 +1384,7 @@ export const ConfigurationHub: React.FC = () => {
                       if (!result.ok) {
                         throw new Error(result.error?.message || 'Profil invalide');
                       }
+                      invalidateRequestDefaultsCache();
                       await loadConfig();
                     } catch (err) {
                       errorToast(`Échec application profil: ${err}`);
@@ -1401,6 +1404,7 @@ export const ConfigurationHub: React.FC = () => {
                       if (!result.ok) {
                         throw new Error(result.error?.message || 'Profil invalide');
                       }
+                      invalidateRequestDefaultsCache();
                       await loadConfig();
                     } catch (err) {
                       errorToast(`Échec application profil: ${err}`);
@@ -1420,6 +1424,7 @@ export const ConfigurationHub: React.FC = () => {
                       if (!result.ok) {
                         throw new Error(result.error?.message || 'Profil invalide');
                       }
+                      invalidateRequestDefaultsCache();
                       await loadConfig();
                     } catch (err) {
                       errorToast(`Échec application profil: ${err}`);

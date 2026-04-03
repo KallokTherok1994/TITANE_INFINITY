@@ -9,6 +9,7 @@ use tauri::State;
 use uuid::Uuid;
 
 use crate::overdrive::chat_orchestrator::ChatOrchestratorState;
+use crate::config::update::current_chat_bundle;
 use crate::engines::conversation_os::{
     MemoryEngine, PolicyEngine, ResilienceEngine, RouterEngine, SearchEngine,
 };
@@ -713,22 +714,37 @@ pub async fn conversation_generate(
         if parts.is_empty() { None } else { Some(parts.join("\n\n")) }
     };
 
+    let request_defaults = current_chat_bundle().await.request_defaults;
+
+    let configured_provider = match request_defaults.provider.to_ascii_lowercase().as_str() {
+        "gemini" => ProviderPreference::Gemini,
+        "ollama" => ProviderPreference::Ollama,
+        "local" => ProviderPreference::Local,
+        "openai" => ProviderPreference::OpenAI,
+        "claude" | "anthropic" => ProviderPreference::Claude,
+        _ => ProviderPreference::Auto,
+    };
+
     let request = ConversationRequest {
         user_message: message.clone(),
         conversation_id: Some(conversation_id.clone()),
         mode: conversation_mode,
-        ai_config: effective_provider.map(|p| {
-            let provider_pref = match p.as_str() {
+        ai_config: Some({
+            let provider_pref = effective_provider
+                .as_deref()
+                .map(|p| match p {
                 "gemini" => super::types::ProviderPreference::Gemini,
                 "ollama" => super::types::ProviderPreference::Ollama,
                 "openai" | "gpt" => super::types::ProviderPreference::OpenAI,
                 "claude" | "anthropic" => super::types::ProviderPreference::Claude,
                 "local" => super::types::ProviderPreference::Local,
-                _ => super::types::ProviderPreference::Auto,
-            };
+                _ => configured_provider.clone(),
+            })
+                .unwrap_or(configured_provider);
+
             AIConfig {
-                temperature: 0.7,
-                max_tokens: None,
+                temperature: request_defaults.temperature,
+                max_tokens: Some(request_defaults.max_output_tokens as usize),
                 provider_preference: provider_pref,
             }
         }),

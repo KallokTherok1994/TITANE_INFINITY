@@ -51,6 +51,7 @@ import {
   type ProviderPreference,
   type ChatRequestArgs,
   type ChatCompletionPayload,
+  type ChatPerformanceProfile,
 } from '@/services/tauri/chatEngine.commands';
 // 🧠 Phase 1: Canonical Discernment Kernel — single decision point
 import {
@@ -114,6 +115,19 @@ type BackendStreamMetadata = {
   error?: string;
   parseError?: string;
 };
+
+function toBackendPerformanceProfile(profileId: string): ChatPerformanceProfile {
+  switch (profileId) {
+    case 'DIRECT':
+      return 'fast';
+    case 'DEEP':
+    case 'ARCHITECT':
+    case 'OMEGA':
+      return 'deep';
+    default:
+      return 'balanced';
+  }
+}
 
 // ─────────────────────────────────────────────────────────────────
 // TYPES OMEGA ÉTENDUS + SURVEILLANCE
@@ -693,6 +707,13 @@ Format: [Audit complet] + [Réponse utilisateur]
         initialAutoHealed: autoHealed,
         modeMaxTokens: effectiveResponseProfile.maxTokens,
         modeTemperature: effectiveResponseProfile.temperature,
+        backendProvider:
+          canonicalDecision.provider.name !== 'auto'
+            ? (canonicalDecision.provider.name as ProviderPreference)
+            : this.providerPreference !== 'auto'
+              ? this.providerPreference
+              : undefined,
+        responseProfileId: effectiveResponseProfile.id,
       });
 
       if (backendResponse) {
@@ -1323,6 +1344,8 @@ Que souhaites-tu explorer ?`;
     modeMaxTokens?: number;
     /** v24.4.0: Effective temperature from canonical response policy */
     modeTemperature?: number;
+    backendProvider?: ProviderPreference;
+    responseProfileId: string;
   }): Promise<ChatEngineResponse | null> {
     const {
       finalConfig,
@@ -1335,6 +1358,8 @@ Que souhaites-tu explorer ?`;
       initialAutoHealed,
       modeMaxTokens,
       modeTemperature,
+      backendProvider,
+      responseProfileId,
     } = params;
 
     if (!this.isBackendAvailable()) {
@@ -1348,19 +1373,12 @@ Que souhaites-tu explorer ?`;
         conversationId: this.getConversationId(finalConfig.mode),
         userMessage: validatedMessage,
         systemPrompt,
-        // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
-        temperature:
-          finalConfig.aiConfig?.temperature ??
-          modeTemperature ??
-          DEFAULT_AI_CONFIG.temperature ??
-          0.7,
-        maxOutputTokens:
-          finalConfig.aiConfig?.maxTokens ??
-          modeMaxTokens ??
-          DEFAULT_AI_CONFIG.maxTokens ??
-          2048,
-        provider: this.providerPreference,
+        // Persisted Admin Config HUB defaults are resolved by chatEngine.commands.
+        temperature: finalConfig.aiConfig?.temperature,
+        maxOutputTokens: finalConfig.aiConfig?.maxTokens,
+        provider: backendProvider,
         enableStreaming: false,
+        profile: toBackendPerformanceProfile(responseProfileId),
       };
 
       const completion: ChatCompletionPayload =
@@ -1498,6 +1516,8 @@ Que souhaites-tu explorer ?`;
     initialAutoHealed: boolean;
     modeMaxTokens?: number;
     modeTemperature?: number;
+    backendProvider?: ProviderPreference;
+    responseProfileId: string;
   }): AsyncGenerator<string, ChatEngineResponse> | null {
     if (!this.isBackendAvailable()) {
       return null;
@@ -1517,6 +1537,8 @@ Que souhaites-tu explorer ?`;
     initialAutoHealed: boolean;
     modeMaxTokens?: number;
     modeTemperature?: number;
+    backendProvider?: ProviderPreference;
+    responseProfileId: string;
   }): AsyncGenerator<string, ChatEngineResponse> {
     const {
       finalConfig,
@@ -1529,6 +1551,8 @@ Que souhaites-tu explorer ?`;
       initialAutoHealed,
       modeMaxTokens,
       modeTemperature,
+      backendProvider,
+      responseProfileId,
     } = params;
 
     let autoHealed = initialAutoHealed;
@@ -1555,19 +1579,11 @@ Que souhaites-tu explorer ?`;
       conversationId: conversationId ?? undefined,
       userMessage: validatedMessage,
       systemPrompt,
-      // v24.4.0: fallback chain: explicit aiConfig → mode policy → DEFAULT_AI_CONFIG
-      temperature:
-        finalConfig.aiConfig?.temperature ??
-        modeTemperature ??
-        DEFAULT_AI_CONFIG.temperature ??
-        0.7,
-      maxOutputTokens:
-        finalConfig.aiConfig?.maxTokens ??
-        modeMaxTokens ??
-        DEFAULT_AI_CONFIG.maxTokens ??
-        2048,
-      provider: this.providerPreference,
+      temperature: finalConfig.aiConfig?.temperature,
+      maxOutputTokens: finalConfig.aiConfig?.maxTokens,
+      provider: backendProvider,
       enableStreaming: true,
+      profile: toBackendPerformanceProfile(responseProfileId),
     };
 
     try {
@@ -2100,11 +2116,11 @@ Que souhaites-tu explorer ?`;
     const likelyDomain = this.inferLikelyDomain(msgLower);
 
     if (likelyDomain) {
-      return `Je pense que tu parles de **${likelyDomain}**. Est-ce correct ? Si oui, précise ce que tu veux que je fasse.`;
+      return `Je pense que tu parles de **${likelyDomain}**. Quelle action précise veux-tu que j'exécute ?`;
     }
 
     // Generic but concise clarification
-    return `Pour que je puisse répondre utilement, précise : Quoi (sujet) ? Comment (format) ? Pourquoi (objectif) ?`;
+    return `Précise l'action exacte à exécuter ou le résultat attendu.`;
   }
 
   /**
@@ -2409,6 +2425,13 @@ Avec ces précisions, je pourrai te donner une réponse complète et utile.`;
         initialAutoHealed: autoHealed,
         modeMaxTokens: streamResponseProfile.maxTokens,
         modeTemperature: streamResponseProfile.temperature,
+        backendProvider:
+          streamCanonicalDecision.provider.name !== 'auto'
+            ? (streamCanonicalDecision.provider.name as ProviderPreference)
+            : this.providerPreference !== 'auto'
+              ? this.providerPreference
+              : undefined,
+        responseProfileId: streamResponseProfile.id,
       });
 
       if (backendStream) {
