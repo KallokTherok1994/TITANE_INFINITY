@@ -716,17 +716,18 @@ const ChatComponent: React.FC = () => {
 
     // Model truth extraction from response metadata
     const responseMeta = lastEntry?.response?.metadata;
-    const metaObj = responseMeta && typeof responseMeta === 'object'
-      ? (responseMeta as Record<string, unknown>)
-      : null;
-    const modelUsed = typeof metaObj?.modelUsed === 'string'
-      ? metaObj.modelUsed
-      : typeof lastEntry?.response?.model === 'string'
-        ? lastEntry.response.model
-        : undefined;
-    const modelRequested = typeof metaObj?.modelRequested === 'string'
-      ? metaObj.modelRequested
-      : undefined;
+    const metaObj =
+      responseMeta && typeof responseMeta === 'object'
+        ? (responseMeta as Record<string, unknown>)
+        : null;
+    const modelUsed =
+      typeof metaObj?.modelUsed === 'string'
+        ? metaObj.modelUsed
+        : typeof lastEntry?.response?.model === 'string'
+          ? lastEntry.response.model
+          : undefined;
+    const modelRequested =
+      typeof metaObj?.modelRequested === 'string' ? metaObj.modelRequested : undefined;
     const fallbackUsed = Boolean(metaObj?.fallbackUsed);
 
     return {
