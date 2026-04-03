@@ -3,11 +3,11 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v29.0.0 (repository authority)
-**Status:** Development (v29.0.0 — not sealed for production)
+**Version:** v28.88.0 (repository authority)
+**Status:** Production (v28.88.0 — SEALED)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Canal de release canonique:** v29.0.0
+**Canal de release canonique:** v28.88.0
 
 **Qualite (v28.88.0) :** Vite 8 + rolldown migration, deps recert, prod deploy sealed.
 

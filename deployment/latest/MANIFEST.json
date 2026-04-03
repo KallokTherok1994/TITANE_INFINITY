@@ -1,52 +1,42 @@
 {
   "deployment": {
-    "timestamp": "2026-04-02 21:42:00 UTC",
-    "version": "29.0.0",
-    "canonical_release": "v29.0.0",
-    "artifact_status": "PENDING_BUILD",
-    "note": "Version synchronized to 29.0.0. Artifacts PENDING_BUILD for v29.0.0.",
+    "timestamp": "2026-03-22 00:00:00 UTC",
+    "version": "28.88.0",
+    "canonical_release": "v28.88.0",
+    "artifact_status": "SEALED",
+    "note": "Sealed release v28.88.0; artifacts and checksums per RELEASE_ARTIFACTS_CHECKSUMS_28.88.0.txt.",
     "branch": "MAIN",
-    "deployment_type": "release_preparation"
+    "deployment_type": "sealed_release"
   },
   "artifacts": [
     {
-      "name": "TITANE-Infinity_28.5.0_amd64.AppImage",
-      "size": "90M",
-      "sha256": "96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7"
+      "name": "TITANE-Infinity_28.88.0_amd64.AppImage",
+      "size": "UNKNOWN",
+      "sha256": "f0e8c4954657b665f4254885e2884d8bed9fce242ae39647c2e8fdc1fa5acae8"
     },
     {
-      "name": "TITANE-Infinity_28.5.0_amd64.deb",
-      "size": "21M",
-      "sha256": "ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e"
+      "name": "TITANE-Infinity_28.88.0_amd64.deb",
+      "size": "UNKNOWN",
+      "sha256": "647125daa4b5b1043cbcb71ac6aff6c4ccbc70124c1c47237e4cda8fc839f2e5"
     },
     {
-      "name": "TITANE-Infinity-28.5.0-1.x86_64.rpm",
-      "size": "21M",
-      "sha256": "eb4937b47dbd1626705de26462381ddcf173f631c63c5a6c06b961e2c6d9de79"
-    },
-    {
-      "name": "Titan-Stable_28.5.0_amd64.AppImage",
-      "size": "90M",
-      "sha256": "96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7"
-    },
-    {
-      "name": "Titan-Stable_28.5.0_amd64.deb",
-      "size": "21M",
-      "sha256": "ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e"
+      "name": "TITANE-Infinity-28.88.0-1.x86_64.rpm",
+      "size": "UNKNOWN",
+      "sha256": "bb02968046f127bc4d30d811f03bfdc9dacb79c6ac9dc926539eb656a7b1e15c"
     }
   ],
   "historical_reference": {
     "v28.0.0": "See MANIFEST_v28.0.0.json and SHA256SUMS_v28.0.0.txt for verified v28.0.0 artifact checksums."
   },
   "certification": {
-    "release_gate_status": "PENDING",
-    "phase_chain_status": "RELEASE_PREPARATION",
+    "release_gate_status": "SEALED",
+    "phase_chain_status": "SEALED",
     "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "PENDING_BINARY_PROOF"
+    "production_readiness": "SEALED_BINARY_PROOF"
   },
-  "version": "29.0.0",
-  "build_date": "2026-04-01",
-  "build_head": "8904d1089",
+  "version": "28.88.0",
+  "build_date": "2026-03-22",
+  "build_head": "UNKNOWN",
   "build_type": "PROD",
   "tokens": [
     "GO_FOR_PROD_BUILD__TITANE_INFINITY",

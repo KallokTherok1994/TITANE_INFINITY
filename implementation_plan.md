@@ -1,135 +1,56 @@
-# Implementation Plan: BehavioralRouter — Phase 1 "TITANE Vivant"
+# Implementation Plan: PROVIDER_TRUTH_CHAIN — Converge Dual Kernel Authority
 
 [Overview]
-Create a unified BehavioralController that connects TITANE's disconnected systems (memory, preferences, intent, observability) into a single decision-making component. This is the "nervous system" that will make TITANE's existing pieces work together coherently, enabling the first step toward a "living" system.
+Converge the TITANE chat provider selection onto a single canonical authority by ensuring the orchestrator honors the canonicalDiscernmentKernel's provider decision without override from its own internal cognitiveKernel.
 
-Currently, TITANE's memory, preferences, intent classification, and observability all operate in isolation. Memory is injected into the prompt but doesn't influence skill selection. Preferences shape the response post-LLM but don't influence depth selection. Observability collects traces but never feeds back into behavior. The BehavioralRouter will be the central component that takes signals from all these systems and produces a unified behavioral decision.
+The chat authority chain is already converged on `canonicalDiscernmentKernel` as the sole authority for profile, mode, memory injection, and inference state (proven in CHAT_AUTHORITY_CONVERGENCE proof pack, PASS). However, the orchestrator (`src/services/ai/orchestrator.ts`) maintains its own `cognitiveKernel.executeCognitiveProcess()` that independently selects a provider. When the canonical kernel's provider preference is passed to the orchestrator via `orchestratorConfig.provider`, the orchestrator's logic can override it if `cognitiveDecision.confidence > 70`. This creates a dual-kernel authority on provider selection — the single most causal current lock.
 
 [Types]
-Single sentence describing the type system changes.
-
-New types for behavioral routing decisions and signals:
-
-```typescript
-// Signal from any subsystem to the behavioral router
-export interface BehavioralSignal {
-  source: 'memory' | 'preference' | 'intent' | 'observability' | 'identity';
-  type: string; // e.g., 'depth_hint', 'skill_hint', 'initiative_hint'
-  value: unknown;
-  confidence: number; // 0.0-1.0
-  timestamp: number;
-}
-
-// Unified behavioral decision produced by the router
-export interface BehavioralDecision {
-  profileId: ResponseProfileId;
-  skillId?: string; // skill to activate (if any)
-  initiativeAction?: InitiativeAction; // proactive action (if any)
-  reasoning: string; // why this decision was made
-  signals: BehavioralSignal[]; // signals that influenced this decision
-  confidence: number; // 0.0-1.0
-}
-
-// Initiative action TITANE can propose
-export interface InitiativeAction {
-  type: 'suggest' | 'remind' | 'propose' | 'warn';
-  message: string;
-  trigger: string; // what triggered this initiative
-  priority: 'low' | 'medium' | 'high';
-}
-
-// Configuration for the behavioral router
-export interface BehavioralRouterConfig {
-  enableMemoryInfluence: boolean; // default: true
-  enablePreferenceInfluence: boolean; // default: true
-  enableObservabilityInfluence: boolean; // default: false (Phase 3)
-  enableInitiative: boolean; // default: false (Phase 2)
-  maxSignalsPerDecision: number; // default: 10
-  minConfidenceThreshold: number; // default: 0.4
-}
-```
+No new types required. The existing types are sufficient:
+- `CanonicalDecision.provider` (from `canonicalDiscernmentKernel.ts`): `{ name, model, fallback[], temperature, maxTokens, reasoningEffort }`
+- `AIConfig.preferredProvider` (from `./types`): `ProviderChoice`
+- `NeuralSelection` (internal to orchestrator): `{ selectedProvider, reason, confidence, alternates }`
 
 [Files]
-Single sentence describing file modifications.
-
-New files to create:
-
-- `src/services/ai/behavioralRouter.ts` — Main BehavioralRouter class with signal collection, decision making, and integration with existing systems
-
-Existing files to modify:
-
-- `src/services/ai/chatEngine.ts` — Integrate BehavioralRouter into the generate() pipeline, replacing the current disconnected calls to classifyIntent(), getEffectiveProfile(), checkMemoryForAnswer() with a unified BehavioralRouter.decide() call
-- `src/services/ai/responsePolicy.ts` — Add BehavioralDecision type exports and integrate with existing profile selection
-
-No files to delete or move.
-
-No configuration file updates needed.
+- **Modified**: `src/services/ai/orchestrator.ts` — In the `generate()` method, modify the `finalProvider` decision logic to honor `preferredProvider` when it is explicitly set by the canonical kernel (not 'auto'). The cognitiveKernel's provider decision should be used only as a signal for health/latency updates, not as an override authority.
+- **Modified**: `src/services/ai/chatEngine.ts` — Ensure the canonical kernel's provider preference is always passed as `preferredProvider` in the orchestrator config, and that the kernel's fallback chain is used as the cascade order.
+- **New proof pack**: `proof_packs/PROVIDER_TRUTH_CHAIN_CONVERGENCE_<timestamp>/` — Contains evidence of the convergence.
 
 [Functions]
-Single sentence describing function modifications.
+- `orchestrator.generate()` (src/services/ai/orchestrator.ts, line ~350): Modify the `finalProvider` selection logic. Current logic:
+  ```typescript
+  const finalProvider = IS_VITEST
+    ? selection.selectedProvider
+    : preferredProvider && preferredProvider !== 'auto'
+      ? preferredProvider
+      : cognitiveDecision.confidence > 70
+        ? cognitiveDecision.provider
+        : selection.selectedProvider;
+  ```
+  This already honors `preferredProvider` when set. The issue is that `chatEngine.ts` passes the kernel's provider as `orchestratorConfig.provider`, which becomes `config?.preferredProvider` in the orchestrator. The current logic IS correct for explicit preferredProvider. The real gap is that the orchestrator's `cognitiveKernel` still runs and its results are logged as if authoritative, creating confusion and potential future regression.
 
-New functions in `src/services/ai/behavioralRouter.ts`:
+  **Actual fix needed**: Add a guard comment + assertion that when `preferredProvider !== 'auto'`, the cognitiveKernel's provider decision is logged as advisory only, never used as the final provider. Also ensure the `selection.alternates` used for fallback cascade come from the canonical kernel's `fallbackChain` when available.
 
-- `BehavioralRouter.collectSignals(message, memoryContext, preferences, intentResult)` — Collects all behavioral signals from memory, preferences, intent, and observability
-- `BehavioralRouter.decide(signals, config)` — Takes collected signals and produces a unified BehavioralDecision
-- `BehavioralRouter.resolveConflicts(signals)` — Resolves conflicting signals (e.g., memory says DEEP but preference says DIRECT)
-- `BehavioralRouter.shouldActivateSkill(decision, availableSkills)` — Determines if a skill should be auto-activated based on the decision
+- `chatEngine.generate()` (src/services/ai/chatEngine.ts, line ~390): Verify that `canonicalDecision.provider.name` is always passed as `orchestratorConfig.provider` and `canonicalDecision.fallbackChain` as `orchestratorConfig.fallbackProviders`. Current code already does this — no change needed.
 
-Modified functions in `src/services/ai/chatEngine.ts`:
-
-- `generate()` — Replace the current sequence of classifyIntent() → getEffectiveProfile() → checkMemoryForAnswer() with a single BehavioralRouter.decide() call that produces a unified decision
-- No other functions need modification
+- `chatEngine.stream()` (src/services/ai/chatEngine.ts): Currently, stream() applies the kernel's provider preference to `this.providerPreference` but does NOT pass it to `aiOrchestrator.stream()`. The orchestrator's stream method calls `selectOptimalProvider` without any preferredProvider, meaning the kernel's provider decision is IGNORED during streaming. **This is a real gap.** Fix: pass the kernel's provider preference to the stream path.
 
 [Classes]
-Single sentence describing class modifications.
-
-New class in `src/services/ai/behavioralRouter.ts`:
-
-- `BehavioralRouter` — Singleton class with methods: collectSignals(), decide(), resolveConflicts(), shouldActivateSkill()
-- Constructor takes config: BehavioralRouterConfig
-- Integrates with existing: memoryIntegration, preferenceEngine, classifyIntent, RESPONSE_PROFILES
-
-Modified classes:
-
-- `ChatEngineOmega` in `src/services/ai/chatEngine.ts` — Add behavioralRouter property, replace disconnected signal collection with unified BehavioralRouter.decide() call
+- `AIOrchestrator` (src/services/ai/orchestrator.ts): No class-level changes. The fix is scoped to the `generate()` method's provider selection logic and the `stream()` method's provider passthrough.
 
 [Dependencies]
-Single sentence describing dependency modifications.
-
-No new external dependencies. The BehavioralRouter will use existing internal modules:
-
-- `src/services/ai/memoryIntegration.ts` (memory context)
-- `src/services/ai/preferenceEngine.ts` (preferences)
-- `src/services/ai/responsePolicy.ts` (intent classification, profiles)
-- `src/services/cognitive/CognitiveObservabilityEngine.ts` (observability traces)
+No new dependencies. No version changes.
 
 [Testing]
-Single sentence describing testing approach.
-
-Test file: `src/__tests__/services/ai/behavioralRouter.test.ts`
-
-Test scenarios:
-
-1. **Low ambiguity action request** — Router selects DEVELOPED profile, no clarification
-2. **User prefers short answers** — Router respects preference, selects DIRECT
-3. **Memory suggests a skill** — Router evaluates skill activation
-4. **Conflicting signals** — Router resolves conflicts (memory says DEEP, preference says DIRECT)
-5. **No signals** — Router falls back to mode default
-
-Each test verifies:
-
-- The decision profile matches expected
-- The reasoning is coherent
-- The signals are properly collected
-- The confidence is above threshold
+- Existing test: `src/__tests__/services/ai/chatEngineCanonicalIntegration.test.ts` — Verify this test still passes after the change.
+- Existing test: `src/__tests__/services/ai/behavioralRouterIntegration.test.ts` — Verify no regression.
+- New test: Add a test case in the orchestrator tests that verifies when `preferredProvider` is explicitly set (not 'auto'), the cognitiveKernel's provider decision is NOT used as the final provider, regardless of confidence.
+- Validation: Run `pnpm run check` to verify TypeScript compilation.
+- Proof: Document the provider truth chain (requested → selected → executed → shown) in the proof pack.
 
 [Implementation Order]
-Single sentence describing the implementation sequence.
-
-1. Create `src/services/ai/behavioralRouter.ts` with types and empty class
-2. Implement `collectSignals()` — gather signals from memory, preferences, intent
-3. Implement `resolveConflicts()` — handle conflicting signals
-4. Implement `decide()` — produce unified BehavioralDecision
-5. Integrate into `chatEngine.ts` generate() pipeline
-6. Create test file with 5 scenarios
-7. Run tests and verify TypeScript compilation
+1. **Step 1**: Fix `orchestrator.generate()` — Add guard to ensure `preferredProvider` (when explicitly set by canonical kernel) is never overridden by cognitiveKernel's decision. Add clarifying comments documenting the authority hierarchy.
+2. **Step 2**: Fix `orchestrator.stream()` — Pass kernel's provider preference through the stream path so streaming also respects the canonical kernel's provider authority.
+3. **Step 3**: Run `pnpm run check` to verify TypeScript compilation.
+4. **Step 4**: Run existing integration tests to verify no regression.
+5. **Step 5**: Create proof pack with provider truth chain evidence.
