@@ -28,7 +28,7 @@ jobs:
 
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           fetch-depth: 0
 
@@ -39,7 +39,7 @@ jobs:
           pnpm --version
 
       - name: 'Install Rust stable'
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # stable/v1
         with:
           toolchain: stable
           targets: x86_64-unknown-linux-gnu
@@ -55,7 +55,7 @@ jobs:
             jq
 
       - name: 'Cache Rust dependencies'
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7  # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: |
             ~/.cargo/bin/
@@ -68,7 +68,7 @@ jobs:
             ${{ runner.os }}-cargo-
 
       - name: 'Cache pnpm store'
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7  # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: ~/.local/share/pnpm/store
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -157,7 +157,7 @@ jobs:
           fi
 
       - name: '📦 Upload build artifacts'
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: titane-stable-${{ github.sha }}
           path: |
