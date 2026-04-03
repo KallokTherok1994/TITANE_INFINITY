@@ -82,7 +82,7 @@ const PROVIDER_DISPLAY_NAMES: Record<string, string> = {
   'ultimate-fallback': 'Ultimate Fallback',
 };
 
-const DEFAULT_PROVIDER_NAME = 'OMEGA Neural';
+const DEFAULT_PROVIDER_NAME = 'En attente...';
 const PROVIDER_PREFERENCE_OPTIONS: ProviderPreference[] = [
   'auto',
   'local',
@@ -694,6 +694,7 @@ const ChatComponent: React.FC = () => {
       lastProvider ??
       null;
     const displayName = resolveProviderDisplayName(resolvedProviderRaw);
+    const hasConfirmedProvider = Boolean(resolvedProviderRaw);
     const status: ProviderStatus['status'] = (() => {
       if (error) {
         return 'error';
@@ -702,6 +703,9 @@ const ChatComponent: React.FC = () => {
         return attemptedProviders.length > 0 ? 'offline' : 'error';
       }
       if (isLoading) {
+        return 'connecting';
+      }
+      if (!hasConfirmedProvider) {
         return 'connecting';
       }
       return 'online';
@@ -1372,7 +1376,9 @@ const ChatComponent: React.FC = () => {
                   aria-live="polite"
                   aria-label={`Provider ${providerStatus.name} : statut ${providerStatus.status}`}
                 />
-                <span className="status-label">Actif:</span>
+                {providerStatus.selectedProvider && (
+                  <span className="status-label">Actif:</span>
+                )}
                 <span
                   className="status-value"
                   title={
