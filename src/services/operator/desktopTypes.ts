@@ -4,6 +4,19 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 /**
+ * Desktop perception session
+ */
+export interface DesktopSession {
+  session_id: string;
+  status: 'idle' | 'perceiving' | 'paused' | 'handoff_pending' | 'blocked' | 'stopped';
+  started_at: string;
+  paused_at?: string;
+  handoff_pending: boolean;
+  handoff_reason?: string;
+  kill_reason?: string;
+}
+
+/**
  * Desktop control surface status and capabilities
  */
 export interface DesktopControlStatus {
