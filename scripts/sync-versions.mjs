@@ -5,6 +5,7 @@
  * Ensures that the version declared in package.json is propagated to:
  *   - src-tauri/Cargo.toml  (version = "x.y.z")
  *   - src-tauri/tauri.conf.json  (version field)
+ *   - runtime/stable/tauri.conf.json  (stable runtime version field)
  *
  * Phase 4.3 — Build artifact consolidation
  *
@@ -84,7 +85,38 @@ if (fs.existsSync(tauriConfPath)) {
   console.warn('  ⚠️  src-tauri/tauri.conf.json not found, skipping');
 }
 
-// ── 4. Sync tauri.base.json (template) ───────────────────────────────────────
+// ── 4. Sync runtime/stable/tauri.conf.json (stable build config) ───────────
+
+const runtimeStableTauriConfPath = path.join(root, 'runtime', 'stable', 'tauri.conf.json');
+if (fs.existsSync(runtimeStableTauriConfPath)) {
+  const conf = JSON.parse(fs.readFileSync(runtimeStableTauriConfPath, 'utf8'));
+
+  let tauriChanged = false;
+
+  if (conf.package?.version !== undefined && conf.package.version !== version) {
+    conf.package.version = version;
+    tauriChanged = true;
+  }
+
+  if (conf.version !== undefined && conf.version !== version) {
+    conf.version = version;
+    tauriChanged = true;
+  }
+
+  if (tauriChanged) {
+    if (!dryRun) {
+      fs.writeFileSync(runtimeStableTauriConfPath, JSON.stringify(conf, null, 2) + '\n');
+    }
+    console.log(`  ✅ runtime/stable/tauri.conf.json → ${version}`);
+    changed++;
+  } else {
+    console.log(`  ✓  runtime/stable/tauri.conf.json already at ${version}`);
+  }
+} else {
+  console.warn('  ⚠️  runtime/stable/tauri.conf.json not found, skipping');
+}
+
+// ── 5. Sync tauri.base.json (template) ───────────────────────────────────────
 
 const tauriBasePath = path.join(root, 'tauri.base.json');
 if (fs.existsSync(tauriBasePath)) {
