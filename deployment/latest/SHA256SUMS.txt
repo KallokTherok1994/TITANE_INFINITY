@@ -1,21 +1,2 @@
-# SHA256SUMS — TITANE∞ v28.5.0 (PENDING BUILD)
-# Canonical release: v28.5.0
-# Artifact status: PENDING — binary artifacts for v28.5.0 have not yet been built.
-# For verified v28.0.0 checksums, see: SHA256SUMS_v28.0.0.txt
-
-# v28.5.0 target artifacts (checksums will be populated after build):
-# PENDING  Titan-Stable_28.5.0_amd64.AppImage
-# PENDING  Titan-Stable_28.5.0_amd64.deb
-# PENDING  TITANE-Infinity_28.5.0_amd64.AppImage
-# PENDING  TITANE-Infinity_28.5.0_amd64.deb
-
-# --- Historical v28.0.0 reference (SUPERSEDED by v28.5.0 canon) ---
-90442771be7cb2e40972790fa0a1c1eb7ef7ed08d61ad697a0934a1ea5bf1c1b  Titan-Stable_28.0.0_amd64.AppImage
-69f253ef94a3845d7255dc25e72aef36a37527221ca26b2ed8620750d003de71  Titan-Stable_28.0.0_amd64.deb
-fc57a8f1d0316f587c952cb01c6530fd126bfa019543dcb1416853e452f350a9  titane-infinity
-96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7  TITANE-Infinity_28.5.0_amd64.AppImage
-ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e  TITANE-Infinity_28.5.0_amd64.deb
-eb4937b47dbd1626705de26462381ddcf173f631c63c5a6c06b961e2c6d9de79  TITANE-Infinity-28.5.0-1.x86_64.rpm
-96c847eab8f5c8982235a39224d8b48a393d339a2cece81c826cc15fbf1f01d7  Titan-Stable_28.5.0_amd64.AppImage
-ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e  Titan-Stable_28.5.0_amd64.deb
-c3d0b5f8dcb2b2735c540de810e035bfe0f371ffc1f730d7d545f1ed25928aa4  titane-infinity
+e0923643d0262e7ef40475102b1e8a419b923904f798df67f2ff520bbc87187a  Titan-Stable_28.88.0_amd64.AppImage
+d2c57c92b48f653660faf9b83904f9037f4cbb1fcfc9cbf88df84058919e1f57  Titan-Stable_28.88.0_amd64.deb

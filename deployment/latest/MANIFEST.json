@@ -1,47 +1,26 @@
 {
   "deployment": {
-    "timestamp": "2026-03-22 00:00:00 UTC",
+    "timestamp": "2026-04-03 17:14:20 UTC",
     "version": "28.88.0",
-    "canonical_release": "v28.88.0",
-    "artifact_status": "SEALED",
-    "note": "Sealed release v28.88.0; artifacts and checksums per RELEASE_ARTIFACTS_CHECKSUMS_28.88.0.txt.",
+    "commit": "a642a456cbbf960908255f044817ba7aa71b3cbb",
     "branch": "MAIN",
-    "deployment_type": "sealed_release"
+    "certification": "TITANE_INFINITY_RELEASE_20260403_131152_CERTIFIED",
+    "deployment_type": "post_certification"
   },
-  "artifacts": [
-    {
-      "name": "TITANE-Infinity_28.88.0_amd64.AppImage",
-      "size": "UNKNOWN",
-      "sha256": "f0e8c4954657b665f4254885e2884d8bed9fce242ae39647c2e8fdc1fa5acae8"
+  "artifacts": {
+    "appimage": {
+      "available": true,
+      "sha256": "e0923643d0262e7ef40475102b1e8a419b923904f798df67f2ff520bbc87187a"
     },
-    {
-      "name": "TITANE-Infinity_28.88.0_amd64.deb",
-      "size": "UNKNOWN",
-      "sha256": "647125daa4b5b1043cbcb71ac6aff6c4ccbc70124c1c47237e4cda8fc839f2e5"
-    },
-    {
-      "name": "TITANE-Infinity-28.88.0-1.x86_64.rpm",
-      "size": "UNKNOWN",
-      "sha256": "bb02968046f127bc4d30d811f03bfdc9dacb79c6ac9dc926539eb656a7b1e15c"
+    "deb": {
+      "available": true,
+      "sha256": "d2c57c92b48f653660faf9b83904f9037f4cbb1fcfc9cbf88df84058919e1f57"
     }
-  ],
-  "historical_reference": {
-    "v28.0.0": "See MANIFEST_v28.0.0.json and SHA256SUMS_v28.0.0.txt for verified v28.0.0 artifact checksums."
   },
   "certification": {
-    "release_gate_status": "SEALED",
-    "phase_chain_status": "SEALED",
+    "release_gate_status": "PASSED",
+    "phase_chain_status": "P2→P3→P4→P5→P6→RELEASE: COMPLETE",
     "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "SEALED_BINARY_PROOF"
-  },
-  "version": "28.88.0",
-  "build_date": "2026-03-22",
-  "build_head": "UNKNOWN",
-  "build_type": "PROD",
-  "tokens": [
-    "GO_FOR_PROD_BUILD__TITANE_INFINITY",
-    "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
-  ],
-  "pipeline": "lint + format:check + ollama:bundle + vite build + tauri build + post-build",
-  "pre_build_gates": "check + lint + format:check + verify_instructions + detect_recurrence"
+    "production_readiness": "CERTIFIED_READY"
+  }
 }
