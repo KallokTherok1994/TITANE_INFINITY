@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+
+vi.mock('@tauri-apps/api/core', () => ({
+  invoke: vi.fn(),
+}));
+
 import {
   pauseDesktopSession,
   resumeDesktopSession,
   handoffDesktopSession,
   killDesktopSession,
   getDesktopControlStatus,
-} from '../../services/operator/desktopPerception.ts';
-
-// Mock the invoke function
-vi.mock('@tauri-apps/api/core', () => ({
-  invoke: vi.fn(),
-}));
+} from '../../../services/operator/desktopPerception';
 
 import { invoke } from '@tauri-apps/api/core';
 const mockInvoke = invoke as ReturnType<typeof vi.fn>;
