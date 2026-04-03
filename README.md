@@ -2,10 +2,12 @@
 
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
+![Release v28.88.0](https://img.shields.io/badge/release-v28.88.0-brightgreen?logo=github)
 
 **Version:** v28.88.0 (repository authority)
-**Status:** Production (v28.88.0 — SEALED)
+**Status:** ✅ Production Ready (v28.88.0 — CERTIFIED & DEPLOYED)
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
+**Latest Release:** [v28.88.0-release-20260403](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0-release-20260403) (April 3, 2026)
 
 **Canal de release canonique:** v28.88.0
 
@@ -24,27 +26,32 @@
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.88.0
+### ✅ Release canonique courante: v28.88.0 (Certified & Deployed)
 
-Artefacts verifies (Linux):
+**Status**: 🟢 PRODUCTION READY — CERTIFIED  
+**Certification ID**: TITANE_INFINITY_RELEASE_20260403_131152_CERTIFIED  
+**Release Date**: April 3, 2026
 
-- `TITANE-Infinity_28.88.0_amd64.AppImage`
-- `TITANE-Infinity_28.88.0_amd64.deb`
-- `TITANE-Infinity-28.88.0-1.x86_64.rpm`
+Artefacts verifies (Linux amd64):
 
-Verification recommandee:
+- **AppImage**: `Titan-Stable_28.88.0_amd64.AppImage` (87 MB) — [Download](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0-release-20260403)
+- **DEB Package**: `Titan-Stable_28.88.0_amd64.deb` (17 MB) — [Download](https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0-release-20260403)
 
-```bash
-cat RELEASE_v28.88.0_SEALED.txt
+Checksums:
+
+```
+AppImage:  e0923643d0262e7ef40475102b1e8a419b923904f798df67f2ff520bbc87187a
+DEB:       d2c57c92b48f653660faf9b83904f9037f4cbb1fcfc9cbf88df84058919e1f57
 ```
 
-Release GitHub (notes + assets):
+**Release Notes & Installation**:
+- Full release notes: [RELEASE_v28.88.0.md](RELEASE_v28.88.0.md)
+- GitHub Release: https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0-release-20260403
+- Proof Pack: [proof_packs/PROD_RELEASE_v28.88.0_SEALED_2026-04-03.md](proof_packs/PROD_RELEASE_v28.88.0_SEALED_2026-04-03.md)
 
-- https://github.com/KallokTherok1994/TITANE_INFINITY/releases/tag/v28.88.0
-
-Scellement final de session:
-
-- `RELEASE_v28.88.0_SEALED.txt`
+**Test Results**: 3899/3899 PASSED (100%)  
+**Security**: MAXIMUM_HARDENED  
+**Authorization**: Token-gated (GO_FOR_PROD_BUILD + GO_FOR_PROD_DEPLOY)
 
 ### ✨ **Archive binaire historique : v27.0.5**
 
