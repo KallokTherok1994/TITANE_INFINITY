@@ -342,6 +342,40 @@ const ChatDebugPanel = ({
                 </div>
               )}
 
+              {/* Discernment core metadata (frontend stub) */}
+              {lastEntry.response && (lastEntry.response as any).discernment && (
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    lineHeight: 1.5,
+                    padding: '8px',
+                    borderRadius: '8px',
+                    background: 'rgba(59,130,246,0.08)',
+                    border: '1px solid rgba(59,130,246,0.25)',
+                  }}
+                >
+                  <div style={{ fontWeight: 600, marginBottom: 4 }}>
+                    Discernment (stub)
+                  </div>
+                  {(() => {
+                    const d = (lastEntry.response as any).discernment;
+                    return (
+                      <>
+                        <div>Profil: {d.profileId}</div>
+                        <div>Décision: {d.askActHold}</div>
+                        <div>Initiative: {d.initiativeLevel}</div>
+                        <div>Provider: {d.providerChoice ?? 'n/a'}</div>
+                        <div>Memoire/Web/Outil: {`${d.memoryAction} / ${d.webAction} / ${d.toolAction}`}</div>
+                        <div>Truth: {d.truthLabel}</div>
+                        {Array.isArray(d.reasonCodes) && d.reasonCodes.length > 0 && (
+                          <div>Reasons: {d.reasonCodes.join(', ')}</div>
+                        )}
+                      </>
+                    );
+                  })()}
+                </div>
+              )}
+
               {lastEntry.request.attemptedProviders?.length > 0 && (
                 <div style={{ fontSize: '0.75rem', opacity: 0.75 }}>
                   <strong>Ordre tentatives :</strong>{' '}
@@ -1494,6 +1528,24 @@ const ChatComponent: React.FC = () => {
                   <span className="status-value">{debugEntries.length}</span>
                 </div>
               )}
+
+              {debugEntries.length > 0 &&
+                (debugEntries[0]?.response as any)?.discernment && (
+                  <div className="chat-status-item chat-status-discernment">
+                    <span className="status-label">Discernment:</span>
+                    <span className="status-value">
+                      {(() => {
+                        const d = (debugEntries[0]!.response as any).discernment;
+                        const parts = [
+                          d.askActHold?.toUpperCase?.(),
+                          d.profileId,
+                          d.providerChoice ?? 'n/a',
+                        ].filter(Boolean);
+                        return parts.join(' · ');
+                      })()}
+                    </span>
+                  </div>
+                )}
             </div>
           </div>
 
