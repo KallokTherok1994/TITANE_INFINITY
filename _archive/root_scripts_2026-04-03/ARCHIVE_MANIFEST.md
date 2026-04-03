@@ -116,3 +116,26 @@ git log --follow _archive/root_scripts_2026-04-03/script-name.sh
 ```bash
 git revert HEAD --no-edit
 ```
+
+---
+
+## Wave 4 Additions (2026-04-03)
+
+The following files were appended to this archive in Wave 4 (same session):
+
+### Root Test Scripts (orphaned — only proof_pack/docs historical refs)
+- `test-chat-direct.mjs` — Historical Ollama/chat test script (v20.5.x era)
+- `test-ollama-connection.js` — Historical Ollama connection test (v26 era)
+- `test-titane-ollama.mjs` — Historical Titane-Ollama integration test
+- `test_chat_backend.py` — Historical Python chat backend test
+- `test_finetuned.py` — Historical fine-tuned model test
+
+References: only `proof_packs/*/01_BOOTSTRAP.md` (session snapshots) and `docs/01_misc/02_DISCOVER_RAW.md` (raw ls -la snapshot).
+
+---
+
+## Wave 4 Separate Archives
+
+See also:
+- `_archive/super_prompts_2026-04-03/` — 1 super-prompt file (zero external refs)
+- `_archive/dist_stub_2026-04-03/` — 1 dist stub HTML file (zero external refs)
