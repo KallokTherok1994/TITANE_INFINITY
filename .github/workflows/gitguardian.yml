@@ -26,13 +26,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0 # Full history for better scanning
 
       - name: 🔐 Run GitGuardian scan
         if: ${{ env.GITGUARDIAN_API_KEY != '' }}
-        uses: GitGuardian/ggshield-action@0ebefb9aad794cfe4ea98897204db50e20ad5a00  # v1.33.0
+        uses: GitGuardian/ggshield-action@0ebefb9aad794cfe4ea98897204db50e20ad5a00 # v1.33.0
         env:
           GITGUARDIAN_API_KEY: ${{ env.GITGUARDIAN_API_KEY }}
           GITHUB_PUSH_BEFORE_SHA: ${{ github.event.before }}

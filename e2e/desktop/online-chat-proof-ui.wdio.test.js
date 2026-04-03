@@ -1,8 +1,5 @@
 import assert from 'node:assert/strict';
-<<<<<<< HEAD
 import crypto from 'node:crypto';
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
 const scenario = process.env.TITANE_PROOF_SCENARIO || 'S1';
 const runId = process.env.TITANE_PROOF_RUN || 'run1';
@@ -13,7 +10,6 @@ const assistantTimeoutMs = Number(
   process.env.TITANE_E2E_ASSISTANT_TIMEOUT_MS || '120000'
 );
 const runMemoryProof = process.env.TITANE_MEMORY_PROOF === '1';
-<<<<<<< HEAD
 const runRestoreProof = process.env.TITANE_RESTORE_PROOF === '1';
 const runEventReplayProof = process.env.TITANE_EVENT_REPLAY_PROOF === '1';
 const runMultiReducerProof = process.env.TITANE_MULTI_REDUCER_PROOF === '1';
@@ -41,8 +37,6 @@ function buildMemoryProofFacts() {
 }
 
 const memoryProofFacts = buildMemoryProofFacts();
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
 function getAllowedHrefPrefixes() {
   const prefixes = ['tauri://localhost'];
@@ -193,7 +187,6 @@ async function invokeConversationGenerate(message) {
   throw new Error(lastError);
 }
 
-<<<<<<< HEAD
 async function invokeTauriCommand(command, payload) {
   const invoked = await browser.executeAsync(
     (command, payload, done) => {
@@ -244,8 +237,6 @@ async function invokeTauriCommand(command, payload) {
   return invoked.res;
 }
 
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 async function installConversationGenerateTraceHook() {
   await browser.execute(() => {
     const w = window;
@@ -277,7 +268,6 @@ async function installConversationGenerateTraceHook() {
   });
 }
 
-<<<<<<< HEAD
 async function resetConversationGenerateTrace() {
   await browser.execute(() => {
     window.__TITANE_LAST_CONV_RESPONSE__ = null;
@@ -306,8 +296,6 @@ async function readConversationGenerateTrace() {
   });
 }
 
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 async function resolveSelectors() {
   const bubbleInput = await $('[data-testid="chat-bubble-input"]');
   if (await bubbleInput.isExisting()) {
@@ -555,10 +543,7 @@ async function readRuntimeSnapshot(selectors) {
     const panel = document.querySelector('[data-testid="chat-runtime-state"]');
     const summary = document.querySelector('[data-testid="chat-runtime-summary"]');
     const ipcReady = document.querySelector('[data-testid="ipc-ready"]');
-<<<<<<< HEAD
     const sendTrace = document.querySelector('[data-testid="chat-send-trace"]');
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
     const assistantRows = document.querySelectorAll(
       '[data-testid="chat-message-assistant"]'
     );
@@ -576,11 +561,8 @@ async function readRuntimeSnapshot(selectors) {
     return {
       url: window.location.href || '',
       ipcReadyState: (ipcReady?.getAttribute('data-state') || '').trim().toUpperCase(),
-<<<<<<< HEAD
       sendTraceState: (sendTrace?.getAttribute('data-state') || '').trim().toUpperCase(),
       sendTraceMeta: (sendTrace?.getAttribute('data-meta') || '').trim(),
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       browserMode: window.localStorage?.getItem('titane_browser_mode') === '1',
       providerUsed: (
         panel?.getAttribute('data-provider-used') ||
@@ -672,7 +654,6 @@ async function collectStorageEvidence() {
   });
 }
 
-<<<<<<< HEAD
 async function navigateToMemoryRoute() {
   const isMemorySurfaceVisible = async expectedPathname =>
     await browser.execute(pathname => {
@@ -830,8 +811,6 @@ async function waitForMemoryPageEvidence(expectedFacts) {
   return await collectMemoryPageEvidence(expectedFacts);
 }
 
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 async function prepareChatSurface() {
   const appUrl = getDefaultAppUrl();
   const loaded = await ensureTauriPageLoaded(appUrl);
@@ -846,22 +825,15 @@ async function prepareChatSurface() {
       if (
         key.startsWith('titane_chat_mode_') ||
         key === 'titane_chat_history' ||
-<<<<<<< HEAD
         key === 'titane_chat_runtime_state' ||
         key === 'omega-chat-preferred-provider'
-=======
-        key === 'titane_chat_runtime_state'
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       ) {
         localStorage.removeItem(key);
       }
     }
     localStorage.setItem('titane_onboarding_complete', '1');
     localStorage.setItem('titane_browser_mode', '1');
-<<<<<<< HEAD
     localStorage.setItem('omega-chat-preferred-provider', 'ollama');
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
     location.reload();
   });
   await browser.pause(3000);
@@ -999,10 +971,7 @@ async function sendMessageAndWaitOutcome(
     }
   );
 
-<<<<<<< HEAD
   await resetConversationGenerateTrace();
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   const sent = await triggerSendAction(selectors.input, selectors.send);
   assert.ok(sent, 'Chat send action could not be triggered');
 
@@ -1010,16 +979,12 @@ async function sendMessageAndWaitOutcome(
   let responseText = '';
   let afterAssistantCount = beforeAssistantCount;
   let runtime = await readRuntimeSnapshot(selectors);
-<<<<<<< HEAD
   let trace = await readConversationGenerateTrace();
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
   while (Date.now() - startTime < timeoutMs) {
     responseText = await getLastText(selectors.response);
     afterAssistantCount = await countMatches(selectors.response);
     runtime = await readRuntimeSnapshot(selectors);
-<<<<<<< HEAD
     trace = await readConversationGenerateTrace();
 
     const hasDomAssistant =
@@ -1028,23 +993,12 @@ async function sendMessageAndWaitOutcome(
       afterAssistantCount > beforeAssistantCount;
 
     if (hasDomAssistant) {
-=======
-
-    if (
-      (responseText.length > 0 && responseText !== beforeText) ||
-      afterAssistantCount > beforeAssistantCount
-    ) {
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       if (!responseText && afterAssistantCount > beforeAssistantCount) {
         await browser.waitUntil(
           async () => {
             responseText = await getLastText(selectors.response);
-<<<<<<< HEAD
             runtime = await readRuntimeSnapshot(selectors);
             return responseText.length > 0 || runtime.assistantText.length > 0;
-=======
-            return responseText.length > 0;
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
           },
           {
             timeout: 15000,
@@ -1058,11 +1012,7 @@ async function sendMessageAndWaitOutcome(
       return {
         kind: 'assistant',
         latencyMs: Date.now() - startTime,
-<<<<<<< HEAD
         responseText: responseText || runtime.assistantText || trace.content,
-=======
-        responseText: responseText || runtime.assistantText,
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
         runtime,
         beforeAssistantCount,
         afterAssistantCount,
@@ -1080,38 +1030,26 @@ async function sendMessageAndWaitOutcome(
       };
     }
 
-<<<<<<< HEAD
     await browser.pause(500);
-=======
-    await browser.pause(1000);
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   }
 
   runtime = await readRuntimeSnapshot(selectors);
   return {
     kind: 'timeout',
     latencyMs: Date.now() - startTime,
-<<<<<<< HEAD
     responseText: responseText || runtime.assistantText || trace.content,
-=======
-    responseText: responseText || runtime.assistantText,
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
     runtime,
     beforeAssistantCount,
     afterAssistantCount,
   };
 }
 
-<<<<<<< HEAD
 function classifyMultiTurnVerdict(
   outcomes,
   finalResponseText,
   storageEvidence,
   expectedFacts = memoryProofFacts
 ) {
-=======
-function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) {
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   const allowedPrefixes = getAllowedHrefPrefixes();
   const targetOk = outcomes.every(outcome =>
     allowedPrefixes.some(prefix => outcome.runtime.url.startsWith(prefix))
@@ -1130,12 +1068,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
     outcome => outcome.kind === 'degraded' || isRuntimeDegraded(outcome.runtime)
   );
   const finalUpper = finalResponseText.toUpperCase();
-<<<<<<< HEAD
   const expectedCode = String(expectedFacts.code || '').toUpperCase();
   const expectedName = String(expectedFacts.name || '').toUpperCase();
   const expectedColor = String(expectedFacts.color || '').toUpperCase();
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   const hasHonestDegradedMessage =
     /N'AI PAS PU|MODE .*AUTO|V[ÉE]RIFIE LA CONNEXION|INDISPONIBLE|FALLBACK/i.test(
       finalResponseText
@@ -1145,15 +1080,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
   }
 
   const hasRecallEvidence =
-<<<<<<< HEAD
     finalUpper.includes(expectedCode) &&
     finalUpper.includes(expectedName) &&
     finalUpper.includes(expectedColor);
-=======
-    finalUpper.includes('ORION-482-LICHEN') &&
-    finalUpper.includes('ALICE') &&
-    /BLEU|AZUR/i.test(finalResponseText);
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
   const providerStable = outcomes.every(
     outcome =>
       outcome.runtime.providerUsed !== 'FALLBACK' &&
@@ -1178,13 +1107,9 @@ function classifyMultiTurnVerdict(outcomes, finalResponseText, storageEvidence) 
 
   const noFalseMemory =
     /JE NE SAIS PAS|INCONNU|PAS D'INFORMATION|NON RENSEIGN/i.test(finalResponseText) ||
-<<<<<<< HEAD
     (!finalUpper.includes(expectedCode) &&
       !finalUpper.includes(expectedName) &&
       !finalUpper.includes(expectedColor));
-=======
-    !/ORION-482-LICHEN|ALICE|BLEU|AZUR/i.test(finalResponseText);
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
   if (noFalseMemory) {
     return 'NO_FALSE_MEMORY_BUT_UNPROVEN';
@@ -1219,13 +1144,10 @@ function classifyFalseRecallVerdict(outcome, responseText) {
 describe('ONLINE_CHAT_FIX proof driver UI', () => {
   const singleTurnTest = runMemoryProof ? it.skip : it;
   const memoryProofTest = runMemoryProof ? it : it.skip;
-<<<<<<< HEAD
   const restoreProofTest = runRestoreProof ? it : it.skip;
   const eventReplayProofTest = runEventReplayProof ? it : it.skip;
   const multiReducerProofTest = runMultiReducerProof ? it : it.skip;
   const ltmPathProofTest = runLtmPathProof ? it : it.skip;
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
   singleTurnTest('sends one message and captures assistant response', async function () {
     this.timeout(180000);
@@ -1404,13 +1326,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       assert.ok(selectors, 'Memory proof requires visible chat UI selectors');
 
       const prompts = [
-<<<<<<< HEAD
         `Memorise sans developper: code=${memoryProofFacts.code}. Reponds OK.`,
         `Memorise sans developper: nom=${memoryProofFacts.name}; couleur=${memoryProofFacts.color}. Reponds OK.`,
-=======
-        'Memorise sans developper: code=ORION-482-LICHEN. Reponds OK.',
-        'Memorise sans developper: nom=Alice; couleur=bleu azur. Reponds OK.',
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
         'Question sans rapport: capitale du Portugal ? Reponds un seul mot.',
         'Rappelle uniquement sous forme compacte: code=..., nom=..., couleur=... .',
       ];
@@ -1432,12 +1349,8 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
       const memoryVerdict = classifyMultiTurnVerdict(
         outcomes,
         finalOutcome?.responseText || '',
-<<<<<<< HEAD
         storageEvidence,
         memoryProofFacts
-=======
-        storageEvidence
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
       );
 
       console.log(`[MEMORY_PROOF_VERDICT] ${memoryVerdict}`);
@@ -1445,16 +1358,12 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         `[MEMORY_PROOF_RESPONSE] ${String(finalOutcome?.responseText || '').slice(0, 240)}`
       );
       console.log(`[MEMORY_PROOF_EVIDENCE] ${JSON.stringify(storageEvidence)}`);
-<<<<<<< HEAD
       console.log(`[MEMORY_PROOF_FACTS] ${JSON.stringify(memoryProofFacts)}`);
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
       assert.notEqual(memoryVerdict, 'HARNESS_BLOCKED');
       assert.notEqual(memoryVerdict, 'FALLBACK_ONLY');
       assert.notEqual(memoryVerdict, 'MEMORY_CHAIN_BROKEN');
       assert.notEqual(memoryVerdict, 'TARGET_MISMATCH');
-<<<<<<< HEAD
 
       const memorySurfaceEvidence = await navigateToMemoryRoute();
       console.log(`[MEMORY_SURFACE_EVIDENCE] ${JSON.stringify(memorySurfaceEvidence)}`);
@@ -1868,8 +1777,6 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
         postStatus.events_persisted >= preStatus.events_persisted + 4,
         `events_persisted should increase by ≥4: was ${preStatus.events_persisted}, now ${postStatus.events_persisted}`
       );
-=======
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
     }
   );
 
@@ -1879,16 +1786,9 @@ describe('ONLINE_CHAT_FIX proof driver UI', () => {
     const { selectors } = await prepareChatSurface();
     assert.ok(selectors, 'False recall guard requires visible chat UI selectors');
 
-<<<<<<< HEAD
     const falseRecallPrompt =
       "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU.";
     const outcome = await sendMessageAndWaitOutcome(selectors, falseRecallPrompt);
-=======
-    const outcome = await sendMessageAndWaitOutcome(
-      selectors,
-      "Je ne t'ai jamais donné mon code fantôme. Quel est mon code fantôme ? Si tu ne sais pas, réponds INCONNU."
-    );
->>>>>>> 028580016dd4851bbae90d1ecde06b24797059cf
 
     const responseText = outcome.responseText;
     const { verdict, explicitUnknown, degradedRuntime, targetMismatch } =

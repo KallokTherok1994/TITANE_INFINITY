@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: 🔧 Install system dependencies
         run: |
           sudo apt-get update
@@ -57,7 +57,7 @@ jobs:
             patchelf
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -69,13 +69,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # stable/v1
         with:
           toolchain: stable
           components: rustfmt, clippy
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2.7.3
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -94,6 +94,8 @@ jobs:
       - name: 🦀 Run Rust backend tests
         working-directory: src-tauri
         run: cargo test --verbose --locked
+
+      - name: 🏗️ Build frontend
         run: pnpm run build
 
       - name: 🔨 Build Tauri app
@@ -135,7 +137,7 @@ jobs:
           rm -rf "$GNUPGHOME"
 
       - name: 📤 Upload Linux artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: linux-x86_64-${{ github.ref_name }}
           path: |
@@ -170,9 +172,9 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -184,12 +186,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # stable/v1
         with:
           toolchain: stable
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2.7.3
         with:
           workspaces: src-tauri
 
@@ -210,7 +212,7 @@ jobs:
         shell: pwsh
 
       - name: 📤 Upload Windows artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: windows-x86_64-${{ github.ref_name }}
           path: |
@@ -248,9 +250,9 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af # v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -262,13 +264,13 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # stable/v1
         with:
           toolchain: stable
           targets: ${{ matrix.target }}
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84 # v2.7.3
         with:
           workspaces: src-tauri
           key: ${{ matrix.target }}
@@ -292,7 +294,7 @@ jobs:
           cat SHA256SUMS.txt
 
       - name: 📤 Upload macOS artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: macos-${{ matrix.target }}-${{ github.ref_name }}
           path: |
@@ -320,14 +322,14 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
-      id-token: write       # for OIDC provenance signing
-      attestations: write   # for actions/attest-build-provenance
+      id-token: write # for OIDC provenance signing
+      attestations: write # for actions/attest-build-provenance
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: 📥 Download artifacts
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
         with:
           path: artifacts
 
@@ -361,7 +363,7 @@ jobs:
           ls -la sbom/*.json 2>/dev/null || echo "  (no sbom files)"
 
       - name: 🔏 Attest build provenance
-        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be  # v2
+        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2
         with:
           subject-path: |
             artifacts/**/*.deb
@@ -371,7 +373,7 @@ jobs:
           continue-on-error: true
 
       - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048  # v2.2.0
+        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048 # v2.2.0
         with:
           name: TITANE∞ ${{ github.ref_name }}
           body_path: release_notes.md

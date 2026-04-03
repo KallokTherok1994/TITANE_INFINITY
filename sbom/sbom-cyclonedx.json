@@ -11,623 +11,623 @@
     }
   },
   "components": [
-  {
-    "name": "@axe-core/playwright",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@axe-core/playwright@unknown"
-  },
-  {
-    "name": "@axe-core/react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@axe-core/react@unknown"
-  },
-  {
-    "name": "@chromatic-com/storybook",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@chromatic-com/storybook@unknown"
-  },
-  {
-    "name": "@eslint/eslintrc",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@eslint/eslintrc@unknown"
-  },
-  {
-    "name": "@eslint/js",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@eslint/js@unknown"
-  },
-  {
-    "name": "@playwright/test",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@playwright/test@unknown"
-  },
-  {
-    "name": "@sentry/react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@sentry/react@unknown"
-  },
-  {
-    "name": "@storybook/addon-a11y",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@storybook/addon-a11y@unknown"
-  },
-  {
-    "name": "@storybook/addon-docs",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@storybook/addon-docs@unknown"
-  },
-  {
-    "name": "@storybook/addon-onboarding",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@storybook/addon-onboarding@unknown"
-  },
-  {
-    "name": "@storybook/addon-vitest",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@storybook/addon-vitest@unknown"
-  },
-  {
-    "name": "@storybook/react-vite",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@storybook/react-vite@unknown"
-  },
-  {
-    "name": "@tailwindcss/postcss",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tailwindcss/postcss@unknown"
-  },
-  {
-    "name": "@tanstack/react-query",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tanstack/react-query@unknown"
-  },
-  {
-    "name": "@tauri-apps/api",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/api@unknown"
-  },
-  {
-    "name": "@tauri-apps/cli",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/cli@unknown"
-  },
-  {
-    "name": "@tauri-apps/plugin-dialog",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/plugin-dialog@unknown"
-  },
-  {
-    "name": "@tauri-apps/plugin-fs",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/plugin-fs@unknown"
-  },
-  {
-    "name": "@tauri-apps/plugin-http",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/plugin-http@unknown"
-  },
-  {
-    "name": "@tauri-apps/plugin-shell",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@tauri-apps/plugin-shell@unknown"
-  },
-  {
-    "name": "@testing-library/dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@testing-library/dom@unknown"
-  },
-  {
-    "name": "@testing-library/jest-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@testing-library/jest-dom@unknown"
-  },
-  {
-    "name": "@testing-library/react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@testing-library/react@unknown"
-  },
-  {
-    "name": "@testing-library/user-event",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@testing-library/user-event@unknown"
-  },
-  {
-    "name": "@types/better-sqlite3",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/better-sqlite3@unknown"
-  },
-  {
-    "name": "@types/node",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/node@unknown"
-  },
-  {
-    "name": "@types/react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/react@unknown"
-  },
-  {
-    "name": "@types/react-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/react-dom@unknown"
-  },
-  {
-    "name": "@types/react-router-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/react-router-dom@unknown"
-  },
-  {
-    "name": "@types/react-window",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/react-window@unknown"
-  },
-  {
-    "name": "@types/three",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/three@unknown"
-  },
-  {
-    "name": "@types/uuid",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@types/uuid@unknown"
-  },
-  {
-    "name": "@typescript-eslint/eslint-plugin",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@typescript-eslint/eslint-plugin@unknown"
-  },
-  {
-    "name": "@typescript-eslint/parser",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@typescript-eslint/parser@unknown"
-  },
-  {
-    "name": "@vitejs/plugin-react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@vitejs/plugin-react@unknown"
-  },
-  {
-    "name": "@vitest/browser",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@vitest/browser@unknown"
-  },
-  {
-    "name": "@vitest/browser-playwright",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@vitest/browser-playwright@unknown"
-  },
-  {
-    "name": "@vitest/coverage-v8",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@vitest/coverage-v8@unknown"
-  },
-  {
-    "name": "@vitest/ui",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@vitest/ui@unknown"
-  },
-  {
-    "name": "@wdio/cli",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@wdio/cli@unknown"
-  },
-  {
-    "name": "@wdio/local-runner",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@wdio/local-runner@unknown"
-  },
-  {
-    "name": "@wdio/mocha-framework",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@wdio/mocha-framework@unknown"
-  },
-  {
-    "name": "@wdio/spec-reporter",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@wdio/spec-reporter@unknown"
-  },
-  {
-    "name": "@xenova/transformers",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/@xenova/transformers@unknown"
-  },
-  {
-    "name": "autoprefixer",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/autoprefixer@unknown"
-  },
-  {
-    "name": "axe-core",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/axe-core@unknown"
-  },
-  {
-    "name": "baseline-browser-mapping",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/baseline-browser-mapping@unknown"
-  },
-  {
-    "name": "better-sqlite3",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/better-sqlite3@unknown"
-  },
-  {
-    "name": "clsx",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/clsx@unknown"
-  },
-  {
-    "name": "cross-env",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/cross-env@unknown"
-  },
-  {
-    "name": "date-fns",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/date-fns@unknown"
-  },
-  {
-    "name": "dompurify",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/dompurify@unknown"
-  },
-  {
-    "name": "eslint",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint@unknown"
-  },
-  {
-    "name": "eslint-config-prettier",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint-config-prettier@unknown"
-  },
-  {
-    "name": "eslint-plugin-react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint-plugin-react@unknown"
-  },
-  {
-    "name": "eslint-plugin-react-hooks",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint-plugin-react-hooks@unknown"
-  },
-  {
-    "name": "eslint-plugin-react-refresh",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint-plugin-react-refresh@unknown"
-  },
-  {
-    "name": "eslint-plugin-storybook",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eslint-plugin-storybook@unknown"
-  },
-  {
-    "name": "eventemitter3",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/eventemitter3@unknown"
-  },
-  {
-    "name": "framer-motion",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/framer-motion@unknown"
-  },
-  {
-    "name": "happy-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/happy-dom@unknown"
-  },
-  {
-    "name": "husky",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/husky@unknown"
-  },
-  {
-    "name": "i18next",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/i18next@unknown"
-  },
-  {
-    "name": "i18next-browser-languagedetector",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/i18next-browser-languagedetector@unknown"
-  },
-  {
-    "name": "identity-obj-proxy",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/identity-obj-proxy@unknown"
-  },
-  {
-    "name": "jsdom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/jsdom@unknown"
-  },
-  {
-    "name": "lightningcss",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/lightningcss@unknown"
-  },
-  {
-    "name": "lint-staged",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/lint-staged@unknown"
-  },
-  {
-    "name": "lucide-react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/lucide-react@unknown"
-  },
-  {
-    "name": "mocha",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/mocha@unknown"
-  },
-  {
-    "name": "playwright",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/playwright@unknown"
-  },
-  {
-    "name": "postcss",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/postcss@unknown"
-  },
-  {
-    "name": "prettier",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/prettier@unknown"
-  },
-  {
-    "name": "react",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react@unknown"
-  },
-  {
-    "name": "react-chrono",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-chrono@unknown"
-  },
-  {
-    "name": "react-d3-tree",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-d3-tree@unknown"
-  },
-  {
-    "name": "react-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-dom@unknown"
-  },
-  {
-    "name": "react-i18next",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-i18next@unknown"
-  },
-  {
-    "name": "react-is",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-is@unknown"
-  },
-  {
-    "name": "react-markdown",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-markdown@unknown"
-  },
-  {
-    "name": "react-router",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-router@unknown"
-  },
-  {
-    "name": "react-router-dom",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-router-dom@unknown"
-  },
-  {
-    "name": "react-window",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/react-window@unknown"
-  },
-  {
-    "name": "recharts",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/recharts@unknown"
-  },
-  {
-    "name": "remark-gfm",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/remark-gfm@unknown"
-  },
-  {
-    "name": "rollup-plugin-visualizer",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/rollup-plugin-visualizer@unknown"
-  },
-  {
-    "name": "sonner",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/sonner@unknown"
-  },
-  {
-    "name": "storybook",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/storybook@unknown"
-  },
-  {
-    "name": "tailwindcss",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/tailwindcss@unknown"
-  },
-  {
-    "name": "tauri",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/tauri@unknown"
-  },
-  {
-    "name": "three",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/three@unknown"
-  },
-  {
-    "name": "titane-infinity",
-    "version": "29.0.0",
-    "type": "library",
-    "purl": "pkg:cargo/titane-infinity@29.0.0"
-  },
-  {
-    "name": "typescript",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/typescript@unknown"
-  },
-  {
-    "name": "uuid",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/uuid@unknown"
-  },
-  {
-    "name": "vite",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/vite@unknown"
-  },
-  {
-    "name": "vite-plugin-compression",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/vite-plugin-compression@unknown"
-  },
-  {
-    "name": "vite-tsconfig-paths",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/vite-tsconfig-paths@unknown"
-  },
-  {
-    "name": "vitest",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/vitest@unknown"
-  },
-  {
-    "name": "web-vitals",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/web-vitals@unknown"
-  },
-  {
-    "name": "webdriverio",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/webdriverio@unknown"
-  },
-  {
-    "name": "workbox-build",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/workbox-build@unknown"
-  },
-  {
-    "name": "zod",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/zod@unknown"
-  },
-  {
-    "name": "zustand",
-    "version": "unknown",
-    "type": "library",
-    "purl": "pkg:npm/zustand@unknown"
-  }
-]
+    {
+      "name": "@axe-core/playwright",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@axe-core/playwright@unknown"
+    },
+    {
+      "name": "@axe-core/react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@axe-core/react@unknown"
+    },
+    {
+      "name": "@chromatic-com/storybook",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@chromatic-com/storybook@unknown"
+    },
+    {
+      "name": "@eslint/eslintrc",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@eslint/eslintrc@unknown"
+    },
+    {
+      "name": "@eslint/js",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@eslint/js@unknown"
+    },
+    {
+      "name": "@playwright/test",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@playwright/test@unknown"
+    },
+    {
+      "name": "@sentry/react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@sentry/react@unknown"
+    },
+    {
+      "name": "@storybook/addon-a11y",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-a11y@unknown"
+    },
+    {
+      "name": "@storybook/addon-docs",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-docs@unknown"
+    },
+    {
+      "name": "@storybook/addon-onboarding",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-onboarding@unknown"
+    },
+    {
+      "name": "@storybook/addon-vitest",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/addon-vitest@unknown"
+    },
+    {
+      "name": "@storybook/react-vite",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@storybook/react-vite@unknown"
+    },
+    {
+      "name": "@tailwindcss/postcss",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tailwindcss/postcss@unknown"
+    },
+    {
+      "name": "@tanstack/react-query",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tanstack/react-query@unknown"
+    },
+    {
+      "name": "@tauri-apps/api",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/api@unknown"
+    },
+    {
+      "name": "@tauri-apps/cli",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/cli@unknown"
+    },
+    {
+      "name": "@tauri-apps/plugin-dialog",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-dialog@unknown"
+    },
+    {
+      "name": "@tauri-apps/plugin-fs",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-fs@unknown"
+    },
+    {
+      "name": "@tauri-apps/plugin-http",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-http@unknown"
+    },
+    {
+      "name": "@tauri-apps/plugin-shell",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@tauri-apps/plugin-shell@unknown"
+    },
+    {
+      "name": "@testing-library/dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/dom@unknown"
+    },
+    {
+      "name": "@testing-library/jest-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/jest-dom@unknown"
+    },
+    {
+      "name": "@testing-library/react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/react@unknown"
+    },
+    {
+      "name": "@testing-library/user-event",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@testing-library/user-event@unknown"
+    },
+    {
+      "name": "@types/better-sqlite3",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/better-sqlite3@unknown"
+    },
+    {
+      "name": "@types/node",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/node@unknown"
+    },
+    {
+      "name": "@types/react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/react@unknown"
+    },
+    {
+      "name": "@types/react-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-dom@unknown"
+    },
+    {
+      "name": "@types/react-router-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-router-dom@unknown"
+    },
+    {
+      "name": "@types/react-window",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/react-window@unknown"
+    },
+    {
+      "name": "@types/three",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/three@unknown"
+    },
+    {
+      "name": "@types/uuid",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@types/uuid@unknown"
+    },
+    {
+      "name": "@typescript-eslint/eslint-plugin",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@typescript-eslint/eslint-plugin@unknown"
+    },
+    {
+      "name": "@typescript-eslint/parser",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@typescript-eslint/parser@unknown"
+    },
+    {
+      "name": "@vitejs/plugin-react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@vitejs/plugin-react@unknown"
+    },
+    {
+      "name": "@vitest/browser",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/browser@unknown"
+    },
+    {
+      "name": "@vitest/browser-playwright",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/browser-playwright@unknown"
+    },
+    {
+      "name": "@vitest/coverage-v8",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/coverage-v8@unknown"
+    },
+    {
+      "name": "@vitest/ui",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@vitest/ui@unknown"
+    },
+    {
+      "name": "@wdio/cli",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/cli@unknown"
+    },
+    {
+      "name": "@wdio/local-runner",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/local-runner@unknown"
+    },
+    {
+      "name": "@wdio/mocha-framework",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/mocha-framework@unknown"
+    },
+    {
+      "name": "@wdio/spec-reporter",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@wdio/spec-reporter@unknown"
+    },
+    {
+      "name": "@xenova/transformers",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/@xenova/transformers@unknown"
+    },
+    {
+      "name": "autoprefixer",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/autoprefixer@unknown"
+    },
+    {
+      "name": "axe-core",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/axe-core@unknown"
+    },
+    {
+      "name": "baseline-browser-mapping",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/baseline-browser-mapping@unknown"
+    },
+    {
+      "name": "better-sqlite3",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/better-sqlite3@unknown"
+    },
+    {
+      "name": "clsx",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/clsx@unknown"
+    },
+    {
+      "name": "cross-env",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/cross-env@unknown"
+    },
+    {
+      "name": "date-fns",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/date-fns@unknown"
+    },
+    {
+      "name": "dompurify",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/dompurify@unknown"
+    },
+    {
+      "name": "eslint",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint@unknown"
+    },
+    {
+      "name": "eslint-config-prettier",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint-config-prettier@unknown"
+    },
+    {
+      "name": "eslint-plugin-react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react@unknown"
+    },
+    {
+      "name": "eslint-plugin-react-hooks",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react-hooks@unknown"
+    },
+    {
+      "name": "eslint-plugin-react-refresh",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-react-refresh@unknown"
+    },
+    {
+      "name": "eslint-plugin-storybook",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eslint-plugin-storybook@unknown"
+    },
+    {
+      "name": "eventemitter3",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/eventemitter3@unknown"
+    },
+    {
+      "name": "framer-motion",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/framer-motion@unknown"
+    },
+    {
+      "name": "happy-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/happy-dom@unknown"
+    },
+    {
+      "name": "husky",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/husky@unknown"
+    },
+    {
+      "name": "i18next",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/i18next@unknown"
+    },
+    {
+      "name": "i18next-browser-languagedetector",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/i18next-browser-languagedetector@unknown"
+    },
+    {
+      "name": "identity-obj-proxy",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/identity-obj-proxy@unknown"
+    },
+    {
+      "name": "jsdom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/jsdom@unknown"
+    },
+    {
+      "name": "lightningcss",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/lightningcss@unknown"
+    },
+    {
+      "name": "lint-staged",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/lint-staged@unknown"
+    },
+    {
+      "name": "lucide-react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/lucide-react@unknown"
+    },
+    {
+      "name": "mocha",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/mocha@unknown"
+    },
+    {
+      "name": "playwright",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/playwright@unknown"
+    },
+    {
+      "name": "postcss",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/postcss@unknown"
+    },
+    {
+      "name": "prettier",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/prettier@unknown"
+    },
+    {
+      "name": "react",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react@unknown"
+    },
+    {
+      "name": "react-chrono",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-chrono@unknown"
+    },
+    {
+      "name": "react-d3-tree",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-d3-tree@unknown"
+    },
+    {
+      "name": "react-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-dom@unknown"
+    },
+    {
+      "name": "react-i18next",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-i18next@unknown"
+    },
+    {
+      "name": "react-is",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-is@unknown"
+    },
+    {
+      "name": "react-markdown",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-markdown@unknown"
+    },
+    {
+      "name": "react-router",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-router@unknown"
+    },
+    {
+      "name": "react-router-dom",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-router-dom@unknown"
+    },
+    {
+      "name": "react-window",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/react-window@unknown"
+    },
+    {
+      "name": "recharts",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/recharts@unknown"
+    },
+    {
+      "name": "remark-gfm",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/remark-gfm@unknown"
+    },
+    {
+      "name": "rollup-plugin-visualizer",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/rollup-plugin-visualizer@unknown"
+    },
+    {
+      "name": "sonner",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/sonner@unknown"
+    },
+    {
+      "name": "storybook",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/storybook@unknown"
+    },
+    {
+      "name": "tailwindcss",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/tailwindcss@unknown"
+    },
+    {
+      "name": "tauri",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/tauri@unknown"
+    },
+    {
+      "name": "three",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/three@unknown"
+    },
+    {
+      "name": "titane-infinity",
+      "version": "29.0.0",
+      "type": "library",
+      "purl": "pkg:cargo/titane-infinity@29.0.0"
+    },
+    {
+      "name": "typescript",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/typescript@unknown"
+    },
+    {
+      "name": "uuid",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/uuid@unknown"
+    },
+    {
+      "name": "vite",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/vite@unknown"
+    },
+    {
+      "name": "vite-plugin-compression",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/vite-plugin-compression@unknown"
+    },
+    {
+      "name": "vite-tsconfig-paths",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/vite-tsconfig-paths@unknown"
+    },
+    {
+      "name": "vitest",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/vitest@unknown"
+    },
+    {
+      "name": "web-vitals",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/web-vitals@unknown"
+    },
+    {
+      "name": "webdriverio",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/webdriverio@unknown"
+    },
+    {
+      "name": "workbox-build",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/workbox-build@unknown"
+    },
+    {
+      "name": "zod",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/zod@unknown"
+    },
+    {
+      "name": "zustand",
+      "version": "unknown",
+      "type": "library",
+      "purl": "pkg:npm/zustand@unknown"
+    }
+  ]
 }

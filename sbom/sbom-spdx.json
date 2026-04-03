@@ -6,14 +6,9 @@
   "documentNamespace": "https://github.com/KallokTherok1994/TITANE_INFINITY/sbom/titane-infinity-29.0.0-2026-04-02T22:52:05Z",
   "creationInfo": {
     "created": "2026-04-02T22:52:05Z",
-    "creators": [
-      "Tool: TITANE∞ generate-sbom.sh",
-      "Organization: KallokTherok1994"
-    ]
+    "creators": ["Tool: TITANE∞ generate-sbom.sh", "Organization: KallokTherok1994"]
   },
-  "documentDescribes": [
-    "SPDXRef-Root"
-  ],
+  "documentDescribes": ["SPDXRef-Root"],
   "packages": [
     {
       "SPDXID": "SPDXRef-Root",
