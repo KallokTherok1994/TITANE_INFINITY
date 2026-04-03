@@ -17,6 +17,10 @@ on:
           - staging
           - production
 
+
+permissions:
+  contents: read
+
 env:
   RUST_BACKTRACE: full
   NODE_ENV: production
@@ -30,8 +34,7 @@ jobs:
       commit: ${{ steps.version.outputs.commit }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Get version info
         id: version
         run: |
@@ -56,10 +59,9 @@ jobs:
     needs: validate
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '22'
 
@@ -84,7 +86,7 @@ jobs:
 
       - name: Upload test results
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: test-results
           path: |
@@ -100,10 +102,9 @@ jobs:
       contents: write
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '22'
 
@@ -119,7 +120,9 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        with:
+          toolchain: stable
 
       - name: 🛠️ Build Tauri bundles
         run: pnpm exec tauri build --config src-tauri/tauri.conf.json
@@ -132,7 +135,7 @@ jobs:
           ls -lh "src-tauri/target/release/bundle/appimage/TITANE-Infinity_${VERSION}_amd64.AppImage"
 
       - name: 📎 Upload deployment artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: TITANE-Infinity-${{ needs.validate.outputs.version }}-bundles
           path: |
@@ -141,7 +144,7 @@ jobs:
             src-tauri/target/release/bundle/appimage/TITANE-Infinity_${{ needs.validate.outputs.version }}_amd64.AppImage
 
       - name: 📤 Create/Update Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844  # v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
           files: |

@@ -102,7 +102,9 @@ scripts/archive/
 # Temp & Misc
 *.pem
 temp/
+temp/*
 tmp/
+tmp/*
 *.tmp
 tsc
 💥

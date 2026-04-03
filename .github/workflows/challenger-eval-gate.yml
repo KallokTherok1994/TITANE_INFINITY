@@ -38,7 +38,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout'
-        uses: actions/checkout@v6.0.1
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
         with:
           fetch-depth: 1
 
@@ -46,16 +46,18 @@ jobs:
         run: corepack enable
 
       - name: '🟢 Setup Node.js ${{ env.NODE_VERSION }}'
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: '🦀 Setup Rust ${{ env.RUST_VERSION }}'
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        with:
+          toolchain: stable
 
       - name: '📦 Cache Rust'
-        uses: Swatinem/rust-cache@v2.7.3
+        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
         with:
           workspaces: src-tauri
 
@@ -82,7 +84,7 @@ jobs:
 
       - name: '📊 Upload Challenger Scorecard'
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: challenger-scorecard-${{ github.sha }}
           path: |
@@ -144,8 +146,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout'
-        uses: actions/checkout@v6.0.1
-
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
       - name: '🔬 verify_evals_scaffold.sh'
         run: bash scripts/verify/verify_evals_scaffold.sh
 

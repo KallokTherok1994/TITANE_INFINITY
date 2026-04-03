@@ -35,6 +35,7 @@ ALLOWED_EXCEPTIONS=(
     ".*\\.sample$"
     "README\\.md$"
     "SECRETS\\.md$"
+    "^docs/_evidence/.*\\.log$"
     "^docs/_evidence/.*/RUNLOGS/.*\\.log$"
     "^reports/.*\\.log$"
     "^docs/reports/.*\\.log$"

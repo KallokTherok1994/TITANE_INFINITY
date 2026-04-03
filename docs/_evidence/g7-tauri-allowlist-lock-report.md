@@ -2,7 +2,7 @@
 
 ## Summary
 - **Status**: PASS
-- **Timestamp**: 2026-03-22T06:41:47Z
+- **Timestamp**: 2026-04-03T00:56:17Z
 
 ## Checks
 
@@ -67,6 +67,27 @@
     "allow": [
       {
         "command": "get_runtime_config"
+      },
+      {
+        "command": "http_request"
+      },
+      {
+        "command": "total_dev_unlock"
+      },
+      {
+        "command": "total_dev_session_status"
+      },
+      {
+        "command": "total_dev_revoke"
+      },
+      {
+        "command": "total_dev_git_op"
+      },
+      {
+        "command": "total_dev_run_command"
+      },
+      {
+        "command": "total_dev_read_file"
       },
       {
         "command": "boot_marker_log"
@@ -1084,6 +1105,9 @@
       },
       {
         "command": "titan_force_snapshot"
+      },
+      {
+        "command": "titan_force_snapshot_current"
       },
       {
         "command": "titan_load_state"
@@ -3142,6 +3166,27 @@
       },
       {
         "command": "get_performance_metrics"
+      },
+      {
+        "command": "total_dev_unlock"
+      },
+      {
+        "command": "total_dev_session_status"
+      },
+      {
+        "command": "total_dev_revoke"
+      },
+      {
+        "command": "total_dev_git_op"
+      },
+      {
+        "command": "total_dev_run_command"
+      },
+      {
+        "command": "total_dev_read_file"
+      },
+      {
+        "command": "total_dev_unlock"
       }
     ]
   },

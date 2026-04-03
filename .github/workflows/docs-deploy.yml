@@ -31,13 +31,12 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: 🔧 Enable Corepack (pnpm)
         run: corepack enable
 
       - name: 📦 Setup Node.js 22
-        uses: actions/setup-node@v4.1.0
+        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
         with:
           node-version: '22'
           cache: 'pnpm'
@@ -54,7 +53,7 @@ jobs:
         run: pnpm exec typedoc || pnpm dlx --package typedoc@0.28.14 --package typedoc-plugin-markdown@4.9.0 typedoc
 
       - name: 📤 Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa  # v3.0.1
         with:
           path: docs
 
@@ -95,8 +94,7 @@ jobs:
       - name: 🚀 Deploy to GitHub Pages
         id: deployment
         if: steps.pages_check.outputs.enabled == 'true'
-        uses: actions/deploy-pages@v4
-
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e  # v4.0.5
       - name: 📊 Summary (deployed)
         if: steps.pages_check.outputs.enabled == 'true'
         run: |

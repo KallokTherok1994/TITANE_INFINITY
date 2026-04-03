@@ -54,3 +54,31 @@ updates:
           - '*'
         update-types:
           - major
+
+  # Rust/Cargo dependencies (Tauri backend)
+  - package-ecosystem: cargo
+    directory: '/src-tauri'
+    schedule:
+      interval: weekly
+      day: monday
+      time: '07:00'
+      timezone: 'Etc/UTC'
+    open-pull-requests-limit: 3
+    labels:
+      - dependencies
+      - automated
+      - rust
+    commit-message:
+      prefix: 'chore(deps-cargo)'
+      include: scope
+    groups:
+      cargo-minor-patch:
+        patterns:
+          - '*'
+        update-types:
+          - minor
+          - patch
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major

@@ -1,52 +1,13 @@
 {
   "deployment": {
-    "timestamp": "2026-03-21 00:21:15 UTC",
-    "version": "28.88.0",
-    "canonical_release": "v28.88.0",
+    "timestamp": "2026-04-02 21:42:00 UTC",
+    "version": "29.0.0",
+    "canonical_release": "v29.0.0",
     "artifact_status": "PENDING_BUILD",
-    "note": "Canonical repo version is 28.44.0. Binary artifacts for v28.44.0 are pending build and gate completion. Historical v28.0.0 artifacts documented in MANIFEST_v28.0.0.json.",
+    "note": "Version synchronized to 29.0.0. Artifacts PENDING_BUILD for v29.0.0.",
     "branch": "MAIN",
     "deployment_type": "release_preparation"
   },
-  "artifacts": {
-    "appimage": {
-      "available": false,
-      "target_name": "Titan-Stable_28.5.0_amd64.AppImage",
-      "sha256": "PENDING"
-    },
-    "deb": {
-      "available": false,
-      "target_name": "Titan-Stable_28.5.0_amd64.deb",
-      "sha256": "PENDING"
-    },
-    "appimage_alt": {
-      "available": false,
-      "target_name": "TITANE-Infinity_28.5.0_amd64.AppImage",
-      "sha256": "PENDING"
-    },
-    "deb_alt": {
-      "available": false,
-      "target_name": "TITANE-Infinity_28.5.0_amd64.deb",
-      "sha256": "PENDING"
-    }
-  },
-  "historical_reference": {
-    "v28.0.0": "See MANIFEST_v28.0.0.json and SHA256SUMS_v28.0.0.txt for verified v28.0.0 artifact checksums."
-  },
-  "certification": {
-    "release_gate_status": "PENDING",
-    "phase_chain_status": "RELEASE_PREPARATION",
-    "security_posture": "MAXIMUM_HARDENED",
-    "production_readiness": "PENDING_BINARY_PROOF"
-  },
-  "version": "28.88.0",
-  "build_date": "2026-04-01",
-  "build_head": "8904d1089",
-  "build_type": "PROD",
-  "tokens": [
-    "GO_FOR_PROD_BUILD__TITANE_INFINITY",
-    "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
-  ],
   "artifacts": [
     {
       "name": "TITANE-Infinity_28.5.0_amd64.AppImage",
@@ -73,6 +34,23 @@
       "size": "21M",
       "sha256": "ba5829458c56887af459629fa4c5197266ec6110c504fc0fff4fa0084781c42e"
     }
+  ],
+  "historical_reference": {
+    "v28.0.0": "See MANIFEST_v28.0.0.json and SHA256SUMS_v28.0.0.txt for verified v28.0.0 artifact checksums."
+  },
+  "certification": {
+    "release_gate_status": "PENDING",
+    "phase_chain_status": "RELEASE_PREPARATION",
+    "security_posture": "MAXIMUM_HARDENED",
+    "production_readiness": "PENDING_BINARY_PROOF"
+  },
+  "version": "29.0.0",
+  "build_date": "2026-04-01",
+  "build_head": "8904d1089",
+  "build_type": "PROD",
+  "tokens": [
+    "GO_FOR_PROD_BUILD__TITANE_INFINITY",
+    "GO_FOR_PROD_DEPLOY__TITANE_INFINITY"
   ],
   "pipeline": "lint + format:check + ollama:bundle + vite build + tauri build + post-build",
   "pre_build_gates": "check + lint + format:check + verify_instructions + detect_recurrence"

@@ -18,6 +18,10 @@ on:
       - 'src-tauri/allowlist.whitelist.stable.json'
   workflow_dispatch:
 
+
+permissions:
+  contents: read
+
 jobs:
   contract-guard:
     name: 'P2 Contract Guard Validation'
@@ -25,8 +29,7 @@ jobs:
 
     steps:
       - name: '📥 Checkout repository'
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: '⚙️ Install jq for JSON processing'
         run: |
           sudo apt-get update -q
@@ -49,7 +52,7 @@ jobs:
 
       - name: '🗂️ Upload evidence'
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: p2-contract-guard-evidence
           path: /tmp/contract-evidence/

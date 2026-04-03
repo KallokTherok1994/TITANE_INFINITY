@@ -26,6 +26,10 @@ on:
         default: 'false'
         type: boolean
 
+
+permissions:
+  contents: read
+
 jobs:
   build-validation:
     name: 'P3 Build Config Validation'
@@ -33,15 +37,16 @@ jobs:
 
     steps:
       - name: '📥 Checkout repository'
-        uses: actions/checkout@v4
-
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5  # v4.3.1
       - name: '🔧 Setup Node.js'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020  # v4
         with:
           node-version: '22'
 
       - name: '🔧 Setup Rust toolchain'
-        uses: dtolnay/rust-toolchain@stable
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        with:
+          toolchain: stable
 
       - name: '📦 Enable Corepack (pnpm)'
         run: corepack enable
@@ -75,7 +80,7 @@ jobs:
 
       - name: '🗂️ Upload evidence'
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: p3-build-guard-evidence
           path: /tmp/build-evidence/
@@ -83,7 +88,7 @@ jobs:
 
       - name: '📦 Upload AppImage artifacts'
         if: ${{ github.event.inputs.full_build == 'true' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02  # v4.6.2
         with:
           name: build-artifacts
           path: runtime/stable/*.AppImage
