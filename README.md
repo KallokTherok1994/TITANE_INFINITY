@@ -3,28 +3,28 @@
 ![CI/CD Status](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/ci.yml/badge.svg?branch=MAIN)
 ![Mermaid Canon](https://github.com/KallokTherok1994/TITANE_INFINITY/actions/workflows/mermaid-verify.yml/badge.svg?branch=MAIN)
 
-**Version:** v28.88.0 (repository authority)  
-**Status:** Production Ready ✅ (sealed v28.88.0)  
+**Version:** v29.0.0 (repository authority - V29 Alpha)  
+**Status:** V29 Alpha 🔬 (sealed v28.88.0, preparing v29.0.0)  
 **License:** Proprietary — © 2025-2026 Humain Total / Kevin Thibault
 
-**Canal de release canonique:** v28.88.0
+**Canal de release canonique:** v29.0.0 (alpha), v28.88.0 (derniere scellee)
 
-**Qualite (v28.88.0) :** Vite 8 + rolldown migration, deps recert, prod deploy sealed.
+**Qualite (v29.0.0 alpha) :** Governance cleanup, version alignment, docs sync. v28.88.0 sealed as last production.
 
 **Documentation canonique :** [docs/README.md](docs/README.md) (source principale de navigation documentaire)
 
 **Statut d'autorite documentaire (LOCAL, 2026-03-21) :**
 
-- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `28.88.0` (`PROVEN_BY_REPO`)
-- Release canonique verifiee: `v28.88.0` (`PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`)
+- Source de version canonique du repo: `package.json` + `CHANGELOG.md` -> `29.0.0` (`PROVEN_BY_REPO`)
+- Release canonique verifiee: `v29.0.0` (alpha, `PROVEN_BY_REPO` + `PROVEN_BY_CHANGELOG`), `v28.88.0` (derniere scellee)
 - Lignes binaires historiques documentees: `v27.2.0`, `v27.0.5` (`PROVEN_BY_CANON_DOC`)
-- Politique de coherence: version canonique et release courante `28.88.0`; references v27/v28.0.0-v28.5.0 conservees en historique
+- Politique de coherence: version canonique courante `29.0.0` (alpha); `28.88.0` est la derniere release scellee; references v27/v28.0.0-v28.5.0 conservees en historique
 
 ---
 
 ## 📦 Téléchargement
 
-### ✅ Release canonique courante: v28.88.0
+### ✅ Release canonique courante: v28.88.0 (derniere scellee) | v29.0.0 (alpha en preparation)
 
 Artefacts verifies (Linux):
 

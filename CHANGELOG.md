@@ -2,6 +2,28 @@
 
 All notable changes to this project are documented in this file.
 
+## [29.0.0] - 2026-04-03 (V29 Alpha)
+
+### Changed
+
+- chore(version): bump 28.88.0 → 29.0.0
+- chore(governance): V29 cleanup, archive and restructure session
+- fix(version): align package.json description to v29.0.0
+- fix(docs): update README and docs/README version references to v29.0.0
+- docs(changelog): add [29.0.0] entry (retroactive documentation of version bump)
+
+### Documented
+
+- Root cleanup: 106+ loose files mapped (BUCKET B, deferred to Wave 2)
+- Proposed topology: archive historical docs, consolidate scripts into scripts/
+- Deferred usage verification: /orchestration, /runtime, /legacy, /evals
+
+### Notes
+
+- Version surfaces now aligned: package.json desc+version (29.0.0), Cargo.toml (29.0.0, aligned since prior commit), MANIFEST.json (29.0.0, aligned since prior commit)
+- V29 status: QUALIFIED_PARTIAL (alpha, full release pending Wave 2 cleanup)
+- Proof pack: proof_packs/V29_CLEANUP_RESTRUCTURE_2026-04-03_2a7a65a9/
+
 ## [28.88.0] - 2026-03-22 (Governance)
 
 ### Changed
