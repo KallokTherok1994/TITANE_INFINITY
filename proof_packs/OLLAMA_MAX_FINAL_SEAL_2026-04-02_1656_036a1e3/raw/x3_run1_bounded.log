@@ -1,0 +1,10 @@
+]633;E;echo "# RUN 1 START $(date -Iseconds)";835e8d4b-99d2-48da-aaff-5c41c045bb5e]633;C# RUN 1 START 2026-04-02T16:59:38-04:00
+PWD=/home/titane-os/Documents/GitHub/TITANE_INFINITY
+TARGET=scripts/smoke/smoke-runtime-chat.sh (timeout 210s)
+
+🧪 TITANE∞ — SMOKE RUNTIME CHAT
+================================
+✅ Ollama reachable on http://localhost:11434
+Complété
+EXIT_CODE=143
+# RUN 1 END 2026-04-02T17:00:12-04:00
