@@ -1,8 +1,8 @@
-# VERSION AUTHORITY MAP — TITANE∞ v28.88.0
+# VERSION AUTHORITY MAP — TITANE∞ v29.0.0
 
-Generated: 2026-04-01
-Session: FINAL_SEAL_20260401
-Canonical target version: **28.88.0**
+Generated: 2026-04-02
+Session: UI_SEAL_20260402
+Canonical target version: **29.0.0**
 
 ---
 
@@ -12,11 +12,11 @@ Files that define or publicly assert the current official version.
 
 | Path                                            | Version(s) mentioned | Authority level | Status  | Action        | Proof               |
 | ----------------------------------------------- | -------------------- | --------------- | ------- | ------------- | ------------------- |
-| `package.json`                                  | `28.5.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
-| `src-tauri/Cargo.toml`                          | `28.5.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
-| `src-tauri/tauri.conf.json`                     | `28.5.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
-| `CHANGELOG.md`                                  | `28.5.0` (top entry) | PRIMARY         | CURRENT | KEEP_AS_CANON | top entry confirmed |
-| `docs/90_release/PRODUCTION_RELEASE_v28.5.0.md` | `28.5.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | present + aligned   |
+| `package.json`                                  | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
+| `src-tauri/Cargo.toml`                          | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
+| `tauri.base.json`                               | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | aligned 2026-04-02  |
+| `CHANGELOG.md`                                  | `29.0.0` (top entry) | PRIMARY         | CURRENT | KEEP_AS_CANON | aligned 2026-04-02  |
+| `docs/90_release/PRODUCTION_RELEASE_v28.5.0.md` | `28.5.0`             | HISTORICAL      | FROZEN  | KEEP_AS_HISTORY | historical doc     |
 
 ---
 
@@ -77,7 +77,6 @@ None identified as requiring move; historical docs already reside under `docs/90
 
 ## Summary
 
-- **One current version authority**: `28.5.0` in `package.json`, `Cargo.toml`, `tauri.conf.json`, `CHANGELOG.md` top entry
-- **All primary and secondary surfaces aligned** after this session
+- **One current version authority**: `29.0.0` in `package.json`, `Cargo.toml`, `tauri.base.json`, `CHANGELOG.md`
 - **Historical docs preserved in place** with version-specific filenames
-- **Deployment latest pointers updated** to reflect 28.5.0 canonical status (artifacts pending build)
+- **Deployment latest pointers**: pending update to 29.0.0

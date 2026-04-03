@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## [28.88.0] - 2026-03-22 (Governance)
+## [29.0.0] - 2026-04-02 (UI Seal)
 
 ### Changed
 
