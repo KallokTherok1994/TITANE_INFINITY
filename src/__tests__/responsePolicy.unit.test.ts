@@ -269,7 +269,12 @@ describe('ResponsePolicy — getEffectiveProfile', () => {
   it('modeMaxTokens supérieur au profil → retourne modeMaxTokens', () => {
     // OMEGA mode est actuellement configuré à 16000 tokens.
     // Message suffisamment long pour ne pas déclencher Rule 7 (short_message_direct)
-    const { profile } = getEffectiveProfile('omega', 'donne-moi toutes les options disponibles', 4000, 0.6);
+    const { profile } = getEffectiveProfile(
+      'omega',
+      'donne-moi toutes les options disponibles',
+      4000,
+      0.6
+    );
     expect(profile.maxTokens).toBe(16000);
   });
 

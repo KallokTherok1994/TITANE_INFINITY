@@ -17,7 +17,15 @@ Single sentence: Define job types for job lifecycle, progress tracking, and boun
 
 type JobStatus = 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'FAILED' | 'CANCELLED' | 'BLOCKED';
 
-type JobKind = 'repo_inventory' | 'file_analysis' | 'grep_analysis' | 'test_run' | 'build_check' | 'browser_extract' | 'ide_inspect' | 'custom';
+type JobKind =
+  | 'repo_inventory'
+  | 'file_analysis'
+  | 'grep_analysis'
+  | 'test_run'
+  | 'build_check'
+  | 'browser_extract'
+  | 'ide_inspect'
+  | 'custom';
 
 interface OperatorJob {
   job_id: string;
@@ -63,12 +71,14 @@ interface JobListResult {
 Single sentence: Create job operator service, Rust IPC commands, and update capability registry classification.
 
 **New files to create:**
+
 - `src/services/operator/jobTypes.ts` — TypeScript types for job operator
 - `src/services/operator/jobOperator.ts` — Frontend service for job relay
 - `src-tauri/src/commands/job_operator.rs` — Rust IPC commands (job_create, job_start, job_status, job_list, job_cancel, job_get_config)
 - `src/__tests__/services/operator/jobOperator.test.ts` — Tests for job operator
 
 **Existing files to modify:**
+
 - `src-tauri/src/main.rs` — Add job_operator module declaration and command registrations
 - `src/services/operator/types.ts` — Update long_task_job_engine from ABSENT to CONFIGURED
 - `src-tauri/src/commands/capability_commands.rs` — Update long_task_job_engine classification
@@ -78,6 +88,7 @@ Single sentence: Create job operator service, Rust IPC commands, and update capa
 Single sentence: Implement job lifecycle management, progress tracking, and bounded execution via IPC.
 
 **New functions (Rust - `src-tauri/src/commands/job_operator.rs`):**
+
 - `job_create(kind, scope, params) -> Result<JobCreateResult, String>` — Creates a new governed job
 - `job_start(job_id) -> Result<OperatorJob, String>` — Starts a queued job
 - `job_status(job_id) -> Result<OperatorJob, String>` — Returns current job state
@@ -86,6 +97,7 @@ Single sentence: Implement job lifecycle management, progress tracking, and boun
 - `job_get_config() -> Result<JobOperatorConfig, String>` — Returns configuration
 
 **New functions (TypeScript - `src/services/operator/jobOperator.ts`):**
+
 - `createJob(kind, scope, params?): Promise<JobCreateResult>` — Creates a new job
 - `startJob(jobId: string): Promise<OperatorJob>` — Starts a job
 - `getJobStatus(jobId: string): Promise<OperatorJob>` — Gets job status
@@ -106,6 +118,7 @@ Single sentence: No new dependencies required; job operator uses existing sessio
 Single sentence: Create unit tests for job types and integration tests for IPC commands.
 
 **Test file: `src/__tests__/services/operator/jobOperator.test.ts`**
+
 - Test job lifecycle (create → start → status → cancel)
 - Test session binding
 - Test cancelable enforcement

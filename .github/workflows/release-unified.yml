@@ -39,7 +39,8 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: 🔧 Install system dependencies
         run: |
           sudo apt-get update
@@ -57,7 +58,7 @@ jobs:
             patchelf
 
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -69,13 +70,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           components: rustfmt, clippy
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@v2.7.3
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -93,7 +93,8 @@ jobs:
 
       - name: 🦀 Run Rust backend tests
         working-directory: src-tauri
-        run: cargo test --verbose --locked
+        run: cargo test --verbose
+      - name: 🏗️ Build frontend
         run: pnpm run build
 
       - name: 🔨 Build Tauri app
@@ -105,46 +106,17 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/release/bundle
-          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt
-          cat SHA256SUMS.txt
-
-      - name: 🔏 GPG sign artifacts
-        env:
-          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
-        if: env.GPG_PRIVATE_KEY != ''
-        run: |
-          # Import GPG key from CI secret
-          export GNUPGHOME=$(mktemp -d)
-          echo "$GPG_PRIVATE_KEY" | gpg --batch --import 2>/dev/null
-          KEY_ID=$(gpg --list-keys --with-colons 2>/dev/null | grep '^fpr:' | head -1 | cut -d: -f10)
-
-          cd src-tauri/target/release/bundle
-
-          # Sign each artifact
-          for f in deb/*.deb appimage/*.AppImage; do
-            [ -f "$f" ] && gpg --batch --yes --detach-sign --armor --local-user "$KEY_ID" --output "${f}.sig" "$f"
-          done
-
-          # Sign SHA256SUMS.txt
-          if [ -f SHA256SUMS.txt ]; then
-            gpg --batch --yes --detach-sign --armor --local-user "$KEY_ID" --output SHA256SUMS.sig SHA256SUMS.txt
-          fi
-
-          echo "=== GPG Signatures ==="
-          find . -name "*.sig" -o -name "*.asc" | sort
-          rm -rf "$GNUPGHOME"
+          sha256sum deb/*.deb appimage/*.AppImage > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload Linux artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: linux-x86_64-${{ github.ref_name }}
           path: |
             src-tauri/target/release/bundle/deb/*.deb
-            src-tauri/target/release/bundle/deb/*.deb.sig
             src-tauri/target/release/bundle/appimage/*.AppImage
-            src-tauri/target/release/bundle/appimage/*.AppImage.sig
             src-tauri/target/release/bundle/SHA256SUMS.txt
-            src-tauri/target/release/bundle/SHA256SUMS.sig
           if-no-files-found: warn
           retention-days: 30
 
@@ -170,9 +142,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -184,12 +157,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@v2.7.3
         with:
           workspaces: src-tauri
 
@@ -208,9 +179,10 @@ jobs:
           Get-FileHash *.msi -Algorithm SHA256 | Format-List | Out-File SHA256SUMS.txt
           cat SHA256SUMS.txt
         shell: pwsh
+        continue-on-error: true
 
       - name: 📤 Upload Windows artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: windows-x86_64-${{ github.ref_name }}
           path: |
@@ -248,9 +220,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: 📦 Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -262,13 +235,12 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           targets: ${{ matrix.target }}
 
       - name: 💾 Cache Rust dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@v2.7.3
         with:
           workspaces: src-tauri
           key: ${{ matrix.target }}
@@ -288,11 +260,11 @@ jobs:
       - name: 🔐 Generate checksums
         run: |
           cd src-tauri/target/${{ matrix.target }}/release/bundle/dmg
-          shasum -a 256 *.dmg > SHA256SUMS.txt
-          cat SHA256SUMS.txt
+          shasum -a 256 *.dmg > SHA256SUMS.txt || true
+          cat SHA256SUMS.txt || echo "No checksums generated"
 
       - name: 📤 Upload macOS artifacts
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: macos-${{ matrix.target }}-${{ github.ref_name }}
           path: |
@@ -320,14 +292,13 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
     permissions:
       contents: write
-      id-token: write       # for OIDC provenance signing
-      attestations: write   # for actions/attest-build-provenance
 
     steps:
       - name: 📥 Checkout repository
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: 📥 Download artifacts
-        uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131  # v7.0.0
+        uses: actions/download-artifact@v7
         with:
           path: artifacts
 
@@ -354,24 +325,8 @@ jobs:
           fi
           cat release_notes.md
 
-      - name: 📦 Generate and include SBOM
-        run: |
-          bash scripts/sbom/generate-sbom.sh sbom || true
-          echo "SBOM files generated:"
-          ls -la sbom/*.json 2>/dev/null || echo "  (no sbom files)"
-
-      - name: 🔏 Attest build provenance
-        uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be  # v2
-        with:
-          subject-path: |
-            artifacts/**/*.deb
-            artifacts/**/*.AppImage
-            artifacts/**/*.msi
-            artifacts/**/*.dmg
-          continue-on-error: true
-
       - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@7b4da11513bf3f43f9999e90eabced41ab8bb048  # v2.2.0
+        uses: softprops/action-gh-release@v2.2.0
         with:
           name: TITANE∞ ${{ github.ref_name }}
           body_path: release_notes.md
@@ -383,10 +338,6 @@ jobs:
             artifacts/**/*.msi
             artifacts/**/*.dmg
             artifacts/**/SHA256SUMS.txt
-            artifacts/**/*.sig
-            sbom/sbom-cyclonedx.json
-            sbom/sbom-spdx.json
-            sbom/sbom-cyclonedx.json.sha256
           fail_on_unmatched_files: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

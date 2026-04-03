@@ -17,6 +17,7 @@ Build the first truthful desktop perception layer (PERCEPTION_STACK sub-lock) fo
 ## Scope
 
 Minimal truthful desktop perception layer:
+
 1. Active window discovery (window title, process name)
 2. Window title/process read
 3. Allowed surface model
@@ -24,6 +25,7 @@ Minimal truthful desktop perception layer:
 5. Session binding to session_authority
 
 **NOT in scope** (future sub-locks):
+
 - Screenshot capture (CRITICAL risk, requires separate sub-lock)
 - Raw input injection (CRITICAL risk, requires separate sub-lock)
 - Kill/pause/handoff UI (CONTROL_SURFACES sub-lock)
@@ -77,6 +79,7 @@ Minimal truthful desktop perception layer:
 ### New Functions
 
 **TypeScript**:
+
 - `openDesktopSession(allowedSurfaces?: string[]): Promise<DesktopSession>`
 - `closeDesktopSession(sessionId: string): Promise<boolean>`
 - `getDesktopSessionStatus(sessionId: string): Promise<DesktopSession>`
@@ -86,6 +89,7 @@ Minimal truthful desktop perception layer:
 - `isDesktopPerceptionAvailable(): Promise<boolean>`
 
 **Rust**:
+
 - `desktop_open_session()` — Create governed desktop perception session
 - `desktop_close_session()` — Close session
 - `desktop_get_session_status()` — Get session state
@@ -96,6 +100,7 @@ Minimal truthful desktop perception layer:
 ## Dependencies
 
 No new external dependencies. Uses existing:
+
 - `@tauri-apps/api` (invoke)
 - `serde` (Rust serialization)
 - `chrono` (Rust timestamps)
@@ -104,14 +109,17 @@ No new external dependencies. Uses existing:
 ## Testing
 
 ### Test Strategy
+
 - Unit tests for TypeScript service (mocked IPC)
 - Integration tests for Rust commands
 - x3 rerun for critical truth paths
 
 ### Test Files
+
 - `src/__tests__/services/operator/desktopPerception.test.ts`
 
 ### Test Cases
+
 1. Session open/close lifecycle
 2. Active window discovery returns honest truth
 3. Window list returns honest truth

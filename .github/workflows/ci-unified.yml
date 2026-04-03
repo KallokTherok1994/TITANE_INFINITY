@@ -35,12 +35,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -84,12 +85,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -138,12 +140,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -216,7 +219,7 @@ jobs:
 
       - name: 📤 Upload coverage
         if: github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
-        uses: codecov/codecov-action@671740ac38dd9b0130fbe1cec585b89eea48d3de  # v5.5.2
+        uses: codecov/codecov-action@v5.5.2
         with:
           files: ./coverage/lcov.info
           fail_ci_if_error: false
@@ -243,7 +246,8 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: 📁 Ensure dist directory exists
         run: mkdir -p dist
 
@@ -263,13 +267,12 @@ jobs:
             patchelf
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
+        uses: dtolnay/rust-toolchain@stable
         with:
-          toolchain: stable
           components: clippy, rustfmt
 
       - name: 💾 Cache Cargo dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@v2.7.3
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -280,7 +283,9 @@ jobs:
 
       - name: Run Cargo tests
         working-directory: src-tauri
-        run: cargo test --verbose --locked
+        run: cargo test --verbose
+
+      - name: Run Clippy (linter)
         working-directory: src-tauri
         run: cargo clippy --all-targets --all-features -- -W clippy::all
 
@@ -306,12 +311,13 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
@@ -333,7 +339,7 @@ jobs:
 
       - name: 📤 Upload Playwright report
         if: always()
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: playwright-report-${{ github.run_id }}
           path: playwright-report/
@@ -361,20 +367,19 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Enable Corepack (pnpm)
         run: corepack enable
 
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: 🔧 Install system dependencies
         run: |
@@ -393,7 +398,7 @@ jobs:
             patchelf
 
       - name: 💾 Cache Cargo dependencies
-        uses: Swatinem/rust-cache@23bce251a8cd2ffc3c1075eaa2367cf899916d84  # v2.7.3
+        uses: Swatinem/rust-cache@v2.7.3
         with:
           workspaces: src-tauri
           cache-on-failure: true
@@ -422,10 +427,9 @@ jobs:
           else
             echo "⚠️ No artifacts found for checksum generation"
           fi
-
       - name: 📤 Upload build artifacts
         if: success() && github.event_name == 'push' && github.ref == 'refs/heads/MAIN'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f  # v6.0.0
+        uses: actions/upload-artifact@v6
         with:
           name: titane-build-ubuntu-${{ github.run_id }}
           path: |
@@ -466,9 +470,10 @@ jobs:
 
     steps:
       - name: 📥 Checkout code
-        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8  # v6.0.1
+        uses: actions/checkout@v6.0.1
+
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@39370e3970a6d050c480ffad4ff0ed4d3fdee5af  # v4.1.0
+        uses: actions/setup-node@v4.1.0
         with:
           node-version: ${{ env.NODE_VERSION }}
 
@@ -488,9 +493,7 @@ jobs:
         continue-on-error: true
 
       - name: 🦀 Setup Rust ${{ env.RUST_VERSION }}
-        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9  # stable/v1
-        with:
-          toolchain: stable
+        uses: dtolnay/rust-toolchain@stable
 
       - name: 🔒 Install cargo-audit
         run: cargo install cargo-audit --locked

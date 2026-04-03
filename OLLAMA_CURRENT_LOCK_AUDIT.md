@@ -1,4 +1,5 @@
 # OLLAMA CURRENT LOCK AUDIT — TITANE_INFINITY
+
 **Date**: 2026-04-02
 **Phase**: ACT — One Lock Implementation
 
@@ -16,6 +17,7 @@
 ### Current State Analysis
 
 #### Chain Breakpoint #1: Backend (ollama.rs)
+
 ```rust
 // Current: Returns only response text, no model confirmation
 pub async fn query_ollama(prompt: String) -> Result<String, String>
@@ -23,16 +25,18 @@ pub async fn query_ollama(prompt: String) -> Result<String, String>
 ```
 
 #### Chain Breakpoint #2: Transport (ollamaTransport.ts)
+
 ```typescript
 // Current: Returns model from IPC result, but ollama.rs doesn't provide it
 return {
   content: result.content,
-  model: result.model,  // ← This is undefined from backend
+  model: result.model, // ← This is undefined from backend
   latency_ms: result.latency_ms,
 };
 ```
 
 #### Chain Breakpoint #3: Provider (ollama.ts)
+
 ```typescript
 // Current: Falls back to config model if backend doesn't provide model
 return {
@@ -43,9 +47,12 @@ return {
 ```
 
 #### Chain Breakpoint #4: UI (Chat.tsx)
+
 ```typescript
 // Current: Shows provider name but NOT model name
-metadata: { provider: response.provider }
+metadata: {
+  provider: response.provider;
+}
 // Missing: model_used field
 ```
 
@@ -66,13 +73,13 @@ metadata: { provider: response.provider }
 
 ## OTHER LOCKS (NOT SELECTED)
 
-| Lock | Status | Reason |
-|------|--------|--------|
-| CONTEXT_POLICY_UNCLEAR | HOLD | numCtx 8192 vs Modelfile 32768 mismatch, but not blocking |
-| PRELOAD_KEEPALIVE_UNPROVEN | HOLD | No preload/keep_alive logic exists |
-| STRUCTURED_OUTPUTS_UNPROVEN | HOLD | Not implemented, not blocking |
-| TOOLS_PATH_UNPROVEN | HOLD | Not implemented, not blocking |
-| EMBEDDINGS_PATH_UNPROVEN | HOLD | Not implemented, not blocking |
-| VISION_PATH_UNPROVEN | HOLD | Not implemented, not blocking |
-| METRICS_NOT_CAPTURED | PARTIAL | Some metrics exist, missing model_used tracking |
-| FALLBACK_MASKING_RISK | RELATED | Addressed by REQUESTED_USED_SHOWN_UNPROVEN fix |
+| Lock                        | Status  | Reason                                                    |
+| --------------------------- | ------- | --------------------------------------------------------- |
+| CONTEXT_POLICY_UNCLEAR      | HOLD    | numCtx 8192 vs Modelfile 32768 mismatch, but not blocking |
+| PRELOAD_KEEPALIVE_UNPROVEN  | HOLD    | No preload/keep_alive logic exists                        |
+| STRUCTURED_OUTPUTS_UNPROVEN | HOLD    | Not implemented, not blocking                             |
+| TOOLS_PATH_UNPROVEN         | HOLD    | Not implemented, not blocking                             |
+| EMBEDDINGS_PATH_UNPROVEN    | HOLD    | Not implemented, not blocking                             |
+| VISION_PATH_UNPROVEN        | HOLD    | Not implemented, not blocking                             |
+| METRICS_NOT_CAPTURED        | PARTIAL | Some metrics exist, missing model_used tracking           |
+| FALLBACK_MASKING_RISK       | RELATED | Addressed by REQUESTED_USED_SHOWN_UNPROVEN fix            |

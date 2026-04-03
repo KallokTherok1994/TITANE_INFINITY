@@ -10,12 +10,12 @@ Canonical target version: **29.0.0**
 
 Files that define or publicly assert the current official version.
 
-| Path                                            | Version(s) mentioned | Authority level | Status  | Action        | Proof               |
-| ----------------------------------------------- | -------------------- | --------------- | ------- | ------------- | ------------------- |
-| `package.json`                                  | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
-| `src-tauri/Cargo.toml`                          | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | grep verified       |
-| `tauri.base.json`                               | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON | aligned 2026-04-02  |
-| `CHANGELOG.md`                                  | `29.0.0` (top entry) | PRIMARY         | CURRENT | KEEP_AS_CANON | aligned 2026-04-02  |
+| Path                                            | Version(s) mentioned | Authority level | Status  | Action          | Proof              |
+| ----------------------------------------------- | -------------------- | --------------- | ------- | --------------- | ------------------ |
+| `package.json`                                  | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON   | grep verified      |
+| `src-tauri/Cargo.toml`                          | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON   | grep verified      |
+| `tauri.base.json`                               | `29.0.0`             | PRIMARY         | CURRENT | KEEP_AS_CANON   | aligned 2026-04-02 |
+| `CHANGELOG.md`                                  | `29.0.0` (top entry) | PRIMARY         | CURRENT | KEEP_AS_CANON   | aligned 2026-04-02 |
 | `docs/90_release/PRODUCTION_RELEASE_v28.5.0.md` | `28.5.0`             | HISTORICAL      | FROZEN  | KEEP_AS_HISTORY | historical doc     |
 
 ---

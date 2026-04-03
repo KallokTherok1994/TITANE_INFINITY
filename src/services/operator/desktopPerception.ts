@@ -50,7 +50,10 @@ export async function handoffDesktopSession(
  * @param reason Reason for kill switch activation
  * @returns Promise<boolean> true if killed successfully
  */
-export async function killDesktopSession(sessionId: string, reason: string): Promise<boolean> {
+export async function killDesktopSession(
+  sessionId: string,
+  reason: string
+): Promise<boolean> {
   return invoke<boolean>('desktop_kill_switch', {
     session_id: sessionId,
     reason,

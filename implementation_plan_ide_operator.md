@@ -18,26 +18,26 @@ Single sentence: Define IDE operator types for session binding, relay results, s
 type IDESessionStatus = 'IDLE' | 'INSPECTING' | 'EXECUTING' | 'BLOCKED' | 'STOPPED';
 
 type IDERelayCategory =
-  | 'repo_inventory'     // List repo structure
-  | 'file_read'          // Read file content
-  | 'grep_search'        // Search patterns
-  | 'git_status'         // Git status
-  | 'git_diff'           // Git diff
-  | 'safe_command'       // Bounded command execution
-  | 'patch_prepare'      // Prepare patch (read-only)
-  | 'handoff_required'   // Sensitive boundary
-  | 'forbidden_sensitive'// Action forbidden
-  | 'tooling_missing';   // Required tool not available
+  | 'repo_inventory' // List repo structure
+  | 'file_read' // Read file content
+  | 'grep_search' // Search patterns
+  | 'git_status' // Git status
+  | 'git_diff' // Git diff
+  | 'safe_command' // Bounded command execution
+  | 'patch_prepare' // Prepare patch (read-only)
+  | 'handoff_required' // Sensitive boundary
+  | 'forbidden_sensitive' // Action forbidden
+  | 'tooling_missing'; // Required tool not available
 
 type IDEScopeCategory =
-  | 'repo_read'          // Read repo structure
-  | 'file_read'          // Read file content
-  | 'grep_search'        // Search patterns
-  | 'git_read'           // Git status/diff/log
-  | 'safe_command'       // Bounded shell execution
-  | 'patch_prepare'      // Patch suggestion (no apply)
-  | 'handoff_required'   // Sensitive boundary
-  | 'forbidden';         // Never allowed
+  | 'repo_read' // Read repo structure
+  | 'file_read' // Read file content
+  | 'grep_search' // Search patterns
+  | 'git_read' // Git status/diff/log
+  | 'safe_command' // Bounded shell execution
+  | 'patch_prepare' // Patch suggestion (no apply)
+  | 'handoff_required' // Sensitive boundary
+  | 'forbidden'; // Never allowed
 
 interface IDESession {
   session_id: string;
@@ -68,14 +68,25 @@ interface IDERelayResult {
 }
 
 interface IDERelayRequest {
-  action: 'repo_inventory' | 'file_read' | 'grep_search' | 'git_status' | 'git_diff' | 'safe_command';
-  target?: string;        // file path, search pattern, command
+  action:
+    | 'repo_inventory'
+    | 'file_read'
+    | 'grep_search'
+    | 'git_status'
+    | 'git_diff'
+    | 'safe_command';
+  target?: string; // file path, search pattern, command
   scope?: IDEScopeCategory;
 }
 
 interface IDECommandBoundary {
   action: string;
-  boundary: 'READ_ONLY' | 'SAFE_BOUNDED_EXEC' | 'WRITE_PREP_ONLY' | 'HUMAN_APPROVAL_REQUIRED' | 'FORBIDDEN';
+  boundary:
+    | 'READ_ONLY'
+    | 'SAFE_BOUNDED_EXEC'
+    | 'WRITE_PREP_ONLY'
+    | 'HUMAN_APPROVAL_REQUIRED'
+    | 'FORBIDDEN';
   requires_session: boolean;
   requires_unlocked: boolean;
 }
@@ -86,12 +97,14 @@ interface IDECommandBoundary {
 Single sentence: Create IDE operator service, Rust IPC commands, and update capability registry classification.
 
 **New files to create:**
+
 - `src/services/operator/ideTypes.ts` — TypeScript types for IDE operator
 - `src/services/operator/ideOperator.ts` — Frontend service for IDE relay
 - `src-tauri/src/commands/ide_operator.rs` — Rust IPC commands (ide_open_session, ide_repo_inventory, ide_file_read, ide_grep_search, ide_git_status, ide_git_diff, ide_safe_command, ide_close_session, ide_get_config)
 - `src/__tests__/services/operator/ideOperator.test.ts` — Tests for IDE operator
 
 **Existing files to modify:**
+
 - `src-tauri/src/main.rs` — Add ide_operator module declaration and command registrations
 - `src/services/operator/types.ts` — Update ide_operator from ABSENT to CONFIGURED
 - `src-tauri/src/commands/capability_commands.rs` — Update ide_operator classification
@@ -101,6 +114,7 @@ Single sentence: Create IDE operator service, Rust IPC commands, and update capa
 Single sentence: Implement IDE session management, repo inspection, file reading, grep search, git status/diff, and bounded command execution via IPC.
 
 **New functions (Rust - `src-tauri/src/commands/ide_operator.rs`):**
+
 - `ide_open_session(workspace_dir: String, allowed_scopes: Vec<String>) -> Result<IDESession, String>` — Opens governed IDE session
 - `ide_repo_inventory(session_id: String) -> Result<IDERelayResult, String>` — Lists repo structure
 - `ide_file_read(session_id: String, path: String) -> Result<IDERelayResult, String>` — Reads file content (reuses total_dev_read_file logic)
@@ -113,6 +127,7 @@ Single sentence: Implement IDE session management, repo inspection, file reading
 - `ide_get_config() -> Result<IDEOperatorConfig, String>` — Returns IDE operator configuration
 
 **New functions (TypeScript - `src/services/operator/ideOperator.ts`):**
+
 - `openIDESession(workspaceDir: string, allowedScopes?: string[]): Promise<IDESession>` — IPC call to open session
 - `closeIDESession(sessionId: string): Promise<boolean>` — IPC call to close session
 - `getIDESessionStatus(sessionId: string): Promise<IDESession>` — IPC call for status
@@ -125,6 +140,7 @@ Single sentence: Implement IDE session management, repo inspection, file reading
 - `getIDEOperatorConfig(): Promise<IDEOperatorConfig>` — Config + tooling check
 
 **Modified functions:**
+
 - `src/services/operator/types.ts` — Update `ide_operator` from ABSENT to CONFIGURED with reason_code reflecting session binding and existing capabilities
 - `src-tauri/src/commands/capability_commands.rs` — Update `ide_operator` status in `build_static_registry()` to CONFIGURED
 
@@ -139,6 +155,7 @@ The IDE operator uses a session map (HashMap<String, IDESession>) in Rust for se
 Single sentence: No new dependencies required; IDE operator reuses existing `total_dev_commands` functions and `git`/`grep`/`ls` system commands.
 
 **Existing dependencies leveraged:**
+
 - `total_dev_run_command` (already in total_dev_commands.rs) — Shell execution with allowlist
 - `total_dev_git_op` (already in total_dev_commands.rs) — Git operations with allowlist
 - `total_dev_read_file` (already in total_dev_commands.rs) — File reading with path traversal protection
@@ -152,6 +169,7 @@ Single sentence: No new dependencies required; IDE operator reuses existing `tot
 Single sentence: Create unit tests for IDE operator types and integration tests for IPC commands.
 
 **Test file: `src/__tests__/services/operator/ideOperator.test.ts`**
+
 - Test IDE session lifecycle (open → inspect → execute → close)
 - Test scope enforcement (allowed scope succeeds, forbidden scope blocks)
 - Test session binding to session_authority
