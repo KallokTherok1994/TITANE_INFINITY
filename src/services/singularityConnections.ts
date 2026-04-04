@@ -414,6 +414,9 @@ export class SingularityConnections {
       // Get current route from window.location
       const activePage = window.location.pathname;
 
+      const previousRuntime = current?.runtime ?? {};
+      const inferredBuild = import.meta.env.DEV ? 'dev' : 'stable';
+
       const updated: MetaLayer = {
         ...current,
         ui: {
@@ -424,12 +427,19 @@ export class SingularityConnections {
           last_interaction: null, // ✅ v∞.FIX - Backend will populate timestamp
         },
         runtime: {
-          ...current.runtime,
-          version: '17.3.0',
-          build: 'dev',
+          ...previousRuntime,
+          version:
+            typeof previousRuntime.version === 'string' && previousRuntime.version.trim().length > 0
+              ? previousRuntime.version
+              : 'unknown',
+          build:
+            typeof previousRuntime.build === 'string' && previousRuntime.build.trim().length > 0
+              ? previousRuntime.build
+              : inferredBuild,
           environment: import.meta.env.MODE,
           uptime: Math.floor(performance.now() / 1000), // ✅ v∞.FIX - Convert ms to seconds (u64)
-          restart_count: 0,
+          restart_count:
+            typeof previousRuntime.restart_count === 'number' ? previousRuntime.restart_count : 0,
         },
         runtime_health: this.calculateRuntimeHealth(),
       };

@@ -6,7 +6,7 @@
 
 import React from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, act } from '@testing-library/react';
+import { render, screen, act, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { TitanePage } from '../../pages/TitanePage';
 import { AppShell } from '../../components/layout/AppShell';
@@ -62,6 +62,36 @@ describe('UI Navigation — Single TopNav (Article 1)', () => {
     });
 
     expect(navElements).toHaveLength(1);
+  });
+
+  it('marks the More menu active when the current route belongs to an overflow item', () => {
+    const items: TopNavItem[] = [
+      { id: 'titane', label: 'TITANE', icon: '⚡', route: '/titane' },
+      { id: 'time', label: 'TIME', icon: '🕐', route: '/time' },
+      { id: 'admin', label: 'ADMIN', icon: '⚙️', route: '/admin' },
+      { id: 'dev', label: 'DEV', icon: '🛠️', route: '/dev' },
+      { id: 'fusion', label: 'FUSION', icon: '✨', route: '/fusion' },
+      { id: 'optimization', label: 'OPTIMIZE', icon: '⚡', route: '/optimization' },
+    ];
+
+    render(
+      React.createElement(
+        BrowserRouter,
+        null,
+        React.createElement(TopNav, {
+          items,
+          currentRoute: '/optimization',
+          onNavigate: () => undefined,
+          maxVisibleItems: 5,
+        })
+      )
+    );
+
+    const moreButton = screen.getByTestId('btn-nav-more');
+    expect(moreButton).toHaveAttribute('aria-current', 'page');
+
+    fireEvent.click(moreButton);
+    expect(screen.getByTestId('nav-optimization')).toHaveAttribute('aria-current', 'page');
   });
 
   it('programmatic check: countTopNavInstances === 1', () => {

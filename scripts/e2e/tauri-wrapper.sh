@@ -53,31 +53,66 @@ log_line "[E2E_WRAPPER] active"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 
+resolve_policy_binary() {
+  node - "$REPO_ROOT" <<'NODE'
+const path = require('node:path');
+const rootDir = process.argv[2];
+
+try {
+  const {
+    resolveNativeBinaryPolicy,
+  } = require(path.resolve(rootDir, 'scripts/e2e/native-binary-policy.cjs'));
+
+  const policy = resolveNativeBinaryPolicy({
+    rootDir,
+    explicitBinaryPath: process.env.TAURI_BINARY_PATH || '',
+    tauriDevServerUrl: process.env.TAURI_DEV_SERVER_URL || '',
+    mode: process.env.TITANE_NATIVE_BINARY_MODE || '',
+  });
+
+  process.stdout.write(policy.selectedBinaryPath || '');
+} catch {
+  process.stdout.write('');
+}
+NODE
+}
+
+POLICY_BINARY="$(resolve_policy_binary || true)"
+shopt -s nullglob
+APPIMAGE_CANDIDATES=(
+  "$REPO_ROOT"/deployment/latest/*.AppImage
+  "$REPO_ROOT"/runtime/stable/*.AppImage
+  "$REPO_ROOT"/src-tauri/target/release/bundle/appimage/*.AppImage
+)
+shopt -u nullglob
+
+if [[ -x "$HOME/.local/bin/titane-infinity" && -x "/usr/bin/titane-infinity" ]]; then
+  log_line "[E2E_WRAPPER] shadowing-risk ~/.local/bin/titane-infinity may mask /usr/bin/titane-infinity"
+fi
+
 # Binary selection policy:
-# - If TAURI_BINARY_PATH is explicitly provided: use it first.
-# - If TAURI_DEV_SERVER_URL is set: prefer debug/release binaries.
-# - Otherwise: prefer packaged AppImage binaries with embedded assets.
+# - explicit TAURI_BINARY_PATH always wins.
+# - native-binary-policy.cjs provides the canonical freshest candidate.
+# - fallback order keeps /usr/bin ahead of ~/.local/bin to avoid stale local shadowing.
 if [[ -n "${TAURI_DEV_SERVER_URL:-}" ]]; then
   BINARY_PATHS=(
     "${TAURI_BINARY_PATH:-}"
+    "$POLICY_BINARY"
     "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
     "$REPO_ROOT/src-tauri/target/release/titane-infinity"
-    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$HOME/.local/bin/titane-infinity"
+    "${APPIMAGE_CANDIDATES[@]}"
     "/usr/bin/titane-infinity"
+    "$HOME/.local/bin/titane-infinity"
   )
 else
   BINARY_PATHS=(
     "${TAURI_BINARY_PATH:-}"
-    "$REPO_ROOT/runtime/stable/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/src-tauri/target/release/bundle/appimage/TITANE-Infinity_27.2.0_amd64.AppImage"
-    "$REPO_ROOT/deployment/latest/TITANE-Infinity_27.2.0_amd64.AppImage"
+    "$POLICY_BINARY"
+    "${APPIMAGE_CANDIDATES[@]}"
     "$REPO_ROOT/src-tauri/target/release/titane-infinity"
     "$REPO_ROOT/src-tauri/target/debug/titane-infinity"
-    "$HOME/.local/bin/titane-infinity"
     "/usr/bin/titane-infinity"
+    "$HOME/.local/bin/titane-infinity"
   )
 fi
 

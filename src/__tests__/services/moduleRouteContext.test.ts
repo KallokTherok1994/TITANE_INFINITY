@@ -60,4 +60,14 @@ describe('moduleRouteContext memory route', () => {
       'write-actions-blocked-until-persistent-bridge-exists'
     );
   });
+
+  it('normalizes redirected routes to their real active destinations', () => {
+    const xpContext = publishActiveModuleContext('/xp');
+    const cognitiveContext = publishActiveModuleContext('/cognitive');
+
+    expect(xpContext.route).toBe('/experience');
+    expect(xpContext.moduleId).not.toBe('unknown_module');
+    expect(cognitiveContext.route).toBe('/dev');
+    expect(cognitiveContext.moduleId).toBe('dev_center');
+  });
 });

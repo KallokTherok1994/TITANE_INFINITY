@@ -14,7 +14,8 @@
  * © 2025 TITANE Team. All rights reserved.
  */
 
-import React, { useState, useCallback, lazy, Suspense, memo } from 'react';
+import React, { useState, useCallback, useEffect, lazy, Suspense, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { type AdminTab, ADMIN_TABS } from './types';
@@ -162,11 +163,32 @@ const TabContent: React.FC<TabContentProps> = ({ tab }) => {
 // ══════════════════════════════════════════════════════════════════
 
 const AdminPageComponent: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<AdminTab>('system');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => {
+    const requestedTab = searchParams.get('tab');
+    return ADMIN_TABS.some(tab => tab.id === requestedTab)
+      ? (requestedTab as AdminTab)
+      : 'system';
+  });
 
-  const handleTabChange = useCallback((tab: AdminTab) => {
-    setActiveTab(tab);
-  }, []);
+  const handleTabChange = useCallback(
+    (tab: AdminTab) => {
+      setActiveTab(tab);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', tab);
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (ADMIN_TABS.some(tab => tab.id === requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab as AdminTab);
+    }
+  }, [activeTab, searchParams]);
 
   return (
     <div className="admin-page" data-testid="page-admin">

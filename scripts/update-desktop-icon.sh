@@ -4,7 +4,7 @@
 # Mise à jour automatique de l'icône dans le menu des applications
 # ═══════════════════════════════════════════════════════════════
 
-set -e
+set -euo pipefail
 
 # Couleurs
 GREEN='\033[0;32m'
@@ -38,23 +38,26 @@ mkdir -p "$DESKTOP_INSTALL_DIR"
 
 echo -e "${YELLOW}[1/4]${NC} Mise à jour du fichier .desktop avec chemins actuels..."
 
-# Détecter l'exécutable à utiliser (priorité: AppImage la plus récente parmi bundle+stable → cargo release → cargo debug)
+# Détecter l'exécutable à utiliser (priorité: AppImage la plus récente déployée/stable → binaire installé → cargo release → cargo debug)
 BINARY_PATH=""
 
 shopt -s nullglob
+DEPLOY_APPIMAGES=("$PROJECT_DIR"/deployment/latest/*.AppImage)
 STABLE_APPIMAGES=("$PROJECT_DIR"/runtime/stable/*.AppImage)
 BUNDLE_APPIMAGES=("$PROJECT_DIR"/src-tauri/target/release/bundle/appimage/*.AppImage)
-ALL_APPIMAGES=("${BUNDLE_APPIMAGES[@]}" "${STABLE_APPIMAGES[@]}")
+ALL_APPIMAGES=("${DEPLOY_APPIMAGES[@]}" "${STABLE_APPIMAGES[@]}" "${BUNDLE_APPIMAGES[@]}")
 shopt -u nullglob
 
 if [ ${#ALL_APPIMAGES[@]} -gt 0 ]; then
-    # Prendre la plus récente
-    BINARY_PATH="$(ls -t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
+    BINARY_PATH="$(ls -1t "${ALL_APPIMAGES[@]}" 2>/dev/null | head -n 1)"
     echo -e "      ✓ AppImage la plus récente trouvée"
-elif [ -f "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
+elif [ -x "/usr/bin/titane-infinity" ]; then
+    BINARY_PATH="/usr/bin/titane-infinity"
+    echo -e "      ✓ Binaire installé trouvé (/usr/bin)"
+elif [ -x "$PROJECT_DIR/src-tauri/target/release/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/release/titane-infinity"
     echo -e "      ✓ Binaire Release trouvé"
-elif [ -f "$PROJECT_DIR/src-tauri/target/debug/titane-infinity" ]; then
+elif [ -x "$PROJECT_DIR/src-tauri/target/debug/titane-infinity" ]; then
     BINARY_PATH="$PROJECT_DIR/src-tauri/target/debug/titane-infinity"
     echo -e "      ✓ Binaire Debug trouvé"
 else

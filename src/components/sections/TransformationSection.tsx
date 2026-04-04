@@ -11,6 +11,7 @@ import React, { memo } from 'react';
 import { Grid, Stack } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -40,7 +41,15 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
 
       <Card>
         <h3 style={{ marginBottom: spacing[4] }}>Roadmap Évolutif</h3>
-        <React.Suspense fallback={null}>
+        <React.Suspense
+          fallback={
+            <SectionLoadingFallback
+              label="Roadmap évolutif"
+              note="Chargement des paliers de transformation…"
+              testId="loading-transformation-roadmap"
+            />
+          }
+        >
           <LazyTransformationRoadmap />
         </React.Suspense>
       </Card>

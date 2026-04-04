@@ -10,6 +10,7 @@
 
 import { tauriClient } from '@/lib/tauriClient';
 import React, { useState, useEffect, useCallback, memo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { logger } from '@/lib/logger';
 import { useDeveloperMode } from '@/features/developer-mode/useDeveloperMode';
@@ -37,6 +38,18 @@ import { useSystemHealth } from '@/stores/systemStore.selectors';
 // ═══════════════════════════════════════════════════════════════════════════
 
 type SectionId = 'overview' | 'diagnostics' | 'operations' | 'validation' | 'security';
+
+const VALID_SECTIONS: SectionId[] = [
+  'overview',
+  'diagnostics',
+  'operations',
+  'validation',
+  'security',
+];
+
+const isSectionId = (value: string | null): value is SectionId => {
+  return value !== null && VALID_SECTIONS.includes(value as SectionId);
+};
 
 interface OrchestrationState {
   multiAi: {
@@ -634,7 +647,11 @@ MetricsSection.displayName = 'MetricsSection';
 // ═══════════════════════════════════════════════════════════════════════════
 
 function DevPageContent(): JSX.Element {
-  const [activeSection, setActiveSection] = useState<SectionId>('overview');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeSection, setActiveSection] = useState<SectionId>(() => {
+    const requestedSection = searchParams.get('tab');
+    return isSectionId(requestedSection) ? requestedSection : 'overview';
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -723,6 +740,25 @@ function DevPageContent(): JSX.Element {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const updateActiveSection = useCallback(
+    (nextSection: SectionId) => {
+      setActiveSection(nextSection);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', nextSection);
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedSection = searchParams.get('tab');
+    if (isSectionId(requestedSection) && requestedSection !== activeSection) {
+      setActiveSection(requestedSection);
+    }
+  }, [activeSection, searchParams]);
 
   // Handlers
   const handleExecuteCommand = useCallback(
@@ -828,7 +864,7 @@ function DevPageContent(): JSX.Element {
             key={section.id}
             data-testid={`tab-dev-${section.id}`}
             className={`dev-tab ${activeSection === section.id ? 'dev-tab--active' : ''}`}
-            onClick={() => setActiveSection(section.id)}
+            onClick={() => updateActiveSection(section.id)}
           >
             <span className="dev-tab-icon">{section.icon}</span>
             <span className="dev-tab-label">{section.label}</span>

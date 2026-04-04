@@ -19,7 +19,6 @@ async function clickNavItem(navTestId) {
   const routeByNavId = {
     'nav-titane': '/titane',
     'nav-time': '/time',
-    'nav-stats': '/dev',
     'nav-admin': '/admin',
     'nav-dev': '/dev',
   };
@@ -82,7 +81,6 @@ describe('Desktop (Tauri) UI connectivity critical', () => {
     const checks = [
       { nav: 'nav-titane', page: 'page-titane' },
       { nav: 'nav-time', page: 'page-time' },
-      { nav: 'nav-stats', page: 'page-dev' },
       { nav: 'nav-admin', page: 'page-admin' },
       { nav: 'nav-dev', page: 'page-dev' },
     ];

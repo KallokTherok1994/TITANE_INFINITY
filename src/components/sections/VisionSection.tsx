@@ -11,6 +11,7 @@ import React, { useState, useCallback, memo } from 'react';
 import { Grid, Stack } from '@components/layout';
 import { Button } from '../ui';
 import { Card } from '@/ui';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { CameraPreview } from '@/components/vision/CameraPreview';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { Camera } from 'lucide-react';
@@ -181,7 +182,15 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
                 )}
 
                 <CameraPreview position="bottom-left" />
-                <React.Suspense fallback={null}>
+                <React.Suspense
+                  fallback={
+                    <SectionLoadingFallback
+                      label="Overlay de détection"
+                      note="Activation des détections visuelles…"
+                      testId="loading-vision-overlay"
+                    />
+                  }
+                >
                   <LazyDetectionOverlay />
                 </React.Suspense>
               </div>
@@ -241,7 +250,15 @@ export const VisionSection: React.FC<VisionSectionProps> = memo(() => {
       {/* Vision Metrics Charts */}
       <div style={{ marginTop: spacing[6] }}>
         <h3 style={{ marginBottom: spacing[4] }}>📈 Graphiques de Métriques</h3>
-        <React.Suspense fallback={null}>
+        <React.Suspense
+          fallback={
+            <SectionLoadingFallback
+              label="Graphiques Vision"
+              note="Préparation des métriques visuelles…"
+              testId="loading-vision-metrics"
+            />
+          }
+        >
           <LazyVisionMetricsChart />
         </React.Suspense>
       </div>

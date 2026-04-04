@@ -40,6 +40,7 @@ export interface TopNavItem {
   icon: React.ReactNode;
   route: string;
   description?: string;
+  matchRoutes?: string[];
 }
 
 export interface TopNavProps {
@@ -174,9 +175,20 @@ export const TopNav: React.FC<TopNavProps> = ({
     }
   };
 
-  const isActive = (route: string): boolean => {
-    return currentRoute === route || currentRoute.startsWith(route);
+  const matchesRoute = (route: string): boolean => {
+    return (
+      currentRoute === route ||
+      currentRoute.startsWith(`${route}/`) ||
+      currentRoute.startsWith(`${route}?`)
+    );
   };
+
+  const isActive = (item: TopNavItem): boolean => {
+    const candidates = [item.route, ...(item.matchRoutes ?? [])];
+    return candidates.some(matchesRoute);
+  };
+
+  const hasActiveMoreItem = moreItems.some(item => isActive(item));
 
   return (
     <nav
@@ -202,7 +214,7 @@ export const TopNav: React.FC<TopNavProps> = ({
       <div className="flex items-center gap-3 flex-1 justify-center max-w-5xl">
         {/* Visible Items */}
         {visibleItems.map(item => {
-          const active = isActive(item.route);
+          const active = isActive(item);
           return (
             <button
               key={item.id}
@@ -243,7 +255,13 @@ export const TopNav: React.FC<TopNavProps> = ({
               aria-label="Plus d'options"
               aria-expanded={isMoreMenuOpen}
               aria-haspopup="true"
-              className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50 focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool"
+              aria-current={hasActiveMoreItem ? 'page' : undefined}
+              className={cn(
+                'flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-titanium-accent-cool',
+                hasActiveMoreItem
+                  ? 'text-titanium-accent-cool bg-titanium-bg-interactive'
+                  : 'text-titanium-text-secondary hover:text-titanium-text-primary hover:bg-titanium-bg-interactive/50'
+              )}
             >
               <MoreHorizontal size={18} />
               <span className="hidden md:inline">Plus</span>
@@ -272,7 +290,7 @@ export const TopNav: React.FC<TopNavProps> = ({
                   role="menu"
                 >
                   {moreItems.map(item => {
-                    const active = isActive(item.route);
+                    const active = isActive(item);
                     return (
                       <button
                         key={item.id}
@@ -369,6 +387,7 @@ export const createTopNavItems = (
     label: string;
     route: string;
     description?: string;
+    matchRoutes?: string[];
   }>
 ): TopNavItem[] => {
   return menuSections.map(section => ({
@@ -377,5 +396,6 @@ export const createTopNavItems = (
     icon: ICON_MAP[section.id] || <Atom size={18} />,
     route: section.route,
     description: section.description,
+    matchRoutes: section.matchRoutes,
   }));
 };

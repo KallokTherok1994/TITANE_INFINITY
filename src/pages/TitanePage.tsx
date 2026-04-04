@@ -31,6 +31,7 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Container, Stack } from '@components/layout';
 import { createLogger } from '@/utils/logger';
 import { useVisualEngines } from '@hooks/useVisualEngines';
@@ -78,6 +79,22 @@ type TabId =
   | 'transformation'
   | 'symbiose';
 
+const VALID_TABS: TabId[] = [
+  'conversation',
+  'vision',
+  'overview',
+  'identity',
+  'memory-map',
+  'memory-evolution',
+  'progression',
+  'transformation',
+  'symbiose',
+];
+
+const isTabId = (value: string | null): value is TabId => {
+  return value !== null && VALID_TABS.includes(value as TabId);
+};
+
 const TAB_PANEL_IDS: Record<TabId, string> = {
   conversation: 'titane-panel-conversation',
   vision: 'titane-panel-vision',
@@ -120,8 +137,13 @@ const TAB_LABEL_IDS: Record<TabId, string> = {
  * in src/components/sections/ for better maintainability and testability.
  */
 export const TitanePage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+
   // ═══ STATE ═══
-  const [activeTab, setActiveTab] = useState<TabId>('conversation');
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const requestedTab = searchParams.get('tab');
+    return isTabId(requestedTab) ? requestedTab : 'conversation';
+  });
   const [progression, setProgression] = useState<ProgressionState | null>(null);
   const [memoryStats, setMemoryStats] = useState<MemoryStats | null>(null);
 
@@ -184,20 +206,39 @@ export const TitanePage: React.FC = () => {
     [progression, memoryStats]
   );
 
+  const updateActiveTab = useCallback(
+    (nextTab: TabId) => {
+      setActiveTab(nextTab);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', nextTab);
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (isTabId(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+  }, [activeTab, searchParams]);
+
   // ═══ TAB HANDLERS ═══
   const tabHandlers = useMemo(
     () => ({
-      conversation: () => setActiveTab('conversation'),
-      vision: () => setActiveTab('vision'),
-      overview: () => setActiveTab('overview'),
-      identity: () => setActiveTab('identity'),
-      memoryMap: () => setActiveTab('memory-map'),
-      memoryEvolution: () => setActiveTab('memory-evolution'),
-      progression: () => setActiveTab('progression'),
-      transformation: () => setActiveTab('transformation'),
-      symbiose: () => setActiveTab('symbiose'),
+      conversation: () => updateActiveTab('conversation'),
+      vision: () => updateActiveTab('vision'),
+      overview: () => updateActiveTab('overview'),
+      identity: () => updateActiveTab('identity'),
+      memoryMap: () => updateActiveTab('memory-map'),
+      memoryEvolution: () => updateActiveTab('memory-evolution'),
+      progression: () => updateActiveTab('progression'),
+      transformation: () => updateActiveTab('transformation'),
+      symbiose: () => updateActiveTab('symbiose'),
     }),
-    []
+    [updateActiveTab]
   );
 
   // ═══ RENDER ACTIVE SECTION ═══
@@ -396,7 +437,9 @@ export const TitanePage: React.FC = () => {
             aria-labelledby={TAB_LABEL_IDS[activeTab]}
             tabIndex={0}
           >
-            {renderActiveSection()}
+            <ErrorBoundary context={`TitaneTab:${activeTab}`}>
+              {renderActiveSection()}
+            </ErrorBoundary>
           </div>
         </Stack>
       </Container>

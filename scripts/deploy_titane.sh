@@ -39,13 +39,13 @@ DEB=""
 
 # Chercher AppImage
 if ls "$BUNDLE_DIR/appimage/"*.AppImage 1> /dev/null 2>&1; then
-    APPIMAGE=$(ls -1 "$BUNDLE_DIR/appimage/"*.AppImage | head -1)
+    APPIMAGE=$(ls -1t "$BUNDLE_DIR/appimage/"*.AppImage | head -1)
     echo -e "${GREEN}✓${NC} Found AppImage: $(basename "$APPIMAGE")"
 fi
 
 # Chercher DEB
 if ls "$BUNDLE_DIR/deb/"*.deb 1> /dev/null 2>&1; then
-    DEB=$(ls -1 "$BUNDLE_DIR/deb/"*.deb | head -1)
+    DEB=$(ls -1t "$BUNDLE_DIR/deb/"*.deb | head -1)
     echo -e "${GREEN}✓${NC} Found DEB: $(basename "$DEB")"
 fi
 

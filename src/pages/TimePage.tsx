@@ -12,7 +12,8 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { tauriClient } from '@/lib/tauriClient';
 import { useToast } from '@/hooks/useToast';
 import { REFRESH_INTERVALS } from '@/constants/timeouts';
@@ -24,6 +25,12 @@ import './TimePage.css';
 // ═══════════════════════════════════════════════════════════════════
 
 type TabId = 'now' | 'agenda' | 'timeline' | 'snapshots' | 'cognitive';
+
+const VALID_TABS: TabId[] = ['now', 'agenda', 'timeline', 'snapshots', 'cognitive'];
+
+const isTabId = (value: string | null): value is TabId => {
+  return value !== null && VALID_TABS.includes(value as TabId);
+};
 
 interface TimeBlock {
   id: string;
@@ -82,7 +89,11 @@ interface FlowState {
 // ═══════════════════════════════════════════════════════════════════
 
 export const TimePage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<TabId>('now');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<TabId>(() => {
+    const requestedTab = searchParams.get('tab');
+    return isTabId(requestedTab) ? requestedTab : 'now';
+  });
   const [currentDate] = useState<Date>(new Date());
   const [currentEnergy] = useState<number>(72);
   const [snapshots, setSnapshots] = useState<Snapshot[]>([]);
@@ -136,6 +147,25 @@ export const TimePage: React.FC = () => {
       energy: 65,
     },
   ];
+
+  const updateActiveTab = useCallback(
+    (nextTab: TabId) => {
+      setActiveTab(nextTab);
+      setSearchParams(prev => {
+        const next = new URLSearchParams(prev);
+        next.set('tab', nextTab);
+        return next;
+      }, { replace: true });
+    },
+    [setSearchParams]
+  );
+
+  useEffect(() => {
+    const requestedTab = searchParams.get('tab');
+    if (isTabId(requestedTab) && requestedTab !== activeTab) {
+      setActiveTab(requestedTab);
+    }
+  }, [activeTab, searchParams]);
 
   // Load snapshots & stats
   useEffect(() => {
@@ -196,7 +226,7 @@ export const TimePage: React.FC = () => {
           <button
             key={tab.id}
             data-testid={`tab-time-${tab.id}`}
-            onClick={() => setActiveTab(tab.id as TabId)}
+            onClick={() => updateActiveTab(tab.id as TabId)}
             className={`px-4 py-2 rounded-lg transition-all whitespace-nowrap ${
               activeTab === tab.id
                 ? 'bg-blue-600 text-white'

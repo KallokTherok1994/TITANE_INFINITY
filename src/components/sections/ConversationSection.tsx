@@ -87,17 +87,57 @@ interface LatestAssistantRuntimeSnapshot {
   runtimeSignals: RuntimeSignals;
 }
 
-const AVAILABLE_PROVIDERS: Array<{
-  id: ConversationProviderPreference;
+const BASE_CONVERSATION_PROVIDERS: Array<{
+  id: Extract<ConversationProviderPreference, 'gemini' | 'ollama' | 'openai' | 'claude'>;
+  name: string;
+  icon: string;
+}> = [
+  { id: 'gemini', name: 'Gemini', icon: '✨' },
+  { id: 'ollama', name: 'Ollama', icon: '🦙' },
+  { id: 'openai', name: 'OpenAI', icon: '🤖' },
+  { id: 'claude', name: 'Claude', icon: '🧠' },
+];
+
+type ConversationProviderReadiness = Partial<
+  Record<ConversationProviderPreference, boolean>
+>;
+
+const DEFAULT_CONVERSATION_PROVIDER_READINESS: Record<
+  ConversationProviderPreference,
+  boolean
+> = {
+  auto: true,
+  local: true,
+  ollama: true,
+  openai: false,
+  gemini: false,
+  claude: false,
+};
+
+export function isConversationProviderReady(
+  provider: ConversationProviderPreference,
+  readiness: ConversationProviderReadiness = DEFAULT_CONVERSATION_PROVIDER_READINESS
+): boolean {
+  if (provider === 'auto' || provider === 'local' || provider === 'ollama') {
+    return true;
+  }
+
+  return readiness[provider] === true;
+}
+
+export function buildConversationProviders(
+  readiness: ConversationProviderReadiness = DEFAULT_CONVERSATION_PROVIDER_READINESS
+): Array<{
+  id: Extract<ConversationProviderPreference, 'gemini' | 'ollama' | 'openai' | 'claude'>;
   name: string;
   icon: string;
   available: boolean;
-}> = [
-  { id: 'gemini', name: 'Gemini', icon: '✨', available: true },
-  { id: 'ollama', name: 'Ollama', icon: '🦙', available: true },
-  { id: 'openai', name: 'OpenAI', icon: '🤖', available: true },
-  { id: 'claude', name: 'Claude', icon: '🧠', available: true },
-];
+}> {
+  return BASE_CONVERSATION_PROVIDERS.map(provider => ({
+    ...provider,
+    available: isConversationProviderReady(provider.id, readiness),
+  }));
+}
 
 const BUILT_IN_CONVERSATION_MODES = [
   {
@@ -159,7 +199,7 @@ export function resolveConversationDisplayProvider(
   }
 
   return (
-    AVAILABLE_PROVIDERS.find(provider => provider.id === selectedProvider)?.name ??
+    BASE_CONVERSATION_PROVIDERS.find(provider => provider.id === selectedProvider)?.name ??
     selectedProvider
   );
 }
@@ -1017,6 +1057,14 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
   const { success: toastSuccess, error: errorToast } = useToast();
   const [selectedProvider, setSelectedProvider] =
     useState<ConversationProviderPreference>(getInitialSelectedProvider);
+  const [providerReadiness, setProviderReadiness] =
+    useState<ConversationProviderReadiness>(DEFAULT_CONVERSATION_PROVIDER_READINESS);
+  const effectiveProviderPreference = isConversationProviderReady(
+    selectedProvider,
+    providerReadiness
+  )
+    ? selectedProvider
+    : 'ollama';
   const {
     messages,
     isLoading,
@@ -1032,7 +1080,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     conversationId,
   } = useConversationEngine({
     mode: 'default',
-    providerPreference: selectedProvider,
+    providerPreference: effectiveProviderPreference,
     autoHealthCheck: false,
     maxMessages: 500,
   });
@@ -1125,6 +1173,70 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
     window.localStorage.setItem('omega-chat-preferred-provider', selectedProvider);
   }, [selectedProvider]);
 
+  useEffect(() => {
+    const isTestEnv =
+      import.meta.env.MODE === 'test' ||
+      (typeof process !== 'undefined' && Boolean(process.env.VITEST));
+    if (isTestEnv) {
+      return;
+    }
+
+    let cancelled = false;
+    const withTimeout = <T,>(
+      promise: Promise<T>,
+      timeoutMs: number,
+      fallback: T
+    ): Promise<T> =>
+      Promise.race([
+        promise,
+        new Promise<T>(resolve => {
+          window.setTimeout(() => resolve(fallback), timeoutMs);
+        }),
+      ]);
+
+    void (async () => {
+      try {
+        const [openaiModule, geminiModule, claudeModule] = await Promise.all([
+          import('@/services/ai/providers/openai'),
+          import('@/services/ai/providers/gemini'),
+          import('@/services/ai/providers/claude'),
+        ]);
+
+        const checks = await Promise.allSettled([
+          withTimeout(openaiModule.openaiProvider.isAvailable(), 3000, false),
+          withTimeout(geminiModule.geminiProvider.isAvailable(), 3000, false),
+          withTimeout(claudeModule.claudeProvider.isAvailable(), 3000, false),
+        ]);
+
+        if (cancelled) {
+          return;
+        }
+
+        const openaiAvailable =
+          checks[0] && checks[0].status === 'fulfilled' ? checks[0].value : false;
+        const geminiAvailable =
+          checks[1] && checks[1].status === 'fulfilled' ? checks[1].value : false;
+        const claudeAvailable =
+          checks[2] && checks[2].status === 'fulfilled' ? checks[2].value : false;
+
+        setProviderReadiness(prev => ({
+          ...prev,
+          openai: openaiAvailable,
+          gemini: geminiAvailable,
+          claude: claudeAvailable,
+        }));
+      } catch (providerError) {
+        if (!cancelled) {
+          pageLogger.warn('Provider readiness check failed', providerError);
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   // ═══ COMPUTED VALUES ═══
   const conversationModes = useMemo(() => {
     const customModesFormatted = customModes.map(m => ({
@@ -1176,6 +1288,16 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
 
     return null;
   }, [messages]);
+
+  const availableProviders = useMemo(
+    () => buildConversationProviders(providerReadiness),
+    [providerReadiness]
+  );
+
+  const selectedProviderReady = useMemo(
+    () => isConversationProviderReady(selectedProvider, providerReadiness),
+    [providerReadiness, selectedProvider]
+  );
 
   const selectedProviderLabel = useMemo(
     () => resolveConversationDisplayProvider(selectedProvider, null),
@@ -1823,7 +1945,7 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             <ChatProviderSelector
               selectedProvider={selectedProvider}
               onChange={handleProviderChange}
-              providers={AVAILABLE_PROVIDERS}
+              providers={availableProviders}
             />
 
             {/* Mode Selector */}
@@ -1965,6 +2087,22 @@ export const ConversationSection: React.FC<ConversationSectionProps> = memo(() =
             {filteredCount}/{messageCount}
           </div>
         </div>
+
+        {selectedProvider !== 'auto' &&
+          selectedProvider !== 'local' &&
+          selectedProvider !== 'ollama' &&
+          !selectedProviderReady && (
+            <div
+              className="conversation-error"
+              data-testid="chat-provider-warning"
+              role="alert"
+            >
+              <strong>⚠️ Provider non configuré:</strong> {selectedProviderLabel} n&apos;est
+              pas disponible sur ce runtime. TITANE conservera ce choix sans fallback
+              silencieux et affichera un résultat dégradé tant que la clé API n&apos;est
+              pas ajoutée dans <strong>Admin → Gouvernance → Secrets</strong>.
+            </div>
+          )}
 
         {latestAssistantRuntime && (
           <div

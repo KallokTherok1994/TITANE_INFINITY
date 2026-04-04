@@ -20,16 +20,35 @@ function existsExecutable(filePath) {
   }
 }
 
-function newestAssetMtimeMs(assetsDir) {
-  if (!fs.existsSync(assetsDir)) return -1;
-  let newest = -1;
-  for (const entry of fs.readdirSync(assetsDir, { withFileTypes: true })) {
-    if (!entry.isFile()) continue;
-    const full = path.join(assetsDir, entry.name);
-    const current = statMtimeMs(full);
-    if (current > newest) newest = current;
+function listExecutableAppImageCandidates(rootDir) {
+  const candidateDirs = [
+    path.resolve(rootDir, 'deployment/latest'),
+    path.resolve(rootDir, 'runtime/stable'),
+    path.resolve(rootDir, 'src-tauri/target/release/bundle/appimage'),
+  ];
+
+  const seen = new Set();
+  const candidates = [];
+
+  for (const dir of candidateDirs) {
+    if (!fs.existsSync(dir)) continue;
+
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.endsWith('.AppImage')) continue;
+
+      const filePath = path.join(dir, entry.name);
+      if (seen.has(filePath) || !existsExecutable(filePath)) continue;
+
+      seen.add(filePath);
+      candidates.push({
+        kind: 'appimage',
+        filePath,
+        mtimeMs: statMtimeMs(filePath),
+      });
+    }
   }
-  return newest;
+
+  return candidates.sort((left, right) => right.mtimeMs - left.mtimeMs);
 }
 
 function listWorkspaceChanges(rootDir) {
@@ -78,12 +97,14 @@ function pickByPreference(candidates, mode) {
   const release = candidates.find(item => item.kind === 'release');
   const debug = candidates.find(item => item.kind === 'debug');
   const appimage = candidates.find(item => item.kind === 'appimage');
+  const installed = candidates.find(item => item.kind === 'installed');
+  const local = candidates.find(item => item.kind === 'local');
 
   if (mode === 'debug') {
-    return debug || release || appimage || null;
+    return debug || release || appimage || installed || local || null;
   }
   if (mode === 'release') {
-    return release || debug || appimage || null;
+    return release || appimage || installed || local || debug || null;
   }
 
   return (
@@ -96,11 +117,16 @@ function classifyFreshness({ selectedKind, isFresh, explicitOverride, workspaceA
   if (!isFresh) {
     if (selectedKind === 'debug') return 'STALE_DEBUG_BINARY';
     if (selectedKind === 'release') return 'STALE_RELEASE_BINARY';
+    if (selectedKind === 'installed' || selectedKind === 'local') {
+      return 'STALE_INSTALLED_BINARY';
+    }
     return 'BUILD_REQUIRED';
   }
 
   if (selectedKind === 'debug') return 'FRESH_DEBUG_BINARY';
   if (selectedKind === 'release') return 'FRESH_RELEASE_BINARY';
+  if (selectedKind === 'installed') return 'FRESH_INSTALLED_BINARY';
+  if (selectedKind === 'local') return 'FRESH_LOCAL_BINARY';
   if (explicitOverride) return 'FRESH_CERTIFIED_BINARY';
   return 'FRESH_CERTIFIED_BINARY';
 }
@@ -122,31 +148,18 @@ function resolveNativeBinaryPolicy(options = {}) {
 
   const debugPath = path.resolve(rootDir, 'src-tauri/target/debug/titane-infinity');
   const releasePath = path.resolve(rootDir, 'src-tauri/target/release/titane-infinity');
-  const appImagePaths = [
-    // newest first: policy selects the first executable found
-    path.resolve(
-      rootDir,
-      'src-tauri/target/release/bundle/appimage/TITANE-Infinity_28.6.0_amd64.AppImage'
-    ),
-    path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.5.0_amd64.AppImage'),
-    path.resolve(rootDir, 'deployment/latest/TITANE-Infinity_28.0.0_amd64.AppImage'),
-    path.resolve(rootDir, 'runtime/stable/Titan-Stable_27.2.0_amd64.AppImage'),
-    path.resolve(
-      rootDir,
-      'deployment/v27.0.2_prod_final/TITANE-Infinity_27.0.2_amd64.AppImage'
-    ),
-  ];
+  const installedPath = '/usr/bin/titane-infinity';
+  const localPath = process.env.HOME
+    ? path.resolve(process.env.HOME, '.local/bin/titane-infinity')
+    : '';
+  const appImageCandidates = listExecutableAppImageCandidates(rootDir);
 
-  const existingAppImage =
-    appImagePaths.find(filePath => existsExecutable(filePath)) || '';
   const candidates = [
     { kind: 'debug', filePath: debugPath, mtimeMs: statMtimeMs(debugPath) },
     { kind: 'release', filePath: releasePath, mtimeMs: statMtimeMs(releasePath) },
-    {
-      kind: 'appimage',
-      filePath: existingAppImage,
-      mtimeMs: statMtimeMs(existingAppImage),
-    },
+    ...appImageCandidates,
+    { kind: 'installed', filePath: installedPath, mtimeMs: statMtimeMs(installedPath) },
+    { kind: 'local', filePath: localPath, mtimeMs: statMtimeMs(localPath) },
   ].filter(item => item.filePath && item.mtimeMs >= 0);
 
   const explicitExists = existsExecutable(explicitBinaryPath);
@@ -215,6 +228,7 @@ function resolveNativeBinaryPolicy(options = {}) {
     freshnessClass === 'NO_VALID_BINARY' ||
     freshnessClass === 'STALE_DEBUG_BINARY' ||
     freshnessClass === 'STALE_RELEASE_BINARY' ||
+    freshnessClass === 'STALE_INSTALLED_BINARY' ||
     freshnessClass === 'WORKSPACE_AHEAD_OF_RUNTIME' ||
     freshnessClass === 'BUILD_REQUIRED';
 
@@ -226,6 +240,9 @@ function resolveNativeBinaryPolicy(options = {}) {
         ? 'RELEASE_PREFERRED_POLICY'
         : 'NEWEST_BINARY_POLICY';
 
+  const localBinaryExists = existsExecutable(localPath);
+  const systemBinaryExists = existsExecutable(installedPath);
+
   return {
     mode,
     selectedBinaryPath: selected?.filePath || '',
@@ -235,14 +252,19 @@ function resolveNativeBinaryPolicy(options = {}) {
     precedence: explicitExists
       ? ['explicit', 'policy']
       : mode === 'debug'
-        ? ['debug', 'release', 'appimage']
+        ? ['debug', 'release', 'appimage(newest)', 'installed', 'local']
         : mode === 'release'
-          ? ['release', 'debug', 'appimage']
-          : ['newest(debug/release/appimage)'],
+          ? ['release', 'appimage(newest)', 'installed', 'local', 'debug']
+          : ['newest(debug/release/appimage/installed/local)'],
     freshnessClass,
     buildRequired,
     workspaceAhead,
     workspaceAheadPaths,
+    shadowingRisk: {
+      localBinaryPath: localBinaryExists ? localPath : '',
+      systemBinaryPath: systemBinaryExists ? installedPath : '',
+      localOverridesSystem: localBinaryExists && systemBinaryExists,
+    },
     freshnessBasis: {
       maxInputKey: maxInput.key,
       maxInputPath: maxInput.filePath,

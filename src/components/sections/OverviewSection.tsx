@@ -11,6 +11,7 @@ import React, { memo } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { QuickStatCard } from '@/features/dashboard';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { PersonaMoodIndicator } from '@components/PersonaMoodIndicator';
 import { TMetric, TSectionHeader } from '@/design-system';
 import { spacing } from '@themes/tokens';
@@ -95,7 +96,15 @@ export const OverviewSection: React.FC<OverviewSectionProps> = memo(({ stats }) 
       </div>
 
       {/* Real-Time Charts */}
-      <React.Suspense fallback={null}>
+      <React.Suspense
+        fallback={
+          <SectionLoadingFallback
+            label="Graphiques temps réel"
+            note="Chargement du dashboard en temps réel…"
+            testId="loading-overview-charts"
+          />
+        }
+      >
         <LazyRealTimeCharts />
       </React.Suspense>
 

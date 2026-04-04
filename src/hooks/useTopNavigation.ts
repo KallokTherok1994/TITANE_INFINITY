@@ -4,22 +4,43 @@ import { createTopNavItems } from '@components/layout';
 
 const TOP_NAV_SECTIONS = [
   // ═══ PRINCIPAL ═══
-  { id: 'titane', label: 'TITANE', route: '/titane', description: 'Le Cœur du Système' },
+  {
+    id: 'titane',
+    label: 'TITANE',
+    route: '/titane',
+    description: 'Le Cœur du Système',
+    matchRoutes: ['/experience', '/memory', '/research', '/skills'],
+  },
   { id: 'time', label: 'TIME', route: '/time', description: 'Centre Temporel' },
   { id: 'admin', label: 'ADMIN', route: '/admin', description: 'Centre Admin Unifié' },
-  { id: 'dev', label: 'DEV', route: '/dev', description: 'Centre DEV Unifié' },
+  {
+    id: 'dev',
+    label: 'DEV',
+    route: '/dev',
+    description: 'Centre DEV Unifié',
+    matchRoutes: ['/orchestration-center', '/orchestration-intelligence'],
+  },
   // Dans menu "Plus"
   {
     id: 'fusion',
     label: 'FUSION',
     route: '/fusion',
     description: 'Backend/Frontend Fusion',
+    matchRoutes: [
+      '/reality-center',
+      '/hyper-center',
+      '/quantum-center',
+      '/identity-center',
+      '/memory-evolution',
+      '/cloud',
+    ],
   },
   {
     id: 'optimization',
     label: 'OPTIMIZE',
     route: '/optimization',
     description: 'Performance Ultime',
+    matchRoutes: ['/performance'],
   },
   {
     id: 'total-dev',

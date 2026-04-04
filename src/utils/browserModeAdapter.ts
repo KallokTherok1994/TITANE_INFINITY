@@ -23,6 +23,9 @@ export const isBrowserMode = (): boolean => {
 
 export const configureBrowserMode = (): void => {
   if (!isBrowserMode()) {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('titane_browser_mode');
+    }
     return;
   }
 
@@ -55,6 +58,12 @@ export const configureBrowserMode = (): void => {
 };
 
 // Auto-configure au chargement du module
+if (typeof window !== 'undefined') {
+  window.addEventListener('tauri-ready', () => {
+    localStorage.removeItem('titane_browser_mode');
+  });
+}
+
 if (isBrowserMode()) {
   configureBrowserMode();
 }

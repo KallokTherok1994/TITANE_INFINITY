@@ -11,6 +11,7 @@ import React, { useState, useCallback, memo, useMemo } from 'react';
 import { Grid } from '@components/layout';
 import { Card } from '@/ui';
 import { TMetric, TSectionHeader } from '@/design-system';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { createLogger } from '@/utils/logger';
 import { usePersistentMemory } from '@/hooks/usePersistentMemory';
@@ -342,7 +343,15 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         <div style={{ marginTop: spacing[6] }}>
           <Card>
             <h3 style={{ marginBottom: spacing[4] }}>📚 Dashboard Mémoire</h3>
-            <React.Suspense fallback={null}>
+            <React.Suspense
+              fallback={
+                <SectionLoadingFallback
+                  label="Dashboard mémoire"
+                  note="Chargement des signaux mémoire…"
+                  testId="loading-memory-dashboard"
+                />
+              }
+            >
               <LazyMemoryDashboard
                 modeId={MEMORY_SECTION_MODE}
                 compact={true}
@@ -356,7 +365,15 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {/* Memory Tree Visualization */}
         <div style={{ marginTop: spacing[6] }}>
           <h3 style={{ marginBottom: spacing[4] }}>🌳 Arbre de la Mémoire</h3>
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Arbre mémoire"
+                note="Construction de la hiérarchie mémoire…"
+                testId="loading-memory-tree"
+              />
+            }
+          >
             <LazyMemoryTreeViewer
               data={memoryTreeData ?? undefined}
               onNodeClick={handleNodeClick}
@@ -399,7 +416,15 @@ export const MemorySection: React.FC<MemorySectionProps> = memo(
         {/* Memory Search */}
         <div style={{ marginTop: spacing[6] }}>
           <h3 style={{ marginBottom: spacing[4] }}>🔍 Recherche Sémantique</h3>
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Recherche sémantique"
+                note="Initialisation de la recherche mémoire…"
+                testId="loading-memory-search"
+              />
+            }
+          >
             <LazyMemorySearchPanel
               entries={searchEntries}
               onEntryClick={handleEntryClick}

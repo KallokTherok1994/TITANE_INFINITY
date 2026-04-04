@@ -70,6 +70,7 @@ import { useWindowControls } from './hooks/useWindowControls'; // ✨ v26.2.1 - 
 import { useZoomControl } from './hooks/useZoomControl'; // ✨ Sprint 6 Phase 3 - Zoom control
 import { ToastProvider } from './components/providers/ToastProvider'; // ✨ M1 - Toast notifications via Sonner
 import { publishActiveModuleContext } from '@/services/chat/moduleRouteContext';
+import { SingularityConnections } from '@/services/singularityConnections';
 
 /**
  * 🔐 POLITIQUE DE SÉCURITÉ ENVIRONNEMENT - RESTRICTIONS DÉSACTIVÉES
@@ -280,10 +281,12 @@ const AppRouter: React.FC = () => {
   useEffect(() => {
     try {
       publishActiveModuleContext(location.pathname);
+      void SingularityConnections.syncUIState();
     } catch (error) {
-      logger.warn('Failed to publish module context for chat binding', {
+      logger.warn('Failed to sync active UI/module context', {
         component: 'AppRouter',
         route: location.pathname,
+        error,
       });
     }
   }, [location.pathname]);
@@ -541,10 +544,10 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/progression" element={<Navigate to="/titane" replace />} />
           <Route path="/xp" element={<Navigate to="/experience" replace />} />
-          {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev (Stats fusionné DEV Cockpit) */}
-          <Route path="/cognitive" element={<Navigate to="/dev" replace />} />
+          {/* ❌ v25.2.1 → v29.1: /cognitive redirigé vers /dev?tab=diagnostics (Stats fusionné DEV Cockpit) */}
+          <Route path="/cognitive" element={<Navigate to="/dev?tab=diagnostics" replace />} />
           {/* ✅ v29.1: /stats fusionné dans DEV Cockpit > Diagnostics */}
-          <Route path="/stats" element={<Navigate to="/dev" replace />} />
+          <Route path="/stats" element={<Navigate to="/dev?tab=diagnostics" replace />} />
           <Route path="/experience" element={<Experience />} /> {/* ✨ v∞.D5 - Page XP */}
           {/* ✨ v25.1 TIME CENTER - Fusion Temporal Flow + Agenda + Time Navigator */}
           <Route
@@ -569,23 +572,23 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Redirections vers ADMIN Center */}
-          <Route path="/system-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/diagnostics" element={<Navigate to="/admin" replace />} />
-          <Route path="/devtools" element={<Navigate to="/admin" replace />} />
-          <Route path="/cluster" element={<Navigate to="/admin" replace />} />
-          <Route path="/introspection" element={<Navigate to="/admin" replace />} />
-          <Route path="/hypervision" element={<Navigate to="/admin" replace />} />
-          <Route path="/configuration" element={<Navigate to="/admin" replace />} />
-          <Route path="/design-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/design-system" element={<Navigate to="/admin" replace />} />
-          <Route path="/settings" element={<Navigate to="/admin" replace />} />
-          <Route path="/governance-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/governance" element={<Navigate to="/admin" replace />} />
-          <Route path="/secure" element={<Navigate to="/admin" replace />} />
-          <Route path="/audio-center" element={<Navigate to="/admin" replace />} />
-          <Route path="/audio" element={<Navigate to="/admin" replace />} />
-          <Route path="/voice" element={<Navigate to="/admin" replace />} />
-          <Route path="/tts" element={<Navigate to="/admin" replace />} />
+          <Route path="/system-center" element={<Navigate to="/admin?tab=system" replace />} />
+          <Route path="/diagnostics" element={<Navigate to="/admin?tab=production-health" replace />} />
+          <Route path="/devtools" element={<Navigate to="/admin?tab=system" replace />} />
+          <Route path="/cluster" element={<Navigate to="/admin?tab=production-health" replace />} />
+          <Route path="/introspection" element={<Navigate to="/admin?tab=system" replace />} />
+          <Route path="/hypervision" element={<Navigate to="/admin?tab=system" replace />} />
+          <Route path="/configuration" element={<Navigate to="/admin?tab=config" replace />} />
+          <Route path="/design-center" element={<Navigate to="/admin?tab=design" replace />} />
+          <Route path="/design-system" element={<Navigate to="/admin?tab=design" replace />} />
+          <Route path="/settings" element={<Navigate to="/admin?tab=config" replace />} />
+          <Route path="/governance-center" element={<Navigate to="/admin?tab=governance" replace />} />
+          <Route path="/governance" element={<Navigate to="/admin?tab=governance" replace />} />
+          <Route path="/secure" element={<Navigate to="/admin?tab=governance" replace />} />
+          <Route path="/audio-center" element={<Navigate to="/admin?tab=audio" replace />} />
+          <Route path="/audio" element={<Navigate to="/admin?tab=audio" replace />} />
+          <Route path="/voice" element={<Navigate to="/admin?tab=audio" replace />} />
+          <Route path="/tts" element={<Navigate to="/admin?tab=audio" replace />} />
           {/* ✨ v25.3.2 - FUSION DASHBOARD - Perfect Backend/Frontend Integration */}
           <Route
             path="/fusion"
@@ -667,17 +670,17 @@ const AppRouter: React.FC = () => {
             }
           />
           {/* Redirections des anciens modules vers DEV */}
-          <Route path="/one-core" element={<Navigate to="/dev" replace />} />
-          <Route path="/command-center" element={<Navigate to="/dev" replace />} />
-          <Route path="/unified" element={<Navigate to="/dev" replace />} />
-          <Route path="/qa-monitoring" element={<Navigate to="/dev" replace />} />
-          <Route path="/qa" element={<Navigate to="/dev" replace />} />
-          <Route path="/monitoring" element={<Navigate to="/dev" replace />} />
-          <Route path="/tests" element={<Navigate to="/dev" replace />} />
-          <Route path="/developer-mode" element={<Navigate to="/dev" replace />} />
-          <Route path="/dev-mode" element={<Navigate to="/dev" replace />} />
-          <Route path="/devmode" element={<Navigate to="/dev" replace />} />
-          <Route path="/ia-dev" element={<Navigate to="/dev" replace />} />
+          <Route path="/one-core" element={<Navigate to="/dev?tab=overview" replace />} />
+          <Route path="/command-center" element={<Navigate to="/dev?tab=operations" replace />} />
+          <Route path="/unified" element={<Navigate to="/dev?tab=overview" replace />} />
+          <Route path="/qa-monitoring" element={<Navigate to="/dev?tab=validation" replace />} />
+          <Route path="/qa" element={<Navigate to="/dev?tab=validation" replace />} />
+          <Route path="/monitoring" element={<Navigate to="/dev?tab=diagnostics" replace />} />
+          <Route path="/tests" element={<Navigate to="/dev?tab=validation" replace />} />
+          <Route path="/developer-mode" element={<Navigate to="/dev?tab=operations" replace />} />
+          <Route path="/dev-mode" element={<Navigate to="/dev?tab=operations" replace />} />
+          <Route path="/devmode" element={<Navigate to="/dev?tab=operations" replace />} />
+          <Route path="/ia-dev" element={<Navigate to="/dev?tab=operations" replace />} />
           {/* Note: /orchestration-intelligence et /orchestration-center ont leurs propres composants ci-dessus */}
           <Route
             path="/orchestration"

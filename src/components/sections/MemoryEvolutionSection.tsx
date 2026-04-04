@@ -12,6 +12,7 @@ import { Card } from '@/ui';
 import { TSectionHeader } from '@/design-system';
 import { colors, spacing, fontSizes } from '@themes/tokens';
 import { detectEnvironment } from '@/core/tauri/environment';
+import { SectionLoadingFallback } from './SectionLoadingFallback';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -47,7 +48,15 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
       <Card>
         <h3 style={{ marginBottom: spacing[4] }}>Centre d&apos;Évolution Mémoire</h3>
         {env.isTauri ? (
-          <React.Suspense fallback={null}>
+          <React.Suspense
+            fallback={
+              <SectionLoadingFallback
+                label="Évolution mémoire"
+                note="Chargement du centre d’évolution…"
+                testId="loading-memory-evolution-center"
+              />
+            }
+          >
             <LazyMemoryEvolutionCenter />
           </React.Suspense>
         ) : (
@@ -57,7 +66,15 @@ export const MemoryEvolutionSection: React.FC<MemoryEvolutionSectionProps> = mem
             </p>
             <div style={{ marginTop: spacing[4] }}>
               <h4 style={{ marginBottom: spacing[3] }}>Timeline d&apos;Évolution</h4>
-              <React.Suspense fallback={null}>
+              <React.Suspense
+                fallback={
+                  <SectionLoadingFallback
+                    label="Timeline d’évolution"
+                    note="Chargement de la timeline…"
+                    testId="loading-evolution-timeline"
+                  />
+                }
+              >
                 <LazyEvolutionTimeline />
               </React.Suspense>
             </div>
