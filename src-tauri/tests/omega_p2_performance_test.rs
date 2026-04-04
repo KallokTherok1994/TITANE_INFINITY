@@ -36,7 +36,6 @@ async fn test_omega_p2_latency_improvement() {
         emotion_context: None,
         custom_system_prompt: None,
         history: None,
-        omega_meta: None,
     };
 
     // Measure P2 pipeline latency
@@ -105,7 +104,6 @@ async fn test_omega_p2_french_mastery_integration() {
         emotion_context: None,
         custom_system_prompt: None,
         history: None,
-        omega_meta: None,
     };
 
     let omega_result = bridge
@@ -166,7 +164,6 @@ async fn test_omega_p2_vs_legacy_comparison() {
             emotion_context: None,
             custom_system_prompt: None,
             history: None,
-            omega_meta: None,
         };
 
         let start = Instant::now();

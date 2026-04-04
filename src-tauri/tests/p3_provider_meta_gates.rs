@@ -77,7 +77,6 @@ async fn run_request(engine: &ConversationEngineState, message: &str, preference
         emotion_context: None,
         custom_system_prompt: None,
         history: None,
-        omega_meta: None,
     };
 
     let response = engine
@@ -155,7 +154,6 @@ async fn test_p3_offline5_offlinesim_x3() {
                 emotion_context: None,
                 custom_system_prompt: None,
                 history: None,
-                omega_meta: None,
             };
 
             let response = engine
@@ -196,7 +194,6 @@ async fn test_p3_stability_burst_x3() {
                 emotion_context: None,
                 custom_system_prompt: None,
                 history: None,
-                omega_meta: None,
             };
 
             let response = tokio::time::timeout(
@@ -237,7 +234,6 @@ async fn test_p3_determinism_signature_x3() {
             emotion_context: None,
             custom_system_prompt: None,
             history: None,
-            omega_meta: None,
         };
 
         let response = engine

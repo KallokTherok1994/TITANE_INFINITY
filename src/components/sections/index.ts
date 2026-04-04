@@ -6,7 +6,11 @@
  * Centralized exports for all extracted TitanePage sections
  */
 
-export { ConversationSection } from './ConversationSection';
+export {
+  ConversationSection,
+  buildConversationProviders,
+  isConversationProviderReady,
+} from './ConversationSection';
 export { VisionSection } from './VisionSection';
 export { OverviewSection } from './OverviewSection';
 export type { TitaneStats } from './OverviewSection';

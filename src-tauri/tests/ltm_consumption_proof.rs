@@ -24,7 +24,7 @@ mod ltm_consumption_proof {
 
         // 2. Write improbable fact via persist path
         let improbable_fact = "code=ZEPHYR-7X3-KOI";
-        let message = format!("Memorise sans developper: {}. Reponds OK.", improbable_fact);
+        let _message = format!("Memorise sans developper: {}. Reponds OK.", improbable_fact);
 
         // Simulate the persist_explicit_memory_write_facts() logic
         let intermediate_dir = base_path.join("intermediate");
