@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildConversationProviders,
   isConversationProviderReady,
-} from '../../components/sections';
+} from '../../components/sections/conversationProviderReadiness';
 
 type ConversationProviderEntry = ReturnType<typeof buildConversationProviders>[number];
 

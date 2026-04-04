@@ -240,4 +240,18 @@ describe('SC5: champion/challenger config is well-formed', () => {
   it('has at least one field', () => {
     expect(Object.keys(config).length).toBeGreaterThanOrEqual(1);
   });
+
+  it('does not label Ollama champions with cloud-only model aliases', () => {
+    const champions = (config.champions ?? {}) as Record<
+      string,
+      { provider?: string; model?: string }
+    >;
+
+    for (const entry of Object.values(champions)) {
+      if (entry?.provider !== 'ollama') continue;
+      expect(entry.model).toBeDefined();
+      expect(typeof entry.model).toBe('string');
+      expect(entry.model === 'auto' || entry.model?.includes(':')).toBe(true);
+    }
+  });
 });

@@ -2,16 +2,17 @@
  * TITANE∞ — OMEGA CHAMPION/CHALLENGER SCAFFOLD
  * ═══════════════════════════════════════════════════════════════════
  * Minimal comparison scaffold for Lock #2.
- * Reads config/championChallenger.json (read-only at runtime).
+ * Reads config/championChallenger.json as the single source of truth.
  * Logs divergences when comparison is enabled.
- * Does NOT alter the main request path — sidecar only.
+ * Can influence provider ordering through the canonical kernel.
  *
  * Constitution: I1 (no fake PASS), I3 (no hidden routing), I6 (minimal patch)
  * Lock: #2 — CHAMPION_CHALLENGER_READY
  * ═══════════════════════════════════════════════════════════════════
  */
 
-import type { CanonicalMode, EffortLevel, ModelClass } from './omegaModeClassifier';
+import championChallengerRegistry from '../../../config/championChallenger.json';
+import type { CanonicalMode } from './omegaModeClassifier';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // TYPES
@@ -85,43 +86,7 @@ let cachedRegistry: ChampionChallengerRegistry | null = null;
 export function loadRegistry(): ChampionChallengerRegistry {
   if (cachedRegistry) return cachedRegistry;
 
-  // Static fallback — matches config/championChallenger.json structure
-  cachedRegistry = {
-    version: '1.0.0',
-    lock: '#2',
-    champions: {
-      DIRECT: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.8 },
-      CLARIFY_LIGHT: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.68 },
-      DEEP_REASONING: { provider: 'gemini', model: 'opus', confidence_threshold: 0.85 },
-      ARCHITECT: { provider: 'gemini', model: 'opus', confidence_threshold: 0.87 },
-      REPAIR: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.8 },
-      CERTIFY: { provider: 'gemini', model: 'opus', confidence_threshold: 0.88 },
-      EXPLORATION: { provider: 'ollama', model: 'sonnet', confidence_threshold: 0.67 },
-      SHADOW_LEARNING: { provider: 'ollama', model: 'sonnet', confidence_threshold: 1.0 },
-    },
-    challengers: {
-      DIRECT: [{ provider: 'gemini', model: 'haiku', rationale: 'Lower latency' }],
-      DEEP_REASONING: [{ provider: 'claude', model: 'opus', rationale: 'Stronger CoT' }],
-      ARCHITECT: [{ provider: 'claude', model: 'opus', rationale: 'Better synthesis' }],
-      CERTIFY: [
-        { provider: 'openai', model: 'opus', rationale: 'Native reasoning_effort' },
-      ],
-    },
-    comparison: {
-      enabled: false,
-      sample_rate: 0.0,
-      max_parallel_calls: 1,
-      log_divergence: true,
-      metrics: ['latency_ms', 'token_count', 'accuracy_score', 'honesty_score'],
-    },
-    promotion_rules: {
-      min_samples: 50,
-      accuracy_improvement: 0.05,
-      latency_penalty_ms: 2000,
-      require_human_approval: true,
-    },
-  };
-
+  cachedRegistry = championChallengerRegistry as ChampionChallengerRegistry;
   return cachedRegistry;
 }
 

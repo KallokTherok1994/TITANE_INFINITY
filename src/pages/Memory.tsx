@@ -13,6 +13,7 @@ import { normalizePersistentMemoryStats } from '@/services/memory/persistentMemo
 const FALLBACK_STATS: TitaneStats = {
   totalXP: 0,
   level: 1,
+  chatMessageCount: 0,
   memoryShortTerm: 0,
   memoryMidTerm: 0,
   memoryLongTerm: 0,

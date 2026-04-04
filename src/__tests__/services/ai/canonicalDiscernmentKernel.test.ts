@@ -159,6 +159,27 @@ describe('CanonicalDiscernmentKernel', () => {
 
       expect(decision.provider.name).toBe('ollama');
     });
+
+    it('should let the REPAIR champion move ollama ahead of developed-profile defaults', () => {
+      const decision = kernel.discern({
+        ...defaultInput,
+        message: 'Répare ce bug React qui bloque le build et corrige le patch minimal.',
+        mode: 'debug_cognitive',
+        runtimeState: {
+          providerHealth: {
+            ollama: 0.8,
+            gemini: 0.8,
+            openai: 0.8,
+            claude: 0.8,
+            'titane-local': 0.8,
+          },
+        },
+      });
+
+      expect(decision.modeClassification?.canonicalMode).toBe('REPAIR');
+      expect(decision.provider.name).toBe('ollama');
+      expect(decision.fallbackChain).toContain('gemini');
+    });
   });
 
   describe('Decision 6: Tool/Skill', () => {

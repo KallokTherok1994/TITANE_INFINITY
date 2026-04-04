@@ -196,6 +196,7 @@ export const TitanePage: React.FC = () => {
     () => ({
       totalXP: progression?.totalXP ?? 0,
       level: progression?.level ?? 1,
+      chatMessageCount: progression?.chatMessageCount ?? 0,
       memoryShortTerm: memoryStats?.countByLevel?.['session'] ?? 0,
       memoryMidTerm: memoryStats?.countByLevel?.['intermediate'] ?? 0,
       memoryLongTerm: memoryStats?.countByLevel?.['long_term'] ?? 0,
@@ -259,7 +260,7 @@ export const TitanePage: React.FC = () => {
       case 'progression':
         return <ProgressionSection progression={progression} stats={stats} />;
       case 'transformation':
-        return <TransformationSection />;
+        return <TransformationSection stats={stats} />;
       case 'symbiose':
         return <TwinEvolutionPanel isAdmin={true} compact={false} />;
       default:

@@ -13,6 +13,7 @@ export const uiPages = {
       '[data-testid="tab-memory-evolution"]',
       '[data-testid="tab-progression"]',
       '[data-testid="tab-transformation"]',
+      '[data-testid="tab-symbiose"]',
     ],
   },
   time: {

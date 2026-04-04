@@ -20,6 +20,7 @@ import {
 import { TMetric, TBadge, TSectionHeader } from '@/design-system';
 import { spacing, fontSizes } from '@themes/tokens';
 import type { ProgressionState } from '@/cognitive/types';
+import { useCurrentChatModeId } from '@/stores/useChatModeStore';
 
 // ═══════════════════════════════════════════════════════════════════════════
 // TYPES
@@ -28,6 +29,7 @@ import type { ProgressionState } from '@/cognitive/types';
 export interface TitaneStats {
   totalXP: number;
   level: number;
+  chatMessageCount: number;
   memoryShortTerm: number;
   memoryMidTerm: number;
   memoryLongTerm: number;
@@ -45,19 +47,22 @@ interface ProgressionSectionProps {
 
 export const ProgressionSection: React.FC<ProgressionSectionProps> = memo(
   ({ progression, stats }) => {
-    // Real chatMessageCount from xpEngine state (canonical source — incremented per chat_message XP event)
-    const chatMessageCount = progression?.chatMessageCount ?? 0;
+    const currentModeId = useCurrentChatModeId();
 
-    // Current stats for achievement progress — chatMessageCount now from real xpEngine
+    // Real chatMessageCount from xpEngine state (canonical source — incremented per chat_message XP event)
+    const chatMessageCount = progression?.chatMessageCount ?? stats.chatMessageCount ?? 0;
+    const modesUsed = currentModeId ? 1 : 0;
+
+    // Current stats for achievement progress — mode progress now reflects the active canonical mode.
     const currentStats = useMemo(
       () => ({
         level: stats.level,
         totalXP: stats.totalXP,
         messageCount: chatMessageCount,
-        modesUsed: 0, // [DISPLAY_ONLY] pas de compteur de modes connecté
+        modesUsed,
         chatMessageCount,
       }),
-      [stats, chatMessageCount]
+      [stats, chatMessageCount, modesUsed]
     );
 
     // Resolve achievements from real stats (level/XP/messages computed from xpEngine)

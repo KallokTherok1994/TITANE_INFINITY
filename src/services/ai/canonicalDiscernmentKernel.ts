@@ -34,9 +34,11 @@ import type { ChatMode } from './chatTypes';
 import {
   classifyMode,
   resolveMode,
+  type CanonicalMode,
   type ClassifierInput,
   type ModeClassification,
 } from './omegaModeClassifier';
+import { getChampion } from './championChallenger';
 // Phase 2-3: Runtime truth, skill selection, orchestrator health
 import { cognitiveKernel } from './cognitiveKernel';
 import { aiOrchestrator } from './orchestrator';
@@ -271,7 +273,8 @@ export class CanonicalDiscernmentKernel {
     const providerDecision = this.selectProvider(
       effectiveProfile,
       input.providerPreference ?? 'auto',
-      input.runtimeState
+      input.runtimeState,
+      modeClassification.canonicalMode
     );
 
     signals.push({
@@ -466,7 +469,7 @@ export class CanonicalDiscernmentKernel {
   }
 
   /**
-   * Select provider based on profile preference + runtime health.
+   * Select provider based on explicit preference, champion ordering, and runtime health.
    */
   private selectProvider(
     profile: {
@@ -476,14 +479,22 @@ export class CanonicalDiscernmentKernel {
       reasoningEffort: 'low' | 'medium' | 'high';
     },
     userPreference: string,
-    runtimeState?: DiscernmentInput['runtimeState']
+    runtimeState?: DiscernmentInput['runtimeState'],
+    canonicalMode?: CanonicalMode
   ): CanonicalDecision['provider'] {
     let candidates = [...profile.preferredProviders];
 
     // User explicit preference → top priority
     if (userPreference !== 'auto') {
       candidates = [userPreference, ...candidates.filter(p => p !== userPreference)];
+    } else if (canonicalMode) {
+      const champion = getChampion(canonicalMode);
+      if (champion?.provider) {
+        candidates = [champion.provider, ...candidates.filter(p => p !== champion.provider)];
+      }
     }
+
+    candidates = [...new Set(candidates.filter(Boolean))];
 
     // Score candidates by health
     const scored = candidates.map(name => {
@@ -494,7 +505,7 @@ export class CanonicalDiscernmentKernel {
     // Sort: health desc, then preference order
     scored.sort((a, b) => b.health - a.health);
 
-    const selected = scored[0] ?? { name: 'ollama', health: 0.5 };
+    const selected = scored[0] ?? { name: candidates[0] ?? 'ollama', health: 0.5 };
     const fallback = scored.slice(1).map(s => s.name);
 
     return {

@@ -18,7 +18,17 @@ import { colors, spacing, fontSizes } from '@themes/tokens';
 // TYPES
 // ═══════════════════════════════════════════════════════════════════════════
 
-type TransformationSectionProps = Record<string, never>;
+interface TransformationSectionProps {
+  stats: {
+    totalXP: number;
+    level: number;
+    chatMessageCount: number;
+    memoryShortTerm: number;
+    memoryMidTerm: number;
+    memoryLongTerm: number;
+    evolutionScore: number;
+  };
+}
 
 // Lazy-load heavy components
 const LazyTransformationRoadmap = React.lazy(() =>
@@ -31,7 +41,18 @@ const LazyTransformationRoadmap = React.lazy(() =>
 // MAIN COMPONENT
 // ═══════════════════════════════════════════════════════════════════════════
 
-export const TransformationSection: React.FC<TransformationSectionProps> = memo(() => {
+export const TransformationSection: React.FC<TransformationSectionProps> = memo(({ stats }) => {
+  const transformationPhase =
+    stats.evolutionScore >= 80
+      ? 'Symbiose avancée'
+      : stats.evolutionScore >= 50
+        ? 'Consolidation active'
+        : stats.evolutionScore >= 20
+          ? 'Croissance structurée'
+          : 'Initialisation guidée';
+
+  const totalMemories = stats.memoryShortTerm + stats.memoryMidTerm + stats.memoryLongTerm;
+
   return (
     <div className="titane-section titane-section-transformation">
       <TSectionHeader
@@ -100,7 +121,7 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
         </Card>
 
         <Card>
-          <h3 style={{ marginBottom: spacing[4] }}>Paliers Franchis</h3>
+          <h3 style={{ marginBottom: spacing[4] }}>Indicateurs Synchronisés</h3>
           <p
             style={{
               fontSize: fontSizes.sm,
@@ -108,24 +129,27 @@ export const TransformationSection: React.FC<TransformationSectionProps> = memo(
               marginBottom: spacing[3],
             }}
           >
-            Source: roadmap curée — DISPLAY_ONLY, aucune connexion IPC live.
+            Calculés depuis l&apos;état réel TITANE — XP, mémoire et activité conversationnelle.
           </p>
           <Stack direction="vertical" gap={3}>
-            <TMetric label="v25.0" value="Fusion EVO" color="success" />
-            <TMetric label="v25.1" value="Fusion TIME" color="success" />
-            <TMetric label="v25.2" value="Fusion STATS + ADMIN" color="success" />
-            <TMetric label="v25.3" value="Fusion TITANE" color="success" />
-            <TMetric label="v26.0" value="Vision & Mémoire Advanced" color="success" />
+            <TMetric label="Phase active" value={transformationPhase} color="success" />
+            <TMetric label="Niveau actuel" value={stats.level.toString()} color="success" />
+            <TMetric label="Score évolution" value={`${stats.evolutionScore}%`} color="info" />
+            <TMetric label="Mémoire consolidée" value={totalMemories.toString()} color="info" />
             <TMetric
-              label="v27.0"
-              value="Identité & Transformation (85%)"
-              color="success"
-            />
-            <TMetric
-              label="v28.0"
-              value="AI Multi-Provider (en cours)"
+              label="Messages synchronisés"
+              value={stats.chatMessageCount.toString()}
               color={colors.saphir.primary[500]}
             />
+            <p
+              style={{
+                fontSize: fontSizes.sm,
+                color: colors.neutral[400],
+                marginTop: spacing[2],
+              }}
+            >
+              La transformation progresse selon le niveau, les souvenirs consolidés et le volume conversationnel réellement observé.
+            </p>
           </Stack>
         </Card>
       </Grid>

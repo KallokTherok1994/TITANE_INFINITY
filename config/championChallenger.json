@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "lock": "#2",
   "description": "Champion/Challenger registry — OMEGA Lock #2. Tracks current champion providers per canonical mode and registered challengers for A/B comparison.",
-  "updated": "2026-03-26",
+  "updated": "2026-04-04",
   "champions": {
-    "DIRECT": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.8 },
+    "DIRECT": { "provider": "ollama", "model": "gemma2:2b", "confidence_threshold": 0.8 },
     "CLARIFY_LIGHT": {
       "provider": "ollama",
-      "model": "sonnet",
+      "model": "gemma2:2b",
       "confidence_threshold": 0.68
     },
     "DEEP_REASONING": {
@@ -17,16 +17,16 @@
       "confidence_threshold": 0.85
     },
     "ARCHITECT": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.87 },
-    "REPAIR": { "provider": "ollama", "model": "sonnet", "confidence_threshold": 0.8 },
+    "REPAIR": { "provider": "ollama", "model": "gemma2:2b", "confidence_threshold": 0.8 },
     "CERTIFY": { "provider": "gemini", "model": "opus", "confidence_threshold": 0.88 },
     "EXPLORATION": {
       "provider": "ollama",
-      "model": "sonnet",
+      "model": "gemma2:2b",
       "confidence_threshold": 0.67
     },
     "SHADOW_LEARNING": {
       "provider": "ollama",
-      "model": "sonnet",
+      "model": "gemma2:2b",
       "confidence_threshold": 1.0
     }
   },
