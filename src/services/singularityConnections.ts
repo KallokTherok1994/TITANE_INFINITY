@@ -405,14 +405,15 @@ export class SingularityConnections {
   //   UI ROUTER → META LAYER
   // ═══════════════════════════════════════════════════════════
 
-  static async syncUIState(): Promise<void> {
+  static async syncUIState(pathWithState?: string): Promise<void> {
     // Note: singularity_get_meta not available yet
     // Using client-side data gracefully
     try {
       const current = await SingularityBridge.getMeta();
 
-      // Get current route from window.location
-      const activePage = window.location.pathname;
+      // Get current route + tab state from window.location unless explicitly provided
+      const activePage =
+        pathWithState ?? `${window.location.pathname}${window.location.search}`;
 
       const previousRuntime = current?.runtime ?? {};
       const inferredBuild = import.meta.env.DEV ? 'dev' : 'stable';

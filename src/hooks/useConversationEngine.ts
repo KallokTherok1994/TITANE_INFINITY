@@ -136,6 +136,8 @@ export interface ConversationMessage {
     providerMeta?: ProviderDecisionMeta;
     contextBinding?: {
       route: string;
+      pageState?: string;
+      fullRoute?: string;
       moduleId: string;
       moduleName: string;
       sequence: number;
@@ -335,6 +337,8 @@ export function useConversationEngine(
 
     return {
       route: envelope.routeContext.route,
+      pageState: envelope.routeContext.pageState,
+      fullRoute: envelope.routeContext.fullRoute,
       moduleId: envelope.moduleContext.moduleId,
       moduleName: envelope.moduleContext.moduleName,
       sequence: envelope.continuity.sequence,

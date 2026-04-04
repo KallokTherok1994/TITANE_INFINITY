@@ -279,17 +279,19 @@ const AppRouter: React.FC = () => {
   }, []);
 
   useEffect(() => {
+    const routeWithState = `${location.pathname}${location.search}`;
+
     try {
-      publishActiveModuleContext(location.pathname);
-      void SingularityConnections.syncUIState();
+      publishActiveModuleContext(routeWithState);
+      void SingularityConnections.syncUIState(routeWithState);
     } catch (error) {
       logger.warn('Failed to sync active UI/module context', {
         component: 'AppRouter',
-        route: location.pathname,
+        route: routeWithState,
         error,
       });
     }
-  }, [location.pathname]);
+  }, [location.pathname, location.search]);
 
   // UI vΩ: Sidebar removed, TopNav navigation only
   // const sidebarCollapsed = useSingularitySidebarCollapsed();

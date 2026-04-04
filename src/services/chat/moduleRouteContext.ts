@@ -15,6 +15,8 @@ export type ModuleDataTruthClass =
 export interface ModuleRouteContext {
   route: string;
   aliasResolvedFrom?: string;
+  pageState?: string;
+  fullRoute?: string;
   moduleId: string;
   moduleName: string;
   moduleType: string;
@@ -429,15 +431,31 @@ function writeJson(key: string, value: unknown): void {
   }
 }
 
-function normalizeRoute(pathname: string): { route: string; aliasResolvedFrom?: string } {
-  const route = pathname.split('?')[0] || '/';
+function normalizeRoute(pathWithState: string): {
+  route: string;
+  aliasResolvedFrom?: string;
+  pageState?: string;
+  fullRoute: string;
+} {
+  const [rawPath, ...queryParts] = pathWithState.split('?');
+  const route = rawPath || '/';
+  const pageState = queryParts.length > 0 ? queryParts.join('?') : undefined;
   const canonical = ROUTE_ALIASES[route];
 
   if (!canonical) {
-    return { route };
+    return {
+      route,
+      pageState,
+      fullRoute: pageState ? `${route}?${pageState}` : route,
+    };
   }
 
-  return { route: canonical, aliasResolvedFrom: route };
+  return {
+    route: canonical,
+    aliasResolvedFrom: route,
+    pageState,
+    fullRoute: pageState ? `${canonical}?${pageState}` : canonical,
+  };
 }
 
 function getDefinition(route: string): ModuleRouteDefinition {
@@ -454,9 +472,9 @@ export function readRecentModuleContexts(limit = 8): ModuleRouteContext[] {
   return history.slice(-limit);
 }
 
-export function publishActiveModuleContext(pathname: string): ModuleRouteContext {
+export function publishActiveModuleContext(pathWithState: string): ModuleRouteContext {
   const previous = readActiveModuleContext();
-  const normalized = normalizeRoute(pathname);
+  const normalized = normalizeRoute(pathWithState);
   const definition = getDefinition(normalized.route);
   const now = Date.now();
 
@@ -469,6 +487,8 @@ export function publishActiveModuleContext(pathname: string): ModuleRouteContext
   const context: ModuleRouteContext = {
     route: normalized.route,
     aliasResolvedFrom: normalized.aliasResolvedFrom,
+    pageState: normalized.pageState,
+    fullRoute: normalized.fullRoute,
     moduleId: definition.moduleId,
     moduleName: definition.moduleName,
     moduleType: definition.moduleType,

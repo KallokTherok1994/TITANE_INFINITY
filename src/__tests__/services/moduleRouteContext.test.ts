@@ -70,4 +70,20 @@ describe('moduleRouteContext memory route', () => {
     expect(cognitiveContext.route).toBe('/dev');
     expect(cognitiveContext.moduleId).toBe('dev_center');
   });
+
+  it('preserves tab state for query-driven pages while keeping the canonical route', () => {
+    const audioContext = publishActiveModuleContext('/admin?tab=audio');
+    const governanceContext = publishActiveModuleContext('/admin?tab=governance');
+
+    expect(audioContext.route).toBe('/admin');
+    expect(audioContext.pageState).toBe('tab=audio');
+    expect(audioContext.fullRoute).toBe('/admin?tab=audio');
+    expect(audioContext.moduleId).toBe('admin_center');
+
+    expect(governanceContext.route).toBe('/admin');
+    expect(governanceContext.pageState).toBe('tab=governance');
+    expect(governanceContext.fullRoute).toBe('/admin?tab=governance');
+    expect(governanceContext.continuity.changeType).toBe('same-module');
+    expect(readActiveModuleContext()?.fullRoute).toBe('/admin?tab=governance');
+  });
 });
