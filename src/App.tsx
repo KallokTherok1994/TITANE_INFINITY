@@ -333,7 +333,13 @@ const AppRouter: React.FC = () => {
       try {
         // En mode navigateur, vérifier d'abord le localStorage
         if (typeof localStorage !== 'undefined') {
-          const browserMode = localStorage.getItem('titane_browser_mode') === '1';
+          const browserModeFlag = localStorage.getItem('titane_browser_mode') === '1';
+          const browserMode = browserModeFlag && !isTauriRuntimeAvailable();
+
+          if (browserModeFlag && !browserMode) {
+            localStorage.removeItem('titane_browser_mode');
+          }
+
           if (browserMode) {
             const localComplete =
               localStorage.getItem('titane_onboarding_complete') === '1';
@@ -364,7 +370,9 @@ const AppRouter: React.FC = () => {
 
     // Add timeout to prevent infinite loading
     const timeoutDuration =
-      typeof window !== 'undefined' && localStorage.getItem('titane_browser_mode') === '1'
+      typeof window !== 'undefined' &&
+      localStorage.getItem('titane_browser_mode') === '1' &&
+      !isTauriRuntimeAvailable()
         ? 1000
         : 5000;
 

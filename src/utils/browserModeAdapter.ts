@@ -21,11 +21,19 @@ export const isBrowserMode = (): boolean => {
   return !(w.__TAURI__ || w.__TAURI_INTERNALS__);
 };
 
+const clearBrowserModeFlags = (): void => {
+  if (typeof localStorage === 'undefined') {
+    return;
+  }
+
+  localStorage.removeItem('titane_browser_mode');
+  localStorage.removeItem('titane_security_mode');
+  localStorage.removeItem('titane_restrictions_disabled');
+};
+
 export const configureBrowserMode = (): void => {
   if (!isBrowserMode()) {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.removeItem('titane_browser_mode');
-    }
+    clearBrowserModeFlags();
     return;
   }
 
@@ -60,10 +68,8 @@ export const configureBrowserMode = (): void => {
 // Auto-configure au chargement du module
 if (typeof window !== 'undefined') {
   window.addEventListener('tauri-ready', () => {
-    localStorage.removeItem('titane_browser_mode');
+    clearBrowserModeFlags();
   });
-}
 
-if (isBrowserMode()) {
   configureBrowserMode();
 }
