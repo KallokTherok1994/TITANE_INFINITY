@@ -1,4 +1,5 @@
-# Artifact Sizes
-# Generated: 2026-04-04T00:01:14Z
-Titan-Stable_28.90.0_amd64.AppImage: 90339832 bytes (87M)
-Titan-Stable_28.90.0_amd64.deb: 17554358 bytes (17M)
+]633;E;stat -c '%n %s bytes' "$DEST/$APP_BASENAME" "$DEST/$DEB_BASENAME";1cbd74ae-dba4-4dbd-a58a-67a8e68eaaed]633;Cdeployment/latest/TITANE-Infinity_28.90.0_amd64.AppImage 94210552 bytes
+deployment/latest/TITANE-Infinity_28.90.0_amd64.deb 21619262 bytes
+
+90M	deployment/latest/TITANE-Infinity_28.90.0_amd64.AppImage
+21M	deployment/latest/TITANE-Infinity_28.90.0_amd64.deb
